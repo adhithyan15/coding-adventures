@@ -3,6 +3,17 @@
 All notable changes to this package will be documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.2.0] — 2026-04-28 (BF06)
+
+### Added
+
+- ``WASMBackend(host=…)`` accepts an optional ``wasm_runtime.WasiHost``.
+  When supplied, ``run()`` instantiates the underlying ``WasmRuntime``
+  with that host so programs that emit WASI ``fd_write`` / ``fd_read``
+  imports route stdout / stdin through caller-supplied callbacks.
+  ``host=None`` (the default) preserves the existing behaviour: a fresh
+  default ``WasmRuntime`` per run, stdout discarded, stdin EOF.
+
 ## [0.1.1] — 2026-04-27
 
 ### Added

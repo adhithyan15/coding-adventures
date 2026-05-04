@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.13.0] - 2026-04-28
+
+### Added
+
+- **`ScalarSubquery(query)` expression** (`expr.py`) — represents a
+  `(SELECT ...)` in expression position. Contains the resolved inner
+  `LogicalPlan`. Returns `False` from `contains_aggregate()` and is a no-op
+  in `collect_columns()`.
+
+## [0.12.0] - 2026-04-28
+
+### Added — Phase 9: SQL Triggers
+
+- **`CreateTriggerStmt` / `DropTriggerStmt`** (`ast.py`) — typed AST nodes for
+  trigger DDL statements; added to the `Statement` union type.
+- **`CreateTrigger` / `DropTrigger`** (`plan.py`) — logical plan leaf nodes;
+  added to the `LogicalPlan` union; `children()` returns `()` for both.
+- **Planner dispatch** (`planner.py`) — `_plan_create_trigger` and
+  `_plan_drop_trigger` map the AST nodes to plan nodes; exported from
+  `sql_planner.__init__`.
+
 ## [0.11.0] - 2026-04-27
 
 ### Added — Phase 8: Window Functions (OVER / PARTITION BY)

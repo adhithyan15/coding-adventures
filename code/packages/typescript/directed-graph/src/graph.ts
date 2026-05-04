@@ -104,6 +104,14 @@ export class EdgeNotFoundError extends Error {
   }
 }
 
+export type GraphPropertyValue = string | number | boolean | null;
+export type GraphPropertyBag = Record<string, GraphPropertyValue>;
+export type WeightedEdge = readonly [string, string, number];
+
+function edgeKey(fromNode: string, toNode: string): string {
+  return `${fromNode}\0${toNode}`;
+}
+
 // ---------------------------------------------------------------------------
 // The Graph class
 // ---------------------------------------------------------------------------
@@ -115,7 +123,8 @@ export class EdgeNotFoundError extends Error {
  * means A points to B, so B is a *successor* of A and A is a *predecessor* of B.
  *
  * Self-loops are disallowed -- `addEdge("A", "A")` throws an `Error`.
- * Duplicate edges and nodes are silently ignored (idempotent adds).
+ * Duplicate nodes are silently ignored. Re-adding an edge updates its weight
+ * and merges metadata into the existing edge property bag.
  *
  * Example:
  *
@@ -131,8 +140,11 @@ export class Graph {
   // We start with empty maps. The invariant is: every node that exists
   // in the graph has a key in BOTH _forward and _reverse.
 
-  private readonly _forward: Map<string, Set<string>> = new Map();
-  private readonly _reverse: Map<string, Set<string>> = new Map();
+  private readonly _forward: Map<string, Map<string, number>> = new Map();
+  private readonly _reverse: Map<string, Map<string, number>> = new Map();
+  private readonly _graphProperties: GraphPropertyBag = {};
+  private readonly _nodeProperties: Map<string, GraphPropertyBag> = new Map();
+  private readonly _edgeProperties: Map<string, GraphPropertyBag> = new Map();
 
   // ------------------------------------------------------------------
   // Self-loop control
@@ -170,11 +182,13 @@ export class Graph {
    * This is called implicitly by `addEdge`, so you only need to call
    * it directly for isolated nodes (nodes with no edges).
    */
-  addNode(node: string): void {
+  addNode(node: string, properties: GraphPropertyBag = {}): void {
     if (!this._forward.has(node)) {
-      this._forward.set(node, new Set());
-      this._reverse.set(node, new Set());
+      this._forward.set(node, new Map());
+      this._reverse.set(node, new Map());
+      this._nodeProperties.set(node, {});
     }
+    this.mergeNodeProperties(node, properties);
   }
 
   /**
@@ -192,19 +206,22 @@ export class Graph {
 
     // Clean up outgoing edges: for each successor, remove `node` from
     // that successor's reverse (predecessor) set.
-    for (const successor of this._forward.get(node)!) {
+    for (const successor of this._forward.get(node)!.keys()) {
       this._reverse.get(successor)!.delete(node);
+      this._edgeProperties.delete(edgeKey(node, successor));
     }
 
     // Clean up incoming edges: for each predecessor, remove `node` from
     // that predecessor's forward (successor) set.
-    for (const predecessor of this._reverse.get(node)!) {
+    for (const predecessor of this._reverse.get(node)!.keys()) {
       this._forward.get(predecessor)!.delete(node);
+      this._edgeProperties.delete(edgeKey(predecessor, node));
     }
 
     // Finally, remove the node itself from both maps.
     this._forward.delete(node);
     this._reverse.delete(node);
+    this._nodeProperties.delete(node);
   }
 
   /**
@@ -239,20 +256,27 @@ export class Graph {
    *
    * Duplicate edges are silently ignored (Sets handle deduplication).
    */
-  addEdge(fromNode: string, toNode: string): void {
+  addEdge(
+    fromNode: string,
+    toNode: string,
+    weight = 1.0,
+    properties: GraphPropertyBag = {}
+  ): void {
     if (fromNode === toNode && !this._allowSelfLoops) {
       throw new Error(
         `Self-loops are not allowed: "${fromNode}" -> "${toNode}"`
       );
     }
+    this.validateWeight(weight);
 
     // Ensure both nodes exist (idempotent).
     this.addNode(fromNode);
     this.addNode(toNode);
 
     // Add the edge to both adjacency maps.
-    this._forward.get(fromNode)!.add(toNode);
-    this._reverse.get(toNode)!.add(fromNode);
+    this._forward.get(fromNode)!.set(toNode, weight);
+    this._reverse.get(toNode)!.set(fromNode, weight);
+    this.mergeEdgeProperties(fromNode, toNode, { ...properties, weight });
   }
 
   /**
@@ -271,6 +295,7 @@ export class Graph {
 
     this._forward.get(fromNode)!.delete(toNode);
     this._reverse.get(toNode)!.delete(fromNode);
+    this._edgeProperties.delete(edgeKey(fromNode, toNode));
   }
 
   /**
@@ -291,11 +316,132 @@ export class Graph {
   edges(): [string, string][] {
     const result: [string, string][] = [];
     for (const [node, successors] of this._forward) {
-      for (const successor of successors) {
+      for (const successor of successors.keys()) {
         result.push([node, successor]);
       }
     }
     return result;
+  }
+
+  /**
+   * Return a list of all directed edges as [fromNode, toNode, weight] tuples.
+   */
+  edgesWeighted(): WeightedEdge[] {
+    const result: WeightedEdge[] = [];
+    for (const [node, successors] of this._forward) {
+      for (const [successor, weight] of successors) {
+        result.push([node, successor, weight]);
+      }
+    }
+    return result;
+  }
+
+  /**
+   * Return the weight of the directed edge fromNode -> toNode.
+   */
+  edgeWeight(fromNode: string, toNode: string): number {
+    const weight = this._forward.get(fromNode)?.get(toNode);
+    if (weight === undefined) {
+      throw new EdgeNotFoundError(fromNode, toNode);
+    }
+    return weight;
+  }
+
+  // ------------------------------------------------------------------
+  // Property bags
+  // ------------------------------------------------------------------
+
+  /**
+   * Return a copy of graph-level properties.
+   */
+  graphProperties(): GraphPropertyBag {
+    return { ...this._graphProperties };
+  }
+
+  /**
+   * Set one graph-level property.
+   */
+  setGraphProperty(key: string, value: GraphPropertyValue): void {
+    this._graphProperties[key] = value;
+  }
+
+  /**
+   * Remove one graph-level property if present.
+   */
+  removeGraphProperty(key: string): void {
+    delete this._graphProperties[key];
+  }
+
+  /**
+   * Return a copy of properties attached to a node.
+   */
+  nodeProperties(node: string): GraphPropertyBag {
+    this.assertNode(node);
+    return { ...(this._nodeProperties.get(node) ?? {}) };
+  }
+
+  /**
+   * Set one property on a node.
+   */
+  setNodeProperty(
+    node: string,
+    key: string,
+    value: GraphPropertyValue
+  ): void {
+    this.assertNode(node);
+    this._nodeProperties.get(node)![key] = value;
+  }
+
+  /**
+   * Remove one property from a node if present.
+   */
+  removeNodeProperty(node: string, key: string): void {
+    this.assertNode(node);
+    delete this._nodeProperties.get(node)![key];
+  }
+
+  /**
+   * Return a copy of properties attached to directed edge fromNode -> toNode.
+   */
+  edgeProperties(fromNode: string, toNode: string): GraphPropertyBag {
+    this.assertEdge(fromNode, toNode);
+    const properties =
+      this._edgeProperties.get(edgeKey(fromNode, toNode)) ?? {};
+    return { ...properties, weight: this.edgeWeight(fromNode, toNode) };
+  }
+
+  /**
+   * Set one property on directed edge fromNode -> toNode.
+   * Setting "weight" also updates edgeWeight and weighted traversal state.
+   */
+  setEdgeProperty(
+    fromNode: string,
+    toNode: string,
+    key: string,
+    value: GraphPropertyValue
+  ): void {
+    this.assertEdge(fromNode, toNode);
+    if (key === "weight") {
+      if (typeof value !== "number" || Number.isNaN(value)) {
+        throw new Error("Edge property 'weight' must be a number");
+      }
+      this.setEdgeWeight(fromNode, toNode, value);
+    }
+    this.mergeEdgeProperties(fromNode, toNode, { [key]: value });
+  }
+
+  /**
+   * Remove one property from directed edge fromNode -> toNode if present.
+   * Removing "weight" resets the edge weight to 1.0.
+   */
+  removeEdgeProperty(fromNode: string, toNode: string, key: string): void {
+    this.assertEdge(fromNode, toNode);
+    if (key === "weight") {
+      this.setEdgeWeight(fromNode, toNode, 1.0);
+      this.mergeEdgeProperties(fromNode, toNode, { weight: 1.0 });
+      return;
+    }
+    delete this._edgeProperties.get(edgeKey(fromNode, toNode))?.[key];
   }
 
   // ------------------------------------------------------------------
@@ -312,7 +458,7 @@ export class Graph {
     if (!this._reverse.has(node)) {
       throw new NodeNotFoundError(node);
     }
-    return Array.from(this._reverse.get(node)!);
+    return Array.from(this._reverse.get(node)!.keys());
   }
 
   /**
@@ -325,7 +471,17 @@ export class Graph {
     if (!this._forward.has(node)) {
       throw new NodeNotFoundError(node);
     }
-    return Array.from(this._forward.get(node)!);
+    return Array.from(this._forward.get(node)!.keys());
+  }
+
+  /**
+   * Return successor weights as a Map of successor -> edge weight.
+   */
+  successorsWeighted(node: string): ReadonlyMap<string, number> {
+    if (!this._forward.has(node)) {
+      throw new NodeNotFoundError(node);
+    }
+    return new Map(this._forward.get(node)!);
   }
 
   // ------------------------------------------------------------------
@@ -409,7 +565,7 @@ export class Graph {
       // "Remove" this node by decrementing the in-degree of all its
       // successors. If any successor's in-degree drops to zero, it's
       // ready to be processed.
-      const sortedSuccessors = Array.from(this._forward.get(node)!).sort();
+      const sortedSuccessors = Array.from(this._forward.get(node)!.keys()).sort();
       for (const successor of sortedSuccessors) {
         inDegree.set(successor, inDegree.get(successor)! - 1);
         if (inDegree.get(successor)! === 0) {
@@ -462,7 +618,7 @@ export class Graph {
       /**Return true if a cycle is reachable from this node.*/
       color.set(node, Graph.GRAY);
 
-      for (const successor of this._forward.get(node)!) {
+      for (const successor of this._forward.get(node)!.keys()) {
         if (color.get(successor) === Graph.GRAY) {
           // Back edge found -- cycle!
           return true;
@@ -507,7 +663,7 @@ export class Graph {
     const dfs = (node: string): string[] | null => {
       color.set(node, Graph.GRAY);
 
-      const sortedSuccessors = Array.from(this._forward.get(node)!).sort();
+      const sortedSuccessors = Array.from(this._forward.get(node)!.keys()).sort();
       for (const successor of sortedSuccessors) {
         if (color.get(successor) === Graph.GRAY) {
           // Found the cycle! Reconstruct the path.
@@ -572,14 +728,14 @@ export class Graph {
     }
 
     const visited = new Set<string>();
-    const queue: string[] = Array.from(this._forward.get(node)!);
+    const queue: string[] = Array.from(this._forward.get(node)!.keys());
     for (const n of queue) {
       visited.add(n);
     }
 
     while (queue.length > 0) {
       const current = queue.shift()!;
-      for (const successor of this._forward.get(current)!) {
+      for (const successor of this._forward.get(current)!.keys()) {
         if (!visited.has(successor)) {
           visited.add(successor);
           queue.push(successor);
@@ -614,14 +770,14 @@ export class Graph {
     }
 
     const visited = new Set<string>();
-    const queue: string[] = Array.from(this._reverse.get(node)!);
+    const queue: string[] = Array.from(this._reverse.get(node)!.keys());
     for (const n of queue) {
       visited.add(n);
     }
 
     while (queue.length > 0) {
       const current = queue.shift()!;
-      for (const predecessor of this._reverse.get(current)!) {
+      for (const predecessor of this._reverse.get(current)!.keys()) {
         if (!visited.has(predecessor)) {
           visited.add(predecessor);
           queue.push(predecessor);
@@ -680,7 +836,7 @@ export class Graph {
 
       const nextLevelSet = new Set<string>();
       for (const node of currentLevel) {
-        for (const successor of this._forward.get(node)!) {
+        for (const successor of this._forward.get(node)!.keys()) {
           inDegree.set(successor, inDegree.get(successor)! - 1);
           if (inDegree.get(successor)! === 0) {
             nextLevelSet.add(successor);
@@ -733,5 +889,55 @@ export class Graph {
     }
 
     return result;
+  }
+
+  private assertNode(node: string): void {
+    if (!this.hasNode(node)) {
+      throw new NodeNotFoundError(node);
+    }
+  }
+
+  private assertEdge(fromNode: string, toNode: string): void {
+    if (!this.hasEdge(fromNode, toNode)) {
+      throw new EdgeNotFoundError(fromNode, toNode);
+    }
+  }
+
+  private mergeNodeProperties(
+    node: string,
+    properties: GraphPropertyBag
+  ): void {
+    const existing = this._nodeProperties.get(node);
+    if (existing === undefined) {
+      return;
+    }
+    Object.assign(existing, properties);
+  }
+
+  private mergeEdgeProperties(
+    fromNode: string,
+    toNode: string,
+    properties: GraphPropertyBag
+  ): void {
+    const key = edgeKey(fromNode, toNode);
+    const existing = this._edgeProperties.get(key) ?? {};
+    Object.assign(existing, properties);
+    this._edgeProperties.set(key, existing);
+  }
+
+  private validateWeight(weight: number): void {
+    if (typeof weight !== "number" || Number.isNaN(weight)) {
+      throw new Error("Edge weight must be a number");
+    }
+  }
+
+  private setEdgeWeight(
+    fromNode: string,
+    toNode: string,
+    weight: number
+  ): void {
+    this.validateWeight(weight);
+    this._forward.get(fromNode)!.set(toNode, weight);
+    this._reverse.get(toNode)!.set(fromNode, weight);
   }
 }

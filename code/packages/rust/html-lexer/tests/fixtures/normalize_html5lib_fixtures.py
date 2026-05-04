@@ -11,11 +11,30 @@ from typing import Any
 
 
 SUPPORTED_INITIAL_STATES = {
+    "CDATA section state",
     "Data state",
     "PLAINTEXT state",
     "RCDATA state",
     "RAWTEXT state",
+    "Script data double escaped dash dash state",
+    "Script data double escaped dash state",
+    "Script data double escaped less-than sign state",
     "Script data double escaped state",
+    "Script data escaped dash dash state",
+    "Script data escaped dash state",
+    "Script data escaped less-than sign state",
+    "Script data escaped state",
+    "Script data state",
+}
+
+SCRIPT_INITIAL_STATES = {
+    "Script data double escaped dash dash state",
+    "Script data double escaped dash state",
+    "Script data double escaped less-than sign state",
+    "Script data double escaped state",
+    "Script data escaped dash dash state",
+    "Script data escaped dash state",
+    "Script data escaped less-than sign state",
     "Script data escaped state",
     "Script data state",
 }
@@ -78,24 +97,16 @@ def is_supported(test: dict[str, Any]) -> tuple[bool, str]:
         return False, f"unsupported initialStates={initial_states!r}"
 
     last_start_tag = test.get("lastStartTag")
-    if initial_states in (
-        ["RCDATA state"],
-        ["RAWTEXT state"],
-        ["Script data double escaped state"],
-        ["Script data escaped state"],
-        ["Script data state"],
-    ) and not isinstance(last_start_tag, str):
+    if (
+        initial_states
+        and initial_states[0] in {"RCDATA state", "RAWTEXT state", *SCRIPT_INITIAL_STATES}
+        and not isinstance(last_start_tag, str)
+    ):
         return False, f"{initial_states[0]} requires lastStartTag"
 
     if (
         initial_states
-        not in (
-            ["RCDATA state"],
-            ["RAWTEXT state"],
-            ["Script data double escaped state"],
-            ["Script data escaped state"],
-            ["Script data state"],
-        )
+        and initial_states[0] not in {"RCDATA state", "RAWTEXT state", *SCRIPT_INITIAL_STATES}
         and last_start_tag is not None
     ):
         return False, f"unsupported lastStartTag={last_start_tag!r}"
@@ -130,7 +141,20 @@ def normalize_case(index: int, test: dict[str, Any]) -> dict[str, Any]:
             tokens.append(f"Comment(data={token[1]})")
         elif kind == "DOCTYPE":
             force_quirks = not bool(token[4])
-            tokens.append(f"Doctype(name={token[1]}, force_quirks={str(force_quirks).lower()})")
+            name = "null" if token[1] is None else token[1]
+            public_identifier = "null" if token[2] is None else token[2]
+            system_identifier = "null" if token[3] is None else token[3]
+            if token[2] is None and token[3] is None:
+                tokens.append(f"Doctype(name={name}, force_quirks={str(force_quirks).lower()})")
+            else:
+                tokens.append(
+                    "Doctype("
+                    f"name={name}, "
+                    f"public_identifier={public_identifier}, "
+                    f"system_identifier={system_identifier}, "
+                    f"force_quirks={str(force_quirks).lower()}"
+                    ")"
+                )
 
     if pending_text:
         tokens.append(f"Text(data={pending_text})")

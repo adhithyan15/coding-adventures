@@ -1,3 +1,5 @@
+import { predictLinearWithVm } from "./neural-vm.js";
+
 export type LossKind = "mse" | "mae";
 
 export interface TrainingPoint {
@@ -14,6 +16,8 @@ export interface ModelState {
 }
 
 export interface StepResult {
+  previousState: ModelState;
+  previousLoss: number;
   state: ModelState;
   loss: number;
   mae: number;
@@ -32,11 +36,11 @@ export const CELSIUS_DATASET: TrainingPoint[] = [
 ];
 
 export function predict(x: number, state: ModelState): number {
-  return state.weight * x + state.bias;
+  return predictLinearWithVm([x], state).predictions[0] ?? 0;
 }
 
 export function predictions(points: TrainingPoint[], state: ModelState): number[] {
-  return points.map((point) => predict(point.x, state));
+  return predictLinearWithVm(points.map((point) => point.x), state).predictions;
 }
 
 export function loss(points: TrainingPoint[], state: ModelState, lossKind: LossKind): number {
@@ -92,6 +96,7 @@ export function trainStep(
   lossKind: LossKind,
 ): StepResult {
   const { gradientWeight, gradientBias } = gradients(points, state, lossKind);
+  const previousLoss = loss(points, state, lossKind);
   const nextState = {
     weight: state.weight - learningRate * gradientWeight,
     bias: state.bias - learningRate * gradientBias,
@@ -99,6 +104,8 @@ export function trainStep(
   };
 
   return {
+    previousState: state,
+    previousLoss,
     state: nextState,
     loss: loss(points, nextState, lossKind),
     mae: meanAbsoluteError(points, nextState),

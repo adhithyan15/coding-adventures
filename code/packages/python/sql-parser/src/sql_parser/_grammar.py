@@ -913,6 +913,7 @@ PARSER_GRAMMAR = ParserGrammar(
             Alternation(choices=[
                 RuleReference(name='NUMBER', is_token=True),
                 RuleReference(name='STRING', is_token=True),
+                RuleReference(name='BLOB', is_token=True),
                 Literal(value='NULL'),
                 Literal(value='TRUE'),
                 Literal(value='FALSE'),

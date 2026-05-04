@@ -15,6 +15,7 @@ skip:
 DCG          = "-->"
 QUERY        = "?-"
 RULE         = ":-"
+RANGE        = ".." -> ATOM
 
 # Common dedicated punctuation tokens for the first parser pass.
 LPAREN       = "("

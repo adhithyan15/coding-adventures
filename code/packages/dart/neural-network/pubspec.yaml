@@ -1,0 +1,12 @@
+name: coding_adventures_neural_network
+version: 0.1.0
+description: Graph-native neural network primitives.
+repository: https://github.com/adhithyan15/coding-adventures
+
+environment:
+  sdk: ^3.0.0
+
+dependencies: {}
+
+dev_dependencies:
+  test: ^1.25.0

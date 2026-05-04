@@ -12,6 +12,16 @@ pub enum GraphRepr {
 pub type WeightedEdge = (String, String, f64);
 
 #[derive(Debug, Clone, PartialEq)]
+pub enum GraphPropertyValue {
+    String(String),
+    Number(f64),
+    Bool(bool),
+    Null,
+}
+
+pub type GraphPropertyBag = BTreeMap<String, GraphPropertyValue>;
+
+#[derive(Debug, Clone, PartialEq)]
 pub enum GraphError {
     NodeNotFound(String),
     EdgeNotFound(String, String),
@@ -39,6 +49,9 @@ pub struct Graph {
     node_list: Vec<String>,
     node_index: BTreeMap<String, usize>,
     matrix: Vec<Vec<Option<f64>>>,
+    graph_properties: GraphPropertyBag,
+    node_properties: BTreeMap<String, GraphPropertyBag>,
+    edge_properties: BTreeMap<(String, String), GraphPropertyBag>,
 }
 
 impl Graph {
@@ -49,6 +62,9 @@ impl Graph {
             node_list: Vec::new(),
             node_index: BTreeMap::new(),
             matrix: Vec::new(),
+            graph_properties: BTreeMap::new(),
+            node_properties: BTreeMap::new(),
+            edge_properties: BTreeMap::new(),
         }
     }
 
@@ -58,23 +74,35 @@ impl Graph {
 
     pub fn add_node(&mut self, node: impl Into<String>) {
         let node = node.into();
+        self.add_node_with_properties(node, BTreeMap::new());
+    }
+
+    pub fn add_node_with_properties(
+        &mut self,
+        node: impl Into<String>,
+        properties: GraphPropertyBag,
+    ) {
+        let node = node.into();
         match self.repr {
             GraphRepr::AdjacencyList => {
-                self.adj.entry(node).or_default();
+                self.adj.entry(node.clone()).or_default();
             }
             GraphRepr::AdjacencyMatrix => {
-                if self.node_index.contains_key(&node) {
-                    return;
+                if !self.node_index.contains_key(&node) {
+                    let index = self.node_list.len();
+                    self.node_list.push(node.clone());
+                    self.node_index.insert(node.clone(), index);
+                    for row in &mut self.matrix {
+                        row.push(None);
+                    }
+                    self.matrix.push(vec![None; index + 1]);
                 }
-                let index = self.node_list.len();
-                self.node_list.push(node.clone());
-                self.node_index.insert(node, index);
-                for row in &mut self.matrix {
-                    row.push(None);
-                }
-                self.matrix.push(vec![None; index + 1]);
             }
         }
+        self.node_properties
+            .entry(node)
+            .or_default()
+            .extend(properties);
     }
 
     pub fn remove_node(&mut self, node: &str) -> Result<(), GraphError> {
@@ -89,8 +117,11 @@ impl Graph {
                     if let Some(entry) = self.adj.get_mut(neighbor) {
                         entry.remove(node);
                     }
+                    self.edge_properties
+                        .remove(&canonical_endpoints(node, neighbor));
                 }
                 self.adj.remove(node);
+                self.node_properties.remove(node);
                 Ok(())
             }
             GraphRepr::AdjacencyMatrix => {
@@ -98,7 +129,12 @@ impl Graph {
                     .node_index
                     .remove(node)
                     .ok_or_else(|| GraphError::NodeNotFound(node.to_string()))?;
+                for other in &self.node_list {
+                    self.edge_properties
+                        .remove(&canonical_endpoints(node, other));
+                }
                 self.node_list.remove(index);
+                self.node_properties.remove(node);
                 self.matrix.remove(index);
                 for row in &mut self.matrix {
                     row.remove(index);
@@ -128,6 +164,16 @@ impl Graph {
     }
 
     pub fn add_edge(&mut self, left: impl Into<String>, right: impl Into<String>, weight: f64) {
+        self.add_edge_with_properties(left, right, weight, BTreeMap::new());
+    }
+
+    pub fn add_edge_with_properties(
+        &mut self,
+        left: impl Into<String>,
+        right: impl Into<String>,
+        weight: f64,
+        properties: GraphPropertyBag,
+    ) {
         let left = left.into();
         let right = right.into();
         self.add_node(left.clone());
@@ -142,7 +188,7 @@ impl Graph {
                 self.adj
                     .get_mut(&right)
                     .expect("right node must exist")
-                    .insert(left, weight);
+                    .insert(left.clone(), weight);
             }
             GraphRepr::AdjacencyMatrix => {
                 let left_index = self.node_index[&left];
@@ -151,6 +197,10 @@ impl Graph {
                 self.matrix[right_index][left_index] = Some(weight);
             }
         }
+        let edge_key = canonical_endpoints(&left, &right);
+        let edge_properties = self.edge_properties.entry(edge_key).or_default();
+        edge_properties.extend(properties);
+        edge_properties.insert("weight".to_string(), GraphPropertyValue::Number(weight));
     }
 
     pub fn remove_edge(&mut self, left: &str, right: &str) -> Result<(), GraphError> {
@@ -169,6 +219,8 @@ impl Graph {
                 }
                 self.adj.get_mut(left).unwrap().remove(right);
                 self.adj.get_mut(right).unwrap().remove(left);
+                self.edge_properties
+                    .remove(&canonical_endpoints(left, right));
                 Ok(())
             }
             GraphRepr::AdjacencyMatrix => {
@@ -188,6 +240,8 @@ impl Graph {
                 }
                 self.matrix[left_index][right_index] = None;
                 self.matrix[right_index][left_index] = None;
+                self.edge_properties
+                    .remove(&canonical_endpoints(left, right));
                 Ok(())
             }
         }
@@ -230,6 +284,138 @@ impl Graph {
                     .ok_or_else(|| GraphError::EdgeNotFound(left.to_string(), right.to_string()))
             }
         }
+    }
+
+    pub fn graph_properties(&self) -> GraphPropertyBag {
+        self.graph_properties.clone()
+    }
+
+    pub fn set_graph_property(&mut self, key: impl Into<String>, value: GraphPropertyValue) {
+        self.graph_properties.insert(key.into(), value);
+    }
+
+    pub fn remove_graph_property(&mut self, key: &str) {
+        self.graph_properties.remove(key);
+    }
+
+    pub fn node_properties(&self, node: &str) -> Result<GraphPropertyBag, GraphError> {
+        if !self.has_node(node) {
+            return Err(GraphError::NodeNotFound(node.to_string()));
+        }
+        Ok(self.node_properties.get(node).cloned().unwrap_or_default())
+    }
+
+    pub fn set_node_property(
+        &mut self,
+        node: &str,
+        key: impl Into<String>,
+        value: GraphPropertyValue,
+    ) -> Result<(), GraphError> {
+        if !self.has_node(node) {
+            return Err(GraphError::NodeNotFound(node.to_string()));
+        }
+        self.node_properties
+            .entry(node.to_string())
+            .or_default()
+            .insert(key.into(), value);
+        Ok(())
+    }
+
+    pub fn remove_node_property(&mut self, node: &str, key: &str) -> Result<(), GraphError> {
+        if !self.has_node(node) {
+            return Err(GraphError::NodeNotFound(node.to_string()));
+        }
+        if let Some(properties) = self.node_properties.get_mut(node) {
+            properties.remove(key);
+        }
+        Ok(())
+    }
+
+    pub fn edge_properties(&self, left: &str, right: &str) -> Result<GraphPropertyBag, GraphError> {
+        if !self.has_edge(left, right) {
+            return Err(GraphError::EdgeNotFound(
+                left.to_string(),
+                right.to_string(),
+            ));
+        }
+        let mut properties = self
+            .edge_properties
+            .get(&canonical_endpoints(left, right))
+            .cloned()
+            .unwrap_or_default();
+        properties.insert(
+            "weight".to_string(),
+            GraphPropertyValue::Number(self.edge_weight(left, right)?),
+        );
+        Ok(properties)
+    }
+
+    pub fn set_edge_property(
+        &mut self,
+        left: &str,
+        right: &str,
+        key: impl Into<String>,
+        value: GraphPropertyValue,
+    ) -> Result<(), GraphError> {
+        if !self.has_edge(left, right) {
+            return Err(GraphError::EdgeNotFound(
+                left.to_string(),
+                right.to_string(),
+            ));
+        }
+        let key = key.into();
+        if key == "weight" {
+            match value {
+                GraphPropertyValue::Number(weight) => {
+                    self.set_edge_weight(left, right, weight)?;
+                    self.edge_properties
+                        .entry(canonical_endpoints(left, right))
+                        .or_default()
+                        .insert(key, GraphPropertyValue::Number(weight));
+                    return Ok(());
+                }
+                _ => {
+                    return Err(GraphError::EdgeNotFound(
+                        "weight".to_string(),
+                        "numeric property".to_string(),
+                    ));
+                }
+            }
+        }
+        self.edge_properties
+            .entry(canonical_endpoints(left, right))
+            .or_default()
+            .insert(key, value);
+        Ok(())
+    }
+
+    pub fn remove_edge_property(
+        &mut self,
+        left: &str,
+        right: &str,
+        key: &str,
+    ) -> Result<(), GraphError> {
+        if !self.has_edge(left, right) {
+            return Err(GraphError::EdgeNotFound(
+                left.to_string(),
+                right.to_string(),
+            ));
+        }
+        if key == "weight" {
+            self.set_edge_weight(left, right, 1.0)?;
+            self.edge_properties
+                .entry(canonical_endpoints(left, right))
+                .or_default()
+                .insert("weight".to_string(), GraphPropertyValue::Number(1.0));
+            return Ok(());
+        }
+        if let Some(properties) = self
+            .edge_properties
+            .get_mut(&canonical_endpoints(left, right))
+        {
+            properties.remove(key);
+        }
+        Ok(())
     }
 
     pub fn edges(&self) -> Vec<WeightedEdge> {
@@ -326,6 +512,46 @@ impl Graph {
             GraphRepr::AdjacencyList => self.adj.len(),
             GraphRepr::AdjacencyMatrix => self.node_list.len(),
         }
+    }
+
+    fn set_edge_weight(&mut self, left: &str, right: &str, weight: f64) -> Result<(), GraphError> {
+        match self.repr {
+            GraphRepr::AdjacencyList => {
+                if !self.has_edge(left, right) {
+                    return Err(GraphError::EdgeNotFound(
+                        left.to_string(),
+                        right.to_string(),
+                    ));
+                }
+                self.adj
+                    .get_mut(left)
+                    .expect("left node must exist")
+                    .insert(right.to_string(), weight);
+                self.adj
+                    .get_mut(right)
+                    .expect("right node must exist")
+                    .insert(left.to_string(), weight);
+            }
+            GraphRepr::AdjacencyMatrix => {
+                let left_index =
+                    self.node_index.get(left).copied().ok_or_else(|| {
+                        GraphError::EdgeNotFound(left.to_string(), right.to_string())
+                    })?;
+                let right_index =
+                    self.node_index.get(right).copied().ok_or_else(|| {
+                        GraphError::EdgeNotFound(left.to_string(), right.to_string())
+                    })?;
+                if self.matrix[left_index][right_index].is_none() {
+                    return Err(GraphError::EdgeNotFound(
+                        left.to_string(),
+                        right.to_string(),
+                    ));
+                }
+                self.matrix[left_index][right_index] = Some(weight);
+                self.matrix[right_index][left_index] = Some(weight);
+            }
+        }
+        Ok(())
     }
 }
 

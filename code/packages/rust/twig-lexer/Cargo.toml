@@ -1,0 +1,13 @@
+[package]
+name = "twig-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "Twig (Lisp-precursor) lexer — thin wrapper over GrammarLexer; grammar is build-time-compiled to Rust via grammar_tools::codegen"
+build = "build.rs"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer         = { path = "../lexer" }
+
+[build-dependencies]
+grammar-tools = { path = "../grammar-tools" }

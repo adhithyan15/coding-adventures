@@ -2,6 +2,8 @@
 
 __version__ = "0.1.0"
 
+from wasm_execution import WasmExecutionLimits
+
 from wasm_runtime.instance import WasmInstance
 from wasm_runtime.runtime import WasmRuntime
 from wasm_runtime.wasi_host import (
@@ -16,6 +18,7 @@ from wasm_runtime.wasi_host import (
 
 __all__ = [
     "WasmRuntime",
+    "WasmExecutionLimits",
     "WasmInstance",
     "WasiHost",
     "WasiConfig",

@@ -1,2 +1,2 @@
-REM prereqs: ../virtual-machine ../grammar-tools ../lexer
+REM prereqs: ../virtual-machine ../grammar-tools ../lexer ../interpreter-ir ../vm-core ../codegen-core ../jit-core
 echo Perl testing is not supported on Windows - skipping

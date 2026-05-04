@@ -476,6 +476,7 @@ class ColumnDef:
     name: str
     type: str
     nullable: bool = True
+    primary_key: bool = False
     check_instrs: tuple[Instruction, ...] = ()
     # (ref_table, ref_col_or_None) where None means "reference the parent PK".
     foreign_key: tuple[str, str | None] | None = None
@@ -528,6 +529,32 @@ class DropIndex:
 
     If ``if_exists=True`` and the index does not exist, the instruction is
     silently skipped. Otherwise ``IndexNotFound`` is raised.
+    """
+    name: str
+    if_exists: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class CreateTriggerDef:
+    """Store a trigger definition in the backend.
+
+    ``body_sql`` is the raw SQL text of the body statements (without the
+    surrounding BEGIN…END), with individual statements separated by
+    semicolons.  At fire time the VM re-parses and re-compiles the body.
+    """
+    name: str
+    timing: str    # "BEFORE" | "AFTER"
+    event: str     # "INSERT" | "UPDATE" | "DELETE"
+    table: str
+    body_sql: str
+
+
+@dataclass(frozen=True, slots=True)
+class DropTriggerDef:
+    """Remove a trigger definition from the backend.
+
+    If ``if_exists=True`` and the trigger does not exist, the instruction is
+    silently skipped.  Otherwise ``TriggerNotFound`` is raised.
     """
     name: str
     if_exists: bool = False
@@ -604,6 +631,26 @@ class RunExistsSubquery:
 
 
 @dataclass(frozen=True, slots=True)
+class RunScalarSubquery:
+    """Execute the inner sub-program; push the single result value onto the stack.
+
+    Used for scalar subqueries — ``(SELECT expr FROM …)`` in expression
+    position (SELECT list, WHERE clause, HAVING, etc.).  The inner program
+    is expected to return exactly one column.
+
+    - Zero rows returned → ``NULL`` is pushed.
+    - Exactly one row returned → the first column's value is pushed.
+    - More than one row returned → ``CardinalityError`` is raised at runtime.
+
+    ``sub_program`` is a fully compiled inner SELECT program compiled with its
+    own cursor/label namespace so there is no state leakage with the outer
+    program.
+    """
+
+    sub_program: Program   # fully compiled inner SELECT program
+
+
+@dataclass(frozen=True, slots=True)
 class RunRecursiveCTE:
     """Execute a WITH RECURSIVE CTE via fixed-point iteration.
 
@@ -648,6 +695,42 @@ class OpenWorkingSetScan:
     """
 
     cursor_id: int
+
+
+# ---- Outer-join match tracking -----------------------------------------
+
+
+@dataclass(frozen=True, slots=True)
+class JoinBeginRow:
+    """Push False onto the join-match stack at the start of each left row.
+
+    One entry per active outer-join nesting level.  Paired with
+    :class:`JoinSetMatched` (marks a hit) and :class:`JoinIfMatched`
+    (tests-and-pops the flag).
+    """
+
+
+@dataclass(frozen=True, slots=True)
+class JoinSetMatched:
+    """Set the top of the join-match stack to True.
+
+    Emitted inside the inner loop body, after the ON condition passes,
+    so the outer loop knows at least one right row matched the current
+    left row.
+    """
+
+
+@dataclass(frozen=True, slots=True)
+class JoinIfMatched:
+    """Pop the join-match stack; jump to ``label`` if the flag is True.
+
+    Used after the inner scan exhausts: if any right row matched, jump
+    over the null-padded row emission.  If no row matched, fall through
+    to emit the left row with NULLs for all right-side columns (which
+    :class:`LoadColumn` supplies automatically when the right cursor has
+    no current row).
+    """
+    label: str
 
 
 # ---- Control flow -------------------------------------------------------
@@ -803,12 +886,15 @@ Instruction = (
     | ComputeWindowFunctions
     | InsertRow | InsertFromResult | UpdateRows | DeleteRows | CreateTable | DropTable | AlterTable
     | CreateIndex | DropIndex | OpenIndexScan
+    | CreateTriggerDef | DropTriggerDef
     | CaptureLeftResult | IntersectResult | ExceptResult
     | BeginTransaction | CommitTransaction | RollbackTransaction
     | RunSubquery
     | RunExistsSubquery
+    | RunScalarSubquery
     | RunRecursiveCTE
     | OpenWorkingSetScan
+    | JoinBeginRow | JoinSetMatched | JoinIfMatched
     | Label | Jump | JumpIfFalse | JumpIfTrue | Halt
 )
 

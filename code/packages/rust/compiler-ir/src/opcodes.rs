@@ -16,7 +16,7 @@
 //! ```text
 //! Constants:    LOAD_IMM, LOAD_ADDR
 //! Memory:       LOAD_BYTE, STORE_BYTE, LOAD_WORD, STORE_WORD
-//! Arithmetic:   ADD, ADD_IMM, SUB, AND, AND_IMM
+//! Arithmetic:   ADD, ADD_IMM, SUB, MUL, DIV, AND, AND_IMM
 //! Comparison:   CMP_EQ, CMP_NE, CMP_LT, CMP_GT
 //! Control Flow: LABEL, JUMP, BRANCH_Z, BRANCH_NZ, CALL, RET
 //! System:       SYSCALL, HALT
@@ -61,6 +61,22 @@ pub enum IrOp {
     AddImm,
     /// Register-register subtraction. `SUB v3, v1, v2  →  v3 = v1 - v2`
     Sub,
+    /// Register-register signed multiplication. `MUL v3, v1, v2  →  v3 = v1 * v2`
+    ///
+    /// Signed integer multiplication; overflow behaviour matches the
+    /// target machine (wrap-around in two's complement is the norm).
+    Mul,
+    /// Register-register signed integer division. `DIV v3, v1, v2  →  v3 = v1 / v2`
+    ///
+    /// Truncates toward zero (C-style), consistent with Python's `//`
+    /// for non-negative operands.
+    ///
+    /// **Division by zero**: backends MUST raise a hardware trap or software
+    /// fault on a zero divisor.  Silently returning 0 is explicitly forbidden
+    /// — doing so would produce wrong program results with no indication of
+    /// error, which can be exploited to bypass security-critical checks
+    /// (e.g. a guard that divides by a sentinel value to detect initialisation).
+    Div,
     /// Register-register bitwise AND. `AND v3, v1, v2  →  v3 = v1 & v2`
     And,
     /// Register-immediate bitwise AND. `AND_IMM v2, v2, 255  →  v2 = v2 & 0xFF`
@@ -115,6 +131,8 @@ impl fmt::Display for IrOp {
             IrOp::Add       => "ADD",
             IrOp::AddImm    => "ADD_IMM",
             IrOp::Sub       => "SUB",
+            IrOp::Mul       => "MUL",
+            IrOp::Div       => "DIV",
             IrOp::And       => "AND",
             IrOp::AndImm    => "AND_IMM",
             IrOp::CmpEq     => "CMP_EQ",
@@ -155,6 +173,8 @@ pub fn parse_op(name: &str) -> Option<IrOp> {
         "ADD"        => Some(IrOp::Add),
         "ADD_IMM"    => Some(IrOp::AddImm),
         "SUB"        => Some(IrOp::Sub),
+        "MUL"        => Some(IrOp::Mul),
+        "DIV"        => Some(IrOp::Div),
         "AND"        => Some(IrOp::And),
         "AND_IMM"    => Some(IrOp::AndImm),
         "CMP_EQ"     => Some(IrOp::CmpEq),
@@ -245,17 +265,20 @@ mod tests {
     }
 
     #[test]
-    fn test_opcode_count_is_25() {
-        // Regression guard — we must have exactly 25 opcodes.
+    fn test_opcode_count_is_27() {
+        // Regression guard — we must have exactly 27 opcodes.
+        // 0.1.0: 25 opcodes (original set)
+        // 0.1.1: +Mul, +Div = 27
         let ops = [
             IrOp::LoadImm, IrOp::LoadAddr, IrOp::LoadByte, IrOp::StoreByte,
             IrOp::LoadWord, IrOp::StoreWord, IrOp::Add, IrOp::AddImm,
-            IrOp::Sub, IrOp::And, IrOp::AndImm, IrOp::CmpEq, IrOp::CmpNe,
-            IrOp::CmpLt, IrOp::CmpGt, IrOp::Label, IrOp::Jump, IrOp::BranchZ,
-            IrOp::BranchNz, IrOp::Call, IrOp::Ret, IrOp::Syscall, IrOp::Halt,
+            IrOp::Sub, IrOp::Mul, IrOp::Div, IrOp::And, IrOp::AndImm,
+            IrOp::CmpEq, IrOp::CmpNe, IrOp::CmpLt, IrOp::CmpGt,
+            IrOp::Label, IrOp::Jump, IrOp::BranchZ, IrOp::BranchNz,
+            IrOp::Call, IrOp::Ret, IrOp::Syscall, IrOp::Halt,
             IrOp::Nop, IrOp::Comment,
         ];
-        assert_eq!(ops.len(), 25);
+        assert_eq!(ops.len(), 27);
     }
 
     #[test]

@@ -1,4 +1,4 @@
-"""algol-type-checker — Type checker for the first ALGOL 60 compiler subset
+"""algol-type-checker — Type checker for the Python ALGOL 60 compiler lane
 
 This package is part of the coding-adventures monorepo, a ground-up
 implementation of the computing stack from transistors to operating systems.
@@ -8,6 +8,9 @@ from algol_type_checker.checker import (
     FRAME_HEADER_SIZE,
     FRAME_REAL_SIZE,
     FRAME_WORD_SIZE,
+    MAX_AST_DEPTH,
+    MAX_BLOCK_NESTING_DEPTH,
+    MAX_PROCEDURE_NESTING_DEPTH,
     AlgolTypeChecker,
     ArrayDescriptor,
     ArrayDimension,
@@ -29,6 +32,7 @@ from algol_type_checker.checker import (
     SwitchDescriptor,
     Symbol,
     TypeCheckError,
+    TypeCheckLimits,
     TypeCheckResult,
     assert_algol_typed,
     check,
@@ -48,6 +52,9 @@ __all__ = [
     "FrameLayout",
     "FrameSlot",
     "LabelDescriptor",
+    "MAX_AST_DEPTH",
+    "MAX_BLOCK_NESTING_DEPTH",
+    "MAX_PROCEDURE_NESTING_DEPTH",
     "ProcedureDescriptor",
     "ProcedureFormalCallShape",
     "ProcedureParameter",
@@ -62,6 +69,7 @@ __all__ = [
     "Symbol",
     "SwitchDescriptor",
     "TypeCheckError",
+    "TypeCheckLimits",
     "TypeCheckResult",
     "assert_algol_typed",
     "check",

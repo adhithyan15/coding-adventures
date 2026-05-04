@@ -34,6 +34,7 @@ from logic_engine import (
     var,
 )
 from prolog_core import (
+    DialectProfile,
     OperatorTable,
     PredicateRegistry,
     PrologDirective,
@@ -41,6 +42,7 @@ from prolog_core import (
     PrologModule,
     PrologModuleImport,
     PrologTermExpansion,
+    dialect_profile,
     empty_predicate_registry,
     module_import_from_directive,
     module_spec_from_directive,
@@ -55,6 +57,7 @@ __version__ = "0.1.0"
 type GoalAdapter = Callable[[GoalExpr], object]
 type RelationResolver = Callable[[Relation], Relation]
 type SourceResolver = Callable[[Term, Path], Path | None]
+type PrologDialect = str | Symbol | DialectProfile
 _USER_MODULE = sym("user")
 _MODULE_QUALIFIER = sym(":")
 _CONJUNCTION = sym(",")
@@ -68,6 +71,13 @@ _FINDALL = sym("findall")
 _BAGOF = sym("bagof")
 _SETOF = sym("setof")
 _FORALL = sym("forall")
+_MAPLIST = sym("maplist")
+_CONVLIST = sym("convlist")
+_INCLUDE = sym("include")
+_EXCLUDE = sym("exclude")
+_PARTITION = sym("partition")
+_FOLDL = sym("foldl")
+_SCANL = sym("scanl")
 
 
 class ParsedSourceLike(Protocol):
@@ -109,6 +119,7 @@ class LoadedPrologSource:
     """A parsed-and-loaded Prolog source with derived initialization metadata."""
 
     source_path: Path | None
+    dialect_profile: DialectProfile
     program: Program
     clauses: tuple[Clause, ...]
     queries: tuple[ParsedQuery, ...]
@@ -131,6 +142,7 @@ class LoadedPrologProject:
 
     program: Program
     sources: tuple[LoadedPrologSource, ...]
+    dialect_profiles: tuple[DialectProfile, ...]
     queries: tuple[ParsedQuery, ...]
     modules: tuple[PrologModule, ...]
     initialization_directives: tuple[PrologDirective, ...]
@@ -163,11 +175,13 @@ class PrologExpansionError(RuntimeError):
 def load_parsed_prolog_source(
     parsed_source: ParsedSourceLike,
     *,
+    dialect: PrologDialect = "swi",
     source_path: str | Path | None = None,
     source_resolver: SourceResolver | None = None,
 ) -> LoadedPrologSource:
     """Normalize a dialect-specific parsed source into one loader result."""
 
+    profile = dialect_profile(dialect)
     predicate_registry = parsed_source.predicate_registry
     normalized_source_path = (
         None if source_path is None else Path(source_path).expanduser().resolve()
@@ -207,6 +221,7 @@ def load_parsed_prolog_source(
     )
     loaded_source = LoadedPrologSource(
         source_path=normalized_source_path,
+        dialect_profile=profile,
         program=parsed_source.program,
         clauses=parsed_source.clauses,
         queries=parsed_source.queries,
@@ -227,6 +242,36 @@ def load_parsed_prolog_source(
     return apply_expansion_directives(loaded_source)
 
 
+def load_prolog_source(
+    source: str,
+    *,
+    dialect: PrologDialect = "swi",
+    operator_table: OperatorTable | None = None,
+    source_path: str | Path | None = None,
+    source_resolver: SourceResolver | None = None,
+) -> LoadedPrologSource:
+    """Parse and load one source string through a supported dialect profile."""
+
+    profile = dialect_profile(dialect)
+    if profile.name == "iso":
+        return load_iso_prolog_source(
+            source,
+            operator_table=operator_table,
+            source_path=source_path,
+            source_resolver=source_resolver,
+        )
+    if profile.name == "swi":
+        return load_swi_prolog_source(
+            source,
+            operator_table=operator_table,
+            source_path=source_path,
+            source_resolver=source_resolver,
+        )
+
+    msg = f"dialect {profile.name!r} does not have an implemented loader yet"
+    raise ValueError(msg)
+
+
 def load_iso_prolog_source(
     source: str,
     *,
@@ -240,6 +285,7 @@ def load_iso_prolog_source(
 
     return load_parsed_prolog_source(
         parse_iso_source(source, operator_table=operator_table),
+        dialect="iso",
         source_path=source_path,
         source_resolver=source_resolver,
     )
@@ -258,7 +304,25 @@ def load_swi_prolog_source(
 
     return load_parsed_prolog_source(
         parse_swi_source(source, operator_table=operator_table),
+        dialect="swi",
         source_path=source_path,
+        source_resolver=source_resolver,
+    )
+
+
+def load_prolog_file(
+    path: str | Path,
+    *,
+    dialect: PrologDialect = "swi",
+    operator_table: OperatorTable | None = None,
+    source_resolver: SourceResolver | None = None,
+) -> LoadedPrologSource:
+    """Read, parse, load, and expand one Prolog source file by dialect."""
+
+    return _load_prolog_file(
+        Path(path).expanduser().resolve(),
+        dialect_profile=dialect_profile(dialect),
+        operator_table=operator_table,
         source_resolver=source_resolver,
     )
 
@@ -271,11 +335,32 @@ def load_swi_prolog_file(
 ) -> LoadedPrologSource:
     """Read, parse, load, and expand one SWI-Prolog source file."""
 
-    return _load_swi_prolog_file(
-        Path(path).expanduser().resolve(),
+    return load_prolog_file(
+        path,
+        dialect="swi",
         operator_table=operator_table,
         source_resolver=source_resolver,
     )
+
+
+def load_prolog_project(
+    *sources: str,
+    dialect: PrologDialect = "swi",
+    operator_table: OperatorTable | None = None,
+    source_resolver: SourceResolver | None = None,
+) -> LoadedPrologProject:
+    """Parse, load, and link multiple source strings under one dialect."""
+
+    loaded_sources = tuple(
+        load_prolog_source(
+            source,
+            dialect=dialect,
+            operator_table=operator_table,
+            source_resolver=source_resolver,
+        )
+        for source in sources
+    )
+    return link_loaded_prolog_sources(*loaded_sources)
 
 
 def load_swi_prolog_project(
@@ -285,24 +370,23 @@ def load_swi_prolog_project(
 ) -> LoadedPrologProject:
     """Parse, load, and link multiple SWI-Prolog sources as one project."""
 
-    loaded_sources = tuple(
-        load_swi_prolog_source(
-            source,
-            operator_table=operator_table,
-            source_resolver=source_resolver,
-        )
-        for source in sources
+    return load_prolog_project(
+        *sources,
+        dialect="swi",
+        operator_table=operator_table,
+        source_resolver=source_resolver,
     )
-    return link_loaded_prolog_sources(*loaded_sources)
 
 
-def load_swi_prolog_project_from_files(
+def load_prolog_project_from_files(
     *entry_paths: str | Path,
+    dialect: PrologDialect = "swi",
     operator_table: OperatorTable | None = None,
     source_resolver: SourceResolver | None = None,
 ) -> LoadedPrologProject:
-    """Load, resolve, and link a SWI-Prolog file graph."""
+    """Load, resolve, and link a Prolog file graph by dialect."""
 
+    profile = dialect_profile(dialect)
     pending_paths = [
         Path(entry_path).expanduser().resolve() for entry_path in entry_paths
     ]
@@ -313,8 +397,9 @@ def load_swi_prolog_project_from_files(
         if current_path in loaded_by_path:
             continue
 
-        loaded_source = load_swi_prolog_file(
+        loaded_source = load_prolog_file(
             current_path,
+            dialect=profile,
             operator_table=operator_table,
             source_resolver=source_resolver,
         )
@@ -334,6 +419,21 @@ def load_swi_prolog_project_from_files(
         for loaded_source in loaded_by_path.values()
     )
     return link_loaded_prolog_sources(*normalized_sources)
+
+
+def load_swi_prolog_project_from_files(
+    *entry_paths: str | Path,
+    operator_table: OperatorTable | None = None,
+    source_resolver: SourceResolver | None = None,
+) -> LoadedPrologProject:
+    """Load, resolve, and link a SWI-Prolog file graph."""
+
+    return load_prolog_project_from_files(
+        *entry_paths,
+        dialect="swi",
+        operator_table=operator_table,
+        source_resolver=source_resolver,
+    )
 
 
 def link_loaded_prolog_sources(
@@ -378,6 +478,9 @@ def link_loaded_prolog_sources(
     return LoadedPrologProject(
         program=program(*linked_clauses, dynamic_relations=dynamic_relations),
         sources=tuple(loaded_sources),
+        dialect_profiles=tuple(
+            dict.fromkeys(source.dialect_profile for source in loaded_sources),
+        ),
         queries=tuple(linked_queries),
         modules=tuple(linked_modules),
         initialization_directives=tuple(initialization_directives),
@@ -463,10 +566,14 @@ def run_prolog_initialization_goals(
 ) -> State:
     """Run initialization directives with the shared Prolog builtin adapter."""
 
+    operator_table = getattr(loaded_source, "operator_table", None)
     return run_initialization_goals(
         loaded_source,
         state=state,
-        goal_adapter=adapt_prolog_goal,
+        goal_adapter=lambda goal_value: adapt_prolog_goal(
+            goal_value,
+            operator_table=operator_table,
+        ),
     )
 
 
@@ -746,9 +853,10 @@ def _goal_from_expanded_term(term_value: Term) -> GoalExpr:
         raise PrologExpansionError(msg) from error
 
 
-def _load_swi_prolog_file(
+def _load_prolog_file(
     normalized_path: Path,
     *,
+    dialect_profile: DialectProfile,
     operator_table: OperatorTable | None = None,
     source_resolver: SourceResolver | None = None,
     include_stack: tuple[Path, ...] = (),
@@ -757,8 +865,9 @@ def _load_swi_prolog_file(
         msg = f"circular include detected at {normalized_path}"
         raise ValueError(msg)
 
-    loaded_source = load_swi_prolog_source(
+    loaded_source = load_prolog_source(
         normalized_path.read_text(encoding="utf-8"),
+        dialect=dialect_profile,
         operator_table=operator_table,
         source_path=normalized_path,
         source_resolver=source_resolver,
@@ -772,8 +881,9 @@ def _load_swi_prolog_file(
         return loaded_source
 
     merged_includes = tuple(
-        _load_swi_prolog_file(
+        _load_prolog_file(
             dependency.resolved_path,
+            dialect_profile=dialect_profile,
             operator_table=operator_table,
             source_resolver=source_resolver,
             include_stack=(*include_stack, normalized_path),
@@ -1390,7 +1500,40 @@ def _rewrite_goal_term(
             _rewrite_goal_term(term_value.args[1], resolver, module_resolvers),
         )
 
-    if term_value.functor in {_CALL, _ONCE}:
+    if term_value.functor == _CALL and term_value.args:
+        if len(term_value.args) > 1:
+            return term(
+                term_value.functor,
+                _rewrite_callable_closure(
+                    term_value.args[0],
+                    len(term_value.args) - 1,
+                    resolver,
+                    module_resolvers,
+                ),
+                *term_value.args[1:],
+            )
+        return term(
+            term_value.functor,
+            _rewrite_goal_term(term_value.args[0], resolver, module_resolvers),
+        )
+
+    apply_extra_arity = _apply_family_closure_extra_arity(
+        term_value.functor,
+        len(term_value.args),
+    )
+    if apply_extra_arity is not None:
+        return term(
+            term_value.functor,
+            _rewrite_callable_closure(
+                term_value.args[0],
+                apply_extra_arity,
+                resolver,
+                module_resolvers,
+            ),
+            *term_value.args[1:],
+        )
+
+    if term_value.functor == _ONCE and len(term_value.args) == 1:
         return term(
             term_value.functor,
             _rewrite_goal_term(term_value.args[0], resolver, module_resolvers),
@@ -1432,6 +1575,71 @@ def _rewrite_goal_term(
     if resolved_relation.symbol == term_value.functor:
         return term_value
     return term(resolved_relation.symbol, *term_value.args)
+
+
+def _rewrite_callable_closure(
+    term_value: Term,
+    extra_arity: int,
+    resolver: RelationResolver,
+    module_resolvers: dict[Symbol, RelationResolver],
+) -> Term:
+    if isinstance(term_value, Compound):
+        qualified = _qualified_goal(term_value)
+        if qualified is not None:
+            module_name, goal_term = qualified
+            target_resolver = module_resolvers.get(module_name)
+            if target_resolver is None:
+                msg = f"module qualification references unknown module {module_name}"
+                raise ValueError(msg)
+            return _rewrite_callable_closure(
+                goal_term,
+                extra_arity,
+                target_resolver,
+                module_resolvers,
+            )
+
+    closure_arity = _callable_closure_arity(term_value, extra_arity)
+    if closure_arity is None:
+        return term_value
+
+    if isinstance(term_value, Atom):
+        resolved = resolver(Relation(symbol=term_value.symbol, arity=closure_arity))
+        if resolved.symbol == term_value.symbol:
+            return term_value
+        return atom(resolved.symbol)
+
+    if isinstance(term_value, Compound):
+        resolved = resolver(Relation(symbol=term_value.functor, arity=closure_arity))
+        if resolved.symbol == term_value.functor:
+            return term_value
+        return term(resolved.symbol, *term_value.args)
+
+    return term_value
+
+
+def _apply_family_closure_extra_arity(
+    functor: Symbol,
+    arity: int,
+) -> int | None:
+    if functor == _MAPLIST and 2 <= arity <= 5:
+        return arity - 1
+    if functor in {_INCLUDE, _EXCLUDE} and arity == 3:
+        return 1
+    if functor == _PARTITION and arity == 4:
+        return 1
+    if functor == _CONVLIST and arity == 3:
+        return 2
+    if functor in {_FOLDL, _SCANL} and 4 <= arity <= 7:
+        return arity - 1
+    return None
+
+
+def _callable_closure_arity(term_value: Term, extra_arity: int) -> int | None:
+    if isinstance(term_value, Atom):
+        return extra_arity
+    if isinstance(term_value, Compound):
+        return len(term_value.args) + extra_arity
+    return None
 
 
 def _qualified_goal(term_value: Compound) -> tuple[Symbol, Term] | None:

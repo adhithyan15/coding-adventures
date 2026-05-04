@@ -679,14 +679,24 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
         "flush_text"
         | "emit_current_as_text"
         | "append_text_replacement"
+        | "append_attribute_value_replacement"
+        | "append_tag_name_replacement"
+        | "append_attribute_name_replacement"
+        | "append_comment_replacement"
+        | "append_doctype_name_replacement"
+        | "append_doctype_public_identifier_replacement"
+        | "append_doctype_system_identifier_replacement"
         | "create_start_tag"
         | "create_end_tag"
         | "create_comment"
         | "create_doctype"
         | "start_attribute"
         | "commit_attribute"
+        | "commit_attribute_dedup"
         | "mark_self_closing"
         | "mark_force_quirks"
+        | "set_doctype_public_identifier_empty"
+        | "set_doctype_system_identifier_empty"
         | "clear_temporary_buffer"
         | "append_temporary_buffer_to_text"
         | "append_temporary_buffer_to_attribute_value"
@@ -701,6 +711,9 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
         | "discard_current_token"
         | "switch_to_return_state"
         | "emit_rcdata_end_tag_or_text"
+        | "emit_rcdata_end_tag_with_trailing_solidus_or_text"
+        | "emit_rcdata_end_tag_with_whitespace_or_text"
+        | "emit_rcdata_end_tag_with_attributes_or_text"
         | "emit_current_token" => return Ok(()),
         _ => {}
     }
@@ -720,6 +733,8 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
             | "append_comment(current_lowercase)"
             | "append_doctype_name(current)"
             | "append_doctype_name(current_lowercase)"
+            | "append_doctype_public_identifier(current)"
+            | "append_doctype_system_identifier(current)"
             | "append_temporary_buffer(current)"
             | "append_temporary_buffer(current_lowercase)"
     ) {
@@ -735,6 +750,12 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
         return Ok(());
     }
     if action.starts_with("append_doctype_name(") && action.ends_with(')') {
+        return Ok(());
+    }
+    if action.starts_with("append_doctype_public_identifier(") && action.ends_with(')') {
+        return Ok(());
+    }
+    if action.starts_with("append_doctype_system_identifier(") && action.ends_with(')') {
         return Ok(());
     }
     if action.starts_with("append_temporary_buffer(") && action.ends_with(')') {

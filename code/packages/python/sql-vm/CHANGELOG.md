@@ -1,5 +1,61 @@
 # Changelog
 
+## 1.6.0 — 2026-05-04
+
+### Added
+
+- **`join_match_stack: list[bool]`** added to `_VmState` — a stack that
+  tracks, per active left row, whether any right row satisfied the JOIN
+  ON condition. Supports arbitrarily nested LEFT OUTER JOINs.
+- **`JoinBeginRow` handler** — appends `False` to `join_match_stack`.
+- **`JoinSetMatched` handler** — sets `join_match_stack[-1] = True`.
+- **`JoinIfMatched(label)` handler** — pops the stack; conditionally
+  jumps to *label* if the popped value is `True`. When the stack is
+  empty (defensive), pops as `False` and falls through.
+- **LEFT OUTER JOIN null-padding** — no new instruction required; when
+  the right scan's `CloseScan` removes the cursor from `current_row`,
+  any subsequent `LoadColumn` for right-side columns returns `None`
+  automatically (existing `_load_column` semantics).
+
+## 1.5.0 — 2026-04-28
+
+### Added
+
+- **User-defined functions (UDFs)** — `execute()` accepts `user_functions`
+  dict; `_do_call_scalar` checks user registry before built-ins. nargs=-1
+  for variadic functions.
+- **`RunScalarSubquery` handler** — `_do_run_scalar_subquery` executes the
+  embedded sub-program, pushes the single result value, or NULL when empty.
+- **`CardinalityError`** (`errors.py`) — raised when a scalar subquery
+  returns more than one row; exported from `sql_vm.__init__`.
+- **`primary_key` passed to `BackendColumnDef`** in `_do_create_table` —
+  threads the primary-key flag through to the backend so PRAGMA table_info
+  correctly reports pk=1 for primary-key columns.
+
+## 1.4.0 — 2026-04-28
+
+### Added — Phase 9: SQL Triggers
+
+- **`TriggerDepthError`** (`errors.py`) — raised when trigger recursion exceeds
+  depth 16; exported from `sql_vm.__init__`.
+- **`_VmState.trigger_executor` / `.trigger_depth`** — optional callback and
+  nesting depth injected by the façade layer; the VM calls the executor for
+  each trigger that should fire without importing parsing/planning code itself.
+- **`execute()` new kwargs** — `trigger_executor` and `trigger_depth` wired
+  into `_VmState` construction.
+- **`_fire_trigger()`** — checks depth limit, then delegates to the executor.
+- **`_do_insert` / `_do_update` / `_do_delete`** — fire BEFORE and AFTER
+  triggers around the actual DML call.
+- **`_do_create_trigger` / `_do_drop_trigger`** — new dispatch handlers for
+  `CreateTriggerDef` / `DropTriggerDef` IR instructions.
+
+### Fixed
+
+- **`_do_update` old-row snapshot** — `current_row[cursor_id]` was captured as
+  a mutable reference; subsequent in-place `update(assignments)` mutated
+  `old_row` before AFTER triggers fired, causing OLD.col to return the
+  post-update value.  Fixed by calling `dict(...)` to take a shallow copy.
+
 ## 1.3.0 — 2026-04-27
 
 ### Added — Phase 8: Window Functions (OVER / PARTITION BY)

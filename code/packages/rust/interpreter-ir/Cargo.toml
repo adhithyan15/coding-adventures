@@ -1,0 +1,11 @@
+[package]
+name = "interpreter-ir"
+version = "0.1.0"
+edition = "2021"
+description = "InterpreterIR (IIR) — the bytecode for the LANG JIT/AOT pipeline"
+
+[lib]
+name = "interpreter_ir"
+path = "src/lib.rs"
+
+[dependencies]

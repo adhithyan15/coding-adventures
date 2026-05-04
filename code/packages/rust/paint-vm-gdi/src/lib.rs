@@ -63,11 +63,18 @@
 
 pub const VERSION: &str = "0.1.0";
 
+use arc2d::SvgArc;
 use paint_instructions::{
     FillRule, ImageSrc, PaintClip, PaintEllipse, PaintGlyphRun, PaintGroup, PaintImage,
     PaintInstruction, PaintLayer, PaintLine, PaintPath, PaintRect, PaintScene, PaintText,
     PathCommand, PixelContainer, TextAlign, Transform2D,
 };
+#[cfg(target_os = "windows")]
+use paint_vm_runtime::{
+    PaintAcceleration, PaintBackendCapabilities, PaintBackendDescriptor, PaintBackendFamily,
+    PaintBackendTier, PaintPlatformSupport, PaintRenderError, PaintRenderer, SupportLevel,
+};
+use point2d::Point as Point2D;
 
 // ---------------------------------------------------------------------------
 // Platform gate — this crate only compiles on Windows
@@ -1283,12 +1290,52 @@ unsafe fn render_path(hdc: windows::Win32::Graphics::Gdi::HDC, path: &PaintPath,
                 }
                 current = Some((x, y));
             }
-            PathCommand::ArcTo { x, y, .. } => {
-                if current.is_none() {
+            PathCommand::ArcTo {
+                rx,
+                ry,
+                x_rotation,
+                large_arc,
+                sweep,
+                x,
+                y,
+            } => {
+                let Some((sx, sy)) = current else {
                     let _ = MoveToEx(hdc, x.round() as i32, y.round() as i32, None);
+                    current = Some((x, y));
                     subpath_start = Some((x, y));
-                } else {
+                    continue;
+                };
+
+                let arc = SvgArc::new(
+                    Point2D::new(sx, sy),
+                    Point2D::new(x, y),
+                    rx,
+                    ry,
+                    x_rotation.to_radians(),
+                    large_arc,
+                    sweep,
+                );
+                let beziers = arc.to_cubic_beziers();
+                if beziers.is_empty() {
                     let _ = LineTo(hdc, x.round() as i32, y.round() as i32);
+                } else {
+                    for bezier in beziers {
+                        let points = [
+                            POINT {
+                                x: bezier.p1.x.round() as i32,
+                                y: bezier.p1.y.round() as i32,
+                            },
+                            POINT {
+                                x: bezier.p2.x.round() as i32,
+                                y: bezier.p2.y.round() as i32,
+                            },
+                            POINT {
+                                x: bezier.p3.x.round() as i32,
+                                y: bezier.p3.y.round() as i32,
+                            },
+                        ];
+                        let _ = PolyBezierTo(hdc, &points);
+                    }
                 }
                 current = Some((x, y));
             }
@@ -1422,6 +1469,61 @@ pub fn render(scene: &PaintScene) -> PixelContainer {
     unsafe { render_unsafe(scene, width, height) }
 }
 
+/// Runtime adapter for selecting GDI through `paint-vm-runtime`.
+#[cfg(target_os = "windows")]
+pub struct GdiPaintBackend;
+
+#[cfg(target_os = "windows")]
+pub fn descriptor() -> PaintBackendDescriptor {
+    PaintBackendDescriptor {
+        id: "paint-vm-gdi",
+        display_name: "Paint VM GDI",
+        family: PaintBackendFamily::Gdi,
+        acceleration: PaintAcceleration::Cpu,
+        tier: PaintBackendTier::Tier2NativeScenes,
+        platforms: PaintPlatformSupport::windows(),
+        capabilities: PaintBackendCapabilities {
+            rect: SupportLevel::Supported,
+            line: SupportLevel::Supported,
+            ellipse: SupportLevel::Supported,
+            path: SupportLevel::Supported,
+            path_arc_to: SupportLevel::Supported,
+            glyph_run: SupportLevel::Supported,
+            text: SupportLevel::Supported,
+            image: SupportLevel::Supported,
+            clip: SupportLevel::Supported,
+            group: SupportLevel::Supported,
+            group_transform: SupportLevel::Supported,
+            group_opacity: SupportLevel::Supported,
+            layer: SupportLevel::Supported,
+            layer_opacity: SupportLevel::Supported,
+            layer_filters: SupportLevel::Unsupported,
+            layer_blend_modes: SupportLevel::Unsupported,
+            linear_gradient: SupportLevel::Unsupported,
+            radial_gradient: SupportLevel::Unsupported,
+            antialiasing: SupportLevel::Unsupported,
+            offscreen_pixels: SupportLevel::Supported,
+        },
+        priority: 100,
+    }
+}
+
+#[cfg(target_os = "windows")]
+pub fn renderer() -> GdiPaintBackend {
+    GdiPaintBackend
+}
+
+#[cfg(target_os = "windows")]
+impl PaintRenderer for GdiPaintBackend {
+    fn descriptor(&self) -> PaintBackendDescriptor {
+        descriptor()
+    }
+
+    fn render(&self, scene: &PaintScene) -> Result<PixelContainer, PaintRenderError> {
+        Ok(crate::render(scene))
+    }
+}
+
 /// The actual rendering logic, wrapped in `unsafe` for GDI FFI calls.
 ///
 /// ## DIBSection memory layout
@@ -1531,6 +1633,10 @@ mod tests {
         ImageSrc, PaintBase, PaintEllipse, PaintGroup, PaintImage, PaintInstruction, PaintLayer,
         PaintPath, PaintRect, PaintScene, PaintText, PathCommand, TextAlign,
     };
+    #[cfg(target_os = "windows")]
+    use paint_vm_runtime::{
+        PaintBackendPreference, PaintBackendRegistry, PaintRenderOptions, SupportLevel,
+    };
 
     #[cfg(target_os = "windows")]
     fn dark_pixel_bounds(pixels: &PixelContainer) -> Option<(u32, u32, u32, u32)> {
@@ -1557,6 +1663,48 @@ mod tests {
     #[test]
     fn version_exists() {
         assert_eq!(VERSION, "0.1.0");
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn descriptor_reports_gdi_runtime_capabilities() {
+        let descriptor = descriptor();
+        assert_eq!(descriptor.id, "paint-vm-gdi");
+        assert_eq!(descriptor.capabilities.text, SupportLevel::Supported);
+        assert_eq!(descriptor.capabilities.glyph_run, SupportLevel::Supported);
+        assert_eq!(descriptor.capabilities.path_arc_to, SupportLevel::Supported);
+        assert_eq!(
+            descriptor.capabilities.linear_gradient,
+            SupportLevel::Unsupported
+        );
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn runtime_registry_can_render_with_gdi_backend() {
+        let backend = renderer();
+        let mut registry = PaintBackendRegistry::new();
+        registry.register(&backend);
+
+        let mut scene = PaintScene::new(32.0, 32.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                4.0, 4.0, 20.0, 20.0, "#000000",
+            )));
+
+        let pixels = registry
+            .render_auto(
+                &scene,
+                PaintRenderOptions {
+                    preference: PaintBackendPreference::Named("paint-vm-gdi".to_string()),
+                    ..PaintRenderOptions::default()
+                },
+            )
+            .expect("GDI should satisfy a rect-only scene");
+
+        let (r, g, b, a) = pixels.pixel_at(8, 8);
+        assert_eq!((r, g, b, a), (0, 0, 0, 255));
     }
 
     // ─── Colour parser tests ────────────────────────────────────────────────
@@ -1834,6 +1982,46 @@ mod tests {
         assert_eq!(r, 0, "triangle edge should draw stroke");
         assert_eq!(g, 0);
         assert_eq!(b, 0);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn arc_to_renders_curve_instead_of_chord() {
+        let mut scene = PaintScene::new(100.0, 80.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 20.0, y: 50.0 },
+                PathCommand::ArcTo {
+                    rx: 30.0,
+                    ry: 30.0,
+                    x_rotation: 0.0,
+                    large_arc: false,
+                    sweep: true,
+                    x: 80.0,
+                    y: 50.0,
+                },
+            ],
+            fill: Some("none".to_string()),
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(3.0),
+            stroke_cap: None,
+            stroke_join: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let pixels = render(&scene);
+        let (r, g, b, _a) = pixels.pixel_at(50, 20);
+        assert_eq!((r, g, b), (0, 0, 0), "top of arc should draw");
+
+        let (r, g, b, _a) = pixels.pixel_at(50, 50);
+        assert_eq!(
+            (r, g, b),
+            (255, 255, 255),
+            "arc should not degrade to the straight chord"
+        );
     }
 
     #[cfg(target_os = "windows")]

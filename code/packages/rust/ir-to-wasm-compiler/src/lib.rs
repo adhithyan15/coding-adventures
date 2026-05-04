@@ -1,3 +1,5 @@
+pub mod codegen;
+
 use std::collections::{BTreeSet, HashMap};
 use std::fmt;
 

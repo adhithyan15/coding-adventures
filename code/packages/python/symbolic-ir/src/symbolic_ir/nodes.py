@@ -190,13 +190,22 @@ ATAN = IRSymbol("Atan")
 ASIN = IRSymbol("Asin")
 ACOS = IRSymbol("Acos")
 
-# Hyperbolic functions
+# Hyperbolic functions — forward and inverse
 SINH = IRSymbol("Sinh")
 COSH = IRSymbol("Cosh")
 TANH = IRSymbol("Tanh")
 ASINH = IRSymbol("Asinh")
 ACOSH = IRSymbol("Acosh")
 ATANH = IRSymbol("Atanh")
+
+# Reciprocal hyperbolic functions (Phase 15)
+# coth = cosh/sinh, sech = 1/cosh, csch = 1/sinh.
+# These are NOT defined as Mul(Inv(...), ...) at the IR level — they are
+# first-class heads so handlers can evaluate them numerically and the
+# differentiator can emit exact symbolic derivatives.
+COTH = IRSymbol("Coth")
+SECH = IRSymbol("Sech")
+CSCH = IRSymbol("Csch")
 
 # Calculus
 D = IRSymbol("D")

@@ -23,7 +23,30 @@ SWITCH = "switch"
 STATIC = "static"
 PARAMETER_STORAGE = "parameter"
 MAX_ARRAY_DIMENSIONS = 4
-_READ_ONLY_BUILTINS = {"print", "output"}
+MAX_AST_DEPTH = 512
+MAX_BLOCK_NESTING_DEPTH = 64
+MAX_PROCEDURE_NESTING_DEPTH = 64
+_OUTPUT_BUILTINS = {"print", "output"}
+_FIXED_RETURN_NUMERIC_BUILTINS = {
+    "entier": INTEGER,
+    "sign": INTEGER,
+    "sqrt": REAL,
+    "sin": REAL,
+    "cos": REAL,
+    "arctan": REAL,
+    "ln": REAL,
+    "exp": REAL,
+}
+_NUMERIC_BUILTINS = {"abs"} | set(_FIXED_RETURN_NUMERIC_BUILTINS)
+_READ_ONLY_BUILTINS = _OUTPUT_BUILTINS | _NUMERIC_BUILTINS
+
+
+def _builtin_name(name: str | None) -> str | None:
+    """Return the canonical builtin spelling for a source-level callee name."""
+    if name is None:
+        return None
+    canonical = name.lower()
+    return canonical if canonical in _READ_ONLY_BUILTINS else None
 
 
 @dataclass(frozen=True)
@@ -33,6 +56,15 @@ class Diagnostic:
     message: str
     line: int
     column: int
+
+
+@dataclass(frozen=True)
+class TypeCheckLimits:
+    """Resource limits for recursive ALGOL semantic analysis."""
+
+    max_ast_depth: int = MAX_AST_DEPTH
+    max_block_nesting_depth: int = MAX_BLOCK_NESTING_DEPTH
+    max_procedure_nesting_depth: int = MAX_PROCEDURE_NESTING_DEPTH
 
 
 @dataclass
@@ -191,7 +223,20 @@ class ProcedureFormalCallShape:
 
     role: str
     argument_types: tuple[str, ...]
+    argument_kinds: tuple[str, ...] = ()
+    argument_assignable: tuple[bool, ...] = ()
+    argument_formal_names: tuple[str | None, ...] = ()
+    procedure_argument_ids: tuple[int | None, ...] = ()
     return_type: str | None = None
+
+
+@dataclass(frozen=True)
+class _ProcedureShapeContext:
+    """Maps forwarded formal procedure names to an enclosing call shape."""
+
+    descriptor: ProcedureDescriptor
+    shape: ProcedureFormalCallShape
+    parent: _ProcedureShapeContext | None = None
 
 
 @dataclass(frozen=True)
@@ -232,6 +277,19 @@ class ProcedureDescriptor:
     line: int
     column: int
     parameter_symbol_id: int | None = None
+
+
+@dataclass(frozen=True)
+class _PendingProcedureDeclaration:
+    """A procedure signature whose body still needs semantic checking."""
+
+    procedure: ProcedureDescriptor
+    descriptor_index: int
+    proc_scope: Scope
+    body_inner: ASTNode
+    procedure_depth: int
+    formal_names: tuple[Token, ...]
+    value_names: frozenset[str]
 
 
 @dataclass(frozen=True)
@@ -393,9 +451,10 @@ class TypeCheckError(Exception):
 
 
 class AlgolTypeChecker:
-    """Validate the first ALGOL 60 compiler subset."""
+    """Validate the Python ALGOL 60 compiler lane."""
 
-    def __init__(self) -> None:
+    def __init__(self, limits: TypeCheckLimits | None = None) -> None:
+        self.limits = limits or TypeCheckLimits()
         self.diagnostics: list[Diagnostic] = []
         self.expression_types: dict[int, str] = {}
         self.semantic_blocks: list[SemanticBlock] = []
@@ -420,6 +479,7 @@ class AlgolTypeChecker:
         self._next_label_id = 0
         self._next_switch_id = 0
         self._next_static_offset = 0
+        self._procedure_nesting_depth = 0
 
     def check(self, ast: ASTNode) -> TypeCheckResult:
         self.diagnostics = []
@@ -443,12 +503,14 @@ class AlgolTypeChecker:
         self._next_label_id = 0
         self._next_switch_id = 0
         self._next_static_offset = 0
+        self._procedure_nesting_depth = 0
         root_scope = Scope()
-        block = _first_node(ast, "block")
-        if block is None:
-            self._error(ast, "ALGOL program must contain a block")
-        else:
-            self._check_block(block, root_scope)
+        if self._check_ast_depth(ast):
+            block = _first_node(ast, "block")
+            if block is None:
+                self._error(ast, "ALGOL program must contain a block")
+            else:
+                self._check_block(block, root_scope)
         semantic = SemanticProgram(
             ast=ast,
             root_block=self.semantic_blocks[0] if self.semantic_blocks else None,
@@ -473,7 +535,31 @@ class AlgolTypeChecker:
             semantic=semantic,
         )
 
+    def _check_ast_depth(self, ast: ASTNode) -> bool:
+        stack: list[tuple[ASTNode, int]] = [(ast, 1)]
+        while stack:
+            node, depth = stack.pop()
+            if depth > self.limits.max_ast_depth:
+                self._error(
+                    node,
+                    f"AST depth {depth} exceeds configured limit "
+                    f"{self.limits.max_ast_depth}",
+                )
+                return False
+            for child in reversed(node.children):
+                if isinstance(child, ASTNode):
+                    stack.append((child, depth + 1))
+        return True
+
     def _check_block(self, block: ASTNode, parent: Scope) -> Scope:
+        depth = parent.depth + 1 if parent.depth >= 0 else 0
+        if depth > self.limits.max_block_nesting_depth:
+            self._error(
+                block,
+                f"block nesting depth {depth} exceeds configured limit "
+                f"{self.limits.max_block_nesting_depth}",
+            )
+            return Scope(parent=parent, depth=depth)
         scope = self._new_block_scope(parent, ast_node=block)
         self._check_block_contents(block, scope)
         return scope
@@ -483,9 +569,17 @@ class AlgolTypeChecker:
             if child.rule_name == "statement":
                 self._collect_statement_labels(child, scope)
 
+        pending_procedures: list[_PendingProcedureDeclaration] = []
         for child in _node_children(block):
             if child.rule_name == "declaration":
-                self._check_declaration(child, scope)
+                pending = self._check_declaration(child, scope)
+                if pending is not None:
+                    pending_procedures.append(pending)
+
+        self._resolve_pending_procedure_write_reasons(pending_procedures)
+
+        for pending in pending_procedures:
+            self._check_pending_procedure_body(pending)
 
         for child in _node_children(block):
             if child.rule_name == "statement":
@@ -532,30 +626,34 @@ class AlgolTypeChecker:
         )
         return scope
 
-    def _check_declaration(self, declaration: ASTNode, scope: Scope) -> None:
+    def _check_declaration(
+        self,
+        declaration: ASTNode,
+        scope: Scope,
+    ) -> _PendingProcedureDeclaration | None:
         inner = _first_ast_child(declaration)
         if inner is None:
-            return
+            return None
         if inner.rule_name == "procedure_decl":
-            self._check_procedure_declaration(inner, scope)
-            return
+            return self._check_procedure_declaration(inner, scope)
         if inner.rule_name == "own_decl":
             self._check_scalar_declaration(inner, scope, storage_class=STATIC)
-            return
+            return None
         if inner.rule_name == "own_array_decl":
             self._check_array_declaration(inner, scope, storage_class=STATIC)
-            return
+            return None
         if inner.rule_name == "array_decl":
             self._check_array_declaration(inner, scope, storage_class="frame")
-            return
+            return None
         if inner.rule_name == "switch_decl":
             self._check_switch_declaration(inner, scope)
-            return
+            return None
         if inner.rule_name != "type_decl":
             self._error(inner, f"{inner.rule_name} declarations are not supported yet")
-            return
+            return None
 
         self._check_scalar_declaration(inner, scope, storage_class="frame")
+        return None
 
     def _check_scalar_declaration(
         self,
@@ -743,7 +841,7 @@ class AlgolTypeChecker:
             self._check_designational(
                 entry,
                 scope,
-                allow_nonlocal_label=False,
+                allow_nonlocal_label=True,
                 allow_switch_selection=True,
                 active_switch_id=switch_id,
             )
@@ -759,11 +857,24 @@ class AlgolTypeChecker:
             )
         )
 
-    def _check_procedure_declaration(self, node: ASTNode, scope: Scope) -> None:
+    def _check_procedure_declaration(
+        self,
+        node: ASTNode,
+        scope: Scope,
+    ) -> _PendingProcedureDeclaration | None:
         name_token = _procedure_name(node)
         if name_token is None:
             self._error(node, "procedure declaration is missing a name")
-            return
+            return None
+
+        procedure_depth = self._procedure_nesting_depth + 1
+        if procedure_depth > self.limits.max_procedure_nesting_depth:
+            self._error(
+                name_token,
+                f"procedure nesting depth {procedure_depth} exceeds configured "
+                f"limit {self.limits.max_procedure_nesting_depth}",
+            )
+            return None
 
         return_type = _procedure_return_type(node)
         if return_type is not None and return_type not in {
@@ -776,21 +887,13 @@ class AlgolTypeChecker:
                 name_token,
                 f"{return_type} procedure results are not supported yet",
             )
-            return
+            return None
 
         formal_names = _formal_parameter_names(node)
         value_names = _value_parameter_names(node)
         parameter_specs = _parameter_specs(node)
         body = _first_direct_node(node, "proc_body")
         body_inner = _first_ast_child(body) if body is not None else None
-        known_procedures = _unique_procedure_names(self.semantic_procedures)
-        write_reasons = _by_name_formal_write_reasons(
-            body_inner,
-            formal_names,
-            value_names,
-            known_procedures,
-            name_token.value,
-        )
         for formal in formal_names:
             mode = VALUE if formal.value in value_names else NAME
             parameter_spec = parameter_specs.get(formal.value, _ParameterSpec())
@@ -847,13 +950,22 @@ class AlgolTypeChecker:
                 name_token,
                 f"{name_token.value!r} is already declared in this scope",
             )
-            return
+            return None
         self._next_symbol_id += 1
         self.semantic_symbols.append(procedure_symbol)
 
         if body_inner is None:
             self._error(node, "procedure declaration is missing a body")
-            return
+            return None
+
+        body_depth = scope.depth + 1 if scope.depth >= 0 else 0
+        if body_depth > self.limits.max_block_nesting_depth:
+            self._error(
+                body_inner,
+                f"block nesting depth {body_depth} exceeds configured limit "
+                f"{self.limits.max_block_nesting_depth}",
+            )
+            return None
 
         proc_scope = self._new_block_scope(
             scope,
@@ -966,16 +1078,8 @@ class AlgolTypeChecker:
                         symbol_id=param_symbol.symbol_id,
                         slot_offset=param_symbol.slot_offset,
                         kind=parameter_kind,
-                        may_write=(
-                            formal.value in write_reasons
-                            if parameter_kind == "scalar"
-                            else False
-                        ),
-                        write_reason=(
-                            write_reasons.get(formal.value)
-                            if parameter_kind == "scalar"
-                            else None
-                        ),
+                        may_write=False,
+                        write_reason=None,
                     )
                 )
 
@@ -994,28 +1098,116 @@ class AlgolTypeChecker:
         descriptor_index = len(self.semantic_procedures)
         self.semantic_procedures.append(descriptor)
 
-        if body_inner.rule_name == "block":
-            self._check_block_contents(body_inner, proc_scope)
-        else:
-            self._collect_statement_labels(body_inner, proc_scope)
-            self._check_statement(body_inner, proc_scope)
-        updated_parameters = tuple(
-            self._procedure_parameter_with_call_shapes(parameter)
-            for parameter in parameters
+        return _PendingProcedureDeclaration(
+            procedure=descriptor,
+            descriptor_index=descriptor_index,
+            proc_scope=proc_scope,
+            body_inner=body_inner,
+            procedure_depth=procedure_depth,
+            formal_names=tuple(formal_names),
+            value_names=frozenset(value_names),
         )
-        if updated_parameters != descriptor.parameters:
-            self.semantic_procedures[descriptor_index] = ProcedureDescriptor(
-                procedure_id=descriptor.procedure_id,
-                name=descriptor.name,
-                label=descriptor.label,
-                declaring_block_id=descriptor.declaring_block_id,
-                body_block_id=descriptor.body_block_id,
-                body_node_id=descriptor.body_node_id,
-                return_type=descriptor.return_type,
-                parameters=updated_parameters,
-                line=descriptor.line,
-                column=descriptor.column,
+
+    def _resolve_pending_procedure_write_reasons(
+        self,
+        pending_procedures: list[_PendingProcedureDeclaration],
+    ) -> None:
+        changed = True
+        while changed:
+            changed = False
+            known_procedures = _unique_procedure_names(self.semantic_procedures)
+            for pending in pending_procedures:
+                descriptor = self.semantic_procedures[pending.descriptor_index]
+                write_reasons = _by_name_formal_write_reasons(
+                    pending.body_inner,
+                    list(pending.formal_names),
+                    set(pending.value_names),
+                    known_procedures,
+                    descriptor.name,
+                )
+                updated_parameters = tuple(
+                    self._procedure_parameter_with_write_reason(
+                        parameter,
+                        write_reasons,
+                    )
+                    for parameter in descriptor.parameters
+                )
+                if updated_parameters != descriptor.parameters:
+                    self.semantic_procedures[pending.descriptor_index] = (
+                        ProcedureDescriptor(
+                            procedure_id=descriptor.procedure_id,
+                            name=descriptor.name,
+                            label=descriptor.label,
+                            declaring_block_id=descriptor.declaring_block_id,
+                            body_block_id=descriptor.body_block_id,
+                            body_node_id=descriptor.body_node_id,
+                            return_type=descriptor.return_type,
+                            parameters=updated_parameters,
+                            line=descriptor.line,
+                            column=descriptor.column,
+                        )
+                    )
+                    changed = True
+
+    def _procedure_parameter_with_write_reason(
+        self,
+        parameter: ProcedureParameter,
+        write_reasons: dict[str, str],
+    ) -> ProcedureParameter:
+        if parameter.kind != "scalar":
+            return parameter
+        write_reason = write_reasons.get(parameter.name)
+        may_write = write_reason is not None
+        if (
+            parameter.may_write == may_write
+            and parameter.write_reason == write_reason
+        ):
+            return parameter
+        return ProcedureParameter(
+            name=parameter.name,
+            type_name=parameter.type_name,
+            mode=parameter.mode,
+            symbol_id=parameter.symbol_id,
+            slot_offset=parameter.slot_offset,
+            kind=parameter.kind,
+            may_write=may_write,
+            write_reason=write_reason,
+            procedure_call_shapes=parameter.procedure_call_shapes,
+        )
+
+    def _check_pending_procedure_body(
+        self,
+        pending: _PendingProcedureDeclaration,
+    ) -> None:
+        previous_procedure_depth = self._procedure_nesting_depth
+        self._procedure_nesting_depth = pending.procedure_depth
+        try:
+            descriptor = self.semantic_procedures[pending.descriptor_index]
+            if pending.body_inner.rule_name == "block":
+                self._check_block_contents(pending.body_inner, pending.proc_scope)
+            else:
+                self._collect_statement_labels(pending.body_inner, pending.proc_scope)
+                self._check_statement(pending.body_inner, pending.proc_scope)
+            updated_parameters = tuple(
+                self._procedure_parameter_with_call_shapes(parameter)
+                for parameter in descriptor.parameters
             )
+            if updated_parameters != descriptor.parameters:
+                updated_descriptor = ProcedureDescriptor(
+                    procedure_id=descriptor.procedure_id,
+                    name=descriptor.name,
+                    label=descriptor.label,
+                    declaring_block_id=descriptor.declaring_block_id,
+                    body_block_id=descriptor.body_block_id,
+                    body_node_id=descriptor.body_node_id,
+                    return_type=descriptor.return_type,
+                    parameters=updated_parameters,
+                    line=descriptor.line,
+                    column=descriptor.column,
+                )
+                self.semantic_procedures[pending.descriptor_index] = updated_descriptor
+        finally:
+            self._procedure_nesting_depth = previous_procedure_depth
 
     def _procedure_parameter_with_call_shapes(
         self,
@@ -1041,23 +1233,28 @@ class AlgolTypeChecker:
         )
 
     def _collect_statement_labels(self, statement: ASTNode, scope: Scope) -> None:
-        label_node = _first_direct_node(statement, "label")
-        if label_node is not None:
+        for label_node in _direct_nodes(statement, "label"):
             label_token = _label_token(label_node)
             if label_token is not None:
                 self._declare_label(label_token, statement, scope)
 
         body = _statement_body(statement)
-        if body is None or body.rule_name == "block":
+        if body is not None:
+            self._collect_nested_statement_labels(body, scope)
+
+    def _collect_nested_statement_labels(self, node: ASTNode, scope: Scope) -> None:
+        if node.rule_name == "block":
             return
-        for child in _node_children(body):
-            if child.rule_name == "statement":
-                self._collect_statement_labels(child, scope)
-            elif child.rule_name == "unlabeled_stmt":
-                nested = _first_ast_child(child)
-                if nested is not None and nested.rule_name != "block":
-                    for nested_statement in _direct_nodes(nested, "statement"):
-                        self._collect_statement_labels(nested_statement, scope)
+        if node.rule_name == "statement":
+            self._collect_statement_labels(node, scope)
+            return
+        if node.rule_name == "unlabeled_stmt":
+            nested = _first_ast_child(node)
+            if nested is not None:
+                self._collect_nested_statement_labels(nested, scope)
+            return
+        for child in _node_children(node):
+            self._collect_nested_statement_labels(child, scope)
 
     def _declare_label(
         self,
@@ -1340,14 +1537,8 @@ class AlgolTypeChecker:
         if symbol.kind != SWITCH:
             self._error(name_token, f"{name_token.value!r} is not a switch")
             return
-        if active_switch_id is not None and symbol.switch_id == active_switch_id:
-            self._error(
-                name_token,
-                f"switch {name_token.value!r} cannot select itself recursively",
-            )
-            return
 
-        indexes = _direct_nodes(node, "arith_expr")
+        indexes = _switch_selection_indexes(node)
         if len(indexes) != 1:
             self._error(node, "switch selection requires exactly one index")
             return
@@ -1457,14 +1648,29 @@ class AlgolTypeChecker:
                 self._check_statement(child, scope)
 
     def _check_for(self, node: ASTNode, scope: Scope) -> None:
-        loop_name = next(
-            (tok for tok in _direct_tokens(node) if tok.type_name == "NAME"), None
-        )
+        loop_variable = _first_direct_node(node, "variable")
+        loop_name = _variable_head_name(loop_variable)
         if loop_name is None:
             self._error(node, "for loop is missing its control variable")
             return
-        symbol = self._resolve_name(loop_name, scope, role="control")
-        loop_type = ERROR if symbol is None else symbol.type_name
+        if _variable_subscripts(loop_variable):
+            access = self._check_array_access(loop_variable, scope, role="control")
+            descriptor = (
+                next(
+                    (
+                        array
+                        for array in self.semantic_arrays
+                        if array.array_id == access.array_id
+                    ),
+                    None,
+                )
+                if access is not None
+                else None
+            )
+            loop_type = ERROR if descriptor is None else descriptor.element_type
+        else:
+            symbol = self._resolve_name(loop_name, scope, role="control")
+            loop_type = ERROR if symbol is None else symbol.type_name
         if loop_type != ERROR and loop_type not in {INTEGER, REAL}:
             self._error(loop_name, "for loop control variable must be integer or real")
 
@@ -1647,10 +1853,10 @@ class AlgolTypeChecker:
         if expr.rule_name in {"expr_cmp", "relation"}:
             if any(
                 isinstance(child, Token)
-                and child.value in {"=", "!=", "<", "<=", ">", ">="}
+                and child.value in {"=", "!=", "<>", "<", "<=", ">", ">="}
                 for child in meaningful
             ):
-                return self._infer_numeric_comparison(expr, meaningful, scope)
+                return self._infer_comparison(expr, meaningful, scope)
             return self._infer_expr(meaningful[0], scope)
 
         if expr.rule_name in {"expr_add", "simple_arith", "expr_mul", "term"}:
@@ -1899,12 +2105,44 @@ class AlgolTypeChecker:
                 scope,
                 role=role,
             )
-        if len(arguments) != len(descriptor.parameters):
+        if descriptor.procedure_id != -1 and len(arguments) != len(
+            descriptor.parameters
+        ):
             self._error(
                 name_token,
                 f"procedure {name_token.value!r} expects "
                 f"{len(descriptor.parameters)} argument(s), got {len(arguments)}",
             )
+        if descriptor.procedure_id == -1:
+            return_type = self._check_builtin_procedure_call(
+                name_token,
+                arguments,
+                scope,
+                role=role,
+            )
+            if role == "expression" and return_type is None:
+                self._error(
+                    name_token,
+                    f"procedure {name_token.value!r} does not return a value",
+                )
+            call = ResolvedProcedureCall(
+                token_id=id(name_token),
+                name=descriptor.name,
+                role=role,
+                procedure_id=descriptor.procedure_id,
+                label=descriptor.label,
+                use_block_id=scope.block_id,
+                declaration_block_id=declaring_scope.block_id,
+                lexical_depth_delta=lexical_depth_delta,
+                argument_count=len(arguments),
+                return_type=return_type,
+                line=name_token.line,
+                column=name_token.column,
+                parameter_symbol_id=descriptor.parameter_symbol_id,
+            )
+            self.resolved_procedure_calls.append(call)
+            return call
+
         for argument, parameter in zip(arguments, descriptor.parameters, strict=False):
             if parameter.kind == ARRAY:
                 self._check_array_parameter_actual(argument, scope, parameter)
@@ -1916,22 +2154,15 @@ class AlgolTypeChecker:
                 self._check_switch_parameter_actual(argument, scope, parameter)
                 continue
             if parameter.kind == "procedure":
-                self._check_procedure_parameter_actual(argument, scope, parameter)
+                self._check_procedure_parameter_actual(
+                    argument,
+                    scope,
+                    parameter,
+                    call_descriptor=descriptor,
+                    call_arguments=arguments,
+                )
                 continue
             actual_type = self._infer_expr(argument, scope)
-            if descriptor.procedure_id == -1:
-                if actual_type != ERROR and actual_type not in {
-                    INTEGER,
-                    BOOLEAN,
-                    REAL,
-                    STRING,
-                }:
-                    self._error(
-                        argument,
-                        f"builtin procedure {name_token.value!r} expects integer, "
-                        f"boolean, real, or string, got {actual_type}",
-                    )
-                continue
             if actual_type != ERROR and not self._parameter_accepts_type(
                 parameter.mode,
                 parameter.type_name,
@@ -1950,9 +2181,15 @@ class AlgolTypeChecker:
                     f"got {actual_type}",
                 )
                 continue
+            parameter_may_write = self._scalar_parameter_may_write_at_call(
+                descriptor,
+                parameter,
+                arguments,
+                scope,
+            )
             if (
                 parameter.mode == NAME
-                and parameter.may_write
+                and parameter_may_write
                 and (
                     not _is_assignable_actual(argument)
                     or self._resolved_bare_procedure_expression(argument) is not None
@@ -1964,7 +2201,7 @@ class AlgolTypeChecker:
                     "expression is not assignable",
                 )
                 continue
-            if parameter.mode == NAME and parameter.may_write:
+            if parameter.mode == NAME and parameter_may_write:
                 self._record_assignable_actual_write(argument, scope)
 
         if role == "expression" and descriptor.return_type is None:
@@ -1989,6 +2226,57 @@ class AlgolTypeChecker:
         )
         self.resolved_procedure_calls.append(call)
         return call
+
+    def _check_builtin_procedure_call(
+        self,
+        name_token: Token,
+        arguments: list[ASTNode],
+        scope: Scope,
+        *,
+        role: str,
+    ) -> str | None:
+        builtin_name = _builtin_name(name_token.value)
+        if builtin_name in _OUTPUT_BUILTINS:
+            if not arguments:
+                self._error(
+                    name_token,
+                    f"procedure {name_token.value!r} expects at least 1 argument",
+                )
+                return None
+            for argument in arguments:
+                actual_type = self._infer_expr(argument, scope)
+                if actual_type != ERROR and actual_type not in {
+                    INTEGER,
+                    BOOLEAN,
+                    REAL,
+                    STRING,
+                }:
+                    self._error(
+                        argument,
+                        f"builtin procedure {name_token.value!r} expects integer, "
+                        f"boolean, real, or string, got {actual_type}",
+                    )
+            return None
+        if len(arguments) != 1:
+            self._error(
+                name_token,
+                f"builtin function {name_token.value!r} expects 1 argument(s), "
+                f"got {len(arguments)}",
+            )
+            return ERROR
+        actual_type = self._infer_expr(arguments[0], scope)
+        if actual_type != ERROR and not _is_numeric_type(actual_type):
+            self._error(
+                arguments[0],
+                f"builtin function {name_token.value!r} expects integer or real, "
+                f"got {actual_type}",
+            )
+            return ERROR
+        if builtin_name == "abs":
+            return actual_type
+        if builtin_name in _FIXED_RETURN_NUMERIC_BUILTINS:
+            return _FIXED_RETURN_NUMERIC_BUILTINS[builtin_name]
+        return ERROR
 
     def _resolved_bare_procedure_expression(
         self,
@@ -2021,9 +2309,46 @@ class AlgolTypeChecker:
         role: str,
     ) -> ResolvedProcedureCall:
         argument_types: list[str] = []
+        argument_kinds: list[str] = []
+        argument_assignable: list[bool] = []
+        argument_formal_names: list[str | None] = []
+        procedure_argument_ids: list[int | None] = []
         for argument in arguments:
+            array_type = self._formal_array_argument_type(argument, scope)
+            if array_type is not None:
+                argument_types.append(array_type)
+                argument_kinds.append(ARRAY)
+                argument_assignable.append(False)
+                argument_formal_names.append(None)
+                procedure_argument_ids.append(None)
+                continue
+            nonscalar = self._formal_nonscalar_argument_shape(argument, scope)
+            if nonscalar is not None:
+                (
+                    argument_kind,
+                    argument_type,
+                    procedure_id,
+                    formal_name,
+                ) = nonscalar
+                argument_types.append(argument_type)
+                argument_kinds.append(argument_kind)
+                argument_assignable.append(False)
+                argument_formal_names.append(formal_name)
+                procedure_argument_ids.append(procedure_id)
+                continue
             actual_type = self._infer_expr(argument, scope)
             argument_types.append(actual_type)
+            argument_kinds.append("scalar")
+            argument_assignable.append(
+                _is_assignable_actual(argument)
+                and self._resolved_bare_procedure_expression(argument) is None
+            )
+            argument_formal_names.append(
+                self._scalar_by_name_parameter_actual_name(argument, scope)
+            )
+            procedure_argument_ids.append(None)
+            if argument_assignable[-1]:
+                self._record_assignable_actual_write(argument, scope)
             if actual_type != ERROR and actual_type not in {
                 INTEGER,
                 BOOLEAN,
@@ -2047,6 +2372,10 @@ class AlgolTypeChecker:
                 ProcedureFormalCallShape(
                     role=role,
                     argument_types=tuple(argument_types),
+                    argument_kinds=tuple(argument_kinds),
+                    argument_assignable=tuple(argument_assignable),
+                    argument_formal_names=tuple(argument_formal_names),
+                    procedure_argument_ids=tuple(procedure_argument_ids),
                     return_type=return_type if role == "expression" else None,
                 ),
             )
@@ -2067,6 +2396,192 @@ class AlgolTypeChecker:
         )
         self.resolved_procedure_calls.append(call)
         return call
+
+    def _formal_array_argument_type(
+        self,
+        argument: ASTNode,
+        scope: Scope,
+    ) -> str | None:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            return None
+        name = _variable_head_name(variable)
+        if name is None:
+            return None
+        resolved = scope.resolve_with_scope(name.value)
+        if resolved is None or resolved[0].kind != ARRAY:
+            return None
+        access = self._check_array_access(
+            variable,
+            scope,
+            role="actual",
+            allow_whole=True,
+        )
+        if access is None:
+            return ERROR
+        descriptor = next(
+            (
+                array
+                for array in self.semantic_arrays
+                if array.array_id == access.array_id
+            ),
+            None,
+        )
+        return ERROR if descriptor is None else descriptor.element_type
+
+    def _formal_nonscalar_argument_shape(
+        self,
+        argument: ASTNode,
+        scope: Scope,
+    ) -> tuple[str, str, int | None, str | None] | None:
+        if self._check_label_designational_actual(
+            argument,
+            scope,
+            parameter_name="procedure argument",
+            report=False,
+            record=False,
+        ):
+            self._check_label_designational_actual(
+                argument,
+                scope,
+                parameter_name="procedure argument",
+                report=True,
+                record=True,
+            )
+            return LABEL, LABEL, None, None
+
+        if self._check_switch_designator_actual(
+            argument,
+            scope,
+            parameter_name="procedure argument",
+            report=False,
+        ):
+            self._check_switch_designator_actual(
+                argument,
+                scope,
+                parameter_name="procedure argument",
+                report=True,
+            )
+            return SWITCH, SWITCH, None, None
+
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            return None
+        name = _variable_head_name(variable)
+        if name is None:
+            return None
+        resolved = scope.resolve_with_scope(name.value)
+        if resolved is None:
+            return None
+        symbol, _, _ = resolved
+        if symbol.kind == LABEL:
+            return LABEL, LABEL, None, None
+        if symbol.kind == SWITCH:
+            return SWITCH, SWITCH, None, None
+        if symbol.kind == "procedure":
+            descriptor = next(
+                (
+                    procedure
+                    for procedure in self.semantic_procedures
+                    if procedure.procedure_id == symbol.procedure_id
+                ),
+                None,
+            )
+            if (
+                descriptor is not None
+                and descriptor.return_type is not None
+                and not descriptor.parameters
+            ):
+                return None
+            return "procedure", symbol.type_name, symbol.procedure_id, None
+        if symbol.kind == "procedure_parameter":
+            return "procedure", symbol.type_name, None, symbol.name
+        return None
+
+    def _scalar_by_name_parameter_actual_name(
+        self,
+        argument: ASTNode,
+        scope: Scope,
+    ) -> str | None:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            return None
+        name = _variable_head_name(variable)
+        if name is None:
+            return None
+        resolved = scope.resolve_with_scope(name.value)
+        if resolved is None:
+            return None
+        symbol, _, _ = resolved
+        if symbol.kind == "parameter" and symbol.parameter_mode == NAME:
+            return symbol.name
+        return None
+
+    def _scalar_parameter_may_write_at_call(
+        self,
+        descriptor: ProcedureDescriptor,
+        parameter: ProcedureParameter,
+        arguments: list[ASTNode],
+        scope: Scope,
+    ) -> bool:
+        if (
+            parameter.kind != "scalar"
+            or parameter.mode != NAME
+            or not parameter.may_write
+        ):
+            return False
+        if parameter.write_reason != "transitive call":
+            return True
+
+        saw_formal_procedure_shape = False
+        for procedure_index, procedure_parameter in enumerate(descriptor.parameters):
+            if procedure_parameter.kind != "procedure":
+                continue
+            for shape in procedure_parameter.procedure_call_shapes:
+                formal_names = _shape_argument_formal_names(shape)
+                for argument_index, formal_name in enumerate(formal_names):
+                    if formal_name != parameter.name:
+                        continue
+                    saw_formal_procedure_shape = True
+                    if procedure_index >= len(arguments):
+                        return True
+                    if self._procedure_actual_writes_shape_argument(
+                        arguments[procedure_index],
+                        scope,
+                        argument_index,
+                    ):
+                        return True
+        return not saw_formal_procedure_shape
+
+    def _procedure_actual_writes_shape_argument(
+        self,
+        argument: ASTNode,
+        scope: Scope,
+        argument_index: int,
+    ) -> bool:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            return True
+        name = _variable_head_name(variable)
+        if name is None:
+            return True
+        resolved = scope.resolve_with_scope(name.value)
+        if resolved is None:
+            return True
+        symbol, _, _ = resolved
+        if symbol.kind == "procedure_parameter":
+            return True
+        if symbol.kind != "procedure" or symbol.procedure_id is None:
+            return True
+        descriptor = self._procedure_descriptor_for_id(symbol.procedure_id)
+        if descriptor is None or argument_index >= len(descriptor.parameters):
+            return True
+        parameter = descriptor.parameters[argument_index]
+        return (
+            parameter.kind == "scalar"
+            and parameter.mode == NAME
+            and parameter.may_write
+        )
 
     def _record_procedure_parameter_call_shape(
         self,
@@ -2124,33 +2639,114 @@ class AlgolTypeChecker:
         scope: Scope,
         parameter: ProcedureParameter,
     ) -> Symbol | None:
-        variable = _single_variable_expr(argument)
-        if variable is None or _variable_subscripts(variable):
-            self._error(
-                argument,
-                f"label parameter {parameter.name!r} expects a direct label actual",
-            )
+        if self._check_label_designational_actual(
+            argument,
+            scope,
+            parameter_name=parameter.name,
+            report=True,
+            record=True,
+        ):
             return None
+        self._error(
+            argument,
+            f"label parameter {parameter.name!r} expects a label designational actual",
+        )
+        return None
+
+    def _check_label_designational_actual(
+        self,
+        argument: ASTNode,
+        scope: Scope,
+        *,
+        parameter_name: str,
+        report: bool,
+        record: bool,
+    ) -> bool:
+        parts = _conditional_expression_parts(_meaningful_children(argument))
+        if parts is not None:
+            condition, then_expr, else_expr = parts
+            if report:
+                condition_type = self._infer_expr(condition, scope)
+                if condition_type != ERROR and condition_type != BOOLEAN:
+                    self._error(
+                        condition,
+                        "label designational actual condition must be boolean",
+                    )
+            then_ok = self._check_label_designational_actual(
+                then_expr,
+                scope,
+                parameter_name=parameter_name,
+                report=report,
+                record=record,
+            )
+            else_ok = self._check_label_designational_actual(
+                else_expr,
+                scope,
+                parameter_name=parameter_name,
+                report=report,
+                record=record,
+            )
+            return then_ok and else_ok
+
+        literal_label = _single_integer_label_expr(argument)
+        if literal_label is not None:
+            resolved = scope.resolve_with_scope(literal_label.value)
+            if resolved is None:
+                if report:
+                    self._error(
+                        literal_label,
+                        f"{literal_label.value!r} is not declared in block "
+                        f"{scope.block_id} or its lexical parents",
+                    )
+                return False
+            symbol, _, _ = resolved
+            if symbol.kind == LABEL:
+                return True
+            if report:
+                self._error(
+                    literal_label,
+                    f"label parameter {parameter_name!r} expects a label actual",
+                )
+            return False
+
+        variable = _single_variable_expr(argument)
+        if variable is None:
+            return False
         name = _variable_head_name(variable)
         if name is None:
-            self._error(argument, "label actual is missing a name")
-            return None
+            if report:
+                self._error(argument, "label actual is missing a name")
+            return False
         resolved = scope.resolve_with_scope(name.value)
         if resolved is None:
-            self._error(
-                name,
-                f"{name.value!r} is not declared in block {scope.block_id} "
-                "or its lexical parents",
-            )
-            return None
+            if report:
+                self._error(
+                    name,
+                    f"{name.value!r} is not declared in block {scope.block_id} "
+                    "or its lexical parents",
+                )
+            return False
         symbol, _, _ = resolved
-        if symbol.kind != LABEL:
+        if _variable_subscripts(variable):
+            if symbol.kind == SWITCH:
+                if record:
+                    self._check_switch_selection(variable, scope)
+                return True
+            if report:
+                self._error(
+                    name,
+                    f"label parameter {parameter_name!r} expects a switch "
+                    "selection or label actual",
+                )
+            return False
+        if symbol.kind == LABEL:
+            return True
+        if report:
             self._error(
                 name,
-                f"label parameter {parameter.name!r} expects a label actual",
+                f"label parameter {parameter_name!r} expects a label actual",
             )
-            return None
-        return symbol
+        return False
 
     def _check_switch_parameter_actual(
         self,
@@ -2158,39 +2754,86 @@ class AlgolTypeChecker:
         scope: Scope,
         parameter: ProcedureParameter,
     ) -> Symbol | None:
+        if self._check_switch_designator_actual(
+            argument,
+            scope,
+            parameter_name=parameter.name,
+            report=True,
+        ):
+            return None
+        self._error(
+            argument,
+            f"switch parameter {parameter.name!r} expects a switch designator actual",
+        )
+        return None
+
+    def _check_switch_designator_actual(
+        self,
+        argument: ASTNode,
+        scope: Scope,
+        *,
+        parameter_name: str,
+        report: bool,
+    ) -> bool:
+        parts = _conditional_expression_parts(_meaningful_children(argument))
+        if parts is not None:
+            condition, then_expr, else_expr = parts
+            if report:
+                condition_type = self._infer_expr(condition, scope)
+                if condition_type != ERROR and condition_type != BOOLEAN:
+                    self._error(
+                        condition,
+                        "switch designator actual condition must be boolean",
+                    )
+            then_ok = self._check_switch_designator_actual(
+                then_expr,
+                scope,
+                parameter_name=parameter_name,
+                report=report,
+            )
+            else_ok = self._check_switch_designator_actual(
+                else_expr,
+                scope,
+                parameter_name=parameter_name,
+                report=report,
+            )
+            return then_ok and else_ok
+
         variable = _single_variable_expr(argument)
         if variable is None or _variable_subscripts(variable):
-            self._error(
-                argument,
-                f"switch parameter {parameter.name!r} expects a direct switch actual",
-            )
-            return None
+            return False
         name = _variable_head_name(variable)
         if name is None:
-            self._error(argument, "switch actual is missing a name")
-            return None
+            if report:
+                self._error(argument, "switch actual is missing a name")
+            return False
         resolved = scope.resolve_with_scope(name.value)
         if resolved is None:
-            self._error(
-                name,
-                f"{name.value!r} is not declared in block {scope.block_id} "
-                "or its lexical parents",
-            )
-            return None
+            if report:
+                self._error(
+                    name,
+                    f"{name.value!r} is not declared in block {scope.block_id} "
+                    "or its lexical parents",
+                )
+            return False
         symbol, _, _ = resolved
-        if symbol.kind != SWITCH:
+        if symbol.kind == SWITCH:
+            return True
+        if report:
             self._error(
                 name,
-                f"switch parameter {parameter.name!r} expects a switch actual",
+                f"switch parameter {parameter_name!r} expects a switch actual",
             )
-            return None
-        return symbol
+        return False
 
     def _check_procedure_parameter_actual(
         self,
         argument: ASTNode,
         scope: Scope,
         parameter: ProcedureParameter,
+        *,
+        call_descriptor: ProcedureDescriptor | None = None,
+        call_arguments: list[ASTNode] | None = None,
     ) -> Symbol | None:
         variable = _single_variable_expr(argument)
         if variable is None or _variable_subscripts(variable):
@@ -2215,7 +2858,15 @@ class AlgolTypeChecker:
         symbol, _, _ = resolved
         if symbol.kind == "procedure_parameter":
             for shape in parameter.procedure_call_shapes:
-                self._record_procedure_parameter_call_shape(symbol.symbol_id, shape)
+                self._record_procedure_parameter_call_shape(
+                    symbol.symbol_id,
+                    self._remap_forwarded_procedure_call_shape(
+                        shape,
+                        call_descriptor=call_descriptor,
+                        call_arguments=call_arguments,
+                        scope=scope,
+                    ),
+                )
             return symbol
         if symbol.kind != "procedure" or symbol.procedure_id is None:
             self._error(
@@ -2241,6 +2892,50 @@ class AlgolTypeChecker:
         ):
             return None
         return symbol
+
+    def _remap_forwarded_procedure_call_shape(
+        self,
+        shape: ProcedureFormalCallShape,
+        *,
+        call_descriptor: ProcedureDescriptor | None,
+        call_arguments: list[ASTNode] | None,
+        scope: Scope,
+    ) -> ProcedureFormalCallShape:
+        if call_descriptor is None or call_arguments is None:
+            return shape
+
+        remapped_names: list[str | None] = []
+        for formal_name in _shape_argument_formal_names(shape):
+            if formal_name is None:
+                remapped_names.append(None)
+                continue
+            parameter_index = next(
+                (
+                    index
+                    for index, parameter in enumerate(call_descriptor.parameters)
+                    if parameter.name == formal_name
+                ),
+                None,
+            )
+            if parameter_index is None or parameter_index >= len(call_arguments):
+                remapped_names.append(None)
+                continue
+            remapped_names.append(
+                self._scalar_by_name_parameter_actual_name(
+                    call_arguments[parameter_index],
+                    scope,
+                )
+            )
+
+        return ProcedureFormalCallShape(
+            role=shape.role,
+            argument_types=shape.argument_types,
+            argument_kinds=shape.argument_kinds,
+            argument_assignable=shape.argument_assignable,
+            argument_formal_names=tuple(remapped_names),
+            procedure_argument_ids=shape.procedure_argument_ids,
+            return_type=shape.return_type,
+        )
 
     def _procedure_actual_satisfies_formal_shapes(
         self,
@@ -2307,24 +3002,129 @@ class AlgolTypeChecker:
                         f"argument(s), got {actual}",
                     )
                 return False
-            for actual_parameter, actual_type in zip(
-                descriptor.parameters,
-                shape.argument_types,
-                strict=True,
+            for argument_index, (actual_parameter, actual_type) in enumerate(
+                zip(
+                    descriptor.parameters,
+                    shape.argument_types,
+                    strict=True,
+                )
             ):
-                if (
-                    actual_parameter.kind != "scalar"
-                    or actual_parameter.mode != VALUE
-                ):
+                argument_kind = (
+                    shape.argument_kinds[argument_index]
+                    if argument_index < len(shape.argument_kinds)
+                    else "scalar"
+                )
+                argument_assignable = (
+                    shape.argument_assignable[argument_index]
+                    if argument_index < len(shape.argument_assignable)
+                    else False
+                )
+                procedure_argument_id = (
+                    shape.procedure_argument_ids[argument_index]
+                    if argument_index < len(shape.procedure_argument_ids)
+                    else None
+                )
+                if argument_kind == ARRAY:
+                    if actual_parameter.kind != ARRAY:
+                        self._error(
+                            token,
+                            f"procedure parameter {parameter.name!r} passes an "
+                            "array to a scalar actual parameter "
+                            f"{actual_parameter.name!r}",
+                        )
+                        return False
+                    if actual_parameter.type_name != actual_type:
+                        self._error(
+                            token,
+                            f"procedure parameter {parameter.name!r} passes "
+                            f"{actual_type} array to actual parameter "
+                            f"{actual_parameter.name!r} expecting "
+                            f"{actual_parameter.type_name}",
+                        )
+                        return False
+                    continue
+                if argument_kind == LABEL:
+                    if actual_parameter.kind != LABEL:
+                        self._error(
+                            token,
+                            f"procedure parameter {parameter.name!r} passes a "
+                            "label to non-label actual parameter "
+                            f"{actual_parameter.name!r}",
+                        )
+                        return False
+                    continue
+                if argument_kind == SWITCH:
+                    if actual_parameter.kind != SWITCH:
+                        self._error(
+                            token,
+                            f"procedure parameter {parameter.name!r} passes a "
+                            "switch to non-switch actual parameter "
+                            f"{actual_parameter.name!r}",
+                        )
+                        return False
+                    continue
+                if argument_kind == "procedure":
+                    if actual_parameter.kind != "procedure":
+                        self._error(
+                            token,
+                            f"procedure parameter {parameter.name!r} passes a "
+                            "procedure to non-procedure actual parameter "
+                            f"{actual_parameter.name!r}",
+                        )
+                        return False
+                    if procedure_argument_id is not None:
+                        nested_descriptor = self._procedure_descriptor_for_id(
+                            procedure_argument_id
+                        )
+                        if nested_descriptor is None:
+                            self._error(
+                                token,
+                                f"procedure parameter {parameter.name!r} passes a "
+                                "procedure actual with no descriptor",
+                            )
+                            return False
+                        if not self._procedure_actual_satisfies_formal_shapes(
+                            token,
+                            nested_descriptor,
+                            actual_parameter,
+                        ):
+                            return False
+                    if not self._procedure_parameter_type_satisfies(
+                        expected_type=actual_parameter.type_name,
+                        actual_type=actual_type,
+                    ):
+                        self._error(
+                            token,
+                            f"procedure parameter {parameter.name!r} passes "
+                            f"{actual_type} procedure to actual parameter "
+                            f"{actual_parameter.name!r} expecting "
+                            f"{actual_parameter.type_name}",
+                        )
+                        return False
+                    continue
+                if argument_kind != "scalar":
+                    self._error(
+                        token,
+                        f"procedure parameter {parameter.name!r} has unsupported "
+                        f"{argument_kind} argument shape",
+                    )
+                    return False
+                if actual_parameter.kind != "scalar":
                     self._error(
                         token,
                         f"procedure parameter {parameter.name!r} expects a "
-                        "procedure actual with scalar value parameters in this "
-                        "phase",
+                        "procedure actual with scalar parameters",
+                    )
+                    return False
+                if actual_parameter.mode not in {VALUE, NAME}:
+                    self._error(
+                        token,
+                        f"procedure parameter {parameter.name!r} expects a "
+                        "procedure actual with scalar value or name parameters",
                     )
                     return False
                 if not self._parameter_accepts_type(
-                    VALUE,
+                    actual_parameter.mode,
                     actual_parameter.type_name,
                     actual_type,
                 ):
@@ -2336,7 +3136,154 @@ class AlgolTypeChecker:
                         f"{actual_parameter.type_name}",
                     )
                     return False
+                parameter_may_write = self._procedure_parameter_may_write_for_shape(
+                    descriptor,
+                    actual_parameter,
+                    shape,
+                    context=None,
+                )
+                if actual_parameter.mode == NAME and (
+                    parameter_may_write and not argument_assignable
+                ):
+                    self._error(
+                        token,
+                        f"procedure parameter {parameter.name!r} passes a "
+                        f"non-assignable actual to written by-name parameter "
+                        f"{actual_parameter.name!r}",
+                    )
+                    return False
+                continue
         return True
+
+    def _procedure_parameter_may_write_for_shape(
+        self,
+        descriptor: ProcedureDescriptor,
+        parameter: ProcedureParameter,
+        shape: ProcedureFormalCallShape,
+        *,
+        context: _ProcedureShapeContext | None,
+    ) -> bool:
+        if (
+            parameter.kind != "scalar"
+            or parameter.mode != NAME
+            or not parameter.may_write
+        ):
+            return False
+        if parameter.write_reason != "transitive call":
+            return True
+
+        saw_formal_procedure_shape = False
+        for procedure_index, procedure_parameter in enumerate(descriptor.parameters):
+            if procedure_parameter.kind != "procedure":
+                continue
+            for nested_shape in procedure_parameter.procedure_call_shapes:
+                formal_names = _shape_argument_formal_names(nested_shape)
+                for argument_index, formal_name in enumerate(formal_names):
+                    if formal_name != parameter.name:
+                        continue
+                    saw_formal_procedure_shape = True
+                    if self._shape_procedure_argument_writes(
+                        descriptor,
+                        shape,
+                        procedure_index,
+                        nested_shape,
+                        argument_index,
+                        context=context,
+                    ):
+                        return True
+        return not saw_formal_procedure_shape
+
+    def _shape_procedure_argument_writes(
+        self,
+        shape_descriptor: ProcedureDescriptor,
+        shape: ProcedureFormalCallShape,
+        procedure_argument_index: int,
+        nested_shape: ProcedureFormalCallShape,
+        nested_argument_index: int,
+        *,
+        context: _ProcedureShapeContext | None,
+    ) -> bool:
+        procedure_id = self._resolve_shape_procedure_argument_id(
+            shape,
+            procedure_argument_index,
+            context,
+        )
+        if procedure_id is None:
+            return True
+        descriptor = self._procedure_descriptor_for_id(procedure_id)
+        if descriptor is None or nested_argument_index >= len(descriptor.parameters):
+            return True
+        parameter = descriptor.parameters[nested_argument_index]
+        nested_context = _ProcedureShapeContext(
+            descriptor=shape_descriptor,
+            shape=shape,
+            parent=context,
+        )
+        return self._procedure_parameter_may_write_for_shape(
+            descriptor,
+            parameter,
+            nested_shape,
+            context=nested_context,
+        )
+
+    def _resolve_shape_procedure_argument_id(
+        self,
+        shape: ProcedureFormalCallShape,
+        procedure_argument_index: int,
+        context: _ProcedureShapeContext | None,
+    ) -> int | None:
+        if procedure_argument_index >= len(shape.procedure_argument_ids):
+            return None
+        procedure_id = shape.procedure_argument_ids[procedure_argument_index]
+        if procedure_id is not None:
+            return procedure_id
+        formal_names = _shape_argument_formal_names(shape)
+        if procedure_argument_index >= len(formal_names):
+            return None
+        formal_name = formal_names[procedure_argument_index]
+        if formal_name is None or context is None:
+            return None
+        parameter_index = next(
+            (
+                index
+                for index, parameter in enumerate(context.descriptor.parameters)
+                if parameter.kind == "procedure" and parameter.name == formal_name
+            ),
+            None,
+        )
+        if parameter_index is None:
+            return None
+        return self._resolve_shape_procedure_argument_id(
+            context.shape,
+            parameter_index,
+            context.parent,
+        )
+
+    def _procedure_descriptor_for_id(
+        self,
+        procedure_id: int,
+    ) -> ProcedureDescriptor | None:
+        return next(
+            (
+                procedure
+                for procedure in self.semantic_procedures
+                if procedure.procedure_id == procedure_id
+            ),
+            None,
+        )
+
+    def _procedure_parameter_type_satisfies(
+        self,
+        *,
+        expected_type: str,
+        actual_type: str,
+    ) -> bool:
+        if expected_type == "procedure" or actual_type == "procedure":
+            return expected_type == actual_type
+        return self._procedure_return_type_satisfies(
+            expected_type=expected_type,
+            actual_type=actual_type,
+        )
 
     def _procedure_return_type_satisfies(
         self,
@@ -2353,16 +3300,22 @@ class AlgolTypeChecker:
         token: Token,
         scope: Scope,
     ) -> tuple[ProcedureDescriptor, Scope, int] | None:
-        if token.value not in {"print", "output"}:
+        builtin_name = _builtin_name(token.value)
+        if builtin_name is None:
             return None
+        return_type = None
+        if builtin_name == "abs":
+            return_type = INTEGER
+        elif builtin_name in _FIXED_RETURN_NUMERIC_BUILTINS:
+            return_type = _FIXED_RETURN_NUMERIC_BUILTINS[builtin_name]
         descriptor = ProcedureDescriptor(
             procedure_id=-1,
-            name=token.value,
-            label=f"__algol_builtin_{token.value}",
+            name=builtin_name,
+            label=f"__algol_builtin_{builtin_name}",
             declaring_block_id=scope.block_id,
             body_block_id=scope.block_id,
             body_node_id=-1,
-            return_type=None,
+            return_type=return_type,
             parameters=(
                 ProcedureParameter(
                     name="value",
@@ -2590,30 +3543,50 @@ class AlgolTypeChecker:
                     f"numeric operator {operator.value!r} is not supported",
                 )
                 return ERROR
-            if exponent_type != INTEGER:
-                self._error(node, "exponentiation exponent must be integer")
+            if not _is_numeric_type(exponent_type):
+                self._error(
+                    node,
+                    f"operator requires numeric operand, got {exponent_type}",
+                )
                 return ERROR
-            current_type = REAL if current_type == REAL else INTEGER
+            current_type = (
+                REAL if REAL in {current_type, exponent_type} else INTEGER
+            )
             index += 2
         return current_type
 
-    def _infer_numeric_comparison(
+    def _infer_comparison(
         self,
         node: ASTNode,
         children: list[ASTNode | Token],
         scope: Scope,
     ) -> str:
         left = self._infer_expr(children[0], scope)
+        operator = children[1]
         right = self._infer_expr(children[2], scope)
         if left == ERROR or right == ERROR:
             return ERROR
-        if not _is_numeric_type(left):
-            self._error(node, f"operator requires numeric operand, got {left}")
+        if not isinstance(operator, Token):
+            self._error(node, "expected comparison operator")
             return ERROR
-        if not _is_numeric_type(right):
-            self._error(node, f"operator requires numeric operand, got {right}")
+        if _is_numeric_type(left) and _is_numeric_type(right):
+            return BOOLEAN
+        if (
+            operator.value in {"=", "!=", "<>"}
+            and left == right
+            and left in {BOOLEAN, STRING}
+        ):
+            return BOOLEAN
+        if operator.value not in {"=", "!=", "<>"}:
+            actual = left if not _is_numeric_type(left) else right
+            self._error(node, f"operator requires numeric operand, got {actual}")
             return ERROR
-        return BOOLEAN
+        self._error(
+            node,
+            f"operator {operator.value!r} requires compatible operands, got "
+            f"{left} and {right}",
+        )
+        return ERROR
 
     def _can_assign(self, target_type: str, value_type: str) -> bool:
         if target_type == value_type:
@@ -2653,8 +3626,11 @@ class AlgolTypeChecker:
         self.diagnostics.append(Diagnostic(message, *_position(obj)))
 
 
-def check_algol(ast: ASTNode) -> TypeCheckResult:
-    return AlgolTypeChecker().check(ast)
+def check_algol(
+    ast: ASTNode,
+    limits: TypeCheckLimits | None = None,
+) -> TypeCheckResult:
+    return AlgolTypeChecker(limits=limits).check(ast)
 
 
 def _is_numeric_type(type_name: str) -> bool:
@@ -2669,12 +3645,18 @@ def _conditional_branch_type(then_type: str, else_type: str) -> str | None:
     return None
 
 
-def check(ast: ASTNode) -> TypeCheckResult:
-    return check_algol(ast)
+def check(
+    ast: ASTNode,
+    limits: TypeCheckLimits | None = None,
+) -> TypeCheckResult:
+    return check_algol(ast, limits=limits)
 
 
-def assert_algol_typed(ast: ASTNode) -> TypeCheckResult:
-    result = check_algol(ast)
+def assert_algol_typed(
+    ast: ASTNode,
+    limits: TypeCheckLimits | None = None,
+) -> TypeCheckResult:
+    result = check_algol(ast, limits=limits)
     if not result.ok:
         details = "\n".join(
             f"Line {diag.line}, Col {diag.column}: {diag.message}"
@@ -2830,22 +3812,39 @@ def _parameter_specs(node: ASTNode) -> dict[str, _ParameterSpec]:
     specs: dict[str, _ParameterSpec] = {}
     for spec_part in _direct_nodes(node, "spec_part"):
         specifier = _first_direct_node(spec_part, "specifier")
-        specifier_name = _first_keyword_value(specifier) or ""
+        specifier_kind, specifier_type = _parameter_specifier(specifier)
         ident_list = _first_direct_node(spec_part, "ident_list")
         for token in _tokens(ident_list):
             if token.type_name == "NAME":
                 current = specs.get(token.value, _ParameterSpec())
-                if specifier_name in {INTEGER, BOOLEAN, REAL, STRING}:
-                    specs[token.value] = _ParameterSpec(
-                        kind=current.kind,
-                        type_name=specifier_name,
-                    )
-                elif specifier_name in {ARRAY, LABEL, SWITCH, "procedure"}:
-                    specs[token.value] = _ParameterSpec(
-                        kind=specifier_name,
-                        type_name=current.type_name,
-                    )
+                specs[token.value] = _ParameterSpec(
+                    kind=specifier_kind or current.kind,
+                    type_name=specifier_type or current.type_name,
+                )
     return specs
+
+
+def _parameter_specifier(node: ASTNode | None) -> tuple[str | None, str | None]:
+    values = [
+        token.value
+        for token in _tokens(node)
+        if token.type_name == "KEYWORD"
+    ]
+    type_name = next(
+        (value for value in values if value in {INTEGER, BOOLEAN, REAL, STRING}),
+        None,
+    )
+    if ARRAY in values:
+        return ARRAY, type_name
+    if "procedure" in values:
+        return "procedure", type_name
+    if LABEL in values:
+        return LABEL, None
+    if SWITCH in values:
+        return SWITCH, None
+    if type_name is not None:
+        return "scalar", type_name
+    return None, None
 
 
 def _label_token(node: ASTNode) -> Token | None:
@@ -3003,13 +4002,23 @@ def _callee_may_write_argument(
 ) -> bool:
     if callee_name is None:
         return True
-    if callee_name in _READ_ONLY_BUILTINS:
+    if _builtin_name(callee_name) is not None:
         return False
     procedure = known_procedures.get(callee_name)
     if procedure is None or argument_index >= len(procedure.parameters):
         return True
     parameter = procedure.parameters[argument_index]
     return parameter.mode == NAME and parameter.may_write
+
+
+def _shape_argument_formal_names(
+    shape: ProcedureFormalCallShape,
+) -> tuple[str | None, ...]:
+    if len(shape.argument_formal_names) >= len(shape.argument_types):
+        return shape.argument_formal_names
+    return shape.argument_formal_names + (None,) * (
+        len(shape.argument_types) - len(shape.argument_formal_names)
+    )
 
 
 def _direct_block_declared_names(node: ASTNode) -> set[str]:
@@ -3072,6 +4081,18 @@ def _single_variable_expr(node: ASTNode | None) -> ASTNode | None:
     return _single_variable_expr(meaningful[0])
 
 
+def _single_integer_label_expr(node: ASTNode | None) -> Token | None:
+    if node is None:
+        return None
+    meaningful = _meaningful_children(node)
+    if len(meaningful) != 1:
+        return None
+    child = meaningful[0]
+    if isinstance(child, Token):
+        return child if child.type_name == "INTEGER_LIT" else None
+    return _single_integer_label_expr(child)
+
+
 def _variable_head_name_value(node: ASTNode | None) -> str | None:
     token = _variable_head_name(node)
     return token.value if token is not None else None
@@ -3109,5 +4130,14 @@ def _variable_subscripts(node: ASTNode | None) -> list[ASTNode]:
         variable = node
     else:
         variable = _first_node(node, "variable")
+    subscripts = _first_direct_node(variable, "subscripts")
+    return _direct_nodes(subscripts, "arith_expr")
+
+
+def _switch_selection_indexes(node: ASTNode | None) -> list[ASTNode]:
+    direct = _direct_nodes(node, "arith_expr")
+    if direct:
+        return direct
+    variable = node if node is not None and node.rule_name == "variable" else None
     subscripts = _first_direct_node(variable, "subscripts")
     return _direct_nodes(subscripts, "arith_expr")

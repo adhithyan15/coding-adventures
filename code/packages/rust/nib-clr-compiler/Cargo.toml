@@ -1,0 +1,18 @@
+[package]
+name = "nib-clr-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "End-to-end Nib to CLR CIL compiler"
+
+[dependencies]
+coding-adventures-nib-parser = { path = "../nib-parser" }
+compiler-ir = { path = "../compiler-ir" }
+ir-optimizer = { path = "../ir-optimizer" }
+ir-to-cil-bytecode = { path = "../ir-to-cil-bytecode" }
+nib-ir-compiler = { path = "../nib-ir-compiler" }
+nib-type-checker = { path = "../nib-type-checker" }
+parser = { path = "../parser" }
+type-checker-protocol = { path = "../type-checker-protocol" }
+
+[dev-dependencies]
+clr-simulator = { path = "../clr-simulator" }

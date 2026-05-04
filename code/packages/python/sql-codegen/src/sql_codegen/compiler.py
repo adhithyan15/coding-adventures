@@ -64,6 +64,7 @@ from sql_planner import (
     NotIn,
     Project,
     Rollback,
+    ScalarSubquery,
     Scan,
     Sort,
     UnaryExpr,
@@ -88,10 +89,16 @@ from sql_planner import (
     CreateTable as PlanCreateTable,
 )
 from sql_planner import (
+    CreateTrigger as PlanCreateTrigger,
+)
+from sql_planner import (
     DropIndex as PlanDropIndex,
 )
 from sql_planner import (
     DropTable as PlanDropTable,
+)
+from sql_planner import (
+    DropTrigger as PlanDropTrigger,
 )
 from sql_planner import (
     IsNotNull as AstIsNotNull,
@@ -137,11 +144,13 @@ from .ir import (
     ComputeWindowFunctions,
     CreateIndex,
     CreateTable,
+    CreateTriggerDef,
     DeleteRows,
     Direction,
     DistinctResult,
     DropIndex,
     DropTable,
+    DropTriggerDef,
     EmitColumn,
     EmitRow,
     ExceptResult,
@@ -155,6 +164,9 @@ from .ir import (
     IntersectResult,
     IsNotNull,
     IsNull,
+    JoinBeginRow,
+    JoinIfMatched,
+    JoinSetMatched,
     Jump,
     JumpIfFalse,
     Label,
@@ -171,6 +183,7 @@ from .ir import (
     RollbackTransaction,
     RunExistsSubquery,
     RunRecursiveCTE,
+    RunScalarSubquery,
     RunSubquery,
     SaveGroupKey,
     ScanAllColumns,
@@ -299,6 +312,18 @@ def _compile_plan(p: LogicalPlan, ctx: _Ctx) -> tuple[list[Instruction], tuple[s
 
         case PlanDropIndex(name=name, if_exists=ie):
             return [DropIndex(name=name, if_exists=ie)], ()
+
+        case PlanCreateTrigger(
+            name=name, timing=timing, event=event, table=table, body_sql=body
+        ):
+            return [
+                CreateTriggerDef(
+                    name=name, timing=timing, event=event, table=table, body_sql=body
+                ),
+            ], ()
+
+        case PlanDropTrigger(name=name, if_exists=ie):
+            return [DropTriggerDef(name=name, if_exists=ie)], ()
 
         case Insert():
             return _compile_insert(p, ctx), ()
@@ -447,6 +472,13 @@ def _compile_core(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
             return _compile_aggregate(p, ctx)
         case Having(input=Aggregate() as agg, predicate=pred):
             return _compile_aggregate(agg, ctx, having=pred)
+        # Project(Aggregate) — occurs in scalar subquery inner plans that haven't
+        # had _flatten_project_over_aggregate applied. Skip the projection layer;
+        # column names don't matter for sub-program result rows.
+        case Project(input=Aggregate() as agg):
+            return _compile_aggregate(agg, ctx)
+        case Project(input=Having(input=Aggregate() as agg, predicate=pred)):
+            return _compile_aggregate(agg, ctx, having=pred)
 
         # Set operations — compile left side, then right side, then post-process.
         #
@@ -530,10 +562,14 @@ def _compile_select(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
     predicate, inner = _peel_filter(inner)
 
     def body(c: _Ctx) -> list[Instruction]:
+        # Generate a fresh skip label on each invocation so that calling
+        # body twice (e.g. matched path + null-padded path in a LEFT JOIN)
+        # does not produce duplicate Label names in the instruction stream.
+        skip = c.new_label("filter_skip") if predicate is not None else ""
         out: list[Instruction] = []
         if predicate is not None:
             out.extend(_compile_expr(predicate, c))
-            out.append(JumpIfFalse(label=_skip_label))
+            out.append(JumpIfFalse(label=skip))
         # Build the row.
         out.append(BeginRow())
         if project_items is None:
@@ -553,11 +589,9 @@ def _compile_select(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
                     out.append(EmitColumn(name=_projection_name(it)))
         out.append(EmitRow())
         if predicate is not None:
-            out.append(Label(name=_skip_label))
+            out.append(Label(name=skip))
         return out
 
-    # Unique skip label per SELECT body.
-    _skip_label = ctx.new_label("filter_skip")
     return _compile_source(inner, body, ctx)
 
 
@@ -787,7 +821,66 @@ def _compile_join(
 
         return _compile_source(lft, outer_body, ctx)
 
-    # LEFT / RIGHT / FULL — not yet implemented; raise a clear error.
+    if kind == JoinKind.LEFT:
+        # Nested-loop LEFT OUTER JOIN.
+        #
+        # For each left row we track whether any right row satisfied the ON
+        # condition (join_match_stack in the VM).  After the right scan
+        # exhausts, if no match was found we emit ``body`` once more; at that
+        # point the right cursor has no current row so every LoadColumn for a
+        # right-side column returns NULL — exactly the null-padding SQL
+        # requires.
+        #
+        # ``body`` is called at most twice per left row:
+        #   1. Once per matching (left, right) pair inside the inner loop.
+        #   2. At most once on the null-padded path if zero right rows matched.
+        # Each call to ``body`` generates a fresh filter-skip label (the body
+        # closure uses c.new_label, not a closed-over static string), so
+        # duplicate label names cannot appear in the instruction stream.
+        matched_label = ctx.new_label("loj_matched")
+
+        def loj_inner_body(c: _Ctx) -> list[Instruction]:
+            out: list[Instruction] = []
+            skip = c.new_label("loj_cond_skip")
+            if cond is not None:
+                out.extend(_compile_expr(cond, c))
+                out.append(JumpIfFalse(label=skip))
+            # ON condition passed: mark this left row as having a match,
+            # then emit the regular (non-null-padded) output row.
+            out.append(JoinSetMatched())
+            out.extend(body(c))
+            out.append(Label(name=skip))
+            return out
+
+        def loj_outer_body(c: _Ctx) -> list[Instruction]:
+            out: list[Instruction] = []
+            # Begin a new match-tracking epoch for this left row.
+            out.append(JoinBeginRow())
+            out.extend(_compile_source(rgt, loj_inner_body, c))
+            # After the right scan: if at least one right row matched ON,
+            # jump past the null-padded emission.
+            out.append(JoinIfMatched(label=matched_label))
+            # No match found: emit body with the right cursor closed.
+            # LoadColumn for right-side columns returns NULL automatically
+            # because the cursor has no current row.
+            out.extend(body(c))
+            out.append(Label(name=matched_label))
+            return out
+
+        return _compile_source(lft, loj_outer_body, ctx)
+
+    if kind == JoinKind.RIGHT:
+        # RIGHT OUTER JOIN = LEFT OUTER JOIN with the two sides swapped in the
+        # execution loop.  The ON condition and body both reference columns by
+        # table alias (via alias_to_cursor), not by physical scan position, so
+        # reversing which side is the outer loop is sufficient: the original
+        # right table becomes the outer "left" (preserved for every row) and
+        # the original left table becomes the inner "right" (null-padded when
+        # no ON match is found).  Output column order is controlled by the
+        # Project node above the join and is not affected by the swap.
+        return _compile_join(rgt, lft, JoinKind.LEFT, cond, body, ctx)
+
+    # FULL — not yet implemented; raise a clear error.
     raise UnsupportedNode(f"Join({kind})")
 
 
@@ -1020,6 +1113,20 @@ def _compile_expr(e: Expr, ctx: _Ctx) -> list[Instruction]:
                 result_schema=(),
             )
             return [RunExistsSubquery(sub_program=sub)]
+        case ScalarSubquery(query=inner_plan):
+            # Compile the inner SELECT to a standalone sub-program.  At
+            # runtime the VM executes it, takes the first column of the
+            # single result row, and pushes it as the scalar value.
+            inner_ctx = _Ctx()
+            inner_instrs, _ = _compile_plan(inner_plan, inner_ctx)  # type: ignore[arg-type]
+            inner_instrs.append(Halt())
+            inner_resolved = _resolve_labels(inner_instrs)
+            sub = Program(
+                instructions=tuple(inner_instrs),
+                labels=inner_resolved,
+                result_schema=(),
+            )
+            return [RunScalarSubquery(sub_program=sub)]
         case AggregateExpr():
             # At this point in compilation we're inside an aggregate node's
             # HAVING or projection; direct emission isn't possible without
@@ -1157,6 +1264,7 @@ def _to_ir_col(c: AstColumnDef) -> IrColumnDef:
         name=c.name,
         type=c.type_name,
         nullable=not c.effective_not_null(),
+        primary_key=c.primary_key,
         check_instrs=check_instrs,
         foreign_key=fk,
     )

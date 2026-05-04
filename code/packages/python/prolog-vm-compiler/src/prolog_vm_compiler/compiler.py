@@ -4,13 +4,19 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterable, Iterator, Mapping
 from dataclasses import dataclass
+from itertools import islice
 from pathlib import Path
 from types import MappingProxyType
+from typing import Literal, Protocol
 
+from logic_bytecode import LogicBytecodeProgram
+from logic_bytecode import compile_program as compile_logic_bytecode_program
+from logic_bytecode_vm import LogicBytecodeVM, create_logic_bytecode_vm
 from logic_engine import (
     Clause,
     Compound,
     ConjExpr,
+    Disequality,
     DisjExpr,
     FreshExpr,
     GoalExpr,
@@ -28,6 +34,7 @@ from logic_engine import (
 from logic_instructions import (
     InstructionProgram,
     LogicInstruction,
+    QueryInstruction,
     defdynamic,
     defrel,
     fact,
@@ -37,16 +44,17 @@ from logic_instructions import (
     validate,
 )
 from logic_vm import LogicVM, create_logic_vm
-from prolog_core import OperatorTable
+from prolog_core import DialectProfile, OperatorTable, dialect_profile
 from prolog_loader import (
     LoadedPrologProject,
     LoadedPrologSource,
+    PrologDialect,
     SourceResolver,
     adapt_prolog_goal,
-    load_swi_prolog_file,
-    load_swi_prolog_project,
-    load_swi_prolog_project_from_files,
-    load_swi_prolog_source,
+    load_prolog_file,
+    load_prolog_project,
+    load_prolog_project_from_files,
+    load_prolog_source,
     rewrite_loaded_prolog_query,
 )
 from prolog_parser import ParsedQuery
@@ -54,6 +62,7 @@ from swi_prolog_parser import parse_swi_query
 from symbol_core import Symbol
 
 type RelationKey = tuple[Symbol, int]
+type PrologVMBackend = Literal["structured", "bytecode"]
 
 
 @dataclass(frozen=True, slots=True)
@@ -61,6 +70,7 @@ class CompiledPrologVMProgram:
     """A Prolog source lowered into standardized Logic VM instructions."""
 
     instructions: InstructionProgram
+    dialect_profile: DialectProfile | None = None
     initialization_query_count: int = 0
     source_query_count: int = 0
     source_query_variables: tuple[tuple[str, ...], ...] = ()
@@ -106,12 +116,18 @@ class PrologAnswer:
     """A named source-level answer produced by the compiled Prolog VM path."""
 
     bindings: Mapping[str, Term]
+    residual_constraints: tuple[Disequality, ...] = ()
 
     def __post_init__(self) -> None:
         object.__setattr__(
             self,
             "bindings",
             MappingProxyType(dict(self.bindings)),
+        )
+        object.__setattr__(
+            self,
+            "residual_constraints",
+            tuple(self.residual_constraints),
         )
 
     def as_dict(self) -> dict[str, Term]:
@@ -124,13 +140,55 @@ class PrologVMInitializationError(RuntimeError):
     """Raised when a compiled initialization query cannot be proven."""
 
 
+class PrologQueryVMState(Protocol):
+    """Query storage shared by structured and bytecode VM states."""
+
+    queries: list[QueryInstruction]
+
+
+class PrologQueryVM(Protocol):
+    """Minimal VM shape shared by structured and bytecode Prolog runtimes."""
+
+    state: PrologQueryVMState
+
+    def assembled_program(self) -> Program:
+        """Return the loaded VM program as an executable logic-engine program."""
+        ...
+
+    def run_query(
+        self,
+        query_index: int = 0,
+        limit: int | None = None,
+    ) -> list[Term | tuple[Term, ...]]:
+        """Run one stored query from a fresh logic state."""
+        ...
+
+    def solve_query_from(
+        self,
+        state: State,
+        query_index: int = 0,
+    ) -> Iterator[State]:
+        """Yield proof states for one stored query from an existing state."""
+        ...
+
+    def run_query_from(
+        self,
+        state: State,
+        query_index: int = 0,
+        limit: int | None = None,
+    ) -> list[Term | tuple[Term, ...]]:
+        """Run one stored query from an existing logic state."""
+        ...
+
+
 @dataclass(slots=True)
 class PrologVMRuntime:
     """A loaded Prolog VM runtime that can answer ad-hoc source queries."""
 
     compiled_program: CompiledPrologVMProgram
-    vm: LogicVM
+    vm: PrologQueryVM
     state: State
+    dialect_profile: DialectProfile | None = None
     operator_table: OperatorTable | None = None
     adapt_builtins: bool = True
     query_rewriter: Callable[[ParsedQuery], ParsedQuery] | None = None
@@ -147,7 +205,11 @@ class PrologVMRuntime:
         parsed_query = self._parse_query(source)
         if self.query_rewriter is not None:
             parsed_query = self.query_rewriter(parsed_query)
-        goal = _adapt_goal(parsed_query.goal, adapt_builtins=self.adapt_builtins)
+        goal = _adapt_goal(
+            parsed_query.goal,
+            adapt_builtins=self.adapt_builtins,
+            operator_table=self.operator_table,
+        )
         outputs = tuple(parsed_query.variables.values())
         proof_states = solve_from(self.vm.assembled_program(), goal, self.state)
 
@@ -163,7 +225,11 @@ class PrologVMRuntime:
             if committed_state is None:
                 committed_state = proof_state
             answers.append(
-                _answer_from_terms(parsed_query.variables.keys(), outputs, proof_state),
+                _answer_from_terms(
+                    parsed_query.variables.keys(),
+                    outputs,
+                    proof_state,
+                ),
             )
 
         if commit and committed_state is not None:
@@ -198,8 +264,9 @@ class PrologVMRuntime:
     def _parse_query(self, source: str | ParsedQuery) -> ParsedQuery:
         if isinstance(source, ParsedQuery):
             return source
-        return parse_swi_query(
+        return _parse_query_for_dialect(
             _normalize_query_source(source),
+            dialect=self.dialect_profile,
             operator_table=self.operator_table,
         )
 
@@ -217,6 +284,8 @@ def compile_loaded_prolog_source(
         loaded_source.initialization_goals,
         loaded_source.program,
         adapt_builtins=adapt_builtins,
+        operator_table=loaded_source.operator_table,
+        dialect_profile=loaded_source.dialect_profile,
     )
 
 
@@ -233,6 +302,22 @@ def compile_loaded_prolog_project(
         loaded_project.initialization_goals,
         loaded_project.program,
         adapt_builtins=adapt_builtins,
+        operator_table=_project_operator_table(loaded_project),
+        dialect_profile=_project_dialect_profile(loaded_project),
+    )
+
+
+def compile_prolog_source(
+    source: str,
+    *,
+    dialect: PrologDialect = "swi",
+    adapt_builtins: bool = True,
+) -> CompiledPrologVMProgram:
+    """Parse, load, and compile one Prolog source string by dialect profile."""
+
+    return compile_loaded_prolog_source(
+        load_prolog_source(source, dialect=dialect),
+        adapt_builtins=adapt_builtins,
     )
 
 
@@ -243,8 +328,190 @@ def compile_swi_prolog_source(
 ) -> CompiledPrologVMProgram:
     """Parse, load, and compile one SWI-compatible Prolog source string."""
 
+    return compile_prolog_source(
+        source,
+        dialect="swi",
+        adapt_builtins=adapt_builtins,
+    )
+
+
+def compile_iso_prolog_source(
+    source: str,
+    *,
+    adapt_builtins: bool = True,
+) -> CompiledPrologVMProgram:
+    """Parse, load, and compile one ISO/Core Prolog source string."""
+
+    return compile_prolog_source(
+        source,
+        dialect="iso",
+        adapt_builtins=adapt_builtins,
+    )
+
+
+def run_prolog_source_query(
+    source: str,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    *,
+    dialect: PrologDialect = "swi",
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Parse, compile, and run one source query through the selected backend."""
+
+    compiled_program = compile_prolog_source(
+        source,
+        dialect=dialect,
+        adapt_builtins=adapt_builtins,
+    )
+    if initialize:
+        return run_initialized_compiled_prolog_query(
+            compiled_program,
+            source_query_index,
+            limit,
+            backend=backend,
+        )
+    return run_compiled_prolog_query(
+        compiled_program,
+        source_query_index,
+        limit,
+        backend=backend,
+    )
+
+
+def run_prolog_source_query_answers(
+    source: str,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    *,
+    dialect: PrologDialect = "swi",
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Parse, compile, and run one source query with named bindings."""
+
+    compiled_program = compile_prolog_source(
+        source,
+        dialect=dialect,
+        adapt_builtins=adapt_builtins,
+    )
+    if initialize:
+        return run_initialized_compiled_prolog_query_answers(
+            compiled_program,
+            source_query_index,
+            limit,
+            backend=backend,
+        )
+    return run_compiled_prolog_query_answers(
+        compiled_program,
+        source_query_index,
+        limit,
+        backend=backend,
+    )
+
+
+def run_swi_prolog_source_query(
+    source: str,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    *,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Parse, compile, and run one SWI-compatible source query."""
+
+    return run_prolog_source_query(
+        source,
+        source_query_index,
+        limit,
+        dialect="swi",
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def run_swi_prolog_source_query_answers(
+    source: str,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    *,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Parse, compile, and run one SWI-compatible query with named bindings."""
+
+    return run_prolog_source_query_answers(
+        source,
+        source_query_index,
+        limit,
+        dialect="swi",
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def run_iso_prolog_source_query(
+    source: str,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    *,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Parse, compile, and run one ISO/Core source query."""
+
+    return run_prolog_source_query(
+        source,
+        source_query_index,
+        limit,
+        dialect="iso",
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def run_iso_prolog_source_query_answers(
+    source: str,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    *,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Parse, compile, and run one ISO/Core query with named bindings."""
+
+    return run_prolog_source_query_answers(
+        source,
+        source_query_index,
+        limit,
+        dialect="iso",
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def compile_prolog_file(
+    path: str | Path,
+    *,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    adapt_builtins: bool = True,
+) -> CompiledPrologVMProgram:
+    """Read, load, and compile one Prolog source file by dialect."""
+
     return compile_loaded_prolog_source(
-        load_swi_prolog_source(source),
+        load_prolog_file(path, dialect=dialect, source_resolver=source_resolver),
         adapt_builtins=adapt_builtins,
     )
 
@@ -257,8 +524,23 @@ def compile_swi_prolog_file(
 ) -> CompiledPrologVMProgram:
     """Read, load, and compile one SWI-compatible Prolog source file."""
 
-    return compile_loaded_prolog_source(
-        load_swi_prolog_file(path, source_resolver=source_resolver),
+    return compile_prolog_file(
+        path,
+        dialect="swi",
+        source_resolver=source_resolver,
+        adapt_builtins=adapt_builtins,
+    )
+
+
+def compile_prolog_project(
+    *sources: str,
+    dialect: PrologDialect = "swi",
+    adapt_builtins: bool = True,
+) -> CompiledPrologVMProgram:
+    """Parse, link, and compile multiple Prolog sources by dialect."""
+
+    return compile_loaded_prolog_project(
+        load_prolog_project(*sources, dialect=dialect),
         adapt_builtins=adapt_builtins,
     )
 
@@ -269,8 +551,27 @@ def compile_swi_prolog_project(
 ) -> CompiledPrologVMProgram:
     """Parse, link, and compile multiple SWI-compatible Prolog sources."""
 
+    return compile_prolog_project(
+        *sources,
+        dialect="swi",
+        adapt_builtins=adapt_builtins,
+    )
+
+
+def compile_prolog_project_from_files(
+    *entry_paths: str | Path,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    adapt_builtins: bool = True,
+) -> CompiledPrologVMProgram:
+    """Load, link, and compile a Prolog file graph by dialect."""
+
     return compile_loaded_prolog_project(
-        load_swi_prolog_project(*sources),
+        load_prolog_project_from_files(
+            *entry_paths,
+            dialect=dialect,
+            source_resolver=source_resolver,
+        ),
         adapt_builtins=adapt_builtins,
     )
 
@@ -282,12 +583,343 @@ def compile_swi_prolog_project_from_files(
 ) -> CompiledPrologVMProgram:
     """Load, link, and compile a SWI-compatible Prolog file graph."""
 
-    return compile_loaded_prolog_project(
-        load_swi_prolog_project_from_files(
-            *entry_paths,
-            source_resolver=source_resolver,
-        ),
+    return compile_prolog_project_from_files(
+        *entry_paths,
+        dialect="swi",
+        source_resolver=source_resolver,
         adapt_builtins=adapt_builtins,
+    )
+
+
+def run_prolog_file_query(
+    path: str | Path,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    *,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Read, compile, and run one source query from a Prolog file."""
+
+    compiled_program = compile_prolog_file(
+        path,
+        dialect=dialect,
+        source_resolver=source_resolver,
+        adapt_builtins=adapt_builtins,
+    )
+    if initialize:
+        return run_initialized_compiled_prolog_query(
+            compiled_program,
+            source_query_index,
+            limit,
+            backend=backend,
+        )
+    return run_compiled_prolog_query(
+        compiled_program,
+        source_query_index,
+        limit,
+        backend=backend,
+    )
+
+
+def run_prolog_file_query_answers(
+    path: str | Path,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    *,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Read, compile, and run one file query with named bindings."""
+
+    compiled_program = compile_prolog_file(
+        path,
+        dialect=dialect,
+        source_resolver=source_resolver,
+        adapt_builtins=adapt_builtins,
+    )
+    if initialize:
+        return run_initialized_compiled_prolog_query_answers(
+            compiled_program,
+            source_query_index,
+            limit,
+            backend=backend,
+        )
+    return run_compiled_prolog_query_answers(
+        compiled_program,
+        source_query_index,
+        limit,
+        backend=backend,
+    )
+
+
+def run_swi_prolog_file_query(
+    path: str | Path,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    *,
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Read, compile, and run one SWI-compatible file query."""
+
+    return run_prolog_file_query(
+        path,
+        source_query_index,
+        limit,
+        dialect="swi",
+        source_resolver=source_resolver,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def run_swi_prolog_file_query_answers(
+    path: str | Path,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    *,
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Read, compile, and run one SWI-compatible file query with bindings."""
+
+    return run_prolog_file_query_answers(
+        path,
+        source_query_index,
+        limit,
+        dialect="swi",
+        source_resolver=source_resolver,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def run_prolog_project_query(
+    *sources: str,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    dialect: PrologDialect = "swi",
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Parse, link, compile, and run one source query from a project."""
+
+    compiled_program = compile_prolog_project(
+        *sources,
+        dialect=dialect,
+        adapt_builtins=adapt_builtins,
+    )
+    if initialize:
+        return run_initialized_compiled_prolog_query(
+            compiled_program,
+            source_query_index,
+            limit,
+            backend=backend,
+        )
+    return run_compiled_prolog_query(
+        compiled_program,
+        source_query_index,
+        limit,
+        backend=backend,
+    )
+
+
+def run_prolog_project_query_answers(
+    *sources: str,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    dialect: PrologDialect = "swi",
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Parse, link, compile, and run one project query with bindings."""
+
+    compiled_program = compile_prolog_project(
+        *sources,
+        dialect=dialect,
+        adapt_builtins=adapt_builtins,
+    )
+    if initialize:
+        return run_initialized_compiled_prolog_query_answers(
+            compiled_program,
+            source_query_index,
+            limit,
+            backend=backend,
+        )
+    return run_compiled_prolog_query_answers(
+        compiled_program,
+        source_query_index,
+        limit,
+        backend=backend,
+    )
+
+
+def run_swi_prolog_project_query(
+    *sources: str,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Parse, link, compile, and run one SWI-compatible project query."""
+
+    return run_prolog_project_query(
+        *sources,
+        source_query_index=source_query_index,
+        limit=limit,
+        dialect="swi",
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def run_swi_prolog_project_query_answers(
+    *sources: str,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Parse, link, compile, and run one SWI project query with bindings."""
+
+    return run_prolog_project_query_answers(
+        *sources,
+        source_query_index=source_query_index,
+        limit=limit,
+        dialect="swi",
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def run_prolog_project_file_query(
+    *entry_paths: str | Path,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Load, link, compile, and run one source query from a file graph."""
+
+    compiled_program = compile_prolog_project_from_files(
+        *entry_paths,
+        dialect=dialect,
+        source_resolver=source_resolver,
+        adapt_builtins=adapt_builtins,
+    )
+    if initialize:
+        return run_initialized_compiled_prolog_query(
+            compiled_program,
+            source_query_index,
+            limit,
+            backend=backend,
+        )
+    return run_compiled_prolog_query(
+        compiled_program,
+        source_query_index,
+        limit,
+        backend=backend,
+    )
+
+
+def run_prolog_project_file_query_answers(
+    *entry_paths: str | Path,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Load, link, compile, and run one file-graph query with bindings."""
+
+    compiled_program = compile_prolog_project_from_files(
+        *entry_paths,
+        dialect=dialect,
+        source_resolver=source_resolver,
+        adapt_builtins=adapt_builtins,
+    )
+    if initialize:
+        return run_initialized_compiled_prolog_query_answers(
+            compiled_program,
+            source_query_index,
+            limit,
+            backend=backend,
+        )
+    return run_compiled_prolog_query_answers(
+        compiled_program,
+        source_query_index,
+        limit,
+        backend=backend,
+    )
+
+
+def run_swi_prolog_project_file_query(
+    *entry_paths: str | Path,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Load, link, compile, and run one SWI-compatible file-graph query."""
+
+    return run_prolog_project_file_query(
+        *entry_paths,
+        source_query_index=source_query_index,
+        limit=limit,
+        dialect="swi",
+        source_resolver=source_resolver,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def run_swi_prolog_project_file_query_answers(
+    *entry_paths: str | Path,
+    source_query_index: int = 0,
+    limit: int | None = None,
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = False,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Load, link, compile, and run one SWI file-graph query with bindings."""
+
+    return run_prolog_project_file_query_answers(
+        *entry_paths,
+        source_query_index=source_query_index,
+        limit=limit,
+        dialect="swi",
+        source_resolver=source_resolver,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
     )
 
 
@@ -300,21 +932,63 @@ def load_compiled_prolog_vm(compiled_program: CompiledPrologVMProgram) -> LogicV
     return vm
 
 
+def compile_prolog_to_bytecode(
+    compiled_program: CompiledPrologVMProgram,
+) -> LogicBytecodeProgram:
+    """Lower a compiled Prolog instruction stream into compact Logic bytecode."""
+
+    return compile_logic_bytecode_program(compiled_program.instructions)
+
+
+def load_compiled_prolog_bytecode_vm(
+    compiled_program: CompiledPrologVMProgram,
+) -> LogicBytecodeVM:
+    """Load a compiled Prolog program into a fresh Logic bytecode VM."""
+
+    vm = create_logic_bytecode_vm()
+    vm.load(compile_prolog_to_bytecode(compiled_program))
+    vm.run()
+    return vm
+
+
+def load_compiled_prolog_backend_vm(
+    compiled_program: CompiledPrologVMProgram,
+    *,
+    backend: PrologVMBackend = "structured",
+) -> PrologQueryVM:
+    """Load a compiled Prolog program into the selected VM backend."""
+
+    if backend == "structured":
+        return load_compiled_prolog_vm(compiled_program)
+    if backend == "bytecode":
+        return load_compiled_prolog_bytecode_vm(compiled_program)
+    msg = f"unsupported Prolog VM backend {backend!r}"
+    raise ValueError(msg)
+
+
 def create_prolog_vm_runtime(
     compiled_program: CompiledPrologVMProgram,
     *,
     initialize: bool = True,
+    dialect: PrologDialect | None = None,
     operator_table: OperatorTable | None = None,
     adapt_builtins: bool = True,
     query_rewriter: Callable[[ParsedQuery], ParsedQuery] | None = None,
+    backend: PrologVMBackend = "structured",
 ) -> PrologVMRuntime:
     """Create a stateful ad-hoc query runtime from a compiled program."""
 
-    vm = load_compiled_prolog_vm(compiled_program)
+    vm = load_compiled_prolog_backend_vm(compiled_program, backend=backend)
+    profile = (
+        compiled_program.dialect_profile
+        if dialect is None
+        else dialect_profile(dialect)
+    )
     runtime = PrologVMRuntime(
         compiled_program=compiled_program,
         vm=vm,
         state=State(),
+        dialect_profile=profile,
         operator_table=operator_table,
         adapt_builtins=adapt_builtins,
         query_rewriter=query_rewriter,
@@ -324,23 +998,135 @@ def create_prolog_vm_runtime(
     return runtime
 
 
-def create_swi_prolog_vm_runtime(
-    source: str,
+def create_prolog_bytecode_vm_runtime(
+    compiled_program: CompiledPrologVMProgram,
     *,
     initialize: bool = True,
+    dialect: PrologDialect | None = None,
+    operator_table: OperatorTable | None = None,
     adapt_builtins: bool = True,
+    query_rewriter: Callable[[ParsedQuery], ParsedQuery] | None = None,
 ) -> PrologVMRuntime:
-    """Parse, load, compile, and initialize a SWI-compatible query runtime."""
+    """Create a stateful ad-hoc query runtime backed by Logic bytecode."""
 
-    loaded_source = load_swi_prolog_source(source)
+    return create_prolog_vm_runtime(
+        compiled_program,
+        initialize=initialize,
+        dialect=dialect,
+        operator_table=operator_table,
+        adapt_builtins=adapt_builtins,
+        query_rewriter=query_rewriter,
+        backend="bytecode",
+    )
+
+
+def create_prolog_source_vm_runtime(
+    source: str,
+    *,
+    dialect: PrologDialect = "swi",
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> PrologVMRuntime:
+    """Parse, load, compile, and initialize a source query runtime by dialect."""
+
+    loaded_source = load_prolog_source(source, dialect=dialect)
     return create_prolog_vm_runtime(
         compile_loaded_prolog_source(
             loaded_source,
             adapt_builtins=adapt_builtins,
         ),
         initialize=initialize,
+        dialect=loaded_source.dialect_profile,
         operator_table=loaded_source.operator_table,
         adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def create_prolog_source_bytecode_vm_runtime(
+    source: str,
+    *,
+    dialect: PrologDialect = "swi",
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Parse, compile, bytecode-load, and initialize a query runtime."""
+
+    return create_prolog_source_vm_runtime(
+        source,
+        dialect=dialect,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend="bytecode",
+    )
+
+
+def create_swi_prolog_vm_runtime(
+    source: str,
+    *,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> PrologVMRuntime:
+    """Parse, load, compile, and initialize a SWI-compatible query runtime."""
+
+    return create_prolog_source_vm_runtime(
+        source,
+        dialect="swi",
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def create_swi_prolog_bytecode_vm_runtime(
+    source: str,
+    *,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Parse, compile, and bytecode-load a SWI-compatible query runtime."""
+
+    return create_swi_prolog_vm_runtime(
+        source,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend="bytecode",
+    )
+
+
+def create_iso_prolog_vm_runtime(
+    source: str,
+    *,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> PrologVMRuntime:
+    """Parse, load, compile, and initialize an ISO/Core query runtime."""
+
+    return create_prolog_source_vm_runtime(
+        source,
+        dialect="iso",
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def create_iso_prolog_bytecode_vm_runtime(
+    source: str,
+    *,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Parse, compile, and bytecode-load an ISO/Core query runtime."""
+
+    return create_iso_prolog_vm_runtime(
+        source,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend="bytecode",
     )
 
 
@@ -350,18 +1136,84 @@ def create_swi_prolog_file_runtime(
     source_resolver: SourceResolver | None = None,
     initialize: bool = True,
     adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
 ) -> PrologVMRuntime:
     """Create a stateful query runtime from one SWI-compatible Prolog file."""
 
-    loaded_source = load_swi_prolog_file(path, source_resolver=source_resolver)
+    return create_prolog_file_runtime(
+        path,
+        dialect="swi",
+        source_resolver=source_resolver,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def create_swi_prolog_file_bytecode_vm_runtime(
+    path: str | Path,
+    *,
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Create a bytecode-backed query runtime from one SWI Prolog file."""
+
+    return create_swi_prolog_file_runtime(
+        path,
+        source_resolver=source_resolver,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend="bytecode",
+    )
+
+
+def create_prolog_file_runtime(
+    path: str | Path,
+    *,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> PrologVMRuntime:
+    """Create a stateful query runtime from one Prolog file by dialect."""
+
+    loaded_source = load_prolog_file(
+        path,
+        dialect=dialect,
+        source_resolver=source_resolver,
+    )
     return create_prolog_vm_runtime(
         compile_loaded_prolog_source(
             loaded_source,
             adapt_builtins=adapt_builtins,
         ),
         initialize=initialize,
+        dialect=loaded_source.dialect_profile,
         operator_table=loaded_source.operator_table,
         adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def create_prolog_file_bytecode_vm_runtime(
+    path: str | Path,
+    *,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Create a bytecode-backed stateful query runtime from one Prolog file."""
+
+    return create_prolog_file_runtime(
+        path,
+        dialect=dialect,
+        source_resolver=source_resolver,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend="bytecode",
     )
 
 
@@ -370,16 +1222,55 @@ def create_swi_prolog_project_runtime(
     query_module: str | Symbol | None = None,
     initialize: bool = True,
     adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
 ) -> PrologVMRuntime:
     """Create a stateful query runtime from linked SWI-compatible sources."""
 
-    loaded_project = load_swi_prolog_project(*sources)
+    return create_prolog_project_runtime(
+        *sources,
+        dialect="swi",
+        query_module=query_module,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def create_swi_prolog_project_bytecode_vm_runtime(
+    *sources: str,
+    query_module: str | Symbol | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Create a bytecode-backed query runtime from linked SWI sources."""
+
+    return create_swi_prolog_project_runtime(
+        *sources,
+        query_module=query_module,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend="bytecode",
+    )
+
+
+def create_prolog_project_runtime(
+    *sources: str,
+    dialect: PrologDialect = "swi",
+    query_module: str | Symbol | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> PrologVMRuntime:
+    """Create a stateful query runtime from linked source strings by dialect."""
+
+    loaded_project = load_prolog_project(*sources, dialect=dialect)
     return create_prolog_vm_runtime(
         compile_loaded_prolog_project(
             loaded_project,
             adapt_builtins=adapt_builtins,
         ),
         initialize=initialize,
+        dialect=_project_dialect_profile(loaded_project),
         operator_table=_project_operator_table(loaded_project),
         adapt_builtins=adapt_builtins,
         query_rewriter=lambda query_value: rewrite_loaded_prolog_query(
@@ -387,6 +1278,26 @@ def create_swi_prolog_project_runtime(
             query_value,
             module=query_module,
         ),
+        backend=backend,
+    )
+
+
+def create_prolog_project_bytecode_vm_runtime(
+    *sources: str,
+    dialect: PrologDialect = "swi",
+    query_module: str | Symbol | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Create a bytecode-backed runtime from linked source strings."""
+
+    return create_prolog_project_runtime(
+        *sources,
+        dialect=dialect,
+        query_module=query_module,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend="bytecode",
     )
 
 
@@ -396,11 +1307,54 @@ def create_swi_prolog_project_file_runtime(
     query_module: str | Symbol | None = None,
     initialize: bool = True,
     adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
 ) -> PrologVMRuntime:
     """Create a stateful query runtime from a SWI-compatible Prolog file graph."""
 
-    loaded_project = load_swi_prolog_project_from_files(
+    return create_prolog_project_file_runtime(
         *entry_paths,
+        dialect="swi",
+        source_resolver=source_resolver,
+        query_module=query_module,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def create_swi_prolog_project_file_bytecode_vm_runtime(
+    *entry_paths: str | Path,
+    source_resolver: SourceResolver | None = None,
+    query_module: str | Symbol | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Create a bytecode-backed query runtime from a SWI file graph."""
+
+    return create_swi_prolog_project_file_runtime(
+        *entry_paths,
+        source_resolver=source_resolver,
+        query_module=query_module,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend="bytecode",
+    )
+
+
+def create_prolog_project_file_runtime(
+    *entry_paths: str | Path,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    query_module: str | Symbol | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> PrologVMRuntime:
+    """Create a stateful query runtime from a file graph by dialect."""
+
+    loaded_project = load_prolog_project_from_files(
+        *entry_paths,
+        dialect=dialect,
         source_resolver=source_resolver,
     )
     return create_prolog_vm_runtime(
@@ -409,6 +1363,7 @@ def create_swi_prolog_project_file_runtime(
             adapt_builtins=adapt_builtins,
         ),
         initialize=initialize,
+        dialect=_project_dialect_profile(loaded_project),
         operator_table=_project_operator_table(loaded_project),
         adapt_builtins=adapt_builtins,
         query_rewriter=lambda query_value: rewrite_loaded_prolog_query(
@@ -416,6 +1371,464 @@ def create_swi_prolog_project_file_runtime(
             query_value,
             module=query_module,
         ),
+        backend=backend,
+    )
+
+
+def create_prolog_project_file_bytecode_vm_runtime(
+    *entry_paths: str | Path,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    query_module: str | Symbol | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+) -> PrologVMRuntime:
+    """Create a bytecode-backed stateful runtime from a file graph."""
+
+    return create_prolog_project_file_runtime(
+        *entry_paths,
+        dialect=dialect,
+        source_resolver=source_resolver,
+        query_module=query_module,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend="bytecode",
+    )
+
+
+def query_prolog_source(
+    source: str,
+    query_source: str | ParsedQuery,
+    *,
+    limit: int | None = None,
+    dialect: PrologDialect = "swi",
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Load source text and answer one ad-hoc top-level query."""
+
+    runtime = create_prolog_source_vm_runtime(
+        source,
+        dialect=dialect,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+    return runtime.query(query_source, limit=limit)
+
+
+def query_prolog_source_values(
+    source: str,
+    query_source: str | ParsedQuery,
+    *,
+    limit: int | None = None,
+    dialect: PrologDialect = "swi",
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Load source text and return raw values for one ad-hoc query."""
+
+    return [
+        _answer_value(answer)
+        for answer in query_prolog_source(
+            source,
+            query_source,
+            limit=limit,
+            dialect=dialect,
+            initialize=initialize,
+            adapt_builtins=adapt_builtins,
+            backend=backend,
+        )
+    ]
+
+
+def query_swi_prolog_source(
+    source: str,
+    query_source: str | ParsedQuery,
+    *,
+    limit: int | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Load SWI-compatible source text and answer one top-level query."""
+
+    return query_prolog_source(
+        source,
+        query_source,
+        limit=limit,
+        dialect="swi",
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def query_swi_prolog_source_values(
+    source: str,
+    query_source: str | ParsedQuery,
+    *,
+    limit: int | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Load SWI-compatible source text and return raw query values."""
+
+    return query_prolog_source_values(
+        source,
+        query_source,
+        limit=limit,
+        dialect="swi",
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def query_iso_prolog_source(
+    source: str,
+    query_source: str | ParsedQuery,
+    *,
+    limit: int | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Load ISO/Core source text and answer one top-level query."""
+
+    return query_prolog_source(
+        source,
+        query_source,
+        limit=limit,
+        dialect="iso",
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def query_iso_prolog_source_values(
+    source: str,
+    query_source: str | ParsedQuery,
+    *,
+    limit: int | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Load ISO/Core source text and return raw query values."""
+
+    return query_prolog_source_values(
+        source,
+        query_source,
+        limit=limit,
+        dialect="iso",
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def query_prolog_file(
+    path: str | Path,
+    query_source: str | ParsedQuery,
+    *,
+    limit: int | None = None,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Load one Prolog file and answer an ad-hoc top-level query."""
+
+    runtime = create_prolog_file_runtime(
+        path,
+        dialect=dialect,
+        source_resolver=source_resolver,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+    return runtime.query(query_source, limit=limit)
+
+
+def query_prolog_file_values(
+    path: str | Path,
+    query_source: str | ParsedQuery,
+    *,
+    limit: int | None = None,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Load one Prolog file and return raw values for an ad-hoc query."""
+
+    return [
+        _answer_value(answer)
+        for answer in query_prolog_file(
+            path,
+            query_source,
+            limit=limit,
+            dialect=dialect,
+            source_resolver=source_resolver,
+            initialize=initialize,
+            adapt_builtins=adapt_builtins,
+            backend=backend,
+        )
+    ]
+
+
+def query_swi_prolog_file(
+    path: str | Path,
+    query_source: str | ParsedQuery,
+    *,
+    limit: int | None = None,
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Load one SWI-compatible Prolog file and answer a top-level query."""
+
+    return query_prolog_file(
+        path,
+        query_source,
+        limit=limit,
+        dialect="swi",
+        source_resolver=source_resolver,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def query_swi_prolog_file_values(
+    path: str | Path,
+    query_source: str | ParsedQuery,
+    *,
+    limit: int | None = None,
+    source_resolver: SourceResolver | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Load one SWI-compatible Prolog file and return raw query values."""
+
+    return query_prolog_file_values(
+        path,
+        query_source,
+        limit=limit,
+        dialect="swi",
+        source_resolver=source_resolver,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def query_prolog_project(
+    *sources: str,
+    query_source: str | ParsedQuery,
+    limit: int | None = None,
+    dialect: PrologDialect = "swi",
+    query_module: str | Symbol | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Load linked source strings and answer an ad-hoc top-level query."""
+
+    runtime = create_prolog_project_runtime(
+        *sources,
+        dialect=dialect,
+        query_module=query_module,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+    return runtime.query(query_source, limit=limit)
+
+
+def query_prolog_project_values(
+    *sources: str,
+    query_source: str | ParsedQuery,
+    limit: int | None = None,
+    dialect: PrologDialect = "swi",
+    query_module: str | Symbol | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Load linked source strings and return raw ad-hoc query values."""
+
+    return [
+        _answer_value(answer)
+        for answer in query_prolog_project(
+            *sources,
+            query_source=query_source,
+            limit=limit,
+            dialect=dialect,
+            query_module=query_module,
+            initialize=initialize,
+            adapt_builtins=adapt_builtins,
+            backend=backend,
+        )
+    ]
+
+
+def query_swi_prolog_project(
+    *sources: str,
+    query_source: str | ParsedQuery,
+    limit: int | None = None,
+    query_module: str | Symbol | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Load linked SWI-compatible source strings and answer a query."""
+
+    return query_prolog_project(
+        *sources,
+        query_source=query_source,
+        limit=limit,
+        dialect="swi",
+        query_module=query_module,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def query_swi_prolog_project_values(
+    *sources: str,
+    query_source: str | ParsedQuery,
+    limit: int | None = None,
+    query_module: str | Symbol | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Load linked SWI-compatible source strings and return raw values."""
+
+    return query_prolog_project_values(
+        *sources,
+        query_source=query_source,
+        limit=limit,
+        dialect="swi",
+        query_module=query_module,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def query_prolog_project_file(
+    *entry_paths: str | Path,
+    query_source: str | ParsedQuery,
+    limit: int | None = None,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    query_module: str | Symbol | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Load a Prolog file graph and answer an ad-hoc top-level query."""
+
+    runtime = create_prolog_project_file_runtime(
+        *entry_paths,
+        dialect=dialect,
+        source_resolver=source_resolver,
+        query_module=query_module,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+    return runtime.query(query_source, limit=limit)
+
+
+def query_prolog_project_file_values(
+    *entry_paths: str | Path,
+    query_source: str | ParsedQuery,
+    limit: int | None = None,
+    dialect: PrologDialect = "swi",
+    source_resolver: SourceResolver | None = None,
+    query_module: str | Symbol | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Load a Prolog file graph and return raw ad-hoc query values."""
+
+    return [
+        _answer_value(answer)
+        for answer in query_prolog_project_file(
+            *entry_paths,
+            query_source=query_source,
+            limit=limit,
+            dialect=dialect,
+            source_resolver=source_resolver,
+            query_module=query_module,
+            initialize=initialize,
+            adapt_builtins=adapt_builtins,
+            backend=backend,
+        )
+    ]
+
+
+def query_swi_prolog_project_file(
+    *entry_paths: str | Path,
+    query_source: str | ParsedQuery,
+    limit: int | None = None,
+    source_resolver: SourceResolver | None = None,
+    query_module: str | Symbol | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[PrologAnswer]:
+    """Load a SWI-compatible file graph and answer a top-level query."""
+
+    return query_prolog_project_file(
+        *entry_paths,
+        query_source=query_source,
+        limit=limit,
+        dialect="swi",
+        source_resolver=source_resolver,
+        query_module=query_module,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
+    )
+
+
+def query_swi_prolog_project_file_values(
+    *entry_paths: str | Path,
+    query_source: str | ParsedQuery,
+    limit: int | None = None,
+    source_resolver: SourceResolver | None = None,
+    query_module: str | Symbol | None = None,
+    initialize: bool = True,
+    adapt_builtins: bool = True,
+    backend: PrologVMBackend = "structured",
+) -> list[Term | tuple[Term, ...]]:
+    """Load a SWI-compatible file graph and return raw query values."""
+
+    return query_prolog_project_file_values(
+        *entry_paths,
+        query_source=query_source,
+        limit=limit,
+        dialect="swi",
+        source_resolver=source_resolver,
+        query_module=query_module,
+        initialize=initialize,
+        adapt_builtins=adapt_builtins,
+        backend=backend,
     )
 
 
@@ -423,10 +1836,12 @@ def run_compiled_prolog_query(
     compiled_program: CompiledPrologVMProgram,
     source_query_index: int = 0,
     limit: int | None = None,
+    *,
+    backend: PrologVMBackend = "structured",
 ) -> list[Term | tuple[Term, ...]]:
     """Run one source-level query from a compiled Prolog VM program."""
 
-    vm = load_compiled_prolog_vm(compiled_program)
+    vm = load_compiled_prolog_backend_vm(compiled_program, backend=backend)
     return vm.run_query(
         query_index=compiled_program.source_query_vm_index(source_query_index),
         limit=limit,
@@ -437,17 +1852,18 @@ def run_compiled_prolog_query_answers(
     compiled_program: CompiledPrologVMProgram,
     source_query_index: int = 0,
     limit: int | None = None,
+    *,
+    backend: PrologVMBackend = "structured",
 ) -> list[PrologAnswer]:
     """Run one source query and return bindings keyed by Prolog variable name."""
 
-    return _answers_from_results(
+    vm = load_compiled_prolog_backend_vm(compiled_program, backend=backend)
+    return _answers_from_vm_query(
         compiled_program,
+        vm,
+        State(),
         source_query_index,
-        run_compiled_prolog_query(
-            compiled_program,
-            source_query_index=source_query_index,
-            limit=limit,
-        ),
+        limit=limit,
     )
 
 
@@ -455,10 +1871,11 @@ def run_compiled_prolog_queries(
     compiled_program: CompiledPrologVMProgram,
     *,
     limit: int | None = None,
+    backend: PrologVMBackend = "structured",
 ) -> list[list[Term | tuple[Term, ...]]]:
     """Run all source-level queries from a compiled Prolog VM program."""
 
-    vm = load_compiled_prolog_vm(compiled_program)
+    vm = load_compiled_prolog_backend_vm(compiled_program, backend=backend)
     return [
         vm.run_query(
             query_index=compiled_program.source_query_vm_index(index),
@@ -472,10 +1889,11 @@ def run_compiled_prolog_initializations(
     compiled_program: CompiledPrologVMProgram,
     *,
     state: State | None = None,
+    backend: PrologVMBackend = "structured",
 ) -> State:
     """Run compiled initialization query slots in order and return final state."""
 
-    vm = load_compiled_prolog_vm(compiled_program)
+    vm = load_compiled_prolog_backend_vm(compiled_program, backend=backend)
     return _run_initializations_on_vm(vm, compiled_program, state=state)
 
 
@@ -483,10 +1901,12 @@ def run_initialized_compiled_prolog_query(
     compiled_program: CompiledPrologVMProgram,
     source_query_index: int = 0,
     limit: int | None = None,
+    *,
+    backend: PrologVMBackend = "structured",
 ) -> list[Term | tuple[Term, ...]]:
     """Run initializations, then execute one source query from that state."""
 
-    vm = load_compiled_prolog_vm(compiled_program)
+    vm = load_compiled_prolog_backend_vm(compiled_program, backend=backend)
     initialized_state = _run_initializations_on_vm(vm, compiled_program)
     return vm.run_query_from(
         initialized_state,
@@ -499,17 +1919,107 @@ def run_initialized_compiled_prolog_query_answers(
     compiled_program: CompiledPrologVMProgram,
     source_query_index: int = 0,
     limit: int | None = None,
+    *,
+    backend: PrologVMBackend = "structured",
 ) -> list[PrologAnswer]:
     """Run initializations and return named bindings for one source query."""
 
-    return _answers_from_results(
+    vm = load_compiled_prolog_backend_vm(compiled_program, backend=backend)
+    initialized_state = _run_initializations_on_vm(vm, compiled_program)
+    return _answers_from_vm_query(
+        compiled_program,
+        vm,
+        initialized_state,
+        source_query_index,
+        limit=limit,
+    )
+
+
+def run_compiled_prolog_bytecode_query(
+    compiled_program: CompiledPrologVMProgram,
+    source_query_index: int = 0,
+    limit: int | None = None,
+) -> list[Term | tuple[Term, ...]]:
+    """Run one source query through the Logic bytecode VM path."""
+
+    return run_compiled_prolog_query(
         compiled_program,
         source_query_index,
-        run_initialized_compiled_prolog_query(
-            compiled_program,
-            source_query_index=source_query_index,
-            limit=limit,
-        ),
+        limit,
+        backend="bytecode",
+    )
+
+
+def run_compiled_prolog_bytecode_query_answers(
+    compiled_program: CompiledPrologVMProgram,
+    source_query_index: int = 0,
+    limit: int | None = None,
+) -> list[PrologAnswer]:
+    """Run one bytecode VM source query with named Prolog bindings."""
+
+    return run_compiled_prolog_query_answers(
+        compiled_program,
+        source_query_index,
+        limit,
+        backend="bytecode",
+    )
+
+
+def run_compiled_prolog_bytecode_queries(
+    compiled_program: CompiledPrologVMProgram,
+    *,
+    limit: int | None = None,
+) -> list[list[Term | tuple[Term, ...]]]:
+    """Run all source queries through the Logic bytecode VM path."""
+
+    return run_compiled_prolog_queries(
+        compiled_program,
+        limit=limit,
+        backend="bytecode",
+    )
+
+
+def run_compiled_prolog_bytecode_initializations(
+    compiled_program: CompiledPrologVMProgram,
+    *,
+    state: State | None = None,
+) -> State:
+    """Run compiled initialization slots through the bytecode VM path."""
+
+    return run_compiled_prolog_initializations(
+        compiled_program,
+        state=state,
+        backend="bytecode",
+    )
+
+
+def run_initialized_compiled_prolog_bytecode_query(
+    compiled_program: CompiledPrologVMProgram,
+    source_query_index: int = 0,
+    limit: int | None = None,
+) -> list[Term | tuple[Term, ...]]:
+    """Run bytecode VM initializations, then one source query."""
+
+    return run_initialized_compiled_prolog_query(
+        compiled_program,
+        source_query_index,
+        limit,
+        backend="bytecode",
+    )
+
+
+def run_initialized_compiled_prolog_bytecode_query_answers(
+    compiled_program: CompiledPrologVMProgram,
+    source_query_index: int = 0,
+    limit: int | None = None,
+) -> list[PrologAnswer]:
+    """Run bytecode VM initializations and return named source bindings."""
+
+    return run_initialized_compiled_prolog_query_answers(
+        compiled_program,
+        source_query_index,
+        limit,
+        backend="bytecode",
     )
 
 
@@ -520,17 +2030,31 @@ def _compile_loaded_prolog(
     program_value: Program,
     *,
     adapt_builtins: bool,
+    operator_table: OperatorTable | None = None,
+    dialect_profile: DialectProfile | None = None,
 ) -> CompiledPrologVMProgram:
     adapted_clauses = tuple(
-        _adapt_clause(clause_value, adapt_builtins=adapt_builtins)
+        _adapt_clause(
+            clause_value,
+            adapt_builtins=adapt_builtins,
+            operator_table=operator_table,
+        )
         for clause_value in clauses
     )
     adapted_initialization_goals = tuple(
-        _adapt_goal(goal_value, adapt_builtins=adapt_builtins)
+        _adapt_goal(
+            goal_value,
+            adapt_builtins=adapt_builtins,
+            operator_table=operator_table,
+        )
         for goal_value in initialization_goals
     )
     adapted_source_queries = tuple(
-        _adapt_query(query_value, adapt_builtins=adapt_builtins)
+        _adapt_query(
+            query_value,
+            adapt_builtins=adapt_builtins,
+            operator_table=operator_table,
+        )
         for query_value in source_queries
     )
 
@@ -573,6 +2097,7 @@ def _compile_loaded_prolog(
     validate(compiled_instructions)
     return CompiledPrologVMProgram(
         instructions=compiled_instructions,
+        dialect_profile=dialect_profile,
         initialization_query_count=len(adapted_initialization_goals),
         source_query_count=len(adapted_source_queries),
         source_query_variables=tuple(
@@ -581,27 +2106,46 @@ def _compile_loaded_prolog(
     )
 
 
-def _adapt_clause(clause_value: Clause, *, adapt_builtins: bool) -> Clause:
+def _adapt_clause(
+    clause_value: Clause,
+    *,
+    adapt_builtins: bool,
+    operator_table: OperatorTable | None,
+) -> Clause:
     if clause_value.body is None:
         return clause_value
     return Clause(
         head=clause_value.head,
-        body=_adapt_goal(clause_value.body, adapt_builtins=adapt_builtins),
+        body=_adapt_goal(
+            clause_value.body,
+            adapt_builtins=adapt_builtins,
+            operator_table=operator_table,
+        ),
     )
 
 
-def _adapt_goal(goal_value: GoalExpr, *, adapt_builtins: bool) -> GoalExpr:
+def _adapt_goal(
+    goal_value: GoalExpr,
+    *,
+    adapt_builtins: bool,
+    operator_table: OperatorTable | None,
+) -> GoalExpr:
     if not adapt_builtins:
         return goal_value
-    return adapt_prolog_goal(goal_value)
+    return adapt_prolog_goal(goal_value, operator_table=operator_table)
 
 
-def _adapt_query(query_value: ParsedQuery, *, adapt_builtins: bool) -> ParsedQuery:
+def _adapt_query(
+    query_value: ParsedQuery,
+    *,
+    adapt_builtins: bool,
+    operator_table: OperatorTable | None,
+) -> ParsedQuery:
     goal_value = query_value.goal
     if not adapt_builtins:
         return query_value
     return ParsedQuery(
-        goal=adapt_prolog_goal(goal_value),
+        goal=adapt_prolog_goal(goal_value, operator_table=operator_table),
         variables=query_value.variables,
     )
 
@@ -610,6 +2154,30 @@ def _project_operator_table(project: LoadedPrologProject) -> OperatorTable | Non
     if not project.sources:
         return None
     return project.sources[0].operator_table
+
+
+def _project_dialect_profile(project: LoadedPrologProject) -> DialectProfile | None:
+    if not project.dialect_profiles:
+        return None
+    return project.dialect_profiles[0]
+
+
+def _parse_query_for_dialect(
+    source: str,
+    *,
+    dialect: DialectProfile | None,
+    operator_table: OperatorTable | None,
+) -> ParsedQuery:
+    profile = dialect_profile("swi") if dialect is None else dialect
+    if profile.name == "iso":
+        from iso_prolog_parser import parse_iso_query
+
+        return parse_iso_query(source, operator_table=operator_table)
+    if profile.name == "swi":
+        return parse_swi_query(source, operator_table=operator_table)
+
+    msg = f"dialect {profile.name!r} does not have an implemented query parser yet"
+    raise ValueError(msg)
 
 
 def _collect_relations(
@@ -675,7 +2243,7 @@ def _query_outputs(query_value: ParsedQuery) -> tuple[Term, ...] | None:
 
 
 def _run_initializations_on_vm(
-    vm: LogicVM,
+    vm: PrologQueryVM,
     compiled_program: CompiledPrologVMProgram,
     *,
     state: State | None = None,
@@ -690,20 +2258,33 @@ def _run_initializations_on_vm(
     return current_state
 
 
-def _answers_from_results(
+def _answers_from_vm_query(
     compiled_program: CompiledPrologVMProgram,
+    vm: PrologQueryVM,
+    state: State,
     source_query_index: int,
-    results: list[Term | tuple[Term, ...]],
+    *,
+    limit: int | None,
 ) -> list[PrologAnswer]:
-    names = compiled_program.source_query_variable_names(source_query_index)
-    if not names:
-        return [PrologAnswer({}) for _result in results]
+    if limit is not None and limit < 0:
+        msg = "query limit must be non-negative"
+        raise ValueError(msg)
 
-    answers: list[PrologAnswer] = []
-    for result in results:
-        values = result if isinstance(result, tuple) else (result,)
-        answers.append(PrologAnswer(dict(zip(names, values, strict=True))))
-    return answers
+    vm_query_index = compiled_program.source_query_vm_index(source_query_index)
+    names = compiled_program.source_query_variable_names(source_query_index)
+    try:
+        outputs = vm.state.queries[vm_query_index].outputs or ()
+    except IndexError as exc:
+        msg = f"query index {vm_query_index} is out of range"
+        raise IndexError(msg) from exc
+
+    proof_states = vm.solve_query_from(state, vm_query_index)
+    if limit is not None:
+        proof_states = islice(proof_states, limit)
+    return [
+        _answer_from_terms(names, tuple(outputs), proof_state)
+        for proof_state in proof_states
+    ]
 
 
 def _answer_from_terms(
@@ -711,13 +2292,25 @@ def _answer_from_terms(
     outputs: tuple[Term, ...],
     state: State,
 ) -> PrologAnswer:
+    residual_constraints = _residual_constraints(state)
     if not outputs:
-        return PrologAnswer({})
+        return PrologAnswer({}, residual_constraints=residual_constraints)
     return PrologAnswer(
         {
             name: reify(output, state.substitution)
             for name, output in zip(names, outputs, strict=True)
         },
+        residual_constraints=residual_constraints,
+    )
+
+
+def _residual_constraints(state: State) -> tuple[Disequality, ...]:
+    return tuple(
+        Disequality(
+            left=reify(constraint.left, state.substitution),
+            right=reify(constraint.right, state.substitution),
+        )
+        for constraint in state.constraints
     )
 
 

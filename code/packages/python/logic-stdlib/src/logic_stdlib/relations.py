@@ -23,6 +23,7 @@ from logic_engine import (
     Number,
     Program,
     State,
+    String,
     Term,
     conj,
     defer,
@@ -32,6 +33,7 @@ from logic_engine import (
     logic_list,
     native_goal,
     num,
+    reify,
     solve_from,
     term,
 )
@@ -45,12 +47,20 @@ __all__ = [
     "lengtho",
     "listo",
     "membero",
+    "nth0_resto",
+    "nth0o",
+    "nth1_resto",
+    "nth1o",
     "permuteo",
     "reverseo",
     "selecto",
+    "msorto",
     "subsequenceo",
+    "sorto",
     "tailo",
 ]
+
+type TermSortKey = tuple[object, ...]
 
 
 def emptyo(value: object) -> GoalExpr:
@@ -107,6 +117,57 @@ def lengtho(items: object, length: object) -> GoalExpr:
     """
 
     return native_goal(_lengtho_runner, items, length)
+
+
+def sorto(items: object, sorted_items: object) -> GoalExpr:
+    """Relate a proper finite list to its duplicate-free sorted ordering.
+
+    Sorting uses the same Prolog-inspired standard term order as the builtin
+    term comparison predicates. The input list must be proper and finite; open
+    tails fail rather than starting an unbounded search.
+    """
+
+    return native_goal(_sorto_runner, items, sorted_items)
+
+
+def msorto(items: object, sorted_items: object) -> GoalExpr:
+    """Relate a proper finite list to its sorted ordering while keeping duplicates."""
+
+    return native_goal(_msorto_runner, items, sorted_items)
+
+
+def nth0o(index: object, items: object, element: object) -> GoalExpr:
+    """Relate a zero-based index to an element of a proper finite list."""
+
+    return native_goal(_ntho_runner, index, items, element, 0)
+
+
+def nth0_resto(
+    index: object,
+    items: object,
+    element: object,
+    rest: object,
+) -> GoalExpr:
+    """Relate zero-based selection to the list with that element removed."""
+
+    return native_goal(_nth_resto_runner, index, items, element, rest, 0)
+
+
+def nth1o(index: object, items: object, element: object) -> GoalExpr:
+    """Relate a one-based index to an element of a proper finite list."""
+
+    return native_goal(_ntho_runner, index, items, element, 1)
+
+
+def nth1_resto(
+    index: object,
+    items: object,
+    element: object,
+    rest: object,
+) -> GoalExpr:
+    """Relate one-based selection to the list with that element removed."""
+
+    return native_goal(_nth_resto_runner, index, items, element, rest, 1)
 
 
 def listo(value: object) -> GoalExpr:
@@ -177,6 +238,167 @@ def _proper_list_length(items: Term, state: State) -> int | None:
         if isinstance(current, LogicVar):
             return None
         return None
+
+
+def _sorto_runner(
+    program_value: Program,
+    state: State,
+    args: tuple[Term, ...],
+) -> Iterator[State]:
+    items, sorted_items = args
+    values = _proper_list_items(items, state)
+    if values is None:
+        return
+
+    unique: dict[Term, Term] = {}
+    for value in values:
+        unique.setdefault(value, value)
+
+    sorted_values = sorted(unique.values(), key=_term_sort_key)
+    yield from solve_from(
+        program_value,
+        eq(sorted_items, logic_list(sorted_values)),
+        state,
+    )
+
+
+def _msorto_runner(
+    program_value: Program,
+    state: State,
+    args: tuple[Term, ...],
+) -> Iterator[State]:
+    items, sorted_items = args
+    values = _proper_list_items(items, state)
+    if values is None:
+        return
+
+    sorted_values = sorted(values, key=_term_sort_key)
+    yield from solve_from(
+        program_value,
+        eq(sorted_items, logic_list(sorted_values)),
+        state,
+    )
+
+
+def _ntho_runner(
+    program_value: Program,
+    state: State,
+    args: tuple[Term, ...],
+) -> Iterator[State]:
+    index, items, element, base_term = args
+    if not isinstance(base_term, Number) or not isinstance(base_term.value, int):
+        return
+    base = base_term.value
+    values = _proper_list_items(items, state)
+    if values is None:
+        return
+
+    index_value = _integer_index(index, state)
+    if index_value is not None:
+        offset = index_value - base
+        if offset < 0 or offset >= len(values):
+            return
+        yield from solve_from(program_value, eq(element, values[offset]), state)
+        return
+
+    walked_index = state.substitution.walk(index)
+    if not isinstance(walked_index, LogicVar):
+        return
+
+    for offset, value in enumerate(values):
+        yield from solve_from(
+            program_value,
+            conj(eq(index, num(offset + base)), eq(element, value)),
+            state,
+        )
+
+
+def _nth_resto_runner(
+    program_value: Program,
+    state: State,
+    args: tuple[Term, ...],
+) -> Iterator[State]:
+    index, items, element, rest, base_term = args
+    if not isinstance(base_term, Number) or not isinstance(base_term.value, int):
+        return
+    base = base_term.value
+    values = _proper_list_items(items, state)
+    if values is None:
+        return
+
+    index_value = _integer_index(index, state)
+    if index_value is not None:
+        offset = index_value - base
+        if offset < 0 or offset >= len(values):
+            return
+        remaining = [*values[:offset], *values[offset + 1 :]]
+        yield from solve_from(
+            program_value,
+            conj(eq(element, values[offset]), eq(rest, logic_list(remaining))),
+            state,
+        )
+        return
+
+    walked_index = state.substitution.walk(index)
+    if not isinstance(walked_index, LogicVar):
+        return
+
+    for offset, value in enumerate(values):
+        remaining = [*values[:offset], *values[offset + 1 :]]
+        yield from solve_from(
+            program_value,
+            conj(
+                eq(index, num(offset + base)),
+                eq(element, value),
+                eq(rest, logic_list(remaining)),
+            ),
+            state,
+        )
+
+
+def _integer_index(index: Term, state: State) -> int | None:
+    walked = state.substitution.walk(index)
+    if not isinstance(walked, Number):
+        return None
+    if not isinstance(walked.value, int):
+        return None
+    return walked.value
+
+
+def _proper_list_items(items: Term, state: State) -> list[Term] | None:
+    values: list[Term] = []
+    current = state.substitution.walk(items)
+
+    while True:
+        if isinstance(current, Atom) and current.symbol.name == "[]":
+            return values
+        if (
+            isinstance(current, Compound)
+            and current.functor.name == "."
+            and len(current.args) == 2
+        ):
+            values.append(reify(current.args[0], state.substitution))
+            current = state.substitution.walk(current.args[1])
+            continue
+        return None
+
+
+def _term_sort_key(term_value: Term) -> TermSortKey:
+    if isinstance(term_value, LogicVar):
+        return (0, term_value.id, str(term_value.display_name or ""))
+    if isinstance(term_value, Number):
+        return (1, term_value.value)
+    if isinstance(term_value, Atom):
+        return (2, term_value.symbol.namespace or "", term_value.symbol.name)
+    if isinstance(term_value, String):
+        return (3, term_value.value)
+    return (
+        4,
+        len(term_value.args),
+        term_value.functor.namespace or "",
+        term_value.functor.name,
+        tuple(_term_sort_key(argument) for argument in term_value.args),
+    )
 
 
 def membero(member: object, items: object) -> GoalExpr:

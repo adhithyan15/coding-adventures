@@ -1,0 +1,9 @@
+[package]
+name = "twig-completion"
+version = "0.1.0"
+edition = "2021"
+description = "LSP code-completion items for Twig — the editor 'autocomplete this' feed.  Walks a parsed Program plus an optional partial-typed prefix and returns user-defined symbols, built-in keywords, and constant literals."
+
+[dependencies]
+twig-document-symbols = { path = "../twig-document-symbols" }
+twig-parser = { path = "../twig-parser" }

@@ -465,6 +465,30 @@ class DropIndex:
     if_exists: bool = False
 
 
+@dataclass(frozen=True, slots=True)
+class CreateTrigger:
+    """CREATE TRIGGER plan node.
+
+    ``body_sql`` carries the raw SQL of the trigger body statements without
+    the surrounding BEGIN…END.  The VM stores it verbatim in the backend's
+    :class:`~sql_backend.schema.TriggerDef` and re-parses it at fire time.
+    """
+
+    name: str
+    timing: str   # "BEFORE" | "AFTER"
+    event: str    # "INSERT" | "UPDATE" | "DELETE"
+    table: str
+    body_sql: str
+
+
+@dataclass(frozen=True, slots=True)
+class DropTrigger:
+    """DROP TRIGGER [IF EXISTS] name."""
+
+    name: str
+    if_exists: bool = False
+
+
 # ---- Index scan leaf node --------------------------------------------------
 
 
@@ -604,6 +628,8 @@ LogicalPlan = (
     | AlterTable
     | CreateIndex
     | DropIndex
+    | CreateTrigger
+    | DropTrigger
 )
 
 
@@ -626,6 +652,8 @@ def children(node: LogicalPlan) -> tuple[LogicalPlan, ...]:
         case Scan() | IndexScan() | EmptyResult() | CreateTable() | DropTable():
             return ()
         case CreateIndex() | DropIndex():
+            return ()
+        case CreateTrigger() | DropTrigger():
             return ()
         case Begin() | Commit() | Rollback():
             return ()

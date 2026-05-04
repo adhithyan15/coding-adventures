@@ -6,7 +6,10 @@ General-purpose intermediate representation (IR) type library for the AOT compil
 
 This package provides the IR data structures used by the AOT native compiler pipeline:
 
-- **Opcodes** (`IrOp`) — 25 opcodes covering constants, memory, arithmetic, comparison, control flow, system calls, and meta instructions
+- **Opcodes** (`IrOp`) — stable integer opcodes covering constants, memory,
+  arithmetic, bitwise logic, 64-bit floating operations including standard
+  real math, comparison, control flow, system calls, and meta
+  instructions
 - **Operand types** — `IrRegister` (v0, v1, ...), `IrImmediate` (literal integers), `IrLabel` (named jump targets)
 - **Instruction** (`IrInstruction`) — opcode + operands + unique ID for source mapping
 - **Data declarations** (`IrDataDecl`) — named static memory regions

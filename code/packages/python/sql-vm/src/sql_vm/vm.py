@@ -36,6 +36,7 @@ from sql_backend.backend import Backend, TransactionHandle
 from sql_backend.errors import IndexAlreadyExists, IndexNotFound
 from sql_backend.index import IndexDef
 from sql_backend.row import RowIterator
+from sql_backend.schema import TriggerDef as BackendTriggerDef
 from sql_backend.values import SqlValue, sql_type_name
 from sql_codegen import (
     CHECK_CURSOR_ID,
@@ -54,11 +55,13 @@ from sql_codegen import (
     ComputeWindowFunctions,
     CreateIndex,
     CreateTable,
+    CreateTriggerDef,
     DeleteRows,
     Direction,
     DistinctResult,
     DropIndex,
     DropTable,
+    DropTriggerDef,
     EmitColumn,
     EmitRow,
     ExceptResult,
@@ -72,6 +75,9 @@ from sql_codegen import (
     IntersectResult,
     IsNotNull,
     IsNull,
+    JoinBeginRow,
+    JoinIfMatched,
+    JoinSetMatched,
     Jump,
     JumpIfFalse,
     JumpIfTrue,
@@ -90,6 +96,7 @@ from sql_codegen import (
     RollbackTransaction,
     RunExistsSubquery,
     RunRecursiveCTE,
+    RunScalarSubquery,
     RunSubquery,
     SaveGroupKey,
     ScanAllColumns,
@@ -104,6 +111,7 @@ from sql_codegen import IrAggFunc as AggFunc
 
 from .errors import (
     BackendError,
+    CardinalityError,
     ColumnAlreadyExists,
     ColumnNotFound,
     ConstraintViolation,
@@ -113,6 +121,7 @@ from .errors import (
     TableAlreadyExists,
     TableNotFound,
     TransactionError,
+    TriggerDepthError,
 )
 from .operators import apply_binary, apply_unary, like_match
 from .result import QueryResult, _MutableResult
@@ -261,6 +270,25 @@ class _VmState:
     # before running the recursive sub-program; read by OpenWorkingSetScan to
     # create a fresh _SubqueryCursor on each loop entry (handles JOIN context).
     working_set_data: list[dict[str, SqlValue]] = field(default_factory=list)
+    # Trigger executor callback.  When provided, the DML handlers call this
+    # for each trigger that should fire.  The callable signature is:
+    #   trigger_executor(defn, new_row, old_row, current_depth) -> None
+    # where defn is a TriggerDef, new_row/old_row are dicts or None, and
+    # current_depth is the nesting level of the current VM invocation.
+    # The executor is responsible for the depth check (raises TriggerDepthError
+    # when current_depth + 1 > 16) and for setting up NEW/OLD pseudo-tables.
+    trigger_executor: Callable | None = None
+    # Nesting depth of the current VM invocation within trigger bodies.
+    # 0 = top-level statement; > 0 = inside a trigger body.
+    trigger_depth: int = 0
+    # User-registered scalar functions: lower-cased name → (nargs, callable).
+    # nargs=-1 means variadic.  Checked before the built-in registry so users
+    # can override built-ins (e.g. to shim behaviour in tests).
+    user_functions: dict[str, tuple[int, Callable]] | None = None
+    # Outer-join match tracking.  Each JoinBeginRow pushes False; JoinSetMatched
+    # sets the top to True; JoinIfMatched pops and conditionally jumps.
+    # The stack depth equals the number of currently-open outer-join levels.
+    join_match_stack: list[bool] = field(default_factory=list)
     # Scan telemetry — populated during execution; used to build QueryEvent.
     # Only the *first* scan per execute() call is recorded (one event per call).
     scan_table: str = ""
@@ -299,6 +327,9 @@ def execute(
     fk_parent: dict[str, list[tuple[str, str, str | None]]] | None = None,
     event_cb: Callable[[QueryEvent], None] | None = None,
     filtered_columns: list[str] | None = None,
+    trigger_executor: Callable | None = None,
+    trigger_depth: int = 0,
+    user_functions: dict[str, tuple[int, Callable]] | None = None,
 ) -> QueryResult:
     """Execute ``program`` against ``backend`` and return the result.
 
@@ -314,6 +345,12 @@ def execute(
         Optional list of column names that appeared in the WHERE predicate of
         the executing statement.  Passed through verbatim to the
         :class:`QueryEvent`.  When ``None`` the event carries an empty list.
+
+    ``user_functions``:
+        Optional dict mapping lower-cased SQL function names to
+        ``(nargs, callable)`` pairs registered via
+        :meth:`~mini_sqlite.Connection.create_function`.  Checked before the
+        built-in scalar registry so users can shadow built-in functions.
     """
     import time
 
@@ -331,6 +368,9 @@ def execute(
         check_registry=registry,
         fk_child=fk_c,
         fk_parent=fk_p,
+        trigger_executor=trigger_executor,
+        trigger_depth=trigger_depth,
+        user_functions=user_functions,
     )
     instructions = program.instructions
     n = len(instructions)
@@ -508,6 +548,12 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
     if isinstance(ins, DropIndex):
         _do_drop_index(ins, st)
         return
+    if isinstance(ins, CreateTriggerDef):
+        _do_create_trigger(ins, st)
+        return
+    if isinstance(ins, DropTriggerDef):
+        _do_drop_trigger(ins, st)
+        return
     if isinstance(ins, AlterTable):
         _do_alter_table(ins, st)
         return
@@ -533,6 +579,9 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
     if isinstance(ins, RunExistsSubquery):
         _do_run_exists_subquery(ins, st)
         return
+    if isinstance(ins, RunScalarSubquery):
+        _do_run_scalar_subquery(ins, st)
+        return
     if isinstance(ins, RunRecursiveCTE):
         _do_run_recursive_cte(ins, st)
         return
@@ -549,6 +598,20 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
         return
     if isinstance(ins, RollbackTransaction):
         _do_rollback_transaction(st)
+        return
+
+    # Outer-join match tracking -------------------------------------------
+    if isinstance(ins, JoinBeginRow):
+        st.join_match_stack.append(False)
+        return
+    if isinstance(ins, JoinSetMatched):
+        if st.join_match_stack:
+            st.join_match_stack[-1] = True
+        return
+    if isinstance(ins, JoinIfMatched):
+        matched = st.join_match_stack.pop() if st.join_match_stack else False
+        if matched:
+            st.pc = _resolve(st, ins.label)
         return
 
     # Control flow --------------------------------------------------------
@@ -687,6 +750,19 @@ def _do_call_scalar(ins: CallScalar, st: _VmState) -> None:
         CallScalar("coalesce", 2)  → pushes 42
     """
     args = st.pop_n(ins.n_args)
+    # User-registered functions take precedence over built-ins, allowing
+    # callers to shadow or extend the function set at the connection level.
+    if st.user_functions is not None:
+        entry = st.user_functions.get(ins.func.lower())
+        if entry is not None:
+            nargs, fn = entry
+            if nargs != -1 and nargs != len(args):
+                from .errors import WrongNumberOfArguments
+                raise WrongNumberOfArguments(
+                    name=ins.func, expected=str(nargs), got=len(args)
+                )
+            st.push(fn(*args))
+            return
     result = _call_scalar(ins.func, args)
     st.push(result)
 
@@ -732,6 +808,28 @@ def _do_run_exists_subquery(ins: RunExistsSubquery, st: _VmState) -> None:
     """
     sub_result = execute(ins.sub_program, st.backend)
     st.push(len(sub_result.rows) > 0)
+
+
+def _do_run_scalar_subquery(ins: RunScalarSubquery, st: _VmState) -> None:
+    """Execute the scalar sub-program and push the single result value.
+
+    Runs the inner program against the same backend as the outer query.
+
+    - Zero rows: ``NULL`` is pushed.
+    - One row: the first column's value is pushed.
+    - Two or more rows: :class:`~sql_vm.errors.CardinalityError` is raised.
+
+    The inner program always returns exactly one column — the optimizer
+    and codegen ensure this at compile time.
+    """
+    sub_result = execute(ins.sub_program, st.backend)
+    rows = sub_result.rows
+    if len(rows) == 0:
+        st.push(None)
+    elif len(rows) > 1:
+        raise CardinalityError()
+    else:
+        st.push(rows[0][0] if rows[0] else None)
 
 
 def _execute_with_cursors(
@@ -1293,15 +1391,49 @@ def _translate_backend_error(e: be.BackendError) -> Exception:
     return BackendError(message=str(e), original=e)
 
 
+def _fire_trigger(
+    defn: BackendTriggerDef,
+    new_row: dict | None,
+    old_row: dict | None,
+    st: _VmState,
+) -> None:
+    """Invoke the trigger executor callback for a single trigger.
+
+    Raises :class:`TriggerDepthError` when the nesting depth would exceed 16.
+    When no executor is registered the trigger is silently skipped — this
+    allows unit-testing the VM in isolation without a full pipeline.
+    """
+    if st.trigger_executor is None:
+        return
+    next_depth = st.trigger_depth + 1
+    if next_depth > 16:
+        raise TriggerDepthError(trigger_name=defn.name)
+    st.trigger_executor(defn, new_row, old_row, next_depth)
+
+
 def _do_insert(ins: InsertRow, st: _VmState) -> None:
     values = st.pop_n(len(ins.columns))
     row = dict(zip(ins.columns, values, strict=True))
     _check_constraints(ins.table, row, st)
     _check_fk_child(ins.table, row, st)
+    # Fire BEFORE INSERT triggers.
+    before_triggers = [
+        t for t in st.backend.list_triggers(ins.table)
+        if t.timing == "BEFORE" and t.event == "INSERT"
+    ]
+    for defn in before_triggers:
+        _fire_trigger(defn, row, None, st)
     try:
         st.backend.insert(ins.table, row)
     except be.BackendError as e:
         raise _translate_backend_error(e) from e
+    # Fire AFTER INSERT triggers.
+    after_triggers = [
+        t for t in st.backend.list_triggers(ins.table)
+        if t.timing == "AFTER" and t.event == "INSERT"
+    ]
+    for defn in after_triggers:
+        _fire_trigger(defn, row, None, st)
     st.result.rows_affected = (st.result.rows_affected or 0) + 1
 
 
@@ -1312,10 +1444,19 @@ def _do_update(ins: UpdateRows, st: _VmState) -> None:
     if cursor is None:
         raise InternalError(message=f"update: cursor {ins.cursor_id} not open")
     # Evaluate CHECK and FK constraints against the post-update row.
-    current = st.current_row.get(ins.cursor_id, {})
+    # Copy current row so the AFTER trigger sees the pre-update snapshot in old_row,
+    # even after st.current_row is mutated below.
+    current = dict(st.current_row.get(ins.cursor_id, {}))
     merged = {**current, **assignments}
     _check_constraints(ins.table, merged, st)
     _check_fk_child(ins.table, merged, st)
+    # Fire BEFORE UPDATE triggers.
+    before_triggers = [
+        t for t in st.backend.list_triggers(ins.table)
+        if t.timing == "BEFORE" and t.event == "UPDATE"
+    ]
+    for defn in before_triggers:
+        _fire_trigger(defn, merged, current, st)
     try:
         st.backend.update(ins.table, cursor, assignments)
     except be.BackendError as e:
@@ -1324,6 +1465,13 @@ def _do_update(ins: UpdateRows, st: _VmState) -> None:
     # sees the updated values.
     if ins.cursor_id in st.current_row:
         st.current_row[ins.cursor_id].update(assignments)
+    # Fire AFTER UPDATE triggers.
+    after_triggers = [
+        t for t in st.backend.list_triggers(ins.table)
+        if t.timing == "AFTER" and t.event == "UPDATE"
+    ]
+    for defn in after_triggers:
+        _fire_trigger(defn, merged, current, st)
     st.result.rows_affected = (st.result.rows_affected or 0) + 1
 
 
@@ -1334,10 +1482,24 @@ def _do_delete(ins: DeleteRows, st: _VmState) -> None:
     # Check RESTRICT: reject deletion if any child table references this row.
     current = st.current_row.get(ins.cursor_id, {})
     _check_fk_parent(ins.table, current, st)
+    # Fire BEFORE DELETE triggers.
+    before_triggers = [
+        t for t in st.backend.list_triggers(ins.table)
+        if t.timing == "BEFORE" and t.event == "DELETE"
+    ]
+    for defn in before_triggers:
+        _fire_trigger(defn, None, current, st)
     try:
         st.backend.delete(ins.table, cursor)
     except be.BackendError as e:
         raise _translate_backend_error(e) from e
+    # Fire AFTER DELETE triggers.
+    after_triggers = [
+        t for t in st.backend.list_triggers(ins.table)
+        if t.timing == "AFTER" and t.event == "DELETE"
+    ]
+    for defn in after_triggers:
+        _fire_trigger(defn, None, current, st)
     st.current_row.pop(ins.cursor_id, None)
     st.result.rows_affected = (st.result.rows_affected or 0) + 1
 
@@ -1346,7 +1508,12 @@ def _do_create_table(ins: CreateTable, st: _VmState) -> None:
     from sql_backend.schema import ColumnDef as BackendColumnDef
 
     col_defs = [
-        BackendColumnDef(name=c.name, type_name=c.type, not_null=not c.nullable)
+        BackendColumnDef(
+            name=c.name,
+            type_name=c.type,
+            not_null=not c.nullable,
+            primary_key=c.primary_key,
+        )
         for c in ins.columns
     ]
     try:
@@ -1518,6 +1685,31 @@ def _do_drop_index(ins: DropIndex, st: _VmState) -> None:
         st.backend.drop_index(ins.name, if_exists=ins.if_exists)
     except IndexNotFound:
         raise
+    st.result.rows_affected = 0
+
+
+def _do_create_trigger(ins: CreateTriggerDef, st: _VmState) -> None:
+    """Store a trigger definition in the backend."""
+    defn = BackendTriggerDef(
+        name=ins.name,
+        table=ins.table,
+        timing=ins.timing,  # type: ignore[arg-type]
+        event=ins.event,    # type: ignore[arg-type]
+        body=ins.body_sql,
+    )
+    try:
+        st.backend.create_trigger(defn)
+    except be.BackendError as e:
+        raise _translate_backend_error(e) from e
+    st.result.rows_affected = 0
+
+
+def _do_drop_trigger(ins: DropTriggerDef, st: _VmState) -> None:
+    """Remove a trigger definition from the backend."""
+    try:
+        st.backend.drop_trigger(ins.name, ins.if_exists)
+    except be.BackendError as e:
+        raise _translate_backend_error(e) from e
     st.result.rows_affected = 0
 
 

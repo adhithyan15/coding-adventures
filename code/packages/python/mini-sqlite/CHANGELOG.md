@@ -1,5 +1,285 @@
 # Changelog
 
+## [1.13.0] - 2026-05-04
+
+### Added
+
+- **RIGHT [OUTER] JOIN end-to-end** — `RIGHT JOIN` and `RIGHT OUTER JOIN`
+  now execute correctly. Unmatched right rows appear with `NULL` for all
+  left-side columns. Implemented by swapping `lft`/`rgt` in the codegen
+  and reusing LEFT JOIN machinery.
+- **4 new integration tests** in `test_outer_join.py`:
+  `test_right_outer_join_basic`, `test_right_join_keyword_alone`,
+  `test_right_outer_join_left_empty`, `test_right_outer_join_where_null_left`
+
+## [1.12.0] - 2026-05-04
+
+### Added
+
+- **LEFT [OUTER] JOIN end-to-end** — `LEFT JOIN` and `LEFT OUTER JOIN`
+  now execute correctly through the full mini-sqlite pipeline. Unmatched
+  left rows appear with `NULL` for all right-side columns.
+- **Three-way chained LEFT JOIN** — `A LEFT JOIN B LEFT JOIN C` works via
+  `join_match_stack` nesting in the VM; each join level tracks its own
+  match state independently.
+- **GROUP BY + COUNT with LEFT JOIN** — `COUNT(right_col)` correctly
+  counts zero for left rows with no right match, since `COUNT` ignores
+  NULLs.
+- **WHERE on join result** — predicates like `WHERE right_col IS NULL`
+  (anti-join pattern) and `WHERE left_col = 'x'` apply correctly after
+  LEFT JOIN.
+
+### Fixed
+
+- **`PredicatePushdown` outer-join safety** — the optimizer no longer
+  pushes right-side WHERE predicates inside a `LEFT OUTER JOIN`. Doing
+  so would filter the right scan *before* the join, destroying the
+  null-padding that makes the outer join semantics correct. The fix adds
+  a `JoinKind`-aware guard in `_distribute_conjuncts`:
+  - `LEFT JOIN`: left-side predicates may be pushed; right-side predicates
+    stay above the join.
+  - `RIGHT JOIN`: right-side predicates may be pushed; left-side stay above.
+  - `FULL JOIN`: no predicates pushed to either side.
+  - `INNER`/`CROSS`: both sides safe to push (unchanged).
+
+## [1.11.0] - 2026-04-29
+
+### Added
+
+**Numeric parameter binding (`:N` style)**
+
+`Cursor.execute` and `Connection.execute` now accept the third PEP 249
+positional paramstyle: numeric `:N` placeholders bound from a `Sequence`.
+This completes the trio (`?`, `:N`, `:name`) supported by the stdlib
+`sqlite3` module.
+
+```python
+conn.execute(
+    "SELECT * FROM employees WHERE dept = :1 OR dept = :2",
+    ("eng", "sales"),
+)
+```
+
+- **`binding.substitute`** — recognises `:` followed by digits as a
+  numeric placeholder.  `N` is 1-indexed: `:1` → `parameters[0]`,
+  `:2` → `parameters[1]`, etc.
+- **Mutual exclusion** — qmark, numeric, and named styles cannot be
+  mixed in a single statement.  The error message now lists all three:
+  `"cannot mix '?', ':N', and ':name' parameter styles in one statement"`.
+- **Error cases** — `:0` raises `ProgrammingError("1-indexed")`;
+  `:N` with `N > len(parameters)` raises `out of range`; `:N` with a
+  mapping raises `numeric` (must be a sequence).
+- **Repeated indices** — `:1` may appear multiple times, all binding to
+  the same value.  Trailing unused values in the sequence are silently
+  ignored (matching `sqlite3`).
+- **`paramstyle`** docstring extended to mention all three runtime
+  styles; the declared value remains `"qmark"`.
+
+### Tests added
+
+- `tests/test_binding.py::TestNumericParameters` — 13 unit tests:
+  single/multi binding, repeated index, extra-value tolerance,
+  out-of-range, zero-index, scanner safe inside literals/comments,
+  multi-digit index, paramstyle exclusivity (mixing, mapping rejection),
+  value type rendering.
+- `tests/test_cursor.py` — 3 end-to-end tests via `Connection.execute`:
+  numeric SELECT, numeric INSERT, repeated index.
+
+## [1.10.0] - 2026-04-29
+
+### Added
+
+**`PRAGMA user_version` (read/write) and `PRAGMA schema_version` (read)**
+
+Two new PRAGMAs matching real SQLite's behaviour for header-field access:
+
+```sql
+PRAGMA user_version;             -- read: returns one row (user_version,)
+PRAGMA user_version = 7;         -- write: stores 7 in the header
+PRAGMA schema_version;           -- read: returns one row (schema_version,)
+```
+
+- **`PRAGMA user_version`** — application-defined `u32` (0 ≤ v ≤ 2³² − 1).
+  Read returns a one-row, one-column result `(user_version,)`.  Write
+  validates the range and stages the change on the backend; persistent
+  backends (`SqliteFileBackend`) flush via the next `commit`.  An
+  out-of-range value raises `ProgrammingError`.
+- **`PRAGMA schema_version`** — read-only.  Returns the schema cookie,
+  which is bumped automatically on every DDL operation (`CREATE TABLE`,
+  `DROP TABLE`, `CREATE INDEX`, `DROP INDEX`, …).  DML statements
+  (INSERT/UPDATE/DELETE) do *not* bump it.
+- **`_PRAGMA_RE` extension** — the engine's PRAGMA regex now also matches
+  the assignment form `PRAGMA name = <int>` (signed integer), with the
+  value captured into a new `set_value` named group.
+- Backend support: relies on
+  `Backend.get_user_version` / `set_user_version` /
+  `get_schema_version` (added in `sql-backend` 0.11.0 and
+  `storage-sqlite` 0.18.0).  Backends without these methods cause
+  `PRAGMA user_version` writes to raise
+  `ProgrammingError("backend does not support …")` rather than
+  AttributeError.
+
+### Tests added
+
+- `tests/test_tier3_pragma.py::TestUserVersion` — 8 tests: default,
+  description, set+read, overwrite, zero-is-valid, max u32, negative
+  rejected, overflow rejected.
+- `tests/test_tier3_pragma.py::TestSchemaVersion` — 6 tests: default,
+  description, CREATE TABLE bumps, DROP TABLE bumps, CREATE INDEX
+  bumps, DML does not bump.
+
+## [1.9.0] - 2026-04-28
+
+### Added
+
+**Bytes (BLOB) parameter binding**
+
+`bytes`, `bytearray`, and `memoryview` parameters can now be bound to `?`
+placeholders.  They render as the SQLite blob-literal form `X'<hex>'`,
+which round-trips through the SQL lexer (it already accepts `X'...'`
+since the BLOB-type work in 1.7.0).
+
+```python
+conn.execute("INSERT INTO blobs (data) VALUES (?)", (b"\xde\xad\xbe\xef",))
+```
+
+- **`binding._to_sql_literal`** — the previous `NotSupportedError` for
+  byte parameters is replaced with `f"X'{bytes(value).hex()}'"`.  The
+  explicit `bytes(value)` coercion materialises a fresh object so a
+  hostile `bytes` subclass overriding `.hex()` cannot inject SQL.
+- **`bytearray` / `memoryview`** are coerced via `bytes(...)` and render
+  identically to `bytes`.
+- **Empty bytes** render as `X''` (parses as a zero-length blob).
+
+### Tests added
+
+- `tests/test_binding.py` — 5 new tests: bytes round-trip, empty bytes,
+  bytearray, memoryview, and a hostile-subclass injection-defense test.
+- `tests/test_cursor.py::test_bytes_param_round_trip` — end-to-end
+  insert + select of binary data through `Connection.execute`.
+
+### Removed
+
+- `test_bytes_not_supported` — replaced by the round-trip tests above.
+
+## [1.8.0] - 2026-04-28
+
+### Added
+
+**Named parameter binding (`:name` style)**
+
+`Cursor.execute` and `Connection.execute` now accept a `Mapping` (e.g. `dict`)
+as the *parameters* argument, in addition to the existing `Sequence` form.
+When a mapping is passed, every `:identifier` placeholder in the SQL is
+replaced by `parameters[identifier]` — matching the stdlib `sqlite3`
+behaviour and PEP 249's `"named"` paramstyle.
+
+```python
+conn.execute(
+    "SELECT name FROM employees WHERE dept = :d AND active = :active",
+    {"d": "eng", "active": True},
+)
+```
+
+- **`binding.substitute(sql, parameters)`** — parameter type now
+  `Sequence | Mapping`.  Sequence → qmark style (`?`); mapping → named
+  style (`:name`).  Mixing the two styles in one statement raises
+  `ProgrammingError`.
+- **Identifier rules** — `:identifier` matches `[A-Za-z_][A-Za-z0-9_]*`.
+  Postgres-style casts like `a::INT` are NOT recognised as placeholders
+  (the `:` is followed by another `:`, not an identifier-start
+  character).  Numeric placeholders like `:1` are also NOT recognised
+  (PEP 249 calls those `"numeric"` style; not yet supported).
+- **NULL-safe placeholders inside literals/comments** — `:foo` inside
+  `'...'`, `--...`, or `/* ... */` is left untouched, matching the
+  existing `?` scanner behaviour.
+- **Extra dict keys are ignored** — only keys referenced by the SQL are
+  consumed; unused keys do not raise (matches `sqlite3`).
+- **`Connection.execute` / `Cursor.execute`** — type signature widened
+  to `Sequence[Any] | Mapping[str, Any] = ()`.
+- **`engine.run`** — same signature widening; forwards the mapping
+  through to `substitute`.
+- **`paramstyle`** docstring clarified — the module still declares
+  `"qmark"` (matching stdlib `sqlite3`) but accepts both styles at
+  runtime.
+
+### Tests added
+
+- `tests/test_binding.py::TestNamedParameters` — 17 unit tests
+  covering single/multi-named binding, repeated keys, extra-key
+  tolerance, missing-key error, scanner robustness inside literals
+  and comments, double-colon non-recognition, identifier rules,
+  paramstyle exclusivity (mixing, wrong container types), and value
+  type rendering.
+- `tests/test_cursor.py` — 4 end-to-end tests via `Connection.execute`:
+  named SELECT, named INSERT, missing-key error, repeated key.
+
+## [1.7.0] - 2026-04-28
+
+### Added — SQL Extras: Scalar Subqueries, BLOB, PRAGMA, UDFs
+
+- **Scalar subqueries** — `(SELECT expr FROM ...)` expressions now work in
+  SELECT list, WHERE, and other expression positions. Returns NULL when
+  the subquery finds no rows; raises `CardinalityError` when it returns
+  more than one row.
+- **BLOB type** — binary data via `x'DEADBEEF'` / `X'...'` hex literal
+  syntax. `SqlValue` extended to include `bytes`; `sql_type_name()` returns
+  `"BLOB"` for byte values.
+- **PRAGMA statements** — engine-level interception for:
+  - `PRAGMA table_info(t)` — column metadata (cid, name, type, notnull,
+    dflt_value, pk)
+  - `PRAGMA index_list(t)` — index names and uniqueness flags
+  - `PRAGMA foreign_key_list(t)` — FK constraints from the live fk_child
+    registry
+  - `PRAGMA table_list` — all table names in the schema
+- **User-defined functions (UDFs)** — `conn.create_function(name, nargs, fn)`
+  registers a Python callable; nargs=-1 for variadic. UDFs take precedence
+  over built-ins.
+
+### Fixed
+
+- **`primary_key` now flows through to backend** — `CREATE TABLE ... PRIMARY
+  KEY` column constraint was lost in the IR → VM → backend pipeline.
+  `IrColumnDef` now carries `primary_key: bool`; `_do_create_table` passes it
+  to `BackendColumnDef`, so `PRAGMA table_info` correctly reports pk=1.
+
+## [1.6.0] - 2026-04-28
+
+### Added — Phase 9: SQL Triggers (BEFORE/AFTER INSERT/UPDATE/DELETE)
+
+- **`_create_trigger()` / `_drop_trigger()` adapter functions** — translate
+  `create_trigger_stmt` / `drop_trigger_stmt` AST nodes into
+  `CreateTriggerStmt` / `DropTriggerStmt` planner statements.
+- **`_node_to_sql()` helper** — reconstructs body SQL from the trigger body
+  AST.  Re-adds single quotes around `STRING` token values (which the lexer
+  strips), normalises `new`/`old` NAME tokens to uppercase, and escapes
+  embedded single quotes using SQL-standard doubling.
+- **`_inject_pseudo_refs()` / `_make_trigger_executor()`** — parameter-
+  substitution approach for `NEW.col` / `OLD.col` references: replaces them
+  with `?` placeholders bound to the actual pre/post-update row values before
+  executing the body SQL.  This avoids the cursor-lookup problem that would
+  arise from creating real pseudo-tables.
+- **`_split_body_sql()`** — splits trigger body SQL on the `" ; "` separator
+  emitted by `_node_to_sql` for multi-statement trigger bodies.
+- **`run()` new parameters** — `trigger_executor` and `trigger_depth` are
+  forwarded to `sql_vm.execute()`; the executor is auto-created on top-level
+  calls and re-used for nested trigger body executions.
+- **`test_tier3_triggers.py`** — 44 new tests covering:
+  - Grammar: parser produces `create_trigger_stmt` / `drop_trigger_stmt` nodes
+    (9 tests)
+  - Adapter: correct `CreateTriggerStmt` / `DropTriggerStmt` output (8 tests)
+  - Backend: `InMemoryBackend` trigger storage and retrieval (8 tests)
+  - Integration: end-to-end trigger correctness via `:memory:` connection
+    (19 tests) including BEFORE/AFTER INSERT/UPDATE/DELETE, NEW/OLD value
+    access, multi-statement bodies, trigger ordering, DROP TRIGGER, and
+    transaction rollback of trigger effects.
+
+### Fixed
+
+- **`sql-vm`: `_do_update` old-row snapshot** — `current_row` was captured as
+  a mutable reference, causing AFTER UPDATE triggers to receive the
+  post-update dict in `old_row`.  Fixed by copying the dict before mutation.
+
 ## [1.5.0] - 2026-04-27
 
 ### Added — Phase 8: Window Functions (OVER / PARTITION BY)

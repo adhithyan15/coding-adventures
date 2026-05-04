@@ -17,6 +17,7 @@ from __future__ import annotations
 
 from .errors import (
     BackendError,
+    CardinalityError,
     ColumnAlreadyExists,
     ColumnNotFound,
     ConstraintViolation,
@@ -27,6 +28,7 @@ from .errors import (
     TableAlreadyExists,
     TableNotFound,
     TransactionError,
+    TriggerDepthError,
     TypeMismatch,
     UnsupportedFunction,
     VmError,
@@ -38,6 +40,7 @@ from .vm import QueryEvent, execute, set_event_listener
 
 __all__ = [
     "BackendError",
+    "CardinalityError",
     "ColumnAlreadyExists",
     "ColumnNotFound",
     "ConstraintViolation",
@@ -50,6 +53,7 @@ __all__ = [
     "TableAlreadyExists",
     "TableNotFound",
     "TransactionError",
+    "TriggerDepthError",
     "TypeMismatch",
     "UnsupportedFunction",
     "VmError",

@@ -6,6 +6,12 @@ import {
   type TrainingSnapshot,
 } from "coding-adventures-two-layer-network/src/index";
 import { SingleLayerNetwork } from "coding-adventures-single-layer-network/src/index";
+import { createXorNetwork } from "@coding-adventures/neural-network";
+import {
+  compileBytecodeToMatrixPlan,
+  compileNeuralNetworkToBytecode,
+  runNeuralMatrixForwardScalars,
+} from "@coding-adventures/neural-graph-vm";
 
 export const VERSION = "0.1.0";
 
@@ -42,8 +48,11 @@ export interface XorPredictionRow {
 export interface XorRunResult {
   history: TrainingSnapshot[];
   rows: XorPredictionRow[];
+  vmRows: XorPredictionRow[];
   finalLoss: number;
   trace: ExampleTrace;
+  bytecodeInstructionCount: number;
+  matrixInstructionCount: number;
 }
 
 export interface LinearFailureResult {
@@ -108,12 +117,45 @@ export function runXorDemo(options: XorRunOptions = {}): XorRunResult {
       hidden: inspection.hiddenActivations[index]!,
     };
   });
+  const vm = runXorGraphVmDemo();
 
   return {
     history,
     rows,
+    vmRows: vm.rows,
     finalLoss: history[history.length - 1]?.loss ?? 0,
     trace: network.trace(XOR_INPUTS, 1, XOR_TARGETS[1]),
+    bytecodeInstructionCount: vm.bytecodeInstructionCount,
+    matrixInstructionCount: vm.matrixInstructionCount,
+  };
+}
+
+export function runXorGraphVmDemo(): {
+  rows: XorPredictionRow[];
+  bytecodeInstructionCount: number;
+  matrixInstructionCount: number;
+} {
+  const bytecode = compileNeuralNetworkToBytecode(createXorNetwork("xor-graph-vm"));
+  const matrixPlan = compileBytecodeToMatrixPlan(bytecode);
+  const rows = XOR_INPUTS.map((input, index) => {
+    const outputs = runNeuralMatrixForwardScalars(matrixPlan, {
+      x0: input[0]!,
+      x1: input[1]!,
+    });
+    const prediction = outputs.prediction;
+    return {
+      input,
+      target: XOR_TARGETS[index]![0]!,
+      prediction,
+      rounded: prediction >= 0.5 ? 1 : 0,
+      hidden: [],
+    };
+  });
+
+  return {
+    rows,
+    bytecodeInstructionCount: bytecode.functions[0].instructions.length,
+    matrixInstructionCount: matrixPlan.instructions.length,
   };
 }
 
@@ -132,7 +174,11 @@ export function formatXorRun(result: XorRunResult): string {
     })
     .join("\n");
 
-  return `${checkpoints}\n\n${rows}`;
+  const vmRows = result.vmRows
+    .map(row => `[${row.input.join(", ")}] target=${row.target} vm_prediction=${fmt(row.prediction)} rounded=${row.rounded}`)
+    .join("\n");
+
+  return `${checkpoints}\n\n${rows}\n\nGraph VM matrix path (${result.bytecodeInstructionCount} bytecode ops -> ${result.matrixInstructionCount} matrix ops)\n${vmRows}`;
 }
 
 export function formatLinearFailure(result: LinearFailureResult): string {

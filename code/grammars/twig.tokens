@@ -1,0 +1,102 @@
+# Token definitions for Twig
+# @version 1
+#
+# Twig is a tiny purely-functional Lisp-precursor.  Source is a
+# stream of S-expressions; lexing is correspondingly minimal — a few
+# punctuation characters plus identifiers, integer literals, and the
+# Scheme-style ``#t`` / ``#f`` boolean syntax.
+#
+# Example source showing every token kind:
+#
+#   (define (length xs)         ; comment to end of line
+#     (if (null? xs) 0 (+ 1 (length (cdr xs)))))
+#
+# The ``;`` to end-of-line comment + ``WHITESPACE`` skip pattern keep
+# the parser stream clean — neither comments nor whitespace ever
+# reach the parser.
+#
+# Token ordering matters: literals before patterns, longer literals
+# before shorter ones that are prefixes (``#t`` vs ``#``).  The
+# grammar-driven lexer tries each rule top-to-bottom and commits on
+# the first match, so we put the unambiguous shapes early.
+
+# ---------------------------------------------------------------------------
+# Punctuation literals
+# ---------------------------------------------------------------------------
+LPAREN     = "("
+RPAREN     = ")"
+QUOTE      = "'"
+
+# ---------------------------------------------------------------------------
+# Boolean literals
+#
+# Scheme/Lisp tradition: ``#t`` and ``#f``.  These are exact two-character
+# literals and must come before any pattern that could swallow ``#``.
+# ---------------------------------------------------------------------------
+BOOL_TRUE  = "#t"
+BOOL_FALSE = "#f"
+
+# ---------------------------------------------------------------------------
+# Numeric literals
+#
+# Twig V1 has only signed integers.  The leading ``-?`` handles
+# negative literals (``-7``) while the lexer's longest-match rule
+# ensures that bare ``-`` (the subtraction operator) still tokenises
+# as a NAME because ``/-?[0-9]+/`` requires at least one digit.
+# Floats / rationals can be added later by extending this regex.
+# ---------------------------------------------------------------------------
+INTEGER    = /-?[0-9]+/
+
+# ---------------------------------------------------------------------------
+# Identifiers — names, operators, predicates
+#
+# Lisp names are very permissive: arithmetic operators (``+`` / ``-`` /
+# ``*`` / ``/``), comparisons (``=`` / ``<`` / ``>``), trailing ``?``
+# for predicates (``null?`` / ``pair?``), trailing ``!`` for mutators
+# (none in V1, but we admit the syntax for forward compatibility),
+# plus underscores and dollar signs.  Digits are allowed inside an
+# identifier but not at its start — ``42`` is an INTEGER, ``f42`` is
+# a NAME.
+# ---------------------------------------------------------------------------
+NAME       = /[A-Za-z+\-*/=<>!?_$][A-Za-z+\-*/=<>!?_$0-9]*/
+
+# ---------------------------------------------------------------------------
+# Keyword promotion
+#
+# Words listed below, when they would otherwise lex as NAME, are
+# emitted by the GrammarLexer as KEYWORD tokens with the matched word
+# as the token's ``value``.  The parser's grammar tests for them with
+# string literals (``"define"``, ``"if"``, ...) and dispatches to the
+# corresponding rule.
+#
+# ``nil`` is here so the parser can recognise the empty-list literal
+# without us having to special-case the value of every NAME token.
+# ---------------------------------------------------------------------------
+keywords:
+  define
+  lambda
+  let
+  if
+  begin
+  quote
+  nil
+  # TW04 Phase 4a — module form keywords.  Promoted to KEYWORD
+  # tokens so the grammar's literal-string match (``"module"``,
+  # ``"export"``, ``"import"``) wins.  These names become
+  # reserved as a side effect — Twig source can no longer use
+  # ``module`` / ``export`` / ``import`` as variable names.
+  module
+  export
+  import
+
+# ---------------------------------------------------------------------------
+# Skip patterns — consumed silently, never reach the parser
+# ---------------------------------------------------------------------------
+# WHITESPACE captures all the usual suspects + ``\r`` for Windows
+# line endings (the Python lexer normalises CRLF here so the line
+# counter stays accurate).  COMMENT is the Lisp ``;`` line comment,
+# which runs to the next newline (the newline itself is consumed by
+# WHITESPACE).
+skip:
+  WHITESPACE = /[ \t\r\n]+/
+  COMMENT    = /;[^\n]*/

@@ -17,12 +17,17 @@ alphabet = [
   "=",
   "!",
   "-",
+  "[",
+  "]",
   "\"",
   "'",
+  "`",
+  "\u0000",
   " ",
   "\n",
   "\t",
   "\r",
+  "\u000C",
   "D",
   "d",
   "O",
@@ -33,6 +38,8 @@ alphabet = [
   "t",
   "L",
   "l",
+  "I",
+  "i",
   "Y",
   "y",
   "P",
@@ -59,6 +66,7 @@ alphabet = [
   "s",
   "X",
   "x",
+  "?",
 ]
 
 [[tokens]]
@@ -79,7 +87,7 @@ fields = ["data"]
 
 [[tokens]]
 name = "Doctype"
-fields = ["name", "force_quirks"]
+fields = ["name", "public_identifier", "system_identifier", "force_quirks"]
 
 [[tokens]]
 name = "EOF"
@@ -120,6 +128,16 @@ external_entry = true
 [[states]]
 id = "plaintext"
 external_entry = true
+
+[[states]]
+id = "cdata_section"
+external_entry = true
+
+[[states]]
+id = "cdata_section_bracket"
+
+[[states]]
+id = "cdata_section_end"
 
 [[states]]
 id = "script_data"
@@ -195,6 +213,42 @@ id = "script_data_end_tag_name"
 
 [[states]]
 id = "script_data_escaped_end_tag_name"
+
+[[states]]
+id = "rcdata_end_tag_whitespace"
+
+[[states]]
+id = "rawtext_end_tag_whitespace"
+
+[[states]]
+id = "script_data_end_tag_whitespace"
+
+[[states]]
+id = "script_data_escaped_end_tag_whitespace"
+
+[[states]]
+id = "rcdata_end_tag_attributes"
+
+[[states]]
+id = "rawtext_end_tag_attributes"
+
+[[states]]
+id = "script_data_end_tag_attributes"
+
+[[states]]
+id = "script_data_escaped_end_tag_attributes"
+
+[[states]]
+id = "rcdata_self_closing_end_tag"
+
+[[states]]
+id = "rawtext_self_closing_end_tag"
+
+[[states]]
+id = "script_data_self_closing_end_tag"
+
+[[states]]
+id = "script_data_escaped_self_closing_end_tag"
 
 [[states]]
 id = "rcdata_character_reference"
@@ -404,6 +458,9 @@ id = "tag_name"
 id = "end_tag_name"
 
 [[states]]
+id = "end_tag_attributes"
+
+[[states]]
 id = "before_attribute_name"
 
 [[states]]
@@ -434,16 +491,52 @@ id = "self_closing_start_tag"
 id = "markup_declaration_open"
 
 [[states]]
+id = "cdata_open_bracket"
+
+[[states]]
+id = "cdata_open_c"
+
+[[states]]
+id = "cdata_open_cd"
+
+[[states]]
+id = "cdata_open_cda"
+
+[[states]]
+id = "cdata_open_cdat"
+
+[[states]]
+id = "cdata_open_cdata"
+
+[[states]]
 id = "comment_start"
 
 [[states]]
+id = "comment_start_dash"
+
+[[states]]
 id = "comment"
+
+[[states]]
+id = "comment_less_than_sign"
+
+[[states]]
+id = "comment_less_than_sign_bang"
+
+[[states]]
+id = "comment_less_than_sign_bang_dash"
+
+[[states]]
+id = "comment_less_than_sign_bang_dash_dash"
 
 [[states]]
 id = "comment_end_dash"
 
 [[states]]
 id = "comment_end"
+
+[[states]]
+id = "comment_end_bang"
 
 [[states]]
 id = "bogus_comment"
@@ -479,6 +572,72 @@ id = "doctype_name"
 id = "after_doctype_name"
 
 [[states]]
+id = "doctype_public_keyword_u"
+
+[[states]]
+id = "doctype_public_keyword_b"
+
+[[states]]
+id = "doctype_public_keyword_l"
+
+[[states]]
+id = "doctype_public_keyword_i"
+
+[[states]]
+id = "doctype_public_keyword_c"
+
+[[states]]
+id = "after_doctype_public_keyword"
+
+[[states]]
+id = "before_doctype_public_identifier"
+
+[[states]]
+id = "doctype_public_identifier_double_quoted"
+
+[[states]]
+id = "doctype_public_identifier_single_quoted"
+
+[[states]]
+id = "after_doctype_public_identifier"
+
+[[states]]
+id = "between_doctype_public_and_system_identifiers"
+
+[[states]]
+id = "doctype_system_keyword_y"
+
+[[states]]
+id = "doctype_system_keyword_s"
+
+[[states]]
+id = "doctype_system_keyword_t"
+
+[[states]]
+id = "doctype_system_keyword_e"
+
+[[states]]
+id = "doctype_system_keyword_m"
+
+[[states]]
+id = "after_doctype_system_keyword"
+
+[[states]]
+id = "before_doctype_system_identifier"
+
+[[states]]
+id = "doctype_system_identifier_double_quoted"
+
+[[states]]
+id = "doctype_system_identifier_single_quoted"
+
+[[states]]
+id = "after_doctype_system_identifier"
+
+[[states]]
+id = "bogus_doctype"
+
+[[states]]
 id = "before_end_tag_close"
 
 [[states]]
@@ -500,6 +659,12 @@ actions = [
   "clear_temporary_buffer",
   "append_temporary_buffer(&)",
 ]
+
+[[transitions]]
+from = "data"
+matcher = { literal = "\u0000" }
+to = "data"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
 
 [[transitions]]
 from = "data"
@@ -532,6 +697,12 @@ actions = [
 
 [[transitions]]
 from = "rcdata"
+matcher = { literal = "\u0000" }
+to = "rcdata"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
+
+[[transitions]]
+from = "rcdata"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -548,6 +719,12 @@ from = "rawtext"
 matcher = { literal = "<" }
 to = "rawtext_less_than_sign"
 actions = ["flush_text"]
+
+[[transitions]]
+from = "rawtext"
+matcher = { literal = "\u0000" }
+to = "rawtext"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
 
 [[transitions]]
 from = "rawtext"
@@ -571,14 +748,94 @@ actions = ["flush_text", "emit(EOF)"]
 
 [[transitions]]
 from = "plaintext"
+matcher = { literal = "\u0000" }
+to = "plaintext"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
+
+[[transitions]]
+from = "plaintext"
 matcher = { anything = true }
 to = "plaintext"
 actions = ["append_text(current)"]
 
 [[transitions]]
+from = "cdata_section"
+matcher = { literal = "]" }
+to = "cdata_section_bracket"
+
+[[transitions]]
+from = "cdata_section"
+matcher = { literal = "\u0000" }
+to = "cdata_section"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
+
+[[transitions]]
+from = "cdata_section"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "cdata_section"
+matcher = { anything = true }
+to = "cdata_section"
+actions = ["append_text(current)"]
+
+[[transitions]]
+from = "cdata_section_bracket"
+matcher = { literal = "]" }
+to = "cdata_section_end"
+
+[[transitions]]
+from = "cdata_section_bracket"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_text(])", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "cdata_section_bracket"
+matcher = { anything = true }
+to = "cdata_section"
+consume = false
+actions = ["append_text(])"]
+
+[[transitions]]
+from = "cdata_section_end"
+matcher = { literal = ">" }
+to = "data"
+
+[[transitions]]
+from = "cdata_section_end"
+matcher = { literal = "]" }
+to = "cdata_section_end"
+actions = ["append_text(])"]
+
+[[transitions]]
+from = "cdata_section_end"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["append_text(]])", "flush_text", "emit(EOF)"]
+
+[[transitions]]
+from = "cdata_section_end"
+matcher = { anything = true }
+to = "cdata_section"
+consume = false
+actions = ["append_text(]])"]
+
+[[transitions]]
 from = "script_data"
 matcher = { literal = "<" }
 to = "script_data_less_than_sign"
+
+[[transitions]]
+from = "script_data"
+matcher = { literal = "\u0000" }
+to = "script_data"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
 
 [[transitions]]
 from = "script_data"
@@ -710,6 +967,12 @@ to = "script_data_escaped_less_than_sign"
 
 [[transitions]]
 from = "script_data_escaped"
+matcher = { literal = "\u0000" }
+to = "script_data_escaped"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
+
+[[transitions]]
+from = "script_data_escaped"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -731,6 +994,12 @@ actions = ["append_text(current)"]
 from = "script_data_escaped_dash"
 matcher = { literal = "<" }
 to = "script_data_escaped_less_than_sign"
+
+[[transitions]]
+from = "script_data_escaped_dash"
+matcher = { literal = "\u0000" }
+to = "script_data_escaped"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
 
 [[transitions]]
 from = "script_data_escaped_dash"
@@ -761,6 +1030,12 @@ from = "script_data_escaped_dash_dash"
 matcher = { literal = ">" }
 to = "script_data"
 actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_escaped_dash_dash"
+matcher = { literal = "\u0000" }
+to = "script_data_escaped"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
 
 [[transitions]]
 from = "script_data_escaped_dash_dash"
@@ -819,7 +1094,7 @@ actions = ["append_text(<)"]
 
 [[transitions]]
 from = "script_data_double_escape_start"
-matcher = { one_of = " \n\t\r/>" }
+matcher = { one_of = " \n\t\r\u000C/>" }
 to = "script_data_escaped"
 actions = [
   "append_text(current)",
@@ -865,6 +1140,12 @@ actions = ["append_text(current)"]
 
 [[transitions]]
 from = "script_data_double_escaped"
+matcher = { literal = "\u0000" }
+to = "script_data_double_escaped"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
+
+[[transitions]]
+from = "script_data_double_escaped"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -887,6 +1168,12 @@ from = "script_data_double_escaped_dash"
 matcher = { literal = "<" }
 to = "script_data_double_escaped_less_than_sign"
 actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_double_escaped_dash"
+matcher = { literal = "\u0000" }
+to = "script_data_double_escaped"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
 
 [[transitions]]
 from = "script_data_double_escaped_dash"
@@ -918,6 +1205,12 @@ from = "script_data_double_escaped_dash_dash"
 matcher = { literal = ">" }
 to = "script_data_double_escaped"
 actions = ["append_text(current)"]
+
+[[transitions]]
+from = "script_data_double_escaped_dash_dash"
+matcher = { literal = "\u0000" }
+to = "script_data_double_escaped"
+actions = ["parse_error(unexpected-null-character)", "append_text_replacement"]
 
 [[transitions]]
 from = "script_data_double_escaped_dash_dash"
@@ -953,7 +1246,7 @@ consume = false
 
 [[transitions]]
 from = "script_data_double_escape_end"
-matcher = { one_of = " \n\t\r/>" }
+matcher = { one_of = " \n\t\r\u000C/>" }
 to = "script_data_double_escaped"
 actions = [
   "append_text(current)",
@@ -1061,6 +1354,41 @@ actions = ["emit_rcdata_end_tag_or_text"]
 
 [[transitions]]
 from = "rcdata_end_tag_name"
+matcher = { literal = " " }
+to = "rcdata_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rcdata_end_tag_name"
+matcher = { literal = "\n" }
+to = "rcdata_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rcdata_end_tag_name"
+matcher = { literal = "\t" }
+to = "rcdata_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rcdata_end_tag_name"
+matcher = { literal = "\r" }
+to = "rcdata_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rcdata_end_tag_name"
+matcher = { literal = "\u000C" }
+to = "rcdata_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rcdata_end_tag_name"
+matcher = { literal = "/" }
+to = "rcdata_self_closing_end_tag"
+
+[[transitions]]
+from = "rcdata_end_tag_name"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -1086,6 +1414,41 @@ from = "rawtext_end_tag_name"
 matcher = { literal = ">" }
 to = "rawtext"
 actions = ["emit_rcdata_end_tag_or_text"]
+
+[[transitions]]
+from = "rawtext_end_tag_name"
+matcher = { literal = " " }
+to = "rawtext_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rawtext_end_tag_name"
+matcher = { literal = "\n" }
+to = "rawtext_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rawtext_end_tag_name"
+matcher = { literal = "\t" }
+to = "rawtext_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rawtext_end_tag_name"
+matcher = { literal = "\r" }
+to = "rawtext_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rawtext_end_tag_name"
+matcher = { literal = "\u000C" }
+to = "rawtext_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rawtext_end_tag_name"
+matcher = { literal = "/" }
+to = "rawtext_self_closing_end_tag"
 
 [[transitions]]
 from = "rawtext_end_tag_name"
@@ -1117,6 +1480,41 @@ actions = ["emit_rcdata_end_tag_or_text"]
 
 [[transitions]]
 from = "script_data_end_tag_name"
+matcher = { literal = " " }
+to = "script_data_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_name"
+matcher = { literal = "\n" }
+to = "script_data_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_name"
+matcher = { literal = "\t" }
+to = "script_data_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_name"
+matcher = { literal = "\r" }
+to = "script_data_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_name"
+matcher = { literal = "\u000C" }
+to = "script_data_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_name"
+matcher = { literal = "/" }
+to = "script_data_self_closing_end_tag"
+
+[[transitions]]
+from = "script_data_end_tag_name"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -1145,6 +1543,41 @@ actions = ["emit_rcdata_end_tag_or_text"]
 
 [[transitions]]
 from = "script_data_escaped_end_tag_name"
+matcher = { literal = " " }
+to = "script_data_escaped_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_name"
+matcher = { literal = "\n" }
+to = "script_data_escaped_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_name"
+matcher = { literal = "\t" }
+to = "script_data_escaped_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_name"
+matcher = { literal = "\r" }
+to = "script_data_escaped_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_name"
+matcher = { literal = "\u000C" }
+to = "script_data_escaped_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_name"
+matcher = { literal = "/" }
+to = "script_data_escaped_self_closing_end_tag"
+
+[[transitions]]
+from = "script_data_escaped_end_tag_name"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -1163,6 +1596,474 @@ to = "script_data_escaped_end_tag_name"
 actions = [
   "append_tag_name(current_lowercase)",
   "append_temporary_buffer(current_lowercase)",
+]
+
+[[transitions]]
+from = "rcdata_end_tag_whitespace"
+matcher = { literal = " " }
+to = "rcdata_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rcdata_end_tag_whitespace"
+matcher = { literal = "\n" }
+to = "rcdata_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rcdata_end_tag_whitespace"
+matcher = { literal = "\t" }
+to = "rcdata_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rcdata_end_tag_whitespace"
+matcher = { literal = "\r" }
+to = "rcdata_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rcdata_end_tag_whitespace"
+matcher = { literal = "\u000C" }
+to = "rcdata_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rcdata_end_tag_whitespace"
+matcher = { literal = ">" }
+to = "rcdata"
+actions = ["emit_rcdata_end_tag_with_whitespace_or_text"]
+
+[[transitions]]
+from = "rcdata_end_tag_whitespace"
+matcher = { literal = "/" }
+to = "rcdata_self_closing_end_tag"
+
+[[transitions]]
+from = "rcdata_end_tag_whitespace"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "rcdata_end_tag_whitespace"
+matcher = { anything = true }
+to = "rcdata_end_tag_attributes"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rawtext_end_tag_whitespace"
+matcher = { literal = " " }
+to = "rawtext_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rawtext_end_tag_whitespace"
+matcher = { literal = "\n" }
+to = "rawtext_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rawtext_end_tag_whitespace"
+matcher = { literal = "\t" }
+to = "rawtext_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rawtext_end_tag_whitespace"
+matcher = { literal = "\r" }
+to = "rawtext_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rawtext_end_tag_whitespace"
+matcher = { literal = "\u000C" }
+to = "rawtext_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rawtext_end_tag_whitespace"
+matcher = { literal = ">" }
+to = "rawtext"
+actions = ["emit_rcdata_end_tag_with_whitespace_or_text"]
+
+[[transitions]]
+from = "rawtext_end_tag_whitespace"
+matcher = { literal = "/" }
+to = "rawtext_self_closing_end_tag"
+
+[[transitions]]
+from = "rawtext_end_tag_whitespace"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "rawtext_end_tag_whitespace"
+matcher = { anything = true }
+to = "rawtext_end_tag_attributes"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_whitespace"
+matcher = { literal = " " }
+to = "script_data_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_whitespace"
+matcher = { literal = "\n" }
+to = "script_data_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_whitespace"
+matcher = { literal = "\t" }
+to = "script_data_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_whitespace"
+matcher = { literal = "\r" }
+to = "script_data_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_whitespace"
+matcher = { literal = "\u000C" }
+to = "script_data_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_whitespace"
+matcher = { literal = ">" }
+to = "script_data"
+actions = ["emit_rcdata_end_tag_with_whitespace_or_text"]
+
+[[transitions]]
+from = "script_data_end_tag_whitespace"
+matcher = { literal = "/" }
+to = "script_data_self_closing_end_tag"
+
+[[transitions]]
+from = "script_data_end_tag_whitespace"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "script_data_end_tag_whitespace"
+matcher = { anything = true }
+to = "script_data_end_tag_attributes"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_whitespace"
+matcher = { literal = " " }
+to = "script_data_escaped_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_whitespace"
+matcher = { literal = "\n" }
+to = "script_data_escaped_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_whitespace"
+matcher = { literal = "\t" }
+to = "script_data_escaped_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_whitespace"
+matcher = { literal = "\r" }
+to = "script_data_escaped_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_whitespace"
+matcher = { literal = "\u000C" }
+to = "script_data_escaped_end_tag_whitespace"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_whitespace"
+matcher = { literal = ">" }
+to = "script_data_escaped"
+actions = ["emit_rcdata_end_tag_with_whitespace_or_text"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_whitespace"
+matcher = { literal = "/" }
+to = "script_data_escaped_self_closing_end_tag"
+
+[[transitions]]
+from = "script_data_escaped_end_tag_whitespace"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_whitespace"
+matcher = { anything = true }
+to = "script_data_escaped_end_tag_attributes"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rcdata_end_tag_attributes"
+matcher = { literal = ">" }
+to = "rcdata"
+actions = ["emit_rcdata_end_tag_with_attributes_or_text"]
+
+[[transitions]]
+from = "rcdata_end_tag_attributes"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "rcdata_end_tag_attributes"
+matcher = { anything = true }
+to = "rcdata_end_tag_attributes"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rawtext_end_tag_attributes"
+matcher = { literal = ">" }
+to = "rawtext"
+actions = ["emit_rcdata_end_tag_with_attributes_or_text"]
+
+[[transitions]]
+from = "rawtext_end_tag_attributes"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "rawtext_end_tag_attributes"
+matcher = { anything = true }
+to = "rawtext_end_tag_attributes"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_attributes"
+matcher = { literal = ">" }
+to = "script_data"
+actions = ["emit_rcdata_end_tag_with_attributes_or_text"]
+
+[[transitions]]
+from = "script_data_end_tag_attributes"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "script_data_end_tag_attributes"
+matcher = { anything = true }
+to = "script_data_end_tag_attributes"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_attributes"
+matcher = { literal = ">" }
+to = "script_data_escaped"
+actions = ["emit_rcdata_end_tag_with_attributes_or_text"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_attributes"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_attributes"
+matcher = { anything = true }
+to = "script_data_escaped_end_tag_attributes"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "rcdata_self_closing_end_tag"
+matcher = { literal = ">" }
+to = "rcdata"
+actions = ["emit_rcdata_end_tag_with_trailing_solidus_or_text"]
+
+[[transitions]]
+from = "rcdata_self_closing_end_tag"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "append_text(/)",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "rcdata_self_closing_end_tag"
+matcher = { anything = true }
+to = "rcdata"
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "append_text(/)",
+  "append_text(current)",
+]
+
+[[transitions]]
+from = "rawtext_self_closing_end_tag"
+matcher = { literal = ">" }
+to = "rawtext"
+actions = ["emit_rcdata_end_tag_with_trailing_solidus_or_text"]
+
+[[transitions]]
+from = "rawtext_self_closing_end_tag"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "append_text(/)",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "rawtext_self_closing_end_tag"
+matcher = { anything = true }
+to = "rawtext"
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "append_text(/)",
+  "append_text(current)",
+]
+
+[[transitions]]
+from = "script_data_self_closing_end_tag"
+matcher = { literal = ">" }
+to = "script_data"
+actions = ["emit_rcdata_end_tag_with_trailing_solidus_or_text"]
+
+[[transitions]]
+from = "script_data_self_closing_end_tag"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "append_text(/)",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "script_data_self_closing_end_tag"
+matcher = { anything = true }
+to = "script_data"
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "append_text(/)",
+  "append_text(current)",
+]
+
+[[transitions]]
+from = "script_data_escaped_self_closing_end_tag"
+matcher = { literal = ">" }
+to = "script_data_escaped"
+actions = ["emit_rcdata_end_tag_with_trailing_solidus_or_text"]
+
+[[transitions]]
+from = "script_data_escaped_self_closing_end_tag"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "append_text(/)",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "script_data_escaped_self_closing_end_tag"
+matcher = { anything = true }
+to = "script_data_escaped"
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "append_text(/)",
+  "append_text(current)",
 ]
 
 [[transitions]]
@@ -1304,14 +2205,23 @@ from = "text_numeric_character_reference"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+actions = [
+  "append_temporary_buffer_to_text",
+  "parse_error(absence-of-digits-in-numeric-character-reference)",
+  "flush_text",
+  "emit(EOF)",
+]
 
 [[transitions]]
 from = "text_numeric_character_reference"
 matcher = { anything = true }
 to = "data"
 consume = false
-actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+actions = [
+  "append_temporary_buffer_to_text",
+  "parse_error(absence-of-digits-in-numeric-character-reference)",
+  "switch_to_return_state",
+]
 
 [[transitions]]
 from = "text_numeric_hex_character_reference_start"
@@ -1336,14 +2246,23 @@ from = "text_numeric_hex_character_reference_start"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["append_temporary_buffer_to_text", "flush_text", "emit(EOF)"]
+actions = [
+  "append_temporary_buffer_to_text",
+  "parse_error(absence-of-digits-in-numeric-character-reference)",
+  "flush_text",
+  "emit(EOF)",
+]
 
 [[transitions]]
 from = "text_numeric_hex_character_reference_start"
 matcher = { anything = true }
 to = "data"
 consume = false
-actions = ["append_temporary_buffer_to_text", "switch_to_return_state"]
+actions = [
+  "append_temporary_buffer_to_text",
+  "parse_error(absence-of-digits-in-numeric-character-reference)",
+  "switch_to_return_state",
+]
 
 [[transitions]]
 from = "text_numeric_hex_character_reference"
@@ -1929,7 +2848,7 @@ actions = [
 
 [[transitions]]
 from = "text_named_character_reference_copy"
-matcher = { one_of = " \n\t\r<>/\"'" }
+matcher = { one_of = " \n\t\r\u000C<>/\"'" }
 to = "data"
 consume = false
 actions = [
@@ -2046,7 +2965,7 @@ actions = [
 
 [[transitions]]
 from = "text_named_character_reference_nbsp"
-matcher = { one_of = " \n\t\r<>/\"'" }
+matcher = { one_of = " \n\t\r\u000C<>/\"'" }
 to = "data"
 consume = false
 actions = [
@@ -2137,7 +3056,7 @@ actions = [
 
 [[transitions]]
 from = "text_named_character_reference_reg"
-matcher = { one_of = " \n\t\r<>/\"'" }
+matcher = { one_of = " \n\t\r\u000C<>/\"'" }
 to = "data"
 consume = false
 actions = [
@@ -2237,6 +3156,25 @@ to = "markup_declaration_open"
 
 [[transitions]]
 from = "tag_open"
+matcher = { literal = "?" }
+to = "bogus_comment"
+consume = false
+actions = ["parse_error(unexpected-question-mark-instead-of-tag-name)", "create_comment"]
+
+[[transitions]]
+from = "tag_open"
+matcher = { range = ["A", "Z"] }
+to = "tag_name"
+actions = ["create_start_tag", "append_tag_name(current_lowercase)"]
+
+[[transitions]]
+from = "tag_open"
+matcher = { range = ["a", "z"] }
+to = "tag_name"
+actions = ["create_start_tag", "append_tag_name(current_lowercase)"]
+
+[[transitions]]
+from = "tag_open"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -2249,9 +3187,20 @@ actions = [
 
 [[transitions]]
 from = "tag_open"
+matcher = { literal = "\u0000" }
+to = "data"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_text(<)",
+  "append_text_replacement",
+]
+
+[[transitions]]
+from = "tag_open"
 matcher = { anything = true }
-to = "tag_name"
-actions = ["create_start_tag", "append_tag_name(current_lowercase)"]
+to = "data"
+consume = false
+actions = ["parse_error(invalid-first-character-of-tag-name)", "append_text(<)"]
 
 [[transitions]]
 from = "end_tag_open"
@@ -2273,9 +3222,22 @@ actions = [
 
 [[transitions]]
 from = "end_tag_open"
-matcher = { anything = true }
+matcher = { range = ["A", "Z"] }
 to = "end_tag_name"
 actions = ["create_end_tag", "append_tag_name(current_lowercase)"]
+
+[[transitions]]
+from = "end_tag_open"
+matcher = { range = ["a", "z"] }
+to = "end_tag_name"
+actions = ["create_end_tag", "append_tag_name(current_lowercase)"]
+
+[[transitions]]
+from = "end_tag_open"
+matcher = { anything = true }
+to = "bogus_comment"
+consume = false
+actions = ["parse_error(invalid-first-character-of-tag-name)", "create_comment"]
 
 [[transitions]]
 from = "tag_name"
@@ -2299,6 +3261,11 @@ to = "before_attribute_name"
 
 [[transitions]]
 from = "tag_name"
+matcher = { literal = "\u000C" }
+to = "before_attribute_name"
+
+[[transitions]]
+from = "tag_name"
 matcher = { literal = "/" }
 to = "self_closing_start_tag"
 
@@ -2315,9 +3282,15 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-tag-name-state)",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
+
+[[transitions]]
+from = "tag_name"
+matcher = { literal = "\u0000" }
+to = "tag_name"
+actions = ["parse_error(unexpected-null-character)", "append_tag_name_replacement"]
 
 [[transitions]]
 from = "tag_name"
@@ -2343,6 +3316,11 @@ to = "before_attribute_name"
 [[transitions]]
 from = "before_attribute_name"
 matcher = { literal = "\r" }
+to = "before_attribute_name"
+
+[[transitions]]
+from = "before_attribute_name"
+matcher = { literal = "\u000C" }
 to = "before_attribute_name"
 
 [[transitions]]
@@ -2373,8 +3351,18 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-tag)",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
+]
+
+[[transitions]]
+from = "before_attribute_name"
+matcher = { literal = "\u0000" }
+to = "attribute_name"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "start_attribute",
+  "append_attribute_name_replacement",
 ]
 
 [[transitions]]
@@ -2405,9 +3393,14 @@ to = "after_attribute_name"
 
 [[transitions]]
 from = "attribute_name"
+matcher = { literal = "\u000C" }
+to = "after_attribute_name"
+
+[[transitions]]
+from = "attribute_name"
 matcher = { literal = "/" }
 to = "self_closing_start_tag"
-actions = ["commit_attribute"]
+actions = ["commit_attribute_dedup"]
 
 [[transitions]]
 from = "attribute_name"
@@ -2418,7 +3411,7 @@ to = "before_attribute_value"
 from = "attribute_name"
 matcher = { literal = ">" }
 to = "data"
-actions = ["emit_current_token"]
+actions = ["commit_attribute_dedup", "emit_current_token"]
 
 [[transitions]]
 from = "attribute_name"
@@ -2427,8 +3420,17 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-tag)",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
+]
+
+[[transitions]]
+from = "attribute_name"
+matcher = { literal = "\u0000" }
+to = "attribute_name"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_attribute_name_replacement",
 ]
 
 [[transitions]]
@@ -2459,9 +3461,14 @@ to = "after_attribute_name"
 
 [[transitions]]
 from = "after_attribute_name"
+matcher = { literal = "\u000C" }
+to = "after_attribute_name"
+
+[[transitions]]
+from = "after_attribute_name"
 matcher = { literal = "/" }
 to = "self_closing_start_tag"
-actions = ["commit_attribute"]
+actions = ["commit_attribute_dedup"]
 
 [[transitions]]
 from = "after_attribute_name"
@@ -2472,7 +3479,7 @@ to = "before_attribute_value"
 from = "after_attribute_name"
 matcher = { literal = ">" }
 to = "data"
-actions = ["commit_attribute", "emit_current_token"]
+actions = ["commit_attribute_dedup", "emit_current_token"]
 
 [[transitions]]
 from = "after_attribute_name"
@@ -2481,9 +3488,19 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
+]
+
+[[transitions]]
+from = "after_attribute_name"
+matcher = { literal = "\u0000" }
+to = "attribute_name"
+actions = [
+  "commit_attribute_dedup",
+  "parse_error(unexpected-null-character)",
+  "start_attribute",
+  "append_attribute_name_replacement",
 ]
 
 [[transitions]]
@@ -2491,7 +3508,7 @@ from = "after_attribute_name"
 matcher = { anything = true }
 to = "attribute_name"
 actions = [
-  "commit_attribute",
+  "commit_attribute_dedup",
   "start_attribute",
   "append_attribute_name(current_lowercase)",
 ]
@@ -2518,6 +3535,11 @@ to = "before_attribute_value"
 
 [[transitions]]
 from = "before_attribute_value"
+matcher = { literal = "\u000C" }
+to = "before_attribute_value"
+
+[[transitions]]
+from = "before_attribute_value"
 matcher = { literal = "\"" }
 to = "attribute_value_double_quoted"
 
@@ -2532,7 +3554,7 @@ matcher = { literal = ">" }
 to = "data"
 actions = [
   "parse_error(missing-attribute-value)",
-  "commit_attribute",
+  "commit_attribute_dedup",
   "emit_current_token",
 ]
 
@@ -2543,8 +3565,7 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -2560,6 +3581,15 @@ actions = [
 
 [[transitions]]
 from = "before_attribute_value"
+matcher = { literal = "\u0000" }
+to = "attribute_value_unquoted"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_attribute_value_replacement",
+]
+
+[[transitions]]
+from = "before_attribute_value"
 matcher = { anything = true }
 to = "attribute_value_unquoted"
 actions = ["append_attribute_value(current)"]
@@ -2568,7 +3598,7 @@ actions = ["append_attribute_value(current)"]
 from = "attribute_value_double_quoted"
 matcher = { literal = "\"" }
 to = "after_attribute_value_quoted"
-actions = ["commit_attribute"]
+actions = ["commit_attribute_dedup"]
 
 [[transitions]]
 from = "attribute_value_double_quoted"
@@ -2577,8 +3607,7 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -2594,6 +3623,15 @@ actions = [
 
 [[transitions]]
 from = "attribute_value_double_quoted"
+matcher = { literal = "\u0000" }
+to = "attribute_value_double_quoted"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_attribute_value_replacement",
+]
+
+[[transitions]]
+from = "attribute_value_double_quoted"
 matcher = { anything = true }
 to = "attribute_value_double_quoted"
 actions = ["append_attribute_value(current)"]
@@ -2602,7 +3640,7 @@ actions = ["append_attribute_value(current)"]
 from = "attribute_value_single_quoted"
 matcher = { literal = "'" }
 to = "after_attribute_value_quoted"
-actions = ["commit_attribute"]
+actions = ["commit_attribute_dedup"]
 
 [[transitions]]
 from = "attribute_value_single_quoted"
@@ -2611,8 +3649,7 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -2628,6 +3665,15 @@ actions = [
 
 [[transitions]]
 from = "attribute_value_single_quoted"
+matcher = { literal = "\u0000" }
+to = "attribute_value_single_quoted"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_attribute_value_replacement",
+]
+
+[[transitions]]
+from = "attribute_value_single_quoted"
 matcher = { anything = true }
 to = "attribute_value_single_quoted"
 actions = ["append_attribute_value(current)"]
@@ -2636,37 +3682,43 @@ actions = ["append_attribute_value(current)"]
 from = "attribute_value_unquoted"
 matcher = { literal = " " }
 to = "before_attribute_name"
-actions = ["commit_attribute"]
+actions = ["commit_attribute_dedup"]
 
 [[transitions]]
 from = "attribute_value_unquoted"
 matcher = { literal = "\n" }
 to = "before_attribute_name"
-actions = ["commit_attribute"]
+actions = ["commit_attribute_dedup"]
 
 [[transitions]]
 from = "attribute_value_unquoted"
 matcher = { literal = "\t" }
 to = "before_attribute_name"
-actions = ["commit_attribute"]
+actions = ["commit_attribute_dedup"]
 
 [[transitions]]
 from = "attribute_value_unquoted"
 matcher = { literal = "\r" }
 to = "before_attribute_name"
-actions = ["commit_attribute"]
+actions = ["commit_attribute_dedup"]
+
+[[transitions]]
+from = "attribute_value_unquoted"
+matcher = { literal = "\u000C" }
+to = "before_attribute_name"
+actions = ["commit_attribute_dedup"]
 
 [[transitions]]
 from = "attribute_value_unquoted"
 matcher = { literal = "/" }
 to = "self_closing_start_tag"
-actions = ["commit_attribute"]
+actions = ["commit_attribute_dedup"]
 
 [[transitions]]
 from = "attribute_value_unquoted"
 matcher = { literal = ">" }
 to = "data"
-actions = ["commit_attribute", "emit_current_token"]
+actions = ["commit_attribute_dedup", "emit_current_token"]
 
 [[transitions]]
 from = "attribute_value_unquoted"
@@ -2675,8 +3727,7 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -2688,6 +3739,60 @@ actions = [
   "set_return_state(attribute_value_unquoted)",
   "clear_temporary_buffer",
   "append_temporary_buffer(&)",
+]
+
+[[transitions]]
+from = "attribute_value_unquoted"
+matcher = { literal = "\u0000" }
+to = "attribute_value_unquoted"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_attribute_value_replacement",
+]
+
+[[transitions]]
+from = "attribute_value_unquoted"
+matcher = { literal = "\"" }
+to = "attribute_value_unquoted"
+actions = [
+  "parse_error(unexpected-character-in-unquoted-attribute-value)",
+  "append_attribute_value(current)",
+]
+
+[[transitions]]
+from = "attribute_value_unquoted"
+matcher = { literal = "'" }
+to = "attribute_value_unquoted"
+actions = [
+  "parse_error(unexpected-character-in-unquoted-attribute-value)",
+  "append_attribute_value(current)",
+]
+
+[[transitions]]
+from = "attribute_value_unquoted"
+matcher = { literal = "<" }
+to = "attribute_value_unquoted"
+actions = [
+  "parse_error(unexpected-character-in-unquoted-attribute-value)",
+  "append_attribute_value(current)",
+]
+
+[[transitions]]
+from = "attribute_value_unquoted"
+matcher = { literal = "=" }
+to = "attribute_value_unquoted"
+actions = [
+  "parse_error(unexpected-character-in-unquoted-attribute-value)",
+  "append_attribute_value(current)",
+]
+
+[[transitions]]
+from = "attribute_value_unquoted"
+matcher = { literal = "`" }
+to = "attribute_value_unquoted"
+actions = [
+  "parse_error(unexpected-character-in-unquoted-attribute-value)",
+  "append_attribute_value(current)",
 ]
 
 [[transitions]]
@@ -2806,8 +3911,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -2846,9 +3950,9 @@ to = "done"
 consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
+  "parse_error(absence-of-digits-in-numeric-character-reference)",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -2859,6 +3963,7 @@ to = "attribute_value_unquoted"
 consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
+  "parse_error(absence-of-digits-in-numeric-character-reference)",
   "switch_to_return_state",
 ]
 
@@ -2887,9 +3992,9 @@ to = "done"
 consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
+  "parse_error(absence-of-digits-in-numeric-character-reference)",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -2900,6 +4005,7 @@ to = "attribute_value_unquoted"
 consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
+  "parse_error(absence-of-digits-in-numeric-character-reference)",
   "switch_to_return_state",
 ]
 
@@ -2939,8 +4045,7 @@ actions = [
   "append_numeric_character_reference_to_attribute_value",
   "parse_error(missing-semicolon-after-character-reference)",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -2979,8 +4084,7 @@ actions = [
   "append_numeric_character_reference_to_attribute_value",
   "parse_error(missing-semicolon-after-character-reference)",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3031,8 +4135,7 @@ consume = false
 actions = [
   "recover_named_character_reference_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3078,8 +4181,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3113,8 +4215,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3146,8 +4247,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3181,8 +4281,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3216,8 +4315,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3249,8 +4347,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3284,8 +4381,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3317,8 +4413,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3352,8 +4447,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3385,8 +4479,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3420,8 +4513,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3455,8 +4547,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3490,8 +4581,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3523,8 +4613,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3558,8 +4647,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3593,8 +4681,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3628,8 +4715,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3661,14 +4747,13 @@ actions = [
   "append_named_character_reference_to_attribute_value",
   "parse_error(missing-semicolon-after-character-reference)",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
 [[transitions]]
 from = "attribute_named_character_reference_copy"
-matcher = { one_of = " \n\t\r>/\"'" }
+matcher = { one_of = " \n\t\r\u000C>/\"'" }
 to = "attribute_value_unquoted"
 consume = false
 actions = [
@@ -3707,8 +4792,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3742,8 +4826,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3777,8 +4860,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3810,14 +4892,13 @@ actions = [
   "append_named_character_reference_to_attribute_value",
   "parse_error(missing-semicolon-after-character-reference)",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
 [[transitions]]
 from = "attribute_named_character_reference_nbsp"
-matcher = { one_of = " \n\t\r>/\"'" }
+matcher = { one_of = " \n\t\r\u000C>/\"'" }
 to = "attribute_value_unquoted"
 consume = false
 actions = [
@@ -3856,8 +4937,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3891,8 +4971,7 @@ consume = false
 actions = [
   "append_temporary_buffer_to_attribute_value",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -3924,14 +5003,13 @@ actions = [
   "append_named_character_reference_to_attribute_value",
   "parse_error(missing-semicolon-after-character-reference)",
   "parse_error(eof-in-tag)",
-  "commit_attribute",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
 [[transitions]]
 from = "attribute_named_character_reference_reg"
-matcher = { one_of = " \n\t\r>/\"'" }
+matcher = { one_of = " \n\t\r\u000C>/\"'" }
 to = "attribute_value_unquoted"
 consume = false
 actions = [
@@ -3972,6 +5050,11 @@ to = "before_attribute_name"
 
 [[transitions]]
 from = "after_attribute_value_quoted"
+matcher = { literal = "\u000C" }
+to = "before_attribute_name"
+
+[[transitions]]
+from = "after_attribute_value_quoted"
 matcher = { literal = "/" }
 to = "self_closing_start_tag"
 
@@ -3988,7 +5071,7 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-tag)",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4015,7 +5098,7 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-tag)",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
 
@@ -4049,33 +5132,201 @@ actions = ["create_doctype"]
 
 [[transitions]]
 from = "markup_declaration_open"
+matcher = { literal = "[" }
+to = "cdata_open_bracket"
+
+[[transitions]]
+from = "markup_declaration_open"
 matcher = { eof = true }
-to = "done"
+to = "bogus_comment"
 consume = false
 actions = [
-  "parse_error(eof-in-markup-declaration-open-state)",
-  "append_text(<!)",
-  "flush_text",
-  "emit(EOF)",
+  "parse_error(incorrectly-opened-comment)",
+  "create_comment",
 ]
 
 [[transitions]]
 from = "markup_declaration_open"
 matcher = { anything = true }
 to = "bogus_comment"
-actions = ["create_comment", "append_comment(current)"]
+consume = false
+actions = [
+  "parse_error(incorrectly-opened-comment)",
+  "create_comment",
+]
+
+[[transitions]]
+from = "cdata_open_bracket"
+matcher = { literal = "C" }
+to = "cdata_open_c"
+
+[[transitions]]
+from = "cdata_open_bracket"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-comment)",
+  "create_comment",
+  "append_comment([)",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "cdata_open_bracket"
+matcher = { anything = true }
+to = "bogus_comment"
+actions = ["create_comment", "append_comment([)", "append_comment(current)"]
+
+[[transitions]]
+from = "cdata_open_c"
+matcher = { literal = "D" }
+to = "cdata_open_cd"
+
+[[transitions]]
+from = "cdata_open_c"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-comment)",
+  "create_comment",
+  "append_comment([C)",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "cdata_open_c"
+matcher = { anything = true }
+to = "bogus_comment"
+actions = ["create_comment", "append_comment([C)", "append_comment(current)"]
+
+[[transitions]]
+from = "cdata_open_cd"
+matcher = { literal = "A" }
+to = "cdata_open_cda"
+
+[[transitions]]
+from = "cdata_open_cd"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-comment)",
+  "create_comment",
+  "append_comment([CD)",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "cdata_open_cd"
+matcher = { anything = true }
+to = "bogus_comment"
+actions = [
+  "create_comment",
+  "append_comment([CD)",
+  "append_comment(current)",
+]
+
+[[transitions]]
+from = "cdata_open_cda"
+matcher = { literal = "T" }
+to = "cdata_open_cdat"
+
+[[transitions]]
+from = "cdata_open_cda"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-comment)",
+  "create_comment",
+  "append_comment([CDA)",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "cdata_open_cda"
+matcher = { anything = true }
+to = "bogus_comment"
+actions = [
+  "create_comment",
+  "append_comment([CDA)",
+  "append_comment(current)",
+]
+
+[[transitions]]
+from = "cdata_open_cdat"
+matcher = { literal = "A" }
+to = "cdata_open_cdata"
+
+[[transitions]]
+from = "cdata_open_cdat"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-comment)",
+  "create_comment",
+  "append_comment([CDAT)",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "cdata_open_cdat"
+matcher = { anything = true }
+to = "bogus_comment"
+actions = [
+  "create_comment",
+  "append_comment([CDAT)",
+  "append_comment(current)",
+]
+
+[[transitions]]
+from = "cdata_open_cdata"
+matcher = { literal = "[" }
+to = "cdata_section"
+
+[[transitions]]
+from = "cdata_open_cdata"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-comment)",
+  "create_comment",
+  "append_comment([CDATA)",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "cdata_open_cdata"
+matcher = { anything = true }
+to = "bogus_comment"
+actions = [
+  "create_comment",
+  "append_comment([CDATA)",
+  "append_comment(current)",
+]
 
 [[transitions]]
 from = "comment_start"
 matcher = { literal = "-" }
-to = "comment"
+to = "comment_start_dash"
 
 [[transitions]]
 from = "comment_start"
 matcher = { literal = ">" }
 to = "data"
 actions = [
-  "parse_error(abrupt-closing-of-empty-comment)",
+  "parse_error(incorrectly-opened-comment)",
+  "append_comment(-)",
   "emit_current_token",
 ]
 
@@ -4084,13 +5335,72 @@ from = "comment_start"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-comment)", "emit_current_token", "emit(EOF)"]
+actions = [
+  "parse_error(incorrectly-opened-comment)",
+  "append_comment(-)",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "comment_start"
+matcher = { literal = "\u0000" }
+to = "bogus_comment"
+actions = [
+  "parse_error(incorrectly-opened-comment)",
+  "parse_error(unexpected-null-character)",
+  "append_comment(-)",
+  "append_comment_replacement",
+]
 
 [[transitions]]
 from = "comment_start"
 matcher = { anything = true }
 to = "bogus_comment"
-actions = ["append_comment(-)", "append_comment(current)"]
+actions = [
+  "parse_error(incorrectly-opened-comment)",
+  "append_comment(-)",
+  "append_comment(current)",
+]
+
+[[transitions]]
+from = "comment_start_dash"
+matcher = { literal = ">" }
+to = "data"
+actions = [
+  "parse_error(abrupt-closing-of-empty-comment)",
+  "emit_current_token",
+]
+
+[[transitions]]
+from = "comment_start_dash"
+matcher = { literal = "-" }
+to = "comment_end"
+
+[[transitions]]
+from = "comment_start_dash"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(eof-in-comment)", "emit_current_token", "emit(EOF)"]
+
+[[transitions]]
+from = "comment_start_dash"
+matcher = { literal = "\u0000" }
+to = "comment"
+actions = ["parse_error(unexpected-null-character)", "append_comment_replacement"]
+
+[[transitions]]
+from = "comment_start_dash"
+matcher = { anything = true }
+to = "comment"
+actions = ["append_comment(current)"]
+
+[[transitions]]
+from = "comment"
+matcher = { literal = "<" }
+to = "comment_less_than_sign"
+actions = ["append_comment(<)"]
 
 [[transitions]]
 from = "comment"
@@ -4106,9 +5416,100 @@ actions = ["parse_error(eof-in-comment)", "emit_current_token", "emit(EOF)"]
 
 [[transitions]]
 from = "comment"
+matcher = { literal = "\u0000" }
+to = "comment"
+actions = ["parse_error(unexpected-null-character)", "append_comment_replacement"]
+
+[[transitions]]
+from = "comment"
 matcher = { anything = true }
 to = "comment"
 actions = ["append_comment(current)"]
+
+[[transitions]]
+from = "comment_less_than_sign"
+matcher = { literal = "!" }
+to = "comment_less_than_sign_bang"
+actions = ["append_comment(!)"]
+
+[[transitions]]
+from = "comment_less_than_sign"
+matcher = { literal = "<" }
+to = "comment_less_than_sign"
+actions = ["append_comment(<)"]
+
+[[transitions]]
+from = "comment_less_than_sign"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(eof-in-comment)", "emit_current_token", "emit(EOF)"]
+
+[[transitions]]
+from = "comment_less_than_sign"
+matcher = { anything = true }
+to = "comment"
+consume = false
+
+[[transitions]]
+from = "comment_less_than_sign_bang"
+matcher = { literal = "-" }
+to = "comment_less_than_sign_bang_dash"
+
+[[transitions]]
+from = "comment_less_than_sign_bang"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["parse_error(eof-in-comment)", "emit_current_token", "emit(EOF)"]
+
+[[transitions]]
+from = "comment_less_than_sign_bang"
+matcher = { anything = true }
+to = "comment"
+consume = false
+
+[[transitions]]
+from = "comment_less_than_sign_bang_dash"
+matcher = { literal = "-" }
+to = "comment_less_than_sign_bang_dash_dash"
+
+[[transitions]]
+from = "comment_less_than_sign_bang_dash"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-comment)",
+  "append_comment(-)",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "comment_less_than_sign_bang_dash"
+matcher = { anything = true }
+to = "comment_end_dash"
+consume = false
+
+[[transitions]]
+from = "comment_less_than_sign_bang_dash_dash"
+matcher = { literal = ">" }
+to = "comment_end"
+consume = false
+
+[[transitions]]
+from = "comment_less_than_sign_bang_dash_dash"
+matcher = { eof = true }
+to = "comment_end"
+consume = false
+
+[[transitions]]
+from = "comment_less_than_sign_bang_dash_dash"
+matcher = { anything = true }
+to = "comment_end"
+consume = false
+actions = ["parse_error(nested-comment)"]
 
 [[transitions]]
 from = "comment_end_dash"
@@ -4129,9 +5530,24 @@ actions = [
 
 [[transitions]]
 from = "comment_end_dash"
+matcher = { literal = "\u0000" }
+to = "comment"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_comment(-)",
+  "append_comment_replacement",
+]
+
+[[transitions]]
+from = "comment_end_dash"
 matcher = { anything = true }
 to = "comment"
 actions = ["append_comment(-)", "append_comment(current)"]
+
+[[transitions]]
+from = "comment_end"
+matcher = { literal = "!" }
+to = "comment_end_bang"
 
 [[transitions]]
 from = "comment_end"
@@ -4159,9 +5575,50 @@ actions = [
 
 [[transitions]]
 from = "comment_end"
+matcher = { literal = "\u0000" }
+to = "comment"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_comment(--)",
+  "append_comment_replacement",
+]
+
+[[transitions]]
+from = "comment_end"
 matcher = { anything = true }
 to = "comment"
 actions = ["append_comment(--)", "append_comment(current)"]
+
+[[transitions]]
+from = "comment_end_bang"
+matcher = { literal = "-" }
+to = "comment_end_dash"
+actions = ["append_comment(--!)"]
+
+[[transitions]]
+from = "comment_end_bang"
+matcher = { literal = ">" }
+to = "data"
+actions = ["parse_error(incorrectly-closed-comment)", "emit_current_token"]
+
+[[transitions]]
+from = "comment_end_bang"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-comment)",
+  "append_comment(--!)",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "comment_end_bang"
+matcher = { anything = true }
+to = "comment"
+consume = false
+actions = ["append_comment(--!)"]
 
 [[transitions]]
 from = "bogus_comment"
@@ -4174,7 +5631,13 @@ from = "bogus_comment"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-comment)", "emit_current_token", "emit(EOF)"]
+actions = ["emit_current_token", "emit(EOF)"]
+
+[[transitions]]
+from = "bogus_comment"
+matcher = { literal = "\u0000" }
+to = "bogus_comment"
+actions = ["parse_error(unexpected-null-character)", "append_comment_replacement"]
 
 [[transitions]]
 from = "bogus_comment"
@@ -4197,7 +5660,12 @@ from = "doctype_keyword_o"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-doctype)", "emit_current_token", "emit(EOF)"]
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
 
 [[transitions]]
 from = "doctype_keyword_o"
@@ -4205,6 +5673,7 @@ matcher = { anything = true }
 to = "doctype_name"
 actions = [
   "parse_error(invalid-doctype-keyword)",
+  "mark_force_quirks",
   "append_doctype_name(d)",
   "append_doctype_name(current_lowercase)",
 ]
@@ -4224,7 +5693,12 @@ from = "doctype_keyword_c"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-doctype)", "emit_current_token", "emit(EOF)"]
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
 
 [[transitions]]
 from = "doctype_keyword_c"
@@ -4232,6 +5706,7 @@ matcher = { anything = true }
 to = "doctype_name"
 actions = [
   "parse_error(invalid-doctype-keyword)",
+  "mark_force_quirks",
   "append_doctype_name(do)",
   "append_doctype_name(current_lowercase)",
 ]
@@ -4251,7 +5726,12 @@ from = "doctype_keyword_t"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-doctype)", "emit_current_token", "emit(EOF)"]
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
 
 [[transitions]]
 from = "doctype_keyword_t"
@@ -4259,6 +5739,7 @@ matcher = { anything = true }
 to = "doctype_name"
 actions = [
   "parse_error(invalid-doctype-keyword)",
+  "mark_force_quirks",
   "append_doctype_name(doc)",
   "append_doctype_name(current_lowercase)",
 ]
@@ -4278,7 +5759,12 @@ from = "doctype_keyword_y"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-doctype)", "emit_current_token", "emit(EOF)"]
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
 
 [[transitions]]
 from = "doctype_keyword_y"
@@ -4286,6 +5772,7 @@ matcher = { anything = true }
 to = "doctype_name"
 actions = [
   "parse_error(invalid-doctype-keyword)",
+  "mark_force_quirks",
   "append_doctype_name(doct)",
   "append_doctype_name(current_lowercase)",
 ]
@@ -4305,7 +5792,12 @@ from = "doctype_keyword_p"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-doctype)", "emit_current_token", "emit(EOF)"]
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
 
 [[transitions]]
 from = "doctype_keyword_p"
@@ -4313,6 +5805,7 @@ matcher = { anything = true }
 to = "doctype_name"
 actions = [
   "parse_error(invalid-doctype-keyword)",
+  "mark_force_quirks",
   "append_doctype_name(docty)",
   "append_doctype_name(current_lowercase)",
 ]
@@ -4332,7 +5825,12 @@ from = "doctype_keyword_e"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-doctype)", "emit_current_token", "emit(EOF)"]
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
 
 [[transitions]]
 from = "doctype_keyword_e"
@@ -4340,6 +5838,7 @@ matcher = { anything = true }
 to = "doctype_name"
 actions = [
   "parse_error(invalid-doctype-keyword)",
+  "mark_force_quirks",
   "append_doctype_name(doctyp)",
   "append_doctype_name(current_lowercase)",
 ]
@@ -4366,16 +5865,40 @@ to = "before_doctype_name"
 
 [[transitions]]
 from = "doctype_after_keyword"
+matcher = { literal = "\u000C" }
+to = "before_doctype_name"
+
+[[transitions]]
+from = "doctype_after_keyword"
 matcher = { literal = ">" }
 to = "data"
-actions = ["emit_current_token"]
+actions = [
+  "parse_error(missing-doctype-name)",
+  "mark_force_quirks",
+  "emit_current_token",
+]
 
 [[transitions]]
 from = "doctype_after_keyword"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-doctype)", "emit_current_token", "emit(EOF)"]
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_after_keyword"
+matcher = { literal = "\u0000" }
+to = "doctype_name"
+actions = [
+  "parse_error(missing-whitespace-before-doctype-name)",
+  "parse_error(unexpected-null-character)",
+  "append_doctype_name_replacement",
+]
 
 [[transitions]]
 from = "doctype_after_keyword"
@@ -4408,16 +5931,36 @@ to = "before_doctype_name"
 
 [[transitions]]
 from = "before_doctype_name"
+matcher = { literal = "\u000C" }
+to = "before_doctype_name"
+
+[[transitions]]
+from = "before_doctype_name"
 matcher = { literal = ">" }
 to = "data"
-actions = ["parse_error(missing-doctype-name)", "emit_current_token"]
+actions = [
+  "parse_error(missing-doctype-name)",
+  "mark_force_quirks",
+  "emit_current_token",
+]
 
 [[transitions]]
 from = "before_doctype_name"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-doctype)", "emit_current_token", "emit(EOF)"]
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "before_doctype_name"
+matcher = { literal = "\u0000" }
+to = "doctype_name"
+actions = ["parse_error(unexpected-null-character)", "append_doctype_name_replacement"]
 
 [[transitions]]
 from = "before_doctype_name"
@@ -4447,6 +5990,11 @@ to = "after_doctype_name"
 
 [[transitions]]
 from = "doctype_name"
+matcher = { literal = "\u000C" }
+to = "after_doctype_name"
+
+[[transitions]]
+from = "doctype_name"
 matcher = { literal = ">" }
 to = "data"
 actions = ["emit_current_token"]
@@ -4456,7 +6004,18 @@ from = "doctype_name"
 matcher = { eof = true }
 to = "done"
 consume = false
-actions = ["parse_error(eof-in-doctype)", "emit_current_token", "emit(EOF)"]
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_name"
+matcher = { literal = "\u0000" }
+to = "doctype_name"
+actions = ["parse_error(unexpected-null-character)", "append_doctype_name_replacement"]
 
 [[transitions]]
 from = "doctype_name"
@@ -4486,22 +6045,1045 @@ to = "after_doctype_name"
 
 [[transitions]]
 from = "after_doctype_name"
-matcher = { literal = ">" }
-to = "data"
-actions = ["emit_current_token"]
-
-[[transitions]]
-from = "after_doctype_name"
-matcher = { eof = true }
-to = "done"
-consume = false
-actions = ["parse_error(eof-in-doctype)", "emit_current_token", "emit(EOF)"]
-
-[[transitions]]
-from = "after_doctype_name"
-matcher = { anything = true }
+matcher = { literal = "\u000C" }
 to = "after_doctype_name"
-actions = ["parse_error(unexpected-character-after-doctype-name)"]
+
+[[transitions]]
+from = "after_doctype_name"
+matcher = { literal = ">" }
+to = "data"
+actions = ["emit_current_token"]
+
+[[transitions]]
+from = "after_doctype_name"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "after_doctype_name"
+matcher = { literal = "P" }
+to = "doctype_public_keyword_u"
+
+[[transitions]]
+from = "after_doctype_name"
+matcher = { literal = "p" }
+to = "doctype_public_keyword_u"
+
+[[transitions]]
+from = "after_doctype_name"
+matcher = { literal = "S" }
+to = "doctype_system_keyword_y"
+
+[[transitions]]
+from = "after_doctype_name"
+matcher = { literal = "s" }
+to = "doctype_system_keyword_y"
+
+[[transitions]]
+from = "after_doctype_name"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(invalid-character-sequence-after-doctype-name)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_public_keyword_u"
+matcher = { literal = "U" }
+to = "doctype_public_keyword_b"
+
+[[transitions]]
+from = "doctype_public_keyword_u"
+matcher = { literal = "u" }
+to = "doctype_public_keyword_b"
+
+[[transitions]]
+from = "doctype_public_keyword_b"
+matcher = { literal = "B" }
+to = "doctype_public_keyword_l"
+
+[[transitions]]
+from = "doctype_public_keyword_b"
+matcher = { literal = "b" }
+to = "doctype_public_keyword_l"
+
+[[transitions]]
+from = "doctype_public_keyword_l"
+matcher = { literal = "L" }
+to = "doctype_public_keyword_i"
+
+[[transitions]]
+from = "doctype_public_keyword_l"
+matcher = { literal = "l" }
+to = "doctype_public_keyword_i"
+
+[[transitions]]
+from = "doctype_public_keyword_i"
+matcher = { literal = "I" }
+to = "doctype_public_keyword_c"
+
+[[transitions]]
+from = "doctype_public_keyword_i"
+matcher = { literal = "i" }
+to = "doctype_public_keyword_c"
+
+[[transitions]]
+from = "doctype_public_keyword_c"
+matcher = { literal = "C" }
+to = "after_doctype_public_keyword"
+
+[[transitions]]
+from = "doctype_public_keyword_c"
+matcher = { literal = "c" }
+to = "after_doctype_public_keyword"
+
+[[transitions]]
+from = "doctype_public_keyword_u"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_public_keyword_b"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_public_keyword_l"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_public_keyword_i"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_public_keyword_c"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_public_keyword_u"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(invalid-character-sequence-after-doctype-name)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_public_keyword_b"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(invalid-character-sequence-after-doctype-name)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_public_keyword_l"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(invalid-character-sequence-after-doctype-name)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_public_keyword_i"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(invalid-character-sequence-after-doctype-name)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_public_keyword_c"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(invalid-character-sequence-after-doctype-name)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_system_keyword_y"
+matcher = { literal = "Y" }
+to = "doctype_system_keyword_s"
+
+[[transitions]]
+from = "doctype_system_keyword_y"
+matcher = { literal = "y" }
+to = "doctype_system_keyword_s"
+
+[[transitions]]
+from = "doctype_system_keyword_s"
+matcher = { literal = "S" }
+to = "doctype_system_keyword_t"
+
+[[transitions]]
+from = "doctype_system_keyword_s"
+matcher = { literal = "s" }
+to = "doctype_system_keyword_t"
+
+[[transitions]]
+from = "doctype_system_keyword_t"
+matcher = { literal = "T" }
+to = "doctype_system_keyword_e"
+
+[[transitions]]
+from = "doctype_system_keyword_t"
+matcher = { literal = "t" }
+to = "doctype_system_keyword_e"
+
+[[transitions]]
+from = "doctype_system_keyword_e"
+matcher = { literal = "E" }
+to = "doctype_system_keyword_m"
+
+[[transitions]]
+from = "doctype_system_keyword_e"
+matcher = { literal = "e" }
+to = "doctype_system_keyword_m"
+
+[[transitions]]
+from = "doctype_system_keyword_m"
+matcher = { literal = "M" }
+to = "after_doctype_system_keyword"
+
+[[transitions]]
+from = "doctype_system_keyword_m"
+matcher = { literal = "m" }
+to = "after_doctype_system_keyword"
+
+[[transitions]]
+from = "doctype_system_keyword_y"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_system_keyword_s"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_system_keyword_t"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_system_keyword_e"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_system_keyword_m"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_system_keyword_y"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(invalid-character-sequence-after-doctype-name)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_system_keyword_s"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(invalid-character-sequence-after-doctype-name)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_system_keyword_t"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(invalid-character-sequence-after-doctype-name)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_system_keyword_e"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(invalid-character-sequence-after-doctype-name)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_system_keyword_m"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(invalid-character-sequence-after-doctype-name)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "after_doctype_public_keyword"
+matcher = { literal = " " }
+to = "before_doctype_public_identifier"
+
+[[transitions]]
+from = "after_doctype_public_keyword"
+matcher = { literal = "\n" }
+to = "before_doctype_public_identifier"
+
+[[transitions]]
+from = "after_doctype_public_keyword"
+matcher = { literal = "\t" }
+to = "before_doctype_public_identifier"
+
+[[transitions]]
+from = "after_doctype_public_keyword"
+matcher = { literal = "\r" }
+to = "before_doctype_public_identifier"
+
+[[transitions]]
+from = "after_doctype_public_keyword"
+matcher = { literal = "\u000C" }
+to = "before_doctype_public_identifier"
+
+[[transitions]]
+from = "after_doctype_public_keyword"
+matcher = { literal = "\"" }
+to = "doctype_public_identifier_double_quoted"
+actions = [
+  "parse_error(missing-whitespace-after-doctype-public-keyword)",
+  "set_doctype_public_identifier_empty",
+]
+
+[[transitions]]
+from = "after_doctype_public_keyword"
+matcher = { literal = "'" }
+to = "doctype_public_identifier_single_quoted"
+actions = [
+  "parse_error(missing-whitespace-after-doctype-public-keyword)",
+  "set_doctype_public_identifier_empty",
+]
+
+[[transitions]]
+from = "after_doctype_public_keyword"
+matcher = { literal = ">" }
+to = "data"
+actions = [
+  "parse_error(missing-doctype-public-identifier)",
+  "mark_force_quirks",
+  "emit_current_token",
+]
+
+[[transitions]]
+from = "after_doctype_public_keyword"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "after_doctype_public_keyword"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(missing-quote-before-doctype-public-identifier)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "before_doctype_public_identifier"
+matcher = { literal = " " }
+to = "before_doctype_public_identifier"
+
+[[transitions]]
+from = "before_doctype_public_identifier"
+matcher = { literal = "\n" }
+to = "before_doctype_public_identifier"
+
+[[transitions]]
+from = "before_doctype_public_identifier"
+matcher = { literal = "\t" }
+to = "before_doctype_public_identifier"
+
+[[transitions]]
+from = "before_doctype_public_identifier"
+matcher = { literal = "\r" }
+to = "before_doctype_public_identifier"
+
+[[transitions]]
+from = "before_doctype_public_identifier"
+matcher = { literal = "\u000C" }
+to = "before_doctype_public_identifier"
+
+[[transitions]]
+from = "before_doctype_public_identifier"
+matcher = { literal = "\"" }
+to = "doctype_public_identifier_double_quoted"
+actions = ["set_doctype_public_identifier_empty"]
+
+[[transitions]]
+from = "before_doctype_public_identifier"
+matcher = { literal = "'" }
+to = "doctype_public_identifier_single_quoted"
+actions = ["set_doctype_public_identifier_empty"]
+
+[[transitions]]
+from = "before_doctype_public_identifier"
+matcher = { literal = ">" }
+to = "data"
+actions = [
+  "parse_error(missing-doctype-public-identifier)",
+  "mark_force_quirks",
+  "emit_current_token",
+]
+
+[[transitions]]
+from = "before_doctype_public_identifier"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "before_doctype_public_identifier"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(missing-quote-before-doctype-public-identifier)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_public_identifier_double_quoted"
+matcher = { literal = "\"" }
+to = "after_doctype_public_identifier"
+
+[[transitions]]
+from = "doctype_public_identifier_double_quoted"
+matcher = { literal = ">" }
+to = "data"
+actions = [
+  "parse_error(abrupt-doctype-public-identifier)",
+  "mark_force_quirks",
+  "emit_current_token",
+]
+
+[[transitions]]
+from = "doctype_public_identifier_double_quoted"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_public_identifier_double_quoted"
+matcher = { literal = "\u0000" }
+to = "doctype_public_identifier_double_quoted"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_doctype_public_identifier_replacement",
+]
+
+[[transitions]]
+from = "doctype_public_identifier_double_quoted"
+matcher = { anything = true }
+to = "doctype_public_identifier_double_quoted"
+actions = ["append_doctype_public_identifier(current)"]
+
+[[transitions]]
+from = "doctype_public_identifier_single_quoted"
+matcher = { literal = "'" }
+to = "after_doctype_public_identifier"
+
+[[transitions]]
+from = "doctype_public_identifier_single_quoted"
+matcher = { literal = ">" }
+to = "data"
+actions = [
+  "parse_error(abrupt-doctype-public-identifier)",
+  "mark_force_quirks",
+  "emit_current_token",
+]
+
+[[transitions]]
+from = "doctype_public_identifier_single_quoted"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_public_identifier_single_quoted"
+matcher = { literal = "\u0000" }
+to = "doctype_public_identifier_single_quoted"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_doctype_public_identifier_replacement",
+]
+
+[[transitions]]
+from = "doctype_public_identifier_single_quoted"
+matcher = { anything = true }
+to = "doctype_public_identifier_single_quoted"
+actions = ["append_doctype_public_identifier(current)"]
+
+[[transitions]]
+from = "after_doctype_public_identifier"
+matcher = { literal = " " }
+to = "between_doctype_public_and_system_identifiers"
+
+[[transitions]]
+from = "after_doctype_public_identifier"
+matcher = { literal = "\n" }
+to = "between_doctype_public_and_system_identifiers"
+
+[[transitions]]
+from = "after_doctype_public_identifier"
+matcher = { literal = "\t" }
+to = "between_doctype_public_and_system_identifiers"
+
+[[transitions]]
+from = "after_doctype_public_identifier"
+matcher = { literal = "\r" }
+to = "between_doctype_public_and_system_identifiers"
+
+[[transitions]]
+from = "after_doctype_public_identifier"
+matcher = { literal = "\u000C" }
+to = "between_doctype_public_and_system_identifiers"
+
+[[transitions]]
+from = "after_doctype_public_identifier"
+matcher = { literal = ">" }
+to = "data"
+actions = ["emit_current_token"]
+
+[[transitions]]
+from = "after_doctype_public_identifier"
+matcher = { literal = "\"" }
+to = "doctype_system_identifier_double_quoted"
+actions = [
+  "parse_error(missing-whitespace-between-doctype-public-and-system-identifiers)",
+  "set_doctype_system_identifier_empty",
+]
+
+[[transitions]]
+from = "after_doctype_public_identifier"
+matcher = { literal = "'" }
+to = "doctype_system_identifier_single_quoted"
+actions = [
+  "parse_error(missing-whitespace-between-doctype-public-and-system-identifiers)",
+  "set_doctype_system_identifier_empty",
+]
+
+[[transitions]]
+from = "after_doctype_public_identifier"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "after_doctype_public_identifier"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(missing-quote-before-doctype-system-identifier)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "between_doctype_public_and_system_identifiers"
+matcher = { literal = " " }
+to = "between_doctype_public_and_system_identifiers"
+
+[[transitions]]
+from = "between_doctype_public_and_system_identifiers"
+matcher = { literal = "\n" }
+to = "between_doctype_public_and_system_identifiers"
+
+[[transitions]]
+from = "between_doctype_public_and_system_identifiers"
+matcher = { literal = "\t" }
+to = "between_doctype_public_and_system_identifiers"
+
+[[transitions]]
+from = "between_doctype_public_and_system_identifiers"
+matcher = { literal = "\r" }
+to = "between_doctype_public_and_system_identifiers"
+
+[[transitions]]
+from = "between_doctype_public_and_system_identifiers"
+matcher = { literal = "\u000C" }
+to = "between_doctype_public_and_system_identifiers"
+
+[[transitions]]
+from = "between_doctype_public_and_system_identifiers"
+matcher = { literal = ">" }
+to = "data"
+actions = ["emit_current_token"]
+
+[[transitions]]
+from = "between_doctype_public_and_system_identifiers"
+matcher = { literal = "\"" }
+to = "doctype_system_identifier_double_quoted"
+actions = ["set_doctype_system_identifier_empty"]
+
+[[transitions]]
+from = "between_doctype_public_and_system_identifiers"
+matcher = { literal = "'" }
+to = "doctype_system_identifier_single_quoted"
+actions = ["set_doctype_system_identifier_empty"]
+
+[[transitions]]
+from = "between_doctype_public_and_system_identifiers"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "between_doctype_public_and_system_identifiers"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(missing-quote-before-doctype-system-identifier)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "after_doctype_system_keyword"
+matcher = { literal = " " }
+to = "before_doctype_system_identifier"
+
+[[transitions]]
+from = "after_doctype_system_keyword"
+matcher = { literal = "\n" }
+to = "before_doctype_system_identifier"
+
+[[transitions]]
+from = "after_doctype_system_keyword"
+matcher = { literal = "\t" }
+to = "before_doctype_system_identifier"
+
+[[transitions]]
+from = "after_doctype_system_keyword"
+matcher = { literal = "\r" }
+to = "before_doctype_system_identifier"
+
+[[transitions]]
+from = "after_doctype_system_keyword"
+matcher = { literal = "\u000C" }
+to = "before_doctype_system_identifier"
+
+[[transitions]]
+from = "after_doctype_system_keyword"
+matcher = { literal = "\"" }
+to = "doctype_system_identifier_double_quoted"
+actions = [
+  "parse_error(missing-whitespace-after-doctype-system-keyword)",
+  "set_doctype_system_identifier_empty",
+]
+
+[[transitions]]
+from = "after_doctype_system_keyword"
+matcher = { literal = "'" }
+to = "doctype_system_identifier_single_quoted"
+actions = [
+  "parse_error(missing-whitespace-after-doctype-system-keyword)",
+  "set_doctype_system_identifier_empty",
+]
+
+[[transitions]]
+from = "after_doctype_system_keyword"
+matcher = { literal = ">" }
+to = "data"
+actions = [
+  "parse_error(missing-doctype-system-identifier)",
+  "mark_force_quirks",
+  "emit_current_token",
+]
+
+[[transitions]]
+from = "after_doctype_system_keyword"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "after_doctype_system_keyword"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(missing-quote-before-doctype-system-identifier)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "before_doctype_system_identifier"
+matcher = { literal = " " }
+to = "before_doctype_system_identifier"
+
+[[transitions]]
+from = "before_doctype_system_identifier"
+matcher = { literal = "\n" }
+to = "before_doctype_system_identifier"
+
+[[transitions]]
+from = "before_doctype_system_identifier"
+matcher = { literal = "\t" }
+to = "before_doctype_system_identifier"
+
+[[transitions]]
+from = "before_doctype_system_identifier"
+matcher = { literal = "\r" }
+to = "before_doctype_system_identifier"
+
+[[transitions]]
+from = "before_doctype_system_identifier"
+matcher = { literal = "\u000C" }
+to = "before_doctype_system_identifier"
+
+[[transitions]]
+from = "before_doctype_system_identifier"
+matcher = { literal = "\"" }
+to = "doctype_system_identifier_double_quoted"
+actions = ["set_doctype_system_identifier_empty"]
+
+[[transitions]]
+from = "before_doctype_system_identifier"
+matcher = { literal = "'" }
+to = "doctype_system_identifier_single_quoted"
+actions = ["set_doctype_system_identifier_empty"]
+
+[[transitions]]
+from = "before_doctype_system_identifier"
+matcher = { literal = ">" }
+to = "data"
+actions = [
+  "parse_error(missing-doctype-system-identifier)",
+  "mark_force_quirks",
+  "emit_current_token",
+]
+
+[[transitions]]
+from = "before_doctype_system_identifier"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "before_doctype_system_identifier"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(missing-quote-before-doctype-system-identifier)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "doctype_system_identifier_double_quoted"
+matcher = { literal = "\"" }
+to = "after_doctype_system_identifier"
+
+[[transitions]]
+from = "doctype_system_identifier_double_quoted"
+matcher = { literal = ">" }
+to = "data"
+actions = [
+  "parse_error(abrupt-doctype-system-identifier)",
+  "mark_force_quirks",
+  "emit_current_token",
+]
+
+[[transitions]]
+from = "doctype_system_identifier_double_quoted"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_system_identifier_double_quoted"
+matcher = { literal = "\u0000" }
+to = "doctype_system_identifier_double_quoted"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_doctype_system_identifier_replacement",
+]
+
+[[transitions]]
+from = "doctype_system_identifier_double_quoted"
+matcher = { anything = true }
+to = "doctype_system_identifier_double_quoted"
+actions = ["append_doctype_system_identifier(current)"]
+
+[[transitions]]
+from = "doctype_system_identifier_single_quoted"
+matcher = { literal = "'" }
+to = "after_doctype_system_identifier"
+
+[[transitions]]
+from = "doctype_system_identifier_single_quoted"
+matcher = { literal = ">" }
+to = "data"
+actions = [
+  "parse_error(abrupt-doctype-system-identifier)",
+  "mark_force_quirks",
+  "emit_current_token",
+]
+
+[[transitions]]
+from = "doctype_system_identifier_single_quoted"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "doctype_system_identifier_single_quoted"
+matcher = { literal = "\u0000" }
+to = "doctype_system_identifier_single_quoted"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "append_doctype_system_identifier_replacement",
+]
+
+[[transitions]]
+from = "doctype_system_identifier_single_quoted"
+matcher = { anything = true }
+to = "doctype_system_identifier_single_quoted"
+actions = ["append_doctype_system_identifier(current)"]
+
+[[transitions]]
+from = "after_doctype_system_identifier"
+matcher = { literal = " " }
+to = "after_doctype_system_identifier"
+
+[[transitions]]
+from = "after_doctype_system_identifier"
+matcher = { literal = "\n" }
+to = "after_doctype_system_identifier"
+
+[[transitions]]
+from = "after_doctype_system_identifier"
+matcher = { literal = "\t" }
+to = "after_doctype_system_identifier"
+
+[[transitions]]
+from = "after_doctype_system_identifier"
+matcher = { literal = "\r" }
+to = "after_doctype_system_identifier"
+
+[[transitions]]
+from = "after_doctype_system_identifier"
+matcher = { literal = "\u000C" }
+to = "after_doctype_system_identifier"
+
+[[transitions]]
+from = "after_doctype_system_identifier"
+matcher = { literal = ">" }
+to = "data"
+actions = ["emit_current_token"]
+
+[[transitions]]
+from = "after_doctype_system_identifier"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-doctype)",
+  "mark_force_quirks",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "after_doctype_system_identifier"
+matcher = { anything = true }
+to = "bogus_doctype"
+consume = false
+actions = [
+  "parse_error(unexpected-character-after-doctype-system-identifier)",
+  "mark_force_quirks",
+]
+
+[[transitions]]
+from = "bogus_doctype"
+matcher = { literal = ">" }
+to = "data"
+actions = ["emit_current_token"]
+
+[[transitions]]
+from = "bogus_doctype"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = ["emit_current_token", "emit(EOF)"]
+
+[[transitions]]
+from = "bogus_doctype"
+matcher = { literal = "\u0000" }
+to = "bogus_doctype"
+actions = ["parse_error(unexpected-null-character)"]
+
+[[transitions]]
+from = "bogus_doctype"
+matcher = { anything = true }
+to = "bogus_doctype"
 
 [[transitions]]
 from = "before_end_tag_close"
@@ -4525,6 +7107,11 @@ to = "before_end_tag_close"
 
 [[transitions]]
 from = "before_end_tag_close"
+matcher = { literal = "\u000C" }
+to = "before_end_tag_close"
+
+[[transitions]]
+from = "before_end_tag_close"
 matcher = { literal = ">" }
 to = "data"
 actions = ["emit_current_token"]
@@ -4536,15 +7123,43 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-end-tag-name-state)",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
+
+[[transitions]]
+from = "before_end_tag_close"
+matcher = { literal = "/" }
+to = "before_end_tag_close"
+actions = ["parse_error(end-tag-with-trailing-solidus)"]
 
 [[transitions]]
 from = "before_end_tag_close"
 matcher = { anything = true }
-to = "before_end_tag_close"
-actions = ["parse_error(unexpected-character-after-end-tag-name)"]
+to = "end_tag_attributes"
+actions = ["parse_error(end-tag-with-attributes)"]
+
+[[transitions]]
+from = "end_tag_attributes"
+matcher = { literal = ">" }
+to = "data"
+actions = ["emit_current_token"]
+
+[[transitions]]
+from = "end_tag_attributes"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(eof-in-end-tag-name-state)",
+  "discard_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "end_tag_attributes"
+matcher = { anything = true }
+to = "end_tag_attributes"
 
 [[transitions]]
 from = "end_tag_name"
@@ -4572,9 +7187,21 @@ actions = ["parse_error(unexpected-whitespace-after-end-tag-name)"]
 
 [[transitions]]
 from = "end_tag_name"
+matcher = { literal = "\u000C" }
+to = "before_end_tag_close"
+actions = ["parse_error(unexpected-whitespace-after-end-tag-name)"]
+
+[[transitions]]
+from = "end_tag_name"
 matcher = { literal = ">" }
 to = "data"
 actions = ["emit_current_token"]
+
+[[transitions]]
+from = "end_tag_name"
+matcher = { literal = "/" }
+to = "before_end_tag_close"
+actions = ["parse_error(end-tag-with-trailing-solidus)"]
 
 [[transitions]]
 from = "end_tag_name"
@@ -4583,9 +7210,15 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-end-tag-name-state)",
-  "emit_current_token",
+  "discard_current_token",
   "emit(EOF)",
 ]
+
+[[transitions]]
+from = "end_tag_name"
+matcher = { literal = "\u0000" }
+to = "end_tag_name"
+actions = ["parse_error(unexpected-null-character)", "append_tag_name_replacement"]
 
 [[transitions]]
 from = "end_tag_name"

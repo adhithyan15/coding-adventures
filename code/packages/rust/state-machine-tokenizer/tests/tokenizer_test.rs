@@ -50,6 +50,42 @@ fn tokenizer_bounds_non_consuming_transition_loops() {
 }
 
 #[test]
+fn tokenizer_preserves_carriage_returns_by_default() {
+    let mut tokenizer = text_tokenizer();
+
+    tokenizer.push("a\r\nb\rc\n").unwrap();
+    tokenizer.finish().unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::Text("a\r\nb\rc\n".to_string()), Token::Eof]
+    );
+    assert_eq!(tokenizer.position().byte_offset, 7);
+    assert_eq!(tokenizer.position().char_offset, 7);
+    assert_eq!(tokenizer.position().line, 3);
+    assert_eq!(tokenizer.position().column, 1);
+}
+
+#[test]
+fn tokenizer_can_normalize_carriage_returns_across_chunks() {
+    let mut tokenizer = text_tokenizer().with_normalized_carriage_returns();
+
+    tokenizer.push("a\r").unwrap();
+    tokenizer.push("\nb\rc").unwrap();
+    tokenizer.push("\n").unwrap();
+    tokenizer.finish().unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::Text("a\nb\nc\n".to_string()), Token::Eof]
+    );
+    assert_eq!(tokenizer.position().byte_offset, 7);
+    assert_eq!(tokenizer.position().char_offset, 7);
+    assert_eq!(tokenizer.position().line, 4);
+    assert_eq!(tokenizer.position().column, 1);
+}
+
+#[test]
 fn tokenizer_builds_start_tag_attributes_and_self_closing_markers() {
     let mut tokenizer = Tokenizer::new(
         EffectfulStateMachine::new(
@@ -140,6 +176,64 @@ fn tokenizer_builds_start_tag_attributes_and_self_closing_markers() {
 }
 
 #[test]
+fn tokenizer_can_drop_duplicate_attributes_when_requested() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "tag_open", "attr", "done"]),
+            set(&["<", "A", "H", "1", "2", ">", " "]),
+            vec![
+                EffectfulTransition::new(
+                    "data",
+                    EffectfulMatcher::Event("<".to_string()),
+                    "tag_open",
+                ),
+                EffectfulTransition::new(
+                    "tag_open",
+                    EffectfulMatcher::Event("A".to_string()),
+                    "attr",
+                )
+                .with_effects(&["create_start_tag", "append_tag_name(current_lowercase)"]),
+                EffectfulTransition::new("attr", EffectfulMatcher::Event("H".to_string()), "attr")
+                    .with_effects(&[
+                        "start_attribute",
+                        "append_attribute_name(href)",
+                        "append_attribute_value(1)",
+                        "commit_attribute_dedup",
+                    ]),
+                EffectfulTransition::new("attr", EffectfulMatcher::Event("1".to_string()), "attr")
+                    .with_effects(&[
+                        "start_attribute",
+                        "append_attribute_name(href)",
+                        "append_attribute_value(2)",
+                        "commit_attribute_dedup",
+                    ]),
+                EffectfulTransition::new("attr", EffectfulMatcher::Event(">".to_string()), "done")
+                    .with_effects(&["emit_current_token"]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("<AH1>").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::StartTag {
+            name: "a".to_string(),
+            attributes: vec![Attribute {
+                name: "href".to_string(),
+                value: "1".to_string(),
+            }],
+            self_closing: false,
+        }]
+    );
+    assert_eq!(tokenizer.diagnostics().len(), 1);
+    assert_eq!(tokenizer.diagnostics()[0].code, "duplicate-attribute");
+}
+
+#[test]
 fn tokenizer_builds_comment_tokens_with_current_and_literal_actions() {
     let mut tokenizer = Tokenizer::new(
         EffectfulStateMachine::new(
@@ -192,6 +286,37 @@ fn tokenizer_builds_comment_tokens_with_current_and_literal_actions() {
 }
 
 #[test]
+fn tokenizer_appends_replacement_character_to_comments() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["!"]),
+            vec![EffectfulTransition::new(
+                "data",
+                EffectfulMatcher::Event("!".to_string()),
+                "done",
+            )
+            .with_effects(&[
+                "create_comment",
+                "append_comment(open)",
+                "append_comment_replacement",
+                "emit_current_token",
+            ])],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("!").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::Comment("open\u{FFFD}".to_string())]
+    );
+}
+
+#[test]
 fn tokenizer_builds_doctypes_and_marks_force_quirks() {
     let mut tokenizer = Tokenizer::new(
         EffectfulStateMachine::new(
@@ -239,7 +364,51 @@ fn tokenizer_builds_doctypes_and_marks_force_quirks() {
         tokenizer.drain_tokens(),
         vec![Token::Doctype {
             name: Some("html".to_string()),
+            public_identifier: None,
+            system_identifier: None,
             force_quirks: true,
+        }]
+    );
+}
+
+#[test]
+fn tokenizer_appends_replacement_character_to_doctype_fields() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["D"]),
+            vec![EffectfulTransition::new(
+                "data",
+                EffectfulMatcher::Event("D".to_string()),
+                "done",
+            )
+            .with_effects(&[
+                "create_doctype",
+                "append_doctype_name(html)",
+                "append_doctype_name_replacement",
+                "set_doctype_public_identifier_empty",
+                "append_doctype_public_identifier(pub)",
+                "append_doctype_public_identifier_replacement",
+                "set_doctype_system_identifier_empty",
+                "append_doctype_system_identifier(sys)",
+                "append_doctype_system_identifier_replacement",
+                "emit_current_token",
+            ])],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("D").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::Doctype {
+            name: Some("html\u{FFFD}".to_string()),
+            public_identifier: Some("pub\u{FFFD}".to_string()),
+            system_identifier: Some("sys\u{FFFD}".to_string()),
+            force_quirks: false,
         }]
     );
 }
@@ -350,6 +519,90 @@ fn tokenizer_appends_temporary_buffer_to_attribute_value() {
 }
 
 #[test]
+fn tokenizer_appends_replacement_character_to_attribute_value() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["A"]),
+            vec![EffectfulTransition::new(
+                "data",
+                EffectfulMatcher::Event("A".to_string()),
+                "done",
+            )
+            .with_effects(&[
+                "create_start_tag",
+                "append_tag_name(current_lowercase)",
+                "start_attribute",
+                "append_attribute_name(title)",
+                "append_attribute_value_replacement",
+                "commit_attribute",
+                "emit_current_token",
+            ])],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("A").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::StartTag {
+            name: "a".to_string(),
+            attributes: vec![Attribute {
+                name: "title".to_string(),
+                value: "\u{FFFD}".to_string(),
+            }],
+            self_closing: false,
+        }]
+    );
+}
+
+#[test]
+fn tokenizer_appends_replacement_character_to_tag_and_attribute_names() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["A"]),
+            vec![EffectfulTransition::new(
+                "data",
+                EffectfulMatcher::Event("A".to_string()),
+                "done",
+            )
+            .with_effects(&[
+                "create_start_tag",
+                "append_tag_name(current_lowercase)",
+                "append_tag_name_replacement",
+                "start_attribute",
+                "append_attribute_name_replacement",
+                "append_attribute_name(title)",
+                "append_attribute_value(ok)",
+                "commit_attribute",
+                "emit_current_token",
+            ])],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("A").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::StartTag {
+            name: "a\u{FFFD}".to_string(),
+            attributes: vec![Attribute {
+                name: "\u{FFFD}title".to_string(),
+                value: "ok".to_string(),
+            }],
+            self_closing: false,
+        }]
+    );
+}
+
+#[test]
 fn tokenizer_decodes_numeric_character_references_from_temporary_buffer() {
     let mut tokenizer = Tokenizer::new(
         EffectfulStateMachine::new(
@@ -395,6 +648,65 @@ fn tokenizer_decodes_numeric_character_references_from_temporary_buffer() {
                 }],
                 self_closing: false,
             },
+        ]
+    );
+}
+
+#[test]
+fn tokenizer_reports_invalid_numeric_character_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["N"]),
+            vec![EffectfulTransition::new(
+                "data",
+                EffectfulMatcher::Event("N".to_string()),
+                "done",
+            )
+            .with_effects(&[
+                "clear_temporary_buffer",
+                "append_temporary_buffer(&#0)",
+                "append_numeric_character_reference_to_text",
+                "append_text( )",
+                "append_temporary_buffer(&#xD800)",
+                "append_numeric_character_reference_to_text",
+                "append_text( )",
+                "append_temporary_buffer(&#x110000)",
+                "append_numeric_character_reference_to_text",
+                "append_text( )",
+                "append_temporary_buffer(&#xFDD0)",
+                "append_numeric_character_reference_to_text",
+                "append_text( )",
+                "append_temporary_buffer(&#x80)",
+                "append_numeric_character_reference_to_text",
+                "flush_text",
+            ])],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("N").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![Token::Text(
+            "\u{FFFD} \u{FFFD} \u{FFFD} \u{FDD0} \u{20AC}".to_string()
+        )]
+    );
+    assert_eq!(
+        tokenizer
+            .diagnostics()
+            .iter()
+            .map(|diagnostic| diagnostic.code.as_str())
+            .collect::<Vec<_>>(),
+        vec![
+            "null-character-reference",
+            "surrogate-character-reference",
+            "character-reference-outside-unicode-range",
+            "noncharacter-character-reference",
+            "control-character-reference",
         ]
     );
 }
@@ -500,6 +812,959 @@ fn tokenizer_decodes_case_sensitive_latin1_named_character_references() {
 }
 
 #[test]
+fn tokenizer_decodes_whatwg_spacing_and_invisible_named_character_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&ThickSpace;)",
+                        "append_named_character_reference_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "done")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(title)",
+                        "append_temporary_buffer(&NoBreak;)",
+                        "append_named_character_reference_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TA").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("\u{205F}\u{200A}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "title".to_string(),
+                    value: "\u{2060}".to_string(),
+                }],
+                self_closing: false,
+            },
+        ]
+    );
+}
+
+#[test]
+fn tokenizer_decodes_whatwg_relational_named_character_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&NotEqualTilde;)",
+                        "append_named_character_reference_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "done")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(title)",
+                        "append_temporary_buffer(&NotNestedGreaterGreater;)",
+                        "append_named_character_reference_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TA").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("\u{2242}\u{0338}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "title".to_string(),
+                    value: "\u{2AA2}\u{0338}".to_string(),
+                }],
+                self_closing: false,
+            },
+        ]
+    );
+}
+
+#[test]
+fn tokenizer_decodes_whatwg_equality_and_parallel_named_character_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&Congruent;)",
+                        "append_named_character_reference_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "done")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(title)",
+                        "append_temporary_buffer(&nparsl;)",
+                        "append_named_character_reference_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TA").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("\u{2261}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "title".to_string(),
+                    value: "\u{2AFD}\u{20E5}".to_string(),
+                }],
+                self_closing: false,
+            },
+        ]
+    );
+}
+
+#[test]
+fn tokenizer_decodes_whatwg_greater_less_comparison_named_character_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&GreaterEqualLess;)",
+                        "append_named_character_reference_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "done")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(title)",
+                        "append_temporary_buffer(&nLtv;)",
+                        "append_named_character_reference_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TA").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("\u{22DB}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "title".to_string(),
+                    value: "\u{226A}\u{0338}".to_string(),
+                }],
+                self_closing: false,
+            },
+        ]
+    );
+}
+
+#[test]
+fn tokenizer_decodes_whatwg_precedence_named_character_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&PrecedesEqual;)",
+                        "append_named_character_reference_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "done")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(title)",
+                        "append_temporary_buffer(&succnapprox;)",
+                        "append_named_character_reference_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TA").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("\u{2AAF}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "title".to_string(),
+                    value: "\u{2ABA}".to_string(),
+                }],
+                self_closing: false,
+            },
+        ]
+    );
+}
+
+#[test]
+fn tokenizer_decodes_whatwg_arrow_named_character_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&LongLeftRightArrow;)",
+                        "append_named_character_reference_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "done")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(title)",
+                        "append_temporary_buffer(&RightDownVectorBar;)",
+                        "append_named_character_reference_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TA").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("\u{27F7}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "title".to_string(),
+                    value: "\u{2955}".to_string(),
+                }],
+                self_closing: false,
+            },
+        ]
+    );
+}
+
+#[test]
+fn tokenizer_decodes_whatwg_extended_arrow_named_character_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&hookleftarrow;)",
+                        "append_named_character_reference_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "done")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(title)",
+                        "append_temporary_buffer(&nLeftrightarrow;)",
+                        "append_named_character_reference_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TA").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("\u{21A9}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "title".to_string(),
+                    value: "\u{21CE}".to_string(),
+                }],
+                self_closing: false,
+            },
+        ]
+    );
+}
+
+#[test]
+fn tokenizer_decodes_whatwg_greek_variant_named_character_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&varepsilon;)",
+                        "append_named_character_reference_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "done")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(title)",
+                        "append_temporary_buffer(&straightphi;)",
+                        "append_named_character_reference_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TA").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("\u{03F5}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "title".to_string(),
+                    value: "\u{03D5}".to_string(),
+                }],
+                self_closing: false,
+            },
+        ]
+    );
+}
+
+#[test]
+fn tokenizer_decodes_whatwg_set_and_logic_named_character_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&Intersection;)",
+                        "append_named_character_reference_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "done")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(title)",
+                        "append_temporary_buffer(&NotSubset;)",
+                        "append_named_character_reference_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TA").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("\u{22C2}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "title".to_string(),
+                    value: "\u{2282}\u{20D2}".to_string(),
+                }],
+                self_closing: false,
+            },
+        ]
+    );
+}
+
+#[test]
+fn tokenizer_decodes_whatwg_operator_and_shape_named_character_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&CircleDot;)",
+                        "append_named_character_reference_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "done")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(title)",
+                        "append_temporary_buffer(&blacklozenge;)",
+                        "append_named_character_reference_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TA").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("\u{2299}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "title".to_string(),
+                    value: "\u{29EB}".to_string(),
+                }],
+                self_closing: false,
+            },
+        ]
+    );
+}
+
+#[test]
+fn tokenizer_decodes_whatwg_box_drawing_named_character_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&boxVH;)",
+                        "append_named_character_reference_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "done")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(title)",
+                        "append_temporary_buffer(&boxvr;)",
+                        "append_named_character_reference_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TA").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("\u{256C}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "title".to_string(),
+                    value: "\u{251C}".to_string(),
+                }],
+                self_closing: false,
+            },
+        ]
+    );
+}
+
+#[test]
+fn tokenizer_decodes_whatwg_angle_and_fence_named_character_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&angmsd;)",
+                        "append_named_character_reference_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "done")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(title)",
+                        "append_temporary_buffer(&LeftDoubleBracket;)",
+                        "append_named_character_reference_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TA").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("\u{2221}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "title".to_string(),
+                    value: "\u{27E6}".to_string(),
+                }],
+                self_closing: false,
+            },
+        ]
+    );
+}
+
+#[test]
+fn tokenizer_decodes_whatwg_latin_extended_named_character_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&Amacr;)",
+                        "append_named_character_reference_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "done")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(title)",
+                        "append_temporary_buffer(&ccaron;)",
+                        "append_named_character_reference_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TA").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("\u{0100}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "title".to_string(),
+                    value: "\u{010D}".to_string(),
+                }],
+                self_closing: false,
+            },
+        ]
+    );
+}
+
+#[test]
+fn tokenizer_decodes_whatwg_mathematical_alphabet_named_character_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&Aopf;)",
+                        "append_named_character_reference_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "done")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(title)",
+                        "append_temporary_buffer(&zfr;)",
+                        "append_named_character_reference_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TA").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("\u{1D538}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "title".to_string(),
+                    value: "\u{1D537}".to_string(),
+                }],
+                self_closing: false,
+            },
+        ]
+    );
+}
+
+#[test]
+fn tokenizer_decodes_whatwg_cyrillic_named_character_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&Acy;)",
+                        "append_named_character_reference_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "done")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(title)",
+                        "append_temporary_buffer(&zhcy;)",
+                        "append_named_character_reference_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TA").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("\u{0410}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "title".to_string(),
+                    value: "\u{0436}".to_string(),
+                }],
+                self_closing: false,
+            },
+        ]
+    );
+}
+
+#[test]
+fn tokenizer_decodes_whatwg_remaining_arrow_named_character_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&DownLeftRightVector;)",
+                        "append_named_character_reference_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "done")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(title)",
+                        "append_temporary_buffer(&nrarrc;)",
+                        "append_named_character_reference_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TA").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("\u{2950}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "title".to_string(),
+                    value: "\u{2933}\u{0338}".to_string(),
+                }],
+                self_closing: false,
+            },
+        ]
+    );
+}
+
+#[test]
+fn tokenizer_decodes_whatwg_remaining_set_named_character_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&NotSquareSubset;)",
+                        "append_named_character_reference_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "done")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(title)",
+                        "append_temporary_buffer(&varsupsetneqq;)",
+                        "append_named_character_reference_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TA").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("\u{228F}\u{0338}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "title".to_string(),
+                    value: "\u{2ACC}\u{FE00}".to_string(),
+                }],
+                self_closing: false,
+            },
+        ]
+    );
+}
+
+#[test]
+fn tokenizer_decodes_whatwg_remaining_operator_named_character_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&ClockwiseContourIntegral;)",
+                        "append_named_character_reference_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "done")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(title)",
+                        "append_temporary_buffer(&ncongdot;)",
+                        "append_named_character_reference_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TA").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("\u{2232}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "title".to_string(),
+                    value: "\u{2A6D}\u{0338}".to_string(),
+                }],
+                self_closing: false,
+            },
+        ]
+    );
+}
+
+#[test]
+fn tokenizer_decodes_final_whatwg_named_character_reference_batch() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&Backslash;)",
+                        "append_named_character_reference_to_text",
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&bnequiv;)",
+                        "append_named_character_reference_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "done")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(title)",
+                        "append_temporary_buffer(&yucy;)",
+                        "append_named_character_reference_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TA").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("\u{2216}\u{2261}\u{20E5}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "title".to_string(),
+                    value: "\u{044E}".to_string(),
+                }],
+                self_closing: false,
+            },
+        ]
+    );
+}
+
+#[test]
 fn tokenizer_falls_back_for_unknown_named_character_references() {
     let mut tokenizer = Tokenizer::new(
         EffectfulStateMachine::new(
@@ -546,6 +1811,74 @@ fn tokenizer_falls_back_for_unknown_named_character_references() {
                 self_closing: false,
             },
         ]
+    );
+}
+
+#[test]
+fn tokenizer_only_recovers_semicolonless_legacy_named_references() {
+    let mut tokenizer = Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            set(&["T", "A", "L"]),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Event("T".to_string()), "data")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&notin)",
+                        "append_named_character_reference_or_temporary_buffer_to_text",
+                        "flush_text",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("A".to_string()), "data")
+                    .with_effects(&[
+                        "create_start_tag",
+                        "append_tag_name(current_lowercase)",
+                        "start_attribute",
+                        "append_attribute_name(value)",
+                        "append_temporary_buffer(&notin)",
+                        "append_named_character_reference_or_temporary_buffer_to_attribute_value",
+                        "commit_attribute",
+                        "emit_current_token",
+                    ]),
+                EffectfulTransition::new("data", EffectfulMatcher::Event("L".to_string()), "done")
+                    .with_effects(&[
+                        "clear_temporary_buffer",
+                        "append_temporary_buffer(&Agrave)",
+                        "append_named_character_reference_or_temporary_buffer_to_text",
+                        "flush_text",
+                    ]),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    );
+
+    tokenizer.push("TAL").unwrap();
+
+    assert_eq!(
+        tokenizer.drain_tokens(),
+        vec![
+            Token::Text("\u{00AC}in".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![Attribute {
+                    name: "value".to_string(),
+                    value: "&notin".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Text("\u{00C0}".to_string()),
+        ]
+    );
+    assert_eq!(
+        tokenizer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "missing-semicolon-after-character-reference"
+            })
+            .count(),
+        2
     );
 }
 
@@ -821,6 +2154,25 @@ fn tokenizer_supports_rcdata_end_tag_candidate_fallback_action() {
         mismatch.drain_tokens(),
         vec![Token::Text("Hello</style>".to_string()), Token::Eof]
     );
+}
+
+fn text_tokenizer() -> Tokenizer {
+    Tokenizer::new(
+        EffectfulStateMachine::new(
+            set(&["data", "done"]),
+            HashSet::new(),
+            vec![
+                EffectfulTransition::new("data", EffectfulMatcher::Any, "data")
+                    .with_effects(&["append_text(current)"]),
+                EffectfulTransition::new("data", EffectfulMatcher::End, "done")
+                    .with_effects(&["flush_text", "emit(EOF)"])
+                    .consuming(false),
+            ],
+            "data".to_string(),
+            set(&["done"]),
+        )
+        .unwrap(),
+    )
 }
 
 fn set(values: &[&str]) -> HashSet<String> {

@@ -60,10 +60,12 @@ from .ast import (
     CommitStmt,
     CreateIndexStmt,
     CreateTableStmt,
+    CreateTriggerStmt,
     DeleteStmt,
     DerivedTableRef,
     DropIndexStmt,
     DropTableStmt,
+    DropTriggerStmt,
     ExceptStmt,
     InsertSelectStmt,
     InsertValuesStmt,
@@ -109,6 +111,7 @@ from .expr import (
     Literal,
     NotIn,
     NotLike,
+    ScalarSubquery,
     UnaryExpr,
     Wildcard,
     WindowFuncExpr,
@@ -155,6 +158,10 @@ def plan(ast: Statement, schema: SchemaProvider) -> P.LogicalPlan:
             return _plan_create_index(ast)
         case DropIndexStmt():
             return _plan_drop_index(ast)
+        case CreateTriggerStmt():
+            return _plan_create_trigger(ast)
+        case DropTriggerStmt():
+            return _plan_drop_trigger(ast)
         case BeginStmt():
             return P.Begin()
         case CommitStmt():
@@ -547,6 +554,11 @@ def _resolve(
                 raise InternalError(message="schema required to plan EXISTS subquery")
             inner_plan = _plan_select(stmt, schema)  # type: ignore[arg-type]
             return ExistsSubquery(query=inner_plan)
+        case ScalarSubquery(query=stmt):
+            if schema is None:
+                raise InternalError(message="schema required to plan scalar subquery")
+            inner_plan = _plan_select(stmt, schema)  # type: ignore[arg-type]
+            return ScalarSubquery(query=inner_plan)
         case WindowFuncExpr(func, arg, partition_by, order_by):
             new_arg = _resolve(arg, scope, schema) if arg is not None else None
             new_partition_by = tuple(_resolve(e, scope, schema) for e in partition_by)
@@ -748,6 +760,22 @@ def _plan_create_index(stmt: CreateIndexStmt) -> P.LogicalPlan:
 def _plan_drop_index(stmt: DropIndexStmt) -> P.LogicalPlan:
     """DROP INDEX — no schema lookup needed (backend validates at execution)."""
     return P.DropIndex(name=stmt.name, if_exists=stmt.if_exists)
+
+
+def _plan_create_trigger(stmt: CreateTriggerStmt) -> P.LogicalPlan:
+    """CREATE TRIGGER — body SQL is passed through; body planning is deferred."""
+    return P.CreateTrigger(
+        name=stmt.name,
+        timing=stmt.timing,
+        event=stmt.event,
+        table=stmt.table,
+        body_sql=stmt.body_sql,
+    )
+
+
+def _plan_drop_trigger(stmt: DropTriggerStmt) -> P.LogicalPlan:
+    """DROP TRIGGER — no schema lookup needed."""
+    return P.DropTrigger(name=stmt.name, if_exists=stmt.if_exists)
 
 
 # --------------------------------------------------------------------------

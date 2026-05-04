@@ -29,7 +29,7 @@ All notable changes to this package will be documented in this file.
   procedure/function, while keeping procedure-crossing jumps and nonlocal
   designational branches guarded.
 - Added semantic checking for chained assignments, ALGOL conditional
-  expressions, and numeric exponentiation with integer exponents.
+  expressions, and numeric exponentiation with integer or real exponents.
 - Added semantic resolution for bare no-argument typed procedure names used as
   expressions, while keeping written by-name actuals from treating those calls
   as assignable scalar storage.
@@ -42,8 +42,54 @@ All notable changes to this package will be documented in this file.
 - Treated builtin `print`/`output` calls as read-only during by-name formal
   write analysis, so expression actuals remain valid when a formal is only
   printed.
+- Accepted one or more arguments to builtin `print`/`output` calls while
+  keeping numeric builtins strict about receiving exactly one argument.
+- Registered all procedure signatures in a block before checking procedure
+  bodies, allowing forward sibling procedure calls and mutually recursive
+  typed procedures.
 - Accepted integer-returning procedure actuals for real-valued formal
   procedure parameters, matching scalar integer-to-real promotion.
+- Accepted switch declaration entries that target labels in lexical parent
+  blocks.
+- Accepted procedure-valued actuals with scalar by-name parameters for formal
+  procedure parameters, while rejecting call shapes that would pass a
+  non-assignable actual to a written by-name parameter.
+- Accepted procedure-valued actuals with whole-array parameters for formal
+  procedure parameters, recording array argument call shapes for lowering.
+- Accepted procedure-valued actuals with label, switch, and procedure
+  parameters for formal procedure parameters.
+- Accepted report-style typed formal specifiers such as `integer array a;` and
+  `real procedure f;`, merging them into the same semantic parameter metadata
+  as the older split spelling.
+- Validated nested procedure-parameter call-shape contracts when a formal
+  procedure call forwards a concrete procedure actual.
+- Validated nested procedure-parameter call-shape contracts when a formal
+  procedure call forwards another formal procedure parameter and resolves the
+  eventual concrete procedure actual through the enclosing call shape.
+- Accepted conditional switch designator actuals for switch formals and formal
+  procedure call-shape recording.
+- Accepted recursive switch self-selection entries so terminating recursive
+  designational dispatch can lower through the WASM pipeline.
+- Accepted `go to` as an alternate spelling for direct and designational
+  `goto` statements.
+- Accepted standard numeric builtin functions `abs`, `sign`, and `entier` with
+  integer/real argument checking and read-only by-name analysis.
+- Accepted standard real builtin function `sqrt`, returning `real` for integer
+  or real arguments while preserving read-only by-name analysis.
+- Accepted standard real builtin functions `sin`, `cos`, `arctan`, `ln`, and
+  `exp`, returning `real` for integer or real arguments while preserving
+  read-only by-name analysis.
+- Resolved standard numeric and output builtins case-insensitively while
+  preserving normal identifier casing for user declarations.
+- Added configurable type-check resource limits for maximum AST depth, block
+  nesting depth, and procedure nesting depth so recursive semantic visitors
+  reject hostile inputs with diagnostics before walking too deeply.
+- Accepted shared lexer front-door spellings for uppercase keywords/comments,
+  `<>` not-equal relations, and double-quoted string literals.
+- Accepted shared lexer front-door publication symbols for relations,
+  exponentiation, multiplication, real division, and boolean operators.
+- Accepted subscripted integer and real array elements as `for` statement
+  control variables.
 
 ## [0.1.0] - 2026-04-20
 

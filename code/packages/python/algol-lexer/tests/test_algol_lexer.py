@@ -26,30 +26,36 @@ ALGOL 60 has several tokenization behaviors that differ from modern languages:
    INTEGER_LIT so that ``3.14`` matches as one REAL_LIT, not INTEGER_LIT
    ``3`` followed by a syntax error on ``.14``.
 
-6. **String literals are single-quoted**: ``'hello'``, not ``"hello"``.
-   No escape sequences — a quote cannot appear inside an ALGOL 60 string.
+6. **String literals are quoted**: ``'hello'`` or ``"hello"``.
+   No escape sequences — the opening quote cannot appear inside the string.
 """
 
 from __future__ import annotations
 
-import pytest
-
-from algol_lexer import create_algol_lexer, tokenize_algol
 from lexer import GrammarLexer, Token
 
+from algol_lexer import create_algol_lexer, tokenize_algol
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
 
+def token_type_name(token: Token) -> str:
+    """Return a token type name for either enum-backed or string tokens."""
+    token_type = token.type
+    return token_type if isinstance(token_type, str) else token_type.name
+
+
 def token_types(source: str) -> list[str]:
     """Tokenize and return just the type names (excluding EOF)."""
     tokens = tokenize_algol(source)
     return [
-        t.type if isinstance(t.type, str) else t.type.name
+        t.value.upper()
+        if token_type_name(t) == "KEYWORD"
+        else token_type_name(t)
         for t in tokens
-        if (t.type if isinstance(t.type, str) else t.type.name) != "EOF"
+        if token_type_name(t) != "EOF"
     ]
 
 
@@ -59,7 +65,7 @@ def token_values(source: str) -> list[str]:
     return [
         t.value
         for t in tokens
-        if (t.type if isinstance(t.type, str) else t.type.name) != "EOF"
+        if token_type_name(t) != "EOF"
     ]
 
 
@@ -81,8 +87,7 @@ class TestFactory:
         lexer = create_algol_lexer("begin integer x; x := 42 end")
         tokens = lexer.tokenize()
         assert len(tokens) >= 2  # at least something + EOF
-        last_type = tokens[-1].type if isinstance(tokens[-1].type, str) else tokens[-1].type.name
-        assert last_type == "EOF"
+        assert token_type_name(tokens[-1]) == "EOF"
 
 
 # ---------------------------------------------------------------------------
@@ -172,9 +177,8 @@ class TestKeywords:
 class TestBooleanKeywords:
     """Tests for ALGOL 60 boolean operator keywords.
 
-    ALGOL 60 uses words for all boolean operators — no ``&&``, ``||``, ``!``.
-    This makes programs more readable to non-programmers (the original goal
-    was to create a language readable by scientists and mathematicians).
+    The lexer accepts both word spellings and ALGOL publication symbols, then
+    normalizes the symbols to the same keyword values as the words.
 
     Operator precedence (lowest to highest):
         eqv   — logical equivalence (a eqv b = a ↔ b)
@@ -214,6 +218,11 @@ class TestBooleanKeywords:
         types = token_types("not and or impl eqv")
         assert types == ["NOT", "AND", "OR", "IMPL", "EQV"]
 
+    def test_publication_symbol_boolean_operators(self) -> None:
+        """Publication-symbol booleans normalize to keyword spellings."""
+        assert token_types("¬ ∧ ∨ ⊃ ≡") == ["NOT", "AND", "OR", "IMPL", "EQV"]
+        assert token_values("¬ ∧ ∨ ⊃ ≡") == ["not", "and", "or", "impl", "eqv"]
+
 
 # ---------------------------------------------------------------------------
 # Operator tests
@@ -226,8 +235,8 @@ class TestOperators:
     Key design facts:
     - ``:=`` is ASSIGN (not ``:`` + ``=`` — the multi-char match fires first)
     - ``**`` is POWER (not ``*`` + ``*``)
-    - ``<=`` is LEQ, ``>=`` is GEQ, ``!=`` is NEQ
-    - ``^`` is CARET (alternative exponentiation, same precedence as ``**``)
+    - ``<=``/``≤`` are LEQ, ``>=``/``≥`` are GEQ, ``!=``/``<>``/``≠`` are NEQ
+    - ``^``/``↑`` are CARET (alternative exponentiation, same precedence as ``**``)
     - ``=`` is EQ (equality test, NOT assignment)
     """
 
@@ -246,20 +255,50 @@ class TestOperators:
         types = token_types("^")
         assert types == ["CARET"]
 
+    def test_publication_symbol_caret(self) -> None:
+        """``↑`` normalizes to the existing CARET exponentiation token."""
+        assert token_types("↑") == ["CARET"]
+        assert token_values("↑") == ["^"]
+
+    def test_publication_symbol_multiply_and_divide(self) -> None:
+        """``×`` and ``÷`` normalize to ASCII arithmetic operators."""
+        assert token_types("× ÷") == ["STAR", "SLASH"]
+        assert token_values("× ÷") == ["*", "/"]
+
     def test_leq(self) -> None:
         """``<=`` is a single LEQ token, not LT EQ."""
         types = token_types("<=")
         assert types == ["LEQ"]
+
+    def test_publication_symbol_leq(self) -> None:
+        """``≤`` normalizes to the existing LEQ operator value."""
+        assert token_types("≤") == ["LEQ"]
+        assert token_values("≤") == ["<="]
 
     def test_geq(self) -> None:
         """``>=`` is a single GEQ token, not GT EQ."""
         types = token_types(">=")
         assert types == ["GEQ"]
 
+    def test_publication_symbol_geq(self) -> None:
+        """``≥`` normalizes to the existing GEQ operator value."""
+        assert token_types("≥") == ["GEQ"]
+        assert token_values("≥") == [">="]
+
     def test_neq(self) -> None:
         """``!=`` is a single NEQ token."""
         types = token_types("!=")
         assert types == ["NEQ"]
+
+    def test_angle_neq(self) -> None:
+        """``<>`` is also accepted as an ALGOL/Pascal-style NEQ token."""
+        types = token_types("<>")
+        assert types == ["NEQ"]
+
+    def test_publication_symbol_neq(self) -> None:
+        """``≠`` normalizes to the existing NEQ operator value."""
+        assert token_types("≠") == ["NEQ"]
+        assert token_values("≠") == ["!="]
 
     def test_eq(self) -> None:
         """``=`` is EQ (equality), not assignment."""
@@ -288,8 +327,19 @@ class TestOperators:
 
     def test_all_relational_operators(self) -> None:
         """All six relational operators tokenize correctly."""
-        types = token_types("< <= = != >= >")
-        assert types == ["LT", "LEQ", "EQ", "NEQ", "GEQ", "GT"]
+        types = token_types("< <= ≤ = != <> ≠ >= ≥ >")
+        assert types == [
+            "LT",
+            "LEQ",
+            "LEQ",
+            "EQ",
+            "NEQ",
+            "NEQ",
+            "NEQ",
+            "GEQ",
+            "GEQ",
+            "GT",
+        ]
 
 
 # ---------------------------------------------------------------------------
@@ -449,9 +499,9 @@ class TestRealLiteral:
 class TestStringLiteral:
     """Tests for ALGOL 60 string literal tokenization.
 
-    ALGOL 60 uses single quotes for strings. There are no escape sequences —
-    the original language had no way to include a single quote inside a string
-    literal. The lexer matches everything between opening and closing ``'``.
+    ALGOL 60 uses quoted strings. There are no escape sequences — the original
+    language had no way to include the opening quote inside a string literal.
+    The lexer accepts both common ASCII quote spellings.
     """
 
     def test_simple_string(self) -> None:
@@ -470,6 +520,18 @@ class TestStringLiteral:
     def test_empty_string(self) -> None:
         """An empty single-quoted string: ``''``."""
         types = token_types("''")
+        assert types == ["STRING_LIT"]
+
+    def test_double_quoted_string(self) -> None:
+        """A double-quoted string is also accepted."""
+        types = token_types('"hello"')
+        values = token_values('"hello"')
+        assert types == ["STRING_LIT"]
+        assert values == ['"hello"']
+
+    def test_empty_double_quoted_string(self) -> None:
+        """An empty double-quoted string is also accepted."""
+        types = token_types('""')
         assert types == ["STRING_LIT"]
 
     def test_string_with_digits(self) -> None:
@@ -495,7 +557,8 @@ class TestCommentSkipping:
         x := 1; comment this sets x;
         y := 2
 
-    the lexer sees: IDENT ASSIGN INTEGER_LIT SEMICOLON [comment skipped] IDENT ASSIGN INTEGER_LIT
+    the lexer sees: IDENT ASSIGN INTEGER_LIT SEMICOLON [comment skipped]
+    IDENT ASSIGN INTEGER_LIT
 
     Wait — the semicolon before 'comment' is emitted as SEMICOLON. Then the
     'comment...' pattern consumes 'comment this sets x;' as a skip. So
@@ -507,6 +570,11 @@ class TestCommentSkipping:
         """A comment produces no tokens."""
         types = token_types("comment this is a comment;")
         assert types == []
+
+    def test_comment_keyword_is_case_insensitive(self) -> None:
+        """COMMENT follows the same case-insensitive keyword policy."""
+        assert token_types("COMMENT this is a comment;") == []
+        assert token_types("Comment this is a comment;") == []
 
     def test_code_after_comment(self) -> None:
         """Tokens after a comment are still emitted."""
@@ -539,6 +607,13 @@ class TestCommentSkipping:
         # Just verify no crash and reasonable token count.
         tokens = token_values(source)
         assert "42" in tokens or "0" in tokens  # some tokens visible
+
+    def test_comment_prefix_identifier_is_not_skipped(self) -> None:
+        """Identifiers beginning with comment still respect keyword boundaries."""
+        source = "commentary := 1;"
+
+        assert token_types(source) == ["NAME", "ASSIGN", "INTEGER_LIT", "SEMICOLON"]
+        assert token_values(source)[0] == "commentary"
 
 
 # ---------------------------------------------------------------------------
@@ -808,19 +883,16 @@ class TestEOF:
         """Token list always ends with EOF."""
         tokens = tokenize_algol("x := 1")
         last = tokens[-1]
-        eof_name = last.type if isinstance(last.type, str) else last.type.name
-        assert eof_name == "EOF"
+        assert token_type_name(last) == "EOF"
 
     def test_empty_input_has_eof(self) -> None:
         """Empty input still produces an EOF token."""
         tokens = tokenize_algol("")
         assert len(tokens) == 1
-        eof_name = tokens[0].type if isinstance(tokens[0].type, str) else tokens[0].type.name
-        assert eof_name == "EOF"
+        assert token_type_name(tokens[0]) == "EOF"
 
     def test_whitespace_only_has_eof(self) -> None:
         """Input with only whitespace produces just EOF."""
         tokens = tokenize_algol("   \t\n  ")
         assert len(tokens) == 1
-        eof_name = tokens[0].type if isinstance(tokens[0].type, str) else tokens[0].type.name
-        assert eof_name == "EOF"
+        assert token_type_name(tokens[0]) == "EOF"

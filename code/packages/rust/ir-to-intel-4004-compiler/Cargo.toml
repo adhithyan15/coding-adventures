@@ -4,5 +4,6 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+codegen-core = { path = "../codegen-core" }
 compiler-ir = { path = "../compiler-ir" }
 intel-4004-ir-validator = { path = "../intel-4004-ir-validator" }

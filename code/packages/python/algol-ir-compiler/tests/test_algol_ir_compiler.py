@@ -6,7 +6,7 @@ from algol_type_checker import FRAME_WORD_SIZE, FrameSlot, check_algol
 from compiler_ir import IrImmediate, IrOp, IrRegister
 from lang_parser import ASTNode
 
-from algol_ir_compiler import CompileError, __version__, compile_algol
+from algol_ir_compiler import CompileError, IrCompilerLimits, __version__, compile_algol
 from algol_ir_compiler.compiler import (
     _MAX_STRING_OUTPUT_BYTES,
     _MAX_TOTAL_OUTPUT_BYTES,
@@ -53,6 +53,20 @@ class TestAlgolIrCompiler:
         assert IrOp.BRANCH_Z in opcodes
         assert IrOp.JUMP in opcodes
         assert opcodes.count(IrOp.STORE_WORD) >= 1
+
+    def test_compiles_boolean_and_string_conditional_expression_values(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; boolean ok; string word; "
+                "ok := if false then false else true; "
+                "word := if ok then 'YES' else 'NO'; "
+                "if ok and (word = 'YES') then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        assert opcodes.count(IrOp.BRANCH_Z) >= 2
+        assert opcodes.count(IrOp.STORE_WORD) >= 3
 
     def test_compiles_structured_if_labels(self) -> None:
         result = compile_algol(
@@ -128,6 +142,22 @@ class TestAlgolIrCompiler:
         assert IrOp.F64_CMP_LT in opcodes
         assert IrOp.F64_ADD in opcodes
 
+    def test_compiles_array_element_for_control_variable(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; integer array a[1:1]; "
+                "for a[1] := 1 step 1 until 3 do result := result + a[1] "
+                "end"
+            )
+        )
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+        assert any(label.endswith("_start") for label in labels)
+        assert any(label.endswith("_body") for label in labels)
+
     def test_compiles_own_scalar_to_static_storage(self) -> None:
         result = compile_algol(
             parse_algol(
@@ -160,6 +190,30 @@ class TestAlgolIrCompiler:
         ]
         assert load_addr_labels.count("__algol_static") >= 2
 
+    def test_compiles_own_real_boolean_and_string_scalars_to_static_storage(
+        self,
+    ) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin own real scale; own boolean ready; own string marker; "
+                "integer result; "
+                "scale := 1.5; ready := true; marker := 'OK'; result := 1 "
+                "end"
+            )
+        )
+        data_labels = [decl.label for decl in result.program.data]
+        load_addr_labels = [
+            instr.operands[1].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LOAD_ADDR and len(instr.operands) == 2
+        ]
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert "__algol_static" in data_labels
+        assert load_addr_labels.count("__algol_static") >= 3
+        assert IrOp.STORE_F64 in opcodes
+        assert IrOp.STORE_WORD in opcodes
+
     def test_compiles_own_array_descriptor_to_static_storage(self) -> None:
         result = compile_algol(
             parse_algol(
@@ -177,6 +231,33 @@ class TestAlgolIrCompiler:
 
         assert "__algol_static" in data_labels
         assert load_addr_labels.count("__algol_static") >= 2
+
+    def test_compiles_own_real_boolean_and_string_array_descriptors_to_static_storage(
+        self,
+    ) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin own real array totals[1:1]; "
+                "own boolean array flags[1:1]; "
+                "own string array labels[1:1]; "
+                "integer result; "
+                "totals[1] := 1.5; flags[1] := true; labels[1] := 'OK'; "
+                "result := 1 "
+                "end"
+            )
+        )
+        data_labels = [decl.label for decl in result.program.data]
+        load_addr_labels = [
+            instr.operands[1].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LOAD_ADDR and len(instr.operands) == 2
+        ]
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert "__algol_static" in data_labels
+        assert load_addr_labels.count("__algol_static") >= 3
+        assert IrOp.STORE_F64 in opcodes
+        assert IrOp.STORE_WORD in opcodes
 
     def test_compiles_array_allocation_with_zero_fill_loop(self) -> None:
         result = compile_algol(
@@ -237,6 +318,25 @@ class TestAlgolIrCompiler:
         assert opcodes.count(IrOp.LOAD_WORD) >= 2
         assert IrOp.LOAD_BYTE in opcodes
         assert any(label.startswith("algol_label_output_string_") for label in labels)
+
+    def test_compiles_string_equality_to_descriptor_loop(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; string left, right; "
+                "left := 'Hi'; right := 'Hi'; "
+                "if left = right then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+
+        assert IrOp.LOAD_BYTE in opcodes
+        assert any(label.startswith("algol_label_string_equal_") for label in labels)
 
     def test_compiles_string_output_guards_for_length_and_total_bytes(self) -> None:
         result = compile_algol(
@@ -308,6 +408,40 @@ class TestAlgolIrCompiler:
         assert target in jumps
         assert opcodes.count(IrOp.LOAD_WORD) >= 1
         assert opcodes.count(IrOp.STORE_WORD) >= 1
+
+    def test_compiles_go_to_spelling(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "go to done; "
+                "result := 99; "
+                "done: result := 7 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.JUMP in opcodes
+
+    def test_compiles_multiple_labels_on_one_statement(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "goto second; "
+                "first: second: result := 7 "
+                "end"
+            )
+        )
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+        algol_labels = [
+            label for label in labels if label.startswith("algol_label_")
+        ]
+
+        assert len(algol_labels) == 2
 
     def test_compiles_procedure_crossing_goto_with_pending_transfer(self) -> None:
         result = compile_algol(
@@ -423,6 +557,30 @@ class TestAlgolIrCompiler:
         assert opcodes.count(IrOp.RET) >= 2
         assert any(label.startswith("algol_label_") for label in labels)
 
+    def test_compiles_nonlocal_switch_entry_label_with_frame_unwind(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "result := 0; "
+                "begin switch s := done; result := 5; goto s[1]; result := 99 end; "
+                "done: result := result + 2 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+
+        assert IrOp.CMP_EQ in opcodes
+        assert any(label.startswith("switch_0_1_next") for label in labels)
+        assert any(
+            label.startswith("algol_label_") and label.endswith("_done")
+            for label in labels
+        )
+
     def test_compiles_nested_switch_selection_entry(self) -> None:
         result = compile_algol(
             parse_algol(
@@ -444,6 +602,33 @@ class TestAlgolIrCompiler:
 
         assert any(label.startswith("switch_0_1_next") for label in labels)
         assert any(label.startswith("switch_1_1_next") for label in labels)
+
+    def test_compiles_self_recursive_switch_selection_entry(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, i; "
+                "switch s := done, if i = 0 then done else s[i]; "
+                "i := 1; goto s[2]; "
+                "done: result := 7 "
+                "end"
+            )
+        )
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+        calls = [
+            instr
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.CALL
+        ]
+
+        assert "_fn_algol_eval_switch" in labels
+        assert any(
+            instr.operands[0].name == "_fn_algol_eval_switch"
+            for instr in calls
+        )
 
     def test_compiles_nonlocal_conditional_designational_goto(self) -> None:
         result = compile_algol(
@@ -518,6 +703,29 @@ class TestAlgolIrCompiler:
         assert IrOp.MUL in opcodes
         assert opcodes.count(IrOp.SUB) >= 2
 
+    def test_compiles_standard_numeric_builtin_functions(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; real x; "
+                "x := -2.5; "
+                "x := sin(sqrt(9)) + cos(0) + arctan(1) + ln(exp(1)); "
+                "result := abs(0 - 3) + sign(x) + entier(x) "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.CMP_LT in opcodes
+        assert IrOp.F64_CMP_LT in opcodes
+        assert IrOp.I32_TRUNC_FROM_F64 in opcodes
+        assert IrOp.F64_FROM_I32 in opcodes
+        assert IrOp.F64_SQRT in opcodes
+        assert IrOp.F64_SIN in opcodes
+        assert IrOp.F64_COS in opcodes
+        assert IrOp.F64_ATAN in opcodes
+        assert IrOp.F64_LN in opcodes
+        assert IrOp.F64_EXP in opcodes
+
     def test_integer_division_emits_runtime_failure_guard(self) -> None:
         result = compile_algol(
             parse_algol("begin integer result, divisor; result := 10 div divisor end")
@@ -550,7 +758,8 @@ class TestAlgolIrCompiler:
         )
         opcodes = [instr.opcode for instr in result.program.instructions]
         assert IrOp.CMP_GT in opcodes
-        assert IrOp.AND in opcodes
+        assert IrOp.BRANCH_Z in opcodes
+        assert IrOp.BRANCH_NZ in opcodes
 
     def test_compiles_boolean_implication_form(self) -> None:
         result = compile_algol(
@@ -563,14 +772,26 @@ class TestAlgolIrCompiler:
         opcodes = [instr.opcode for instr in result.program.instructions]
 
         assert IrOp.ADD_IMM in opcodes
-        assert IrOp.AND_IMM in opcodes
-        assert IrOp.CMP_NE in opcodes
+        assert IrOp.BRANCH_Z in opcodes
 
     def test_compiles_boolean_equivalence_form(self) -> None:
         result = compile_algol(
             parse_algol(
                 "begin integer result; "
                 "if true eqv false then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.CMP_EQ in opcodes
+
+    def test_compiles_boolean_equality_comparison(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; boolean flag; "
+                "flag := true; "
+                "if flag = true then result := 1 else result := 0 "
                 "end"
             )
         )
@@ -642,6 +863,33 @@ class TestAlgolIrCompiler:
         )
         opcodes = [instr.opcode for instr in result.program.instructions]
         assert IrOp.CMP_NE in opcodes
+
+    def test_compiles_angle_not_equal_comparison(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; if 1 <> 2 then result := 1 else result := 0 end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        assert IrOp.CMP_NE in opcodes
+
+    def test_compiles_publication_symbol_operators(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "if (2 ↑ 3 = 8) ∧ (3 ≤ 4) ∧ (5 ≥ 5) ∧ (1 ≠ 2) "
+                "∧ (¬ false) ∧ (true ⊃ true) ∧ (true ≡ true) "
+                "then result := 1 else result := 0 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.MUL in opcodes
+        assert IrOp.CMP_EQ in opcodes
+        assert IrOp.CMP_NE in opcodes
+        assert IrOp.CMP_GT in opcodes
+        assert IrOp.CMP_LT in opcodes
 
     def test_compiles_nested_block(self) -> None:
         result = compile_algol(
@@ -795,6 +1043,59 @@ class TestAlgolIrCompiler:
             for instruction in calls
         )
 
+    def test_compiles_switch_parameter_call_with_conditional_actual(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; boolean flag; "
+                "switch a := left; switch b := right; "
+                "procedure escape(sw); switch sw; begin goto sw[1] end; "
+                "flag := false; escape(if flag then a else b); "
+                "left: result := 1; goto done; "
+                "right: result := 2; "
+                "done: "
+                "end"
+            )
+        )
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+
+        assert result.procedure_signatures["_fn_algol_eval_switch"].param_count == 3
+        assert any(label.startswith("switch_actual_") for label in labels)
+
+    def test_compiles_value_switch_parameter_call_through_resolve_helper(
+        self,
+    ) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; boolean flag; "
+                "switch a := left; switch b := right; "
+                "procedure escape(sw); value sw; switch sw; "
+                "begin goto sw[1] end; "
+                "flag := false; escape(if flag then a else b); "
+                "left: result := 1; goto done; "
+                "right: result := 2; "
+                "done: "
+                "end"
+            )
+        )
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+        calls = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert result.procedure_signatures["_fn_algol_resolve_switch"].param_count == 3
+        assert "_fn_algol_resolve_switch" in labels
+        assert "_fn_algol_resolve_switch" in calls
+
     def test_compiles_procedure_parameter_call_and_dispatcher(self) -> None:
         result = compile_algol(
             parse_algol(
@@ -848,6 +1149,292 @@ class TestAlgolIrCompiler:
             for instruction in calls
         )
 
+    def test_compiles_procedure_parameter_call_with_by_name_actual(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "procedure invoke(p); procedure p; "
+                "begin integer y; y := 3; p(y); result := y end; "
+                "procedure bump(x); integer x; begin x := x + 4 end; "
+                "invoke(bump) "
+                "end"
+            )
+        )
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+        opcodes = [instruction.opcode for instruction in result.program.instructions]
+
+        assert "_fn_algol_call_procedure_i32" in labels
+        assert IrOp.AND_IMM in opcodes
+
+    def test_compiles_procedure_parameter_call_with_array_element_actual(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; integer array a[1:1]; "
+                "procedure invoke(p); procedure p; begin p(a[1]) end; "
+                "procedure set(x); integer x; begin x := x + 7 end; "
+                "a[1] := 0; invoke(set); result := a[1] "
+                "end"
+            )
+        )
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+        calls = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert "_fn_algol_call_procedure_i32" in labels
+        assert "_fn_algol_eval_thunk" in labels
+        assert "_fn_algol_store_thunk" in labels
+        assert "_fn_algol_eval_thunk" in calls
+        assert "_fn_algol_store_thunk" in calls
+
+    def test_compiles_procedure_parameter_call_with_array_argument(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; integer array a[1:2]; "
+                "procedure invoke(p); procedure p; begin p(a) end; "
+                "procedure first(xs); integer xs; array xs; "
+                "begin result := xs[1] end; "
+                "a[1] := 9; invoke(first) "
+                "end"
+            )
+        )
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert "_fn_algol_call_procedure_array_i32" in labels
+        assert (
+            result.procedure_signatures[
+                "_fn_algol_call_procedure_array_i32"
+            ].param_types
+            == ("integer", "integer", "integer")
+        )
+        assert any(
+            instruction.operands[0].name == "_fn_algol_call_procedure_array_i32"
+            for instruction in calls
+        )
+
+    def test_compiles_report_style_typed_array_parameter_specifier(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; integer array a[1:2]; "
+                "procedure first(xs); integer array xs; "
+                "begin result := xs[1] end; "
+                "a[1] := 9; first(a) "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.LOAD_WORD in opcodes
+        assert IrOp.STORE_WORD in opcodes
+
+    def test_compiles_procedure_parameter_call_with_label_argument(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "procedure invoke(p); procedure p; begin p(done) end; "
+                "procedure jump(l); label l; begin result := 9; goto l end; "
+                "invoke(jump); done: "
+                "end"
+            )
+        )
+
+        assert (
+            result.procedure_signatures["_fn_algol_call_procedure_label"].param_types
+            == ("integer", "integer", "integer")
+        )
+
+    def test_compiles_label_parameter_call_with_conditional_argument(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; boolean flag; "
+                "procedure jump(l); label l; begin goto l end; "
+                "flag := false; jump(if flag then left else right); "
+                "left: result := 1; goto done; "
+                "right: result := 2; "
+                "done: "
+                "end"
+            )
+        )
+        opcodes = [instruction.opcode for instruction in result.program.instructions]
+
+        assert IrOp.BRANCH_Z in opcodes
+
+    def test_compiles_by_name_label_argument_through_eval_helper(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, flag; "
+                "procedure jump(l); label l; begin flag := 1; goto l end; "
+                "flag := 0; jump(if flag = 0 then left else right); "
+                "left: result := 1; goto done; "
+                "right: result := 2; "
+                "done: "
+                "end"
+            )
+        )
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+        calls = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.CALL
+        ]
+
+        assert "_fn_algol_eval_label" in labels
+        assert "_fn_algol_eval_label" in calls
+
+    def test_compiles_procedure_parameter_call_with_conditional_label_argument(
+        self,
+    ) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; boolean flag; "
+                "procedure invoke(p); procedure p; "
+                "begin p(if flag then left else right) end; "
+                "procedure jump(l); label l; begin goto l end; "
+                "flag := false; invoke(jump); "
+                "left: result := 1; goto done; "
+                "right: result := 2; "
+                "done: "
+                "end"
+            )
+        )
+
+        assert (
+            result.procedure_signatures["_fn_algol_call_procedure_label"].param_types
+            == ("integer", "integer", "integer")
+        )
+        calls = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.CALL
+        ]
+
+        assert "_fn_algol_eval_label" in calls
+
+    def test_compiles_procedure_parameter_call_with_switch_selection_label_argument(
+        self,
+    ) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, i; switch s := left, right; "
+                "procedure invoke(p); procedure p; begin p(s[i]) end; "
+                "procedure jump(l); label l; begin goto l end; "
+                "i := 2; invoke(jump); "
+                "left: result := 1; goto done; "
+                "right: result := 2; "
+                "done: "
+                "end"
+            )
+        )
+
+        assert (
+            result.procedure_signatures["_fn_algol_call_procedure_label"].param_types
+            == ("integer", "integer", "integer")
+        )
+
+    def test_compiles_procedure_parameter_call_with_switch_argument(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; switch s := done; "
+                "procedure invoke(p); procedure p; begin p(s) end; "
+                "procedure jump(sw); switch sw; begin goto sw[1] end; "
+                "invoke(jump); done: "
+                "end"
+            )
+        )
+
+        assert (
+            result.procedure_signatures["_fn_algol_call_procedure_switch"].param_types
+            == ("integer", "integer", "integer")
+        )
+
+    def test_compiles_procedure_parameter_call_with_conditional_switch_argument(
+        self,
+    ) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; boolean flag; "
+                "switch a := left; switch b := right; "
+                "procedure invoke(p); procedure p; "
+                "begin p(if flag then a else b) end; "
+                "procedure jump(sw); switch sw; begin goto sw[1] end; "
+                "flag := false; invoke(jump); "
+                "left: result := 1; goto done; "
+                "right: result := 2; "
+                "done: "
+                "end"
+            )
+        )
+
+        assert (
+            result.procedure_signatures["_fn_algol_call_procedure_switch"].param_types
+            == ("integer", "integer", "integer")
+        )
+
+    def test_compiles_procedure_parameter_call_with_procedure_argument(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "procedure bump; begin result := result + 1 end; "
+                "procedure invoke(p); procedure p; begin p(bump) end; "
+                "procedure use(q); procedure q; begin q; q end; "
+                "result := 0; invoke(use) "
+                "end"
+            )
+        )
+
+        assert (
+            result.procedure_signatures[
+                "_fn_algol_call_procedure_procedure"
+            ].param_types
+            == ("integer", "integer", "integer")
+        )
+
+    def test_compiles_formal_procedure_parameter_as_procedure_argument(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "integer procedure id(x); value x; integer x; begin id := x end; "
+                "integer procedure relay1(g, y); integer g, y; procedure g; "
+                "begin relay1 := g(y) end; "
+                "integer procedure relay2(p, h, z); integer p, h, z; "
+                "procedure p, h; begin relay2 := p(h, z) end; "
+                "procedure invoke(q); integer q; procedure q; "
+                "begin result := q(relay1, id, 3 + 4) end; "
+                "invoke(relay2) "
+                "end"
+            )
+        )
+
+        assert (
+            result.procedure_signatures[
+                "_fn_algol_call_procedure_i32_result_procedure_i32_i32"
+            ].param_types
+            == ("integer", "integer", "integer", "integer")
+        )
+
     def test_compiles_value_procedure_parameter_call_with_value_argument(self) -> None:
         result = compile_algol(
             parse_algol(
@@ -890,6 +1477,45 @@ class TestAlgolIrCompiler:
 
         assert signature.param_types == ("integer", "integer", "integer")
         assert signature.return_type == "real"
+
+    def test_compiles_report_style_typed_procedure_parameter_specifier(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; real y; "
+                "procedure invoke(f); real procedure f; "
+                "begin y := f(2); if y = 4 then result := 1 else result := 0 end; "
+                "real procedure twice(x); value x; real x; begin twice := x * 2 end; "
+                "invoke(twice) "
+                "end"
+            )
+        )
+        signature = result.procedure_signatures[
+            "_fn_algol_call_procedure_f64_result_i32"
+        ]
+
+        assert signature.param_types == ("integer", "integer", "integer")
+        assert signature.return_type == "real"
+
+    def test_compiles_typed_procedure_parameter_call_with_array_argument(
+        self,
+    ) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; integer array a[1:2]; "
+                "procedure invoke(f); integer f; procedure f; "
+                "begin result := f(a) end; "
+                "integer procedure first(xs); integer xs; array xs; "
+                "begin first := xs[1] end; "
+                "a[1] := 11; invoke(first) "
+                "end"
+            )
+        )
+        signature = result.procedure_signatures[
+            "_fn_algol_call_procedure_i32_result_array_i32"
+        ]
+
+        assert signature.param_types == ("integer", "integer", "integer")
+        assert signature.return_type == "integer"
 
     def test_compiles_integer_return_actual_for_real_procedure_parameter(self) -> None:
         result = compile_algol(
@@ -995,6 +1621,114 @@ class TestAlgolIrCompiler:
 
         assert calls[0].operands[0].name.startswith("_fn_algol_")
         assert result.procedure_signatures[calls[0].operands[0].name].param_count == 2
+
+    def test_compiles_explicit_empty_no_argument_typed_procedure_call(
+        self,
+    ) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "integer procedure seven(); begin seven := 7 end; "
+                "result := seven() "
+                "end"
+            )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert calls[0].operands[0].name.startswith("_fn_algol_")
+        assert result.procedure_signatures[calls[0].operands[0].name].param_count == 2
+
+    def test_compiles_explicit_empty_no_argument_statement_call(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "procedure mark(); begin result := 9 end; "
+                "mark() "
+                "end"
+            )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert calls[0].operands[0].name.startswith("_fn_algol_")
+        assert result.procedure_signatures[calls[0].operands[0].name].param_count == 2
+
+    def test_compiles_forward_sibling_procedure_call(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "procedure first; begin second end; "
+                "procedure second; begin result := 7 end; "
+                "first "
+                "end"
+            )
+        )
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+        calls = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert any(label.endswith("_first") for label in labels)
+        assert any(label.endswith("_second") for label in labels)
+        assert len(calls) == 2
+
+    def test_compiles_mutually_recursive_typed_procedures(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "integer procedure even(n); value n; integer n; "
+                "begin if n = 0 then even := 1 else even := odd(n - 1) end; "
+                "integer procedure odd(n); value n; integer n; "
+                "begin if n = 0 then odd := 0 else odd := even(n - 1) end; "
+                "result := odd(5) "
+                "end"
+            )
+        )
+        procedure_labels = [
+            label
+            for label in result.procedure_signatures
+            if label.startswith("_fn_algol_")
+        ]
+        call_targets = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert len(procedure_labels) == 2
+        assert all(label in call_targets for label in procedure_labels)
+
+    def test_compiles_forward_read_only_by_name_expression_actual(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "procedure relay(x); integer x; begin emit(x) end; "
+                "procedure emit(y); integer y; begin result := y end; "
+                "relay(3 + 4) "
+                "end"
+            )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert len(calls) >= 2
+        assert "_fn_algol_eval_thunk" in result.procedure_signatures
 
     def test_compiles_boolean_value_procedure_call(self) -> None:
         result = compile_algol(
@@ -1181,6 +1915,62 @@ class TestAlgolIrCompiler:
         with pytest.raises(CompileError, match="must contain a block"):
             compile_algol(ASTNode("program", []))
 
+    def test_raises_when_generated_conditional_label_limit_is_exceeded(
+        self,
+    ) -> None:
+        with pytest.raises(CompileError, match="conditional/generated label sets"):
+            compile_algol(
+                parse_algol(
+                    "begin integer result; "
+                    "if true then result := 1 else result := 0 "
+                    "end"
+                ),
+                limits=IrCompilerLimits(max_if_label_sets=1),
+            )
+
+    def test_raises_when_generated_loop_label_limit_is_exceeded(self) -> None:
+        with pytest.raises(CompileError, match="loop label sets"):
+            compile_algol(
+                parse_algol(
+                    "begin integer result, i; "
+                    "for i := 1 do result := i "
+                    "end"
+                ),
+                limits=IrCompilerLimits(max_loop_label_sets=0),
+            )
+
+    def test_raises_when_generated_switch_dispatch_limit_is_exceeded(self) -> None:
+        with pytest.raises(CompileError, match="switch dispatch states"):
+            compile_algol(
+                parse_algol(
+                    "begin integer result, i; "
+                    "switch s := one; "
+                    "i := 1; goto s[i]; "
+                    "one: result := 1 "
+                    "end"
+                ),
+                limits=IrCompilerLimits(max_switch_dispatches=0),
+            )
+
+    def test_raises_when_generated_output_label_limit_is_exceeded(self) -> None:
+        with pytest.raises(CompileError, match="output helper label sets"):
+            compile_algol(
+                parse_algol("begin print(1) end"),
+                limits=IrCompilerLimits(max_output_label_sets=0),
+            )
+
+    def test_raises_when_generated_eval_thunk_limit_is_exceeded(self) -> None:
+        with pytest.raises(CompileError, match="by-name eval thunks"):
+            compile_algol(
+                parse_algol(
+                    "begin integer result; "
+                    "integer procedure id(x); integer x; begin id := x end; "
+                    "result := id(1 + 2) "
+                    "end"
+                ),
+                limits=IrCompilerLimits(max_eval_thunks=0),
+            )
+
     def test_compiles_without_result_variable(self) -> None:
         result = compile_algol(parse_algol("begin integer x; x := 1 end"))
         halt_index = next(
@@ -1214,6 +2004,15 @@ class TestAlgolIrCompiler:
             instruction.opcode == IrOp.MUL
             for instruction in result.program.instructions
         )
+
+    def test_compiles_real_exponentiation_to_pow_import(self) -> None:
+        result = compile_algol(
+            parse_algol("begin real x; x := 9.0 ** 0.5 end")
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert IrOp.F64_POW in opcodes
+        assert IrOp.F64_CMP_NE in opcodes
 
     def test_compiles_chained_assignment_right_to_left(self) -> None:
         result = compile_algol(
@@ -1526,6 +2325,31 @@ class TestAlgolIrCompiler:
 
         assert any(label.startswith("algol_label_output_bool_") for label in labels)
         assert len(syscalls) >= 4
+
+    def test_compiles_builtin_print_multiple_arguments_in_order(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; real x; boolean ok; string msg; "
+                "x := 1.5; ok := true; msg := 'Hi'; "
+                "print(msg, result + 1, ok, x); result := 1 end"
+            )
+        )
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+        syscalls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.SYSCALL
+        ]
+
+        assert any(label.startswith("algol_label_output_string_") for label in labels)
+        assert any(label.startswith("algol_label_output_int_") for label in labels)
+        assert any(label.startswith("algol_label_output_bool_") for label in labels)
+        assert any(label.startswith("algol_label_output_real_") for label in labels)
+        assert len(syscalls) >= 12
 
     def test_compiles_builtin_print_real_to_fixed_point_output(self) -> None:
         result = compile_algol(

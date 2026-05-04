@@ -4,6 +4,7 @@ import pytest
 from logic_engine import conj, relation, var
 from logic_instructions import (
     InstructionProgram,
+    defdynamic,
     defrel,
     fact,
     instruction_program,
@@ -68,6 +69,25 @@ class TestLogicBytecode:
             LogicBytecodeOp.EMIT_QUERY,
             LogicBytecodeOp.HALT,
         ]
+
+    def test_compile_preserves_dynamic_relation_declarations(self) -> None:
+        memo = relation("memo", 1)
+        value = var("Value")
+        program_value = instruction_program(
+            defdynamic(memo),
+            fact(memo("cached")),
+            query(memo(value), outputs=(value,)),
+        )
+        bytecode = compile_program(program_value)
+
+        assert [instruction.opcode for instruction in bytecode.instructions] == [
+            LogicBytecodeOp.EMIT_DYNAMIC_RELATION,
+            LogicBytecodeOp.EMIT_FACT,
+            LogicBytecodeOp.EMIT_QUERY,
+            LogicBytecodeOp.HALT,
+        ]
+        assert decode_program(bytecode) == program_value
+        assert "0000: EMIT_DYNAMIC_RELATION 0 ; memo/1" in disassemble_text(bytecode)
 
     def test_compile_appends_halt(self) -> None:
         bytecode = compile_program(_ancestor_program())

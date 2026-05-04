@@ -53,11 +53,13 @@ from sql_planner import (
     CommitStmt,
     CreateIndexStmt,
     CreateTableStmt,
+    CreateTriggerStmt,
     CreateViewStmt,
     DeleteStmt,
     DerivedTableRef,
     DropIndexStmt,
     DropTableStmt,
+    DropTriggerStmt,
     DropViewStmt,
     ExceptStmt,
     ExistsSubquery,
@@ -81,6 +83,7 @@ from sql_planner import (
     RollbackStmt,
     RollbackToStmt,
     SavepointStmt,
+    ScalarSubquery,
     SelectItem,
     SelectStmt,
     SortKey,
@@ -180,6 +183,10 @@ def _stmt_dispatch(
             return _create_view(inner)
         case "drop_view_stmt":
             return _drop_view(inner)
+        case "create_trigger_stmt":
+            return _create_trigger(inner)
+        case "drop_trigger_stmt":
+            return _drop_trigger(inner)
         case "begin_stmt":
             return BeginStmt()
         case "commit_stmt":
@@ -819,6 +826,95 @@ def _drop_view(node: ASTNode) -> DropViewStmt:
 
 
 # --------------------------------------------------------------------------
+# CREATE TRIGGER / DROP TRIGGER.
+# --------------------------------------------------------------------------
+
+
+def _node_to_sql(node: ASTNode) -> str:
+    """Reconstruct SQL text from an ASTNode by flattening all token values.
+
+    NEW and OLD are not keywords in our lexer — they arrive as NAME tokens.
+    We uppercase them here so that references like ``new.col`` become
+    ``NEW . col``, matching the temporary table names the trigger executor
+    creates.
+
+    STRING token values have their surrounding quotes stripped by the lexer;
+    we re-add single quotes here (escaping any embedded quotes via SQL-standard
+    doubling so the reconstructed text is re-parseable).
+    """
+    parts: list[str] = []
+    for child in node.children:
+        if isinstance(child, Token):
+            tt = _token_type(child)
+            val = child.value
+            if tt == "NAME" and val.lower() in ("new", "old"):
+                val = val.upper()
+            elif tt == "STRING":
+                # Re-wrap in single quotes; escape embedded quotes by doubling.
+                val = "'" + val.replace("'", "''") + "'"
+            parts.append(val)
+        elif isinstance(child, ASTNode):
+            parts.append(_node_to_sql(child))
+    return " ".join(parts)
+
+
+def _create_trigger(node: ASTNode) -> CreateTriggerStmt:
+    """Translate ``create_trigger_stmt`` into :class:`CreateTriggerStmt`.
+
+    Grammar::
+
+        create_trigger_stmt =
+            "CREATE" "TRIGGER" NAME
+            ( "BEFORE" | "AFTER" ) ( "INSERT" | "UPDATE" | "DELETE" ) "ON" NAME
+            "FOR" "EACH" "ROW"
+            "BEGIN" trigger_body_stmt ";" { trigger_body_stmt ";" } "END" ;
+
+    NAME tokens appear in order: trigger_name, table_name.
+    KEYWORD tokens carry BEFORE/AFTER and INSERT/UPDATE/DELETE.
+    """
+    names = [c.value for c in node.children if isinstance(c, Token) and _token_type(c) == "NAME"]
+    if len(names) < 2:
+        raise ProgrammingError("create_trigger_stmt: expected trigger name and table name")
+    trigger_name = names[0]
+    table_name = names[1]
+
+    keywords = [
+        c.value.upper()
+        for c in node.children
+        if isinstance(c, Token) and _token_type(c) == "KEYWORD"
+    ]
+    timing = "BEFORE" if "BEFORE" in keywords else "AFTER"
+    event = next((k for k in keywords if k in ("INSERT", "UPDATE", "DELETE")), None)
+    if event is None:
+        raise ProgrammingError("create_trigger_stmt: expected INSERT, UPDATE, or DELETE event")
+
+    body_stmts = _child_nodes(node, "trigger_body_stmt")
+    body_sql = " ; ".join(_node_to_sql(s) for s in body_stmts)
+
+    return CreateTriggerStmt(
+        name=trigger_name,
+        timing=timing,
+        event=event,
+        table=table_name,
+        body_sql=body_sql,
+    )
+
+
+def _drop_trigger(node: ASTNode) -> DropTriggerStmt:
+    """Translate ``drop_trigger_stmt`` into :class:`DropTriggerStmt`.
+
+    Grammar::
+
+        drop_trigger_stmt = "DROP" "TRIGGER" [ "IF" "EXISTS" ] NAME ;
+    """
+    if_exists = _has_keyword_sequence(node, ("IF", "EXISTS"))
+    name_tok = _first_token(node, kind="NAME")
+    if name_tok is None:
+        raise ProgrammingError("drop_trigger_stmt: expected trigger name")
+    return DropTriggerStmt(name=name_tok.value, if_exists=if_exists)
+
+
+# --------------------------------------------------------------------------
 # SAVEPOINT / RELEASE / ROLLBACK TO.
 # --------------------------------------------------------------------------
 
@@ -1014,6 +1110,10 @@ def _primary(node: ASTNode, state: _PlaceholderCounter) -> Expr:
                 return Literal(value=_parse_number(c.value))
             if t == "STRING":
                 return Literal(value=_unquote_string(c.value))
+            if t == "BLOB":
+                # BLOB_HEX token value is e.g. x'deadbeef' — strip x' and '.
+                hex_str = c.value[2:-1]
+                return Literal(value=bytes.fromhex(hex_str))
             if t == "QMARK":
                 idx = state.next()
                 return Literal(value=cast(object, _Placeholder(index=idx)))  # type: ignore[arg-type]
@@ -1046,8 +1146,11 @@ def _primary(node: ASTNode, state: _PlaceholderCounter) -> Expr:
             if c.rule_name == "case_expr":
                 return _case_expr(c, state)
             if c.rule_name == "query_stmt":
-                # Scalar subquery: "(" query_stmt ")" — not yet supported.
-                raise ProgrammingError("scalar subqueries in expressions are not yet supported")
+                # Scalar subquery: "(" query_stmt ")" in expression position.
+                inner_stmt = _query_stmt(c)
+                if not isinstance(inner_stmt, SelectStmt):
+                    raise ProgrammingError("scalar subquery must be a SELECT statement")
+                return ScalarSubquery(query=inner_stmt)
     raise ProgrammingError("unrecognized primary expression")
 
 

@@ -288,6 +288,30 @@ class ExistsSubquery:
 
 
 @dataclass(frozen=True, slots=True)
+class ScalarSubquery:
+    """A scalar subquery expression: ``(SELECT expr FROM …)`` in expression position.
+
+    Lifecycle
+    ---------
+    Created by the adapter with ``query`` holding a raw ``SelectStmt``.
+    The planner's ``_resolve()`` replaces ``query`` with a compiled
+    ``LogicalPlan`` before passing the expression to codegen.
+
+    Runtime
+    -------
+    The VM executes the inner program and pushes the first column of the
+    single result row onto the stack.  If the subquery returns zero rows the
+    value is ``NULL``.  If it returns more than one row a
+    :class:`~sql_vm.errors.CardinalityError` is raised.
+
+    ``query`` is typed as ``object`` to break the circular import between
+    this module and ``sql_planner.plan``.
+    """
+
+    query: object  # SelectStmt before _resolve; LogicalPlan after _resolve
+
+
+@dataclass(frozen=True, slots=True)
 class WindowFuncExpr:
     """A window (analytic) function: ``func([arg]) OVER (PARTITION BY … ORDER BY …)``.
 
@@ -346,6 +370,7 @@ Expr = (
     | CaseExpr
     | AggregateExpr
     | ExistsSubquery
+    | ScalarSubquery
     | WindowFuncExpr
 )
 
@@ -388,6 +413,10 @@ def contains_aggregate(expr: Expr) -> bool:
             # The inner query is independently scoped; from the outer
             # expression's perspective EXISTS is a boolean atom, not an
             # aggregate.
+            return False
+        case ScalarSubquery():
+            # Scalar subqueries are self-contained; any aggregation inside
+            # them is scoped to the inner query.
             return False
         case WindowFuncExpr():
             # Window functions are handled by a separate WindowAgg plan node.
@@ -446,6 +475,9 @@ def _collect_columns(expr: Expr, out: list[Column]) -> None:
         case ExistsSubquery():
             # Inner query columns are independently scoped — not visible to
             # projection-pruning or column-resolution in the outer query.
+            pass
+        case ScalarSubquery():
+            # Inner query columns are independently scoped.
             pass
         case WindowFuncExpr(_, arg, partition_by, order_by):
             if arg is not None:

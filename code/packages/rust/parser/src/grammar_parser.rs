@@ -745,18 +745,40 @@ impl GrammarParser {
         // Fall back to enum-based matching.
         let expected = string_to_token_type(expected_type);
 
-        // If the expected type maps to `Name` but is not literally "NAME", it
-        // is a custom grammar-defined token type (e.g. AT_KEYWORD, VARIABLE,
-        // FUNCTION, IDENT). In that case we must NOT match a token that already
-        // has a *different* type_name set — e.g. an IDENT token must not match
-        // a VARIABLE reference just because both have TokenType::Name.
+        // If the expected type maps to `Name`, the token grammar's
+        // string-based `type_name` is the source of truth — the legacy
+        // `type_: Name` enum value is only a fallback for builtin
+        // identifiers that don't carry a custom `type_name`.  Two cases:
         //
-        // A token with type_name = None and type_ = Name is a "bare" name token
-        // (e.g. a keyword or identifier produced by a grammar that didn't assign
-        // a named type), and we allow it to match any custom Name-based type.
-        if expected == TokenType::Name && expected_type != "NAME" {
-            if token.type_name.is_some() {
-                // Token has a specific custom type that didn't match above.
+        //   - `expected_type == "NAME"`: the grammar wants a *bare*
+        //     name token (no custom type_name).  Reject tokens whose
+        //     `type_name` is set — e.g. a QUOTE token (whose type_ is
+        //     Name only because string_to_token_type("QUOTE") falls
+        //     back to Name) must not satisfy a NAME reference.
+        //
+        //   - `expected_type` is some custom Name-based type
+        //     (`AT_KEYWORD`, `VARIABLE`, `IDENT`, …): the type_name
+        //     check above has already covered the success case, so if
+        //     we got here, this token's type_name doesn't match — even
+        //     a `type_name: None` bare-Name token shouldn't be
+        //     coerced into a custom type, because that would let
+        //     unrelated grammars cross-pollute (e.g. an IDENT match
+        //     accepting a VARIABLE token).
+        //
+        // The original behaviour allowed bare-Name tokens to match any
+        // custom Name-based type, which was a footgun: it caused
+        // languages with both NAME and a sibling Name-typed token (like
+        // Twig's `QUOTE = "'"`) to misclassify atoms.  See twig-parser
+        // tests for the regression that motivated this tightening.
+        if expected == TokenType::Name {
+            if expected_type == "NAME" {
+                if token.type_name.is_some() {
+                    self.record_failure(expected_type);
+                    return None;
+                }
+            } else {
+                // Custom Name-based reference; the type_name check at
+                // the top of this function is the only path to success.
                 self.record_failure(expected_type);
                 return None;
             }

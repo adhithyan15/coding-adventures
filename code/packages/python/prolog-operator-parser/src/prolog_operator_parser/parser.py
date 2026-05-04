@@ -76,6 +76,14 @@ class ParsedOperatorSource:
     predicate_registry: PredicateRegistry
 
 
+@dataclass(frozen=True, slots=True)
+class ParsedOperatorTerm:
+    """A parsed term plus its named variable scope."""
+
+    term: Term
+    variables: dict[str, LogicVar]
+
+
 @dataclass(slots=True)
 class _Scope:
     """Per-clause or per-query variable scope."""
@@ -184,11 +192,14 @@ class _OperatorParser:
         return ParsedQuery(goal=goal, variables=dict(scope.variables))
 
     def parse_term(self) -> Term:
+        return self.parse_named_term().term
+
+    def parse_named_term(self) -> ParsedOperatorTerm:
         scope = _Scope(variables={})
         parsed = self._parse_term_expression(scope, 1200, stop_types={"EOF"})
         if not self._at_end():
             raise self._error(self._current_or_eof(), "unexpected tokens after term")
-        return parsed.value
+        return ParsedOperatorTerm(term=parsed.value, variables=dict(scope.variables))
 
     def _parse_query_statement(self) -> ParsedQuery:
         scope = _Scope(variables={})
@@ -620,3 +631,16 @@ def parse_operator_term_tokens(
         operator_table,
         allow_directives=False,
     ).parse_term()
+
+
+def parse_operator_named_term_tokens(
+    tokens: list[Token],
+    operator_table: OperatorTable,
+) -> ParsedOperatorTerm:
+    """Parse a bare term and retain its named variable scope."""
+
+    return _OperatorParser(
+        _strip_eof(tokens),
+        operator_table,
+        allow_directives=False,
+    ).parse_named_term()

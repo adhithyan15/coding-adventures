@@ -108,6 +108,24 @@ class TestSwiTokenization:
             "EOF",
         ]
 
+    def test_clpfd_range_operator_is_one_symbolic_atom(self) -> None:
+        tokens = tokenize_swi_prolog("?- X in 1..4, X #=< 3.\n")
+
+        assert [(token.type_name, token.value) for token in tokens] == [
+            ("QUERY", "?-"),
+            ("VARIABLE", "X"),
+            ("ATOM", "in"),
+            ("INTEGER", "1"),
+            ("ATOM", ".."),
+            ("INTEGER", "4"),
+            ("COMMA", ","),
+            ("VARIABLE", "X"),
+            ("ATOM", "#=<"),
+            ("INTEGER", "3"),
+            ("DOT", "."),
+            ("EOF", ""),
+        ]
+
     def test_create_swi_prolog_lexer(self) -> None:
         lexer = create_swi_prolog_lexer("likes(marge, donuts).\n")
 

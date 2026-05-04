@@ -39,6 +39,167 @@
       ]
     },
     {
+      "description": "doctype missing name force quirks",
+      "input": "<!DOCTYPE>",
+      "output": [
+        ["DOCTYPE", null, null, null, false]
+      ],
+      "errors": [
+        {"code": "missing-doctype-name", "line": 1, "col": 10}
+      ]
+    },
+    {
+      "description": "doctype name eof force quirks",
+      "input": "<!DOCTYPE html",
+      "output": [
+        ["DOCTYPE", "html", null, null, false]
+      ],
+      "errors": [
+        {"code": "eof-in-doctype", "line": 1, "col": 15}
+      ]
+    },
+    {
+      "description": "doctype keyword eof force quirks",
+      "input": "<!DOC",
+      "output": [
+        ["DOCTYPE", null, null, null, false]
+      ],
+      "errors": [
+        {"code": "eof-in-doctype", "line": 1, "col": 6}
+      ]
+    },
+    {
+      "description": "doctype invalid keyword force quirks",
+      "input": "<!DOX>",
+      "output": [
+        ["DOCTYPE", "dox", null, null, false]
+      ],
+      "errors": [
+        {"code": "invalid-doctype-keyword", "line": 1, "col": 5}
+      ]
+    },
+    {
+      "description": "doctype public identifier",
+      "input": "<!DOCTYPE html PUBLIC \"-//IETF//DTD HTML//EN\">",
+      "output": [
+        ["DOCTYPE", "html", "-//IETF//DTD HTML//EN", null, true]
+      ]
+    },
+    {
+      "description": "doctype public and system identifiers",
+      "input": "<!DOCTYPE html PUBLIC '-//W3C//DTD HTML 4.01//EN' \"about:legacy-compat\">",
+      "output": [
+        ["DOCTYPE", "html", "-//W3C//DTD HTML 4.01//EN", "about:legacy-compat", true]
+      ]
+    },
+    {
+      "description": "doctype missing whitespace after public keyword",
+      "input": "<!DOCTYPE html PUBLIC\"-//IETF//DTD HTML//EN\">",
+      "output": [
+        ["DOCTYPE", "html", "-//IETF//DTD HTML//EN", null, true]
+      ],
+      "errors": [
+        {"code": "missing-whitespace-after-doctype-public-keyword", "line": 1, "col": 22}
+      ]
+    },
+    {
+      "description": "doctype missing whitespace between public and system identifiers",
+      "input": "<!DOCTYPE html PUBLIC '-//W3C//DTD HTML 4.01//EN'\"about:legacy-compat\">",
+      "output": [
+        ["DOCTYPE", "html", "-//W3C//DTD HTML 4.01//EN", "about:legacy-compat", true]
+      ],
+      "errors": [
+        {"code": "missing-whitespace-between-doctype-public-and-system-identifiers", "line": 1, "col": 54}
+      ]
+    },
+    {
+      "description": "doctype missing quote before public identifier",
+      "input": "<!DOCTYPE html PUBLIC id>",
+      "output": [
+        ["DOCTYPE", "html", null, null, false]
+      ],
+      "errors": [
+        {"code": "missing-quote-before-doctype-public-identifier", "line": 1, "col": 23}
+      ]
+    },
+    {
+      "description": "doctype abrupt public identifier",
+      "input": "<!DOCTYPE html PUBLIC \"unterminated>",
+      "output": [
+        ["DOCTYPE", "html", "unterminated", null, false]
+      ],
+      "errors": [
+        {"code": "abrupt-doctype-public-identifier", "line": 1, "col": 35}
+      ]
+    },
+    {
+      "description": "doctype missing public identifier",
+      "input": "<!DOCTYPE html PUBLIC>",
+      "output": [
+        ["DOCTYPE", "html", null, null, false]
+      ],
+      "errors": [
+        {"code": "missing-doctype-public-identifier", "line": 1, "col": 23}
+      ]
+    },
+    {
+      "description": "doctype system identifier",
+      "input": "<!DOCTYPE html SYSTEM \"about:legacy-compat\">",
+      "output": [
+        ["DOCTYPE", "html", null, "about:legacy-compat", true]
+      ]
+    },
+    {
+      "description": "doctype missing whitespace after system keyword",
+      "input": "<!DOCTYPE html SYSTEM\"about:legacy-compat\">",
+      "output": [
+        ["DOCTYPE", "html", null, "about:legacy-compat", true]
+      ],
+      "errors": [
+        {"code": "missing-whitespace-after-doctype-system-keyword", "line": 1, "col": 22}
+      ]
+    },
+    {
+      "description": "doctype missing quote before system identifier",
+      "input": "<!DOCTYPE html SYSTEM id>",
+      "output": [
+        ["DOCTYPE", "html", null, null, false]
+      ],
+      "errors": [
+        {"code": "missing-quote-before-doctype-system-identifier", "line": 1, "col": 23}
+      ]
+    },
+    {
+      "description": "doctype abrupt system identifier",
+      "input": "<!DOCTYPE html SYSTEM \"about:legacy-compat>",
+      "output": [
+        ["DOCTYPE", "html", null, "about:legacy-compat", false]
+      ],
+      "errors": [
+        {"code": "abrupt-doctype-system-identifier", "line": 1, "col": 42}
+      ]
+    },
+    {
+      "description": "doctype missing system identifier",
+      "input": "<!DOCTYPE html SYSTEM>",
+      "output": [
+        ["DOCTYPE", "html", null, null, false]
+      ],
+      "errors": [
+        {"code": "missing-doctype-system-identifier", "line": 1, "col": 23}
+      ]
+    },
+    {
+      "description": "doctype trailing junk after system identifier",
+      "input": "<!DOCTYPE html SYSTEM \"about:legacy-compat\" junk>",
+      "output": [
+        ["DOCTYPE", "html", null, "about:legacy-compat", false]
+      ],
+      "errors": [
+        {"code": "unexpected-character-after-doctype-system-identifier", "line": 1, "col": 45}
+      ]
+    },
+    {
       "description": "self closing start tag uses html5lib boolean slot",
       "input": "<br/>",
       "output": [
@@ -53,6 +214,27 @@
       ],
       "errors": [
         {"code": "eof-in-comment", "line": 1, "col": 9}
+      ]
+    },
+    {
+      "description": "abrupt empty comment close",
+      "input": "Before<!-->After",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", ""],
+        ["Character", "After"]
+      ],
+      "errors": [
+        {"code": "abrupt-closing-of-empty-comment", "line": 1, "col": 11}
+      ]
+    },
+    {
+      "description": "dash prefixed empty comment close",
+      "input": "Before<!--->After",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", ""],
+        ["Character", "After"]
       ]
     },
     {
@@ -87,6 +269,98 @@
       ]
     },
     {
+      "description": "duplicate attributes keep first value",
+      "input": "<a href=one HREF=two title=ok>",
+      "output": [
+        ["StartTag", "a", {"href": "one", "title": "ok"}]
+      ],
+      "errors": [
+        {"code": "duplicate-attribute", "line": 1, "col": 21}
+      ]
+    },
+    {
+      "description": "unexpected unquoted attribute value characters are preserved",
+      "input": "<a data=one=two sq=x'y lt=x<y eq=x=y tick=x`y dq=x\"y>",
+      "output": [
+        ["StartTag", "a", {"data": "one=two", "sq": "x'y", "lt": "x<y", "eq": "x=y", "tick": "x`y", "dq": "x\"y"}]
+      ],
+      "errors": [
+        {"code": "unexpected-character-in-unquoted-attribute-value", "line": 1, "col": 12},
+        {"code": "unexpected-character-in-unquoted-attribute-value", "line": 1, "col": 22},
+        {"code": "unexpected-character-in-unquoted-attribute-value", "line": 1, "col": 30},
+        {"code": "unexpected-character-in-unquoted-attribute-value", "line": 1, "col": 38},
+        {"code": "unexpected-character-in-unquoted-attribute-value", "line": 1, "col": 48},
+        {"code": "unexpected-character-in-unquoted-attribute-value", "line": 1, "col": 56}
+      ]
+    },
+    {
+      "description": "null characters are replaced in data and attributes",
+      "input": "A\u0000<a title=\"x\u0000y\" data=x\u0000y bare=\u0000>z",
+      "output": [
+        ["Character", "A\uFFFD"],
+        ["StartTag", "a", {"title": "x\uFFFDy", "data": "x\uFFFDy", "bare": "\uFFFD"}],
+        ["Character", "z"]
+      ],
+      "errors": [
+        {"code": "unexpected-null-character", "line": 1, "col": 2},
+        {"code": "unexpected-null-character", "line": 1, "col": 14},
+        {"code": "unexpected-null-character", "line": 1, "col": 24},
+        {"code": "unexpected-null-character", "line": 1, "col": 32}
+      ]
+    },
+    {
+      "description": "null characters are replaced in tag and attribute names",
+      "input": "<x\u0000 \u0000=v a\u0000b=1 first \u0000second=2></x\u0000>",
+      "output": [
+        ["StartTag", "x\uFFFD", {"\uFFFD": "v", "a\uFFFDb": "1", "first": "", "\uFFFDsecond": "2"}],
+        ["EndTag", "x\uFFFD"]
+      ],
+      "errors": [
+        {"code": "unexpected-null-character", "line": 1, "col": 3},
+        {"code": "unexpected-null-character", "line": 1, "col": 5},
+        {"code": "unexpected-null-character", "line": 1, "col": 10},
+        {"code": "unexpected-null-character", "line": 1, "col": 21},
+        {"code": "unexpected-null-character", "line": 1, "col": 34}
+      ]
+    },
+    {
+      "description": "null characters are replaced in comments and bogus comments",
+      "input": "<!--a\u0000b--><!--\u0000--><!--a-\u0000b--><!--a--\u0000b--><!foo\u0000><!-\u0000>",
+      "output": [
+        ["Comment", "a\uFFFDb"],
+        ["Comment", "\uFFFD"],
+        ["Comment", "a-\uFFFDb"],
+        ["Comment", "a--\uFFFDb"],
+        ["Comment", "foo\uFFFD"],
+        ["Comment", "-\uFFFD"]
+      ],
+      "errors": [
+        {"code": "unexpected-null-character", "line": 1, "col": 6},
+        {"code": "unexpected-null-character", "line": 1, "col": 15},
+        {"code": "unexpected-null-character", "line": 1, "col": 25},
+        {"code": "unexpected-null-character", "line": 1, "col": 37},
+        {"code": "incorrectly-opened-comment", "line": 1, "col": 44},
+        {"code": "unexpected-null-character", "line": 1, "col": 47},
+        {"code": "incorrectly-opened-comment", "line": 1, "col": 52},
+        {"code": "unexpected-null-character", "line": 1, "col": 52}
+      ]
+    },
+    {
+      "description": "null characters are replaced in doctype names and identifiers",
+      "input": "<!DOCTYPE\u0000><!DOCTYPE h\u0000 PUBLIC \"p\u0000\" \"s\u0000\">",
+      "output": [
+        ["DOCTYPE", "\uFFFD", null, null, true],
+        ["DOCTYPE", "h\uFFFD", "p\uFFFD", "s\uFFFD", true]
+      ],
+      "errors": [
+        {"code": "missing-whitespace-before-doctype-name", "line": 1, "col": 10},
+        {"code": "unexpected-null-character", "line": 1, "col": 10},
+        {"code": "unexpected-null-character", "line": 1, "col": 23},
+        {"code": "unexpected-null-character", "line": 1, "col": 34},
+        {"code": "unexpected-null-character", "line": 1, "col": 39}
+      ]
+    },
+    {
       "description": "plaintext state literalizes markup and character references",
       "initialStates": ["PLAINTEXT state"],
       "input": "hello <b>still text</b> &amp; literal",
@@ -112,6 +386,36 @@
       "output": [
         ["Character", "if (a < b) "],
         ["EndTag", "script"]
+      ]
+    },
+    {
+      "description": "script data escaped state replaces null characters",
+      "initialStates": ["Script data escaped state"],
+      "lastStartTag": "script",
+      "input": "a\u0000-\u0000--\u0000></script>",
+      "output": [
+        ["Character", "a\uFFFd-\uFFFd--\uFFFd>"],
+        ["EndTag", "script"]
+      ],
+      "errors": [
+        {"code": "unexpected-null-character", "line": 1, "col": 2},
+        {"code": "unexpected-null-character", "line": 1, "col": 4},
+        {"code": "unexpected-null-character", "line": 1, "col": 7}
+      ]
+    },
+    {
+      "description": "script data double escaped state replaces null characters",
+      "initialStates": ["Script data double escaped state"],
+      "lastStartTag": "script",
+      "input": "a\u0000-\u0000--\u0000></script>x</script>",
+      "output": [
+        ["Character", "a\uFFFd-\uFFFd--\uFFFd></script>x"],
+        ["EndTag", "script"]
+      ],
+      "errors": [
+        {"code": "unexpected-null-character", "line": 1, "col": 2},
+        {"code": "unexpected-null-character", "line": 1, "col": 4},
+        {"code": "unexpected-null-character", "line": 1, "col": 7}
       ]
     },
     {
@@ -218,6 +522,743 @@
       ]
     },
     {
+      "description": "data state WHATWG spacing named character references",
+      "input": "Spacing:&Tab;&NewLine;&MediumSpace;&ThickSpace;&ThinSpace;&VeryThinSpace;&ZeroWidthSpace;&NegativeMediumSpace;",
+      "output": [
+        ["Character", "Spacing:"],
+        ["Character", "\t"],
+        ["Character", "\n"],
+        ["Character", "\u205F"],
+        ["Character", "\u205F\u200A"],
+        ["Character", "\u2009"],
+        ["Character", "\u200A"],
+        ["Character", "\u200B"],
+        ["Character", "\u200B"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG invisible named character references",
+      "input": "<a data=\"&NoBreak;&NonBreakingSpace;&ApplyFunction;&InvisibleTimes;&InvisibleComma;\">",
+      "output": [
+        ["StartTag", "a", {"data": "\u2060\u00A0\u2061\u2062\u2063"}]
+      ]
+    },
+    {
+      "description": "data state WHATWG alias punctuation named character references",
+      "input": "&OpenCurlyQuote;hi&CloseCurlyQuote; &OpenCurlyDoubleQuote;x&CloseCurlyDoubleQuote; &CenterDot;&VerticalBar;&DoubleVerticalBar;&LeftAngleBracket;&RightAngleBracket;&Cross;&SmallCircle;",
+      "output": [
+        ["Character", "\u2018"],
+        ["Character", "hi"],
+        ["Character", "\u2019"],
+        ["Character", " "],
+        ["Character", "\u201C"],
+        ["Character", "x"],
+        ["Character", "\u201D"],
+        ["Character", " "],
+        ["Character", "\u00B7"],
+        ["Character", "\u2223"],
+        ["Character", "\u2225"],
+        ["Character", "\u27E8"],
+        ["Character", "\u27E9"],
+        ["Character", "\u2A2F"],
+        ["Character", "\u2218"]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG math constant named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&DifferentialD;&CapitalDifferentialD;&DD;&dd;&ExponentialE;&ee;&ImaginaryI;&ii;</title>",
+      "output": [
+        ["Character", "\u2146"],
+        ["Character", "\u2145"],
+        ["Character", "\u2145"],
+        ["Character", "\u2146"],
+        ["Character", "\u2147"],
+        ["Character", "\u2147"],
+        ["Character", "\u2148"],
+        ["Character", "\u2148"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "data state WHATWG equality and tilde named character references",
+      "input": "Relations:&Equal;&EqualTilde;&Tilde;&TildeEqual;&TildeFullEqual;&TildeTilde;&NotEqual;&NotEqualTilde;&NotTilde;&NotTildeEqual;&NotTildeFullEqual;&NotTildeTilde;",
+      "output": [
+        ["Character", "Relations:"],
+        ["Character", "\u2A75"],
+        ["Character", "\u2242"],
+        ["Character", "\u223C"],
+        ["Character", "\u2243"],
+        ["Character", "\u2245"],
+        ["Character", "\u2248"],
+        ["Character", "\u2260"],
+        ["Character", "\u2242\u0338"],
+        ["Character", "\u2241"],
+        ["Character", "\u2244"],
+        ["Character", "\u2247"],
+        ["Character", "\u2249"]
+      ]
+    },
+    {
+      "description": "data state WHATWG congruence named character references",
+      "input": "Congruence:&Bumpeq;&Congruent;&DotEqual;&HumpDownHump;&HumpEqual;&NotVerticalBar;&VerticalLine;&bcong;&bsim;&bsime;&bump;&bumpE;&bumpe;&bumpeq;&circeq;&coloneq;&congdot;&doteq;&doteqdot;",
+      "output": [
+        ["Character", "Congruence:"],
+        ["Character", "\u224E\u2261\u2250\u224E\u224F\u2224|\u224C\u223D\u22CD\u224E\u2AAE\u224F\u224F\u2257\u2254\u2A6D\u2250\u2251"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG equality and parallel named character references",
+      "input": "<math eq=\"&eqcirc;&eqcolon;&eqsim;&eqslantgtr;&eqslantless;&equals;&equest;&equivDD;&eqvparsl;\" parallel=\"&mid;&midast;&midcir;&npar;&nparallel;&nparsl;&npart;&par;&parallel;&parsim;\">",
+      "output": [
+        ["StartTag", "math", {"eq": "\u2256\u2255\u2242\u2A96\u2A95=\u225F\u2A78\u29E5", "parallel": "\u2223*\u2AF0\u2226\u2226\u2AFD\u20E5\u2202\u0338\u2225\u2225\u2AF3"}]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG similarity named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&parsl;&shortmid;&shortparallel;&simdot;&sime;&simeq;&simg;&simgE;&siml;&simlE;&simne;&simplus;&simrarr;</title>",
+      "output": [
+        ["Character", "\u2AFD\u2223\u2225\u2A6A\u2243\u2243\u2A9E\u2AA0\u2A9D\u2A9F\u2246\u2A24\u2972"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG greater and less named character references",
+      "input": "<math cmp=\"&GreaterEqual;&GreaterFullEqual;&GreaterGreater;&GreaterLess;&GreaterSlantEqual;&GreaterTilde;\" inv=\"&LessEqualGreater;&LessFullEqual;&LessGreater;&LessLess;&LessSlantEqual;&LessTilde;\">",
+      "output": [
+        ["StartTag", "math", {"cmp": "\u2265\u2267\u2AA2\u2277\u2A7E\u2273", "inv": "\u22DA\u2266\u2276\u2AA1\u2A7D\u2272"}]
+      ]
+    },
+    {
+      "description": "data state WHATWG greater and less comparison named character references",
+      "input": "GreaterLess:&GreaterEqualLess;&gl;&glE;&gla;&glj;&gnE;&gnap;&gnapprox;&gne;&gneq;&gneqq;&gnsim;&gtrapprox;&gtrarr;",
+      "output": [
+        ["Character", "GreaterLess:"],
+        ["Character", "\u22DB\u2277\u2A92\u2AA5\u2AA4\u2269\u2A8A\u2A8A\u2A88\u2A88\u2269\u22E7\u2A86\u2978"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG greater and less comparison named character references",
+      "input": "<math cmp=\"&gtrdot;&gtreqless;&gtreqqless;&gtrless;&gtrsim;&lessapprox;&lessdot;&lesseqgtr;&lesseqqgtr;&lessgtr;&lesssim;&lg;&lgE;&lnE;\">",
+      "output": [
+        ["StartTag", "math", {"cmp": "\u22D7\u22DB\u2A8C\u2277\u2273\u2A85\u22D6\u22DA\u2A8B\u2276\u2272\u2276\u2A91\u2268"}]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG negated greater and less comparison named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&lnap;&lnapprox;&lne;&lneq;&lneqq;&lnsim;&nGg;&nGt;&nGtv;&nLl;&nLt;&nLtv;</title>",
+      "output": [
+        ["Character", "\u2A89\u2A89\u2A87\u2A87\u2268\u22E6\u22D9\u0338\u226B\u20D2\u226B\u0338\u22D8\u0338\u226A\u20D2\u226A\u0338"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG negated relational named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&NotGreater;&NotGreaterEqual;&NotGreaterFullEqual;&NotGreaterGreater;&NotGreaterLess;&NotGreaterSlantEqual;&NotGreaterTilde;&NotLess;&NotLessEqual;&NotLessGreater;&NotLessLess;&NotLessSlantEqual;&NotLessTilde;&NotNestedGreaterGreater;&NotNestedLessLess;</title>",
+      "output": [
+        ["Character", "\u226F"],
+        ["Character", "\u2271"],
+        ["Character", "\u2267\u0338"],
+        ["Character", "\u226B\u0338"],
+        ["Character", "\u2279"],
+        ["Character", "\u2A7E\u0338"],
+        ["Character", "\u2275"],
+        ["Character", "\u226E"],
+        ["Character", "\u2270"],
+        ["Character", "\u2278"],
+        ["Character", "\u226A\u0338"],
+        ["Character", "\u2A7D\u0338"],
+        ["Character", "\u2274"],
+        ["Character", "\u2AA2\u0338"],
+        ["Character", "\u2AA1\u0338"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "data state WHATWG precedence named character references",
+      "input": "Precedence:&NotPrecedes;&NotPrecedesEqual;&NotPrecedesSlantEqual;&NotSucceeds;&NotSucceedsEqual;&NotSucceedsSlantEqual;&NotSucceedsTilde;&Precedes;&PrecedesEqual;&PrecedesSlantEqual;&PrecedesTilde;&Succeeds;&SucceedsEqual;&SucceedsSlantEqual;&SucceedsTilde;&curlyeqprec;&curlyeqsucc;&nprec;&npreceq;",
+      "output": [
+        ["Character", "Precedence:"],
+        ["Character", "\u2280\u2AAF\u0338\u22E0\u2281\u2AB0\u0338\u22E1\u227F\u0338\u227A\u2AAF\u227C\u227E\u227B\u2AB0\u227D\u227F\u22DE\u22DF\u2280\u2AAF\u0338"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG precedence named character references",
+      "input": "<math prec=\"&nsucc;&nsucceq;&pr;&prE;&prap;&prcue;&pre;&prec;&precapprox;&preccurlyeq;&preceq;&precnapprox;&precneqq;&precnsim;&precsim;&prnE;&prnap;&prnsim;&prsim;\">",
+      "output": [
+        ["StartTag", "math", {"prec": "\u2281\u2AB0\u0338\u227A\u2AB3\u2AB7\u227C\u2AAF\u227A\u2AB7\u227C\u2AAF\u2AB9\u2AB5\u22E8\u227E\u2AB5\u2AB9\u22E8\u227E"}]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG successor named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&sc;&scE;&scap;&sccue;&sce;&scnE;&scnap;&scnsim;&scsim;&succ;&succapprox;&succcurlyeq;&succeq;&succnapprox;&succneqq;&succnsim;&succsim;</title>",
+      "output": [
+        ["Character", "\u227B\u2AB4\u2AB8\u227D\u2AB0\u2AB6\u2ABA\u22E9\u227F\u227B\u2AB8\u227D\u2AB0\u2ABA\u2AB6\u22E9\u227F"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "data state WHATWG basic arrow named character references",
+      "input": "Arrows:&LeftArrow;&RightArrow;&UpArrow;&DownArrow;&LeftRightArrow;&UpDownArrow;&DoubleLeftArrow;&DoubleRightArrow;&DoubleUpArrow;&DoubleDownArrow;&DoubleLeftRightArrow;&DoubleUpDownArrow;",
+      "output": [
+        ["Character", "Arrows:"],
+        ["Character", "\u2190"],
+        ["Character", "\u2192"],
+        ["Character", "\u2191"],
+        ["Character", "\u2193"],
+        ["Character", "\u2194"],
+        ["Character", "\u2195"],
+        ["Character", "\u21D0"],
+        ["Character", "\u21D2"],
+        ["Character", "\u21D1"],
+        ["Character", "\u21D3"],
+        ["Character", "\u21D4"],
+        ["Character", "\u21D5"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG long and bar arrow named character references",
+      "input": "<a long=\"&LongLeftArrow;&LongRightArrow;&LongLeftRightArrow;&Longleftarrow;&Longrightarrow;&Longleftrightarrow;\" bars=\"&LeftArrowBar;&RightArrowBar;&UpArrowBar;&DownArrowBar;&LeftArrowRightArrow;&RightArrowLeftArrow;&UpArrowDownArrow;&DownArrowUpArrow;&LeftTeeArrow;&RightTeeArrow;&map;&Map;\">",
+      "output": [
+        ["StartTag", "a", {"long": "\u27F5\u27F6\u27F7\u27F8\u27F9\u27FA", "bars": "\u21E4\u21E5\u2912\u2913\u21C6\u21C4\u21C5\u21F5\u21A4\u21A6\u21A6\u2905"}]
+      ]
+    },
+    {
+      "description": "data state WHATWG extended arrow named character references",
+      "input": "More arrows:&Darr;&Downarrow;&Larr;&Leftarrow;&Leftrightarrow;&Rarr;&Rightarrow;&Uarr;&Uparrow;&Updownarrow;&ShortDownArrow;&ShortLeftArrow;&ShortRightArrow;&ShortUpArrow;&LowerLeftArrow;&LowerRightArrow;&UpperLeftArrow;&UpperRightArrow;&DoubleLongLeftArrow;&DoubleLongLeftRightArrow;&DoubleLongRightArrow;&DownTeeArrow;&UpTeeArrow;",
+      "output": [
+        ["Character", "More arrows:"],
+        ["Character", "\u21A1"],
+        ["Character", "\u21D3"],
+        ["Character", "\u219E"],
+        ["Character", "\u21D0"],
+        ["Character", "\u21D4"],
+        ["Character", "\u21A0"],
+        ["Character", "\u21D2"],
+        ["Character", "\u219F"],
+        ["Character", "\u21D1"],
+        ["Character", "\u21D5"],
+        ["Character", "\u2193"],
+        ["Character", "\u2190"],
+        ["Character", "\u2192"],
+        ["Character", "\u2191"],
+        ["Character", "\u2199"],
+        ["Character", "\u2198"],
+        ["Character", "\u2196"],
+        ["Character", "\u2197"],
+        ["Character", "\u27F8"],
+        ["Character", "\u27FA"],
+        ["Character", "\u27F9"],
+        ["Character", "\u21A7"],
+        ["Character", "\u21A5"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG hook tail and loop arrow named character references",
+      "input": "<a plain=\"&downarrow;&leftarrow;&leftrightarrow;&longleftarrow;&longleftrightarrow;&longrightarrow;\" hooks=\"&hookleftarrow;&hookrightarrow;&leftarrowtail;&rightarrowtail;&twoheadleftarrow;&twoheadrightarrow;\" loops=\"&curvearrowleft;&curvearrowright;&circlearrowleft;&circlearrowright;&looparrowleft;&looparrowright;\">",
+      "output": [
+        ["StartTag", "a", {"plain": "\u2193\u2190\u2194\u27F5\u27F7\u27F6", "hooks": "\u21A9\u21AA\u21A2\u21A3\u219E\u21A0", "loops": "\u21B6\u21B7\u21BA\u21BB\u21AB\u21AC"}]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG vector arrow named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&LeftVector;&RightVector;&LeftUpVector;&RightUpVector;&LeftDownVector;&RightDownVector;&DownLeftVector;&DownRightVector;&LeftVectorBar;&RightVectorBar;&LeftUpVectorBar;&RightUpVectorBar;&LeftDownVectorBar;&RightDownVectorBar;&DownLeftVectorBar;&DownRightVectorBar;</title>",
+      "output": [
+        ["Character", "\u21BC"],
+        ["Character", "\u21C0"],
+        ["Character", "\u21BF"],
+        ["Character", "\u21BE"],
+        ["Character", "\u21C3"],
+        ["Character", "\u21C2"],
+        ["Character", "\u21BD"],
+        ["Character", "\u21C1"],
+        ["Character", "\u2952"],
+        ["Character", "\u2953"],
+        ["Character", "\u2958"],
+        ["Character", "\u2954"],
+        ["Character", "\u2959"],
+        ["Character", "\u2955"],
+        ["Character", "\u2956"],
+        ["Character", "\u2957"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG harpoon negated and mapsto arrow named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&leftharpoonup;&leftharpoondown;&rightharpoonup;&rightharpoondown;&upharpoonleft;&upharpoonright;&downharpoonleft;&downharpoonright;&leftleftarrows;&rightrightarrows;&downdownarrows;&upuparrows;&leftrightarrows;&rightleftarrows;&leftrightharpoons;&rightleftharpoons;&rightsquigarrow;&leftrightsquigarrow;&nleftarrow;&nrightarrow;&nleftrightarrow;&nLeftarrow;&nRightarrow;&nLeftrightarrow;&mapsto;&longmapsto;&mapstoleft;&mapstoup;&mapstodown;&nearrow;&searrow;&swarrow;&nwarrow;</title>",
+      "output": [
+        ["Character", "\u21BC"],
+        ["Character", "\u21BD"],
+        ["Character", "\u21C0"],
+        ["Character", "\u21C1"],
+        ["Character", "\u21BF"],
+        ["Character", "\u21BE"],
+        ["Character", "\u21C3"],
+        ["Character", "\u21C2"],
+        ["Character", "\u21C7"],
+        ["Character", "\u21C9"],
+        ["Character", "\u21CA"],
+        ["Character", "\u21C8"],
+        ["Character", "\u21C6"],
+        ["Character", "\u21C4"],
+        ["Character", "\u21CB"],
+        ["Character", "\u21CC"],
+        ["Character", "\u219D"],
+        ["Character", "\u21AD"],
+        ["Character", "\u219A"],
+        ["Character", "\u219B"],
+        ["Character", "\u21AE"],
+        ["Character", "\u21CD"],
+        ["Character", "\u21CF"],
+        ["Character", "\u21CE"],
+        ["Character", "\u21A6"],
+        ["Character", "\u27FC"],
+        ["Character", "\u21A4"],
+        ["Character", "\u21A5"],
+        ["Character", "\u21A7"],
+        ["Character", "\u2197"],
+        ["Character", "\u2198"],
+        ["Character", "\u2199"],
+        ["Character", "\u2196"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "data state WHATWG Greek variant named character references",
+      "input": "Greek variants:&Gammad;&digamma;&Upsi;&upsi;&beth;&gimel;&daleth;&backepsilon;&bepsi;",
+      "output": [
+        ["Character", "Greek variants:"],
+        ["Character", "\u03DC"],
+        ["Character", "\u03DD"],
+        ["Character", "\u03D2"],
+        ["Character", "\u03C5"],
+        ["Character", "\u2136"],
+        ["Character", "\u2137"],
+        ["Character", "\u2138"],
+        ["Character", "\u03F6"],
+        ["Character", "\u03F6"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG Greek variant named character references",
+      "input": "<i vars=\"&epsi;&epsiv;&varepsilon;&straightepsilon;&kappav;&varkappa;&phiv;&varphi;&straightphi;\" more=\"&rhov;&varrho;&sigmav;&varsigma;&thetav;&vartheta;&varpi;\">",
+      "output": [
+        ["StartTag", "i", {"vars": "\u03B5\u03F5\u03F5\u03F5\u03F0\u03F0\u03D5\u03D5\u03D5", "more": "\u03F1\u03F1\u03C2\u03C2\u03D1\u03D1\u03D6"}]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG Greek variant named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&varepsilon;&varkappa;&vartheta;&varrho;&varsigma;&varphi;</title>",
+      "output": [
+        ["Character", "\u03F5"],
+        ["Character", "\u03F0"],
+        ["Character", "\u03D1"],
+        ["Character", "\u03F1"],
+        ["Character", "\u03C2"],
+        ["Character", "\u03D5"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "data state WHATWG set and logic named character references",
+      "input": "Sets:&Intersection;&Union;&SquareIntersection;&SquareUnion;&Wedge;&Vee;&And;&Or;&Not;&Cup;&Cap;&CupCap;&NotCupCap;&VerticalSeparator;",
+      "output": [
+        ["Character", "Sets:"],
+        ["Character", "\u22C2"],
+        ["Character", "\u22C3"],
+        ["Character", "\u2293"],
+        ["Character", "\u2294"],
+        ["Character", "\u22C0"],
+        ["Character", "\u22C1"],
+        ["Character", "\u2A53"],
+        ["Character", "\u2A54"],
+        ["Character", "\u2AEC"],
+        ["Character", "\u22D3"],
+        ["Character", "\u22D2"],
+        ["Character", "\u224D"],
+        ["Character", "\u226D"],
+        ["Character", "\u2758"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG set and logic named character references",
+      "input": "<m membership=\"&Element;&NotElement;&ReverseElement;&NotReverseElement;&Exists;&NotExists;&SuchThat;&isinv;&isinE;&notinva;&notinvb;&notinvc;&niv;&notniva;&notnivb;&notnivc;\" subsets=\"&Subset;&Supset;&SubsetEqual;&NotSubset;&NotSubsetEqual;&subE;&supE;&nsubE;&nsupE;&subne;&supne;&subnE;&supnE;\">",
+      "output": [
+        ["StartTag", "m", {"membership": "\u2208\u2209\u220B\u220C\u2203\u2204\u220B\u2208\u22F9\u2209\u22F7\u22F6\u220B\u220C\u22FE\u22FD", "subsets": "\u22D0\u22D1\u2286\u2282\u20D2\u2288\u2AC5\u2AC6\u2AC5\u0338\u2AC6\u0338\u228A\u228B\u2ACB\u2ACC"}]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG set and logic named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&emptyset;&emptyv;&varnothing;&setminus;&smallsetminus;&sqcap;&sqcup;&sqsub;&sqsup;&sqsube;&sqsupe;&cuvee;&cuwed;&xcap;&xcup;&xvee;&xwedge;</title>",
+      "output": [
+        ["Character", "\u2205"],
+        ["Character", "\u2205"],
+        ["Character", "\u2205"],
+        ["Character", "\u2216"],
+        ["Character", "\u2216"],
+        ["Character", "\u2293"],
+        ["Character", "\u2294"],
+        ["Character", "\u228F"],
+        ["Character", "\u2290"],
+        ["Character", "\u2291"],
+        ["Character", "\u2292"],
+        ["Character", "\u22CE"],
+        ["Character", "\u22CF"],
+        ["Character", "\u22C2"],
+        ["Character", "\u22C3"],
+        ["Character", "\u22C1"],
+        ["Character", "\u22C0"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "data state WHATWG operator named character references",
+      "input": "Operators:&CircleDot;&CircleMinus;&CirclePlus;&CircleTimes;&ContourIntegral;&DoubleContourIntegral;&Integral;&Product;&Coproduct;&Sum;&Sqrt;&Proportional;&Therefore;&Because;&VerticalTilde;",
+      "output": [
+        ["Character", "Operators:"],
+        ["Character", "\u2299"],
+        ["Character", "\u2296"],
+        ["Character", "\u2295"],
+        ["Character", "\u2297"],
+        ["Character", "\u222E"],
+        ["Character", "\u222F"],
+        ["Character", "\u222B"],
+        ["Character", "\u220F"],
+        ["Character", "\u2210"],
+        ["Character", "\u2211"],
+        ["Character", "\u221A"],
+        ["Character", "\u221D"],
+        ["Character", "\u2234"],
+        ["Character", "\u2235"],
+        ["Character", "\u2240"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG operator and shape named character references",
+      "input": "<g ops=\"&ominus;&odot;&osol;&ocir;&oast;&odash;&pluscir;&timesb;&sdotb;&minusb;&boxplus;&boxminus;&boxtimes;&dotsquare;&compfn;\" shapes=\"&FilledSmallSquare;&EmptySmallSquare;&EmptyVerySmallSquare;&FilledVerySmallSquare;&Square;&SquareSubset;&SquareSubsetEqual;&SquareSuperset;&SquareSupersetEqual;\">",
+      "output": [
+        ["StartTag", "g", {"ops": "\u2296\u2299\u2298\u229A\u229B\u229D\u2A22\u22A0\u22A1\u229F\u229E\u229F\u22A0\u22A1\u2218", "shapes": "\u25FC\u25FB\u25AB\u25AA\u25A1\u228F\u2291\u2290\u2292"}]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG shape named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&squ;&square;&squf;&squarf;&blacksquare;&lozenge;&lozf;&blacklozenge;&diamond;&diam;&diamondsuit;&malt;&maltese;&starf;&bigstar;&star;&phone;&female;&male;&spadesuit;&clubsuit;&heartsuit;</title>",
+      "output": [
+        ["Character", "\u25A1"],
+        ["Character", "\u25A1"],
+        ["Character", "\u25AA"],
+        ["Character", "\u25AA"],
+        ["Character", "\u25AA"],
+        ["Character", "\u25CA"],
+        ["Character", "\u29EB"],
+        ["Character", "\u29EB"],
+        ["Character", "\u22C4"],
+        ["Character", "\u22C4"],
+        ["Character", "\u2666"],
+        ["Character", "\u2720"],
+        ["Character", "\u2720"],
+        ["Character", "\u2605"],
+        ["Character", "\u2605"],
+        ["Character", "\u2606"],
+        ["Character", "\u260E"],
+        ["Character", "\u2640"],
+        ["Character", "\u2642"],
+        ["Character", "\u2660"],
+        ["Character", "\u2663"],
+        ["Character", "\u2665"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "data state WHATWG box-drawing named character references",
+      "input": "Boxes:&boxDL;&boxDR;&boxDl;&boxDr;&boxH;&boxHD;&boxHU;&boxHd;&boxHu;&boxUL;&boxUR;&boxUl;&boxUr;&boxV;&boxVH;&boxVL;&boxVR;&boxVh;&boxVl;&boxVr;&boxbox;",
+      "output": [
+        ["Character", "Boxes:"],
+        ["Character", "\u2557\u2554\u2556\u2553\u2550\u2566\u2569\u2564\u2567\u255D\u255A\u255C\u2559\u2551\u256C\u2563\u2560\u256B\u2562\u255F\u29C9"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG box-drawing named character references",
+      "input": "<box double=\"&boxDL;&boxDR;&boxDl;&boxDr;&boxH;&boxHD;&boxHU;&boxHd;&boxHu;&boxUL;&boxUR;&boxUl;&boxUr;\" mixed=\"&boxV;&boxVH;&boxVL;&boxVR;&boxVh;&boxVl;&boxVr;&boxbox;&boxdL;&boxdR;&boxdl;&boxdr;&boxh;&boxhD;&boxhU;\" light=\"&boxhd;&boxhu;&boxuL;&boxuR;&boxul;&boxur;&boxv;&boxvH;&boxvL;&boxvR;&boxvh;&boxvl;&boxvr;\">",
+      "output": [
+        ["StartTag", "box", {"double": "\u2557\u2554\u2556\u2553\u2550\u2566\u2569\u2564\u2567\u255D\u255A\u255C\u2559", "mixed": "\u2551\u256C\u2563\u2560\u256B\u2562\u255F\u29C9\u2555\u2552\u2510\u250C\u2500\u2565\u2568", "light": "\u252C\u2534\u255B\u2558\u2518\u2514\u2502\u256A\u2561\u255E\u253C\u2524\u251C"}]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG box-drawing named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&boxdL;&boxdR;&boxdl;&boxdr;&boxh;&boxhD;&boxhU;&boxhd;&boxhu;&boxuL;&boxuR;&boxul;&boxur;&boxv;&boxvH;&boxvL;&boxvR;&boxvh;&boxvl;&boxvr;</title>",
+      "output": [
+        ["Character", "\u2555\u2552\u2510\u250C\u2500\u2565\u2568\u252C\u2534\u255B\u2558\u2518\u2514\u2502\u256A\u2561\u255E\u253C\u2524\u251C"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "data state WHATWG angle named character references",
+      "input": "Angles:&angle;&angmsd;&angsph;&angrt;&angrtvb;&angrtvbd;&angst;&angzarr;&measuredangle;",
+      "output": [
+        ["Character", "Angles:"],
+        ["Character", "\u2220"],
+        ["Character", "\u2221"],
+        ["Character", "\u2222"],
+        ["Character", "\u221F"],
+        ["Character", "\u22BE"],
+        ["Character", "\u299D"],
+        ["Character", "\u00C5"],
+        ["Character", "\u237C"],
+        ["Character", "\u2221"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG fence named character references",
+      "input": "<f angles=\"&lang;&rang;&langle;&rangle;&LeftAngleBracket;&RightAngleBracket;\" fences=\"&LeftCeiling;&RightCeiling;&LeftFloor;&RightFloor;&LeftDoubleBracket;&RightDoubleBracket;&lobrk;&robrk;&lbrack;&rbrack;&lbrace;&rbrace;&lpar;&rpar;\">",
+      "output": [
+        ["StartTag", "f", {"angles": "\u27E8\u27E9\u27E8\u27E9\u27E8\u27E9", "fences": "\u2308\u2309\u230A\u230B\u27E6\u27E7\u27E6\u27E7[]{}()"}]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG triangle and corner named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&LeftTriangle;&RightTriangle;&triangleleft;&triangleright;&blacktriangleleft;&blacktriangleright;&ulcorner;&urcorner;&llcorner;&lrcorner;&OverBrace;&UnderBrace;&OverBracket;&UnderBracket;&OverParenthesis;&UnderParenthesis;&OverBar;&UnderBar;&bbrk;&bbrktbrk;</title>",
+      "output": [
+        ["Character", "\u22B2"],
+        ["Character", "\u22B3"],
+        ["Character", "\u25C3"],
+        ["Character", "\u25B9"],
+        ["Character", "\u25C2"],
+        ["Character", "\u25B8"],
+        ["Character", "\u231C"],
+        ["Character", "\u231D"],
+        ["Character", "\u231E"],
+        ["Character", "\u231F"],
+        ["Character", "\u23DE"],
+        ["Character", "\u23DF"],
+        ["Character", "\u23B4"],
+        ["Character", "\u23B5"],
+        ["Character", "\u23DC"],
+        ["Character", "\u23DD"],
+        ["Character", "\u203E"],
+        ["Character", "_"],
+        ["Character", "\u23B5"],
+        ["Character", "\u23B6"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "data state WHATWG Latin Extended named character references",
+      "input": "Latin extended:&Amacr;&abreve;&Aogon;&aogon;&Cacute;&ccaron;&Dcaron;&dcaron;&Emacr;&eogon;&Gbreve;&gcirc;&Idot;&inodot;",
+      "output": [
+        ["Character", "Latin extended:"],
+        ["Character", "\u0100"],
+        ["Character", "\u0103"],
+        ["Character", "\u0104"],
+        ["Character", "\u0105"],
+        ["Character", "\u0106"],
+        ["Character", "\u010D"],
+        ["Character", "\u010E"],
+        ["Character", "\u010F"],
+        ["Character", "\u0112"],
+        ["Character", "\u0119"],
+        ["Character", "\u011E"],
+        ["Character", "\u011D"],
+        ["Character", "\u0130"],
+        ["Character", "\u0131"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG Latin Extended named character references",
+      "input": "<p upper=\"&Hcirc;&Itilde;&Jcirc;&Kcedil;&Lacute;&Lcaron;&Lcedil;&Lmidot;&Nacute;&Ncaron;&Ncedil;\" lower=\"&hcirc;&itilde;&jcirc;&kcedil;&lacute;&lcaron;&lcedil;&lmidot;&nacute;&ncaron;&ncedil;\">",
+      "output": [
+        ["StartTag", "p", {"upper": "\u0124\u0128\u0134\u0136\u0139\u013D\u013B\u013F\u0143\u0147\u0145", "lower": "\u0125\u0129\u0135\u0137\u013A\u013E\u013C\u0140\u0144\u0148\u0146"}]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG Latin Extended named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&Omacr;&omacr;&Racute;&rcaron;&Sacute;&scedil;&Scirc;&scirc;&Tcaron;&tcedil;&Ubreve;&umacr;&Uogon;&uring;&Utilde;&wcirc;&Ycirc;&ycirc;&Zacute;&zcaron;&Zdot;&zdot;</title>",
+      "output": [
+        ["Character", "\u014C"],
+        ["Character", "\u014D"],
+        ["Character", "\u0154"],
+        ["Character", "\u0159"],
+        ["Character", "\u015A"],
+        ["Character", "\u015F"],
+        ["Character", "\u015C"],
+        ["Character", "\u015D"],
+        ["Character", "\u0164"],
+        ["Character", "\u0163"],
+        ["Character", "\u016C"],
+        ["Character", "\u016B"],
+        ["Character", "\u0172"],
+        ["Character", "\u016F"],
+        ["Character", "\u0168"],
+        ["Character", "\u0175"],
+        ["Character", "\u0176"],
+        ["Character", "\u0177"],
+        ["Character", "\u0179"],
+        ["Character", "\u017E"],
+        ["Character", "\u017B"],
+        ["Character", "\u017C"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "data state WHATWG open-face mathematical alphabet named character references",
+      "input": "Open face:&Aopf;&Bopf;&Copf;&Dopf;&Eopf;&Fopf;&Gopf;&Hopf;&Iopf;&Jopf;&Kopf;&Lopf;&Mopf;&Nopf;&Oopf;&Popf;&Qopf;&Ropf;&Sopf;&Topf;&Uopf;&Vopf;&Wopf;&Xopf;&Yopf;&Zopf;&aopf;&bopf;&copf;&dopf;&eopf;&fopf;&gopf;&hopf;&iopf;&jopf;&kopf;&lopf;&mopf;&nopf;&oopf;&popf;&qopf;&ropf;&sopf;&topf;&uopf;&vopf;&wopf;&xopf;&yopf;&zopf;",
+      "output": [
+        ["Character", "Open face:𝔸𝔹ℂ𝔻𝔼𝔽𝔾ℍ𝕀𝕁𝕂𝕃𝕄ℕ𝕆ℙℚℝ𝕊𝕋𝕌𝕍𝕎𝕏𝕐ℤ𝕒𝕓𝕔𝕕𝕖𝕗𝕘𝕙𝕚𝕛𝕜𝕝𝕞𝕟𝕠𝕡𝕢𝕣𝕤𝕥𝕦𝕧𝕨𝕩𝕪𝕫"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG script mathematical alphabet named character references",
+      "input": "<math upper=\"&Ascr;&Bscr;&Cscr;&Dscr;&Escr;&Fscr;&Gscr;&Hscr;&Iscr;&Jscr;&Kscr;&Lscr;&Mscr;&Nscr;&Oscr;&Pscr;&Qscr;&Rscr;&Sscr;&Tscr;&Uscr;&Vscr;&Wscr;&Xscr;&Yscr;&Zscr;\" lower=\"&ascr;&bscr;&cscr;&dscr;&escr;&fscr;&gscr;&hscr;&iscr;&jscr;&kscr;&lscr;&mscr;&nscr;&oscr;&pscr;&qscr;&rscr;&sscr;&tscr;&uscr;&vscr;&wscr;&xscr;&yscr;&zscr;\">",
+      "output": [
+        ["StartTag", "math", {"upper": "𝒜ℬ𝒞𝒟ℰℱ𝒢ℋℐ𝒥𝒦ℒℳ𝒩𝒪𝒫𝒬ℛ𝒮𝒯𝒰𝒱𝒲𝒳𝒴𝒵", "lower": "𝒶𝒷𝒸𝒹ℯ𝒻ℊ𝒽𝒾𝒿𝓀𝓁𝓂𝓃ℴ𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏"}]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG fraktur mathematical alphabet named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&Afr;&Bfr;&Cfr;&Dfr;&Efr;&Ffr;&Gfr;&Hfr;&Ifr;&Jfr;&Kfr;&Lfr;&Mfr;&Nfr;&Ofr;&Pfr;&Qfr;&Rfr;&Sfr;&Tfr;&Ufr;&Vfr;&Wfr;&Xfr;&Yfr;&Zfr;&afr;&bfr;&cfr;&dfr;&efr;&ffr;&gfr;&hfr;&ifr;&jfr;&kfr;&lfr;&mfr;&nfr;&ofr;&pfr;&qfr;&rfr;&sfr;&tfr;&ufr;&vfr;&wfr;&xfr;&yfr;&zfr;</title>",
+      "output": [
+        ["Character", "𝔄𝔅ℭ𝔇𝔈𝔉𝔊ℌℑ𝔍𝔎𝔏𝔐𝔑𝔒𝔓𝔔ℜ𝔖𝔗𝔘𝔙𝔚𝔛𝔜ℨ𝔞𝔟𝔠𝔡𝔢𝔣𝔤𝔥𝔦𝔧𝔨𝔩𝔪𝔫𝔬𝔭𝔮𝔯𝔰𝔱𝔲𝔳𝔴𝔵𝔶𝔷"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "data state WHATWG core Cyrillic named character references",
+      "input": "Cyrillic:&Acy;&Bcy;&Vcy;&Gcy;&Dcy;&IEcy;&IOcy;&ZHcy;&Zcy;&Icy;&Jcy;&Kcy;&Lcy;&Mcy;&Ncy;&Ocy;&Pcy;&Rcy;&Scy;&Tcy;&Ucy;&Fcy;&KHcy;&TScy;&CHcy;&SHcy;&SHCHcy;&HARDcy;&Ycy;&SOFTcy;&Ecy;&YUcy;&YAcy;&acy;&bcy;&vcy;&gcy;&dcy;&iecy;&iocy;&zhcy;&zcy;&icy;&jcy;&kcy;&lcy;&mcy;&ncy;&ocy;&pcy;&rcy;&scy;&tcy;&ucy;&fcy;&khcy;&tscy;&chcy;&shcy;&shchcy;&hardcy;&ycy;&softcy;&ecy;&yucy;&yacy;",
+      "output": [
+        ["Character", "Cyrillic:АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя"]
+      ]
+    },
+    {
+      "description": "attribute WHATWG extended Cyrillic named character references",
+      "input": "<span upper=\"&DJcy;&DScy;&DZcy;&GJcy;&Iukcy;&Jsercy;&Jukcy;&KJcy;&LJcy;&NJcy;&TSHcy;&Ubrcy;&YIcy;\" lower=\"&djcy;&dscy;&dzcy;&gjcy;&iukcy;&jsercy;&jukcy;&kjcy;&ljcy;&njcy;&tshcy;&ubrcy;&yicy;\">",
+      "output": [
+        ["StartTag", "span", {"upper": "ЂЅЏЃІЈЄЌЉЊЋЎЇ", "lower": "ђѕџѓіјєќљњћўї"}]
+      ]
+    },
+    {
+      "description": "rcdata WHATWG Cyrillic named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&Acy;&IEcy;&ZHcy;&SHCHcy;&SOFTcy;&YAcy;&acy;&iecy;&zhcy;&shchcy;&softcy;&yacy;&DJcy;&TSHcy;&Ubrcy;&YIcy;&djcy;&tshcy;&ubrcy;&yicy;</title>",
+      "output": [
+        ["Character", "АЕЖЩЬЯаежщьяЂЋЎЇђћўї"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "data state remaining WHATWG vector named character references",
+      "input": "Vectors:&DownLeftRightVector;&DownLeftTeeVector;&DownRightTeeVector;&LeftDownTeeVector;&LeftRightVector;&LeftTeeVector;&LeftUpDownVector;&LeftUpTeeVector;&RightDownTeeVector;&RightTeeVector;&RightUpDownVector;&RightUpTeeVector;",
+      "output": [
+        ["Character", "Vectors:⥐⥞⥟⥡⥎⥚⥑⥠⥝⥛⥏⥜"]
+      ]
+    },
+    {
+      "description": "attribute remaining WHATWG arrow named character references",
+      "input": "<nav upper=\"&Lleftarrow;&Rrightarrow;&RBarr;&Rarrtl;&Uarrocir;&neArr;&nwArr;&seArr;&swArr;&xhArr;&xlArr;&xrArr;\" lower=\"&lAarr;&rAarr;&lbarr;&rbarr;&bkarow;&dbkarow;&drbkarow;&nearr;&nwarr;&searr;&swarr;&zigrarr;\">",
+      "output": [
+        ["StartTag", "nav", {"upper": "⇚⇛⤐⤖⥉⇗⇖⇘⇙⟺⟸⟹", "lower": "⇚⇛⤌⤍⤍⤏⤐↗↖↘↙⇝"}]
+      ]
+    },
+    {
+      "description": "rcdata remaining WHATWG harpoon named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&dHar;&lHar;&rHar;&uHar;&duhar;&lrhar;&rlhar;&lharu;&lhard;&rharu;&rhard;&uharl;&uharr;&dharl;&dharr;&nrarrc;&nrarrw;</title>",
+      "output": [
+        ["Character", "⥥⥢⥤⥣⥯⇋⇌↼↽⇀⇁↿↾⇃⇂⤳̸↝̸"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "data state remaining WHATWG cap/cup set named character references",
+      "input": "Sets:&bigcap;&bigcup;&bigsqcup;&UnionPlus;&capand;&capbrcup;&capcap;&capcup;&capdot;&caps;&ccaps;&ccups;&ccupssm;&cupbrcap;&cupcap;&cupcup;&cupdot;&cupor;&cups;&ncap;&ncup;&xsqcup;",
+      "output": [
+        ["Character", "Sets:⋂⋃⨆⊎⩄⩉⩋⩇⩀∩︀⩍⩌⩐⩈⩆⩊⊍⩅∪︀⩃⩂⨆"]
+      ]
+    },
+    {
+      "description": "attribute remaining WHATWG subset and superset named character references",
+      "input": "<set sub=\"&Sub;&csub;&csube;&subdot;&subedot;&submult;&subplus;&subset;&subseteq;&subseteqq;&subsetneq;&subsetneqq;&subsim;&subsub;&subsup;\" sup=\"&Sup;&Superset;&SupersetEqual;&csup;&csupe;&supdot;&supdsub;&supedot;&suphsol;&suphsub;&supmult;&supplus;&supset;&supseteq;&supseteqq;&supsetneq;&supsetneqq;&supsim;&supsub;&supsup;\">",
+      "output": [
+        ["StartTag", "set", {"sub": "⋐⫏⫑⪽⫃⫁⪿⊂⊆⫅⊊⫋⫇⫕⫓", "sup": "⋑⊃⊇⫐⫒⪾⫘⫄⟉⫗⫂⫀⊃⊇⫆⊋⫌⫈⫔⫖"}]
+      ]
+    },
+    {
+      "description": "rcdata remaining WHATWG negated set named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&NotSquareSubset;&NotSquareSubsetEqual;&NotSquareSuperset;&NotSquareSupersetEqual;&NotSuperset;&NotSupersetEqual;&nsubset;&nsubseteq;&nsubseteqq;&nsupset;&nsupseteq;&nsupseteqq;&varsubsetneq;&varsubsetneqq;&varsupsetneq;&varsupsetneqq;&vnsub;&vnsup;&vsubnE;&vsubne;&vsupnE;&vsupne;</title>",
+      "output": [
+        ["Character", "⊏̸⋢⊐̸⋣⊃⃒⊉⊂⃒⊈⫅̸⊃⃒⊉⫆̸⊊︀⫋︀⊋︀⫌︀⊂⃒⊃⃒⫋︀⊊︀⫌︀⊋︀"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "data state remaining WHATWG square-set named character references",
+      "input": "Squares:&sqcaps;&sqcups;&sqsubset;&sqsubseteq;&sqsupset;&sqsupseteq;&nsqsube;&nsqsupe;&setmn;&ssetmn;&bsolhsub;&suphsol;&lsqb;&rsqb;",
+      "output": [
+        ["Character", "Squares:⊓︀⊔︀⊏⊑⊐⊒⋢⋣∖∖⟈⟉[]"]
+      ]
+    },
+    {
+      "description": "data state remaining WHATWG integral named character references",
+      "input": "Integrals:&Conint;&Cconint;&ClockwiseContourIntegral;&CounterClockwiseContourIntegral;&Int;&awconint;&awint;&cirfnint;&conint;&cwconint;&cwint;&fpartint;&iiiint;&iiint;&intlarhk;&npolint;&oint;&pointint;&qint;&quatint;&rppolint;&scpolint;&tint;",
+      "output": [
+        ["Character", "Integrals:∯∰∲∳∬∳⨑⨐∮∲∱⨍⨌∭⨗⨔∮⨕⨌⨖⨒⨓∭"]
+      ]
+    },
+    {
+      "description": "attribute remaining WHATWG operator named character references",
+      "input": "<ops value=\"&MinusPlus;&Otimes;&PlusMinus;&bigcirc;&bigodot;&bigoplus;&bigotimes;&biguplus;&circledast;&circledcirc;&circleddash;&coprod;&divideontimes;&dotminus;&dotplus;&eplus;&loplus;&lotimes;&ltimes;&minusd;&minusdu;&mnplus;&otimesas;&plus;&plusacir;&plusb;&plusdo;&plusdu;&pluse;&plussim;&plustwo;&roplus;&rotimes;&rtimes;&timesbar;&timesd;&triminus;&triplus;&uplus;&xcirc;&xodot;&xoplus;&xuplus;\">",
+      "output": [
+        ["StartTag", "ops", {"value": "∓⨷±◯⨀⨁⨂⨄⊛⊚⊝∐⋇∸∔⩱⨭⨴⋉∸⨪∓⨶+⨣⊞∔⨥⩲⨦⨧⨮⨵⋊⨱⨰⨺⨹⊎◯⨀⨁⨄"}]
+      ]
+    },
+    {
+      "description": "rcdata remaining WHATWG dot operator named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&DDotrahd;&Dot;&DotDot;&DoubleDot;&TripleDot;&centerdot;&ctdot;&ddotseq;&dot;&dtdot;&eDDot;&eDot;&efDot;&egsdot;&elsdot;&erDot;&esdot;&fallingdotseq;&gesdot;&gesdoto;&gesdotol;&gtdot;&isindot;&lesdot;&lesdoto;&lesdotor;&ltdot;&mDDot;&ncongdot;&nedot;&notindot;&risingdotseq;&sdote;&tdot;&tridot;&utdot;</title>",
+      "output": [
+        ["Character", "⤑¨⃜¨⃛·⋯⩷˙⋱⩷≑≒⪘⪗≓≐≒⪀⪂⪄⋗⋵⩿⪁⪃⋖∺⩭̸≐̸⋵̸≓⩦⃛◬⋰"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
+      "description": "data state remaining WHATWG operator-adjacent named character references",
+      "input": "Misc:&Mellintrf;&infintie;&intcal;&integers;&intercal;&intprod;&iprod;&leftthreetimes;&rightthreetimes;&elinters;",
+      "output": [
+        ["Character", "Misc:ℳ⧝⊺ℤ⊺⨼⨼⋋⋌⏧"]
+      ]
+    },
+    {
       "description": "data state legacy named character references missing semicolons",
       "input": "Legacy&nbsp symbols: &copy/&reg",
       "output": [
@@ -267,6 +1308,21 @@
       ]
     },
     {
+      "description": "nonlegacy named references without semicolons fall back to legacy prefixes",
+      "input": "Text &notin &trade <a value=&notin legacy=&Agrave data=&copy/>",
+      "output": [
+        ["Character", "Text "],
+        ["Character", "\u00AC"],
+        ["Character", "in &trade "],
+        ["StartTag", "a", {"value": "&notin", "legacy": "\u00C0", "data": "\u00A9"}, true]
+      ],
+      "errors": [
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 10},
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 47},
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 59}
+      ]
+    },
+    {
       "description": "data state named character reference fallback",
       "input": "Known &AMP; unknown &madeup;",
       "output": [
@@ -284,6 +1340,77 @@
       ]
     },
     {
+      "description": "data state named character references use the longest matching prefix",
+      "input": "Text &notit; &copycat &sumtotal",
+      "output": [
+        ["Character", "Text "],
+        ["Character", "\u00AC"],
+        ["Character", "it; "],
+        ["Character", "\u00A9"],
+        ["Character", "cat &sumtotal"]
+      ],
+      "errors": [
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 10},
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 18}
+      ]
+    },
+    {
+      "description": "attribute named character references preserve ambiguous ampersands",
+      "input": "<a title=\"&notit; &copycat &copy\" rel=&notin data=&notin;>",
+      "output": [
+        ["StartTag", "a", {"title": "&notit; &copycat \u00A9", "rel": "&notin", "data": "\u2209"}]
+      ],
+      "errors": [
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 33}
+      ]
+    },
+    {
+      "description": "rcdata named character references use the longest matching prefix",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&notit; &copycat</title>",
+      "output": [
+        ["Character", "\u00AC"],
+        ["Character", "it; "],
+        ["Character", "\u00A9"],
+        ["Character", "cat"],
+        ["EndTag", "title"]
+      ],
+      "errors": [
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 5},
+        {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 13}
+      ]
+    },
+    {
+      "description": "data state remaining HTML4 math named character references",
+      "input": "Math symbols: &alefsym;&oline; &alefsymtail &olinebar",
+      "output": [
+        ["Character", "Math symbols: "],
+        ["Character", "\u2135"],
+        ["Character", "\u203E"],
+        ["Character", " "],
+        ["Character", "&alefsymtail &olinebar"]
+      ]
+    },
+    {
+      "description": "attribute remaining HTML4 math named character references",
+      "input": "<math alef=\"&alefsym;\" overline=&oline; literal=&alefsymtail>",
+      "output": [
+        ["StartTag", "math", {"alef": "\u2135", "overline": "\u203E", "literal": "&alefsymtail"}]
+      ]
+    },
+    {
+      "description": "rcdata remaining HTML4 math named character references",
+      "initialStates": ["RCDATA state"],
+      "lastStartTag": "title",
+      "input": "&alefsym;&oline;</title>",
+      "output": [
+        ["Character", "\u2135"],
+        ["Character", "\u203E"],
+        ["EndTag", "title"]
+      ]
+    },
+    {
       "description": "data state numeric character references",
       "input": "Letters: &#65; &#x42; &#X43; &#0;",
       "output": [
@@ -295,6 +1422,9 @@
         ["Character", "C"],
         ["Character", " "],
         ["Character", "\uFFFD"]
+      ],
+      "errors": [
+        {"code": "null-character-reference", "line": 1, "col": 28}
       ]
     },
     {
@@ -302,6 +1432,37 @@
       "input": "<a title=\"&#65;&#x42;\" data-x='&#X43;' note=&#0;>",
       "output": [
         ["StartTag", "a", {"title": "AB", "data-x": "C", "note": "\uFFFD"}]
+      ],
+      "errors": [
+        {"code": "null-character-reference", "line": 1, "col": 53}
+      ]
+    },
+    {
+      "description": "invalid numeric character reference recovery",
+      "input": "<a data='&#0; &#xD800; &#x110000; &#xFDD0; &#x80;'>",
+      "output": [
+        ["StartTag", "a", {"data": "\uFFFD \uFFFD \uFFFD \uFDD0 \u20AC"}]
+      ],
+      "errors": [
+        {"code": "null-character-reference", "line": 1, "col": 13},
+        {"code": "surrogate-character-reference", "line": 1, "col": 22},
+        {"code": "character-reference-outside-unicode-range", "line": 1, "col": 33},
+        {"code": "noncharacter-character-reference", "line": 1, "col": 42},
+        {"code": "control-character-reference", "line": 1, "col": 49}
+      ]
+    },
+    {
+      "description": "numeric character references without digits stay literal",
+      "input": "Bad &#; &#x; <a title='&#x;' data=&#;>",
+      "output": [
+        ["Character", "Bad &#; &#x; "],
+        ["StartTag", "a", {"title": "&#x;", "data": "&#;"}]
+      ],
+      "errors": [
+        {"code": "absence-of-digits-in-numeric-character-reference", "line": 1, "col": 7},
+        {"code": "absence-of-digits-in-numeric-character-reference", "line": 1, "col": 12},
+        {"code": "absence-of-digits-in-numeric-character-reference", "line": 1, "col": 27},
+        {"code": "absence-of-digits-in-numeric-character-reference", "line": 1, "col": 37}
       ]
     },
     {
@@ -370,6 +1531,445 @@
         ["Character", "</script>"],
         ["Character", " y -->"],
         ["EndTag", "script"]
+      ]
+    },
+    {
+      "description": "CDATA section state literalizes markup until delimiter",
+      "initialStates": ["CDATA section state"],
+      "input": "<not-markup> &amp; ]]><p>x</p>",
+      "output": [
+        ["Character", "<not-markup> &amp; "],
+        ["StartTag", "p", {}],
+        ["Character", "x"],
+        ["EndTag", "p"]
+      ]
+    },
+    {
+      "description": "markup declaration CDATA opener enters CDATA section",
+      "input": "<![CDATA[<not-markup> &amp; ]]><p>After</p>",
+      "output": [
+        ["Character", "<not-markup> &amp; "],
+        ["StartTag", "p", {}],
+        ["Character", "After"],
+        ["EndTag", "p"]
+      ]
+    },
+    {
+      "description": "nested comment opener reports tokenizer error",
+      "input": "Before<!--a <!-- b -->After",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", "a <!-- b "],
+        ["Character", "After"]
+      ],
+      "errors": [
+        {"code": "nested-comment", "line": 1, "col": 17}
+      ]
+    },
+    {
+      "description": "incorrectly closed comment end bang",
+      "input": "Before<!--x--!>After",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", "x"],
+        ["Character", "After"]
+      ],
+      "errors": [
+        {"code": "incorrectly-closed-comment", "line": 1, "col": 15}
+      ]
+    },
+    {
+      "description": "question mark after tag open recovers as bogus comment",
+      "input": "Before<?xml version=\"1.0\"?>After",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", "?xml version=\"1.0\"?"],
+        ["Character", "After"]
+      ],
+      "errors": [
+        {"code": "unexpected-question-mark-instead-of-tag-name", "line": 1, "col": 8}
+      ]
+    },
+    {
+      "description": "question mark bogus comment eof has no eof-in-comment error",
+      "input": "Before<?xml",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", "?xml"]
+      ],
+      "errors": [
+        {"code": "unexpected-question-mark-instead-of-tag-name", "line": 1, "col": 8}
+      ]
+    },
+    {
+      "description": "incorrectly opened markup declaration reports tokenizer error",
+      "input": "Before<!foo>After",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", "foo"],
+        ["Character", "After"]
+      ],
+      "errors": [
+        {"code": "incorrectly-opened-comment", "line": 1, "col": 9}
+      ]
+    },
+    {
+      "description": "empty incorrectly opened markup declaration reconsumes delimiter",
+      "input": "Before<!>After",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", ""],
+        ["Character", "After"]
+      ],
+      "errors": [
+        {"code": "incorrectly-opened-comment", "line": 1, "col": 9}
+      ]
+    },
+    {
+      "description": "markup declaration opener eof recovers as empty bogus comment",
+      "input": "Before<!",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", ""]
+      ],
+      "errors": [
+        {"code": "incorrectly-opened-comment", "line": 1, "col": 9}
+      ]
+    },
+    {
+      "description": "one dash markup declaration recovers as bogus comment",
+      "input": "Before<!->Middle<!-x>After<!-",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", "-"],
+        ["Character", "Middle"],
+        ["Comment", "-x"],
+        ["Character", "After"],
+        ["Comment", "-"]
+      ],
+      "errors": [
+        {"code": "incorrectly-opened-comment", "line": 1, "col": 9},
+        {"code": "incorrectly-opened-comment", "line": 1, "col": 19},
+        {"code": "incorrectly-opened-comment", "line": 1, "col": 29}
+      ]
+    },
+    {
+      "description": "invalid end tag opener recovers as bogus comment",
+      "input": "Before</3>After",
+      "output": [
+        ["Character", "Before"],
+        ["Comment", "3"],
+        ["Character", "After"]
+      ],
+      "errors": [
+        {"code": "invalid-first-character-of-tag-name", "line": 1, "col": 9}
+      ]
+    },
+    {
+          "description": "final WHATWG named character reference coverage batch 1",
+          "input": "WHATWG remaining named refs 1 (Assign-angmsdah):&Assign;&Backslash;&Barv;&Barwed;&Bernoullis;&Breve;&Cayleys;&Cedilla;&Colon;&Colone;&Dashv;&Del;&Diamond;&DoubleLeftTee;&DoubleRightTee;&DownBreve;&DownTee;&Dstrok;&ENG;&Equilibrium;&Esim;&ForAll;&Fouriertrf;&Gg;&Gt;&Hacek;&Hat;&HilbertSpace;&HorizontalLine;&Hstrok;&IJlig;&Im;&Implies;&Lang;&Laplacetrf;&LeftTee;&LeftTriangleBar;&LeftTriangleEqual;&Ll;&Lsh;&Lstrok;&Lt;&NotCongruent;&NotDoubleVerticalBar;&NotHumpDownHump;&NotHumpEqual;&NotLeftTriangle;&NotLeftTriangleBar;&NotLeftTriangleEqual;&NotRightTriangle;&NotRightTriangleBar;&NotRightTriangleEqual;&Odblac;&PartialD;&Poincareplane;&Pr;&Proportion;&Rang;&Re;&ReverseEquilibrium;&ReverseUpEquilibrium;&RightTee;&RightTriangleBar;&RightTriangleEqual;&RoundImplies;&Rsh;&RuleDelayed;&Sc;&Star;&TRADE;&Tstrok;&Udblac;&UpEquilibrium;&UpTee;&VDash;&Vbar;&Vdash;&Vdashl;&Verbar;&Vert;&Vvdash;&ac;&acE;&acd;&af;&aleph;&amalg;&andand;&andd;&andslope;&andv;&ange;&angmsdaa;&angmsdab;&angmsdac;&angmsdad;&angmsdae;&angmsdaf;&angmsdag;&angmsdah;",
+          "output": [
+                [
+                      "Character",
+                      "WHATWG remaining named refs 1 (Assign-angmsdah):≔∖⫧⌆ℬ˘ℭ¸∷⩴⫤∇⋄⫤⊨̑⊤ĐŊ⇌⩳∀ℱ⋙≫ˇ^ℋ─ĦĲℑ⇒⟪ℒ⊣⧏⊴⋘↰Ł≪≢∦≎̸≏̸⋪⧏̸⋬⋫⧐̸⋭Ő∂ℌ⪻∷⟫ℜ⇋⥯⊢⧐⊵⥰↱⧴⪼⋆™ŦŰ⥮⊥⊫⫫⊩⫦‖‖⊪∾∾̳∿⁡ℵ⨿⩕⩜⩘⩚⦤⦨⦩⦪⦫⦬⦭⦮⦯"
+                ]
+          ]
+    },
+    {
+          "description": "final WHATWG named character reference coverage batch 2",
+          "input": "WHATWG remaining named refs 2 (ap-eng):&ap;&apE;&apacir;&ape;&apid;&approx;&approxeq;&ast;&asympeq;&bNot;&backcong;&backprime;&backsim;&backsimeq;&barvee;&barwed;&barwedge;&becaus;&because;&bemptyv;&bernou;&between;&bigtriangledown;&bigtriangleup;&bigvee;&bigwedge;&blacktriangle;&blacktriangledown;&blank;&blk12;&blk14;&blk34;&block;&bne;&bnequiv;&bnot;&bot;&bottom;&bowtie;&bprime;&breve;&bsemi;&bsol;&bsolb;&bullet;&caret;&caron;&cemptyv;&check;&checkmark;&cir;&cirE;&cire;&cirmid;&cirscir;&colon;&colone;&comma;&commat;&comp;&complement;&complexes;&copysr;&cross;&cuepr;&cuesc;&curlyvee;&curlywedge;&cylcty;&dash;&dashv;&dblac;&ddagger;&demptyv;&die;&disin;&div;&divonx;&dlcorn;&dlcrop;&dollar;&doublebarwedge;&drcorn;&drcrop;&dsol;&dstrok;&dtri;&dtrif;&dwangle;&easter;&ecir;&ecolon;&eg;&egs;&el;&ell;&els;&emsp13;&emsp14;&eng;",
+          "output": [
+                [
+                      "Character",
+                      "WHATWG remaining named refs 2 (ap-eng):≈⩰⩯≊≋≈≊*≍⫭≌‵∽⋍⊽⌅⌅∵∵⦰ℬ≬▽△⋁⋀▴▾␣▒░▓█=⃥≡⃥⌐⊥⊥⋈‵˘⁏\\⧅•⁁ˇ⦲✓✓○⧃≗⫯⧂:≔,@∁∁ℂ℗✗⋞⋟⋎⋏⌭‐⊣˝‡⦱¨⋲÷⋇⌞⌍$⌆⌟⌌⧶đ▿▾⦦⩮≖≕⪚⪖⪙ℓ⪕  ŋ"
+                ]
+          ]
+    },
+    {
+          "description": "final WHATWG named character reference coverage batch 3",
+          "input": "WHATWG remaining named refs 3 (epar-lcub):&epar;&eparsl;&esim;&excl;&expectation;&exponentiale;&ffilig;&fflig;&ffllig;&filig;&fjlig;&flat;&fllig;&fltns;&fork;&forkv;&frac13;&frac15;&frac16;&frac18;&frac23;&frac25;&frac35;&frac38;&frac45;&frac56;&frac58;&frac78;&frown;&gE;&gEl;&gacute;&gammad;&gap;&gel;&geq;&geqq;&geqslant;&ges;&gescc;&gesl;&gesles;&gg;&ggg;&grave;&gsim;&gsime;&gsiml;&gtcc;&gtcir;&gtlPar;&gtquest;&gvertneqq;&gvnE;&hairsp;&half;&hamilt;&hbar;&hercon;&hksearow;&hkswarow;&homtht;&horbar;&hslash;&hstrok;&hybull;&hyphen;&ic;&iff;&iinfin;&iiota;&ijlig;&imagline;&imagpart;&imath;&imof;&imped;&in;&incare;&isins;&isinsv;&it;&jmath;&kgreen;&lAtail;&lE;&lEg;&laemptyv;&lagran;&langd;&lap;&lat;&latail;&late;&lates;&lbbrk;&lbrke;&lbrksld;&lbrkslu;&lcub;",
+          "output": [
+                [
+                      "Character",
+                      "WHATWG remaining named refs 3 (epar-lcub):⋕⧣≂!ℰⅇﬃﬀﬄﬁfj♭ﬂ▱⋔⫙⅓⅕⅙⅛⅔⅖⅗⅜⅘⅚⅝⅞⌢≧⪌ǵϝ⪆⋛≥≧⩾⩾⪩⋛︀⪔≫⋙`≳⪎⪐⪧⩺⦕⩼≩︀≩︀ ½ℋℏ⊹⤥⤦∻―ℏħ⁃‐⁣⇔⧜℩ĳℐℑı⊷Ƶ∈℅⋴⋳⁢ȷĸ⤛≦⪋⦴ℒ⦑⪅⪫⤙⪭⪭︀❲⦋⦏⦍{"
+                ]
+          ]
+    },
+    {
+          "description": "final WHATWG named character reference coverage batch 4",
+          "input": "WHATWG remaining named refs 4 (ldca-nsce):&ldca;&ldquor;&ldsh;&leg;&leq;&leqq;&leqslant;&les;&lescc;&lesg;&lesges;&lhblk;&ll;&lltri;&lmoust;&lmoustache;&loang;&lopar;&lowbar;&lparlt;&lrtri;&lsh;&lsim;&lsime;&lsimg;&lstrok;&ltcc;&ltcir;&lthree;&ltquest;&ltrPar;&ltri;&ltrie;&ltrif;&lvertneqq;&lvnE;&marker;&mcomma;&mho;&mlcp;&mldr;&models;&mp;&mstpos;&multimap;&mumap;&nVDash;&nVdash;&nang;&nap;&napE;&napid;&napos;&napprox;&natur;&natural;&naturals;&nbump;&nbumpe;&ncong;&nearhk;&nequiv;&nesear;&nesim;&nexists;&ngE;&nge;&ngeq;&ngeqq;&ngeqslant;&nges;&ngsim;&ngt;&ngtr;&nhpar;&nis;&nisd;&nlE;&nldr;&nle;&nleq;&nleqq;&nleqslant;&nles;&nless;&nlsim;&nlt;&nltri;&nltrie;&nmid;&notinE;&notni;&npr;&nprcue;&npre;&nrtri;&nrtrie;&nsc;&nsccue;&nsce;",
+          "output": [
+                [
+                      "Character",
+                      "WHATWG remaining named refs 4 (ldca-nsce):⤶„↲⋚≤≦⩽⩽⪨⋚︀⪓▄≪◺⎰⎰⟬⦅_⦓⊿↰≲⪍⪏ł⪦⩹⋋⩻⦖◃⊴◂≨︀≨︀▮⨩℧⫛…⊧∓∾⊸⊸⊯⊮∠⃒≉⩰̸≋̸ŉ≉♮♮ℕ≎̸≏̸≇⤤≢⤨≂̸∄≧̸≱≱≧̸⩾̸⩾̸≵≯≯⫲⋼⋺≦̸‥≰≰≦̸⩽̸⩽̸≮≴≮⋪⋬∤⋹̸∌⊀⋠⪯̸⋫⋭⊁⋡⪰̸"
+                ]
+          ]
+    },
+    {
+          "description": "final WHATWG named character reference coverage batch 5",
+          "input": "WHATWG remaining named refs 5 (nshortmid-rsh):&nshortmid;&nshortparallel;&nsim;&nsime;&nsimeq;&nsmid;&nspar;&ntgl;&ntlg;&ntriangleleft;&ntrianglelefteq;&ntriangleright;&ntrianglerighteq;&num;&numero;&numsp;&nvDash;&nvap;&nvdash;&nvge;&nvgt;&nvinfin;&nvle;&nvlt;&nvltrie;&nvrtrie;&nvsim;&nwarhk;&nwnear;&oS;&odblac;&odiv;&odsold;&ofcir;&ogon;&ogt;&ohbar;&ohm;&olcir;&olcross;&olt;&omid;&opar;&operp;&ord;&order;&orderof;&origof;&oror;&orslope;&orv;&ovbar;&percnt;&period;&pertenk;&phmmat;&pitchfork;&planck;&planckh;&plankv;&pm;&primes;&profalar;&profline;&profsurf;&propto;&prurel;&puncsp;&qprime;&quaternions;&quest;&questeq;&rAtail;&race;&raemptyv;&rangd;&range;&ratail;&ratio;&rationals;&rbbrk;&rbrke;&rbrksld;&rbrkslu;&rcub;&rdca;&rdquor;&rdsh;&realine;&realpart;&reals;&rect;&ring;&rmoust;&rmoustache;&rnmid;&roang;&ropar;&rpargt;&rsh;",
+          "output": [
+                [
+                      "Character",
+                      "WHATWG remaining named refs 5 (nshortmid-rsh):∤∦≁≄≄∤∦≹≸⋪⋬⋫⋭#№ ⊭≍⃒⊬≥⃒>⃒⧞≤⃒<⃒⊴⃒⊵⃒∼⃒⤣⤧Ⓢő⨸⦼⦿˛⧁⦵Ω⦾⦻⧀⦶⦷⦹⩝ℴℴ⊶⩖⩗⩛⌽%.‱ℳ⋔ℏℎℏ±ℙ⌮⌒⌓∝⊰ ⁗ℍ?≟⤜∽̱⦳⦒⦥⤚∶ℚ❳⦌⦎⦐}⤷”↳ℛℜℝ▭˚⎱⎱⫮⟭⦆⦔↱"
+                ]
+          ]
+    },
+    {
+          "description": "final WHATWG named character reference coverage batch 6",
+          "input": "WHATWG remaining named refs 6 (rthree-zeetrf):&rthree;&rtri;&rtrie;&rtrif;&rtriltri;&rx;&searhk;&semi;&seswar;&sext;&sfrown;&sharp;&smashp;&smeparsl;&smid;&smile;&smt;&smte;&smtes;&sol;&solb;&solbar;&spar;&ssmile;&sstarf;&strns;&sung;&swarhk;&swnwar;&target;&tbrk;&telrec;&therefore;&thickapprox;&thicksim;&thkap;&thksim;&toea;&top;&topbot;&topcir;&topfork;&tosa;&tprime;&triangle;&triangledown;&trianglelefteq;&triangleq;&trianglerighteq;&trie;&trisb;&tritime;&trpezium;&tstrok;&twixt;&udblac;&uhblk;&ulcorn;&ulcrop;&ultri;&urcorn;&urcrop;&urtri;&utri;&utrif;&uwangle;&vBar;&vBarv;&vDash;&vangrt;&varpropto;&vartriangleleft;&vartriangleright;&vdash;&vee;&veebar;&veeeq;&vellip;&verbar;&vert;&vltri;&vprop;&vrtri;&vzigzag;&wedbar;&wedge;&wedgeq;&wp;&wr;&wreath;&xdtri;&xmap;&xnis;&xotime;&xutri;&zeetrf;",
+          "output": [
+                [
+                      "Character",
+                      "WHATWG remaining named refs 6 (rthree-zeetrf):⋌▹⊵▸⧎℞⤥;⤩✶⌢♯⨳⧤∣⌣⪪⪬⪬︀/⧄⌿∥⌣⋆¯♪⤦⤪⌖⎴⌕∴≈∼≈∼⤨⊤⌶⫱⫚⤩‴▵▿⊴≜⊵≜⧍⨻⏢ŧ≬ű▀⌜⌏◸⌝⌎◹▵▴⦧⫨⫩⊨⦜∝⊲⊳⊢∨⊻≚⋮||⊲∝⊳⦚⩟∧≙℘≀≀▽⟼⋻⨂△ℨ"
+                ]
+          ]
+    },
+    {
+      "description": "form feed legacy named reference boundary",
+      "input": "A&copy\fB&nbsp\f<a copy=&copy\freg=&reg\f>",
+      "output": [
+        [
+          "Character",
+          "A©\fB \f"
+        ],
+        [
+          "StartTag",
+          "a",
+          {
+            "copy": "©",
+            "reg": "®"
+          }
+        ]
+      ],
+      "errors": [
+        {
+          "code": "missing-semicolon-after-character-reference",
+          "line": 1,
+          "col": 7
+        },
+        {
+          "code": "missing-semicolon-after-character-reference",
+          "line": 1,
+          "col": 14
+        },
+        {
+          "code": "missing-semicolon-after-character-reference",
+          "line": 1,
+          "col": 28
+        },
+        {
+          "code": "missing-semicolon-after-character-reference",
+          "line": 1,
+          "col": 37
+        }
+      ]
+    },
+    {
+      "description": "form feed script double escape delimiter",
+      "input": "<!-- <script\fx </script\f y --></script>",
+      "initialStates": [
+        "Script data state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          "<!-- <script\fx </script\f y -->"
+        ],
+        [
+          "EndTag",
+          "script"
+        ]
+      ]
+    },
+    {
+      "description": "script escaped dash state can resume escaped text and close script",
+      "input": "x</script>",
+      "initialStates": [
+        "Script data escaped dash state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          "x"
+        ],
+        [
+          "EndTag",
+          "script"
+        ]
+      ]
+    },
+    {
+      "description": "script escaped dash dash state exits escaped text on greater-than",
+      "input": ">plain</script>",
+      "initialStates": [
+        "Script data escaped dash dash state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          ">plain"
+        ],
+        [
+          "EndTag",
+          "script"
+        ]
+      ]
+    },
+    {
+      "description": "script escaped less-than sign state recognizes matching end tag",
+      "input": "/script>tail",
+      "initialStates": [
+        "Script data escaped less-than sign state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "EndTag",
+          "script"
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ]
+    },
+    {
+      "description": "script double escaped dash state keeps escaped end marker as text",
+      "input": "x</script>tail",
+      "initialStates": [
+        "Script data double escaped dash state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          "x</script>tail"
+        ]
+      ]
+    },
+    {
+      "description": "script double escaped dash dash state remains text after greater-than",
+      "input": ">still</script>text",
+      "initialStates": [
+        "Script data double escaped dash dash state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          ">still</script>text"
+        ]
+      ]
+    },
+    {
+      "description": "script double escaped less-than sign state exits before matching end tag",
+      "input": "/script>after</script>",
+      "initialStates": [
+        "Script data double escaped less-than sign state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          "/script>after"
+        ],
+        [
+          "EndTag",
+          "script"
+        ]
+      ]
+    },
+    {
+      "description": "carriage return newline normalization",
+      "input": "<p\r\nclass=x>one\rtwo\r\nthree</p>",
+      "output": [
+        [
+          "StartTag",
+          "p",
+          {
+            "class": "x"
+          }
+        ],
+        [
+          "Character",
+          "one\ntwo\nthree"
+        ],
+        [
+          "EndTag",
+          "p"
+        ]
+      ]
+    },
+    {
+      "description": "eof drops partial start tag",
+      "input": "<div class=\"open",
+      "output": [],
+      "errors": [
+        {
+          "code": "eof-in-tag",
+          "line": 1,
+          "col": 17
+        }
+      ]
+    },
+    {
+      "description": "eof drops partial end tag",
+      "input": "</section class=x",
+      "output": [],
+      "errors": [
+        {
+          "code": "unexpected-whitespace-after-end-tag-name",
+          "line": 1,
+          "col": 10
+        },
+        {
+          "code": "end-tag-with-attributes",
+          "line": 1,
+          "col": 11
+        },
+        {
+          "code": "eof-in-end-tag-name-state",
+          "line": 1,
+          "col": 18
+        }
+      ]
+    },
+    {
+      "description": "eof drops attribute named reference start tag",
+      "input": "<a href=&copy",
+      "output": [],
+      "errors": [
+        {
+          "code": "missing-semicolon-after-character-reference",
+          "line": 1,
+          "col": 14
+        },
+        {
+          "code": "eof-in-tag",
+          "line": 1,
+          "col": 14
+        }
+      ]
+    },
+    {
+      "description": "eof drops attribute numeric reference start tag",
+      "input": "<a href=&#x41",
+      "output": [],
+      "errors": [
+        {
+          "code": "missing-semicolon-after-character-reference",
+          "line": 1,
+          "col": 14
+        },
+        {
+          "code": "eof-in-tag",
+          "line": 1,
+          "col": 14
+        }
       ]
     }
   ]

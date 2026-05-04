@@ -22,12 +22,156 @@ checked-in generated Rust modules built to match the output shape of
 compatibility floor for Venture's Mosaic-era target: it is not the end state of
 the project, but the first real HTML authoring artifact that must keep HTML
 1.0-era content working as the lexer grows forward toward newer standards.
-The default lexer already resolves the core named character references and the
-classic Latin-1 entity set, preserving entity-name case so legacy names such as
-`Agrave` and `agrave` remain distinct.
+The default lexer already resolves the core named character references, the
+classic Latin-1 entity set, and the HTML4 symbol/math references including
+`alefsym` and `oline`, preserving entity-name case so legacy names such as
+`Agrave` and `agrave` remain distinct. It also includes a growing WHATWG
+named-reference slice for spacing, invisible operators, punctuation aliases,
+and math constants such as `Tab`, `NewLine`, `NoBreak`, `InvisibleTimes`,
+`OpenCurlyQuote`, and `DifferentialD`. The same static table now covers a
+focused relation/operator slice including equality, tilde, greater-than,
+less-than, extended greater/less comparison, precedence/successor, congruence,
+similarity, parallel, and negated relation aliases with combining-overlay
+replacements, plus arrow and vector aliases such as `LeftArrow`,
+`LongRightArrow`, `Map`, `RightDownVectorBar`, `hookleftarrow`,
+`nLeftrightarrow`, and `longmapsto`,
+along with Greek variant and letter-like aliases such as `varepsilon`,
+`varkappa`, `varphi`, `digamma`, `beth`, and `daleth`. It also
+includes set, membership, subset, and logic aliases such as `Intersection`,
+`Union`, `Element`, `NotElement`, `Subset`, `nsubE`, `sqcup`, and `xwedge`,
+plus operator and shape aliases such as `CircleDot`, `ContourIntegral`,
+`FilledSmallSquare`, `blacklozenge`, `bigstar`, and `spadesuit`, and angle or
+fence aliases such as `angmsd`, `LeftDoubleBracket`, `lobrk`, `OverBrace`, and
+`ulcorner`, box-drawing aliases such as `boxH`, `boxVH`, `boxdl`, and `boxvr`,
+plus Latin Extended and diacritic aliases such as `Amacr`, `ccaron`, `Lmidot`,
+`uring`, and `Zdot`, mathematical alphabet aliases such as `Aopf`, `zopf`,
+`Ascr`, `zscr`, `Afr`, and `zfr`, Cyrillic aliases such as `Acy`, `ZHcy`,
+`SHCHcy`, `DJcy`, `Ubrcy`, and `yicy`, remaining arrow, vector, and harpoon
+aliases such as `DownLeftRightVector`, `Lleftarrow`, `rarrc`, `dHar`, and
+`nrarrc`, plus the remaining set algebra aliases such as `bigcap`, `capand`,
+`subsetneqq`, `NotSquareSubset`, `sqcaps`, and `xsqcup`, and the remaining
+operator/integral aliases such as `Conint`, `bigoplus`, `DotDot`, `ncongdot`,
+`qint`, and `timesbar`. The static table now covers every semicolon-terminated
+WHATWG named character reference.
+Named character reference scanning now follows the longest-prefix shape of the
+HTML tokenizer: text and RCDATA recover inputs such as `&copycat` as `©cat`
+with a missing-semicolon diagnostic, while attribute values preserve ambiguous
+ampersands like `&copycat` literally when the would-be reference is followed by
+an ASCII alphanumeric character or `=`.
+That missing-semicolon recovery is now constrained to WHATWG's legacy
+no-semicolon aliases, so newer names such as `&trade` stay literal without a
+terminating semicolon and inputs like `&notin` recover through the shorter
+legacy `&not` prefix in text.
+Form feed is treated as HTML ASCII whitespace in the generated delimiter
+paths, including script double-escape boundaries and semicolonless legacy named
+character references.
+The Rust HTML wrapper also enables input-stream newline preprocessing, so CRLF
+pairs and bare carriage returns are tokenized as LF while source offsets still
+advance across the original bytes.
+Numeric character references report invalid-code-point diagnostics and recover
+with the HTML replacement/remapping rules for null, surrogate, out-of-range,
+noncharacter, and Windows-1252 control references.
+Digitless numeric references such as `&#;` and `&#x;` stay literal while
+reporting `absence-of-digits-in-numeric-character-reference`.
+Duplicate attributes recover with HTML semantics: the first attribute value is
+kept, later attributes with the same interpreted name are dropped, and a
+`duplicate-attribute` diagnostic is recorded.
+Unquoted attribute values also preserve spec-defined unexpected characters
+such as `"`, `'`, `<`, `=`, and `` ` `` while reporting
+`unexpected-character-in-unquoted-attribute-value`.
+EOF inside ordinary start/end tag construction now reports the relevant
+EOF-in-tag diagnostic and drops the incomplete token instead of handing a
+partial tag to the future parser.
+The same partial-token drop now applies when EOF arrives inside an attribute
+character-reference substate, including named and numeric references.
+NULL characters in data/RCDATA/RAWTEXT/PLAINTEXT/CDATA/script data, script
+escaped/double-escaped states, and attribute values recover by reporting
+`unexpected-null-character` and appending U+FFFD, matching the replacement
+behavior the future parser will expect from the lexer/tokenizer boundary.
+Tag names and attribute names now use the same recovery shape, so a raw NULL in
+markup names becomes U+FFFD and records `unexpected-null-character` instead of
+leaking the raw code point into emitted tokens.
+Comments and bogus comments also replace raw NULL characters with U+FFFD while
+recording `unexpected-null-character`, including dash-sensitive comment end
+substates that must preserve their pending `-` or `--` text first.
+DOCTYPE names and quoted public/system identifiers use the same replacement
+path, so legacy declarations with embedded NULLs still emit structured
+DOCTYPE tokens with U+FFFD in the affected field.
+Comment tokenization includes the standard start-dash recovery cases for empty
+HTML comments such as `<!-->` and `<!--->`, while still preserving normal
+Mosaic-era `<!--note-->` comments. Nested-looking `<!--` sequences inside an
+open comment remain literal comment data and surface a recoverable
+`nested-comment` diagnostic. Comment endings also recover from `--!>` with an
+`incorrectly-closed-comment` diagnostic while preserving non-closing `--!` text.
+Processing-instruction-looking markup such as `<?xml ...?>` now follows HTML
+bogus-comment recovery instead of being mistaken for a start tag, preserving
+legacy document prologs without polluting the tag stream. EOF in that bogus
+comment recovery emits the recovered comment without adding an unrelated
+`eof-in-comment` diagnostic.
+Malformed markup declarations such as `<!foo>` also recover as bogus comments
+and report `incorrectly-opened-comment`, matching the tokenizer error shape the
+future parser will rely on for compatibility diagnostics. That recovery
+reconsumes the first non-matching byte in bogus-comment state, so empty
+declarations such as `<!>` emit an empty comment and return to normal data
+lexing, and EOF after `<!` emits the same empty bogus-comment recovery instead
+of preserving the opener as text. One-dash declaration openers such as `<!->`
+and `<!-x>` use that same bogus-comment recovery instead of being mistaken for
+normal empty-comment syntax.
+The tag-open states now only begin normal tags when the next character is an
+ASCII letter; stray less-than signs such as `a < b` remain text, and malformed
+end-tag openers such as `</3>` recover as bogus comments with a tokenizer
+diagnostic.
+DOCTYPE tokenization reports missing names and marks force-quirks mode for
+inputs such as `<!DOCTYPE>` and `<!DOCTYPE >`, and EOF recovery after a name
+or inside the `DOCTYPE` keyword emits a force-quirks token. Malformed
+`DOCTYPE` keyword text also marks force-quirks mode. Mosaic-era `PUBLIC` and
+`SYSTEM` identifiers are preserved on emitted DOCTYPE tokens, so legacy
+declarations such as `<!DOCTYPE html PUBLIC "...">` keep the information the
+future tree-construction/parser layer will need for compatibility decisions.
+DOCTYPE system-identifier recovery marks force-quirks mode for missing
+identifiers and unexpected trailing junk. PUBLIC/SYSTEM declarations also report
+the current recovery diagnostics for missing whitespace, missing identifier
+quotes, and abrupt identifier termination while preserving any recoverable
+public/system identifier text.
 The generated HTML1 machine also exposes `RCDATA`, `RAWTEXT`, `PLAINTEXT`,
-`script_data`, `script_data_escaped`, and `script_data_double_escaped` entry
-states for parser-controlled tokenizer submodes.
+`CDATA section`, `script_data`, `script_data_escaped`,
+`script_data_escaped_dash`, `script_data_escaped_dash_dash`,
+`script_data_escaped_less_than_sign`, `script_data_double_escaped`,
+`script_data_double_escaped_dash`, `script_data_double_escaped_dash_dash`, and
+`script_data_double_escaped_less_than_sign` entry states for parser-controlled
+tokenizer submodes. The markup declaration path also recognizes `<![CDATA[`
+and enters the CDATA section state so the generated lexer can exercise that
+tokenizer subflow end to end; a future parser can still decide when that opener
+is valid for foreign-content contexts.
+The public Rust API now wraps those parser-controlled entry states in
+`HtmlTokenizerState` and `HtmlLexContext`, including an element-to-context map
+for `title`, `textarea`, raw-text elements, `script`, and `plaintext`. A
+scripting-aware variant lets the parser decide whether `noscript` enters
+RAWTEXT or stays ordinary markup. That lets the parser request a statically
+linked lexer in the right tokenizer mode without depending on generated
+machine-state strings. Parsers that keep one lexer alive can call
+`apply_html_lex_context` to move that lexer between data state and text-mode
+states while clearing stale last-start-tag context.
+Foreign-content CDATA is exposed as an explicit
+`HtmlLexContext::cdata_section()` helper rather than as an element-name mapping,
+so future SVG/MathML tree-construction logic can opt into CDATA only after it
+has confirmed the parser context.
+Script escaped and double-escaped substates are exposed through
+`HtmlLexContext::script_substate(...)`, giving parser and conformance callers a
+typed way to seed those script tokenizer subflows without raw machine-state
+strings. The accepted script entry states are also available as
+`HTML_SCRIPT_TOKENIZER_STATES`, and `HtmlTokenizerState::is_script_substate()`
+lets parser adapters validate user-selected fragment contexts before seeding a
+lexer.
+For importers and parser fragment APIs that need to enumerate the whole
+supported surface, `HTML_TOKENIZER_STATES` lists every parser-facing tokenizer
+entry state and `HTML_FRAGMENT_TOKENIZER_STATES` lists the non-data fragment
+states accepted by the wrapper. `HtmlTokenizerState::is_fragment_state()` keeps
+that validation centralized in the lexer package. Code that starts from
+generated machine-state identifiers can use
+`HtmlTokenizerState::from_machine_state(...)` or
+`HtmlTokenizerState::from_fragment_machine_state(...)` to round-trip back to the
+typed API without copying raw state strings.
 `html-skeleton.lexer.states.toml` remains in the crate as a smaller bootstrap
 machine for comparisons and narrow debugging.
 
@@ -54,11 +198,11 @@ fixture normalization logic to live forever inside the Rust tests.
 
 The normalized corpus now carries optional tokenizer-context metadata such as
 `initial_state` and `last_start_tag`, so upstream RCDATA, RAWTEXT, PLAINTEXT,
-script data, script data escaped, and script data double escaped cases can
-already live in the shared Venture fixture format. Current Rust conformance
-tests now seed that context into the generated lexer so the first
-non-data-state cases execute through the same static Rust wrapper as the
-data-state corpus.
+CDATA section, script data, script data escaped/dash/less-than substates, and
+script data double-escaped/dash/less-than substates can already live in the
+shared Venture fixture format. Current Rust conformance tests now seed that
+context into the generated lexer so non-data-state cases execute through the
+same static Rust wrapper as the data-state corpus.
 
 The intended WHATWG/WPT path is to normalize upstream tokenizer cases into this
 same schema rather than teaching the Rust harness to parse raw upstream files
@@ -81,6 +225,18 @@ assert_eq!(
         Token::Eof,
     ]
 );
+```
+
+Parser-controlled fragments can seed the same static lexer with a typed
+tokenizer context:
+
+```rust
+use coding_adventures_html_lexer::{lex_html_fragment, HtmlLexContext, Token};
+
+let context = HtmlLexContext::for_element_text("title").unwrap();
+let tokens = lex_html_fragment("Tom &amp; Jerry</title>", &context).unwrap();
+
+assert_eq!(tokens[0], Token::Text("Tom & Jerry".into()));
 ```
 
 ## Development

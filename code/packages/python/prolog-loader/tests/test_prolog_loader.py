@@ -12,12 +12,14 @@ from logic_engine import (
     DisjExpr,
     FreshExpr,
     LogicVar,
+    Number,
     RelationCall,
     State,
     atom,
     conj,
     disj,
     eq,
+    fact,
     fresh,
     logic_list,
     num,
@@ -26,6 +28,8 @@ from logic_engine import (
     relation,
     solve_all,
     solve_from,
+    solve_n,
+    string,
     term,
     visible_clauses_for,
 )
@@ -40,6 +44,10 @@ from prolog_loader import (
     adapt_prolog_goal,
     link_loaded_prolog_sources,
     load_iso_prolog_source,
+    load_prolog_file,
+    load_prolog_project,
+    load_prolog_project_from_files,
+    load_prolog_source,
     load_swi_prolog_file,
     load_swi_prolog_project,
     load_swi_prolog_project_from_files,
@@ -76,6 +84,7 @@ class TestPrologLoader:
             {relation("parent", 2).key()},
         )
         assert loaded.predicate_registry.get("parent", 2) is not None
+        assert loaded.dialect_profile.name == "iso"
 
     def test_load_swi_source_collects_initialization_metadata(self) -> None:
         loaded = load_swi_prolog_source(
@@ -87,6 +96,44 @@ class TestPrologLoader:
 
         assert len(loaded.initialization_goals) == 1
         assert str(loaded.initialization_terms[0]) == "main"
+        assert loaded.dialect_profile.name == "swi"
+
+    def test_load_prolog_source_routes_by_dialect_profile(self) -> None:
+        iso_loaded = load_prolog_source(
+            """
+            parent(homer, bart).
+            ?- parent(homer, Who).
+            """,
+            dialect="iso-core",
+        )
+        swi_loaded = load_prolog_source(
+            """
+            :- module(family, [parent/2]).
+            parent(homer, lisa).
+            ?- parent(homer, Who).
+            """,
+            dialect="swipl",
+        )
+
+        assert iso_loaded.dialect_profile.name == "iso"
+        assert swi_loaded.dialect_profile.name == "swi"
+        assert swi_loaded.module_spec is not None
+        assert solve_all(
+            iso_loaded.program,
+            iso_loaded.queries[0].variables["Who"],
+            iso_loaded.queries[0].goal,
+        ) == [atom("bart")]
+        assert solve_all(
+            swi_loaded.program,
+            swi_loaded.queries[0].variables["Who"],
+            swi_loaded.queries[0].goal,
+        ) == [atom("lisa")]
+
+    def test_load_prolog_source_rejects_tracked_but_unimplemented_dialects(
+        self,
+    ) -> None:
+        with pytest.raises(ValueError, match="does not have an implemented loader"):
+            load_prolog_source("parent(homer, bart).\n", dialect="gnu")
 
     def test_load_swi_source_collects_module_metadata(self) -> None:
         loaded = load_swi_prolog_source(
@@ -432,6 +479,33 @@ class TestPrologLoader:
             tmp_path / "facts.pl"
         ).resolve()
 
+    def test_load_prolog_file_and_project_route_by_dialect_profile(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        iso_path = tmp_path / "family.pl"
+        iso_path.write_text(
+            "parent(homer, bart).\n?- parent(homer, Who).\n",
+            encoding="utf-8",
+        )
+
+        loaded = load_prolog_file(iso_path, dialect="iso")
+        project = load_prolog_project(
+            "parent(homer, lisa).\n",
+            "?- parent(homer, Who).\n",
+            dialect="iso",
+        )
+        file_project = load_prolog_project_from_files(iso_path, dialect="iso")
+
+        assert loaded.dialect_profile.name == "iso"
+        assert [profile.name for profile in project.dialect_profiles] == ["iso"]
+        assert [profile.name for profile in file_project.dialect_profiles] == ["iso"]
+        assert solve_all(
+            project.program,
+            project.queries[0].variables["Who"],
+            project.queries[0].goal,
+        ) == [atom("lisa")]
+
     def test_load_swi_prolog_project_from_files_loads_consulted_user_sources(
         self,
         tmp_path: Path,
@@ -527,6 +601,87 @@ class TestPrologLoader:
             adapt_prolog_goal(query.goal),
         ) == [
             atom("bart"),
+        ]
+
+    def test_module_qualification_rewrites_call_n_meta_arguments(self) -> None:
+        project = load_swi_prolog_project(
+            """
+            :- module(family, [ancestor/2]).
+            ancestor(homer, bart).
+            ancestor(homer, lisa).
+            """,
+            """
+            :- module(app, []).
+            ?- call(family:ancestor, homer, Who).
+            """,
+        )
+
+        query = project.queries[0]
+
+        assert solve_all(
+            project.program,
+            query.variables["Who"],
+            adapt_prolog_goal(query.goal),
+        ) == [
+            atom("bart"),
+            atom("lisa"),
+        ]
+
+    def test_module_qualification_rewrites_apply_family_closures(self) -> None:
+        project = load_swi_prolog_project(
+            """
+            :- module(apply_helpers, [
+                increment/2,
+                convert/2,
+                small/1,
+                pair_push/4,
+                push/3
+            ]).
+            increment(1, 2).
+            increment(2, 3).
+            convert(1, one).
+            convert(3, three).
+            small(1).
+            small(2).
+            pair_push(Left, Right, Acc, [pair(Left, Right)|Acc]).
+            push(Item, Acc, [Item|Acc]).
+            """,
+            """
+            :- module(app, []).
+            :- use_module(apply_helpers, [
+                increment/2,
+                convert/2,
+                small/1,
+                pair_push/4,
+                push/3
+            ]).
+            ?- maplist(increment, [1,2], Ys),
+               convlist(convert, [1,2,3], Converted),
+               include(small, [1,2,3], Small),
+               foldl(pair_push, [a,b], [x,y], [], Folded),
+               scanl(push, [a,b], [], Scanned).
+            """,
+        )
+        query = project.queries[0]
+
+        assert solve_all(
+            project.program,
+            (
+                query.variables["Ys"],
+                query.variables["Converted"],
+                query.variables["Small"],
+                query.variables["Folded"],
+                query.variables["Scanned"],
+            ),
+            adapt_prolog_goal(query.goal),
+        ) == [
+            (
+                logic_list([2, 3]),
+                logic_list(["one", "three"]),
+                logic_list([1, 2]),
+                logic_list([term("pair", "b", "y"), term("pair", "a", "x")]),
+                logic_list([logic_list(["a"]), logic_list(["b", "a"])]),
+            ),
         ]
 
     def test_module_qualified_initialization_goals_execute(self) -> None:
@@ -728,8 +883,11 @@ class TestPrologGoalAdapter:
             relation("var", 1)(atom("X")),
             relation("nonvar", 1)(atom("x")),
             relation("ground", 1)(atom("x")),
+            relation("acyclic_term", 1)(term("box", atom("tea"))),
+            relation("cyclic_term", 1)(term("box", atom("tea"))),
             relation("atom", 1)(atom("x")),
             relation("atomic", 1)(atom("x")),
+            relation("integer", 1)(1),
             relation("number", 1)(1),
             relation("string", 1)("hello"),
             relation("compound", 1)(term("pair", atom("a"), atom("b"))),
@@ -745,6 +903,17 @@ class TestPrologGoalAdapter:
                 atom("[]"),
             ),
             relation("once", 1)(term("memo", atom("ok"))),
+            relation("repeat", 0)(),
+            relation("ignore", 1)(term("memo", atom("ok"))),
+            relation("call_cleanup", 2)(
+                term("memo", atom("ok")),
+                term("memo", atom("cleaned")),
+            ),
+            relation("setup_call_cleanup", 3)(
+                term("memo", atom("setup")),
+                term("memo", atom("ok")),
+                term("memo", atom("cleaned")),
+            ),
             relation("->", 2)(term("memo", atom("ok")), term("memo", atom("then"))),
             relation("not", 1)(term("memo", atom("missing"))),
             relation("\\+", 1)(term("memo", atom("missing"))),
@@ -754,7 +923,67 @@ class TestPrologGoalAdapter:
                 term("memo", atom("ok")),
                 term(".", atom("memo"), term(".", atom("ok"), atom("[]"))),
             ),
+            relation("unifiable", 3)(
+                term("box", LogicVar(id=92)),
+                term("box", atom("tea")),
+                LogicVar(id=93),
+            ),
+            relation("unify_with_occurs_check", 2)(
+                LogicVar(id=94),
+                term("box", atom("tea")),
+            ),
+            relation("atom_chars", 2)(atom("tea"), logic_list(["t", "e", "a"])),
+            relation("atom_codes", 2)(atom("tea"), logic_list([116, 101, 97])),
+            relation("atom_concat", 3)(atom("tea"), atom("cup"), atom("teacup")),
+            relation("atom_length", 2)(atom("teacup"), 6),
+            relation("atomic_list_concat", 2)(
+                logic_list(["tea", "cup"]),
+                atom("teacup"),
+            ),
+            relation("atomic_list_concat", 3)(
+                logic_list(["tea", "cup"]),
+                atom("-"),
+                atom("tea-cup"),
+            ),
+            relation("number_chars", 2)(42, logic_list(["4", "2"])),
+            relation("number_codes", 2)(42, logic_list([52, 50])),
+            relation("number_string", 2)(42, string("42")),
+            relation("atom_number", 2)(atom("42"), 42),
+            relation("char_code", 2)(atom("A"), 65),
+            relation("string_chars", 2)(string("hi"), logic_list(["h", "i"])),
+            relation("string_codes", 2)(string("hi"), logic_list([104, 105])),
+            relation("string_length", 2)(string("hi"), 2),
+            relation("sub_atom", 5)(
+                atom("teacup"),
+                3,
+                3,
+                0,
+                atom("cup"),
+            ),
+            relation("sub_string", 5)(
+                string("logic"),
+                2,
+                2,
+                1,
+                string("gi"),
+            ),
+            relation("=", 2)(LogicVar(id=14), atom("a")),
+            relation("\\=", 2)(atom("a"), atom("b")),
+            relation("dif", 2)(LogicVar(id=15), atom("tea")),
             relation("==", 2)(atom("a"), atom("a")),
+            relation("\\==", 2)(atom("a"), atom("b")),
+            relation("=@=", 2)(
+                term("box", LogicVar(id=78)),
+                term("box", LogicVar(id=79)),
+            ),
+            relation("\\=@=", 2)(
+                term("pair", LogicVar(id=80), LogicVar(id=80)),
+                term("pair", LogicVar(id=81), LogicVar(id=82)),
+            ),
+            relation("subsumes_term", 2)(
+                term("box", LogicVar(id=83)),
+                term("box", atom("tea")),
+            ),
             relation("compare", 3)(atom("<"), atom("a"), atom("b")),
             relation("@<", 2)(atom("a"), atom("b")),
             relation("@=<", 2)(atom("a"), atom("b")),
@@ -768,6 +997,8 @@ class TestPrologGoalAdapter:
             relation("dynamic", 1)(term("/", atom("memo"), 1)),
             relation("abolish", 1)(term("/", atom("memo"), 1)),
             relation("current_predicate", 1)(term("/", atom("memo"), 1)),
+            relation("current_atom", 1)(atom("memo")),
+            relation("current_functor", 2)(atom("memo"), 1),
             relation("predicate_property", 2)(
                 term("/", atom("memo"), 1),
                 atom("dynamic"),
@@ -779,14 +1010,36 @@ class TestPrologGoalAdapter:
             ),
             relation("true", 0)(),
             relation("fail", 0)(),
+            relation("false", 0)(),
             relation("!", 0)(),
             relation("is", 2)(LogicVar(id=10), term("+", 1, 2)),
+            relation("succ", 2)(1, LogicVar(id=29)),
+            relation("#=", 2)(LogicVar(id=30), term("+", LogicVar(id=31), 1)),
+            relation("#\\=", 2)(LogicVar(id=32), LogicVar(id=33)),
+            relation("#<", 2)(LogicVar(id=34), LogicVar(id=35)),
+            relation("#=<", 2)(LogicVar(id=36), LogicVar(id=37)),
+            relation("#>", 2)(LogicVar(id=38), LogicVar(id=39)),
+            relation("#>=", 2)(LogicVar(id=40), LogicVar(id=41)),
+            relation("in", 2)(LogicVar(id=42), logic_list([1, 2, 3])),
+            relation("ins", 2)(
+                logic_list([LogicVar(id=43)]),
+                logic_list([1, 2, 3]),
+            ),
+            relation("all_different", 1)(
+                logic_list([LogicVar(id=44), LogicVar(id=45)])
+            ),
+            relation("all_distinct", 1)(
+                logic_list([LogicVar(id=46), LogicVar(id=47)])
+            ),
+            relation("labeling", 2)(logic_list([]), logic_list([LogicVar(id=48)])),
+            relation("label", 1)(logic_list([LogicVar(id=49)])),
             relation("=:=", 2)(term("+", 1, 2), 3),
             relation("=\\=", 2)(term("+", 1, 2), 4),
             relation("<", 2)(1, 2),
             relation("=<", 2)(1, 1),
             relation(">", 2)(2, 1),
             relation(">=", 2)(2, 2),
+            relation("between", 3)(1, 3, LogicVar(id=28)),
             relation("findall", 3)(
                 atom("ok"),
                 term("memo", atom("ok")),
@@ -796,6 +1049,53 @@ class TestPrologGoalAdapter:
             relation("setof", 3)(atom("ok"), term("memo", atom("ok")), LogicVar(id=13)),
             relation("forall", 2)(term("memo", atom("ok")), term("memo", atom("ok"))),
             relation("copy_term", 2)(term("box", LogicVar(id=15)), LogicVar(id=14)),
+            relation("term_variables", 2)(
+                term("box", LogicVar(id=16)),
+                LogicVar(id=17),
+            ),
+            relation("numbervars", 3)(
+                term("box", LogicVar(id=83)),
+                0,
+                LogicVar(id=89),
+            ),
+            relation("compound_name_arguments", 3)(
+                term("box", atom("tea")),
+                LogicVar(id=92),
+                LogicVar(id=93),
+            ),
+            relation("compound_name_arity", 3)(
+                LogicVar(id=94),
+                atom("box"),
+                1,
+            ),
+            relation("term_hash", 2)(term("box", atom("tea")), LogicVar(id=90)),
+            relation("term_hash", 4)(
+                term("box", atom("tea")),
+                2,
+                1_000,
+                LogicVar(id=91),
+            ),
+            relation("term_to_atom", 2)(term("box", atom("tea")), LogicVar(id=84)),
+            relation("atom_to_term", 3)(
+                atom("box(X)"),
+                LogicVar(id=85),
+                LogicVar(id=86),
+            ),
+            relation("read_term_from_atom", 3)(
+                atom("box(X)"),
+                LogicVar(id=87),
+                logic_list([]),
+            ),
+            relation("write_term_to_atom", 3)(
+                term("box", atom("tea")),
+                LogicVar(id=88),
+                logic_list([]),
+            ),
+            relation("current_prolog_flag", 2)(
+                atom("unknown"),
+                LogicVar(id=18),
+            ),
+            relation("set_prolog_flag", 2)(atom("unknown"), atom("error")),
             relation("is_list", 1)(
                 term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
             ),
@@ -811,6 +1111,10 @@ class TestPrologGoalAdapter:
                 atom("tea"),
                 term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
             ),
+            relation("msort", 2)(
+                term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
+                LogicVar(id=20),
+            ),
             relation("permutation", 2)(
                 term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
                 LogicVar(id=16),
@@ -819,10 +1123,36 @@ class TestPrologGoalAdapter:
                 term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
                 LogicVar(id=17),
             ),
+            relation("sort", 2)(
+                term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
+                LogicVar(id=21),
+            ),
             relation("append", 3)(
                 term(".", atom("tea"), atom("[]")),
                 term(".", atom("cake"), atom("[]")),
                 LogicVar(id=18),
+            ),
+            relation("nth0", 3)(
+                1,
+                term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
+                LogicVar(id=22),
+            ),
+            relation("nth1", 3)(
+                2,
+                term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
+                LogicVar(id=23),
+            ),
+            relation("nth0", 4)(
+                1,
+                term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
+                LogicVar(id=24),
+                LogicVar(id=25),
+            ),
+            relation("nth1", 4)(
+                2,
+                term(".", atom("tea"), term(".", atom("cake"), atom("[]"))),
+                LogicVar(id=26),
+                LogicVar(id=27),
             ),
             relation("select", 3)(
                 atom("tea"),
@@ -875,6 +1205,142 @@ class TestPrologGoalAdapter:
         assert isinstance(adapted.goals[1], DisjExpr)
         assert isinstance(adapted.goals[2], FreshExpr)
 
+    def test_adapt_prolog_goal_preserves_collection_grouping_scope(self) -> None:
+        parent = relation("parent", 2)
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+            fact(parent("marge", "maggie")),
+        )
+        grouped = parse_swi_query(
+            "?- bagof(Child, parent(Parent, Child), Children).",
+        )
+        existential = parse_swi_query(
+            "?- bagof(Child, Parent^parent(Parent, Child), Children).",
+        )
+
+        assert solve_all(
+            family,
+            (grouped.variables["Parent"], grouped.variables["Children"]),
+            adapt_prolog_goal(grouped.goal),
+        ) == [
+            (atom("homer"), logic_list(["bart", "lisa"])),
+            (atom("marge"), logic_list(["maggie"])),
+        ]
+        assert solve_all(
+            family,
+            existential.variables["Children"],
+            adapt_prolog_goal(existential.goal),
+        ) == [
+            logic_list(["bart", "lisa", "maggie"]),
+        ]
+
+    def test_adapt_prolog_goal_enumerates_loaded_operator_table(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            :- op(500, yfx, ++).
+            ?- current_op(500, Type, '++').
+            """,
+        )
+        query = loaded.queries[0]
+
+        adapted = adapt_prolog_goal(
+            query.goal,
+            operator_table=loaded.operator_table,
+        )
+
+        assert solve_all(loaded.program, query.variables["Type"], adapted) == [
+            atom("yfx"),
+        ]
+
+    def test_adapt_prolog_goal_enumerates_visible_atoms(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            parent(homer, bart).
+            ?- current_atom(Atom), Atom = bart.
+            """,
+        )
+        query = loaded.queries[0]
+
+        assert solve_all(
+            loaded.program,
+            query.variables["Atom"],
+            adapt_prolog_goal(query.goal),
+        ) == [atom("bart")]
+
+    def test_adapt_prolog_goal_enumerates_visible_functors(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            parent(homer, child(bart)).
+            ?- current_functor(child, Arity).
+            """,
+        )
+        query = loaded.queries[0]
+
+        assert solve_all(
+            loaded.program,
+            query.variables["Arity"],
+            adapt_prolog_goal(query.goal),
+        ) == [num(1)]
+
+    def test_adapt_prolog_goal_rewrites_repeat_control(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            ?- repeat, member(Item, [tea, cake]).
+            """,
+        )
+        query = loaded.queries[0]
+
+        assert solve_n(
+            loaded.program,
+            5,
+            query.variables["Item"],
+            adapt_prolog_goal(query.goal),
+        ) == [
+            atom("tea"),
+            atom("cake"),
+            atom("tea"),
+            atom("cake"),
+            atom("tea"),
+        ]
+
+    def test_adapt_prolog_goal_rewrites_ignore_and_false_control(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            ?- ignore(member(Item, [tea, cake])), ignore(false), \\+ false.
+            """,
+        )
+        query = loaded.queries[0]
+
+        assert solve_all(
+            loaded.program,
+            query.variables["Item"],
+            adapt_prolog_goal(query.goal),
+        ) == [atom("tea")]
+
+    def test_adapt_prolog_goal_rewrites_cleanup_control(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            :- dynamic(resource/1).
+            :- dynamic(cleaned/1).
+
+            ?- setup_call_cleanup(
+                   assertz(resource(open)),
+                   resource(Resource),
+                   assertz(cleaned(Resource))),
+               call_cleanup(true, assertz(cleaned(done))),
+               cleaned(Resource),
+               cleaned(done).
+            """,
+        )
+        query = loaded.queries[0]
+
+        assert solve_all(
+            loaded.program,
+            query.variables["Resource"],
+            adapt_prolog_goal(query.goal),
+        ) == [atom("open")]
+
     def test_adapt_prolog_goal_rewrites_if_then_else_control(self) -> None:
         parsed = parse_swi_query(
             "?- ((X = first ; X = second) -> Result = X ; Result = none).",
@@ -887,6 +1353,343 @@ class TestPrologGoalAdapter:
             parsed.variables["Result"],
             adapted,
         ) == [atom("first")]
+
+    def test_adapt_prolog_goal_rewrites_term_equality_predicates(self) -> None:
+        parsed = parse_swi_query(
+            "?- X = box(tea), X == box(tea), X \\== box(cake), "
+            "X \\= box(cake), Result = ok.",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            (parsed.variables["X"], parsed.variables["Result"]),
+            adapted,
+        ) == [(term("box", "tea"), atom("ok"))]
+
+    def test_adapt_prolog_goal_rewrites_variant_and_subsumes_predicates(self) -> None:
+        parsed = parse_swi_query(
+            "?- pair(X, X) =@= pair(Y, Y), "
+            "pair(X, X) \\=@= pair(Y, Z), "
+            "subsumes_term(box(A), box(tea)), Result = ok.",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            parsed.variables["Result"],
+            adapted,
+        ) == [atom("ok")]
+
+    def test_adapt_prolog_goal_rewrites_text_conversion_predicates(self) -> None:
+        parsed = parse_swi_query(
+            "?- atom_chars(tea, Chars), "
+            "atom_codes(Atom, [116, 101, 97]), "
+            "number_chars(Number, ['4', '2']), "
+            "number_codes(Float, [51, 46, 53]), "
+            "number_string(Parsed, \"7\"), "
+            "atom_number(AtomNumberText, 8), "
+            "atom_number('9.5', AtomNumber), "
+            "atom_concat(tea, cup, Joined), "
+            "atom_concat(Prefix, cup, teacup), "
+            "atom_length(teacup, AtomLength), "
+            "sub_atom(teacup, 3, 3, 0, SubAtom), "
+            "atomic_list_concat([tea, 2, go], '-', AtomList), "
+            "atomic_list_concat(Split, '-', 'tea-cup'), "
+            "char_code(Char, 90), "
+            "string_chars(String, [h, i]), "
+            "string_length(\"hello\", StringLength), "
+            "sub_string(\"logic\", 2, 2, 1, SubString), "
+            "term_to_atom(pair(tea, [cup, cake]), RenderedTerm), "
+            "atom_to_term('pair(X, tea)', ParsedTerm, Bindings), "
+            'string_codes("ok", Codes).',
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["Chars"],
+                parsed.variables["Atom"],
+                parsed.variables["Number"],
+                parsed.variables["Float"],
+                parsed.variables["Parsed"],
+                parsed.variables["AtomNumberText"],
+                parsed.variables["AtomNumber"],
+                parsed.variables["Joined"],
+                parsed.variables["Prefix"],
+                parsed.variables["AtomLength"],
+                parsed.variables["SubAtom"],
+                parsed.variables["AtomList"],
+                parsed.variables["Split"],
+                parsed.variables["Char"],
+                parsed.variables["String"],
+                parsed.variables["StringLength"],
+                parsed.variables["SubString"],
+                parsed.variables["RenderedTerm"],
+                parsed.variables["ParsedTerm"],
+                parsed.variables["Bindings"],
+                parsed.variables["Codes"],
+            ),
+            adapted,
+        )
+        assert len(answers) == 1
+        answer = answers[0]
+        parsed_term = answer[18]
+        assert isinstance(parsed_term, Compound)
+        assert answer == (
+            logic_list(["t", "e", "a"]),
+            atom("tea"),
+            num(42),
+            num(3.5),
+            num(7),
+            atom("8"),
+            num(9.5),
+            atom("teacup"),
+            atom("tea"),
+            num(6),
+            atom("cup"),
+            atom("tea-2-go"),
+            logic_list(["tea", "cup"]),
+            atom("Z"),
+            string("hi"),
+            num(5),
+            string("gi"),
+            atom("pair(tea, [cup, cake])"),
+            term("pair", parsed_term.args[0], "tea"),
+            logic_list([term("=", "X", parsed_term.args[0])]),
+            logic_list([111, 107]),
+        )
+
+    def test_adapt_prolog_goal_rewrites_term_read_write_options(self) -> None:
+        parsed = parse_swi_query(
+            "?- read_term_from_atom('pair(X, Y, X)', Term, "
+            "[variable_names(Names), variables(Vars)]), "
+            "write_term_to_atom(pair(tea, [cup]), Rendered, "
+            "[quoted(true), ignore_ops(false)]).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["Term"],
+                parsed.variables["Names"],
+                parsed.variables["Vars"],
+                parsed.variables["Rendered"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert len(answers) == 1
+        term_value, names, vars_value, rendered = answers[0]
+        assert isinstance(term_value, Compound)
+        assert term_value == term(
+            "pair",
+            term_value.args[0],
+            term_value.args[1],
+            term_value.args[0],
+        )
+        assert names == logic_list(
+            [
+                term("=", "X", term_value.args[0]),
+                term("=", "Y", term_value.args[1]),
+            ],
+        )
+        assert vars_value == logic_list([term_value.args[0], term_value.args[1]])
+        assert rendered == atom("pair(tea, [cup])")
+
+    def test_adapt_prolog_goal_rewrites_numbervars_and_write_numbervars(self) -> None:
+        parsed = parse_swi_query(
+            "?- Term = pair(X, box(Y), X), "
+            "numbervars(Term, 0, End), "
+            "write_term_to_atom(Term, Rendered, [numbervars(true)]), "
+            "write_term_to_atom(Term, Canonical, [numbervars(false)]).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["Term"],
+                parsed.variables["End"],
+                parsed.variables["Rendered"],
+                parsed.variables["Canonical"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert answers == [
+            (
+                term(
+                    "pair",
+                    term("$VAR", 0),
+                    term("box", term("$VAR", 1)),
+                    term("$VAR", 0),
+                ),
+                num(2),
+                atom("pair(A, box(B), A)"),
+                atom("pair('$VAR'(0), box('$VAR'(1)), '$VAR'(0))"),
+            ),
+        ]
+
+    def test_adapt_prolog_goal_rewrites_compound_reflection_predicates(self) -> None:
+        parsed = parse_swi_query(
+            "?- compound_name_arguments(box(tea, cake), Name, Arguments), "
+            "compound_name_arguments(Built, box, [tea, cake]), "
+            "compound_name_arity(pair(left, right), PairName, PairArity), "
+            "compound_name_arity(Template, pair, 2).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["Name"],
+                parsed.variables["Arguments"],
+                parsed.variables["Built"],
+                parsed.variables["PairName"],
+                parsed.variables["PairArity"],
+                parsed.variables["Template"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert len(answers) == 1
+        name, arguments, built, pair_name, pair_arity, template = answers[0]
+        assert name == atom("box")
+        assert arguments == logic_list(["tea", "cake"])
+        assert built == term("box", "tea", "cake")
+        assert pair_name == atom("pair")
+        assert pair_arity == num(2)
+        assert isinstance(template, Compound)
+        assert template.functor == atom("pair").symbol
+        assert len(template.args) == 2
+        assert all(isinstance(argument, LogicVar) for argument in template.args)
+        assert template.args[0] != template.args[1]
+
+    def test_adapt_prolog_goal_rewrites_unifiability_predicates(self) -> None:
+        parsed = parse_swi_query(
+            "?- unifiable(pair(X, X), pair(tea, Y), Unifier), "
+            "unify_with_occurs_check(Z, box(tea)).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["X"],
+                parsed.variables["Y"],
+                parsed.variables["Unifier"],
+                parsed.variables["Z"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert answers == [
+            (
+                parsed.variables["X"],
+                parsed.variables["Y"],
+                logic_list([
+                    term("=", parsed.variables["X"], atom("tea")),
+                    term("=", parsed.variables["Y"], atom("tea")),
+                ]),
+                term("box", "tea"),
+            ),
+        ]
+
+    def test_adapt_prolog_goal_rewrites_term_hash_predicates(self) -> None:
+        parsed = parse_swi_query(
+            "?- term_hash(pair(X, X), FirstHash), "
+            "term_hash(pair(Y, Y), SecondHash), "
+            "term_hash(pair(X, Y), DifferentHash), "
+            "term_hash(box(tea), 2, 1000, BoundedHash).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["FirstHash"],
+                parsed.variables["SecondHash"],
+                parsed.variables["DifferentHash"],
+                parsed.variables["BoundedHash"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert len(answers) == 1
+        first, second, different, bounded = answers[0]
+        assert first == second
+        assert first != different
+        assert isinstance(bounded, Number)
+        assert 0 <= bounded.value < 1000
+
+    def test_adapt_prolog_goal_rejects_unsupported_term_io_options(self) -> None:
+        parsed_read = parse_swi_query(
+            "?- read_term_from_atom('pair(X)', Term, [unknown(true)]).",
+        )
+        parsed_write = parse_swi_query(
+            "?- write_term_to_atom(pair(tea), Atom, [quoted(maybe)]).",
+        )
+
+        assert (
+            solve_all(
+                program(),
+                parsed_read.variables["Term"],
+                adapt_prolog_goal(parsed_read.goal),
+            )
+            == []
+        )
+        assert (
+            solve_all(
+                program(),
+                parsed_write.variables["Atom"],
+                adapt_prolog_goal(parsed_write.goal),
+            )
+            == []
+        )
+
+    def test_adapt_prolog_goal_rewrites_term_equality_failures(self) -> None:
+        parsed_unifiable = parse_swi_query("?- X \\= box(tea).")
+        parsed_identical = parse_swi_query("?- X = box(tea), X \\== box(tea).")
+        parsed_equal = parse_swi_query("?- X = box(tea), X \\= box(tea).")
+
+        assert solve_all(
+            program(),
+            parsed_unifiable.variables["X"],
+            adapt_prolog_goal(parsed_unifiable.goal),
+        ) == []
+        assert solve_all(
+            program(),
+            parsed_identical.variables["X"],
+            adapt_prolog_goal(parsed_identical.goal),
+        ) == []
+        assert solve_all(
+            program(),
+            parsed_equal.variables["X"],
+            adapt_prolog_goal(parsed_equal.goal),
+        ) == []
+
+    def test_adapt_prolog_goal_rewrites_dif_as_delayed_disequality(self) -> None:
+        parsed = parse_swi_query(
+            "?- dif(X, tea), X = cake, dif(Left, Right), "
+            "Left = box(tea), Right = box(cake).",
+        )
+        parsed_failure = parse_swi_query("?- dif(X, tea), X = tea.")
+
+        assert solve_all(
+            program(),
+            (
+                parsed.variables["X"],
+                parsed.variables["Left"],
+                parsed.variables["Right"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        ) == [(atom("cake"), term("box", "tea"), term("box", "cake"))]
+        assert solve_all(
+            program(),
+            parsed_failure.variables["X"],
+            adapt_prolog_goal(parsed_failure.goal),
+        ) == []
 
     def test_adapt_prolog_goal_uses_else_branch_from_original_state(self) -> None:
         parsed = parse_swi_query(
@@ -901,11 +1704,272 @@ class TestPrologGoalAdapter:
             adapted,
         ) == [atom("else")]
 
+    def test_adapt_prolog_goal_rewrites_between_generator(self) -> None:
+        parsed = parse_swi_query(
+            "?- between(1, 4, Value), succ(Value, Next), integer(Next), Next > 3.",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            (parsed.variables["Value"], parsed.variables["Next"]),
+            adapted,
+        ) == [
+            (num(3), num(4)),
+            (num(4), num(5)),
+        ]
+
+    def test_adapt_prolog_goal_rewrites_call_n(self) -> None:
+        parsed = parse_swi_query(
+            "?- call(member, Item, [tea, cake]).",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            parsed.variables["Item"],
+            adapted,
+        ) == [atom("tea"), atom("cake")]
+
+    def test_adapt_prolog_goal_rewrites_higher_order_list_builtins(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            small(1).
+            small(2).
+            increment(1, 2).
+            increment(2, 3).
+            increment(3, 4).
+            push(Item, Acc, [Item|Acc]).
+
+            ?- maplist(increment, [1,2,3], Ys),
+               include(small, [1,2,3], Small),
+               exclude(small, [1,2,3], Big),
+               partition(small, [1,2,3], Yes, No),
+               foldl(push, [a,b,c], [], Stack).
+            """,
+        )
+        query = loaded.queries[0]
+        adapted = adapt_prolog_goal(query.goal)
+
+        assert solve_all(
+            loaded.program,
+            (
+                query.variables["Ys"],
+                query.variables["Small"],
+                query.variables["Big"],
+                query.variables["Yes"],
+                query.variables["No"],
+                query.variables["Stack"],
+            ),
+            adapted,
+        ) == [
+            (
+                logic_list([2, 3, 4]),
+                logic_list([1, 2]),
+                logic_list([3]),
+                logic_list([1, 2]),
+                logic_list([3]),
+                logic_list(["c", "b", "a"]),
+            ),
+        ]
+
+    def test_adapt_prolog_goal_rewrites_apply_family_builtins(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            join4(A, B, C, joined(A, B, C)).
+            convert(1, one).
+            convert(3, three).
+            pair_push(Left, Right, Acc, [pair(Left, Right)|Acc]).
+            push(Item, Acc, [Item|Acc]).
+
+            ?- maplist(join4, [a,b], [x,y], [1,2], Joined),
+               convlist(convert, [1,2,3], Converted),
+               foldl(pair_push, [a,b], [x,y], [], Folded),
+               scanl(push, [a,b], [], Scanned).
+            """,
+        )
+        query = loaded.queries[0]
+        adapted = adapt_prolog_goal(query.goal)
+
+        assert solve_all(
+            loaded.program,
+            (
+                query.variables["Joined"],
+                query.variables["Converted"],
+                query.variables["Folded"],
+                query.variables["Scanned"],
+            ),
+            adapted,
+        ) == [
+            (
+                logic_list([term("joined", "a", "x", 1), term("joined", "b", "y", 2)]),
+                logic_list(["one", "three"]),
+                logic_list([term("pair", "b", "y"), term("pair", "a", "x")]),
+                logic_list([logic_list(["a"]), logic_list(["b", "a"])]),
+            ),
+        ]
+
+    def test_adapt_prolog_goal_rewrites_clpfd_callable_forms(self) -> None:
+        parsed = parse_swi_query(
+            "?- ins([X,Y], [1,2,3]), "
+            "in(Z, [1,2,3,4,5,6]), "
+            "#<(X,Y), "
+            "#=(Z, +(X,Y)), "
+            "all_different([X,Y]), "
+            "labeling([], [X,Y,Z]).",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            (parsed.variables["X"], parsed.variables["Y"], parsed.variables["Z"]),
+            adapted,
+        ) == [
+            (num(1), num(2), num(3)),
+            (num(1), num(3), num(4)),
+            (num(2), num(3), num(5)),
+        ]
+
+    def test_adapt_prolog_goal_flattens_clpfd_sum_equality(self) -> None:
+        parsed = parse_swi_query(
+            "?- [X,Y] ins 1..3, "
+            "Z in 4..6, "
+            "X #< Y, "
+            "Z #= X + Y + 1, "
+            "labeling([], [X,Y,Z]).",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            (parsed.variables["X"], parsed.variables["Y"], parsed.variables["Z"]),
+            adapted,
+        ) == [
+            (num(1), num(2), num(4)),
+            (num(1), num(3), num(5)),
+            (num(2), num(3), num(6)),
+        ]
+
+    def test_adapt_prolog_goal_honors_labeling_order_options(self) -> None:
+        parsed = parse_swi_query(
+            "?- X in 1..3, "
+            "labeling([down], [X]).",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            parsed.variables["X"],
+            adapted,
+        ) == [num(3), num(2), num(1)]
+
+    def test_adapt_prolog_goal_rewrites_clpfd_sum_global(self) -> None:
+        parsed = parse_swi_query(
+            "?- [X,Y,Z] ins 1..4, "
+            "sum([X,Y,Z], #=, 6), "
+            "X #< Y, "
+            "Y #< Z, "
+            "labeling([], [X,Y,Z]).",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            (parsed.variables["X"], parsed.variables["Y"], parsed.variables["Z"]),
+            adapted,
+        ) == [
+            (num(1), num(2), num(3)),
+        ]
+
+    def test_adapt_prolog_goal_rewrites_clpfd_scalar_product(self) -> None:
+        parsed = parse_swi_query(
+            "?- [X,Y] ins 0..4, "
+            "scalar_product([2,3], [X,Y], #=, 12), "
+            "X #< Y, "
+            "labeling([], [X,Y]).",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            (parsed.variables["X"], parsed.variables["Y"]),
+            adapted,
+        ) == [
+            (num(0), num(4)),
+        ]
+
+    def test_adapt_prolog_goal_rewrites_clpfd_modeling_globals(self) -> None:
+        parsed = parse_swi_query(
+            "?- [I,X,Y,Z] ins 1..4, "
+            "I #= 2, "
+            "element(I, [X,Y,Z], 4), "
+            "sum([X,Y,Z], #=<, 8), "
+            "scalar_product([2,1,1], [X,Y,Z], #>, 8), "
+            "all_different([X,Y,Z]), "
+            "labeling([], [I,X,Y,Z]).",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            (
+                parsed.variables["I"],
+                parsed.variables["X"],
+                parsed.variables["Y"],
+                parsed.variables["Z"],
+            ),
+            adapted,
+        ) == [
+            (num(2), num(1), num(4), num(3)),
+            (num(2), num(2), num(4), num(1)),
+            (num(2), num(3), num(4), num(1)),
+        ]
+
+    def test_adapt_prolog_goal_rewrites_clpfd_reification(self) -> None:
+        parsed = parse_swi_query(
+            "?- [X,Y] ins 1..2, "
+            "(X #< Y) #<==> B, "
+            "(#\\ B) #<==> NB, "
+            "labeling([], [X,Y,B,NB]).",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            (
+                parsed.variables["X"],
+                parsed.variables["Y"],
+                parsed.variables["B"],
+                parsed.variables["NB"],
+            ),
+            adapted,
+        ) == [
+            (num(1), num(1), num(0), num(1)),
+            (num(1), num(2), num(1), num(0)),
+            (num(2), num(1), num(0), num(1)),
+            (num(2), num(2), num(0), num(1)),
+        ]
+
     def test_adapt_prolog_goal_rewrites_common_list_predicates(self) -> None:
         parsed = parse_swi_query(
             "?- member(Item, [tea, cake]), "
             "append([Item], [jam], Combined), "
             "reverse(Combined, Reversed), "
+            "sort([Item, jam, Item], UniqueSorted), "
+            "msort([Item, jam, Item], Sorted), "
+            "nth0(1, Reversed, ZeroBased), "
+            "nth1(2, Reversed, OneBased), "
+            "nth0(1, Reversed, ZeroRestBased, ZeroRest), "
+            "nth1(2, Reversed, OneRestBased, OneRest), "
             "length(Reversed, Count).",
         )
 
@@ -917,6 +1981,14 @@ class TestPrologGoalAdapter:
                 parsed.variables["Item"],
                 parsed.variables["Combined"],
                 parsed.variables["Reversed"],
+                parsed.variables["UniqueSorted"],
+                parsed.variables["Sorted"],
+                parsed.variables["ZeroBased"],
+                parsed.variables["OneBased"],
+                parsed.variables["ZeroRestBased"],
+                parsed.variables["ZeroRest"],
+                parsed.variables["OneRestBased"],
+                parsed.variables["OneRest"],
                 parsed.variables["Count"],
             ),
             adapted,
@@ -925,12 +1997,28 @@ class TestPrologGoalAdapter:
                 atom("tea"),
                 logic_list(["tea", "jam"]),
                 logic_list(["jam", "tea"]),
+                logic_list(["jam", "tea"]),
+                logic_list(["jam", "tea", "tea"]),
+                atom("tea"),
+                atom("tea"),
+                atom("tea"),
+                logic_list(["jam"]),
+                atom("tea"),
+                logic_list(["jam"]),
                 num(2),
             ),
             (
                 atom("cake"),
                 logic_list(["cake", "jam"]),
                 logic_list(["jam", "cake"]),
+                logic_list(["cake", "jam"]),
+                logic_list(["cake", "cake", "jam"]),
+                atom("cake"),
+                atom("cake"),
+                atom("cake"),
+                logic_list(["jam"]),
+                atom("cake"),
+                logic_list(["jam"]),
                 num(2),
             ),
         ]

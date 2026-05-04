@@ -59,6 +59,13 @@ MATRIX = IRSymbol("Matrix")
 TRANSPOSE = IRSymbol("Transpose")
 DETERMINANT = IRSymbol("Determinant")
 INVERSE = IRSymbol("Inverse")
+DOT = IRSymbol("Dot")
+TRACE = IRSymbol("Trace")
+DIMENSIONS = IRSymbol("Dimensions")
+IDENTITY_MATRIX = IRSymbol("IdentityMatrix")
+ZERO_MATRIX = IRSymbol("ZeroMatrix")
+RANK = IRSymbol("Rank")
+ROW_REDUCE = IRSymbol("RowReduce")
 
 GCD = IRSymbol("Gcd")
 LCM = IRSymbol("Lcm")
@@ -170,11 +177,18 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "part": PART,
     "flatten": FLATTEN,
     "join": JOIN,
-    # Matrix
+    # Matrix (Group E — complete set)
     "matrix": MATRIX,
     "transpose": TRANSPOSE,
     "determinant": DETERMINANT,
     "invert": INVERSE,
+    "dot": DOT,           # matrix product: dot(A, B) or A . B
+    "mattrace": TRACE,    # sum of diagonal (MACSYMA: mattrace)
+    "matrix_size": DIMENSIONS,  # [rows, cols] shape
+    "ident": IDENTITY_MATRIX,   # n×n identity (MACSYMA: ident)
+    "zeromatrix": ZERO_MATRIX,  # m×n zero matrix
+    "rank": RANK,
+    "rowreduce": ROW_REDUCE,
     # Newton's method numeric root finder
     "mnewton": MNEWTON,
     # Number-theoretic

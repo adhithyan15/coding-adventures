@@ -14,6 +14,212 @@ pub use state_machine_tokenizer::{
 mod generated_html1;
 mod generated_html_skeleton;
 
+/// Parser-facing scripting flag for tokenizer text-mode decisions.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum HtmlScriptingMode {
+    Enabled,
+    Disabled,
+}
+
+/// Parser-facing HTML tokenizer entry state.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum HtmlTokenizerState {
+    Data,
+    Rcdata,
+    Rawtext,
+    Plaintext,
+    CdataSection,
+    ScriptData,
+    ScriptDataEscaped,
+    ScriptDataEscapedDash,
+    ScriptDataEscapedDashDash,
+    ScriptDataEscapedLessThanSign,
+    ScriptDataDoubleEscaped,
+    ScriptDataDoubleEscapedDash,
+    ScriptDataDoubleEscapedDashDash,
+    ScriptDataDoubleEscapedLessThanSign,
+}
+
+/// Tokenizer states that are valid parser-facing entry points.
+pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 14] = [
+    HtmlTokenizerState::Data,
+    HtmlTokenizerState::Rcdata,
+    HtmlTokenizerState::Rawtext,
+    HtmlTokenizerState::Plaintext,
+    HtmlTokenizerState::CdataSection,
+    HtmlTokenizerState::ScriptData,
+    HtmlTokenizerState::ScriptDataEscaped,
+    HtmlTokenizerState::ScriptDataEscapedDash,
+    HtmlTokenizerState::ScriptDataEscapedDashDash,
+    HtmlTokenizerState::ScriptDataEscapedLessThanSign,
+    HtmlTokenizerState::ScriptDataDoubleEscaped,
+    HtmlTokenizerState::ScriptDataDoubleEscapedDash,
+    HtmlTokenizerState::ScriptDataDoubleEscapedDashDash,
+    HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign,
+];
+
+/// Tokenizer states used for parser-controlled text or foreign-content fragments.
+pub const HTML_FRAGMENT_TOKENIZER_STATES: [HtmlTokenizerState; 13] = [
+    HtmlTokenizerState::Rcdata,
+    HtmlTokenizerState::Rawtext,
+    HtmlTokenizerState::Plaintext,
+    HtmlTokenizerState::CdataSection,
+    HtmlTokenizerState::ScriptData,
+    HtmlTokenizerState::ScriptDataEscaped,
+    HtmlTokenizerState::ScriptDataEscapedDash,
+    HtmlTokenizerState::ScriptDataEscapedDashDash,
+    HtmlTokenizerState::ScriptDataEscapedLessThanSign,
+    HtmlTokenizerState::ScriptDataDoubleEscaped,
+    HtmlTokenizerState::ScriptDataDoubleEscapedDash,
+    HtmlTokenizerState::ScriptDataDoubleEscapedDashDash,
+    HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign,
+];
+
+/// Tokenizer states that are valid script-substate entry points.
+pub const HTML_SCRIPT_TOKENIZER_STATES: [HtmlTokenizerState; 9] = [
+    HtmlTokenizerState::ScriptData,
+    HtmlTokenizerState::ScriptDataEscaped,
+    HtmlTokenizerState::ScriptDataEscapedDash,
+    HtmlTokenizerState::ScriptDataEscapedDashDash,
+    HtmlTokenizerState::ScriptDataEscapedLessThanSign,
+    HtmlTokenizerState::ScriptDataDoubleEscaped,
+    HtmlTokenizerState::ScriptDataDoubleEscapedDash,
+    HtmlTokenizerState::ScriptDataDoubleEscapedDashDash,
+    HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign,
+];
+
+impl HtmlTokenizerState {
+    /// Machine-state identifier used by the generated static lexer.
+    pub fn as_machine_state(self) -> &'static str {
+        match self {
+            Self::Data => "data",
+            Self::Rcdata => "rcdata",
+            Self::Rawtext => "rawtext",
+            Self::Plaintext => "plaintext",
+            Self::CdataSection => "cdata_section",
+            Self::ScriptData => "script_data",
+            Self::ScriptDataEscaped => "script_data_escaped",
+            Self::ScriptDataEscapedDash => "script_data_escaped_dash",
+            Self::ScriptDataEscapedDashDash => "script_data_escaped_dash_dash",
+            Self::ScriptDataEscapedLessThanSign => "script_data_escaped_less_than_sign",
+            Self::ScriptDataDoubleEscaped => "script_data_double_escaped",
+            Self::ScriptDataDoubleEscapedDash => "script_data_double_escaped_dash",
+            Self::ScriptDataDoubleEscapedDashDash => "script_data_double_escaped_dash_dash",
+            Self::ScriptDataDoubleEscapedLessThanSign => {
+                "script_data_double_escaped_less_than_sign"
+            }
+        }
+    }
+
+    /// Return the typed tokenizer state for a generated machine-state identifier.
+    pub fn from_machine_state(machine_state: &str) -> Option<Self> {
+        HTML_TOKENIZER_STATES
+            .iter()
+            .copied()
+            .find(|state| state.as_machine_state() == machine_state)
+    }
+
+    /// Return the typed fragment state for a generated machine-state identifier.
+    pub fn from_fragment_machine_state(machine_state: &str) -> Option<Self> {
+        Self::from_machine_state(machine_state).filter(|state| state.is_fragment_state())
+    }
+
+    /// Return whether this state is a parser-approved script tokenizer substate.
+    pub fn is_script_substate(self) -> bool {
+        HTML_SCRIPT_TOKENIZER_STATES.contains(&self)
+    }
+
+    /// Return whether this state is a parser-approved fragment entry point.
+    pub fn is_fragment_state(self) -> bool {
+        HTML_FRAGMENT_TOKENIZER_STATES.contains(&self)
+    }
+}
+
+/// Initial tokenizer context for fragment or parser-controlled lexing.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HtmlLexContext {
+    pub initial_state: HtmlTokenizerState,
+    pub last_start_tag: Option<String>,
+}
+
+impl HtmlLexContext {
+    pub fn new(initial_state: HtmlTokenizerState) -> Self {
+        Self {
+            initial_state,
+            last_start_tag: None,
+        }
+    }
+
+    pub fn data() -> Self {
+        Self::new(HtmlTokenizerState::Data)
+    }
+
+    /// Return the tokenizer context for parser-approved foreign-content CDATA.
+    ///
+    /// HTML data-state markup only treats `<![CDATA[` specially when the parser
+    /// has entered a foreign-content integration point such as SVG or MathML.
+    /// Keeping this as an explicit context prevents element-name mapping from
+    /// pretending CDATA is valid in ordinary HTML content.
+    pub fn cdata_section() -> Self {
+        Self::new(HtmlTokenizerState::CdataSection)
+    }
+
+    /// Return a script tokenizer substate context for parser-approved fragments.
+    ///
+    /// These substates are useful for html5lib/WPT-style fixtures and for
+    /// future parser flows that need to resume script tokenization after
+    /// already recognizing an escaped or double-escaped script section.
+    pub fn script_substate(initial_state: HtmlTokenizerState) -> Option<Self> {
+        if initial_state.is_script_substate() {
+            Some(Self::new(initial_state).with_last_start_tag("script"))
+        } else {
+            None
+        }
+    }
+
+    pub fn with_last_start_tag(mut self, tag: impl Into<String>) -> Self {
+        self.last_start_tag = Some(tag.into());
+        self
+    }
+
+    pub fn is_data(&self) -> bool {
+        self.initial_state == HtmlTokenizerState::Data && self.last_start_tag.is_none()
+    }
+
+    /// Return the tokenizer context used for text following a start tag.
+    ///
+    /// This is the parser-facing map from element names to HTML tokenizer
+    /// submodes. It deliberately keeps foreign-content CDATA decisions out of
+    /// the element map because those depend on tree-construction context.
+    pub fn for_element_text(element_name: &str) -> Option<Self> {
+        Self::for_element_text_with_scripting(element_name, HtmlScriptingMode::Enabled)
+    }
+
+    /// Return the tokenizer context used for text after a start tag, including
+    /// scripting-sensitive `noscript` handling.
+    pub fn for_element_text_with_scripting(
+        element_name: &str,
+        scripting: HtmlScriptingMode,
+    ) -> Option<Self> {
+        let name = element_name.to_ascii_lowercase();
+        let state = match name.as_str() {
+            "title" | "textarea" => HtmlTokenizerState::Rcdata,
+            "iframe" | "noembed" | "noframes" | "style" | "xmp" => HtmlTokenizerState::Rawtext,
+            "noscript" if scripting == HtmlScriptingMode::Enabled => HtmlTokenizerState::Rawtext,
+            "script" => HtmlTokenizerState::ScriptData,
+            "plaintext" => HtmlTokenizerState::Plaintext,
+            _ => return None,
+        };
+
+        let context = Self::new(state);
+        if state == HtmlTokenizerState::Plaintext {
+            Some(context)
+        } else {
+            Some(context.with_last_start_tag(name))
+        }
+    }
+}
+
 /// Return the generated typed definition for the HTML 1.x compatibility-floor lexer.
 pub fn html1_definition() -> StateMachineDefinition {
     generated_html1::html1_lexer_definition()
@@ -37,13 +243,39 @@ pub fn html_skeleton_machine() -> std::result::Result<EffectfulStateMachine, Str
 /// Build a Rust HTML lexer over the statically linked HTML 1.x compatibility floor.
 pub fn create_html_lexer() -> Result<HtmlLexer> {
     html1_machine()
-        .map(HtmlLexer::new)
+        .map(|machine| HtmlLexer::new(machine).with_normalized_carriage_returns())
         .map_err(TokenizerError::Machine)
+}
+
+/// Build a lexer seeded with a parser-controlled HTML tokenizer context.
+pub fn create_html_lexer_with_context(context: &HtmlLexContext) -> Result<HtmlLexer> {
+    let mut lexer = create_html_lexer()?;
+    apply_html_lex_context(&mut lexer, context)?;
+    Ok(lexer)
+}
+
+/// Move an existing lexer into a parser-controlled HTML tokenizer context.
+pub fn apply_html_lex_context(lexer: &mut HtmlLexer, context: &HtmlLexContext) -> Result<()> {
+    lexer.set_initial_state(context.initial_state.as_machine_state())?;
+    if let Some(last_start_tag) = context.last_start_tag.as_deref() {
+        lexer.set_last_start_tag(last_start_tag);
+    } else {
+        lexer.clear_last_start_tag();
+    }
+    Ok(())
 }
 
 /// Lex one complete HTML string with the current compatibility-floor machine.
 pub fn lex_html(source: &str) -> Result<Vec<Token>> {
     let mut lexer = create_html_lexer()?;
+    lexer.push(source)?;
+    lexer.finish()?;
+    Ok(lexer.drain_tokens())
+}
+
+/// Lex a parser-controlled HTML fragment with an explicit tokenizer context.
+pub fn lex_html_fragment(source: &str, context: &HtmlLexContext) -> Result<Vec<Token>> {
+    let mut lexer = create_html_lexer_with_context(context)?;
     lexer.push(source)?;
     lexer.finish()?;
     Ok(lexer.drain_tokens())

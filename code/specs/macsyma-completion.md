@@ -26,7 +26,7 @@ syntax differences go in the frontend name table and backend subclass.
 
 ---
 
-## Current status (as of symbolic-vm 0.32.2 / macsyma-runtime 1.5.0)
+## Current status (as of symbolic-vm 0.33.0 / macsyma-runtime 1.11.0)
 
 ### Fully working end-to-end
 
@@ -40,11 +40,11 @@ syntax differences go in the frontend name table and backend subclass.
 | Factoring           | `Factor` (rational-root + Kronecker + BZH)      | `cas-factor` (0.3.0) |
 | Solving             | `Solve` (deg 1–4 + linear systems), `NSolve`   | `cas-solve` (0.6.0) |
 | List operations     | `Length First Rest Last Append Reverse Range Map Apply Select Sort Part Flatten Join MakeList` | `cas-list-operations` |
-| Matrix operations   | `Matrix Transpose Determinant Inverse`          | `cas-matrix` |
+| Matrix operations   | `Matrix Transpose Determinant Inverse Dot Trace Dimensions IdentityMatrix ZeroMatrix Rank RowReduce` | `cas-matrix` (0.2.0) |
 | Limits              | `Limit` (direct substitution)                   | `cas-limit-series` |
 | Taylor series       | `Taylor` (polynomial + transcendental fallback) | `cas-limit-series`, `symbolic-vm` |
 | Differentiation     | `D`                                             | `symbolic-vm` |
-| Integration         | `Integrate` (Risch Phases 1–13: poly, exp, log, trig, IBP, partial fractions, inverse-trig, hyperbolic) | `symbolic-vm` |
+| Integration         | `Integrate` (Risch Phases 1–14: poly, exp, log, trig, IBP, partial fractions, inverse-trig, hyperbolic, hyperbolic powers, exp×hyperbolic) | `symbolic-vm` |
 | Numeric ops         | `Abs Cbrt Floor Ceiling Mod Gcd Lcm`           | `symbolic-vm` |
 | Trigonometric simplification | `TrigSimplify TrigExpand TrigReduce`   | `cas-trig` (0.1.0) |
 | Complex numbers     | `Re Im Conjugate Arg RectForm PolarForm`, `%i`  | `cas-complex` (0.1.0) |
@@ -227,6 +227,69 @@ Surface syntax:
 - `groebner([x^2+y-1, x+y^2-1], [x, y])` → `List(g1, g2, ...)` (reduced Gröbner basis)
 - `poly_reduce(x^2, [x-1], [x])` → `1`
 - `ideal_solve([x+y-1, x-y], [x, y])` → `List(List(Rule(x, 1/2), Rule(y, 1/2)))`
+
+---
+
+## Group E — Complete
+
+### E1 · `cas-matrix` 0.2.0 — Complete matrix operation set
+
+**Status: ✅ Complete** (all handlers wired in `symbolic-vm` 0.33.0)
+
+#### Phase 1 (cas-matrix 0.1.0) — already shipped
+
+| Head | MACSYMA name | Description |
+|---|---|---|
+| `Matrix` | `matrix` | Construction from row lists |
+| `Transpose` | `transpose` | Swap rows and columns |
+| `Determinant` | `determinant` | Cofactor expansion |
+| `Inverse` | `invert` | Gauss-Jordan over Fraction |
+
+#### Phase 2 (cas-matrix 0.2.0) — new in Group E
+
+| Head | MACSYMA name | Description |
+|---|---|---|
+| `Dot` | `dot` | Matrix product; exact rational arithmetic |
+| `Trace` | `mattrace` | Sum of main diagonal (left-folded into binary ADDs) |
+| `Dimensions` | `matrix_size` | `List(rows, cols)` shape query |
+| `IdentityMatrix` | `ident` | n×n identity matrix |
+| `ZeroMatrix` | `zeromatrix` | m×n (or n×n) zero matrix |
+| `Rank` | `rank` | Rank via forward row elimination |
+| `RowReduce` | `rowreduce` | Reduced row-echelon form (Gauss-Jordan over Fraction) |
+
+All operations use `Fraction` (Python stdlib) for exact rational arithmetic — no
+floating-point rounding errors in pivoting.
+
+The `RowReduce` and `Rank` implementations live in `cas_matrix/rowreduce.py`.
+`Rank` stops after forward elimination; `RowReduce` continues with back-substitution
+and normalization to produce RREF.
+
+`trace_handler` folds any n-ary `IRApply(ADD, ...)` returned by `cas_matrix.trace`
+into a chain of binary additions so output stays within the VM's binary-ADD contract.
+
+---
+
+### E2 · Phase 14 — exp×hyperbolic and hyperbolic-power integration
+
+**Status: ✅ Complete** (wired in `symbolic-vm` 0.33.0)
+
+Three new integration families added to `integrate.py`:
+
+| Family | Formula | Dispatcher |
+|---|---|---|
+| `∫ exp(ax+b)·sinh(cx+d) dx` | `exp(ax+b)·[a·sinh−c·cosh]/(a²−c²)` | `_try_exp_hyp` |
+| `∫ exp(ax+b)·cosh(cx+d) dx` | `exp(ax+b)·[a·cosh−c·sinh]/(a²−c²)` | `_try_exp_hyp` |
+| `∫ sinh^n(ax+b) dx` (n ≥ 2) | IBP reduction: `I_n = (1/(na))·sinh^(n-1)·cosh − (n-1)/n·I_{n-2}` | `_try_hyp_power` |
+| `∫ cosh^n(ax+b) dx` (n ≥ 2) | IBP reduction: `I_n = (1/(na))·cosh^(n-1)·sinh + (n-1)/n·I_{n-2}` | `_try_hyp_power` |
+| `∫ sinh^m·cosh^n dx` (min(m,n)=1) | u-substitution: `cosh^(n+1)/(n+1)/a` or `sinh^(m+1)/(m+1)/a` | `_try_sinh_cosh_product` |
+
+**Degenerate/unsupported (return unevaluated):**
+- `∫ exp(x)·sinh(x) dx` — a=c, denominator D=a²−c²=0
+- `∫ sinh^m·cosh^n dx` where both m,n ≥ 2 (general case deferred)
+- Non-linear arguments to sinh/cosh (e.g. `sinh(x²)`)
+- Fractional/negative exponents (e.g. `sinh(x)^(1/2)`)
+
+New source files: `exp_hyp_integral.py`, `hyp_power_integral.py`.
 
 ---
 

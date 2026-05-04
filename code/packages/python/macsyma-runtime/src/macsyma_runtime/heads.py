@@ -21,7 +21,7 @@ SUPPRESS = IRSymbol("Suppress")
 # Bookkeeping operations.
 KILL = IRSymbol("Kill")
 EV = IRSymbol("Ev")
-BLOCK = IRSymbol("Block")  # reserved for Phase G; not yet handled.
+BLOCK = IRSymbol("Block")  # Phase G — handled by symbolic-vm's block_ handler.
 ASSUME = IRSymbol("Assume")
 FORGET = IRSymbol("Forget")
 IS = IRSymbol("Is")

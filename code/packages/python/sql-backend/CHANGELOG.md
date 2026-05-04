@@ -5,6 +5,53 @@ All notable changes to the `sql-backend` Python package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.11.0] - 2026-04-28
+
+### Added
+
+- **`InMemoryBackend.get_user_version` / `set_user_version` /
+  `get_schema_version`** — three new methods exposing the SQLite header
+  fields used by `PRAGMA user_version` / `PRAGMA schema_version`.
+  - `_user_version`: a `u32` opaque to the engine (defaults to 0).
+  - `_schema_version`: a counter the backend bumps automatically on every
+    successful `create_table` / `drop_table` / `create_index` / `drop_index`.
+  - `set_user_version` validates `0 ≤ v ≤ 2³² − 1` and raises
+    `ValueError` otherwise.
+
+## [0.10.0] - 2026-04-28
+
+### Added
+
+- **`ColumnDef.autoincrement`** — new boolean field, defaults to `False`.
+  Set on a column declared `INTEGER PRIMARY KEY AUTOINCREMENT` to request
+  monotonic rowid assignment (no reuse of deleted rowids).  The
+  constraint is enforced by `storage-sqlite` 0.17+ via the
+  `sqlite_sequence` table; in-memory backends may treat it as a hint.
+
+## [0.9.0] - 2026-04-28
+
+### Added
+
+- **BLOB type support** — `SqlValue` union extended to include `bytes`.
+  `sql_type_name()` returns `"BLOB"` for byte values. `is_sql_value()`
+  accepts `bytes`.
+
+## [0.8.0] - 2026-04-28
+
+### Added — Phase 9: SQL Triggers
+
+- **`TriggerDef` dataclass** (`schema.py`) — stores `name`, `table`, `timing`
+  (`"BEFORE"` | `"AFTER"`), `event` (`"INSERT"` | `"UPDATE"` | `"DELETE"`),
+  and `body` (raw body SQL string).
+- **`TriggerAlreadyExists` / `TriggerNotFound`** (`errors.py`) — typed error
+  classes for trigger DDL failures; exported from `sql_backend.__init__`.
+- **`Backend.create_trigger` / `drop_trigger` / `list_triggers`** — non-
+  abstract default implementations (raise `Unsupported` / return `[]`) so
+  existing backend subclasses continue to work without changes.
+- **`InMemoryBackend` trigger storage** — `_triggers` (name → `TriggerDef`)
+  and `_triggers_by_table` (table → ordered list) keep triggers in creation
+  order; `list_triggers(table)` is O(1) lookup.
+
 ## [0.7.0] - 2026-04-27
 
 ### Added — Phase 7: SAVEPOINT / RELEASE / ROLLBACK TO

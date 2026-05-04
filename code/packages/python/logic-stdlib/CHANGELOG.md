@@ -2,6 +2,31 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.8.0] - 2026-04-28
+
+### Added
+
+- finite `nth0_resto` and `nth1_resto` relations for positional selection with
+  the remaining list
+- pytest coverage for zero-based selection, one-based selection, enumeration,
+  out-of-range failure, and improper-list rejection
+
+## [0.7.0] - 2026-04-28
+
+### Added
+
+- finite `nth0o` and `nth1o` relations for indexing proper lists
+- pytest coverage for zero-based lookup, one-based lookup, index enumeration,
+  out-of-range failure, and improper-list rejection
+
+## [0.6.0] - 2026-04-28
+
+### Added
+
+- finite `sorto` relation for sorting proper lists and removing duplicates
+- finite `msorto` relation for sorting proper lists while preserving duplicates
+- pytest coverage for sorted list output and improper-list rejection
+
 ## [0.5.0] - 2026-04-28
 
 ### Added

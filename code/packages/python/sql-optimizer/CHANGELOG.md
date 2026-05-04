@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.5.0] - 2026-05-04
+
+### Fixed
+
+- **`PredicatePushdown` outer-join correctness** — predicates on the
+  null-padded side of an outer join were incorrectly being pushed inside
+  the join's sub-scan, converting an outer join into a de-facto inner
+  join. Fix: `_distribute_conjuncts` now consults the join `kind` before
+  pushing to each side.
+  - `LEFT JOIN` → only left-side predicates may be pushed into the left
+    scan; right-side predicates remain above the join.
+  - `RIGHT JOIN` → only right-side predicates may be pushed.
+  - `FULL JOIN` → no single-side push at all.
+  - `INNER` / `CROSS` → unchanged (both sides OK).
+
+### Added
+
+- `JoinKind` imported from `sql_planner` in `predicate_pushdown.py` to
+  support the outer-join guard.
+
 ## [0.4.0] - 2026-04-23
 
 ### Changed — Phase 9.7: Composite (multi-column) automatic index support (IX-8)

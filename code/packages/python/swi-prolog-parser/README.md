@@ -14,6 +14,10 @@ the directive list as metadata, and file-scoped `op/3` directives are applied
 while parsing so later clauses use the updated operator table. DCG rules
 (`-->`) are also expanded into ordinary executable clauses during parsing.
 
+The SWI parser accepts natural CLP(FD) infix forms such as `X in 1..4`,
+`[X,Y] ins 1..4`, and `Z #= X + Y`; the loader/VM layers can then adapt those
+operator-shaped goals into finite-domain builtin constraints.
+
 ## Quick Start
 
 ```python

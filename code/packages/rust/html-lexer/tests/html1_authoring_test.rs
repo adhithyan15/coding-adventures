@@ -25,6 +25,10 @@ fn html1_authoring_artifact_parses_as_mosaic_era_floor() {
     assert!(definition
         .states
         .iter()
+        .any(|state| state.id == "cdata_section"));
+    assert!(definition
+        .states
+        .iter()
         .any(|state| state.id == "script_data"));
     assert!(definition
         .states
@@ -91,6 +95,34 @@ fn html1_authoring_supports_seeded_plaintext_state() {
         lexer.drain_tokens(),
         vec![
             Token::Text("<p>literal &amp; text</p>".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn html1_authoring_supports_seeded_cdata_section_state() {
+    let definition = from_states_toml(HTML1_LEXER_TOML).unwrap();
+    let machine = EffectfulStateMachine::from_definition(&definition).unwrap();
+    let mut lexer = HtmlLexer::new(machine);
+
+    lexer.set_initial_state("cdata_section").unwrap();
+    lexer.push("<not-markup> &amp; ]]><p>x</p>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("<not-markup> &amp; ".to_string()),
+            Token::StartTag {
+                name: "p".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::Text("x".to_string()),
+            Token::EndTag {
+                name: "p".to_string()
+            },
             Token::Eof,
         ]
     );
@@ -180,11 +212,30 @@ fn token_summary(token: Token) -> String {
         ),
         Token::EndTag { name } => format!("EndTag(name={name})"),
         Token::Comment(data) => format!("Comment(data={data})"),
-        Token::Doctype { name, force_quirks } => match name {
-            Some(name) => format!("Doctype(name={name}, force_quirks={force_quirks})"),
-            None => format!("Doctype(name=null, force_quirks={force_quirks})"),
-        },
+        Token::Doctype {
+            name,
+            public_identifier,
+            system_identifier,
+            force_quirks,
+        } => doctype_summary(name, public_identifier, system_identifier, force_quirks),
         Token::Eof => "EOF".to_string(),
+    }
+}
+
+fn doctype_summary(
+    name: Option<String>,
+    public_identifier: Option<String>,
+    system_identifier: Option<String>,
+    force_quirks: bool,
+) -> String {
+    let name = name.unwrap_or_else(|| "null".to_string());
+    match (public_identifier, system_identifier) {
+        (None, None) => format!("Doctype(name={name}, force_quirks={force_quirks})"),
+        (public_identifier, system_identifier) => format!(
+            "Doctype(name={name}, public_identifier={}, system_identifier={}, force_quirks={force_quirks})",
+            public_identifier.unwrap_or_else(|| "null".to_string()),
+            system_identifier.unwrap_or_else(|| "null".to_string())
+        ),
     }
 }
 

@@ -1,5 +1,108 @@
 # Changelog
 
+## 0.2.0 — 2026-04-27
+
+### Added
+
+- `cas_handlers.py` — VM handler functions for every CAS substrate package:
+  - **Simplify / Expand** — delegate to `cas_simplify.simplify` and
+    `cas_simplify.canonical` respectively.
+  - **Subst** — delegates to `cas_substitution.subst`; re-evaluates the
+    substituted result through the VM so numeric simplification fires.
+  - **Factor** — identifies the single free variable, converts the IR
+    to an integer polynomial via `symbolic_vm.polynomial_bridge.to_rational`,
+    calls `cas_factor.factor_integer_polynomial`, and reassembles the result
+    as `Mul(content, Pow(factor, mult), …)` IR.
+  - **Solve** — converts the polynomial to rational form, dispatches to
+    `cas_solve.solve_linear` (degree 1) or `cas_solve.solve_quadratic`
+    (degree 2), returns `List(solution, …)` IR.  Degree > 2 and non-polynomial
+    expressions return unevaluated.  Handles `Equal(lhs, rhs)` by rewriting
+    to `Sub(lhs, rhs)`.
+  - **List operations** — `Length`, `First`, `Rest`, `Last`, `Append`,
+    `Reverse`, `Range`, `Map`, `Apply`, `Select`, `Sort`, `Part`, `Flatten`,
+    `Join`.  Each is a thin wrapper around the corresponding
+    `cas_list_operations` function; `Map` and `Apply` route through the VM
+    so element-wise evaluation fires.
+  - **Matrix operations** — `Matrix` (shape validation), `Transpose`,
+    `Determinant`, `Inverse`; all delegate to `cas_matrix`.
+  - **Limit** — delegates to `cas_limit_series.limit_direct`; passes the
+    result through `simplify` and the VM so numeric reduction fires.
+  - **Taylor** — delegates to `cas_limit_series.taylor_polynomial`; returns
+    unevaluated for non-polynomial expressions (`PolynomialError`).
+  - **Numeric helpers** — `Abs`, `Floor`, `Ceiling`, `Mod`, `Gcd`, `Lcm`.
+- `MacsymaBackend.__init__` now merges `build_cas_handler_table()` into
+  `self._handlers` so every CAS head is handled automatically.
+- Pre-bound constants: `%pi → IRFloat(π)` and `%e → IRFloat(e)` installed
+  in `self._env` at construction time.
+- 57 new integration tests in `tests/test_cas_handlers.py` covering:
+  handler-table completeness, constant pre-binding, simplify, expand, subst,
+  factor (difference of squares, perfect square, linear, no-variable),
+  solve (linear, quadratic), all list ops, matrix transpose and determinant,
+  limit, taylor, and all numeric helpers; plus edge-case / defensive tests for
+  wrong arity, non-list inputs, multi-variate polynomials, and symbolic args.
+- Added CAS substrate packages to `pyproject.toml` dependencies:
+  `cas-pattern-matching`, `cas-substitution`, `cas-simplify`, `cas-factor`,
+  `cas-solve`, `cas-list-operations`, `cas-matrix`, `cas-limit-series`.
+- Updated `BUILD` to install CAS deps in correct leaf-to-root order.
+
+---
+
+## 1.12.0 — 2026-04-28
+
+**Phase G (control-flow grammar) — tests and stale-comment cleanup.**
+
+Control-flow constructs (`if/then/else`, `for…thru`, `for…in`, `while…do`,
+`block([locals], …)`, `return()`) were already fully implemented across the
+grammar, lexer, parser, compiler, and VM layers.  This release completes the
+Phase G story for `macsyma-runtime`:
+
+- `tests/test_control_flow.py` (**NEW**): 42 end-to-end tests that drive
+  every control-flow construct through the full pipeline
+  `parse_macsyma → compile_macsyma (with extended name table) → VM(MacsymaBackend)`.
+  Covers interaction with CAS operations (factor, solve, length, etc.),
+  multi-statement programs, function definitions inside blocks, and
+  `MacsymaBackend`-specific features (history, kill).
+- `src/macsyma_runtime/heads.py`: corrected stale comment on `BLOCK`
+  ("reserved for Phase G; not yet handled" → "handled by symbolic-vm's
+  `block_` handler").
+- `pyproject.toml`: bumped `symbolic-vm` floor to `>=0.34.0`.
+
+Total tests: **177** (up from 135). Coverage: **98.71 %**.
+
+---
+
+## 1.11.0 — 2026-04-28
+
+**Add Group E matrix operation names to the MACSYMA name table.**
+
+- `name_table.py`: added seven new `IRSymbol` singletons:
+  `DOT`, `TRACE`, `DIMENSIONS`, `IDENTITY_MATRIX`, `ZERO_MATRIX`, `RANK`,
+  `ROW_REDUCE`.
+- Added seven new entries to `MACSYMA_NAME_TABLE`:
+
+  | MACSYMA name | IR head |
+  |---|---|
+  | `dot` | `Dot` |
+  | `mattrace` | `Trace` |
+  | `matrix_size` | `Dimensions` |
+  | `ident` | `IdentityMatrix` |
+  | `zeromatrix` | `ZeroMatrix` |
+  | `rank` | `Rank` |
+  | `rowreduce` | `RowReduce` |
+
+MACSYMA users can now write:
+- `dot(A, B)` → matrix product
+- `mattrace(M)` → sum of diagonal (MACSYMA canonical spelling is `mattrace`)
+- `matrix_size(M)` → `[rows, cols]` shape
+- `ident(n)` → n×n identity matrix
+- `zeromatrix(m, n)` → m×n zero matrix
+- `rank(M)` → rank of matrix (integer)
+- `rowreduce(M)` → reduced row-echelon form
+
+Bumped `symbolic-vm` dependency floor to `>=0.33.0`.
+
+---
+
 ## 1.10.0 — 2026-04-28
 
 **Add Gröbner basis and multivariate solve operations to the MACSYMA name table.**

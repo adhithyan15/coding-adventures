@@ -1,0 +1,8 @@
+[package]
+name = "twig-document-symbols"
+version = "0.1.0"
+edition = "2021"
+description = "LSP document-symbol extraction for Twig — the outline-view feed.  Walks a parsed Program and returns a typed list of top-level (define …) symbols (Function vs Variable), each with name, kind, optional detail (param signature), and source position."
+
+[dependencies]
+twig-parser = { path = "../twig-parser" }

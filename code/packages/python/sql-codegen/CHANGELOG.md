@@ -1,5 +1,78 @@
 # Changelog
 
+## [1.6.0] - 2026-05-04
+
+### Added
+
+- **RIGHT [OUTER] JOIN compilation** — `_compile_join` now handles
+  `JoinKind.RIGHT` by swapping `lft`/`rgt` and delegating to the LEFT
+  JOIN path. The ON condition and body function both reference columns
+  by table alias (via `alias_to_cursor`), so reversing execution order
+  is sufficient: the original right table becomes the outer "left"
+  (preserved for every row) and the original left table becomes the
+  inner "right" (null-padded when no ON match is found).
+- **`test_right_join_compiles`** replaces `test_right_join_raises` in
+  `tests/test_select.py`; a new `test_full_join_raises` confirms FULL
+  JOIN still raises `UnsupportedNode`.
+
+## [1.5.0] - 2026-05-04
+
+### Added
+
+- **LEFT [OUTER] JOIN compilation** — `_compile_join` now handles
+  `JoinKind.LEFT`, emitting a nested-loop outer join using three new
+  match-tracking IR instructions (`JoinBeginRow`, `JoinSetMatched`,
+  `JoinIfMatched`). When the right scan exhausts without a match the
+  right cursor is closed; any subsequent `LoadColumn` for right-side
+  columns returns `NULL` automatically, providing null-padding without
+  a dedicated `NullRow` instruction.
+- **`JoinBeginRow` IR instruction** — pushes `False` onto the VM's
+  `join_match_stack` at the start of each left row.
+- **`JoinSetMatched` IR instruction** — sets `join_match_stack[-1] = True`
+  when an ON-condition match is found.
+- **`JoinIfMatched(label)` IR instruction** — pops the match stack; if
+  `True` jumps to *label* (skipping the null-padded emission path).
+- All three exported from `sql_codegen.__init__` and added to the
+  `Instruction` type union in `ir.py`.
+
+### Fixed
+
+- **Duplicate label bug in `_compile_select` body closure** — the
+  `filter_skip` label was previously generated once outside the body
+  closure. Calling `body(c)` twice (matched path + null-padded path in
+  a LEFT JOIN) produced two `Label("filter_skip_N")` entries with
+  identical names, causing `_resolve_labels` to overwrite the first jump
+  target. The label is now generated *inside* the body closure so each
+  invocation gets a unique name.
+
+## [1.4.0] - 2026-04-28
+
+### Added
+
+- **`RunScalarSubquery(sub_program)` IR instruction** — compiles a
+  `ScalarSubquery` plan expression into an embedded sub-program that is
+  executed at runtime; the VM pushes the single result value or NULL.
+- **`primary_key: bool` on `ColumnDef`** — IR column definition now carries
+  the primary key flag so the VM can pass it to the backend on `CREATE TABLE`.
+
+### Fixed
+
+- **`_compile_core` handles `Project(Aggregate)`** — scalar subquery inner
+  plans contain an unflattenened `Project(Aggregate(...))` shape. Added two
+  match cases before the default fall-through so aggregate sub-programs
+  compile correctly without requiring `_flatten_project_over_aggregate`.
+
+## [1.3.0] - 2026-04-28
+
+### Added — Phase 9: SQL Triggers
+
+- **`CreateTriggerDef` IR instruction** — carries `name`, `timing`, `event`,
+  `table`, `body_sql`; emitted by the compiler for `CreateTrigger` plan nodes.
+- **`DropTriggerDef` IR instruction** — carries `name`, `if_exists`; emitted
+  for `DropTrigger` plan nodes.
+- Both exported from `sql_codegen.__init__` and added to the `Instruction`
+  type union in `ir.py`.
+
 ## [1.2.0] - 2026-04-27
 
 ### Added — Phase 8: Window Functions (OVER / PARTITION BY)

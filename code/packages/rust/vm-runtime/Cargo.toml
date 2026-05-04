@@ -1,0 +1,12 @@
+[package]
+name = "vm-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "LANG15 — linkable, embeddable runtime library for AOT-compiled InterpreterIR binaries."
+license = "MIT"
+
+[dependencies]
+interpreter-ir = { path = "../interpreter-ir" }
+vm-core        = { path = "../vm-core" }
+
+[dev-dependencies]

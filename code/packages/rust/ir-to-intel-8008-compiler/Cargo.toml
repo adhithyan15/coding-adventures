@@ -1,0 +1,8 @@
+[package]
+name = "ir-to-intel-8008-compiler"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+compiler-ir  = { path = "../compiler-ir" }
+codegen-core = { path = "../codegen-core" }

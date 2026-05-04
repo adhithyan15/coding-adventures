@@ -42,10 +42,28 @@ _SYSCALL_READ = 2
 _SYSCALL_EXIT = 10
 
 _WASI_MODULE = "wasi_snapshot_preview1"
+_COMPILER_MATH_MODULE = "compiler_math"
 _WASI_IOVEC_OFFSET = 0
 _WASI_COUNT_OFFSET = 8
 _WASI_BYTE_OFFSET = 12
 _WASI_SCRATCH_SIZE = 16
+
+_F64_UNARY_MATH_IMPORT_NAMES: dict[IrOp, str] = {
+    IrOp.F64_SIN: "f64_sin",
+    IrOp.F64_COS: "f64_cos",
+    IrOp.F64_ATAN: "f64_atan",
+    IrOp.F64_LN: "f64_ln",
+    IrOp.F64_EXP: "f64_exp",
+}
+_F64_UNARY_MATH_OPS = frozenset(_F64_UNARY_MATH_IMPORT_NAMES)
+_F64_BINARY_MATH_IMPORT_NAMES: dict[IrOp, str] = {
+    IrOp.F64_POW: "f64_pow",
+}
+_F64_BINARY_MATH_OPS = frozenset(_F64_BINARY_MATH_IMPORT_NAMES)
+_F64_MATH_IMPORT_NAMES = {
+    **_F64_UNARY_MATH_IMPORT_NAMES,
+    **_F64_BINARY_MATH_IMPORT_NAMES,
+}
 
 _MEMORY_OPS = frozenset(
     {
@@ -104,6 +122,7 @@ _OPCODE = {
         "f64.sub",
         "f64.mul",
         "f64.div",
+        "f64.sqrt",
         "f64.convert_i32_s",
         "i32.trunc_f64_s",
         "drop",
@@ -151,6 +170,13 @@ _WASM_SUPPORTED_OPCODES: frozenset[IrOp] = frozenset({
     IrOp.F64_SUB,
     IrOp.F64_MUL,
     IrOp.F64_DIV,
+    IrOp.F64_SQRT,
+    IrOp.F64_SIN,
+    IrOp.F64_COS,
+    IrOp.F64_ATAN,
+    IrOp.F64_LN,
+    IrOp.F64_EXP,
+    IrOp.F64_POW,
     IrOp.F64_CMP_EQ,
     IrOp.F64_CMP_NE,
     IrOp.F64_CMP_LT,
@@ -294,20 +320,34 @@ class _FunctionIR:
 
 
 @dataclass(frozen=True)
-class _WasiImport:
-    syscall_number: int
+class _FunctionImport:
+    module_name: str
     name: str
     func_type: FuncType
+    syscall_number: int | None = None
+    math_opcode: IrOp | None = None
 
     @property
     def type_key(self) -> str:
-        return f"wasi::{self.name}"
+        return f"{self.module_name}::{self.name}"
 
 
 @dataclass(frozen=True)
-class _WasiContext:
-    function_indices: dict[int, int]
+class _ImportContext:
+    syscall_function_indices: dict[int, int]
+    math_function_indices: dict[IrOp, int]
     scratch_base: int | None
+
+
+def _compiler_math_func_type(opcode: IrOp) -> FuncType:
+    if opcode in _F64_UNARY_MATH_OPS:
+        return FuncType(params=(ValueType.F64,), results=(ValueType.F64,))
+    if opcode in _F64_BINARY_MATH_OPS:
+        return FuncType(
+            params=(ValueType.F64, ValueType.F64),
+            results=(ValueType.F64,),
+        )
+    raise WasmLoweringError(f"unsupported compiler math opcode: {opcode.name}")
 
 
 class IrToWasmCompiler:
@@ -333,7 +373,7 @@ class IrToWasmCompiler:
                 signatures[signature.label] = signature
 
         functions = self._split_functions(program, signatures)
-        imports = self._collect_wasi_imports(program)
+        imports = self._collect_function_imports(program)
         type_indices, types = self._build_type_table(functions, imports)
         data_offsets = self._layout_data(program.data)
         scratch_base = None
@@ -344,7 +384,7 @@ class IrToWasmCompiler:
         module.types.extend(types)
         module.imports.extend(
             Import(
-                module_name=_WASI_MODULE,
+                module_name=imp.module_name,
                 name=imp.name,
                 kind=ExternalKind.FUNCTION,
                 type_info=type_indices[imp.type_key],
@@ -381,8 +421,17 @@ class IrToWasmCompiler:
             _DispatchLoopLowerer if strategy == "dispatch_loop" else _FunctionLowerer
         )
 
-        wasi_context = _WasiContext(
-            function_indices={imp.syscall_number: index for index, imp in enumerate(imports)},
+        import_context = _ImportContext(
+            syscall_function_indices={
+                imp.syscall_number: index
+                for index, imp in enumerate(imports)
+                if imp.syscall_number is not None
+            },
+            math_function_indices={
+                imp.math_opcode: index
+                for index, imp in enumerate(imports)
+                if imp.math_opcode is not None
+            },
             scratch_base=scratch_base,
         )
         for function in functions:
@@ -392,7 +441,7 @@ class IrToWasmCompiler:
                     signatures=signatures,
                     function_indices=function_indices,
                     data_offsets=data_offsets,
-                    wasi_context=wasi_context,
+                    import_context=import_context,
                 ).lower()
             )
             if function.signature.export_name is not None:
@@ -409,7 +458,7 @@ class IrToWasmCompiler:
     def _build_type_table(
         self,
         functions: list[_FunctionIR],
-        imports: list[_WasiImport],
+        imports: list[_FunctionImport],
     ) -> tuple[dict[str, int], list[FuncType]]:
         type_indices: dict[FuncType, int] = {}
         function_types: list[FuncType] = []
@@ -455,15 +504,20 @@ class IrToWasmCompiler:
                 return True
         return False
 
-    def _collect_wasi_imports(self, program: IrProgram) -> list[_WasiImport]:
+    def _collect_function_imports(self, program: IrProgram) -> list[_FunctionImport]:
         required_syscalls: set[int] = set()
+        required_math_ops: set[IrOp] = set()
         for instruction in program.instructions:
-            if instruction.opcode != IrOp.SYSCALL or not instruction.operands:
-                continue
-            required_syscalls.add(_expect_immediate(instruction.operands[0], "SYSCALL number").value)
+            if instruction.opcode == IrOp.SYSCALL and instruction.operands:
+                required_syscalls.add(
+                    _expect_immediate(instruction.operands[0], "SYSCALL number").value
+                )
+            elif instruction.opcode in _F64_MATH_IMPORT_NAMES:
+                required_math_ops.add(instruction.opcode)
 
         ordered_imports = (
-            _WasiImport(
+            _FunctionImport(
+                module_name=_WASI_MODULE,
                 syscall_number=_SYSCALL_WRITE,
                 name="fd_write",
                 func_type=FuncType(
@@ -471,7 +525,8 @@ class IrToWasmCompiler:
                     results=(ValueType.I32,),
                 ),
             ),
-            _WasiImport(
+            _FunctionImport(
+                module_name=_WASI_MODULE,
                 syscall_number=_SYSCALL_READ,
                 name="fd_read",
                 func_type=FuncType(
@@ -479,7 +534,8 @@ class IrToWasmCompiler:
                     results=(ValueType.I32,),
                 ),
             ),
-            _WasiImport(
+            _FunctionImport(
+                module_name=_WASI_MODULE,
                 syscall_number=_SYSCALL_EXIT,
                 name="proc_exit",
                 func_type=FuncType(
@@ -492,9 +548,24 @@ class IrToWasmCompiler:
         supported_syscalls = {imp.syscall_number for imp in ordered_imports}
         unsupported = sorted(required_syscalls - supported_syscalls)
         if unsupported:
-            raise WasmLoweringError(f"unsupported SYSCALL number(s): {', '.join(map(str, unsupported))}")
+            unsupported_text = ", ".join(map(str, unsupported))
+            raise WasmLoweringError(
+                f"unsupported SYSCALL number(s): {unsupported_text}"
+            )
 
-        return [imp for imp in ordered_imports if imp.syscall_number in required_syscalls]
+        imports = [
+            imp for imp in ordered_imports if imp.syscall_number in required_syscalls
+        ]
+        imports.extend(
+            _FunctionImport(
+                module_name=_COMPILER_MATH_MODULE,
+                name=_F64_MATH_IMPORT_NAMES[opcode],
+                func_type=_compiler_math_func_type(opcode),
+                math_opcode=opcode,
+            )
+            for opcode in sorted(required_math_ops, key=int)
+        )
+        return imports
 
     def _split_functions(
         self,
@@ -542,13 +613,13 @@ class _FunctionLowerer:
         signatures: dict[str, FunctionSignature],
         function_indices: dict[str, int],
         data_offsets: dict[str, int],
-        wasi_context: _WasiContext,
+        import_context: _ImportContext,
     ) -> None:
         self.function = function
         self.signatures = signatures
         self.function_indices = function_indices
         self.data_offsets = data_offsets
-        self.wasi_context = wasi_context
+        self.import_context = import_context
         self.param_count = function.signature.param_count
         self._register_types = function.register_types
         self._bytes = bytearray()
@@ -806,6 +877,22 @@ class _FunctionLowerer:
                 self._emit_binary_numeric("f64.mul", instruction)
             case IrOp.F64_DIV:
                 self._emit_binary_numeric("f64.div", instruction)
+            case IrOp.F64_SQRT:
+                dst = _expect_register(instruction.operands[0], "F64_SQRT dst")
+                src = _expect_register(instruction.operands[1], "F64_SQRT src")
+                self._emit_local_get(src.index)
+                self._emit_opcode("f64.sqrt")
+                self._emit_local_set(dst.index)
+            case (
+                IrOp.F64_SIN
+                | IrOp.F64_COS
+                | IrOp.F64_ATAN
+                | IrOp.F64_LN
+                | IrOp.F64_EXP
+            ):
+                self._emit_f64_unary_math_call(instruction)
+            case IrOp.F64_POW:
+                self._emit_f64_binary_math_call(instruction)
             case IrOp.CMP_EQ:
                 self._emit_binary_numeric("i32.eq", instruction)
             case IrOp.CMP_NE:
@@ -985,16 +1072,62 @@ class _FunctionLowerer:
         self._emit_memarg(2, 0)
 
     def _emit_wasi_call(self, syscall_number: int) -> None:
-        function_index = self.wasi_context.function_indices.get(syscall_number)
+        function_index = self.import_context.syscall_function_indices.get(
+            syscall_number
+        )
         if function_index is None:
             raise WasmLoweringError(f"missing WASI import for SYSCALL {syscall_number}")
         self._emit_opcode("call")
         self._emit_u32(function_index)
 
+    def _emit_f64_unary_math_call(self, instruction: IrInstruction) -> None:
+        dst = _expect_register(
+            instruction.operands[0], f"{instruction.opcode.name} dst"
+        )
+        src = _expect_register(
+            instruction.operands[1], f"{instruction.opcode.name} src"
+        )
+        function_index = self.import_context.math_function_indices.get(
+            instruction.opcode
+        )
+        if function_index is None:
+            name = _F64_UNARY_MATH_IMPORT_NAMES[instruction.opcode]
+            raise WasmLoweringError(
+                f"missing compiler math import for {name}"
+            )
+        self._emit_local_get(src.index)
+        self._emit_opcode("call")
+        self._emit_u32(function_index)
+        self._emit_local_set(dst.index)
+
+    def _emit_f64_binary_math_call(self, instruction: IrInstruction) -> None:
+        dst = _expect_register(
+            instruction.operands[0], f"{instruction.opcode.name} dst"
+        )
+        lhs = _expect_register(
+            instruction.operands[1], f"{instruction.opcode.name} lhs"
+        )
+        rhs = _expect_register(
+            instruction.operands[2], f"{instruction.opcode.name} rhs"
+        )
+        function_index = self.import_context.math_function_indices.get(
+            instruction.opcode
+        )
+        if function_index is None:
+            name = _F64_MATH_IMPORT_NAMES[instruction.opcode]
+            raise WasmLoweringError(
+                f"missing compiler math import for {name}"
+            )
+        self._emit_local_get(lhs.index)
+        self._emit_local_get(rhs.index)
+        self._emit_opcode("call")
+        self._emit_u32(function_index)
+        self._emit_local_set(dst.index)
+
     def _require_wasi_scratch(self) -> int:
-        if self.wasi_context.scratch_base is None:
+        if self.import_context.scratch_base is None:
             raise WasmLoweringError("SYSCALL lowering requires WASM scratch memory")
-        return self.wasi_context.scratch_base
+        return self.import_context.scratch_base
 
     def _emit_binary_numeric(self, wasm_op: str, instruction: IrInstruction) -> None:
         dst = _expect_register(instruction.operands[0], f"{instruction.opcode.name} dst")
@@ -1477,7 +1610,20 @@ def _infer_register_types(
                 _assign_register_type(
                     reg_types, dst.index, ValueType.I32, instruction.opcode.name
                 )
-            case IrOp.F64_ADD | IrOp.F64_SUB | IrOp.F64_MUL | IrOp.F64_DIV | IrOp.F64_FROM_I32:
+            case (
+                IrOp.F64_ADD
+                | IrOp.F64_SUB
+                | IrOp.F64_MUL
+                | IrOp.F64_DIV
+                | IrOp.F64_SQRT
+                | IrOp.F64_SIN
+                | IrOp.F64_COS
+                | IrOp.F64_ATAN
+                | IrOp.F64_LN
+                | IrOp.F64_EXP
+                | IrOp.F64_POW
+                | IrOp.F64_FROM_I32
+            ):
                 dst = _expect_register(instruction.operands[0], f"{instruction.opcode.name} dst")
                 _assign_register_type(
                     reg_types, dst.index, ValueType.F64, instruction.opcode.name

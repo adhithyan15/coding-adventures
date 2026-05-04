@@ -4,7 +4,12 @@ version = "0.1.0"
 description = "Binary Classifier for Mansions using Perceptron"
 requires-python = ">=3.12"
 dependencies = [
-    "coding-adventures-matrix", "coding-adventures-loss-functions", "activation-functions", "perceptron"
+    "coding-adventures-matrix",
+    "coding-adventures-loss-functions",
+    "activation-functions",
+    "perceptron",
+    "coding-adventures-neural-network",
+    "coding-adventures-neural-graph-vm"
 ]
 
 [tool.uv.sources]
@@ -12,3 +17,5 @@ coding-adventures-matrix = { path = "../../../packages/python/matrix", editable 
 coding-adventures-loss-functions = { path = "../../../packages/python/loss-functions", editable = true }
 activation-functions = { path = "../../../packages/python/activation-functions", editable = true }
 perceptron = { path = "../../../packages/python/perceptron", editable = true }
+coding-adventures-neural-network = { path = "../../../packages/python/neural-network", editable = true }
+coding-adventures-neural-graph-vm = { path = "../../../packages/python/neural-graph-vm", editable = true }

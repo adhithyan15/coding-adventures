@@ -15,9 +15,15 @@ from logic_stdlib.relations import (
     lengtho,
     listo,
     membero,
+    msorto,
+    nth0_resto,
+    nth0o,
+    nth1_resto,
+    nth1o,
     permuteo,
     reverseo,
     selecto,
+    sorto,
     subsequenceo,
     tailo,
 )
@@ -32,11 +38,17 @@ __all__ = [
     "lengtho",
     "listo",
     "membero",
+    "msorto",
+    "nth0_resto",
+    "nth0o",
+    "nth1_resto",
+    "nth1o",
     "permuteo",
     "reverseo",
     "selecto",
+    "sorto",
     "subsequenceo",
     "tailo",
 ]
 
-__version__ = "0.5.0"
+__version__ = "0.8.0"

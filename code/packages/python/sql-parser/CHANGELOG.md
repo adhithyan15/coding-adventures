@@ -2,6 +2,26 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.12.0] - 2026-04-28
+
+### Added
+
+- **BLOB in primary expressions** — the `primary` grammar rule now accepts a
+  `BLOB` token, enabling `x'hex'` literals in all expression positions.
+
+## [0.11.0] - 2026-04-28
+
+### Added — Phase 9: SQL Triggers
+
+- **`create_trigger_stmt`** grammar rule — `CREATE TRIGGER NAME (BEFORE|AFTER)
+  (INSERT|UPDATE|DELETE) ON NAME FOR EACH ROW BEGIN body END`.
+- **`trigger_body_stmt`** grammar rule — alternation over `insert_stmt`,
+  `update_stmt`, `delete_stmt`, `query_stmt`.  The semicolons separating
+  body statements are consumed inside `create_trigger_stmt` so they don't
+  conflict with the top-level `program` rule.
+- **`drop_trigger_stmt`** grammar rule — `DROP TRIGGER [IF EXISTS] NAME`.
+- Both added to the `statement` alternation.
+
 ## [0.10.0] - 2026-04-27
 
 ### Added — Phase 8: Window Functions (OVER / PARTITION BY)

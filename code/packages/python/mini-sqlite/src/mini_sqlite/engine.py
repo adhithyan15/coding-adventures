@@ -22,11 +22,13 @@ is reached.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+import re
+from collections.abc import Mapping, Sequence
 from dataclasses import replace
 from typing import TYPE_CHECKING, Any
 
 from sql_backend import Backend, backend_as_schema_provider
+from sql_backend.schema import ColumnDef as BackendColumnDef
 from sql_codegen import compile as codegen_compile
 from sql_optimizer import optimize
 from sql_parser import parse_sql
@@ -72,7 +74,7 @@ if TYPE_CHECKING:
 def run(
     backend: Backend,
     sql: str,
-    parameters: Sequence[Any] = (),
+    parameters: Sequence[Any] | Mapping[str, Any] = (),
     *,
     advisor: IndexAdvisor | None = None,
     check_registry: dict | None = None,
@@ -80,11 +82,20 @@ def run(
     fk_parent: dict | None = None,
     view_defs: dict | None = None,
     savepoints: list[str] | None = None,
+    trigger_executor: Any | None = None,
+    trigger_depth: int = 0,
+    user_functions: dict | None = None,
 ) -> QueryResult:
     """Execute a single SQL statement and return the :class:`QueryResult`.
 
-    ``parameters`` is an ordered sequence matching the ``?`` placeholders
-    in ``sql``. Empty for un-parameterised statements.
+    ``parameters`` follows PEP 249 paramstyle:
+
+    * a ``Sequence`` (tuple, list, …) → qmark style; each ``?`` in *sql*
+      consumes the next positional value.
+    * a ``Mapping`` (dict, …) → named style; each ``:identifier`` in *sql*
+      is replaced by ``parameters[identifier]``.
+
+    Empty for un-parameterised statements.
 
     ``advisor``, when provided, receives the optimised plan via
     :meth:`~mini_sqlite.advisor.IndexAdvisor.observe_plan` so it can
@@ -98,6 +109,10 @@ def run(
     """
     bound = substitute(sql, parameters)
     try:
+        # PRAGMA statements are intercepted before parsing — they query backend
+        # metadata and return formatted rows without going through the planner.
+        if re.match(r"\s*PRAGMA\b", bound, re.IGNORECASE):
+            return _run_pragma(backend, bound, fk_child=fk_child)
         ast = parse_sql(bound)
         stmt = to_statement(ast, view_defs=view_defs)
 
@@ -173,6 +188,18 @@ def run(
             if (advisor is not None and _table)
             else None
         )
+        # Build a trigger executor on the first (top-level) call; re-use the
+        # caller-supplied one for recursive trigger body executions.
+        _trigger_executor = trigger_executor
+        if _trigger_executor is None:
+            _trigger_executor = _make_trigger_executor(
+                backend=backend,
+                check_registry=check_registry,
+                fk_child=fk_child,
+                fk_parent=fk_parent,
+                view_defs=view_defs,
+                user_functions=user_functions,
+            )
         return execute(
             program,
             backend,
@@ -181,6 +208,9 @@ def run(
             fk_parent=fk_parent,
             event_cb=event_cb,
             filtered_columns=_filtered,
+            trigger_executor=_trigger_executor,
+            trigger_depth=trigger_depth,
+            user_functions=user_functions or None,
         )
     except ProgrammingError:
         # Already-translated errors raised from our own code pass through.
@@ -353,3 +383,248 @@ def _extract_scan_info(plan: LogicalPlan) -> tuple[str, list[str]]:
             return _extract_scan_info(lhs)
         case _:
             return "", []
+
+
+# --------------------------------------------------------------------------
+# PRAGMA handler — returns backend metadata as a QueryResult.
+# --------------------------------------------------------------------------
+
+# Matches one of these PRAGMA forms:
+#   PRAGMA name                       — read query
+#   PRAGMA name('arg')                — read with table-name argument
+#   PRAGMA name("arg")                — same, double-quoted
+#   PRAGMA name = <int>               — write (non-negative integer literal)
+_PRAGMA_RE = re.compile(
+    r"""
+    \s* PRAGMA \s+
+    (?P<name>[A-Za-z_][A-Za-z0-9_]*)   # pragma name
+    (?:                                  # optional argument or assignment
+        \s* \(
+            \s* ["']? (?P<arg>[A-Za-z_][A-Za-z0-9_]*) ["']? \s*
+        \)
+        |
+        \s* = \s* (?P<set_value>-?\d+)
+    )?
+    \s* ;? \s* $
+    """,
+    re.IGNORECASE | re.VERBOSE,
+)
+
+
+def _run_pragma(backend: Backend, sql: str, *, fk_child: dict | None = None) -> QueryResult:
+    """Handle a PRAGMA statement by querying backend metadata.
+
+    Supported pragmas (matching SQLite output format):
+
+    ``PRAGMA table_info('t')``
+        One row per column: ``(cid, name, type, notnull, dflt_value, pk)``.
+
+    ``PRAGMA index_list('t')``
+        One row per index on table *t*: ``(seq, name, unique)``.
+
+    ``PRAGMA foreign_key_list('t')``
+        One row per FK on table *t*:
+        ``(id, seq, table, from, to, on_update, on_delete, match)``.
+
+    ``PRAGMA table_list``
+        One row per table in the schema: ``(schema, name, type)``.
+
+    ``PRAGMA user_version``
+        Read the user-defined integer at byte offset 60 of the database
+        header.  Returns one row ``(user_version,)`` of an int.  A fresh
+        database returns 0.
+
+    ``PRAGMA user_version = <int>``
+        Write *<int>* into the user_version field.  Must fit in u32
+        (0 ≤ v ≤ 2³² − 1).  Produces an empty result.
+
+    ``PRAGMA schema_version``
+        Read-only — returns one row ``(schema_version,)`` of an int.
+        The schema cookie is bumped automatically on every DDL operation.
+    """
+    m = _PRAGMA_RE.match(sql)
+    if m is None:
+        raise ProgrammingError(f"invalid PRAGMA syntax: {sql!r}")
+    name = m.group("name").lower()
+    arg = m.group("arg")  # may be None
+    set_value = m.group("set_value")  # may be None — assignment form
+
+    if name == "table_info":
+        if not arg:
+            raise ProgrammingError("PRAGMA table_info requires a table name")
+        try:
+            cols = backend.columns(arg)
+        except Exception:  # noqa: BLE001 — unknown table returns empty
+            return QueryResult(
+                columns=("cid", "name", "type", "notnull", "dflt_value", "pk"),
+                rows=(),
+            )
+        rows = []
+        for i, col in enumerate(cols):
+            if isinstance(col, BackendColumnDef):
+                not_null = int(col.effective_not_null())
+                pk = int(col.primary_key)
+                type_name = col.type_name
+                dflt = col.default if col.has_default() else None
+                name_str = col.name
+            else:
+                not_null = 0
+                pk = 0
+                type_name = "TEXT"
+                dflt = None
+                name_str = str(col)
+            rows.append((i, name_str, type_name, not_null, dflt, pk))
+        return QueryResult(
+            columns=("cid", "name", "type", "notnull", "dflt_value", "pk"),
+            rows=tuple(rows),
+        )
+
+    if name == "index_list":
+        if not arg:
+            raise ProgrammingError("PRAGMA index_list requires a table name")
+        try:
+            indexes = backend.list_indexes(table=arg)
+        except Exception:  # noqa: BLE001
+            indexes = []
+        return QueryResult(
+            columns=("seq", "name", "unique"),
+            rows=tuple((seq, idx.name, int(idx.unique)) for seq, idx in enumerate(indexes)),
+        )
+
+    if name == "foreign_key_list":
+        if not arg:
+            raise ProgrammingError("PRAGMA foreign_key_list requires a table name")
+        fk_rows = []
+        if fk_child:
+            for fk_id, (from_col, ref_table, ref_col) in enumerate(fk_child.get(arg, [])):
+                fk_rows.append((
+                    fk_id, 0, ref_table, from_col,
+                    ref_col or "", "NO ACTION", "NO ACTION", "NONE",
+                ))
+        return QueryResult(
+            columns=("id", "seq", "table", "from", "to", "on_update", "on_delete", "match"),
+            rows=tuple(fk_rows),
+        )
+
+    if name == "table_list":
+        tables = backend.tables()
+        return QueryResult(
+            columns=("schema", "name", "type"),
+            rows=tuple(("main", t, "table") for t in tables),
+        )
+
+    if name == "user_version":
+        if set_value is not None:
+            try:
+                backend.set_user_version(int(set_value))
+            except AttributeError as e:
+                # Backend without u32-header support (e.g. InMemoryBackend
+                # in some configurations) — surface as Unsupported rather
+                # than the bare AttributeError.
+                raise ProgrammingError(
+                    "backend does not support PRAGMA user_version write"
+                ) from e
+            except ValueError as e:
+                raise ProgrammingError(str(e)) from e
+            return QueryResult(rows_affected=0)
+        try:
+            v = backend.get_user_version()
+        except AttributeError:
+            v = 0  # backend has no header — return 0 by convention
+        return QueryResult(columns=("user_version",), rows=((v,),))
+
+    if name == "schema_version":
+        # Read-only.  Ignores any "= value" form (matches sqlite3 silently).
+        try:
+            v = backend.get_schema_version()
+        except AttributeError:
+            v = 0
+        return QueryResult(columns=("schema_version",), rows=((v,),))
+
+    # Unknown PRAGMA — return empty result rather than error, matching SQLite.
+    return QueryResult(columns=(), rows=())
+
+
+# --------------------------------------------------------------------------
+# Trigger executor — fires trigger body SQL with NEW/OLD value injection.
+# --------------------------------------------------------------------------
+
+
+def _split_body_sql(body: str) -> list[str]:
+    """Split a trigger body SQL string on ' ; ' separators into individual statements."""
+    return [s.strip() for s in body.split(" ; ") if s.strip()]
+
+
+# Matches ``NEW . col`` or ``OLD . col`` (with any surrounding whitespace)
+# as generated by the adapter's _node_to_sql helper.
+_PSEUDO_REF_RE = re.compile(r"\b(NEW|OLD)\s*\.\s*(\w+)", re.IGNORECASE)
+
+
+def _inject_pseudo_refs(
+    sql: str,
+    new_row: dict | None,
+    old_row: dict | None,
+) -> tuple[str, list[Any]]:
+    """Replace ``NEW.col`` / ``OLD.col`` references with ``?`` placeholders.
+
+    Returns ``(rewritten_sql, ordered_params)`` so the body statement can be
+    executed as a parameterised query with the actual row values inline rather
+    than requiring a live cursor scan of a pseudo-table.
+
+    Replacement is strictly left-to-right so parameter order matches the
+    placeholder order the binding layer expects.
+    """
+    params: list[Any] = []
+
+    def _replace(m: re.Match) -> str:
+        pseudo = m.group(1).upper()
+        col = m.group(2)
+        row = new_row if pseudo == "NEW" else old_row
+        params.append(row.get(col) if row else None)
+        return "?"
+
+    rewritten = _PSEUDO_REF_RE.sub(_replace, sql)
+    return rewritten, params
+
+
+def _make_trigger_executor(
+    *,
+    backend: Backend,
+    check_registry: dict | None,
+    fk_child: dict | None,
+    fk_parent: dict | None,
+    view_defs: dict | None,
+    user_functions: dict | None = None,
+) -> Any:
+    """Return a callable suitable for passing as ``trigger_executor`` to :func:`execute`.
+
+    The returned executor rewrites each body statement so that ``NEW.col``
+    and ``OLD.col`` references are replaced with ``?`` placeholders bound to
+    the actual row values.  This avoids the need to create temporary tables
+    and keeps each body statement purely data-driven.
+
+    Nested trigger firings (triggers within trigger bodies) are handled by
+    passing the same executor recursively; the depth counter is forwarded so
+    the VM's recursion guard stays accurate.
+
+    ``new_row`` is ``None`` for ``DELETE`` triggers; ``old_row`` is ``None``
+    for ``INSERT`` triggers.
+    """
+
+    def executor(defn: Any, new_row: dict | None, old_row: dict | None, depth: int) -> None:
+        for stmt_sql in _split_body_sql(defn.body):
+            rewritten, params = _inject_pseudo_refs(stmt_sql, new_row, old_row)
+            run(
+                backend,
+                rewritten,
+                params,
+                check_registry=check_registry,
+                fk_child=fk_child,
+                fk_parent=fk_parent,
+                view_defs=view_defs,
+                trigger_executor=executor,
+                trigger_depth=depth,
+                user_functions=user_functions,
+            )
+
+    return executor

@@ -1,5 +1,329 @@
 # Changelog
 
+## [0.18.0] - 2026-04-28
+
+### Added
+
+**Database header field accessors (PRAGMA user_version / schema_version)**
+
+- **`Schema.get_user_version()` / `set_user_version(value)`** — read/write
+  the `user_version` field at byte offset 60 of the page-1 header
+  (`u32` BE).  Range-checked to `0 ≤ v ≤ 2³² − 1`.  The write is staged
+  via the pager and persisted on the next `commit`.
+- **`SqliteFileBackend.get_user_version()` / `set_user_version(value)` /
+  `get_schema_version()`** — backend-level wrappers that delegate to the
+  `Schema` object.  `get_schema_version()` returns the schema cookie
+  (offset 40), which is bumped automatically by every DDL operation.
+- New private constant `_USER_VERSION_OFFSET = 60` in `schema.py`.
+
+These methods are used by mini-sqlite's `PRAGMA user_version` /
+`PRAGMA schema_version` dispatch (added in mini-sqlite 1.9.0).
+
+## [0.17.0] - 2026-04-28
+
+### Added
+
+**AUTOINCREMENT (IX-14)**
+
+`INTEGER PRIMARY KEY AUTOINCREMENT` is now supported and matches real
+SQLite's monotonicity guarantee: rowids assigned by the system are
+strictly greater than every rowid that has *ever* lived in the table,
+even ones that have been deleted.  Plain `INTEGER PRIMARY KEY`
+(without `AUTOINCREMENT`) keeps its existing rowid-reuse behaviour.
+
+- **`SqliteFileBackend.create_table`** — when any column is declared
+  `AUTOINCREMENT`, lazily creates the `sqlite_sequence` system table
+  (schema `(name TEXT, seq INTEGER)`).  This matches SQLite's behaviour
+  where the table appears in `.tables` once any AUTOINCREMENT table
+  exists.
+- **`SqliteFileBackend._get_seq(table)` / `_set_seq(table, value)`** —
+  new private helpers that read/write `sqlite_sequence` directly via
+  the table's B-tree, bypassing the public `insert` to avoid recursion.
+- **`_choose_rowid(..., current_seq=0)`** — gained an optional
+  `current_seq` keyword.  When non-zero, the returned rowid is
+  `max(max_existing_rowid, current_seq) + 1`, guaranteeing monotonicity.
+- **`SqliteFileBackend.insert`** — for AUTOINCREMENT tables, fetches
+  `current_seq` from `sqlite_sequence`, picks a rowid that exceeds it,
+  and bumps the seq after a successful insert.  Explicit-rowid inserts
+  that overshoot the sequence also bump it (matches SQLite).
+- **`_columns_to_sql`** — emits `AUTOINCREMENT` after `PRIMARY KEY` so
+  the flag round-trips through `sqlite_schema`.
+- **`_parse_one_column`** — recognises the `AUTOINCREMENT` keyword.
+
+### Fixed
+
+- **NOT NULL on auto-assigned IPK columns** — pre-existing latent bug:
+  `INSERT` without an explicit value for an `INTEGER PRIMARY KEY` column
+  would fail the `NOT NULL` check before `_choose_rowid` could fill in
+  the auto-assigned rowid.  Now `_check_not_null` runs after rowid
+  assignment, so `INSERT INTO items (name) VALUES ('x')` works on
+  IPK tables (with or without `AUTOINCREMENT`).
+
+### Tests added
+
+- `test_backend.py::TestAutoincrement` — 10 tests: lazy
+  `sqlite_sequence` creation, no creation for plain IPK, sequential
+  rowid assignment, deleted-rowid not reused under AUTOINCREMENT,
+  contrast test (plain IPK does reuse), explicit rowid bumps sequence,
+  persistence across reopen, schema round-trip, SQL emit, parser.
+
+## [0.16.0] - 2026-04-28
+
+### Added
+
+**Auto-created UNIQUE indexes for UNIQUE / PRIMARY KEY columns (IX-13)**
+
+`CREATE TABLE` now auto-creates a UNIQUE index for every column declared
+`UNIQUE` or non-IPK `PRIMARY KEY`, matching SQLite's own behaviour.  These
+indexes use the SQLite-standard ``sqlite_autoindex_<table>_<n>`` naming
+convention and provide O(log n) UNIQUE enforcement on every
+insert/update via the IX-12 runtime maintenance path.
+
+- **`SqliteFileBackend.create_table`** — after writing the table schema,
+  scans the column list and calls `create_index` for each column that
+  satisfies `effective_unique() and not _is_ipk(col)`.  Auto-indexes are
+  named `sqlite_autoindex_<table>_<n>` (1-indexed by appearance) and
+  marked `unique=True, auto=True`.  Integer PRIMARY KEY columns are
+  skipped — uniqueness is enforced by the rowid B-tree itself.
+- **`SqliteFileBackend.list_indexes`** — `auto` detection now recognises
+  both naming conventions: `auto_*` (IndexAdvisor) and `sqlite_autoindex_*`
+  (UNIQUE auto-indexes).
+
+### Removed
+
+- **`_check_unique`** — the O(n) per-insert UNIQUE constraint scan is
+  gone.  Auto-created UNIQUE indexes provide the same enforcement at
+  O(log n) via the IX-12 runtime maintenance path.  Behaviour is
+  unchanged from a user perspective: the same `ConstraintViolation` is
+  raised on a UNIQUE collision, only faster.
+
+### Tests added
+
+- `test_backend_index.py::TestAutoUniqueIndex` — 8 tests: UNIQUE column
+  creates auto-index, no auto-index for IPK column, auto-index for
+  non-IPK PRIMARY KEY (e.g. `TEXT PRIMARY KEY`), multiple UNIQUE columns
+  each get an index, runtime enforcement on insert, NULLs do not
+  conflict, persistence across reopen, runtime enforcement on update.
+
+### Notes
+
+- This effectively closes the loop on the IX-11/12 series: any column
+  declared `UNIQUE` in `CREATE TABLE` is now enforced via an index from
+  the moment the table is created — no separate `CREATE UNIQUE INDEX`
+  statement needed.
+- 636 total tests pass (628 + 8 new); ruff clean.
+
+## [0.15.0] - 2026-04-28
+
+### Added
+
+**Runtime index maintenance (IX-12)**
+
+Secondary indexes are now kept in sync with the table B-tree on every
+DML operation, not only at `create_index` backfill time.  Combined with
+the IX-11 UNIQUE flag, this means `CREATE UNIQUE INDEX` actually rejects
+duplicate inserts at runtime — the IX-11 limitation note is gone.
+
+- **`SqliteFileBackend.insert`** — now walks every index on the target
+  table after the row is committed to the table B-tree, computing the
+  index key from the inserted row and inserting `(key_vals, rowid)` into
+  each index B-tree.  For UNIQUE indexes, a duplicate-key check (with
+  NULL-distinct semantics) runs *before* any mutation so a violation
+  leaves the database byte-for-byte unchanged.
+- **`SqliteFileBackend.update`** — for each index, compares the old key
+  (from the cursor's cached row) to the new key (from the proposed row).
+  If they differ, deletes the old `(key, rowid)` entry and inserts the
+  new one.  No-op for indexes whose columns weren't changed.  UNIQUE
+  pre-check on the new key matches `insert` semantics.
+- **`SqliteFileBackend.delete`** — removes the row's entry from every
+  index before deleting the table B-tree row, using the cursor's cached
+  row to recover the indexed column values.
+- **`SqliteFileBackend._open_indexes_for(table)`** — new private helper
+  that returns `[(name, columns, IndexTree)]` for every index on a
+  table, with each `IndexTree` opened in the right unique mode (parsed
+  from the stored `CREATE INDEX` SQL).
+
+### Tests added
+
+- `test_backend_index.py::TestRuntimeIndexMaintenance` — 9 tests:
+  insert populates index, runtime UNIQUE violation, multiple NULLs
+  allowed, delete removes index entry, update changes index entry,
+  update of non-indexed column skips index, runtime UNIQUE on update,
+  multiple-index maintenance, persistence across reopen.
+
+### Notes
+
+- This closes the IX-11 limitation where UNIQUE only fired at backfill.
+  All UNIQUE checks now occur on every `INSERT`/`UPDATE` automatically.
+- `INSERT` and `UPDATE` no longer auto-commit (unchanged behaviour); the
+  caller — typically the SQL VM — must wrap DML in
+  `begin_transaction`/`commit` to flush dirty pages.
+
+## [0.14.0] - 2026-04-28
+
+### Added
+
+**UNIQUE index enforcement (IX-11)**
+
+`IndexDef.unique` is now an enforced constraint at index level, not a reserved
+field.  `CREATE UNIQUE INDEX` creates an index that rejects duplicate keys at
+both backfill time and (eventually) at runtime insert/update time.
+
+- **`IndexTree.create(..., is_unique=False)`** and **`IndexTree.open(...,
+  is_unique=False)`** — new keyword.  When `True`, `IndexTree.insert(key,
+  rowid)` raises `DuplicateIndexKeyError` if any existing entry shares the
+  same key (independent of rowid).  The check runs **before** any disk write,
+  so the tree is unchanged on rejection.
+- **`IndexTree.is_unique` property** — exposes the flag for callers that need
+  to introspect.
+- **NULL semantics** — per SQLite, `NULL` values in a UNIQUE index are
+  considered distinct from each other.  If any column in the key is `NULL`,
+  the duplicate check is skipped.  This lets multiple rows have `NULL` in a
+  UNIQUE column (single or composite).
+- **`SqliteFileBackend.create_index(IndexDef(unique=True))`** — emits
+  `CREATE UNIQUE INDEX` SQL into `sqlite_schema`, opens the index B-tree in
+  unique mode, and runs the backfill.  If existing rows contain duplicates,
+  the pending pager writes are rolled back and `ConstraintViolation` is
+  raised.  The database is unchanged on failure.
+- **`SqliteFileBackend.list_indexes`** — populates `IndexDef.unique` by
+  parsing the stored `CREATE INDEX` SQL via the new `_parse_index_unique`
+  helper.  The flag round-trips across close/reopen.
+- **`_columns_to_index_sql(name, table, columns, *, unique=False)`** — gained
+  a `unique` keyword that switches to `CREATE UNIQUE INDEX`.
+- **`_parse_index_unique(sql)`** — case-insensitive regex match for
+  `CREATE UNIQUE INDEX`.  Tolerates extra whitespace.
+
+### Spec
+
+- `code/specs/storage-sqlite-v3-auto-index.md` — added IX-11 to the phased
+  build order, documented the storage and backend layer changes, and
+  spelled out NULL-distinct semantics.  Removed the "UNIQUE deferred"
+  non-goal.
+
+### Tests added
+
+- `test_index_tree.py::TestUniqueIndex` — 7 tests: default non-unique,
+  distinct keys allowed, duplicate rejected, multiple NULLs allowed,
+  composite NULL semantics, multi-leaf rejection, round-trip via reopen.
+- `test_backend_index.py::TestUniqueIndex` — 7 tests: round-trip of unique
+  flag, default non-unique, backfill rejection on duplicates, success on
+  distinct data, NULL allowance, persistence across reopen, helper unit
+  test.
+
+### Limitations
+
+- Index maintenance on runtime `insert` / `update` / `delete` is still a
+  pre-existing gap in `SqliteFileBackend` — UNIQUE enforcement only fires
+  at backfill time today.  Once index maintenance lands, runtime UNIQUE
+  enforcement will work automatically with no further `IndexTree` changes.
+- The duplicate scan inside `IndexTree.insert` uses `range_scan` which is
+  O(N) worst case.  A dedicated O(log N) `_has_key` helper is a future
+  optimisation.
+
+## [0.13.0] - 2026-04-28
+
+### Added
+
+**Configurable page sizes (512–65536 bytes)**
+
+Every layer of the storage stack now uses the actual page size read from the
+database header rather than the module-level `PAGE_SIZE = 4096` constant.
+Valid page sizes are the same powers-of-two that SQLite supports: 512, 1024,
+2048, 4096, 8192, 16384, 32768, and 65536.
+
+- **`Pager.create(page_size=…)`** — new keyword argument; defaults to 4096.
+  Validates against the set of SQLite-valid sizes and raises `ValueError` for
+  anything else.
+- **`Pager.page_size` property** — returns `self._page_size`, an instance
+  attribute set on construction / open instead of the module constant.
+- **`Pager.open`** — reads the page size from bytes 16–17 of the database
+  header on open (the standard SQLite field).  The encoded value 1 is decoded
+  as 65536 per the SQLite spec.  An out-of-spec value raises
+  `CorruptDatabaseError`.  Files without the SQLite magic bytes (e.g. raw
+  pager-only test files) fall back to the default 4096.
+- **`freelist.trunk_capacity(page_size)`** — new public function; computes
+  the maximum leaf entries per trunk page for an arbitrary page size (was a
+  module constant `TRUNK_CAPACITY = 1022` for 4096-byte pages only).  The
+  constant is kept for backward compatibility.
+
+### Changed
+
+- **`Pager`** — `_open_file` now reads the SQLite magic and page-size field
+  via a short-lived probe file handle that is closed before the main `_f`
+  handle is opened.  This prevents Python's buffered I/O read-ahead from
+  masking short-read detection after external file truncation (a behaviour
+  difference observed on macOS).
+- **`BTree`, `IndexTree`** — all module-level helper functions
+  (`_local_payload_size`, `_cell_size_on_page`, `_read_ptrs`, …) gained a
+  `page_size: int = PAGE_SIZE` parameter.  Class methods derive the page size
+  from `self._pager.page_size` on every call.
+- **`Freelist`** — `allocate` and `free` use `self._pager.page_size` and the
+  new `trunk_capacity()` function.
+- **`Schema` / `initialize_new_database`** — replaced the hard-coded `PAGE_SIZE`
+  import with `pager.page_size` throughout.  `initialize_new_database` writes
+  the correct page-size field into the SQLite header for any page size.
+
+### Tests added
+
+- `test_pager.py` — `test_create_with_1024_page_size`,
+  `test_create_with_8192_page_size`, `test_create_rejects_invalid_page_size`,
+  `test_open_reads_page_size_from_sqlite_header` (parametrised over all 7
+  non-default valid sizes), `test_open_rejects_sqlite_header_with_bad_page_size`,
+  `test_multi_page_roundtrip_small_pages`.
+- `test_schema.py` — `TestNonDefaultPageSize`: initialize + create table +
+  close + reopen round-trip at 1024 and 8192 bytes.
+
+## [0.12.0] - 2026-04-28
+
+### Added
+
+**`SqliteFileBackend` — complete Backend interface coverage**
+
+All previously-missing Backend interface methods are now fully implemented,
+bringing the file backend to feature parity with `InMemoryBackend`.
+
+- **`add_column(table, column)`** — implements ALTER TABLE ADD COLUMN by
+  rewriting the stored `CREATE TABLE` SQL in `sqlite_schema` (via the new
+  `Schema.update_table_sql` helper).  Existing rows are not touched on disk;
+  `_decode_row` now returns the column's declared `DEFAULT` (or NULL) for
+  columns absent from pre-existing record payloads, mirroring SQLite's own
+  on-disk semantics.  Raises `ColumnAlreadyExists` for duplicate column names.
+
+- **`current_transaction()`** — returns the active `TransactionHandle` or
+  `None`, enabling multi-statement transaction sequences across separate
+  `execute()` calls to retrieve the handle without external storage.
+
+- **Savepoints (`create_savepoint`, `release_savepoint`,
+  `rollback_to_savepoint`)** — implemented via an in-memory snapshot stack.
+  `create_savepoint(name)` deep-copies the pager's dirty-page dict and records
+  the current logical page count.  `rollback_to_savepoint(name)` restores both,
+  re-attaches the schema object, and destroys savepoints created after the named
+  one (keeping the named savepoint alive, per SQLite semantics).
+  `release_savepoint(name)` drops the savepoint and all later ones without
+  changing the data state.  Raises `Unsupported` for unknown savepoint names.
+
+- **Triggers (`create_trigger`, `drop_trigger`, `list_triggers`)** — triggers
+  are stored as `type='trigger'` rows in `sqlite_schema` with `rootpage=0`
+  (the SQLite convention).  `create_trigger` serialises a `TriggerDef` to a
+  `CREATE TRIGGER … BEGIN … END` statement.  `list_triggers(table)` parses
+  them back into `TriggerDef` objects.  `drop_trigger(name, if_exists=False)`
+  removes the row.  All three use new `Schema` helpers added below.
+
+**`Schema` — new helpers**
+
+- **`find_trigger(name)`**, **`list_triggers(table=None)`** — read `type='trigger'`
+  rows from `sqlite_schema`, with optional per-table filtering.
+- **`create_trigger(name, table, sql)`** — inserts a trigger row with `rootpage=0`.
+- **`drop_trigger(name)`** — deletes the trigger row and bumps the schema cookie.
+- **`update_table_sql(name, new_sql)`** — rewrites the `sql` field of an existing
+  `type='table'` row in-place (using `BTree.update`), preserving the `rootpage`.
+
+### Changed
+
+- `_decode_row` now applies a column's declared `DEFAULT` (instead of unconditionally
+  returning `NULL`) when a record's payload is shorter than the schema's column count.
+  This handles rows written before an `add_column` call correctly.
+
 ## [0.11.0] - 2026-04-27
 
 ### Added

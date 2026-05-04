@@ -36,6 +36,8 @@ from symbolic_ir import (
     BLOCK,
     COS,
     COSH,
+    COTH,
+    CSCH,
     DEFINE,
     DIV,
     EQUAL,
@@ -57,6 +59,7 @@ from symbolic_ir import (
     OR,
     POW,
     RETURN,
+    SECH,
     SIN,
     SINH,
     SQRT,
@@ -343,6 +346,46 @@ def acosh(simplify: bool) -> Handler:
 
 def atanh(simplify: bool) -> Handler:
     return _elementary("Atanh", math.atanh, {0: ZERO}, simplify)
+
+
+# ---------------------------------------------------------------------------
+# Reciprocal hyperbolic functions (Phase 15)
+#
+# coth = cosh/sinh, sech = 1/cosh, csch = 1/sinh.
+#
+# Domain notes:
+#   coth(0) and csch(0) are undefined (division by sinh(0) = 0).
+#   sech(0) = 1/cosh(0) = 1/1 = 1.
+#
+# All three use the ``_elementary`` factory just like the primary
+# hyperbolic functions above.
+# ---------------------------------------------------------------------------
+
+
+def coth(simplify: bool) -> Handler:
+    """Return a handler for ``coth(x) = cosh(x)/sinh(x)``.
+
+    No exact identity at ``x = 0`` — the function has a simple pole there.
+    At ``|x| → ∞``, ``coth(x) → ±1``, but those are limits, not exact
+    identities at integer inputs, so the table is empty.
+    """
+    return _elementary("Coth", lambda x: math.cosh(x) / math.sinh(x), {}, simplify)
+
+
+def sech(simplify: bool) -> Handler:
+    """Return a handler for ``sech(x) = 1/cosh(x)``.
+
+    Exact identity: ``sech(0) = 1/cosh(0) = 1/1 = 1``.
+    """
+    return _elementary("Sech", lambda x: 1.0 / math.cosh(x), {0: ONE}, simplify)
+
+
+def csch(simplify: bool) -> Handler:
+    """Return a handler for ``csch(x) = 1/sinh(x)``.
+
+    No exact identity at ``x = 0`` — the function has a simple pole there.
+    """
+    return _elementary("Csch", lambda x: 1.0 / math.sinh(x), {}, simplify)
 
 
 # ---------------------------------------------------------------------------
@@ -894,6 +937,9 @@ def build_handler_table(simplify: bool) -> dict[str, Handler]:
         ASINH.name: asinh(simplify),
         ACOSH.name: acosh(simplify),
         ATANH.name: atanh(simplify),
+        COTH.name: coth(simplify),
+        SECH.name: sech(simplify),
+        CSCH.name: csch(simplify),
         EQUAL.name: equal(simplify),
         NOT_EQUAL.name: not_equal(simplify),
         LESS.name: less(simplify),

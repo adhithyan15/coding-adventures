@@ -1,0 +1,70 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "algol60-wasm",
+  "display_name": "algol60-wasm",
+  "description": "Compile an ALGOL 60 source file to a WebAssembly module.",
+  "version": "0.1.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
+  "flags": [
+    {
+      "id": "output",
+      "short": "o",
+      "long": "output",
+      "description": "Output .wasm path. Defaults to SOURCE with a .wasm suffix.",
+      "type": "path",
+      "value_name": "WASM"
+    },
+    {
+      "id": "quiet",
+      "short": "q",
+      "long": "quiet",
+      "description": "Do not print the output path after a successful compile.",
+      "type": "boolean"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "source",
+      "display_name": "SOURCE",
+      "description": "ALGOL 60 source file to compile.",
+      "type": "file",
+      "required": true
+    }
+  ],
+  "commands": [
+    {
+      "id": "run",
+      "name": "run",
+      "description": "Compile an ALGOL 60 source file in memory and run its WASM _start export.",
+      "flags": [
+        {
+          "id": "max-instructions",
+          "long": "max-instructions",
+          "description": "Maximum WASM instructions to execute before trapping.",
+          "type": "integer",
+          "value_name": "COUNT",
+          "default": 1000000
+        },
+        {
+          "id": "print-result",
+          "long": "print-result",
+          "description": "Print the _start return values to stderr after program output.",
+          "type": "boolean"
+        }
+      ],
+      "arguments": [
+        {
+          "id": "source",
+          "display_name": "SOURCE",
+          "description": "ALGOL 60 source file to compile and run.",
+          "type": "file",
+          "required": true
+        }
+      ]
+    }
+  ]
+}

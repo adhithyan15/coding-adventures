@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.8.0 — 2026-04-28
+
+**Phase 15 — Reciprocal hyperbolic compiler mappings: `coth`, `sech`, `csch`.**
+
+Three entries added to `_STANDARD_FUNCTIONS` in `compiler.py`:
+
+```python
+"coth": COTH,
+"sech": SECH,
+"csch": CSCH,
+```
+
+These mappings follow the same pattern as `"sinh": SINH` etc. from Phase 13.
+`COTH`, `SECH`, `CSCH` are imported from `symbolic_ir` 0.8.0, which adds the
+three new `IRSymbol` head singletons.
+
+Depends on `symbolic-ir >= 0.8.0`.
+
+---
+
 ## 0.7.0 — 2026-04-27
 
 **Phase 13 — Hyperbolic function compiler mappings.**

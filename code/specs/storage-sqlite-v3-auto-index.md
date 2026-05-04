@@ -461,8 +461,58 @@ assert any(
 |---|---|---|
 | IX-7 | `QueryEvent` emitted by `sql_vm`; `should_drop` on `IndexPolicy`; `cold_window` on `HitCountPolicy`; `on_query_event` on `IndexAdvisor`; engine wires event callback | `sql-vm`, `mini-sqlite` |
 | IX-8 | Composite (multi-column) index advisor + planner prefix-match selection + `IndexScan.columns` list | `mini-sqlite`, `sql-planner`, `sql-codegen`, `sql-vm` |
+| IX-11 | UNIQUE index enforcement — `IndexTree.is_unique` flag, `CREATE UNIQUE INDEX` round-trip, backfill duplicate-rejection | `storage-sqlite` |
 
 Each phase is a separate feature branch and PR.
+
+---
+
+## UNIQUE index enforcement (IX-11)
+
+`IndexDef.unique` is now an enforced constraint, not a reserved field.
+
+### Storage layer (`storage_sqlite.index_tree.IndexTree`)
+
+`IndexTree.create()` and `IndexTree.open()` accept an `is_unique: bool = False`
+keyword.  When `True`, `IndexTree.insert(key, rowid)` raises
+`DuplicateIndexKeyError` if any existing entry shares the same key — independent
+of rowid.  The check is implemented as a `range_scan(key, key)` lookup before
+the leaf write, so no partial state leaks on rejection.
+
+The `is_unique` flag is **not** persisted in the index page format itself — it
+is recovered from the `CREATE UNIQUE INDEX` SQL stored in `sqlite_schema`.
+This matches SQLite's own approach (the page format has no per-index "unique"
+bit; uniqueness lives in the schema text).
+
+### NULL semantics
+
+Per SQLite's UNIQUE-index rule, `NULL` values are considered **distinct from
+each other**.  If any column in *key* is `NULL`, the duplicate check is
+skipped — multiple rows with `NULL` in any indexed column may coexist.  This
+applies to single-column and composite UNIQUE indexes alike.
+
+### Backend layer (`SqliteFileBackend`)
+
+* `_columns_to_index_sql(name, table, columns, *, unique=False)` — emits
+  `CREATE UNIQUE INDEX` when `unique=True`.
+* `_parse_index_unique(sql)` — case-insensitive regex match for
+  `CREATE UNIQUE INDEX`.  Used by `list_indexes` to populate
+  `IndexDef.unique` on read.
+* `create_index(IndexDef(..., unique=True))` — performs the backfill
+  through a unique-mode `IndexTree`.  If existing rows contain duplicates,
+  the pending pager writes are rolled back and `ConstraintViolation` is
+  raised.  The database state is unchanged on failure.
+
+### Limitations of the IX-11 implementation
+
+* Index maintenance on runtime `insert` / `update` / `delete` is **not yet
+  wired** in `SqliteFileBackend` (a pre-existing gap, deferred to a separate
+  phase).  Once that lands, UNIQUE enforcement will fire on every row
+  modification automatically — no further changes to `IndexTree` are needed.
+* The duplicate scan inside `IndexTree.insert` uses `range_scan(key, key)`
+  which is O(N) in the worst case (entries before *key* are walked before
+  early-exit kicks in).  A dedicated O(log N) `_has_key(key)` helper is a
+  future optimisation.
 
 ---
 
@@ -522,8 +572,6 @@ Each phase is a separate feature branch and PR.
 ## Non-goals (v3)
 
 - **Three-or-more column composite indexes** — deferred to v4.
-- **UNIQUE index enforcement** — `IndexDef.unique` field reserved but not
-  enforced. Deferred to a dedicated uniqueness spec.
 - **`ANALYZE` / statistics-based cost model** — first-match / prefix-length
   heuristic only. Deferred to v4.
 - **Index-only scans** — deferred to v4.

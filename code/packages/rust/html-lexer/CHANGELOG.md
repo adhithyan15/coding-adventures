@@ -71,3 +71,156 @@ documented in this file.
 - Script-data double-escaped tokenizer states, so nested-looking
   `<script>...</script>` text inside escaped script comments does not
   prematurely emit the outer script end tag.
+- html5lib-style normalization and conformance coverage for seeded script
+  escaped/double-escaped dash, dash-dash, and less-than-sign substates.
+- Seeded CDATA section tokenizer-state support for future parser-controlled
+  foreign-content tokenization, keeping markup and character references literal
+  until the `]]>` delimiter returns the lexer to data state.
+- Markup declaration `<![CDATA[` opener support that reaches the CDATA section
+  state from data-state lexing while preserving malformed partial openers as
+  bogus comments.
+- HTML comment start-dash handling, including `<!-->` abrupt empty-comment
+  recovery and `<!--->` empty-comment closure.
+- HTML comment less-than-sign handling for nested-looking `<!--` sequences
+  inside open comments, preserving the text while reporting `nested-comment`.
+- HTML comment end-bang handling for `--!>` recovery and non-closing `--!`
+  text preservation.
+- Processing-instruction-looking `<?...?>` markup now recovers as a bogus
+  comment with `unexpected-question-mark-instead-of-tag-name`.
+- EOF in bogus-comment recovery now emits the recovered comment without adding
+  an unrelated `eof-in-comment` diagnostic.
+- Malformed markup declarations such as `<!foo>` now report
+  `incorrectly-opened-comment` while recovering as bogus comments.
+- Malformed markup declaration fallback now reconsumes the first non-matching
+  byte in bogus-comment state, so `<!>` emits an empty comment and returns to
+  data state.
+- EOF after a malformed markup declaration opener such as `<!` now emits an
+  empty bogus comment with `incorrectly-opened-comment` instead of preserving
+  the opener as text.
+- Duplicate attributes now follow HTML recovery by keeping the first attribute,
+  dropping later attributes with the same interpreted name, and reporting
+  `duplicate-attribute`.
+- Unquoted attribute values now preserve unexpected characters such as `"`,
+  `'`, `<`, `=`, and `` ` `` while reporting
+  `unexpected-character-in-unquoted-attribute-value`.
+- NULL characters in data/RCDATA/RAWTEXT/PLAINTEXT/CDATA/script data and
+  attribute values now recover with `unexpected-null-character` and append
+  U+FFFD.
+- NULL characters in tag names and attribute names now recover with
+  `unexpected-null-character` and append U+FFFD.
+- NULL characters in comments and bogus comments now recover with
+  `unexpected-null-character` and append U+FFFD while preserving pending comment
+  dashes.
+- NULL characters in DOCTYPE names and quoted public/system identifiers now
+  recover with `unexpected-null-character` and append U+FFFD.
+- NULL characters in script escaped and double-escaped substates now recover
+  with `unexpected-null-character` and append U+FFFD while preserving their
+  dash-sensitive state transitions.
+- Numeric character references now report invalid-code-point diagnostics and
+  recover with replacement/remapping behavior for null, surrogate,
+  out-of-range, noncharacter, and Windows-1252 control references.
+- Digitless numeric character references such as `&#;` and `&#x;` now report
+  `absence-of-digits-in-numeric-character-reference` while staying literal.
+- One-dash markup declarations such as `<!->` and `<!-x>` now use
+  incorrectly-opened bogus-comment recovery instead of empty-comment recovery.
+- Invalid tag-open characters now follow HTML recovery: stray `<` text is
+  preserved and malformed end-tag openers recover as bogus comments.
+- Missing-name DOCTYPE recovery now marks force-quirks mode for `<!DOCTYPE>`
+  and whitespace-only DOCTYPE names.
+- DOCTYPE declarations cut off by EOF after a name now emit the current name
+  with force-quirks mode enabled.
+- DOCTYPE `PUBLIC` and `SYSTEM` identifier states now preserve quoted public
+  and system identifiers on emitted tokens, including force-quirks recovery for
+  missing identifiers.
+- Standalone `SYSTEM` doctypes and trailing junk after system identifiers are
+  now covered, with unexpected trailing junk marking force-quirks mode.
+- DOCTYPE public/system recovery conformance now covers missing whitespace
+  around identifiers, missing identifier quotes, and abrupt identifier
+  termination.
+- DOCTYPE declarations cut off while matching the `DOCTYPE` keyword now emit a
+  force-quirks token instead of a clean partial declaration.
+- Malformed `DOCTYPE` keyword text now marks force-quirks mode while preserving
+  the recovered keyword text as the best-effort DOCTYPE name.
+- Named character reference recovery now uses the longest matching known
+  entity prefix in text and RCDATA, while preserving ambiguous ampersands
+  literally in attribute values when the missing-semicolon reference would be
+  followed by an ASCII alphanumeric character or `=`.
+- Missing-semicolon named-character-reference recovery is now limited to
+  WHATWG legacy no-semicolon aliases, avoiding over-acceptance of newer names
+  such as `trade` without `;`.
+- Completed the HTML4-era math named reference table with `alefsym` and
+  `oline`, including data, RCDATA, attribute, and normalized html5lib smoke
+  coverage.
+- Added a WHATWG named-reference batch for spacing, invisible operators,
+  punctuation aliases, and math constants, including multi-codepoint
+  replacements such as `ThickSpace`.
+- Added a WHATWG relation/operator named-reference batch for equality, tilde,
+  greater-than, less-than, and negated aliases, including combining-overlay
+  replacements such as `NotNestedGreaterGreater`.
+- Added a WHATWG greater/less comparison named-reference batch covering `gl*`,
+  `gn*`, `gtr*`, `less*`, `ln*`, and negated nested comparison aliases.
+- Added a WHATWG equality/congruence/parallel named-reference batch covering
+  `Bumpeq`, `Congruent`, `eq*`, `sim*`, `mid*`, and `par*` aliases.
+- Added a WHATWG precedence/successor relation named-reference batch covering
+  `Precedes`, `Succeeds`, `pr*`, `prec*`, `sc*`, and `succ*` aliases.
+- Added a WHATWG arrow/vector named-reference batch covering basic, double,
+  long, bar, tee, map, vector, and vector-bar arrow aliases.
+- Added a WHATWG Greek variant named-reference batch covering epsilon, kappa,
+  phi, pi, rho, sigma, theta, upsilon, digamma, and letter-like aliases.
+- Added a WHATWG set/logic named-reference batch covering set operations,
+  membership, subset/superset, square-set, and n-ary logic aliases.
+- Added a WHATWG mathematical alphabet named-reference batch covering
+  open-face (`*opf`), script (`*scr`), and fraktur (`*fr`) aliases.
+- Added a WHATWG Cyrillic named-reference batch covering core and extended
+  uppercase/lowercase `*cy` aliases.
+- Added a remaining WHATWG arrow/vector/harpoon named-reference batch covering
+  vector-tee, fish-tail, curved, negated, and long arrow aliases.
+- Added a remaining WHATWG set-algebra named-reference batch covering cap/cup,
+  square-set, subset/superset, and negated set aliases.
+- Added a remaining WHATWG operator/integral named-reference batch covering
+  contour integrals, circled operators, dot relations, plus/times variants,
+  and multi-integral aliases.
+- Completed semicolon-terminated WHATWG named-character-reference coverage with
+  a final generated batch for the remaining aliases.
+- Treated form feed as an HTML ASCII-whitespace delimiter for script
+  double-escape boundaries and semicolonless legacy character references.
+- Enabled HTML input-stream newline preprocessing in the Rust wrapper, so CRLF
+  pairs and bare carriage returns tokenize as LF.
+- EOF inside ordinary start/end tag construction now drops the partial token
+  after reporting EOF-in-tag diagnostics.
+- EOF inside attribute character-reference substates now also drops the partial
+  start tag after preserving the relevant reference diagnostics.
+- Added a WHATWG operator/shape named-reference batch covering circled
+  operators, integrals, products, squares, lozenges, stars, suits, and symbols.
+- Added a WHATWG box-drawing named-reference batch covering double-line,
+  mixed-line, light-line, crossing, and corner box aliases.
+- Added a WHATWG angle/fence named-reference batch covering angle, bracket,
+  floor/ceiling, triangle, corner, and over/under fence aliases.
+- Added a WHATWG Latin Extended named-reference batch covering macron, breve,
+  ogonek, caron, cedilla, circumflex, dot, ring, and tilde letter aliases.
+- Added a second WHATWG arrow named-reference batch covering short/capital,
+  lowercase long, hook, tail, loop, harpoon, negated, squiggle, diagonal, and
+  mapsto aliases.
+- Added parser-facing `HtmlTokenizerState` and `HtmlLexContext` APIs, including
+  typed fragment lexing and element-to-tokenizer-mode mapping for RCDATA,
+  RAWTEXT, script data, and PLAINTEXT parser handoff.
+- Added `apply_html_lex_context` so parser code can reconfigure an existing
+  lexer with typed HTML context and clear stale text-mode tag context when
+  returning to data-state lexing.
+- Added scripting-aware parser-facing text-mode context selection so `noscript`
+  can enter RAWTEXT when scripting is enabled and remain ordinary markup when
+  scripting is disabled.
+- Added a typed parser-facing CDATA section context for future SVG/MathML
+  foreign-content tree construction without exposing raw machine-state strings.
+- Added typed parser-facing script substate contexts for script escaped and
+  double-escaped tokenizer fixtures and future parser handoff.
+- Added `HTML_SCRIPT_TOKENIZER_STATES` and `HtmlTokenizerState::is_script_substate()`
+  so parser/conformance adapters can enumerate and validate every supported
+  script entry state without duplicating lexer internals.
+- Added `HTML_TOKENIZER_STATES`, `HTML_FRAGMENT_TOKENIZER_STATES`, and
+  `HtmlTokenizerState::is_fragment_state()` so parser and fixture importers can
+  enumerate the full typed tokenizer-context surface without copying state
+  lists out of the lexer crate.
+- Added `HtmlTokenizerState::from_machine_state()` and
+  `HtmlTokenizerState::from_fragment_machine_state()` so parser/conformance code
+  can map generated machine-state identifiers back into typed tokenizer states.

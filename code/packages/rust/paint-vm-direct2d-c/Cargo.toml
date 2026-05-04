@@ -9,5 +9,7 @@ crate-type = ["staticlib", "cdylib"]
 
 [dependencies]
 paint-instructions = { path = "../paint-instructions" }
+
+[target.'cfg(target_os = "windows")'.dependencies]
 paint-vm-direct2d = { path = "../paint-vm-direct2d" }
 paint-vm-gdi = { path = "../paint-vm-gdi" }

@@ -97,10 +97,27 @@ class TestIrOp:
         assert IrOp.F64_CMP_GE == 44
         assert IrOp.F64_FROM_I32 == 45
         assert IrOp.I32_TRUNC_FROM_F64 == 46
+        assert IrOp.MAKE_CLOSURE == 47
+        assert IrOp.APPLY_CLOSURE == 48
+        assert IrOp.F64_SQRT == 49
+        assert IrOp.F64_SIN == 50
+        assert IrOp.F64_COS == 51
+        assert IrOp.F64_ATAN == 52
+        assert IrOp.F64_LN == 53
+        assert IrOp.F64_EXP == 54
+        assert IrOp.MAKE_CONS == 55
+        assert IrOp.CAR == 56
+        assert IrOp.CDR == 57
+        assert IrOp.IS_NULL == 58
+        assert IrOp.IS_PAIR == 59
+        assert IrOp.MAKE_SYMBOL == 60
+        assert IrOp.IS_SYMBOL == 61
+        assert IrOp.LOAD_NIL == 62
+        assert IrOp.F64_POW == 63
 
     def test_total_opcode_count(self) -> None:
-        """There are exactly 47 opcodes after adding f64-to-i32 truncation."""
-        assert len(IrOp) == 47
+        """There are exactly 64 opcodes after heap primitives and f64 pow."""
+        assert len(IrOp) == 64
 
     def test_name_to_op_roundtrip(self) -> None:
         """NAME_TO_OP[op.name] == op for every opcode."""
@@ -1006,6 +1023,44 @@ class TestAllOpcodesPrintParse:
             IrOp.F64_CMP_GE:   [IrRegister(4), IrRegister(1), IrRegister(2)],
             IrOp.F64_FROM_I32: [IrRegister(2), IrRegister(1)],
             IrOp.I32_TRUNC_FROM_F64: [IrRegister(2), IrRegister(1)],
+            IrOp.F64_SQRT:     [IrRegister(2), IrRegister(1)],
+            IrOp.F64_SIN:      [IrRegister(2), IrRegister(1)],
+            IrOp.F64_COS:      [IrRegister(2), IrRegister(1)],
+            IrOp.F64_ATAN:     [IrRegister(2), IrRegister(1)],
+            IrOp.F64_LN:       [IrRegister(2), IrRegister(1)],
+            IrOp.F64_EXP:      [IrRegister(2), IrRegister(1)],
+            IrOp.F64_POW:      [IrRegister(3), IrRegister(1), IrRegister(2)],
+            # MAKE_CLOSURE dst, fn_label, num_captured, capt0, capt1
+            IrOp.MAKE_CLOSURE: [
+                IrRegister(0),
+                IrLabel("_lambda_0"),
+                IrImmediate(2),
+                IrRegister(1),
+                IrRegister(2),
+            ],
+            # APPLY_CLOSURE dst, closure_reg, num_args, arg0
+            IrOp.APPLY_CLOSURE: [
+                IrRegister(0),
+                IrRegister(3),
+                IrImmediate(1),
+                IrRegister(4),
+            ],
+            # MAKE_CONS dst, head_reg, tail_reg
+            IrOp.MAKE_CONS:    [IrRegister(5), IrRegister(1), IrRegister(2)],
+            # CAR dst, src
+            IrOp.CAR:          [IrRegister(2), IrRegister(5)],
+            # CDR dst, src
+            IrOp.CDR:          [IrRegister(2), IrRegister(5)],
+            # IS_NULL dst, src
+            IrOp.IS_NULL:      [IrRegister(2), IrRegister(5)],
+            # IS_PAIR dst, src
+            IrOp.IS_PAIR:      [IrRegister(2), IrRegister(5)],
+            # MAKE_SYMBOL dst, name_label
+            IrOp.MAKE_SYMBOL:  [IrRegister(2), IrLabel("foo")],
+            # IS_SYMBOL dst, src
+            IrOp.IS_SYMBOL:    [IrRegister(2), IrRegister(5)],
+            # LOAD_NIL dst
+            IrOp.LOAD_NIL:     [IrRegister(2)],
         }
         for idx, op in enumerate(IrOp):
             operands = operands_by_opcode[op]

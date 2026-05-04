@@ -26,12 +26,15 @@ from symbolic_ir import (
     ATANH,
     COS,
     COSH,
+    COTH,
+    CSCH,
     DIV,
     EXP,
     LOG,
     MUL,
     NEG,
     POW,
+    SECH,
     SIN,
     SINH,
     SQRT,
@@ -249,6 +252,30 @@ def _diff(f: IRNode, x: IRSymbol) -> IRNode:
         (inner,) = f.args
         denom = IRApply(SUB, (ONE, IRApply(POW, (inner, IRInteger(2)))))
         return IRApply(DIV, (_diff(inner, x), denom))
+
+    # -- Reciprocal hyperbolic functions (Phase 15) -----------------------
+    #
+    # Derivatives are expressed in terms of sinh/cosh (not in terms of
+    # coth/sech/csch themselves) so the simplifier doesn't need to recurse
+    # back through these heads.
+    #
+    # d/dx coth(u) = -u' / sinh²(u)
+    if head == COTH:
+        (inner,) = f.args
+        denom = IRApply(POW, (IRApply(SINH, (inner,)), IRInteger(2)))
+        return IRApply(NEG, (IRApply(DIV, (_diff(inner, x), denom)),))
+    # d/dx sech(u) = -u'·sinh(u) / cosh²(u)
+    if head == SECH:
+        (inner,) = f.args
+        numer = IRApply(MUL, (_diff(inner, x), IRApply(SINH, (inner,))))
+        denom = IRApply(POW, (IRApply(COSH, (inner,)), IRInteger(2)))
+        return IRApply(NEG, (IRApply(DIV, (numer, denom)),))
+    # d/dx csch(u) = -u'·cosh(u) / sinh²(u)
+    if head == CSCH:
+        (inner,) = f.args
+        numer = IRApply(MUL, (_diff(inner, x), IRApply(COSH, (inner,))))
+        denom = IRApply(POW, (IRApply(SINH, (inner,)), IRInteger(2)))
+        return IRApply(NEG, (IRApply(DIV, (numer, denom)),))
 
     # Unknown function — leave as ``D(f, x)`` unevaluated.
     return IRApply(D, (f, x))

@@ -113,17 +113,29 @@ switch_list  = desig_expr { COMMA desig_expr } ;
 procedure_decl = [ type ] "procedure" NAME [ formal_params ] SEMICOLON
                  [ value_part ] { spec_part } proc_body ;
 
-formal_params = LPAREN ident_list RPAREN ;
+# Empty parentheses are accepted as a compatibility spelling for parameterless
+# procedures; the report-style spelling omits formal_params entirely.
+formal_params = LPAREN [ ident_list ] RPAREN ;
 
 # The VALUE declaration opts specific parameters into call-by-value semantics.
 # All parameters not listed here are call-by-name: the argument expression is
 # re-evaluated every time the parameter is used inside the procedure body.
 value_part   = "value" ident_list SEMICOLON ;
 
-# spec_part declares what kind each parameter is (integer, real, array, etc.)
+# spec_part declares what kind each parameter is (integer, real, array, etc.).
+# Typed array/procedure specs accept report-style combined forms such as
+# `integer array a;` and `real procedure f;`. The older split spelling
+# `integer a; array a;` remains valid because repeated spec parts are merged by
+# the semantic checker.
 spec_part    = specifier ident_list SEMICOLON ;
 
-specifier    = "integer" | "real" | "boolean" | "string" | "array" | "label" | "switch" | "procedure" ;
+specifier    = type "array"
+             | type "procedure"
+             | "array"
+             | "label"
+             | "switch"
+             | "procedure"
+             | type ;
 
 proc_body    = block | statement ;
 
@@ -131,18 +143,18 @@ proc_body    = block | statement ;
 # Statements
 # ---------------------------------------------------------------------------
 
-# Any statement may carry a label. Labels can be identifiers or integer literals.
-# Labels are the targets of goto statements.
+# Any statement may carry one or more labels. Labels can be identifiers or
+# integer literals. Labels are the targets of goto statements.
 #
-# The third alternative (label COLON alone) supports a standalone label at the
-# end of a block, e.g. `done:` immediately before `end`. This is equivalent to
-# a label on an empty/dummy statement — a common ALGOL 60 idiom for goto targets
+# The third alternative supports standalone labels at the end of a block, e.g.
+# `done:` or `done1: done2:` immediately before `end`. This is equivalent to
+# labels on an empty/dummy statement — a common ALGOL 60 idiom for goto targets
 # at the end of a block. Strictly, ALGOL 60 requires a statement after a label,
-# but most implementations accept a terminal label because the block's `end`
+# but most implementations accept terminal labels because the block's `end`
 # acts as the associated statement.
-statement    = [ label COLON ] unlabeled_stmt
-             | [ label COLON ] cond_stmt
-             | label COLON ;
+statement    = { label COLON } unlabeled_stmt
+             | { label COLON } cond_stmt
+             | label COLON { label COLON } ;
 
 label        = NAME | INTEGER_LIT ;
 
@@ -177,21 +189,24 @@ assign_stmt  = left_part { left_part } expression ;
 
 left_part    = variable ASSIGN ;
 
-goto_stmt    = "goto" desig_expr ;
+# ALGOL 60 accepted both spellings in common use: the single-word `goto` and
+# the report-style two-word `go to`.
+goto_stmt    = "goto" desig_expr
+             | "go" "to" desig_expr ;
 
 # Procedure call as a statement (return value, if any, is discarded).
-# Calls with no arguments omit the parentheses entirely.
-proc_stmt    = NAME [ LPAREN actual_params RPAREN ] ;
+# No-argument calls may use report-style bare names or explicit empty parens.
+proc_stmt    = NAME [ LPAREN [ actual_params ] RPAREN ] ;
 
 actual_params = expression { COMMA expression } ;
 
 # For loop with a list of for-elements. Elements are separated by commas.
 # Three element forms:
-#   step/until: for i := 1 step 1 until 10 do   (classic range loop)
-#   while:      for i := x while x > 0 do       (conditional advance)
-#   simple:     for i := 5 do                   (single value, executes once)
-# Multiple forms can be combined: for i := 1 step 1 until 5, 10, 20 do
-for_stmt     = "for" NAME ASSIGN for_list "do" statement ;
+#   step/until: for i := 1 step 1 until 10 do      (classic range loop)
+#   while:      for a[i] := x while x > 0 do       (conditional advance)
+#   simple:     for i := 5 do                      (single value, executes once)
+# Multiple forms can be combined: for a[1] := 1 step 1 until 5, 10, 20 do
+for_stmt     = "for" variable ASSIGN for_list "do" statement ;
 
 for_list     = for_elem { COMMA for_elem } ;
 
@@ -273,6 +288,8 @@ factor       = primary { ( CARET | POWER ) primary } ;
 primary      = INTEGER_LIT
              | REAL_LIT
              | STRING_LIT
+             | "true"
+             | "false"
              | proc_call
              | variable
              | LPAREN arith_expr RPAREN ;
@@ -299,14 +316,14 @@ bool_factor  = bool_secondary { "and" bool_secondary } ;
 
 bool_secondary = "not" bool_secondary | bool_primary ;
 
-bool_primary = "true"
+bool_primary = relation
+             | "true"
              | "false"
-             | relation
              | proc_call
              | variable
              | LPAREN bool_expr RPAREN ;
 
-# A relation compares two arithmetic expressions.
+# A relation compares two scalar expressions.
 # Note: the operands are simple_arith (not full arith_expr) to avoid ambiguity
 # with the conditional expression form.
 relation     = simple_arith ( EQ | NEQ | LT | LEQ | GT | GEQ ) simple_arith ;
@@ -333,7 +350,7 @@ variable     = NAME [ LBRACKET subscripts RBRACKET ] ;
 
 subscripts   = arith_expr { COMMA arith_expr } ;
 
-# A procedure call with arguments. The no-argument form (proc_stmt with no parens)
-# is handled in the statement rules. Here we require parentheses — this form
-# is used when a procedure call appears inside an expression.
-proc_call    = NAME LPAREN actual_params RPAREN ;
+# A procedure call expression. No-argument calls may be written with empty
+# parentheses; bare no-argument typed procedure expressions are handled by
+# semantic analysis when a NAME resolves to a typed procedure.
+proc_call    = NAME LPAREN [ actual_params ] RPAREN ;

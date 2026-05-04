@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Add ISO/Core operator defaults for strict term equality, variant equality,
+  and standard term ordering (`==/2`, `\\==/2`, `=@=/2`, `\\=@=/2`, `@</2`,
+  `@=</2`, `@>/2`, and `@>=/2`).
+- Add SWI CLP(FD) operator defaults for `#=/2`, `#\=/2`, `#</2`, `#=</2`,
+  `#>/2`, `#>=/2`, `in/2`, `ins/2`, and `../2`.
+
 ## 0.1.0
 
 - Added shared Prolog operator-table and directive IR primitives

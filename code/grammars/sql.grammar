@@ -14,6 +14,7 @@ statement         = query_stmt | insert_stmt | update_stmt
                   | alter_table_stmt
                   | create_index_stmt | drop_index_stmt
                   | create_view_stmt | drop_view_stmt
+                  | create_trigger_stmt | drop_trigger_stmt
                   | begin_stmt | commit_stmt | rollback_to_stmt | rollback_stmt
                   | savepoint_stmt | release_stmt ;
 
@@ -181,7 +182,7 @@ unary             = "-" unary | primary ;
 #      "SELECT".
 #   7. Bare column reference NAME [. NAME]
 #   8. Parenthesised expression "(" expr ")"
-primary           = NUMBER | STRING | "NULL" | "TRUE" | "FALSE"
+primary           = NUMBER | STRING | BLOB | "NULL" | "TRUE" | "FALSE"
                   | case_expr
                   | window_func_call
                   | function_call
@@ -224,6 +225,35 @@ window_func_call  = NAME "(" ( STAR | [ value_list ] ) ")" "OVER" "(" window_spe
 window_spec       = [ partition_clause ] [ order_clause ] ;
 partition_clause  = "PARTITION" "BY" expr { "," expr } ;
 value_list        = expr { "," expr } ;
+
+# ── CREATE TRIGGER / DROP TRIGGER ────────────────────────────────────────────
+#
+# Triggers fire automatically when a DML event (INSERT, UPDATE, DELETE) occurs
+# on the named table.  Two timings are supported: BEFORE (before the DML write)
+# and AFTER (after the write).
+#
+# Grammar::
+#
+#   create_trigger_stmt =
+#     "CREATE" "TRIGGER" NAME
+#     ( "BEFORE" | "AFTER" ) ( "INSERT" | "UPDATE" | "DELETE" ) "ON" NAME
+#     "FOR" "EACH" "ROW"
+#     "BEGIN" trigger_body_stmt ";" { trigger_body_stmt ";" } "END" ;
+#
+#   trigger_body_stmt = insert_stmt | update_stmt | delete_stmt | query_stmt ;
+#
+# NEW and OLD pseudo-tables are referenced as ordinary NAME.NAME column
+# references inside the body — they are not keywords, just contextual names.
+# The executor injects single-row "NEW" and "OLD" tables at fire time.
+
+create_trigger_stmt = "CREATE" "TRIGGER" NAME
+                      ( "BEFORE" | "AFTER" ) ( "INSERT" | "UPDATE" | "DELETE" ) "ON" NAME
+                      "FOR" "EACH" "ROW"
+                      "BEGIN" trigger_body_stmt ";" { trigger_body_stmt ";" } "END" ;
+
+trigger_body_stmt   = insert_stmt | update_stmt | delete_stmt | query_stmt ;
+
+drop_trigger_stmt   = "DROP" "TRIGGER" [ "IF" "EXISTS" ] NAME ;
 
 # ── CASE expression ───────────────────────────────────────────────────────────
 #
