@@ -278,6 +278,10 @@ Use `--check` to parse, load, compile, and initialize source without running a
 query. This is intended for CI and editor integrations that need to validate a
 Prolog file graph even when it does not contain embedded `?-` directives.
 
+Use `--list-source-queries` to inspect embedded `?-` directives before choosing
+what to run. Text output lists the zero-based query index and visible variables;
+JSON output emits the same metadata as a stable `source_queries` record.
+
 Use `--all-source-queries` when a source file contains several embedded `?-`
 queries and the CLI should run them as a script. The command prints or emits
 one result record per source query, sets `source_query_index` in JSON formats,
