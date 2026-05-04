@@ -1,5 +1,75 @@
 # ir-to-jvm-class-file
 
+## 0.17.0 — 2026-05-04 — TW04 Phase 4d — cross-module invokestatic + TwigRuntime
+
+### Added — `JvmBackendConfig.external_runtime_class`
+
+New optional field (`str | None`, default `None`) that redirects all
+`getstatic` / `putstatic` for `__ca_regs` and `__ca_objregs` to the named
+external class rather than the module's own class.  When set to
+`TWIG_RUNTIME_BINARY_NAME` every module class delegates register-array
+access to a shared `TwigRuntime` class, keeping one consistent register
+file across the entire multi-module program.
+
+### Added — `JvmBackendConfig.extra_callable_labels`
+
+New optional field (`tuple[str, ...]`, default `()`).  Exported functions
+in a dependency module are only invoked from other modules; no local `CALL`
+instruction targets them, so `_discover_callable_regions` would silently
+omit them.  This hint forces the named labels to be emitted as proper JVM
+methods even when they have no local callers.
+
+### Added — `TWIG_RUNTIME_BINARY_NAME` constant
+
+Module-level constant holding the JVM internal class name of the shared
+runtime class (`"coding_adventures/twig/runtime/TwigRuntime"`).
+
+### Added — `build_runtime_class_artifact(reg_count=256)`
+
+Standalone factory that generates the `TwigRuntime` class file.  The class
+owns `public static int[] __ca_regs` and `public static Object[] __ca_objregs`,
+both initialised in `<clinit>` to arrays of length `reg_count`.  Returns a
+`JVMClassArtifact` ready to include in any multi-module JAR.
+
+### Added — cross-module `CALL` lowering to `invokestatic`
+
+`IrOp.CALL` with a label whose name contains `/` is now recognised as a
+cross-module call.  The label is decomposed at its **last** `/` to extract
+the foreign class name and method name; the backend emits:
+
+```
+invokestatic <class>.<method>()I
+```
+
+### Added — multi-module method visibility
+
+In single-module builds callable methods remain `ACC_PRIVATE | ACC_STATIC`.
+When `external_runtime_class` is set (multi-module mode), **all** callable
+methods are upgraded to `ACC_PUBLIC | ACC_STATIC` so that other module
+classes can invoke them via cross-class `invokestatic`.
+
+### Fixed — `_discover_callable_regions` skips cross-module targets
+
+Previously any `CALL` label containing `/` was added to `callable_names`
+and the subsequent consistency check raised `MissingCallableLabels`.  The
+function now skips labels with `/` in both the discovery pass and the
+second-pass branch-target check.
+
+### Fixed — `__ca_syscall` now uses `_reg_owner` for register access
+
+Two `getstatic` instructions inside `_build_syscall_method` (SYSCALL 1 and
+SYSCALL 10) were hard-coding `self.config.class_name` for the `__ca_regs`
+field reference.  In multi-module mode this caused `NoSuchFieldError`
+because the module class no longer owns the field.  Both now use
+`self._reg_field_ref(...)` which correctly targets `TwigRuntime` when
+`external_runtime_class` is set.
+
+### Added — slash-form class names accepted by the validator
+
+`_JAVA_BINARY_NAME_RE` updated to permit `/` as a segment separator
+alongside `.`, enabling module names like `"user/hello"` or `"a/math"` to
+pass validation.
+
 ## 0.16.0 — 2026-05-04 — SYSCALL 10 (exit) + validator correction
 
 ### Added — `SYSCALL 10` (process exit) in `__ca_syscall`

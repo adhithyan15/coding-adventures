@@ -1,5 +1,50 @@
 # Changelog — twig-jvm-compiler
 
+## [0.7.0] — 2026-05-04 — TW04 Phase 4d — multi-module JVM compilation
+
+### Added — `compile_modules(modules, *, entry_module)` → `MultiModuleResult`
+
+Driver function that accepts the topologically ordered list returned by
+`twig.resolve_modules`, skips the synthetic `host` module, and compiles
+every real module to a JVM class.  All modules share one `TwigRuntime`
+register file (via `external_runtime_class`) so cross-module `invokestatic`
+calls see a consistent register state.  The entry module receives
+`emit_main_wrapper=True`; dependency modules do not.
+
+### Added — `run_modules(modules, *, entry_module)` → `MultiModuleExecutionResult`
+
+End-to-end driver that calls `compile_modules`, bundles every generated
+class (including `TwigRuntime`) into a JAR via `jvm_jar_writer`, and
+invokes `java -jar`.  Classes from `multi_class_artifact` (closure support
+classes, Cons, Symbol, Nil) are deduplicated by filename before bundling.
+
+### Added — `MultiModuleResult`, `ModuleCompileResult`, `MultiModuleExecutionResult`
+
+New result types (all frozen dataclasses) that carry the shared runtime
+artifact, per-module compilation results, and the entry class name for the
+JAR manifest.
+
+### Added — `module_name_to_jvm_class(name)` → `str`
+
+Identity mapping from Twig module name to JVM internal class name.
+`"user/hello"` → `"user/hello"` — forward slashes already serve as JVM
+package separators so no conversion is needed.
+
+### Fixed — cross-module user-module calls
+
+`_Compiler._compile_apply` now recognises `VarRef` names containing `/`
+as cross-module qualified calls (distinct from the `host/*` host-call path
+added in Phase 4c).  Arguments are marshalled into param-slot registers and
+`IrOp.CALL IrLabel("module/fn")` is emitted; the JVM backend then lowers
+it to `invokestatic` on the foreign class.
+
+### Added — exported functions passed as `extra_callable_labels`
+
+`_compile_one_module` reads `module.program.module.exports` and passes
+the list as `JvmBackendConfig.extra_callable_labels` so that dependency
+modules' exported functions (which have no local `CALL` callers) are
+emitted as public JVM methods rather than silently dropped.
+
 ## [0.6.0] — 2026-04-29 — multi-arity closures
 
 Multi-arg lambdas like `(lambda (x y) (+ x y))` now run on real
