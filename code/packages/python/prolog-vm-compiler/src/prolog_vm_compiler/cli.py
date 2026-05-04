@@ -10,7 +10,14 @@ from importlib import resources
 from pathlib import Path
 from typing import Literal, TextIO, cast
 
-from cli_builder import HelpResult, ParseErrors, Parser, ParseResult, VersionResult
+from cli_builder import (
+    HelpResult,
+    ParseError,
+    ParseErrors,
+    Parser,
+    ParseResult,
+    VersionResult,
+)
 from logic_engine import Atom, Compound, Disequality, LogicVar, Number, String, Term
 
 from prolog_vm_compiler.compiler import (
@@ -60,7 +67,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         parsed = _parse_argv(argv)
     except ParseErrors as error:
-        print(error, file=sys.stderr)
+        _print_parse_error(error, output_format=_requested_output_format(argv))
         return 2
 
     if isinstance(parsed, HelpResult):
@@ -70,16 +77,25 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(parsed.version)
         return 0
 
+    output_format = _output_format_from_result(parsed)
     try:
         args = _cli_args_from_result(parsed)
     except ValueError as error:
-        print(f"{_PROGRAM_NAME}: {error}", file=sys.stderr)
+        _print_error(
+            error_type="validation_error",
+            message=str(error),
+            output_format=output_format,
+        )
         return 2
 
     try:
         status = _run_cli(args)
     except Exception as error:  # noqa: BLE001 - CLI should render failures plainly.
-        print(f"{_PROGRAM_NAME}: {error}", file=sys.stderr)
+        _print_error(
+            error_type="runtime_error",
+            message=str(error),
+            output_format=args.output_format,
+        )
         return 1
 
     return status
@@ -135,6 +151,81 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         interactive=bool(flags["interactive"]),
         initialize=not bool(flags["no-initialize"]),
     )
+
+
+def _requested_output_format(argv: Sequence[str] | None) -> CliOutputFormat:
+    raw_argv = sys.argv[1:] if argv is None else argv
+    for index, token in enumerate(raw_argv):
+        if token == "--format" and index + 1 < len(raw_argv):
+            value = raw_argv[index + 1]
+        elif token.startswith("--format="):
+            value = token.partition("=")[2]
+        else:
+            continue
+        if value in {"text", "json", "jsonl"}:
+            return cast("CliOutputFormat", value)
+    return "text"
+
+
+def _output_format_from_result(result: ParseResult) -> CliOutputFormat:
+    value = result.flags.get("format")
+    if isinstance(value, str):
+        return _output_format(value)
+    return "text"
+
+
+def _print_parse_error(
+    error: ParseErrors,
+    *,
+    output_format: CliOutputFormat,
+    stderr: TextIO | None = None,
+) -> None:
+    if output_format == "text":
+        print(error, file=sys.stderr if stderr is None else stderr)
+        return
+    _print_error(
+        error_type="parse_error",
+        message="invalid command-line arguments",
+        output_format=output_format,
+        stderr=stderr,
+        details={
+            "errors": [
+                _parse_error_detail(parse_error)
+                for parse_error in error.errors
+            ],
+        },
+    )
+
+
+def _parse_error_detail(error: ParseError) -> dict[str, object]:
+    detail: dict[str, object] = {
+        "type": error.error_type,
+        "message": error.message,
+    }
+    if error.suggestion is not None:
+        detail["suggestion"] = error.suggestion
+    if error.context:
+        detail["context"] = error.context
+    return detail
+
+
+def _print_error(
+    *,
+    error_type: str,
+    message: str,
+    output_format: CliOutputFormat,
+    stderr: TextIO | None = None,
+    details: dict[str, object] | None = None,
+) -> None:
+    output = sys.stderr if stderr is None else stderr
+    if output_format == "text":
+        print(f"{_PROGRAM_NAME}: {message}", file=output)
+        return
+
+    error: dict[str, object] = {"type": error_type, "message": message}
+    if details is not None:
+        error.update(details)
+    print(json.dumps({"success": False, "error": error}, sort_keys=True), file=output)
 
 
 def _optional_string(value: object) -> str | None:
