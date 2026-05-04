@@ -1,0 +1,11 @@
+[package]
+name = "matrix-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "MX04 — the brain of the matrix execution layer. Planner, executor registry, and cost-model-driven placement. Lowers matrix-ir Graphs to compute-ir ComputeGraphs by routing each op to the cheapest available executor. Zero external dependencies."
+license = "MIT"
+
+[dependencies]
+matrix-ir         = { path = "../matrix-ir" }
+compute-ir        = { path = "../compute-ir" }
+executor-protocol = { path = "../executor-protocol" }
