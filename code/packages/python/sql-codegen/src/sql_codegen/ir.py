@@ -116,6 +116,31 @@ class LoadColumn:
 
 
 @dataclass(frozen=True, slots=True)
+class LoadOuterColumn:
+    """Push a column value from the *outer* query's current cursor row.
+
+    Used in correlated sub-programs — the inner program needs to read a
+    value that belongs to the enclosing query's current row.
+
+    At compile time ``cursor_id`` is the cursor ID assigned by the **outer**
+    compilation context to the table aliased as the correlated source.
+    At runtime the VM provides the outer state's ``current_row`` snapshot
+    to the inner execution via ``_VmState.outer_current_row``.
+
+    Example — ``e.dept_id`` in ``WHERE id = e.dept_id`` inside a subquery
+    where the outer scan opened cursor 0 for alias ``e``::
+
+        LoadOuterColumn(cursor_id=0, col="dept_id")
+        →  outer_current_row[0]["dept_id"]
+
+    If the outer cursor has no current row (e.g. NULL padding in a LEFT JOIN),
+    ``None`` is pushed.
+    """
+    cursor_id: int
+    col: str
+
+
+@dataclass(frozen=True, slots=True)
 class Pop:
     """Discard the top of the value stack."""
 
@@ -651,6 +676,39 @@ class RunScalarSubquery:
 
 
 @dataclass(frozen=True, slots=True)
+class RunInSubquery:
+    """Pop the test value from the stack, execute the sub-program, and push a boolean.
+
+    Used for ``expr IN (SELECT …)`` and ``expr NOT IN (SELECT …)``.
+
+    Sequence
+    --------
+    The caller compiles the outer operand expression first (pushing the test
+    value), then emits this instruction.
+
+    ::
+
+        [compile operand]          # pushes test_value onto the stack
+        RunInSubquery(...)         # pops test_value, runs subquery, pushes bool
+
+    The sub-program is expected to return at least one column; only the first
+    column of each result row participates in the membership test.
+
+    NULL semantics (SQL tri-value logic)
+    ------------------------------------
+    - ``NULL IN (...)``  → ``None`` (NULL)
+    - ``x IN (...)``  → ``True``  if x is in the result set (ignoring NULLs in set)
+    - ``x IN (...)``  → ``None``  if x is NOT in the result set AND the set contains NULL
+    - ``x IN (...)``  → ``False`` otherwise
+
+    For ``NOT IN`` (``negate=True``) booleans are flipped; NULL stays NULL.
+    """
+
+    sub_program: Program
+    negate: bool = False
+
+
+@dataclass(frozen=True, slots=True)
 class RunRecursiveCTE:
     """Execute a WITH RECURSIVE CTE via fixed-point iteration.
 
@@ -877,7 +935,7 @@ class ComputeWindowFunctions:
 # --------------------------------------------------------------------------
 
 Instruction = (
-    LoadConst | LoadColumn | Pop
+    LoadConst | LoadColumn | LoadOuterColumn | Pop
     | BinaryOp | UnaryOp | IsNull | IsNotNull | Between | InList | Like | Coalesce | CallScalar
     | OpenScan | AdvanceCursor | CloseScan
     | BeginRow | EmitColumn | EmitRow | SetResultSchema | ScanAllColumns
@@ -892,6 +950,7 @@ Instruction = (
     | RunSubquery
     | RunExistsSubquery
     | RunScalarSubquery
+    | RunInSubquery
     | RunRecursiveCTE
     | OpenWorkingSetScan
     | JoinBeginRow | JoinSetMatched | JoinIfMatched

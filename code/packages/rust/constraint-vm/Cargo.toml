@@ -1,0 +1,10 @@
+[package]
+name = "constraint-vm"
+version = "0.1.0"
+edition = "2021"
+description = "LANG24 PR 24-D — instruction-stream executor for the generic Constraint-VM: walks ConstraintInstructions, drives the Engine, surfaces SAT/UNSAT/model results"
+
+[dependencies]
+constraint-core = { path = "../constraint-core" }
+constraint-instructions = { path = "../constraint-instructions" }
+constraint-engine = { path = "../constraint-engine" }

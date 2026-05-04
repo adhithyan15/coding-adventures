@@ -1,5 +1,42 @@
 # Changelog
 
+## [1.16.0] - 2026-05-04
+
+### Added
+
+- **Correlated subquery execution** — end-to-end support for subqueries
+  whose WHERE clause references columns from the enclosing query (correlated
+  subqueries).  The adapter, planner, codegen, and VM cooperate to re-execute
+  the inner program for each outer row with the outer cursor's current snapshot.
+  Supported forms:
+  - `WHERE e.col IN (SELECT ... FROM t WHERE t.x = e.col)` — correlated IN
+  - `WHERE e.col NOT IN (SELECT ... FROM t WHERE t.x = e.col)` — correlated NOT IN
+  - `WHERE EXISTS (SELECT 1 FROM t WHERE t.x = e.col)` — correlated EXISTS
+  - `WHERE NOT EXISTS (SELECT 1 FROM t WHERE t.x = e.col)` — correlated NOT EXISTS
+  - `SELECT (SELECT t.col FROM t WHERE t.x = e.col) ...` — scalar subquery
+    in SELECT list (returns `NULL` when inner query yields no rows)
+- **14 new integration tests** in `tests/test_tier4_correlated_subquery.py`
+  covering: basic correlated IN/NOT IN/EXISTS/NOT EXISTS, no-match /
+  all-match variants, scalar NULL semantics, per-row re-execution
+  verification, and correlated subqueries combined with outer WHERE filters.
+
+## [1.15.0] - 2026-05-04
+
+### Added
+
+- **`IN (subquery)` / `NOT IN (subquery)` execution** — the adapter
+  now converts the subquery form of `IN` / `NOT IN` (previously
+  `ProgrammingError("subquery in IN clause is not yet supported")`)
+  to `InSubquery` / `NotInSubquery` plan-expression nodes, which flow
+  through the planner, codegen, and VM.  Full SQL three-valued NULL
+  logic is preserved end-to-end.
+- **13 new integration tests** in `tests/test_tier3_in_subquery.py`
+  covering: basic `IN` / `NOT IN`, no-match / all-match / partial-match
+  sets, `NULL` test-value exclusion, `NULL` in subquery set making
+  `NOT IN` return `UNKNOWN`, aggregate subqueries (`GROUP BY` / `HAVING`
+  inside the inner query), combined `AND` predicates, and `HAVING`-
+  level `IN` filtering.
+
 ## [1.14.0] - 2026-05-04
 
 ### Added

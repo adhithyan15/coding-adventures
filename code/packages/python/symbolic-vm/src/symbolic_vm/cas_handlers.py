@@ -55,7 +55,11 @@ from cas_complex.normalize import contains_imaginary as _contains_imaginary
 from cas_factor import factor_integer_polynomial
 from cas_fourier import build_fourier_handler_table as _build_fourier
 from cas_laplace import build_laplace_handler_table as _build_laplace
-from cas_limit_series import PolynomialError, limit_direct, taylor_polynomial
+from cas_limit_series import (
+    PolynomialError,
+    limit_advanced,
+    taylor_polynomial,
+)
 from cas_list_operations import (
     ListOperationError,
     append,
@@ -1420,23 +1424,48 @@ def norm_handler(_vm: VM, expr: IRApply) -> IRNode:
 
 
 def limit_handler(vm: VM, expr: IRApply) -> IRNode:
-    """``Limit(expr, var, point)`` — direct-substitution limit.
+    """``Limit(expr, var, point[, dir])`` — full limit evaluation.
 
-    Phase 1: substitutes ``point`` for ``var`` in ``expr`` via
-    :func:`cas_limit_series.limit_direct`. If the result is obviously
-    indeterminate (a literal ``0/0``), the unevaluated ``Limit(…)`` is
-    returned instead. The result is simplified and then re-evaluated
-    through the VM so arithmetic collapses.
+    Phase 20 upgrade: uses :func:`cas_limit_series.limit_advanced` with
+    injected ``diff_fn`` and ``eval_fn`` from the VM.  Supports all
+    standard indeterminate forms (0/0, ∞/∞, 0·∞, 1^∞, 0^0, ∞^0) via
+    L'Hôpital and the exp-log rewrite.  Also handles limits at ±∞ and
+    one-sided limits (``direction="plus"`` / ``"minus"``).
 
-    L'Hôpital and limits at ±∞ are deferred to a later phase.
+    Call forms:
+      ``Limit(expr, var, point)``          — two-sided limit
+      ``Limit(expr, var, point, plus)``    — right-sided limit
+      ``Limit(expr, var, point, minus)``   — left-sided limit
+
+    Falls through to the unevaluated ``Limit(…)`` node if the limit
+    cannot be determined (oscillating, truly indeterminate, unknown form).
     """
-    if len(expr.args) != 3:
+    n = len(expr.args)
+    if n not in (3, 4):
         return expr
-    body, var, point = expr.args
+    body, var, point = expr.args[:3]
     if not isinstance(var, IRSymbol):
         return expr
-    result = limit_direct(body, var, point)
-    # Simplify then re-evaluate; limit_direct returns raw substituted IR.
+
+    # Parse optional direction argument.
+    direction: str | None = None
+    if n == 4:
+        dir_arg = expr.args[3]
+        if isinstance(dir_arg, IRSymbol) and dir_arg.name in ("plus", "minus"):
+            direction = dir_arg.name
+
+    # Inject diff_fn and eval_fn from the VM.
+    def _diff_fn(e: IRNode, v: IRSymbol) -> IRNode:
+        return vm.eval(_symbolic_diff(e, v))
+
+    result = limit_advanced(
+        body,
+        var,
+        point,
+        direction,
+        diff_fn=_diff_fn,
+        eval_fn=vm.eval,
+    )
     return vm.eval(simplify(result))
 
 

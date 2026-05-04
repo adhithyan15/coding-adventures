@@ -68,6 +68,7 @@ from sql_planner import (
     In,
     InsertSelectStmt,
     InsertValuesStmt,
+    InSubquery,
     IntersectStmt,
     IsNotNull,
     IsNull,
@@ -77,6 +78,7 @@ from sql_planner import (
     Limit,
     Literal,
     NotIn,
+    NotInSubquery,
     NotLike,
     RecursiveCTERef,
     ReleaseSavepointStmt,
@@ -1038,8 +1040,13 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
         if in_expr_node is not None:
             q = _maybe_child(in_expr_node, "query_stmt")
             if q is not None:
-                # Subquery in IN clause — not yet supported; raise a clear error.
-                raise ProgrammingError("subquery in IN clause is not yet supported")
+                # Subquery form: expr IN (SELECT ...)
+                inner_stmt = _query_stmt(q)
+                if not isinstance(inner_stmt, SelectStmt):
+                    raise ProgrammingError("IN subquery must be a plain SELECT statement")
+                if negated:
+                    return NotInSubquery(operand=left, query=inner_stmt)
+                return InSubquery(operand=left, query=inner_stmt)
             vl = _child_node(in_expr_node, "value_list")
         else:
             # Old grammar fallback: value_list directly under comparison.

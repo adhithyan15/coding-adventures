@@ -1,5 +1,53 @@
 # Changelog
 
+## [0.15.0] - 2026-05-04
+
+### Added
+
+- **`CorrelatedRef(outer_alias, col)` expression** (`expr.py`) — represents a
+  column reference that resolves only against the *outer* query's scope inside
+  a subquery.  Distinguished from `Column` so that codegen can emit a
+  `LoadOuterColumn` instruction at runtime.  Returns `False` from
+  `contains_aggregate()` and is a no-op in `_collect_columns()`.
+- **`outer_scope` parameter on `_plan_select()` and `_resolve()`** (`planner.py`)
+  — when planning a subquery, the enclosing query's column scope is passed as
+  `outer_scope`.  Column references not found in the inner scope fall back to
+  `outer_scope` and become `CorrelatedRef` nodes rather than raising
+  `UnknownColumn`.
+- **`_resolve_column()` outer-scope fallback** (`planner.py`) — qualified
+  references (`alias.col`) and bare references (`col`) both try `outer_scope`
+  after failing inner-scope resolution.  Qualified references produce
+  `CorrelatedRef(outer_alias=alias, col=col)`; bare references walk all
+  outer-scope aliases looking for a unique owner.
+- **Subquery correlated planning** (`planner.py`) — `_resolve` cases for
+  `ExistsSubquery`, `ScalarSubquery`, `InSubquery`, and `NotInSubquery` now
+  pass the current query's scope as `outer_scope` when recursively planning
+  the inner `SelectStmt`.
+- **`CorrelatedRef`** exported from `sql_planner.__init__`.
+- **8 new planner unit tests** in `tests/test_planner_correlated.py`
+  covering: correlated IN/EXISTS/scalar/NOT IN subqueries, bare-name outer
+  scope resolution, and error cases (unknown alias, column absent from all
+  scopes).
+
+## [0.14.0] - 2026-05-04
+
+### Added
+
+- **`InSubquery(operand, query)` expression** (`expr.py`) — represents
+  `expr IN (SELECT ...)`.  Contains the resolved inner `LogicalPlan`
+  (after planner rewriting from raw `SelectStmt`).  Returns `False`
+  from `contains_aggregate()` and propagates `collect_columns()` on
+  `operand` only.
+- **`NotInSubquery(operand, query)` expression** (`expr.py`) — same
+  structure as `InSubquery` but represents `expr NOT IN (SELECT ...)`.
+  Both added to the `Expr` union type.
+- **Planner dispatch** (`planner.py`) — `_resolve` cases for
+  `InSubquery` and `NotInSubquery`: resolve `operand` in the current
+  scope, then recursively plan the inner `SelectStmt` via
+  `_plan_select`, replacing the raw AST node with a `LogicalPlan`.
+- **`InSubquery` and `NotInSubquery`** exported from
+  `sql_planner.__init__`.
+
 ## [0.13.0] - 2026-04-28
 
 ### Added

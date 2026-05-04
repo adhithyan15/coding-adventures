@@ -43,6 +43,7 @@ from sql_planner import (
     CaseExpr,
     Column,
     Commit,
+    CorrelatedRef,
     Delete,
     DerivedTable,
     Distinct,
@@ -56,12 +57,14 @@ from sql_planner import (
     In,
     IndexScan,
     Insert,
+    InSubquery,
     Intersect,
     Join,
     JoinKind,
     Literal,
     LogicalPlan,
     NotIn,
+    NotInSubquery,
     Project,
     Rollback,
     ScalarSubquery,
@@ -175,6 +178,7 @@ from .ir import (
     LoadColumn,
     LoadConst,
     LoadGroupKey,
+    LoadOuterColumn,
     NullsOrder,
     OpenIndexScan,
     OpenScan,
@@ -182,6 +186,7 @@ from .ir import (
     Program,
     RollbackTransaction,
     RunExistsSubquery,
+    RunInSubquery,
     RunRecursiveCTE,
     RunScalarSubquery,
     RunSubquery,
@@ -216,6 +221,13 @@ class _Ctx:
     The alias map is how later ``LoadColumn`` calls know which cursor to
     read from. A Scan populates the map when it opens; a Column reference
     uses it to find the scan's cursor.
+
+    ``outer_alias_to_cursor`` is set only when compiling an inner
+    sub-program that may contain :class:`~sql_planner.expr.CorrelatedRef`
+    nodes.  It is a snapshot of the *outer* context's ``alias_to_cursor``
+    at the time the subquery expression was compiled.  When
+    :func:`_compile_expr` encounters a ``CorrelatedRef``, it looks up the
+    outer cursor ID here and emits :class:`~sql_codegen.ir.LoadOuterColumn`.
     """
 
     cursor_counter: int = 0
@@ -223,6 +235,8 @@ class _Ctx:
     agg_counter: int = 0
     alias_to_cursor: dict[str, int] = field(default_factory=dict)
     working_set_cursor_id: int | None = None
+    # Outer cursor map — non-None only inside correlated sub-program compilation.
+    outer_alias_to_cursor: dict[str, int] | None = None
 
     def new_cursor(self, alias: str) -> int:
         cid = self.cursor_counter
@@ -1052,10 +1066,13 @@ def _compile_having(
 
                 for s, a in zip(slots, aggregates, strict=True):
                     assert isinstance(a, AggregateItem)
-                    if a.func is f and (
+                    # arg=None is the legacy direct-construction form for COUNT(*);
+                    # planner always produces FuncArg(star=True). Accept both.
+                    matched = (
                         (arg is None and a.arg.star)
-                        or (a.arg.value == arg)
-                    ):
+                        or (arg is not None and a.arg == arg)
+                    )
+                    if a.func is f and matched:
                         return [FinalizeAgg(slot=s)]
                 raise UnsupportedNode("AggregateExpr not present in Aggregate.aggregates")
             case Column(col=c):
@@ -1086,6 +1103,21 @@ def _compile_expr(e: Expr, ctx: _Ctx) -> list[Instruction]:
         case Column(table=t, col=c):
             cid = ctx.alias_to_cursor.get(t or "", 0)
             return [LoadColumn(cursor_id=cid, column=c)]
+        case CorrelatedRef(outer_alias=alias, col=c):
+            # A correlated reference resolves against the *outer* query's
+            # cursor map.  The outer map was captured when the inner sub-program
+            # compilation started (see the ExistsSubquery / ScalarSubquery /
+            # InSubquery / NotInSubquery cases below).
+            #
+            # At runtime the VM passes the outer state's ``current_row``
+            # snapshot to the inner execution; ``LoadOuterColumn`` reads from
+            # that snapshot rather than the inner program's own cursor table.
+            if ctx.outer_alias_to_cursor is None:
+                raise UnsupportedNode(
+                    f"CorrelatedRef({alias!r}.{c!r}) found but no outer cursor map in context"
+                )
+            cid = ctx.outer_alias_to_cursor.get(alias, 0)
+            return [LoadOuterColumn(cursor_id=cid, col=c)]
         case BinaryExpr(op=op, left=l_, right=r_):
             return _compile_expr(l_, ctx) + _compile_expr(r_, ctx) + [BinaryOp(op=_binop_to_ir(op))]
         case UnaryExpr(op=op, operand=o):
@@ -1163,7 +1195,11 @@ def _compile_expr(e: Expr, ctx: _Ctx) -> list[Instruction]:
             # Compile the inner LogicalPlan to a standalone sub-program.
             # The inner program runs against the same backend but with its
             # own cursor/label namespace so there is no state leakage.
-            inner_ctx = _Ctx()
+            #
+            # ``outer_alias_to_cursor`` captures the enclosing scan map so
+            # that any CorrelatedRef nodes inside the inner plan can resolve
+            # to the correct outer cursor IDs at runtime.
+            inner_ctx = _Ctx(outer_alias_to_cursor=dict(ctx.alias_to_cursor))
             inner_instrs, _ = _compile_plan(inner_plan, inner_ctx)  # type: ignore[arg-type]
             inner_instrs.append(Halt())
             inner_resolved = _resolve_labels(inner_instrs)
@@ -1177,7 +1213,7 @@ def _compile_expr(e: Expr, ctx: _Ctx) -> list[Instruction]:
             # Compile the inner SELECT to a standalone sub-program.  At
             # runtime the VM executes it, takes the first column of the
             # single result row, and pushes it as the scalar value.
-            inner_ctx = _Ctx()
+            inner_ctx = _Ctx(outer_alias_to_cursor=dict(ctx.alias_to_cursor))
             inner_instrs, _ = _compile_plan(inner_plan, inner_ctx)  # type: ignore[arg-type]
             inner_instrs.append(Halt())
             inner_resolved = _resolve_labels(inner_instrs)
@@ -1187,6 +1223,29 @@ def _compile_expr(e: Expr, ctx: _Ctx) -> list[Instruction]:
                 result_schema=(),
             )
             return [RunScalarSubquery(sub_program=sub)]
+        case InSubquery(operand=op, query=inner_plan):
+            # Compile the inner plan to a standalone sub-program, then compile
+            # the outer operand expression (pushes test value), then emit
+            # RunInSubquery which pops the test value and pushes a bool.
+            inner_ctx = _Ctx(outer_alias_to_cursor=dict(ctx.alias_to_cursor))
+            inner_instrs, _ = _compile_plan(inner_plan, inner_ctx)  # type: ignore[arg-type]
+            inner_instrs.append(Halt())
+            sub = Program(
+                instructions=tuple(inner_instrs),
+                labels=_resolve_labels(inner_instrs),
+                result_schema=(),
+            )
+            return [*_compile_expr(op, ctx), RunInSubquery(sub_program=sub, negate=False)]  # type: ignore[arg-type]
+        case NotInSubquery(operand=op, query=inner_plan):
+            inner_ctx = _Ctx(outer_alias_to_cursor=dict(ctx.alias_to_cursor))
+            inner_instrs, _ = _compile_plan(inner_plan, inner_ctx)  # type: ignore[arg-type]
+            inner_instrs.append(Halt())
+            sub = Program(
+                instructions=tuple(inner_instrs),
+                labels=_resolve_labels(inner_instrs),
+                result_schema=(),
+            )
+            return [*_compile_expr(op, ctx), RunInSubquery(sub_program=sub, negate=True)]  # type: ignore[arg-type]
         case AggregateExpr():
             # At this point in compilation we're inside an aggregate node's
             # HAVING or projection; direct emission isn't possible without
