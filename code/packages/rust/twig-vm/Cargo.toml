@@ -1,6 +1,6 @@
 [package]
 name = "twig-vm"
-version = "0.6.0"
+version = "0.6.1"
 edition = "2021"
 description = "LANG20 PRs 3–8 — TwigVM: compiles Twig source and dispatches the IIR end to end including closures, top-level value defines, quoted symbols, method-dispatch opcodes, persistent inline-cache slot machinery, and the V8-Ignition-style vm-core profiler"
 

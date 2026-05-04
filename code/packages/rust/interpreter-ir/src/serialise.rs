@@ -335,6 +335,8 @@ fn deserialise_function(r: &mut Reader<'_>) -> Result<IIRFunction, DeserialiseEr
         call_count: 0,
         feedback_slots: std::collections::HashMap::new(),
         source_map: Vec::new(),
+        param_refinements: Vec::new(),
+        return_refinement: None,
     })
 }
 

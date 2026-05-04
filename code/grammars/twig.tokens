@@ -26,6 +26,33 @@
 LPAREN     = "("
 RPAREN     = ")"
 QUOTE      = "'"
+# COLON is used for refinement type annotations (LANG23 PR 23-E):
+#   (define x : (Int 0 128) 42)               ; value binding with range annotation
+#   (define (f (x : (Int 0 128))) body)        ; parameter annotation
+#   (define (f (x : int) -> (Int 0 256)) body) ; return-type annotation
+# The colon character is not in the NAME regex so it was previously a
+# lex error.  Promoting it to its own punctuation token lets the parser
+# grammar test for it with the string literal ``":"``.
+COLON      = ":"
+# ARROW is the return-type annotation marker for LANG23 PR 23-E.
+#
+# Without ARROW, ``->`` would lex as a NAME token (both ``-`` and ``>``
+# appear in the NAME character class).  That causes an ambiguity in the
+# grammar's ``{ typed_param }`` repetition: the loop eagerly consumes
+# ``->`` as a bare-NAME parameter, then tries to parse ``(Int 0 256)``
+# as another typed_param, and fails with "Expected COLON, got '0'".
+#
+# By defining ARROW as an exact literal *before* the NAME pattern, the
+# lexer commits to ARROW when it sees ``->``, leaving the grammar free
+# to use ``ARROW`` as a sentinel that ends the param list and begins the
+# optional return-type annotation.
+#
+# Trade-off: ``->`` is no longer a legal Twig identifier.  In practice
+# this is not a restriction — no Twig standard-library function or
+# user program uses ``->`` as a name.  If that ever changes, a
+# ``keywords``-style promotion can be added; for now a reserved token
+# is the simplest, safest approach.
+ARROW      = "->"
 
 # ---------------------------------------------------------------------------
 # Boolean literals
