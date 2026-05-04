@@ -99,7 +99,22 @@ impl LiaTactic {
             v
         };
 
-        match eliminate_all(&constraints, &all_vars, &mut assignment) {
+        // LIA budget: limits the total number of `eliminate_all` calls to
+        // prevent O(search_width^N) blowup when many variables are
+        // unconstrained.
+        //
+        // Calibration:
+        //   N=1 variable: up to 1 001 calls (MAX_SEARCH_WIDTH + base).
+        //   N=2 variables: up to ≈1 003 003 calls (1001 * 1002 + 1).
+        //   N=3 variables: up to ≈10^9 potential calls — budget truncates
+        //     this to Unknown long before it completes.
+        //
+        // 2 000 000 is generous enough to always succeed for N=2 (the common
+        // LANG23 case: two refined parameters) while providing a hard ceiling
+        // against adversarial formulae with 3+ unconstrained variables.
+        const LIA_BUDGET: usize = 2_000_000;
+        let mut budget = LIA_BUDGET;
+        match eliminate_all(&constraints, &all_vars, &mut assignment, &mut budget) {
             EliminationResult::Sat => {
                 // Build the model from the assignment.
                 let mut model = Model::new();
@@ -134,12 +149,20 @@ enum EliminationResult {
 ///
 /// `vars` is the remaining variables to assign, `assignment` grows as
 /// we commit to values for each.  When `vars` is empty we evaluate the
-/// ground formula directly.
+/// ground formula directly.  `budget` is a shared call counter; when
+/// it reaches zero the search returns `Unknown` to cap worst-case work.
 fn eliminate_all(
     constraints: &[Predicate],
     vars: &[String],
     assignment: &mut HashMap<String, i128>,
+    budget: &mut usize,
 ) -> EliminationResult {
+    // Budget guard: prevent O(search_width^N) blowup.
+    if *budget == 0 {
+        return EliminationResult::Unknown("LIA search budget exceeded".into());
+    }
+    *budget -= 1;
+
     // Base case: no more variables — ground evaluation.
     if vars.is_empty() {
         let model = build_model(assignment);
@@ -208,7 +231,7 @@ fn eliminate_all(
             return EliminationResult::Unsat;
         }
         assignment.insert(var.clone(), first);
-        return eliminate_all(constraints, rest, assignment);
+        return eliminate_all(constraints, rest, assignment, budget);
     }
 
     // Step 3: determine search range.
@@ -259,7 +282,7 @@ fn eliminate_all(
     // Try each candidate.
     for &val in &candidates {
         assignment.insert(var.clone(), val);
-        match eliminate_all(constraints, rest, assignment) {
+        match eliminate_all(constraints, rest, assignment, budget) {
             EliminationResult::Sat => return EliminationResult::Sat,
             EliminationResult::Unsat => {
                 // This candidate doesn't work — try next.
@@ -394,9 +417,19 @@ fn extract_cmp(
         if let Some(rhs_val) = eval_as_const(rhs, assignment) {
             return match op {
                 CmpOp::Le => BoundInfo::UpperBound(rhs_val),
-                CmpOp::Lt => BoundInfo::UpperBound(rhs_val - 1), // x < n ≡ x ≤ n-1 (integers)
+                // x < n  ≡  x ≤ n−1  (integers).
+                // If n = i128::MIN then x < i128::MIN has no solution.
+                CmpOp::Lt => match rhs_val.checked_sub(1) {
+                    Some(v) => BoundInfo::UpperBound(v),
+                    None => BoundInfo::Unsatisfiable,
+                },
                 CmpOp::Ge => BoundInfo::LowerBound(rhs_val),
-                CmpOp::Gt => BoundInfo::LowerBound(rhs_val + 1), // x > n ≡ x ≥ n+1
+                // x > n  ≡  x ≥ n+1  (integers).
+                // If n = i128::MAX then x > i128::MAX has no solution.
+                CmpOp::Gt => match rhs_val.checked_add(1) {
+                    Some(v) => BoundInfo::LowerBound(v),
+                    None => BoundInfo::Unsatisfiable,
+                },
             };
         }
     }
@@ -405,9 +438,17 @@ fn extract_cmp(
         if let Some(lhs_val) = eval_as_const(lhs, assignment) {
             return match op {
                 CmpOp::Le => BoundInfo::LowerBound(lhs_val), // lhs ≤ x ≡ x ≥ lhs
-                CmpOp::Lt => BoundInfo::LowerBound(lhs_val + 1),
+                // lhs < x  ≡  x ≥ lhs+1.  If lhs = i128::MAX no integer x satisfies this.
+                CmpOp::Lt => match lhs_val.checked_add(1) {
+                    Some(v) => BoundInfo::LowerBound(v),
+                    None => BoundInfo::Unsatisfiable,
+                },
                 CmpOp::Ge => BoundInfo::UpperBound(lhs_val),
-                CmpOp::Gt => BoundInfo::UpperBound(lhs_val - 1),
+                // lhs > x  ≡  x ≤ lhs−1.  If lhs = i128::MIN no integer x satisfies this.
+                CmpOp::Gt => match lhs_val.checked_sub(1) {
+                    Some(v) => BoundInfo::UpperBound(v),
+                    None => BoundInfo::Unsatisfiable,
+                },
             };
         }
     }

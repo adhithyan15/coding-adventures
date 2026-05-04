@@ -512,14 +512,23 @@ fn eval_predicate_concrete(predicate: &Predicate, value: i128) -> Option<bool> {
             // Evaluable iff all coefficients are over the same "__v" variable
             // (single-variable linear inequality).
             if coefs.iter().all(|(vid, _)| vid.0 == "__v") {
-                let lhs: i128 = coefs.iter().map(|(_, c)| c * value).sum();
-                Some(match op {
-                    lang_refined_types::CmpOp::Lt => lhs < *rhs,
-                    lang_refined_types::CmpOp::Le => lhs <= *rhs,
-                    lang_refined_types::CmpOp::Eq => lhs == *rhs,
-                    lang_refined_types::CmpOp::Ge => lhs >= *rhs,
-                    lang_refined_types::CmpOp::Gt => lhs > *rhs,
-                })
+                // Use checked arithmetic to avoid integer overflow when
+                // coefficient or value is near i128::MIN/MAX.  On overflow
+                // we return None so the solver handles it instead.
+                let lhs_opt: Option<i128> = coefs.iter().try_fold(0i128, |acc, (_, c)| {
+                    let term = c.checked_mul(value)?;
+                    acc.checked_add(term)
+                });
+                match lhs_opt {
+                    None => None, // arithmetic overflow → fall through to solver
+                    Some(lhs) => Some(match op {
+                        lang_refined_types::CmpOp::Lt => lhs < *rhs,
+                        lang_refined_types::CmpOp::Le => lhs <= *rhs,
+                        lang_refined_types::CmpOp::Eq => lhs == *rhs,
+                        lang_refined_types::CmpOp::Ge => lhs >= *rhs,
+                        lang_refined_types::CmpOp::Gt => lhs > *rhs,
+                    }),
+                }
             } else {
                 None // multi-variable: defer to solver
             }

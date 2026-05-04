@@ -178,7 +178,12 @@ pub struct Vm {
     /// Current engine (top of scope stack).
     engine: Engine,
     /// Saved snapshots for `PushScope` / `PopScope`.
-    scope_stack: Vec<Engine>,
+    ///
+    /// Each entry pairs the engine snapshot with the `total_assertions`
+    /// count at the time of the push, so that `PopScope` can restore both
+    /// together and the assertion limit isn't permanently consumed by
+    /// assertions made inside a (subsequently popped) scope.
+    scope_stack: Vec<(Engine, usize)>,
     /// Result of the most recent `CheckSat`.
     last_check_sat: Option<SolverResult>,
     /// Total assertions submitted (across all scopes) — for the limit.
@@ -315,12 +320,19 @@ impl Vm {
                     )));
                 }
                 let snap = self.engine.snapshot();
-                self.scope_stack.push(snap);
+                // Save both the engine snapshot and the current assertion count so
+                // that PopScope can restore the limit counter.  Without this, every
+                // assertion made inside a pushed scope permanently consumes budget
+                // even after the scope is popped — leaking capacity and making the
+                // limit unreliable over many push/pop cycles.
+                self.scope_stack.push((snap, self.total_assertions));
             }
 
             ConstraintInstr::PopScope => {
-                let saved = self.scope_stack.pop().ok_or(VmError::UnmatchedPop)?;
-                self.engine = saved;
+                let (saved_engine, saved_assertions) =
+                    self.scope_stack.pop().ok_or(VmError::UnmatchedPop)?;
+                self.engine = saved_engine;
+                self.total_assertions = saved_assertions;
                 self.last_check_sat = None; // Scope changed — prior result stale.
             }
 

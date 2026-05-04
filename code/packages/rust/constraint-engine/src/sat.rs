@@ -109,8 +109,14 @@ impl SatTactic {
         }
 
         // DPLL with an initial empty assignment.
+        //
+        // The budget limits total recursive calls — 1 000 000 is generous
+        // for LANG23 use (typical formulae use O(10) variables) but prevents
+        // exponential blowup if a caller somehow feeds in a large formula.
+        const DPLL_BUDGET: usize = 1_000_000;
         let mut assignment: HashMap<String, bool> = HashMap::new();
-        match dpll(&clauses, &mut assignment) {
+        let mut budget = DPLL_BUDGET;
+        match dpll(&clauses, &mut assignment, &mut budget) {
             DpllResult::Sat => {
                 let mut model = Model::new();
                 for v in bool_vars {
@@ -120,6 +126,7 @@ impl SatTactic {
                 SolverResult::Sat(model)
             }
             DpllResult::Unsat => SolverResult::Unsat,
+            DpllResult::Unknown(r) => SolverResult::Unknown(r),
         }
     }
 }
@@ -187,17 +194,39 @@ fn collect_clauses(p: &Predicate) -> Result<Vec<Clause>, String> {
 // DPLL
 // ---------------------------------------------------------------------------
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug)]
 enum DpllResult {
     Sat,
     Unsat,
+    /// The DPLL search budget was exhausted.  The formula may be satisfiable
+    /// but the solver couldn't confirm it within the allowed node count.
+    /// The caller should surface this as `SolverResult::Unknown`.
+    Unknown(String),
 }
 
 /// Core DPLL procedure.
 ///
 /// `clauses` is the current (possibly simplified) formula; `assignment`
-/// accumulates committed assignments.
-fn dpll(clauses: &[Clause], assignment: &mut HashMap<String, bool>) -> DpllResult {
+/// accumulates committed assignments.  `budget` is a shared mutable counter
+/// decremented on each recursive call; when it reaches zero the search is
+/// abandoned and `DpllResult::Unknown` is returned to prevent exponential
+/// blowup on adversarial formulae.
+fn dpll(
+    clauses: &[Clause],
+    assignment: &mut HashMap<String, bool>,
+    budget: &mut usize,
+) -> DpllResult {
+    // ── Budget guard ─────────────────────────────────────────────────────────
+    //
+    // DPLL is O(2^n) in the worst case.  For the small Boolean formulae that
+    // arise from LANG23 refinement checking the budget is never reached in
+    // practice.  For adversarially large or malformed programs, the budget
+    // prevents a denial-of-service via an exhaustive search.
+    if *budget == 0 {
+        return DpllResult::Unknown("DPLL node budget exceeded".into());
+    }
+    *budget -= 1;
+
     // Step 1: unit propagation.
     let (mut clauses_owned, forced) = unit_propagate(clauses);
     for (var, val) in &forced {
@@ -241,9 +270,13 @@ fn dpll(clauses: &[Clause], assignment: &mut HashMap<String, bool>) -> DpllResul
         let mut a = assignment.clone();
         let simplified = simplify_clauses(&clauses_owned, &branch_var, true);
         a.insert(branch_var.clone(), true);
-        if dpll(&simplified, &mut a) == DpllResult::Sat {
-            *assignment = a;
-            return DpllResult::Sat;
+        match dpll(&simplified, &mut a, budget) {
+            DpllResult::Sat => {
+                *assignment = a;
+                return DpllResult::Sat;
+            }
+            DpllResult::Unknown(r) => return DpllResult::Unknown(r),
+            DpllResult::Unsat => {} // try false branch
         }
     }
 
@@ -252,9 +285,13 @@ fn dpll(clauses: &[Clause], assignment: &mut HashMap<String, bool>) -> DpllResul
         let mut a = assignment.clone();
         let simplified = simplify_clauses(&clauses_owned, &branch_var, false);
         a.insert(branch_var.clone(), false);
-        if dpll(&simplified, &mut a) == DpllResult::Sat {
-            *assignment = a;
-            return DpllResult::Sat;
+        match dpll(&simplified, &mut a, budget) {
+            DpllResult::Sat => {
+                *assignment = a;
+                return DpllResult::Sat;
+            }
+            DpllResult::Unknown(r) => return DpllResult::Unknown(r),
+            DpllResult::Unsat => {} // backtrack — both branches failed
         }
     }
 
