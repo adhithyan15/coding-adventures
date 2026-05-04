@@ -1,0 +1,12 @@
+[package]
+name = "executor-protocol"
+version = "0.1.0"
+edition = "2021"
+description = "MX03 — wire-level protocol between the matrix-execution runtime and its executors. Hand-rolled binary message format, transport-pluggable Transport trait, in-process LocalTransport, hand-rolled minimal block_on. Zero external dependencies."
+license = "MIT"
+
+[dependencies]
+# Path-only.  No external crates.  See specs/MX00 for the
+# zero-dependency mandate.
+matrix-ir  = { path = "../matrix-ir" }
+compute-ir = { path = "../compute-ir" }

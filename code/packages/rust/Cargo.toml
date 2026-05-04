@@ -40,6 +40,7 @@ members = [
     "code128",
     "compute-ir",
     "compute-runtime",
+    "executor-protocol",
     "compute-unit",
     "constraint-core",
     "constraint-instructions",
