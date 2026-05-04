@@ -30,6 +30,8 @@ All notable changes to this package will be documented in this file.
   eval-thunk path used by integer expressions.
 - Lowered multiple builtin `print`/`output` arguments in source order through
   the existing guarded integer, boolean, real, and string output paths.
+- Lowered direct calls to sibling procedures declared later in the same block,
+  including mutually recursive typed procedures now resolved by the checker.
 - Lowered integer array-element by-name actuals to tagged descriptors with
   generated eval/store helpers that re-compute the element address on every
   formal read or assignment.

@@ -934,6 +934,63 @@ class TestAlgolTypeChecker:
         assert body_block.scope.symbols["inc"].kind == "procedure_result"
         assert body_block.scope.symbols["x"].kind == "parameter"
 
+    def test_procedure_body_can_call_later_sibling_procedure(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure first; begin second end; "
+            "procedure second; begin result := 7 end; "
+            "first "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        calls = [call.name for call in result.semantic.procedure_calls]
+        assert calls == ["second", "first"]
+
+    def test_procedure_body_can_reference_later_block_declarations(self) -> None:
+        ast = parse_algol(
+            "begin "
+            "procedure set; begin result := 7 end; "
+            "integer result; "
+            "switch route := done; "
+            "procedure jump; begin goto route[1] end; "
+            "set; jump; "
+            "done: result := result + 1 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        references = {(ref.name, ref.role) for ref in result.semantic.references}
+        assert ("result", "write") in references
+        assert result.semantic.switch_selections[0].name == "route"
+
+    def test_accepts_mutually_recursive_typed_procedures(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer procedure even(n); value n; integer n; "
+            "begin if n = 0 then even := 1 else even := odd(n - 1) end; "
+            "integer procedure odd(n); value n; integer n; "
+            "begin if n = 0 then odd := 0 else odd := even(n - 1) end; "
+            "result := odd(5) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert [procedure.name for procedure in result.semantic.procedures] == [
+            "even",
+            "odd",
+        ]
+        assert {call.name for call in result.semantic.procedure_calls} == {
+            "even",
+            "odd",
+        }
+
     def test_accepts_bare_no_argument_typed_procedure_expression(self) -> None:
         ast = parse_algol(
             "begin integer result; "

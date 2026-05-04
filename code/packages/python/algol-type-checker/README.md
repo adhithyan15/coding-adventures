@@ -31,11 +31,14 @@ static links a later WASM lowering pass must walk.
 Procedure declarations receive semantic descriptors with generated function
 labels, parameter slots, value-vs-name parameter modes, conservative by-name
 write metadata, result slots for typed procedures, and resolved call sites
-carrying the static-link delta needed by code generation. Builtin output calls
-accept one or more scalar arguments, and standard numeric functions remain
-single-argument calls. Both are resolved case-insensitively and treated as
-read-only by the write analysis, so formals that are only printed or inspected
-can still accept expression actuals.
+carrying the static-link delta needed by code generation. A block's procedure
+signatures are registered before any procedure body is checked, so sibling
+procedures can call declarations that appear later in the same block and
+typed procedures can be mutually recursive. Builtin output calls accept one or
+more scalar arguments, and standard numeric functions remain single-argument
+calls. Both are resolved case-insensitively and treated as read-only by the
+write analysis, so formals that are only printed or inspected can still accept
+expression actuals.
 No-argument procedure declarations and typed procedure expressions may use
 either explicit empty parentheses or bare procedure names, matching ALGOL's
 omitted-parentheses call syntax, while procedure result variables inside their

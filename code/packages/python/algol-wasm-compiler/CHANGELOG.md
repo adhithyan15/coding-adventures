@@ -89,6 +89,9 @@ All notable changes to this package will be documented in this file.
 - Accepted multiple arguments to builtin `print(...)` / `output(...)`, emitting
   each integer, boolean, real, or string argument in order through the same
   guarded output path.
+- Executed forward sibling procedure calls and mutually recursive typed
+  procedures by registering a block's procedure signatures before checking any
+  procedure body.
 - Executed subscripted integer and real array elements as writable `for`
   statement control variables.
 - Rejected formal procedure forwarding when a concrete procedure argument does

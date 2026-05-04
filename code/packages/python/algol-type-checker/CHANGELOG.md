@@ -44,6 +44,9 @@ All notable changes to this package will be documented in this file.
   printed.
 - Accepted one or more arguments to builtin `print`/`output` calls while
   keeping numeric builtins strict about receiving exactly one argument.
+- Registered all procedure signatures in a block before checking procedure
+  bodies, allowing forward sibling procedure calls and mutually recursive
+  typed procedures.
 - Accepted integer-returning procedure actuals for real-valued formal
   procedure parameters, matching scalar integer-to-real promotion.
 - Accepted switch declaration entries that target labels in lexical parent
