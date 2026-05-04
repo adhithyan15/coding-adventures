@@ -76,6 +76,7 @@ members = [
     "fsharp-lexer",
     "fsharp-parser",
     "garbage-collector",
+    "gc-core",
     "ge225-simulator",
     "argon2d",
     "argon2i",
