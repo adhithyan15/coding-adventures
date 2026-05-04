@@ -357,3 +357,27 @@ LOGCONTRACT = IRSymbol("LogContract")
 LOGEXPAND = IRSymbol("LogExpand")
 EXPONENTIALIZE = IRSymbol("Exponentialize")
 DEMOIVRE = IRSymbol("DeMoivre")
+
+# Pattern-matching operations (Phase 22)
+#
+# MACSYMA's user-defined rewrite-rule system built on top of the
+# structural pattern matcher in ``cas-pattern-matching``.
+#
+# Pattern variable declaration:
+#   MatchDeclare(sym)            — declare sym as a wildcard variable
+#   MatchDeclare(sym, predicate) — declare sym with a type predicate
+#                                  (integerp, symbolp, floatp, etc.)
+#
+# Named-rule management:
+#   Defrule(name, lhs, rhs)     — compile + store a named rewrite rule
+#   Apply1(name, expr)          — apply named rule once at root
+#   Apply2(name, expr)          — apply named rule recursively (fixed-point)
+#
+# Automatic simplifier integration:
+#   TellSimp(lhs, rhs)          — add a rule to the VM's auto-simplifier;
+#                                  fires on every eval of matching exprs
+MATCHDECLARE = IRSymbol("MatchDeclare")
+DEFRULE = IRSymbol("Defrule")
+APPLY1 = IRSymbol("Apply1")
+APPLY2 = IRSymbol("Apply2")
+TELLSIMP = IRSymbol("TellSimp")
