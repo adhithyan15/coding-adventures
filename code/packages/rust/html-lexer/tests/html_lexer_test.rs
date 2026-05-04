@@ -1,7 +1,8 @@
 use coding_adventures_html_lexer::{
     apply_html_lex_context, create_html_lexer, html1_definition, html1_machine,
     html_skeleton_definition, html_skeleton_machine, lex_html, lex_html_fragment, Attribute,
-    HtmlLexContext, HtmlScriptingMode, HtmlTokenizerState, Token, HTML_SCRIPT_TOKENIZER_STATES,
+    HtmlLexContext, HtmlScriptingMode, HtmlTokenizerState, Token, HTML_FRAGMENT_TOKENIZER_STATES,
+    HTML_SCRIPT_TOKENIZER_STATES, HTML_TOKENIZER_STATES,
 };
 use state_machine::END_INPUT;
 
@@ -4457,6 +4458,35 @@ fn parser_facing_context_maps_script_substates() {
         None
     );
     assert!(!HtmlTokenizerState::Rawtext.is_script_substate());
+}
+
+#[test]
+fn parser_facing_context_exposes_tokenizer_state_sets() {
+    assert_eq!(
+        HTML_TOKENIZER_STATES.map(HtmlTokenizerState::as_machine_state),
+        [
+            "data",
+            "rcdata",
+            "rawtext",
+            "plaintext",
+            "cdata_section",
+            "script_data",
+            "script_data_escaped",
+            "script_data_escaped_dash",
+            "script_data_escaped_dash_dash",
+            "script_data_escaped_less_than_sign",
+            "script_data_double_escaped",
+            "script_data_double_escaped_dash",
+            "script_data_double_escaped_dash_dash",
+            "script_data_double_escaped_less_than_sign",
+        ]
+    );
+    assert!(!HtmlTokenizerState::Data.is_fragment_state());
+
+    assert_eq!(&HTML_FRAGMENT_TOKENIZER_STATES, &HTML_TOKENIZER_STATES[1..]);
+    for state in HTML_FRAGMENT_TOKENIZER_STATES {
+        assert!(state.is_fragment_state());
+    }
 }
 
 #[test]

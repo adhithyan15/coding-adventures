@@ -163,6 +163,11 @@ strings. The accepted script entry states are also available as
 `HTML_SCRIPT_TOKENIZER_STATES`, and `HtmlTokenizerState::is_script_substate()`
 lets parser adapters validate user-selected fragment contexts before seeding a
 lexer.
+For importers and parser fragment APIs that need to enumerate the whole
+supported surface, `HTML_TOKENIZER_STATES` lists every parser-facing tokenizer
+entry state and `HTML_FRAGMENT_TOKENIZER_STATES` lists the non-data fragment
+states accepted by the wrapper. `HtmlTokenizerState::is_fragment_state()` keeps
+that validation centralized in the lexer package.
 `html-skeleton.lexer.states.toml` remains in the crate as a smaller bootstrap
 machine for comparisons and narrow debugging.
 

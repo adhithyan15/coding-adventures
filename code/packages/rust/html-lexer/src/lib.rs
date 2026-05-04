@@ -40,6 +40,41 @@ pub enum HtmlTokenizerState {
     ScriptDataDoubleEscapedLessThanSign,
 }
 
+/// Tokenizer states that are valid parser-facing entry points.
+pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 14] = [
+    HtmlTokenizerState::Data,
+    HtmlTokenizerState::Rcdata,
+    HtmlTokenizerState::Rawtext,
+    HtmlTokenizerState::Plaintext,
+    HtmlTokenizerState::CdataSection,
+    HtmlTokenizerState::ScriptData,
+    HtmlTokenizerState::ScriptDataEscaped,
+    HtmlTokenizerState::ScriptDataEscapedDash,
+    HtmlTokenizerState::ScriptDataEscapedDashDash,
+    HtmlTokenizerState::ScriptDataEscapedLessThanSign,
+    HtmlTokenizerState::ScriptDataDoubleEscaped,
+    HtmlTokenizerState::ScriptDataDoubleEscapedDash,
+    HtmlTokenizerState::ScriptDataDoubleEscapedDashDash,
+    HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign,
+];
+
+/// Tokenizer states used for parser-controlled text or foreign-content fragments.
+pub const HTML_FRAGMENT_TOKENIZER_STATES: [HtmlTokenizerState; 13] = [
+    HtmlTokenizerState::Rcdata,
+    HtmlTokenizerState::Rawtext,
+    HtmlTokenizerState::Plaintext,
+    HtmlTokenizerState::CdataSection,
+    HtmlTokenizerState::ScriptData,
+    HtmlTokenizerState::ScriptDataEscaped,
+    HtmlTokenizerState::ScriptDataEscapedDash,
+    HtmlTokenizerState::ScriptDataEscapedDashDash,
+    HtmlTokenizerState::ScriptDataEscapedLessThanSign,
+    HtmlTokenizerState::ScriptDataDoubleEscaped,
+    HtmlTokenizerState::ScriptDataDoubleEscapedDash,
+    HtmlTokenizerState::ScriptDataDoubleEscapedDashDash,
+    HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign,
+];
+
 /// Tokenizer states that are valid script-substate entry points.
 pub const HTML_SCRIPT_TOKENIZER_STATES: [HtmlTokenizerState; 9] = [
     HtmlTokenizerState::ScriptData,
@@ -79,6 +114,11 @@ impl HtmlTokenizerState {
     /// Return whether this state is a parser-approved script tokenizer substate.
     pub fn is_script_substate(self) -> bool {
         HTML_SCRIPT_TOKENIZER_STATES.contains(&self)
+    }
+
+    /// Return whether this state is a parser-approved fragment entry point.
+    pub fn is_fragment_state(self) -> bool {
+        HTML_FRAGMENT_TOKENIZER_STATES.contains(&self)
     }
 }
 
