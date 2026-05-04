@@ -406,6 +406,7 @@ members = [
     "vault-recipients",
     "vault-secure-channel",
     "vault-auth",
+    "vault-policy",
     "context-store",
     "artifact-store",
     "skill-store",
