@@ -95,6 +95,13 @@ fn main() -> ExitCode {
         }
     };
 
+    // Surface which backend the matrix execution layer routed to.  The
+    // planner picks per graph based on cost model, so tiny images may
+    // stay on CPU even on a Mac with Metal available.
+    if let Some(name) = image_gpu_core::last_executor() {
+        eprintln!("instagram-filters: executed on {}", name);
+    }
+
     let encoded = image_codec_ppm::encode_ppm(&out_image);
     if let Err(e) = std::fs::write(&parsed.output, &encoded) {
         eprintln!("instagram-filters: write {}: {}", parsed.output, e);

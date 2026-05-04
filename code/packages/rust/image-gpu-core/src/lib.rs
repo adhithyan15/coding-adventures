@@ -44,6 +44,14 @@ pub use pixel_container::PixelContainer;
 mod pipeline;
 mod sergb;
 
+/// The name of the executor that handled the most recent dispatch on
+/// this thread.  Returns `"cpu"`, `"metal"`, or `None` if no GPU op
+/// has yet succeeded on this thread.
+///
+/// Re-exported from `pipeline` so CLI demos can surface which backend
+/// actually ran without changing the public function signatures.
+pub use pipeline::last_executor;
+
 use matrix_ir::{DType, GraphBuilder, Shape};
 
 /// User-facing error type.  Compatible with v0.1's `GpuError` for ABI
