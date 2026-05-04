@@ -24,3 +24,6 @@ documented in this file.
 - Parser-approved initial script tokenizer contexts for script data, escaped,
   dash/dash-dash, less-than, and double-escaped substates backed by the typed
   lexer script-substate context helper.
+- Initial table tree-construction recovery for omitted `tbody`/`tr` structure,
+  including implicit row groups for bare rows/cells and section closure when a
+  new table section starts.

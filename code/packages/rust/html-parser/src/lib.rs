@@ -243,6 +243,7 @@ impl HtmlParser {
         attributes: Vec<LexerAttribute>,
         self_closing: bool,
     ) {
+        self.apply_table_implied_contexts(&name);
         self.apply_simple_implied_end_tags(&name);
 
         let attributes = attributes
@@ -292,6 +293,13 @@ impl HtmlParser {
         }
     }
 
+    fn append_implied_element(&mut self, name: &str) {
+        let child_index = self.append_node(Node::element(name.to_string(), Vec::new()));
+        let mut path = self.current_parent_path().to_vec();
+        path.push(child_index);
+        self.open_elements.push(path);
+    }
+
     fn close_element(&mut self, name: &str) {
         if let Some(index) = self
             .open_elements
@@ -306,6 +314,36 @@ impl HtmlParser {
             "unexpected-end-tag",
             format!("end tag `</{name}>` did not match an open element"),
         ));
+    }
+
+    fn apply_table_implied_contexts(&mut self, incoming_name: &str) {
+        match incoming_name {
+            "tbody" | "thead" | "tfoot" => {
+                self.pop_current_if(|name| name == "td" || name == "th");
+                self.pop_current_if(|name| name == "tr");
+                self.pop_current_if(is_table_section);
+            }
+            "tr" => {
+                self.pop_current_if(|name| name == "td" || name == "th");
+                self.pop_current_if(|name| name == "tr");
+                if self.current_element_is("table") {
+                    self.append_implied_element("tbody");
+                }
+            }
+            "td" | "th" => {
+                self.pop_current_if(|name| name == "td" || name == "th");
+                if self.current_element_is("table") {
+                    self.append_implied_element("tbody");
+                }
+                if self.current_element_is("tbody")
+                    || self.current_element_is("thead")
+                    || self.current_element_is("tfoot")
+                {
+                    self.append_implied_element("tr");
+                }
+            }
+            _ => {}
+        }
     }
 
     fn apply_simple_implied_end_tags(&mut self, incoming_name: &str) {
@@ -328,6 +366,16 @@ impl HtmlParser {
         if predicate(name) {
             self.open_elements.pop();
         }
+    }
+
+    fn current_element_is(&self, name: &str) -> bool {
+        self.current_element_name()
+            .is_some_and(|current| current == name)
+    }
+
+    fn current_element_name(&self) -> Option<&str> {
+        let path = self.open_elements.last()?;
+        element_at_path(&self.document, path)
     }
 
     fn current_parent_path(&self) -> &[usize] {
@@ -509,6 +557,10 @@ fn is_ignorable_before_body(node: &Node) -> bool {
     }
 }
 
+fn is_table_section(name: &str) -> bool {
+    matches!(name, "tbody" | "thead" | "tfoot")
+}
+
 fn is_void_element(name: &str) -> bool {
     matches!(
         name,
@@ -621,6 +673,63 @@ mod tests {
 
         assert_eq!(element(&body.children[1]).children, vec![Node::text("a")]);
         assert_eq!(element(&body.children[2]).children, vec![Node::text("b")]);
+    }
+
+    #[test]
+    fn synthesizes_table_body_and_row_for_omitted_table_structure() {
+        let document = parse_html("<table><td>A<td>B<tr><th>C</table>").unwrap();
+
+        let table = element(&body(&document).children[0]);
+        assert_eq!(table.name, "table");
+
+        let tbody = element(&table.children[0]);
+        assert_eq!(tbody.name, "tbody");
+        assert_eq!(tbody.children.len(), 2);
+
+        let first_row = element(&tbody.children[0]);
+        assert_eq!(first_row.name, "tr");
+        assert_eq!(element(&first_row.children[0]).name, "td");
+        assert_eq!(
+            element(&first_row.children[0]).children,
+            vec![Node::text("A")]
+        );
+        assert_eq!(element(&first_row.children[1]).name, "td");
+        assert_eq!(
+            element(&first_row.children[1]).children,
+            vec![Node::text("B")]
+        );
+
+        let second_row = element(&tbody.children[1]);
+        assert_eq!(second_row.name, "tr");
+        assert_eq!(element(&second_row.children[0]).name, "th");
+        assert_eq!(
+            element(&second_row.children[0]).children,
+            vec![Node::text("C")]
+        );
+    }
+
+    #[test]
+    fn closes_open_table_sections_when_new_sections_start() {
+        let document = parse_html("<table><tbody><tr><td>A<tfoot><tr><td>B</table>").unwrap();
+
+        let table = element(&body(&document).children[0]);
+        assert_eq!(table.children.len(), 2);
+
+        let tbody = element(&table.children[0]);
+        assert_eq!(tbody.name, "tbody");
+        let tbody_row = element(&tbody.children[0]);
+        assert_eq!(
+            element(&tbody_row.children[0]).children,
+            vec![Node::text("A")]
+        );
+
+        let tfoot = element(&table.children[1]);
+        assert_eq!(tfoot.name, "tfoot");
+        let tfoot_row = element(&tfoot.children[0]);
+        assert_eq!(
+            element(&tfoot_row.children[0]).children,
+            vec![Node::text("B")]
+        );
     }
 
     #[test]

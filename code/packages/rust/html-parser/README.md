@@ -14,6 +14,7 @@ This first slice intentionally starts small:
 - void element handling
 - adjacent text merging
 - implied document shell creation for omitted `html`, `head`, and `body`
+- implied table `tbody` and `tr` creation for common omitted table structure
 - parser-controlled lexer handoff for `title`, `textarea`, RAWTEXT elements,
   `script`, and `plaintext`
 - parser options for scripting-sensitive tokenizer handoff, including
