@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pytest
-
 from symbolic_ir import IRInteger, IRRational
 
 from cas_matrix import (
@@ -14,7 +13,6 @@ from cas_matrix import (
     row_reduce,
     zero_matrix,
 )
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -116,8 +114,8 @@ class TestRank:
 
 class TestRowReduce:
     def test_identity_2x2_unchanged(self):
-        I = identity_matrix(2)
-        R = row_reduce(I)
+        Id = identity_matrix(2)
+        R = row_reduce(Id)
         assert _entries(R) == [[(1, 1), (0, 1)], [(0, 1), (1, 1)]]
 
     def test_2x2_full_rank(self):
