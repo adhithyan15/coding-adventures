@@ -1,0 +1,11 @@
+[package]
+name = "grammar-lsp-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "LS02 PR A — Generic grammar-driven LSP bridge: implements ls00::LanguageBridge from .tokens + .grammar + LanguageSpec"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+coding-adventures-ls00 = { path = "../ls00" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"

@@ -1,0 +1,12 @@
+[package]
+name = "twig-dap"
+version = "0.1.0"
+edition = "2021"
+description = "LS03 PR B — Twig DAP adapter: compile + launch hooks over dap-adapter-core; produces twig-dap binary"
+
+[dependencies]
+dap-adapter-core = { path = "../dap-adapter-core" }
+
+[[bin]]
+name = "twig-dap"
+path = "bin/twig_dap.rs"

@@ -1,0 +1,13 @@
+[package]
+name = "twig-lsp-bridge"
+version = "0.1.0"
+edition = "2021"
+description = "LS02 PR B — Twig instantiation of grammar-lsp-bridge; provides twig_language_spec() and twig-lsp-server binary"
+
+[dependencies]
+grammar-lsp-bridge = { path = "../grammar-lsp-bridge" }
+coding-adventures-ls00 = { path = "../ls00" }
+
+[[bin]]
+name = "twig-lsp-server"
+path = "bin/twig_lsp_server.rs"
