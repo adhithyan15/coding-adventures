@@ -22,6 +22,7 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
+    "coding-adventures-directed-graph",
     "coding-adventures-grammar-tools",
     "coding-adventures-lexer",
     "coding-adventures-parser",
@@ -30,6 +31,7 @@ dependencies = [
 ]
 
 [tool.uv.sources]
+coding-adventures-directed-graph = { path = "../directed-graph", editable = true }
 coding-adventures-grammar-tools = { path = "../grammar-tools", editable = true }
 coding-adventures-lexer = { path = "../lexer", editable = true }
 coding-adventures-parser = { path = "../parser", editable = true }
