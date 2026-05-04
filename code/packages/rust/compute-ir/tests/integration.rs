@@ -221,6 +221,61 @@ fn rejects_double_alloc() {
 }
 
 #[test]
+fn rejects_use_after_free() {
+    // Allocate a buffer, write to it via Compute, free it, then try
+    // to use the (now-freed) tensor in another Compute.  The validator
+    // must reject this — the tensor's residency is no longer valid.
+    let g = ComputeGraph {
+        format_version: VERSION,
+        inputs: vec![placed(0, DType::F32, Shape::from(&[3]), cpu_buf(0))],
+        outputs: vec![],
+        constants: vec![],
+        ops: vec![
+            PlacedOp::Alloc {
+                residency: cpu_buf(1),
+                bytes: 12,
+            },
+            PlacedOp::Compute {
+                op: Op::Neg {
+                    input: TensorId(0),
+                    output: TensorId(1),
+                },
+                executor: CPU_EXECUTOR,
+                timing: OpTiming { estimated_ns: 0 },
+            },
+            // Free t1's buffer.
+            PlacedOp::Free {
+                residency: cpu_buf(1),
+            },
+            PlacedOp::Alloc {
+                residency: cpu_buf(2),
+                bytes: 12,
+            },
+            // Try to read t1 (just freed) from another compute.
+            PlacedOp::Compute {
+                op: Op::Neg {
+                    input: TensorId(1),
+                    output: TensorId(2),
+                },
+                executor: CPU_EXECUTOR,
+                timing: OpTiming { estimated_ns: 0 },
+            },
+        ],
+        tensors: vec![
+            placed(0, DType::F32, Shape::from(&[3]), cpu_buf(0)),
+            placed(1, DType::F32, Shape::from(&[3]), cpu_buf(1)),
+            placed(2, DType::F32, Shape::from(&[3]), cpu_buf(2)),
+        ],
+    };
+    // After Free purges current_residency, the second Compute's
+    // input lookup fails with UndefinedTensor.
+    assert!(matches!(
+        g.validate(),
+        Err(ComputeIrError::UndefinedTensor { .. })
+    ));
+}
+
+#[test]
 fn rejects_free_without_alloc() {
     let g = ComputeGraph {
         format_version: VERSION,

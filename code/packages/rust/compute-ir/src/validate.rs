@@ -279,6 +279,14 @@ impl ComputeGraph {
                             residency: *residency,
                         });
                     }
+                    // Remove any tensor still pointing at this residency
+                    // from current_residency, so a subsequent Compute
+                    // that reads such a tensor fails the
+                    // resident-on-executor check rather than silently
+                    // passing.  This guards against use-after-free at
+                    // the IR level (a planner bug — but the validator
+                    // should catch it).
+                    current_residency.retain(|_, r| r != residency);
                 }
             }
         }
