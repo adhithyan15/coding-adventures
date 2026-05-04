@@ -10897,17 +10897,15 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
-                "attribute_name".to_string(),
+                "before_attribute_name".to_string(),
             ],
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(unexpected-solidus-in-tag)".to_string(),
-                "start_attribute".to_string(),
-                "append_attribute_name(current_lowercase)".to_string(),
             ],
-            consume: true,
+            consume: false,
         },
         TransitionDefinition {
             from: "markup_declaration_open".to_string(),

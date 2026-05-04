@@ -5105,11 +5105,10 @@ actions = [
 [[transitions]]
 from = "self_closing_start_tag"
 matcher = { anything = true }
-to = "attribute_name"
+to = "before_attribute_name"
+consume = false
 actions = [
   "parse_error(unexpected-solidus-in-tag)",
-  "start_attribute",
-  "append_attribute_name(current_lowercase)",
 ]
 
 [[transitions]]

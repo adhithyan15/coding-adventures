@@ -76,6 +76,10 @@ reporting `absence-of-digits-in-numeric-character-reference`.
 Duplicate attributes recover with HTML semantics: the first attribute value is
 kept, later attributes with the same interpreted name are dropped, and a
 `duplicate-attribute` diagnostic is recorded.
+Unexpected solidus recovery inside start tags now reconsumes in
+`before_attribute_name`, so malformed inputs such as `<img/ src=x>` skip the
+space normally and continue parsing later attributes instead of folding the
+separator into an attribute name.
 Unquoted attribute values also preserve spec-defined unexpected characters
 such as `"`, `'`, `<`, `=`, and `` ` `` while reporting
 `unexpected-character-in-unquoted-attribute-value`.
