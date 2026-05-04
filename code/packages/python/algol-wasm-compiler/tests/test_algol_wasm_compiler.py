@@ -1801,6 +1801,29 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [6]
 
+    def test_forward_sibling_procedure_call_executes(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure first; begin second end; "
+            "procedure second; begin result := 7 end; "
+            "first "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_procedure_body_sees_later_block_declarations(self) -> None:
+        result = compile_source(
+            "begin "
+            "procedure set; begin result := 7 end; "
+            "integer result; "
+            "switch route := done; "
+            "procedure jump; begin goto route[1] end; "
+            "set; jump; "
+            "done: result := result + 1 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
     def test_value_parameter_assignment_does_not_write_back(self) -> None:
         result = compile_source(
             "begin integer result, y; "
@@ -2374,6 +2397,18 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [120]
+
+    def test_mutually_recursive_typed_procedures_execute(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure even(n); value n; integer n; "
+            "begin if n = 0 then even := 1 else even := odd(n - 1) end; "
+            "integer procedure odd(n); value n; integer n; "
+            "begin if n = 0 then odd := 0 else odd := even(n - 1) end; "
+            "result := odd(5) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
 
     def test_runaway_recursion_hits_bounded_frame_stack(self) -> None:
         result = compile_source(

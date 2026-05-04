@@ -1660,6 +1660,57 @@ class TestAlgolIrCompiler:
         assert calls[0].operands[0].name.startswith("_fn_algol_")
         assert result.procedure_signatures[calls[0].operands[0].name].param_count == 2
 
+    def test_compiles_forward_sibling_procedure_call(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "procedure first; begin second end; "
+                "procedure second; begin result := 7 end; "
+                "first "
+                "end"
+            )
+        )
+        labels = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.LABEL
+        ]
+        calls = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert any(label.endswith("_first") for label in labels)
+        assert any(label.endswith("_second") for label in labels)
+        assert len(calls) == 2
+
+    def test_compiles_mutually_recursive_typed_procedures(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "integer procedure even(n); value n; integer n; "
+                "begin if n = 0 then even := 1 else even := odd(n - 1) end; "
+                "integer procedure odd(n); value n; integer n; "
+                "begin if n = 0 then odd := 0 else odd := even(n - 1) end; "
+                "result := odd(5) "
+                "end"
+            )
+        )
+        procedure_labels = [
+            label
+            for label in result.procedure_signatures
+            if label.startswith("_fn_algol_")
+        ]
+        call_targets = [
+            instruction.operands[0].name
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert len(procedure_labels) == 2
+        assert all(label in call_targets for label in procedure_labels)
+
     def test_compiles_boolean_value_procedure_call(self) -> None:
         result = compile_algol(
             parse_algol(

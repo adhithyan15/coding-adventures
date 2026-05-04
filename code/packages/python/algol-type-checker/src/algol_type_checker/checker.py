@@ -280,6 +280,18 @@ class ProcedureDescriptor:
 
 
 @dataclass(frozen=True)
+class _PendingProcedureDeclaration:
+    """A procedure signature whose body still needs semantic checking."""
+
+    procedure: ProcedureDescriptor
+    descriptor_index: int
+    proc_scope: Scope
+    body_inner: ASTNode
+    procedure_depth: int
+    parameters: tuple[ProcedureParameter, ...]
+
+
+@dataclass(frozen=True)
 class ResolvedProcedureCall:
     """A procedure occurrence after lexical lookup has selected a descriptor."""
 
@@ -556,9 +568,15 @@ class AlgolTypeChecker:
             if child.rule_name == "statement":
                 self._collect_statement_labels(child, scope)
 
+        pending_procedures: list[_PendingProcedureDeclaration] = []
         for child in _node_children(block):
             if child.rule_name == "declaration":
-                self._check_declaration(child, scope)
+                pending = self._check_declaration(child, scope)
+                if pending is not None:
+                    pending_procedures.append(pending)
+
+        for pending in pending_procedures:
+            self._check_pending_procedure_body(pending)
 
         for child in _node_children(block):
             if child.rule_name == "statement":
@@ -605,30 +623,34 @@ class AlgolTypeChecker:
         )
         return scope
 
-    def _check_declaration(self, declaration: ASTNode, scope: Scope) -> None:
+    def _check_declaration(
+        self,
+        declaration: ASTNode,
+        scope: Scope,
+    ) -> _PendingProcedureDeclaration | None:
         inner = _first_ast_child(declaration)
         if inner is None:
-            return
+            return None
         if inner.rule_name == "procedure_decl":
-            self._check_procedure_declaration(inner, scope)
-            return
+            return self._check_procedure_declaration(inner, scope)
         if inner.rule_name == "own_decl":
             self._check_scalar_declaration(inner, scope, storage_class=STATIC)
-            return
+            return None
         if inner.rule_name == "own_array_decl":
             self._check_array_declaration(inner, scope, storage_class=STATIC)
-            return
+            return None
         if inner.rule_name == "array_decl":
             self._check_array_declaration(inner, scope, storage_class="frame")
-            return
+            return None
         if inner.rule_name == "switch_decl":
             self._check_switch_declaration(inner, scope)
-            return
+            return None
         if inner.rule_name != "type_decl":
             self._error(inner, f"{inner.rule_name} declarations are not supported yet")
-            return
+            return None
 
         self._check_scalar_declaration(inner, scope, storage_class="frame")
+        return None
 
     def _check_scalar_declaration(
         self,
@@ -832,11 +854,15 @@ class AlgolTypeChecker:
             )
         )
 
-    def _check_procedure_declaration(self, node: ASTNode, scope: Scope) -> None:
+    def _check_procedure_declaration(
+        self,
+        node: ASTNode,
+        scope: Scope,
+    ) -> _PendingProcedureDeclaration | None:
         name_token = _procedure_name(node)
         if name_token is None:
             self._error(node, "procedure declaration is missing a name")
-            return
+            return None
 
         procedure_depth = self._procedure_nesting_depth + 1
         if procedure_depth > self.limits.max_procedure_nesting_depth:
@@ -845,7 +871,7 @@ class AlgolTypeChecker:
                 f"procedure nesting depth {procedure_depth} exceeds configured "
                 f"limit {self.limits.max_procedure_nesting_depth}",
             )
-            return
+            return None
 
         return_type = _procedure_return_type(node)
         if return_type is not None and return_type not in {
@@ -858,7 +884,7 @@ class AlgolTypeChecker:
                 name_token,
                 f"{return_type} procedure results are not supported yet",
             )
-            return
+            return None
 
         formal_names = _formal_parameter_names(node)
         value_names = _value_parameter_names(node)
@@ -929,13 +955,13 @@ class AlgolTypeChecker:
                 name_token,
                 f"{name_token.value!r} is already declared in this scope",
             )
-            return
+            return None
         self._next_symbol_id += 1
         self.semantic_symbols.append(procedure_symbol)
 
         if body_inner is None:
             self._error(node, "procedure declaration is missing a body")
-            return
+            return None
 
         body_depth = scope.depth + 1 if scope.depth >= 0 else 0
         if body_depth > self.limits.max_block_nesting_depth:
@@ -944,7 +970,7 @@ class AlgolTypeChecker:
                 f"block nesting depth {body_depth} exceeds configured limit "
                 f"{self.limits.max_block_nesting_depth}",
             )
-            return
+            return None
 
         proc_scope = self._new_block_scope(
             scope,
@@ -1085,20 +1111,34 @@ class AlgolTypeChecker:
         descriptor_index = len(self.semantic_procedures)
         self.semantic_procedures.append(descriptor)
 
+        return _PendingProcedureDeclaration(
+            procedure=descriptor,
+            descriptor_index=descriptor_index,
+            proc_scope=proc_scope,
+            body_inner=body_inner,
+            procedure_depth=procedure_depth,
+            parameters=tuple(parameters),
+        )
+
+    def _check_pending_procedure_body(
+        self,
+        pending: _PendingProcedureDeclaration,
+    ) -> None:
+        descriptor = pending.procedure
         previous_procedure_depth = self._procedure_nesting_depth
-        self._procedure_nesting_depth = procedure_depth
+        self._procedure_nesting_depth = pending.procedure_depth
         try:
-            if body_inner.rule_name == "block":
-                self._check_block_contents(body_inner, proc_scope)
+            if pending.body_inner.rule_name == "block":
+                self._check_block_contents(pending.body_inner, pending.proc_scope)
             else:
-                self._collect_statement_labels(body_inner, proc_scope)
-                self._check_statement(body_inner, proc_scope)
+                self._collect_statement_labels(pending.body_inner, pending.proc_scope)
+                self._check_statement(pending.body_inner, pending.proc_scope)
             updated_parameters = tuple(
                 self._procedure_parameter_with_call_shapes(parameter)
-                for parameter in parameters
+                for parameter in pending.parameters
             )
             if updated_parameters != descriptor.parameters:
-                self.semantic_procedures[descriptor_index] = ProcedureDescriptor(
+                updated_descriptor = ProcedureDescriptor(
                     procedure_id=descriptor.procedure_id,
                     name=descriptor.name,
                     label=descriptor.label,
@@ -1110,6 +1150,7 @@ class AlgolTypeChecker:
                     line=descriptor.line,
                     column=descriptor.column,
                 )
+                self.semantic_procedures[pending.descriptor_index] = updated_descriptor
         finally:
             self._procedure_nesting_depth = previous_procedure_depth
 

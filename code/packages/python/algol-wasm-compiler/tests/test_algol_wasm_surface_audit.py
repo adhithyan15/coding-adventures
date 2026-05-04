@@ -52,6 +52,23 @@ _SURFACE_CASES = (
         result=[8],
     ),
     SurfaceCase(
+        name="forward-procedure-declaration-visibility",
+        source="""
+            begin
+              procedure first; begin second end;
+              integer result;
+              switch route := done;
+              procedure second; begin result := 12; goto route[1] end;
+              first;
+              result := 0;
+            done:
+              print('FORWARD ', result)
+            end
+        """,
+        result=[12],
+        stdout="FORWARD 12",
+    ),
+    SurfaceCase(
         name="for-list-scalar-and-array-control",
         source="""
             begin

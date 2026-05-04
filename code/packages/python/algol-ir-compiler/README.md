@@ -16,7 +16,10 @@ Calls pass an explicit static link followed by value arguments, procedure frames
 are allocated from the module frame stack, and typed procedures return through
 their procedure-name result slot. Integer and boolean procedure results flow
 through `v1`; real procedure results flow through the WASM backend's dedicated
-f64 result register, `v31`.
+f64 result register, `v31`. Because the type checker registers all procedure
+signatures in a block before checking procedure bodies, direct calls can target
+procedures declared later in the same block and typed procedures can be
+mutually recursive.
 Parameterless procedures may be declared and called with explicit empty
 parentheses, and typed procedures can still be used by bare name in expression
 positions, following ALGOL's
