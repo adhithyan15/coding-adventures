@@ -4483,6 +4483,30 @@ fn parser_facing_context_exposes_tokenizer_state_sets() {
     );
     assert!(!HtmlTokenizerState::Data.is_fragment_state());
 
+    for state in HTML_TOKENIZER_STATES {
+        assert_eq!(
+            HtmlTokenizerState::from_machine_state(state.as_machine_state()),
+            Some(state)
+        );
+    }
+    assert_eq!(
+        HtmlTokenizerState::from_machine_state("script data state"),
+        None
+    );
+    assert_eq!(HtmlTokenizerState::from_machine_state("bogus"), None);
+    assert_eq!(
+        HtmlTokenizerState::from_fragment_machine_state("data"),
+        None
+    );
+    assert_eq!(
+        HtmlTokenizerState::from_fragment_machine_state("rcdata"),
+        Some(HtmlTokenizerState::Rcdata)
+    );
+    assert_eq!(
+        HtmlTokenizerState::from_fragment_machine_state("script_data_escaped_dash_dash"),
+        Some(HtmlTokenizerState::ScriptDataEscapedDashDash)
+    );
+
     assert_eq!(&HTML_FRAGMENT_TOKENIZER_STATES, &HTML_TOKENIZER_STATES[1..]);
     for state in HTML_FRAGMENT_TOKENIZER_STATES {
         assert!(state.is_fragment_state());

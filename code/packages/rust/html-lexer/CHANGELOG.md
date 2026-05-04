@@ -221,3 +221,6 @@ documented in this file.
   `HtmlTokenizerState::is_fragment_state()` so parser and fixture importers can
   enumerate the full typed tokenizer-context surface without copying state
   lists out of the lexer crate.
+- Added `HtmlTokenizerState::from_machine_state()` and
+  `HtmlTokenizerState::from_fragment_machine_state()` so parser/conformance code
+  can map generated machine-state identifiers back into typed tokenizer states.
