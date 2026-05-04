@@ -25,6 +25,12 @@
       "repeatable": true
     },
     {
+      "id": "check",
+      "long": "check",
+      "description": "Parse, load, compile, and optionally initialize without running a query.",
+      "type": "boolean"
+    },
+    {
       "id": "source-query-index",
       "long": "source-query-index",
       "description": "Zero-based source-level ?- query index to run when --query is absent.",

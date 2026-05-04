@@ -51,6 +51,58 @@ def test_cli_repeated_queries_share_committed_runtime_state(
     ]
 
 
+def test_cli_check_compiles_source_without_queries(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        "--check",
+    ])
+
+    assert status == 0
+    assert capsys.readouterr().out == "ok.\n"
+
+
+def test_cli_check_json_reports_query_counts(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        ":- initialization(true). parent(homer, bart). ?- parent(homer, Who).",
+        "--check",
+        "--format",
+        "json",
+    ])
+
+    payload = json.loads(capsys.readouterr().out)
+
+    assert status == 0
+    assert payload == {
+        "backend": "structured",
+        "initialization_query_count": 1,
+        "initialized": True,
+        "mode": "check",
+        "source_query_count": 1,
+        "success": True,
+    }
+
+
+def test_cli_check_rejects_ad_hoc_queries(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        "--check",
+        "--query",
+        "parent(homer, Who)",
+    ])
+
+    assert status == 2
+    assert "--check cannot be combined with --query" in capsys.readouterr().err
+
+
 def test_cli_json_output_serializes_named_answers(
     capsys: pytest.CaptureFixture[str],
 ) -> None:

@@ -11,6 +11,7 @@ The goal is practical usability:
 
 - run inline Prolog source through the structured VM or bytecode VM
 - run a single `.pl` file or linked file graph
+- check that source parses, loads, compiles, and initializes without a query
 - run stored source-level `?-` queries by index
 - run all stored source-level `?-` queries as an executable script
 - run one or more ad-hoc top-level queries
@@ -27,6 +28,7 @@ Important options:
 
 - `--source SOURCE` loads inline source instead of files.
 - `--query QUERY` runs an ad-hoc top-level query. It may be repeated.
+- `--check` parses, loads, compiles, and initializes without running a query.
 - `--source-query-index INDEX` selects a stored source-level query when no
   ad-hoc query is provided.
 - `--all-source-queries` runs every stored source-level query in order when no
@@ -71,6 +73,10 @@ Value = saved.
 JSON document for non-interactive scripts: a single result object for one query
 or a list of result objects for repeated queries. `--format jsonl` emits one
 JSON object per query result.
+
+When `--check` is set, JSON formats emit one success object with `mode:
+"check"`, `source_query_count`, `initialization_query_count`, `backend`, and
+whether initialization ran.
 
 When `--all-source-queries` is set, each embedded `?-` query produces one result
 object with its `source_query_index`. The process exits with status 1 if any
@@ -128,6 +134,7 @@ setup phase before entering the top-level loop.
 The CLI test coverage should prove:
 
 - inline source ad-hoc queries through bytecode
+- query-free compile/check mode
 - stored source-level queries from files
 - all source-level queries from files and inline source
 - linked project file graphs with module-context queries

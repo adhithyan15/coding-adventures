@@ -274,6 +274,10 @@ Use `--values` to print raw answer values, omit `--query` to run a source-level
 `?-` directive by index, and use `--dialect iso` when the ISO parser profile is
 the desired frontend.
 
+Use `--check` to parse, load, compile, and initialize source without running a
+query. This is intended for CI and editor integrations that need to validate a
+Prolog file graph even when it does not contain embedded `?-` directives.
+
 Use `--all-source-queries` when a source file contains several embedded `?-`
 queries and the CLI should run them as a script. The command prints or emits
 one result record per source query, sets `source_query_index` in JSON formats,
