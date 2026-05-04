@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.6.0 — 2026-05-04
+
+### Added
+
+- **`join_match_stack: list[bool]`** added to `_VmState` — a stack that
+  tracks, per active left row, whether any right row satisfied the JOIN
+  ON condition. Supports arbitrarily nested LEFT OUTER JOINs.
+- **`JoinBeginRow` handler** — appends `False` to `join_match_stack`.
+- **`JoinSetMatched` handler** — sets `join_match_stack[-1] = True`.
+- **`JoinIfMatched(label)` handler** — pops the stack; conditionally
+  jumps to *label* if the popped value is `True`. When the stack is
+  empty (defensive), pops as `False` and falls through.
+- **LEFT OUTER JOIN null-padding** — no new instruction required; when
+  the right scan's `CloseScan` removes the cursor from `current_row`,
+  any subsequent `LoadColumn` for right-side columns returns `None`
+  automatically (existing `_load_column` semantics).
+
 ## 1.5.0 — 2026-04-28
 
 ### Added

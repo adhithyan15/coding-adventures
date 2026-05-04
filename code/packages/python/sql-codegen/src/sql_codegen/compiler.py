@@ -164,6 +164,9 @@ from .ir import (
     IntersectResult,
     IsNotNull,
     IsNull,
+    JoinBeginRow,
+    JoinIfMatched,
+    JoinSetMatched,
     Jump,
     JumpIfFalse,
     Label,
@@ -559,10 +562,14 @@ def _compile_select(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
     predicate, inner = _peel_filter(inner)
 
     def body(c: _Ctx) -> list[Instruction]:
+        # Generate a fresh skip label on each invocation so that calling
+        # body twice (e.g. matched path + null-padded path in a LEFT JOIN)
+        # does not produce duplicate Label names in the instruction stream.
+        skip = c.new_label("filter_skip") if predicate is not None else ""
         out: list[Instruction] = []
         if predicate is not None:
             out.extend(_compile_expr(predicate, c))
-            out.append(JumpIfFalse(label=_skip_label))
+            out.append(JumpIfFalse(label=skip))
         # Build the row.
         out.append(BeginRow())
         if project_items is None:
@@ -582,11 +589,9 @@ def _compile_select(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
                     out.append(EmitColumn(name=_projection_name(it)))
         out.append(EmitRow())
         if predicate is not None:
-            out.append(Label(name=_skip_label))
+            out.append(Label(name=skip))
         return out
 
-    # Unique skip label per SELECT body.
-    _skip_label = ctx.new_label("filter_skip")
     return _compile_source(inner, body, ctx)
 
 
@@ -816,7 +821,55 @@ def _compile_join(
 
         return _compile_source(lft, outer_body, ctx)
 
-    # LEFT / RIGHT / FULL — not yet implemented; raise a clear error.
+    if kind == JoinKind.LEFT:
+        # Nested-loop LEFT OUTER JOIN.
+        #
+        # For each left row we track whether any right row satisfied the ON
+        # condition (join_match_stack in the VM).  After the right scan
+        # exhausts, if no match was found we emit ``body`` once more; at that
+        # point the right cursor has no current row so every LoadColumn for a
+        # right-side column returns NULL — exactly the null-padding SQL
+        # requires.
+        #
+        # ``body`` is called at most twice per left row:
+        #   1. Once per matching (left, right) pair inside the inner loop.
+        #   2. At most once on the null-padded path if zero right rows matched.
+        # Each call to ``body`` generates a fresh filter-skip label (the body
+        # closure uses c.new_label, not a closed-over static string), so
+        # duplicate label names cannot appear in the instruction stream.
+        matched_label = ctx.new_label("loj_matched")
+
+        def loj_inner_body(c: _Ctx) -> list[Instruction]:
+            out: list[Instruction] = []
+            skip = c.new_label("loj_cond_skip")
+            if cond is not None:
+                out.extend(_compile_expr(cond, c))
+                out.append(JumpIfFalse(label=skip))
+            # ON condition passed: mark this left row as having a match,
+            # then emit the regular (non-null-padded) output row.
+            out.append(JoinSetMatched())
+            out.extend(body(c))
+            out.append(Label(name=skip))
+            return out
+
+        def loj_outer_body(c: _Ctx) -> list[Instruction]:
+            out: list[Instruction] = []
+            # Begin a new match-tracking epoch for this left row.
+            out.append(JoinBeginRow())
+            out.extend(_compile_source(rgt, loj_inner_body, c))
+            # After the right scan: if at least one right row matched ON,
+            # jump past the null-padded emission.
+            out.append(JoinIfMatched(label=matched_label))
+            # No match found: emit body with the right cursor closed.
+            # LoadColumn for right-side columns returns NULL automatically
+            # because the cursor has no current row.
+            out.extend(body(c))
+            out.append(Label(name=matched_label))
+            return out
+
+        return _compile_source(lft, loj_outer_body, ctx)
+
+    # RIGHT / FULL — not yet implemented; raise a clear error.
     raise UnsupportedNode(f"Join({kind})")
 
 

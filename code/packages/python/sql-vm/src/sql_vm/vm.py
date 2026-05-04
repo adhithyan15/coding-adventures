@@ -75,6 +75,9 @@ from sql_codegen import (
     IntersectResult,
     IsNotNull,
     IsNull,
+    JoinBeginRow,
+    JoinIfMatched,
+    JoinSetMatched,
     Jump,
     JumpIfFalse,
     JumpIfTrue,
@@ -282,6 +285,10 @@ class _VmState:
     # nargs=-1 means variadic.  Checked before the built-in registry so users
     # can override built-ins (e.g. to shim behaviour in tests).
     user_functions: dict[str, tuple[int, Callable]] | None = None
+    # Outer-join match tracking.  Each JoinBeginRow pushes False; JoinSetMatched
+    # sets the top to True; JoinIfMatched pops and conditionally jumps.
+    # The stack depth equals the number of currently-open outer-join levels.
+    join_match_stack: list[bool] = field(default_factory=list)
     # Scan telemetry — populated during execution; used to build QueryEvent.
     # Only the *first* scan per execute() call is recorded (one event per call).
     scan_table: str = ""
@@ -591,6 +598,20 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
         return
     if isinstance(ins, RollbackTransaction):
         _do_rollback_transaction(st)
+        return
+
+    # Outer-join match tracking -------------------------------------------
+    if isinstance(ins, JoinBeginRow):
+        st.join_match_stack.append(False)
+        return
+    if isinstance(ins, JoinSetMatched):
+        if st.join_match_stack:
+            st.join_match_stack[-1] = True
+        return
+    if isinstance(ins, JoinIfMatched):
+        matched = st.join_match_stack.pop() if st.join_match_stack else False
+        if matched:
+            st.pc = _resolve(st, ins.label)
         return
 
     # Control flow --------------------------------------------------------

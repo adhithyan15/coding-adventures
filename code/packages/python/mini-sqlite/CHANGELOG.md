@@ -1,5 +1,35 @@
 # Changelog
 
+## [1.12.0] - 2026-05-04
+
+### Added
+
+- **LEFT [OUTER] JOIN end-to-end** — `LEFT JOIN` and `LEFT OUTER JOIN`
+  now execute correctly through the full mini-sqlite pipeline. Unmatched
+  left rows appear with `NULL` for all right-side columns.
+- **Three-way chained LEFT JOIN** — `A LEFT JOIN B LEFT JOIN C` works via
+  `join_match_stack` nesting in the VM; each join level tracks its own
+  match state independently.
+- **GROUP BY + COUNT with LEFT JOIN** — `COUNT(right_col)` correctly
+  counts zero for left rows with no right match, since `COUNT` ignores
+  NULLs.
+- **WHERE on join result** — predicates like `WHERE right_col IS NULL`
+  (anti-join pattern) and `WHERE left_col = 'x'` apply correctly after
+  LEFT JOIN.
+
+### Fixed
+
+- **`PredicatePushdown` outer-join safety** — the optimizer no longer
+  pushes right-side WHERE predicates inside a `LEFT OUTER JOIN`. Doing
+  so would filter the right scan *before* the join, destroying the
+  null-padding that makes the outer join semantics correct. The fix adds
+  a `JoinKind`-aware guard in `_distribute_conjuncts`:
+  - `LEFT JOIN`: left-side predicates may be pushed; right-side predicates
+    stay above the join.
+  - `RIGHT JOIN`: right-side predicates may be pushed; left-side stay above.
+  - `FULL JOIN`: no predicates pushed to either side.
+  - `INNER`/`CROSS`: both sides safe to push (unchanged).
+
 ## [1.11.0] - 2026-04-29
 
 ### Added
