@@ -1,15 +1,9 @@
-#!/usr/bin/env bash
-set -euo pipefail
+load("code/packages/starlark/library-rules/rust_library.star", "rust_library")
 
-# Build and test cas-pretty-printer
-# Dependencies: symbolic-ir (already in workspace)
-
-cd "$(dirname "$0")"
-
-echo "==> Building cas-pretty-printer"
-cargo build -p cas-pretty-printer
-
-echo "==> Testing cas-pretty-printer"
-cargo test -p cas-pretty-printer
-
-echo "==> cas-pretty-printer OK"
+_targets = [
+    rust_library(
+        name = "cas-pretty-printer",
+        srcs = ["src/**/*.rs", "tests/**/*.rs"],
+        deps = ["symbolic-ir"],
+    ),
+]

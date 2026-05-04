@@ -1,0 +1,7 @@
+[package]
+name = "lang-runtime-core"
+version = "0.1.0"
+edition = "2021"
+description = "LANG20 — language-agnostic runtime substrate: LangBinding trait + supporting types (PR 1: skeleton only)"
+
+[dependencies]

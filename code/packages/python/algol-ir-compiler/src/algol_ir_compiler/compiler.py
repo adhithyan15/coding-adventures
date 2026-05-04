@@ -1,13 +1,14 @@
-"""Lower the first ALGOL 60 compiler subset into compiler IR."""
+"""Lower the Python ALGOL 60 semantic lane into compiler IR."""
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 from algol_type_checker import (
     ArrayDescriptor,
     LabelDescriptor,
     ProcedureDescriptor,
+    ProcedureFormalCallShape,
     ProcedureParameter,
     ResolvedArrayAccess,
     ResolvedGoto,
@@ -83,21 +84,37 @@ _THUNK_EVAL_LABEL = "_fn_algol_eval_thunk"
 _THUNK_STORE_LABEL = "_fn_algol_store_thunk"
 _THUNK_EVAL_REAL_LABEL = "_fn_algol_eval_real_thunk"
 _THUNK_STORE_REAL_LABEL = "_fn_algol_store_real_thunk"
+_LABEL_EVAL_LABEL = "_fn_algol_eval_label"
 _SWITCH_EVAL_LABEL = "_fn_algol_eval_switch"
+_SWITCH_RESOLVE_LABEL = "_fn_algol_resolve_switch"
+_PROCEDURE_CALL_LABEL = "_fn_algol_call_procedure"
 _THUNK_DESCRIPTOR_SIZE = 12
 _THUNK_CODE_ID_OFFSET = 0
 _THUNK_CALLER_FRAME_OFFSET = 4
 _THUNK_FLAGS_OFFSET = 8
 _THUNK_DESCRIPTOR_TAG = 1
 _THUNK_FLAG_STORE = 1
+_LABEL_DESCRIPTOR_SIZE = 8
+_LABEL_DESCRIPTOR_ID_OFFSET = 0
+_LABEL_DESCRIPTOR_CALLER_FRAME_OFFSET = 4
 _SWITCH_DESCRIPTOR_SIZE = 8
 _SWITCH_DESCRIPTOR_ID_OFFSET = 0
 _SWITCH_DESCRIPTOR_CALLER_FRAME_OFFSET = 4
+_PROCEDURE_DESCRIPTOR_SIZE = 8
+_PROCEDURE_DESCRIPTOR_ID_OFFSET = 0
+_PROCEDURE_DESCRIPTOR_STATIC_LINK_OFFSET = 4
 _MAX_EVAL_THUNKS = 256
+_MAX_IF_LABEL_SETS = 4096
+_MAX_LOOP_LABEL_SETS = 2048
+_MAX_SWITCH_DISPATCHES = 1024
+_MAX_OUTPUT_LABEL_SETS = 2048
 _INTEGER_TYPE = "integer"
 _BOOLEAN_TYPE = "boolean"
 _REAL_TYPE = "real"
 _STRING_TYPE = "string"
+_I32_MIN = -(1 << 31)
+_I32_MAX_EXCLUSIVE = 1 << 31
+_I32_NEG_ONE = -1
 _STRING_DESCRIPTOR_LENGTH_OFFSET = 0
 _STRING_DESCRIPTOR_DATA_POINTER_OFFSET = 4
 _STRING_DESCRIPTOR_SIZE = 8
@@ -105,7 +122,34 @@ _MAX_STRING_OUTPUT_BYTES = 4096
 _MAX_TOTAL_OUTPUT_BYTES = 8192
 _BUILTIN_PRINT_LABEL = "__algol_builtin_print"
 _BUILTIN_OUTPUT_LABEL = "__algol_builtin_output"
+_BUILTIN_ABS_LABEL = "__algol_builtin_abs"
+_BUILTIN_ENTIER_LABEL = "__algol_builtin_entier"
+_BUILTIN_SIGN_LABEL = "__algol_builtin_sign"
+_BUILTIN_SQRT_LABEL = "__algol_builtin_sqrt"
+_BUILTIN_SIN_LABEL = "__algol_builtin_sin"
+_BUILTIN_COS_LABEL = "__algol_builtin_cos"
+_BUILTIN_ARCTAN_LABEL = "__algol_builtin_arctan"
+_BUILTIN_LN_LABEL = "__algol_builtin_ln"
+_BUILTIN_EXP_LABEL = "__algol_builtin_exp"
+_BUILTIN_REAL_MATH_OPS = {
+    _BUILTIN_SIN_LABEL: IrOp.F64_SIN,
+    _BUILTIN_COS_LABEL: IrOp.F64_COS,
+    _BUILTIN_ARCTAN_LABEL: IrOp.F64_ATAN,
+    _BUILTIN_LN_LABEL: IrOp.F64_LN,
+    _BUILTIN_EXP_LABEL: IrOp.F64_EXP,
+}
 _WRITE_SYSCALL = 1
+
+
+@dataclass(frozen=True)
+class IrCompilerLimits:
+    """Resource limits for generated ALGOL IR helper state."""
+
+    max_eval_thunks: int = _MAX_EVAL_THUNKS
+    max_if_label_sets: int = _MAX_IF_LABEL_SETS
+    max_loop_label_sets: int = _MAX_LOOP_LABEL_SETS
+    max_switch_dispatches: int = _MAX_SWITCH_DISPATCHES
+    max_output_label_sets: int = _MAX_OUTPUT_LABEL_SETS
 
 
 @dataclass(frozen=True)
@@ -176,6 +220,24 @@ class _EvalThunk:
 
 
 @dataclass(frozen=True)
+class _LabelThunk:
+    """A by-name label designator captured for helper dispatch."""
+
+    thunk_id: int
+    expression: ASTNode
+    block_id: int
+
+
+@dataclass(frozen=True)
+class _SwitchThunk:
+    """A by-name switch designator captured for helper dispatch."""
+
+    thunk_id: int
+    expression: ASTNode
+    block_id: int
+
+
+@dataclass(frozen=True)
 class _ForElementPlan:
     """A lowered for-list element and the labels needed to execute it."""
 
@@ -187,6 +249,15 @@ class _ForElementPlan:
     check_label: str | None = None
 
 
+@dataclass(frozen=True)
+class _ForControlTarget:
+    """The lvalue controlled by an ALGOL for statement."""
+
+    type_name: str
+    reference: ResolvedReference | None = None
+    array_variable: ASTNode | None = None
+
+
 class AlgolIrCompiler:
     """Compile a typed ALGOL AST into the repository's register IR.
 
@@ -195,7 +266,8 @@ class AlgolIrCompiler:
     operands for the generic memory instructions consumed by the WASM backend.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, limits: IrCompilerLimits | None = None) -> None:
+        self.limits = limits or IrCompilerLimits()
         self.ids = IDGenerator()
         self.program = IrProgram(entry_label="_start")
         self.source_ast: ASTNode | None = None
@@ -217,7 +289,7 @@ class AlgolIrCompiler:
         self.references: dict[tuple[int, str], ResolvedReference] = {}
         self.procedure_calls: dict[tuple[int, str], ResolvedProcedureCall] = {}
         self.array_accesses: dict[tuple[int, str], ResolvedArrayAccess] = {}
-        self.labels: dict[int, LabelDescriptor] = {}
+        self.labels_by_statement: dict[int, list[LabelDescriptor]] = {}
         self.labels_by_symbol: dict[int, LabelDescriptor] = {}
         self.labels_by_block_name: dict[tuple[int, str], LabelDescriptor] = {}
         self.gotos: dict[int, ResolvedGoto] = {}
@@ -232,11 +304,21 @@ class AlgolIrCompiler:
         self.variable_slots: dict[str, int] = {}
         self.legacy_variable_slots: dict[str, int] = {}
         self.procedure_signatures: dict[str, ProcedureSignaturePlan] = {}
+        self.procedure_parameter_dispatchers: dict[
+            tuple[str | None, tuple[str, ...], tuple[str, ...]],
+            str,
+        ] = {}
         self.expression_types: dict[int, str] = {}
         self.current_function_return_type: str | None = _INTEGER_TYPE
         self.eval_thunks: list[_EvalThunk] = []
+        self.label_thunks: list[_LabelThunk] = []
+        self.switch_thunks: list[_SwitchThunk] = []
+        self.active_switch_selection_ids: list[int] = []
         self.has_by_name_parameters = False
+        self.has_label_parameters = False
         self.has_switch_parameters = False
+        self.has_recursive_switch_selections = False
+        self.has_procedure_parameters = False
         self.string_literal_offsets: dict[str, int] = {}
 
     def compile(self, typed: TypeCheckResult | ASTNode) -> CompileResult:
@@ -264,8 +346,14 @@ class AlgolIrCompiler:
         self.heap_pointer_reg = -1
         self.heap_limit_reg = -1
         self.eval_thunks = []
+        self.label_thunks = []
+        self.switch_thunks = []
+        self.active_switch_selection_ids = []
         self.has_by_name_parameters = False
+        self.has_label_parameters = False
         self.has_switch_parameters = False
+        self.has_recursive_switch_selections = False
+        self.has_procedure_parameters = False
         self.string_literal_offsets = {}
         self.semantic_blocks = list(type_result.semantic.blocks)
         self.semantic_blocks_by_ast = {
@@ -288,10 +376,11 @@ class AlgolIrCompiler:
             (access.token_id, access.role): access
             for access in type_result.semantic.array_accesses
         }
-        self.labels = {
-            label.statement_node_id: label
-            for label in type_result.semantic.labels
-        }
+        self.labels_by_statement = {}
+        for label in type_result.semantic.labels:
+            self.labels_by_statement.setdefault(label.statement_node_id, []).append(
+                label
+            )
         self.labels_by_id = {
             label.label_id: label for label in type_result.semantic.labels
         }
@@ -331,8 +420,21 @@ class AlgolIrCompiler:
             for procedure in type_result.semantic.procedures
             for parameter in procedure.parameters
         )
+        self.has_label_parameters = any(
+            parameter.kind == "label"
+            for procedure in type_result.semantic.procedures
+            for parameter in procedure.parameters
+        )
         self.has_switch_parameters = any(
             parameter.kind == "switch"
+            for procedure in type_result.semantic.procedures
+            for parameter in procedure.parameters
+        )
+        self.has_recursive_switch_selections = (
+            self._has_recursive_switch_selection_cycle()
+        )
+        self.has_procedure_parameters = any(
+            parameter.kind == "procedure"
             for procedure in type_result.semantic.procedures
             for parameter in procedure.parameters
         )
@@ -354,7 +456,12 @@ class AlgolIrCompiler:
                     *(
                         _INTEGER_TYPE
                         if parameter.mode == _NAME_MODE
-                        or parameter.kind in {"array", "label", "switch"}
+                        or parameter.kind in {
+                            "array",
+                            "label",
+                            "switch",
+                            "procedure",
+                        }
                         else parameter.type_name
                         for parameter in procedure.parameters
                     ),
@@ -364,29 +471,25 @@ class AlgolIrCompiler:
             for procedure in type_result.semantic.procedures
         }
         if self.has_by_name_parameters:
-            self.procedure_signatures[_THUNK_EVAL_LABEL] = ProcedureSignaturePlan(
+            self._ensure_thunk_signatures()
+        if self.has_label_parameters:
+            self.procedure_signatures[_LABEL_EVAL_LABEL] = ProcedureSignaturePlan(
                 param_types=(_INTEGER_TYPE, _INTEGER_TYPE),
                 return_type=_INTEGER_TYPE,
             )
-            self.procedure_signatures[_THUNK_STORE_LABEL] = ProcedureSignaturePlan(
+        if self.has_switch_parameters or self.has_recursive_switch_selections:
+            self.procedure_signatures[_SWITCH_EVAL_LABEL] = ProcedureSignaturePlan(
                 param_types=(_INTEGER_TYPE, _INTEGER_TYPE, _INTEGER_TYPE),
                 return_type=_INTEGER_TYPE,
             )
-            self.procedure_signatures[_THUNK_EVAL_REAL_LABEL] = (
-                ProcedureSignaturePlan(
-                    param_types=(_INTEGER_TYPE, _INTEGER_TYPE),
-                    return_type=_REAL_TYPE,
-                )
-            )
-            self.procedure_signatures[_THUNK_STORE_REAL_LABEL] = (
-                ProcedureSignaturePlan(
-                    param_types=(_INTEGER_TYPE, _INTEGER_TYPE, _REAL_TYPE),
-                    return_type=_INTEGER_TYPE,
-                )
-            )
         if self.has_switch_parameters:
-            self.procedure_signatures[_SWITCH_EVAL_LABEL] = ProcedureSignaturePlan(
+            self.procedure_signatures[_SWITCH_RESOLVE_LABEL] = ProcedureSignaturePlan(
                 param_types=(_INTEGER_TYPE, _INTEGER_TYPE, _INTEGER_TYPE),
+                return_type=_INTEGER_TYPE,
+            )
+        if self.has_procedure_parameters:
+            self.procedure_signatures[_PROCEDURE_CALL_LABEL] = ProcedureSignaturePlan(
+                param_types=(_INTEGER_TYPE, _INTEGER_TYPE),
                 return_type=_INTEGER_TYPE,
             )
         self.frame_offsets = self._layout_frames(self.semantic_blocks)
@@ -395,6 +498,7 @@ class AlgolIrCompiler:
             self.semantic_blocks
         )
         self.expression_types = dict(type_result.expression_types)
+        self.procedure_parameter_dispatchers = {}
 
         total_frame_bytes = sum(
             block.frame_layout.frame_size for block in self.semantic_blocks
@@ -471,15 +575,11 @@ class AlgolIrCompiler:
         self.current_function_return_type = _INTEGER_TYPE
         root_scope = self._compile_block(block, parent=None)
 
-        result_symbol = root_scope.semantic_block.scope.symbols.get("result")
-        if result_symbol is None:
-            raise CompileError(
-                "compiled ALGOL programs must declare integer variable 'result'"
-            )
-        self._emit_load_symbol(result_symbol, root_scope, _RESULT_REG)
+        self._emit_program_result(root_scope)
         self._emit(IrOp.HALT)
         self._compile_procedures(type_result.semantic.procedures)
-        if self.has_by_name_parameters:
+        if self.has_by_name_parameters or self.eval_thunks:
+            self._ensure_thunk_signatures()
             self._compile_eval_thunk_dispatcher(
                 label=_THUNK_EVAL_LABEL,
                 thunk_kind="word",
@@ -496,8 +596,38 @@ class AlgolIrCompiler:
                 label=_THUNK_STORE_REAL_LABEL,
                 thunk_kind=_REAL_TYPE,
             )
-        if self.has_switch_parameters:
+        if self.has_label_parameters or self.label_thunks:
+            self._compile_label_eval_dispatcher()
+        if (
+            self.has_switch_parameters
+            or self.has_recursive_switch_selections
+            or self.switch_thunks
+        ):
             self._compile_switch_eval_dispatcher()
+        if self.has_switch_parameters or self.switch_thunks:
+            self._compile_switch_resolve_dispatcher()
+        if self.has_procedure_parameters:
+            self._compile_procedure_call_dispatcher(
+                argument_kinds=tuple(),
+                argument_types=tuple(),
+                label=_PROCEDURE_CALL_LABEL,
+                return_type=None,
+            )
+            for (return_type, argument_kinds, argument_types), label in sorted(
+                self.procedure_parameter_dispatchers.items(),
+                key=lambda item: (
+                    item[0][0] or "",
+                    len(item[0][2]),
+                    item[0][1],
+                    item[0][2],
+                ),
+            ):
+                self._compile_procedure_call_dispatcher(
+                    argument_kinds=argument_kinds,
+                    argument_types=argument_types,
+                    label=label,
+                    return_type=return_type,
+                )
 
         return CompileResult(
             program=self.program,
@@ -508,6 +638,24 @@ class AlgolIrCompiler:
             frame_memory_label=_FRAME_MEMORY_LABEL,
             heap_memory_label=_HEAP_MEMORY_LABEL,
             procedure_signatures=dict(self.procedure_signatures),
+        )
+
+    def _ensure_thunk_signatures(self) -> None:
+        self.procedure_signatures[_THUNK_EVAL_LABEL] = ProcedureSignaturePlan(
+            param_types=(_INTEGER_TYPE, _INTEGER_TYPE),
+            return_type=_INTEGER_TYPE,
+        )
+        self.procedure_signatures[_THUNK_STORE_LABEL] = ProcedureSignaturePlan(
+            param_types=(_INTEGER_TYPE, _INTEGER_TYPE, _INTEGER_TYPE),
+            return_type=_INTEGER_TYPE,
+        )
+        self.procedure_signatures[_THUNK_EVAL_REAL_LABEL] = ProcedureSignaturePlan(
+            param_types=(_INTEGER_TYPE, _INTEGER_TYPE),
+            return_type=_REAL_TYPE,
+        )
+        self.procedure_signatures[_THUNK_STORE_REAL_LABEL] = ProcedureSignaturePlan(
+            param_types=(_INTEGER_TYPE, _INTEGER_TYPE, _REAL_TYPE),
+            return_type=_INTEGER_TYPE,
         )
 
     def _compile_block(self, block: ASTNode, parent: _FrameScope | None) -> _FrameScope:
@@ -859,8 +1007,7 @@ class AlgolIrCompiler:
         )
 
     def _emit_zero_memory(self, start_pointer: int, end_pointer: int) -> None:
-        index = self.loop_count
-        self.loop_count += 1
+        index = self._next_loop_index()
         loop_label = f"loop_{index}_start"
         end_label = f"loop_{index}_end"
         cursor = self._fresh_reg()
@@ -891,9 +1038,48 @@ class AlgolIrCompiler:
         self._emit(IrOp.JUMP, IrLabel(loop_label))
         self._label(end_label)
 
+    def _emit_copy_memory(
+        self, source_pointer: int, target_pointer: int, byte_count: int
+    ) -> None:
+        index = self._next_loop_index()
+        loop_label = f"loop_{index}_start"
+        end_label = f"loop_{index}_end"
+        cursor = self._fresh_reg()
+        done = self._fresh_reg()
+
+        self._copy_reg(dst=cursor, src=_ZERO_REG)
+        self._label(loop_label)
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(done),
+            IrRegister(cursor),
+            IrRegister(byte_count),
+        )
+        self._emit(IrOp.BRANCH_NZ, IrRegister(done), IrLabel(end_label))
+        byte = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_BYTE,
+            IrRegister(byte),
+            IrRegister(source_pointer),
+            IrRegister(cursor),
+        )
+        self._emit(
+            IrOp.STORE_BYTE,
+            IrRegister(byte),
+            IrRegister(target_pointer),
+            IrRegister(cursor),
+        )
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(cursor),
+            IrRegister(cursor),
+            IrImmediate(1),
+        )
+        self._emit(IrOp.JUMP, IrLabel(loop_label))
+        self._label(end_label)
+
     def _compile_statement(self, statement: ASTNode, scope: _FrameScope) -> None:
-        label = self.labels.get(id(statement))
-        if label is not None:
+        for label in self.labels_by_statement.get(id(statement), ()):
             self._label(label.ir_label)
 
         inner = _statement_body(statement)
@@ -946,8 +1132,7 @@ class AlgolIrCompiler:
         if execution_scope is None:
             execution_scope = scope
         if any(token.value == "if" for token in _direct_tokens(node)):
-            index = self.if_count
-            self.if_count += 1
+            index = self._next_if_index()
             else_label = f"if_{index}_else"
             bool_expr = _first_direct_node(node, "bool_expr")
             if bool_expr is None:
@@ -976,7 +1161,11 @@ class AlgolIrCompiler:
         simple = _first_direct_node(node, "simple_desig")
         if simple is None:
             raise CompileError("unsupported designational expression")
-        self._compile_simple_designational(simple, scope, execution_scope=execution_scope)
+        self._compile_simple_designational(
+            simple,
+            scope,
+            execution_scope=execution_scope,
+        )
 
     def _compile_simple_designational(
         self,
@@ -1039,6 +1228,19 @@ class AlgolIrCompiler:
             current = current.goto_parent
         return None
 
+    def _resolve_label_in_semantic_scope(
+        self,
+        name: str,
+        scope: _FrameScope,
+    ) -> LabelDescriptor | None:
+        resolved = self._resolve_symbol_in_scope_chain(name, scope)
+        if resolved is None:
+            return None
+        symbol, _ = resolved
+        if symbol.kind != "label" or symbol.parameter_mode is not None:
+            return None
+        return self.labels_by_symbol.get(symbol.symbol_id)
+
     def _compile_label_parameter_target(
         self,
         token: Token,
@@ -1055,14 +1257,65 @@ class AlgolIrCompiler:
                 f"label parameter {token.value!r} has no planned frame slot"
             )
         frame_reg = self._emit_frame_for_lexical_depth(scope, lexical_depth_delta)
-        value_reg = self._fresh_reg()
+        slot_value = self._fresh_reg()
         self._emit(
             IrOp.LOAD_WORD,
-            IrRegister(value_reg),
+            IrRegister(slot_value),
             IrRegister(frame_reg),
             IrRegister(self._const_reg(symbol.slot_offset)),
         )
-        return value_reg
+        if symbol.parameter_mode == _VALUE_MODE:
+            return slot_value
+        return self._emit_eval_label_descriptor(slot_value, scope)
+
+    def _compile_label_parameter_descriptor_pointer(
+        self,
+        token: Token,
+        scope: _FrameScope,
+    ) -> int | None:
+        resolved = self._resolve_symbol_in_scope_chain(token.value, scope)
+        if resolved is None:
+            return None
+        symbol, lexical_depth_delta = resolved
+        if (
+            symbol.kind != "label"
+            or symbol.parameter_mode != _NAME_MODE
+            or symbol.slot_offset is None
+        ):
+            return None
+        frame_reg = self._emit_frame_for_lexical_depth(scope, lexical_depth_delta)
+        pointer = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(pointer),
+            IrRegister(frame_reg),
+            IrRegister(self._const_reg(symbol.slot_offset)),
+        )
+        return pointer
+
+    def _emit_eval_label_descriptor(
+        self,
+        descriptor: int,
+        scope: _FrameScope,
+    ) -> int:
+        active_thunk_heap_mark = (
+            scope.active_thunk_heap_mark_reg
+            if scope.active_thunk_heap_mark_reg is not None
+            else self._const_reg(0)
+        )
+        self._emit(
+            IrOp.CALL,
+            IrLabel(_LABEL_EVAL_LABEL),
+            IrRegister(descriptor),
+            IrRegister(active_thunk_heap_mark),
+        )
+        if scope.helper_failure:
+            self._emit_helper_return_on_thunk_failure(scope)
+        self._emit_propagate_thunk_failure(scope)
+        self._emit_handle_pending_goto_after_call(scope)
+        result = self._fresh_reg()
+        self._copy_reg(dst=result, src=_RESULT_REG)
+        return result
 
     def _compile_switch_parameter_pointer(
         self,
@@ -1126,7 +1379,7 @@ class AlgolIrCompiler:
             raise CompileError("switch selection was not resolved")
         if execution_scope is None:
             execution_scope = scope
-        indexes = _direct_nodes(node, "arith_expr")
+        indexes = _switch_selection_indexes(node)
         if len(indexes) != 1:
             raise CompileError("switch selection requires exactly one index")
         index_value = self._compile_expr(indexes[0], scope)
@@ -1149,31 +1402,48 @@ class AlgolIrCompiler:
         descriptor = self.switches.get(selection.switch_id)
         if descriptor is None:
             raise CompileError(f"switch {selection.name!r} has no descriptor")
-        entry_scope = self._active_scope_for_block(selection.declaration_block_id, scope)
-        dispatch_index = self.switch_count
-        self.switch_count += 1
-        for entry_index, entry_node_id in enumerate(descriptor.entry_node_ids, start=1):
-            next_label = f"switch_{dispatch_index}_{entry_index}_next"
-            expected = self._const_reg(entry_index)
-            matches = self._fresh_reg()
-            self._emit(
-                IrOp.CMP_EQ,
-                IrRegister(matches),
-                IrRegister(index_value),
-                IrRegister(expected),
+        if selection.switch_id in self.active_switch_selection_ids:
+            label_value = self._emit_call_concrete_switch_eval(
+                selection,
+                index_value,
+                scope,
             )
-            self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(next_label))
-            entry = self._find_ast_by_id(entry_node_id)
-            if entry is None:
-                raise CompileError(
-                    f"switch {selection.name!r} entry {entry_index} is missing"
+            self._emit_goto_label_value(label_value, execution_scope)
+            return
+        entry_scope = self._active_scope_for_block(
+            selection.declaration_block_id,
+            scope,
+        )
+        dispatch_index = self._next_switch_index()
+        self.active_switch_selection_ids.append(selection.switch_id)
+        try:
+            for entry_index, entry_node_id in enumerate(
+                descriptor.entry_node_ids,
+                start=1,
+            ):
+                next_label = f"switch_{dispatch_index}_{entry_index}_next"
+                expected = self._const_reg(entry_index)
+                matches = self._fresh_reg()
+                self._emit(
+                    IrOp.CMP_EQ,
+                    IrRegister(matches),
+                    IrRegister(index_value),
+                    IrRegister(expected),
                 )
-            self._compile_designational(
-                entry,
-                entry_scope,
-                execution_scope=execution_scope,
-            )
-            self._label(next_label)
+                self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(next_label))
+                entry = self._find_ast_by_id(entry_node_id)
+                if entry is None:
+                    raise CompileError(
+                        f"switch {selection.name!r} entry {entry_index} is missing"
+                    )
+                self._compile_designational(
+                    entry,
+                    entry_scope,
+                    execution_scope=execution_scope,
+                )
+                self._label(next_label)
+        finally:
+            self.active_switch_selection_ids.pop()
         failed = self._const_reg(1)
         self._emit_runtime_failure_guard(failed, execution_scope)
 
@@ -1183,8 +1453,7 @@ class AlgolIrCompiler:
         scope: _FrameScope,
     ) -> int:
         if any(token.value == "if" for token in _direct_tokens(node)):
-            index = self.if_count
-            self.if_count += 1
+            index = self._next_if_index()
             else_label = f"if_{index}_else"
             end_label = f"if_{index}_end"
             result = self._fresh_reg()
@@ -1226,6 +1495,9 @@ class AlgolIrCompiler:
             label_value = self._compile_label_parameter_target(direct, scope)
             if label_value is not None:
                 return label_value
+            label = self._resolve_label_in_semantic_scope(direct.value, scope)
+            if label is not None:
+                return self._const_reg(label.label_id)
             raise CompileError(f"goto target {direct.value!r} was not resolved")
 
         if any(token.value == "[" for token in _direct_tokens(node)):
@@ -1244,7 +1516,7 @@ class AlgolIrCompiler:
         selection = self.switch_selections.get(id(node))
         if selection is None:
             raise CompileError("switch selection was not resolved")
-        indexes = _direct_nodes(node, "arith_expr")
+        indexes = _switch_selection_indexes(node)
         if len(indexes) != 1:
             raise CompileError("switch selection requires exactly one index")
         index_value = self._compile_expr(indexes[0], scope)
@@ -1262,6 +1534,12 @@ class AlgolIrCompiler:
         descriptor = self.switches.get(selection.switch_id)
         if descriptor is None:
             raise CompileError(f"switch {selection.name!r} has no descriptor")
+        if selection.switch_id in self.active_switch_selection_ids:
+            return self._emit_call_concrete_switch_eval(
+                selection,
+                index_value,
+                scope,
+            )
         entry_scope = self._rebase_scope_for_selection(scope, selection)
         return self._compile_switch_entries_value(
             descriptor,
@@ -1277,29 +1555,37 @@ class AlgolIrCompiler:
         index_value: int,
         entry_scope: _FrameScope,
     ) -> int:
-        dispatch_index = self.switch_count
-        self.switch_count += 1
-        result = self._const_reg(0)
+        dispatch_index = self._next_switch_index()
+        result = self._fresh_reg()
+        self._emit(IrOp.LOAD_IMM, IrRegister(result), IrImmediate(0))
         end_label = f"switch_value_{dispatch_index}_end"
-        for entry_index, entry_node_id in enumerate(descriptor.entry_node_ids, start=1):
-            next_label = f"switch_value_{dispatch_index}_{entry_index}_next"
-            expected = self._const_reg(entry_index)
-            matches = self._fresh_reg()
-            self._emit(
-                IrOp.CMP_EQ,
-                IrRegister(matches),
-                IrRegister(index_value),
-                IrRegister(expected),
-            )
-            self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(next_label))
-            entry = self._find_ast_by_id(entry_node_id)
-            if entry is None:
-                raise CompileError(
-                    f"switch {selection.name!r} entry {entry_index} is missing"
+        self.active_switch_selection_ids.append(selection.switch_id)
+        try:
+            for entry_index, entry_node_id in enumerate(
+                descriptor.entry_node_ids,
+                start=1,
+            ):
+                next_label = f"switch_value_{dispatch_index}_{entry_index}_next"
+                expected = self._const_reg(entry_index)
+                matches = self._fresh_reg()
+                self._emit(
+                    IrOp.CMP_EQ,
+                    IrRegister(matches),
+                    IrRegister(index_value),
+                    IrRegister(expected),
                 )
-            result = self._compile_designational_value(entry, entry_scope)
-            self._emit(IrOp.JUMP, IrLabel(end_label))
-            self._label(next_label)
+                self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(next_label))
+                entry = self._find_ast_by_id(entry_node_id)
+                if entry is None:
+                    raise CompileError(
+                        f"switch {selection.name!r} entry {entry_index} is missing"
+                    )
+                entry_value = self._compile_designational_value(entry, entry_scope)
+                self._copy_reg(dst=result, src=entry_value)
+                self._emit(IrOp.JUMP, IrLabel(end_label))
+                self._label(next_label)
+        finally:
+            self.active_switch_selection_ids.pop()
         failed = self._const_reg(1)
         self._emit_runtime_failure_guard(failed, entry_scope)
         self._label(end_label)
@@ -1326,38 +1612,55 @@ class AlgolIrCompiler:
         )
 
     def _compile_assignment(self, assign: ASTNode, scope: _FrameScope) -> None:
-        left_part = _first_direct_node(assign, "left_part")
+        left_parts = _direct_nodes(assign, "left_part")
         expr = _first_direct_node(assign, "expression")
-        variable = _first_node(left_part, "variable") if left_part is not None else None
-        if variable is None or expr is None:
+        if not left_parts or expr is None:
             raise CompileError("assignment needs a variable target and expression")
         value = self._compile_expr(expr, scope)
+        expr_type = self._expr_type(expr)
+        for left_part in reversed(left_parts):
+            variable = _first_node(left_part, "variable")
+            if variable is None:
+                raise CompileError("assignment target must be a variable")
+            self._compile_assignment_target(
+                variable,
+                value,
+                expr_type,
+                scope,
+            )
+
+    def _compile_assignment_target(
+        self,
+        variable: ASTNode,
+        value: int,
+        value_type: str,
+        scope: _FrameScope,
+    ) -> None:
         if _variable_subscripts(variable):
             name = _variable_head_name(variable)
             if name is None:
                 raise CompileError("array assignment target is missing a name")
             access = self._require_array_access(name, "write")
-            value = self._coerce_reg_to_type(
+            coerced = self._coerce_reg_to_type(
                 value,
-                self._expr_type(expr),
+                value_type,
                 expected_type=self.arrays[access.array_id].element_type,
             )
-            self._compile_array_store(variable, scope, value)
+            self._compile_array_store(variable, scope, coerced)
             return
         name = _variable_name(variable)
         if name is None:
             raise CompileError("only scalar assignments are supported")
         target = self._require_reference(name, "write")
-        value = self._coerce_reg_to_type(
+        coerced = self._coerce_reg_to_type(
             value,
-            self._expr_type(expr),
+            value_type,
             expected_type=target.type_name,
         )
-        self._emit_store_reference(target, scope, value)
+        self._emit_store_reference(target, scope, coerced)
 
     def _compile_if(self, cond: ASTNode, scope: _FrameScope) -> None:
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         else_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
 
@@ -1385,24 +1688,87 @@ class AlgolIrCompiler:
                 self._compile_statement(child, scope)
         self._label(end_label)
 
-    def _compile_for(self, node: ASTNode, scope: _FrameScope) -> None:
-        loop_token = next(
-            (tok for tok in _direct_tokens(node) if tok.type_name == "NAME"), None
-        )
-        if loop_token is None:
+    def _for_control_target(self, node: ASTNode) -> _ForControlTarget:
+        variable = _first_direct_node(node, "variable")
+        name = _variable_head_name(variable)
+        if name is None:
             raise CompileError("for loop is missing its control variable")
-        loop_reference = self._require_reference(loop_token, "control")
+        if _variable_subscripts(variable):
+            access = self._require_array_access(name, "control")
+            return _ForControlTarget(
+                type_name=self.arrays[access.array_id].element_type,
+                array_variable=variable,
+            )
+        reference = self._require_reference(name, "control")
+        return _ForControlTarget(
+            type_name=reference.type_name,
+            reference=reference,
+        )
+
+    def _emit_load_for_control(
+        self, target: _ForControlTarget, scope: _FrameScope
+    ) -> int:
+        if target.reference is not None:
+            return self._emit_load_reference(target.reference, scope)
+        if target.array_variable is None:
+            raise CompileError("for loop control target is missing storage")
+        name = _variable_head_name(target.array_variable)
+        if name is None:
+            raise CompileError("array control target is missing a name")
+        access = self._require_array_access(name, "control")
+        data_pointer, byte_offset = self._compile_array_element_address(
+            target.array_variable,
+            scope,
+            role="control",
+        )
+        dst = self._fresh_reg()
+        self._emit_load_scalar_at_reg(
+            self.arrays[access.array_id].element_type,
+            dst,
+            data_pointer,
+            byte_offset,
+        )
+        return dst
+
+    def _emit_store_for_control(
+        self,
+        target: _ForControlTarget,
+        scope: _FrameScope,
+        value_reg: int,
+    ) -> None:
+        if target.reference is not None:
+            self._emit_store_reference(target.reference, scope, value_reg)
+            return
+        if target.array_variable is None:
+            raise CompileError("for loop control target is missing storage")
+        name = _variable_head_name(target.array_variable)
+        if name is None:
+            raise CompileError("array control target is missing a name")
+        access = self._require_array_access(name, "control")
+        data_pointer, byte_offset = self._compile_array_element_address(
+            target.array_variable,
+            scope,
+            role="control",
+        )
+        self._emit_store_scalar_at_reg(
+            self.arrays[access.array_id].element_type,
+            value_reg,
+            data_pointer,
+            byte_offset,
+        )
+
+    def _compile_for(self, node: ASTNode, scope: _FrameScope) -> None:
+        loop_target = self._for_control_target(node)
         body = _first_direct_node(node, "statement")
         elements = _direct_nodes(_first_direct_node(node, "for_list"), "for_elem")
         if not elements:
             return
 
-        index = self.loop_count
-        self.loop_count += 1
+        index = self._next_loop_index()
         if len(elements) == 1:
             self._compile_single_for_element(
                 elements[0],
-                loop_reference=loop_reference,
+                loop_target=loop_target,
                 body=body,
                 scope=scope,
                 index=index,
@@ -1465,9 +1831,9 @@ class AlgolIrCompiler:
                 value = self._coerce_reg_to_type(
                     value,
                     self._expr_type(arith_nodes[0]),
-                    expected_type=loop_reference.type_name,
+                    expected_type=loop_target.type_name,
                 )
-                self._emit_store_reference(loop_reference, scope, value)
+                self._emit_store_for_control(loop_target, scope, value)
                 self._emit(
                     IrOp.LOAD_IMM,
                     IrRegister(active_element_reg),
@@ -1486,9 +1852,9 @@ class AlgolIrCompiler:
                 value = self._coerce_reg_to_type(
                     value,
                     self._expr_type(arith_nodes[0]),
-                    expected_type=loop_reference.type_name,
+                    expected_type=loop_target.type_name,
                 )
-                self._emit_store_reference(loop_reference, scope, value)
+                self._emit_store_for_control(loop_target, scope, value)
                 condition = self._compile_expr(bool_node, scope)
                 self._emit(
                     IrOp.BRANCH_Z,
@@ -1512,9 +1878,9 @@ class AlgolIrCompiler:
             start = self._coerce_reg_to_type(
                 start,
                 self._expr_type(arith_nodes[0]),
-                expected_type=loop_reference.type_name,
+                expected_type=loop_target.type_name,
             )
-            self._emit_store_reference(loop_reference, scope, start)
+            self._emit_store_for_control(loop_target, scope, start)
             self._emit(IrOp.JUMP, IrLabel(plan.check_label))
 
             self._label(plan.check_label)
@@ -1525,7 +1891,7 @@ class AlgolIrCompiler:
             self._emit_step_until_dispatch(
                 active_element_reg=active_element_reg,
                 dispatch_value=plan.dispatch_value,
-                loop_reference=loop_reference,
+                loop_target=loop_target,
                 loop_scope=scope,
                 step_value=step_value,
                 step_type=step_type,
@@ -1536,25 +1902,26 @@ class AlgolIrCompiler:
             )
 
             self._label(plan.advance_label)
-            current_value = self._emit_load_reference(loop_reference, scope)
+            current_value = self._emit_load_for_control(loop_target, scope)
             next_value = self._emit_numeric(
                 "+",
                 current_value,
-                loop_reference.type_name,
+                loop_target.type_name,
                 step_value,
                 step_type,
+                scope,
             )
             next_type = self._result_type_for_numeric_operator(
                 "+",
-                loop_reference.type_name,
+                loop_target.type_name,
                 step_type,
             )
             next_value = self._coerce_reg_to_type(
                 next_value,
                 next_type,
-                expected_type=loop_reference.type_name,
+                expected_type=loop_target.type_name,
             )
-            self._emit_store_reference(loop_reference, scope, next_value)
+            self._emit_store_for_control(loop_target, scope, next_value)
             self._emit(IrOp.JUMP, IrLabel(plan.check_label))
 
         self._label(body_label)
@@ -1573,7 +1940,7 @@ class AlgolIrCompiler:
         self,
         elem: ASTNode,
         *,
-        loop_reference: ResolvedReference,
+        loop_target: _ForControlTarget,
         body: ASTNode | None,
         scope: _FrameScope,
         index: int,
@@ -1585,9 +1952,9 @@ class AlgolIrCompiler:
             value = self._coerce_reg_to_type(
                 value,
                 self._expr_type(value_node),
-                expected_type=loop_reference.type_name,
+                expected_type=loop_target.type_name,
             )
-            self._emit_store_reference(loop_reference, scope, value)
+            self._emit_store_for_control(loop_target, scope, value)
             if body is not None:
                 self._compile_statement(body, scope)
             return
@@ -1604,9 +1971,9 @@ class AlgolIrCompiler:
             value = self._coerce_reg_to_type(
                 value,
                 self._expr_type(value_node),
-                expected_type=loop_reference.type_name,
+                expected_type=loop_target.type_name,
             )
-            self._emit_store_reference(loop_reference, scope, value)
+            self._emit_store_for_control(loop_target, scope, value)
             condition = self._compile_expr(condition_node, scope)
             self._emit(IrOp.BRANCH_Z, IrRegister(condition), IrLabel(end_label))
             if body is not None:
@@ -1626,9 +1993,9 @@ class AlgolIrCompiler:
         start = self._coerce_reg_to_type(
             start,
             self._expr_type(start_node),
-            expected_type=loop_reference.type_name,
+            expected_type=loop_target.type_name,
         )
-        self._emit_store_reference(loop_reference, scope, start)
+        self._emit_store_for_control(loop_target, scope, start)
 
         start_label = f"loop_{index}_start"
         body_label = f"loop_{index}_body"
@@ -1639,7 +2006,7 @@ class AlgolIrCompiler:
         limit_value = self._compile_expr(limit_node, scope)
         limit_type = self._expr_type(limit_node)
         self._emit_step_until_branch(
-            loop_reference=loop_reference,
+            loop_target=loop_target,
             loop_scope=scope,
             step_value=step_value,
             step_type=step_type,
@@ -1652,32 +2019,33 @@ class AlgolIrCompiler:
         self._label(body_label)
         if body is not None:
             self._compile_statement(body, scope)
-        current_value = self._emit_load_reference(loop_reference, scope)
+        current_value = self._emit_load_for_control(loop_target, scope)
         next_value = self._emit_numeric(
             "+",
             current_value,
-            loop_reference.type_name,
+            loop_target.type_name,
             step_value,
             step_type,
+            scope,
         )
         next_type = self._result_type_for_numeric_operator(
             "+",
-            loop_reference.type_name,
+            loop_target.type_name,
             step_type,
         )
         next_value = self._coerce_reg_to_type(
             next_value,
             next_type,
-            expected_type=loop_reference.type_name,
+            expected_type=loop_target.type_name,
         )
-        self._emit_store_reference(loop_reference, scope, next_value)
+        self._emit_store_for_control(loop_target, scope, next_value)
         self._emit(IrOp.JUMP, IrLabel(start_label))
         self._label(end_label)
 
     def _emit_step_until_branch(
         self,
         *,
-        loop_reference: ResolvedReference,
+        loop_target: _ForControlTarget,
         loop_scope: _FrameScope,
         step_value: int,
         step_type: str,
@@ -1692,7 +2060,7 @@ class AlgolIrCompiler:
         negative_label = f"{label_prefix}_negative"
         compare_type = (
             _REAL_TYPE
-            if _REAL_TYPE in {loop_reference.type_name, limit_type}
+            if _REAL_TYPE in {loop_target.type_name, limit_type}
             else _INTEGER_TYPE
         )
         step_type_for_compare = self._result_type_for_numeric_operator(
@@ -1755,10 +2123,10 @@ class AlgolIrCompiler:
         self._emit(IrOp.JUMP, IrLabel(continue_label))
 
         self._label(positive_label)
-        loop_value = self._emit_load_reference(loop_reference, loop_scope)
+        loop_value = self._emit_load_for_control(loop_target, loop_scope)
         positive_loop = self._coerce_reg_to_type(
             loop_value,
-            loop_reference.type_name,
+            loop_target.type_name,
             expected_type=compare_type,
         )
         positive_limit = self._coerce_reg_to_type(
@@ -1789,10 +2157,10 @@ class AlgolIrCompiler:
         self._emit(IrOp.JUMP, IrLabel(continue_label))
 
         self._label(negative_label)
-        loop_value = self._emit_load_reference(loop_reference, loop_scope)
+        loop_value = self._emit_load_for_control(loop_target, loop_scope)
         negative_loop = self._coerce_reg_to_type(
             loop_value,
-            loop_reference.type_name,
+            loop_target.type_name,
             expected_type=compare_type,
         )
         negative_limit = self._coerce_reg_to_type(
@@ -1850,7 +2218,7 @@ class AlgolIrCompiler:
         *,
         active_element_reg: int,
         dispatch_value: int,
-        loop_reference: ResolvedReference,
+        loop_target: _ForControlTarget,
         loop_scope: _FrameScope,
         step_value: int,
         step_type: str,
@@ -1864,7 +2232,7 @@ class AlgolIrCompiler:
         negative_label = f"{continue_label}_{dispatch_value}_negative"
         compare_type = (
             _REAL_TYPE
-            if _REAL_TYPE in {loop_reference.type_name, limit_type}
+            if _REAL_TYPE in {loop_target.type_name, limit_type}
             else _INTEGER_TYPE
         )
         step_type_for_compare = self._result_type_for_numeric_operator(
@@ -1932,10 +2300,10 @@ class AlgolIrCompiler:
         self._emit(IrOp.JUMP, IrLabel(continue_label))
 
         self._label(positive_label)
-        loop_value = self._emit_load_reference(loop_reference, loop_scope)
+        loop_value = self._emit_load_for_control(loop_target, loop_scope)
         positive_loop = self._coerce_reg_to_type(
             loop_value,
-            loop_reference.type_name,
+            loop_target.type_name,
             expected_type=compare_type,
         )
         positive_limit = self._coerce_reg_to_type(
@@ -1971,10 +2339,10 @@ class AlgolIrCompiler:
         self._emit(IrOp.JUMP, IrLabel(continue_label))
 
         self._label(negative_label)
-        loop_value = self._emit_load_reference(loop_reference, loop_scope)
+        loop_value = self._emit_load_for_control(loop_target, loop_scope)
         negative_loop = self._coerce_reg_to_type(
             loop_value,
-            loop_reference.type_name,
+            loop_target.type_name,
             expected_type=compare_type,
         )
         negative_limit = self._coerce_reg_to_type(
@@ -2020,12 +2388,26 @@ class AlgolIrCompiler:
             name = _variable_name(expr)
             if name is None:
                 raise CompileError("variable is missing a name")
+            if self.procedure_calls.get((id(name), "expression")) is not None:
+                return self._compile_procedure_call(expr, scope)
             reference = self._require_reference(name, "read")
             return self._emit_load_reference(reference, scope)
 
         meaningful = _meaningful_children(expr)
         if not meaningful:
             raise CompileError(f"empty expression node {expr.rule_name}")
+
+        conditional = _conditional_expression_parts(meaningful)
+        if conditional is not None:
+            condition, then_expr, else_expr = conditional
+            return self._compile_conditional_expression(
+                expr,
+                condition,
+                then_expr,
+                else_expr,
+                scope,
+            )
+
         if len(meaningful) == 1:
             return self._compile_expr(meaningful[0], scope)
 
@@ -2094,17 +2476,56 @@ class AlgolIrCompiler:
             "expression",
             "arith_expr",
             "bool_expr",
-            "expr_pow",
-            "factor",
         }:
+            return self._compile_expr(meaningful[0], scope)
+
+        if expr.rule_name in {"expr_pow", "factor"}:
             if any(
                 isinstance(child, Token) and child.value in {"**", "^"}
                 for child in meaningful
             ):
-                raise CompileError("exponentiation is not supported yet")
+                return self._compile_power_chain(meaningful, scope)
             return self._compile_expr(meaningful[0], scope)
 
         return self._compile_expr(meaningful[0], scope)
+
+    def _compile_conditional_expression(
+        self,
+        node: ASTNode,
+        condition: ASTNode,
+        then_expr: ASTNode,
+        else_expr: ASTNode,
+        scope: _FrameScope,
+    ) -> int:
+        index = self._next_if_index()
+        else_label = f"if_{index}_else"
+        end_label = f"if_{index}_end"
+        result_type = self._expr_type(node)
+        result = self._fresh_reg()
+
+        condition_reg = self._compile_expr(condition, scope)
+        self._emit(IrOp.BRANCH_Z, IrRegister(condition_reg), IrLabel(else_label))
+
+        then_value = self._compile_expr(then_expr, scope)
+        then_value = self._coerce_reg_to_type(
+            then_value,
+            self._expr_type(then_expr),
+            expected_type=result_type,
+        )
+        self._copy_scalar_reg(type_name=result_type, dst=result, src=then_value)
+        self._emit(IrOp.JUMP, IrLabel(end_label))
+
+        self._label(else_label)
+        else_value = self._compile_expr(else_expr, scope)
+        else_value = self._coerce_reg_to_type(
+            else_value,
+            self._expr_type(else_expr),
+            expected_type=result_type,
+        )
+        self._copy_scalar_reg(type_name=result_type, dst=result, src=else_value)
+
+        self._label(end_label)
+        return result
 
     def _compile_token(self, token: Token, scope: _FrameScope) -> int:
         if token.type_name == "INTEGER_LIT":
@@ -2138,11 +2559,45 @@ class AlgolIrCompiler:
                 current_type,
                 right,
                 right_type,
+                scope,
             )
             current_type = self._result_type_for_numeric_operator(
                 operator.value,
                 current_type,
                 right_type,
+            )
+            index += 2
+        return current
+
+    def _compile_power_chain(
+        self, children: list[ASTNode | Token], scope: _FrameScope
+    ) -> int:
+        current = self._compile_expr(children[0], scope)
+        current_type = self._expr_type(children[0])
+        index = 1
+        while index < len(children):
+            operator = children[index]
+            exponent = self._compile_expr(children[index + 1], scope)
+            if not isinstance(operator, Token):
+                raise CompileError("expected exponentiation operator")
+            if operator.value not in {"**", "^"}:
+                raise CompileError(
+                    f"numeric operator {operator.value!r} is not supported"
+                )
+            exponent_type = self._expr_type(children[index + 1])
+            if exponent_type not in {_INTEGER_TYPE, _REAL_TYPE}:
+                raise CompileError("exponentiation exponent must be numeric")
+            current = self._emit_power(
+                current,
+                current_type,
+                exponent,
+                exponent_type,
+                scope,
+            )
+            current_type = (
+                _REAL_TYPE
+                if _REAL_TYPE in {current_type, exponent_type}
+                else _INTEGER_TYPE
             )
             index += 2
         return current
@@ -2157,50 +2612,64 @@ class AlgolIrCompiler:
         index = 1
         while index < len(children):
             operator = children[index]
-            right = self._compile_expr(children[index + 1], scope)
             if not isinstance(operator, Token):
                 raise CompileError("expected boolean operator")
             value = operator.value
-            if value == "and":
-                dst = self._fresh_reg()
-                self._emit(
-                    IrOp.AND, IrRegister(dst), IrRegister(current), IrRegister(right)
+            right = children[index + 1]
+            if value in {"and", "or", "impl"}:
+                current = self._emit_short_circuit_bool(
+                    operator=value,
+                    left=current,
+                    right=right,
+                    scope=scope,
                 )
-                current = dst
-            elif value == "or":
-                summed = self._fresh_reg()
-                dst = self._fresh_reg()
-                self._emit(
-                    IrOp.ADD, IrRegister(summed), IrRegister(current), IrRegister(right)
-                )
-                self._emit(
-                    IrOp.CMP_NE, IrRegister(dst), IrRegister(summed), IrRegister(0)
-                )
-                current = dst
-            elif value == "impl":
-                inverted = self._invert_bool(current)
-                summed = self._fresh_reg()
-                dst = self._fresh_reg()
-                self._emit(
-                    IrOp.ADD,
-                    IrRegister(summed),
-                    IrRegister(inverted),
-                    IrRegister(right),
-                )
-                self._emit(
-                    IrOp.CMP_NE, IrRegister(dst), IrRegister(summed), IrRegister(0)
-                )
-                current = dst
             elif value == "eqv":
+                right_reg = self._compile_expr(right, scope)
                 dst = self._fresh_reg()
                 self._emit(
-                    IrOp.CMP_EQ, IrRegister(dst), IrRegister(current), IrRegister(right)
+                    IrOp.CMP_EQ,
+                    IrRegister(dst),
+                    IrRegister(current),
+                    IrRegister(right_reg),
                 )
                 current = dst
             else:
                 raise CompileError(f"boolean operator {value!r} is not supported yet")
             index += 2
         return current
+
+    def _emit_short_circuit_bool(
+        self,
+        *,
+        operator: str,
+        left: int,
+        right: ASTNode | Token,
+        scope: _FrameScope,
+    ) -> int:
+        index = self._next_if_index()
+        end_label = f"bool_{index}_{operator}_end"
+        result = self._fresh_reg()
+
+        if operator == "and":
+            self._emit(IrOp.LOAD_IMM, IrRegister(result), IrImmediate(0))
+            self._emit(IrOp.BRANCH_Z, IrRegister(left), IrLabel(end_label))
+            right_reg = self._compile_expr(right, scope)
+            self._copy_reg(dst=result, src=right_reg)
+        elif operator == "or":
+            self._emit(IrOp.LOAD_IMM, IrRegister(result), IrImmediate(1))
+            self._emit(IrOp.BRANCH_NZ, IrRegister(left), IrLabel(end_label))
+            right_reg = self._compile_expr(right, scope)
+            self._copy_reg(dst=result, src=right_reg)
+        elif operator == "impl":
+            self._emit(IrOp.LOAD_IMM, IrRegister(result), IrImmediate(1))
+            self._emit(IrOp.BRANCH_Z, IrRegister(left), IrLabel(end_label))
+            right_reg = self._compile_expr(right, scope)
+            self._copy_reg(dst=result, src=right_reg)
+        else:
+            raise CompileError(f"boolean operator {operator!r} is not supported yet")
+
+        self._label(end_label)
+        return result
 
     def _compile_comparison(
         self, children: list[ASTNode | Token], scope: _FrameScope
@@ -2213,7 +2682,38 @@ class AlgolIrCompiler:
         if not isinstance(operator, Token):
             raise CompileError("expected comparison operator")
         dst = self._fresh_reg()
-        if _REAL_TYPE in {left_type, right_type}:
+        if _STRING_TYPE in {left_type, right_type}:
+            if left_type != _STRING_TYPE or right_type != _STRING_TYPE:
+                raise CompileError(
+                    "string comparison requires two string operands"
+                )
+            if operator.value not in {"=", "!=", "<>"}:
+                raise CompileError(
+                    f"comparison operator {operator.value!r} is not supported "
+                    "for strings"
+                )
+            dst = self._emit_string_equality(left, right, scope)
+            if operator.value in {"!=", "<>"}:
+                dst = self._invert_bool(dst)
+        elif _BOOLEAN_TYPE in {left_type, right_type}:
+            if left_type != _BOOLEAN_TYPE or right_type != _BOOLEAN_TYPE:
+                raise CompileError(
+                    "boolean comparison requires two boolean operands"
+                )
+            if operator.value == "=":
+                self._emit(
+                    IrOp.CMP_EQ, IrRegister(dst), IrRegister(left), IrRegister(right)
+                )
+            elif operator.value in {"!=", "<>"}:
+                self._emit(
+                    IrOp.CMP_NE, IrRegister(dst), IrRegister(left), IrRegister(right)
+                )
+            else:
+                raise CompileError(
+                    f"comparison operator {operator.value!r} is not supported "
+                    "for booleans"
+                )
+        elif _REAL_TYPE in {left_type, right_type}:
             left = self._coerce_reg_to_type(
                 left,
                 left_type,
@@ -2231,7 +2731,7 @@ class AlgolIrCompiler:
                     IrRegister(left),
                     IrRegister(right),
                 )
-            elif operator.value == "!=":
+            elif operator.value in {"!=", "<>"}:
                 self._emit(
                     IrOp.F64_CMP_NE,
                     IrRegister(dst),
@@ -2275,7 +2775,7 @@ class AlgolIrCompiler:
                 self._emit(
                     IrOp.CMP_EQ, IrRegister(dst), IrRegister(left), IrRegister(right)
                 )
-            elif operator.value == "!=":
+            elif operator.value in {"!=", "<>"}:
                 self._emit(
                     IrOp.CMP_NE, IrRegister(dst), IrRegister(left), IrRegister(right)
                 )
@@ -2303,6 +2803,139 @@ class AlgolIrCompiler:
                 )
         return dst
 
+    def _emit_string_equality(
+        self, left_pointer: int, right_pointer: int, scope: _FrameScope
+    ) -> int:
+        index = self._next_if_index()
+        loop_label = f"algol_label_string_equal_{index}_loop"
+        compare_label = f"algol_label_string_equal_{index}_compare"
+        end_label = f"algol_label_string_equal_{index}_end"
+        result = self._fresh_reg()
+        cursor = self._fresh_reg()
+        at_end = self._fresh_reg()
+        same_length = self._fresh_reg()
+        left_byte = self._fresh_reg()
+        right_byte = self._fresh_reg()
+        same_byte = self._fresh_reg()
+        next_cursor = self._fresh_reg()
+        left_length, left_data = self._emit_string_descriptor_parts(
+            left_pointer,
+            scope,
+        )
+        right_length, right_data = self._emit_string_descriptor_parts(
+            right_pointer,
+            scope,
+        )
+
+        self._emit(IrOp.LOAD_IMM, IrRegister(result), IrImmediate(0))
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(same_length),
+            IrRegister(left_length),
+            IrRegister(right_length),
+        )
+        self._emit(IrOp.BRANCH_Z, IrRegister(same_length), IrLabel(end_label))
+        self._emit(IrOp.LOAD_IMM, IrRegister(cursor), IrImmediate(0))
+        self._label(loop_label)
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(at_end),
+            IrRegister(cursor),
+            IrRegister(left_length),
+        )
+        self._emit(IrOp.BRANCH_Z, IrRegister(at_end), IrLabel(compare_label))
+        self._emit(IrOp.LOAD_IMM, IrRegister(result), IrImmediate(1))
+        self._emit(IrOp.JUMP, IrLabel(end_label))
+        self._label(compare_label)
+        self._emit(
+            IrOp.LOAD_BYTE,
+            IrRegister(left_byte),
+            IrRegister(left_data),
+            IrRegister(cursor),
+        )
+        self._emit(
+            IrOp.LOAD_BYTE,
+            IrRegister(right_byte),
+            IrRegister(right_data),
+            IrRegister(cursor),
+        )
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(same_byte),
+            IrRegister(left_byte),
+            IrRegister(right_byte),
+        )
+        self._emit(IrOp.BRANCH_Z, IrRegister(same_byte), IrLabel(end_label))
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(next_cursor),
+            IrRegister(cursor),
+            IrImmediate(1),
+        )
+        self._copy_reg(dst=cursor, src=next_cursor)
+        self._emit(IrOp.JUMP, IrLabel(loop_label))
+        self._label(end_label)
+        return result
+
+    def _emit_string_descriptor_parts(
+        self, pointer_reg: int, scope: _FrameScope
+    ) -> tuple[int, int]:
+        index = self._next_if_index()
+        done_label = f"algol_label_string_descriptor_{index}_done"
+        data_guard_done_label = (
+            f"algol_label_string_descriptor_{index}_data_guard_done"
+        )
+        length_reg = self._fresh_reg()
+        data_reg = self._fresh_reg()
+        negative_length_reg = self._fresh_reg()
+        too_large_reg = self._fresh_reg()
+        missing_data_reg = self._fresh_reg()
+
+        self._emit(IrOp.LOAD_IMM, IrRegister(length_reg), IrImmediate(0))
+        self._emit(IrOp.LOAD_IMM, IrRegister(data_reg), IrImmediate(0))
+        self._emit(IrOp.BRANCH_Z, IrRegister(pointer_reg), IrLabel(done_label))
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            length_reg,
+            pointer_reg,
+            _STRING_DESCRIPTOR_LENGTH_OFFSET,
+        )
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            data_reg,
+            pointer_reg,
+            _STRING_DESCRIPTOR_DATA_POINTER_OFFSET,
+        )
+        self._emit(
+            IrOp.CMP_LT,
+            IrRegister(negative_length_reg),
+            IrRegister(length_reg),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit_runtime_failure_guard(negative_length_reg, scope)
+        self._emit(
+            IrOp.CMP_GT,
+            IrRegister(too_large_reg),
+            IrRegister(length_reg),
+            IrRegister(self._const_reg(_MAX_STRING_OUTPUT_BYTES)),
+        )
+        self._emit_runtime_failure_guard(too_large_reg, scope)
+        self._emit(
+            IrOp.BRANCH_Z,
+            IrRegister(length_reg),
+            IrLabel(data_guard_done_label),
+        )
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(missing_data_reg),
+            IrRegister(data_reg),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit_runtime_failure_guard(missing_data_reg, scope)
+        self._label(data_guard_done_label)
+        self._label(done_label)
+        return length_reg, data_reg
+
     def _emit_numeric(
         self,
         operator: str,
@@ -2310,6 +2943,7 @@ class AlgolIrCompiler:
         left_type: str,
         right: int,
         right_type: str,
+        scope: _FrameScope,
     ) -> int:
         dst = self._fresh_reg()
         result_type = self._result_type_for_numeric_operator(
@@ -2350,6 +2984,7 @@ class AlgolIrCompiler:
                     IrRegister(right),
                 )
             elif operator == "/":
+                self._emit_real_zero_divisor_guard(right, scope)
                 self._emit(
                     IrOp.F64_DIV,
                     IrRegister(dst),
@@ -2366,10 +3001,12 @@ class AlgolIrCompiler:
         elif operator == "*":
             self._emit(IrOp.MUL, IrRegister(dst), IrRegister(left), IrRegister(right))
         elif operator == "div":
+            self._emit_integer_division_failure_guard(left, right, scope)
             self._emit(IrOp.DIV, IrRegister(dst), IrRegister(left), IrRegister(right))
         elif operator == "mod":
             quotient = self._fresh_reg()
             product = self._fresh_reg()
+            self._emit_integer_division_failure_guard(left, right, scope)
             self._emit(
                 IrOp.DIV, IrRegister(quotient), IrRegister(left), IrRegister(right)
             )
@@ -2380,6 +3017,222 @@ class AlgolIrCompiler:
         else:
             raise CompileError(f"numeric operator {operator!r} is not supported")
         return dst
+
+    def _emit_integer_division_failure_guard(
+        self, dividend: int, divisor: int, scope: _FrameScope
+    ) -> None:
+        zero_divisor = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(zero_divisor),
+            IrRegister(divisor),
+            IrRegister(_ZERO_REG),
+        )
+        min_dividend = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(min_dividend),
+            IrRegister(dividend),
+            IrRegister(self._const_reg(_I32_MIN)),
+        )
+        negative_one_divisor = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(negative_one_divisor),
+            IrRegister(divisor),
+            IrRegister(self._const_reg(_I32_NEG_ONE)),
+        )
+        overflowing_division = self._fresh_reg()
+        self._emit(
+            IrOp.AND,
+            IrRegister(overflowing_division),
+            IrRegister(min_dividend),
+            IrRegister(negative_one_divisor),
+        )
+        failed = self._fresh_reg()
+        self._emit(
+            IrOp.OR,
+            IrRegister(failed),
+            IrRegister(zero_divisor),
+            IrRegister(overflowing_division),
+        )
+        self._emit_runtime_failure_guard(failed, scope)
+
+    def _emit_real_zero_divisor_guard(
+        self, divisor: int, scope: _FrameScope
+    ) -> None:
+        zero = self._const_f64_reg(0.0)
+        failed = self._fresh_reg()
+        self._emit(
+            IrOp.F64_CMP_EQ,
+            IrRegister(failed),
+            IrRegister(divisor),
+            IrRegister(zero),
+        )
+        self._emit_runtime_failure_guard(failed, scope)
+
+    def _emit_power(
+        self,
+        base: int,
+        base_type: str,
+        exponent: int,
+        exponent_type: str,
+        scope: _FrameScope,
+    ) -> int:
+        if exponent_type == _REAL_TYPE:
+            return self._emit_real_power(base, base_type, exponent, scope)
+        if base_type == _REAL_TYPE:
+            return self._emit_real_integer_power(base, exponent, scope)
+        return self._emit_integer_power(base, exponent)
+
+    def _emit_real_power(
+        self,
+        base: int,
+        base_type: str,
+        exponent: int,
+        scope: _FrameScope,
+    ) -> int:
+        base = self._coerce_reg_to_type(
+            base,
+            base_type,
+            expected_type=_REAL_TYPE,
+        )
+        result = self._fresh_reg()
+        self._emit(
+            IrOp.F64_POW,
+            IrRegister(result),
+            IrRegister(base),
+            IrRegister(exponent),
+        )
+        failed = self._fresh_reg()
+        self._emit(
+            IrOp.F64_CMP_NE,
+            IrRegister(failed),
+            IrRegister(result),
+            IrRegister(result),
+        )
+        self._emit_runtime_failure_guard(failed, scope)
+        return result
+
+    def _emit_integer_power(self, base: int, exponent: int) -> int:
+        index = self._next_if_index()
+        negative_label = f"pow_{index}_negative"
+        loop_label = f"pow_{index}_loop"
+        end_label = f"pow_{index}_end"
+        result = self._const_reg(1)
+        remaining = self._fresh_reg()
+        self._copy_reg(dst=remaining, src=exponent)
+        is_negative = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_LT,
+            IrRegister(is_negative),
+            IrRegister(remaining),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit(IrOp.BRANCH_NZ, IrRegister(is_negative), IrLabel(negative_label))
+        self._label(loop_label)
+        done = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(done),
+            IrRegister(remaining),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit(IrOp.BRANCH_NZ, IrRegister(done), IrLabel(end_label))
+        next_result = self._fresh_reg()
+        self._emit(
+            IrOp.MUL,
+            IrRegister(next_result),
+            IrRegister(result),
+            IrRegister(base),
+        )
+        self._copy_reg(dst=result, src=next_result)
+        next_remaining = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(next_remaining),
+            IrRegister(remaining),
+            IrImmediate(-1),
+        )
+        self._copy_reg(dst=remaining, src=next_remaining)
+        self._emit(IrOp.JUMP, IrLabel(loop_label))
+        self._label(negative_label)
+        self._copy_reg(dst=result, src=_ZERO_REG)
+        self._label(end_label)
+        return result
+
+    def _emit_real_integer_power(
+        self, base: int, exponent: int, scope: _FrameScope
+    ) -> int:
+        index = self._next_if_index()
+        negative_label = f"pow_{index}_negative"
+        prepare_loop_label = f"pow_{index}_prepare_loop"
+        loop_label = f"pow_{index}_loop"
+        reciprocal_label = f"pow_{index}_reciprocal"
+        end_label = f"pow_{index}_end"
+        result = self._const_f64_reg(1.0)
+        remaining = self._fresh_reg()
+        self._copy_reg(dst=remaining, src=exponent)
+        negative = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_LT,
+            IrRegister(negative),
+            IrRegister(remaining),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit(IrOp.BRANCH_NZ, IrRegister(negative), IrLabel(negative_label))
+        self._emit(IrOp.JUMP, IrLabel(prepare_loop_label))
+        self._label(negative_label)
+        self._emit_real_zero_divisor_guard(base, scope)
+        zero = self._const_reg(0)
+        absolute = self._fresh_reg()
+        self._emit(
+            IrOp.SUB,
+            IrRegister(absolute),
+            IrRegister(zero),
+            IrRegister(remaining),
+        )
+        self._copy_reg(dst=remaining, src=absolute)
+        self._label(prepare_loop_label)
+        self._label(loop_label)
+        done = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_EQ,
+            IrRegister(done),
+            IrRegister(remaining),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit(IrOp.BRANCH_NZ, IrRegister(done), IrLabel(reciprocal_label))
+        next_result = self._fresh_reg()
+        self._emit(
+            IrOp.F64_MUL,
+            IrRegister(next_result),
+            IrRegister(result),
+            IrRegister(base),
+        )
+        self._copy_scalar_reg(type_name=_REAL_TYPE, dst=result, src=next_result)
+        next_remaining = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(next_remaining),
+            IrRegister(remaining),
+            IrImmediate(-1),
+        )
+        self._copy_reg(dst=remaining, src=next_remaining)
+        self._emit(IrOp.JUMP, IrLabel(loop_label))
+        self._label(reciprocal_label)
+        self._emit(IrOp.BRANCH_Z, IrRegister(negative), IrLabel(end_label))
+        one = self._const_f64_reg(1.0)
+        reciprocal = self._fresh_reg()
+        self._emit(
+            IrOp.F64_DIV,
+            IrRegister(reciprocal),
+            IrRegister(one),
+            IrRegister(result),
+        )
+        self._copy_scalar_reg(type_name=_REAL_TYPE, dst=result, src=reciprocal)
+        self._label(end_label)
+        return result
 
     def _invert_bool(self, source: int) -> int:
         dst = self._fresh_reg()
@@ -2398,6 +3251,16 @@ class AlgolIrCompiler:
         call = self._require_procedure_call(name, role)
         if call.label in {_BUILTIN_PRINT_LABEL, _BUILTIN_OUTPUT_LABEL}:
             return self._compile_builtin_output(node, scope)
+        if call.label in {
+            _BUILTIN_ABS_LABEL,
+            _BUILTIN_ENTIER_LABEL,
+            _BUILTIN_SIGN_LABEL,
+            _BUILTIN_SQRT_LABEL,
+            *_BUILTIN_REAL_MATH_OPS,
+        }:
+            return self._compile_builtin_numeric(node, call, scope)
+        if call.parameter_symbol_id is not None:
+            return self._compile_procedure_parameter_call(node, call, scope)
         procedure = self.procedures[call.procedure_id]
         static_link = self._emit_static_link_for_call(call, scope)
         actuals = _direct_nodes(_first_direct_node(node, "actual_params"), "expression")
@@ -2406,12 +3269,24 @@ class AlgolIrCompiler:
                 f"procedure {procedure.name!r} expects "
                 f"{len(procedure.parameters)} argument(s), got {len(actuals)}"
             )
+        effective_parameters = [
+            replace(
+                parameter,
+                may_write=self._scalar_parameter_may_write_at_call(
+                    procedure,
+                    parameter,
+                    actuals,
+                    scope,
+                ),
+            )
+            for parameter in procedure.parameters
+        ]
         thunk_actuals = [
             (index, argument, parameter)
             for index, (argument, parameter) in enumerate(
-                zip(actuals, procedure.parameters, strict=True)
+                zip(actuals, effective_parameters, strict=True)
             )
-            if parameter.kind not in {"array", "label", "switch"}
+            if parameter.kind not in {"array", "label", "switch", "procedure"}
             and parameter.mode == _NAME_MODE
             and self._requires_by_name_thunk_descriptor(argument)
         ]
@@ -2421,6 +3296,20 @@ class AlgolIrCompiler:
                 zip(actuals, procedure.parameters, strict=True)
             )
             if parameter.kind == "switch"
+        ]
+        label_actuals = [
+            (index, argument, parameter)
+            for index, (argument, parameter) in enumerate(
+                zip(actuals, procedure.parameters, strict=True)
+            )
+            if parameter.kind == "label" and parameter.mode == _NAME_MODE
+        ]
+        procedure_actuals = [
+            (index, argument, parameter)
+            for index, (argument, parameter) in enumerate(
+                zip(actuals, procedure.parameters, strict=True)
+            )
+            if parameter.kind == "procedure"
         ]
         for _, argument, parameter in thunk_actuals:
             variable = _single_variable_expr(argument)
@@ -2434,18 +3323,20 @@ class AlgolIrCompiler:
 
         arguments: list[int | None] = [None] * len(actuals)
         for index, (argument, parameter) in enumerate(
-            zip(actuals, procedure.parameters, strict=True)
+            zip(actuals, effective_parameters, strict=True)
         ):
             if parameter.kind == "array":
-                if parameter.mode == _VALUE_MODE:
-                    raise CompileError(
-                        f"value array parameter {parameter.name!r} is not supported yet"
-                    )
                 continue
             if parameter.kind == "label":
-                arguments[index] = self._compile_label_actual_value(argument, scope)
+                if parameter.mode == _VALUE_MODE:
+                    arguments[index] = self._compile_label_actual_value(
+                        argument,
+                        scope,
+                    )
                 continue
             if parameter.kind == "switch":
+                continue
+            if parameter.kind == "procedure":
                 continue
             if parameter.mode == _VALUE_MODE:
                 value = self._compile_expr(argument, scope)
@@ -2457,7 +3348,9 @@ class AlgolIrCompiler:
 
         temp_descriptor_bytes = (
             len(thunk_actuals) * _THUNK_DESCRIPTOR_SIZE
+            + len(label_actuals) * _LABEL_DESCRIPTOR_SIZE
             + len(switch_actuals) * _SWITCH_DESCRIPTOR_SIZE
+            + len(procedure_actuals) * _PROCEDURE_DESCRIPTOR_SIZE
         )
         descriptor_heap_mark = (
             self._emit_reserve_temp_descriptor_space(temp_descriptor_bytes, scope)
@@ -2482,29 +3375,93 @@ class AlgolIrCompiler:
         switch_descriptor_offsets = {
             argument_index: (
                 len(thunk_actuals) * _THUNK_DESCRIPTOR_SIZE
+                + len(label_actuals) * _LABEL_DESCRIPTOR_SIZE
                 + descriptor_index * _SWITCH_DESCRIPTOR_SIZE
             )
             for descriptor_index, (argument_index, _, _) in enumerate(
                 switch_actuals
             )
         }
+        label_descriptor_offsets = {
+            argument_index: (
+                len(thunk_actuals) * _THUNK_DESCRIPTOR_SIZE
+                + descriptor_index * _LABEL_DESCRIPTOR_SIZE
+            )
+            for descriptor_index, (argument_index, _, _) in enumerate(label_actuals)
+        }
+        procedure_descriptor_offsets = {
+            argument_index: (
+                len(thunk_actuals) * _THUNK_DESCRIPTOR_SIZE
+                + len(label_actuals) * _LABEL_DESCRIPTOR_SIZE
+                + len(switch_actuals) * _SWITCH_DESCRIPTOR_SIZE
+                + descriptor_index * _PROCEDURE_DESCRIPTOR_SIZE
+            )
+            for descriptor_index, (argument_index, _, _) in enumerate(
+                procedure_actuals
+            )
+        }
         for index, (argument, parameter) in enumerate(
-            zip(actuals, procedure.parameters, strict=True)
+            zip(actuals, effective_parameters, strict=True)
         ):
             if parameter.kind == "array":
                 arguments[index] = self._compile_array_actual_pointer(argument, scope)
                 continue
             if parameter.kind == "label":
-                arguments[index] = self._compile_label_actual_value(argument, scope)
+                if parameter.mode == _VALUE_MODE:
+                    arguments[index] = self._compile_label_actual_value(
+                        argument,
+                        scope,
+                    )
+                    continue
+                if (
+                    descriptor_heap_mark is None
+                    or index not in label_descriptor_offsets
+                ):
+                    raise CompileError("missing reserved descriptor for label actual")
+                descriptor = self._emit_descriptor_at(
+                    descriptor_heap_mark,
+                    label_descriptor_offsets[index],
+                )
+                arguments[index] = self._compile_label_thunk_actual(
+                    argument,
+                    scope,
+                    descriptor,
+                )
                 continue
             if parameter.kind == "switch":
                 descriptor = None
-                if descriptor_heap_mark is not None and index in switch_descriptor_offsets:
+                if (
+                    descriptor_heap_mark is not None
+                    and index in switch_descriptor_offsets
+                ):
                     descriptor = self._emit_descriptor_at(
                         descriptor_heap_mark,
                         switch_descriptor_offsets[index],
                     )
-                arguments[index] = self._compile_switch_actual_pointer(
+                if parameter.mode == _VALUE_MODE:
+                    arguments[index] = self._compile_value_switch_actual_pointer(
+                        argument,
+                        scope,
+                        descriptor,
+                    )
+                else:
+                    arguments[index] = self._compile_switch_thunk_actual(
+                        argument,
+                        scope,
+                        descriptor,
+                    )
+                continue
+            if parameter.kind == "procedure":
+                descriptor = None
+                if (
+                    descriptor_heap_mark is not None
+                    and index in procedure_descriptor_offsets
+                ):
+                    descriptor = self._emit_descriptor_at(
+                        descriptor_heap_mark,
+                        procedure_descriptor_offsets[index],
+                    )
+                arguments[index] = self._compile_procedure_actual_pointer(
                     argument,
                     scope,
                     descriptor,
@@ -2552,34 +3509,687 @@ class AlgolIrCompiler:
         )
         return result
 
+    def _compile_procedure_parameter_call(
+        self,
+        node: ASTNode,
+        call: ResolvedProcedureCall,
+        scope: _FrameScope,
+    ) -> int:
+        actuals = _direct_nodes(_first_direct_node(node, "actual_params"), "expression")
+        argument_kinds, argument_types = self._formal_argument_shapes(actuals, scope)
+        for argument_kind, actual_type in zip(
+            argument_kinds,
+            argument_types,
+            strict=True,
+        ):
+            if argument_kind != "scalar":
+                continue
+            if actual_type not in {
+                _INTEGER_TYPE,
+                _BOOLEAN_TYPE,
+                _REAL_TYPE,
+                _STRING_TYPE,
+            }:
+                raise CompileError(
+                    f"procedure parameter {call.name!r} cannot pass "
+                    f"{actual_type} argument"
+                )
+        thunk_actuals = [
+            (index, argument, actual_type)
+            for index, (argument, actual_type) in enumerate(
+                zip(actuals, argument_types, strict=True)
+            )
+            if argument_kinds[index] == "scalar"
+            and self._requires_by_name_thunk_descriptor(argument)
+        ]
+        switch_actuals = [
+            (index, argument, actual_type)
+            for index, (argument, actual_type) in enumerate(
+                zip(actuals, argument_types, strict=True)
+            )
+            if argument_kinds[index] == "switch"
+        ]
+        label_actuals = [
+            (index, argument, actual_type)
+            for index, (argument, actual_type) in enumerate(
+                zip(actuals, argument_types, strict=True)
+            )
+            if argument_kinds[index] == "label"
+        ]
+        procedure_actuals = [
+            (index, argument, actual_type)
+            for index, (argument, actual_type) in enumerate(
+                zip(actuals, argument_types, strict=True)
+            )
+            if argument_kinds[index] == "procedure"
+        ]
+        temp_descriptor_bytes = (
+            len(thunk_actuals) * _THUNK_DESCRIPTOR_SIZE
+            + len(label_actuals) * _LABEL_DESCRIPTOR_SIZE
+            + len(switch_actuals) * _SWITCH_DESCRIPTOR_SIZE
+            + len(procedure_actuals) * _PROCEDURE_DESCRIPTOR_SIZE
+        )
+        descriptor_heap_mark = (
+            self._emit_reserve_temp_descriptor_space(temp_descriptor_bytes, scope)
+            if temp_descriptor_bytes
+            else None
+        )
+        descriptor_offsets = {
+            argument_index: descriptor_index * _THUNK_DESCRIPTOR_SIZE
+            for descriptor_index, (argument_index, _, _) in enumerate(thunk_actuals)
+        }
+        switch_descriptor_offsets = {
+            argument_index: (
+                len(thunk_actuals) * _THUNK_DESCRIPTOR_SIZE
+                + len(label_actuals) * _LABEL_DESCRIPTOR_SIZE
+                + descriptor_index * _SWITCH_DESCRIPTOR_SIZE
+            )
+            for descriptor_index, (argument_index, _, _) in enumerate(switch_actuals)
+        }
+        label_descriptor_offsets = {
+            argument_index: (
+                len(thunk_actuals) * _THUNK_DESCRIPTOR_SIZE
+                + descriptor_index * _LABEL_DESCRIPTOR_SIZE
+            )
+            for descriptor_index, (argument_index, _, _) in enumerate(label_actuals)
+        }
+        procedure_descriptor_offsets = {
+            argument_index: (
+                len(thunk_actuals) * _THUNK_DESCRIPTOR_SIZE
+                + len(label_actuals) * _LABEL_DESCRIPTOR_SIZE
+                + len(switch_actuals) * _SWITCH_DESCRIPTOR_SIZE
+                + descriptor_index * _PROCEDURE_DESCRIPTOR_SIZE
+            )
+            for descriptor_index, (argument_index, _, _) in enumerate(
+                procedure_actuals
+            )
+        }
+        argument_regs: list[int] = []
+        for index, (actual, actual_type, argument_kind) in enumerate(
+            zip(actuals, argument_types, argument_kinds, strict=True)
+        ):
+            if argument_kind == "array":
+                argument_regs.append(self._compile_array_actual_pointer(actual, scope))
+                continue
+            if argument_kind == "label":
+                if (
+                    descriptor_heap_mark is None
+                    or index not in label_descriptor_offsets
+                ):
+                    raise CompileError("missing reserved descriptor for label actual")
+                descriptor = self._emit_descriptor_at(
+                    descriptor_heap_mark,
+                    label_descriptor_offsets[index],
+                )
+                argument_regs.append(
+                    self._compile_label_thunk_actual(actual, scope, descriptor)
+                )
+                continue
+            if argument_kind == "switch":
+                descriptor = None
+                if (
+                    descriptor_heap_mark is not None
+                    and index in switch_descriptor_offsets
+                ):
+                    descriptor = self._emit_descriptor_at(
+                        descriptor_heap_mark,
+                        switch_descriptor_offsets[index],
+                    )
+                argument_regs.append(
+                    self._compile_switch_thunk_actual(actual, scope, descriptor)
+                )
+                continue
+            if argument_kind == "procedure":
+                descriptor = None
+                if (
+                    descriptor_heap_mark is not None
+                    and index in procedure_descriptor_offsets
+                ):
+                    descriptor = self._emit_descriptor_at(
+                        descriptor_heap_mark,
+                        procedure_descriptor_offsets[index],
+                    )
+                argument_regs.append(
+                    self._compile_procedure_actual_pointer(actual, scope, descriptor)
+                )
+                continue
+            descriptor = None
+            if descriptor_heap_mark is not None and index in descriptor_offsets:
+                descriptor = self._emit_descriptor_at(
+                    descriptor_heap_mark,
+                    descriptor_offsets[index],
+                )
+            argument_regs.append(
+                self._compile_by_name_actual_pointer(
+                    actual,
+                    ProcedureParameter(
+                        name=f"{call.name}_argument_{index}",
+                        type_name=actual_type,
+                        mode=_NAME_MODE,
+                        symbol_id=-1,
+                        slot_offset=0,
+                        may_write=True,
+                    ),
+                    scope,
+                    descriptor,
+                )
+            )
+        descriptor_pointer = self._compile_procedure_parameter_pointer(
+            call.name,
+            scope,
+        )
+        if descriptor_pointer is None:
+            raise CompileError(
+                f"procedure parameter {call.name!r} was not resolved"
+            )
+        active_thunk_heap_mark = (
+            descriptor_heap_mark
+            if descriptor_heap_mark is not None
+            else (
+                scope.active_thunk_heap_mark_reg
+                if scope.active_thunk_heap_mark_reg is not None
+                else self._const_reg(0)
+            )
+        )
+        dispatch_label = self._procedure_parameter_dispatch_label(
+            argument_kinds,
+            argument_types,
+            return_type=call.return_type,
+        )
+        self._emit(
+            IrOp.CALL,
+            IrLabel(dispatch_label),
+            IrRegister(descriptor_pointer),
+            IrRegister(active_thunk_heap_mark),
+            *(IrRegister(argument) for argument in argument_regs),
+        )
+        if descriptor_heap_mark is not None:
+            self._store_runtime_state(
+                _RUNTIME_HEAP_POINTER_OFFSET,
+                descriptor_heap_mark,
+            )
+        if scope.helper_failure:
+            self._emit_helper_return_on_thunk_failure(scope)
+        self._emit_propagate_thunk_failure(scope)
+        self._emit_handle_pending_goto_after_call(scope)
+        result = self._fresh_reg()
+        self._copy_scalar_reg(
+            type_name=call.return_type or _INTEGER_TYPE,
+            dst=result,
+            src=_REAL_RESULT_REG if call.return_type == _REAL_TYPE else _RESULT_REG,
+        )
+        return result
+
+    def _procedure_parameter_dispatch_label(
+        self,
+        argument_kinds: tuple[str, ...],
+        argument_types: tuple[str, ...],
+        *,
+        return_type: str | None,
+    ) -> str:
+        if len(argument_kinds) != len(argument_types):
+            raise CompileError("procedure parameter dispatch shape is inconsistent")
+        if not argument_types and return_type is None:
+            self.procedure_signatures.setdefault(
+                _PROCEDURE_CALL_LABEL,
+                ProcedureSignaturePlan(
+                    param_types=(_INTEGER_TYPE, _INTEGER_TYPE),
+                    return_type=_INTEGER_TYPE,
+                ),
+            )
+            return _PROCEDURE_CALL_LABEL
+        key = (return_type, argument_kinds, argument_types)
+        label = self.procedure_parameter_dispatchers.get(key)
+        if label is None:
+            suffix = "_".join(
+                _procedure_parameter_dispatch_type_tag(type_name, kind=kind)
+                for kind, type_name in zip(argument_kinds, argument_types, strict=True)
+            )
+            if return_type is None:
+                label = f"{_PROCEDURE_CALL_LABEL}_{suffix}"
+            else:
+                return_tag = _procedure_parameter_dispatch_type_tag(return_type)
+                label = f"{_PROCEDURE_CALL_LABEL}_{return_tag}_result"
+                if suffix:
+                    label = f"{label}_{suffix}"
+            self.procedure_parameter_dispatchers[key] = label
+            self.procedure_signatures[label] = ProcedureSignaturePlan(
+                param_types=(
+                    _INTEGER_TYPE,
+                    _INTEGER_TYPE,
+                    *(_INTEGER_TYPE for _ in argument_types),
+                ),
+                return_type=return_type or _INTEGER_TYPE,
+            )
+        return label
+
+    def _formal_argument_shapes(
+        self,
+        actuals: list[ASTNode],
+        scope: _FrameScope,
+    ) -> tuple[tuple[str, ...], tuple[str, ...]]:
+        argument_kinds: list[str] = []
+        argument_types: list[str] = []
+        for actual in actuals:
+            array_type = self._formal_array_argument_type(actual, scope)
+            if array_type is not None:
+                argument_kinds.append("array")
+                argument_types.append(array_type)
+                continue
+            nonscalar = self._formal_nonscalar_argument_shape(actual, scope)
+            if nonscalar is not None:
+                argument_kind, argument_type = nonscalar
+                argument_kinds.append(argument_kind)
+                argument_types.append(argument_type)
+                continue
+            argument_kinds.append("scalar")
+            argument_types.append(self._expr_type(actual))
+        return tuple(argument_kinds), tuple(argument_types)
+
+    def _scalar_parameter_may_write_at_call(
+        self,
+        procedure: ProcedureDescriptor,
+        parameter: ProcedureParameter,
+        actuals: list[ASTNode],
+        scope: _FrameScope,
+    ) -> bool:
+        if (
+            parameter.kind != "scalar"
+            or parameter.mode != _NAME_MODE
+            or not parameter.may_write
+        ):
+            return False
+        if parameter.write_reason != "transitive call":
+            return True
+
+        saw_formal_procedure_shape = False
+        for procedure_index, procedure_parameter in enumerate(procedure.parameters):
+            if procedure_parameter.kind != "procedure":
+                continue
+            for shape in procedure_parameter.procedure_call_shapes:
+                formal_names = _shape_argument_formal_names(shape)
+                for argument_index, formal_name in enumerate(formal_names):
+                    if formal_name != parameter.name:
+                        continue
+                    saw_formal_procedure_shape = True
+                    if procedure_index >= len(actuals):
+                        return True
+                    if self._procedure_actual_writes_shape_argument(
+                        actuals[procedure_index],
+                        scope,
+                        argument_index,
+                    ):
+                        return True
+        return not saw_formal_procedure_shape
+
+    def _procedure_actual_writes_shape_argument(
+        self,
+        argument: ASTNode,
+        scope: _FrameScope,
+        argument_index: int,
+    ) -> bool:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            return True
+        name = _variable_name(variable)
+        if name is None:
+            return True
+        resolved = self._resolve_symbol_in_scope_chain(name.value, scope)
+        if resolved is None:
+            return True
+        symbol, _ = resolved
+        if symbol.kind == "procedure_parameter":
+            return True
+        if symbol.kind != "procedure" or symbol.procedure_id is None:
+            return True
+        procedure = self.procedures.get(symbol.procedure_id)
+        if procedure is None or argument_index >= len(procedure.parameters):
+            return True
+        parameter = procedure.parameters[argument_index]
+        return (
+            parameter.kind == "scalar"
+            and parameter.mode == _NAME_MODE
+            and parameter.may_write
+        )
+
+    def _formal_array_argument_type(
+        self,
+        argument: ASTNode,
+        scope: _FrameScope,
+    ) -> str | None:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            return None
+        name = _variable_name(variable)
+        if name is None:
+            return None
+        resolved = self._resolve_symbol_in_scope_chain(name.value, scope)
+        if resolved is None or resolved[0].kind != "array":
+            return None
+        access = self._require_array_access(name, "actual")
+        descriptor = self.arrays.get(access.array_id)
+        if descriptor is None:
+            raise CompileError(f"array actual {name.value!r} has no descriptor")
+        return descriptor.element_type
+
+    def _formal_nonscalar_argument_shape(
+        self,
+        argument: ASTNode,
+        scope: _FrameScope,
+    ) -> tuple[str, str] | None:
+        if self._is_label_designational_actual(argument, scope):
+            return "label", "label"
+        if self._is_switch_designator_actual(argument, scope):
+            return "switch", "switch"
+
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            return None
+        name = _variable_name(variable)
+        if name is None:
+            return None
+        resolved = self._resolve_symbol_in_scope_chain(name.value, scope)
+        if resolved is None:
+            return None
+        symbol, _ = resolved
+        if symbol.kind == "label":
+            return "label", "label"
+        if symbol.kind == "switch":
+            return "switch", "switch"
+        if symbol.kind == "procedure":
+            procedure = (
+                self.procedures.get(symbol.procedure_id)
+                if symbol.procedure_id is not None
+                else None
+            )
+            if (
+                procedure is not None
+                and procedure.return_type is not None
+                and not procedure.parameters
+            ):
+                return None
+            return "procedure", symbol.type_name
+        if symbol.kind == "procedure_parameter":
+            return "procedure", symbol.type_name
+        return None
+
     def _compile_builtin_output(self, node: ASTNode, scope: _FrameScope) -> int:
         actuals = _direct_nodes(_first_direct_node(node, "actual_params"), "expression")
+        if not actuals:
+            raise CompileError("builtin output expects at least 1 argument")
+        for actual in actuals:
+            actual_type = self._expr_type(actual)
+            actual_reg = self._compile_expr(actual, scope)
+            saved_arg_reg: int | None = None
+            if self.next_reg > _VALUE_PARAM_BASE_REG:
+                saved_arg_reg = self._fresh_reg()
+                self._copy_reg(dst=saved_arg_reg, src=_VALUE_PARAM_BASE_REG)
+            if actual_type == _STRING_TYPE:
+                self._emit_output_string(actual_reg, scope)
+            elif actual_type == _BOOLEAN_TYPE:
+                self._emit_output_boolean(actual_reg, scope)
+            elif actual_type == _INTEGER_TYPE:
+                self._emit_output_integer(actual_reg, scope)
+            elif actual_type == _REAL_TYPE:
+                self._emit_output_real(actual_reg, scope)
+            else:
+                raise CompileError(
+                    "builtin output currently supports integer, boolean, real, "
+                    "and string"
+                )
+
+            if saved_arg_reg is not None:
+                self._copy_reg(dst=_VALUE_PARAM_BASE_REG, src=saved_arg_reg)
+        return _ZERO_REG
+
+    def _compile_builtin_numeric(
+        self,
+        node: ASTNode,
+        call: ResolvedProcedureCall,
+        scope: _FrameScope,
+    ) -> int:
+        actuals = _direct_nodes(_first_direct_node(node, "actual_params"), "expression")
         if len(actuals) != 1:
-            raise CompileError("builtin output expects exactly 1 argument")
+            raise CompileError(f"builtin {call.name} expects exactly 1 argument")
         actual = actuals[0]
         actual_type = self._expr_type(actual)
-        actual_reg = self._compile_expr(actual, scope)
-        saved_arg_reg: int | None = None
-        if self.next_reg > _VALUE_PARAM_BASE_REG:
-            saved_arg_reg = self._fresh_reg()
-            self._copy_reg(dst=saved_arg_reg, src=_VALUE_PARAM_BASE_REG)
-        if actual_type == _STRING_TYPE:
-            self._emit_output_string(actual_reg, scope)
-        elif actual_type == _BOOLEAN_TYPE:
-            self._emit_output_boolean(actual_reg, scope)
+        value = self._compile_expr(actual, scope)
+        if call.label == _BUILTIN_ABS_LABEL:
+            return self._emit_builtin_abs(value, actual_type)
+        if call.label == _BUILTIN_ENTIER_LABEL:
+            return self._emit_builtin_entier(value, actual_type, scope)
+        if call.label == _BUILTIN_SIGN_LABEL:
+            return self._emit_builtin_sign(value, actual_type)
+        if call.label == _BUILTIN_SQRT_LABEL:
+            return self._emit_builtin_sqrt(value, actual_type, scope)
+        math_op = _BUILTIN_REAL_MATH_OPS.get(call.label)
+        if math_op is not None:
+            return self._emit_builtin_real_math(value, actual_type, math_op, scope)
+        raise CompileError(f"unknown builtin numeric function {call.name!r}")
+
+    def _emit_builtin_abs(self, value: int, actual_type: str) -> int:
+        index = self._next_if_index()
+        nonnegative_label = f"builtin_abs_{index}_nonnegative"
+        end_label = f"builtin_abs_{index}_end"
+        result = self._fresh_reg()
+        negative = self._fresh_reg()
+        if actual_type == _REAL_TYPE:
+            self._emit(
+                IrOp.F64_CMP_LT,
+                IrRegister(negative),
+                IrRegister(value),
+                IrRegister(self._const_f64_reg(0.0)),
+            )
+            self._emit(IrOp.BRANCH_Z, IrRegister(negative), IrLabel(nonnegative_label))
+            self._emit(
+                IrOp.F64_SUB,
+                IrRegister(result),
+                IrRegister(self._const_f64_reg(0.0)),
+                IrRegister(value),
+            )
+            self._emit(IrOp.JUMP, IrLabel(end_label))
+            self._label(nonnegative_label)
+            self._copy_scalar_reg(type_name=_REAL_TYPE, dst=result, src=value)
+            self._label(end_label)
+            return result
+
+        if actual_type != _INTEGER_TYPE:
+            raise CompileError(f"builtin abs does not support {actual_type}")
+        self._emit(
+            IrOp.CMP_LT,
+            IrRegister(negative),
+            IrRegister(value),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit(IrOp.BRANCH_Z, IrRegister(negative), IrLabel(nonnegative_label))
+        self._emit(
+            IrOp.SUB,
+            IrRegister(result),
+            IrRegister(_ZERO_REG),
+            IrRegister(value),
+        )
+        self._emit(IrOp.JUMP, IrLabel(end_label))
+        self._label(nonnegative_label)
+        self._copy_reg(dst=result, src=value)
+        self._label(end_label)
+        return result
+
+    def _emit_builtin_entier(
+        self,
+        value: int,
+        actual_type: str,
+        scope: _FrameScope,
+    ) -> int:
+        if actual_type == _INTEGER_TYPE:
+            result = self._fresh_reg()
+            self._copy_reg(dst=result, src=value)
+            return result
+        if actual_type != _REAL_TYPE:
+            raise CompileError(f"builtin entier does not support {actual_type}")
+
+        index = self._next_if_index()
+        maybe_adjust_label = f"builtin_entier_{index}_maybe_adjust"
+        end_label = f"builtin_entier_{index}_end"
+        result = self._fresh_reg()
+        self._emit_checked_i32_trunc_from_f64(result, value, scope)
+        negative = self._fresh_reg()
+        self._emit(
+            IrOp.F64_CMP_LT,
+            IrRegister(negative),
+            IrRegister(value),
+            IrRegister(self._const_f64_reg(0.0)),
+        )
+        self._emit(IrOp.BRANCH_NZ, IrRegister(negative), IrLabel(maybe_adjust_label))
+        self._emit(IrOp.JUMP, IrLabel(end_label))
+        self._label(maybe_adjust_label)
+        truncated_as_real = self._fresh_reg()
+        exact = self._fresh_reg()
+        self._emit(
+            IrOp.F64_FROM_I32,
+            IrRegister(truncated_as_real),
+            IrRegister(result),
+        )
+        self._emit(
+            IrOp.F64_CMP_EQ,
+            IrRegister(exact),
+            IrRegister(truncated_as_real),
+            IrRegister(value),
+        )
+        self._emit(IrOp.BRANCH_NZ, IrRegister(exact), IrLabel(end_label))
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(result),
+            IrRegister(result),
+            IrImmediate(-1),
+        )
+        self._label(end_label)
+        return result
+
+    def _emit_builtin_sign(self, value: int, actual_type: str) -> int:
+        index = self._next_if_index()
+        nonnegative_label = f"builtin_sign_{index}_nonnegative"
+        zero_label = f"builtin_sign_{index}_zero"
+        end_label = f"builtin_sign_{index}_end"
+        result = self._fresh_reg()
+        negative = self._fresh_reg()
+        positive = self._fresh_reg()
+        if actual_type == _REAL_TYPE:
+            zero = self._const_f64_reg(0.0)
+            self._emit(
+                IrOp.F64_CMP_LT,
+                IrRegister(negative),
+                IrRegister(value),
+                IrRegister(zero),
+            )
+            self._emit(IrOp.BRANCH_Z, IrRegister(negative), IrLabel(nonnegative_label))
+            self._emit(
+                IrOp.LOAD_IMM,
+                IrRegister(result),
+                IrImmediate(-1),
+            )
+            self._emit(IrOp.JUMP, IrLabel(end_label))
+            self._label(nonnegative_label)
+            self._emit(
+                IrOp.F64_CMP_GT,
+                IrRegister(positive),
+                IrRegister(value),
+                IrRegister(zero),
+            )
         elif actual_type == _INTEGER_TYPE:
-            self._emit_output_integer(actual_reg, scope)
-        elif actual_type == _REAL_TYPE:
-            self._emit_output_real(actual_reg, scope)
+            self._emit(
+                IrOp.CMP_LT,
+                IrRegister(negative),
+                IrRegister(value),
+                IrRegister(_ZERO_REG),
+            )
+            self._emit(IrOp.BRANCH_Z, IrRegister(negative), IrLabel(nonnegative_label))
+            self._emit(
+                IrOp.LOAD_IMM,
+                IrRegister(result),
+                IrImmediate(-1),
+            )
+            self._emit(IrOp.JUMP, IrLabel(end_label))
+            self._label(nonnegative_label)
+            self._emit(
+                IrOp.CMP_GT,
+                IrRegister(positive),
+                IrRegister(value),
+                IrRegister(_ZERO_REG),
+            )
         else:
+            raise CompileError(f"builtin sign does not support {actual_type}")
+
+        self._emit(IrOp.BRANCH_Z, IrRegister(positive), IrLabel(zero_label))
+        self._emit(IrOp.LOAD_IMM, IrRegister(result), IrImmediate(1))
+        self._emit(IrOp.JUMP, IrLabel(end_label))
+        self._label(zero_label)
+        self._copy_reg(dst=result, src=_ZERO_REG)
+        self._label(end_label)
+        return result
+
+    def _emit_builtin_sqrt(
+        self,
+        value: int,
+        actual_type: str,
+        scope: _FrameScope,
+    ) -> int:
+        if actual_type == _INTEGER_TYPE:
+            real_value = self._fresh_reg()
+            self._emit(
+                IrOp.F64_FROM_I32,
+                IrRegister(real_value),
+                IrRegister(value),
+            )
+            value = real_value
+        elif actual_type != _REAL_TYPE:
+            raise CompileError(f"builtin sqrt does not support {actual_type}")
+
+        negative = self._fresh_reg()
+        self._emit(
+            IrOp.F64_CMP_LT,
+            IrRegister(negative),
+            IrRegister(value),
+            IrRegister(self._const_f64_reg(0.0)),
+        )
+        self._emit_runtime_failure_guard(negative, scope)
+
+        result = self._fresh_reg()
+        self._emit(IrOp.F64_SQRT, IrRegister(result), IrRegister(value))
+        return result
+
+    def _emit_builtin_real_math(
+        self,
+        value: int,
+        actual_type: str,
+        opcode: IrOp,
+        scope: _FrameScope,
+    ) -> int:
+        if actual_type == _INTEGER_TYPE:
+            real_value = self._fresh_reg()
+            self._emit(
+                IrOp.F64_FROM_I32,
+                IrRegister(real_value),
+                IrRegister(value),
+            )
+            value = real_value
+        elif actual_type != _REAL_TYPE:
             raise CompileError(
-                "builtin output currently supports integer, boolean, real, "
-                "and string"
+                f"builtin {opcode.name.lower()} does not support {actual_type}"
             )
 
-        if saved_arg_reg is not None:
-            self._copy_reg(dst=_VALUE_PARAM_BASE_REG, src=saved_arg_reg)
-        return _ZERO_REG
+        if opcode == IrOp.F64_LN:
+            nonpositive = self._fresh_reg()
+            self._emit(
+                IrOp.F64_CMP_LE,
+                IrRegister(nonpositive),
+                IrRegister(value),
+                IrRegister(self._const_f64_reg(0.0)),
+            )
+            self._emit_runtime_failure_guard(nonpositive, scope)
+
+        result = self._fresh_reg()
+        self._emit(opcode, IrRegister(result), IrRegister(value))
+        return result
 
     def _emit_output_chars(self, text: str, scope: _FrameScope) -> None:
         for char in text:
@@ -2612,8 +4222,7 @@ class AlgolIrCompiler:
         )
 
     def _emit_output_string(self, pointer_reg: int, scope: _FrameScope) -> None:
-        index = self.output_count
-        self.output_count += 1
+        index = self._next_output_index()
         loop_label = f"algol_label_output_string_{index}_loop"
         end_label = f"algol_label_output_string_{index}_end"
         data_guard_done_label = f"algol_label_output_string_{index}_data_guard_done"
@@ -2691,8 +4300,7 @@ class AlgolIrCompiler:
         self._label(end_label)
 
     def _emit_output_boolean(self, value_reg: int, scope: _FrameScope) -> None:
-        index = self.output_count
-        self.output_count += 1
+        index = self._next_output_index()
         false_label = f"algol_label_output_bool_{index}_false"
         end_label = f"algol_label_output_bool_{index}_end"
         self._emit(IrOp.BRANCH_Z, IrRegister(value_reg), IrLabel(false_label))
@@ -2703,8 +4311,7 @@ class AlgolIrCompiler:
         self._label(end_label)
 
     def _emit_output_integer(self, value_reg: int, scope: _FrameScope) -> None:
-        index = self.output_count
-        self.output_count += 1
+        index = self._next_output_index()
         extract_loop_label = f"algol_label_output_int_{index}_extract_loop"
         emit_label = f"algol_label_output_int_{index}_emit"
         emit_loop_label = f"algol_label_output_int_{index}_emit_loop"
@@ -2799,11 +4406,11 @@ class AlgolIrCompiler:
         self._label(end_label)
 
     def _emit_output_real(self, value_reg: int, scope: _FrameScope) -> None:
-        index = self.output_count
-        self.output_count += 1
+        index = self._next_output_index()
         positive_label = f"algol_label_output_real_{index}_positive"
         normalized_label = f"algol_label_output_real_{index}_normalized"
         no_carry_label = f"algol_label_output_real_{index}_no_carry"
+        no_sign_label = f"algol_label_output_real_{index}_no_sign"
 
         zero_f64 = self._const_f64_reg(0.0)
         abs_reg = self._fresh_reg()
@@ -2819,7 +4426,6 @@ class AlgolIrCompiler:
             IrRegister(negative_reg),
             IrLabel(positive_label),
         )
-        self._emit_output_chars("-", scope)
         self._emit(
             IrOp.F64_SUB,
             IrRegister(abs_reg),
@@ -2832,11 +4438,7 @@ class AlgolIrCompiler:
         self._label(normalized_label)
 
         integer_part_reg = self._fresh_reg()
-        self._emit(
-            IrOp.I32_TRUNC_FROM_F64,
-            IrRegister(integer_part_reg),
-            IrRegister(abs_reg),
-        )
+        self._emit_checked_i32_trunc_from_f64(integer_part_reg, abs_reg, scope)
         integer_part_f64 = self._coerce_reg_to_type(
             integer_part_reg,
             _INTEGER_TYPE,
@@ -2897,6 +4499,13 @@ class AlgolIrCompiler:
         )
         self._label(no_carry_label)
 
+        self._emit(
+            IrOp.BRANCH_Z,
+            IrRegister(negative_reg),
+            IrLabel(no_sign_label),
+        )
+        self._emit_output_chars("-", scope)
+        self._label(no_sign_label)
         self._emit_output_integer(integer_part_reg, scope)
         self._emit_output_chars(".", scope)
         self._emit_output_three_digits(fraction_digits_reg, scope)
@@ -2958,6 +4567,42 @@ class AlgolIrCompiler:
             )
             self._emit_output_reg(ascii_reg, scope)
 
+    def _emit_checked_i32_trunc_from_f64(
+        self,
+        dst_reg: int,
+        value_reg: int,
+        scope: _FrameScope,
+    ) -> None:
+        nan_reg = self._fresh_reg()
+        too_low_reg = self._fresh_reg()
+        too_high_reg = self._fresh_reg()
+        self._emit(
+            IrOp.F64_CMP_NE,
+            IrRegister(nan_reg),
+            IrRegister(value_reg),
+            IrRegister(value_reg),
+        )
+        self._emit_runtime_failure_guard(nan_reg, scope)
+        self._emit(
+            IrOp.F64_CMP_LT,
+            IrRegister(too_low_reg),
+            IrRegister(value_reg),
+            IrRegister(self._const_f64_reg(float(_I32_MIN))),
+        )
+        self._emit_runtime_failure_guard(too_low_reg, scope)
+        self._emit(
+            IrOp.F64_CMP_GE,
+            IrRegister(too_high_reg),
+            IrRegister(value_reg),
+            IrRegister(self._const_f64_reg(float(_I32_MAX_EXCLUSIVE))),
+        )
+        self._emit_runtime_failure_guard(too_high_reg, scope)
+        self._emit(
+            IrOp.I32_TRUNC_FROM_F64,
+            IrRegister(dst_reg),
+            IrRegister(value_reg),
+        )
+
     def _emit_extract_integer_digit(
         self,
         work_reg: int,
@@ -2990,9 +4635,9 @@ class AlgolIrCompiler:
             IrRegister(work_reg),
             IrRegister(product_reg),
         )
-        invert_label = f"algol_label_output_digit_{self.output_count}_invert"
-        continue_label = f"algol_label_output_digit_{self.output_count}_continue"
-        self.output_count += 1
+        index = self._next_output_index()
+        invert_label = f"algol_label_output_digit_{index}_invert"
+        continue_label = f"algol_label_output_digit_{index}_continue"
         self._emit(
             IrOp.BRANCH_Z,
             IrRegister(negative_reg),
@@ -3028,7 +4673,13 @@ class AlgolIrCompiler:
 
     def _requires_by_name_thunk_descriptor(self, argument: ASTNode) -> bool:
         variable = _single_variable_expr(argument)
-        return variable is None or bool(_variable_subscripts(variable))
+        if variable is None or _variable_subscripts(variable):
+            return True
+        name = _variable_name(variable)
+        return (
+            name is not None
+            and self.procedure_calls.get((id(name), "expression")) is not None
+        )
 
     def _compile_by_name_actual_pointer(
         self,
@@ -3063,6 +4714,18 @@ class AlgolIrCompiler:
         name = _variable_name(variable)
         if name is None:
             raise CompileError("by-name scalar actual is missing a name")
+        if self.procedure_calls.get((id(name), "expression")) is not None:
+            if descriptor is None:
+                raise CompileError(
+                    "missing reserved eval thunk descriptor for by-name procedure "
+                    "expression"
+                )
+            return self._compile_eval_thunk_actual(
+                argument,
+                parameter,
+                scope,
+                descriptor,
+            )
         reference = self._require_reference(name, "read")
         return self._emit_reference_pointer(reference, scope)
 
@@ -3086,9 +4749,37 @@ class AlgolIrCompiler:
         scope: _FrameScope,
         descriptor: int | None,
     ) -> int:
+        parts = _conditional_expression_parts(_meaningful_children(argument))
+        if parts is not None:
+            if descriptor is None:
+                raise CompileError("missing reserved descriptor for switch actual")
+            condition, then_expr, else_expr = parts
+            index = self._next_if_index()
+            else_label = f"switch_actual_{index}_else"
+            end_label = f"switch_actual_{index}_end"
+            result = self._fresh_reg()
+            condition_value = self._compile_expr(condition, scope)
+            self._emit(IrOp.BRANCH_Z, IrRegister(condition_value), IrLabel(else_label))
+            then_pointer = self._compile_switch_actual_pointer(
+                then_expr,
+                scope,
+                descriptor,
+            )
+            self._copy_reg(dst=result, src=then_pointer)
+            self._emit(IrOp.JUMP, IrLabel(end_label))
+            self._label(else_label)
+            else_pointer = self._compile_switch_actual_pointer(
+                else_expr,
+                scope,
+                descriptor,
+            )
+            self._copy_reg(dst=result, src=else_pointer)
+            self._label(end_label)
+            return result
+
         variable = _single_variable_expr(argument)
         if variable is None or _variable_subscripts(variable):
-            raise CompileError("switch parameter actual must be a direct switch")
+            raise CompileError("switch parameter actual must be a switch designator")
         name = _variable_name(variable)
         if name is None:
             raise CompileError("switch parameter actual is missing a name")
@@ -3128,15 +4819,162 @@ class AlgolIrCompiler:
         )
         return descriptor
 
+    def _compile_switch_thunk_actual(
+        self,
+        argument: ASTNode,
+        scope: _FrameScope,
+        descriptor: int | None,
+    ) -> int:
+        if descriptor is None:
+            raise CompileError("missing reserved descriptor for switch actual")
+        parts = _conditional_expression_parts(_meaningful_children(argument))
+        if parts is not None:
+            thunk = self._register_switch_thunk(argument, scope.block_id)
+            self._emit_write_switch_thunk_descriptor(thunk, scope, descriptor)
+            return descriptor
+
+        pointer = self._compile_switch_actual_pointer(argument, scope, descriptor)
+        self._emit_copy_switch_descriptor(pointer, descriptor)
+        return descriptor
+
+    def _compile_value_switch_actual_pointer(
+        self,
+        argument: ASTNode,
+        scope: _FrameScope,
+        descriptor: int | None,
+    ) -> int:
+        if descriptor is None:
+            raise CompileError("missing reserved descriptor for value switch actual")
+        pointer = self._compile_switch_actual_pointer(argument, scope, descriptor)
+        return self._emit_resolve_switch_descriptor(pointer, descriptor, scope)
+
+    def _is_switch_designator_actual(
+        self,
+        argument: ASTNode,
+        scope: _FrameScope,
+    ) -> bool:
+        parts = _conditional_expression_parts(_meaningful_children(argument))
+        if parts is not None:
+            _, then_expr, else_expr = parts
+            return self._is_switch_designator_actual(
+                then_expr,
+                scope,
+            ) and self._is_switch_designator_actual(else_expr, scope)
+
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            return False
+        name = _variable_name(variable)
+        if name is None:
+            return False
+        resolved = self._resolve_symbol_in_scope_chain(name.value, scope)
+        return resolved is not None and resolved[0].kind == "switch"
+
+    def _compile_procedure_actual_pointer(
+        self,
+        argument: ASTNode,
+        scope: _FrameScope,
+        descriptor: int | None,
+    ) -> int:
+        variable = _single_variable_expr(argument)
+        if variable is None or _variable_subscripts(variable):
+            raise CompileError("procedure parameter actual must be a direct procedure")
+        name = _variable_name(variable)
+        if name is None:
+            raise CompileError("procedure parameter actual is missing a name")
+        resolved = self._resolve_symbol_in_scope_chain(name.value, scope)
+        if resolved is None:
+            raise CompileError(f"procedure actual {name.value!r} was not resolved")
+        symbol, lexical_depth_delta = resolved
+        if symbol.kind == "procedure_parameter":
+            if symbol.slot_offset is None:
+                raise CompileError(
+                    f"procedure parameter actual {name.value!r} has no planned "
+                    "frame slot"
+                )
+            frame_reg = self._emit_frame_for_lexical_depth(scope, lexical_depth_delta)
+            pointer = self._fresh_reg()
+            self._emit(
+                IrOp.LOAD_WORD,
+                IrRegister(pointer),
+                IrRegister(frame_reg),
+                IrRegister(self._const_reg(symbol.slot_offset)),
+            )
+            return pointer
+        if symbol.kind != "procedure" or symbol.procedure_id is None:
+            raise CompileError(
+                f"procedure parameter actual {name.value!r} is not a procedure"
+            )
+        procedure = self.procedures.get(symbol.procedure_id)
+        if procedure is None:
+            raise CompileError(f"procedure actual {name.value!r} has no descriptor")
+        if descriptor is None:
+            raise CompileError(
+                f"missing reserved descriptor for procedure actual {name.value!r}"
+            )
+        static_link = self._emit_frame_for_lexical_depth(scope, lexical_depth_delta)
+        self._emit_write_procedure_descriptor(
+            descriptor,
+            procedure.procedure_id,
+            static_link,
+        )
+        return descriptor
+
     def _compile_label_actual_value(
         self,
         argument: ASTNode,
         scope: _FrameScope,
     ) -> int:
+        parts = _conditional_expression_parts(_meaningful_children(argument))
+        if parts is not None:
+            condition, then_expr, else_expr = parts
+            index = self._next_if_index()
+            else_label = f"label_actual_{index}_else"
+            end_label = f"label_actual_{index}_end"
+            result = self._fresh_reg()
+            condition_value = self._compile_expr(condition, scope)
+            self._emit(IrOp.BRANCH_Z, IrRegister(condition_value), IrLabel(else_label))
+            then_value = self._compile_label_actual_value(then_expr, scope)
+            self._copy_reg(dst=result, src=then_value)
+            self._emit(IrOp.JUMP, IrLabel(end_label))
+            self._label(else_label)
+            else_value = self._compile_label_actual_value(else_expr, scope)
+            self._copy_reg(dst=result, src=else_value)
+            self._label(end_label)
+            return result
+
+        literal_label = _single_integer_label_expr(argument)
+        if literal_label is not None:
+            label = self._resolve_label_in_scope_chain(literal_label.value, scope)
+            if label is not None:
+                return self._const_reg(label.label_id)
+            label = self._resolve_label_in_semantic_scope(literal_label.value, scope)
+            if label is not None:
+                return self._const_reg(label.label_id)
+            raise CompileError(
+                f"label actual {literal_label.value!r} has no descriptor"
+            )
+
         variable = _single_variable_expr(argument)
-        if variable is None or _variable_subscripts(variable):
-            raise CompileError("label parameter actual must be a direct label")
+        if variable is None:
+            raise CompileError("label parameter actual must be a label designator")
         name = _variable_name(variable)
+        if name is None and _variable_subscripts(variable):
+            switch_name = _variable_head_name(variable)
+            if switch_name is None:
+                raise CompileError("label switch actual is missing a name")
+            resolved = self._resolve_symbol_in_scope_chain(switch_name.value, scope)
+            if resolved is None:
+                raise CompileError(
+                    f"label switch actual {switch_name.value!r} was not resolved"
+                )
+            symbol, _ = resolved
+            if symbol.kind != "switch":
+                raise CompileError(
+                    f"label parameter actual {switch_name.value!r} is not a "
+                    "switch selection"
+                )
+            return self._compile_switch_selection_value(variable, scope)
         if name is None:
             raise CompileError("label parameter actual is missing a name")
         resolved = self._resolve_symbol_in_scope_chain(name.value, scope)
@@ -3153,18 +4991,82 @@ class AlgolIrCompiler:
                     f"label parameter actual {name.value!r} has no planned frame slot"
                 )
             frame_reg = self._emit_frame_for_lexical_depth(scope, lexical_depth_delta)
-            value_reg = self._fresh_reg()
+            slot_value = self._fresh_reg()
             self._emit(
                 IrOp.LOAD_WORD,
-                IrRegister(value_reg),
+                IrRegister(slot_value),
                 IrRegister(frame_reg),
                 IrRegister(self._const_reg(symbol.slot_offset)),
             )
-            return value_reg
+            if symbol.parameter_mode == _VALUE_MODE:
+                return slot_value
+            return self._emit_eval_label_descriptor(slot_value, scope)
         label = self.labels_by_symbol.get(symbol.symbol_id)
         if label is None:
             raise CompileError(f"label actual {name.value!r} has no descriptor")
         return self._const_reg(label.label_id)
+
+    def _is_label_designational_actual(
+        self,
+        argument: ASTNode,
+        scope: _FrameScope,
+    ) -> bool:
+        parts = _conditional_expression_parts(_meaningful_children(argument))
+        if parts is not None:
+            _, then_expr, else_expr = parts
+            return self._is_label_designational_actual(
+                then_expr,
+                scope,
+            ) and self._is_label_designational_actual(else_expr, scope)
+
+        literal_label = _single_integer_label_expr(argument)
+        if literal_label is not None:
+            label = self._resolve_label_in_scope_chain(literal_label.value, scope)
+            if label is not None:
+                return True
+            return (
+                self._resolve_label_in_semantic_scope(literal_label.value, scope)
+                is not None
+            )
+
+        variable = _single_variable_expr(argument)
+        if variable is None:
+            return False
+        name = _variable_head_name(variable)
+        if name is None:
+            return False
+        resolved = self._resolve_symbol_in_scope_chain(name.value, scope)
+        if resolved is None:
+            return False
+        symbol, _ = resolved
+        if _variable_subscripts(variable):
+            return symbol.kind == "switch"
+        return symbol.kind == "label"
+
+    def _compile_procedure_parameter_pointer(
+        self,
+        name: str,
+        scope: _FrameScope,
+    ) -> int | None:
+        resolved = self._resolve_symbol_in_scope_chain(name, scope)
+        if resolved is None:
+            return None
+        symbol, lexical_depth_delta = resolved
+        if symbol.kind != "procedure_parameter":
+            return None
+        if symbol.slot_offset is None:
+            raise CompileError(
+                f"procedure parameter {name!r} has no planned frame slot"
+            )
+        frame_reg = self._emit_frame_for_lexical_depth(scope, lexical_depth_delta)
+        descriptor_pointer = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(descriptor_pointer),
+            IrRegister(frame_reg),
+            IrRegister(self._const_reg(symbol.slot_offset)),
+        )
+        return descriptor_pointer
 
     def _emit_call_switch_eval(
         self,
@@ -3189,6 +5091,99 @@ class AlgolIrCompiler:
         self._copy_reg(dst=result, src=_RESULT_REG)
         return result
 
+    def _emit_resolve_switch_descriptor(
+        self,
+        descriptor_pointer: int,
+        target_descriptor: int,
+        scope: _FrameScope,
+    ) -> int:
+        active_thunk_heap_mark = (
+            scope.active_thunk_heap_mark_reg
+            if scope.active_thunk_heap_mark_reg is not None
+            else self._const_reg(0)
+        )
+        self._emit(
+            IrOp.CALL,
+            IrLabel(_SWITCH_RESOLVE_LABEL),
+            IrRegister(descriptor_pointer),
+            IrRegister(active_thunk_heap_mark),
+            IrRegister(target_descriptor),
+        )
+        if scope.helper_failure:
+            self._emit_helper_return_on_thunk_failure(scope)
+        self._emit_propagate_thunk_failure(scope)
+        self._emit_handle_pending_goto_after_call(scope)
+        result = self._fresh_reg()
+        self._copy_reg(dst=result, src=_RESULT_REG)
+        return result
+
+    def _emit_call_concrete_switch_eval(
+        self,
+        selection: ResolvedSwitchSelection,
+        index_value: int,
+        scope: _FrameScope,
+    ) -> int:
+        if selection.switch_id < 0:
+            raise CompileError("switch parameter selection has no concrete id")
+        descriptor_pointer = self._emit_reserve_temp_descriptor_space(
+            _SWITCH_DESCRIPTOR_SIZE,
+            scope,
+        )
+        declaration_scope = self._rebase_scope_for_selection(scope, selection)
+        self._emit_write_switch_descriptor(
+            descriptor_pointer,
+            selection.switch_id,
+            declaration_scope.frame_base_reg,
+        )
+        result = self._emit_call_switch_eval(descriptor_pointer, index_value, scope)
+        self._store_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, descriptor_pointer)
+        return result
+
+    def _emit_goto_label_value(
+        self,
+        label_value: int,
+        scope: _FrameScope,
+    ) -> None:
+        index = self._next_if_index()
+        end_label = f"label_value_{index}_end"
+        active_scopes = self._active_function_scopes(scope)
+        active_block_ids = {active_scope.block_id for active_scope in active_scopes}
+        for label in self.labels_by_id.values():
+            if label.declaring_block_id not in active_block_ids:
+                continue
+            next_index = self._next_if_index()
+            next_label = f"label_value_{next_index}_next"
+            matches = self._fresh_reg()
+            self._emit(
+                IrOp.CMP_EQ,
+                IrRegister(matches),
+                IrRegister(label_value),
+                IrRegister(self._const_reg(label.label_id)),
+            )
+            self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(next_label))
+            self._emit_unwind_to_block(scope, label.declaring_block_id)
+            self._emit(IrOp.JUMP, IrLabel(label.ir_label))
+            self._emit(IrOp.JUMP, IrLabel(end_label))
+            self._label(next_label)
+
+        if scope.function_owner_procedure_id is not None or scope.helper_failure:
+            self._emit_pending_goto_return_reg(scope, label_value)
+        else:
+            tagged_label = self._fresh_reg()
+            self._emit(
+                IrOp.ADD_IMM,
+                IrRegister(tagged_label),
+                IrRegister(label_value),
+                IrImmediate(1),
+            )
+            self._store_runtime_state(
+                _RUNTIME_PENDING_GOTO_LABEL_OFFSET,
+                tagged_label,
+            )
+            self._emit_zero_result_reg()
+            self._emit(IrOp.HALT)
+        self._label(end_label)
+
     def _compile_eval_thunk_actual(
         self,
         argument: ASTNode,
@@ -3210,6 +5205,27 @@ class AlgolIrCompiler:
             IrImmediate(_THUNK_DESCRIPTOR_TAG),
         )
         return tagged_descriptor
+
+    def _compile_label_thunk_actual(
+        self,
+        argument: ASTNode,
+        scope: _FrameScope,
+        descriptor: int,
+    ) -> int:
+        variable = _single_variable_expr(argument)
+        if variable is not None and not _variable_subscripts(variable):
+            name = _variable_name(variable)
+            if name is not None:
+                forwarded = self._compile_label_parameter_descriptor_pointer(
+                    name,
+                    scope,
+                )
+                if forwarded is not None:
+                    return forwarded
+
+        thunk = self._register_label_thunk(argument, scope.block_id)
+        self._emit_write_label_thunk_descriptor(thunk, scope, descriptor)
+        return descriptor
 
     def _compile_array_element_thunk_actual(
         self,
@@ -3252,10 +5268,10 @@ class AlgolIrCompiler:
         is_array_element: bool = False,
         store_capable: bool = False,
     ) -> _EvalThunk:
-        if len(self.eval_thunks) >= _MAX_EVAL_THUNKS:
+        if len(self.eval_thunks) >= self.limits.max_eval_thunks:
             raise CompileError(
                 "ALGOL program requires more than "
-                f"{_MAX_EVAL_THUNKS} by-name eval thunks"
+                f"{self.limits.max_eval_thunks} by-name eval thunks"
             )
         thunk = _EvalThunk(
             thunk_id=len(self.eval_thunks) + 1,
@@ -3266,6 +5282,42 @@ class AlgolIrCompiler:
             store_capable=store_capable,
         )
         self.eval_thunks.append(thunk)
+        return thunk
+
+    def _register_label_thunk(
+        self,
+        argument: ASTNode,
+        block_id: int,
+    ) -> _LabelThunk:
+        if len(self.label_thunks) >= self.limits.max_eval_thunks:
+            raise CompileError(
+                "ALGOL program requires more than "
+                f"{self.limits.max_eval_thunks} by-name label thunks"
+            )
+        thunk = _LabelThunk(
+            thunk_id=len(self.label_thunks) + 1,
+            expression=argument,
+            block_id=block_id,
+        )
+        self.label_thunks.append(thunk)
+        return thunk
+
+    def _register_switch_thunk(
+        self,
+        argument: ASTNode,
+        block_id: int,
+    ) -> _SwitchThunk:
+        if len(self.switch_thunks) >= self.limits.max_eval_thunks:
+            raise CompileError(
+                "ALGOL program requires more than "
+                f"{self.limits.max_eval_thunks} by-name switch thunks"
+            )
+        thunk = _SwitchThunk(
+            thunk_id=len(self.switch_thunks) + 1,
+            expression=argument,
+            block_id=block_id,
+        )
+        self.switch_thunks.append(thunk)
         return thunk
 
     def _emit_reserve_eval_thunk_descriptors(
@@ -3339,6 +5391,40 @@ class AlgolIrCompiler:
             _THUNK_FLAG_STORE if thunk.store_capable else 0,
         )
 
+    def _emit_write_label_thunk_descriptor(
+        self,
+        thunk: _LabelThunk,
+        scope: _FrameScope,
+        descriptor: int,
+    ) -> None:
+        self._store_word_const(
+            descriptor,
+            _LABEL_DESCRIPTOR_ID_OFFSET,
+            thunk.thunk_id,
+        )
+        self._store_word_reg(
+            value_reg=scope.frame_base_reg,
+            base_reg=descriptor,
+            offset=_LABEL_DESCRIPTOR_CALLER_FRAME_OFFSET,
+        )
+
+    def _emit_write_switch_thunk_descriptor(
+        self,
+        thunk: _SwitchThunk,
+        scope: _FrameScope,
+        descriptor: int,
+    ) -> None:
+        self._store_word_const(
+            descriptor,
+            _SWITCH_DESCRIPTOR_ID_OFFSET,
+            -thunk.thunk_id,
+        )
+        self._store_word_reg(
+            value_reg=scope.frame_base_reg,
+            base_reg=descriptor,
+            offset=_SWITCH_DESCRIPTOR_CALLER_FRAME_OFFSET,
+        )
+
     def _emit_write_switch_descriptor(
         self,
         descriptor: int,
@@ -3355,6 +5441,107 @@ class AlgolIrCompiler:
             base_reg=descriptor,
             offset=_SWITCH_DESCRIPTOR_CALLER_FRAME_OFFSET,
         )
+
+    def _emit_copy_switch_descriptor(self, source: int, target: int) -> None:
+        switch_id = self._fresh_reg()
+        caller_frame = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(switch_id),
+            IrRegister(source),
+            IrRegister(self._const_reg(_SWITCH_DESCRIPTOR_ID_OFFSET)),
+        )
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(caller_frame),
+            IrRegister(source),
+            IrRegister(self._const_reg(_SWITCH_DESCRIPTOR_CALLER_FRAME_OFFSET)),
+        )
+        self._store_word_reg(
+            value_reg=switch_id,
+            base_reg=target,
+            offset=_SWITCH_DESCRIPTOR_ID_OFFSET,
+        )
+        self._store_word_reg(
+            value_reg=caller_frame,
+            base_reg=target,
+            offset=_SWITCH_DESCRIPTOR_CALLER_FRAME_OFFSET,
+        )
+
+    def _emit_write_procedure_descriptor(
+        self,
+        descriptor: int,
+        procedure_id: int,
+        static_link_reg: int,
+    ) -> None:
+        self._store_word_const(
+            descriptor,
+            _PROCEDURE_DESCRIPTOR_ID_OFFSET,
+            procedure_id,
+        )
+        self._store_word_reg(
+            value_reg=static_link_reg,
+            base_reg=descriptor,
+            offset=_PROCEDURE_DESCRIPTOR_STATIC_LINK_OFFSET,
+        )
+
+    def _compile_label_eval_dispatcher(self) -> None:
+        previous_return_type = self.current_function_return_type
+        self.current_function_return_type = _INTEGER_TYPE
+        self._label(_LABEL_EVAL_LABEL)
+        descriptor = _STATIC_LINK_PARAM_REG
+        active_thunk_heap_mark = _THUNK_HEAP_MARK_PARAM_REG
+        thunk_id = self._fresh_reg()
+        caller_frame = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(thunk_id),
+            IrRegister(descriptor),
+            IrRegister(self._const_reg(_LABEL_DESCRIPTOR_ID_OFFSET)),
+        )
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(caller_frame),
+            IrRegister(descriptor),
+            IrRegister(self._const_reg(_LABEL_DESCRIPTOR_CALLER_FRAME_OFFSET)),
+        )
+        for thunk in self.label_thunks:
+            index = self._next_if_index()
+            else_label = f"if_{index}_else"
+            end_label = f"if_{index}_end"
+            matches = self._fresh_reg()
+            self._emit(
+                IrOp.CMP_EQ,
+                IrRegister(matches),
+                IrRegister(thunk_id),
+                IrRegister(self._const_reg(thunk.thunk_id)),
+            )
+            self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(else_label))
+            self._emit_enter_thunk_helper()
+            label_scope = _FrameScope(
+                semantic_block=self.semantic_blocks_by_id[thunk.block_id],
+                frame_base_reg=caller_frame,
+                heap_mark_reg=None,
+                parent=None,
+                goto_parent=None,
+                function_owner_procedure_id=None,
+                active_thunk_heap_mark_reg=active_thunk_heap_mark,
+                helper_failure=True,
+            )
+            label_value = self._compile_label_actual_value(
+                thunk.expression,
+                label_scope,
+            )
+            self._copy_reg(dst=_RESULT_REG, src=label_value)
+            self._emit_leave_thunk_helper()
+            self._emit(IrOp.RET)
+            self._emit(IrOp.JUMP, IrLabel(end_label))
+            self._label(else_label)
+            self._label(end_label)
+        self._store_runtime_state(_RUNTIME_THUNK_FAILURE_OFFSET, self._const_reg(1))
+        self._emit_zero_result_reg()
+        self._emit(IrOp.RET)
+        self.current_function_return_type = previous_return_type
 
     def _compile_procedures(
         self, procedures: list[ProcedureDescriptor]
@@ -3387,8 +5574,7 @@ class AlgolIrCompiler:
         for thunk in self.eval_thunks:
             if (thunk_kind == _REAL_TYPE) != (thunk.type_name == _REAL_TYPE):
                 continue
-            index = self.if_count
-            self.if_count += 1
+            index = self._next_if_index()
             else_label = f"if_{index}_else"
             end_label = f"if_{index}_end"
             matches = self._fresh_reg()
@@ -3426,7 +5612,11 @@ class AlgolIrCompiler:
                 )
             else:
                 value = self._compile_expr(thunk.expression, thunk_scope)
-            self._copy_scalar_reg(type_name=thunk.type_name, dst=_RESULT_REG, src=value)
+            self._copy_scalar_reg(
+                type_name=thunk.type_name,
+                dst=self._result_reg_for_type(thunk.type_name),
+                src=value,
+            )
             self._emit_leave_thunk_helper()
             self._emit(IrOp.RET)
             self._emit(IrOp.JUMP, IrLabel(end_label))
@@ -3462,8 +5652,7 @@ class AlgolIrCompiler:
                 continue
             if (thunk_kind == _REAL_TYPE) != (thunk.type_name == _REAL_TYPE):
                 continue
-            index = self.if_count
-            self.if_count += 1
+            index = self._next_if_index()
             else_label = f"if_{index}_else"
             end_label = f"if_{index}_end"
             matches = self._fresh_reg()
@@ -3530,8 +5719,7 @@ class AlgolIrCompiler:
             IrRegister(self._const_reg(_SWITCH_DESCRIPTOR_CALLER_FRAME_OFFSET)),
         )
         for switch in self.switches.values():
-            index = self.if_count
-            self.if_count += 1
+            index = self._next_if_index()
             else_label = f"if_{index}_else"
             end_label = f"if_{index}_end"
             matches = self._fresh_reg()
@@ -3577,10 +5765,438 @@ class AlgolIrCompiler:
             self._emit(IrOp.JUMP, IrLabel(end_label))
             self._label(else_label)
             self._label(end_label)
+        for thunk in self.switch_thunks:
+            index = self._next_if_index()
+            else_label = f"if_{index}_else"
+            end_label = f"if_{index}_end"
+            matches = self._fresh_reg()
+            self._emit(
+                IrOp.CMP_EQ,
+                IrRegister(matches),
+                IrRegister(switch_id),
+                IrRegister(self._const_reg(-thunk.thunk_id)),
+            )
+            self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(else_label))
+            self._emit_enter_thunk_helper()
+            switch_scope = _FrameScope(
+                semantic_block=self.semantic_blocks_by_id[thunk.block_id],
+                frame_base_reg=caller_frame,
+                heap_mark_reg=None,
+                parent=None,
+                goto_parent=None,
+                function_owner_procedure_id=None,
+                active_thunk_heap_mark_reg=active_thunk_heap_mark,
+                helper_failure=True,
+            )
+            temp_descriptor = self._emit_reserve_temp_descriptor_space(
+                _SWITCH_DESCRIPTOR_SIZE,
+                switch_scope,
+            )
+            actual_pointer = self._compile_switch_actual_pointer(
+                thunk.expression,
+                switch_scope,
+                temp_descriptor,
+            )
+            label_value = self._emit_call_switch_eval(
+                actual_pointer,
+                index_value,
+                switch_scope,
+            )
+            self._store_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, temp_descriptor)
+            self._copy_reg(dst=_RESULT_REG, src=label_value)
+            self._emit_leave_thunk_helper()
+            self._emit(IrOp.RET)
+            self._emit(IrOp.JUMP, IrLabel(end_label))
+            self._label(else_label)
+            self._label(end_label)
         self._store_runtime_state(_RUNTIME_THUNK_FAILURE_OFFSET, self._const_reg(1))
         self._emit_zero_result_reg()
         self._emit(IrOp.RET)
         self.current_function_return_type = previous_return_type
+
+    def _compile_switch_resolve_dispatcher(self) -> None:
+        previous_return_type = self.current_function_return_type
+        self.current_function_return_type = _INTEGER_TYPE
+        self._label(_SWITCH_RESOLVE_LABEL)
+        descriptor = _STATIC_LINK_PARAM_REG
+        active_thunk_heap_mark = _THUNK_HEAP_MARK_PARAM_REG
+        target_descriptor = _VALUE_PARAM_BASE_REG
+        switch_id = self._fresh_reg()
+        caller_frame = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(switch_id),
+            IrRegister(descriptor),
+            IrRegister(self._const_reg(_SWITCH_DESCRIPTOR_ID_OFFSET)),
+        )
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(caller_frame),
+            IrRegister(descriptor),
+            IrRegister(self._const_reg(_SWITCH_DESCRIPTOR_CALLER_FRAME_OFFSET)),
+        )
+
+        is_thunk = self._fresh_reg()
+        concrete_label = f"switch_resolve_{self._next_if_index()}_concrete"
+        self._emit(
+            IrOp.CMP_LT,
+            IrRegister(is_thunk),
+            IrRegister(switch_id),
+            IrRegister(_ZERO_REG),
+        )
+        self._emit(IrOp.BRANCH_Z, IrRegister(is_thunk), IrLabel(concrete_label))
+
+        for thunk in self.switch_thunks:
+            index = self._next_if_index()
+            else_label = f"if_{index}_else"
+            end_label = f"if_{index}_end"
+            matches = self._fresh_reg()
+            self._emit(
+                IrOp.CMP_EQ,
+                IrRegister(matches),
+                IrRegister(switch_id),
+                IrRegister(self._const_reg(-thunk.thunk_id)),
+            )
+            self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(else_label))
+            self._emit_enter_thunk_helper()
+            switch_scope = _FrameScope(
+                semantic_block=self.semantic_blocks_by_id[thunk.block_id],
+                frame_base_reg=caller_frame,
+                heap_mark_reg=None,
+                parent=None,
+                goto_parent=None,
+                function_owner_procedure_id=None,
+                active_thunk_heap_mark_reg=active_thunk_heap_mark,
+                helper_failure=True,
+            )
+            temp_descriptor = self._emit_reserve_temp_descriptor_space(
+                _SWITCH_DESCRIPTOR_SIZE,
+                switch_scope,
+            )
+            actual_pointer = self._compile_switch_actual_pointer(
+                thunk.expression,
+                switch_scope,
+                temp_descriptor,
+            )
+            self._emit(
+                IrOp.CALL,
+                IrLabel(_SWITCH_RESOLVE_LABEL),
+                IrRegister(actual_pointer),
+                IrRegister(active_thunk_heap_mark),
+                IrRegister(target_descriptor),
+            )
+            self._emit_helper_return_on_thunk_failure(switch_scope)
+            self._emit_handle_pending_goto_after_call(switch_scope)
+            self._store_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, temp_descriptor)
+            self._emit_leave_thunk_helper()
+            self._emit(IrOp.RET)
+            self._emit(IrOp.JUMP, IrLabel(end_label))
+            self._label(else_label)
+            self._label(end_label)
+
+        self._store_runtime_state(_RUNTIME_THUNK_FAILURE_OFFSET, self._const_reg(1))
+        self._emit_zero_result_reg()
+        self._emit(IrOp.RET)
+
+        self._label(concrete_label)
+        self._emit_copy_switch_descriptor(descriptor, target_descriptor)
+        self._copy_reg(dst=_RESULT_REG, src=target_descriptor)
+        self._emit(IrOp.RET)
+        self.current_function_return_type = previous_return_type
+
+    def _compile_procedure_call_dispatcher(
+        self,
+        *,
+        argument_kinds: tuple[str, ...],
+        argument_types: tuple[str, ...],
+        label: str,
+        return_type: str | None,
+    ) -> None:
+        previous_return_type = self.current_function_return_type
+        self.current_function_return_type = return_type or _INTEGER_TYPE
+        self._label(label)
+        descriptor = _STATIC_LINK_PARAM_REG
+        active_thunk_heap_mark = _THUNK_HEAP_MARK_PARAM_REG
+        procedure_id = self._fresh_reg()
+        static_link = self._fresh_reg()
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(procedure_id),
+            IrRegister(descriptor),
+            IrRegister(self._const_reg(_PROCEDURE_DESCRIPTOR_ID_OFFSET)),
+        )
+        self._emit(
+            IrOp.LOAD_WORD,
+            IrRegister(static_link),
+            IrRegister(descriptor),
+            IrRegister(self._const_reg(_PROCEDURE_DESCRIPTOR_STATIC_LINK_OFFSET)),
+        )
+        for procedure in self.procedures.values():
+            if not self._procedure_matches_dispatch_shape(
+                procedure,
+                argument_kinds,
+                argument_types,
+                return_type=return_type,
+            ):
+                continue
+            index = self._next_if_index()
+            else_label = f"if_{index}_else"
+            end_label = f"if_{index}_end"
+            matches = self._fresh_reg()
+            self._emit(
+                IrOp.CMP_EQ,
+                IrRegister(matches),
+                IrRegister(procedure_id),
+                IrRegister(self._const_reg(procedure.procedure_id)),
+            )
+            self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(else_label))
+            call_arguments: list[int] = []
+            for arg_index, (argument_kind, argument_type, parameter) in enumerate(
+                zip(argument_kinds, argument_types, procedure.parameters, strict=True)
+            ):
+                argument_pointer = _VALUE_PARAM_BASE_REG + arg_index
+                if argument_kind == "label":
+                    if parameter.mode == _VALUE_MODE:
+                        call_arguments.append(
+                            self._emit_load_label_argument_value(
+                                argument_pointer,
+                                active_thunk_heap_mark,
+                            )
+                        )
+                    else:
+                        call_arguments.append(argument_pointer)
+                    continue
+                if argument_kind == "switch":
+                    if parameter.mode == _VALUE_MODE:
+                        call_arguments.append(
+                            self._emit_resolve_switch_argument_pointer(
+                                argument_pointer,
+                                active_thunk_heap_mark,
+                            )
+                        )
+                    else:
+                        call_arguments.append(argument_pointer)
+                    continue
+                if argument_kind in {"array", "procedure"}:
+                    call_arguments.append(argument_pointer)
+                    continue
+                if parameter.mode == _NAME_MODE:
+                    call_arguments.append(argument_pointer)
+                    continue
+                argument_value = self._emit_load_by_name_argument_value(
+                    argument_pointer,
+                    argument_type,
+                    active_thunk_heap_mark,
+                )
+                call_arguments.append(
+                    self._coerce_reg_to_type(
+                        argument_value,
+                        argument_type,
+                        expected_type=parameter.type_name,
+                    )
+                )
+            self._emit(
+                IrOp.CALL,
+                IrLabel(procedure.label),
+                IrRegister(static_link),
+                IrRegister(active_thunk_heap_mark),
+                *(IrRegister(argument) for argument in call_arguments),
+            )
+            if return_type is not None:
+                result_source = (
+                    _REAL_RESULT_REG
+                    if procedure.return_type == _REAL_TYPE
+                    else _RESULT_REG
+                )
+                result_value = self._coerce_reg_to_type(
+                    result_source,
+                    procedure.return_type or _INTEGER_TYPE,
+                    expected_type=return_type,
+                )
+                self._copy_scalar_reg(
+                    type_name=return_type,
+                    dst=self._result_reg_for_type(return_type),
+                    src=result_value,
+                )
+            self._emit(IrOp.RET)
+            self._emit(IrOp.JUMP, IrLabel(end_label))
+            self._label(else_label)
+            self._label(end_label)
+        self._emit_zero_result_reg()
+        self._emit(IrOp.RET)
+        self.current_function_return_type = previous_return_type
+
+    def _emit_load_label_argument_value(
+        self,
+        descriptor: int,
+        active_thunk_heap_mark: int,
+    ) -> int:
+        self._emit(
+            IrOp.CALL,
+            IrLabel(_LABEL_EVAL_LABEL),
+            IrRegister(descriptor),
+            IrRegister(active_thunk_heap_mark),
+        )
+        self._emit_dispatcher_return_on_runtime_transfer()
+        result = self._fresh_reg()
+        self._copy_reg(dst=result, src=_RESULT_REG)
+        return result
+
+    def _emit_resolve_switch_argument_pointer(
+        self,
+        descriptor: int,
+        active_thunk_heap_mark: int,
+    ) -> int:
+        self._emit(
+            IrOp.CALL,
+            IrLabel(_SWITCH_RESOLVE_LABEL),
+            IrRegister(descriptor),
+            IrRegister(active_thunk_heap_mark),
+            IrRegister(descriptor),
+        )
+        self._emit_dispatcher_return_on_runtime_transfer()
+        result = self._fresh_reg()
+        self._copy_reg(dst=result, src=_RESULT_REG)
+        return result
+
+    def _procedure_matches_dispatch_shape(
+        self,
+        procedure: ProcedureDescriptor,
+        argument_kinds: tuple[str, ...],
+        argument_types: tuple[str, ...],
+        *,
+        return_type: str | None,
+    ) -> bool:
+        if return_type is None:
+            if procedure.return_type is not None:
+                return False
+        elif not _procedure_return_type_satisfies(
+            expected_type=return_type,
+            actual_type=procedure.return_type,
+        ):
+            return False
+        if len(argument_kinds) != len(argument_types):
+            return False
+        if len(procedure.parameters) != len(argument_types):
+            return False
+        for argument_kind, parameter, argument_type in zip(
+            argument_kinds,
+            procedure.parameters,
+            argument_types,
+            strict=True,
+        ):
+            if argument_kind == "array":
+                if parameter.kind != "array":
+                    return False
+                if parameter.type_name != argument_type:
+                    return False
+                continue
+            if argument_kind == "label":
+                if parameter.kind != "label":
+                    return False
+                continue
+            if argument_kind == "switch":
+                if parameter.kind != "switch":
+                    return False
+                continue
+            if argument_kind == "procedure":
+                if parameter.kind != "procedure":
+                    return False
+                if not _procedure_parameter_type_satisfies(
+                    expected_type=parameter.type_name,
+                    actual_type=argument_type,
+                ):
+                    return False
+                continue
+            if argument_kind != "scalar":
+                return False
+            if parameter.kind != "scalar":
+                return False
+            if parameter.mode == _VALUE_MODE:
+                if parameter.type_name == argument_type:
+                    continue
+                if parameter.type_name == _REAL_TYPE and argument_type == _INTEGER_TYPE:
+                    continue
+                return False
+            if parameter.mode == _NAME_MODE:
+                if parameter.type_name == argument_type:
+                    continue
+                return False
+            return False
+        return True
+
+    def _emit_load_by_name_argument_value(
+        self,
+        pointer: int,
+        type_name: str,
+        active_thunk_heap_mark: int,
+    ) -> int:
+        tag = self._fresh_reg()
+        index = self._next_if_index()
+        storage_label = f"if_{index}_else"
+        end_label = f"if_{index}_end"
+        dst = self._fresh_reg()
+        self._emit(
+            IrOp.AND_IMM,
+            IrRegister(tag),
+            IrRegister(pointer),
+            IrImmediate(_THUNK_DESCRIPTOR_TAG),
+        )
+        self._emit(IrOp.BRANCH_Z, IrRegister(tag), IrLabel(storage_label))
+        descriptor = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(descriptor),
+            IrRegister(pointer),
+            IrImmediate(-_THUNK_DESCRIPTOR_TAG),
+        )
+        self._emit(
+            IrOp.CALL,
+            IrLabel(
+                _THUNK_EVAL_REAL_LABEL
+                if type_name == _REAL_TYPE
+                else _THUNK_EVAL_LABEL
+            ),
+            IrRegister(descriptor),
+            IrRegister(active_thunk_heap_mark),
+        )
+        self._emit_dispatcher_return_on_runtime_transfer()
+        self._copy_scalar_reg(
+            type_name=type_name,
+            dst=dst,
+            src=_REAL_RESULT_REG if type_name == _REAL_TYPE else _RESULT_REG,
+        )
+        self._emit(IrOp.JUMP, IrLabel(end_label))
+        self._label(storage_label)
+        self._emit_load_scalar(type_name, dst, pointer, 0)
+        self._label(end_label)
+        return dst
+
+    def _emit_dispatcher_return_on_runtime_transfer(self) -> None:
+        failed = self._fresh_reg()
+        self._load_runtime_state(_RUNTIME_THUNK_FAILURE_OFFSET, failed)
+        pending_label = self._fresh_reg()
+        self._load_runtime_state(_RUNTIME_PENDING_GOTO_LABEL_OFFSET, pending_label)
+        should_return = self._fresh_reg()
+        self._emit(
+            IrOp.ADD,
+            IrRegister(should_return),
+            IrRegister(failed),
+            IrRegister(pending_label),
+        )
+        index = self._next_if_index()
+        continue_label = f"if_{index}_else"
+        end_label = f"if_{index}_end"
+        self._emit(
+            IrOp.BRANCH_Z,
+            IrRegister(should_return),
+            IrLabel(continue_label),
+        )
+        self._emit_zero_result_reg()
+        self._emit(IrOp.RET)
+        self._emit(IrOp.JUMP, IrLabel(end_label))
+        self._label(continue_label)
+        self._label(end_label)
 
     def _compile_procedure(self, procedure: ProcedureDescriptor) -> None:
         body = self._find_ast_by_id(procedure.body_node_id)
@@ -3636,7 +6252,17 @@ class AlgolIrCompiler:
         )
         self._initialize_scalar_slots(scope)
         for index, parameter in enumerate(procedure.parameters):
-            if parameter.kind == "array" or parameter.mode == _NAME_MODE:
+            if parameter.kind == "array":
+                self._store_array_parameter(
+                    parameter,
+                    _VALUE_PARAM_BASE_REG + index,
+                    scope,
+                )
+            elif parameter.mode == _NAME_MODE or parameter.kind in {
+                "label",
+                "switch",
+                "procedure",
+            }:
                 self._store_word_reg(
                     value_reg=_VALUE_PARAM_BASE_REG + index,
                     base_reg=scope.frame_base_reg,
@@ -3663,12 +6289,178 @@ class AlgolIrCompiler:
                 raise CompileError(
                     f"procedure {procedure.name!r} has no result slot"
                 )
-            self._emit_load_symbol(result_symbol, scope, _RESULT_REG)
+            self._emit_load_symbol(
+                result_symbol,
+                scope,
+                self._result_reg_for_type(procedure.return_type),
+            )
         else:
             self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
         self._emit_leave_frame(scope)
         self._emit(IrOp.RET)
         self.current_function_return_type = previous_return_type
+
+    def _store_array_parameter(
+        self,
+        parameter: ProcedureParameter,
+        source_descriptor: int,
+        scope: _FrameScope,
+    ) -> None:
+        descriptor = source_descriptor
+        if parameter.mode == _VALUE_MODE:
+            descriptor = self._copy_value_array_descriptor(source_descriptor, scope)
+        self._store_word_reg(
+            value_reg=descriptor,
+            base_reg=scope.frame_base_reg,
+            offset=parameter.slot_offset,
+        )
+
+    def _copy_value_array_descriptor(
+        self,
+        source_descriptor: int,
+        scope: _FrameScope,
+    ) -> int:
+        element_type = self._fresh_reg()
+        dimension_count = self._fresh_reg()
+        total_count = self._fresh_reg()
+        element_width = self._fresh_reg()
+        source_data_pointer = self._fresh_reg()
+        source_bounds_pointer = self._fresh_reg()
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            element_type,
+            source_descriptor,
+            0,
+        )
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            dimension_count,
+            source_descriptor,
+            _ARRAY_DIMENSION_COUNT_OFFSET,
+        )
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            total_count,
+            source_descriptor,
+            _ARRAY_TOTAL_COUNT_OFFSET,
+        )
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            element_width,
+            source_descriptor,
+            _ARRAY_ELEMENT_WIDTH_OFFSET,
+        )
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            source_data_pointer,
+            source_descriptor,
+            _ARRAY_DATA_POINTER_OFFSET,
+        )
+        self._emit_load_scalar(
+            _INTEGER_TYPE,
+            source_bounds_pointer,
+            source_descriptor,
+            _ARRAY_BOUNDS_POINTER_OFFSET,
+        )
+
+        bounds_bytes = self._fresh_reg()
+        self._emit(
+            IrOp.MUL,
+            IrRegister(bounds_bytes),
+            IrRegister(dimension_count),
+            IrRegister(self._const_reg(_ARRAY_DIMENSION_ENTRY_SIZE)),
+        )
+        data_bytes = self._fresh_reg()
+        self._emit(
+            IrOp.MUL,
+            IrRegister(data_bytes),
+            IrRegister(total_count),
+            IrRegister(element_width),
+        )
+        tail_bytes = self._fresh_reg()
+        self._emit(
+            IrOp.ADD,
+            IrRegister(tail_bytes),
+            IrRegister(bounds_bytes),
+            IrRegister(data_bytes),
+        )
+        allocation_size = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(allocation_size),
+            IrRegister(tail_bytes),
+            IrImmediate(_ARRAY_DESCRIPTOR_SIZE),
+        )
+
+        heap_pointer = self._fresh_reg()
+        heap_limit = self._fresh_reg()
+        self._load_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, heap_pointer)
+        self._load_runtime_state(_RUNTIME_HEAP_LIMIT_OFFSET, heap_limit)
+        new_heap_pointer = self._fresh_reg()
+        self._emit(
+            IrOp.ADD,
+            IrRegister(new_heap_pointer),
+            IrRegister(heap_pointer),
+            IrRegister(allocation_size),
+        )
+        heap_exhausted = self._fresh_reg()
+        self._emit(
+            IrOp.CMP_GT,
+            IrRegister(heap_exhausted),
+            IrRegister(new_heap_pointer),
+            IrRegister(heap_limit),
+        )
+        self._emit_runtime_failure_guard(heap_exhausted, scope)
+        self._store_runtime_state(_RUNTIME_HEAP_POINTER_OFFSET, new_heap_pointer)
+
+        bounds_pointer = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(bounds_pointer),
+            IrRegister(heap_pointer),
+            IrImmediate(_ARRAY_DESCRIPTOR_SIZE),
+        )
+        data_pointer = self._fresh_reg()
+        self._emit(
+            IrOp.ADD,
+            IrRegister(data_pointer),
+            IrRegister(bounds_pointer),
+            IrRegister(bounds_bytes),
+        )
+
+        self._store_word_reg(
+            value_reg=element_type,
+            base_reg=heap_pointer,
+            offset=0,
+        )
+        self._store_word_reg(
+            value_reg=dimension_count,
+            base_reg=heap_pointer,
+            offset=_ARRAY_DIMENSION_COUNT_OFFSET,
+        )
+        self._store_word_reg(
+            value_reg=total_count,
+            base_reg=heap_pointer,
+            offset=_ARRAY_TOTAL_COUNT_OFFSET,
+        )
+        self._store_word_reg(
+            value_reg=element_width,
+            base_reg=heap_pointer,
+            offset=_ARRAY_ELEMENT_WIDTH_OFFSET,
+        )
+        self._store_word_reg(
+            value_reg=data_pointer,
+            base_reg=heap_pointer,
+            offset=_ARRAY_DATA_POINTER_OFFSET,
+        )
+        self._store_word_reg(
+            value_reg=bounds_pointer,
+            base_reg=heap_pointer,
+            offset=_ARRAY_BOUNDS_POINTER_OFFSET,
+        )
+        self._emit_copy_memory(source_bounds_pointer, bounds_pointer, bounds_bytes)
+        self._emit_copy_memory(source_data_pointer, data_pointer, data_bytes)
+        return heap_pointer
 
     def _compile_array_load(self, variable: ASTNode, scope: _FrameScope) -> int:
         name = _variable_head_name(variable)
@@ -3870,8 +6662,7 @@ class AlgolIrCompiler:
     ) -> int:
         pointer = self._emit_reference_pointer(reference, scope)
         tag = self._fresh_reg()
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         storage_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
         dst = self._fresh_reg()
@@ -3973,8 +6764,7 @@ class AlgolIrCompiler:
         pointer = self._emit_reference_pointer(reference, scope)
         if self._is_by_name_reference(reference):
             tag = self._fresh_reg()
-            index = self.if_count
-            self.if_count += 1
+            index = self._next_if_index()
             storage_label = f"if_{index}_else"
             end_label = f"if_{index}_end"
             self._emit(
@@ -4166,7 +6956,12 @@ class AlgolIrCompiler:
                 IrRegister(base_reg),
                 IrLabel(_STATIC_MEMORY_LABEL),
             )
-            self._emit_load_scalar(symbol.type_name, dst_reg, base_reg, symbol.slot_offset)
+            self._emit_load_scalar(
+                symbol.type_name,
+                dst_reg,
+                base_reg,
+                symbol.slot_offset,
+            )
             return
         if symbol.declaring_block_id != scope.block_id:
             raise CompileError(f"symbol {symbol.name!r} does not belong to root block")
@@ -4187,6 +6982,17 @@ class AlgolIrCompiler:
             IrRegister(scope.frame_base_reg),
             IrRegister(offset_reg),
         )
+
+    def _emit_program_result(self, scope: _FrameScope) -> None:
+        result_symbol = scope.semantic_block.scope.symbols.get("result")
+        if (
+            result_symbol is not None
+            and result_symbol.kind == "scalar"
+            and result_symbol.type_name == _INTEGER_TYPE
+        ):
+            self._emit_load_symbol(result_symbol, scope, _RESULT_REG)
+            return
+        self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
 
     def _emit_load_scalar(
         self,
@@ -4412,15 +7218,17 @@ class AlgolIrCompiler:
         if self.current_function_return_type == _REAL_TYPE:
             self._emit(
                 IrOp.LOAD_F64_IMM,
-                IrRegister(_RESULT_REG),
+                IrRegister(_REAL_RESULT_REG),
                 IrFloatImmediate(0.0),
             )
             return
         self._emit(IrOp.LOAD_IMM, IrRegister(_RESULT_REG), IrImmediate(0))
 
+    def _result_reg_for_type(self, type_name: str | None) -> int:
+        return _REAL_RESULT_REG if type_name == _REAL_TYPE else _RESULT_REG
+
     def _emit_stack_overflow_guard(self, overflow_reg: int) -> None:
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         else_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
         self._emit(IrOp.BRANCH_Z, IrRegister(overflow_reg), IrLabel(else_label))
@@ -4431,8 +7239,7 @@ class AlgolIrCompiler:
         self._label(end_label)
 
     def _emit_runtime_failure_guard(self, failed_reg: int, scope: _FrameScope) -> None:
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         else_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
         self._emit(IrOp.BRANCH_Z, IrRegister(failed_reg), IrLabel(else_label))
@@ -4459,9 +7266,16 @@ class AlgolIrCompiler:
         scope: _FrameScope,
         label_reg: int,
     ) -> None:
+        tagged_label = self._fresh_reg()
+        self._emit(
+            IrOp.ADD_IMM,
+            IrRegister(tagged_label),
+            IrRegister(label_reg),
+            IrImmediate(1),
+        )
         self._store_runtime_state(
             _RUNTIME_PENDING_GOTO_LABEL_OFFSET,
-            label_reg,
+            tagged_label,
         )
         self._emit_zero_result_reg()
         if not scope.helper_failure:
@@ -4474,8 +7288,7 @@ class AlgolIrCompiler:
     def _emit_handle_pending_goto_after_call(self, scope: _FrameScope) -> None:
         pending_label = self._fresh_reg()
         self._load_runtime_state(_RUNTIME_PENDING_GOTO_LABEL_OFFSET, pending_label)
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         no_pending_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
         self._emit(IrOp.BRANCH_Z, IrRegister(pending_label), IrLabel(no_pending_label))
@@ -4494,15 +7307,15 @@ class AlgolIrCompiler:
         for label in self.labels_by_id.values():
             if label.declaring_block_id not in active_block_ids:
                 continue
-            next_label = f"if_{self.if_count}_else"
-            next_end_label = f"if_{self.if_count}_end"
-            self.if_count += 1
+            next_index = self._next_if_index()
+            next_label = f"if_{next_index}_else"
+            next_end_label = f"if_{next_index}_end"
             matches = self._fresh_reg()
             self._emit(
                 IrOp.CMP_EQ,
                 IrRegister(matches),
                 IrRegister(pending_label),
-                IrRegister(self._const_reg(label.label_id)),
+                IrRegister(self._const_reg(label.label_id + 1)),
             )
             self._emit(IrOp.BRANCH_Z, IrRegister(matches), IrLabel(next_label))
             self._store_runtime_state(_RUNTIME_PENDING_GOTO_LABEL_OFFSET, _ZERO_REG)
@@ -4553,8 +7366,7 @@ class AlgolIrCompiler:
         failed_reg: int,
         scope: _FrameScope,
     ) -> None:
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         else_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
         self._emit(IrOp.BRANCH_Z, IrRegister(failed_reg), IrLabel(else_label))
@@ -4600,8 +7412,7 @@ class AlgolIrCompiler:
     def _emit_mark_thunk_failure_if_helper_active(self) -> None:
         depth = self._fresh_reg()
         self._load_runtime_state(_RUNTIME_THUNK_HELPER_DEPTH_OFFSET, depth)
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         else_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
         self._emit(IrOp.BRANCH_Z, IrRegister(depth), IrLabel(else_label))
@@ -4613,8 +7424,7 @@ class AlgolIrCompiler:
     def _emit_helper_return_on_thunk_failure(self, scope: _FrameScope) -> None:
         failed = self._fresh_reg()
         self._load_runtime_state(_RUNTIME_THUNK_FAILURE_OFFSET, failed)
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         else_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
         self._emit(IrOp.BRANCH_Z, IrRegister(failed), IrLabel(else_label))
@@ -4630,8 +7440,7 @@ class AlgolIrCompiler:
         mark_reg = scope.active_thunk_heap_mark_reg
         if mark_reg is None:
             return
-        index = self.if_count
-        self.if_count += 1
+        index = self._next_if_index()
         else_label = f"if_{index}_else"
         end_label = f"if_{index}_end"
         has_mark = self._fresh_reg()
@@ -4703,6 +7512,41 @@ class AlgolIrCompiler:
                 child for child in node.children if isinstance(child, ASTNode)
             )
         return None
+
+    def _has_recursive_switch_selection_cycle(self) -> bool:
+        edges: dict[int, set[int]] = {
+            switch_id: set() for switch_id in self.switches
+        }
+        for switch in self.switches.values():
+            for entry_node_id in switch.entry_node_ids:
+                entry = self._find_ast_by_id(entry_node_id)
+                if entry is None:
+                    continue
+                pending = [entry]
+                while pending:
+                    node = pending.pop()
+                    selection = self.switch_selections.get(id(node))
+                    if selection is not None and selection.switch_id >= 0:
+                        edges[switch.switch_id].add(selection.switch_id)
+                    pending.extend(_node_children(node))
+
+        visited: set[int] = set()
+        visiting: set[int] = set()
+
+        def visit(switch_id: int) -> bool:
+            if switch_id in visiting:
+                return True
+            if switch_id in visited:
+                return False
+            visiting.add(switch_id)
+            for next_switch_id in edges.get(switch_id, set()):
+                if next_switch_id in self.switches and visit(next_switch_id):
+                    return True
+            visiting.remove(switch_id)
+            visited.add(switch_id)
+            return False
+
+        return any(visit(switch_id) for switch_id in self.switches)
 
     def _layout_frames(self, blocks: list[SemanticBlock]) -> dict[int, int]:
         offsets: dict[int, int] = {}
@@ -4814,6 +7658,50 @@ class AlgolIrCompiler:
         self.next_reg += 1
         return reg
 
+    def _next_if_index(self) -> int:
+        return self._next_limited_index(
+            counter_name="if_count",
+            limit=self.limits.max_if_label_sets,
+            description="conditional/generated label sets",
+        )
+
+    def _next_loop_index(self) -> int:
+        return self._next_limited_index(
+            counter_name="loop_count",
+            limit=self.limits.max_loop_label_sets,
+            description="loop label sets",
+        )
+
+    def _next_switch_index(self) -> int:
+        return self._next_limited_index(
+            counter_name="switch_count",
+            limit=self.limits.max_switch_dispatches,
+            description="switch dispatch states",
+        )
+
+    def _next_output_index(self) -> int:
+        return self._next_limited_index(
+            counter_name="output_count",
+            limit=self.limits.max_output_label_sets,
+            description="output helper label sets",
+        )
+
+    def _next_limited_index(
+        self,
+        *,
+        counter_name: str,
+        limit: int,
+        description: str,
+    ) -> int:
+        current = getattr(self, counter_name)
+        if current >= limit:
+            raise CompileError(
+                "ALGOL program requires more than "
+                f"{limit} {description}"
+            )
+        setattr(self, counter_name, current + 1)
+        return current
+
     def _label(self, name: str) -> None:
         self.program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel(name)], id=-1))
 
@@ -4825,8 +7713,11 @@ class AlgolIrCompiler:
         )
 
 
-def compile_algol(typed: TypeCheckResult | ASTNode) -> CompileResult:
-    return AlgolIrCompiler().compile(typed)
+def compile_algol(
+    typed: TypeCheckResult | ASTNode,
+    limits: IrCompilerLimits | None = None,
+) -> CompileResult:
+    return AlgolIrCompiler(limits=limits).compile(typed)
 
 
 def _node_children(node: ASTNode | None) -> list[ASTNode]:
@@ -4894,6 +7785,45 @@ def _meaningful_children(node: ASTNode) -> list[ASTNode | Token]:
         for child in node.children
         if not (isinstance(child, Token) and child.value in {"(", ")"})
     ]
+
+
+def _conditional_expression_parts(
+    children: list[ASTNode | Token],
+) -> tuple[ASTNode, ASTNode, ASTNode] | None:
+    first = children[0] if children else None
+    if not isinstance(first, Token) or first.value != "if":
+        return None
+    then_index = _keyword_child_index(children, "then")
+    else_index = _keyword_child_index(children, "else")
+    if then_index is None or else_index is None or then_index >= else_index:
+        return None
+    condition = _first_ast_child_between(children, 1, then_index)
+    then_expr = _first_ast_child_between(children, then_index + 1, else_index)
+    else_expr = _first_ast_child_between(children, else_index + 1, len(children))
+    if condition is None or then_expr is None or else_expr is None:
+        return None
+    return condition, then_expr, else_expr
+
+
+def _keyword_child_index(
+    children: list[ASTNode | Token],
+    keyword: str,
+) -> int | None:
+    for index, child in enumerate(children):
+        if isinstance(child, Token) and child.value == keyword:
+            return index
+    return None
+
+
+def _first_ast_child_between(
+    children: list[ASTNode | Token],
+    start: int,
+    end: int,
+) -> ASTNode | None:
+    return next(
+        (child for child in children[start:end] if isinstance(child, ASTNode)),
+        None,
+    )
 
 
 def _first_node(node: ASTNode, rule_name: str) -> ASTNode | None:
@@ -4966,6 +7896,18 @@ def _single_variable_expr(node: ASTNode | None) -> ASTNode | None:
     return _single_variable_expr(meaningful[0])
 
 
+def _single_integer_label_expr(node: ASTNode | None) -> Token | None:
+    if node is None:
+        return None
+    meaningful = _meaningful_children(node)
+    if len(meaningful) != 1:
+        return None
+    child = meaningful[0]
+    if isinstance(child, Token):
+        return child if child.type_name == "INTEGER_LIT" else None
+    return _single_integer_label_expr(child)
+
+
 def _variable_head_name(node: ASTNode | None) -> Token | None:
     if node is None:
         variable = None
@@ -4992,8 +7934,92 @@ def _variable_subscripts(node: ASTNode | None) -> list[ASTNode]:
     return _direct_nodes(subscripts, "arith_expr")
 
 
+def _switch_selection_indexes(node: ASTNode | None) -> list[ASTNode]:
+    direct = _direct_nodes(node, "arith_expr")
+    if direct:
+        return direct
+    variable = node if node is not None and node.rule_name == "variable" else None
+    subscripts = _first_direct_node(variable, "subscripts")
+    return _direct_nodes(subscripts, "arith_expr")
+
+
 def _has_comparison(children: list[ASTNode | Token]) -> bool:
     return any(
-        isinstance(child, Token) and child.value in {"=", "!=", "<", "<=", ">", ">="}
+        isinstance(child, Token)
+        and child.value in {"=", "!=", "<>", "<", "<=", ">", ">="}
         for child in children
     )
+
+
+def _procedure_parameter_dispatch_type_tag(
+    type_name: str,
+    *,
+    kind: str = "scalar",
+) -> str:
+    tags = {
+        _INTEGER_TYPE: "i32",
+        _BOOLEAN_TYPE: "bool",
+        _REAL_TYPE: "f64",
+        _STRING_TYPE: "str",
+    }
+    if kind == "label":
+        return "label"
+    if kind == "switch":
+        return "switch"
+    if kind == "procedure":
+        if type_name == "procedure":
+            return "procedure"
+        try:
+            return f"procedure_{tags[type_name]}"
+        except KeyError as exc:
+            raise CompileError(
+                f"unsupported procedure parameter dispatch type {type_name!r}"
+            ) from exc
+    if kind not in {"array", "scalar"}:
+        raise CompileError(
+            f"unsupported procedure parameter dispatch argument kind {kind!r}"
+        )
+    try:
+        tag = tags[type_name]
+    except KeyError as exc:
+        raise CompileError(
+            f"unsupported procedure parameter dispatch type {type_name!r}"
+        ) from exc
+    if kind == "array":
+        return f"array_{tag}"
+    return tag
+
+
+def _procedure_parameter_type_satisfies(
+    *,
+    expected_type: str,
+    actual_type: str,
+) -> bool:
+    if expected_type == "procedure" or actual_type == "procedure":
+        return expected_type == actual_type
+    return _procedure_return_type_satisfies(
+        expected_type=expected_type,
+        actual_type=actual_type,
+    )
+
+
+def _shape_argument_formal_names(
+    shape: ProcedureFormalCallShape,
+) -> tuple[str | None, ...]:
+    if len(shape.argument_formal_names) >= len(shape.argument_types):
+        return shape.argument_formal_names
+    return shape.argument_formal_names + (None,) * (
+        len(shape.argument_types) - len(shape.argument_formal_names)
+    )
+
+
+def _procedure_return_type_satisfies(
+    *,
+    expected_type: str,
+    actual_type: str | None,
+) -> bool:
+    if actual_type is None:
+        return False
+    if expected_type == _REAL_TYPE and actual_type == _INTEGER_TYPE:
+        return True
+    return expected_type == actual_type

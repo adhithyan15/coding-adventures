@@ -16,14 +16,14 @@
 //! |-------------------|-------------------------------------------------|
 //! | `PaintRect`       | Fully implemented — solid-colour filled rects   |
 //! | `PaintLine`       | Fully implemented — rendered via pen + LineTo   |
-//! | `PaintGroup`      | Fully implemented — recurses into children      |
+//! | `PaintGroup`      | Implemented — direct render + opacity/transform  |
 //! | `PaintClip`       | Fully implemented — IntersectClipRect + restore |
 //! | `PaintGlyphRun`   | Implemented — ExtTextOutW + ETO_GLYPH_INDEX     |
-//! | `PaintEllipse`    | Planned — Ellipse()                             |
-//! | `PaintPath`       | Planned — BeginPath/PolyBezierTo                |
-//! | `PaintLayer`      | Planned — offscreen DC + BitBlt                 |
+//! | `PaintEllipse`    | Implemented — Ellipse()                         |
+//! | `PaintPath`       | Implemented — BeginPath/PolyBezierTo            |
+//! | `PaintLayer`      | Implemented — isolated offscreen compositing    |
 //! | `PaintGradient`   | Planned — GradientFill (limited)                |
-//! | `PaintImage`      | Planned — StretchDIBits / AlphaBlend            |
+//! | `PaintImage`      | Implemented — WIC decode + AlphaBlend           |
 //!
 //! ## GDI pipeline
 //!
@@ -63,18 +63,27 @@
 
 pub const VERSION: &str = "0.1.0";
 
+use arc2d::SvgArc;
 use paint_instructions::{
-    FillRule, ImageSrc, PaintClip, PaintEllipse, PaintGlyphRun, PaintImage, PaintInstruction,
-    PaintLine, PaintPath, PaintRect, PaintScene, PaintText, PathCommand, PixelContainer,
-    TextAlign,
+    FillRule, ImageSrc, PaintClip, PaintEllipse, PaintGlyphRun, PaintGroup, PaintImage,
+    PaintInstruction, PaintLayer, PaintLine, PaintPath, PaintRect, PaintScene, PaintText,
+    PathCommand, PixelContainer, TextAlign, Transform2D,
 };
+#[cfg(target_os = "windows")]
+use paint_vm_runtime::{
+    PaintAcceleration, PaintBackendCapabilities, PaintBackendDescriptor, PaintBackendFamily,
+    PaintBackendTier, PaintPlatformSupport, PaintRenderError, PaintRenderer, SupportLevel,
+};
+use point2d::Point as Point2D;
 
 // ---------------------------------------------------------------------------
 // Platform gate — this crate only compiles on Windows
 // ---------------------------------------------------------------------------
 
 #[cfg(not(target_os = "windows"))]
-compile_error!("paint-vm-gdi requires Windows. Use paint-metal on macOS or paint-vm-cairo on Linux.");
+compile_error!(
+    "paint-vm-gdi requires Windows. Use paint-metal on macOS or paint-vm-cairo on Linux."
+);
 
 // ---------------------------------------------------------------------------
 // Windows API imports
@@ -93,14 +102,15 @@ use windows::Win32::Foundation::{GENERIC_ACCESS_RIGHTS, POINT, RECT};
 use windows::Win32::Graphics::Gdi::{
     AlphaBlend, BeginPath, CloseFigure, CreateCompatibleDC, CreateDIBSection, CreateFontW,
     CreatePen, CreateSolidBrush, DeleteDC, DeleteObject, Ellipse, EndPath, ExtCreatePen,
-    ExtTextOutW, FillPath, FillRect, GetStockObject, IntersectClipRect, LineTo, MoveToEx,
-    PolyBezierTo, Rectangle, RestoreDC, RoundRect, SaveDC, SelectObject, SetBkMode,
-    SetPolyFillMode, SetTextAlign, SetTextColor, StrokeAndFillPath, StrokePath, BITMAPINFO,
-    BITMAPINFOHEADER, BI_RGB, BLENDFUNCTION, BS_SOLID, CLIP_DEFAULT_PRECIS,
-    CLEARTYPE_QUALITY, DEFAULT_CHARSET, DEFAULT_PITCH, DIB_RGB_COLORS, ETO_GLYPH_INDEX,
-    HBITMAP, HDC, HGDIOBJ, LOGBRUSH, NULL_BRUSH, NULL_PEN, OUT_DEFAULT_PRECIS,
-    PS_ENDCAP_FLAT, PS_GEOMETRIC, PS_JOIN_MITER, PS_SOLID, PS_USERSTYLE, TA_BASELINE, TA_CENTER,
-    TA_LEFT, TA_RIGHT, TRANSPARENT, AC_SRC_ALPHA, AC_SRC_OVER, ALTERNATE, WINDING,
+    ExtTextOutW, FillPath, FillRect, GetStockObject, GetWorldTransform, IntersectClipRect, LineTo,
+    MoveToEx, PolyBezierTo, Rectangle, RestoreDC, RoundRect, SaveDC, SelectObject, SetBkMode,
+    SetGraphicsMode, SetPolyFillMode, SetTextAlign, SetTextColor, SetWorldTransform,
+    StrokeAndFillPath, StrokePath, AC_SRC_ALPHA, AC_SRC_OVER, ALTERNATE, BITMAPINFO,
+    BITMAPINFOHEADER, BI_RGB, BLENDFUNCTION, BS_SOLID, CLEARTYPE_QUALITY, CLIP_DEFAULT_PRECIS,
+    DEFAULT_CHARSET, DEFAULT_PITCH, DIB_RGB_COLORS, ETO_GLYPH_INDEX, GM_ADVANCED, HBITMAP, HDC,
+    HGDIOBJ, LOGBRUSH, NULL_BRUSH, NULL_PEN, OUT_DEFAULT_PRECIS, PS_ENDCAP_FLAT, PS_GEOMETRIC,
+    PS_JOIN_MITER, PS_SOLID, PS_USERSTYLE, TA_BASELINE, TA_CENTER, TA_LEFT, TA_RIGHT, TRANSPARENT,
+    WINDING, XFORM,
 };
 #[cfg(target_os = "windows")]
 use windows::Win32::Graphics::Imaging::{
@@ -350,12 +360,28 @@ fn color_to_colorref(r: f64, g: f64, b: f64) -> u32 {
 }
 
 #[cfg(target_os = "windows")]
-fn parse_colorref(s: &str) -> Option<windows::Win32::Foundation::COLORREF> {
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum RenderMode {
+    Normal,
+    Coverage,
+}
+
+#[cfg(target_os = "windows")]
+fn parse_colorref_for_mode(
+    s: &str,
+    mode: RenderMode,
+) -> Option<windows::Win32::Foundation::COLORREF> {
     let (r, g, b, a) = parse_hex_color(s);
     if a == 0.0 {
         return None;
     }
-    Some(windows::Win32::Foundation::COLORREF(color_to_colorref(r, g, b)))
+    let (r, g, b) = match mode {
+        RenderMode::Normal => (r, g, b),
+        RenderMode::Coverage => (1.0, 1.0, 1.0),
+    };
+    Some(windows::Win32::Foundation::COLORREF(color_to_colorref(
+        r, g, b,
+    )))
 }
 
 #[cfg(target_os = "windows")]
@@ -384,11 +410,7 @@ unsafe fn create_pen_for_stroke(
             Some(&styles),
         )
     } else {
-        CreatePen(
-            PS_SOLID,
-            width_px as i32,
-            colorref,
-        )
+        CreatePen(PS_SOLID, width_px as i32, colorref)
     }
 }
 
@@ -406,6 +428,10 @@ struct GdiSurface {
 impl GdiSurface {
     fn byte_len(&self) -> usize {
         self.width as usize * self.height as usize * 4
+    }
+
+    unsafe fn pixels(&self) -> &[u8] {
+        std::slice::from_raw_parts(self.bits_ptr, self.byte_len())
     }
 
     unsafe fn pixels_mut(&mut self) -> &mut [u8] {
@@ -519,7 +545,10 @@ fn resolve_image_uri_path(uri: &str) -> Option<String> {
         return Some(percent_decode_component(path));
     }
     if let Some(path) = uri.strip_prefix("file://") {
-        return Some(format!(r"\\{}", percent_decode_component(path).replace('/', "\\")));
+        return Some(format!(
+            r"\\{}",
+            percent_decode_component(path).replace('/', "\\")
+        ));
     }
     if uri.contains("://") {
         return None;
@@ -561,7 +590,9 @@ unsafe fn decode_uri_to_pbgra(uri: &str) -> Option<(u32, u32, Vec<u8>)> {
     converter.GetSize(&mut width, &mut height).ok()?;
     let stride = width.checked_mul(4)?;
     let mut pixels = vec![0u8; stride as usize * height as usize];
-    converter.CopyPixels(std::ptr::null(), stride, &mut pixels).ok()?;
+    converter
+        .CopyPixels(std::ptr::null(), stride, &mut pixels)
+        .ok()?;
     Some((width, height, pixels))
 }
 
@@ -601,7 +632,203 @@ unsafe fn alpha_blend_surface(
 }
 
 #[cfg(target_os = "windows")]
-unsafe fn render_image(hdc: HDC, image: &PaintImage) {
+fn is_identity_transform(transform: Option<&Transform2D>) -> bool {
+    transform.is_none_or(|t| {
+        (t[0] - 1.0).abs() <= f64::EPSILON
+            && t[1].abs() <= f64::EPSILON
+            && t[2].abs() <= f64::EPSILON
+            && (t[3] - 1.0).abs() <= f64::EPSILON
+            && t[4].abs() <= f64::EPSILON
+            && t[5].abs() <= f64::EPSILON
+    })
+}
+
+#[cfg(target_os = "windows")]
+fn xform_identity() -> XFORM {
+    XFORM {
+        eM11: 1.0,
+        eM12: 0.0,
+        eM21: 0.0,
+        eM22: 1.0,
+        eDx: 0.0,
+        eDy: 0.0,
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn xform_from_transform(transform: &Transform2D) -> XFORM {
+    XFORM {
+        eM11: transform[0] as f32,
+        eM12: transform[1] as f32,
+        eM21: transform[2] as f32,
+        eM22: transform[3] as f32,
+        eDx: transform[4] as f32,
+        eDy: transform[5] as f32,
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn multiply_xform(a: XFORM, b: XFORM) -> XFORM {
+    XFORM {
+        eM11: a.eM11 * b.eM11 + a.eM12 * b.eM21,
+        eM12: a.eM11 * b.eM12 + a.eM12 * b.eM22,
+        eM21: a.eM21 * b.eM11 + a.eM22 * b.eM21,
+        eM22: a.eM21 * b.eM12 + a.eM22 * b.eM22,
+        eDx: a.eDx * b.eM11 + a.eDy * b.eM21 + b.eDx,
+        eDy: a.eDx * b.eM12 + a.eDy * b.eM22 + b.eDy,
+    }
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn with_transform<F>(hdc: HDC, transform: Option<&Transform2D>, f: F)
+where
+    F: FnOnce(),
+{
+    if is_identity_transform(transform) {
+        f();
+        return;
+    }
+    let saved = SaveDC(hdc);
+    let _ = SetGraphicsMode(hdc, GM_ADVANCED);
+    let mut current = xform_identity();
+    let _ = GetWorldTransform(hdc, &mut current);
+    let combined = multiply_xform(current, xform_from_transform(transform.unwrap()));
+    let _ = SetWorldTransform(hdc, &combined);
+    f();
+    let _ = RestoreDC(hdc, saved);
+}
+
+#[cfg(target_os = "windows")]
+fn pbgra_to_white_alpha(pbgra: &mut [u8]) {
+    for pixel in pbgra.chunks_exact_mut(4) {
+        let alpha = pixel[3];
+        pixel[0] = alpha;
+        pixel[1] = alpha;
+        pixel[2] = alpha;
+    }
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn finalize_surface_alpha(color_surface: &mut GdiSurface, coverage_surface: &GdiSurface) {
+    let coverage = coverage_surface.pixels();
+    let color = color_surface.pixels_mut();
+    for (color_px, coverage_px) in color.chunks_exact_mut(4).zip(coverage.chunks_exact(4)) {
+        let alpha = coverage_px[0].max(coverage_px[1]).max(coverage_px[2]);
+        color_px[3] = alpha;
+        color_px[0] = color_px[0].min(alpha);
+        color_px[1] = color_px[1].min(alpha);
+        color_px[2] = color_px[2].min(alpha);
+    }
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn render_offscreen_composited(
+    dest_hdc: HDC,
+    instructions: &[PaintInstruction],
+    scene_width: u32,
+    scene_height: u32,
+    transform: Option<&Transform2D>,
+    opacity: f64,
+    mode: RenderMode,
+) {
+    if scene_width == 0 || scene_height == 0 || opacity <= 0.0 {
+        return;
+    }
+    let Some(mut color_surface) = create_surface(scene_width, scene_height) else {
+        return;
+    };
+    let Some(mut coverage_surface) = create_surface(scene_width, scene_height) else {
+        return;
+    };
+
+    color_surface.pixels_mut().fill(0);
+    coverage_surface.pixels_mut().fill(0);
+
+    with_transform(color_surface.hdc, transform, || {
+        render_instructions(
+            color_surface.hdc,
+            instructions,
+            scene_width,
+            scene_height,
+            mode,
+        );
+    });
+    with_transform(coverage_surface.hdc, transform, || {
+        render_instructions(
+            coverage_surface.hdc,
+            instructions,
+            scene_width,
+            scene_height,
+            RenderMode::Coverage,
+        );
+    });
+
+    finalize_surface_alpha(&mut color_surface, &coverage_surface);
+    alpha_blend_surface(
+        dest_hdc,
+        &color_surface,
+        0,
+        0,
+        scene_width as i32,
+        scene_height as i32,
+        Some(opacity),
+    );
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn render_group(
+    hdc: HDC,
+    group: &PaintGroup,
+    scene_width: u32,
+    scene_height: u32,
+    mode: RenderMode,
+) {
+    let opacity = group.opacity.unwrap_or(1.0).clamp(0.0, 1.0);
+    if opacity <= 0.0 {
+        return;
+    }
+    if opacity < 1.0 {
+        render_offscreen_composited(
+            hdc,
+            &group.children,
+            scene_width,
+            scene_height,
+            group.transform.as_ref(),
+            opacity,
+            mode,
+        );
+    } else {
+        with_transform(hdc, group.transform.as_ref(), || {
+            render_instructions(hdc, &group.children, scene_width, scene_height, mode);
+        });
+    }
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn render_layer(
+    hdc: HDC,
+    layer: &PaintLayer,
+    scene_width: u32,
+    scene_height: u32,
+    mode: RenderMode,
+) {
+    let opacity = layer.opacity.unwrap_or(1.0).clamp(0.0, 1.0);
+    if opacity <= 0.0 {
+        return;
+    }
+    render_offscreen_composited(
+        hdc,
+        &layer.children,
+        scene_width,
+        scene_height,
+        layer.transform.as_ref(),
+        opacity,
+        mode,
+    );
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn render_image(hdc: HDC, image: &PaintImage, mode: RenderMode) {
     if image.width <= 0.0 || image.height <= 0.0 {
         return;
     }
@@ -614,13 +841,21 @@ unsafe fn render_image(hdc: HDC, image: &PaintImage) {
             if pixels.data.len() < pixels.width as usize * pixels.height as usize * 4 {
                 return;
             }
-            Some((pixels.width, pixels.height, rgba_to_pbgra_bytes(&pixels.data)))
+            Some((
+                pixels.width,
+                pixels.height,
+                rgba_to_pbgra_bytes(&pixels.data),
+            ))
         }
         ImageSrc::Uri(uri) => decode_uri_to_pbgra(uri),
     };
     let Some((src_width, src_height, pbgra)) = decoded else {
         return;
     };
+    let mut pbgra = pbgra;
+    if mode == RenderMode::Coverage {
+        pbgra_to_white_alpha(&mut pbgra);
+    }
     let Some(mut surface) = create_surface(src_width, src_height) else {
         return;
     };
@@ -646,33 +881,35 @@ unsafe fn render_image(hdc: HDC, image: &PaintImage) {
 
 /// Render a list of [`PaintInstruction`]s into a GDI device context.
 ///
-/// This is the core dispatch loop. It recursively handles Group and Clip
-/// nodes, and dispatches Rect and Line to their respective GDI calls.
+/// This is the core dispatch loop. It recursively handles Group, Layer, and
+/// Clip nodes and dispatches each primitive to its corresponding GDI call.
 /// Unimplemented instruction types are silently skipped (same as paint-metal).
 #[cfg(target_os = "windows")]
 unsafe fn render_instructions(
     hdc: windows::Win32::Graphics::Gdi::HDC,
     instructions: &[PaintInstruction],
+    scene_width: u32,
+    scene_height: u32,
+    mode: RenderMode,
 ) {
     for instr in instructions {
         match instr {
-            PaintInstruction::Rect(rect) => render_rect(hdc, rect),
-            PaintInstruction::Line(line) => render_line(hdc, line),
+            PaintInstruction::Rect(rect) => render_rect(hdc, rect, mode),
+            PaintInstruction::Line(line) => render_line(hdc, line, mode),
             PaintInstruction::Group(group) => {
-                // PaintGroup: render children directly into the same DC.
-                // Transform support (SetWorldTransform) is deferred — for
-                // barcodes, groups are used purely for logical containment.
-                render_instructions(hdc, &group.children);
+                render_group(hdc, group, scene_width, scene_height, mode)
             }
-            PaintInstruction::Clip(clip) => render_clip(hdc, clip),
-            PaintInstruction::Text(text) => render_text(hdc, text),
-            PaintInstruction::GlyphRun(run) => render_glyph_run(hdc, run),
-            PaintInstruction::Ellipse(ellipse) => render_ellipse(hdc, ellipse),
-            PaintInstruction::Path(path) => render_path(hdc, path),
-            PaintInstruction::Image(image) => render_image(hdc, image),
+            PaintInstruction::Clip(clip) => render_clip(hdc, clip, scene_width, scene_height, mode),
+            PaintInstruction::Text(text) => render_text(hdc, text, mode),
+            PaintInstruction::GlyphRun(run) => render_glyph_run(hdc, run, mode),
+            PaintInstruction::Ellipse(ellipse) => render_ellipse(hdc, ellipse, mode),
+            PaintInstruction::Path(path) => render_path(hdc, path, mode),
+            PaintInstruction::Layer(layer) => {
+                render_layer(hdc, layer, scene_width, scene_height, mode)
+            }
+            PaintInstruction::Image(image) => render_image(hdc, image, mode),
             // Planned but not yet implemented — same skip list as paint-metal:
-            PaintInstruction::Layer(_)
-            | PaintInstruction::Gradient(_) => {
+            PaintInstruction::Gradient(_) => {
                 // No-op for now. Barcodes only need Rect/Line/Group/Clip.
             }
         }
@@ -680,7 +917,7 @@ unsafe fn render_instructions(
 }
 
 #[cfg(target_os = "windows")]
-unsafe fn render_text(hdc: HDC, text: &PaintText) {
+unsafe fn render_text(hdc: HDC, text: &PaintText, mode: RenderMode) {
     if text.text.is_empty() {
         return;
     }
@@ -710,6 +947,10 @@ unsafe fn render_text(hdc: HDC, text: &PaintText) {
         windows::Win32::Graphics::Gdi::TEXT_ALIGN_OPTIONS(align_flag.0 | TA_BASELINE.0),
     );
     let _ = SetBkMode(hdc, TRANSPARENT);
+    let (r, g, b) = match mode {
+        RenderMode::Normal => (r, g, b),
+        RenderMode::Coverage => (1.0, 1.0, 1.0),
+    };
     let colorref = color_to_colorref(r, g, b);
     let _ = SetTextColor(hdc, windows::Win32::Foundation::COLORREF(colorref));
     let _ = ExtTextOutW(
@@ -727,7 +968,11 @@ unsafe fn render_text(hdc: HDC, text: &PaintText) {
 }
 
 #[cfg(target_os = "windows")]
-unsafe fn render_glyph_run(hdc: windows::Win32::Graphics::Gdi::HDC, run: &PaintGlyphRun) {
+unsafe fn render_glyph_run(
+    hdc: windows::Win32::Graphics::Gdi::HDC,
+    run: &PaintGlyphRun,
+    mode: RenderMode,
+) {
     if run.glyphs.is_empty() {
         return;
     }
@@ -750,6 +995,10 @@ unsafe fn render_glyph_run(hdc: windows::Win32::Graphics::Gdi::HDC, run: &PaintG
         windows::Win32::Graphics::Gdi::TEXT_ALIGN_OPTIONS(TA_LEFT.0 | TA_BASELINE.0),
     );
     let _ = SetBkMode(hdc, TRANSPARENT);
+    let (r, g, b) = match mode {
+        RenderMode::Normal => (r, g, b),
+        RenderMode::Coverage => (1.0, 1.0, 1.0),
+    };
     let colorref = color_to_colorref(r, g, b);
     let _ = SetTextColor(hdc, windows::Win32::Foundation::COLORREF(colorref));
 
@@ -779,9 +1028,15 @@ unsafe fn render_glyph_run(hdc: windows::Win32::Graphics::Gdi::HDC, run: &PaintG
 /// GDI's `Rectangle` / `RoundRect` can paint fill and stroke in one pass using
 /// the currently selected brush and pen.
 #[cfg(target_os = "windows")]
-unsafe fn render_rect(hdc: windows::Win32::Graphics::Gdi::HDC, rect: &PaintRect) {
-    let fill_color = rect.fill.as_deref().and_then(parse_colorref);
-    let stroke_color = rect.stroke.as_deref().and_then(parse_colorref);
+unsafe fn render_rect(hdc: windows::Win32::Graphics::Gdi::HDC, rect: &PaintRect, mode: RenderMode) {
+    let fill_color = rect
+        .fill
+        .as_deref()
+        .and_then(|fill| parse_colorref_for_mode(fill, mode));
+    let stroke_color = rect
+        .stroke
+        .as_deref()
+        .and_then(|stroke| parse_colorref_for_mode(stroke, mode));
     if fill_color.is_none() && stroke_color.is_none() {
         return;
     }
@@ -797,11 +1052,7 @@ unsafe fn render_rect(hdc: windows::Win32::Graphics::Gdi::HDC, rect: &PaintRect)
 
     let mut owned_pen = None;
     let pen_obj = if let Some(colorref) = stroke_color {
-        let pen = create_pen_for_stroke(
-            colorref,
-            rect.stroke_width,
-            rect.stroke_dash.as_deref(),
-        );
+        let pen = create_pen_for_stroke(colorref, rect.stroke_width, rect.stroke_dash.as_deref());
         owned_pen = Some(pen);
         pen.into()
     } else {
@@ -847,8 +1098,8 @@ unsafe fn render_rect(hdc: windows::Win32::Graphics::Gdi::HDC, rect: &PaintRect)
 ///         ← pen width →
 /// ```
 #[cfg(target_os = "windows")]
-unsafe fn render_line(hdc: windows::Win32::Graphics::Gdi::HDC, line: &PaintLine) {
-    let Some(colorref) = parse_colorref(&line.stroke) else {
+unsafe fn render_line(hdc: windows::Win32::Graphics::Gdi::HDC, line: &PaintLine, mode: RenderMode) {
+    let Some(colorref) = parse_colorref_for_mode(&line.stroke, mode) else {
         return;
     };
     let pen = create_pen_for_stroke(colorref, line.stroke_width, line.stroke_dash.as_deref());
@@ -866,9 +1117,19 @@ unsafe fn render_line(hdc: windows::Win32::Graphics::Gdi::HDC, line: &PaintLine)
 }
 
 #[cfg(target_os = "windows")]
-unsafe fn render_ellipse(hdc: windows::Win32::Graphics::Gdi::HDC, ellipse: &PaintEllipse) {
-    let fill_color = ellipse.fill.as_deref().and_then(parse_colorref);
-    let stroke_color = ellipse.stroke.as_deref().and_then(parse_colorref);
+unsafe fn render_ellipse(
+    hdc: windows::Win32::Graphics::Gdi::HDC,
+    ellipse: &PaintEllipse,
+    mode: RenderMode,
+) {
+    let fill_color = ellipse
+        .fill
+        .as_deref()
+        .and_then(|fill| parse_colorref_for_mode(fill, mode));
+    let stroke_color = ellipse
+        .stroke
+        .as_deref()
+        .and_then(|stroke| parse_colorref_for_mode(stroke, mode));
     if fill_color.is_none() && stroke_color.is_none() {
         return;
     }
@@ -914,9 +1175,15 @@ unsafe fn render_ellipse(hdc: windows::Win32::Graphics::Gdi::HDC, ellipse: &Pain
 }
 
 #[cfg(target_os = "windows")]
-unsafe fn render_path(hdc: windows::Win32::Graphics::Gdi::HDC, path: &PaintPath) {
-    let fill_color = path.fill.as_deref().and_then(parse_colorref);
-    let stroke_color = path.stroke.as_deref().and_then(parse_colorref);
+unsafe fn render_path(hdc: windows::Win32::Graphics::Gdi::HDC, path: &PaintPath, mode: RenderMode) {
+    let fill_color = path
+        .fill
+        .as_deref()
+        .and_then(|fill| parse_colorref_for_mode(fill, mode));
+    let stroke_color = path
+        .stroke
+        .as_deref()
+        .and_then(|stroke| parse_colorref_for_mode(stroke, mode));
     if fill_color.is_none() && stroke_color.is_none() {
         return;
     }
@@ -941,11 +1208,7 @@ unsafe fn render_path(hdc: windows::Win32::Graphics::Gdi::HDC, path: &PaintPath)
 
     let mut owned_pen = None;
     let pen_obj = if let Some(colorref) = stroke_color {
-        let pen = create_pen_for_stroke(
-            colorref,
-            path.stroke_width,
-            path.stroke_dash.as_deref(),
-        );
+        let pen = create_pen_for_stroke(colorref, path.stroke_width, path.stroke_dash.as_deref());
         owned_pen = Some(pen);
         pen.into()
     } else {
@@ -1027,12 +1290,52 @@ unsafe fn render_path(hdc: windows::Win32::Graphics::Gdi::HDC, path: &PaintPath)
                 }
                 current = Some((x, y));
             }
-            PathCommand::ArcTo { x, y, .. } => {
-                if current.is_none() {
+            PathCommand::ArcTo {
+                rx,
+                ry,
+                x_rotation,
+                large_arc,
+                sweep,
+                x,
+                y,
+            } => {
+                let Some((sx, sy)) = current else {
                     let _ = MoveToEx(hdc, x.round() as i32, y.round() as i32, None);
+                    current = Some((x, y));
                     subpath_start = Some((x, y));
-                } else {
+                    continue;
+                };
+
+                let arc = SvgArc::new(
+                    Point2D::new(sx, sy),
+                    Point2D::new(x, y),
+                    rx,
+                    ry,
+                    x_rotation.to_radians(),
+                    large_arc,
+                    sweep,
+                );
+                let beziers = arc.to_cubic_beziers();
+                if beziers.is_empty() {
                     let _ = LineTo(hdc, x.round() as i32, y.round() as i32);
+                } else {
+                    for bezier in beziers {
+                        let points = [
+                            POINT {
+                                x: bezier.p1.x.round() as i32,
+                                y: bezier.p1.y.round() as i32,
+                            },
+                            POINT {
+                                x: bezier.p2.x.round() as i32,
+                                y: bezier.p2.y.round() as i32,
+                            },
+                            POINT {
+                                x: bezier.p3.x.round() as i32,
+                                y: bezier.p3.y.round() as i32,
+                            },
+                        ];
+                        let _ = PolyBezierTo(hdc, &points);
+                    }
                 }
                 current = Some((x, y));
             }
@@ -1057,7 +1360,10 @@ unsafe fn render_path(hdc: windows::Win32::Graphics::Gdi::HDC, path: &PaintPath)
         (false, false) => {}
     }
 
-    let _ = SetPolyFillMode(hdc, windows::Win32::Graphics::Gdi::CREATE_POLYGON_RGN_MODE(old_fill_mode));
+    let _ = SetPolyFillMode(
+        hdc,
+        windows::Win32::Graphics::Gdi::CREATE_POLYGON_RGN_MODE(old_fill_mode),
+    );
     let _ = RestoreDC(hdc, saved);
     if let Some(pen) = owned_pen {
         let _ = DeleteObject(pen);
@@ -1077,7 +1383,13 @@ unsafe fn render_path(hdc: windows::Win32::Graphics::Gdi::HDC, path: &PaintPath)
 ///
 /// This correctly nests: inner clips intersect with outer clips.
 #[cfg(target_os = "windows")]
-unsafe fn render_clip(hdc: windows::Win32::Graphics::Gdi::HDC, clip: &PaintClip) {
+unsafe fn render_clip(
+    hdc: windows::Win32::Graphics::Gdi::HDC,
+    clip: &PaintClip,
+    scene_width: u32,
+    scene_height: u32,
+    mode: RenderMode,
+) {
     let _ = SaveDC(hdc);
 
     let _ = IntersectClipRect(
@@ -1088,7 +1400,7 @@ unsafe fn render_clip(hdc: windows::Win32::Graphics::Gdi::HDC, clip: &PaintClip)
         (clip.y + clip.height).round() as i32,
     );
 
-    render_instructions(hdc, &clip.children);
+    render_instructions(hdc, &clip.children, scene_width, scene_height, mode);
 
     let _ = RestoreDC(hdc, -1);
 }
@@ -1157,6 +1469,61 @@ pub fn render(scene: &PaintScene) -> PixelContainer {
     unsafe { render_unsafe(scene, width, height) }
 }
 
+/// Runtime adapter for selecting GDI through `paint-vm-runtime`.
+#[cfg(target_os = "windows")]
+pub struct GdiPaintBackend;
+
+#[cfg(target_os = "windows")]
+pub fn descriptor() -> PaintBackendDescriptor {
+    PaintBackendDescriptor {
+        id: "paint-vm-gdi",
+        display_name: "Paint VM GDI",
+        family: PaintBackendFamily::Gdi,
+        acceleration: PaintAcceleration::Cpu,
+        tier: PaintBackendTier::Tier2NativeScenes,
+        platforms: PaintPlatformSupport::windows(),
+        capabilities: PaintBackendCapabilities {
+            rect: SupportLevel::Supported,
+            line: SupportLevel::Supported,
+            ellipse: SupportLevel::Supported,
+            path: SupportLevel::Supported,
+            path_arc_to: SupportLevel::Supported,
+            glyph_run: SupportLevel::Supported,
+            text: SupportLevel::Supported,
+            image: SupportLevel::Supported,
+            clip: SupportLevel::Supported,
+            group: SupportLevel::Supported,
+            group_transform: SupportLevel::Supported,
+            group_opacity: SupportLevel::Supported,
+            layer: SupportLevel::Supported,
+            layer_opacity: SupportLevel::Supported,
+            layer_filters: SupportLevel::Unsupported,
+            layer_blend_modes: SupportLevel::Unsupported,
+            linear_gradient: SupportLevel::Unsupported,
+            radial_gradient: SupportLevel::Unsupported,
+            antialiasing: SupportLevel::Unsupported,
+            offscreen_pixels: SupportLevel::Supported,
+        },
+        priority: 100,
+    }
+}
+
+#[cfg(target_os = "windows")]
+pub fn renderer() -> GdiPaintBackend {
+    GdiPaintBackend
+}
+
+#[cfg(target_os = "windows")]
+impl PaintRenderer for GdiPaintBackend {
+    fn descriptor(&self) -> PaintBackendDescriptor {
+        descriptor()
+    }
+
+    fn render(&self, scene: &PaintScene) -> Result<PixelContainer, PaintRenderError> {
+        Ok(crate::render(scene))
+    }
+}
+
 /// The actual rendering logic, wrapped in `unsafe` for GDI FFI calls.
 ///
 /// ## DIBSection memory layout
@@ -1207,10 +1574,7 @@ unsafe fn render_unsafe(scene: &PaintScene, width: u32, height: u32) -> PixelCon
 
     let mut bits_ptr: *mut std::ffi::c_void = std::ptr::null_mut();
     let hbitmap = CreateDIBSection(hdc, &bmi, DIB_RGB_COLORS, &mut bits_ptr, None, 0);
-    assert!(
-        !hbitmap.is_err(),
-        "Failed to create DIBSection"
-    );
+    assert!(!hbitmap.is_err(), "Failed to create DIBSection");
     let hbitmap = hbitmap.unwrap();
     assert!(!bits_ptr.is_null(), "DIBSection pixel pointer is null");
 
@@ -1231,7 +1595,7 @@ unsafe fn render_unsafe(scene: &PaintScene, width: u32, height: u32) -> PixelCon
     let _ = DeleteObject(bg_brush);
 
     // ── Step 5: Dispatch PaintInstructions ────────────────────────────────
-    render_instructions(hdc, &scene.instructions);
+    render_instructions(hdc, &scene.instructions, width, height, RenderMode::Normal);
 
     // ── Step 6: Read back pixels (BGRA → RGBA) ──────────────────────────
     //
@@ -1266,8 +1630,12 @@ mod tests {
     use image_codec_bmp::encode_bmp;
     use paint_codec_png::encode_png;
     use paint_instructions::{
-        ImageSrc, PaintBase, PaintEllipse, PaintGroup, PaintImage, PaintInstruction, PaintPath,
-        PaintRect, PaintScene, PaintText, PathCommand, TextAlign,
+        ImageSrc, PaintBase, PaintEllipse, PaintGroup, PaintImage, PaintInstruction, PaintLayer,
+        PaintPath, PaintRect, PaintScene, PaintText, PathCommand, TextAlign,
+    };
+    #[cfg(target_os = "windows")]
+    use paint_vm_runtime::{
+        PaintBackendPreference, PaintBackendRegistry, PaintRenderOptions, SupportLevel,
     };
 
     #[cfg(target_os = "windows")]
@@ -1295,6 +1663,48 @@ mod tests {
     #[test]
     fn version_exists() {
         assert_eq!(VERSION, "0.1.0");
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn descriptor_reports_gdi_runtime_capabilities() {
+        let descriptor = descriptor();
+        assert_eq!(descriptor.id, "paint-vm-gdi");
+        assert_eq!(descriptor.capabilities.text, SupportLevel::Supported);
+        assert_eq!(descriptor.capabilities.glyph_run, SupportLevel::Supported);
+        assert_eq!(descriptor.capabilities.path_arc_to, SupportLevel::Supported);
+        assert_eq!(
+            descriptor.capabilities.linear_gradient,
+            SupportLevel::Unsupported
+        );
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn runtime_registry_can_render_with_gdi_backend() {
+        let backend = renderer();
+        let mut registry = PaintBackendRegistry::new();
+        registry.register(&backend);
+
+        let mut scene = PaintScene::new(32.0, 32.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                4.0, 4.0, 20.0, 20.0, "#000000",
+            )));
+
+        let pixels = registry
+            .render_auto(
+                &scene,
+                PaintRenderOptions {
+                    preference: PaintBackendPreference::Named("paint-vm-gdi".to_string()),
+                    ..PaintRenderOptions::default()
+                },
+            )
+            .expect("GDI should satisfy a rect-only scene");
+
+        let (r, g, b, a) = pixels.pixel_at(8, 8);
+        assert_eq!((r, g, b, a), (0, 0, 0, 255));
     }
 
     // ─── Colour parser tests ────────────────────────────────────────────────
@@ -1403,9 +1813,11 @@ mod tests {
     #[test]
     fn render_red_rect_on_white() {
         let mut scene = PaintScene::new(100.0, 100.0);
-        scene.instructions.push(PaintInstruction::Rect(
-            PaintRect::filled(10.0, 10.0, 80.0, 80.0, "#ff0000"),
-        ));
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                10.0, 10.0, 80.0, 80.0, "#ff0000",
+            )));
 
         let pixels = render(&scene);
         assert_eq!(pixels.width, 100);
@@ -1459,9 +1871,15 @@ mod tests {
     #[test]
     fn transparent_rect_is_invisible() {
         let mut scene = PaintScene::new(50.0, 50.0);
-        scene.instructions.push(PaintInstruction::Rect(
-            PaintRect::filled(0.0, 0.0, 50.0, 50.0, "transparent"),
-        ));
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                0.0,
+                0.0,
+                50.0,
+                50.0,
+                "transparent",
+            )));
 
         let pixels = render(&scene);
         // Should be white background everywhere
@@ -1505,18 +1923,20 @@ mod tests {
     #[test]
     fn ellipse_fill_and_stroke_render() {
         let mut scene = PaintScene::new(80.0, 80.0);
-        scene.instructions.push(PaintInstruction::Ellipse(PaintEllipse {
-            base: PaintBase::default(),
-            cx: 40.0,
-            cy: 40.0,
-            rx: 20.0,
-            ry: 15.0,
-            fill: Some("#0000ff".to_string()),
-            stroke: Some("#ff0000".to_string()),
-            stroke_width: Some(2.0),
-            stroke_dash: None,
-            stroke_dash_offset: None,
-        }));
+        scene
+            .instructions
+            .push(PaintInstruction::Ellipse(PaintEllipse {
+                base: PaintBase::default(),
+                cx: 40.0,
+                cy: 40.0,
+                rx: 20.0,
+                ry: 15.0,
+                fill: Some("#0000ff".to_string()),
+                stroke: Some("#ff0000".to_string()),
+                stroke_width: Some(2.0),
+                stroke_dash: None,
+                stroke_dash_offset: None,
+            }));
 
         let pixels = render(&scene);
         let (r, g, b, _a) = pixels.pixel_at(40, 40);
@@ -1562,6 +1982,46 @@ mod tests {
         assert_eq!(r, 0, "triangle edge should draw stroke");
         assert_eq!(g, 0);
         assert_eq!(b, 0);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn arc_to_renders_curve_instead_of_chord() {
+        let mut scene = PaintScene::new(100.0, 80.0);
+        scene.instructions.push(PaintInstruction::Path(PaintPath {
+            base: PaintBase::default(),
+            commands: vec![
+                PathCommand::MoveTo { x: 20.0, y: 50.0 },
+                PathCommand::ArcTo {
+                    rx: 30.0,
+                    ry: 30.0,
+                    x_rotation: 0.0,
+                    large_arc: false,
+                    sweep: true,
+                    x: 80.0,
+                    y: 50.0,
+                },
+            ],
+            fill: Some("none".to_string()),
+            fill_rule: None,
+            stroke: Some("#000000".to_string()),
+            stroke_width: Some(3.0),
+            stroke_cap: None,
+            stroke_join: None,
+            stroke_dash: None,
+            stroke_dash_offset: None,
+        }));
+
+        let pixels = render(&scene);
+        let (r, g, b, _a) = pixels.pixel_at(50, 20);
+        assert_eq!((r, g, b), (0, 0, 0), "top of arc should draw");
+
+        let (r, g, b, _a) = pixels.pixel_at(50, 50);
+        assert_eq!(
+            (r, g, b),
+            (255, 255, 255),
+            "arc should not degrade to the straight chord"
+        );
     }
 
     #[cfg(target_os = "windows")]
@@ -1623,29 +2083,41 @@ mod tests {
         let (r, g, b, _a) = pixels.pixel_at(30, 10);
         assert_eq!((r, g, b), (0, 255, 0), "top-right quadrant should be green");
         let (r, g, b, _a) = pixels.pixel_at(10, 30);
-        assert_eq!((r, g, b), (0, 0, 255), "bottom-left quadrant should be blue");
+        assert_eq!(
+            (r, g, b),
+            (0, 0, 255),
+            "bottom-left quadrant should be blue"
+        );
         let (r, g, b, _a) = pixels.pixel_at(30, 30);
-        assert_eq!((r, g, b), (255, 255, 0), "bottom-right quadrant should be yellow");
+        assert_eq!(
+            (r, g, b),
+            (255, 255, 0),
+            "bottom-right quadrant should be yellow"
+        );
 
         let mut translucent_scene = PaintScene::new(20.0, 20.0);
-        translucent_scene.instructions.push(PaintInstruction::Image(PaintImage {
-            base: PaintBase::default(),
-            x: 0.0,
-            y: 0.0,
-            width: 20.0,
-            height: 20.0,
-            src: ImageSrc::Pixels(PixelContainer::from_data(
-                1,
-                1,
-                vec![255, 0, 0, 255],
-            )),
-            opacity: Some(0.5),
-        }));
+        translucent_scene
+            .instructions
+            .push(PaintInstruction::Image(PaintImage {
+                base: PaintBase::default(),
+                x: 0.0,
+                y: 0.0,
+                width: 20.0,
+                height: 20.0,
+                src: ImageSrc::Pixels(PixelContainer::from_data(1, 1, vec![255, 0, 0, 255])),
+                opacity: Some(0.5),
+            }));
         let blended = render(&translucent_scene);
         let (r, g, b, _a) = blended.pixel_at(10, 10);
         assert!(r >= 250, "half-opacity red over white should keep red high");
-        assert!((120..=136).contains(&g), "half-opacity red should soften green");
-        assert!((120..=136).contains(&b), "half-opacity red should soften blue");
+        assert!(
+            (120..=136).contains(&g),
+            "half-opacity red should soften green"
+        );
+        assert!(
+            (120..=136).contains(&b),
+            "half-opacity red should soften blue"
+        );
     }
 
     #[cfg(target_os = "windows")]
@@ -1700,7 +2172,11 @@ mod tests {
         path.push(format!("paint vm gdi png {unique}.png"));
         std::fs::write(&path, png).unwrap();
 
-        let path_for_uri = path.display().to_string().replace('\\', "/").replace(' ', "%20");
+        let path_for_uri = path
+            .display()
+            .to_string()
+            .replace('\\', "/")
+            .replace(' ', "%20");
         let uri = format!("file:///{path_for_uri}");
         let mut scene = PaintScene::new(8.0, 8.0);
         scene.instructions.push(PaintInstruction::Image(PaintImage {
@@ -1717,7 +2193,11 @@ mod tests {
         let _ = std::fs::remove_file(&path);
 
         let (r, g, b, _a) = pixels.pixel_at(4, 4);
-        assert_eq!((r, g, b), (12, 34, 56), "png file URI should decode via WIC");
+        assert_eq!(
+            (r, g, b),
+            (12, 34, 56),
+            "png file URI should decode via WIC"
+        );
     }
 
     #[cfg(target_os = "windows")]
@@ -1768,11 +2248,26 @@ mod tests {
         let (center_min, center_max) = render_bounds(TextAlign::Center);
         let (right_min, right_max) = render_bounds(TextAlign::Right);
 
-        assert!(left_min > center_min, "center alignment should start left of left alignment");
-        assert!(center_min > right_min, "right alignment should start furthest left");
-        assert!(left_max >= 110, "left alignment should extend to the right of anchor");
-        assert!(center_min < 110 && center_max > 110, "center alignment should straddle anchor");
-        assert!(right_max <= 110, "right alignment should end at or before anchor");
+        assert!(
+            left_min > center_min,
+            "center alignment should start left of left alignment"
+        );
+        assert!(
+            center_min > right_min,
+            "right alignment should start furthest left"
+        );
+        assert!(
+            left_max >= 110,
+            "left alignment should extend to the right of anchor"
+        );
+        assert!(
+            center_min < 110 && center_max > 110,
+            "center alignment should straddle anchor"
+        );
+        assert!(
+            right_max <= 110,
+            "right alignment should end at or before anchor"
+        );
     }
 
     /// Group should recurse into children and render both rects.
@@ -1804,6 +2299,97 @@ mod tests {
         assert_eq!(r, 0, "right half should be blue");
         assert_eq!(g, 0);
         assert_eq!(b, 255);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn group_opacity_blends_children() {
+        let mut scene = PaintScene::new(20.0, 20.0);
+        scene.instructions.push(PaintInstruction::Group(PaintGroup {
+            base: PaintBase::default(),
+            children: vec![PaintInstruction::Rect(PaintRect::filled(
+                0.0, 0.0, 20.0, 20.0, "#000000",
+            ))],
+            transform: None,
+            opacity: Some(0.5),
+        }));
+
+        let pixels = render(&scene);
+        let (r, g, b, _a) = pixels.pixel_at(10, 10);
+        assert!(
+            (120..=136).contains(&r),
+            "group opacity should blend red over white"
+        );
+        assert!(
+            (120..=136).contains(&g),
+            "group opacity should blend green over white"
+        );
+        assert!(
+            (120..=136).contains(&b),
+            "group opacity should blend blue over white"
+        );
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn group_transform_translates_children() {
+        let mut scene = PaintScene::new(40.0, 30.0);
+        scene.instructions.push(PaintInstruction::Group(PaintGroup {
+            base: PaintBase::default(),
+            children: vec![PaintInstruction::Rect(PaintRect::filled(
+                0.0, 0.0, 10.0, 10.0, "#ff0000",
+            ))],
+            transform: Some([1.0, 0.0, 0.0, 1.0, 20.0, 10.0]),
+            opacity: None,
+        }));
+
+        let pixels = render(&scene);
+        let (r, g, b, _a) = pixels.pixel_at(5, 5);
+        assert_eq!(
+            (r, g, b),
+            (255, 255, 255),
+            "untranslated origin should remain background"
+        );
+        let (r, g, b, _a) = pixels.pixel_at(25, 15);
+        assert_eq!(
+            (r, g, b),
+            (255, 0, 0),
+            "transform should move child geometry"
+        );
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn layer_renders_children_with_opacity_and_transform() {
+        let mut scene = PaintScene::new(50.0, 40.0);
+        scene.instructions.push(PaintInstruction::Layer(PaintLayer {
+            base: PaintBase::default(),
+            children: vec![PaintInstruction::Rect(PaintRect::filled(
+                0.0, 0.0, 12.0, 12.0, "#0000ff",
+            ))],
+            filters: None,
+            blend_mode: None,
+            opacity: Some(0.5),
+            transform: Some([1.0, 0.0, 0.0, 1.0, 24.0, 14.0]),
+        }));
+
+        let pixels = render(&scene);
+        let (r, g, b, _a) = pixels.pixel_at(6, 6);
+        assert_eq!(
+            (r, g, b),
+            (255, 255, 255),
+            "layer should not paint before translation"
+        );
+        let (r, g, b, _a) = pixels.pixel_at(30, 20);
+        assert!(
+            (120..=136).contains(&r),
+            "layer opacity should soften red channel"
+        );
+        assert!(
+            (120..=136).contains(&g),
+            "layer opacity should soften green channel"
+        );
+        assert!(b >= 250, "layer opacity should keep blue channel high");
     }
 
     /// Clip should restrict drawing to the clip rectangle.
@@ -1848,9 +2434,15 @@ mod tests {
         // 10 black bars (even indices), each 10px wide, 80px tall
         for i in 0..20u32 {
             if i % 2 == 0 {
-                scene.instructions.push(PaintInstruction::Rect(
-                    PaintRect::filled(i as f64 * 10.0, 0.0, 10.0, 80.0, "#000000"),
-                ));
+                scene
+                    .instructions
+                    .push(PaintInstruction::Rect(PaintRect::filled(
+                        i as f64 * 10.0,
+                        0.0,
+                        10.0,
+                        80.0,
+                        "#000000",
+                    )));
             }
         }
 
@@ -1887,13 +2479,15 @@ mod tests {
         for row in 0..4u32 {
             for col in 0..4u32 {
                 if (row + col) % 2 == 0 {
-                    scene.instructions.push(PaintInstruction::Rect(PaintRect::filled(
-                        col as f64 * module_size,
-                        row as f64 * module_size,
-                        module_size,
-                        module_size,
-                        "#000000",
-                    )));
+                    scene
+                        .instructions
+                        .push(PaintInstruction::Rect(PaintRect::filled(
+                            col as f64 * module_size,
+                            row as f64 * module_size,
+                            module_size,
+                            module_size,
+                            "#000000",
+                        )));
                 }
             }
         }

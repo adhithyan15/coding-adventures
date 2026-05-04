@@ -1,0 +1,7 @@
+[package]
+name = "constraint-core"
+version = "0.1.0"
+edition = "2021"
+description = "LANG24 PR 24-A — Predicate AST + Sort/Logic/Theory enums + normalisation passes for the generic Constraint-VM (the data-crate foundation; constraint-instructions, constraint-engine, constraint-vm and every consumer build on this)"
+
+[dependencies]

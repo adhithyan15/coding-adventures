@@ -1,0 +1,13 @@
+[package]
+name = "twig-vm"
+version = "0.6.0"
+edition = "2021"
+description = "LANG20 PRs 3–8 — TwigVM: compiles Twig source and dispatches the IIR end to end including closures, top-level value defines, quoted symbols, method-dispatch opcodes, persistent inline-cache slot machinery, and the V8-Ignition-style vm-core profiler"
+
+[dependencies]
+twig-ir-compiler  = { path = "../twig-ir-compiler" }
+twig-parser       = { path = "../twig-parser" }
+twig-lexer        = { path = "../twig-lexer" }
+lispy-runtime     = { path = "../lispy-runtime" }
+lang-runtime-core = { path = "../lang-runtime-core" }
+interpreter-ir    = { path = "../interpreter-ir" }

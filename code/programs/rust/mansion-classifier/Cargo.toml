@@ -8,3 +8,5 @@ matrix = { path = "../../../packages/rust/matrix" }
 loss-functions = { path = "../../../packages/rust/loss-functions" }
 activation-functions = { path = "../../../packages/rust/activation-functions" }
 perceptron = { path = "../../../packages/rust/perceptron" }
+neural-network = { path = "../../../packages/rust/neural-network" }
+neural-graph-vm = { path = "../../../packages/rust/neural-graph-vm" }

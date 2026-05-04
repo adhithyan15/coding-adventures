@@ -77,6 +77,8 @@ v1 limitations
 
 from __future__ import annotations
 
+import contextlib
+import copy
 import os
 import re
 import struct
@@ -84,6 +86,7 @@ from collections.abc import Iterator
 
 from sql_backend import (
     Backend,
+    ColumnAlreadyExists,
     ColumnDef,
     ColumnNotFound,
     ConstraintViolation,
@@ -97,16 +100,24 @@ from sql_backend import (
     TableAlreadyExists,
     TableNotFound,
     TransactionHandle,
+    TriggerAlreadyExists,
+    TriggerNotFound,
     Unsupported,
 )
-from sql_backend.schema import NO_DEFAULT
+from sql_backend.schema import NO_DEFAULT, TriggerDef
 
 from storage_sqlite import record as _record
 from storage_sqlite.btree import BTree, DuplicateRowidError
 from storage_sqlite.freelist import Freelist
-from storage_sqlite.index_tree import IndexTree
+from storage_sqlite.index_tree import DuplicateIndexKeyError, IndexTree
 from storage_sqlite.pager import Pager
 from storage_sqlite.schema import Schema, SchemaError, initialize_new_database
+
+# Name of the system table that tracks AUTOINCREMENT high-water marks per
+# table.  Created lazily on first ``CREATE TABLE ... AUTOINCREMENT``.  Schema:
+# ``CREATE TABLE sqlite_sequence (name TEXT, seq INTEGER)``.
+_SEQUENCE_TABLE: str = "sqlite_sequence"
+
 
 # ---------------------------------------------------------------------------
 # SQL column-definition helpers
@@ -156,6 +167,9 @@ def _columns_to_sql(table: str, columns: list[ColumnDef]) -> str:
         tokens: list[str] = [col.name, col.type_name]
         if col.primary_key:
             tokens.append("PRIMARY KEY")
+            # AUTOINCREMENT may only follow PRIMARY KEY in SQLite syntax.
+            if col.autoincrement:
+                tokens.append("AUTOINCREMENT")
         # NOT NULL: emit only when not implied by PRIMARY KEY to match sqlite3's
         # output style; PRIMARY KEY already implies NOT NULL in SQLite.
         if col.not_null and not col.primary_key:
@@ -281,6 +295,7 @@ def _parse_one_column(col_sql: str) -> ColumnDef | None:
     not_null = False
     primary_key = False
     unique = False
+    autoincrement = False
     default: object = NO_DEFAULT
 
     i = 2
@@ -289,6 +304,9 @@ def _parse_one_column(col_sql: str) -> ColumnDef | None:
         if tok_upper == "PRIMARY" and i + 1 < len(tokens) and tokens[i + 1].upper() == "KEY":
             primary_key = True
             i += 2
+        elif tok_upper == "AUTOINCREMENT":
+            autoincrement = True
+            i += 1
         elif tok_upper == "NOT" and i + 1 < len(tokens) and tokens[i + 1].upper() == "NULL":
             not_null = True
             i += 2
@@ -299,7 +317,7 @@ def _parse_one_column(col_sql: str) -> ColumnDef | None:
             default = _parse_literal(tokens[i + 1])
             i += 2
         else:
-            i += 1  # skip unknown token (e.g. AUTO_INCREMENT, REFERENCES, …)
+            i += 1  # skip unknown token (e.g. REFERENCES, COLLATE, …)
 
     return ColumnDef(
         name=name,
@@ -307,6 +325,7 @@ def _parse_one_column(col_sql: str) -> ColumnDef | None:
         not_null=not_null,
         primary_key=primary_key,
         unique=unique,
+        autoincrement=autoincrement,
         default=default,
     )
 
@@ -404,19 +423,103 @@ def _parse_index_columns(sql: str) -> list[str]:
     return cols
 
 
-def _columns_to_index_sql(name: str, table: str, columns: list[str]) -> str:
+def _columns_to_index_sql(
+    name: str, table: str, columns: list[str], *, unique: bool = False
+) -> str:
     """Serialise an index definition as a quoted ``CREATE INDEX`` statement.
 
     All identifiers are double-quoted via :func:`_quote_identifier` to
     prevent DDL injection when user-supplied names contain SQL metacharacters.
-    The output is stored verbatim in ``sqlite_schema`` and is parseable by
-    both :func:`_parse_index_columns` and by the real ``sqlite3`` CLI::
+    When *unique* is ``True``, emits ``CREATE UNIQUE INDEX``.  The output is
+    stored verbatim in ``sqlite_schema`` and is parseable by both
+    :func:`_parse_index_columns` / :func:`_parse_index_unique` and by the real
+    ``sqlite3`` CLI::
 
         _columns_to_index_sql("idx_orders_user_id", "orders", ["user_id"])
         # → 'CREATE INDEX "idx_orders_user_id" ON "orders" ("user_id")'
+
+        _columns_to_index_sql("idx_users_email", "users", ["email"], unique=True)
+        # → 'CREATE UNIQUE INDEX "idx_users_email" ON "users" ("email")'
     """
     col_list = ", ".join(_quote_identifier(c) for c in columns)
-    return f"CREATE INDEX {_quote_identifier(name)} ON {_quote_identifier(table)} ({col_list})"
+    keyword = "CREATE UNIQUE INDEX" if unique else "CREATE INDEX"
+    return f"{keyword} {_quote_identifier(name)} ON {_quote_identifier(table)} ({col_list})"
+
+
+_UNIQUE_INDEX_RE = re.compile(r"\bCREATE\s+UNIQUE\s+INDEX\b", re.IGNORECASE)
+
+
+def _parse_index_unique(sql: str | None) -> bool:
+    """Return ``True`` if *sql* is a ``CREATE UNIQUE INDEX`` statement.
+
+    Tolerates extra whitespace and case variation.  Returns ``False`` for
+    ``None`` (rows written without an ``sql`` field) and for ``CREATE
+    INDEX`` (no ``UNIQUE`` keyword).
+    """
+    if sql is None:
+        return False
+    return _UNIQUE_INDEX_RE.search(sql) is not None
+
+
+# ---------------------------------------------------------------------------
+# Trigger SQL helpers
+# ---------------------------------------------------------------------------
+
+
+def _trigger_to_sql(defn: TriggerDef) -> str:
+    """Serialise a :class:`~sql_backend.schema.TriggerDef` to a ``CREATE
+    TRIGGER`` statement for storage in ``sqlite_schema``.
+
+    The body is wrapped in ``BEGIN … END`` to form a syntactically complete
+    SQL statement that is round-trippable via :func:`_sql_to_trigger_def`.
+
+    Example::
+
+        _trigger_to_sql(TriggerDef(
+            name="trg_audit", table="orders",
+            timing="AFTER", event="INSERT",
+            body="INSERT INTO audit VALUES (NEW.id);",
+        ))
+        # → 'CREATE TRIGGER "trg_audit" AFTER INSERT ON "orders"\\nBEGIN\\n...\\nEND'
+    """
+    return (
+        f"CREATE TRIGGER {_quote_identifier(defn.name)} "
+        f"{defn.timing} {defn.event} ON {_quote_identifier(defn.table)}\n"
+        f"BEGIN\n{defn.body}\nEND"
+    )
+
+
+_TIMING_EVENT_RE = re.compile(
+    r"\b(BEFORE|AFTER)\s+(INSERT|UPDATE|DELETE)\b",
+    re.IGNORECASE,
+)
+_BODY_RE = re.compile(r"\bBEGIN\b(.*)\bEND\b", re.IGNORECASE | re.DOTALL)
+
+
+def _sql_to_trigger_def(name: str, tbl_name: str, sql: str) -> TriggerDef:
+    """Parse a ``CREATE TRIGGER`` SQL string back to a :class:`~sql_backend.schema.TriggerDef`.
+
+    Extracts ``timing`` (BEFORE/AFTER), ``event`` (INSERT/UPDATE/DELETE), and
+    ``body`` (the text between ``BEGIN`` and the final ``END``).
+
+    Raises :class:`ValueError` if the SQL cannot be parsed.
+    """
+    m = _TIMING_EVENT_RE.search(sql)
+    if m is None:
+        raise ValueError(f"cannot parse trigger timing/event from: {sql!r}")
+    timing = m.group(1).upper()
+    event = m.group(2).upper()
+
+    body_m = _BODY_RE.search(sql)
+    body = body_m.group(1).strip() if body_m else ""
+
+    return TriggerDef(
+        name=name,
+        table=tbl_name,
+        timing=timing,  # type: ignore[arg-type]
+        event=event,  # type: ignore[arg-type]
+        body=body,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -488,8 +591,12 @@ def _decode_row(rowid: int, payload: bytes, columns: list[ColumnDef]) -> Row:
             result[col.name] = rowid  # inject rowid; consume (and discard) the NULL slot
             payload_idx += 1
         else:
-            val = decoded_values[payload_idx] if payload_idx < len(decoded_values) else None
-            result[col.name] = val
+            if payload_idx < len(decoded_values):
+                result[col.name] = decoded_values[payload_idx]
+            else:
+                # Column was added via ALTER TABLE ADD COLUMN after this row was
+                # written. Return the declared default, or NULL if there is none.
+                result[col.name] = col.default if col.has_default() else None  # type: ignore[assignment]
             payload_idx += 1
     return result
 
@@ -512,15 +619,25 @@ def _find_max_rowid(tree: BTree) -> int:
     return max_rid
 
 
-def _choose_rowid(row: Row, columns: list[ColumnDef], tree: BTree) -> int:
+def _choose_rowid(
+    row: Row,
+    columns: list[ColumnDef],
+    tree: BTree,
+    *,
+    current_seq: int = 0,
+) -> int:
     """Determine the rowid to use when inserting *row*.
 
     Rules (mirroring SQLite's behaviour):
 
     1. If the table has an INTEGER PRIMARY KEY column AND the row supplies a
        non-NULL value for it, use that value as the rowid.
-    2. Otherwise (no IPK, or IPK column is absent/NULL in this row), assign
-       ``max_existing_rowid + 1``.
+    2. Otherwise (no IPK, or IPK column is absent/NULL in this row):
+       - For plain ``INTEGER PRIMARY KEY``: ``max_existing_rowid + 1``.
+       - For ``INTEGER PRIMARY KEY AUTOINCREMENT`` (caller supplies
+         *current_seq* > 0): ``max(max_existing_rowid, current_seq) + 1``.
+         This makes deleted rowids never reusable — the monotonicity
+         guarantee that AUTOINCREMENT provides over plain IPK.
     """
     for col in columns:
         if _is_ipk(col):
@@ -530,7 +647,13 @@ def _choose_rowid(row: Row, columns: list[ColumnDef], tree: BTree) -> int:
             # IPK absent or NULL → fall through to auto-assign.
             break
 
-    return _find_max_rowid(tree) + 1
+    max_rid = _find_max_rowid(tree)
+    return max(max_rid, current_seq) + 1
+
+
+def _has_autoincrement(columns: list[ColumnDef]) -> bool:
+    """Return ``True`` if any column in *columns* is declared AUTOINCREMENT."""
+    return any(c.autoincrement for c in columns)
 
 
 # ---------------------------------------------------------------------------
@@ -570,50 +693,6 @@ def _check_not_null(table: str, row: Row, columns: list[ColumnDef]) -> None:
                 column=col.name,
                 message=f"NOT NULL constraint failed: {table}.{col.name}",
             )
-
-
-def _check_unique(
-    table: str,
-    row: Row,
-    columns: list[ColumnDef],
-    tree: BTree,
-    tree_columns: list[ColumnDef],
-    ignore_rowid: int | None = None,
-) -> None:
-    """Raise :class:`~sql_backend.ConstraintViolation` if a UNIQUE column
-    already contains the value being inserted/updated.
-
-    NULL values never conflict (SQL semantics). *ignore_rowid* is the rowid
-    of the row being updated so it is not compared against itself.
-
-    This is O(n) per unique column. Acceptable for v1; future versions can
-    add in-memory uniqueness indexes.
-    """
-    unique_cols = [c for c in columns if c.effective_unique()]
-    if not unique_cols:
-        return
-
-    new_vals = {col.name: row.get(col.name) for col in unique_cols}
-    # Optimisation: if none of the unique-column values are non-NULL we can
-    # skip the scan entirely.
-    if all(v is None for v in new_vals.values()):
-        return
-
-    for existing_rowid, payload in tree.scan():
-        if existing_rowid == ignore_rowid:
-            continue
-        existing_row = _decode_row(existing_rowid, payload, tree_columns)
-        for col in unique_cols:
-            new_val = new_vals[col.name]
-            if new_val is None:
-                continue  # NULL never conflicts
-            if existing_row.get(col.name) == new_val:
-                label = "PRIMARY KEY" if col.primary_key else "UNIQUE"
-                raise ConstraintViolation(
-                    table=table,
-                    column=col.name,
-                    message=f"{label} constraint failed: {table}.{col.name}",
-                )
 
 
 # ---------------------------------------------------------------------------
@@ -733,6 +812,9 @@ class SqliteFileBackend(Backend):
         self._next_handle: int = 1
         self._active_handle: int | None = None
 
+        # Savepoint stack: list of (name, dirty_snapshot, size_pages_snapshot).
+        self._savepoint_stack: list[tuple[str, dict[int, bytes], int]] = []
+
     # ── Context manager ──────────────────────────────────────────────────────
 
     def __enter__(self) -> SqliteFileBackend:
@@ -773,6 +855,103 @@ class SqliteFileBackend(Backend):
         """Open a B-tree for *rootpage* with the freelist attached."""
         return BTree.open(self._pager, rootpage, freelist=self._freelist)
 
+    # ── AUTOINCREMENT / sqlite_sequence helpers ───────────────────────────────
+
+    def _ensure_sequence_table(self) -> None:
+        """Create ``sqlite_sequence`` if it doesn't already exist.
+
+        Idempotent — does nothing when the table is already present.  The
+        schema matches real SQLite's: two columns, ``name TEXT`` and
+        ``seq INTEGER``.  Called on demand from :meth:`create_table` when
+        an ``AUTOINCREMENT`` column is declared.
+        """
+        if self._schema.find_table(_SEQUENCE_TABLE) is not None:
+            return
+        cols = [
+            ColumnDef(name="name", type_name="TEXT"),
+            ColumnDef(name="seq", type_name="INTEGER"),
+        ]
+        sql = _columns_to_sql(_SEQUENCE_TABLE, cols)
+        self._schema.create_table(_SEQUENCE_TABLE, sql)
+
+    def _seq_columns(self) -> list[ColumnDef]:
+        """Return the column list for the ``sqlite_sequence`` table."""
+        return [
+            ColumnDef(name="name", type_name="TEXT"),
+            ColumnDef(name="seq", type_name="INTEGER"),
+        ]
+
+    def _get_seq(self, table: str) -> int:
+        """Return the current sequence value for *table*, or 0 if absent.
+
+        Reads the ``sqlite_sequence`` row whose ``name`` matches *table*.
+        Missing table or missing row both return 0 — the caller treats 0
+        as "no rows have ever been inserted, start from 1".
+        """
+        if self._schema.find_table(_SEQUENCE_TABLE) is None:
+            return 0
+        rootpage, _ = self._require_table(_SEQUENCE_TABLE)
+        tree = self._open_tree(rootpage)
+        for _rowid, payload in tree.scan():
+            row = _decode_row(_rowid, payload, self._seq_columns())
+            if row.get("name") == table:
+                seq = row.get("seq")
+                return int(seq) if isinstance(seq, int) else 0
+        return 0
+
+    def _set_seq(self, table: str, value: int) -> None:
+        """Update or insert the ``sqlite_sequence`` row for *table*.
+
+        If a row with ``name == table`` already exists, its ``seq`` field
+        is rewritten to *value*; otherwise a new row is appended.  Bypasses
+        :meth:`insert` to avoid recursion through the AUTOINCREMENT path
+        (the sequence table is itself never an AUTOINCREMENT table).
+        """
+        rootpage, _ = self._require_table(_SEQUENCE_TABLE)
+        tree = self._open_tree(rootpage)
+        seq_cols = self._seq_columns()
+        # Update an existing row in place if one is found.
+        for rowid, payload in tree.scan():
+            row = _decode_row(rowid, payload, seq_cols)
+            if row.get("name") == table:
+                new_payload = _encode_row(
+                    rowid, {"name": table, "seq": value}, seq_cols
+                )
+                tree.update(rowid, new_payload)
+                return
+        # Otherwise insert a new row.  Use max-rowid + 1 directly — the
+        # sequence table is not itself AUTOINCREMENT.
+        new_rowid = _find_max_rowid(tree) + 1
+        new_payload = _encode_row(
+            new_rowid, {"name": table, "seq": value}, seq_cols
+        )
+        tree.insert(new_rowid, new_payload)
+
+    def _open_indexes_for(
+        self, table: str
+    ) -> list[tuple[str, list[str], IndexTree]]:
+        """Return open ``IndexTree`` handles for every index on *table*.
+
+        Each tuple is ``(index_name, indexed_columns, idx_tree)`` where
+        ``idx_tree`` carries its UNIQUE flag (read from the stored
+        ``CREATE INDEX`` SQL).  Used by :meth:`insert`, :meth:`update`, and
+        :meth:`delete` to keep secondary indexes consistent with the table
+        B-tree.
+
+        Returns an empty list when the table has no indexes — the common
+        case for tables that the application has not explicitly indexed.
+        """
+        rows = self._schema.list_indexes(table)
+        result: list[tuple[str, list[str], IndexTree]] = []
+        for name, _tbl_name, rootpage, sql in rows:
+            cols = _parse_index_columns(sql) if sql else []
+            unique = _parse_index_unique(sql)
+            tree = IndexTree.open(
+                self._pager, rootpage, freelist=self._freelist, is_unique=unique
+            )
+            result.append((name, cols, tree))
+        return result
+
     # ── Backend interface: Schema ─────────────────────────────────────────────
 
     def tables(self) -> list[str]:
@@ -786,6 +965,39 @@ class SqliteFileBackend(Backend):
         """
         _, cols = self._require_table(table)
         return cols
+
+    # ── Header field accessors (PRAGMA user_version / schema_version) ────────
+
+    def get_user_version(self) -> int:
+        """Read the ``user_version`` field from the database header.
+
+        ``user_version`` is a 32-bit unsigned integer at byte offset 60
+        of the page-1 header.  It is opaque to the engine — applications
+        typically use it for schema-migration version tracking.  A fresh
+        database returns 0.
+        """
+        return self._schema.get_user_version()
+
+    def set_user_version(self, value: int) -> None:
+        """Write *value* into the ``user_version`` field.
+
+        *value* must fit in an unsigned 32-bit integer; otherwise raises
+        ``ValueError``.  The change is staged in the pager and persists
+        on the next ``commit``.  No transaction is auto-committed here —
+        the caller (typically the SQL VM) wraps the PRAGMA in its usual
+        transaction lifecycle.
+        """
+        self._schema.set_user_version(value)
+
+    def get_schema_version(self) -> int:
+        """Read the schema cookie from the database header.
+
+        The schema cookie (a 32-bit unsigned integer at byte offset 40)
+        is incremented automatically on every DDL operation
+        (``CREATE TABLE``, ``DROP TABLE``, ``ALTER TABLE``, etc.).
+        Read-only — applications cannot set it directly.
+        """
+        return self._schema.get_schema_cookie()
 
     # ── Backend interface: Read ───────────────────────────────────────────────
 
@@ -834,18 +1046,55 @@ class SqliteFileBackend(Backend):
             if key not in known:
                 raise ColumnNotFound(table=table, column=key)
 
-        # Constraint checks.
-        _check_not_null(table, full_row, columns)
-
         tree = self._open_tree(rootpage)
 
-        # Determine the rowid and check primary-key uniqueness.
-        rowid = _choose_rowid(full_row, columns, tree)
+        # Determine the rowid.  For AUTOINCREMENT tables, the chosen rowid
+        # must be strictly greater than every rowid that has *ever* lived
+        # in the table — even ones that have since been deleted — so we
+        # consult ``sqlite_sequence`` for the high-water mark.
+        autoinc = _has_autoincrement(columns)
+        current_seq = self._get_seq(table) if autoinc else 0
+        rowid = _choose_rowid(full_row, columns, tree, current_seq=current_seq)
 
-        # For non-IPK UNIQUE columns, scan for duplicates before inserting.
-        non_pk_unique = [c for c in columns if c.effective_unique() and not _is_ipk(c)]
-        if non_pk_unique:
-            _check_unique(table, full_row, non_pk_unique, tree, columns)
+        # Write the chosen rowid back into the IPK column so the NOT NULL
+        # check below sees the auto-assigned value, not the NULL placeholder
+        # left there by _apply_defaults.  PRIMARY KEY implies NOT NULL, so
+        # without this step every "INSERT without explicit IPK value" would
+        # fail the constraint check before the auto-assign got a chance.
+        for col in columns:
+            if _is_ipk(col):
+                full_row[col.name] = rowid
+                break
+
+        # Constraint checks (run after rowid assignment for the IPK reason
+        # above; the order doesn't matter for non-IPK columns).
+        _check_not_null(table, full_row, columns)
+
+        # Pre-validate UNIQUE indexes before mutating anything: walk every
+        # index on this table and reject the row if any UNIQUE index would
+        # be violated.  Doing this BEFORE the table insert means failures
+        # leave the database byte-for-byte unchanged.
+        #
+        # Per-column UNIQUE / non-IPK PRIMARY KEY constraints declared in
+        # CREATE TABLE are enforced via auto-created UNIQUE indexes (named
+        # ``sqlite_autoindex_<table>_<n>``), so the index walk below covers
+        # them automatically — no separate O(n) scan is needed.
+        indexes = self._open_indexes_for(table)
+        for idx_name, idx_cols, idx_tree in indexes:
+            if not idx_tree.is_unique:
+                continue
+            key_vals: list[SqlValue] = [full_row.get(c) for c in idx_cols]  # type: ignore[misc]
+            if any(v is None for v in key_vals):
+                continue  # NULL-distinct: per SQLite, NULLs don't conflict
+            if next(idx_tree.range_scan(key_vals, key_vals), None) is not None:
+                raise ConstraintViolation(
+                    table=table,
+                    column=", ".join(idx_cols),
+                    message=(
+                        f"UNIQUE constraint failed: index {idx_name!r} "
+                        f"already has key {key_vals!r}"
+                    ),
+                )
 
         payload = _encode_row(rowid, full_row, columns)
         try:
@@ -860,6 +1109,18 @@ class SqliteFileBackend(Backend):
                     message=f"PRIMARY KEY constraint failed: {table}.{pk_cols[0].name}",
                 ) from None
             raise  # Should not happen for non-IPK tables; propagate as-is.
+
+        # Maintain secondary indexes: insert (key_vals, rowid) into each.
+        # UNIQUE checks above ensure this cannot raise DuplicateIndexKeyError.
+        for _idx_name, idx_cols, idx_tree in indexes:
+            key_vals = [full_row.get(c) for c in idx_cols]  # type: ignore[misc]
+            idx_tree.insert(key_vals, rowid)
+
+        # AUTOINCREMENT bookkeeping: bump the sqlite_sequence high-water
+        # mark whenever the new rowid exceeds it.  Explicit-rowid inserts
+        # that overshoot the sequence also bump it (matches SQLite).
+        if autoinc and rowid > current_seq:
+            self._set_seq(table, rowid)
 
     def update(
         self,
@@ -899,8 +1160,41 @@ class SqliteFileBackend(Backend):
 
         tree = self._open_tree(rootpage)
         rowid = cursor._current_rowid  # noqa: SLF001
+
+        # Maintain secondary indexes.  For each index, decide whether the new
+        # row's key differs from the old; if so, the old entry must be
+        # deleted and the new entry inserted.  Pre-validate UNIQUE indexes
+        # *before* any mutation so a violation leaves state unchanged.
+        indexes = self._open_indexes_for(table)
+        index_changes: list[tuple[IndexTree, list[SqlValue], list[SqlValue]]] = []
+        for idx_name, idx_cols, idx_tree in indexes:
+            old_key: list[SqlValue] = [current_row.get(c) for c in idx_cols]  # type: ignore[misc]
+            new_key: list[SqlValue] = [proposed.get(c) for c in idx_cols]  # type: ignore[misc]
+            if old_key == new_key:
+                continue  # nothing to do for this index
+            index_changes.append((idx_tree, old_key, new_key))
+            # UNIQUE pre-check on the new key (NULL-distinct).
+            if (
+                idx_tree.is_unique
+                and not any(v is None for v in new_key)
+                and next(idx_tree.range_scan(new_key, new_key), None) is not None
+            ):
+                raise ConstraintViolation(
+                    table=table,
+                    column=", ".join(idx_cols),
+                    message=(
+                        f"UNIQUE constraint failed: index {idx_name!r} "
+                        f"already has key {new_key!r}"
+                    ),
+                )
+
         new_payload = _encode_row(rowid, proposed, columns)
         tree.update(rowid, new_payload)
+
+        # Apply the index entry rotations now that the table row is in place.
+        for idx_tree, old_key, new_key in index_changes:
+            idx_tree.delete(old_key, rowid)
+            idx_tree.insert(new_key, rowid)
 
         # Update cursor's cached row so further reads are consistent.
         cursor._current_row = proposed  # noqa: SLF001
@@ -923,6 +1217,15 @@ class SqliteFileBackend(Backend):
         rootpage, _ = self._require_table(table)
         tree = self._open_tree(rootpage)
         rowid = cursor._current_rowid  # noqa: SLF001
+
+        # Remove this row's entries from every secondary index BEFORE the
+        # table row goes away, so we can still read the indexed column values
+        # from the cursor's cached row.
+        current_row: Row = cursor._current_row or {}  # noqa: SLF001
+        for _idx_name, idx_cols, idx_tree in self._open_indexes_for(table):
+            key_vals: list[SqlValue] = [current_row.get(c) for c in idx_cols]  # type: ignore[misc]
+            idx_tree.delete(key_vals, rowid)
+
         tree.delete(rowid)
 
         # Clear cursor position — the row no longer exists.
@@ -942,6 +1245,14 @@ class SqliteFileBackend(Backend):
         Generates the ``CREATE TABLE`` SQL, stores it in ``sqlite_schema``,
         and allocates a fresh root page for the new B-tree.
 
+        For every column with ``effective_unique()`` (i.e. ``UNIQUE`` or
+        non-IPK ``PRIMARY KEY``), a UNIQUE auto-index is also created with
+        the SQLite-standard ``sqlite_autoindex_<table>_<n>`` name.  These
+        indexes provide O(log n) UNIQUE enforcement on every insert/update
+        via the IX-12 runtime maintenance path.  Integer PRIMARY KEY
+        columns (the IPK case) are skipped — their uniqueness is already
+        enforced by the rowid B-tree itself.
+
         If *if_not_exists* is ``True`` and the table already exists, this is a
         no-op. Otherwise raises :class:`~sql_backend.TableAlreadyExists`.
         """
@@ -952,6 +1263,29 @@ class SqliteFileBackend(Backend):
 
         sql = _columns_to_sql(table, columns)
         self._schema.create_table(table, sql)
+
+        # Bootstrap sqlite_sequence on first use of AUTOINCREMENT — matches
+        # SQLite's lazy-creation behaviour (the table appears in `.tables`
+        # once any AUTOINCREMENT table has been declared).
+        if _has_autoincrement(columns):
+            self._ensure_sequence_table()
+
+        # Auto-create UNIQUE indexes for every column declared UNIQUE or
+        # non-IPK PRIMARY KEY.  The table is empty so backfill is a no-op;
+        # subsequent inserts will populate the index via runtime maintenance
+        # (see :meth:`insert`).
+        auto_idx_n = 0
+        for col in columns:
+            if not col.effective_unique() or _is_ipk(col):
+                continue
+            auto_idx_n += 1
+            auto_name = f"sqlite_autoindex_{table}_{auto_idx_n}"
+            self.create_index(
+                IndexDef(
+                    name=auto_name, table=table,
+                    columns=[col.name], unique=True, auto=True,
+                )
+            )
 
     def drop_table(self, table: str, if_exists: bool) -> None:
         """Drop *table*, freeing all its pages.
@@ -965,6 +1299,25 @@ class SqliteFileBackend(Backend):
             if if_exists:
                 return
             raise TableNotFound(table=table) from None
+
+    def add_column(self, table: str, column: ColumnDef) -> None:
+        """Add a new column to an existing table (ALTER TABLE … ADD COLUMN).
+
+        Rewrites the ``CREATE TABLE`` SQL stored in ``sqlite_schema`` to
+        include the new column.  Existing rows are NOT modified on disk —
+        :func:`_decode_row` returns the column default (or NULL) for columns
+        that are absent from old records, mirroring SQLite's own behaviour for
+        ALTER TABLE ADD COLUMN without a data-file rewrite.
+
+        Raises :class:`~sql_backend.TableNotFound` if *table* does not exist.
+        Raises :class:`~sql_backend.ColumnAlreadyExists` if a column with
+        that name already exists in the table.
+        """
+        _, columns = self._require_table(table)
+        if any(c.name == column.name for c in columns):
+            raise ColumnAlreadyExists(table=table, column=column.name)
+        new_sql = _columns_to_sql(table, columns + [column])
+        self._schema.update_table_sql(table, new_sql)
 
     # ── Backend interface: Transactions ───────────────────────────────────────
 
@@ -1034,8 +1387,131 @@ class SqliteFileBackend(Backend):
         self._require_active(handle)
         self._pager.rollback()
         self._active_handle = None
+        self._savepoint_stack.clear()
         # Reattach the schema object so it reads fresh pages after rollback.
         self._schema = Schema(self._pager, freelist=self._freelist)
+
+    def current_transaction(self) -> TransactionHandle | None:
+        """Return the active transaction handle, or ``None`` if none is open.
+
+        Allows multi-statement transactions that span separate
+        :func:`~sql_vm.vm.execute` calls to retrieve the handle issued by
+        an earlier ``BeginTransaction`` instruction without storing it
+        externally.
+        """
+        if self._active_handle is None:
+            return None
+        return TransactionHandle(self._active_handle)
+
+    # ── Backend interface: Savepoints ─────────────────────────────────────────
+
+    def create_savepoint(self, name: str) -> None:
+        """Push a snapshot of the pager's dirty-page table.
+
+        Savepoints in the file backend are implemented by deep-copying the
+        pager's in-memory dirty-page dict and recording the current logical
+        page count.  Rolling back to a savepoint restores both, effectively
+        undoing all page writes that happened after the savepoint was created.
+
+        No disk I/O occurs here — the snapshot lives entirely in memory until
+        the outer transaction is committed or rolled back.
+
+        Multiple savepoints with the same name are allowed; they stack
+        independently, as in SQLite.
+        """
+        dirty_snap = copy.deepcopy(self._pager._dirty)  # noqa: SLF001
+        size_snap = self._pager._size_pages  # noqa: SLF001
+        self._savepoint_stack.append((name, dirty_snap, size_snap))
+
+    def release_savepoint(self, name: str) -> None:
+        """Release (destroy) the named savepoint and all savepoints after it.
+
+        The current data state is unchanged — this is a "partial commit" up
+        to the release point.  Raises :class:`~sql_backend.Unsupported` if no
+        savepoint with *name* exists.
+        """
+        idx = self._find_savepoint(name)
+        if idx is None:
+            raise Unsupported(operation=f"RELEASE {name!r}: no such savepoint")
+        del self._savepoint_stack[idx:]
+
+    def rollback_to_savepoint(self, name: str) -> None:
+        """Restore the pager dirty-page state to when *name* was created.
+
+        Replaces the pager's dirty-page dict and logical size with the
+        snapshot taken at savepoint creation, then re-attaches the schema
+        object so it reads the restored pages.  Savepoints created after
+        *name* are destroyed; *name* itself is kept alive so the caller may
+        roll back to it again or release it later.
+
+        Raises :class:`~sql_backend.Unsupported` if no savepoint with *name*
+        exists.
+        """
+        idx = self._find_savepoint(name)
+        if idx is None:
+            raise Unsupported(operation=f"ROLLBACK TO {name!r}: no such savepoint")
+        _sp_name, dirty_snap, size_snap = self._savepoint_stack[idx]
+        self._pager._dirty = copy.deepcopy(dirty_snap)  # noqa: SLF001
+        self._pager._size_pages = size_snap  # noqa: SLF001
+        self._schema = Schema(self._pager, freelist=self._freelist)
+        del self._savepoint_stack[idx + 1:]
+
+    def _find_savepoint(self, name: str) -> int | None:
+        """Return the index of the *last* savepoint named *name*, or ``None``."""
+        for i in range(len(self._savepoint_stack) - 1, -1, -1):
+            if self._savepoint_stack[i][0] == name:
+                return i
+        return None
+
+    # ── Backend interface: Triggers ───────────────────────────────────────────
+
+    def create_trigger(self, defn: TriggerDef) -> None:
+        """Store a trigger definition in ``sqlite_schema``.
+
+        Serialises *defn* to a ``CREATE TRIGGER`` SQL string and inserts a
+        ``type = 'trigger'`` row into ``sqlite_schema`` with ``rootpage = 0``
+        (the standard convention for trigger rows).
+
+        Raises :class:`~sql_backend.TriggerAlreadyExists` if a trigger with
+        ``defn.name`` already exists.
+        """
+        if self._schema.find_trigger(defn.name) is not None:
+            raise TriggerAlreadyExists(name=defn.name)
+        sql = _trigger_to_sql(defn)
+        self._schema.create_trigger(defn.name, defn.table, sql)
+
+    def drop_trigger(self, name: str, if_exists: bool = False) -> None:
+        """Remove a trigger definition by name.
+
+        Deletes the ``sqlite_schema`` row and bumps the schema cookie.
+        When ``if_exists=True`` and the trigger does not exist, this is a
+        silent no-op.  Otherwise raises :class:`~sql_backend.TriggerNotFound`.
+        """
+        try:
+            self._schema.drop_trigger(name)
+        except SchemaError:
+            if if_exists:
+                return
+            raise TriggerNotFound(name=name) from None
+
+    def list_triggers(self, table: str) -> list[TriggerDef]:
+        """Return all triggers for *table* in creation order.
+
+        Reads ``sqlite_schema`` for ``type = 'trigger'`` rows whose
+        ``tbl_name`` matches *table*, parses the ``CREATE TRIGGER`` SQL to
+        recover the timing, event, and body, and returns a list of
+        :class:`~sql_backend.schema.TriggerDef` objects.
+
+        Returns an empty list when no triggers exist for *table*.
+        """
+        rows = self._schema.list_triggers(table)
+        result: list[TriggerDef] = []
+        for name, tbl_name, sql in rows:
+            if sql is None:
+                continue
+            with contextlib.suppress(ValueError):
+                result.append(_sql_to_trigger_def(name, tbl_name, sql))
+        return result
 
     # ── Backend interface: Indexes ────────────────────────────────────────────
 
@@ -1083,16 +1559,39 @@ class SqliteFileBackend(Backend):
                 raise ColumnNotFound(table=index.table, column=col)
 
         # 4. Allocate index storage and write the schema row.
-        sql = _columns_to_index_sql(index.name, index.table, index.columns)
+        sql = _columns_to_index_sql(
+            index.name, index.table, index.columns, unique=index.unique
+        )
         idx_rootpage = self._schema.create_index(index.name, index.table, sql)
 
-        # 5. Backfill existing rows.
+        # 5. Backfill existing rows.  When the index is UNIQUE,
+        #    ``IndexTree.insert`` raises :class:`DuplicateIndexKeyError` if a
+        #    duplicate is encountered during backfill — translate that to a
+        #    public :class:`~sql_backend.ConstraintViolation` so callers see
+        #    the same error type they would see from a runtime insert.
         table_tree = self._open_tree(rootpage)
-        idx_tree = IndexTree.open(self._pager, idx_rootpage, freelist=self._freelist)
-        for rowid, payload in table_tree.scan():
-            row = _decode_row(rowid, payload, columns)
-            key_vals: list[SqlValue] = [row.get(col) for col in index.columns]  # type: ignore[misc]
-            idx_tree.insert(key_vals, rowid)
+        idx_tree = IndexTree.open(
+            self._pager, idx_rootpage, freelist=self._freelist, is_unique=index.unique
+        )
+        try:
+            for rowid, payload in table_tree.scan():
+                row = _decode_row(rowid, payload, columns)
+                key_vals: list[SqlValue] = [row.get(col) for col in index.columns]  # type: ignore[misc]
+                idx_tree.insert(key_vals, rowid)
+        except DuplicateIndexKeyError as e:
+            # Backfill found pre-existing duplicates — abort the index
+            # creation by rolling back the pending writes (the schema row
+            # and any partial index pages) so the database is unchanged.
+            self._pager.rollback()
+            self._schema = Schema(self._pager, freelist=self._freelist)
+            raise ConstraintViolation(
+                table=index.table,
+                column=", ".join(index.columns),
+                message=(
+                    f"cannot create UNIQUE INDEX {index.name!r}: "
+                    f"existing rows contain duplicate values ({e})"
+                ),
+            ) from None
 
         # Commit the backfill so it is durable.
         self._update_commit_header()
@@ -1142,9 +1641,19 @@ class SqliteFileBackend(Backend):
         result: list[IndexDef] = []
         for name, tbl_name, _, sql in rows:
             columns = _parse_index_columns(sql) if sql else []
-            auto = name.startswith("auto_")
+            unique = _parse_index_unique(sql)
+            # Two auto-index naming conventions:
+            #   * ``auto_*`` — IndexAdvisor (IX-7/8) auto-created indexes for
+            #     query acceleration.
+            #   * ``sqlite_autoindex_*`` — UNIQUE auto-indexes created by
+            #     ``create_table`` for ``UNIQUE`` / non-IPK ``PRIMARY KEY``
+            #     columns (SQLite naming convention).
+            auto = name.startswith("auto_") or name.startswith("sqlite_autoindex_")
             result.append(
-                IndexDef(name=name, table=tbl_name, columns=columns, unique=False, auto=auto)
+                IndexDef(
+                    name=name, table=tbl_name, columns=columns,
+                    unique=unique, auto=auto,
+                )
             )
         return result
 

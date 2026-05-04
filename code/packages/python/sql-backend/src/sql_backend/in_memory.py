@@ -55,17 +55,20 @@ from typing import Final
 
 from .backend import Backend, TransactionHandle
 from .errors import (
+    ColumnAlreadyExists,
     ColumnNotFound,
     ConstraintViolation,
     IndexAlreadyExists,
     IndexNotFound,
     TableAlreadyExists,
     TableNotFound,
+    TriggerAlreadyExists,
+    TriggerNotFound,
     Unsupported,
 )
 from .index import IndexDef
 from .row import Cursor, ListCursor, ListRowIterator, Row, RowIterator
-from .schema import ColumnDef
+from .schema import ColumnDef, TriggerDef
 from .values import SqlValue
 
 # ---------------------------------------------------------------------------
@@ -146,6 +149,10 @@ class InMemoryBackend(Backend):
         # in-memory index structures); scan_index does a linear scan at
         # call time.  This is fine for a pedagogical reference backend.
         self._indexes: dict[str, IndexDef] = {}
+        # Trigger stores: name → TriggerDef (for uniqueness checks and DROP),
+        # and table → ordered list of TriggerDef (for firing order).
+        self._triggers: dict[str, TriggerDef] = {}
+        self._triggers_by_table: dict[str, list[TriggerDef]] = {}
         # Snapshot for the currently-active transaction, if any. ``None``
         # means no transaction is open. We store a full deep copy rather
         # than a diff log because it is dramatically simpler and the data
@@ -157,6 +164,16 @@ class InMemoryBackend(Backend):
         # this way an old handle will never match a new transaction.
         self._next_handle: int = 1
         self._active_handle: int | None = None
+        # Savepoint stack: list of (name, tables_snapshot, indexes_snapshot).
+        # Each SAVEPOINT pushes a deep-copy; RELEASE pops; ROLLBACK TO
+        # restores from a snapshot but keeps the entry so it can be reused.
+        self._savepoint_stack: list[tuple[str, dict[str, _Table], dict[str, IndexDef]]] = []
+        # PRAGMA user_version / schema_version backing fields (real SQLite
+        # stores these in the file header; for the in-memory backend we
+        # just hold ints).  ``_schema_version`` increments on every
+        # successful create_table / drop_table / create_index / drop_index.
+        self._user_version: int = 0
+        self._schema_version: int = 0
 
     # --- Construction helpers ---------------------------------------------
 
@@ -186,6 +203,29 @@ class InMemoryBackend(Backend):
 
     def columns(self, table: str) -> list[ColumnDef]:
         return list(self._require_table(table).columns)
+
+    # --- Header fields (PRAGMA user_version / schema_version) -------------
+
+    def get_user_version(self) -> int:
+        """Return the user_version field (a u32 with no engine semantics).
+
+        Defaults to 0 on a fresh backend.  Persistent backends (e.g.
+        ``SqliteFileBackend``) read this from byte 60 of the page-1
+        header; in-memory just holds it as an attribute.
+        """
+        return self._user_version
+
+    def set_user_version(self, value: int) -> None:
+        """Write *value* into ``user_version``; must fit in u32."""
+        if not (0 <= value <= 0xFFFFFFFF):
+            raise ValueError(
+                f"user_version must fit in u32 (0 ≤ v ≤ {0xFFFFFFFF}), got {value}"
+            )
+        self._user_version = value
+
+    def get_schema_version(self) -> int:
+        """Return the schema cookie — bumped on every DDL operation."""
+        return self._schema_version
 
     # --- Read -------------------------------------------------------------
 
@@ -280,6 +320,7 @@ class InMemoryBackend(Backend):
                 return
             raise TableAlreadyExists(table=table)
         self._tables[table] = _Table(columns)
+        self._schema_version += 1
 
     def drop_table(self, table: str, if_exists: bool) -> None:
         if table not in self._tables:
@@ -287,6 +328,19 @@ class InMemoryBackend(Backend):
                 return
             raise TableNotFound(table=table)
         del self._tables[table]
+        self._schema_version += 1
+
+    def add_column(self, table: str, column: ColumnDef) -> None:
+        if table not in self._tables:
+            raise TableNotFound(table=table)
+        tbl = self._tables[table]
+        if any(c.name == column.name for c in tbl.columns):
+            raise ColumnAlreadyExists(table=table, column=column.name)
+        tbl.columns.append(column)
+        # Backfill existing rows: default value if specified, NULL otherwise.
+        fill_value: SqlValue = column.default if column.has_default() else None
+        for row in tbl.rows:
+            row[column.name] = fill_value
 
     # --- Transactions -----------------------------------------------------
 
@@ -340,6 +394,98 @@ class InMemoryBackend(Backend):
             return None
         return TransactionHandle(self._active_handle)
 
+    def create_savepoint(self, name: str) -> None:
+        """Push a deep-copy snapshot of the current tables and indexes.
+
+        Each SAVEPOINT call appends to the stack; multiple savepoints with the
+        same name stack independently (SQLite allows this).  If a transaction
+        is not already active, ``create_savepoint`` implicitly begins one so
+        the savepoint has something to anchor to.
+
+        Deep-copying is O(data size) but acceptable for the pedagogical scale
+        this backend targets.
+        """
+        if self._active_handle is None:
+            # Implicitly begin a transaction so the savepoint is anchored.
+            self.begin_transaction()
+        snap_tables = copy.deepcopy(self._tables)
+        snap_indexes = copy.deepcopy(self._indexes)
+        self._savepoint_stack.append((name, snap_tables, snap_indexes))
+
+    def release_savepoint(self, name: str) -> None:
+        """Remove the named savepoint (and all savepoints after it).
+
+        Finds the *last* entry in the stack with the given name, removes it
+        and every entry that was pushed after it.  The current table state is
+        not changed — this is a "partial commit" up to the release point.
+
+        Raises :class:`~sql_backend.errors.Unsupported` if no savepoint with
+        that name exists.
+        """
+        idx = self._find_savepoint(name)
+        if idx is None:
+            raise Unsupported(operation=f"RELEASE {name!r}: no such savepoint")
+        del self._savepoint_stack[idx:]
+
+    def rollback_to_savepoint(self, name: str) -> None:
+        """Restore the database to the state it was in when *name* was created.
+
+        Finds the *last* savepoint with the given name, restores tables and
+        indexes from its snapshot, and removes all savepoints pushed after it.
+        The named savepoint itself is kept in the stack so the caller may roll
+        back to it again or release it later.
+
+        Raises :class:`~sql_backend.errors.Unsupported` if no savepoint with
+        that name exists.
+        """
+        idx = self._find_savepoint(name)
+        if idx is None:
+            raise Unsupported(operation=f"ROLLBACK TO {name!r}: no such savepoint")
+        _name, snap_tables, snap_indexes = self._savepoint_stack[idx]
+        # Restore state from the snapshot.
+        self._tables = copy.deepcopy(snap_tables)
+        self._indexes = copy.deepcopy(snap_indexes)
+        # Drop all savepoints created after this one; keep this one alive.
+        del self._savepoint_stack[idx + 1:]
+
+    def _find_savepoint(self, name: str) -> int | None:
+        """Return the index of the *last* savepoint named *name*, or ``None``."""
+        for i in range(len(self._savepoint_stack) - 1, -1, -1):
+            if self._savepoint_stack[i][0] == name:
+                return i
+        return None
+
+    # --- Triggers ----------------------------------------------------------
+
+    def create_trigger(self, defn: TriggerDef) -> None:
+        """Store a trigger definition.
+
+        Raises :class:`TriggerAlreadyExists` if a trigger with the same name
+        already exists.
+        """
+        if defn.name in self._triggers:
+            raise TriggerAlreadyExists(name=defn.name)
+        self._triggers[defn.name] = defn
+        self._triggers_by_table.setdefault(defn.table, []).append(defn)
+
+    def drop_trigger(self, name: str, if_exists: bool = False) -> None:
+        """Remove a trigger definition by name.
+
+        Raises :class:`TriggerNotFound` when *name* is absent and
+        ``if_exists=False``.
+        """
+        if name not in self._triggers:
+            if if_exists:
+                return
+            raise TriggerNotFound(name=name)
+        defn = self._triggers.pop(name)
+        table_list = self._triggers_by_table.get(defn.table, [])
+        self._triggers_by_table[defn.table] = [t for t in table_list if t.name != name]
+
+    def list_triggers(self, table: str) -> list[TriggerDef]:
+        """Return all triggers for *table* in creation order."""
+        return list(self._triggers_by_table.get(table, []))
+
     # --- Indexes ----------------------------------------------------------
 
     def create_index(self, index: IndexDef) -> None:
@@ -368,6 +514,7 @@ class InMemoryBackend(Backend):
             if col not in col_names:
                 raise ColumnNotFound(table=index.table, column=col)
         self._indexes[index.name] = index
+        self._schema_version += 1
 
     def drop_index(self, name: str, *, if_exists: bool = False) -> None:
         """Remove an index definition.
@@ -380,6 +527,7 @@ class InMemoryBackend(Backend):
                 return
             raise IndexNotFound(index=name)
         del self._indexes[name]
+        self._schema_version += 1
 
     def list_indexes(self, table: str | None = None) -> list[IndexDef]:
         """Return all stored index definitions, optionally filtered by table.

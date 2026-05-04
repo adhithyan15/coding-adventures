@@ -81,6 +81,17 @@ class ColumnNotFound(BackendError):
 
 
 @dataclass(eq=True)
+class ColumnAlreadyExists(BackendError):
+    """Raised by ``add_column`` when a column with that name already exists."""
+
+    table: str
+    column: str
+
+    def __str__(self) -> str:
+        return f"column already exists: {self.table!r}.{self.column!r}"
+
+
+@dataclass(eq=True)
 class ConstraintViolation(BackendError):
     """Raised for NOT NULL / UNIQUE / PRIMARY KEY violations.
 
@@ -169,3 +180,23 @@ class IndexNotFound(BackendError):
 
     def __str__(self) -> str:
         return f"index not found: {self.index!r}"
+
+
+@dataclass(eq=True)
+class TriggerAlreadyExists(BackendError):
+    """Raised by ``create_trigger`` when a trigger with the same name already exists."""
+
+    name: str
+
+    def __str__(self) -> str:
+        return f"trigger already exists: {self.name!r}"
+
+
+@dataclass(eq=True)
+class TriggerNotFound(BackendError):
+    """Raised by ``drop_trigger(if_exists=False)`` when the trigger does not exist."""
+
+    name: str
+
+    def __str__(self) -> str:
+        return f"trigger not found: {self.name!r}"

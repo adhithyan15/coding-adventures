@@ -72,6 +72,13 @@ the build job skips straight to step 6 (hashing), saving time on each of the
       "type": "object",
       "description": "Map of language name to boolean indicating whether that language's toolchain is needed for this build.",
       "additionalProperties": { "type": "boolean" }
+    },
+    "shards": {
+      "type": "array",
+      "description": "Optional prerequisite-closed build shards for multi-runner CI execution. See build-plan-sharding.md.",
+      "items": {
+        "$ref": "#/$defs/shard_entry"
+      }
     }
   },
   "$defs": {
@@ -116,6 +123,40 @@ the build job skips straight to step 6 (hashing), saving time on each of the
           "description": "Qualified names of packages this package depends on, as declared in the Starlark deps field."
         }
       }
+    },
+    "shard_entry": {
+      "type": "object",
+      "required": ["index", "name", "assigned_packages", "package_names"],
+      "additionalProperties": true,
+      "properties": {
+        "index": {
+          "type": "integer",
+          "description": "Stable shard index used by CI matrix jobs."
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable shard label, e.g. shard-1-of-5."
+        },
+        "assigned_packages": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Packages directly assigned to this shard."
+        },
+        "package_names": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Assigned packages plus transitive prerequisites; this is the package set the shard builds."
+        },
+        "languages_needed": {
+          "type": "object",
+          "additionalProperties": { "type": "boolean" },
+          "description": "Toolchains needed by this shard."
+        },
+        "estimated_cost": {
+          "type": "integer",
+          "description": "Heuristic cost used for balancing shards."
+        }
+      }
     }
   }
 }
@@ -157,6 +198,7 @@ the build job skips straight to step 6 (hashing), saving time on each of the
 |--------|:---:|-----------|
 | Add optional `build_timeout` to package_entry | No | Additive — v1 readers ignore it |
 | Add optional `platform_overrides` top-level field | No | Additive |
+| Add optional `shards` top-level field | No | Additive |
 | Add `"zig"` to the language enum | No | Additive |
 | Rename `rel_path` → `path` | **Yes → v2** | Breaking — v1 readers expect `rel_path` |
 | Change edges from `[[a,b]]` to `[{from:a, to:b}]` | **Yes → v2** | Breaking — structural change |

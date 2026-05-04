@@ -1,0 +1,17 @@
+[project]
+name = "xor-hidden-layer-demo"
+version = "0.1.0"
+description = "Shows why XOR needs a hidden layer"
+requires-python = ">=3.9"
+dependencies = [
+    "coding-adventures-single-layer-network",
+    "coding-adventures-two-layer-network",
+    "coding-adventures-neural-network",
+    "coding-adventures-neural-graph-vm",
+]
+
+[tool.uv.sources]
+coding-adventures-single-layer-network = { path = "../../../packages/python/single-layer-network" }
+coding-adventures-two-layer-network = { path = "../../../packages/python/two-layer-network" }
+coding-adventures-neural-network = { path = "../../../packages/python/neural-network" }
+coding-adventures-neural-graph-vm = { path = "../../../packages/python/neural-graph-vm" }

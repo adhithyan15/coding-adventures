@@ -23,6 +23,7 @@ from enum import IntEnum
 
 from logic_engine import ConjExpr, DisjExpr, FreshExpr, GoalExpr, Relation, RelationCall
 from logic_instructions import (
+    DynamicRelationDefInstruction,
     FactInstruction,
     InstructionProgram,
     QueryInstruction,
@@ -56,6 +57,7 @@ class LogicBytecodeOp(IntEnum):
     EMIT_FACT = 0x01
     EMIT_RULE = 0x02
     EMIT_QUERY = 0x03
+    EMIT_DYNAMIC_RELATION = 0x04
     HALT = 0xF0
 
 
@@ -145,7 +147,10 @@ def _collect_relations(program_value: InstructionProgram) -> tuple[Relation, ...
             ordered.append(relation_value)
 
     for instruction in program_value.instructions:
-        if isinstance(instruction, RelationDefInstruction):
+        if isinstance(
+            instruction,
+            RelationDefInstruction | DynamicRelationDefInstruction,
+        ):
             visit(instruction.relation)
         elif isinstance(instruction, FactInstruction):
             visit(instruction.head.relation)
@@ -177,7 +182,14 @@ def compile_program(program_value: InstructionProgram) -> LogicBytecodeProgram:
     instructions: list[LogicBytecodeInstruction] = []
 
     for instruction in program_value.instructions:
-        if isinstance(instruction, RelationDefInstruction):
+        if isinstance(instruction, DynamicRelationDefInstruction):
+            instructions.append(
+                LogicBytecodeInstruction(
+                    opcode=LogicBytecodeOp.EMIT_DYNAMIC_RELATION,
+                    operand=relation_index[instruction.relation.key()],
+                ),
+            )
+        elif isinstance(instruction, RelationDefInstruction):
             instructions.append(
                 LogicBytecodeInstruction(
                     opcode=LogicBytecodeOp.EMIT_RELATION,
@@ -247,7 +259,11 @@ def decode_program(program_value: LogicBytecodeProgram) -> InstructionProgram:
     """Decode loader bytecode back into the original LP07 instruction stream."""
 
     decoded_instructions: list[
-        RelationDefInstruction | FactInstruction | RuleInstruction | QueryInstruction
+        RelationDefInstruction
+        | DynamicRelationDefInstruction
+        | FactInstruction
+        | RuleInstruction
+        | QueryInstruction
     ] = []
     halted = False
 
@@ -262,7 +278,17 @@ def decode_program(program_value: LogicBytecodeProgram) -> InstructionProgram:
             break
 
         operand = _require_operand(instruction, index)
-        if opcode is LogicBytecodeOp.EMIT_RELATION:
+        if opcode is LogicBytecodeOp.EMIT_DYNAMIC_RELATION:
+            decoded_instructions.append(
+                DynamicRelationDefInstruction(
+                    relation=_pool_get(
+                        program_value.relation_pool,
+                        "relation pool",
+                        operand,
+                    ),
+                ),
+            )
+        elif opcode is LogicBytecodeOp.EMIT_RELATION:
             decoded_instructions.append(
                 RelationDefInstruction(
                     relation=_pool_get(
@@ -304,7 +330,10 @@ def _comment_for_instruction(
         return None
 
     operand = _require_operand(instruction, index)
-    if opcode is LogicBytecodeOp.EMIT_RELATION:
+    if opcode in {
+        LogicBytecodeOp.EMIT_RELATION,
+        LogicBytecodeOp.EMIT_DYNAMIC_RELATION,
+    }:
         return str(_pool_get(program_value.relation_pool, "relation pool", operand))
     if opcode is LogicBytecodeOp.EMIT_FACT:
         return str(_pool_get(program_value.fact_pool, "fact pool", operand).head)

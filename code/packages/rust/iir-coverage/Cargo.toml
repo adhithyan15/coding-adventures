@@ -1,0 +1,8 @@
+[package]
+name = "iir-coverage"
+version = "0.1.0"
+edition = "2021"
+description = "LANG-dev-tools D-4 — pure-data IIR-level coverage projection: takes IIRModule + execution trace, returns source-line coverage report.  First consumer of the IIRFunction.source_map populated by D-1."
+
+[dependencies]
+interpreter-ir = { path = "../interpreter-ir" }

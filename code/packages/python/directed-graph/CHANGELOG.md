@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Inherited DT00 graph and node property bags on `DirectedGraph`.
+- Added directed edge property bags keyed by ordered `(u, v)` edge identity.
+- Synchronized the canonical `weight` edge property with directed edge weights
+  and reverse-adjacency weights.
+
 ## [0.2.0] - 2026-04-08
 
 ### Changed (Breaking)

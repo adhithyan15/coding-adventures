@@ -1,5 +1,59 @@
 # Changelog
 
+## 0.8.0 — 2026-04-28
+
+**Phase 15 — Reciprocal hyperbolic compiler mappings: `coth`, `sech`, `csch`.**
+
+Three entries added to `_STANDARD_FUNCTIONS` in `compiler.py`:
+
+```python
+"coth": COTH,
+"sech": SECH,
+"csch": CSCH,
+```
+
+These mappings follow the same pattern as `"sinh": SINH` etc. from Phase 13.
+`COTH`, `SECH`, `CSCH` are imported from `symbolic_ir` 0.8.0, which adds the
+three new `IRSymbol` head singletons.
+
+Depends on `symbolic-ir >= 0.8.0`.
+
+---
+
+## 0.7.0 — 2026-04-27
+
+**Phase 13 — Hyperbolic function compiler mappings.**
+
+No new compiler logic was needed — `"sinh": SINH`, `"cosh": COSH`,
+`"tanh": TANH`, `"asinh": ASINH`, `"acosh": ACOSH`, and `"atanh": ATANH`
+were already added to `_STANDARD_FUNCTIONS` in 0.5.0. This release bumps the
+version to align with Phase 13 of the symbolic VM (0.32.0), and updates the
+`symbolic-ir` dependency to `>=0.7.0`.
+
+## 0.6.0 — 2026-04-27
+
+**Phase G — Control-flow AST → IR compilation.**
+
+Added six new compiler methods and registered them in the `_handlers`
+dispatch table:
+
+- `_compile_if_expr` — `if c then t [elseif c2 then t2] [else e]` →
+  right-nested chain of `If(cond, then[, else])` IR nodes.
+- `_compile_for_each_expr` — `for x in list do body` →
+  `ForEach(x, list, body)`.
+- `_compile_for_range_expr` — `for x [: a] [step s] (thru|while|unless) b do body` →
+  `ForRange(x, a, s, b, body)` (defaults: `start=1`, `step=1`).
+- `_compile_while_expr` — `while c do body` → `While(c, body)`.
+- `_compile_block_expr` — `block([x: 0, y], s1, s2, …)` →
+  `Block(List(…), s1, …)`. Prepends `List()` when no explicit locals list.
+- `_compile_return_expr` — `return(expr)` → `Return(expr)`.
+
+Also imported `BLOCK`, `FOR_EACH`, `FOR_RANGE`, `IF`, `RETURN`, `WHILE`
+from `symbolic_ir` and bumped `symbolic-ir` dependency to `>=0.6.0`.
+
+Grammar changes required: `macsyma.grammar` adds the six new productions;
+`macsyma.tokens` adds the `unless` keyword.
+
 ## 0.5.0 — 2026-04-23
 
 - Added `"sinh": SINH`, `"cosh": COSH`, `"tanh": TANH`, `"asinh": ASINH`,

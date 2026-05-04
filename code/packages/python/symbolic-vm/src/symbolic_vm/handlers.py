@@ -33,18 +33,24 @@ from symbolic_ir import (
     ASSIGN,
     ATAN,
     ATANH,
+    BLOCK,
     COS,
     COSH,
+    COTH,
+    CSCH,
     DEFINE,
     DIV,
     EQUAL,
     EXP,
+    FOR_EACH,
+    FOR_RANGE,
     GREATER,
     GREATER_EQUAL,
     IF,
     INV,
     LESS,
     LESS_EQUAL,
+    LIST,
     LOG,
     MUL,
     NEG,
@@ -52,12 +58,15 @@ from symbolic_ir import (
     NOT_EQUAL,
     OR,
     POW,
+    RETURN,
+    SECH,
     SIN,
     SINH,
     SQRT,
     SUB,
     TAN,
     TANH,
+    WHILE,
     IRApply,
     IRInteger,
     IRNode,
@@ -340,6 +349,46 @@ def atanh(simplify: bool) -> Handler:
 
 
 # ---------------------------------------------------------------------------
+# Reciprocal hyperbolic functions (Phase 15)
+#
+# coth = cosh/sinh, sech = 1/cosh, csch = 1/sinh.
+#
+# Domain notes:
+#   coth(0) and csch(0) are undefined (division by sinh(0) = 0).
+#   sech(0) = 1/cosh(0) = 1/1 = 1.
+#
+# All three use the ``_elementary`` factory just like the primary
+# hyperbolic functions above.
+# ---------------------------------------------------------------------------
+
+
+def coth(simplify: bool) -> Handler:
+    """Return a handler for ``coth(x) = cosh(x)/sinh(x)``.
+
+    No exact identity at ``x = 0`` — the function has a simple pole there.
+    At ``|x| → ∞``, ``coth(x) → ±1``, but those are limits, not exact
+    identities at integer inputs, so the table is empty.
+    """
+    return _elementary("Coth", lambda x: math.cosh(x) / math.sinh(x), {}, simplify)
+
+
+def sech(simplify: bool) -> Handler:
+    """Return a handler for ``sech(x) = 1/cosh(x)``.
+
+    Exact identity: ``sech(0) = 1/cosh(0) = 1/1 = 1``.
+    """
+    return _elementary("Sech", lambda x: 1.0 / math.cosh(x), {0: ONE}, simplify)
+
+
+def csch(simplify: bool) -> Handler:
+    """Return a handler for ``csch(x) = 1/sinh(x)``.
+
+    No exact identity at ``x = 0`` — the function has a simple pole there.
+    """
+    return _elementary("Csch", lambda x: 1.0 / math.sinh(x), {}, simplify)
+
+
+# ---------------------------------------------------------------------------
 # Comparisons
 # ---------------------------------------------------------------------------
 
@@ -538,6 +587,315 @@ def list_(_simplify: bool) -> Handler:
 
 
 # ---------------------------------------------------------------------------
+# Control flow (Phase G — MACSYMA grammar extensions)
+#
+# Five new heads implement structured programming in the VM:
+#
+#   While(condition, body)
+#   ForRange(var, start, step, end, body)
+#   ForEach(var, list, body)
+#   Block(locals_list, stmt1, …, stmtN)
+#   Return(value)
+#
+# All of While/ForRange/ForEach/Block are "held heads" — their args are
+# NOT pre-evaluated by the VM before dispatch. Each handler manually
+# evaluates the parts it needs at the right time (condition before each
+# iteration, body on each iteration, etc.).
+#
+# Return is NOT a held head; the VM evaluates its single argument to
+# produce the return value, then calls the handler, which raises
+# _ReturnSignal. The control-flow handlers (While/ForRange/ForEach/Block)
+# catch _ReturnSignal and return its payload.
+# ---------------------------------------------------------------------------
+
+
+class _ReturnSignal(BaseException):
+    """Raised by the ``Return`` handler to unwind a Block/loop early.
+
+    Inherits from ``BaseException`` rather than ``Exception`` so that
+    ``except Exception`` clauses in user code (if any) don't swallow it
+    accidentally. The VM handlers catch it explicitly.
+    """
+
+    def __init__(self, value: IRNode) -> None:
+        super().__init__()
+        self.value = value
+
+
+# ---------------------------------------------------------------------------
+# Safety limit for loop evaluation
+#
+# While/ForRange loops driven by user-supplied symbolic expressions have
+# no natural upper bound. Without a guard, a user writing ``while true do 1``
+# or ``for i: 1 thru 10^9 do i`` would spin the Python interpreter at 100 %
+# CPU indefinitely — a denial-of-service risk in any multi-tenant or server
+# context.
+#
+# MAX_LOOP_ITERATIONS caps the total number of loop-body executions for
+# While and ForRange (ForEach is inherently bounded by the list length).
+# When the limit is hit a ``RuntimeError`` is raised with an informative
+# message so the caller can catch it cleanly.
+#
+# The value is set to 10,000,000 (ten million) which is more than generous
+# for any legitimate CAS computation and still catches truly runaway loops
+# before they become a problem.  Library consumers that need a different
+# limit can monkey-patch this module attribute at startup.
+# ---------------------------------------------------------------------------
+
+MAX_LOOP_ITERATIONS: int = 10_000_000
+
+
+def while_(simplify: bool) -> Handler:  # noqa: ARG001
+    """Build a While handler.
+
+    Evaluates ``condition`` before each iteration; exits when it is
+    falsy or indeterminate (symbolic).  Evaluates ``body`` on each
+    iteration and returns the last body value, or ``False`` if the loop
+    never executes (condition was false from the start).
+
+    Both ``condition`` and ``body`` are held — the handler calls
+    ``vm.eval`` on them directly so they are re-evaluated each time
+    round the loop rather than evaluated once before dispatch.
+    """
+
+    def handler(vm, expr: IRApply) -> IRNode:
+        if len(expr.args) != 2:
+            raise TypeError(
+                f"While expects 2 arguments, got {len(expr.args)}"
+            )
+        cond_template, body_template = expr.args
+        result: IRNode = FALSE
+        iters = 0
+        try:
+            while True:
+                if iters >= MAX_LOOP_ITERATIONS:
+                    raise RuntimeError(
+                        f"While loop exceeded {MAX_LOOP_ITERATIONS} iterations"
+                    )
+                cond = vm.eval(cond_template)
+                t = _is_truthy(cond)
+                if t is False:
+                    break
+                if t is None:
+                    # Symbolic condition — cannot determine loop count.
+                    # Return the While expression as-is (unevaluated).
+                    return expr
+                result = vm.eval(body_template)
+                iters += 1
+        except _ReturnSignal as sig:
+            return sig.value
+        return result
+
+    return handler
+
+
+def for_range_(simplify: bool) -> Handler:  # noqa: ARG001
+    """Build a ForRange handler.
+
+    Implements ``for var: start step step thru end do body``.
+    Evaluates ``start``, ``step``, and ``end`` once; iterates while
+    ``var <= end`` (for positive step), binding ``var`` to successive
+    values.  Restores the previous binding of ``var`` on exit (even if
+    a ``Return`` fires).
+
+    All five arguments are held — see :data:`~symbolic_vm.backends._HELD_HEADS`.
+    """
+
+    def handler(vm, expr: IRApply) -> IRNode:
+        if len(expr.args) != 5:
+            raise TypeError(
+                f"ForRange expects 5 arguments, got {len(expr.args)}"
+            )
+        var_sym, start_tpl, step_tpl, end_tpl, body_tpl = expr.args
+        if not isinstance(var_sym, IRSymbol):
+            raise TypeError(
+                f"ForRange: first argument must be a symbol, got {var_sym!r}"
+            )
+        start = vm.eval(start_tpl)
+        step = vm.eval(step_tpl)
+        end = vm.eval(end_tpl)
+
+        v_start = to_number(start)
+        v_step = to_number(step)
+        v_end = to_number(end)
+
+        if v_start is None or v_step is None or v_end is None:
+            # Symbolic bounds — leave the expression unevaluated.
+            return expr
+
+        # Save the loop variable's old binding so we can restore it on
+        # exit.  If the variable was unbound before the loop, we unbind
+        # it again after.
+        old = vm.backend.lookup(var_sym.name)
+        result: IRNode = FALSE
+        iters = 0
+        try:
+            i_val = v_start
+            while (v_step > 0 and i_val <= v_end) or (v_step < 0 and i_val >= v_end):
+                if iters >= MAX_LOOP_ITERATIONS:
+                    raise RuntimeError(
+                        f"ForRange loop exceeded {MAX_LOOP_ITERATIONS} iterations"
+                    )
+                vm.backend.bind(var_sym.name, from_number(i_val))
+                try:
+                    result = vm.eval(body_tpl)
+                except _ReturnSignal as sig:
+                    return sig.value
+                i_val += v_step
+                iters += 1
+        finally:
+            if old is None:
+                vm.backend.unbind(var_sym.name)
+            else:
+                vm.backend.bind(var_sym.name, old)
+        return result
+
+    return handler
+
+
+def for_each_(simplify: bool) -> Handler:  # noqa: ARG001
+    """Build a ForEach handler.
+
+    Implements ``for var in list do body``.  Evaluates the list once,
+    then evaluates ``body`` for each element, binding ``var`` in turn.
+    Restores ``var``'s previous binding on exit.
+
+    Returns ``False`` if the list is empty (matching MACSYMA semantics).
+    """
+
+    def handler(vm, expr: IRApply) -> IRNode:
+        if len(expr.args) != 3:
+            raise TypeError(
+                f"ForEach expects 3 arguments, got {len(expr.args)}"
+            )
+        var_sym, list_tpl, body_tpl = expr.args
+        if not isinstance(var_sym, IRSymbol):
+            raise TypeError(
+                f"ForEach: first argument must be a symbol, got {var_sym!r}"
+            )
+        list_val = vm.eval(list_tpl)
+        if not (isinstance(list_val, IRApply) and list_val.head == LIST):
+            # Not a concrete list — leave unevaluated.
+            return expr
+
+        old = vm.backend.lookup(var_sym.name)
+        result: IRNode = FALSE
+        try:
+            for elem in list_val.args:
+                vm.backend.bind(var_sym.name, elem)
+                try:
+                    result = vm.eval(body_tpl)
+                except _ReturnSignal as sig:
+                    return sig.value
+        finally:
+            if old is None:
+                vm.backend.unbind(var_sym.name)
+            else:
+                vm.backend.bind(var_sym.name, old)
+        return result
+
+    return handler
+
+
+def block_(simplify: bool) -> Handler:  # noqa: ARG001
+    """Build a Block handler.
+
+    Implements ``block([locals], stmt1, stmt2, …)``.
+
+    The first argument must be an ``IRApply(LIST, …)`` — the locals
+    declaration.  Each element of that list is either:
+
+    - ``IRSymbol(name)`` — declare ``name``, initialize to ``False``.
+    - ``IRApply(ASSIGN, sym, rhs)`` — declare ``sym``, initialize to
+      ``vm.eval(rhs)``.
+
+    Statements (args 1…N) are evaluated in order; the return value is
+    the value of the last statement.  A ``Return(value)`` anywhere
+    inside the block (including inside nested While/For loops) exits
+    immediately and returns ``value``.
+
+    All bindings for local variables are saved on entry and restored on
+    exit — even if a ``Return`` or an exception fires.
+    """
+
+    def handler(vm, expr: IRApply) -> IRNode:
+        if not expr.args:
+            return FALSE
+
+        # The first argument is always the locals list (possibly empty).
+        # The compiler always prepends ``List()`` so this invariant holds.
+        first = expr.args[0]
+        if isinstance(first, IRApply) and first.head == LIST:
+            locals_node = first
+            stmts = expr.args[1:]
+        else:
+            # Defensive: treat everything as statements, no locals.
+            locals_node = IRApply(LIST, ())
+            stmts = expr.args
+
+        # Process locals: save old bindings, install new ones.
+        saved: dict[str, IRNode | None] = {}
+        for local in locals_node.args:
+            if isinstance(local, IRSymbol):
+                name = local.name
+                saved[name] = vm.backend.lookup(name)
+                vm.backend.bind(name, FALSE)
+            elif (
+                isinstance(local, IRApply)
+                and local.head == ASSIGN
+                and len(local.args) == 2
+                and isinstance(local.args[0], IRSymbol)
+            ):
+                name = local.args[0].name
+                saved[name] = vm.backend.lookup(name)
+                # Evaluate the initializer in the enclosing scope
+                # (before the local binding shadows it).
+                vm.backend.bind(name, vm.eval(local.args[1]))
+            else:
+                raise TypeError(
+                    f"Block: invalid local declaration: {local!r}"
+                )
+
+        # Execute statements in order, capturing return value.
+        result: IRNode = FALSE
+        try:
+            for stmt in stmts:
+                result = vm.eval(stmt)
+        except _ReturnSignal as sig:
+            result = sig.value
+        finally:
+            # Restore all saved bindings regardless of how we exited.
+            for name, old_val in saved.items():
+                if old_val is None:
+                    vm.backend.unbind(name)
+                else:
+                    vm.backend.bind(name, old_val)
+
+        return result
+
+    return handler
+
+
+def return_(_simplify: bool) -> Handler:
+    """Build a Return handler.
+
+    ``Return`` is NOT a held head — the VM evaluates its single argument
+    before calling this handler, so ``expr.args[0]`` is already the
+    evaluated return value.  The handler raises :class:`_ReturnSignal`
+    which unwinds through enclosing While/ForRange/ForEach/Block handlers.
+    """
+
+    def handler(_vm, expr: IRApply) -> IRNode:
+        if len(expr.args) != 1:
+            raise TypeError(
+                f"Return expects 1 argument, got {len(expr.args)}"
+            )
+        raise _ReturnSignal(expr.args[0])
+
+    return handler
+
+
+# ---------------------------------------------------------------------------
 # Shared builder — construct the handler table for a backend.
 # ---------------------------------------------------------------------------
 
@@ -579,6 +937,9 @@ def build_handler_table(simplify: bool) -> dict[str, Handler]:
         ASINH.name: asinh(simplify),
         ACOSH.name: acosh(simplify),
         ATANH.name: atanh(simplify),
+        COTH.name: coth(simplify),
+        SECH.name: sech(simplify),
+        CSCH.name: csch(simplify),
         EQUAL.name: equal(simplify),
         NOT_EQUAL.name: not_equal(simplify),
         LESS.name: less(simplify),
@@ -592,6 +953,12 @@ def build_handler_table(simplify: bool) -> dict[str, Handler]:
         ASSIGN.name: assign(simplify),
         DEFINE.name: define(simplify),
         "List": list_(simplify),
+        # Control flow (Phase G)
+        WHILE.name: while_(simplify),
+        FOR_RANGE.name: for_range_(simplify),
+        FOR_EACH.name: for_each_(simplify),
+        BLOCK.name: block_(simplify),
+        RETURN.name: return_(simplify),
     }
 
 

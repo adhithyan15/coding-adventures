@@ -1,5 +1,131 @@
 # Changelog
 
+## [0.13.0] - 2026-04-28
+
+### Added
+
+- **`ScalarSubquery(query)` expression** (`expr.py`) — represents a
+  `(SELECT ...)` in expression position. Contains the resolved inner
+  `LogicalPlan`. Returns `False` from `contains_aggregate()` and is a no-op
+  in `collect_columns()`.
+
+## [0.12.0] - 2026-04-28
+
+### Added — Phase 9: SQL Triggers
+
+- **`CreateTriggerStmt` / `DropTriggerStmt`** (`ast.py`) — typed AST nodes for
+  trigger DDL statements; added to the `Statement` union type.
+- **`CreateTrigger` / `DropTrigger`** (`plan.py`) — logical plan leaf nodes;
+  added to the `LogicalPlan` union; `children()` returns `()` for both.
+- **Planner dispatch** (`planner.py`) — `_plan_create_trigger` and
+  `_plan_drop_trigger` map the AST nodes to plan nodes; exported from
+  `sql_planner.__init__`.
+
+## [0.11.0] - 2026-04-27
+
+### Added — Phase 8: Window Functions (OVER / PARTITION BY)
+
+- **`WindowFuncExpr` AST expression** — frozen dataclass with `func: str`,
+  `arg: Expr | None`, `partition_by: tuple[Expr, ...]`, and
+  `order_by: tuple[tuple[Expr, bool], ...]` (expr, descending).  Added to
+  the `Expr` union.  `contains_aggregate()` returns `False` for it;
+  `_collect_columns()` walks all sub-expressions.
+- **`WindowFuncSpec` plan node** — frozen dataclass capturing one window
+  function: `func`, `arg_expr`, `partition_by`, `order_by`, `alias`.
+- **`WindowAgg` logical plan node** — `input: LogicalPlan`,
+  `specs: tuple[WindowFuncSpec, ...]`, `output_cols: tuple[str, ...]`.
+  Added to the `LogicalPlan` union.
+- **`_plan_select()` window path** — detects `WindowFuncExpr` items in the
+  SELECT list, builds an inner `Project` materialising non-window columns
+  plus dependency columns (arg / partition_by / order_by refs), then wraps
+  it in `WindowAgg`.  `output_cols` = non-window output names + window
+  alias names.
+- **`_resolve()` extension** — handles `WindowFuncExpr`, recursively
+  resolving its sub-expressions against the FROM scope.
+- All new types exported via `__all__`.
+
+## [0.10.0] - 2026-04-27
+
+### Added — Phase 7: SAVEPOINT / RELEASE / ROLLBACK TO
+
+- **`SavepointStmt` AST node** — frozen dataclass with `name: str`.
+  Represents `SAVEPOINT name`.
+- **`ReleaseSavepointStmt` AST node** — `name: str`.
+  Represents `RELEASE [SAVEPOINT] name`.
+- **`RollbackToStmt` AST node** — `name: str`.
+  Represents `ROLLBACK TO [SAVEPOINT] name`.
+- All three types added to the `Statement` union and exported via `__all__`.
+
+## [0.9.0] - 2026-04-27
+
+### Added — Phase 6: CREATE / DROP VIEW
+
+- **`CreateViewStmt` AST node** (`sql_planner.ast`) — frozen dataclass
+  carrying `name: str`, `query: SelectStmt`, and `if_not_exists: bool`.
+  Represents `CREATE [IF NOT EXISTS] VIEW name AS query`.
+- **`DropViewStmt` AST node** (`sql_planner.ast`) — frozen dataclass with
+  `name: str` and `if_exists: bool`.  Represents `DROP VIEW [IF EXISTS] name`.
+- Both types added to the `Statement` type union and exported from
+  `sql_planner.__init__`.
+
+## [0.8.0] - 2026-04-27
+
+### Added — Phase 5b: Recursive CTEs
+
+- **`RecursiveCTERef` AST node** (`sql_planner.ast`) — structured representation
+  of a `WITH RECURSIVE name AS (anchor UNION [ALL] recursive)` CTE reference.
+  Carries `name`, `anchor: SelectStmt`, `recursive: SelectStmt`, `union_all: bool`,
+  and an optional `alias` that defaults to the CTE name.
+- **`WorkingSetScan` plan node** (`sql_planner.plan`) — represents a self-reference
+  inside a recursive CTE body.  Holds `alias` and `columns`.  The VM maps this to
+  the current working set produced by the previous iteration.
+- **`RecursiveCTE` plan node** (`sql_planner.plan`) — wraps `anchor`, `recursive`
+  sub-plans, `alias`, `columns`, and `union_all` flag.  Produced when the planner
+  encounters a `RecursiveCTERef` in the FROM / JOIN tree.
+- **Planner dispatch for `RecursiveCTERef`** — `_plan_table_ref` detects a
+  `RecursiveCTERef` entry, plans the anchor without the self-reference in scope
+  and plans the recursive body with the CTE name mapped to a `WorkingSetScan`,
+  then wraps both in a `RecursiveCTE` plan node.
+- **All three types exported** from `sql_planner.__init__`.
+
+## [0.7.0] - 2026-04-27
+
+### Added
+- `AlterTableStmt` AST node (`sql_planner.ast`) — structured representation of
+  ALTER TABLE … ADD [COLUMN] col_def.
+- `AlterTable` plan node (`sql_planner.plan`) — produced by `_plan_alter_table`.
+- Planner dispatch for `AlterTableStmt` in `planner.py`.
+- Both types exported from `sql_planner.__init__`.
+
+## [0.6.0] - 2026-04-27
+
+### Added — Phase 2: EXISTS / NOT EXISTS subquery expressions
+
+- **`ExistsSubquery` expression node** (`sql_planner.expr`) — new `Expr`
+  variant representing `EXISTS (subquery)`.  Holds `query: object` (typed as
+  `object` rather than `LogicalPlan` to avoid a circular import between
+  `expr.py` and `plan.py`).  Before planning the field holds a raw
+  `SelectStmt`; after `_resolve()` it holds a fully-planned `LogicalPlan`.
+
+- **`ExistsSubquery` exported from `sql_planner.__init__`** — added to both
+  the import block and `__all__`.
+
+- **`_resolve()` threaded with `schema` parameter** — signature extended to
+  `_resolve(expr, scope, schema=None)`.  All internal recursive calls and all
+  external call sites (`_plan_select`, `_build_from_tree`, `_plan_update`,
+  `_plan_delete`) updated to forward the schema context.  Required so the
+  inner SELECT inside an EXISTS can be planned against the same schema.
+
+- **`ExistsSubquery` case in `_resolve()`** — when a pre-planner
+  `ExistsSubquery(query=SelectStmt)` is encountered, `_resolve` calls
+  `_plan_select(stmt, schema)` and returns a post-planner
+  `ExistsSubquery(query=LogicalPlan)`.  Raises `InternalError` if called
+  without a schema.
+
+- **`contains_aggregate` / `_collect_columns` updated** — both helpers return
+  `False` / no-op respectively for `ExistsSubquery` (subquery column
+  references don't propagate into the outer query's column set).
+
 ## [0.5.0] - 2026-04-23
 
 ### Added — Phase 9.7: Composite (multi-column) automatic index support (IX-8)
@@ -130,3 +256,4 @@
 - `plan_all` helper for multi-statement scripts.
 - `children()` tree-walk helper exposed from the plan module.
 - PlanError hierarchy as dataclasses for structural equality in tests.
+

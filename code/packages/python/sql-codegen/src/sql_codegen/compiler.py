@@ -48,6 +48,7 @@ from sql_planner import (
     Distinct,
     EmptyResult,
     Except,
+    ExistsSubquery,
     Expr,
     Filter,
     FunctionCall,
@@ -63,12 +64,17 @@ from sql_planner import (
     NotIn,
     Project,
     Rollback,
+    ScalarSubquery,
     Scan,
     Sort,
     UnaryExpr,
     Union,
     Update,
     Wildcard,
+    WorkingSetScan,
+)
+from sql_planner import (
+    AlterTable as PlanAlterTable,
 )
 from sql_planner import (
     Between as AstBetween,
@@ -83,10 +89,16 @@ from sql_planner import (
     CreateTable as PlanCreateTable,
 )
 from sql_planner import (
+    CreateTrigger as PlanCreateTrigger,
+)
+from sql_planner import (
     DropIndex as PlanDropIndex,
 )
 from sql_planner import (
     DropTable as PlanDropTable,
+)
+from sql_planner import (
+    DropTrigger as PlanDropTrigger,
 )
 from sql_planner import (
     IsNotNull as AstIsNotNull,
@@ -101,17 +113,25 @@ from sql_planner import (
     NotLike as AstNotLike,
 )
 from sql_planner import (
+    RecursiveCTE as PlanRecursiveCTE,
+)
+from sql_planner import (
     UnaryOp as AstUnaryOp,
+)
+from sql_planner import (
+    WindowAgg as PlanWindowAgg,
 )
 from sql_planner.ast import ColumnDef as AstColumnDef
 from sql_planner.expr import AggregateExpr
 from sql_planner.plan import AggFunc as PlanAggFunc
 from sql_planner.plan import Limit as PlanLimit
+from sql_planner.plan import WindowFuncSpec as PlanWindowFuncSpec
 
 from .errors import UnsupportedNode
 from .ir import (
     AdvanceCursor,
     AdvanceGroupKey,
+    AlterTable,
     BeginRow,
     BeginTransaction,
     Between,
@@ -121,13 +141,16 @@ from .ir import (
     CaptureLeftResult,
     CloseScan,
     CommitTransaction,
+    ComputeWindowFunctions,
     CreateIndex,
     CreateTable,
+    CreateTriggerDef,
     DeleteRows,
     Direction,
     DistinctResult,
     DropIndex,
     DropTable,
+    DropTriggerDef,
     EmitColumn,
     EmitRow,
     ExceptResult,
@@ -152,8 +175,12 @@ from .ir import (
     NullsOrder,
     OpenIndexScan,
     OpenScan,
+    OpenWorkingSetScan,
     Program,
     RollbackTransaction,
+    RunExistsSubquery,
+    RunRecursiveCTE,
+    RunScalarSubquery,
     RunSubquery,
     SaveGroupKey,
     ScanAllColumns,
@@ -164,6 +191,8 @@ from .ir import (
     UnaryOpCode,
     UpdateAgg,
     UpdateRows,
+    WinFunc,
+    WinFuncSpec,
 )
 from .ir import (
     AggFunc as IrAggFunc,
@@ -190,6 +219,7 @@ class _Ctx:
     label_counter: int = 0
     agg_counter: int = 0
     alias_to_cursor: dict[str, int] = field(default_factory=dict)
+    working_set_cursor_id: int | None = None
 
     def new_cursor(self, alias: str) -> int:
         cid = self.cursor_counter
@@ -269,6 +299,9 @@ def _compile_plan(p: LogicalPlan, ctx: _Ctx) -> tuple[list[Instruction], tuple[s
         case PlanDropTable(table=t, if_exists=ie):
             return [DropTable(table=t, if_exists=ie)], ()
 
+        case PlanAlterTable(table=t, column=col):
+            return [AlterTable(table=t, column=_to_ir_col(col))], ()
+
         case PlanCreateIndex(name=name, table=table, columns=cols, unique=uniq, if_not_exists=ine):
             return [
                 CreateIndex(name=name, table=table, columns=cols, unique=uniq, if_not_exists=ine),
@@ -276,6 +309,18 @@ def _compile_plan(p: LogicalPlan, ctx: _Ctx) -> tuple[list[Instruction], tuple[s
 
         case PlanDropIndex(name=name, if_exists=ie):
             return [DropIndex(name=name, if_exists=ie)], ()
+
+        case PlanCreateTrigger(
+            name=name, timing=timing, event=event, table=table, body_sql=body
+        ):
+            return [
+                CreateTriggerDef(
+                    name=name, timing=timing, event=event, table=table, body_sql=body
+                ),
+            ], ()
+
+        case PlanDropTrigger(name=name, if_exists=ie):
+            return [DropTriggerDef(name=name, if_exists=ie)], ()
 
         case Insert():
             return _compile_insert(p, ctx), ()
@@ -295,6 +340,25 @@ def _compile_plan(p: LogicalPlan, ctx: _Ctx) -> tuple[list[Instruction], tuple[s
 
         case Rollback():
             return [RollbackTransaction()], ()
+
+        case PlanWindowAgg(input=inner, specs=specs, output_cols=output_cols):
+            # Window aggregation: compile the inner plan (which emits the
+            # scan loop), then append ComputeWindowFunctions.  We prepend
+            # SetResultSchema(inner_schema) so result.columns correctly
+            # reflects the INNER column layout when ComputeWindowFunctions
+            # looks up arg/partition/order column names.  ComputeWindowFunctions
+            # itself sets result.columns = output_cols at the end.
+            inner_instrs, inner_schema = _compile_plan(inner, ctx)
+            ir_specs = tuple(_to_ir_win_spec(s) for s in specs)
+            win_instr = ComputeWindowFunctions(
+                specs=ir_specs,
+                output_cols=output_cols,
+            )
+            return (
+                [SetResultSchema(columns=inner_schema)]
+                + inner_instrs
+                + [win_instr]
+            ), output_cols
 
         case _:
             # Read-only query path: emit SetResultSchema, then build the
@@ -335,6 +399,8 @@ def _schema_of(p: LogicalPlan) -> tuple[str, ...]:
         # Set operations: output schema follows the left side's columns.
         case Union(left=left_plan) | Intersect(left=left_plan) | Except(left=left_plan):
             return _schema_of(left_plan)
+        case PlanWindowAgg(output_cols=cols):
+            return cols
         case _:
             return ()
 
@@ -403,6 +469,13 @@ def _compile_core(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
             return _compile_aggregate(p, ctx)
         case Having(input=Aggregate() as agg, predicate=pred):
             return _compile_aggregate(agg, ctx, having=pred)
+        # Project(Aggregate) — occurs in scalar subquery inner plans that haven't
+        # had _flatten_project_over_aggregate applied. Skip the projection layer;
+        # column names don't matter for sub-program result rows.
+        case Project(input=Aggregate() as agg):
+            return _compile_aggregate(agg, ctx)
+        case Project(input=Having(input=Aggregate() as agg, predicate=pred)):
+            return _compile_aggregate(agg, ctx, having=pred)
 
         # Set operations — compile left side, then right side, then post-process.
         #
@@ -435,6 +508,30 @@ def _compile_core(p: LogicalPlan, ctx: _Ctx) -> list[Instruction]:
             out.extend(_compile_read(right_plan, ctx))
             out.append(ExceptResult(all=all_flag))
             return out
+
+        case PlanWindowAgg(input=inner, specs=specs, output_cols=output_cols):
+            # Compile the inner plan, then append ComputeWindowFunctions.
+            #
+            # Critical invariant: when ComputeWindowFunctions executes,
+            # result.columns must reflect the INNER schema (the columns
+            # emitted by the scan loop) so it can look up arg/partition/order
+            # columns by name.  The outer _compile_plan catch-all has already
+            # emitted SetResultSchema(output_cols), so we prepend an explicit
+            # SetResultSchema(inner_schema) to override it.  This override is
+            # always correct:
+            #   - non-empty inner_schema: inner_instrs also starts with
+            #     SetResultSchema(inner_schema), so we get a harmless duplicate.
+            #   - empty inner_schema (window-only SELECT with no non-window
+            #     items): inner_instrs emits no SetResultSchema (because the
+            #     catch-all skips it for empty schemas), so the prepend is the
+            #     only one and is required.
+            inner_instrs, inner_schema = _compile_plan(inner, ctx)
+            ir_specs = tuple(_to_ir_win_spec(s) for s in specs)
+            return (
+                [SetResultSchema(columns=inner_schema)]
+                + inner_instrs
+                + [ComputeWindowFunctions(specs=ir_specs, output_cols=output_cols)]
+            )
 
         case _:
             # Project(Filter(Join/Scan)) — the ordinary SELECT shape.
@@ -625,6 +722,71 @@ def _compile_source(
 
             return _compile_source(inner, wrapped, ctx)
 
+        case WorkingSetScan(alias=alias, columns=_):
+            # The VM stores the working set rows in VmState.working_set_data.
+            # OpenWorkingSetScan creates a fresh _SubqueryCursor from those
+            # rows each time it executes — critical for correctness when the
+            # CTE self-reference appears inside a JOIN (the outer loop would
+            # otherwise exhaust the cursor on the first row and leave nothing
+            # for subsequent rows).
+            cid = ctx.working_set_cursor_id if ctx.working_set_cursor_id is not None else 0
+            ctx.alias_to_cursor[alias] = cid
+            loop = ctx.new_label("wss_loop")
+            end = ctx.new_label("wss_end")
+            out = [
+                OpenWorkingSetScan(cursor_id=cid),
+                Label(name=loop),
+                AdvanceCursor(cursor_id=cid, on_exhausted=end),
+            ]
+            out.extend(body(ctx))
+            out.extend([Jump(label=loop), Label(name=end), CloseScan(cursor_id=cid)])
+            return out
+
+        case PlanRecursiveCTE(
+            anchor=anchor_plan,
+            recursive=recursive_plan,
+            alias=alias,
+            columns=_,
+            union_all=union_all,
+        ):
+            # Compile anchor as an independent sub-program.
+            anchor_ctx = _Ctx()
+            anchor_instrs, anchor_schema = _compile_plan(anchor_plan, anchor_ctx)
+            anchor_instrs.append(Halt())
+            anchor_prog = Program(
+                instructions=tuple(anchor_instrs),
+                labels=_resolve_labels(anchor_instrs),
+                result_schema=anchor_schema,
+            )
+            # Compile recursive step: cursor 0 is pre-reserved for the working
+            # set cursor (VM pre-populates it before each iteration), so we
+            # start assigning other cursors from 1.
+            recursive_ctx = _Ctx(cursor_counter=1, working_set_cursor_id=0)
+            recursive_instrs, recursive_schema = _compile_plan(recursive_plan, recursive_ctx)
+            recursive_instrs.append(Halt())
+            recursive_prog = Program(
+                instructions=tuple(recursive_instrs),
+                labels=_resolve_labels(recursive_instrs),
+                result_schema=recursive_schema,
+            )
+            cid = ctx.new_cursor(alias)
+            loop = ctx.new_label("rcte_loop")
+            end = ctx.new_label("rcte_end")
+            out = [
+                RunRecursiveCTE(
+                    cursor_id=cid,
+                    anchor_program=anchor_prog,
+                    recursive_program=recursive_prog,
+                    working_cursor_id=0,
+                    union_all=union_all,
+                ),
+                Label(name=loop),
+                AdvanceCursor(cursor_id=cid, on_exhausted=end),
+            ]
+            out.extend(body(ctx))
+            out.extend([Jump(label=loop), Label(name=end), CloseScan(cursor_id=cid)])
+            return out
+
         case _:
             raise UnsupportedNode(type(p).__name__)
 
@@ -719,7 +881,7 @@ def _compile_aggregate(
         # by the predicate on demand. In this v1 we take a simpler approach
         # and ask the VM to run the whole post block per group, discarding
         # rows for which the predicate is false.
-        post.extend(_compile_having(having, group_by, aggregates, slots))
+        post.extend(_compile_having(having, group_by, aggregates, slots, ctx))
         post.append(JumpIfFalse(label=emit_next))
 
     # Build the output row: group keys first, then finalized aggregates.
@@ -745,14 +907,15 @@ def _compile_having(
     group_by: tuple[Expr, ...],
     aggregates: tuple[object, ...],
     slots: list[int],
+    ctx: _Ctx,
 ) -> list[Instruction]:
     """Compile a HAVING predicate — aggregates reference slots; plain
     columns reference the saved group key by position.
 
-    Supports a small predicate subset (enough for COUNT(*) > N style
-    expressions). Everything else falls through to plain expression
-    compilation, which raises UnsupportedNode for aggregates outside the
-    slot map.
+    AggregateExpr and Column references are handled via the slot/group-key
+    maps. All other expressions (including EXISTS subqueries, unary ops,
+    and binary comparisons) are delegated to _compile_expr so the full
+    expression language is available in HAVING predicates.
     """
     # Build a lookup: aggregate expression → slot, and column → group-key index.
     group_lookup = {_column_display_name(e): i for i, e in enumerate(group_by)}
@@ -780,7 +943,9 @@ def _compile_having(
             case BinaryExpr(op=op, left=l_, right=r_):
                 return walk(l_) + walk(r_) + [BinaryOp(op=_binop_to_ir(op))]
             case _:
-                raise UnsupportedNode(f"HAVING: {type(e).__name__}")
+                # Delegate to general expression compiler for EXISTS, UnaryExpr,
+                # and any other expression that doesn't reference aggregate slots.
+                return _compile_expr(e, ctx)
 
     return walk(having)
 
@@ -870,6 +1035,34 @@ def _compile_expr(e: Expr, ctx: _Ctx) -> list[Instruction]:
                 out.append(LoadConst(value=None))
             out.append(Label(name=end_lbl))
             return out
+        case ExistsSubquery(query=inner_plan):
+            # Compile the inner LogicalPlan to a standalone sub-program.
+            # The inner program runs against the same backend but with its
+            # own cursor/label namespace so there is no state leakage.
+            inner_ctx = _Ctx()
+            inner_instrs, _ = _compile_plan(inner_plan, inner_ctx)  # type: ignore[arg-type]
+            inner_instrs.append(Halt())
+            inner_resolved = _resolve_labels(inner_instrs)
+            sub = Program(
+                instructions=tuple(inner_instrs),
+                labels=inner_resolved,
+                result_schema=(),
+            )
+            return [RunExistsSubquery(sub_program=sub)]
+        case ScalarSubquery(query=inner_plan):
+            # Compile the inner SELECT to a standalone sub-program.  At
+            # runtime the VM executes it, takes the first column of the
+            # single result row, and pushes it as the scalar value.
+            inner_ctx = _Ctx()
+            inner_instrs, _ = _compile_plan(inner_plan, inner_ctx)  # type: ignore[arg-type]
+            inner_instrs.append(Halt())
+            inner_resolved = _resolve_labels(inner_instrs)
+            sub = Program(
+                instructions=tuple(inner_instrs),
+                labels=inner_resolved,
+                result_schema=(),
+            )
+            return [RunScalarSubquery(sub_program=sub)]
         case AggregateExpr():
             # At this point in compilation we're inside an aggregate node's
             # HAVING or projection; direct emission isn't possible without
@@ -991,10 +1184,25 @@ def _plan_agg_to_ir(f: PlanAggFunc) -> IrAggFunc:
 
 
 def _to_ir_col(c: AstColumnDef) -> IrColumnDef:
+    check_instrs: tuple[Instruction, ...] = ()
+    if c.check_expr is not None:
+        # Compile the CHECK expression using a synthetic context where every
+        # unqualified column reference resolves to the sentinel CHECK_CURSOR_ID.
+        # The VM will bind this cursor to the incoming row at validation time.
+        from .ir import CHECK_CURSOR_ID
+        check_ctx = _Ctx()
+        check_ctx.alias_to_cursor[""] = CHECK_CURSOR_ID
+        check_instrs = tuple(_compile_expr(c.check_expr, check_ctx))  # type: ignore[arg-type]
+    fk: tuple[str, str | None] | None = None
+    if c.foreign_key is not None:
+        fk = c.foreign_key  # type: ignore[assignment]
     return IrColumnDef(
         name=c.name,
         type=c.type_name,
         nullable=not c.effective_not_null(),
+        primary_key=c.primary_key,
+        check_instrs=check_instrs,
+        foreign_key=fk,
     )
 
 
@@ -1006,3 +1214,56 @@ def _to_sort_key(k: object) -> SortKey:
     direction = Direction.DESC if k.descending else Direction.ASC
     nulls = NullsOrder.FIRST if k.nulls_first else NullsOrder.LAST
     return SortKey(column=col, direction=direction, nulls=nulls)
+
+
+# Map lower-case window function names to the IR WinFunc enum values.
+_WIN_FUNC_MAP: dict[str, WinFunc] = {
+    "row_number": WinFunc.ROW_NUMBER,
+    "rank": WinFunc.RANK,
+    "dense_rank": WinFunc.DENSE_RANK,
+    "sum": WinFunc.SUM,
+    "count": WinFunc.COUNT,
+    "count_star": WinFunc.COUNT_STAR,
+    "avg": WinFunc.AVG,
+    "min": WinFunc.MIN,
+    "max": WinFunc.MAX,
+    "first_value": WinFunc.FIRST_VALUE,
+    "last_value": WinFunc.LAST_VALUE,
+}
+
+
+def _to_ir_win_spec(spec: PlanWindowFuncSpec) -> WinFuncSpec:
+    """Convert a planner-level WindowFuncSpec to an IR WinFuncSpec.
+
+    All expression arguments in the planner spec are expected to be simple
+    :class:`Column` nodes — the planner ensures dependency columns are
+    present in the inner projection with matching names.  Complex
+    sub-expressions are not supported in this release.
+    """
+    func_key = spec.func.lower()
+    ir_func = _WIN_FUNC_MAP.get(func_key)
+    if ir_func is None:
+        raise UnsupportedNode(f"unknown window function: {spec.func!r}")
+
+    def _col_name(e: object) -> str:
+        if isinstance(e, Column):
+            return e.col
+        raise UnsupportedNode(
+            "window function partition/order/arg must be a column reference, "
+            f"got {type(e).__name__}"
+        )
+
+    arg_col: str | None = None
+    if spec.arg_expr is not None:
+        arg_col = _col_name(spec.arg_expr)
+
+    partition_cols = tuple(_col_name(e) for e in spec.partition_by)
+    order_cols = tuple((_col_name(e), desc) for e, desc in spec.order_by)
+
+    return WinFuncSpec(
+        func=ir_func,
+        arg_col=arg_col,
+        partition_cols=partition_cols,
+        order_cols=order_cols,
+        result_col=spec.alias,
+    )

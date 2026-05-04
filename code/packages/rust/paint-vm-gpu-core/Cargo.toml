@@ -1,0 +1,8 @@
+[package]
+name = "paint-vm-gpu-core"
+version = "0.1.0"
+edition = "2021"
+description = "Shared PaintScene tessellation and GPU render-plan core for Paint VM backends"
+
+[dependencies]
+paint-instructions = { path = "../paint-instructions" }

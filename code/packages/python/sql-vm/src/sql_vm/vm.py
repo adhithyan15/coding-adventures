@@ -36,10 +36,13 @@ from sql_backend.backend import Backend, TransactionHandle
 from sql_backend.errors import IndexAlreadyExists, IndexNotFound
 from sql_backend.index import IndexDef
 from sql_backend.row import RowIterator
+from sql_backend.schema import TriggerDef as BackendTriggerDef
 from sql_backend.values import SqlValue, sql_type_name
 from sql_codegen import (
+    CHECK_CURSOR_ID,
     AdvanceCursor,
     AdvanceGroupKey,
+    AlterTable,
     BeginRow,
     BeginTransaction,
     Between,
@@ -49,13 +52,16 @@ from sql_codegen import (
     CloseScan,
     Coalesce,
     CommitTransaction,
+    ComputeWindowFunctions,
     CreateIndex,
     CreateTable,
+    CreateTriggerDef,
     DeleteRows,
     Direction,
     DistinctResult,
     DropIndex,
     DropTable,
+    DropTriggerDef,
     EmitColumn,
     EmitRow,
     ExceptResult,
@@ -81,9 +87,13 @@ from sql_codegen import (
     NullsOrder,
     OpenIndexScan,
     OpenScan,
+    OpenWorkingSetScan,
     Pop,
     Program,
     RollbackTransaction,
+    RunExistsSubquery,
+    RunRecursiveCTE,
+    RunScalarSubquery,
     RunSubquery,
     SaveGroupKey,
     ScanAllColumns,
@@ -92,11 +102,14 @@ from sql_codegen import (
     UnaryOp,
     UpdateAgg,
     UpdateRows,
+    WinFunc,
 )
 from sql_codegen import IrAggFunc as AggFunc
 
 from .errors import (
     BackendError,
+    CardinalityError,
+    ColumnAlreadyExists,
     ColumnNotFound,
     ConstraintViolation,
     InternalError,
@@ -105,6 +118,7 @@ from .errors import (
     TableAlreadyExists,
     TableNotFound,
     TransactionError,
+    TriggerDepthError,
 )
 from .operators import apply_binary, apply_unary, like_match
 from .result import QueryResult, _MutableResult
@@ -238,6 +252,36 @@ class _VmState:
     # Handle returned by backend.begin_transaction(); None when no explicit
     # transaction is active.
     transaction_handle: TransactionHandle | None = None
+    # Per-table CHECK constraint registry: table → [(col_name, instrs)].
+    # Populated at CreateTable time; consulted before every INSERT/UPDATE.
+    check_registry: dict[str, list[tuple[str, tuple[Instruction, ...]]]] = field(
+        default_factory=dict
+    )
+    # FOREIGN KEY registries — both populated at CreateTable time.
+    # fk_child: child_table → [(child_col, parent_table, parent_col_or_None)]
+    # fk_parent: parent_table → [(child_table, child_col, parent_col_or_None)]
+    # parent_col=None means "the parent's PRIMARY KEY column".
+    fk_child: dict[str, list[tuple[str, str, str | None]]] = field(default_factory=dict)
+    fk_parent: dict[str, list[tuple[str, str, str | None]]] = field(default_factory=dict)
+    # Working-set rows for recursive CTEs.  Populated by _execute_with_cursors
+    # before running the recursive sub-program; read by OpenWorkingSetScan to
+    # create a fresh _SubqueryCursor on each loop entry (handles JOIN context).
+    working_set_data: list[dict[str, SqlValue]] = field(default_factory=list)
+    # Trigger executor callback.  When provided, the DML handlers call this
+    # for each trigger that should fire.  The callable signature is:
+    #   trigger_executor(defn, new_row, old_row, current_depth) -> None
+    # where defn is a TriggerDef, new_row/old_row are dicts or None, and
+    # current_depth is the nesting level of the current VM invocation.
+    # The executor is responsible for the depth check (raises TriggerDepthError
+    # when current_depth + 1 > 16) and for setting up NEW/OLD pseudo-tables.
+    trigger_executor: Callable | None = None
+    # Nesting depth of the current VM invocation within trigger bodies.
+    # 0 = top-level statement; > 0 = inside a trigger body.
+    trigger_depth: int = 0
+    # User-registered scalar functions: lower-cased name → (nargs, callable).
+    # nargs=-1 means variadic.  Checked before the built-in registry so users
+    # can override built-ins (e.g. to shim behaviour in tests).
+    user_functions: dict[str, tuple[int, Callable]] | None = None
     # Scan telemetry — populated during execution; used to build QueryEvent.
     # Only the *first* scan per execute() call is recorded (one event per call).
     scan_table: str = ""
@@ -271,8 +315,14 @@ def execute(
     program: Program,
     backend: Backend,
     *,
+    check_registry: dict[str, list[tuple[str, tuple[Instruction, ...]]]] | None = None,
+    fk_child: dict[str, list[tuple[str, str, str | None]]] | None = None,
+    fk_parent: dict[str, list[tuple[str, str, str | None]]] | None = None,
     event_cb: Callable[[QueryEvent], None] | None = None,
     filtered_columns: list[str] | None = None,
+    trigger_executor: Callable | None = None,
+    trigger_depth: int = 0,
+    user_functions: dict[str, tuple[int, Callable]] | None = None,
 ) -> QueryResult:
     """Execute ``program`` against ``backend`` and return the result.
 
@@ -288,11 +338,33 @@ def execute(
         Optional list of column names that appeared in the WHERE predicate of
         the executing statement.  Passed through verbatim to the
         :class:`QueryEvent`.  When ``None`` the event carries an empty list.
+
+    ``user_functions``:
+        Optional dict mapping lower-cased SQL function names to
+        ``(nargs, callable)`` pairs registered via
+        :meth:`~mini_sqlite.Connection.create_function`.  Checked before the
+        built-in scalar registry so users can shadow built-in functions.
     """
     import time
 
     _t0 = time.perf_counter()
-    state = _VmState(program=program, backend=backend)
+    # Use the caller-supplied registries so constraints registered by a prior
+    # CREATE TABLE statement persist across execute() calls.
+    registry: dict[str, list[tuple[str, tuple[Instruction, ...]]]] = (
+        check_registry if check_registry is not None else {}
+    )
+    fk_c: dict[str, list[tuple[str, str, str | None]]] = fk_child if fk_child is not None else {}
+    fk_p: dict[str, list[tuple[str, str, str | None]]] = fk_parent if fk_parent is not None else {}
+    state = _VmState(
+        program=program,
+        backend=backend,
+        check_registry=registry,
+        fk_child=fk_c,
+        fk_parent=fk_p,
+        trigger_executor=trigger_executor,
+        trigger_depth=trigger_depth,
+        user_functions=user_functions,
+    )
     instructions = program.instructions
     n = len(instructions)
     while state.pc < n:
@@ -440,6 +512,9 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
     if isinstance(ins, DistinctResult):
         _do_distinct(st)
         return
+    if isinstance(ins, ComputeWindowFunctions):
+        _do_compute_window(ins, st)
+        return
 
     # DML / DDL -----------------------------------------------------------
     if isinstance(ins, InsertRow):
@@ -466,6 +541,15 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
     if isinstance(ins, DropIndex):
         _do_drop_index(ins, st)
         return
+    if isinstance(ins, CreateTriggerDef):
+        _do_create_trigger(ins, st)
+        return
+    if isinstance(ins, DropTriggerDef):
+        _do_drop_trigger(ins, st)
+        return
+    if isinstance(ins, AlterTable):
+        _do_alter_table(ins, st)
+        return
     if isinstance(ins, OpenIndexScan):
         _do_open_index_scan(ins, st)
         return
@@ -484,6 +568,18 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
     # Derived-table sub-queries -------------------------------------------
     if isinstance(ins, RunSubquery):
         _do_run_subquery(ins, st)
+        return
+    if isinstance(ins, RunExistsSubquery):
+        _do_run_exists_subquery(ins, st)
+        return
+    if isinstance(ins, RunScalarSubquery):
+        _do_run_scalar_subquery(ins, st)
+        return
+    if isinstance(ins, RunRecursiveCTE):
+        _do_run_recursive_cte(ins, st)
+        return
+    if isinstance(ins, OpenWorkingSetScan):
+        st.cursors[ins.cursor_id] = _SubqueryCursor(rows=st.working_set_data)
         return
 
     # Transactions --------------------------------------------------------
@@ -633,6 +729,19 @@ def _do_call_scalar(ins: CallScalar, st: _VmState) -> None:
         CallScalar("coalesce", 2)  → pushes 42
     """
     args = st.pop_n(ins.n_args)
+    # User-registered functions take precedence over built-ins, allowing
+    # callers to shadow or extend the function set at the connection level.
+    if st.user_functions is not None:
+        entry = st.user_functions.get(ins.func.lower())
+        if entry is not None:
+            nargs, fn = entry
+            if nargs != -1 and nargs != len(args):
+                from .errors import WrongNumberOfArguments
+                raise WrongNumberOfArguments(
+                    name=ins.func, expected=str(nargs), got=len(args)
+                )
+            st.push(fn(*args))
+            return
     result = _call_scalar(ins.func, args)
     st.push(result)
 
@@ -664,6 +773,136 @@ def _do_run_subquery(ins: RunSubquery, st: _VmState) -> None:
         dict(zip(cols, row, strict=False)) for row in sub_result.rows
     ]
     st.cursors[ins.cursor_id] = _SubqueryCursor(rows=rows)
+
+
+def _do_run_exists_subquery(ins: RunExistsSubquery, st: _VmState) -> None:
+    """Execute the EXISTS sub-program and push TRUE iff it returned any rows.
+
+    Runs the inner program against the same backend as the outer query and
+    checks the row count.  Unlike :func:`_do_run_subquery`, no cursor is
+    opened — the result is a single boolean pushed onto the expression stack.
+
+    ``NOT EXISTS`` is handled by the caller: a :class:`~sql_codegen.UnaryOp`
+    ``NOT`` instruction follows this one and inverts the boolean.
+    """
+    sub_result = execute(ins.sub_program, st.backend)
+    st.push(len(sub_result.rows) > 0)
+
+
+def _do_run_scalar_subquery(ins: RunScalarSubquery, st: _VmState) -> None:
+    """Execute the scalar sub-program and push the single result value.
+
+    Runs the inner program against the same backend as the outer query.
+
+    - Zero rows: ``NULL`` is pushed.
+    - One row: the first column's value is pushed.
+    - Two or more rows: :class:`~sql_vm.errors.CardinalityError` is raised.
+
+    The inner program always returns exactly one column — the optimizer
+    and codegen ensure this at compile time.
+    """
+    sub_result = execute(ins.sub_program, st.backend)
+    rows = sub_result.rows
+    if len(rows) == 0:
+        st.push(None)
+    elif len(rows) > 1:
+        raise CardinalityError()
+    else:
+        st.push(rows[0][0] if rows[0] else None)
+
+
+def _execute_with_cursors(
+    program: Program,
+    backend: Backend,
+    working_set_rows: list[dict[str, SqlValue]],
+) -> QueryResult:
+    """Execute ``program`` with a pre-loaded working set.
+
+    Used by the recursive CTE handler to supply the current working set before
+    running the recursive step.  Rather than pre-populating a cursor (which
+    would be exhausted after the first JOIN outer-loop iteration), the rows are
+    stored in ``VmState.working_set_data``.  The compiled
+    ``OpenWorkingSetScan`` instruction then creates a brand-new
+    :class:`_SubqueryCursor` from that data on every entry into the
+    WorkingSetScan loop, so even a JOIN-based recursive step works correctly.
+
+    A fresh :class:`_VmState` is created so that the recursive program's stack,
+    agg_table, and result buffer are isolated from the caller's state.
+    """
+    state = _VmState(program=program, backend=backend)
+    state.working_set_data = working_set_rows
+    instructions = program.instructions
+    n = len(instructions)
+    while state.pc < n:
+        ins = instructions[state.pc]
+        state.pc += 1
+        if isinstance(ins, Halt):
+            break
+        _dispatch(ins, state)
+    return state.result.freeze()
+
+
+def _do_run_recursive_cte(ins: RunRecursiveCTE, st: _VmState) -> None:
+    """Execute anchor, then iterate the recursive step until a fixed point.
+
+    The anchor runs once to produce the initial working set.  The recursive
+    step then runs in a loop, with cursor ``working_cursor_id`` pre-loaded
+    with the current working set rows.  Each iteration's output becomes the
+    next working set.  The loop stops when the recursive step returns zero
+    new rows (fixed-point / empty step).
+
+    For UNION ALL: all rows from every iteration are accumulated.
+    For UNION: duplicate rows (compared as sorted key-value tuples) are
+    discarded, which also prevents infinite loops in cyclic graphs.
+
+    The accumulated rows are materialised as a :class:`_SubqueryCursor` under
+    ``cursor_id`` so the outer scan loop's ``AdvanceCursor`` / ``LoadColumn`` /
+    ``CloseScan`` instructions work without any special casing.
+    """
+    # --- Anchor phase -------------------------------------------------------
+    anchor_result = execute(ins.anchor_program, st.backend)
+    anchor_cols = anchor_result.columns
+
+    working_rows: list[dict[str, SqlValue]] = [
+        dict(zip(anchor_cols, row, strict=False)) for row in anchor_result.rows
+    ]
+    all_rows: list[dict[str, SqlValue]] = list(working_rows)
+
+    # For UNION (deduplicated): track seen rows to prevent cycles.
+    seen: set[tuple[tuple[str, SqlValue], ...]] = set()
+    if not ins.union_all:
+        for row in all_rows:
+            seen.add(tuple(sorted(row.items())))
+
+    # --- Recursive phase (fixed-point iteration) ----------------------------
+    while working_rows:
+        recursive_result = _execute_with_cursors(
+            ins.recursive_program,
+            st.backend,
+            working_rows,
+        )
+        # Relabel with anchor column names (SQL standard: UNION output names
+        # from the leftmost / anchor SELECT).
+        new_rows: list[dict[str, SqlValue]] = [
+            dict(zip(anchor_cols, row, strict=False)) for row in recursive_result.rows
+        ]
+
+        if ins.union_all:
+            working_rows = new_rows
+        else:
+            # Only keep rows not already seen (cycle safety for UNION).
+            next_working: list[dict[str, SqlValue]] = []
+            for row in new_rows:
+                key = tuple(sorted(row.items()))
+                if key not in seen:
+                    seen.add(key)
+                    next_working.append(row)
+            working_rows = next_working
+
+        all_rows.extend(working_rows)
+
+    # Materialise accumulated result as a cursor for the outer scan loop.
+    st.cursors[ins.cursor_id] = _SubqueryCursor(rows=all_rows)
 
 
 def _do_open(ins: OpenScan, st: _VmState) -> None:
@@ -900,6 +1139,218 @@ def _do_distinct(st: _VmState) -> None:
     st.result.rows = out
 
 
+def _do_compute_window(ins: ComputeWindowFunctions, st: _VmState) -> None:
+    """Evaluate all window functions against the materialised result buffer.
+
+    Algorithm
+    ---------
+    1. Convert each result tuple to a ``dict[str, SqlValue]`` keyed by the
+       current ``result.columns``.
+    2. For each :class:`WinFuncSpec`:
+       a. Build partitions — a dict mapping a frozen tuple of partition-key
+          values to the list of row dicts in that partition.
+       b. Sort each partition by the spec's ``order_cols``.
+       c. Evaluate the window function across each sorted partition.
+       d. Write the result value into each row dict under ``result_col``.
+    3. Project each dict to ``ins.output_cols`` and rebuild the rows list.
+    4. Update ``result.columns``.
+
+    Partition sort key
+    ------------------
+    NULL sorts before all other values (SQLite BINARY collation for ORDER BY
+    within window frames).  We use the same ``_sql_sort_key`` helper as the
+    index scan code so behaviour is consistent.
+    """
+    columns = st.result.columns
+
+    # Convert tuples → dicts for easy column access.
+    rows: list[dict[str, SqlValue]] = [
+        dict(zip(columns, row, strict=True))
+        for row in st.result.rows
+    ]
+
+    for spec in ins.specs:
+        # --- Build partitions -------------------------------------------
+        partitions: dict[tuple[SqlValue, ...], list[dict[str, SqlValue]]] = {}
+        for row in rows:
+            pk = tuple(row.get(c) for c in spec.partition_cols)
+            if pk not in partitions:
+                partitions[pk] = []
+            partitions[pk].append(row)
+
+        for partition in partitions.values():
+            # --- Sort within partition -----------------------------------
+            if spec.order_cols:
+                def _sort_key(
+                    r: dict[str, SqlValue], cols: tuple[tuple[str, bool], ...]
+                ) -> tuple[object, ...]:
+                    result_key: list[object] = []
+                    for col, desc in cols:
+                        v = r.get(col)
+                        k = _win_sort_key(v)
+                        result_key.append(_Descending(k) if desc else k)
+                    return tuple(result_key)
+
+                order_cols = spec.order_cols
+                partition.sort(key=lambda r: _sort_key(r, order_cols))
+
+            # --- Evaluate window function --------------------------------
+            func = spec.func
+            arg_col = spec.arg_col
+            result_col = spec.result_col
+
+            if func == WinFunc.ROW_NUMBER:
+                for i, row in enumerate(partition, start=1):
+                    row[result_col] = i
+
+            elif func == WinFunc.RANK:
+                rank = 1
+                for i, row in enumerate(partition):
+                    if i == 0:
+                        row[result_col] = 1
+                    else:
+                        prev = partition[i - 1]
+                        if _order_vals(prev, spec.order_cols) == _order_vals(row, spec.order_cols):
+                            row[result_col] = prev[result_col]
+                        else:
+                            rank = i + 1
+                            row[result_col] = rank
+
+            elif func == WinFunc.DENSE_RANK:
+                rank = 1
+                for i, row in enumerate(partition):
+                    if i == 0:
+                        row[result_col] = 1
+                    else:
+                        prev = partition[i - 1]
+                        if _order_vals(prev, spec.order_cols) == _order_vals(row, spec.order_cols):
+                            row[result_col] = prev[result_col]
+                        else:
+                            rank += 1
+                            row[result_col] = rank
+
+            elif func == WinFunc.SUM:
+                total: SqlValue = None
+                for row in partition:
+                    v = row.get(arg_col) if arg_col else None
+                    if v is not None:
+                        total = v if total is None else total + v  # type: ignore[operator]
+                for row in partition:
+                    row[result_col] = total
+
+            elif func == WinFunc.COUNT:
+                count = sum(1 for row in partition if arg_col and row.get(arg_col) is not None)
+                for row in partition:
+                    row[result_col] = count
+
+            elif func == WinFunc.COUNT_STAR:
+                count = len(partition)
+                for row in partition:
+                    row[result_col] = count
+
+            elif func == WinFunc.AVG:
+                vals = [
+                    row.get(arg_col) for row in partition
+                    if arg_col and row.get(arg_col) is not None
+                ]
+                avg: SqlValue = None
+                if vals:
+                    s = sum(float(v) for v in vals)  # type: ignore[arg-type]
+                    avg = s / len(vals)
+                for row in partition:
+                    row[result_col] = avg
+
+            elif func == WinFunc.MIN:
+                def _min_key(v: SqlValue) -> tuple[int, object]:
+                    return _win_sort_key(v)
+                vals = [row.get(arg_col) for row in partition if arg_col] if arg_col else []
+                non_null = [v for v in vals if v is not None]
+                min_val: SqlValue = min(non_null, key=_min_key) if non_null else None  # type: ignore[arg-type]
+                for row in partition:
+                    row[result_col] = min_val
+
+            elif func == WinFunc.MAX:
+                def _max_key(v: SqlValue) -> tuple[int, object]:
+                    return _win_sort_key(v)
+                vals = [row.get(arg_col) for row in partition if arg_col] if arg_col else []
+                non_null = [v for v in vals if v is not None]
+                max_val: SqlValue = max(non_null, key=_max_key) if non_null else None  # type: ignore[arg-type]
+                for row in partition:
+                    row[result_col] = max_val
+
+            elif func == WinFunc.FIRST_VALUE:
+                first = partition[0].get(arg_col) if partition and arg_col else None
+                for row in partition:
+                    row[result_col] = first
+
+            elif func == WinFunc.LAST_VALUE:
+                last = partition[-1].get(arg_col) if partition and arg_col else None
+                for row in partition:
+                    row[result_col] = last
+
+    # Project rows to output_cols and rebuild tuples.
+    out_cols = ins.output_cols
+    st.result.rows = [
+        tuple(row.get(c) for c in out_cols)
+        for row in rows
+    ]
+    st.result.columns = out_cols
+
+
+def _win_sort_key(v: SqlValue) -> tuple[int, object]:
+    """Return a sort key for a SQL value using NULL-first ordering.
+
+    Matches the ``_sql_sort_key`` convention used by ``InMemoryBackend``
+    for index scans: NULL < numbers < strings < bytes.
+    """
+    if v is None:
+        return (0, b"")
+    if isinstance(v, bool):
+        return (1, int(v))
+    if isinstance(v, (int, float)):
+        return (1, v)
+    if isinstance(v, str):
+        return (2, v)
+    if isinstance(v, bytes):
+        return (3, v)
+    return (4, repr(v))
+
+
+class _Descending:
+    """Wrapper that reverses comparison for descending sort.
+
+    Python's ``sort`` is ascending-only; wrapping a key in this class
+    inverts the comparison so the sort behaves as descending.
+    """
+
+    __slots__ = ("key",)
+
+    def __init__(self, key: tuple[int, object]) -> None:
+        self.key = key
+
+    def __lt__(self, other: _Descending) -> bool:
+        return self.key > other.key
+
+    def __le__(self, other: _Descending) -> bool:
+        return self.key >= other.key
+
+    def __gt__(self, other: _Descending) -> bool:
+        return self.key < other.key
+
+    def __ge__(self, other: _Descending) -> bool:
+        return self.key <= other.key
+
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, _Descending) and self.key == other.key
+
+
+def _order_vals(
+    row: dict[str, SqlValue], order_cols: tuple[tuple[str, bool], ...]
+) -> tuple[SqlValue, ...]:
+    """Extract the ORDER BY key values from a row dict."""
+    return tuple(row.get(col) for col, _ in order_cols)
+
+
 # --------------------------------------------------------------------------
 # DML + DDL.
 # --------------------------------------------------------------------------
@@ -912,18 +1363,56 @@ def _translate_backend_error(e: be.BackendError) -> Exception:
         return TableAlreadyExists(table=e.table)
     if isinstance(e, be.ColumnNotFound):
         return ColumnNotFound(cursor_id=-1, column=e.column)
+    if isinstance(e, be.ColumnAlreadyExists):
+        return ColumnAlreadyExists(table=e.table, column=e.column)
     if isinstance(e, be.ConstraintViolation):
         return ConstraintViolation(table=e.table, column=e.column, message=e.message)
     return BackendError(message=str(e), original=e)
 
 
+def _fire_trigger(
+    defn: BackendTriggerDef,
+    new_row: dict | None,
+    old_row: dict | None,
+    st: _VmState,
+) -> None:
+    """Invoke the trigger executor callback for a single trigger.
+
+    Raises :class:`TriggerDepthError` when the nesting depth would exceed 16.
+    When no executor is registered the trigger is silently skipped — this
+    allows unit-testing the VM in isolation without a full pipeline.
+    """
+    if st.trigger_executor is None:
+        return
+    next_depth = st.trigger_depth + 1
+    if next_depth > 16:
+        raise TriggerDepthError(trigger_name=defn.name)
+    st.trigger_executor(defn, new_row, old_row, next_depth)
+
+
 def _do_insert(ins: InsertRow, st: _VmState) -> None:
     values = st.pop_n(len(ins.columns))
     row = dict(zip(ins.columns, values, strict=True))
+    _check_constraints(ins.table, row, st)
+    _check_fk_child(ins.table, row, st)
+    # Fire BEFORE INSERT triggers.
+    before_triggers = [
+        t for t in st.backend.list_triggers(ins.table)
+        if t.timing == "BEFORE" and t.event == "INSERT"
+    ]
+    for defn in before_triggers:
+        _fire_trigger(defn, row, None, st)
     try:
         st.backend.insert(ins.table, row)
     except be.BackendError as e:
         raise _translate_backend_error(e) from e
+    # Fire AFTER INSERT triggers.
+    after_triggers = [
+        t for t in st.backend.list_triggers(ins.table)
+        if t.timing == "AFTER" and t.event == "INSERT"
+    ]
+    for defn in after_triggers:
+        _fire_trigger(defn, row, None, st)
     st.result.rows_affected = (st.result.rows_affected or 0) + 1
 
 
@@ -933,6 +1422,20 @@ def _do_update(ins: UpdateRows, st: _VmState) -> None:
     cursor = st.cursors.get(ins.cursor_id)
     if cursor is None:
         raise InternalError(message=f"update: cursor {ins.cursor_id} not open")
+    # Evaluate CHECK and FK constraints against the post-update row.
+    # Copy current row so the AFTER trigger sees the pre-update snapshot in old_row,
+    # even after st.current_row is mutated below.
+    current = dict(st.current_row.get(ins.cursor_id, {}))
+    merged = {**current, **assignments}
+    _check_constraints(ins.table, merged, st)
+    _check_fk_child(ins.table, merged, st)
+    # Fire BEFORE UPDATE triggers.
+    before_triggers = [
+        t for t in st.backend.list_triggers(ins.table)
+        if t.timing == "BEFORE" and t.event == "UPDATE"
+    ]
+    for defn in before_triggers:
+        _fire_trigger(defn, merged, current, st)
     try:
         st.backend.update(ins.table, cursor, assignments)
     except be.BackendError as e:
@@ -941,6 +1444,13 @@ def _do_update(ins: UpdateRows, st: _VmState) -> None:
     # sees the updated values.
     if ins.cursor_id in st.current_row:
         st.current_row[ins.cursor_id].update(assignments)
+    # Fire AFTER UPDATE triggers.
+    after_triggers = [
+        t for t in st.backend.list_triggers(ins.table)
+        if t.timing == "AFTER" and t.event == "UPDATE"
+    ]
+    for defn in after_triggers:
+        _fire_trigger(defn, merged, current, st)
     st.result.rows_affected = (st.result.rows_affected or 0) + 1
 
 
@@ -948,10 +1458,27 @@ def _do_delete(ins: DeleteRows, st: _VmState) -> None:
     cursor = st.cursors.get(ins.cursor_id)
     if cursor is None:
         raise InternalError(message=f"delete: cursor {ins.cursor_id} not open")
+    # Check RESTRICT: reject deletion if any child table references this row.
+    current = st.current_row.get(ins.cursor_id, {})
+    _check_fk_parent(ins.table, current, st)
+    # Fire BEFORE DELETE triggers.
+    before_triggers = [
+        t for t in st.backend.list_triggers(ins.table)
+        if t.timing == "BEFORE" and t.event == "DELETE"
+    ]
+    for defn in before_triggers:
+        _fire_trigger(defn, None, current, st)
     try:
         st.backend.delete(ins.table, cursor)
     except be.BackendError as e:
         raise _translate_backend_error(e) from e
+    # Fire AFTER DELETE triggers.
+    after_triggers = [
+        t for t in st.backend.list_triggers(ins.table)
+        if t.timing == "AFTER" and t.event == "DELETE"
+    ]
+    for defn in after_triggers:
+        _fire_trigger(defn, None, current, st)
     st.current_row.pop(ins.cursor_id, None)
     st.result.rows_affected = (st.result.rows_affected or 0) + 1
 
@@ -960,14 +1487,139 @@ def _do_create_table(ins: CreateTable, st: _VmState) -> None:
     from sql_backend.schema import ColumnDef as BackendColumnDef
 
     col_defs = [
-        BackendColumnDef(name=c.name, type_name=c.type, not_null=not c.nullable)
+        BackendColumnDef(
+            name=c.name,
+            type_name=c.type,
+            not_null=not c.nullable,
+            primary_key=c.primary_key,
+        )
         for c in ins.columns
     ]
     try:
         st.backend.create_table(ins.table, col_defs, ins.if_not_exists)
     except be.BackendError as e:
         raise _translate_backend_error(e) from e
+    # Register CHECK constraints.
+    checks = [(c.name, c.check_instrs) for c in ins.columns if c.check_instrs]
+    if checks:
+        st.check_registry[ins.table] = checks
+    # Register FOREIGN KEY constraints — both child (forward) and parent (reverse).
+    for col in ins.columns:
+        if col.foreign_key is None:
+            continue
+        ref_table, ref_col = col.foreign_key
+        # Forward: child_table → parent lookups on INSERT/UPDATE
+        st.fk_child.setdefault(ins.table, []).append((col.name, ref_table, ref_col))
+        # Reverse: parent_table → restrict on DELETE
+        st.fk_parent.setdefault(ref_table, []).append((ins.table, col.name, ref_col))
     st.result.rows_affected = 0
+
+
+def _check_constraints(table: str, row: dict[str, SqlValue], st: _VmState) -> None:
+    """Evaluate every CHECK constraint for *table* against *row*.
+
+    The check instructions are evaluated using ``CHECK_CURSOR_ID`` as a
+    synthetic cursor so ``LoadColumn`` can resolve column names.  NULL
+    result is treated as passing (standard SQL behaviour).  ``False`` raises
+    :class:`ConstraintViolation`.
+    """
+    constraints = st.check_registry.get(table)
+    if not constraints:
+        return
+    st.current_row[CHECK_CURSOR_ID] = row
+    try:
+        for col_name, instrs in constraints:
+            depth_before = len(st.stack)
+            for instr in instrs:
+                _dispatch(instr, st)
+            result = st.pop()
+            assert len(st.stack) == depth_before, "CHECK expr left extra values on stack"
+            if result is False:
+                raise ConstraintViolation(
+                    table=table,
+                    column=col_name,
+                    message=f"CHECK constraint failed: {table}.{col_name}",
+                )
+    finally:
+        st.current_row.pop(CHECK_CURSOR_ID, None)
+
+
+def _fk_find_pk(table: str, backend: object) -> str:
+    """Return the PRIMARY KEY column name for *table*, falling back to 'id'."""
+    try:
+        cols = backend.columns(table)  # type: ignore[union-attr]
+    except Exception:  # noqa: BLE001
+        return "id"
+    for c in cols:
+        if getattr(c, "primary_key", False):
+            return c.name
+    return "id"
+
+
+def _fk_row_exists(table: str, col: str, value: object, backend: object) -> bool:
+    """Return True if any row in *table* has *col* == *value*."""
+    cur = backend.scan(table)  # type: ignore[union-attr]
+    try:
+        while True:
+            row = cur.next()
+            if row is None:
+                return False
+            if row.get(col) == value:
+                return True
+    finally:
+        cur.close()
+
+
+def _check_fk_child(table: str, row: dict, st: _VmState) -> None:
+    """Verify every FOREIGN KEY on the child *table* is satisfied by *row*.
+
+    NULL FK values pass unconditionally (SQL standard: unknown reference is
+    not an error).  Non-NULL values must have a matching row in the parent.
+    """
+    fks = st.fk_child.get(table)
+    if not fks:
+        return
+    for child_col, parent_table, parent_col in fks:
+        value = row.get(child_col)
+        if value is None:
+            continue
+        ref_col = parent_col if parent_col is not None else _fk_find_pk(parent_table, st.backend)
+        if not _fk_row_exists(parent_table, ref_col, value, st.backend):
+            raise ConstraintViolation(
+                table=table,
+                column=child_col,
+                message=(
+                    f"FOREIGN KEY constraint failed: "
+                    f"{table}.{child_col} → {parent_table}.{ref_col} = {value!r}"
+                ),
+            )
+
+
+def _check_fk_parent(table: str, row: dict, st: _VmState) -> None:
+    """Enforce RESTRICT on deletion: reject if any child row references *row*.
+
+    Only the columns registered in ``fk_parent`` are checked.  NULL values in
+    the parent's referenced column cannot be referenced by any child (because
+    child NULL passes unconditionally in :func:`_check_fk_child`), so we skip.
+    """
+    refs = st.fk_parent.get(table)
+    if not refs:
+        return
+    for child_table, child_col, parent_col in refs:
+        ref_col = parent_col if parent_col is not None else _fk_find_pk(table, st.backend)
+        value = row.get(ref_col)
+        if value is None:
+            continue
+        if _fk_row_exists(child_table, child_col, value, st.backend):
+            raise ConstraintViolation(
+                table=table,
+                column=ref_col,
+                message=(
+                    f"FOREIGN KEY constraint failed: "
+                    f"cannot delete {table}.{ref_col} = {value!r}, "
+                    f"referenced by {child_table}.{child_col}"
+                ),
+            )
 
 
 def _do_drop_table(ins: DropTable, st: _VmState) -> None:
@@ -1012,6 +1664,47 @@ def _do_drop_index(ins: DropIndex, st: _VmState) -> None:
         st.backend.drop_index(ins.name, if_exists=ins.if_exists)
     except IndexNotFound:
         raise
+    st.result.rows_affected = 0
+
+
+def _do_create_trigger(ins: CreateTriggerDef, st: _VmState) -> None:
+    """Store a trigger definition in the backend."""
+    defn = BackendTriggerDef(
+        name=ins.name,
+        table=ins.table,
+        timing=ins.timing,  # type: ignore[arg-type]
+        event=ins.event,    # type: ignore[arg-type]
+        body=ins.body_sql,
+    )
+    try:
+        st.backend.create_trigger(defn)
+    except be.BackendError as e:
+        raise _translate_backend_error(e) from e
+    st.result.rows_affected = 0
+
+
+def _do_drop_trigger(ins: DropTriggerDef, st: _VmState) -> None:
+    """Remove a trigger definition from the backend."""
+    try:
+        st.backend.drop_trigger(ins.name, ins.if_exists)
+    except be.BackendError as e:
+        raise _translate_backend_error(e) from e
+    st.result.rows_affected = 0
+
+
+def _do_alter_table(ins: AlterTable, st: _VmState) -> None:
+    """Add a column to an existing table via ALTER TABLE … ADD COLUMN."""
+    from sql_backend.schema import ColumnDef as BackendColumnDef
+
+    col = BackendColumnDef(
+        name=ins.column.name,
+        type_name=ins.column.type,
+        not_null=not ins.column.nullable,
+    )
+    try:
+        st.backend.add_column(ins.table, col)
+    except be.BackendError as e:
+        raise _translate_backend_error(e) from e
     st.result.rows_affected = 0
 
 

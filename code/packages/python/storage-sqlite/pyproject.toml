@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-storage-sqlite"
-version = "0.10.0"
+version = "0.12.0"
 description = "SQLite byte-compatible file backend for the sql-backend interface."
 requires-python = ">=3.12"
 license = "MIT"

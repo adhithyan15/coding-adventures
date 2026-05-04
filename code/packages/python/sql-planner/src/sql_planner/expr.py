@@ -262,6 +262,94 @@ class AggregateExpr:
     distinct: bool = False
 
 
+@dataclass(frozen=True, slots=True)
+class ExistsSubquery:
+    """``EXISTS (subquery)`` — TRUE iff the inner query returns at least one row.
+
+    Lifecycle
+    ---------
+    This node is created by the adapter with ``query`` holding a raw
+    ``SelectStmt``.  The planner's ``_resolve()`` replaces ``query`` with
+    the compiled ``LogicalPlan`` before passing the expression to codegen.
+
+    ``query`` is typed as ``object`` to break the circular import between
+    this module and ``sql_planner.plan`` (which itself imports ``Expr``).
+    Callers narrow the type at the appropriate pipeline stage.
+
+    NOT EXISTS
+    ----------
+    ``NOT EXISTS (...)`` is represented as
+    ``UnaryExpr(op=UnaryOp.NOT, operand=ExistsSubquery(...))``.
+    No ``negated`` field is needed — the existing ``UnaryOp.NOT`` instruction
+    handles inversion at runtime without any extra complexity here.
+    """
+
+    query: object  # SelectStmt before _resolve; LogicalPlan after _resolve
+
+
+@dataclass(frozen=True, slots=True)
+class ScalarSubquery:
+    """A scalar subquery expression: ``(SELECT expr FROM …)`` in expression position.
+
+    Lifecycle
+    ---------
+    Created by the adapter with ``query`` holding a raw ``SelectStmt``.
+    The planner's ``_resolve()`` replaces ``query`` with a compiled
+    ``LogicalPlan`` before passing the expression to codegen.
+
+    Runtime
+    -------
+    The VM executes the inner program and pushes the first column of the
+    single result row onto the stack.  If the subquery returns zero rows the
+    value is ``NULL``.  If it returns more than one row a
+    :class:`~sql_vm.errors.CardinalityError` is raised.
+
+    ``query`` is typed as ``object`` to break the circular import between
+    this module and ``sql_planner.plan``.
+    """
+
+    query: object  # SelectStmt before _resolve; LogicalPlan after _resolve
+
+
+@dataclass(frozen=True, slots=True)
+class WindowFuncExpr:
+    """A window (analytic) function: ``func([arg]) OVER (PARTITION BY … ORDER BY …)``.
+
+    Window functions differ from aggregate functions:
+    - They do *not* collapse rows — one output row per input row.
+    - They operate over a "window" of related rows defined by the OVER clause.
+    - They may appear only in SELECT lists (not WHERE, GROUP BY, or HAVING).
+
+    Fields
+    ------
+    func:
+        Function name in lower-case (``"row_number"``, ``"sum"``, …).
+        The planner normalises to lower-case; codegen maps to :class:`WinFunc`.
+    arg:
+        The single expression argument, or ``None`` for arg-free functions
+        (``ROW_NUMBER``, ``RANK``, ``DENSE_RANK``).  ``COUNT(*)`` passes
+        ``arg=None`` with ``func="count_star"``.
+    partition_by:
+        Tuple of partition key expressions.  Rows with equal partition keys
+        are placed in the same window group.  Empty tuple means the whole
+        result set is one partition.
+    order_by:
+        Tuple of ``(expr, descending)`` sort keys within each partition.
+        Required for ranking functions; optional for aggregating functions.
+
+    Lifecycle
+    ---------
+    Created by the adapter with raw ``Column`` references.  ``_resolve()``
+    in the planner qualifies each expression against the current scope,
+    producing a fully-resolved tree that codegen can emit directly.
+    """
+
+    func: str                                    # e.g. "row_number", "sum"
+    arg: Expr | None                           # None for arg-free funcs
+    partition_by: tuple[Expr, ...] = ()
+    order_by: tuple[tuple[Expr, bool], ...] = ()  # (expr, descending)
+
+
 # The type union every non-specialized consumer should match on. Order
 # doesn't matter for correctness, but we keep the union sorted to help
 # anyone eyeballing pattern matches.
@@ -281,6 +369,9 @@ Expr = (
     | Wildcard
     | CaseExpr
     | AggregateExpr
+    | ExistsSubquery
+    | ScalarSubquery
+    | WindowFuncExpr
 )
 
 
@@ -318,6 +409,19 @@ def contains_aggregate(expr: Expr) -> bool:
             ):
                 return True
             return else_ is not None and contains_aggregate(else_)
+        case ExistsSubquery():
+            # The inner query is independently scoped; from the outer
+            # expression's perspective EXISTS is a boolean atom, not an
+            # aggregate.
+            return False
+        case ScalarSubquery():
+            # Scalar subqueries are self-contained; any aggregation inside
+            # them is scoped to the inner query.
+            return False
+        case WindowFuncExpr():
+            # Window functions are handled by a separate WindowAgg plan node.
+            # They are not aggregates from the planner's perspective.
+            return False
         case _:
             return False
 
@@ -368,5 +472,19 @@ def _collect_columns(expr: Expr, out: list[Column]) -> None:
         case AggregateExpr(_, arg, _):
             if arg.value is not None:
                 _collect_columns(arg.value, out)
+        case ExistsSubquery():
+            # Inner query columns are independently scoped — not visible to
+            # projection-pruning or column-resolution in the outer query.
+            pass
+        case ScalarSubquery():
+            # Inner query columns are independently scoped.
+            pass
+        case WindowFuncExpr(_, arg, partition_by, order_by):
+            if arg is not None:
+                _collect_columns(arg, out)
+            for e in partition_by:
+                _collect_columns(e, out)
+            for e, _ in order_by:
+                _collect_columns(e, out)
         case _:
             pass

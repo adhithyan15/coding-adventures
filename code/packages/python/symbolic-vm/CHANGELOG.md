@@ -1,5 +1,797 @@
 # Changelog
 
+## 0.38.0 — 2026-04-29
+
+**Phase 18 — `cas-ode` 0.2.0 dependency bump (Bernoulli · Exact · Non-homogeneous 2nd-order).**
+
+Bumps the `coding-adventures-cas-ode` minimum version from `>=0.1.0` to
+`>=0.2.0` to pull in the three new ODE solver classes added in `cas-ode`
+0.2.0.  No changes to `symbolic_vm` source code — this is a pure dependency
+upgrade so users get the improved `ode2(...)` evaluation automatically.
+
+### What changed in `cas-ode` 0.2.0
+
+- **Bernoulli ODE solver** (`y' + P(x)·y = Q(x)·y^n`, n ≠ 0,1):
+  substitution `v = y^(1−n)` reduces to first-order linear; returns
+  `Equal(y, v_sol^(1/(1−n)))`.
+- **Exact ODE solver** (`M dx + N dy = 0`, ∂M/∂y = ∂N/∂x):
+  computes potential F and returns the implicit solution `Equal(F + g, %c)`.
+  Exactness check uses numerical evaluation to handle structurally different
+  but mathematically equal IR trees.
+- **Second-order non-homogeneous solver** (`a·y'' + b·y' + c·y = f(x)`):
+  undetermined coefficients for constant, polynomial (≤ degree 2),
+  exponential, trig, and exp×trig forcing; full resonance handling
+  (s = 0, 1, 2 multiplicity shifts).
+- Dispatcher updated: non-homogeneous 2nd-order checked before homogeneous;
+  exact solver runs last to preserve explicit `Equal(y, f(x))` forms.
+- 47 new tests (135 total); combined coverage 82.89%.
+
+---
+
+## 0.37.0 — 2026-04-28
+
+**Phase 17 — `∫ tanh^n(ax+b) dx` power reduction.**
+
+Completes the hyperbolic power-reduction suite (Phases 14 and 16 covered the
+other five functions; tanh was the only remaining gap).
+
+### Algorithm
+
+Uses the Pythagorean identity `tanh²(t) = 1 − sech²(t)`:
+
+```
+I_n = I_{n-2} − tanh^(n-1)(ax+b) / ((n-1)·a)
+
+Base cases:
+  n = 0  →  x
+  n = 1  →  log(cosh(ax+b)) / a      [Phase 13 bare tanh integral]
+```
+
+This is the direct analog of `coth^n` (Phase 16) — same recursion structure,
+different Pythagorean identity (`−sech²` vs `+csch²`).
+
+**Verification examples:**
+- n=2: `F = x − tanh(x)`.  `F' = 1 − sech² = tanh²`  ✓
+- n=3: `F = log(cosh) − tanh²/2`.  `F' = tanh − tanh·sech² = tanh³`  ✓
+- n=4: `F = x − tanh − tanh³/3`.  `F' = tanh²(1−sech²) = tanh⁴`  ✓
+
+### Implementation
+
+- `recip_hyp_power_integral.py` — new public function `tanh_power_integral(n, a, b, x)`;
+  `COSH` added to imports (needed for the n=1 base-case `log(cosh)/a`).
+- `integrate.py` — `_try_recip_hyp_power` extended to include `TANH` in the
+  handled-head set; `tanh_power_integral` added to the import block.
+
+### Tests (`test_phase17.py`) — 16 tests
+
+| Class | Tests | What is verified |
+|-------|-------|-----------------|
+| `TestPhase17_TanhPowers` | 10 | n=2,3,4,5; a=2; b=1; a=1/2; structural (Tanh/log(cosh)) |
+| `TestPhase17_Fallthrough` | 3 | poly×tanh², non-linear arg, poly×tanh (non-elementary) |
+| `TestPhase17_Regressions` | 3 | Phase 16 sech², Phase 13 tanh bare, Phase 14 sinh^4 |
+
+All antiderivatives verified numerically at two test points.
+
+---
+
+## 0.36.0 — 2026-04-28
+
+**Phase 16 — Reciprocal hyperbolic power integrals: `sech^n`, `csch^n`, `coth^n`.**
+
+Closes the gap left by Phase 15, which deferred `∫ sech²(x) dx` and all higher
+powers of the three reciprocal hyperbolic functions.  Each family gets a full
+IBP (or identity-based) reduction formula valid for any non-negative integer `n`.
+
+### New module: `recip_hyp_power_integral.py`
+
+Exports three public functions, all pure-recursive with no back-calls into
+`integrate.py` (avoiding circular imports):
+
+| Function | Formula |
+|----------|---------|
+| `sech_power_integral(n,a,b,x)` | IBP: `I_n = sech^(n-2)·tanh/((n-1)a) + (n-2)/(n-1)·I_{n-2}` |
+| `csch_power_integral(n,a,b,x)` | IBP: `I_n = −csch^(n-2)·coth/((n-1)a) − (n-2)/(n-1)·I_{n-2}` |
+| `coth_power_integral(n,a,b,x)` | Identity: `I_n = I_{n-2} − coth^(n-1)/((n-1)a)` |
+
+**sech^n base cases:** `n=0→x`, `n=1→atan(sinh(ax+b))/a`, `n=2→tanh(ax+b)/a`.
+
+**csch^n base cases:** `n=0→x`, `n=1→log(tanh((ax+b)/2))/a`, `n=2→−coth(ax+b)/a`.
+
+**coth^n base cases:** `n=0→x`, `n=1→log(sinh(ax+b))/a`.
+
+The `coth^n` recursion is derived from `coth²=1+csch²` (Pythagorean identity)
+rather than IBP — it produces a cleaner telescoping result with no outer product.
+
+No new IR heads required; all output uses existing heads (`TANH`, `COTH`, `SINH`,
+`ATAN`, `LOG`).
+
+### `integrate.py` changes
+
+1. Imported the three new functions from `recip_hyp_power_integral`.
+2. Added `_try_recip_hyp_power(base, exponent, x)` dispatcher — fires for
+   `SECH`/`CSCH`/`COTH` base with integer exponent ≥ 2 and linear argument.
+3. Call site added immediately after `_try_hyp_power` (~line 544).
+
+### `test_phase15.py` update
+
+`test_sech_squared_unevaluated` renamed to `test_sech_squared_now_evaluates`
+and updated to assert `_was_evaluated` (previously asserted `_is_unevaluated`).
+
+### Tests (`test_phase16.py`) — 34 tests
+
+| Class | Tests | What is verified |
+|-------|-------|-----------------|
+| `TestPhase16_SechPowers` | 8 | n=2,3,4,5; a=2; b=1; a=1/2; Tanh in result |
+| `TestPhase16_CschPowers` | 8 | n=2,3,4,5; a=2; b=1; a=1/2; Coth in result |
+| `TestPhase16_CothPowers` | 8 | n=2,3,4,5; a=2; b=1; a=1/2; Coth power in result |
+| `TestPhase16_Fallthrough` | 3 | poly×sech², non-linear arg, mixed product |
+| `TestPhase16_Regressions` | 3 | Phase 15 bare, Phase 14 sinh^4, Phase 3 exp |
+| `TestPhase16_Macsyma` | 4 | end-to-end via MACSYMA string interface |
+
+Antiderivative correctness verified numerically at two test points per case.
+
+---
+
+## 0.35.0 — 2026-04-28
+
+**Phase 15 — Reciprocal hyperbolic functions: `coth`, `sech`, `csch`.**
+
+Completes the hyperbolic set started in Phase 13 by adding the three reciprocal
+functions.  Each one gets a numeric evaluation handler, symbolic differentiation
+rules, and a closed-form bare integral.
+
+### New handlers (`handlers.py`)
+
+| Handler | `numeric_fn` | Exact identity |
+|---------|-------------|----------------|
+| `coth(simplify)` | `cosh(x)/sinh(x)` | none (pole at 0) |
+| `sech(simplify)` | `1/cosh(x)` | `sech(0) = 1` |
+| `csch(simplify)` | `1/sinh(x)` | none (pole at 0) |
+
+All three registered in `build_handler_table` after the existing ATANH entry.
+
+### Differentiation rules (`integrate.py`)
+
+```
+d/dx coth(u) = −u' / sinh²(u)
+d/dx sech(u) = −u'·sinh(u) / cosh²(u)
+d/dx csch(u) = −u'·cosh(u) / sinh²(u)
+```
+
+Derivatives are expressed via `SINH`/`COSH` to avoid self-referential recursion.
+When `u = x` (darg is the integer literal 1) the chain-rule factor is omitted.
+
+### Bare integration formulas (`integrate.py`)
+
+```
+∫ coth(ax+b) dx = (1/a)·log(sinh(ax+b))
+∫ sech(ax+b) dx = (1/a)·atan(sinh(ax+b))
+∫ csch(ax+b) dx = (1/a)·log(tanh((ax+b)/2))
+```
+
+Three private helpers added after `_atanh_integral`: `_coth_integral`,
+`_sech_integral`, `_csch_integral`.
+
+Note: `∫ csch(ax+b) dx = −atanh(cosh(ax+b))/a` is algebraically equivalent but
+not numerically safe on the reals (cosh ≥ 1 always, outside `atanh`'s domain).
+The `log(tanh(half_arg))` form is used instead.
+
+Poly×coth/sech/csch integration is deferred to a future phase.
+
+### Phase 3 head set extended
+
+`COTH`, `SECH`, `CSCH` added to the head-recognition set in Phase 3 of
+`_integrate`, enabling bare dispatch for any linear argument `ax+b`.
+
+### Tests (`test_phase15.py`) — 41 tests
+
+| Class | Tests |
+|-------|-------|
+| `TestPhase15_HandlerEval` | 6 |
+| `TestPhase15_Differentiation` | 9 |
+| `TestPhase15_CothIntegral` | 5 |
+| `TestPhase15_SechIntegral` | 5 |
+| `TestPhase15_CschIntegral` | 5 |
+| `TestPhase15_Fallthrough` | 3 |
+| `TestPhase15_Regressions` | 3 |
+| `TestPhase15_Macsyma` | 5 |
+
+Depends on `symbolic-ir >= 0.8.0`.
+
+---
+
+## 0.34.0 — 2026-04-28
+
+**Phase 14 deferred fixes: exp×hyp degenerate case, sinh^m·cosh^n (both≥2), atanh×poly.**
+
+### 14a-fix: `∫ exp(ax+b)·sinh/cosh(cx+d) dx` when `a² = c²`
+
+`exp_hyp_integral.py` gains `exp_hyp_degenerate(a, b, c, d, is_sinh, x_sym)`.
+
+Previously `_try_exp_hyp` fell through to unevaluated when `D = a²−c² = 0`.
+The fix expands sinh/cosh into exponentials, giving two terms — one
+exponential and one constant — whose antiderivatives are trivial:
+
+```
+a=c:   e^(2ax+b+d)/(4a)  ±  e^(b-d)·x/2
+a=-c:  e^(b+d)·x/2  ±  e^(2ax+b-d)/(4a)
+```
+
+`+` for cosh, `−` for sinh.
+
+### 14b-fix: `∫ sinh^m·cosh^n dx` for both `m, n ≥ 2`
+
+`hyp_power_integral.sinh_times_cosh_power` is extended with three sub-cases
+(replacing the old `return None`).  A new private helper `_fold_add` left-folds
+term lists into binary ADD nodes.
+
+| Sub-case | Condition | Method |
+|----------|-----------|--------|
+| A | m odd | u=cosh, expand (u²−1)^p by binomial → sum of cosh powers |
+| B | n odd | u=sinh, expand (u²+1)^q by binomial → sum of sinh powers |
+| C | both even | sinh²p=(cosh²−1)^p → reduce to Σ cosh_power_integral calls |
+
+### 14c-fix: `∫ P(x)·atanh(ax+b) dx` for `P ∈ Q[x]`
+
+New file: `atanh_poly_integral.py`.  IBP with u=atanh gives the closed form:
+
+```
+[Q(x) − (r₀ − r₁·b/a)]·atanh(ax+b)  −  a·T(x)  +  (r₁/(2a))·log(1−(ax+b)²)
+```
+
+where `Q = ∫P`, `T = ∫S`, and `r₁x+r₀` is the remainder from dividing `Q`
+by `1−(ax+b)²`.
+
+`integrate.py` gains `_try_atanh_product` wired in the MUL block after the
+Phase 13 inverse-hyp handlers.
+
+### Tests
+
+`test_phase14.py`: three formerly-unevaluated fallthroughs changed to
+closed-form assertions; new class `TestPhase14_DeferredFixes` (18 tests).
+
+`test_phase13.py`: `test_atanh_times_x` updated from unevaluated to evaluated.
+
+Total: 1018 tests, 86% coverage.
+
+---
+
+## 0.33.0 — 2026-04-28
+
+**Group E: complete matrix handler set + Phase 14 hyperbolic integration.**
+
+### Group E — matrix operation completeness
+
+All seven remaining matrix handlers wired into `SymbolicBackend` via
+`cas_handlers.py`:
+
+| Handler | Operation |
+|---------|-----------|
+| `Dot(A, B)` | Matrix product (rows of A × cols of B) |
+| `Trace(M)` | Sum of main diagonal; left-folded into binary ADDs |
+| `Dimensions(M)` | `List(rows, cols)` shape query |
+| `IdentityMatrix(n)` | n×n identity matrix |
+| `ZeroMatrix(m, n)` / `ZeroMatrix(n)` | m×n (or n×n) zero matrix |
+| `Rank(M)` | Rank via forward REF over `Fraction` (exact arithmetic) |
+| `RowReduce(M)` | Reduced row-echelon form via Gauss-Jordan elimination |
+
+`trace_handler` now left-folds any n-ary `IRApply(ADD, ...)` returned by
+`cas_matrix.trace` into a chain of binary additions to stay within the VM's
+binary-ADD contract.
+
+### Phase 14 — hyperbolic power and exp×hyperbolic integration
+
+Three new integration families added to `integrate.py`:
+
+**14a: `∫ exp(ax+b)·sinh(cx+d) dx` and `∫ exp(ax+b)·cosh(cx+d) dx`**
+
+New file: `exp_hyp_integral.py`.  Uses the exponential expansion of sinh/cosh
+to reduce to two pure-exponential integrals, then recombines:
+
+```
+∫ e^(ax+b)·sinh(cx+d) dx = e^(ax+b)·[a·sinh(cx+d) − c·cosh(cx+d)] / (a²−c²)
+∫ e^(ax+b)·cosh(cx+d) dx = e^(ax+b)·[a·cosh(cx+d) − c·sinh(cx+d)] / (a²−c²)
+```
+
+Falls through (returns unevaluated) when `a² = c²` (degenerate denominator).
+
+**14b: `∫ sinh^n(ax+b) dx` and `∫ cosh^n(ax+b) dx`** (n ≥ 2)
+
+New file: `hyp_power_integral.py`.  Recursive IBP reduction formulas:
+
+```
+I_n(sinh) = (1/(na))·sinh^(n-1)·cosh − (n-1)/n · I_{n-2}   (−)
+I_n(cosh) = (1/(na))·cosh^(n-1)·sinh + (n-1)/n · I_{n-2}   (+)
+```
+
+**14c: `∫ sinh^m · cosh^n dx`** when min(m,n) = 1
+
+u-substitution: if m=1, u=cosh → cosh^(n+1)/(n+1)/a; if n=1, u=sinh →
+sinh^(m+1)/(m+1)/a.  Returns `None` (falls through) when both m,n ≥ 2.
+
+### Dispatcher functions added to `integrate.py`
+
+- `_try_hyp_power(base, exponent, x)` — fires for `Pow(Sinh/Cosh(linear), n≥2)`
+- `_try_exp_hyp(exp_node, hyp_node, x)` — fires for `exp(linear)×sinh/cosh(linear)`
+- `_try_sinh_cosh_product(f1, f2, x)` — fires for `sinh^m × cosh^n` (m or n = 1)
+
+### Tests
+
+New `tests/test_phase14.py` with 62 tests covering:
+- `TestPhase14_ExpSinh` (7) — exp×sinh integration cases
+- `TestPhase14_ExpCosh` (5) — exp×cosh integration cases
+- `TestPhase14_SinhPowers` (7) — sinh^n for n=2..5, linear args
+- `TestPhase14_CoshPowers` (7) — cosh^n for n=2..5, linear args
+- `TestPhase14_SinhCoshProduct` (7) — u-sub mixed products
+- `TestPhase14_MatrixOps` (12) — all 7 new matrix handlers
+- `TestPhase14_Fallthroughs` (6) — degenerate/unsupported cases
+- `TestPhase14_Regressions` (5) — Phases 1/4/12/13 still work
+- `TestPhase14_Macsyma` (4) — end-to-end via Macsyma string interface
+
+`test_phase13.py`: removed `test_sinh_squared` fallthrough (Phase 14 now
+evaluates `∫ sinh²(x) dx` via the reduction formula).
+
+### Version
+
+- Bumped to **0.33.0**; `cas-matrix>=0.2.0` dependency floor raised.
+
+---
+
+## 0.32.8 — 2026-04-28
+
+**Wire `cas-multivariate` into `SymbolicBackend` (Gröbner bases).**
+
+- `cas_handlers.py`: imports `build_multivariate_handler_table` from `cas_multivariate`
+  and merges it into the handler table via `**_build_multivariate()`.
+- `pyproject.toml`: added `"coding-adventures-cas-multivariate>=0.1.0"` as a dependency.
+
+This wires `Groebner(List(polys), List(vars))`, `PolyReduce(f, List(polys), List(vars))`,
+and `IdealSolve(List(polys), List(vars))` into the symbolic VM.
+
+---
+
+## 0.32.7 — 2026-04-27
+
+**Wire `cas-algebraic` into `SymbolicBackend`; add `AlgFactor` to held heads.**
+
+- `cas_handlers.py`: imports `build_alg_factor_handler_table` from `cas_algebraic`
+  and merges it into the handler table via `**_build_algebraic()`.
+- `backends.py`: added `"AlgFactor"` to `_HELD_HEADS` so the `Sqrt(d)` second
+  argument is not pre-evaluated to a float before the handler can inspect it.
+  This is the same pattern used for `"ODE2"`.
+- `pyproject.toml`: added `"coding-adventures-cas-algebraic>=0.1.0"` as a dependency.
+
+This wires `AlgFactor(poly, Sqrt(d))` into the symbolic VM so that
+`algfactor(x^4+1, sqrt(2))` compiles to `AlgFactor(x^4+1, Sqrt(2))` IR and
+evaluates to `(x^2+sqrt(2)*x+1)*(x^2-sqrt(2)*x+1)`.
+
+---
+
+## 0.32.6 — 2026-04-28
+
+**Bump `cas-factor` dependency to 0.3.0 (BZH Phase 3).**
+
+No source changes to `symbolic-vm` itself. The upgraded `cas-factor 0.3.0`
+adds Berlekamp-Zassenhaus-Hensel factoring as a fallback for monic polynomials
+of degree ≥ 4 that Kronecker misses. This means `factor(x^5 - 1)`,
+`factor(x^8 - 1)`, `factor(x^9 - 1)`, and other high-degree cyclotomic
+polynomials now factor correctly through the MACSYMA `factor(...)` surface
+syntax without any VM changes.
+
+---
+
+## 0.32.5 — 2026-04-27
+
+**Wire `cas-ode` into `SymbolicBackend`; add `ODE2` to held heads.**
+
+- `cas_handlers.py`: imports `build_ode_handler_table` from `cas_ode` and
+  merges it into the handler table at the end of `build_cas_handler_table()`.
+- `backends.py`: added `"ODE2"` to `_HELD_HEADS` so that `D(y, x)` inside
+  the ODE expression argument is not pre-evaluated to zero before the ODE
+  handler sees it. This is the correct semantic: the ODE solver needs to
+  inspect the derivative structure of the equation.
+- Added `coding-adventures-cas-ode>=0.1.0` as a dependency.
+
+---
+
+## 0.32.4 — 2026-04-27
+
+**Wire `cas-fourier` into `SymbolicBackend`.**
+
+- Added `from cas_fourier import build_fourier_handler_table as _build_fourier`
+  to `cas_handlers.py`.
+- Added `**_build_fourier()` to the `build_cas_handler_table()` return dict.
+- Added `"coding-adventures-cas-fourier>=0.1.0"` to `pyproject.toml` dependencies.
+
+This wires `Fourier(f, t, ω)` and `IFourier(F, ω, t)` into the symbolic VM.
+Both operations follow the graceful fall-through contract: unknown inputs return
+the expression unevaluated.
+
+---
+
+## 0.32.3 — 2026-04-27
+
+**Wire `cas-laplace` into `SymbolicBackend`.**
+
+- Added `from cas_laplace import build_laplace_handler_table as _build_laplace`
+  to `cas_handlers.py`.
+- Added `**_build_laplace()` to the `build_cas_handler_table()` return dict.
+- Added `"coding-adventures-cas-laplace>=0.1.0"` to `pyproject.toml` dependencies.
+
+This wires `Laplace(f, t, s)`, `ILT(F, s, t)`, `DiracDelta(x)`, and `UnitStep(x)`
+into the symbolic VM. All four operations follow the graceful fall-through contract.
+
+---
+
+## 0.32.2 — 2026-04-27
+
+**Wire `cas-mnewton` into `SymbolicBackend`.**
+
+- Added `from cas_mnewton import build_mnewton_handler_table as _build_mnewton`
+  to `cas_handlers.py`.
+- Added `**_build_mnewton()` to the `build_cas_handler_table()` return dict
+  so `MNewton(f, x, x0)` is handled by every `SymbolicBackend`-derived VM.
+- Added `coding-adventures-cas-mnewton` to `pyproject.toml` dependencies.
+- `MNewton(f, x, x0)` now evaluates to `IRFloat(root)` for numeric x0, and
+  falls through to unevaluated on non-numeric input or zero-derivative.
+
+---
+
+## 0.32.1 — 2026-04-27
+
+**Bug fix — hyperbolic differentiation via `derivative.py` pathway.**
+
+Phase 13 added differentiation rules for `sinh/cosh/tanh/asinh/acosh/atanh` to
+`integrate.py`'s `_diff_ir` helper, but the standalone `derivative.py` module
+(used when callers invoke `diff` directly rather than through the integrator) was
+not updated.  Without this fix, `diff(sinh(x), x)` called through `derivative.py`
+entered infinite recursion and raised `RecursionError`.
+
+Added chain-rule branches to `derivative.py` for all six hyperbolic heads:
+
+- `Sinh(u)` → `Cosh(u) · u'`
+- `Cosh(u)` → `Sinh(u) · u'`
+- `Tanh(u)` → `u' / Cosh(u)²`
+- `Asinh(u)` → `u' / √(u²+1)`
+- `Acosh(u)` → `u' / √(u²−1)`
+- `Atanh(u)` → `u' / (1−u²)`
+
+---
+
+## 0.32.0 — 2026-04-27
+
+**Phase 13 — Hyperbolic function evaluation, differentiation, and integration.**
+
+New evaluation handlers (six `_elementary`-based handlers in `handlers.py`,
+registered in `build_handler_table`):
+
+- `sinh(simplify)` — `Sinh(u)`, exact identity `Sinh(0) = 0`.
+- `cosh(simplify)` — `Cosh(u)`, exact identity `Cosh(0) = 1`.
+- `tanh(simplify)` — `Tanh(u)`, exact identity `Tanh(0) = 0`.
+- `asinh(simplify)` — `Asinh(u)`, exact identity `Asinh(0) = 0`.
+- `acosh(simplify)` — `Acosh(u)`, exact identity `Acosh(1) = 0`.
+- `atanh(simplify)` — `Atanh(u)`, exact identity `Atanh(0) = 0`.
+
+New integration modules:
+
+- `sinh_poly_integral.py` — tabular IBP for `∫ P(x)·sinh(ax+b) dx` and
+  `∫ P(x)·cosh(ax+b) dx`. Sign alternation `(−1)^k` (period 2, vs trig's
+  period 4). Public API: `sinh_poly_integral`, `cosh_poly_integral`.
+- `asinh_poly_integral.py` — reduction IBP for `∫ P(x)·asinh(ax+b) dx` and
+  `∫ P(x)·acosh(ax+b) dx`. Uses the reduction formula
+  `Iₙ = (1/n)·tⁿ⁻¹·√(t²±1) ∓ (n−1)/n · Iₙ₋₂`. Public API:
+  `asinh_poly_integral`, `acosh_poly_integral`.
+
+Changes to `integrate.py` (9 change sites):
+
+1. Imports: added `SINH`, `COSH`, `TANH`, `ASINH`, `ACOSH`, `ATANH` and
+   the two new module imports.
+2. Phase 1 head set: added all six hyperbolic heads.
+3. Phase 3 head set: added all six.
+4. Bare dispatch: `SINH`/`COSH` → tabular IBP; `TANH` → `log(cosh(ax+b))/a`;
+   `ASINH`/`ACOSH` → reduction IBP; `ATANH` → inline IBP formula.
+5. Dispatcher functions: `_try_sinh_product`, `_try_cosh_product`,
+   `_try_asinh_product`, `_try_acosh_product`.
+6. Phase 13 MUL hooks wired in after Phase 12 block.
+7. Diff rules in `_diff_ir`: all six hyperbolic functions.
+8. Helper functions: `_tanh_integral`, `_atanh_integral`.
+
+New test file `tests/test_phase13.py` with 55 tests across 9 classes:
+`TestPhase13_SinhCanonical` (8), `TestPhase13_CoshCanonical` (7),
+`TestPhase13_LinearHyp` (8), `TestPhase13_AsinhCanonical` (8),
+`TestPhase13_AcoshCanonical` (5), `TestPhase13_BareAtanhTanh` (4),
+`TestPhase13_Fallthrough` (4), `TestPhase13_Regressions` (6),
+`TestPhase13_Macsyma` (5).
+
+Bumped `symbolic-ir` dependency to `>=0.7.0`.
+
+New spec: `code/specs/phase13-hyperbolic.md`.
+
+## 0.31.0 — 2026-04-27
+
+**Phase G — Control-flow VM handlers.**
+
+Added five new evaluation handlers to `handlers.py` and wired them into
+`build_handler_table()`:
+
+- `while_(simplify)` — `While(condition, body)` loop handler. Re-evaluates
+  `condition` before each iteration; exits when condition is falsy or
+  indeterminate. Returns the last body value (or `False` if never entered).
+- `for_range_(simplify)` — `ForRange(var, start, step, end, body)` handler.
+  Evaluates bounds once, iterates `var` from `start` to `end` inclusive
+  (step can be negative). Saves and restores the loop variable's binding.
+- `for_each_(simplify)` — `ForEach(var, list, body)` handler. Evaluates the
+  list once; iterates over elements, binding `var` to each in turn.
+- `block_(simplify)` — `Block(List(locals), stmt1, …, stmtN)` handler.
+  Installs local bindings, evaluates statements in order, returns the last
+  value, restores all bindings (including via `Return` exit).
+- `return_(_simplify)` — `Return(value)` handler. Raises `_ReturnSignal`
+  to unwind through any enclosing Block/While/ForRange/ForEach handler.
+
+Also:
+
+- Added `_ReturnSignal(BaseException)` exception class for early-exit
+  signalling through nested control flow.
+- Extended `_HELD_HEADS` in `backends.py` with `WHILE`, `FOR_RANGE`,
+  `FOR_EACH`, `BLOCK` (args not pre-evaluated before dispatch).
+- Added `unbind(name)` to `Backend` ABC (default no-op) and `_BaseBackend`
+  (calls `self._env.pop(name, None)`) for block scope restoration.
+- Bumped `symbolic-ir` dependency to `>=0.6.0`.
+
+Required by `macsyma-grammar-extensions.md` (Phase G). Companion releases:
+`symbolic-ir` 0.6.0, `macsyma-compiler` 0.6.0.
+
+## 0.30.0 — 2026-04-27
+
+**`Cbrt` evaluation handler — exact cube-root simplification.**
+
+Added `cbrt_handler` and `_integer_cbrt` helper to `cas_handlers.py`,
+registered under the `"Cbrt"` key in `build_cas_handler_table()`.
+
+Evaluation rules:
+- **Perfect integer cubes**: `Cbrt(8) → 2`, `Cbrt(-27) → -3`,
+  `Cbrt(0) → 0`, `Cbrt(1) → 1`.
+- **Exact rational**: `Cbrt(8/27) → 2/3`, `Cbrt(-8/27) → -2/3`.
+  Both numerator and denominator must be perfect cubes; otherwise the
+  node is left unevaluated.
+- **Float**: `Cbrt(8.0) → 2.0`, `Cbrt(-27.0) → -3.0` (uses
+  `n^(1/3)` with sign-aware handling for negatives).
+- **Symbolic / imperfect**: `Cbrt(x)`, `Cbrt(2)`, `Cbrt(1/2)` all
+  pass through unevaluated.
+
+`_integer_cbrt(n)` uses a float estimate plus ±1 probe to find the
+exact integer cube root without floating-point rounding errors.
+
+20 new tests in `test_cas_handlers.py` covering every branch (positive
+perfect cubes, zero, negative cubes, rational exact, rational imperfect
+passthrough, float positive, float negative, symbolic passthrough).
+Total test count 864; coverage 86 %.
+
+## 0.29.0 — 2026-04-27
+
+**REPL quality fixes — lambda beta-reduction and transcendental Taylor.**
+
+Two VM-level bugs fixed, one import alias added in `derivative.py`:
+
+1. **Lambda beta-reduction** (`vm.py`): `map(lambda([z], z^2), [1,2,3])`
+   previously returned unevaluated because the VM's `_eval_apply` only
+   handled named function calls (via `Define` records) and never dispatched
+   when the head was itself an `IRApply(lambda, ...)`.  A new `_apply_lambda`
+   method and a step 4b in `_eval_apply` now detect inline lambdas and perform
+   the parameter substitution, making `Map` + `Select` + direct lambda calls
+   all work correctly.
+
+2. **Transcendental Taylor** (`cas_handlers.py`): `taylor(sin(y), y, 0, 4)`
+   previously returned the expression unevaluated because
+   `cas_limit_series.taylor_polynomial` only handles polynomial inputs.  The
+   handler now falls back to `_taylor_derivative_fallback`, which computes each
+   coefficient `f^(k)(a)/k!` via successive symbolic differentiation (using the
+   existing `_diff` from `derivative.py`) followed by point-substitution.
+   `_symbolic_diff` import added at module level.  Both polynomial and
+   transcendental paths are tested.
+
+3 new lambda tests (`test_map_with_lambda`, `test_lambda_direct_call`,
+`test_lambda_two_params`) and 1 updated Taylor test
+(`test_taylor_transcendental_sin`) added.  Total test count 850, coverage 86 %.
+
+## 0.28.0 — 2026-04-27
+
+**Phase 13 — Hyperbolic functions (sinh, cosh, tanh, asinh, acosh, atanh).**
+
+**Roadmap item A1 — Kronecker polynomial factoring (Phase 2) wired through `cas-factor 0.2.0`.**
+
+Upgrades `coding-adventures-cas-factor` dependency to `>=0.2.0`.
+
+The `Factor` handler in `build_cas_handler_table()` transparently benefits
+from `cas-factor`'s new Kronecker algorithm — no handler code changes needed.
+Factoring now handles:
+
+- **Sophie Germain identity**: `x⁴ + 4 = (x²+2x+2)(x²−2x+2)`
+- **Cyclotomic**: `x⁴+x²+1 = (x²+x+1)(x²−x+1)`
+- **Repeated irreducibles**: `x⁴+2x²+1 = (x²+1)²`
+- **Mixed**: `(x²+1)(x−2)` correctly split
+
+Updated `factor_handler` docstring to reflect Phase 2 capabilities.
+
+2 new tests in `test_cas_handlers.py` (Sophie Germain, cyclotomic), verifying
+that `Factor(x⁴+4)` and `Factor(x⁴+x²+1)` both return non-trivial `Mul` trees.
+
+## 0.26.0 — 2026-04-27
+
+**Roadmap item A3 — rational function operations (Collect, Together, RatSimplify, Apart, full Expand).**
+
+`Expand` handler upgraded from a `canonical()`-only pass to full polynomial
+distribution via the polynomial bridge.  Four new IR heads wired into
+`SymbolicBackend` via `build_cas_handler_table()`:
+
+- **`Expand`** (improved): calls `to_rational` + `from_polynomial` to distribute
+  `Mul` over `Add` and expand integer powers for single-variable polynomials
+  with rational coefficients. Falls back to `canonical` for multi-variable /
+  transcendental expressions.
+- **`Collect(expr, var)`**: groups terms by powers of `var` for single-variable
+  polynomials with rational coefficients (same mechanism as `Expand` but takes
+  an explicit variable argument). MACSYMA surface: `collect`.
+- **`Together(expr)`**: combines a sum of rational functions into a single
+  fraction `P(x)/Q(x)` with monic denominator. MACSYMA surface: `together`.
+- **`RatSimplify(expr)`**: cancels the GCD of numerator and denominator,
+  reducing the rational expression to lowest terms. MACSYMA surface: `ratsimp`.
+- **`Apart(expr, var)`**: partial-fraction decomposition (Phase 1 — distinct
+  rational linear factors only). Uses residue formula `A_i = P(r_i)/Q'(r_i)`.
+  MACSYMA surface: `partfrac`. Falls back to unevaluated for irreducible
+  quadratic or repeated factors.
+
+**Dependencies**: `coding-adventures-polynomial` was already in
+`pyproject.toml`; the new handlers import `gcd`, `monic`, `deriv`,
+`evaluate`, `rational_roots`, `divmod_poly` directly from `polynomial`.
+
+**New tests (18 in Section 14 of `test_cas_handlers.py`)** +
+**6 new pipeline tests in `macsyma-runtime`**.
+
+## 0.25.0 — 2026-04-27
+
+**Roadmap item B1 (cas-trig) wired into SymbolicBackend.**
+
+`cas-trig` is now a dependency. Its handler table is merged via
+`_build_trig()` in `SymbolicBackend.__init__`.
+
+**New IR heads** (3 total):
+`TrigSimplify`, `TrigExpand`, `TrigReduce`.
+
+- `TrigSimplify`: Pythagorean identity (`sin²+cos²→1`), sign rules
+  (`sin(-x)→-sin(x)`, `cos(-x)→cos(x)`), and special-value lookup
+  (`sin(π/6)→1/2`, etc.).
+- `TrigExpand`: angle-addition formulas and Chebyshev recurrence for
+  integer multiples (`sin(2x)→2sin(x)cos(x)`, `cos(3x)→...`).
+- `TrigReduce`: power-to-multiple-angle reduction
+  (`sin²(x)→(1-cos(2x))/2`, `cos³(x)→(3cos(x)+cos(3x))/4`, etc.).
+
+**Dependencies updated:**
+- `cas-trig>=0.1.0` added to `pyproject.toml`.
+
+**New tests (5 in `test_cas_handlers.py`)** + **5 pipeline tests**.
+
+## 0.24.0 — 2026-04-27
+
+**Roadmap items A2c + A2d (NSolve and linear systems) wired in.**
+
+- `solve_handler` extended to detect `Solve(List(eqs...), List(vars...))`
+  and route it to `solve_linear_system` (Gaussian elimination, exact
+  rational arithmetic). Returns `List(Rule(var, val), ...)`.
+- `nsolve_handler` added for `NSolve(poly, var)`: Durand-Kerner iteration
+  returning `IRFloat`/complex IR roots for any polynomial degree.
+- `MACSYMA_NAME_TABLE` gains `"nsolve"→NSolve` and `"linsolve"→Solve`.
+- `cas-solve>=0.6.0` dependency pin updated.
+- 4 new tests in `test_cas_handlers.py` + 4 new pipeline tests.
+
+## 0.23.0 — 2026-04-27
+
+**Roadmap items A2a + A2b (cubic and quartic solvers) wired into `solve_handler`.**
+
+The `Solve` handler in `cas_handlers.py` now supports degree-3 and degree-4
+polynomials via `cas-solve`'s new `solve_cubic` and `solve_quartic`:
+
+- **Degree 3**: routes through `solve_cubic` (rational-root theorem → Cardano).
+  Returns a `List` of roots, or unevaluated for casus irreducibilis.
+- **Degree 4**: routes through `solve_quartic` (rational-root theorem →
+  biquadratic → Ferrari). Returns a `List` of roots, or unevaluated when the
+  Ferrari resolvent has no rational root.
+- Empty or "ALL" results are propagated as unevaluated expressions.
+
+**Dependencies updated:**
+- `cas-solve` bumped to `>=0.4.0` in `pyproject.toml`.
+
+**New tests (4 in `test_cas_handlers.py`):**
+`test_solve_cubic_three_rational`, `test_solve_cubic_one_rational_two_complex`,
+`test_solve_quartic_four_rational`, `test_solve_degree_5_passthrough`.
+
+## 0.22.0 — 2026-04-27
+
+**Roadmap item B2 (cas-complex) wired into SymbolicBackend.**
+
+`cas-complex` is now a dependency. Its handler table is merged into
+`build_cas_handler_table()` via `**_build_complex()`, and two additional
+integration points are set up in `SymbolicBackend.__init__`:
+
+- `ImaginaryUnit` is pre-bound to itself so it evaluates as an inert
+  symbol (rather than triggering the unresolved-symbol fall-through).
+- A wrapper around the `Pow` handler routes `ImaginaryUnit^n` through
+  `imaginary_power_handler` (reducing `i^n → {1, i, -1, -i}` via `n % 4`)
+  before falling through to the standard power handler.
+- `Abs` is extended: when its argument contains `ImaginaryUnit`, it
+  delegates to `abs_complex_handler` (returning `sqrt(re² + im²)`).
+
+**New IR heads** (7 total):
+`Re`, `Im`, `Conjugate`, `Arg`, `RectForm`, `PolarForm`, `AbsComplex`.
+
+## 0.21.0 — 2026-04-27
+
+**Roadmap item B3 (cas-number-theory) wired into SymbolicBackend.**
+
+The new `cas-number-theory` package is now a dependency and its handler
+table is merged into `build_cas_handler_table()` via `**_build_nt()`.
+
+**New IR heads** (10 total, all language-neutral):
+`IsPrime`, `NextPrime`, `PrevPrime`, `FactorInteger`, `Divisors`,
+`Totient`, `MoebiusMu`, `JacobiSymbol`, `ChineseRemainder`, `IntegerLength`.
+
+## 0.20.0 — 2026-04-27
+
+**Roadmap items C2, C4, C5 implemented** — three items from the MACSYMA
+completion roadmap (`macsyma-completion.md`) are now live in `SymbolicBackend`.
+All three are language-neutral IR heads; every future CAS frontend inherits
+them automatically.
+
+**New handlers installed on `SymbolicBackend`**:
+
+- **`Lhs(Equal(a, b))` → `a`** (C5) — left-hand side of an equation.
+- **`Rhs(Equal(a, b))` → `b`** (C5) — right-hand side of an equation.
+- **`MakeList(expr, var, n)` / `MakeList(expr, var, from, to[, step])`** (C2)
+  — generative list construction: evaluates `expr` for each integer value
+  of `var` in the specified range.  Replaces the previous stub that mapped
+  `makelist` → `Range`.
+- **`At(expr, Equal(var, val))` / `At(expr, List(…))` → substitution then eval** (C4)
+  — point evaluation; sugar over `Subst`.  Handles both single rules and
+  lists of rules.
+
+**Bug fix**: `MACSYMA_NAME_TABLE["makelist"]` previously routed to `Range`
+(a plain integer range generator). It now routes to the correct `MakeList`
+head, which evaluates an arbitrary expression over a range.
+
+**New import**: `EQUAL` added to the `cas_handlers.py` imports from
+`symbolic_ir`.
+
+## 0.19.0 — 2026-04-27
+
+**CAS substrate handlers wired into SymbolicBackend** — the universal inner
+doll. Every CAS frontend that extends `SymbolicBackend` (MACSYMA, Maple,
+Mathematica, …) now inherits the full algebraic operation set for free.
+Language-specific quirks (Display/Suppress/Kill/Ev) remain in the language
+backend subclass (the outer doll).
+
+**New module**: `symbolic_vm/cas_handlers.py`
+
+**New handlers installed on `SymbolicBackend`**:
+
+- **Algebraic**: `Simplify`, `Expand`, `Factor` (Phase 1: integer-root
+  factoring via rational-root theorem), `Solve` (linear and quadratic over Q),
+  `Subst` (structural substitution + re-evaluation).
+- **List operations**: `Length`, `First`, `Rest`, `Last`, `Append`, `Reverse`,
+  `Range`, `Map`, `Apply`, `Select`, `Sort`, `Part`, `Flatten`, `Join`.
+- **Matrix**: `Matrix`, `Transpose`, `Determinant`, `Inverse`.
+- **Calculus**: `Limit` (direct-substitution Phase 1), `Taylor` (polynomial
+  Taylor expansion).
+- **Numeric**: `Abs`, `Floor`, `Ceiling`, `Mod`, `Gcd`, `Lcm`.
+
+**Package dependencies added**: `cas-pattern-matching`, `cas-substitution`,
+`cas-simplify`, `cas-factor`, `cas-solve`, `cas-list-operations`,
+`cas-matrix`, `cas-limit-series`.
+
+**Architecture note**: These handlers are the **inner doll** — universal
+CAS operations that any symbolic algebra language can use unchanged. They
+are explicitly *not* placed in `MacsymaBackend` so that future Maple and
+Mathematica backends can extend `SymbolicBackend` directly and inherit
+the complete algebraic substrate without touching any MACSYMA-specific code.
+
 ## 0.18.0 — 2026-04-23
 
 Phase 13 of the integration roadmap — hyperbolic functions.

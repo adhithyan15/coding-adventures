@@ -49,9 +49,35 @@ def test_too_many_params():
         substitute("VALUES (?)", (1, 2))
 
 
-def test_bytes_not_supported():
-    with pytest.raises(mini_sqlite.NotSupportedError):
-        substitute("VALUES (?)", (b"x",))
+def test_bytes_render_as_blob_literal():
+    """``bytes`` parameters render as the SQLite ``X'<hex>'`` blob literal."""
+    assert substitute("VALUES (?)", (b"\xde\xad\xbe\xef",)) == "VALUES (X'deadbeef')"
+
+
+def test_empty_bytes_render_as_empty_blob_literal():
+    assert substitute("VALUES (?)", (b"",)) == "VALUES (X'')"
+
+
+def test_bytearray_renders_same_as_bytes():
+    assert substitute("VALUES (?)", (bytearray(b"\x00\xff"),)) == "VALUES (X'00ff')"
+
+
+def test_memoryview_renders_same_as_bytes():
+    assert substitute("VALUES (?)", (memoryview(b"\xab\xcd"),)) == "VALUES (X'abcd')"
+
+
+def test_bytes_subclass_cannot_inject_via_hex():
+    """A ``bytes`` subclass overriding ``hex`` must not bypass the literal form.
+
+    The implementation calls ``bytes(value).hex()`` which materialises a
+    fresh ``bytes`` object, so a subclass-defined ``.hex`` is bypassed.
+    """
+    class Evil(bytes):
+        def hex(self, *a, **kw):  # noqa: ANN002, ANN003, ANN202
+            return "00'; DROP TABLE t--"
+
+    out = substitute("VALUES (?)", (Evil(b"\x01\x02"),))
+    assert out == "VALUES (X'0102')"
 
 
 def test_unsupported_type():
@@ -88,3 +114,185 @@ def test_non_finite_floats_rejected():
     for bad in (float("inf"), float("-inf"), float("nan")):
         with pytest.raises(mini_sqlite.ProgrammingError):
             substitute("VALUES (?)", (bad,))
+
+
+# ---------------------------------------------------------------------------
+# Named parameter style (``:name``)
+# ---------------------------------------------------------------------------
+
+
+class TestNamedParameters:
+    """``:identifier`` placeholders bound from a Mapping (PEP 249 'named')."""
+
+    def test_single_named_param(self):
+        assert substitute("SELECT :x", {"x": 42}) == "SELECT 42"
+
+    def test_multiple_distinct_named_params(self):
+        out = substitute(
+            "SELECT :a, :b, :c", {"a": 1, "b": 2.5, "c": "hi"}
+        )
+        assert out == "SELECT 1, 2.5, 'hi'"
+
+    def test_same_named_param_used_twice(self):
+        """A named placeholder may appear more than once with the same key."""
+        out = substitute(
+            "SELECT * FROM t WHERE x = :v OR y = :v", {"v": 7}
+        )
+        assert out == "SELECT * FROM t WHERE x = 7 OR y = 7"
+
+    def test_extra_dict_keys_are_ignored(self):
+        """Per sqlite3, unused dict keys are silently ignored."""
+        out = substitute("SELECT :x", {"x": 1, "unused": 999})
+        assert out == "SELECT 1"
+
+    def test_missing_key_raises(self):
+        with pytest.raises(mini_sqlite.ProgrammingError, match=":missing"):
+            substitute("SELECT :missing", {"x": 1})
+
+    def test_named_inside_string_literal_is_ignored(self):
+        # ``:x`` inside a literal must not consume the parameter.
+        out = substitute(
+            "SELECT ':x is not bound' WHERE y = :x", {"x": 5}
+        )
+        assert out == "SELECT ':x is not bound' WHERE y = 5"
+
+    def test_named_inside_line_comment_is_ignored(self):
+        out = substitute(
+            "SELECT 1 -- :ignored\nWHERE x = :x", {"x": 9}
+        )
+        assert out == "SELECT 1 -- :ignored\nWHERE x = 9"
+
+    def test_named_inside_block_comment_is_ignored(self):
+        out = substitute(
+            "SELECT /* :ignored */ :x", {"x": 9}
+        )
+        assert out == "SELECT /* :ignored */ 9"
+
+    def test_double_colon_is_not_a_placeholder(self):
+        """``a::INT`` (Postgres-style cast) must pass through untouched."""
+        out = substitute("SELECT a :: INT FROM t", {})
+        assert out == "SELECT a :: INT FROM t"
+
+    def test_underscore_in_identifier(self):
+        out = substitute("SELECT :user_id", {"user_id": 42})
+        assert out == "SELECT 42"
+
+    def test_digit_after_initial_letter(self):
+        out = substitute("SELECT :col1, :col2", {"col1": 1, "col2": 2})
+        assert out == "SELECT 1, 2"
+
+    def test_leading_digit_with_mapping_raises(self):
+        """``:1`` is numeric style — using it with a Mapping raises."""
+        with pytest.raises(mini_sqlite.ProgrammingError, match="numeric"):
+            substitute("SELECT :1", {})
+
+    def test_qmark_with_mapping_raises(self):
+        with pytest.raises(mini_sqlite.ProgrammingError, match="mapping"):
+            substitute("SELECT ?", {"x": 1})
+
+    def test_named_with_sequence_raises(self):
+        with pytest.raises(mini_sqlite.ProgrammingError, match="not a mapping"):
+            substitute("SELECT :x", (1,))
+
+    def test_mixed_paramstyles_raise(self):
+        # Order :name then ? with a mapping: :name binds first, then ? hits
+        # the "cannot mix" check before the wrong-container check.
+        with pytest.raises(mini_sqlite.ProgrammingError, match="mix"):
+            substitute("SELECT :x, ?", {"x": 1})
+
+    def test_named_value_types(self):
+        """All SQL value types render correctly through named binding."""
+        out = substitute(
+            "VALUES (:n, :i, :f, :t, :b)",
+            {"n": None, "i": 7, "f": 1.5, "t": "ok", "b": True},
+        )
+        assert out == "VALUES (NULL, 7, 1.5, 'ok', 1)"
+
+    def test_empty_mapping_with_no_placeholders(self):
+        assert substitute("SELECT 1", {}) == "SELECT 1"
+
+
+# ---------------------------------------------------------------------------
+# Numeric parameter style (``:N``, 1-indexed)
+# ---------------------------------------------------------------------------
+
+
+class TestNumericParameters:
+    """``:N`` placeholders bound from a Sequence by 1-indexed position."""
+
+    def test_single_numeric_param(self):
+        assert substitute("SELECT :1", (42,)) == "SELECT 42"
+
+    def test_multiple_distinct_numeric_params(self):
+        out = substitute(
+            "SELECT :1, :2, :3", (1, 2.5, "hi"),
+        )
+        assert out == "SELECT 1, 2.5, 'hi'"
+
+    def test_same_numeric_param_used_twice(self):
+        """A numeric placeholder may appear more than once."""
+        out = substitute(
+            "SELECT * FROM t WHERE x = :1 OR y = :1", (7,),
+        )
+        assert out == "SELECT * FROM t WHERE x = 7 OR y = 7"
+
+    def test_extra_sequence_values_are_allowed(self):
+        """Numeric style does not require all values to be referenced.
+
+        Matches sqlite3 semantics: extra trailing values in the sequence
+        are silently ignored when only some indices are used.
+        """
+        out = substitute("SELECT :1", (5, 99, 100))
+        assert out == "SELECT 5"
+
+    def test_out_of_range_raises(self):
+        with pytest.raises(mini_sqlite.ProgrammingError, match="out of range"):
+            substitute("SELECT :3", (1, 2))
+
+    def test_zero_index_raises(self):
+        """Numeric style is 1-indexed; ``:0`` is invalid."""
+        with pytest.raises(mini_sqlite.ProgrammingError, match="1-indexed"):
+            substitute("SELECT :0", (1,))
+
+    def test_numeric_inside_string_literal_is_ignored(self):
+        out = substitute(
+            "SELECT ':1 is not bound' WHERE y = :1", (5,),
+        )
+        assert out == "SELECT ':1 is not bound' WHERE y = 5"
+
+    def test_numeric_inside_line_comment_is_ignored(self):
+        out = substitute(
+            "SELECT 1 -- :2\nWHERE x = :1", (9,),
+        )
+        assert out == "SELECT 1 -- :2\nWHERE x = 9"
+
+    def test_numeric_inside_block_comment_is_ignored(self):
+        out = substitute(
+            "SELECT /* :2 */ :1", (9,),
+        )
+        assert out == "SELECT /* :2 */ 9"
+
+    def test_multi_digit_index(self):
+        out = substitute("SELECT :12", tuple(range(20)))
+        assert out == "SELECT 11"  # 1-indexed → parameters[11]
+
+    def test_numeric_with_mapping_raises(self):
+        with pytest.raises(mini_sqlite.ProgrammingError, match="numeric"):
+            substitute("SELECT :1", {"1": "a"})
+
+    def test_numeric_mixed_with_qmark_raises(self):
+        with pytest.raises(mini_sqlite.ProgrammingError, match="mix"):
+            substitute("SELECT ?, :1", (1, 2))
+
+    def test_numeric_mixed_with_named_raises(self):
+        # ``:n`` (named) must come first so the mixing check fires before
+        # the wrong-container check.
+        with pytest.raises(mini_sqlite.ProgrammingError, match="mix"):
+            substitute("SELECT :n, :1", {"n": 5})
+
+    def test_numeric_value_types(self):
+        out = substitute(
+            "VALUES (:1, :2, :3, :4, :5)",
+            (None, 7, 1.5, "ok", True),
+        )
+        assert out == "VALUES (NULL, 7, 1.5, 'ok', 1)"

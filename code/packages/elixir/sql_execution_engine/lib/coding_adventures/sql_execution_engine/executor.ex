@@ -121,6 +121,10 @@ defmodule CodingAdventures.SqlExecutionEngine.Executor do
     execute_statement(inner, data_source)
   end
 
+  defp execute_statement(%ASTNode{rule_name: "query_stmt", children: [inner]}, data_source) do
+    execute_statement(inner, data_source)
+  end
+
   defp execute_statement(%ASTNode{rule_name: "select_stmt"} = node, data_source) do
     {:ok, execute_select(node, data_source)}
   end
@@ -561,10 +565,11 @@ defmodule CodingAdventures.SqlExecutionEngine.Executor do
   # Find the first ASTNode with matching rule_name; return {node, remaining}.
   # Uses a linear scan — the children list is small so this is fine.
   defp find_first_node(target_rule, children) do
-    idx = Enum.find_index(children, fn
-      %ASTNode{rule_name: r} -> r == target_rule
-      _ -> false
-    end)
+    idx =
+      Enum.find_index(children, fn
+        %ASTNode{rule_name: r} -> r == target_rule
+        _ -> false
+      end)
 
     node = Enum.at(children, idx)
     rest = Enum.drop(children, idx + 1)
@@ -573,10 +578,11 @@ defmodule CodingAdventures.SqlExecutionEngine.Executor do
 
   # Find the first Token with matching value; return {token, remaining}.
   defp find_token_by_value(target_value, children) do
-    idx = Enum.find_index(children, fn
-      %Token{value: v} -> v == target_value
-      _ -> false
-    end)
+    idx =
+      Enum.find_index(children, fn
+        %Token{value: v} -> v == target_value
+        _ -> false
+      end)
 
     token = Enum.at(children, idx)
     rest = Enum.drop(children, idx + 1)
@@ -585,10 +591,11 @@ defmodule CodingAdventures.SqlExecutionEngine.Executor do
 
   # Find an optional node; returns {nil, children} if absent.
   defp find_optional_node(target_rule, children) do
-    idx = Enum.find_index(children, fn
-      %ASTNode{rule_name: r} -> r == target_rule
-      _ -> false
-    end)
+    idx =
+      Enum.find_index(children, fn
+        %ASTNode{rule_name: r} -> r == target_rule
+        _ -> false
+      end)
 
     if idx do
       node = Enum.at(children, idx)

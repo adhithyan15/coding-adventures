@@ -459,12 +459,27 @@ class RollbackTransaction:
     """Call ``backend.rollback(handle)`` and clear the stored handle."""
 
 
+# Sentinel cursor_id used when the VM evaluates CHECK constraint expressions.
+# Normal cursors are allocated starting from 0, so -1 is guaranteed distinct.
+CHECK_CURSOR_ID: int = -1
+
+
 @dataclass(frozen=True, slots=True)
 class ColumnDef:
-    """One column in a CREATE TABLE — mirrors planner's ColumnDef."""
+    """One column in a CREATE TABLE — mirrors planner's ColumnDef.
+
+    ``check_instrs`` is a pre-compiled sequence of IR instructions that
+    leaves a boolean (or NULL) on the stack when executed. The VM evaluates
+    these against a new/updated row using the sentinel cursor id
+    ``CHECK_CURSOR_ID``.  Empty tuple means no CHECK constraint.
+    """
     name: str
     type: str
     nullable: bool = True
+    primary_key: bool = False
+    check_instrs: tuple[Instruction, ...] = ()
+    # (ref_table, ref_col_or_None) where None means "reference the parent PK".
+    foreign_key: tuple[str, str | None] | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -480,6 +495,13 @@ class DropTable:
     """Ask the backend to drop a table."""
     table: str
     if_exists: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class AlterTable:
+    """Ask the backend to add a column to an existing table."""
+    table: str
+    column: ColumnDef
 
 
 @dataclass(frozen=True, slots=True)
@@ -507,6 +529,32 @@ class DropIndex:
 
     If ``if_exists=True`` and the index does not exist, the instruction is
     silently skipped. Otherwise ``IndexNotFound`` is raised.
+    """
+    name: str
+    if_exists: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class CreateTriggerDef:
+    """Store a trigger definition in the backend.
+
+    ``body_sql`` is the raw SQL text of the body statements (without the
+    surrounding BEGIN…END), with individual statements separated by
+    semicolons.  At fire time the VM re-parses and re-compiles the body.
+    """
+    name: str
+    timing: str    # "BEFORE" | "AFTER"
+    event: str     # "INSERT" | "UPDATE" | "DELETE"
+    table: str
+    body_sql: str
+
+
+@dataclass(frozen=True, slots=True)
+class DropTriggerDef:
+    """Remove a trigger definition from the backend.
+
+    If ``if_exists=True`` and the trigger does not exist, the instruction is
+    silently skipped.  Otherwise ``TriggerNotFound`` is raised.
     """
     name: str
     if_exists: bool = False
@@ -565,6 +613,90 @@ class RunSubquery:
     sub_program: Program   # Program is defined below; forward-ref resolved by PEP 563
 
 
+@dataclass(frozen=True, slots=True)
+class RunExistsSubquery:
+    """Execute the inner sub-program; push TRUE iff it returns at least one row.
+
+    Used for ``EXISTS (subquery)`` in WHERE, HAVING, and SELECT projection.
+    Unlike :class:`RunSubquery` (which materialises rows for cursor-based
+    iteration), this instruction is a pure boolean test — it executes the inner
+    plan in a temporary child state, checks the row count, and pushes a boolean
+    onto the outer expression stack.
+
+    ``NOT EXISTS`` is handled by the caller: a :class:`UnaryOp` ``NOT``
+    instruction is emitted after this one, inverting the boolean result.
+    """
+
+    sub_program: Program   # fully compiled inner SELECT program
+
+
+@dataclass(frozen=True, slots=True)
+class RunScalarSubquery:
+    """Execute the inner sub-program; push the single result value onto the stack.
+
+    Used for scalar subqueries — ``(SELECT expr FROM …)`` in expression
+    position (SELECT list, WHERE clause, HAVING, etc.).  The inner program
+    is expected to return exactly one column.
+
+    - Zero rows returned → ``NULL`` is pushed.
+    - Exactly one row returned → the first column's value is pushed.
+    - More than one row returned → ``CardinalityError`` is raised at runtime.
+
+    ``sub_program`` is a fully compiled inner SELECT program compiled with its
+    own cursor/label namespace so there is no state leakage with the outer
+    program.
+    """
+
+    sub_program: Program   # fully compiled inner SELECT program
+
+
+@dataclass(frozen=True, slots=True)
+class RunRecursiveCTE:
+    """Execute a WITH RECURSIVE CTE via fixed-point iteration.
+
+    Algorithm (see VM ``_do_run_recursive_cte``):
+
+    1. Run ``anchor_program`` once → initial working set.
+    2. Loop while working set is non-empty:
+       a. Run ``recursive_program`` with cursor ``working_cursor_id``
+          pre-populated from the current working set.
+       b. Relabel result rows with the anchor's output column names
+          (SQL rule: UNION ALL names come from the left/anchor side).
+       c. If ``union_all`` is False, discard rows already in the
+          accumulated set (UNION semantics — cycle prevention).
+       d. Extend the accumulated result; update working set.
+    3. Wrap the accumulated rows in a :class:`~sql_vm.vm._SubqueryCursor`
+       and store under ``cursor_id`` for the outer scan loop.
+
+    ``working_cursor_id`` is the cursor slot pre-allocated inside
+    ``recursive_program`` for the working-set scan (always cursor 0 in the
+    recursive sub-program, because the recursive FROM source is compiled
+    first).
+    """
+
+    cursor_id: int
+    anchor_program: Program
+    recursive_program: Program
+    working_cursor_id: int
+    union_all: bool = True
+
+
+@dataclass(frozen=True, slots=True)
+class OpenWorkingSetScan:
+    """Open a fresh cursor over the recursive working-set rows.
+
+    Used inside recursive sub-programs so that ``WorkingSetScan`` loops work
+    correctly when the CTE self-reference appears inside a JOIN.  Each time
+    this instruction executes, it materialises a brand-new
+    :class:`~sql_vm.vm._SubqueryCursor` from ``vm_state.working_set_data``
+    and stores it under ``cursor_id``.  The subsequent ``AdvanceCursor`` /
+    ``CloseScan`` loop iterates that fresh cursor — so even if the outer JOIN
+    loop calls this many times, each iteration starts from row zero.
+    """
+
+    cursor_id: int
+
+
 # ---- Control flow -------------------------------------------------------
 
 
@@ -598,6 +730,113 @@ class Halt:
 
 
 # --------------------------------------------------------------------------
+# Window functions
+# --------------------------------------------------------------------------
+
+
+class WinFunc(Enum):
+    """Supported window (analytic) functions.
+
+    Ranking functions
+    -----------------
+    ROW_NUMBER   — 1-based sequential integer within the ordered partition.
+                   Ties get different numbers depending on order.
+    RANK         — like ROW_NUMBER but identical ORDER BY values share the same
+                   rank; the next rank after a tie jumps (1, 1, 3, …).
+    DENSE_RANK   — like RANK but without gaps (1, 1, 2, …).
+
+    Aggregate-style functions
+    -------------------------
+    SUM / COUNT / COUNT_STAR / AVG / MIN / MAX
+        — cumulate over the *entire* partition (the full-partition frame is
+          used, which is the default when no ROWS/RANGE clause is given).
+          ``COUNT_STAR`` is ``COUNT(*)`` — no arg column, always counts rows.
+
+    Value functions
+    ---------------
+    FIRST_VALUE  — the value of ``arg_col`` in the first row of the partition.
+    LAST_VALUE   — the value of ``arg_col`` in the last row of the partition.
+    """
+
+    ROW_NUMBER = "ROW_NUMBER"
+    RANK = "RANK"
+    DENSE_RANK = "DENSE_RANK"
+    SUM = "SUM"
+    COUNT = "COUNT"
+    COUNT_STAR = "COUNT_STAR"
+    AVG = "AVG"
+    MIN = "MIN"
+    MAX = "MAX"
+    FIRST_VALUE = "FIRST_VALUE"
+    LAST_VALUE = "LAST_VALUE"
+
+
+@dataclass(frozen=True, slots=True)
+class WinFuncSpec:
+    """Column-level specification for one window function call.
+
+    The IR represents all arguments as column names (strings) because at
+    codegen time every expression has already been compiled into the inner
+    projection's output schema.  The VM looks up ``arg_col`` /
+    ``partition_cols`` / ``order_cols`` in ``result.columns`` to find the
+    correct positional index.
+
+    Fields
+    ------
+    func:
+        Which window function to evaluate.
+    arg_col:
+        Name of the column in the result buffer that holds the function's
+        argument (e.g. ``"salary"`` for ``SUM(salary)``).  ``None`` for
+        arg-free functions (``ROW_NUMBER``, ``RANK``, ``DENSE_RANK``) and
+        ``COUNT_STAR``.
+    partition_cols:
+        Ordered tuple of column names to partition by.  An empty tuple means
+        the whole result is one partition.
+    order_cols:
+        Ordered tuple of ``(column_name, descending)`` pairs that define the
+        ordering within each partition.  Required for ranking functions.
+    result_col:
+        The output column name for this window function (the SELECT alias).
+    """
+
+    func: WinFunc
+    arg_col: str | None
+    partition_cols: tuple[str, ...]
+    order_cols: tuple[tuple[str, bool], ...]
+    result_col: str
+
+
+@dataclass(frozen=True, slots=True)
+class ComputeWindowFunctions:
+    """Post-process the result buffer to evaluate window functions.
+
+    Execution model
+    ---------------
+    By the time this instruction executes, the inner scan loop has finished
+    and ``vm_state.result.rows`` holds every output row as a positional
+    tuple.  ``ComputeWindowFunctions`` works entirely on that buffer:
+
+    1. Convert each row tuple to a dict keyed by ``result.columns``.
+    2. For each :class:`WinFuncSpec` in ``specs``:
+       a. Group rows into partitions by the values of ``partition_cols``.
+       b. Sort each partition by ``order_cols`` (stable sort).
+       c. Evaluate the window function over the sorted partition, assigning
+          a value to each row.
+       d. Store the value in ``result_col`` on each dict.
+    3. Project each dict down to ``output_cols`` (in order) and convert back
+       to tuples.
+    4. Replace ``result.rows`` and set ``result.columns = output_cols``.
+
+    This single-pass design avoids materialising multiple intermediate
+    buffers and is correct for non-nested window functions.
+    """
+
+    specs: tuple[WinFuncSpec, ...]
+    output_cols: tuple[str, ...]  # final column projection after all specs
+
+
+# --------------------------------------------------------------------------
 # Discriminated union — every Instruction variant.
 # --------------------------------------------------------------------------
 
@@ -608,11 +847,17 @@ Instruction = (
     | BeginRow | EmitColumn | EmitRow | SetResultSchema | ScanAllColumns
     | InitAgg | UpdateAgg | FinalizeAgg | SaveGroupKey | LoadGroupKey | AdvanceGroupKey
     | SortResult | LimitResult | DistinctResult
-    | InsertRow | InsertFromResult | UpdateRows | DeleteRows | CreateTable | DropTable
+    | ComputeWindowFunctions
+    | InsertRow | InsertFromResult | UpdateRows | DeleteRows | CreateTable | DropTable | AlterTable
     | CreateIndex | DropIndex | OpenIndexScan
+    | CreateTriggerDef | DropTriggerDef
     | CaptureLeftResult | IntersectResult | ExceptResult
     | BeginTransaction | CommitTransaction | RollbackTransaction
     | RunSubquery
+    | RunExistsSubquery
+    | RunScalarSubquery
+    | RunRecursiveCTE
+    | OpenWorkingSetScan
     | Label | Jump | JumpIfFalse | JumpIfTrue | Halt
 )
 

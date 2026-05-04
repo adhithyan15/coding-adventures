@@ -1,0 +1,1 @@
+PERL5LIB=lib:../neural-network/lib prove -l t

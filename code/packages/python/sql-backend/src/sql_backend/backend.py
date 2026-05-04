@@ -62,7 +62,7 @@ from typing import NewType
 
 from .index import IndexDef
 from .row import Cursor, Row, RowIterator
-from .schema import ColumnDef
+from .schema import ColumnDef, TriggerDef
 from .values import SqlValue
 
 # Transactions are represented as opaque tokens — an integer handle. Backends
@@ -172,6 +172,16 @@ class Backend(ABC):
 
         If ``if_exists`` is True and the table does not exist, this is a
         no-op. Otherwise, raise :class:`TableNotFound`.
+        """
+
+    @abstractmethod
+    def add_column(self, table: str, column: ColumnDef) -> None:
+        """Add a new column to an existing table (ALTER TABLE … ADD COLUMN).
+
+        Existing rows gain the column with the value ``column.default`` if a
+        DEFAULT was specified, or NULL otherwise.  Raises
+        :class:`TableNotFound` if the table does not exist and
+        :class:`ColumnAlreadyExists` if a column with that name already exists.
         """
 
     # --- Indexes -----------------------------------------------------------
@@ -327,6 +337,85 @@ class Backend(ABC):
         retrieve it here.
         """
         return None
+
+    # --- Savepoints --------------------------------------------------------
+    # Non-abstract: the default raises Unsupported so backends that don't
+    # support savepoints inherit a clear error instead of a silent no-op.
+
+    def create_savepoint(self, name: str) -> None:
+        """Create a named savepoint within the active transaction.
+
+        The default implementation raises :class:`Unsupported`. Override in
+        backends that support partial rollback.
+
+        Raises :class:`Unsupported` if savepoints are not supported.
+        """
+        from .errors import Unsupported  # local import avoids circular dep
+        raise Unsupported(operation="savepoints")
+
+    def release_savepoint(self, name: str) -> None:
+        """Release (destroy) the named savepoint.
+
+        Per SQL/SQLite semantics, releasing a savepoint also releases all
+        savepoints created after it.  Changes are kept — the outer transaction
+        still needs to be committed or rolled back.
+
+        The default implementation raises :class:`Unsupported`.
+        """
+        from .errors import Unsupported
+        raise Unsupported(operation="savepoints")
+
+    def rollback_to_savepoint(self, name: str) -> None:
+        """Roll back all changes made after the named savepoint.
+
+        Unlike a full rollback, the savepoint itself remains alive after this
+        call — the caller may roll back to it again, or release it later.
+        Savepoints created after the named one are destroyed.
+
+        The default implementation raises :class:`Unsupported`.
+        """
+        from .errors import Unsupported
+        raise Unsupported(operation="savepoints")
+
+    # --- Triggers ------------------------------------------------------------
+    # Non-abstract: default implementations raise Unsupported so backends that
+    # don't support triggers inherit a clear error rather than a silent no-op.
+
+    def create_trigger(self, defn: TriggerDef) -> None:
+        """Store a trigger definition.
+
+        The trigger fires on ``defn.event`` (INSERT / UPDATE / DELETE) at
+        ``defn.timing`` (BEFORE / AFTER) for ``defn.table``.
+
+        Raises :class:`~sql_backend.errors.TriggerAlreadyExists` if a trigger
+        with the same name already exists.
+
+        The default implementation raises :class:`Unsupported`.
+        """
+        from .errors import Unsupported
+        raise Unsupported(operation="triggers")
+
+    def drop_trigger(self, name: str, if_exists: bool = False) -> None:
+        """Remove a trigger definition by name.
+
+        When ``if_exists=True`` and the trigger does not exist, this is a
+        silent no-op.  Otherwise raises
+        :class:`~sql_backend.errors.TriggerNotFound`.
+
+        The default implementation raises :class:`Unsupported`.
+        """
+        from .errors import Unsupported
+        raise Unsupported(operation="triggers")
+
+    def list_triggers(self, table: str) -> list[TriggerDef]:
+        """Return all triggers for *table* in creation order.
+
+        Returns an empty list when no triggers exist (not an error).
+
+        The default implementation returns an empty list so backends that do
+        not support triggers simply never fire any.
+        """
+        return []
 
 
 class SchemaProvider(ABC):

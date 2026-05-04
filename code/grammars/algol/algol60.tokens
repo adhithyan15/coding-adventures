@@ -11,16 +11,17 @@
 # No column restrictions (unlike Fortran 77 and COBOL, which were punched-card-based).
 #
 # Character set note: The ALGOL 60 report used mathematical typographic symbols
-# (≤, ≥, ≠, ↑, ∧, ∨, ¬, ⊃, ≡) that could not be printed on real hardware of the era.
-# Every hardware implementation mapped these to ASCII sequences. This grammar uses
-# the ASCII conventions that became standard.
+# (≤, ≥, ≠, ↑, ×, ÷, ∧, ∨, ¬, ⊃, ≡) that could not be printed on real
+# hardware of the era. Every hardware implementation mapped these to ASCII
+# sequences. This grammar accepts both the publication symbols and the ASCII
+# conventions that became standard.
 #
 # Key ordering rules (first match wins):
 #   :=  must come before  :   (ASSIGN before COLON)
-#   **  must come before  *   (POWER before STAR)
-#   <=  must come before  <   (LEQ before LT)
-#   >=  must come before  >   (GEQ before GT)
-#   !=  must come before any single-char use of !
+#   **  must come before  * and ×   (POWER before STAR)
+#   <= and ≤ must come before  <   (LEQ before LT)
+#   >= and ≥ must come before  >   (GEQ before GT)
+#   !=, <>, and ≠ must come before any single-char use of !, <, or >
 #   REAL_LIT must come before INTEGER_LIT (decimal/exponent before plain digits)
 
 # ---------------------------------------------------------------------------
@@ -39,9 +40,10 @@ REAL_LIT    = /[0-9]+\.[0-9]*([eE][+-]?[0-9]+)?|[0-9]+[eE][+-]?[0-9]+/
 # Integer literal: one or more decimal digits, no decimal point, no exponent.
 INTEGER_LIT = /[0-9]+/
 
-# String literal: single-quoted. ALGOL 60 strings have no escape sequences —
-# a single quote cannot appear inside a string literal.
-STRING_LIT  = /'[^']*'/
+# String literal: quoted. ALGOL 60 strings have no escape sequences, so the
+# opening quote cannot appear unescaped inside the literal. Both single and
+# double quotes are accepted as common ASCII representations of string quotes.
+STRING_LIT  = /'[^']*'|"[^"]*"/
 
 # Identifier: letter followed by zero or more letters or digits.
 # No underscore — original ALGOL 60 did not allow it.
@@ -63,10 +65,19 @@ ASSIGN      = ":="
 # ** must come before * so "**" is not lexed as STAR STAR.
 POWER       = "**"
 
-# Relational operators (ASCII for ≤, ≥, ≠)
-LEQ         = "<="
-GEQ         = ">="
-NEQ         = "!="
+# Relational operators. The wrapper normalizes the publication symbols to the
+# same values as the ASCII spellings.
+LEQ         = /<=|≤/
+GEQ         = />=|≥/
+NEQ         = /!=|<>|≠/
+
+# Publication-symbol boolean operators. The ALGOL lexer wrapper normalizes
+# these to the same keyword values as their word forms.
+NOT_SYM     = "¬"
+AND_SYM     = "∧"
+OR_SYM      = "∨"
+IMPL_SYM    = "⊃"
+EQV_SYM     = "≡"
 
 # ---------------------------------------------------------------------------
 # Single-character operators
@@ -74,13 +85,14 @@ NEQ         = "!="
 
 PLUS        = "+"
 MINUS       = "-"
-STAR        = "*"
-SLASH       = "/"
+# Multiplication and real division. The publication symbols normalize to the
+# same token values as the ASCII spellings in the ALGOL lexer wrapper.
+STAR        = /\*|×/
+SLASH       = /\/|÷/
 
-# Caret: alternative to ** for exponentiation.
-# Both ^ and ** produce different token kinds so the parser can treat them
-# identically (both map to the exponentiation operator).
-CARET       = "^"
+# Caret: alternative to ** for exponentiation. The ALGOL publication uparrow
+# is normalized to the same token/value shape as caret.
+CARET       = /\^|↑/
 
 # Equality test (not assignment — ALGOL uses := for that).
 EQ          = "="
@@ -172,6 +184,7 @@ skip:
 
   # Comment syntax: the word "comment" followed by any text up to the next ";".
   # Example: comment this is a comment;
-  # The pattern matches "comment" (already consumed as a keyword trigger above)
-  # but the comment skip rule runs first in the skip phase.
-  COMMENT    = /comment[^;]*;/
+  # Skip patterns run before keyword reclassification, so require an identifier
+  # boundary after the case-insensitive keyword to avoid swallowing identifiers
+  # such as "commentary".
+  COMMENT    = /(?i:comment)\b[^;]*;/

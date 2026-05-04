@@ -13,6 +13,13 @@
   },
   "dependencies": {
     "@coding-adventures/lattice-transpiler": "file:../../../packages/typescript/lattice-transpiler",
+    "@coding-adventures/neural-graph-vm": "file:../../../packages/typescript/neural-graph-vm",
+    "@coding-adventures/neural-network": "file:../../../packages/typescript/neural-network",
+    "@coding-adventures/paint-instructions": "file:../../../packages/typescript/paint-instructions",
+    "@coding-adventures/paint-vm": "file:../../../packages/typescript/paint-vm",
+    "@coding-adventures/paint-vm-svg": "file:../../../packages/typescript/paint-vm-svg",
+    "coding-adventures-two-layer-network": "file:../../../packages/typescript/two-layer-network",
+    "matrix": "file:../../../packages/typescript/matrix",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },

@@ -5,6 +5,24 @@ All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- Unified `expression` parsing now accepts ALGOL conditional expressions such
+  as `if b then x else y` in assignment values and actual parameters.
+- Block and compound statement lists now tolerate repeated and trailing
+  semicolons, matching common ALGOL dummy-statement style.
+- `goto_stmt` now accepts the report-style two-word `go to` spelling in
+  addition to the compact `goto` spelling.
+- Parsed uppercase and mixed-case keywords/comments, `<>` not-equal relations,
+  and double-quoted string literals through the shared ALGOL lexer.
+- Parsed ALGOL publication symbols for relations, exponentiation, and boolean
+  operators through the shared lexer normalization layer.
+- Parsed report-style typed formal specifiers such as `integer array a;` and
+  `real procedure f;` while preserving the existing split specifier spelling.
+- Parsed subscripted variables as `for` statement control variables.
+
 ## [0.1.0] — 2026-04-06
 
 ### Added

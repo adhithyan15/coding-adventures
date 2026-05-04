@@ -8,9 +8,15 @@ through this object and never seeks raw bytes on the file.
 What the pager guarantees
 -------------------------
 
-**Page I/O.** Fixed-size 4096-byte pages, 1-based numbering (page 1 at
-byte offset 0, page 2 at byte offset 4096, …). Reads return exactly
-4096 bytes; writes take exactly 4096 bytes. Page 0 is illegal.
+**Page I/O.** Fixed-size pages (512–65536 bytes, always a power of two),
+1-based numbering (page 1 at byte offset 0, page 2 at byte offset
+``page_size``, …). Reads return exactly ``page_size`` bytes; writes take
+exactly ``page_size`` bytes. Page 0 is illegal.
+
+The page size is determined at database creation time (default 4096) and
+stored in the 100-byte SQLite header at bytes 16–17 of page 1. On
+:meth:`open`, the pager reads that field and uses it for all subsequent I/O
+so an existing database is always handled at its native page size.
 
 **Caching.** A small LRU cache (default 32 pages) holds recently-read
 clean pages. Writes go first to an in-memory dirty-page table; they
@@ -46,8 +52,6 @@ the main file is consistent before any caller sees it.
 
 **v1 limitations** (deferred per ``code/specs/storage-sqlite.md``):
 
-- Page size is pinned at 4096. Other sizes are valid SQLite but not yet
-  supported here.
 - Large transactions hold every dirty page in memory until commit. Real
   SQLite spills to disk; we don't (yet).
 - Single-process, single-writer. No POSIX advisory locking.
@@ -70,8 +74,14 @@ from types import TracebackType
 from storage_sqlite.errors import CorruptDatabaseError, JournalError
 
 PAGE_SIZE: int = 4096
-"""Fixed page size for v1. SQLite supports 512..65536 in powers of two;
-we'll add the rest in v2."""
+"""Default page size.  SQLite supports 512, 1024, 2048, 4096, 8192,
+16384, 32768, and 65536.  A :class:`Pager` uses the page size stored
+in the database header — this constant is the default for new databases."""
+
+# All page sizes valid per the SQLite file-format specification.
+_VALID_PAGE_SIZES: frozenset[int] = frozenset(
+    {512, 1024, 2048, 4096, 8192, 16384, 32768, 65536}
+)
 
 _DEFAULT_CACHE_PAGES: int = 32
 
@@ -114,6 +124,7 @@ class Pager:
         "_journal_path",
         "_journaled",
         "_originals",
+        "_page_size",
         "_path",
         "_size_pages",
     )
@@ -129,6 +140,7 @@ class Pager:
         self._cache_pages: int = cache_pages
         # Opened lazily in ``create`` / ``open``.
         self._f = None  # type: ignore[assignment]
+        self._page_size: int = PAGE_SIZE  # overwritten in _open_file
         self._size_pages: int = 0
         self._initial_size_pages: int = 0
         self._cache: OrderedDict[int, bytes] = OrderedDict()
@@ -143,7 +155,8 @@ class Pager:
 
     @property
     def page_size(self) -> int:
-        return PAGE_SIZE
+        """The page size for this database, read from the header on :meth:`open`."""
+        return self._page_size
 
     @property
     def size_pages(self) -> int:
@@ -161,19 +174,31 @@ class Pager:
         cls,
         path: str | os.PathLike[str],
         *,
+        page_size: int = PAGE_SIZE,
         cache_pages: int = _DEFAULT_CACHE_PAGES,
     ) -> Pager:
         """Create a fresh zero-page file and return a pager over it.
 
+        *page_size* sets the page size for the new database (default 4096).
+        Valid values are powers of two from 512 to 65536. The caller must
+        write a properly-formatted header (e.g. via
+        :func:`~storage_sqlite.schema.initialize_new_database`) so that
+        subsequent :meth:`open` calls can read the page size back from
+        the file.
+
         Raises :class:`FileExistsError` if the path already exists — the
         caller should explicitly delete first if they want to overwrite.
         """
+        if page_size not in _VALID_PAGE_SIZES:
+            raise ValueError(
+                f"page_size must be one of {sorted(_VALID_PAGE_SIZES)}, got {page_size}"
+            )
         p = Path(path)
         if p.exists():
             raise FileExistsError(f"refusing to overwrite existing file: {p}")
         p.touch()
         pager = cls(p, cache_pages=cache_pages)
-        pager._open_file()
+        pager._open_file(page_size=page_size)
         return pager
 
     @classmethod
@@ -183,7 +208,14 @@ class Pager:
         *,
         cache_pages: int = _DEFAULT_CACHE_PAGES,
     ) -> Pager:
-        """Open an existing file. Replays a hot journal if present."""
+        """Open an existing file. Replays a hot journal if present.
+
+        The page size is read from bytes 16–17 of the database header on
+        page 1.  If the file is empty (just created and not yet written),
+        the default page size 4096 is used temporarily; the caller should
+        write the header immediately so subsequent opens detect the correct
+        size.
+        """
         p = Path(path)
         if not p.exists():
             raise FileNotFoundError(str(p))
@@ -191,15 +223,45 @@ class Pager:
         pager._open_file()
         return pager
 
-    def _open_file(self) -> None:
-        self._f = open(self._path, "r+b")  # noqa: SIM115 — lifetime is the pager
+    def _open_file(self, page_size: int = PAGE_SIZE) -> None:
         file_size = os.path.getsize(self._path)
-        if file_size % PAGE_SIZE != 0:
+
+        if file_size >= 18:
+            # Read the magic + page-size field via a short-lived probe handle
+            # that is closed before self._f is opened.  Using self._f for this
+            # read would fill Python's read-ahead buffer with the first page's
+            # data; after an external truncation, seek(0)+read(page_size) on a
+            # buffered handle serves from that buffer instead of going to the
+            # OS, masking short-read detection (observed on macOS).
+            with open(self._path, "rb") as _probe:
+                magic = _probe.read(18)
+            _SQLITE_MAGIC = b"SQLite format 3\x00"
+            if magic[:16] == _SQLITE_MAGIC:
+                (encoded,) = struct.unpack(">H", magic[16:18])
+                actual = 65536 if encoded == 1 else encoded
+                if actual not in _VALID_PAGE_SIZES:
+                    raise CorruptDatabaseError(
+                        f"invalid page size in database header: {actual}"
+                    )
+                self._page_size = actual
+            else:
+                # Raw file without a proper header — use the caller-supplied
+                # default (only reached in tests or when creating non-schema pagers).
+                self._page_size = page_size
+        else:
+            # Fresh / empty file: use the caller-supplied default.
+            self._page_size = page_size
+
+        # Open self._f only after the probe so its read-ahead buffer starts
+        # empty — guarantees that _read_from_main always goes to the OS.
+        self._f = open(self._path, "r+b")  # noqa: SIM115 — lifetime is the pager
+
+        if file_size % self._page_size != 0:
             self._f.close()
             raise CorruptDatabaseError(
-                f"file size {file_size} is not a multiple of page size {PAGE_SIZE}"
+                f"file size {file_size} is not a multiple of page size {self._page_size}"
             )
-        self._size_pages = file_size // PAGE_SIZE
+        self._size_pages = file_size // self._page_size
         self._initial_size_pages = self._size_pages
 
         # Recover before returning: a hot journal must be resolved before
@@ -244,8 +306,8 @@ class Pager:
         """
         self._assert_open()
         self._check_page_no(page_no)
-        if len(data) != PAGE_SIZE:
-            raise ValueError(f"data must be exactly {PAGE_SIZE} bytes, got {len(data)}")
+        if len(data) != self._page_size:
+            raise ValueError(f"data must be exactly {self._page_size} bytes, got {len(data)}")
 
         # Snapshot the original once, on the first write in this txn,
         # *if* the page existed pre-txn. Pages newly allocated this txn
@@ -268,7 +330,7 @@ class Pager:
         self._assert_open()
         self._size_pages += 1
         new_no = self._size_pages
-        self._dirty[new_no] = b"\x00" * PAGE_SIZE
+        self._dirty[new_no] = b"\x00" * self._page_size
         return new_no
 
     def commit(self) -> None:
@@ -382,11 +444,11 @@ class Pager:
         # ``_dirty`` by the caller — we should never be asked to read them
         # from main. Defensively return zeros if asked.
         if page_no > self._initial_size_pages:
-            return b"\x00" * PAGE_SIZE
+            return b"\x00" * self._page_size
         assert self._f is not None
-        self._f.seek((page_no - 1) * PAGE_SIZE)
-        data = self._f.read(PAGE_SIZE)
-        if len(data) != PAGE_SIZE:
+        self._f.seek((page_no - 1) * self._page_size)
+        data = self._f.read(self._page_size)
+        if len(data) != self._page_size:
             raise CorruptDatabaseError(
                 f"short read: page {page_no} returned {len(data)} bytes"
             )
@@ -421,7 +483,7 @@ class Pager:
                 struct.pack(
                     _JOURNAL_HEADER_FMT,
                     _JOURNAL_MAGIC,
-                    PAGE_SIZE,
+                    self._page_size,
                     _JOURNAL_SENTINEL,
                     self._initial_size_pages,
                 )
@@ -437,7 +499,7 @@ class Pager:
                 struct.pack(
                     _JOURNAL_HEADER_FMT,
                     _JOURNAL_MAGIC,
-                    PAGE_SIZE,
+                    self._page_size,
                     len(self._originals),
                     self._initial_size_pages,
                 )
@@ -451,11 +513,11 @@ class Pager:
         # Sort for deterministic on-disk write order — makes tests and
         # golden-file diffs behave predictably.
         for page_no in sorted(self._dirty):
-            self._f.seek((page_no - 1) * PAGE_SIZE)
+            self._f.seek((page_no - 1) * self._page_size)
             self._f.write(self._dirty[page_no])
         # Shrink if this txn allocated pages that rollback later undid —
         # _size_pages at this point is the *committed* size.
-        self._f.truncate(self._size_pages * PAGE_SIZE)
+        self._f.truncate(self._size_pages * self._page_size)
         self._f.flush()
         os.fsync(self._f.fileno())
 
@@ -475,9 +537,9 @@ class Pager:
                 )
                 if magic != _JOURNAL_MAGIC:
                     raise JournalError(f"bad journal magic: {magic!r}")
-                if page_size != PAGE_SIZE:
+                if page_size != self._page_size:
                     raise JournalError(
-                        f"journal page size {page_size} != main {PAGE_SIZE}"
+                        f"journal page size {page_size} != main {self._page_size}"
                     )
                 if record_count == _JOURNAL_SENTINEL:
                     # Not finalised → commit aborted mid-flight → main is
@@ -493,14 +555,14 @@ class Pager:
                     if len(prefix) < _RECORD_PREFIX_SIZE:
                         raise JournalError("journal record prefix truncated")
                     (page_no,) = struct.unpack(_RECORD_PREFIX_FMT, prefix)
-                    payload = j.read(PAGE_SIZE)
-                    if len(payload) < PAGE_SIZE:
+                    payload = j.read(self._page_size)
+                    if len(payload) < self._page_size:
                         raise JournalError("journal record payload truncated")
-                    self._f.seek((page_no - 1) * PAGE_SIZE)
+                    self._f.seek((page_no - 1) * self._page_size)
                     self._f.write(payload)
                 # Truncate main back to the pre-txn size so any pages
                 # allocated during the failed txn disappear.
-                self._f.truncate(initial_size * PAGE_SIZE)
+                self._f.truncate(initial_size * self._page_size)
                 self._f.flush()
                 os.fsync(self._f.fileno())
                 self._size_pages = initial_size

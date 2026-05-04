@@ -18,6 +18,7 @@ struct FixtureSuite {
 }
 
 #[derive(Debug, Clone, Deserialize)]
+#[allow(dead_code)]
 struct FixtureCase {
     id: String,
     #[serde(default)]
@@ -38,6 +39,7 @@ struct Html5libTokenizerFile {
 }
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 struct Html5libTokenizerTest {
     description: String,
     input: String,
@@ -70,6 +72,7 @@ struct Html5libNormalizedSuite {
 }
 
 #[derive(Debug, Deserialize)]
+#[allow(dead_code)]
 struct Html5libSkippedCase {
     id: String,
     description: String,
@@ -89,14 +92,14 @@ fn fixture_manifests_parse() {
     assert_eq!(html1.format, "venture-html-lexer-fixtures/v1");
     assert_eq!(html1.suite, "html1");
     assert!(!html1.description.is_empty());
-    assert_eq!(html1.cases.len(), 8);
+    assert_eq!(html1.cases.len(), 143);
 }
 
 #[test]
 fn html5lib_smoke_fixture_file_parses() {
     let file = load_html5lib_file(HTML5LIB_RAW_FIXTURES);
 
-    assert_eq!(file.tests.len(), 9);
+    assert_eq!(file.tests.len(), 156);
     assert_eq!(
         file.tests[0].description,
         "simple start and end tag in data state"
@@ -104,19 +107,39 @@ fn html5lib_smoke_fixture_file_parses() {
     assert!(file.tests[0].initial_states.is_empty());
     assert!(file.tests[0].last_start_tag.is_none());
     assert_eq!(file.tests[2].initial_states, vec!["Data state".to_string()]);
-    assert_eq!(file.tests[5].errors[0].code, "eof-in-comment");
-    assert_eq!(file.tests[5].errors[0].line, 1);
-    assert_eq!(file.tests[5].errors[0].col, 9);
+    assert_eq!(file.tests[4].errors[0].code, "missing-doctype-name");
+    assert_eq!(file.tests[5].errors[0].code, "eof-in-doctype");
+    assert_eq!(file.tests[6].errors[0].code, "eof-in-doctype");
+    assert_eq!(file.tests[7].errors[0].code, "invalid-doctype-keyword");
     assert_eq!(
-        file.tests[6].initial_states,
+        file.tests[14].errors[0].code,
+        "missing-doctype-public-identifier"
+    );
+    assert_eq!(
+        file.tests[19].errors[0].code,
+        "missing-doctype-system-identifier"
+    );
+    assert_eq!(
+        file.tests[20].errors[0].code,
+        "unexpected-character-after-doctype-system-identifier"
+    );
+    assert_eq!(file.tests[22].errors[0].code, "eof-in-comment");
+    assert_eq!(file.tests[22].errors[0].line, 1);
+    assert_eq!(file.tests[22].errors[0].col, 9);
+    assert_eq!(
+        file.tests[23].errors[0].code,
+        "abrupt-closing-of-empty-comment"
+    );
+    assert_eq!(
+        file.tests[25].initial_states,
         vec!["RCDATA state".to_string()]
     );
-    assert_eq!(file.tests[6].last_start_tag.as_deref(), Some("title"));
+    assert_eq!(file.tests[25].last_start_tag.as_deref(), Some("title"));
     assert_eq!(
-        file.tests[8].initial_states,
+        file.tests[27].initial_states,
         vec!["RAWTEXT state".to_string()]
     );
-    assert_eq!(file.tests[8].last_start_tag.as_deref(), Some("style"));
+    assert_eq!(file.tests[27].last_start_tag.as_deref(), Some("style"));
 }
 
 #[test]
@@ -131,28 +154,80 @@ fn normalized_html5lib_fixture_parses_with_importer_metadata() {
     assert_eq!(
         normalized.supported_initial_states,
         vec![
+            "CDATA section state".to_string(),
             "Data state".to_string(),
+            "PLAINTEXT state".to_string(),
             "RAWTEXT state".to_string(),
-            "RCDATA state".to_string()
+            "RCDATA state".to_string(),
+            "Script data double escaped dash dash state".to_string(),
+            "Script data double escaped dash state".to_string(),
+            "Script data double escaped less-than sign state".to_string(),
+            "Script data double escaped state".to_string(),
+            "Script data escaped dash dash state".to_string(),
+            "Script data escaped dash state".to_string(),
+            "Script data escaped less-than sign state".to_string(),
+            "Script data escaped state".to_string(),
+            "Script data state".to_string()
         ]
     );
-    assert_eq!(normalized.cases.len(), 9);
+    assert_eq!(normalized.cases.len(), 156);
     assert!(normalized.skipped.is_empty());
     assert_eq!(
-        normalized.cases[6].initial_state.as_deref(),
+        normalized.cases[4].diagnostics,
+        vec!["missing-doctype-name".to_string()]
+    );
+    assert_eq!(
+        normalized.cases[5].diagnostics,
+        vec!["eof-in-doctype".to_string()]
+    );
+    assert_eq!(
+        normalized.cases[6].diagnostics,
+        vec!["eof-in-doctype".to_string()]
+    );
+    assert_eq!(
+        normalized.cases[7].diagnostics,
+        vec!["invalid-doctype-keyword".to_string()]
+    );
+    assert_eq!(
+        normalized.cases[14].diagnostics,
+        vec!["missing-doctype-public-identifier".to_string()]
+    );
+    assert_eq!(
+        normalized.cases[19].diagnostics,
+        vec!["missing-doctype-system-identifier".to_string()]
+    );
+    assert_eq!(
+        normalized.cases[20].diagnostics,
+        vec!["unexpected-character-after-doctype-system-identifier".to_string()]
+    );
+    assert_eq!(
+        normalized.cases[23].diagnostics,
+        vec!["abrupt-closing-of-empty-comment".to_string()]
+    );
+    assert_eq!(
+        normalized.cases[25].initial_state.as_deref(),
         Some("RCDATA state")
     );
-    assert_eq!(normalized.cases[6].last_start_tag.as_deref(), Some("title"));
     assert_eq!(
-        normalized.cases[7].initial_state.as_deref(),
+        normalized.cases[25].last_start_tag.as_deref(),
+        Some("title")
+    );
+    assert_eq!(
+        normalized.cases[26].initial_state.as_deref(),
         Some("RCDATA state")
     );
-    assert_eq!(normalized.cases[7].last_start_tag.as_deref(), Some("title"));
     assert_eq!(
-        normalized.cases[8].initial_state.as_deref(),
+        normalized.cases[26].last_start_tag.as_deref(),
+        Some("title")
+    );
+    assert_eq!(
+        normalized.cases[27].initial_state.as_deref(),
         Some("RAWTEXT state")
     );
-    assert_eq!(normalized.cases[8].last_start_tag.as_deref(), Some("style"));
+    assert_eq!(
+        normalized.cases[27].last_start_tag.as_deref(),
+        Some("style")
+    );
 }
 
 #[test]
@@ -170,7 +245,7 @@ fn html1_conformance_cases_match_generated_machine() {
     let suite = load_suite(HTML1_FIXTURES);
     run_fixture_suite(&suite, |case| {
         let mut lexer = html1_machine()
-            .map(HtmlLexer::new)
+            .map(|machine| HtmlLexer::new(machine).with_normalized_carriage_returns())
             .map_err(|error| error.to_string())?;
         configure_lexer_for_case(&mut lexer, case).map_err(|error| format!("{error:?}"))?;
         Ok(lexer)
@@ -194,7 +269,7 @@ fn normalized_html5lib_cases_match_default_wrapper() {
 
     assert_eq!(suite.format, "venture-html-lexer-fixtures/v1");
     assert_eq!(suite.suite, "html5lib-smoke");
-    assert_eq!(suite.cases.len(), 9);
+    assert_eq!(suite.cases.len(), 156);
 
     run_fixture_suite(&suite, |case| {
         let mut lexer = create_html_lexer().map_err(|error| format!("{error:?}"))?;
@@ -210,7 +285,7 @@ fn normalized_html5lib_cases_match_generated_html1_machine() {
 
     run_fixture_suite(&suite, |case| {
         let mut lexer = html1_machine()
-            .map(HtmlLexer::new)
+            .map(|machine| HtmlLexer::new(machine).with_normalized_carriage_returns())
             .map_err(|error| error.to_string())?;
         configure_lexer_for_case(&mut lexer, case).map_err(|error| format!("{error:?}"))?;
         Ok(lexer)
@@ -266,8 +341,19 @@ fn unsupported_runtime_cases(normalized: &Html5libNormalizedSuite) -> Vec<Fixtur
 fn is_supported_by_current_runtime(case: &FixtureCase) -> bool {
     match case.initial_state.as_deref() {
         None | Some("Data state") => case.last_start_tag.is_none(),
+        Some("CDATA section state") => case.last_start_tag.is_none(),
+        Some("PLAINTEXT state") => case.last_start_tag.is_none(),
         Some("RCDATA state") => case.last_start_tag.is_some(),
         Some("RAWTEXT state") => case.last_start_tag.is_some(),
+        Some("Script data double escaped dash dash state") => case.last_start_tag.is_some(),
+        Some("Script data double escaped dash state") => case.last_start_tag.is_some(),
+        Some("Script data double escaped less-than sign state") => case.last_start_tag.is_some(),
+        Some("Script data double escaped state") => case.last_start_tag.is_some(),
+        Some("Script data escaped dash dash state") => case.last_start_tag.is_some(),
+        Some("Script data escaped dash state") => case.last_start_tag.is_some(),
+        Some("Script data escaped less-than sign state") => case.last_start_tag.is_some(),
+        Some("Script data escaped state") => case.last_start_tag.is_some(),
+        Some("Script data state") => case.last_start_tag.is_some(),
         Some(_) => false,
     }
 }
@@ -327,8 +413,21 @@ fn configure_lexer_for_case(
 fn machine_state_for_fixture(state: &str) -> &str {
     match state {
         "Data state" => "data",
+        "CDATA section state" => "cdata_section",
+        "PLAINTEXT state" => "plaintext",
         "RCDATA state" => "rcdata",
         "RAWTEXT state" => "rawtext",
+        "Script data double escaped dash dash state" => "script_data_double_escaped_dash_dash",
+        "Script data double escaped dash state" => "script_data_double_escaped_dash",
+        "Script data double escaped less-than sign state" => {
+            "script_data_double_escaped_less_than_sign"
+        }
+        "Script data double escaped state" => "script_data_double_escaped",
+        "Script data escaped dash dash state" => "script_data_escaped_dash_dash",
+        "Script data escaped dash state" => "script_data_escaped_dash",
+        "Script data escaped less-than sign state" => "script_data_escaped_less_than_sign",
+        "Script data escaped state" => "script_data_escaped",
+        "Script data state" => "script_data",
         other => panic!("unsupported fixture state `{other}`"),
     }
 }
@@ -346,11 +445,30 @@ fn token_summary(token: Token) -> String {
         ),
         Token::EndTag { name } => format!("EndTag(name={name})"),
         Token::Comment(data) => format!("Comment(data={data})"),
-        Token::Doctype { name, force_quirks } => match name {
-            Some(name) => format!("Doctype(name={name}, force_quirks={force_quirks})"),
-            None => format!("Doctype(name=null, force_quirks={force_quirks})"),
-        },
+        Token::Doctype {
+            name,
+            public_identifier,
+            system_identifier,
+            force_quirks,
+        } => doctype_summary(name, public_identifier, system_identifier, force_quirks),
         Token::Eof => "EOF".to_string(),
+    }
+}
+
+fn doctype_summary(
+    name: Option<String>,
+    public_identifier: Option<String>,
+    system_identifier: Option<String>,
+    force_quirks: bool,
+) -> String {
+    let name = name.unwrap_or_else(|| "null".to_string());
+    match (public_identifier, system_identifier) {
+        (None, None) => format!("Doctype(name={name}, force_quirks={force_quirks})"),
+        (public_identifier, system_identifier) => format!(
+            "Doctype(name={name}, public_identifier={}, system_identifier={}, force_quirks={force_quirks})",
+            public_identifier.unwrap_or_else(|| "null".to_string()),
+            system_identifier.unwrap_or_else(|| "null".to_string())
+        ),
     }
 }
 

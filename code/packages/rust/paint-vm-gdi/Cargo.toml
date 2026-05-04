@@ -5,7 +5,10 @@ edition = "2021"
 description = "GDI renderer for the paint-instructions scene model (P2D07)"
 
 [dependencies]
+arc2d = { path = "../arc2d" }
 paint-instructions = { path = "../paint-instructions" }
+paint-vm-runtime = { path = "../paint-vm-runtime" }
+point2d = { path = "../point2d" }
 
 [dependencies.windows]
 version = "0.58"

@@ -1471,6 +1471,17 @@ function M.decompress(data)
         if last then break end
     end
 
+    -- Reject trailing bytes after the last block.
+    -- A valid ZStd frame ends exactly at the last block's payload. Any bytes
+    -- remaining at `pos` are either garbage, a concatenated second frame, or
+    -- a sign of frame truncation — all of which indicate a malformed input
+    -- that should be rejected rather than silently accepted.
+    if pos <= #data then
+        error(string.format(
+            "zstd: unexpected trailing data: %d byte(s) after last block (pos %d, total %d)",
+            #data - pos + 1, pos, #data))
+    end
+
     return to_string(out)
 end
 

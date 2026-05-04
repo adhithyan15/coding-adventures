@@ -262,7 +262,46 @@ class Except:
     all: bool = False
 
 
-# ---- Derived table (subquery in FROM) -------------------------------------
+# ---- Derived table (subquery in FROM) and recursive CTEs ------------------
+
+
+@dataclass(frozen=True, slots=True)
+class WorkingSetScan:
+    """Leaf: scans the current iteration's working set inside a recursive CTE.
+
+    Used inside the recursive query plan where the CTE's self-reference appears.
+    The codegen emits only the ``AdvanceCursor`` loop — no ``OpenScan`` or
+    ``RunSubquery`` — because the VM's ``RunRecursiveCTE`` handler pre-populates
+    the cursor before each iteration.
+
+    ``alias`` matches the CTE name; ``columns`` is the anchor's output schema.
+    """
+
+    alias: str
+    columns: tuple[str, ...]
+
+
+@dataclass(frozen=True, slots=True)
+class RecursiveCTE:
+    """Fixed-point iteration: anchor ∪ recursive(working_set) until working_set empty.
+
+    The planner produces this node when a SELECT's FROM clause references a
+    ``WITH RECURSIVE`` CTE.  The codegen compiles it to a ``RunRecursiveCTE``
+    instruction; the VM executes the fixed-point loop at runtime.
+
+    ``anchor`` is the base-case plan (evaluated once).  ``recursive`` contains
+    a :class:`WorkingSetScan` as its leaf, representing the self-reference.
+    ``columns`` is the anchor's output schema — used by the outer query to
+    resolve column references without executing anything.  ``union_all`` is
+    True for ``UNION ALL`` (keep all rows) and False for ``UNION``
+    (deduplicate accumulated rows after each iteration).
+    """
+
+    anchor: LogicalPlan
+    recursive: LogicalPlan
+    alias: str
+    columns: tuple[str, ...]
+    union_all: bool = True
 
 
 @dataclass(frozen=True, slots=True)
@@ -395,6 +434,14 @@ class DropTable:
 
 
 @dataclass(frozen=True, slots=True)
+class AlterTable:
+    """ALTER TABLE t ADD [COLUMN] col_def."""
+
+    table: str
+    column: ColumnDef
+
+
+@dataclass(frozen=True, slots=True)
 class CreateIndex:
     """CREATE [UNIQUE] INDEX [IF NOT EXISTS] name ON table (col, ...).
 
@@ -413,6 +460,30 @@ class CreateIndex:
 @dataclass(frozen=True, slots=True)
 class DropIndex:
     """DROP INDEX [IF EXISTS] name."""
+
+    name: str
+    if_exists: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class CreateTrigger:
+    """CREATE TRIGGER plan node.
+
+    ``body_sql`` carries the raw SQL of the trigger body statements without
+    the surrounding BEGIN…END.  The VM stores it verbatim in the backend's
+    :class:`~sql_backend.schema.TriggerDef` and re-parses it at fire time.
+    """
+
+    name: str
+    timing: str   # "BEFORE" | "AFTER"
+    event: str    # "INSERT" | "UPDATE" | "DELETE"
+    table: str
+    body_sql: str
+
+
+@dataclass(frozen=True, slots=True)
+class DropTrigger:
+    """DROP TRIGGER [IF EXISTS] name."""
 
     name: str
     if_exists: bool = False
@@ -472,12 +543,68 @@ class IndexScan:
     residual: Expr | None = None
 
 
+@dataclass(frozen=True, slots=True)
+class WindowFuncSpec:
+    """Specification for a single window function inside a :class:`WindowAgg` node.
+
+    One ``WindowFuncSpec`` is created per window function appearing in the
+    SELECT list.  The planner collects all window specs from resolved SELECT
+    items and emits a single ``WindowAgg`` node that post-processes every
+    window function in one pass.
+
+    Fields
+    ------
+    func:
+        Lower-case function name (``"row_number"``, ``"sum"``, …).
+    arg_expr:
+        The resolved argument expression, or ``None`` for arg-free functions
+        and ``COUNT(*)``.
+    partition_by:
+        Tuple of resolved partition key expressions.
+    order_by:
+        Tuple of ``(resolved_expr, descending)`` sort keys.
+    alias:
+        Output column name — the SELECT-item alias or a generated name.
+    """
+
+    func: str
+    arg_expr: Expr | None
+    partition_by: tuple[Expr, ...]
+    order_by: tuple[tuple[Expr, bool], ...]
+    alias: str
+
+
+@dataclass(frozen=True, slots=True)
+class WindowAgg:
+    """Post-process a materialised result buffer to compute window functions.
+
+    The ``input`` plan is compiled normally and its rows are collected into
+    the result buffer.  The VM then executes :class:`ComputeWindowFunctions`
+    which walks the buffer, groups rows by partition key, and evaluates each
+    window function to produce an additional output column.
+
+    ``output_cols`` is the final ordered column list the query presents to the
+    caller — it equals the inner projection columns *plus* the window function
+    alias columns.
+
+    Wrapper nodes (Sort, Limit, Distinct) may appear above WindowAgg; the
+    codegen correctly wraps ``ComputeWindowFunctions`` before those
+    post-processing steps.
+    """
+
+    input: LogicalPlan
+    specs: tuple[WindowFuncSpec, ...]
+    output_cols: tuple[str, ...]  # inner cols + window alias cols
+
+
 # The root union. Every plan function returns one of these.
 LogicalPlan = (
     Scan
     | IndexScan
     | EmptyResult
     | DerivedTable
+    | WorkingSetScan
+    | RecursiveCTE
     | Filter
     | Project
     | Join
@@ -489,6 +616,7 @@ LogicalPlan = (
     | Union
     | Intersect
     | Except
+    | WindowAgg
     | Begin
     | Commit
     | Rollback
@@ -497,8 +625,11 @@ LogicalPlan = (
     | Delete
     | CreateTable
     | DropTable
+    | AlterTable
     | CreateIndex
     | DropIndex
+    | CreateTrigger
+    | DropTrigger
 )
 
 
@@ -522,13 +653,19 @@ def children(node: LogicalPlan) -> tuple[LogicalPlan, ...]:
             return ()
         case CreateIndex() | DropIndex():
             return ()
+        case CreateTrigger() | DropTrigger():
+            return ()
         case Begin() | Commit() | Rollback():
+            return ()
+        case WorkingSetScan():
             return ()
         case DerivedTable(query=q, alias=_, columns=_):
             return (q,)
+        case RecursiveCTE(anchor=a, recursive=r):
+            return (a, r)
         case (
             Filter() | Project() | Aggregate() | Having()
-            | Sort() | Limit() | Distinct()
+            | Sort() | Limit() | Distinct() | WindowAgg()
         ):
             return (node.input,)
         case Join() | Union() | Intersect() | Except():

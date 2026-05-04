@@ -1,0 +1,12 @@
+[package]
+name = "code-packager"
+version = "0.1.0"
+edition = "2021"
+description = "Cross-platform binary packaging for compiled code (LANG10)"
+license = "MIT"
+
+[dependencies]
+wasm-types = { path = "../wasm-types" }
+wasm-module-encoder = { path = "../wasm-module-encoder" }
+
+[dev-dependencies]

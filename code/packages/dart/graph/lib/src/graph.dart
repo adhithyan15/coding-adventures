@@ -3,12 +3,11 @@ import 'dart:convert';
 
 import 'errors.dart';
 
-enum GraphRepr {
-  adjacencyList,
-  adjacencyMatrix,
-}
+enum GraphRepr { adjacencyList, adjacencyMatrix }
 
 typedef WeightedEdge<T> = ({T left, T right, double weight});
+typedef GraphPropertyValue = Object?;
+typedef GraphPropertyBag = Map<String, GraphPropertyValue>;
 
 int compareNodes<T>(T left, T right) {
   if (left is String && right is String) {
@@ -35,19 +34,25 @@ class Graph<T> {
   final List<T> _nodeList = <T>[];
   final Map<T, int> _nodeIndex = <T, int>{};
   final List<List<double?>> _matrix = <List<double?>>[];
+  final GraphPropertyBag _graphProperties = <String, GraphPropertyValue>{};
+  final Map<T, GraphPropertyBag> _nodeProperties = <T, GraphPropertyBag>{};
+  final Map<String, GraphPropertyBag> _edgeProperties =
+      <String, GraphPropertyBag>{};
 
   GraphRepr get repr => _repr;
 
   int get size =>
       _repr == GraphRepr.adjacencyList ? _adj.length : _nodeList.length;
 
-  void addNode(T node) {
+  void addNode(T node, [GraphPropertyBag properties = const {}]) {
     if (_repr == GraphRepr.adjacencyList) {
       _adj.putIfAbsent(node, () => <T, double>{});
+      _mergeNodeProperties(node, properties);
       return;
     }
 
     if (_nodeIndex.containsKey(node)) {
+      _mergeNodeProperties(node, properties);
       return;
     }
 
@@ -59,6 +64,7 @@ class Graph<T> {
       row.add(null);
     }
     _matrix.add(List<double?>.filled(index + 1, null, growable: true));
+    _mergeNodeProperties(node, properties);
   }
 
   void removeNode(T node) {
@@ -70,8 +76,10 @@ class Graph<T> {
 
       for (final neighbor in List<T>.from(neighbors.keys)) {
         _adj[neighbor]?.remove(node);
+        _edgeProperties.remove(_edgeKey(node, neighbor));
       }
       _adj.remove(node);
+      _nodeProperties.remove(node);
       return;
     }
 
@@ -80,6 +88,10 @@ class Graph<T> {
       throw NodeNotFoundError<T>(node);
     }
 
+    for (final other in _nodeList) {
+      _edgeProperties.remove(_edgeKey(node, other));
+    }
+    _nodeProperties.remove(node);
     _nodeList.removeAt(index);
     _matrix.removeAt(index);
     for (final row in _matrix) {
@@ -103,7 +115,12 @@ class Graph<T> {
     return Set<T>.unmodifiable(nodes);
   }
 
-  void addEdge(T left, T right, [num weight = 1]) {
+  void addEdge(
+    T left,
+    T right, [
+    num weight = 1,
+    GraphPropertyBag properties = const {},
+  ]) {
     final normalizedWeight = weight.toDouble();
     addNode(left);
     addNode(right);
@@ -111,6 +128,7 @@ class Graph<T> {
     if (_repr == GraphRepr.adjacencyList) {
       _adj[left]![right] = normalizedWeight;
       _adj[right]![left] = normalizedWeight;
+      _mergeEdgeProperties(left, right, normalizedWeight, properties);
       return;
     }
 
@@ -118,6 +136,7 @@ class Graph<T> {
     final rightIndex = _nodeIndex[right]!;
     _matrix[leftIndex][rightIndex] = normalizedWeight;
     _matrix[rightIndex][leftIndex] = normalizedWeight;
+    _mergeEdgeProperties(left, right, normalizedWeight, properties);
   }
 
   void removeEdge(T left, T right) {
@@ -134,6 +153,7 @@ class Graph<T> {
       if (left != right) {
         rightNeighbors.remove(left);
       }
+      _edgeProperties.remove(_edgeKey(left, right));
       return;
     }
 
@@ -147,6 +167,7 @@ class Graph<T> {
 
     _matrix[leftIndex][rightIndex] = null;
     _matrix[rightIndex][leftIndex] = null;
+    _edgeProperties.remove(_edgeKey(left, right));
   }
 
   bool hasEdge(T left, T right) {
@@ -206,9 +227,7 @@ class Graph<T> {
         for (var col = row; col < _nodeList.length; col++) {
           final weight = _matrix[row][col];
           if (weight != null) {
-            result.add(
-              _canonicalEdge(_nodeList[row], _nodeList[col], weight),
-            );
+            result.add(_canonicalEdge(_nodeList[row], _nodeList[col], weight));
           }
         }
       }
@@ -278,8 +297,126 @@ class Graph<T> {
 
   int degree(T node) => neighbors(node).length;
 
+  GraphPropertyBag graphProperties() =>
+      Map<String, GraphPropertyValue>.unmodifiable(_graphProperties);
+
+  void setGraphProperty(String key, GraphPropertyValue value) {
+    _graphProperties[key] = value;
+  }
+
+  void removeGraphProperty(String key) {
+    _graphProperties.remove(key);
+  }
+
+  GraphPropertyBag nodeProperties(T node) {
+    if (!hasNode(node)) {
+      throw NodeNotFoundError<T>(node);
+    }
+
+    return Map<String, GraphPropertyValue>.unmodifiable(
+      _nodeProperties[node] ?? const <String, GraphPropertyValue>{},
+    );
+  }
+
+  void setNodeProperty(T node, String key, GraphPropertyValue value) {
+    if (!hasNode(node)) {
+      throw NodeNotFoundError<T>(node);
+    }
+
+    _nodeProperties.putIfAbsent(node, () => <String, GraphPropertyValue>{});
+    _nodeProperties[node]![key] = value;
+  }
+
+  void removeNodeProperty(T node, String key) {
+    if (!hasNode(node)) {
+      throw NodeNotFoundError<T>(node);
+    }
+
+    _nodeProperties[node]?.remove(key);
+  }
+
+  GraphPropertyBag edgeProperties(T left, T right) {
+    if (!hasEdge(left, right)) {
+      throw EdgeNotFoundError<T>(left, right);
+    }
+
+    final properties = <String, GraphPropertyValue>{
+      ...?_edgeProperties[_edgeKey(left, right)],
+      'weight': edgeWeight(left, right),
+    };
+    return Map<String, GraphPropertyValue>.unmodifiable(properties);
+  }
+
+  void setEdgeProperty(T left, T right, String key, GraphPropertyValue value) {
+    if (!hasEdge(left, right)) {
+      throw EdgeNotFoundError<T>(left, right);
+    }
+
+    if (key == 'weight') {
+      if (value is! num) {
+        throw ArgumentError("edge property 'weight' must be numeric");
+      }
+      _setEdgeWeight(left, right, value.toDouble());
+    }
+
+    _edgeProperties.putIfAbsent(
+      _edgeKey(left, right),
+      () => <String, GraphPropertyValue>{},
+    );
+    _edgeProperties[_edgeKey(left, right)]![key] = value;
+  }
+
+  void removeEdgeProperty(T left, T right, String key) {
+    if (!hasEdge(left, right)) {
+      throw EdgeNotFoundError<T>(left, right);
+    }
+
+    if (key == 'weight') {
+      _setEdgeWeight(left, right, 1);
+      _edgeProperties.putIfAbsent(
+        _edgeKey(left, right),
+        () => <String, GraphPropertyValue>{},
+      );
+      _edgeProperties[_edgeKey(left, right)]!['weight'] = 1.0;
+      return;
+    }
+
+    _edgeProperties[_edgeKey(left, right)]?.remove(key);
+  }
+
   @override
-  String toString() => 'Graph(nodes=$size, edges=${edges().length}, repr=$_repr)';
+  String toString() =>
+      'Graph(nodes=$size, edges=${edges().length}, repr=$_repr)';
+
+  void _mergeNodeProperties(T node, GraphPropertyBag properties) {
+    _nodeProperties.putIfAbsent(node, () => <String, GraphPropertyValue>{});
+    _nodeProperties[node]!.addAll(properties);
+  }
+
+  void _mergeEdgeProperties(
+    T left,
+    T right,
+    double weight,
+    GraphPropertyBag properties,
+  ) {
+    final key = _edgeKey(left, right);
+    _edgeProperties.putIfAbsent(key, () => <String, GraphPropertyValue>{});
+    _edgeProperties[key]!.addAll(properties);
+    _edgeProperties[key]!['weight'] = weight;
+  }
+
+  void _setEdgeWeight(T left, T right, double weight) {
+    if (_repr == GraphRepr.adjacencyList) {
+      _adj[left]![right] = weight;
+      _adj[right]![left] = weight;
+      return;
+    }
+
+    final leftIndex = _nodeIndex[left]!;
+    final rightIndex = _nodeIndex[right]!;
+    _matrix[leftIndex][rightIndex] = weight;
+    _matrix[rightIndex][leftIndex] = weight;
+  }
 }
 
 String _nodeSortKey(Object? node) {

@@ -1,0 +1,5 @@
+[package]
+name = "format-doc"
+version = "0.1.0"
+edition = "2021"
+description = "Wadler-style document algebra and width-aware layout engine for pretty-printers.  Rust port of P2D03 (the TypeScript @coding-adventures/format-doc).  The semantic IR every formatter builds — language-specific formatters compile AST -> Doc, this crate realises Doc -> DocLayoutTree."

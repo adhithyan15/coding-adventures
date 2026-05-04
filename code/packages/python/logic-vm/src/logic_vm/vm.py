@@ -24,6 +24,7 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from dataclasses import dataclass, field
+from itertools import islice
 from typing import Protocol
 
 from logic_engine import (
@@ -40,9 +41,10 @@ from logic_engine import (
     Program,
     Relation,
     RelationCall,
+    State,
     Term,
-    solve_all,
-    solve_n,
+    reify,
+    solve_from,
 )
 from logic_engine import (
     fact as engine_fact,
@@ -414,6 +416,32 @@ class LogicVM:
     ) -> list[Term | tuple[Term, ...]]:
         """Execute one stored query against the loaded runtime state."""
 
+        return self.run_query_from(State(), query_index=query_index, limit=limit)
+
+    def solve_query_from(
+        self,
+        state: State,
+        query_index: int = 0,
+    ) -> Iterator[State]:
+        """Yield proof states for one stored query from an existing state."""
+
+        self._require_finished_loading()
+        try:
+            selected = self.state.queries[query_index]
+        except IndexError as exc:
+            msg = f"query index {query_index} is out of range"
+            raise LogicVMError(msg) from exc
+
+        yield from solve_from(self.assembled_program(), selected.goal, state)
+
+    def run_query_from(
+        self,
+        state: State,
+        query_index: int = 0,
+        limit: int | None = None,
+    ) -> list[Term | tuple[Term, ...]]:
+        """Execute one stored query from an existing logic state."""
+
         self._require_finished_loading()
         try:
             selected = self.state.queries[query_index]
@@ -428,9 +456,25 @@ class LogicVM:
         query_value: object | tuple[Term, ...]
         query_value = outputs[0] if len(outputs) == 1 else outputs
 
-        if limit is None:
-            return solve_all(self.assembled_program(), query_value, selected.goal)
-        return solve_n(self.assembled_program(), limit, query_value, selected.goal)
+        proof_states = self.solve_query_from(state, query_index=query_index)
+        if limit is not None:
+            if limit < 0:
+                msg = "run_query_from() requires a non-negative limit"
+                raise ValueError(msg)
+            proof_states = islice(proof_states, limit)
+
+        results: list[Term | tuple[Term, ...]] = []
+        for proof_state in proof_states:
+            if isinstance(query_value, tuple):
+                results.append(
+                    tuple(
+                        reify(item, proof_state.substitution)
+                        for item in query_value
+                    ),
+                )
+            else:
+                results.append(reify(query_value, proof_state.substitution))
+        return results
 
     def run_all_queries(
         self,
@@ -441,6 +485,19 @@ class LogicVM:
         self._require_finished_loading()
         return [
             self.run_query(query_index=index, limit=limit)
+            for index, _query in enumerate(self.state.queries)
+        ]
+
+    def run_all_queries_from(
+        self,
+        state: State,
+        limit: int | None = None,
+    ) -> list[list[Term | tuple[Term, ...]]]:
+        """Execute every stored query from an existing logic state."""
+
+        self._require_finished_loading()
+        return [
+            self.run_query_from(state, query_index=index, limit=limit)
             for index, _query in enumerate(self.state.queries)
         ]
 

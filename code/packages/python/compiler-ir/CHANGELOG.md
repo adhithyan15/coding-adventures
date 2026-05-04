@@ -1,5 +1,70 @@
 # Changelog
 
+## [Unreleased]
+
+### Added — TW03 Phase 3a heap-primitive ops
+
+Eight new opcodes (55–62) introducing the cross-backend Lisp
+heap-primitive interface.  See
+[TW03-phase3-heap-primitives.md](../../../specs/TW03-phase3-heap-primitives.md)
+for the multi-backend lowering plan.
+
+- **`IrOp.MAKE_CONS` (55)** — allocate a cons cell.  Operand layout:
+  `MAKE_CONS dst, head_reg, tail_reg`.
+- **`IrOp.CAR` (56)** — read the head of a cons cell.
+  `CAR dst, src`.
+- **`IrOp.CDR` (57)** — read the tail of a cons cell.
+  `CDR dst, src`.
+- **`IrOp.IS_NULL` (58)** — sets `dst=1` if `src` is the nil sentinel,
+  else 0.  Result feeds straight into `BRANCH_Z` / `BRANCH_NZ`.
+- **`IrOp.IS_PAIR` (59)** — sets `dst=1` if `src` is a cons cell.
+- **`IrOp.MAKE_SYMBOL` (60)** — intern a symbol named by an `IrLabel`
+  (reuses the existing label round-trip path).  `MAKE_SYMBOL dst, name_label`.
+- **`IrOp.IS_SYMBOL` (61)** — sets `dst=1` if `src` is a symbol.
+- **`IrOp.LOAD_NIL` (62)** — store the nil sentinel into `dst`.
+
+These are the **cross-backend interface** for TW03 Phase 3.
+Per-backend lowering ships in subsequent phases (JVM03 / CLR03 /
+BEAM03).  Adding new opcodes does not touch existing 0–54 IDs, so
+older serialized IR text round-trips unchanged.
+
+### Added — earlier (rolled into 0.5.0)
+
+- **`IrOp.F64_SQRT` (49)** — unary 64-bit floating square root
+  (`dst = sqrt(src)`) for frontends that need standard real math builtins.
+- **`IrOp.F64_SIN` (50)**, **`IrOp.F64_COS` (51)**,
+  **`IrOp.F64_ATAN` (52)**, **`IrOp.F64_LN` (53)**, and
+  **`IrOp.F64_EXP` (54)** — unary 64-bit floating standard math operations
+  for frontends with real numeric libraries.
+- **`IrOp.F64_POW` (63)** — binary 64-bit floating power operation
+  (`dst = pow(base, exponent)`) for frontends with real exponentiation.
+
+## [0.4.0] — 2026-04-29
+
+### Added — TW03 Phase 2 closure ops
+
+- **``IrOp.MAKE_CLOSURE`` (47)** — construct a closure value
+  capturing free variables from the enclosing scope.  Operand
+  layout: ``MAKE_CLOSURE dst, fn_label, num_captured, capt0, capt1, ...``
+- **``IrOp.APPLY_CLOSURE`` (48)** — invoke a closure value with
+  zero or more arguments.  Operand layout:
+  ``APPLY_CLOSURE dst, closure_reg, num_args, arg0, arg1, ...``
+
+These ops are the **cross-backend interface** for TW03 Phase 2.
+Lowering strategies differ per backend:
+
+- JVM/CLR — closure becomes an object reference; per-lambda
+  class with captured fields + ``apply`` method.  See
+  ``code/specs/JVM02-phase2-multi-class-closure-lowering.md``.
+- BEAM — emit ``make_fun2`` referencing a ``FunT`` chunk row.
+- vm-core — delegate to the host-side ``make_closure`` /
+  ``apply_closure`` builtins (already implemented in TW00).
+
+Backends that don't yet support these ops should reject via
+their pre-flight validator with a clear "TW03 Phase 2: closures
+not yet implemented for this backend" message — never silently
+miscompile.
+
 ## [0.3.0] - 2026-04-20
 
 ### Added

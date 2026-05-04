@@ -1,5 +1,142 @@
 # Changelog
 
+## [1.4.0] - 2026-04-28
+
+### Added
+
+- **`RunScalarSubquery(sub_program)` IR instruction** — compiles a
+  `ScalarSubquery` plan expression into an embedded sub-program that is
+  executed at runtime; the VM pushes the single result value or NULL.
+- **`primary_key: bool` on `ColumnDef`** — IR column definition now carries
+  the primary key flag so the VM can pass it to the backend on `CREATE TABLE`.
+
+### Fixed
+
+- **`_compile_core` handles `Project(Aggregate)`** — scalar subquery inner
+  plans contain an unflattenened `Project(Aggregate(...))` shape. Added two
+  match cases before the default fall-through so aggregate sub-programs
+  compile correctly without requiring `_flatten_project_over_aggregate`.
+
+## [1.3.0] - 2026-04-28
+
+### Added — Phase 9: SQL Triggers
+
+- **`CreateTriggerDef` IR instruction** — carries `name`, `timing`, `event`,
+  `table`, `body_sql`; emitted by the compiler for `CreateTrigger` plan nodes.
+- **`DropTriggerDef` IR instruction** — carries `name`, `if_exists`; emitted
+  for `DropTrigger` plan nodes.
+- Both exported from `sql_codegen.__init__` and added to the `Instruction`
+  type union in `ir.py`.
+
+## [1.2.0] - 2026-04-27
+
+### Added — Phase 8: Window Functions (OVER / PARTITION BY)
+
+- **`WinFunc` enum** — `ROW_NUMBER`, `RANK`, `DENSE_RANK`, `SUM`, `COUNT`,
+  `COUNT_STAR`, `AVG`, `MIN`, `MAX`, `FIRST_VALUE`, `LAST_VALUE`.
+- **`WinFuncSpec` IR dataclass** — `func: WinFunc`, `arg_col: str | None`,
+  `partition_cols`, `order_cols`, `result_col`.
+- **`ComputeWindowFunctions` instruction** — post-processing instruction
+  (analogous to `SortResult` / `LimitResult`) that runs after all rows are
+  materialised.  Carries `specs` and `output_cols`.
+- **`_compile_plan` special case for `WindowAgg`** — emits
+  `SetResultSchema(inner_schema) + inner_instrs + ComputeWindowFunctions`.
+  Prepending `SetResultSchema(inner_schema)` is critical: it ensures
+  `result.columns` reflects the inner column layout (not the outer
+  `output_cols`) when `ComputeWindowFunctions` looks up arg/partition/order
+  columns by name.
+- **`_compile_core` case for `WindowAgg`** — same logic for when `WindowAgg`
+  is wrapped inside `Sort` / `Limit` / `Distinct`.
+- **`_schema_of` case for `WindowAgg`** — returns `output_cols`.
+- **`_to_ir_win_spec()` helper** — maps `PlanWindowFuncSpec` → `WinFuncSpec`,
+  resolving `arg_expr` to a column name in the inner schema.
+- All new types exported via `__all__`.
+
+## [1.1.0] - 2026-04-27
+
+### Added — Phase 5b: Recursive CTEs
+
+- **`OpenWorkingSetScan` IR instruction** — opens a fresh cursor over the
+  current working-set rows stored in `_VmState.working_set_data`.  Emitted
+  at the top of each `WorkingSetScan` loop so that self-references inside a
+  JOIN (which close and reopen the inner cursor on each outer iteration) work
+  correctly without exhausting the cursor.
+- **`RunRecursiveCTE` IR instruction** — drives the fixed-point iteration:
+  runs `anchor_program` once, then runs `recursive_program` against the
+  previous working set until the recursive step produces zero new rows.
+  Carries `cursor_id`, `anchor_program`, `recursive_program`,
+  `working_cursor_id`, and `union_all` flag.
+- **`WorkingSetScan` compiler case** in `_compile_source` — emits
+  `OpenWorkingSetScan` + loop scaffolding (identical shape to `Scan` / derived
+  table, but opening from the VM's working set rather than a backend table).
+- **`RecursiveCTE` compiler case** in `_compile_source` — compiles anchor and
+  recursive sub-programs in isolated `_Ctx` instances (recursive ctx reserves
+  cursor 0 for the working set), resolves labels, wraps both as `Program`
+  objects, emits `RunRecursiveCTE`, and adds the outer advance/loop/close
+  scaffolding for the caller to iterate results.
+- **`_Ctx.working_set_cursor_id`** — optional int used by `WorkingSetScan` to
+  know which cursor id to emit `OpenWorkingSetScan` for (defaults to 0 in the
+  recursive sub-program context).
+- Both new IR instructions exported from `sql_codegen.__init__`.
+
+## [1.0.0] - 2026-04-27
+
+### Added — Phase 4b: FOREIGN KEY constraints
+
+- **`IrColumnDef.foreign_key: tuple[str, str | None] | None`** — carries the
+  `(ref_table, ref_col_or_None)` FK reference into the VM.
+- **`_to_ir_col()` passes `foreign_key` through** — reads `c.foreign_key` from
+  the AST/backend `ColumnDef` and copies it into the IR struct.
+
+## [0.9.0] - 2026-04-27
+
+### Added — Phase 4a: CHECK constraints
+
+- **`CHECK_CURSOR_ID = -1`** — sentinel cursor id used in check-expression
+  instructions.  The VM temporarily maps this id to the incoming row dict so
+  `LoadColumn(cursor_id=-1, column="score")` resolves to the correct value.
+- **`ColumnDef.check_instrs: tuple[Instruction, ...]`** — IR ColumnDef carries the
+  pre-compiled instruction sequence for its CHECK constraint; empty tuple when there
+  is no constraint.
+- **`compiler._to_ir_col` CHECK compilation** — when `AstColumnDef.check_expr` is
+  not `None`, a fresh `_Ctx` is created with `alias_to_cursor[""] = CHECK_CURSOR_ID`
+  so all unqualified column references in the expression map to the sentinel cursor;
+  the compiled instructions are frozen into `check_instrs`.
+- **`CHECK_CURSOR_ID` and `IrColumnDef` exported** from `sql_codegen.__init__`.
+
+## [0.8.0] - 2026-04-27
+
+### Added
+- `AlterTable` IR instruction — holds `table: str` and `column: ColumnDef`.
+- Compiler case `PlanAlterTable → AlterTable` in `_compile_plan`.
+- `AlterTable` exported from `sql_codegen.__init__`.
+
+## [0.7.0] - 2026-04-27
+
+### Added — Phase 2: EXISTS / NOT EXISTS subquery expressions
+
+- **`RunExistsSubquery` IR instruction** (`sql_codegen.ir`) — new instruction
+  that carries a fully-resolved inner `sub_program`.  The VM executes the
+  sub-program and pushes `True` if it produced at least one row, `False`
+  otherwise.  Separate from `RunSubquery` so the VM can short-circuit after
+  the first row without materialising the full result set.
+
+- **`ExistsSubquery` compilation in `_compile_expr`** — when the compiler
+  encounters a post-planner `ExistsSubquery(query=LogicalPlan)`, it compiles
+  the inner plan to a standalone `Program` (fresh `_Ctx` so cursor/label IDs
+  don't collide with the outer program) and emits a `RunExistsSubquery`
+  instruction.
+
+- **`_compile_having` accepts `ctx` parameter** — the function's `walk`
+  inner closure now falls back to `_compile_expr(e, ctx)` for any expression
+  not covered by the dedicated aggregate/column/literal/binary cases.  This
+  enables `EXISTS (subquery)`, `NOT EXISTS`, and arbitrary boolean
+  sub-expressions in `HAVING` predicates.  The call site in
+  `_compile_aggregate` passes `ctx` accordingly.
+
+- **`RunExistsSubquery` exported** — added to `sql_codegen.__init__` import
+  block and `__all__`.
+
 ## [0.6.0] - 2026-04-23
 
 ### Changed — Phase 9.7: Composite (multi-column) automatic index support (IX-8)
@@ -136,3 +273,4 @@
   CREATE TABLE, DROP TABLE, EmptyResult.
 - Raises `UnsupportedNode` for LEFT / RIGHT / FULL JOIN and
   INSERT ... SELECT (deferred to v0.2).
+

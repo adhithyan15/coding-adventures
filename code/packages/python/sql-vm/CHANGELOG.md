@@ -1,5 +1,209 @@
 # Changelog
 
+## 1.5.0 — 2026-04-28
+
+### Added
+
+- **User-defined functions (UDFs)** — `execute()` accepts `user_functions`
+  dict; `_do_call_scalar` checks user registry before built-ins. nargs=-1
+  for variadic functions.
+- **`RunScalarSubquery` handler** — `_do_run_scalar_subquery` executes the
+  embedded sub-program, pushes the single result value, or NULL when empty.
+- **`CardinalityError`** (`errors.py`) — raised when a scalar subquery
+  returns more than one row; exported from `sql_vm.__init__`.
+- **`primary_key` passed to `BackendColumnDef`** in `_do_create_table` —
+  threads the primary-key flag through to the backend so PRAGMA table_info
+  correctly reports pk=1 for primary-key columns.
+
+## 1.4.0 — 2026-04-28
+
+### Added — Phase 9: SQL Triggers
+
+- **`TriggerDepthError`** (`errors.py`) — raised when trigger recursion exceeds
+  depth 16; exported from `sql_vm.__init__`.
+- **`_VmState.trigger_executor` / `.trigger_depth`** — optional callback and
+  nesting depth injected by the façade layer; the VM calls the executor for
+  each trigger that should fire without importing parsing/planning code itself.
+- **`execute()` new kwargs** — `trigger_executor` and `trigger_depth` wired
+  into `_VmState` construction.
+- **`_fire_trigger()`** — checks depth limit, then delegates to the executor.
+- **`_do_insert` / `_do_update` / `_do_delete`** — fire BEFORE and AFTER
+  triggers around the actual DML call.
+- **`_do_create_trigger` / `_do_drop_trigger`** — new dispatch handlers for
+  `CreateTriggerDef` / `DropTriggerDef` IR instructions.
+
+### Fixed
+
+- **`_do_update` old-row snapshot** — `current_row[cursor_id]` was captured as
+  a mutable reference; subsequent in-place `update(assignments)` mutated
+  `old_row` before AFTER triggers fired, causing OLD.col to return the
+  post-update value.  Fixed by calling `dict(...)` to take a shallow copy.
+
+## 1.3.0 — 2026-04-27
+
+### Added — Phase 8: Window Functions (OVER / PARTITION BY)
+
+- **`_do_compute_window()` handler** — dispatched when the VM encounters a
+  `ComputeWindowFunctions` instruction.  Two-pass algorithm:
+  1. Converts the result buffer rows to dicts keyed by `result.columns`.
+  2. Groups rows into partitions by `partition_cols` (empty key = global window).
+  3. Sorts each partition by `order_cols` using a NULL-first `_win_sort_key()`.
+  4. Evaluates each `WinFuncSpec` in order:
+     - Ranking: `ROW_NUMBER`, `RANK`, `DENSE_RANK`
+     - Aggregate: `SUM`, `COUNT` (skips NULLs), `COUNT_STAR`, `AVG`, `MIN`, `MAX`
+     - Value: `FIRST_VALUE`, `LAST_VALUE`
+  5. Projects rows to `output_cols` and updates `result.columns`.
+- **`_win_sort_key()` / `_Descending` helpers** — NULL-first sort key; wraps
+  non-NULL values in `_Descending` for DESC columns.
+- **`_order_vals()` helper** — extracts ordered column values from a row dict.
+
+## 1.2.0 — 2026-04-27
+
+### Added — Phase 5b: Recursive CTEs
+
+- **`_VmState.working_set_data: list[dict[str, SqlValue]]`** — stores the
+  current working-set rows for the recursive iteration; populated by
+  `_execute_with_cursors` before each recursive step.
+- **`_execute_with_cursors(program, backend, working_set_rows)`** — private
+  helper that runs a sub-program with a pre-loaded working set.  Sets
+  `state.working_set_data` rather than directly populating cursor 0, so
+  `OpenWorkingSetScan` can re-create a fresh cursor on each inner-loop
+  entry (crucial for correctness when the self-reference appears inside a JOIN).
+- **`RunRecursiveCTE` dispatch** — `_do_run_recursive_cte` implements the
+  fixed-point algorithm:
+  1. Execute anchor program via `execute()`; collect anchor rows as the initial
+     working set.
+  2. Repeat: run `recursive_program` via `_execute_with_cursors(working_rows)`;
+     collect new rows; if `union_all=False` deduplicate against a `seen` set.
+  3. Terminate when the working set is empty.
+  4. Populate `st.cursors[cursor_id]` with a `_SubqueryCursor` over all
+     accumulated rows.
+- **`OpenWorkingSetScan` dispatch** — handler creates a fresh
+  `_SubqueryCursor(rows=st.working_set_data)` bound to `cursor_id`.
+  Each call produces an independent cursor so JOIN outer loops can exhaust
+  and reopen without interfering with each other.
+- **Column name normalisation** — output column names always come from the
+  anchor's `result.columns`, matching the SQL standard rule that UNION output
+  names are taken from the leftmost SELECT.
+
+## 1.1.0 — 2026-04-27
+
+### Added — Phase 4b: FOREIGN KEY constraints
+
+- **`fk_child` / `fk_parent` parameters on `execute()`** — mutable dicts passed
+  from `Connection` so FK registrations from `CREATE TABLE` persist across calls.
+  `fk_child`: child_table → [(child_col, parent_table, parent_col_or_None)].
+  `fk_parent`: parent_table → [(child_table, child_col, parent_col_or_None)].
+- **`_VmState.fk_child` / `fk_parent`** — two new `field(default_factory=dict)`
+  fields carrying both directions of the FK graph.
+- **`_do_create_table` populates both registries** — for every column with a
+  non-None `foreign_key` tuple, writes forward (child→parent) and reverse
+  (parent→child) entries using `dict.setdefault`.
+- **`_check_fk_child()`** — scans the parent table and raises `ConstraintViolation`
+  when a non-NULL FK value has no matching row.  NULL passes unconditionally
+  (SQL standard: NULL reference is not an error).
+- **`_check_fk_parent()`** — scans the child table and raises `ConstraintViolation`
+  (RESTRICT) when deleting a parent row that is still referenced.
+- **`_fk_find_pk()` / `_fk_row_exists()`** — helpers: PK column discovery and
+  O(n) scan predicate.
+- **INSERT, UPDATE, DELETE enforcement** — `_do_insert` and `_do_update` call
+  `_check_fk_child` after CHECK; `_do_delete` calls `_check_fk_parent` before
+  the backend write.
+- **6 new VM-level tests** in `test_dml_ddl.py`.
+
+## 1.0.0 — 2026-04-27
+
+### Added — Phase 4a: CHECK constraints
+
+- **`check_registry` parameter on `execute()`** — a mutable `dict` passed in from
+  `Connection` so CHECK state registered by `CREATE TABLE` persists across calls.
+  The dict maps `table_name → list[(col_name, check_instrs)]`.
+- **`_do_create_table` populates `check_registry`** — for each column whose IR
+  `ColumnDef.check_instrs` is non-empty, an entry is written into the registry so
+  subsequent INSERT/UPDATE calls can enforce it.
+- **`_check_constraints()` helper** — iterates over the registry entry for the
+  target table, temporarily sets `st.current_row[CHECK_CURSOR_ID] = row`, runs the
+  pre-compiled instruction sequence, pops the result, and raises `ConstraintViolation`
+  when the result is `False`.  NULL results pass (SQL three-valued-logic).
+- **`ConstraintViolation` exports `table` and `column`** — the raised exception
+  carries enough detail for the mini-sqlite layer to produce an informative error.
+- **INSERT and UPDATE enforcement** — `_do_insert` validates the to-be-inserted row
+  before writing; `_do_update` merges pending assignments with the current row and
+  validates the merged dict before writing, preserving transactional rollback on
+  violation.
+- **Tests** — 4 new tests in `test_dml_ddl.py` covering valid INSERT, violating
+  INSERT, violating UPDATE, and NULL passthrough.
+
+## 0.9.0 — 2026-04-27
+
+### Added
+- `ColumnAlreadyExists` VM error — raised (and exported) when ALTER TABLE tries to
+  add a column that already exists.
+- `AlterTable` IR instruction dispatch — `_do_alter_table` handler calls
+  `backend.add_column` and translates any `BackendError`.
+- `_translate_backend_error` extended to map `be.ColumnAlreadyExists` to
+  `ColumnAlreadyExists`.
+
+## 0.8.0 — 2026-04-27
+
+### Added — Phase 2: EXISTS / NOT EXISTS subquery expressions
+
+- **`RunExistsSubquery` dispatch** — the VM's main dispatch loop now handles
+  `RunExistsSubquery` instructions.  The handler calls `execute(ins.sub_program,
+  st.backend)` in a sub-state, then pushes `True` onto the value stack if the
+  result set contains at least one row, `False` otherwise.  Because `NOT
+  EXISTS` is represented as `UnaryExpr(NOT, ExistsSubquery(...))`, the
+  existing `NOT` unary instruction handles inversion without any extra VM
+  logic.
+
+## 0.7.0 — 2026-04-27
+
+### Added — Date/time scalar functions + scalar MAX/MIN
+
+- **`DATE(timevalue [, modifier...])`** — returns ISO-8601 date string
+  (`YYYY-MM-DD`).  Accepts `'now'`, ISO-8601 strings, Julian Day floats,
+  and Unix epoch integers as time values.
+
+- **`TIME(timevalue [, modifier...])`** — returns time string (`HH:MM:SS`).
+
+- **`DATETIME(timevalue [, modifier...])`** — returns combined datetime string
+  (`YYYY-MM-DD HH:MM:SS`).
+
+- **`JULIANDAY(timevalue [, modifier...])`** — returns Julian Day Number as
+  float.  `JULIANDAY('2000-01-01')` → `2451544.5` (well-known constant).
+
+- **`UNIXEPOCH(timevalue [, modifier...])`** — returns Unix epoch seconds as
+  integer.  `UNIXEPOCH('1970-01-01')` → `0`.
+
+- **`STRFTIME(format, timevalue [, modifier...])`** — formats a time value
+  using C-style format specifiers.  Supports all standard `%Y`, `%m`, `%d`,
+  `%H`, `%M`, `%S` plus SQLite extensions `%f` (SS.SSS), `%s` (epoch
+  integer), `%J` (Julian Day), `%j` (day of year), `%W` (week number).
+
+- **Modifiers supported** for all six functions:
+  `+N days/hours/minutes/seconds/months/years`,
+  `-N days/…`, `start of day/month/year`, `localtime`, `utc`.
+  Leap-year clamping applied when adding months (`2024-01-31 + 1 month` →
+  `2024-02-29`).
+
+- **`MAX(a, b)`** (scalar form) — returns the greater of two arguments using
+  SQLite type ordering.  NULL is treated as "less than everything":
+  `MAX(1, NULL)` → `1`, `MAX(NULL, NULL)` → `NULL`.
+
+- **`MIN(a, b)`** (scalar form) — returns the lesser of two arguments.
+  `MIN(1, NULL)` → `NULL`, `MIN(NULL, NULL)` → `NULL`.
+
+  The scalar two-argument forms are dispatched via `CallScalar` and do not
+  conflict with the single-argument aggregate forms handled by
+  `InitAgg`/`FinalizeAgg` opcodes.
+
+- **`tests/test_scalar_functions.py`** — 69 new tests in `TestScalarMinMax`
+  and `TestDateTimeFunctions` classes covering: format correctness, NULL
+  propagation, known constants (`JULIANDAY('2000-01-01')` → `2451544.5`,
+  `UNIXEPOCH('1970-01-01')` → `0`), all six modifier types, leap-year
+  clamping, compound modifiers, and `STRFTIME` specifiers including `%f`,
+  `%s`, `%j`.
+
 ## 0.6.0 — 2026-04-23
 
 ### Changed — Phase 9.7: Composite (multi-column) automatic index support (IX-8)
@@ -171,3 +375,4 @@ Initial release.
 - DML: InsertRow, UpdateRows, DeleteRows
 - DDL: CreateTable, DropTable
 - Typed error hierarchy rooted at `VmError`
+

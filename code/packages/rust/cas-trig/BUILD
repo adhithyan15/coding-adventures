@@ -1,12 +1,9 @@
-#!/usr/bin/env bash
-set -euo pipefail
+load("code/packages/starlark/library-rules/rust_library.star", "rust_library")
 
-cd "$(dirname "$0")"
-
-echo "==> Building cas-trig"
-cargo build -p cas-trig
-
-echo "==> Testing cas-trig"
-cargo test -p cas-trig
-
-echo "==> cas-trig OK"
+_targets = [
+    rust_library(
+        name = "cas-trig",
+        srcs = ["src/**/*.rs", "tests/**/*.rs"],
+        deps = ["symbolic-ir"],
+    ),
+]

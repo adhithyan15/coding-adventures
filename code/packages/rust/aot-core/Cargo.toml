@@ -1,0 +1,14 @@
+[package]
+name = "aot-core"
+version = "0.1.0"
+edition = "2021"
+description = "Ahead-of-time compilation engine for InterpreterIR — infers types, specialises IIRFunctions into typed CIR, and links them into a .aot binary."
+license = "MIT"
+
+[dependencies]
+interpreter-ir = { path = "../interpreter-ir" }
+jit-core       = { path = "../jit-core" }
+codegen-core   = { path = "../codegen-core" }
+serde_json     = "1"
+
+[dev-dependencies]

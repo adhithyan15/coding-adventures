@@ -17,6 +17,8 @@ from prolog_core import (
     swi_operator_table,
 )
 from prolog_operator_parser import (
+    ParsedOperatorTerm,
+    parse_operator_named_term_tokens,
     parse_operator_program_tokens,
     parse_operator_query_tokens,
     parse_operator_source_tokens,
@@ -137,3 +139,17 @@ def parse_swi_query(
         tokens,
         active_operator_table,
     )
+
+
+def parse_swi_term(
+    source: str,
+    *,
+    operator_table: OperatorTable | None = None,
+) -> ParsedOperatorTerm:
+    """Parse one SWI-Prolog term and retain its named variable scope."""
+
+    tokens = tokenize_swi_prolog(source)
+    active_operator_table = (
+        swi_operator_table() if operator_table is None else operator_table
+    )
+    return parse_operator_named_term_tokens(tokens, active_operator_table)

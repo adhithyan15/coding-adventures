@@ -32,6 +32,110 @@
       ]
     },
     {
+      "id": "duplicate-attributes",
+      "description": "Duplicate attributes keep the first value and report duplicate-attribute",
+      "input": "<a href=one HREF=two title=ok>",
+      "tokens": [
+        "StartTag(name=a, attributes=[href=one, title=ok], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "duplicate-attribute"
+      ]
+    },
+    {
+      "id": "unexpected-unquoted-attribute-value-characters",
+      "description": "Unexpected characters in unquoted attribute values are preserved with parse errors",
+      "input": "<a data=one=two sq=x'y lt=x<y eq=x=y tick=x`y dq=x\"y>",
+      "tokens": [
+        "StartTag(name=a, attributes=[data=one=two, sq=x'y, lt=x<y, eq=x=y, tick=x`y, dq=x\"y], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-character-in-unquoted-attribute-value",
+        "unexpected-character-in-unquoted-attribute-value",
+        "unexpected-character-in-unquoted-attribute-value",
+        "unexpected-character-in-unquoted-attribute-value",
+        "unexpected-character-in-unquoted-attribute-value",
+        "unexpected-character-in-unquoted-attribute-value"
+      ]
+    },
+    {
+      "id": "null-character-replacement",
+      "description": "NULL characters in data and attribute values are replaced with U+FFFD",
+      "input": "A\u0000<a title=\"x\u0000y\" data=x\u0000y bare=\u0000>z",
+      "tokens": [
+        "Text(data=A�)",
+        "StartTag(name=a, attributes=[title=x�y, data=x�y, bare=�], self_closing=false)",
+        "Text(data=z)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "unexpected-null-character"
+      ]
+    },
+    {
+      "id": "null-character-name-replacement",
+      "description": "NULL characters in tag and attribute names are replaced with U+FFFD",
+      "input": "<x\u0000 \u0000=v a\u0000b=1 first \u0000second=2></x\u0000>",
+      "tokens": [
+        "StartTag(name=x�, attributes=[�=v, a�b=1, first=, �second=2], self_closing=false)",
+        "EndTag(name=x�)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "unexpected-null-character"
+      ]
+    },
+    {
+      "id": "null-character-comment-replacement",
+      "description": "NULL characters in comments and bogus comments are replaced with U+FFFD",
+      "input": "<!--a\u0000b--><!--\u0000--><!--a-\u0000b--><!--a--\u0000b--><!foo\u0000><!-\u0000>",
+      "tokens": [
+        "Comment(data=a�b)",
+        "Comment(data=�)",
+        "Comment(data=a-�b)",
+        "Comment(data=a--�b)",
+        "Comment(data=foo�)",
+        "Comment(data=-�)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "incorrectly-opened-comment",
+        "unexpected-null-character",
+        "incorrectly-opened-comment",
+        "unexpected-null-character"
+      ]
+    },
+    {
+      "id": "null-character-doctype-replacement",
+      "description": "NULL characters in DOCTYPE names and identifiers are replaced with U+FFFD",
+      "input": "<!DOCTYPE\u0000><!DOCTYPE h\u0000 PUBLIC \"p\u0000\" \"s\u0000\">",
+      "tokens": [
+        "Doctype(name=�, force_quirks=false)",
+        "Doctype(name=h�, public_identifier=p�, system_identifier=s�, force_quirks=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-whitespace-before-doctype-name",
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "unexpected-null-character",
+        "unexpected-null-character"
+      ]
+    },
+    {
       "id": "mosaic-doctype-and-heading",
       "input": "<!DOCTYPE HTML><H1 class=test>Hello</H1>",
       "tokens": [
@@ -43,6 +147,225 @@
       ]
     },
     {
+      "id": "doctype-missing-name-quirks",
+      "description": "DOCTYPE without a name emits a force-quirks doctype",
+      "input": "<!DOCTYPE>",
+      "tokens": [
+        "Doctype(name=null, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-doctype-name"
+      ]
+    },
+    {
+      "id": "doctype-whitespace-only-name-quirks",
+      "description": "DOCTYPE with only whitespace before > emits a force-quirks doctype",
+      "input": "<!DOCTYPE >",
+      "tokens": [
+        "Doctype(name=null, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-doctype-name"
+      ]
+    },
+    {
+      "id": "doctype-name-eof-quirks",
+      "description": "DOCTYPE name cut off by EOF emits the current name and marks force-quirks",
+      "input": "<!DOCTYPE html",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "eof-in-doctype"
+      ]
+    },
+    {
+      "id": "doctype-keyword-eof-quirks",
+      "description": "DOCTYPE keyword cut off by EOF emits a force-quirks doctype",
+      "input": "<!DOC",
+      "tokens": [
+        "Doctype(name=null, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "eof-in-doctype"
+      ]
+    },
+    {
+      "id": "doctype-invalid-keyword-quirks",
+      "description": "Malformed DOCTYPE keyword text marks force-quirks",
+      "input": "<!DOX>",
+      "tokens": [
+        "Doctype(name=dox, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "invalid-doctype-keyword"
+      ]
+    },
+    {
+      "id": "doctype-after-name-eof-quirks",
+      "description": "DOCTYPE after-name state cut off by EOF marks force-quirks",
+      "input": "<!DOCTYPE html ",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "eof-in-doctype"
+      ]
+    },
+    {
+      "id": "doctype-public-identifier",
+      "description": "Mosaic-era PUBLIC doctypes preserve their public identifier",
+      "input": "<!DOCTYPE html PUBLIC \"-//IETF//DTD HTML//EN\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=-//IETF//DTD HTML//EN, system_identifier=null, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "doctype-public-and-system-identifiers",
+      "description": "DOCTYPE PUBLIC declarations preserve both public and system identifiers",
+      "input": "<!DOCTYPE html PUBLIC '-//W3C//DTD HTML 4.01//EN' \"about:legacy-compat\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=-//W3C//DTD HTML 4.01//EN, system_identifier=about:legacy-compat, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "doctype-missing-whitespace-after-public-keyword",
+      "description": "DOCTYPE PUBLIC declarations recover when the public identifier starts immediately after the keyword",
+      "input": "<!DOCTYPE html PUBLIC\"-//IETF//DTD HTML//EN\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=-//IETF//DTD HTML//EN, system_identifier=null, force_quirks=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-whitespace-after-doctype-public-keyword"
+      ]
+    },
+    {
+      "id": "doctype-missing-whitespace-between-public-and-system-identifiers",
+      "description": "DOCTYPE PUBLIC declarations recover when the system identifier starts immediately after the public identifier",
+      "input": "<!DOCTYPE html PUBLIC '-//W3C//DTD HTML 4.01//EN'\"about:legacy-compat\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=-//W3C//DTD HTML 4.01//EN, system_identifier=about:legacy-compat, force_quirks=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-whitespace-between-doctype-public-and-system-identifiers"
+      ]
+    },
+    {
+      "id": "doctype-missing-quote-before-public-identifier",
+      "description": "DOCTYPE PUBLIC declarations missing a quoted public identifier recover through bogus doctype",
+      "input": "<!DOCTYPE html PUBLIC id>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-quote-before-doctype-public-identifier"
+      ]
+    },
+    {
+      "id": "doctype-abrupt-public-identifier",
+      "description": "DOCTYPE PUBLIC declarations cut off by > inside the public identifier mark force-quirks",
+      "input": "<!DOCTYPE html PUBLIC \"unterminated>",
+      "tokens": [
+        "Doctype(name=html, public_identifier=unterminated, system_identifier=null, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "abrupt-doctype-public-identifier"
+      ]
+    },
+    {
+      "id": "doctype-missing-public-identifier-quirks",
+      "description": "DOCTYPE PUBLIC without an identifier marks force-quirks",
+      "input": "<!DOCTYPE html PUBLIC>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-doctype-public-identifier"
+      ]
+    },
+    {
+      "id": "doctype-system-identifier",
+      "description": "DOCTYPE SYSTEM declarations preserve the system identifier",
+      "input": "<!DOCTYPE html SYSTEM \"about:legacy-compat\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=about:legacy-compat, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "doctype-missing-whitespace-after-system-keyword",
+      "description": "DOCTYPE SYSTEM declarations recover when the system identifier starts immediately after the keyword",
+      "input": "<!DOCTYPE html SYSTEM\"about:legacy-compat\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=about:legacy-compat, force_quirks=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-whitespace-after-doctype-system-keyword"
+      ]
+    },
+    {
+      "id": "doctype-missing-quote-before-system-identifier",
+      "description": "DOCTYPE SYSTEM declarations missing a quoted system identifier recover through bogus doctype",
+      "input": "<!DOCTYPE html SYSTEM id>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-quote-before-doctype-system-identifier"
+      ]
+    },
+    {
+      "id": "doctype-abrupt-system-identifier",
+      "description": "DOCTYPE SYSTEM declarations cut off by > inside the system identifier mark force-quirks",
+      "input": "<!DOCTYPE html SYSTEM \"about:legacy-compat>",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=about:legacy-compat, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "abrupt-doctype-system-identifier"
+      ]
+    },
+    {
+      "id": "doctype-missing-system-identifier-quirks",
+      "description": "DOCTYPE SYSTEM without an identifier marks force-quirks",
+      "input": "<!DOCTYPE html SYSTEM>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-doctype-system-identifier"
+      ]
+    },
+    {
+      "id": "doctype-trailing-junk-after-system-identifier-quirks",
+      "description": "Unexpected text after a system identifier marks force-quirks",
+      "input": "<!DOCTYPE html SYSTEM \"about:legacy-compat\" junk>",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=about:legacy-compat, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-character-after-doctype-system-identifier"
+      ]
+    },
+    {
       "id": "comment-eof-recovery",
       "input": "<!--open",
       "tokens": [
@@ -51,6 +374,59 @@
       ],
       "diagnostics": [
         "eof-in-comment"
+      ]
+    },
+    {
+      "id": "comment-abrupt-empty-close",
+      "description": "HTML comment opener <!--> emits an empty comment with an abrupt close diagnostic",
+      "input": "Before<!-->After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "abrupt-closing-of-empty-comment"
+      ]
+    },
+    {
+      "id": "comment-dash-prefixed-empty-close",
+      "description": "HTML comment opener <!---> closes as an empty comment before returning to data",
+      "input": "Before<!--->After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=)",
+        "Text(data=After)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "comment-nested-opener-recovery",
+      "description": "Nested-looking <!-- inside a comment remains comment data and reports nested-comment",
+      "input": "Before<!--a <!-- b -->After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=a <!-- b )",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "nested-comment"
+      ]
+    },
+    {
+      "id": "comment-incorrectly-closed-bang",
+      "description": "Comment end bang before > closes the comment with an incorrectly-closed-comment diagnostic",
+      "input": "Before<!--x--!>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=x)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "incorrectly-closed-comment"
       ]
     },
     {
@@ -87,6 +463,1163 @@
       ],
       "initial_state": "RAWTEXT state",
       "last_start_tag": "style"
+    },
+    {
+      "id": "html-character-references-data",
+      "description": "Named character references resolve in data state",
+      "input": "Fish &amp; &lt;b&gt; &quot;quote&quot; &apos;ok&apos;",
+      "tokens": [
+        "Text(data=Fish & <b> \"quote\" 'ok')",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-character-references-attributes",
+      "description": "Named character references resolve inside quoted and unquoted attribute values",
+      "input": "<a title=\"Fish &amp; Chips\" data-x='&lt;ok&gt;' note=&quot;hi&quot;>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=Fish & Chips, data-x=<ok>, note=\"hi\"], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves named character references as text",
+      "input": "Fish &amp; &lt;/title>",
+      "tokens": [
+        "Text(data=Fish & </title>)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html-legacy-character-references-data",
+      "description": "Legacy named character references resolve in data state",
+      "input": "Legacy&nbsp;symbols: &copy; &reg;",
+      "tokens": [
+        "Text(data=Legacy symbols: © ®)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-legacy-character-references-attributes",
+      "description": "Legacy named character references resolve inside quoted and unquoted attribute values",
+      "input": "<a title=\"A&nbsp;B\" copy='&copy;' reg=&reg;>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=A B, copy=©, reg=®], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-legacy-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves legacy named character references as text",
+      "input": "Venture&nbsp;&copy;&reg;</title>",
+      "tokens": [
+        "Text(data=Venture ©®)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html-latin1-character-references-data",
+      "description": "Classic Latin-1 named character references resolve in data state with case-sensitive names",
+      "input": "Latin-1: &Agrave;&agrave; &frac12; &yen;",
+      "tokens": [
+        "Text(data=Latin-1: Àà ½ ¥)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-latin1-character-references-attributes",
+      "description": "Classic Latin-1 named character references resolve inside quoted and unquoted attribute values",
+      "input": "<a title=\"&AElig;&aelig;\" currency=&pound;>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=Ææ, currency=£], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-latin1-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves classic Latin-1 named character references as text",
+      "input": "&Ntilde;&ntilde;</title>",
+      "tokens": [
+        "Text(data=Ññ)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html-whatwg-spacing-character-references-data",
+      "description": "WHATWG spacing named character references resolve in data state",
+      "input": "Spacing:&Tab;&NewLine;&MediumSpace;&ThickSpace;&ThinSpace;&VeryThinSpace;&ZeroWidthSpace;&NegativeMediumSpace;",
+      "tokens": [
+        "Text(data=Spacing:\t\n     ​​)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-invisible-character-references-attributes",
+      "description": "WHATWG invisible and non-breaking aliases resolve inside attribute values",
+      "input": "<a data=\"&NoBreak;&NonBreakingSpace;&ApplyFunction;&InvisibleTimes;&InvisibleComma;\">",
+      "tokens": [
+        "StartTag(name=a, attributes=[data=⁠ ⁡⁢⁣], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-math-constant-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG differential, exponential, and imaginary aliases",
+      "input": "&DifferentialD;&CapitalDifferentialD;&DD;&dd;&ExponentialE;&ee;&ImaginaryI;&ii;</title>",
+      "tokens": [
+        "Text(data=ⅆⅅⅅⅆⅇⅇⅈⅈ)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html-whatwg-equality-tilde-character-references-data",
+      "description": "WHATWG equality and tilde named character references resolve in data state",
+      "input": "Relations:&Equal;&EqualTilde;&Tilde;&TildeEqual;&TildeFullEqual;&TildeTilde;&NotEqual;&NotEqualTilde;&NotTilde;&NotTildeEqual;&NotTildeFullEqual;&NotTildeTilde;",
+      "tokens": [
+        "Text(data=Relations:⩵≂∼≃≅≈≠≂̸≁≄≇≉)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-congruence-character-references-data",
+      "description": "WHATWG congruence and equality aliases resolve in data state",
+      "input": "Congruence:&Bumpeq;&Congruent;&DotEqual;&HumpDownHump;&HumpEqual;&NotVerticalBar;&VerticalLine;&bcong;&bsim;&bsime;&bump;&bumpE;&bumpe;&bumpeq;&circeq;&coloneq;&congdot;&doteq;&doteqdot;",
+      "tokens": [
+        "Text(data=Congruence:≎≡≐≎≏∤|≌∽⋍≎⪮≏≏≗≔⩭≐≑)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-equality-parallel-character-references-attributes",
+      "description": "WHATWG equality and parallel aliases resolve inside attribute values",
+      "input": "<math eq=\"&eqcirc;&eqcolon;&eqsim;&eqslantgtr;&eqslantless;&equals;&equest;&equivDD;&eqvparsl;\" parallel=\"&mid;&midast;&midcir;&npar;&nparallel;&nparsl;&npart;&par;&parallel;&parsim;\">",
+      "tokens": [
+        "StartTag(name=math, attributes=[eq=≖≕≂⪖⪕=≟⩸⧥, parallel=∣*⫰∦∦⫽⃥∂̸∥∥⫳], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-similarity-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG similarity aliases",
+      "input": "&parsl;&shortmid;&shortparallel;&simdot;&sime;&simeq;&simg;&simgE;&siml;&simlE;&simne;&simplus;&simrarr;</title>",
+      "tokens": [
+        "Text(data=⫽∣∥⩪≃≃⪞⪠⪝⪟≆⨤⥲)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html-whatwg-greater-less-character-references-attributes",
+      "description": "WHATWG greater-than and less-than relation aliases resolve inside attribute values",
+      "input": "<math cmp=\"&GreaterEqual;&GreaterFullEqual;&GreaterGreater;&GreaterLess;&GreaterSlantEqual;&GreaterTilde;\" inv=\"&LessEqualGreater;&LessFullEqual;&LessGreater;&LessLess;&LessSlantEqual;&LessTilde;\">",
+      "tokens": [
+        "StartTag(name=math, attributes=[cmp=≥≧⪢≷⩾≳, inv=⋚≦≶⪡⩽≲], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-greater-less-comparison-character-references-data",
+      "description": "WHATWG greater-than and less-than comparison aliases resolve in data state",
+      "input": "GreaterLess:&GreaterEqualLess;&gl;&glE;&gla;&glj;&gnE;&gnap;&gnapprox;&gne;&gneq;&gneqq;&gnsim;&gtrapprox;&gtrarr;",
+      "tokens": [
+        "Text(data=GreaterLess:⋛≷⪒⪥⪤≩⪊⪊⪈⪈≩⋧⪆⥸)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-greater-less-comparison-character-references-attributes",
+      "description": "WHATWG greater-than and less-than comparison aliases resolve inside attribute values",
+      "input": "<math cmp=\"&gtrdot;&gtreqless;&gtreqqless;&gtrless;&gtrsim;&lessapprox;&lessdot;&lesseqgtr;&lesseqqgtr;&lessgtr;&lesssim;&lg;&lgE;&lnE;\">",
+      "tokens": [
+        "StartTag(name=math, attributes=[cmp=⋗⋛⪌≷≳⪅⋖⋚⪋≶≲≶⪑≨], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-negated-greater-less-comparison-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG negated greater-than and less-than comparison aliases",
+      "input": "&lnap;&lnapprox;&lne;&lneq;&lneqq;&lnsim;&nGg;&nGt;&nGtv;&nLl;&nLt;&nLtv;</title>",
+      "tokens": [
+        "Text(data=⪉⪉⪇⪇≨⋦⋙̸≫⃒≫̸⋘̸≪⃒≪̸)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html-whatwg-negated-relation-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG negated relation aliases, including combining-overlay replacements",
+      "input": "&NotGreater;&NotGreaterEqual;&NotGreaterFullEqual;&NotGreaterGreater;&NotGreaterLess;&NotGreaterSlantEqual;&NotGreaterTilde;&NotLess;&NotLessEqual;&NotLessGreater;&NotLessLess;&NotLessSlantEqual;&NotLessTilde;&NotNestedGreaterGreater;&NotNestedLessLess;</title>",
+      "tokens": [
+        "Text(data=≯≱≧̸≫̸≹⩾̸≵≮≰≸≪̸⩽̸≴⪢̸⪡̸)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html-whatwg-precedence-character-references-data",
+      "description": "WHATWG precedence and successor relation aliases resolve in data state",
+      "input": "Precedence:&NotPrecedes;&NotPrecedesEqual;&NotPrecedesSlantEqual;&NotSucceeds;&NotSucceedsEqual;&NotSucceedsSlantEqual;&NotSucceedsTilde;&Precedes;&PrecedesEqual;&PrecedesSlantEqual;&PrecedesTilde;&Succeeds;&SucceedsEqual;&SucceedsSlantEqual;&SucceedsTilde;&curlyeqprec;&curlyeqsucc;&nprec;&npreceq;",
+      "tokens": [
+        "Text(data=Precedence:⊀⪯̸⋠⊁⪰̸⋡≿̸≺⪯≼≾≻⪰≽≿⋞⋟⊀⪯̸)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-precedence-character-references-attributes",
+      "description": "WHATWG precedence aliases resolve inside attribute values",
+      "input": "<math prec=\"&nsucc;&nsucceq;&pr;&prE;&prap;&prcue;&pre;&prec;&precapprox;&preccurlyeq;&preceq;&precnapprox;&precneqq;&precnsim;&precsim;&prnE;&prnap;&prnsim;&prsim;\">",
+      "tokens": [
+        "StartTag(name=math, attributes=[prec=⊁⪰̸≺⪳⪷≼⪯≺⪷≼⪯⪹⪵⋨≾⪵⪹⋨≾], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-successor-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG successor aliases",
+      "input": "&sc;&scE;&scap;&sccue;&sce;&scnE;&scnap;&scnsim;&scsim;&succ;&succapprox;&succcurlyeq;&succeq;&succnapprox;&succneqq;&succnsim;&succsim;</title>",
+      "tokens": [
+        "Text(data=≻⪴⪸≽⪰⪶⪺⋩≿≻⪸≽⪰⪺⪶⋩≿)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html-whatwg-basic-arrow-character-references-data",
+      "description": "WHATWG basic and double arrow aliases resolve in data state",
+      "input": "Arrows:&LeftArrow;&RightArrow;&UpArrow;&DownArrow;&LeftRightArrow;&UpDownArrow;&DoubleLeftArrow;&DoubleRightArrow;&DoubleUpArrow;&DoubleDownArrow;&DoubleLeftRightArrow;&DoubleUpDownArrow;",
+      "tokens": [
+        "Text(data=Arrows:←→↑↓↔↕⇐⇒⇑⇓⇔⇕)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-long-and-bar-arrow-character-references-attributes",
+      "description": "WHATWG long, bar, tee, and map arrow aliases resolve inside attribute values",
+      "input": "<a long=\"&LongLeftArrow;&LongRightArrow;&LongLeftRightArrow;&Longleftarrow;&Longrightarrow;&Longleftrightarrow;\" bars=\"&LeftArrowBar;&RightArrowBar;&UpArrowBar;&DownArrowBar;&LeftArrowRightArrow;&RightArrowLeftArrow;&UpArrowDownArrow;&DownArrowUpArrow;&LeftTeeArrow;&RightTeeArrow;&map;&Map;\">",
+      "tokens": [
+        "StartTag(name=a, attributes=[long=⟵⟶⟷⟸⟹⟺, bars=⇤⇥⤒⤓⇆⇄⇅⇵↤↦↦⤅], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-extended-arrow-character-references-data",
+      "description": "WHATWG extended capital, short, diagonal, and double-long arrow aliases resolve in data state",
+      "input": "More arrows:&Darr;&Downarrow;&Larr;&Leftarrow;&Leftrightarrow;&Rarr;&Rightarrow;&Uarr;&Uparrow;&Updownarrow;&ShortDownArrow;&ShortLeftArrow;&ShortRightArrow;&ShortUpArrow;&LowerLeftArrow;&LowerRightArrow;&UpperLeftArrow;&UpperRightArrow;&DoubleLongLeftArrow;&DoubleLongLeftRightArrow;&DoubleLongRightArrow;&DownTeeArrow;&UpTeeArrow;",
+      "tokens": [
+        "Text(data=More arrows:↡⇓↞⇐⇔↠⇒↟⇑⇕↓←→↑↙↘↖↗⟸⟺⟹↧↥)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-hook-tail-loop-arrow-character-references-attributes",
+      "description": "WHATWG lowercase long, hook, tail, two-head, curve, circle, and loop arrow aliases resolve inside attribute values",
+      "input": "<a plain=\"&downarrow;&leftarrow;&leftrightarrow;&longleftarrow;&longleftrightarrow;&longrightarrow;\" hooks=\"&hookleftarrow;&hookrightarrow;&leftarrowtail;&rightarrowtail;&twoheadleftarrow;&twoheadrightarrow;\" loops=\"&curvearrowleft;&curvearrowright;&circlearrowleft;&circlearrowright;&looparrowleft;&looparrowright;\">",
+      "tokens": [
+        "StartTag(name=a, attributes=[plain=↓←↔⟵⟷⟶, hooks=↩↪↢↣↞↠, loops=↶↷↺↻↫↬], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-vector-arrow-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG vector and vector-bar arrow aliases",
+      "input": "&LeftVector;&RightVector;&LeftUpVector;&RightUpVector;&LeftDownVector;&RightDownVector;&DownLeftVector;&DownRightVector;&LeftVectorBar;&RightVectorBar;&LeftUpVectorBar;&RightUpVectorBar;&LeftDownVectorBar;&RightDownVectorBar;&DownLeftVectorBar;&DownRightVectorBar;</title>",
+      "tokens": [
+        "Text(data=↼⇀↿↾⇃⇂↽⇁⥒⥓⥘⥔⥙⥕⥖⥗)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html-whatwg-harpoon-negated-mapsto-arrow-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG harpoon, repeated, negated, squiggle, mapsto, and diagonal arrow aliases",
+      "input": "&leftharpoonup;&leftharpoondown;&rightharpoonup;&rightharpoondown;&upharpoonleft;&upharpoonright;&downharpoonleft;&downharpoonright;&leftleftarrows;&rightrightarrows;&downdownarrows;&upuparrows;&leftrightarrows;&rightleftarrows;&leftrightharpoons;&rightleftharpoons;&rightsquigarrow;&leftrightsquigarrow;&nleftarrow;&nrightarrow;&nleftrightarrow;&nLeftarrow;&nRightarrow;&nLeftrightarrow;&mapsto;&longmapsto;&mapstoleft;&mapstoup;&mapstodown;&nearrow;&searrow;&swarrow;&nwarrow;</title>",
+      "tokens": [
+        "Text(data=↼↽⇀⇁↿↾⇃⇂⇇⇉⇊⇈⇆⇄⇋⇌↝↭↚↛↮⇍⇏⇎↦⟼↤↥↧↗↘↙↖)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html-whatwg-greek-variant-character-references-data",
+      "description": "WHATWG Greek variant and letter-like aliases resolve in data state",
+      "input": "Greek variants:&Gammad;&digamma;&Upsi;&upsi;&beth;&gimel;&daleth;&backepsilon;&bepsi;",
+      "tokens": [
+        "Text(data=Greek variants:Ϝϝϒυℶℷℸ϶϶)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-greek-variant-character-references-attributes",
+      "description": "WHATWG Greek variant aliases resolve inside attribute values",
+      "input": "<i vars=\"&epsi;&epsiv;&varepsilon;&straightepsilon;&kappav;&varkappa;&phiv;&varphi;&straightphi;\" more=\"&rhov;&varrho;&sigmav;&varsigma;&thetav;&vartheta;&varpi;\">",
+      "tokens": [
+        "StartTag(name=i, attributes=[vars=εϵϵϵϰϰϕϕϕ, more=ϱϱςςϑϑϖ], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-greek-variant-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG Greek variant aliases",
+      "input": "&varepsilon;&varkappa;&vartheta;&varrho;&varsigma;&varphi;</title>",
+      "tokens": [
+        "Text(data=ϵϰϑϱςϕ)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html-whatwg-set-logic-character-references-data",
+      "description": "WHATWG set and logic aliases resolve in data state",
+      "input": "Sets:&Intersection;&Union;&SquareIntersection;&SquareUnion;&Wedge;&Vee;&And;&Or;&Not;&Cup;&Cap;&CupCap;&NotCupCap;&VerticalSeparator;",
+      "tokens": [
+        "Text(data=Sets:⋂⋃⊓⊔⋀⋁⩓⩔⫬⋓⋒≍≭❘)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-set-logic-character-references-attributes",
+      "description": "WHATWG membership and subset aliases resolve inside attribute values",
+      "input": "<m membership=\"&Element;&NotElement;&ReverseElement;&NotReverseElement;&Exists;&NotExists;&SuchThat;&isinv;&isinE;&notinva;&notinvb;&notinvc;&niv;&notniva;&notnivb;&notnivc;\" subsets=\"&Subset;&Supset;&SubsetEqual;&NotSubset;&NotSubsetEqual;&subE;&supE;&nsubE;&nsupE;&subne;&supne;&subnE;&supnE;\">",
+      "tokens": [
+        "StartTag(name=m, attributes=[membership=∈∉∋∌∃∄∋∈⋹∉⋷⋶∋∌⋾⋽, subsets=⋐⋑⊆⊂⃒⊈⫅⫆⫅̸⫆̸⊊⊋⫋⫌], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-set-logic-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG set operation aliases",
+      "input": "&emptyset;&emptyv;&varnothing;&setminus;&smallsetminus;&sqcap;&sqcup;&sqsub;&sqsup;&sqsube;&sqsupe;&cuvee;&cuwed;&xcap;&xcup;&xvee;&xwedge;</title>",
+      "tokens": [
+        "Text(data=∅∅∅∖∖⊓⊔⊏⊐⊑⊒⋎⋏⋂⋃⋁⋀)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html-whatwg-operator-character-references-data",
+      "description": "WHATWG circled operator, integral, product, and therefore aliases resolve in data state",
+      "input": "Operators:&CircleDot;&CircleMinus;&CirclePlus;&CircleTimes;&ContourIntegral;&DoubleContourIntegral;&Integral;&Product;&Coproduct;&Sum;&Sqrt;&Proportional;&Therefore;&Because;&VerticalTilde;",
+      "tokens": [
+        "Text(data=Operators:⊙⊖⊕⊗∮∯∫∏∐∑√∝∴∵≀)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-operator-shape-character-references-attributes",
+      "description": "WHATWG boxed operator and square aliases resolve inside attribute values",
+      "input": "<g ops=\"&ominus;&odot;&osol;&ocir;&oast;&odash;&pluscir;&timesb;&sdotb;&minusb;&boxplus;&boxminus;&boxtimes;&dotsquare;&compfn;\" shapes=\"&FilledSmallSquare;&EmptySmallSquare;&EmptyVerySmallSquare;&FilledVerySmallSquare;&Square;&SquareSubset;&SquareSubsetEqual;&SquareSuperset;&SquareSupersetEqual;\">",
+      "tokens": [
+        "StartTag(name=g, attributes=[ops=⊖⊙⊘⊚⊛⊝⨢⊠⊡⊟⊞⊟⊠⊡∘, shapes=◼◻▫▪□⊏⊑⊐⊒], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-shape-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG square, lozenge, star, suit, and symbol aliases",
+      "input": "&squ;&square;&squf;&squarf;&blacksquare;&lozenge;&lozf;&blacklozenge;&diamond;&diam;&diamondsuit;&malt;&maltese;&starf;&bigstar;&star;&phone;&female;&male;&spadesuit;&clubsuit;&heartsuit;</title>",
+      "tokens": [
+        "Text(data=□□▪▪▪◊⧫⧫⋄⋄♦✠✠★★☆☎♀♂♠♣♥)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html-whatwg-box-drawing-character-references-data",
+      "description": "WHATWG box-drawing aliases resolve in data state",
+      "input": "Boxes:&boxDL;&boxDR;&boxDl;&boxDr;&boxH;&boxHD;&boxHU;&boxHd;&boxHu;&boxUL;&boxUR;&boxUl;&boxUr;&boxV;&boxVH;&boxVL;&boxVR;&boxVh;&boxVl;&boxVr;&boxbox;",
+      "tokens": [
+        "Text(data=Boxes:╗╔╖╓═╦╩╤╧╝╚╜╙║╬╣╠╫╢╟⧉)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-box-drawing-character-references-attributes",
+      "description": "WHATWG box-drawing aliases resolve inside attribute values",
+      "input": "<box double=\"&boxDL;&boxDR;&boxDl;&boxDr;&boxH;&boxHD;&boxHU;&boxHd;&boxHu;&boxUL;&boxUR;&boxUl;&boxUr;\" mixed=\"&boxV;&boxVH;&boxVL;&boxVR;&boxVh;&boxVl;&boxVr;&boxbox;&boxdL;&boxdR;&boxdl;&boxdr;&boxh;&boxhD;&boxhU;\" light=\"&boxhd;&boxhu;&boxuL;&boxuR;&boxul;&boxur;&boxv;&boxvH;&boxvL;&boxvR;&boxvh;&boxvl;&boxvr;\">",
+      "tokens": [
+        "StartTag(name=box, attributes=[double=╗╔╖╓═╦╩╤╧╝╚╜╙, mixed=║╬╣╠╫╢╟⧉╕╒┐┌─╥╨, light=┬┴╛╘┘└│╪╡╞┼┤├], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-box-drawing-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG box-drawing aliases",
+      "input": "&boxdL;&boxdR;&boxdl;&boxdr;&boxh;&boxhD;&boxhU;&boxhd;&boxhu;&boxuL;&boxuR;&boxul;&boxur;&boxv;&boxvH;&boxvL;&boxvR;&boxvh;&boxvl;&boxvr;</title>",
+      "tokens": [
+        "Text(data=╕╒┐┌─╥╨┬┴╛╘┘└│╪╡╞┼┤├)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html-whatwg-angle-character-references-data",
+      "description": "WHATWG angle aliases resolve in data state",
+      "input": "Angles:&angle;&angmsd;&angsph;&angrt;&angrtvb;&angrtvbd;&angst;&angzarr;&measuredangle;",
+      "tokens": [
+        "Text(data=Angles:∠∡∢∟⊾⦝Å⍼∡)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-fence-character-references-attributes",
+      "description": "WHATWG angle bracket and fence aliases resolve inside attribute values",
+      "input": "<f angles=\"&lang;&rang;&langle;&rangle;&LeftAngleBracket;&RightAngleBracket;\" fences=\"&LeftCeiling;&RightCeiling;&LeftFloor;&RightFloor;&LeftDoubleBracket;&RightDoubleBracket;&lobrk;&robrk;&lbrack;&rbrack;&lbrace;&rbrace;&lpar;&rpar;\">",
+      "tokens": [
+        "StartTag(name=f, attributes=[angles=⟨⟩⟨⟩⟨⟩, fences=⌈⌉⌊⌋⟦⟧⟦⟧[]{}()], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-triangle-corner-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG triangle, corner, and over-under fence aliases",
+      "input": "&LeftTriangle;&RightTriangle;&triangleleft;&triangleright;&blacktriangleleft;&blacktriangleright;&ulcorner;&urcorner;&llcorner;&lrcorner;&OverBrace;&UnderBrace;&OverBracket;&UnderBracket;&OverParenthesis;&UnderParenthesis;&OverBar;&UnderBar;&bbrk;&bbrktbrk;</title>",
+      "tokens": [
+        "Text(data=⊲⊳◃▹◂▸⌜⌝⌞⌟⏞⏟⎴⎵⏜⏝‾_⎵⎶)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html-whatwg-latin-extended-character-references-data",
+      "description": "WHATWG Latin Extended and diacritic aliases resolve in data state",
+      "input": "Latin extended:&Amacr;&abreve;&Aogon;&aogon;&Cacute;&ccaron;&Dcaron;&dcaron;&Emacr;&eogon;&Gbreve;&gcirc;&Idot;&inodot;",
+      "tokens": [
+        "Text(data=Latin extended:ĀăĄąĆčĎďĒęĞĝİı)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-latin-extended-character-references-attributes",
+      "description": "WHATWG Latin Extended and diacritic aliases resolve inside attribute values",
+      "input": "<p upper=\"&Hcirc;&Itilde;&Jcirc;&Kcedil;&Lacute;&Lcaron;&Lcedil;&Lmidot;&Nacute;&Ncaron;&Ncedil;\" lower=\"&hcirc;&itilde;&jcirc;&kcedil;&lacute;&lcaron;&lcedil;&lmidot;&nacute;&ncaron;&ncedil;\">",
+      "tokens": [
+        "StartTag(name=p, attributes=[upper=ĤĨĴĶĹĽĻĿŃŇŅ, lower=ĥĩĵķĺľļŀńňņ], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-latin-extended-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves WHATWG Latin Extended and diacritic aliases",
+      "input": "&Omacr;&omacr;&Racute;&rcaron;&Sacute;&scedil;&Scirc;&scirc;&Tcaron;&tcedil;&Ubreve;&umacr;&Uogon;&uring;&Utilde;&wcirc;&Ycirc;&ycirc;&Zacute;&zcaron;&Zdot;&zdot;</title>",
+      "tokens": [
+        "Text(data=ŌōŔřŚşŜŝŤţŬūŲůŨŵŶŷŹžŻż)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html-semicolonless-legacy-character-references-data",
+      "description": "Legacy named character references recover when the semicolon is missing in data state",
+      "input": "Legacy&nbsp symbols: &copy/&reg",
+      "tokens": [
+        "Text(data=Legacy  symbols: ©/®)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ]
+    },
+    {
+      "id": "html-semicolonless-legacy-character-references-attributes",
+      "description": "Legacy named character references recover when the semicolon is missing in attributes",
+      "input": "<a title=\"A&nbsp B\" copy=&copy reg=&reg>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=A  B, copy=©, reg=®], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ]
+    },
+    {
+      "id": "html-semicolonless-legacy-character-references-rcdata",
+      "description": "Seeded title RCDATA context recovers legacy named character references with missing semicolons",
+      "input": "Venture&nbsp &copy &reg</title>",
+      "tokens": [
+        "Text(data=Venture  © ®)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html-semicolonless-nonlegacy-character-reference-recovery",
+      "description": "Missing-semicolon named references only recover through legacy aliases",
+      "input": "Text &notin &trade <a value=&notin legacy=&Agrave data=&copy/>",
+      "tokens": [
+        "Text(data=Text ¬in &trade )",
+        "StartTag(name=a, attributes=[value=&notin, legacy=À, data=©], self_closing=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ]
+    },
+    {
+      "id": "html-named-character-reference-fallback-data",
+      "description": "Named character references resolve known uppercase aliases and unknown references stay literal in data state",
+      "input": "Known &AMP; unknown &madeup;",
+      "tokens": [
+        "Text(data=Known & unknown &madeup;)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-named-character-reference-fallback-attributes",
+      "description": "Unknown named character references stay literal inside attributes",
+      "input": "<a title=\"&copy;\" bogus=&madeup;>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=©, bogus=&madeup;], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-numeric-character-references-data",
+      "description": "Decimal and hexadecimal numeric character references resolve in data state",
+      "input": "Letters: &#65; &#x42; &#X43; &#0;",
+      "tokens": [
+        "Text(data=Letters: A B C �)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "null-character-reference"
+      ]
+    },
+    {
+      "id": "html-numeric-character-references-attributes",
+      "description": "Numeric character references resolve inside quoted and unquoted attribute values",
+      "input": "<a title=\"&#65;&#x42;\" data-x='&#X43;' note=&#0;>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=AB, data-x=C, note=�], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "null-character-reference"
+      ]
+    },
+    {
+      "id": "html-invalid-numeric-character-reference-recovery",
+      "description": "Invalid numeric character references report spec diagnostics and use replacement or remapped characters",
+      "input": "<a data='&#0; &#xD800; &#x110000; &#xFDD0; &#x80;'>",
+      "tokens": [
+        "StartTag(name=a, attributes=[data=� � � ﷐ €], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "null-character-reference",
+        "surrogate-character-reference",
+        "character-reference-outside-unicode-range",
+        "noncharacter-character-reference",
+        "control-character-reference"
+      ]
+    },
+    {
+      "id": "html-absence-of-digits-numeric-character-reference-recovery",
+      "description": "Numeric character references without digits stay literal and report absence-of-digits diagnostics",
+      "input": "Bad &#; &#x; <a title='&#x;' data=&#;>",
+      "tokens": [
+        "Text(data=Bad &#; &#x; )",
+        "StartTag(name=a, attributes=[title=&#x;, data=&#;], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "absence-of-digits-in-numeric-character-reference",
+        "absence-of-digits-in-numeric-character-reference",
+        "absence-of-digits-in-numeric-character-reference",
+        "absence-of-digits-in-numeric-character-reference"
+      ]
+    },
+    {
+      "id": "html-numeric-character-references-rcdata",
+      "description": "Seeded title RCDATA context resolves numeric character references as text",
+      "input": "Fish &#38; &#x3C;/title>",
+      "tokens": [
+        "Text(data=Fish & </title>)",
+        "EOF"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html-missing-semicolon-numeric-character-references-data",
+      "description": "Numeric character references recover when the semicolon is missing in data state",
+      "input": "Letters: &#65 &#x42Z",
+      "tokens": [
+        "Text(data=Letters: A BZ)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ]
+    },
+    {
+      "id": "html-missing-semicolon-numeric-character-references-attributes",
+      "description": "Numeric character references recover when the semicolon is missing in attributes",
+      "input": "<a title=&#65 data-x=&#x42>",
+      "tokens": [
+        "StartTag(name=a, attributes=[title=A, data-x=B], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ]
+    },
+    {
+      "id": "html-missing-semicolon-numeric-character-references-rcdata",
+      "description": "Seeded title RCDATA context recovers numeric character references with missing semicolons",
+      "input": "Fish &#38 &#x3C/title>",
+      "tokens": [
+        "Text(data=Fish & </title>)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ],
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html-plaintext-state-literalizes-markup",
+      "description": "Seeded PLAINTEXT context treats markup and character references as literal text",
+      "input": "hello <b>still text</b> &amp; literal",
+      "tokens": [
+        "Text(data=hello <b>still text</b> &amp; literal)",
+        "EOF"
+      ],
+      "initial_state": "PLAINTEXT state"
+    },
+    {
+      "id": "html-script-data-state-end-tag",
+      "description": "Seeded script data context emits the matching script end tag while keeping character references literal",
+      "input": "if (a < b) alert('&amp;');</script>",
+      "tokens": [
+        "Text(data=if (a < b) alert('&amp;');)",
+        "EndTag(name=script)",
+        "EOF"
+      ],
+      "initial_state": "Script data state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html-script-data-escaped-state-end-tag",
+      "description": "Seeded script data escaped context emits the matching script end tag",
+      "input": "if (a < b) </script>",
+      "tokens": [
+        "Text(data=if (a < b) )",
+        "EndTag(name=script)",
+        "EOF"
+      ],
+      "initial_state": "Script data escaped state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html-script-data-double-escaped-state-end-tag",
+      "description": "Seeded script data double escaped context keeps the first script end tag literal until the double escape closes",
+      "input": "x </script> y --></script>",
+      "tokens": [
+        "Text(data=x </script> y -->)",
+        "EndTag(name=script)",
+        "EOF"
+      ],
+      "initial_state": "Script data double escaped state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html-cdata-section-state-literalizes-markup",
+      "description": "Seeded CDATA section context treats markup and character references as literal text until ]]>, then returns to data",
+      "input": "<not-markup> &amp; ]]><p>x</p>",
+      "tokens": [
+        "Text(data=<not-markup> &amp; )",
+        "StartTag(name=p, attributes=[], self_closing=false)",
+        "Text(data=x)",
+        "EndTag(name=p)",
+        "EOF"
+      ],
+      "initial_state": "CDATA section state"
+    },
+    {
+      "id": "html-cdata-markup-opener-enters-cdata-section",
+      "description": "Markup declaration <![CDATA[ enters CDATA section text until ]]>, then returns to data",
+      "input": "Before<![CDATA[<not-markup> &amp; ]]>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Text(data=<not-markup> &amp; After)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "question-mark-tag-open-bogus-comment",
+      "description": "Processing-instruction-looking markup recovers as a bogus comment",
+      "input": "Before<?xml version=\"1.0\"?>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=?xml version=\"1.0\"?)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-question-mark-instead-of-tag-name"
+      ]
+    },
+    {
+      "id": "question-mark-tag-open-bogus-comment-eof",
+      "description": "EOF in bogus-comment recovery emits the comment without eof-in-comment",
+      "input": "Before<?xml",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=?xml)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-question-mark-instead-of-tag-name"
+      ]
+    },
+    {
+      "id": "incorrectly-opened-markup-declaration",
+      "description": "Malformed markup declarations recover as bogus comments with a diagnostic",
+      "input": "Before<!foo>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=foo)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "incorrectly-opened-comment"
+      ]
+    },
+    {
+      "id": "empty-incorrectly-opened-markup-declaration",
+      "description": "Malformed empty declarations reconsume > in bogus comment recovery",
+      "input": "Before<!>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "incorrectly-opened-comment"
+      ]
+    },
+    {
+      "id": "eof-incorrectly-opened-markup-declaration",
+      "description": "EOF after a markup declaration opener recovers as an empty bogus comment",
+      "input": "Before<!",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "incorrectly-opened-comment"
+      ]
+    },
+    {
+      "id": "one-dash-markup-declaration-bogus-comment",
+      "description": "Markup declarations with only one opening dash recover as bogus comments",
+      "input": "Before<!->Middle<!-x>After<!-",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=-)",
+        "Text(data=Middle)",
+        "Comment(data=-x)",
+        "Text(data=After)",
+        "Comment(data=-)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "incorrectly-opened-comment",
+        "incorrectly-opened-comment",
+        "incorrectly-opened-comment"
+      ]
+    },
+    {
+      "id": "invalid-tag-open-text-recovery",
+      "description": "A less-than sign before non-tag text remains text instead of starting a tag",
+      "input": "Before < after",
+      "tokens": [
+        "Text(data=Before )",
+        "Text(data=< after)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "invalid-first-character-of-tag-name"
+      ]
+    },
+    {
+      "id": "invalid-end-tag-open-bogus-comment",
+      "description": "An end-tag opener followed by a non-letter recovers as a bogus comment",
+      "input": "Before</3>After",
+      "tokens": [
+        "Text(data=Before)",
+        "Comment(data=3)",
+        "Text(data=After)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "invalid-first-character-of-tag-name"
+      ]
+    },
+    {
+      "id": "html-whatwg-open-face-character-references-data",
+      "description": "WHATWG open-face mathematical alphabet named references decode in data state",
+      "input": "Open face:&Aopf;&Bopf;&Copf;&Dopf;&Eopf;&Fopf;&Gopf;&Hopf;&Iopf;&Jopf;&Kopf;&Lopf;&Mopf;&Nopf;&Oopf;&Popf;&Qopf;&Ropf;&Sopf;&Topf;&Uopf;&Vopf;&Wopf;&Xopf;&Yopf;&Zopf;&aopf;&bopf;&copf;&dopf;&eopf;&fopf;&gopf;&hopf;&iopf;&jopf;&kopf;&lopf;&mopf;&nopf;&oopf;&popf;&qopf;&ropf;&sopf;&topf;&uopf;&vopf;&wopf;&xopf;&yopf;&zopf;",
+      "tokens": [
+        "Text(data=Open face:𝔸𝔹ℂ𝔻𝔼𝔽𝔾ℍ𝕀𝕁𝕂𝕃𝕄ℕ𝕆ℙℚℝ𝕊𝕋𝕌𝕍𝕎𝕏𝕐ℤ𝕒𝕓𝕔𝕕𝕖𝕗𝕘𝕙𝕚𝕛𝕜𝕝𝕞𝕟𝕠𝕡𝕢𝕣𝕤𝕥𝕦𝕧𝕨𝕩𝕪𝕫)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-script-character-references-attributes",
+      "description": "WHATWG script mathematical alphabet named references decode in attributes",
+      "input": "<math upper=\"&Ascr;&Bscr;&Cscr;&Dscr;&Escr;&Fscr;&Gscr;&Hscr;&Iscr;&Jscr;&Kscr;&Lscr;&Mscr;&Nscr;&Oscr;&Pscr;&Qscr;&Rscr;&Sscr;&Tscr;&Uscr;&Vscr;&Wscr;&Xscr;&Yscr;&Zscr;\" lower=\"&ascr;&bscr;&cscr;&dscr;&escr;&fscr;&gscr;&hscr;&iscr;&jscr;&kscr;&lscr;&mscr;&nscr;&oscr;&pscr;&qscr;&rscr;&sscr;&tscr;&uscr;&vscr;&wscr;&xscr;&yscr;&zscr;\">",
+      "tokens": [
+        "StartTag(name=math, attributes=[upper=𝒜ℬ𝒞𝒟ℰℱ𝒢ℋℐ𝒥𝒦ℒℳ𝒩𝒪𝒫𝒬ℛ𝒮𝒯𝒰𝒱𝒲𝒳𝒴𝒵, lower=𝒶𝒷𝒸𝒹ℯ𝒻ℊ𝒽𝒾𝒿𝓀𝓁𝓂𝓃ℴ𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-fraktur-character-references-rcdata",
+      "description": "WHATWG fraktur mathematical alphabet named references decode in RCDATA",
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title",
+      "input": "&Afr;&Bfr;&Cfr;&Dfr;&Efr;&Ffr;&Gfr;&Hfr;&Ifr;&Jfr;&Kfr;&Lfr;&Mfr;&Nfr;&Ofr;&Pfr;&Qfr;&Rfr;&Sfr;&Tfr;&Ufr;&Vfr;&Wfr;&Xfr;&Yfr;&Zfr;&afr;&bfr;&cfr;&dfr;&efr;&ffr;&gfr;&hfr;&ifr;&jfr;&kfr;&lfr;&mfr;&nfr;&ofr;&pfr;&qfr;&rfr;&sfr;&tfr;&ufr;&vfr;&wfr;&xfr;&yfr;&zfr;</title>",
+      "tokens": [
+        "Text(data=𝔄𝔅ℭ𝔇𝔈𝔉𝔊ℌℑ𝔍𝔎𝔏𝔐𝔑𝔒𝔓𝔔ℜ𝔖𝔗𝔘𝔙𝔚𝔛𝔜ℨ𝔞𝔟𝔠𝔡𝔢𝔣𝔤𝔥𝔦𝔧𝔨𝔩𝔪𝔫𝔬𝔭𝔮𝔯𝔰𝔱𝔲𝔳𝔴𝔵𝔶𝔷)",
+        "EndTag(name=title)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-core-cyrillic-character-references-data",
+      "description": "WHATWG core Cyrillic named references decode in data state",
+      "input": "Cyrillic:&Acy;&Bcy;&Vcy;&Gcy;&Dcy;&IEcy;&IOcy;&ZHcy;&Zcy;&Icy;&Jcy;&Kcy;&Lcy;&Mcy;&Ncy;&Ocy;&Pcy;&Rcy;&Scy;&Tcy;&Ucy;&Fcy;&KHcy;&TScy;&CHcy;&SHcy;&SHCHcy;&HARDcy;&Ycy;&SOFTcy;&Ecy;&YUcy;&YAcy;&acy;&bcy;&vcy;&gcy;&dcy;&iecy;&iocy;&zhcy;&zcy;&icy;&jcy;&kcy;&lcy;&mcy;&ncy;&ocy;&pcy;&rcy;&scy;&tcy;&ucy;&fcy;&khcy;&tscy;&chcy;&shcy;&shchcy;&hardcy;&ycy;&softcy;&ecy;&yucy;&yacy;",
+      "tokens": [
+        "Text(data=Cyrillic:АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-extended-cyrillic-character-references-attributes",
+      "description": "WHATWG extended Cyrillic named references decode in attributes",
+      "input": "<span upper=\"&DJcy;&DScy;&DZcy;&GJcy;&Iukcy;&Jsercy;&Jukcy;&KJcy;&LJcy;&NJcy;&TSHcy;&Ubrcy;&YIcy;\" lower=\"&djcy;&dscy;&dzcy;&gjcy;&iukcy;&jsercy;&jukcy;&kjcy;&ljcy;&njcy;&tshcy;&ubrcy;&yicy;\">",
+      "tokens": [
+        "StartTag(name=span, attributes=[upper=ЂЅЏЃІЈЄЌЉЊЋЎЇ, lower=ђѕџѓіјєќљњћўї], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-cyrillic-character-references-rcdata",
+      "description": "WHATWG Cyrillic named references decode in RCDATA",
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title",
+      "input": "&Acy;&IEcy;&ZHcy;&SHCHcy;&SOFTcy;&YAcy;&acy;&iecy;&zhcy;&shchcy;&softcy;&yacy;&DJcy;&TSHcy;&Ubrcy;&YIcy;&djcy;&tshcy;&ubrcy;&yicy;</title>",
+      "tokens": [
+        "Text(data=АЕЖЩЬЯаежщьяЂЋЎЇђћўї)",
+        "EndTag(name=title)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-remaining-vector-character-references-data",
+      "description": "Remaining WHATWG vector named references decode in data state",
+      "input": "Vectors:&DownLeftRightVector;&DownLeftTeeVector;&DownRightTeeVector;&LeftDownTeeVector;&LeftRightVector;&LeftTeeVector;&LeftUpDownVector;&LeftUpTeeVector;&RightDownTeeVector;&RightTeeVector;&RightUpDownVector;&RightUpTeeVector;",
+      "tokens": [
+        "Text(data=Vectors:⥐⥞⥟⥡⥎⥚⥑⥠⥝⥛⥏⥜)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-remaining-arrow-character-references-attributes",
+      "description": "Remaining WHATWG arrow named references decode in attributes",
+      "input": "<nav upper=\"&Lleftarrow;&Rrightarrow;&RBarr;&Rarrtl;&Uarrocir;&neArr;&nwArr;&seArr;&swArr;&xhArr;&xlArr;&xrArr;\" lower=\"&lAarr;&rAarr;&lbarr;&rbarr;&bkarow;&dbkarow;&drbkarow;&nearr;&nwarr;&searr;&swarr;&zigrarr;\">",
+      "tokens": [
+        "StartTag(name=nav, attributes=[upper=⇚⇛⤐⤖⥉⇗⇖⇘⇙⟺⟸⟹, lower=⇚⇛⤌⤍⤍⤏⤐↗↖↘↙⇝], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-remaining-harpoon-character-references-rcdata",
+      "description": "Remaining WHATWG harpoon named references decode in RCDATA",
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title",
+      "input": "&dHar;&lHar;&rHar;&uHar;&duhar;&lrhar;&rlhar;&lharu;&lhard;&rharu;&rhard;&uharl;&uharr;&dharl;&dharr;&nrarrc;&nrarrw;</title>",
+      "tokens": [
+        "Text(data=⥥⥢⥤⥣⥯⇋⇌↼↽⇀⇁↿↾⇃⇂⤳̸↝̸)",
+        "EndTag(name=title)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-remaining-cap-cup-character-references-data",
+      "description": "Remaining WHATWG cap/cup set named references decode in data state",
+      "input": "Sets:&bigcap;&bigcup;&bigsqcup;&UnionPlus;&capand;&capbrcup;&capcap;&capcup;&capdot;&caps;&ccaps;&ccups;&ccupssm;&cupbrcap;&cupcap;&cupcup;&cupdot;&cupor;&cups;&ncap;&ncup;&xsqcup;",
+      "tokens": [
+        "Text(data=Sets:⋂⋃⨆⊎⩄⩉⩋⩇⩀∩︀⩍⩌⩐⩈⩆⩊⊍⩅∪︀⩃⩂⨆)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-remaining-subset-superset-character-references-attributes",
+      "description": "Remaining WHATWG subset/superset named references decode in attributes",
+      "input": "<set sub=\"&Sub;&csub;&csube;&subdot;&subedot;&submult;&subplus;&subset;&subseteq;&subseteqq;&subsetneq;&subsetneqq;&subsim;&subsub;&subsup;\" sup=\"&Sup;&Superset;&SupersetEqual;&csup;&csupe;&supdot;&supdsub;&supedot;&suphsol;&suphsub;&supmult;&supplus;&supset;&supseteq;&supseteqq;&supsetneq;&supsetneqq;&supsim;&supsub;&supsup;\">",
+      "tokens": [
+        "StartTag(name=set, attributes=[sub=⋐⫏⫑⪽⫃⫁⪿⊂⊆⫅⊊⫋⫇⫕⫓, sup=⋑⊃⊇⫐⫒⪾⫘⫄⟉⫗⫂⫀⊃⊇⫆⊋⫌⫈⫔⫖], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-remaining-negated-set-character-references-rcdata",
+      "description": "Remaining WHATWG negated set named references decode in RCDATA",
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title",
+      "input": "&NotSquareSubset;&NotSquareSubsetEqual;&NotSquareSuperset;&NotSquareSupersetEqual;&NotSuperset;&NotSupersetEqual;&nsubset;&nsubseteq;&nsubseteqq;&nsupset;&nsupseteq;&nsupseteqq;&varsubsetneq;&varsubsetneqq;&varsupsetneq;&varsupsetneqq;&vnsub;&vnsup;&vsubnE;&vsubne;&vsupnE;&vsupne;</title>",
+      "tokens": [
+        "Text(data=⊏̸⋢⊐̸⋣⊃⃒⊉⊂⃒⊈⫅̸⊃⃒⊉⫆̸⊊︀⫋︀⊋︀⫌︀⊂⃒⊃⃒⫋︀⊊︀⫌︀⊋︀)",
+        "EndTag(name=title)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-remaining-square-set-character-references-data",
+      "description": "Remaining WHATWG square-set named references decode in data state",
+      "input": "Squares:&sqcaps;&sqcups;&sqsubset;&sqsubseteq;&sqsupset;&sqsupseteq;&nsqsube;&nsqsupe;&setmn;&ssetmn;&bsolhsub;&suphsol;&lsqb;&rsqb;",
+      "tokens": [
+        "Text(data=Squares:⊓︀⊔︀⊏⊑⊐⊒⋢⋣∖∖⟈⟉[])",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-remaining-integral-character-references-data",
+      "description": "Remaining WHATWG integral named references decode in data state",
+      "input": "Integrals:&Conint;&Cconint;&ClockwiseContourIntegral;&CounterClockwiseContourIntegral;&Int;&awconint;&awint;&cirfnint;&conint;&cwconint;&cwint;&fpartint;&iiiint;&iiint;&intlarhk;&npolint;&oint;&pointint;&qint;&quatint;&rppolint;&scpolint;&tint;",
+      "tokens": [
+        "Text(data=Integrals:∯∰∲∳∬∳⨑⨐∮∲∱⨍⨌∭⨗⨔∮⨕⨌⨖⨒⨓∭)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-remaining-operator-character-references-attributes",
+      "description": "Remaining WHATWG operator named references decode in attributes",
+      "input": "<ops value=\"&MinusPlus;&Otimes;&PlusMinus;&bigcirc;&bigodot;&bigoplus;&bigotimes;&biguplus;&circledast;&circledcirc;&circleddash;&coprod;&divideontimes;&dotminus;&dotplus;&eplus;&loplus;&lotimes;&ltimes;&minusd;&minusdu;&mnplus;&otimesas;&plus;&plusacir;&plusb;&plusdo;&plusdu;&pluse;&plussim;&plustwo;&roplus;&rotimes;&rtimes;&timesbar;&timesd;&triminus;&triplus;&uplus;&xcirc;&xodot;&xoplus;&xuplus;\">",
+      "tokens": [
+        "StartTag(name=ops, attributes=[value=∓⨷±◯⨀⨁⨂⨄⊛⊚⊝∐⋇∸∔⩱⨭⨴⋉∸⨪∓⨶+⨣⊞∔⨥⩲⨦⨧⨮⨵⋊⨱⨰⨺⨹⊎◯⨀⨁⨄], self_closing=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-remaining-dot-character-references-rcdata",
+      "description": "Remaining WHATWG dot operator named references decode in RCDATA",
+      "initial_state": "RCDATA state",
+      "last_start_tag": "title",
+      "input": "&DDotrahd;&Dot;&DotDot;&DoubleDot;&TripleDot;&centerdot;&ctdot;&ddotseq;&dot;&dtdot;&eDDot;&eDot;&efDot;&egsdot;&elsdot;&erDot;&esdot;&fallingdotseq;&gesdot;&gesdoto;&gesdotol;&gtdot;&isindot;&lesdot;&lesdoto;&lesdotor;&ltdot;&mDDot;&ncongdot;&nedot;&notindot;&risingdotseq;&sdote;&tdot;&tridot;&utdot;</title>",
+      "tokens": [
+        "Text(data=⤑¨⃜¨⃛·⋯⩷˙⋱⩷≑≒⪘⪗≓≐≒⪀⪂⪄⋗⋵⩿⪁⪃⋖∺⩭̸≐̸⋵̸≓⩦⃛◬⋰)",
+        "EndTag(name=title)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-remaining-operator-misc-character-references-data",
+      "description": "Remaining WHATWG operator-adjacent named references decode in data state",
+      "input": "Misc:&Mellintrf;&infintie;&intcal;&integers;&intercal;&intprod;&iprod;&leftthreetimes;&rightthreetimes;&elinters;",
+      "tokens": [
+        "Text(data=Misc:ℳ⧝⊺ℤ⊺⨼⨼⋋⋌⏧)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-final-named-character-references-1",
+      "description": "Final WHATWG named character reference coverage batch 1: Assign through angmsdah",
+      "input": "WHATWG remaining named refs 1 (Assign-angmsdah):&Assign;&Backslash;&Barv;&Barwed;&Bernoullis;&Breve;&Cayleys;&Cedilla;&Colon;&Colone;&Dashv;&Del;&Diamond;&DoubleLeftTee;&DoubleRightTee;&DownBreve;&DownTee;&Dstrok;&ENG;&Equilibrium;&Esim;&ForAll;&Fouriertrf;&Gg;&Gt;&Hacek;&Hat;&HilbertSpace;&HorizontalLine;&Hstrok;&IJlig;&Im;&Implies;&Lang;&Laplacetrf;&LeftTee;&LeftTriangleBar;&LeftTriangleEqual;&Ll;&Lsh;&Lstrok;&Lt;&NotCongruent;&NotDoubleVerticalBar;&NotHumpDownHump;&NotHumpEqual;&NotLeftTriangle;&NotLeftTriangleBar;&NotLeftTriangleEqual;&NotRightTriangle;&NotRightTriangleBar;&NotRightTriangleEqual;&Odblac;&PartialD;&Poincareplane;&Pr;&Proportion;&Rang;&Re;&ReverseEquilibrium;&ReverseUpEquilibrium;&RightTee;&RightTriangleBar;&RightTriangleEqual;&RoundImplies;&Rsh;&RuleDelayed;&Sc;&Star;&TRADE;&Tstrok;&Udblac;&UpEquilibrium;&UpTee;&VDash;&Vbar;&Vdash;&Vdashl;&Verbar;&Vert;&Vvdash;&ac;&acE;&acd;&af;&aleph;&amalg;&andand;&andd;&andslope;&andv;&ange;&angmsdaa;&angmsdab;&angmsdac;&angmsdad;&angmsdae;&angmsdaf;&angmsdag;&angmsdah;",
+      "tokens": [
+        "Text(data=WHATWG remaining named refs 1 (Assign-angmsdah):≔∖⫧⌆ℬ˘ℭ¸∷⩴⫤∇⋄⫤⊨̑⊤ĐŊ⇌⩳∀ℱ⋙≫ˇ^ℋ─ĦĲℑ⇒⟪ℒ⊣⧏⊴⋘↰Ł≪≢∦≎̸≏̸⋪⧏̸⋬⋫⧐̸⋭Ő∂ℌ⪻∷⟫ℜ⇋⥯⊢⧐⊵⥰↱⧴⪼⋆™ŦŰ⥮⊥⊫⫫⊩⫦‖‖⊪∾∾̳∿⁡ℵ⨿⩕⩜⩘⩚⦤⦨⦩⦪⦫⦬⦭⦮⦯)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-final-named-character-references-2",
+      "description": "Final WHATWG named character reference coverage batch 2: ap through eng",
+      "input": "WHATWG remaining named refs 2 (ap-eng):&ap;&apE;&apacir;&ape;&apid;&approx;&approxeq;&ast;&asympeq;&bNot;&backcong;&backprime;&backsim;&backsimeq;&barvee;&barwed;&barwedge;&becaus;&because;&bemptyv;&bernou;&between;&bigtriangledown;&bigtriangleup;&bigvee;&bigwedge;&blacktriangle;&blacktriangledown;&blank;&blk12;&blk14;&blk34;&block;&bne;&bnequiv;&bnot;&bot;&bottom;&bowtie;&bprime;&breve;&bsemi;&bsol;&bsolb;&bullet;&caret;&caron;&cemptyv;&check;&checkmark;&cir;&cirE;&cire;&cirmid;&cirscir;&colon;&colone;&comma;&commat;&comp;&complement;&complexes;&copysr;&cross;&cuepr;&cuesc;&curlyvee;&curlywedge;&cylcty;&dash;&dashv;&dblac;&ddagger;&demptyv;&die;&disin;&div;&divonx;&dlcorn;&dlcrop;&dollar;&doublebarwedge;&drcorn;&drcrop;&dsol;&dstrok;&dtri;&dtrif;&dwangle;&easter;&ecir;&ecolon;&eg;&egs;&el;&ell;&els;&emsp13;&emsp14;&eng;",
+      "tokens": [
+        "Text(data=WHATWG remaining named refs 2 (ap-eng):≈⩰⩯≊≋≈≊*≍⫭≌‵∽⋍⊽⌅⌅∵∵⦰ℬ≬▽△⋁⋀▴▾␣▒░▓█=⃥≡⃥⌐⊥⊥⋈‵˘⁏\\⧅•⁁ˇ⦲✓✓○⧃≗⫯⧂:≔,@∁∁ℂ℗✗⋞⋟⋎⋏⌭‐⊣˝‡⦱¨⋲÷⋇⌞⌍$⌆⌟⌌⧶đ▿▾⦦⩮≖≕⪚⪖⪙ℓ⪕  ŋ)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-final-named-character-references-3",
+      "description": "Final WHATWG named character reference coverage batch 3: epar through lcub",
+      "input": "WHATWG remaining named refs 3 (epar-lcub):&epar;&eparsl;&esim;&excl;&expectation;&exponentiale;&ffilig;&fflig;&ffllig;&filig;&fjlig;&flat;&fllig;&fltns;&fork;&forkv;&frac13;&frac15;&frac16;&frac18;&frac23;&frac25;&frac35;&frac38;&frac45;&frac56;&frac58;&frac78;&frown;&gE;&gEl;&gacute;&gammad;&gap;&gel;&geq;&geqq;&geqslant;&ges;&gescc;&gesl;&gesles;&gg;&ggg;&grave;&gsim;&gsime;&gsiml;&gtcc;&gtcir;&gtlPar;&gtquest;&gvertneqq;&gvnE;&hairsp;&half;&hamilt;&hbar;&hercon;&hksearow;&hkswarow;&homtht;&horbar;&hslash;&hstrok;&hybull;&hyphen;&ic;&iff;&iinfin;&iiota;&ijlig;&imagline;&imagpart;&imath;&imof;&imped;&in;&incare;&isins;&isinsv;&it;&jmath;&kgreen;&lAtail;&lE;&lEg;&laemptyv;&lagran;&langd;&lap;&lat;&latail;&late;&lates;&lbbrk;&lbrke;&lbrksld;&lbrkslu;&lcub;",
+      "tokens": [
+        "Text(data=WHATWG remaining named refs 3 (epar-lcub):⋕⧣≂!ℰⅇﬃﬀﬄﬁfj♭ﬂ▱⋔⫙⅓⅕⅙⅛⅔⅖⅗⅜⅘⅚⅝⅞⌢≧⪌ǵϝ⪆⋛≥≧⩾⩾⪩⋛︀⪔≫⋙`≳⪎⪐⪧⩺⦕⩼≩︀≩︀ ½ℋℏ⊹⤥⤦∻―ℏħ⁃‐⁣⇔⧜℩ĳℐℑı⊷Ƶ∈℅⋴⋳⁢ȷĸ⤛≦⪋⦴ℒ⦑⪅⪫⤙⪭⪭︀❲⦋⦏⦍{)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-final-named-character-references-4",
+      "description": "Final WHATWG named character reference coverage batch 4: ldca through nsce",
+      "input": "WHATWG remaining named refs 4 (ldca-nsce):&ldca;&ldquor;&ldsh;&leg;&leq;&leqq;&leqslant;&les;&lescc;&lesg;&lesges;&lhblk;&ll;&lltri;&lmoust;&lmoustache;&loang;&lopar;&lowbar;&lparlt;&lrtri;&lsh;&lsim;&lsime;&lsimg;&lstrok;&ltcc;&ltcir;&lthree;&ltquest;&ltrPar;&ltri;&ltrie;&ltrif;&lvertneqq;&lvnE;&marker;&mcomma;&mho;&mlcp;&mldr;&models;&mp;&mstpos;&multimap;&mumap;&nVDash;&nVdash;&nang;&nap;&napE;&napid;&napos;&napprox;&natur;&natural;&naturals;&nbump;&nbumpe;&ncong;&nearhk;&nequiv;&nesear;&nesim;&nexists;&ngE;&nge;&ngeq;&ngeqq;&ngeqslant;&nges;&ngsim;&ngt;&ngtr;&nhpar;&nis;&nisd;&nlE;&nldr;&nle;&nleq;&nleqq;&nleqslant;&nles;&nless;&nlsim;&nlt;&nltri;&nltrie;&nmid;&notinE;&notni;&npr;&nprcue;&npre;&nrtri;&nrtrie;&nsc;&nsccue;&nsce;",
+      "tokens": [
+        "Text(data=WHATWG remaining named refs 4 (ldca-nsce):⤶„↲⋚≤≦⩽⩽⪨⋚︀⪓▄≪◺⎰⎰⟬⦅_⦓⊿↰≲⪍⪏ł⪦⩹⋋⩻⦖◃⊴◂≨︀≨︀▮⨩℧⫛…⊧∓∾⊸⊸⊯⊮∠⃒≉⩰̸≋̸ŉ≉♮♮ℕ≎̸≏̸≇⤤≢⤨≂̸∄≧̸≱≱≧̸⩾̸⩾̸≵≯≯⫲⋼⋺≦̸‥≰≰≦̸⩽̸⩽̸≮≴≮⋪⋬∤⋹̸∌⊀⋠⪯̸⋫⋭⊁⋡⪰̸)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-final-named-character-references-5",
+      "description": "Final WHATWG named character reference coverage batch 5: nshortmid through rsh",
+      "input": "WHATWG remaining named refs 5 (nshortmid-rsh):&nshortmid;&nshortparallel;&nsim;&nsime;&nsimeq;&nsmid;&nspar;&ntgl;&ntlg;&ntriangleleft;&ntrianglelefteq;&ntriangleright;&ntrianglerighteq;&num;&numero;&numsp;&nvDash;&nvap;&nvdash;&nvge;&nvgt;&nvinfin;&nvle;&nvlt;&nvltrie;&nvrtrie;&nvsim;&nwarhk;&nwnear;&oS;&odblac;&odiv;&odsold;&ofcir;&ogon;&ogt;&ohbar;&ohm;&olcir;&olcross;&olt;&omid;&opar;&operp;&ord;&order;&orderof;&origof;&oror;&orslope;&orv;&ovbar;&percnt;&period;&pertenk;&phmmat;&pitchfork;&planck;&planckh;&plankv;&pm;&primes;&profalar;&profline;&profsurf;&propto;&prurel;&puncsp;&qprime;&quaternions;&quest;&questeq;&rAtail;&race;&raemptyv;&rangd;&range;&ratail;&ratio;&rationals;&rbbrk;&rbrke;&rbrksld;&rbrkslu;&rcub;&rdca;&rdquor;&rdsh;&realine;&realpart;&reals;&rect;&ring;&rmoust;&rmoustache;&rnmid;&roang;&ropar;&rpargt;&rsh;",
+      "tokens": [
+        "Text(data=WHATWG remaining named refs 5 (nshortmid-rsh):∤∦≁≄≄∤∦≹≸⋪⋬⋫⋭#№ ⊭≍⃒⊬≥⃒>⃒⧞≤⃒<⃒⊴⃒⊵⃒∼⃒⤣⤧Ⓢő⨸⦼⦿˛⧁⦵Ω⦾⦻⧀⦶⦷⦹⩝ℴℴ⊶⩖⩗⩛⌽%.‱ℳ⋔ℏℎℏ±ℙ⌮⌒⌓∝⊰ ⁗ℍ?≟⤜∽̱⦳⦒⦥⤚∶ℚ❳⦌⦎⦐}⤷”↳ℛℜℝ▭˚⎱⎱⫮⟭⦆⦔↱)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-whatwg-final-named-character-references-6",
+      "description": "Final WHATWG named character reference coverage batch 6: rthree through zeetrf",
+      "input": "WHATWG remaining named refs 6 (rthree-zeetrf):&rthree;&rtri;&rtrie;&rtrif;&rtriltri;&rx;&searhk;&semi;&seswar;&sext;&sfrown;&sharp;&smashp;&smeparsl;&smid;&smile;&smt;&smte;&smtes;&sol;&solb;&solbar;&spar;&ssmile;&sstarf;&strns;&sung;&swarhk;&swnwar;&target;&tbrk;&telrec;&therefore;&thickapprox;&thicksim;&thkap;&thksim;&toea;&top;&topbot;&topcir;&topfork;&tosa;&tprime;&triangle;&triangledown;&trianglelefteq;&triangleq;&trianglerighteq;&trie;&trisb;&tritime;&trpezium;&tstrok;&twixt;&udblac;&uhblk;&ulcorn;&ulcrop;&ultri;&urcorn;&urcrop;&urtri;&utri;&utrif;&uwangle;&vBar;&vBarv;&vDash;&vangrt;&varpropto;&vartriangleleft;&vartriangleright;&vdash;&vee;&veebar;&veeeq;&vellip;&verbar;&vert;&vltri;&vprop;&vrtri;&vzigzag;&wedbar;&wedge;&wedgeq;&wp;&wr;&wreath;&xdtri;&xmap;&xnis;&xotime;&xutri;&zeetrf;",
+      "tokens": [
+        "Text(data=WHATWG remaining named refs 6 (rthree-zeetrf):⋌▹⊵▸⧎℞⤥;⤩✶⌢♯⨳⧤∣⌣⪪⪬⪬︀/⧄⌿∥⌣⋆¯♪⤦⤪⌖⎴⌕∴≈∼≈∼⤨⊤⌶⫱⫚⤩‴▵▿⊴≜⊵≜⧍⨻⏢ŧ≬ű▀⌜⌏◸⌝⌎◹▵▴⦧⫨⫩⊨⦜∝⊲⊳⊢∨⊻≚⋮||⊲∝⊳⦚⩟∧≙℘≀≀▽⟼⋻⨂△ℨ)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-form-feed-legacy-reference-boundary",
+      "description": "Form feed is an ASCII-whitespace boundary for semicolonless legacy named references",
+      "input": "A&copy\fB&nbsp\f<a copy=&copy\freg=&reg\f>",
+      "tokens": [
+        "Text(data=A©\fB \f)",
+        "StartTag(name=a, attributes=[copy=©, reg=®], self_closing=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference",
+        "missing-semicolon-after-character-reference"
+      ]
+    },
+    {
+      "id": "html-form-feed-script-double-escape-delimiter",
+      "description": "Form feed delimits script double-escape start and end keywords",
+      "initial_state": "Script data state",
+      "last_start_tag": "script",
+      "input": "<!-- <script\fx </script\f y --></script>",
+      "tokens": [
+        "Text(data=<!-- <script\fx </script\f y -->)",
+        "EndTag(name=script)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-carriage-return-newline-normalization",
+      "description": "CRLF and bare CR normalize to LF before HTML tokenization",
+      "input": "<p\r\nclass=x>one\rtwo\r\nthree</p>",
+      "tokens": [
+        "StartTag(name=p, attributes=[class=x], self_closing=false)",
+        "Text(data=one\ntwo\nthree)",
+        "EndTag(name=p)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "html-eof-drops-partial-start-tag",
+      "description": "EOF in an unfinished start tag drops the partial token",
+      "input": "<div class=\"open",
+      "tokens": [
+        "EOF"
+      ],
+      "diagnostics": [
+        "eof-in-tag"
+      ]
+    },
+    {
+      "id": "html-eof-drops-partial-end-tag",
+      "description": "EOF in an unfinished ordinary end tag drops the partial token",
+      "input": "</section class=x",
+      "tokens": [
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-whitespace-after-end-tag-name",
+        "end-tag-with-attributes",
+        "eof-in-end-tag-name-state"
+      ]
+    },
+    {
+      "id": "html-eof-drops-attribute-named-reference",
+      "description": "EOF inside an attribute named character reference drops the partial start tag",
+      "input": "<a href=&copy",
+      "tokens": [
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "eof-in-tag"
+      ]
+    },
+    {
+      "id": "html-eof-drops-attribute-numeric-reference",
+      "description": "EOF inside an attribute numeric character reference drops the partial start tag",
+      "input": "<a href=&#x41",
+      "tokens": [
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference",
+        "eof-in-tag"
+      ]
     }
   ]
 }

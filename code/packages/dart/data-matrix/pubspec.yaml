@@ -1,0 +1,21 @@
+name: coding_adventures_data_matrix
+version: 0.1.0
+description: >
+  Data Matrix ECC200 encoder — ISO/IEC 16022:2006 compliant.
+  Encodes strings to Data Matrix symbols (10×10 to 144×144 squares plus six
+  rectangular sizes) using ASCII mode, GF(256)/0x12D Reed-Solomon error
+  correction (b=1 convention), L-shaped finder + timing-clock border, and
+  the diagonal "Utah" placement algorithm (no masking step). Produces a
+  ModuleGrid consumable by barcode-2d for pixel-level rendering.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_barcode_2d:
+    path: ../barcode-2d
+
+dev_dependencies:
+  test: ^1.25.0

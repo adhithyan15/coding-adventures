@@ -1,5 +1,14 @@
 {
   "name": "mansion-classifier",
   "version": "1.0.0",
-  "scripts": { "start": "npx ts-node --transpileOnly src/index.ts" }
+  "scripts": { "start": "tsx src/index.ts" },
+  "dependencies": {
+    "@coding-adventures/neural-network": "file:../../../packages/typescript/neural-network",
+    "@coding-adventures/neural-graph-vm": "file:../../../packages/typescript/neural-graph-vm"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.0.0"
+  }
 }

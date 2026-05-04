@@ -507,7 +507,7 @@ available index covers the predicate column. If so, it substitutes an
 | `col IN (v1, v2, …)` | ✅ (union of point lookups) |
 | `col IS NULL` | ❌ deferred |
 | `col LIKE 'prefix%'` | ❌ deferred |
-| Multi-column compound predicates | ❌ deferred (composite indexes in v3) |
+| Multi-column compound predicates | ✅ implemented in v3 (`storage-sqlite-v3-auto-index.md`) |
 
 #### Index selection algorithm (v2 — first match, no cost model)
 

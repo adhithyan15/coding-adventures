@@ -2,5 +2,9 @@ luarocks show coding-adventures-directed-graph 1>nul 2>nul || (cd ../directed_gr
 luarocks show coding-adventures-state-machine 1>nul 2>nul || (cd ../state_machine && luarocks make --local coding-adventures-state-machine-0.1.0-1.rockspec)
 luarocks show coding-adventures-grammar-tools 1>nul 2>nul || (cd ../grammar_tools && luarocks make --local coding-adventures-grammar-tools-0.1.0-1.rockspec)
 luarocks show coding-adventures-lexer 1>nul 2>nul || (cd ../lexer && luarocks make --local coding-adventures-lexer-0.1.0-1.rockspec)
+luarocks show coding-adventures-interpreter-ir 1>nul 2>nul || (cd ../interpreter_ir && luarocks make --local coding-adventures-interpreter-ir-0.1.0-1.rockspec)
+luarocks show coding-adventures-vm-core 1>nul 2>nul || (cd ../vm_core && luarocks make --local --deps-mode=none coding-adventures-vm-core-0.1.0-1.rockspec)
+luarocks show coding-adventures-codegen-core 1>nul 2>nul || (cd ../codegen_core && luarocks make --local --deps-mode=none coding-adventures-codegen-core-0.1.0-1.rockspec)
+luarocks show coding-adventures-jit-core 1>nul 2>nul || (cd ../jit_core && luarocks make --local --deps-mode=none coding-adventures-jit-core-0.1.0-1.rockspec)
 luarocks make --local --deps-mode=none coding-adventures-brainfuck-0.1.0-1.rockspec
 cd tests && busted . --verbose --pattern=test_

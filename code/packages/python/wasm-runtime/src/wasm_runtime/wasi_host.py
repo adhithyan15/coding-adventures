@@ -25,6 +25,12 @@ can talk to the outside world through imported WASI functions.
   - random_get      — fill a buffer with cryptographically random bytes
   - sched_yield     — cooperative scheduler hint (no-op in single-thread)
 
+Compiler math imports
+─────────────────────
+The generic compiler pipeline may also import f64 math helpers from
+``compiler_math``. These are intentionally separate from WASI so generated
+modules have a small, explicit ABI for non-core WASM math operations.
+
 Design: pluggable clock and random
 ───────────────────────────────────
 Clock and random number generation are injected through abstract base
@@ -46,6 +52,7 @@ WASI uses numeric errno codes (same idea as POSIX):
 
 from __future__ import annotations
 
+import math
 import secrets
 import time
 from abc import ABC, abstractmethod
@@ -53,7 +60,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
-from wasm_execution import LinearMemory, WasmValue, i32
+from wasm_execution import LinearMemory, WasmValue, f64, i32
 from wasm_types import FuncType, ValueType
 
 # ---------------------------------------------------------------------------
@@ -63,6 +70,27 @@ ESUCCESS = 0    # no error
 EBADF = 8       # bad file descriptor
 EINVAL = 28     # invalid argument  (e.g. unknown clock id)
 ENOSYS = 52     # function not (yet) implemented
+
+_COMPILER_MATH_MODULE = "compiler_math"
+_COMPILER_MATH_UNARY_F64: dict[str, Callable[[float], float]] = {
+    "f64_sin": math.sin,
+    "f64_cos": math.cos,
+    "f64_atan": math.atan,
+    "f64_ln": math.log,
+    "f64_exp": math.exp,
+}
+_COMPILER_MATH_BINARY_F64: dict[str, Callable[[float, float], float]] = {
+    "f64_pow": math.pow,
+}
+_DEFAULT_MAX_FD_WRITE_BYTES_PER_CALL = 1 << 20
+_DEFAULT_MAX_FD_WRITE_BYTES_TOTAL = 16 << 20
+
+
+def _math_result(fn: Callable[..., float], *args: float) -> WasmValue:
+    try:
+        return f64(fn(*args))
+    except (OverflowError, ValueError):
+        return f64(math.nan)
 
 
 # ---------------------------------------------------------------------------
@@ -172,6 +200,10 @@ class WasiConfig:
     stdout  — callable that receives each piece of text written to fd 1.
               If None, output is silently discarded.
     stderr  — same but for fd 2.
+    max_fd_write_bytes_per_call
+            — maximum bytes one fd_write call may read from guest memory.
+    max_fd_write_bytes_total
+            — maximum bytes all fd_write calls may write through this host.
     clock   — WasiClock implementation.  Defaults to SystemClock (real time).
     random  — WasiRandom implementation.  Defaults to SystemRandom (OS CSPRNG).
     """
@@ -181,6 +213,8 @@ class WasiConfig:
     stdin: Callable[[int], bytes | bytearray | str | None] | None = None
     stdout: Callable[[str], None] | None = None
     stderr: Callable[[str], None] | None = None
+    max_fd_write_bytes_per_call: int = _DEFAULT_MAX_FD_WRITE_BYTES_PER_CALL
+    max_fd_write_bytes_total: int = _DEFAULT_MAX_FD_WRITE_BYTES_TOTAL
     clock: WasiClock = field(default_factory=SystemClock)
     random: WasiRandom = field(default_factory=SystemRandom)
 
@@ -272,6 +306,9 @@ class WasiHost:
         self._stdin = config.stdin or (lambda _n: b"")
         self._stdout = config.stdout or (lambda _t: None)
         self._stderr = config.stderr or (lambda _t: None)
+        self._max_fd_write_bytes_per_call = config.max_fd_write_bytes_per_call
+        self._max_fd_write_bytes_total = config.max_fd_write_bytes_total
+        self._fd_write_bytes_written = 0
         self._args = config.args
         self._env = config.env
         self._clock = config.clock
@@ -291,7 +328,9 @@ class WasiHost:
     # ------------------------------------------------------------------
 
     def resolve_function(self, module_name: str, name: str) -> Any | None:  # noqa: ANN401
-        """Return a _HostFunc for the named WASI function, or None."""
+        """Return a _HostFunc for a supported import, or None."""
+        if module_name == _COMPILER_MATH_MODULE:
+            return self._make_compiler_math(name)
         if module_name != "wasi_snapshot_preview1":
             return None
 
@@ -315,6 +354,40 @@ class WasiHost:
         # Everything else returns ENOSYS so the module can link but will
         # get an explicit "not implemented" error if called at runtime.
         return self._make_stub(name)
+
+    def _make_compiler_math(self, name: str) -> _HostFunc | None:
+        unary_fn = _COMPILER_MATH_UNARY_F64.get(name)
+        if unary_fn is not None:
+
+            def unary_f64_impl(args: list[WasmValue]) -> list[WasmValue]:
+                return [_math_result(unary_fn, float(args[0].value))]
+
+            return _HostFunc(
+                FuncType(params=(ValueType.F64,), results=(ValueType.F64,)),
+                unary_f64_impl,
+            )
+
+        binary_fn = _COMPILER_MATH_BINARY_F64.get(name)
+        if binary_fn is not None:
+
+            def binary_f64_impl(args: list[WasmValue]) -> list[WasmValue]:
+                return [
+                    _math_result(
+                        binary_fn,
+                        float(args[0].value),
+                        float(args[1].value),
+                    )
+                ]
+
+            return _HostFunc(
+                FuncType(
+                    params=(ValueType.F64, ValueType.F64),
+                    results=(ValueType.F64,),
+                ),
+                binary_f64_impl,
+            )
+
+        return None
 
     def resolve_global(self, _module_name: str, _name: str) -> Any | None:  # noqa: ANN401
         return None
@@ -347,34 +420,40 @@ class WasiHost:
 
         def fd_write_impl(args: list[WasmValue]) -> list[WasmValue]:
             fd = args[0].value
-            iovs_ptr = args[1].value
+            iovs_ptr = args[1].value & 0xFFFFFFFF
             iovs_len = args[2].value
-            nwritten_ptr = args[3].value
+            nwritten_ptr = args[3].value & 0xFFFFFFFF
 
             if host._instance_memory is None:
                 return [i32(ENOSYS)]
+            if fd not in {1, 2}:
+                return [i32(EBADF)]
+            if iovs_len < 0:
+                return [i32(EINVAL)]
 
             mem = host._instance_memory
-            total_written = 0
+            plan = host._read_iovec_plan(mem, iovs_ptr, iovs_len)
+            if plan is None or not host._memory_range_is_valid(mem, nwritten_ptr, 4):
+                return [i32(EINVAL)]
 
-            for idx in range(iovs_len):
-                # Each iovec is 8 bytes: 4-byte ptr + 4-byte length.
-                buf_ptr = mem.load_i32(iovs_ptr + idx * 8) & 0xFFFFFFFF
-                buf_len = mem.load_i32(iovs_ptr + idx * 8 + 4) & 0xFFFFFFFF
+            total_written = sum(buf_len for _buf_ptr, buf_len in plan)
+            if total_written > host._max_fd_write_bytes_per_call:
+                return [i32(EINVAL)]
+            if (
+                host._fd_write_bytes_written + total_written
+                > host._max_fd_write_bytes_total
+            ):
+                return [i32(EINVAL)]
 
-                # Read individual bytes and decode as Latin-1 (1 byte → 1 char).
-                chars = []
-                for j in range(buf_len):
-                    chars.append(chr(mem.load_i32_8u(buf_ptr + j)))
-
-                text = "".join(chars)
-                total_written += buf_len
+            for buf_ptr, buf_len in plan:
+                text = host._read_latin1(mem, buf_ptr, buf_len)
 
                 if fd == 1:
                     host._stdout(text)
                 elif fd == 2:
                     host._stderr(text)
 
+            host._fd_write_bytes_written += total_written
             mem.store_i32(nwritten_ptr, total_written)
             return [i32(ESUCCESS)]
 
@@ -441,6 +520,36 @@ class WasiHost:
             ),
             fd_read_impl,
         )
+
+    def _read_iovec_plan(
+        self,
+        mem: LinearMemory,
+        iovs_ptr: int,
+        iovs_len: int,
+    ) -> list[tuple[int, int]] | None:
+        if not self._memory_range_is_valid(mem, iovs_ptr, iovs_len * 8):
+            return None
+        plan: list[tuple[int, int]] = []
+        for idx in range(iovs_len):
+            descriptor_ptr = iovs_ptr + idx * 8
+            buf_ptr = mem.load_i32(descriptor_ptr) & 0xFFFFFFFF
+            buf_len = mem.load_i32(descriptor_ptr + 4) & 0xFFFFFFFF
+            if not self._memory_range_is_valid(mem, buf_ptr, buf_len):
+                return None
+            plan.append((buf_ptr, buf_len))
+        return plan
+
+    def _memory_range_is_valid(
+        self,
+        mem: LinearMemory,
+        ptr: int,
+        length: int,
+    ) -> bool:
+        memory_size = mem.byte_length()
+        return length >= 0 and ptr <= memory_size and ptr + length <= memory_size
+
+    def _read_latin1(self, mem: LinearMemory, ptr: int, length: int) -> str:
+        return "".join(chr(mem.load_i32_8u(ptr + offset)) for offset in range(length))
 
     def _make_proc_exit(self) -> _HostFunc:
         """Build the proc_exit host function.

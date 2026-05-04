@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-cas-pretty-printer"
-version = "0.1.0"
+version = "0.4.2"
 description = "Pretty-print symbolic IR back to source text — dialect-aware (MACSYMA, Mathematica, Maple, Lisp)."
 requires-python = ">=3.12"
 license = "MIT"

@@ -55,23 +55,24 @@ from __future__ import annotations
 
 from . import plan as P
 from .ast import (
-    Assignment as AstAssignment,
-)
-from .ast import (
+    AlterTableStmt,
     BeginStmt,
     CommitStmt,
     CreateIndexStmt,
     CreateTableStmt,
+    CreateTriggerStmt,
     DeleteStmt,
     DerivedTableRef,
     DropIndexStmt,
     DropTableStmt,
+    DropTriggerStmt,
     ExceptStmt,
     InsertSelectStmt,
     InsertValuesStmt,
     IntersectStmt,
     JoinClause,
     JoinKind,
+    RecursiveCTERef,
     RollbackStmt,
     SelectItem,
     SelectStmt,
@@ -81,10 +82,14 @@ from .ast import (
     UpdateStmt,
 )
 from .ast import (
+    Assignment as AstAssignment,
+)
+from .ast import (
     SortKey as AstSortKey,
 )
 from .errors import (
     AmbiguousColumn,
+    InternalError,
     InvalidAggregate,
     UnknownColumn,
     UnsupportedStatement,
@@ -96,6 +101,7 @@ from .expr import (
     BinaryOp,
     CaseExpr,
     Column,
+    ExistsSubquery,
     Expr,
     FunctionCall,
     In,
@@ -105,8 +111,10 @@ from .expr import (
     Literal,
     NotIn,
     NotLike,
+    ScalarSubquery,
     UnaryExpr,
     Wildcard,
+    WindowFuncExpr,
     contains_aggregate,
 )
 from .schema_provider import SchemaProvider
@@ -144,10 +152,16 @@ def plan(ast: Statement, schema: SchemaProvider) -> P.LogicalPlan:
             return _plan_create_table(ast)
         case DropTableStmt():
             return _plan_drop_table(ast)
+        case AlterTableStmt():
+            return _plan_alter_table(ast)
         case CreateIndexStmt():
             return _plan_create_index(ast)
         case DropIndexStmt():
             return _plan_drop_index(ast)
+        case CreateTriggerStmt():
+            return _plan_create_trigger(ast)
+        case DropTriggerStmt():
+            return _plan_drop_trigger(ast)
         case BeginStmt():
             return P.Begin()
         case CommitStmt():
@@ -168,16 +182,21 @@ def plan_all(asts: list[Statement], schema: SchemaProvider) -> list[P.LogicalPla
 # --------------------------------------------------------------------------
 
 
-def _plan_select(stmt: SelectStmt, schema: SchemaProvider) -> P.LogicalPlan:
+def _plan_select(
+    stmt: SelectStmt,
+    schema: SchemaProvider,
+    *,
+    working_set: tuple[str, tuple[str, ...]] | None = None,
+) -> P.LogicalPlan:
     # 1. Build the scan / join tree from FROM + JOINs, and the column scope
     #    it exposes. Column resolution later qualifies bare references
     #    against this scope.
-    tree, scope = _build_from_tree(stmt.from_, stmt.joins, schema)
+    tree, scope = _build_from_tree(stmt.from_, stmt.joins, schema, working_set=working_set)
 
     # 2. WHERE — single Filter above the scan tree. Aggregates are forbidden
     #    inside WHERE (SQL forbids this — WHERE runs per-row before grouping).
     if stmt.where is not None:
-        where = _resolve(stmt.where, scope)
+        where = _resolve(stmt.where, scope, schema)
         if contains_aggregate(where):
             raise InvalidAggregate(message="aggregate function not allowed in WHERE clause")
         # IX-6: If the WHERE predicate can be served by a B-tree index on the
@@ -186,10 +205,7 @@ def _plan_select(stmt: SelectStmt, schema: SchemaProvider) -> P.LogicalPlan:
         # DerivedTable) — composite sources can't be accelerated this way.
         if isinstance(tree, P.Scan):
             idx_node = _try_index_scan(where, tree, schema)
-            if idx_node is not None:
-                tree = idx_node
-            else:
-                tree = P.Filter(input=tree, predicate=where)
+            tree = idx_node if idx_node is not None else P.Filter(input=tree, predicate=where)
         else:
             tree = P.Filter(input=tree, predicate=where)
 
@@ -197,13 +213,13 @@ def _plan_select(stmt: SelectStmt, schema: SchemaProvider) -> P.LogicalPlan:
     #    (a) GROUP BY is non-empty, or
     #    (b) any SELECT item or HAVING predicate uses an aggregate.
     resolved_items = tuple(
-        P.ProjectionItem(expr=_resolve(it.expr, scope), alias=_derive_alias(it))
+        P.ProjectionItem(expr=_resolve(it.expr, scope, schema), alias=_derive_alias(it))
         for it in stmt.items
     )
-    having = _resolve(stmt.having, scope) if stmt.having is not None else None
+    having = _resolve(stmt.having, scope, schema) if stmt.having is not None else None
     order_by = tuple(
         P.SortKey(
-            expr=_resolve(k.expr, scope),
+            expr=_resolve(k.expr, scope, schema),
             descending=k.descending,
             nulls_first=k.nulls_first,
         )
@@ -214,7 +230,7 @@ def _plan_select(stmt: SelectStmt, schema: SchemaProvider) -> P.LogicalPlan:
     has_agg_in_having = having is not None and contains_aggregate(having)
     has_agg_in_order = any(contains_aggregate(k.expr) for k in order_by)
     if stmt.group_by or has_agg_in_select or has_agg_in_having or has_agg_in_order:
-        group_by = tuple(_resolve(g, scope) for g in stmt.group_by)
+        group_by = tuple(_resolve(g, scope, schema) for g in stmt.group_by)
         aggregates = _collect_aggregates(resolved_items, having, order_by)
         tree = P.Aggregate(input=tree, group_by=group_by, aggregates=aggregates)
 
@@ -223,8 +239,65 @@ def _plan_select(stmt: SelectStmt, schema: SchemaProvider) -> P.LogicalPlan:
     if having is not None:
         tree = P.Having(input=tree, predicate=having)
 
-    # 5. Projection — always present. A SELECT always has at least one item.
-    tree = P.Project(input=tree, items=resolved_items)
+    # 5. Window functions — if any SELECT item is a WindowFuncExpr, emit a
+    #    WindowAgg node instead of a plain Project.
+    #
+    #    Design: the inner Project materialises all columns needed by the
+    #    window expressions (non-window SELECT items + any extra dependency
+    #    columns).  WindowAgg post-processes the materialised result buffer to
+    #    append the window function output columns.
+    win_items = [it for it in resolved_items if isinstance(it.expr, WindowFuncExpr)]
+    if win_items:
+        specs: list[P.WindowFuncSpec] = []
+        for i, it in enumerate(win_items):
+            wf: WindowFuncExpr = it.expr  # type: ignore[assignment]
+            alias = it.alias or f"window_{i + 1}"
+            specs.append(
+                P.WindowFuncSpec(
+                    func=wf.func,
+                    arg_expr=wf.arg,
+                    partition_by=wf.partition_by,
+                    order_by=wf.order_by,
+                    alias=alias,
+                )
+            )
+
+        non_win_items = [it for it in resolved_items if not isinstance(it.expr, WindowFuncExpr)]
+
+        # Track which (table, col) pairs are already covered by the non-window
+        # projection so we don't add redundant extra columns.
+        covered: set[tuple[str | None, str]] = {
+            (it.expr.table, it.expr.col)
+            for it in non_win_items
+            if isinstance(it.expr, Column)
+        }
+        extra: list[P.ProjectionItem] = []
+        for spec in specs:
+            for dep in _win_spec_columns(spec):
+                key = (dep.table, dep.col)
+                if key not in covered:
+                    covered.add(key)
+                    extra.append(P.ProjectionItem(expr=dep, alias=dep.col))
+
+        inner_items = tuple(non_win_items) + tuple(extra)
+        inner_projection = P.Project(input=tree, items=inner_items)
+
+        # Final output: non-window item names first, then window alias names.
+        non_win_out = tuple(
+            it.alias if it.alias is not None
+            else (it.expr.col if isinstance(it.expr, Column) else f"column_{i + 1}")
+            for i, it in enumerate(non_win_items)
+        )
+        output_cols = non_win_out + tuple(s.alias for s in specs)
+
+        tree = P.WindowAgg(
+            input=inner_projection,
+            specs=tuple(specs),
+            output_cols=output_cols,
+        )
+    else:
+        # 5 (normal path). Projection — always present.
+        tree = P.Project(input=tree, items=resolved_items)
 
     # 6. DISTINCT — simple wrapper.
     if stmt.distinct:
@@ -242,32 +315,67 @@ def _plan_select(stmt: SelectStmt, schema: SchemaProvider) -> P.LogicalPlan:
     return tree
 
 
+def _win_spec_columns(spec: P.WindowFuncSpec) -> list[Column]:
+    """Collect all Column references from a WindowFuncSpec's expressions."""
+    from .expr import collect_columns as _cc
+    cols: list[Column] = []
+    if spec.arg_expr is not None:
+        cols.extend(_cc(spec.arg_expr))
+    for e in spec.partition_by:
+        cols.extend(_cc(e))
+    for e, _ in spec.order_by:
+        cols.extend(_cc(e))
+    return cols
+
+
 def _build_from_tree(
-    root: TableRef | DerivedTableRef,
+    root: TableRef | DerivedTableRef | RecursiveCTERef,
     joins: tuple[JoinClause, ...],
     schema: SchemaProvider,
+    *,
+    working_set: tuple[str, tuple[str, ...]] | None = None,
 ) -> tuple[P.LogicalPlan, Scope]:
     """Build a nested Join tree out of FROM + JOIN clauses. Return tree + scope.
 
-    The root may be either a plain :class:`TableRef` (common case — a named
-    backend table) or a :class:`DerivedTableRef` (a subquery used as a table
-    source, ``(SELECT …) AS alias``).  For derived tables we plan the inner
-    query recursively, compute its output column list via
-    :func:`_output_columns`, and wrap it in a :class:`P.DerivedTable` leaf.
+    ``working_set`` is ``(cte_name, columns)`` when planning the recursive body
+    of a WITH RECURSIVE CTE — any ``TableRef(cte_name)`` becomes a
+    :class:`P.WorkingSetScan` rather than a backend :class:`P.Scan`.
     """
     scope: Scope = {}
-    if isinstance(root, DerivedTableRef):
+    if isinstance(root, RecursiveCTERef):
+        # Plan anchor normally; derive its output schema.
+        anchor_plan = _plan_select(root.anchor, schema)
+        anchor_cols = _output_columns(anchor_plan)
+        # Plan recursive with working_set so the self-reference becomes WorkingSetScan.
+        ws_alias = root.alias or root.name
+        recursive_plan = _plan_select(
+            root.recursive, schema, working_set=(root.name, anchor_cols)
+        )
+        _add_to_scope(scope, ws_alias, list(anchor_cols))
+        tree: P.LogicalPlan = P.RecursiveCTE(
+            anchor=anchor_plan,
+            recursive=recursive_plan,
+            alias=ws_alias,
+            columns=anchor_cols,
+            union_all=root.union_all,
+        )
+    elif isinstance(root, DerivedTableRef):
         inner_plan = _plan_select(root.select, schema)
         cols = _output_columns(inner_plan)
         _add_to_scope(scope, root.alias, list(cols))
-        tree: P.LogicalPlan = P.DerivedTable(
+        tree = P.DerivedTable(
             query=inner_plan, alias=root.alias, columns=cols
         )
     else:
-        # Plain TableRef — ensure the table exists.
-        root_cols = schema.columns(root.table)
-        _add_to_scope(scope, root.alias or root.table, root_cols)
-        tree = P.Scan(table=root.table, alias=root.alias)
+        # Plain TableRef — check if it's a working-set self-reference first.
+        if working_set is not None and root.table == working_set[0]:
+            ws_alias = root.alias or root.table
+            _add_to_scope(scope, ws_alias, list(working_set[1]))
+            tree = P.WorkingSetScan(alias=ws_alias, columns=working_set[1])
+        else:
+            root_cols = schema.columns(root.table)
+            _add_to_scope(scope, root.alias or root.table, root_cols)
+            tree = P.Scan(table=root.table, alias=root.alias)
 
     for j in joins:
         if isinstance(j.right, DerivedTableRef):
@@ -277,13 +385,20 @@ def _build_from_tree(
             right_node: P.LogicalPlan = P.DerivedTable(
                 query=inner_plan, alias=j.right.alias, columns=cols
             )
+        elif isinstance(j.right, TableRef) and (
+            working_set is not None and j.right.table == working_set[0]
+        ):
+            # Working-set self-reference in a JOIN (e.g. INNER JOIN cte ON ...)
+            ws_alias = j.right.alias or j.right.table
+            _add_to_scope(scope, ws_alias, list(working_set[1]))
+            right_node = P.WorkingSetScan(alias=ws_alias, columns=working_set[1])
         else:
-            right_cols = schema.columns(j.right.table)
-            _add_to_scope(scope, j.right.alias or j.right.table, right_cols)
-            right_node = P.Scan(table=j.right.table, alias=j.right.alias)
+            right_cols = schema.columns(j.right.table)  # type: ignore[union-attr]
+            _add_to_scope(scope, j.right.alias or j.right.table, right_cols)  # type: ignore[union-attr]
+            right_node = P.Scan(table=j.right.table, alias=j.right.alias)  # type: ignore[union-attr]
         # ON clause is resolved against the merged scope so it can reference
         # columns from both sides.
-        condition = _resolve(j.on, scope) if j.on is not None else None
+        condition = _resolve(j.on, scope, schema) if j.on is not None else None
         _validate_join(j, condition)
         tree = P.Join(
             left=tree,
@@ -358,12 +473,21 @@ def _add_to_scope(scope: Scope, alias: str, columns: list[str]) -> None:
 # --------------------------------------------------------------------------
 
 
-def _resolve(expr: Expr, scope: Scope) -> Expr:
+def _resolve(
+    expr: Expr,
+    scope: Scope,
+    schema: SchemaProvider | None = None,
+) -> Expr:
     """Qualify bare :class:`Column` references against ``scope``.
 
     Returns a new expression tree (because expressions are frozen). For
     expressions that contain no columns, this is equivalent to returning
     the input unchanged.
+
+    ``schema`` is only required when the expression tree may contain
+    :class:`~sql_planner.expr.ExistsSubquery` nodes — the planner needs it
+    to plan the inner SELECT independently.  All other expression types ignore
+    this parameter.
     """
     match expr:
         case Literal() | Wildcard():
@@ -371,52 +495,81 @@ def _resolve(expr: Expr, scope: Scope) -> Expr:
         case Column(table, col):
             return _resolve_column(table, col, scope)
         case BinaryExpr(op, left, right):
-            return BinaryExpr(op=op, left=_resolve(left, scope), right=_resolve(right, scope))
+            return BinaryExpr(
+                op=op,
+                left=_resolve(left, scope, schema),
+                right=_resolve(right, scope, schema),
+            )
         case UnaryExpr(op, operand):
-            return UnaryExpr(op=op, operand=_resolve(operand, scope))
+            return UnaryExpr(op=op, operand=_resolve(operand, scope, schema))
         case FunctionCall(name, args):
             new_args = tuple(
                 a if a.star or a.value is None
-                else type(a)(star=False, value=_resolve(a.value, scope))
+                else type(a)(star=False, value=_resolve(a.value, scope, schema))
                 for a in args
             )
             return FunctionCall(name=name, args=new_args)
         case IsNull(operand):
-            return IsNull(operand=_resolve(operand, scope))
+            return IsNull(operand=_resolve(operand, scope, schema))
         case IsNotNull(operand):
-            return IsNotNull(operand=_resolve(operand, scope))
+            return IsNotNull(operand=_resolve(operand, scope, schema))
         case Between(operand, low, high):
             return Between(
-                operand=_resolve(operand, scope),
-                low=_resolve(low, scope),
-                high=_resolve(high, scope),
+                operand=_resolve(operand, scope, schema),
+                low=_resolve(low, scope, schema),
+                high=_resolve(high, scope, schema),
             )
         case In(operand, values):
             return In(
-                operand=_resolve(operand, scope),
-                values=tuple(_resolve(v, scope) for v in values),
+                operand=_resolve(operand, scope, schema),
+                values=tuple(_resolve(v, scope, schema) for v in values),
             )
         case NotIn(operand, values):
             return NotIn(
-                operand=_resolve(operand, scope),
-                values=tuple(_resolve(v, scope) for v in values),
+                operand=_resolve(operand, scope, schema),
+                values=tuple(_resolve(v, scope, schema) for v in values),
             )
         case Like(operand, pattern):
-            return Like(operand=_resolve(operand, scope), pattern=pattern)
+            return Like(operand=_resolve(operand, scope, schema), pattern=pattern)
         case NotLike(operand, pattern):
-            return NotLike(operand=_resolve(operand, scope), pattern=pattern)
+            return NotLike(operand=_resolve(operand, scope, schema), pattern=pattern)
         case AggregateExpr(func, arg, distinct):
             if arg.star or arg.value is None:
                 return expr
-            new_arg = type(arg)(star=False, value=_resolve(arg.value, scope))
+            new_arg = type(arg)(star=False, value=_resolve(arg.value, scope, schema))
             return AggregateExpr(func=func, arg=new_arg, distinct=distinct)
         case CaseExpr(whens, else_):
             return CaseExpr(
                 whens=tuple(
-                    (_resolve(cond, scope), _resolve(result, scope))
+                    (_resolve(cond, scope, schema), _resolve(result, scope, schema))
                     for cond, result in whens
                 ),
-                else_=_resolve(else_, scope) if else_ is not None else None,
+                else_=_resolve(else_, scope, schema) if else_ is not None else None,
+            )
+        case ExistsSubquery(query=stmt):
+            # Plan the inner SELECT independently using the same schema but
+            # without sharing the outer scope — no correlated subqueries.
+            # After this call, query holds a LogicalPlan ready for codegen.
+            if schema is None:
+                raise InternalError(message="schema required to plan EXISTS subquery")
+            inner_plan = _plan_select(stmt, schema)  # type: ignore[arg-type]
+            return ExistsSubquery(query=inner_plan)
+        case ScalarSubquery(query=stmt):
+            if schema is None:
+                raise InternalError(message="schema required to plan scalar subquery")
+            inner_plan = _plan_select(stmt, schema)  # type: ignore[arg-type]
+            return ScalarSubquery(query=inner_plan)
+        case WindowFuncExpr(func, arg, partition_by, order_by):
+            new_arg = _resolve(arg, scope, schema) if arg is not None else None
+            new_partition_by = tuple(_resolve(e, scope, schema) for e in partition_by)
+            new_order_by = tuple(
+                (_resolve(e, scope, schema), desc) for e, desc in order_by
+            )
+            return WindowFuncExpr(
+                func=func,
+                arg=new_arg,
+                partition_by=new_partition_by,
+                order_by=new_order_by,
             )
     raise AmbiguousColumn(column="<internal>", tables=[])  # unreachable
 
@@ -554,10 +707,10 @@ def _plan_update(stmt: UpdateStmt, schema: SchemaProvider) -> P.LogicalPlan:
         if a.column not in cols:
             raise UnknownColumn(table=stmt.table, column=a.column)
     resolved_assignments = tuple(
-        P.Assignment(column=a.column, value=_resolve(a.value, scope))
+        P.Assignment(column=a.column, value=_resolve(a.value, scope, schema))
         for a in stmt.assignments
     )
-    predicate = _resolve(stmt.where, scope) if stmt.where is not None else None
+    predicate = _resolve(stmt.where, scope, schema) if stmt.where is not None else None
     if predicate is not None and contains_aggregate(predicate):
         raise InvalidAggregate(message="aggregate function not allowed in UPDATE WHERE clause")
     return P.Update(
@@ -570,7 +723,7 @@ def _plan_update(stmt: UpdateStmt, schema: SchemaProvider) -> P.LogicalPlan:
 def _plan_delete(stmt: DeleteStmt, schema: SchemaProvider) -> P.LogicalPlan:
     cols = schema.columns(stmt.table)
     scope: Scope = {stmt.table: cols}
-    predicate = _resolve(stmt.where, scope) if stmt.where is not None else None
+    predicate = _resolve(stmt.where, scope, schema) if stmt.where is not None else None
     if predicate is not None and contains_aggregate(predicate):
         raise InvalidAggregate(message="aggregate function not allowed in DELETE WHERE clause")
     return P.Delete(table=stmt.table, predicate=predicate)
@@ -589,6 +742,10 @@ def _plan_drop_table(stmt: DropTableStmt) -> P.LogicalPlan:
     return P.DropTable(table=stmt.table, if_exists=stmt.if_exists)
 
 
+def _plan_alter_table(stmt: AlterTableStmt) -> P.LogicalPlan:
+    return P.AlterTable(table=stmt.table, column=stmt.column)
+
+
 def _plan_create_index(stmt: CreateIndexStmt) -> P.LogicalPlan:
     """CREATE INDEX — no schema lookup needed (backend validates at execution)."""
     return P.CreateIndex(
@@ -603,6 +760,22 @@ def _plan_create_index(stmt: CreateIndexStmt) -> P.LogicalPlan:
 def _plan_drop_index(stmt: DropIndexStmt) -> P.LogicalPlan:
     """DROP INDEX — no schema lookup needed (backend validates at execution)."""
     return P.DropIndex(name=stmt.name, if_exists=stmt.if_exists)
+
+
+def _plan_create_trigger(stmt: CreateTriggerStmt) -> P.LogicalPlan:
+    """CREATE TRIGGER — body SQL is passed through; body planning is deferred."""
+    return P.CreateTrigger(
+        name=stmt.name,
+        timing=stmt.timing,
+        event=stmt.event,
+        table=stmt.table,
+        body_sql=stmt.body_sql,
+    )
+
+
+def _plan_drop_trigger(stmt: DropTriggerStmt) -> P.LogicalPlan:
+    """DROP TRIGGER — no schema lookup needed."""
+    return P.DropTrigger(name=stmt.name, if_exists=stmt.if_exists)
 
 
 # --------------------------------------------------------------------------
@@ -796,7 +969,7 @@ def _extract_multi_column_bounds(
     predicate: Expr,
     alias: str,
     index_cols: list[str],
-) -> "_MultiColBounds | None":
+) -> _MultiColBounds | None:
     """Extract multi-column range bounds for a composite index prefix.
 
     Walks ``index_cols`` in order, trying to bind each leading column to a
@@ -940,13 +1113,11 @@ def _extract_index_bounds(
         """True when *expr* is a Column reference to ``alias.col``."""
         return isinstance(expr, Column) and expr.table == alias and expr.col == col
 
-    if isinstance(predicate, Between):
-        # col BETWEEN lo_lit AND hi_lit  →  closed range
-        if (
-            is_our_col(predicate.operand)
-            and isinstance(predicate.low, Literal)
-            and isinstance(predicate.high, Literal)
-        ):
+    if isinstance(predicate, Between) and (
+        is_our_col(predicate.operand)
+        and isinstance(predicate.low, Literal)
+        and isinstance(predicate.high, Literal)
+    ):
             return (predicate.low.value, True, predicate.high.value, True, None)
 
     if isinstance(predicate, BinaryExpr):

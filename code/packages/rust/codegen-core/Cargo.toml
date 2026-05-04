@@ -1,0 +1,13 @@
+[package]
+name = "codegen-core"
+version = "0.1.0"
+edition = "2021"
+description = "Universal IR-to-native compilation layer (LANG19/LANG20)"
+license = "MIT"
+
+[dependencies]
+jit-core = { path = "../jit-core" }
+compiler-ir = { path = "../compiler-ir" }
+ir-optimizer = { path = "../ir-optimizer" }
+
+[dev-dependencies]

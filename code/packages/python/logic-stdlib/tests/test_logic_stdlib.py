@@ -8,6 +8,7 @@ from logic_engine import (
     conj,
     eq,
     logic_list,
+    num,
     program,
     solve_all,
     solve_n,
@@ -21,11 +22,18 @@ from logic_stdlib import (
     emptyo,
     heado,
     lasto,
+    lengtho,
     listo,
     membero,
+    msorto,
+    nth0_resto,
+    nth0o,
+    nth1_resto,
+    nth1o,
     permuteo,
     reverseo,
     selecto,
+    sorto,
     subsequenceo,
     tailo,
 )
@@ -35,9 +43,9 @@ class TestVersion:
     """Verify the package is importable and wired to the engine layer."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.4.0"
+        assert __version__ == "0.8.0"
         engine_major, engine_minor, _engine_patch = logic_engine_version.split(".")
-        assert (int(engine_major), int(engine_minor)) >= (0, 4)
+        assert (int(engine_major), int(engine_minor)) >= (0, 10)
 
 
 class TestListRelations:
@@ -120,6 +128,195 @@ class TestListRelations:
             last,
             lasto(logic_list(["tea"]), last),
         ) == [atom("tea")]
+
+    def test_lengtho_counts_a_proper_list(self) -> None:
+        length = var("Length")
+
+        assert solve_all(
+            program(),
+            length,
+            lengtho(logic_list(["tea", "cake", "jam"]), length),
+        ) == [num(3)]
+
+    def test_lengtho_validates_a_known_non_negative_length(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                lengtho(logic_list(["tea", "cake"]), 2),
+            ),
+        ) == [atom("ok")]
+
+    def test_lengtho_creates_a_fresh_skeleton_for_known_lengths(self) -> None:
+        items = var("Items")
+
+        assert solve_all(
+            program(),
+            items,
+            conj(
+                lengtho(items, 2),
+                eq(items, logic_list(["tea", "cake"])),
+            ),
+        ) == [logic_list(["tea", "cake"])]
+
+    def test_lengtho_rejects_improper_lists_and_negative_lengths(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                lengtho(logic_list(["tea"], tail="cake"), marker),
+            ),
+        ) == []
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), lengtho(logic_list(["tea"]), -1)),
+        ) == []
+
+    def test_sorto_sorts_a_proper_list_and_removes_duplicates(self) -> None:
+        sorted_items = var("SortedItems")
+
+        assert solve_all(
+            program(),
+            sorted_items,
+            sorto(logic_list(["tea", "cake", "tea", "jam"]), sorted_items),
+        ) == [logic_list(["cake", "jam", "tea"])]
+
+    def test_msorto_sorts_a_proper_list_and_keeps_duplicates(self) -> None:
+        sorted_items = var("SortedItems")
+
+        assert solve_all(
+            program(),
+            sorted_items,
+            msorto(logic_list([3, 1, 2, 1]), sorted_items),
+        ) == [logic_list([1, 1, 2, 3])]
+
+    def test_sorto_rejects_improper_lists(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                sorto(logic_list(["tea"], tail="cake"), var("Sorted")),
+            ),
+        ) == []
+
+    def test_nth0o_finds_zero_based_elements(self) -> None:
+        item = var("Item")
+
+        assert solve_all(
+            program(),
+            item,
+            nth0o(1, logic_list(["tea", "cake", "jam"]), item),
+        ) == [atom("cake")]
+
+    def test_nth1o_finds_one_based_elements(self) -> None:
+        item = var("Item")
+
+        assert solve_all(
+            program(),
+            item,
+            nth1o(2, logic_list(["tea", "cake", "jam"]), item),
+        ) == [atom("cake")]
+
+    def test_ntho_enumerates_index_element_pairs_for_proper_lists(self) -> None:
+        index = var("Index")
+        item = var("Item")
+
+        assert solve_all(
+            program(),
+            (index, item),
+            nth0o(index, logic_list(["tea", "cake", "jam"]), item),
+        ) == [
+            (num(0), atom("tea")),
+            (num(1), atom("cake")),
+            (num(2), atom("jam")),
+        ]
+
+    def test_ntho_rejects_out_of_range_and_improper_lists(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), nth0o(3, logic_list(["tea"]), var("Item"))),
+        ) == []
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                nth0o(0, logic_list(["tea"], tail="cake"), var("Item")),
+            ),
+        ) == []
+
+    def test_nth0_resto_removes_zero_based_selected_element(self) -> None:
+        item = var("Item")
+        rest = var("Rest")
+
+        assert solve_all(
+            program(),
+            (item, rest),
+            nth0_resto(1, logic_list(["tea", "cake", "jam"]), item, rest),
+        ) == [(atom("cake"), logic_list(["tea", "jam"]))]
+
+    def test_nth1_resto_removes_one_based_selected_element(self) -> None:
+        item = var("Item")
+        rest = var("Rest")
+
+        assert solve_all(
+            program(),
+            (item, rest),
+            nth1_resto(2, logic_list(["tea", "cake", "jam"]), item, rest),
+        ) == [(atom("cake"), logic_list(["tea", "jam"]))]
+
+    def test_nth_resto_enumerates_index_element_rest_triples(self) -> None:
+        index = var("Index")
+        item = var("Item")
+        rest = var("Rest")
+
+        assert solve_all(
+            program(),
+            (index, item, rest),
+            nth0_resto(index, logic_list(["tea", "cake", "jam"]), item, rest),
+        ) == [
+            (num(0), atom("tea"), logic_list(["cake", "jam"])),
+            (num(1), atom("cake"), logic_list(["tea", "jam"])),
+            (num(2), atom("jam"), logic_list(["tea", "cake"])),
+        ]
+
+    def test_nth_resto_rejects_out_of_range_and_improper_lists(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                nth0_resto(3, logic_list(["tea"]), var("Item"), var("Rest")),
+            ),
+        ) == []
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                nth0_resto(
+                    0,
+                    logic_list(["tea"], tail="cake"),
+                    var("Item"),
+                    var("Rest"),
+                ),
+            ),
+        ) == []
 
     def test_membero_enumerates_members_of_a_concrete_list(self) -> None:
         item = var("Item")

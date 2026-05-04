@@ -20,18 +20,27 @@ which raises.
 from __future__ import annotations
 
 from symbolic_ir import (
+    ACOSH,
     ADD,
+    ASINH,
+    ATANH,
     COS,
+    COSH,
+    COTH,
+    CSCH,
     DIV,
     EXP,
     LOG,
     MUL,
     NEG,
     POW,
+    SECH,
     SIN,
+    SINH,
     SQRT,
     SUB,
     TAN,
+    TANH,
     D,
     IRApply,
     IRFloat,
@@ -209,6 +218,64 @@ def _diff(f: IRNode, x: IRSymbol) -> IRNode:
                 IRApply(MUL, (IRInteger(2), IRApply(SQRT, (inner,)))),
             ),
         )
+
+    # -- Hyperbolic functions (chain rule) --------------------------------
+    # d/dx sinh(u) = cosh(u) · u'
+    if head == SINH:
+        (inner,) = f.args
+        return IRApply(MUL, (IRApply(COSH, (inner,)), _diff(inner, x)))
+    # d/dx cosh(u) = sinh(u) · u'
+    if head == COSH:
+        (inner,) = f.args
+        return IRApply(MUL, (IRApply(SINH, (inner,)), _diff(inner, x)))
+    # d/dx tanh(u) = sech²(u) · u' = u' / cosh²(u)
+    if head == TANH:
+        (inner,) = f.args
+        return IRApply(
+            DIV,
+            (_diff(inner, x), IRApply(POW, (IRApply(COSH, (inner,)), IRInteger(2)))),
+        )
+    # d/dx asinh(u) = u' / sqrt(u² + 1)
+    if head == ASINH:
+        (inner,) = f.args
+        u2_plus_1 = IRApply(ADD, (IRApply(POW, (inner, IRInteger(2))), ONE))
+        denom = IRApply(SQRT, (u2_plus_1,))
+        return IRApply(DIV, (_diff(inner, x), denom))
+    # d/dx acosh(u) = u' / sqrt(u² - 1)
+    if head == ACOSH:
+        (inner,) = f.args
+        u2_minus_1 = IRApply(SUB, (IRApply(POW, (inner, IRInteger(2))), ONE))
+        denom = IRApply(SQRT, (u2_minus_1,))
+        return IRApply(DIV, (_diff(inner, x), denom))
+    # d/dx atanh(u) = u' / (1 - u²)
+    if head == ATANH:
+        (inner,) = f.args
+        denom = IRApply(SUB, (ONE, IRApply(POW, (inner, IRInteger(2)))))
+        return IRApply(DIV, (_diff(inner, x), denom))
+
+    # -- Reciprocal hyperbolic functions (Phase 15) -----------------------
+    #
+    # Derivatives are expressed in terms of sinh/cosh (not in terms of
+    # coth/sech/csch themselves) so the simplifier doesn't need to recurse
+    # back through these heads.
+    #
+    # d/dx coth(u) = -u' / sinh²(u)
+    if head == COTH:
+        (inner,) = f.args
+        denom = IRApply(POW, (IRApply(SINH, (inner,)), IRInteger(2)))
+        return IRApply(NEG, (IRApply(DIV, (_diff(inner, x), denom)),))
+    # d/dx sech(u) = -u'·sinh(u) / cosh²(u)
+    if head == SECH:
+        (inner,) = f.args
+        numer = IRApply(MUL, (_diff(inner, x), IRApply(SINH, (inner,))))
+        denom = IRApply(POW, (IRApply(COSH, (inner,)), IRInteger(2)))
+        return IRApply(NEG, (IRApply(DIV, (numer, denom)),))
+    # d/dx csch(u) = -u'·cosh(u) / sinh²(u)
+    if head == CSCH:
+        (inner,) = f.args
+        numer = IRApply(MUL, (_diff(inner, x), IRApply(COSH, (inner,))))
+        denom = IRApply(POW, (IRApply(SINH, (inner,)), IRInteger(2)))
+        return IRApply(NEG, (IRApply(DIV, (numer, denom)),))
 
     # Unknown function — leave as ``D(f, x)`` unevaluated.
     return IRApply(D, (f, x))

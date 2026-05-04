@@ -1,12 +1,9 @@
-#!/usr/bin/env bash
-set -euo pipefail
+load("code/packages/starlark/library-rules/rust_library.star", "rust_library")
 
-cd "$(dirname "$0")"
-
-echo "==> Building cas-number-theory"
-cargo build -p cas-number-theory
-
-echo "==> Testing cas-number-theory"
-cargo test -p cas-number-theory
-
-echo "==> cas-number-theory OK"
+_targets = [
+    rust_library(
+        name = "cas-number-theory",
+        srcs = ["src/**/*.rs", "tests/**/*.rs"],
+        deps = ["symbolic-ir"],
+    ),
+]

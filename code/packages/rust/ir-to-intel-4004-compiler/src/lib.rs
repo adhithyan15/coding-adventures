@@ -1,3 +1,5 @@
+pub mod codegen;
+
 use compiler_ir::{IrInstruction, IrOp, IrOperand, IrProgram};
 use intel_4004_ir_validator::{IrValidator, ValidationDiagnostic};
 

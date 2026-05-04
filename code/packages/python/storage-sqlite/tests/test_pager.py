@@ -509,3 +509,113 @@ def test_newly_allocated_page_not_in_originals(tmp_path: Path) -> None:
         pager.allocate()
         pager.write(1, _page(0xCC))
         assert 1 not in pager._originals
+
+
+# ------------------------------------------------------------------
+# Configurable page sizes.
+# ------------------------------------------------------------------
+
+
+def test_create_with_1024_page_size(tmp_path: Path) -> None:
+    p = tmp_path / "db"
+    pager = Pager.create(p, page_size=1024)
+    assert pager.page_size == 1024
+    pager.allocate()
+    data_in = bytes(range(256)) * 4  # 1024 bytes
+    pager.write(1, data_in)
+    pager.commit()
+    assert pager.read(1) == data_in
+    pager.close()
+
+
+def test_create_with_8192_page_size(tmp_path: Path) -> None:
+    p = tmp_path / "db"
+    pager = Pager.create(p, page_size=8192)
+    assert pager.page_size == 8192
+    pager.allocate()
+    data_in = b"\xAB" * 8192
+    pager.write(1, data_in)
+    pager.commit()
+    assert pager.read(1) == data_in
+    pager.close()
+
+
+def test_create_rejects_invalid_page_size(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="page_size"):
+        Pager.create(tmp_path / "db", page_size=3000)
+
+
+@pytest.mark.parametrize("ps", [512, 1024, 2048, 8192, 16384, 32768, 65536])
+def test_open_reads_page_size_from_sqlite_header(tmp_path: Path, ps: int) -> None:
+    """After writing a proper SQLite header, Pager.open detects the page size."""
+    import struct as _struct
+
+    p = tmp_path / "db"
+
+    # Build a minimal but valid SQLite header inside page 1.
+    _SQLITE_MAGIC = b"SQLite format 3\x00"
+    with Pager.create(p, page_size=ps) as pager:
+        pager.allocate()
+        buf = bytearray(ps)
+        buf[:16] = _SQLITE_MAGIC
+        # page size field: bytes 16-17 (u16 BE); 65536 encodes as 1
+        encoded_ps = 1 if ps == 65536 else ps
+        _struct.pack_into(">H", buf, 16, encoded_ps)
+        pager.write(1, bytes(buf))
+        pager.commit()
+
+    with Pager.open(p) as pager2:
+        assert pager2.page_size == ps
+        assert pager2.size_pages == 1
+        # The page data round-trips correctly.
+        page_data = pager2.read(1)
+        assert page_data[:16] == _SQLITE_MAGIC
+
+
+def test_open_rejects_sqlite_header_with_bad_page_size(tmp_path: Path) -> None:
+    """A SQLite magic + out-of-spec page size field triggers CorruptDatabaseError."""
+    import struct as _struct
+
+    p = tmp_path / "db"
+    # Write 4096 bytes with SQLite magic but an invalid page-size field (3000).
+    _SQLITE_MAGIC = b"SQLite format 3\x00"
+    buf = bytearray(PAGE_SIZE)
+    buf[:16] = _SQLITE_MAGIC
+    _struct.pack_into(">H", buf, 16, 3000)  # not a valid SQLite page size
+    p.write_bytes(bytes(buf))
+
+    with pytest.raises(CorruptDatabaseError, match="invalid page size"):
+        Pager.open(p)
+
+
+def test_multi_page_roundtrip_small_pages(tmp_path: Path) -> None:
+    """Write and read-back several pages using 512-byte pages.
+
+    Page 1 carries a minimal SQLite magic + page-size field so that
+    Pager.open can detect the page size automatically on re-open.
+    """
+    import struct as _struct
+
+    _SQLITE_MAGIC = b"SQLite format 3\x00"
+    p = tmp_path / "db"
+    ps = 512
+    n_pages = 5
+
+    with Pager.create(p, page_size=ps) as pager:
+        for _ in range(n_pages):
+            pager.allocate()
+        for i in range(1, n_pages + 1):
+            buf = bytearray(ps)
+            if i == 1:
+                buf[:16] = _SQLITE_MAGIC
+                _struct.pack_into(">H", buf, 16, ps)
+            else:
+                buf[:] = bytes([i]) * ps
+            pager.write(i, bytes(buf))
+        pager.commit()
+
+    with Pager.open(p) as pager2:
+        assert pager2.page_size == ps
+        assert pager2.size_pages == n_pages
+        for i in range(2, n_pages + 1):
+            assert pager2.read(i) == bytes([i]) * ps

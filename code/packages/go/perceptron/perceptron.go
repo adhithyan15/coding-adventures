@@ -44,7 +44,7 @@ func (p *Perceptron) Fit(xData [][]float64, yData [][]float64, logSteps int) {
 
 			for epoch := 0; epoch <= p.Epochs; epoch++ {
 				raw, _ := features.Dot(p.Weights)
-				raw.AddScalar(p.Bias)
+				raw = raw.AddScalar(p.Bias)
 
 				linearProbs := make([]float64, features.Rows)
 				linearTruth := make([]float64, features.Rows)
@@ -92,7 +92,7 @@ func (p *Perceptron) Predict(xData [][]float64) []float64 {
 
 			features := matrix.New2D(xData)
 			raw, _ := features.Dot(p.Weights)
-			raw.AddScalar(p.Bias)
+			raw = raw.AddScalar(p.Bias)
 
 			predictions := make([]float64, features.Rows)
 			for i := 0; i < features.Rows; i++ {

@@ -39,6 +39,19 @@ result = runtime.load_and_run(wasm_bytes, "square", [5])
 print(result)  # [25]
 ```
 
+### Bounding execution
+
+```python
+from wasm_runtime import WasmExecutionLimits, WasmRuntime
+
+runtime = WasmRuntime(limits=WasmExecutionLimits(max_instructions=100_000))
+runtime.load_and_run(wasm_bytes, "_start", [])
+```
+
+When the instruction budget is exhausted, execution traps before dispatching
+the next WASM instruction. This lets untrusted compiled programs fail
+predictably instead of monopolizing the Python host.
+
 ### WASI Tier 1 (stdin/stdout/stderr capture)
 
 ```python
@@ -65,11 +78,18 @@ config = WasiConfig(
     stdin=lambda n: b"input"[:n],
     stdout=print,
     stderr=print,
+    max_fd_write_bytes_per_call=1 << 20,
+    max_fd_write_bytes_total=16 << 20,
     clock=SystemClock(),    # default: real OS clock
     random=SystemRandom(),  # default: OS CSPRNG via secrets module
 )
 host = WasiHost(config)
 ```
+
+`fd_write` validates iovec tables, guest buffer ranges, and the `nwritten`
+pointer before reading guest memory or forwarding output. Writes are capped per
+call and across the host lifetime by `WasiConfig` so untrusted modules cannot
+force unbounded host allocation or stdout/stderr traffic.
 
 #### Injecting a fake clock for testing
 
@@ -83,6 +103,13 @@ class FakeClock(WasiClock):
 
 host = WasiHost(WasiConfig(clock=FakeClock()))
 ```
+
+### Compiler math imports
+
+`WasiHost` also resolves the generic compiler pipeline's `compiler_math`
+imports for standard f64 math: `f64_sin`, `f64_cos`, `f64_atan`, `f64_ln`,
+`f64_exp`, and `f64_pow`. These imports are intentionally separate from WASI
+so generated modules declare the non-core WASM math surface they need.
 
 ## WASI functions implemented
 

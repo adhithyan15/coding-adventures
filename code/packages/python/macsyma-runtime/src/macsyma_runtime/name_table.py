@@ -17,7 +17,15 @@ compiler change required.
 
 from __future__ import annotations
 
-from symbolic_ir import IRSymbol
+from symbolic_ir import (
+    DIRAC_DELTA,
+    FOURIER,
+    IFOURIER,
+    ILT,
+    LAPLACE,
+    UNIT_STEP,
+    IRSymbol,
+)
 
 # IR heads from substrate packages that may not exist yet — define
 # them here as :class:`IRSymbol` singletons so the table can reference
@@ -28,6 +36,7 @@ SIMPLIFY = IRSymbol("Simplify")
 EXPAND = IRSymbol("Expand")
 FACTOR = IRSymbol("Factor")
 SOLVE = IRSymbol("Solve")
+NSOLVE = IRSymbol("NSolve")
 TAYLOR = IRSymbol("Taylor")
 LIMIT = IRSymbol("Limit")
 
@@ -50,6 +59,13 @@ MATRIX = IRSymbol("Matrix")
 TRANSPOSE = IRSymbol("Transpose")
 DETERMINANT = IRSymbol("Determinant")
 INVERSE = IRSymbol("Inverse")
+DOT = IRSymbol("Dot")
+TRACE = IRSymbol("Trace")
+DIMENSIONS = IRSymbol("Dimensions")
+IDENTITY_MATRIX = IRSymbol("IdentityMatrix")
+ZERO_MATRIX = IRSymbol("ZeroMatrix")
+RANK = IRSymbol("Rank")
+ROW_REDUCE = IRSymbol("RowReduce")
 
 GCD = IRSymbol("Gcd")
 LCM = IRSymbol("Lcm")
@@ -57,6 +73,68 @@ MOD = IRSymbol("Mod")
 FLOOR = IRSymbol("Floor")
 CEILING = IRSymbol("Ceiling")
 ABS = IRSymbol("Abs")
+
+# Equation-side selectors (C5)
+LHS = IRSymbol("Lhs")
+RHS = IRSymbol("Rhs")
+
+# Generative list construction (C2)
+MAKE_LIST = IRSymbol("MakeList")
+
+# Point evaluation (C4)
+AT = IRSymbol("At")
+
+# Number theory (B3)
+IS_PRIME = IRSymbol("IsPrime")
+NEXT_PRIME = IRSymbol("NextPrime")
+PREV_PRIME = IRSymbol("PrevPrime")
+FACTOR_INTEGER = IRSymbol("FactorInteger")
+DIVISORS = IRSymbol("Divisors")
+TOTIENT = IRSymbol("Totient")
+MOEBIUS_MU = IRSymbol("MoebiusMu")
+JACOBI_SYMBOL = IRSymbol("JacobiSymbol")
+CHINESE_REMAINDER = IRSymbol("ChineseRemainder")
+INTEGER_LENGTH = IRSymbol("IntegerLength")
+
+# Numeric root-finding (Newton's method)
+MNEWTON = IRSymbol("MNewton")
+
+# Laplace transforms (D-remaining)
+# LAPLACE, ILT, DIRAC_DELTA, UNIT_STEP imported from symbolic_ir above.
+
+# Fourier transforms (D — cas-fourier)
+# FOURIER, IFOURIER imported from symbolic_ir above.
+
+# ODE solving (D3 — cas-ode)
+ODE2 = IRSymbol("ODE2")
+
+# Algebraic extension factoring (D5 — cas-algebraic)
+ALG_FACTOR = IRSymbol("AlgFactor")
+
+# Multivariate polynomial operations (D6 — cas-multivariate)
+GROEBNER = IRSymbol("Groebner")       # groebner(polys, vars) — Gröbner basis
+POLY_REDUCE = IRSymbol("PolyReduce")  # poly_reduce(f, polys, vars) — reduction
+IDEAL_SOLVE = IRSymbol("IdealSolve")  # ideal_solve(polys, vars) — solve system
+
+# Trig transformation heads (B1)
+TRIG_SIMPLIFY = IRSymbol("TrigSimplify")
+TRIG_EXPAND = IRSymbol("TrigExpand")
+TRIG_REDUCE = IRSymbol("TrigReduce")
+
+# Rational function operations (A3)
+COLLECT = IRSymbol("Collect")
+TOGETHER = IRSymbol("Together")
+RAT_SIMPLIFY = IRSymbol("RatSimplify")
+APART = IRSymbol("Apart")
+
+# Complex number IR heads (B2)
+IMAGINARY_UNIT = IRSymbol("ImaginaryUnit")
+RE = IRSymbol("Re")
+IM = IRSymbol("Im")
+CONJUGATE = IRSymbol("Conjugate")
+ARG = IRSymbol("Arg")
+RECT_FORM = IRSymbol("RectForm")
+POLAR_FORM = IRSymbol("PolarForm")
 
 # Re-export the runtime-owned heads so callers have one import.
 from macsyma_runtime.heads import (  # noqa: E402
@@ -80,6 +158,8 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "expand": EXPAND,
     "factor": FACTOR,
     "solve": SOLVE,
+    "nsolve": NSOLVE,
+    "linsolve": SOLVE,  # MACSYMA's linsolve is linear-system solving
     "taylor": TAYLOR,
     "limit": LIMIT,
     # List operations
@@ -89,7 +169,7 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "last": LAST,
     "append": APPEND,
     "reverse": REVERSE,
-    "makelist": RANGE,
+    "makelist": MAKE_LIST,
     "map": MAP,
     "apply": APPLY,
     "sublist": SELECT,
@@ -97,11 +177,20 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "part": PART,
     "flatten": FLATTEN,
     "join": JOIN,
-    # Matrix
+    # Matrix (Group E — complete set)
     "matrix": MATRIX,
     "transpose": TRANSPOSE,
     "determinant": DETERMINANT,
     "invert": INVERSE,
+    "dot": DOT,           # matrix product: dot(A, B) or A . B
+    "mattrace": TRACE,    # sum of diagonal (MACSYMA: mattrace)
+    "matrix_size": DIMENSIONS,  # [rows, cols] shape
+    "ident": IDENTITY_MATRIX,   # n×n identity (MACSYMA: ident)
+    "zeromatrix": ZERO_MATRIX,  # m×n zero matrix
+    "rank": RANK,
+    "rowreduce": ROW_REDUCE,
+    # Newton's method numeric root finder
+    "mnewton": MNEWTON,
     # Number-theoretic
     "gcd": GCD,
     "lcm": LCM,
@@ -109,6 +198,62 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "floor": FLOOR,
     "ceiling": CEILING,
     "abs": ABS,
+    # Equation-side selectors (C5)
+    "lhs": LHS,
+    "rhs": RHS,
+    # Point evaluation — At(expr, Equal(var, val)) (C4)
+    "at": AT,
+    # Number theory (B3)
+    "primep": IS_PRIME,   # canonical MACSYMA name
+    "is_prime": IS_PRIME,  # common alias used in interactive sessions
+    "next_prime": NEXT_PRIME,
+    "prev_prime": PREV_PRIME,
+    "ifactor": FACTOR_INTEGER,
+    "divisors": DIVISORS,
+    "totient": TOTIENT,
+    "moebius": MOEBIUS_MU,
+    "jacobi": JACOBI_SYMBOL,
+    "chinese": CHINESE_REMAINDER,
+    "numdigits": INTEGER_LENGTH,
+    # Trig transformation operations (B1)
+    "trigsimp": TRIG_SIMPLIFY,
+    "trigexpand": TRIG_EXPAND,
+    "trigreduce": TRIG_REDUCE,
+    # Rational function operations (A3)
+    "collect": COLLECT,
+    "together": TOGETHER,
+    "ratsimp": RAT_SIMPLIFY,
+    "partfrac": APART,
+    # Complex number operations (B2)
+    # %i is the imaginary unit constant; the compiler maps the token to
+    # IMAGINARY_UNIT so the VM finds the pre-bound symbol.
+    "%i": IMAGINARY_UNIT,
+    "realpart": RE,
+    "imagpart": IM,
+    "conjugate": CONJUGATE,
+    # cabs(z) = complex modulus; Abs dispatches to complex handler when z
+    # contains ImaginaryUnit, so both names route to the same IR head.
+    "cabs": ABS,
+    "carg": ARG,
+    "rectform": RECT_FORM,
+    "polarform": POLAR_FORM,
+    # Laplace transforms
+    "laplace": LAPLACE,
+    "ilt": ILT,
+    "delta": DIRAC_DELTA,   # Dirac delta δ(t)
+    "hstep": UNIT_STEP,     # Heaviside step H(t)
+    "unit_step": UNIT_STEP,  # alias
+    # Fourier transforms
+    "fourier": FOURIER,     # Forward Fourier transform
+    "ifourier": IFOURIER,   # Inverse Fourier transform
+    # ODE solving (D3 — cas-ode)
+    "ode2": ODE2,           # ode2(eqn, y, x) — symbolic ODE solver
+    # Algebraic extension factoring (D5 — cas-algebraic)
+    "algfactor": ALG_FACTOR,  # algfactor(poly, sqrt(d)) — factor over Q[√d]
+    # Multivariate polynomial operations (D6 — cas-multivariate)
+    "groebner": GROEBNER,           # groebner(polys, vars) — Gröbner basis
+    "poly_reduce": POLY_REDUCE,     # poly_reduce(f, polys, vars) — reduction
+    "ideal_solve": IDEAL_SOLVE,     # ideal_solve(polys, vars) — solve system
     # Runtime-owned operations
     "kill": KILL,
     "ev": EV,

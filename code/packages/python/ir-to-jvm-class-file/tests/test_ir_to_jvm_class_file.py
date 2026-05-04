@@ -726,3 +726,1051 @@ class TestValidateForJvm:
         )
         with pytest.raises(JvmBackendError, match="pre-flight"):
             lower_ir_to_jvm_class_file(program, JvmBackendConfig(class_name="Bad"))
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# JVM02 Phase 2b — multi-class artifact + Closure interface
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+class TestPhase2bMultiClass:
+    """Tests for the multi-class scaffolding that JVM02 Phase 2 closures
+    will use.  Phase 2b ships the data shape and the ``Closure`` interface
+    only; per-lambda ``Closure_<name>`` subclasses + the actual
+    MAKE_CLOSURE / APPLY_CLOSURE lowering land in Phase 2c.
+    """
+
+    def _trivial_program(self, class_name: str) -> JvmBackendConfig:
+        return JvmBackendConfig(class_name=class_name)
+
+    def _trivial_main(self) -> IrProgram:
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")]))
+        program.add_instruction(IrInstruction(IrOp.HALT))
+        return program
+
+    def test_multiclass_returns_main_when_interface_not_requested(self) -> None:
+        from ir_to_jvm_class_file import (
+            JVMMultiClassArtifact,
+            lower_ir_to_jvm_classes,
+        )
+        artifact = lower_ir_to_jvm_classes(
+            self._trivial_main(), self._trivial_program("Solo")
+        )
+        assert isinstance(artifact, JVMMultiClassArtifact)
+        assert len(artifact.classes) == 1
+        assert artifact.main.class_name == "Solo"
+
+    def test_multiclass_appends_closure_interface_when_requested(self) -> None:
+        from ir_to_jvm_class_file import (
+            CLOSURE_INTERFACE_BINARY_NAME,
+            lower_ir_to_jvm_classes,
+        )
+        artifact = lower_ir_to_jvm_classes(
+            self._trivial_main(),
+            self._trivial_program("WithClosure"),
+            include_closure_interface=True,
+        )
+        assert len(artifact.classes) == 2
+        # main always first, interface appended.
+        assert artifact.main.class_name == "WithClosure"
+        assert artifact.classes[1].class_name == (
+            CLOSURE_INTERFACE_BINARY_NAME.replace("/", ".")
+        )
+
+    def test_class_filenames_are_path_safe(self) -> None:
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        artifact = lower_ir_to_jvm_classes(
+            self._trivial_main(),
+            self._trivial_program("WithClosure"),
+            include_closure_interface=True,
+        )
+        # Closure interface lands at the spec'd JAR path.
+        assert "coding_adventures/twig/runtime/Closure.class" in (
+            artifact.class_filenames
+        )
+
+    def test_closure_interface_artifact_parses_as_class_file(self) -> None:
+        """Spec verification: the bytes we hand-roll for the Closure
+        interface parse cleanly via ``jvm-class-file``'s decoder."""
+        from jvm_class_file import parse_class_file
+
+        from ir_to_jvm_class_file import (
+            CLOSURE_INTERFACE_METHOD_DESCRIPTOR,
+            CLOSURE_INTERFACE_METHOD_NAME,
+            build_closure_interface_artifact,
+        )
+        artifact = build_closure_interface_artifact()
+        cf = parse_class_file(artifact.class_bytes)
+        # ACC_INTERFACE = 0x0200, ACC_ABSTRACT = 0x0400, plus ACC_PUBLIC.
+        assert cf.access_flags & 0x0200, "must be tagged as interface"
+        assert cf.access_flags & 0x0400, "must be tagged as abstract"
+        # Has exactly one method: apply([I)I, abstract.
+        assert len(cf.methods) == 1
+        method = cf.methods[0]
+        assert method.name == CLOSURE_INTERFACE_METHOD_NAME
+        assert method.descriptor == CLOSURE_INTERFACE_METHOD_DESCRIPTOR
+        assert method.access_flags & 0x0400, "method must be abstract"
+
+    def test_main_first_invariant(self) -> None:
+        """``JVMMultiClassArtifact.main`` always returns ``classes[0]``
+        — JAR builders rely on this to set ``Main-Class``."""
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        artifact = lower_ir_to_jvm_classes(
+            self._trivial_main(),
+            self._trivial_program("MainFirst"),
+            include_closure_interface=True,
+        )
+        assert artifact.main is artifact.classes[0]
+        assert artifact.main.class_name == "MainFirst"
+
+    def test_empty_multiclass_artifact_rejected(self) -> None:
+        """Constructing without any classes is invalid — the main user
+        class is always required."""
+        from ir_to_jvm_class_file import (
+            JvmBackendError,
+            JVMMultiClassArtifact,
+        )
+        empty = JVMMultiClassArtifact(classes=())
+        with pytest.raises(JvmBackendError, match="at least the main"):
+            _ = empty.main
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# JVM02 Phase 2b — real-`java` JAR loading test
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+def _java_available_for_jar() -> bool:
+    """Probe ``java`` once at import time.  Skip the JAR test
+    cleanly when the runtime isn't on PATH (matches the existing
+    pattern in ``test_oct_8bit_e2e.py``)."""
+    import shutil
+    import subprocess
+
+    if shutil.which("java") is None:
+        return False
+    try:
+        result = subprocess.run(
+            ["java", "-version"], capture_output=True, timeout=5, check=False,
+        )
+        return result.returncode == 0
+    except (subprocess.SubprocessError, OSError):
+        return False
+
+
+_JAVA_AVAILABLE = _java_available_for_jar()
+_skip_if_no_java = pytest.mark.skipif(
+    not _JAVA_AVAILABLE,
+    reason="java not on PATH — skipping real-java JAR conformance test",
+)
+
+
+@_skip_if_no_java
+def test_phase2b_jar_with_closure_interface_loads_under_real_java(
+    tmp_path: pytest.TempPathFactory,
+) -> None:
+    """Pack the main user class + ``Closure`` interface into a JAR
+    and prove that real ``java -jar`` loads both classes (the
+    interface side via ``Class.forName`` from main).
+
+    This is the headline JVM02 Phase 2b conformance test — when it
+    passes, the multi-class plumbing is verified end-to-end on the
+    actual JVM (not just our internal class-file decoder).  Phase
+    2c can then add MAKE_CLOSURE / APPLY_CLOSURE lowering on top
+    without re-litigating the basic load path.
+    """
+    import subprocess
+    from pathlib import Path
+
+    from jvm_jar_writer import JarManifest, write_jar
+
+    from ir_to_jvm_class_file import (
+        CLOSURE_INTERFACE_BINARY_NAME,
+        JvmBackendConfig,
+        lower_ir_to_jvm_classes,
+    )
+
+    # The main program forces a Class.forName lookup for the
+    # closure interface, so the JVM is forced to fully load the
+    # interface class — not just leave it as an unresolved symbol.
+    # If the interface bytecode were malformed the JVM would throw
+    # a ClassFormatError at this exact line.
+    main_class_name = "Phase2bMain"
+    program = IrProgram(entry_label="_start")
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")]))
+    # Trivial body — the test isn't about main's behaviour.  A
+    # single LOAD_IMM keeps validate_for_jvm happy without
+    # expanding the JAR's dependency surface.
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(0), IrImmediate(0)])
+    )
+    program.add_instruction(IrInstruction(IrOp.HALT))
+
+    artifact = lower_ir_to_jvm_classes(
+        program,
+        JvmBackendConfig(class_name=main_class_name),
+        include_closure_interface=True,
+    )
+
+    # Build a JAR containing both classes.
+    classes = tuple(
+        (cls.class_filename, cls.class_bytes) for cls in artifact.classes
+    )
+    manifest = JarManifest(main_class=main_class_name)
+    jar_bytes = write_jar(classes, manifest)
+
+    jar_path = Path(tmp_path) / "phase2b.jar"
+    jar_path.write_bytes(jar_bytes)
+
+    result = subprocess.run(
+        ["java", "-jar", str(jar_path)],
+        capture_output=True,
+        text=True,
+        timeout=15,
+        check=False,
+    )
+
+    # The main class halts cleanly (returncode 0); a malformed
+    # Closure interface .class would surface as ClassFormatError /
+    # VerifyError on the FIRST class loaded — even before main
+    # runs — because some JVMs eagerly verify the JAR contents.
+    assert result.returncode == 0, (
+        f"java rejected the multi-class JAR.\n"
+        f"  exit code: {result.returncode}\n"
+        f"  stdout: {result.stdout!r}\n"
+        f"  stderr: {result.stderr!r}\n"
+        f"  closure interface name: {CLOSURE_INTERFACE_BINARY_NAME!r}"
+    )
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# JVM02 Phase 2c — closure-op lowering + per-lambda subclass emission
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+class TestPhase2cClosureLowering:
+    """Tests for MAKE_CLOSURE / APPLY_CLOSURE lowering and per-lambda
+    Closure_<name>.class emission.  Phase 2c v1 ships these as
+    structural-only — the bytecode shape is verifier-correct, but
+    end-to-end runtime semantics for captured-state retention need
+    a parallel Object[] register pool that lands in Phase 2c.5.
+    """
+
+    def _make_adder_program(self) -> IrProgram:
+        """The headline closure fixture mirroring what twig-jvm-compiler
+        will emit for ``(define (make-adder n) (lambda (x) (+ x n)))
+        ((make-adder 7) 35)``."""
+        program = IrProgram(entry_label="_start")
+
+        # Lifted lambda body — captures-first layout.
+        program.add_instruction(
+            IrInstruction(IrOp.LABEL, [IrLabel("_lambda_0")])
+        )
+        program.add_instruction(
+            IrInstruction(
+                IrOp.ADD, [IrRegister(1), IrRegister(2), IrRegister(3)],
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+
+        # make_adder
+        program.add_instruction(
+            IrInstruction(IrOp.LABEL, [IrLabel("make_adder")])
+        )
+        program.add_instruction(
+            IrInstruction(
+                IrOp.MAKE_CLOSURE,
+                [
+                    IrRegister(1),
+                    IrLabel("_lambda_0"),
+                    IrImmediate(1),
+                    IrRegister(2),
+                ],
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+
+        # main: closure = make_adder(7); APPLY_CLOSURE(closure, [35]).
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")]))
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(2), IrImmediate(7)])
+        )
+        program.add_instruction(
+            IrInstruction(IrOp.CALL, [IrLabel("make_adder")])
+        )
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(11), IrImmediate(35)])
+        )
+        program.add_instruction(
+            IrInstruction(
+                IrOp.APPLY_CLOSURE,
+                [
+                    IrRegister(1),
+                    IrRegister(1),
+                    IrImmediate(1),
+                    IrRegister(11),
+                ],
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.HALT, []))
+        return program
+
+    def _config(self) -> JvmBackendConfig:
+        return JvmBackendConfig(
+            class_name="ClosureMain",
+            closure_free_var_counts={"_lambda_0": 1},
+        )
+
+    def test_multiclass_artifact_includes_interface_and_subclass(self) -> None:
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        artifact = lower_ir_to_jvm_classes(
+            self._make_adder_program(), self._config(),
+        )
+        names = {c.class_name for c in artifact.classes}
+        # main + IClosure + Closure_lambda_0 = 3 classes.
+        assert "ClosureMain" in names
+        assert "coding_adventures.twig.runtime.Closure" in names
+        assert "coding_adventures.twig.runtime.Closure__lambda_0" in names
+
+    def test_lambda_region_now_lives_on_main_class(self) -> None:
+        """JVM02 Phase 2c.5: the lifted lambda body lives as a
+        PUBLIC static method on the main class with widened arity
+        (``num_free + explicit_arity``).  The closure subclass's
+        ``apply`` method forwards to it via ``invokestatic``.
+
+        This was previously the opposite: Phase 2c structural-only
+        emitted the lambda body on the subclass with a placeholder
+        ``apply`` body.  Phase 2c.5 inverts that so the existing
+        IR-body emitter works unchanged.
+        """
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        artifact = lower_ir_to_jvm_classes(
+            self._make_adder_program(), self._config(),
+        )
+        main = artifact.main
+        assert "_lambda_0" in main.callable_labels
+        assert "make_adder" in main.callable_labels
+        assert "_start" in main.callable_labels  # entry label
+
+    def test_closure_subclass_artifact_parses(self) -> None:
+        """The hand-rolled Closure_<name>.class bytes parse cleanly
+        through ``jvm-class-file``'s decoder.
+
+        ``JVMClassFile`` doesn't expose a ``fields`` accessor, so
+        we assert on the methods (ctor + apply with the right
+        descriptors) and on the field-name UTF8 entries appearing
+        in the constant pool — both are sufficient evidence that
+        the layout is well-formed.
+        """
+        from jvm_class_file import parse_class_file
+        from ir_to_jvm_class_file import build_closure_subclass_artifact
+        artifact = build_closure_subclass_artifact("_lambda_0", num_free=2)
+        cf = parse_class_file(artifact.class_bytes)
+        # Public + super flags.
+        assert cf.access_flags & 0x0001  # ACC_PUBLIC
+        # 2 methods (.ctor + apply).
+        method_names = [m.name for m in cf.methods]
+        assert "<init>" in method_names
+        assert "apply" in method_names
+        # ctor descriptor matches num_free.
+        ctor = next(m for m in cf.methods if m.name == "<init>")
+        assert ctor.descriptor == "(II)V"
+        # apply descriptor matches the Closure interface contract.
+        apply = next(m for m in cf.methods if m.name == "apply")
+        assert apply.descriptor == "([I)I"
+        # capt0 / capt1 utf8 entries land in the constant pool.
+        assert b"capt0" in artifact.class_bytes
+        assert b"capt1" in artifact.class_bytes
+
+    def test_closure_subclass_zero_captures(self) -> None:
+        """A function-value-style closure (no captures) still emits
+        a valid Closure subclass — empty-field-list, ()V ctor."""
+        from jvm_class_file import parse_class_file
+        from ir_to_jvm_class_file import build_closure_subclass_artifact
+        artifact = build_closure_subclass_artifact("_lambda_0", num_free=0)
+        cf = parse_class_file(artifact.class_bytes)
+        ctor = next(m for m in cf.methods if m.name == "<init>")
+        assert ctor.descriptor == "()V"
+        # No capt fields in the constant pool either.
+        assert b"capt0" not in artifact.class_bytes
+
+    def test_make_closure_unknown_lambda_rejected(self) -> None:
+        """MAKE_CLOSURE referencing a region that exists in the IR
+        but is NOT declared in ``closure_free_var_counts`` is
+        rejected with a clear diagnostic — the lowerer can't know
+        how to emit the subclass without the capture count."""
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_lambda_undeclared")]))
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")]))
+        program.add_instruction(
+            IrInstruction(
+                IrOp.MAKE_CLOSURE,
+                [
+                    IrRegister(1),
+                    IrLabel("_lambda_undeclared"),
+                    IrImmediate(0),
+                ],
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.HALT, []))
+        with pytest.raises(JvmBackendError, match=r"closure region"):
+            lower_ir_to_jvm_class_file(
+                program,
+                JvmBackendConfig(
+                    class_name="Bad",
+                    closure_free_var_counts={},  # not declared
+                ),
+            )
+
+    def test_make_closure_capture_count_mismatch_rejected(self) -> None:
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_lambda_0")]))
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")]))
+        program.add_instruction(
+            IrInstruction(
+                IrOp.MAKE_CLOSURE,
+                [
+                    IrRegister(1),
+                    IrLabel("_lambda_0"),
+                    IrImmediate(2),  # Says 2 captures
+                    IrRegister(2),
+                ],
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.HALT, []))
+        with pytest.raises(JvmBackendError, match=r"num_captured=2"):
+            lower_ir_to_jvm_class_file(
+                program,
+                JvmBackendConfig(
+                    class_name="Bad",
+                    closure_free_var_counts={"_lambda_0": 2},
+                ),
+            )
+
+    def test_main_class_contains_make_closure_bytecode(self) -> None:
+        """``new`` (0xBB) appears in the main class's bytecode where
+        MAKE_CLOSURE expands."""
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        artifact = lower_ir_to_jvm_classes(
+            self._make_adder_program(), self._config(),
+        )
+        # 0xBB is the JVM new opcode.  Substring search is enough — if
+        # MAKE_CLOSURE didn't lower, the byte wouldn't appear in any
+        # class generated from a closure-free baseline.
+        assert b"\xbb" in artifact.main.class_bytes
+
+    def test_main_class_contains_invokeinterface_bytecode(self) -> None:
+        """``invokeinterface`` (0xB9) appears where APPLY_CLOSURE
+        expands — the closure dispatch site."""
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        artifact = lower_ir_to_jvm_classes(
+            self._make_adder_program(), self._config(),
+        )
+        assert b"\xb9" in artifact.main.class_bytes
+
+
+@_skip_if_no_java
+def test_phase2c_make_adder_closure_returns_42_on_real_java(
+    tmp_path: pytest.TempPathFactory,
+) -> None:
+    """Headline JVM02 Phase 2c.5 end-to-end:
+    ``((make-adder 7) 35) → 42`` on real ``java -jar``.
+
+    The closure pipeline:
+
+    * MAKE_CLOSURE r1 _lambda_0 1 r2 → ``new
+      Closure__lambda_0; dup; iload r2; invokespecial
+      <init>(I)V; aastore __ca_objregs[1]``.  The new ref is
+      retained in the parallel Object[] pool (Phase 2c.5).
+    * APPLY_CLOSURE r1 r1 1 r11 → ``aaload __ca_objregs[1];
+      checkcast Closure; ldc 1; newarray int; <dup; ldc 0;
+      iload r11; iastore>; invokeinterface Closure.apply([I)I;
+      istore __ca_regs[1]``.
+    * The closure subclass's ``apply`` body forwards to
+      ``MakeAdderMain._lambda_0(I,I)I`` — the lifted lambda
+      lives as a public static method on the main class with
+      widened arity (num_free + explicit_arity = 2).  Its
+      prologue copies its 2 JVM args into ``__ca_regs[2..3]``
+      so the existing IR-body emitter runs unchanged.
+    * SYSCALL 1 prints r1 (= 42) as a byte; ``stdout == b'*'``
+      (= 42 = 0x2a).
+    """
+    import subprocess
+    from pathlib import Path
+
+    from jvm_jar_writer import JarManifest, write_jar
+
+    from ir_to_jvm_class_file import (
+        JvmBackendConfig,
+        lower_ir_to_jvm_classes,
+    )
+
+    program = IrProgram(entry_label="_start")
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_lambda_0")]))
+    program.add_instruction(
+        IrInstruction(IrOp.ADD, [IrRegister(1), IrRegister(2), IrRegister(3)])
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, []))
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("make_adder")]))
+    program.add_instruction(
+        IrInstruction(
+            IrOp.MAKE_CLOSURE,
+            [
+                IrRegister(1),
+                IrLabel("_lambda_0"),
+                IrImmediate(1),
+                IrRegister(2),
+            ],
+        )
+    )
+    program.add_instruction(IrInstruction(IrOp.RET, []))
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")]))
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(2), IrImmediate(7)])
+    )
+    program.add_instruction(IrInstruction(IrOp.CALL, [IrLabel("make_adder")]))
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(11), IrImmediate(35)])
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.APPLY_CLOSURE,
+            [IrRegister(1), IrRegister(1), IrImmediate(1), IrRegister(11)],
+        )
+    )
+    # SYSCALL 1 prints r1 as a byte; we assert on stdout = b'*' (= 42).
+    program.add_instruction(
+        IrInstruction(IrOp.SYSCALL, [IrImmediate(1), IrRegister(1)])
+    )
+    program.add_instruction(IrInstruction(IrOp.HALT, []))
+
+    config = JvmBackendConfig(
+        class_name="MakeAdderMain",
+        closure_free_var_counts={"_lambda_0": 1},
+    )
+    artifact = lower_ir_to_jvm_classes(program, config)
+
+    classes = tuple(
+        (c.class_filename, c.class_bytes) for c in artifact.classes
+    )
+    jar_bytes = write_jar(
+        classes, JarManifest(main_class="MakeAdderMain"),
+    )
+    jar_path = Path(tmp_path) / "make_adder.jar"
+    jar_path.write_bytes(jar_bytes)
+    result = subprocess.run(
+        ["java", "-jar", str(jar_path)],
+        capture_output=True, timeout=15, check=False,
+    )
+    assert result.stdout == b"*", (
+        f"closure pipeline broke at runtime.\n"
+        f"  stdout: {result.stdout!r}\n"
+        f"  stderr: {result.stderr!r}"
+    )
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# JVM02 Phase 2c.5 — typed register pool + lifted-lambda forwarder
+# ─────────────────────────────────────────────────────────────────────────────
+
+
+class TestPhase2c5TypedPool:
+    """Tests for the parallel ``Object[]`` register pool that
+    Phase 2c.5 adds.  These verify the structural changes that
+    let closures actually run end-to-end on real ``java``:
+    ``__ca_objregs`` field allocation, the lifted-lambda method
+    on the main class with widened arity, and the closure
+    subclass's invokestatic forwarder.
+    """
+
+    def _make_adder_program(self) -> IrProgram:
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_lambda_0")]))
+        program.add_instruction(
+            IrInstruction(
+                IrOp.ADD, [IrRegister(1), IrRegister(2), IrRegister(3)],
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("make_adder")]))
+        program.add_instruction(
+            IrInstruction(
+                IrOp.MAKE_CLOSURE,
+                [
+                    IrRegister(1),
+                    IrLabel("_lambda_0"),
+                    IrImmediate(1),
+                    IrRegister(2),
+                ],
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")]))
+        program.add_instruction(IrInstruction(IrOp.HALT, []))
+        return program
+
+    def _config(self) -> JvmBackendConfig:
+        return JvmBackendConfig(
+            class_name="MakeAdderMain",
+            closure_free_var_counts={"_lambda_0": 1},
+        )
+
+    def test_objregs_field_present_when_closures_declared(self) -> None:
+        """The main class gains an ``Object[] __ca_objregs`` field
+        when at least one closure is declared."""
+        from jvm_class_file import parse_class_file
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        artifact = lower_ir_to_jvm_classes(
+            self._make_adder_program(), self._config(),
+        )
+        # The decoder doesn't expose fields, so check the constant
+        # pool: the field name and descriptor should both appear.
+        cf = parse_class_file(artifact.main.class_bytes)
+        assert b"__ca_objregs" in artifact.main.class_bytes
+        assert b"[Ljava/lang/Object;" in artifact.main.class_bytes
+
+    def test_objregs_field_absent_in_pure_int_program(self) -> None:
+        """Programs without closures don't pay for the
+        Object[] field — the byte stream is identical to pre-2c.5
+        for non-closure callers."""
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")]))
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(42)])
+        )
+        program.add_instruction(IrInstruction(IrOp.HALT, []))
+        artifact = lower_ir_to_jvm_class_file(
+            program, JvmBackendConfig(class_name="Pure"),
+        )
+        assert b"__ca_objregs" not in artifact.class_bytes
+
+    def test_lifted_lambda_emitted_as_public_method_on_main(self) -> None:
+        """The lifted lambda body lives as a PUBLIC static method
+        on the main class so the closure subclass can invokestatic
+        it from a different package.  Its descriptor is widened to
+        ``(II)I`` (1 capture + 1 explicit arg)."""
+        from jvm_class_file import parse_class_file
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        artifact = lower_ir_to_jvm_classes(
+            self._make_adder_program(), self._config(),
+        )
+        cf = parse_class_file(artifact.main.class_bytes)
+        lambda_method = next(
+            (m for m in cf.methods if m.name == "_lambda_0"), None,
+        )
+        assert lambda_method is not None, "lifted lambda must be on main class"
+        assert lambda_method.descriptor == "(II)I"
+        # ACC_PUBLIC bit set so cross-class invokestatic resolves.
+        assert lambda_method.access_flags & 0x0001
+
+    def test_main_class_callable_labels_includes_lambda(self) -> None:
+        """JVMClassArtifact.callable_labels exposes the lifted
+        lambda so JAR builders / simulators see it."""
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        artifact = lower_ir_to_jvm_classes(
+            self._make_adder_program(), self._config(),
+        )
+        assert "_lambda_0" in artifact.main.callable_labels
+
+    def test_subclass_apply_forwards_via_invokestatic(self) -> None:
+        """The closure subclass's ``apply`` body is an
+        invokestatic forwarder — its bytecode contains the
+        invokestatic opcode (0xB8) but NO ``iconst_0; ireturn``
+        placeholder pattern."""
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        artifact = lower_ir_to_jvm_classes(
+            self._make_adder_program(), self._config(),
+        )
+        subclass = next(
+            c for c in artifact.classes if "Closure__lambda_0" in c.class_name
+        )
+        # invokestatic = 0xB8; appears in the apply body.
+        assert b"\xb8" in subclass.class_bytes
+
+    def test_make_closure_uses_aastore_into_objregs(self) -> None:
+        """MAKE_CLOSURE emits aastore (0x53) to write the new ref
+        into __ca_objregs — not pop (0x57) like Phase 2c."""
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        artifact = lower_ir_to_jvm_classes(
+            self._make_adder_program(), self._config(),
+        )
+        # 0x53 is JVM aastore.  Should appear since MAKE_CLOSURE is
+        # the only path that emits it on the main class.
+        assert b"\x53" in artifact.main.class_bytes
+
+    def test_apply_closure_uses_aaload_and_checkcast(self) -> None:
+        """APPLY_CLOSURE emits aaload (0x32) then checkcast (0xC0)
+        on the closure ref read from __ca_objregs."""
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        # Build a program that uses APPLY_CLOSURE.
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_lambda_0")]))
+        program.add_instruction(IrInstruction(IrOp.RET, []))
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")]))
+        program.add_instruction(
+            IrInstruction(
+                IrOp.MAKE_CLOSURE,
+                [IrRegister(1), IrLabel("_lambda_0"), IrImmediate(0)],
+            )
+        )
+        program.add_instruction(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(2), IrImmediate(35)])
+        )
+        program.add_instruction(
+            IrInstruction(
+                IrOp.APPLY_CLOSURE,
+                [IrRegister(1), IrRegister(1), IrImmediate(1), IrRegister(2)],
+            )
+        )
+        program.add_instruction(IrInstruction(IrOp.HALT, []))
+        artifact = lower_ir_to_jvm_classes(
+            program,
+            JvmBackendConfig(
+                class_name="UsesApply",
+                closure_free_var_counts={"_lambda_0": 0},
+            ),
+        )
+        # 0x32 = aaload; 0xC0 = checkcast.
+        assert b"\x32" in artifact.main.class_bytes
+        assert b"\xc0" in artifact.main.class_bytes
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# TW03 Phase 3b — heap primitives (Cons / Symbol / Nil + 8 opcode lowerings)
+# ─────────────────────────────────────────────────────────────────────────
+
+class TestHeapRuntimeClasses:
+    """Tests for the three runtime classes auto-included whenever a
+    program uses any heap opcode (MAKE_CONS, CAR, CDR, IS_NULL, IS_PAIR,
+    MAKE_SYMBOL, IS_SYMBOL, LOAD_NIL).  Each artifact is parsed back via
+    ``jvm_class_file.parse_class_file`` to lock down the field/method
+    layout — the JVM verifier will reject anything malformed at load
+    time, so the parse-back also serves as a smoke test."""
+
+    def test_cons_class_layout(self) -> None:
+        from ir_to_jvm_class_file import (
+            CONS_BINARY_NAME,
+            build_cons_class_artifact,
+        )
+        artifact = build_cons_class_artifact()
+        assert artifact.class_name == CONS_BINARY_NAME.replace("/", ".")
+        cf = parse_class_file(artifact.class_bytes)
+        # Heterogeneous-cons: head is now Object-typed (was int) so
+        # cons cells can hold any Twig value.  Ctor takes two Objects.
+        method_descriptors = [m.descriptor for m in cf.methods]
+        assert "(Ljava/lang/Object;Ljava/lang/Object;)V" in method_descriptors
+        # Field-name UTF8 entries — head + tail.
+        assert b"head" in artifact.class_bytes
+        assert b"tail" in artifact.class_bytes
+
+    def test_nil_class_layout(self) -> None:
+        from ir_to_jvm_class_file import (
+            NIL_BINARY_NAME,
+            build_nil_class_artifact,
+        )
+        artifact = build_nil_class_artifact()
+        assert artifact.class_name == NIL_BINARY_NAME.replace("/", ".")
+        cf = parse_class_file(artifact.class_bytes)
+        method_names = [m.name for m in cf.methods]
+        assert "<init>" in method_names
+        assert "<clinit>" in method_names
+        # Singleton field.
+        assert b"INSTANCE" in artifact.class_bytes
+
+    def test_symbol_class_layout(self) -> None:
+        from ir_to_jvm_class_file import (
+            SYMBOL_BINARY_NAME,
+            build_symbol_class_artifact,
+        )
+        artifact = build_symbol_class_artifact()
+        assert artifact.class_name == SYMBOL_BINARY_NAME.replace("/", ".")
+        cf = parse_class_file(artifact.class_bytes)
+        method_names = [m.name for m in cf.methods]
+        assert "<init>" in method_names
+        assert "<clinit>" in method_names
+        assert "intern" in method_names
+        intern = next(m for m in cf.methods if m.name == "intern")
+        assert intern.descriptor == (
+            "(Ljava/lang/String;)"
+            "Lcoding_adventures/twig/runtime/Symbol;"
+        )
+        # HashMap is referenced.
+        assert b"java/util/HashMap" in artifact.class_bytes
+
+
+class TestHeapOpLowering:
+    """Each new opcode should produce the specific JVM instruction
+    bytes that uniquely identify its lowering — relies on byte
+    fingerprints rather than a full disassembler."""
+
+    def _make_main_only_program(
+        self, instructions: list[IrInstruction],
+    ) -> IrProgram:
+        program = IrProgram(entry_label="_start")
+        program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")]))
+        for ins in instructions:
+            program.add_instruction(ins)
+        program.add_instruction(IrInstruction(IrOp.HALT, []))
+        return program
+
+    def test_make_cons_emits_new_and_invokespecial(self) -> None:
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(7)]),
+            IrInstruction(
+                IrOp.MAKE_CONS,
+                [IrRegister(2), IrRegister(1), IrRegister(3)],
+            ),
+        ])
+        artifact = lower_ir_to_jvm_classes(
+            program, JvmBackendConfig(class_name="UsesCons"),
+        )
+        # Cons / Symbol / Nil runtime classes auto-included.
+        names = [a.class_name for a in artifact.classes]
+        assert "coding_adventures.twig.runtime.Cons" in names
+        assert "coding_adventures.twig.runtime.Nil" in names
+        assert "coding_adventures.twig.runtime.Symbol" in names
+        # 0xBB = new; 0xB7 = invokespecial; 0x53 = aastore.
+        body = artifact.main.class_bytes
+        assert b"\xbb" in body  # new Cons
+        assert b"\xb7" in body  # invokespecial Cons.<init>
+        assert b"\x53" in body  # aastore into __ca_objregs
+
+    def test_car_emits_getfield_int(self) -> None:
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.CAR, [IrRegister(1), IrRegister(2)]),
+        ])
+        artifact = lower_ir_to_jvm_classes(
+            program, JvmBackendConfig(class_name="UsesCar"),
+        )
+        # 0xB4 = getfield; 0xC0 = checkcast.
+        assert b"\xb4" in artifact.main.class_bytes
+        assert b"\xc0" in artifact.main.class_bytes
+
+    def test_cdr_emits_getfield_object(self) -> None:
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.CDR, [IrRegister(1), IrRegister(2)]),
+        ])
+        artifact = lower_ir_to_jvm_classes(
+            program, JvmBackendConfig(class_name="UsesCdr"),
+        )
+        assert b"\xb4" in artifact.main.class_bytes
+        assert b"\xc0" in artifact.main.class_bytes
+
+    def test_is_null_emits_if_acmpne(self) -> None:
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.IS_NULL, [IrRegister(1), IrRegister(2)]),
+        ])
+        artifact = lower_ir_to_jvm_classes(
+            program, JvmBackendConfig(class_name="UsesIsNull"),
+        )
+        # 0xA6 = if_acmpne.
+        assert b"\xa6" in artifact.main.class_bytes
+
+    def test_is_pair_emits_instanceof(self) -> None:
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.IS_PAIR, [IrRegister(1), IrRegister(2)]),
+        ])
+        artifact = lower_ir_to_jvm_classes(
+            program, JvmBackendConfig(class_name="UsesIsPair"),
+        )
+        # 0xC1 = instanceof.
+        assert b"\xc1" in artifact.main.class_bytes
+
+    def test_is_symbol_emits_instanceof(self) -> None:
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.IS_SYMBOL, [IrRegister(1), IrRegister(2)]),
+        ])
+        artifact = lower_ir_to_jvm_classes(
+            program, JvmBackendConfig(class_name="UsesIsSym"),
+        )
+        assert b"\xc1" in artifact.main.class_bytes
+
+    def test_make_symbol_emits_intern_call(self) -> None:
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        program = self._make_main_only_program([
+            IrInstruction(
+                IrOp.MAKE_SYMBOL,
+                [IrRegister(1), IrLabel("foo")],
+            ),
+        ])
+        artifact = lower_ir_to_jvm_classes(
+            program, JvmBackendConfig(class_name="UsesMakeSym"),
+        )
+        # The literal "foo" UTF8 is in the constant pool.
+        assert b"foo" in artifact.main.class_bytes
+        # 0xB8 = invokestatic Symbol.intern.
+        assert b"\xb8" in artifact.main.class_bytes
+
+    def test_load_nil_emits_getstatic(self) -> None:
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.LOAD_NIL, [IrRegister(1)]),
+        ])
+        artifact = lower_ir_to_jvm_classes(
+            program, JvmBackendConfig(class_name="UsesLoadNil"),
+        )
+        # 0xB2 = getstatic Nil.INSTANCE; 0x53 = aastore.
+        assert b"\xb2" in artifact.main.class_bytes
+        assert b"\x53" in artifact.main.class_bytes
+        # And the Nil class gets included.
+        names = [a.class_name for a in artifact.classes]
+        assert "coding_adventures.twig.runtime.Nil" in names
+
+    def test_heap_op_arity_validation(self) -> None:
+        """MAKE_CONS with the wrong operand count is rejected."""
+        from ir_to_jvm_class_file import lower_ir_to_jvm_classes
+        program = self._make_main_only_program([
+            IrInstruction(IrOp.MAKE_CONS, [IrRegister(1)]),  # missing 2 ops
+        ])
+        with pytest.raises(JvmBackendError, match=r"MAKE_CONS expects"):
+            lower_ir_to_jvm_classes(
+                program, JvmBackendConfig(class_name="Bad"),
+            )
+
+
+# Real-java end-to-end — list-of-ints length.
+
+requires_java = pytest.mark.skipif(
+    subprocess.call(
+        ["java", "-version"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    ) != 0
+    if os.environ.get("CODING_ADVENTURES_REQUIRE_JAVA") != "1"
+    else False,
+    reason="java runtime not available",
+)
+
+
+@requires_java
+def test_real_java_list_of_ints_length() -> None:
+    """Hand-written IR for the program::
+
+        (length (cons 1 (cons 2 (cons 3 nil))))
+
+    with ``length`` lowered as a CALL-recursive function that
+    increments r1 each step until ``IS_NULL`` of the list head
+    becomes 1.  Exits with the int length via SYSCALL 1.
+
+    This is an end-to-end smoke test that exercises:
+
+      * Cons / Nil / Symbol class loading
+      * MAKE_CONS lowering
+      * CDR lowering
+      * IS_NULL identity test
+      * BRANCH_Z fed by IS_NULL result
+      * The full multi-class JAR-shaped artifact (just spread on
+        a classpath here for simplicity since the test doesn't
+        depend on Main-Class manifest semantics).
+    """
+    from ir_to_jvm_class_file import (
+        JvmBackendConfig,
+        lower_ir_to_jvm_classes,
+        write_class_file,
+    )
+
+    program = IrProgram(entry_label="_start")
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("_start")]))
+    # Build the list (cons 1 (cons 2 (cons 3 nil))) backwards:
+    #   r10 = nil
+    #   r3 = 3; r10 = cons(3, nil)
+    #   r3 = 2; r10 = cons(2, r10)
+    #   r3 = 1; r10 = cons(1, r10)
+    program.add_instruction(IrInstruction(IrOp.LOAD_NIL, [IrRegister(10)]))
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(3), IrImmediate(3)])
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.MAKE_CONS,
+            [IrRegister(10), IrRegister(3), IrRegister(10)],
+        )
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(3), IrImmediate(2)])
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.MAKE_CONS,
+            [IrRegister(10), IrRegister(3), IrRegister(10)],
+        )
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(3), IrImmediate(1)])
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.MAKE_CONS,
+            [IrRegister(10), IrRegister(3), IrRegister(10)],
+        )
+    )
+    # Compute length iteratively in r1, walking r10.
+    #   r1 = 0
+    # loop:
+    #   r2 = is_null(r10)
+    #   branch_z r2, end
+    #   r1 = r1 + 1
+    #   r10 = cdr(r10)
+    #   jump loop
+    # end:
+    #   syscall 1, r1   ; print one byte
+    #   halt
+    program.add_instruction(
+        IrInstruction(IrOp.LOAD_IMM, [IrRegister(1), IrImmediate(0)])
+    )
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("loop")]))
+    program.add_instruction(
+        IrInstruction(IrOp.IS_NULL, [IrRegister(2), IrRegister(10)])
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.BRANCH_NZ, [IrRegister(2), IrLabel("end")],
+        )
+    )
+    program.add_instruction(
+        IrInstruction(
+            IrOp.ADD_IMM,
+            [IrRegister(1), IrRegister(1), IrImmediate(1)],
+        )
+    )
+    program.add_instruction(
+        IrInstruction(IrOp.CDR, [IrRegister(10), IrRegister(10)])
+    )
+    program.add_instruction(IrInstruction(IrOp.JUMP, [IrLabel("loop")]))
+    program.add_instruction(IrInstruction(IrOp.LABEL, [IrLabel("end")]))
+    program.add_instruction(
+        IrInstruction(IrOp.SYSCALL, [IrImmediate(1), IrRegister(1)])
+    )
+    program.add_instruction(IrInstruction(IrOp.HALT, []))
+
+    artifact = lower_ir_to_jvm_classes(
+        program,
+        JvmBackendConfig(
+            class_name="ListLength", syscall_arg_reg=1,
+        ),
+    )
+
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp_path = Path(tmp)
+        for cls in artifact.classes:
+            write_class_file(cls, tmp_path)
+        result = subprocess.run(
+            ["java", "-cp", str(tmp_path), "ListLength"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=30,
+            check=False,
+        )
+
+    assert result.returncode == 0, result.stderr.decode("utf-8", "replace")
+    # Length 3 → SYSCALL prints byte 0x03 to stdout.
+    assert result.stdout == b"\x03", result.stdout

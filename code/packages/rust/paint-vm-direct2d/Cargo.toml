@@ -6,6 +6,7 @@ description = "Direct2D renderer for the paint-instructions scene model (P2D06)"
 
 [dependencies]
 paint-instructions = { path = "../paint-instructions" }
+paint-vm-runtime = { path = "../paint-vm-runtime" }
 window-core = { path = "../window-core" }
 window-win32 = { path = "../window-win32" }
 

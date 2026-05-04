@@ -1,0 +1,94 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-cir-to-compiler-ir"
+version = "0.3.0"
+description = "LANG21 bridge: lowers list[CIRInstr] to IrProgram for any ir-to-* backend"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Adhithya Rajasekaran" }]
+readme = "README.md"
+keywords = ["compiler", "ir", "jit", "aot", "codegen", "lowering", "education"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "Topic :: Education",
+    "Topic :: Software Development :: Compilers",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Typing :: Typed",
+]
+dependencies = [
+    "coding-adventures-compiler-ir",
+    "coding-adventures-codegen-core",
+]
+
+[project.urls]
+Homepage = "https://github.com/adhithyan15/coding-adventures"
+Repository = "https://github.com/adhithyan15/coding-adventures"
+Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/LANG21-cir-to-compiler-ir.md"
+
+[tool.uv.sources]
+coding-adventures-compiler-ir = { path = "../compiler-ir", editable = true }
+coding-adventures-codegen-core = { path = "../codegen-core", editable = true }
+coding-adventures-interpreter-ir = { path = "../interpreter-ir", editable = true }
+coding-adventures-ir-optimizer = { path = "../ir-optimizer", editable = true }
+coding-adventures-ir-to-wasm-compiler = { path = "../ir-to-wasm-compiler", editable = true }
+coding-adventures-wasm-leb128 = { path = "../wasm-leb128", editable = true }
+coding-adventures-wasm-types = { path = "../wasm-types", editable = true }
+coding-adventures-wasm-opcodes = { path = "../wasm-opcodes", editable = true }
+coding-adventures-wasm-module-parser = { path = "../wasm-module-parser", editable = true }
+coding-adventures-wasm-validator = { path = "../wasm-validator", editable = true }
+coding-adventures-wasm-execution = { path = "../wasm-execution", editable = true }
+coding-adventures-wasm-runtime = { path = "../wasm-runtime", editable = true }
+coding-adventures-wasm-module-encoder = { path = "../wasm-module-encoder", editable = true }
+coding-adventures-virtual-machine = { path = "../virtual-machine", editable = true }
+coding-adventures-ir-to-jvm-class-file = { path = "../ir-to-jvm-class-file", editable = true }
+coding-adventures-jvm-class-file = { path = "../jvm-class-file", editable = true }
+
+[project.optional-dependencies]
+dev = [
+    "coding-adventures-interpreter-ir",
+    "coding-adventures-ir-optimizer",
+    "coding-adventures-ir-to-wasm-compiler",
+    "coding-adventures-wasm-leb128",
+    "coding-adventures-wasm-types",
+    "coding-adventures-wasm-opcodes",
+    "coding-adventures-wasm-module-parser",
+    "coding-adventures-wasm-validator",
+    "coding-adventures-wasm-execution",
+    "coding-adventures-wasm-runtime",
+    "coding-adventures-wasm-module-encoder",
+    "coding-adventures-virtual-machine",
+    "coding-adventures-ir-to-jvm-class-file",
+    "coding-adventures-jvm-class-file",
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/cir_to_compiler_ir"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "SIM", "ANN"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["ANN", "E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=cir_to_compiler_ir --cov-report=term-missing --cov-fail-under=80"
+
+[tool.coverage.run]
+source = ["src/cir_to_compiler_ir"]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true

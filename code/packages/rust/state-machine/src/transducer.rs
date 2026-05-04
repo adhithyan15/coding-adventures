@@ -44,6 +44,10 @@ impl<'a> EffectfulInput<'a> {
 pub enum EffectfulMatcher {
     /// Match one declared input event.
     Event(String),
+    /// Match any one-code-point event contained in this set.
+    OneOf(String),
+    /// Match any one-code-point event in the inclusive scalar range.
+    Range { start: char, end: char },
     /// Match any non-EOF input event. Ordered transitions make this useful as
     /// an `anything_else` fallback after specific cases.
     Any,
@@ -56,6 +60,7 @@ impl EffectfulMatcher {
     pub fn as_definition_event(&self) -> String {
         match self {
             Self::Event(event) => event.clone(),
+            Self::OneOf(_) | Self::Range { .. } => ANY_INPUT.to_string(),
             Self::Any => ANY_INPUT.to_string(),
             Self::End => END_INPUT.to_string(),
         }
@@ -64,6 +69,14 @@ impl EffectfulMatcher {
     fn matches(&self, input: EffectfulInput<'_>) -> bool {
         match (self, input) {
             (Self::Event(expected), EffectfulInput::Event(actual)) => expected == actual,
+            (Self::OneOf(values), EffectfulInput::Event(actual)) => actual
+                .chars()
+                .next()
+                .is_some_and(|ch| actual.len() == ch.len_utf8() && values.contains(ch)),
+            (Self::Range { start, end }, EffectfulInput::Event(actual)) => actual
+                .chars()
+                .next()
+                .is_some_and(|ch| actual.len() == ch.len_utf8() && *start <= ch && ch <= *end),
             (Self::Any, EffectfulInput::Event(_)) => true,
             (Self::End, EffectfulInput::End) => true,
             _ => false,
@@ -274,6 +287,11 @@ impl EffectfulStateMachine {
             }
             let matcher = match transition.matcher.as_ref() {
                 Some(MatcherDefinition::Literal(event)) => EffectfulMatcher::Event(event.clone()),
+                Some(MatcherDefinition::OneOf(values)) => EffectfulMatcher::OneOf(values.clone()),
+                Some(MatcherDefinition::Range { start, end }) => EffectfulMatcher::Range {
+                    start: single_char_matcher_bound("range.start", start)?,
+                    end: single_char_matcher_bound("range.end", end)?,
+                },
                 Some(MatcherDefinition::Anything) => EffectfulMatcher::Any,
                 Some(MatcherDefinition::Eof) => EffectfulMatcher::End,
                 Some(other) => {
@@ -330,6 +348,11 @@ impl EffectfulStateMachine {
                 );
                 entry.matcher = Some(match &transition.matcher {
                     EffectfulMatcher::Event(event) => MatcherDefinition::Literal(event.clone()),
+                    EffectfulMatcher::OneOf(values) => MatcherDefinition::OneOf(values.clone()),
+                    EffectfulMatcher::Range { start, end } => MatcherDefinition::Range {
+                        start: start.to_string(),
+                        end: end.to_string(),
+                    },
                     EffectfulMatcher::Any => MatcherDefinition::Anything,
                     EffectfulMatcher::End => MatcherDefinition::Eof,
                 });
@@ -404,7 +427,7 @@ impl EffectfulStateMachine {
     /// Process one input event or EOF sentinel and return the emitted effects.
     pub fn process(&mut self, input: EffectfulInput<'_>) -> Result<EffectfulStep, String> {
         if let EffectfulInput::Event(event) = input {
-            if !self.alphabet.contains(event) && !self.current_state_has_any_transition() {
+            if !self.alphabet.contains(event) && !self.current_state_has_broad_transition() {
                 return Err(format!("Event '{event}' is not in the alphabet"));
             }
         }
@@ -439,9 +462,15 @@ impl EffectfulStateMachine {
         Ok(step)
     }
 
-    fn current_state_has_any_transition(&self) -> bool {
+    fn current_state_has_broad_transition(&self) -> bool {
         self.transitions.iter().any(|transition| {
-            transition.source == self.current && matches!(transition.matcher, EffectfulMatcher::Any)
+            transition.source == self.current
+                && matches!(
+                    transition.matcher,
+                    EffectfulMatcher::Any
+                        | EffectfulMatcher::OneOf(_)
+                        | EffectfulMatcher::Range { .. }
+                )
         })
     }
 }
@@ -464,6 +493,17 @@ fn unique_string_set(field: &str, values: &[String]) -> Result<HashSet<String>, 
         }
     }
     Ok(set)
+}
+
+fn single_char_matcher_bound(field: &str, value: &str) -> Result<char, String> {
+    let mut chars = value.chars();
+    let ch = chars
+        .next()
+        .ok_or_else(|| format!("{field} must contain exactly one code point"))?;
+    if chars.next().is_some() {
+        return Err(format!("{field} must contain exactly one code point"));
+    }
+    Ok(ch)
 }
 
 fn sorted_strings(values: &HashSet<String>) -> Vec<String> {

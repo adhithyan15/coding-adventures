@@ -5,6 +5,94 @@ All notable changes to the `sql-backend` Python package are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.11.0] - 2026-04-28
+
+### Added
+
+- **`InMemoryBackend.get_user_version` / `set_user_version` /
+  `get_schema_version`** — three new methods exposing the SQLite header
+  fields used by `PRAGMA user_version` / `PRAGMA schema_version`.
+  - `_user_version`: a `u32` opaque to the engine (defaults to 0).
+  - `_schema_version`: a counter the backend bumps automatically on every
+    successful `create_table` / `drop_table` / `create_index` / `drop_index`.
+  - `set_user_version` validates `0 ≤ v ≤ 2³² − 1` and raises
+    `ValueError` otherwise.
+
+## [0.10.0] - 2026-04-28
+
+### Added
+
+- **`ColumnDef.autoincrement`** — new boolean field, defaults to `False`.
+  Set on a column declared `INTEGER PRIMARY KEY AUTOINCREMENT` to request
+  monotonic rowid assignment (no reuse of deleted rowids).  The
+  constraint is enforced by `storage-sqlite` 0.17+ via the
+  `sqlite_sequence` table; in-memory backends may treat it as a hint.
+
+## [0.9.0] - 2026-04-28
+
+### Added
+
+- **BLOB type support** — `SqlValue` union extended to include `bytes`.
+  `sql_type_name()` returns `"BLOB"` for byte values. `is_sql_value()`
+  accepts `bytes`.
+
+## [0.8.0] - 2026-04-28
+
+### Added — Phase 9: SQL Triggers
+
+- **`TriggerDef` dataclass** (`schema.py`) — stores `name`, `table`, `timing`
+  (`"BEFORE"` | `"AFTER"`), `event` (`"INSERT"` | `"UPDATE"` | `"DELETE"`),
+  and `body` (raw body SQL string).
+- **`TriggerAlreadyExists` / `TriggerNotFound`** (`errors.py`) — typed error
+  classes for trigger DDL failures; exported from `sql_backend.__init__`.
+- **`Backend.create_trigger` / `drop_trigger` / `list_triggers`** — non-
+  abstract default implementations (raise `Unsupported` / return `[]`) so
+  existing backend subclasses continue to work without changes.
+- **`InMemoryBackend` trigger storage** — `_triggers` (name → `TriggerDef`)
+  and `_triggers_by_table` (table → ordered list) keep triggers in creation
+  order; `list_triggers(table)` is O(1) lookup.
+
+## [0.7.0] - 2026-04-27
+
+### Added — Phase 7: SAVEPOINT / RELEASE / ROLLBACK TO
+
+- **`Backend.create_savepoint(name)`** — non-abstract method; default raises
+  `Unsupported("savepoints")`.  Override in backends that support partial rollback.
+- **`Backend.release_savepoint(name)`** — removes the named savepoint (and
+  all savepoints after it) without changing the current data state.
+- **`Backend.rollback_to_savepoint(name)`** — restores data to the snapshot
+  taken at the named savepoint, but keeps the savepoint alive so it can be
+  re-used.
+- **`InMemoryBackend._savepoint_stack`** — `list[tuple[str, tables_snap, indexes_snap]]`
+  tracking all active savepoints.  `create_savepoint` pushes a deep-copy;
+  `release_savepoint` pops; `rollback_to_savepoint` restores and trims.
+  Implicitly begins a transaction if one is not already active.
+
+## [0.6.0] - 2026-04-27
+
+### Added — Phase 4b: FOREIGN KEY constraints
+
+- **`ColumnDef.foreign_key: object`** — optional `(ref_table, ref_col_or_None)`
+  tuple typed as `object` to avoid circular import.  `compare=False, hash=False`
+  preserves existing equality/hash behaviour.  `None` ref_col means "reference
+  the parent's PRIMARY KEY".
+
+## [0.5.0] - 2026-04-27
+
+### Added — Phase 4a: CHECK constraints
+
+- **`ColumnDef.check_expr: object`** — new optional field on the backend `ColumnDef`,
+  typed as `object` to avoid a circular import with the planner's `Expr` hierarchy.
+  `compare=False, hash=False` so existing equality and hash behaviour is unaffected.
+  Carries the planner expression tree from the adapter layer through to codegen.
+
+## [0.4.0] - 2026-04-27
+
+### Added
+- `ColumnAlreadyExists` error class — raised by `add_column` when the target column already exists.
+- `Backend.add_column(table, column)` — new abstract method for ALTER TABLE ADD COLUMN support.
+- `InMemoryBackend.add_column` — appends column to table schema and backfills existing rows with NULL.
+
 ## [0.3.0] - 2026-04-21
 
 ### Added
@@ -100,3 +188,4 @@ the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html
   future backend is measured the same way.
 - Unit tests covering values, errors, schema, iteration, InMemoryBackend,
   and the conformance suite itself.
+

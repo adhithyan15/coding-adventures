@@ -3,6 +3,42 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.2.0] — 2026-04-27
+
+### Added — LANG20: `Intel8008CodeGenerator` — `CodeGenerator[IrProgram, str]` adapter
+
+**New module: `ir_to_intel_8008_compiler.generator`**
+
+- `Intel8008CodeGenerator` — thin adapter satisfying the
+  `CodeGenerator[IrProgram, str]` structural protocol (LANG20).
+
+  ```
+  [Optimizer] → [Intel8008CodeGenerator] → str (text assembly)
+                                             ├─→ assembler → bytes  (AOT)
+                                             └─→ Intel 8008 simulator
+  ```
+
+  - `name = "intel8008"` — unique backend identifier.
+  - `validate(ir) -> list[str]` — delegates to `IrValidator().validate()`,
+    converting each `IrValidationError` to its `.message` string.  Never
+    raises.  8008 rules: register count ≤ 6 (B, C, D, E, H, L), supported
+    opcode set (no LOAD_WORD, STORE_WORD, etc.).
+  - `generate(ir) -> str` — delegates to `IrToIntel8008Compiler().compile(ir)`.
+    Returns Intel 8008 text assembly (`ORG …`, `MVI …`, `HLT`).  Raises
+    `IrValidationError` on invalid IR.
+
+- `Intel8008CodeGenerator` exported from `ir_to_intel_8008_compiler.__init__`
+  alongside the existing (internal) `CodeGenerator` assembly class.
+
+**New tests: `tests/test_codegen_generator.py`** — 14 tests covering: `name`,
+`isinstance(gen, CodeGenerator)` structural check, `validate()` on valid /
+too-many-registers / unsupported-opcode IR, `validate()` returns `list[str]`
+(not `list[IrValidationError]`), `generate()` returns `str`, output contains
+`ORG` directive, output contains `HLT`, `generate()` raises on invalid IR,
+round-trip, export check.
+
+---
+
 ## [0.1.1] — 2026-04-21
 
 ### Fixed

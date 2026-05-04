@@ -18,9 +18,12 @@ dependencies = [
 [tool.uv.sources]
 coding-adventures-compiler-ir = { path = "../compiler-ir", editable = true }
 coding-adventures-intel-8008-ir-validator = { path = "../intel-8008-ir-validator", editable = true }
+coding-adventures-codegen-core = { path = "../codegen-core", editable = true }
+coding-adventures-interpreter-ir = { path = "../interpreter-ir", editable = true }
+coding-adventures-ir-optimizer = { path = "../ir-optimizer", editable = true }
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4"]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "coding-adventures-interpreter-ir", "coding-adventures-ir-optimizer", "coding-adventures-codegen-core"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ir_to_intel_8008_compiler"]

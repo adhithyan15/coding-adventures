@@ -16,24 +16,31 @@ TOKEN_GRAMMAR = TokenGrammar(
     case_sensitive=False,
     definitions=[
         TokenDefinition(
+            name='BLOB_HEX',
+            pattern="[xX]'[0-9A-Fa-f]*'",
+            is_regex=True,
+            line_number=17,
+            alias='BLOB',
+        ),
+        TokenDefinition(
             name='NAME',
             pattern='[a-zA-Z_][a-zA-Z0-9_]*',
             is_regex=True,
-            line_number=17,
+            line_number=18,
             alias=None,
         ),
         TokenDefinition(
             name='NUMBER',
             pattern='[0-9]+\\.?[0-9]*',
             is_regex=True,
-            line_number=18,
+            line_number=19,
             alias=None,
         ),
         TokenDefinition(
             name='STRING_SQ',
             pattern="'([^'\\\\]|\\\\.)*'",
             is_regex=True,
-            line_number=19,
+            line_number=20,
             alias='STRING',
         ),
         TokenDefinition(
@@ -163,7 +170,7 @@ TOKEN_GRAMMAR = TokenGrammar(
             alias=None,
         ),
     ],
-    keywords=['SELECT', 'FROM', 'WHERE', 'GROUP', 'BY', 'HAVING', 'ORDER', 'LIMIT', 'OFFSET', 'INSERT', 'INTO', 'VALUES', 'UPDATE', 'SET', 'DELETE', 'CREATE', 'DROP', 'TABLE', 'IF', 'EXISTS', 'NOT', 'AND', 'OR', 'NULL', 'IS', 'IN', 'BETWEEN', 'LIKE', 'AS', 'DISTINCT', 'ALL', 'UNION', 'INTERSECT', 'EXCEPT', 'JOIN', 'INNER', 'LEFT', 'RIGHT', 'OUTER', 'CROSS', 'FULL', 'ON', 'ASC', 'DESC', 'TRUE', 'FALSE', 'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'PRIMARY', 'KEY', 'UNIQUE', 'DEFAULT'],
+    keywords=['WITH', 'RECURSIVE', 'SELECT', 'FROM', 'WHERE', 'GROUP', 'BY', 'HAVING', 'ORDER', 'LIMIT', 'OFFSET', 'INSERT', 'INTO', 'VALUES', 'UPDATE', 'SET', 'DELETE', 'ALTER', 'ADD', 'COLUMN', 'CREATE', 'DROP', 'TABLE', 'IF', 'EXISTS', 'NOT', 'AND', 'OR', 'NULL', 'IS', 'IN', 'BETWEEN', 'LIKE', 'AS', 'DISTINCT', 'ALL', 'UNION', 'INTERSECT', 'EXCEPT', 'JOIN', 'INNER', 'LEFT', 'RIGHT', 'OUTER', 'CROSS', 'FULL', 'ON', 'ASC', 'DESC', 'TRUE', 'FALSE', 'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'PRIMARY', 'KEY', 'UNIQUE', 'CHECK', 'REFERENCES', 'DEFAULT', 'VIEW', 'SAVEPOINT', 'RELEASE', 'TO', 'OVER', 'PARTITION'],
     mode=None,
     escape_mode=None,
     skip_definitions=[

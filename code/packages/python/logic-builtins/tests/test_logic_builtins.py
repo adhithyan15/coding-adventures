@@ -6,6 +6,7 @@ import pytest
 from logic_engine import (
     Compound,
     LogicVar,
+    Number,
     atom,
     conj,
     disj,
@@ -26,29 +27,60 @@ from logic_engine import (
 )
 
 from logic_builtins import (
+    PrologEvaluationError,
+    PrologInstantiationError,
+    PrologThrown,
+    PrologTypeError,
     __version__,
     abolisho,
+    acyclic_termo,
     add,
     all_differento,
     argo,
     assertao,
     assertzo,
+    atom_charso,
+    atom_codeso,
+    atom_concato,
+    atom_lengtho,
+    atom_numbero,
+    atomic_list_concato,
+    atomic_list_concato_with_separator,
     atomico,
     atomo,
     bagofo,
+    betweeno,
+    call_cleanupo,
     callableo,
     callo,
     calltermo,
+    catcho,
+    char_codeo,
     clauseo,
     compare_termo,
+    compound_name_argumentso,
+    compound_name_arityo,
     compoundo,
+    convlisto,
     copytermo,
+    current_atomo,
+    current_functoro,
     current_predicateo,
+    current_prolog_flago,
     cuto,
+    cyclic_termo,
+    difo,
     div,
     dynamico,
+    excludeo,
     failo,
+    falseo,
     fd_addo,
+    fd_bool_ando,
+    fd_bool_implieso,
+    fd_bool_noto,
+    fd_bool_oro,
+    fd_elemento,
     fd_eqo,
     fd_geqo,
     fd_gto,
@@ -57,10 +89,15 @@ from logic_builtins import (
     fd_lto,
     fd_mulo,
     fd_neqo,
+    fd_reify_relationo,
+    fd_scalar_product_relationo,
+    fd_scalar_producto,
     fd_subo,
+    fd_sum_relationo,
     fd_sumo,
     findallo,
     floordiv,
+    foldlo,
     forallo,
     functoro,
     geqo,
@@ -68,32 +105,65 @@ from logic_builtins import (
     gto,
     ifthenelseo,
     iftheno,
+    ignoreo,
+    includeo,
+    integero,
     iso,
+    labeling_optionso,
     labelingo,
     leqo,
     lto,
+    maplisto,
     mod,
     mul,
     neg,
     nonvaro,
+    not_same_termo,
+    not_variant_termo,
     noto,
+    number_charso,
+    number_codeso,
+    number_stringo,
     numbero,
+    numbervarso,
     numeqo,
     numneqo,
     onceo,
+    partitiono,
     predicate_propertyo,
+    prolog_iso,
+    prolog_lto,
+    prolog_numeqo,
+    repeato,
     retractallo,
     retracto,
     same_termo,
+    scanlo,
+    set_prolog_flago,
     setofo,
+    setup_call_cleanupo,
+    string_charso,
+    string_codeso,
+    string_lengtho,
     stringo,
     sub,
+    sub_atomo,
+    sub_stringo,
+    subsumes_termo,
+    succo,
+    term_hash_boundedo,
+    term_hasho,
+    term_variableso,
     termo_geqo,
     termo_gto,
     termo_leqo,
     termo_lto,
+    throwo,
     trueo,
+    unifiableo,
+    unify_with_occurs_checko,
     univo,
+    variant_termo,
     varo,
 )
 
@@ -102,7 +172,7 @@ class TestVersion:
     """Verify the package is importable and versioned."""
 
     def test_version_exists(self) -> None:
-        assert __version__ == "0.13.0"
+        assert __version__ == "0.15.0"
 
 
 class TestAdvancedControlBuiltins:
@@ -184,6 +254,28 @@ class TestAdvancedControlBuiltins:
             ),
         ) == [atom("else")]
 
+    def test_ifthenelseo_freshens_rule_local_variables(self) -> None:
+        candidate = relation("candidate", 1)
+        chosen = relation("chosen", 1)
+        choice = var("Choice")
+        result = var("Result")
+        output = var("Output")
+
+        prog = program(
+            fact(candidate("first")),
+            fact(candidate("second")),
+            rule(
+                chosen(result),
+                ifthenelseo(
+                    candidate(choice),
+                    eq(result, choice),
+                    eq(result, "none"),
+                ),
+            ),
+        )
+
+        assert solve_all(prog, output, chosen(output)) == [atom("first")]
+
     def test_forallo_succeeds_when_every_generated_proof_passes(self) -> None:
         marker = var("Marker")
         item = var("Item")
@@ -219,6 +311,42 @@ class TestAdvancedControlBuiltins:
             item,
             forallo(disj(eq(item, 1), eq(item, 2)), numbero(item)),
         ) == [item]
+
+    def test_control_goal_terms_preserve_rule_local_freshening(self) -> None:
+        item = var("Item")
+        probe_result = var("Probe")
+        output = var("Output")
+        inner = var("Inner")
+        item_rel = relation("item", 1)
+        blocked = relation("blocked", 1)
+        allowed = relation("allowed", 1)
+        probe = relation("probe", 1)
+        first_probe = relation("first_probe", 1)
+        all_small = relation("all_small", 0)
+        visible = relation("visible", 2)
+
+        prog = program(
+            fact(item_rel("tea")),
+            fact(item_rel("cake")),
+            fact(blocked("cake")),
+            fact(probe("first")),
+            fact(probe("second")),
+            rule(allowed(item), conj(item_rel(item), noto(blocked(item)))),
+            rule(first_probe(probe_result), onceo(probe(probe_result))),
+            rule(
+                all_small(),
+                forallo(disj(eq(inner, 1), eq(inner, 2)), lto(inner, 3)),
+            ),
+            rule(
+                visible(item, probe_result),
+                conj(allowed(item), first_probe(probe_result), all_small()),
+            ),
+        )
+
+        assert solve_all(prog, output, visible(output, probe_result)) == [atom("tea")]
+        assert solve_all(prog, probe_result, visible(output, probe_result)) == [
+            atom("first"),
+        ]
 
     def test_advanced_control_rejects_non_goals(self) -> None:
         with pytest.raises(TypeError):
@@ -289,6 +417,26 @@ class TestCollectionBuiltins:
         ) == [logic_list(["tea", "tea"])]
         assert solve_all(program(), results, bagofo(item, fail(), results)) == []
 
+    def test_bagofo_groups_by_free_goal_variables(self) -> None:
+        parent = relation("parent", 2)
+        parent_name = var("Parent")
+        child = var("Child")
+        children = var("Children")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+            fact(parent("marge", "maggie")),
+        )
+
+        assert solve_all(
+            family,
+            (parent_name, children),
+            bagofo(child, parent(parent_name, child), children),
+        ) == [
+            (atom("homer"), logic_list(["bart", "lisa"])),
+            (atom("marge"), logic_list(["maggie"])),
+        ]
+
     def test_setofo_removes_duplicates_and_sorts_terms(self) -> None:
         item = var("Item")
         results = var("Results")
@@ -308,6 +456,27 @@ class TestCollectionBuiltins:
             ),
         ) == [logic_list([2, "apple", "pear"])]
         assert solve_all(program(), results, setofo(item, fail(), results)) == []
+
+    def test_setofo_groups_and_sorts_each_group(self) -> None:
+        score = relation("score", 2)
+        player = var("Player")
+        value = var("Value")
+        scores = var("Scores")
+        scoreboard = program(
+            fact(score("homer", 2)),
+            fact(score("homer", 1)),
+            fact(score("homer", 2)),
+            fact(score("marge", 3)),
+        )
+
+        assert solve_all(
+            scoreboard,
+            (player, scores),
+            setofo(value, score(player, value), scores),
+        ) == [
+            (atom("homer"), logic_list([1, 2])),
+            (atom("marge"), logic_list([3])),
+        ]
 
     def test_collectors_compose_with_arithmetic_predicates(self) -> None:
         raw = var("Raw")
@@ -342,6 +511,37 @@ class TestCollectionBuiltins:
             results,
             findallo(child, parent("homer", child), results),
         ) == [logic_list(["bart", "lisa"])]
+
+    def test_collectors_preserve_rule_local_freshening(self) -> None:
+        item = var("Item")
+        output = var("Output")
+        results = var("Results")
+        item_rel = relation("item", 1)
+        duplicate = relation("duplicate", 1)
+        all_items = relation("all_items", 1)
+        bagged_items = relation("bagged_items", 1)
+        unique_items = relation("unique_items", 1)
+
+        prog = program(
+            fact(item_rel("tea")),
+            fact(item_rel("cake")),
+            fact(duplicate("cake")),
+            fact(duplicate("tea")),
+            fact(duplicate("cake")),
+            rule(all_items(results), findallo(item, item_rel(item), results)),
+            rule(bagged_items(results), bagofo(item, item_rel(item), results)),
+            rule(unique_items(results), setofo(item, duplicate(item), results)),
+        )
+
+        assert solve_all(prog, output, all_items(output)) == [
+            logic_list(["tea", "cake"]),
+        ]
+        assert solve_all(prog, output, bagged_items(output)) == [
+            logic_list(["tea", "cake"]),
+        ]
+        assert solve_all(prog, output, unique_items(output)) == [
+            logic_list(["cake", "tea"]),
+        ]
 
     def test_collectors_reject_non_goals(self) -> None:
         results = var("Results")
@@ -437,6 +637,107 @@ class TestArithmeticBuiltins:
             program(),
             marker,
             conj(eq(marker, "ok"), lto(add(open_value, 1), 3)),
+        ) == []
+
+    def test_prolog_strict_arithmetic_raises_source_level_errors(self) -> None:
+        result = var("Result")
+        open_value = var("Open")
+
+        assert solve_all(program(), result, prolog_iso(result, add(1, 2))) == [
+            num(3),
+        ]
+        assert solve_all(program(), result, prolog_numeqo(add(1, 2), 3)) == [
+            result,
+        ]
+
+        with pytest.raises(PrologInstantiationError) as instantiation:
+            solve_all(program(), result, prolog_iso(result, add(open_value, 1)))
+        assert instantiation.value.kind == "instantiation_error"
+
+        with pytest.raises(PrologTypeError) as type_error:
+            solve_all(program(), result, prolog_iso(result, add("tea", 1)))
+        assert type_error.value.kind == "type_error"
+        assert type_error.value.expected == "evaluable"
+
+        with pytest.raises(PrologEvaluationError) as evaluation:
+            solve_all(program(), result, prolog_iso(result, div(7, 0)))
+        assert evaluation.value.kind == "evaluation_error"
+        assert evaluation.value.evaluation_error == "zero_divisor"
+
+        with pytest.raises(PrologInstantiationError):
+            solve_all(program(), result, prolog_lto(open_value, 3))
+        with pytest.raises(PrologTypeError):
+            solve_all(program(), result, prolog_lto("tea", 3))
+
+    def test_betweeno_enumerates_inclusive_integer_ranges(self) -> None:
+        value = var("Value")
+
+        assert solve_all(program(), value, betweeno(2, 5, value)) == [
+            num(2),
+            num(3),
+            num(4),
+            num(5),
+        ]
+
+    def test_betweeno_validates_bound_values(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), betweeno(2, 5, 4)),
+        ) == [atom("ok")]
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), betweeno(2, 5, 8)),
+        ) == []
+
+    def test_betweeno_rejects_non_integer_and_descending_ranges(self) -> None:
+        value = var("Value")
+
+        assert solve_all(program(), value, betweeno(5, 2, value)) == []
+        assert solve_all(program(), value, betweeno(1.5, 3, value)) == []
+        assert solve_all(program(), value, betweeno(1, 3, "tea")) == []
+
+    def test_integero_accepts_integer_numbers_only(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), integero(3)),
+        ) == [atom("ok")]
+        assert solve_all(program(), marker, conj(eq(marker, "ok"), integero(3.5))) == []
+        assert solve_all(program(), marker, conj(eq(marker, "ok"), integero("3"))) == []
+
+    def test_succo_validates_and_generates_successors(self) -> None:
+        value = var("Value")
+        predecessor = var("Predecessor")
+
+        assert solve_all(program(), value, succo(2, value)) == [num(3)]
+        assert solve_all(program(), predecessor, succo(predecessor, 3)) == [num(2)]
+        assert solve_all(
+            program(),
+            value,
+            conj(eq(value, "ok"), succo(2, 3)),
+        ) == [atom("ok")]
+
+    def test_succo_rejects_negative_non_integer_and_too_open_cases(self) -> None:
+        left = var("Left")
+        right = var("Right")
+        marker = var("Marker")
+
+        assert solve_all(program(), marker, conj(eq(marker, "ok"), succo(-1, 0))) == []
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), succo(1.5, 2.5)),
+        ) == []
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "ok"), succo(left, right)),
         ) == []
 
     def test_arithmetic_goals_compose_with_relation_search(self) -> None:
@@ -559,6 +860,67 @@ class TestFiniteDomainBuiltins:
             conj(eq(marker, "ok"), fd_gto(4, 3), fd_geqo(4, 4)),
         ) == [atom("ok")]
         assert solve_all(program(), marker, conj(eq(marker, "ok"), fd_gto(3, 4))) == []
+
+    def test_fd_reify_relationo_enumerates_truth_values(self) -> None:
+        left = var("Left")
+        right = var("Right")
+        truth = var("Truth")
+
+        assert solve_all(
+            program(),
+            (left, right, truth),
+            conj(
+                fd_ino(left, range(1, 3)),
+                fd_ino(right, range(1, 3)),
+                fd_reify_relationo(left, "lt", right, truth),
+                labelingo([left, right, truth]),
+            ),
+        ) == [
+            (num(1), num(1), num(0)),
+            (num(1), num(2), num(1)),
+            (num(2), num(1), num(0)),
+            (num(2), num(2), num(0)),
+        ]
+
+    def test_fd_reify_relationo_truth_can_force_relation(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(
+                fd_ino(left, range(1, 4)),
+                fd_ino(right, range(1, 4)),
+                fd_reify_relationo(left, "lt", right, 1),
+                labelingo([left, right]),
+            ),
+        ) == [(num(1), num(2)), (num(1), num(3)), (num(2), num(3))]
+
+    def test_fd_boolean_connectives_enumerate_truth_tables(self) -> None:
+        left = var("Left")
+        right = var("Right")
+        both = var("Both")
+        either = var("Either")
+        not_both = var("NotBoth")
+        implies = var("Implies")
+
+        assert solve_all(
+            program(),
+            (left, right, both, either, not_both, implies),
+            conj(
+                fd_bool_ando(left, right, both),
+                fd_bool_oro(left, right, either),
+                fd_bool_noto(both, not_both),
+                fd_bool_implieso(left, right, implies),
+                labelingo([left, right, both, either, not_both, implies]),
+            ),
+        ) == [
+            (num(0), num(0), num(0), num(0), num(1), num(1)),
+            (num(0), num(1), num(0), num(1), num(1), num(1)),
+            (num(1), num(0), num(0), num(1), num(1), num(0)),
+            (num(1), num(1), num(1), num(1), num(0), num(1)),
+        ]
 
     def test_labelingo_accepts_logic_list_of_variables(self) -> None:
         left = var("Left")
@@ -732,6 +1094,140 @@ class TestFiniteDomainBuiltins:
             conj(eq(marker, "ok"), fd_sumo([], 1)),
         ) == []
 
+    def test_fd_scalar_producto_solves_weighted_sum_constraints(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(
+                fd_ino(left, range(0, 5)),
+                fd_ino(right, range(0, 5)),
+                fd_scalar_producto([2, 3], [left, right], 12),
+                fd_lto(left, right),
+                labelingo([left, right]),
+            ),
+        ) == [(num(0), num(4))]
+
+    def test_fd_scalar_producto_accepts_logic_lists_and_negative_coefficients(
+        self,
+    ) -> None:
+        left = var("Left")
+        right = var("Right")
+        total = var("Total")
+
+        assert solve_all(
+            program(),
+            (left, right, total),
+            conj(
+                fd_ino(left, range(0, 5)),
+                fd_ino(right, range(0, 5)),
+                fd_ino(total, range(-5, 6)),
+                fd_scalar_producto(
+                    logic_list([2, -1]),
+                    logic_list([left, right]),
+                    total,
+                ),
+                fd_eqo(total, 3),
+                labelingo([left, right, total]),
+            ),
+        ) == [
+            (num(2), num(1), num(3)),
+            (num(3), num(3), num(3)),
+        ]
+
+    def test_fd_scalar_producto_rejects_length_mismatches(self) -> None:
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            conj(
+                fd_ino(value, range(0, 5)),
+                fd_scalar_producto([2, 3], [value], 4),
+                labelingo([value]),
+            ),
+        ) == []
+
+    def test_fd_sum_relationo_supports_comparison_modes(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(
+                fd_ino(left, range(1, 5)),
+                fd_ino(right, range(1, 5)),
+                fd_sum_relationo([left, right], "lt", 5),
+                all_differento([left, right]),
+                labelingo([left, right]),
+            ),
+        ) == [
+            (num(1), num(2)),
+            (num(1), num(3)),
+            (num(2), num(1)),
+            (num(3), num(1)),
+        ]
+
+    def test_fd_scalar_product_relationo_supports_comparison_modes(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(
+                fd_ino(left, range(0, 4)),
+                fd_ino(right, range(0, 4)),
+                fd_scalar_product_relationo([2, 3], [left, right], "ge", 7),
+                fd_lto(left, right),
+                labelingo([left, right]),
+            ),
+        ) == [
+            (num(0), num(3)),
+            (num(1), num(2)),
+            (num(1), num(3)),
+            (num(2), num(3)),
+        ]
+
+    def test_fd_elemento_solves_index_and_value_constraints(self) -> None:
+        index = var("Index")
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            (index, value),
+            conj(
+                fd_ino(index, range(1, 4)),
+                fd_ino(value, range(2, 5)),
+                fd_elemento(index, [3, 1, 4], value),
+                labelingo([index, value]),
+            ),
+        ) == [(num(1), num(3)), (num(3), num(4))]
+
+    def test_fd_elemento_accepts_logic_lists_and_variable_items(self) -> None:
+        index = var("Index")
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(
+            program(),
+            (index, left, right),
+            conj(
+                fd_ino(index, range(1, 3)),
+                fd_ino(left, range(1, 4)),
+                fd_ino(right, range(1, 4)),
+                fd_elemento(index, logic_list([left, right]), 3),
+                fd_lto(left, right),
+                labelingo([index, left, right]),
+            ),
+        ) == [
+            (num(2), num(1), num(3)),
+            (num(2), num(2), num(3)),
+        ]
+
     def test_all_differento_prunes_singleton_assignments(self) -> None:
         left = var("Left")
         middle = var("Middle")
@@ -801,6 +1297,32 @@ class TestFiniteDomainBuiltins:
             (num(2), num(20)),
             (num(3), num(20)),
         ]
+
+    def test_labeling_optionso_supports_leftmost_and_down(self) -> None:
+        wide = var("Wide")
+        narrow = var("Narrow")
+
+        assert solve_all(
+            program(),
+            (wide, narrow),
+            conj(
+                fd_ino(wide, [1]),
+                fd_ino(narrow, [10, 20]),
+                labeling_optionso(["leftmost", "down"], [wide, narrow]),
+            ),
+        ) == [(num(1), num(20)), (num(1), num(10))]
+
+    def test_labeling_optionso_supports_logic_list_options(self) -> None:
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            conj(
+                fd_ino(value, range(1, 4)),
+                labeling_optionso(logic_list(["down"]), logic_list([value])),
+            ),
+        ) == [num(3), num(2), num(1)]
 
     def test_fd_constraints_solve_australia_map_coloring(self) -> None:
         wa = var("WA")
@@ -944,6 +1466,40 @@ class TestControlBuiltins:
 
         assert answers == [atom("first")]
 
+    def test_falseo_is_failure_alias(self) -> None:
+        assert solve_all(program(), var("Item"), falseo()) == []
+
+    def test_ignoreo_keeps_first_solution_or_succeeds_unchanged(self) -> None:
+        item = var("Item")
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            item,
+            ignoreo(disj(eq(item, "first"), eq(item, "second"))),
+        ) == [atom("first")]
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "kept"), ignoreo(falseo())),
+        ) == [atom("kept")]
+
+    def test_repeato_restarts_the_rest_of_the_search(self) -> None:
+        item = var("Item")
+
+        assert solve_n(
+            program(),
+            5,
+            item,
+            conj(repeato(), disj(eq(item, "tea"), eq(item, "cake"))),
+        ) == [
+            atom("tea"),
+            atom("cake"),
+            atom("tea"),
+            atom("cake"),
+            atom("tea"),
+        ]
+
     def test_cuto_commits_surrounding_search(self) -> None:
         item = var("Item")
 
@@ -970,6 +1526,130 @@ class TestControlBuiltins:
             outer,
             conj(disj(eq(outer, "left"), eq(outer, "right")), cuto()),
         ) == [atom("left")]
+
+    def test_repeato_composes_with_cut_to_stop_search(self) -> None:
+        item = var("Item")
+
+        assert solve_n(
+            program(),
+            5,
+            item,
+            conj(repeato(), disj(eq(item, "tea"), eq(item, "cake")), cuto()),
+        ) == [atom("tea")]
+
+    def test_throwo_unwinds_to_matching_catcho(self) -> None:
+        result = var("Result")
+
+        assert solve_all(
+            program(),
+            result,
+            catcho(throwo("boom"), "boom", eq(result, "caught")),
+        ) == [atom("caught")]
+
+    def test_catcho_preserves_throw_state_for_recovery(self) -> None:
+        ball = var("Ball")
+        flavor = var("Flavor")
+
+        assert solve_all(
+            program(),
+            (ball, flavor),
+            catcho(
+                conj(eq(ball, term("failure", "tea")), throwo(ball)),
+                term("failure", flavor),
+                eq(flavor, "tea"),
+            ),
+        ) == [(term("failure", "tea"), atom("tea"))]
+
+    def test_catcho_rethrows_non_matching_exceptions(self) -> None:
+        marker = var("Marker")
+
+        with pytest.raises(PrologThrown) as thrown:
+            solve_all(
+                program(),
+                marker,
+                catcho(throwo("boom"), "other", eq(marker, "caught")),
+            )
+
+        assert thrown.value.term == atom("boom")
+
+    def test_catcho_leaves_normal_goal_solutions_unchanged(self) -> None:
+        result = var("Result")
+
+        assert solve_all(
+            program(),
+            result,
+            catcho(eq(result, "normal"), "boom", eq(result, "caught")),
+        ) == [atom("normal")]
+
+    def test_catcho_can_recover_from_runtime_errors(self) -> None:
+        marker = var("Marker")
+        context = var("Context")
+        result = var("Result")
+        open_value = var("Open")
+
+        assert solve_all(
+            program(),
+            marker,
+            catcho(
+                prolog_iso(result, add(open_value, 1)),
+                term("error", atom("instantiation_error"), context),
+                eq(marker, "caught"),
+            ),
+        ) == [atom("caught")]
+
+    def test_call_cleanupo_runs_cleanup_after_success(self) -> None:
+        cleaned = relation("cleaned", 1)
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                dynamico("cleaned", 1),
+                call_cleanupo(eq("ok", "ok"), assertzo(cleaned("done"))),
+                cleaned(marker),
+            ),
+        ) == [atom("done")]
+
+    def test_call_cleanupo_runs_cleanup_before_rethrowing(self) -> None:
+        cleaned = relation("cleaned", 1)
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                dynamico("cleaned", 1),
+                catcho(
+                    call_cleanupo(
+                        throwo("boom"),
+                        assertzo(cleaned("after_throw")),
+                    ),
+                    "boom",
+                    cleaned(marker),
+                ),
+            ),
+        ) == [atom("after_throw")]
+
+    def test_setup_call_cleanupo_runs_setup_goal_and_cleanup(self) -> None:
+        resource = relation("resource", 1)
+        cleaned = relation("cleaned", 1)
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                dynamico("resource", 1),
+                dynamico("cleaned", 1),
+                setup_call_cleanupo(
+                    assertzo(resource("open")),
+                    resource(marker),
+                    assertzo(cleaned(marker)),
+                ),
+                cleaned(marker),
+            ),
+        ) == [atom("open")]
 
     def test_noto_succeeds_when_goal_fails_and_fails_when_goal_succeeds(self) -> None:
         marker = var("Marker")
@@ -1045,6 +1725,25 @@ class TestCallableTermBuiltins:
             conj(clauseo(child("bart", "homer"), body), calltermo(body)),
         ) == [term("parent", "homer", "bart")]
 
+    def test_calltermo_appends_arguments_to_callable_terms(self) -> None:
+        parent = relation("parent", 2)
+        child = var("Child")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+        )
+
+        assert solve_all(
+            family,
+            child,
+            calltermo("parent", "homer", child),
+        ) == [atom("bart"), atom("lisa")]
+        assert solve_all(
+            family,
+            child,
+            calltermo(term("parent", "homer"), child),
+        ) == [atom("bart"), atom("lisa")]
+
     def test_calltermo_fails_for_open_or_non_callable_terms(self) -> None:
         goal = var("Goal")
         marker = var("Marker")
@@ -1059,6 +1758,178 @@ class TestCallableTermBuiltins:
             marker,
             conj(eq(marker, "ok"), calltermo(string("nope"))),
         ) == []
+
+
+class TestHigherOrderListBuiltins:
+    """Higher-order list helpers should compose with callable terms."""
+
+    def test_maplisto_applies_unary_and_binary_closures(self) -> None:
+        small = relation("small", 1)
+        increment = relation("increment", 2)
+        join4 = relation("join4", 4)
+        result = var("Result")
+        combined = var("Combined")
+        a = var("A")
+        b = var("B")
+        c = var("C")
+        d = var("D")
+        prog = program(
+            fact(small(1)),
+            fact(small(2)),
+            fact(increment(1, 2)),
+            fact(increment(2, 3)),
+            fact(increment(3, 4)),
+            rule(join4(a, b, c, d), eq(d, term("joined", a, b, c))),
+        )
+
+        assert solve_all(
+            prog,
+            (result, combined),
+            conj(
+                maplisto("small", logic_list([1, 2])),
+                maplisto("increment", logic_list([1, 2, 3]), result),
+                maplisto(
+                    "join4",
+                    logic_list(["a", "b"]),
+                    logic_list(["x", "y"]),
+                    logic_list([1, 2]),
+                    combined,
+                ),
+            ),
+        ) == [
+            (
+                logic_list([2, 3, 4]),
+                logic_list([term("joined", "a", "x", 1), term("joined", "b", "y", 2)]),
+            ),
+        ]
+
+    def test_partition_include_and_exclude_use_unary_closures(self) -> None:
+        small = relation("small", 1)
+        included = var("Included")
+        excluded = var("Excluded")
+        included_again = var("IncludedAgain")
+        excluded_again = var("ExcludedAgain")
+        prog = program(fact(small(1)), fact(small(2)))
+
+        assert solve_all(
+            prog,
+            (included, excluded, included_again, excluded_again),
+            conj(
+                partitiono("small", logic_list([1, 3, 2]), included, excluded),
+                includeo("small", logic_list([1, 3, 2]), included_again),
+                excludeo("small", logic_list([1, 3, 2]), excluded_again),
+            ),
+        ) == [
+            (
+                logic_list([1, 2]),
+                logic_list([3]),
+                logic_list([1, 2]),
+                logic_list([3]),
+            ),
+        ]
+
+    def test_foldlo_accumulates_with_a_ternary_closure(self) -> None:
+        push = relation("push", 3)
+        pair_push = relation("pair_push", 4)
+        item = var("Item")
+        left = var("Left")
+        right = var("Right")
+        accumulator = var("Accumulator")
+        next_accumulator = var("NextAccumulator")
+        result = var("Result")
+        pair_result = var("PairResult")
+        prog = program(
+            rule(
+                push(item, accumulator, next_accumulator),
+                eq(next_accumulator, term(".", item, accumulator)),
+            ),
+            rule(
+                pair_push(left, right, accumulator, next_accumulator),
+                eq(next_accumulator, term(".", term("pair", left, right), accumulator)),
+            ),
+        )
+
+        assert solve_all(
+            prog,
+            (result, pair_result),
+            conj(
+                foldlo("push", logic_list(["a", "b", "c"]), logic_list([]), result),
+                foldlo(
+                    "pair_push",
+                    logic_list(["a", "b"]),
+                    logic_list(["x", "y"]),
+                    logic_list([]),
+                    pair_result,
+                ),
+            ),
+        ) == [
+            (
+                logic_list(["c", "b", "a"]),
+                logic_list([term("pair", "b", "y"), term("pair", "a", "x")]),
+            ),
+        ]
+
+    def test_convlisto_maps_successful_binary_closure_results(self) -> None:
+        convert = relation("convert", 2)
+        result = var("Result")
+        prog = program(
+            fact(convert(1, "one")),
+            fact(convert(3, "three")),
+        )
+
+        assert solve_all(
+            prog,
+            result,
+            convlisto("convert", logic_list([1, 2, 3]), result),
+        ) == [logic_list(["one", "three"])]
+
+    def test_scanlo_collects_intermediate_accumulators(self) -> None:
+        push = relation("push", 3)
+        pair_push = relation("pair_push", 4)
+        item = var("Item")
+        left = var("Left")
+        right = var("Right")
+        accumulator = var("Accumulator")
+        next_accumulator = var("NextAccumulator")
+        result = var("Result")
+        pair_result = var("PairResult")
+        prog = program(
+            rule(
+                push(item, accumulator, next_accumulator),
+                eq(next_accumulator, term(".", item, accumulator)),
+            ),
+            rule(
+                pair_push(left, right, accumulator, next_accumulator),
+                eq(next_accumulator, term(".", term("pair", left, right), accumulator)),
+            ),
+        )
+
+        assert solve_all(
+            prog,
+            (result, pair_result),
+            conj(
+                scanlo("push", logic_list(["a", "b", "c"]), logic_list([]), result),
+                scanlo(
+                    "pair_push",
+                    logic_list(["a", "b"]),
+                    logic_list(["x", "y"]),
+                    logic_list([]),
+                    pair_result,
+                ),
+            ),
+        ) == [
+            (
+                logic_list([
+                    logic_list(["a"]),
+                    logic_list(["b", "a"]),
+                    logic_list(["c", "b", "a"]),
+                ]),
+                logic_list([
+                    logic_list([term("pair", "a", "x")]),
+                    logic_list([term("pair", "b", "y"), term("pair", "a", "x")]),
+                ]),
+            ),
+        ]
 
 
 class TestTermMetaprogrammingBuiltins:
@@ -1140,6 +2011,92 @@ class TestTermMetaprogrammingBuiltins:
         assert solve_all(program(), value, functoro(value, "box", 1.5)) == []
         assert solve_all(program(), value, functoro(value, 3, 1)) == []
 
+    def test_compound_name_argumentso_inspects_and_constructs_compounds(self) -> None:
+        name = var("Name")
+        arguments = var("Arguments")
+        constructed = var("Constructed")
+
+        assert solve_all(
+            program(),
+            (name, arguments),
+            compound_name_argumentso(term("box", "tea", "cake"), name, arguments),
+        ) == [(atom("box"), logic_list(["tea", "cake"]))]
+        assert solve_all(
+            program(),
+            constructed,
+            compound_name_argumentso(constructed, "box", logic_list(["tea", "cake"])),
+        ) == [term("box", "tea", "cake")]
+
+    def test_compound_name_argumentso_rejects_non_compound_shapes(self) -> None:
+        value = var("Value")
+        name = var("Name")
+
+        assert (
+            solve_all(
+                program(),
+                name,
+                compound_name_argumentso("tea", name, logic_list([])),
+            )
+            == []
+        )
+        assert (
+            solve_all(
+                program(),
+                value,
+                compound_name_argumentso(value, "box", logic_list([])),
+            )
+            == []
+        )
+        assert (
+            solve_all(program(), value, compound_name_argumentso(value, "box", 3))
+            == []
+        )
+        assert (
+            solve_all(
+                program(),
+                value,
+                compound_name_argumentso(value, 3, logic_list(["tea"])),
+            )
+            == []
+        )
+
+    def test_compound_name_arityo_inspects_and_constructs_compounds(self) -> None:
+        name = var("Name")
+        arity = var("Arity")
+        constructed = var("Constructed")
+
+        assert solve_all(
+            program(),
+            (name, arity),
+            compound_name_arityo(term("box", "tea", "cake"), name, arity),
+        ) == [(atom("box"), num(2))]
+
+        answers = solve_all(
+            program(),
+            constructed,
+            compound_name_arityo(constructed, "pair", 2),
+        )
+        assert len(answers) == 1
+        [pair] = answers
+        assert isinstance(pair, Compound)
+        assert pair.functor == atom("pair").symbol
+        assert len(pair.args) == 2
+        assert all(isinstance(argument, LogicVar) for argument in pair.args)
+        assert pair.args[0] != pair.args[1]
+
+    def test_compound_name_arityo_rejects_atomic_and_invalid_construction(self) -> None:
+        value = var("Value")
+        name = var("Name")
+
+        assert solve_all(program(), name, compound_name_arityo("tea", name, 0)) == []
+        assert solve_all(program(), value, compound_name_arityo(value, "box", 0)) == []
+        assert solve_all(program(), value, compound_name_arityo(value, "box", -1)) == []
+        assert (
+            solve_all(program(), value, compound_name_arityo(value, "box", 1.5))
+            == []
+        )
+        assert solve_all(program(), value, compound_name_arityo(value, 3, 1)) == []
+
     def test_copytermo_copies_ground_terms_and_refreshes_variables(self) -> None:
         copy = var("Copy")
         original = var("Original")
@@ -1173,6 +2130,246 @@ class TestTermMetaprogrammingBuiltins:
             ),
         ) == [term("box", "tea")]
 
+    def test_term_variableso_collects_reified_unique_variables_in_order(self) -> None:
+        source = var("Source")
+        first = var("First")
+        second = var("Second")
+        variables = var("Variables")
+
+        answers = solve_all(
+            program(),
+            variables,
+            conj(
+                eq(source, term("pair", first, term("box", second, first))),
+                term_variableso(source, variables),
+            ),
+        )
+
+        assert answers == [logic_list([first, second])]
+
+    def test_term_variableso_ignores_ground_bindings(self) -> None:
+        first = var("First")
+        second = var("Second")
+        variables = var("Variables")
+
+        answers = solve_all(
+            program(),
+            variables,
+            conj(
+                eq(first, "tea"),
+                term_variableso(term("pair", first, second), variables),
+            ),
+        )
+
+        assert answers == [logic_list([second])]
+        assert solve_all(
+            program(),
+            variables,
+            term_variableso(term("box", 1), variables),
+        ) == [logic_list([])]
+
+    def test_numbervarso_numbers_open_variables_in_first_occurrence_order(self) -> None:
+        first = var("First")
+        second = var("Second")
+        source = var("Source")
+        end = var("End")
+
+        answers = solve_all(
+            program(),
+            (source, end),
+            conj(
+                eq(source, term("pair", first, term("box", second, first))),
+                numbervarso(source, 3, end),
+            ),
+        )
+
+        assert answers == [
+            (
+                term(
+                    "pair",
+                    term("$VAR", 3),
+                    term("box", term("$VAR", 4), term("$VAR", 3)),
+                ),
+                num(5),
+            ),
+        ]
+
+    def test_numbervarso_skips_ground_terms_and_rejects_bad_indices(self) -> None:
+        end = var("End")
+
+        assert solve_all(program(), end, numbervarso(term("box", "tea"), 2, end)) == [
+            num(2),
+        ]
+        assert (
+            solve_all(program(), end, numbervarso(term("box", var("X")), -1, end))
+            == []
+        )
+        assert (
+            solve_all(program(), end, numbervarso(term("box", var("X")), 1.5, end))
+            == []
+        )
+
+    def test_acyclic_and_cyclic_term_predicates_classify_finite_terms(self) -> None:
+        value = var("Value")
+        result = var("Result")
+
+        assert solve_all(program(), result, acyclic_termo(term("box", value))) == [
+            result,
+        ]
+        assert solve_all(
+            program(),
+            result,
+            conj(eq(value, "tea"), acyclic_termo(term("pair", value, value))),
+        ) == [result]
+        assert solve_all(program(), result, cyclic_termo(term("box", value))) == []
+
+    def test_unify_with_occurs_checko_rejects_self_referential_terms(self) -> None:
+        value = var("Value")
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            value,
+            unify_with_occurs_checko(value, term("box", "tea")),
+        ) == [term("box", "tea")]
+        assert (
+            solve_all(
+                program(),
+                marker,
+                unify_with_occurs_checko(value, term("box", value)),
+            )
+            == []
+        )
+
+    def test_unifiableo_reports_bindings_without_applying_them(self) -> None:
+        left = var("Left")
+        right = var("Right")
+        unifier = var("Unifier")
+
+        answers = solve_all(
+            program(),
+            (left, right, unifier),
+            unifiableo(term("pair", left, left), term("pair", "tea", right), unifier),
+        )
+
+        assert answers == [
+            (
+                left,
+                right,
+                logic_list([
+                    term("=", left, atom("tea")),
+                    term("=", right, atom("tea")),
+                ]),
+            ),
+        ]
+
+    def test_unifiableo_fails_when_terms_cannot_unify(self) -> None:
+        unifier = var("Unifier")
+
+        assert (
+            solve_all(
+                program(),
+                unifier,
+                unifiableo(term("box", "tea"), term("box", "cake"), unifier),
+            )
+            == []
+        )
+
+    def test_term_hasho_hashes_variants_alike_but_preserves_variable_shape(
+        self,
+    ) -> None:
+        first_hash = var("FirstHash")
+        second_hash = var("SecondHash")
+        third_hash = var("ThirdHash")
+        x = var("X")
+        y = var("Y")
+        a = var("A")
+        b = var("B")
+
+        answers = solve_all(
+            program(),
+            (first_hash, second_hash, third_hash),
+            conj(
+                term_hasho(term("pair", x, x), first_hash),
+                term_hasho(term("pair", y, y), second_hash),
+                term_hasho(term("pair", a, b), third_hash),
+            ),
+        )
+
+        assert len(answers) == 1
+        first, second, third = answers[0]
+        assert first == second
+        assert first != third
+        assert isinstance(first, Number)
+        assert 0 <= first.value < 2_147_483_647
+
+    def test_term_hasho_validates_existing_hash_values(self) -> None:
+        hash_target = var("Hash")
+        hash_value = solve_all(
+            program(),
+            hash_target,
+            term_hasho(term("box", "tea"), hash_target),
+        )[0]
+        assert isinstance(hash_value, Number)
+
+        result = var("Result")
+        assert solve_all(
+            program(),
+            result,
+            conj(
+                term_hasho(term("box", "tea"), hash_value),
+                eq(result, "ok"),
+            ),
+        ) == [atom("ok")]
+        assert solve_all(
+            program(),
+            var("Result"),
+            term_hasho(term("box", "tea"), hash_value.value + 1),
+        ) == []
+
+    def test_term_hash_boundedo_honors_depth_and_range(self) -> None:
+        shallow_left = var("ShallowLeft")
+        shallow_right = var("ShallowRight")
+        deep_left = var("DeepLeft")
+        deep_right = var("DeepRight")
+
+        answers = solve_all(
+            program(),
+            (shallow_left, shallow_right, deep_left, deep_right),
+            conj(
+                term_hash_boundedo(term("box", "tea"), 1, 1_000_000, shallow_left),
+                term_hash_boundedo(term("box", "cake"), 1, 1_000_000, shallow_right),
+                term_hash_boundedo(term("box", "tea"), 2, 1_000_000, deep_left),
+                term_hash_boundedo(term("box", "cake"), 2, 1_000_000, deep_right),
+            ),
+        )
+
+        assert len(answers) == 1
+        shallow_tea, shallow_cake, deep_tea, deep_cake = answers[0]
+        assert shallow_tea == shallow_cake
+        assert deep_tea != deep_cake
+        assert isinstance(deep_tea, Number)
+        assert 0 <= deep_tea.value < 1_000_000
+
+    def test_term_hash_boundedo_rejects_invalid_bounds(self) -> None:
+        hash_value = var("Hash")
+
+        assert solve_all(
+            program(),
+            hash_value,
+            term_hash_boundedo(term("box", "tea"), -1, 10, hash_value),
+        ) == []
+        assert solve_all(
+            program(),
+            hash_value,
+            term_hash_boundedo(term("box", "tea"), 1, 0, hash_value),
+        ) == []
+        assert solve_all(
+            program(),
+            hash_value,
+            term_hash_boundedo(term("box", "tea"), 1.5, 10, hash_value),
+        ) == []
+
     def test_same_termo_checks_strict_identity_without_unifying(self) -> None:
         left = var("Left")
         right = var("Right")
@@ -1184,6 +2381,309 @@ class TestTermMetaprogrammingBuiltins:
             (left, right),
             conj(eq(left, right), same_termo(left, right)),
         ) == [(right, right)]
+
+    def test_not_same_termo_checks_strict_non_identity_without_unifying(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(program(), (left, right), not_same_termo(left, right)) == [
+            (left, right),
+        ]
+        assert solve_all(program(), left, not_same_termo(left, left)) == []
+        assert (
+            solve_all(
+                program(),
+                (left, right),
+                conj(eq(left, right), not_same_termo(left, right)),
+            )
+            == []
+        )
+        assert (
+            solve_all(
+                program(),
+                left,
+                not_same_termo(term("box", "tea"), term("box", "tea")),
+            )
+            == []
+        )
+        assert solve_all(
+            program(),
+            left,
+            not_same_termo(term("box", "tea"), term("box", "cake")),
+        ) == [left]
+
+    def test_variant_termo_accepts_alpha_equivalent_terms(self) -> None:
+        left = var("Left")
+        right = var("Right")
+        other = var("Other")
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                variant_termo(
+                    term("pair", left, term("box", left)),
+                    term("pair", right, term("box", right)),
+                ),
+            ),
+        ) == [atom("ok")]
+        assert solve_all(
+            program(),
+            marker,
+            variant_termo(term("pair", left, left), term("pair", right, other)),
+        ) == []
+
+    def test_not_variant_termo_detects_non_variants_without_binding(self) -> None:
+        left = var("Left")
+        right = var("Right")
+        other = var("Other")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            not_variant_termo(term("pair", left, left), term("pair", right, other)),
+        ) == [(left, right)]
+        assert solve_all(
+            program(),
+            left,
+            not_variant_termo(term("box", left), term("box", right)),
+        ) == []
+
+    def test_subsumes_termo_checks_instance_relationship_without_binding(self) -> None:
+        general = var("General")
+        specific = var("Specific")
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                subsumes_termo(term("box", general), term("box", "tea")),
+            ),
+        ) == [atom("ok")]
+        assert solve_all(
+            program(),
+            marker,
+            subsumes_termo(term("box", "tea"), term("box", specific)),
+        ) == []
+        assert solve_all(
+            program(),
+            marker,
+            subsumes_termo(
+                term("pair", general, general),
+                term("pair", "tea", "cake"),
+            ),
+        ) == []
+
+    def test_difo_delays_disequality_until_later_bindings(self) -> None:
+        left = var("Left")
+        right = var("Right")
+
+        assert solve_all(program(), left, difo(left, "tea")) == [left]
+        assert (
+            solve_all(program(), left, conj(difo(left, "tea"), eq(left, "tea")))
+            == []
+        )
+        assert solve_all(
+            program(),
+            left,
+            conj(difo(left, "tea"), eq(left, "cake")),
+        ) == [atom("cake")]
+        assert solve_all(
+            program(),
+            (left, right),
+            conj(difo(left, right), eq(left, "tea"), eq(right, "cake")),
+        ) == [(atom("tea"), atom("cake"))]
+
+    def test_text_conversion_builtins_relate_atoms_strings_and_lists(self) -> None:
+        value = var("Value")
+        pieces = var("Pieces")
+
+        assert solve_all(program(), pieces, atom_charso("tea", pieces)) == [
+            logic_list(["t", "e", "a"]),
+        ]
+        assert solve_all(program(), value, atom_charso(value, logic_list(["t"]))) == [
+            atom("t"),
+        ]
+        assert solve_all(program(), pieces, atom_codeso("tea", pieces)) == [
+            logic_list([116, 101, 97]),
+        ]
+        assert solve_all(
+            program(),
+            value,
+            atom_codeso(value, logic_list([116, 101, 97])),
+        ) == [atom("tea")]
+        assert solve_all(program(), pieces, string_charso(string("hi"), pieces)) == [
+            logic_list(["h", "i"]),
+        ]
+        assert solve_all(program(), value, string_codeso(value, logic_list([104]))) == [
+            string("h"),
+        ]
+
+    def test_number_conversion_builtins_parse_and_render_finite_modes(self) -> None:
+        value = var("Value")
+        pieces = var("Pieces")
+
+        assert solve_all(program(), pieces, number_charso(42, pieces)) == [
+            logic_list(["4", "2"]),
+        ]
+        assert solve_all(
+            program(),
+            value,
+            number_charso(value, logic_list(["-", "7"])),
+        ) == [num(-7)]
+        assert solve_all(program(), pieces, number_codeso(3.5, pieces)) == [
+            logic_list([51, 46, 53]),
+        ]
+        assert solve_all(
+            program(),
+            value,
+            number_codeso(value, logic_list([51, 46, 50, 53])),
+        ) == [num(3.25)]
+        assert (
+            solve_all(program(), value, number_charso(value, logic_list(["x"])))
+            == []
+        )
+
+    def test_char_codeo_relates_one_character_atoms_to_codes(self) -> None:
+        char = var("Char")
+        code = var("Code")
+
+        assert solve_all(program(), code, char_codeo("A", code)) == [num(65)]
+        assert solve_all(program(), char, char_codeo(char, 90)) == [atom("Z")]
+        assert solve_all(program(), code, char_codeo("tea", code)) == []
+        assert solve_all(program(), char, char_codeo(char, -1)) == []
+
+    def test_atom_composition_builtins_use_finite_concat_modes(self) -> None:
+        left = var("Left")
+        right = var("Right")
+        combined = var("Combined")
+
+        assert solve_all(program(), combined, atom_concato("tea", "cup", combined)) == [
+            atom("teacup"),
+        ]
+        assert solve_all(program(), right, atom_concato("tea", right, "teacup")) == [
+            atom("cup"),
+        ]
+        assert solve_all(program(), left, atom_concato(left, "cup", "teacup")) == [
+            atom("tea"),
+        ]
+        assert solve_all(
+            program(),
+            (left, right),
+            atom_concato(left, right, "ab"),
+        ) == [
+            (atom("a"), atom("b")),
+        ]
+
+    def test_atomic_list_concat_builtins_join_and_split_atoms(self) -> None:
+        value = var("Value")
+        parts = var("Parts")
+
+        assert solve_all(
+            program(),
+            value,
+            atomic_list_concato(logic_list(["tea", "cup"]), value),
+        ) == [atom("teacup")]
+        assert solve_all(
+            program(),
+            value,
+            atomic_list_concato_with_separator(
+                logic_list(["tea", 2, string("go")]),
+                "-",
+                value,
+            ),
+        ) == [atom("tea-2-go")]
+        assert solve_all(
+            program(),
+            parts,
+            atomic_list_concato_with_separator(parts, "-", "tea-cup-pot"),
+        ) == [logic_list(["tea", "cup", "pot"])]
+        assert solve_all(program(), parts, atomic_list_concato(parts, "tea")) == []
+
+    def test_number_stringo_relates_numbers_to_string_terms(self) -> None:
+        value = var("Value")
+        text = var("Text")
+
+        assert solve_all(program(), text, number_stringo(42, text)) == [string("42")]
+        assert solve_all(program(), value, number_stringo(value, string("3.5"))) == [
+            num(3.5),
+        ]
+        assert solve_all(program(), value, number_stringo(value, string("nope"))) == []
+
+    def test_atom_numbero_relates_atoms_to_numbers(self) -> None:
+        value = var("Value")
+        text = var("Text")
+
+        assert solve_all(program(), text, atom_numbero(text, 42)) == [atom("42")]
+        assert solve_all(program(), value, atom_numbero("-3.5", value)) == [
+            num(-3.5),
+        ]
+        assert solve_all(program(), value, atom_numbero("nope", value)) == []
+        assert solve_all(program(), value, atom_numbero(string("3"), value)) == []
+
+    def test_text_inspection_builtins_measure_atoms_and_strings(self) -> None:
+        value = var("Value")
+
+        assert solve_all(program(), value, atom_lengtho("teacup", value)) == [num(6)]
+        assert solve_all(program(), value, string_lengtho(string("hi"), value)) == [
+            num(2),
+        ]
+        assert solve_all(program(), value, atom_lengtho(value, 3)) == []
+
+    def test_sub_atomo_enumerates_and_filters_finite_atom_slices(self) -> None:
+        before = var("Before")
+        length = var("Length")
+        after = var("After")
+        sub_atom = var("SubAtom")
+
+        assert solve_all(
+            program(),
+            (before, length, after),
+            sub_atomo("teacup", before, length, after, "cup"),
+        ) == [(num(3), num(3), num(0))]
+        assert solve_all(
+            program(),
+            sub_atom,
+            sub_atomo("abc", 1, 1, 1, sub_atom),
+        ) == [atom("b")]
+        assert solve_all(
+            program(),
+            sub_atom,
+            sub_atomo("abc", before, length, after, sub_atom),
+        ) == [
+            atom("a"),
+            atom("ab"),
+            atom("abc"),
+            atom("b"),
+            atom("bc"),
+            atom("c"),
+        ]
+
+    def test_sub_stringo_enumerates_and_constructs_finite_string_slices(self) -> None:
+        before = var("Before")
+        length = var("Length")
+        after = var("After")
+        sub_text = var("SubText")
+        text = var("Text")
+
+        assert solve_all(
+            program(),
+            (before, length, after),
+            sub_stringo(string("logic"), before, length, after, string("gi")),
+        ) == [(num(2), num(2), num(1))]
+        assert solve_all(
+            program(),
+            text,
+            sub_stringo(text, 0, length, 0, string("logic")),
+        ) == [string("logic")]
+        assert (
+            solve_all(program(), text, sub_stringo(text, 1, length, 0, sub_text))
+            == []
+        )
 
     def test_atomico_and_callableo_classify_reified_terms(self) -> None:
         value = var("Value")
@@ -1364,6 +2864,80 @@ class TestClauseIntrospectionBuiltins:
 class TestPredicateMetadataBuiltins:
     """Predicate metadata should expose source and builtin predicates."""
 
+    def test_current_prolog_flago_enumerates_read_only_runtime_flags(self) -> None:
+        flag = var("Flag")
+        value = var("Value")
+
+        flags = solve_all(program(), (flag, value), current_prolog_flago(flag, value))
+
+        assert (atom("bounded"), atom("false")) in flags
+        assert (atom("double_quotes"), atom("string")) in flags
+        assert (atom("unknown"), atom("fail")) in flags
+
+    def test_current_prolog_flago_reads_known_flags(self) -> None:
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            current_prolog_flago("integer_rounding_function", value),
+        ) == [atom("floor")]
+        assert solve_all(
+            program(),
+            value,
+            current_prolog_flago("missing_flag", value),
+        ) == []
+
+    def test_set_prolog_flago_updates_current_branch_flags(self) -> None:
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            conj(
+                set_prolog_flago("unknown", "error"),
+                current_prolog_flago("unknown", value),
+            ),
+        ) == [atom("error")]
+
+    def test_set_prolog_flago_rolls_back_across_branches(self) -> None:
+        value = var("Value")
+
+        assert solve_all(
+            program(),
+            value,
+            disj(
+                conj(
+                    set_prolog_flago("double_quotes", "atom"),
+                    current_prolog_flago("double_quotes", value),
+                ),
+                current_prolog_flago("double_quotes", value),
+            ),
+        ) == [atom("atom"), atom("string")]
+
+    def test_set_prolog_flago_rejects_read_only_or_invalid_flags(self) -> None:
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(set_prolog_flago("bounded", "true"), eq(marker, "changed")),
+        ) == []
+        assert solve_all(
+            program(),
+            marker,
+            conj(set_prolog_flago("unknown", "silent"), eq(marker, "changed")),
+        ) == []
+
+    def test_set_prolog_flago_requires_instantiated_inputs(self) -> None:
+        name = var("Name")
+        value = var("Value")
+
+        with pytest.raises(PrologInstantiationError):
+            solve_all(program(), value, set_prolog_flago(name, "fail"))
+        with pytest.raises(PrologInstantiationError):
+            solve_all(program(), value, set_prolog_flago("unknown", value))
+
     def test_current_predicateo_enumerates_source_predicates(self) -> None:
         parent = relation("parent", 2)
         child = relation("child", 2)
@@ -1386,7 +2960,87 @@ class TestPredicateMetadataBuiltins:
 
         assert solve_all(program(), arity, current_predicateo("calltermo", arity)) == [
             num(1),
+            num(2),
+            num(3),
+            num(4),
+            num(5),
+            num(6),
+            num(7),
+            num(8),
         ]
+
+    def test_current_atomo_enumerates_source_dynamic_and_builtin_atoms(self) -> None:
+        parent = relation("parent", 2)
+        memo = relation("memo", 1)
+        name = var("Name")
+        family = program(
+            fact(parent("homer", "bart")),
+            rule(parent("marge", "lisa"), eq("family", "family")),
+        )
+
+        source_atoms = set(solve_all(family, name, current_atomo(name)))
+        dynamic_atoms = set(
+            solve_all(
+                program(),
+                name,
+                conj(
+                    dynamico("memo", 1),
+                    assertzo(memo("cached")),
+                    current_atomo(name),
+                ),
+            ),
+        )
+
+        assert atom("parent") in source_atoms
+        assert atom("homer") in source_atoms
+        assert atom("bart") in source_atoms
+        assert atom("family") in source_atoms
+        assert atom("current_atomo") in source_atoms
+        assert atom("double_quotes") in source_atoms
+        assert atom("cached") in dynamic_atoms
+
+    def test_current_functoro_enumerates_source_dynamic_and_builtin_functors(
+        self,
+    ) -> None:
+        parent = relation("parent", 2)
+        memo = relation("memo", 1)
+        arity = var("Arity")
+        family = program(
+            fact(parent("homer", term("child", "bart"))),
+            rule(
+                parent("marge", "lisa"),
+                eq(term("marker", "ok"), term("marker", "ok")),
+            ),
+        )
+
+        assert solve_all(family, arity, current_functoro("parent", arity)) == [
+            num(2),
+        ]
+        assert solve_all(family, arity, current_functoro("child", arity)) == [
+            num(1),
+        ]
+        assert solve_all(family, arity, current_functoro("bart", arity)) == [
+            num(0),
+        ]
+        assert solve_all(program(), arity, current_functoro("calltermo", arity)) == [
+            num(1),
+            num(2),
+            num(3),
+            num(4),
+            num(5),
+            num(6),
+            num(7),
+            num(8),
+        ]
+        assert solve_all(
+            program(),
+            arity,
+            conj(
+                dynamico("memo", 1),
+                assertzo(memo(term("cached", "value"))),
+                current_functoro("cached", arity),
+            ),
+        ) == [num(1)]
 
     def test_predicate_propertyo_reports_source_properties(self) -> None:
         parent = relation("parent", 2)
@@ -1409,7 +3063,7 @@ class TestPredicateMetadataBuiltins:
         prop = var("Property")
 
         properties = set(
-            solve_all(program(), prop, predicate_propertyo("calltermo", 1, prop)),
+            solve_all(program(), prop, predicate_propertyo("calltermo", 3, prop)),
         )
 
         assert atom("defined") in properties

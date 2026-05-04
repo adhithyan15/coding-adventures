@@ -1,5 +1,505 @@
 # Changelog
 
+## [1.11.0] - 2026-04-29
+
+### Added
+
+**Numeric parameter binding (`:N` style)**
+
+`Cursor.execute` and `Connection.execute` now accept the third PEP 249
+positional paramstyle: numeric `:N` placeholders bound from a `Sequence`.
+This completes the trio (`?`, `:N`, `:name`) supported by the stdlib
+`sqlite3` module.
+
+```python
+conn.execute(
+    "SELECT * FROM employees WHERE dept = :1 OR dept = :2",
+    ("eng", "sales"),
+)
+```
+
+- **`binding.substitute`** — recognises `:` followed by digits as a
+  numeric placeholder.  `N` is 1-indexed: `:1` → `parameters[0]`,
+  `:2` → `parameters[1]`, etc.
+- **Mutual exclusion** — qmark, numeric, and named styles cannot be
+  mixed in a single statement.  The error message now lists all three:
+  `"cannot mix '?', ':N', and ':name' parameter styles in one statement"`.
+- **Error cases** — `:0` raises `ProgrammingError("1-indexed")`;
+  `:N` with `N > len(parameters)` raises `out of range`; `:N` with a
+  mapping raises `numeric` (must be a sequence).
+- **Repeated indices** — `:1` may appear multiple times, all binding to
+  the same value.  Trailing unused values in the sequence are silently
+  ignored (matching `sqlite3`).
+- **`paramstyle`** docstring extended to mention all three runtime
+  styles; the declared value remains `"qmark"`.
+
+### Tests added
+
+- `tests/test_binding.py::TestNumericParameters` — 13 unit tests:
+  single/multi binding, repeated index, extra-value tolerance,
+  out-of-range, zero-index, scanner safe inside literals/comments,
+  multi-digit index, paramstyle exclusivity (mixing, mapping rejection),
+  value type rendering.
+- `tests/test_cursor.py` — 3 end-to-end tests via `Connection.execute`:
+  numeric SELECT, numeric INSERT, repeated index.
+
+## [1.10.0] - 2026-04-29
+
+### Added
+
+**`PRAGMA user_version` (read/write) and `PRAGMA schema_version` (read)**
+
+Two new PRAGMAs matching real SQLite's behaviour for header-field access:
+
+```sql
+PRAGMA user_version;             -- read: returns one row (user_version,)
+PRAGMA user_version = 7;         -- write: stores 7 in the header
+PRAGMA schema_version;           -- read: returns one row (schema_version,)
+```
+
+- **`PRAGMA user_version`** — application-defined `u32` (0 ≤ v ≤ 2³² − 1).
+  Read returns a one-row, one-column result `(user_version,)`.  Write
+  validates the range and stages the change on the backend; persistent
+  backends (`SqliteFileBackend`) flush via the next `commit`.  An
+  out-of-range value raises `ProgrammingError`.
+- **`PRAGMA schema_version`** — read-only.  Returns the schema cookie,
+  which is bumped automatically on every DDL operation (`CREATE TABLE`,
+  `DROP TABLE`, `CREATE INDEX`, `DROP INDEX`, …).  DML statements
+  (INSERT/UPDATE/DELETE) do *not* bump it.
+- **`_PRAGMA_RE` extension** — the engine's PRAGMA regex now also matches
+  the assignment form `PRAGMA name = <int>` (signed integer), with the
+  value captured into a new `set_value` named group.
+- Backend support: relies on
+  `Backend.get_user_version` / `set_user_version` /
+  `get_schema_version` (added in `sql-backend` 0.11.0 and
+  `storage-sqlite` 0.18.0).  Backends without these methods cause
+  `PRAGMA user_version` writes to raise
+  `ProgrammingError("backend does not support …")` rather than
+  AttributeError.
+
+### Tests added
+
+- `tests/test_tier3_pragma.py::TestUserVersion` — 8 tests: default,
+  description, set+read, overwrite, zero-is-valid, max u32, negative
+  rejected, overflow rejected.
+- `tests/test_tier3_pragma.py::TestSchemaVersion` — 6 tests: default,
+  description, CREATE TABLE bumps, DROP TABLE bumps, CREATE INDEX
+  bumps, DML does not bump.
+
+## [1.9.0] - 2026-04-28
+
+### Added
+
+**Bytes (BLOB) parameter binding**
+
+`bytes`, `bytearray`, and `memoryview` parameters can now be bound to `?`
+placeholders.  They render as the SQLite blob-literal form `X'<hex>'`,
+which round-trips through the SQL lexer (it already accepts `X'...'`
+since the BLOB-type work in 1.7.0).
+
+```python
+conn.execute("INSERT INTO blobs (data) VALUES (?)", (b"\xde\xad\xbe\xef",))
+```
+
+- **`binding._to_sql_literal`** — the previous `NotSupportedError` for
+  byte parameters is replaced with `f"X'{bytes(value).hex()}'"`.  The
+  explicit `bytes(value)` coercion materialises a fresh object so a
+  hostile `bytes` subclass overriding `.hex()` cannot inject SQL.
+- **`bytearray` / `memoryview`** are coerced via `bytes(...)` and render
+  identically to `bytes`.
+- **Empty bytes** render as `X''` (parses as a zero-length blob).
+
+### Tests added
+
+- `tests/test_binding.py` — 5 new tests: bytes round-trip, empty bytes,
+  bytearray, memoryview, and a hostile-subclass injection-defense test.
+- `tests/test_cursor.py::test_bytes_param_round_trip` — end-to-end
+  insert + select of binary data through `Connection.execute`.
+
+### Removed
+
+- `test_bytes_not_supported` — replaced by the round-trip tests above.
+
+## [1.8.0] - 2026-04-28
+
+### Added
+
+**Named parameter binding (`:name` style)**
+
+`Cursor.execute` and `Connection.execute` now accept a `Mapping` (e.g. `dict`)
+as the *parameters* argument, in addition to the existing `Sequence` form.
+When a mapping is passed, every `:identifier` placeholder in the SQL is
+replaced by `parameters[identifier]` — matching the stdlib `sqlite3`
+behaviour and PEP 249's `"named"` paramstyle.
+
+```python
+conn.execute(
+    "SELECT name FROM employees WHERE dept = :d AND active = :active",
+    {"d": "eng", "active": True},
+)
+```
+
+- **`binding.substitute(sql, parameters)`** — parameter type now
+  `Sequence | Mapping`.  Sequence → qmark style (`?`); mapping → named
+  style (`:name`).  Mixing the two styles in one statement raises
+  `ProgrammingError`.
+- **Identifier rules** — `:identifier` matches `[A-Za-z_][A-Za-z0-9_]*`.
+  Postgres-style casts like `a::INT` are NOT recognised as placeholders
+  (the `:` is followed by another `:`, not an identifier-start
+  character).  Numeric placeholders like `:1` are also NOT recognised
+  (PEP 249 calls those `"numeric"` style; not yet supported).
+- **NULL-safe placeholders inside literals/comments** — `:foo` inside
+  `'...'`, `--...`, or `/* ... */` is left untouched, matching the
+  existing `?` scanner behaviour.
+- **Extra dict keys are ignored** — only keys referenced by the SQL are
+  consumed; unused keys do not raise (matches `sqlite3`).
+- **`Connection.execute` / `Cursor.execute`** — type signature widened
+  to `Sequence[Any] | Mapping[str, Any] = ()`.
+- **`engine.run`** — same signature widening; forwards the mapping
+  through to `substitute`.
+- **`paramstyle`** docstring clarified — the module still declares
+  `"qmark"` (matching stdlib `sqlite3`) but accepts both styles at
+  runtime.
+
+### Tests added
+
+- `tests/test_binding.py::TestNamedParameters` — 17 unit tests
+  covering single/multi-named binding, repeated keys, extra-key
+  tolerance, missing-key error, scanner robustness inside literals
+  and comments, double-colon non-recognition, identifier rules,
+  paramstyle exclusivity (mixing, wrong container types), and value
+  type rendering.
+- `tests/test_cursor.py` — 4 end-to-end tests via `Connection.execute`:
+  named SELECT, named INSERT, missing-key error, repeated key.
+
+## [1.7.0] - 2026-04-28
+
+### Added — SQL Extras: Scalar Subqueries, BLOB, PRAGMA, UDFs
+
+- **Scalar subqueries** — `(SELECT expr FROM ...)` expressions now work in
+  SELECT list, WHERE, and other expression positions. Returns NULL when
+  the subquery finds no rows; raises `CardinalityError` when it returns
+  more than one row.
+- **BLOB type** — binary data via `x'DEADBEEF'` / `X'...'` hex literal
+  syntax. `SqlValue` extended to include `bytes`; `sql_type_name()` returns
+  `"BLOB"` for byte values.
+- **PRAGMA statements** — engine-level interception for:
+  - `PRAGMA table_info(t)` — column metadata (cid, name, type, notnull,
+    dflt_value, pk)
+  - `PRAGMA index_list(t)` — index names and uniqueness flags
+  - `PRAGMA foreign_key_list(t)` — FK constraints from the live fk_child
+    registry
+  - `PRAGMA table_list` — all table names in the schema
+- **User-defined functions (UDFs)** — `conn.create_function(name, nargs, fn)`
+  registers a Python callable; nargs=-1 for variadic. UDFs take precedence
+  over built-ins.
+
+### Fixed
+
+- **`primary_key` now flows through to backend** — `CREATE TABLE ... PRIMARY
+  KEY` column constraint was lost in the IR → VM → backend pipeline.
+  `IrColumnDef` now carries `primary_key: bool`; `_do_create_table` passes it
+  to `BackendColumnDef`, so `PRAGMA table_info` correctly reports pk=1.
+
+## [1.6.0] - 2026-04-28
+
+### Added — Phase 9: SQL Triggers (BEFORE/AFTER INSERT/UPDATE/DELETE)
+
+- **`_create_trigger()` / `_drop_trigger()` adapter functions** — translate
+  `create_trigger_stmt` / `drop_trigger_stmt` AST nodes into
+  `CreateTriggerStmt` / `DropTriggerStmt` planner statements.
+- **`_node_to_sql()` helper** — reconstructs body SQL from the trigger body
+  AST.  Re-adds single quotes around `STRING` token values (which the lexer
+  strips), normalises `new`/`old` NAME tokens to uppercase, and escapes
+  embedded single quotes using SQL-standard doubling.
+- **`_inject_pseudo_refs()` / `_make_trigger_executor()`** — parameter-
+  substitution approach for `NEW.col` / `OLD.col` references: replaces them
+  with `?` placeholders bound to the actual pre/post-update row values before
+  executing the body SQL.  This avoids the cursor-lookup problem that would
+  arise from creating real pseudo-tables.
+- **`_split_body_sql()`** — splits trigger body SQL on the `" ; "` separator
+  emitted by `_node_to_sql` for multi-statement trigger bodies.
+- **`run()` new parameters** — `trigger_executor` and `trigger_depth` are
+  forwarded to `sql_vm.execute()`; the executor is auto-created on top-level
+  calls and re-used for nested trigger body executions.
+- **`test_tier3_triggers.py`** — 44 new tests covering:
+  - Grammar: parser produces `create_trigger_stmt` / `drop_trigger_stmt` nodes
+    (9 tests)
+  - Adapter: correct `CreateTriggerStmt` / `DropTriggerStmt` output (8 tests)
+  - Backend: `InMemoryBackend` trigger storage and retrieval (8 tests)
+  - Integration: end-to-end trigger correctness via `:memory:` connection
+    (19 tests) including BEFORE/AFTER INSERT/UPDATE/DELETE, NEW/OLD value
+    access, multi-statement bodies, trigger ordering, DROP TRIGGER, and
+    transaction rollback of trigger effects.
+
+### Fixed
+
+- **`sql-vm`: `_do_update` old-row snapshot** — `current_row` was captured as
+  a mutable reference, causing AFTER UPDATE triggers to receive the
+  post-update dict in `old_row`.  Fixed by copying the dict before mutation.
+
+## [1.5.0] - 2026-04-27
+
+### Added — Phase 8: Window Functions (OVER / PARTITION BY)
+
+- **`_window_func_call()` adapter function** — translates a `window_func_call`
+  parse-tree node into a `WindowFuncExpr`.  Handles `COUNT(*)` (becomes
+  `func="count_star"` with `arg=None`), standard `func(expr)` calls, and
+  arg-free functions like `ROW_NUMBER()`.  Parses `PARTITION BY` and window
+  `ORDER BY` (DESC keyword detected via token inspection).
+- **`_primary()` extension** — the `window_func_call` branch is tested before
+  `function_call` (matching the grammar's PEG priority rule).
+- **`test_tier3_window.py`** — 41 new tests covering:
+  - Grammar: parser produces `window_func_call` nodes (7 tests)
+  - Adapter: `_window_func_call()` produces correct `WindowFuncExpr` (13 tests)
+  - Planner: `WindowAgg` plan node structure (5 tests)
+  - Integration: end-to-end SQL via `:memory:` connection (16 tests)
+- **`pyproject.toml` coverage `omit`** — excludes legacy `* 2.py` duplicate
+  files from coverage measurement so the 80% threshold reflects real code.
+
+### Functions supported end-to-end
+
+`ROW_NUMBER()`, `RANK()`, `DENSE_RANK()`, `SUM(col)`, `COUNT(*)`,
+`COUNT(col)`, `AVG(col)`, `MIN(col)`, `MAX(col)`, `FIRST_VALUE(col)`,
+`LAST_VALUE(col)` — all with optional `PARTITION BY` and/or `ORDER BY`
+inside the `OVER (…)` clause.
+
+## [1.4.0] - 2026-04-27
+
+### Added — Phase 7: SAVEPOINT / RELEASE / ROLLBACK TO
+
+- **`SAVEPOINT name`** — creates a named savepoint within the active
+  transaction (implicitly begins a transaction if none is open, matching
+  SQLite semantics).
+- **`RELEASE [SAVEPOINT] name`** — destroys the named savepoint and all
+  savepoints created after it; changes since the savepoint are kept in the
+  outer transaction.
+- **`ROLLBACK TO [SAVEPOINT] name`** — rolls back all changes made after
+  the named savepoint.  The savepoint itself survives and can be rolled
+  back to again.
+- **cursor `_tcl_keyword()` fix** — `ROLLBACK TO …` is no longer
+  intercepted by the TCL fast-path; it passes through to the full engine
+  pipeline so the grammar can extract the savepoint name.
+- **`Connection._savepoints`** — live `list[str]` tracking active
+  savepoints; cleared automatically on `COMMIT` or `ROLLBACK`.
+- **27 new tests** in `tests/test_tier3_savepoint.py` covering grammar,
+  adapter, end-to-end integration, and error handling.
+
+## [1.3.0] - 2026-04-27
+
+### Added — Phase 6: CREATE / DROP VIEW
+
+- **`CREATE VIEW [IF NOT EXISTS] name AS query`** — the engine intercepts
+  `CreateViewStmt` before calling `plan()` and stores the view's defining
+  `SelectStmt` in the connection's `_view_defs` dict.  `IF NOT EXISTS` silently
+  skips the operation when the view already exists; without the flag an existing
+  view name raises `ProgrammingError`.
+- **`DROP VIEW [IF EXISTS] name`** — removes the named view from `_view_defs`.
+  `IF EXISTS` is a no-op when the view is absent; without the flag a missing
+  name raises `ProgrammingError("no such view: …")`.
+- **View expansion in the adapter** — `to_statement()` now accepts a
+  `view_defs: dict[str, SelectStmt] | None` parameter that is threaded through
+  `_query_stmt` → `_select` → `_table_ref` / `_join_clause`.  A plain table
+  reference whose name matches an entry in `view_defs` is expanded inline to a
+  `DerivedTableRef`, exactly like a non-recursive CTE.  CTEs take priority over
+  views with the same name.
+- **`adapter._create_view` / `_drop_view`** helper functions parse the two new
+  statement forms and produce the matching planner AST nodes.
+- **23 new tests** in `tests/test_tier3_views.py` covering grammar parsing,
+  adapter AST construction, view expansion, and end-to-end SQL execution.
+
+## [1.2.0] - 2026-04-27
+
+### Added — Phase 5b: Recursive CTEs
+
+- **End-to-end `WITH RECURSIVE` support** — `adapter._query_stmt()` detects a
+  `RECURSIVE` keyword in the `with_clause` node and, when the CTE body contains
+  a `set_op_clause` (UNION / UNION ALL), parses it as a `RecursiveCTERef`
+  instead of a plain `SelectStmt`.  The adapter parses the anchor sub-select
+  first (with the CTE name in scope for other CTEs but not for self), then
+  parses the recursive body with the CTE name excluded from `active_ctes` so
+  that the self-reference resolves to a plain `TableRef` for the planner.
+- **`adapter._table_ref` handles `RecursiveCTERef` entries** — when a table
+  name matches a `RecursiveCTERef` key in `active_ctes`, the ref is returned
+  directly (with alias applied) rather than being wrapped in a `DerivedTableRef`.
+  The planner's `RecursiveCTERef` path then produces a `RecursiveCTE` plan node.
+- **`adapter._select` / `_join_clause`** — `ctes` parameter type extended to
+  `dict[str, SelectStmt | RecursiveCTERef] | None` so recursive CTE refs flow
+  through JOIN right-hand-side table references as well.
+- **22 new tests** in `tests/test_tier3_recursive_cte.py`:
+  - `TestRecursiveCTEGrammar` (6 tests) — grammar and adapter: `RecursiveCTERef`
+    production, anchor/recursive field contents, `union_all` flag, alias
+    propagation, self-reference left as `TableRef`.
+  - `TestRecursiveCTEIntegration` (11 tests) — end-to-end: simple tree traversal,
+    subtree starting at a node, org-chart depth computation, UNION vs UNION ALL,
+    empty anchor, leaf-only query, multiple roots, ORDER BY and LIMIT on
+    recursive results, COUNT aggregate over CTE.
+  - `TestRecursiveCTEErrors` (5 tests) — error handling: unknown table in
+    anchor, unknown column in anchor, type mismatch in WHERE, non-existent
+    recursive column, LIMIT before recursion completes.
+
+## [1.1.0] - 2026-04-27
+
+### Added — Phase 5a: Non-recursive CTEs
+
+- **`adapter._query_stmt()`** extended to detect an optional `with_clause`
+  child node in the parse tree.  Each `cte_def` is parsed into a `SelectStmt`
+  and recorded in an `active_ctes` dict that accumulates left-to-right so
+  later CTEs can reference earlier ones.
+- **`adapter._table_ref(ctes=)`** — when a plain table name matches a key in
+  `active_ctes`, it is rewritten to a `DerivedTableRef` (alias defaults to the
+  CTE name if no explicit `AS` is given).  This means CTEs are resolved
+  entirely at the adapter layer; the planner, codegen, and VM see ordinary
+  derived-table (subquery) nodes and require no changes.
+- **`adapter._select(ctes=)` / `_join_clause(ctes=)`** — `ctes` parameter
+  threaded through so JOIN right-hand-side table refs are also resolved.
+- **`test_tier3_cte.py`** — 18 new tests: 5 grammar / adapter unit tests,
+  9 end-to-end integration tests, and 4 error / edge-case tests.
+
+## [1.0.0] - 2026-04-27
+
+### Added — Phase 4b: FOREIGN KEY constraints
+
+- **`Connection._fk_child` / `_fk_parent: dict`** — two mutable dicts
+  initialized in `__init__` and threaded through every `Cursor.execute()` →
+  `engine.run()` → `vm.execute()` call so FK registrations from `CREATE TABLE`
+  persist for subsequent DML.
+- **`engine.run()` `fk_child` / `fk_parent` parameters** — forwarded to
+  `vm.execute()`.
+- **`adapter._col_def()` REFERENCES parsing** — recognises `REFERENCES table`
+  and `REFERENCES table(col)` grammar variants; stores `(ref_table, ref_col)`
+  tuple as `ColumnDef.foreign_key` (ref_col is `None` when not specified).
+- **18 new tests** in `tests/test_tier3_foreign_keys.py`:
+  - `TestForeignKeyPipeline` — grammar, adapter, codegen pipeline unit tests.
+  - `TestForeignKeyIntegration` — valid inserts, NULL FK passthrough, multi-child,
+    delete-after-child-removed, table-survival.
+  - `TestForeignKeyErrors` — missing parent on INSERT/UPDATE, RESTRICT on DELETE,
+    error message content, multi-FK column enforcement.
+
+## [0.9.0] - 2026-04-27
+
+### Added — Phase 4a: CHECK constraints
+
+- **`Connection._check_registry: dict`** — mutable dict initialized to `{}` on
+  connection creation and threaded through `Cursor → engine.run() → vm.execute()`.
+  Mutations from `CREATE TABLE` persist in this dict across `execute()` calls.
+- **`engine.run()` `check_registry` parameter** — forwarded to `vm.execute()` so
+  the same dict is used for both registration (CREATE TABLE) and enforcement
+  (INSERT/UPDATE).
+- **`adapter._col_def()` CHECK parsing** — recognises the `CHECK ( expr )` grammar
+  variant and passes the parsed expression as `check_expr` on the `ColumnDef`.
+- **20 new tests** in `tests/test_tier3_check_constraints.py`:
+  - `TestCheckConstraintPipeline` — unit tests for grammar, adapter, planner, codegen.
+  - `TestCheckConstraintIntegration` — valid inserts, boundary values, NULL semantics,
+    UPDATE enforcement, multi-column checks, compound `AND` range check.
+  - `TestCheckConstraintErrors` — violation on INSERT and UPDATE, error message
+    mentions the column name, compound lower/upper bound violations.
+
+## [0.8.0] - 2026-04-27
+
+### Added — Phase 3: ALTER TABLE ADD COLUMN
+
+- **`ALTER TABLE t ADD [COLUMN] col_def`** — full pipeline support across all layers:
+  grammar, lexer keywords, adapter, planner, codegen IR, VM execution, and the
+  InMemoryBackend.  Existing rows are backfilled with NULL (or the column default
+  if one is provided).
+
+- **Grammar** (`code/grammars/sql.grammar`, `sql-lexer _grammar.py`,
+  `sql-parser _grammar.py`) — added `alter_table_stmt` rule; `ALTER`, `ADD`, and
+  `COLUMN` registered as SQL keywords so they tokenize as KEYWORD not NAME.
+
+- **`sql-backend`** — added abstract `add_column(table, column)` method to
+  `Backend`; `InMemoryBackend` appends the column and backfills all existing rows
+  with NULL; `ColumnAlreadyExists` error class added.
+
+- **`storage-sqlite`** — `SqliteFileBackend.add_column` raises
+  `Unsupported("ALTER TABLE ADD COLUMN")` (file-format rewrite not yet
+  implemented).
+
+- **`sql-planner`** — `AlterTableStmt` AST node; `AlterTable` plan node; planner
+  dispatch `_plan_alter_table`.
+
+- **`sql-codegen`** — `AlterTable` IR instruction; compiler case
+  `PlanAlterTable → AlterTable` using `_to_ir_col` for type conversion.
+
+- **`sql-vm`** — `_do_alter_table` handler; `ColumnAlreadyExists` VM error;
+  `_translate_backend_error` extended to map `be.ColumnAlreadyExists`.
+
+- **`mini_sqlite.adapter`** — `_alter_table` parser; `alter_table_stmt` dispatch.
+
+- **`mini_sqlite.errors.translate`** — maps `ColumnAlreadyExists` to
+  `OperationalError`.
+
+- **`test_tier3_alter_table.py`** — 16 new tests across three classes:
+  - `TestAlterTablePipeline` (5 tests): grammar, adapter, planner, codegen.
+  - `TestAlterTableIntegration` (9 tests): nullable add, NOT NULL, INSERT after
+    ALTER, UPDATE on new column, WHERE filter, multiple columns, commit.
+  - `TestAlterTableErrors` (2 tests): table-not-found, duplicate-column.
+
+## [0.7.0] - 2026-04-27
+
+### Added — Phase 2: EXISTS / NOT EXISTS subquery expressions
+
+- **`EXISTS (subquery)` and `NOT EXISTS (subquery)`** — fully supported in
+  `WHERE`, `HAVING`, and `SELECT` list positions.  Only uncorrelated subqueries
+  are supported in this version (the subquery may not reference columns from
+  the outer query).
+
+- **Grammar** (`code/grammars/sql.grammar`) — `EXISTS "(" query_stmt ")"` added
+  as an alternative in the `primary` rule, before the existing subquery-in-parens
+  alternative.  `NOT EXISTS` works automatically via the existing `not_expr`
+  grammar rule.
+
+- **Adapter** (`mini_sqlite.adapter._primary`) — recognises the `EXISTS`
+  keyword token and constructs an `ExistsSubquery(query=SelectStmt)` from the
+  child `query_stmt` node.
+
+- **`_flatten_project_over_aggregate`** (engine) — extended to handle
+  `Project(Having(Aggregate(...)))` in addition to the pre-existing
+  `Project(Aggregate(...))` case.  Without this fix, HAVING clauses with
+  non-standard predicates (including EXISTS) caused an "unsupported plan node:
+  Having" error during codegen.
+
+- **`test_tier3_exists.py`** — 26 new tests across three classes:
+  - `TestExistsBasic` (6 tests): grammar parsing, TRUE/FALSE result verification.
+  - `TestExistsIntegration` (13 tests): WHERE, HAVING, SELECT-list, AND/OR
+    combinations, filtered subqueries, LIMIT 0 subquery, empty-table cases.
+  - `TestNotExistsIntegration` (7 tests): same coverage for `NOT EXISTS`.
+
+## [0.6.1] - 2026-04-27
+
+### Added — ML observer hook: IndexPolicy.on_query_event forwarding
+
+- **`IndexPolicy.on_query_event(event: QueryEvent) -> None`** (optional hook) —
+  documented as a third, fully optional method on the `IndexPolicy` protocol.
+  When implemented by a custom policy, the advisor forwards every
+  `QueryEvent` to it immediately after the drop loop completes.  This gives
+  ML-based or adaptive policies access to raw runtime signals — table scanned,
+  filtered columns, `rows_scanned`, `rows_returned`, `used_index`, and
+  `duration_us` — so they can maintain their own feature history without
+  needing to intercept the advisor's internal state.
+
+  Detection follows the same `hasattr` / `callable` pattern already used for
+  `should_drop`: a policy that does not implement `on_query_event` is simply
+  never called, preserving full backward compatibility with v2-style policies.
+
+- **`IndexAdvisor.on_query_event` restructured** — the early `return` for
+  policies without `should_drop` has been replaced by a guarded `if
+  callable(should_drop_fn):` block so execution always reaches the
+  `on_query_event` forwarding at the end of the method, regardless of whether
+  the drop loop ran.
+
+- **`tests/test_tier3_ml_hook.py`** — 14 new tests covering:
+  - Protocol surface: `HitCountPolicy` has no `on_query_event`; v2 policies
+    remain backward compatible.
+  - Forwarding behaviour: single and multiple events forwarded in order; the
+    exact same `QueryEvent` object is passed; hook fires even when
+    `should_drop` is absent; hook fires after the drop loop.
+  - ML policy integration via `Connection`: policy accumulates events from
+    real queries, sees `used_index` after index creation, coexists with
+    `should_drop`, survives `set_policy` swaps, and exposes selectivity
+    signals.
+
 ## [0.6.0] - 2026-04-23
 
 ### Added — Phase 9.7: Composite (multi-column) automatic index support (IX-8)
@@ -361,3 +861,4 @@
   pipeline exception family, including lexer and parser errors →
   `ProgrammingError`.
 - Output value coercion: `True`/`False` → `1`/`0` to match sqlite3.
+

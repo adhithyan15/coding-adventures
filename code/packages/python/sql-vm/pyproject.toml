@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-sql-vm"
-version = "0.6.0"
+version = "1.5.0"
 description = "Dispatch-loop virtual machine that executes sql-codegen Programs against a pluggable Backend."
 requires-python = ">=3.12"
 license = "MIT"
@@ -54,6 +54,7 @@ addopts = "--cov=sql_vm --cov-report=term-missing --cov-fail-under=80"
 
 [tool.coverage.run]
 source = ["src/sql_vm"]
+omit = ["**/sql_vm/* 2.py"]
 
 [tool.coverage.report]
 fail_under = 80

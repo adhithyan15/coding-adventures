@@ -1,0 +1,52 @@
+cabal-version:      2.4
+name:               micro-qr
+version:            0.1.0.0
+synopsis:           ISO/IEC 18004:2015 Annex E Micro QR Code encoder
+description:
+    Micro QR Code encoder — ISO/IEC 18004:2015 Annex E compliant.
+    .
+    Encodes any UTF-8 string into a scannable Micro QR Code symbol. Outputs a
+    ModuleGrid (abstract boolean grid) that can be passed to barcode-2d's
+    layout() for pixel rendering.
+    .
+    Supports:
+    .
+    * Symbols: M1 (11×11), M2 (13×13), M3 (15×15), M4 (17×17)
+    * Modes: Numeric (M1+), Alphanumeric (M2+), Byte (M3+)
+    * ECC levels: DETECTION (M1), L (M2-M4), M (M2-M4), Q (M4 only)
+    * Single 7×7 top-left finder pattern (no rotation invariance)
+    * Reed-Solomon error correction (GF(256), b=0 convention, poly 0x11D)
+    * 4 mask patterns (subset of regular QR's 8) with ISO penalty scoring
+    * 15-bit BCH format information (single copy, XOR mask 0x4445)
+license:            MIT
+author:             Coding Adventures
+maintainer:         contact@coding-adventures.com
+category:           Graphics
+homepage:           https://github.com/adhithyan15/coding-adventures
+bug-reports:        https://github.com/adhithyan15/coding-adventures/issues
+extra-doc-files:    README.md
+                    CHANGELOG.md
+
+library
+    exposed-modules:  CodingAdventures.MicroQR
+    build-depends:    base               >= 4.7 && < 5
+                    , vector             >= 0.12
+                    , gf256
+                    , barcode-2d
+    hs-source-dirs:   src
+    default-language: Haskell2010
+    ghc-options:      -Wall
+
+test-suite micro-qr-test
+    default-language: Haskell2010
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Spec.hs
+    other-modules:    MicroQRSpec
+    build-depends:      base       >= 4.7 && < 5
+                      , vector     >= 0.12
+                      , micro-qr
+                      , barcode-2d
+                      , hspec      == 2.*
+    build-tool-depends: hspec-discover:hspec-discover == 2.*
+    ghc-options:        -Wall

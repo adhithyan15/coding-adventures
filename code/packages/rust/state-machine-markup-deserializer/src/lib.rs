@@ -679,19 +679,41 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
         "flush_text"
         | "emit_current_as_text"
         | "append_text_replacement"
+        | "append_attribute_value_replacement"
+        | "append_tag_name_replacement"
+        | "append_attribute_name_replacement"
+        | "append_comment_replacement"
+        | "append_doctype_name_replacement"
+        | "append_doctype_public_identifier_replacement"
+        | "append_doctype_system_identifier_replacement"
         | "create_start_tag"
         | "create_end_tag"
         | "create_comment"
         | "create_doctype"
         | "start_attribute"
         | "commit_attribute"
+        | "commit_attribute_dedup"
         | "mark_self_closing"
         | "mark_force_quirks"
+        | "set_doctype_public_identifier_empty"
+        | "set_doctype_system_identifier_empty"
         | "clear_temporary_buffer"
         | "append_temporary_buffer_to_text"
+        | "append_temporary_buffer_to_attribute_value"
+        | "append_numeric_character_reference_to_text"
+        | "append_numeric_character_reference_to_attribute_value"
+        | "append_named_character_reference_to_text"
+        | "append_named_character_reference_to_attribute_value"
+        | "append_named_character_reference_or_temporary_buffer_to_text"
+        | "append_named_character_reference_or_temporary_buffer_to_attribute_value"
+        | "recover_named_character_reference_to_text"
+        | "recover_named_character_reference_to_attribute_value"
         | "discard_current_token"
         | "switch_to_return_state"
         | "emit_rcdata_end_tag_or_text"
+        | "emit_rcdata_end_tag_with_trailing_solidus_or_text"
+        | "emit_rcdata_end_tag_with_whitespace_or_text"
+        | "emit_rcdata_end_tag_with_attributes_or_text"
         | "emit_current_token" => return Ok(()),
         _ => {}
     }
@@ -711,6 +733,8 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
             | "append_comment(current_lowercase)"
             | "append_doctype_name(current)"
             | "append_doctype_name(current_lowercase)"
+            | "append_doctype_public_identifier(current)"
+            | "append_doctype_system_identifier(current)"
             | "append_temporary_buffer(current)"
             | "append_temporary_buffer(current_lowercase)"
     ) {
@@ -728,6 +752,12 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
     if action.starts_with("append_doctype_name(") && action.ends_with(')') {
         return Ok(());
     }
+    if action.starts_with("append_doctype_public_identifier(") && action.ends_with(')') {
+        return Ok(());
+    }
+    if action.starts_with("append_doctype_system_identifier(") && action.ends_with(')') {
+        return Ok(());
+    }
     if action.starts_with("append_temporary_buffer(") && action.ends_with(')') {
         return Ok(());
     }
@@ -739,6 +769,15 @@ fn validate_action(action: &str, token_names: &HashSet<String>) -> Result<()> {
     }
     if action.starts_with("switch_to(") && action.ends_with(')') {
         return Ok(());
+    }
+    if action.starts_with("switch_to_if_temporary_buffer_equals(") && action.ends_with(')') {
+        let arguments = action
+            .trim_start_matches("switch_to_if_temporary_buffer_equals(")
+            .trim_end_matches(')');
+        let parts = arguments.split(',').map(str::trim).collect::<Vec<_>>();
+        if parts.len() == 3 && parts.iter().all(|part| !part.is_empty()) {
+            return Ok(());
+        }
     }
     if action.starts_with("emit(") && action.ends_with(')') {
         let token = action

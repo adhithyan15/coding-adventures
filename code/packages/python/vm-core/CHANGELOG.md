@@ -6,6 +6,90 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — LANG18: Lightweight VM coverage mode
+
+- **`VMCore._coverage_mode` / `VMCore._coverage`** — two new internal fields that
+  form the LANG18 coverage subsystem.  `_coverage_mode` is the master gate (False
+  by default, checked once per dispatch iteration); `_coverage` accumulates executed
+  IIR instruction indices per function as `dict[str, set[int]]`.  Zero allocation
+  and zero dict writes when coverage is disabled.
+
+- **`VMCore.enable_coverage()`** — enter coverage mode.  Idempotent; existing data
+  is preserved so multiple partial runs accumulate cleanly.
+
+- **`VMCore.disable_coverage()`** — exit coverage mode.  Collected data is preserved;
+  call `reset_coverage()` to clear it.  Idempotent (no-op if already off).
+
+- **`VMCore.is_coverage_mode() -> bool`** — True when coverage collection is active.
+  Coverage mode and debug mode (`is_debug_mode()`) are independent flags; both can
+  be True simultaneously without interference.
+
+- **`VMCore.coverage_data() -> dict[str, frozenset[int]]`** — point-in-time snapshot
+  of executed IIR instruction indices per function.  Returns `frozenset` values so
+  callers cannot accidentally mutate the live coverage sets.  Subsequent execution
+  does not retroactively change the returned snapshot.
+
+- **`VMCore.reset_coverage()`** — clear all coverage data and disable coverage mode.
+  After this call `coverage_data()` returns `{}` and `is_coverage_mode()` is False.
+
+- **Dispatch loop change** (`vm_core/dispatch.py`) — inserted an
+  `if vm._coverage_mode:` block immediately after the LANG06 debug-mode check.
+  When coverage is on, the current `ip_before` is added to
+  `vm._coverage[frame.fn.name]`.  This is the only hot-path change; coverage and
+  debug mode are checked in separate `if`-blocks so neither feature pays the cost
+  of the other.
+
+- **`tests/test_coverage.py`** — 23 new tests organised into six classes:
+  `TestCoverageDefaultState`, `TestCoverageCollection`, `TestBranchCoverage`,
+  `TestCoverageAccumulation`, `TestDisableCoverage`, `TestCoverageAndDebugMode`.
+  All pass with the full test suite at 97.69% total coverage.
+
+### Added — LANG06: Debug hooks, breakpoints, and step-mode API
+
+- `vm_core.debug` — new module containing:
+  - `StepMode` enum with three values: `IN` (pause at very next IIR instruction),
+    `OVER` (pause at next instruction in same or outer frame), `OUT` (pause after
+    the current frame returns).
+  - `DebugHooks` — base class with four no-op callback methods: `on_instruction`,
+    `on_call`, `on_return`, `on_exception`.  Debug adapters subclass this.
+- `VMCore.attach_debug_hooks(hooks)` — registers a `DebugHooks` adapter and
+  enables debug mode (`_debug_mode = True`).  Zero overhead when no hooks are
+  attached: the dispatch loop gates the entire debug path behind a single boolean.
+- `VMCore.detach_debug_hooks()` — removes the adapter and disables debug mode.
+- `VMCore.is_debug_mode() -> bool` — True when hooks are attached.
+- `VMCore.pause()` — requests that the dispatch loop fire `on_instruction` at
+  the very next instruction.
+- `VMCore.step_in()` — set `StepMode.IN`: pause at every next instruction in any
+  frame.  Call from inside `on_instruction` to single-step.
+- `VMCore.step_over()` — set `StepMode.OVER`: pause at next instruction in the
+  current or a shallower frame (skips callee internals).
+- `VMCore.step_out()` — set `StepMode.OUT`: let execution continue until the
+  current frame returns, then pause at the next instruction in the caller.
+- `VMCore.continue_()` — clear step mode; execution resumes without any
+  additional pauses until the next breakpoint.
+- `VMCore.set_breakpoint(instr_idx, fn_name, condition=None)` — register an
+  unconditional or conditional breakpoint.  A `condition` string is a Python
+  expression evaluated with the frame's named register values as locals; the
+  breakpoint only fires when the expression is truthy.  Invalid expressions are
+  silently ignored.
+- `VMCore.clear_breakpoint(instr_idx, fn_name)` — remove a registered
+  breakpoint.
+- `VMCore.call_stack() -> list[VMFrame]` — return a shallow copy of the current
+  frame stack (bottom to top).  Safe to inspect outside `on_instruction`.
+- `VMCore.patch_function(fn_name, new_fn)` — hot-swap a function body mid-run;
+  raises `KeyError` if the function is not in the module.
+- `run_dispatch_loop` — fires `on_instruction` before each dispatch when debug
+  mode is on; fires `on_call` in `handle_call` before pushing the callee frame;
+  fires `on_return` in `handle_ret` / `handle_ret_void` after popping the frame;
+  fires `on_exception` (best-effort, never masked) when an unhandled error
+  propagates.  `StepMode.OUT` is handled in `_fire_on_return` by converting a
+  return at the watched depth into a `_paused = True` for the next instruction.
+- Re-exports `DebugHooks` and `StepMode` from the package root.
+- `tests/test_debug_hooks.py` — 184 tests (28 new debug-hook tests added to the
+  existing 156): attach/detach, on_instruction at breakpoints, conditional
+  breakpoints, step_in / step_over / step_out, call_stack, patch_function,
+  on_call / on_return / on_exception, adapter-error robustness.
+
 ### Added — LANG17 PR3: ``execute_traced`` and the ``VMTracer`` helper
 
 - `vm_core.tracer` — new module with `VMTrace` dataclass and
