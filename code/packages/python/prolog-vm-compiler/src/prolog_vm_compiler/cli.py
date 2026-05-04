@@ -21,12 +21,20 @@ from cli_builder import (
 from logic_engine import Atom, Compound, Disequality, LogicVar, Number, String, Term
 
 from prolog_vm_compiler.compiler import (
+    CompiledPrologVMProgram,
     PrologAnswer,
     PrologVMBackend,
     PrologVMRuntime,
+    compile_prolog_file,
+    compile_prolog_project_from_files,
+    compile_prolog_source,
     create_prolog_file_runtime,
     create_prolog_project_file_runtime,
     create_prolog_source_vm_runtime,
+    run_compiled_prolog_query,
+    run_compiled_prolog_query_answers,
+    run_initialized_compiled_prolog_query,
+    run_initialized_compiled_prolog_query_answers,
     run_prolog_file_query,
     run_prolog_file_query_answers,
     run_prolog_project_file_query,
@@ -50,6 +58,7 @@ class CliArgs:
     source: str | None
     queries: tuple[str, ...]
     source_query_index: int
+    all_source_queries: bool
     query_module: str | None
     limit: int | None
     dialect: CliDialect
@@ -133,12 +142,20 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if source is None and not files:
         msg = "provide --source or at least one Prolog file"
         raise ValueError(msg)
+    all_source_queries = bool(flags["all-source-queries"])
+    if all_source_queries and queries:
+        msg = "--all-source-queries cannot be combined with --query"
+        raise ValueError(msg)
+    if all_source_queries and bool(flags["interactive"]):
+        msg = "--all-source-queries cannot be combined with --interactive"
+        raise ValueError(msg)
 
     return CliArgs(
         files=files,
         source=source,
         queries=queries,
         source_query_index=source_query_index,
+        all_source_queries=all_source_queries,
         query_module=query_module,
         limit=limit,
         dialect=_dialect(_required_string(flags["dialect"], name="--dialect")),
@@ -287,6 +304,9 @@ def _run_cli(args: CliArgs) -> int:
             saw_failure = _run_interactive(args, runtime=runtime) or saw_failure
         return 1 if saw_failure else 0
 
+    if args.all_source_queries:
+        return _run_all_source_queries(args)
+
     results = _run_source_query(args)
     _print_result_records(
         [
@@ -299,6 +319,71 @@ def _run_cli(args: CliArgs) -> int:
         args=args,
     )
     return 0 if results else 1
+
+
+def _run_all_source_queries(args: CliArgs) -> int:
+    compiled_program = _compile_source_program(args)
+    if compiled_program.source_query_count == 0:
+        msg = "source contains no ?- queries"
+        raise ValueError(msg)
+
+    records: list[dict[str, object]] = []
+    saw_failure = False
+    for index in range(compiled_program.source_query_count):
+        results = _run_compiled_source_query(args, compiled_program, index)
+        records.append(
+            _result_record(
+                results,
+                values=args.values,
+                source_query_index=index,
+            ),
+        )
+        saw_failure = saw_failure or not results
+
+    _print_result_records(records, args=args)
+    return 1 if saw_failure else 0
+
+
+def _compile_source_program(args: CliArgs) -> CompiledPrologVMProgram:
+    if args.source is not None:
+        return compile_prolog_source(args.source, dialect=args.dialect)
+    if len(args.files) == 1:
+        return compile_prolog_file(args.files[0], dialect=args.dialect)
+    return compile_prolog_project_from_files(*args.files, dialect=args.dialect)
+
+
+def _run_compiled_source_query(
+    args: CliArgs,
+    compiled_program: CompiledPrologVMProgram,
+    source_query_index: int,
+) -> list[PrologAnswer] | list[Term | tuple[Term, ...]]:
+    if args.values:
+        if args.initialize:
+            return run_initialized_compiled_prolog_query(
+                compiled_program,
+                source_query_index,
+                args.limit,
+                backend=args.backend,
+            )
+        return run_compiled_prolog_query(
+            compiled_program,
+            source_query_index,
+            args.limit,
+            backend=args.backend,
+        )
+    if args.initialize:
+        return run_initialized_compiled_prolog_query_answers(
+            compiled_program,
+            source_query_index,
+            args.limit,
+            backend=args.backend,
+        )
+    return run_compiled_prolog_query_answers(
+        compiled_program,
+        source_query_index,
+        args.limit,
+        backend=args.backend,
+    )
 
 
 def _run_ad_hoc_queries(

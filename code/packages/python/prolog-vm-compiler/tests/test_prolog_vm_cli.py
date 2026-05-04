@@ -199,6 +199,60 @@ def test_cli_runs_file_embedded_query_with_named_answers(
     ]
 
 
+def test_cli_runs_all_file_embedded_queries(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    source_path = tmp_path / "family.pl"
+    source_path.write_text(
+        "parent(homer, bart).\n"
+        "?- parent(homer, Who).\n"
+        "?- parent(marge, Who).\n",
+        encoding="utf-8",
+    )
+
+    status = main([
+        str(source_path),
+        "--all-source-queries",
+        "--backend",
+        "bytecode",
+    ])
+
+    assert status == 1
+    assert capsys.readouterr().out.splitlines() == [
+        "Who = bart.",
+        "false.",
+    ]
+
+
+def test_cli_json_output_serializes_all_source_queries(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart). ?- parent(homer, Who). ?- parent(marge, Who).",
+        "--all-source-queries",
+        "--format",
+        "json",
+    ])
+
+    payload = json.loads(capsys.readouterr().out)
+
+    assert status == 1
+    assert payload[0]["success"] is True
+    assert payload[0]["source_query_index"] == 0
+    assert payload[0]["answers"][0]["bindings"]["Who"] == {
+        "type": "atom",
+        "value": "bart",
+    }
+    assert payload[1] == {
+        "answer_count": 0,
+        "answers": [],
+        "source_query_index": 1,
+        "success": False,
+    }
+
+
 def test_cli_runs_project_file_graph_with_query_module(
     tmp_path: Path,
     capsys: pytest.CaptureFixture[str],
@@ -265,6 +319,21 @@ def test_cli_rejects_missing_input(capsys: pytest.CaptureFixture[str]) -> None:
 
     assert status == 2
     assert "provide --source or at least one Prolog file" in capsys.readouterr().err
+
+
+def test_cli_rejects_all_source_queries_with_ad_hoc_query(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        "--all-source-queries",
+        "--query",
+        "parent(homer, Who)",
+    ])
+
+    assert status == 2
+    assert "--all-source-queries cannot be combined" in capsys.readouterr().err
 
 
 def test_cli_json_output_serializes_validation_errors(
