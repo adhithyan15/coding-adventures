@@ -102,8 +102,16 @@ impl CpuExecutor {
 
     /// Process one request and produce a response.  Pure (modulo
     /// internal state) — does no I/O, never blocks.
+    ///
+    /// Mutex poisoning (caused by a panic in a previous request, e.g.
+    /// while evaluating a kernel against malicious input) is recovered
+    /// from rather than propagated.  This means a single bad request
+    /// cannot DoS the executor for all subsequent clients.
     pub fn handle(&self, req: ExecutorRequest) -> ExecutorResponse {
-        let mut s = self.state.lock().expect("CpuExecutor mutex poisoned");
+        let mut s = match self.state.lock() {
+            Ok(g) => g,
+            Err(poisoned) => poisoned.into_inner(),
+        };
         match req {
             ExecutorRequest::Register {
                 protocol_version: _,

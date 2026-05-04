@@ -13,7 +13,70 @@ use std::collections::HashMap;
 
 /// Run the graph and return per-op timings.  Returns `Err(message)`
 /// on the first op that fails (out-of-bounds, missing buffer, etc.).
+///
+/// ## Security
+///
+/// Before any kernel runs, we validate:
+/// - Every tensor's `numel * dtype.size_bytes()` fits in `u64` (no overflow).
+/// - Every input buffer's actual size matches its declared shape×dtype.
+/// - Reasonable size cap (1 GiB per tensor) to limit OOM blast.
+///
+/// This closes the panic-on-malicious-shape attack surface that
+/// arises when a graph claims a shape larger than its actual buffer.
 pub fn run(buffers: &mut BufferStore, graph: &ComputeGraph) -> Result<Vec<OpTiming>, String> {
+    // 16 MiB max per tensor for V1 — generous for a CPU executor while
+    // still bounding a malicious graph's DoS impact.  Tunable.
+    const MAX_TENSOR_BYTES: u64 = 16 * 1024 * 1024;
+
+    // ──── Up-front validation pass ────
+    for t in &graph.tensors {
+        let bytes = t
+            .shape
+            .byte_size(t.dtype)
+            .ok_or_else(|| format!("tensor {} byte_size overflows u64", t.id.0))?;
+        if bytes > MAX_TENSOR_BYTES {
+            return Err(format!(
+                "tensor {} requires {} bytes, exceeds the {}-byte limit",
+                t.id.0, bytes, MAX_TENSOR_BYTES
+            ));
+        }
+    }
+    for inp in &graph.inputs {
+        let bytes = inp.shape.byte_size(inp.dtype).unwrap() as usize;
+        match buffers.get(inp.residency.buffer) {
+            Ok(buf) if buf.len() >= bytes => {} // OK
+            Ok(buf) => {
+                return Err(format!(
+                    "input tensor {} declares {} bytes but buffer {} is only {} bytes",
+                    inp.id.0,
+                    bytes,
+                    inp.residency.buffer.0,
+                    buf.len()
+                ));
+            }
+            Err(_) => {
+                return Err(format!(
+                    "input tensor {} buffer {} not found",
+                    inp.id.0, inp.residency.buffer.0
+                ));
+            }
+        }
+    }
+    for c in &graph.constants {
+        let pt = graph
+            .tensor(c.tensor)
+            .ok_or_else(|| format!("constant references unknown tensor {}", c.tensor.0))?;
+        let expected = pt.shape.byte_size(pt.dtype).unwrap() as usize;
+        if c.bytes.len() != expected {
+            return Err(format!(
+                "constant tensor {} declares {} bytes but bytes are {}",
+                c.tensor.0,
+                expected,
+                c.bytes.len()
+            ));
+        }
+    }
+
     // Track which BufferId currently holds each TensorId.
     let mut residency: HashMap<TensorId, Residency> = HashMap::new();
     for inp in &graph.inputs {

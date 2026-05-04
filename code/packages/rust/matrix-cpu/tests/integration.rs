@@ -578,7 +578,96 @@ fn abs_i32() {
     assert_eq!(got, vec![5, 7, 42]);
 }
 
-// ─────────────────── 4. Local transport ───────────────────
+// ─────────────────── 4. Hardening: malicious graph rejection ───────────────────
+
+#[test]
+fn dispatch_rejects_oversized_tensor() {
+    // A tensor with shape [2^20, 2^20, 4] f32 declares ~4 TiB.  The
+    // dispatch validator should reject this without OOM.
+    let exec = CpuExecutor::new();
+    let buf = match exec.handle(ExecutorRequest::AllocBuffer { bytes: 16 }) {
+        ExecutorResponse::BufferAllocated { buffer } => buffer,
+        _ => panic!(),
+    };
+    let oversized = Shape::from(&[1 << 20, 1 << 20, 4]);
+    let g = ComputeGraph {
+        format_version: compute_ir::WIRE_FORMAT_VERSION,
+        inputs: vec![placed(0, DType::F32, oversized.clone(), cpu_buf(buf.0))],
+        outputs: vec![],
+        constants: vec![],
+        ops: vec![],
+        tensors: vec![placed(0, DType::F32, oversized, cpu_buf(buf.0))],
+    };
+    match exec.handle(ExecutorRequest::Dispatch { job_id: 1, graph: g }) {
+        ExecutorResponse::Error { message, .. } => {
+            assert!(
+                message.contains("exceeds") || message.contains("overflows"),
+                "expected size-cap error, got: {}",
+                message
+            );
+        }
+        other => panic!("expected Error, got {:?}", other),
+    }
+}
+
+#[test]
+fn dispatch_rejects_buffer_smaller_than_shape() {
+    // Declare a tensor of shape [10] f32 (40 bytes) but supply only a
+    // 4-byte buffer.  Validator must reject.
+    let exec = CpuExecutor::new();
+    let buf = match exec.handle(ExecutorRequest::AllocBuffer { bytes: 4 }) {
+        ExecutorResponse::BufferAllocated { buffer } => buffer,
+        _ => panic!(),
+    };
+    let g = ComputeGraph {
+        format_version: compute_ir::WIRE_FORMAT_VERSION,
+        inputs: vec![placed(0, DType::F32, Shape::from(&[10]), cpu_buf(buf.0))],
+        outputs: vec![],
+        constants: vec![],
+        ops: vec![],
+        tensors: vec![placed(0, DType::F32, Shape::from(&[10]), cpu_buf(buf.0))],
+    };
+    match exec.handle(ExecutorRequest::Dispatch { job_id: 1, graph: g }) {
+        ExecutorResponse::Error { message, .. } => {
+            assert!(
+                message.contains("declares") || message.contains("buffer"),
+                "got: {}",
+                message
+            );
+        }
+        other => panic!("expected Error, got {:?}", other),
+    }
+}
+
+#[test]
+fn dispatch_rejects_constant_byte_length_mismatch() {
+    let exec = CpuExecutor::new();
+    let g = ComputeGraph {
+        format_version: compute_ir::WIRE_FORMAT_VERSION,
+        inputs: vec![],
+        outputs: vec![],
+        constants: vec![PlacedConstant {
+            tensor: TensorId(0),
+            // Tensor declares [3] f32 = 12 bytes, supply 5 — must reject.
+            bytes: vec![0u8; 5],
+            residency: cpu_buf(99),
+        }],
+        ops: vec![],
+        tensors: vec![placed(0, DType::F32, Shape::from(&[3]), cpu_buf(99))],
+    };
+    match exec.handle(ExecutorRequest::Dispatch { job_id: 1, graph: g }) {
+        ExecutorResponse::Error { message, .. } => {
+            assert!(
+                message.contains("constant") || message.contains("bytes"),
+                "got: {}",
+                message
+            );
+        }
+        other => panic!("expected Error, got {:?}", other),
+    }
+}
+
+// ─────────────────── 5. Local transport ───────────────────
 
 #[test]
 fn local_transport_ferries_requests() {
