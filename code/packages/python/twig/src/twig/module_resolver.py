@@ -80,9 +80,9 @@ detection algorithm itself.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Sequence
 
 from directed_graph import (
     DirectedGraph,
@@ -133,6 +133,7 @@ def resolve_modules(
     entry_module: str,
     *,
     search_paths: Sequence[Path],
+    include_stdlib: bool = True,
 ) -> list[ResolvedModule]:
     """Resolve ``entry_module`` and its transitive imports.
 
@@ -143,9 +144,27 @@ def resolve_modules(
     can iterate the list once and emit code without forward
     references.
 
+    Parameters
+    ----------
+    entry_module:
+        The Twig module name to resolve (e.g. ``"user/hello"``).
+    search_paths:
+        Ordered list of directories to search for ``.tw`` files.
+        Earlier entries shadow later ones, matching Python's
+        ``sys.path`` semantics.
+    include_stdlib:
+        When ``True`` (default), the bundled Twig standard library
+        is appended to ``search_paths`` automatically.  This allows
+        Twig programs to ``(import stdlib/io)`` without the caller
+        needing to know where the stdlib lives on disk.  Pass
+        ``False`` if you are supplying the stdlib path manually
+        (e.g. during stdlib development / testing) or if you
+        intentionally want to exclude it.
+
     Raises :class:`TwigCompileError` on:
 
-    * **No search paths** — ``search_paths`` is empty.
+    * **No search paths** — ``search_paths`` is empty and
+      ``include_stdlib=False``.
     * **Missing module file** — ``entry_module`` or any
       imported module isn't found in any search path.
     * **Path / name mismatch** — a file at ``stdlib/io.tw``
@@ -158,7 +177,18 @@ def resolve_modules(
     The synthetic ``host`` module is auto-resolved without
     consulting the search path.
     """
-    if not search_paths:
+    # Append the bundled stdlib search root when requested.
+    # Import here to avoid a circular dependency at module load time
+    # (twig/__init__.py imports from this module, and we import back).
+    effective_paths: Sequence[Path] = search_paths
+    if include_stdlib:
+        from pathlib import Path as _Path
+
+        _stdlib = _Path(__file__).parent / "stdlib_twig"
+        if _stdlib.exists():
+            effective_paths = [*search_paths, _stdlib]
+
+    if not effective_paths:
         raise TwigCompileError(
             "No module search paths configured.  "
             "Pass at least one directory via search_paths."
@@ -166,7 +196,7 @@ def resolve_modules(
 
     # Pass 1: recursively discover every reachable module.
     discovered: dict[str, ResolvedModule] = {}
-    _discover(entry_module, search_paths, discovered)
+    _discover(entry_module, effective_paths, discovered)
 
     # Pass 2: build the import graph and topo-sort it.
     order = _topo_order(discovered)
@@ -419,11 +449,11 @@ def _find_module_file(name: str, search_paths: Sequence[Path]) -> Path:
         # Reject any path that escapes the search root.
         try:
             candidate.relative_to(sp_resolved)
-        except ValueError:
+        except ValueError as exc:
             raise TwigCompileError(
                 f"module name {name!r} resolves to a path outside "
                 f"the search root {sp_resolved}"
-            )
+            ) from exc
         if candidate.is_file():
             return candidate
     raise TwigCompileError(

@@ -1,5 +1,31 @@
 # Changelog — twig-jvm-compiler
 
+## [0.8.0] — 2026-05-04 — TW04 Phase 4g — stdlib/io end-to-end on JVM
+
+### Added — stdlib/io runtime tests (`tests/test_stdlib_jvm.py`)
+
+End-to-end tests proving that Twig programs importing the bundled
+`stdlib/io` module compile and execute on the real JVM.  The headline
+acceptance criterion:
+
+```
+(module hello (import stdlib/io))
+(stdlib/io/println 42)
+(stdlib/io/println (+ 17 25))
+→ stdout: b"42\n42\n\n"   (JVM appends trailing byte = return of last form)
+```
+
+Tests cover: `println`, `print-int`, `newline`, `print-bool`, multi-call,
+and a define-then-call pattern.  All 14 tests run on real `java` and skip
+cleanly when `java` is not on PATH.
+
+Note on JVM trailing byte: `_start` always writes the integer return value
+of the last top-level expression as a raw byte via SYSCALL 1.  For a call
+to `println` this return value is the return of the inner `host/write-byte
+10` (ASCII newline = 10), so the JVM appends `b"\n"` after user output.
+For `print-bool` the last write-byte call has ASCII return 101 (`'e'`), so
+`"true"` becomes `b"truee"` and `"false"` becomes `b"falsee"`.
+
 ## [0.7.0] — 2026-05-04 — TW04 Phase 4d — multi-module JVM compilation
 
 ### Added — `compile_modules(modules, *, entry_module)` → `MultiModuleResult`
