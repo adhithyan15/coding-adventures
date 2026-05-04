@@ -1,5 +1,72 @@
 # Changelog — twig-beam-compiler
 
+## 0.5.0 — 2026-05-04 — TW04 Phase 4f (multi-module BEAM compilation)
+
+Implements multi-module BEAM lowering: each Twig module compiles to one
+`.beam` file; all `.beam` files are loaded in the same `erl` session so
+cross-module calls resolve at runtime.
+
+### New result types
+
+| Type | Description |
+|---|---|
+| `ModuleBeamCompileResult` | Per-module artefact: Twig name, Erlang atom, IR, `.beam` bytes, exports tuple. |
+| `MultiModuleBeamResult` | Aggregate: entry module, all `ModuleBeamCompileResult`s, entry beam module name. |
+| `MultiModuleBeamExecutionResult` | Compile result + `erl` subprocess stdout/stderr/returncode. |
+
+All three are frozen dataclasses.
+
+### New public API
+
+| Symbol | Description |
+|---|---|
+| `module_name_to_beam_module(name)` | Map `"a/math"` → `"a_math"` (replace `/` with `_`). |
+| `compile_modules(modules, entry_module, *, optimize=True)` | Compile a topologically ordered list of `ResolvedModule`s to BEAM. Skips the synthetic `host` module. Returns `MultiModuleBeamResult`. |
+| `run_modules(modules, entry_module, *, optimize=True, tmp_dir=None, timeout_seconds=30)` | Compile all modules, write `.beam` files to a temp dir, and invoke `erl -noshell -pa <dir> -eval '<loads> Result = <entry>:main(), erlang:halt(Result).'`. Returns `MultiModuleBeamExecutionResult`. |
+
+### Cross-module call semantics
+
+Unlike CLR/JVM (which use a fixed-width parameter frame for all calls),
+BEAM's `call_ext N Mfa` instruction encodes the remote function's EXACT
+arity in both the instruction prefix and the MFA triple.  The arity is
+tracked at two levels:
+
+1. `_Compiler._cross_module_arities` — records the call-site arity at
+   each cross-module `IrOp.CALL` (the caller knows how many args it passes).
+2. `compile_modules` seeds `all_external_arities` from dep module exports
+   by re-running `_Compiler` on each compiled dep module and reading
+   `_fn_params`; this gives the exact declared arity for each exported function.
+
+Both sources are merged into `BEAMBackendConfig.external_function_arities`
+before passing to `lower_ir_to_beam`.
+
+### `run_modules` — explicit module pre-loading
+
+`erl -pa <dir>` adds `.beam` files to the code path but does NOT
+guarantee auto-loading in `-noshell` mode before the first cross-module
+`call_ext` fires.  Without explicit pre-loading the VM crashes with
+`{undef, [{a_math, add, 2, []}]}` or SIGSEGV.  The `-eval` expression
+now emits one `{module,_} = code:load_file(<atom>)` call per compiled
+module (in compilation order, deps first) before invoking `main()`.
+
+### Fixed — GC-safe y-register initialisation (via `ir-to-beam` 0.5.0)
+
+Recursive dep-module functions called via `call_ext` crashed
+non-deterministically at recursion depth ≥ 4 because unwritten y-register
+slots in function frames contained stack-word garbage that the BEAM GC
+mistook for valid heap pointers.  The fix (`move {atom,0}, y(i)` for all
+slots after `allocate`) is in `ir-to-beam` 0.5.0.
+
+### Test additions (38 tests in `test_multi_module_beam.py`)
+
+- **`TestModuleNameToBeamModule`** — 7 unit tests for the name mapping.
+- **`TestCompileModulesStructure`** — 25 structural tests (no `erl` required):
+  result types, BEAM magic bytes, atom names, IR cross-module call presence,
+  export tuples, immutability, host-module exclusion, invalid entry raises.
+- **`TestRunModulesOnRealBeam`** — 6 runtime tests (gated with `@requires_beam`):
+  two-module `add` → 42, three-module chained calls → 15, `sub` → 7,
+  recursive `fact(5)` → 120, multiple calls same dep → 18, result type check.
+
 ## 0.4.0 — 2026-04-30 — TW03 Phase 3e (heap primitives from Twig source)
 
 Twig source containing `cons` / `car` / `cdr` / `null?` / `pair?` /
