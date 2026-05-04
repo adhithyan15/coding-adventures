@@ -142,10 +142,11 @@ def _fold_plan(p: LogicalPlan) -> LogicalPlan:
             return DerivedTable(query=_fold_plan(q), alias=alias, columns=cols)
         case Begin() | Commit() | Rollback():
             return p  # transaction control — nothing to fold
-        case Insert(table=t, columns=cols, source=src):
+        case Insert(table=t, columns=cols, source=src, returning=ret):
             new_src = _fold_insert_source(src)
-            return Insert(table=t, columns=cols, source=new_src)
-        case Update(table=t, assignments=asgs, predicate=pred):
+            new_ret = tuple(_fold_expr(r) for r in ret)
+            return Insert(table=t, columns=cols, source=new_src, returning=new_ret)
+        case Update(table=t, assignments=asgs, predicate=pred, returning=ret):
             return Update(
                 table=t,
                 assignments=tuple(
@@ -153,11 +154,13 @@ def _fold_plan(p: LogicalPlan) -> LogicalPlan:
                     for a in asgs
                 ),
                 predicate=_fold_expr(pred) if pred is not None else None,
+                returning=tuple(_fold_expr(r) for r in ret),
             )
-        case Delete(table=t, predicate=pred):
+        case Delete(table=t, predicate=pred, returning=ret):
             return Delete(
                 table=t,
                 predicate=_fold_expr(pred) if pred is not None else None,
+                returning=tuple(_fold_expr(r) for r in ret),
             )
         case IndexScan(
             table=t, alias=a, index_name=iname, columns=cols,

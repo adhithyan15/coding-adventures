@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.10.0 — 2026-05-04
+
+### Added
+
+- **`last_inserted_row` field on `_VmState`** (`vm.py`) — a
+  `dict[str, SqlValue]` that is overwritten with the full row dict every time
+  `_do_insert` executes an `InsertRow`.  Provides the data source for
+  `LoadLastInsertedColumn`.
+- **`LoadLastInsertedColumn(col)` dispatch** (`vm.py`) — `_dispatch` now
+  handles `LoadLastInsertedColumn` by pushing
+  `st.last_inserted_row.get(ins.col)` onto the value stack, returning `None`
+  (NULL) when the column is not present.  Powers INSERT … RETURNING without
+  requiring an open cursor after the insert.
+
 ## 1.9.0 — 2026-05-04
 
 ### Added

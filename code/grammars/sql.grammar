@@ -68,15 +68,18 @@ limit_clause      = "LIMIT" NUMBER [ "OFFSET" NUMBER ] ;
 
 insert_stmt       = "INSERT" "INTO" NAME
                     [ "(" NAME { "," NAME } ")" ]
-                    insert_body ;
+                    insert_body
+                    [ returning_clause ] ;
 insert_body       = "VALUES" row_value { "," row_value } | query_stmt ;
 row_value         = "(" expr { "," expr } ")" ;
 
 update_stmt       = "UPDATE" NAME "SET" assignment { "," assignment }
-                    [ where_clause ] ;
+                    [ where_clause ] [ returning_clause ] ;
 assignment        = NAME "=" expr ;
 
-delete_stmt       = "DELETE" "FROM" NAME [ where_clause ] ;
+delete_stmt       = "DELETE" "FROM" NAME [ where_clause ] [ returning_clause ] ;
+
+returning_clause  = "RETURNING" expr { "," expr } ;
 
 # ── CREATE TABLE / DROP TABLE ─────────────────────────────────────────────────
 
