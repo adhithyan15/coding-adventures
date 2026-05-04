@@ -282,6 +282,7 @@ members = [
     "cuda-compute",
     "gpu-runtime",
     "image-gpu-core",
+    "matrix-ir",
     "metal-compute",
     "paint-metal",
     "paint-vm-direct2d-c",
