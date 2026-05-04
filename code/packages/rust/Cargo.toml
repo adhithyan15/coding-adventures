@@ -411,6 +411,7 @@ members = [
     "vault-leases",
     "vault-engine-core",
     "vault-engine-kv2",
+    "vault-audit",
     "storage-fs",
     "context-store",
     "artifact-store",
