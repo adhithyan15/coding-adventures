@@ -1,0 +1,13 @@
+[package]
+name = "matrix-metal"
+version = "0.1.0"
+edition = "2021"
+description = "First real GPU executor for the matrix execution layer. Lowers a subset of MatrixIR ops to MSL kernels and dispatches via the metal-compute crate. Falls back to CPU automatically (via the planner's capability filter) for ops it doesn't yet support."
+license = "MIT"
+
+[dependencies]
+matrix-ir         = { path = "../matrix-ir" }
+compute-ir        = { path = "../compute-ir" }
+matrix-runtime    = { path = "../matrix-runtime" }
+executor-protocol = { path = "../executor-protocol" }
+metal-compute     = { path = "../metal-compute" }

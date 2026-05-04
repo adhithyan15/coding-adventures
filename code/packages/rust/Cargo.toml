@@ -290,6 +290,7 @@ members = [
     "image-gpu-core",
     "matrix-cpu",
     "matrix-ir",
+    "matrix-metal",
     "matrix-runtime",
     "metal-compute",
     "paint-metal",
