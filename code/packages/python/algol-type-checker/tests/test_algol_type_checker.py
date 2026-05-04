@@ -2497,6 +2497,34 @@ class TestAlgolTypeChecker:
 
         assert result.ok
 
+    def test_accepts_builtin_print_with_multiple_arguments(self) -> None:
+        ast = parse_algol(
+            "begin integer result; real x; boolean ok; string msg; "
+            "x := 1.5; ok := true; msg := 'Hi'; "
+            "print(msg, result + 1, ok, x); result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert result.semantic.procedure_calls[-1].label == "__algol_builtin_print"
+        assert result.semantic.procedure_calls[-1].argument_count == 4
+
+    def test_rejects_builtin_print_without_arguments(self) -> None:
+        ast = parse_algol("begin integer result; print(); result := 0 end")
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "expects at least 1 argument" in result.diagnostics[0].message
+
+    def test_rejects_numeric_builtin_with_multiple_arguments(self) -> None:
+        ast = parse_algol("begin integer result; result := abs(1, 2) end")
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert "expects 1 argument(s), got 2" in result.diagnostics[0].message
+
     def test_accepts_string_variable_declaration_and_assignment(self) -> None:
         ast = parse_algol("begin string msg; msg := 'Hi' end")
         result = check_algol(ast)

@@ -2256,6 +2256,31 @@ class TestAlgolIrCompiler:
         assert any(label.startswith("algol_label_output_bool_") for label in labels)
         assert len(syscalls) >= 4
 
+    def test_compiles_builtin_print_multiple_arguments_in_order(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; real x; boolean ok; string msg; "
+                "x := 1.5; ok := true; msg := 'Hi'; "
+                "print(msg, result + 1, ok, x); result := 1 end"
+            )
+        )
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+        syscalls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.SYSCALL
+        ]
+
+        assert any(label.startswith("algol_label_output_string_") for label in labels)
+        assert any(label.startswith("algol_label_output_int_") for label in labels)
+        assert any(label.startswith("algol_label_output_bool_") for label in labels)
+        assert any(label.startswith("algol_label_output_real_") for label in labels)
+        assert len(syscalls) >= 12
+
     def test_compiles_builtin_print_real_to_fixed_point_output(self) -> None:
         result = compile_algol(
             parse_algol("begin integer result; print(3.5); result := 1 end")

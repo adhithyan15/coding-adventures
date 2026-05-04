@@ -32,7 +32,8 @@ Procedure declarations receive semantic descriptors with generated function
 labels, parameter slots, value-vs-name parameter modes, conservative by-name
 write metadata, result slots for typed procedures, and resolved call sites
 carrying the static-link delta needed by code generation. Builtin output calls
-and standard numeric functions are resolved case-insensitively and treated as
+accept one or more scalar arguments, and standard numeric functions remain
+single-argument calls. Both are resolved case-insensitively and treated as
 read-only by the write analysis, so formals that are only printed or inspected
 can still accept expression actuals.
 No-argument procedure declarations and typed procedure expressions may use

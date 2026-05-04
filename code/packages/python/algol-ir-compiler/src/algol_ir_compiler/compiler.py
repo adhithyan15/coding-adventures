@@ -3915,31 +3915,31 @@ class AlgolIrCompiler:
 
     def _compile_builtin_output(self, node: ASTNode, scope: _FrameScope) -> int:
         actuals = _direct_nodes(_first_direct_node(node, "actual_params"), "expression")
-        if len(actuals) != 1:
-            raise CompileError("builtin output expects exactly 1 argument")
-        actual = actuals[0]
-        actual_type = self._expr_type(actual)
-        actual_reg = self._compile_expr(actual, scope)
-        saved_arg_reg: int | None = None
-        if self.next_reg > _VALUE_PARAM_BASE_REG:
-            saved_arg_reg = self._fresh_reg()
-            self._copy_reg(dst=saved_arg_reg, src=_VALUE_PARAM_BASE_REG)
-        if actual_type == _STRING_TYPE:
-            self._emit_output_string(actual_reg, scope)
-        elif actual_type == _BOOLEAN_TYPE:
-            self._emit_output_boolean(actual_reg, scope)
-        elif actual_type == _INTEGER_TYPE:
-            self._emit_output_integer(actual_reg, scope)
-        elif actual_type == _REAL_TYPE:
-            self._emit_output_real(actual_reg, scope)
-        else:
-            raise CompileError(
-                "builtin output currently supports integer, boolean, real, "
-                "and string"
-            )
+        if not actuals:
+            raise CompileError("builtin output expects at least 1 argument")
+        for actual in actuals:
+            actual_type = self._expr_type(actual)
+            actual_reg = self._compile_expr(actual, scope)
+            saved_arg_reg: int | None = None
+            if self.next_reg > _VALUE_PARAM_BASE_REG:
+                saved_arg_reg = self._fresh_reg()
+                self._copy_reg(dst=saved_arg_reg, src=_VALUE_PARAM_BASE_REG)
+            if actual_type == _STRING_TYPE:
+                self._emit_output_string(actual_reg, scope)
+            elif actual_type == _BOOLEAN_TYPE:
+                self._emit_output_boolean(actual_reg, scope)
+            elif actual_type == _INTEGER_TYPE:
+                self._emit_output_integer(actual_reg, scope)
+            elif actual_type == _REAL_TYPE:
+                self._emit_output_real(actual_reg, scope)
+            else:
+                raise CompileError(
+                    "builtin output currently supports integer, boolean, real, "
+                    "and string"
+                )
 
-        if saved_arg_reg is not None:
-            self._copy_reg(dst=_VALUE_PARAM_BASE_REG, src=saved_arg_reg)
+            if saved_arg_reg is not None:
+                self._copy_reg(dst=_VALUE_PARAM_BASE_REG, src=saved_arg_reg)
         return _ZERO_REG
 
     def _compile_builtin_numeric(

@@ -86,6 +86,9 @@ All notable changes to this package will be documented in this file.
 - Added a golden convergence fixture for real, boolean, and string by-name
   actuals through scalar storage, array-element storage, expression thunks, and
   formal-procedure forwarding.
+- Accepted multiple arguments to builtin `print(...)` / `output(...)`, emitting
+  each integer, boolean, real, or string argument in order through the same
+  guarded output path.
 - Executed subscripted integer and real array elements as writable `for`
   statement control variables.
 - Rejected formal procedure forwarding when a concrete procedure argument does

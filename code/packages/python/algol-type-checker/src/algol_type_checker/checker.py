@@ -2009,7 +2009,9 @@ class AlgolTypeChecker:
                 scope,
                 role=role,
             )
-        if len(arguments) != len(descriptor.parameters):
+        if descriptor.procedure_id != -1 and len(arguments) != len(
+            descriptor.parameters
+        ):
             self._error(
                 name_token,
                 f"procedure {name_token.value!r} expects "
@@ -2137,23 +2139,36 @@ class AlgolTypeChecker:
         *,
         role: str,
     ) -> str | None:
-        if not arguments:
-            return None
-        actual_type = self._infer_expr(arguments[0], scope)
         builtin_name = _builtin_name(name_token.value)
         if builtin_name in _OUTPUT_BUILTINS:
-            if actual_type != ERROR and actual_type not in {
-                INTEGER,
-                BOOLEAN,
-                REAL,
-                STRING,
-            }:
+            if not arguments:
                 self._error(
-                    arguments[0],
-                    f"builtin procedure {name_token.value!r} expects integer, "
-                    f"boolean, real, or string, got {actual_type}",
+                    name_token,
+                    f"procedure {name_token.value!r} expects at least 1 argument",
                 )
+                return None
+            for argument in arguments:
+                actual_type = self._infer_expr(argument, scope)
+                if actual_type != ERROR and actual_type not in {
+                    INTEGER,
+                    BOOLEAN,
+                    REAL,
+                    STRING,
+                }:
+                    self._error(
+                        argument,
+                        f"builtin procedure {name_token.value!r} expects integer, "
+                        f"boolean, real, or string, got {actual_type}",
+                    )
             return None
+        if len(arguments) != 1:
+            self._error(
+                name_token,
+                f"builtin function {name_token.value!r} expects 1 argument(s), "
+                f"got {len(arguments)}",
+            )
+            return ERROR
+        actual_type = self._infer_expr(arguments[0], scope)
         if actual_type != ERROR and not _is_numeric_type(actual_type):
             self._error(
                 arguments[0],

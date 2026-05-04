@@ -141,6 +141,24 @@ _SURFACE_CASES = (
         stdout="15",
     ),
     SurfaceCase(
+        name="multi-argument-output",
+        source="""
+            begin
+              integer result;
+              real x;
+              boolean ok;
+              string msg;
+              x := 1.5;
+              ok := true;
+              msg := 'IO';
+              result := 21;
+              print(msg, ' ', result, ' ', ok, ' ', x)
+            end
+        """,
+        result=[21],
+        stdout="IO 21 true 1.500",
+    ),
+    SurfaceCase(
         name="nonlocal-switch-goto-unwinds-dynamic-storage",
         source="""
             begin

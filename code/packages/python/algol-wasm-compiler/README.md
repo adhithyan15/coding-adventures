@@ -41,8 +41,8 @@ the current lane already supports a substantial ALGOL 60 surface:
 - labels, local and nonlocal `goto`/`go to`, switch designators, and conditional
   designational expressions, including nonlocal branches and nested
   recursive switch entries
-- builtin `print(...)` / `output(...)` for integers, booleans, reals, strings,
-  and string variables
+- builtin `print(...)` / `output(...)` for one or more integers, booleans,
+  reals, strings, and string variables
 
 Within the repository's ASCII `algol60` grammar, the executable
 declaration, statement, expression, procedure, array, by-name, and designational
@@ -97,6 +97,14 @@ captured_print: list[str] = []
 runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured_print.append)))
 assert runtime.load_and_run(print_only.binary, "_start", []) == [0]
 assert "".join(captured_print) == "Hi"
+
+captured_many: list[str] = []
+runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured_many.append)))
+multi_print = compile_source(
+    "begin integer result; print('Answer ', 40 + 2, ' ', true); result := 1 end"
+)
+assert runtime.load_and_run(multi_print.binary, "_start", []) == [1]
+assert "".join(captured_many) == "Answer 42 true"
 
 with_array = compile_source(
     "begin integer result; integer array a[1:3]; "
