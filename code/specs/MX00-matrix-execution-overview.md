@@ -69,7 +69,7 @@ bytes.  The discipline is identical.
 | **MX01** | `matrix-ir` | Pure tensor algebra IR.  Domain libraries emit this. |
 | **MX02** | `compute-ir` | Placed IR with explicit devices and `Transfer` ops. |
 | **MX03** | `executor-protocol` | Wire format, message types, `Transport` trait. |
-| **MX04** | `compute-runtime` | Planner, backend registry, cost model. |
+| **MX04** | `matrix-runtime` | Planner, backend registry, cost model. |
 
 A backend (CPU, Metal, CUDA, …) is then a thin crate that implements the
 executor side of the protocol.  V1 ships:
