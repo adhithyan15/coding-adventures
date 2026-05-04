@@ -116,6 +116,31 @@ class LoadColumn:
 
 
 @dataclass(frozen=True, slots=True)
+class LoadOuterColumn:
+    """Push a column value from the *outer* query's current cursor row.
+
+    Used in correlated sub-programs — the inner program needs to read a
+    value that belongs to the enclosing query's current row.
+
+    At compile time ``cursor_id`` is the cursor ID assigned by the **outer**
+    compilation context to the table aliased as the correlated source.
+    At runtime the VM provides the outer state's ``current_row`` snapshot
+    to the inner execution via ``_VmState.outer_current_row``.
+
+    Example — ``e.dept_id`` in ``WHERE id = e.dept_id`` inside a subquery
+    where the outer scan opened cursor 0 for alias ``e``::
+
+        LoadOuterColumn(cursor_id=0, col="dept_id")
+        →  outer_current_row[0]["dept_id"]
+
+    If the outer cursor has no current row (e.g. NULL padding in a LEFT JOIN),
+    ``None`` is pushed.
+    """
+    cursor_id: int
+    col: str
+
+
+@dataclass(frozen=True, slots=True)
 class Pop:
     """Discard the top of the value stack."""
 
@@ -910,7 +935,7 @@ class ComputeWindowFunctions:
 # --------------------------------------------------------------------------
 
 Instruction = (
-    LoadConst | LoadColumn | Pop
+    LoadConst | LoadColumn | LoadOuterColumn | Pop
     | BinaryOp | UnaryOp | IsNull | IsNotNull | Between | InList | Like | Coalesce | CallScalar
     | OpenScan | AdvanceCursor | CloseScan
     | BeginRow | EmitColumn | EmitRow | SetResultSchema | ScanAllColumns

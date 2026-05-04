@@ -87,6 +87,7 @@ from sql_codegen import (
     LoadColumn,
     LoadConst,
     LoadGroupKey,
+    LoadOuterColumn,
     NullsOrder,
     OpenIndexScan,
     OpenScan,
@@ -290,6 +291,12 @@ class _VmState:
     # sets the top to True; JoinIfMatched pops and conditionally jumps.
     # The stack depth equals the number of currently-open outer-join levels.
     join_match_stack: list[bool] = field(default_factory=list)
+    # Correlated subquery support — a snapshot of the enclosing query's
+    # ``current_row`` at the time the sub-program was launched.  Used by
+    # ``LoadOuterColumn`` to read values from the outer scan without sharing
+    # any mutable state with the inner execution.  ``None`` (the default)
+    # means this program is the top-level query (not a correlated sub-program).
+    outer_current_row: dict[int, dict[str, SqlValue]] = field(default_factory=dict)
     # Scan telemetry — populated during execution; used to build QueryEvent.
     # Only the *first* scan per execute() call is recorded (one event per call).
     scan_table: str = ""
@@ -331,6 +338,7 @@ def execute(
     trigger_executor: Callable | None = None,
     trigger_depth: int = 0,
     user_functions: dict[str, tuple[int, Callable]] | None = None,
+    outer_current_row: dict[int, dict[str, SqlValue]] | None = None,
 ) -> QueryResult:
     """Execute ``program`` against ``backend`` and return the result.
 
@@ -352,6 +360,12 @@ def execute(
         ``(nargs, callable)`` pairs registered via
         :meth:`~mini_sqlite.Connection.create_function`.  Checked before the
         built-in scalar registry so users can shadow built-in functions.
+
+    ``outer_current_row``:
+        Optional snapshot of the enclosing query's ``current_row`` table —
+        ``{cursor_id: {col: value, …}, …}``.  Provided only when this program
+        is a correlated sub-program; ``LoadOuterColumn`` reads from it.
+        ``None`` for top-level programs (the default).
     """
     import time
 
@@ -372,6 +386,7 @@ def execute(
         trigger_executor=trigger_executor,
         trigger_depth=trigger_depth,
         user_functions=user_functions,
+        outer_current_row=outer_current_row if outer_current_row is not None else {},
     )
     instructions = program.instructions
     n = len(instructions)
@@ -412,6 +427,9 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
         return
     if isinstance(ins, LoadColumn):
         _load_column(ins, st)
+        return
+    if isinstance(ins, LoadOuterColumn):
+        _load_outer_column(ins, st)
         return
     if isinstance(ins, Pop):
         st.pop()
@@ -659,6 +677,23 @@ def _load_column(ins: LoadColumn, st: _VmState) -> None:
     st.push(row.get(ins.column))
 
 
+def _load_outer_column(ins: LoadOuterColumn, st: _VmState) -> None:
+    """Push a column value from the outer query's current row snapshot.
+
+    ``st.outer_current_row`` is a frozen copy of the enclosing scan's
+    ``current_row`` at the time the inner sub-program was invoked.
+
+    If the outer cursor ID is not present (e.g. the subquery was invoked
+    from an uncorrelated context — which should not happen if the planner and
+    codegen are correct), we push ``None`` as a safe fallback.
+    """
+    row = st.outer_current_row.get(ins.cursor_id)
+    if row is None:
+        st.push(None)
+        return
+    st.push(row.get(ins.col))
+
+
 def _do_between(st: _VmState) -> None:
     high = st.pop()
     low = st.pop()
@@ -809,8 +844,17 @@ def _do_run_exists_subquery(ins: RunExistsSubquery, st: _VmState) -> None:
 
     ``NOT EXISTS`` is handled by the caller: a :class:`~sql_codegen.UnaryOp`
     ``NOT`` instruction follows this one and inverts the boolean.
+
+    Correlated subqueries
+    ---------------------
+    If the inner program contains ``LoadOuterColumn`` instructions, it needs
+    the outer scan's current row.  We pass ``st.current_row`` as the inner
+    program's ``outer_current_row`` snapshot so those reads resolve correctly.
+    The inner execution gets its own isolated ``_VmState``; sharing
+    ``current_row`` as a **dict reference** (not a deep copy) is safe because
+    the inner program does not modify outer cursor rows.
     """
-    sub_result = execute(ins.sub_program, st.backend)
+    sub_result = execute(ins.sub_program, st.backend, outer_current_row=st.current_row)
     st.push(len(sub_result.rows) > 0)
 
 
@@ -825,8 +869,11 @@ def _do_run_scalar_subquery(ins: RunScalarSubquery, st: _VmState) -> None:
 
     The inner program always returns exactly one column — the optimizer
     and codegen ensure this at compile time.
+
+    Correlated subqueries: passes ``st.current_row`` as ``outer_current_row``
+    so ``LoadOuterColumn`` instructions in the inner program resolve correctly.
     """
-    sub_result = execute(ins.sub_program, st.backend)
+    sub_result = execute(ins.sub_program, st.backend, outer_current_row=st.current_row)
     rows = sub_result.rows
     if len(rows) == 0:
         st.push(None)
@@ -847,12 +894,17 @@ def _do_run_in_subquery(ins: RunInSubquery, st: _VmState) -> None:
     - test_value found in non-NULL members → push True (or False if negate)
     - test_value not found, result set contains NULL → push None (unknown)
     - test_value not found, no NULL in set → push False (or True if negate)
+
+    Correlated subqueries: passes ``st.current_row`` as ``outer_current_row``
+    so ``LoadOuterColumn`` instructions in the inner program resolve correctly.
+    The inner program is re-executed once per outer row; each time it reads
+    the correlated column values from the outer cursor's current row.
     """
     test_value = st.pop()
     if test_value is None:
         st.push(None)
         return
-    sub_result = execute(ins.sub_program, st.backend)
+    sub_result = execute(ins.sub_program, st.backend, outer_current_row=st.current_row)
     # Build two sets: one of non-NULL first-column values, and a flag for NULL presence.
     non_null_values: set[object] = set()
     has_null = False
