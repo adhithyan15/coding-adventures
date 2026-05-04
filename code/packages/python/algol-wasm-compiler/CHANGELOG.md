@@ -83,6 +83,9 @@ All notable changes to this package will be documented in this file.
   `real procedure f;` through the full WASM pipeline.
 - Executed conditional switch actuals through direct calls, forwarded switch
   formals, and formal procedure dispatch, with a golden end-to-end fixture.
+- Added a golden convergence fixture for real, boolean, and string by-name
+  actuals through scalar storage, array-element storage, expression thunks, and
+  formal-procedure forwarding.
 - Executed subscripted integer and real array elements as writable `for`
   statement control variables.
 - Rejected formal procedure forwarding when a concrete procedure argument does

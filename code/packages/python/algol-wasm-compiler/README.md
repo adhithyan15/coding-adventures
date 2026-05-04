@@ -151,6 +151,8 @@ local WASM runtime. Those fixtures cover:
   caller resumes at the target label
 - dynamic multidimensional array bounds captured at block entry
 - writable real, boolean, and string by-name scalar formals in one program
+- real, boolean, and string by-name actuals through scalar storage,
+  array-element storage, expression thunks, and formal-procedure forwarding
 - runtime bounds failure through the zero-result failure path before later
   output executes
 - mixed `own` scalar and array storage for real, boolean, and string values,
