@@ -35,6 +35,11 @@ _GOLDEN_FIXTURES = (
     GoldenFixture(name="nonlocal-unwind", result=[42], stdout="UNWIND 42"),
     GoldenFixture(name="dynamic-array-bounds", result=[63], stdout="DYNAMIC 63"),
     GoldenFixture(name="by-name-mixed-scalars", result=[27], stdout="BYNAME 27"),
+    GoldenFixture(
+        name="noninteger-by-name",
+        result=[111111111],
+        stdout="TYPED LAZY 111111111",
+    ),
     GoldenFixture(name="runtime-guards", result=[0], stdout=""),
     GoldenFixture(name="storage-semantics", result=[737], stdout="STORAGE 737"),
     GoldenFixture(name="edge-semantics", result=[65], stdout="EDGE 65"),

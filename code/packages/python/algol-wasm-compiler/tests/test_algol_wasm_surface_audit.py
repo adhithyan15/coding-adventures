@@ -111,6 +111,36 @@ _SURFACE_CASES = (
         stdout="YES 17",
     ),
     SurfaceCase(
+        name="typed-by-name-expression-actuals",
+        source="""
+            begin
+              integer result;
+              real r;
+              boolean flag;
+              string word;
+              real procedure readreal(x); real x;
+                begin r := r + 1.0; readreal := x end;
+              boolean procedure readbool(x); boolean x;
+                begin flag := not flag; readbool := x end;
+              string procedure readstring(x); string x;
+                begin word := 'LAZY'; readstring := x end;
+              result := 0;
+              r := 2.0;
+              if readreal(r + 0.5) = 3.5 then result := result + 3 else result := 0;
+              flag := false;
+              if readbool(flag) then result := result + 5 else result := 0;
+              word := 'EARLY';
+              if readstring(if true then word else 'NO') = 'LAZY' then
+                result := result + 7
+              else
+                result := 0;
+              print(result)
+            end
+        """,
+        result=[15],
+        stdout="15",
+    ),
+    SurfaceCase(
         name="nonlocal-switch-goto-unwinds-dynamic-storage",
         source="""
             begin
