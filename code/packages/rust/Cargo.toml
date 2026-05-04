@@ -413,6 +413,7 @@ members = [
     "vault-engine-core",
     "vault-engine-kv2",
     "vault-audit",
+    "vault-sync",
     "storage-fs",
     "context-store",
     "artifact-store",

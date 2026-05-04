@@ -1,0 +1,7 @@
+[package]
+name = "coding_adventures_vault_sync"
+version = "0.1.0"
+edition = "2021"
+description = "VLT10 — multi-device E2EE sync engine for the Vault stack. Per-record version vectors with last-writer-wins by default + opt-in CRDT (OR-set) merge for fields that admit one. Server stores opaque ciphertext + revision metadata only — never plaintext or record type."
+
+[dependencies]
