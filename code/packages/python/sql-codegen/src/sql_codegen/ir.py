@@ -141,6 +141,27 @@ class LoadOuterColumn:
 
 
 @dataclass(frozen=True, slots=True)
+class LoadLastInsertedColumn:
+    """Push a column value from the most recently inserted row.
+
+    Used exclusively in INSERT … RETURNING to read back the values that were
+    just written.  The VM stores the inserted row in
+    ``_VmState.last_inserted_row`` immediately after each ``InsertRow``.
+
+    The ``col`` field is the column name as it appears in the table schema.
+
+    Example — ``RETURNING id, name`` after ``INSERT INTO employees …``::
+
+        LoadLastInsertedColumn(col="id")    →  last_inserted_row["id"]
+        LoadLastInsertedColumn(col="name")  →  last_inserted_row["name"]
+
+    Reads return ``None`` when the column is absent (e.g. because the INSERT
+    used an implicit column list and omitted that column from the VALUES tuple).
+    """
+    col: str
+
+
+@dataclass(frozen=True, slots=True)
 class Pop:
     """Discard the top of the value stack."""
 
@@ -935,7 +956,7 @@ class ComputeWindowFunctions:
 # --------------------------------------------------------------------------
 
 Instruction = (
-    LoadConst | LoadColumn | LoadOuterColumn | Pop
+    LoadConst | LoadColumn | LoadOuterColumn | LoadLastInsertedColumn | Pop
     | BinaryOp | UnaryOp | IsNull | IsNotNull | Between | InList | Like | Coalesce | CallScalar
     | OpenScan | AdvanceCursor | CloseScan
     | BeginRow | EmitColumn | EmitRow | SetResultSchema | ScanAllColumns

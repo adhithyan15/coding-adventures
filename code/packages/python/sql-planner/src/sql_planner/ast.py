@@ -178,11 +178,12 @@ class SelectStmt:
 
 @dataclass(frozen=True, slots=True)
 class InsertValuesStmt:
-    """INSERT INTO t (cols) VALUES (v1, v2, ...), (w1, w2, ...)."""
+    """INSERT INTO t (cols) VALUES (v1, v2, ...), (w1, w2, ...) [RETURNING ...]."""
 
     table: str
     columns: tuple[str, ...] | None  # None = implicit column list (all columns in order)
     rows: tuple[tuple[Expr, ...], ...]
+    returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
 
 
 @dataclass(frozen=True, slots=True)
@@ -195,19 +196,21 @@ class Assignment:
 
 @dataclass(frozen=True, slots=True)
 class UpdateStmt:
-    """UPDATE t SET col = expr, ... WHERE predicate."""
+    """UPDATE t SET col = expr, ... WHERE predicate [RETURNING ...]."""
 
     table: str
     assignments: tuple[Assignment, ...]
     where: Expr | None = None
+    returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
 
 
 @dataclass(frozen=True, slots=True)
 class DeleteStmt:
-    """DELETE FROM t WHERE predicate."""
+    """DELETE FROM t WHERE predicate [RETURNING ...]."""
 
     table: str
     where: Expr | None = None
+    returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
 
 
 # ---- Set-operation statements -----------------------------------------------
@@ -268,7 +271,7 @@ class ExceptStmt:
 
 @dataclass(frozen=True, slots=True)
 class InsertSelectStmt:
-    """INSERT INTO t (cols) SELECT …
+    """INSERT INTO t (cols) SELECT … [RETURNING …]
 
     The ``select`` field is the sub-query whose result rows are inserted.
     ``columns`` is the explicit target column list; ``None`` means the
@@ -278,6 +281,7 @@ class InsertSelectStmt:
     table: str
     columns: tuple[str, ...] | None
     select: SelectStmt
+    returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
 
 
 # ---- Transaction-control statements ----------------------------------------

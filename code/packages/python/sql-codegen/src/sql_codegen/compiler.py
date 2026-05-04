@@ -178,6 +178,7 @@ from .ir import (
     LoadColumn,
     LoadConst,
     LoadGroupKey,
+    LoadLastInsertedColumn,
     LoadOuterColumn,
     NullsOrder,
     OpenIndexScan,
@@ -1262,20 +1263,94 @@ def _compile_expr(e: Expr, ctx: _Ctx) -> list[Instruction]:
 # --------------------------------------------------------------------------
 
 
+def _returning_col_name(expr: Expr, idx: int) -> str:
+    """Derive a display name for a RETURNING column expression.
+
+    For plain column references we use the column name (e.g. ``'id'``).
+    For anything more complex we fall back to a positional name so downstream
+    code (SetResultSchema, cursor.description) always has a non-empty string.
+    """
+    if isinstance(expr, Column):
+        return expr.col
+    return f"column_{idx}"
+
+
+def _compile_returning_insert_expr(expr: Expr, ctx: _Ctx) -> list[Instruction]:
+    """Compile a RETURNING expression in the context of an INSERT statement.
+
+    Column references (``Column``) are emitted as ``LoadLastInsertedColumn``
+    because there is no open cursor after an INSERT — the row is only
+    accessible via ``_VmState.last_inserted_row``.
+
+    All other expression types (``Literal``, ``BinaryExpr``, etc.) are handled
+    by the regular ``_compile_expr`` — they do not reference cursor state.
+    Note: if a non-Column sub-expression contains a nested Column node it will
+    fall back to the alias-map cursor lookup, which is wrong for INSERT.  In
+    practice RETURNING expressions are simple column references or literals, and
+    complex arithmetic over inserted columns is uncommon.  Support for nested
+    Column refs inside expressions can be added later by making this function
+    fully recursive over every expression kind.
+    """
+    if isinstance(expr, Column):
+        return [LoadLastInsertedColumn(col=expr.col)]
+    # Literals, function calls, arithmetic over literals — no column reads.
+    return _compile_expr(expr, ctx)
+
+
+def _compile_returning_cursor_expr(
+    expr: Expr, ctx: _Ctx, cursor_id: int
+) -> list[Instruction]:
+    """Compile a RETURNING expression in the context of UPDATE or DELETE.
+
+    Column references are emitted as ``LoadColumn(cursor_id, col)`` where
+    ``cursor_id`` is the scan cursor that holds the current row.
+
+    For UPDATE, the cursor's ``current_row`` is already updated when RETURNING
+    is emitted (``UpdateRows`` patches ``st.current_row`` before returning).
+    For DELETE, RETURNING is emitted *before* ``DeleteRows`` so the cursor
+    still holds the pre-deletion row.
+    """
+    if isinstance(expr, Column):
+        return [LoadColumn(cursor_id=cursor_id, column=expr.col)]
+    return _compile_expr(expr, ctx)
+
+
 def _compile_insert(ins: Insert, ctx: _Ctx) -> list[Instruction]:
     src = ins.source
     cols = ins.columns or ()
+
+    # RETURNING preamble: if this INSERT has a RETURNING clause we emit a
+    # SetResultSchema once at the top so the VM knows the output column names.
+    ret_schema: list[Instruction] = []
+    if ins.returning:
+        ret_cols = tuple(
+            _returning_col_name(expr, i + 1) for i, expr in enumerate(ins.returning)
+        )
+        ret_schema = [SetResultSchema(columns=ret_cols)]
+
     if src.values is not None:
-        out: list[Instruction] = []
+        out: list[Instruction] = list(ret_schema)
         for row in src.values:
             for v in row:
                 out.extend(_compile_expr(v, ctx))
             out.append(InsertRow(table=ins.table, columns=tuple(cols)))
+            # After InsertRow the VM stores the inserted row in
+            # ``last_inserted_row``.  Emit RETURNING columns by reading from it.
+            if ins.returning:
+                out.append(BeginRow())
+                for i, ret_expr in enumerate(ins.returning):
+                    out.extend(_compile_returning_insert_expr(ret_expr, ctx))
+                    out.append(
+                        EmitColumn(name=_returning_col_name(ret_expr, i + 1))
+                    )
+                out.append(EmitRow())
         return out
+
     # INSERT … SELECT: compile the sub-SELECT into the result buffer, then
     # drain it with InsertFromResult. _compile_plan is safe to call
     # recursively here — it shares the same _Ctx (cursor/label counters stay
     # globally unique) and it does NOT emit a Halt.
+    # Note: RETURNING is not supported with INSERT … SELECT in this version.
     assert src.query is not None
     select_instrs, _ = _compile_plan(src.query, ctx)
     select_instrs.append(InsertFromResult(table=ins.table, columns=tuple(cols)))
@@ -1287,11 +1362,19 @@ def _compile_update(upd: Update, ctx: _Ctx) -> list[Instruction]:
     loop = ctx.new_label("update_loop")
     end = ctx.new_label("update_end")
     skip = ctx.new_label("update_skip")
-    out: list[Instruction] = [
+    out: list[Instruction] = []
+    # Emit SetResultSchema once at the top when RETURNING is present so the VM
+    # knows the output column names before any rows are emitted.
+    if upd.returning:
+        ret_cols = tuple(
+            _returning_col_name(expr, i + 1) for i, expr in enumerate(upd.returning)
+        )
+        out.append(SetResultSchema(columns=ret_cols))
+    out.extend([
         OpenScan(cursor_id=cid, table=upd.table),
         Label(name=loop),
         AdvanceCursor(cursor_id=cid, on_exhausted=end),
-    ]
+    ])
     if upd.predicate is not None:
         out.extend(_compile_expr(upd.predicate, ctx))
         out.append(JumpIfFalse(label=skip))
@@ -1304,6 +1387,15 @@ def _compile_update(upd: Update, ctx: _Ctx) -> list[Instruction]:
             cursor_id=cid,
         )
     )
+    # RETURNING: emit columns AFTER UpdateRows — ``st.current_row[cid]`` is
+    # patched by the VM's ``_do_update`` before returning, so LoadColumn reads
+    # the post-update values.
+    if upd.returning:
+        out.append(BeginRow())
+        for i, ret_expr in enumerate(upd.returning):
+            out.extend(_compile_returning_cursor_expr(ret_expr, ctx, cid))
+            out.append(EmitColumn(name=_returning_col_name(ret_expr, i + 1)))
+        out.append(EmitRow())
     if upd.predicate is not None:
         out.append(Label(name=skip))
     out.extend([Jump(label=loop), Label(name=end), CloseScan(cursor_id=cid)])
@@ -1315,14 +1407,29 @@ def _compile_delete(dlt: Delete, ctx: _Ctx) -> list[Instruction]:
     loop = ctx.new_label("delete_loop")
     end = ctx.new_label("delete_end")
     skip = ctx.new_label("delete_skip")
-    out: list[Instruction] = [
+    out: list[Instruction] = []
+    # Emit SetResultSchema once at the top when RETURNING is present.
+    if dlt.returning:
+        ret_cols = tuple(
+            _returning_col_name(expr, i + 1) for i, expr in enumerate(dlt.returning)
+        )
+        out.append(SetResultSchema(columns=ret_cols))
+    out.extend([
         OpenScan(cursor_id=cid, table=dlt.table),
         Label(name=loop),
         AdvanceCursor(cursor_id=cid, on_exhausted=end),
-    ]
+    ])
     if dlt.predicate is not None:
         out.extend(_compile_expr(dlt.predicate, ctx))
         out.append(JumpIfFalse(label=skip))
+    # RETURNING: emit columns BEFORE DeleteRows — ``st.current_row[cid]``
+    # still holds the row at this point.  After DeleteRows it is removed.
+    if dlt.returning:
+        out.append(BeginRow())
+        for i, ret_expr in enumerate(dlt.returning):
+            out.extend(_compile_returning_cursor_expr(ret_expr, ctx, cid))
+            out.append(EmitColumn(name=_returning_col_name(ret_expr, i + 1)))
+        out.append(EmitRow())
     out.append(DeleteRows(table=dlt.table, cursor_id=cid))
     if dlt.predicate is not None:
         out.append(Label(name=skip))

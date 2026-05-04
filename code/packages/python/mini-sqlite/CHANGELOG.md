@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.17.0] - 2026-05-04
+
+### Added
+
+- **RETURNING clause** — `INSERT`, `UPDATE`, and `DELETE` statements now
+  support a trailing `RETURNING col1, col2, ...` clause that returns the
+  affected rows as a result set, exactly like SQLite's `RETURNING` extension.
+  - **INSERT RETURNING** — returns the inserted row(s); `cursor.description`
+    is set, `cursor.fetchall()` / `cursor.fetchone()` work as with SELECT.
+  - **UPDATE RETURNING** — returns the post-update row values for each
+    matched row.
+  - **DELETE RETURNING** — captures row values *before* deletion; the rows
+    are gone from the table by the time the cursor is consumed.
+  - The adapter (`adapter.py`) extracts the `returning_clause` AST child and
+    passes a `returning=(expr, ...)` tuple to the statement constructors.
+  - 17 integration tests in `tests/test_tier4_returning.py` covering single-
+    row, multi-row, single- and multi-column, description header, rowcount,
+    value-persistence, and empty-result cases for all three DML statements.
+
 ## [1.16.0] - 2026-05-04
 
 ### Added

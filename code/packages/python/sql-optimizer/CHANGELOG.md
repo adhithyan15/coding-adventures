@@ -20,6 +20,15 @@
 - `JoinKind` imported from `sql_planner` in `predicate_pushdown.py` to
   support the outer-join guard.
 
+### Fixed (RETURNING)
+
+- **`ConstantFolding` preserves `returning` on DML nodes** (`constant_folding.py`)
+  — the `Insert`, `Update`, and `Delete` match arms in `_fold_plan` were
+  rebuilding the nodes without passing the `returning` field, silently stripping
+  the RETURNING clause before codegen.  All three cases now capture `returning=ret`
+  and emit `returning=tuple(_fold_expr(r) for r in ret)` so that RETURNING
+  expressions are folded rather than dropped.
+
 ## [0.4.0] - 2026-04-23
 
 ### Changed — Phase 9.7: Composite (multi-column) automatic index support (IX-8)

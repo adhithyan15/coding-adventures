@@ -1,10 +1,17 @@
 # `lang-refinement-checker`
 
-**LANG23 PR 23-C** — the refinement proof-obligation checker.
+**LANG23 PRs 23-C + 23-D** — the refinement proof-obligation checker.
 
 Takes `RefinedType` annotations from the IIR, lowers their predicates to
 `ConstraintInstructions`, runs them through `constraint-vm`, and classifies
 the solver's answer into one of the three LANG23 outcomes.
+
+Two APIs are provided:
+
+| API | Module | PR | Scope |
+|-----|--------|----|-------|
+| `Checker` | (crate root) | 23-C | Per-binding: checks one proof obligation given concrete/predicated/unconstrained evidence. |
+| `FunctionChecker` | `function_checker` | 23-D | Function-scope: walks a CFG, accumulates guard predicates path-by-path, checks each return site. |
 
 ---
 
@@ -14,8 +21,9 @@ the solver's answer into one of the three LANG23 outcomes.
 lang-refined-types          (RefinedType, Predicate, Kind)
         │
 lang-refinement-checker     (this crate)
-        │  builds constraint programs via ProgramBuilder
-        │  drives constraint_vm::check_sat / get_model
+        │  PR 23-C: Checker — per-binding proof obligations
+        │  PR 23-D: FunctionChecker — CFG-based path-sensitive analysis
+        │  both lower via ProgramBuilder → constraint-vm
         │
 constraint-vm ──► constraint-engine ──► SAT / LIA tactics
 ```
@@ -28,7 +36,7 @@ PROVEN_UNSAFE  → compile error with concrete counter-example value
 UNKNOWN        → emit a runtime check; warn; proceed in lenient mode
 ```
 
-## Proof obligation
+## PR 23-C: Per-binding checker
 
 For each annotated binding, the checker runs a *refutation query*:
 
@@ -43,7 +51,7 @@ Formally: `check_sat(E(x) ∧ ¬P(x))`.
 | SAT(m) | `PROVEN_UNSAFE` (m contains the counter-example) |
 | UNKNOWN | `UNKNOWN` |
 
-## Evidence
+### Evidence
 
 | Variant | When to use | Example |
 |---------|-------------|---------|
@@ -51,7 +59,7 @@ Formally: `check_sat(E(x) ∧ ¬P(x))`.
 | `Predicated(preds)` | Guard/annotation narrows value | `if n < 128 then ascii-info(n)` |
 | `Unconstrained` | Source unknown at compile time | `(define x : (Int 1 256) (read-int))` |
 
-## Usage
+### Usage
 
 ```rust
 use lang_refined_types::{RefinedType, Kind, Predicate};
@@ -80,10 +88,12 @@ assert!(checker.check(&annotation, &Evidence::Predicated(guard)).is_safe());
 assert!(checker.check(&annotation, &Evidence::Unconstrained).is_unknown());
 ```
 
-## Batch checking
+### Batch checking
 
 ```rust
 use lang_refinement_checker::{Obligation, Evidence, check_all};
+# use lang_refined_types::{RefinedType, Kind, Predicate};
+# let annotation = RefinedType::refined(Kind::Int, Predicate::Range { lo: Some(0), hi: Some(128), inclusive_hi: false });
 
 let obligations = vec![
     Obligation::new("ascii-index", annotation.clone(), Evidence::Concrete(64)),
@@ -94,6 +104,92 @@ for (label, outcome) in check_all(&obligations) {
     println!("{label}: {outcome:?}");
 }
 ```
+
+---
+
+## PR 23-D: Function-scope checker
+
+Extends `Checker` to handle entire function bodies.  Walks a tree-structured
+CFG, accumulates guard predicates along each path (the same machine TypeScript
+uses for control-flow narrowing), and checks each return site.
+
+### The CFG model
+
+```
+CfgNode::Branch { guard, then_node, else_node }   — a conditional branch
+CfgNode::Return(ReturnValue)                       — a return statement
+
+ReturnValue::Literal(i128)   — compile-time constant
+ReturnValue::Variable(name)  — a function parameter or local
+```
+
+### clamp-byte example
+
+```scheme
+(define (clamp-byte (x : int) -> (Int 0 256))
+  (cond ((< x 0)   0)
+        ((> x 255) 255)
+        (else      x)))
+```
+
+```rust
+use lang_refined_types::{Kind, Predicate, RefinedType};
+use lang_refinement_checker::function_checker::{
+    BranchGuard, CfgNode, FunctionChecker, FunctionSignature, ReturnValue,
+};
+
+let sig = FunctionSignature {
+    params: vec![("x".to_string(), RefinedType::unrefined(Kind::Int))],
+    return_type: RefinedType::refined(
+        Kind::Int,
+        Predicate::Range { lo: Some(0), hi: Some(256), inclusive_hi: false },
+    ),
+};
+
+//  x < 0  ≡  Range { hi: Some(0), inclusive_hi: false }
+//  x ≥ 256 ≡  Range { lo: Some(256) }
+let cfg = CfgNode::Branch {
+    guard: BranchGuard {
+        var: "x".to_string(),
+        predicate: Predicate::Range { lo: None, hi: Some(0), inclusive_hi: false },
+    },
+    then_node: Box::new(CfgNode::Return(ReturnValue::Literal(0))),
+    else_node: Box::new(CfgNode::Branch {
+        guard: BranchGuard {
+            var: "x".to_string(),
+            predicate: Predicate::Range { lo: Some(256), hi: None, inclusive_hi: false },
+        },
+        then_node: Box::new(CfgNode::Return(ReturnValue::Literal(255))),
+        else_node: Box::new(CfgNode::Return(ReturnValue::Variable("x".to_string()))),
+    }),
+};
+
+let mut fc = FunctionChecker::new();
+let result = fc.check_function(&sig, &cfg);
+
+assert!(result.all_proven_safe());
+// Three return sites, all proven safe — no runtime checks needed.
+assert_eq!(result.return_sites.len(), 3);
+assert_eq!(result.runtime_check_count(), 0);
+```
+
+### How it works — the three paths
+
+| Path | Guards for x | Return | Evidence | Outcome |
+|------|-------------|--------|----------|---------|
+| then₁ | `x < 0` | `Literal(0)` | `Concrete(0)` | `0 ∈ [0,256)` → Safe |
+| then₂ | `¬(x<0)`, `x≥256` | `Literal(255)` | `Concrete(255)` | `255 ∈ [0,256)` → Safe |
+| else₂ | `¬(x<0)`, `¬(x≥256)` | `Variable("x")` | `Predicated{__v≥0, __v<256}` | UNSAT refutation → Safe |
+
+For `Variable("x")`, the accumulated scope predicates for `"x"` are remapped to
+`"__v"` via `substitute_var` before passing to `Checker::check_predicated`.
+
+### Violation detection
+
+If the return type were `(Int 0 200)` instead, `return 255` would produce
+`ProvenUnsafe(CounterExample { value: 255, ... })`.
+
+---
 
 ## Mode integration
 

@@ -2,6 +2,15 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.12.0] - 2026-05-04
+
+### Added
+
+- **`RETURNING` keyword** — added `'RETURNING'` to the `keywords` list in
+  `_grammar.py` and to the `keywords:` section of `sql.tokens`.  The lexer now
+  emits a `KEYWORD` token with value `"RETURNING"` for any `RETURNING`
+  occurrence, enabling the parser to recognise the DML RETURNING clause.
+
 ## [0.11.0] - 2026-04-28
 
 ### Added

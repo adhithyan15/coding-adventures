@@ -328,3 +328,32 @@ ALG_FACTOR = IRSymbol("AlgFactor")  # algfactor(poly, sqrt(d)) head
 GROEBNER = IRSymbol("Groebner")      # groebner(polys, vars) head
 POLY_REDUCE = IRSymbol("PolyReduce")  # poly_reduce(f, polys, vars) head
 IDEAL_SOLVE = IRSymbol("IdealSolve")  # ideal_solve(polys, vars) head
+
+# Simplification operations (Phase 21)
+#
+# These nine heads implement the MACSYMA assumption framework and the
+# radical/log/exponentialize simplification family.
+#
+# Assumption framework:
+#   Assume(relation)         — record a fact, e.g. Assume(Greater(x, 0))
+#   Assume(sym, property)    — record a property, e.g. Assume(n, integer)
+#   Forget(relation)         — remove a specific fact
+#   Forget()                 — remove ALL recorded assumptions
+#   Is(relation)             — query: returns "true" / "false" / "unknown"
+#   Sign(x)                  — sign function: 1, -1, 0, or unevaluated
+#
+# Radical / log / exponential simplification:
+#   Radcan(expr)             — canonical form for radical expressions
+#   LogContract(expr)        — combine log sums into a single log
+#   LogExpand(expr)          — expand a log over products / powers
+#   Exponentialize(expr)     — convert trig/hyp functions to exp form
+#   DeMoivre(expr)           — convert exp(a+bi) → exp(a)·(cos b + i·sin b)
+ASSUME = IRSymbol("Assume")
+FORGET = IRSymbol("Forget")
+IS = IRSymbol("Is")
+SIGN = IRSymbol("Sign")
+RADCAN = IRSymbol("Radcan")
+LOGCONTRACT = IRSymbol("LogContract")
+LOGEXPAND = IRSymbol("LogExpand")
+EXPONENTIALIZE = IRSymbol("Exponentialize")
+DEMOIVRE = IRSymbol("DeMoivre")

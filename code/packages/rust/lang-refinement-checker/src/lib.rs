@@ -1,9 +1,9 @@
 //! # `lang-refinement-checker` — LANG23 refinement proof-obligation checker.
 //!
-//! **LANG23 PR 23-C**.  The compiler pass that takes `RefinedType` annotations
-//! from the IIR, lowers their predicates to `ConstraintInstructions`, runs
-//! them through `constraint-vm`, and classifies the solver's answer into one
-//! of the three LANG23 outcomes:
+//! **LANG23 PRs 23-C and 23-D.**  The compiler pass that takes `RefinedType`
+//! annotations from the IIR, lowers their predicates to
+//! `ConstraintInstructions`, runs them through `constraint-vm`, and classifies
+//! the solver's answer into one of the three LANG23 outcomes:
 //!
 //! ```text
 //! PROVEN_SAFE    → strip the runtime check; narrow the downstream type
@@ -11,14 +11,22 @@
 //! UNKNOWN        → emit a runtime check; warn; proceed in lenient mode
 //! ```
 //!
+//! ## Modules
+//!
+//! | Module | PR | Description |
+//! |--------|----|-------------|
+//! | (top-level) | 23-C | Per-binding `Checker`: checks one proof obligation at a time given concrete/predicated/unconstrained evidence. |
+//! | [`function_checker`] | 23-D | Function-scope `FunctionChecker`: walks a CFG, accumulates guard predicates path-by-path, checks each return site. |
+//!
 //! ## Architecture
 //!
 //! ```text
 //! lang-refined-types          (RefinedType, Predicate, Kind)
 //!         │
 //! lang-refinement-checker     (this crate)
-//!         │  builds constraint programs via ProgramBuilder
-//!         │  drives constraint-vm::check_sat / get_model
+//!         │  PR 23-C: Checker — per-binding proof obligations
+//!         │  PR 23-D: FunctionChecker — CFG-based, path-sensitive
+//!         │  both lower via ProgramBuilder → constraint-vm
 //!         │
 //! constraint-vm ──► constraint-engine ──► SAT / LIA tactics
 //! ```
@@ -53,7 +61,9 @@
 //!
 //! The checker uses the sentinel variable name `"__v"` for the value being
 //! checked in all generated constraint programs.  Callers do not need to
-//! know this — it's an implementation detail.
+//! know this — it's an implementation detail of the per-binding API.
+//! The [`function_checker`] module uses actual parameter names in its CFG
+//! model and remaps them to `"__v"` internally via [`function_checker::substitute_var`].
 //!
 //! ## Lenient vs strict mode
 //!
@@ -65,6 +75,8 @@
 
 #![warn(missing_docs)]
 #![warn(rust_2018_idioms)]
+
+pub mod function_checker;
 
 use constraint_core::{Logic, Predicate as CorePredicate, Sort};
 use constraint_engine::{Model, SolverResult, Value};
