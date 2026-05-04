@@ -394,6 +394,7 @@ members = [
     "vault-sealed-store",
     "shamir",
     "canonical-cbor",
+    "vault-records",
     "context-store",
     "artifact-store",
     "skill-store",
