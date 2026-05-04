@@ -33,6 +33,12 @@
       "value_name": "INDEX"
     },
     {
+      "id": "all-source-queries",
+      "long": "all-source-queries",
+      "description": "Run every source-level ?- query in order when --query is absent.",
+      "type": "boolean"
+    },
+    {
       "id": "query-module",
       "long": "query-module",
       "description": "Module context for ad-hoc project/file-graph queries.",

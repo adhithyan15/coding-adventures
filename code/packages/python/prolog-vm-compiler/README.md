@@ -274,6 +274,11 @@ Use `--values` to print raw answer values, omit `--query` to run a source-level
 `?-` directive by index, and use `--dialect iso` when the ISO parser profile is
 the desired frontend.
 
+Use `--all-source-queries` when a source file contains several embedded `?-`
+queries and the CLI should run them as a script. The command prints or emits
+one result record per source query, sets `source_query_index` in JSON formats,
+and exits nonzero if any embedded query has no answers.
+
 Use `--format json` for a machine-readable result object, or `--format jsonl`
 when repeated queries should stream one result record per line. JSON answers
 preserve named bindings, raw values, compound terms, variables, and residual
