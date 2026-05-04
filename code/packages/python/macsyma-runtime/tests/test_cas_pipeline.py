@@ -17,14 +17,13 @@ they require the full MACSYMA compiler + name table, which is a
 
 from __future__ import annotations
 
-import pytest
 from macsyma_compiler import compile_macsyma
 from macsyma_compiler.compiler import _STANDARD_FUNCTIONS
 from macsyma_parser import parse_macsyma
 from symbolic_ir import IRApply, IRFloat, IRInteger, IRRational, IRSymbol
+from symbolic_vm import VM
 
 from macsyma_runtime import MacsymaBackend, extend_compiler_name_table
-from symbolic_vm import VM
 
 # Extend the compiler name table so MACSYMA names compile to canonical IR.
 # This call is idempotent — subsequent calls are no-ops.
@@ -148,7 +147,10 @@ def test_pipeline_solve_quadratic() -> None:
     assert result.head.name == "List"
     assert len(result.args) == 2
     # Solutions may be IRRational or IRInteger.
-    vals = {(s.numerator if isinstance(s, IRRational) else s.value) for s in result.args}
+    vals = {
+        (s.numerator if isinstance(s, IRRational) else s.value)
+        for s in result.args
+    }
     assert vals == {2, 3}
 
 
@@ -738,7 +740,6 @@ def test_pipeline_diff_polynomial() -> None:
 
 def test_pipeline_diff_sin() -> None:
     """diff(sin(x), x) → cos(x)."""
-    from symbolic_ir import COS, IRApply as _IRApply, IRSymbol as _IRSym
     result = _eval("diff(sin(x), x)")
     # Should be Cos(x).
     assert isinstance(result, IRApply)

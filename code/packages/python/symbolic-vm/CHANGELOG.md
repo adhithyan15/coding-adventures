@@ -1,5 +1,62 @@
 # Changelog
 
+## 0.43.0 — 2026-05-04
+
+**Phase 23 — Special functions as integration and differentiation fallback.**
+
+Bumps `coding-adventures-symbolic-ir` to `>=0.11.0`.
+
+### New module: `special_functions.py`
+
+Contains all Phase 23 logic: integration pattern matchers, differentiation
+chain-rule rules, and numeric evaluation helpers.
+
+**Integration fallbacks** (appended to `_integrate()` in `integrate.py`):
+| Pattern | Result |
+|---------|--------|
+| `∫ exp(c·x²) dx` (c < 0) | `√π/(2·√\|c\|) · erf(√\|c\|·x)` |
+| `∫ exp(c·x²) dx` (c > 0) | `√π/(2·√c) · erfi(√c·x)` |
+| `∫ sin(ax)/x dx` | `Si(ax)` |
+| `∫ cos(ax)/x dx` | `Ci(ax)` |
+| `∫ sinh(ax)/x dx` | `Shi(ax)` |
+| `∫ cosh(ax)/x dx` | `Chi(ax)` |
+| `∫ log(1−ax)/x dx` | `−Li₂(ax)` |
+| `∫ log(x)/(1−x) dx` | `Li₂(1−x)` |
+| `∫ sin(q·π·x²) dx` | `(1/√(2q))·FresnelS(√(2q)·x)` |
+| `∫ cos(q·π·x²) dx` | `(1/√(2q))·FresnelC(√(2q)·x)` |
+| `∫ sin(a·x²) dx` | `√(π/(2a))·FresnelS(x·√(2a/π))` |
+| `∫ cos(a·x²) dx` | `√(π/(2a))·FresnelC(x·√(2a/π))` |
+
+**Differentiation rules** (dispatched from `derivative.py` via `diff_special`):
+
+`erf`, `erfc`, `erfi`, `Si`, `Ci`, `Shi`, `Chi`, `Li₂`, `FresnelS`, `FresnelC`
+— all via the chain rule `d/dx f(g(x)) = f′(g(x)) · g′(x)`.
+
+**Numeric evaluation helpers** (`gamma_eval`, `beta_eval`, `erf_numeric`,
+`erfi_numeric`, `si_numeric`, `ci_numeric`, `shi_numeric`, `chi_numeric`,
+`li2_numeric`, `fresnel_s_numeric`, `fresnel_c_numeric`).
+
+### New handlers (`cas_handlers.py`)
+
+Twelve new handlers registered in `build_cas_handler_table()`:
+
+| Head | Handler | Special values / method |
+|------|---------|------------------------|
+| `GammaFunc` | `gamma_handler` | Exact for integers/half-integers; Lanczos otherwise |
+| `BetaFunc` | `beta_handler` | Reduces via Γ; `B(½,½) = π` |
+| `Erf` | `erf_handler` | `erf(0) = 0`; float via `math.erf` |
+| `Erfc` | `erfc_handler` | `erfc(0) = 1`; float |
+| `Erfi` | `erfi_handler` | `erfi(0) = 0`; series |
+| `Si` | `si_handler` | `Si(0) = 0`; series |
+| `Ci` | `ci_handler` | Series + log; x > 0 only |
+| `Shi` | `shi_handler` | `Shi(0) = 0`; series |
+| `Chi` | `chi_handler` | Series + log; x > 0 only |
+| `Li2` | `li2_handler` | `Li₂(0)=0`, `Li₂(1)=π²/6`; series |
+| `FresnelS` | `fresnel_s_handler` | `FresnelS(0) = 0`; series |
+| `FresnelC` | `fresnel_c_handler` | `FresnelC(0) = 0`; series |
+
+---
+
 ## 0.42.0 — 2026-05-04
 
 **Phase 22 — MACSYMA pattern-matching rule system: `matchdeclare`, `defrule`,

@@ -12,13 +12,8 @@ from __future__ import annotations
 
 import math
 
-import pytest
-
-from macsyma_runtime import MacsymaBackend
-from macsyma_runtime.cas_handlers import build_cas_handler_table
 from symbolic_ir import (
     ADD,
-    DIV,
     MUL,
     NEG,
     POW,
@@ -26,10 +21,14 @@ from symbolic_ir import (
     IRApply,
     IRFloat,
     IRInteger,
+    IRNode,
     IRRational,
     IRSymbol,
 )
 from symbolic_vm import VM
+
+from macsyma_runtime import MacsymaBackend
+from macsyma_runtime.cas_handlers import build_cas_handler_table
 
 # ---------------------------------------------------------------------------
 # Helpers

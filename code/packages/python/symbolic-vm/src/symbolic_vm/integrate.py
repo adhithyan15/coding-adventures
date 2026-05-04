@@ -144,6 +144,7 @@ from symbolic_vm.recip_hyp_power_integral import (
 )
 from symbolic_vm.rothstein_trager import rothstein_trager
 from symbolic_vm.sinh_poly_integral import cosh_poly_integral, sinh_poly_integral
+from symbolic_vm.special_functions import INTEGRATION_FALLBACKS
 from symbolic_vm.trig_poly_integral import trig_cos_integral, trig_sin_integral
 
 ONE = IRInteger(1)
@@ -171,6 +172,14 @@ def integrate() -> Handler:
             return vm.eval(rational_result)
         result = _integrate(f, x)
         if result is None:
+            # Phase 23: special-function fallback — try erf, Si/Ci, Li₂,
+            # Fresnel after all elementary routes have returned None.
+            # Placed here (in the outer handler) so it fires regardless of
+            # which early-return path inside _integrate was taken.
+            for _sf_try in INTEGRATION_FALLBACKS:
+                _sf_result = _sf_try(f, x)
+                if _sf_result is not None:
+                    return vm.eval(_sf_result)
             return IRApply(INTEGRATE, (f, x))
         return vm.eval(result)
 
