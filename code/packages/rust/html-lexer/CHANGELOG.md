@@ -190,6 +190,9 @@ documented in this file.
   after reporting EOF-in-tag diagnostics.
 - EOF inside attribute character-reference substates now also drops the partial
   start tag after preserving the relevant reference diagnostics.
+- Unexpected solidus recovery in start tags now reconsumes in
+  `before_attribute_name`, preserving attributes after malformed slash-space or
+  slash-NULL sequences.
 - Added a WHATWG operator/shape named-reference batch covering circled
   operators, integrals, products, squares, lozenges, stars, suits, and symbols.
 - Added a WHATWG box-drawing named-reference batch covering double-line,
