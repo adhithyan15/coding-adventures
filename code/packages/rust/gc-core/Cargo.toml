@@ -1,0 +1,13 @@
+[package]
+name = "gc-core"
+version = "0.1.0"
+edition = "2021"
+description = "LANG16 — adaptive GC adapter layer wiring garbage-collector into the LANG VM pipeline."
+license = "MIT"
+
+[lib]
+name = "gc_core"
+path = "src/lib.rs"
+
+[dependencies]
+garbage-collector = { path = "../garbage-collector" }
