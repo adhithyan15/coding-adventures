@@ -144,14 +144,38 @@ class TestJoin:
         assert len(opens) == 2
         assert len(closes) == 2
 
-    def test_right_join_raises(self) -> None:
+    def test_right_join_compiles(self) -> None:
+        # RIGHT JOIN is compiled by swapping sides and delegating to LEFT JOIN.
+        # It must emit the same outer-join instructions as a LEFT JOIN.
+        plan = Project(
+            input=Join(
+                left=Scan(table="a", alias="a"),
+                right=Scan(table="b", alias="b"),
+                kind=JoinKind.RIGHT,
+                condition=BinaryExpr(
+                    op=AstOp.EQ, left=Column("a", "k"), right=Column("b", "k")
+                ),
+            ),
+            items=(ProjectionItem(expr=Column("b", "k"), alias="k"),),
+        )
+        prog = compile(plan)
+        assert any(isinstance(i, JoinBeginRow) for i in prog.instructions)
+        assert any(isinstance(i, JoinSetMatched) for i in prog.instructions)
+        assert any(isinstance(i, JoinIfMatched) for i in prog.instructions)
+        # Two OpenScan + two CloseScan (same structure as LEFT JOIN).
+        opens = [i for i in prog.instructions if isinstance(i, OpenScan)]
+        closes = [i for i in prog.instructions if isinstance(i, CloseScan)]
+        assert len(opens) == 2
+        assert len(closes) == 2
+
+    def test_full_join_raises(self) -> None:
         from sql_codegen.errors import UnsupportedNode
 
         plan = Project(
             input=Join(
                 left=Scan(table="a", alias="a"),
                 right=Scan(table="b", alias="b"),
-                kind=JoinKind.RIGHT,
+                kind=JoinKind.FULL,
                 condition=BinaryExpr(
                     op=AstOp.EQ, left=Column("a", "k"), right=Column("b", "k")
                 ),
@@ -163,7 +187,7 @@ class TestJoin:
         except UnsupportedNode:
             pass
         else:
-            raise AssertionError("expected UnsupportedNode for RIGHT JOIN")
+            raise AssertionError("expected UnsupportedNode for FULL JOIN")
 
 
 class TestPostProcessing:
