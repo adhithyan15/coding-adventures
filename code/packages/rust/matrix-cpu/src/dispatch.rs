@@ -332,15 +332,22 @@ fn exec_compute(buffers: &mut BufferStore, graph: &ComputeGraph, op: &Op) -> Res
         }
 
         // ──── Const ────
-        Op::Const {
-            constant,
-            output: _,
-        } => {
-            // Already uploaded above when we initialised constants.
-            // Sanity-check the index.
-            if (*constant as usize) >= graph.constants.len() {
-                return Err(format!("constant index {} out of range", constant));
+        Op::Const { constant, output } => {
+            // Materialise the constant from the constants table into the
+            // output tensor's buffer.  The bytes were uploaded to the
+            // constant's source-tensor buffer at dispatch start (see
+            // run() above), but the Const op produces a NEW tensor in
+            // SSA — its buffer is separately allocated and needs to
+            // receive the constant's bytes here.
+            let c = graph
+                .constants
+                .get(*constant as usize)
+                .ok_or_else(|| format!("constant index {} out of range", constant))?;
+            let out_residency = lookup_residency(graph, *output)?;
+            if !buffers.contains(out_residency.buffer) {
+                buffers.alloc(out_residency.buffer, c.bytes.len());
             }
+            buffers.write(out_residency.buffer, 0, &c.bytes)?;
             Ok(())
         }
     }

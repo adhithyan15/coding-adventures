@@ -1,18 +1,16 @@
 [package]
 name = "image-gpu-core"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "IMG06: GPU-accelerated point operations on PixelContainer — Metal on macOS, CUDA on NVIDIA, CPU fallback everywhere"
-
-[features]
-# Enable Metal backend (macOS).  Propagates to gpu-runtime/metal.
-# Disable with --no-default-features to build/test without linking Metal.framework.
-default = ["metal"]
-metal   = ["gpu-runtime/metal"]
+description = "IMG06: image-domain library built on the matrix execution layer (MX01–MX04). Each operation is a MatrixIR graph dispatched through matrix-runtime to matrix-cpu (or any future GPU executor). Public API unchanged from v0.1; backend swapped from gpu-runtime to matrix-{ir,runtime,cpu}."
 
 [dependencies]
-gpu-runtime     = { path = "../gpu-runtime", default-features = false }
-pixel-container = { path = "../pixel-container" }
+matrix-ir         = { path = "../matrix-ir" }
+compute-ir        = { path = "../compute-ir" }
+matrix-runtime    = { path = "../matrix-runtime" }
+matrix-cpu        = { path = "../matrix-cpu" }
+executor-protocol = { path = "../executor-protocol" }
+pixel-container   = { path = "../pixel-container" }
 
 [dev-dependencies]
 image-point-ops = { path = "../image-point-ops" }
