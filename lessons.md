@@ -63,6 +63,9 @@ A condensed quick-reference of mistakes made during development, grouped by cate
 - **Parsing pyproject.toml with regex is brittle.** Comment lines containing `[` break naive `[^[]*?` cross-line patterns. Parse line-by-line, skip `#` lines, track section headers explicitly.
 - **Mocked wrapper tests for native packages** — when native smoke tests skip on the wrong platform, the Python facade's wrapper logic still needs coverage from mocked tests, or coverage gates fail off-platform.
 - **Compiler-generated data segments need source-stage byte caps.** AST-depth and source-size limits don't bound semantic frame plans or generated runtime images. Cap at the earliest stage that computes the size.
+- **JVM multi-module: exported functions in dep modules need `extra_callable_labels`.** `_discover_callable_regions` builds callable names from `CALL` instructions; exported functions that are only called cross-module have no local callers, so they are silently omitted from the class file → `NoSuchMethodError` at runtime. Pass `module.program.module.exports` as `extra_callable_labels` in the JvmBackendConfig.
+- **JVM multi-module: all `__ca_regs` references must use `_reg_owner`, not `self.config.class_name`.** Any `field_ref(self.config.class_name, "__ca_regs", ...)` inside helper methods (`__ca_syscall`, etc.) that was added before `external_runtime_class` was introduced must be updated to `_reg_field_ref(...)`. Two `getstatic` calls in `_build_syscall_method` (SYSCALL 1 write-byte, SYSCALL 10 exit) were missed and caused `NoSuchFieldError` at runtime in multi-module mode.
+- **JVM cross-class invokestatic requires `ACC_PUBLIC`** — a method tagged `ACC_PRIVATE` on class A cannot be called by class B even via `invokestatic`. The JVM raises `NoSuchMethodError` at runtime (not a compile-time error). In multi-module mode set all callable methods to `ACC_PUBLIC | ACC_STATIC`.
 
 ## Ruby
 

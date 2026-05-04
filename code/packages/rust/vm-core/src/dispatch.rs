@@ -68,6 +68,23 @@ pub struct DispatchCtx<'a> {
     pub fn_call_counts: &'a mut HashMap<String, u32>,
     pub metrics_instrs: &'a mut u64,
     pub metrics_jit_hits: &'a mut u64,
+    // ── LANG17: branch + loop metrics ────────────────────────────────────────
+    /// Per-function, per-instruction-index branch taken/not-taken counts.
+    ///
+    /// Keyed `branch_stats[fn_name][ip]`.  Only conditional branches
+    /// (`jmp_if_true`, `jmp_if_false`) write here.
+    pub branch_stats: &'a mut HashMap<String, HashMap<usize, crate::branch_stats::BranchStats>>,
+    /// Per-function, per-source-ip back-edge (loop iteration) counts.
+    ///
+    /// Keyed `loop_back_edge_counts[fn_name][source_ip]`.  Incremented
+    /// whenever a jump (conditional or unconditional) targets an earlier
+    /// instruction index.
+    pub loop_back_edge_counts: &'a mut HashMap<String, HashMap<usize, u64>>,
+    /// Optional per-instruction trace accumulator (LANG17 execute_traced path).
+    ///
+    /// `None` on the normal `execute()` path — zero overhead.  `Some` on
+    /// `execute_traced()`, where each instruction appends a `VMTrace`.
+    pub tracer: Option<&'a mut Vec<crate::trace::VMTrace>>,
 }
 
 /// Signature for a language-specific opcode extension handler.
@@ -345,48 +362,92 @@ fn find_label_ip(
 }
 
 fn handle_jmp(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
-    let (fn_name, label) = {
+    let (fn_name, label, source_ip) = {
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
         let label = instr.srcs.first()
             .and_then(|s| s.as_var())
             .ok_or_else(|| VMError::Custom("jmp missing label".into()))?
             .to_string();
-        (frame.fn_name.clone(), label)
+        // source_ip is frame.ip - 1 because the dispatch loop already advanced it.
+        (frame.fn_name.clone(), label, frame.ip.saturating_sub(1))
     };
     let target = find_label_ip(ctx.module_fns, &fn_name, &label)?;
+    // Back-edge detection: unconditional jump to an earlier instruction.
+    if target < source_ip {
+        ctx.loop_back_edge_counts
+            .entry(fn_name)
+            .or_default()
+            .entry(source_ip)
+            .and_modify(|c| *c += 1)
+            .or_insert(1);
+    }
     ctx.frames.last_mut().unwrap().ip = target;
     Ok(None)
 }
 
 fn handle_jmp_if_true(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
-    let (fn_name, cond, label) = {
+    let (fn_name, cond, label, source_ip) = {
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
         let cond = resolve_src(frame, &instr.srcs, 0)?;
         let label = instr.srcs.get(1)
             .and_then(|s| s.as_var())
             .ok_or_else(|| VMError::Custom("jmp_if_true missing label".into()))?
             .to_string();
-        (frame.fn_name.clone(), cond, label)
+        (frame.fn_name.clone(), cond, label, frame.ip.saturating_sub(1))
     };
-    if cond.is_truthy() {
+    let taken = cond.is_truthy();
+    // Record branch stats (always-on, O(1) per branch).
+    ctx.branch_stats
+        .entry(fn_name.clone())
+        .or_default()
+        .entry(source_ip)
+        .or_default()
+        .bump(taken);
+    if taken {
         let target = find_label_ip(ctx.module_fns, &fn_name, &label)?;
+        // Back-edge: taken conditional branch to earlier instruction = loop.
+        if target < source_ip {
+            ctx.loop_back_edge_counts
+                .entry(fn_name)
+                .or_default()
+                .entry(source_ip)
+                .and_modify(|c| *c += 1)
+                .or_insert(1);
+        }
         ctx.frames.last_mut().unwrap().ip = target;
     }
     Ok(None)
 }
 
 fn handle_jmp_if_false(ctx: &mut DispatchCtx, instr: &IIRInstr) -> Result<Option<Value>, VMError> {
-    let (fn_name, cond, label) = {
+    let (fn_name, cond, label, source_ip) = {
         let frame = ctx.frames.last().ok_or_else(|| VMError::Custom("no frame".into()))?;
         let cond = resolve_src(frame, &instr.srcs, 0)?;
         let label = instr.srcs.get(1)
             .and_then(|s| s.as_var())
             .ok_or_else(|| VMError::Custom("jmp_if_false missing label".into()))?
             .to_string();
-        (frame.fn_name.clone(), cond, label)
+        (frame.fn_name.clone(), cond, label, frame.ip.saturating_sub(1))
     };
-    if !cond.is_truthy() {
+    let taken = !cond.is_truthy();
+    // Record branch stats.
+    ctx.branch_stats
+        .entry(fn_name.clone())
+        .or_default()
+        .entry(source_ip)
+        .or_default()
+        .bump(taken);
+    if taken {
         let target = find_label_ip(ctx.module_fns, &fn_name, &label)?;
+        // Back-edge: taken conditional branch to earlier instruction = loop.
+        if target < source_ip {
+            ctx.loop_back_edge_counts
+                .entry(fn_name)
+                .or_default()
+                .entry(source_ip)
+                .and_modify(|c| *c += 1)
+                .or_insert(1);
+        }
         ctx.frames.last_mut().unwrap().ip = target;
     }
     Ok(None)
@@ -749,6 +810,16 @@ pub(crate) fn run_dispatch_loop(
         // The clone is O(small) — a few strings and a short Vec.
         let instr = ctx.module_fns[fn_idx].instructions[ip].clone();
 
+        // Snapshot registers *before* dispatch (only on execute_traced path).
+        let registers_before: Vec<Value> = if ctx.tracer.is_some() {
+            ctx.frames.last()
+                .map(|f| f.registers.clone())
+                .unwrap_or_default()
+        } else {
+            Vec::new()
+        };
+        let frame_depth_before = ctx.frames.len().saturating_sub(1);
+
         // Advance IP before dispatch so branch handlers can overwrite it.
         ctx.frames.last_mut().unwrap().ip += 1;
 
@@ -792,6 +863,21 @@ pub(crate) fn run_dispatch_loop(
                     }
                 }
             }
+        }
+
+        // Instruction trace (execute_traced path only).
+        if let Some(tracer) = ctx.tracer.as_deref_mut() {
+            let registers_after = ctx.frames.last()
+                .map(|f| f.registers.clone())
+                .unwrap_or_default();
+            tracer.push(crate::trace::VMTrace {
+                frame_depth: frame_depth_before,
+                fn_name: fn_name.clone(),
+                ip,
+                instr: instr.clone(),
+                registers_before,
+                registers_after,
+            });
         }
 
         // Track return values.

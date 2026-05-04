@@ -1,0 +1,9 @@
+[package]
+name = "coding_adventures_vault_records"
+version = "0.1.0"
+edition = "2021"
+description = "VLT02 — typed Vault record schemas (Login, SecureNote, Card, TotpSeed, ApiKey, DatabaseCredential, …) with canonical-CBOR plaintext bytes and content-type tagging. The plaintext layer beneath VLT01 envelope encryption."
+
+[dependencies]
+coding_adventures_canonical_cbor = { path = "../canonical-cbor" }
+coding_adventures_zeroize = { path = "../zeroize" }
