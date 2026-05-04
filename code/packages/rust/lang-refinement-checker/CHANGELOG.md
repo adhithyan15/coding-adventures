@@ -1,5 +1,70 @@
 # Changelog — `lang-refinement-checker`
 
+## 0.4.0 — 2026-05-04
+
+Program-scope annotation-completeness checker.  **LANG23 PR 23-G.**
+
+### Added
+
+- `program_checker` module — the PR 23-G program-scope (rung 4) checking API.
+  - `ViolationKind` enum: `UnrefinedParam { param_index: usize, param_name: String }` |
+    `UnrefinedReturn`.  The kind of missing annotation.  `UnrefinedReturn` is
+    only produced when the checker is constructed with `with_return_type_checking()`.
+  - `AnnotationViolation` struct: `module_name`, `function_name`, `kind`,
+    `description`.  One entry per missing annotation.  `description` carries a
+    human-readable compiler error message: `"[text/ascii] decode: parameter 0
+    'codepoint' has no refinement annotation (': any')"`.
+  - `ProgramCheckResult` struct: `violations: Vec<AnnotationViolation>` + helpers:
+    - `is_clean()` — true iff no violations found.
+    - `has_violations()` — true iff at least one violation found.
+    - `violation_count()` — length of `violations`.
+    - `error_message()` — multi-line human-readable listing of all violations.
+    - `violating_modules()` — deduplicated list of module names with violations.
+  - `ProgramModule` struct: `name: String` + `scope: ModuleScope`.  A named
+    module with its public function-signature registry.  Functions absent from
+    the scope are excluded from the check (per-symbol opt-out, consistent with
+    the module-scope checker).
+  - `ProgramChecker` struct: purely structural — no solver, no CFG walk.
+    - `new()` — default constructor; only parameter annotations are checked.
+    - `with_return_type_checking()` — builder method enabling return-type checks.
+    - `check_program(&[ProgramModule]) -> ProgramCheckResult` — iterates every
+      module's `ModuleScope`, every registered function, every parameter; emits
+      `UnrefinedParam` for `: any` parameters and optionally `UnrefinedReturn`
+      for unrefined return types.
+  - `ModuleScope::iter()` — added `pub(crate)` iterator to `module_checker`'s
+    `ModuleScope` so `program_checker` can enumerate all registered functions
+    without accessing the private `HashMap` field directly.
+- 26 unit tests + 3 doc-tests in `program_checker` covering:
+  - Primary acceptance criterion: strict mode rejects a refinement-incomplete
+    module (one with an unrefined param alongside a fully annotated function).
+  - Fully annotated program passes.
+  - Empty program and empty module pass (vacuous).
+  - Single unrefined first param — one violation.
+  - Two unrefined params — two violations.
+  - Mixed params (first annotated, second not) — one violation at index 1.
+  - Zero-param function — always clean.
+  - Unrefined return not flagged by default.
+  - Unrefined return flagged when `with_return_type_checking()` enabled.
+  - Annotated return passes return-type check.
+  - Unrefined param + unrefined return → 2 violations with return checking on.
+  - Violations across multiple modules all collected.
+  - Clean module + dirty module → only dirty module produces violations.
+  - `error_message()` empty when clean; contains count and param info when not.
+  - `violating_modules()` returns correct names and deduplicates.
+  - `violation_count()` matches `violations.len()`.
+  - Violation description format for param and for return.
+  - `ProgramChecker::default()` equivalent to `ProgramChecker::new()`.
+  - `with_return_type_checking()` doc-test and module-level doc-test.
+
+### Changed
+
+- Crate version bumped `0.3.0 → 0.4.0`.
+- Crate description updated to mention 23-C, 23-D, 23-F, and 23-G.
+- `lib.rs` module-level doc updated to show the four-module structure and the
+  new `ProgramChecker` entry in the module table and architecture diagram.
+- `module_checker::ModuleScope` gained `pub(crate) fn iter()` to support the
+  new `program_checker` module.
+
 ## 0.3.0 — 2026-05-04
 
 Module-scope refinement checker.  **LANG23 PR 23-F.**
