@@ -25,7 +25,7 @@
 //!
 //! ## Decision shape
 //!
-//! ```rust
+//! ```ignore
 //! pub enum Decision { Allow, Deny(Reason) }
 //! ```
 //!
