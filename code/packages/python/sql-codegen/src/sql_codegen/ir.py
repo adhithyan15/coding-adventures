@@ -884,6 +884,13 @@ class WinFunc(Enum):
     MAX = "MAX"
     FIRST_VALUE = "FIRST_VALUE"
     LAST_VALUE = "LAST_VALUE"
+    # Offset / navigation functions (SQL:2003)
+    LAG = "LAG"           # LAG(col [, offset=1 [, default=NULL]])
+    LEAD = "LEAD"         # LEAD(col [, offset=1 [, default=NULL]])
+    NTH_VALUE = "NTH_VALUE"   # NTH_VALUE(col, n) — value from nth row in window
+    NTILE = "NTILE"       # NTILE(n) — distribute rows into n numbered buckets
+    PERCENT_RANK = "PERCENT_RANK"  # (rank-1)/(rows-1) — relative rank 0..1
+    CUME_DIST = "CUME_DIST"        # cumulative distribution 0..1
 
 
 @dataclass(frozen=True, slots=True)
@@ -920,6 +927,13 @@ class WinFuncSpec:
     partition_cols: tuple[str, ...]
     order_cols: tuple[tuple[str, bool], ...]
     result_col: str
+    extra_args: tuple[object, ...] = ()
+    # Meaning by function:
+    # LAG / LEAD  → extra_args = (offset: int, default: SqlValue)
+    #               offset defaults to 1, default to None if omitted.
+    # NTH_VALUE   → extra_args = (n: int,)   — 1-indexed row position
+    # NTILE       → extra_args = (n: int,)   — number of buckets
+    # PERCENT_RANK, CUME_DIST, and all others → extra_args = ()
 
 
 @dataclass(frozen=True, slots=True)

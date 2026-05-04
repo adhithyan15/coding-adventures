@@ -575,6 +575,7 @@ class WindowFuncSpec:
     partition_by: tuple[Expr, ...]
     order_by: tuple[tuple[Expr, bool], ...]
     alias: str
+    extra_args: tuple[Expr, ...] = ()   # LAG/LEAD offset+default; NTH_VALUE n
 
 
 @dataclass(frozen=True, slots=True)
