@@ -1,5 +1,69 @@
 # Changelog — twig-clr-compiler
 
+## 0.7.0 — 2026-05-04 — Phase 4e multi-module CLR compilation + Phase 4c host calls
+
+### Added — `compile_modules` and `run_modules`
+
+New API for compiling and executing multi-module Twig programs on the CLR:
+
+```python
+from twig_clr_compiler import compile_modules, run_modules
+
+result = compile_modules(resolved_modules, entry_module="user/hello")
+# result.assembly_bytes — single PE file containing all modules as TypeDefs
+# result.module_results — list of ModuleClrCompileResult, entry first
+# result.entry_type_name — CLR type name derived from entry module name
+
+exec_result = run_modules(resolved_modules, entry_module="user/hello")
+# exec_result.returncode  — dotnet process exit code
+# exec_result.stdout / .stderr
+```
+
+Each non-host Twig module maps to one TypeDef in the PE assembly.  The
+entry module's TypeDef uses `main` as the entry point; dep modules'
+TypeDefs expose their exported functions as static methods called from
+the entry module via `call` instructions with stable MethodDef tokens.
+
+### Added — `module_name_to_clr_type`
+
+Helper that replaces `/` with `_` in module names for CLR type names:
+`"user/hello"` → `"user_hello"`.
+
+### Added — `MultiModuleClrResult` and `ModuleClrCompileResult`
+
+Frozen dataclasses returned by `compile_modules`:
+- `MultiModuleClrResult.module_results` — `list[ModuleClrCompileResult]`
+  with the entry module first
+- `ModuleClrCompileResult.callable_names` — set of exported function names
+- `ModuleClrCompileResult.artifact` — `CILProgramArtifact` for introspection
+
+### Fixed — inline host calls
+
+`compile_source` and `compile_modules` now pass
+`inline_host_syscalls=True` to the CIL backend, so `host/write-byte`,
+`host/read-byte`, and `host/exit` emit direct `System.Console.Write`,
+`System.Console.Read`, and `System.Environment.Exit` calls instead of
+the brainfuck-only `__ca_syscall` external helper.  Previously any Twig
+program using `(import host)` would crash with `TypeLoadException`.
+
+### Fixed — local_count floor for cross-module calls
+
+When compiling multiple modules, `compile_modules` computes
+`global_local_count` (the maximum local count across all modules) and
+passes it as `call_register_count` to every module's backend config.
+A floor in `_analyze_program` ensures every module declares at least
+that many locals, preventing `InvalidProgramException` when the entry
+module has fewer registers than `global_local_count`.
+
+### Acceptance criterion (TW04 Phase 4e)
+
+```
+(a/math/add 17 25)  →  exit code 42
+```
+
+All 99 tests pass on net9.0, including recursive dep-module functions,
+three-module chains, and host-call + dep-module combinations.
+
 ## 0.6.0 — 2026-04-29 — multi-arity closures
 
 Multi-arg lambdas like `(lambda (x y) (+ x y))` now run on real

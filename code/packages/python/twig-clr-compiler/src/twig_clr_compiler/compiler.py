@@ -77,8 +77,11 @@ from compiler_ir import (
 from ir_optimizer import IrOptimizer, OptimizationResult
 from ir_to_cil_bytecode import (
     CILBackendConfig,
+    CILProgramArtifact,
+    CILTypeArtifact,
     lower_ir_to_cil_bytecode,
 )
+from ir_to_cil_bytecode.backend import SequentialCILTokenProvider
 from twig import (
     TwigCompileError,
     TwigError,
@@ -101,6 +104,7 @@ from twig.ast_nodes import (
     VarRef,
 )
 from twig.free_vars import free_vars
+from twig.module_resolver import HOST_MODULE_NAME, ResolvedModule
 
 # ---------------------------------------------------------------------------
 # Result types
@@ -505,13 +509,25 @@ class _Compiler:
             # by ``__ca_syscall`` for num=2.
             _slash = name.find("/")
             if _slash > 0 and _slash < len(name) - 1:
-                # Module-qualified host call (``host/write-byte`` etc.)
+                # Module-qualified call — ``host/write-byte`` or a user-module
+                # cross-call like ``a/math/add``.
                 num = _HOST_SYSCALLS.get(name)
                 if num is None:
-                    raise TwigCompileError(
-                        f"unknown host call {name!r} — "
-                        "supported: " + ", ".join(sorted(_HOST_SYSCALLS))
-                    )
+                    # TW04 Phase 4e: user-module cross-call.  Emit
+                    # ``IrOp.CALL IrLabel(name)`` with args marshalled
+                    # into param slots first.  The IR label contains
+                    # ``/`` so the CIL backend recognises it as a
+                    # cross-module call and resolves it via
+                    # ``config.external_method_tokens`` at lowering time.
+                    xm_arg_regs = [
+                        self._compile_expr(a, ctx) for a in expr.args
+                    ]
+                    for i, src in enumerate(xm_arg_regs):
+                        self._emit_move(IrRegister(_REG_PARAM_BASE + i), src)
+                    self._emit(IrOp.CALL, IrLabel(name))
+                    dest = self._fresh_holding(ctx)
+                    self._emit_move(dest, IrRegister(_REG_HALT_RESULT))
+                    return dest
                 scratch = IrRegister(_CLR_SYSCALL_ARG_REG)
                 if num == 2:  # read-byte — no user arg, result into fresh reg
                     dest = self._fresh_holding(ctx)
@@ -808,6 +824,10 @@ def compile_source(
                 # backend to read the syscall arg from that register so
                 # it matches the JVM convention and the compiler's intent.
                 syscall_arg_reg=_CLR_SYSCALL_ARG_REG,
+                # TW04 Phase 4c: use inline .NET API calls for SYSCALL 1/2/10
+                # (Console.Write / Console.Read / Environment.Exit) instead of
+                # the brainfuck-specific __ca_syscall external helper.
+                inline_host_syscalls=True,
             ),
         )
     except Exception as exc:
@@ -895,6 +915,467 @@ def run_source(
             check=False,
         )
     return ClrRunResult(
+        compilation=compilation,
+        stdout=proc.stdout,
+        stderr=proc.stderr,
+        returncode=proc.returncode,
+    )
+
+
+# ---------------------------------------------------------------------------
+# TW04 Phase 4e — multi-module CLR compilation
+# ---------------------------------------------------------------------------
+#
+# Each Twig module (excluding the synthetic ``host`` module) becomes one
+# TypeDef row in a **single** PE/CLI assembly.  Cross-module function calls
+# lower to ordinary CIL ``call`` instructions addressed by pre-assigned
+# MethodDef tokens in the combined assembly.
+#
+# Why one assembly (not one PE per module)?
+# -----------------------------------------
+# CLR cross-assembly calls require ``AssemblyRef`` + ``MemberRef`` tokens
+# which ``cli-assembly-writer`` does not yet support.  Packing all modules
+# into one PE lets every ``call`` instruction use a simple ``MethodDef``
+# token (``0x06xxxxxx``) — the same kind used for same-TypeDef calls.
+#
+# CLR type naming
+# ---------------
+# CLR type names may not contain ``/``.  We replace every ``/`` in the
+# Twig module name with ``_`` to produce a valid CLR identifier:
+# ``"a/math"`` → ``"a_math"``, ``"user/hello"`` → ``"user_hello"``.
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class ModuleClrCompileResult:
+    """Per-module artefact from a multi-module CLR compile run.
+
+    ``type_name`` is the CLR TypeDef name for this module's methods in the
+    combined assembly (``module_name_to_clr_type(module_name)``).
+    ``callable_names`` lists the emitted method names in IR label-position
+    order — used by callers to reconstruct the MethodDef token layout.
+    """
+
+    module_name: str
+    type_name: str
+    ir: IrProgram
+    artifact: CILProgramArtifact
+    callable_names: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class MultiModuleClrResult:
+    """Combined artefact from compiling a complete Twig module graph to CLR.
+
+    ``assembly_bytes`` is a single PE/CLI ``.exe`` containing one TypeDef
+    per Twig module.  ``entry_type_name`` is the TypeDef that owns the
+    ``.entrypoint`` method.
+    """
+
+    entry_module: str
+    module_results: tuple[ModuleClrCompileResult, ...]
+    assembly_bytes: bytes
+    entry_type_name: str
+
+
+@dataclass(frozen=True)
+class MultiModuleClrExecutionResult:
+    """Compile + real-``dotnet`` execution result for a multi-module program."""
+
+    compilation: MultiModuleClrResult
+    stdout: bytes
+    stderr: bytes
+    returncode: int
+
+
+def module_name_to_clr_type(name: str) -> str:
+    """Map a Twig module name to a CLR type name.
+
+    CLR type names may not contain ``/``.  We replace every occurrence with
+    ``_`` so ``"a/math"`` becomes ``"a_math"`` and ``"user/hello"`` becomes
+    ``"user_hello"``.  The mapping is injective for all legal Twig module
+    names.
+
+    Example::
+
+        >>> module_name_to_clr_type("user/hello")
+        'user_hello'
+        >>> module_name_to_clr_type("a/math")
+        'a_math'
+    """
+    return name.replace("/", "_")
+
+
+def _compile_module_to_ir(
+    module: ResolvedModule,
+) -> tuple[IrProgram, list[tuple[str, list[str], Lambda]], IrProgram]:
+    """Compile a resolved Twig module to raw IR, lifted lambdas, optimised IR.
+
+    Returns ``(raw_ir, lifted_lambdas, optimized_ir)``.  The lifted-lambdas
+    list mirrors what ``_Compiler._lifted_lambdas`` accumulates and is used
+    to build ``closure_free_var_counts`` for the CIL backend.
+    """
+    compiler = _Compiler()
+    raw_ir = compiler.compile(module.program)
+    optimization = IrOptimizer.default_passes().optimize(raw_ir)
+    return raw_ir, list(compiler._lifted_lambdas), optimization.program  # noqa: SLF001
+
+
+def _discover_module_callable_names(
+    optimized_ir: IrProgram,
+    lifted_lambdas: list[tuple[str, list[str], Lambda]],
+    exports: list[str],
+) -> tuple[str, ...]:
+    """Return the main-type callable method names for a module's IR program.
+
+    The "main-type" callables are all callable regions *minus* lifted-lambda
+    (closure) regions.  They are ordered by their label position in the IR
+    instruction stream, which matches the MethodDef table row order that the
+    assembly writer emits.
+
+    ``exports`` are included even when no local CALL targets them (they are
+    only called from OTHER modules).
+
+    Phase 4e restriction: dep modules must not contain closures.  The entry
+    module's closures are handled separately during token assignment.
+    """
+    # Names of lifted lambda regions (closure bodies).
+    closure_region_names: set[str] = {name for name, _, _ in lifted_lambdas}
+
+    # Scan label positions in IR instruction order.
+    label_positions: dict[str, int] = {}
+    for i, instr in enumerate(optimized_ir.instructions):
+        if instr.opcode == IrOp.LABEL:
+            label_positions[instr.operands[0].name] = i  # type: ignore[union-attr]
+
+    # Seed with the entry label and any local CALL targets.
+    callable_names: set[str] = {optimized_ir.entry_label}
+    for instr in optimized_ir.instructions:
+        if instr.opcode == IrOp.CALL:
+            target_name = instr.operands[0].name  # type: ignore[union-attr]
+            if "/" not in target_name:
+                callable_names.add(target_name)
+        elif instr.opcode == IrOp.MAKE_CLOSURE:
+            target_name = instr.operands[1].name  # type: ignore[union-attr]
+            callable_names.add(target_name)
+
+    # Include exports — they are only called cross-module so they have no
+    # local CALL callers.
+    for exp in exports:
+        if exp in label_positions:
+            callable_names.add(exp)
+
+    # Filter out closure regions; sort by IR position.
+    main_callables = callable_names - closure_region_names
+    return tuple(
+        sorted(main_callables, key=lambda n: label_positions.get(n, 0))
+    )
+
+
+def compile_modules(
+    modules: list[ResolvedModule],
+    *,
+    entry_module: str,
+    assembly_name: str = "TwigProgram",
+) -> MultiModuleClrResult:
+    """Compile a topologically ordered list of resolved Twig modules to a
+    single CLR PE/CLI assembly.
+
+    ``modules`` should be the list returned by ``twig.resolve_modules`` (in
+    dependency-first topological order).  ``entry_module`` names the module
+    whose ``main`` function becomes the assembly's entry point.  The synthetic
+    ``host`` module is silently skipped.
+
+    **Phase 4e restriction**: dependency modules must not contain closures or
+    heap primitives.  These extensions are reserved for a future phase.
+
+    The function uses a two-pass approach:
+
+    **Pass 1** — compile each module's Twig source to IR, discover each
+    module's main-type callable names, and compute cumulative MethodDef token
+    offsets.
+
+    **Pass 2** — recompile each module to a ``CILProgramArtifact`` using a
+    ``SequentialCILTokenProvider`` with the correct ``method_token_offset``
+    and ``CILBackendConfig.external_method_tokens`` populated from Pass 1.
+
+    The entry module becomes the main TypeDef (row 2) in the combined
+    assembly; each dep module becomes an extra TypeDef row.
+    """
+    _validate_assembly_name(assembly_name)
+
+    # Skip the synthetic host module — it has no IR to compile.
+    real_modules = [m for m in modules if m.name != HOST_MODULE_NAME]
+    if not real_modules:
+        raise ClrPackageError(
+            "compile-modules",
+            "no real modules found (only host module present)",
+        )
+
+    # Reorder: entry module first, then deps in the order they appear.
+    try:
+        entry_mod = next(m for m in real_modules if m.name == entry_module)
+    except StopIteration:
+        raise ClrPackageError(
+            "compile-modules",
+            f"entry module {entry_module!r} not found in modules list",
+        ) from None
+    dep_mods = [m for m in real_modules if m.name != entry_module]
+    # Topological order: deps before entry (from resolve_modules), but we want
+    # entry first so its methods get the lowest MethodDef token numbers.
+    ordered: list[ResolvedModule] = [entry_mod] + dep_mods
+
+    # ── Pass 1: compile each module to IR, discover callable names ────────
+
+    # Per-module: (raw_ir, lifted_lambdas, optimized_ir)
+    _IrTriple = tuple[IrProgram, list[tuple[str, list[str], Lambda]], IrProgram]
+    module_irs: dict[str, _IrTriple] = {}
+    # Ordered callable names for the main TypeDef of each module.
+    module_callables: dict[str, tuple[str, ...]] = {}
+
+    for mod in ordered:
+        raw_ir, lifted, opt_ir = _compile_module_to_ir(mod)
+        module_irs[mod.name] = (raw_ir, lifted, opt_ir)
+        mod_decl = mod.program.module
+        exports = list(mod_decl.exports) if mod_decl else []
+        callables = _discover_module_callable_names(opt_ir, lifted, exports)
+        module_callables[mod.name] = callables
+
+    # ── Shared call_register_count ────────────────────────────────────────
+    #
+    # CIL methods declare their parameter count in the method signature.
+    # A cross-module ``call`` pushes exactly ``call_register_count`` arguments.
+    # If each module used its own local_count (derived from its own max
+    # register index), the entry module (which has many more holding registers
+    # than dep modules) would push MORE arguments than the dep method declares
+    # — causing a ``System.InvalidProgramException`` at runtime.
+    #
+    # The fix: compute the global maximum local_count across ALL modules and
+    # use it as ``call_register_count`` for every module.  Dep module methods
+    # end up declaring more parameters than they strictly need, but the extra
+    # parameter slots are simply never read — this is harmless.
+    #
+    # local_count = max(max_reg_index + 1, syscall_arg_reg + 1, 2)
+    # We use ``_CLR_SYSCALL_ARG_REG = 0``, so the floor is 2.
+    global_local_count = 2
+    for mod in ordered:
+        _, _, opt_ir = module_irs[mod.name]
+        max_reg = -1
+        for instr in opt_ir.instructions:
+            for operand in instr.operands:
+                if isinstance(operand, IrRegister):
+                    max_reg = max(max_reg, operand.index)
+        mod_local_count = max(max_reg + 1, _CLR_SYSCALL_ARG_REG + 1, 2)
+        global_local_count = max(global_local_count, mod_local_count)
+
+    # ── Assign cumulative MethodDef token offsets ─────────────────────────
+    #
+    # Entry module callables: rows 1..M_entry          (offset 0)
+    # Entry module closure rows: rows M_entry+1..      (1 + 2*K)
+    # Dep 1 callables: rows after entry module total   (offset = entry total)
+    # Dep 2 callables: rows after entry + dep 1 total
+    #
+    # Helper / MemberRef tokens (0x0Axxxxxx) are unaffected — they always
+    # start at 0x0A000001 in every module's token provider and map to the
+    # SAME five MemberRef rows in the combined assembly.
+
+    module_token_offset: dict[str, int] = {}
+    running_offset = 0
+    for mod in ordered:
+        module_token_offset[mod.name] = running_offset
+        running_offset += len(module_callables[mod.name])
+        # Entry module closure rows (Phase 4e: only entry module may have closures).
+        if mod.name == entry_module:
+            _, lifted, _ = module_irs[mod.name]
+            num_closures = len(lifted)
+            if num_closures:
+                # IClosure::Apply (1 row) + per-closure (.ctor + Apply = 2 rows each)
+                running_offset += 1 + 2 * num_closures
+
+    # ── Build all_external_tokens: for each module, the qualified label →
+    # pre-assigned MethodDef token of every OTHER module's callable. ───────
+    #
+    # A dep-module callable ``add`` with module name ``a/math`` is
+    # referenced in a CALL instruction as ``IrLabel("a/math/add")`` — the
+    # module name, a ``/`` separator, then the function name.  The token is
+    # ``0x06000000 | (offset + row_within_module)``.
+
+    all_external_tokens: dict[str, dict[str, int]] = {
+        mod.name: {} for mod in ordered
+    }
+    for dep in ordered:
+        dep_offset = module_token_offset[dep.name]
+        for i, callable_name in enumerate(module_callables[dep.name]):
+            qualified = f"{dep.name}/{callable_name}"
+            token = 0x06000001 + dep_offset + i - 1  # 1-indexed row
+            # Correct: 0x06000001 + dep_offset means row (dep_offset+1).
+            # But row indexing: entry offset=0 → row 1 = 0x06000001 + 0.
+            # dep_offset=M_entry → row M_entry+1 = 0x06000001 + M_entry.
+            token = 0x06000000 | (dep_offset + 1 + i)
+            for other in ordered:
+                if other.name != dep.name:
+                    all_external_tokens[other.name][qualified] = token
+
+    # ── Pass 2: compile each module to CILProgramArtifact ────────────────
+
+    module_results: list[ModuleClrCompileResult] = []
+
+    for mod in ordered:
+        raw_ir, lifted, opt_ir = module_irs[mod.name]
+        is_entry = mod.name == entry_module
+        offset = module_token_offset[mod.name]
+        callables = module_callables[mod.name]
+        ext_tokens = all_external_tokens[mod.name]
+
+        closure_free_var_counts: dict[str, int] = {}
+        closure_explicit_arities: dict[str, int] = {}
+        if is_entry:
+            for lifted_name, captures, lam in lifted:
+                closure_free_var_counts[lifted_name] = len(captures)
+                closure_explicit_arities[lifted_name] = len(lam.params)
+
+        mod_decl = mod.program.module
+        exports = list(mod_decl.exports) if mod_decl else []
+
+        # Build a provider that starts at the right MethodDef row for this
+        # module.  The entry module uses offset=0 (rows start at 1); dep
+        # modules use their cumulative offset.
+        closure_names: tuple[str, ...] = tuple(
+            n for n, _, _ in lifted
+        ) if is_entry else ()
+        provider = SequentialCILTokenProvider(
+            callables,
+            method_token_offset=offset,
+            closure_names=closure_names,
+            closure_free_var_counts=closure_free_var_counts,
+        )
+
+        try:
+            artifact = lower_ir_to_cil_bytecode(
+                opt_ir,
+                CILBackendConfig(
+                    # TW04 Phase 4e: use the global shared call_register_count
+                    # so all modules declare the same parameter count.  See
+                    # the "Shared call_register_count" comment above.
+                    call_register_count=global_local_count,
+                    closure_free_var_counts=closure_free_var_counts,
+                    closure_explicit_arities=closure_explicit_arities,
+                    syscall_arg_reg=_CLR_SYSCALL_ARG_REG,
+                    extra_callable_labels=tuple(exports),
+                    external_method_tokens=ext_tokens,
+                    # TW04 Phase 4c: use inline .NET API calls for host syscalls
+                    # so SYSCALL 1/2/10 work on real dotnet without a helper lib.
+                    inline_host_syscalls=True,
+                ),
+                token_provider=provider,
+            )
+        except Exception as exc:
+            raise ClrPackageError(
+                "lower-cil",
+                f"module {mod.name!r}: {exc}",
+                exc,
+            ) from exc
+
+        module_results.append(
+            ModuleClrCompileResult(
+                module_name=mod.name,
+                type_name=module_name_to_clr_type(mod.name),
+                ir=opt_ir,
+                artifact=artifact,
+                callable_names=callables,
+            )
+        )
+
+    # ── Merge into one CILProgramArtifact ────────────────────────────────
+    #
+    # Entry module's artifact becomes the "main" artifact (methods → main
+    # TypeDef).  Each dep module's methods are packaged as a CILTypeArtifact
+    # in ``extra_types``.  The assembly writer emits them in declaration order,
+    # which matches our cumulative MethodDef token assignment.
+
+    entry_result = module_results[0]
+    dep_results = module_results[1:]
+
+    # Start with the entry module's extra_types (closures, heap types).
+    merged_extra_types = list(entry_result.artifact.extra_types)
+
+    for dep_result in dep_results:
+        type_name = dep_result.type_name
+        dep_methods = dep_result.artifact.methods
+        merged_extra_types.append(
+            CILTypeArtifact(
+                name=type_name,
+                namespace="",
+                is_interface=False,
+                extends="System.Object",
+                implements=(),
+                fields=(),
+                methods=dep_methods,
+            )
+        )
+
+    # Build the combined artifact by replacing extra_types on the entry artifact.
+    from dataclasses import replace as _dc_replace
+
+    combined_artifact = _dc_replace(
+        entry_result.artifact,
+        extra_types=tuple(merged_extra_types),
+    )
+
+    try:
+        cli_config = CLIAssemblyConfig(
+            assembly_name=assembly_name,
+            module_name=f"{assembly_name}.exe",
+            type_name=entry_result.type_name,
+        )
+        written = write_cli_assembly(combined_artifact, cli_config)
+    except Exception as exc:
+        raise ClrPackageError("write-pe", str(exc), exc) from exc
+
+    return MultiModuleClrResult(
+        entry_module=entry_module,
+        module_results=tuple(module_results),
+        assembly_bytes=written.assembly_bytes,
+        entry_type_name=entry_result.type_name,
+    )
+
+
+def run_modules(
+    modules: list[ResolvedModule],
+    *,
+    entry_module: str,
+    assembly_name: str = "TwigProgram",
+    timeout_seconds: int = 30,
+) -> MultiModuleClrExecutionResult:
+    """Compile and execute a multi-module Twig program on the real ``dotnet``
+    runtime.
+
+    Calls ``compile_modules``, writes the single ``.exe`` to a temp directory
+    alongside its ``runtimeconfig.json``, runs ``dotnet <name>.exe``, and
+    returns the result.
+
+    The process **exit code** is the program's return value (same convention
+    as single-module ``run_source``).
+    """
+    compilation = compile_modules(
+        modules,
+        entry_module=entry_module,
+        assembly_name=assembly_name,
+    )
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp_path = Path(tmp)
+        exe_path = tmp_path / f"{assembly_name}.exe"
+        cfg_path = tmp_path / f"{assembly_name}.runtimeconfig.json"
+        exe_path.write_bytes(compilation.assembly_bytes)
+        cfg_path.write_text(_runtimeconfig_for_net9())
+
+        proc = subprocess.run(
+            ["dotnet", str(exe_path)],
+            capture_output=True,
+            timeout=timeout_seconds,
+            check=False,
+        )
+    return MultiModuleClrExecutionResult(
         compilation=compilation,
         stdout=proc.stdout,
         stderr=proc.stderr,
