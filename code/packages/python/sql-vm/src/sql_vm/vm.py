@@ -87,6 +87,7 @@ from sql_codegen import (
     LoadColumn,
     LoadConst,
     LoadGroupKey,
+    LoadLastInsertedColumn,
     LoadOuterColumn,
     NullsOrder,
     OpenIndexScan,
@@ -291,6 +292,10 @@ class _VmState:
     # sets the top to True; JoinIfMatched pops and conditionally jumps.
     # The stack depth equals the number of currently-open outer-join levels.
     join_match_stack: list[bool] = field(default_factory=list)
+    # INSERT … RETURNING support — the most recently inserted row is saved here
+    # by ``_do_insert`` so that ``LoadLastInsertedColumn`` can read it back.
+    # Keyed by column name; empty dict when no INSERT has been executed yet.
+    last_inserted_row: dict[str, SqlValue] = field(default_factory=dict)
     # Correlated subquery support — a snapshot of the enclosing query's
     # ``current_row`` at the time the sub-program was launched.  Used by
     # ``LoadOuterColumn`` to read values from the outer scan without sharing
@@ -430,6 +435,9 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
         return
     if isinstance(ins, LoadOuterColumn):
         _load_outer_column(ins, st)
+        return
+    if isinstance(ins, LoadLastInsertedColumn):
+        st.push(st.last_inserted_row.get(ins.col))
         return
     if isinstance(ins, Pop):
         st.pop()
@@ -1527,6 +1535,11 @@ def _do_insert(ins: InsertRow, st: _VmState) -> None:
     ]
     for defn in after_triggers:
         _fire_trigger(defn, row, None, st)
+    # Save the inserted row so that RETURNING … can read it back via
+    # ``LoadLastInsertedColumn``.  We save it after the successful insert so
+    # constraint violations leave the previous value intact (and RETURNING
+    # would not be reached anyway because an exception is raised).
+    st.last_inserted_row = row
     st.result.rows_affected = (st.result.rows_affected or 0) + 1
 
 

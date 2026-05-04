@@ -11,14 +11,10 @@ from grammar_tools.parser_grammar import (
     GrammarRule,
     Group,
     Literal,
-    NegativeLookahead,
-    OneOrMoreRepetition,
     Optional,
     ParserGrammar,
-    PositiveLookahead,
     Repetition,
     RuleReference,
-    SeparatedRepetition,
     Sequence,
 )
 
@@ -380,6 +376,9 @@ PARSER_GRAMMAR = ParserGrammar(
                     ]),
                 ),
                 RuleReference(name='insert_body', is_token=False),
+                Optional(element=
+                    RuleReference(name='returning_clause', is_token=False),
+                ),
             ]),
             line_number=63,
         ),
@@ -434,6 +433,9 @@ PARSER_GRAMMAR = ParserGrammar(
                 Optional(element=
                     RuleReference(name='where_clause', is_token=False),
                 ),
+                Optional(element=
+                    RuleReference(name='returning_clause', is_token=False),
+                ),
             ]),
             line_number=69,
         ),
@@ -457,8 +459,26 @@ PARSER_GRAMMAR = ParserGrammar(
                 Optional(element=
                     RuleReference(name='where_clause', is_token=False),
                 ),
+                Optional(element=
+                    RuleReference(name='returning_clause', is_token=False),
+                ),
             ]),
             line_number=73,
+        ),
+        GrammarRule(
+            name='returning_clause',
+            body=
+            Sequence(elements=[
+                Literal(value='RETURNING'),
+                RuleReference(name='expr', is_token=False),
+                Repetition(element=
+                    Sequence(elements=[
+                        Literal(value=','),
+                        RuleReference(name='expr', is_token=False),
+                    ]),
+                ),
+            ]),
+            line_number=75,
         ),
         GrammarRule(
             name='create_table_stmt',

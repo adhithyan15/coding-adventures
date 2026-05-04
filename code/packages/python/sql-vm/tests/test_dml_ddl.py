@@ -446,3 +446,138 @@ def test_fk_delete_parent_no_children() -> None:
     result = execute(compile(plan), be, fk_child=fk_c, fk_parent=fk_p)
     assert result.rows_affected == 1
     assert _scan_rows(be, "parents") == [{"id": 2}]
+
+
+# ---- RETURNING clause execution --------------------------------------------
+
+
+def _make_employee_backend() -> InMemoryBackend:
+    """Return a backend with an 'employees' table containing id, name, salary."""
+    be = InMemoryBackend()
+    be.create_table(
+        "employees",
+        [
+            BackendColumnDef(name="id", type_name="INTEGER"),
+            BackendColumnDef(name="name", type_name="TEXT"),
+            BackendColumnDef(name="salary", type_name="INTEGER"),
+        ],
+        False,
+    )
+    return be
+
+
+def test_insert_returning_single_row() -> None:
+    """INSERT … RETURNING id, name returns the inserted row."""
+    be = _make_employee_backend()
+    plan = Insert(
+        table="employees",
+        columns=("id", "name", "salary"),
+        source=InsertSource(values=((Literal(1), Literal("Alice"), Literal(50000)),)),
+        returning=(Column("employees", "id"), Column("employees", "name")),
+    )
+    result = execute(compile(plan), be)
+    assert result.columns == ("id", "name")
+    assert list(result.rows) == [(1, "Alice")]
+    # The row must be stored in the backend too.
+    assert _scan_rows(be, "employees") == [{"id": 1, "name": "Alice", "salary": 50000}]
+
+
+def test_insert_returning_multiple_rows() -> None:
+    """INSERT two rows with RETURNING — result contains both rows in order."""
+    be = _make_employee_backend()
+    plan = Insert(
+        table="employees",
+        columns=("id", "name", "salary"),
+        source=InsertSource(values=(
+            (Literal(1), Literal("Alice"), Literal(50000)),
+            (Literal(2), Literal("Bob"), Literal(60000)),
+        )),
+        returning=(Column("employees", "id"), Column("employees", "salary")),
+    )
+    result = execute(compile(plan), be)
+    assert result.columns == ("id", "salary")
+    assert list(result.rows) == [(1, 50000), (2, 60000)]
+
+
+def test_insert_returning_salary_column() -> None:
+    """INSERT … RETURNING salary reads back the inserted salary value."""
+    be = _make_employee_backend()
+    plan = Insert(
+        table="employees",
+        columns=("id", "name", "salary"),
+        source=InsertSource(values=((Literal(99), Literal("Z"), Literal(99999)),)),
+        returning=(Column("employees", "salary"),),
+    )
+    result = execute(compile(plan), be)
+    assert result.columns == ("salary",)
+    assert list(result.rows) == [(99999,)]
+
+
+def test_update_returning_updated_values() -> None:
+    """UPDATE … RETURNING shows post-update row values."""
+    be = _make_employee_backend()
+    be.insert("employees", {"id": 1, "name": "Alice", "salary": 50000})
+    be.insert("employees", {"id": 2, "name": "Bob", "salary": 60000})
+    plan = Update(
+        table="employees",
+        assignments=(Assignment(column="salary", value=Literal(75000)),),
+        predicate=BinaryExpr(
+            op=BinaryOp.EQ, left=Column("employees", "id"), right=Literal(1)
+        ),
+        returning=(Column("employees", "id"), Column("employees", "salary")),
+    )
+    result = execute(compile(plan), be)
+    assert result.columns == ("id", "salary")
+    assert list(result.rows) == [(1, 75000)]
+
+
+def test_update_returning_all_matched_rows() -> None:
+    """UPDATE without WHERE returns one RETURNING row per affected row."""
+    be = _make_employee_backend()
+    be.insert("employees", {"id": 1, "name": "Alice", "salary": 50000})
+    be.insert("employees", {"id": 2, "name": "Bob", "salary": 60000})
+    plan = Update(
+        table="employees",
+        assignments=(Assignment(column="salary", value=Literal(99999)),),
+        returning=(Column("employees", "id"),),
+    )
+    result = execute(compile(plan), be)
+    assert result.columns == ("id",)
+    assert len(result.rows) == 2
+
+
+def test_delete_returning_deleted_row() -> None:
+    """DELETE … RETURNING returns the deleted row's values before deletion."""
+    be = _make_employee_backend()
+    be.insert("employees", {"id": 1, "name": "Alice", "salary": 50000})
+    be.insert("employees", {"id": 2, "name": "Bob", "salary": 60000})
+    plan = Delete(
+        table="employees",
+        predicate=BinaryExpr(
+            op=BinaryOp.EQ, left=Column("employees", "id"), right=Literal(2)
+        ),
+        returning=(Column("employees", "id"), Column("employees", "name")),
+    )
+    result = execute(compile(plan), be)
+    assert result.columns == ("id", "name")
+    assert list(result.rows) == [(2, "Bob")]
+    # Verify the row was actually deleted.
+    remaining = _scan_rows(be, "employees")
+    assert len(remaining) == 1
+    assert remaining[0]["id"] == 1
+
+
+def test_delete_returning_multiple_rows() -> None:
+    """DELETE all rows with RETURNING — each deleted row appears in result."""
+    be = _make_employee_backend()
+    be.insert("employees", {"id": 1, "name": "Alice", "salary": 50000})
+    be.insert("employees", {"id": 2, "name": "Bob", "salary": 60000})
+    be.insert("employees", {"id": 3, "name": "Charlie", "salary": 70000})
+    plan = Delete(
+        table="employees",
+        returning=(Column("employees", "id"),),
+    )
+    result = execute(compile(plan), be)
+    assert result.columns == ("id",)
+    assert len(result.rows) == 3
+    assert _scan_rows(be, "employees") == []

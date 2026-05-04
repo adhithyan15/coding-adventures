@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.10.0] - 2026-05-04
+
+### Added
+
+- **`LoadLastInsertedColumn(col)` IR instruction** (`ir.py`) — pushes the
+  value of `col` from the most recently inserted row onto the value stack.
+  Used by INSERT … RETURNING where there is no open cursor after the insert
+  completes.  Exported from `sql_codegen.__init__`.
+- **RETURNING clause compilation** (`compiler.py`) — the compiler now handles
+  the `returning` field on `Insert`, `Update`, and `Delete` plan nodes:
+  - `Insert RETURNING` — emits `SetResultSchema` at the top; after each
+    `InsertRow` emits `BeginRow` + `LoadLastInsertedColumn`/`EmitColumn` per
+    column + `EmitRow`.
+  - `Update RETURNING` — emits `SetResultSchema` at the top; after
+    `UpdateRows` emits `BeginRow` + `LoadColumn`/`EmitColumn` per column +
+    `EmitRow` (reads the *post-update* row).
+  - `Delete RETURNING` — emits `SetResultSchema` at the top; *before*
+    `DeleteRows` emits `BeginRow` + `LoadColumn`/`EmitColumn` per column +
+    `EmitRow` (captures the row *before* deletion).
+
 ## [1.9.0] - 2026-05-04
 
 ### Added

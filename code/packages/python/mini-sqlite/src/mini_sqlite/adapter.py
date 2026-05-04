@@ -545,6 +545,25 @@ def _limit_clause(node: ASTNode | None) -> Limit | None:
 # --------------------------------------------------------------------------
 
 
+def _returning_exprs(
+    node: ASTNode, state: _PlaceholderCounter
+) -> tuple[Expr, ...]:
+    """Parse a returning_clause child of a DML statement node.
+
+    ``returning_clause = 'RETURNING' expr { ',' expr }``
+
+    Returns an empty tuple when no returning_clause child is present.
+    """
+    ret_node = _maybe_child(node, "returning_clause")
+    if ret_node is None:
+        return ()
+    return tuple(
+        _expr(c, state)
+        for c in ret_node.children
+        if isinstance(c, ASTNode) and c.rule_name == "expr"
+    )
+
+
 def _insert(node: ASTNode) -> InsertValuesStmt | InsertSelectStmt:
     state = _PlaceholderCounter()
     # insert_stmt =
@@ -578,6 +597,7 @@ def _insert(node: ASTNode) -> InsertValuesStmt | InsertSelectStmt:
 
     # Check if we have an insert_body child (new grammar).
     insert_body_node = _maybe_child(node, "insert_body")
+    returning = _returning_exprs(node, state)
     if insert_body_node is not None:
         # New grammar: insert_body = "VALUES" row_value ... | query_stmt
         q = _maybe_child(insert_body_node, "query_stmt")
@@ -587,13 +607,15 @@ def _insert(node: ASTNode) -> InsertValuesStmt | InsertSelectStmt:
                 raise ProgrammingError(
                     "INSERT \u2026 SELECT requires a plain SELECT, not a set operation"
                 )
-            return InsertSelectStmt(table=table, columns=columns, select=inner_stmt)
+            return InsertSelectStmt(
+                table=table, columns=columns, select=inner_stmt, returning=returning
+            )
         rows = tuple(_row_value(rv, state) for rv in _child_nodes(insert_body_node, "row_value"))
-        return InsertValuesStmt(table=table, columns=columns, rows=rows)
+        return InsertValuesStmt(table=table, columns=columns, rows=rows, returning=returning)
 
     # Old grammar fallback: row_value nodes directly under insert_stmt.
     rows = tuple(_row_value(rv, state) for rv in _child_nodes(node, "row_value"))
-    return InsertValuesStmt(table=table, columns=columns, rows=rows)
+    return InsertValuesStmt(table=table, columns=columns, rows=rows, returning=returning)
 
 
 def _row_value(node: ASTNode, state: _PlaceholderCounter) -> tuple[Expr, ...]:
@@ -604,7 +626,7 @@ def _row_value(node: ASTNode, state: _PlaceholderCounter) -> tuple[Expr, ...]:
 
 def _update(node: ASTNode) -> UpdateStmt:
     state = _PlaceholderCounter()
-    # update_stmt = "UPDATE" NAME "SET" assignment { "," assignment } [where]
+    # update_stmt = "UPDATE" NAME "SET" assignment { "," assignment } [where] [returning]
     table_tok = _first_token(node, kind="NAME")
     assert table_tok is not None
     table = table_tok.value
@@ -615,7 +637,8 @@ def _update(node: ASTNode) -> UpdateStmt:
         if isinstance(c, ASTNode) and c.rule_name == "assignment"
     )
     where = _maybe_expr(node, "where_clause", state, skip=1)
-    return UpdateStmt(table=table, assignments=assignments, where=where)
+    returning = _returning_exprs(node, state)
+    return UpdateStmt(table=table, assignments=assignments, where=where, returning=returning)
 
 
 def _assignment(node: ASTNode, state: _PlaceholderCounter) -> Assignment:
@@ -627,11 +650,12 @@ def _assignment(node: ASTNode, state: _PlaceholderCounter) -> Assignment:
 
 def _delete(node: ASTNode) -> DeleteStmt:
     state = _PlaceholderCounter()
-    # delete_stmt = "DELETE" "FROM" NAME [where]
+    # delete_stmt = "DELETE" "FROM" NAME [where] [returning]
     table_tok = _first_token(node, kind="NAME")
     assert table_tok is not None
     where = _maybe_expr(node, "where_clause", state, skip=1)
-    return DeleteStmt(table=table_tok.value, where=where)
+    returning = _returning_exprs(node, state)
+    return DeleteStmt(table=table_tok.value, where=where, returning=returning)
 
 
 # --------------------------------------------------------------------------

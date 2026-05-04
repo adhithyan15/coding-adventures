@@ -6,7 +6,7 @@
 # Downstream packages import TOKEN_GRAMMAR directly instead of
 # reading and parsing the .tokens file at runtime.
 
-from grammar_tools.token_grammar import PatternGroup, TokenDefinition, TokenGrammar
+from grammar_tools.token_grammar import TokenDefinition, TokenGrammar
 
 # fmt: off  # noqa: E501 — generated code may have long lines
 
@@ -170,7 +170,7 @@ TOKEN_GRAMMAR = TokenGrammar(
             alias=None,
         ),
     ],
-    keywords=['WITH', 'RECURSIVE', 'SELECT', 'FROM', 'WHERE', 'GROUP', 'BY', 'HAVING', 'ORDER', 'LIMIT', 'OFFSET', 'INSERT', 'INTO', 'VALUES', 'UPDATE', 'SET', 'DELETE', 'ALTER', 'ADD', 'COLUMN', 'CREATE', 'DROP', 'TABLE', 'IF', 'EXISTS', 'NOT', 'AND', 'OR', 'NULL', 'IS', 'IN', 'BETWEEN', 'LIKE', 'AS', 'DISTINCT', 'ALL', 'UNION', 'INTERSECT', 'EXCEPT', 'JOIN', 'INNER', 'LEFT', 'RIGHT', 'OUTER', 'CROSS', 'FULL', 'ON', 'ASC', 'DESC', 'TRUE', 'FALSE', 'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'PRIMARY', 'KEY', 'UNIQUE', 'CHECK', 'REFERENCES', 'DEFAULT', 'VIEW', 'SAVEPOINT', 'RELEASE', 'TO', 'OVER', 'PARTITION'],
+    keywords=['WITH', 'RECURSIVE', 'SELECT', 'FROM', 'WHERE', 'GROUP', 'BY', 'HAVING', 'ORDER', 'LIMIT', 'OFFSET', 'INSERT', 'INTO', 'VALUES', 'UPDATE', 'SET', 'DELETE', 'ALTER', 'ADD', 'COLUMN', 'CREATE', 'DROP', 'TABLE', 'IF', 'EXISTS', 'NOT', 'AND', 'OR', 'NULL', 'IS', 'IN', 'BETWEEN', 'LIKE', 'AS', 'DISTINCT', 'ALL', 'UNION', 'INTERSECT', 'EXCEPT', 'JOIN', 'INNER', 'LEFT', 'RIGHT', 'OUTER', 'CROSS', 'FULL', 'ON', 'ASC', 'DESC', 'TRUE', 'FALSE', 'CASE', 'WHEN', 'THEN', 'ELSE', 'END', 'PRIMARY', 'KEY', 'UNIQUE', 'CHECK', 'REFERENCES', 'DEFAULT', 'VIEW', 'SAVEPOINT', 'RELEASE', 'TO', 'OVER', 'PARTITION', 'RETURNING'],
     mode=None,
     escape_mode=None,
     skip_definitions=[

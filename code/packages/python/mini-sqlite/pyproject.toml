@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-mini-sqlite"
-version = "1.16.0"
+version = "1.17.0"
 description = "PEP 249 DB-API 2.0 facade over the sql-lexer / parser / planner / optimizer / codegen / vm / backend stack."
 requires-python = ">=3.12"
 license = "MIT"

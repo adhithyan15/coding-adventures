@@ -2,6 +2,17 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.13.0] - 2026-05-04
+
+### Added
+
+- **`RETURNING` clause grammar** — `insert_stmt`, `update_stmt`, and
+  `delete_stmt` rules now each accept an optional trailing
+  `returning_clause = "RETURNING" expr { "," expr }`.  Both the canonical
+  `sql.grammar` text file (used at runtime) and the pre-generated `_grammar.py`
+  fallback were updated in tandem.  The parser produces an AST node named
+  `returning_clause` containing one `expr` child per column expression.
+
 ## [0.12.0] - 2026-04-28
 
 ### Added

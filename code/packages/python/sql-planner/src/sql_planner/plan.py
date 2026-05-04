@@ -381,11 +381,12 @@ class InsertSource:
 
 @dataclass(frozen=True, slots=True)
 class Insert:
-    """INSERT INTO t (cols) VALUES (...) or INSERT INTO t SELECT ...."""
+    """INSERT INTO t (cols) VALUES (...) or INSERT INTO t SELECT ... [RETURNING ...]."""
 
     table: str
     columns: tuple[str, ...] | None  # None = implicit column list
     source: InsertSource
+    returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
 
 
 @dataclass(frozen=True, slots=True)
@@ -398,19 +399,21 @@ class Assignment:
 
 @dataclass(frozen=True, slots=True)
 class Update:
-    """UPDATE t SET col = expr, ... WHERE predicate."""
+    """UPDATE t SET col = expr, ... WHERE predicate [RETURNING ...]."""
 
     table: str
     assignments: tuple[Assignment, ...]
     predicate: Expr | None = None  # None = update every row
+    returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
 
 
 @dataclass(frozen=True, slots=True)
 class Delete:
-    """DELETE FROM t WHERE predicate."""
+    """DELETE FROM t WHERE predicate [RETURNING ...]."""
 
     table: str
     predicate: Expr | None = None
+    returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
 
 
 # ---- DDL nodes ------------------------------------------------------------

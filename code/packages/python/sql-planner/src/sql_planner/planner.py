@@ -363,7 +363,7 @@ def _build_from_tree(
     if isinstance(root, RecursiveCTERef):
         # Plan anchor normally; derive its output schema.
         anchor_plan = _plan_select(root.anchor, schema)
-        anchor_cols = _output_columns(anchor_plan)
+        anchor_cols = _output_columns(anchor_plan, schema)
         # Plan recursive with working_set so the self-reference becomes WorkingSetScan.
         ws_alias = root.alias or root.name
         recursive_plan = _plan_select(
@@ -379,7 +379,7 @@ def _build_from_tree(
         )
     elif isinstance(root, DerivedTableRef):
         inner_plan = _plan_select(root.select, schema)
-        cols = _output_columns(inner_plan)
+        cols = _output_columns(inner_plan, schema)
         _add_to_scope(scope, root.alias, list(cols))
         tree = P.DerivedTable(
             query=inner_plan, alias=root.alias, columns=cols
@@ -398,7 +398,7 @@ def _build_from_tree(
     for j in joins:
         if isinstance(j.right, DerivedTableRef):
             inner_plan = _plan_select(j.right.select, schema)
-            cols = _output_columns(inner_plan)
+            cols = _output_columns(inner_plan, schema)
             _add_to_scope(scope, j.right.alias, list(cols))
             right_node: P.LogicalPlan = P.DerivedTable(
                 query=inner_plan, alias=j.right.alias, columns=cols
@@ -427,7 +427,10 @@ def _build_from_tree(
     return tree, scope
 
 
-def _output_columns(plan: P.LogicalPlan) -> tuple[str, ...]:
+def _output_columns(
+    plan: P.LogicalPlan,
+    schema: SchemaProvider | None = None,
+) -> tuple[str, ...]:
     """Return the ordered output column names of a finished plan tree.
 
     Used to compute the schema of a derived table (subquery in FROM) at
@@ -436,8 +439,17 @@ def _output_columns(plan: P.LogicalPlan) -> tuple[str, ...]:
     Distinct, Having) until it reaches a Project node whose items carry
     explicit aliases or column names.
 
-    Raises :class:`UnsupportedStatement` for ``SELECT *`` inside a derived
-    table — we can't know the column list without executing the query.
+    ``schema`` is required when the project contains ``SELECT *`` (a
+    :class:`~sql_planner.expr.Wildcard` item) — the wildcard is expanded
+    to the actual column list of the plan's input by delegating to
+    :func:`_source_columns`.  When ``schema`` is ``None`` and a wildcard
+    is encountered, the positional name ``column_N`` is used as a fallback
+    (preserving backward-compatibility for callers that don't need exact
+    names).
+
+    Raises :class:`UnsupportedStatement` when a wildcard spans a plan
+    node whose schema cannot be determined even with schema access (e.g. a
+    bare aggregate without a GROUP BY at the top level).
     """
     # Walk through purely decorative wrapper nodes that don't change columns.
     node = plan
@@ -447,20 +459,80 @@ def _output_columns(plan: P.LogicalPlan) -> tuple[str, ...]:
     if isinstance(node, P.Project):
         cols: list[str] = []
         for i, item in enumerate(node.items, start=1):
-            if item.alias is not None:
+            if isinstance(item.expr, Wildcard):
+                # SELECT * — expand by tracing through the input plan.
+                # When schema is available, delegate to _source_columns.
+                if schema is not None:
+                    cols.extend(_source_columns(node.input, schema))
+                else:
+                    cols.append(f"column_{i}")
+            elif item.alias is not None:
                 cols.append(item.alias)
-            elif isinstance(item.expr, P.ProjectionItem):
-                # Shouldn't happen, but guard anyway.
-                cols.append(f"column_{i}")
             else:
-                # No alias — we use the expr-level alias from _derive_alias.
-                # _derive_alias already ran and stored the result in item.alias,
-                # so reaching here means the item has no natural name.
+                # No alias — positional fallback (should be rare: _derive_alias
+                # already assigns an alias for Column and FunctionCall nodes).
                 cols.append(f"column_{i}")
         return tuple(cols)
 
     raise UnsupportedStatement(
         kind="SELECT * in derived table (cannot infer column names without schema)"
+    )
+
+
+def _source_columns(
+    node: P.LogicalPlan,
+    schema: SchemaProvider,
+) -> list[str]:
+    """Recursively determine the output column names produced by *node*.
+
+    Used by :func:`_output_columns` to expand ``SELECT *`` at planning
+    time.  Returns a flat list of column names in output order.
+
+    Handles the plan nodes that can appear as the direct input to a
+    Project:
+
+    - :class:`P.Scan` — asks the schema provider for the table's columns.
+    - :class:`P.DerivedTable` — the columns are already stored in the node.
+    - :class:`P.WorkingSetScan` — the columns are stored in the node.
+    - :class:`P.RecursiveCTE` — uses the anchor's output schema.
+    - :class:`P.Filter` — transparent; delegates to its input.
+    - :class:`P.Join` — concatenates left and right column lists.
+    - :class:`P.Project` — recursive call to :func:`_output_columns`.
+    - Decorative wrappers (Sort, Limit, Distinct, Having) — transparent.
+    """
+    if isinstance(node, P.Scan):
+        return schema.columns(node.table)
+
+    if isinstance(node, P.DerivedTable):
+        return list(node.columns)
+
+    if isinstance(node, P.WorkingSetScan):
+        return list(node.columns)
+
+    if isinstance(node, P.RecursiveCTE):
+        # Anchor and recursive steps have the same schema.
+        return list(_output_columns(node.anchor, schema))
+
+    if isinstance(node, P.Filter):
+        return _source_columns(node.input, schema)
+
+    if isinstance(node, (P.Sort, P.Limit, P.Distinct, P.Having)):
+        return _source_columns(node.input, schema)  # type: ignore[union-attr]
+
+    if isinstance(node, P.Join):
+        left_cols = _source_columns(node.left, schema)
+        right_cols = _source_columns(node.right, schema)
+        return left_cols + right_cols
+
+    if isinstance(node, P.Project):
+        return list(_output_columns(node, schema))
+
+    # Aggregate, Union, Intersect, Except, IndexScan, etc. — fall through to
+    # the same logic that _output_columns uses for non-Project top-levels.
+    # These should not normally be the direct input of another Project without
+    # an intervening explicit column list.
+    raise UnsupportedStatement(
+        kind=f"SELECT * over {type(node).__name__} in derived table"
     )
 
 
@@ -776,10 +848,17 @@ def _plan_insert(stmt: InsertValuesStmt, schema: SchemaProvider) -> P.LogicalPla
         for c in stmt.columns:
             if c not in table_cols:
                 raise UnknownColumn(table=stmt.table, column=c)
+    # Resolve RETURNING exprs against the table's column scope so that bare
+    # column references like ``id`` become ``Column(table=stmt.table, col='id')``.
+    returning_scope: Scope = {stmt.table: table_cols}
+    resolved_returning = tuple(
+        _resolve(r, returning_scope, schema) for r in stmt.returning
+    )
     return P.Insert(
         table=stmt.table,
         columns=stmt.columns,
         source=P.InsertSource(values=stmt.rows),
+        returning=resolved_returning,
     )
 
 
@@ -796,10 +875,12 @@ def _plan_update(stmt: UpdateStmt, schema: SchemaProvider) -> P.LogicalPlan:
     predicate = _resolve(stmt.where, scope, schema) if stmt.where is not None else None
     if predicate is not None and contains_aggregate(predicate):
         raise InvalidAggregate(message="aggregate function not allowed in UPDATE WHERE clause")
+    resolved_returning = tuple(_resolve(r, scope, schema) for r in stmt.returning)
     return P.Update(
         table=stmt.table,
         assignments=resolved_assignments,
         predicate=predicate,
+        returning=resolved_returning,
     )
 
 
@@ -809,7 +890,8 @@ def _plan_delete(stmt: DeleteStmt, schema: SchemaProvider) -> P.LogicalPlan:
     predicate = _resolve(stmt.where, scope, schema) if stmt.where is not None else None
     if predicate is not None and contains_aggregate(predicate):
         raise InvalidAggregate(message="aggregate function not allowed in DELETE WHERE clause")
-    return P.Delete(table=stmt.table, predicate=predicate)
+    resolved_returning = tuple(_resolve(r, scope, schema) for r in stmt.returning)
+    return P.Delete(table=stmt.table, predicate=predicate, returning=resolved_returning)
 
 
 def _plan_create_table(stmt: CreateTableStmt) -> P.LogicalPlan:
@@ -919,10 +1001,15 @@ def _plan_insert_select(stmt: InsertSelectStmt, schema: SchemaProvider) -> P.Log
             if c not in table_cols:
                 raise UnknownColumn(table=stmt.table, column=c)
     sub_plan = _plan_select(stmt.select, schema)
+    returning_scope: Scope = {stmt.table: table_cols}
+    resolved_returning = tuple(
+        _resolve(r, returning_scope, schema) for r in stmt.returning
+    )
     return P.Insert(
         table=stmt.table,
         columns=stmt.columns,
         source=P.InsertSource(query=sub_plan),
+        returning=resolved_returning,
     )
 
 
