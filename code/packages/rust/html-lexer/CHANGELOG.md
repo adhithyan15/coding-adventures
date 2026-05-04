@@ -193,6 +193,9 @@ documented in this file.
 - Unexpected solidus recovery in start tags now reconsumes in
   `before_attribute_name`, preserving attributes after malformed slash-space or
   slash-NULL sequences.
+- Missing-whitespace recovery after quoted attribute values now reconsumes in
+  `before_attribute_name`, preserving jammed attributes while still reporting
+  secondary `=` or NULL attribute-name diagnostics.
 - Added a WHATWG operator/shape named-reference batch covering circled
   operators, integrals, products, squares, lozenges, stars, suits, and symbols.
 - Added a WHATWG box-drawing named-reference batch covering double-line,
