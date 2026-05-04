@@ -327,6 +327,7 @@ impl HtmlParser {
                 self.pop_current_if(|name| name == "caption" || name == "colgroup");
             }
             "col" => {
+                self.pop_current_if(|name| name == "caption");
                 if self.current_element_is("table") {
                     self.append_implied_element("colgroup");
                 }
@@ -810,6 +811,27 @@ mod tests {
         assert_eq!(element(&colgroup.children[1]).name, "col");
 
         let tbody = element(&table.children[1]);
+        let row = element(&tbody.children[0]);
+        assert_eq!(element(&row.children[0]).children, vec![Node::text("A")]);
+    }
+
+    #[test]
+    fn closes_caption_before_bare_table_columns() {
+        let document = parse_html("<table><caption>Cap<col><tr><td>A</table>").unwrap();
+
+        let table = element(&body(&document).children[0]);
+        assert_eq!(table.children.len(), 3);
+
+        let caption = element(&table.children[0]);
+        assert_eq!(caption.name, "caption");
+        assert_eq!(caption.children, vec![Node::text("Cap")]);
+
+        let colgroup = element(&table.children[1]);
+        assert_eq!(colgroup.name, "colgroup");
+        assert_eq!(colgroup.children.len(), 1);
+        assert_eq!(element(&colgroup.children[0]).name, "col");
+
+        let tbody = element(&table.children[2]);
         let row = element(&tbody.children[0]);
         assert_eq!(element(&row.children[0]).children, vec![Node::text("A")]);
     }

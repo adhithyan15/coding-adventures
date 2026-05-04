@@ -16,7 +16,8 @@ This first slice intentionally starts small:
 - implied document shell creation for omitted `html`, `head`, and `body`
 - implied table `tbody` and `tr` creation for common omitted table structure
 - implied table `colgroup` creation for bare `col` elements
-- table caption/column-group boundary recovery before rows and sections
+- table caption/column-group boundary recovery before bare columns, rows, and
+  sections
 - parser-controlled lexer handoff for `title`, `textarea`, RAWTEXT elements,
   `script`, and `plaintext`
 - parser options for scripting-sensitive tokenizer handoff, including
