@@ -38,6 +38,7 @@ members = [
     "codabar",
     "code39",
     "code128",
+    "compute-ir",
     "compute-runtime",
     "compute-unit",
     "constraint-core",
