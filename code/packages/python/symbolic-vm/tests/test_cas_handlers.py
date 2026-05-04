@@ -1267,8 +1267,8 @@ def test_expand_rational_function() -> None:
     assert result is not None
 
 
-def test_expand_wrong_arity_passthrough() -> None:
-    """Expand() or Expand(a, b) with wrong arity → unevaluated."""
+def test_expand_wrong_arity_passthrough_two_args() -> None:
+    """Expand(a, b) with two args → unevaluated."""
     vm, _ = make_vm()
     expr = IRApply(_EXPAND, ())
     assert vm.eval(expr) == expr

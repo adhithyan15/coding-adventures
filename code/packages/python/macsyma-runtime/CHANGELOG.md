@@ -1,5 +1,34 @@
 # Changelog
 
+## 1.15.0 — 2026-05-04
+
+**Phase 24 — Definite integration end-to-end via MACSYMA surface syntax.**
+
+Bumps `coding-adventures-symbolic-vm>=0.44.0`.
+
+### What changed
+
+No new `cas_handlers.py` or `name_table.py` entries are required.  The
+MACSYMA compiler already maps `integrate(f, x, a, b)` → the 4-argument
+`Integrate(f, x, a, b)` IR node, and the VM's `integrate()` handler
+(updated in symbolic-vm 0.44.0) now processes the 4-argument form using
+the Fundamental Theorem of Calculus.
+
+The end-to-end surface form now works:
+
+```
+integrate(exp(-x^2), x, 0, %inf)   →   sqrt(%pi) / 2
+integrate(x^2, x, 0, 1)            →   1/3
+integrate(sin(x), x, 0, %pi)       →   2
+integrate(sin(x)/x, x, 0, %inf)    →   %pi/2
+integrate(log(x), x, 0, 1)         →   -1
+```
+
+Infinite limits `%inf` and `%minf` are recognised by the VM's definite-
+integration machinery.
+
+---
+
 ## 1.14.0 — 2026-05-04
 
 **Phase 23 — Wire MACSYMA surface syntax for special functions (erf, Si/Ci,

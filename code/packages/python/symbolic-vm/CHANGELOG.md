@@ -1,5 +1,62 @@
 # Changelog
 
+## 0.44.0 — 2026-05-04
+
+**Phase 24 — Definite integration via the Fundamental Theorem of Calculus.**
+
+### New module: `definite_integral.py`
+
+Evaluates `Integrate(f, x, a, b)` using `F(b) − F(a)` where `F` is any
+antiderivative of `f`.
+
+**Finite limits**: structural substitution via `cas_substitution.subst`,
+then `vm.eval`.  Improper integrals with `log(0)` at `x = 0` are handled by
+`_eval_at_zero_plus`, which applies the symbolic limit
+`lim_{x→0+} xⁿ·log(x) = 0` (n > 0).
+
+**Infinite limits** (`%inf` / `%minf`): `_eval_at_inf` walks the
+antiderivative tree and applies a table of one-sided limits for the special
+functions introduced in Phase 23:
+
+| Function | lim at +∞ | lim at −∞ |
+|----------|-----------|-----------|
+| `erf(u)` | 1 | −1 |
+| `erfc(u)` | 0 | 2 |
+| `Si(u)` | π/2 | −π/2 |
+| `atan(u)` | π/2 | −π/2 |
+| `tanh(u)` / `coth(u)` | 1 | −1 |
+| `sech(u)` / `csch(u)` | 0 | 0 |
+| `FresnelS(u)` / `FresnelC(u)` | 1/2 | −1/2 |
+| `exp(u)` | diverges | 0 |
+
+**Divergent integrals** return the unevaluated `Integrate(f, x, a, b)` node
+rather than raising an error.
+
+### Changes to `integrate.py`
+
+The `Integrate` handler now accepts 2 **or** 4 arguments:
+
+* 2 args: unchanged indefinite integration (Phases 1–23).
+* 4 args: definite integration — computes the indefinite integral via all
+  three routes (rational, Phase-1 table, Phase-23 special-function
+  fallbacks), then calls `evaluate_definite`.
+
+New helper `_contains_integrate(expr)` detects when a partially-evaluated
+rational antiderivative still contains unevaluated `Integrate` sub-nodes
+(which would cause incorrect definite results); those cases fall back to
+returning the 4-argument unevaluated form.
+
+### Updates to tests
+
+* `test_phase24.py` — 54 new tests across 10 test classes covering polynomial,
+  trig, exponential, rational, log, semi-infinite, fully-infinite,
+  special-function, unevaluated, regression, and MACSYMA end-to-end cases.
+* `test_integrate.py` — updated error message match for wrong-arity test.
+* `test_cas_handlers.py` — fixed duplicate `test_expand_wrong_arity_passthrough`
+  function name (renamed second occurrence to `…_two_args`).
+
+---
+
 ## 0.43.0 — 2026-05-04
 
 **Phase 23 — Special functions as integration and differentiation fallback.**

@@ -1,4 +1,4 @@
-"""Symbolic integration — the ``Integrate`` handler (Phases 1–14).
+"""Symbolic integration — the ``Integrate`` handler (Phases 1–24).
 
 The handler tries two routes, in order:
 
@@ -115,6 +115,7 @@ from symbolic_vm.asinh_poly_integral import acosh_poly_integral, asinh_poly_inte
 from symbolic_vm.atan_poly_integral import atan_poly_integral
 from symbolic_vm.atanh_poly_integral import atanh_poly_integral
 from symbolic_vm.backend import Handler
+from symbolic_vm.definite_integral import evaluate_definite
 from symbolic_vm.exp_hyp_integral import (
     exp_cosh_integral,
     exp_hyp_degenerate,
@@ -155,10 +156,57 @@ def integrate() -> Handler:
     """Return the ``Integrate`` handler for the symbolic backend."""
 
     def handler(vm, expr: IRApply) -> IRNode:
-        if len(expr.args) != 2:
+        nargs = len(expr.args)
+        if nargs not in {2, 4}:
             raise TypeError(
-                f"Integrate expects 2 arguments, got {len(expr.args)}"
+                f"Integrate expects 2 or 4 arguments, got {nargs}"
             )
+
+        if nargs == 4:
+            # ---------------------------------------------------------------
+            # Phase 24: definite integration  Integrate(f, x, a, b)
+            #
+            # Strategy:
+            #   1. Compute the indefinite antiderivative F with the same
+            #      three routes used for the 2-arg form.
+            #   2. Delegate to evaluate_definite which applies F(b) − F(a),
+            #      handling infinite limits via _eval_at_inf.
+            # ---------------------------------------------------------------
+            f, x, a, b = expr.args
+            if not isinstance(x, IRSymbol):
+                return expr
+
+            F: IRNode | None = None
+
+            # Route 1: rational function.
+            rational_result = _integrate_rational(f, x)
+            if rational_result is not None:
+                F = vm.eval(rational_result)
+                # If the rational result still has an unevaluated Integrate
+                # sub-expression, fall through and return unevaluated.
+                if _contains_integrate(F):
+                    return IRApply(INTEGRATE, (f, x, a, b))
+            else:
+                # Route 2: Phase 1 pattern table.
+                F = _integrate(f, x)
+                if F is None:
+                    # Route 3: Phase 23 special-function fallbacks.
+                    for _sf_try in INTEGRATION_FALLBACKS:
+                        F = _sf_try(f, x)
+                        if F is not None:
+                            break
+                if F is None:
+                    # No antiderivative found — leave unevaluated.
+                    return IRApply(INTEGRATE, (f, x, a, b))
+                F = vm.eval(F)
+                if _contains_integrate(F):
+                    return IRApply(INTEGRATE, (f, x, a, b))
+
+            return evaluate_definite(f, x, a, b, F, vm)
+
+        # nargs == 2 --------------------------------------------------------
+        # Indefinite integration (original behaviour, Phases 1–23).
+        # -------------------------------------------------------------------
         f, x = expr.args
         if not isinstance(x, IRSymbol):
             # Integration with respect to something other than a plain
@@ -184,6 +232,26 @@ def integrate() -> Handler:
         return vm.eval(result)
 
     return handler
+
+
+# ---------------------------------------------------------------------------
+# Phase 24 helper — detect unevaluated Integrate nodes in a result
+# ---------------------------------------------------------------------------
+
+
+def _contains_integrate(expr: IRNode) -> bool:
+    """Return True if *expr* contains any ``Integrate(...)`` sub-expression.
+
+    Used by the definite-integration handler to bail out when the
+    rational-function route returns a partially-unevaluated result (i.e. an
+    integral whose transcendental residual could not be expressed in terms of
+    elementary functions or the Phase 23 special functions).
+    """
+    if isinstance(expr, IRApply):
+        if expr.head == INTEGRATE:
+            return True
+        return any(_contains_integrate(a) for a in expr.args)
+    return False
 
 
 # ---------------------------------------------------------------------------
