@@ -32,3 +32,5 @@ documented in this file.
   builder.
 - Implied `colgroup` creation for bare `col` elements under tables, keeping
   column metadata grouped before following row sections.
+- Caption boundary recovery before bare `col` elements, so captions close
+  before implied column groups are created.
