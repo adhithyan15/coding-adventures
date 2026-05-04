@@ -408,6 +408,7 @@ members = [
     "vault-secure-channel",
     "vault-auth",
     "vault-policy",
+    "storage-fs",
     "context-store",
     "artifact-store",
     "skill-store",
