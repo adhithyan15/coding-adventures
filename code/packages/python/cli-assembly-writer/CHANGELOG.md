@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.5.0 — 2026-05-04 — System.Console AssemblyRef + inline host-call TypeRefs (TW04 Phase 4c)
+
+### Added — TypeRef rows 4 and 5 for inline host-call helpers
+
+Two new TypeRef rows are always emitted (small cost; keeps MemberRef
+token numbers deterministic across all assemblies):
+
+| Row | Type | Assembly |
+|-----|------|----------|
+| 4 | `System.Console` | AssemblyRef row 2 (`System.Console`) |
+| 5 | `System.Environment` | AssemblyRef row 1 (`System.Runtime`) |
+
+### Added — AssemblyRef row 2 for `System.Console`
+
+`System.Console` is a separate assembly from `System.Runtime` in
+net9.0.  Pointing its TypeRef ResolutionScope at `System.Runtime`
+causes `TypeLoadException: Could not load type 'System.Console' from
+assembly 'System.Runtime'` at runtime.  A second AssemblyRef row is
+emitted with name `System.Console` and the same ECMA public-key token
+and version as the existing `System.Runtime` row.
+
+### Changed — `_build_memberref_rows` uses `spec.class_typeref_row`
+
+Previously all helper MemberRef rows used a hardcoded TypeRef row-1
+parent.  Now the `CILHelperSpec.class_typeref_row` field drives the
+`MemberRefParent` coded index, enabling helpers in rows 4 and 5 to
+resolve correctly.
+
 ## 0.4.0 — 2026-04-30 — System.Int32 TypeRef (closure box support)
 
 Adds a third TypeRef row for `[System.Runtime]System.Int32` so

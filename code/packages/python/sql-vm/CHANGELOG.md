@@ -1,5 +1,31 @@
 # Changelog
 
+## 1.9.0 — 2026-05-04
+
+### Added
+
+- **`outer_current_row` parameter on `execute()`** (`vm.py`) — optional
+  `dict[int, dict[str, SqlValue]]` mapping outer cursor IDs to their current
+  row snapshots.  Defaults to `{}` (empty).  Stored in `_VmState` for use
+  by the `LoadOuterColumn` handler.
+- **`_VmState.outer_current_row` field** (`vm.py`) — the outer row snapshot
+  from the enclosing query; populated at construction time from `execute()`'s
+  parameter.
+- **`LoadOuterColumn` dispatch** (`vm.py`) — `_dispatch` routes
+  `LoadOuterColumn(cursor_id, col)` to the new `_load_outer_column()` helper,
+  which reads `col` from `outer_current_row[cursor_id]` and pushes the value
+  (or `None` if the cursor or column is absent).
+- **Correlated outer-row threading** (`vm.py`) — `_do_run_exists_subquery`,
+  `_do_run_scalar_subquery`, and `_do_run_in_subquery` now call
+  `execute(sub_program, backend, outer_current_row=st.current_row)` so that
+  inner programs can resolve `LoadOuterColumn` against the outer scan's
+  snapshot.  Each outer row gets a fresh inner execution — no caching.
+- **11 new VM tests** in `tests/test_correlated_subquery.py`:
+  `LoadOuterColumn` unit tests (basic, missing cursor, missing column, no
+  `outer_current_row`), and end-to-end planner→codegen→VM tests for
+  correlated IN, NOT IN, EXISTS, NOT EXISTS, scalar subquery, and per-row
+  re-execution.
+
 ## 1.8.0 — 2026-05-04
 
 ### Added

@@ -1,5 +1,44 @@
 # Changelog
 
+## 0.12.0 — 2026-05-04 — inline host syscalls + local_count floor (TW04 Phase 4c/4e)
+
+### Added — `inline_host_syscalls` config flag
+
+`CILBackendConfig(inline_host_syscalls=True)` changes SYSCALL 1/2/10
+lowering from the brainfuck-specific `__ca_syscall(num, arg)` external
+call to direct .NET API calls:
+
+| SYSCALL | Inline target |
+|---------|---------------|
+| 1 (write-byte) | `System.Console.Write(char)` via `conv.u2` + call |
+| 2 (read-byte)  | `System.Console.Read() → int32` |
+| 10 (exit)      | `System.Environment.Exit(int32) → void` |
+
+This eliminates the `TypeLoadException: Could not load type
+'CodingAdventures.Runtime.Helpers'` that occurred when Twig programs
+used `host/write-byte` via the CLR backend — the helper type only
+exists in the brainfuck VM runtime, not in the standard .NET SDK.
+
+Three new `CILHelper` variants added: `CONSOLE_WRITE_CHAR`,
+`CONSOLE_READ`, `ENVIRONMENT_EXIT`.  Each has a `class_typeref_row`
+that points to the correct TypeRef row (4 = System.Console,
+5 = System.Environment) in the PE metadata.
+
+### Added — local_count floor at `call_register_count`
+
+`_analyze_program` now floors `plan.local_count` at
+`config.call_register_count` (when set).  Without this floor, an entry
+module with fewer registers than `global_local_count` declared too few
+locals, causing `InvalidProgramException` when the JIT tried to push
+the full `global_local_count` args for a cross-module call.
+
+### Changed — `CILHelperSpec` has `class_typeref_row: int = 1`
+
+New field on `CILHelperSpec` (default `1` = backward-compatible legacy
+behaviour).  The cli-assembly-writer uses this field to compute the
+`MemberRefParent` coded index for each helper MemberRef row, replacing
+the hardcoded TypeRef-row-1 assumption.
+
 ## 0.11.0 — 2026-04-29 — multi-arity closures (IClosure.Apply takes int32[])
 
 `IClosure.Apply` now takes `int32[]` (was `int32`) so closures

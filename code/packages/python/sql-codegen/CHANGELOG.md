@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.9.0] - 2026-05-04
+
+### Added
+
+- **`LoadOuterColumn(cursor_id, col)` IR instruction** (`ir.py`) — pushes
+  the value of `col` from the outer query's cursor snapshot onto the value
+  stack.  Used by correlated subqueries where an inner program needs to read
+  a column from the enclosing query's current row.  Returns `None` (NULL) if
+  the cursor ID is absent from the snapshot or the column is not present.
+- **`outer_alias_to_cursor` field on `_Ctx`** (`compiler.py`) — holds the
+  outer query's `alias → cursor_id` mapping.  Populated when compiling
+  subprograms for `RunExistsSubquery`, `RunScalarSubquery`, and `RunInSubquery`
+  by copying `ctx.alias_to_cursor` from the enclosing context.
+- **`CorrelatedRef` compilation** (`compiler.py`) — `_compile_expr` handles
+  `CorrelatedRef(outer_alias, col)` by looking up `outer_alias` in
+  `ctx.outer_alias_to_cursor` and emitting `LoadOuterColumn(cursor_id, col)`.
+  Raises `UnsupportedNode` if `outer_alias_to_cursor` is absent (top-level
+  query — should never happen in well-formed plans).
+- **`LoadOuterColumn`** exported from `sql_codegen.__init__`.
+
 ## [1.8.0] - 2026-05-04
 
 ### Added

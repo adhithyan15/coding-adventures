@@ -349,6 +349,45 @@ class NotInSubquery:
 
 
 @dataclass(frozen=True, slots=True)
+class CorrelatedRef:
+    """A column reference that resolves against the *outer* query's scope.
+
+    Correlated subqueries
+    ---------------------
+    A correlated subquery is one whose WHERE (or HAVING) clause references
+    a column from an enclosing query.  Example::
+
+        SELECT e.name
+        FROM employees AS e
+        WHERE e.dept_id IN (
+            SELECT id FROM departments AS d WHERE d.id = e.dept_id
+        )
+
+    The inner query references ``e.dept_id`` from the outer scope.  After
+    column resolution the planner replaces the inner ``Column(table="e",
+    col="dept_id")`` with a ``CorrelatedRef(outer_alias="e", col="dept_id")``.
+
+    Lifecycle
+    ---------
+    - **Planner** (``_resolve_column``): when a column is not found in the
+      inner scope but *is* found in the outer scope, a ``CorrelatedRef`` is
+      created.  The ``outer_alias`` is the table alias from the outer scope.
+    - **Codegen** (``_compile_expr``): a ``CorrelatedRef`` compiles to a
+      ``LoadOuterColumn(cursor_id, col)`` instruction, where ``cursor_id`` is
+      looked up from the outer compilation context's ``alias_to_cursor`` map.
+    - **VM**: ``LoadOuterColumn`` reads the column value from the outer
+      execution state's ``current_row`` snapshot that was passed into the
+      inner sub-program at call time.
+
+    Each re-execution of the inner sub-program (once per outer row) gets the
+    outer row at that moment — that is what makes the subquery "correlated".
+    """
+
+    outer_alias: str   # table alias in the outer scope (e.g. "e")
+    col: str           # column name within that alias (e.g. "dept_id")
+
+
+@dataclass(frozen=True, slots=True)
 class WindowFuncExpr:
     """A window (analytic) function: ``func([arg]) OVER (PARTITION BY … ORDER BY …)``.
 
@@ -393,6 +432,7 @@ class WindowFuncExpr:
 Expr = (
     Literal
     | Column
+    | CorrelatedRef
     | BinaryExpr
     | UnaryExpr
     | FunctionCall
@@ -448,6 +488,10 @@ def contains_aggregate(expr: Expr) -> bool:
             ):
                 return True
             return else_ is not None and contains_aggregate(else_)
+        case CorrelatedRef():
+            # A correlated outer-column reference is a leaf that carries no
+            # aggregate semantics in the current scope.
+            return False
         case ExistsSubquery():
             # The inner query is independently scoped; from the outer
             # expression's perspective EXISTS is a boolean atom, not an
@@ -516,6 +560,11 @@ def _collect_columns(expr: Expr, out: list[Column]) -> None:
         case AggregateExpr(_, arg, _):
             if arg.value is not None:
                 _collect_columns(arg.value, out)
+        case CorrelatedRef():
+            # A correlated reference points into the outer scope — it is NOT
+            # a local column of the inner query, so projection-pruning in the
+            # inner query should not collect it.
+            pass
         case ExistsSubquery():
             # Inner query columns are independently scoped — not visible to
             # projection-pruning or column-resolution in the outer query.

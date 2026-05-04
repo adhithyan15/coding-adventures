@@ -1,0 +1,11 @@
+[package]
+name = "lang-refinement-checker"
+version = "0.1.0"
+edition = "2021"
+description = "LANG23 PR 23-C — refinement obligation checker: lowers RefinedType predicates to ConstraintInstructions and drives the Constraint-VM to classify PROVEN_SAFE / PROVEN_UNSAFE / UNKNOWN"
+
+[dependencies]
+constraint-core = { path = "../constraint-core" }
+constraint-engine = { path = "../constraint-engine" }
+constraint-vm = { path = "../constraint-vm" }
+lang-refined-types = { path = "../lang-refined-types" }

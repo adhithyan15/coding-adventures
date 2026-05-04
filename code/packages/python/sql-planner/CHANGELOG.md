@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.15.0] - 2026-05-04
+
+### Added
+
+- **`CorrelatedRef(outer_alias, col)` expression** (`expr.py`) — represents a
+  column reference that resolves only against the *outer* query's scope inside
+  a subquery.  Distinguished from `Column` so that codegen can emit a
+  `LoadOuterColumn` instruction at runtime.  Returns `False` from
+  `contains_aggregate()` and is a no-op in `_collect_columns()`.
+- **`outer_scope` parameter on `_plan_select()` and `_resolve()`** (`planner.py`)
+  — when planning a subquery, the enclosing query's column scope is passed as
+  `outer_scope`.  Column references not found in the inner scope fall back to
+  `outer_scope` and become `CorrelatedRef` nodes rather than raising
+  `UnknownColumn`.
+- **`_resolve_column()` outer-scope fallback** (`planner.py`) — qualified
+  references (`alias.col`) and bare references (`col`) both try `outer_scope`
+  after failing inner-scope resolution.  Qualified references produce
+  `CorrelatedRef(outer_alias=alias, col=col)`; bare references walk all
+  outer-scope aliases looking for a unique owner.
+- **Subquery correlated planning** (`planner.py`) — `_resolve` cases for
+  `ExistsSubquery`, `ScalarSubquery`, `InSubquery`, and `NotInSubquery` now
+  pass the current query's scope as `outer_scope` when recursively planning
+  the inner `SelectStmt`.
+- **`CorrelatedRef`** exported from `sql_planner.__init__`.
+- **8 new planner unit tests** in `tests/test_planner_correlated.py`
+  covering: correlated IN/EXISTS/scalar/NOT IN subqueries, bare-name outer
+  scope resolution, and error cases (unknown alias, column absent from all
+  scopes).
+
 ## [0.14.0] - 2026-05-04
 
 ### Added

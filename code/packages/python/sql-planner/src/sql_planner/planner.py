@@ -101,6 +101,7 @@ from .expr import (
     BinaryOp,
     CaseExpr,
     Column,
+    CorrelatedRef,
     ExistsSubquery,
     Expr,
     FunctionCall,
@@ -189,7 +190,19 @@ def _plan_select(
     schema: SchemaProvider,
     *,
     working_set: tuple[str, tuple[str, ...]] | None = None,
+    outer_scope: Scope | None = None,
 ) -> P.LogicalPlan:
+    """Plan a SELECT statement into a LogicalPlan tree.
+
+    ``outer_scope`` is the scope of the *enclosing* query when this SELECT
+    is compiled as a correlated subquery.  Any column reference not found in
+    this query's own scope is resolved against ``outer_scope`` and becomes a
+    :class:`~sql_planner.expr.CorrelatedRef` node — signalling to codegen
+    that the value must be fetched from the outer cursor at runtime.
+
+    Most SELECT statements are top-level (``outer_scope=None``); in those
+    cases the function behaves exactly as before.
+    """
     # 1. Build the scan / join tree from FROM + JOINs, and the column scope
     #    it exposes. Column resolution later qualifies bare references
     #    against this scope.
@@ -198,7 +211,7 @@ def _plan_select(
     # 2. WHERE — single Filter above the scan tree. Aggregates are forbidden
     #    inside WHERE (SQL forbids this — WHERE runs per-row before grouping).
     if stmt.where is not None:
-        where = _resolve(stmt.where, scope, schema)
+        where = _resolve(stmt.where, scope, schema, outer_scope)
         if contains_aggregate(where):
             raise InvalidAggregate(message="aggregate function not allowed in WHERE clause")
         # IX-6: If the WHERE predicate can be served by a B-tree index on the
@@ -215,13 +228,16 @@ def _plan_select(
     #    (a) GROUP BY is non-empty, or
     #    (b) any SELECT item or HAVING predicate uses an aggregate.
     resolved_items = tuple(
-        P.ProjectionItem(expr=_resolve(it.expr, scope, schema), alias=_derive_alias(it))
+        P.ProjectionItem(
+            expr=_resolve(it.expr, scope, schema, outer_scope),
+            alias=_derive_alias(it),
+        )
         for it in stmt.items
     )
-    having = _resolve(stmt.having, scope, schema) if stmt.having is not None else None
+    having = _resolve(stmt.having, scope, schema, outer_scope) if stmt.having is not None else None
     order_by = tuple(
         P.SortKey(
-            expr=_resolve(k.expr, scope, schema),
+            expr=_resolve(k.expr, scope, schema, outer_scope),
             descending=k.descending,
             nulls_first=k.nulls_first,
         )
@@ -232,7 +248,7 @@ def _plan_select(
     has_agg_in_having = having is not None and contains_aggregate(having)
     has_agg_in_order = any(contains_aggregate(k.expr) for k in order_by)
     if stmt.group_by or has_agg_in_select or has_agg_in_having or has_agg_in_order:
-        group_by = tuple(_resolve(g, scope, schema) for g in stmt.group_by)
+        group_by = tuple(_resolve(g, scope, schema, outer_scope) for g in stmt.group_by)
         aggregates = _collect_aggregates(resolved_items, having, order_by)
         tree = P.Aggregate(input=tree, group_by=group_by, aggregates=aggregates)
 
@@ -479,6 +495,7 @@ def _resolve(
     expr: Expr,
     scope: Scope,
     schema: SchemaProvider | None = None,
+    outer_scope: Scope | None = None,
 ) -> Expr:
     """Qualify bare :class:`Column` references against ``scope``.
 
@@ -490,94 +507,112 @@ def _resolve(
     :class:`~sql_planner.expr.ExistsSubquery` nodes — the planner needs it
     to plan the inner SELECT independently.  All other expression types ignore
     this parameter.
+
+    ``outer_scope`` is the scope of the immediately enclosing query.  When a
+    column cannot be resolved in ``scope``, the planner falls back to
+    ``outer_scope``.  If found there, it returns a
+    :class:`~sql_planner.expr.CorrelatedRef` — a marker that codegen
+    translates into a ``LoadOuterColumn`` instruction at runtime.
+
+    Only one level of outer scope is supported.  Deeply nested correlated
+    references (grandparent queries) require extending this API to a scope
+    stack, which is reserved for a future increment.
     """
     match expr:
         case Literal() | Wildcard():
             return expr
+        case CorrelatedRef():
+            # Already resolved by a prior _resolve pass — pass through.
+            return expr
         case Column(table, col):
-            return _resolve_column(table, col, scope)
+            return _resolve_column(table, col, scope, outer_scope)
         case BinaryExpr(op, left, right):
             return BinaryExpr(
                 op=op,
-                left=_resolve(left, scope, schema),
-                right=_resolve(right, scope, schema),
+                left=_resolve(left, scope, schema, outer_scope),
+                right=_resolve(right, scope, schema, outer_scope),
             )
         case UnaryExpr(op, operand):
-            return UnaryExpr(op=op, operand=_resolve(operand, scope, schema))
+            return UnaryExpr(op=op, operand=_resolve(operand, scope, schema, outer_scope))
         case FunctionCall(name, args):
             new_args = tuple(
                 a if a.star or a.value is None
-                else type(a)(star=False, value=_resolve(a.value, scope, schema))
+                else type(a)(star=False, value=_resolve(a.value, scope, schema, outer_scope))
                 for a in args
             )
             return FunctionCall(name=name, args=new_args)
         case IsNull(operand):
-            return IsNull(operand=_resolve(operand, scope, schema))
+            return IsNull(operand=_resolve(operand, scope, schema, outer_scope))
         case IsNotNull(operand):
-            return IsNotNull(operand=_resolve(operand, scope, schema))
+            return IsNotNull(operand=_resolve(operand, scope, schema, outer_scope))
         case Between(operand, low, high):
             return Between(
-                operand=_resolve(operand, scope, schema),
-                low=_resolve(low, scope, schema),
-                high=_resolve(high, scope, schema),
+                operand=_resolve(operand, scope, schema, outer_scope),
+                low=_resolve(low, scope, schema, outer_scope),
+                high=_resolve(high, scope, schema, outer_scope),
             )
         case In(operand, values):
             return In(
-                operand=_resolve(operand, scope, schema),
-                values=tuple(_resolve(v, scope, schema) for v in values),
+                operand=_resolve(operand, scope, schema, outer_scope),
+                values=tuple(_resolve(v, scope, schema, outer_scope) for v in values),
             )
         case NotIn(operand, values):
             return NotIn(
-                operand=_resolve(operand, scope, schema),
-                values=tuple(_resolve(v, scope, schema) for v in values),
+                operand=_resolve(operand, scope, schema, outer_scope),
+                values=tuple(_resolve(v, scope, schema, outer_scope) for v in values),
             )
         case Like(operand, pattern):
-            return Like(operand=_resolve(operand, scope, schema), pattern=pattern)
+            return Like(operand=_resolve(operand, scope, schema, outer_scope), pattern=pattern)
         case NotLike(operand, pattern):
-            return NotLike(operand=_resolve(operand, scope, schema), pattern=pattern)
+            return NotLike(operand=_resolve(operand, scope, schema, outer_scope), pattern=pattern)
         case AggregateExpr(func, arg, distinct):
             if arg.star or arg.value is None:
                 return expr
-            new_arg = type(arg)(star=False, value=_resolve(arg.value, scope, schema))
+            new_arg = type(arg)(star=False, value=_resolve(arg.value, scope, schema, outer_scope))
             return AggregateExpr(func=func, arg=new_arg, distinct=distinct)
         case CaseExpr(whens, else_):
             return CaseExpr(
                 whens=tuple(
-                    (_resolve(cond, scope, schema), _resolve(result, scope, schema))
+                    (
+                        _resolve(cond, scope, schema, outer_scope),
+                        _resolve(result, scope, schema, outer_scope),
+                    )
                     for cond, result in whens
                 ),
-                else_=_resolve(else_, scope, schema) if else_ is not None else None,
+                else_=_resolve(else_, scope, schema, outer_scope) if else_ is not None else None,
             )
         case ExistsSubquery(query=stmt):
-            # Plan the inner SELECT independently using the same schema but
-            # without sharing the outer scope — no correlated subqueries.
-            # After this call, query holds a LogicalPlan ready for codegen.
+            # Plan the inner SELECT with the current scope as its outer scope
+            # so that correlated references to the enclosing query are resolved
+            # as CorrelatedRef nodes rather than raising UnknownColumn.
             if schema is None:
                 raise InternalError(message="schema required to plan EXISTS subquery")
-            inner_plan = _plan_select(stmt, schema)  # type: ignore[arg-type]
+            inner_plan = _plan_select(stmt, schema, outer_scope=scope)  # type: ignore[arg-type]
             return ExistsSubquery(query=inner_plan)
         case ScalarSubquery(query=stmt):
             if schema is None:
                 raise InternalError(message="schema required to plan scalar subquery")
-            inner_plan = _plan_select(stmt, schema)  # type: ignore[arg-type]
+            inner_plan = _plan_select(stmt, schema, outer_scope=scope)  # type: ignore[arg-type]
             return ScalarSubquery(query=inner_plan)
         case InSubquery(operand=op, query=stmt):
             if schema is None:
                 raise InternalError(message="schema required to plan IN subquery")
-            resolved_op = _resolve(op, scope, schema)  # type: ignore[arg-type]
-            inner_plan = _plan_select(stmt, schema)  # type: ignore[arg-type]
+            resolved_op = _resolve(op, scope, schema, outer_scope)  # type: ignore[arg-type]
+            inner_plan = _plan_select(stmt, schema, outer_scope=scope)  # type: ignore[arg-type]
             return InSubquery(operand=resolved_op, query=inner_plan)
         case NotInSubquery(operand=op, query=stmt):
             if schema is None:
                 raise InternalError(message="schema required to plan NOT IN subquery")
-            resolved_op = _resolve(op, scope, schema)  # type: ignore[arg-type]
-            inner_plan = _plan_select(stmt, schema)  # type: ignore[arg-type]
+            resolved_op = _resolve(op, scope, schema, outer_scope)  # type: ignore[arg-type]
+            inner_plan = _plan_select(stmt, schema, outer_scope=scope)  # type: ignore[arg-type]
             return NotInSubquery(operand=resolved_op, query=inner_plan)
         case WindowFuncExpr(func, arg, partition_by, order_by):
-            new_arg = _resolve(arg, scope, schema) if arg is not None else None
-            new_partition_by = tuple(_resolve(e, scope, schema) for e in partition_by)
+            new_arg = _resolve(arg, scope, schema, outer_scope) if arg is not None else None
+            new_partition_by = tuple(
+                _resolve(e, scope, schema, outer_scope) for e in partition_by
+            )
             new_order_by = tuple(
-                (_resolve(e, scope, schema), desc) for e, desc in order_by
+                (_resolve(e, scope, schema, outer_scope), desc) for e, desc in order_by
             )
             return WindowFuncExpr(
                 func=func,
@@ -588,20 +623,54 @@ def _resolve(
     raise AmbiguousColumn(column="<internal>", tables=[])  # unreachable
 
 
-def _resolve_column(table: str | None, col: str, scope: Scope) -> Column:
+def _resolve_column(
+    table: str | None,
+    col: str,
+    scope: Scope,
+    outer_scope: Scope | None = None,
+) -> Column | CorrelatedRef:
+    """Resolve a column reference against the inner scope, falling back to
+    the outer scope for correlated subquery references.
+
+    Inner scope resolution returns a :class:`Column`.
+    Outer scope resolution returns a :class:`CorrelatedRef`.
+
+    Resolution order:
+    1. Try the inner scope first (``scope``).
+    2. If not found AND ``outer_scope`` is provided, try ``outer_scope``.
+    3. Raise :class:`UnknownColumn` if neither scope has the column.
+
+    Qualified references (``table.col``) check the named alias in order; bare
+    references walk all aliases in the active scope looking for a unique owner.
+    """
+    # ---- Qualified reference (table.col) ------------------------------------
     if table is not None:
-        if table not in scope:
-            raise UnknownColumn(table=table, column=col)
-        if col not in scope[table]:
-            raise UnknownColumn(table=table, column=col)
-        return Column(table=table, col=col)
-    # Bare column reference — find which tables have it.
+        if table in scope and col in scope[table]:
+            # Found in inner scope — a regular column reference.
+            return Column(table=table, col=col)
+        # Not in inner scope. Try the outer scope before raising.
+        if outer_scope is not None and table in outer_scope and col in outer_scope[table]:
+            # Found in the enclosing query's scope — correlated reference.
+            return CorrelatedRef(outer_alias=table, col=col)
+        raise UnknownColumn(table=table, column=col)
+
+    # ---- Bare reference (col, no table qualifier) ---------------------------
+    # Find which inner-scope aliases own this column.
     owners = [t for t, cols in scope.items() if col in cols]
-    if not owners:
-        raise UnknownColumn(table=None, column=col)
-    if len(owners) > 1:
-        raise AmbiguousColumn(column=col, tables=owners)
-    return Column(table=owners[0], col=col)
+    if owners:
+        if len(owners) > 1:
+            raise AmbiguousColumn(column=col, tables=owners)
+        return Column(table=owners[0], col=col)
+
+    # Not found in inner scope. Try outer scope.
+    if outer_scope is not None:
+        outer_owners = [t for t, cols in outer_scope.items() if col in cols]
+        if len(outer_owners) == 1:
+            return CorrelatedRef(outer_alias=outer_owners[0], col=col)
+        if len(outer_owners) > 1:
+            raise AmbiguousColumn(column=col, tables=outer_owners)
+
+    raise UnknownColumn(table=None, column=col)
 
 
 # --------------------------------------------------------------------------
