@@ -651,6 +651,39 @@ class RunScalarSubquery:
 
 
 @dataclass(frozen=True, slots=True)
+class RunInSubquery:
+    """Pop the test value from the stack, execute the sub-program, and push a boolean.
+
+    Used for ``expr IN (SELECT …)`` and ``expr NOT IN (SELECT …)``.
+
+    Sequence
+    --------
+    The caller compiles the outer operand expression first (pushing the test
+    value), then emits this instruction.
+
+    ::
+
+        [compile operand]          # pushes test_value onto the stack
+        RunInSubquery(...)         # pops test_value, runs subquery, pushes bool
+
+    The sub-program is expected to return at least one column; only the first
+    column of each result row participates in the membership test.
+
+    NULL semantics (SQL tri-value logic)
+    ------------------------------------
+    - ``NULL IN (...)``  → ``None`` (NULL)
+    - ``x IN (...)``  → ``True``  if x is in the result set (ignoring NULLs in set)
+    - ``x IN (...)``  → ``None``  if x is NOT in the result set AND the set contains NULL
+    - ``x IN (...)``  → ``False`` otherwise
+
+    For ``NOT IN`` (``negate=True``) booleans are flipped; NULL stays NULL.
+    """
+
+    sub_program: Program
+    negate: bool = False
+
+
+@dataclass(frozen=True, slots=True)
 class RunRecursiveCTE:
     """Execute a WITH RECURSIVE CTE via fixed-point iteration.
 
@@ -892,6 +925,7 @@ Instruction = (
     | RunSubquery
     | RunExistsSubquery
     | RunScalarSubquery
+    | RunInSubquery
     | RunRecursiveCTE
     | OpenWorkingSetScan
     | JoinBeginRow | JoinSetMatched | JoinIfMatched

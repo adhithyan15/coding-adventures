@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.14.0] - 2026-05-04
+
+### Added
+
+- **`InSubquery(operand, query)` expression** (`expr.py`) — represents
+  `expr IN (SELECT ...)`.  Contains the resolved inner `LogicalPlan`
+  (after planner rewriting from raw `SelectStmt`).  Returns `False`
+  from `contains_aggregate()` and propagates `collect_columns()` on
+  `operand` only.
+- **`NotInSubquery(operand, query)` expression** (`expr.py`) — same
+  structure as `InSubquery` but represents `expr NOT IN (SELECT ...)`.
+  Both added to the `Expr` union type.
+- **Planner dispatch** (`planner.py`) — `_resolve` cases for
+  `InSubquery` and `NotInSubquery`: resolve `operand` in the current
+  scope, then recursively plan the inner `SelectStmt` via
+  `_plan_select`, replacing the raw AST node with a `LogicalPlan`.
+- **`InSubquery` and `NotInSubquery`** exported from
+  `sql_planner.__init__`.
+
 ## [0.13.0] - 2026-04-28
 
 ### Added

@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.8.0] - 2026-05-04
+
+### Added
+
+- **`RunInSubquery` IR instruction** (`ir.py`) — stack instruction that
+  pops the test value, executes an embedded `sub_program`, materializes
+  the first column of every result row into a set, then pushes the
+  membership result.  The `negate: bool` field inverts the result for
+  `NOT IN`.  SQL three-valued logic is preserved: if the test value is
+  `NULL`, pushes `None`; if the set contains `NULL` and the value was
+  not found, pushes `None` (UNKNOWN); otherwise pushes `True`/`False`.
+- **`InSubquery` / `NotInSubquery` compilation** (`compiler.py`) —
+  `_compile_expr` handles both new planner expression nodes by compiling
+  the inner plan into an embedded `Program` (same lifecycle as
+  `RunScalarSubquery` and `RunExistsSubquery`) and emitting
+  `RunInSubquery(sub_program=..., negate=...)`.
+- **HAVING `_compile_having` fix** (`compiler.py`) — the aggregate-slot
+  lookup condition now accepts both `arg=None` (legacy direct-
+  construction form for `COUNT(*)`) and `arg=FuncArg(star=True)` (the
+  form produced by the planner), fixing `COUNT(*) > N` in HAVING when
+  used inside an `IN` subquery.
+- **`RunInSubquery`** exported from `sql_codegen.__init__`.
+
 ## [1.7.0] - 2026-05-04
 
 ### Added

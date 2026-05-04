@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-sql-codegen"
-version = "1.4.0"
+version = "1.8.0"
 description = "Compiles LogicalPlan trees into flat IR bytecode for the sql-vm."
 requires-python = ">=3.12"
 license = "MIT"

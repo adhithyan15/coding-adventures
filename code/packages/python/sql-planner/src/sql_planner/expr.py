@@ -312,6 +312,43 @@ class ScalarSubquery:
 
 
 @dataclass(frozen=True, slots=True)
+class InSubquery:
+    """``expr IN (SELECT …)`` — TRUE iff the subquery result set contains the value.
+
+    Lifecycle
+    ---------
+    Created by the adapter with ``query`` holding a raw ``SelectStmt``.
+    The planner's ``_resolve()`` replaces ``query`` with a compiled
+    ``LogicalPlan`` before passing to codegen.
+
+    ``query`` is typed as ``object`` to break the circular import between
+    this module and ``sql_planner.plan``.
+
+    NULL semantics (SQL tri-value logic)
+    ------------------------------------
+    - ``NULL IN (...)`` → NULL
+    - ``x IN (...)`` → TRUE if x equals any non-NULL member
+    - ``x IN (...)`` → NULL  if x has no match and the set contains NULL
+    - ``x IN (...)`` → FALSE otherwise
+    """
+
+    operand: object  # Expr (typed object to avoid forward-reference issues at runtime)
+    query: object    # SelectStmt → LogicalPlan after _resolve
+
+
+@dataclass(frozen=True, slots=True)
+class NotInSubquery:
+    """``expr NOT IN (SELECT …)`` — complement of :class:`InSubquery`.
+
+    Same NULL semantics apply: the result is NULL whenever it would be NULL for
+    the corresponding ``IN`` test.  The boolean TRUE/FALSE cases are inverted.
+    """
+
+    operand: object  # Expr
+    query: object    # SelectStmt → LogicalPlan after _resolve
+
+
+@dataclass(frozen=True, slots=True)
 class WindowFuncExpr:
     """A window (analytic) function: ``func([arg]) OVER (PARTITION BY … ORDER BY …)``.
 
@@ -371,6 +408,8 @@ Expr = (
     | AggregateExpr
     | ExistsSubquery
     | ScalarSubquery
+    | InSubquery
+    | NotInSubquery
     | WindowFuncExpr
 )
 
@@ -417,6 +456,11 @@ def contains_aggregate(expr: Expr) -> bool:
         case ScalarSubquery():
             # Scalar subqueries are self-contained; any aggregation inside
             # them is scoped to the inner query.
+            return False
+        case InSubquery() | NotInSubquery():
+            # Subquery is independently scoped; the operand could in theory
+            # contain an aggregate, but IN-subquery in a HAVING clause is
+            # unusual enough that we treat it conservatively as non-aggregate.
             return False
         case WindowFuncExpr():
             # Window functions are handled by a separate WindowAgg plan node.
@@ -479,6 +523,11 @@ def _collect_columns(expr: Expr, out: list[Column]) -> None:
         case ScalarSubquery():
             # Inner query columns are independently scoped.
             pass
+        case InSubquery(operand=op) | NotInSubquery(operand=op):
+            # Collect columns from the outer operand expression (e.g., the
+            # left-hand side of `col IN (SELECT ...)`).  The inner subquery
+            # is independently scoped — its columns are not visible here.
+            _collect_columns(op, out)  # type: ignore[arg-type]
         case WindowFuncExpr(_, arg, partition_by, order_by):
             if arg is not None:
                 _collect_columns(arg, out)

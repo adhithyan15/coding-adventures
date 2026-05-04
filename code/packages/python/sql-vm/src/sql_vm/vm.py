@@ -95,6 +95,7 @@ from sql_codegen import (
     Program,
     RollbackTransaction,
     RunExistsSubquery,
+    RunInSubquery,
     RunRecursiveCTE,
     RunScalarSubquery,
     RunSubquery,
@@ -582,6 +583,9 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
     if isinstance(ins, RunScalarSubquery):
         _do_run_scalar_subquery(ins, st)
         return
+    if isinstance(ins, RunInSubquery):
+        _do_run_in_subquery(ins, st)
+        return
     if isinstance(ins, RunRecursiveCTE):
         _do_run_recursive_cte(ins, st)
         return
@@ -830,6 +834,43 @@ def _do_run_scalar_subquery(ins: RunScalarSubquery, st: _VmState) -> None:
         raise CardinalityError()
     else:
         st.push(rows[0][0] if rows[0] else None)
+
+
+def _do_run_in_subquery(ins: RunInSubquery, st: _VmState) -> None:
+    """Execute the IN-subquery and push a boolean (or NULL).
+
+    Pops the test value from the top of the stack, executes the sub-program
+    to materialise the result set, then tests membership.
+
+    NULL semantics (SQL three-valued logic):
+    - test_value is None  → push None (NULL IN ... = NULL)
+    - test_value found in non-NULL members → push True (or False if negate)
+    - test_value not found, result set contains NULL → push None (unknown)
+    - test_value not found, no NULL in set → push False (or True if negate)
+    """
+    test_value = st.pop()
+    if test_value is None:
+        st.push(None)
+        return
+    sub_result = execute(ins.sub_program, st.backend)
+    # Build two sets: one of non-NULL first-column values, and a flag for NULL presence.
+    non_null_values: set[object] = set()
+    has_null = False
+    for row in sub_result.rows:
+        val = row[0] if row else None
+        if val is None:
+            has_null = True
+        else:
+            non_null_values.add(val)
+    if test_value in non_null_values:
+        # Definite match.
+        st.push(ins.negate is False)
+    elif has_null:
+        # No match found, but NULL is in the set — result is UNKNOWN (NULL).
+        st.push(None)
+    else:
+        # Definite non-match.
+        st.push(ins.negate is True)
 
 
 def _execute_with_cursors(

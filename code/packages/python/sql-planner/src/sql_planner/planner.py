@@ -105,11 +105,13 @@ from .expr import (
     Expr,
     FunctionCall,
     In,
+    InSubquery,
     IsNotNull,
     IsNull,
     Like,
     Literal,
     NotIn,
+    NotInSubquery,
     NotLike,
     ScalarSubquery,
     UnaryExpr,
@@ -559,6 +561,18 @@ def _resolve(
                 raise InternalError(message="schema required to plan scalar subquery")
             inner_plan = _plan_select(stmt, schema)  # type: ignore[arg-type]
             return ScalarSubquery(query=inner_plan)
+        case InSubquery(operand=op, query=stmt):
+            if schema is None:
+                raise InternalError(message="schema required to plan IN subquery")
+            resolved_op = _resolve(op, scope, schema)  # type: ignore[arg-type]
+            inner_plan = _plan_select(stmt, schema)  # type: ignore[arg-type]
+            return InSubquery(operand=resolved_op, query=inner_plan)
+        case NotInSubquery(operand=op, query=stmt):
+            if schema is None:
+                raise InternalError(message="schema required to plan NOT IN subquery")
+            resolved_op = _resolve(op, scope, schema)  # type: ignore[arg-type]
+            inner_plan = _plan_select(stmt, schema)  # type: ignore[arg-type]
+            return NotInSubquery(operand=resolved_op, query=inner_plan)
         case WindowFuncExpr(func, arg, partition_by, order_by):
             new_arg = _resolve(arg, scope, schema) if arg is not None else None
             new_partition_by = tuple(_resolve(e, scope, schema) for e in partition_by)

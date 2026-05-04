@@ -56,12 +56,14 @@ from sql_planner import (
     In,
     IndexScan,
     Insert,
+    InSubquery,
     Intersect,
     Join,
     JoinKind,
     Literal,
     LogicalPlan,
     NotIn,
+    NotInSubquery,
     Project,
     Rollback,
     ScalarSubquery,
@@ -182,6 +184,7 @@ from .ir import (
     Program,
     RollbackTransaction,
     RunExistsSubquery,
+    RunInSubquery,
     RunRecursiveCTE,
     RunScalarSubquery,
     RunSubquery,
@@ -1052,10 +1055,13 @@ def _compile_having(
 
                 for s, a in zip(slots, aggregates, strict=True):
                     assert isinstance(a, AggregateItem)
-                    if a.func is f and (
+                    # arg=None is the legacy direct-construction form for COUNT(*);
+                    # planner always produces FuncArg(star=True). Accept both.
+                    matched = (
                         (arg is None and a.arg.star)
-                        or (a.arg.value == arg)
-                    ):
+                        or (arg is not None and a.arg == arg)
+                    )
+                    if a.func is f and matched:
                         return [FinalizeAgg(slot=s)]
                 raise UnsupportedNode("AggregateExpr not present in Aggregate.aggregates")
             case Column(col=c):
@@ -1187,6 +1193,29 @@ def _compile_expr(e: Expr, ctx: _Ctx) -> list[Instruction]:
                 result_schema=(),
             )
             return [RunScalarSubquery(sub_program=sub)]
+        case InSubquery(operand=op, query=inner_plan):
+            # Compile the inner plan to a standalone sub-program, then compile
+            # the outer operand expression (pushes test value), then emit
+            # RunInSubquery which pops the test value and pushes a bool.
+            inner_ctx = _Ctx()
+            inner_instrs, _ = _compile_plan(inner_plan, inner_ctx)  # type: ignore[arg-type]
+            inner_instrs.append(Halt())
+            sub = Program(
+                instructions=tuple(inner_instrs),
+                labels=_resolve_labels(inner_instrs),
+                result_schema=(),
+            )
+            return [*_compile_expr(op, ctx), RunInSubquery(sub_program=sub, negate=False)]  # type: ignore[arg-type]
+        case NotInSubquery(operand=op, query=inner_plan):
+            inner_ctx = _Ctx()
+            inner_instrs, _ = _compile_plan(inner_plan, inner_ctx)  # type: ignore[arg-type]
+            inner_instrs.append(Halt())
+            sub = Program(
+                instructions=tuple(inner_instrs),
+                labels=_resolve_labels(inner_instrs),
+                result_schema=(),
+            )
+            return [*_compile_expr(op, ctx), RunInSubquery(sub_program=sub, negate=True)]  # type: ignore[arg-type]
         case AggregateExpr():
             # At this point in compilation we're inside an aggregate node's
             # HAVING or projection; direct emission isn't possible without
