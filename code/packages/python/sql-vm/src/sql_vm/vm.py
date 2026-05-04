@@ -1546,7 +1546,13 @@ def _do_compute_window(ins: ComputeWindowFunctions, st: _VmState) -> None:
                 #
                 # extra_args = (n: int,) — 1-indexed.
                 (n_raw,) = spec.extra_args if spec.extra_args else (1,)
-                n_idx = int(n_raw) - 1  # type: ignore[arg-type]  # convert to 0-indexed
+                # Defense-in-depth: codegen already rejects non-integer n, but
+                # guard here too so a hand-crafted WinFuncSpec fails cleanly.
+                if not isinstance(n_raw, int) or isinstance(n_raw, bool):
+                    raise RuntimeError(
+                        f"NTH_VALUE n must be an integer, got {type(n_raw).__name__!r}"
+                    )
+                n_idx = n_raw - 1  # convert to 0-indexed
                 if 0 <= n_idx < len(partition) and arg_col:
                     nth_val: SqlValue = partition[n_idx].get(arg_col)
                 else:

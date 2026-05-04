@@ -753,3 +753,34 @@ class TestEdgeCases:
         state = types.SimpleNamespace(result=result_buf)
         with pytest.raises(RuntimeError, match="NTILE n must be an integer"):
             _do_compute_window(instr, state)  # type: ignore[arg-type]
+
+    def test_nth_value_vm_guard_rejects_string_n(self) -> None:
+        """Defense-in-depth: NTH_VALUE handler raises RuntimeError for non-int n."""
+        import types
+
+        import pytest
+        from sql_codegen import ComputeWindowFunctions
+        from sql_codegen.ir import WinFunc, WinFuncSpec
+
+        from sql_vm.result import _MutableResult
+        from sql_vm.vm import _do_compute_window
+
+        spec_ir = WinFuncSpec(
+            func=WinFunc.NTH_VALUE,
+            arg_col="salary",
+            partition_cols=(),
+            order_cols=(("id", False),),
+            result_col="nv",
+            extra_args=("two",),  # string row index — invalid
+        )
+        instr = ComputeWindowFunctions(
+            specs=(spec_ir,),
+            output_cols=("id", "salary", "nv"),
+        )
+        result_buf = _MutableResult(
+            columns=("id", "salary"),
+            rows=[(1, 100), (2, 200)],
+        )
+        state = types.SimpleNamespace(result=result_buf)
+        with pytest.raises(RuntimeError, match="NTH_VALUE n must be an integer"):
+            _do_compute_window(instr, state)  # type: ignore[arg-type]
