@@ -1,0 +1,24 @@
+[package]
+name = "instagram-filters"
+version = "0.1.0"
+edition = "2021"
+description = "End-to-end demo: PPM in → image-gpu-core filter (running on the matrix execution layer) → PPM out. Proves the matrix-ir → matrix-runtime → matrix-cpu pipeline by composing real Instagram-style filters from MatrixIR primitives."
+license = "MIT"
+
+# Standalone workspace so the program tree stays separate from the
+# packages workspace (matches the convention used by every other
+# program in code/programs/rust/).
+[workspace]
+
+[dependencies]
+image-gpu-core   = { path = "../../../packages/rust/image-gpu-core" }
+image-codec-ppm  = { path = "../../../packages/rust/image-codec-ppm" }
+pixel-container  = { path = "../../../packages/rust/pixel-container" }
+
+[lib]
+name = "instagram_filters"
+path = "src/lib.rs"
+
+[[bin]]
+name = "instagram-filters"
+path = "src/main.rs"
