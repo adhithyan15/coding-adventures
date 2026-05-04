@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.13.0] - 2026-05-04
+
+### Added
+
+- **RIGHT [OUTER] JOIN end-to-end** — `RIGHT JOIN` and `RIGHT OUTER JOIN`
+  now execute correctly. Unmatched right rows appear with `NULL` for all
+  left-side columns. Implemented by swapping `lft`/`rgt` in the codegen
+  and reusing LEFT JOIN machinery.
+- **4 new integration tests** in `test_outer_join.py`:
+  `test_right_outer_join_basic`, `test_right_join_keyword_alone`,
+  `test_right_outer_join_left_empty`, `test_right_outer_join_where_null_left`
+
 ## [1.12.0] - 2026-05-04
 
 ### Added

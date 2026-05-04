@@ -869,7 +869,18 @@ def _compile_join(
 
         return _compile_source(lft, loj_outer_body, ctx)
 
-    # RIGHT / FULL — not yet implemented; raise a clear error.
+    if kind == JoinKind.RIGHT:
+        # RIGHT OUTER JOIN = LEFT OUTER JOIN with the two sides swapped in the
+        # execution loop.  The ON condition and body both reference columns by
+        # table alias (via alias_to_cursor), not by physical scan position, so
+        # reversing which side is the outer loop is sufficient: the original
+        # right table becomes the outer "left" (preserved for every row) and
+        # the original left table becomes the inner "right" (null-padded when
+        # no ON match is found).  Output column order is controlled by the
+        # Project node above the join and is not affected by the swap.
+        return _compile_join(rgt, lft, JoinKind.LEFT, cond, body, ctx)
+
+    # FULL — not yet implemented; raise a clear error.
     raise UnsupportedNode(f"Join({kind})")
 
 

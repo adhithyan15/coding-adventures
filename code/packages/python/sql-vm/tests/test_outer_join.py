@@ -286,3 +286,84 @@ def test_nested_left_join(two_table_backend: InMemoryBackend) -> None:
     assert by_name["Alice"] == ("Alice", "alice_order", None)
     assert by_name["Bob"] == ("Bob", "bob_order", "shipped")
     assert by_name["Carol"] == ("Carol", None, None)
+
+
+# ---------------------------------------------------------------------------
+# RIGHT OUTER JOIN
+# ---------------------------------------------------------------------------
+
+
+def test_right_join_partial_match(two_table_backend: InMemoryBackend) -> None:
+    """RIGHT JOIN: all right rows appear; left columns are NULL for unmatched.
+
+    customers: 1 Alice, 2 Bob, 3 Carol
+    orders: customer_id=1 alice_order, customer_id=2 bob_order
+
+    RIGHT JOIN orders → customers:
+        alice_order (1, Alice)   — matched
+        bob_order   (2, Bob)     — matched
+
+    If we add an order with customer_id=99 (no such customer):
+        mystery_order (NULL, NULL) — unmatched right row
+    """
+    be = two_table_backend
+    be.insert("orders", {"order_id": 30, "customer_id": 99, "product": "mystery_order"})
+
+    plan = Project(
+        input=Join(
+            left=Scan(table="customers", alias="customers"),
+            right=Scan(table="orders", alias="orders"),
+            kind=JoinKind.RIGHT,
+            condition=BinaryExpr(
+                op=BinaryOp.EQ,
+                left=Column("customers", "id"),
+                right=Column("orders", "customer_id"),
+            ),
+        ),
+        items=(
+            ProjectionItem(expr=Column("customers", "name"), alias="name"),
+            ProjectionItem(expr=Column("orders", "product"), alias="product"),
+        ),
+    )
+    result = execute(compile(plan), be)
+    by_product = {r[1]: r[0] for r in result.rows}
+    assert by_product["alice_order"] == "Alice"
+    assert by_product["bob_order"] == "Bob"
+    assert by_product["mystery_order"] is None   # no matching customer
+
+
+def test_right_join_left_empty(two_table_backend: InMemoryBackend) -> None:
+    """RIGHT JOIN with empty left table: all right rows appear with NULL left cols."""
+    be = InMemoryBackend()
+    be.create_table("a", [ColumnDef(name="x", type_name="INTEGER")], False)
+    be.create_table(
+        "b",
+        [ColumnDef(name="x", type_name="INTEGER"), ColumnDef(name="y", type_name="TEXT")],
+        False,
+    )
+    be.insert("b", {"x": 10, "y": "hello"})
+    be.insert("b", {"x": 20, "y": "world"})
+    # a is empty
+
+    plan = Project(
+        input=Join(
+            left=Scan(table="a", alias="a"),
+            right=Scan(table="b", alias="b"),
+            kind=JoinKind.RIGHT,
+            condition=BinaryExpr(
+                op=BinaryOp.EQ,
+                left=Column("a", "x"),
+                right=Column("b", "x"),
+            ),
+        ),
+        items=(
+            ProjectionItem(expr=Column("a", "x"), alias="ax"),
+            ProjectionItem(expr=Column("b", "y"), alias="by"),
+        ),
+    )
+    result = execute(compile(plan), be)
+    assert len(result.rows) == 2
+    for row in result.rows:
+        assert row[0] is None   # a.x is NULL for all unmatched rows
+    by_values = {r[1] for r in result.rows}
+    assert by_values == {"hello", "world"}

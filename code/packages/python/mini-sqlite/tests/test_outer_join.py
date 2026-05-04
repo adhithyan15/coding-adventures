@@ -272,3 +272,77 @@ def test_left_outer_join_with_count(conn) -> None:
     assert by_name["Alice"] == 1
     assert by_name["Bob"] == 1
     assert by_name["Carol"] == 0
+
+
+# ---------------------------------------------------------------------------
+# RIGHT OUTER JOIN
+# ---------------------------------------------------------------------------
+
+
+def test_right_outer_join_basic(conn) -> None:
+    """RIGHT JOIN: all right rows appear; unmatched right rows have NULL left cols.
+
+    Add an orphan order (customer_id=99, no matching customer).
+    RIGHT JOIN orders → customers yields:
+        Alice  alice_order
+        Bob    bob_order
+        NULL   orphan_order   ← no matching customer
+    """
+    conn.execute(
+        "INSERT INTO orders (order_id, customer_id, product) VALUES (30, 99, 'orphan_order')"
+    )
+    rows = conn.execute("""
+        SELECT c.name, o.product
+        FROM customers AS c
+        RIGHT OUTER JOIN orders AS o ON c.id = o.customer_id
+    """).fetchall()
+
+    by_product = {r[1]: r[0] for r in rows}
+    assert by_product["alice_order"] == "Alice"
+    assert by_product["bob_order"] == "Bob"
+    assert by_product["orphan_order"] is None
+
+
+def test_right_join_keyword_alone(conn) -> None:
+    """RIGHT JOIN (without OUTER) is identical to RIGHT OUTER JOIN."""
+    conn.execute(
+        "INSERT INTO orders (order_id, customer_id, product) VALUES (30, 99, 'orphan_order')"
+    )
+    rows = conn.execute("""
+        SELECT c.name, o.product
+        FROM customers AS c
+        RIGHT JOIN orders AS o ON c.id = o.customer_id
+    """).fetchall()
+
+    orphan = [r for r in rows if r[1] == "orphan_order"]
+    assert len(orphan) == 1
+    assert orphan[0][0] is None
+
+
+def test_right_outer_join_left_empty(conn) -> None:
+    """When all left rows are deleted, all right rows appear with NULL left cols."""
+    conn.execute("DELETE FROM customers")
+    rows = conn.execute("""
+        SELECT c.name, o.product
+        FROM customers AS c
+        RIGHT OUTER JOIN orders AS o ON c.id = o.customer_id
+    """).fetchall()
+
+    assert len(rows) == 2
+    for row in rows:
+        assert row[0] is None
+
+
+def test_right_outer_join_where_null_left(conn) -> None:
+    """WHERE c.name IS NULL selects only unmatched right rows (anti-join pattern)."""
+    conn.execute(
+        "INSERT INTO orders (order_id, customer_id, product) VALUES (30, 99, 'orphan_order')"
+    )
+    rows = conn.execute("""
+        SELECT c.name, o.product
+        FROM customers AS c
+        RIGHT OUTER JOIN orders AS o ON c.id = o.customer_id
+        WHERE c.name IS NULL
+    """).fetchall()
+
+    assert rows == [(None, "orphan_order")]

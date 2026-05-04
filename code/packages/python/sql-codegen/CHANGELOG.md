@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.6.0] - 2026-05-04
+
+### Added
+
+- **RIGHT [OUTER] JOIN compilation** — `_compile_join` now handles
+  `JoinKind.RIGHT` by swapping `lft`/`rgt` and delegating to the LEFT
+  JOIN path. The ON condition and body function both reference columns
+  by table alias (via `alias_to_cursor`), so reversing execution order
+  is sufficient: the original right table becomes the outer "left"
+  (preserved for every row) and the original left table becomes the
+  inner "right" (null-padded when no ON match is found).
+- **`test_right_join_compiles`** replaces `test_right_join_raises` in
+  `tests/test_select.py`; a new `test_full_join_raises` confirms FULL
+  JOIN still raises `UnsupportedNode`.
+
 ## [1.5.0] - 2026-05-04
 
 ### Added
