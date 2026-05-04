@@ -1,5 +1,49 @@
 # Changelog — constraint-core
 
+## [0.1.1] — 2026-05-04
+
+Security hardening — algorithmic-complexity DoS guards.  These fixes become
+necessary now that LANG23 PR 23-E lets user-written Twig refinement-type
+annotations flow into the solver without a prior sanitisation layer.
+
+### Fixed
+
+- **CNF clause-count ceiling** (`cnf_distribute`).  The naive OR-over-AND
+  distribution is exponential in the number of conjuncts inside each
+  disjunct.  An adversarial predicate with ~14 levels of OR-over-AND
+  could produce ≫ 10⁶ clauses and stall the process indefinitely.
+  `cnf_distribute` now accepts a `budget: &mut usize` parameter initialised
+  to `MAX_CNF_CLAUSES = 10_000` and returns `Err(String)` when the budget
+  hits zero.  `to_cnf()` propagates the error, changing its return type from
+  `Predicate` to `Result<Predicate, String>`.
+
+- **Depth guard** (`depth_of` + `MAX_PREDICATE_DEPTH`).  Deeply-nested
+  predicates could overflow the thread stack inside the mutually recursive
+  `to_nnf` / `cnf_distribute` / `simplify` passes.
+  - New public constant `MAX_PREDICATE_DEPTH = 500`.
+  - New public function `depth_of(p: &Predicate) -> usize` that measures
+    tree depth using saturating arithmetic (returns `usize::MAX` for trees
+    beyond the cap) so callers can reject over-deep input in O(n) without
+    themselves recursing deeply.
+  - Engines should call `depth_of(p) > MAX_PREDICATE_DEPTH` before passing
+    user-supplied predicates to any normalisation pass.
+
+### Added
+
+- 4 new unit tests: `cnf_budget_exceeded_returns_err`, `depth_of_atoms_is_zero`,
+  `depth_of_compound`, `depth_of_saturates_beyond_max`.
+
+### Migration
+
+Callers of `to_cnf()` must handle `Result`:
+
+```rust
+// before
+let cnf = predicate.to_cnf();
+// after
+let cnf = predicate.to_cnf().map_err(|e| /* handle budget exhaustion */)?;
+```
+
 ## [0.1.0] — 2026-04-30
 
 Initial release.  **LANG24 PR 24-A** — predicate AST + sort/logic/theory

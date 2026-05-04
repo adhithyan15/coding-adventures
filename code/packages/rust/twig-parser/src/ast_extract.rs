@@ -52,6 +52,47 @@ use crate::TwigParseError;
 /// typical 2 MiB OS thread stack on macOS.
 pub const MAX_AST_DEPTH: usize = 256;
 
+/// Maximum number of integer values allowed in a `(Member int (...))`
+/// refinement-type annotation.
+///
+/// Each value lowers to one equality predicate in `constraint-core`,
+/// and all equalities are wrapped in an `Or`.  Naive CNF distribution
+/// of an `Or` of N `And`-wrapped equalities is O(2^N); even with the
+/// `MAX_CNF_CLAUSES` ceiling in `constraint-core`, a large membership
+/// set wastes significant work before the budget fires.  Capping at
+/// parse time is the cheapest defence.
+///
+/// 256 is generous for any realistic enum-style refinement (HTTP status
+/// codes, MIDI velocities, small finite domains) while preventing
+/// adversarial blowup.
+pub const MAX_MEMBERSHIP_INT_VALUES: usize = 256;
+
+/// Validate that a `(Member int (...))` annotation contains at most
+/// [`MAX_MEMBERSHIP_INT_VALUES`] values.
+///
+/// Called by the LANG23 PR 23-E annotation extractor before constructing
+/// `TypeAnnotation::MembershipInt { values }`.  Returns a parse error at
+/// `(line, column)` if `count` exceeds the limit.
+pub fn check_membership_int_count(
+    count: usize,
+    line: usize,
+    column: usize,
+) -> Result<(), crate::TwigParseError> {
+    if count > MAX_MEMBERSHIP_INT_VALUES {
+        Err(crate::TwigParseError {
+            message: format!(
+                "(Member ...) annotation has {count} values but the maximum is \
+                 {MAX_MEMBERSHIP_INT_VALUES}; split into smaller membership sets or \
+                 use a Range annotation instead"
+            ),
+            line,
+            column,
+        })
+    } else {
+        Ok(())
+    }
+}
+
 // ---------------------------------------------------------------------------
 // Token helpers
 // ---------------------------------------------------------------------------

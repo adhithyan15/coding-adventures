@@ -46,7 +46,7 @@
 
 use std::collections::HashMap;
 
-use constraint_core::Predicate;
+use constraint_core::{depth_of, Predicate, MAX_PREDICATE_DEPTH};
 
 use crate::{Model, SolverResult, Value};
 
@@ -98,10 +98,25 @@ impl SatTactic {
             return SolverResult::Sat(model);
         }
 
+        // Reject predicates that are too deep for the recursive passes
+        // (to_nnf, to_cnf, …) — a deeply nested tree can overflow the
+        // OS thread stack.
+        for p in assertions {
+            if depth_of(p) > MAX_PREDICATE_DEPTH {
+                return SolverResult::Unknown(format!(
+                    "predicate depth exceeds MAX_PREDICATE_DEPTH ({MAX_PREDICATE_DEPTH}); \
+                     refusing to recurse to avoid stack overflow"
+                ));
+            }
+        }
+
         // Convert every assertion to CNF and collect clauses.
         let mut clauses: Vec<Clause> = Vec::new();
         for p in assertions {
-            let cnf = p.clone().to_cnf();
+            let cnf = match p.clone().to_cnf() {
+                Ok(c) => c,
+                Err(reason) => return SolverResult::Unknown(reason),
+            };
             match collect_clauses(&cnf) {
                 Ok(new_clauses) => clauses.extend(new_clauses),
                 Err(reason) => return SolverResult::Unknown(reason),

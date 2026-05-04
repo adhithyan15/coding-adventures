@@ -1,5 +1,34 @@
 # Changelog — `lang-refined-types`
 
+## 0.1.1 — 2026-05-04
+
+Security hardening — allocation-free canonical sort for `Predicate`.
+
+### Fixed
+
+- **`Predicate::canonicalise()` used `format!("{:?}")` as a sort key**.
+  `And` / `Or` operands were sorted by comparing their `Debug` strings:
+  `parts.sort_by(|a, b| format!("{a:?}").cmp(&format!("{b:?}")))`
+  This allocated two `String`s per comparison pair, giving O(n log n ×
+  average-predicate-size) allocation cost.  A `Membership { values }` with
+  k values, nested inside an `And`, produced a string proportional to k on
+  every comparison; a user who crafted an `And` of many such predicates
+  could trigger O(n² k) allocation.
+
+  **Fix**: implemented `PartialOrd + Ord` for `Predicate` using a
+  variant-tag discriminant (stable fixed order across variants) followed
+  by field-level lexicographic comparison — all allocation-free.
+  `canonicalise` now calls `parts.sort()` + `parts.dedup()`.
+
+### Added
+
+- `impl PartialOrd for Predicate` — delegates to `Ord`.
+- `impl Ord for Predicate` — tag-then-fields total order; uses existing
+  `Ord` impls on `VarId`, `CmpOp`, `Option<i128>`, `Vec<i128>`,
+  `Vec<Predicate>`, `Box<Predicate>`, `i128`, `String`.
+- 3 new unit tests: `canonicalise_and_is_order_independent`,
+  `canonicalise_or_is_order_independent`, `canonicalise_deduplicates`.
+
 ## 0.1.0 — 2026-05-04
 
 Initial release.  **LANG23 PR 23-A.**

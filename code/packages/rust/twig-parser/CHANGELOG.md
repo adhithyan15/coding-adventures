@@ -41,6 +41,26 @@
   annotation could be parsed, causing "Expected COLON, got '0'" errors on any
   function with a `-> TypeAnnotation` return type.
 
+## [0.1.1] — 2026-05-04
+
+Security hardening — parse-time cap for membership-set cardinality.
+
+### Added
+
+- **`MAX_MEMBERSHIP_INT_VALUES = 256`** public constant.  LANG23 PR 23-E
+  introduces `TypeAnnotation::MembershipInt { values }` which is lowered to
+  an Or-of-Eq predicate by `constraint-core`.  Each value becomes one CNF
+  clause in the SAT tactic; an uncapped list of 10 000+ values would blow
+  the CNF budget added in `constraint-core` 0.1.1 and could stress the LIA
+  tactic equally.  This constant is the canonical upper limit; PR 23-E's
+  `extract_type_annotation` calls `check_membership_int_count` (below) to
+  enforce it at parse time, before any lowering occurs.
+
+- **`check_membership_int_count(count, line, column) -> Result<(), TwigParseError>`**
+  public helper.  Returns `Err` with a descriptive message when `count`
+  exceeds `MAX_MEMBERSHIP_INT_VALUES`.  Re-exported from the crate root
+  alongside `MAX_MEMBERSHIP_INT_VALUES`.
+
 ## [0.1.0] — 2026-04-29
 
 ### Added

@@ -47,23 +47,19 @@
 //!
 //! ## Non-guarantees (caller responsibilities)
 //!
-//! - **Predicate depth.**  All recursive operations
-//!   ([`Predicate::to_nnf`], [`Predicate::to_cnf`],
-//!   [`Predicate::simplify`], [`Predicate::free_vars`],
-//!   [`infer_sort`], `Display::fmt`) recurse on the AST without an
-//!   explicit depth guard.  A maliciously deep `Predicate` can
-//!   overflow the thread stack.  Consumers ingesting predicates
-//!   from untrusted sources (refinement-type checkers reading
-//!   user code, SMT-LIB importers) must enforce a depth limit at
-//!   the boundary.  `constraint-engine` (PR 24-C) will provide
-//!   the canonical guarded entry point.
-//! - **CNF blow-up.**  [`Predicate::to_cnf`] uses naive
-//!   distribution, which is exponential in the worst case
-//!   (`O(2^n)` clauses for an `Or` of `n` `And`s).  Acceptable
-//!   for the small predicates that arise in refinement-type
-//!   checking; consumers handling untrusted predicates should
-//!   prefer Tseitin encoding (also forthcoming in
-//!   `constraint-engine`).
+//! - **Predicate depth.**  Most recursive operations
+//!   ([`Predicate::to_nnf`], [`Predicate::simplify`],
+//!   [`Predicate::free_vars`], [`infer_sort`], `Display::fmt`) recurse
+//!   on the AST without an explicit depth guard.  Consumers ingesting
+//!   predicates from untrusted sources must call [`depth_of`] and
+//!   reject predicates deeper than [`MAX_PREDICATE_DEPTH`] before
+//!   invoking these passes.  [`Predicate::to_cnf`] enforces an
+//!   internal clause-count ceiling and returns `Err` on overflow.
+//! - **CNF blow-up.**  [`Predicate::to_cnf`] now caps output at
+//!   [`MAX_CNF_CLAUSES`] clauses and returns `Err` if exceeded so
+//!   that callers can degrade to `Unknown`.  The underlying
+//!   distribution is still naïve (`O(2^n)` in the worst case);
+//!   Tseitin encoding is out of v1 scope.
 //! - **`Rational` range.**  [`Rational::new`] rejects `i128::MIN`
 //!   for either numerator or denominator (its magnitude can't be
 //!   represented as a positive `i128`).  Callers building
@@ -76,6 +72,22 @@
 use std::collections::BTreeSet;
 use std::collections::HashMap;
 use std::fmt;
+
+// ---------------------------------------------------------------------------
+// Resource limits
+// ---------------------------------------------------------------------------
+
+/// Maximum number of CNF clauses [`Predicate::to_cnf`] may produce before
+/// aborting with `Err`.  Prevents unbounded memory allocation from
+/// exponential distribution of deeply nested Or-over-And predicates.
+pub const MAX_CNF_CLAUSES: usize = 10_000;
+
+/// Maximum predicate-AST depth that [`depth_of`] considers "safe" for
+/// recursive passes (`to_nnf`, `simplify`, `free_vars`, `infer_sort`, …).
+/// Callers must reject predicates deeper than this before invoking those
+/// passes.  Used by `constraint-engine`'s SAT tactic as its pre-flight
+/// guard.
+pub const MAX_PREDICATE_DEPTH: usize = 500;
 
 // ---------------------------------------------------------------------------
 // Sort
@@ -530,15 +542,19 @@ impl Predicate {
     /// Convert to **conjunctive normal form** (CNF) via NNF + naive
     /// distribution of `Or` over `And`.
     ///
+    /// Returns `Err(reason)` if the output would exceed
+    /// [`MAX_CNF_CLAUSES`] — the caller should degrade to
+    /// `SolverResult::Unknown` in that case rather than allocating
+    /// unbounded memory.
+    ///
     /// **Warning: exponential in the worst case.**  Naive
     /// distribution of an OR-of-N-ANDs blows up factorially.  For
     /// large predicates, use Tseitin-style rewriting (introduces
-    /// fresh bool vars) — out of v1 scope.  Callers should keep CNF
-    /// inputs small or arrange them in NNF and let the SAT tactic
-    /// drive its own clause learning.
-    pub fn to_cnf(self) -> Predicate {
+    /// fresh bool vars) — out of v1 scope.
+    pub fn to_cnf(self) -> Result<Predicate, String> {
         let nnf = self.to_nnf();
-        cnf_distribute(nnf)
+        let mut budget = MAX_CNF_CLAUSES;
+        cnf_distribute(nnf, &mut budget)
     }
 
     /// Apply local simplifications — constant folding, identity
@@ -690,49 +706,137 @@ fn free_vars_rec(p: &Predicate, out: &mut BTreeSet<String>, bound: &mut BTreeSet
     }
 }
 
-fn cnf_distribute(p: Predicate) -> Predicate {
+/// Return the maximum AST nesting depth of `p`.
+///
+/// The return value saturates at `MAX_PREDICATE_DEPTH + 1` once the
+/// tree is deeper than that — the result is therefore only precise for
+/// trees within the accepted range, but is always a correct signal for
+/// the `> MAX_PREDICATE_DEPTH` guard check:
+///
+/// ```rust
+/// # use constraint_core::{Predicate, depth_of, MAX_PREDICATE_DEPTH};
+/// let p = Predicate::Bool(true);
+/// assert!(depth_of(&p) <= MAX_PREDICATE_DEPTH);
+/// ```
+///
+/// Recursion is capped at `MAX_PREDICATE_DEPTH + 2` levels to avoid
+/// stack overflow while measuring — a tree deeper than the cap returns
+/// `usize::MAX` (saturating arithmetic).
+pub fn depth_of(p: &Predicate) -> usize {
+    fn go(p: &Predicate, remaining: usize) -> usize {
+        if remaining == 0 {
+            return usize::MAX; // deeper than the cap — saturate
+        }
+        match p {
+            Predicate::Bool(_) | Predicate::Var(_) | Predicate::Int(_)
+            | Predicate::Real(_) => 0,
+            Predicate::And(parts) | Predicate::Or(parts) | Predicate::Add(parts) => {
+                1_usize.saturating_add(
+                    parts.iter().map(|q| go(q, remaining - 1)).max().unwrap_or(0),
+                )
+            }
+            Predicate::Not(inner) | Predicate::Mul { term: inner, .. } => {
+                1_usize.saturating_add(go(inner, remaining - 1))
+            }
+            Predicate::Implies(a, b)
+            | Predicate::Iff(a, b)
+            | Predicate::Eq(a, b)
+            | Predicate::NEq(a, b)
+            | Predicate::Sub(a, b)
+            | Predicate::Le(a, b)
+            | Predicate::Lt(a, b)
+            | Predicate::Ge(a, b)
+            | Predicate::Gt(a, b) => {
+                1_usize.saturating_add(
+                    go(a, remaining - 1).max(go(b, remaining - 1)),
+                )
+            }
+            Predicate::Ite(c, t, e) => 1_usize.saturating_add(
+                go(c, remaining - 1)
+                    .max(go(t, remaining - 1))
+                    .max(go(e, remaining - 1)),
+            ),
+            Predicate::Forall { body, .. } | Predicate::Exists { body, .. } => {
+                1_usize.saturating_add(go(body, remaining - 1))
+            }
+            Predicate::Select { arr, idx } => 1_usize.saturating_add(
+                go(arr, remaining - 1).max(go(idx, remaining - 1)),
+            ),
+            Predicate::Store { arr, idx, val } => 1_usize.saturating_add(
+                go(arr, remaining - 1)
+                    .max(go(idx, remaining - 1))
+                    .max(go(val, remaining - 1)),
+            ),
+            Predicate::Apply { args, .. } => 1_usize.saturating_add(
+                args.iter().map(|q| go(q, remaining - 1)).max().unwrap_or(0),
+            ),
+        }
+    }
+    // Start with MAX_PREDICATE_DEPTH + 2 so that trees of depth exactly
+    // MAX_PREDICATE_DEPTH compute their true depth (no saturation).
+    go(p, MAX_PREDICATE_DEPTH + 2)
+}
+
+/// Budget-tracked CNF distribution.  Decrements `*budget` on each
+/// recursive call; returns `Err` when exhausted to prevent
+/// unbounded allocation.
+fn cnf_distribute(p: Predicate, budget: &mut usize) -> Result<Predicate, String> {
+    if *budget == 0 {
+        return Err(format!(
+            "CNF clause limit ({MAX_CNF_CLAUSES}) exceeded — \
+             predicate requires too many clauses for naive distribution; \
+             use Tseitin encoding or simplify before calling to_cnf"
+        ));
+    }
+    *budget -= 1;
+
     // Walk the NNF tree.  At an Or node: distribute over any And
     // child.  At an And node: just recurse and re-and the parts.
     // No top-level rewriting needed for atoms, comparisons, or
     // already-cnf-shaped subtrees.
     match p {
         Predicate::And(parts) => {
-            Predicate::and(parts.into_iter().map(cnf_distribute).collect())
+            let mut out = Vec::with_capacity(parts.len());
+            for part in parts {
+                out.push(cnf_distribute(part, budget)?);
+            }
+            Ok(Predicate::and(out))
         }
         Predicate::Or(parts) => {
             // Fully distribute by repeatedly cross-producting And children.
-            let parts: Vec<Predicate> = parts.into_iter().map(cnf_distribute).collect();
+            let mut dist_parts = Vec::with_capacity(parts.len());
+            for part in parts {
+                dist_parts.push(cnf_distribute(part, budget)?);
+            }
             // Find the first And in parts (if any).  If none, this Or is
             // already in CNF (it's a clause).
-            if let Some(and_idx) = parts.iter().position(|p| matches!(p, Predicate::And(_))) {
-                let and_parts = match &parts[and_idx] {
+            if let Some(and_idx) = dist_parts.iter().position(|p| matches!(p, Predicate::And(_))) {
+                let and_parts = match &dist_parts[and_idx] {
                     Predicate::And(v) => v.clone(),
                     _ => unreachable!(),
                 };
-                let rest: Vec<Predicate> = parts
+                let rest: Vec<Predicate> = dist_parts
                     .iter()
                     .enumerate()
                     .filter(|(i, _)| *i != and_idx)
                     .map(|(_, p)| p.clone())
                     .collect();
                 // (a ∧ b) ∨ rest  →  (a ∨ rest) ∧ (b ∨ rest)
-                let clauses: Vec<Predicate> = and_parts
-                    .into_iter()
-                    .map(|a| {
-                        let mut new_or = vec![a];
-                        new_or.extend(rest.clone());
-                        cnf_distribute(Predicate::or(new_or))
-                    })
-                    .collect();
-                Predicate::and(clauses)
+                let mut clauses = Vec::with_capacity(and_parts.len());
+                for a in and_parts {
+                    let mut new_or = vec![a];
+                    new_or.extend(rest.clone());
+                    clauses.push(cnf_distribute(Predicate::or(new_or), budget)?);
+                }
+                Ok(Predicate::and(clauses))
             } else {
-                Predicate::or(parts)
+                Ok(Predicate::or(dist_parts))
             }
         }
         // Atoms and other constructors stay as-is (they're either
         // atomic or contain no boolean structure to distribute over
         // in v1's scope).
-        other => other,
+        other => Ok(other),
     }
 }
 
@@ -1270,7 +1374,7 @@ mod tests {
         let b = Predicate::Var("b".into());
         let c = Predicate::Var("c".into());
         let p = Predicate::or(vec![Predicate::and(vec![a.clone(), b.clone()]), c.clone()]);
-        let cnf = p.to_cnf();
+        let cnf = p.to_cnf().expect("small predicate should not exceed CNF budget");
         match cnf {
             Predicate::And(clauses) => {
                 assert_eq!(clauses.len(), 2);
@@ -1287,7 +1391,7 @@ mod tests {
             Predicate::or(vec![vx(), vy()]),
             Predicate::not(vy()),
         ]);
-        let cnf = p.clone().to_cnf();
+        let cnf = p.clone().to_cnf().expect("small predicate should not exceed CNF budget");
         // Must remain shape-equivalent (And-of-Ors-or-atoms).
         match cnf {
             Predicate::And(parts) => {
@@ -1300,6 +1404,54 @@ mod tests {
             }
             _ => panic!("expected And"),
         }
+    }
+
+    #[test]
+    fn cnf_budget_exceeded_returns_err() {
+        // Build an Or of 15 2-element Ands — naive distribution produces
+        // 2^15 = 32 768 clauses, exceeding MAX_CNF_CLAUSES (10 000).
+        let arms: Vec<Predicate> = (0..15_u32)
+            .map(|i| {
+                Predicate::and(vec![
+                    Predicate::Var(format!("a{i}")),
+                    Predicate::Var(format!("b{i}")),
+                ])
+            })
+            .collect();
+        let p = Predicate::or(arms);
+        assert!(
+            p.to_cnf().is_err(),
+            "expected Err when CNF would exceed MAX_CNF_CLAUSES"
+        );
+    }
+
+    #[test]
+    fn depth_of_atoms_is_zero() {
+        assert_eq!(super::depth_of(&Predicate::Bool(true)), 0);
+        assert_eq!(super::depth_of(&Predicate::Int(42)), 0);
+        assert_eq!(super::depth_of(&Predicate::Var("x".into())), 0);
+    }
+
+    #[test]
+    fn depth_of_compound() {
+        let p = Predicate::and(vec![vx(), vy()]);
+        assert_eq!(super::depth_of(&p), 1);
+        let q = Predicate::not(p);
+        assert_eq!(super::depth_of(&q), 2);
+    }
+
+    #[test]
+    fn depth_of_saturates_beyond_max() {
+        // Build a 502-deep Not chain (MAX_PREDICATE_DEPTH + 2).
+        let mut p: Predicate = Predicate::Bool(true);
+        for _ in 0..502 {
+            p = Predicate::Not(Box::new(p));
+        }
+        let d = super::depth_of(&p);
+        assert!(
+            d > super::MAX_PREDICATE_DEPTH,
+            "expected depth > MAX_PREDICATE_DEPTH for a 502-deep tree, got {d}"
+        );
     }
 
     // ---------- Simplify ----------
