@@ -25,6 +25,9 @@ from sql_codegen import (
     CloseScan,
     Direction,
     DistinctResult,
+    JoinBeginRow,
+    JoinIfMatched,
+    JoinSetMatched,
     JumpIfFalse,
     LimitResult,
     OpenScan,
@@ -113,24 +116,54 @@ class TestJoin:
         jumps = [i for i in prog.instructions if isinstance(i, JumpIfFalse)]
         assert len(jumps) == 0
 
-    def test_left_join_raises(self) -> None:
+    def test_left_join_compiles(self) -> None:
+        # LEFT JOIN must compile without raising and emit the outer-join
+        # match-tracking instructions: JoinBeginRow, JoinSetMatched,
+        # JoinIfMatched.  Exactly one of each (two-table join).
+        plan = Project(
+            input=Join(
+                left=Scan(table="a", alias="a"),
+                right=Scan(table="b", alias="b"),
+                kind=JoinKind.LEFT,
+                condition=BinaryExpr(
+                    op=AstOp.EQ, left=Column("a", "k"), right=Column("b", "k")
+                ),
+            ),
+            items=(ProjectionItem(expr=Column("a", "k"), alias="k"),),
+        )
+        prog = compile(plan)
+        assert any(isinstance(i, JoinBeginRow) for i in prog.instructions)
+        assert any(isinstance(i, JoinSetMatched) for i in prog.instructions)
+        matched = [i for i in prog.instructions if isinstance(i, JoinIfMatched)]
+        assert len(matched) == 1
+        # The matched label must resolve to a valid instruction index.
+        assert matched[0].label in prog.labels
+        # Still two OpenScan + two CloseScan (same structural shape as INNER).
+        opens = [i for i in prog.instructions if isinstance(i, OpenScan)]
+        closes = [i for i in prog.instructions if isinstance(i, CloseScan)]
+        assert len(opens) == 2
+        assert len(closes) == 2
+
+    def test_right_join_raises(self) -> None:
         from sql_codegen.errors import UnsupportedNode
 
         plan = Project(
             input=Join(
                 left=Scan(table="a", alias="a"),
                 right=Scan(table="b", alias="b"),
-                kind=JoinKind.LEFT,
-                condition=None,
+                kind=JoinKind.RIGHT,
+                condition=BinaryExpr(
+                    op=AstOp.EQ, left=Column("a", "k"), right=Column("b", "k")
+                ),
             ),
-            items=(ProjectionItem(expr=Column("a", "x"), alias="x"),),
+            items=(ProjectionItem(expr=Column("a", "k"), alias="k"),),
         )
         try:
             compile(plan)
         except UnsupportedNode:
             pass
         else:
-            raise AssertionError("expected UnsupportedNode for LEFT JOIN")
+            raise AssertionError("expected UnsupportedNode for RIGHT JOIN")
 
 
 class TestPostProcessing:

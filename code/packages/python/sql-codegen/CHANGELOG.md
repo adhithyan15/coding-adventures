@@ -1,5 +1,35 @@
 # Changelog
 
+## [1.5.0] - 2026-05-04
+
+### Added
+
+- **LEFT [OUTER] JOIN compilation** — `_compile_join` now handles
+  `JoinKind.LEFT`, emitting a nested-loop outer join using three new
+  match-tracking IR instructions (`JoinBeginRow`, `JoinSetMatched`,
+  `JoinIfMatched`). When the right scan exhausts without a match the
+  right cursor is closed; any subsequent `LoadColumn` for right-side
+  columns returns `NULL` automatically, providing null-padding without
+  a dedicated `NullRow` instruction.
+- **`JoinBeginRow` IR instruction** — pushes `False` onto the VM's
+  `join_match_stack` at the start of each left row.
+- **`JoinSetMatched` IR instruction** — sets `join_match_stack[-1] = True`
+  when an ON-condition match is found.
+- **`JoinIfMatched(label)` IR instruction** — pops the match stack; if
+  `True` jumps to *label* (skipping the null-padded emission path).
+- All three exported from `sql_codegen.__init__` and added to the
+  `Instruction` type union in `ir.py`.
+
+### Fixed
+
+- **Duplicate label bug in `_compile_select` body closure** — the
+  `filter_skip` label was previously generated once outside the body
+  closure. Calling `body(c)` twice (matched path + null-padded path in
+  a LEFT JOIN) produced two `Label("filter_skip_N")` entries with
+  identical names, causing `_resolve_labels` to overwrite the first jump
+  target. The label is now generated *inside* the body closure so each
+  invocation gets a unique name.
+
 ## [1.4.0] - 2026-04-28
 
 ### Added

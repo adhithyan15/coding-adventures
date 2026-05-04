@@ -697,6 +697,42 @@ class OpenWorkingSetScan:
     cursor_id: int
 
 
+# ---- Outer-join match tracking -----------------------------------------
+
+
+@dataclass(frozen=True, slots=True)
+class JoinBeginRow:
+    """Push False onto the join-match stack at the start of each left row.
+
+    One entry per active outer-join nesting level.  Paired with
+    :class:`JoinSetMatched` (marks a hit) and :class:`JoinIfMatched`
+    (tests-and-pops the flag).
+    """
+
+
+@dataclass(frozen=True, slots=True)
+class JoinSetMatched:
+    """Set the top of the join-match stack to True.
+
+    Emitted inside the inner loop body, after the ON condition passes,
+    so the outer loop knows at least one right row matched the current
+    left row.
+    """
+
+
+@dataclass(frozen=True, slots=True)
+class JoinIfMatched:
+    """Pop the join-match stack; jump to ``label`` if the flag is True.
+
+    Used after the inner scan exhausts: if any right row matched, jump
+    over the null-padded row emission.  If no row matched, fall through
+    to emit the left row with NULLs for all right-side columns (which
+    :class:`LoadColumn` supplies automatically when the right cursor has
+    no current row).
+    """
+    label: str
+
+
 # ---- Control flow -------------------------------------------------------
 
 
@@ -858,6 +894,7 @@ Instruction = (
     | RunScalarSubquery
     | RunRecursiveCTE
     | OpenWorkingSetScan
+    | JoinBeginRow | JoinSetMatched | JoinIfMatched
     | Label | Jump | JumpIfFalse | JumpIfTrue | Halt
 )
 

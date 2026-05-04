@@ -76,6 +76,7 @@ from sql_planner import (
     IsNotNull,
     IsNull,
     Join,
+    JoinKind,
     Like,
     Literal,
     LogicalPlan,
@@ -180,17 +181,30 @@ def _distribute_conjuncts(
         # Through Join — each conjunct assigned to the side(s) whose
         # alias set contains its columns. Conjuncts that reference both
         # sides stay above the join.
+        #
+        # Outer-join safety: pushing a right-side predicate inside a LEFT
+        # OUTER JOIN corrupts null-padding semantics — the filter fires
+        # before the join, eliminating right rows that would have produced
+        # null-padded left rows, and then the WHERE on NULL matches them
+        # wrongly. Only push to a side when the join kind does not null-pad
+        # that side:
+        #   LEFT  JOIN → left side OK to push, right side NOT OK
+        #   RIGHT JOIN → right side OK to push, left side NOT OK
+        #   FULL  JOIN → neither side OK
+        #   INNER / CROSS → both sides OK
         case Join(left=l, right=r, kind=k, condition=cond):
             left_aliases = _alias_set(l)
             right_aliases = _alias_set(r)
+            can_push_left = k in (JoinKind.INNER, JoinKind.CROSS, JoinKind.LEFT)
+            can_push_right = k in (JoinKind.INNER, JoinKind.CROSS, JoinKind.RIGHT)
             left_push: list[Expr] = []
             right_push: list[Expr] = []
             stuck: list[Expr] = []
             for c in conjuncts:
                 cols = _column_aliases(c)
-                if cols and cols.issubset(left_aliases):
+                if can_push_left and cols and cols.issubset(left_aliases):
                     left_push.append(c)
-                elif cols and cols.issubset(right_aliases):
+                elif can_push_right and cols and cols.issubset(right_aliases):
                     right_push.append(c)
                 else:
                     stuck.append(c)
