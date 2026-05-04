@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.15.0] - 2026-05-04
+
+### Added
+
+- **`IN (subquery)` / `NOT IN (subquery)` execution** — the adapter
+  now converts the subquery form of `IN` / `NOT IN` (previously
+  `ProgrammingError("subquery in IN clause is not yet supported")`)
+  to `InSubquery` / `NotInSubquery` plan-expression nodes, which flow
+  through the planner, codegen, and VM.  Full SQL three-valued NULL
+  logic is preserved end-to-end.
+- **13 new integration tests** in `tests/test_tier3_in_subquery.py`
+  covering: basic `IN` / `NOT IN`, no-match / all-match / partial-match
+  sets, `NULL` test-value exclusion, `NULL` in subquery set making
+  `NOT IN` return `UNKNOWN`, aggregate subqueries (`GROUP BY` / `HAVING`
+  inside the inner query), combined `AND` predicates, and `HAVING`-
+  level `IN` filtering.
+
 ## [1.14.0] - 2026-05-04
 
 ### Added

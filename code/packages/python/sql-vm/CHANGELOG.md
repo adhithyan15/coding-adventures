@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.8.0 — 2026-05-04
+
+### Added
+
+- **`RunInSubquery` handler** (`vm.py`) — executes the embedded
+  `sub_program` via a recursive `execute()` call, materializes the
+  first column of all result rows into a `set`, and pushes a `bool` or
+  `None` onto the value stack.  SQL three-valued NULL logic:
+  - test value is `NULL` → push `None`
+  - test value in non-null set → push `True` (or `False` when `negate=True`)
+  - set contains `NULL` and value not found → push `None` (UNKNOWN)
+  - value not found, no NULLs in set → push `False` (or `True` when `negate=True`)
+
 ## 1.7.0 — 2026-05-04
 
 ### Added
