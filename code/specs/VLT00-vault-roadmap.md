@@ -90,6 +90,14 @@ The roadmap below names which layers each class needs.
   │  VLT10  sync engine — E2EE deltas, multi-device              │
   └──────────────────────────────────────────────────────────────┘
                                  │
+  Channel tier ──────────────────┼──────────────────────────────
+  ┌──────────────────────────────────────────────────────────────┐
+  │  VLT-CH vault-secure-channel — Signal-protocol-style:        │
+  │         X3DH initial agreement + Double Ratchet per-message  │
+  │         (continuous key rotation; channel takeover does not  │
+  │         compromise past or future messages)   ◄── SHIPPED    │
+  └──────────────────────────────────────────────────────────────┘
+                                 │
   Lifecycle tier ────────────────┼──────────────────────────────
   ┌──────────────────────────────────────────────────────────────┐
   │  VLT09  audit log — tamper-evident hash-chained              │
@@ -122,7 +130,9 @@ The roadmap below names which layers each class needs.
   ├──────────────────────────────────────────────────────────────┤
   │  VLT01  sealed store — per-record envelope AEAD  ◄── SHIPPED │
   ├──────────────────────────────────────────────────────────────┤
-  │  storage-core — opaque KV with CAS                           │
+  │  storage-core — opaque KV with CAS trait                     │
+  │    backends: InMemory ◄── SHIPPED, STR01 file ◄── SHIPPED,   │
+  │              S3 / GDrive / WebDAV / git ◄── future           │
   └──────────────────────────────────────────────────────────────┘
                                  │
   Primitives ────────────────────┼──────────────────────────────
@@ -139,6 +149,31 @@ around a layer to talk to `storage-core` directly bypasses envelope
 encryption — banned. The single intentional exception is VLT15
 (import/export), which touches plaintext during a user-initiated
 ceremony with explicit warnings.
+
+### Ciphertext-only storage promise
+
+A `storage-core` backend (any implementation: in-memory, file,
+S3, Google Drive, WebDAV, git, future cloud) sees only:
+
+- the `(namespace, key)` slot identifier (opaque bytes),
+- the **ciphertext** plus AEAD tag of the envelope-encrypted
+  record (produced by VLT01),
+- a small set of non-secret metadata fields (revision,
+  content-type, timestamps).
+
+It never sees plaintext. So **anyone with raw backend access — a
+stolen laptop, a compromised cloud-provider account, a subpoena
+served on the sync server — learns nothing about vault contents
+without the master key.** This is the central security
+guarantee of the storage-agnostic design and is preserved by
+*every* backend in the family.
+
+The first two backends — `InMemoryStorageBackend` (in
+`storage-core` itself, for tests) and `FsStorageBackend` (STR01,
+local-disk with atomic write+rename+fsync) — make the
+storage-agnosticism property concrete. Future cloud backends
+(S3, Google Drive, WebDAV, git, IPFS, SQLite) implement the
+same trait without changing the property.
 
 ## Reading guide
 
@@ -157,7 +192,7 @@ KEK rotation without re-encrypting bodies. Sits directly on
 The KEK is currently derived from a single password via Argon2id.
 The next layers generalise that.
 
-### VLT02 — Typed records
+### VLT02 — Typed records ✅ shipped
 
 VLT01 stores `Vec<u8>` plaintext. Real apps need typed records.
 
@@ -177,11 +212,39 @@ needs `Login`. A machine vault needs `DatabaseCredential` with
 
 Depends on: VLT01.
 
-### VLT03 — Key custody
+### VLT03 — Key custody ✅ shipped (PassphraseCustodian + TpmCustodian scaffold)
 
 The KEK has to come from somewhere. VLT01's "Argon2id over a
 password" is one source; many real systems use others. This is the
 pluggability point.
+
+**TPM-first / hardware-preferred (refinement, 2026-05-04):** when
+the host has a hardware custodian available, the vault refuses to
+fall back to a software passphrase custodian unless the caller
+explicitly opts in. The `KeyCustodian` trait reports
+`CustodianCaps { hardware_bound, extractable, requires_user_presence,
+remote }`; the `select_custodian(candidates, force_software)`
+helper picks the first hardware-bound candidate by default;
+`assert_no_hardware_bypass(candidates, host_has_hw,
+force_software)` is the boot-time advisory check. If
+`force_software=true` is set on a hardware-only candidate list,
+the helper returns `NoSoftwareCandidate` rather than silently
+returning a hardware custodian — failing closed against the
+"asked for software, got hardware" footgun.
+
+The headline invariant: **no extractable key material lives in
+process heap when a hardware custodian is in play** — wrap /
+unwrap operations cross the hardware boundary, and the unwrapped
+key is held only briefly inside `Zeroizing<…>`. Side-channel
+attack surface (cold-boot RAM scraping, debugger attaches, swap
+files, core dumps) is correspondingly reduced.
+
+The first PR ships `PassphraseCustodian` (Argon2id +
+XChaCha20-Poly1305 wrap) plus a `TpmCustodian` scaffold that
+reports the right capability shape so `select_custodian` can
+already make TPM-first decisions; the platform-specific TPM 2.0
+backends (`tss-esapi` on Linux, TBS on Windows, Secure Enclave on
+macOS) land in follow-up PRs.
 
 ```rust
 trait KeyCustodian {
@@ -214,7 +277,7 @@ secret (gates threat model)?
 
 Depends on: VLT01. Used by: VLT04, VLT05.
 
-### VLT04 — Recipients
+### VLT04 — Recipients ✅ shipped (PassphraseRecipient + X25519Recipient)
 
 VLT01 wraps each DEK under exactly one KEK. That model breaks the
 moment you want any of:
@@ -253,7 +316,7 @@ DEK under a new KEK and append; old KEK's wrap is retired.
 Depends on: VLT01, VLT03 (custodians can be recipients), VLT02
 (so recipient lists can themselves be records).
 
-### VLT05 — Authentication
+### VLT05 — Authentication ✅ shipped (Password + TOTP)
 
 Both reference classes need pluggable authentication, and the set
 of factors is **wide**. Bitwarden alone supports password +
@@ -334,7 +397,7 @@ manifest (so the same set of factors always derives the same key).
 Depends on: VLT01, VLT03 (custodians are storage for credential
 material). Used by: every transport.
 
-### VLT06 — Policy engine
+### VLT06 — Policy engine ✅ shipped (SimpleRbacEngine + decorators)
 
 Authentication says *who*. Policy says *what they can do*. This
 layer is also pluggable — one project's "RBAC with three roles" is
@@ -366,6 +429,45 @@ fits a Bitwarden-class app); `HclEngine` (HashiCorp's `path
 break-glass auditing.
 
 Depends on: VLT05 (factor list flows in).
+
+### VLT-CH — Secure channel ✅ shipped
+
+Sits between identity (VLT05 produces the identity keys) and
+distribution (VLT11 transports carry the wire bytes). The
+**continuous-key-rotation** layer the user asked for: channel
+takeover at time T does not compromise messages sent before T
+(forward secrecy), and after the next DH ratchet step does not
+compromise messages sent after T either (post-compromise
+security).
+
+Composes the already-shipped `coding_adventures_x3dh` (Signal-
+style initial key agreement using identity + signed-prekey +
+optional one-time-prekey) and `coding_adventures_double_ratchet`
+(per-message DH ratchet + KDF chain) crates into one ergonomic
+wrapper:
+
+```rust
+ChannelInitiator::open(my_identity, peer_bundle, plaintext, aad)
+    -> (Channel, FirstMessage)
+ChannelResponder::accept(first_msg, my_identity, my_spk, my_opk?,
+                         sender_ik_pub, aad)
+    -> (Channel, plaintext)
+Channel::send(plaintext, aad)    -> wire bytes
+Channel::receive(wire, aad)      -> plaintext
+```
+
+Wire format:
+- First message: `"C1" || ek_pub(32) || dr_header(40) || ct_len(4 BE) || ct`
+- Subsequent: `"CN" || dr_header(40) || ct_len(4 BE) || ct`
+
+Caller-supplied AAD is passed through to the ratchet AEAD so
+the ciphertext is bound to application context (e.g.
+`vault_id || record_id`).
+
+Out of scope for v1: PreKeyBundle distribution (a server / sync
+concern, VLT10 territory), sealed-sender / metadata-private
+envelopes, multi-device fan-out orchestration. Spec:
+[VLT-CH-vault-secure-channel.md](./VLT-CH-vault-secure-channel.md).
 
 ### VLT07 — Leases
 
@@ -732,12 +834,27 @@ These are real features; they're just not primitives.
 ## Milestone plan
 
 ```text
+foundation primitives
+[x] shamir       Shamir's Secret Sharing over GF(2^8)        (SSS01)
+[x] canonical-cbor   RFC 8949 §4.2.3 deterministic codec    (CBR01)
+
+storage backends
+[x] storage-core           opaque KV trait + InMemoryBackend (built-in)
+[x] storage-fs (STR01)     local-disk backend with atomic write+rename+fsync
+[ ] storage-s3             AWS / S3-compatible
+[ ] storage-gdrive         Google Drive
+[ ] storage-webdav         WebDAV
+[ ] storage-git            git (commits as ciphertext blobs)
+[ ] storage-sqlite         single-file SQLite
+
+vault stack
 [x] VLT01  sealed store
-[ ] VLT02  typed records
-[ ] VLT03  key custody
-[ ] VLT04  recipients (multi-recipient wrap)
-[ ] VLT05  auth (pluggable factors)
-[ ] VLT06  policy engine
+[x] VLT02  typed records
+[x] VLT03  key custody (PassphraseCustodian + TpmCustodian scaffold)
+[x] VLT04  recipients (PassphraseRecipient + X25519Recipient)
+[x] VLT05  auth (PasswordAuthenticator + TotpAuthenticator)
+[x] VLT06  policy engine (SimpleRbacEngine + AllOf/AnyOf/RequireFactor/TimeBound)
+[x] VLT-CH secure channel (X3DH + Double Ratchet, continuous key rotation)
 [ ] VLT07  leases
 [ ] VLT08  dynamic-secret engines (KV-v2 first; database, PKI, AWS, transit follow)
 [ ] VLT09  audit log
@@ -748,6 +865,19 @@ These are real features; they're just not primitives.
 [ ] VLT14  attachments
 [ ] VLT15  import / export
 ```
+
+Per-layer specs already landed:
+
+- [SSS01-shamir-secret-sharing.md](./SSS01-shamir-secret-sharing.md)
+- [CBR01-canonical-cbor.md](./CBR01-canonical-cbor.md)
+- [STR01-storage-fs-backend.md](./STR01-storage-fs-backend.md)
+- [VLT01-vault-sealed-store.md](./VLT01-vault-sealed-store.md)
+- [VLT02-vault-records.md](./VLT02-vault-records.md)
+- [VLT03-vault-key-custody.md](./VLT03-vault-key-custody.md)
+- [VLT04-vault-recipients.md](./VLT04-vault-recipients.md)
+- [VLT05-vault-auth.md](./VLT05-vault-auth.md)
+- [VLT06-vault-policy.md](./VLT06-vault-policy.md)
+- [VLT-CH-vault-secure-channel.md](./VLT-CH-vault-secure-channel.md)
 
 **First useful checkpoint** (after VLT05 + VLT06 + the CLI half of
 VLT11): a local single-user vault with pluggable auth factors,
