@@ -40,6 +40,19 @@ pub enum HtmlTokenizerState {
     ScriptDataDoubleEscapedLessThanSign,
 }
 
+/// Tokenizer states that are valid script-substate entry points.
+pub const HTML_SCRIPT_TOKENIZER_STATES: [HtmlTokenizerState; 9] = [
+    HtmlTokenizerState::ScriptData,
+    HtmlTokenizerState::ScriptDataEscaped,
+    HtmlTokenizerState::ScriptDataEscapedDash,
+    HtmlTokenizerState::ScriptDataEscapedDashDash,
+    HtmlTokenizerState::ScriptDataEscapedLessThanSign,
+    HtmlTokenizerState::ScriptDataDoubleEscaped,
+    HtmlTokenizerState::ScriptDataDoubleEscapedDash,
+    HtmlTokenizerState::ScriptDataDoubleEscapedDashDash,
+    HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign,
+];
+
 impl HtmlTokenizerState {
     /// Machine-state identifier used by the generated static lexer.
     pub fn as_machine_state(self) -> &'static str {
@@ -61,6 +74,11 @@ impl HtmlTokenizerState {
                 "script_data_double_escaped_less_than_sign"
             }
         }
+    }
+
+    /// Return whether this state is a parser-approved script tokenizer substate.
+    pub fn is_script_substate(self) -> bool {
+        HTML_SCRIPT_TOKENIZER_STATES.contains(&self)
     }
 }
 
@@ -99,19 +117,10 @@ impl HtmlLexContext {
     /// future parser flows that need to resume script tokenization after
     /// already recognizing an escaped or double-escaped script section.
     pub fn script_substate(initial_state: HtmlTokenizerState) -> Option<Self> {
-        match initial_state {
-            HtmlTokenizerState::ScriptData
-            | HtmlTokenizerState::ScriptDataEscaped
-            | HtmlTokenizerState::ScriptDataEscapedDash
-            | HtmlTokenizerState::ScriptDataEscapedDashDash
-            | HtmlTokenizerState::ScriptDataEscapedLessThanSign
-            | HtmlTokenizerState::ScriptDataDoubleEscaped
-            | HtmlTokenizerState::ScriptDataDoubleEscapedDash
-            | HtmlTokenizerState::ScriptDataDoubleEscapedDashDash
-            | HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign => {
-                Some(Self::new(initial_state).with_last_start_tag("script"))
-            }
-            _ => None,
+        if initial_state.is_script_substate() {
+            Some(Self::new(initial_state).with_last_start_tag("script"))
+        } else {
+            None
         }
     }
 

@@ -159,7 +159,10 @@ has confirmed the parser context.
 Script escaped and double-escaped substates are exposed through
 `HtmlLexContext::script_substate(...)`, giving parser and conformance callers a
 typed way to seed those script tokenizer subflows without raw machine-state
-strings.
+strings. The accepted script entry states are also available as
+`HTML_SCRIPT_TOKENIZER_STATES`, and `HtmlTokenizerState::is_script_substate()`
+lets parser adapters validate user-selected fragment contexts before seeding a
+lexer.
 `html-skeleton.lexer.states.toml` remains in the crate as a smaller bootstrap
 machine for comparisons and narrow debugging.
 

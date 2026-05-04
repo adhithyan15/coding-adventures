@@ -214,3 +214,6 @@ documented in this file.
   foreign-content tree construction without exposing raw machine-state strings.
 - Added typed parser-facing script substate contexts for script escaped and
   double-escaped tokenizer fixtures and future parser handoff.
+- Added `HTML_SCRIPT_TOKENIZER_STATES` and `HtmlTokenizerState::is_script_substate()`
+  so parser/conformance adapters can enumerate and validate every supported
+  script entry state without duplicating lexer internals.
