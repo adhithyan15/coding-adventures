@@ -991,6 +991,38 @@ class TestAlgolTypeChecker:
             "odd",
         }
 
+    def test_forward_read_only_callee_keeps_by_name_formal_read_only(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure relay(x); integer x; begin emit(x) end; "
+            "procedure emit(y); integer y; begin print(y); result := y end; "
+            "relay(3 + 4) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        relay = result.semantic.procedures[0]
+        assert relay.parameters[0].name == "x"
+        assert not relay.parameters[0].may_write
+
+    def test_forward_writing_callee_marks_by_name_formal_writable(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "procedure relay(x); integer x; begin set(x) end; "
+            "procedure set(y); integer y; begin y := 9 end; "
+            "relay(3 + 4) "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert result.semantic is not None
+        relay = result.semantic.procedures[0]
+        assert relay.parameters[0].may_write
+        assert "by-name parameter 'x' is assigned" in result.diagnostics[0].message
+
     def test_accepts_bare_no_argument_typed_procedure_expression(self) -> None:
         ast = parse_algol(
             "begin integer result; "
