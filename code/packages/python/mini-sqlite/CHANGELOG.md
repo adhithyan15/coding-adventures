@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.19.0] - 2026-05-04
+
+### Added
+
+- **`GROUP_CONCAT` end-to-end support** (`adapter.py`) — the SQL adapter
+  now recognises `GROUP_CONCAT(col)` and `GROUP_CONCAT(col, separator)`,
+  emitting `AggregateExpr(func=AggFunc.GROUP_CONCAT, separator=…)`.
+  - Zero or 3+ arguments raise `ProgrammingError` at parse time.
+  - The separator must be a string literal; non-literal separators raise
+    `ProgrammingError`.
+- **15 new GROUP_CONCAT tests** (`tests/test_tier5_group_concat.py`) —
+  covering default and custom separators, per-group concatenation, numeric
+  column values, NULL handling (skip / all-NULL → NULL / empty table → NULL),
+  oracle comparison against the real `sqlite3` module, and error cases.
+
 ## [1.18.0] - 2026-05-04
 
 ### Added

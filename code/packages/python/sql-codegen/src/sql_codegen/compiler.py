@@ -986,7 +986,12 @@ def _compile_aggregate(
         out.append(SaveGroupKey(n=len(group_by)))
         # Initialize slots on first encounter (VM handles idempotence).
         for s, a in zip(slots, aggregates, strict=True):
-            out.append(InitAgg(slot=s, func=_plan_agg_to_ir(a.func)))
+            ir_func = _plan_agg_to_ir(a.func)
+            # GROUP_CONCAT bakes the separator into the instruction so the VM
+            # doesn't need to look it up on every row.  The separator field is
+            # ignored for all other aggregate functions.
+            sep = a.separator if a.separator is not None else ","
+            out.append(InitAgg(slot=s, func=ir_func, separator=sep))
         # Update each aggregate with the row's value.
         for s, a in zip(slots, aggregates, strict=True):
             if a.arg.star:
@@ -1012,7 +1017,7 @@ def _compile_aggregate(
     # past the block. This is the same header-then-body pattern as Scan.
     post: list[Instruction] = [
         Label(name=emit_start),
-        AdvanceGroupKey(on_exhausted=emit_end),
+        AdvanceGroupKey(on_exhausted=emit_end, has_group_by=bool(group_by)),
     ]
 
     if having is not None:
@@ -1030,7 +1035,9 @@ def _compile_aggregate(
         name = _column_display_name(e) or f"group_{i}"
         post.append(EmitColumn(name=name))
     for s, a in zip(slots, aggregates, strict=True):
-        post.append(FinalizeAgg(slot=s))
+        ir_func_fin = _plan_agg_to_ir(a.func)
+        sep_fin = a.separator if a.separator is not None else ","
+        post.append(FinalizeAgg(slot=s, func=ir_func_fin, separator=sep_fin))
         post.append(EmitColumn(name=a.alias))
     post.append(EmitRow())
     post.append(Label(name=emit_next))
@@ -1074,7 +1081,9 @@ def _compile_having(
                         or (arg is not None and a.arg == arg)
                     )
                     if a.func is f and matched:
-                        return [FinalizeAgg(slot=s)]
+                        ir_func_hav = _plan_agg_to_ir(a.func)
+                        sep_hav = a.separator if a.separator is not None else ","
+                        return [FinalizeAgg(slot=s, func=ir_func_hav, separator=sep_hav)]
                 raise UnsupportedNode("AggregateExpr not present in Aggregate.aggregates")
             case Column(col=c):
                 if c in group_lookup:

@@ -1,5 +1,41 @@
 # Changelog
 
+## [1.12.0] - 2026-05-04
+
+### Added
+
+- **`GROUP_CONCAT` in `AggFunc` enum** (`ir.py`) — new value
+  `GROUP_CONCAT = "GROUP_CONCAT"` added to the IR aggregate-function enum.
+- **`separator` field on `InitAgg`** (`ir.py`) — `str` field defaulting to
+  `","`.  Baked in at compile time from the SQL literal; ignored for all
+  functions except `GROUP_CONCAT`.
+- **`func` and `separator` fields on `FinalizeAgg`** (`ir.py`) — carry the
+  aggregate function kind and GROUP_CONCAT separator as fallback values for
+  the empty-table implicit-single-group case.  Both have defaults
+  (`COUNT_STAR` / `","`) for backward compatibility with existing
+  `FinalizeAgg(slot=…)` call sites.
+- **`has_group_by` field on `AdvanceGroupKey`** (`ir.py`) — `bool` field
+  defaulting to `True`.  When `False` the VM synthesises an implicit group
+  for no-GROUP-BY queries over empty tables so that exactly one result row
+  is emitted, matching the SQL standard.
+- **`GROUP_CONCAT` codegen** (`compiler.py`) — `_plan_agg_to_ir` now maps
+  `AggFunc.GROUP_CONCAT` → `IrAggFunc.GROUP_CONCAT`.  The compiler wires
+  the `separator` (from `AggregateItem`) into `InitAgg` and passes
+  `func`/`separator` through to every `FinalizeAgg` emission (main emit
+  loop and HAVING predicate).
+- **Compile-time integer enforcement** (`compiler.py`) — `_literal_val`
+  rejects non-integer literals for `LAG/LEAD offset`, `NTILE n`, and
+  `NTH_VALUE n` with a descriptive `UnsupportedNode`.
+
+### Changed
+
+- `AdvanceGroupKey(on_exhausted=…)` emissions now pass
+  `has_group_by=bool(group_by)` so the VM can distinguish implicit-single-
+  group from multi-group aggregates.
+- `FinalizeAgg(slot=…)` emissions now always carry `func` and `separator`
+  matching the corresponding aggregate; the VM uses these for lazy slot
+  initialisation when `InitAgg` was never reached (empty-table path).
+
 ## [1.11.0] - 2026-05-04
 
 ### Added
