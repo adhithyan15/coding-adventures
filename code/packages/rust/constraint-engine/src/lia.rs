@@ -58,7 +58,7 @@
 //! for any realistic LANG23 predicate, so this is safe — the runtime
 //! check catches any case the solver gave up on).
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use constraint_core::Predicate;
 
@@ -181,7 +181,8 @@ fn eliminate_all(
     // `ub` = tightest upper bound seen (initially +∞ = i128::MAX)
     let mut lb: Option<i128> = None; // None = −∞
     let mut ub: Option<i128> = None; // None = +∞
-    let mut neqs: Vec<i128> = Vec::new(); // x ≠ k constraints
+    // HashSet for O(1) membership test in the candidate-filter below.
+    let mut neqs: HashSet<i128> = HashSet::new(); // x ≠ k constraints
     let mut equalities: Vec<i128> = Vec::new(); // x = k constraints
 
     for constraint in constraints {
@@ -196,7 +197,7 @@ fn eliminate_all(
                 equalities.push(n);
             }
             BoundInfo::Disequality(n) => {
-                neqs.push(n);
+                neqs.insert(n);
             }
             BoundInfo::Irrelevant => {}
             BoundInfo::Unsatisfiable => return EliminationResult::Unsat,
