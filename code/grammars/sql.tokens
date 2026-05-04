@@ -120,6 +120,7 @@ keywords:
   FOR
   EACH
   ROW
+  RETURNING
 
 skip:
   WHITESPACE    = /[ \t\r\n]+/

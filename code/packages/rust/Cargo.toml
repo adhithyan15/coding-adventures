@@ -404,6 +404,7 @@ members = [
     "vault-records",
     "vault-key-custody",
     "vault-recipients",
+    "vault-secure-channel",
     "context-store",
     "artifact-store",
     "skill-store",

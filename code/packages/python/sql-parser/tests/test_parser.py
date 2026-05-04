@@ -34,12 +34,11 @@ Test organisation
 from __future__ import annotations
 
 import pytest
+from lang_parser import ASTNode, GrammarParseError, GrammarParser
+from lexer import Token
 
 import sql_parser.parser as _parser_module
-from lang_parser import ASTNode, GrammarParser, GrammarParseError
-from lexer import Token
 from sql_parser import create_sql_parser, parse_sql
-
 
 # ---------------------------------------------------------------------------
 # Helpers

@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.16.0] - 2026-05-04
+
+### Added
+
+- **`returning` field on DML AST nodes** (`ast.py`) — `InsertValuesStmt`,
+  `InsertSelectStmt`, `UpdateStmt`, and `DeleteStmt` each gain a
+  `returning: tuple[Expr, ...] = ()` field that carries the list of
+  expressions from the SQL `RETURNING` clause.
+- **`returning` field on DML plan nodes** (`plan.py`) — `Insert`, `Update`,
+  and `Delete` each gain the same `returning: tuple[Expr, ...] = ()` field.
+- **RETURNING resolution in the planner** (`planner.py`) — `_plan_insert`,
+  `_plan_insert_select`, `_plan_update`, and `_plan_delete` all resolve
+  RETURNING column references against the target table's column scope (the
+  same scope used for WHERE / SET expressions), converting
+  `Column(table=None, col='x')` to `Column(table='tablename', col='x')`.
+
 ## [0.15.0] - 2026-05-04
 
 ### Added
