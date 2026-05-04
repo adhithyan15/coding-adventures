@@ -24,7 +24,6 @@ import pytest
 from macsyma_compiler import compile_macsyma
 from macsyma_compiler.compiler import _STANDARD_FUNCTIONS
 from macsyma_parser import parse_macsyma
-from macsyma_runtime.name_table import extend_compiler_name_table
 from symbolic_ir import (
     BETA_FUNC,
     CHI,
@@ -61,13 +60,6 @@ from symbolic_ir import (
 
 from symbolic_vm.backends import SymbolicBackend
 from symbolic_vm.vm import VM
-
-# ---------------------------------------------------------------------------
-# Extend the MACSYMA compiler name table so erf, gamma, etc. are recognised
-# in the e2e tests.  This is the same call that macsyma-runtime makes at REPL
-# startup.
-# ---------------------------------------------------------------------------
-extend_compiler_name_table(_STANDARD_FUNCTIONS)
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -220,7 +212,21 @@ def _is_unevaluated(f: IRNode, F: IRNode) -> None:
 
 
 def _run_macsyma(src: str) -> IRNode:
-    """Full parse → compile → VM.eval pipeline (symbolic mode)."""
+    """Full parse → compile → VM.eval pipeline (symbolic mode).
+
+    Requires ``macsyma-runtime`` to be installed.  The
+    ``extend_compiler_name_table`` call registers erf, gamma, si, etc. so the
+    MACSYMA compiler can resolve them.  Import is deferred to here so that the
+    rest of the test module works even when ``macsyma-runtime`` is absent (e.g.
+    in the standalone ``symbolic-vm`` CI environment where only
+    ``macsyma-compiler`` / ``macsyma-parser`` are installed as dev deps).
+    """
+    pytest.importorskip(
+        "macsyma_runtime",
+        reason="macsyma-runtime not installed; skipping MACSYMA e2e test",
+    )
+    from macsyma_runtime.name_table import extend_compiler_name_table  # noqa: PLC0415
+    extend_compiler_name_table(_STANDARD_FUNCTIONS)
     stmts = compile_macsyma(parse_macsyma(src))
     return VM(SymbolicBackend()).eval_program(stmts)
 
