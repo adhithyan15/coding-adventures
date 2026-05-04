@@ -217,3 +217,7 @@ documented in this file.
 - Added `HTML_SCRIPT_TOKENIZER_STATES` and `HtmlTokenizerState::is_script_substate()`
   so parser/conformance adapters can enumerate and validate every supported
   script entry state without duplicating lexer internals.
+- Added `HTML_TOKENIZER_STATES`, `HTML_FRAGMENT_TOKENIZER_STATES`, and
+  `HtmlTokenizerState::is_fragment_state()` so parser and fixture importers can
+  enumerate the full typed tokenizer-context surface without copying state
+  lists out of the lexer crate.
