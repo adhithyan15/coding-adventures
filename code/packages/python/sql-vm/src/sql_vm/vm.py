@@ -1451,8 +1451,15 @@ def _do_compute_window(ins: ComputeWindowFunctions, st: _VmState) -> None:
                 #
                 # extra_args = (n: int,) set by codegen.
                 (n_buckets_raw,) = spec.extra_args if spec.extra_args else (1,)
-                n_buckets = max(1, int(n_buckets_raw))  # type: ignore[arg-type]
                 total = len(partition)
+                # Cap n_buckets to the partition size to prevent a DoS where a
+                # caller specifies NTILE(1_000_000_000) on a tiny partition,
+                # forcing the outer loop to run billions of iterations for no
+                # useful work.  SQL semantics are unaffected: if n > N then
+                # every row gets its own bucket (1..N) and empty buckets are
+                # simply never emitted, which is exactly what capping achieves.
+                raw_n = max(1, int(n_buckets_raw))  # type: ignore[arg-type]
+                n_buckets = min(raw_n, total) if total > 0 else 1
                 q, r = divmod(total, n_buckets)
                 # Build a bucket boundary list: bucket k (1-indexed) ends at
                 # the index computed below.
