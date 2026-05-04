@@ -1,0 +1,9 @@
+[package]
+name = "typing-spectrum"
+version = "0.1.0"
+edition = "2021"
+description = "LANG22 — compilation strategy advisor for the optional-typing spectrum.  Maps TypingTier → CompilationMode, JIT-promotion thresholds, per-function advisories, and canonical type-name constants."
+
+[dependencies]
+interpreter-ir  = { path = "../interpreter-ir" }
+iir-type-checker = { path = "../iir-type-checker" }
