@@ -438,42 +438,159 @@ function handleGlyphRun(instr: PaintGlyphRun, ctx: SvgContext): void {
   );
 }
 
-const TEXT_ANCHOR_ALLOWLIST = new Set(["start", "middle", "end"]);
+// ============================================================================
+// PaintText → SVG <text> element
+// ============================================================================
 
-function handleText(instr: PaintText, ctx: SvgContext): void {
-  const anchor = textAlignToAnchor(instr.text_align);
-  const anchorAttr = anchor !== "start" ? ` text-anchor="${anchor}"` : "";
-  ctx.elements.push(
-    `<text${idAttr(instr.id)} x="${safeNum(instr.x, "text.x")}" y="${safeNum(instr.y, "text.y")}" font-family="${escAttr(fontFamilyFromRef(instr.font_ref))}" font-size="${safeNum(instr.font_size, "text.font_size")}" fill="${escAttr(instr.fill)}"${anchorAttr}>${escText(instr.text)}</text>`,
-  );
+/**
+ * Parse a "canvas:" or "svg:" font_ref into individual SVG font attribute values.
+ *
+ * Grammar (matching spec TXT03d):
+ *
+ *   font_ref := ("canvas:" | "svg:") <family> "@" <px_size> [ ":" <weight> [ ":" <style> ] ]
+ *
+ * Examples:
+ *
+ *   "canvas:Helvetica@16"            → family="Helvetica", weight="400", style=""
+ *   "canvas:Helvetica@16:700"        → family="Helvetica", weight="700", style=""
+ *   "canvas:Helvetica@16:700:italic" → family="Helvetica", weight="700", style="italic"
+ *   "svg:Arial@14:400"               → family="Arial",     weight="400", style=""
+ *
+ * The "@<px_size>" component is ignored — `instr.font_size` is the authoritative
+ * size at paint time (the layout engine is the source of truth for sizes).
+ *
+ * Security: `family` is run through a character allowlist to strip any XML-attribute
+ * injection characters before interpolation. `weight` is validated as a number in
+ * [1, 1000]. `style` is checked against a known-safe allowlist.
+ *
+ * Unknown scheme prefixes fall back to safe defaults ("sans-serif", "400", "")
+ * rather than throwing, so a scene with mixed-scheme instructions degrades
+ * gracefully rather than crashing the renderer.
+ */
+function parseSvgFontRef(fontRef: string): {
+  family: string;
+  weight: string;
+  style: string;
+} {
+  let body: string;
+  if (fontRef.startsWith("canvas:")) {
+    body = fontRef.slice("canvas:".length);
+  } else if (fontRef.startsWith("svg:")) {
+    body = fontRef.slice("svg:".length);
+  } else {
+    // Unknown scheme — degrade gracefully rather than throw.
+    // Emitting with safe defaults preserves layout intent (position, size,
+    // fill, text content) even though font selection is imprecise.
+    return { family: "sans-serif", weight: "400", style: "" };
+  }
+
+  const atIdx = body.indexOf("@");
+  const family = atIdx >= 0 ? body.slice(0, atIdx) : body;
+  const rest = atIdx >= 0 ? body.slice(atIdx + 1) : "";
+  // rest format: "<px_size>[:<weight>[:<style>]]"
+  const parts = rest.split(":");
+  // parts[0] = size (ignored — instr.font_size is authoritative)
+  const weightStr = parts[1];
+  const styleStr = parts[2];
+
+  // Security: strip any character outside the allowlist.
+  // Font family names legitimately use letters, digits, spaces, hyphens, and
+  // underscores. Commas and periods appear in multi-family stacks and floats.
+  // Anything outside this set could close an attribute or inject SVG markup.
+  const safeFamily = family.replace(/[^a-zA-Z0-9 ,\-_.]/g, "") || "sans-serif";
+
+  // Validate weight: must be a finite number in the CSS font-weight range [1, 1000].
+  // A crafted weight like "700; fill: red" would inject SVG attribute content.
+  let weight = "400";
+  if (weightStr !== undefined) {
+    const w = Number(weightStr);
+    if (Number.isFinite(w) && w >= 1 && w <= 1000) {
+      weight = String(Math.round(w));
+    }
+  }
+
+  // Validate style against an explicit allowlist.
+  // Only "italic" and "oblique" are valid CSS font-style keywords.
+  const STYLE_ALLOWLIST = new Set(["italic", "oblique"]);
+  const style =
+    styleStr !== undefined && STYLE_ALLOWLIST.has(styleStr) ? styleStr : "";
+
+  return { family: safeFamily, weight, style };
 }
 
-function textAlignToAnchor(align: PaintText["text_align"]): string {
-  switch (align) {
+/**
+ * Map a PaintText `text_align` value to an SVG `text-anchor` attribute value.
+ *
+ * | PaintText  | SVG text-anchor |
+ * |------------|-----------------|
+ * | "start"    | "start"         |
+ * | "center"   | "middle"        | ← SVG uses "middle"; Canvas uses "center"
+ * | "end"      | "end"           |
+ * | undefined  | "start"         | (SVG default — attribute omitted)
+ *
+ * The Canvas backend passes `text_align` directly to `ctx.textAlign` because
+ * Canvas uses "center". SVG uses "middle" for the same concept. This mapping
+ * prevents malformed SVG that a browser might misinterpret or reject.
+ */
+function textAlignToSvgAnchor(textAlign: PaintText["text_align"]): string {
+  switch (textAlign) {
     case "center":
       return "middle";
     case "end":
       return "end";
-    case "start":
-    case undefined:
+    default:
       return "start";
-    default: {
-      const maybeAnchor = String(align);
-      return TEXT_ANCHOR_ALLOWLIST.has(maybeAnchor) ? maybeAnchor : "start";
-    }
   }
 }
 
-function fontFamilyFromRef(fontRef: string): string {
-  if (fontRef.startsWith("svg:") || fontRef.startsWith("canvas:")) {
-    const descriptor = fontRef.slice(fontRef.indexOf(":") + 1);
-    const atIndex = descriptor.indexOf("@");
-    return descriptor.slice(0, atIndex === -1 ? undefined : atIndex) || "sans-serif";
+/**
+ * PaintText → SVG `<text>` element.
+ *
+ * Maps the PaintText instruction to a single SVG `<text>` element. SVG `<text>`
+ * positions the baseline at (x, y) — the same convention as PaintText and
+ * Canvas `fillText()` — so x and y pass through unchanged.
+ *
+ * font_ref is parsed to extract font-family, font-weight, and font-style for
+ * separate SVG attributes (as opposed to a single CSS font shorthand). SVG
+ * prefers individual presentation attributes over font shorthand for
+ * compatibility with SVG renderers that do not implement the CSS cascade
+ * (e.g. librsvg, Batik, server-side SVG processors).
+ *
+ * The text string is run through escText() to handle &, <, and > so the
+ * output is valid XML regardless of what characters the user typed.
+ */
+function handleText(instr: PaintText, ctx: SvgContext): void {
+  if (!Number.isFinite(instr.font_size)) {
+    throw new RangeError(
+      `PaintVM SVG: font_size must be a finite number, got ${instr.font_size}`,
+    );
   }
-  if (fontRef.startsWith("css:")) {
-    return fontRef.slice("css:".length) || "sans-serif";
+
+  const { family, weight, style } = parseSvgFontRef(instr.font_ref);
+
+  // Build the SVG font presentation attributes.
+  // font-family and font-size are always emitted. font-weight is omitted when
+  // it equals the default (400 / normal). font-style is omitted when empty.
+  const fontAttrs: string[] = [
+    `font-family="${escAttr(family)}"`,
+    `font-size="${safeNum(instr.font_size, "text.font_size")}"`,
+  ];
+  if (weight !== "400" && weight !== "normal") {
+    fontAttrs.push(`font-weight="${escAttr(weight)}"`);
   }
-  return fontRef || "sans-serif";
+  if (style) {
+    fontAttrs.push(`font-style="${escAttr(style)}"`);
+  }
+
+  // text-anchor is only emitted when it differs from the SVG default ("start").
+  const anchor = textAlignToSvgAnchor(instr.text_align);
+  if (anchor !== "start") {
+    fontAttrs.push(`text-anchor="${anchor}"`);
+  }
+
+  ctx.elements.push(
+    `<text${idAttr(instr.id)} x="${safeNum(instr.x, "text.x")}" y="${safeNum(instr.y, "text.y")}" ${fontAttrs.join(" ")} fill="${escAttr(instr.fill)}">${escText(instr.text)}</text>`,
+  );
 }
 
 function handleGroup(

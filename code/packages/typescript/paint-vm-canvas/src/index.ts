@@ -614,14 +614,11 @@ function handleImage(
   // supported in synchronous execute(). We emit a placeholder rect instead.
   if (typeof instr.src !== "string") {
     const pixels = instr.src;
-    // Only 8-bit RGBA is directly supported by ImageData
-    if (
-      pixels.channels === 4 &&
-      pixels.bit_depth === 8 &&
-      pixels.pixels instanceof Uint8Array
-    ) {
+    // PixelContainer is fixed RGBA8 (4 channels, 8 bits, data: Uint8Array).
+    // ImageData requires Uint8ClampedArray with the same RGBA8 layout.
+    if (pixels.data instanceof Uint8Array) {
       const imageData = new ImageData(
-        new Uint8ClampedArray(pixels.pixels.buffer),
+        new Uint8ClampedArray(pixels.data.buffer),
         pixels.width,
         pixels.height,
       );
@@ -739,13 +736,13 @@ export function createCanvasVM(): PaintVM<CanvasRenderingContext2D> {
       vm.execute(scene, offCtx);
 
       const imageData = offCtx.getImageData(0, 0, w, h);
+      // PixelContainer is fixed RGBA8: { width, height, data: Uint8Array }.
+      // The old interface (channels, bit_depth, pixels, color_space) was
+      // removed when pixel-container was simplified to a fixed RGBA8 type.
       const pixels: PixelContainer = {
         width: w,
         height: h,
-        channels: 4,
-        bit_depth: 8,
-        pixels: new Uint8Array(imageData.data.buffer),
-        color_space: "srgb",
+        data: new Uint8Array(imageData.data.buffer),
       };
       return pixels;
     },
