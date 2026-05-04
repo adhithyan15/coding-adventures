@@ -3,6 +3,64 @@
 All notable changes to this package will be documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.5.0] — 2026-05-04 (TW04 Phase 4g — bundled Twig standard library)
+
+### Added — bundled stdlib (`stdlib/io`, `stdlib/list`, `stdlib/print`)
+
+Three source-level Twig modules are shipped alongside the package in
+`src/twig/stdlib_twig/stdlib/`:
+
+| Module | Exports |
+|--------|---------|
+| `stdlib/io` | `print-int`, `println`, `newline`, `print-bool` |
+| `stdlib/list` | `length`, `reverse`, `map`, `filter`, `fold` |
+| `stdlib/print` | `print` (type-dispatching: nil, pair, integer) |
+
+All three modules are pure Twig source — no Python glue, no backend
+special-casing.  `stdlib/io` uses only arithmetic and `host/write-byte`,
+so it compiles on JVM, CLR, and BEAM without closures or heap.
+`stdlib/list` uses cons cells and higher-order functions (closures).
+`stdlib/print` depends on both `host` and `stdlib/io`.
+
+### Added — `stdlib_path()` in `twig.__init__`
+
+```python
+from twig import stdlib_path
+path = stdlib_path()  # Path to stdlib_twig/ directory
+```
+
+Returns the `Path` to the root of the bundled stdlib so callers can
+pass it explicitly as a search path when `include_stdlib=False`.
+
+### Added — `include_stdlib: bool = True` on `resolve_modules`
+
+```python
+modules = resolve_modules("user/hello", search_paths=[my_src])
+# stdlib is automatically appended; (import stdlib/io) works
+```
+
+When `True` (the default), the bundled stdlib search root is appended
+to `search_paths` before the resolution pass.  Pass `False` to opt out
+(e.g. during stdlib development where you supply the path manually).
+The auto-inclusion is a no-op when the stdlib directory is not present
+on disk (guard: `if _stdlib.exists()`).
+
+### Fixed — `_extract_define` handles typed_param grammar nodes
+
+The Phase 4g grammar uses `typed_param` ASTNode children for function
+parameters even when unannotated, nesting the bare NAME one level deeper
+than the old `name_or_signature` layout assumed.  `_extract_define` in
+`ast_extract.py` now collects parameter names from `typed_param` children
+(any child `ASTNode` with `rule_name == "typed_param"`) in addition to
+direct NAME tokens, keeping the extractor forward-compatible with both
+annotated and unannotated parameter forms.
+
+### Tests
+
+- `tests/test_stdlib.py` — 42 new tests covering `stdlib_path()`, auto-
+  include resolution, topological ordering, export surface of all three
+  modules, and parse+extract (no runtime needed).
+
 ## [0.4.0] — 2026-05-04 (TW04 Phase 4c — host module + cross-module IR ops)
 
 ### Added

@@ -1,0 +1,100 @@
+; stdlib/list — Twig standard list library
+;
+; Provides the five classic higher-order list operations over Twig's
+; cons-cell heap.  All functions are purely recursive (no mutation,
+; no iteration) in the Scheme tradition.
+;
+; Exports
+; -------
+;   length  lst         — count of elements in lst (0 for nil)
+;   reverse lst         — new list with elements in reversed order
+;   map     f lst       — apply f to every element, return new list
+;   filter  f lst       — keep only elements where (f elem) is truthy
+;   fold    f acc lst   — left fold; acc is the starting accumulator
+;
+; Representation
+; --------------
+; Lists are built from cons cells via (cons head tail).  The empty
+; list is nil (written as ``nil`` in Twig source).  The usual Lisp
+; invariant holds: a proper list is either nil or (cons x proper-list).
+;
+;   (cons 1 (cons 2 (cons 3 nil)))  ≡  [1, 2, 3]
+;
+; Host dependency
+; ---------------
+; The host import is not strictly needed for these pure functions but
+; is declared for potential future use (e.g. debug print inside fold).
+; Compilers silently drop unreferenced imports so this adds no cost.
+;
+; Closures
+; --------
+; map, filter, and fold pass a function value f down the recursion.
+; On all three backends closures are first-class values (they live
+; in the object register pool on JVM/CLR, as an Erlang fun on BEAM)
+; so calling f as (f elem) just goes through APPLY_CLOSURE.
+
+(module stdlib/list
+  (export length reverse map filter fold)
+  (import host))
+
+; length — count elements in a proper list.
+; Base case: nil → 0.  Step: 1 + length(tail).
+;
+;   (length (cons 1 (cons 2 nil)))  →  2
+(define (length lst)
+  (if (null? lst)
+      0
+      (+ 1 (length (cdr lst)))))
+
+; reverse-helper — accumulator-based reverse.
+; Builds the result in acc by prepending each head as we walk the list.
+; At the end acc holds the reversed list.
+;
+;   reverse-helper([1,2,3], [])
+;     → reverse-helper([2,3], [1])
+;     → reverse-helper([3],   [2,1])
+;     → reverse-helper([],    [3,2,1])
+;     → [3,2,1]
+(define (reverse-helper lst acc)
+  (if (null? lst)
+      acc
+      (reverse-helper (cdr lst) (cons (car lst) acc))))
+
+; reverse — return a new list with elements in reversed order.
+; Delegates to the tail-recursive reverse-helper.
+(define (reverse lst)
+  (reverse-helper lst nil))
+
+; map — apply f to each element, collecting results into a new list.
+; The shape mirrors the input: nil → nil, (cons h t) → (cons (f h) (map f t)).
+;
+;   (map (lambda (x) (* x x)) (cons 1 (cons 2 (cons 3 nil))))
+;   →  (cons 1 (cons 4 (cons 9 nil)))
+(define (map f lst)
+  (if (null? lst)
+      nil
+      (cons (f (car lst)) (map f (cdr lst)))))
+
+; filter — keep elements for which f returns a truthy value.
+; Discards the element when f returns 0 (the Twig false value).
+;
+;   (filter (lambda (x) (> x 2)) (cons 1 (cons 2 (cons 3 nil))))
+;   →  (cons 3 nil)
+(define (filter f lst)
+  (if (null? lst)
+      nil
+      (if (f (car lst))
+          (cons (car lst) (filter f (cdr lst)))
+          (filter f (cdr lst)))))
+
+; fold — left fold (reduce) with an explicit accumulator.
+; Applies f to acc and each element in turn, left to right.
+; This is the generalisation from which sum, product, max, etc. derive.
+;
+;   (fold (lambda (acc x) (+ acc x)) 0 (cons 1 (cons 2 (cons 3 nil))))
+;   →  (f (f (f 0 1) 2) 3)
+;   →  6
+(define (fold f acc lst)
+  (if (null? lst)
+      acc
+      (fold f (f acc (car lst)) (cdr lst))))
