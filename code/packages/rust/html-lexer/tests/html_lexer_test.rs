@@ -1,7 +1,7 @@
 use coding_adventures_html_lexer::{
     apply_html_lex_context, create_html_lexer, html1_definition, html1_machine,
     html_skeleton_definition, html_skeleton_machine, lex_html, lex_html_fragment, Attribute,
-    HtmlLexContext, HtmlScriptingMode, HtmlTokenizerState, Token,
+    HtmlLexContext, HtmlScriptingMode, HtmlTokenizerState, Token, HTML_SCRIPT_TOKENIZER_STATES,
 };
 use state_machine::END_INPUT;
 
@@ -4365,6 +4365,56 @@ fn parser_facing_context_maps_script_and_plaintext_elements() {
 
 #[test]
 fn parser_facing_context_maps_script_substates() {
+    let expected_script_substates = [
+        (HtmlTokenizerState::ScriptData, "script_data"),
+        (HtmlTokenizerState::ScriptDataEscaped, "script_data_escaped"),
+        (
+            HtmlTokenizerState::ScriptDataEscapedDash,
+            "script_data_escaped_dash",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapedDashDash,
+            "script_data_escaped_dash_dash",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapedLessThanSign,
+            "script_data_escaped_less_than_sign",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataDoubleEscaped,
+            "script_data_double_escaped",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataDoubleEscapedDash,
+            "script_data_double_escaped_dash",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataDoubleEscapedDashDash,
+            "script_data_double_escaped_dash_dash",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign,
+            "script_data_double_escaped_less_than_sign",
+        ),
+    ];
+    assert_eq!(
+        HTML_SCRIPT_TOKENIZER_STATES,
+        expected_script_substates.map(|(state, _)| state)
+    );
+
+    for (state, machine_state) in expected_script_substates {
+        assert!(state.is_script_substate());
+        assert_eq!(state.as_machine_state(), machine_state);
+
+        let context = HtmlLexContext::script_substate(state).unwrap();
+        assert_eq!(context.initial_state, state);
+        assert_eq!(context.last_start_tag.as_deref(), Some("script"));
+
+        let mut lexer = create_html_lexer().unwrap();
+        apply_html_lex_context(&mut lexer, &context).unwrap();
+        assert_eq!(lexer.current_state(), machine_state);
+    }
+
     let escaped =
         HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEscapedDashDash).unwrap();
     assert_eq!(
@@ -4406,6 +4456,7 @@ fn parser_facing_context_maps_script_substates() {
         HtmlLexContext::script_substate(HtmlTokenizerState::Rawtext),
         None
     );
+    assert!(!HtmlTokenizerState::Rawtext.is_script_substate());
 }
 
 #[test]
