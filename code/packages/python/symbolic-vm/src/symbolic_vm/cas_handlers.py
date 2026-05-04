@@ -40,7 +40,6 @@ from fractions import Fraction
 from typing import TYPE_CHECKING
 
 from cas_algebraic import build_alg_factor_handler_table as _build_algebraic
-from cas_multivariate import build_multivariate_handler_table as _build_multivariate
 from cas_complex import IMAGINARY_UNIT as _IMAGINARY_UNIT
 from cas_complex import build_complex_handler_table as _build_complex
 from cas_complex.handlers import (
@@ -73,19 +72,28 @@ from cas_list_operations import (
 )
 from cas_matrix import (
     MatrixError,
+    charpoly,
+    columnspace,
     determinant,
     dimensions,
     dot,
+    eigenvalues,
+    eigenvectors,
     identity_matrix,
     inverse,
+    lu_decompose,
     matrix,
+    norm,
+    nullspace,
     rank,
     row_reduce,
+    rowspace,
     trace,
     transpose,
     zero_matrix,
 )
 from cas_mnewton import build_mnewton_handler_table as _build_mnewton
+from cas_multivariate import build_multivariate_handler_table as _build_multivariate
 from cas_number_theory.handlers import build_number_theory_handler_table as _build_nt
 from cas_ode import build_ode_handler_table as _build_ode
 from cas_simplify import canonical, simplify
@@ -1248,6 +1256,164 @@ def row_reduce_handler(_vm: VM, expr: IRApply) -> IRNode:
         return expr
 
 
+def eigenvalues_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Eigenvalues(M)`` → ``List(List(λ₁, m₁), List(λ₂, m₂), …)``.
+
+    Each inner ``List`` contains the eigenvalue followed by its algebraic
+    multiplicity.  Dispatches to ``cas-solve`` (linear through quartic) for
+    the characteristic polynomial.  Falls through on:
+
+    - Non-square or non-matrix input.
+    - Matrix larger than 4×4 (higher-degree char poly not supported).
+    - Symbolic entries (cannot form rational char poly).
+    """
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return eigenvalues(expr.args[0])
+    except MatrixError:
+        return expr
+
+
+def eigenvectors_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Eigenvectors(M)`` → ``List(List(λ, m, List(v₁, …)), …)``.
+
+    For each eigenvalue, returns its multiplicity and null-space basis vectors
+    for ``(A − λI)``.  Eigenvectors are returned as n×1 column-vector
+    ``Matrix`` nodes.
+
+    Exact null spaces are computed only for rational eigenvalues.  Complex or
+    irrational eigenvalues yield an empty ``List()`` for their vector group —
+    the pair ``(λ, m)`` is still included so callers know the eigenvalue
+    exists.
+
+    Falls through on non-square / symbolic / >4×4 input.
+    """
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return eigenvectors(expr.args[0])
+    except MatrixError:
+        return expr
+
+
+def charpoly_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``CharPoly(M, λ)`` → ``det(λI − M)`` as an IR polynomial in λ.
+
+    The second argument must be an ``IRSymbol`` naming the variable.  Falls
+    through on non-square input, symbolic matrix entries, or wrong arity.
+    """
+    if len(expr.args) != 2:
+        return expr
+    mat_node, lam_node = expr.args
+    if not isinstance(lam_node, IRSymbol):
+        return expr
+    try:
+        return charpoly(mat_node, lam_node)
+    except MatrixError:
+        return expr
+
+
+def lu_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``LU(M)`` → ``List(L, U, P)`` from Doolittle LU decomposition.
+
+    Returns the three matrices such that ``P·M = L·U``:
+
+    - ``L`` — unit lower-triangular (1s on diagonal).
+    - ``U`` — upper-triangular.
+    - ``P`` — permutation matrix encoding the row-swap history.
+
+    Falls through on non-square, singular, or symbolic input.
+    """
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return lu_decompose(expr.args[0])
+    except MatrixError:
+        return expr
+
+
+def nullspace_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``NullSpace(M)`` → ``List(v₁, v₂, …)`` — null-space basis.
+
+    Each ``vᵢ`` is an n×1 column-vector ``Matrix`` node.  Returns
+    ``List()`` (empty) when M has full column rank.  Falls through on
+    symbolic entries or non-matrix input.
+    """
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return nullspace(expr.args[0])
+    except MatrixError:
+        return expr
+
+
+def columnspace_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``ColumnSpace(M)`` → ``List(c₁, c₂, …)`` — column-space basis.
+
+    Basis vectors are the pivot columns of the **original** matrix M (not
+    the RREF), each returned as an m×1 column-vector ``Matrix`` node.
+    Falls through on symbolic entries or non-matrix input.
+    """
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return columnspace(expr.args[0])
+    except MatrixError:
+        return expr
+
+
+def rowspace_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``RowSpace(M)`` → ``List(r₁, r₂, …)`` — row-space basis.
+
+    Basis vectors are the non-zero rows of the RREF of M, each returned as
+    a 1×n row-vector ``Matrix`` node.  Falls through on symbolic entries or
+    non-matrix input.
+    """
+    if len(expr.args) != 1:
+        return expr
+    try:
+        return rowspace(expr.args[0])
+    except MatrixError:
+        return expr
+
+
+def norm_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``Norm(M)`` or ``Norm(M, "frobenius")`` → matrix/vector norm.
+
+    One-argument form computes the **Euclidean** (L²) norm of a column or
+    row vector.  Raises (falls through) for a general matrix.
+
+    Two-argument form requires the second argument to be the string literal
+    ``IRSymbol("frobenius")`` and computes the **Frobenius** norm of any
+    matrix.
+
+    Returns:
+
+    - ``IRInteger`` or ``IRRational`` when the sum of squares is a perfect
+      rational square (exact result).
+    - ``IRApply(SQRT, (sum_of_squares,))`` otherwise.
+
+    Falls through on symbolic entries, wrong arity, or unknown norm kind.
+    """
+    if len(expr.args) == 1:
+        try:
+            return norm(expr.args[0])
+        except MatrixError:
+            return expr
+    if len(expr.args) == 2:
+        kind_node = expr.args[1]
+        # Accept IRSymbol("frobenius") as the norm kind string.
+        if not isinstance(kind_node, IRSymbol):
+            return expr
+        kind_str = str(kind_node.name)
+        try:
+            return norm(expr.args[0], kind_str)
+        except MatrixError:
+            return expr
+    return expr
+
+
 # ===========================================================================
 # Section 7: cas_limit_series handlers
 # ===========================================================================
@@ -1814,6 +1980,14 @@ def build_cas_handler_table() -> dict[str, Handler]:
         "ZeroMatrix": zero_matrix_handler,
         "Rank": rank_handler,
         "RowReduce": row_reduce_handler,
+        "Eigenvalues": eigenvalues_handler,
+        "Eigenvectors": eigenvectors_handler,
+        "CharPoly": charpoly_handler,
+        "LU": lu_handler,
+        "NullSpace": nullspace_handler,
+        "ColumnSpace": columnspace_handler,
+        "RowSpace": rowspace_handler,
+        "Norm": norm_handler,
         # --- cas_limit_series -----------------------------------------------
         "Limit": limit_handler,
         "Taylor": taylor_handler,

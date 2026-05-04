@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.39.0 — 2026-05-04
+
+**Phase 19 — Linear algebra completion: 8 new VM handlers for `cas-matrix` 0.3.0.**
+
+Bumps `coding-adventures-cas-matrix` minimum version from `>=0.2.0` to
+`>=0.3.0` and wires in handlers for all six new linear algebra operations
+added in `cas-matrix` 0.3.0.
+
+### New VM handlers in `cas_handlers.py`
+
+| Handler | Expression form | Returns |
+|---------|-----------------|---------|
+| `eigenvalues_handler` | `Eigenvalues(M)` | `List(List(λ₁,m₁), …)` — eigenvalue/multiplicity pairs |
+| `eigenvectors_handler` | `Eigenvectors(M)` | `List(List(λ,m,List(v₁,…)), …)` — eigenvalue + basis vectors |
+| `charpoly_handler` | `CharPoly(M, λ)` | IR polynomial `det(λI−M)` in the given symbol |
+| `lu_handler` | `LU(M)` | `List(L, U, P)` from Doolittle partial-pivoting decomposition |
+| `nullspace_handler` | `NullSpace(M)` | `List(v₁,…)` of n×1 null-space basis column vectors |
+| `columnspace_handler` | `ColumnSpace(M)` | `List(c₁,…)` of m×1 column-space basis vectors |
+| `rowspace_handler` | `RowSpace(M)` | `List(r₁,…)` of 1×n row-space basis vectors |
+| `norm_handler` | `Norm(v)` or `Norm(M, frobenius)` | Euclidean or Frobenius norm |
+
+All handlers fall through to the unevaluated `IRApply` on `MatrixError` (symbolic
+entries, wrong shape, size > 4×4 for eigenvalue routines, etc.).
+
+`CharPoly` requires the second argument to be an `IRSymbol` naming the variable.
+`Norm` with `frobenius` keyword accepts `IRSymbol("frobenius")` as the kind argument.
+
+### Fallthrough semantics
+
+All eight handlers return the original unevaluated `expr` on any `MatrixError`,
+matching the pattern used by `rank_handler`, `row_reduce_handler`, and the other
+existing matrix handlers.
+
+---
+
 ## 0.38.0 — 2026-04-29
 
 **Phase 18 — `cas-ode` 0.2.0 dependency bump (Bernoulli · Exact · Non-homogeneous 2nd-order).**
