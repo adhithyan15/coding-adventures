@@ -414,6 +414,23 @@ class CLIAssemblyWriter:
         # token assignment stays deterministic regardless of whether
         # any specific compilation needs box.
         system_int32_name_index = strings.add("Int32")
+        # TW04 Phase 4c: TypeRef rows 4 and 5 for Twig's inline host-call
+        # helpers.  ``System.Console`` (row 4) provides ``Write(char)`` and
+        # ``Read()``; ``System.Environment`` (row 5) provides ``Exit(int32)``.
+        # Both live in the same ``System`` namespace as ``Object`` / ``Int32``,
+        # so ``system_namespace_index`` is reused — no new namespace string
+        # needed.  The rows are always emitted (small overhead) to keep
+        # MemberRef token assignments deterministic across all assemblies.
+        #
+        # IMPORTANT: ``System.Console`` is NOT in ``System.Runtime``; it
+        # lives in its own ``System.Console`` assembly (net9.0).  We add a
+        # second AssemblyRef row (row 2) for that assembly and point
+        # TypeRef row 4's ResolutionScope at it.  ``System.Environment``
+        # IS in ``System.Runtime`` so TypeRef row 5 keeps the row-1 ref.
+        system_console_name_index = strings.add("Console")
+        system_environment_name_index = strings.add("Environment")
+        # Assembly name string for the AssemblyRef row 2 entry.
+        system_console_assembly_name_index = strings.add("System.Console")
 
         # Same keying decision as the sig table: MethodDef row (1-based).
         # ``Apply`` / ``.ctor`` repeat across closure types and would
@@ -496,6 +513,9 @@ class CLIAssemblyWriter:
             system_object_name_index=system_object_name_index,
             system_int32_name_index=system_int32_name_index,
             system_namespace_index=system_namespace_index,
+            system_console_name_index=system_console_name_index,
+            system_environment_name_index=system_environment_name_index,
+            system_console_assembly_name_index=system_console_assembly_name_index,
         )
         # Stream order matches what real C# emits: #~, #Strings, #US,
         # #GUID, #Blob.  The order isn't load-bearing per ECMA-335 but
@@ -545,6 +565,9 @@ class CLIAssemblyWriter:
         system_object_name_index: int,
         system_int32_name_index: int,
         system_namespace_index: int,
+        system_console_name_index: int,
+        system_environment_name_index: int,
+        system_console_assembly_name_index: int,
     ) -> bytes:
         tables: dict[int, list[bytes]] = {
             _MODULE_TABLE: [
@@ -580,6 +603,28 @@ class CLIAssemblyWriter:
                     "<HHH",
                     6,
                     system_int32_name_index,
+                    system_namespace_index,
+                ),
+                # Row 4: ``System.Console`` in System namespace.  Provides
+                # the ``Write(char)`` and ``Read()`` MemberRef targets used
+                # by Twig's inline host-call SYSCALL lowering (TW04 Phase 4c).
+                # Always emitted to keep MemberRef token numbers stable.
+                # ResolutionScope points at AssemblyRef row 2 (System.Console)
+                # — NOT System.Runtime — because System.Console is its own
+                # assembly in net9.0.  AssemblyRef tag = 2, row 2 →
+                # (2 << 2) | 2 = 10.
+                struct.pack(
+                    "<HHH",
+                    10,
+                    system_console_name_index,
+                    system_namespace_index,
+                ),
+                # Row 5: ``System.Environment`` in System namespace.  Provides
+                # ``Exit(int32)`` for Twig's ``host/exit`` inline lowering.
+                struct.pack(
+                    "<HHH",
+                    6,
+                    system_environment_name_index,
                     system_namespace_index,
                 ),
             ],
@@ -662,6 +707,9 @@ class CLIAssemblyWriter:
             #   STRING Name, Culture
             #   BLOB   HashValue
             _ASSEMBLY_REF_TABLE: [
+                # Row 1: System.Runtime — provides System.Object, System.Int32,
+                # System.Environment, and the helper TypeRef (CodingAdventures.*
+                # in brainfuck/oct mode).
                 struct.pack(
                     "<HHHHIHHHH",
                     _SYSTEM_RUNTIME_VERSION[0],
@@ -671,6 +719,24 @@ class CLIAssemblyWriter:
                     0,
                     ecma_token_blob,
                     system_runtime_name_index,
+                    empty_string_index,
+                    empty_blob,
+                ),
+                # Row 2: System.Console — provides System.Console.Write(char)
+                # and System.Console.Read() used by Twig's inline host-call
+                # lowering.  System.Console is a SEPARATE assembly from
+                # System.Runtime in net9.0; pointing TypeRef row 4 at
+                # System.Runtime causes TypeLoadException at runtime.
+                # Same version and ECMA public-key token as System.Runtime.
+                struct.pack(
+                    "<HHHHIHHHH",
+                    _SYSTEM_RUNTIME_VERSION[0],
+                    _SYSTEM_RUNTIME_VERSION[1],
+                    _SYSTEM_RUNTIME_VERSION[2],
+                    _SYSTEM_RUNTIME_VERSION[3],
+                    0,
+                    ecma_token_blob,
+                    system_console_assembly_name_index,
                     empty_string_index,
                     empty_blob,
                 ),
@@ -914,10 +980,15 @@ def _build_memberref_rows(
     = 9``.  System.Object::.ctor points at TypeRef row 2 →
     ``(2 << 3) | 1 = 17``.
     """
+    # ``MemberRefParent`` is a coded index: tag bits (low 3) = 1 for TypeRef;
+    # the row number is shifted left by 3.  ECMA-335 §II.22.25.
+    # For legacy helpers ``spec.class_typeref_row == 1`` → (1 << 3) | 1 = 9.
+    # For TW04 Phase 4c helpers: row 4 (System.Console) → 33,
+    #                              row 5 (System.Environment) → 41.
     rows: list[bytes] = [
         struct.pack(
             "<HHH",
-            (1 << 3) | 1,
+            (spec.class_typeref_row << 3) | 1,
             helper_name_indices[spec.helper],
             helper_sig_indices[spec.helper],
         )

@@ -100,6 +100,12 @@ class CILOpcode(IntEnum):
     LDELEM_I4 = 0x94
     STELEM_I1 = 0x9C
     STELEM_I4 = 0x9E
+    # Numeric conversion opcodes (ECMA-335 §III.1.6).
+    # ``conv.u2`` converts the stack top to an unsigned 16-bit integer
+    # (uint16 / char), zero-extending a shorter value or truncating a
+    # longer one.  Used by the Twig CLR backend to convert an int32 byte
+    # value to ``char`` before calling ``System.Console.Write(char)``.
+    CONV_U2 = 0xD3
     PREFIX_FE = 0xFE
 
 
@@ -199,6 +205,15 @@ class CILBytecodeBuilder:
     def emit_starg(self, index: int) -> CILBytecodeBuilder:
         """Store to an argument slot using ``.s`` or prefixed form."""
         return self.emit_raw(encode_starg(index))
+
+    def emit_conv_u2(self) -> CILBytecodeBuilder:
+        """Emit ``conv.u2`` — truncate/zero-extend the stack top to uint16.
+
+        Used to convert an ``int32`` byte value to ``char`` (uint16) before
+        calling ``System.Console.Write(char)`` in Twig's inline host-call
+        path.  The opcode is ``0xD3`` per ECMA-335 §III.3.18.
+        """
+        return self.emit_opcode(CILOpcode.CONV_U2)
 
     def emit_token_instruction(
         self,
