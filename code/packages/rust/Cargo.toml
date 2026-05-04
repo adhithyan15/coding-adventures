@@ -393,6 +393,7 @@ members = [
     "storage-core",
     "vault-sealed-store",
     "shamir",
+    "canonical-cbor",
     "context-store",
     "artifact-store",
     "skill-store",
