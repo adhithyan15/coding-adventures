@@ -1711,6 +1711,25 @@ class TestAlgolIrCompiler:
         assert len(procedure_labels) == 2
         assert all(label in call_targets for label in procedure_labels)
 
+    def test_compiles_forward_read_only_by_name_expression_actual(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "procedure relay(x); integer x; begin emit(x) end; "
+                "procedure emit(y); integer y; begin result := y end; "
+                "relay(3 + 4) "
+                "end"
+            )
+        )
+        calls = [
+            instruction
+            for instruction in result.program.instructions
+            if instruction.opcode == IrOp.CALL
+        ]
+
+        assert len(calls) >= 2
+        assert "_fn_algol_eval_thunk" in result.procedure_signatures
+
     def test_compiles_boolean_value_procedure_call(self) -> None:
         result = compile_algol(
             parse_algol(

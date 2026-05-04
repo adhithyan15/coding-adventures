@@ -1811,6 +1811,16 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
+    def test_forward_read_only_by_name_callee_accepts_expression_actual(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure relay(x); integer x; begin emit(x) end; "
+            "procedure emit(y); integer y; begin result := y end; "
+            "relay(3 + 4) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
     def test_procedure_body_sees_later_block_declarations(self) -> None:
         result = compile_source(
             "begin "

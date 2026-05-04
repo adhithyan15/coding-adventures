@@ -69,6 +69,20 @@ _SURFACE_CASES = (
         stdout="FORWARD 12",
     ),
     SurfaceCase(
+        name="forward-read-only-by-name-expression-actual",
+        source="""
+            begin
+              integer result;
+              procedure relay(x); integer x; begin emit(x) end;
+              procedure emit(y); integer y; begin result := y end;
+              relay(3 + 4);
+              print(result)
+            end
+        """,
+        result=[7],
+        stdout="7",
+    ),
+    SurfaceCase(
         name="for-list-scalar-and-array-control",
         source="""
             begin

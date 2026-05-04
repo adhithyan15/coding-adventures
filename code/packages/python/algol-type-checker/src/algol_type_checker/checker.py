@@ -288,7 +288,8 @@ class _PendingProcedureDeclaration:
     proc_scope: Scope
     body_inner: ASTNode
     procedure_depth: int
-    parameters: tuple[ProcedureParameter, ...]
+    formal_names: tuple[Token, ...]
+    value_names: frozenset[str]
 
 
 @dataclass(frozen=True)
@@ -574,6 +575,8 @@ class AlgolTypeChecker:
                 pending = self._check_declaration(child, scope)
                 if pending is not None:
                     pending_procedures.append(pending)
+
+        self._resolve_pending_procedure_write_reasons(pending_procedures)
 
         for pending in pending_procedures:
             self._check_pending_procedure_body(pending)
@@ -891,14 +894,6 @@ class AlgolTypeChecker:
         parameter_specs = _parameter_specs(node)
         body = _first_direct_node(node, "proc_body")
         body_inner = _first_ast_child(body) if body is not None else None
-        known_procedures = _unique_procedure_names(self.semantic_procedures)
-        write_reasons = _by_name_formal_write_reasons(
-            body_inner,
-            formal_names,
-            value_names,
-            known_procedures,
-            name_token.value,
-        )
         for formal in formal_names:
             mode = VALUE if formal.value in value_names else NAME
             parameter_spec = parameter_specs.get(formal.value, _ParameterSpec())
@@ -1083,16 +1078,8 @@ class AlgolTypeChecker:
                         symbol_id=param_symbol.symbol_id,
                         slot_offset=param_symbol.slot_offset,
                         kind=parameter_kind,
-                        may_write=(
-                            formal.value in write_reasons
-                            if parameter_kind == "scalar"
-                            else False
-                        ),
-                        write_reason=(
-                            write_reasons.get(formal.value)
-                            if parameter_kind == "scalar"
-                            else None
-                        ),
+                        may_write=False,
+                        write_reason=None,
                     )
                 )
 
@@ -1117,17 +1104,85 @@ class AlgolTypeChecker:
             proc_scope=proc_scope,
             body_inner=body_inner,
             procedure_depth=procedure_depth,
-            parameters=tuple(parameters),
+            formal_names=tuple(formal_names),
+            value_names=frozenset(value_names),
+        )
+
+    def _resolve_pending_procedure_write_reasons(
+        self,
+        pending_procedures: list[_PendingProcedureDeclaration],
+    ) -> None:
+        changed = True
+        while changed:
+            changed = False
+            known_procedures = _unique_procedure_names(self.semantic_procedures)
+            for pending in pending_procedures:
+                descriptor = self.semantic_procedures[pending.descriptor_index]
+                write_reasons = _by_name_formal_write_reasons(
+                    pending.body_inner,
+                    list(pending.formal_names),
+                    set(pending.value_names),
+                    known_procedures,
+                    descriptor.name,
+                )
+                updated_parameters = tuple(
+                    self._procedure_parameter_with_write_reason(
+                        parameter,
+                        write_reasons,
+                    )
+                    for parameter in descriptor.parameters
+                )
+                if updated_parameters != descriptor.parameters:
+                    self.semantic_procedures[pending.descriptor_index] = (
+                        ProcedureDescriptor(
+                            procedure_id=descriptor.procedure_id,
+                            name=descriptor.name,
+                            label=descriptor.label,
+                            declaring_block_id=descriptor.declaring_block_id,
+                            body_block_id=descriptor.body_block_id,
+                            body_node_id=descriptor.body_node_id,
+                            return_type=descriptor.return_type,
+                            parameters=updated_parameters,
+                            line=descriptor.line,
+                            column=descriptor.column,
+                        )
+                    )
+                    changed = True
+
+    def _procedure_parameter_with_write_reason(
+        self,
+        parameter: ProcedureParameter,
+        write_reasons: dict[str, str],
+    ) -> ProcedureParameter:
+        if parameter.kind != "scalar":
+            return parameter
+        write_reason = write_reasons.get(parameter.name)
+        may_write = write_reason is not None
+        if (
+            parameter.may_write == may_write
+            and parameter.write_reason == write_reason
+        ):
+            return parameter
+        return ProcedureParameter(
+            name=parameter.name,
+            type_name=parameter.type_name,
+            mode=parameter.mode,
+            symbol_id=parameter.symbol_id,
+            slot_offset=parameter.slot_offset,
+            kind=parameter.kind,
+            may_write=may_write,
+            write_reason=write_reason,
+            procedure_call_shapes=parameter.procedure_call_shapes,
         )
 
     def _check_pending_procedure_body(
         self,
         pending: _PendingProcedureDeclaration,
     ) -> None:
-        descriptor = pending.procedure
         previous_procedure_depth = self._procedure_nesting_depth
         self._procedure_nesting_depth = pending.procedure_depth
         try:
+            descriptor = self.semantic_procedures[pending.descriptor_index]
             if pending.body_inner.rule_name == "block":
                 self._check_block_contents(pending.body_inner, pending.proc_scope)
             else:
@@ -1135,7 +1190,7 @@ class AlgolTypeChecker:
                 self._check_statement(pending.body_inner, pending.proc_scope)
             updated_parameters = tuple(
                 self._procedure_parameter_with_call_shapes(parameter)
-                for parameter in pending.parameters
+                for parameter in descriptor.parameters
             )
             if updated_parameters != descriptor.parameters:
                 updated_descriptor = ProcedureDescriptor(
