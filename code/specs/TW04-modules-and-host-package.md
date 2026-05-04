@@ -331,9 +331,31 @@ cleanly to anything.
    `coding-adventures-directed-graph` package.  Public API
    unchanged.
 
-4. **Phase 4d — JVM module lowering.**  Each module → one
-   `.class`.  Cross-module CALL → `invokestatic`.  Bundle the
-   stdlib classes alongside the user JAR.
+4. **Phase 4d — JVM module lowering.**  **Status: shipped —
+   `ir-to-jvm-class-file` v0.17.0, `twig-jvm-compiler` v0.7.0.**
+   Each module → one `.class`.  Cross-module CALL → `invokestatic`.
+
+   **Design:**
+   - A shared `TwigRuntime` class (`coding_adventures/twig/runtime/TwigRuntime`)
+     owns `public static int[] __ca_regs` and `public static Object[] __ca_objregs`,
+     initialised in `<clinit>`.  All module classes `getstatic` / `putstatic`
+     to this external owner instead of declaring their own fields.
+   - `JvmBackendConfig.external_runtime_class` — when set to
+     `TWIG_RUNTIME_BINARY_NAME`, the backend omits field declarations and
+     redirects all register-array accesses to the named class.
+   - `JvmBackendConfig.extra_callable_labels` — exported functions have no
+     local `CALL` callers so `_discover_callable_regions` would silently drop
+     them.  This hint forces them to be emitted as `ACC_PUBLIC | ACC_STATIC`
+     JVM methods.
+   - Cross-module `IrOp.CALL` labels (containing `/`) are decomposed at the
+     last `/` to yield a foreign class name and method name; the backend emits
+     `invokestatic <class>.<method>()I`.
+   - `compile_modules(modules, *, entry_module)` in `twig-jvm-compiler`
+     compiles every non-host `ResolvedModule` and returns a `MultiModuleResult`.
+   - `run_modules(modules, *, entry_module)` bundles all classes into a JAR
+     and invokes `java -jar`.
+   - **Acceptance criterion** (from spec): `(a/math/add 17 25)` → exit 0,
+     stdout `b'\x2a'` (42) on real `java`.  ✓
 
 5. **Phase 4e — CLR module lowering.**  Each module → one
    `TypeDef` in a multi-type assembly.

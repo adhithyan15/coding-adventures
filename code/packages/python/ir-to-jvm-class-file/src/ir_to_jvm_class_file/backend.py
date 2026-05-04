@@ -130,9 +130,24 @@ _DESC_PRINTSTREAM_WRITE = "(I)V"
 _DESC_INPUTSTREAM_READ = "()I"
 
 _JAVA_BINARY_NAME_RE = re.compile(
-    r"[A-Za-z_$][A-Za-z0-9_$]*(?:\.[A-Za-z_$][A-Za-z0-9_$]*)*"
+    r"[A-Za-z_$][A-Za-z0-9_$]*(?:[./][A-Za-z_$][A-Za-z0-9_$]*)*"
 )
 _MAX_STATIC_DATA_BYTES = 16 * 1024 * 1024
+
+# TW04 Phase 4d — shared register-file runtime class.
+#
+# In multi-module programs every module needs to READ and WRITE the same
+# ``__ca_regs`` / ``__ca_objregs`` arrays.  If each module class owns its
+# own static copy the call convention breaks: the caller writes param
+# values into its copy; the callee reads from a different copy.
+#
+# The fix: emit one ``TwigRuntime`` class that owns the single canonical
+# arrays.  Every generated module class redirects its ``getstatic`` /
+# ``putstatic`` instructions to this class when
+# ``JvmBackendConfig.external_runtime_class`` is set.
+TWIG_RUNTIME_BINARY_NAME: Final = (
+    "coding_adventures/twig/runtime/TwigRuntime"
+)
 
 # JVM02 Phase 2c.5 — captures-first IR register layout for lifted
 # lambda bodies (matches BEAM/CLR closure conventions).
@@ -176,6 +191,36 @@ class JvmBackendConfig:
     # Twig compiler frontend populates this from each lambda's
     # param list so multi-arity ``(lambda (x y) (+ x y))`` works.
     closure_explicit_arities: dict[str, int] = field(default_factory=dict)
+    # TW04 Phase 4d — optional external register-file class.
+    #
+    # When ``None`` (the default) this module class owns its own
+    # ``static int[] __ca_regs`` and ``static Object[] __ca_objregs``
+    # — the single-module behaviour, unchanged from v1.
+    #
+    # When set to a JVM internal class name (e.g.
+    # ``"coding_adventures/twig/runtime/TwigRuntime"``), the module
+    # class does NOT declare those fields; every ``getstatic`` /
+    # ``putstatic`` for the register arrays targets the named external
+    # class instead.  The module's ``<clinit>`` also skips the array
+    # initialisation — the external class's own ``<clinit>`` does it.
+    #
+    # This lets a multi-module program share one register file across
+    # all compiled classes so that caller-writes in module A are
+    # visible to callee-reads in module B.
+    external_runtime_class: str | None = None
+    # TW04 Phase 4d — extra callable labels for exported functions.
+    #
+    # ``_discover_callable_regions`` normally discovers callable methods
+    # only from: (a) the entry label, and (b) targets of local ``CALL``
+    # instructions.  In a dependency module (e.g. ``a/math``), the
+    # exported functions (``add``, ``sub``) are *never* called locally —
+    # they are only invoked from other modules via cross-module
+    # ``invokestatic``.  Without this hint they would be silently dropped
+    # from the class file, resulting in a ``NoSuchMethodError`` at runtime.
+    #
+    # Supply the plain (unqualified) function names here so they are
+    # included as callable regions even when no local ``CALL`` targets them.
+    extra_callable_labels: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -484,6 +529,13 @@ class _JvmClassLowerer:
         self._fresh_label_id = 0
         self._helper_reg_field = "__ca_regs"
         self._helper_mem_field = "__ca_memory"
+        # TW04 Phase 4d — owner of the register-file static fields.
+        # In single-module programs this is the module class itself
+        # (``self.internal_name``).  In multi-module programs it is the
+        # shared ``TwigRuntime`` class so all modules see the same arrays.
+        self._reg_owner: str = (
+            config.external_runtime_class or self.internal_name
+        )
         # JVM02 Phase 2c.5 — parallel object pool for closure refs.
         # Allocated only when ``closure_free_var_counts`` is non-empty
         # so non-closure programs see no extra fields / clinit work.
@@ -534,19 +586,27 @@ class _JvmClassLowerer:
         # discipline (int-only vs int + obj).
         self._needs_objregs = needs_objregs
 
-        fields = [
-            _FieldSpec(
-                _ACC_PRIVATE | ACC_STATIC,
-                self._helper_reg_field,
-                _DESC_INT_ARRAY,
-            ),
+        # TW04 Phase 4d: when an external TwigRuntime class owns the
+        # register arrays, the module class does NOT declare them as
+        # its own fields.  The ``__ca_memory`` field is per-module (it
+        # is only used by Brainfuck programs); it is always defined here.
+        fields: list[_FieldSpec] = []
+        if not self.config.external_runtime_class:
+            fields.append(
+                _FieldSpec(
+                    _ACC_PRIVATE | ACC_STATIC,
+                    self._helper_reg_field,
+                    _DESC_INT_ARRAY,
+                )
+            )
+        fields.append(
             _FieldSpec(
                 _ACC_PRIVATE | ACC_STATIC,
                 self._helper_mem_field,
                 _DESC_BYTE_ARRAY,
-            ),
-        ]
-        if needs_objregs:
+            )
+        )
+        if needs_objregs and not self.config.external_runtime_class:
             fields.append(
                 _FieldSpec(
                     _ACC_PRIVATE | ACC_STATIC,
@@ -627,9 +687,22 @@ class _JvmClassLowerer:
         label_positions: dict[str, int],
     ) -> list[_CallableRegion]:
         callable_names = {self.program.entry_label}
+        # TW04 Phase 4d: extra callable labels for exported functions.
+        # Exported functions in a dependency module are only called from other
+        # modules (via cross-module invokestatic), so no local CALL instruction
+        # references them.  Without this hint they would be silently omitted
+        # from the class file and cause NoSuchMethodError at runtime.
+        callable_names.update(self.config.extra_callable_labels)
         for instruction in self.program.instructions:
             if instruction.opcode == IrOp.CALL:
                 target = _as_label(instruction.operands[0], "CALL target")
+                # TW04 Phase 4d: a label containing ``/`` is a cross-module
+                # call (e.g. ``"a/math/add"``).  There is no corresponding
+                # local label in this IrProgram — the call lowers to an
+                # ``invokestatic`` on the foreign class, so we must not
+                # require it to exist in the local label table.
+                if "/" in target.name:
+                    continue
                 callable_names.add(target.name)
             elif instruction.opcode == IrOp.MAKE_CLOSURE:
                 # MAKE_CLOSURE dst, fn_label, num_captured, capt0, ...
@@ -687,6 +760,9 @@ class _JvmClassLowerer:
                         )
                 elif instruction.opcode == IrOp.CALL:
                     label_operand = _as_label(instruction.operands[0], "CALL target")
+                    # TW04 Phase 4d: cross-module targets have no local label.
+                    if "/" in label_operand.name:
+                        continue
                     if label_operand.name not in callable_lookup:
                         raise JvmBackendError(
                             "CALL target "
@@ -744,6 +820,19 @@ class _JvmClassLowerer:
 
     def _field_ref(self, name: str, descriptor: str) -> int:
         return self.cp.field_ref(self.internal_name, name, descriptor)
+
+    def _reg_field_ref(self, name: str, descriptor: str) -> int:
+        """Constant-pool field reference for a register-array field.
+
+        When ``external_runtime_class`` is configured, the register
+        arrays (``__ca_regs`` / ``__ca_objregs``) live on the shared
+        ``TwigRuntime`` class rather than on ``self.internal_name``.
+        This helper centralises the owner selection so every
+        ``getstatic`` / ``putstatic`` for those fields is automatically
+        redirected without touching other fields (e.g. ``__ca_memory``
+        which always lives on the module class itself).
+        """
+        return self.cp.field_ref(self._reg_owner, name, descriptor)
 
     def _method_ref(self, name: str, descriptor: str) -> int:
         return self.cp.method_ref(self.internal_name, name, descriptor)
@@ -827,7 +916,7 @@ class _JvmClassLowerer:
         for reg_idx in range(reg_count):
             builder.emit_u2_instruction(
                 _OP_GETSTATIC,
-                self._field_ref(self._helper_reg_field, _DESC_INT_ARRAY),
+                self._reg_field_ref(self._helper_reg_field, _DESC_INT_ARRAY),
             )
             self._emit_push_int(builder, reg_idx)
             builder.emit_opcode(_OP_IALOAD)
@@ -847,7 +936,7 @@ class _JvmClassLowerer:
                 continue  # preserve callee's return value
             builder.emit_u2_instruction(
                 _OP_GETSTATIC,
-                self._field_ref(self._helper_reg_field, _DESC_INT_ARRAY),
+                self._reg_field_ref(self._helper_reg_field, _DESC_INT_ARRAY),
             )
             self._emit_push_int(builder, reg_idx)
             self._emit_iload(builder, reg_idx)
@@ -884,7 +973,7 @@ class _JvmClassLowerer:
         for reg_idx in range(reg_count):
             builder.emit_u2_instruction(
                 _OP_GETSTATIC,
-                self._field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
+                self._reg_field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
             )
             self._emit_push_int(builder, reg_idx)
             builder.emit_opcode(_OP_AALOAD)
@@ -906,7 +995,7 @@ class _JvmClassLowerer:
                 continue  # preserve callee's object return value
             builder.emit_u2_instruction(
                 _OP_GETSTATIC,
-                self._field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
+                self._reg_field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
             )
             self._emit_push_int(builder, reg_idx)
             self._emit_aload(builder, reg_count + reg_idx)
@@ -1073,7 +1162,7 @@ class _JvmClassLowerer:
         #   aastore                          ; objregs[dst] = ref
         builder.emit_u2_instruction(
             _OP_GETSTATIC,
-            self._field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
+            self._reg_field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
         )
         self._emit_push_int(builder, dst.index)
         builder.emit_u2_instruction(
@@ -1129,7 +1218,7 @@ class _JvmClassLowerer:
         # interface type before invokeinterface.
         builder.emit_u2_instruction(
             _OP_GETSTATIC,
-            self._field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
+            self._reg_field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
         )
         self._emit_push_int(builder, closure_reg.index)
         builder.emit_opcode(_OP_AALOAD)
@@ -1192,12 +1281,12 @@ class _JvmClassLowerer:
         if dst.index in self._region_obj_regs:
             builder.emit_u2_instruction(
                 _OP_GETSTATIC,
-                self._field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
+                self._reg_field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
             )
             self._emit_push_int(builder, dst.index)
             builder.emit_u2_instruction(
                 _OP_GETSTATIC,
-                self._field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
+                self._reg_field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
             )
             self._emit_push_int(builder, 1)
             builder.emit_opcode(_OP_AALOAD)
@@ -1230,7 +1319,7 @@ class _JvmClassLowerer:
         the stack."""
         builder.emit_u2_instruction(
             _OP_GETSTATIC,
-            self._field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
+            self._reg_field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
         )
         self._emit_push_int(builder, reg_index)
         builder.emit_opcode(_OP_AALOAD)
@@ -1262,7 +1351,7 @@ class _JvmClassLowerer:
         """
         builder.emit_u2_instruction(
             _OP_GETSTATIC,
-            self._field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
+            self._reg_field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
         )
         builder.emit_opcode(_OP_SWAP)
         self._emit_push_int(builder, dst_index)
@@ -1513,12 +1602,18 @@ class _JvmClassLowerer:
     ) -> _MethodSpec:
         builder = _BytecodeBuilder()
 
-        self._emit_push_int(builder, reg_count)
-        builder.emit_u1_instruction(_OP_NEWARRAY, _ATYPE_INT)
-        builder.emit_u2_instruction(
-            _OP_PUTSTATIC,
-            self._field_ref(self._helper_reg_field, _DESC_INT_ARRAY),
-        )
+        # TW04 Phase 4d: in multi-module programs the register arrays
+        # live on the shared TwigRuntime class whose own ``<clinit>``
+        # allocates them.  The module class's ``<clinit>`` must NOT
+        # reinitialise them (that would reset every register on each new
+        # module load and corrupt in-flight register values).
+        if not self.config.external_runtime_class:
+            self._emit_push_int(builder, reg_count)
+            builder.emit_u1_instruction(_OP_NEWARRAY, _ATYPE_INT)
+            builder.emit_u2_instruction(
+                _OP_PUTSTATIC,
+                self._reg_field_ref(self._helper_reg_field, _DESC_INT_ARRAY),
+            )
 
         total_bytes = sum(declaration.size for declaration in self.program.data)
         self._emit_push_int(builder, total_bytes)
@@ -1545,7 +1640,9 @@ class _JvmClassLowerer:
         # initialised to all-null; the cells get populated by
         # MAKE_CLOSURE / MAKE_CONS / MAKE_SYMBOL / LOAD_NIL /
         # ADD_IMM-mov as the program runs.
-        if needs_objregs:
+        # TW04 Phase 4d: same as ``__ca_regs`` — skip when the arrays
+        # are owned by the external TwigRuntime class.
+        if needs_objregs and not self.config.external_runtime_class:
             self._emit_push_int(builder, reg_count)
             builder.emit_u2_instruction(
                 _OP_ANEWARRAY,
@@ -1553,7 +1650,7 @@ class _JvmClassLowerer:
             )
             builder.emit_u2_instruction(
                 _OP_PUTSTATIC,
-                self._field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
+                self._reg_field_ref(self._objreg_field, _DESC_OBJECT_ARRAY),
             )
 
         builder.emit_opcode(_OP_RETURN)
@@ -1570,7 +1667,7 @@ class _JvmClassLowerer:
         builder = _BytecodeBuilder()
         builder.emit_u2_instruction(
             _OP_GETSTATIC,
-            self._field_ref(self._helper_reg_field, _DESC_INT_ARRAY),
+            self._reg_field_ref(self._helper_reg_field, _DESC_INT_ARRAY),
         )
         self._emit_iload(builder, 0)
         builder.emit_opcode(_OP_IALOAD)
@@ -1588,7 +1685,7 @@ class _JvmClassLowerer:
         builder = _BytecodeBuilder()
         builder.emit_u2_instruction(
             _OP_GETSTATIC,
-            self._field_ref(self._helper_reg_field, _DESC_INT_ARRAY),
+            self._reg_field_ref(self._helper_reg_field, _DESC_INT_ARRAY),
         )
         self._emit_iload(builder, 0)
         self._emit_iload(builder, 1)
@@ -1764,9 +1861,11 @@ class _JvmClassLowerer:
             self.cp.field_ref("java/lang/System", "out", "Ljava/io/PrintStream;"),
         )
         # Load __ca_regs[arg_reg] — arg_reg is local variable 1.
+        # Use _reg_owner so that multi-module builds read from TwigRuntime
+        # rather than the module class (which owns no register array).
         builder.emit_u2_instruction(
             _OP_GETSTATIC,
-            self.cp.field_ref(self.config.class_name, "__ca_regs", "[I"),
+            self._reg_field_ref(self._helper_reg_field, _DESC_INT_ARRAY),
         )
         self._emit_iload(builder, 1)     # arg_reg index
         builder.emit_opcode(_OP_IALOAD)  # __ca_regs[arg_reg]
@@ -1827,10 +1926,11 @@ class _JvmClassLowerer:
         self._emit_iload(builder, 0)     # syscall_num
         self._emit_push_int(builder, 10)
         builder.emit_branch(_OP_IF_ICMPNE, label_done)
-        # Load __ca_regs[arg_reg] as the exit code.
+        # Load __ca_regs[arg_reg] as the exit code.  Same _reg_owner
+        # indirection as SYSCALL 1 — multi-module builds target TwigRuntime.
         builder.emit_u2_instruction(
             _OP_GETSTATIC,
-            self.cp.field_ref(self.config.class_name, "__ca_regs", "[I"),
+            self._reg_field_ref(self._helper_reg_field, _DESC_INT_ARRAY),
         )
         self._emit_iload(builder, 1)     # arg_reg index
         builder.emit_opcode(_OP_IALOAD)  # __ca_regs[arg_reg] = exit code
@@ -1963,9 +2063,24 @@ class _JvmClassLowerer:
         self._emit_region_instructions(builder, region, reg_count)
 
         code = builder.assemble()
+        # In single-module programs only ``_start`` (the entry label) needs
+        # to be callable externally (from ``main()`` on the same class) —
+        # all other functions are invoked via ``invokestatic`` within the
+        # same class, so ``ACC_PRIVATE`` is sufficient.
+        #
+        # In multi-module programs (``external_runtime_class`` is set) other
+        # module classes call into this module's functions via
+        # ``invokestatic``.  JVM access control applies: a method tagged
+        # ``ACC_PRIVATE`` on class A cannot be invoked by class B even with
+        # ``invokestatic``.  The JVM throws ``NoSuchMethodError`` at runtime
+        # for a cross-class invocation of a private method.  Setting all
+        # callable methods to ``ACC_PUBLIC`` in multi-module mode allows the
+        # cross-class ``invokestatic`` calls to succeed while keeping the
+        # single-module behaviour unchanged.
+        is_multi_module = bool(self.config.external_runtime_class)
         access_flags = (
             ACC_PUBLIC | ACC_STATIC
-            if region.name == self.program.entry_label
+            if (region.name == self.program.entry_label or is_multi_module)
             else _ACC_PRIVATE | ACC_STATIC
         )
         # JVM01: int-pool caller-saves uses JVM locals 0..reg_count-1.
@@ -2319,6 +2434,13 @@ class _JvmClassLowerer:
                 # fresh frames per invokestatic), so the snapshot is
                 # private to each invocation — this is what makes
                 # recursion work.
+                #
+                # TW04 Phase 4d: a label like ``"a/math/add"`` (contains
+                # ``/``) is a cross-module call.  Decompose at the LAST
+                # ``/``: ``class = "a/math"``, ``method = "add"``.  The
+                # caller-saves convention is identical — we just point the
+                # ``invokestatic`` at the foreign class's method instead of
+                # a local one.
                 self._emit_caller_save_registers(builder, reg_count)
                 # TW03 Phase 3 follow-up — also snapshot the obj pool
                 # when the program uses heap primitives or closures.
@@ -2330,10 +2452,20 @@ class _JvmClassLowerer:
                 if self._needs_objregs:
                     self._emit_caller_save_objregs(builder, reg_count)
                 self._emit_push_int(builder, 1)
-                builder.emit_u2_instruction(
-                    _OP_INVOKESTATIC,
-                    self._method_ref(label.name, _DESC_NOARGS_INT),
-                )
+                if "/" in label.name:
+                    # Cross-module call: "a/math/add" → class "a/math", method "add"
+                    slash = label.name.rfind("/")
+                    target_class = label.name[:slash]
+                    method_name = label.name[slash + 1:]
+                    builder.emit_u2_instruction(
+                        _OP_INVOKESTATIC,
+                        self.cp.method_ref(target_class, method_name, _DESC_NOARGS_INT),
+                    )
+                else:
+                    builder.emit_u2_instruction(
+                        _OP_INVOKESTATIC,
+                        self._method_ref(label.name, _DESC_NOARGS_INT),
+                    )
                 builder.emit_u2_instruction(
                     _OP_INVOKESTATIC,
                     self._method_ref(self._helper_reg_set, _DESC_INT_INT_TO_VOID),
@@ -2578,6 +2710,131 @@ _HEAP_OPCODES: frozenset[IrOp] = frozenset({
     IrOp.IS_SYMBOL,
     IrOp.LOAD_NIL,
 })
+
+
+def build_runtime_class_artifact(reg_count: int = 256) -> JVMClassArtifact:
+    """Generate the shared ``TwigRuntime`` class for multi-module programs.
+
+    In a single-module Twig program the register file (``__ca_regs`` /
+    ``__ca_objregs``) lives directly on the generated user class.  When
+    multiple modules are compiled together each module class must access
+    the *same* register arrays — otherwise a write in module A is
+    invisible to a read in module B.
+
+    The solution: emit one ``TwigRuntime`` class that owns the single
+    canonical arrays, and configure every module class to redirect its
+    ``getstatic`` / ``putstatic`` instructions there via
+    ``JvmBackendConfig.external_runtime_class``.
+
+    Class layout::
+
+        public final class TwigRuntime {
+            public static int[]    __ca_regs    = new int[reg_count];
+            public static Object[] __ca_objregs = new Object[reg_count];
+        }
+
+    Parameters
+    ----------
+    reg_count:
+        Number of register slots in each array.  Must be large enough
+        to hold the deepest register index used by any module in the
+        build.  Defaults to 256, which is the same upper bound the
+        single-module path uses.
+    """
+    pool = _ConstantPoolBuilder()
+    runtime_name = TWIG_RUNTIME_BINARY_NAME
+    this_class_index = pool.class_ref(runtime_name)
+    super_class_index = pool.class_ref("java/lang/Object")
+    code_attr_name_index = pool.utf8("Code")
+
+    regs_field_name_index = pool.utf8("__ca_regs")
+    regs_field_desc_index = pool.utf8(_DESC_INT_ARRAY)
+    regs_field_ref = pool.field_ref(runtime_name, "__ca_regs", _DESC_INT_ARRAY)
+
+    objregs_field_name_index = pool.utf8("__ca_objregs")
+    objregs_field_desc_index = pool.utf8(_DESC_OBJECT_ARRAY)
+    objregs_field_ref = pool.field_ref(runtime_name, "__ca_objregs", _DESC_OBJECT_ARRAY)
+
+    object_class_index = pool.class_ref("java/lang/Object")
+
+    # ── <clinit>: __ca_regs = new int[N]; __ca_objregs = new Object[N] ──
+    clinit_builder = _BytecodeBuilder()
+
+    # __ca_regs = new int[reg_count]
+    # sipush is safe for reg_count ≤ 32767; default 256 fits in one byte
+    # but bipush only covers −128..127 so sipush is safer universally.
+    if reg_count <= 5:
+        clinit_builder.emit_opcode(_OP_ICONST_0 + reg_count)
+    elif -128 <= reg_count <= 127:
+        clinit_builder.emit_u1_instruction(_OP_BIPUSH, reg_count)
+    else:
+        clinit_builder.emit_raw(bytes([_OP_SIPUSH]) + struct.pack(">h", reg_count))
+    clinit_builder.emit_u1_instruction(_OP_NEWARRAY, _ATYPE_INT)
+    clinit_builder.emit_u2_instruction(_OP_PUTSTATIC, regs_field_ref)
+
+    # __ca_objregs = new Object[reg_count]
+    if reg_count <= 5:
+        clinit_builder.emit_opcode(_OP_ICONST_0 + reg_count)
+    elif -128 <= reg_count <= 127:
+        clinit_builder.emit_u1_instruction(_OP_BIPUSH, reg_count)
+    else:
+        clinit_builder.emit_raw(bytes([_OP_SIPUSH]) + struct.pack(">h", reg_count))
+    clinit_builder.emit_u2_instruction(_OP_ANEWARRAY, object_class_index)
+    clinit_builder.emit_u2_instruction(_OP_PUTSTATIC, objregs_field_ref)
+
+    clinit_builder.emit_opcode(_OP_RETURN)
+    clinit_code = clinit_builder.assemble()
+
+    clinit_name_index = pool.utf8("<clinit>")
+    clinit_desc_index = pool.utf8("()V")
+
+    pool_bytes = pool.encode()
+
+    # ── Assemble the class file (JVMS §4.1) ─────────────────────────────
+    class_bytes_parts: list[bytes] = [
+        b"\xca\xfe\xba\xbe",          # magic
+        _u2(0),                        # minor_version
+        _u2(49),                       # major_version (Java 5)
+        _u2(pool.count),               # constant_pool_count
+        pool_bytes,
+        _u2(ACC_PUBLIC | ACC_SUPER | _ACC_FINAL),  # access_flags
+        _u2(this_class_index),
+        _u2(super_class_index),
+        _u2(0),                        # interfaces_count
+        _u2(2),                        # fields_count (__ca_regs + __ca_objregs)
+        # Field: public static int[] __ca_regs
+        _u2(ACC_PUBLIC | ACC_STATIC),
+        _u2(regs_field_name_index),
+        _u2(regs_field_desc_index),
+        _u2(0),                        # no field attributes
+        # Field: public static Object[] __ca_objregs
+        _u2(ACC_PUBLIC | ACC_STATIC),
+        _u2(objregs_field_name_index),
+        _u2(objregs_field_desc_index),
+        _u2(0),                        # no field attributes
+        _u2(1),                        # methods_count (<clinit> only)
+    ]
+    class_bytes_parts.append(
+        _build_method_info(
+            access_flags=ACC_STATIC,
+            name_index=clinit_name_index,
+            descriptor_index=clinit_desc_index,
+            code=clinit_code,
+            max_stack=2,
+            max_locals=0,
+            code_attribute_name_index=code_attr_name_index,
+        )
+    )
+    class_bytes_parts.append(_u2(0))   # attributes_count
+
+    # ``class_name`` follows the JVMClassArtifact convention of using
+    # dots (canonical Java name), even though the binary name uses slashes.
+    return JVMClassArtifact(
+        class_name=runtime_name.replace("/", "."),
+        class_bytes=b"".join(class_bytes_parts),
+        callable_labels=(),
+        data_offsets={},
+    )
 
 
 def validate_for_jvm(program: IrProgram) -> list[str]:
