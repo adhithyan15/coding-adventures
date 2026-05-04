@@ -103,6 +103,7 @@ members = [
     "interrupt-handler",
     "interpreter-ir",
     "iir-type-checker",
+    "typing-spectrum",
     "iir-coverage",
     "iir-coverage-json",
     "iir-coverage-lcov",
