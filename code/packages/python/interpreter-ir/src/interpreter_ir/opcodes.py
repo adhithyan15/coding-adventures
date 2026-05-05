@@ -90,7 +90,7 @@ CMP_OPS: frozenset[str] = frozenset(
 )
 
 BRANCH_OPS: frozenset[str] = frozenset(
-    {"jmp", "jmp_if_true", "jmp_if_false"}
+    {"jmp", "jmp_if_true", "jmp_if_false", "branch_err"}
 )
 
 CONTROL_OPS: frozenset[str] = frozenset(
@@ -147,10 +147,43 @@ VALUE_OPS: frozenset[str] = (
     ARITHMETIC_OPS | BITWISE_OPS | CMP_OPS | _VALUE_EXTRA | _HEAP_VALUE_OPS
 )
 
+# ---------------------------------------------------------------------------
+# VMCOND00 Phase 1 — checked syscall + error branch
+# ---------------------------------------------------------------------------
+#
+# ``syscall_checked`` invokes a SYSCALL00 host syscall by number and stores
+# both the success value and an error code into named registers.  It never
+# traps — errors are surfaced as a non-zero error register.
+#
+# ``branch_err`` is the companion branch: it jumps to a label when the error
+# register (populated by syscall_checked) is non-zero, and falls through on
+# success.  It lives in BRANCH_OPS so that live-variable analysis and
+# control-flow passes treat it as a conditional branch.
+#
+# IIR operand conventions:
+#
+#   syscall_checked:
+#     srcs = [n (immediate int), arg_reg, val_dst, err_dst]
+#     dest = None   (both output registers are named in srcs)
+#
+#   branch_err:
+#     srcs = [err_reg, label_str]
+#     dest = None
+#
+# The distinction from ``jmp_if_false`` / ``jmp_if_true`` is semantic:
+# ``branch_err`` explicitly documents that it consumes an *error code*, not
+# a Boolean condition.  Backends can exploit this typing to route to
+# exception-handling machinery rather than a plain conditional jump.
+#
+# Note: ``syscall_checked`` is in SIDE_EFFECT_OPS (it performs I/O) and NOT
+# in VALUE_OPS (it has two output slots in srcs, not a single dest).
+SYSCALL_CHECKED_OPS: frozenset[str] = frozenset({"syscall_checked"})
+
 # All ops that have side effects beyond producing a value.
 SIDE_EFFECT_OPS: frozenset[str] = (
     BRANCH_OPS
     | CONTROL_OPS
+    | SYSCALL_CHECKED_OPS
     | frozenset({"store_reg", "store_mem", "io_out", "type_assert"})
     | frozenset({"field_store", "safepoint"})
 )
@@ -173,5 +206,6 @@ ALL_OPS: frozenset[str] = (
     | IO_OPS
     | COERCION_OPS
     | HEAP_OPS
+    | SYSCALL_CHECKED_OPS
     | frozenset({"const"})
 )

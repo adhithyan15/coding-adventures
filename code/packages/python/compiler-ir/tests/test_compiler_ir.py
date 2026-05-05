@@ -114,10 +114,12 @@ class TestIrOp:
         assert IrOp.IS_SYMBOL == 61
         assert IrOp.LOAD_NIL == 62
         assert IrOp.F64_POW == 63
+        assert IrOp.SYSCALL_CHECKED == 64
+        assert IrOp.BRANCH_ERR == 65
 
     def test_total_opcode_count(self) -> None:
-        """There are exactly 64 opcodes after heap primitives and f64 pow."""
-        assert len(IrOp) == 64
+        """There are exactly 66 opcodes after VMCOND00 Phase 1."""
+        assert len(IrOp) == 66
 
     def test_name_to_op_roundtrip(self) -> None:
         """NAME_TO_OP[op.name] == op for every opcode."""
@@ -1061,6 +1063,15 @@ class TestAllOpcodesPrintParse:
             IrOp.IS_SYMBOL:    [IrRegister(2), IrRegister(5)],
             # LOAD_NIL dst
             IrOp.LOAD_NIL:     [IrRegister(2)],
+            # SYSCALL_CHECKED n, arg_reg, val_dst, err_dst
+            IrOp.SYSCALL_CHECKED: [
+                IrImmediate(2),    # n = read-byte
+                IrRegister(0),     # arg (ignored for read-byte)
+                IrRegister(1),     # val_dst — byte read
+                IrRegister(2),     # err_dst — error code
+            ],
+            # BRANCH_ERR err_reg, label
+            IrOp.BRANCH_ERR:   [IrRegister(2), IrLabel("eof_handler")],
         }
         for idx, op in enumerate(IrOp):
             operands = operands_by_opcode[op]

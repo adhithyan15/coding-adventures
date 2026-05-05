@@ -2,6 +2,33 @@
 
 ## [Unreleased]
 
+### Added — VMCOND00 Phase 1: syscall_checked and branch_err opcodes
+
+Two new IIR string mnemonics implementing the VMCOND00 Layer 1 result-value
+error protocol in the interpreter IR world.
+
+- **`"syscall_checked"`** — Invoke a SYSCALL00-numbered host syscall without
+  trapping on errors.  IIR operand layout:
+  `srcs = [n (immediate int), arg_reg, val_dst, err_dst]`
+  Placed in **`SYSCALL_CHECKED_OPS`** (new frozenset) and **`SIDE_EFFECT_OPS`**
+  (it performs I/O).  Not in `VALUE_OPS` (two output slots in `srcs`, not a
+  single `dest`).
+
+- **`"branch_err"`** — Branch to a label when an error register is non-zero.
+  IIR operand layout: `srcs = [err_reg, label_str]`.
+  Added to **`BRANCH_OPS`** so live-variable analysis and control-flow passes
+  treat it as a conditional branch.  Falls through on `err_reg == 0`.
+
+**New export:** `SYSCALL_CHECKED_OPS: frozenset[str]` — exported from
+`interpreter_ir.__init__` alongside the other opcode-category frozensets.
+
+Programs that don't use these opcodes are fully unaffected — the new mnemonics
+never appear in their IIR.
+
+**Spec reference:** VMCOND00 §3 Layer 1; SYSCALL00 §2 canonical table.
+
+---
+
 ### Added — LANG16 PR1: heap / GC opcodes and ref<T> type encoding
 
 Schema-only foundation for the GC plug-in framework — vm-core, jit-core,

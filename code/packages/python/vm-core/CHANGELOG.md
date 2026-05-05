@@ -6,6 +6,68 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — VMCOND00 Phase 1: syscall_checked and branch_err dispatch + register_syscall API
+
+Implements VMCOND00 Layer 1 — the result-value error protocol — in the vm-core
+interpreter.  Languages that opt in can invoke numbered host syscalls without
+trapping and route control flow based on the error code, all without touching
+the condition system or allocating any handler objects.
+
+**New opcode handlers (in `dispatch.py`):**
+
+- **`handle_syscall_checked`** — Executes a SYSCALL00 canonical syscall by
+  number.  Looks up the implementation in `VMCore._syscall_table[n]`, calls it
+  with the resolved argument, and writes `(value, error_code)` into two named
+  registers.  Error convention: 0 = success, -1 = EOF, <-1 = negated errno.
+  The handler never raises Python exceptions: unknown syscall numbers return
+  `(0, -EINVAL)`; implementations that raise are caught and also return
+  `(0, -EINVAL)`.
+
+- **`handle_branch_err`** — Reads the error-code register and jumps to the
+  target label when it is non-zero.  Falls through when it is zero (success).
+  Does not record branch statistics (the check is a typed error test, not an
+  algorithmic conditional).
+
+Both handlers are registered in `STANDARD_OPCODES` under the string mnemonics
+`"syscall_checked"` and `"branch_err"`.
+
+**New public API on `VMCore`:**
+
+- **`register_syscall(n, impl)`** — Register a host implementation for
+  SYSCALL00 syscall number `n`.  `impl` must have signature
+  `(arg: int) -> (value: int, error_code: int)`.  `n` must be in `[1, 255]`
+  (the SYSCALL00 canonical range); a `ValueError` is raised for out-of-range
+  numbers.  See the docstring for the error-code convention and a complete
+  write-byte example.
+- **`unregister_syscall(n)`** — Remove a previously registered implementation.
+  No-op if `n` is not registered.
+- **`_syscall_table`** — Internal dict `{int: Callable}`.  Empty by default;
+  languages wire it up by calling `register_syscall`.  The VM is agnostic about
+  I/O strategy.
+
+**Security hardening:**
+
+- `register_syscall` validates that `n` is in `[1, 255]` before writing to
+  the table.  Syscall 0 is reserved by the ABI; numbers above 255 are outside
+  the canonical table.  Eager rejection surfaces programming errors at
+  registration time rather than silently diverging at dispatch time.
+
+**Test additions (`tests/test_vmcond00_phase1.py` — 26 new tests):**
+
+- `TestRegisterSyscall` — 11 tests: populate, overwrite, remove, no-op, empty
+  default, reject 0, reject >255, reject negative, accept boundary 1, accept
+  boundary 255.
+- `TestSyscallChecked` — 7 tests: success value, return value, EOF, errno, unknown
+  number → EINVAL, impl raises → EINVAL, arg forwarding.
+- `TestBranchErr` — 4 tests: branch on -1, branch on negated errno, branch on
+  positive non-zero, fall-through on 0.
+- `TestSyscallCheckedWithBranchErr` — 4 integration tests: full round-trip through
+  mock read-byte (success and EOF), unknown syscall → error path, two-syscall program.
+
+Coverage: 97.79% (233 tests pass).
+
+---
+
 ### Added — LANG18: Lightweight VM coverage mode
 
 - **`VMCore._coverage_mode` / `VMCore._coverage`** — two new internal fields that

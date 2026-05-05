@@ -455,6 +455,49 @@ class TestOpcodeSets:
     def test_polymorphic_constant(self):
         assert POLYMORPHIC_TYPE == "polymorphic"
 
+    # VMCOND00 Phase 1 opcode additions
+    def test_branch_err_in_branch_ops(self):
+        """branch_err is a conditional branch — it must be in BRANCH_OPS."""
+        assert "branch_err" in BRANCH_OPS
+
+    def test_branch_err_in_side_effect_ops(self):
+        """branch_err has a side effect (it can redirect control flow)."""
+        assert "branch_err" in SIDE_EFFECT_OPS
+
+    def test_branch_err_in_all_ops(self):
+        assert "branch_err" in ALL_OPS
+
+    def test_syscall_checked_in_side_effect_ops(self):
+        """syscall_checked performs I/O — it is a side-effecting op."""
+        assert "syscall_checked" in SIDE_EFFECT_OPS
+
+    def test_syscall_checked_in_all_ops(self):
+        assert "syscall_checked" in ALL_OPS
+
+    def test_syscall_checked_not_in_value_ops(self):
+        """syscall_checked has two output slots in srcs, not a single dest.
+        It is not a value-producing op in the VALUE_OPS sense."""
+        assert "syscall_checked" not in VALUE_OPS
+
+    def test_syscall_checked_not_in_branch_ops(self):
+        """syscall_checked is a syscall, not a branch."""
+        assert "syscall_checked" not in BRANCH_OPS
+
+    def test_syscall_checked_ops_frozenset_exported(self):
+        """SYSCALL_CHECKED_OPS is exported from interpreter_ir."""
+        from interpreter_ir import SYSCALL_CHECKED_OPS  # noqa: PLC0415
+        assert "syscall_checked" in SYSCALL_CHECKED_OPS
+        assert isinstance(SYSCALL_CHECKED_OPS, frozenset)
+
+    def test_syscall_checked_ops_subset_of_side_effect_ops(self):
+        from interpreter_ir import SYSCALL_CHECKED_OPS  # noqa: PLC0415
+        assert SYSCALL_CHECKED_OPS.issubset(SIDE_EFFECT_OPS)
+
+    def test_all_ops_superset_includes_vmcond00(self):
+        """Extend the superset check to include the new VMCOND00 opcodes."""
+        from interpreter_ir import SYSCALL_CHECKED_OPS  # noqa: PLC0415
+        assert SYSCALL_CHECKED_OPS.issubset(ALL_OPS)
+
 
 # ===========================================================================
 # Serialisation tests

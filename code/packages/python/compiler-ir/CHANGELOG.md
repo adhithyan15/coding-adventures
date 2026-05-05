@@ -2,6 +2,37 @@
 
 ## [Unreleased]
 
+### Added — VMCOND00 Phase 1: SYSCALL_CHECKED and BRANCH_ERR opcodes
+
+Two new opcodes implementing the VMCOND00 Layer 1 result-value error protocol.
+Languages that opt in to this layer can invoke host syscalls without trapping
+and inspect the error code with a dedicated conditional branch.  The rest of
+the IR is unchanged — programs that don't use these opcodes are unaffected.
+
+- **`IrOp.SYSCALL_CHECKED` (64)** — Invoke a SYSCALL00-numbered host syscall
+  without trapping on errors.  Operand layout:
+  `SYSCALL_CHECKED n, arg_reg, val_dst, err_dst`
+  - `n`       — SYSCALL00 canonical syscall number (immediate)
+  - `arg_reg` — register holding the single argument
+  - `val_dst` — register to receive the success value (0 on error)
+  - `err_dst` — register to receive the error code: 0 ok, -1 EOF, <-1 negated errno
+
+- **`IrOp.BRANCH_ERR` (65)** — Branch to a label when an error register is
+  non-zero.  Operand layout: `BRANCH_ERR err_reg, label`.  Falls through when
+  `err_reg == 0` (success); jumps when `err_reg != 0` (syscall failed).
+
+The total opcode count grows from 64 → 66.  All existing opcode IDs (0–63)
+remain stable; serialized IR text files round-trip unchanged.
+
+These opcodes map to the **compiler IR** world (AOT compilation via
+`ir-to-jvm-class-file`, `ir-to-cil-bytecode`, `ir-to-beam`).  The
+interpreter IR (``interpreter-ir``) gets the corresponding ``syscall_checked``
+and ``branch_err`` string mnemonics in the same PR.
+
+**Spec reference:** VMCOND00 §3 Layer 1 — result values; SYSCALL00 §2.
+
+---
+
 ### Added — TW03 Phase 3a heap-primitive ops
 
 Eight new opcodes (55–62) introducing the cross-backend Lisp
