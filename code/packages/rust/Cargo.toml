@@ -43,6 +43,7 @@ members = [
     "board-vm-ir",
     "board-vm-runtime",
     "board-vm-uno-r4",
+    "board-vm-uno-r4-usb-cdc",
     "board-vm-uno-r4-uart",
     "board-vm-uno-r4-firmware",
     "brainfuck",

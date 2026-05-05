@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/board-vm-uno-r4-usb-cdc",
+  "capabilities": [
+    {
+      "category": "hardware",
+      "action": "read",
+      "target": "Arduino Uno R4 WiFi TinyUSB CDC device interface",
+      "justification": "Firmware must read Board VM protocol frames arriving over the built-in USB-C SerialUSB CDC endpoint."
+    },
+    {
+      "category": "hardware",
+      "action": "write",
+      "target": "Arduino Uno R4 WiFi TinyUSB CDC device interface",
+      "justification": "Firmware must write Board VM protocol responses back over the built-in USB-C SerialUSB CDC endpoint."
+    }
+  ],
+  "justification": "Board-specific embedded USB CDC boundary for the Uno R4 WiFi. Generic protocol, stream, and VM code remain in reusable crates."
+}
