@@ -5,9 +5,20 @@
   "source": "upstream-html5lib-smoke.test",
   "generator": "normalize_html5lib_fixtures.py",
   "supported_initial_states": [
+    "Bogus comment state",
     "CDATA section bracket state",
     "CDATA section end state",
     "CDATA section state",
+    "Comment end bang state",
+    "Comment end dash state",
+    "Comment end state",
+    "Comment less-than sign bang dash dash state",
+    "Comment less-than sign bang dash state",
+    "Comment less-than sign bang state",
+    "Comment less-than sign state",
+    "Comment start dash state",
+    "Comment start state",
+    "Comment state",
     "Data state",
     "PLAINTEXT state",
     "RAWTEXT end tag attributes state",
@@ -2581,6 +2592,101 @@
       "last_start_tag": "script",
       "current_end_tag": "script",
       "temporary_buffer": "script"
+    },
+    {
+      "id": "html5lib-smoke-202",
+      "description": "comment state resumes seeded comment data",
+      "input": " body -->tail",
+      "tokens": [
+        "Comment(data=seed body )",
+        "Text(data=tail)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Comment state",
+      "current_comment": "seed"
+    },
+    {
+      "id": "html5lib-smoke-203",
+      "description": "comment end dash state preserves pending dash on fallback",
+      "input": "x-->tail",
+      "tokens": [
+        "Comment(data=seed-x)",
+        "Text(data=tail)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Comment end dash state",
+      "current_comment": "seed"
+    },
+    {
+      "id": "html5lib-smoke-204",
+      "description": "comment end state emits incorrectly closed comment",
+      "input": "!>tail",
+      "tokens": [
+        "Comment(data=seed)",
+        "Text(data=tail)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "incorrectly-closed-comment"
+      ],
+      "initial_state": "Comment end state",
+      "current_comment": "seed"
+    },
+    {
+      "id": "html5lib-smoke-205",
+      "description": "comment end bang state preserves pending bang on fallback",
+      "input": "y-->tail",
+      "tokens": [
+        "Comment(data=seed--!y)",
+        "Text(data=tail)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Comment end bang state",
+      "current_comment": "seed"
+    },
+    {
+      "id": "html5lib-smoke-206",
+      "description": "comment less-than sign state resumes committed less-than",
+      "input": "x-->tail",
+      "tokens": [
+        "Comment(data=seed<x)",
+        "Text(data=tail)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Comment less-than sign state",
+      "current_comment": "seed<"
+    },
+    {
+      "id": "html5lib-smoke-207",
+      "description": "comment start dash state reports abrupt close",
+      "input": ">tail",
+      "tokens": [
+        "Comment(data=)",
+        "Text(data=tail)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "abrupt-closing-of-empty-comment"
+      ],
+      "initial_state": "Comment start dash state",
+      "current_comment": ""
+    },
+    {
+      "id": "html5lib-smoke-208",
+      "description": "bogus comment state resumes seeded comment data",
+      "input": "tail>after",
+      "tokens": [
+        "Comment(data=bogus-tail)",
+        "Text(data=after)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Bogus comment state",
+      "current_comment": "bogus-"
     }
   ],
   "skipped": []

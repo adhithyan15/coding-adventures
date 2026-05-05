@@ -287,6 +287,18 @@ impl Tokenizer {
         self.current_attribute = None;
     }
 
+    /// Seed the in-progress comment token used by tokenizer continuation states.
+    pub fn with_current_comment(mut self, data: impl Into<String>) -> Self {
+        self.set_current_comment(data);
+        self
+    }
+
+    /// Store the in-progress comment token used by tokenizer continuation states.
+    pub fn set_current_comment(&mut self, data: impl Into<String>) {
+        self.current_token = Some(CurrentToken::Comment { data: data.into() });
+        self.current_attribute = None;
+    }
+
     /// Clear any in-progress token construction state.
     pub fn clear_current_token(&mut self) {
         self.current_token = None;

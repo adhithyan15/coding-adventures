@@ -14,6 +14,17 @@ SUPPORTED_INITIAL_STATES = {
     "CDATA section bracket state",
     "CDATA section end state",
     "CDATA section state",
+    "Bogus comment state",
+    "Comment end bang state",
+    "Comment end dash state",
+    "Comment end state",
+    "Comment less-than sign bang dash dash state",
+    "Comment less-than sign bang dash state",
+    "Comment less-than sign bang state",
+    "Comment less-than sign state",
+    "Comment start dash state",
+    "Comment start state",
+    "Comment state",
     "Data state",
     "PLAINTEXT state",
     "RCDATA end tag attributes state",
@@ -116,6 +127,20 @@ END_TAG_SEED_INITIAL_STATES = {
     "Script data escaped self-closing end tag state",
 }
 
+COMMENT_SEED_INITIAL_STATES = {
+    "Bogus comment state",
+    "Comment end bang state",
+    "Comment end dash state",
+    "Comment end state",
+    "Comment less-than sign bang dash dash state",
+    "Comment less-than sign bang dash state",
+    "Comment less-than sign bang state",
+    "Comment less-than sign state",
+    "Comment start dash state",
+    "Comment start state",
+    "Comment state",
+}
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -209,6 +234,21 @@ def is_supported(test: dict[str, Any]) -> tuple[bool, str]:
     if has_end_tag_seed and len(needs_end_tag_seed) != len(initial_states):
         return False, "currentEndTag/temporaryBuffer only supported for continuation states"
 
+    needs_comment_seed = [
+        initial_state
+        for initial_state in initial_states
+        if initial_state in COMMENT_SEED_INITIAL_STATES
+    ]
+    has_comment_seed = isinstance(test.get("currentComment"), str)
+    if needs_comment_seed and not has_comment_seed:
+        return False, f"{needs_comment_seed[0]} requires currentComment"
+
+    if has_comment_seed and len(needs_comment_seed) != len(initial_states):
+        return False, "currentComment only supported for comment continuation states"
+
+    if has_comment_seed and (has_end_tag_seed or has_partial_end_tag_seed):
+        return False, "currentComment cannot be combined with end-tag continuation context"
+
     for token in test.get("output", []):
         kind = token[0]
         if kind not in {"Character", "StartTag", "EndTag", "Comment", "DOCTYPE"}:
@@ -283,6 +323,10 @@ def normalize_case(
     temporary_buffer = test.get("temporaryBuffer")
     if temporary_buffer is not None:
         normalized["temporary_buffer"] = temporary_buffer
+
+    current_comment = test.get("currentComment")
+    if current_comment is not None:
+        normalized["current_comment"] = current_comment
 
     return normalized
 

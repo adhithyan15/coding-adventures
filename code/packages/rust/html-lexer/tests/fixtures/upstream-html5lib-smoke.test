@@ -2834,6 +2834,146 @@
           "col": 1
         }
       ]
+    },
+    {
+      "description": "comment state resumes seeded comment data",
+      "input": " body -->tail",
+      "initialStates": [
+        "Comment state"
+      ],
+      "currentComment": "seed",
+      "output": [
+        [
+          "Comment",
+          "seed body "
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ]
+    },
+    {
+      "description": "comment end dash state preserves pending dash on fallback",
+      "input": "x-->tail",
+      "initialStates": [
+        "Comment end dash state"
+      ],
+      "currentComment": "seed",
+      "output": [
+        [
+          "Comment",
+          "seed-x"
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ]
+    },
+    {
+      "description": "comment end state emits incorrectly closed comment",
+      "input": "!>tail",
+      "initialStates": [
+        "Comment end state"
+      ],
+      "currentComment": "seed",
+      "output": [
+        [
+          "Comment",
+          "seed"
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "incorrectly-closed-comment",
+          "line": 1,
+          "col": 2
+        }
+      ]
+    },
+    {
+      "description": "comment end bang state preserves pending bang on fallback",
+      "input": "y-->tail",
+      "initialStates": [
+        "Comment end bang state"
+      ],
+      "currentComment": "seed",
+      "output": [
+        [
+          "Comment",
+          "seed--!y"
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ]
+    },
+    {
+      "description": "comment less-than sign state resumes committed less-than",
+      "input": "x-->tail",
+      "initialStates": [
+        "Comment less-than sign state"
+      ],
+      "currentComment": "seed<",
+      "output": [
+        [
+          "Comment",
+          "seed<x"
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ]
+    },
+    {
+      "description": "comment start dash state reports abrupt close",
+      "input": ">tail",
+      "initialStates": [
+        "Comment start dash state"
+      ],
+      "currentComment": "",
+      "output": [
+        [
+          "Comment",
+          ""
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "abrupt-closing-of-empty-comment",
+          "line": 1,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "description": "bogus comment state resumes seeded comment data",
+      "input": "tail>after",
+      "initialStates": [
+        "Bogus comment state"
+      ],
+      "currentComment": "bogus-",
+      "output": [
+        [
+          "Comment",
+          "bogus-tail"
+        ],
+        [
+          "Character",
+          "after"
+        ]
+      ]
     }
   ]
 }

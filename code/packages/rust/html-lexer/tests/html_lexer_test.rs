@@ -1,8 +1,8 @@
 use coding_adventures_html_lexer::{
-    apply_html_lex_context, create_html_lexer, html1_definition, html1_machine,
-    html_skeleton_definition, html_skeleton_machine, lex_html, lex_html_fragment, Attribute,
-    HtmlLexContext, HtmlScriptingMode, HtmlTokenizerState, Token, HTML_FRAGMENT_TOKENIZER_STATES,
-    HTML_SCRIPT_TOKENIZER_STATES, HTML_TOKENIZER_STATES,
+    apply_html_lex_context, create_html_lexer, create_html_lexer_with_context, html1_definition,
+    html1_machine, html_skeleton_definition, html_skeleton_machine, lex_html, lex_html_fragment,
+    Attribute, HtmlLexContext, HtmlScriptingMode, HtmlTokenizerState, Token,
+    HTML_FRAGMENT_TOKENIZER_STATES, HTML_SCRIPT_TOKENIZER_STATES, HTML_TOKENIZER_STATES,
 };
 use state_machine::END_INPUT;
 
@@ -5046,6 +5046,17 @@ fn parser_facing_context_exposes_tokenizer_state_sets() {
             "cdata_section",
             "cdata_section_bracket",
             "cdata_section_end",
+            "comment_start",
+            "comment_start_dash",
+            "comment",
+            "comment_less_than_sign",
+            "comment_less_than_sign_bang",
+            "comment_less_than_sign_bang_dash",
+            "comment_less_than_sign_bang_dash_dash",
+            "comment_end_dash",
+            "comment_end",
+            "comment_end_bang",
+            "bogus_comment",
             "script_data",
             "script_data_less_than_sign",
             "script_data_end_tag_open",
@@ -5134,8 +5145,12 @@ fn parser_facing_context_exposes_tokenizer_state_sets() {
     assert!(HtmlTokenizerState::ScriptDataEscapedEndTagOpen.requires_last_start_tag());
     assert!(HtmlTokenizerState::ScriptDataEscapedEndTagWhitespace.requires_last_start_tag());
     assert!(HtmlTokenizerState::ScriptDataEscapedEndTagWhitespace.requires_end_tag_seed());
+    assert!(HtmlTokenizerState::Comment.requires_comment_seed());
+    assert!(HtmlTokenizerState::CommentEndDash.requires_comment_seed());
+    assert!(HtmlTokenizerState::BogusComment.requires_comment_seed());
     assert!(!HtmlTokenizerState::RcdataEndTagOpen.requires_end_tag_seed());
     assert!(!HtmlTokenizerState::CdataSectionEnd.requires_last_start_tag());
+    assert!(!HtmlTokenizerState::Data.requires_comment_seed());
 }
 
 #[test]
@@ -5267,6 +5282,114 @@ fn parser_facing_context_seeds_intermediate_text_states() {
             },
             Token::Eof
         ]
+    );
+}
+
+#[test]
+fn parser_facing_context_seeds_comment_continuation_states() {
+    let comment =
+        HtmlLexContext::comment_continuation(HtmlTokenizerState::Comment, "seed").unwrap();
+    assert_eq!(
+        lex_html_fragment(" body -->tail", &comment).unwrap(),
+        vec![
+            Token::Comment("seed body ".to_string()),
+            Token::Text("tail".to_string()),
+            Token::Eof,
+        ]
+    );
+
+    let comment_end_dash =
+        HtmlLexContext::comment_continuation(HtmlTokenizerState::CommentEndDash, "seed").unwrap();
+    assert_eq!(
+        lex_html_fragment("x-->tail", &comment_end_dash).unwrap(),
+        vec![
+            Token::Comment("seed-x".to_string()),
+            Token::Text("tail".to_string()),
+            Token::Eof,
+        ]
+    );
+
+    let comment_end =
+        HtmlLexContext::comment_continuation(HtmlTokenizerState::CommentEnd, "seed").unwrap();
+    let mut lexer = create_html_lexer_with_context(&comment_end).unwrap();
+    lexer.push("!>tail").unwrap();
+    lexer.finish().unwrap();
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Comment("seed".to_string()),
+            Token::Text("tail".to_string()),
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .map(|diagnostic| diagnostic.code.as_str())
+            .collect::<Vec<_>>(),
+        vec!["incorrectly-closed-comment"]
+    );
+
+    let comment_end_bang =
+        HtmlLexContext::comment_continuation(HtmlTokenizerState::CommentEndBang, "seed").unwrap();
+    assert_eq!(
+        lex_html_fragment("y-->tail", &comment_end_bang).unwrap(),
+        vec![
+            Token::Comment("seed--!y".to_string()),
+            Token::Text("tail".to_string()),
+            Token::Eof,
+        ]
+    );
+
+    let less_than =
+        HtmlLexContext::comment_continuation(HtmlTokenizerState::CommentLessThanSign, "seed<")
+            .unwrap();
+    assert_eq!(
+        lex_html_fragment("x-->tail", &less_than).unwrap(),
+        vec![
+            Token::Comment("seed<x".to_string()),
+            Token::Text("tail".to_string()),
+            Token::Eof,
+        ]
+    );
+
+    let start_dash =
+        HtmlLexContext::comment_continuation(HtmlTokenizerState::CommentStartDash, "").unwrap();
+    let mut lexer = create_html_lexer_with_context(&start_dash).unwrap();
+    lexer.push(">tail").unwrap();
+    lexer.finish().unwrap();
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Comment(String::new()),
+            Token::Text("tail".to_string()),
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .map(|diagnostic| diagnostic.code.as_str())
+            .collect::<Vec<_>>(),
+        vec!["abrupt-closing-of-empty-comment"]
+    );
+
+    let bogus =
+        HtmlLexContext::comment_continuation(HtmlTokenizerState::BogusComment, "bogus-").unwrap();
+    assert_eq!(
+        lex_html_fragment("tail>after", &bogus).unwrap(),
+        vec![
+            Token::Comment("bogus-tail".to_string()),
+            Token::Text("after".to_string()),
+            Token::Eof,
+        ]
+    );
+
+    assert_eq!(
+        HtmlLexContext::comment_continuation(HtmlTokenizerState::Rcdata, "nope"),
+        None
     );
 }
 
