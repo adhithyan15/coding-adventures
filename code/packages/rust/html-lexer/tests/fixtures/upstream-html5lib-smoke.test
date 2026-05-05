@@ -2014,6 +2014,147 @@
           "col": 14
         }
       ]
+    },
+    {
+      "description": "cdata bracket state emits pending bracket at eof",
+      "input": "",
+      "initialStates": [
+        "CDATA section bracket state"
+      ],
+      "output": [
+        [
+          "Character",
+          "]"
+        ]
+      ]
+    },
+    {
+      "description": "cdata end state closes on delimiter and returns to data",
+      "input": ">after",
+      "initialStates": [
+        "CDATA section end state"
+      ],
+      "output": [
+        [
+          "Character",
+          "after"
+        ]
+      ]
+    },
+    {
+      "description": "rcdata less-than state recovers literal less-than before references",
+      "input": "b &amp;",
+      "initialStates": [
+        "RCDATA less-than sign state"
+      ],
+      "lastStartTag": "title",
+      "output": [
+        [
+          "Character",
+          "<b &"
+        ]
+      ]
+    },
+    {
+      "description": "rawtext less-than state recovers literal less-than",
+      "input": "b &amp;",
+      "initialStates": [
+        "RAWTEXT less-than sign state"
+      ],
+      "lastStartTag": "style",
+      "output": [
+        [
+          "Character",
+          "<b &amp;"
+        ]
+      ]
+    },
+    {
+      "description": "script less-than state enters escaped text then closes script",
+      "input": "!-->tail</script>",
+      "initialStates": [
+        "Script data less-than sign state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          "<!-->tail"
+        ],
+        [
+          "EndTag",
+          "script"
+        ]
+      ]
+    },
+    {
+      "description": "script escape start states recover to script data on ordinary text",
+      "input": "x</script>",
+      "initialStates": [
+        "Script data escape start state",
+        "Script data escape start dash state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          "x"
+        ],
+        [
+          "EndTag",
+          "script"
+        ]
+      ]
+    },
+    {
+      "description": "script double escape start state enters double escaped script text",
+      "input": "script>inside</script>after</script>",
+      "initialStates": [
+        "Script data double escape start state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          "script>inside</script>after"
+        ],
+        [
+          "EndTag",
+          "script"
+        ]
+      ]
+    },
+    {
+      "description": "script double escape end state exits before matching end tag",
+      "input": "script>after</script>",
+      "initialStates": [
+        "Script data double escape end state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          "script>after"
+        ],
+        [
+          "EndTag",
+          "script"
+        ]
+      ]
+    },
+    {
+      "description": "script less-than state emits pending less-than at eof",
+      "input": "",
+      "initialStates": [
+        "Script data less-than sign state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          "<"
+        ]
+      ]
     }
   ]
 }
