@@ -375,6 +375,14 @@ impl HtmlParser {
         } else if incoming_name == "optgroup" {
             self.pop_current_if(|name| name == "option");
             self.pop_current_if(|name| name == "optgroup");
+        } else if incoming_name == "rb" {
+            self.pop_current_if(is_ruby_annotation_element);
+            self.pop_current_if(|name| name == "rtc");
+        } else if incoming_name == "rt" || incoming_name == "rp" {
+            self.pop_current_if(|name| name == "rb" || name == "rt" || name == "rp");
+        } else if incoming_name == "rtc" {
+            self.pop_current_if(|name| name == "rb" || name == "rt" || name == "rp");
+            self.pop_current_if(|name| name == "rtc");
         } else if is_heading_element(incoming_name) {
             self.pop_current_if(|name| name == "p");
             self.pop_current_if(is_heading_element);
@@ -592,6 +600,10 @@ fn is_heading_element(name: &str) -> bool {
     matches!(name, "h1" | "h2" | "h3" | "h4" | "h5" | "h6")
 }
 
+fn is_ruby_annotation_element(name: &str) -> bool {
+    matches!(name, "rb" | "rt" | "rp")
+}
+
 fn is_paragraph_boundary_element(name: &str) -> bool {
     matches!(
         name,
@@ -772,6 +784,50 @@ mod tests {
             element(&second_group.children[0]).children,
             vec![Node::text("Four")]
         );
+    }
+
+    #[test]
+    fn applies_ruby_annotation_implied_end_tags() {
+        let document = parse_html(
+            "<ruby><rb>漢<rt>kan<rb>字<rt>ji<rp>(fallback<rtc><rt>group<rtc><rt>group2</ruby>",
+        )
+        .unwrap();
+
+        let ruby = element(&body(&document).children[0]);
+        assert_eq!(ruby.name, "ruby");
+        assert_eq!(ruby.children.len(), 7);
+
+        let first_base = element(&ruby.children[0]);
+        assert_eq!(first_base.name, "rb");
+        assert_eq!(first_base.children, vec![Node::text("漢")]);
+
+        let first_text = element(&ruby.children[1]);
+        assert_eq!(first_text.name, "rt");
+        assert_eq!(first_text.children, vec![Node::text("kan")]);
+
+        let second_base = element(&ruby.children[2]);
+        assert_eq!(second_base.name, "rb");
+        assert_eq!(second_base.children, vec![Node::text("字")]);
+
+        let second_text = element(&ruby.children[3]);
+        assert_eq!(second_text.name, "rt");
+        assert_eq!(second_text.children, vec![Node::text("ji")]);
+
+        let fallback = element(&ruby.children[4]);
+        assert_eq!(fallback.name, "rp");
+        assert_eq!(fallback.children, vec![Node::text("(fallback")]);
+
+        let first_container = element(&ruby.children[5]);
+        assert_eq!(first_container.name, "rtc");
+        let grouped_text = element(&first_container.children[0]);
+        assert_eq!(grouped_text.name, "rt");
+        assert_eq!(grouped_text.children, vec![Node::text("group")]);
+
+        let second_container = element(&ruby.children[6]);
+        assert_eq!(second_container.name, "rtc");
+        let second_grouped_text = element(&second_container.children[0]);
+        assert_eq!(second_grouped_text.name, "rt");
+        assert_eq!(second_grouped_text.children, vec![Node::text("group2")]);
     }
 
     #[test]

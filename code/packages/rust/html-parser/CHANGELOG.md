@@ -40,3 +40,5 @@ documented in this file.
   nested heading DOMs when heading end tags are omitted.
 - Common block starts such as `div`, `ul`, and `table` now close open
   paragraphs before insertion, preventing paragraph-nested block DOMs.
+- Ruby annotation starts now close omitted `rb`, `rt`, `rp`, and `rtc` siblings,
+  preventing nested ruby annotation DOMs when end tags are omitted.
