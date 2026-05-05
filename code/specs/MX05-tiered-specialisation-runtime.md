@@ -242,6 +242,19 @@ The compile happens in a background worker thread so live dispatches
 aren't blocked.  Once ready, the specialised pipeline is inserted
 into the cache.
 
+> **Implementation status (Phase 3 V4 landed — image-gpu-core wired)**:
+> `image-gpu-core::pipeline::run_graph_with_constant_inputs` now
+> drives the full pipeline on every dispatch — `Profiler::record_dispatch`
+> updates invocation counters and `SpecRouter::route` is consulted
+> per Compute op.  Per-process singletons (`OnceLock`-backed Profiler
+> and SpecRouter with `NoopSpecialiser` installed) amortise setup
+> cost across calls.  Public hooks `image_gpu_core::profiler_observations()`
+> and `image_gpu_core::spec_cache_len()` make the wiring observable
+> from CLI demos and tests.  Phase 4 will install a backend-specific
+> `Specialiser` (matrix-cpu or matrix-metal emitting kernels with
+> constants folded in) and the route() return will start being
+> consumed by an extended executor-protocol.
+
 > **Implementation status (Phase 3 V3 landed)**: `SpecRouter` ships
 > in `matrix_runtime::router` and ties together the four pieces:
 > Profiler observations → policy → cache → specialiser, end-to-end.

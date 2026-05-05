@@ -55,16 +55,17 @@
 //! the right transport, and handles `Transfer` itself.
 
 use crate::GpuError;
-use compute_ir::ComputeGraph;
+use compute_ir::{ComputeGraph, PlacedOp};
 #[cfg(feature = "metal-backend")]
-use compute_ir::{ExecutorId, PlacedOp, CPU_EXECUTOR};
+use compute_ir::{ExecutorId, CPU_EXECUTOR};
 use executor_protocol::{block_on, ExecutorRequest, ExecutorResponse, LocalTransport, Transport};
 use matrix_ir::{Graph, TensorId};
-use matrix_runtime::Runtime;
+use matrix_runtime::{
+    DefaultPolicy, NoopSpecialiser, Profiler, Runtime, SpecCache, SpecRouter,
+};
 use std::cell::Cell;
 #[cfg(feature = "metal-backend")]
 use std::collections::HashSet;
-#[cfg(feature = "metal-backend")]
 use std::sync::OnceLock;
 
 // ─────────────────────────── Last-executor reporting ───────────────────────────
@@ -125,6 +126,113 @@ fn metal_backend() -> Option<&'static MetalBackend> {
     .as_ref()
 }
 
+// ─────────────────────────── MX05 specialisation singletons ───────────────────────────
+//
+// MX05 Phase 1 / 2a / 3 V1 / V2 / V3 shipped the Profiler /
+// SpecialisationPolicy / SpecCache / SpecRouter machinery in
+// matrix-runtime.  Phase 3 V4 wires them up here so every
+// `run_graph_with_constant_inputs` call records an invocation
+// observation and asks the router whether to specialise each op.
+//
+// In V4 the answer is **always None** (the V1 backend doesn't yet
+// install a real `Specialiser`; we use `NoopSpecialiser` which
+// declines every key) — but the wiring is observable through the
+// public `profiler()` accessor and is foundation for Phase 4 when a
+// real specialiser arrives.
+//
+// Both singletons are lazy via `OnceLock`.  Constructing the SpecRouter
+// allocates a small SpecCache plus the policy + specialiser trait
+// objects; cheap, but doing it once instead of per-call keeps the
+// hot path tight.
+
+fn profiler() -> &'static Profiler {
+    static SLOT: OnceLock<Profiler> = OnceLock::new();
+    SLOT.get_or_init(Profiler::new)
+}
+
+fn spec_router() -> &'static SpecRouter {
+    static SLOT: OnceLock<SpecRouter> = OnceLock::new();
+    SLOT.get_or_init(|| {
+        SpecRouter::new(
+            Box::new(DefaultPolicy::new()),
+            SpecCache::default_capacity(),
+            // V1 of image-gpu-core ships the no-op specialiser.
+            // Phase 4 will swap in a backend-specific one (e.g. an
+            // MSL emitter that constant-folds bias values).
+            Box::new(NoopSpecialiser),
+        )
+    })
+}
+
+/// Snapshot the profile observation accumulated by this process so
+/// far.  Phase 3 V4's CLI demos and tests use this to confirm the
+/// specialisation pipeline is live (invocation counts climb across
+/// repeat calls; cache stays empty under `NoopSpecialiser`).
+///
+/// Returns the same data shape as
+/// [`matrix_runtime::Profiler::observations`] for callers that want
+/// to inspect specific ops.
+pub fn profiler_observations() -> Vec<matrix_runtime::ProfileObservation> {
+    profiler().observations()
+}
+
+/// How many specialised kernels the process-wide cache currently
+/// holds.  Always `0` while `NoopSpecialiser` is installed; Phase 4
+/// will see this rise as backends emit specialisations.
+pub fn spec_cache_len() -> usize {
+    spec_router().cache_len()
+}
+
+/// Drive the MX05 specialisation pipeline for one placed graph:
+///
+/// 1. Bump per-op invocation counters via `Profiler::record_dispatch`.
+/// 2. Build a `ProfileObservation` per Compute op and pass it to
+///    `SpecRouter::route` along with op metadata.  Discard the
+///    return — V1 always gets `None` from the no-op specialiser.
+///
+/// Pure observation work; no behavioural change to the dispatch
+/// itself.  Returns no value.
+fn drive_specialisation(placed: &ComputeGraph) {
+    let p = profiler();
+    p.record_dispatch(placed);
+
+    let r = spec_router();
+    let subhash = Profiler::subhash(placed);
+
+    // Observations() returns every cached observation; index by
+    // (subhash, op_index) so the per-op router calls below are O(n)
+    // total rather than O(n²).
+    let obs = p.observations();
+    let mut by_op: std::collections::HashMap<u32, &matrix_runtime::ProfileObservation> =
+        std::collections::HashMap::new();
+    for o in &obs {
+        if o.graph_subhash == subhash {
+            by_op.insert(o.op_index, o);
+        }
+    }
+
+    for (op_idx, pop) in placed.ops.iter().enumerate() {
+        if let PlacedOp::Compute { op: ir_op, executor, .. } = pop {
+            let key = op_idx as u32;
+            let observation = match by_op.get(&key) {
+                Some(o) => *o,
+                None => continue,
+            };
+            // Output dtype: look up in the placed graph's tensor
+            // table by the op's output tensor id.
+            let out_id = ir_op.output();
+            let out_dtype = match placed.tensor(out_id) {
+                Some(t) => t.dtype,
+                None => continue,
+            };
+            // Discard the return — V1 noop specialiser declines every
+            // key.  Phase 4 will use the returned `SpecialisedKernel`
+            // to dispatch a specialised kernel handle to the backend.
+            let _ = r.route(observation, ir_op.wire_tag(), out_dtype, executor.0);
+        }
+    }
+}
+
 // ─────────────────────────── Public entry point ───────────────────────────
 
 /// Plan and run a graph that has all its inputs embedded as constants
@@ -177,6 +285,14 @@ pub fn run_graph_with_constant_inputs(
 
 /// Dispatch a placed graph through a specific transport, then download
 /// the output and record the executor name as last-used.
+///
+/// Before forwarding to the transport, this function drives the MX05
+/// specialisation pipeline ([`drive_specialisation`]): per-op
+/// invocation counters climb, and the [`SpecRouter`] is asked
+/// whether each Compute op should specialise.  In V1 the answer is
+/// always None (the noop specialiser is installed) — Phase 4 will
+/// install a real specialiser and the same call site will start
+/// emitting kernels.
 fn dispatch_via(
     transport: &LocalTransport,
     placed: ComputeGraph,
@@ -184,6 +300,8 @@ fn dispatch_via(
     output_byte_count: usize,
     executor_name: &'static str,
 ) -> Result<Vec<u8>, GpuError> {
+    drive_specialisation(&placed);
+
     let output_residency = placed
         .outputs
         .iter()
@@ -393,6 +511,48 @@ mod tests {
         let exec = last_executor().expect("an executor name should be recorded");
         // CPU is always available; Metal may or may not be present.
         assert!(exec == "cpu" || exec == "metal", "unexpected: {}", exec);
+    }
+
+    /// MX05 Phase 3 V4 wiring smoke test.  Confirms that calling a
+    /// public op (gpu_invert) drives the SpecRouter pipeline:
+    /// observations accumulate, but the cache stays empty under
+    /// the no-op specialiser installed in V1.
+    #[test]
+    fn dispatch_drives_spec_router_pipeline() {
+        use crate::{gpu_invert, profiler_observations, spec_cache_len};
+        use pixel_container::PixelContainer;
+
+        let mut img = PixelContainer::new(2, 2);
+        img.fill(10, 20, 30, 255);
+
+        // Take a baseline.  The profiler is process-global so other
+        // tests in this file may have already populated it; capture
+        // the *delta* across this dispatch instead of asserting an
+        // absolute count.
+        let before: u64 = profiler_observations()
+            .iter()
+            .map(|o| o.invocation_count)
+            .sum();
+
+        let _ = gpu_invert(&img).unwrap();
+
+        let after: u64 = profiler_observations()
+            .iter()
+            .map(|o| o.invocation_count)
+            .sum();
+        assert!(
+            after > before,
+            "gpu_invert should bump at least one observation counter \
+             (before = {}, after = {})",
+            before,
+            after
+        );
+
+        // No-op specialiser declines every key, so the cache stays
+        // empty regardless of how many dispatches have happened.
+        // Phase 4 will see this number rise as backends emit
+        // specialisations.
+        assert_eq!(spec_cache_len(), 0);
     }
 }
 
