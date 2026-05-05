@@ -32,24 +32,62 @@ impl Default for HtmlParseOptions {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum HtmlInitialTokenizerContext {
     Data,
+    Rcdata,
+    RcdataLessThanSign,
+    Rawtext,
+    RawtextLessThanSign,
     ForeignContentCdataSection,
+    ForeignContentCdataSectionBracket,
+    ForeignContentCdataSectionEnd,
     ScriptData,
+    ScriptDataLessThanSign,
+    ScriptDataEscapeStart,
+    ScriptDataEscapeStartDash,
     ScriptDataEscaped,
     ScriptDataEscapedDash,
     ScriptDataEscapedDashDash,
     ScriptDataEscapedLessThanSign,
+    ScriptDataDoubleEscapeStart,
     ScriptDataDoubleEscaped,
     ScriptDataDoubleEscapedDash,
     ScriptDataDoubleEscapedDashDash,
     ScriptDataDoubleEscapedLessThanSign,
+    ScriptDataDoubleEscapeEnd,
 }
 
 impl HtmlInitialTokenizerContext {
     fn lex_context(self) -> HtmlLexContext {
         match self {
             Self::Data => HtmlLexContext::data(),
+            Self::Rcdata => {
+                HtmlLexContext::new(HtmlTokenizerState::Rcdata).with_last_start_tag("title")
+            }
+            Self::RcdataLessThanSign => HtmlLexContext::new(HtmlTokenizerState::RcdataLessThanSign)
+                .with_last_start_tag("title"),
+            Self::Rawtext => {
+                HtmlLexContext::new(HtmlTokenizerState::Rawtext).with_last_start_tag("style")
+            }
+            Self::RawtextLessThanSign => {
+                HtmlLexContext::new(HtmlTokenizerState::RawtextLessThanSign)
+                    .with_last_start_tag("style")
+            }
             Self::ForeignContentCdataSection => HtmlLexContext::cdata_section(),
+            Self::ForeignContentCdataSectionBracket => {
+                HtmlLexContext::new(HtmlTokenizerState::CdataSectionBracket)
+            }
+            Self::ForeignContentCdataSectionEnd => {
+                HtmlLexContext::new(HtmlTokenizerState::CdataSectionEnd)
+            }
             Self::ScriptData => script_lex_context(HtmlTokenizerState::ScriptData),
+            Self::ScriptDataLessThanSign => {
+                script_lex_context(HtmlTokenizerState::ScriptDataLessThanSign)
+            }
+            Self::ScriptDataEscapeStart => {
+                script_lex_context(HtmlTokenizerState::ScriptDataEscapeStart)
+            }
+            Self::ScriptDataEscapeStartDash => {
+                script_lex_context(HtmlTokenizerState::ScriptDataEscapeStartDash)
+            }
             Self::ScriptDataEscaped => script_lex_context(HtmlTokenizerState::ScriptDataEscaped),
             Self::ScriptDataEscapedDash => {
                 script_lex_context(HtmlTokenizerState::ScriptDataEscapedDash)
@@ -59,6 +97,9 @@ impl HtmlInitialTokenizerContext {
             }
             Self::ScriptDataEscapedLessThanSign => {
                 script_lex_context(HtmlTokenizerState::ScriptDataEscapedLessThanSign)
+            }
+            Self::ScriptDataDoubleEscapeStart => {
+                script_lex_context(HtmlTokenizerState::ScriptDataDoubleEscapeStart)
             }
             Self::ScriptDataDoubleEscaped => {
                 script_lex_context(HtmlTokenizerState::ScriptDataDoubleEscaped)
@@ -71,6 +112,9 @@ impl HtmlInitialTokenizerContext {
             }
             Self::ScriptDataDoubleEscapedLessThanSign => {
                 script_lex_context(HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign)
+            }
+            Self::ScriptDataDoubleEscapeEnd => {
+                script_lex_context(HtmlTokenizerState::ScriptDataDoubleEscapeEnd)
             }
         }
     }
@@ -179,6 +223,7 @@ pub struct HtmlParser {
     open_elements: Vec<Vec<usize>>,
     diagnostics: Vec<ParserDiagnostic>,
     options: HtmlParseOptions,
+    strip_next_leading_lf: bool,
 }
 
 impl HtmlParser {
@@ -211,29 +256,35 @@ impl HtmlParser {
     fn process_token(&mut self, token: Token) {
         match token {
             Token::Text(text) => self.append_text(text),
-            Token::StartTag {
-                name,
-                attributes,
-                self_closing,
-            } => self.append_start_tag(name, attributes, self_closing),
-            Token::EndTag { name } => self.close_element(&name),
-            Token::Comment(comment) => {
-                self.append_node(Node::comment(comment));
+            token => {
+                self.strip_next_leading_lf = false;
+                match token {
+                    Token::StartTag {
+                        name,
+                        attributes,
+                        self_closing,
+                    } => self.append_start_tag(name, attributes, self_closing),
+                    Token::EndTag { name } => self.handle_end_tag(&name),
+                    Token::Comment(comment) => {
+                        self.append_node(Node::comment(comment));
+                    }
+                    Token::Doctype {
+                        name,
+                        public_identifier,
+                        system_identifier,
+                        force_quirks,
+                    } => {
+                        self.append_node(Node::DocumentType(DocumentType {
+                            name,
+                            public_identifier,
+                            system_identifier,
+                            force_quirks,
+                        }));
+                    }
+                    Token::Eof => self.open_elements.clear(),
+                    Token::Text(_) => unreachable!("text token handled before clearing LF state"),
+                }
             }
-            Token::Doctype {
-                name,
-                public_identifier,
-                system_identifier,
-                force_quirks,
-            } => {
-                self.append_node(Node::DocumentType(DocumentType {
-                    name,
-                    public_identifier,
-                    system_identifier,
-                    force_quirks,
-                }));
-            }
-            Token::Eof => self.open_elements.clear(),
         }
     }
 
@@ -258,6 +309,23 @@ impl HtmlParser {
             })
             .collect();
 
+        if name == "html" && self.merge_attributes_into_open_element("html", &attributes) {
+            return;
+        }
+
+        if name == "head" && self.has_open_element("head") {
+            self.merge_attributes_into_open_element("head", &attributes);
+            return;
+        }
+
+        if name == "head" && self.has_open_element("body") {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-head-start-tag",
+                "head start tag was ignored after body content had already started",
+            ));
+            return;
+        }
+
         if name == "body" && self.merge_attributes_into_open_element("body", &attributes) {
             return;
         }
@@ -269,9 +337,23 @@ impl HtmlParser {
             path.push(child_index);
             self.open_elements.push(path);
         }
+
+        if preserves_initial_line_feed(&name) && !self_closing {
+            self.strip_next_leading_lf = true;
+        }
     }
 
     fn append_text(&mut self, text: String) {
+        if text.is_empty() {
+            return;
+        }
+
+        let text = if self.strip_next_leading_lf {
+            self.strip_next_leading_lf = false;
+            text.strip_prefix('\n').unwrap_or(&text).to_string()
+        } else {
+            text
+        };
         if text.is_empty() {
             return;
         }
@@ -343,6 +425,31 @@ impl HtmlParser {
     fn apply_document_shell_implied_contexts(&mut self, incoming_name: &str) {
         if starts_body_after_head(incoming_name) {
             self.pop_current_if(|name| name == "head");
+        }
+    }
+
+    fn handle_end_tag(&mut self, name: &str) {
+        match name {
+            "br" => {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-br-end-tag",
+                    "end tag `</br>` was recovered as a `br` start tag",
+                ));
+                self.append_start_tag("br".to_string(), Vec::new(), true);
+            }
+            "p" if !self.has_open_element("p") => {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-p-end-tag",
+                    "end tag `</p>` created and closed an implied `p` element",
+                ));
+                self.append_start_tag("p".to_string(), Vec::new(), false);
+                self.close_element("p");
+            }
+            "html" => {
+                self.pop_current_if(|current| current == "body");
+                self.close_element(name);
+            }
+            _ => self.close_element(name),
         }
     }
 
@@ -756,6 +863,10 @@ fn is_paragraph_boundary_element(name: &str) -> bool {
     ];
 
     PARAGRAPH_BOUNDARY_ELEMENTS.contains(&name)
+}
+
+fn preserves_initial_line_feed(name: &str) -> bool {
+    matches!(name, "listing" | "pre" | "textarea")
 }
 
 fn is_void_element(name: &str) -> bool {
@@ -1470,6 +1581,53 @@ mod tests {
     }
 
     #[test]
+    fn parser_can_start_in_intermediate_text_fragment_contexts() {
+        let rcdata = parse_html_with_options(
+            "b &amp;",
+            HtmlParseOptions {
+                initial_tokenizer_context: HtmlInitialTokenizerContext::RcdataLessThanSign,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(body(&rcdata).children, vec![Node::text("<b &")]);
+
+        let rawtext = parse_html_with_options(
+            "b &amp;",
+            HtmlParseOptions {
+                initial_tokenizer_context: HtmlInitialTokenizerContext::RawtextLessThanSign,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(body(&rawtext).children, vec![Node::text("<b &amp;")]);
+
+        let cdata_bracket = parse_html_with_options(
+            "",
+            HtmlParseOptions {
+                initial_tokenizer_context:
+                    HtmlInitialTokenizerContext::ForeignContentCdataSectionBracket,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(body(&cdata_bracket).children, vec![Node::text("]")]);
+
+        let cdata_end = parse_html_with_options(
+            ">after<p>x</p>",
+            HtmlParseOptions {
+                initial_tokenizer_context:
+                    HtmlInitialTokenizerContext::ForeignContentCdataSectionEnd,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(body(&cdata_end).children[0], Node::text("after"));
+        let paragraph = element(&body(&cdata_end).children[1]);
+        assert_eq!(paragraph.children, vec![Node::text("x")]);
+    }
+
+    #[test]
     fn parser_can_start_in_script_escaped_fragment_context() {
         let output = parse_html_with_diagnostics_and_options(
             "x</script><p>after</p>",
@@ -1523,6 +1681,66 @@ mod tests {
     }
 
     #[test]
+    fn parser_can_start_in_intermediate_script_fragment_contexts() {
+        let less_than = parse_html_with_diagnostics_and_options(
+            "!-->tail</script><p>after</p>",
+            HtmlParseOptions {
+                initial_tokenizer_context: HtmlInitialTokenizerContext::ScriptDataLessThanSign,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(
+            body(&less_than.document).children[0],
+            Node::text("<!-->tail")
+        );
+        assert_eq!(
+            less_than.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-end-tag",
+                "end tag `</script>` did not match an open element"
+            )]
+        );
+
+        let double_escape_start = parse_html_with_diagnostics_and_options(
+            "script>inside</script>after</script><p>after</p>",
+            HtmlParseOptions {
+                initial_tokenizer_context: HtmlInitialTokenizerContext::ScriptDataDoubleEscapeStart,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(
+            body(&double_escape_start.document).children[0],
+            Node::text("script>inside</script>after")
+        );
+        let paragraph = element(&body(&double_escape_start.document).children[1]);
+        assert_eq!(paragraph.children, vec![Node::text("after")]);
+        assert_eq!(
+            double_escape_start.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-end-tag",
+                "end tag `</script>` did not match an open element"
+            )]
+        );
+
+        let double_escape_end = parse_html_with_diagnostics_and_options(
+            "script>tail</script><p>after</p>",
+            HtmlParseOptions {
+                initial_tokenizer_context: HtmlInitialTokenizerContext::ScriptDataDoubleEscapeEnd,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(
+            body(&double_escape_end.document).children[0],
+            Node::text("script>tail")
+        );
+        let paragraph = element(&body(&double_escape_end.document).children[1]);
+        assert_eq!(paragraph.children, vec![Node::text("after")]);
+    }
+
+    #[test]
     fn parser_drives_plaintext_tokenization_until_eof() {
         let document = parse_html("<p>before</p><plaintext><b>&amp;</b></plaintext>").unwrap();
 
@@ -1565,6 +1783,107 @@ mod tests {
         assert_eq!(body(&document).attribute("class"), Some("home"));
         assert_eq!(element(&head(&document).children[0]).name, "title");
         assert_eq!(element(&body(&document).children[0]).name, "h1");
+    }
+
+    #[test]
+    fn merges_duplicate_html_and_head_start_tags_without_nesting() {
+        let document = parse_html(
+            "<html lang=en><html data-app=venture lang=ignored><head id=main><head data-h=yes><title>T</title><body><p>x</p>",
+        )
+        .unwrap();
+
+        assert_eq!(html(&document).attribute("lang"), Some("en"));
+        assert_eq!(html(&document).attribute("data-app"), Some("venture"));
+        assert_eq!(head(&document).attribute("id"), Some("main"));
+        assert_eq!(head(&document).attribute("data-h"), Some("yes"));
+        assert_eq!(head(&document).children.len(), 1);
+        assert_eq!(element(&head(&document).children[0]).name, "title");
+        assert_eq!(body(&document).children.len(), 1);
+        assert_eq!(element(&body(&document).children[0]).name, "p");
+    }
+
+    #[test]
+    fn ignores_head_start_tags_after_body_content_starts() {
+        let output =
+            parse_html_with_diagnostics("<body><p>before</p><head data-late=yes><p>after</p>")
+                .unwrap();
+
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-head-start-tag",
+                "head start tag was ignored after body content had already started"
+            )]
+        );
+        assert_eq!(head(&output.document).attribute("data-late"), None);
+        assert_eq!(body(&output.document).children.len(), 2);
+        assert_eq!(
+            element(&body(&output.document).children[0]).children,
+            vec![Node::text("before")]
+        );
+        assert_eq!(
+            element(&body(&output.document).children[1]).children,
+            vec![Node::text("after")]
+        );
+    }
+
+    #[test]
+    fn recovers_special_p_and_br_end_tags() {
+        let output = parse_html_with_diagnostics("Before</p>Middle</br>After").unwrap();
+
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![
+                ParserDiagnostic::new(
+                    "unexpected-p-end-tag",
+                    "end tag `</p>` created and closed an implied `p` element"
+                ),
+                ParserDiagnostic::new(
+                    "unexpected-br-end-tag",
+                    "end tag `</br>` was recovered as a `br` start tag"
+                )
+            ]
+        );
+
+        let body = body(&output.document);
+        assert_eq!(body.children.len(), 5);
+        assert_eq!(body.children[0], Node::text("Before"));
+        let paragraph = element(&body.children[1]);
+        assert_eq!(paragraph.name, "p");
+        assert!(paragraph.children.is_empty());
+        assert_eq!(body.children[2], Node::text("Middle"));
+        assert_eq!(element(&body.children[3]).name, "br");
+        assert_eq!(body.children[4], Node::text("After"));
+    }
+
+    #[test]
+    fn strips_initial_line_feed_in_pre_listing_and_textarea() {
+        let document = parse_html(
+            "<pre>\nA</pre><listing>\nB</listing><textarea>\nC</textarea><pre> D</pre><pre><span>\nkept</span></pre>",
+        )
+        .unwrap();
+
+        let body = body(&document);
+
+        let pre = element(&body.children[0]);
+        assert_eq!(pre.name, "pre");
+        assert_eq!(pre.children, vec![Node::text("A")]);
+
+        let listing = element(&body.children[1]);
+        assert_eq!(listing.name, "listing");
+        assert_eq!(listing.children, vec![Node::text("B")]);
+
+        let textarea = element(&body.children[2]);
+        assert_eq!(textarea.name, "textarea");
+        assert_eq!(textarea.children, vec![Node::text("C")]);
+
+        let spaced_pre = element(&body.children[3]);
+        assert_eq!(spaced_pre.name, "pre");
+        assert_eq!(spaced_pre.children, vec![Node::text(" D")]);
+
+        let nested_pre = element(&body.children[4]);
+        let span = element(&nested_pre.children[0]);
+        assert_eq!(span.children, vec![Node::text("\nkept")]);
     }
 
     #[test]
