@@ -104,6 +104,23 @@ _SURFACE_CASES = (
         stdout="SWITCH 13",
     ),
     SurfaceCase(
+        name="forward-array-bound-visibility",
+        source="""
+            begin
+              integer result;
+              integer array a[lower():upper()];
+              integer procedure lower; begin lower := 0 end;
+              integer procedure upper; begin upper := 1 end;
+              a[0] := 5;
+              a[1] := 8;
+              result := a[0] + a[1];
+              print('ARRAY ', result)
+            end
+        """,
+        result=[13],
+        stdout="ARRAY 13",
+    ),
+    SurfaceCase(
         name="for-list-scalar-and-array-control",
         source="""
             begin

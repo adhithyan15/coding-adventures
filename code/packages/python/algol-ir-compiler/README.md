@@ -32,6 +32,9 @@ block entry, stores row-major stride metadata beside the descriptor, and emits
 checked element loads/stores through the descriptor. Block and procedure exits
 restore the heap pointer to the activation's entry mark, so dynamic arrays keep
 ALGOL block lifetime instead of leaking through loops or recursive calls.
+Because the checker defers bound expression analysis until declaration
+registration completes, those lower/upper expressions can call later sibling
+typed procedures in the same block.
 
 Expression lowering includes mixed integer/real arithmetic, boolean operators,
 comparisons, chained assignment targets, branch-selected conditional

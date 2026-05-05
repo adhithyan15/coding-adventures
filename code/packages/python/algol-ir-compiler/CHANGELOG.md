@@ -35,6 +35,9 @@ All notable changes to this package will be documented in this file.
 - Lowered switch entries that select later sibling switch declarations now
   that the checker resolves switch designational lists after declaration
   registration.
+- Lowered array bounds whose expressions call later sibling typed procedures
+  now that the checker defers bound analysis until declaration registration
+  completes.
 - Lowered integer array-element by-name actuals to tagged descriptors with
   generated eval/store helpers that re-compute the element address on every
   formal read or assignment.

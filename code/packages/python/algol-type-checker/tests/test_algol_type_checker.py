@@ -2067,6 +2067,25 @@ class TestAlgolTypeChecker:
             "read",
         ]
 
+    def test_accepts_forward_procedure_calls_in_array_bounds(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer array a[lower():upper()]; "
+            "integer procedure lower; begin lower := 0 end; "
+            "integer procedure upper; begin upper := 0 end; "
+            "a[0] := 5; result := a[0] "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert result.semantic.arrays[0].name == "a"
+        assert [call.name for call in result.semantic.procedure_calls[:2]] == [
+            "lower",
+            "upper",
+        ]
+
     def test_accepts_default_real_array_declaration(self) -> None:
         ast = parse_algol("begin array a[1:3]; a[1] := 7 end")
         result = check_algol(ast)
