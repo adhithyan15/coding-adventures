@@ -2,6 +2,34 @@
 
 ## [Unreleased]
 
+### Added — VMCOND00 Phase 3: PUSH_HANDLER, POP_HANDLER, SIGNAL, ERROR, WARN opcodes
+
+Adds five new `IrOp` enum values implementing VMCOND00 Layer 3 — dynamic
+handlers — in the compiler IR opcode set shared by the JVM, CLR, and BEAM
+backends.
+
+- **`IrOp.PUSH_HANDLER` (67)** — push a condition handler onto the dynamic
+  handler chain.  Operands: `type_id: IrLabel` (``"*"`` or type name) and
+  `fn: IrRegister` (the handler callable).
+- **`IrOp.POP_HANDLER` (68)** — pop the most recently pushed handler.  No
+  operands.
+- **`IrOp.SIGNAL` (69)** — signal a condition non-unwinding; no-op if
+  unhandled.  Operand: `condition: IrRegister`.
+- **`IrOp.ERROR` (70)** — raise a condition; aborts (UncaughtConditionError)
+  if unhandled.  Checks Layer 2 exception table first.  Operand: `condition`.
+- **`IrOp.WARN` (71)** — warn about a condition; emits to stderr if unhandled,
+  then continues.  Operand: `condition: IrRegister`.
+
+All five opcodes are print/parse roundtrip-compatible via the generic
+`print_ir` / `parse_ir` machinery.  Total opcode count: **72** (was 67).
+
+Phase 3 scope is the interpreter / vm-core path only.  JVM, CLR, and BEAM
+backends that encounter these opcodes should reject the program with an
+appropriate "not yet implemented" diagnostic; lowering is deferred to a later
+phase.
+
+---
+
 ### Added — VMCOND00 Phase 2: THROW opcode
 
 Adds `IrOp.THROW` (66) implementing VMCOND00 Layer 2 — unwind exceptions — in

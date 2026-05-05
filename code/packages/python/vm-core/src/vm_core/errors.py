@@ -67,3 +67,25 @@ class UncaughtConditionError(VMError):
                 cond_repr = "<unknown (repr and type name failed)>"
         super().__init__(f"Unhandled condition: {cond_repr}")
         self.condition = condition
+
+
+class HandlerChainError(VMError):
+    """Raised when the handler chain is in an invalid state.
+
+    Currently emitted by the ``pop_handler`` dispatch handler when it is
+    called on an empty chain — which indicates a frontend code-generation
+    bug (unbalanced ``push_handler`` / ``pop_handler`` pairs).
+
+    Attributes
+    ----------
+    message:
+        A human-readable description of what went wrong.
+
+    Example::
+
+        from vm_core.errors import HandlerChainError
+        try:
+            vm.execute(module)
+        except HandlerChainError as e:
+            print(f"Handler chain underflow: {e}")
+    """
