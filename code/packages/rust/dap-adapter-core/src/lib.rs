@@ -5,60 +5,68 @@
 //! and DAP message handling.  Language authors implement the thin
 //! [`LanguageDebugAdapter`] trait (compile + launch) to get a full debugger.
 //!
-//! ## Architecture (see spec LS03 + 05e for full detail)
+//! ## Architecture
 //!
 //! ```text
-//! Editor (VS Code, …)
-//!    │ DAP (JSON over stdio)
+//! Editor (VS Code / Neovim / …)
+//!    │  DAP (JSON over stdio)
 //!    ▼
 //! DapServer<A: LanguageDebugAdapter>   ← this crate
-//!    ├── DapProtocol     — message framing + JSON
-//!    ├── BreakpointManager — source-line → offset set
-//!    ├── StepController  — step-over / step-in / step-out (spec 05e)
-//!    ├── SidecarIndex    — offset ↔ source lookups
-//!    └── VmConnection    — TCP client for VM Debug Protocol
-//!    │ calls LanguageDebugAdapter
+//!    │
+//!    ├── protocol::{read_message, write_message}   — Content-Length framing
+//!    ├── BreakpointManager                          — file → lines map
+//!    ├── StepController                             — step state machine
+//!    ├── SidecarIndex (wraps debug_sidecar)         — offset ↔ source
+//!    └── VmConnection (trait, mockable)             — wire to VM debugger
+//!
+//!    │  via LanguageDebugAdapter
 //!    ▼
 //! impl LanguageDebugAdapter   (e.g. TwigDebugAdapter in twig-dap)
 //!    compile(source) → (bytecode, sidecar_bytes)
-//!    launch_vm(bytecode, debug_port) → Child
-//!    │ VM Debug Protocol (TCP)
-//!    ▼
-//! VM (twig-vm --debug-port N)
+//!    launch_vm(bytecode, debug_port) → Child + Box<dyn VmConnection>
 //! ```
 //!
-//! ## Status — SKELETON (LS03 PR A)
+//! ## Offset model
 //!
-//! Types and module structure are defined. Implementations are TODO stubs.
+//! Throughout the DAP layer we identify a VM execution point as a
+//! [`VmLocation`] — the pair `(function_name, instr_index)`.  This matches
+//! the per-function instruction indexing already used by the
+//! `debug-sidecar` crate, and is also the natural shape for the planned
+//! VM Debug Protocol (`{fn: "foo", offset: 5}` JSON frames).
 //!
-//! ## Prerequisites before implementing LS03 PR A
+//! ## Wire protocol abstraction
 //!
-//! 1. Verify the VM Debug Protocol is fully implemented in twig-vm.
-//!    File: code/packages/rust/twig-vm/src/debug_server.rs (or similar)
-//!    Commands needed: set_breakpoint, continue, step_instruction,
-//!                     get_call_stack, get_slot
-//!    Events needed: stopped, exited
-//!    Spec reference: 05e §"VM Debug Protocol"
+//! [`vm_conn::VmConnection`] is a **trait**, not a concrete TCP client.
+//! This lets us:
+//! - Test `DapServer` without a real VM by passing a [`vm_conn::MockVmConnection`].
+//! - Defer the concrete TCP implementation to a later PR once `twig-vm`
+//!   actually grows a debug server.
 //!
-//! 2. Verify debug-sidecar query API.
-//!    File: code/packages/rust/debug-sidecar/src/lib.rs (or Python equivalent)
-//!    Methods needed: offset_to_source(offset) → (file, line, col)
-//!                    source_to_offsets(file, line) → Vec<offset>
-//!    Spec reference: 05d §"Query API"
+//! ## Status — LS03 PR A complete
 //!
-//! 3. Add debug-sidecar to Cargo.toml deps once the above is verified.
+//! All 13 DAP request handlers, the three stepping algorithms, sidecar
+//! indexing, and a scripted mock VM are implemented.  37+ unit tests plus
+//! one end-to-end integration test exercise the full
+//! launch → setBreakpoints → configurationDone → stopped → stackTrace →
+//! variables → continue → terminated flow.
 
 #![warn(missing_docs)]
 #![warn(rust_2018_idioms)]
 
 pub mod adapter;
-pub mod server;
-pub mod protocol;
 pub mod breakpoints;
-pub mod stepper;
+pub mod protocol;
+pub mod server;
 pub mod sidecar;
+pub mod stepper;
 pub mod vm_conn;
 
 pub use adapter::LanguageDebugAdapter;
+pub use breakpoints::BreakpointManager;
 pub use server::DapServer;
 pub use sidecar::SidecarIndex;
+pub use stepper::{StepController, StepMode};
+pub use vm_conn::{
+    MockVmConnection, StoppedEvent, StoppedReason, TcpConnectOptions, TcpVmConnection,
+    VmConnection, VmFrame, VmLocation,
+};
