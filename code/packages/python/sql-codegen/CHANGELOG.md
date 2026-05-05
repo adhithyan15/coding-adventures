@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.15.0] - 2026-05-04
+
+### Added
+
+- **`on_conflict` field on `InsertRow` and `InsertFromResult`** (`ir.py`) —
+  both INSERT IR instructions now carry `on_conflict: str | None` matching the
+  planner's `Insert.on_conflict`.  The VM reads this field to choose between
+  REPLACE (pre-delete conflicts), IGNORE (swallow `ConstraintViolation`), and
+  default ABORT behaviour.
+
+- **`unique` field on IR `ColumnDef`** (`ir.py`) — the `ColumnDef` dataclass
+  now includes `unique: bool = False` so the UNIQUE column constraint is no
+  longer silently dropped when converting from the planner's backend-schema
+  `ColumnDef` to IR.  Without this field the VM was creating tables whose
+  non-PK UNIQUE columns had `unique=False` in the backend, making duplicate
+  values pass silently.
+
+- **`_to_ir_col` now passes `unique=c.unique`** (`compiler.py`) — ensures the
+  UNIQUE flag flows from `AstColumnDef` (which is `sql_backend.schema.ColumnDef`)
+  through IR all the way to the VM.
+
+- **Codegen passes `on_conflict`** — `InsertRow(...)` and `InsertFromResult(...)`
+  constructions now include `on_conflict=ins.on_conflict`.
+
 ## [1.14.0] - 2026-05-04
 
 ### Added

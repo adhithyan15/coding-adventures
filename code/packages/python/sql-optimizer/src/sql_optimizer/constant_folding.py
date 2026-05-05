@@ -142,10 +142,10 @@ def _fold_plan(p: LogicalPlan) -> LogicalPlan:
             return DerivedTable(query=_fold_plan(q), alias=alias, columns=cols)
         case Begin() | Commit() | Rollback():
             return p  # transaction control — nothing to fold
-        case Insert(table=t, columns=cols, source=src, returning=ret):
+        case Insert(table=t, columns=cols, source=src, on_conflict=oc, returning=ret):
             new_src = _fold_insert_source(src)
             new_ret = tuple(_fold_expr(r) for r in ret)
-            return Insert(table=t, columns=cols, source=new_src, returning=new_ret)
+            return Insert(table=t, columns=cols, source=new_src, on_conflict=oc, returning=new_ret)
         case Update(table=t, assignments=asgs, predicate=pred, returning=ret):
             return Update(
                 table=t,

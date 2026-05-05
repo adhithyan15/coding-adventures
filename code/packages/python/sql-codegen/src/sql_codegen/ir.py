@@ -419,9 +419,21 @@ class DistinctResult:
 
 @dataclass(frozen=True, slots=True)
 class InsertRow:
-    """Pop one value per column (last first); backend inserts the row."""
+    """Pop one value per column (last first); backend inserts the row.
+
+    ``on_conflict`` carries the optional ``INSERT OR <action>`` strategy.
+    The VM applies it when :class:`~sql_backend.backend.ConstraintViolation`
+    is raised:
+
+    - ``None``        — re-raise as :class:`~sql_vm.errors.IntegrityError`
+    - ``"REPLACE"``   — delete every conflicting row, then retry the insert
+    - ``"IGNORE"``    — silently discard this row; continue the statement
+    - ``"ABORT"`` / ``"FAIL"`` / ``"ROLLBACK"`` — re-raise as IntegrityError
+    """
+
     table: str
     columns: tuple[str, ...]
+    on_conflict: str | None = None  # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
 
 
 @dataclass(frozen=True, slots=True)
@@ -435,10 +447,13 @@ class InsertFromResult:
     the result schema's column order as the target column names. This
     mirrors the INSERT VALUES semantics: explicit column list wins, falling
     back to the table's natural order.
+
+    ``on_conflict`` has the same semantics as :class:`InsertRow`.
     """
 
     table: str
     columns: tuple[str, ...]  # empty = use result schema
+    on_conflict: str | None = None  # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
 
 
 @dataclass(frozen=True, slots=True)
@@ -544,11 +559,19 @@ class ColumnDef:
     leaves a boolean (or NULL) on the stack when executed. The VM evaluates
     these against a new/updated row using the sentinel cursor id
     ``CHECK_CURSOR_ID``.  Empty tuple means no CHECK constraint.
+
+    ``unique`` mirrors the UNIQUE column constraint.  When True, the backend
+    enforces that no two rows share the same non-NULL value in this column
+    (in addition to the implicit uniqueness enforced by ``primary_key``).
+    Without this flag the backend would silently accept duplicate values,
+    making ``INSERT OR IGNORE`` and ``INSERT OR REPLACE`` unable to detect
+    non-PK UNIQUE conflicts.
     """
     name: str
     type: str
     nullable: bool = True
     primary_key: bool = False
+    unique: bool = False
     check_instrs: tuple[Instruction, ...] = ()
     # (ref_table, ref_col_or_None) where None means "reference the parent PK".
     foreign_key: tuple[str, str | None] | None = None

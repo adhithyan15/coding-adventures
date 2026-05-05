@@ -1350,7 +1350,11 @@ def _compile_insert(ins: Insert, ctx: _Ctx) -> list[Instruction]:
         for row in src.values:
             for v in row:
                 out.extend(_compile_expr(v, ctx))
-            out.append(InsertRow(table=ins.table, columns=tuple(cols)))
+            out.append(InsertRow(
+                table=ins.table,
+                columns=tuple(cols),
+                on_conflict=ins.on_conflict,
+            ))
             # After InsertRow the VM stores the inserted row in
             # ``last_inserted_row``.  Emit RETURNING columns by reading from it.
             if ins.returning:
@@ -1370,7 +1374,11 @@ def _compile_insert(ins: Insert, ctx: _Ctx) -> list[Instruction]:
     # Note: RETURNING is not supported with INSERT … SELECT in this version.
     assert src.query is not None
     select_instrs, _ = _compile_plan(src.query, ctx)
-    select_instrs.append(InsertFromResult(table=ins.table, columns=tuple(cols)))
+    select_instrs.append(InsertFromResult(
+        table=ins.table,
+        columns=tuple(cols),
+        on_conflict=ins.on_conflict,
+    ))
     return select_instrs
 
 
@@ -1509,6 +1517,7 @@ def _to_ir_col(c: AstColumnDef) -> IrColumnDef:
         type=c.type_name,
         nullable=not c.effective_not_null(),
         primary_key=c.primary_key,
+        unique=c.unique,
         check_instrs=check_instrs,
         foreign_key=fk,
     )

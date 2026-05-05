@@ -2,6 +2,19 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.14.0] - 2026-05-04
+
+### Added
+
+- **`REPLACE`, `IGNORE`, `ABORT`, `FAIL` keywords** (`sql.tokens`) — four new
+  SQL conflict-resolution keywords added to the keyword list to support the
+  `INSERT OR REPLACE`, `INSERT OR IGNORE`, `INSERT OR ABORT`, and
+  `INSERT OR FAIL` syntax, as well as `REPLACE INTO` (shorthand for
+  `INSERT OR REPLACE INTO`).
+
+- **Regenerated `_grammar.py`** — the pre-compiled token grammar cache now
+  includes all four new keywords.
+
 ## [0.13.0] - 2026-05-04
 
 ### Added

@@ -9,7 +9,7 @@
 
 program           = statement { ";" statement } [ ";" ] ;
 
-statement         = query_stmt | insert_stmt | update_stmt
+statement         = query_stmt | insert_stmt | replace_stmt | update_stmt
                   | delete_stmt | create_table_stmt | drop_table_stmt
                   | alter_table_stmt
                   | create_index_stmt | drop_index_stmt
@@ -69,8 +69,28 @@ limit_clause      = "LIMIT" NUMBER [ "OFFSET" NUMBER ] ;
 # INSERT ... SELECT is handled by making insert_body an alternative:
 #   "VALUES" row_value ...   — classic VALUES insert
 #   query_stmt               — INSERT INTO t SELECT ...
+#
+# Conflict resolution (SQLite extension):
+#   INSERT OR REPLACE INTO t ...   — delete conflicting rows, then insert
+#   INSERT OR IGNORE INTO t ...    — silently skip on constraint violation
+#   INSERT OR ABORT INTO t ...     — raise error and abort transaction (default)
+#   INSERT OR FAIL INTO t ...      — raise error, keep prior inserts
+#   INSERT OR ROLLBACK INTO t ...  — raise error and roll back transaction
+#
+# conflict_clause captures the "OR <action>" part; the planner propagates
+# the action string into the Insert plan node for the VM to act on.
+#
+# REPLACE INTO t ... is SQLite shorthand for INSERT OR REPLACE INTO t ...;
+# it is represented as a separate replace_stmt rule so the PEG parser does
+# not need to backtrack from a failed INSERT attempt to try REPLACE.
 
-insert_stmt       = "INSERT" "INTO" NAME
+conflict_clause   = "OR" ( "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK" ) ;
+
+insert_stmt       = "INSERT" [ conflict_clause ] "INTO" NAME
+                    [ "(" NAME { "," NAME } ")" ]
+                    insert_body
+                    [ returning_clause ] ;
+replace_stmt      = "REPLACE" "INTO" NAME
                     [ "(" NAME { "," NAME } ")" ]
                     insert_body
                     [ returning_clause ] ;
@@ -270,7 +290,7 @@ create_trigger_stmt = "CREATE" "TRIGGER" NAME
                       "FOR" "EACH" "ROW"
                       "BEGIN" trigger_body_stmt ";" { trigger_body_stmt ";" } "END" ;
 
-trigger_body_stmt   = insert_stmt | update_stmt | delete_stmt | query_stmt ;
+trigger_body_stmt   = insert_stmt | replace_stmt | update_stmt | delete_stmt | query_stmt ;
 
 drop_trigger_stmt   = "DROP" "TRIGGER" [ "IF" "EXISTS" ] NAME ;
 

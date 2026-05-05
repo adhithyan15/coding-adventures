@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.21.0] - 2026-05-04
+
+### Added
+
+- **`on_conflict` field on `InsertValuesStmt` and `InsertSelectStmt`** (`ast.py`)
+  — both INSERT AST nodes now carry `on_conflict: str | None` with values
+  `None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"`.  `None`
+  means no conflict clause (default SQLite ABORT behaviour).
+
+- **`on_conflict` field on `Insert` plan node** (`plan.py`) — the logical
+  plan's `Insert` node surfaces the same field so the codegen can emit the
+  correct IR instruction.
+
+- **Planner propagates `on_conflict`** (`planner.py`) — both `_plan_insert()`
+  and `_plan_insert_select()` pass `stmt.on_conflict` through to the `Insert`
+  plan node.
+
 ## [0.20.0] - 2026-05-04
 
 ### Added

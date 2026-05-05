@@ -2,6 +2,29 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.15.0] - 2026-05-04
+
+### Added
+
+- **`conflict_clause` grammar rule** (`sql.grammar`) — new production
+  `conflict_clause = "OR" ( "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK" )`
+  captures SQLite's conflict-resolution clause.  Matches the `OR` keyword
+  followed by any of the five conflict actions.
+
+- **`insert_stmt` extended with optional `conflict_clause`** — INSERT now
+  parses as `"INSERT" [ conflict_clause ] "INTO" NAME …`, enabling
+  `INSERT OR REPLACE INTO …`, `INSERT OR IGNORE INTO …`, etc.
+
+- **`replace_stmt` grammar rule** — new top-level statement rule
+  `replace_stmt = "REPLACE" "INTO" NAME …` provides the `REPLACE INTO`
+  shorthand (SQLite syntactic sugar for `INSERT OR REPLACE INTO`).
+
+- **`statement` and `trigger_body_stmt` updated** — both alternations now
+  include `replace_stmt` as a valid choice alongside `insert_stmt`.
+
+- **Regenerated `_grammar.py`** — the pre-compiled parser grammar cache now
+  reflects all grammar changes above.
+
 ## [0.14.0] - 2026-05-04
 
 ### Added

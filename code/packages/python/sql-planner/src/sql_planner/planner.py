@@ -1004,6 +1004,7 @@ def _plan_insert(stmt: InsertValuesStmt, schema: SchemaProvider) -> P.LogicalPla
         table=stmt.table,
         columns=stmt.columns,
         source=P.InsertSource(values=stmt.rows),
+        on_conflict=stmt.on_conflict,
         returning=resolved_returning,
     )
 
@@ -1155,6 +1156,7 @@ def _plan_insert_select(stmt: InsertSelectStmt, schema: SchemaProvider) -> P.Log
         table=stmt.table,
         columns=stmt.columns,
         source=P.InsertSource(query=sub_plan),
+        on_conflict=stmt.on_conflict,
         returning=resolved_returning,
     )
 

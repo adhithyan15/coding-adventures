@@ -1720,9 +1720,87 @@ def _fire_trigger(
     st.trigger_executor(defn, new_row, old_row, next_depth)
 
 
+def _replace_delete_conflicts(
+    table: str, new_row: dict[str, SqlValue], st: _VmState
+) -> None:
+    """Pre-scan ``table`` and delete all rows that would conflict with ``new_row``.
+
+    Implements the ``REPLACE`` conflict resolution strategy: every existing row
+    that shares a value on any UNIQUE or PRIMARY KEY column with ``new_row`` is
+    silently removed before the new row is inserted.  This mirrors SQLite's
+    ``INSERT OR REPLACE`` semantics.
+
+    Conflict rules:
+    - Only non-NULL values are considered — ``NULL`` never triggers uniqueness
+      conflicts in standard SQL (``NULL != NULL``).
+    - All UNIQUE-constrained columns are checked, not just the primary key.
+
+    Scan-delete safety:
+    Both the storage-sqlite and in-memory backends guarantee that after
+    ``backend.delete(table, cursor)`` the cursor remains live and
+    ``cursor.next()`` advances to the row that immediately followed the deleted
+    one.  A single forward pass is therefore sufficient — no intermediate
+    materialisation is required.
+
+    Cursor selection:
+    Backends that support positioned DML (UPDATE/DELETE by cursor position)
+    expose a private ``_open_cursor`` method — the same duck-typing probe the
+    ``OpenScan`` handler uses.  We prefer that over ``scan()`` because
+    ``backend.delete()`` requires a positioned cursor on backends like
+    InMemoryBackend (which rejects a plain ``ListRowIterator``).  If
+    ``_open_cursor`` is absent we fall back to ``scan()``; backends that don't
+    offer positioned cursors also can't implement ``delete()``, so they will
+    either not have UNIQUE constraints or will handle conflicts differently.
+
+    Limitations:
+    This helper does NOT fire DELETE triggers or check FK parent constraints for
+    the pre-deleted rows.  Full trigger + FK semantics for REPLACE are deferred
+    to a future iteration.
+    """
+    try:
+        col_defs = st.backend.columns(table)
+    except Exception:  # noqa: BLE001
+        return
+    # Identify the unique-constrained columns whose new values are non-NULL.
+    # NULL values can never cause a UNIQUE conflict in SQL.
+    unique_cols: list[str] = [
+        cd.name
+        for cd in col_defs
+        if (cd.primary_key or cd.unique) and new_row.get(cd.name) is not None
+    ]
+    if not unique_cols:
+        return
+    # Prefer a positioned cursor — required by InMemoryBackend.delete() and
+    # analogous backends that reject plain read-only RowIterators.  Mirror the
+    # same duck-typing probe used by the OpenScan instruction handler so this
+    # helper stays decoupled from any specific Backend subclass.
+    opener = getattr(st.backend, "_open_cursor", None)
+    cur = opener(table) if opener is not None else st.backend.scan(table)
+    try:
+        while True:
+            existing = cur.next()
+            if existing is None:
+                break
+            # If any unique column matches, delete this row in place.  After
+            # deletion the cursor remains live and the next ``cur.next()`` call
+            # returns the row that used to follow the deleted one, so no rows
+            # are skipped and no rows are double-visited.
+            for col in unique_cols:
+                if existing.get(col) == new_row[col]:
+                    st.backend.delete(table, cur)
+                    break  # one conflict per row; advance outer loop
+    finally:
+        cur.close()
+
+
 def _do_insert(ins: InsertRow, st: _VmState) -> None:
     values = st.pop_n(len(ins.columns))
     row = dict(zip(ins.columns, values, strict=True))
+    # REPLACE: pre-delete every existing row that conflicts on a unique-
+    # constrained column.  The subsequent insert then succeeds unconditionally
+    # (barring NOT NULL violations, which REPLACE does not suppress).
+    if ins.on_conflict == "REPLACE":
+        _replace_delete_conflicts(ins.table, row, st)
     _check_constraints(ins.table, row, st)
     _check_fk_child(ins.table, row, st)
     # Fire BEFORE INSERT triggers.
@@ -1734,6 +1812,14 @@ def _do_insert(ins: InsertRow, st: _VmState) -> None:
         _fire_trigger(defn, row, None, st)
     try:
         st.backend.insert(ins.table, row)
+    except be.ConstraintViolation as e:
+        # IGNORE: silently discard this row on any constraint violation and
+        # continue processing subsequent rows in the same statement.  The
+        # ``rows_affected`` counter and ``last_inserted_row`` are left unchanged
+        # so callers / RETURNING clauses see the pre-IGNORE state.
+        if ins.on_conflict == "IGNORE":
+            return
+        raise _translate_backend_error(e) from e
     except be.BackendError as e:
         raise _translate_backend_error(e) from e
     # Fire AFTER INSERT triggers.
@@ -1827,6 +1913,7 @@ def _do_create_table(ins: CreateTable, st: _VmState) -> None:
             type_name=c.type,
             not_null=not c.nullable,
             primary_key=c.primary_key,
+            unique=c.unique,
         )
         for c in ins.columns
     ]
@@ -2114,8 +2201,16 @@ def _do_insert_from_result(ins: InsertFromResult, st: _VmState) -> None:
     affected = 0
     for row in st.result.rows:
         row_dict = dict(zip(target_cols, row, strict=False))
+        # REPLACE: pre-delete conflicting rows before each insert.
+        if ins.on_conflict == "REPLACE":
+            _replace_delete_conflicts(ins.table, row_dict, st)
         try:
             st.backend.insert(ins.table, row_dict)
+        except be.ConstraintViolation as e:
+            # IGNORE: skip this row silently and continue with the next one.
+            if ins.on_conflict == "IGNORE":
+                continue
+            raise _translate_backend_error(e) from e
         except be.BackendError as e:
             raise _translate_backend_error(e) from e
         affected += 1

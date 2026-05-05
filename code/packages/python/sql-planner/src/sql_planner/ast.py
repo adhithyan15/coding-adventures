@@ -204,11 +204,30 @@ class SelectStmt:
 
 @dataclass(frozen=True, slots=True)
 class InsertValuesStmt:
-    """INSERT INTO t (cols) VALUES (v1, v2, ...), (w1, w2, ...) [RETURNING ...]."""
+    """INSERT INTO t (cols) VALUES (v1, v2, ...), (w1, w2, ...) [RETURNING ...].
+
+    ``on_conflict`` carries the conflict resolution action from an optional
+    ``INSERT OR <action>`` clause or the ``REPLACE INTO`` shorthand:
+
+    - ``None``        — default behaviour: raise an ``IntegrityError``
+    - ``"REPLACE"``   — delete every conflicting row, then insert (also the
+                        semantics of the ``REPLACE INTO`` shorthand)
+    - ``"IGNORE"``    — silently discard the new row on any constraint
+                        violation; subsequent rows in the same statement are
+                        unaffected
+    - ``"ABORT"``     — raise an error and roll back any rows inserted earlier
+                        in this statement (same observable effect as ``None``
+                        for a single-row insert; kept for round-trip fidelity)
+    - ``"FAIL"``      — raise an error but keep rows inserted earlier in this
+                        statement (not fully emulated — treated as ``ABORT``)
+    - ``"ROLLBACK"``  — raise an error and roll back the entire transaction
+                        (not fully emulated — treated as ``ABORT``)
+    """
 
     table: str
     columns: tuple[str, ...] | None  # None = implicit column list (all columns in order)
     rows: tuple[tuple[Expr, ...], ...]
+    on_conflict: str | None = None   # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
     returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
 
 
@@ -302,11 +321,14 @@ class InsertSelectStmt:
     The ``select`` field is the sub-query whose result rows are inserted.
     ``columns`` is the explicit target column list; ``None`` means the
     table's natural column order is used (same semantics as VALUES INSERT).
+
+    ``on_conflict`` has the same semantics as :class:`InsertValuesStmt`.
     """
 
     table: str
     columns: tuple[str, ...] | None
     select: SelectStmt
+    on_conflict: str | None = None   # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
     returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
 
 
