@@ -1,0 +1,8 @@
+[package]
+name = "coding_adventures_vault_search"
+version = "0.1.0"
+edition = "2021"
+description = "VLT13 — local trigram index + BM25 ranker for the Vault stack. Per-schema field declarations (VLT02 specifies which fields are searchable). Index lives in memory at runtime and is persisted as ordinary vault records — i.e. encrypted under the vault's master key by VLT01 sealed-store. No server-side search in v1."
+
+[dependencies]
+coding_adventures_zeroize = { path = "../zeroize" }
