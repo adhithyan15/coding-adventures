@@ -1,6 +1,8 @@
 [workspace]
 resolver = "2"
 members = [
+    "aarch64-backend",
+    "aarch64-encoder",
     "activation-functions",
     "audio-device-coreaudio",
     "audio-device-sink",
