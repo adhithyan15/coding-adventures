@@ -26,3 +26,25 @@
   time, binary size, optimization level).
 - **`AOTError`** — `Backend` and `Snapshot` error variants.
 - 110 unit tests + 12 doc-tests.
+
+## 0.1.1 — 2026-05-05
+
+### Added — `try_specialize_builtin` in `specialise`
+
+`aot-core::specialise::aot_specialise` now lowers `call_builtin "<op>"
+arg1 arg2` to typed CIR ops (`add_<ty>`, `sub_<ty>`, `mul_<ty>`,
+`div_<ty>`, `cmp_<rel>_<ty>`, `mov_<ty>`) when the operands have
+known types.  Maps the eleven Twig primitive names (`+`, `-`, `*`,
+`/`, `=`, `==`, `!=`, `<`, `<=`, `>`, `>=`, `_move`) to typed
+mnemonics.
+
+This is what unlocks the user-visible promise of the LANG-runtime
+pipeline: write a statically-typed program in IIR's interpreter
+flavour, and the AOT compiler resolves all primitive operations to
+native CPU instructions instead of runtime calls.
+
+### Test coverage
+
+- 112 existing tests still pass (no regressions).
+- New end-to-end coverage in `twig-aot/tests/macos_arm64_smoke.rs`
+  exercises the full lowering chain on real Twig source.
