@@ -47,3 +47,9 @@ documented in this file.
   paragraphs before insertion, preventing paragraph-nested block DOMs.
 - Ruby annotation starts now close omitted `rb`, `rt`, `rp`, and `rtc` siblings,
   preventing nested ruby annotation DOMs when end tags are omitted.
+- Repeated interactive formatting starts for `a`, `button`, and `nobr` now
+  close the previous open element before inserting the next one, avoiding
+  impossible nested interactive DOMs for common omitted-end-tag markup.
+- Nested `form` start tags are now ignored with a parser diagnostic while an
+  outer form remains open, keeping form-associated content in the existing form
+  instead of creating nested form DOMs.

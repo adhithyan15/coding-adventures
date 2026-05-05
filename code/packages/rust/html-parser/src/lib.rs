@@ -246,6 +246,9 @@ impl HtmlParser {
         self.apply_document_shell_implied_contexts(&name);
         self.apply_table_implied_contexts(&name);
         self.apply_simple_implied_end_tags(&name);
+        if self.apply_interactive_implied_contexts(&name) {
+            return;
+        }
 
         let attributes: Vec<Attribute> = attributes
             .into_iter()
@@ -432,6 +435,49 @@ impl HtmlParser {
         } else if is_paragraph_boundary_element(incoming_name) {
             self.pop_current_if(|name| name == "p");
         }
+    }
+
+    fn apply_interactive_implied_contexts(&mut self, incoming_name: &str) -> bool {
+        match incoming_name {
+            "a" => {
+                self.close_open_element_silently("a");
+                false
+            }
+            "button" => {
+                self.close_open_element_silently("button");
+                false
+            }
+            "nobr" => {
+                self.close_open_element_silently("nobr");
+                false
+            }
+            "form" if self.has_open_element("form") => {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "nested-form-start-tag",
+                    "nested form start tag was ignored while a form element was already open",
+                ));
+                true
+            }
+            _ => false,
+        }
+    }
+
+    fn close_open_element_silently(&mut self, name: &str) -> bool {
+        let Some(index) = self
+            .open_elements
+            .iter()
+            .rposition(|path| element_at_path(&self.document, path).is_some_and(|n| n == name))
+        else {
+            return false;
+        };
+        self.open_elements.truncate(index);
+        true
+    }
+
+    fn has_open_element(&self, name: &str) -> bool {
+        self.open_elements
+            .iter()
+            .any(|path| element_at_path(&self.document, path).is_some_and(|n| n == name))
     }
 
     fn pop_current_if(&mut self, predicate: impl FnOnce(&str) -> bool) {
@@ -815,6 +861,80 @@ mod tests {
 
         assert_eq!(element(&body.children[1]).children, vec![Node::text("a")]);
         assert_eq!(element(&body.children[2]).children, vec![Node::text("b")]);
+    }
+
+    #[test]
+    fn closes_repeated_interactive_formatting_elements() {
+        let document = parse_html(
+            "<a href=one>One<a href=two>Two</a><button id=one>First<button id=two>Second</button><nobr>A<nobr>B</nobr>",
+        )
+        .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 6);
+
+        let first_anchor = element(&body.children[0]);
+        assert_eq!(first_anchor.name, "a");
+        assert_eq!(first_anchor.attribute("href"), Some("one"));
+        assert_eq!(first_anchor.children, vec![Node::text("One")]);
+
+        let second_anchor = element(&body.children[1]);
+        assert_eq!(second_anchor.name, "a");
+        assert_eq!(second_anchor.attribute("href"), Some("two"));
+        assert_eq!(second_anchor.children, vec![Node::text("Two")]);
+
+        let first_button = element(&body.children[2]);
+        assert_eq!(first_button.name, "button");
+        assert_eq!(first_button.attribute("id"), Some("one"));
+        assert_eq!(first_button.children, vec![Node::text("First")]);
+
+        let second_button = element(&body.children[3]);
+        assert_eq!(second_button.name, "button");
+        assert_eq!(second_button.attribute("id"), Some("two"));
+        assert_eq!(second_button.children, vec![Node::text("Second")]);
+
+        let first_nobr = element(&body.children[4]);
+        assert_eq!(first_nobr.name, "nobr");
+        assert_eq!(first_nobr.children, vec![Node::text("A")]);
+
+        let second_nobr = element(&body.children[5]);
+        assert_eq!(second_nobr.name, "nobr");
+        assert_eq!(second_nobr.children, vec![Node::text("B")]);
+    }
+
+    #[test]
+    fn ignores_nested_form_start_tags() {
+        let output = parse_html_with_diagnostics(
+            "<form id=outer><div>One<form id=inner><input name=x></form><p>After",
+        )
+        .unwrap();
+
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "nested-form-start-tag",
+                "nested form start tag was ignored while a form element was already open"
+            )]
+        );
+
+        let body = body(&output.document);
+        assert_eq!(body.children.len(), 2);
+
+        let form = element(&body.children[0]);
+        assert_eq!(form.name, "form");
+        assert_eq!(form.attribute("id"), Some("outer"));
+        assert_eq!(form.children.len(), 1);
+
+        let div = element(&form.children[0]);
+        assert_eq!(div.name, "div");
+        assert_eq!(div.children[0], Node::text("One"));
+        let input = element(&div.children[1]);
+        assert_eq!(input.name, "input");
+        assert_eq!(input.attribute("name"), Some("x"));
+
+        let paragraph = element(&body.children[1]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children, vec![Node::text("After")]);
     }
 
     #[test]

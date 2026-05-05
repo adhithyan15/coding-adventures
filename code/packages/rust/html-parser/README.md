@@ -30,6 +30,8 @@ This first slice intentionally starts small:
   foreign-content CDATA or script-state fragments
 - simple implied end tags for `p`, `li`, `dt`, `dd`, `option`, `optgroup`,
   ruby annotations, heading elements, and paragraph/block boundaries
+- interactive and form-boundary recovery for repeated `a`, `button`, and
+  `nobr` starts plus ignored nested `form` starts
 - parser diagnostics for unmatched end tags
 
 Future batches can layer the full WHATWG HTML tree-construction insertion modes
