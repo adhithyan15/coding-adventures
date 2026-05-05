@@ -2101,6 +2101,19 @@ class TestAlgolTypeChecker:
             "b",
         ]
 
+    def test_accepts_prior_array_accesses_through_array_bound_procedures(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; integer array b[0:0]; "
+            "integer array a[lower():lower()]; "
+            "integer procedure lower; begin lower := b[0] end; "
+            "b[0] := 0; a[0] := 5; result := a[0] end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+
     def test_rejects_later_array_accesses_in_array_bounds(self) -> None:
         ast = parse_algol(
             "begin integer result; integer array a[b[1]:b[1]]; "
@@ -2114,6 +2127,74 @@ class TestAlgolTypeChecker:
             in diagnostic.message
             for diagnostic in result.diagnostics
         )
+
+    def test_rejects_later_array_accesses_through_array_bound_procedures(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer array a[lower():lower()]; "
+            "integer procedure lower; begin lower := b[0] end; "
+            "integer array b[0:0]; result := 0 end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert any(
+            "array bound cannot call procedure 'lower' because it may access "
+            "array 'b' before its descriptor is allocated" in diagnostic.message
+            for diagnostic in result.diagnostics
+        )
+
+    def test_rejects_transitive_later_array_accesses_through_bound_procedures(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer array a[lower():lower()]; "
+            "integer procedure lower; begin lower := readb end; "
+            "integer procedure readb; begin readb := b[0] end; "
+            "integer array b[0:0]; result := 0 end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert any(
+            "array bound cannot call procedure 'lower' because it may access "
+            "array 'b' before its descriptor is allocated" in diagnostic.message
+            for diagnostic in result.diagnostics
+        )
+
+    def test_rejects_later_array_accesses_through_bound_formal_procedures(
+        self,
+    ) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer array a[wrapper(reader):wrapper(reader)]; "
+            "integer procedure wrapper(f); integer procedure f; "
+            "begin wrapper := f end; "
+            "integer procedure reader; begin reader := b[0] end; "
+            "integer array b[0:0]; result := 0 end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert any(
+            "array bound cannot call procedure 'wrapper' because it may access "
+            "array 'b' before its descriptor is allocated" in diagnostic.message
+            for diagnostic in result.diagnostics
+        )
+
+    def test_accepts_bound_procedures_with_local_array_accesses(self) -> None:
+        ast = parse_algol(
+            "begin integer result; integer array a[lower():lower()]; "
+            "integer procedure lower; "
+            "begin integer array local[0:0]; local[0] := 0; lower := local[0] end; "
+            "a[0] := 5; result := a[0] end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
 
     def test_accepts_default_real_array_declaration(self) -> None:
         ast = parse_algol("begin array a[1:3]; a[1] := 7 end")

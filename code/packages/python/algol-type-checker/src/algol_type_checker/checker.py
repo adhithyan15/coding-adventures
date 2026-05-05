@@ -309,6 +309,8 @@ class ResolvedProcedureCall:
     line: int
     column: int
     parameter_symbol_id: int | None = None
+    procedure_argument_ids: tuple[int | None, ...] = ()
+    procedure_argument_formal_symbol_ids: tuple[int | None, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -423,6 +425,17 @@ class _PendingArrayBoundPair:
     lower: ASTNode
     upper: ASTNode
     visible_array_ids: frozenset[int]
+
+
+@dataclass(frozen=True)
+class _PendingArrayBoundProcedureCall:
+    """Procedure call from an array bound plus arrays allocated before it."""
+
+    bound: ASTNode
+    procedure_id: int
+    procedure_name: str
+    visible_array_ids: frozenset[int]
+    procedure_actuals: tuple[tuple[int, int], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -618,8 +631,9 @@ class AlgolTypeChecker:
                 if pending is not None:
                     pending_procedures.append(pending)
 
+        pending_array_bound_calls: list[_PendingArrayBoundProcedureCall] = []
         for pending in pending_array_bounds:
-            self._check_pending_array_bounds(pending)
+            pending_array_bound_calls.extend(self._check_pending_array_bounds(pending))
 
         for pending in pending_switches:
             self._check_pending_switch_declaration(pending)
@@ -628,6 +642,8 @@ class AlgolTypeChecker:
 
         for pending in pending_procedures:
             self._check_pending_procedure_body(pending)
+
+        self._check_array_bound_procedure_calls(pending_array_bound_calls)
 
         for child in _node_children(block):
             if child.rule_name == "statement":
@@ -696,7 +712,8 @@ class AlgolTypeChecker:
                 storage_class=STATIC,
             )
             if pending_array_bounds is None:
-                self._check_pending_array_bounds(pending)
+                bound_calls = self._check_pending_array_bounds(pending)
+                self._check_array_bound_procedure_calls(bound_calls)
             else:
                 pending_array_bounds.append(pending)
             return None
@@ -707,7 +724,8 @@ class AlgolTypeChecker:
                 storage_class="frame",
             )
             if pending_array_bounds is None:
-                self._check_pending_array_bounds(pending)
+                bound_calls = self._check_pending_array_bounds(pending)
+                self._check_array_bound_procedure_calls(bound_calls)
             else:
                 pending_array_bounds.append(pending)
             return None
@@ -879,10 +897,15 @@ class AlgolTypeChecker:
                 )
         return _PendingArrayBounds(scope=scope, bounds=tuple(pending_bounds))
 
-    def _check_pending_array_bounds(self, pending: _PendingArrayBounds) -> None:
+    def _check_pending_array_bounds(
+        self,
+        pending: _PendingArrayBounds,
+    ) -> list[_PendingArrayBoundProcedureCall]:
+        bound_calls: list[_PendingArrayBoundProcedureCall] = []
         for pair in pending.bounds:
             for bound in (pair.lower, pair.upper):
                 previous_access_count = len(self.resolved_array_accesses)
+                previous_call_count = len(self.resolved_procedure_calls)
                 bound_type = self._infer_expr(bound, pending.scope)
                 if bound_type != ERROR and bound_type != INTEGER:
                     self._error(bound, "array bounds must be integer")
@@ -893,6 +916,137 @@ class AlgolTypeChecker:
                             f"array bound cannot read array {access.name!r} "
                             "before its descriptor is allocated",
                         )
+                for call in self.resolved_procedure_calls[previous_call_count:]:
+                    if call.procedure_id >= 0:
+                        bound_calls.append(
+                            _PendingArrayBoundProcedureCall(
+                                bound=bound,
+                                procedure_id=call.procedure_id,
+                                procedure_name=call.name,
+                                visible_array_ids=pair.visible_array_ids,
+                                procedure_actuals=tuple(
+                                    self._procedure_actuals_for_call(call, {})
+                                ),
+                            )
+                        )
+        return bound_calls
+
+    def _check_array_bound_procedure_calls(
+        self,
+        pending_calls: list[_PendingArrayBoundProcedureCall],
+    ) -> None:
+        if not pending_calls:
+            return
+        owner_by_block = {
+            block.block_id: block.owner_procedure_id for block in self.semantic_blocks
+        }
+        for pending in pending_calls:
+            reachable_procedure_ids: set[int] = set()
+            procedure_actuals = dict(pending.procedure_actuals)
+            reachable_accesses = self._array_accesses_reachable_from_procedure(
+                pending.procedure_id,
+                owner_by_block,
+                reachable_procedure_ids,
+                procedure_actuals,
+            )
+            reported_arrays: set[int] = set()
+            for access in reachable_accesses:
+                if access.array_id in pending.visible_array_ids:
+                    continue
+                if access.array_id in reported_arrays:
+                    continue
+                descriptor = self._array_descriptor_for_id(access.array_id)
+                if descriptor is None:
+                    continue
+                if descriptor.storage_class == PARAMETER_STORAGE:
+                    continue
+                declaring_owner = owner_by_block.get(descriptor.declaring_block_id)
+                if declaring_owner in reachable_procedure_ids:
+                    continue
+                reported_arrays.add(access.array_id)
+                self._error(
+                    pending.bound,
+                    f"array bound cannot call procedure {pending.procedure_name!r} "
+                    f"because it may access array {access.name!r} before its "
+                    "descriptor is allocated",
+                )
+
+    def _array_accesses_reachable_from_procedure(
+        self,
+        procedure_id: int,
+        owner_by_block: dict[int, int | None],
+        seen: set[int],
+        procedure_actuals: dict[int, int],
+    ) -> list[ResolvedArrayAccess]:
+        if procedure_id in seen:
+            return []
+        seen.add(procedure_id)
+        accesses = [
+            access
+            for access in self.resolved_array_accesses
+            if owner_by_block.get(access.use_block_id) == procedure_id
+        ]
+        for call in self.resolved_procedure_calls:
+            if owner_by_block.get(call.use_block_id) != procedure_id:
+                continue
+            call_procedure_id = call.procedure_id
+            if call_procedure_id == -2 and call.parameter_symbol_id is not None:
+                call_procedure_id = procedure_actuals.get(call.parameter_symbol_id, -2)
+            if call_procedure_id < 0:
+                continue
+            nested_actuals = dict(procedure_actuals)
+            nested_actuals.update(
+                self._procedure_actuals_for_call(call, procedure_actuals)
+            )
+            accesses.extend(
+                self._array_accesses_reachable_from_procedure(
+                    call_procedure_id,
+                    owner_by_block,
+                    seen,
+                    nested_actuals,
+                )
+            )
+        return accesses
+
+    def _procedure_actuals_for_call(
+        self,
+        call: ResolvedProcedureCall,
+        enclosing_actuals: dict[int, int],
+    ) -> list[tuple[int, int]]:
+        descriptor = self._procedure_descriptor_for_id(call.procedure_id)
+        if descriptor is None:
+            return []
+        actuals: list[tuple[int, int]] = []
+        for index, parameter in enumerate(descriptor.parameters):
+            if parameter.kind != "procedure":
+                continue
+            actual_id = (
+                call.procedure_argument_ids[index]
+                if index < len(call.procedure_argument_ids)
+                else None
+            )
+            if actual_id is None and index < len(
+                call.procedure_argument_formal_symbol_ids
+            ):
+                formal_symbol_id = call.procedure_argument_formal_symbol_ids[index]
+                if formal_symbol_id is not None:
+                    actual_id = enclosing_actuals.get(formal_symbol_id)
+            if actual_id is not None:
+                actuals.append((parameter.symbol_id, actual_id))
+        return actuals
+
+    def _array_descriptor_for_id(
+        self,
+        array_id: int,
+    ) -> ArrayDescriptor | None:
+        return next(
+            (
+                array
+                for array in self.semantic_arrays
+                if array.array_id == array_id
+            ),
+            None,
+        )
 
     def _register_switch_declaration(
         self,
@@ -2254,25 +2408,47 @@ class AlgolTypeChecker:
             self.resolved_procedure_calls.append(call)
             return call
 
+        procedure_argument_ids: list[int | None] = []
+        procedure_argument_formal_symbol_ids: list[int | None] = []
         for argument, parameter in zip(arguments, descriptor.parameters, strict=False):
             if parameter.kind == ARRAY:
                 self._check_array_parameter_actual(argument, scope, parameter)
+                procedure_argument_ids.append(None)
+                procedure_argument_formal_symbol_ids.append(None)
                 continue
             if parameter.kind == LABEL:
                 self._check_label_parameter_actual(argument, scope, parameter)
+                procedure_argument_ids.append(None)
+                procedure_argument_formal_symbol_ids.append(None)
                 continue
             if parameter.kind == SWITCH:
                 self._check_switch_parameter_actual(argument, scope, parameter)
+                procedure_argument_ids.append(None)
+                procedure_argument_formal_symbol_ids.append(None)
                 continue
             if parameter.kind == "procedure":
-                self._check_procedure_parameter_actual(
+                actual_symbol = self._check_procedure_parameter_actual(
                     argument,
                     scope,
                     parameter,
                     call_descriptor=descriptor,
                     call_arguments=arguments,
                 )
+                procedure_argument_ids.append(
+                    actual_symbol.procedure_id
+                    if actual_symbol is not None
+                    and actual_symbol.kind == "procedure"
+                    else None
+                )
+                procedure_argument_formal_symbol_ids.append(
+                    actual_symbol.symbol_id
+                    if actual_symbol is not None
+                    and actual_symbol.kind == "procedure_parameter"
+                    else None
+                )
                 continue
+            procedure_argument_ids.append(None)
+            procedure_argument_formal_symbol_ids.append(None)
             actual_type = self._infer_expr(argument, scope)
             if actual_type != ERROR and not self._parameter_accepts_type(
                 parameter.mode,
@@ -2334,6 +2510,10 @@ class AlgolTypeChecker:
             line=name_token.line,
             column=name_token.column,
             parameter_symbol_id=descriptor.parameter_symbol_id,
+            procedure_argument_ids=tuple(procedure_argument_ids),
+            procedure_argument_formal_symbol_ids=tuple(
+                procedure_argument_formal_symbol_ids
+            ),
         )
         self.resolved_procedure_calls.append(call)
         return call

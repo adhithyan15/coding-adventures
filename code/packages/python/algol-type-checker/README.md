@@ -50,7 +50,10 @@ IR and WASM lowering stages. Array bound expressions are checked after the
 block's declaration signatures are registered, so bounds can call later sibling
 typed procedures in the same declaration part; direct array reads in bounds
 are still limited to descriptors already allocated earlier in declaration
-order.
+order. Procedure calls from bounds are checked through their reachable bodies
+for the same descriptor-order rule, while arrays local to the called procedures
+remain valid because those frames allocate their own descriptors during the
+call.
 Labels receive stable label descriptors and direct local `goto`/`go to` statements
 resolve to those descriptors. Direct nonlocal block `goto` statements resolve
 to outer active blocks, and procedure-crossing transfers resolve to pending

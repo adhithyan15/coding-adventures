@@ -1855,6 +1855,18 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
 
+    def test_prior_array_accesses_through_array_bound_procedures_execute(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer array b[0:0]; integer array a[lower():lower()]; "
+            "integer procedure lower; begin lower := b[0] end; "
+            "b[0] := 0; a[0] := 9; result := a[0] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
+
     def test_later_array_accesses_in_array_bounds_are_rejected(self) -> None:
         with pytest.raises(AlgolWasmError) as excinfo:
             compile_source(
@@ -1864,6 +1876,37 @@ class TestAlgolWasmCompiler:
 
         assert excinfo.value.stage == "type-check"
         assert "before its descriptor is allocated" in excinfo.value.message
+
+    def test_later_array_accesses_through_array_bound_procedures_are_rejected(
+        self,
+    ) -> None:
+        with pytest.raises(AlgolWasmError) as excinfo:
+            compile_source(
+                "begin integer result; integer array a[lower():lower()]; "
+                "integer procedure lower; begin lower := b[0] end; "
+                "integer array b[0:0]; result := 0 end"
+            )
+
+        assert excinfo.value.stage == "type-check"
+        assert "cannot call procedure 'lower'" in excinfo.value.message
+        assert "array 'b' before its descriptor is allocated" in excinfo.value.message
+
+    def test_later_array_accesses_through_bound_formal_procedures_are_rejected(
+        self,
+    ) -> None:
+        with pytest.raises(AlgolWasmError) as excinfo:
+            compile_source(
+                "begin integer result; "
+                "integer array a[wrapper(reader):wrapper(reader)]; "
+                "integer procedure wrapper(f); integer procedure f; "
+                "begin wrapper := f end; "
+                "integer procedure reader; begin reader := b[0] end; "
+                "integer array b[0:0]; result := 0 end"
+            )
+
+        assert excinfo.value.stage == "type-check"
+        assert "cannot call procedure 'wrapper'" in excinfo.value.message
+        assert "array 'b' before its descriptor is allocated" in excinfo.value.message
 
     def test_procedure_body_sees_later_block_declarations(self) -> None:
         result = compile_source(
