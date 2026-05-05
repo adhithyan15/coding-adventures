@@ -1,11 +1,12 @@
 {
   "name": "twig-vscode",
   "displayName": "Twig",
+  "publisher": "coding-adventures-twig",
   "description": "Twig language support and debugging for Visual Studio Code",
   "version": "0.1.0",
   "main": "./out/extension.js",
   "engines": {
-    "vscode": "^1.85.0"
+    "vscode": "^1.82.0"
   },
   "activationEvents": [
     "onLanguage:twig",
@@ -107,7 +108,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
-    "@types/vscode": "^1.85.0",
+    "@types/vscode": "^1.82.0",
     "typescript": "^5.0.0",
     "vitest": "^3.0.0"
   }

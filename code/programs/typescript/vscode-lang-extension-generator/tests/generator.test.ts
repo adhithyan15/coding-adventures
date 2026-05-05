@@ -399,6 +399,26 @@ describe("buildPackageJson", () => {
     const pkg = JSON.parse(buildPackageJson(fullOpts({ extensionVersion: "1.2.3" })));
     expect(pkg.version).toBe("1.2.3");
   });
+
+  // Regression: VS Code rejects extensions without a `publisher` field
+  // when installed locally (the directory layout is
+  // `<publisher>.<name>-<version>/`).  Always emit one.
+  it("emits a non-empty publisher field", () => {
+    const pkg = JSON.parse(buildPackageJson(fullOpts()));
+    expect(typeof pkg.publisher).toBe("string");
+    expect(pkg.publisher.length).toBeGreaterThan(0);
+  });
+
+  // Regression: the engines.vscode constraint must be permissive enough
+  // to load on widely-deployed VS Code versions.  1.82 is the floor
+  // imposed by vscode-languageclient@9.  Pinning to 1.85 silently
+  // bricks installs on slightly older VS Code (1.84 was the production
+  // version when this generator first shipped).  Don't tighten without
+  // also bumping the dep bound and documenting why.
+  it("declares engines.vscode no tighter than ^1.82.0", () => {
+    const pkg = JSON.parse(buildPackageJson(fullOpts()));
+    expect(pkg.engines.vscode).toBe("^1.82.0");
+  });
 });
 
 // ----------------------------------------------------------------------
@@ -575,6 +595,7 @@ describe("generate", () => {
       "package.json",
       "tsconfig.json",
       ".vscodeignore",
+      ".gitignore",
       "README.md",
       "CHANGELOG.md",
       "BUILD",

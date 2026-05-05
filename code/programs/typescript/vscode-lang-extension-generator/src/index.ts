@@ -377,7 +377,7 @@ export function buildPackageJson(opts: GeneratorOptions): string {
 
   const devDependencies: Record<string, string> = {
     "@types/node": "^22.0.0",
-    "@types/vscode": "^1.85.0",
+    "@types/vscode": "^1.82.0",
     typescript: "^5.0.0",
     vitest: "^3.0.0",
   };
@@ -388,13 +388,23 @@ export function buildPackageJson(opts: GeneratorOptions): string {
   // Construct the object with keys in a deterministic order.  Don't
   // mutate it after this point — JSON.stringify preserves insertion
   // order for object keys.
+  // VS Code requires a non-empty `publisher` field on every extension —
+  // both the marketplace and the local-install path
+  // (~/.vscode/extensions/<publisher>.<name>-<version>/).  Without it,
+  // local installs are silently rejected.  Default to a per-extension
+  // namespace derived from the language id; users can override at
+  // package time with `vsce package --publisher <name>` or by editing
+  // package.json before publishing.
+  const publisher = `coding-adventures-${id}`;
+
   const pkg: Record<string, unknown> = {
     name: `${id}-vscode`,
     displayName: opts.languageName,
+    publisher,
     description,
     version: opts.extensionVersion,
     main: "./out/extension.js",
-    engines: { vscode: "^1.85.0" },
+    engines: { vscode: "^1.82.0" },
     activationEvents,
     categories,
     contributes,
@@ -751,6 +761,22 @@ function buildVscodeignore(): string {
   ].join("\n");
 }
 
+/**
+ * `.gitignore` for the generated extension package.  Without this,
+ * `out/` (the tsc output) and `package-lock.json` (regenerated each
+ * `npm install`) drift into git when contributors `git add .` after
+ * a local build.  Both are reproducible build artifacts.
+ */
+function buildGitignore(): string {
+  return [
+    "node_modules/",
+    "out/",
+    "package-lock.json",
+    "*.vsix",
+    "",
+  ].join("\n");
+}
+
 function buildReadme(opts: GeneratorOptions): string {
   const id = opts.languageId;
   const name = opts.languageName;
@@ -917,6 +943,7 @@ export function generate(opts: GeneratorOptions): void {
   writeFile("package.json", buildPackageJson(opts));
   writeFile("tsconfig.json", buildTsconfig());
   writeFile(".vscodeignore", buildVscodeignore());
+  writeFile(".gitignore", buildGitignore());
   writeFile("README.md", buildReadme(opts));
   writeFile("CHANGELOG.md", buildChangelog(opts));
   writeFile("BUILD", buildBuildScript());
