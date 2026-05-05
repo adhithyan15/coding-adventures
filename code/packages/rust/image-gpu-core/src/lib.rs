@@ -52,6 +52,14 @@ mod sergb;
 /// actually ran without changing the public function signatures.
 pub use pipeline::last_executor;
 
+/// MX05 Phase 3 V4 observation hooks.  After any successful filter
+/// dispatch, [`profiler_observations`] returns the accumulated
+/// per-(graph, op) invocation counters (and per-tensor stats once
+/// Phase 4 lands a real specialiser).  [`spec_cache_len`] reports
+/// how many specialised kernels are cached process-wide; always 0
+/// while the no-op specialiser is installed in V1.
+pub use pipeline::{profiler_observations, spec_cache_len};
+
 use matrix_ir::{DType, GraphBuilder, Shape};
 
 /// User-facing error type.  Compatible with v0.1's `GpuError` for ABI
