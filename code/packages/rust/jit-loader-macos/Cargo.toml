@@ -13,3 +13,5 @@ jit-core         = { path = "../jit-core" }
 aot-core         = { path = "../aot-core" }
 interpreter-ir   = { path = "../interpreter-ir" }
 nib-iir-compiler = { path = "../nib-iir-compiler" }
+twig-ir-compiler = { path = "../twig-ir-compiler" }
+twig-vm          = { path = "../twig-vm" }

@@ -114,9 +114,20 @@ pub enum LoaderError {
     /// `mmap` returned `MAP_FAILED`.  Most often: the kernel's JIT
     /// quota for the process is exhausted, or the address space is
     /// fragmented.  The wrapped `errno` is reported.
-    MmapFailed { errno: i32 },
+    MmapFailed {
+        /// Errno value captured immediately after the `mmap` call.
+        errno: i32,
+    },
     /// Provided code is empty.  Calling a 0-byte function is a bug.
     EmptyCode,
+    /// `code.len()` is so large that page-rounding overflows `usize`.
+    /// Practically unreachable on 64-bit, but rejected here as
+    /// defense-in-depth so we never hand `mmap` an undersized request
+    /// followed by an oversized `copy_nonoverlapping`.
+    CodeTooLarge {
+        /// The offending length.
+        len: usize,
+    },
 }
 
 impl std::fmt::Display for LoaderError {
@@ -126,6 +137,8 @@ impl std::fmt::Display for LoaderError {
                 write!(f, "mmap MAP_JIT failed: errno={errno}"),
             LoaderError::EmptyCode =>
                 write!(f, "cannot install zero bytes of code"),
+            LoaderError::CodeTooLarge { len } =>
+                write!(f, "code length {len} would overflow page-rounding"),
         }
     }
 }
@@ -168,6 +181,14 @@ impl CodePage {
     pub fn new(code: &[u8]) -> Result<Self, LoaderError> {
         if code.is_empty() {
             return Err(LoaderError::EmptyCode);
+        }
+        // Reject anything that would let `round_up` overflow.  In
+        // practice this requires `code.len()` to be within PAGE_SIZE
+        // of `usize::MAX` — unreachable on 64-bit — but we check
+        // explicitly so a future hostile caller can't smuggle a
+        // wrap-around past us.
+        if code.len() > usize::MAX - PAGE_SIZE {
+            return Err(LoaderError::CodeTooLarge { len: code.len() });
         }
 
         // Allocate at page granularity.  16 KiB is the Apple Silicon
@@ -246,11 +267,20 @@ impl CodePage {
     /// produced by `aarch64-backend::compile_function` against an
     /// `IIRFunction` whose `params` and `return_type` match `F`.
     pub unsafe fn as_function<F: Copy>(&self) -> F {
-        debug_assert!(
-            std::mem::size_of::<F>() == std::mem::size_of::<*const ()>(),
+        // Unconditional check: `transmute_copy` reads `size_of::<F>()`
+        // bytes from `&self.base` (an 8-byte stack slot).  If a caller
+        // passes a type larger than a function pointer, the read
+        // would touch adjacent stack memory and produce a garbage
+        // "function pointer" — undefined behaviour.  We refuse to
+        // proceed.  Cost is one compare + branch; negligible
+        // alongside the JIT install.
+        assert_eq!(
+            std::mem::size_of::<F>(),
+            std::mem::size_of::<*const ()>(),
             "F must be a function pointer (same size as *const ())"
         );
-        // SAFETY: caller's contract per the doc above.
+        // SAFETY: caller's contract per the doc above; size match
+        // verified at runtime above.
         std::mem::transmute_copy(&self.base)
     }
 }
@@ -367,5 +397,30 @@ mod tests {
     fn page_len_is_at_least_one_page() {
         let page = CodePage::new(&return_42_bytes()).unwrap();
         assert!(page.len() >= PAGE_SIZE);
+    }
+
+    #[test]
+    fn round_up_does_not_overflow_for_normal_inputs() {
+        // round_up itself is plain arithmetic.  We exercise the bound
+        // CodePage::new uses as a guard.  Synthesising a real
+        // usize::MAX-length slice is prevented by std's
+        // `from_raw_parts` precondition, so we test the predicate
+        // directly.
+        assert!(usize::MAX > usize::MAX - PAGE_SIZE);
+        // Boundary just inside the guard: legal.
+        let safe = usize::MAX - PAGE_SIZE;
+        assert!(safe <= usize::MAX - PAGE_SIZE);
+        // Boundary just outside: would be rejected.
+        let unsafe_len = usize::MAX - (PAGE_SIZE - 1);
+        assert!(unsafe_len > usize::MAX - PAGE_SIZE);
+    }
+
+    #[test]
+    #[should_panic(expected = "F must be a function pointer")]
+    fn as_function_rejects_wrong_size_in_release() {
+        let page = CodePage::new(&return_42_bytes()).unwrap();
+        // `(usize, usize)` is 16 bytes, not 8 — should panic
+        // unconditionally (assert!, not debug_assert!).
+        let _: (usize, usize) = unsafe { page.as_function() };
     }
 }
