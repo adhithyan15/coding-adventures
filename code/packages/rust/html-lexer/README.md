@@ -232,7 +232,10 @@ The importer also expands supported multi-state html5lib entries into stable
 per-state Venture cases and now covers intermediate text-like states such as
 RCDATA/RAWTEXT less-than and end-tag-open, CDATA bracket/end, script less-than
 and end-tag-open, script escape-start, script escaped end-tag-open, and script
-double-escape start/end.
+double-escape start/end. End-tag-open fixtures now cover matching tags,
+mismatched tags that must remain literal text, EOF recovery that preserves the
+pending `</`, and matching end-tag diagnostics for whitespace, attributes, and
+trailing solidus.
 
 The intended WHATWG/WPT path is to normalize upstream tokenizer cases into this
 same schema rather than teaching the Rust harness to parse raw upstream files

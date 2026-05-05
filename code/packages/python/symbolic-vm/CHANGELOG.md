@@ -1,5 +1,78 @@
 # Changelog
 
+## 0.52.0 — 2026-05-05
+
+**Phase 32 — Inverse trig/hyperbolic odd symmetry.**
+
+Five new CAS handlers override the `_elementary`-factory `Asin`, `Acos`,
+`Atan`, `Asinh`, `Atanh` handlers from `handlers.py` via the standard
+`handlers.update(build_cas_handler_table())` mechanism.  `Acosh` is
+intentionally excluded — its domain is `[1, ∞)` so `acosh(-x)` has no
+real-domain symmetry rule.  All numeric fold behaviour is preserved.
+
+### Negation symmetry rules
+
+- **`asin(-x) → -asin(x)`**: Arc-sine is an odd function on `[-1, 1]`.
+  The handler recurses so `asin(-(-x)) = asin(x)` collapses correctly.
+- **`acos(-x) → π - acos(x)`**: Arc-cosine satisfies a reflection identity
+  rather than simple negation.  The `%pi` symbol reuses the existing
+  `IRSymbol("%pi")` convention (`_INV_TRIG_PI` constant).
+- **`atan(-x) → -atan(x)`**: Arc-tangent is odd for all real `x`.
+- **`asinh(-x) → -asinh(x)`**: Hyperbolic arc-sine is odd for all real `x`.
+- **`atanh(-x) → -atanh(x)`**: Hyperbolic arc-tangent is odd on `(-1, 1)`.
+
+### Special numeric values
+
+All five handlers preserve exact IRInteger returns for key values:
+`asin(0) = 0`, `acos(1) = 0`, `atan(0) = 0`, `asinh(0) = 0`,
+`atanh(0) = 0` — matching the existing `{0: ZERO}` / `{1: ZERO}`
+special-case conventions from the `_elementary` factory.
+
+### Test coverage
+
+47 new tests across 6 classes in `tests/test_phase32.py`.  Total suite
+grows to 1639 tests at 82.53% coverage.
+
+## 0.51.0 — 2026-05-05
+
+**Phase 31 — Trig symmetry and arc-cancellation identities.**
+
+Six new handlers override the `_elementary`-factory `Sin`, `Cos`, `Tan`,
+`Sinh`, `Cosh`, `Tanh` handlers from `handlers.py` via the standard
+`handlers.update(build_cas_handler_table())` mechanism.  All numeric fold
+behaviour is preserved.
+
+### Negation symmetry rules
+
+- **`sin(-x) → -sin(x)`**: Sine is an odd function — `sin(-x) = -sin(x)` for
+  all real `x`.  The handler recurses so double negations collapse correctly:
+  `sin(-(-x)) = sin(x)`.
+- **`cos(-x) → cos(x)`**: Cosine is an even function — the negation is stripped
+  and the handler recurses, allowing numeric fold to fire on the inner expression.
+- **`tan(-x) → -tan(x)`**: Tangent is odd — same recursive pattern as sine.
+- **`sinh(-x) → -sinh(x)`**: Hyperbolic sine is odd.
+- **`cosh(-x) → cosh(x)`**: Hyperbolic cosine is even.
+- **`tanh(-x) → -tanh(x)`**: Hyperbolic tangent is odd.
+
+### Arc-function cancellation rules
+
+All six cancellations are structural identities — no assumption is needed:
+
+- **`sin(asin(x)) → x`**: `asin` maps `[-1,1]→[-π/2,π/2]`; `sin` on that
+  interval is the exact left inverse.
+- **`cos(acos(x)) → x`**: `acos` maps `[-1,1]→[0,π]`; `cos∘acos = id`.
+- **`tan(atan(x)) → x`**: `atan` maps `ℝ→(-π/2,π/2)` where `tan` is defined.
+- **`sinh(asinh(x)) → x`**: `asinh` is the exact left inverse of `sinh`.
+- **`cosh(acosh(x)) → x`**: `acosh` maps `[1,∞)→[0,∞)`, exact left inverse.
+- **`tanh(atanh(x)) → x`**: `atanh` is the exact left inverse of `tanh`.
+
+### MACSYMA wiring
+
+All 6 functions wire through MACSYMA surface syntax.  New e2e tests cover
+`sin(-x)`, `cos(-x)`, `tan(-x)`, `cosh(-x)`, `sin(asin(x))`, `tanh(atanh(y))`.
+
+---
+
 ## 0.50.0 — 2026-05-05
 
 **Phase 30 — Algebraic `log` and `exp` cancellation identities.**

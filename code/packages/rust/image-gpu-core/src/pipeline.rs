@@ -55,16 +55,17 @@
 //! the right transport, and handles `Transfer` itself.
 
 use crate::GpuError;
-use compute_ir::ComputeGraph;
+use compute_ir::{ComputeGraph, PlacedOp};
 #[cfg(feature = "metal-backend")]
-use compute_ir::{ExecutorId, PlacedOp, CPU_EXECUTOR};
+use compute_ir::{ExecutorId, CPU_EXECUTOR};
 use executor_protocol::{block_on, ExecutorRequest, ExecutorResponse, LocalTransport, Transport};
 use matrix_ir::{Graph, TensorId};
-use matrix_runtime::Runtime;
+use matrix_runtime::{
+    Profiler, Runtime, SpecCache, SpecRouter, SpecialisationPolicy, SpecKey, ShapeClass, RangeClass,
+};
 use std::cell::Cell;
 #[cfg(feature = "metal-backend")]
 use std::collections::HashSet;
-#[cfg(feature = "metal-backend")]
 use std::sync::OnceLock;
 
 // ─────────────────────────── Last-executor reporting ───────────────────────────
@@ -125,6 +126,178 @@ fn metal_backend() -> Option<&'static MetalBackend> {
     .as_ref()
 }
 
+// ─────────────────────────── MX05 specialisation singletons ───────────────────────────
+//
+// MX05 Phase 1 / 2a / 3 V1 / V2 / V3 shipped the Profiler /
+// SpecialisationPolicy / SpecCache / SpecRouter machinery in
+// matrix-runtime (now matrix-profile).  Phase 3 V4 wired them up
+// here so every `run_graph_with_constant_inputs` call records an
+// invocation observation and asks the router whether to specialise
+// each op.  Phase 4 minimum-viable installed `matrix_cpu::CpuSpecialiser`
+// in matrix-cpu (the first real `Specialiser` impl).  This file
+// (Phase 4 wiring) replaces the `NoopSpecialiser` here with
+// `matrix_cpu::specialiser()` so the cache visibly fills under the
+// instagram-filters demo once enough invocations accumulate.
+//
+// Both singletons are lazy via `OnceLock`.  Constructing the SpecRouter
+// allocates a small SpecCache plus the policy + specialiser trait
+// objects; cheap, but doing it once instead of per-call keeps the
+// hot path tight.
+
+/// How many invocations must accumulate against a (graph_subhash,
+/// op_index) pair before image-gpu-core asks the backend to specialise.
+///
+/// Spec MX05 §"Threshold rationale" calls for 1000 in production.
+/// We use a much lower number here because:
+///
+///  - This file's specialisation is **observation-only** in V1.  The
+///    cache fills, but the dispatch path doesn't yet consume the
+///    handle (that needs an executor-protocol extension — Phase 4.1).
+///    Lowering the threshold makes the wiring visible in CLI demos
+///    and tests without requiring a thousand back-to-back filter
+///    calls.
+///  - Once dispatch actually runs specialised kernels, this threshold
+///    will rise back toward 1000 to match the spec defaults.  For now
+///    the cost of "specialising too eagerly" is a few extra HashMap
+///    inserts; not a real performance hit.
+const HOTNESS_THRESHOLD: u64 = 100;
+
+/// Custom `SpecialisationPolicy` for image-gpu-core that fires on
+/// raw invocation count alone — no tensor-observation requirement.
+///
+/// `DefaultPolicy` is stricter: it requires either a constant-input
+/// or a narrowable-range observation to fire.  Building those
+/// observations needs `Profiler::sample_tensor` calls during dispatch
+/// (Phase 2a's API), which `drive_specialisation` doesn't yet do
+/// (would need to thread tensor bytes through this layer; out of
+/// scope for the V4 wiring).
+///
+/// Until that's wired, `HotPolicy` is the simplest thing that fires
+/// the Specialiser at all.  It emits a `SpecKey` with
+/// `ShapeClass::Dynamic` + `RangeClass::Unknown` — coarsest possible,
+/// but sufficient to demonstrate the cache rising above zero in the
+/// demo.  Phase 4.2 will replace this with `DefaultPolicy` once
+/// `drive_specialisation` is sampling tensor bytes.
+struct HotPolicy {
+    threshold: u64,
+}
+
+impl SpecialisationPolicy for HotPolicy {
+    fn should_specialise(
+        &self,
+        observation: &matrix_runtime::ProfileObservation,
+        op_kind: u8,
+        output_dtype: matrix_ir::DType,
+        backend_id: u32,
+    ) -> Option<SpecKey> {
+        if observation.invocation_count < self.threshold {
+            return None;
+        }
+        Some(SpecKey {
+            op_kind,
+            dtype: output_dtype,
+            shape_class: ShapeClass::Dynamic,
+            range_class: RangeClass::Unknown,
+            backend_id,
+        })
+    }
+}
+
+fn profiler() -> &'static Profiler {
+    static SLOT: OnceLock<Profiler> = OnceLock::new();
+    SLOT.get_or_init(Profiler::new)
+}
+
+fn spec_router() -> &'static SpecRouter {
+    static SLOT: OnceLock<SpecRouter> = OnceLock::new();
+    SLOT.get_or_init(|| {
+        SpecRouter::new(
+            Box::new(HotPolicy {
+                threshold: HOTNESS_THRESHOLD,
+            }),
+            SpecCache::default_capacity(),
+            // Phase 4 minimum-viable: install matrix-cpu's
+            // CpuSpecialiser instead of NoopSpecialiser.  The kernel
+            // handle is opaque to dispatch (still no executor-protocol
+            // extension); but the cache visibly fills, which is the
+            // promise the spec made for this milestone.
+            matrix_cpu::specialiser(),
+        )
+    })
+}
+
+/// Snapshot the profile observation accumulated by this process so
+/// far.  Phase 3 V4's CLI demos and tests use this to confirm the
+/// specialisation pipeline is live (invocation counts climb across
+/// repeat calls; cache stays empty under `NoopSpecialiser`).
+///
+/// Returns the same data shape as
+/// [`matrix_runtime::Profiler::observations`] for callers that want
+/// to inspect specific ops.
+pub fn profiler_observations() -> Vec<matrix_runtime::ProfileObservation> {
+    profiler().observations()
+}
+
+/// How many specialised kernels the process-wide cache currently
+/// holds.  Phase 4 wired `matrix_cpu::CpuSpecialiser` in front of
+/// this cache, so the count rises above zero once a `(graph_subhash,
+/// op_index)` pair crosses the [`HOTNESS_THRESHOLD`] (100 invocations
+/// in V1; will return to spec MX05's 1000 default once dispatch
+/// actually consumes the specialised kernels in Phase 4.1).
+pub fn spec_cache_len() -> usize {
+    spec_router().cache_len()
+}
+
+/// Drive the MX05 specialisation pipeline for one placed graph:
+///
+/// 1. Bump per-op invocation counters via `Profiler::record_dispatch`.
+/// 2. Build a `ProfileObservation` per Compute op and pass it to
+///    `SpecRouter::route` along with op metadata.  Discard the
+///    return — V1 always gets `None` from the no-op specialiser.
+///
+/// Pure observation work; no behavioural change to the dispatch
+/// itself.  Returns no value.
+fn drive_specialisation(placed: &ComputeGraph) {
+    let p = profiler();
+    p.record_dispatch(placed);
+
+    let r = spec_router();
+    let subhash = Profiler::subhash(placed);
+
+    // Observations() returns every cached observation; index by
+    // (subhash, op_index) so the per-op router calls below are O(n)
+    // total rather than O(n²).
+    let obs = p.observations();
+    let mut by_op: std::collections::HashMap<u32, &matrix_runtime::ProfileObservation> =
+        std::collections::HashMap::new();
+    for o in &obs {
+        if o.graph_subhash == subhash {
+            by_op.insert(o.op_index, o);
+        }
+    }
+
+    for (op_idx, pop) in placed.ops.iter().enumerate() {
+        if let PlacedOp::Compute { op: ir_op, executor, .. } = pop {
+            let key = op_idx as u32;
+            let observation = match by_op.get(&key) {
+                Some(o) => *o,
+                None => continue,
+            };
+            // Output dtype: look up in the placed graph's tensor
+            // table by the op's output tensor id.
+            let out_id = ir_op.output();
+            let out_dtype = match placed.tensor(out_id) {
+                Some(t) => t.dtype,
+                None => continue,
+            };
+            // Discard the return — V1 noop specialiser declines every
+            // key.  Phase 4 will use the returned `SpecialisedKernel`
+            // to dispatch a specialised kernel handle to the backend.
+            let _ = r.route(observation, ir_op.wire_tag(), out_dtype, executor.0);
+        }
+    }
+}
+
 // ─────────────────────────── Public entry point ───────────────────────────
 
 /// Plan and run a graph that has all its inputs embedded as constants
@@ -177,6 +350,14 @@ pub fn run_graph_with_constant_inputs(
 
 /// Dispatch a placed graph through a specific transport, then download
 /// the output and record the executor name as last-used.
+///
+/// Before forwarding to the transport, this function drives the MX05
+/// specialisation pipeline ([`drive_specialisation`]): per-op
+/// invocation counters climb, and the [`SpecRouter`] is asked
+/// whether each Compute op should specialise.  In V1 the answer is
+/// always None (the noop specialiser is installed) — Phase 4 will
+/// install a real specialiser and the same call site will start
+/// emitting kernels.
 fn dispatch_via(
     transport: &LocalTransport,
     placed: ComputeGraph,
@@ -184,6 +365,8 @@ fn dispatch_via(
     output_byte_count: usize,
     executor_name: &'static str,
 ) -> Result<Vec<u8>, GpuError> {
+    drive_specialisation(&placed);
+
     let output_residency = placed
         .outputs
         .iter()
@@ -393,6 +576,80 @@ mod tests {
         let exec = last_executor().expect("an executor name should be recorded");
         // CPU is always available; Metal may or may not be present.
         assert!(exec == "cpu" || exec == "metal", "unexpected: {}", exec);
+    }
+
+    /// MX05 Phase 3 V4 wiring smoke test.  Confirms that calling a
+    /// public op (gpu_invert) drives the SpecRouter pipeline:
+    /// observations accumulate.
+    #[test]
+    fn dispatch_drives_spec_router_pipeline() {
+        use crate::{gpu_invert, profiler_observations};
+        use pixel_container::PixelContainer;
+
+        let mut img = PixelContainer::new(2, 2);
+        img.fill(10, 20, 30, 255);
+
+        // Take a baseline.  The profiler is process-global so other
+        // tests in this file may have already populated it; capture
+        // the *delta* across this dispatch instead of asserting an
+        // absolute count.
+        let before: u64 = profiler_observations()
+            .iter()
+            .map(|o| o.invocation_count)
+            .sum();
+
+        let _ = gpu_invert(&img).unwrap();
+
+        let after: u64 = profiler_observations()
+            .iter()
+            .map(|o| o.invocation_count)
+            .sum();
+        assert!(
+            after > before,
+            "gpu_invert should bump at least one observation counter \
+             (before = {}, after = {})",
+            before,
+            after
+        );
+    }
+
+    /// MX05 Phase 4 end-to-end visibility test.  Drives `gpu_invert`
+    /// past the `HOTNESS_THRESHOLD` and asserts that
+    /// [`spec_cache_len`] rises above zero — the first place in
+    /// `image-gpu-core`'s test suite where the cache is observably
+    /// non-empty after a real dispatch path.
+    ///
+    /// Up to V4 the assertion was `cache_len == 0` (NoopSpecialiser).
+    /// With CpuSpecialiser installed and HotPolicy(threshold=100), a
+    /// few hundred invocations of any graph populate at least one
+    /// cache entry per Compute op in the graph.
+    #[test]
+    fn cpu_specialiser_populates_cache_after_hotness_threshold() {
+        use crate::{gpu_invert, spec_cache_len};
+        use pixel_container::PixelContainer;
+
+        // Drive enough dispatches to push every Compute op in
+        // gpu_invert's graph past HOTNESS_THRESHOLD (100).
+        let mut img = PixelContainer::new(2, 2);
+        img.fill(10, 20, 30, 255);
+
+        // Snapshot cache len at the start so we measure delta across
+        // this test.  Other tests in this file may have already
+        // populated some entries.
+        let before = spec_cache_len();
+
+        for _ in 0..150 {
+            let _ = gpu_invert(&img).unwrap();
+        }
+
+        let after = spec_cache_len();
+        assert!(
+            after > before,
+            "expected spec cache to grow after 150 gpu_invert calls; \
+             before = {}, after = {}",
+            before,
+            after
+        );
     }
 }
 

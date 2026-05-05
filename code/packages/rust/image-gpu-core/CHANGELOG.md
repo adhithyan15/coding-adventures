@@ -1,5 +1,94 @@
 # Changelog — image-gpu-core
 
+## 0.5.0 — 2026-05-05
+
+### Added — MX05 Phase 4 visibility (CpuSpecialiser wired)
+
+- The process-wide `SpecRouter` now uses **`matrix_cpu::specialiser()`**
+  instead of `NoopSpecialiser`, hooking up the first real backend
+  `Specialiser` (landed in `matrix-cpu` v0.3.0).
+- A small custom `HotPolicy` replaces `DefaultPolicy` while the
+  per-tensor sampling pipeline matures: it fires the Specialiser
+  on raw invocation count alone (threshold 100), without requiring
+  the constant-input or narrow-range observations that
+  `DefaultPolicy` checks.  This is enough to demonstrate the cache
+  rising above zero in CLI demos and tests.
+- `HOTNESS_THRESHOLD` is `100` — much lower than spec MX05's 1000
+  default — because Phase 4's specialisation is still
+  observation-only (the dispatch path doesn't yet consume the
+  kernel handle; that's Phase 4.1 + an executor-protocol extension).
+  The threshold will return to 1000 once specialised dispatch
+  actually saves cycles.
+
+### Tests
+
+- New `cpu_specialiser_populates_cache_after_hotness_threshold` test
+  drives `gpu_invert` 150 times and asserts that `spec_cache_len()`
+  rises.  This is the first place in `image-gpu-core`'s test suite
+  where the SpecCache is observably non-empty after a real dispatch.
+- The earlier `dispatch_drives_spec_router_pipeline` test no longer
+  asserts `cache_len == 0` (which used to be the NoopSpecialiser
+  invariant) — it only checks that invocation counters climb.
+
+Total tests: 27 unit + 1 doc = 28 (was 26 + 1 = 27).
+
+### Regression check
+
+`instagram-filters` routing on macOS unchanged — the dispatch path
+itself doesn't consume the specialised kernel handle yet, so output
+bytes and the `last_executor()` value are identical to V0.4.0:
+
+```
+  invert        → cpu     (small graph, planner picks CPU)
+  greyscale     → metal   (sRGB + matmul, ships to GPU)
+  sepia         → metal   (matmul-heavy, ships to GPU)
+```
+
+The only new observable is `spec_cache_len()` — call it after a few
+hundred filter invocations and watch the number rise.
+
+## 0.4.0 — 2026-05-05
+
+### Added — MX05 Phase 3 V4 wiring
+
+- Each call to `pipeline::run_graph_with_constant_inputs` now drives
+  the MX05 specialisation pipeline end-to-end:
+    1. `Profiler::record_dispatch` bumps per-(graph, op) invocation
+       counters.
+    2. `SpecRouter::route` is consulted for every Compute op, with the
+       op's wire tag, output dtype, and target executor id.
+    3. The router's return is **discarded in V1** — `NoopSpecialiser`
+       declines every key.  The wiring is foundation for Phase 4
+       when a real specialiser arrives.
+- New public observation hooks:
+    - `image_gpu_core::profiler_observations()` — snapshot the
+      accumulated `ProfileObservation` set.  Useful for telemetry,
+      tests, and future phase 4 caller-side logic.
+    - `image_gpu_core::spec_cache_len()` — how many specialised
+      kernels are cached process-wide.  Always `0` while
+      `NoopSpecialiser` is installed.
+- Per-process `Profiler` and `SpecRouter` singletons via `OnceLock`
+  so the routing pipeline is set up once and amortised across all
+  filter invocations.
+
+### Tests (1 new)
+
+- `dispatch_drives_spec_router_pipeline` — gpu_invert produces a
+  visible bump in `profiler_observations`'s aggregate invocation
+  count.  Cache stays empty (NoopSpecialiser).
+
+### Notes
+
+- No behavioural change in the dispatch path itself.  Routing,
+  output bytes, and the `last_executor()` value are unchanged.
+- Phase 4 will install a backend-specific specialiser (e.g. an
+  MSL emitter that constant-folds bias values for an LLM bias-add
+  pattern).  When that lands, `spec_cache_len()` will start rising
+  and `route()` will start returning `Some(SpecialisedKernel)`s
+  that the dispatch path will consume — once `executor-protocol`
+  grows a way for backends to dispatch via a SpecKey-keyed kernel
+  handle.
+
 ## 0.3.0 — 2026-05-04
 
 ### Added

@@ -1,8 +1,8 @@
 [package]
 name = "image-gpu-core"
-version = "0.3.0"
+version = "0.5.0"
 edition = "2021"
-description = "IMG06: image-domain library built on the matrix execution layer (MX01–MX04). Each operation is a MatrixIR graph dispatched through matrix-runtime; v0.3 wires the optional matrix-metal GPU backend behind a default-on feature flag, with transparent fallback to matrix-cpu on non-Apple targets."
+description = "IMG06: image-domain library built on the matrix execution layer (MX01–MX04). Each operation is a MatrixIR graph dispatched through matrix-runtime. v0.3 wires the optional matrix-metal GPU backend with transparent fallback to matrix-cpu. v0.4 wires the MX05 specialisation pipeline (Profiler + SpecRouter) into every dispatch. v0.5 installs `matrix_cpu::CpuSpecialiser` and a custom `HotPolicy` so the SpecCache visibly fills once a graph's invocation count crosses 100 — the first end-to-end demonstration of MX05 Phase 4 in a real domain library."
 
 [dependencies]
 matrix-ir         = { path = "../matrix-ir" }
