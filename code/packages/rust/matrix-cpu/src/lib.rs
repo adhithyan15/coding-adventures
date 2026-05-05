@@ -30,8 +30,11 @@
 #![warn(rust_2018_idioms)]
 
 mod buffers;
+mod calibrate;
 mod dispatch;
 mod eval;
+
+pub use calibrate::calibrate;
 
 use compute_ir::{BufferId, KernelId};
 use executor_protocol::{
