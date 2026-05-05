@@ -36,3 +36,5 @@ documented in this file.
   before implied column groups are created.
 - Simple implied end-tag recovery for adjacent `option` and `optgroup`
   elements, preventing nested select-option DOMs when end tags are omitted.
+- Heading start tags now close open paragraphs and previous headings, avoiding
+  nested heading DOMs when heading end tags are omitted.
