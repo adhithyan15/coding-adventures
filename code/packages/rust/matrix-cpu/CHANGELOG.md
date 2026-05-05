@@ -2,6 +2,52 @@
 
 All notable changes to `matrix-cpu` are documented here.
 
+## [0.3.0] — 2026-05-05
+
+### Added — MX05 Phase 4 (first real backend Specialiser)
+
+- New `specialiser` module exporting `CpuSpecialiser` and a
+  convenience function `specialiser() -> Box<dyn Specialiser>`.  This
+  is the **first real backend `Specialiser` implementation** in the
+  workspace (previously every test and demo used `NoopSpecialiser`,
+  which always returned `None`).
+- `CpuSpecialiser::specialise(key)` emits a `SpecialisedKernel` for
+  any `SpecKey` it sees, with a deterministic 64-bit handle (FNV-1a
+  over a stable byte serialisation of every public field of `SpecKey`).
+  Two calls with the same key produce identical handles; distinct
+  keys produce distinct handles with extremely high probability.
+- New direct dependency on `matrix-profile` so we can `impl Specialiser`
+  without going through `matrix-runtime`'s re-export.
+
+### Phase 4 minimum-viable scope
+
+The kernel handle is **opaque to the runtime** — the dispatch path
+doesn't yet consume it (that needs an `executor-protocol` extension
+to add something like `ExecutorRequest::DispatchSpecialised`,
+which is V2 work).  But emitting the handle proves the wiring is
+live: under a `SpecRouter` configured with this specialiser plus
+a low policy threshold, hot graphs visibly populate the
+`SpecCache`.
+
+The integration test `router_with_cpu_specialiser_populates_cache_when_policy_fires`
+is the first place in the codebase where `cache.len()` rises above
+zero — the spec MX05 promise that "Phase 4 will see spec_cache_len
+rise" has finally cashed in.
+
+### Tests (7 new, all in `specialiser::tests`)
+
+- `specialise_emits_kernel_for_any_key`
+- `handles_are_deterministic_for_same_key`
+- `handles_differ_for_distinct_keys`
+- `handle_is_sensitive_to_shape_class`
+- `handle_is_sensitive_to_constant_bytes`
+- `specialiser_function_returns_box_dyn`
+- `router_with_cpu_specialiser_populates_cache_when_policy_fires`
+  (end-to-end integration with `SpecRouter`, `DefaultPolicy(1, 0.95)`,
+  and a hot synthetic `ProfileObservation`).
+
+Total tests: 26 unit + 17 integration = 43 (was 19 + 17 = 36).
+
 ## [0.2.0] — 2026-05-05
 
 ### Added — opt-in cost-model calibration
