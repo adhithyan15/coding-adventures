@@ -41,3 +41,30 @@ Up to 8 parameters are supported.  Frame must fit a 12-bit unsigned offset
 - `call_runtime`, `send`, `load_property`, `store_property`
 - Width-truncation for u8/u16/u32 results
 - Real register allocation
+
+## 0.1.1 — 2026-05-05
+
+### Added
+- `mov_<ty>` lowering — typed register-to-register move (load + store
+  via the stack-spill regalloc).  Used by aot-core when lowering
+  `call_builtin "_move"`.
+
+### Fixed
+- **Stack frame layout bug**: virtual register slot 0 was at `[sp + 0]`,
+  but the prologue's `stp fp, lr, [sp, #-frame]!` saves `fp` at the
+  same offset.  The first `str x0, [sp]` clobbered the saved `fp`,
+  so the function's `ldp fp, lr, [sp], #frame` epilogue restored a
+  garbage `fp` and `ret` returned to a garbage address — instant
+  SIGSEGV.
+
+  Fix: virtual slot offsets now start at +16 to leave room for the
+  saved `fp/lr`.  The frame-size cap drops from 4080 to 504 bytes —
+  reflecting the actual `stp_pre`/`ldp_post` 7-bit signed immediate
+  range (the prior 4080 was wishful thinking).
+
+### Note
+
+The fix is what made real Twig programs (`(+ 30 12)`, `(if ...)`)
+actually run end-to-end on Apple Silicon.  Pre-fix, the encoder + IR
++ Mach-O writer were all correct, but the program SIGSEGV'd on return
+because of the saved-fp clobber.

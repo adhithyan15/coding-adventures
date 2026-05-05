@@ -225,6 +225,50 @@ fn end_to_end_typed_twig_returns_42() {
                String::from_utf8_lossy(&out.stderr));
 }
 
+/// Real Twig source programs that exercise the full pipeline:
+///   parser → IIR → CIR (specialise lowers `call_builtin` to typed ops)
+///   → ARM64 → object → ld → runnable Mach-O → exec → exit code.
+///
+/// Each `(source, expected_exit_code)` pair is compiled via
+/// `twig-aot`'s `compile_file_macos_arm64` and run.
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[test]
+fn end_to_end_typed_twig_arithmetic_and_branches() {
+    use std::io::Write;
+
+    let cases = [
+        ("42",                       42i32),
+        ("(+ 30 12)",                42),
+        ("(- 100 58)",               42),
+        ("(* 6 7)",                  42),
+        ("(if (= 1 1) 100 200)",     100),
+        ("(if (= 1 2) 100 200)",     200),
+        ("(if (< 5 10) 7 13)",       7),
+        ("(if (> 5 10) 7 13)",       13),
+    ];
+
+    let dir = tempfile::tempdir().expect("tempdir");
+    for (i, (src, expected)) in cases.iter().enumerate() {
+        let twig_path = dir.path().join(format!("case_{i}.twig"));
+        let exe_path  = dir.path().join(format!("case_{i}"));
+        let mut f = std::fs::File::create(&twig_path).unwrap();
+        writeln!(f, "{src}").unwrap();
+        drop(f);
+
+        twig_aot::compile_file_macos_arm64(&twig_path, &exe_path)
+            .unwrap_or_else(|e| panic!("compile {src}: {e}"));
+
+        let out = Command::new(&exe_path).output()
+            .unwrap_or_else(|e| panic!("launch {src}: {e}"));
+        assert_eq!(
+            out.status.code(), Some(*expected),
+            "src={src} expected={expected} got={:?} stderr={:?}",
+            out.status.code(),
+            String::from_utf8_lossy(&out.stderr),
+        );
+    }
+}
+
 /// Sanity check that the AArch64Backend trait wiring goes end-to-end
 /// for a hand-built CIR-shaped function.
 #[test]

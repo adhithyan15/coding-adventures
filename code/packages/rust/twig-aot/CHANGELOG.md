@@ -1,5 +1,33 @@
 # Changelog — `twig-aot`
 
+## 0.1.1 — 2026-05-05
+
+Real Twig source programs now compile and run on Apple Silicon — not
+just hand-built IIR.  This release does NOT touch `twig-aot` itself
+but pulls in upstream improvements that turn typed Twig source into
+fully-resolved CIR + native code:
+
+- `aot-core::specialise` now lowers `call_builtin "+ / - / * / / / = /
+  != / < / <= / > / >= / _move"` to typed CIR ops (`add_<ty>`,
+  `cmp_eq_<ty>`, `mov_<ty>`) when operand types are known, eliminating
+  runtime calls for primitive arithmetic.
+- `aarch64-backend` adds `mov_<ty>` lowering and fixes a stack-frame
+  bug where virtual register slot 0 collided with the saved `fp/lr`
+  (binaries previously SIGSEGV'd at function return).
+
+End-to-end demonstration:
+
+```
+$ cat hello.twig
+(+ 30 12)
+$ twig-aot hello.twig -o hello && ./hello; echo $?
+42
+```
+
+The integration test suite now runs 8 typed Twig programs through the
+full pipeline and asserts their exit codes (see
+`tests/macos_arm64_smoke.rs::end_to_end_typed_twig_arithmetic_and_branches`).
+
 ## 0.1.0 — 2026-05-05
 
 Initial release.  End-to-end ahead-of-time compiler for Twig: source

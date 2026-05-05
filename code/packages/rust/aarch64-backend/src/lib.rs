@@ -110,24 +110,41 @@ impl Backend for AArch64Backend {
 // Register allocator — assigns each CIR virtual register a stack slot
 // ===========================================================================
 
-#[derive(Debug, Default)]
+/// Stack-spill register allocator.
+///
+/// Each virtual lives at a fixed `[sp, #offset]` slot.  Offsets start at
+/// **16** to leave the bottom 16 bytes of the frame free for the saved
+/// `fp` (at `[sp + 0]`) and `lr` (at `[sp + 8]`) — that's where
+/// `stp fp, lr, [sp, #-frame]!` writes them, and we must not let
+/// virtuals overlap.
+#[derive(Debug)]
 struct RegAlloc {
+    /// `name → byte offset from sp`, with the +16 fp/lr reservation
+    /// already baked in.
     slots: HashMap<String, u32>,
-    next_slot: u32,
+    /// Next byte offset to hand out — also starts at 16 for the same
+    /// reason.
+    next_offset: u32,
+}
+
+impl Default for RegAlloc {
+    fn default() -> Self {
+        RegAlloc { slots: HashMap::new(), next_offset: 16 }
+    }
 }
 
 impl RegAlloc {
     fn slot_of(&mut self, name: &str) -> u32 {
         if let Some(&s) = self.slots.get(name) { return s; }
-        let s = self.next_slot;
-        self.next_slot = self.next_slot.checked_add(8).expect("slot overflow");
+        let s = self.next_offset;
+        self.next_offset = self.next_offset.checked_add(8).expect("slot overflow");
         self.slots.insert(name.to_string(), s);
         s
     }
 
-    /// Required virtual storage size (sum of slots), 16-byte aligned.
-    fn virt_size(&self) -> u32 {
-        (self.next_slot + 15) & !15
+    /// Total frame size (saved fp/lr + virtual storage), 16-byte aligned.
+    fn frame_size(&self) -> u32 {
+        (self.next_offset + 15) & !15
     }
 }
 
@@ -192,9 +209,11 @@ fn compile_inner(ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Result<Vec<u8>, 
         }
     }
 
-    let virt_size = alloc.virt_size();
-    let frame = virt_size + 16; // +16 for saved fp/lr
-    if frame > 4080 {
+    let frame = alloc.frame_size();
+    if frame > 504 {
+        // stp_pre/ldp_post use a 7-bit signed immediate × 8, so the
+        // pre-indexed delta is bounded at ±504.  Functions that need a
+        // bigger frame are out of scope for V1.
         return Err(BackendError::FrameTooLarge(frame));
     }
 
@@ -304,6 +323,21 @@ fn emit_instr(
             .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
         load_operand(asm, alloc, Reg::X0, src)?;
         emit_epilogue(asm, frame)?;
+        return Ok(());
+    }
+
+    // ---- mov_<ty> dest = src --------------------------------------------
+    //
+    // Trivial typed move.  With stack-spill regalloc this is just a
+    // load + store; the type tag is informational (we always move
+    // 64 bits).
+    if let Some(_ty) = op.strip_prefix("mov_") {
+        let dest = require_dest(instr)?;
+        let src = instr.srcs.first()
+            .ok_or_else(|| BackendError::MalformedInstr(format!("{op} needs srcs[0]")))?;
+        load_operand(asm, alloc, Reg::X0, src)?;
+        let slot = alloc.slot_of(dest);
+        asm.str_(Reg::X0, Reg::Sp, slot)?;
         return Ok(());
     }
 
