@@ -1757,9 +1757,17 @@ def _replace_delete_conflicts(
     the pre-deleted rows.  Full trigger + FK semantics for REPLACE are deferred
     to a future iteration.
     """
+    # We use backend.columns() to discover which columns are UNIQUE- or
+    # PRIMARY-KEY-constrained.  If the backend does not support schema
+    # introspection we skip the conflict scan rather than aborting — a backend
+    # without UNIQUE enforcement would raise its own error from insert() anyway.
+    # We intentionally do NOT swallow real errors (e.g. TableNotFound): only
+    # the specific case of "no schema support" (NotImplementedError/
+    # AttributeError) is silenced.  Any other exception propagates normally.
     try:
         col_defs = st.backend.columns(table)
-    except Exception:  # noqa: BLE001
+    except (NotImplementedError, AttributeError):
+        # Backend does not expose schema introspection — skip conflict scan.
         return
     # Identify the unique-constrained columns whose new values are non-NULL.
     # NULL values can never cause a UNIQUE conflict in SQL.
@@ -1793,12 +1801,35 @@ def _replace_delete_conflicts(
         cur.close()
 
 
+_VALID_ON_CONFLICT: frozenset[str] = frozenset(
+    {"REPLACE", "IGNORE", "ABORT", "FAIL", "ROLLBACK"}
+)
+
+
 def _do_insert(ins: InsertRow, st: _VmState) -> None:
+    # Defence-in-depth: validate on_conflict at the VM boundary so a
+    # hand-crafted or programmatically built InsertRow with a bogus action
+    # fails loudly rather than silently skipping both REPLACE and IGNORE
+    # branches and then raising an opaque backend error.
+    if ins.on_conflict is not None and ins.on_conflict not in _VALID_ON_CONFLICT:
+        raise InternalError(
+            message=f"invalid on_conflict action {ins.on_conflict!r}; "
+            f"expected one of {sorted(_VALID_ON_CONFLICT)}"
+        )
     values = st.pop_n(len(ins.columns))
     row = dict(zip(ins.columns, values, strict=True))
     # REPLACE: pre-delete every existing row that conflicts on a unique-
     # constrained column.  The subsequent insert then succeeds unconditionally
     # (barring NOT NULL violations, which REPLACE does not suppress).
+    #
+    # Concurrency note: the pre-delete and the subsequent insert are two
+    # separate backend operations with no transaction held between them.  In a
+    # multi-writer scenario a second writer could insert a conflicting row in
+    # the window between our delete and our insert, causing the insert to fail.
+    # For the current single-process, GIL-protected in-memory backend this is
+    # not a practical concern.  Backends that support concurrent writes (e.g.
+    # a future networked backend) should implement REPLACE atomically inside
+    # their own `insert()` method rather than relying on this two-step helper.
     if ins.on_conflict == "REPLACE":
         _replace_delete_conflicts(ins.table, row, st)
     _check_constraints(ins.table, row, st)
@@ -2196,6 +2227,11 @@ def _do_insert_from_result(ins: InsertFromResult, st: _VmState) -> None:
     After draining, the result buffer is cleared and ``rows_affected`` is
     set to the count of inserted rows.
     """
+    if ins.on_conflict is not None and ins.on_conflict not in _VALID_ON_CONFLICT:
+        raise InternalError(
+            message=f"invalid on_conflict action {ins.on_conflict!r}; "
+            f"expected one of {sorted(_VALID_ON_CONFLICT)}"
+        )
     schema = st.result.columns
     target_cols = ins.columns if ins.columns else schema
     affected = 0
