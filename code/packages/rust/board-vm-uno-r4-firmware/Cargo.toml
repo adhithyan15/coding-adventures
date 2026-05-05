@@ -50,3 +50,7 @@ path = "src/bin/uno_r4_wifi_uart_server.rs"
 [[bin]]
 name = "uno-r4-wifi-serialusb-server"
 path = "src/bin/uno_r4_wifi_serialusb_server.rs"
+
+[[bin]]
+name = "uno-r4-wifi-serialusb-artifact"
+path = "src/bin/uno_r4_wifi_serialusb_artifact.rs"
