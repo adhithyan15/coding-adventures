@@ -3,6 +3,7 @@
 use board_vm_ir::{parse_module, validate, ModuleError, ValidateError};
 use board_vm_runtime::{BoardHal, RunReport, Runtime, RuntimeError};
 
+pub mod arduino_usb_link;
 #[cfg(target_arch = "arm")]
 pub mod scripted_probe_stream;
 pub mod serial_usb_server;

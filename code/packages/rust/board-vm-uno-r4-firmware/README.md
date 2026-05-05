@@ -108,17 +108,29 @@ runtime as the UART server. The reusable server helper is host-tested with a
 fake CDC transport so the Board VM wire-frame path is validated before the
 Arduino/TinyUSB link layer is wired in.
 
-The Rust entrypoint expects the Arduino Renesas/TinyUSB startup and
-`tud_cdc_n_*` symbols to be provided by the firmware link bundle. Build the
-firmware library and host-tested server path now:
+The Rust entrypoint now starts Arduino Renesas USB through the `__USBStart()`
+C++ ABI symbol exposed by the Arduino core. The `board-vm-uno-r4-usb-cdc`
+backend supplies the serial-install descriptor hook and the Uno R4 WiFi USB-C
+mux hook from Rust, so the final link set does not need Arduino's full
+`SerialUSB.cpp` object or WiFi `variant.cpp` just to expose CDC.
+
+`src/arduino_usb_link.rs` records the Arduino Renesas/TinyUSB link contract for
+the built-in USB path: Arduino core version `1.5.3`, FQBN
+`arduino:renesas_uno:unor4wifi`, required TinyUSB C objects, `USB.cpp`,
+`IRQManager.cpp`, the Uno R4 WiFi `libfsp.a`, include directories, compile
+defines, and the Rust-provided C++ ABI hook symbols. It is data-only for now so
+CI can validate the contract without requiring a local Arduino install.
+
+Build the firmware library and host-tested server path now:
 
 ```sh
 cargo test -p board-vm-uno-r4-firmware -- --nocapture
 RUSTC="$(rustup which rustc)" rustup run stable cargo build --target thumbv7em-none-eabihf -p board-vm-uno-r4-firmware --lib
 ```
 
-The final flashable `uno-r4-wifi-serialusb-server` binary needs the follow-up
-Arduino/TinyUSB link package before it can be uploaded to a real board.
+The final flashable `uno-r4-wifi-serialusb-server` binary still needs the
+follow-up build-script step that compiles the manifest's Arduino/TinyUSB C/C++
+objects and links them into the Rust firmware image.
 
 After flashing the generated `.bin`, run the host smoke test against the adapter
 serial port:

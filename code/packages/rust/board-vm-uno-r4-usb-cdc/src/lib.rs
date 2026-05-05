@@ -13,6 +13,9 @@ pub const UNO_R4_WIFI_USB_PRODUCT: &str = "UNO R4 WiFi";
 pub const UNO_R4_WIFI_SERIAL_USB_NAME: &str = "SerialUSB";
 pub const UNO_R4_WIFI_USB_CDC_INTERFACE: u8 = 0;
 pub const UNO_R4_WIFI_USB_MAX_PACKET_BYTES: usize = USB_CDC_FULL_SPEED_MAX_PACKET_BYTES;
+pub const ARDUINO_RENESAS_USB_START_SYMBOL: &str = "_Z10__USBStartv";
+pub const ARDUINO_RENESAS_USB_INSTALL_SERIAL_SYMBOL: &str = "_Z18__USBInstallSerialv";
+pub const UNO_R4_WIFI_CONFIGURE_USB_MUX_SYMBOL: &str = "_Z17configure_usb_muxv";
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum UnoR4UsbCdcError {
@@ -23,6 +26,7 @@ pub enum UnoR4UsbCdcError {
 }
 
 pub trait TinyUsbCdcApi {
+    fn start(&mut self) {}
     fn poll(&mut self);
     fn connected(&self) -> bool;
     fn available(&self) -> usize;
@@ -58,7 +62,11 @@ impl<A> UnoR4WifiSerialUsbCdc<A> {
         Self { api, started: true }
     }
 
-    pub fn begin(&mut self) {
+    pub fn begin(&mut self)
+    where
+        A: TinyUsbCdcApi,
+    {
+        self.api.start();
         self.started = true;
     }
 
@@ -197,6 +205,12 @@ impl Default for TinyUsbCdc0 {
 
 #[cfg(target_arch = "arm")]
 impl TinyUsbCdcApi for TinyUsbCdc0 {
+    fn start(&mut self) {
+        unsafe {
+            ffi::arduino_renesas_usb_start();
+        }
+    }
+
     fn poll(&mut self) {
         unsafe {
             ffi::tud_task_ext(0, false);
@@ -294,6 +308,80 @@ fn control_line_state_from_tinyusb(line_state: u8) -> UsbCdcControlLineState {
 }
 
 #[cfg(target_arch = "arm")]
+#[unsafe(export_name = "_Z18__USBInstallSerialv")]
+pub extern "C" fn arduino_renesas_usb_install_serial() {}
+
+#[cfg(target_arch = "arm")]
+#[unsafe(export_name = "_Z17configure_usb_muxv")]
+pub extern "C" fn arduino_uno_r4_wifi_configure_usb_mux() {
+    unsafe {
+        uno_r4_wifi_usb_mux::route_usb_c_to_ra4m1();
+    }
+}
+
+#[cfg(target_arch = "arm")]
+mod uno_r4_wifi_usb_mux {
+    use core::ptr::{read_volatile, write_volatile};
+
+    const SYSTEM_PRCR: *mut u16 = 0x4001_E3FE as *mut u16;
+    const SYSTEM_VBTBKR1: *mut u8 = 0x4001_E501 as *mut u8;
+    const PORT4_PCNTR1: *mut u32 = 0x4004_0080 as *mut u32;
+    const PORT4_PORR: *mut u16 = 0x4004_0088 as *mut u16;
+    const PMISC_PWPR: *mut u8 = 0x4004_0D03 as *mut u8;
+    const PFS_P408: *mut u32 = 0x4004_0920 as *mut u32;
+
+    const PRCR_KEY: u16 = 0xA500;
+    const PRCR_PRC1_UNLOCK: u16 = PRCR_KEY | 0x0002;
+    const PRCR_LOCK: u16 = PRCR_KEY;
+    const USB_MUX_BACKUP_MARKER: u8 = 40;
+    const USB_SWITCH_MASK: u16 = 1 << 8;
+    const PWPR_B0WI: u8 = 1 << 7;
+    const PWPR_PFSWE: u8 = 1 << 6;
+    const PFS_PDR_OUTPUT: u32 = 1 << 2;
+
+    pub unsafe fn route_usb_c_to_ra4m1() {
+        unlock_system_registers();
+        write_volatile(SYSTEM_VBTBKR1, USB_MUX_BACKUP_MARKER);
+        write_volatile(SYSTEM_VBTBKR1.add(1), 0);
+        write_volatile(SYSTEM_VBTBKR1.add(2), 0);
+        write_volatile(SYSTEM_VBTBKR1.add(3), 0);
+        lock_system_registers();
+
+        enable_pfs_writes();
+        write_volatile(PFS_P408, PFS_PDR_OUTPUT);
+        disable_pfs_writes();
+
+        let mut pcntr1 = read_volatile(PORT4_PCNTR1);
+        pcntr1 |= USB_SWITCH_MASK as u32;
+        pcntr1 &= !((USB_SWITCH_MASK as u32) << 16);
+        write_volatile(PORT4_PCNTR1, pcntr1);
+        write_volatile(PORT4_PORR, USB_SWITCH_MASK);
+    }
+
+    unsafe fn unlock_system_registers() {
+        write_volatile(SYSTEM_PRCR, PRCR_PRC1_UNLOCK);
+    }
+
+    unsafe fn lock_system_registers() {
+        write_volatile(SYSTEM_PRCR, PRCR_LOCK);
+    }
+
+    unsafe fn enable_pfs_writes() {
+        let mut pwpr = read_volatile(PMISC_PWPR);
+        pwpr &= !PWPR_B0WI;
+        write_volatile(PMISC_PWPR, pwpr);
+        write_volatile(PMISC_PWPR, pwpr | PWPR_PFSWE);
+    }
+
+    unsafe fn disable_pfs_writes() {
+        let mut pwpr = read_volatile(PMISC_PWPR);
+        pwpr &= !PWPR_B0WI;
+        write_volatile(PMISC_PWPR, pwpr);
+        write_volatile(PMISC_PWPR, pwpr & !PWPR_PFSWE);
+    }
+}
+
+#[cfg(target_arch = "arm")]
 mod ffi {
     #[repr(C, packed)]
     #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -334,6 +422,8 @@ mod ffi {
     }
 
     unsafe extern "C" {
+        #[link_name = "_Z10__USBStartv"]
+        pub fn arduino_renesas_usb_start();
         pub fn tud_task_ext(timeout_ms: u32, in_isr: bool);
         pub fn tud_cdc_n_connected(itf: u8) -> bool;
         pub fn tud_cdc_n_get_line_state(itf: u8) -> u8;
@@ -369,6 +459,7 @@ mod tests {
         polls: usize,
         flushes: usize,
         writes: usize,
+        starts: usize,
     }
 
     impl FakeTinyUsb {
@@ -388,6 +479,7 @@ mod tests {
                 polls: 0,
                 flushes: 0,
                 writes: 0,
+                starts: 0,
             }
         }
 
@@ -400,6 +492,10 @@ mod tests {
     }
 
     impl TinyUsbCdcApi for FakeTinyUsb {
+        fn start(&mut self) {
+            self.starts += 1;
+        }
+
         fn poll(&mut self) {
             self.polls += 1;
         }
@@ -454,6 +550,15 @@ mod tests {
         assert_eq!(UNO_R4_WIFI_USB_PRODUCT, "UNO R4 WiFi");
         assert_eq!(UNO_R4_WIFI_SERIAL_USB_NAME, "SerialUSB");
         assert_eq!(UNO_R4_WIFI_USB_MAX_PACKET_BYTES, 64);
+        assert_eq!(ARDUINO_RENESAS_USB_START_SYMBOL, "_Z10__USBStartv");
+        assert_eq!(
+            ARDUINO_RENESAS_USB_INSTALL_SERIAL_SYMBOL,
+            "_Z18__USBInstallSerialv"
+        );
+        assert_eq!(
+            UNO_R4_WIFI_CONFIGURE_USB_MUX_SYMBOL,
+            "_Z17configure_usb_muxv"
+        );
     }
 
     #[test]
@@ -464,6 +569,7 @@ mod tests {
         cdc.begin();
         assert_eq!(cdc.read_byte().unwrap(), 0x42);
         assert_eq!(cdc.api().polls, 1);
+        assert_eq!(cdc.api().starts, 1);
     }
 
     #[test]
