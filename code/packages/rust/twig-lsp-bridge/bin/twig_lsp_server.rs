@@ -1,6 +1,9 @@
 //! `twig-lsp-server` — Twig Language Server entry point.
 //!
-//! Runs a JSON-RPC LSP server over stdin/stdout.
+//! Runs a JSON-RPC LSP server over stdin/stdout.  All editor traffic is
+//! handled by `coding_adventures_ls00::server::LspServer`, which delegates
+//! every language-specific decision to the `GrammarLanguageBridge` we
+//! construct from the static `twig_language_spec()`.
 //!
 //! ## Usage
 //!
@@ -11,27 +14,52 @@
 //! Configure your editor to launch this binary as the Twig language server.
 //! VS Code: set `twig.languageServerPath` in settings.json.
 //!
-//! ## Implementation (LS02 PR B)
+//! ## How it's wired
 //!
-//! 1. Call `twig_lsp_bridge::twig_language_spec()`.
-//! 2. Construct `grammar_lsp_bridge::GrammarLanguageBridge::new(spec)`.
-//! 3. Call `ls00::serve_stdio(bridge)` — this blocks, running the event loop.
-//!
-//! TODO (LS02 PR B): Uncomment and implement once LS02 PR A is merged.
-//! Verify the exact ls00 serve function name (serve_stdio? run? serve?).
-//! File: code/packages/rust/ls00/src/lib.rs
+//! ```text
+//! main()
+//!   │
+//!   ▼  twig_language_spec()     ← static LanguageSpec for Twig
+//!   │
+//!   ▼  GrammarLanguageBridge::new(spec)
+//!   │
+//!   ▼  Box<dyn LanguageBridge>
+//!   │
+//!   ▼  LspServer::new(boxed_bridge, stdin, stdout)
+//!   │
+//!   ▼  server.serve()           ← blocks until EOF on stdin
+//! ```
+
+use std::io::{self, BufReader};
+
+use coding_adventures_ls00::language_bridge::LanguageBridge;
+use coding_adventures_ls00::server::LspServer;
+use grammar_lsp_bridge::GrammarLanguageBridge;
+use twig_lsp_bridge::twig_language_spec;
 
 fn main() {
-    eprintln!("twig-lsp-server: LS02 PR B not yet implemented.");
-    eprintln!("Implement grammar-lsp-bridge (LS02 PR A) first, then wire here.");
-    std::process::exit(1);
+    // Build the language-specific bridge from the static Twig spec.
+    let bridge = GrammarLanguageBridge::new(twig_language_spec());
 
-    // TODO (LS02 PR B): replace stub above with:
-    //
-    // use grammar_lsp_bridge::GrammarLanguageBridge;
-    // use twig_lsp_bridge::twig_language_spec;
-    //
-    // let bridge = GrammarLanguageBridge::new(twig_language_spec());
-    // coding_adventures_ls00::serve_stdio(bridge)
-    //     .expect("LSP server error");
+    // Erase the concrete type — `LspServer::new` takes
+    // `Box<dyn LanguageBridge>`.
+    let boxed: Box<dyn LanguageBridge> = Box::new(bridge);
+
+    // Stdio is the LSP standard transport.  We wrap stdin in a `BufReader`
+    // because `LspServer` requires `BufRead` for line-oriented framing.
+    let stdin  = io::stdin();
+    let stdout = io::stdout();
+
+    // Lock both — `LspServer` needs exclusive ownership of the streams
+    // for the duration of the session, and locking eliminates the per-call
+    // re-locking overhead inside the read loop.
+    let reader = BufReader::new(stdin.lock());
+    let writer = stdout.lock();
+
+    let mut server = LspServer::new(boxed, reader, writer);
+
+    // Block until the editor closes the connection (EOF).  Errors during
+    // serving are logged inside the server, not bubbled up here, so this
+    // call is infallible from `main`'s perspective.
+    server.serve();
 }
