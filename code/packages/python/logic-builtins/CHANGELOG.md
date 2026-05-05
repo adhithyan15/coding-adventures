@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `exists_fileo(path)`, `read_file_to_stringo(path, contents)`, and
+  `read_file_to_codeso(path, codes)` for bounded UTF-8 file text I/O from
+  bound atom/string paths.
 - `betweeno(low, high, value)` for finite inclusive integer generation and
   validation, matching the common Prolog `between/3` use case.
 - `integero(term)` for non-bool integer type checks and `succo(predecessor,

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from logic_engine import (
     Compound,
     Disequality,
@@ -997,6 +999,29 @@ class TestPrologVMStress:
                 "A": num(1),
                 "B": num(1),
                 "Chain": num(1),
+            },
+        ]
+
+    def test_file_text_io_predicates_run_through_vm(self, tmp_path: Path) -> None:
+        source_path = tmp_path / "story.pltxt"
+        source_path.write_text("tea\ncake", encoding="utf-8")
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        compiled = compile_swi_prolog_source(
+            f"""
+            ?- exists_file('{path_atom}'),
+               read_file_to_string('{path_atom}', Text),
+               read_file_to_codes('{path_atom}', Codes).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {
+                "Text": string("tea\ncake"),
+                "Codes": logic_list([
+                    num(ord(character)) for character in "tea\ncake"
+                ]),
             },
         ]
 

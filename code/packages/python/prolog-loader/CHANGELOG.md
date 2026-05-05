@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- adapt source-level `exists_file/1`, `read_file_to_string/2`, and
+  `read_file_to_codes/2` into the executable logic builtin layer
 - preserve source query variables across `goal_expansion/2` rewrites
 - adapt Prolog `call/2..8` into variadic callable-term execution
 - preserve extra arguments while rewriting module-qualified `call/N` meta-goals
