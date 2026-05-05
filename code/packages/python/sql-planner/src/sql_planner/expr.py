@@ -462,6 +462,43 @@ class WindowFuncExpr:
     extra_args: tuple[Expr, ...] = ()          # LAG/LEAD offset+default, NTILE n, NTH_VALUE n
 
 
+@dataclass(frozen=True, slots=True)
+class ExcludedColumn:
+    """Reference to the *would-be-inserted* row's value for a column.
+
+    Only valid inside an ``ON CONFLICT DO UPDATE SET`` clause (the upsert
+    action).  The pseudo-table ``EXCLUDED`` contains the row that was
+    rejected because it conflicted with an existing row.  For example::
+
+        INSERT INTO t (id, val)
+        VALUES (1, 42)
+        ON CONFLICT (id) DO UPDATE SET val = EXCLUDED.val
+
+    The ``EXCLUDED.val`` here refers to the value ``42`` from the rejected
+    row — not the value already in the table.
+
+    Why a dedicated node instead of ``Column(table="EXCLUDED", col=…)``?
+    ----------------------------------------------------------------------
+    Using a magic table-name string would silently pass through the normal
+    column-resolution path and break on the ``Scan`` lookup (there is no
+    table named "EXCLUDED" in the schema).  A dedicated node:
+
+    - Is pattern-matchable in the planner without string guards.
+    - Codegen can emit a dedicated ``LoadExcludedColumn`` IR instruction
+      that the VM resolves against the ``excluded_row`` it holds on the
+      side, rather than looking up a cursor.
+    - Makes the AST self-documenting: any reader can see this is EXCLUDED,
+      not a regular column reference.
+
+    The adapter detects ``Column(table="EXCLUDED", col=c)`` inside a upsert
+    clause and rewrites it to ``ExcludedColumn(col=c)``.  Outside a upsert
+    clause, ``EXCLUDED.col`` just resolves as a normal two-part column
+    reference (table alias "EXCLUDED" is very unlikely but harmless).
+    """
+
+    col: str  # column name in the EXCLUDED pseudo-table
+
+
 # The type union every non-specialized consumer should match on. Order
 # doesn't matter for correctness, but we keep the union sorted to help
 # anyone eyeballing pattern matches.
@@ -469,6 +506,7 @@ Expr = (
     Literal
     | Column
     | CorrelatedRef
+    | ExcludedColumn
     | BinaryExpr
     | UnaryExpr
     | FunctionCall

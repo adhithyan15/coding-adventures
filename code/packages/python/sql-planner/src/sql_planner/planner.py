@@ -87,6 +87,10 @@ from .ast import (
 from .ast import (
     SortKey as AstSortKey,
 )
+from .ast import (
+    UpsertAssignment as AstUpsertAssignment,
+    UpsertClause as AstUpsertClause,
+)
 from .errors import (
     AmbiguousColumn,
     InternalError,
@@ -102,6 +106,7 @@ from .expr import (
     CaseExpr,
     Column,
     CorrelatedRef,
+    ExcludedColumn,
     ExistsSubquery,
     Expr,
     FunctionCall,
@@ -987,6 +992,85 @@ def _derive_alias(item: SelectItem) -> str | None:
 # --------------------------------------------------------------------------
 
 
+def _resolve_upsert(
+    clause: AstUpsertClause | None, table_cols: list[str], schema: SchemaProvider
+) -> P.UpsertAction | None:
+    """Convert a raw ``AstUpsertClause`` into a resolved ``P.UpsertAction``.
+
+    The assignment RHS expressions may reference:
+    - ``ExcludedColumn(col=c)`` — the would-be-inserted value (already rewritten
+      by the adapter; passed through unchanged here, no scope needed).
+    - Regular ``Column`` / ``Literal`` / ``BinaryExpr`` etc. — resolved against
+      the target table's scope so bare names like ``price`` become
+      ``Column(table=t, col="price")``.
+
+    When ``clause`` is ``None`` (no ON CONFLICT clause), returns ``None``.
+    """
+    if clause is None:
+        return None
+
+    # Validate conflict target columns exist in the table.
+    for col in clause.conflict_target:
+        if col not in table_cols:
+            raise UnknownColumn(table="(upsert target)", column=col)
+
+    if clause.do_nothing:
+        return P.UpsertAction(conflict_target=clause.conflict_target, do_nothing=True)
+
+    # Resolve assignment values.  ExcludedColumn nodes pass through the
+    # resolver unchanged because _resolve doesn't know about them and will
+    # propagate them as-is (they are not Column nodes to qualify).
+    # We build a scope that includes just the target table so that plain
+    # column refs like ``price`` resolve to ``Column(table=t, col="price")``.
+    # The scope deliberately does NOT include "EXCLUDED" because the adapter
+    # has already rewritten ``Column(table="EXCLUDED", col=c)`` to
+    # ``ExcludedColumn(col=c)`` — there is nothing left to resolve.
+    target_scope: Scope = {}  # no table scope needed; ExcludedColumn is a leaf
+
+    resolved_assignments = tuple(
+        P.UpsertAssignment(
+            column=a.column,
+            value=_resolve_upsert_expr(a.value, table_cols, schema),
+        )
+        for a in clause.assignments
+    )
+    return P.UpsertAction(
+        conflict_target=clause.conflict_target,
+        do_nothing=False,
+        assignments=resolved_assignments,
+    )
+
+
+def _resolve_upsert_expr(expr: Expr, table_cols: list[str], schema: SchemaProvider) -> Expr:
+    """Resolve an expression inside an upsert assignment RHS.
+
+    ``ExcludedColumn`` nodes are leaves — they have no table scope and pass
+    through unchanged.  Everything else is resolved normally.
+
+    We do a targeted structural walk instead of calling the general ``_resolve``
+    so that ``ExcludedColumn`` does not trip the "unknown column" error path.
+    """
+    match expr:
+        case ExcludedColumn():
+            # The pseudo-table value reference — keep as-is.
+            return expr
+        case BinaryExpr(op=op, left=left, right=right):
+            return BinaryExpr(
+                op=op,
+                left=_resolve_upsert_expr(left, table_cols, schema),
+                right=_resolve_upsert_expr(right, table_cols, schema),
+            )
+        case Column(table=None, col=col) if col in table_cols:
+            # Bare column name — qualify it against the insert target table.
+            # We do not have the table name here so we return the column as-is;
+            # the codegen resolves bare Column(table=None) against the insert
+            # table's existing row during the upsert update phase.
+            return expr
+        case _:
+            # Literals and other exprs that need no resolution.
+            return expr
+
+
 def _plan_insert(stmt: InsertValuesStmt, schema: SchemaProvider) -> P.LogicalPlan:
     # Validate the target table and, if a column list is given, each column.
     table_cols = schema.columns(stmt.table)
@@ -1000,12 +1084,14 @@ def _plan_insert(stmt: InsertValuesStmt, schema: SchemaProvider) -> P.LogicalPla
     resolved_returning = tuple(
         _resolve(r, returning_scope, schema) for r in stmt.returning
     )
+    upsert = _resolve_upsert(stmt.upsert_clause, table_cols, schema)
     return P.Insert(
         table=stmt.table,
         columns=stmt.columns,
         source=P.InsertSource(values=stmt.rows),
         on_conflict=stmt.on_conflict,
         returning=resolved_returning,
+        upsert=upsert,
     )
 
 
@@ -1152,12 +1238,14 @@ def _plan_insert_select(stmt: InsertSelectStmt, schema: SchemaProvider) -> P.Log
     resolved_returning = tuple(
         _resolve(r, returning_scope, schema) for r in stmt.returning
     )
+    upsert = _resolve_upsert(stmt.upsert_clause, table_cols, schema)
     return P.Insert(
         table=stmt.table,
         columns=stmt.columns,
         source=P.InsertSource(query=sub_plan),
         on_conflict=stmt.on_conflict,
         returning=resolved_returning,
+        upsert=upsert,
     )
 
 

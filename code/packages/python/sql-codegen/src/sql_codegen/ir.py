@@ -450,6 +450,77 @@ class DistinctResult:
 
 
 @dataclass(frozen=True, slots=True)
+class UpsertAssignment:
+    """One ``col = <compiled value instructions>`` in an ``ON CONFLICT DO UPDATE`` clause.
+
+    The assignment value is pre-compiled into a flat list of instructions.
+    The VM executes them as a mini-program to produce a single value on the
+    operand stack, then pops it into the target column slot.
+
+    ``instructions`` is the complete, self-contained instruction sequence for
+    evaluating the RHS expression.  It may reference ``LoadExcludedColumn``
+    (for ``EXCLUDED.col``) and ``LoadColumn`` against the *existing* row's
+    cursor (for bare column references like ``price``).
+    """
+
+    column: str
+    instructions: tuple[Instruction, ...]  # forward ref; resolved at module end
+
+
+@dataclass(frozen=True, slots=True)
+class UpsertSpec:
+    """Compiled representation of an ``ON CONFLICT … DO …`` clause.
+
+    Carried by :class:`InsertRow` and :class:`InsertFromResult` so the VM
+    can act on it when a :class:`~sql_backend.backend.ConstraintViolation`
+    is raised.
+
+    Fields
+    ------
+    conflict_target:
+        The column names identifying which unique constraint to watch.
+        Empty = any constraint violation fires the action.  The VM uses
+        this to locate the conflicting existing row via
+        ``backend.find_conflicting_row(table, conflict_target, row_dict)``.
+    do_nothing:
+        When ``True`` the VM silently drops the rejected row and continues,
+        like ``INSERT OR IGNORE`` but scoped to the named constraint.
+    assignments:
+        Pre-compiled SET assignments for ``DO UPDATE``.  Empty when
+        ``do_nothing=True``.
+
+    Upsert vs. ``on_conflict``
+    --------------------------
+    ``InsertRow.upsert`` takes precedence over ``InsertRow.on_conflict``.
+    When both are present, ``upsert`` handles the conflict.
+    """
+
+    conflict_target: tuple[str, ...]  # empty = any constraint
+    do_nothing: bool = False
+    assignments: tuple[UpsertAssignment, ...] = ()  # non-empty when do_nothing=False
+
+
+@dataclass(frozen=True, slots=True)
+class LoadExcludedColumn:
+    """Push the value of ``col`` from the current EXCLUDED pseudo-row.
+
+    Only valid inside the pre-compiled assignment instruction sequences inside
+    a :class:`UpsertSpec`.  The VM resolves it against ``_VmState.excluded_row``,
+    a ``dict[str, SqlValue]`` that is set to the would-be-inserted row's data
+    before executing each upsert assignment.
+
+    Why not ``LoadConst`` or ``LoadColumn``?
+    ----------------------------------------
+    - ``LoadConst`` is for compile-time literals, not runtime excluded values.
+    - ``LoadColumn`` reads from a cursor, but EXCLUDED is not a real table;
+      there is no cursor for it.
+    - ``LoadExcludedColumn`` is explicit and avoids any magic-string tricks.
+    """
+
+    col: str  # column name in the EXCLUDED pseudo-row
+
+
+@dataclass(frozen=True, slots=True)
 class InsertRow:
     """Pop one value per column (last first); backend inserts the row.
 
@@ -461,11 +532,16 @@ class InsertRow:
     - ``"REPLACE"``   — delete every conflicting row, then retry the insert
     - ``"IGNORE"``    — silently discard this row; continue the statement
     - ``"ABORT"`` / ``"FAIL"`` / ``"ROLLBACK"`` — re-raise as IntegrityError
+
+    ``upsert`` carries the optional ``ON CONFLICT … DO …`` spec.  When
+    present, a ``ConstraintViolation`` triggers the upsert action instead
+    of ``on_conflict``.
     """
 
     table: str
     columns: tuple[str, ...]
     on_conflict: str | None = None  # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
+    upsert: UpsertSpec | None = None  # ON CONFLICT … DO …
 
 
 @dataclass(frozen=True, slots=True)
@@ -481,11 +557,13 @@ class InsertFromResult:
     back to the table's natural order.
 
     ``on_conflict`` has the same semantics as :class:`InsertRow`.
+    ``upsert`` has the same semantics as :class:`InsertRow.upsert`.
     """
 
     table: str
     columns: tuple[str, ...]  # empty = use result schema
     on_conflict: str | None = None  # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
+    upsert: UpsertSpec | None = None  # ON CONFLICT … DO …
 
 
 @dataclass(frozen=True, slots=True)
@@ -1063,7 +1141,7 @@ class ComputeWindowFunctions:
 # --------------------------------------------------------------------------
 
 Instruction = (
-    LoadConst | LoadColumn | LoadOuterColumn | LoadLastInsertedColumn | Pop
+    LoadConst | LoadColumn | LoadOuterColumn | LoadLastInsertedColumn | LoadExcludedColumn | Pop
     | BinaryOp | UnaryOp | IsNull | IsNotNull | Between | InList | Like | Coalesce | CallScalar
     | OpenScan | AdvanceCursor | CloseScan
     | BeginRow | EmitColumn | EmitRow | SetResultSchema | ScanAllColumns

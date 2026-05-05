@@ -1,5 +1,49 @@
 # Changelog
 
+## 1.16.0 — 2026-05-05
+
+### Added
+
+- **`UPSERT` execution — `ON CONFLICT DO UPDATE` and `ON CONFLICT DO NOTHING`**
+  (`vm.py`) — full upsert semantics for both VALUES-based and SELECT-based INSERTs.
+
+  Key additions:
+
+  - **`excluded_row: dict[str, SqlValue]`** on `_VmState` — stores the
+    *would-be-inserted* row during upsert SET expression evaluation so that
+    `LoadExcludedColumn` instructions can read from it.
+
+  - **`LoadExcludedColumn` dispatch** — pushes `st.excluded_row.get(ins.col)` onto
+    the operand stack.  This instruction is only executed inside `_upsert_apply`.
+
+  - **`_do_upsert(table, row, upsert, st) -> bool`** — the main upsert decision
+    function called from `_do_insert` and `_do_insert_from_result` when the backend
+    raises `ConstraintViolation`.  Returns `True` if the conflict was handled (skip
+    or update), `False` if no match was found (re-raises the original exception).
+    - **DO NOTHING fast path**: immediately returns `True`, silently dropping the
+      conflicting row.
+    - **DO UPDATE**: opens a positioned cursor (`_open_cursor` if available, else
+      `scan`), scans for the conflicting row using `conflict_target` columns (or
+      schema-discovered PRIMARY KEY columns when `conflict_target` is empty), then
+      calls `_upsert_apply`.
+
+  - **`_upsert_apply(table, excluded, existing, upsert, cur, st)`** — evaluates
+    each `UpsertAssignment.instructions` sequence via `_dispatch`, collecting the
+    resulting value for each column, then calls `backend.update()` on the positioned
+    cursor.  Before evaluation it temporarily parks `existing` in
+    `st.current_row[0]` so that bare column references (e.g. `n + 1` where `n`
+    refers to the existing row) resolve correctly via `LoadColumn(cursor_id=0, …)`.
+    After evaluation it restores the previous `current_row[0]` entry.
+
+  - **`_do_insert` and `_do_insert_from_result` updated** — catch
+    `ConstraintViolation` and call `_do_upsert`.  If the upsert handler returns
+    `False` (no match found), the original `ConstraintViolation` is re-translated
+    and re-raised.
+
+- **`test_upsert.py`** — 12 focused VM-level upsert tests covering DO NOTHING,
+  DO UPDATE with EXCLUDED.col, bare column refs, arithmetic, multiple assignments,
+  empty conflict_target, counter accumulation, and plain inserts with no conflict.
+
 ## 1.15.0 — 2026-05-05
 
 ### Added

@@ -130,6 +130,9 @@ keywords:
   IGNORE
   ABORT
   FAIL
+  CONFLICT
+  DO
+  NOTHING
 
 skip:
   WHITESPACE    = /[ \t\r\n]+/

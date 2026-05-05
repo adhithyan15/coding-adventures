@@ -45,6 +45,7 @@ from sql_planner import (
     AggregateExpr,
     AlterTableStmt,
     Assignment,
+    AstUpsertAssignment,
     BeginStmt,
     Between,
     BinaryExpr,
@@ -63,6 +64,7 @@ from sql_planner import (
     DropTriggerStmt,
     DropViewStmt,
     ExceptStmt,
+    ExcludedColumn,
     ExistsSubquery,
     FuncArg,
     FunctionCall,
@@ -96,6 +98,7 @@ from sql_planner import (
     UnaryOp,
     UnionStmt,
     UpdateStmt,
+    UpsertClause,
     Wildcard,
     WindowFuncExpr,
 )
@@ -649,6 +652,102 @@ def _conflict_action(node: ASTNode) -> str | None:
     return None
 
 
+def _upsert_clause(node: ASTNode, state: _PlaceholderCounter) -> UpsertClause | None:
+    """Parse an optional ``upsert_clause`` child from an insert statement node.
+
+    Grammar (from sql.grammar)::
+
+        upsert_clause = "ON" "CONFLICT"
+                        [ "(" NAME { "," NAME } ")" ]
+                        ( "DO" "NOTHING"
+                        | "DO" "UPDATE" "SET" upsert_assignment { "," upsert_assignment } ) ;
+
+        upsert_assignment = NAME "=" expr ;
+
+    Returns ``None`` when no ``upsert_clause`` child is present.
+
+    EXCLUDED pseudo-table rewriting
+    ---------------------------------
+    The grammar parses ``EXCLUDED.col`` as a normal ``column_ref`` (two-part
+    NAME.NAME), which the ``_expr`` helper turns into ``Column(table="EXCLUDED",
+    col=col)``.  This function detects that sentinel and rewrites it to the
+    dedicated ``ExcludedColumn(col=col)`` node so that the planner and codegen
+    can pattern-match on it cleanly without string comparisons.
+    """
+    uc = _maybe_child(node, "upsert_clause")
+    if uc is None:
+        return None
+
+    # Collect conflict target column names from optional "(NAME, ...)" part.
+    conflict_target: list[str] = []
+    in_target = False
+    for child in uc.children:
+        if _is_token(child, type_="LPAREN"):
+            in_target = True
+        elif _is_token(child, type_="RPAREN"):
+            in_target = False
+        elif in_target and isinstance(child, Token) and _token_type(child) == "NAME":
+            conflict_target.append(child.value)
+
+    # Determine action: DO NOTHING or DO UPDATE SET ...
+    do_nothing = False
+    assignments: list[AstUpsertAssignment] = []
+
+    # Scan for NOTHING keyword (DO NOTHING branch)
+    for child in uc.children:
+        is_nothing_kw = (
+            isinstance(child, Token)
+            and _token_type(child) == "KEYWORD"
+            and child.value.upper() == "NOTHING"
+        )
+        if is_nothing_kw:
+            do_nothing = True
+            break
+
+    if not do_nothing:
+        # DO UPDATE SET upsert_assignment { "," upsert_assignment }
+        for child in uc.children:
+            if isinstance(child, ASTNode) and child.rule_name == "upsert_assignment":
+                # upsert_assignment = NAME "=" expr
+                col_tok = _first_token(child, kind="NAME")
+                assert col_tok is not None, "upsert_assignment missing column name"
+                expr_node = _maybe_child(child, "expr")
+                assert expr_node is not None, "upsert_assignment missing expr"
+                raw_val = _expr(expr_node, state)
+                # Rewrite Column(table="EXCLUDED", col=c) \u2192 ExcludedColumn(col=c)
+                val = _rewrite_excluded(raw_val)
+                assignments.append(AstUpsertAssignment(column=col_tok.value, value=val))
+
+    return UpsertClause(
+        conflict_target=tuple(conflict_target),
+        do_nothing=do_nothing,
+        assignments=tuple(assignments),
+    )
+
+
+def _rewrite_excluded(expr: Expr) -> Expr:
+    """Rewrite ``Column(table="EXCLUDED", col=c)`` to ``ExcludedColumn(col=c)``.
+
+    The grammar's ``column_ref = NAME [ "." NAME ]`` rule parses ``EXCLUDED.col``
+    as a two-part column reference.  The adapter turns that into a plain
+    ``Column`` node; this helper post-processes the expression tree so that the
+    ``EXCLUDED`` pseudo-table becomes the dedicated ``ExcludedColumn`` IR node.
+
+    All other expression types are returned unchanged.  We only need to descend
+    into the top-level and binary/unary positions where EXCLUDED.col might
+    appear inside a upsert assignment value.
+    """
+    match expr:
+        case Column(table="EXCLUDED", col=c):
+            return ExcludedColumn(col=c)
+        case BinaryExpr(op=op, left=left, right=right):
+            return BinaryExpr(op=op, left=_rewrite_excluded(left), right=_rewrite_excluded(right))
+        case _:
+            # For the upsert use-case, only literal values and EXCLUDED column
+            # refs are expected; a full recursive walk is overkill here.
+            return expr
+
+
 def _insert(
     node: ASTNode, default_conflict: str | None = None
 ) -> InsertValuesStmt | InsertSelectStmt:
@@ -663,7 +762,7 @@ def _insert(
 
         insert_stmt  = "INSERT" [ conflict_clause ] "INTO" NAME
                        [ "(" NAME { "," NAME } ")" ]
-                       insert_body [ returning_clause ] ;
+                       insert_body [ upsert_clause ] [ returning_clause ] ;
         replace_stmt = "REPLACE" "INTO" NAME
                        [ "(" NAME { "," NAME } ")" ]
                        insert_body [ returning_clause ] ;
@@ -698,6 +797,9 @@ def _insert(
             break
         i += 1
 
+    # Parse optional ON CONFLICT upsert clause.
+    upsert = _upsert_clause(node, state)
+
     # Check if we have an insert_body child (new grammar).
     insert_body_node = _maybe_child(node, "insert_body")
     returning = _returning_exprs(node, state)
@@ -713,11 +815,13 @@ def _insert(
             return InsertSelectStmt(
                 table=table, columns=columns, select=inner_stmt,
                 on_conflict=on_conflict, returning=returning,
+                upsert_clause=upsert,
             )
         rows = tuple(_row_value(rv, state) for rv in _child_nodes(insert_body_node, "row_value"))
         return InsertValuesStmt(
             table=table, columns=columns, rows=rows,
             on_conflict=on_conflict, returning=returning,
+            upsert_clause=upsert,
         )
 
     # Old grammar fallback: row_value nodes directly under insert_stmt.
@@ -725,6 +829,7 @@ def _insert(
     return InsertValuesStmt(
         table=table, columns=columns, rows=rows,
         on_conflict=on_conflict, returning=returning,
+        upsert_clause=upsert,
     )
 
 

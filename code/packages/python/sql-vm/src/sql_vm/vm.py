@@ -87,6 +87,7 @@ from sql_codegen import (
     LimitResult,
     LoadColumn,
     LoadConst,
+    LoadExcludedColumn,
     LoadGroupKey,
     LoadLastInsertedColumn,
     LoadOuterColumn,
@@ -109,6 +110,7 @@ from sql_codegen import (
     UnaryOp,
     UpdateAgg,
     UpdateRows,
+    UpsertSpec,
     WinFunc,
 )
 from sql_codegen import IrAggFunc as AggFunc
@@ -306,6 +308,12 @@ class _VmState:
     # by ``_do_insert`` so that ``LoadLastInsertedColumn`` can read it back.
     # Keyed by column name; empty dict when no INSERT has been executed yet.
     last_inserted_row: dict[str, SqlValue] = field(default_factory=dict)
+    # UPSERT support — when an ON CONFLICT DO UPDATE SET fires, the VM stores
+    # the would-be-inserted row here before executing each assignment's
+    # instruction sequence.  ``LoadExcludedColumn`` reads from this dict.
+    # Between upsert evaluations it may hold stale data; consumers must reset
+    # it before compiling each assignment.
+    excluded_row: dict[str, SqlValue] = field(default_factory=dict)
     # Correlated subquery support — a snapshot of the enclosing query's
     # ``current_row`` at the time the sub-program was launched.  Used by
     # ``LoadOuterColumn`` to read values from the outer scan without sharing
@@ -448,6 +456,13 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
         return
     if isinstance(ins, LoadLastInsertedColumn):
         st.push(st.last_inserted_row.get(ins.col))
+        return
+    if isinstance(ins, LoadExcludedColumn):
+        # Push the value of ``col`` from the EXCLUDED pseudo-row.  This
+        # instruction is only ever executed inside a UpsertSpec assignment
+        # evaluation loop inside _do_upsert; ``excluded_row`` must be set
+        # before the loop runs.
+        st.push(st.excluded_row.get(ins.col))
         return
     if isinstance(ins, Pop):
         st.pop()
@@ -1806,6 +1821,150 @@ _VALID_ON_CONFLICT: frozenset[str] = frozenset(
 )
 
 
+def _do_upsert(table: str, row: dict[str, SqlValue], upsert: UpsertSpec, st: _VmState) -> bool:
+    """Execute the upsert action when an insert would conflict.
+
+    Returns ``True`` if the conflict was handled (caller should not re-raise),
+    ``False`` if the conflict was not handled (caller should re-raise the
+    original :class:`~sql_backend.backend.ConstraintViolation`).
+
+    Strategy
+    --------
+    DO NOTHING
+        We already know a conflict occurred (the backend raised it).  Simply
+        return ``True`` to tell the caller to swallow the exception.  We do
+        NOT need to locate the conflicting row — the existing row is untouched.
+
+    DO UPDATE SET
+        We must find the conflicting row so we can call ``backend.update()``
+        on it (positioned DML).  We open a positioned cursor, scan for a row
+        that matches on the ``conflict_target`` columns (or on the UNIQUE /
+        PRIMARY KEY columns when no target is given), and call
+        ``_upsert_apply`` while the cursor is still positioned.
+
+    ``conflict_target`` columns
+        When non-empty, the conflict_target columns from the grammar are used
+        as the match key.  When empty (``ON CONFLICT DO …`` with no target),
+        we discover the table's unique-constrained columns at runtime by
+        inspecting the backend schema, mirroring ``_replace_delete_conflicts``.
+        This avoids the false-no-match bug that occurs when matching on ALL
+        new-row columns (which differ for the non-key columns).
+    """
+    if upsert.do_nothing:
+        # Fast path: a conflict occurred and we must silently skip the row.
+        # No need to scan the table — the existing row is unchanged.
+        return True
+
+    # DO UPDATE: find the conflicting row using an appropriate match key.
+    match_cols: tuple[str, ...]
+    if upsert.conflict_target:
+        match_cols = upsert.conflict_target
+    else:
+        # No explicit target → discover unique-constrained columns from schema.
+        try:
+            col_defs = st.backend.columns(table)
+        except (NotImplementedError, AttributeError):
+            return False  # Backend lacks schema introspection; bail out.
+        match_cols = tuple(
+            cd.name
+            for cd in col_defs
+            if (cd.primary_key or cd.unique) and row.get(cd.name) is not None
+        )
+        if not match_cols:
+            return False  # No unique columns with non-NULL values; can't locate row.
+
+    # Open a positioned cursor (required by InMemoryBackend.update()).
+    opener = getattr(st.backend, "_open_cursor", None)
+    try:
+        cur = opener(table) if opener is not None else st.backend.scan(table)
+    except be.BackendError as e:
+        raise _translate_backend_error(e) from e
+
+    try:
+        while True:
+            candidate = cur.next()
+            if candidate is None:
+                # No matching row found — the violation is from a different
+                # constraint (e.g. NOT NULL).  Caller handles it.
+                return False
+            if all(candidate.get(col) == row.get(col) for col in match_cols):
+                # Found the conflicting row; cursor is positioned on it.
+                existing_row = dict(candidate)
+                break
+
+        # Evaluate SET assignments and apply via the positioned cursor.
+        _upsert_apply(table, row, existing_row, upsert, cur, st)
+        return True
+    finally:
+        cur.close()
+
+
+def _upsert_apply(
+    table: str,
+    excluded: dict[str, SqlValue],
+    existing: dict[str, SqlValue],
+    upsert: UpsertSpec,
+    cur: object,  # the positioned cursor; type widened to avoid import cycle
+    st: _VmState,
+) -> None:
+    """Evaluate DO UPDATE SET assignments and apply them via a positioned cursor.
+
+    ``excluded`` is the would-be-inserted row (EXCLUDED pseudo-table values).
+    ``existing`` is the current row in the table at the cursor's current position.
+    ``cur`` is already positioned at ``existing``; ``backend.update()`` will act on it.
+
+    Each assignment's pre-compiled instruction sequence is executed as a
+    mini-VM program.  ``LoadExcludedColumn`` reads from ``st.excluded_row``
+    (set to ``excluded`` before the loop).  The result is a single value per
+    assignment on the operand stack, which is popped and stored in
+    ``new_values``.
+    """
+    st.excluded_row = excluded  # bind EXCLUDED pseudo-table for LoadExcludedColumn
+
+    # Make the existing row accessible via cursor_id 0.
+    #
+    # In a VALUES-based INSERT the compiler has no open cursor, so bare column
+    # references in the SET clause (e.g. ``qty + EXCLUDED.qty`` where ``qty``
+    # refers to the current row) compile as ``LoadColumn(cursor_id=0, col=…)``.
+    # We temporarily park the existing row under cursor_id 0 so those reads
+    # return the right value, then restore whatever was there before.
+    _saved_row_0 = st.current_row.get(0)
+    st.current_row[0] = existing
+
+    # Evaluate each assignment's instruction sequence.
+    new_values: dict[str, SqlValue] = {}
+    for assignment in upsert.assignments:
+        depth_before = len(st.stack)
+        for instr in assignment.instructions:
+            _dispatch(instr, st)
+        # Pop the single result value.
+        if len(st.stack) <= depth_before:
+            raise InternalError(
+                message=f"upsert assignment for {assignment.column!r} produced no value"
+            )
+        new_values[assignment.column] = st.stack.pop()
+        # Trim any excess stack entries (shouldn't happen with well-formed IR).
+        del st.stack[depth_before:]
+
+    # Restore cursor_id 0 to whatever it was before we borrowed it.
+    if _saved_row_0 is None:
+        st.current_row.pop(0, None)
+    else:
+        st.current_row[0] = _saved_row_0
+
+    # Validate constraints against the fully-merged post-update row.
+    merged = {**existing, **new_values}
+    _check_constraints(table, merged, st)
+    _check_fk_child(table, merged, st)
+
+    # Apply the update via the positioned cursor.
+    try:
+        st.backend.update(table, cur, new_values)  # type: ignore[arg-type]
+    except be.BackendError as e:
+        raise _translate_backend_error(e) from e
+    st.result.rows_affected = (st.result.rows_affected or 0) + 1
+
+
 def _do_insert(ins: InsertRow, st: _VmState) -> None:
     # Defence-in-depth: validate on_conflict at the VM boundary so a
     # hand-crafted or programmatically built InsertRow with a bogus action
@@ -1844,6 +2003,9 @@ def _do_insert(ins: InsertRow, st: _VmState) -> None:
     try:
         st.backend.insert(ins.table, row)
     except be.ConstraintViolation as e:
+        # Upsert (ON CONFLICT DO …) takes precedence over on_conflict.
+        if ins.upsert is not None and _do_upsert(ins.table, row, ins.upsert, st):
+            return  # conflict handled
         # IGNORE: silently discard this row on any constraint violation and
         # continue processing subsequent rows in the same statement.  The
         # ``rows_affected`` counter and ``last_inserted_row`` are left unchanged
@@ -2249,6 +2411,9 @@ def _do_insert_from_result(ins: InsertFromResult, st: _VmState) -> None:
         try:
             st.backend.insert(ins.table, row_dict)
         except be.ConstraintViolation as e:
+            # Upsert (ON CONFLICT DO …) takes precedence over on_conflict.
+            if ins.upsert is not None and _do_upsert(ins.table, row_dict, ins.upsert, st):
+                continue  # conflict handled; rows_affected updated by _do_upsert
             # IGNORE: skip this row silently and continue with the next one.
             if ins.on_conflict == "IGNORE":
                 continue

@@ -1,5 +1,62 @@
 # Changelog
 
+## [1.24.0] - 2026-05-05
+
+### Added — UPSERT (`ON CONFLICT DO UPDATE / DO NOTHING`)
+
+Full end-to-end support for modern SQLite 3.24+ upsert syntax.
+
+**SQL syntax supported:**
+
+```sql
+-- Silently skip conflicting rows
+INSERT INTO t VALUES (1, 'x') ON CONFLICT DO NOTHING;
+INSERT INTO t (id, val) VALUES (1, 'x') ON CONFLICT (id) DO NOTHING;
+
+-- Update the conflicting row in-place
+INSERT INTO t VALUES (1, 'new')
+  ON CONFLICT (id) DO UPDATE SET val = EXCLUDED.val;
+
+-- Arithmetic accumulation using both existing and excluded values
+INSERT INTO inventory VALUES (1, 5)
+  ON CONFLICT (id) DO UPDATE SET qty = qty + EXCLUDED.qty;
+
+-- Multiple SET assignments
+INSERT INTO t VALUES (1, 'a2', 'b2')
+  ON CONFLICT (id) DO UPDATE SET a = EXCLUDED.a, b = EXCLUDED.b;
+```
+
+**Pipeline changes:**
+
+- **Grammar / tokens** (`sql.grammar`, `sql.tokens`) — new `CONFLICT`, `DO`,
+  `NOTHING` keywords; new `upsert_clause` rule attached to `insert_stmt`.  Parser
+  regenerated (`_grammar.py`).
+
+- **`adapter.py`** (`_upsert_clause`, `_rewrite_excluded`) — parses the
+  `upsert_clause` AST node, rewrites `Column(table="EXCLUDED", col=c)` references
+  to `ExcludedColumn(col=c)`, and returns a `BackendUpsertClause` for the planner.
+  Integrated into `_insert()`.
+
+- **`sql-planner`** — `ExcludedColumn` expression node; `UpsertClause` and
+  `UpsertAssignment` AST nodes; `UpsertAction` and `UpsertAssignment` plan nodes;
+  `_resolve_upsert()` / `_resolve_upsert_expr()` in the planner.
+
+- **`sql-optimizer`** — `_fold_upsert()` helper preserves `UpsertAction` through
+  constant folding.
+
+- **`sql-codegen`** — `UpsertSpec`, `UpsertAssignment`, `LoadExcludedColumn` IR
+  nodes; `_compile_upsert()` + `ExcludedColumn` case in `_compile_expr()`.
+
+- **`sql-vm`** — `excluded_row` state; `LoadExcludedColumn` dispatch; `_do_upsert()`
+  (DO NOTHING fast path + DO UPDATE cursor scan); `_upsert_apply()` (evaluates SET
+  expressions, temporarily parks the existing row for bare column refs, calls
+  `backend.update()`).
+
+**Tests (`tests/test_tier10_upsert.py`)** — 15 oracle-verified tests comparing
+mini-sqlite against real `sqlite3` across DO NOTHING (with/without conflict,
+UNIQUE columns, selective skipping) and DO UPDATE (EXCLUDED.col, arithmetic,
+multiple columns, literal SET, counter accumulation, no-conflict plain inserts).
+
 ## [1.23.0] - 2026-05-05
 
 ### Added — DEFAULT column values (end-to-end)
