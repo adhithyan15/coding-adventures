@@ -416,6 +416,7 @@ members = [
     "vault-engine-kv2",
     "vault-audit",
     "vault-sync",
+    "vault-transport-cli",
     "storage-fs",
     "context-store",
     "artifact-store",
