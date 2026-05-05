@@ -76,6 +76,7 @@ from symbolic_ir import (
     IRSymbol,
 )
 from symbolic_vm.backend import Handler
+from symbolic_vm.cas_handlers import abs_handler as _abs_handler_full
 from symbolic_vm.cas_handlers import apply1_handler as _apply1_handler
 from symbolic_vm.cas_handlers import apply2_handler as _apply2_handler
 from symbolic_vm.cas_handlers import beta_handler as _beta_handler
@@ -799,16 +800,6 @@ def taylor_handler(_vm: VM, expr: IRApply) -> IRNode:
 # ---------------------------------------------------------------------------
 
 
-def abs_handler(_vm: VM, expr: IRApply) -> IRNode:
-    """``Abs(x)`` — absolute value."""
-    if len(expr.args) != 1:
-        return expr
-    n = to_number(expr.args[0])
-    if n is None:
-        return expr
-    return from_number(abs(n))
-
-
 def floor_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Floor(x)`` — floor function."""
     if len(expr.args) != 1:
@@ -907,7 +898,7 @@ def build_cas_handler_table() -> dict[str, Handler]:
         "Limit": limit_handler,
         "Taylor": taylor_handler,
         # Numeric
-        "Abs": abs_handler,
+        "Abs": _abs_handler_full,  # Phase 28: full handler with vm.assumptions support
         "Floor": floor_handler,
         "Ceiling": ceiling_handler,
         "Mod": mod_handler,
