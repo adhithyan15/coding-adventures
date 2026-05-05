@@ -142,6 +142,58 @@ describe("validateOptions", () => {
     expect(() => validateOptions(fullOpts({ fileExtensions: [".tw ig"] }))).toThrow(ValidationError);
   });
 
+  // -----------------------------------------------------------------
+  // Path-traversal hardening — the spec-driven flow makes the
+  // language-spec JSON an untrusted input.  fileExtensions[0] flows
+  // into `path.join(outputDir, "examples/sample" + ext)`, so any
+  // path separator or `..` segment must be rejected at validation.
+  // -----------------------------------------------------------------
+
+  it("rejects fileExtension containing a forward slash", () => {
+    expect(() => validateOptions(fullOpts({ fileExtensions: ["./evil"] }))).toThrow(
+      ValidationError,
+    );
+  });
+
+  it("rejects fileExtension containing a backslash", () => {
+    expect(() => validateOptions(fullOpts({ fileExtensions: [".\\evil"] }))).toThrow(
+      ValidationError,
+    );
+  });
+
+  it("rejects fileExtension that is just a dot", () => {
+    expect(() => validateOptions(fullOpts({ fileExtensions: ["."] }))).toThrow(
+      ValidationError,
+    );
+  });
+
+  it("rejects fileExtension with a parent-directory segment", () => {
+    expect(() =>
+      validateOptions(fullOpts({ fileExtensions: ["./../../etc"] })),
+    ).toThrow(ValidationError);
+  });
+
+  it("rejects all-dot fileExtensions like '..' or '...'", () => {
+    expect(() => validateOptions(fullOpts({ fileExtensions: [".."] }))).toThrow(
+      ValidationError,
+    );
+    expect(() =>
+      validateOptions(fullOpts({ fileExtensions: ["..."] })),
+    ).toThrow(ValidationError);
+  });
+
+  it("accepts realistic file extensions", () => {
+    expect(() =>
+      validateOptions(fullOpts({ fileExtensions: [".twig", ".tw"] })),
+    ).not.toThrow();
+    expect(() =>
+      validateOptions(fullOpts({ fileExtensions: [".cpp", ".c++", ".h"] })),
+    ).not.toThrow();
+    expect(() =>
+      validateOptions(fullOpts({ fileExtensions: [".tar.gz"] })),
+    ).not.toThrow();
+  });
+
   it("rejects when neither lspBinary nor dapBinary is given", () => {
     expect(() =>
       validateOptions(fullOpts({ lspBinary: "", dapBinary: "" })),

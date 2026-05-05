@@ -95,6 +95,29 @@ export class ValidationError extends Error {
 const LANGUAGE_ID_RE = /^[a-z][a-z0-9-]*$/;
 
 /**
+ * A file extension shape — leading dot, then one or more "filename
+ * character" runs.  Tightly drawn so a malicious `--language-spec`
+ * JSON cannot smuggle path separators or `..` segments through the
+ * generator and onto disk.
+ *
+ * Pre-LS04.1 the validator only checked "starts with `.`, no
+ * whitespace".  That let `"./../../etc"` slip past;
+ * since `fileExtensions[0]` flows into `path.join(outputDir,
+ * "examples/sample" + ext)`, an attacker-controlled spec file could
+ * coerce the generator into writing the sample file outside
+ * `outputDir`.  This regex closes that.
+ *
+ * The character class covers every real-world file extension I know
+ * of: `.c`, `.cpp`, `.c++`, `.h`, `.rs`, `.ts`, `.tsx`, `.f90`,
+ * `.r6`, `.go`, `.py`, `.twig`, `.tw`, `.tar.gz` (multi-dot is
+ * permitted; embedded dots are fine).
+ *
+ * The shape `^\.[alnum_+-][alnum_+.-]*$` enforces a non-dot leading
+ * character so values like `".."` and `"..."` are rejected.
+ */
+const FILE_EXTENSION_RE = /^\.[A-Za-z0-9_+-][A-Za-z0-9_+.-]*$/;
+
+/**
  * Binary names — alphanumeric plus hyphens, underscores, dots, and
  * forward slashes (the latter two for relative paths).  We deliberately
  * exclude characters that have meaning in shells or in JS string
@@ -164,9 +187,20 @@ export function validateOptions(opts: GeneratorOptions): void {
         `fileExtension '${ext}' must start with a dot (e.g. '.twig')`,
       );
     }
-    if (/\s/.test(ext)) {
+    if (!FILE_EXTENSION_RE.test(ext)) {
       throw new ValidationError(
-        `fileExtension '${ext}' must not contain whitespace`,
+        `fileExtension '${ext}' must match ${FILE_EXTENSION_RE} ` +
+          `(leading dot, then alphanumerics, underscore, plus, dot, hyphen). ` +
+          `Path separators and '..' are rejected to prevent the spec-driven ` +
+          `flow from writing files outside --output-dir.`,
+      );
+    }
+    // Belt-and-braces: even though FILE_EXTENSION_RE excludes them,
+    // call out `..` segments explicitly so the error message is clear
+    // when the input is a malicious extension like ".." or ".a.b..c".
+    if (ext.split(".").includes("..")) {
+      throw new ValidationError(
+        `fileExtension '${ext}' contains a '..' path segment`,
       );
     }
   }
