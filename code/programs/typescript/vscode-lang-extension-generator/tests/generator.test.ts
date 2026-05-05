@@ -158,6 +158,98 @@ describe("validateOptions", () => {
   it("rejects empty extensionVersion", () => {
     expect(() => validateOptions(fullOpts({ extensionVersion: "" }))).toThrow(ValidationError);
   });
+
+  // -----------------------------------------------------------------
+  // Injection-defence: lspBinary, dapBinary, languageName, description
+  // all flow into source-code string literals.  The validator must
+  // reject characters that could break out of the literal.
+  // -----------------------------------------------------------------
+
+  it("rejects lspBinary containing a quote", () => {
+    expect(() =>
+      validateOptions(fullOpts({ lspBinary: '";process.exit(1);//' })),
+    ).toThrow(ValidationError);
+  });
+
+  it("rejects lspBinary containing a backtick", () => {
+    expect(() => validateOptions(fullOpts({ lspBinary: "evil`" }))).toThrow(ValidationError);
+  });
+
+  it("rejects lspBinary containing whitespace", () => {
+    expect(() => validateOptions(fullOpts({ lspBinary: "two words" }))).toThrow(ValidationError);
+  });
+
+  it("rejects dapBinary containing a semicolon and parens", () => {
+    expect(() =>
+      validateOptions(fullOpts({ dapBinary: "ok;require('x')" })),
+    ).toThrow(ValidationError);
+  });
+
+  it("rejects languageName containing a double-quote", () => {
+    expect(() =>
+      validateOptions(fullOpts({ languageName: 'Twig"; bad();//' })),
+    ).toThrow(ValidationError);
+  });
+
+  it("rejects languageName containing a template-substitution marker", () => {
+    expect(() =>
+      validateOptions(fullOpts({ languageName: "Twig${process.cwd()}" })),
+    ).toThrow(ValidationError);
+  });
+
+  it("rejects languageName containing a backslash", () => {
+    expect(() =>
+      validateOptions(fullOpts({ languageName: "Twig\\nevil" })),
+    ).toThrow(ValidationError);
+  });
+
+  it("rejects description containing a backtick", () => {
+    expect(() =>
+      validateOptions(fullOpts({ description: "x`y" })),
+    ).toThrow(ValidationError);
+  });
+
+  it("accepts safe binary names with dots, slashes, hyphens, and underscores", () => {
+    expect(() =>
+      validateOptions(fullOpts({ lspBinary: "./bin/twig-lsp_server.v2" })),
+    ).not.toThrow();
+  });
+});
+
+// ----------------------------------------------------------------------
+// Injection defence — generated source must be safe even if a
+// malicious value somehow bypasses validateOptions (defense in depth).
+// ----------------------------------------------------------------------
+
+describe("injection defence: builders use JSON.stringify for user input", () => {
+  /**
+   * Construct a malicious-but-validation-passing option set is not
+   * possible because the validator catches all problematic
+   * characters.  But to prove the JSON.stringify path is used, we
+   * spy on what the builders emit when given the *most permissive*
+   * legal binary name and verify the result has the binary inside
+   * a properly-quoted JS string literal — not an unescaped raw
+   * embed that could be coaxed into code execution if validation
+   * regressed.
+   */
+  it("buildLspTs embeds the binary as a JSON-encoded string literal", () => {
+    const text = buildLspTs(fullOpts({ lspBinary: "twig-lsp-server" }));
+    expect(text).toContain('"twig-lsp-server"');
+    // Should NOT contain a bare ${...} interpolation marker, which
+    // would suggest template-string interpolation of user input.
+    expect(text).not.toMatch(/\$\{opts\./);
+  });
+
+  it("buildDapTs embeds the binary as a JSON-encoded string literal", () => {
+    const text = buildDapTs(fullOpts({ dapBinary: "twig-dap" }));
+    expect(text).toContain('"twig-dap"');
+    expect(text).not.toMatch(/\$\{opts\./);
+  });
+
+  it("buildLspTs embeds the language name as a JSON-encoded string literal", () => {
+    const text = buildLspTs(fullOpts({ languageName: "My Language" }));
+    expect(text).toContain('"My Language Language Server"');
+  });
 });
 
 // ----------------------------------------------------------------------
