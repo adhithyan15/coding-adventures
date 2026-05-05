@@ -29,11 +29,6 @@ TestPhase28_Macsyma           — end-to-end MACSYMA surface syntax
 from __future__ import annotations
 
 import pytest
-from macsyma_compiler import compile_macsyma
-from macsyma_compiler.compiler import _STANDARD_FUNCTIONS
-from macsyma_parser import parse_macsyma
-from macsyma_runtime import MacsymaBackend
-from macsyma_runtime.name_table import extend_compiler_name_table
 from symbolic_ir import (
     GREATER,
     GREATER_EQUAL,
@@ -64,22 +59,6 @@ ZERO = IRInteger(0)
 def _make_vm() -> VM:
     """Fresh VM with SymbolicBackend (assumptions supported via vm.assumptions)."""
     return VM(SymbolicBackend())
-
-
-def _make_macsyma_vm() -> VM:
-    """Fresh VM with MacsymaBackend + MACSYMA name table extended."""
-    extend_compiler_name_table(_STANDARD_FUNCTIONS)
-    return VM(MacsymaBackend())
-
-
-def _eval_macsyma(source: str, vm: VM) -> IRNode:
-    """Parse + compile + eval a MACSYMA expression through the given VM."""
-    ast = parse_macsyma(source + ";")
-    stmts = compile_macsyma(ast)
-    result: IRNode = vm.eval(ZERO)
-    for stmt in stmts:
-        result = vm.eval(stmt)
-    return result
 
 
 def _abs(x: IRNode) -> IRApply:
@@ -405,61 +384,96 @@ class TestPhase28_Regressions:
 
 
 class TestPhase28_Macsyma:
-    """End-to-end tests through MACSYMA surface syntax."""
+    """End-to-end tests through MACSYMA surface syntax.
+
+    All tests in this class skip gracefully when ``macsyma_runtime`` is not
+    installed (e.g., when running symbolic-vm's own test suite in isolation).
+    ``macsyma_runtime`` is only available in the combined environment built by
+    the macsyma-runtime BUILD file.
+    """
+
+    def _make_vm(self) -> VM:
+        """Build a MacsymaBackend VM, skipping if runtime not installed."""
+        pytest.importorskip(
+            "macsyma_runtime",
+            reason="macsyma-runtime not installed; skipping MACSYMA e2e test",
+        )
+        from macsyma_compiler.compiler import (  # noqa: PLC0415
+            _STANDARD_FUNCTIONS,
+        )
+        from macsyma_runtime import MacsymaBackend  # noqa: PLC0415
+        from macsyma_runtime.name_table import (  # noqa: PLC0415
+            extend_compiler_name_table,
+        )
+
+        extend_compiler_name_table(_STANDARD_FUNCTIONS)
+        return VM(MacsymaBackend())
+
+    def _run(self, source: str, vm: VM) -> IRNode:
+        """Parse + compile + eval a MACSYMA expression through the given VM."""
+        from macsyma_compiler import compile_macsyma  # noqa: PLC0415
+        from macsyma_parser import parse_macsyma  # noqa: PLC0415
+
+        ast = parse_macsyma(source + ";")
+        stmts = compile_macsyma(ast)
+        result: IRNode = vm.eval(ZERO)
+        for stmt in stmts:
+            result = vm.eval(stmt)
+        return result
 
     @pytest.fixture()
-    def vm(self):
-        return _make_macsyma_vm()
+    def vm(self) -> VM:
+        return self._make_vm()
 
-    def test_assume_abs_positive(self, vm):
+    def test_assume_abs_positive(self, vm: VM) -> None:
         """assume(x > 0); abs(x) → x via MACSYMA surface syntax."""
-        _eval_macsyma("assume(x > 0)", vm)
-        result = _eval_macsyma("abs(x)", vm)
+        self._run("assume(x > 0)", vm)
+        result = self._run("abs(x)", vm)
         assert result == X
 
-    def test_assume_abs_nonneg(self, vm):
+    def test_assume_abs_nonneg(self, vm: VM) -> None:
         """assume(x >= 0); abs(x) → x."""
-        _eval_macsyma("assume(x >= 0)", vm)
-        result = _eval_macsyma("abs(x)", vm)
+        self._run("assume(x >= 0)", vm)
+        result = self._run("abs(x)", vm)
         assert result == X
 
-    def test_assume_abs_negative(self, vm):
+    def test_assume_abs_negative(self, vm: VM) -> None:
         """assume(x < 0); abs(x) → -x."""
-        _eval_macsyma("assume(x < 0)", vm)
-        result = _eval_macsyma("abs(x)", vm)
+        self._run("assume(x < 0)", vm)
+        result = self._run("abs(x)", vm)
         assert isinstance(result, IRApply)
         assert result.head == NEG
         assert result.args[0] == X
 
-    def test_sign_numeric_macsyma(self, vm):
+    def test_sign_numeric_macsyma(self, vm: VM) -> None:
         """sign(5) → 1 via MACSYMA."""
-        result = _eval_macsyma("sign(5)", vm)
+        result = self._run("sign(5)", vm)
         assert result == IRInteger(1)
 
-    def test_assume_sign_positive(self, vm):
+    def test_assume_sign_positive(self, vm: VM) -> None:
         """assume(x > 0); sign(x) → 1 via MACSYMA."""
-        _eval_macsyma("assume(x > 0)", vm)
-        result = _eval_macsyma("sign(x)", vm)
+        self._run("assume(x > 0)", vm)
+        result = self._run("sign(x)", vm)
         assert result == IRInteger(1)
 
-    def test_is_query_macsyma(self, vm):
+    def test_is_query_macsyma(self, vm: VM) -> None:
         """assume(x > 0); is(x > 0) → true."""
-        _eval_macsyma("assume(x > 0)", vm)
-        result = _eval_macsyma("is(x > 0)", vm)
+        self._run("assume(x > 0)", vm)
+        result = self._run("is(x > 0)", vm)
         assert isinstance(result, IRSymbol)
         assert result.name == "true"
 
-    def test_is_unknown_macsyma(self, vm):
+    def test_is_unknown_macsyma(self, vm: VM) -> None:
         """is(y > 0) → unknown when no assumption about y."""
-        result = _eval_macsyma("is(y > 0)", vm)
+        result = self._run("is(y > 0)", vm)
         assert isinstance(result, IRSymbol)
         assert result.name == "unknown"
 
-    def test_forget_restores_unevaluated(self, vm):
+    def test_forget_restores_unevaluated(self, vm: VM) -> None:
         """assume(x > 0); abs(x) → x; forget(x > 0); abs(x) → Abs(x)."""
-        _eval_macsyma("assume(x > 0)", vm)
-        assert _eval_macsyma("abs(x)", vm) == X
-        _eval_macsyma("forget(x > 0)", vm)
-        result = _eval_macsyma("abs(x)", vm)
+        self._run("assume(x > 0)", vm)
+        assert self._run("abs(x)", vm) == X
+        self._run("forget(x > 0)", vm)
+        result = self._run("abs(x)", vm)
         assert isinstance(result, IRApply)
         assert result.head == ABS
