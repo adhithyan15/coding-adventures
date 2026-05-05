@@ -163,6 +163,24 @@ fn exec_compute(
         // unified memory makes this essentially `memcpy`.
         Op::Reshape { input, output, .. } => reshape_dispatch(ctx, graph, *input, *output),
 
+        // Transpose: general N-D permutation up to rank 4.  Single
+        // MSL kernel walks the output linearly and reconstructs the
+        // input multi-index by reversing the permutation.
+        Op::Transpose {
+            input,
+            perm,
+            output,
+        } => transpose_dispatch(ctx, graph, *input, perm, *output),
+
+        // Broadcast: replicate input across size-1 axes to match the
+        // declared target shape.  Single MSL kernel reads from the
+        // input by clamping size-1 axes to index 0.
+        Op::Broadcast {
+            input,
+            output,
+            ..
+        } => broadcast_dispatch(ctx, graph, *input, *output),
+
         _ => Err(format!(
             "matrix-metal V1 doesn't support op {}; the planner should have routed this to CPU",
             op_kind_name(op)
@@ -323,10 +341,239 @@ fn matmul_dispatch(
     Ok(())
 }
 
+/// Transpose: launch the generic permutation kernel.  Encodes the
+/// rank, output numel, permutation vector, and input/output dims
+/// into a 56-byte args struct (rounded up by MSL alignment).
+///
+/// V1 limit: rank ≤ 4, dtype F32.  These match this backend's
+/// advertised `max_tensor_rank` and `supported_dtypes`.  Anything
+/// else returns an error — the planner shouldn't route those to us
+/// once it sees our profile, but the dispatch defends in depth.
+fn transpose_dispatch(
+    ctx: &mut DispatchCtx<'_>,
+    graph: &ComputeGraph,
+    input: TensorId,
+    perm: &[u32],
+    output: TensorId,
+) -> Result<(), String> {
+    let in_t = graph
+        .tensor(input)
+        .ok_or_else(|| format!("transpose input tensor {} not found", input.0))?;
+    let out_t = graph
+        .tensor(output)
+        .ok_or_else(|| format!("transpose output tensor {} not found", output.0))?;
+    let in_residency = in_t.residency;
+    let out_residency = out_t.residency;
+    let rank = in_t.shape.rank();
+    if rank == 0 {
+        // Scalar transpose is a no-op (no axes to permute).  Just
+        // copy the bytes through.
+        let n_bytes = in_t
+            .shape
+            .byte_size(in_t.dtype)
+            .ok_or_else(|| "transpose scalar byte_size overflow".to_string())?;
+        if n_bytes == 0 {
+            return Ok(());
+        }
+        let data = ctx.buffers.read(in_residency.buffer, 0, n_bytes as usize)?;
+        if !ctx.buffers.contains(out_residency.buffer) {
+            ctx.buffers
+                .alloc(ctx.device, out_residency.buffer, n_bytes as usize)?;
+        }
+        ctx.buffers.write(out_residency.buffer, 0, &data)?;
+        return Ok(());
+    }
+    if rank > 4 {
+        return Err(format!(
+            "matrix-metal transpose: rank {} exceeds the supported maximum of 4",
+            rank
+        ));
+    }
+    if perm.len() != rank {
+        return Err(format!(
+            "transpose perm has length {} but input rank is {}",
+            perm.len(),
+            rank
+        ));
+    }
+
+    let numel = out_t
+        .shape
+        .numel()
+        .ok_or_else(|| "transpose output numel overflow".to_string())? as u32;
+    if numel == 0 {
+        return Ok(());
+    }
+
+    let pipeline = ctx
+        .pipelines
+        .get("transpose_f32")
+        .ok_or_else(|| "transpose_f32 pipeline not in cache".to_string())?;
+
+    let in_buf_ptr = ctx.buffers.get(in_residency.buffer)? as *const _;
+    let out_buf_ptr = ctx.buffers.get(out_residency.buffer)? as *const _;
+    // SAFETY: we hold `&BufferStore` via ctx.buffers; both buffer
+    // references live for the dispatch call.  See `unary_dispatch`
+    // for the same pattern.
+    let in_buf = unsafe { &*in_buf_ptr };
+    let out_buf = unsafe { &*out_buf_ptr };
+
+    // Encode TransposeArgs.  Field order matches the MSL struct:
+    //   uint rank;
+    //   uint numel;
+    //   uint perm[4];
+    //   uint in_dims[4];
+    //   uint out_dims[4];
+    // Total: 14 × 4 = 56 bytes.  MSL alignment rounds to 64.
+    let mut args = [0u8; 64];
+    let mut off = 0usize;
+    let put_u32 = |v: u32, args: &mut [u8; 64], off: &mut usize| {
+        args[*off..*off + 4].copy_from_slice(&v.to_le_bytes());
+        *off += 4;
+    };
+    put_u32(rank as u32, &mut args, &mut off);
+    put_u32(numel, &mut args, &mut off);
+    for d in 0..4 {
+        let p = if d < rank { perm[d] } else { 0 };
+        put_u32(p, &mut args, &mut off);
+    }
+    for d in 0..4 {
+        let v = if d < rank { in_t.shape.dims[d] } else { 0 };
+        put_u32(v, &mut args, &mut off);
+    }
+    for d in 0..4 {
+        let v = if d < rank { out_t.shape.dims[d] } else { 0 };
+        put_u32(v, &mut args, &mut off);
+    }
+    let _ = off; // silence unused-mut warning if all branches were taken
+
+    let tg = pipeline.preferred_threads_1d();
+
+    ctx.queue.dispatch(|enc| {
+        enc.set_pipeline(pipeline);
+        enc.set_buffer(in_buf, 0);
+        enc.set_buffer(out_buf, 1);
+        enc.set_bytes(&args, 2);
+        enc.dispatch_threads_1d(numel, tg);
+    });
+    Ok(())
+}
+
 /// Reshape: SSA produces a fresh output tensor, so we copy the input
 /// buffer's bytes into the output buffer.  Same numel; only the shape
 /// metadata differs, and shapes are tracked at the graph level (not in
 /// the buffer itself), so a byte-level memcpy is the entire
+/// Broadcast: launch the generic axis-replication kernel.  Each
+/// input axis must equal the corresponding output (target) axis or be
+/// 1; the matrix-ir validator enforces this so we don't re-check it
+/// here at dispatch time.
+///
+/// V1 limit: rank ≤ 4, dtype F32 (matches `max_tensor_rank` and the
+/// V1 dtype set advertised in this backend's profile).  Out-of-range
+/// inputs return an error — defence in depth.
+fn broadcast_dispatch(
+    ctx: &mut DispatchCtx<'_>,
+    graph: &ComputeGraph,
+    input: TensorId,
+    output: TensorId,
+) -> Result<(), String> {
+    let in_t = graph
+        .tensor(input)
+        .ok_or_else(|| format!("broadcast input tensor {} not found", input.0))?;
+    let out_t = graph
+        .tensor(output)
+        .ok_or_else(|| format!("broadcast output tensor {} not found", output.0))?;
+    let in_residency = in_t.residency;
+    let out_residency = out_t.residency;
+    let rank = out_t.shape.rank();
+    if in_t.shape.rank() != rank {
+        return Err(format!(
+            "broadcast: input rank {} doesn't match output rank {}",
+            in_t.shape.rank(),
+            rank
+        ));
+    }
+    if rank == 0 {
+        // Scalar broadcast → single-element copy.
+        let n_bytes = in_t
+            .shape
+            .byte_size(in_t.dtype)
+            .ok_or_else(|| "broadcast scalar byte_size overflow".to_string())?;
+        if n_bytes == 0 {
+            return Ok(());
+        }
+        let data = ctx.buffers.read(in_residency.buffer, 0, n_bytes as usize)?;
+        if !ctx.buffers.contains(out_residency.buffer) {
+            ctx.buffers
+                .alloc(ctx.device, out_residency.buffer, n_bytes as usize)?;
+        }
+        ctx.buffers.write(out_residency.buffer, 0, &data)?;
+        return Ok(());
+    }
+    if rank > 4 {
+        return Err(format!(
+            "matrix-metal broadcast: rank {} exceeds the supported maximum of 4",
+            rank
+        ));
+    }
+
+    let numel = out_t
+        .shape
+        .numel()
+        .ok_or_else(|| "broadcast output numel overflow".to_string())? as u32;
+    if numel == 0 {
+        return Ok(());
+    }
+
+    let pipeline = ctx
+        .pipelines
+        .get("broadcast_f32")
+        .ok_or_else(|| "broadcast_f32 pipeline not in cache".to_string())?;
+
+    let in_buf_ptr = ctx.buffers.get(in_residency.buffer)? as *const _;
+    let out_buf_ptr = ctx.buffers.get(out_residency.buffer)? as *const _;
+    // SAFETY: we hold `&BufferStore` via ctx.buffers; both buffer
+    // references live for the dispatch call.  Same pattern as
+    // `unary_dispatch`.
+    let in_buf = unsafe { &*in_buf_ptr };
+    let out_buf = unsafe { &*out_buf_ptr };
+
+    // Encode BroadcastArgs.  Field order matches the MSL struct:
+    //   uint rank;
+    //   uint numel;
+    //   uint in_dims[4];
+    //   uint out_dims[4];
+    // Total: 10 × 4 = 40 bytes.  Round up to 48 (MSL alignment).
+    let mut args = [0u8; 48];
+    let mut off = 0usize;
+    let put_u32 = |v: u32, args: &mut [u8; 48], off: &mut usize| {
+        args[*off..*off + 4].copy_from_slice(&v.to_le_bytes());
+        *off += 4;
+    };
+    put_u32(rank as u32, &mut args, &mut off);
+    put_u32(numel, &mut args, &mut off);
+    for d in 0..4 {
+        let v = if d < rank { in_t.shape.dims[d] } else { 0 };
+        put_u32(v, &mut args, &mut off);
+    }
+    for d in 0..4 {
+        let v = if d < rank { out_t.shape.dims[d] } else { 0 };
+        put_u32(v, &mut args, &mut off);
+    }
+    let _ = off;
+
+    let tg = pipeline.preferred_threads_1d();
+
+    ctx.queue.dispatch(|enc| {
+        enc.set_pipeline(pipeline);
+        enc.set_buffer(in_buf, 0);
+        enc.set_buffer(out_buf, 1);
+        enc.set_bytes(&args, 2);
+        enc.dispatch_threads_1d(numel, tg);
+    });
+    Ok(())
+}
+
 /// implementation.
 ///
 /// V2 polish: matrix-metal could expose this as a `BlitCommandEncoder`

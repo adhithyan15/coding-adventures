@@ -56,15 +56,18 @@ VM (e.g. twig-vm --debug-port N)
 All algorithms use the `SidecarIndex` to translate VM offsets to editor
 source lines.
 
-## Status — SKELETON (LS03 PR A)
+## Status — LS03 PR A complete (0.2.0)
 
-Types, module structure, and `LanguageDebugAdapter` trait are fully defined
-and compile cleanly.  All methods are stubs.
+All 14 DAP request handlers, three stepping algorithms, sidecar indexing,
+and a scripted mock VM are implemented.  74 unit tests + one end-to-end
+integration test cover the full launch → setBreakpoints → stopped →
+stackTrace → variables → continue → terminated flow.
 
-**Prerequisites before implementing LS03 PR A:**
-1. Verify `twig-vm` accepts `--debug-port <N>` flag.
-2. Verify `debug-sidecar` Rust API: `offset_to_source()` and `source_to_offsets()`.
-3. Add `debug-sidecar` dependency to Cargo.toml once verified.
+The crate ships two `VmConnection` implementations:
+- `MockVmConnection` — scripted, in-memory (used by tests).
+- `TcpVmConnection` — real client built on the in-repo `tcp-client` (NET01)
+  crate.  Speaks newline-delimited JSON; will plug into `twig-vm` once it
+  grows a `--debug-port` flag (LS03 PR C).
 
 ## Crate layout
 

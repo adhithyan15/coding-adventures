@@ -6,7 +6,7 @@
 # grammar derives directly from the ALGOL 60 report.
 #
 # Notation (repo standard):
-#   UPPERCASE    token kinds from algol.tokens (custom operators, literals)
+#   UPPERCASE    token kinds from algol/algol60.tokens (custom operators, literals)
 #   "keyword"    quoted keyword literals (match token.value for keyword tokens)
 #   lowercase    grammar rules (non-terminals, defined below)
 #   |            alternation (or)
@@ -146,15 +146,11 @@ proc_body    = block | statement ;
 # Any statement may carry one or more labels. Labels can be identifiers or
 # integer literals. Labels are the targets of goto statements.
 #
-# The third alternative supports standalone labels at the end of a block, e.g.
-# `done:` or `done1: done2:` immediately before `end`. This is equivalent to
-# labels on an empty/dummy statement — a common ALGOL 60 idiom for goto targets
-# at the end of a block. Strictly, ALGOL 60 requires a statement after a label,
-# but most implementations accept terminal labels because the block's `end`
-# acts as the associated statement.
+# `dummy_stmt` covers ALGOL 60's empty statement. The lookahead keeps it
+# zero-width, which lets semicolons remain statement separators while still
+# allowing empty bodies after `then`, `else`, `do`, or labels before `end`.
 statement    = { label COLON } unlabeled_stmt
-             | { label COLON } cond_stmt
-             | label COLON { label COLON } ;
+             | { label COLON } cond_stmt ;
 
 label        = NAME | INTEGER_LIT ;
 
@@ -167,11 +163,18 @@ label        = NAME | INTEGER_LIT ;
 # In C and Java, the else binds to the nearest if by convention (not grammar).
 # ALGOL requires explicit begin/end to make nesting unambiguous.
 unlabeled_stmt = assign_stmt
+               | dummy_stmt
                | goto_stmt
                | proc_stmt
                | compound_stmt
                | block
                | for_stmt ;
+
+# Dummy statement: consumes no tokens. It succeeds only when a statement
+# boundary follows, so invalid syntax does not disappear into a no-op.
+dummy_stmt   = &SEMICOLON
+             | &"end"
+             | &"else" ;
 
 # Conditional statement. The then-branch is unlabeled_stmt (excludes conditionals).
 # The else-branch is statement (includes conditionals, enabling if/then/else if chains).
@@ -240,10 +243,10 @@ for_elem     = arith_expr "step" arith_expr "until" arith_expr
 #     exponentiation (left-associative per ALGOL 60 report)
 #     primary (literal, call, variable, parenthesised expression)
 #
-# Only the `expression` rule (used in assignments and actual parameters)
-# needs the full unified hierarchy.  Rules used in type-specific contexts
-# (arith_expr for bounds/subscripts, bool_expr for conditionals) are
-# kept as-is.
+# The `expression` rule is the fully unified hierarchy used in assignments and
+# actual parameters.  Type-specific contexts still use arith_expr, bool_expr,
+# or desig_expr, but their conditional forms also recurse on the then branch so
+# nested conditionals work anywhere ALGOL accepts that value kind.
 expression   = "if" bool_expr "then" expression "else" expression
              | expr_eqv ;
 
@@ -268,7 +271,7 @@ expr_atom    = INTEGER_LIT
 # Arithmetic expression.
 # The conditional form (if b then x else y) produces a numeric value.
 # This is ALGOL's "conditional expression" — cleaner than C's ternary ?: operator.
-arith_expr   = "if" bool_expr "then" simple_arith "else" arith_expr
+arith_expr   = "if" bool_expr "then" arith_expr "else" arith_expr
              | simple_arith ;
 
 # Addition and subtraction. Optional leading sign handles unary + and -.
@@ -303,7 +306,7 @@ primary      = INTEGER_LIT
 #   and    — logical conjunction
 #   not    — logical negation (unary, highest precedence)
 # Then: relation (< = > etc.) and boolean primaries.
-bool_expr    = "if" bool_expr "then" simple_bool "else" bool_expr
+bool_expr    = "if" bool_expr "then" bool_expr "else" bool_expr
              | simple_bool ;
 
 simple_bool  = implication { "eqv" implication } ;
@@ -331,7 +334,7 @@ relation     = simple_arith ( EQ | NEQ | LT | LEQ | GT | GEQ ) simple_arith ;
 # Designational expression: used as the target of goto statements.
 # Resolves to a label — either a direct label, a switch subscript, or
 # a conditional jump (if b then label1 else label2).
-desig_expr   = "if" bool_expr "then" simple_desig "else" desig_expr
+desig_expr   = "if" bool_expr "then" desig_expr "else" desig_expr
              | simple_desig ;
 
 simple_desig = NAME LBRACKET arith_expr RBRACKET

@@ -193,10 +193,53 @@
       "description": "doctype trailing junk after system identifier",
       "input": "<!DOCTYPE html SYSTEM \"about:legacy-compat\" junk>",
       "output": [
-        ["DOCTYPE", "html", null, "about:legacy-compat", false]
+        ["DOCTYPE", "html", null, "about:legacy-compat", true]
       ],
       "errors": [
         {"code": "unexpected-character-after-doctype-system-identifier", "line": 1, "col": 45}
+      ]
+    },
+    {
+      "description": "doctype identifier quote variants",
+      "input": "<!DOCTYPE html PUBLIC 'pub'><!DOCTYPE html SYSTEM 'sys'><!DOCTYPE html PUBLIC \"pub\" 'sys'>",
+      "output": [
+        ["DOCTYPE", "html", "pub", null, true],
+        ["DOCTYPE", "html", null, "sys", true],
+        ["DOCTYPE", "html", "pub", "sys", true]
+      ]
+    },
+    {
+      "description": "doctype public identifier boundary eof",
+      "input": "<!DOCTYPE html PUBLIC \"pub\" ",
+      "output": [
+        ["DOCTYPE", "html", "pub", null, false]
+      ],
+      "errors": [
+        {"code": "eof-in-doctype", "line": 1, "col": 29}
+      ]
+    },
+    {
+      "description": "doctype system identifier boundary eof",
+      "input": "<!DOCTYPE html SYSTEM \"sys\" ",
+      "output": [
+        ["DOCTYPE", "html", null, "sys", false]
+      ],
+      "errors": [
+        {"code": "eof-in-doctype", "line": 1, "col": 29}
+      ]
+    },
+    {
+      "description": "doctype bogus null recovery",
+      "input": "<!DOCTYPE html PUBLIC\u0000bad><!DOCTYPE html SYSTEM\u0000bad>",
+      "output": [
+        ["DOCTYPE", "html", null, null, false],
+        ["DOCTYPE", "html", null, null, false]
+      ],
+      "errors": [
+        {"code": "missing-quote-before-doctype-public-identifier", "line": 1, "col": 22},
+        {"code": "unexpected-null-character", "line": 1, "col": 22},
+        {"code": "missing-quote-before-doctype-system-identifier", "line": 1, "col": 50},
+        {"code": "unexpected-null-character", "line": 1, "col": 50}
       ]
     },
     {
@@ -1314,7 +1357,7 @@
         ["Character", "Text "],
         ["Character", "\u00AC"],
         ["Character", "in &trade "],
-        ["StartTag", "a", {"value": "&notin", "legacy": "\u00C0", "data": "\u00A9"}, true]
+        ["StartTag", "a", {"value": "&notin", "legacy": "\u00C0", "data": "\u00A9/"}, false]
       ],
       "errors": [
         {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 10},
@@ -1970,6 +2013,147 @@
           "line": 1,
           "col": 14
         }
+      ]
+    },
+    {
+      "description": "cdata bracket state emits pending bracket at eof",
+      "input": "",
+      "initialStates": [
+        "CDATA section bracket state"
+      ],
+      "output": [
+        [
+          "Character",
+          "]"
+        ]
+      ]
+    },
+    {
+      "description": "cdata end state closes on delimiter and returns to data",
+      "input": ">after",
+      "initialStates": [
+        "CDATA section end state"
+      ],
+      "output": [
+        [
+          "Character",
+          "after"
+        ]
+      ]
+    },
+    {
+      "description": "rcdata less-than state recovers literal less-than before references",
+      "input": "b &amp;",
+      "initialStates": [
+        "RCDATA less-than sign state"
+      ],
+      "lastStartTag": "title",
+      "output": [
+        [
+          "Character",
+          "<b &"
+        ]
+      ]
+    },
+    {
+      "description": "rawtext less-than state recovers literal less-than",
+      "input": "b &amp;",
+      "initialStates": [
+        "RAWTEXT less-than sign state"
+      ],
+      "lastStartTag": "style",
+      "output": [
+        [
+          "Character",
+          "<b &amp;"
+        ]
+      ]
+    },
+    {
+      "description": "script less-than state enters escaped text then closes script",
+      "input": "!-->tail</script>",
+      "initialStates": [
+        "Script data less-than sign state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          "<!-->tail"
+        ],
+        [
+          "EndTag",
+          "script"
+        ]
+      ]
+    },
+    {
+      "description": "script escape start states recover to script data on ordinary text",
+      "input": "x</script>",
+      "initialStates": [
+        "Script data escape start state",
+        "Script data escape start dash state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          "x"
+        ],
+        [
+          "EndTag",
+          "script"
+        ]
+      ]
+    },
+    {
+      "description": "script double escape start state enters double escaped script text",
+      "input": "script>inside</script>after</script>",
+      "initialStates": [
+        "Script data double escape start state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          "script>inside</script>after"
+        ],
+        [
+          "EndTag",
+          "script"
+        ]
+      ]
+    },
+    {
+      "description": "script double escape end state exits before matching end tag",
+      "input": "script>after</script>",
+      "initialStates": [
+        "Script data double escape end state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          "script>after"
+        ],
+        [
+          "EndTag",
+          "script"
+        ]
+      ]
+    },
+    {
+      "description": "script less-than state emits pending less-than at eof",
+      "input": "",
+      "initialStates": [
+        "Script data less-than sign state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          "<"
+        ]
       ]
     }
   ]

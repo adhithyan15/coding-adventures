@@ -12,6 +12,37 @@ import pytest
 from prolog_vm_compiler.cli import main
 
 
+def test_cli_dumps_capability_manifest_without_source(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main(["--dump-capabilities", "--format", "json"])
+
+    payload = json.loads(capsys.readouterr().out)
+    assert status == 0
+    assert payload["success"] is True
+    assert payload["mode"] == "capabilities"
+    assert payload["status"] == "core-plus-file-io"
+    assert payload["dialects"] == ["iso", "swi"]
+    assert payload["backends"] == ["structured", "bytecode"]
+    assert payload["capabilities"][0]["specs"][0] == "PR00"
+    assert payload["capabilities"][-1]["specs"][-1] == "PR78"
+
+
+def test_cli_dump_capabilities_rejects_source_modes(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--dump-capabilities",
+        "--source",
+        "parent(homer, bart).",
+    ])
+
+    assert status == 2
+    assert "--dump-capabilities cannot be combined with --source" in (
+        capsys.readouterr().err
+    )
+
+
 def test_cli_runs_inline_ad_hoc_query_with_bytecode_values(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
@@ -104,6 +135,133 @@ def test_cli_repeated_queries_share_committed_runtime_state(
         "true.",
         "Value = saved.",
     ]
+
+
+def test_cli_commit_requires_ad_hoc_query(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart). ?- parent(homer, Who).",
+        "--commit",
+    ])
+
+    assert status == 2
+    assert "--commit requires at least one --query" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    "compile_only_flag",
+    [
+        "--check",
+        "--dump-bytecode",
+        "--dump-instructions",
+        "--dump-source-metadata",
+        "--list-source-queries",
+    ],
+)
+def test_cli_limit_rejects_compile_only_modes(
+    compile_only_flag: str,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart). ?- parent(homer, Who).",
+        compile_only_flag,
+        "--limit",
+        "1",
+    ])
+
+    assert status == 2
+    assert f"--limit cannot be combined with {compile_only_flag}" in (
+        capsys.readouterr().err
+    )
+
+
+@pytest.mark.parametrize(
+    "compile_only_flag",
+    [
+        "--check",
+        "--dump-bytecode",
+        "--dump-instructions",
+        "--dump-source-metadata",
+        "--list-source-queries",
+    ],
+)
+def test_cli_values_rejects_compile_only_modes(
+    compile_only_flag: str,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart). ?- parent(homer, Who).",
+        compile_only_flag,
+        "--values",
+    ])
+
+    assert status == 2
+    assert f"--values cannot be combined with {compile_only_flag}" in (
+        capsys.readouterr().err
+    )
+
+
+@pytest.mark.parametrize(
+    "diagnostic_flag",
+    [
+        "--dump-bytecode",
+        "--dump-instructions",
+        "--dump-source-metadata",
+        "--list-source-queries",
+    ],
+)
+def test_cli_no_initialize_rejects_non_initializing_diagnostic_modes(
+    diagnostic_flag: str,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        ":- initialization(true). parent(homer, bart). ?- parent(homer, Who).",
+        diagnostic_flag,
+        "--no-initialize",
+    ])
+
+    assert status == 2
+    assert f"--no-initialize cannot be combined with {diagnostic_flag}" in (
+        capsys.readouterr().err
+    )
+
+
+@pytest.mark.parametrize(
+    ("mode_flags", "conflicting_flag"),
+    [
+        (["--query", "parent(homer, Who)"], "--query"),
+        (["--all-source-queries"], "--all-source-queries"),
+        (["--check"], "--check"),
+        (["--dump-bytecode"], "--dump-bytecode"),
+        (["--dump-instructions"], "--dump-instructions"),
+        (["--dump-source-metadata"], "--dump-source-metadata"),
+        (["--list-source-queries"], "--list-source-queries"),
+        (["--interactive"], "--interactive"),
+    ],
+)
+def test_cli_source_query_index_rejects_non_source_query_modes(
+    mode_flags: list[str],
+    conflicting_flag: str,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart). ?- parent(homer, Who).",
+        "--source-query-index",
+        "0",
+        *mode_flags,
+    ])
+
+    assert status == 2
+    assert (
+        f"--source-query-index cannot be combined with {conflicting_flag}"
+        in capsys.readouterr().err
+    )
 
 
 def test_cli_check_compiles_source_without_queries(
@@ -309,8 +467,8 @@ def test_cli_dump_source_metadata_reports_query_counts(
         "instructions: 5",
     ]
     assert lines[5:] == [
-        "query 0 variables: Who",
-        "query 1 variables: (none)",
+        "query 0 (vm query 1) variables: Who",
+        "query 1 (vm query 2) variables: (none)",
     ]
 
 
@@ -337,8 +495,8 @@ def test_cli_dump_source_metadata_json_reports_source_queries(
         "mode": "source_metadata",
         "query_count": 3,
         "source_queries": [
-            {"index": 0, "variables": ["Who"]},
-            {"index": 1, "variables": []},
+            {"index": 0, "variables": ["Who"], "vm_query_index": 1},
+            {"index": 1, "variables": [], "vm_query_index": 2},
         ],
         "source_query_count": 2,
         "success": True,
@@ -373,8 +531,8 @@ def test_cli_lists_source_query_variables(
 
     assert status == 0
     assert capsys.readouterr().out.splitlines() == [
-        "query 0: Who",
-        "query 1: (no variables)",
+        "query 0 (vm query 0): Who",
+        "query 1 (vm query 1): (no variables)",
     ]
 
 
@@ -395,7 +553,7 @@ def test_cli_lists_source_query_variables_as_json(
     assert payload == {
         "mode": "source_queries",
         "queries": [
-            {"index": 0, "variables": ["Who"]},
+            {"index": 0, "variables": ["Who"], "vm_query_index": 0},
         ],
         "source_query_count": 1,
         "success": True,
@@ -598,6 +756,44 @@ def test_cli_summary_rejects_interactive(
     )
 
 
+def test_cli_json_format_rejects_interactive(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        "--interactive",
+        "--format",
+        "json",
+    ])
+
+    assert status == 2
+    assert "--format json cannot be combined with --interactive" in (
+        capsys.readouterr().err
+    )
+
+
+@pytest.mark.parametrize(
+    "dump_flag",
+    ["--dump-bytecode", "--dump-instructions", "--dump-source-metadata"],
+)
+def test_cli_summary_rejects_compile_only_dump_modes(
+    dump_flag: str,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        dump_flag,
+        "--summary",
+    ])
+
+    assert status == 2
+    assert f"--summary cannot be combined with {dump_flag}" in (
+        capsys.readouterr().err
+    )
+
+
 def test_cli_interactive_loop_runs_queries_from_stdin(
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],
@@ -751,6 +947,93 @@ def test_cli_runs_project_file_graph_with_query_module(
         "Who = bart.",
         "Who = lisa.",
     ]
+
+
+def test_cli_interactive_project_file_graph_uses_query_module(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    family_path = tmp_path / "family.pl"
+    family_path.write_text(
+        ":- module(family, [ancestor/2]).\n"
+        "ancestor(homer, bart).\n",
+        encoding="utf-8",
+    )
+    app_path = tmp_path / "app.pl"
+    app_path.write_text(
+        ":- module(app, []).\n"
+        ":- use_module(family, [ancestor/2]).\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(sys, "stdin", io.StringIO("ancestor(homer, Who)\nhalt.\n"))
+
+    status = main([
+        str(app_path),
+        str(family_path),
+        "--query-module",
+        "app",
+        "--interactive",
+        "--backend",
+        "bytecode",
+    ])
+
+    assert status == 0
+    assert capsys.readouterr().out == "Who = bart.\n"
+
+
+@pytest.mark.parametrize(
+    "mode_flag",
+    [
+        "--check",
+        "--dump-bytecode",
+        "--dump-instructions",
+        "--dump-source-metadata",
+        "--list-source-queries",
+        "--all-source-queries",
+    ],
+)
+def test_cli_query_module_rejects_non_query_modes(
+    tmp_path: Path,
+    mode_flag: str,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    family_path = tmp_path / "family.pl"
+    family_path.write_text("parent(homer, bart).\n", encoding="utf-8")
+    app_path = tmp_path / "app.pl"
+    app_path.write_text(":- module(app, []).\n", encoding="utf-8")
+
+    status = main([
+        str(app_path),
+        str(family_path),
+        "--query-module",
+        "app",
+        mode_flag,
+    ])
+
+    assert status == 2
+    assert "--query-module requires --query or --interactive" in (
+        capsys.readouterr().err
+    )
+
+
+def test_cli_query_module_rejects_non_project_inputs(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    source_path = tmp_path / "family.pl"
+    source_path.write_text("parent(homer, bart).\n", encoding="utf-8")
+
+    status = main([
+        str(source_path),
+        "--query",
+        "parent(homer, Who)",
+        "--query-module",
+        "app",
+    ])
+
+    assert status == 2
+    assert "--query-module requires a project file graph" in capsys.readouterr().err
 
 
 def test_cli_help_is_generated_by_cli_builder(

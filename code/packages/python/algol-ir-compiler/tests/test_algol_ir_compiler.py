@@ -68,6 +68,36 @@ class TestAlgolIrCompiler:
         assert opcodes.count(IrOp.BRANCH_Z) >= 2
         assert opcodes.count(IrOp.STORE_WORD) >= 3
 
+    def test_compiles_nested_conditionals_in_typed_contexts(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; integer array a[1:3]; "
+                "a[if true then if false then 1 else 2 else 3] := 9; "
+                "if if true then if false then false else true else false "
+                "then result := a[2] else result := 0 "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        assert opcodes.count(IrOp.BRANCH_Z) >= 3
+        assert IrOp.STORE_WORD in opcodes
+
+    def test_compiles_nested_conditional_designational_targets(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "goto if true then if false then left else right else fail; "
+                "left: result := 1; goto done; "
+                "right: result := 7; goto done; "
+                "fail: result := 0; "
+                "done: "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+        assert opcodes.count(IrOp.BRANCH_Z) >= 2
+        assert IrOp.JUMP in opcodes
+
     def test_compiles_structured_if_labels(self) -> None:
         result = compile_algol(
             parse_algol(
@@ -81,6 +111,26 @@ class TestAlgolIrCompiler:
         ]
         assert "if_0_else" in labels
         assert "if_0_end" in labels
+
+    def test_compiles_dummy_statements_in_control_positions(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, i; "
+                "if true then ; "
+                "if false then result := 1 else ; "
+                "for i := 1 step 1 until 1 do ; "
+                "done: "
+                "end"
+            )
+        )
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+        assert any(label.startswith("algol_label_") for label in labels)
+        assert any(label.startswith("if_") for label in labels)
+        assert any(label.startswith("loop_") for label in labels)
 
     def test_compiles_for_loop_labels(self) -> None:
         result = compile_algol(

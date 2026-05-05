@@ -1,5 +1,94 @@
 # Changelog — matrix-metal
 
+## 0.3.0 — 2026-05-05
+
+### Added
+
+- **`Op::Broadcast` support.**  Completes the shape-op trio (Reshape
+  in #2077, Transpose in #2122, Broadcast now).  General N-D
+  axis-replication kernel up to rank 4 (matching this backend's
+  advertised `max_tensor_rank`).  Capability bitset now includes
+  tag 0x13.
+
+  The MSL kernel walks the output linearly: for each output element,
+  decomposes the linear index into an output multi-index using the
+  target dims, then builds the input multi-index by clamping each
+  size-1 input axis to index 0 and copying every non-broadcast axis
+  through.  Re-flattens with the input dims and reads.  Memory
+  access is **read-fan-in** — many output threads read the same
+  input element when broadcasting along a hot axis, which Metal
+  handles well via its texture cache on Apple Silicon.
+
+  The args struct (rank, output numel, in_dims[4], out_dims[4]) is
+  encoded as 40 bytes (rounded to 48 for MSL alignment) and passed
+  via `set_bytes`.
+
+  Edge cases:
+    - Rank 0 (scalar) is a no-op single-element copy.
+    - Rank > 4 returns an Err.
+    - Empty output (numel = 0) returns Ok without dispatching.
+    - Input rank ≠ output rank returns an Err.
+    - Input dim ≠ 1 and ≠ output dim is enforced at the matrix-ir
+      validator level; the kernel doesn't re-check.
+
+### Tests (2 new)
+
+- `broadcast_row_to_matrix_on_gpu` — `(1, 3) → (4, 3)` broadcast on axis 0.
+- `broadcast_column_to_matrix_on_gpu` — `(3, 1) → (3, 4)` broadcast on axis 1.
+
+Total: 10 integration tests (was 8).
+
+### Notes
+
+- All three V1 shape ops (Reshape, Transpose, Broadcast) now run on
+  Metal.  The capability filter no longer routes any pure shape op
+  to CPU, so future graphs that mix elementwise + matmul + arbitrary
+  shape ops can stay end-to-end on GPU under uniform-Metal placement.
+- ML-style "bias add" (`out = x + bias` where bias broadcasts across
+  the batch axis) is now expressible end-to-end on Metal.
+
+## 0.2.0 — 2026-05-05
+
+### Added
+
+- **`Op::Transpose` support.**  General N-D permutation kernel up to
+  rank 4 (matching this backend's advertised `max_tensor_rank`).
+  Capability bitset now includes tag 0x12.
+
+  The MSL kernel walks the output linearly: for each output element,
+  it decomposes the linear index into an output multi-index using
+  the output dims, reverses the permutation to get the input
+  multi-index, then re-flattens with the input dims.  Cost per
+  element is O(rank) divides + O(rank) multiplies.  Memory access
+  is non-coalesced for non-trivial permutations — that's the price
+  of generality.  V2 could special-case the rank-2 matrix-transpose
+  path with a tiled shared-memory kernel; V1 keeps the kernel small.
+
+  The args struct (rank, output numel, perm[4], in_dims[4],
+  out_dims[4]) is encoded as 56 bytes (rounded to 64 for MSL
+  alignment) and passed via `set_bytes`.
+
+  Edge cases:
+    - Rank 0 (scalar) is a no-op memcpy.
+    - Rank > 4 returns an Err (the planner shouldn't route those to
+      us once it sees `max_tensor_rank: 4`, but the dispatch defends
+      in depth).
+    - Empty output (numel = 0) returns Ok without dispatching.
+
+### Tests (2 new)
+
+- `transpose_2x3_to_3x2_on_gpu` — rank-2 matrix transpose with `perm = [1, 0]`.
+- `transpose_3d_perm_021_on_gpu` — rank-3 with `perm = [0, 2, 1]` (swaps the last two axes only); confirms the kernel's permutation logic generalises beyond the rank-2 case.
+
+Total tests: 8 integration (was 6).
+
+### Notes
+
+- `Op::Broadcast` (tag 0x13) is still V2 work.  Broadcasting needs
+  proper stride logic — strides become non-trivial when broadcasting
+  across multiple axes, and the kernel needs to know which axes are
+  size-1-broadcast vs ordinary.  Out of scope for this PR.
+
 ## 0.1.1 — 2026-05-04
 
 ### Added

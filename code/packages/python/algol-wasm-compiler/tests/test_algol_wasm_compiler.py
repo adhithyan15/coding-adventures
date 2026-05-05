@@ -203,6 +203,29 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
+    def test_nested_conditionals_execute_in_typed_contexts(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer array a[1:if true then if false then 2 else 3 else 1]; "
+            "a[if true then if false then 1 else 2 else 3] := 11; "
+            "if if true then if false then false else true else false "
+            "then result := a[2] else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [11]
+
+    def test_nested_conditional_designational_goto_executes(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "goto if true then if false then left else right else fail; "
+            "left: result := 1; goto done; "
+            "right: result := 7; goto done; "
+            "fail: result := 0; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
     def test_statement_lists_allow_trailing_and_repeated_semicolons(self) -> None:
         result = compile_source(
             "begin integer result; ; result := 1;; result := 2; end"

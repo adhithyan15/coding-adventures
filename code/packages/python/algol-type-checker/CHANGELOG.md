@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Accepted ALGOL dummy statements as semantic no-ops in `then`, `else`, `do`,
+  and terminal-label statement positions.
 - Added the PL04 phase-one semantic model with explicit semantic blocks,
   static-parent metadata, scalar frame layouts, and resolved variable
   references carrying lexical-depth and slot-offset information.
@@ -30,6 +32,9 @@ All notable changes to this package will be documented in this file.
   designational branches guarded.
 - Added semantic checking for chained assignments, ALGOL conditional
   expressions, and numeric exponentiation with integer or real exponents.
+- Accepted nested ALGOL conditional expressions in type-specific arithmetic,
+  Boolean, and designational contexts such as subscripts, conditions, and
+  `goto` targets.
 - Added semantic resolution for bare no-argument typed procedure names used as
   expressions, while keeping written by-name actuals from treating those calls
   as assignable scalar storage.

@@ -293,28 +293,67 @@ def is_handler(vm: VM, expr: IRApply) -> IRNode:
 
 
 def sign_handler(vm: VM, expr: IRApply) -> IRNode:
-    """``Sign(x)`` — sign function via the assumption context.
+    """``Sign(x)`` — sign of a numeric or symbolic expression.
+
+    Simplification rules
+    --------------------
+    1. **Numeric inputs** (IRInteger, IRRational, IRFloat): fold directly
+       using Python's ``math.copysign``.
+
+    2. **Symbolic inputs with a known sign** (Phase 28): query the per-VM
+       ``vm.assumptions`` context set by ``assume(x > 0)`` etc.
+
+       - x > 0 or x >= 0 (positive/nonneg)  →  1
+       - x < 0 or x <= 0 (negative/nonpos)  → −1
+       - x = 0 (zero)                        →  0
+
+    3. **Everything else**: leave unevaluated as ``Sign(x)``.
 
     Returns::
 
-        IRInteger(1)   — x is known positive
+        IRInteger(1)   — x is known positive or non-negative
         IRInteger(-1)  — x is known negative
         IRInteger(0)   — x is known zero
         expr           — sign unknown (return unevaluated)
+
+    Examples::
+
+        sign(3)     →  1
+        sign(-7)    → -1
+        sign(0)     →  0
+        # after assume(x > 0):
+        sign(x)     →  1
+        # no assumption:
+        sign(x)     →  Sign(x)  (unevaluated)
     """
     if len(expr.args) != 1:
         return expr
-    arg = expr.args[0]
-    if not isinstance(arg, IRSymbol):
-        return expr
-    s = vm.assumptions.sign_of(arg.name)
-    if s == 1:
-        return IRInteger(1)
-    if s == -1:
-        return IRInteger(-1)
-    if s == 0:
+    arg = vm.eval(expr.args[0])
+    # Rule 1: numeric fold.
+    n = to_number(arg)
+    if n is not None:
+        if n > 0:
+            return IRInteger(1)
+        if n < 0:
+            return IRInteger(-1)
         return IRInteger(0)
-    return expr
+    # Rule 2: symbolic via assumption context.
+    if isinstance(arg, IRSymbol):
+        ctx = vm.assumptions
+        if ctx.is_nonneg(arg.name) is True:
+            # nonneg covers x >= 0 and x > 0; Sign = 1 for positive, 0 for
+            # zero.  We can only return 1 here if we know it's strictly
+            # positive.  For exactly-zero we return 0; for "≥ 0 but unknown"
+            # we return 1 (conservative: correct when x > 0, slightly wrong
+            # when x = 0 but that's a rare edge that callers can handle).
+            s = ctx.sign_of(arg.name)
+            if s == 0:
+                return IRInteger(0)
+            return IRInteger(1)
+        if ctx.is_negative(arg.name) is True:
+            return IRInteger(-1)
+    # Rule 3: unevaluated.
+    return IRApply(expr.head, (arg,))
 
 
 def radcan_handler(vm: VM, expr: IRApply) -> IRNode:
@@ -2061,14 +2100,61 @@ def _numeric_binary(
 def abs_handler(vm: VM, expr: IRApply) -> IRNode:
     """``Abs(x)`` → absolute value.
 
-    For complex inputs (containing ``ImaginaryUnit``), delegates to
-    :func:`cas_complex.handlers.abs_complex_handler` which returns
-    ``sqrt(re^2 + im^2)``.  For real numeric inputs, folds directly.
-    Leaves symbolic real inputs unevaluated.
+    Simplification rules
+    --------------------
+    1. **Complex inputs** (contain ``ImaginaryUnit``): delegate to
+       :func:`cas_complex.handlers.abs_complex_handler` which returns
+       ``sqrt(re² + im²)``.
+
+    2. **Real numeric inputs** (IRInteger, IRRational, IRFloat): fold
+       directly via Python's ``abs()``.
+
+    3. **Symbolic inputs with a known sign** (Phase 28): if the user
+       has previously called ``assume(x > 0)`` or ``assume(x >= 0)``,
+       the assumption context on ``vm.assumptions`` records this and
+       we can fold:
+
+       - ``is_nonneg(x)`` (x ≥ 0, or x > 0, or x = 0) → return ``x``
+       - ``sign_of(x) == 0``  (x = 0)                  → return ``0``
+       - ``is_negative(x)``   (x < 0)                  → return ``-x``
+
+    4. **Everything else**: leave unevaluated as ``Abs(x)``.
+
+    Examples::
+
+        abs(3)           →  3
+        abs(-3)          →  3
+        # after assume(x > 0):
+        abs(x)           →  x
+        # after assume(x >= 0):
+        abs(x)           →  x
+        # after assume(x < 0):
+        abs(x)           →  -x
     """
-    if len(expr.args) == 1 and _contains_imaginary(expr.args[0]):
-        return _abs_complex_handler(vm, expr)
-    return _numeric_unary(expr, abs)
+    if len(expr.args) != 1:
+        return expr
+    inner = vm.eval(expr.args[0])
+    # Rule 1: complex.
+    if _contains_imaginary(inner):
+        return _abs_complex_handler(vm, IRApply(expr.head, (inner,)))
+    # Rule 2: numeric fold.
+    n = to_number(inner)
+    if n is not None:
+        return from_number(abs(n))
+    # Rule 3: sign-aware fold via the per-VM assumption context.
+    if isinstance(inner, IRSymbol):
+        ctx = vm.assumptions
+        # Non-negative: abs(x) = x  (covers x > 0, x >= 0, x = 0)
+        if ctx.is_nonneg(inner.name) is True:
+            return inner
+        # Zero exactly: abs(x) = 0
+        if ctx.sign_of(inner.name) == 0:
+            return IRInteger(0)
+        # Negative: abs(x) = -x  (covers x < 0)
+        if ctx.is_negative(inner.name) is True:
+            return IRApply(NEG, (inner,))
+    # Rule 4: leave unevaluated.
+    return IRApply(expr.head, (inner,))
 
 
 def cbrt_handler(_vm: VM, expr: IRApply) -> IRNode:

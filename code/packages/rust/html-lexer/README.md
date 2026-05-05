@@ -87,6 +87,9 @@ Unquoted attribute values also preserve spec-defined unexpected characters
 such as `"`, `'`, `<`, `=`, and `` ` `` while reporting
 `unexpected-character-in-unquoted-attribute-value`, including when the first
 value character appears immediately after `=`.
+Solidus characters inside unquoted attribute values stay in the value, so
+URL-like markup such as `href=http://example.test/path` is not mistaken for a
+self-closing tag transition.
 EOF inside ordinary start/end tag construction now reports the relevant
 EOF-in-tag diagnostic and drops the incomplete token instead of handing a
 partial tag to the future parser.
@@ -127,11 +130,14 @@ declarations such as `<!>` emit an empty comment and return to normal data
 lexing, and EOF after `<!` emits the same empty bogus-comment recovery instead
 of preserving the opener as text. One-dash declaration openers such as `<!->`
 and `<!-x>` use that same bogus-comment recovery instead of being mistaken for
-normal empty-comment syntax.
+normal empty-comment syntax. Malformed `<![CDATA` opener recovery also replaces
+embedded NULL characters with U+FFFD before continuing in bogus-comment state.
 The tag-open states now only begin normal tags when the next character is an
 ASCII letter; stray less-than signs such as `a < b` remain text, and malformed
 end-tag openers such as `</3>` recover as bogus comments with a tokenizer
-diagnostic.
+diagnostic. A raw NULL after `<` follows the same invalid tag-open recovery
+before data-state NULL replacement, so both diagnostics are preserved while the
+text becomes `<` plus U+FFFD.
 DOCTYPE tokenization reports missing names and marks force-quirks mode for
 inputs such as `<!DOCTYPE>` and `<!DOCTYPE >`, and EOF recovery after a name
 or inside the `DOCTYPE` keyword emits a force-quirks token. Malformed
@@ -140,20 +146,26 @@ or inside the `DOCTYPE` keyword emits a force-quirks token. Malformed
 declarations such as `<!DOCTYPE html PUBLIC "...">` keep the information the
 future tree-construction/parser layer will need for compatibility decisions.
 DOCTYPE system-identifier recovery marks force-quirks mode for missing
-identifiers and unexpected trailing junk. PUBLIC/SYSTEM declarations also report
-the current recovery diagnostics for missing whitespace, missing identifier
-quotes, and abrupt identifier termination while preserving any recoverable
-public/system identifier text.
+identifiers and EOF, while unexpected trailing junk after a closed identifier
+reports a diagnostic without forcing quirks mode. PUBLIC/SYSTEM declarations
+also report the current recovery diagnostics for missing whitespace, missing
+identifier quotes, abrupt identifier termination, and EOF around quoted
+identifier boundaries while preserving any recoverable public/system identifier
+text. Bogus DOCTYPE recovery ignores embedded NULL characters after reporting
+`unexpected-null-character`, matching the tokenizer's discard-oriented bogus
+DOCTYPE state.
 The generated HTML1 machine also exposes `RCDATA`, `RAWTEXT`, `PLAINTEXT`,
 `CDATA section`, `script_data`, `script_data_escaped`,
 `script_data_escaped_dash`, `script_data_escaped_dash_dash`,
 `script_data_escaped_less_than_sign`, `script_data_double_escaped`,
 `script_data_double_escaped_dash`, `script_data_double_escaped_dash_dash`, and
 `script_data_double_escaped_less_than_sign` entry states for parser-controlled
-tokenizer submodes. The markup declaration path also recognizes `<![CDATA[`
-and enters the CDATA section state so the generated lexer can exercise that
-tokenizer subflow end to end; a future parser can still decide when that opener
-is valid for foreign-content contexts.
+tokenizer submodes, plus intermediate RCDATA/RAWTEXT less-than, CDATA
+bracket/end, script less-than, escape-start, and double-escape start/end states
+used by html5lib/WPT-style tokenizer fixtures. The markup declaration path also
+recognizes `<![CDATA[` and enters the CDATA section state so the generated lexer
+can exercise that tokenizer subflow end to end; a future parser can still decide
+when that opener is valid for foreign-content contexts.
 The public Rust API now wraps those parser-controlled entry states in
 `HtmlTokenizerState` and `HtmlLexContext`, including an element-to-context map
 for `title`, `textarea`, raw-text elements, `script`, and `plaintext`. A
@@ -179,10 +191,11 @@ supported surface, `HTML_TOKENIZER_STATES` lists every parser-facing tokenizer
 entry state and `HTML_FRAGMENT_TOKENIZER_STATES` lists the non-data fragment
 states accepted by the wrapper. `HtmlTokenizerState::is_fragment_state()` keeps
 that validation centralized in the lexer package. Code that starts from
-generated machine-state identifiers can use
-`HtmlTokenizerState::from_machine_state(...)` or
-`HtmlTokenizerState::from_fragment_machine_state(...)` to round-trip back to the
-typed API without copying raw state strings.
+generated machine-state identifiers or html5lib fixture labels can use
+`HtmlTokenizerState::from_machine_state(...)`,
+`HtmlTokenizerState::from_fragment_machine_state(...)`, or
+`HtmlTokenizerState::from_html5lib_state(...)` to round-trip back to the typed
+API without copying raw state strings.
 `html-skeleton.lexer.states.toml` remains in the crate as a smaller bootstrap
 machine for comparisons and narrow debugging.
 
@@ -214,6 +227,10 @@ script data double-escaped/dash/less-than substates can already live in the
 shared Venture fixture format. Current Rust conformance tests now seed that
 context into the generated lexer so non-data-state cases execute through the
 same static Rust wrapper as the data-state corpus.
+The importer also expands supported multi-state html5lib entries into stable
+per-state Venture cases and now covers intermediate text-like states such as
+RCDATA/RAWTEXT less-than, CDATA bracket/end, script less-than, script
+escape-start, and script double-escape start/end.
 
 The intended WHATWG/WPT path is to normalize upstream tokenizer cases into this
 same schema rather than teaching the Rust harness to parse raw upstream files

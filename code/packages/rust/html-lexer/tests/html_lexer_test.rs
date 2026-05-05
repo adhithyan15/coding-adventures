@@ -98,7 +98,7 @@ fn default_html_lexer_drops_partial_attribute_references_at_eof() {
 #[test]
 fn default_html_lexer_supports_html1_attributes_comments_and_doctypes() {
     let tokens = lex_html(
-        "<!DOCTYPE HTML><IMG SRC=\"mosaic.gif\" ALT='Splash' hidden=1/>Before<!--note-->After",
+        "<!DOCTYPE HTML><IMG SRC=\"mosaic.gif\" ALT='Splash' hidden=1 />Before<!--note-->After",
     )
     .unwrap();
 
@@ -381,6 +381,49 @@ fn default_html_lexer_reports_first_unquoted_attribute_value_characters() {
             .count(),
         3
     );
+}
+
+#[test]
+fn default_html_lexer_keeps_solidus_in_unquoted_attribute_values() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("<a href=http://example.test/path data=a/b><img src=cat/>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "href".to_string(),
+                        value: "http://example.test/path".to_string(),
+                    },
+                    Attribute {
+                        name: "data".to_string(),
+                        value: "a/b".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "img".to_string(),
+                attributes: vec![Attribute {
+                    name: "src".to_string(),
+                    value: "cat/".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert!(!lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "unexpected-solidus-in-tag"));
 }
 
 #[test]
@@ -810,6 +853,39 @@ fn default_html_lexer_supports_public_and_system_doctype_identifiers() {
 }
 
 #[test]
+fn default_html_lexer_supports_doctype_identifier_quote_variants() {
+    let tokens = lex_html(
+        "<!DOCTYPE html PUBLIC 'pub'><!DOCTYPE html SYSTEM 'sys'><!DOCTYPE html PUBLIC \"pub\" 'sys'>",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: Some("pub".to_string()),
+                system_identifier: None,
+                force_quirks: false,
+            },
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: Some("sys".to_string()),
+                force_quirks: false,
+            },
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: Some("pub".to_string()),
+                system_identifier: Some("sys".to_string()),
+                force_quirks: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_reports_missing_whitespace_after_doctype_public_keyword() {
     let mut lexer = create_html_lexer().unwrap();
 
@@ -860,6 +936,70 @@ fn default_html_lexer_reports_missing_whitespace_between_doctype_identifiers() {
     assert!(lexer.diagnostics().iter().any(|diagnostic| {
         diagnostic.code == "missing-whitespace-between-doctype-public-and-system-identifiers"
     }));
+}
+
+#[test]
+fn default_html_lexer_marks_public_identifier_boundary_eof_force_quirks() {
+    let cases = [
+        (
+            "<!DOCTYPE html PUBLIC",
+            None,
+            None,
+            "eof after PUBLIC keyword",
+        ),
+        (
+            "<!DOCTYPE html PUBLIC ",
+            None,
+            None,
+            "eof before public identifier",
+        ),
+        (
+            "<!DOCTYPE html PUBLIC \"pub",
+            Some("pub"),
+            None,
+            "eof inside public identifier",
+        ),
+        (
+            "<!DOCTYPE html PUBLIC \"pub\"",
+            Some("pub"),
+            None,
+            "eof after public identifier",
+        ),
+        (
+            "<!DOCTYPE html PUBLIC \"pub\" ",
+            Some("pub"),
+            None,
+            "eof between public and system identifiers",
+        ),
+    ];
+
+    for (input, expected_public, expected_system, label) in cases {
+        let mut lexer = create_html_lexer().unwrap();
+
+        lexer.push(input).unwrap();
+        lexer.finish().unwrap();
+
+        assert_eq!(
+            lexer.drain_tokens(),
+            vec![
+                Token::Doctype {
+                    name: Some("html".to_string()),
+                    public_identifier: expected_public.map(str::to_string),
+                    system_identifier: expected_system.map(str::to_string),
+                    force_quirks: true,
+                },
+                Token::Eof,
+            ],
+            "{label}"
+        );
+        assert!(
+            lexer
+                .diagnostics()
+                .iter()
+                .any(|diagnostic| diagnostic.code == "eof-in-doctype"),
+            "{label}"
+        );
+    }
 }
 
 #[test]
@@ -1046,6 +1186,61 @@ fn default_html_lexer_reports_missing_quote_before_doctype_system_identifier() {
 }
 
 #[test]
+fn default_html_lexer_marks_system_identifier_boundary_eof_force_quirks() {
+    let cases = [
+        ("<!DOCTYPE html SYSTEM", None, "eof after SYSTEM keyword"),
+        (
+            "<!DOCTYPE html SYSTEM ",
+            None,
+            "eof before system identifier",
+        ),
+        (
+            "<!DOCTYPE html SYSTEM \"sys",
+            Some("sys"),
+            "eof inside system identifier",
+        ),
+        (
+            "<!DOCTYPE html SYSTEM \"sys\"",
+            Some("sys"),
+            "eof after system identifier",
+        ),
+        (
+            "<!DOCTYPE html SYSTEM \"sys\" ",
+            Some("sys"),
+            "eof after system identifier whitespace",
+        ),
+    ];
+
+    for (input, expected_system, label) in cases {
+        let mut lexer = create_html_lexer().unwrap();
+
+        lexer.push(input).unwrap();
+        lexer.finish().unwrap();
+
+        assert_eq!(
+            lexer.drain_tokens(),
+            vec![
+                Token::Doctype {
+                    name: Some("html".to_string()),
+                    public_identifier: None,
+                    system_identifier: expected_system.map(str::to_string),
+                    force_quirks: true,
+                },
+                Token::Eof,
+            ],
+            "{label}"
+        );
+        assert!(
+            lexer
+                .diagnostics()
+                .iter()
+                .any(|diagnostic| diagnostic.code == "eof-in-doctype"),
+            "{label}"
+        );
+    }
+}
+
+#[test]
 fn default_html_lexer_reports_abrupt_doctype_system_identifier() {
     let mut lexer = create_html_lexer().unwrap();
 
@@ -1123,7 +1318,7 @@ fn default_html_lexer_marks_missing_system_identifier_force_quirks() {
 }
 
 #[test]
-fn default_html_lexer_marks_trailing_junk_after_system_identifier_force_quirks() {
+fn default_html_lexer_reports_trailing_junk_after_system_identifier() {
     let mut lexer = create_html_lexer().unwrap();
 
     lexer
@@ -1138,7 +1333,7 @@ fn default_html_lexer_marks_trailing_junk_after_system_identifier_force_quirks()
                 name: Some("html".to_string()),
                 public_identifier: None,
                 system_identifier: Some("about:legacy-compat".to_string()),
-                force_quirks: true,
+                force_quirks: false,
             },
             Token::Eof,
         ]
@@ -1146,6 +1341,51 @@ fn default_html_lexer_marks_trailing_junk_after_system_identifier_force_quirks()
     assert!(lexer.diagnostics().iter().any(
         |diagnostic| diagnostic.code == "unexpected-character-after-doctype-system-identifier"
     ));
+}
+
+#[test]
+fn default_html_lexer_ignores_nulls_inside_bogus_doctype_recovery() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("<!DOCTYPE html PUBLIC\0bad><!DOCTYPE html SYSTEM\0bad>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: true,
+            },
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: true,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-null-character")
+            .count(),
+        2
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "missing-quote-before-doctype-public-identifier"));
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "missing-quote-before-doctype-system-identifier"));
 }
 
 #[test]
@@ -1320,6 +1560,31 @@ fn default_html_lexer_recovers_invalid_tag_open_as_text() {
         .diagnostics()
         .iter()
         .any(|diagnostic| diagnostic.code == "invalid-first-character-of-tag-name"));
+}
+
+#[test]
+fn default_html_lexer_reconsumes_null_tag_open_as_text() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("Before <\0 after").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("Before ".to_string()),
+            Token::Text("<\u{FFFD} after".to_string()),
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "invalid-first-character-of-tag-name"));
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "unexpected-null-character"));
 }
 
 #[test]
@@ -2347,6 +2612,28 @@ fn default_html_lexer_recovers_malformed_cdata_open_as_bogus_comment() {
             Token::Eof,
         ]
     );
+}
+
+#[test]
+fn default_html_lexer_replaces_null_in_malformed_cdata_openers() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("a<![CD\0>after").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("a".to_string()),
+            Token::Comment("[CD\u{FFFD}".to_string()),
+            Token::Text("after".to_string()),
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "unexpected-null-character"));
 }
 
 #[test]
@@ -4076,10 +4363,10 @@ fn default_html_lexer_restricts_semicolonless_named_references_to_legacy_names()
                     },
                     Attribute {
                         name: "data".to_string(),
-                        value: "\u{00A9}".to_string(),
+                        value: "\u{00A9}/".to_string(),
                     },
                 ],
-                self_closing: true,
+                self_closing: false,
             },
             Token::Eof,
         ]
@@ -4583,6 +4870,18 @@ fn parser_facing_context_maps_script_and_plaintext_elements() {
 fn parser_facing_context_maps_script_substates() {
     let expected_script_substates = [
         (HtmlTokenizerState::ScriptData, "script_data"),
+        (
+            HtmlTokenizerState::ScriptDataLessThanSign,
+            "script_data_less_than_sign",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapeStart,
+            "script_data_escape_start",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapeStartDash,
+            "script_data_escape_start_dash",
+        ),
         (HtmlTokenizerState::ScriptDataEscaped, "script_data_escaped"),
         (
             HtmlTokenizerState::ScriptDataEscapedDash,
@@ -4595,6 +4894,10 @@ fn parser_facing_context_maps_script_substates() {
         (
             HtmlTokenizerState::ScriptDataEscapedLessThanSign,
             "script_data_escaped_less_than_sign",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataDoubleEscapeStart,
+            "script_data_double_escape_start",
         ),
         (
             HtmlTokenizerState::ScriptDataDoubleEscaped,
@@ -4611,6 +4914,10 @@ fn parser_facing_context_maps_script_substates() {
         (
             HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign,
             "script_data_double_escaped_less_than_sign",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataDoubleEscapeEnd,
+            "script_data_double_escape_end",
         ),
     ];
     assert_eq!(
@@ -4682,18 +4989,27 @@ fn parser_facing_context_exposes_tokenizer_state_sets() {
         [
             "data",
             "rcdata",
+            "rcdata_less_than_sign",
             "rawtext",
+            "rawtext_less_than_sign",
             "plaintext",
             "cdata_section",
+            "cdata_section_bracket",
+            "cdata_section_end",
             "script_data",
+            "script_data_less_than_sign",
+            "script_data_escape_start",
+            "script_data_escape_start_dash",
             "script_data_escaped",
             "script_data_escaped_dash",
             "script_data_escaped_dash_dash",
             "script_data_escaped_less_than_sign",
+            "script_data_double_escape_start",
             "script_data_double_escaped",
             "script_data_double_escaped_dash",
             "script_data_double_escaped_dash_dash",
             "script_data_double_escaped_less_than_sign",
+            "script_data_double_escape_end",
         ]
     );
     assert!(!HtmlTokenizerState::Data.is_fragment_state());
@@ -4726,6 +5042,103 @@ fn parser_facing_context_exposes_tokenizer_state_sets() {
     for state in HTML_FRAGMENT_TOKENIZER_STATES {
         assert!(state.is_fragment_state());
     }
+
+    for state in HTML_TOKENIZER_STATES {
+        assert_eq!(
+            HtmlTokenizerState::from_html5lib_state(state.as_html5lib_state()),
+            Some(state)
+        );
+    }
+    assert_eq!(
+        HtmlTokenizerState::from_html5lib_state("Script data double escape start state"),
+        Some(HtmlTokenizerState::ScriptDataDoubleEscapeStart)
+    );
+    assert_eq!(HtmlTokenizerState::from_html5lib_state("Bogus state"), None);
+
+    assert!(HtmlTokenizerState::RcdataLessThanSign.requires_last_start_tag());
+    assert!(HtmlTokenizerState::RawtextLessThanSign.requires_last_start_tag());
+    assert!(HtmlTokenizerState::ScriptDataEscapeStart.requires_last_start_tag());
+    assert!(!HtmlTokenizerState::CdataSectionEnd.requires_last_start_tag());
+}
+
+#[test]
+fn parser_facing_context_seeds_intermediate_text_states() {
+    let cdata_bracket = HtmlLexContext::new(HtmlTokenizerState::CdataSectionBracket);
+    assert_eq!(
+        lex_html_fragment("", &cdata_bracket).unwrap(),
+        vec![Token::Text("]".to_string()), Token::Eof]
+    );
+
+    let cdata_end = HtmlLexContext::new(HtmlTokenizerState::CdataSectionEnd);
+    assert_eq!(
+        lex_html_fragment(">after", &cdata_end).unwrap(),
+        vec![Token::Text("after".to_string()), Token::Eof]
+    );
+
+    let rcdata_less_than =
+        HtmlLexContext::new(HtmlTokenizerState::RcdataLessThanSign).with_last_start_tag("title");
+    assert_eq!(
+        lex_html_fragment("b &amp;</title>", &rcdata_less_than).unwrap(),
+        vec![
+            Token::Text("<b &".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof
+        ]
+    );
+
+    let rawtext_less_than =
+        HtmlLexContext::new(HtmlTokenizerState::RawtextLessThanSign).with_last_start_tag("style");
+    assert_eq!(
+        lex_html_fragment("b &amp;</style>", &rawtext_less_than).unwrap(),
+        vec![
+            Token::Text("<b &amp;".to_string()),
+            Token::EndTag {
+                name: "style".to_string()
+            },
+            Token::Eof
+        ]
+    );
+
+    let script_less_than =
+        HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataLessThanSign).unwrap();
+    assert_eq!(
+        lex_html_fragment("!-->tail</script>", &script_less_than).unwrap(),
+        vec![
+            Token::Text("<!-->tail".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof
+        ]
+    );
+
+    let double_escape_start =
+        HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataDoubleEscapeStart).unwrap();
+    assert_eq!(
+        lex_html_fragment("script>inside</script>after</script>", &double_escape_start).unwrap(),
+        vec![
+            Token::Text("script>inside</script>after".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof
+        ]
+    );
+
+    let double_escape_end =
+        HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataDoubleEscapeEnd).unwrap();
+    assert_eq!(
+        lex_html_fragment("script>after</script>", &double_escape_end).unwrap(),
+        vec![
+            Token::Text("script>after".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof
+        ]
+    );
 }
 
 #[test]

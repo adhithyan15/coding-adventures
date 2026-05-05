@@ -2,6 +2,65 @@
 
 All notable changes to `matrix-cpu` are documented here.
 
+## [0.2.0] — 2026-05-05
+
+### Added — opt-in cost-model calibration
+
+- New `calibrate` module exporting `calibrate() -> BackendProfile`.
+  Runs a brief throughput measurement (~10 ms per dtype, ~30 ms total)
+  on F32 / U8 / I32 elementwise add and returns a `BackendProfile`
+  with calibrated `gflops_*` fields.  Other fields are inherited from
+  the hardcoded defaults in `profile()`.  Result is cached via
+  `OnceLock` so repeat calls are ~10 ns.
+- Calibration is **opt-in**: `profile()` continues to return the
+  hardcoded defaults so CI stays deterministic and existing call
+  sites (image-gpu-core, instagram-filters) keep working unchanged.
+  Programs that want accurate routing on heterogeneous hardware call
+  `matrix_cpu::calibrate()` at startup and use the result in place of
+  `profile()`.
+- `clamp_gflops()` floor-protects against ridiculously low
+  measurements (< 1 GFLOPS suggests the system was thrashing during
+  calibration; we fall back to the default in that case) and caps at
+  `u32::MAX` to fit the `BackendProfile` field width.
+
+### What we measure / don't measure
+
+Measured: F32, U8, I32 elementwise-add throughput.  The planner only
+needs ordinal correctness for routing decisions, not per-cycle
+accuracy, so a coarse measurement is sufficient.
+
+Not measured (V1): memory bandwidth (`host_to_device_bw` etc.).
+Inherits the heuristic 100 bytes/ns default which is close enough for
+the cost model to make the right shape of decision on host-resident
+buffers.  V2 of calibration could add a memcpy benchmark.
+
+### Tests (6 new)
+
+- `calibrate_returns_sane_profile` — values within plausible range.
+- `calibrate_is_idempotent` — caching works (subsequent calls give
+  exactly the same numbers).
+- `calibrate_inherits_non_throughput_fields_from_profile` — only the
+  three `gflops_*` fields differ from the default.
+- `clamp_gflops_floors_implausibly_low_at_default`
+- `clamp_gflops_caps_at_u32_max`
+- `clamp_gflops_passes_through_normal_values`
+
+Total tests: 19 unit + 17 integration = 36 (was 13 + 17 = 30).
+
+### Notes
+
+- On the author's M-series Mac the calibrated F32 number (~10 GFLOPS
+  for a single-thread scalar elementwise add) is **lower** than the
+  default's 40 GFLOPS.  That's expected — the default was set
+  optimistically — and the absolute values matter less than the
+  relative gap to the registered specialised backends.  Programs
+  using calibration on this hardware will see Metal preferred for
+  more graphs than under the defaults.
+- Image-filter routing in instagram-filters is unchanged because
+  image-gpu-core still uses `profile()`, not `calibrate()`.  Switching
+  it over is a separate opt-in (and arguably the wrong default, since
+  it'd make the routing depend on the CPU's mood at startup).
+
 ## [0.1.1] — 2026-05-04
 
 ### Fixed

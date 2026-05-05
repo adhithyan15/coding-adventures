@@ -53,15 +53,12 @@ require('lspconfig').twig.setup({
 - Keyword + declaration completion
 - Formatting (via `twig-formatter`)
 
-## Status — SKELETON (LS02 PR B)
+## Status — LS02 PR B complete (0.2.0)
 
-`twig_language_spec()` is defined.  The `twig-lsp-server` binary stub exits
-with an error until LS02 PR A (`grammar-lsp-bridge`) is implemented.
-
-**TODO (LS02 PR B):**
-1. Replace placeholder grammar paths with real `include_str!` paths.
-2. Wire `twig-formatter` as `format_fn`.
-3. Implement `twig_lsp_server` main.
+`twig_language_spec()` is fully wired — grammar files are embedded via
+`include_str!`, the formatter is connected, and `twig-lsp-server` is a
+real LSP server.  All eight optional `LanguageBridge` features are
+supported.
 
 ## Spec reference
 

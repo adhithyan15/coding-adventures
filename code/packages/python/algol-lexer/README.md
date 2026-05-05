@@ -28,13 +28,16 @@ Go, Swift, Kotlin.
 ## How It Fits the Stack
 
 ```
-algol.tokens (grammar definition)
+algol/algol60.tokens (token grammar)
       │
       ▼
-grammar_tools.parse_token_grammar()
+grammar_tools.compile_token_grammar()
       │
       ▼
-GrammarLexer  ←── algol-lexer (this package, thin wrapper)
+algol_lexer._grammar.TOKEN_GRAMMAR
+      │
+      ▼
+GrammarLexer  ←── algol-lexer (this package, no runtime file I/O)
       │
       ▼
 list[Token]   ──► algol-parser
@@ -42,8 +45,8 @@ list[Token]   ──► algol-parser
 
 This package is a thin wrapper. The real work is done by:
 
-- **`coding-adventures-grammar-tools`**: Parses `algol.tokens` into a
-  `TokenGrammar` data structure.
+- **`coding-adventures-grammar-tools`**: Compiles `algol/algol60.tokens` into
+  a native `TokenGrammar` module.
 - **`coding-adventures-lexer`**: The `GrammarLexer` engine that runs the
   token grammar against source text.
 

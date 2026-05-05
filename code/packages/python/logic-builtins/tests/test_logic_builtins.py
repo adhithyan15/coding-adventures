@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 from logic_engine import (
     Compound,
@@ -73,6 +75,7 @@ from logic_builtins import (
     div,
     dynamico,
     excludeo,
+    exists_fileo,
     failo,
     falseo,
     fd_addo,
@@ -134,6 +137,8 @@ from logic_builtins import (
     prolog_iso,
     prolog_lto,
     prolog_numeqo,
+    read_file_to_codeso,
+    read_file_to_stringo,
     repeato,
     retractallo,
     retracto,
@@ -173,6 +178,47 @@ class TestVersion:
 
     def test_version_exists(self) -> None:
         assert __version__ == "0.15.0"
+
+
+class TestFileTextBuiltins:
+    """Bounded file-text helpers should stay deterministic and UTF-8 only."""
+
+    def test_exists_fileo_succeeds_for_regular_files(self, tmp_path: Path) -> None:
+        source_path = tmp_path / "data.txt"
+        source_path.write_text("tea", encoding="utf-8")
+
+        assert solve_all(
+            program(),
+            "ok",
+            conj(eq("ok", "ok"), exists_fileo(string(str(source_path)))),
+        ) == [atom("ok")]
+        assert solve_all(
+            program(),
+            "ok",
+            conj(eq("ok", "ok"), exists_fileo(string(str(tmp_path / "missing.txt")))),
+        ) == []
+
+    def test_read_file_to_stringo_reads_utf8_text(self, tmp_path: Path) -> None:
+        source_path = tmp_path / "data.txt"
+        source_path.write_text("tea\ncake", encoding="utf-8")
+        contents = var("Contents")
+
+        assert solve_all(
+            program(),
+            contents,
+            read_file_to_stringo(atom(str(source_path)), contents),
+        ) == [string("tea\ncake")]
+
+    def test_read_file_to_codeso_reads_code_points(self, tmp_path: Path) -> None:
+        source_path = tmp_path / "data.txt"
+        source_path.write_text("A\n", encoding="utf-8")
+        codes = var("Codes")
+
+        assert solve_all(
+            program(),
+            codes,
+            read_file_to_codeso(string(str(source_path)), codes),
+        ) == [logic_list([num(65), num(10)])]
 
 
 class TestAdvancedControlBuiltins:

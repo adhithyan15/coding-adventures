@@ -44,6 +44,7 @@ mod planner;
 mod policy;
 mod profile;
 mod registry;
+mod router;
 mod runtime;
 mod spec;
 
@@ -52,6 +53,7 @@ pub use planner::{plan, PlanError};
 pub use policy::{DefaultPolicy, SpecialisationPolicy};
 pub use profile::{ProfileObservation, Profiler, TensorObservation};
 pub use registry::{RegisteredExecutor, Registry};
+pub use router::SpecRouter;
 pub use runtime::{Runtime, RuntimeError};
 pub use spec::{
     NoopSpecialiser, RangeClass, ShapeClass, SpecCache, SpecKey, Specialiser, SpecialisedKernel,

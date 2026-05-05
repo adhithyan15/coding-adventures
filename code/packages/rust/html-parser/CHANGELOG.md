@@ -16,6 +16,11 @@ documented in this file.
   ordinary data-state markup.
 - Implied `html`, `head`, and `body` document shell normalization, including
   preservation of explicit shell attributes and legacy omitted-wrapper pages.
+- Explicit `head` elements now close before `body` starts or non-head body
+  content appears, preventing omitted `</head>` pages from trapping body DOM
+  inside the head.
+- Duplicate open `body` start tags now merge missing attributes into the
+  existing body instead of creating nested body elements.
 - Scripting-aware parse options for parser-controlled tokenizer handoff, so
   `noscript` becomes RAWTEXT with scripting enabled and ordinary fallback
   markup with scripting disabled.
@@ -40,3 +45,20 @@ documented in this file.
   nested heading DOMs when heading end tags are omitted.
 - Common block starts such as `div`, `ul`, and `table` now close open
   paragraphs before insertion, preventing paragraph-nested block DOMs.
+- Ruby annotation starts now close omitted `rb`, `rt`, `rp`, and `rtc` siblings,
+  preventing nested ruby annotation DOMs when end tags are omitted.
+- Repeated interactive formatting starts for `a`, `button`, and `nobr` now
+  close the previous open element before inserting the next one, avoiding
+  impossible nested interactive DOMs for common omitted-end-tag markup.
+- Repeated interactive starts now preserve the surrounding paragraph context
+  when they recover, so trailing text and later inline siblings stay under the
+  same paragraph instead of spilling to the body.
+- Paragraph boundary recovery now covers additional legacy and modern block
+  starts, including `button`, `center`, `dir`, `hgroup`, `search`, `listing`,
+  `xmp`, and `plaintext`.
+- Raw-text and plaintext block starts now close an open paragraph before
+  tokenizer handoff, keeping the resulting text-mode elements as paragraph
+  siblings.
+- Nested `form` start tags are now ignored with a parser diagnostic while an
+  outer form remains open, keeping form-associated content in the existing form
+  instead of creating nested form DOMs.

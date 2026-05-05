@@ -243,16 +243,25 @@ impl HtmlParser {
         attributes: Vec<LexerAttribute>,
         self_closing: bool,
     ) {
+        self.apply_document_shell_implied_contexts(&name);
         self.apply_table_implied_contexts(&name);
         self.apply_simple_implied_end_tags(&name);
+        if self.apply_interactive_implied_contexts(&name) {
+            return;
+        }
 
-        let attributes = attributes
+        let attributes: Vec<Attribute> = attributes
             .into_iter()
             .map(|attribute| Attribute {
                 name: attribute.name,
                 value: attribute.value,
             })
             .collect();
+
+        if name == "body" && self.merge_attributes_into_open_element("body", &attributes) {
+            return;
+        }
+
         let child_index = self.append_node(Node::element(name.clone(), attributes));
 
         if !self_closing && !is_void_element(&name) {
@@ -265,6 +274,10 @@ impl HtmlParser {
     fn append_text(&mut self, text: String) {
         if text.is_empty() {
             return;
+        }
+
+        if !text.chars().all(char::is_whitespace) {
+            self.pop_current_if(|name| name == "head");
         }
 
         if let Some(children) = self.current_children_mut() {
@@ -298,6 +311,39 @@ impl HtmlParser {
         let mut path = self.current_parent_path().to_vec();
         path.push(child_index);
         self.open_elements.push(path);
+    }
+
+    fn merge_attributes_into_open_element(
+        &mut self,
+        element_name: &str,
+        attributes: &[Attribute],
+    ) -> bool {
+        let Some(path) = self
+            .open_elements
+            .iter()
+            .rposition(|path| {
+                element_at_path(&self.document, path).is_some_and(|name| name == element_name)
+            })
+            .map(|index| self.open_elements[index].clone())
+        else {
+            return false;
+        };
+
+        let Some(element) = element_at_path_mut(&mut self.document, &path) else {
+            return false;
+        };
+        for attribute in attributes {
+            if element.attribute(&attribute.name).is_none() {
+                element.attributes.push(attribute.clone());
+            }
+        }
+        true
+    }
+
+    fn apply_document_shell_implied_contexts(&mut self, incoming_name: &str) {
+        if starts_body_after_head(incoming_name) {
+            self.pop_current_if(|name| name == "head");
+        }
     }
 
     fn close_element(&mut self, name: &str) {
@@ -375,12 +421,63 @@ impl HtmlParser {
         } else if incoming_name == "optgroup" {
             self.pop_current_if(|name| name == "option");
             self.pop_current_if(|name| name == "optgroup");
+        } else if incoming_name == "rb" {
+            self.pop_current_if(is_ruby_annotation_element);
+            self.pop_current_if(|name| name == "rtc");
+        } else if incoming_name == "rt" || incoming_name == "rp" {
+            self.pop_current_if(|name| name == "rb" || name == "rt" || name == "rp");
+        } else if incoming_name == "rtc" {
+            self.pop_current_if(|name| name == "rb" || name == "rt" || name == "rp");
+            self.pop_current_if(|name| name == "rtc");
         } else if is_heading_element(incoming_name) {
             self.pop_current_if(|name| name == "p");
             self.pop_current_if(is_heading_element);
         } else if is_paragraph_boundary_element(incoming_name) {
             self.pop_current_if(|name| name == "p");
         }
+    }
+
+    fn apply_interactive_implied_contexts(&mut self, incoming_name: &str) -> bool {
+        match incoming_name {
+            "a" => {
+                self.close_open_element_silently("a");
+                false
+            }
+            "button" => {
+                self.close_open_element_silently("button");
+                false
+            }
+            "nobr" => {
+                self.close_open_element_silently("nobr");
+                false
+            }
+            "form" if self.has_open_element("form") => {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "nested-form-start-tag",
+                    "nested form start tag was ignored while a form element was already open",
+                ));
+                true
+            }
+            _ => false,
+        }
+    }
+
+    fn close_open_element_silently(&mut self, name: &str) -> bool {
+        let Some(index) = self
+            .open_elements
+            .iter()
+            .rposition(|path| element_at_path(&self.document, path).is_some_and(|n| n == name))
+        else {
+            return false;
+        };
+        self.open_elements.truncate(index);
+        true
+    }
+
+    fn has_open_element(&self, name: &str) -> bool {
+        self.open_elements
+            .iter()
+            .any(|path| element_at_path(&self.document, path).is_some_and(|n| n == name))
     }
 
     fn pop_current_if(&mut self, predicate: impl FnOnce(&str) -> bool) {
@@ -459,6 +556,29 @@ fn element_at_path<'a>(document: &'a Document, path: &[usize]) -> Option<&'a str
     }
 
     current
+}
+
+fn element_at_path_mut<'a>(
+    document: &'a mut Document,
+    path: &[usize],
+) -> Option<&'a mut dom_core::Element> {
+    let (index, rest) = path.split_first()?;
+    let node = document.children.get_mut(*index)?;
+    element_node_at_path_mut(node, rest)
+}
+
+fn element_node_at_path_mut<'a>(
+    node: &'a mut Node,
+    path: &[usize],
+) -> Option<&'a mut dom_core::Element> {
+    let Node::Element(element) = node else {
+        return None;
+    };
+    let Some((index, rest)) = path.split_first() else {
+        return Some(element);
+    };
+    let child = element.children.get_mut(*index)?;
+    element_node_at_path_mut(child, rest)
 }
 
 fn children_at_path_mut<'a>(nodes: &'a mut Vec<Node>, path: &[usize]) -> Option<&'a mut Vec<Node>> {
@@ -576,6 +696,10 @@ fn is_head_element(name: &str) -> bool {
     )
 }
 
+fn starts_body_after_head(name: &str) -> bool {
+    name == "body" || (!is_head_element(name) && name != "head" && name != "html")
+}
+
 fn is_ignorable_before_body(node: &Node) -> bool {
     match node {
         Node::Text(text) => text.data.chars().all(char::is_whitespace),
@@ -592,33 +716,46 @@ fn is_heading_element(name: &str) -> bool {
     matches!(name, "h1" | "h2" | "h3" | "h4" | "h5" | "h6")
 }
 
+fn is_ruby_annotation_element(name: &str) -> bool {
+    matches!(name, "rb" | "rt" | "rp")
+}
+
 fn is_paragraph_boundary_element(name: &str) -> bool {
-    matches!(
-        name,
-        "address"
-            | "article"
-            | "aside"
-            | "blockquote"
-            | "details"
-            | "dialog"
-            | "div"
-            | "dl"
-            | "fieldset"
-            | "figcaption"
-            | "figure"
-            | "footer"
-            | "form"
-            | "header"
-            | "hr"
-            | "main"
-            | "menu"
-            | "nav"
-            | "ol"
-            | "pre"
-            | "section"
-            | "table"
-            | "ul"
-    )
+    const PARAGRAPH_BOUNDARY_ELEMENTS: &[&str] = &[
+        "address",
+        "article",
+        "aside",
+        "blockquote",
+        "button",
+        "center",
+        "details",
+        "dialog",
+        "dir",
+        "div",
+        "dl",
+        "fieldset",
+        "figcaption",
+        "figure",
+        "footer",
+        "form",
+        "header",
+        "hgroup",
+        "hr",
+        "listing",
+        "main",
+        "menu",
+        "nav",
+        "ol",
+        "plaintext",
+        "pre",
+        "search",
+        "section",
+        "table",
+        "ul",
+        "xmp",
+    ];
+
+    PARAGRAPH_BOUNDARY_ELEMENTS.contains(&name)
 }
 
 fn is_void_element(name: &str) -> bool {
@@ -736,6 +873,219 @@ mod tests {
     }
 
     #[test]
+    fn closes_repeated_interactive_formatting_elements() {
+        let document = parse_html(
+            "<a href=one>One<a href=two>Two</a><button id=one>First<button id=two>Second</button><nobr>A<nobr>B</nobr>",
+        )
+        .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 6);
+
+        let first_anchor = element(&body.children[0]);
+        assert_eq!(first_anchor.name, "a");
+        assert_eq!(first_anchor.attribute("href"), Some("one"));
+        assert_eq!(first_anchor.children, vec![Node::text("One")]);
+
+        let second_anchor = element(&body.children[1]);
+        assert_eq!(second_anchor.name, "a");
+        assert_eq!(second_anchor.attribute("href"), Some("two"));
+        assert_eq!(second_anchor.children, vec![Node::text("Two")]);
+
+        let first_button = element(&body.children[2]);
+        assert_eq!(first_button.name, "button");
+        assert_eq!(first_button.attribute("id"), Some("one"));
+        assert_eq!(first_button.children, vec![Node::text("First")]);
+
+        let second_button = element(&body.children[3]);
+        assert_eq!(second_button.name, "button");
+        assert_eq!(second_button.attribute("id"), Some("two"));
+        assert_eq!(second_button.children, vec![Node::text("Second")]);
+
+        let first_nobr = element(&body.children[4]);
+        assert_eq!(first_nobr.name, "nobr");
+        assert_eq!(first_nobr.children, vec![Node::text("A")]);
+
+        let second_nobr = element(&body.children[5]);
+        assert_eq!(second_nobr.name, "nobr");
+        assert_eq!(second_nobr.children, vec![Node::text("B")]);
+    }
+
+    #[test]
+    fn preserves_surrounding_context_when_interactive_elements_repeat() {
+        let document = parse_html(
+            "<p>Lead <a href=one>One<a href=two>Two</a> tail<p>Next <nobr>A<nobr>B</nobr>",
+        )
+        .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let first_paragraph = element(&body.children[0]);
+        assert_eq!(first_paragraph.name, "p");
+        assert_eq!(first_paragraph.children[0], Node::text("Lead "));
+
+        let first_anchor = element(&first_paragraph.children[1]);
+        assert_eq!(first_anchor.name, "a");
+        assert_eq!(first_anchor.attribute("href"), Some("one"));
+        assert_eq!(first_anchor.children, vec![Node::text("One")]);
+
+        let second_anchor = element(&first_paragraph.children[2]);
+        assert_eq!(second_anchor.name, "a");
+        assert_eq!(second_anchor.attribute("href"), Some("two"));
+        assert_eq!(second_anchor.children, vec![Node::text("Two")]);
+        assert_eq!(first_paragraph.children[3], Node::text(" tail"));
+
+        let second_paragraph = element(&body.children[1]);
+        assert_eq!(second_paragraph.name, "p");
+        assert_eq!(second_paragraph.children[0], Node::text("Next "));
+
+        let first_nobr = element(&second_paragraph.children[1]);
+        assert_eq!(first_nobr.name, "nobr");
+        assert_eq!(first_nobr.children, vec![Node::text("A")]);
+
+        let second_nobr = element(&second_paragraph.children[2]);
+        assert_eq!(second_nobr.name, "nobr");
+        assert_eq!(second_nobr.children, vec![Node::text("B")]);
+    }
+
+    #[test]
+    fn closes_paragraph_before_button_and_legacy_block_boundaries() {
+        let document = parse_html(
+            "<p>Button<button>Click<button>Again</button><p>Centered<center>Block</center><p>Search<search>Find</search><p>Heading<hgroup>Title</hgroup><p>Listing<listing>Block</listing><p>Directory<dir><li>Item",
+        )
+        .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 13);
+
+        let button_intro = element(&body.children[0]);
+        assert_eq!(button_intro.name, "p");
+        assert_eq!(button_intro.children, vec![Node::text("Button")]);
+
+        let first_button = element(&body.children[1]);
+        assert_eq!(first_button.name, "button");
+        assert_eq!(first_button.children, vec![Node::text("Click")]);
+
+        let second_button = element(&body.children[2]);
+        assert_eq!(second_button.name, "button");
+        assert_eq!(second_button.children, vec![Node::text("Again")]);
+
+        let centered_intro = element(&body.children[3]);
+        assert_eq!(centered_intro.name, "p");
+        assert_eq!(centered_intro.children, vec![Node::text("Centered")]);
+
+        let center = element(&body.children[4]);
+        assert_eq!(center.name, "center");
+        assert_eq!(center.children, vec![Node::text("Block")]);
+
+        let search_intro = element(&body.children[5]);
+        assert_eq!(search_intro.name, "p");
+        assert_eq!(search_intro.children, vec![Node::text("Search")]);
+
+        let search = element(&body.children[6]);
+        assert_eq!(search.name, "search");
+        assert_eq!(search.children, vec![Node::text("Find")]);
+
+        let heading_intro = element(&body.children[7]);
+        assert_eq!(heading_intro.name, "p");
+        assert_eq!(heading_intro.children, vec![Node::text("Heading")]);
+
+        let hgroup = element(&body.children[8]);
+        assert_eq!(hgroup.name, "hgroup");
+        assert_eq!(hgroup.children, vec![Node::text("Title")]);
+
+        let listing_intro = element(&body.children[9]);
+        assert_eq!(listing_intro.name, "p");
+        assert_eq!(listing_intro.children, vec![Node::text("Listing")]);
+
+        let listing = element(&body.children[10]);
+        assert_eq!(listing.name, "listing");
+        assert_eq!(listing.children, vec![Node::text("Block")]);
+
+        let directory_intro = element(&body.children[11]);
+        assert_eq!(directory_intro.name, "p");
+        assert_eq!(directory_intro.children, vec![Node::text("Directory")]);
+
+        let directory = element(&body.children[12]);
+        assert_eq!(directory.name, "dir");
+        assert_eq!(directory.children.len(), 1);
+        let item = element(&directory.children[0]);
+        assert_eq!(item.name, "li");
+        assert_eq!(item.children, vec![Node::text("Item")]);
+    }
+
+    #[test]
+    fn closes_paragraphs_before_raw_text_block_boundaries() {
+        let document = parse_html("<p>Xmp<xmp>B <i>tag</i></xmp>").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let xmp_intro = element(&body.children[0]);
+        assert_eq!(xmp_intro.name, "p");
+        assert_eq!(xmp_intro.children, vec![Node::text("Xmp")]);
+
+        let xmp = element(&body.children[1]);
+        assert_eq!(xmp.name, "xmp");
+        assert_eq!(xmp.children, vec![Node::text("B <i>tag</i>")]);
+    }
+
+    #[test]
+    fn closes_paragraph_before_plaintext_consumes_rest_of_document() {
+        let document = parse_html("<p>Before<plaintext>A <b>tag</b><p>still text").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let paragraph = element(&body.children[0]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children, vec![Node::text("Before")]);
+
+        let plaintext = element(&body.children[1]);
+        assert_eq!(plaintext.name, "plaintext");
+        assert_eq!(
+            plaintext.children,
+            vec![Node::text("A <b>tag</b><p>still text")]
+        );
+    }
+
+    #[test]
+    fn ignores_nested_form_start_tags() {
+        let output = parse_html_with_diagnostics(
+            "<form id=outer><div>One<form id=inner><input name=x></form><p>After",
+        )
+        .unwrap();
+
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "nested-form-start-tag",
+                "nested form start tag was ignored while a form element was already open"
+            )]
+        );
+
+        let body = body(&output.document);
+        assert_eq!(body.children.len(), 2);
+
+        let form = element(&body.children[0]);
+        assert_eq!(form.name, "form");
+        assert_eq!(form.attribute("id"), Some("outer"));
+        assert_eq!(form.children.len(), 1);
+
+        let div = element(&form.children[0]);
+        assert_eq!(div.name, "div");
+        assert_eq!(div.children[0], Node::text("One"));
+        let input = element(&div.children[1]);
+        assert_eq!(input.name, "input");
+        assert_eq!(input.attribute("name"), Some("x"));
+
+        let paragraph = element(&body.children[1]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children, vec![Node::text("After")]);
+    }
+
+    #[test]
     fn applies_select_option_implied_end_tags() {
         let document = parse_html(
             "<select><option>One<option selected>Two<optgroup label=G><option>Three<optgroup label=H><option>Four</select>",
@@ -772,6 +1122,50 @@ mod tests {
             element(&second_group.children[0]).children,
             vec![Node::text("Four")]
         );
+    }
+
+    #[test]
+    fn applies_ruby_annotation_implied_end_tags() {
+        let document = parse_html(
+            "<ruby><rb>漢<rt>kan<rb>字<rt>ji<rp>(fallback<rtc><rt>group<rtc><rt>group2</ruby>",
+        )
+        .unwrap();
+
+        let ruby = element(&body(&document).children[0]);
+        assert_eq!(ruby.name, "ruby");
+        assert_eq!(ruby.children.len(), 7);
+
+        let first_base = element(&ruby.children[0]);
+        assert_eq!(first_base.name, "rb");
+        assert_eq!(first_base.children, vec![Node::text("漢")]);
+
+        let first_text = element(&ruby.children[1]);
+        assert_eq!(first_text.name, "rt");
+        assert_eq!(first_text.children, vec![Node::text("kan")]);
+
+        let second_base = element(&ruby.children[2]);
+        assert_eq!(second_base.name, "rb");
+        assert_eq!(second_base.children, vec![Node::text("字")]);
+
+        let second_text = element(&ruby.children[3]);
+        assert_eq!(second_text.name, "rt");
+        assert_eq!(second_text.children, vec![Node::text("ji")]);
+
+        let fallback = element(&ruby.children[4]);
+        assert_eq!(fallback.name, "rp");
+        assert_eq!(fallback.children, vec![Node::text("(fallback")]);
+
+        let first_container = element(&ruby.children[5]);
+        assert_eq!(first_container.name, "rtc");
+        let grouped_text = element(&first_container.children[0]);
+        assert_eq!(grouped_text.name, "rt");
+        assert_eq!(grouped_text.children, vec![Node::text("group")]);
+
+        let second_container = element(&ruby.children[6]);
+        assert_eq!(second_container.name, "rtc");
+        let second_grouped_text = element(&second_container.children[0]);
+        assert_eq!(second_grouped_text.name, "rt");
+        assert_eq!(second_grouped_text.children, vec![Node::text("group2")]);
     }
 
     #[test]
@@ -1171,5 +1565,52 @@ mod tests {
         assert_eq!(body(&document).attribute("class"), Some("home"));
         assert_eq!(element(&head(&document).children[0]).name, "title");
         assert_eq!(element(&body(&document).children[0]).name, "h1");
+    }
+
+    #[test]
+    fn closes_explicit_head_before_body_boundaries() {
+        let document =
+            parse_html("<html><head data-h=yes><title>T</title><body class=main><p>x</p></html>")
+                .unwrap();
+
+        assert_eq!(head(&document).attribute("data-h"), Some("yes"));
+        assert_eq!(head(&document).children.len(), 1);
+        assert_eq!(element(&head(&document).children[0]).name, "title");
+        assert_eq!(body(&document).attribute("class"), Some("main"));
+        let paragraph = element(&body(&document).children[0]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children, vec![Node::text("x")]);
+    }
+
+    #[test]
+    fn closes_explicit_head_before_implicit_body_content() {
+        let document = parse_html("<head><title>T</title>hello<p>x</p>").unwrap();
+
+        assert_eq!(head(&document).children.len(), 1);
+        assert_eq!(element(&head(&document).children[0]).name, "title");
+        assert_eq!(body(&document).children[0], Node::text("hello"));
+        let paragraph = element(&body(&document).children[1]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children, vec![Node::text("x")]);
+    }
+
+    #[test]
+    fn merges_late_body_attributes_without_nesting_body_elements() {
+        let document =
+            parse_html("<body class=main><p>before</p><body id=late class=ignored><p>after</p>")
+                .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.attribute("class"), Some("main"));
+        assert_eq!(body.attribute("id"), Some("late"));
+        assert_eq!(body.children.len(), 2);
+
+        let before = element(&body.children[0]);
+        assert_eq!(before.name, "p");
+        assert_eq!(before.children, vec![Node::text("before")]);
+
+        let after = element(&body.children[1]);
+        assert_eq!(after.name, "p");
+        assert_eq!(after.children, vec![Node::text("after")]);
     }
 }

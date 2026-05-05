@@ -7,8 +7,19 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- Added a generated-grammar freshness test that recompiles
+  `code/grammars/algol/algol60.grammar` and verifies the committed Python parser
+  grammar is current.
+
 ### Changed
 
+- Type-specific conditional grammar rules now allow nested `if ... then ...
+  else ...` forms in arithmetic bounds/subscripts, boolean conditions, and
+  designational `goto` targets.
+- Added zero-width `dummy_stmt` parsing for ALGOL empty statements after
+  `then`, `else`, `do`, or labels before `end`.
 - Unified `expression` parsing now accepts ALGOL conditional expressions such
   as `if b then x else y` in assignment values and actual parameters.
 - Block and compound statement lists now tolerate repeated and trailing
@@ -22,6 +33,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Parsed report-style typed formal specifiers such as `integer array a;` and
   `real procedure f;` while preserving the existing split specifier spelling.
 - Parsed subscripted variables as `for` statement control variables.
+- Runtime parsing now imports compiled `algol/algol60.grammar` Python data
+  instead of reading and parsing the grammar file at startup.
 
 ## [0.1.0] — 2026-04-06
 
@@ -31,17 +44,19 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   source text into a generic `ASTNode` parse tree rooted at `program`.
 - `create_algol_parser(source: str) -> GrammarParser` — factory function for
   callers who want direct control over the parser object.
-- Grammar-driven implementation using `algol.grammar` and the `GrammarParser`
-  engine from `coding-adventures-parser`.
+- Grammar-driven implementation using `algol/algol60.grammar` and the
+  `GrammarParser` engine from `coding-adventures-parser`.
 - Full ALGOL 60 grammar coverage:
   - **Top level**: `program` → `block`
-  - **Block structure**: `BEGIN { declaration SEMICOLON } statement { SEMICOLON statement } END`
+  - **Block structure**:
+    `BEGIN { declaration SEMICOLON } { SEMICOLON } [ statement { SEMICOLON [ statement ] } ] END`
     enforces declaration-before-statement ordering at the grammar level.
-  - **Declarations**: `type_decl`, `array_decl` (with dynamic bounds),
-    `switch_decl`, `procedure_decl` (with `value`/`spec` parts)
+  - **Declarations**: `type_decl`, `own_decl`, `own_array_decl`, `array_decl`
+    (with dynamic bounds), `switch_decl`, `procedure_decl` (with
+    `value`/`spec` parts)
   - **Statements**: `assign_stmt` (chainable `:=`), `cond_stmt`
     (dangling-else-free), `for_stmt` (step/until, while, simple),
-    `goto_stmt`, `proc_stmt`, `compound_stmt`, `empty_stmt`
+    `goto_stmt`, `proc_stmt`, `compound_stmt`, `dummy_stmt`
   - **Arithmetic expressions**: full 5-level precedence hierarchy
     (`arith_expr` → `simple_arith` → `term` → `factor` → `primary`),
     conditional arithmetic expressions (`if b then x else y`),

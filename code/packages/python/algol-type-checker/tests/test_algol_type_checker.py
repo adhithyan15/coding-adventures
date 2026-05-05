@@ -519,6 +519,21 @@ class TestAlgolTypeChecker:
         )
         assert check_algol(ast).ok
 
+    def test_accepts_dummy_statements_in_control_positions(self) -> None:
+        ast = parse_algol(
+            "begin integer result, i; "
+            "if true then ; "
+            "if false then result := 1 else ; "
+            "for i := 1 do ; "
+            "done: "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert "done" in result.root_scope.children[0].symbols
+
     def test_accepts_boolean_implication_and_equivalence(self) -> None:
         ast = parse_algol(
             "begin integer result; "
@@ -641,6 +656,30 @@ class TestAlgolTypeChecker:
             "ok := if false then false else true; "
             "word := if ok then 'YES' else 'NO'; "
             "if ok and (word = 'YES') then result := 1 else result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+        assert result.ok
+
+    def test_accepts_nested_conditional_expressions_in_typed_contexts(self) -> None:
+        ast = parse_algol(
+            "begin integer result; integer array a[1:3]; "
+            "a[if true then if false then 1 else 2 else 3] := 9; "
+            "if if true then if false then false else true else false "
+            "then result := a[2] else result := 0 "
+            "end"
+        )
+        result = check_algol(ast)
+        assert result.ok
+
+    def test_accepts_nested_conditional_designational_targets(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "goto if true then if false then left else right else fail; "
+            "left: result := 1; goto done; "
+            "right: result := 7; goto done; "
+            "fail: result := 0; "
+            "done: "
             "end"
         )
         result = check_algol(ast)

@@ -116,6 +116,9 @@ documented in this file.
 - NULL characters in comments and bogus comments now recover with
   `unexpected-null-character` and append U+FFFD while preserving pending comment
   dashes.
+- NULL characters encountered while recovering malformed `<![CDATA` openers now
+  report `unexpected-null-character` and append U+FFFD before continuing as
+  bogus comments.
 - NULL characters in DOCTYPE names and quoted public/system identifiers now
   recover with `unexpected-null-character` and append U+FFFD.
 - NULL characters in script escaped and double-escaped substates now recover
@@ -130,6 +133,9 @@ documented in this file.
   incorrectly-opened bogus-comment recovery instead of empty-comment recovery.
 - Invalid tag-open characters now follow HTML recovery: stray `<` text is
   preserved and malformed end-tag openers recover as bogus comments.
+- NULL after `<` now reconsumes through data-state recovery, preserving both
+  `invalid-first-character-of-tag-name` and `unexpected-null-character`
+  diagnostics while emitting `<` followed by U+FFFD.
 - Missing-name DOCTYPE recovery now marks force-quirks mode for `<!DOCTYPE>`
   and whitespace-only DOCTYPE names.
 - DOCTYPE declarations cut off by EOF after a name now emit the current name
@@ -138,7 +144,11 @@ documented in this file.
   and system identifiers on emitted tokens, including force-quirks recovery for
   missing identifiers.
 - Standalone `SYSTEM` doctypes and trailing junk after system identifiers are
-  now covered, with unexpected trailing junk marking force-quirks mode.
+  now covered, with unexpected trailing junk reporting a diagnostic without
+  forcing quirks mode.
+- DOCTYPE recovery coverage now includes single-quoted public/system
+  identifiers, EOF at public/system identifier boundaries, and NULL recovery
+  while discarding bogus DOCTYPE text.
 - DOCTYPE public/system recovery conformance now covers missing whitespace
   around identifiers, missing identifier quotes, and abrupt identifier
   termination.
@@ -228,6 +238,19 @@ documented in this file.
 - Added `HTML_SCRIPT_TOKENIZER_STATES` and `HtmlTokenizerState::is_script_substate()`
   so parser/conformance adapters can enumerate and validate every supported
   script entry state without duplicating lexer internals.
+- Expanded typed parser-facing tokenizer states to include intermediate
+  text-like html5lib/WPT entry points: RCDATA/RAWTEXT less-than, CDATA
+  bracket/end, script less-than, script escape-start, and script double-escape
+  start/end states.
+- Added html5lib fixture-label round-tripping through
+  `HtmlTokenizerState::as_html5lib_state` and
+  `HtmlTokenizerState::from_html5lib_state`, plus centralized
+  `requires_last_start_tag` validation for conformance importers.
+- Expanded the html5lib smoke importer to support multi-state raw cases by
+  generating stable per-state Venture fixture IDs instead of skipping the whole
+  upstream entry.
+- Added normalized html5lib-style coverage for intermediate CDATA, RCDATA,
+  RAWTEXT, script escape, and script double-escape seeded states.
 - Added `HTML_TOKENIZER_STATES`, `HTML_FRAGMENT_TOKENIZER_STATES`, and
   `HtmlTokenizerState::is_fragment_state()` so parser and fixture importers can
   enumerate the full typed tokenizer-context surface without copying state
@@ -235,3 +258,5 @@ documented in this file.
 - Added `HtmlTokenizerState::from_machine_state()` and
   `HtmlTokenizerState::from_fragment_machine_state()` so parser/conformance code
   can map generated machine-state identifiers back into typed tokenizer states.
+- Unquoted attribute values now keep solidus characters as value text, avoiding
+  false self-closing-tag recovery for URL-like values and trailing path slashes.

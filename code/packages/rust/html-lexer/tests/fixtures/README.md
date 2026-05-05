@@ -72,14 +72,21 @@ currently supports:
 - `initialStates: ["RAWTEXT state"]` together with `lastStartTag`
 - `initialStates: ["PLAINTEXT state"]`
 - `initialStates: ["CDATA section state"]`
+- CDATA section `bracket` and `end` substates
 - `initialStates: ["Script data state"]` together with `lastStartTag`
+- script `less-than sign`, `escape start`, and `escape start dash` substates
+  together with `lastStartTag`
 - `initialStates: ["Script data escaped state"]` together with `lastStartTag`
 - script escaped `dash`, `dash dash`, and `less-than sign` substates together
   with `lastStartTag`
+- script double-escape `start` and `end` substates together with
+  `lastStartTag`
 - `initialStates: ["Script data double escaped state"]` together with
   `lastStartTag`
 - script double-escaped `dash`, `dash dash`, and `less-than sign` substates
   together with `lastStartTag`
+- multi-state html5lib fixture entries for supported states, expanded into
+  stable per-state Venture fixture cases
 - `StartTag`, `EndTag`, `Character`, `Comment`, and `DOCTYPE` output tokens
 - html5lib start-tag self-closing booleans
 - named character references in data, RCDATA, and attribute values for the

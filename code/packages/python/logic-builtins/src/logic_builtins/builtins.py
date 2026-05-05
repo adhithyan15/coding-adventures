@@ -18,6 +18,7 @@ from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
 from hashlib import blake2b
 from itertools import product
+from pathlib import Path
 
 from logic_engine import (
     Atom,
@@ -111,6 +112,7 @@ __all__ = [
     "difo",
     "dynamico",
     "div",
+    "exists_fileo",
     "fd_eqo",
     "fd_elemento",
     "fd_geqo",
@@ -172,6 +174,8 @@ __all__ = [
     "bagofo",
     "partitiono",
     "predicate_propertyo",
+    "read_file_to_codeso",
+    "read_file_to_stringo",
     "repeato",
     "PrologEvaluationError",
     "PrologFlagStore",
@@ -4745,6 +4749,73 @@ def number_stringo(number_value: object, string_value: object) -> GoalExpr:
         yield from solve_from(program_value, eq(number_term, parsed), state)
 
     return native_goal(run, number_value, string_value)
+
+
+def _path_text(term_value: Term) -> str | None:
+    if isinstance(term_value, String):
+        return term_value.value
+    if isinstance(term_value, Atom) and term_value.symbol.namespace is None:
+        return term_value.symbol.name
+    return None
+
+
+def _read_utf8_file(path_text: str) -> str | None:
+    try:
+        return Path(path_text).read_text(encoding="utf-8")
+    except OSError:
+        return None
+    except UnicodeDecodeError:
+        return None
+
+
+def exists_fileo(path_value: object) -> GoalExpr:
+    """Succeed when a bound atom/string path names an existing regular file."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [path_term] = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        if Path(path_text).is_file():
+            yield state
+
+    return native_goal(run, path_value)
+
+
+def read_file_to_stringo(path_value: object, contents: object) -> GoalExpr:
+    """Relate a bound atom/string path to the file's UTF-8 contents as a string."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, contents_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        text = _read_utf8_file(path_text)
+        if text is None:
+            return
+        yield from solve_from(program_value, eq(contents_term, String(text)), state)
+
+    return native_goal(run, path_value, contents)
+
+
+def read_file_to_codeso(path_value: object, codes: object) -> GoalExpr:
+    """Relate a bound atom/string path to the file's UTF-8 code-point list."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, codes_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        text = _read_utf8_file(path_text)
+        if text is None:
+            return
+        yield from solve_from(
+            program_value,
+            eq(codes_term, logic_list([num(ord(character)) for character in text])),
+            state,
+        )
+
+    return native_goal(run, path_value, codes)
 
 
 def compoundo(term_value: object) -> GoalExpr:
