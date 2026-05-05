@@ -10,10 +10,11 @@ committee chaired by Peter Naur. It is the common ancestor of Pascal, C,
 Simula (the first OOP language), and through them virtually every modern
 programming language. Its grammar was the first ever written in BNF notation.
 
-This package loads ``algol.tokens`` from the ``code/grammars/`` directory and
-uses the same ``GrammarLexer`` engine that powers the JSON, Python, Ruby,
-JavaScript, and Starlark lexers. This demonstrates that one lexer engine can
-handle radically different languages — including a language from 1960.
+This package imports the compiled ``algol/algol60.tokens`` grammar as native
+Python data and uses the same ``GrammarLexer`` engine that powers the JSON,
+Python, Ruby, JavaScript, and Starlark lexers. This demonstrates that one lexer
+engine can handle radically different languages — including a language from
+1960.
 
 Usage::
 
@@ -24,9 +25,18 @@ Usage::
         print(token)
 """
 
-from algol_lexer.tokenizer import create_algol_lexer, tokenize_algol
+from algol_lexer.tokenizer import (
+    DEFAULT_VERSION,
+    SUPPORTED_VERSIONS,
+    create_algol_lexer,
+    resolve_version,
+    tokenize_algol,
+)
 
 __all__ = [
+    "DEFAULT_VERSION",
+    "SUPPORTED_VERSIONS",
     "create_algol_lexer",
+    "resolve_version",
     "tokenize_algol",
 ]

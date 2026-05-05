@@ -2,7 +2,7 @@
 
 This package is a **thin wrapper** around the generic ``GrammarParser``. It
 tokenizes ALGOL 60 source using the ``algol-lexer`` package, then parses the
-token stream using the EBNF rules defined in ``algol.grammar``.
+token stream using the compiled EBNF rules from ``algol/algol60.grammar``.
 
 ALGOL 60 (1960) was the first programming language whose grammar was formally
 specified in BNF (Backus-Naur Form). It introduced block structure, lexical
@@ -22,9 +22,18 @@ Usage::
     print(ast.rule_name)  # "program"
 """
 
-from algol_parser.parser import create_algol_parser, parse_algol
+from algol_parser.parser import (
+    DEFAULT_VERSION,
+    SUPPORTED_VERSIONS,
+    create_algol_parser,
+    parse_algol,
+    resolve_version,
+)
 
 __all__ = [
+    "DEFAULT_VERSION",
+    "SUPPORTED_VERSIONS",
     "create_algol_parser",
     "parse_algol",
+    "resolve_version",
 ]

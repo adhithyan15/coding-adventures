@@ -27,6 +27,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Parsed report-style typed formal specifiers such as `integer array a;` and
   `real procedure f;` while preserving the existing split specifier spelling.
 - Parsed subscripted variables as `for` statement control variables.
+- Runtime parsing now imports compiled `algol/algol60.grammar` Python data
+  instead of reading and parsing the grammar file at startup.
 
 ## [0.1.0] — 2026-04-06
 
@@ -36,8 +38,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   source text into a generic `ASTNode` parse tree rooted at `program`.
 - `create_algol_parser(source: str) -> GrammarParser` — factory function for
   callers who want direct control over the parser object.
-- Grammar-driven implementation using `algol.grammar` and the `GrammarParser`
-  engine from `coding-adventures-parser`.
+- Grammar-driven implementation using `algol/algol60.grammar` and the
+  `GrammarParser` engine from `coding-adventures-parser`.
 - Full ALGOL 60 grammar coverage:
   - **Top level**: `program` → `block`
   - **Block structure**:

@@ -1,7 +1,7 @@
 """Tests for the ALGOL 60 lexer thin wrapper.
 
 These tests verify that the grammar-driven lexer, configured with
-``algol.tokens``, correctly tokenizes ALGOL 60 source text.
+``algol/algol60.tokens``, correctly tokenizes ALGOL 60 source text.
 
 ALGOL 60 Tokenization Notes
 -----------------------------
@@ -32,9 +32,17 @@ ALGOL 60 has several tokenization behaviors that differ from modern languages:
 
 from __future__ import annotations
 
+import pytest
 from lexer import GrammarLexer, Token
 
-from algol_lexer import create_algol_lexer, tokenize_algol
+from algol_lexer import (
+    DEFAULT_VERSION,
+    SUPPORTED_VERSIONS,
+    create_algol_lexer,
+    resolve_version,
+    tokenize_algol,
+)
+from algol_lexer._grammar import TOKEN_GRAMMAR
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -88,6 +96,33 @@ class TestFactory:
         tokens = lexer.tokenize()
         assert len(tokens) >= 2  # at least something + EOF
         assert token_type_name(tokens[-1]) == "EOF"
+
+    def test_default_version_is_algol60(self) -> None:
+        """The default lexer grammar is the compiled ALGOL 60 grammar."""
+        assert DEFAULT_VERSION == "algol60"
+        assert sorted(SUPPORTED_VERSIONS) == ["algol60"]
+        assert resolve_version() == "algol60"
+        assert resolve_version(None) == "algol60"
+
+    def test_factory_uses_compiled_token_grammar(self) -> None:
+        """The lexer imports native grammar data instead of reading files."""
+        lexer = create_algol_lexer("begin end")
+
+        assert lexer._grammar is TOKEN_GRAMMAR
+
+    def test_explicit_algol60_version_produces_tokens(self) -> None:
+        """The supported version name can be passed explicitly."""
+        types = [
+            token_type_name(token)
+            for token in tokenize_algol("begin end", version="algol60")
+        ]
+
+        assert types == ["KEYWORD", "KEYWORD", "EOF"]
+
+    def test_unknown_version_is_rejected(self) -> None:
+        """Unknown ALGOL versions fail before falling back to stale files."""
+        with pytest.raises(ValueError, match="Unknown ALGOL version 'algol68'"):
+            resolve_version("algol68")
 
 
 # ---------------------------------------------------------------------------

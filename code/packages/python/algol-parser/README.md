@@ -30,10 +30,13 @@ including John Backus, Peter Naur, and Edsger Dijkstra. Its *Revised Report*
 algol/algol60.grammar (grammar rules)  algol/algol60.tokens (token defs)
       │                                     │
       ▼                                     ▼
-grammar_tools.parse_parser_grammar()   algol-lexer
+grammar_tools.compile_parser_grammar() algol-lexer
       │                                     │ list[Token]
       ▼                                     ▼
-GrammarParser ←── algol-parser (this package, thin wrapper)
+algol_parser._grammar.PARSER_GRAMMAR
+      │
+      ▼
+GrammarParser ←── algol-parser (this package, no runtime file I/O)
       │
       ▼
 ASTNode (generic parse tree)
@@ -41,8 +44,8 @@ ASTNode (generic parse tree)
 
 This package depends on:
 - **`coding-adventures-algol-lexer`**: Tokenizes ALGOL 60 source.
-- **`coding-adventures-grammar-tools`**: Parses `algol.grammar` into a
-  `ParserGrammar` data structure.
+- **`coding-adventures-grammar-tools`**: Compiles `algol/algol60.grammar` into
+  a native `ParserGrammar` module.
 - **`coding-adventures-parser`**: The `GrammarParser` engine that runs the
   grammar against the token stream.
 

@@ -18,6 +18,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `¬`, `⊃`, and `≡`, normalizing them to the existing ASCII or keyword token
   values.
 - Accepted double-quoted string literals in addition to single-quoted strings.
+- Runtime tokenization now imports compiled `algol/algol60.tokens` Python data
+  instead of reading and parsing the grammar file at startup.
 
 ## [0.1.0] — 2026-04-06
 
@@ -27,8 +29,8 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   ALGOL 60 source text into a flat list of tokens.
 - `create_algol_lexer(source: str) -> GrammarLexer` — factory function for
   callers who want direct control over the lexer object.
-- Grammar-driven implementation using `algol.tokens` and the `GrammarLexer`
-  engine from `coding-adventures-lexer`.
+- Grammar-driven implementation using `algol/algol60.tokens` and the
+  `GrammarLexer` engine from `coding-adventures-lexer`.
 - Full support for all ALGOL 60 token types:
   - Value tokens: `INTEGER_LIT`, `REAL_LIT` (with exponent), `STRING_LIT`,
     `IDENT`

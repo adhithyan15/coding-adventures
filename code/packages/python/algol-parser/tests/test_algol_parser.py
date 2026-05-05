@@ -1,7 +1,7 @@
 """Tests for the ALGOL 60 parser thin wrapper.
 
 These tests verify that the grammar-driven parser, configured with
-``algol.grammar``, correctly parses ALGOL 60 source text into ASTs.
+``algol/algol60.grammar``, correctly parses ALGOL 60 source text into ASTs.
 
 ALGOL 60 Parsing Notes
 -----------------------
@@ -35,7 +35,14 @@ import pytest
 from lang_parser import ASTNode, GrammarParseError, GrammarParser
 from lexer import Token
 
-from algol_parser import create_algol_parser, parse_algol
+from algol_parser import (
+    DEFAULT_VERSION,
+    SUPPORTED_VERSIONS,
+    create_algol_parser,
+    parse_algol,
+    resolve_version,
+)
+from algol_parser._grammar import PARSER_GRAMMAR
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -92,6 +99,30 @@ class TestFactory:
         ast = parser.parse()
         assert isinstance(ast, ASTNode)
         assert ast.rule_name == "program"
+
+    def test_default_version_is_algol60(self) -> None:
+        """The default parser grammar is the compiled ALGOL 60 grammar."""
+        assert DEFAULT_VERSION == "algol60"
+        assert sorted(SUPPORTED_VERSIONS) == ["algol60"]
+        assert resolve_version() == "algol60"
+        assert resolve_version(None) == "algol60"
+
+    def test_factory_uses_compiled_parser_grammar(self) -> None:
+        """The parser imports native grammar data instead of reading files."""
+        parser = create_algol_parser("begin end")
+
+        assert parser._grammar is PARSER_GRAMMAR
+
+    def test_explicit_algol60_version_produces_ast(self) -> None:
+        """The supported version name can be passed explicitly."""
+        ast = parse_algol("begin end", version="algol60")
+
+        assert ast.rule_name == "program"
+
+    def test_unknown_version_is_rejected(self) -> None:
+        """Unknown ALGOL versions fail before falling back to stale files."""
+        with pytest.raises(ValueError, match="Unknown ALGOL version 'algol68'"):
+            resolve_version("algol68")
 
 
 # ---------------------------------------------------------------------------
