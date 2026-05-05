@@ -3367,6 +3367,36 @@ actions = [
 
 [[transitions]]
 from = "before_attribute_name"
+matcher = { literal = "\"" }
+to = "attribute_name"
+actions = [
+  "parse_error(unexpected-character-in-attribute-name)",
+  "start_attribute",
+  "append_attribute_name(current_lowercase)",
+]
+
+[[transitions]]
+from = "before_attribute_name"
+matcher = { literal = "'" }
+to = "attribute_name"
+actions = [
+  "parse_error(unexpected-character-in-attribute-name)",
+  "start_attribute",
+  "append_attribute_name(current_lowercase)",
+]
+
+[[transitions]]
+from = "before_attribute_name"
+matcher = { literal = "<" }
+to = "attribute_name"
+actions = [
+  "parse_error(unexpected-character-in-attribute-name)",
+  "start_attribute",
+  "append_attribute_name(current_lowercase)",
+]
+
+[[transitions]]
+from = "before_attribute_name"
 matcher = { anything = true }
 to = "attribute_name"
 actions = ["start_attribute", "append_attribute_name(current_lowercase)"]
@@ -3431,6 +3461,33 @@ to = "attribute_name"
 actions = [
   "parse_error(unexpected-null-character)",
   "append_attribute_name_replacement",
+]
+
+[[transitions]]
+from = "attribute_name"
+matcher = { literal = "\"" }
+to = "attribute_name"
+actions = [
+  "parse_error(unexpected-character-in-attribute-name)",
+  "append_attribute_name(current_lowercase)",
+]
+
+[[transitions]]
+from = "attribute_name"
+matcher = { literal = "'" }
+to = "attribute_name"
+actions = [
+  "parse_error(unexpected-character-in-attribute-name)",
+  "append_attribute_name(current_lowercase)",
+]
+
+[[transitions]]
+from = "attribute_name"
+matcher = { literal = "<" }
+to = "attribute_name"
+actions = [
+  "parse_error(unexpected-character-in-attribute-name)",
+  "append_attribute_name(current_lowercase)",
 ]
 
 [[transitions]]
@@ -3501,6 +3558,39 @@ actions = [
   "parse_error(unexpected-null-character)",
   "start_attribute",
   "append_attribute_name_replacement",
+]
+
+[[transitions]]
+from = "after_attribute_name"
+matcher = { literal = "\"" }
+to = "attribute_name"
+actions = [
+  "commit_attribute_dedup",
+  "parse_error(unexpected-character-in-attribute-name)",
+  "start_attribute",
+  "append_attribute_name(current_lowercase)",
+]
+
+[[transitions]]
+from = "after_attribute_name"
+matcher = { literal = "'" }
+to = "attribute_name"
+actions = [
+  "commit_attribute_dedup",
+  "parse_error(unexpected-character-in-attribute-name)",
+  "start_attribute",
+  "append_attribute_name(current_lowercase)",
+]
+
+[[transitions]]
+from = "after_attribute_name"
+matcher = { literal = "<" }
+to = "attribute_name"
+actions = [
+  "commit_attribute_dedup",
+  "parse_error(unexpected-character-in-attribute-name)",
+  "start_attribute",
+  "append_attribute_name(current_lowercase)",
 ]
 
 [[transitions]]

@@ -110,6 +110,9 @@ documented in this file.
   U+FFFD.
 - NULL characters in tag names and attribute names now recover with
   `unexpected-null-character` and append U+FFFD.
+- Quote and less-than characters in attribute names now report
+  `unexpected-character-in-attribute-name` while preserving the character in
+  the recovered emitted attribute name.
 - NULL characters in comments and bogus comments now recover with
   `unexpected-null-character` and append U+FFFD while preserving pending comment
   dashes.

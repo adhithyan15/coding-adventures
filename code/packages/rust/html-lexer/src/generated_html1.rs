@@ -7529,6 +7529,57 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "before_attribute_name".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\"".to_string())),
+            to: vec![
+                "attribute_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-character-in-attribute-name)".to_string(),
+                "start_attribute".to_string(),
+                "append_attribute_name(current_lowercase)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "before_attribute_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("'".to_string())),
+            to: vec![
+                "attribute_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-character-in-attribute-name)".to_string(),
+                "start_attribute".to_string(),
+                "append_attribute_name(current_lowercase)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "before_attribute_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("<".to_string())),
+            to: vec![
+                "attribute_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-character-in-attribute-name)".to_string(),
+                "start_attribute".to_string(),
+                "append_attribute_name(current_lowercase)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "before_attribute_name".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
                 "attribute_name".to_string(),
@@ -7687,6 +7738,54 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "attribute_name".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\"".to_string())),
+            to: vec![
+                "attribute_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-character-in-attribute-name)".to_string(),
+                "append_attribute_name(current_lowercase)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "attribute_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("'".to_string())),
+            to: vec![
+                "attribute_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-character-in-attribute-name)".to_string(),
+                "append_attribute_name(current_lowercase)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "attribute_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("<".to_string())),
+            to: vec![
+                "attribute_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-character-in-attribute-name)".to_string(),
+                "append_attribute_name(current_lowercase)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "attribute_name".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
                 "attribute_name".to_string(),
@@ -7840,6 +7939,60 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "parse_error(unexpected-null-character)".to_string(),
                 "start_attribute".to_string(),
                 "append_attribute_name_replacement".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "after_attribute_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\"".to_string())),
+            to: vec![
+                "attribute_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "commit_attribute_dedup".to_string(),
+                "parse_error(unexpected-character-in-attribute-name)".to_string(),
+                "start_attribute".to_string(),
+                "append_attribute_name(current_lowercase)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "after_attribute_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("'".to_string())),
+            to: vec![
+                "attribute_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "commit_attribute_dedup".to_string(),
+                "parse_error(unexpected-character-in-attribute-name)".to_string(),
+                "start_attribute".to_string(),
+                "append_attribute_name(current_lowercase)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "after_attribute_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("<".to_string())),
+            to: vec![
+                "attribute_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "commit_attribute_dedup".to_string(),
+                "parse_error(unexpected-character-in-attribute-name)".to_string(),
+                "start_attribute".to_string(),
+                "append_attribute_name(current_lowercase)".to_string(),
             ],
             consume: true,
         },
