@@ -15140,7 +15140,6 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(unexpected-character-after-doctype-system-identifier)".to_string(),
-                "mark_force_quirks".to_string(),
             ],
             consume: false,
         },

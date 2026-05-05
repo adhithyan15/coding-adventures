@@ -7239,7 +7239,6 @@ to = "bogus_doctype"
 consume = false
 actions = [
   "parse_error(unexpected-character-after-doctype-system-identifier)",
-  "mark_force_quirks",
 ]
 
 [[transitions]]

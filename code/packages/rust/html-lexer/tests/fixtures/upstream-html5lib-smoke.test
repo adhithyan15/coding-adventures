@@ -193,10 +193,53 @@
       "description": "doctype trailing junk after system identifier",
       "input": "<!DOCTYPE html SYSTEM \"about:legacy-compat\" junk>",
       "output": [
-        ["DOCTYPE", "html", null, "about:legacy-compat", false]
+        ["DOCTYPE", "html", null, "about:legacy-compat", true]
       ],
       "errors": [
         {"code": "unexpected-character-after-doctype-system-identifier", "line": 1, "col": 45}
+      ]
+    },
+    {
+      "description": "doctype identifier quote variants",
+      "input": "<!DOCTYPE html PUBLIC 'pub'><!DOCTYPE html SYSTEM 'sys'><!DOCTYPE html PUBLIC \"pub\" 'sys'>",
+      "output": [
+        ["DOCTYPE", "html", "pub", null, true],
+        ["DOCTYPE", "html", null, "sys", true],
+        ["DOCTYPE", "html", "pub", "sys", true]
+      ]
+    },
+    {
+      "description": "doctype public identifier boundary eof",
+      "input": "<!DOCTYPE html PUBLIC \"pub\" ",
+      "output": [
+        ["DOCTYPE", "html", "pub", null, false]
+      ],
+      "errors": [
+        {"code": "eof-in-doctype", "line": 1, "col": 29}
+      ]
+    },
+    {
+      "description": "doctype system identifier boundary eof",
+      "input": "<!DOCTYPE html SYSTEM \"sys\" ",
+      "output": [
+        ["DOCTYPE", "html", null, "sys", false]
+      ],
+      "errors": [
+        {"code": "eof-in-doctype", "line": 1, "col": 29}
+      ]
+    },
+    {
+      "description": "doctype bogus null recovery",
+      "input": "<!DOCTYPE html PUBLIC\u0000bad><!DOCTYPE html SYSTEM\u0000bad>",
+      "output": [
+        ["DOCTYPE", "html", null, null, false],
+        ["DOCTYPE", "html", null, null, false]
+      ],
+      "errors": [
+        {"code": "missing-quote-before-doctype-public-identifier", "line": 1, "col": 22},
+        {"code": "unexpected-null-character", "line": 1, "col": 22},
+        {"code": "missing-quote-before-doctype-system-identifier", "line": 1, "col": 50},
+        {"code": "unexpected-null-character", "line": 1, "col": 50}
       ]
     },
     {
