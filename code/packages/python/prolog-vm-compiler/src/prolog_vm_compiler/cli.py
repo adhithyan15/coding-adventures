@@ -72,6 +72,7 @@ class CliArgs:
     check: bool
     dump_bytecode: bool
     dump_instructions: bool
+    dump_source_metadata: bool
     list_source_queries: bool
     source_query_index: int
     all_source_queries: bool
@@ -175,6 +176,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     check = bool(flags["check"])
     dump_bytecode = bool(flags["dump-bytecode"])
     dump_instructions = bool(flags["dump-instructions"])
+    dump_source_metadata = bool(flags["dump-source-metadata"])
     list_source_queries = bool(flags["list-source-queries"])
     if check and queries:
         msg = "--check cannot be combined with --query"
@@ -218,6 +220,27 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if dump_instructions and bool(flags["interactive"]):
         msg = "--dump-instructions cannot be combined with --interactive"
         raise ValueError(msg)
+    if dump_source_metadata and queries:
+        msg = "--dump-source-metadata cannot be combined with --query"
+        raise ValueError(msg)
+    if dump_source_metadata and check:
+        msg = "--dump-source-metadata cannot be combined with --check"
+        raise ValueError(msg)
+    if dump_source_metadata and dump_bytecode:
+        msg = "--dump-source-metadata cannot be combined with --dump-bytecode"
+        raise ValueError(msg)
+    if dump_source_metadata and dump_instructions:
+        msg = "--dump-source-metadata cannot be combined with --dump-instructions"
+        raise ValueError(msg)
+    if dump_source_metadata and list_source_queries:
+        msg = "--dump-source-metadata cannot be combined with --list-source-queries"
+        raise ValueError(msg)
+    if dump_source_metadata and all_source_queries:
+        msg = "--dump-source-metadata cannot be combined with --all-source-queries"
+        raise ValueError(msg)
+    if dump_source_metadata and bool(flags["interactive"]):
+        msg = "--dump-source-metadata cannot be combined with --interactive"
+        raise ValueError(msg)
     if list_source_queries and queries:
         msg = "--list-source-queries cannot be combined with --query"
         raise ValueError(msg)
@@ -254,6 +277,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         check=check,
         dump_bytecode=dump_bytecode,
         dump_instructions=dump_instructions,
+        dump_source_metadata=dump_source_metadata,
         list_source_queries=list_source_queries,
         source_query_index=source_query_index,
         all_source_queries=all_source_queries,
@@ -399,6 +423,8 @@ def _run_cli(args: CliArgs) -> int:
         return _run_dump_instructions(args)
     if args.dump_bytecode:
         return _run_dump_bytecode(args)
+    if args.dump_source_metadata:
+        return _run_dump_source_metadata(args)
     if args.list_source_queries:
         return _run_list_source_queries(args)
 
@@ -453,10 +479,72 @@ def _run_dump_instructions(args: CliArgs) -> int:
     return 0
 
 
+def _run_dump_source_metadata(args: CliArgs) -> int:
+    compiled_program = _compile_source_program(args)
+    _print_source_metadata(compiled_program, args=args)
+    return 0
+
+
 def _run_list_source_queries(args: CliArgs) -> int:
     compiled_program = _compile_source_program(args)
     _print_source_query_summary(compiled_program, args=args)
     return 0
+
+
+def _source_query_records(
+    compiled_program: CompiledPrologVMProgram,
+) -> list[dict[str, object]]:
+    return [
+        {
+            "index": index,
+            "variables": list(compiled_program.source_query_variable_names(index)),
+        }
+        for index in range(compiled_program.source_query_count)
+    ]
+
+
+def _print_source_metadata(
+    compiled_program: CompiledPrologVMProgram,
+    *,
+    args: CliArgs,
+    stdout: TextIO | None = None,
+) -> None:
+    output = sys.stdout if stdout is None else stdout
+    profile = compiled_program.dialect_profile
+    dialect_name = args.dialect if profile is None else profile.name
+    dialect_display_name = dialect_name if profile is None else profile.display_name
+    query_summaries = _source_query_records(compiled_program)
+
+    if args.output_format == "text":
+        print(f"dialect: {dialect_display_name}", file=output)
+        print(
+            f"initialization queries: {compiled_program.initialization_query_count}",
+            file=output,
+        )
+        print(f"source queries: {compiled_program.source_query_count}", file=output)
+        print(f"total queries: {compiled_program.query_count}", file=output)
+        print(
+            f"instructions: {len(compiled_program.instructions.instructions)}",
+            file=output,
+        )
+        for query in query_summaries:
+            variables = cast("list[str]", query["variables"])
+            variable_text = ", ".join(variables) if variables else "(none)"
+            print(f"query {query['index']} variables: {variable_text}", file=output)
+        return
+
+    payload = {
+        "success": True,
+        "mode": "source_metadata",
+        "dialect": dialect_name,
+        "dialect_display_name": dialect_display_name,
+        "instruction_count": len(compiled_program.instructions.instructions),
+        "initialization_query_count": compiled_program.initialization_query_count,
+        "source_query_count": compiled_program.source_query_count,
+        "query_count": compiled_program.query_count,
+        "source_queries": query_summaries,
+    }
+    print(json.dumps(payload, sort_keys=True), file=output)
 
 
 def _print_source_query_summary(
@@ -466,13 +554,7 @@ def _print_source_query_summary(
     stdout: TextIO | None = None,
 ) -> None:
     output = sys.stdout if stdout is None else stdout
-    query_summaries = [
-        {
-            "index": index,
-            "variables": list(compiled_program.source_query_variable_names(index)),
-        }
-        for index in range(compiled_program.source_query_count)
-    ]
+    query_summaries = _source_query_records(compiled_program)
 
     if args.output_format == "text":
         if not query_summaries:
