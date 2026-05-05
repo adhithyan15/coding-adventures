@@ -2,11 +2,11 @@
 
 Uno R4 firmware smoke test for the Board VM runtime.
 
-This crate embeds the BVM1 blink module and provides a tiny firmware binary that
-executes the bytecode against the Uno R4 WiFi D13 LED HAL. It is not the
-interactive serial protocol firmware yet; it is the first real-board check that
-the Rust target, linker script, Uno R4 GPIO mapping, and Board VM runtime can
-produce a flashable image.
+This crate embeds the BVM1 blink module and provides firmware binaries for Uno
+R4 WiFi bring-up. The early probes check the Rust target, linker script, GPIO
+mapping, runtime, and in-memory stream path. `uno-r4-wifi-uart-server` is the
+first interactive firmware: it serves Board VM wire frames over the Uno R4 WiFi
+SCI9 UART route exposed by `board-vm-uno-r4-uart`.
 
 Host-side validation:
 
@@ -86,6 +86,29 @@ repeating four-fast-blink pattern means the full scripted upload/run path passed
 
 ```sh
 RUSTC="$(rustup which rustc)" rustup run stable cargo build --target thumbv7em-none-eabihf --bin uno-r4-wifi-stream-session-probe --release
+```
+
+`uno-r4-wifi-uart-server` keeps a `DeviceStreamEndpoint` attached to
+`UartByteStream<UnoR4WifiSerialUart>` and serves host requests indefinitely. It
+uses the Uno R4 WiFi Arduino `Serial1` route on D22/D23 over SCI9. The built-in
+USB-C serial device is Arduino `SerialUSB`, so it will not answer this UART
+server until a separate USB CDC transport backend exists. Use a level-compatible
+USB-to-UART adapter on D22/D23 for this firmware.
+
+Build the UART server firmware:
+
+```sh
+RUSTC="$(rustup which rustc)" rustup run stable cargo build --target thumbv7em-none-eabihf --bin uno-r4-wifi-uart-server --release
+```
+
+After flashing the generated `.bin`, run the host smoke test against the adapter
+serial port:
+
+```sh
+cargo run -p board-vm-cli --bin board-vm -- smoke \
+  --port /dev/cu.usbmodem... \
+  --baud 115200 \
+  --timeout-ms 1000
 ```
 
 ```sh
