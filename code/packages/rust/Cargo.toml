@@ -33,6 +33,7 @@ members = [
     "board-vm-host",
     "board-vm-client",
     "board-vm-stream",
+    "board-vm-device",
     "board-vm-loopback",
     "board-vm-ir",
     "board-vm-runtime",
