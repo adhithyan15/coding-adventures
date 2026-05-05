@@ -34,3 +34,5 @@ documented in this file.
   column metadata grouped before following row sections.
 - Caption boundary recovery before bare `col` elements, so captions close
   before implied column groups are created.
+- Simple implied end-tag recovery for adjacent `option` and `optgroup`
+  elements, preventing nested select-option DOMs when end tags are omitted.

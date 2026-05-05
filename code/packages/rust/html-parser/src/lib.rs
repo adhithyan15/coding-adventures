@@ -370,6 +370,11 @@ impl HtmlParser {
             self.pop_current_if(|name| name == "li");
         } else if incoming_name == "dt" || incoming_name == "dd" {
             self.pop_current_if(|name| name == "dt" || name == "dd");
+        } else if incoming_name == "option" {
+            self.pop_current_if(|name| name == "option");
+        } else if incoming_name == "optgroup" {
+            self.pop_current_if(|name| name == "option");
+            self.pop_current_if(|name| name == "optgroup");
         }
     }
 
@@ -690,6 +695,45 @@ mod tests {
 
         assert_eq!(element(&body.children[1]).children, vec![Node::text("a")]);
         assert_eq!(element(&body.children[2]).children, vec![Node::text("b")]);
+    }
+
+    #[test]
+    fn applies_select_option_implied_end_tags() {
+        let document = parse_html(
+            "<select><option>One<option selected>Two<optgroup label=G><option>Three<optgroup label=H><option>Four</select>",
+        )
+        .unwrap();
+
+        let select = element(&body(&document).children[0]);
+        assert_eq!(select.name, "select");
+        assert_eq!(select.children.len(), 4);
+
+        let first = element(&select.children[0]);
+        assert_eq!(first.name, "option");
+        assert_eq!(first.children, vec![Node::text("One")]);
+
+        let second = element(&select.children[1]);
+        assert_eq!(second.name, "option");
+        assert_eq!(second.attribute("selected"), Some(""));
+        assert_eq!(second.children, vec![Node::text("Two")]);
+
+        let group = element(&select.children[2]);
+        assert_eq!(group.name, "optgroup");
+        assert_eq!(group.attribute("label"), Some("G"));
+        assert_eq!(group.children.len(), 1);
+        assert_eq!(
+            element(&group.children[0]).children,
+            vec![Node::text("Three")]
+        );
+
+        let second_group = element(&select.children[3]);
+        assert_eq!(second_group.name, "optgroup");
+        assert_eq!(second_group.attribute("label"), Some("H"));
+        assert_eq!(second_group.children.len(), 1);
+        assert_eq!(
+            element(&second_group.children[0]).children,
+            vec![Node::text("Four")]
+        );
     }
 
     #[test]
