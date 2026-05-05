@@ -12,10 +12,12 @@ The core idea is deliberately split in two:
 1. The **IR and protocol are portable**. A Python client, Ruby client, Java
    client, Lua client, JS client, or CLI all produce the same binary messages
    and the same bytecode.
-2. The **runtime adapter is board-specific**. Arduino Uno, Arduino Nano 33,
-   RP2040, ESP32, MBed, and other boards expose different pins, timers, PWM
-   channels, storage limits, and flashing tools. Each board port maps the
-   portable VM calls onto its real hardware.
+2. The **runtime adapter is board-specific**. Arduino Uno R4, classic AVR
+   Arduino boards, ATtiny boards, 8051/MCS-51 boards, RP2040/RP2350 boards,
+   ESP32 boards, STM32 boards, MBed-style boards, and other targets expose
+   different pins, timers, PWM channels, storage limits, instruction sets, and
+   flashing tools. Each board port maps the portable VM calls onto its real
+   hardware.
 
 This spec uses the name **Board VM** to avoid confusion with
 `hardware-vm.md`, which is the HDL event-driven simulator for Verilog/VHDL.
@@ -80,7 +82,9 @@ pieces can be reused by every board and every host language.
 | `board-vm-ir` | Bytecode instruction format, decoder, validator | Rust `no_std` |
 | `board-vm-runtime` | Interpreter, handle table, command loop | Rust `no_std` |
 | `board-vm-host` | Reference CLI/REPL and uploader | Desktop Rust |
-| `board-vm-arduino-*` | Board-specific HAL adapter and firmware package | Embedded Rust |
+| `board-vm-target-*` | Board-family target descriptor and HAL adapter | Embedded Rust |
+| `board-vm-arduino-*` | Arduino-family target packages | Embedded Rust |
+| `board-vm-rust-backend-*` | Missing Rust compiler/codegen support for constrained ISAs | Compiler/backend work |
 | `board-vm-conformance` | Shared protocol and bytecode test vectors | Host tests |
 
 Later language SDK packages should depend on the specification and test vectors,
@@ -93,6 +97,33 @@ board-vm-ruby
 board-vm-java
 board-vm-lua
 ```
+
+## Target Families
+
+The intended target set is broader than modern Arm and RISC-V boards. The
+architecture must explicitly include old and constrained microcontrollers so the
+runtime does not accidentally grow assumptions that exclude them.
+
+| Family | First boards | ISA/core | Runtime profile |
+|---|---|---|---|
+| Arduino Uno R4 | Uno R4 Minima/WiFi | Renesas RA4M1, Arm Cortex-M4F | `full` |
+| Raspberry Pi Pico | Pico/Pico W, Pico 2 | RP2040 Arm Cortex-M0+, RP2350 Arm/RISC-V | `full`/`small` |
+| ESP32 | ESP32-C3, ESP32-S3, classic ESP32 | RISC-V or Xtensa | `full` |
+| STM32 | Nucleo-32/64/144 | Arm Cortex-M family | `small`/`full` |
+| Classic Arduino AVR | Uno R3, Nano, Mega, Leonardo | ATmega AVR | `tiny` |
+| ATtiny | ATtiny85, tinyAVR-0/1/2 boards | AVR | `tiny` |
+| 8051/MCS-51 | AT89C51/S51/S52, AT89LP, EFM8 | 8051-compatible | `tiny` |
+| Atmel/Microchip SAM | Due, Zero, SAMD21/SAMD51 boards | Arm Cortex-M | `small`/`full` |
+| MBed-style boards | LPC1768, FRDM, Nucleo via Mbed | Arm Cortex-M | `small`/`full` |
+
+See `BVM06-board-target-matrix.md` for the full matrix and backend policy.
+
+AVR/ATmega/ATtiny are not 8051-based. They are Atmel/Microchip AVR devices.
+Atmel/Microchip also has 8051-compatible families such as AT89. Both families
+are in scope.
+
+If Rust support is missing for a target, that creates a Rust backend task. It
+does not remove the target from scope.
 
 ## Concepts
 
@@ -175,16 +206,40 @@ instead generate a firmware image with the VM and bytecode embedded.
 
 ### Eject
 
-Eject converts an interactive session into standalone firmware. There are two
+Eject converts an interactive session into standalone firmware. There are three
 eject forms:
 
 | Form | Use when | Output |
 |---|---|---|
 | Store on device | Board supports persistent program storage | Bytecode written to flash/EEPROM |
 | Build firmware | Board requires host-side flashing | Runtime firmware with embedded bytecode |
+| AOT firmware | Target has a native backend and the project wants to remove the VM from the final image | Target-native firmware generated from bytecode |
 
-The same bytecode module should work in both forms. The difference is where the
-module is stored and how it is launched.
+The same bytecode module is the portable interchange artifact for all forms.
+For stored and embedded firmware modes, the module is executed by the VM. For
+AOT firmware, the module is the input to a target-specific lowering pass that
+emits native code and can omit the interpreter from the final image.
+
+### AOT Eject
+
+AOT eject is a final packaging optimization, not the interactive development
+model. The REPL, host SDKs, protocol, validation, fake-board tests, and session
+capture still use bytecode. Once a program is ready to ship, an AOT backend may
+lower the validated module into target-native code:
+
+```
+validated bytecode module
+  -> target descriptor + capability bindings
+  -> AOT lowering backend
+  -> native object / assembly / Rust or LLVM artifact
+  -> board firmware package
+```
+
+AOT support is optional per target. If a target has no AOT backend, or the host
+cannot prove that the lowered artifact matches VM semantics for the selected
+profile, eject must fall back to stored bytecode or embedded-bytecode firmware.
+This keeps the VM as the universal baseline while leaving a clean path to final
+firmware with no interpreter overhead.
 
 ## Public API
 
@@ -256,9 +311,9 @@ Ejected program:
 Host session history or source file
   -> bytecode module
   -> validate against BoardDescriptor
-  -> store on board OR embed in firmware
+  -> store on board OR embed in firmware OR AOT-lower to native code
   -> board reset
-  -> VM boot
+  -> VM boot OR native entrypoint boot
   -> physical hardware behavior
 ```
 
@@ -302,3 +357,5 @@ available, and a compact message string when space permits.
 - Debugging support: step, break, inspect stack, inspect handles.
 - Capability schemas generated into host SDKs.
 - Static verifier for programs that should be safe to run forever.
+- AOT eject backends that remove the VM from final firmware when a target can
+  prove semantic equivalence with bytecode execution.
