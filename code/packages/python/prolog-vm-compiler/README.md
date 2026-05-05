@@ -322,6 +322,9 @@ and exits nonzero if any embedded query has no answers.
 Use `--summary` on non-interactive query runs when scripts, CI jobs, or editor
 integrations need compact totals. Text output appends one summary line, JSONL
 appends a summary record, and JSON wraps result records with summary metadata.
+Because it summarizes query execution, `--summary` is rejected for compile-only
+diagnostic modes such as `--check`, `--dump-instructions`, `--dump-bytecode`,
+`--dump-source-metadata`, and `--list-source-queries`.
 
 Use `--format json` for a machine-readable result object, or `--format jsonl`
 when repeated queries should stream one result record per line. JSON answers

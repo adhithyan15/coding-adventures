@@ -257,6 +257,15 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if summary and check:
         msg = "--summary cannot be combined with --check"
         raise ValueError(msg)
+    if summary and dump_bytecode:
+        msg = "--summary cannot be combined with --dump-bytecode"
+        raise ValueError(msg)
+    if summary and dump_instructions:
+        msg = "--summary cannot be combined with --dump-instructions"
+        raise ValueError(msg)
+    if summary and dump_source_metadata:
+        msg = "--summary cannot be combined with --dump-source-metadata"
+        raise ValueError(msg)
     if summary and list_source_queries:
         msg = "--summary cannot be combined with --list-source-queries"
         raise ValueError(msg)
