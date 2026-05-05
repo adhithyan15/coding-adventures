@@ -2393,6 +2393,28 @@ fn default_html_lexer_recovers_malformed_cdata_open_as_bogus_comment() {
 }
 
 #[test]
+fn default_html_lexer_replaces_null_in_malformed_cdata_openers() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("a<![CD\0>after").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("a".to_string()),
+            Token::Comment("[CD\u{FFFD}".to_string()),
+            Token::Text("after".to_string()),
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "unexpected-null-character"));
+}
+
+#[test]
 fn default_html_lexer_keeps_unclosed_cdata_brackets_as_text_at_eof() {
     let mut lexer = create_html_lexer().unwrap();
     lexer.set_initial_state("cdata_section").unwrap();

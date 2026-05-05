@@ -116,6 +116,9 @@ documented in this file.
 - NULL characters in comments and bogus comments now recover with
   `unexpected-null-character` and append U+FFFD while preserving pending comment
   dashes.
+- NULL characters encountered while recovering malformed `<![CDATA` openers now
+  report `unexpected-null-character` and append U+FFFD before continuing as
+  bogus comments.
 - NULL characters in DOCTYPE names and quoted public/system identifiers now
   recover with `unexpected-null-character` and append U+FFFD.
 - NULL characters in script escaped and double-escaped substates now recover
