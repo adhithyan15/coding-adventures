@@ -261,7 +261,7 @@ prolog-vm \
 ```
 
 For linked module projects, pass all entry files and the module context for
-ad-hoc queries:
+ad-hoc or interactive top-level queries:
 
 ```bash
 prolog-vm app.pl family.pl \
@@ -269,6 +269,11 @@ prolog-vm app.pl family.pl \
   --query-module app \
   --backend bytecode
 ```
+
+`--query-module` only applies to project file graphs with `--query` or
+`--interactive`; it is rejected for inline source, single files, source-query
+execution, and compile-only diagnostics because those paths do not consume a
+module context.
 
 Use `--values` to print raw answer values, omit `--query` to run a source-level
 `?-` directive by index, and use `--dialect iso` when the ISO parser profile is

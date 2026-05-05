@@ -151,6 +151,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         flags["source-query-index"],
         name="--source-query-index",
     )
+    interactive = bool(flags["interactive"])
 
     if limit is not None and limit < 0:
         msg = "--limit must be non-negative"
@@ -164,13 +165,19 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if source_stdin and files:
         msg = "--source-stdin cannot be combined with file paths"
         raise ValueError(msg)
-    if source_stdin and bool(flags["interactive"]):
+    if source_stdin and interactive:
         msg = "--source-stdin cannot be combined with --interactive"
         raise ValueError(msg)
     if source_stdin:
         source = sys.stdin.read()
     if source is None and not files:
         msg = "provide --source or at least one Prolog file"
+        raise ValueError(msg)
+    if query_module is not None and source is not None:
+        msg = "--query-module requires a project file graph"
+        raise ValueError(msg)
+    if query_module is not None and len(files) < 2:
+        msg = "--query-module requires a project file graph"
         raise ValueError(msg)
     all_source_queries = bool(flags["all-source-queries"])
     check = bool(flags["check"])
@@ -195,7 +202,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if check and all_source_queries:
         msg = "--check cannot be combined with --all-source-queries"
         raise ValueError(msg)
-    if check and bool(flags["interactive"]):
+    if check and interactive:
         msg = "--check cannot be combined with --interactive"
         raise ValueError(msg)
     if dump_bytecode and queries:
@@ -219,7 +226,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if dump_bytecode and all_source_queries:
         msg = "--dump-bytecode cannot be combined with --all-source-queries"
         raise ValueError(msg)
-    if dump_bytecode and bool(flags["interactive"]):
+    if dump_bytecode and interactive:
         msg = "--dump-bytecode cannot be combined with --interactive"
         raise ValueError(msg)
     if dump_instructions and queries:
@@ -246,7 +253,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if dump_instructions and all_source_queries:
         msg = "--dump-instructions cannot be combined with --all-source-queries"
         raise ValueError(msg)
-    if dump_instructions and bool(flags["interactive"]):
+    if dump_instructions and interactive:
         msg = "--dump-instructions cannot be combined with --interactive"
         raise ValueError(msg)
     if dump_source_metadata and queries:
@@ -276,7 +283,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if dump_source_metadata and all_source_queries:
         msg = "--dump-source-metadata cannot be combined with --all-source-queries"
         raise ValueError(msg)
-    if dump_source_metadata and bool(flags["interactive"]):
+    if dump_source_metadata and interactive:
         msg = "--dump-source-metadata cannot be combined with --interactive"
         raise ValueError(msg)
     if list_source_queries and queries:
@@ -297,7 +304,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if list_source_queries and source_query_index_explicit:
         msg = "--source-query-index cannot be combined with --list-source-queries"
         raise ValueError(msg)
-    if list_source_queries and bool(flags["interactive"]):
+    if list_source_queries and interactive:
         msg = "--list-source-queries cannot be combined with --interactive"
         raise ValueError(msg)
     summary = bool(flags["summary"])
@@ -316,7 +323,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if summary and list_source_queries:
         msg = "--summary cannot be combined with --list-source-queries"
         raise ValueError(msg)
-    if summary and bool(flags["interactive"]):
+    if summary and interactive:
         msg = "--summary cannot be combined with --interactive"
         raise ValueError(msg)
     if all_source_queries and queries:
@@ -325,14 +332,17 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if all_source_queries and source_query_index_explicit:
         msg = "--source-query-index cannot be combined with --all-source-queries"
         raise ValueError(msg)
-    if all_source_queries and bool(flags["interactive"]):
+    if all_source_queries and interactive:
         msg = "--all-source-queries cannot be combined with --interactive"
         raise ValueError(msg)
     if queries and source_query_index_explicit:
         msg = "--source-query-index cannot be combined with --query"
         raise ValueError(msg)
-    if bool(flags["interactive"]) and source_query_index_explicit:
+    if interactive and source_query_index_explicit:
         msg = "--source-query-index cannot be combined with --interactive"
+        raise ValueError(msg)
+    if query_module is not None and not (queries or interactive):
+        msg = "--query-module requires --query or --interactive"
         raise ValueError(msg)
     if bool(flags["commit"]) and not queries:
         msg = "--commit requires at least one --query"
@@ -359,7 +369,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
             _required_string(flags["format"], name="--format"),
         ),
         commit=bool(flags["commit"]),
-        interactive=bool(flags["interactive"]),
+        interactive=interactive,
         initialize=not bool(flags["no-initialize"]),
     )
 
