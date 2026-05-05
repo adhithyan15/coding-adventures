@@ -67,6 +67,17 @@ from bytecode runtime issues:
 RUSTC="$(rustup which rustc)" rustup run stable cargo build --target thumbv7em-none-eabihf --bin uno-r4-wifi-raw-blink-probe --release
 ```
 
+`uno-r4-wifi-stream-handshake-probe` validates the board-side protocol path
+without requiring USB CDC yet. It creates an in-memory COBS-delimited `HELLO`
+request, serves it through `DeviceStreamEndpoint` and the Uno R4 `BoardVmDevice`,
+decodes the emitted `HELLO_ACK`, and then blinks the yellow `L` LED. A repeating
+three-fast-blink pattern means the stream/protocol/device path passed; a slow
+single blink means the probe failed before or during response validation.
+
+```sh
+RUSTC="$(rustup which rustc)" rustup run stable cargo build --target thumbv7em-none-eabihf --bin uno-r4-wifi-stream-handshake-probe --release
+```
+
 ```sh
 arduino-cli upload \
   -p /dev/cu.usbmodem... \
