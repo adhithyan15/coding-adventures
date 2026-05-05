@@ -1,0 +1,23 @@
+[package]
+name = "board-vm-uno-r4-firmware"
+version = "0.1.0"
+edition = "2021"
+description = "Uno R4 firmware smoke test for the Board VM runtime"
+
+[dependencies]
+board-vm-ir = { path = "../board-vm-ir" }
+board-vm-runtime = { path = "../board-vm-runtime" }
+board-vm-uno-r4 = { path = "../board-vm-uno-r4" }
+
+[target.'cfg(target_arch = "arm")'.dependencies]
+arduino-uno-r4-hal = "0.1.0"
+cortex-m-rt = "0.7"
+embedded-hal = "1.0"
+panic-halt = "0.2"
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "uno-r4-vm-blink-smoke"
+path = "src/bin/uno_r4_vm_blink_smoke.rs"

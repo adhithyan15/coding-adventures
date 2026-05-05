@@ -39,6 +39,7 @@ members = [
     "board-vm-ir",
     "board-vm-runtime",
     "board-vm-uno-r4",
+    "board-vm-uno-r4-firmware",
     "brainfuck",
     "brainfuck-clr-compiler",
     "brainfuck-jvm-compiler",
