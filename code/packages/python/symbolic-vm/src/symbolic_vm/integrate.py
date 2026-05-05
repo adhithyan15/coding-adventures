@@ -500,6 +500,15 @@ def _integrate(f: IRNode, x: IRSymbol) -> IRNode | None:
         if not _depends_on(b, x):
             ia = _integrate(a, x)
             return None if ia is None else IRApply(MUL, (b, ia))
+        # Neg distribution: Mul(f, Neg(g)) → Neg(Mul(f, g)) so NEG rule fires.
+        # This lets ∫ exp(x)·sinh(-x) dx work after Phase 31 simplifies
+        # sinh(-x) → Neg(Sinh(x)) before the integrand reaches us.
+        if isinstance(b, IRApply) and b.head == NEG and len(b.args) == 1:
+            inner = _integrate(IRApply(MUL, (a, b.args[0])), x)
+            return None if inner is None else IRApply(NEG, (inner,))
+        if isinstance(a, IRApply) and a.head == NEG and len(a.args) == 1:
+            inner = _integrate(IRApply(MUL, (a.args[0], b)), x)
+            return None if inner is None else IRApply(NEG, (inner,))
         # Both factors depend on x — try Phase 3 then Phase 4 patterns.
         # Phase 3: exp(linear) and log(linear) products.
         result = _try_exp_product(a, b, x) or _try_exp_product(b, a, x)
