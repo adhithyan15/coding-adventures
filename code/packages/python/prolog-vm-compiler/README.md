@@ -285,6 +285,14 @@ Use `--check` to parse, load, compile, and initialize source without running a
 query. This is intended for CI and editor integrations that need to validate a
 Prolog file graph even when it does not contain embedded `?-` directives.
 
+Use `--dump-bytecode` to compile source into Logic bytecode and print the
+loader-bytecode disassembly without executing queries. This is useful when
+diagnosing convergence between the structured VM and the bytecode VM:
+
+```bash
+prolog-vm --source "parent(homer, bart). ?- parent(homer, Who)." --dump-bytecode
+```
+
 Use `--list-source-queries` to inspect embedded `?-` directives before choosing
 what to run. Text output lists the zero-based query index and visible variables;
 JSON output emits the same metadata as a stable `source_queries` record.
