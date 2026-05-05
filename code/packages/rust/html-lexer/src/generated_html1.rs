@@ -148,7 +148,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         },
         FixtureDefinition {
             name: "mosaic-attributes-and-self-closing".to_string(),
-            input: "<IMG SRC=\"mosaic.gif\" ALT='Splash' hidden=1/>".to_string(),
+            input: "<IMG SRC=\"mosaic.gif\" ALT='Splash' hidden=1 />".to_string(),
             tokens: vec![
                 "StartTag(name=img, attributes=[src=mosaic.gif, alt=Splash, hidden=1], self_closing=true)".to_string(),
                 "EOF".to_string(),
@@ -8474,13 +8474,13 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             on: None,
             matcher: Some(MatcherDefinition::Literal("/".to_string())),
             to: vec![
-                "self_closing_start_tag".to_string(),
+                "attribute_value_unquoted".to_string(),
             ],
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "commit_attribute_dedup".to_string(),
+                "append_attribute_value(current)".to_string(),
             ],
             consume: true,
         },
