@@ -1,0 +1,8 @@
+[package]
+name = "board-vm-usb-cdc"
+version = "0.1.0"
+edition = "2021"
+description = "Reusable USB CDC byte stream adapter for Board VM device transports"
+
+[dependencies]
+board-vm-device = { path = "../board-vm-device" }

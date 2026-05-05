@@ -36,6 +36,7 @@ members = [
     "board-vm-stream",
     "board-vm-serial",
     "board-vm-uart",
+    "board-vm-usb-cdc",
     "board-vm-fixed-stream",
     "board-vm-device",
     "board-vm-loopback",
