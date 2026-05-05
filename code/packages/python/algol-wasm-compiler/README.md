@@ -17,8 +17,8 @@ the current lane already supports a substantial ALGOL 60 surface:
 - `integer`, `boolean`, `real`, and `string` scalar values
 - `own` scalars and arrays with static lifetime
 - arrays of `integer`, `boolean`, `real`, and `string` values with runtime
-  bounds, including bounds that call later sibling typed procedures, and
-  checked element access
+  bounds, including bounds that call later sibling typed procedures or read
+  previously allocated array descriptors, and checked element access
 - case-insensitive keywords, comments, and standard builtins,
   `!=`/`<>`/`≠` not-equal spelling, ALGOL publication symbols such as `≤`,
   `≥`, `↑`, `×`, `÷`, `¬`, `∧`, `∨`, `⊃`, `≡`, and single- or double-quoted
@@ -163,7 +163,8 @@ local WASM runtime. Those fixtures cover:
 - nonlocal procedure `goto` that unwinds dynamic array storage before the
   caller resumes at the target label
 - dynamic multidimensional array bounds captured at block entry, including
-  bounds that call later sibling typed procedures
+  bounds that call later sibling typed procedures while preserving array
+  declaration order
 - writable real, boolean, and string by-name scalar formals in one program
 - real, boolean, and string by-name actuals through scalar storage,
   array-element storage, expression thunks, and formal-procedure forwarding
@@ -182,9 +183,9 @@ local WASM runtime. Those fixtures cover:
   forms, parenthesized conditional designational expressions, numeric labels,
   boolean operators, real arithmetic, and output
 - a surface-audit matrix for publication notation, procedure-call spellings,
-  forward procedure, switch, and array-bound visibility, loop forms, typed
-  formal procedures, value array copies, nonlocal switch/goto cleanup, and
-  programs without the `result` compatibility scalar
+  forward procedure, switch, array-bound visibility, array-bound declaration
+  order, loop forms, typed formal procedures, value array copies, nonlocal
+  switch/goto cleanup, and programs without the `result` compatibility scalar
 
 ## Dependencies
 

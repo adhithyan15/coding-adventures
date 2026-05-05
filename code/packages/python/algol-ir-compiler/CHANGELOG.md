@@ -38,6 +38,8 @@ All notable changes to this package will be documented in this file.
 - Lowered array bounds whose expressions call later sibling typed procedures
   now that the checker defers bound analysis until declaration registration
   completes.
+- Preserved array declaration-order semantics by relying on checker diagnostics
+  for bounds that read later array descriptors.
 - Lowered integer array-element by-name actuals to tagged descriptors with
   generated eval/store helpers that re-compute the element address on every
   formal read or assignment.

@@ -48,7 +48,9 @@ dimension metadata for lower/upper bound expressions, and resolved read/write
 accesses that preserve the static-link delta and subscript count needed by the
 IR and WASM lowering stages. Array bound expressions are checked after the
 block's declaration signatures are registered, so bounds can call later sibling
-typed procedures in the same declaration part.
+typed procedures in the same declaration part; direct array reads in bounds
+are still limited to descriptors already allocated earlier in declaration
+order.
 Labels receive stable label descriptors and direct local `goto`/`go to` statements
 resolve to those descriptors. Direct nonlocal block `goto` statements resolve
 to outer active blocks, and procedure-crossing transfers resolve to pending
