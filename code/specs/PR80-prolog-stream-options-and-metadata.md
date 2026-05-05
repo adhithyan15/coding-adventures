@@ -47,14 +47,13 @@ Coverage should prove:
 - structured VM and bytecode VM produce matching answers for option/metadata
   stream queries.
 - the capability manifest records PR80 as complete while leaving standard
-  streams, binary streams, repositioning, rich ISO/SWI options, foreign
+  streams, binary streams, rich ISO/SWI options, foreign
   predicates, and async host services deferred.
 
 ## Non-goals
 
 - no `current_input/1`, `current_output/1`, `set_input/1`, or `set_output/1`
 - no implicit one-argument `write/1`, `nl/0`, or standard stream aliases
-- no stream repositioning or `set_stream_position/2`
 - no binary streams or encodings beyond UTF-8
 - no `read/1`, `read_term/2`, or term parsing from stream handles
 - no foreign predicate or async host callback boundary

@@ -15,6 +15,8 @@ All notable changes to this package will be documented in this file.
 - `open_optionso/4`, `current_streamo/3`, `stream_propertyo/2`, and
   `flush_outputo/1` for bounded stream aliases, option validation, and
   metadata.
+- `set_stream_positiono/2` and `seeko/4` for bounded read-stream cursor
+  repositioning.
 - `betweeno(low, high, value)` for finite inclusive integer generation and
   validation, matching the common Prolog `between/3` use case.
 - `integero(term)` for non-bool integer type checks and `succo(predecessor,

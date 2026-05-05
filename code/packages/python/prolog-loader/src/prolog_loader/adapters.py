@@ -116,7 +116,9 @@ from logic_builtins import (
     retracto,
     same_termo,
     scanlo,
+    seeko,
     set_prolog_flago,
+    set_stream_positiono,
     setofo,
     setup_call_cleanupo,
     stream_propertyo,
@@ -537,6 +539,10 @@ def _adapt_relation_call(
         return current_streamo(*args)
     if name == "stream_property" and goal.relation.arity == 2:
         return stream_propertyo(*args)
+    if name == "set_stream_position" and goal.relation.arity == 2:
+        return set_stream_positiono(*args)
+    if name == "seek" and goal.relation.arity == 4:
+        return seeko(*args)
     if name == "read_string" and goal.relation.arity == 3:
         return read_stringo(*args)
     if name == "read_line_to_string" and goal.relation.arity == 2:

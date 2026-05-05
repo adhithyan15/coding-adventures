@@ -249,7 +249,7 @@ assert [answer.as_dict() for answer in runtime.query("ancestor(homer, Who)")] ==
 
 ## Capability Manifest
 
-The Prolog-on-Logic-VM implementation track covers PR00 through PR80. The
+The Prolog-on-Logic-VM implementation track covers PR00 through PR81. The
 package exposes that as a machine-readable manifest so downstream tools and
 future implementation work can distinguish completed functionality from
 deliberately deferred advanced dialect/runtime emulation:
@@ -259,7 +259,7 @@ from prolog_vm_compiler import prolog_vm_capability_manifest
 
 manifest = prolog_vm_capability_manifest()
 
-assert manifest.status == "core-plus-stream-metadata"
+assert manifest.status == "core-plus-stream-positioning"
 assert manifest.dialects == ("iso", "swi")
 assert manifest.backends == ("structured", "bytecode")
 ```
@@ -272,7 +272,8 @@ UTF-8 file text I/O through `exists_file/1`, `read_file_to_string/2`, and
 `read_file_to_codes/2`, plus bounded UTF-8 file stream I/O through `open/3`,
 `close/1`, `read_string/3`, `read_line_to_string/2`, `get_char/2`,
 `at_end_of_stream/1`, `write/2`, and `nl/1`, with alias/metadata support via
-`open/4`, `current_stream/3`, `stream_property/2`, and `flush_output/1`. The
+`open/4`, `current_stream/3`, `stream_property/2`, and `flush_output/1`, plus
+bounded cursor repositioning via `set_stream_position/2` and `seek/4`. The
 manifest also names the remaining advanced-dialect work that is intentionally
 outside the completed batches: full external dialect emulation, tabling and
 well-founded negation, generalized attributed-variable/coroutining services,
@@ -452,6 +453,8 @@ The package includes end-to-end stress tests for:
   `at_end_of_stream/1`, `write/2`, and `nl/1`
 - bounded stream aliases and metadata with `open/4`, `current_stream/3`,
   `stream_property/2`, and `flush_output/1`
+- bounded stream cursor repositioning with `set_stream_position/2` and
+  `seek/4`
 - term text I/O with `term_to_atom/2`, `atom_to_term/3`,
   `read_term_from_atom/3`, and `write_term_to_atom/3`
 - numbered term variables with `numbervars/3` and `write_term_to_atom/3`
