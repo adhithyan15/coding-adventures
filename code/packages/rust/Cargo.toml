@@ -424,6 +424,7 @@ members = [
     "vault-transport-cli",
     "vault-revisions",
     "vault-search",
+    "vault-attachments",
     "storage-fs",
     "context-store",
     "artifact-store",
