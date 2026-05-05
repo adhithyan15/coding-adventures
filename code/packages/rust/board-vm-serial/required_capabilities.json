@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/board-vm-serial",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "serial device paths such as /dev/tty*, /dev/cu*, and COM*",
+      "justification": "Host transport must read Board VM response bytes from a user-selected serial device."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "serial device paths such as /dev/tty*, /dev/cu*, and COM*",
+      "justification": "Host transport must write Board VM request bytes to a user-selected serial device."
+    }
+  ],
+  "justification": "This host crate is the explicit real-hardware serial boundary. It only opens user-selected serial ports and delegates protocol framing to pure Board VM crates."
+}
