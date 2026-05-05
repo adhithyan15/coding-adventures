@@ -691,6 +691,96 @@ def handle_call_builtin(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> Any:
     return result
 
 
+# ---------------------------------------------------------------------------
+# VMCOND00 Phase 1 — checked syscall + error branch
+# ---------------------------------------------------------------------------
+#
+# handle_syscall_checked
+# ----------------------
+# Executes a SYSCALL00-numbered host syscall without trapping on errors.
+# The handler looks up the syscall number (srcs[0]) in ``vm._syscall_table``,
+# resolves the argument register (srcs[1]), and calls the implementation.
+#
+# The implementation must return a ``(value: int, error_code: int)`` tuple:
+#   - value:      the success value (byte read, bytes written, fd, …).
+#                 Stored in the val_dst register (srcs[2]).  Set to 0 on error.
+#   - error_code: 0 on success, -1 on EOF, <-1 for negated errno.
+#                 Stored in the err_dst register (srcs[3]).
+#
+# If the syscall number is not registered, the handler stores 0 in val_dst
+# and EINVAL (−22) in err_dst — matching the C ABI in SYSCALL00 Section 4.
+#
+# handle_branch_err
+# -----------------
+# Conditional branch on a non-zero error register.  Behaves like
+# ``handle_jmp_if_false`` (branch when condition is falsy) but with the
+# polarity inverted: we branch when the error register is *non-zero* (i.e.,
+# the syscall failed).  Falls through when err_reg == 0 (success).
+#
+# Branch statistics are NOT recorded for branch_err because the branch is
+# not a general Boolean — it is a typed error-code check.  This keeps the
+# branch profiler's data focused on algorithmic branches (if-else, loops)
+# rather than syscall error paths.
+
+_EINVAL: int = -22  # negated EINVAL — matches POSIX errno 22
+
+
+def handle_syscall_checked(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> None:
+    """Execute a numbered host syscall without trapping on errors.
+
+    Operand layout in ``instr.srcs``:
+      [0] n        — the SYSCALL00 canonical syscall number (immediate int)
+      [1] arg_reg  — register name holding the single argument
+      [2] val_dst  — register name to receive the success value (0 on error)
+      [3] err_dst  — register name to receive the error code (0 = ok,
+                     -1 = EOF, <-1 = negated errno)
+
+    The handler never raises — all errors are reported via err_dst.
+    """
+    n = int(instr.srcs[0])
+    arg = frame.resolve(instr.srcs[1])
+    val_dst = str(instr.srcs[2])
+    err_dst = str(instr.srcs[3])
+
+    impl = vm._syscall_table.get(n)
+    if impl is None:
+        # Unknown syscall number → EINVAL, no value.
+        frame.assign(val_dst, 0)
+        frame.assign(err_dst, _EINVAL)
+        return None
+
+    try:
+        value, error_code = impl(arg)
+    except Exception:  # noqa: BLE001 — syscall impls must not propagate Python exc
+        frame.assign(val_dst, 0)
+        frame.assign(err_dst, _EINVAL)
+        return None
+
+    frame.assign(val_dst, value)
+    frame.assign(err_dst, error_code)
+    return None
+
+
+def handle_branch_err(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> None:
+    """Branch to a label when an error register is non-zero.
+
+    Operand layout in ``instr.srcs``:
+      [0] err_reg — name of the error-code register (from syscall_checked)
+      [1] label   — IR label to jump to when err_reg != 0
+
+    Falls through (does not branch) when err_reg == 0 (success).
+
+    Unlike ``jmp_if_true`` / ``jmp_if_false``, branch_err does not record
+    branch statistics — it is a typed error-code test, not an algorithmic
+    conditional.
+    """
+    err = frame.resolve(instr.srcs[0])
+    if err != 0:
+        target_ip = frame.fn.label_index(str(instr.srcs[1]))
+        frame.ip = target_ip
+    return None
+
+
 # --- I/O ---
 
 def handle_io_in(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> Any:
@@ -802,4 +892,7 @@ STANDARD_OPCODES: dict[str, Any] = {
     "io_out": handle_io_out,
     "cast": handle_cast,
     "type_assert": handle_type_assert,
+    # VMCOND00 Phase 1 — checked syscalls and error-code branches.
+    "syscall_checked": handle_syscall_checked,
+    "branch_err": handle_branch_err,
 }

@@ -33,6 +33,7 @@ The opcodes are grouped by category:
   Closures:     MAKE_CLOSURE, APPLY_CLOSURE   (TW03 Phase 2)
   Heap:         MAKE_CONS, CAR, CDR, IS_NULL, IS_PAIR,
                 MAKE_SYMBOL, IS_SYMBOL, LOAD_NIL   (TW03 Phase 3)
+  Error-aware:  SYSCALL_CHECKED, BRANCH_ERR   (VMCOND00 Phase 1)
 
 Text Names
 ----------
@@ -409,6 +410,76 @@ class IrOp(IntEnum):
     # Appended after TW03 heap opcodes to preserve stable opcode values.
     #   F64_POW v1, v2, v3 → v1 = pow(v2, v3)
     F64_POW = 63
+
+    # ── VMCOND00 Phase 1 — checked syscall + error branch ────────────────
+    #
+    # These two opcodes implement the VMCOND00 Layer 1 result-value protocol:
+    # a syscall that can fail without trapping, and a conditional branch that
+    # detects the failure.  Together they let a language emit code like:
+    #
+    #     SYSCALL_CHECKED 2, arg_reg, val_dst, err_dst   ; read-byte
+    #     BRANCH_ERR err_dst, eof_handler                ; branch if err != 0
+    #     ; happy path here — val_dst holds the byte
+    #     ...
+    #   eof_handler:
+    #     ; error path — err_dst holds negated errno or -1 for EOF
+    #
+    # The protocol: SYSCALL_CHECKED runs the numbered host syscall (n=1..33
+    # from the SYSCALL00 canonical table), stores the success value in
+    # ``val_dst``, and stores a "sticky" error code in ``err_dst``
+    # (0 = success, -1 = EOF, <-1 = negated errno).  BRANCH_ERR reads
+    # ``err_dst`` and branches when it is non-zero — it NEVER branches when
+    # the syscall succeeded.
+    #
+    # Why two separate opcodes rather than one combined branch?
+    #
+    #   - Separation of concerns: the syscall opcode is purely a value-
+    #     producer; the branch is purely a control-flow decision.  This
+    #     mirrors LOAD_IMM / BRANCH_Z decomposition.
+    #   - Allows multiple BRANCH_ERR tests on the same ``err_dst`` (e.g.
+    #     branch on EOF vs. branch on write-error) by reusing the same
+    #     register.
+    #   - Backends that compile SYSCALL_CHECKED to native code can inline
+    #     the error flag into a hardware status register and collapse
+    #     BRANCH_ERR into a conditional jump with zero extra load.
+    #
+    # VMCOND00 SYSCALL01 extends these into SYSCALL_CONDITIONED which
+    # additionally calls back into the condition system; that is Phase 3.
+
+    # SYSCALL_CHECKED — run a numbered host syscall, capturing errors.
+    #
+    # Operand layout:
+    #   SYSCALL_CHECKED  n:imm  arg:reg  val_dst:reg  err_dst:reg
+    #
+    # where:
+    #   - ``n``       — the SYSCALL00 canonical syscall number (immediate)
+    #   - ``arg``     — the single argument register (conventions per syscall)
+    #   - ``val_dst`` — register to receive the success value (byte read,
+    #                   bytes written, etc.)  Set to 0 on error.
+    #   - ``err_dst`` — register to receive the error code: 0 on success,
+    #                   -1 on EOF, <-1 for negated errno.
+    #
+    # SYSCALL_CHECKED never traps — it always stores into both output
+    # registers and returns control to the next instruction.  The caller
+    # decides what to do with the error code.
+    SYSCALL_CHECKED = 64
+
+    # BRANCH_ERR — branch to a label when an error register is non-zero.
+    #
+    # Operand layout:
+    #   BRANCH_ERR  err_reg:reg  label:label
+    #
+    # where:
+    #   - ``err_reg`` — a register previously written by SYSCALL_CHECKED
+    #   - ``label``   — IR label to jump to when ``err_reg != 0``
+    #
+    # BRANCH_ERR is the companion to SYSCALL_CHECKED.  It behaves like
+    # BRANCH_NZ but is semantically typed as "this register holds an error
+    # code, not a general Boolean" — backends can use this typing hint when
+    # lowering to error-code registers or exception paths.
+    #
+    # Execution: if err_reg == 0 (success), fall through; otherwise jump.
+    BRANCH_ERR = 65
 
 
 # Canonical name → opcode mapping. Built from the enum at module load time.

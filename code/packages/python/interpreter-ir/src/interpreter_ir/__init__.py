@@ -61,6 +61,7 @@ from interpreter_ir.opcodes import (
     REF_PREFIX,
     REF_SUFFIX,
     SIDE_EFFECT_OPS,
+    SYSCALL_CHECKED_OPS,
     VALUE_OPS,
     is_ref_type,
     make_ref_type,
@@ -100,6 +101,7 @@ __all__ = [
     "IO_OPS",
     "MEMORY_OPS",
     "SIDE_EFFECT_OPS",
+    "SYSCALL_CHECKED_OPS",
     "VALUE_OPS",
     # Type constants and helpers
     "CONCRETE_TYPES",
