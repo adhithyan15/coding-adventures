@@ -1,0 +1,16 @@
+[package]
+name = "board-vm-cli"
+version = "0.1.0"
+edition = "2021"
+description = "Command-line smoke tools for Board VM hardware sessions"
+
+[dependencies]
+board-vm-client = { path = "../board-vm-client" }
+board-vm-serial = { path = "../board-vm-serial" }
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "board-vm"
+path = "src/main.rs"

@@ -32,6 +32,7 @@ members = [
     "board-vm-protocol",
     "board-vm-host",
     "board-vm-client",
+    "board-vm-cli",
     "board-vm-stream",
     "board-vm-serial",
     "board-vm-device",
