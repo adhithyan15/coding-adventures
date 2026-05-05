@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.13.0 — 2026-05-05
+
+**Add 2 transcendental-solving head symbols — Phase 26.**
+
+New `IRSymbol` singletons in `nodes.py`, exported from `__init__.py`:
+
+- `FREE_INTEGER = IRSymbol("FreeInteger")` — the free-integer constant `%k` that
+  appears in periodic solutions of trig equations.  `solve(sin(x)=c,x)` returns
+  solutions containing `FreeInteger` to represent "for all integers k".
+- `LAMBERT_W = IRSymbol("LambertW")` — the principal branch W₀ of the Lambert W
+  function (inverse of `w·exp(w)`).  `solve(x·exp(x)=c,x)` returns `LambertW(c)`.
+  Numerically evaluated by the VM when the argument is a concrete number.
+
+---
+
 ## 0.12.0 — 2026-05-04
 
 **Add 2 summation head symbols — Phase 25 symbolic sum/product.**

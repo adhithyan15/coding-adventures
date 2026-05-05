@@ -66,6 +66,7 @@ from symbolic_ir.nodes import (
     FOR_EACH,
     FOR_RANGE,
     FORGET,
+    FREE_INTEGER,
     FOURIER,
     FRESNEL_C,
     FRESNEL_S,
@@ -80,6 +81,7 @@ from symbolic_ir.nodes import (
     INTEGRATE,
     INV,
     IS,
+    LAMBERT_W,
     LAPLACE,
     LESS,
     LESS_EQUAL,
@@ -112,6 +114,8 @@ from symbolic_ir.nodes import (
     TAN,
     TANH,
     TELLSIMP,
+    FREE_INTEGER,
+    LAMBERT_W,
     PRODUCT,
     SUM,
     UNIT_STEP,
@@ -234,4 +238,7 @@ __all__ = [
     # Summation and product (Phase 25)
     "SUM",
     "PRODUCT",
+    # Transcendental solving (Phase 26)
+    "FREE_INTEGER",
+    "LAMBERT_W",
 ]

@@ -34,6 +34,7 @@ from symbolic_ir import (
     GAMMA_FUNC,
     IFOURIER,
     ILT,
+    LAMBERT_W,
     LAPLACE,
     LI2,
     MATCHDECLARE,
@@ -307,6 +308,10 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     # Fresnel integrals: fresnel_s(x), fresnel_c(x)
     "fresnel_s": FRESNEL_S,
     "fresnel_c": FRESNEL_C,
+    # Lambert W function (Phase 26 — transcendental equation solving)
+    # lambert_w(x) = W₀(x), the principal branch of W satisfying W·exp(W)=x.
+    # Arises in solutions of f(x)·exp(f(x)) = c where f is linear.
+    "lambert_w": LAMBERT_W,
 }
 
 

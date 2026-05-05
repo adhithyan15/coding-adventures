@@ -4,15 +4,15 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-cas-solve"
-version = "0.6.0"
-description = "Equation solving (Phases 1–5: linear, quadratic, cubic, quartic, numeric, linear systems)."
+version = "0.7.0"
+description = "Equation solving — polynomial (degrees 1–4) + numeric root-finding + linear systems + transcendental families (trig, exp/log, hyperbolic, Lambert W, compound substitution)."
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
 readme = "README.md"
 keywords = ["cas", "solve", "polynomial", "symbolic", "education"]
 dependencies = [
-    "coding-adventures-symbolic-ir>=0.5.0",
+    "coding-adventures-symbolic-ir>=0.13.0",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",

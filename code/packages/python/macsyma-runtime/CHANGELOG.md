@@ -1,5 +1,25 @@
 # Changelog
 
+## 1.17.0 — 2026-05-05
+
+**Phase 26 — Transcendental equation solving via MACSYMA surface syntax.**
+
+Bumps `coding-adventures-symbolic-ir>=0.13.0` and
+`coding-adventures-symbolic-vm>=0.46.0`.
+
+### What changed
+
+- `name_table.py`: imports `LAMBERT_W` from `symbolic_ir>=0.13.0` and adds
+  `"lambert_w": LAMBERT_W` to `MACSYMA_NAME_TABLE`.  MACSYMA users can now
+  call `lambert_w(x)` to invoke the principal Lambert W function W₀(x); the
+  symbolic-vm `lambert_w_handler` evaluates it numerically when `x` is
+  concrete.
+- `solve(eq, var)` now automatically dispatches through the transcendental
+  families (trig, exp/log, Lambert W, hyperbolic, compound substitution) via
+  the updated `symbolic-vm 0.46.0` without any additional runtime changes.
+
+---
+
 ## 1.16.0 — 2026-05-04
 
 **Phase 25 — Symbolic summation and product evaluation via MACSYMA surface syntax.**

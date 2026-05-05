@@ -115,6 +115,7 @@ from cas_solve import nsolve_fraction_poly as _nsolve_fraction_poly
 from cas_solve import solve_cubic as _solve_cubic
 from cas_solve import solve_linear_system as _solve_linear_system
 from cas_solve import solve_quartic as _solve_quartic
+from cas_solve import try_solve_transcendental as _try_transcendental
 from cas_substitution import subst
 from polynomial import (
     degree as _poly_degree,
@@ -1066,6 +1067,10 @@ def solve_handler(_vm: VM, expr: IRApply) -> IRNode:
     poly_ir = _unwrap_equation(eq_ir)
     coeffs = _ir_to_fraction_poly(poly_ir, var_ir)
     if coeffs is None:
+        # Phase 26: try transcendental families before giving up.
+        trans_sols = _try_transcendental(eq_ir, var_ir)
+        if trans_sols is not None:
+            return IRApply(IRSymbol("List"), tuple(trans_sols))
         return expr  # not a polynomial in var
 
     deg = len(coeffs) - 1
@@ -1151,6 +1156,78 @@ def nsolve_handler(_vm: VM, expr: IRApply) -> IRNode:
     coeffs_desc = list(reversed(coeffs))
     ir_roots = _nsolve_fraction_poly(coeffs_desc)
     return IRApply(IRSymbol("List"), tuple(ir_roots))
+
+
+# ===========================================================================
+# Section 4b: Phase 26 — Lambert W numeric evaluation
+# ===========================================================================
+
+
+def lambert_w_handler(_vm: VM, expr: IRApply) -> IRNode:
+    """``LambertW(x)`` — principal branch W₀ of the Lambert W function.
+
+    The Lambert W function W₀ is the principal solution of ``w·exp(w) = x``.
+    It arises when solving equations of the form ``f(x)·exp(f(x)) = c`` where
+    ``f`` is linear — the transcendental solver (Phase 26c) leaves the symbolic
+    ``LambertW(c)`` in the solution expression, and this handler evaluates it
+    numerically when ``x`` is a concrete rational or floating-point constant.
+
+    Domain for the principal branch W₀:
+    - Defined for ``x ≥ −1/e ≈ −0.3679``.
+    - Returns ``IRFloat`` on success.
+    - Returns the expression unevaluated for symbolic ``x`` or ``x`` outside
+      the domain of W₀.
+
+    Numeric method: Newton iteration on ``g(w) = w·exp(w) − x``.
+    The iteration ``w ← w − g(w)/g′(w)`` converges quadratically; we stop when
+    ``|Δw| < 1e-12·(1 + |w|)`` or after 64 iterations, whichever comes first.
+
+    Starting point heuristic:
+    - ``x > 0``: start at ``log(x)`` (correct order of magnitude).
+    - ``x = 0``: start at 0 (exact answer).
+    - ``−1/e ≤ x < 0``: start at 0 and let Newton iterate toward the branch.
+
+    Examples::
+
+        LambertW(0)       → 0.0          (W₀(0) = 0)
+        LambertW(1)       → 0.5671...    (Omega constant)
+        LambertW(e)       → 1.0          (W₀(e) = 1)
+        LambertW(-1/e)    → -1.0         (branch point)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = expr.args[0]
+    x_num = to_number(arg)
+    if x_num is None:
+        # Symbolic argument — leave unevaluated.
+        return expr
+
+    # to_number returns a Fraction for rational inputs; convert to float.
+    x_val = float(x_num)
+
+    # Domain check: W₀ is defined only for x ≥ −1/e.
+    lower_bound = -1.0 / math.e
+    if x_val < lower_bound - 1e-12:
+        # Out of domain for the principal branch — return unevaluated.
+        return expr
+
+    # Choose a sensible starting point for Newton iteration.
+    # log(x) is a good initial estimate for x > 0; 0.0 works near the branch point.
+    w = math.log(x_val) if x_val > 0.0 else 0.0
+
+    # Newton iteration: w ← w − (w·exp(w) − x) / (exp(w)·(w + 1))
+    # Guard against zero denominator at w = −1 with a tiny epsilon.
+    _EPS = 1e-300
+    for _ in range(64):
+        ew = math.exp(w)
+        numerator = w * ew - x_val
+        denominator = ew * (w + 1.0) + _EPS
+        dw = numerator / denominator
+        w -= dw
+        if abs(dw) < 1e-12 * (1.0 + abs(w)):
+            break
+
+    return IRFloat(w)
 
 
 # ===========================================================================
@@ -2737,6 +2814,8 @@ def build_cas_handler_table() -> dict[str, Handler]:
         # --- Phase 25: symbolic summation and product -----------------------
         "Sum": sum_handler,
         "Product": product_handler,
+        # --- Phase 26: Lambert W numeric evaluation -------------------------
+        "LambertW": lambert_w_handler,
     }
 
 
