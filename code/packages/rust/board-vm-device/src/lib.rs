@@ -6,13 +6,13 @@ use board_vm_ir::{
 };
 use board_vm_protocol::{
     decode_frame, decode_hello, decode_program_begin, decode_program_chunk, decode_program_end,
-    decode_run_request, encode_caps_report, encode_error_payload, encode_frame, encode_hello_ack,
-    encode_program_begin, encode_program_chunk, encode_program_end, encode_run_report_header,
-    CapabilityDescriptor, CapsReportHeader, ErrorPayload, Frame, HelloAck, MessageType,
-    ProgramBegin, ProgramChunk, ProgramEnd, ProtocolError, RunReportHeader,
-    RunStatus as ProtocolRunStatus, CAP_FLAG_BYTECODE_CALLABLE, CAP_FLAG_PROTOCOL_FEATURE,
-    CAP_PROGRAM_RAM_EXEC, FLAG_IS_ERROR_RESPONSE, FLAG_IS_RESPONSE, NO_BYTECODE_OFFSET,
-    NO_PROGRAM_ID, RUN_FLAG_BACKGROUND_RUN, RUN_FLAG_RESET_VM_BEFORE_RUN,
+    decode_run_request, decode_wire_frame, encode_caps_report, encode_error_payload, encode_frame,
+    encode_hello_ack, encode_program_begin, encode_program_chunk, encode_program_end,
+    encode_run_report_header, encode_wire_frame, CapabilityDescriptor, CapsReportHeader,
+    ErrorPayload, Frame, HelloAck, MessageType, ProgramBegin, ProgramChunk, ProgramEnd,
+    ProtocolError, RunReportHeader, RunStatus as ProtocolRunStatus, CAP_FLAG_BYTECODE_CALLABLE,
+    CAP_FLAG_PROTOCOL_FEATURE, CAP_PROGRAM_RAM_EXEC, FLAG_IS_ERROR_RESPONSE, FLAG_IS_RESPONSE,
+    NO_BYTECODE_OFFSET, NO_PROGRAM_ID, RUN_FLAG_BACKGROUND_RUN, RUN_FLAG_RESET_VM_BEFORE_RUN,
 };
 use board_vm_runtime::{BoardHal, RunStatus as RuntimeRunStatus, Runtime, RuntimeError};
 
@@ -475,6 +475,147 @@ where
     }
 }
 
+pub trait DeviceByteStream {
+    type Error;
+
+    fn read_byte(&mut self) -> Result<u8, Self::Error>;
+
+    fn write_all(&mut self, bytes: &[u8]) -> Result<(), Self::Error>;
+
+    fn flush(&mut self) -> Result<(), Self::Error> {
+        Ok(())
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DeviceStreamError<E> {
+    Stream(E),
+    IncomingWireFrameTooLarge,
+    RawFrameTooLarge,
+    ResponseWireFrameTooLarge,
+    Protocol(ProtocolError),
+    Device(DeviceError),
+}
+
+pub struct DeviceStreamEndpoint<
+    S,
+    const WIRE_BYTES: usize = 1024,
+    const RAW_BYTES: usize = 512,
+    const PAYLOAD_BYTES: usize = 256,
+> {
+    stream: S,
+    wire: [u8; WIRE_BYTES],
+    raw_request: [u8; RAW_BYTES],
+    raw_response: [u8; RAW_BYTES],
+    payload: [u8; PAYLOAD_BYTES],
+}
+
+impl<S, const WIRE_BYTES: usize, const RAW_BYTES: usize, const PAYLOAD_BYTES: usize>
+    DeviceStreamEndpoint<S, WIRE_BYTES, RAW_BYTES, PAYLOAD_BYTES>
+{
+    pub fn new(stream: S) -> Self {
+        Self {
+            stream,
+            wire: [0; WIRE_BYTES],
+            raw_request: [0; RAW_BYTES],
+            raw_response: [0; RAW_BYTES],
+            payload: [0; PAYLOAD_BYTES],
+        }
+    }
+
+    pub fn into_inner(self) -> S {
+        self.stream
+    }
+
+    pub fn inner(&self) -> &S {
+        &self.stream
+    }
+
+    pub fn inner_mut(&mut self) -> &mut S {
+        &mut self.stream
+    }
+}
+
+impl<S, const WIRE_BYTES: usize, const RAW_BYTES: usize, const PAYLOAD_BYTES: usize>
+    DeviceStreamEndpoint<S, WIRE_BYTES, RAW_BYTES, PAYLOAD_BYTES>
+where
+    S: DeviceByteStream,
+{
+    pub fn serve_one<
+        'a,
+        H,
+        const MAX_PROGRAM_BYTES: usize,
+        const MAX_STACK: usize,
+        const MAX_HANDLES: usize,
+    >(
+        &mut self,
+        device: &mut BoardVmDevice<'a, H, MAX_PROGRAM_BYTES, MAX_STACK, MAX_HANDLES>,
+    ) -> Result<usize, DeviceStreamError<S::Error>>
+    where
+        H: BoardHal,
+    {
+        let wire_len = self.read_wire_frame()?;
+        let request_len = decode_wire_frame(&self.wire[..wire_len], &mut self.raw_request)
+            .map_err(map_decode_wire_error)?;
+        let response_len = device
+            .handle_raw_frame(
+                &self.raw_request[..request_len],
+                &mut self.payload,
+                &mut self.raw_response,
+            )
+            .map_err(map_device_stream_error)?;
+        let write_len = encode_wire_frame(&self.raw_response[..response_len], &mut self.wire)
+            .map_err(map_encode_wire_error)?;
+        self.stream
+            .write_all(&self.wire[..write_len])
+            .map_err(DeviceStreamError::Stream)?;
+        self.stream.flush().map_err(DeviceStreamError::Stream)?;
+        Ok(write_len)
+    }
+
+    fn read_wire_frame(&mut self) -> Result<usize, DeviceStreamError<S::Error>> {
+        let mut len = 0;
+        loop {
+            if len >= self.wire.len() {
+                return Err(DeviceStreamError::IncomingWireFrameTooLarge);
+            }
+
+            let byte = self.stream.read_byte().map_err(DeviceStreamError::Stream)?;
+            self.wire[len] = byte;
+            len += 1;
+
+            if byte == 0 {
+                return Ok(len);
+            }
+        }
+    }
+}
+
+fn map_decode_wire_error<E>(error: ProtocolError) -> DeviceStreamError<E> {
+    match error {
+        ProtocolError::OutputTooSmall | ProtocolError::PayloadTooLarge => {
+            DeviceStreamError::RawFrameTooLarge
+        }
+        other => DeviceStreamError::Protocol(other),
+    }
+}
+
+fn map_encode_wire_error<E>(error: ProtocolError) -> DeviceStreamError<E> {
+    match error {
+        ProtocolError::OutputTooSmall | ProtocolError::PayloadTooLarge => {
+            DeviceStreamError::ResponseWireFrameTooLarge
+        }
+        other => DeviceStreamError::Protocol(other),
+    }
+}
+
+fn map_device_stream_error<E>(error: DeviceError) -> DeviceStreamError<E> {
+    match error {
+        DeviceError::OutputTooSmall => DeviceStreamError::RawFrameTooLarge,
+        other => DeviceStreamError::Device(other),
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum BoardFault {
     Protocol(ProtocolError),
@@ -618,7 +759,7 @@ mod tests {
     use board_vm_ir::CapabilitySet;
     use board_vm_protocol::{
         decode_caps_report_header, decode_error_payload, decode_frame, decode_hello_ack,
-        decode_run_report_header, RunStatus,
+        decode_run_report_header, decode_wire_frame, encode_wire_frame, RunStatus,
     };
     use board_vm_runtime::{GpioMode, HalError, Level};
 
@@ -705,6 +846,76 @@ mod tests {
         )
     }
 
+    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+    enum TestStreamError {
+        EndOfInput,
+        WriteBufferTooSmall,
+    }
+
+    struct ScriptedByteStream<const READ_BYTES: usize, const WRITE_BYTES: usize> {
+        read: [u8; READ_BYTES],
+        read_len: usize,
+        read_offset: usize,
+        written: [u8; WRITE_BYTES],
+        written_len: usize,
+        flush_count: usize,
+    }
+
+    impl<const READ_BYTES: usize, const WRITE_BYTES: usize>
+        ScriptedByteStream<READ_BYTES, WRITE_BYTES>
+    {
+        fn with_read(bytes: &[u8]) -> Self {
+            assert!(bytes.len() <= READ_BYTES);
+            let mut read = [0; READ_BYTES];
+            read[..bytes.len()].copy_from_slice(bytes);
+            Self {
+                read,
+                read_len: bytes.len(),
+                read_offset: 0,
+                written: [0; WRITE_BYTES],
+                written_len: 0,
+                flush_count: 0,
+            }
+        }
+
+        fn written(&self) -> &[u8] {
+            &self.written[..self.written_len]
+        }
+    }
+
+    impl<const READ_BYTES: usize, const WRITE_BYTES: usize> DeviceByteStream
+        for ScriptedByteStream<READ_BYTES, WRITE_BYTES>
+    {
+        type Error = TestStreamError;
+
+        fn read_byte(&mut self) -> Result<u8, Self::Error> {
+            if self.read_offset >= self.read_len {
+                return Err(TestStreamError::EndOfInput);
+            }
+            let byte = self.read[self.read_offset];
+            self.read_offset += 1;
+            Ok(byte)
+        }
+
+        fn write_all(&mut self, bytes: &[u8]) -> Result<(), Self::Error> {
+            let end = self
+                .written_len
+                .checked_add(bytes.len())
+                .ok_or(TestStreamError::WriteBufferTooSmall)?;
+            if end > WRITE_BYTES {
+                return Err(TestStreamError::WriteBufferTooSmall);
+            }
+            self.written[self.written_len..end].copy_from_slice(bytes);
+            self.written_len = end;
+            Ok(())
+        }
+
+        fn flush(&mut self) -> Result<(), Self::Error> {
+            self.flush_count += 1;
+            Ok(())
+        }
+    }
+
     fn handle(
         device: &mut Device,
         request: &[u8],
@@ -714,6 +925,51 @@ mod tests {
         device
             .handle_raw_frame(request, payload, response)
             .expect("device response")
+    }
+
+    #[test]
+    fn stream_endpoint_serves_wire_framed_handshake() {
+        let mut device = new_device();
+        let mut session = HostSession::new();
+        let mut host_payload = [0u8; 96];
+        let mut request = [0u8; 128];
+        let mut request_wire = [0u8; 192];
+        let mut raw_response = [0u8; 128];
+
+        let hello = session
+            .hello_frame("stream-host", 0xCAFE_BABE, &mut host_payload, &mut request)
+            .unwrap();
+        let request_wire_len = encode_wire_frame(&request[..hello.len], &mut request_wire).unwrap();
+        let stream = ScriptedByteStream::<192, 192>::with_read(&request_wire[..request_wire_len]);
+        let mut endpoint = DeviceStreamEndpoint::<_, 192, 128, 128>::new(stream);
+
+        let written_len = endpoint.serve_one(&mut device).unwrap();
+        let stream = endpoint.into_inner();
+        assert_eq!(written_len, stream.written().len());
+        assert_eq!(stream.flush_count, 1);
+
+        let raw_len = decode_wire_frame(stream.written(), &mut raw_response).unwrap();
+        let frame = decode_frame(&raw_response[..raw_len]).unwrap();
+        assert_eq!(frame.flags, FLAG_IS_RESPONSE);
+        assert_eq!(frame.message_type, MessageType::HELLO_ACK);
+        assert_eq!(frame.request_id, hello.request_id);
+        let hello_ack = decode_hello_ack(frame.payload).unwrap();
+        assert_eq!(hello_ack.board_name, "test-board");
+        assert_eq!(hello_ack.runtime_name, DEFAULT_DEVICE_RUNTIME_ID);
+        assert_eq!(hello_ack.host_nonce, 0xCAFE_BABE);
+        assert_eq!(hello_ack.board_nonce, 0xB04D_1001);
+    }
+
+    #[test]
+    fn stream_endpoint_rejects_unbounded_wire_frame() {
+        let mut device = new_device();
+        let stream = ScriptedByteStream::<5, 8>::with_read(&[1, 2, 3, 4, 5]);
+        let mut endpoint = DeviceStreamEndpoint::<_, 4, 8, 8>::new(stream);
+
+        assert_eq!(
+            endpoint.serve_one(&mut device),
+            Err(DeviceStreamError::IncomingWireFrameTooLarge)
+        );
     }
 
     #[test]
