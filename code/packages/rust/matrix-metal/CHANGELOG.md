@@ -1,5 +1,51 @@
 # Changelog — matrix-metal
 
+## 0.4.0 — 2026-05-05
+
+### Added
+
+- **`Op::Cast` support (F32 output paths only).**  Capability bitset
+  now includes tag 0x1A.
+
+  matrix-metal advertises `supported_dtypes = F32`, which constrains
+  the planner's capability filter to route only Casts whose **output**
+  dtype is F32 to us.  That leaves three input-dtype paths to handle:
+
+    - `F32 → F32` (degenerate identity cast)
+    - `U8 → F32` (widening conversion)
+    - `I32 → F32` (widening conversion)
+
+  Each is a one-line elementwise scalar cast.  MSL's implicit
+  conversions match Rust's `as` semantics for these widening paths
+  (no rounding mode ambiguity; every U8 and I32 value fits in F32
+  exactly or with at most one rounding step).
+
+  The other three Cast directions (`F32 → U8 / I32`, `U8 → I32`,
+  `I32 → U8`) need `supported_dtypes` to advertise U8 / I32 — and
+  that would also let the planner route U8/I32 elementwise ops to us
+  which we don't yet implement.  Keeping the dtype bitset at F32 only
+  means those casts stay on CPU; we ship the F32-output ones today.
+
+### Tests (3 new integration tests)
+
+- `cast_u8_to_f32_on_gpu` — `[0, 1, 200, 255]` (u8) → `[0.0, 1.0, 200.0, 255.0]` (f32).
+- `cast_i32_to_f32_on_gpu` — `[0, 1, -1, 1_000_000, i32::MIN]` (i32) → matching f32 values; verifies that the largest-magnitude path still round-trips correctly (i32::MIN is exactly representable in f32 with no rounding).
+- `cast_f32_to_f32_on_gpu_is_identity` — degenerate path; confirms PI and other arbitrary f32 values round-trip byte-exactly.
+
+Total integration tests: 13 (was 10).
+
+### Notes
+
+- Defence in depth: `cast_dispatch` returns Err if the planner ever
+  routes a non-F32-output cast to us (it shouldn't, given the
+  `supported_dtypes` bitset, but the runtime check guards against
+  planner bugs and future capability changes).
+- This unblocks ML graphs that use U8 image inputs and I32 index
+  buffers but produce F32 intermediates — e.g. `image-gpu-core`'s
+  current pattern of u8-pixels → f32-cast → matmul → u8-pack stays
+  on Metal for the **u8→f32** half (the f32→u8 pack still falls
+  back to CPU).
+
 ## 0.3.0 — 2026-05-05
 
 ### Added

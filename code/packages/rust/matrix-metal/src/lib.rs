@@ -67,7 +67,9 @@ use metal_compute::{MetalCommandQueue, MetalComputePipeline, MetalDevice};
 /// - 0x11 Reshape (metadata-only; implemented as a buffer memcpy in SSA)
 /// - 0x12 Transpose (general N-D permutation, max rank 4)
 /// - 0x13 Broadcast (general N-D size-1-axis replication, max rank 4)
-/// - 0x15 MatMul, 0x1B Const
+/// - 0x15 MatMul
+/// - 0x1A Cast (F32 output paths only — input may be F32/U8/I32)
+/// - 0x1B Const
 ///
 /// `Reshape` is included even though Metal has no shader for it: the
 /// SSA form of Reshape produces a fresh output tensor, so we treat it
@@ -92,11 +94,13 @@ fn supported_ops_bitset() -> u32 {
     for tag in 0x07..=0x0Du8 {
         mask |= 1u32 << tag;
     }
-    // Reshape (0x11), Transpose (0x12), Broadcast (0x13), MatMul (0x15), Const (0x1B).
+    // Reshape (0x11), Transpose (0x12), Broadcast (0x13), MatMul (0x15),
+    // Cast (0x1A), Const (0x1B).
     mask |= 1u32 << 0x11;
     mask |= 1u32 << 0x12;
     mask |= 1u32 << 0x13;
     mask |= 1u32 << 0x15;
+    mask |= 1u32 << 0x1A;
     mask |= 1u32 << 0x1B;
     mask
 }

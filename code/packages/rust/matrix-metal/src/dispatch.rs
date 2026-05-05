@@ -181,6 +181,16 @@ fn exec_compute(
             ..
         } => broadcast_dispatch(ctx, graph, *input, *output),
 
+        // Cast: dtype conversion.  matrix-metal advertises only F32
+        // as a supported output dtype, so the planner only routes
+        // Casts whose output is F32 to us — three input paths to
+        // handle: U8→F32, I32→F32, F32→F32.
+        Op::Cast {
+            input,
+            dtype,
+            output,
+        } => cast_dispatch(ctx, graph, *input, *dtype, *output),
+
         _ => Err(format!(
             "matrix-metal V1 doesn't support op {}; the planner should have routed this to CPU",
             op_kind_name(op)
@@ -605,6 +615,69 @@ fn reshape_dispatch(
             .alloc(ctx.device, out_residency.buffer, n_bytes as usize)?;
     }
     ctx.buffers.write(out_residency.buffer, 0, &data)?;
+    Ok(())
+}
+
+/// Cast: dispatch a single-element-wise dtype conversion.  Only
+/// F32-output paths reach us (the planner's capability filter
+/// restricts on output dtype, and matrix-metal advertises F32 only).
+/// Three input dtypes are handled: F32, U8, I32.
+fn cast_dispatch(
+    ctx: &mut DispatchCtx<'_>,
+    graph: &ComputeGraph,
+    input: TensorId,
+    output_dtype: matrix_ir::DType,
+    output: TensorId,
+) -> Result<(), String> {
+    let in_t = graph
+        .tensor(input)
+        .ok_or_else(|| format!("cast input tensor {} not found", input.0))?;
+    let out_residency = lookup_residency(graph, output)?;
+    let n = in_t
+        .shape
+        .numel()
+        .ok_or_else(|| format!("cast input tensor {} numel overflow", input.0))?
+        as u32;
+    if n == 0 {
+        return Ok(());
+    }
+
+    // Defence in depth: matrix-metal only emits F32-output kernels;
+    // routing a non-F32-output cast to us indicates a planner bug.
+    if output_dtype != matrix_ir::DType::F32 {
+        return Err(format!(
+            "matrix-metal cast: unsupported output dtype {:?} (only F32 ships in V1)",
+            output_dtype
+        ));
+    }
+
+    let kernel_name = match in_t.dtype {
+        matrix_ir::DType::F32 => "cast_f32_to_f32",
+        matrix_ir::DType::U8 => "cast_u8_to_f32",
+        matrix_ir::DType::I32 => "cast_i32_to_f32",
+    };
+    let pipeline = ctx
+        .pipelines
+        .get(kernel_name)
+        .ok_or_else(|| format!("pipeline {} not in cache", kernel_name))?;
+
+    let in_buf_ptr = ctx.buffers.get(in_t.residency.buffer)? as *const _;
+    let out_buf_ptr = ctx.buffers.get(out_residency.buffer)? as *const _;
+    // SAFETY: see `unary_dispatch` — same pattern, both buffers live
+    // for the duration of the dispatch call via `&BufferStore`.
+    let in_buf = unsafe { &*in_buf_ptr };
+    let out_buf = unsafe { &*out_buf_ptr };
+
+    let n_bytes = n.to_le_bytes();
+    let tg = pipeline.preferred_threads_1d();
+
+    ctx.queue.dispatch(|enc| {
+        enc.set_pipeline(pipeline);
+        enc.set_buffer(in_buf, 0);
+        enc.set_buffer(out_buf, 1);
+        enc.set_bytes(&n_bytes, 2);
+        enc.dispatch_threads_1d(n, tg);
+    });
     Ok(())
 }
 
