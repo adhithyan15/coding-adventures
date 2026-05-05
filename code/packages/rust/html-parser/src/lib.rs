@@ -499,29 +499,29 @@ impl HtmlParser {
         match incoming_name {
             "caption" | "colgroup" => {
                 self.pop_table_cell_row_and_section_contexts();
-                self.pop_current_if(|name| name == "caption" || name == "colgroup");
+                self.close_open_element_if(|name| name == "caption" || name == "colgroup");
             }
             "tbody" | "thead" | "tfoot" => {
                 self.pop_table_cell_row_and_section_contexts();
-                self.pop_current_if(|name| name == "caption" || name == "colgroup");
+                self.close_open_element_if(|name| name == "caption" || name == "colgroup");
             }
             "col" => {
-                self.pop_current_if(|name| name == "caption");
+                self.close_open_element_if(|name| name == "caption");
                 if self.current_element_is("table") {
                     self.append_implied_element("colgroup");
                 }
             }
             "tr" => {
-                self.pop_current_if(|name| name == "td" || name == "th");
-                self.pop_current_if(|name| name == "tr");
-                self.pop_current_if(|name| name == "caption" || name == "colgroup");
+                self.close_open_element_if(|name| name == "td" || name == "th");
+                self.close_open_element_if(|name| name == "tr");
+                self.close_open_element_if(|name| name == "caption" || name == "colgroup");
                 if self.current_element_is("table") {
                     self.append_implied_element("tbody");
                 }
             }
             "td" | "th" => {
-                self.pop_current_if(|name| name == "td" || name == "th");
-                self.pop_current_if(|name| name == "caption" || name == "colgroup");
+                self.close_open_element_if(|name| name == "td" || name == "th");
+                self.close_open_element_if(|name| name == "caption" || name == "colgroup");
                 if self.current_element_is("table") {
                     self.append_implied_element("tbody");
                 }
@@ -537,36 +537,36 @@ impl HtmlParser {
     }
 
     fn pop_table_cell_row_and_section_contexts(&mut self) {
-        self.pop_current_if(|name| name == "td" || name == "th");
-        self.pop_current_if(|name| name == "tr");
-        self.pop_current_if(is_table_section);
+        self.close_open_element_if(|name| name == "td" || name == "th");
+        self.close_open_element_if(|name| name == "tr");
+        self.close_open_element_if(is_table_section);
     }
 
     fn apply_simple_implied_end_tags(&mut self, incoming_name: &str) {
         if incoming_name == "p" {
-            self.pop_current_if(|name| name == "p");
+            self.close_open_element_if(|name| name == "p");
         } else if incoming_name == "li" {
-            self.pop_current_if(|name| name == "li");
+            self.close_open_element_if(|name| name == "li");
         } else if incoming_name == "dt" || incoming_name == "dd" {
-            self.pop_current_if(|name| name == "dt" || name == "dd");
+            self.close_open_element_if(|name| name == "dt" || name == "dd");
         } else if incoming_name == "option" {
-            self.pop_current_if(|name| name == "option");
+            self.close_open_element_if(|name| name == "option");
         } else if incoming_name == "optgroup" {
-            self.pop_current_if(|name| name == "option");
-            self.pop_current_if(|name| name == "optgroup");
+            self.close_open_element_if(|name| name == "option");
+            self.close_open_element_if(|name| name == "optgroup");
         } else if incoming_name == "rb" {
-            self.pop_current_if(is_ruby_annotation_element);
-            self.pop_current_if(|name| name == "rtc");
+            self.close_open_element_if(is_ruby_annotation_element);
+            self.close_open_element_if(|name| name == "rtc");
         } else if incoming_name == "rt" || incoming_name == "rp" {
-            self.pop_current_if(|name| name == "rb" || name == "rt" || name == "rp");
+            self.close_open_element_if(|name| name == "rb" || name == "rt" || name == "rp");
         } else if incoming_name == "rtc" {
-            self.pop_current_if(|name| name == "rb" || name == "rt" || name == "rp");
-            self.pop_current_if(|name| name == "rtc");
+            self.close_open_element_if(|name| name == "rb" || name == "rt" || name == "rp");
+            self.close_open_element_if(|name| name == "rtc");
         } else if is_heading_element(incoming_name) {
-            self.pop_current_if(|name| name == "p");
-            self.pop_current_if(is_heading_element);
+            self.close_open_element_if(|name| name == "p");
+            self.close_open_element_if(is_heading_element);
         } else if is_paragraph_boundary_element(incoming_name) {
-            self.pop_current_if(|name| name == "p");
+            self.close_open_element_if(|name| name == "p");
         }
     }
 
@@ -596,11 +596,13 @@ impl HtmlParser {
     }
 
     fn close_open_element_silently(&mut self, name: &str) -> bool {
-        let Some(index) = self
-            .open_elements
-            .iter()
-            .rposition(|path| element_at_path(&self.document, path).is_some_and(|n| n == name))
-        else {
+        self.close_open_element_if(|candidate| candidate == name)
+    }
+
+    fn close_open_element_if(&mut self, predicate: impl Fn(&str) -> bool) -> bool {
+        let Some(index) = self.open_elements.iter().rposition(|path| {
+            element_at_path(&self.document, path).is_some_and(|name| predicate(name))
+        }) else {
             return false;
         };
         self.open_elements.truncate(index);
@@ -1010,6 +1012,86 @@ mod tests {
     }
 
     #[test]
+    fn closes_scoped_implied_end_tags_around_nested_inline_children() {
+        let document = parse_html(
+            "<p><em>One<p>Two<ul><li><strong>A<li>B</ul><dl><dt><em>T<dd>D</dl><select><option><span>One<option selected>Two<optgroup label=G><option><b>Three<optgroup label=H><option>Four</select><h1><span>Head<h2>Next",
+        )
+        .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 7);
+
+        let first_paragraph = element(&body.children[0]);
+        assert_eq!(first_paragraph.name, "p");
+        let emphasized = element(&first_paragraph.children[0]);
+        assert_eq!(emphasized.name, "em");
+        assert_eq!(emphasized.children, vec![Node::text("One")]);
+
+        let second_paragraph = element(&body.children[1]);
+        assert_eq!(second_paragraph.name, "p");
+        assert_eq!(second_paragraph.children, vec![Node::text("Two")]);
+
+        let list = element(&body.children[2]);
+        assert_eq!(list.name, "ul");
+        assert_eq!(list.children.len(), 2);
+        let first_item = element(&list.children[0]);
+        assert_eq!(first_item.name, "li");
+        let strong = element(&first_item.children[0]);
+        assert_eq!(strong.name, "strong");
+        assert_eq!(strong.children, vec![Node::text("A")]);
+        assert_eq!(element(&list.children[1]).children, vec![Node::text("B")]);
+
+        let definitions = element(&body.children[3]);
+        assert_eq!(definitions.name, "dl");
+        assert_eq!(definitions.children.len(), 2);
+        let term = element(&definitions.children[0]);
+        assert_eq!(term.name, "dt");
+        assert_eq!(element(&term.children[0]).children, vec![Node::text("T")]);
+        let description = element(&definitions.children[1]);
+        assert_eq!(description.name, "dd");
+        assert_eq!(description.children, vec![Node::text("D")]);
+
+        let select = element(&body.children[4]);
+        assert_eq!(select.name, "select");
+        assert_eq!(select.children.len(), 4);
+        let first_option = element(&select.children[0]);
+        assert_eq!(first_option.name, "option");
+        assert_eq!(
+            element(&first_option.children[0]).children,
+            vec![Node::text("One")]
+        );
+        let second_option = element(&select.children[1]);
+        assert_eq!(second_option.name, "option");
+        assert_eq!(second_option.attribute("selected"), Some(""));
+        assert_eq!(second_option.children, vec![Node::text("Two")]);
+        let first_group = element(&select.children[2]);
+        assert_eq!(first_group.name, "optgroup");
+        assert_eq!(first_group.attribute("label"), Some("G"));
+        assert_eq!(
+            element(&element(&first_group.children[0]).children[0]).children,
+            vec![Node::text("Three")]
+        );
+        let second_group = element(&select.children[3]);
+        assert_eq!(second_group.name, "optgroup");
+        assert_eq!(second_group.attribute("label"), Some("H"));
+        assert_eq!(
+            element(&second_group.children[0]).children,
+            vec![Node::text("Four")]
+        );
+
+        let first_heading = element(&body.children[5]);
+        assert_eq!(first_heading.name, "h1");
+        assert_eq!(
+            element(&first_heading.children[0]).children,
+            vec![Node::text("Head")]
+        );
+
+        let second_heading = element(&body.children[6]);
+        assert_eq!(second_heading.name, "h2");
+        assert_eq!(second_heading.children, vec![Node::text("Next")]);
+    }
+
+    #[test]
     fn closes_repeated_interactive_formatting_elements() {
         let document = parse_html(
             "<a href=one>One<a href=two>Two</a><button id=one>First<button id=two>Second</button><nobr>A<nobr>B</nobr>",
@@ -1306,6 +1388,51 @@ mod tests {
     }
 
     #[test]
+    fn closes_scoped_ruby_annotations_around_nested_inline_children() {
+        let document =
+            parse_html("<ruby><rb><em>漢<rt><span>kan<rb>字<rtc><rt><b>group<rtc><rt>group2")
+                .unwrap();
+
+        let ruby = element(&body(&document).children[0]);
+        assert_eq!(ruby.name, "ruby");
+        assert_eq!(ruby.children.len(), 5);
+
+        let first_base = element(&ruby.children[0]);
+        assert_eq!(first_base.name, "rb");
+        assert_eq!(
+            element(&first_base.children[0]).children,
+            vec![Node::text("漢")]
+        );
+
+        let first_text = element(&ruby.children[1]);
+        assert_eq!(first_text.name, "rt");
+        assert_eq!(
+            element(&first_text.children[0]).children,
+            vec![Node::text("kan")]
+        );
+
+        let second_base = element(&ruby.children[2]);
+        assert_eq!(second_base.name, "rb");
+        assert_eq!(second_base.children, vec![Node::text("字")]);
+
+        let first_container = element(&ruby.children[3]);
+        assert_eq!(first_container.name, "rtc");
+        let grouped_text = element(&first_container.children[0]);
+        assert_eq!(grouped_text.name, "rt");
+        assert_eq!(
+            element(&grouped_text.children[0]).children,
+            vec![Node::text("group")]
+        );
+
+        let second_container = element(&ruby.children[4]);
+        assert_eq!(second_container.name, "rtc");
+        assert_eq!(
+            element(&second_container.children[0]).children,
+            vec![Node::text("group2")]
+        );
+    }
+
+    #[test]
     fn applies_heading_implied_end_tags() {
         let document = parse_html("<p>Intro<h1>One<h2>Two<h3>Three").unwrap();
 
@@ -1511,6 +1638,64 @@ mod tests {
         let tbody = element(&table.children[2]);
         let row = element(&tbody.children[0]);
         assert_eq!(element(&row.children[0]).children, vec![Node::text("A")]);
+    }
+
+    #[test]
+    fn closes_scoped_table_contexts_around_nested_inline_children() {
+        let document = parse_html(
+            "<table><caption><b>Cap<col><tr><td><em>A<tr><th><span>B<tbody><tr><td>C<tfoot><tr><td>F</table>",
+        )
+        .unwrap();
+
+        let table = element(&body(&document).children[0]);
+        assert_eq!(table.name, "table");
+        assert_eq!(table.children.len(), 5);
+
+        let caption = element(&table.children[0]);
+        assert_eq!(caption.name, "caption");
+        assert_eq!(
+            element(&caption.children[0]).children,
+            vec![Node::text("Cap")]
+        );
+
+        let colgroup = element(&table.children[1]);
+        assert_eq!(colgroup.name, "colgroup");
+        assert_eq!(colgroup.children.len(), 1);
+        assert_eq!(element(&colgroup.children[0]).name, "col");
+
+        let first_body = element(&table.children[2]);
+        assert_eq!(first_body.name, "tbody");
+        assert_eq!(first_body.children.len(), 2);
+        let first_row = element(&first_body.children[0]);
+        assert_eq!(first_row.name, "tr");
+        let first_cell = element(&first_row.children[0]);
+        assert_eq!(first_cell.name, "td");
+        assert_eq!(
+            element(&first_cell.children[0]).children,
+            vec![Node::text("A")]
+        );
+        let second_row = element(&first_body.children[1]);
+        assert_eq!(second_row.name, "tr");
+        let heading_cell = element(&second_row.children[0]);
+        assert_eq!(heading_cell.name, "th");
+        assert_eq!(
+            element(&heading_cell.children[0]).children,
+            vec![Node::text("B")]
+        );
+
+        let second_body = element(&table.children[3]);
+        assert_eq!(second_body.name, "tbody");
+        assert_eq!(
+            element(&element(&second_body.children[0]).children[0]).children,
+            vec![Node::text("C")]
+        );
+
+        let foot = element(&table.children[4]);
+        assert_eq!(foot.name, "tfoot");
+        assert_eq!(
+            element(&element(&foot.children[0]).children[0]).children,
+            vec![Node::text("F")]
+        );
     }
 
     #[test]
