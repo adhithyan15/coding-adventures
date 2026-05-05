@@ -92,8 +92,10 @@ from symbolic_vm.cas_handlers import li2_handler as _li2_handler
 from symbolic_vm.cas_handlers import (
     matchdeclare_handler as _matchdeclare_handler,
 )
+from symbolic_vm.cas_handlers import product_handler as _product_handler
 from symbolic_vm.cas_handlers import shi_handler as _shi_handler
 from symbolic_vm.cas_handlers import si_handler as _si_handler
+from symbolic_vm.cas_handlers import sum_handler as _sum_handler
 from symbolic_vm.cas_handlers import tellsimp_handler as _tellsimp_handler
 from symbolic_vm.numeric import from_number, to_number
 from symbolic_vm.polynomial_bridge import from_polynomial, to_rational
@@ -930,4 +932,7 @@ def build_cas_handler_table() -> dict[str, Handler]:
         "Li2": _li2_handler,
         "FresnelS": _fresnel_s_handler,
         "FresnelC": _fresnel_c_handler,
+        # --- Phase 25: symbolic summation and product -----------------------
+        "Sum": _sum_handler,
+        "Product": _product_handler,
     }

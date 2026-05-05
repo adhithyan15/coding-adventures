@@ -112,6 +112,8 @@ from symbolic_ir.nodes import (
     TAN,
     TANH,
     TELLSIMP,
+    PRODUCT,
+    SUM,
     UNIT_STEP,
     WHILE,
     D,
@@ -229,4 +231,7 @@ __all__ = [
     "BETA_FUNC",
     "FRESNEL_S",
     "FRESNEL_C",
+    # Summation and product (Phase 25)
+    "SUM",
+    "PRODUCT",
 ]

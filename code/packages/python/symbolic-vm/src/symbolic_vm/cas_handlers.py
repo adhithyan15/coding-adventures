@@ -146,8 +146,10 @@ from symbolic_ir import (
     MUL,
     NEG,
     POW,
+    PRODUCT,
     SQRT,
     SUB,
+    SUM,
     IRApply,
     IRFloat,
     IRInteger,
@@ -2535,6 +2537,70 @@ def fresnel_c_handler(vm: VM, expr: IRApply) -> IRNode:
     return expr
 
 
+# ===========================================================================
+# Section: Phase 25 — Symbolic summation and product handlers
+# ===========================================================================
+
+
+def sum_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Sum(f, k, lo, hi)`` — closed-form symbolic summation.
+
+    Dispatches to ``cas_summation.evaluate_sum`` which applies:
+
+    1. Constant summand → ``f * (hi − lo + 1)``
+    2. Geometric series (finite or infinite) → standard formula
+    3. Power-of-index via Faulhaber's formula (k^m, m = 0…5)
+    4. Classic infinite series (Basel, Leibniz, Taylor for e/exp)
+    5. Numeric small range when bounds are concrete integers
+    6. Fallback: returns unevaluated ``Sum(f, k, lo, hi)``
+
+    The VM is passed through so the evaluator can invoke ``vm.eval`` on
+    intermediate sub-expressions (e.g. constant-summand count).
+    """
+    from cas_summation import evaluate_sum as _evaluate_sum
+
+    if len(expr.args) != 4:  # noqa: PLR2004
+        return expr
+    f, k, lo, hi = expr.args
+    if not isinstance(k, IRSymbol):
+        return expr
+    # Evaluate bounds before dispatching so the evaluator sees simplified forms.
+    lo_ev = vm.eval(lo)
+    hi_ev = vm.eval(hi)
+    result = _evaluate_sum(f, k, lo_ev, hi_ev, vm)
+    # Avoid re-entering the handler if evaluate_sum fell back to unevaluated.
+    if isinstance(result, IRApply) and result.head == SUM:
+        return result
+    return vm.eval(result)
+
+
+def product_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Product(f, k, lo, hi)`` — closed-form symbolic product.
+
+    Dispatches to ``cas_summation.evaluate_product`` which applies:
+
+    1. Constant factor → ``f^(hi − lo + 1)``
+    2. ``k`` with lo=1 → ``GammaFunc(hi+1)``  (i.e. ``hi!``)
+    3. ``c*k`` with lo=1 → ``c^hi * GammaFunc(hi+1)``
+    4. Numeric small range when bounds are concrete integers
+    5. Fallback: returns unevaluated ``Product(f, k, lo, hi)``
+    """
+    from cas_summation import evaluate_product as _evaluate_product
+
+    if len(expr.args) != 4:  # noqa: PLR2004
+        return expr
+    f, k, lo, hi = expr.args
+    if not isinstance(k, IRSymbol):
+        return expr
+    lo_ev = vm.eval(lo)
+    hi_ev = vm.eval(hi)
+    result = _evaluate_product(f, k, lo_ev, hi_ev, vm)
+    # Avoid re-entering the handler if evaluate_product fell back to unevaluated.
+    if isinstance(result, IRApply) and result.head == PRODUCT:
+        return result
+    return vm.eval(result)
+
+
 def build_cas_handler_table() -> dict[str, Handler]:
     """Return the full CAS handler table for :class:`SymbolicBackend`.
 
@@ -2668,6 +2734,9 @@ def build_cas_handler_table() -> dict[str, Handler]:
         "Li2": li2_handler,
         "FresnelS": fresnel_s_handler,
         "FresnelC": fresnel_c_handler,
+        # --- Phase 25: symbolic summation and product -----------------------
+        "Sum": sum_handler,
+        "Product": product_handler,
     }
 
 

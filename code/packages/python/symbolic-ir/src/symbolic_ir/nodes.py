@@ -424,3 +424,46 @@ BETA_FUNC = IRSymbol("BetaFunc")
 #   Both → 1/2 as x → ∞.
 FRESNEL_S = IRSymbol("FresnelS")
 FRESNEL_C = IRSymbol("FresnelC")
+
+# ── Phase 25 — Symbolic summation and product ─────────────────────────────
+#
+# These two heads represent unevaluated (or partially evaluated) symbolic
+# sums and products over a discrete index variable.  Both take exactly four
+# arguments:
+#
+#   Sum(f, k, a, b)     ≡  Σ_{k=a}^{b} f(k)
+#   Product(f, k, a, b) ≡  Π_{k=a}^{b} f(k)
+#
+# where:
+#   f  — the summand / factor expression (may contain k)
+#   k  — the index variable (must be an IRSymbol)
+#   a  — the lower bound (inclusive; may be symbolic)
+#   b  — the upper bound (inclusive; may be symbolic or %inf)
+#
+# The VM handler attempts a closed-form evaluation in this order:
+#
+#   1. Constant summand (f does not contain k):
+#        Σ c = c · (b − a + 1)
+#
+#   2. Geometric series (f = coeff · base^k, base constant in k):
+#        Σ_{k=a}^{b} r^k = r^a · (r^{b−a+1} − 1) / (r − 1)     [finite]
+#        Σ_{k=a}^{∞}  r^k = r^a / (1 − r)                        [infinite]
+#
+#   3. Power of the index (f = c · k^m, m ∈ {0,…,5}):
+#        Uses Faulhaber's polynomial formula F(n,m) = Σ_{k=1}^n k^m.
+#        General bounds: c · [F(b,m) − F(a−1,m)].
+#
+#   4. Classic infinite series (b = %inf):
+#        Σ_{k=1}^∞ 1/k²  = π²/6   (Basel problem, Euler 1734)
+#        Σ_{k=1}^∞ 1/k⁴  = π⁴/90
+#        Σ_{k=0}^∞ (−1)^k/(2k+1) = π/4  (Leibniz)
+#        Σ_{k=0}^∞ 1/k!  = %e
+#        Σ_{k=0}^∞ x^k/k! = exp(x)
+#
+#   5. Unevaluated: returns Sum/Product unchanged.
+#
+# Product-specific closed forms:
+#   Π_{k=1}^{n} k   = GammaFunc(n+1)      (factorial)
+#   Π_{k=a}^{b} c   = c^(b−a+1)          (constant factor)
+SUM = IRSymbol("Sum")
+PRODUCT = IRSymbol("Product")

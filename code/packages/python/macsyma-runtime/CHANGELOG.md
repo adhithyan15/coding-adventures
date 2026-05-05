@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.16.0 — 2026-05-04
+
+**Phase 25 — Symbolic summation and product evaluation via MACSYMA surface syntax.**
+
+Bumps `coding-adventures-symbolic-ir>=0.12.0` and
+`coding-adventures-symbolic-vm>=0.45.0`.
+
+### What changed
+
+- `cas_handlers.py`: imports `sum_handler` and `product_handler` from
+  `symbolic_vm.cas_handlers`, registers them as `"Sum"` and `"Product"`.
+
+The MACSYMA compiler (bumped to 0.9.0 separately) maps:
+- `sum(f, k, a, b)` → `Sum(f, k, a, b)` IR node
+- `product(f, k, a, b)` → `Product(f, k, a, b)` IR node
+
+The VM's `sum_handler` and `product_handler` (added in symbolic-vm 0.45.0)
+evaluate these via `cas-summation` 0.1.0.
+
 ## 1.15.0 — 2026-05-04
 
 **Phase 24 — Definite integration end-to-end via MACSYMA surface syntax.**

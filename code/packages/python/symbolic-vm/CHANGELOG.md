@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.45.0 — 2026-05-04
+
+**Phase 25 — Symbolic summation and product evaluation.**
+
+### New handlers in `cas_handlers.py`
+
+`sum_handler` and `product_handler` implement the `Sum` and `Product` IR heads.
+Both delegate to the `cas-summation` package (new dependency):
+
+- `Sum(f, k, lo, hi)` → closed-form evaluation via `evaluate_sum`:
+  - Constant summand: `f * (hi − lo + 1)`
+  - Geometric series (finite and infinite)
+  - Faulhaber power sums `Σ k^m` for m = 0…5
+  - Classic infinite series (Basel π²/6, Leibniz π/4, Taylor e and exp(x))
+  - Numeric small ranges via `cas_substitution.subst`
+  - Fallback: unevaluated `Sum(f, k, lo, hi)`
+- `Product(f, k, lo, hi)` → closed-form evaluation via `evaluate_product`:
+  - Constant factor: `f^(hi − lo + 1)`
+  - Identity product: `Γ(hi+1)` (i.e. `hi!`) when f=k, lo=1
+  - Scaled identity: `c^hi · Γ(hi+1)` when f=c·k, lo=1
+  - Numeric small ranges
+  - Fallback: unevaluated `Product(f, k, lo, hi)`
+
+### New IR heads imported
+
+`SUM` and `PRODUCT` from `symbolic_ir` 0.12.0 are now imported in `cas_handlers.py`.
+
+### New dependency
+
+`coding-adventures-cas-summation>=0.1.0` added to `pyproject.toml`.
+
 ## 0.44.0 — 2026-05-04
 
 **Phase 24 — Definite integration via the Fundamental Theorem of Calculus.**
