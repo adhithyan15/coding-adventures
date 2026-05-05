@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.12.0 — 2026-05-04
+
+**Add 2 summation head symbols — Phase 25 symbolic sum/product.**
+
+New `IRSymbol` singletons in `nodes.py`, exported from `__init__.py`:
+
+- `SUM = IRSymbol("Sum")` — symbolic summation `Σ_{k=a}^{b} f(k)` (4-arg)
+- `PRODUCT = IRSymbol("Product")` — symbolic product `Π_{k=a}^{b} f(k)` (4-arg)
+
+Both take 4 arguments: `(f, k, lo, hi)` matching the MACSYMA `sum`/`product`
+calling convention. The VM evaluates them to closed forms (Faulhaber
+polynomial, geometric series, classic constants) or returns the unevaluated
+node when no pattern matches.
+
+---
+
 ## 0.11.0 — 2026-05-04
 
 **Add 12 special-function head symbols — Phase 23 erf/Si/Li₂/Gamma/Fresnel.**

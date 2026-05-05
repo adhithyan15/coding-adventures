@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-macsyma-compiler"
-version = "0.8.0"
+version = "0.9.0"
 description = "Lowers parsed MACSYMA ASTs to the universal symbolic IR."
 requires-python = ">=3.12"
 license = "MIT"
@@ -19,7 +19,7 @@ dependencies = [
     "coding-adventures-macsyma-parser",
     "coding-adventures-parser",
     "coding-adventures-state-machine",
-    "coding-adventures-symbolic-ir>=0.8.0",
+    "coding-adventures-symbolic-ir>=0.12.0",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
