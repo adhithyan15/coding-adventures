@@ -92,6 +92,7 @@ members = [
     "gpu-core",
     "gradient-descent",
     "grammar-tools",
+    "grammar-lsp-bridge",
     "grammar-wasm-support",
     "haskell-lexer",
     "haskell-parser",
@@ -341,6 +342,7 @@ members = [
     "huffman-compression",
     "json-rpc",
     "ls00",
+    "dap-adapter-core",
     "rpc",
     "lsm-tree",
     "write-ahead-log",
@@ -482,4 +484,6 @@ members = [
     "lang-runtime-core",
     "lispy-runtime",
     "twig-vm",
+    "twig-lsp-bridge",
+    "twig-dap",
 ]
