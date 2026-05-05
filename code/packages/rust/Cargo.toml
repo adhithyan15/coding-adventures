@@ -417,6 +417,7 @@ members = [
     "vault-audit",
     "vault-sync",
     "vault-transport-cli",
+    "vault-revisions",
     "storage-fs",
     "context-store",
     "artifact-store",
