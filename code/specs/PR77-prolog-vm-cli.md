@@ -49,8 +49,8 @@ Important options:
   ad-hoc query is provided.
 - `--all-source-queries` runs every stored source-level query in order when no
   ad-hoc query is provided.
-- `--query-module MODULE` resolves ad-hoc project queries through a module's
-  imports.
+- `--query-module MODULE` resolves ad-hoc or interactive project queries
+  through a module's imports.
 - `--backend structured|bytecode` selects the VM backend.
 - `--dialect swi|iso` selects the frontend dialect profile.
 - `--limit N` caps the number of answers emitted per executed query.
@@ -138,6 +138,11 @@ source query has no answers, matching repeated ad-hoc query scripts.
 `--source-query-index` only applies to single stored source-query execution and
 is rejected with ad-hoc, all-source-query, interactive, and compile-only modes
 rather than being ignored.
+
+`--query-module` only applies to project file graphs in ad-hoc or interactive
+top-level query modes. Inline source, single-file input, source-query modes, and
+compile-only diagnostics reject it rather than silently ignoring the module
+context.
 
 When `--summary` is set for non-interactive query execution, text output
 appends one compact line with query, success, failure, and answer totals. JSONL

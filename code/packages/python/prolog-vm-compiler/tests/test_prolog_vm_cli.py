@@ -875,6 +875,93 @@ def test_cli_runs_project_file_graph_with_query_module(
     ]
 
 
+def test_cli_interactive_project_file_graph_uses_query_module(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    family_path = tmp_path / "family.pl"
+    family_path.write_text(
+        ":- module(family, [ancestor/2]).\n"
+        "ancestor(homer, bart).\n",
+        encoding="utf-8",
+    )
+    app_path = tmp_path / "app.pl"
+    app_path.write_text(
+        ":- module(app, []).\n"
+        ":- use_module(family, [ancestor/2]).\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(sys, "stdin", io.StringIO("ancestor(homer, Who)\nhalt.\n"))
+
+    status = main([
+        str(app_path),
+        str(family_path),
+        "--query-module",
+        "app",
+        "--interactive",
+        "--backend",
+        "bytecode",
+    ])
+
+    assert status == 0
+    assert capsys.readouterr().out == "Who = bart.\n"
+
+
+@pytest.mark.parametrize(
+    "mode_flag",
+    [
+        "--check",
+        "--dump-bytecode",
+        "--dump-instructions",
+        "--dump-source-metadata",
+        "--list-source-queries",
+        "--all-source-queries",
+    ],
+)
+def test_cli_query_module_rejects_non_query_modes(
+    tmp_path: Path,
+    mode_flag: str,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    family_path = tmp_path / "family.pl"
+    family_path.write_text("parent(homer, bart).\n", encoding="utf-8")
+    app_path = tmp_path / "app.pl"
+    app_path.write_text(":- module(app, []).\n", encoding="utf-8")
+
+    status = main([
+        str(app_path),
+        str(family_path),
+        "--query-module",
+        "app",
+        mode_flag,
+    ])
+
+    assert status == 2
+    assert "--query-module requires --query or --interactive" in (
+        capsys.readouterr().err
+    )
+
+
+def test_cli_query_module_rejects_non_project_inputs(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    source_path = tmp_path / "family.pl"
+    source_path.write_text("parent(homer, bart).\n", encoding="utf-8")
+
+    status = main([
+        str(source_path),
+        "--query",
+        "parent(homer, Who)",
+        "--query-module",
+        "app",
+    ])
+
+    assert status == 2
+    assert "--query-module requires a project file graph" in capsys.readouterr().err
+
+
 def test_cli_help_is_generated_by_cli_builder(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
