@@ -342,3 +342,37 @@ class TestPrologBytecodeVMStress:
                 "Tail": string("ea"),
             },
         ]
+
+    def test_stream_options_and_properties_match_structured_vm(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "stream-options.pltxt"
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        compiled = compile_swi_prolog_source(
+            f"""
+            ?- open('{path_atom}', write, Out,
+                    [alias(bytecode_report), encoding(utf8), type(text)]),
+               write(bytecode_report, "tea"),
+               flush_output(bytecode_report),
+               stream_property(bytecode_report, alias(Alias)),
+               current_stream(Path, Mode, Out),
+               close(bytecode_report).
+            """,
+        )
+
+        answers = run_compiled_prolog_bytecode_query_answers(compiled)
+
+        assert _project_answers(answers, "Alias", "Path", "Mode") == _project_answers(
+            run_compiled_prolog_query_answers(compiled),
+            "Alias",
+            "Path",
+            "Mode",
+        )
+        assert _project_answers(answers, "Alias", "Path", "Mode") == [
+            {
+                "Alias": atom("bytecode_report"),
+                "Path": atom(str(source_path)),
+                "Mode": atom("write"),
+            },
+        ]

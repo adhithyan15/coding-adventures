@@ -33,8 +33,10 @@ mod buffers;
 mod calibrate;
 mod dispatch;
 mod eval;
+mod specialiser;
 
 pub use calibrate::calibrate;
+pub use specialiser::{specialiser, CpuSpecialiser};
 
 use compute_ir::{BufferId, KernelId};
 use executor_protocol::{

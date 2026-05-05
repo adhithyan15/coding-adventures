@@ -9,8 +9,11 @@
   bytecode VM paths, including `open/3`, `close/1`, `read_string/3`,
   `read_line_to_string/2`, `get_char/2`, `at_end_of_stream/1`, `write/2`,
   and `nl/1`.
+- Run bounded source-level stream option and metadata predicates through
+  structured and bytecode VM paths, including `open/4`, `current_stream/3`,
+  `stream_property/2`, and `flush_output/1`.
 - Add a public Prolog VM capability manifest and `prolog-vm --dump-capabilities`
-  so scripts and future planning can distinguish the completed PR00-PR79 track
+  so scripts and future planning can distinguish the completed PR00-PR80 track
   from deferred advanced dialect/runtime work.
 - Add end-to-end stress coverage for recursive search, modules, DCGs,
   arithmetic, collections, dynamic initialization, named answers, and expansion.

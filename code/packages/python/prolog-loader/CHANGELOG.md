@@ -7,6 +7,8 @@
 - adapt source-level bounded file stream predicates including `open/3`,
   `close/1`, `read_string/3`, `read_line_to_string/2`, `get_char/2`,
   `at_end_of_stream/1`, `write/2`, and `nl/1`
+- adapt source-level bounded stream option and metadata predicates including
+  `open/4`, `current_stream/3`, `stream_property/2`, and `flush_output/1`
 - preserve source query variables across `goal_expansion/2` rewrites
 - adapt Prolog `call/2..8` into variadic callable-term execution
 - preserve extra arguments while rewriting module-qualified `call/N` meta-goals

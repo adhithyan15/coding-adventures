@@ -12,6 +12,9 @@ All notable changes to this package will be documented in this file.
 - `openo(path, mode, stream)`, `closeo(stream)`, `read_stringo/3`,
   `read_line_to_stringo/2`, `get_charo/2`, `at_end_of_streamo/1`,
   `writeo/2`, and `nlo/1` for bounded UTF-8 file stream handles.
+- `open_optionso/4`, `current_streamo/3`, `stream_propertyo/2`, and
+  `flush_outputo/1` for bounded stream aliases, option validation, and
+  metadata.
 - `betweeno(low, high, value)` for finite inclusive integer generation and
   validation, matching the common Prolog `between/3` use case.
 - `integero(term)` for non-bool integer type checks and `succo(predecessor,

@@ -41,22 +41,22 @@
 
 mod cost;
 mod planner;
-mod policy;
-mod profile;
 mod registry;
-mod router;
 mod runtime;
-mod spec;
 
 pub use cost::{compute_cost, estimate_flops, transfer_cost_ns};
 pub use planner::{plan, PlanError};
-pub use policy::{DefaultPolicy, SpecialisationPolicy};
-pub use profile::{ProfileObservation, Profiler, TensorObservation};
 pub use registry::{RegisteredExecutor, Registry};
-pub use router::SpecRouter;
 pub use runtime::{Runtime, RuntimeError};
-pub use spec::{
-    NoopSpecialiser, RangeClass, ShapeClass, SpecCache, SpecKey, Specialiser, SpecialisedKernel,
+
+// Re-export the MX05 specialisation pipeline from `matrix-profile`.
+// As of MX05 Phase 3 V5 these types live in their own crate; the
+// re-exports here keep existing `use matrix_runtime::Profiler;` style
+// imports working unchanged across all consumers.
+pub use matrix_profile::{
+    DefaultPolicy, NoopSpecialiser, ProfileObservation, Profiler, RangeClass, ShapeClass,
+    SpecCache, SpecKey, SpecRouter, SpecialisationPolicy, SpecialisedKernel, Specialiser,
+    TensorObservation,
 };
 
 // Re-export BackendProfile from executor-protocol so callers don't

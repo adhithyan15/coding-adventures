@@ -90,6 +90,40 @@ pub trait Backend: Send + Sync {
     /// Returns the function's return value, or `Value::Null` for void
     /// functions.
     fn run(&self, binary: &[u8], args: &[Value]) -> Value;
+
+    /// Compile with full function context — name, parameters, return type.
+    ///
+    /// Native backends (e.g. an ARM64 backend) need this richer signature
+    /// to lay out the AAPCS64 prologue (which registers carry which params)
+    /// and to choose the right `ret_*` width.  IR-only backends (NullBackend,
+    /// EchoBackend, WASM) typically ignore the context and just call
+    /// [`Self::compile`] — that's the default implementation.
+    ///
+    /// Callers (jit-core, aot-core) should prefer this method over
+    /// [`Self::compile`] when they have an `IIRFunction` in hand.
+    fn compile_function(&self, _ctx: &FunctionContext<'_>, ir: &[CIRInstr]) -> Option<Vec<u8>> {
+        self.compile(ir)
+    }
+}
+
+/// Read-only view of an `IIRFunction`'s shape passed to
+/// [`Backend::compile_function`].
+///
+/// Lifetimes match the originating function so no cloning is needed in the
+/// hot path — backends typically read these fields once during prologue
+/// emission and discard them.
+#[derive(Debug, Clone, Copy)]
+pub struct FunctionContext<'a> {
+    /// Function name (e.g. `"main"`, `"fib"`).  Used for label generation
+    /// and any debug info the backend chooses to emit.
+    pub name: &'a str,
+    /// Parameter list — `(name, type_str)` in declaration order.  AAPCS64
+    /// backends marshal these from `x0..x7` into virtual-register slots.
+    pub params: &'a [(String, String)],
+    /// Return type string (e.g. `"u8"`, `"void"`).  Determines whether the
+    /// backend expects a `ret_*` mnemonic and how to package the return
+    /// value into `x0`.
+    pub return_type: &'a str,
 }
 
 // ---------------------------------------------------------------------------
