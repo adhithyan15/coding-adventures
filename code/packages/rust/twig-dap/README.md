@@ -50,6 +50,25 @@ Install the Twig VS Code extension (separate package) to register the
 5. `dap-adapter-core` connects to the VM over TCP and proxies all DAP
    requests (breakpoints, step, continue, variables, call stack).
 
+## Trust model — local loopback only
+
+The `twig-vm` debug server binds `127.0.0.1:<PORT>` and accepts the
+**first** TCP connection.  There is no token, secret, or fd-passing
+handshake confirming the peer is the spawning `twig-dap` adapter.  On a
+shared host any local process running as the same user can race to
+connect first and:
+
+- Read the call stack (`get_call_stack`) and source-level locations
+- Read register/variable values (`get_slot`) — these may carry data the
+  debugged program is processing
+- Drive breakpoints, pauses, and stepping
+
+This is the conventional DAP local-loopback trust model.  It is
+appropriate for single-user developer machines.  **Do not use the debug
+server on multi-user systems or hosts where untrusted local processes
+may exist.**  A future hardening pass may add a one-time token in the
+adapter→VM handshake; for now, the wire is unauthenticated.
+
 ## Status — LS03 PR B complete (0.2.0)
 
 `TwigDebugAdapter::compile()` runs `twig-ir-compiler` and emits a

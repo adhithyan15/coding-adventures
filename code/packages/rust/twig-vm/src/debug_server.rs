@@ -38,12 +38,45 @@
 //! ```
 
 use std::collections::{HashSet, VecDeque};
-use std::io::{BufRead, BufReader, Write};
+use std::io::{BufRead, BufReader, Read, Write};
 use std::net::TcpStream;
 
 use serde_json::{json, Value};
 
 use crate::debug::{DebugHooks, FrameView};
+
+// ---------------------------------------------------------------------------
+// DoS guard
+// ---------------------------------------------------------------------------
+
+/// Maximum bytes a single newline-terminated command line may contain.
+///
+/// Commands and event payloads are small structured JSON; 1 MiB is far
+/// above any legitimate value and well below memory exhaustion.  Without
+/// this cap, a peer that streams bytes without a newline would force
+/// unbounded `String` growth.
+pub const MAX_LINE_BYTES: usize = 1024 * 1024;
+
+/// Read one line of at most [`MAX_LINE_BYTES`] bytes (inclusive of `\n`)
+/// from a `BufRead`, returning the line as a `String`.
+///
+/// Behaves like `BufRead::read_line` but with a hard cap: if more than
+/// [`MAX_LINE_BYTES`] bytes are consumed before a newline, returns an
+/// `InvalidData` error and the partially-read bytes are discarded.
+fn read_line_capped(reader: &mut impl BufRead, line: &mut String) -> std::io::Result<usize> {
+    let mut limited = reader.take(MAX_LINE_BYTES as u64);
+    let n = limited.read_line(line)?;
+    // If we hit the limit AND no newline arrived, signal overflow.
+    // (`read_line` succeeds at EOF too — that's `n == 0` and we let it
+    // through unchanged.)
+    if n == MAX_LINE_BYTES && !line.ends_with('\n') {
+        return Err(std::io::Error::new(
+            std::io::ErrorKind::InvalidData,
+            format!("debug-server line exceeded {MAX_LINE_BYTES} bytes"),
+        ));
+    }
+    Ok(n)
+}
 
 // ---------------------------------------------------------------------------
 // Reasons the VM stopped — wire-format strings match dap-adapter-core
@@ -130,9 +163,12 @@ impl DebugServer {
     }
 
     /// Read the next JSON line, blocking.  Returns `None` on EOF.
+    ///
+    /// Uses the [`MAX_LINE_BYTES`]-capped reader so a malicious peer
+    /// cannot OOM us with a never-newline-terminated stream.
     fn read_json_blocking(&mut self) -> std::io::Result<Option<Value>> {
         let mut line = String::new();
-        if self.reader.read_line(&mut line)? == 0 {
+        if read_line_capped(&mut self.reader, &mut line)? == 0 {
             return Ok(None); // EOF — adapter disconnected
         }
         let v: Value = serde_json::from_str(line.trim_end())
@@ -152,7 +188,7 @@ impl DebugServer {
         self.writer.set_nonblocking(true)?;
         loop {
             let mut line = String::new();
-            match self.reader.read_line(&mut line) {
+            match read_line_capped(&mut self.reader, &mut line) {
                 Ok(0) => break,                 // EOF
                 Ok(_) => {
                     if let Ok(v) = serde_json::from_str::<Value>(line.trim_end()) {
@@ -466,6 +502,29 @@ mod tests {
         ]);
         srv.track_stack("main", 0, 2);
         assert_eq!(srv.call_stack, vec![("main".to_string(), 2)]);
+    }
+
+    #[test]
+    fn read_line_capped_rejects_overlong_input() {
+        // Build a buffer of MAX_LINE_BYTES + 1 bytes, NO newline.  The
+        // helper must return InvalidData rather than allocate the lot.
+        use std::io::Cursor;
+        let bytes = vec![b'A'; MAX_LINE_BYTES + 1];
+        let mut reader = std::io::BufReader::new(Cursor::new(bytes));
+        let mut line = String::new();
+        let err = read_line_capped(&mut reader, &mut line).unwrap_err();
+        assert_eq!(err.kind(), std::io::ErrorKind::InvalidData);
+    }
+
+    #[test]
+    fn read_line_capped_accepts_legitimate_line() {
+        use std::io::Cursor;
+        let raw = b"{\"cmd\":\"continue\"}\n".to_vec();
+        let mut reader = std::io::BufReader::new(Cursor::new(raw));
+        let mut line = String::new();
+        let n = read_line_capped(&mut reader, &mut line).unwrap();
+        assert_eq!(n, line.len());
+        assert!(line.ends_with('\n'));
     }
 
     #[test]

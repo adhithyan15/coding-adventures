@@ -141,7 +141,24 @@ pub fn build_sidecar(module: &IIRModule, source_path: &Path) -> Vec<u8> {
 /// Used to find `twig-vm` from `twig-dap`.  Falls back to a bare name
 /// (PATH lookup) if no sibling is found, supporting both
 /// `cargo install`-style installation and ad-hoc development.
+///
+/// ## Path-traversal guard
+///
+/// `name` MUST be a bare filename — no directory separators, no `..`,
+/// no leading `.`.  This prevents a future caller from accidentally (or
+/// maliciously) constructing a path that escapes the current
+/// executable's directory.  Today the only call site uses the hardcoded
+/// literal `"twig-vm"`, but the guard hardens against drift.
 pub fn find_sibling_binary(name: &str) -> Result<PathBuf, String> {
+    if name.is_empty()
+        || name == "."
+        || name == ".."
+        || name.contains('/')
+        || name.contains('\\')
+        || name.contains('\0')
+    {
+        return Err(format!("find_sibling_binary: invalid name {name:?}"));
+    }
     if let Ok(exe) = std::env::current_exe() {
         if let Some(dir) = exe.parent() {
             #[cfg(windows)] let candidate = dir.join(format!("{name}.exe"));
@@ -237,5 +254,16 @@ mod tests {
     fn find_sibling_binary_returns_something() {
         let p = find_sibling_binary("nonexistent-xyz").expect("ok");
         assert!(p.to_string_lossy().contains("nonexistent-xyz"));
+    }
+
+    #[test]
+    fn find_sibling_binary_rejects_path_traversal() {
+        assert!(find_sibling_binary("../../bin/sh").is_err());
+        assert!(find_sibling_binary("..").is_err());
+        assert!(find_sibling_binary(".").is_err());
+        assert!(find_sibling_binary("a/b").is_err());
+        assert!(find_sibling_binary("a\\b").is_err());
+        assert!(find_sibling_binary("").is_err());
+        assert!(find_sibling_binary("a\0b").is_err());
     }
 }
