@@ -50,6 +50,15 @@ documented in this file.
 - Repeated interactive formatting starts for `a`, `button`, and `nobr` now
   close the previous open element before inserting the next one, avoiding
   impossible nested interactive DOMs for common omitted-end-tag markup.
+- Repeated interactive starts now preserve the surrounding paragraph context
+  when they recover, so trailing text and later inline siblings stay under the
+  same paragraph instead of spilling to the body.
+- Paragraph boundary recovery now covers additional legacy and modern block
+  starts, including `button`, `center`, `dir`, `hgroup`, `search`, `listing`,
+  `xmp`, and `plaintext`.
+- Raw-text and plaintext block starts now close an open paragraph before
+  tokenizer handoff, keeping the resulting text-mode elements as paragraph
+  siblings.
 - Nested `form` start tags are now ignored with a parser diagnostic while an
   outer form remains open, keeping form-associated content in the existing form
   instead of creating nested form DOMs.
