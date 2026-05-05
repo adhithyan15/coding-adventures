@@ -1303,7 +1303,7 @@
       "input": "Text &notin &trade <a value=&notin legacy=&Agrave data=&copy/>",
       "tokens": [
         "Text(data=Text \u00acin &trade )",
-        "StartTag(name=a, attributes=[value=&notin, legacy=\u00c0, data=\u00a9], self_closing=true)",
+        "StartTag(name=a, attributes=[value=&notin, legacy=\u00c0, data=\u00a9/], self_closing=false)",
         "EOF"
       ],
       "diagnostics": [

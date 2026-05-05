@@ -15,7 +15,7 @@
     },
     {
       "id": "mosaic-attributes-and-self-closing",
-      "input": "<IMG SRC=\"mosaic.gif\" ALT='Splash' hidden=1/>",
+      "input": "<IMG SRC=\"mosaic.gif\" ALT='Splash' hidden=1 />",
       "tokens": [
         "StartTag(name=img, attributes=[src=mosaic.gif, alt=Splash, hidden=1], self_closing=true)",
         "EOF"
@@ -994,7 +994,7 @@
       "input": "Text &notin &trade <a value=&notin legacy=&Agrave data=&copy/>",
       "tokens": [
         "Text(data=Text ¬in &trade )",
-        "StartTag(name=a, attributes=[value=&notin, legacy=À, data=©], self_closing=true)",
+        "StartTag(name=a, attributes=[value=&notin, legacy=À, data=©/], self_closing=false)",
         "EOF"
       ],
       "diagnostics": [

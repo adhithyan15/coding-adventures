@@ -3828,8 +3828,8 @@ actions = ["commit_attribute_dedup"]
 [[transitions]]
 from = "attribute_value_unquoted"
 matcher = { literal = "/" }
-to = "self_closing_start_tag"
-actions = ["commit_attribute_dedup"]
+to = "attribute_value_unquoted"
+actions = ["append_attribute_value(current)"]
 
 [[transitions]]
 from = "attribute_value_unquoted"
@@ -7353,7 +7353,7 @@ tokens = [
 
 [[fixtures]]
 name = "mosaic-attributes-and-self-closing"
-input = "<IMG SRC=\"mosaic.gif\" ALT='Splash' hidden=1/>"
+input = "<IMG SRC=\"mosaic.gif\" ALT='Splash' hidden=1 />"
 tokens = [
   "StartTag(name=img, attributes=[src=mosaic.gif, alt=Splash, hidden=1], self_closing=true)",
   "EOF",

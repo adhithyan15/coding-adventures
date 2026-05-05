@@ -87,6 +87,9 @@ Unquoted attribute values also preserve spec-defined unexpected characters
 such as `"`, `'`, `<`, `=`, and `` ` `` while reporting
 `unexpected-character-in-unquoted-attribute-value`, including when the first
 value character appears immediately after `=`.
+Solidus characters inside unquoted attribute values stay in the value, so
+URL-like markup such as `href=http://example.test/path` is not mistaken for a
+self-closing tag transition.
 EOF inside ordinary start/end tag construction now reports the relevant
 EOF-in-tag diagnostic and drops the incomplete token instead of handing a
 partial tag to the future parser.

@@ -1314,7 +1314,7 @@
         ["Character", "Text "],
         ["Character", "\u00AC"],
         ["Character", "in &trade "],
-        ["StartTag", "a", {"value": "&notin", "legacy": "\u00C0", "data": "\u00A9"}, true]
+        ["StartTag", "a", {"value": "&notin", "legacy": "\u00C0", "data": "\u00A9/"}, false]
       ],
       "errors": [
         {"code": "missing-semicolon-after-character-reference", "line": 1, "col": 10},

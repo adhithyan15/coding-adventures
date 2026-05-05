@@ -98,7 +98,7 @@ fn default_html_lexer_drops_partial_attribute_references_at_eof() {
 #[test]
 fn default_html_lexer_supports_html1_attributes_comments_and_doctypes() {
     let tokens = lex_html(
-        "<!DOCTYPE HTML><IMG SRC=\"mosaic.gif\" ALT='Splash' hidden=1/>Before<!--note-->After",
+        "<!DOCTYPE HTML><IMG SRC=\"mosaic.gif\" ALT='Splash' hidden=1 />Before<!--note-->After",
     )
     .unwrap();
 
@@ -381,6 +381,49 @@ fn default_html_lexer_reports_first_unquoted_attribute_value_characters() {
             .count(),
         3
     );
+}
+
+#[test]
+fn default_html_lexer_keeps_solidus_in_unquoted_attribute_values() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("<a href=http://example.test/path data=a/b><img src=cat/>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "href".to_string(),
+                        value: "http://example.test/path".to_string(),
+                    },
+                    Attribute {
+                        name: "data".to_string(),
+                        value: "a/b".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "img".to_string(),
+                attributes: vec![Attribute {
+                    name: "src".to_string(),
+                    value: "cat/".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert!(!lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "unexpected-solidus-in-tag"));
 }
 
 #[test]
@@ -4076,10 +4119,10 @@ fn default_html_lexer_restricts_semicolonless_named_references_to_legacy_names()
                     },
                     Attribute {
                         name: "data".to_string(),
-                        value: "\u{00A9}".to_string(),
+                        value: "\u{00A9}/".to_string(),
                     },
                 ],
-                self_closing: true,
+                self_closing: false,
             },
             Token::Eof,
         ]
