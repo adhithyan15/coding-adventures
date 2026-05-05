@@ -7,6 +7,12 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- Added a generated-grammar freshness test that recompiles
+  `code/grammars/algol/algol60.tokens` and verifies the committed Python token
+  grammar is current.
+
 ### Changed
 
 - Accepted uppercase and mixed-case ALGOL keywords in the wrapper without

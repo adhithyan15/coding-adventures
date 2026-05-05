@@ -32,7 +32,11 @@ ALGOL 60 has several tokenization behaviors that differ from modern languages:
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
+from grammar_tools.compiler import compile_token_grammar
+from grammar_tools.token_grammar import parse_token_grammar
 from lexer import GrammarLexer, Token
 
 from algol_lexer import (
@@ -43,6 +47,13 @@ from algol_lexer import (
     tokenize_algol,
 )
 from algol_lexer._grammar import TOKEN_GRAMMAR
+
+_REPO_ROOT = Path(__file__).resolve().parents[5]
+_SOURCE_TOKENS = _REPO_ROOT / "code/grammars/algol/algol60.tokens"
+_GENERATED_GRAMMAR = (
+    _REPO_ROOT
+    / "code/packages/python/algol-lexer/src/algol_lexer/_grammar.py"
+)
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -109,6 +120,16 @@ class TestFactory:
         lexer = create_algol_lexer("begin end")
 
         assert lexer._grammar is TOKEN_GRAMMAR
+
+    def test_compiled_token_grammar_is_fresh(self) -> None:
+        """The committed Python token grammar matches the source grammar."""
+        source = _SOURCE_TOKENS.read_text(encoding="utf-8")
+        expected = compile_token_grammar(
+            parse_token_grammar(source),
+            "algol/algol60.tokens",
+        )
+
+        assert _GENERATED_GRAMMAR.read_text(encoding="utf-8") == expected
 
     def test_explicit_algol60_version_produces_tokens(self) -> None:
         """The supported version name can be passed explicitly."""
