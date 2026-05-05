@@ -1,8 +1,9 @@
 """ALGOL 60 Parser — parses ALGOL 60 source text into ASTs.
 
-This module is a thin wrapper around the generic ``GrammarParser``. It loads
-the ``algol.grammar`` file from the ``code/grammars/`` directory, tokenizes
-the input using the ALGOL 60 lexer, and produces a generic ``ASTNode`` tree.
+This module is a thin wrapper around the generic ``GrammarParser``. It imports
+the compiled ``algol/algol60.grammar`` grammar as native Python data, tokenizes
+the input using the ALGOL 60 lexer, and produces a generic ``ASTNode`` tree
+without runtime grammar-file I/O.
 
 A Short History of ALGOL 60 Grammar
 -------------------------------------
@@ -60,7 +61,7 @@ that influenced all subsequent languages:
 Grammar Structure
 ------------------
 
-The grammar in ``algol.grammar`` uses EBNF extensions::
+The grammar in ``algol/algol60.grammar`` uses EBNF extensions::
 
     { x }    zero or more repetitions
     [ x ]    optional (zero or one)
@@ -90,54 +91,40 @@ Two convenience functions:
 - ``parse_algol(source)`` — the all-in-one function. Pass in ALGOL 60 text,
   get back an AST.
 
-Locating the Grammar File
---------------------------
+Compiled Grammar
+----------------
 
-The ``algol.grammar`` file lives in ``code/grammars/`` at the repository
-root. We locate it relative to this module's file path::
-
-    parser.py
-    └── algol_parser/      (parent)
-        └── src/           (parent)
-            └── algol-parser/ (parent)
-                └── python/    (parent)
-                    └── packages/ (parent)
-                        └── code/     (parent)
-                            └── grammars/
-                                └── algol.grammar
+The source grammar lives at ``code/grammars/algol/algol60.grammar`` for
+authoring and regeneration. Runtime code imports ``PARSER_GRAMMAR`` from
+``algol_parser._grammar`` so installed packages do not need repository-relative
+grammar files.
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from algol_lexer import tokenize_algol
-from grammar_tools import parse_parser_grammar
+from algol_lexer import (
+    DEFAULT_VERSION,
+    SUPPORTED_VERSIONS,
+    resolve_version,
+    tokenize_algol,
+)
 from lang_parser import ASTNode, GrammarParser
 
-# ---------------------------------------------------------------------------
-# Grammar File Location
-# ---------------------------------------------------------------------------
+from algol_parser._grammar import PARSER_GRAMMAR
 
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-VALID_VERSIONS = {"algol60"}
+_PARSER_GRAMMARS = {version: PARSER_GRAMMAR for version in SUPPORTED_VERSIONS}
 
 
-def resolve_grammar_path(version: str = "algol60") -> Path:
-    """Resolve a supported ALGOL parser grammar path."""
-    if version not in VALID_VERSIONS:
-        valid = ", ".join(sorted(VALID_VERSIONS))
-        raise ValueError(f"Unknown ALGOL version {version!r}. Valid versions: {valid}")
-    return GRAMMAR_DIR / "algol" / f"{version}.grammar"
-
-
-def create_algol_parser(source: str, version: str = "algol60") -> GrammarParser:
+def create_algol_parser(
+    source: str,
+    version: str | None = DEFAULT_VERSION,
+) -> GrammarParser:
     """Create a ``GrammarParser`` configured for ALGOL 60 text.
 
     This function:
 
     1. Tokenizes the source text using the ALGOL 60 lexer.
-    2. Reads and parses the ``algol.grammar`` file.
+    2. Selects the compiled ``algol/algol60.grammar`` grammar.
     3. Creates a ``GrammarParser`` with those tokens and grammar rules.
 
     The parser handles all ALGOL 60 grammar features, including:
@@ -160,7 +147,6 @@ def create_algol_parser(source: str, version: str = "algol60") -> GrammarParser:
         Call ``.parse()`` on it to get the AST.
 
     Raises:
-        FileNotFoundError: If the grammar files cannot be found.
         LexerError: If the source contains characters invalid in ALGOL 60.
 
     Example::
@@ -168,12 +154,13 @@ def create_algol_parser(source: str, version: str = "algol60") -> GrammarParser:
         parser = create_algol_parser('begin integer x; x := 42 end')
         ast = parser.parse()
     """
-    tokens = tokenize_algol(source, version=version)
-    grammar = parse_parser_grammar(resolve_grammar_path(version).read_text())
+    resolved = resolve_version(version)
+    tokens = tokenize_algol(source, version=resolved)
+    grammar = _PARSER_GRAMMARS[resolved]
     return GrammarParser(tokens, grammar)
 
 
-def parse_algol(source: str, version: str = "algol60") -> ASTNode:
+def parse_algol(source: str, version: str | None = DEFAULT_VERSION) -> ASTNode:
     """Parse ALGOL 60 text and return an AST.
 
     This is the main entry point for the ALGOL 60 parser. Pass in a string of
@@ -226,7 +213,6 @@ def parse_algol(source: str, version: str = "algol60") -> ASTNode:
         ``rule_name`` is ``"program"``.
 
     Raises:
-        FileNotFoundError: If the grammar files cannot be found.
         LexerError: If the source contains characters invalid in ALGOL 60.
         GrammarParseError: If the source has syntax errors according to
             the ALGOL 60 grammar.

@@ -6,7 +6,7 @@
 # grammar derives directly from the ALGOL 60 report.
 #
 # Notation (repo standard):
-#   UPPERCASE    token kinds from algol.tokens (custom operators, literals)
+#   UPPERCASE    token kinds from algol/algol60.tokens (custom operators, literals)
 #   "keyword"    quoted keyword literals (match token.value for keyword tokens)
 #   lowercase    grammar rules (non-terminals, defined below)
 #   |            alternation (or)
