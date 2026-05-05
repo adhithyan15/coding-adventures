@@ -224,6 +224,11 @@ blink/
   firmware.<board-specific extension>
 ```
 
+Later, an AOT eject mode may replace `blink.bvm` plus the interpreter with a
+native blink entrypoint for the selected target. The MVP does not require AOT,
+but the blink fixture should remain small and deterministic enough to become
+the first AOT equivalence test.
+
 ## Fake Board Expected Trace
 
 Running the blink bytecode for one loop on a fake board should produce:
@@ -316,3 +321,4 @@ code/fixtures/board-vm/protocol/run-blink-session.json
 - `watch` command for pin-change events.
 - Browser REPL using WebSerial.
 - Multi-language SDK parity for blink.
+- AOT blink eject fixture that proves native output matches VM execution.
