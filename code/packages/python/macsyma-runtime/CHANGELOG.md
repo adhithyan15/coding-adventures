@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.18.0 — 2026-05-05
+
+**Phase 27 — Polynomial inequality solving via MACSYMA surface syntax.**
+
+`solve(p(x) op c, x)` (op ∈ {<, >, ≤, ≥}) now returns a list of interval
+conditions via the upgraded `symbolic-vm` 0.47.0.  No changes to the
+runtime layer itself — this is a dependency bump.
+
+```macsyma
+solve(x - 1 > 0, x)           →  [x > 1]
+solve(x^2 - 1 < 0, x)         →  [and(x > -1, x < 1)]
+solve(x^2 + 1 > 0, x)         →  [0 >= 0]
+```
+
+Dependency bump: `symbolic-vm` ≥ 0.47.0 (was ≥ 0.46.0).
+
+---
+
 ## 1.17.0 — 2026-05-05
 
 **Phase 26 — Transcendental equation solving via MACSYMA surface syntax.**

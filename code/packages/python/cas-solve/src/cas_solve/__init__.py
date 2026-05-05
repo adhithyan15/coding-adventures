@@ -1,5 +1,5 @@
 """Equation solving (Phases 1–6: linear, quadratic, cubic, quartic, numeric, systems,
-and Phase 26 transcendental families).
+Phase 26 transcendental families, and Phase 27 polynomial inequality solving).
 
 Quick start::
 
@@ -30,6 +30,7 @@ from cas_solve.linear import ALL, solve_linear
 from cas_solve.linear_system import solve_linear_system
 from cas_solve.quadratic import solve_quadratic
 from cas_solve.quartic import solve_quartic
+from cas_solve.inequality import try_solve_inequality
 from cas_solve.transcendental import try_solve_transcendental
 
 __all__ = [
@@ -45,5 +46,6 @@ __all__ = [
     "solve_linear_system",
     "solve_quadratic",
     "solve_quartic",
+    "try_solve_inequality",
     "try_solve_transcendental",
 ]

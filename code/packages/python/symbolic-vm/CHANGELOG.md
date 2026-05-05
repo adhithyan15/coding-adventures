@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.47.0 — 2026-05-05
+
+**Phase 27 — Polynomial inequality solving.**
+
+`solve_handler` in `cas_handlers.py` now dispatches polynomial inequalities
+``p(x) op 0`` (op ∈ {<, >, ≤, ≥}) to the new `cas_solve.try_solve_inequality`
+function before falling through to equation solving.
+
+- Inequality heads (`Less`, `Greater`, `LessEqual`, `GreaterEqual`) are
+  detected immediately after the system-form check, before `_unwrap_equation`
+  is called (which would strip the comparison head).
+- `cas_solve>=0.8.0` is now required (was `>=0.7.0`).
+- New import: `from cas_solve import try_solve_inequality as _try_inequality`.
+
+**Surface syntax** (via MACSYMA):
+
+```
+solve(x - 1 > 0, x)          →  [x > 1]
+solve(x^2 - 1 < 0, x)        →  [and(x > -1, x < 1)]
+solve(x^2 - 3*x + 2 <= 0, x) →  [and(x >= 1, x <= 2)]
+solve(x^2 + 1 > 0, x)        →  [0 >= 0]  (all reals)
+solve(x^2 + 1 < 0, x)        →  []        (no solution)
+```
+
+---
+
 ## 0.46.0 — 2026-05-05
 
 **Phase 26 — Transcendental equation solving + Lambert W handler.**

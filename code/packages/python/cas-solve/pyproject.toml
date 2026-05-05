@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-cas-solve"
-version = "0.7.0"
-description = "Equation solving — polynomial (degrees 1–4) + numeric root-finding + linear systems + transcendental families (trig, exp/log, hyperbolic, Lambert W, compound substitution)."
+version = "0.8.0"
+description = "Equation solving — polynomial (degrees 1–4) + numeric root-finding + linear systems + transcendental families + polynomial inequality solving."
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
