@@ -35,6 +35,8 @@ struct FixtureCase {
     #[serde(default)]
     current_end_tag: Option<String>,
     #[serde(default)]
+    current_comment: Option<String>,
+    #[serde(default)]
     temporary_buffer: Option<String>,
 }
 
@@ -57,6 +59,8 @@ struct Html5libTokenizerTest {
     current_end_tag: Option<String>,
     #[serde(default, rename = "temporaryBuffer")]
     temporary_buffer: Option<String>,
+    #[serde(default, rename = "currentComment")]
+    current_comment: Option<String>,
     #[serde(default)]
     errors: Vec<Html5libTokenizerError>,
 }
@@ -255,6 +259,14 @@ fn normalized_html5lib_fixture_parses_with_importer_metadata() {
                 && case.initial_state.as_deref() == Some("RCDATA end tag name state")),
         "normalized fixtures should include seeded end-tag continuation states"
     );
+    assert!(
+        normalized
+            .cases
+            .iter()
+            .any(|case| case.current_comment.as_deref() == Some("seed")
+                && case.initial_state.as_deref() == Some("Comment end dash state")),
+        "normalized fixtures should include seeded comment continuation states"
+    );
 }
 
 #[test]
@@ -370,6 +382,7 @@ fn is_supported_by_current_runtime(case: &FixtureCase) -> bool {
         None => {
             case.last_start_tag.is_none()
                 && case.current_end_tag.is_none()
+                && case.current_comment.is_none()
                 && case.temporary_buffer.is_none()
         }
         Some(initial_state) => {
@@ -378,8 +391,10 @@ fn is_supported_by_current_runtime(case: &FixtureCase) -> bool {
             };
             let has_end_tag_seed =
                 case.current_end_tag.is_some() && case.temporary_buffer.is_some();
+            let has_comment_seed = case.current_comment.is_some();
             state.requires_last_start_tag() == case.last_start_tag.is_some()
                 && state.requires_end_tag_seed() == has_end_tag_seed
+                && state.requires_comment_seed() == has_comment_seed
                 && (has_end_tag_seed
                     || (case.current_end_tag.is_none() && case.temporary_buffer.is_none()))
         }
@@ -440,6 +455,9 @@ fn configure_lexer_for_case(
     }
     if let Some(current_end_tag) = case.current_end_tag.as_deref() {
         context = context.with_current_end_tag(current_end_tag);
+    }
+    if let Some(current_comment) = case.current_comment.as_deref() {
+        context = context.with_current_comment(current_comment);
     }
     if let Some(temporary_buffer) = case.temporary_buffer.as_deref() {
         context = context.with_temporary_buffer(temporary_buffer);

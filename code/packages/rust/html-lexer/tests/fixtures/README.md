@@ -67,6 +67,9 @@ optional `initialStates`, optional `lastStartTag`, and optional `errors`.
 For seeded continuation states that upstream fixtures cannot fully describe,
 this smoke file also accepts `currentEndTag` and `temporaryBuffer` extension
 fields; the normalizer lowers them to `current_end_tag` and `temporary_buffer`.
+Comment continuation fixtures likewise accept a `currentComment` extension
+field, lowered to `current_comment`, so html5lib-style comment substates can
+resume with an already-created comment token.
 
 `normalize_html5lib_fixtures.py` is the checked-in importer for this shape. It
 currently supports:
@@ -78,6 +81,9 @@ currently supports:
 - `initialStates: ["PLAINTEXT state"]`
 - `initialStates: ["CDATA section state"]`
 - CDATA section `bracket` and `end` substates
+- comment `start`, `start dash`, body, less-than-sign, less-than-sign bang,
+  less-than-sign bang dash, less-than-sign bang dash dash, end-dash, end,
+  end-bang, and bogus-comment substates together with `currentComment`
 - `initialStates: ["Script data state"]` together with `lastStartTag`
 - script `less-than sign`, `escape start`, and `escape start dash` substates
   together with `lastStartTag`
@@ -172,13 +178,14 @@ than silently disappearing. Rust conformance tests execute the generated
 `html5lib-smoke.json` corpus and separately parse the raw upstream-style file to
 keep the intake path visible. Tokenizer-context cases such as RCDATA, RAWTEXT,
 script submodes, CDATA bracket/end states, resumable end-tag-open states, and
-seeded end-tag continuation states stay in the generated corpus with context
+seeded end-tag and comment continuation states stay in the generated corpus with context
 metadata and are seeded into the Rust wrapper at test time, while still
 unsupported upstream states remain recorded under `skipped` instead of being
 discarded. End-tag continuation coverage intentionally exercises matching,
 mismatched, EOF, and diagnostic recovery paths so parser/tokenizer handoff
 regressions show up in the shared fixture corpus instead of only in narrow unit
-tests.
+tests. Comment continuation coverage does the same for pending dash/bang and
+bogus-comment recovery paths.
 
 To regenerate the normalized corpus:
 

@@ -43,6 +43,17 @@ pub enum HtmlTokenizerState {
     CdataSection,
     CdataSectionBracket,
     CdataSectionEnd,
+    CommentStart,
+    CommentStartDash,
+    Comment,
+    CommentLessThanSign,
+    CommentLessThanSignBang,
+    CommentLessThanSignBangDash,
+    CommentLessThanSignBangDashDash,
+    CommentEndDash,
+    CommentEnd,
+    CommentEndBang,
+    BogusComment,
     ScriptData,
     ScriptDataLessThanSign,
     ScriptDataEndTagOpen,
@@ -70,7 +81,7 @@ pub enum HtmlTokenizerState {
 }
 
 /// Tokenizer states that are valid parser-facing entry points.
-pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 43] = [
+pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 54] = [
     HtmlTokenizerState::Data,
     HtmlTokenizerState::Rcdata,
     HtmlTokenizerState::RcdataLessThanSign,
@@ -90,6 +101,17 @@ pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 43] = [
     HtmlTokenizerState::CdataSection,
     HtmlTokenizerState::CdataSectionBracket,
     HtmlTokenizerState::CdataSectionEnd,
+    HtmlTokenizerState::CommentStart,
+    HtmlTokenizerState::CommentStartDash,
+    HtmlTokenizerState::Comment,
+    HtmlTokenizerState::CommentLessThanSign,
+    HtmlTokenizerState::CommentLessThanSignBang,
+    HtmlTokenizerState::CommentLessThanSignBangDash,
+    HtmlTokenizerState::CommentLessThanSignBangDashDash,
+    HtmlTokenizerState::CommentEndDash,
+    HtmlTokenizerState::CommentEnd,
+    HtmlTokenizerState::CommentEndBang,
+    HtmlTokenizerState::BogusComment,
     HtmlTokenizerState::ScriptData,
     HtmlTokenizerState::ScriptDataLessThanSign,
     HtmlTokenizerState::ScriptDataEndTagOpen,
@@ -117,7 +139,7 @@ pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 43] = [
 ];
 
 /// Tokenizer states used for parser-controlled text or foreign-content fragments.
-pub const HTML_FRAGMENT_TOKENIZER_STATES: [HtmlTokenizerState; 42] = [
+pub const HTML_FRAGMENT_TOKENIZER_STATES: [HtmlTokenizerState; 53] = [
     HtmlTokenizerState::Rcdata,
     HtmlTokenizerState::RcdataLessThanSign,
     HtmlTokenizerState::RcdataEndTagOpen,
@@ -136,6 +158,17 @@ pub const HTML_FRAGMENT_TOKENIZER_STATES: [HtmlTokenizerState; 42] = [
     HtmlTokenizerState::CdataSection,
     HtmlTokenizerState::CdataSectionBracket,
     HtmlTokenizerState::CdataSectionEnd,
+    HtmlTokenizerState::CommentStart,
+    HtmlTokenizerState::CommentStartDash,
+    HtmlTokenizerState::Comment,
+    HtmlTokenizerState::CommentLessThanSign,
+    HtmlTokenizerState::CommentLessThanSignBang,
+    HtmlTokenizerState::CommentLessThanSignBangDash,
+    HtmlTokenizerState::CommentLessThanSignBangDashDash,
+    HtmlTokenizerState::CommentEndDash,
+    HtmlTokenizerState::CommentEnd,
+    HtmlTokenizerState::CommentEndBang,
+    HtmlTokenizerState::BogusComment,
     HtmlTokenizerState::ScriptData,
     HtmlTokenizerState::ScriptDataLessThanSign,
     HtmlTokenizerState::ScriptDataEndTagOpen,
@@ -213,6 +246,17 @@ impl HtmlTokenizerState {
             Self::CdataSection => "cdata_section",
             Self::CdataSectionBracket => "cdata_section_bracket",
             Self::CdataSectionEnd => "cdata_section_end",
+            Self::CommentStart => "comment_start",
+            Self::CommentStartDash => "comment_start_dash",
+            Self::Comment => "comment",
+            Self::CommentLessThanSign => "comment_less_than_sign",
+            Self::CommentLessThanSignBang => "comment_less_than_sign_bang",
+            Self::CommentLessThanSignBangDash => "comment_less_than_sign_bang_dash",
+            Self::CommentLessThanSignBangDashDash => "comment_less_than_sign_bang_dash_dash",
+            Self::CommentEndDash => "comment_end_dash",
+            Self::CommentEnd => "comment_end",
+            Self::CommentEndBang => "comment_end_bang",
+            Self::BogusComment => "bogus_comment",
             Self::ScriptData => "script_data",
             Self::ScriptDataLessThanSign => "script_data_less_than_sign",
             Self::ScriptDataEndTagOpen => "script_data_end_tag_open",
@@ -264,6 +308,17 @@ impl HtmlTokenizerState {
             Self::CdataSection => "CDATA section state",
             Self::CdataSectionBracket => "CDATA section bracket state",
             Self::CdataSectionEnd => "CDATA section end state",
+            Self::CommentStart => "Comment start state",
+            Self::CommentStartDash => "Comment start dash state",
+            Self::Comment => "Comment state",
+            Self::CommentLessThanSign => "Comment less-than sign state",
+            Self::CommentLessThanSignBang => "Comment less-than sign bang state",
+            Self::CommentLessThanSignBangDash => "Comment less-than sign bang dash state",
+            Self::CommentLessThanSignBangDashDash => "Comment less-than sign bang dash dash state",
+            Self::CommentEndDash => "Comment end dash state",
+            Self::CommentEnd => "Comment end state",
+            Self::CommentEndBang => "Comment end bang state",
+            Self::BogusComment => "Bogus comment state",
             Self::ScriptData => "Script data state",
             Self::ScriptDataLessThanSign => "Script data less-than sign state",
             Self::ScriptDataEndTagOpen => "Script data end tag open state",
@@ -353,6 +408,24 @@ impl HtmlTokenizerState {
         )
     }
 
+    /// Return whether this state resumes an already-started comment token.
+    pub fn requires_comment_seed(self) -> bool {
+        matches!(
+            self,
+            Self::CommentStart
+                | Self::CommentStartDash
+                | Self::Comment
+                | Self::CommentLessThanSign
+                | Self::CommentLessThanSignBang
+                | Self::CommentLessThanSignBangDash
+                | Self::CommentLessThanSignBangDashDash
+                | Self::CommentEndDash
+                | Self::CommentEnd
+                | Self::CommentEndBang
+                | Self::BogusComment
+        )
+    }
+
     /// Return whether a seeded state needs the parser's last-start-tag context.
     pub fn requires_last_start_tag(self) -> bool {
         matches!(
@@ -381,6 +454,7 @@ pub struct HtmlLexContext {
     pub initial_state: HtmlTokenizerState,
     pub last_start_tag: Option<String>,
     pub current_end_tag: Option<String>,
+    pub current_comment: Option<String>,
     pub temporary_buffer: Option<String>,
 }
 
@@ -390,6 +464,7 @@ impl HtmlLexContext {
             initial_state,
             last_start_tag: None,
             current_end_tag: None,
+            current_comment: None,
             temporary_buffer: None,
         }
     }
@@ -431,6 +506,11 @@ impl HtmlLexContext {
         self
     }
 
+    pub fn with_current_comment(mut self, data: impl Into<String>) -> Self {
+        self.current_comment = Some(data.into());
+        self
+    }
+
     pub fn with_temporary_buffer(mut self, value: impl Into<String>) -> Self {
         self.temporary_buffer = Some(value.into());
         self
@@ -440,7 +520,25 @@ impl HtmlLexContext {
         self.initial_state == HtmlTokenizerState::Data
             && self.last_start_tag.is_none()
             && self.current_end_tag.is_none()
+            && self.current_comment.is_none()
             && self.temporary_buffer.is_none()
+    }
+
+    /// Return a comment tokenizer continuation context for importer/parser tests.
+    ///
+    /// These states resume with an already-created comment token. States such as
+    /// `comment_end_dash` and `comment_end` encode pending dash delimiters in
+    /// the tokenizer state itself, so the seed only contains already-committed
+    /// comment data.
+    pub fn comment_continuation(
+        initial_state: HtmlTokenizerState,
+        data: impl Into<String>,
+    ) -> Option<Self> {
+        if initial_state.requires_comment_seed() {
+            Some(Self::new(initial_state).with_current_comment(data))
+        } else {
+            None
+        }
     }
 
     /// Return the tokenizer context used for text following a start tag.
@@ -521,6 +619,8 @@ pub fn apply_html_lex_context(lexer: &mut HtmlLexer, context: &HtmlLexContext) -
     }
     if let Some(current_end_tag) = context.current_end_tag.as_deref() {
         lexer.set_current_end_tag(current_end_tag);
+    } else if let Some(current_comment) = context.current_comment.as_deref() {
+        lexer.set_current_comment(current_comment);
     } else {
         lexer.clear_current_token();
     }

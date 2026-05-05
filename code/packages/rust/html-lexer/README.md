@@ -179,6 +179,11 @@ machine-state strings. Parsers that keep one lexer alive can call
 `apply_html_lex_context` to move that lexer between data state, text-mode
 states, and seeded end-tag continuation states while clearing stale
 last-start-tag, current-token, and temporary-buffer context.
+The same typed context layer now covers seeded comment continuation states,
+including comment start/dash, less-than/bang/dash substates, end-dash/end-bang,
+and bogus-comment recovery. This lets html5lib-style importer cases resume
+comment tokenization with an in-progress comment token instead of treating those
+states as runtime gaps.
 Foreign-content CDATA is exposed as an explicit
 `HtmlLexContext::cdata_section()` helper rather than as an element-name mapping,
 so future SVG/MathML tree-construction logic can opt into CDATA only after it
@@ -226,11 +231,12 @@ fixture normalization logic to live forever inside the Rust tests.
 
 The normalized corpus now carries optional tokenizer-context metadata such as
 `initial_state` and `last_start_tag`, so upstream RCDATA, RAWTEXT, PLAINTEXT,
-CDATA section, script data, script data escaped/dash/less-than/end-tag-open
-substates, and script data double-escaped/dash/less-than substates can already
-live in the shared Venture fixture format. Current Rust conformance tests now
-seed that context into the generated lexer so non-data-state cases execute
-through the same static Rust wrapper as the data-state corpus.
+CDATA section, comment continuation states, script data, script data
+escaped/dash/less-than/end-tag-open substates, and script data
+double-escaped/dash/less-than substates can already live in the shared Venture
+fixture format. Current Rust conformance tests now seed that context into the
+generated lexer so non-data-state cases execute through the same static Rust
+wrapper as the data-state corpus.
 The importer also expands supported multi-state html5lib entries into stable
 per-state Venture cases and now covers intermediate text-like states such as
 RCDATA/RAWTEXT less-than and end-tag-open, CDATA bracket/end, script less-than
@@ -238,7 +244,8 @@ and end-tag-open, script escape-start, script escaped end-tag-open, and script
 double-escape start/end. End-tag-open fixtures now cover matching tags,
 mismatched tags that must remain literal text, EOF recovery that preserves the
 pending `</`, and matching end-tag diagnostics for whitespace, attributes, and
-trailing solidus.
+trailing solidus. Comment continuation fixtures cover seeded body, pending dash,
+pending bang, nested-comment, abrupt-close, and bogus-comment recovery paths.
 
 The intended WHATWG/WPT path is to normalize upstream tokenizer cases into this
 same schema rather than teaching the Rust harness to parse raw upstream files

@@ -43,3 +43,5 @@ All notable changes to the `state-machine-tokenizer` crate will be documented in
 - Restricted missing-semicolon named-character-reference recovery to the
   WHATWG legacy no-semicolon aliases instead of accepting every known name
   without `;`.
+- Added current-comment seeding helpers so wrapper packages can resume
+  comment-token continuation states without loading tokenizer definition files.

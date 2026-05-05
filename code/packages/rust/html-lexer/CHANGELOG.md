@@ -23,6 +23,12 @@ documented in this file.
 - html5lib-style smoke fixture coverage for the seeded continuation states,
   including matching end tags, mismatched literal recovery, EOF recovery, and
   whitespace/attribute/trailing-solidus diagnostics.
+- Parser/importer-facing seeded comment continuation contexts, including
+  comment body, start-dash, less-than, end-dash, end-bang, and bogus-comment
+  substates with current-comment seeding.
+- html5lib-style smoke fixture coverage for seeded comment continuations,
+  including pending dash/bang preservation, abrupt close diagnostics, and
+  bogus-comment recovery.
 
 ### Changed
 - Switched the stable `create_html_lexer` and `lex_html` API over from the
