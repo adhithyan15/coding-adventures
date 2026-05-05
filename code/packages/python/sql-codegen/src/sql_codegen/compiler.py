@@ -36,6 +36,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
+from sql_backend.schema import NO_DEFAULT as _BACKEND_NO_DEFAULT
 from sql_planner import (
     Aggregate,
     Begin,
@@ -125,7 +126,6 @@ from sql_planner import (
 from sql_planner import (
     WindowAgg as PlanWindowAgg,
 )
-from sql_backend.schema import NO_DEFAULT as _BACKEND_NO_DEFAULT
 from sql_planner.ast import ColumnDef as AstColumnDef
 from sql_planner.expr import AggregateExpr
 from sql_planner.plan import AggFunc as PlanAggFunc
@@ -134,6 +134,7 @@ from sql_planner.plan import WindowFuncSpec as PlanWindowFuncSpec
 
 from .errors import UnsupportedNode
 from .ir import (
+    NO_COLUMN_DEFAULT,
     AdvanceCursor,
     AdvanceGroupKey,
     AlterTable,
@@ -209,7 +210,6 @@ from .ir import (
     AggFunc as IrAggFunc,
 )
 from .ir import (
-    NO_COLUMN_DEFAULT,
     ColumnDef as IrColumnDef,
 )
 
