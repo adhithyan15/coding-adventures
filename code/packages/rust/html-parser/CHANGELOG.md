@@ -38,3 +38,5 @@ documented in this file.
   elements, preventing nested select-option DOMs when end tags are omitted.
 - Heading start tags now close open paragraphs and previous headings, avoiding
   nested heading DOMs when heading end tags are omitted.
+- Common block starts such as `div`, `ul`, and `table` now close open
+  paragraphs before insertion, preventing paragraph-nested block DOMs.

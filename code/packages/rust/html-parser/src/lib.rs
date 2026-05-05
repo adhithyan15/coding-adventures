@@ -378,6 +378,8 @@ impl HtmlParser {
         } else if is_heading_element(incoming_name) {
             self.pop_current_if(|name| name == "p");
             self.pop_current_if(is_heading_element);
+        } else if is_paragraph_boundary_element(incoming_name) {
+            self.pop_current_if(|name| name == "p");
         }
     }
 
@@ -590,6 +592,35 @@ fn is_heading_element(name: &str) -> bool {
     matches!(name, "h1" | "h2" | "h3" | "h4" | "h5" | "h6")
 }
 
+fn is_paragraph_boundary_element(name: &str) -> bool {
+    matches!(
+        name,
+        "address"
+            | "article"
+            | "aside"
+            | "blockquote"
+            | "details"
+            | "dialog"
+            | "div"
+            | "dl"
+            | "fieldset"
+            | "figcaption"
+            | "figure"
+            | "footer"
+            | "form"
+            | "header"
+            | "hr"
+            | "main"
+            | "menu"
+            | "nav"
+            | "ol"
+            | "pre"
+            | "section"
+            | "table"
+            | "ul"
+    )
+}
+
 fn is_void_element(name: &str) -> bool {
     matches!(
         name,
@@ -765,6 +796,46 @@ mod tests {
         let third = element(&body.children[3]);
         assert_eq!(third.name, "h3");
         assert_eq!(third.children, vec![Node::text("Three")]);
+    }
+
+    #[test]
+    fn closes_paragraphs_before_block_boundaries() {
+        let document = parse_html(
+            "<p>Intro<div>Block</div><p>Items<ul><li>One</ul><p>Table<table><tr><td>A</table>",
+        )
+        .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 6);
+
+        let intro = element(&body.children[0]);
+        assert_eq!(intro.name, "p");
+        assert_eq!(intro.children, vec![Node::text("Intro")]);
+
+        let div = element(&body.children[1]);
+        assert_eq!(div.name, "div");
+        assert_eq!(div.children, vec![Node::text("Block")]);
+
+        let items = element(&body.children[2]);
+        assert_eq!(items.name, "p");
+        assert_eq!(items.children, vec![Node::text("Items")]);
+
+        let list = element(&body.children[3]);
+        assert_eq!(list.name, "ul");
+        assert_eq!(list.children.len(), 1);
+        let item = element(&list.children[0]);
+        assert_eq!(item.name, "li");
+        assert_eq!(item.children, vec![Node::text("One")]);
+
+        let table_intro = element(&body.children[4]);
+        assert_eq!(table_intro.name, "p");
+        assert_eq!(table_intro.children, vec![Node::text("Table")]);
+
+        let table = element(&body.children[5]);
+        assert_eq!(table.name, "table");
+        let tbody = element(&table.children[0]);
+        let row = element(&tbody.children[0]);
+        assert_eq!(element(&row.children[0]).children, vec![Node::text("A")]);
     }
 
     #[test]
