@@ -32,6 +32,9 @@ documented in this file.
 - Parser-approved initial tokenizer contexts now cover RCDATA/RAWTEXT
   fragments, CDATA bracket/end substates, script less-than and escape-start
   substates, and script double-escape start/end substates exposed by the lexer.
+- Parser-approved initial tokenizer contexts now include RCDATA, RAWTEXT,
+  script data, and escaped script end-tag-open substates exposed by the lexer,
+  keeping parser fragment handoff aligned with the broader tokenizer surface.
 - Initial table tree-construction recovery for omitted `tbody`/`tr` structure,
   including implicit row groups for bare rows/cells and section closure when a
   new table section starts.
@@ -74,3 +77,6 @@ documented in this file.
 - `</br>` now recovers as a `br` start tag with a parser diagnostic.
 - `pre`, `listing`, and `textarea` now strip one immediately following LF text
   character while preserving later nested text.
+- Omitted-shell `</head>`, `</body>`, and `</html>` boundaries now recover
+  without noisy unmatched-end diagnostics by closing the current lightweight
+  body-content stack before subsequent text or element siblings are appended.
