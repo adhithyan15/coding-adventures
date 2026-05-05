@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "aarch64-backend",
     "aarch64-encoder",
+    "twig-aot",
     "activation-functions",
     "audio-device-coreaudio",
     "audio-device-sink",
