@@ -6,6 +6,8 @@ use board_vm_runtime::{BoardHal, RunReport, Runtime, RuntimeError};
 pub mod arduino_usb_link;
 #[cfg(target_arch = "arm")]
 pub mod scripted_probe_stream;
+#[cfg(not(target_arch = "arm"))]
+pub mod serial_usb_artifact;
 pub mod serial_usb_server;
 #[cfg(target_arch = "arm")]
 pub mod uno_r4_wifi_backend;
@@ -67,7 +69,7 @@ where
     Ok(runtime.run_module(&module, instruction_budget)?)
 }
 
-#[cfg(test)]
+#[cfg(any(test, not(target_arch = "arm")))]
 extern crate std;
 
 #[cfg(test)]

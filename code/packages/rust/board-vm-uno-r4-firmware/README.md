@@ -150,8 +150,39 @@ the pure-Rust link path. Override `BOARD_VM_UNO_R4_ARM_GCC`,
 `BOARD_VM_UNO_R4_ARM_GXX`, or `BOARD_VM_UNO_R4_ARM_AR` if the Arduino-packaged
 toolchain cannot run on the host.
 
-After flashing the generated `.bin`, run the host smoke test against the adapter
-serial port:
+For the built-in USB route, the host artifact helper wraps the repeatable
+hardware path: build the linked SerialUSB firmware, convert the ELF to the
+bootloader `.bin`, optionally upload it with Arduino CLI, and optionally run the
+Board VM smoke session against the same serial port. Use `--print-only` first to
+inspect the exact commands:
+
+```sh
+cargo run -p board-vm-uno-r4-firmware --bin uno-r4-wifi-serialusb-artifact -- \
+  --print-only \
+  --port /dev/cu.usbmodem... \
+  --upload \
+  --smoke
+```
+
+When the Arduino Renesas core and a compatible ARM GCC toolchain are available,
+drop `--print-only` to produce
+`target/thumbv7em-none-eabihf/release/uno-r4-wifi-serialusb-server.bin`, flash
+it, and run the host smoke path:
+
+```sh
+cargo run -p board-vm-uno-r4-firmware --bin uno-r4-wifi-serialusb-artifact -- \
+  --core "$HOME/Library/Arduino15/packages/arduino/hardware/renesas_uno/1.5.3" \
+  --port /dev/cu.usbmodem... \
+  --upload \
+  --smoke
+```
+
+The helper discovers Rust's bundled `llvm-objcopy` when available. Override
+`--objcopy`, `--arduino-cli`, `--target-dir`, `--baud`, or `--timeout-ms` for
+local tooling differences.
+
+After flashing any Board VM server image manually, run the host smoke test
+against the adapter serial port:
 
 ```sh
 cargo run -p board-vm-cli --bin board-vm -- smoke \
@@ -159,6 +190,9 @@ cargo run -p board-vm-cli --bin board-vm -- smoke \
   --baud 115200 \
   --timeout-ms 1000
 ```
+
+For the original `uno-r4-vm-blink-smoke` image, upload the bootloader `.bin`
+directly:
 
 ```sh
 arduino-cli upload \
