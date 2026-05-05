@@ -18,6 +18,10 @@ This first slice intentionally starts small:
   appears before `</head>`
 - duplicate open `body` start-tag recovery that merges missing attributes
   without creating nested body elements
+- duplicate open `html` and `head` start-tag recovery that merges missing
+  attributes without nesting shell elements
+- ignored late `head` start tags after body content has already started, with a
+  parser diagnostic
 - implied table `tbody` and `tr` creation for common omitted table structure
 - implied table `colgroup` creation for bare `col` elements
 - table caption/column-group boundary recovery before bare columns, rows, and
@@ -27,13 +31,16 @@ This first slice intentionally starts small:
 - parser options for scripting-sensitive tokenizer handoff, including
   `noscript`
 - parser-approved initial tokenizer contexts for data-state documents and
-  foreign-content CDATA or script-state fragments
+  RCDATA/RAWTEXT, foreign-content CDATA, script-state, and intermediate
+  tokenizer fragments exposed by the lexer
 - simple implied end tags for `p`, `li`, `dt`, `dd`, `option`, `optgroup`,
   ruby annotations, heading elements, legacy paragraph/block boundaries, and
   raw-text block starts
 - interactive and form-boundary recovery for repeated `a`, `button`, and
   `nobr` starts plus ignored nested `form` starts while preserving surrounding
   paragraph/list context
+- special end-tag recovery for `</p>` and `</br>` compatibility cases
+- initial line-feed stripping for `pre`, `listing`, and `textarea`
 - parser diagnostics for unmatched end tags
 
 Future batches can layer the full WHATWG HTML tree-construction insertion modes
