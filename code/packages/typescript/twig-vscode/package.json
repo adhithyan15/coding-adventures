@@ -1,0 +1,115 @@
+{
+  "name": "twig-vscode",
+  "displayName": "Twig",
+  "publisher": "coding-adventures-twig",
+  "description": "Twig language support and debugging for Visual Studio Code",
+  "version": "0.1.0",
+  "main": "./out/extension.js",
+  "engines": {
+    "vscode": "^1.82.0"
+  },
+  "activationEvents": [
+    "onLanguage:twig",
+    "onDebug"
+  ],
+  "categories": [
+    "Programming Languages",
+    "Debuggers"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "twig",
+        "aliases": [
+          "Twig"
+        ],
+        "extensions": [
+          ".twig",
+          ".tw"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "twig",
+        "scopeName": "source.twig",
+        "path": "./syntaxes/twig.tmLanguage.json"
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "twig",
+        "label": "Twig",
+        "languages": [
+          "twig"
+        ],
+        "configurationAttributes": {
+          "launch": {
+            "required": [
+              "program"
+            ],
+            "properties": {
+              "program": {
+                "type": "string",
+                "description": "Path to the Twig source file to debug."
+              },
+              "stopOnEntry": {
+                "type": "boolean",
+                "description": "Stop on entry to the program.",
+                "default": false
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "twig",
+            "request": "launch",
+            "name": "Launch Twig program",
+            "program": "${file}",
+            "stopOnEntry": false
+          }
+        ]
+      }
+    ],
+    "configuration": {
+      "title": "Twig",
+      "properties": {
+        "twig.serverPath": {
+          "type": "string",
+          "default": "twig-lsp-server",
+          "description": "Path to the Twig language server binary."
+        },
+        "twig.trace.server": {
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Trace LSP messages between VS Code and the language server."
+        },
+        "twig.adapterPath": {
+          "type": "string",
+          "default": "twig-dap",
+          "description": "Path to the Twig debug adapter binary."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsc -p .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/vscode": "^1.82.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

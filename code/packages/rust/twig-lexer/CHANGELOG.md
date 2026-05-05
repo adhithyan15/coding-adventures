@@ -1,5 +1,15 @@
 # Changelog — twig-lexer
 
+## [0.3.0] — LS04 spec dump
+
+### Added
+- `twig_token_grammar_spec()` — public accessor for the
+  build-time-compiled `TokenGrammar`.  Lets downstream editor tooling
+  (the `twig-spec-dump` binary in twig-parser, future treesitter
+  wrappers) introspect Twig's keyword list, brackets, and token table
+  without re-parsing `code/grammars/twig.tokens` at runtime.  Same
+  source of truth as the lexer itself.
+
 ## [0.2.0] — 2026-05-04
 
 ### Added (LANG23 PR 23-E — refinement type annotation tokens)

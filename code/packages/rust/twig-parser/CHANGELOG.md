@@ -1,5 +1,18 @@
 # Changelog — twig-parser
 
+## [0.3.0] — LS04 spec dump
+
+### Added
+- New binary `twig-spec-dump` (`bin/twig_spec_dump.rs`) — emits Twig's
+  `LanguageSpec` v1 JSON document for downstream editor tooling
+  (VS Code extension generator, treesitter wrappers, syntax-highlight
+  generators).
+- The binary uses the build-time-compiled lexer and parser grammars
+  baked into `twig-lexer` and `twig-parser` rlibs — no runtime file
+  I/O, no dependency on `code/grammars/twig.tokens` or
+  `code/grammars/twig.grammar` being present at runtime.
+- `serde_json` dependency added for pretty-printing JSON output.
+
 ## [0.2.0] — 2026-05-04
 
 ### Added (LANG23 PR 23-E — refinement type annotation syntax)

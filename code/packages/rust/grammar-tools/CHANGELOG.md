@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - LS04 spec dump
+
+### Added
+- New `dump_spec` module exposing `dump_language_spec(token_grammar,
+  parser_grammar, metadata)` — serialises a parsed grammar pair into
+  the LanguageSpec v1 JSON document consumed by VS Code extension
+  generation, treesitter wrappers, and other editor tooling
+  (LS04).
+- `infer_brackets()` helper — derives bracket pairs from conventional
+  token names (`LPAREN`/`RPAREN`, `LBRACE`/`RBRACE`, etc.).
+- `serde_json` dependency for the dump-spec JSON output (regular dep,
+  no derive macros — keeps the dep tree small).
+
+### Notes
+- `<lang>-parser` crates can pair this with their build-time-compiled
+  `ParserGrammar` and the lexer crate's `TokenGrammar` to expose a
+  `<lang>-spec-dump` binary; see `code/packages/rust/twig-parser/bin/twig_spec_dump.rs`
+  for the pattern.
+
 ## [0.5.0] - 2026-04-04
 
 ### Added
