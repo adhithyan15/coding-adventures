@@ -147,6 +147,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     query_module = _optional_string(flags["query-module"])
     limit = _optional_int(flags["limit"])
     source_stdin = bool(flags["source-stdin"])
+    output_format = _output_format(_required_string(flags["format"], name="--format"))
     source_query_index = _required_int(
         flags["source-query-index"],
         name="--source-query-index",
@@ -339,6 +340,9 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if summary and interactive:
         msg = "--summary cannot be combined with --interactive"
         raise ValueError(msg)
+    if interactive and output_format == "json":
+        msg = "--format json cannot be combined with --interactive"
+        raise ValueError(msg)
     if all_source_queries and queries:
         msg = "--all-source-queries cannot be combined with --query"
         raise ValueError(msg)
@@ -378,9 +382,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         backend=_backend(_required_string(flags["backend"], name="--backend")),
         values=values,
         summary=summary,
-        output_format=_output_format(
-            _required_string(flags["format"], name="--format"),
-        ),
+        output_format=output_format,
         commit=bool(flags["commit"]),
         interactive=interactive,
         initialize=not bool(flags["no-initialize"]),
