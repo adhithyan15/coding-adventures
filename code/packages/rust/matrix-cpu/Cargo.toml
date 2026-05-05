@@ -1,8 +1,8 @@
 [package]
 name = "matrix-cpu"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "CPU reference executor for the matrix execution layer. Implements every matrix-ir op on every dtype using straight-line Rust. The always-available safety net that supports operations no GPU backend can take. Zero external dependencies."
+description = "CPU reference executor for the matrix execution layer. Implements every matrix-ir op on every dtype using straight-line Rust. The always-available safety net that supports operations no GPU backend can take. v0.3 adds CpuSpecialiser — the first backend `Specialiser` implementation, hooking the MX05 Phase 4 specialisation pipeline up to a real backend. Zero external dependencies."
 license = "MIT"
 
 [dependencies]
@@ -10,3 +10,4 @@ matrix-ir         = { path = "../matrix-ir" }
 compute-ir        = { path = "../compute-ir" }
 executor-protocol = { path = "../executor-protocol" }
 matrix-runtime    = { path = "../matrix-runtime" }
+matrix-profile    = { path = "../matrix-profile" }
