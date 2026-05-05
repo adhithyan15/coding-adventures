@@ -145,6 +145,8 @@ from polynomial import (
 from symbolic_ir import (
     ADD,
     DIV,
+    EXP,
+    LOG,
     MUL,
     NEG,
     POW,
@@ -2281,6 +2283,134 @@ def sqrt_handler(vm: VM, expr: IRApply) -> IRNode:
     return IRApply(expr.head, (arg,))
 
 
+def log_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Log(x)`` — natural logarithm with algebraic simplification.
+
+    This handler overrides the ``_elementary``-factory ``Log`` handler from
+    :mod:`symbolic_vm.handlers` (which was numeric-only) via the standard
+    ``handlers.update(build_cas_handler_table())`` mechanism.  All numeric
+    behaviour from the factory is preserved; algebraic rules are added on top.
+
+    Simplification rules
+    --------------------
+    1. **Special value**: ``Log(1) → 0``.
+
+    2. **Numeric fold**: positive integer / rational / float inputs are folded
+       via ``math.log``.  Negative or zero inputs are left unevaluated because
+       real-valued logarithm is undefined there.
+
+    3. **Cancellation** ``Log(Exp(x)) → x``:
+       ``exp`` maps all of ℝ into ℝ⁺, and ``log`` is its exact inverse, so
+       ``log(exp(x)) = x`` holds for every real ``x`` without any assumption.
+
+    4. **Power rule** ``Log(Pow(x, n)) → Mul(n, Log(x))``:
+       Requires ``vm.assumptions.is_nonneg(x.name)`` to be True, because
+       ``log(x^n) = n·log(x)`` only holds when ``x > 0`` (otherwise branch
+       cuts complicate the identity).
+
+    5. **Everything else**: leave unevaluated as ``Log(arg)``.
+
+    Examples::
+
+        log(1)          →  0
+        log(2.718…)     →  ≈ 1.0
+        log(exp(x))     →  x          (Phase 30)
+        log(exp(2*x))   →  2*x        (Phase 30)
+        # after assume(x > 0):
+        log(x^3)        →  Mul(3, Log(x))   (Phase 30)
+        # no assumption:
+        log(x^3)        →  Log(Pow(x, 3))   (unevaluated)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1 + 2: numeric fold with special value and domain guard.
+    n = to_number(arg)
+    if n is not None:
+        if n == 1:
+            return IRInteger(0)
+        if n <= 0:
+            # log undefined for non-positive reals — leave unevaluated.
+            return IRApply(expr.head, (arg,))
+        return IRFloat(math.log(float(n)))
+    # Rule 3: log(exp(x)) = x  (cancellation, unconditional for real domain).
+    if isinstance(arg, IRApply) and arg.head == EXP and len(arg.args) == 1:
+        return arg.args[0]
+    # Rule 4: log(x^n) = n * log(x)  when x is known non-negative.
+    if isinstance(arg, IRApply) and arg.head == POW and len(arg.args) == 2:
+        base, exp_node = arg.args
+        if isinstance(base, IRSymbol) and vm.assumptions.is_nonneg(base.name) is True:
+            log_base = IRApply(LOG, (base,))
+            return IRApply(MUL, (exp_node, log_base))
+    # Rule 5: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def exp_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Exp(x)`` — natural exponential with algebraic simplification.
+
+    This handler overrides the ``_elementary``-factory ``Exp`` handler from
+    :mod:`symbolic_vm.handlers` (which was numeric-only) via the standard
+    ``handlers.update(build_cas_handler_table())`` mechanism.  All numeric
+    behaviour from the factory is preserved; algebraic rules are added on top.
+
+    Simplification rules
+    --------------------
+    1. **Special value**: ``Exp(0) → 1``.
+
+    2. **Numeric fold**: integer / rational / float inputs are folded via
+       ``math.exp``.
+
+    3. **Cancellation** ``Exp(Log(x)) → x``:
+       Any expression containing ``Log(x)`` already implies ``x > 0`` in the
+       real domain (log is only defined for positive arguments), so
+       ``exp(log(x)) = x`` is structurally safe — no explicit assumption needed.
+
+    4. **Power form** ``Exp(Mul(n, Log(x))) → Pow(x, n)`` (or the commuted
+       form ``Exp(Mul(Log(x), n))``):
+       ``e^{n·ln x} = x^n`` follows directly from the same domain argument as
+       Rule 3.  This simplifies outputs of ``logcontract``, ``exponentialize``,
+       and user-written expressions like ``exp(2*log(x))``.
+
+    5. **Everything else**: leave unevaluated as ``Exp(arg)``.
+
+    Examples::
+
+        exp(0)          →  1
+        exp(1.0)        →  ≈ 2.718
+        exp(log(x))     →  x           (Phase 30)
+        exp(2*log(x))   →  Pow(x, 2)   (Phase 30)
+        exp(log(x)*3)   →  Pow(x, 3)   (Phase 30, commuted Mul)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1 + 2: numeric fold with exp(0) = 1 identity.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(1)
+        return IRFloat(math.exp(float(n)))
+    # Rule 3: exp(log(x)) = x  (structural cancellation).
+    if isinstance(arg, IRApply) and arg.head == LOG and len(arg.args) == 1:
+        return arg.args[0]
+    # Rule 4: exp(n * log(x)) = x^n  (both Mul orderings).
+    if isinstance(arg, IRApply) and arg.head == MUL and len(arg.args) == 2:
+        a, b = arg.args
+        # Check Mul(n, log(x)) and Mul(log(x), n).
+        log_node: IRApply | None = None
+        coeff: IRNode | None = None
+        if isinstance(a, IRApply) and a.head == LOG and len(a.args) == 1:
+            log_node, coeff = a, b
+        elif isinstance(b, IRApply) and b.head == LOG and len(b.args) == 1:
+            log_node, coeff = b, a
+        if log_node is not None and coeff is not None:
+            base = log_node.args[0]
+            return IRApply(POW, (base, coeff))
+    # Rule 5: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
 def cbrt_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Cbrt(x)`` → exact or numeric cube root.
 
@@ -2989,6 +3119,10 @@ def build_cas_handler_table() -> dict[str, Handler]:
         # Phase 29: overrides the _elementary-factory Sqrt in handlers.py,
         # adding algebraic rules (sqrt(x^{2k}) etc.) on top of numeric fold.
         "Sqrt": sqrt_handler,
+        # Phase 30: override _elementary-factory Log/Exp with cancellation
+        # and power-rule algebraic identities on top of numeric fold.
+        "Log": log_handler,
+        "Exp": exp_handler,
         "Cbrt": cbrt_handler,
         "Floor": floor_handler,
         "Ceiling": ceiling_handler,

@@ -1,5 +1,50 @@
 # Changelog
 
+## 0.50.0 — 2026-05-05
+
+**Phase 30 — Algebraic `log` and `exp` cancellation identities.**
+
+Two new handlers override the `_elementary`-factory `Log` and `Exp` handlers
+from `handlers.py` via the standard `handlers.update(build_cas_handler_table())`
+mechanism.  All numeric fold behaviour is preserved.
+
+### `log_handler` (Phase 30, new function)
+
+New algebraic rules on top of the preserved numeric fold:
+
+- **`log(exp(x)) → x`**: Cancellation identity.  `exp` maps all of ℝ into ℝ⁺
+  and `log` is its exact inverse, so this holds for every real `x` without any
+  assumption.
+- **`log(x^n) → n * log(x)`**: Power rule.  Applied only when
+  `vm.assumptions.is_nonneg(x.name)` is True (prevents incorrect simplification
+  in the absence of positivity information).
+- **Guard for undefined inputs**: Negative or zero numeric arguments leave
+  the expression unevaluated (real-valued log is undefined there).
+
+### `exp_handler` (Phase 30, new function)
+
+New algebraic rules on top of the preserved numeric fold:
+
+- **`exp(log(x)) → x`**: Structural cancellation.  Any expression containing
+  `log(x)` already requires `x > 0` in the real domain, so `exp(log(x)) = x`
+  is always safe without an explicit assumption.
+- **`exp(n*log(x)) → x^n`**: Power form.  Recognises both `Mul(n, Log(x))`
+  and the commuted `Mul(Log(x), n)`, returning `Pow(x, n)`.  This simplifies
+  outputs of `logcontract`, `exponentialize`, and user-written expressions
+  like `exp(2*log(x))`.
+
+### Tests
+
+41 new tests in `tests/test_phase30.py` (total suite: 1558 tests, 82.29% coverage):
+
+- `TestPhase30_LogExpCancel` (6) — `log(exp(x))→x`, including compound args
+- `TestPhase30_ExpLogCancel` (7) — `exp(log(x))→x`, `exp(n*log(x))→x^n`
+- `TestPhase30_LogPower` (6) — power rule with/without assumption
+- `TestPhase30_LogNumeric` (5) — numeric fold, `log(1)→0`, negative guard
+- `TestPhase30_ExpNumeric` (5) — numeric fold, `exp(0)→1`
+- `TestPhase30_Regressions` (6) — Phase 29/28/3 regression checks
+- `TestPhase30_Macsyma` (6) — end-to-end MACSYMA surface syntax
+
 ## 0.49.0 — 2026-05-04
 
 **Phase 29 — Algebraic `abs` and `sqrt` simplification.**
