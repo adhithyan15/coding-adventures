@@ -1,5 +1,52 @@
 # Changelog
 
+## 0.48.0 — 2026-05-04
+
+**Phase 28 — Assumptions-aware `abs` and `sign` folding.**
+
+Two existing handlers in `cas_handlers.py` are extended to consult the
+per-VM assumption context (`vm.assumptions`, provided by
+`cas_simplify.AssumptionContext`, first wired in Phase 21):
+
+### `abs_handler` (Phase 28 addition)
+
+`Abs(x)` now folds symbolically when the sign of `x` is known:
+
+- `assume(x > 0)` or `assume(x >= 0)` → `abs(x)` = `x`
+- `assume(x < 0)` → `abs(x)` = `-x`
+- Zero case: `sign_of(x) == 0` → `abs(x)` = `0`
+- No assumption → left unevaluated as `Abs(x)` (unchanged behaviour)
+- Numeric inputs (`IRInteger`, `IRRational`, `IRFloat`) still fold via
+  Python's `abs()`.
+
+The local `abs_handler` in `macsyma_runtime.cas_handlers` (which only
+handled numeric inputs) is replaced by a delegation to the full
+`symbolic_vm.cas_handlers.abs_handler` that carries all three rules.
+
+### `sign_handler` (Phase 28 addition)
+
+`Sign(n)` now folds for all numeric IR literals:
+
+- `sign(5)` → `1`, `sign(-3)` → `-1`, `sign(0)` → `0`
+- Works for `IRInteger`, `IRRational`, `IRFloat`
+- Symbolic folding via assumptions was already present from Phase 21;
+  numeric folding is the new addition.
+
+### New test file: `tests/test_phase28.py`
+
+43 tests across 8 classes:
+
+- `TestPhase28_SignNumeric` — 9 tests: int/rational/float → 1/-1/0
+- `TestPhase28_SignSymbolic` — 5 tests: positive/nonneg/negative/unknown/spill
+- `TestPhase28_AbsAssumptions` — 5 tests: pos/nonneg/neg/different-var/forget
+- `TestPhase28_AbsFallthrough` — 5 tests: numeric/no-assumption fallthrough
+- `TestPhase28_AssumeForgetIs` — 6 tests: full round-trip
+- `TestPhase28_KillResetsDB` — 1 test: forget-all
+- `TestPhase28_Regressions` — 4 tests: Phase 27/3/21 regressions
+- `TestPhase28_Macsyma` — 8 tests: end-to-end MACSYMA surface syntax
+
+Total test count: 1471 (up from 1428). Coverage: 82.66%.
+
 ## 0.47.0 — 2026-05-05
 
 **Phase 27 — Polynomial inequality solving.**
