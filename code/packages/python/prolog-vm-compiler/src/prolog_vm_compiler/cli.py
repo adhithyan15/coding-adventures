@@ -132,6 +132,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     queries = _string_tuple(flags["query"])
     query_module = _optional_string(flags["query-module"])
     limit = _optional_int(flags["limit"])
+    source_stdin = bool(flags["source-stdin"])
     source_query_index = _required_int(
         flags["source-query-index"],
         name="--source-query-index",
@@ -143,6 +144,17 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if source is not None and files:
         msg = "--source cannot be combined with file paths"
         raise ValueError(msg)
+    if source_stdin and source is not None:
+        msg = "--source-stdin cannot be combined with --source"
+        raise ValueError(msg)
+    if source_stdin and files:
+        msg = "--source-stdin cannot be combined with file paths"
+        raise ValueError(msg)
+    if source_stdin and bool(flags["interactive"]):
+        msg = "--source-stdin cannot be combined with --interactive"
+        raise ValueError(msg)
+    if source_stdin:
+        source = sys.stdin.read()
     if source is None and not files:
         msg = "provide --source or at least one Prolog file"
         raise ValueError(msg)

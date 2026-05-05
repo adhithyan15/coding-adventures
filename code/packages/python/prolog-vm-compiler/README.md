@@ -274,6 +274,13 @@ Use `--values` to print raw answer values, omit `--query` to run a source-level
 `?-` directive by index, and use `--dialect iso` when the ISO parser profile is
 the desired frontend.
 
+Use `--source-stdin` when editor integrations or shell pipelines should provide
+the source through stdin while query selection still comes from flags:
+
+```bash
+cat family.pl | prolog-vm --source-stdin --query "parent(homer, Who)"
+```
+
 Use `--check` to parse, load, compile, and initialize source without running a
 query. This is intended for CI and editor integrations that need to validate a
 Prolog file graph even when it does not contain embedded `?-` directives.

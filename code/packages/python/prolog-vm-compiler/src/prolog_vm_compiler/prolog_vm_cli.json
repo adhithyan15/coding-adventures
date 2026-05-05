@@ -17,6 +17,12 @@
       "value_name": "SOURCE"
     },
     {
+      "id": "source-stdin",
+      "long": "source-stdin",
+      "description": "Read Prolog source text from stdin instead of --source or file paths.",
+      "type": "boolean"
+    },
+    {
       "id": "query",
       "long": "query",
       "description": "Ad-hoc top-level query to run; may be repeated for a stateful query script.",
