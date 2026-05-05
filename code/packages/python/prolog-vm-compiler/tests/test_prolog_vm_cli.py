@@ -598,6 +598,27 @@ def test_cli_summary_rejects_interactive(
     )
 
 
+@pytest.mark.parametrize(
+    "dump_flag",
+    ["--dump-bytecode", "--dump-instructions", "--dump-source-metadata"],
+)
+def test_cli_summary_rejects_compile_only_dump_modes(
+    dump_flag: str,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        dump_flag,
+        "--summary",
+    ])
+
+    assert status == 2
+    assert f"--summary cannot be combined with {dump_flag}" in (
+        capsys.readouterr().err
+    )
+
+
 def test_cli_interactive_loop_runs_queries_from_stdin(
     monkeypatch: pytest.MonkeyPatch,
     capsys: pytest.CaptureFixture[str],

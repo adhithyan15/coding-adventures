@@ -138,7 +138,8 @@ When `--summary` is set for non-interactive query execution, text output
 appends one compact line with query, success, failure, and answer totals. JSONL
 appends a final `mode: "summary"` record. JSON wraps result records in an object
 with `results`, `summary`, and aggregate `success` fields so downstream tools
-can consume both details and totals without re-counting.
+can consume both details and totals without re-counting. Compile-only modes
+reject `--summary` rather than silently ignoring it.
 
 Each result object includes:
 
