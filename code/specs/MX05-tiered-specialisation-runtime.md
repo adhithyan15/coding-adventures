@@ -95,6 +95,15 @@ Five new components, none of which require IR or protocol changes:
 
 ### 1. Profile sampler (matrix-profile crate)
 
+> **Implementation status (Phase 1 landed)**: shipped as the
+> `matrix_runtime::profile` module rather than as a separate
+> `matrix-profile` crate.  Promotion is deferred to Phase 2, where the
+> sampler grows real observation logic that benefits from its own
+> dependency surface.  Phase 1 only implements per-op invocation
+> counters and the `Profiler` / `ProfileObservation` /
+> `TensorObservation` data types; everything else in this section is
+> still future work.
+
 A new crate, `matrix-profile`, that owns the observation logic:
 
 - Per-dispatch counters keyed by `(graph_subhash, op_index)`.
