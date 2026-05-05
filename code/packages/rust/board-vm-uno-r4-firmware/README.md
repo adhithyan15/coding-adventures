@@ -3,10 +3,10 @@
 Uno R4 firmware smoke test for the Board VM runtime.
 
 This crate embeds the BVM1 blink module and provides a tiny firmware binary that
-executes the bytecode against the Uno R4 D13 LED HAL. It is not the interactive
-serial protocol firmware yet; it is the first real-board check that the Rust
-target, linker script, Uno R4 GPIO mapping, and Board VM runtime can produce a
-flashable image.
+executes the bytecode against the Uno R4 WiFi D13 LED HAL. It is not the
+interactive serial protocol firmware yet; it is the first real-board check that
+the Rust target, linker script, Uno R4 GPIO mapping, and Board VM runtime can
+produce a flashable image.
 
 Host-side validation:
 
@@ -48,8 +48,10 @@ To produce the bootloader-ready binary:
   target/thumbv7em-none-eabihf/release/uno-r4-vm-blink-smoke.bin
 ```
 
-On an Uno R4 WiFi, upload through Arduino CLI with the board's serial port and
-the Arduino-patched BOSSA uploader:
+On an Uno R4 WiFi, the built-in D13 LED is RA4M1 `P102`; the Uno R4 Minima maps
+D13 differently, to `P111`, and should use a separate Minima smoke backend. For
+the WiFi board, upload through Arduino CLI with the board's serial port and the
+Arduino-patched BOSSA uploader:
 
 ```sh
 arduino-cli upload \

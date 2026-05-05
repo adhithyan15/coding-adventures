@@ -13,13 +13,13 @@ mod firmware {
     use embedded_hal::delay::DelayNs;
     use panic_halt as _;
 
-    pub struct UnoR4LedBackend {
-        led: Option<Pin<'1', 11, Output>>,
+    pub struct UnoR4WifiLedBackend {
+        led: Option<Pin<'1', 2, Output>>,
         delay: Delay,
         now_ms: u32,
     }
 
-    impl UnoR4LedBackend {
+    impl UnoR4WifiLedBackend {
         pub fn new() -> Self {
             Self {
                 led: None,
@@ -29,12 +29,12 @@ mod firmware {
         }
     }
 
-    impl UnoR4Backend for UnoR4LedBackend {
+    impl UnoR4Backend for UnoR4WifiLedBackend {
         fn configure_gpio(&mut self, pin: u8, mode: GpioMode) -> Result<(), HalError> {
             if pin != 13 || mode != GpioMode::Output {
                 return Err(HalError::UnsupportedMode);
             }
-            self.led = Some(Pin::<'1', 11, Output>::new());
+            self.led = Some(Pin::<'1', 2, Output>::new());
             Ok(())
         }
 
@@ -71,8 +71,8 @@ mod firmware {
 
     #[cortex_m_rt::entry]
     fn main() -> ! {
-        let backend = UnoR4LedBackend::new();
-        let board = UnoR4Board::minima(backend);
+        let backend = UnoR4WifiLedBackend::new();
+        let board = UnoR4Board::wifi(backend);
         let mut runtime: Runtime<_, 16, 8> = Runtime::new(board);
 
         loop {
