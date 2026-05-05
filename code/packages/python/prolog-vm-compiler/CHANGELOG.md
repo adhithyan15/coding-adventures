@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Add a public Prolog VM capability manifest and `prolog-vm --dump-capabilities`
+  so scripts and future planning can distinguish the completed PR00-PR77 core
+  track from deferred advanced dialect/runtime work.
 - Add end-to-end stress coverage for recursive search, modules, DCGs,
   arithmetic, collections, dynamic initialization, named answers, and expansion.
 - Add named answer helpers for source-level query results.

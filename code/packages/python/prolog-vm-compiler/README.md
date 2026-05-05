@@ -247,6 +247,33 @@ assert [answer.as_dict() for answer in runtime.query("ancestor(homer, Who)")] ==
 ]
 ```
 
+## Capability Manifest
+
+The core Prolog-on-Logic-VM implementation track covers PR00 through PR77. The
+package exposes that as a machine-readable manifest so downstream tools and
+future implementation work can distinguish completed core functionality from
+deliberately deferred advanced dialect emulation:
+
+```python
+from prolog_vm_compiler import prolog_vm_capability_manifest
+
+manifest = prolog_vm_capability_manifest()
+
+assert manifest.status == "core-complete"
+assert manifest.dialects == ("iso", "swi")
+assert manifest.backends == ("structured", "bytecode")
+```
+
+The completed core batches cover frontend loading, directives, modules, file
+graphs, expansion, structured and bytecode VM execution, source/file/project
+runners, top-level query APIs, the CLI, CLP(FD), dynamic database behavior,
+exceptions, control, collections, term/text predicates, and reflection. The
+manifest also names the remaining advanced-dialect work that is intentionally
+outside the PR00-PR77 core: full external dialect emulation, tabling and
+well-founded negation, generalized attributed-variable/coroutining services,
+non-FD constraint domains, rich streams/I/O, foreign predicates, engines, and
+concurrency.
+
 ## CLI
 
 The package also exposes a `prolog-vm` command backed by the repo's declarative
@@ -258,6 +285,13 @@ prolog-vm \
   --source "parent(homer, bart). parent(homer, lisa)." \
   --query "parent(homer, Who)" \
   --backend bytecode
+```
+
+Use `--dump-capabilities` without source input to inspect the same support
+manifest from scripts or CI:
+
+```bash
+prolog-vm --dump-capabilities --format json
 ```
 
 For linked module projects, pass all entry files and the module context for

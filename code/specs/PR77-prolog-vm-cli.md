@@ -16,6 +16,7 @@ The goal is practical usability:
 - dump structured Logic VM instructions for compile-only diagnostics
 - dump Logic bytecode disassembly for compile-only diagnostics
 - dump source metadata for editor and CI manifest integrations
+- dump the Prolog VM capability manifest without loading source
 - list embedded source-level `?-` query indexes and visible variables
 - run stored source-level `?-` queries by index
 - run all stored source-level `?-` queries as an executable script
@@ -43,6 +44,8 @@ Important options:
   executing queries.
 - `--dump-source-metadata` emits dialect, query counts, instruction count, and
   embedded source-query variable metadata without executing queries.
+- `--dump-capabilities` emits the supported Prolog VM capability manifest
+  without loading source.
 - `--list-source-queries` lists embedded `?-` query indexes and visible
   variables without running them.
 - `--source-query-index INDEX` selects a stored source-level query when no
@@ -126,6 +129,13 @@ When `--dump-source-metadata` is set, JSON formats emit one success object with
 `instruction_count`, and a `source_queries` list containing zero-based `index`
 visible `variables`, and `vm_query_index` metadata. This mode is compile-only
 and mutually exclusive with query execution modes.
+
+When `--dump-capabilities` is set, JSON formats emit one success object with
+`mode: "capabilities"`, the core track status, supported dialects and backends,
+completed PR00-PR77 capability batches, and explicitly deferred advanced
+dialect/runtime batches. This mode is source-free and mutually exclusive with
+source input, query execution, compile-only source diagnostics, and query
+modifiers.
 
 When `--list-source-queries` is set, JSON formats emit one success object with
 `mode: "source_queries"`, `source_query_count`, and a `queries` list containing
@@ -217,6 +227,7 @@ The CLI test coverage should prove:
 - structured instruction dump mode
 - bytecode disassembly dump mode
 - source metadata dump mode
+- capability manifest dump mode
 - source query listing without execution
 - stored source-level queries from files
 - all source-level queries from files and inline source
