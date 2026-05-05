@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-sql-planner"
-version = "0.19.0"
+version = "0.20.0"
 description = "Translates a structured SQL AST into a Logical Plan Tree of relational-algebra nodes."
 requires-python = ">=3.12"
 license = "MIT"

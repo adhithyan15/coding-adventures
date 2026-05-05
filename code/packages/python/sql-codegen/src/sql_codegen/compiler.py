@@ -1473,6 +1473,7 @@ _BINOP_MAP = {
     AstBinaryOp.GTE: BinaryOpCode.GTE,
     AstBinaryOp.AND: BinaryOpCode.AND,
     AstBinaryOp.OR: BinaryOpCode.OR,
+    AstBinaryOp.CONCAT: BinaryOpCode.CONCAT,  # SQL || string concatenation
 }
 
 

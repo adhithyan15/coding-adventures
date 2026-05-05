@@ -413,6 +413,7 @@ def _build_from_tree(
             right_node: P.LogicalPlan = P.DerivedTable(
                 query=inner_plan, alias=j.right.alias, columns=cols
             )
+            right_cols_list: list[str] = list(cols)
         elif isinstance(j.right, TableRef) and (
             working_set is not None and j.right.table == working_set[0]
         ):
@@ -420,18 +421,144 @@ def _build_from_tree(
             ws_alias = j.right.alias or j.right.table
             _add_to_scope(scope, ws_alias, list(working_set[1]))
             right_node = P.WorkingSetScan(alias=ws_alias, columns=working_set[1])
+            right_cols_list = list(working_set[1])
         else:
             right_cols = schema.columns(j.right.table)  # type: ignore[union-attr]
             _add_to_scope(scope, j.right.alias or j.right.table, right_cols)  # type: ignore[union-attr]
             right_node = P.Scan(table=j.right.table, alias=j.right.alias)  # type: ignore[union-attr]
-        # ON clause is resolved against the merged scope so it can reference
-        # columns from both sides.
-        condition = _resolve(j.on, scope, schema) if j.on is not None else None
-        _validate_join(j, condition)
+            right_cols_list = list(right_cols)
+
+        # NATURAL JOIN resolution:
+        #
+        # NATURAL JOIN is syntactic sugar for INNER JOIN with an ON condition
+        # that equates every shared column between the left and right sides.
+        # The planner resolves it here because schema access is available.
+        #
+        # Algorithm:
+        #   1. Collect ALL column names visible on the left (may span multiple tables
+        #      when chaining e.g. a NATURAL JOIN b NATURAL JOIN c).
+        #   2. Find the intersection with the right table's column names.
+        #   3. Build AND(lhs.col = rhs.col, ...) for each shared column.
+        #   4. If no shared columns, fall back to CROSS JOIN (Cartesian product),
+        #      which matches SQLite's behaviour.
+        #
+        # Note: NATURAL JOIN's semantic of *deduplicating* shared columns in SELECT *
+        # output is NOT enforced here — it is left to the projection layer.  For
+        # explicit column references in the SELECT list this distinction never matters.
+        if j.kind == JoinKind.NATURAL:
+            # Collect left-side columns (all aliases registered so far).
+            left_col_names: set[str] = set()
+            for alias_cols in scope.values():
+                if alias_cols is not right_cols_list:  # exclude right side, just registered
+                    left_col_names.update(alias_cols)
+            # Exclude the right alias we just added — scope now contains it.
+            right_alias_key = (
+                j.right.alias if isinstance(j.right, (TableRef, DerivedTableRef)) else None
+            )
+            if right_alias_key is None and isinstance(j.right, TableRef):
+                right_alias_key = j.right.table
+            # Rebuild left columns excluding right's alias.
+            left_col_names = set()
+            for alias, alias_cols in scope.items():
+                if alias != right_alias_key:
+                    left_col_names.update(alias_cols)
+
+            # Find the shared columns (preserve right table's column order).
+            shared_cols = [c for c in right_cols_list if c in left_col_names]
+
+            if not shared_cols:
+                # No shared columns → Cartesian product (CROSS JOIN semantics).
+                actual_kind = JoinKind.CROSS
+                condition = None
+            else:
+                # Build ON: left.c1 = right.c1 AND left.c2 = right.c2 AND ...
+                actual_kind = JoinKind.INNER
+                right_ref = right_alias_key or (
+                    j.right.table  # type: ignore[union-attr]
+                    if isinstance(j.right, TableRef)
+                    else j.right.alias  # type: ignore[union-attr]
+                )
+                cond: Expr | None = None
+                for col in shared_cols:
+                    # Find which left alias owns this column.
+                    left_ref: str | None = None
+                    for alias, alias_cols in scope.items():
+                        if alias != right_ref and col in alias_cols:
+                            left_ref = alias
+                            break
+                    if left_ref is None:
+                        continue
+                    eq: Expr = BinaryExpr(
+                        op=BinaryOp.EQ,
+                        left=Column(table=left_ref, col=col),
+                        right=Column(table=right_ref, col=col),
+                    )
+                    cond = (
+                        BinaryExpr(op=BinaryOp.AND, left=cond, right=eq)
+                        if cond is not None
+                        else eq
+                    )
+                condition = cond
+        elif j.using:
+            # JOIN … USING (col1, col2, …) resolution:
+            #
+            # USING is syntactic sugar for an ON expression that equates each
+            # named column between the left and right sides.  The adapter emits
+            # ``JoinClause(using=('col1', ...))`` rather than an ON expression
+            # because at parse time it cannot determine which left-side table
+            # owns each column in a chained join.
+            #
+            # Here in the planner we have the accumulated scope — all tables
+            # that have been joined so far — and we can find the right owner.
+            #
+            # Algorithm for each USING column:
+            #   1. Determine the right-side alias (same as NATURAL JOIN).
+            #   2. Scan the left portion of the scope (all aliases except right)
+            #      to find which table has the column.
+            #   3. Build left_alias.col = right_alias.col.
+            #   4. AND all per-column equalities together.
+            right_alias_key = (
+                j.right.alias if isinstance(j.right, (TableRef, DerivedTableRef)) else None
+            )
+            if right_alias_key is None and isinstance(j.right, TableRef):
+                right_alias_key = j.right.table
+            right_ref_using = right_alias_key or (
+                j.right.table if isinstance(j.right, TableRef) else j.right.alias  # type: ignore[union-attr]
+            )
+            using_cond: Expr | None = None
+            for col in j.using:
+                # Find which left-side table has this column.
+                left_ref_using: str | None = None
+                for alias, alias_cols in scope.items():
+                    if alias != right_ref_using and col in alias_cols:
+                        left_ref_using = alias
+                        break
+                if left_ref_using is None:
+                    from sql_planner.errors import UnknownColumn
+                    raise UnknownColumn(table=None, column=col)
+                eq_using: Expr = BinaryExpr(
+                    op=BinaryOp.EQ,
+                    left=Column(table=left_ref_using, col=col),
+                    right=Column(table=right_ref_using, col=col),
+                )
+                using_cond = (
+                    BinaryExpr(op=BinaryOp.AND, left=using_cond, right=eq_using)
+                    if using_cond is not None
+                    else eq_using
+                )
+            actual_kind = j.kind  # INNER / LEFT / etc. as specified
+            condition = using_cond
+        else:
+            # ON clause is resolved against the merged scope so it can reference
+            # columns from both sides.
+            actual_kind = j.kind
+            condition = _resolve(j.on, scope, schema) if j.on is not None else None
+            _validate_join(j, condition)
+
         tree = P.Join(
             left=tree,
             right=right_node,
-            kind=j.kind,
+            kind=actual_kind,
             condition=condition,
         )
     return tree, scope

@@ -61,6 +61,7 @@ class BinaryOp(Enum):
     MUL = "*"
     DIV = "/"
     MOD = "%"
+    CONCAT = "||"  # SQL string concatenation: 'hello' || ' ' || 'world' → 'hello world'
 
 
 class UnaryOp(Enum):

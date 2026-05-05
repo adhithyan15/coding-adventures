@@ -52,8 +52,9 @@ select_item       = expr [ "AS" NAME ] ;
 table_ref         = "(" query_stmt ")" "AS" NAME | table_name [ "AS" NAME | NAME ] ;
 table_name        = NAME [ "." NAME ] ;
 
-join_clause       = [ join_type ] "JOIN" table_ref [ "ON" expr ] ;
-join_type         = "CROSS" | "INNER" | ( "LEFT" [ "OUTER" ] )
+join_clause       = [ join_type ] "JOIN" table_ref [ "ON" expr | "USING" "(" NAME { "," NAME } ")" ] ;
+join_type         = "CROSS" | "INNER" | "NATURAL"
+                  | ( "LEFT" [ "OUTER" ] )
                   | ( "RIGHT" [ "OUTER" ] ) | ( "FULL" [ "OUTER" ] ) ;
 
 where_clause      = "WHERE" expr ;
@@ -171,7 +172,7 @@ comparison        = additive [ cmp_op additive
 in_expr           = query_stmt | value_list ;
 
 cmp_op            = "=" | NOT_EQUALS | "<" | ">" | "<=" | ">=" ;
-additive          = multiplicative { ( "+" | "-" ) multiplicative } ;
+additive          = multiplicative { ( "+" | "-" | "||" ) multiplicative } ;
 multiplicative    = unary { ( STAR | "/" | "%" ) unary } ;
 unary             = "-" unary | primary ;
 

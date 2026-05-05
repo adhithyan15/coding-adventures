@@ -332,6 +332,11 @@ def _select(
     items = _select_list(_child_node(node, "select_list"), state)
 
     # FROM + JOINs — FROM is optional (SELECT 1, SELECT UPPER('x'), etc.).
+    #
+    # USING desugaring is now deferred to the planner (see JoinClause.using),
+    # so we no longer need to track a "current left alias" here.  Each
+    # join_clause node is translated independently; the planner's
+    # _build_from_tree resolves USING columns from the accumulated scope.
     from_node = _maybe_child(node, "table_ref")
     if from_node is not None:
         from_ref = _table_ref(from_node, ctes=ctes, view_defs=view_defs)
@@ -481,19 +486,54 @@ def _join_clause(
     ctes: dict[str, SelectStmt | RecursiveCTERef] | None = None,
     view_defs: dict[str, SelectStmt] | None = None,
 ) -> JoinClause:
-    # join_clause = [ join_type ] "JOIN" table_ref [ "ON" expr ]
-    # Plain "JOIN" with no preceding type keyword is treated as INNER JOIN.
+    # join_clause = [ join_type ] "JOIN" table_ref
+    #               [ "ON" expr | "USING" "(" NAME { "," NAME } ")" ]
+    #
+    # USING desugaring is deferred to the planner (see JoinClause.using and
+    # _build_from_tree).  NATURAL JOIN is forwarded as JoinKind.NATURAL for
+    # the same reason — schema access is needed and only available in the
+    # planner.
     jt = _maybe_child(node, "join_type")
     kind = _join_kind(jt) if jt is not None else JoinKind.INNER
     right = _table_ref(_child_node(node, "table_ref"), ctes=ctes, view_defs=view_defs)
-    # The grammar makes ON optional (required only for non-CROSS joins).
+
+    # USING (col1, col2, ...) — deferred resolution.
+    #
+    # We collect the column names and pass them as ``using=`` on JoinClause.
+    # The planner expands them into the proper ON expression during
+    # ``_build_from_tree``, where both the accumulated join scope and the
+    # backend schema are available.
+    #
+    # We intentionally do NOT try to build the ON expression here in the
+    # adapter, because in a chained join like:
+    #
+    #     a JOIN b USING (x) JOIN c USING (y)
+    #
+    # when the second USING is parsed, the adapter only knows that the
+    # "current left table" is ``b`` (the most recently joined table).  But
+    # ``y`` may live in ``a``, not ``b``.  The planner, which has already
+    # added both ``a`` and ``b`` to the scope by the time it processes the
+    # second join clause, can find the right table.
+    if _has_keyword_child(node, "USING"):
+        using_started = False
+        col_names: list[str] = []
+        for c in node.children:
+            if _is_keyword(c, "USING"):
+                using_started = True
+                continue
+            if using_started and isinstance(c, Token) and _token_type(c) == "NAME":
+                col_names.append(c.value)
+        return JoinClause(kind=kind, right=right, using=tuple(col_names))
+
+    # Plain "ON expr" — or no condition at all (CROSS / NATURAL).
     expr_node = _maybe_child(node, "expr")
     on = _expr(expr_node, state) if expr_node is not None else None
     return JoinClause(kind=kind, right=right, on=on)
 
 
 def _join_kind(node: ASTNode) -> str:
-    # join_type = "CROSS" | "INNER" | ... — look at the first keyword token.
+    # join_type = "CROSS" | "INNER" | "NATURAL" | "LEFT" ... | "RIGHT" ... | "FULL" ...
+    # Look at the first keyword token to identify the join kind.
     for c in node.children:
         if isinstance(c, Token) and _token_type(c) == "KEYWORD":
             kw = c.value.upper()
@@ -501,6 +541,8 @@ def _join_kind(node: ASTNode) -> str:
                 return JoinKind.CROSS
             if kw == "INNER":
                 return JoinKind.INNER
+            if kw == "NATURAL":
+                return JoinKind.NATURAL
             if kw == "LEFT":
                 return JoinKind.LEFT
             if kw == "RIGHT":
@@ -1143,12 +1185,17 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
 
 
 def _additive(node: ASTNode, state: _PlaceholderCounter) -> Expr:
-    # additive = multiplicative { ("+"|"-") multiplicative }
+    # additive = multiplicative { ("+"|"-"|"||") multiplicative }
+    #
+    # "||" is SQL string concatenation (same as Python's str + str but for any
+    # type — the VM coerces both sides to str before joining them).  It has the
+    # same precedence as arithmetic + and - because it is in the same grammar
+    # level.  This matches SQLite, PostgreSQL, and the SQL standard.
     return _left_assoc_punct(
         node,
         "multiplicative",
         _multiplicative,
-        {"PLUS": BinaryOp.ADD, "MINUS": BinaryOp.SUB},
+        {"PLUS": BinaryOp.ADD, "MINUS": BinaryOp.SUB, "CONCAT_OP": BinaryOp.CONCAT},
         state,
     )
 

@@ -69,6 +69,7 @@ class JoinKind:
     RIGHT = "RIGHT"
     FULL = "FULL"
     CROSS = "CROSS"
+    NATURAL = "NATURAL"  # resolved to INNER by planner using schema column intersection
 
 
 @dataclass(frozen=True, slots=True)
@@ -134,11 +135,24 @@ class JoinClause:
     The FROM clause is represented as a base :class:`TableRef` plus a list
     of join clauses, each describing how a new table attaches. This mirrors
     how most SQL grammars structure multi-table FROMs.
+
+    ``using`` carries the column names from a ``JOIN … USING (col1, col2)``
+    clause.  The planner expands it into a proper ``ON left.col = right.col
+    AND …`` expression during ``_build_from_tree``, where both the accumulated
+    scope and the backend schema are available to resolve which left-side table
+    owns each column.  When ``using`` is non-empty ``on`` must be ``None`` —
+    the two are mutually exclusive.
+
+    This deferred resolution is necessary for chained multi-table USING joins:
+    in ``a JOIN b USING (x) JOIN c USING (y)``, when the second USING is
+    parsed the adapter does not yet know whether ``y`` lives in ``a`` or ``b``.
+    The planner does, because it has already built the scope for both tables.
     """
 
     kind: str  # one of JoinKind.*
     right: TableRef | DerivedTableRef | RecursiveCTERef
-    on: Expr | None = None  # None for CROSS JOIN
+    on: Expr | None = None  # None for CROSS JOIN / NATURAL / USING (see using field)
+    using: tuple[str, ...] = ()  # column names from USING (...); planner resolves to ON
 
 
 @dataclass(frozen=True, slots=True)
