@@ -210,6 +210,19 @@ impl CpuExecutor {
             ExecutorRequest::Heartbeat => ExecutorResponse::Alive { profile: profile() },
 
             ExecutorRequest::Shutdown => ExecutorResponse::ShuttingDown,
+
+            // V1 of `DispatchSpecialised` is the protocol surface only.
+            // matrix-cpu doesn't yet maintain a per-handle kernel
+            // table — that's MX05 Phase 4.1 work.  Reply with
+            // NOT_IMPLEMENTED so the runtime falls back to the
+            // generic `Dispatch` path.
+            ExecutorRequest::DispatchSpecialised { job_id, .. } => ExecutorResponse::Error {
+                code: ErrorCode::NOT_IMPLEMENTED,
+                message: "matrix-cpu doesn't yet execute specialised kernels; \
+                          MX05 Phase 4.1 will install the per-handle table"
+                    .to_string(),
+                job_id: Some(job_id),
+            },
         }
     }
 }

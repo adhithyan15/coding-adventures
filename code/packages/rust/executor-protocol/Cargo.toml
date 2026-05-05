@@ -1,8 +1,8 @@
 [package]
 name = "executor-protocol"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "MX03 — wire-level protocol between the matrix-execution runtime and its executors. Hand-rolled binary message format, transport-pluggable Transport trait, in-process LocalTransport, hand-rolled minimal block_on. Zero external dependencies."
+description = "MX03 — wire-level protocol between the matrix-execution runtime and its executors. Hand-rolled binary message format, transport-pluggable Transport trait, in-process LocalTransport, hand-rolled minimal block_on. v0.2 adds ExecutorRequest::DispatchSpecialised (MX05 Phase 4.1) for routing pre-emitted specialised kernels by handle, plus ErrorCode::NOT_IMPLEMENTED for soft refusals. Zero external dependencies."
 license = "MIT"
 
 [dependencies]

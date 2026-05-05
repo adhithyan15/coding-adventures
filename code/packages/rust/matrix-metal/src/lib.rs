@@ -314,6 +314,19 @@ impl MetalExecutor {
             ExecutorRequest::Heartbeat => ExecutorResponse::Alive { profile: profile() },
 
             ExecutorRequest::Shutdown => ExecutorResponse::ShuttingDown,
+
+            // V1 protocol surface only.  matrix-metal doesn't yet
+            // maintain a per-handle MTLComputePipelineState table
+            // for specialised kernels — Phase 4.2 work that needs
+            // an MSL emitter.  Reply with NOT_IMPLEMENTED so the
+            // runtime falls back to the generic `Dispatch` path.
+            ExecutorRequest::DispatchSpecialised { job_id, .. } => ExecutorResponse::Error {
+                code: ErrorCode::NOT_IMPLEMENTED,
+                message: "matrix-metal doesn't yet execute specialised kernels; \
+                          MX05 Phase 4.2 will add an MSL emitter and per-handle table"
+                    .to_string(),
+                job_id: Some(job_id),
+            },
         }
     }
 

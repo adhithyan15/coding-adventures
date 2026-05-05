@@ -61,4 +61,15 @@ pub use wire::WireError;
 
 /// Protocol version.  Distinct from the wire-frame version; bump when
 /// a message variant's payload layout changes incompatibly.
-pub const PROTOCOL_VERSION: u32 = 1;
+///
+/// History:
+///
+/// - **v1**: initial release.  10 request variants (`Register` through
+///   `Shutdown`), 11 response variants, 3 event variants.
+/// - **v2** (this revision): adds `ExecutorRequest::DispatchSpecialised`
+///   (tag 0x0A) for MX05 Phase 4.1 specialised-kernel dispatch.
+///   Adds `ErrorCode::NOT_IMPLEMENTED` (0x0062) for backends that
+///   recognise the request shape but haven't yet wired up execution.
+///   Forward-compatible with v1 senders: every existing variant
+///   still encodes/decodes byte-identically.
+pub const PROTOCOL_VERSION: u32 = 2;
