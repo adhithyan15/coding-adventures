@@ -289,6 +289,79 @@ def test_cli_dump_instructions_rejects_execution_modes(
     )
 
 
+def test_cli_dump_source_metadata_reports_query_counts(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        ":- initialization(true). parent(homer, bart). "
+        "?- parent(homer, Who). ?- true.",
+        "--dump-source-metadata",
+    ])
+
+    assert status == 0
+    lines = capsys.readouterr().out.splitlines()
+    assert lines[:5] == [
+        "dialect: SWI-Prolog",
+        "initialization queries: 1",
+        "source queries: 2",
+        "total queries: 3",
+        "instructions: 5",
+    ]
+    assert lines[5:] == [
+        "query 0 variables: Who",
+        "query 1 variables: (none)",
+    ]
+
+
+def test_cli_dump_source_metadata_json_reports_source_queries(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        ":- initialization(true). parent(homer, bart). "
+        "?- parent(homer, Who). ?- true.",
+        "--dump-source-metadata",
+        "--format",
+        "json",
+    ])
+
+    payload = json.loads(capsys.readouterr().out)
+
+    assert status == 0
+    assert payload == {
+        "dialect": "swi",
+        "dialect_display_name": "SWI-Prolog",
+        "initialization_query_count": 1,
+        "instruction_count": 5,
+        "mode": "source_metadata",
+        "query_count": 3,
+        "source_queries": [
+            {"index": 0, "variables": ["Who"]},
+            {"index": 1, "variables": []},
+        ],
+        "source_query_count": 2,
+        "success": True,
+    }
+
+
+def test_cli_dump_source_metadata_rejects_execution_modes(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        "--dump-source-metadata",
+        "--query",
+        "parent(homer, Who)",
+    ])
+
+    assert status == 2
+    assert "--dump-source-metadata cannot be combined with --query" in (
+        capsys.readouterr().err
+    )
+
+
 def test_cli_lists_source_query_variables(
     capsys: pytest.CaptureFixture[str],
 ) -> None:

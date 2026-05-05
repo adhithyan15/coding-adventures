@@ -15,6 +15,7 @@ The goal is practical usability:
 - check that source parses, loads, compiles, and initializes without a query
 - dump structured Logic VM instructions for compile-only diagnostics
 - dump Logic bytecode disassembly for compile-only diagnostics
+- dump source metadata for editor and CI manifest integrations
 - list embedded source-level `?-` query indexes and visible variables
 - run stored source-level `?-` queries by index
 - run all stored source-level `?-` queries as an executable script
@@ -40,6 +41,8 @@ Important options:
   them without executing queries.
 - `--dump-bytecode` compiles to Logic bytecode and emits disassembly without
   executing queries.
+- `--dump-source-metadata` emits dialect, query counts, instruction count, and
+  embedded source-query variable metadata without executing queries.
 - `--list-source-queries` lists embedded `?-` query indexes and visible
   variables without running them.
 - `--source-query-index INDEX` selects a stored source-level query when no
@@ -116,6 +119,12 @@ JSON formats emit one success object with `mode: "bytecode"`, pool counts, an
 `instruction_count`, and structured disassembly `lines`. This mode is
 compile-only and mutually exclusive with query execution modes.
 
+When `--dump-source-metadata` is set, JSON formats emit one success object with
+`mode: "source_metadata"`, `dialect`, `dialect_display_name`, query counts,
+`instruction_count`, and a `source_queries` list containing zero-based `index`
+and visible `variables` metadata. This mode is compile-only and mutually
+exclusive with query execution modes.
+
 When `--list-source-queries` is set, JSON formats emit one success object with
 `mode: "source_queries"`, `source_query_count`, and a `queries` list containing
 zero-based `index` and visible `variables` metadata for each embedded query.
@@ -186,6 +195,7 @@ The CLI test coverage should prove:
 - query-free compile/check mode
 - structured instruction dump mode
 - bytecode disassembly dump mode
+- source metadata dump mode
 - source query listing without execution
 - stored source-level queries from files
 - all source-level queries from files and inline source
