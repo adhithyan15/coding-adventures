@@ -125,6 +125,7 @@ from sql_planner import (
 from sql_planner import (
     WindowAgg as PlanWindowAgg,
 )
+from sql_backend.schema import NO_DEFAULT as _BACKEND_NO_DEFAULT
 from sql_planner.ast import ColumnDef as AstColumnDef
 from sql_planner.expr import AggregateExpr
 from sql_planner.plan import AggFunc as PlanAggFunc
@@ -208,6 +209,7 @@ from .ir import (
     AggFunc as IrAggFunc,
 )
 from .ir import (
+    NO_COLUMN_DEFAULT,
     ColumnDef as IrColumnDef,
 )
 
@@ -1512,12 +1514,18 @@ def _to_ir_col(c: AstColumnDef) -> IrColumnDef:
     fk: tuple[str, str | None] | None = None
     if c.foreign_key is not None:
         fk = c.foreign_key  # type: ignore[assignment]
+    # Convert the backend-layer NO_DEFAULT sentinel to the IR-layer
+    # NO_COLUMN_DEFAULT sentinel so that sql-codegen's IR stays decoupled
+    # from sql-backend's type definitions.  Any other value (including None
+    # for SQL NULL) is a literal default and passes through unchanged.
+    ir_default = NO_COLUMN_DEFAULT if c.default is _BACKEND_NO_DEFAULT else c.default
     return IrColumnDef(
         name=c.name,
         type=c.type_name,
         nullable=not c.effective_not_null(),
         primary_key=c.primary_key,
         unique=c.unique,
+        default=ir_default,
         check_instrs=check_instrs,
         foreign_key=fk,
     )

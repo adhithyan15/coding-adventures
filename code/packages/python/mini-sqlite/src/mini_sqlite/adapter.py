@@ -38,6 +38,7 @@ from typing import cast
 
 from lang_parser import ASTNode
 from lexer import Token
+from sql_backend.schema import NO_DEFAULT
 from sql_backend.schema import ColumnDef as BackendColumnDef
 from sql_planner import (
     AggFunc,
@@ -810,6 +811,7 @@ def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> Backend
     unique = False
     check_expression = None
     foreign_key: tuple[str, str | None] | None = None
+    col_default = NO_DEFAULT   # "no DEFAULT clause" sentinel
     _state = state or _PlaceholderCounter()
     for c in _child_nodes(node, "col_constraint"):
         kw_seq = tuple(
@@ -838,13 +840,32 @@ def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> Backend
             ref_table = ref_names[0] if ref_names else ""
             ref_col: str | None = ref_names[1] if len(ref_names) > 1 else None
             foreign_key = (ref_table, ref_col)
-        # DEFAULT and NULL left alone; the backend's default is already NULL-OK.
+        elif kw_seq[0:1] == ("DEFAULT",):
+            # col_constraint grammar: "DEFAULT" primary
+            #
+            # We evaluate scalar literal defaults at parse time.  The grammar's
+            # ``primary`` production covers NUMBER, STRING, NULL, TRUE, FALSE, and
+            # parenthesised expressions.  We parse the ``primary`` node via _primary
+            # and, if the result is a plain Literal, store the Python value as the
+            # column's default.  Non-literal expressions (e.g. DEFAULT (CURRENT_TIMESTAMP),
+            # DEFAULT (1+1)) are left as NO_DEFAULT and evaluated at INSERT time in
+            # a future increment — this covers the overwhelming majority of real-world
+            # column defaults.
+            primary_node = _maybe_child(c, "primary")
+            if primary_node is not None:
+                try:
+                    default_expr = _primary(primary_node, _state)
+                    if isinstance(default_expr, Literal):
+                        col_default = default_expr.value  # Python int|float|str|bool|None
+                except Exception:  # noqa: BLE001 — malformed node; leave as NO_DEFAULT
+                    pass
     return BackendColumnDef(
         name=col_name,
         type_name=type_name,
         not_null=not_null,
         primary_key=primary_key,
         unique=unique,
+        default=col_default,
         check_expr=check_expression,
         foreign_key=foreign_key,
     )

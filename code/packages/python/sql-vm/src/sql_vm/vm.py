@@ -1936,7 +1936,9 @@ def _do_delete(ins: DeleteRows, st: _VmState) -> None:
 
 
 def _do_create_table(ins: CreateTable, st: _VmState) -> None:
+    from sql_backend.schema import NO_DEFAULT as _BE_NO_DEFAULT
     from sql_backend.schema import ColumnDef as BackendColumnDef
+    from sql_codegen.ir import NO_COLUMN_DEFAULT as _IR_NO_DEFAULT
 
     col_defs = [
         BackendColumnDef(
@@ -1945,6 +1947,10 @@ def _do_create_table(ins: CreateTable, st: _VmState) -> None:
             not_null=not c.nullable,
             primary_key=c.primary_key,
             unique=c.unique,
+            # Convert the IR-layer sentinel back to the backend-layer sentinel.
+            # Any other value (including None = SQL NULL) is a literal default
+            # that passes through unchanged.
+            default=_BE_NO_DEFAULT if c.default is _IR_NO_DEFAULT else c.default,
         )
         for c in ins.columns
     ]
