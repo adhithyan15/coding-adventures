@@ -242,6 +242,59 @@ The compile happens in a background worker thread so live dispatches
 aren't blocked.  Once ready, the specialised pipeline is inserted
 into the cache.
 
+> **Implementation status (Phase 4 visibility landed — image-gpu-core wired)**:
+> `image-gpu-core::pipeline` now installs `matrix_cpu::specialiser()`
+> in front of its process-wide `SpecRouter`, plus a small custom
+> `HotPolicy` that fires on invocation count alone (threshold 100,
+> down from the spec's 1000 default).  Calling
+> `image_gpu_core::spec_cache_len()` after a few hundred filter
+> invocations is now the first place a domain library can observe
+> the cache rising above zero in production code.  The dispatch
+> path doesn't yet consume the specialised kernel handle (still
+> needs an executor-protocol extension), so routing and output
+> bytes are unchanged from V0.4.0; only the cache-size signal is
+> new.
+
+> **Implementation status (Phase 4 minimum-viable landed — first real backend Specialiser)**:
+> `matrix_cpu::CpuSpecialiser` ships as the workspace's first real
+> `Specialiser` impl (previously every test and demo used
+> `NoopSpecialiser` which always returned `None`).  Emits a
+> deterministic 64-bit handle per `SpecKey`; the handle is opaque to
+> the runtime and the dispatch path does not yet consume it (that
+> needs an `executor-protocol` extension — V2 work).  But under a
+> `SpecRouter` configured with `CpuSpecialiser` and a low policy
+> threshold, hot graphs now visibly populate the `SpecCache` — the
+> spec's promise that "Phase 4 will see spec_cache_len rise" cashed
+> in.  Integration test
+> `matrix_cpu::specialiser::tests::router_with_cpu_specialiser_populates_cache_when_policy_fires`
+> is the first place in the codebase where `cache.len() > 0`.
+
+> **Implementation status (Phase 3 V5 landed — matrix-profile crate)**:
+> The full specialisation pipeline (Profiler / sampler / SpecKey /
+> Specialiser / SpecCache / Policy / SpecRouter) lives in its own
+> standalone crate at `code/packages/rust/matrix-profile/`.  Depends
+> only on `matrix-ir` and `compute-ir` — no `executor-protocol`, no
+> `matrix-runtime` — keeping the dependency graph acyclic and the
+> pipeline reusable from any domain library.  `matrix-runtime`
+> re-exports every public item for back-compat so existing
+> `use matrix_runtime::Profiler;` style imports continue to work.
+> 57 tests live in the new crate; matrix-runtime's own test count
+> drops to 17 unit + 8 integration covering planner / registry /
+> cost / runtime.
+
+> **Implementation status (Phase 3 V4 landed — image-gpu-core wired)**:
+> `image-gpu-core::pipeline::run_graph_with_constant_inputs` now
+> drives the full pipeline on every dispatch — `Profiler::record_dispatch`
+> updates invocation counters and `SpecRouter::route` is consulted
+> per Compute op.  Per-process singletons (`OnceLock`-backed Profiler
+> and SpecRouter with `NoopSpecialiser` installed) amortise setup
+> cost across calls.  Public hooks `image_gpu_core::profiler_observations()`
+> and `image_gpu_core::spec_cache_len()` make the wiring observable
+> from CLI demos and tests.  Phase 4 will install a backend-specific
+> `Specialiser` (matrix-cpu or matrix-metal emitting kernels with
+> constants folded in) and the route() return will start being
+> consumed by an extended executor-protocol.
+
 > **Implementation status (Phase 3 V3 landed)**: `SpecRouter` ships
 > in `matrix_runtime::router` and ties together the four pieces:
 > Profiler observations → policy → cache → specialiser, end-to-end.

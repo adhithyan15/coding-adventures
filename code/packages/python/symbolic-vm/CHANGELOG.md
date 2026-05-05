@@ -1,5 +1,123 @@
 # Changelog
 
+## 0.52.0 — 2026-05-05
+
+**Phase 32 — Inverse trig/hyperbolic odd symmetry.**
+
+Five new CAS handlers override the `_elementary`-factory `Asin`, `Acos`,
+`Atan`, `Asinh`, `Atanh` handlers from `handlers.py` via the standard
+`handlers.update(build_cas_handler_table())` mechanism.  `Acosh` is
+intentionally excluded — its domain is `[1, ∞)` so `acosh(-x)` has no
+real-domain symmetry rule.  All numeric fold behaviour is preserved.
+
+### Negation symmetry rules
+
+- **`asin(-x) → -asin(x)`**: Arc-sine is an odd function on `[-1, 1]`.
+  The handler recurses so `asin(-(-x)) = asin(x)` collapses correctly.
+- **`acos(-x) → π - acos(x)`**: Arc-cosine satisfies a reflection identity
+  rather than simple negation.  The `%pi` symbol reuses the existing
+  `IRSymbol("%pi")` convention (`_INV_TRIG_PI` constant).
+- **`atan(-x) → -atan(x)`**: Arc-tangent is odd for all real `x`.
+- **`asinh(-x) → -asinh(x)`**: Hyperbolic arc-sine is odd for all real `x`.
+- **`atanh(-x) → -atanh(x)`**: Hyperbolic arc-tangent is odd on `(-1, 1)`.
+
+### Special numeric values
+
+All five handlers preserve exact IRInteger returns for key values:
+`asin(0) = 0`, `acos(1) = 0`, `atan(0) = 0`, `asinh(0) = 0`,
+`atanh(0) = 0` — matching the existing `{0: ZERO}` / `{1: ZERO}`
+special-case conventions from the `_elementary` factory.
+
+### Test coverage
+
+47 new tests across 6 classes in `tests/test_phase32.py`.  Total suite
+grows to 1639 tests at 82.53% coverage.
+
+## 0.51.0 — 2026-05-05
+
+**Phase 31 — Trig symmetry and arc-cancellation identities.**
+
+Six new handlers override the `_elementary`-factory `Sin`, `Cos`, `Tan`,
+`Sinh`, `Cosh`, `Tanh` handlers from `handlers.py` via the standard
+`handlers.update(build_cas_handler_table())` mechanism.  All numeric fold
+behaviour is preserved.
+
+### Negation symmetry rules
+
+- **`sin(-x) → -sin(x)`**: Sine is an odd function — `sin(-x) = -sin(x)` for
+  all real `x`.  The handler recurses so double negations collapse correctly:
+  `sin(-(-x)) = sin(x)`.
+- **`cos(-x) → cos(x)`**: Cosine is an even function — the negation is stripped
+  and the handler recurses, allowing numeric fold to fire on the inner expression.
+- **`tan(-x) → -tan(x)`**: Tangent is odd — same recursive pattern as sine.
+- **`sinh(-x) → -sinh(x)`**: Hyperbolic sine is odd.
+- **`cosh(-x) → cosh(x)`**: Hyperbolic cosine is even.
+- **`tanh(-x) → -tanh(x)`**: Hyperbolic tangent is odd.
+
+### Arc-function cancellation rules
+
+All six cancellations are structural identities — no assumption is needed:
+
+- **`sin(asin(x)) → x`**: `asin` maps `[-1,1]→[-π/2,π/2]`; `sin` on that
+  interval is the exact left inverse.
+- **`cos(acos(x)) → x`**: `acos` maps `[-1,1]→[0,π]`; `cos∘acos = id`.
+- **`tan(atan(x)) → x`**: `atan` maps `ℝ→(-π/2,π/2)` where `tan` is defined.
+- **`sinh(asinh(x)) → x`**: `asinh` is the exact left inverse of `sinh`.
+- **`cosh(acosh(x)) → x`**: `acosh` maps `[1,∞)→[0,∞)`, exact left inverse.
+- **`tanh(atanh(x)) → x`**: `atanh` is the exact left inverse of `tanh`.
+
+### MACSYMA wiring
+
+All 6 functions wire through MACSYMA surface syntax.  New e2e tests cover
+`sin(-x)`, `cos(-x)`, `tan(-x)`, `cosh(-x)`, `sin(asin(x))`, `tanh(atanh(y))`.
+
+---
+
+## 0.50.0 — 2026-05-05
+
+**Phase 30 — Algebraic `log` and `exp` cancellation identities.**
+
+Two new handlers override the `_elementary`-factory `Log` and `Exp` handlers
+from `handlers.py` via the standard `handlers.update(build_cas_handler_table())`
+mechanism.  All numeric fold behaviour is preserved.
+
+### `log_handler` (Phase 30, new function)
+
+New algebraic rules on top of the preserved numeric fold:
+
+- **`log(exp(x)) → x`**: Cancellation identity.  `exp` maps all of ℝ into ℝ⁺
+  and `log` is its exact inverse, so this holds for every real `x` without any
+  assumption.
+- **`log(x^n) → n * log(x)`**: Power rule.  Applied only when
+  `vm.assumptions.is_nonneg(x.name)` is True (prevents incorrect simplification
+  in the absence of positivity information).
+- **Guard for undefined inputs**: Negative or zero numeric arguments leave
+  the expression unevaluated (real-valued log is undefined there).
+
+### `exp_handler` (Phase 30, new function)
+
+New algebraic rules on top of the preserved numeric fold:
+
+- **`exp(log(x)) → x`**: Structural cancellation.  Any expression containing
+  `log(x)` already requires `x > 0` in the real domain, so `exp(log(x)) = x`
+  is always safe without an explicit assumption.
+- **`exp(n*log(x)) → x^n`**: Power form.  Recognises both `Mul(n, Log(x))`
+  and the commuted `Mul(Log(x), n)`, returning `Pow(x, n)`.  This simplifies
+  outputs of `logcontract`, `exponentialize`, and user-written expressions
+  like `exp(2*log(x))`.
+
+### Tests
+
+41 new tests in `tests/test_phase30.py` (total suite: 1558 tests, 82.29% coverage):
+
+- `TestPhase30_LogExpCancel` (6) — `log(exp(x))→x`, including compound args
+- `TestPhase30_ExpLogCancel` (7) — `exp(log(x))→x`, `exp(n*log(x))→x^n`
+- `TestPhase30_LogPower` (6) — power rule with/without assumption
+- `TestPhase30_LogNumeric` (5) — numeric fold, `log(1)→0`, negative guard
+- `TestPhase30_ExpNumeric` (5) — numeric fold, `exp(0)→1`
+- `TestPhase30_Regressions` (6) — Phase 29/28/3 regression checks
+- `TestPhase30_Macsyma` (6) — end-to-end MACSYMA surface syntax
+
 ## 0.49.0 — 2026-05-04
 
 **Phase 29 — Algebraic `abs` and `sqrt` simplification.**

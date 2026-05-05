@@ -162,11 +162,14 @@ currently supports:
 Unsupported raw cases are skipped into metadata in the generated file rather
 than silently disappearing. Rust conformance tests execute the generated
 `html5lib-smoke.json` corpus and separately parse the raw upstream-style file to
-keep the intake path visible. Tokenizer-context cases such as RCDATA and
-RAWTEXT stay in the generated corpus with `initial_state` / `last_start_tag`
-metadata and are seeded into the Rust wrapper at test time, while still
-unsupported upstream states remain recorded under `skipped` instead of being
-discarded.
+keep the intake path visible. Tokenizer-context cases such as RCDATA, RAWTEXT,
+script submodes, CDATA bracket/end states, and resumable end-tag-open states
+stay in the generated corpus with `initial_state` / `last_start_tag` metadata
+and are seeded into the Rust wrapper at test time, while still unsupported
+upstream states remain recorded under `skipped` instead of being discarded.
+End-tag-open coverage intentionally exercises matching, mismatched, EOF, and
+diagnostic recovery paths so parser/tokenizer handoff regressions show up in the
+shared fixture corpus instead of only in narrow unit tests.
 
 To regenerate the normalized corpus:
 

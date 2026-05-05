@@ -6,6 +6,68 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — VMCOND00 Phase 3: Dynamic handler chain (Layer 3)
+
+Implements VMCOND00 Layer 3 — non-unwinding condition handlers — in the vm-core
+interpreter.  Five new IIR opcodes (`push_handler`, `pop_handler`, `signal`,
+`error`, `warn`) are now fully dispatched by the VM.
+
+**New module: `vm_core.handler_chain`**
+
+- **`HandlerNode`** — dataclass representing one entry on the dynamic handler
+  chain:
+  - `condition_type: str` — `"*"` (catch-all) or a Python type name.
+  - `handler_fn: object` — a string (IIR function name) in Phase 3; Phase 4
+    will extend this to closures and native callables.
+  - `stack_depth: int` — frame-stack depth at push time (reserved for Phase 5
+    `EXIT_TO` unwinding).
+
+**New error: `HandlerChainError`** (subclass of `VMError`) — raised by
+`pop_handler` when the handler chain is empty (push/pop imbalance detected at
+runtime).
+
+**New `VMCore` state: `_handler_chain: list[HandlerNode]`** — mutable stack
+cleared on `VMCore.reset()`.
+
+**New dispatch handlers in `vm_core.dispatch`**
+
+- `handle_push_handler` — reads `type_id` from `srcs[0]` and the handler
+  function name from `frame.resolve(srcs[1])`, wraps them in a `HandlerNode`,
+  and appends to `vm._handler_chain`.
+- `handle_pop_handler` — pops the most recently pushed node; raises
+  `HandlerChainError` on underflow.
+- `handle_signal` — walks the chain most-recent → oldest via
+  `_handler_type_matches`; on the first match calls the handler
+  non-unwinding via `_invoke_handler_nonunwinding`; if no match, continues
+  silently (no-op).
+- `handle_error` — two-phase dispatch:
+  1. Layer 2 static exception table checked first (same logic as `handle_throw`
+     but without full unwind — just redirects `frame.ip` if in range).
+  2. Layer 3 handler chain walked exactly as `handle_signal`.
+  3. If neither matches, raises `UncaughtConditionError`.
+- `handle_warn` — walks the chain exactly as `handle_signal`; if no match,
+  emits `[vm-core WARN] <repr>` to `sys.stderr` using the same hardened
+  repr strategy as `UncaughtConditionError`, then continues.
+
+**Non-unwinding invocation protocol** — `_invoke_handler_nonunwinding` pushes
+a fresh `VMFrame` for the handler function with `return_dest=None` (discarding
+the return value), copies the condition into register 0 (the handler's first
+parameter), and appends the frame to `vm._frames`.  The dispatch loop runs
+inside the handler; when the handler executes `ret`, `handle_ret` pops it and
+the original frame resumes at the instruction *after* the signaling opcode.
+
+**Security** — `handle_warn`'s stderr output uses the same nested
+`try/except` defence as `UncaughtConditionError.__init__` to guard against
+guest objects whose `__repr__` raises or returns an unbounded string.
+
+**Tests** — 33 new tests in `tests/test_vmcond00_phase3.py` covering:
+`HandlerNode` construction, `HandlerChainError` hierarchy,
+push/pop/underflow mechanics, `signal` no-op and match paths,
+`error` Layer 2 priority and Layer 3 fallback, `warn` stderr emission,
+cross-frame handler visibility, and LIFO handler ordering.
+
+---
+
 ### Added — VMCOND00 Phase 2: throw dispatch + UncaughtConditionError
 
 Implements VMCOND00 Layer 2 — unwind exceptions — in the vm-core interpreter.

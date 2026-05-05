@@ -260,3 +260,11 @@ documented in this file.
   can map generated machine-state identifiers back into typed tokenizer states.
 - Unquoted attribute values now keep solidus characters as value text, avoiding
   false self-closing-tag recovery for URL-like values and trailing path slashes.
+- Expanded the typed tokenizer-context surface and html5lib smoke importer to
+  include resumable RCDATA/RAWTEXT/script end-tag-open states, giving parser and
+  conformance callers standard labels for end-tag handoff points that do not
+  require pre-seeded current-token internals.
+- Expanded end-tag-open convergence coverage across RCDATA, RAWTEXT, script
+  data, and escaped script data, including EOF literalization, mismatched end
+  tag text recovery, and matching whitespace/attribute/trailing-solidus
+  diagnostics in both direct lexer tests and html5lib-style fixtures.

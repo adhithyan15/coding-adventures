@@ -3,6 +3,46 @@
 All notable changes to `matrix-runtime` are documented here.  The
 format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.8.0] — 2026-05-05
+
+### Changed — MX05 Phase 3 V5 (matrix-profile crate promotion)
+
+- The MX05 specialisation pipeline (profile sampler, SpecKey,
+  Specialiser trait, SpecCache, SpecialisationPolicy, SpecRouter)
+  has been promoted from inline modules into a standalone
+  `matrix-profile` crate per spec MX05's layering plan.
+- `matrix-runtime` now depends on `matrix-profile` and re-exports
+  every public item from it (`Profiler`, `ProfileObservation`,
+  `TensorObservation`, `SpecKey`, `ShapeClass`, `RangeClass`,
+  `Specialiser`, `NoopSpecialiser`, `SpecialisedKernel`,
+  `SpecCache`, `SpecialisationPolicy`, `DefaultPolicy`,
+  `SpecRouter`).
+- **Back-compat is preserved**: existing code using
+  `use matrix_runtime::Profiler;` (etc.) continues to work
+  unchanged.
+- Test count: 17 unit + 8 integration = 25 (was 74 + 8).  The 49
+  specialisation-pipeline tests moved with their modules and now
+  run against `matrix-profile` (57 tests there, including the four
+  module test groups plus a small handful of cross-module
+  integration tests).
+
+### Why split now
+
+Phases 1–3V4 shipped the pipeline inline in `matrix-runtime` while
+the interface was still stabilising.  Phase 3 V4 (#2155) wired the
+router into `image-gpu-core::pipeline` end-to-end and confirmed the
+interface is stable.  Phase 3 V5 (this PR) lifts everything into
+its own dependency surface so:
+
+- Backends (`matrix-cpu`, `matrix-metal`) can install a custom
+  `Specialiser` without taking on `matrix-runtime`'s planner /
+  registry / cost-model machinery.
+- Domain libraries and standalone tests can pull in the
+  specialisation pipeline alone.
+- The dependency graph stays acyclic: `matrix-profile` depends only
+  on `matrix-ir` and `compute-ir`; nothing else needs to depend on
+  `matrix-runtime` to use specialisation.
+
 ## [0.7.0] — 2026-05-05
 
 ### Added — MX05 Phase 3 V3 (hot-path wiring)

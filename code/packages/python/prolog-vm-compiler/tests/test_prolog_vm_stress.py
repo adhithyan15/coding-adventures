@@ -1062,6 +1062,39 @@ class TestPrologVMStress:
         ]
         assert source_path.read_text(encoding="utf-8") == "tea\ncake"
 
+    def test_stream_options_and_properties_run_through_vm(self, tmp_path: Path) -> None:
+        source_path = tmp_path / "stream-options.pltxt"
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        compiled = compile_swi_prolog_source(
+            f"""
+            ?- open('{path_atom}', write, Out,
+                    [alias(report_stream), encoding(utf8), type(text)]),
+               write(report_stream, "tea"),
+               flush_output(report_stream),
+               stream_property(report_stream, alias(Alias)),
+               current_stream(Path, Mode, Out),
+               close(report_stream).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [
+            {
+                "Alias": answer.as_dict()["Alias"],
+                "Path": answer.as_dict()["Path"],
+                "Mode": answer.as_dict()["Mode"],
+            }
+            for answer in answers
+        ] == [
+            {
+                "Alias": atom("report_stream"),
+                "Path": atom(str(source_path)),
+                "Mode": atom("write"),
+            },
+        ]
+        assert source_path.read_text(encoding="utf-8") == "tea"
+
     def test_initialized_named_answers_keep_runtime_assertions_visible(self) -> None:
         compiled = compile_swi_prolog_source(
             """

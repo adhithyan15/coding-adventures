@@ -1,6 +1,9 @@
 [workspace]
 resolver = "2"
 members = [
+    "aarch64-backend",
+    "aarch64-encoder",
+    "twig-aot",
     "activation-functions",
     "audio-device-coreaudio",
     "audio-device-sink",
@@ -297,6 +300,7 @@ members = [
     "matrix-cpu",
     "matrix-ir",
     "matrix-metal",
+    "matrix-profile",
     "matrix-runtime",
     "metal-compute",
     "paint-metal",

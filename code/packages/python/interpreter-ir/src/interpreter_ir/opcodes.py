@@ -215,12 +215,73 @@ SYSCALL_CHECKED_OPS: frozenset[str] = frozenset({"syscall_checked"})
 #   3. If the stack is exhausted, raises UncaughtConditionError.
 THROW_OPS: frozenset[str] = frozenset({"throw"})
 
+# ---------------------------------------------------------------------------
+# VMCOND00 Phase 3 — dynamic handlers (Layer 3)
+# ---------------------------------------------------------------------------
+#
+# Five opcodes implementing the Layer 3 condition-handler protocol.  Layer 3
+# is non-unwinding: when a matching handler is found by SIGNAL/ERROR/WARN, the
+# VM pushes a handler invocation frame ON TOP of the current call stack without
+# disturbing any of the frames below it.  The call stack beneath the handler is
+# fully intact; code in those frames can still expose restarts (Layer 4) that
+# the handler can invoke.
+#
+# IIR operand conventions:
+#
+#   push_handler:
+#     dest = None
+#     srcs = [type_id_str, fn_reg]
+#     type_id_str — immediate string: "*" (catch-all) or type name to match.
+#     fn_reg      — register name holding the handler callable (string key
+#                   into the IIR module's function table, or a closure value
+#                   in Phase 4).
+#
+#   pop_handler:
+#     dest = None
+#     srcs = []
+#     Pops the most recently pushed handler.  Must be paired with a
+#     PUSH_HANDLER in the same function on every control-flow path that
+#     exits the guarded region.
+#
+#   signal:
+#     dest = None
+#     srcs = [condition_reg]
+#     Walk the handler chain; call first match non-unwinding.  If no match,
+#     continue execution (signal is always a no-op when unhandled).
+#
+#   error:
+#     dest = None
+#     srcs = [condition_reg]
+#     Walk the handler chain like SIGNAL.  If no match, raise
+#     UncaughtConditionError (the unhandled condition aborts the thread).
+#     If a Layer 2 exception table entry also covers the current IP and type,
+#     that takes priority — the error degrades to a THROW.
+#
+#   warn:
+#     dest = None
+#     srcs = [condition_reg]
+#     Walk the handler chain like SIGNAL.  If no match, emit the condition's
+#     repr to stderr and continue execution (WARN never aborts).
+#
+# Set membership:
+#   - IN  SIDE_EFFECT_OPS: all five modify global state (the handler chain or
+#     stderr) and may invoke arbitrary code.
+#   - IN  ALL_OPS.
+#   - NOT in VALUE_OPS: none produce a dest register value.
+#   - NOT in BRANCH_OPS: the handler invocation is not a static intra-function
+#     conditional jump; it is a dynamic call whose target is on the chain.
+#   - NOT in CONTROL_OPS: they don't return from the current function.
+HANDLER_OPS: frozenset[str] = frozenset(
+    {"push_handler", "pop_handler", "signal", "error", "warn"}
+)
+
 # All ops that have side effects beyond producing a value.
 SIDE_EFFECT_OPS: frozenset[str] = (
     BRANCH_OPS
     | CONTROL_OPS
     | SYSCALL_CHECKED_OPS
     | THROW_OPS
+    | HANDLER_OPS
     | frozenset({"store_reg", "store_mem", "io_out", "type_assert"})
     | frozenset({"field_store", "safepoint"})
 )
@@ -245,5 +306,6 @@ ALL_OPS: frozenset[str] = (
     | HEAP_OPS
     | SYSCALL_CHECKED_OPS
     | THROW_OPS
+    | HANDLER_OPS
     | frozenset({"const"})
 )

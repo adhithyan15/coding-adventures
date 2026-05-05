@@ -2143,6 +2143,306 @@
       ]
     },
     {
+      "description": "rcdata end tag open state emits matching end tag",
+      "input": "title>after",
+      "initialStates": [
+        "RCDATA end tag open state"
+      ],
+      "lastStartTag": "title",
+      "output": [
+        [
+          "EndTag",
+          "title"
+        ],
+        [
+          "Character",
+          "after"
+        ]
+      ]
+    },
+    {
+      "description": "rawtext end tag open state emits matching end tag",
+      "input": "style>tail",
+      "initialStates": [
+        "RAWTEXT end tag open state"
+      ],
+      "lastStartTag": "style",
+      "output": [
+        [
+          "EndTag",
+          "style"
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ]
+    },
+    {
+      "description": "script data end tag open state emits matching end tag",
+      "input": "script>tail",
+      "initialStates": [
+        "Script data end tag open state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "EndTag",
+          "script"
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ]
+    },
+    {
+      "description": "script escaped end tag open state emits matching end tag",
+      "input": "script>tail",
+      "initialStates": [
+        "Script data escaped end tag open state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "EndTag",
+          "script"
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ]
+    },
+    {
+      "description": "rcdata end tag open state emits literal opener at eof",
+      "input": "",
+      "initialStates": [
+        "RCDATA end tag open state"
+      ],
+      "lastStartTag": "title",
+      "output": [
+        [
+          "Character",
+          "</"
+        ]
+      ]
+    },
+    {
+      "description": "rawtext end tag open state emits literal opener at eof",
+      "input": "",
+      "initialStates": [
+        "RAWTEXT end tag open state"
+      ],
+      "lastStartTag": "style",
+      "output": [
+        [
+          "Character",
+          "</"
+        ]
+      ]
+    },
+    {
+      "description": "script data end tag open state emits literal opener at eof",
+      "input": "",
+      "initialStates": [
+        "Script data end tag open state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          "</"
+        ]
+      ]
+    },
+    {
+      "description": "script escaped end tag open state emits literal opener at eof",
+      "input": "",
+      "initialStates": [
+        "Script data escaped end tag open state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          "</"
+        ]
+      ]
+    },
+    {
+      "description": "rcdata end tag open state keeps mismatched end tag text",
+      "input": "style>text</title>",
+      "initialStates": [
+        "RCDATA end tag open state"
+      ],
+      "lastStartTag": "title",
+      "output": [
+        [
+          "Character",
+          "</style>text"
+        ],
+        [
+          "EndTag",
+          "title"
+        ]
+      ]
+    },
+    {
+      "description": "rawtext end tag open state keeps mismatched end tag text",
+      "input": "title>tail</style>",
+      "initialStates": [
+        "RAWTEXT end tag open state"
+      ],
+      "lastStartTag": "style",
+      "output": [
+        [
+          "Character",
+          "</title>tail"
+        ],
+        [
+          "EndTag",
+          "style"
+        ]
+      ]
+    },
+    {
+      "description": "script data end tag open state keeps mismatched end tag text",
+      "input": "style>tail</script>",
+      "initialStates": [
+        "Script data end tag open state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          "</style>tail"
+        ],
+        [
+          "EndTag",
+          "script"
+        ]
+      ]
+    },
+    {
+      "description": "script escaped end tag open state keeps mismatched end tag text",
+      "input": "style>tail</script>",
+      "initialStates": [
+        "Script data escaped end tag open state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "Character",
+          "</style>tail"
+        ],
+        [
+          "EndTag",
+          "script"
+        ]
+      ]
+    },
+    {
+      "description": "rcdata end tag open state reports matching end tag attributes",
+      "input": "title class=x>after",
+      "initialStates": [
+        "RCDATA end tag open state"
+      ],
+      "lastStartTag": "title",
+      "output": [
+        [
+          "EndTag",
+          "title"
+        ],
+        [
+          "Character",
+          "after"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "end-tag-with-attributes",
+          "line": 1,
+          "col": 14
+        }
+      ]
+    },
+    {
+      "description": "rawtext end tag open state reports matching end tag whitespace",
+      "input": "style >tail",
+      "initialStates": [
+        "RAWTEXT end tag open state"
+      ],
+      "lastStartTag": "style",
+      "output": [
+        [
+          "EndTag",
+          "style"
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "unexpected-whitespace-after-end-tag-name",
+          "line": 1,
+          "col": 7
+        }
+      ]
+    },
+    {
+      "description": "script data end tag open state reports matching trailing solidus",
+      "input": "script/>tail",
+      "initialStates": [
+        "Script data end tag open state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "EndTag",
+          "script"
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "end-tag-with-trailing-solidus",
+          "line": 1,
+          "col": 8
+        }
+      ]
+    },
+    {
+      "description": "script escaped end tag open state reports matching end tag attributes",
+      "input": "script class=x>tail",
+      "initialStates": [
+        "Script data escaped end tag open state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "EndTag",
+          "script"
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "end-tag-with-attributes",
+          "line": 1,
+          "col": 15
+        }
+      ]
+    },
+    {
       "description": "script less-than state emits pending less-than at eof",
       "input": "",
       "initialStates": [

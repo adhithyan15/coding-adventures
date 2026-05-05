@@ -16,7 +16,9 @@ Public surface
 ``VMError``             — base exception.
 ``UnknownOpcodeError``, ``FrameOverflowError``, ``UndefinedVariableError``,
 ``VMInterrupt``         — specific error types.
-``UncaughtConditionError`` — raised when THROW has no matching handler (VMCOND00).
+``UncaughtConditionError`` — raised when THROW/ERROR has no matching handler (VMCOND00).
+``HandlerChainError``   — raised on handler-chain underflow (VMCOND00 Phase 3).
+``HandlerNode``         — one node in the VMCOND00 Layer 3 handler chain.
 """
 
 from vm_core.builtins import BuiltinRegistry
@@ -24,6 +26,7 @@ from vm_core.core import VMCore
 from vm_core.debug import DebugHooks, StepMode
 from vm_core.errors import (
     FrameOverflowError,
+    HandlerChainError,
     UncaughtConditionError,
     UndefinedVariableError,
     UnknownOpcodeError,
@@ -31,6 +34,7 @@ from vm_core.errors import (
     VMInterrupt,
 )
 from vm_core.frame import RegisterFile, VMFrame
+from vm_core.handler_chain import HandlerNode
 from vm_core.metrics import BranchStats, VMMetrics
 from vm_core.profiler import TypeMapper, VMProfiler, default_type_mapper
 from vm_core.tracer import VMTrace, VMTracer
@@ -55,4 +59,6 @@ __all__ = [
     "UndefinedVariableError",
     "VMInterrupt",
     "UncaughtConditionError",
+    "HandlerChainError",
+    "HandlerNode",
 ]

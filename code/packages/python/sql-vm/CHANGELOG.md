@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.15.0 — 2026-05-05
+
+### Added
+
+- **DEFAULT column value passthrough in `_do_create_table`** (`vm.py`) —
+  `CreateTable` now reads `c.default` from each `ColumnDef` in the instruction
+  and passes it to `BackendColumnDef(default=...)`.  When `c.default` is the
+  IR sentinel `NO_COLUMN_DEFAULT` the VM converts it to the backend sentinel
+  `NO_DEFAULT`, preserving the existing "no default declared" semantics.  Any
+  other value (integer, float, string, or `None` for DEFAULT NULL) is passed
+  through verbatim so `InMemoryBackend._apply_defaults()` can fill the column
+  on INSERT when it is omitted by the caller.
+
+  This closes the final gap in the DEFAULT pipeline:
+  `sql-parser → adapter → sql-backend ColumnDef → IR ColumnDef → VM → InMemoryBackend`.
+
 ## 1.14.0 — 2026-05-04
 
 ### Added

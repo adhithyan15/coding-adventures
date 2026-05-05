@@ -514,6 +514,48 @@ class IrOp(IntEnum):
     #     continue.  If stack exhausted, raise UncaughtConditionError.
     THROW = 66
 
+    # ── VMCOND00 Phase 3 — dynamic handlers (Layer 3) ────────────────────
+    #
+    # Five opcodes implementing the Layer 3 non-unwinding condition handler
+    # protocol.  When SIGNAL/ERROR/WARN finds a matching handler the VM pushes
+    # a handler invocation frame on top of the current call stack WITHOUT
+    # disturbing the frames below.  After the handler returns normally,
+    # execution resumes at the instruction after the signaling opcode.
+    #
+    # Operand layouts:
+    #
+    #   PUSH_HANDLER  type_id:imm  fn:reg
+    #     type_id — IrImmediate(string): "*" (catch-all) or type name.
+    #     fn      — IrRegister: the handler callable.
+    #
+    #   POP_HANDLER
+    #     (no operands)
+    #
+    #   SIGNAL  condition:reg
+    #   ERROR   condition:reg
+    #   WARN    condition:reg
+    #     condition — IrRegister: the condition object to signal/raise/warn.
+    #
+    # Behavioural differences between the three signaling opcodes:
+    #   SIGNAL — no-op when unhandled (always safe to signal).
+    #   ERROR  — aborts the thread (UncaughtConditionError) when unhandled.
+    #            Also checks the Layer 2 exception table first; if the
+    #            current IP is in a guarded range that covers this condition,
+    #            the error degrades to THROW so Layer 2 wins.
+    #   WARN   — emits the condition's repr to stderr when unhandled, then
+    #            continues execution.  Never aborts.
+    #
+    # Backend lowering strategy (Phase 3 scope: interpreter / vm-core only):
+    #   JVM / CLR / BEAM lowering is deferred to a later phase.  Backends that
+    #   do not yet support Layer 3 should reject programs via their pre-flight
+    #   validator: "VMCOND00 Layer 3: dynamic handlers not yet implemented for
+    #   this backend."
+    PUSH_HANDLER = 67
+    POP_HANDLER = 68
+    SIGNAL = 69
+    ERROR = 70
+    WARN = 71
+
 
 # Canonical name → opcode mapping. Built from the enum at module load time.
 # Used by the IR parser to convert text opcode names back to IrOp values.

@@ -4875,6 +4875,10 @@ fn parser_facing_context_maps_script_substates() {
             "script_data_less_than_sign",
         ),
         (
+            HtmlTokenizerState::ScriptDataEndTagOpen,
+            "script_data_end_tag_open",
+        ),
+        (
             HtmlTokenizerState::ScriptDataEscapeStart,
             "script_data_escape_start",
         ),
@@ -4894,6 +4898,10 @@ fn parser_facing_context_maps_script_substates() {
         (
             HtmlTokenizerState::ScriptDataEscapedLessThanSign,
             "script_data_escaped_less_than_sign",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapedEndTagOpen,
+            "script_data_escaped_end_tag_open",
         ),
         (
             HtmlTokenizerState::ScriptDataDoubleEscapeStart,
@@ -4990,20 +4998,24 @@ fn parser_facing_context_exposes_tokenizer_state_sets() {
             "data",
             "rcdata",
             "rcdata_less_than_sign",
+            "rcdata_end_tag_open",
             "rawtext",
             "rawtext_less_than_sign",
+            "rawtext_end_tag_open",
             "plaintext",
             "cdata_section",
             "cdata_section_bracket",
             "cdata_section_end",
             "script_data",
             "script_data_less_than_sign",
+            "script_data_end_tag_open",
             "script_data_escape_start",
             "script_data_escape_start_dash",
             "script_data_escaped",
             "script_data_escaped_dash",
             "script_data_escaped_dash_dash",
             "script_data_escaped_less_than_sign",
+            "script_data_escaped_end_tag_open",
             "script_data_double_escape_start",
             "script_data_double_escaped",
             "script_data_double_escaped_dash",
@@ -5053,11 +5065,19 @@ fn parser_facing_context_exposes_tokenizer_state_sets() {
         HtmlTokenizerState::from_html5lib_state("Script data double escape start state"),
         Some(HtmlTokenizerState::ScriptDataDoubleEscapeStart)
     );
+    assert_eq!(
+        HtmlTokenizerState::from_html5lib_state("RCDATA end tag open state"),
+        Some(HtmlTokenizerState::RcdataEndTagOpen)
+    );
     assert_eq!(HtmlTokenizerState::from_html5lib_state("Bogus state"), None);
 
     assert!(HtmlTokenizerState::RcdataLessThanSign.requires_last_start_tag());
+    assert!(HtmlTokenizerState::RcdataEndTagOpen.requires_last_start_tag());
     assert!(HtmlTokenizerState::RawtextLessThanSign.requires_last_start_tag());
+    assert!(HtmlTokenizerState::RawtextEndTagOpen.requires_last_start_tag());
+    assert!(HtmlTokenizerState::ScriptDataEndTagOpen.requires_last_start_tag());
     assert!(HtmlTokenizerState::ScriptDataEscapeStart.requires_last_start_tag());
+    assert!(HtmlTokenizerState::ScriptDataEscapedEndTagOpen.requires_last_start_tag());
     assert!(!HtmlTokenizerState::CdataSectionEnd.requires_last_start_tag());
 }
 
@@ -5088,6 +5108,19 @@ fn parser_facing_context_seeds_intermediate_text_states() {
         ]
     );
 
+    let rcdata_end_tag_open =
+        HtmlLexContext::new(HtmlTokenizerState::RcdataEndTagOpen).with_last_start_tag("title");
+    assert_eq!(
+        lex_html_fragment("title>after", &rcdata_end_tag_open).unwrap(),
+        vec![
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Text("after".to_string()),
+            Token::Eof
+        ]
+    );
+
     let rawtext_less_than =
         HtmlLexContext::new(HtmlTokenizerState::RawtextLessThanSign).with_last_start_tag("style");
     assert_eq!(
@@ -5101,6 +5134,19 @@ fn parser_facing_context_seeds_intermediate_text_states() {
         ]
     );
 
+    let rawtext_end_tag_open =
+        HtmlLexContext::new(HtmlTokenizerState::RawtextEndTagOpen).with_last_start_tag("style");
+    assert_eq!(
+        lex_html_fragment("style>tail", &rawtext_end_tag_open).unwrap(),
+        vec![
+            Token::EndTag {
+                name: "style".to_string()
+            },
+            Token::Text("tail".to_string()),
+            Token::Eof
+        ]
+    );
+
     let script_less_than =
         HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataLessThanSign).unwrap();
     assert_eq!(
@@ -5110,6 +5156,32 @@ fn parser_facing_context_seeds_intermediate_text_states() {
             Token::EndTag {
                 name: "script".to_string()
             },
+            Token::Eof
+        ]
+    );
+
+    let script_end_tag_open =
+        HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEndTagOpen).unwrap();
+    assert_eq!(
+        lex_html_fragment("script>tail", &script_end_tag_open).unwrap(),
+        vec![
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Text("tail".to_string()),
+            Token::Eof
+        ]
+    );
+
+    let escaped_script_end_tag_open =
+        HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEscapedEndTagOpen).unwrap();
+    assert_eq!(
+        lex_html_fragment("script>tail", &escaped_script_end_tag_open).unwrap(),
+        vec![
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Text("tail".to_string()),
             Token::Eof
         ]
     );
@@ -5139,6 +5211,145 @@ fn parser_facing_context_seeds_intermediate_text_states() {
             Token::Eof
         ]
     );
+}
+
+#[test]
+fn parser_facing_end_tag_open_contexts_recover_literal_boundaries() {
+    for (context, input, expected_text) in [
+        (
+            HtmlLexContext::new(HtmlTokenizerState::RcdataEndTagOpen).with_last_start_tag("title"),
+            "",
+            "</",
+        ),
+        (
+            HtmlLexContext::new(HtmlTokenizerState::RawtextEndTagOpen).with_last_start_tag("style"),
+            "",
+            "</",
+        ),
+        (
+            HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEndTagOpen).unwrap(),
+            "",
+            "</",
+        ),
+        (
+            HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEscapedEndTagOpen)
+                .unwrap(),
+            "",
+            "</",
+        ),
+    ] {
+        assert_eq!(
+            lex_html_fragment(input, &context).unwrap(),
+            vec![Token::Text(expected_text.to_string()), Token::Eof],
+            "context {:?}",
+            context.initial_state
+        );
+    }
+
+    for (context, input, expected_text, expected_end_tag) in [
+        (
+            HtmlLexContext::new(HtmlTokenizerState::RcdataEndTagOpen).with_last_start_tag("title"),
+            "style>text</title>",
+            "</style>text",
+            "title",
+        ),
+        (
+            HtmlLexContext::new(HtmlTokenizerState::RawtextEndTagOpen).with_last_start_tag("style"),
+            "title>tail</style>",
+            "</title>tail",
+            "style",
+        ),
+        (
+            HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEndTagOpen).unwrap(),
+            "style>tail</script>",
+            "</style>tail",
+            "script",
+        ),
+        (
+            HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEscapedEndTagOpen)
+                .unwrap(),
+            "style>tail</script>",
+            "</style>tail",
+            "script",
+        ),
+    ] {
+        assert_eq!(
+            lex_html_fragment(input, &context).unwrap(),
+            vec![
+                Token::Text(expected_text.to_string()),
+                Token::EndTag {
+                    name: expected_end_tag.to_string()
+                },
+                Token::Eof,
+            ],
+            "context {:?}",
+            context.initial_state
+        );
+    }
+}
+
+#[test]
+fn parser_facing_end_tag_open_contexts_report_matching_recovery_diagnostics() {
+    for (context, input, expected_end_tag, expected_text, expected_diagnostic) in [
+        (
+            HtmlLexContext::new(HtmlTokenizerState::RcdataEndTagOpen).with_last_start_tag("title"),
+            "title class=x>after",
+            "title",
+            "after",
+            "end-tag-with-attributes",
+        ),
+        (
+            HtmlLexContext::new(HtmlTokenizerState::RawtextEndTagOpen).with_last_start_tag("style"),
+            "style >tail",
+            "style",
+            "tail",
+            "unexpected-whitespace-after-end-tag-name",
+        ),
+        (
+            HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEndTagOpen).unwrap(),
+            "script/>tail",
+            "script",
+            "tail",
+            "end-tag-with-trailing-solidus",
+        ),
+        (
+            HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEscapedEndTagOpen)
+                .unwrap(),
+            "script class=x>tail",
+            "script",
+            "tail",
+            "end-tag-with-attributes",
+        ),
+    ] {
+        let mut lexer = create_html_lexer().unwrap();
+        apply_html_lex_context(&mut lexer, &context).unwrap();
+
+        lexer.push(input).unwrap();
+        lexer.finish().unwrap();
+
+        assert_eq!(
+            lexer.drain_tokens(),
+            vec![
+                Token::EndTag {
+                    name: expected_end_tag.to_string()
+                },
+                Token::Text(expected_text.to_string()),
+                Token::Eof,
+            ],
+            "context {:?}",
+            context.initial_state
+        );
+        assert_eq!(
+            lexer
+                .diagnostics()
+                .iter()
+                .map(|diagnostic| diagnostic.code.as_str())
+                .collect::<Vec<_>>(),
+            vec![expected_diagnostic],
+            "context {:?}",
+            context.initial_state
+        );
+    }
 }
 
 #[test]

@@ -160,9 +160,10 @@ The generated HTML1 machine also exposes `RCDATA`, `RAWTEXT`, `PLAINTEXT`,
 `script_data_escaped_less_than_sign`, `script_data_double_escaped`,
 `script_data_double_escaped_dash`, `script_data_double_escaped_dash_dash`, and
 `script_data_double_escaped_less_than_sign` entry states for parser-controlled
-tokenizer submodes, plus intermediate RCDATA/RAWTEXT less-than, CDATA
-bracket/end, script less-than, escape-start, and double-escape start/end states
-used by html5lib/WPT-style tokenizer fixtures. The markup declaration path also
+tokenizer submodes, plus intermediate RCDATA/RAWTEXT less-than and end-tag-open
+states, CDATA bracket/end states, and script less-than, end-tag-open,
+escape-start, escaped end-tag-open, and double-escape start/end states used by
+html5lib/WPT-style tokenizer fixtures. The markup declaration path also
 recognizes `<![CDATA[` and enters the CDATA section state so the generated lexer
 can exercise that tokenizer subflow end to end; a future parser can still decide
 when that opener is valid for foreign-content contexts.
@@ -222,15 +223,19 @@ fixture normalization logic to live forever inside the Rust tests.
 
 The normalized corpus now carries optional tokenizer-context metadata such as
 `initial_state` and `last_start_tag`, so upstream RCDATA, RAWTEXT, PLAINTEXT,
-CDATA section, script data, script data escaped/dash/less-than substates, and
-script data double-escaped/dash/less-than substates can already live in the
-shared Venture fixture format. Current Rust conformance tests now seed that
-context into the generated lexer so non-data-state cases execute through the
-same static Rust wrapper as the data-state corpus.
+CDATA section, script data, script data escaped/dash/less-than/end-tag-open
+substates, and script data double-escaped/dash/less-than substates can already
+live in the shared Venture fixture format. Current Rust conformance tests now
+seed that context into the generated lexer so non-data-state cases execute
+through the same static Rust wrapper as the data-state corpus.
 The importer also expands supported multi-state html5lib entries into stable
 per-state Venture cases and now covers intermediate text-like states such as
-RCDATA/RAWTEXT less-than, CDATA bracket/end, script less-than, script
-escape-start, and script double-escape start/end.
+RCDATA/RAWTEXT less-than and end-tag-open, CDATA bracket/end, script less-than
+and end-tag-open, script escape-start, script escaped end-tag-open, and script
+double-escape start/end. End-tag-open fixtures now cover matching tags,
+mismatched tags that must remain literal text, EOF recovery that preserves the
+pending `</`, and matching end-tag diagnostics for whitespace, attributes, and
+trailing solidus.
 
 The intended WHATWG/WPT path is to normalize upstream tokenizer cases into this
 same schema rather than teaching the Rust harness to parse raw upstream files

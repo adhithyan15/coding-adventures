@@ -117,10 +117,16 @@ class TestIrOp:
         assert IrOp.SYSCALL_CHECKED == 64
         assert IrOp.BRANCH_ERR == 65
         assert IrOp.THROW == 66
+        # VMCOND00 Phase 3 — Layer 3 dynamic handler opcodes
+        assert IrOp.PUSH_HANDLER == 67
+        assert IrOp.POP_HANDLER == 68
+        assert IrOp.SIGNAL == 69
+        assert IrOp.ERROR == 70
+        assert IrOp.WARN == 71
 
     def test_total_opcode_count(self) -> None:
-        """There are exactly 67 opcodes after VMCOND00 Phase 2."""
-        assert len(IrOp) == 67
+        """There are exactly 72 opcodes after VMCOND00 Phase 3."""
+        assert len(IrOp) == 72
 
     def test_name_to_op_roundtrip(self) -> None:
         """NAME_TO_OP[op.name] == op for every opcode."""
@@ -1075,6 +1081,16 @@ class TestAllOpcodesPrintParse:
             IrOp.BRANCH_ERR:   [IrRegister(2), IrLabel("eof_handler")],
             # THROW condition_reg
             IrOp.THROW:        [IrRegister(0)],
+            # VMCOND00 Phase 3 — PUSH_HANDLER type_id:label fn:reg
+            IrOp.PUSH_HANDLER: [IrLabel("*"), IrRegister(1)],
+            # POP_HANDLER (no operands)
+            IrOp.POP_HANDLER:  [],
+            # SIGNAL condition:reg
+            IrOp.SIGNAL:       [IrRegister(0)],
+            # ERROR condition:reg
+            IrOp.ERROR:        [IrRegister(0)],
+            # WARN condition:reg
+            IrOp.WARN:         [IrRegister(0)],
         }
         for idx, op in enumerate(IrOp):
             operands = operands_by_opcode[op]

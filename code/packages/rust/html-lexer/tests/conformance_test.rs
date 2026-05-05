@@ -100,7 +100,7 @@ fn fixture_manifests_parse() {
 fn html5lib_smoke_fixture_file_parses() {
     let file = load_html5lib_file(HTML5LIB_RAW_FIXTURES);
 
-    assert_eq!(file.tests.len(), 169);
+    assert_eq!(file.tests.len(), 185);
     assert_eq!(
         file.tests[0].description,
         "simple start and end tag in data state"
@@ -166,8 +166,10 @@ fn normalized_html5lib_fixture_parses_with_importer_metadata() {
             "CDATA section state".to_string(),
             "Data state".to_string(),
             "PLAINTEXT state".to_string(),
+            "RAWTEXT end tag open state".to_string(),
             "RAWTEXT less-than sign state".to_string(),
             "RAWTEXT state".to_string(),
+            "RCDATA end tag open state".to_string(),
             "RCDATA less-than sign state".to_string(),
             "RCDATA state".to_string(),
             "Script data double escape end state".to_string(),
@@ -176,17 +178,19 @@ fn normalized_html5lib_fixture_parses_with_importer_metadata() {
             "Script data double escaped dash state".to_string(),
             "Script data double escaped less-than sign state".to_string(),
             "Script data double escaped state".to_string(),
+            "Script data end tag open state".to_string(),
             "Script data escape start dash state".to_string(),
             "Script data escape start state".to_string(),
             "Script data escaped dash dash state".to_string(),
             "Script data escaped dash state".to_string(),
+            "Script data escaped end tag open state".to_string(),
             "Script data escaped less-than sign state".to_string(),
             "Script data escaped state".to_string(),
             "Script data less-than sign state".to_string(),
             "Script data state".to_string()
         ]
     );
-    assert_eq!(normalized.cases.len(), 170);
+    assert_eq!(normalized.cases.len(), 186);
     assert!(normalized.skipped.is_empty());
     assert_eq!(
         normalized.cases[4].diagnostics,
@@ -302,7 +306,7 @@ fn normalized_html5lib_cases_match_default_wrapper() {
 
     assert_eq!(suite.format, "venture-html-lexer-fixtures/v1");
     assert_eq!(suite.suite, "html5lib-smoke");
-    assert_eq!(suite.cases.len(), 170);
+    assert_eq!(suite.cases.len(), 186);
 
     run_fixture_suite(&suite, |case| {
         let mut lexer = create_html_lexer().map_err(|error| format!("{error:?}"))?;

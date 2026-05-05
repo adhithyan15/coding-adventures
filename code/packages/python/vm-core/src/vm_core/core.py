@@ -130,6 +130,17 @@ class VMCore:
         # JIT handlers — registered by jit-core after compilation.
         self._jit_handlers: dict[str, Callable[[list[Any]], Any]] = {}
 
+        # VMCOND00 Phase 3 — handler chain (Layer 3: Dynamic Handlers).
+        #
+        # A list of HandlerNode objects pushed by ``push_handler`` and popped
+        # by ``pop_handler``.  SIGNAL / ERROR / WARN search this list from the
+        # END (most recently pushed) to the BEGINNING (oldest), calling the
+        # first node whose condition_type matches the thrown condition.
+        #
+        # The list is intentionally cleared by reset() between executions so
+        # that handlers from a previous run never leak into the next one.
+        self._handler_chain: list = []  # list[HandlerNode]
+
         # VMCOND00 Phase 1 — syscall dispatch table.
         #
         # Maps SYSCALL00 canonical syscall number (int) to an implementation
@@ -537,6 +548,7 @@ class VMCore:
         self._interrupted = False
         self._memory = {}
         self._io_ports = {}
+        self._handler_chain = []  # VMCOND00 Phase 3 — clear per execution
 
     # ------------------------------------------------------------------
     # LANG06 debug API

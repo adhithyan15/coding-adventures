@@ -1,5 +1,28 @@
 # Changelog
 
+## [1.16.0] - 2026-05-05
+
+### Added
+
+- **`NO_COLUMN_DEFAULT` sentinel in `ir.py`** — module-level singleton
+  (`_NoColumnDefault` / `NO_COLUMN_DEFAULT: Final`) that distinguishes "no
+  DEFAULT clause" from "DEFAULT NULL" in the IR `ColumnDef`.  Decoupled from
+  `sql_backend.schema.NO_DEFAULT` so the IR layer does not import from the
+  backend.
+
+- **`default: object = NO_COLUMN_DEFAULT` on IR `ColumnDef`** — the column
+  definition dataclass now carries the declared DEFAULT literal value (an
+  integer, float, string, or `None` for DEFAULT NULL) through to the VM.
+  When no DEFAULT clause is present the field holds the `NO_COLUMN_DEFAULT`
+  sentinel and the VM passes `NO_DEFAULT` to the backend (preserving existing
+  behaviour).
+
+- **`_to_ir_col` passes `default=ir_default`** (`compiler.py`) — converts the
+  backend's `NO_DEFAULT` sentinel to the IR's `NO_COLUMN_DEFAULT`, then stores
+  any other value as-is.  Imports `_BACKEND_NO_DEFAULT` from
+  `sql_backend.schema` and `NO_COLUMN_DEFAULT` from the local `ir` module for
+  the conversion.
+
 ## [1.15.0] - 2026-05-04
 
 ### Added

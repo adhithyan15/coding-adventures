@@ -32,7 +32,8 @@ This first slice intentionally starts small:
   `noscript`
 - parser-approved initial tokenizer contexts for data-state documents and
   RCDATA/RAWTEXT, foreign-content CDATA, script-state, and intermediate
-  tokenizer fragments exposed by the lexer
+  tokenizer fragments exposed by the lexer, including resumable end-tag-open
+  contexts
 - simple implied end tags for `p`, `li`, `dt`, `dd`, `option`, `optgroup`,
   ruby annotations, heading elements, legacy paragraph/block boundaries, and
   raw-text block starts
@@ -40,6 +41,8 @@ This first slice intentionally starts small:
   `nobr` starts plus ignored nested `form` starts while preserving surrounding
   paragraph/list context
 - special end-tag recovery for `</p>` and `</br>` compatibility cases
+- omitted shell end-tag recovery for common `</head>`, `</body>`, and `</html>`
+  boundaries in documents that rely on implied wrapper elements
 - initial line-feed stripping for `pre`, `listing`, and `textarea`
 - parser diagnostics for unmatched end tags
 

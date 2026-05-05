@@ -41,6 +41,7 @@ from logic_builtins import (
     current_functoro,
     current_predicateo,
     current_prolog_flago,
+    current_streamo,
     cuto,
     cyclic_termo,
     difo,
@@ -70,6 +71,7 @@ from logic_builtins import (
     fd_sum_relationo,
     fd_sumo,
     findallo,
+    flush_outputo,
     foldlo,
     forallo,
     functoro,
@@ -94,6 +96,7 @@ from logic_builtins import (
     numbero,
     numbervarso,
     onceo,
+    open_optionso,
     openo,
     partitiono,
     predicate_propertyo,
@@ -116,6 +119,7 @@ from logic_builtins import (
     set_prolog_flago,
     setofo,
     setup_call_cleanupo,
+    stream_propertyo,
     string_charso,
     string_codeso,
     string_lengtho,
@@ -288,6 +292,8 @@ def _adapt_relation_call(
         return at_end_of_streamo(args[0])
     if goal.relation.arity == 1 and name == "nl":
         return nlo(args[0])
+    if goal.relation.arity == 1 and name == "flush_output":
+        return flush_outputo(args[0])
 
     binary_arithmetic_builtins: dict[str, Callable[[object, object], GoalExpr]] = {
         "is": prolog_iso,
@@ -525,6 +531,12 @@ def _adapt_relation_call(
         return read_file_to_codeso(*args)
     if name == "open" and goal.relation.arity == 3:
         return openo(*args)
+    if name == "open" and goal.relation.arity == 4:
+        return open_optionso(*args)
+    if name == "current_stream" and goal.relation.arity == 3:
+        return current_streamo(*args)
+    if name == "stream_property" and goal.relation.arity == 2:
+        return stream_propertyo(*args)
     if name == "read_string" and goal.relation.arity == 3:
         return read_stringo(*args)
     if name == "read_line_to_string" and goal.relation.arity == 2:
