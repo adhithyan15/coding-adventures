@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Accepted ALGOL dummy statements as semantic no-ops in `then`, `else`, `do`,
+  and terminal-label statement positions.
 - Added the PL04 phase-one semantic model with explicit semantic blocks,
   static-parent metadata, scalar frame layouts, and resolved variable
   references carrying lexical-depth and slot-offset information.

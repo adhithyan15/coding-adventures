@@ -112,6 +112,26 @@ class TestAlgolIrCompiler:
         assert "if_0_else" in labels
         assert "if_0_end" in labels
 
+    def test_compiles_dummy_statements_in_control_positions(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result, i; "
+                "if true then ; "
+                "if false then result := 1 else ; "
+                "for i := 1 step 1 until 1 do ; "
+                "done: "
+                "end"
+            )
+        )
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+        assert any(label.startswith("algol_label_") for label in labels)
+        assert any(label.startswith("if_") for label in labels)
+        assert any(label.startswith("loop_") for label in labels)
+
     def test_compiles_for_loop_labels(self) -> None:
         result = compile_algol(
             parse_algol(

@@ -109,8 +109,8 @@ class TestMinimalProgram:
           <statements>
         end
 
-    At least one statement is required. The empty statement (``empty_stmt``)
-    satisfies this requirement.
+    Empty programs are valid, and ALGOL dummy statements appear as zero-width
+    ``dummy_stmt`` nodes where a statement boundary supplies the no-op.
     """
 
     def test_minimal_program_root(self) -> None:
@@ -333,6 +333,18 @@ class TestIfStatement:
         )
         assert ast.rule_name == "program"
 
+    def test_if_then_dummy_statement(self) -> None:
+        """The then-branch may be ALGOL's zero-width dummy statement."""
+        ast = parse("begin integer x; if true then ; x := 1 end")
+        assert ast.rule_name == "program"
+        assert find_nodes(ast, "dummy_stmt")
+
+    def test_if_else_dummy_statement(self) -> None:
+        """The else-branch may also be a dummy statement."""
+        ast = parse("begin integer x; if false then x := 1 else ; end")
+        assert ast.rule_name == "program"
+        assert find_nodes(ast, "dummy_stmt")
+
 
 # ---------------------------------------------------------------------------
 # Goto statement tests
@@ -388,7 +400,9 @@ class TestGotoStatement:
             == 2
         )
 
-        assert all(child.rule_name == "label" for child in child_nodes(statement))
+        nodes = child_nodes(statement)
+        assert [child.rule_name for child in nodes[:2]] == ["label", "label"]
+        assert find_nodes(statement, "dummy_stmt")
 
 
 # ---------------------------------------------------------------------------
@@ -482,6 +496,12 @@ class TestForLoop:
         for_nodes = find_nodes(ast, "for_stmt")
         assert len(for_nodes) == 1
         assert find_nodes(for_nodes[0], "subscripts")
+
+    def test_dummy_statement_body(self) -> None:
+        """For-loop bodies may be empty dummy statements."""
+        ast = parse("begin integer i; for i := 1 do ; i := 2 end")
+        assert ast.rule_name == "program"
+        assert find_nodes(ast, "dummy_stmt")
 
 
 # ---------------------------------------------------------------------------

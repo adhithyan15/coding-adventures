@@ -151,6 +151,23 @@ _SURFACE_CASES = (
         result=[23],
     ),
     SurfaceCase(
+        name="dummy-statements-in-control-positions",
+        source="""
+            begin
+              integer result, i;
+              result := 0;
+              if true then ;
+              if false then result := 100 else ;
+              for i := 1 do ;
+              done:
+              result := result + i + 6;
+              print('DUMMY ', result)
+            end
+        """,
+        result=[7],
+        stdout="DUMMY 7",
+    ),
+    SurfaceCase(
         name="nested-conditional-type-contexts",
         source="""
             begin

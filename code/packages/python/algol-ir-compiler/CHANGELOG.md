@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Changed
 
+- Lowered ALGOL dummy statements as no-op IR in `then`, `else`, `do`, and
+  terminal-label statement positions.
 - Lowered ALGOL scalar locals through planned activation-frame slots instead
   of source-variable virtual registers.
 - Added frame-memory metadata, frame header setup/teardown, static-link
