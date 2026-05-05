@@ -272,7 +272,8 @@ prolog-vm app.pl family.pl \
 
 Use `--values` to print raw answer values, omit `--query` to run a source-level
 `?-` directive by index, and use `--dialect iso` when the ISO parser profile is
-the desired frontend.
+the desired frontend. `--source-query-index` only applies to that single stored
+source-query mode and is rejected when another mode would ignore it.
 
 Use `--source-stdin` when editor integrations or shell pipelines should provide
 the source through stdin while query selection still comes from flags:

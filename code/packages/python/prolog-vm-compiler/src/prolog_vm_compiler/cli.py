@@ -179,6 +179,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     dump_source_metadata = bool(flags["dump-source-metadata"])
     list_source_queries = bool(flags["list-source-queries"])
     values = bool(flags["values"])
+    source_query_index_explicit = "source-query-index" in result.explicit_flags
     if check and queries:
         msg = "--check cannot be combined with --query"
         raise ValueError(msg)
@@ -187,6 +188,9 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     if check and values:
         msg = "--values cannot be combined with --check"
+        raise ValueError(msg)
+    if check and source_query_index_explicit:
+        msg = "--source-query-index cannot be combined with --check"
         raise ValueError(msg)
     if check and all_source_queries:
         msg = "--check cannot be combined with --all-source-queries"
@@ -205,6 +209,9 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     if dump_bytecode and values:
         msg = "--values cannot be combined with --dump-bytecode"
+        raise ValueError(msg)
+    if dump_bytecode and source_query_index_explicit:
+        msg = "--source-query-index cannot be combined with --dump-bytecode"
         raise ValueError(msg)
     if dump_bytecode and list_source_queries:
         msg = "--dump-bytecode cannot be combined with --list-source-queries"
@@ -226,6 +233,9 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     if dump_instructions and values:
         msg = "--values cannot be combined with --dump-instructions"
+        raise ValueError(msg)
+    if dump_instructions and source_query_index_explicit:
+        msg = "--source-query-index cannot be combined with --dump-instructions"
         raise ValueError(msg)
     if dump_instructions and dump_bytecode:
         msg = "--dump-instructions cannot be combined with --dump-bytecode"
@@ -250,6 +260,9 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     if dump_source_metadata and values:
         msg = "--values cannot be combined with --dump-source-metadata"
+        raise ValueError(msg)
+    if dump_source_metadata and source_query_index_explicit:
+        msg = "--source-query-index cannot be combined with --dump-source-metadata"
         raise ValueError(msg)
     if dump_source_metadata and dump_bytecode:
         msg = "--dump-source-metadata cannot be combined with --dump-bytecode"
@@ -281,6 +294,9 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if list_source_queries and values:
         msg = "--values cannot be combined with --list-source-queries"
         raise ValueError(msg)
+    if list_source_queries and source_query_index_explicit:
+        msg = "--source-query-index cannot be combined with --list-source-queries"
+        raise ValueError(msg)
     if list_source_queries and bool(flags["interactive"]):
         msg = "--list-source-queries cannot be combined with --interactive"
         raise ValueError(msg)
@@ -306,8 +322,17 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if all_source_queries and queries:
         msg = "--all-source-queries cannot be combined with --query"
         raise ValueError(msg)
+    if all_source_queries and source_query_index_explicit:
+        msg = "--source-query-index cannot be combined with --all-source-queries"
+        raise ValueError(msg)
     if all_source_queries and bool(flags["interactive"]):
         msg = "--all-source-queries cannot be combined with --interactive"
+        raise ValueError(msg)
+    if queries and source_query_index_explicit:
+        msg = "--source-query-index cannot be combined with --query"
+        raise ValueError(msg)
+    if bool(flags["interactive"]) and source_query_index_explicit:
+        msg = "--source-query-index cannot be combined with --interactive"
         raise ValueError(msg)
     if bool(flags["commit"]) and not queries:
         msg = "--commit requires at least one --query"

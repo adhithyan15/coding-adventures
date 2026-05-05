@@ -135,6 +135,9 @@ embedded query.
 When `--all-source-queries` is set, each embedded `?-` query produces one result
 object with its `source_query_index`. The process exits with status 1 if any
 source query has no answers, matching repeated ad-hoc query scripts.
+`--source-query-index` only applies to single stored source-query execution and
+is rejected with ad-hoc, all-source-query, interactive, and compile-only modes
+rather than being ignored.
 
 When `--summary` is set for non-interactive query execution, text output
 appends one compact line with query, success, failure, and answer totals. JSONL
