@@ -4,6 +4,7 @@ members = [
     "aarch64-backend",
     "aarch64-encoder",
     "twig-aot",
+    "nib-iir-compiler",
     "activation-functions",
     "audio-device-coreaudio",
     "audio-device-sink",
