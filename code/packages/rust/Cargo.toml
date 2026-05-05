@@ -425,6 +425,7 @@ members = [
     "vault-revisions",
     "vault-search",
     "vault-attachments",
+    "vault-import-export",
     "storage-fs",
     "context-store",
     "artifact-store",
