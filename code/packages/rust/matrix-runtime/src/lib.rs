@@ -44,12 +44,16 @@ mod planner;
 mod profile;
 mod registry;
 mod runtime;
+mod spec;
 
 pub use cost::{compute_cost, estimate_flops, transfer_cost_ns};
 pub use planner::{plan, PlanError};
 pub use profile::{ProfileObservation, Profiler, TensorObservation};
 pub use registry::{RegisteredExecutor, Registry};
 pub use runtime::{Runtime, RuntimeError};
+pub use spec::{
+    NoopSpecialiser, RangeClass, ShapeClass, SpecCache, SpecKey, Specialiser, SpecialisedKernel,
+};
 
 // Re-export BackendProfile from executor-protocol so callers don't
 // need a separate import.

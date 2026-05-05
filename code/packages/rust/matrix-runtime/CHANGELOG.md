@@ -3,6 +3,63 @@
 All notable changes to `matrix-runtime` are documented here.  The
 format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.5.0] — 2026-05-05
+
+### Added — MX05 Phase 3 V1 (SpecKey + Specialiser trait + LRU SpecCache)
+
+- New `spec` module exporting:
+  - `SpecKey` — equivalence class identifying which observed pattern
+    a specialised kernel targets.  Carries `op_kind` + `dtype` +
+    `ShapeClass` + `RangeClass` + `backend_id`.  `Hash + Eq` so it
+    works as a HashMap key.
+  - `ShapeClass` — `Static(Shape)` / `StaticRank(u8)` / `Dynamic`.
+  - `RangeClass` — `FloatBits` (IEEE-754 bit-encoded so the enum can
+    derive `Hash`), `Integer { min, max }`, `Constant { bytes }`,
+    `Unknown`.  `RangeClass::float(min, max)` constructor handles
+    the bit conversion and collapses NaN ends to `Unknown` so
+    downstream HashMap lookups stay stable.
+  - `Specialiser` trait — backends implement to emit specialised
+    kernels for a given key.  Default `NoopSpecialiser` always
+    returns `None` so an executor that hasn't opted in still works.
+  - `SpecialisedKernel` — `(SpecKey, opaque handle, source_summary)`.
+  - `SpecCache` — bounded LRU keyed by `SpecKey`.  Default capacity
+    64 entries; capacity 0 means "never cache".  `get` touches LRU,
+    `insert` evicts the least-recently-used entry when full.
+
+### Tests (13 new)
+
+- `spec_key_equality_on_all_fields`
+- `shape_class_static_is_hashable`
+- `range_class_float_round_trip`
+- `range_class_float_with_nan_collapses_to_unknown`
+- `range_class_constant_is_hashable`
+- `noop_specialiser_returns_none`
+- `cache_insert_and_get_round_trip`
+- `cache_get_miss_returns_none`
+- `cache_evicts_lru_when_full`
+- `cache_capacity_zero_does_not_store`
+- `cache_re_insert_updates_value_and_touches_lru`
+- `cache_clear_drops_everything`
+- `cache_at_default_capacity_evicts_in_lru_order`
+
+Total tests: 51 unit + 8 integration = 59 (was 38 + 8 = 46).
+
+### Notes
+
+- Phase 3 V1 ships the **shape** of profile-guided specialisation
+  without yet plugging it into the dispatch path.  Phase 3 V2 will
+  add the policy that turns a `ProfileObservation` (Phase 2a output)
+  into a `SpecKey` and decides when to call the backend's
+  `Specialiser`.  Phase 3 V3 will route dispatch through `SpecCache`
+  on the hot path.
+- `SpecCache::get` is currently O(n) on hit (a `VecDeque::retain`
+  call to maintain LRU order).  Acceptable at the V1 default capacity
+  of 64; will revisit in Phase 3 V2 if profiling shows it as a hot
+  spot.
+- Image-filter routing on macOS unchanged: `invert` → CPU,
+  `greyscale` / `sepia` → Metal across the synthetic test-image
+  suite.
+
 ## [0.4.0] — 2026-05-05
 
 ### Added — MX05 Phase 2a (range observation)
