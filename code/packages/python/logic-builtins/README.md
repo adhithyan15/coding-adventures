@@ -56,6 +56,11 @@ ordinary logic goal expressions.
   atom composition and number/string conversion modes
 - `atom_lengtho/2`, `string_lengtho/2`, `sub_atomo/5`, and `sub_stringo/5` for
   finite text inspection and slicing modes
+- `exists_fileo/1`, `read_file_to_stringo/2`, and `read_file_to_codeso/2` for
+  bounded UTF-8 file text reads
+- `openo/3`, `closeo/1`, `read_stringo/3`, `read_line_to_stringo/2`,
+  `get_charo/2`, `at_end_of_streamo/1`, `writeo/2`, and `nlo/1` for bounded
+  UTF-8 file stream handles
 - `difo(left, right)` for delayed disequality constraints
 - `clauseo(head, body)` for Prolog-style clause introspection
 - `compare_termo(order, left, right)`, `termo_lto(left, right)`,

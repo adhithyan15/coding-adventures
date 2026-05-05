@@ -58,6 +58,10 @@ It keeps parsing side-effect free, then exposes helpers to:
 - adapt higher-order list predicates such as `maplist/2..5`, `convlist/3`,
   `include/3`, `exclude/3`, `partition/4`, `foldl/4..7`, and `scanl/4..7`
   into callable-term-backed builtin goals
+- adapt bounded UTF-8 file text and stream predicates such as `exists_file/1`,
+  `read_file_to_string/2`, `read_file_to_codes/2`, `open/3`, `close/1`,
+  `read_string/3`, `read_line_to_string/2`, `get_char/2`,
+  `at_end_of_stream/1`, `write/2`, and `nl/1`
 - load SWI-Prolog source graphs from real `.pl` files through relative
   `consult/1`, `ensure_loaded/1`, and file-backed `use_module/1,2`
 - splice `include/1` targets into the including source before project linking
