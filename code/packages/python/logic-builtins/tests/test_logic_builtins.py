@@ -41,6 +41,7 @@ from logic_builtins import (
     argo,
     assertao,
     assertzo,
+    at_end_of_current_streamo,
     at_end_of_streamo,
     atom_charso,
     atom_codeso,
@@ -69,6 +70,8 @@ from logic_builtins import (
     copytermo,
     current_atomo,
     current_functoro,
+    current_inputo,
+    current_outputo,
     current_predicateo,
     current_prolog_flago,
     current_streamo,
@@ -103,12 +106,14 @@ from logic_builtins import (
     fd_sumo,
     findallo,
     floordiv,
+    flush_current_outputo,
     flush_outputo,
     foldlo,
     forallo,
     functoro,
     geqo,
     get_charo,
+    get_current_charo,
     groundo,
     gto,
     ifthenelseo,
@@ -125,6 +130,7 @@ from logic_builtins import (
     mod,
     mul,
     neg,
+    nl_currento,
     nlo,
     nonvaro,
     not_same_termo,
@@ -145,6 +151,8 @@ from logic_builtins import (
     prolog_iso,
     prolog_lto,
     prolog_numeqo,
+    read_current_line_to_stringo,
+    read_current_stringo,
     read_file_to_codeso,
     read_file_to_stringo,
     read_line_to_stringo,
@@ -155,6 +163,8 @@ from logic_builtins import (
     same_termo,
     scanlo,
     seeko,
+    set_inputo,
+    set_outputo,
     set_prolog_flago,
     set_stream_positiono,
     setofo,
@@ -183,6 +193,7 @@ from logic_builtins import (
     univo,
     variant_termo,
     varo,
+    write_currento,
     writeo,
 )
 
@@ -391,6 +402,88 @@ class TestFileTextBuiltins:
             "ok",
             conj(closeo(opened_stream), eq("ok", "ok")),
         ) == [atom("ok")]
+
+    def test_current_stream_facade_reads_and_writes_selected_streams(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        input_path = tmp_path / "current-input.txt"
+        output_path = tmp_path / "current-output.txt"
+        input_path.write_text("abcdef", encoding="utf-8")
+        input_stream = var("InputStream")
+        output_stream = var("OutputStream")
+        current_input = var("CurrentInput")
+        current_output = var("CurrentOutput")
+        first_char = var("FirstChar")
+        chunk = var("Chunk")
+        line = var("Line")
+        input_property = var("InputProperty")
+        output_property = var("OutputProperty")
+        result = var("Result")
+
+        answers = solve_all(
+            program(),
+            result,
+            conj(
+                open_optionso(
+                    atom(str(input_path)),
+                    "read",
+                    input_stream,
+                    logic_list([term("alias", atom("selected_input"))]),
+                ),
+                open_optionso(
+                    atom(str(output_path)),
+                    "write",
+                    output_stream,
+                    logic_list([term("alias", atom("selected_output"))]),
+                ),
+                set_inputo(atom("selected_input")),
+                set_outputo(atom("selected_output")),
+                current_inputo(current_input),
+                current_outputo(current_output),
+                get_current_charo(first_char),
+                read_current_stringo(num(2), chunk),
+                read_current_line_to_stringo(line),
+                at_end_of_current_streamo(),
+                write_currento(string("tea")),
+                nl_currento(),
+                write_currento(term("cake", atom("slice"))),
+                flush_current_outputo(),
+                stream_propertyo(input_stream, input_property),
+                eq(input_property, atom("current_input")),
+                stream_propertyo(output_stream, output_property),
+                eq(output_property, atom("current_output")),
+                closeo(input_stream),
+                closeo(output_stream),
+                eq(
+                    result,
+                    term(
+                        "current_streams",
+                        current_input,
+                        current_output,
+                        first_char,
+                        chunk,
+                        line,
+                    ),
+                ),
+            ),
+        )
+        assert len(answers) == 1
+        [answer] = answers
+        assert isinstance(answer, Compound)
+        assert answer.functor.name == "current_streams"
+        (
+            current_input_answer,
+            current_output_answer,
+            first,
+            chunk_answer,
+            line_answer,
+        ) = answer.args
+        assert current_input_answer != current_output_answer
+        assert first == atom("a")
+        assert chunk_answer == string("bc")
+        assert line_answer == string("def")
+        assert output_path.read_text(encoding="utf-8") == "tea\ncake(slice)"
 
 
 class TestAdvancedControlBuiltins:

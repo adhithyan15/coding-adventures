@@ -11,6 +11,9 @@
   `open/4`, `current_stream/3`, `stream_property/2`, and `flush_output/1`
 - adapt source-level bounded stream positioning predicates including
   `set_stream_position/2` and `seek/4`
+- adapt selected current-stream predicates including `set_input/1`,
+  `set_output/1`, `current_input/1`, `current_output/1`, current-input read
+  forms, and current-output write/flush forms
 - preserve source query variables across `goal_expansion/2` rewrites
 - adapt Prolog `call/2..8` into variadic callable-term execution
 - preserve extra arguments while rewriting module-qualified `call/N` meta-goals

@@ -66,6 +66,8 @@ ordinary logic goal expressions.
   metadata
 - `set_stream_positiono/2` and `seeko/4` for bounded read-stream cursor
   repositioning
+- `set_inputo/1`, `set_outputo/1`, `current_inputo/1`, `current_outputo/1`,
+  and current-stream read/write forms for selected bounded streams
 - `difo(left, right)` for delayed disequality constraints
 - `clauseo(head, body)` for Prolog-style clause introspection
 - `compare_termo(order, left, right)`, `termo_lto(left, right)`,
