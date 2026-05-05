@@ -216,6 +216,128 @@ kernel void broadcast_f32(
     out[gid] = in[in_linear];
 }
 
+// ──────────────── reductions (F32, single axis, max rank 4) ────────────────
+//
+// V1 supports **single-axis** reduction.  Multi-axis reductions
+// (`axes.len() > 1`) fall back to CPU via a dispatch-time Err — the
+// planner can route them to us based on the capability bitset, but
+// the dispatch refuses and the runtime escalates.  V2 will lift this
+// by either decomposing multi-axis reduce into a chain of single-axis
+// kernels or by writing a rank-N reduce kernel directly.
+//
+// Each output element corresponds to a multi-index in the output
+// space.  The kernel:
+//
+//   1. Decomposes its `gid` into an output multi-index using `out_dims`.
+//   2. Builds a template input multi-index from the output one,
+//      inserting/skipping the reduced axis based on `keep_dims`.
+//   3. Sweeps `i = 0..reduce_size`, slotting `i` into the reduce-axis
+//      position and accumulating the input value.
+//   4. Writes the accumulator out (sum: as-is; mean: divide by
+//      `reduce_size`; max: starts the accumulator at -INFINITY).
+//
+// Performance is suboptimal — there's no tree reduction within a
+// threadgroup, so each thread does `reduce_size` reads sequentially.
+// Fine for the rank-2/3/4 reduction sizes typical in image / ML
+// graphs (hundreds to thousands).  V2 polish: tile-and-tree reduction
+// for very large reduce axes.
+
+struct ReduceArgs {
+    uint rank_in;
+    uint reduce_axis;
+    uint reduce_size;
+    uint keep_dims;     // 0 or 1
+    uint numel_out;
+    uint in_dims[4];
+    uint out_dims[4];
+};
+
+// Helper that walks both `args.out_dims` (which has rank
+// `keep_dims ? rank_in : rank_in - 1`) and rebuilds the input
+// multi-index template, returning a flat input offset for `i` slotted
+// into `args.reduce_axis`.  The MSL compiler inlines this body into
+// each kernel; sharing it via a function keeps the three reduce
+// variants bit-identical except for the accumulator.
+//
+// This helper is defined inside each kernel below (MSL doesn't expose
+// device-function inlining as cleanly across kernels), but the
+// algorithm above is the conceptual model.
+
+#define REDUCE_F32_BODY(INIT, ACC_EXPR, FINAL_EXPR) \
+    if (gid >= args.numel_out) return; \
+    /* Decompose gid into output multi-index. */ \
+    uint out_idx[4] = {0u, 0u, 0u, 0u}; \
+    uint linear = gid; \
+    uint rank_out = (args.keep_dims != 0u) ? args.rank_in : (args.rank_in - 1u); \
+    for (int d = (int)rank_out - 1; d >= 0; --d) { \
+        uint extent = args.out_dims[d]; \
+        out_idx[d] = linear % extent; \
+        linear /= extent; \
+    } \
+    /* Build input multi-index template, skipping/adjusting reduce axis. */ \
+    uint in_idx[4] = {0u, 0u, 0u, 0u}; \
+    if (args.keep_dims != 0u) { \
+        for (uint d = 0; d < args.rank_in; ++d) { \
+            in_idx[d] = (d == args.reduce_axis) ? 0u : out_idx[d]; \
+        } \
+    } else { \
+        uint o = 0u; \
+        for (uint d = 0; d < args.rank_in; ++d) { \
+            if (d == args.reduce_axis) { \
+                in_idx[d] = 0u; \
+            } else { \
+                in_idx[d] = out_idx[o]; \
+                o += 1u; \
+            } \
+        } \
+    } \
+    /* Sweep over reduce axis. */ \
+    float acc = INIT; \
+    for (uint i = 0u; i < args.reduce_size; ++i) { \
+        in_idx[args.reduce_axis] = i; \
+        uint flat = 0u; \
+        uint stride = 1u; \
+        for (int d = (int)args.rank_in - 1; d >= 0; --d) { \
+            flat += in_idx[d] * stride; \
+            stride *= args.in_dims[d]; \
+        } \
+        float x = in[flat]; \
+        acc = ACC_EXPR; \
+    } \
+    out[gid] = FINAL_EXPR;
+
+kernel void reduce_sum_f32(
+    device const float* in [[buffer(0)]],
+    device float* out [[buffer(1)]],
+    constant ReduceArgs& args [[buffer(2)]],
+    uint gid [[thread_position_in_grid]]
+) {
+    REDUCE_F32_BODY(0.0f, acc + x, acc)
+}
+
+kernel void reduce_max_f32(
+    device const float* in [[buffer(0)]],
+    device float* out [[buffer(1)]],
+    constant ReduceArgs& args [[buffer(2)]],
+    uint gid [[thread_position_in_grid]]
+) {
+    // Initial value: -INFINITY so any real element beats it.  An
+    // empty reduce (reduce_size = 0) leaves -INFINITY in the output;
+    // matrix-cpu's reference behaviour matches.
+    REDUCE_F32_BODY(-INFINITY, max(acc, x), acc)
+}
+
+kernel void reduce_mean_f32(
+    device const float* in [[buffer(0)]],
+    device float* out [[buffer(1)]],
+    constant ReduceArgs& args [[buffer(2)]],
+    uint gid [[thread_position_in_grid]]
+) {
+    // Mean = sum / reduce_size.  Reduce-size 0 gives NaN; matches
+    // matrix-cpu's behaviour of dividing by zero on an empty reduction.
+    REDUCE_F32_BODY(0.0f, acc + x, acc / (float)args.reduce_size)
+}
+
 // ──────────────── cast (F32 output) ────────────────
 //
 // Op::Cast specifies an output dtype.  matrix-metal advertises
@@ -302,4 +424,8 @@ pub const KERNEL_ENTRY_POINTS: &[&str] = &[
     "cast_u8_to_f32",
     "cast_i32_to_f32",
     "cast_f32_to_f32",
+    // reductions (F32, single-axis, max rank 4)
+    "reduce_sum_f32",
+    "reduce_max_f32",
+    "reduce_mean_f32",
 ];
