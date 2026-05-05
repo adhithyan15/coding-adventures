@@ -982,6 +982,303 @@ fn cast_f32_to_f32_on_gpu_is_identity() {
     assert_eq!(result, vec![1.5, -2.5, 0.0, std::f32::consts::PI]);
 }
 
+// ─────────────────── 4f. Reduce ───────────────────
+
+#[test]
+fn reduce_sum_axis1_on_gpu() {
+    // Input  (2 × 3):    [[1, 2, 3],
+    //                     [4, 5, 6]]
+    // Reduce axis 1, keep_dims = false → output shape [2]
+    //   Output: [1+2+3, 4+5+6] = [6.0, 15.0]
+    let exec = match make_executor() {
+        Some(e) => e,
+        None => return,
+    };
+
+    let in_bytes = f32_bytes(&[1.0, 2.0, 3.0, 4.0, 5.0, 6.0]);
+    let in_shape = Shape::from(&[2, 3]);
+    let out_shape = Shape::from(&[2]);
+
+    let g = ComputeGraph {
+        format_version: compute_ir::WIRE_FORMAT_VERSION,
+        inputs: vec![],
+        outputs: vec![placed_metal(2, DType::F32, out_shape.clone(), metal_buf(2))],
+        constants: vec![PlacedConstant {
+            tensor: TensorId(0),
+            bytes: in_bytes,
+            residency: metal_buf(0),
+        }],
+        ops: vec![
+            PlacedOp::Alloc {
+                residency: metal_buf(1),
+                bytes: 6 * 4,
+            },
+            PlacedOp::Compute {
+                op: Op::Const {
+                    constant: 0,
+                    output: TensorId(1),
+                },
+                executor: METAL_ID,
+                timing: PlanOpTiming { estimated_ns: 0 },
+            },
+            PlacedOp::Alloc {
+                residency: metal_buf(2),
+                bytes: 2 * 4,
+            },
+            PlacedOp::Compute {
+                op: Op::ReduceSum {
+                    input: TensorId(1),
+                    axes: vec![1],
+                    keep_dims: false,
+                    output: TensorId(2),
+                },
+                executor: METAL_ID,
+                timing: PlanOpTiming { estimated_ns: 0 },
+            },
+        ],
+        tensors: vec![
+            placed_metal(0, DType::F32, in_shape.clone(), metal_buf(0)),
+            placed_metal(1, DType::F32, in_shape, metal_buf(1)),
+            placed_metal(2, DType::F32, out_shape, metal_buf(2)),
+        ],
+    };
+
+    match exec.handle(ExecutorRequest::Dispatch { job_id: 1, graph: g }) {
+        ExecutorResponse::DispatchDone { .. } => {}
+        other => panic!("expected DispatchDone, got {:?}", other),
+    }
+    let down = exec.handle(ExecutorRequest::DownloadBuffer {
+        buffer: BufferId(2),
+        offset: 0,
+        len: 2 * 4,
+    });
+    let result = match down {
+        ExecutorResponse::BufferData { data, .. } => from_f32(&data),
+        other => panic!("download: {:?}", other),
+    };
+    assert_eq!(result, vec![6.0, 15.0]);
+}
+
+#[test]
+fn reduce_max_axis0_keep_dims_on_gpu() {
+    // Input  (2 × 3):    [[1, 5, 3],
+    //                     [4, 2, 6]]
+    // Reduce axis 0, keep_dims = true → output shape [1, 3]
+    //   Output: [[max(1,4), max(5,2), max(3,6)]] = [[4.0, 5.0, 6.0]]
+    let exec = match make_executor() {
+        Some(e) => e,
+        None => return,
+    };
+
+    let in_bytes = f32_bytes(&[1.0, 5.0, 3.0, 4.0, 2.0, 6.0]);
+    let in_shape = Shape::from(&[2, 3]);
+    let out_shape = Shape::from(&[1, 3]);
+
+    let g = ComputeGraph {
+        format_version: compute_ir::WIRE_FORMAT_VERSION,
+        inputs: vec![],
+        outputs: vec![placed_metal(2, DType::F32, out_shape.clone(), metal_buf(2))],
+        constants: vec![PlacedConstant {
+            tensor: TensorId(0),
+            bytes: in_bytes,
+            residency: metal_buf(0),
+        }],
+        ops: vec![
+            PlacedOp::Alloc {
+                residency: metal_buf(1),
+                bytes: 6 * 4,
+            },
+            PlacedOp::Compute {
+                op: Op::Const {
+                    constant: 0,
+                    output: TensorId(1),
+                },
+                executor: METAL_ID,
+                timing: PlanOpTiming { estimated_ns: 0 },
+            },
+            PlacedOp::Alloc {
+                residency: metal_buf(2),
+                bytes: 3 * 4,
+            },
+            PlacedOp::Compute {
+                op: Op::ReduceMax {
+                    input: TensorId(1),
+                    axes: vec![0],
+                    keep_dims: true,
+                    output: TensorId(2),
+                },
+                executor: METAL_ID,
+                timing: PlanOpTiming { estimated_ns: 0 },
+            },
+        ],
+        tensors: vec![
+            placed_metal(0, DType::F32, in_shape.clone(), metal_buf(0)),
+            placed_metal(1, DType::F32, in_shape, metal_buf(1)),
+            placed_metal(2, DType::F32, out_shape, metal_buf(2)),
+        ],
+    };
+
+    match exec.handle(ExecutorRequest::Dispatch { job_id: 1, graph: g }) {
+        ExecutorResponse::DispatchDone { .. } => {}
+        other => panic!("expected DispatchDone, got {:?}", other),
+    }
+    let down = exec.handle(ExecutorRequest::DownloadBuffer {
+        buffer: BufferId(2),
+        offset: 0,
+        len: 3 * 4,
+    });
+    let result = match down {
+        ExecutorResponse::BufferData { data, .. } => from_f32(&data),
+        other => panic!("download: {:?}", other),
+    };
+    assert_eq!(result, vec![4.0, 5.0, 6.0]);
+}
+
+#[test]
+fn reduce_mean_axis1_on_gpu() {
+    // Input  (2 × 4):    [[2, 4, 6, 8],
+    //                     [1, 3, 5, 7]]
+    // Reduce axis 1, keep_dims = false → output shape [2]
+    //   Output: [(2+4+6+8)/4, (1+3+5+7)/4] = [5.0, 4.0]
+    let exec = match make_executor() {
+        Some(e) => e,
+        None => return,
+    };
+
+    let in_bytes = f32_bytes(&[2.0, 4.0, 6.0, 8.0, 1.0, 3.0, 5.0, 7.0]);
+    let in_shape = Shape::from(&[2, 4]);
+    let out_shape = Shape::from(&[2]);
+
+    let g = ComputeGraph {
+        format_version: compute_ir::WIRE_FORMAT_VERSION,
+        inputs: vec![],
+        outputs: vec![placed_metal(2, DType::F32, out_shape.clone(), metal_buf(2))],
+        constants: vec![PlacedConstant {
+            tensor: TensorId(0),
+            bytes: in_bytes,
+            residency: metal_buf(0),
+        }],
+        ops: vec![
+            PlacedOp::Alloc {
+                residency: metal_buf(1),
+                bytes: 8 * 4,
+            },
+            PlacedOp::Compute {
+                op: Op::Const {
+                    constant: 0,
+                    output: TensorId(1),
+                },
+                executor: METAL_ID,
+                timing: PlanOpTiming { estimated_ns: 0 },
+            },
+            PlacedOp::Alloc {
+                residency: metal_buf(2),
+                bytes: 2 * 4,
+            },
+            PlacedOp::Compute {
+                op: Op::ReduceMean {
+                    input: TensorId(1),
+                    axes: vec![1],
+                    keep_dims: false,
+                    output: TensorId(2),
+                },
+                executor: METAL_ID,
+                timing: PlanOpTiming { estimated_ns: 0 },
+            },
+        ],
+        tensors: vec![
+            placed_metal(0, DType::F32, in_shape.clone(), metal_buf(0)),
+            placed_metal(1, DType::F32, in_shape, metal_buf(1)),
+            placed_metal(2, DType::F32, out_shape, metal_buf(2)),
+        ],
+    };
+
+    match exec.handle(ExecutorRequest::Dispatch { job_id: 1, graph: g }) {
+        ExecutorResponse::DispatchDone { .. } => {}
+        other => panic!("expected DispatchDone, got {:?}", other),
+    }
+    let down = exec.handle(ExecutorRequest::DownloadBuffer {
+        buffer: BufferId(2),
+        offset: 0,
+        len: 2 * 4,
+    });
+    let result = match down {
+        ExecutorResponse::BufferData { data, .. } => from_f32(&data),
+        other => panic!("download: {:?}", other),
+    };
+    assert_eq!(result, vec![5.0, 4.0]);
+}
+
+#[test]
+fn reduce_multi_axis_returns_error() {
+    // V1 only supports single-axis reduction.  Confirm a multi-axis
+    // attempt fails cleanly with an Error response (so the runtime
+    // can fall back to CPU).
+    let exec = match make_executor() {
+        Some(e) => e,
+        None => return,
+    };
+
+    let in_bytes = f32_bytes(&[1.0, 2.0, 3.0, 4.0]);
+    let in_shape = Shape::from(&[2, 2]);
+    let out_shape = Shape::from(&[]); // reduce over both axes
+
+    let g = ComputeGraph {
+        format_version: compute_ir::WIRE_FORMAT_VERSION,
+        inputs: vec![],
+        outputs: vec![placed_metal(2, DType::F32, out_shape.clone(), metal_buf(2))],
+        constants: vec![PlacedConstant {
+            tensor: TensorId(0),
+            bytes: in_bytes,
+            residency: metal_buf(0),
+        }],
+        ops: vec![
+            PlacedOp::Alloc {
+                residency: metal_buf(1),
+                bytes: 4 * 4,
+            },
+            PlacedOp::Compute {
+                op: Op::Const {
+                    constant: 0,
+                    output: TensorId(1),
+                },
+                executor: METAL_ID,
+                timing: PlanOpTiming { estimated_ns: 0 },
+            },
+            PlacedOp::Alloc {
+                residency: metal_buf(2),
+                bytes: 4,
+            },
+            PlacedOp::Compute {
+                op: Op::ReduceSum {
+                    input: TensorId(1),
+                    axes: vec![0, 1], // multi-axis — V2
+                    keep_dims: false,
+                    output: TensorId(2),
+                },
+                executor: METAL_ID,
+                timing: PlanOpTiming { estimated_ns: 0 },
+            },
+        ],
+        tensors: vec![
+            placed_metal(0, DType::F32, in_shape.clone(), metal_buf(0)),
+            placed_metal(1, DType::F32, in_shape, metal_buf(1)),
+            placed_metal(2, DType::F32, out_shape, metal_buf(2)),
+        ],
+    };
+
+    match exec.handle(ExecutorRequest::Dispatch { job_id: 1, graph: g }) {
+        ExecutorResponse::Error { message, .. } => {
+            assert!(
+                message.contains("single-axis"),
+                "expected single-axis error, got: {}",
+                message
+            );
+        }
+        other => panic!("expected Error for multi-axis reduce, got {:?}", other),
+    }
+}
+
 // ─────────────────── 5. Validation ───────────────────
 
 #[test]

@@ -1,5 +1,53 @@
 # Changelog — matrix-metal
 
+## 0.5.0 — 2026-05-05
+
+### Added
+
+- **`Op::ReduceSum / ReduceMax / ReduceMean` support** for **single-
+  axis** F32 reductions.  Capability bitset now includes tags 0x0E,
+  0x0F, 0x10.
+
+  Three new MSL kernels (`reduce_sum_f32`, `reduce_max_f32`,
+  `reduce_mean_f32`) share a `REDUCE_F32_BODY` macro that:
+
+    1. Decomposes `gid` into an output multi-index using `out_dims`.
+    2. Builds a template input multi-index, skipping/adjusting the
+       reduced axis based on `keep_dims`.
+    3. Sweeps `i = 0..reduce_size`, slotting `i` into the reduce-axis
+       position and accumulating.
+    4. Writes the result (sum: as-is; max: starting from `-INFINITY`;
+       mean: divided by `reduce_size`).
+
+  Supports `keep_dims = true` and `keep_dims = false`.  Up to rank 4
+  (matching this backend's advertised `max_tensor_rank`).
+
+  **Multi-axis reductions** (`axes.len() > 1`) return an Err at
+  dispatch time with a clear message — the runtime can either surface
+  the error or decompose into a chain of single-axis reductions.
+  Decomposition is V2 work.
+
+### Tests (4 new integration tests)
+
+- `reduce_sum_axis1_on_gpu` — `[[1,2,3],[4,5,6]]` reduce-sum axis 1 → `[6, 15]`.
+- `reduce_max_axis0_keep_dims_on_gpu` — `[[1,5,3],[4,2,6]]` reduce-max axis 0 with keep_dims → `[[4, 5, 6]]`.
+- `reduce_mean_axis1_on_gpu` — `[[2,4,6,8],[1,3,5,7]]` reduce-mean axis 1 → `[5.0, 4.0]`.
+- `reduce_multi_axis_returns_error` — verifies V1 multi-axis attempt fails cleanly with a "single-axis" error message so the runtime can fall back.
+
+Total integration tests: 17 (was 13).
+
+### Notes
+
+- The kernels are thread-per-output-element with sequential reads
+  along the reduce axis.  Performance is suboptimal for very long
+  reduce axes (no tree reduction within a threadgroup); fine for
+  the rank-2/3/4 reduce sizes typical in image / ML graphs (hundreds
+  to thousands).  V2 polish: tile-and-tree reduction kernels.
+- Reduction completes the V1 elementwise+reduction op set on Metal.
+  Combined with shape ops (Reshape/Transpose/Broadcast in 0.1.1–
+  0.3.0) and casts (0.4.0), matrix-metal now handles the bulk of
+  ML-style F32 graph patterns end-to-end.
+
 ## 0.4.0 — 2026-05-05
 
 ### Added
