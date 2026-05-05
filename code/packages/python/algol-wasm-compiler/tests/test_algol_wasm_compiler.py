@@ -1835,6 +1835,17 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
+    def test_forward_procedure_calls_in_array_bounds_execute(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer array a[lower():upper()]; "
+            "integer procedure lower; begin lower := 0 end; "
+            "integer procedure upper; begin upper := 0 end; "
+            "a[0] := 5; result := a[0] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
+
     def test_procedure_body_sees_later_block_declarations(self) -> None:
         result = compile_source(
             "begin "

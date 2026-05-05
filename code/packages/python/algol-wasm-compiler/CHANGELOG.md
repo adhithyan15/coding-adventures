@@ -94,6 +94,8 @@ All notable changes to this package will be documented in this file.
   procedure body.
 - Executed switch entries that select later sibling switch declarations,
   including forward switch lists that use later typed procedure predicates.
+- Executed array bounds that call later sibling typed procedures at block
+  entry.
 - Executed subscripted integer and real array elements as writable `for`
   statement control variables.
 - Rejected formal procedure forwarding when a concrete procedure argument does

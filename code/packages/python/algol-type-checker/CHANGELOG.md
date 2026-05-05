@@ -49,6 +49,9 @@ All notable changes to this package will be documented in this file.
   typed procedures.
 - Registered switch names before checking switch designational lists, allowing
   switch entries to target later sibling switch declarations in the same block.
+- Deferred array-bound expression checking until after sibling declaration
+  registration, allowing bounds to call later typed procedures in the same
+  block.
 - Accepted integer-returning procedure actuals for real-valued formal
   procedure parameters, matching scalar integer-to-real promotion.
 - Accepted switch declaration entries that target labels in lexical parent

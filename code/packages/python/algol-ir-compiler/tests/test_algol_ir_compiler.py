@@ -1599,6 +1599,22 @@ class TestAlgolIrCompiler:
         assert opcodes.count(IrOp.MUL) >= 4
         assert opcodes.count(IrOp.CMP_GT) >= 6
 
+    def test_compiles_forward_procedure_calls_in_array_bounds(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "integer array a[lower():upper()]; "
+                "integer procedure lower; begin lower := 0 end; "
+                "integer procedure upper; begin upper := 0 end; "
+                "a[0] := 5; result := a[0] "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert opcodes.count(IrOp.CALL) >= 2
+        assert "a@block0" in result.variable_slots
+
     def test_compiles_integer_value_procedure_call(self) -> None:
         result = compile_algol(
             parse_algol(
