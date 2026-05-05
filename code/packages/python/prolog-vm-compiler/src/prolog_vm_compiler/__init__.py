@@ -1,5 +1,12 @@
 """Compile loaded Prolog programs into standardized Logic VM instructions."""
 
+from prolog_vm_compiler.capabilities import (
+    PrologVMCapability,
+    PrologVMCapabilityManifest,
+    deferred_prolog_vm_capabilities,
+    prolog_vm_capabilities,
+    prolog_vm_capability_manifest,
+)
 from prolog_vm_compiler.compiler import (
     CompiledPrologVMProgram,
     PrologAnswer,
@@ -95,6 +102,8 @@ __all__ = [
     "__version__",
     "CompiledPrologVMProgram",
     "PrologAnswer",
+    "PrologVMCapability",
+    "PrologVMCapabilityManifest",
     "PrologVMBackend",
     "PrologVMInitializationError",
     "PrologVMRuntime",
@@ -130,9 +139,12 @@ __all__ = [
     "create_swi_prolog_project_file_runtime",
     "create_swi_prolog_project_runtime",
     "create_swi_prolog_vm_runtime",
+    "deferred_prolog_vm_capabilities",
     "load_compiled_prolog_backend_vm",
     "load_compiled_prolog_bytecode_vm",
     "load_compiled_prolog_vm",
+    "prolog_vm_capabilities",
+    "prolog_vm_capability_manifest",
     "query_iso_prolog_source",
     "query_iso_prolog_source_values",
     "query_prolog_file",

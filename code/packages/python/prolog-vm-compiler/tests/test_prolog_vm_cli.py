@@ -12,6 +12,37 @@ import pytest
 from prolog_vm_compiler.cli import main
 
 
+def test_cli_dumps_capability_manifest_without_source(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main(["--dump-capabilities", "--format", "json"])
+
+    payload = json.loads(capsys.readouterr().out)
+    assert status == 0
+    assert payload["success"] is True
+    assert payload["mode"] == "capabilities"
+    assert payload["status"] == "core-complete"
+    assert payload["dialects"] == ["iso", "swi"]
+    assert payload["backends"] == ["structured", "bytecode"]
+    assert payload["capabilities"][0]["specs"][0] == "PR00"
+    assert payload["capabilities"][-1]["specs"][-1] == "PR77"
+
+
+def test_cli_dump_capabilities_rejects_source_modes(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--dump-capabilities",
+        "--source",
+        "parent(homer, bart).",
+    ])
+
+    assert status == 2
+    assert "--dump-capabilities cannot be combined with --source" in (
+        capsys.readouterr().err
+    )
+
+
 def test_cli_runs_inline_ad_hoc_query_with_bytecode_values(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
