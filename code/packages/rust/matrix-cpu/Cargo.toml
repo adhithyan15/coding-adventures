@@ -1,6 +1,6 @@
 [package]
 name = "matrix-cpu"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2021"
 description = "CPU reference executor for the matrix execution layer. Implements every matrix-ir op on every dtype using straight-line Rust. The always-available safety net that supports operations no GPU backend can take. Zero external dependencies."
 license = "MIT"
