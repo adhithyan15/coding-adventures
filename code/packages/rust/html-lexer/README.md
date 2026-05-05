@@ -99,6 +99,9 @@ behavior the future parser will expect from the lexer/tokenizer boundary.
 Tag names and attribute names now use the same recovery shape, so a raw NULL in
 markup names becomes U+FFFD and records `unexpected-null-character` instead of
 leaking the raw code point into emitted tokens.
+Unexpected quote and less-than characters in attribute names are preserved in
+the emitted name while reporting `unexpected-character-in-attribute-name`,
+including before, during, and after attribute-name parsing.
 Comments and bogus comments also replace raw NULL characters with U+FFFD while
 recording `unexpected-null-character`, including dash-sensitive comment end
 substates that must preserve their pending `-` or `--` text first.

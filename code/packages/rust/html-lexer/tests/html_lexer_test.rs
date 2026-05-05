@@ -384,6 +384,51 @@ fn default_html_lexer_reports_first_unquoted_attribute_value_characters() {
 }
 
 #[test]
+fn default_html_lexer_reports_unexpected_attribute_name_characters() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("<a \"pre=1 mid'dle=2 done <tail=3>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "\"pre".to_string(),
+                        value: "1".to_string(),
+                    },
+                    Attribute {
+                        name: "mid'dle".to_string(),
+                        value: "2".to_string(),
+                    },
+                    Attribute {
+                        name: "done".to_string(),
+                        value: String::new(),
+                    },
+                    Attribute {
+                        name: "<tail".to_string(),
+                        value: "3".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-character-in-attribute-name")
+            .count(),
+        3
+    );
+}
+
+#[test]
 fn default_html_lexer_reconsumes_missing_space_after_quoted_attributes() {
     let mut lexer = create_html_lexer().unwrap();
 
