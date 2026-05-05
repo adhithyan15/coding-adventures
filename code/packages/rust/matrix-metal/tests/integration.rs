@@ -757,6 +757,231 @@ fn broadcast_column_to_matrix_on_gpu() {
     );
 }
 
+// ─────────────────── 4e. Cast ───────────────────
+
+#[test]
+fn cast_u8_to_f32_on_gpu() {
+    // Input  (u8, 4 elems): [0, 1, 200, 255]
+    // Output (f32, 4 elems): [0.0, 1.0, 200.0, 255.0]
+    let exec = match make_executor() {
+        Some(e) => e,
+        None => return,
+    };
+
+    let in_bytes = vec![0u8, 1, 200, 255];
+    let n: u32 = 4;
+    let in_shape = Shape::from(&[n]);
+    let out_shape = in_shape.clone();
+
+    let g = ComputeGraph {
+        format_version: compute_ir::WIRE_FORMAT_VERSION,
+        inputs: vec![],
+        outputs: vec![placed_metal(2, DType::F32, out_shape.clone(), metal_buf(2))],
+        constants: vec![PlacedConstant {
+            tensor: TensorId(0),
+            bytes: in_bytes,
+            residency: metal_buf(0),
+        }],
+        ops: vec![
+            PlacedOp::Alloc {
+                residency: metal_buf(1),
+                bytes: n as u64,
+            },
+            PlacedOp::Compute {
+                op: Op::Const {
+                    constant: 0,
+                    output: TensorId(1),
+                },
+                executor: METAL_ID,
+                timing: PlanOpTiming { estimated_ns: 0 },
+            },
+            PlacedOp::Alloc {
+                residency: metal_buf(2),
+                bytes: (n * 4) as u64,
+            },
+            PlacedOp::Compute {
+                op: Op::Cast {
+                    input: TensorId(1),
+                    dtype: DType::F32,
+                    output: TensorId(2),
+                },
+                executor: METAL_ID,
+                timing: PlanOpTiming { estimated_ns: 0 },
+            },
+        ],
+        tensors: vec![
+            placed_metal(0, DType::U8, in_shape.clone(), metal_buf(0)),
+            placed_metal(1, DType::U8, in_shape, metal_buf(1)),
+            placed_metal(2, DType::F32, out_shape, metal_buf(2)),
+        ],
+    };
+
+    match exec.handle(ExecutorRequest::Dispatch { job_id: 1, graph: g }) {
+        ExecutorResponse::DispatchDone { .. } => {}
+        other => panic!("expected DispatchDone, got {:?}", other),
+    }
+    let down = exec.handle(ExecutorRequest::DownloadBuffer {
+        buffer: BufferId(2),
+        offset: 0,
+        len: (n * 4) as u64,
+    });
+    let result = match down {
+        ExecutorResponse::BufferData { data, .. } => from_f32(&data),
+        other => panic!("download: {:?}", other),
+    };
+    assert_eq!(result, vec![0.0, 1.0, 200.0, 255.0]);
+}
+
+#[test]
+fn cast_i32_to_f32_on_gpu() {
+    // Input  (i32, 5 elems): [0, 1, -1, 1000000, -2147483648]
+    // Output (f32, 5 elems): same values, cast widening to f32
+    //                       (i32::MIN → -2147483648.0 exactly in f32)
+    let exec = match make_executor() {
+        Some(e) => e,
+        None => return,
+    };
+
+    let mut in_bytes = Vec::with_capacity(5 * 4);
+    for v in &[0i32, 1, -1, 1_000_000, i32::MIN] {
+        in_bytes.extend_from_slice(&v.to_le_bytes());
+    }
+    let n: u32 = 5;
+    let in_shape = Shape::from(&[n]);
+    let out_shape = in_shape.clone();
+
+    let g = ComputeGraph {
+        format_version: compute_ir::WIRE_FORMAT_VERSION,
+        inputs: vec![],
+        outputs: vec![placed_metal(2, DType::F32, out_shape.clone(), metal_buf(2))],
+        constants: vec![PlacedConstant {
+            tensor: TensorId(0),
+            bytes: in_bytes,
+            residency: metal_buf(0),
+        }],
+        ops: vec![
+            PlacedOp::Alloc {
+                residency: metal_buf(1),
+                bytes: (n * 4) as u64,
+            },
+            PlacedOp::Compute {
+                op: Op::Const {
+                    constant: 0,
+                    output: TensorId(1),
+                },
+                executor: METAL_ID,
+                timing: PlanOpTiming { estimated_ns: 0 },
+            },
+            PlacedOp::Alloc {
+                residency: metal_buf(2),
+                bytes: (n * 4) as u64,
+            },
+            PlacedOp::Compute {
+                op: Op::Cast {
+                    input: TensorId(1),
+                    dtype: DType::F32,
+                    output: TensorId(2),
+                },
+                executor: METAL_ID,
+                timing: PlanOpTiming { estimated_ns: 0 },
+            },
+        ],
+        tensors: vec![
+            placed_metal(0, DType::I32, in_shape.clone(), metal_buf(0)),
+            placed_metal(1, DType::I32, in_shape, metal_buf(1)),
+            placed_metal(2, DType::F32, out_shape, metal_buf(2)),
+        ],
+    };
+
+    match exec.handle(ExecutorRequest::Dispatch { job_id: 1, graph: g }) {
+        ExecutorResponse::DispatchDone { .. } => {}
+        other => panic!("expected DispatchDone, got {:?}", other),
+    }
+    let down = exec.handle(ExecutorRequest::DownloadBuffer {
+        buffer: BufferId(2),
+        offset: 0,
+        len: (n * 4) as u64,
+    });
+    let result = match down {
+        ExecutorResponse::BufferData { data, .. } => from_f32(&data),
+        other => panic!("download: {:?}", other),
+    };
+    assert_eq!(result, vec![0.0, 1.0, -1.0, 1_000_000.0, i32::MIN as f32]);
+}
+
+#[test]
+fn cast_f32_to_f32_on_gpu_is_identity() {
+    // Degenerate identity cast.  Rare in practice but legal — confirm
+    // it round-trips bytes exactly.
+    let exec = match make_executor() {
+        Some(e) => e,
+        None => return,
+    };
+
+    let in_bytes = f32_bytes(&[1.5, -2.5, 0.0, std::f32::consts::PI]);
+    let n: u32 = 4;
+    let in_shape = Shape::from(&[n]);
+    let out_shape = in_shape.clone();
+
+    let g = ComputeGraph {
+        format_version: compute_ir::WIRE_FORMAT_VERSION,
+        inputs: vec![],
+        outputs: vec![placed_metal(2, DType::F32, out_shape.clone(), metal_buf(2))],
+        constants: vec![PlacedConstant {
+            tensor: TensorId(0),
+            bytes: in_bytes,
+            residency: metal_buf(0),
+        }],
+        ops: vec![
+            PlacedOp::Alloc {
+                residency: metal_buf(1),
+                bytes: (n * 4) as u64,
+            },
+            PlacedOp::Compute {
+                op: Op::Const {
+                    constant: 0,
+                    output: TensorId(1),
+                },
+                executor: METAL_ID,
+                timing: PlanOpTiming { estimated_ns: 0 },
+            },
+            PlacedOp::Alloc {
+                residency: metal_buf(2),
+                bytes: (n * 4) as u64,
+            },
+            PlacedOp::Compute {
+                op: Op::Cast {
+                    input: TensorId(1),
+                    dtype: DType::F32,
+                    output: TensorId(2),
+                },
+                executor: METAL_ID,
+                timing: PlanOpTiming { estimated_ns: 0 },
+            },
+        ],
+        tensors: vec![
+            placed_metal(0, DType::F32, in_shape.clone(), metal_buf(0)),
+            placed_metal(1, DType::F32, in_shape, metal_buf(1)),
+            placed_metal(2, DType::F32, out_shape, metal_buf(2)),
+        ],
+    };
+
+    match exec.handle(ExecutorRequest::Dispatch { job_id: 1, graph: g }) {
+        ExecutorResponse::DispatchDone { .. } => {}
+        other => panic!("expected DispatchDone, got {:?}", other),
+    }
+    let down = exec.handle(ExecutorRequest::DownloadBuffer {
+        buffer: BufferId(2),
+        offset: 0,
+        len: (n * 4) as u64,
+    });
+    let result = match down {
+        ExecutorResponse::BufferData { data, .. } => from_f32(&data),
+        other => panic!("download: {:?}", other),
+    };
+    assert_eq!(result, vec![1.5, -2.5, 0.0, std::f32::consts::PI]);
+}
+
 // ─────────────────── 5. Validation ───────────────────
 
 #[test]

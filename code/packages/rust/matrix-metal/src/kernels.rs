@@ -215,6 +215,60 @@ kernel void broadcast_f32(
 
     out[gid] = in[in_linear];
 }
+
+// ──────────────── cast (F32 output) ────────────────
+//
+// Op::Cast specifies an output dtype.  matrix-metal advertises
+// `supported_dtypes = F32`, which constrains the planner's capability
+// filter to route only Casts whose **output** dtype is F32 to us.
+// That leaves three input-dtype paths to support:
+//
+//   - F32 → F32 (degenerate identity cast; rare but legal)
+//   - U8  → F32 (widening conversion)
+//   - I32 → F32 (widening conversion)
+//
+// The other three directions (anything → U8 / I32) need
+// `supported_dtypes` to advertise U8 / I32 — and that would also
+// let the planner route U8/I32 elementwise ops to us, which we
+// don't yet implement.  Keeping the dtype bitset at F32 means
+// those casts stay on CPU, and we can ship the F32-output ones
+// today.
+//
+// Each kernel is a one-line element-wise scalar cast.  MSL's
+// implicit conversions match Rust's `as` semantics for these
+// widening paths (no rounding mode ambiguity, no clamping to
+// worry about — every `u8` and `i32` value fits in `f32` exactly
+// or with at most one rounding step).
+
+kernel void cast_u8_to_f32(
+    device const uchar* in [[buffer(0)]],
+    device float* out [[buffer(1)]],
+    constant uint& n [[buffer(2)]],
+    uint gid [[thread_position_in_grid]]
+) {
+    if (gid >= n) return;
+    out[gid] = (float)in[gid];
+}
+
+kernel void cast_i32_to_f32(
+    device const int* in [[buffer(0)]],
+    device float* out [[buffer(1)]],
+    constant uint& n [[buffer(2)]],
+    uint gid [[thread_position_in_grid]]
+) {
+    if (gid >= n) return;
+    out[gid] = (float)in[gid];
+}
+
+kernel void cast_f32_to_f32(
+    device const float* in [[buffer(0)]],
+    device float* out [[buffer(1)]],
+    constant uint& n [[buffer(2)]],
+    uint gid [[thread_position_in_grid]]
+) {
+    if (gid >= n) return;
+    out[gid] = in[gid];
+}
 "#;
 
 /// Names of every kernel entry point in [`KERNELS_MSL`].  Used at
@@ -244,4 +298,8 @@ pub const KERNEL_ENTRY_POINTS: &[&str] = &[
     "transpose_f32",
     // broadcast
     "broadcast_f32",
+    // cast (F32 output paths only — see KERNELS_MSL comment)
+    "cast_u8_to_f32",
+    "cast_i32_to_f32",
+    "cast_f32_to_f32",
 ];
