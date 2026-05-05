@@ -37,6 +37,10 @@ This first slice intentionally starts small:
 - simple implied end tags for `p`, `li`, `dt`, `dd`, `option`, `optgroup`,
   ruby annotations, heading elements, legacy paragraph/block boundaries, and
   raw-text block starts
+- scope-aware omitted-end recovery for those implied-end-tag families even when
+  nested inline descendants are still open
+- scope-aware table caption, column group, row group, row, and cell boundary
+  recovery across nested inline descendants
 - interactive and form-boundary recovery for repeated `a`, `button`, and
   `nobr` starts plus ignored nested `form` starts while preserving surrounding
   paragraph/list context
