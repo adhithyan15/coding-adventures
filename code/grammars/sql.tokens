@@ -126,6 +126,10 @@ keywords:
   GLOB
   NATURAL
   USING
+  REPLACE
+  IGNORE
+  ABORT
+  FAIL
 
 skip:
   WHITESPACE    = /[ \t\r\n]+/

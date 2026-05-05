@@ -1,5 +1,39 @@
 # Changelog
 
+## 1.14.0 — 2026-05-04
+
+### Added
+
+- **`INSERT OR REPLACE` / `REPLACE INTO`** — when `InsertRow.on_conflict ==
+  "REPLACE"`, `_do_insert()` calls the new `_replace_delete_conflicts()`
+  helper before inserting.  That helper scans the target table using a
+  positioned cursor (`_open_cursor` where available, `scan` as fallback) and
+  deletes every existing row that shares a value on any UNIQUE or PRIMARY KEY
+  column with the incoming row.  The scan-delete is single-pass because the
+  backend guarantees the cursor stays live after deletion and advances to the
+  next row automatically.  The same logic applies to `_do_insert_from_result`
+  for `INSERT OR REPLACE … SELECT`.
+
+- **`INSERT OR IGNORE`** — when `InsertRow.on_conflict == "IGNORE"` or
+  `InsertFromResult.on_conflict == "IGNORE"`, `ConstraintViolation` from the
+  backend is caught silently and the row is skipped.  Other exceptions are
+  still re-raised as `IntegrityError`.
+
+- **`_replace_delete_conflicts` helper** — pre-scans a table and deletes all
+  rows conflicting with a new row on any UNIQUE/PRIMARY KEY column.  Uses
+  `getattr(backend, "_open_cursor", None)` to prefer positioned cursors
+  (required by `InMemoryBackend.delete()`) over read-only `scan()` iterators.
+  Only non-NULL column values are checked (NULL never conflicts in SQL).
+
+### Fixed
+
+- **`_do_create_table` now passes `unique=c.unique` to `BackendColumnDef`**
+  — the VM handler for the `CreateTable` IR instruction was building
+  `BackendColumnDef` without the `unique` keyword, causing every UNIQUE column
+  constraint to be silently ignored by the backend.  Non-PK UNIQUE columns
+  would accept duplicate values without raising `ConstraintViolation`, making
+  `INSERT OR IGNORE` unable to detect non-PK UNIQUE conflicts.
+
 ## 1.13.0 — 2026-05-04
 
 ### Added

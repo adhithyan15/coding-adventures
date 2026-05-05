@@ -408,11 +408,24 @@ class InsertSource:
 
 @dataclass(frozen=True, slots=True)
 class Insert:
-    """INSERT INTO t (cols) VALUES (...) or INSERT INTO t SELECT ... [RETURNING ...]."""
+    """INSERT INTO t (cols) VALUES (...) or INSERT INTO t SELECT ... [RETURNING ...].
+
+    ``on_conflict`` mirrors the SQL ``INSERT OR <action>`` clause and the
+    ``REPLACE INTO`` shorthand.  The VM uses it to decide what to do when a
+    constraint violation occurs:
+
+    - ``None``        — raise :class:`IntegrityError` (default)
+    - ``"REPLACE"``   — delete every conflicting row, then insert
+    - ``"IGNORE"``    — silently discard the new row and continue
+    - ``"ABORT"`` / ``"FAIL"`` / ``"ROLLBACK"`` — raise an error
+                        (full FAIL/ROLLBACK transaction semantics are left
+                        to the connection layer; the VM raises IntegrityError)
+    """
 
     table: str
     columns: tuple[str, ...] | None  # None = implicit column list
     source: InsertSource
+    on_conflict: str | None = None   # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
     returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
 
 

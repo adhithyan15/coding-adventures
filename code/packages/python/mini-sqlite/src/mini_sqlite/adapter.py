@@ -167,6 +167,9 @@ def _stmt_dispatch(
             return _select(inner, view_defs=view_defs)
         case "insert_stmt":
             return _insert(inner)
+        case "replace_stmt":
+            # REPLACE INTO t ... is syntactic sugar for INSERT OR REPLACE INTO t ...
+            return _insert(inner, default_conflict="REPLACE")
         case "update_stmt":
             return _update(inner)
         case "delete_stmt":
@@ -625,12 +628,50 @@ def _returning_exprs(
     )
 
 
-def _insert(node: ASTNode) -> InsertValuesStmt | InsertSelectStmt:
+def _conflict_action(node: ASTNode) -> str | None:
+    """Extract the conflict resolution action from an optional ``conflict_clause`` child.
+
+    ``conflict_clause = "OR" ( "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK" )``
+
+    Returns the action string in uppercase (e.g. ``"REPLACE"``) or ``None``
+    when no ``conflict_clause`` is present.
+    """
+    cc = _maybe_child(node, "conflict_clause")
+    if cc is None:
+        return None
+    # The second token in the conflict_clause is the action keyword.
+    for child in cc.children:
+        if isinstance(child, Token) and _token_type(child) == "KEYWORD":
+            kw = child.value.upper()
+            if kw in {"REPLACE", "IGNORE", "ABORT", "FAIL", "ROLLBACK"}:
+                return kw
+    return None
+
+
+def _insert(
+    node: ASTNode, default_conflict: str | None = None
+) -> InsertValuesStmt | InsertSelectStmt:
+    """Parse an ``insert_stmt`` or ``replace_stmt`` AST node.
+
+    ``default_conflict`` is pre-set to ``"REPLACE"`` when called from the
+    ``replace_stmt`` dispatch path (``REPLACE INTO \u2026`` shorthand).  For a
+    regular ``insert_stmt`` the optional ``conflict_clause`` child is
+    inspected instead and overrides ``default_conflict``.
+
+    Grammar::
+
+        insert_stmt  = "INSERT" [ conflict_clause ] "INTO" NAME
+                       [ "(" NAME { "," NAME } ")" ]
+                       insert_body [ returning_clause ] ;
+        replace_stmt = "REPLACE" "INTO" NAME
+                       [ "(" NAME { "," NAME } ")" ]
+                       insert_body [ returning_clause ] ;
+        insert_body  = "VALUES" row_value { "," row_value } | query_stmt ;
+        conflict_clause = "OR" ( "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK" ) ;
+    """
     state = _PlaceholderCounter()
-    # insert_stmt =
-    #   "INSERT" "INTO" NAME [ "(" NAME { "," NAME } ")" ]
-    #   insert_body
-    # insert_body = "VALUES" row_value { "," row_value } | query_stmt
+    # Conflict action: explicit clause overrides the default supplied by caller.
+    on_conflict: str | None = _conflict_action(node) or default_conflict
     table_tok = _first_token(node, kind="NAME")
     assert table_tok is not None
     table = table_tok.value
@@ -669,14 +710,21 @@ def _insert(node: ASTNode) -> InsertValuesStmt | InsertSelectStmt:
                     "INSERT \u2026 SELECT requires a plain SELECT, not a set operation"
                 )
             return InsertSelectStmt(
-                table=table, columns=columns, select=inner_stmt, returning=returning
+                table=table, columns=columns, select=inner_stmt,
+                on_conflict=on_conflict, returning=returning,
             )
         rows = tuple(_row_value(rv, state) for rv in _child_nodes(insert_body_node, "row_value"))
-        return InsertValuesStmt(table=table, columns=columns, rows=rows, returning=returning)
+        return InsertValuesStmt(
+            table=table, columns=columns, rows=rows,
+            on_conflict=on_conflict, returning=returning,
+        )
 
     # Old grammar fallback: row_value nodes directly under insert_stmt.
     rows = tuple(_row_value(rv, state) for rv in _child_nodes(node, "row_value"))
-    return InsertValuesStmt(table=table, columns=columns, rows=rows, returning=returning)
+    return InsertValuesStmt(
+        table=table, columns=columns, rows=rows,
+        on_conflict=on_conflict, returning=returning,
+    )
 
 
 def _row_value(node: ASTNode, state: _PlaceholderCounter) -> tuple[Expr, ...]:

@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.7.0] - 2026-05-04
+
+### Fixed
+
+- **`ConstantFolding` silently dropped `on_conflict` from `Insert` nodes**
+  (`constant_folding.py`) — the pattern match `case Insert(table=t, columns=cols,
+  source=src, returning=ret)` did not capture `on_conflict`, so when rebuilding
+  the node as `Insert(table=t, columns=cols, source=new_src, returning=new_ret)`
+  it defaulted back to `None`.  This caused `INSERT OR REPLACE` and
+  `INSERT OR IGNORE` to silently behave as plain `INSERT` after optimization,
+  raising `IntegrityError` instead of replacing or ignoring conflicting rows.
+  Fix: the pattern now captures `on_conflict=oc` and passes it through.
+
 ## [0.6.0] - 2026-05-04
 
 ### Fixed

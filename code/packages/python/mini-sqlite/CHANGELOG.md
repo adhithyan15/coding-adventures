@@ -1,5 +1,47 @@
 # Changelog
 
+## [1.22.0] - 2026-05-04
+
+### Added — INSERT OR REPLACE, INSERT OR IGNORE, REPLACE INTO
+
+Full end-to-end support for SQLite's conflict-resolution INSERT syntax.  Every
+layer of the pipeline was extended: grammar → lexer → parser → adapter →
+planner → optimizer → codegen → VM.
+
+- **`INSERT OR REPLACE INTO t VALUES …`** — if the new row conflicts on any
+  UNIQUE or PRIMARY KEY column, all conflicting existing rows are deleted and
+  the new row is inserted.  Exactly matches SQLite's `INSERT OR REPLACE`
+  semantics.
+
+- **`REPLACE INTO t VALUES …`** — syntactic sugar for `INSERT OR REPLACE INTO`.
+  Parsed by the new `replace_stmt` grammar rule; the adapter maps it to
+  `on_conflict="REPLACE"`.
+
+- **`INSERT OR IGNORE INTO t VALUES …`** — if the new row would violate a
+  UNIQUE or PRIMARY KEY constraint, the row is silently skipped.  Rows with no
+  conflict are inserted normally.
+
+- **`INSERT OR ABORT INTO t VALUES …`** — explicit form of the default
+  behaviour: raises `IntegrityError` on constraint violation.
+
+- **`INSERT OR REPLACE / IGNORE … SELECT …`** — conflict resolution also works
+  for `INSERT … SELECT` forms.
+
+- **UNIQUE column constraints now enforced for plain `INSERT`** — a latent bug
+  where `col TEXT UNIQUE` constraints were silently ignored by the in-memory
+  backend (and therefore by `mini_sqlite.connect(":memory:")`) has been fixed.
+  The UNIQUE flag now flows correctly through: `sql_backend.schema.ColumnDef`
+  → IR `ColumnDef` (new `unique` field) → `BackendColumnDef` created by the VM
+  `CreateTable` handler.
+
+### Tests
+
+- 17 oracle-verified tests in `tests/test_tier8_insert_conflict.py` run the
+  same SQL on both mini-sqlite and the real `sqlite3` module and assert the
+  results are identical.  Covers: single-key REPLACE, multi-REPLACE,
+  non-key-column REPLACE, UNIQUE column REPLACE/IGNORE, mixed rows, REPLACE
+  INTO shorthand, `INSERT … SELECT` forms, and ABORT (default) behaviour.
+
 ## [1.21.0] - 2026-05-04
 
 ### Added — String concatenation, JOIN USING, NATURAL JOIN
