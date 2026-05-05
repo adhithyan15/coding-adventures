@@ -1,8 +1,8 @@
-//! Data-only link manifest for the Uno R4 WiFi Arduino/TinyUSB USB device stack.
-//!
-//! The Rust firmware owns the VM, protocol, device state, and CDC byte stream.
-//! Arduino's Renesas core still owns the RA4M1 TinyUSB descriptors, IRQ
-//! plumbing, and FSP USB driver objects needed by `__USBStart`.
+// Data-only link manifest for the Uno R4 WiFi Arduino/TinyUSB USB device stack.
+//
+// The Rust firmware owns the VM, protocol, device state, and CDC byte stream.
+// Arduino's Renesas core still owns the RA4M1 TinyUSB descriptors, IRQ
+// plumbing, and FSP USB driver objects needed by `__USBStart`.
 
 pub const ARDUINO_RENESAS_UNO_CORE_VERSION: &str = "1.5.3";
 pub const UNO_R4_WIFI_FQBN: &str = "arduino:renesas_uno:unor4wifi";
@@ -13,6 +13,7 @@ pub const UNO_R4_WIFI_BOOTLOADER_USB_PID: u16 = 0x1002;
 pub const UNO_R4_WIFI_USB_RHPORT: u8 = 0;
 
 pub const ARDUINO_CORE_ENV_VAR: &str = "BOARD_VM_UNO_R4_ARDUINO_CORE";
+pub const ARDUINO_USB_LINK_ENV_VAR: &str = "BOARD_VM_UNO_R4_LINK_ARDUINO_USB";
 pub const ARDUINO_ARM_GCC_ENV_VAR: &str = "BOARD_VM_UNO_R4_ARM_GCC";
 pub const ARDUINO_ARM_GXX_ENV_VAR: &str = "BOARD_VM_UNO_R4_ARM_GXX";
 pub const ARDUINO_ARM_AR_ENV_VAR: &str = "BOARD_VM_UNO_R4_ARM_AR";
@@ -81,6 +82,8 @@ pub const ARDUINO_USB_LINK_INCLUDE_DIRS: &[&str] = &[
     "cores/arduino/tinyusb/common",
     "cores/arduino/tinyusb/device",
     "cores/arduino/usb",
+    "cores/arduino/api/deprecated",
+    "cores/arduino/api/deprecated-avr-comp",
     "variants/UNOWIFIR4",
     "variants/UNOWIFIR4/includes/ra/fsp/inc",
     "variants/UNOWIFIR4/includes/ra/fsp/inc/api",
@@ -93,6 +96,10 @@ pub const ARDUINO_USB_LINK_INCLUDE_DIRS: &[&str] = &[
 ];
 
 pub const ARDUINO_USB_LINK_DEFINES: &[&str] = &[
+    "ARDUINO=10607",
+    "ARDUINO_UNOWIFIR4",
+    "ARDUINO_ARCH_RENESAS_UNO",
+    "ARDUINO_ARCH_RENESAS",
     "F_CPU=48000000",
     "NO_USB",
     "BACKTRACE_SUPPORT",
@@ -105,6 +112,13 @@ pub const ARDUINO_USB_LINK_DEFINES: &[&str] = &[
 ];
 
 pub const ARDUINO_USB_LINK_CFLAGS: &[&str] = &[
+    "-c",
+    "-w",
+    "-Os",
+    "-g3",
+    "-nostdlib",
+    "-MMD",
+    "-std=gnu11",
     "-mcpu=cortex-m4",
     "-mthumb",
     "-mfloat-abi=hard",
@@ -112,9 +126,21 @@ pub const ARDUINO_USB_LINK_CFLAGS: &[&str] = &[
     "-ffunction-sections",
     "-fdata-sections",
     "-fsigned-char",
+    "-fno-builtin",
 ];
 
 pub const ARDUINO_USB_LINK_CXXFLAGS: &[&str] = &[
+    "-c",
+    "-w",
+    "-Os",
+    "-g3",
+    "-fno-use-cxa-atexit",
+    "-fno-threadsafe-statics",
+    "-fno-rtti",
+    "-fno-exceptions",
+    "-MMD",
+    "-nostdlib",
+    "-std=gnu++17",
     "-mcpu=cortex-m4",
     "-mthumb",
     "-mfloat-abi=hard",
@@ -122,8 +148,7 @@ pub const ARDUINO_USB_LINK_CXXFLAGS: &[&str] = &[
     "-ffunction-sections",
     "-fdata-sections",
     "-fsigned-char",
-    "-fno-rtti",
-    "-fno-exceptions",
+    "-fno-builtin",
 ];
 
 pub const RUST_PROVIDED_USB_SYMBOLS: &[&str] = &[
@@ -163,6 +188,7 @@ mod tests {
         assert_eq!(UNO_R4_WIFI_RUNTIME_USB_PID, 0x006D);
         assert_eq!(UNO_R4_WIFI_BOOTLOADER_USB_PID, 0x1002);
         assert_eq!(UNO_R4_WIFI_USB_RHPORT, 0);
+        assert_eq!(ARDUINO_USB_LINK_ENV_VAR, "BOARD_VM_UNO_R4_LINK_ARDUINO_USB");
     }
 
     #[test]
@@ -181,11 +207,16 @@ mod tests {
     #[test]
     fn link_manifest_carries_arduino_flags_needed_by_tinyusb() {
         assert!(ARDUINO_USB_LINK_INCLUDE_DIRS.contains(&"cores/arduino/tinyusb"));
+        assert!(ARDUINO_USB_LINK_INCLUDE_DIRS.contains(&"cores/arduino/api/deprecated"));
         assert!(ARDUINO_USB_LINK_INCLUDE_DIRS.contains(&"variants/UNOWIFIR4"));
+        assert!(ARDUINO_USB_LINK_DEFINES.contains(&"ARDUINO_UNOWIFIR4"));
+        assert!(ARDUINO_USB_LINK_DEFINES.contains(&"ARDUINO_ARCH_RENESAS_UNO"));
         assert!(ARDUINO_USB_LINK_DEFINES.contains(&"CFG_TUSB_MCU=OPT_MCU_RAXXX"));
         assert!(ARDUINO_USB_LINK_DEFINES.contains(&"ARDUINO_UNOR4_WIFI"));
+        assert!(ARDUINO_USB_LINK_CFLAGS.contains(&"-std=gnu11"));
         assert!(ARDUINO_USB_LINK_CFLAGS.contains(&"-mcpu=cortex-m4"));
         assert!(ARDUINO_USB_LINK_CXXFLAGS.contains(&"-fno-exceptions"));
+        assert!(ARDUINO_USB_LINK_CXXFLAGS.contains(&"-fno-threadsafe-statics"));
     }
 
     #[test]
