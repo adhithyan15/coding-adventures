@@ -8,13 +8,17 @@ use std::process::Command;
 use std::string::{String, ToString};
 use std::vec::Vec;
 
-use crate::arduino_usb_link::{ARDUINO_CORE_ENV_VAR, ARDUINO_USB_LINK_ENV_VAR, UNO_R4_WIFI_FQBN};
+use crate::arduino_usb_link::{
+    ARDUINO_ARM_AR_ENV_VAR, ARDUINO_ARM_COMPAT_ROOT_ENV_VAR, ARDUINO_ARM_GCC_ENV_VAR,
+    ARDUINO_ARM_GXX_ENV_VAR, ARDUINO_CORE_ENV_VAR, ARDUINO_USB_LINK_ENV_VAR, UNO_R4_WIFI_FQBN,
+};
 
 pub const SERIAL_USB_SERVER_BIN: &str = "uno-r4-wifi-serialusb-server";
 pub const TARGET_TRIPLE: &str = "thumbv7em-none-eabihf";
 pub const FIRMWARE_PACKAGE: &str = "board-vm-uno-r4-firmware";
 pub const DEFAULT_BAUD_RATE: u32 = 115_200;
 pub const DEFAULT_TIMEOUT_MS: u64 = 1_000;
+pub const ARDUINO_BOSSAC_PATH_ENV_VAR: &str = "BOARD_VM_UNO_R4_BOSSAC_PATH";
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CommandSpec {
@@ -82,6 +86,12 @@ impl CommandSpec {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SerialUsbArtifactOptions {
     pub arduino_core: Option<PathBuf>,
+    pub rustc: Option<PathBuf>,
+    pub arm_gcc: Option<PathBuf>,
+    pub arm_gxx: Option<PathBuf>,
+    pub arm_ar: Option<PathBuf>,
+    pub arm_compat_root: Option<PathBuf>,
+    pub bossac_path: Option<PathBuf>,
     pub target_dir: PathBuf,
     pub objcopy: PathBuf,
     pub arduino_cli: PathBuf,
@@ -97,6 +107,12 @@ impl Default for SerialUsbArtifactOptions {
     fn default() -> Self {
         Self {
             arduino_core: env::var_os(ARDUINO_CORE_ENV_VAR).map(PathBuf::from),
+            rustc: env::var_os("RUSTC").map(PathBuf::from),
+            arm_gcc: env::var_os(ARDUINO_ARM_GCC_ENV_VAR).map(PathBuf::from),
+            arm_gxx: env::var_os(ARDUINO_ARM_GXX_ENV_VAR).map(PathBuf::from),
+            arm_ar: env::var_os(ARDUINO_ARM_AR_ENV_VAR).map(PathBuf::from),
+            arm_compat_root: env::var_os(ARDUINO_ARM_COMPAT_ROOT_ENV_VAR).map(PathBuf::from),
+            bossac_path: env::var_os(ARDUINO_BOSSAC_PATH_ENV_VAR).map(PathBuf::from),
             target_dir: PathBuf::from("target"),
             objcopy: PathBuf::from("llvm-objcopy"),
             arduino_cli: PathBuf::from("arduino-cli"),
@@ -111,6 +127,29 @@ impl Default for SerialUsbArtifactOptions {
 }
 
 impl SerialUsbArtifactOptions {
+    pub fn fill_host_defaults(&mut self) {
+        if self.rustc.is_none() {
+            self.rustc = resolve_rustup_stable_rustc();
+        }
+
+        if self.arm_gcc.is_none() {
+            self.arm_gcc = find_on_path("arm-none-eabi-gcc");
+        }
+        if self.arm_gxx.is_none() {
+            self.arm_gxx = find_on_path("arm-none-eabi-g++");
+        }
+        if self.arm_ar.is_none() {
+            self.arm_ar = find_on_path("arm-none-eabi-ar");
+        }
+
+        if self.arm_compat_root.is_none() {
+            self.arm_compat_root = self
+                .arduino_core
+                .as_deref()
+                .and_then(arduino_arm_compat_root_from_core);
+        }
+    }
+
     pub fn profile_dir(&self) -> &'static str {
         if self.release {
             "release"
@@ -167,6 +206,21 @@ impl SerialUsbArtifactOptions {
         if let Some(core) = &self.arduino_core {
             command = command.env_path(ARDUINO_CORE_ENV_VAR, core);
         }
+        if let Some(rustc) = &self.rustc {
+            command = command.env_path("RUSTC", rustc);
+        }
+        if let Some(gcc) = &self.arm_gcc {
+            command = command.env_path(ARDUINO_ARM_GCC_ENV_VAR, gcc);
+        }
+        if let Some(gxx) = &self.arm_gxx {
+            command = command.env_path(ARDUINO_ARM_GXX_ENV_VAR, gxx);
+        }
+        if let Some(ar) = &self.arm_ar {
+            command = command.env_path(ARDUINO_ARM_AR_ENV_VAR, ar);
+        }
+        if let Some(root) = &self.arm_compat_root {
+            command = command.env_path(ARDUINO_ARM_COMPAT_ROOT_ENV_VAR, root);
+        }
 
         command
     }
@@ -184,16 +238,23 @@ impl SerialUsbArtifactOptions {
             "--port is required with --upload",
         ))?;
 
-        Ok(
-            CommandSpec::new(self.arduino_cli.as_os_str().to_os_string())
-                .arg("upload")
-                .arg("-p")
-                .arg(port.as_str())
-                .arg("-b")
-                .arg(UNO_R4_WIFI_FQBN)
-                .arg("-i")
-                .arg_path(&self.bin_path()),
-        )
+        let mut command = CommandSpec::new(self.arduino_cli.as_os_str().to_os_string())
+            .arg("upload")
+            .arg("-p")
+            .arg(port.as_str())
+            .arg("-b")
+            .arg(UNO_R4_WIFI_FQBN)
+            .arg("-i")
+            .arg_path(&self.bin_path());
+
+        if let Some(path) = &self.bossac_path {
+            command = command.arg("--upload-property").arg(format!(
+                "runtime.tools.bossac-1.9.1-arduino5.path={}",
+                path.display()
+            ));
+        }
+
+        Ok(command)
     }
 
     fn smoke_command(&self) -> Result<CommandSpec, ArtifactCliError> {
@@ -271,6 +332,28 @@ where
             "--core" => {
                 options.arduino_core = Some(PathBuf::from(next_value(&mut args, "--core")?));
             }
+            "--rustc" => {
+                options.rustc = Some(PathBuf::from(next_value(&mut args, "--rustc")?));
+            }
+            "--arm-toolchain-bin" => {
+                let bin_dir = PathBuf::from(next_value(&mut args, "--arm-toolchain-bin")?);
+                options.arm_gcc = Some(bin_dir.join(executable_name("arm-none-eabi-gcc")));
+                options.arm_gxx = Some(bin_dir.join(executable_name("arm-none-eabi-g++")));
+                options.arm_ar = Some(bin_dir.join(executable_name("arm-none-eabi-ar")));
+            }
+            "--arm-gcc" => {
+                options.arm_gcc = Some(PathBuf::from(next_value(&mut args, "--arm-gcc")?));
+            }
+            "--arm-gxx" => {
+                options.arm_gxx = Some(PathBuf::from(next_value(&mut args, "--arm-gxx")?));
+            }
+            "--arm-ar" => {
+                options.arm_ar = Some(PathBuf::from(next_value(&mut args, "--arm-ar")?));
+            }
+            "--arm-compat-root" => {
+                options.arm_compat_root =
+                    Some(PathBuf::from(next_value(&mut args, "--arm-compat-root")?));
+            }
             "--target-dir" => {
                 options.target_dir = PathBuf::from(next_value(&mut args, "--target-dir")?);
             }
@@ -279,6 +362,9 @@ where
             }
             "--arduino-cli" => {
                 options.arduino_cli = PathBuf::from(next_value(&mut args, "--arduino-cli")?);
+            }
+            "--bossac-path" => {
+                options.bossac_path = Some(PathBuf::from(next_value(&mut args, "--bossac-path")?));
             }
             "--port" | "-p" => {
                 options.port = Some(next_value(&mut args, "--port")?);
@@ -305,12 +391,14 @@ where
 }
 
 pub fn usage() -> &'static str {
-    "usage:\n  uno-r4-wifi-serialusb-artifact [--core <arduino-core>] [--target-dir <dir>] [--objcopy <path>] [--print-only] [--upload --port <path>] [--smoke --port <path>] [--baud <rate>] [--timeout-ms <ms>]"
+    "usage:\n  uno-r4-wifi-serialusb-artifact [--core <arduino-core>] [--rustc <path>] [--arm-toolchain-bin <dir>] [--arm-gcc <path>] [--arm-gxx <path>] [--arm-ar <path>] [--arm-compat-root <dir>] [--target-dir <dir>] [--objcopy <path>] [--arduino-cli <path>] [--bossac-path <dir>] [--print-only] [--upload --port <path>] [--smoke --port <path>] [--baud <rate>] [--timeout-ms <ms>]"
 }
 
 pub fn resolve_rust_llvm_objcopy() -> Option<PathBuf> {
     let rustc_output = Command::new("rustup")
         .arg("which")
+        .arg("--toolchain")
+        .arg("stable")
         .arg("rustc")
         .output()
         .ok()?;
@@ -330,6 +418,37 @@ pub fn resolve_rust_llvm_objcopy() -> Option<PathBuf> {
     let host = detect_host_triple(&version)?;
     let objcopy = rust_llvm_objcopy_path_from_rustc(Path::new(&rustc_path), &host)?;
     objcopy.exists().then_some(objcopy)
+}
+
+pub fn resolve_rustup_stable_rustc() -> Option<PathBuf> {
+    let output = Command::new("rustup")
+        .arg("which")
+        .arg("--toolchain")
+        .arg("stable")
+        .arg("rustc")
+        .output()
+        .ok()?;
+    if !output.status.success() {
+        return None;
+    }
+
+    let path = String::from_utf8_lossy(&output.stdout).trim().to_string();
+    (!path.is_empty()).then(|| PathBuf::from(path))
+}
+
+pub fn find_on_path(program: &str) -> Option<PathBuf> {
+    let paths = env::var_os("PATH")?;
+    env::split_paths(&paths)
+        .map(|dir| dir.join(executable_name(program)))
+        .find(|candidate| candidate.exists())
+}
+
+pub fn arduino_arm_compat_root_from_core(core_dir: &Path) -> Option<PathBuf> {
+    let packages_dir = core_dir.ancestors().nth(4)?;
+    let root = packages_dir
+        .join("arduino/tools/arm-none-eabi-gcc")
+        .join("7-2017q4");
+    root.exists().then_some(root)
 }
 
 pub fn detect_host_triple(rustc_verbose_version: &str) -> Option<String> {
@@ -394,6 +513,12 @@ mod tests {
     fn options() -> SerialUsbArtifactOptions {
         SerialUsbArtifactOptions {
             arduino_core: Some(PathBuf::from("/arduino/renesas_uno/1.5.3")),
+            rustc: Some(PathBuf::from("/rustup/stable/bin/rustc")),
+            arm_gcc: Some(PathBuf::from("/opt/toolchain/bin/arm-none-eabi-gcc")),
+            arm_gxx: Some(PathBuf::from("/opt/toolchain/bin/arm-none-eabi-g++")),
+            arm_ar: Some(PathBuf::from("/opt/toolchain/bin/arm-none-eabi-ar")),
+            arm_compat_root: Some(PathBuf::from("/arduino/tools/arm-none-eabi-gcc/7-2017q4")),
+            bossac_path: Some(PathBuf::from("/tmp/arduino-bossa/bin")),
             target_dir: PathBuf::from("target"),
             objcopy: PathBuf::from("/rust/llvm-objcopy"),
             arduino_cli: PathBuf::from("arduino-cli"),
@@ -444,6 +569,26 @@ mod tests {
             OsString::from(ARDUINO_CORE_ENV_VAR),
             OsString::from("/arduino/renesas_uno/1.5.3")
         )));
+        assert!(build.env.contains(&(
+            OsString::from("RUSTC"),
+            OsString::from("/rustup/stable/bin/rustc")
+        )));
+        assert!(build.env.contains(&(
+            OsString::from(ARDUINO_ARM_GCC_ENV_VAR),
+            OsString::from("/opt/toolchain/bin/arm-none-eabi-gcc")
+        )));
+        assert!(build.env.contains(&(
+            OsString::from(ARDUINO_ARM_GXX_ENV_VAR),
+            OsString::from("/opt/toolchain/bin/arm-none-eabi-g++")
+        )));
+        assert!(build.env.contains(&(
+            OsString::from(ARDUINO_ARM_AR_ENV_VAR),
+            OsString::from("/opt/toolchain/bin/arm-none-eabi-ar")
+        )));
+        assert!(build.env.contains(&(
+            OsString::from(ARDUINO_ARM_COMPAT_ROOT_ENV_VAR),
+            OsString::from("/arduino/tools/arm-none-eabi-gcc/7-2017q4")
+        )));
     }
 
     #[test]
@@ -482,6 +627,8 @@ mod tests {
                 UNO_R4_WIFI_FQBN,
                 "-i",
                 "target/thumbv7em-none-eabihf/release/uno-r4-wifi-serialusb-server.bin",
+                "--upload-property",
+                "runtime.tools.bossac-1.9.1-arduino5.path=/tmp/arduino-bossa/bin",
             ]
         );
         assert_eq!(
@@ -522,10 +669,18 @@ mod tests {
                 "--print-only",
                 "--core",
                 "/core",
+                "--rustc",
+                "/rustc",
+                "--arm-toolchain-bin",
+                "/native/bin",
+                "--arm-compat-root",
+                "/compat",
                 "--target-dir",
                 "out",
                 "--objcopy",
                 "/bin/llvm-objcopy",
+                "--bossac-path",
+                "/bossac/bin",
                 "--port",
                 "/dev/cu.usbmodem-test",
                 "--upload",
@@ -545,8 +700,23 @@ mod tests {
 
         assert!(run.print_only);
         assert_eq!(run.options.arduino_core, Some(PathBuf::from("/core")));
+        assert_eq!(run.options.rustc, Some(PathBuf::from("/rustc")));
+        assert_eq!(
+            run.options.arm_gcc,
+            Some(PathBuf::from("/native/bin/arm-none-eabi-gcc"))
+        );
+        assert_eq!(
+            run.options.arm_gxx,
+            Some(PathBuf::from("/native/bin/arm-none-eabi-g++"))
+        );
+        assert_eq!(
+            run.options.arm_ar,
+            Some(PathBuf::from("/native/bin/arm-none-eabi-ar"))
+        );
+        assert_eq!(run.options.arm_compat_root, Some(PathBuf::from("/compat")));
         assert_eq!(run.options.target_dir, PathBuf::from("out"));
         assert_eq!(run.options.objcopy, PathBuf::from("/bin/llvm-objcopy"));
+        assert_eq!(run.options.bossac_path, Some(PathBuf::from("/bossac/bin")));
         assert_eq!(run.options.port, Some("/dev/cu.usbmodem-test".to_string()));
         assert!(run.options.upload);
         assert!(run.options.smoke);
@@ -569,6 +739,16 @@ mod tests {
             PathBuf::from(
                 "/toolchains/stable-aarch64-apple-darwin/lib/rustlib/aarch64-apple-darwin/bin/llvm-objcopy"
             )
+        );
+    }
+
+    #[test]
+    fn derives_arduino_arm_compat_root_from_core_dir() {
+        assert_eq!(
+            arduino_arm_compat_root_from_core(Path::new(
+                "/Arduino15/packages/arduino/hardware/renesas_uno/1.5.3"
+            )),
+            None
         );
     }
 }

@@ -9,10 +9,11 @@ mod arduino_usb_link {
 }
 
 use arduino_usb_link::{
-    ArduinoSourceLanguage, ARDUINO_ARM_AR_ENV_VAR, ARDUINO_ARM_GCC_ENV_VAR,
-    ARDUINO_ARM_GXX_ENV_VAR, ARDUINO_CORE_ENV_VAR, ARDUINO_USB_LINK_CFLAGS,
-    ARDUINO_USB_LINK_CXXFLAGS, ARDUINO_USB_LINK_DEFINES, ARDUINO_USB_LINK_ENV_VAR,
-    ARDUINO_USB_LINK_INCLUDE_DIRS, ARDUINO_USB_LINK_SOURCES, UNO_R4_WIFI_FSP_ARCHIVE,
+    ArduinoSourceLanguage, ARDUINO_ARM_AR_ENV_VAR, ARDUINO_ARM_COMPAT_ROOT_ENV_VAR,
+    ARDUINO_ARM_GCC_ENV_VAR, ARDUINO_ARM_GXX_ENV_VAR, ARDUINO_CORE_ENV_VAR,
+    ARDUINO_USB_LINK_CFLAGS, ARDUINO_USB_LINK_CXXFLAGS, ARDUINO_USB_LINK_DEFINES,
+    ARDUINO_USB_LINK_ENV_VAR, ARDUINO_USB_LINK_INCLUDE_DIRS, ARDUINO_USB_LINK_SOURCES,
+    UNO_R4_WIFI_FSP_ARCHIVE,
 };
 
 const UNO_R4_SKETCH_FLASH_ORIGIN: u32 = 0x0000_4000;
@@ -54,6 +55,7 @@ fn emit_rerun_hints() {
     println!("cargo:rerun-if-env-changed={ARDUINO_ARM_GCC_ENV_VAR}");
     println!("cargo:rerun-if-env-changed={ARDUINO_ARM_GXX_ENV_VAR}");
     println!("cargo:rerun-if-env-changed={ARDUINO_ARM_AR_ENV_VAR}");
+    println!("cargo:rerun-if-env-changed={ARDUINO_ARM_COMPAT_ROOT_ENV_VAR}");
 }
 
 fn write_memory_x(out_dir: &Path) {
@@ -73,6 +75,8 @@ fn compile_and_link_arduino_usb(out_dir: &Path) {
     let gcc = resolve_tool(ARDUINO_ARM_GCC_ENV_VAR, &packages_dir, "gcc");
     let gxx = resolve_tool(ARDUINO_ARM_GXX_ENV_VAR, &packages_dir, "g++");
     let ar = resolve_tool(ARDUINO_ARM_AR_ENV_VAR, &packages_dir, "ar");
+    let compat_root = resolve_compat_root(&packages_dir);
+    let compat_header = write_compat_header(out_dir);
 
     let object_dir = out_dir.join("arduino-usb-objects");
     fs::create_dir_all(&object_dir).expect("create Arduino USB object dir");
@@ -91,6 +95,7 @@ fn compile_and_link_arduino_usb(out_dir: &Path) {
                     &source_path,
                     &object,
                     ARDUINO_USB_LINK_CFLAGS,
+                    &c_compat_args(&compat_root),
                 );
                 objects.push(object);
             }
@@ -102,6 +107,7 @@ fn compile_and_link_arduino_usb(out_dir: &Path) {
                     &source_path,
                     &object,
                     ARDUINO_USB_LINK_CXXFLAGS,
+                    &cxx_compat_args(&compat_root, &compat_header),
                 );
                 objects.push(object);
             }
@@ -150,11 +156,13 @@ fn compile_source(
     source_path: &Path,
     object_path: &Path,
     flags: &[&str],
+    compat_args: &[String],
 ) {
     assert_path_exists(source_path, "Arduino source");
 
     let mut command = Command::new(compiler);
     command.args(flags);
+    command.args(compat_args);
     for define in ARDUINO_USB_LINK_DEFINES {
         command.arg(format!("-D{define}"));
     }
@@ -223,6 +231,68 @@ fn resolve_tool(env_var: &str, packages_dir: &Path, suffix: &str) -> PathBuf {
         .join(format!("arm-none-eabi-{suffix}{exe_suffix}"));
     assert_path_exists(&tool, "Arduino ARM tool");
     tool
+}
+
+fn resolve_compat_root(packages_dir: &Path) -> PathBuf {
+    if let Some(path) = env::var_os(ARDUINO_ARM_COMPAT_ROOT_ENV_VAR) {
+        let path = PathBuf::from(path);
+        assert_path_exists(&path, "Arduino ARM compatibility root");
+        return path;
+    }
+
+    let compat_root = packages_dir
+        .join("arduino/tools/arm-none-eabi-gcc")
+        .join(ARDUINO_ARM_GCC_VERSION);
+    assert_path_exists(&compat_root, "Arduino ARM compatibility root");
+    compat_root
+}
+
+fn c_compat_args(compat_root: &Path) -> Vec<String> {
+    let c_include = compat_root.join("arm-none-eabi/include");
+    assert_path_exists(&c_include, "Arduino ARM Newlib include directory");
+
+    vec![
+        "-Wno-error=implicit-function-declaration".to_string(),
+        "-Wno-error=return-mismatch".to_string(),
+        "-include".to_string(),
+        "string.h".to_string(),
+        "-isystem".to_string(),
+        c_include.display().to_string(),
+    ]
+}
+
+fn cxx_compat_args(compat_root: &Path, compat_header: &Path) -> Vec<String> {
+    let cxx_include = compat_root.join("arm-none-eabi/include/c++/7.2.1");
+    let cxx_target_include = cxx_include.join("arm-none-eabi");
+    let c_include = compat_root.join("arm-none-eabi/include");
+
+    assert_path_exists(&cxx_include, "Arduino ARM libstdc++ include directory");
+    assert_path_exists(
+        &cxx_target_include,
+        "Arduino ARM target libstdc++ include directory",
+    );
+    assert_path_exists(&c_include, "Arduino ARM Newlib include directory");
+
+    vec![
+        "-include".to_string(),
+        compat_header.display().to_string(),
+        "-isystem".to_string(),
+        cxx_include.display().to_string(),
+        "-isystem".to_string(),
+        cxx_target_include.display().to_string(),
+        "-isystem".to_string(),
+        c_include.display().to_string(),
+    ]
+}
+
+fn write_compat_header(out_dir: &Path) -> PathBuf {
+    let header = out_dir.join("board_vm_uno_r4_arduino_compat.h");
+    fs::write(
+        &header,
+        "#pragma once\n#include <stddef.h>\n#ifdef __cplusplus\nextern \"C\" {\nvoid *memset(void *, int, size_t);\nvoid *memcpy(void *, const void *, size_t);\nsize_t strlen(const char *);\n}\n#endif\n",
+    )
+    .expect("write Arduino compatibility header");
+    header
 }
 
 fn assert_path_exists(path: &Path, label: &str) {
