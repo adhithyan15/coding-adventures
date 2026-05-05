@@ -54,6 +54,9 @@ All notable changes to this package will be documented in this file.
   block.
 - Rejected array bound expressions that read an array declared later in the
   same block, preserving declaration-order descriptor allocation semantics.
+- Rejected array bounds that call procedures whose reachable bodies may access
+  later same-block array descriptors before allocation, while still allowing
+  callee-local arrays and earlier descriptors.
 - Accepted integer-returning procedure actuals for real-valued formal
   procedure parameters, matching scalar integer-to-real promotion.
 - Accepted switch declaration entries that target labels in lexical parent

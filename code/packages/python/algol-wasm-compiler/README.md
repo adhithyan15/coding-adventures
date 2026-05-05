@@ -18,7 +18,8 @@ the current lane already supports a substantial ALGOL 60 surface:
 - `own` scalars and arrays with static lifetime
 - arrays of `integer`, `boolean`, `real`, and `string` values with runtime
   bounds, including bounds that call later sibling typed procedures or read
-  previously allocated array descriptors, and checked element access
+  previously allocated array descriptors, indirect descriptor-order checking
+  through procedures called from bounds, and checked element access
 - case-insensitive keywords, comments, and standard builtins,
   `!=`/`<>`/`≠` not-equal spelling, ALGOL publication symbols such as `≤`,
   `≥`, `↑`, `×`, `÷`, `¬`, `∧`, `∨`, `⊃`, `≡`, and single- or double-quoted

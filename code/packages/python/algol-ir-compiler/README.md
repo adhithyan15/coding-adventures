@@ -36,7 +36,9 @@ Because the checker defers bound expression analysis until declaration
 registration completes, those lower/upper expressions can call later sibling
 typed procedures in the same block. Bound expressions may read earlier array
 descriptors, but same-block arrays declared later remain rejected before IR
-lowering because their descriptors do not exist at allocation time.
+lowering because their descriptors do not exist at allocation time. The same
+declaration-order guard is applied transitively through procedures called from
+bounds, while arrays local to those callees still lower normally.
 
 Expression lowering includes mixed integer/real arithmetic, boolean operators,
 comparisons, chained assignment targets, branch-selected conditional

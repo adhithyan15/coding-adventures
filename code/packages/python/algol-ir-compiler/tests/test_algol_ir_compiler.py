@@ -1628,12 +1628,55 @@ class TestAlgolIrCompiler:
         assert "b@block0" in result.variable_slots
         assert "a@block0" in result.variable_slots
 
+    def test_compiles_prior_array_accesses_through_array_bound_procedures(
+        self,
+    ) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "integer array b[0:0]; integer array a[lower():lower()]; "
+                "integer procedure lower; begin lower := b[0] end; "
+                "b[0] := 0; a[0] := 9; result := a[0] "
+                "end"
+            )
+        )
+
+        assert "b@block0" in result.variable_slots
+        assert "a@block0" in result.variable_slots
+
     def test_rejects_later_array_accesses_in_array_bounds(self) -> None:
         with pytest.raises(CompileError, match="before its descriptor is allocated"):
             compile_algol(
                 parse_algol(
                     "begin integer result; integer array a[b[1]:b[1]]; "
                     "integer array b[1:1]; result := 0 end"
+                )
+            )
+
+    def test_rejects_later_array_accesses_through_array_bound_procedures(
+        self,
+    ) -> None:
+        with pytest.raises(CompileError, match="cannot call procedure 'lower'"):
+            compile_algol(
+                parse_algol(
+                    "begin integer result; integer array a[lower():lower()]; "
+                    "integer procedure lower; begin lower := b[0] end; "
+                    "integer array b[0:0]; result := 0 end"
+                )
+            )
+
+    def test_rejects_later_array_accesses_through_bound_formal_procedures(
+        self,
+    ) -> None:
+        with pytest.raises(CompileError, match="cannot call procedure 'wrapper'"):
+            compile_algol(
+                parse_algol(
+                    "begin integer result; "
+                    "integer array a[wrapper(reader):wrapper(reader)]; "
+                    "integer procedure wrapper(f); integer procedure f; "
+                    "begin wrapper := f end; "
+                    "integer procedure reader; begin reader := b[0] end; "
+                    "integer array b[0:0]; result := 0 end"
                 )
             )
 

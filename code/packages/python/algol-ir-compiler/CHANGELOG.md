@@ -40,6 +40,9 @@ All notable changes to this package will be documented in this file.
   completes.
 - Preserved array declaration-order semantics by relying on checker diagnostics
   for bounds that read later array descriptors.
+- Preserved indirect array declaration-order semantics by relying on checker
+  diagnostics for bounds that call procedures which may touch later array
+  descriptors.
 - Lowered integer array-element by-name actuals to tagged descriptors with
   generated eval/store helpers that re-compute the element address on every
   formal read or assignment.
