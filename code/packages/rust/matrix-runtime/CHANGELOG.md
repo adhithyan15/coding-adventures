@@ -3,6 +3,60 @@
 All notable changes to `matrix-runtime` are documented here.  The
 format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.7.0] — 2026-05-05
+
+### Added — MX05 Phase 3 V3 (hot-path wiring)
+
+- New `router` module exporting **`SpecRouter`** — the glue that ties
+  Phases 1, 2a, 3 V1, and 3 V2 together end-to-end:
+    1. Asks the policy whether to specialise (`should_specialise`).
+       If no → returns `None`, caller uses the generic kernel.
+    2. Cache lookup via `SpecCache::get`.  Cache hit → return cached.
+    3. Cache miss → ask the backend's `Specialiser::specialise`.
+    4. If specialiser succeeds, cache and return.  If it declines,
+       return `None` without poisoning the cache (so a backend that
+       can't yet specialise this key but might later — e.g. JIT
+       compile pending — will get retried).
+- `SpecRouter::new(policy, cache, specialiser)` for explicit
+  composition; `cache_get` / `cache_insert` / `cache_len` /
+  `cache_clear` for direct cache access.
+- Internal cache is `Mutex`-guarded so a single router can be shared
+  across the dispatch threads of an executor.
+
+### Tests (11 new)
+
+- `cold_observation_returns_none_without_calling_specialiser`
+- `hot_observation_with_constant_input_round_trips_through_specialiser`
+- `second_call_hits_cache_and_does_not_call_specialiser`
+- `declining_specialiser_does_not_poison_cache`
+- `distinct_op_kinds_get_distinct_cache_entries`
+- `distinct_backends_get_distinct_cache_entries`
+- `cache_clear_drops_cached_kernels`
+- `noop_specialiser_yields_none_after_policy_fires`
+- `cache_eviction_means_specialiser_called_again`
+- `cache_get_directly_returns_inserted_kernel`
+- `cache_insert_directly_persists`
+
+Tests use a `CountingSpecialiser` (counts `specialise()` calls and
+emits a deterministic kernel) and a `DecliningSpecialiser` (always
+returns `None`) to exercise both branches of the routing decision.
+
+Total tests: 74 unit + 8 integration = 82 (was 63 + 8 = 71).
+
+### Notes
+
+- **No dispatch loop calls `SpecRouter` yet.**  Phase 3 V4 (next)
+  wires `image-gpu-core::pipeline` (and any other domain library
+  doing dispatch) to call `record_dispatch` followed by
+  `SpecRouter::route` for each compute op, falling back to the
+  generic kernel when route returns `None`.  This separation keeps
+  the V3 PR small enough to review and lets any backend's
+  `Specialiser` implementation land independently of the call-site
+  changes.
+- Image-filter routing on macOS unchanged: `invert` → CPU,
+  `greyscale` / `sepia` → Metal across the synthetic test-image
+  suite.
+
 ## [0.6.0] — 2026-05-05
 
 ### Added — MX05 Phase 3 V2 (specialisation policy)
