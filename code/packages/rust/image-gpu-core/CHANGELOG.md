@@ -1,5 +1,65 @@
 # Changelog — image-gpu-core
 
+## 0.6.0 — 2026-05-05
+
+### Added — MX05 Phase 4.2 (tensor-byte sampling)
+
+- `drive_specialisation` now samples bytes from every constant
+  input the graph carries via `Profiler::sample_tensor`.  Algorithm:
+    1. Walk `placed.ops` to build a `TensorId → &PlacedConstant` map
+       for tensors that are `Op::Const` outputs.
+    2. For each non-Const Compute op, walk its inputs.  If an input
+       traces back to a constant, sample its bytes against the
+       consuming op's input slot.
+- This populates `ProfileObservation::tensor_observations` (which
+  was always empty under the previous wiring), giving
+  `DefaultPolicy` real constant-input observations to act on.
+
+### Changed
+
+- The custom `HotPolicy` workaround is gone.  `spec_router()` now
+  installs `DefaultPolicy::new()` — spec MX05's 1000-invocation
+  threshold + 95% stability — which finally fires on actual
+  constant-input observations rather than just hotness.
+- `HOTNESS_THRESHOLD` const removed (was V4-only crutch).
+
+### Tests
+
+- `default_policy_populates_cache_via_constant_input_sampling` —
+  drives gpu_invert 1100 times and asserts `spec_cache_len()` rises
+  under the production-realistic threshold.  Replaces the V0.5
+  `cpu_specialiser_populates_cache_after_hotness_threshold` test.
+- `drive_specialisation_populates_tensor_observations` — confirms
+  that a single dispatch records at least one TensorObservation
+  with a populated min/max range.  Was 0 before this PR.
+
+Total tests: 28 unit + 1 doc = 29 (was 27 + 1 = 28).
+
+### Cost
+
+- Per-dispatch overhead: O(constants × bytes-per-constant).  The
+  16 MiB per-tensor cap inherited from matrix-runtime keeps this
+  bounded at a few MB of byte-scanning per dispatch.  In practice
+  most image-filter graphs have a handful of small constants
+  (3×3 colour matrix, scalar bias), so the work is tiny.
+
+### Regression check
+
+`instagram-filters` routing on macOS unchanged after this PR:
+
+```
+  invert        → cpu     (small graph, planner picks CPU)
+  greyscale     → metal   (sRGB + matmul, ships to GPU)
+  sepia         → metal   (matmul-heavy, ships to GPU)
+```
+
+The dispatch path still doesn't consume the specialised kernel
+handle (Phase 4.1 + executor-protocol extension required), so
+output bytes and `last_executor()` are identical.  What changed:
+`profiler_observations()`'s `tensor_observations` vector now
+contains real entries, and `spec_cache_len()` rises above 0 once
+1000+ invocations of any one graph have happened.
+
 ## 0.5.0 — 2026-05-05
 
 ### Added — MX05 Phase 4 visibility (CpuSpecialiser wired)

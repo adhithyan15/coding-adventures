@@ -55,15 +55,14 @@
 //! the right transport, and handles `Transfer` itself.
 
 use crate::GpuError;
-use compute_ir::{ComputeGraph, PlacedOp};
+use compute_ir::{ComputeGraph, PlacedConstant, PlacedOp};
 #[cfg(feature = "metal-backend")]
 use compute_ir::{ExecutorId, CPU_EXECUTOR};
 use executor_protocol::{block_on, ExecutorRequest, ExecutorResponse, LocalTransport, Transport};
-use matrix_ir::{Graph, TensorId};
-use matrix_runtime::{
-    Profiler, Runtime, SpecCache, SpecRouter, SpecialisationPolicy, SpecKey, ShapeClass, RangeClass,
-};
+use matrix_ir::{Graph, Op, TensorId};
+use matrix_runtime::{DefaultPolicy, Profiler, Runtime, SpecCache, SpecRouter};
 use std::cell::Cell;
+use std::collections::HashMap;
 #[cfg(feature = "metal-backend")]
 use std::collections::HashSet;
 use std::sync::OnceLock;
@@ -144,65 +143,6 @@ fn metal_backend() -> Option<&'static MetalBackend> {
 // objects; cheap, but doing it once instead of per-call keeps the
 // hot path tight.
 
-/// How many invocations must accumulate against a (graph_subhash,
-/// op_index) pair before image-gpu-core asks the backend to specialise.
-///
-/// Spec MX05 §"Threshold rationale" calls for 1000 in production.
-/// We use a much lower number here because:
-///
-///  - This file's specialisation is **observation-only** in V1.  The
-///    cache fills, but the dispatch path doesn't yet consume the
-///    handle (that needs an executor-protocol extension — Phase 4.1).
-///    Lowering the threshold makes the wiring visible in CLI demos
-///    and tests without requiring a thousand back-to-back filter
-///    calls.
-///  - Once dispatch actually runs specialised kernels, this threshold
-///    will rise back toward 1000 to match the spec defaults.  For now
-///    the cost of "specialising too eagerly" is a few extra HashMap
-///    inserts; not a real performance hit.
-const HOTNESS_THRESHOLD: u64 = 100;
-
-/// Custom `SpecialisationPolicy` for image-gpu-core that fires on
-/// raw invocation count alone — no tensor-observation requirement.
-///
-/// `DefaultPolicy` is stricter: it requires either a constant-input
-/// or a narrowable-range observation to fire.  Building those
-/// observations needs `Profiler::sample_tensor` calls during dispatch
-/// (Phase 2a's API), which `drive_specialisation` doesn't yet do
-/// (would need to thread tensor bytes through this layer; out of
-/// scope for the V4 wiring).
-///
-/// Until that's wired, `HotPolicy` is the simplest thing that fires
-/// the Specialiser at all.  It emits a `SpecKey` with
-/// `ShapeClass::Dynamic` + `RangeClass::Unknown` — coarsest possible,
-/// but sufficient to demonstrate the cache rising above zero in the
-/// demo.  Phase 4.2 will replace this with `DefaultPolicy` once
-/// `drive_specialisation` is sampling tensor bytes.
-struct HotPolicy {
-    threshold: u64,
-}
-
-impl SpecialisationPolicy for HotPolicy {
-    fn should_specialise(
-        &self,
-        observation: &matrix_runtime::ProfileObservation,
-        op_kind: u8,
-        output_dtype: matrix_ir::DType,
-        backend_id: u32,
-    ) -> Option<SpecKey> {
-        if observation.invocation_count < self.threshold {
-            return None;
-        }
-        Some(SpecKey {
-            op_kind,
-            dtype: output_dtype,
-            shape_class: ShapeClass::Dynamic,
-            range_class: RangeClass::Unknown,
-            backend_id,
-        })
-    }
-}
-
 fn profiler() -> &'static Profiler {
     static SLOT: OnceLock<Profiler> = OnceLock::new();
     SLOT.get_or_init(Profiler::new)
@@ -211,16 +151,13 @@ fn profiler() -> &'static Profiler {
 fn spec_router() -> &'static SpecRouter {
     static SLOT: OnceLock<SpecRouter> = OnceLock::new();
     SLOT.get_or_init(|| {
+        // Phase 4.2: drive_specialisation now samples tensor bytes
+        // from `placed.constants[*]` so `DefaultPolicy`'s constant-
+        // input check has real observations to act on.  The threshold
+        // returns to spec MX05's default (1000 invocations).
         SpecRouter::new(
-            Box::new(HotPolicy {
-                threshold: HOTNESS_THRESHOLD,
-            }),
+            Box::new(DefaultPolicy::new()),
             SpecCache::default_capacity(),
-            // Phase 4 minimum-viable: install matrix-cpu's
-            // CpuSpecialiser instead of NoopSpecialiser.  The kernel
-            // handle is opaque to dispatch (still no executor-protocol
-            // extension); but the cache visibly fills, which is the
-            // promise the spec made for this milestone.
             matrix_cpu::specialiser(),
         )
     })
@@ -240,10 +177,11 @@ pub fn profiler_observations() -> Vec<matrix_runtime::ProfileObservation> {
 
 /// How many specialised kernels the process-wide cache currently
 /// holds.  Phase 4 wired `matrix_cpu::CpuSpecialiser` in front of
-/// this cache, so the count rises above zero once a `(graph_subhash,
-/// op_index)` pair crosses the [`HOTNESS_THRESHOLD`] (100 invocations
-/// in V1; will return to spec MX05's 1000 default once dispatch
-/// actually consumes the specialised kernels in Phase 4.1).
+/// this cache and Phase 4.2 (this module) added per-tensor sampling
+/// so `DefaultPolicy` fires properly.  After a graph crosses 1000
+/// invocations and at least one of its op-input constants meets the
+/// 95%-stability bar, this number rises by one cache entry per
+/// distinct `SpecKey`.
 pub fn spec_cache_len() -> usize {
     spec_router().cache_len()
 }
@@ -251,48 +189,99 @@ pub fn spec_cache_len() -> usize {
 /// Drive the MX05 specialisation pipeline for one placed graph:
 ///
 /// 1. Bump per-op invocation counters via `Profiler::record_dispatch`.
-/// 2. Build a `ProfileObservation` per Compute op and pass it to
+/// 2. Sample bytes from every constant input the graph has — this
+///    populates `ProfileObservation::tensor_observations` so the
+///    `DefaultPolicy`'s constant-input / narrowing checks have data
+///    to act on.  Without this step, V1 had to fall back to a
+///    `HotPolicy` that fired on raw invocation count alone.
+/// 3. Build a `ProfileObservation` per Compute op and pass it to
 ///    `SpecRouter::route` along with op metadata.  Discard the
-///    return — V1 always gets `None` from the no-op specialiser.
+///    return — V1 still doesn't dispatch via specialised kernels
+///    (that's Phase 4.1 + an executor-protocol extension); the
+///    return only populates the cache.
 ///
-/// Pure observation work; no behavioural change to the dispatch
-/// itself.  Returns no value.
+/// Pure observation work; no behavioural change to the dispatch.
+/// Cost: O(constants × bytes-per-constant) on each call, capped by
+/// the 16 MiB per-tensor limit (so ≤ a few MB scanned per dispatch).
 fn drive_specialisation(placed: &ComputeGraph) {
     let p = profiler();
     p.record_dispatch(placed);
 
-    let r = spec_router();
     let subhash = Profiler::subhash(placed);
 
+    // ── Tensor-byte sampling ──
+    //
+    // Build a TensorId → &PlacedConstant map for tensors that are
+    // Const ops' outputs.  Any subsequent Compute op reading one of
+    // those tensors as an input is reading a constant value; we
+    // sample the bytes and attribute the observation to the
+    // consuming op's input slot.
+    let mut const_outputs: HashMap<TensorId, &PlacedConstant> = HashMap::new();
+    for op in placed.ops.iter() {
+        if let PlacedOp::Compute {
+            op: Op::Const { constant, output },
+            ..
+        } = op
+        {
+            if let Some(c) = placed.constants.get(*constant as usize) {
+                const_outputs.insert(*output, c);
+            }
+        }
+    }
+    for (op_idx, pop) in placed.ops.iter().enumerate() {
+        if let PlacedOp::Compute { op: ir_op, .. } = pop {
+            // Skip Const ops themselves; they're the *source* of the
+            // observations, not consumers.  Sampling their inputs is
+            // a no-op (Const has no inputs).
+            if matches!(ir_op, Op::Const { .. }) {
+                continue;
+            }
+            for (slot, in_id) in ir_op.inputs().iter().enumerate() {
+                if let Some(c) = const_outputs.get(in_id) {
+                    if let Some(t) = placed.tensor(*in_id) {
+                        p.sample_tensor(
+                            subhash,
+                            op_idx as u32,
+                            slot as u32,
+                            true, // is_input
+                            t.dtype,
+                            &c.bytes,
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    // ── Route per Compute op ──
+    let r = spec_router();
     // Observations() returns every cached observation; index by
-    // (subhash, op_index) so the per-op router calls below are O(n)
-    // total rather than O(n²).
+    // op_index so the per-op router calls below are O(n) total
+    // rather than O(n²).
     let obs = p.observations();
-    let mut by_op: std::collections::HashMap<u32, &matrix_runtime::ProfileObservation> =
-        std::collections::HashMap::new();
+    let mut by_op: HashMap<u32, &matrix_runtime::ProfileObservation> = HashMap::new();
     for o in &obs {
         if o.graph_subhash == subhash {
             by_op.insert(o.op_index, o);
         }
     }
-
     for (op_idx, pop) in placed.ops.iter().enumerate() {
-        if let PlacedOp::Compute { op: ir_op, executor, .. } = pop {
+        if let PlacedOp::Compute {
+            op: ir_op,
+            executor,
+            ..
+        } = pop
+        {
             let key = op_idx as u32;
             let observation = match by_op.get(&key) {
                 Some(o) => *o,
                 None => continue,
             };
-            // Output dtype: look up in the placed graph's tensor
-            // table by the op's output tensor id.
             let out_id = ir_op.output();
             let out_dtype = match placed.tensor(out_id) {
                 Some(t) => t.dtype,
                 None => continue,
             };
-            // Discard the return — V1 noop specialiser declines every
-            // key.  Phase 4 will use the returned `SpecialisedKernel`
-            // to dispatch a specialised kernel handle to the backend.
             let _ = r.route(observation, ir_op.wire_tag(), out_dtype, executor.0);
         }
     }
@@ -613,42 +602,67 @@ mod tests {
         );
     }
 
-    /// MX05 Phase 4 end-to-end visibility test.  Drives `gpu_invert`
-    /// past the `HOTNESS_THRESHOLD` and asserts that
-    /// [`spec_cache_len`] rises above zero — the first place in
-    /// `image-gpu-core`'s test suite where the cache is observably
-    /// non-empty after a real dispatch path.
+    /// MX05 Phase 4.2 end-to-end visibility test.  Drives `gpu_invert`
+    /// past the spec MX05 default 1000-invocation threshold and
+    /// asserts that [`spec_cache_len`] rises above zero.
     ///
-    /// Up to V4 the assertion was `cache_len == 0` (NoopSpecialiser).
-    /// With CpuSpecialiser installed and HotPolicy(threshold=100), a
-    /// few hundred invocations of any graph populate at least one
-    /// cache entry per Compute op in the graph.
+    /// Up to V4.1 (PR #2165) image-gpu-core used a custom HotPolicy
+    /// at threshold 100 because `drive_specialisation` didn't yet
+    /// sample tensor bytes — `DefaultPolicy`'s constant-input check
+    /// requires `observed_min == observed_max` on at least one input
+    /// tensor, which means somebody has to call `Profiler::sample_tensor`.
+    /// Phase 4.2 adds that sampling, so we can switch back to
+    /// `DefaultPolicy::new()` (threshold 1000, stability 0.95) and
+    /// the cache still fills — now backed by real constant-input
+    /// observations rather than just hotness.
     #[test]
-    fn cpu_specialiser_populates_cache_after_hotness_threshold() {
+    fn default_policy_populates_cache_via_constant_input_sampling() {
         use crate::{gpu_invert, spec_cache_len};
         use pixel_container::PixelContainer;
 
-        // Drive enough dispatches to push every Compute op in
-        // gpu_invert's graph past HOTNESS_THRESHOLD (100).
         let mut img = PixelContainer::new(2, 2);
         img.fill(10, 20, 30, 255);
 
-        // Snapshot cache len at the start so we measure delta across
-        // this test.  Other tests in this file may have already
-        // populated some entries.
         let before = spec_cache_len();
 
-        for _ in 0..150 {
+        // Drive past the default threshold of 1000 invocations.  Each
+        // gpu_invert call is fast (small graph, CPU dispatch);
+        // 1100 iterations runs in <100 ms on commodity hardware.
+        for _ in 0..1100 {
             let _ = gpu_invert(&img).unwrap();
         }
 
         let after = spec_cache_len();
         assert!(
             after > before,
-            "expected spec cache to grow after 150 gpu_invert calls; \
+            "expected spec cache to grow after 1100 gpu_invert calls under DefaultPolicy; \
              before = {}, after = {}",
             before,
             after
+        );
+    }
+
+    /// Phase 4.2 also makes `tensor_observations` actually populated
+    /// (was always empty in earlier phases).  This test confirms that
+    /// driving a single dispatch records at least one input
+    /// observation with a stable min/max (which is the signal
+    /// `DefaultPolicy` reads).
+    #[test]
+    fn drive_specialisation_populates_tensor_observations() {
+        use crate::{gpu_invert, profiler_observations};
+        use pixel_container::PixelContainer;
+
+        let mut img = PixelContainer::new(2, 2);
+        img.fill(10, 20, 30, 255);
+
+        let _ = gpu_invert(&img).unwrap();
+
+        let obs = profiler_observations();
+        let total_tensor_observations: usize =
+            obs.iter().map(|o| o.tensor_observations.len()).sum();
+        assert!(
+            total_tensor_observations > 0,
+            "expected at least one TensorObservation populated after gpu_invert; got 0"
         );
     }
 }

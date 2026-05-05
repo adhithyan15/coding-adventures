@@ -242,6 +242,18 @@ The compile happens in a background worker thread so live dispatches
 aren't blocked.  Once ready, the specialised pipeline is inserted
 into the cache.
 
+> **Implementation status (Phase 4.2 landed — tensor-byte sampling, DefaultPolicy fires)**:
+> `image_gpu_core::pipeline::drive_specialisation` now samples bytes
+> from every constant input the graph carries via
+> `Profiler::sample_tensor`, walking `placed.ops` once to build a
+> `TensorId → &PlacedConstant` map, then attributing each consuming
+> op's input slot.  This populates `ProfileObservation::tensor_observations`
+> (which was always empty in earlier phases) and lets the production
+> `DefaultPolicy` fire on real constant-input observations.  The
+> temporary `HotPolicy` workaround from Phase 4 visibility is gone;
+> the threshold returns to the spec's 1000-invocation default and
+> `spec_cache_len()` still rises after enough invocations.
+
 > **Implementation status (Phase 4 visibility landed — image-gpu-core wired)**:
 > `image-gpu-core::pipeline` now installs `matrix_cpu::specialiser()`
 > in front of its process-wide `SpecRouter`, plus a small custom
