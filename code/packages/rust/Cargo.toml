@@ -5,6 +5,7 @@ members = [
     "aarch64-encoder",
     "twig-aot",
     "nib-iir-compiler",
+    "jit-loader-macos",
     "activation-functions",
     "audio-device-coreaudio",
     "audio-device-sink",
