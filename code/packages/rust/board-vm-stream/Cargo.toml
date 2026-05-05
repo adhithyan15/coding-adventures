@@ -1,0 +1,15 @@
+[package]
+name = "board-vm-stream"
+version = "0.1.0"
+edition = "2021"
+description = "COBS byte-stream transport adapter for Board VM host clients"
+
+[dependencies]
+board-vm-client = { path = "../board-vm-client" }
+board-vm-protocol = { path = "../board-vm-protocol" }
+
+[dev-dependencies]
+board-vm-loopback = { path = "../board-vm-loopback" }
+
+[lib]
+path = "src/lib.rs"
