@@ -620,13 +620,29 @@ impl VmConnection for TcpVmConnection {
             return Ok(Some(ev));
         }
         match self.read_line_capped() {
-            Ok(s) if s.is_empty() => Err("vm closed connection".into()),
+            // VM closed the socket cleanly between frames.  This is the
+            // expected flow when a program runs to completion without
+            // any breakpoints — twig-vm finishes, drops the listener,
+            // and the FIN arrives.  Surface it as a clean exit so the
+            // dispatch loop emits `exited` + `terminated` and the editor
+            // ends the session normally.  Without this branch the
+            // adapter prints `vm read: unexpected EOF` on stderr and
+            // exits 1, which VS Code reports as "Invalid debug adapter".
+            Ok(s) if s.is_empty() => Ok(Some(StoppedEvent::Exited { exit_code: 0 })),
             Ok(s) => {
                 let v: Value = serde_json::from_str(s.trim_end())
                     .map_err(|e| format!("vm sent invalid JSON: {e}"))?;
                 Ok(parse_event_value(&v))
             }
             Err(TcpError::Timeout { .. }) => Ok(None),
+            // Same as the empty-line branch above, but the close happened
+            // mid-frame (VM exited while we were waiting for the next
+            // event byte).  `read_exact(1)` returns `UnexpectedEof` on a
+            // half-open socket — that's the most common shape of a
+            // graceful VM exit.
+            Err(TcpError::UnexpectedEof { .. }) => {
+                Ok(Some(StoppedEvent::Exited { exit_code: 0 }))
+            }
             Err(e) => Err(format!("vm read: {e}")),
         }
     }

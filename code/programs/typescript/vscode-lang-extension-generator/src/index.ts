@@ -363,6 +363,14 @@ export function buildPackageJson(opts: GeneratorOptions): string {
   };
   if (grammars) contributes.grammars = grammars;
   if (debuggers) contributes.debuggers = debuggers;
+  // contributes.breakpoints — opt the language into VS Code's
+  // breakpoint UI.  Without this, the gutter doesn't show breakpoint
+  // dots when the user clicks, even if a debugger is contributed —
+  // VS Code only allows breakpoints in languages that explicitly
+  // declare support here.  Required whenever a DAP adapter is wired.
+  if (hasDap) {
+    contributes.breakpoints = [{ language: id }];
+  }
   contributes.configuration = {
     title: opts.languageName,
     properties: configurationProperties,

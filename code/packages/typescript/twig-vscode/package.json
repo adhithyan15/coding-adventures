@@ -73,6 +73,11 @@
         ]
       }
     ],
+    "breakpoints": [
+      {
+        "language": "twig"
+      }
+    ],
     "configuration": {
       "title": "Twig",
       "properties": {

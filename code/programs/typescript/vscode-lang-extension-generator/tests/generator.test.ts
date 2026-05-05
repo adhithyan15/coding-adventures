@@ -374,6 +374,17 @@ describe("buildPackageJson", () => {
     expect(withoutDap.contributes.debuggers).toBeUndefined();
   });
 
+  // Regression: VS Code only allows the user to set breakpoints in a
+  // file when the language declares `contributes.breakpoints`.  Without
+  // it, gutter clicks do nothing — the user sees an apparent dead UI.
+  // Required whenever the extension contributes a debugger.
+  it("emits contributes.breakpoints when DAP wired", () => {
+    const withDap = JSON.parse(buildPackageJson(fullOpts()));
+    const withoutDap = JSON.parse(buildPackageJson(lspOnlyOpts()));
+    expect(withDap.contributes.breakpoints).toEqual([{ language: "twig" }]);
+    expect(withoutDap.contributes.breakpoints).toBeUndefined();
+  });
+
   it("declares vscode-languageclient only when LSP wired", () => {
     const withLsp = JSON.parse(buildPackageJson(fullOpts()));
     const withoutLsp = JSON.parse(buildPackageJson(dapOnlyOpts()));
