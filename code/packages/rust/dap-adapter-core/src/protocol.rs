@@ -30,6 +30,25 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
 // ---------------------------------------------------------------------------
+// DoS guards
+// ---------------------------------------------------------------------------
+
+/// Maximum acceptable `Content-Length` value, in bytes.
+///
+/// Real-world DAP messages are typically < 64 KiB; 16 MiB is well above any
+/// legitimate usage and well below "memory exhaustion".  A peer that
+/// advertises a larger body is rejected before any allocation occurs,
+/// mitigating the trivial OOM-DoS where a malicious peer sends
+/// `Content-Length: 9999999999999`.
+pub const MAX_BODY_BYTES: usize = 16 * 1024 * 1024;
+
+/// Maximum bytes consumed by the `Content-Length` + other headers, combined.
+///
+/// 8 KiB is far above the longest legitimate DAP header section.  Bounds the
+/// "stream infinite header lines" DoS variant.
+pub const MAX_HEADER_BYTES: usize = 8 * 1024;
+
+// ---------------------------------------------------------------------------
 // Framing — read_message / write_message
 // ---------------------------------------------------------------------------
 
@@ -37,6 +56,13 @@ use serde_json::Value;
 ///
 /// Returns the JSON body of the message.  The framing header is consumed
 /// and discarded.  An EOF before any header is reported as `Err("eof")`.
+///
+/// ## DoS protections
+///
+/// - The total bytes consumed by header lines is capped at
+///   [`MAX_HEADER_BYTES`].
+/// - The body length advertised by `Content-Length` is rejected before
+///   allocation if it exceeds [`MAX_BODY_BYTES`].
 pub fn read_message(reader: &mut dyn BufRead) -> Result<Value, String> {
     // ----- 1. Read headers ---------------------------------------------
     //
@@ -44,12 +70,19 @@ pub fn read_message(reader: &mut dyn BufRead) -> Result<Value, String> {
     // (DAP defines no other required header).  A blank line ends the
     // header block.
     let mut content_length: Option<usize> = None;
+    let mut header_bytes_consumed: usize = 0;
     loop {
         let mut line = String::new();
         let n = reader.read_line(&mut line)
             .map_err(|e| format!("read header: {e}"))?;
         if n == 0 {
             return Err("eof".into());
+        }
+        header_bytes_consumed = header_bytes_consumed.saturating_add(n);
+        if header_bytes_consumed > MAX_HEADER_BYTES {
+            return Err(format!(
+                "header section exceeds {MAX_HEADER_BYTES} bytes"
+            ));
         }
         // Strip trailing \r\n (or \n).
         let line = line.trim_end_matches(['\r', '\n']);
@@ -67,8 +100,15 @@ pub fn read_message(reader: &mut dyn BufRead) -> Result<Value, String> {
         // Other headers (Content-Type) are ignored.
     }
     let n = content_length.ok_or("missing Content-Length header")?;
+    if n > MAX_BODY_BYTES {
+        return Err(format!(
+            "Content-Length {n} exceeds {MAX_BODY_BYTES}-byte cap"
+        ));
+    }
 
     // ----- 2. Read exactly N bytes for the body ------------------------
+    //
+    // Allocation is safe because we already capped `n` above.
     let mut buf = vec![0u8; n];
     reader.read_exact(&mut buf).map_err(|e| format!("read body: {e}"))?;
 
@@ -311,5 +351,39 @@ mod tests {
         let req = DapRequest::from_value(v).unwrap();
         assert_eq!(req.command, "disconnect");
         assert!(req.arguments.is_null());
+    }
+
+    // ---- DoS guards ---------------------------------------------------
+
+    #[test]
+    fn read_rejects_content_length_above_cap() {
+        // Build a header advertising MAX_BODY_BYTES + 1.
+        let huge = MAX_BODY_BYTES + 1;
+        let raw = format!("Content-Length: {huge}\r\n\r\n");
+        let mut reader = BufReader::new(Cursor::new(raw.into_bytes()));
+        let err = read_message(&mut reader).unwrap_err();
+        assert!(err.contains("exceeds"), "got: {err}");
+    }
+
+    #[test]
+    fn read_rejects_runaway_header_section() {
+        // Stream MAX_HEADER_BYTES+1 worth of "X-Pad: a\r\n" lines
+        // before any Content-Length.
+        let line = "X-Pad: a\r\n";
+        let count = (MAX_HEADER_BYTES / line.len()) + 2;
+        let raw: String = line.repeat(count);
+        let mut reader = BufReader::new(Cursor::new(raw.into_bytes()));
+        let err = read_message(&mut reader).unwrap_err();
+        assert!(err.contains("header"));
+    }
+
+    #[test]
+    fn read_accepts_legitimate_size() {
+        // 1 KiB body — well under the cap.
+        let body = serde_json::json!({"seq": 1, "type": "request", "command": "x"});
+        let mut buf = Vec::new();
+        write_message(&mut buf, &body).unwrap();
+        let mut reader = BufReader::new(Cursor::new(buf));
+        assert_eq!(read_message(&mut reader).unwrap(), body);
     }
 }

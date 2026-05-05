@@ -45,11 +45,30 @@
 //! ```
 
 use std::collections::VecDeque;
+use std::net::IpAddr;
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
 use serde_json::{json, Value};
 use tcp_client::{connect, ConnectOptions, TcpConnection, TcpError};
+
+// ---------------------------------------------------------------------------
+// DoS / SSRF guards
+// ---------------------------------------------------------------------------
+
+/// Maximum bytes accepted for a single line on the VM TCP socket.
+///
+/// A buggy or malicious VM that streams data without ever emitting `\n` would
+/// otherwise drive `read_line` into an unbounded `String` allocation.  64 KiB
+/// is far above any legitimate VM message and well below memory exhaustion.
+pub const MAX_VM_LINE_BYTES: usize = 64 * 1024;
+
+/// Maximum number of [`StoppedEvent`]s buffered between `poll_event` calls.
+///
+/// If a VM streams events faster than the adapter can drain them, `rpc()`
+/// would queue them indefinitely.  Capping protects against memory blow-up
+/// and surfaces a clear error to the user.
+pub const MAX_PENDING_EVENTS: usize = 10_000;
 
 // ---------------------------------------------------------------------------
 // Core types
@@ -344,6 +363,7 @@ impl VmConnection for MockVmConnection {
 /// "no event yet" case.  Synchronous command responses are expected to arrive
 /// well within this window; if a response takes longer the read loop simply
 /// retries until the configured response deadline.
+#[derive(Debug)]
 pub struct TcpVmConnection {
     conn: TcpConnection,
     pending_events: VecDeque<StoppedEvent>,
@@ -388,7 +408,26 @@ impl TcpVmConnection {
     /// VMs typically need a few hundred milliseconds to fully initialise
     /// their debug server after `launch_vm` returns; this method hides that
     /// race from the DAP server's `launch` handler.
+    ///
+    /// ## SSRF guard — loopback only
+    ///
+    /// The VM debug server **must** listen on a loopback address.  A
+    /// non-loopback `host` (e.g. `"169.254.169.254"`, an internal hostname,
+    /// or a public IP) is rejected before any DNS or connect attempt — this
+    /// prevents a malicious or buggy [`LanguageDebugAdapter`] from steering
+    /// the adapter into making outbound connections that would leak the
+    /// debugged program's variable values to a third party.
     pub fn connect_with_retry(opts: TcpConnectOptions) -> Result<Self, String> {
+        // Reject anything that doesn't parse as a loopback IP.  We do not
+        // accept hostnames here on purpose — DNS introduces a TOCTOU window
+        // where a hostname could resolve to a different address on each
+        // attempt.
+        let ip: IpAddr = opts.host.parse()
+            .map_err(|e| format!("vm host must be a literal IP, got '{}': {e}", opts.host))?;
+        if !ip.is_loopback() {
+            return Err(format!("vm host must be loopback, got {ip}"));
+        }
+
         let deadline = Instant::now() + Duration::from_millis(opts.connect_budget_ms);
         let mut backoff = Duration::from_millis(50);
 
@@ -420,10 +459,49 @@ impl TcpVmConnection {
         }
     }
 
+    /// Read one line of at most [`MAX_VM_LINE_BYTES`] bytes (newline included).
+    ///
+    /// Reads one byte at a time from the underlying buffered TCP connection.
+    /// The per-byte cost is dominated by `tcp-client`'s 8 KiB `BufReader`,
+    /// so legitimate lines complete in well under a millisecond — the cost
+    /// of the loop is only paid when a peer is misbehaving.
+    fn read_line_capped(&mut self) -> Result<String, TcpError> {
+        let mut buf: Vec<u8> = Vec::with_capacity(256);
+        loop {
+            if buf.len() >= MAX_VM_LINE_BYTES {
+                // Synthesise an IO error so callers can match on it.
+                return Err(TcpError::IoError(std::io::Error::new(
+                    std::io::ErrorKind::InvalidData,
+                    format!("vm line exceeded {MAX_VM_LINE_BYTES} bytes"),
+                )));
+            }
+            let one = self.conn.read_exact(1)?;
+            buf.push(one[0]);
+            if one[0] == b'\n' {
+                break;
+            }
+            if one[0] == 0 {
+                // Treat NUL early-terminator from a closed pipe.
+                break;
+            }
+        }
+        String::from_utf8(buf)
+            .map_err(|e| TcpError::IoError(std::io::Error::new(
+                std::io::ErrorKind::InvalidData, format!("vm line not utf-8: {e}"),
+            )))
+    }
+
     /// Send one JSON command and return the first non-event response.
     ///
     /// Events that arrive on the wire while we wait for the response are
     /// queued in `pending_events` and surface through `poll_event` later.
+    ///
+    /// ## DoS protections
+    /// - The deadline is checked at the top of *every* iteration, regardless
+    ///   of whether the previous read succeeded — a malicious VM cannot
+    ///   starve the response by streaming events forever.
+    /// - `pending_events` is capped at [`MAX_PENDING_EVENTS`].
+    /// - Each line read is capped at [`MAX_VM_LINE_BYTES`].
     fn rpc(&mut self, cmd: Value) -> Result<Value, String> {
         // ----- 1. Send command line ----------------------------------------
         let mut line = serde_json::to_string(&cmd)
@@ -435,14 +513,15 @@ impl TcpVmConnection {
         // ----- 2. Read until a non-event response arrives ------------------
         let deadline = Instant::now() + self.response_deadline;
         loop {
-            let raw = match self.conn.read_line() {
+            // Deadline is checked unconditionally each iteration so a
+            // malicious VM cannot starve our response with infinite events.
+            if Instant::now() >= deadline {
+                return Err("vm response timeout".into());
+            }
+
+            let raw = match self.read_line_capped() {
                 Ok(s) => s,
-                Err(TcpError::Timeout { .. }) => {
-                    if Instant::now() >= deadline {
-                        return Err("vm response timeout".into());
-                    }
-                    continue;
-                }
+                Err(TcpError::Timeout { .. }) => continue,
                 Err(e) => return Err(format!("vm read: {e}")),
             };
             if raw.is_empty() {
@@ -452,6 +531,11 @@ impl TcpVmConnection {
                 .map_err(|e| format!("vm sent invalid JSON: {e}"))?;
             if v.get("event").is_some() {
                 if let Some(ev) = parse_event_value(&v) {
+                    if self.pending_events.len() >= MAX_PENDING_EVENTS {
+                        return Err(format!(
+                            "vm flooded {MAX_PENDING_EVENTS} pending events; closing"
+                        ));
+                    }
                     self.pending_events.push_back(ev);
                 }
                 continue;
@@ -535,7 +619,7 @@ impl VmConnection for TcpVmConnection {
         if let Some(ev) = self.pending_events.pop_front() {
             return Ok(Some(ev));
         }
-        match self.conn.read_line() {
+        match self.read_line_capped() {
             Ok(s) if s.is_empty() => Err("vm closed connection".into()),
             Ok(s) => {
                 let v: Value = serde_json::from_str(s.trim_end())
@@ -747,5 +831,51 @@ mod tests {
         assert!(res.is_err());
         // Verify we didn't loop forever.
         assert!(started.elapsed() < Duration::from_secs(2));
+    }
+
+    // ---- SSRF guard tests -------------------------------------------------
+
+    #[test]
+    fn tcp_connect_rejects_non_loopback_ip() {
+        // Non-loopback IPv4 — must be rejected before any DNS or connect.
+        let opts = TcpConnectOptions {
+            host: "169.254.169.254".to_string(), // cloud metadata IP
+            port: 80,
+            ..TcpConnectOptions::default()
+        };
+        let started = std::time::Instant::now();
+        let err = TcpVmConnection::connect_with_retry(opts).unwrap_err();
+        assert!(err.contains("loopback"), "got: {err}");
+        // Must reject without ever attempting a connect (within ~10ms).
+        assert!(started.elapsed() < Duration::from_millis(100));
+    }
+
+    #[test]
+    fn tcp_connect_rejects_hostname() {
+        // Hostnames are rejected — DNS introduces a TOCTOU window.
+        let opts = TcpConnectOptions {
+            host: "localhost".to_string(),
+            port: 1,
+            ..TcpConnectOptions::default()
+        };
+        let err = TcpVmConnection::connect_with_retry(opts).unwrap_err();
+        assert!(err.contains("literal IP"), "got: {err}");
+    }
+
+    #[test]
+    fn tcp_connect_accepts_ipv6_loopback() {
+        // ::1 is loopback and must be accepted (the connect itself will fail
+        // since nothing is listening, but the SSRF guard must let it through).
+        let opts = TcpConnectOptions {
+            host: "::1".to_string(),
+            port: 1,
+            connect_budget_ms: 100,
+            per_attempt_ms: 50,
+            ..TcpConnectOptions::default()
+        };
+        let err = TcpVmConnection::connect_with_retry(opts).unwrap_err();
+        // The SSRF guard let us past — the error is now a connect error,
+        // not a "must be loopback" error.
+        assert!(!err.contains("loopback"), "got: {err}");
     }
 }
