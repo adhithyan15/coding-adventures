@@ -119,6 +119,34 @@ def test_cli_commit_requires_ad_hoc_query(
     assert "--commit requires at least one --query" in capsys.readouterr().err
 
 
+@pytest.mark.parametrize(
+    "compile_only_flag",
+    [
+        "--check",
+        "--dump-bytecode",
+        "--dump-instructions",
+        "--dump-source-metadata",
+        "--list-source-queries",
+    ],
+)
+def test_cli_limit_rejects_compile_only_modes(
+    compile_only_flag: str,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart). ?- parent(homer, Who).",
+        compile_only_flag,
+        "--limit",
+        "1",
+    ])
+
+    assert status == 2
+    assert f"--limit cannot be combined with {compile_only_flag}" in (
+        capsys.readouterr().err
+    )
+
+
 def test_cli_check_compiles_source_without_queries(
     capsys: pytest.CaptureFixture[str],
 ) -> None:

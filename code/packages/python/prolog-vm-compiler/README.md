@@ -319,6 +319,10 @@ queries and the CLI should run them as a script. The command prints or emits
 one result record per source query, sets `source_query_index` in JSON formats,
 and exits nonzero if any embedded query has no answers.
 
+Use `--limit` on query-running modes to cap the number of answers printed per
+query. It is rejected for compile-only diagnostic modes because those modes do
+not enumerate answers.
+
 Use `--commit` only with one or more ad-hoc `--query` flags. It persists the
 first answer state from those query flags into later query flags or an
 interactive loop, but it is rejected when no ad-hoc query is supplied.
