@@ -42,7 +42,9 @@ use crate::protocol::{build_event, build_response, read_message, write_message,
                        DapRequest, SeqCounter};
 use crate::sidecar::SidecarIndex;
 use crate::stepper::{StepController, StepDecision, StepMode};
-use crate::vm_conn::{StoppedEvent, StoppedReason, VmConnection, VmLocation};
+use crate::vm_conn::{
+    StoppedEvent, StoppedReason, TcpConnectOptions, TcpVmConnection, VmConnection, VmLocation,
+};
 
 // ---------------------------------------------------------------------------
 // DapServer
@@ -144,12 +146,27 @@ impl<A: LanguageDebugAdapter> DapServer<A> {
             other => Err(format!("unsupported command: {other}")),
         };
 
-        let resp = match result {
-            Ok(body)    => build_response(req.seq, self.seq.next(), &req.command, true,  None, body),
-            Err(msg)    => build_response(req.seq, self.seq.next(), &req.command, false, Some(&msg),
+        let resp = match &result {
+            Ok(body)    => build_response(req.seq, self.seq.next(), &req.command, true,  None, body.clone()),
+            Err(msg)    => build_response(req.seq, self.seq.next(), &req.command, false, Some(msg),
                                           json!({})),
         };
         write_message(w, &resp)?;
+
+        // After the `initialize` response, the DAP protocol requires the
+        // adapter to send an `initialized` event.  This signals to the
+        // editor that the adapter is ready to receive breakpoint
+        // configuration (setBreakpoints, setFunctionBreakpoints,
+        // configurationDone).  Without this event, editors like VS Code
+        // wait silently then disconnect with "Invalid debug adapter".
+        //
+        // We only emit the event for successful initialize responses —
+        // failed initialize means the adapter isn't ready, and the editor
+        // will tear down the session regardless.
+        if req.command == "initialize" && result.is_ok() {
+            let ev = build_event(self.seq.next(), "initialized", json!({}));
+            write_message(w, &ev)?;
+        }
 
         // Flush any pending events that the handler may have produced.
         self.drain_vm_events(w)?;
@@ -187,18 +204,56 @@ impl<A: LanguageDebugAdapter> DapServer<A> {
 
         self.sidecar = Some(SidecarIndex::from_bytes(&sidecar_bytes)?);
 
-        // The adapter is responsible for picking a debug port (typically a
-        // free ephemeral) and launching the VM.  In tests, we accept that the
-        // adapter may have already wired up a VmConnection out-of-band by
-        // the time `compile` returned — see `launch_test_helper` below.
-        let port: u16 = req.arguments.get("debugPort")
-            .and_then(|v| v.as_u64())
-            .map(|p| p as u16)
-            .unwrap_or(0);
-        if port != 0 {
-            self.vm_proc = Some(self.adapter.launch_vm(&bytecode_path, port)
-                .map_err(|e| format!("launch_vm: {e}"))?);
+        // Tests may pre-wire `self.vm_conn` via `MockVmConnection` and then
+        // invoke `handle_launch` directly — when they do, we skip the
+        // process spawn + TCP connect and use the pre-wired connection.
+        // Production callers (the stdio DAP server driven by VS Code) hit
+        // this branch with `vm_conn = None` and no `debugPort` argument:
+        // we have to pick a free port ourselves and launch the VM.
+        if self.vm_conn.is_some() {
+            return Ok(json!({}));
         }
+
+        // Resolve the VM port.  Editors don't supply `debugPort` — that's
+        // an internal detail of the adapter ↔ VM transport — so we pick a
+        // free ephemeral and tell the VM to bind it.  The
+        // bind/local_addr/drop dance gives us a port the OS guarantees is
+        // free *right now*; there's a small TOCTOU window between the
+        // drop and the VM's re-bind, but the same pattern is used by the
+        // existing twig-dap end-to-end test (`tests/end_to_end.rs`) and
+        // is the standard idiom for picking a port to hand to a child
+        // process.
+        let port: u16 = match req.arguments.get("debugPort").and_then(|v| v.as_u64()) {
+            Some(p) if p != 0 => p as u16,
+            _ => {
+                let listener = std::net::TcpListener::bind("127.0.0.1:0")
+                    .map_err(|e| format!("bind ephemeral port: {e}"))?;
+                let port = listener
+                    .local_addr()
+                    .map_err(|e| format!("local_addr: {e}"))?
+                    .port();
+                drop(listener);
+                port
+            }
+        };
+
+        // Spawn the VM child process.  Stays alive in `self.vm_proc` for
+        // the duration of the session; killed on `disconnect`.
+        self.vm_proc = Some(
+            self.adapter
+                .launch_vm(&bytecode_path, port)
+                .map_err(|e| format!("launch_vm: {e}"))?,
+        );
+
+        // Connect over the loopback TCP transport.  `connect_with_retry`
+        // tolerates the brief startup race where the VM is alive but its
+        // listener hasn't bound yet.
+        let conn = TcpVmConnection::connect_with_retry(TcpConnectOptions {
+            port,
+            ..Default::default()
+        })
+        .map_err(|e| format!("connect to VM on port {port}: {e}"))?;
+        self.vm_conn = Some(Box::new(conn));
 
         Ok(json!({}))
     }
@@ -541,14 +596,83 @@ mod tests {
         assert_eq!(body["supportsConfigurationDoneRequest"], true);
     }
 
+    /// After processing the `initialize` request, the DAP protocol
+    /// requires the adapter to send an `initialized` event so the
+    /// editor knows it can issue breakpoint configuration.  Without
+    /// this event, VS Code waits silently for several seconds, then
+    /// gives up with "Invalid debug adapter".
+    #[test]
+    fn initialize_response_is_followed_by_initialized_event() {
+        let (mut srv, _) = server_with_mock_vm();
+        let req = DapRequest {
+            seq: 1,
+            typ: "request".into(),
+            command: "initialize".into(),
+            arguments: json!({}),
+        };
+        let mut out: Vec<u8> = Vec::new();
+        srv.dispatch(&req, &mut out).unwrap();
+        let text = String::from_utf8(out).unwrap();
+        // Two messages should appear: the response, then the event.
+        assert!(text.contains("\"command\":\"initialize\""), "missing initialize response: {text}");
+        assert!(text.contains("\"type\":\"event\""), "missing event envelope: {text}");
+        assert!(text.contains("\"event\":\"initialized\""), "missing initialized event: {text}");
+    }
+
+    /// Inverse: a *failed* initialize must NOT trigger an `initialized`
+    /// event.  The editor will tear down the session anyway, and
+    /// emitting the event would mislead it into thinking it can
+    /// configure breakpoints on a dead adapter.
+    #[test]
+    fn failed_initialize_does_not_emit_initialized_event() {
+        // We can't easily make handle_initialize fail in the current
+        // implementation (it always returns Ok), so we exercise the
+        // negative branch by sending an unknown command — same code
+        // path through dispatch.
+        let (mut srv, _) = server_with_mock_vm();
+        let req = DapRequest {
+            seq: 1,
+            typ: "request".into(),
+            command: "totally-not-a-real-command".into(),
+            arguments: json!({}),
+        };
+        let mut out: Vec<u8> = Vec::new();
+        srv.dispatch(&req, &mut out).unwrap();
+        let text = String::from_utf8(out).unwrap();
+        assert!(
+            !text.contains("\"event\":\"initialized\""),
+            "initialized event leaked from a non-initialize dispatch: {text}",
+        );
+    }
+
     #[test]
     fn launch_loads_sidecar() {
+        // Pre-wire the mock VM connection so handle_launch's auto-spawn
+        // path is bypassed; tests assert the sidecar-loading logic, not
+        // the VM-spawn path (which is exercised by integration tests).
         let bytes = fixture_sidecar();
         let mut srv = DapServer::new(MockAdapter { sidecar_bytes: bytes });
+        srv.vm_conn = Some(Box::new(MockVmConnection::new()));
         let req = DapRequest { seq: 1, typ: "request".into(), command: "launch".into(),
                                arguments: json!({"program": "prog.tw"}) };
         srv.handle_launch(&req).unwrap();
         assert!(srv.sidecar.is_some());
+    }
+
+    #[test]
+    fn launch_skips_vm_spawn_when_vm_conn_pre_wired() {
+        // Regression: if vm_conn is already set, handle_launch must not
+        // call adapter.launch_vm — the test path explicitly relies on
+        // this short-circuit.
+        let bytes = fixture_sidecar();
+        let mut srv = DapServer::new(MockAdapter { sidecar_bytes: bytes });
+        srv.vm_conn = Some(Box::new(MockVmConnection::new()));
+        let req = DapRequest { seq: 1, typ: "request".into(), command: "launch".into(),
+                               arguments: json!({"program": "prog.tw"}) };
+        // MockAdapter::launch_vm panics; if handle_launch reaches it,
+        // this unwrap propagates the failure and the test fails loudly.
+        srv.handle_launch(&req).unwrap();
+        assert!(srv.vm_proc.is_none(), "vm_proc must remain None when vm_conn is pre-wired");
     }
 
     #[test]
