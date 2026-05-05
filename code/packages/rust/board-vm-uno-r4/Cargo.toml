@@ -1,0 +1,12 @@
+[package]
+name = "board-vm-uno-r4"
+version = "0.1.0"
+edition = "2021"
+description = "Abstract Arduino Uno R4 target descriptor and HAL adapter for Board VM"
+
+[dependencies]
+board-vm-ir = { path = "../board-vm-ir" }
+board-vm-runtime = { path = "../board-vm-runtime" }
+
+[lib]
+path = "src/lib.rs"
