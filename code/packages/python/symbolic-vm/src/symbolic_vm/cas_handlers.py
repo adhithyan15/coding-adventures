@@ -143,7 +143,15 @@ from polynomial import (
     rational_roots as _poly_rational_roots,
 )
 from symbolic_ir import (
+    ACOS,
+    ACOSH,
     ADD,
+    ASIN,
+    ASINH,
+    ATAN,
+    ATANH,
+    COS,
+    COSH,
     DIV,
     EXP,
     LOG,
@@ -151,9 +159,13 @@ from symbolic_ir import (
     NEG,
     POW,
     PRODUCT,
+    SIN,
+    SINH,
     SQRT,
     SUB,
     SUM,
+    TAN,
+    TANH,
     IRApply,
     IRFloat,
     IRInteger,
@@ -2411,6 +2423,292 @@ def exp_handler(vm: VM, expr: IRApply) -> IRNode:
     return IRApply(expr.head, (arg,))
 
 
+# ---------------------------------------------------------------------------
+# Phase 31: Trig symmetry and arc-cancellation identities
+# ---------------------------------------------------------------------------
+# Each of the six primary trig/hyperbolic functions gets an algebraic handler
+# that overrides the numeric-only ``_elementary``-factory handler from
+# ``handlers.py``.  All numeric behaviour from the factory is preserved;
+# two families of algebraic rules are added on top:
+#
+#   A. Negation symmetry — detects ``Neg(inner)`` as the argument and applies
+#      the function's parity (odd → negate result, even → strip negation).
+#
+#   B. Arc-function cancellation — detects the corresponding inverse function
+#      as the argument and returns the inner expression directly.  This is
+#      purely structural: the presence of ``asin(x)`` in the argument already
+#      implies x ∈ [-1,1], ``atan(x)`` implies real domain, etc.
+#
+# Both rules recurse into the handler to handle chained negations and to
+# allow the numeric fold to fire after stripping negation.
+# ---------------------------------------------------------------------------
+
+
+def sin_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Sin(x)`` — sine with odd-symmetry and arc-cancellation rules.
+
+    Simplification rules (Phase 31)
+    --------------------------------
+    1. **Numeric fold**: integer / rational / float inputs evaluate via
+       ``math.sin``.  The special value ``Sin(0) → 0`` is subsumed by this.
+
+    2. **Odd symmetry** ``Sin(-x) → -Sin(x)``:
+       Sine is an odd function — ``sin(-x) = -sin(x)`` for all real ``x``.
+       Recursing into the handler means double negations collapse correctly:
+       ``sin(-(-x)) = sin(x)``.
+
+    3. **Arc-cancellation** ``Sin(Asin(x)) → x``:
+       ``asin`` maps ``[-1,1] → [-π/2, π/2]``; ``sin`` restricted to that
+       interval is the exact left inverse, so ``sin(asin(x)) = x``
+       unconditionally (structural identity).
+
+    4. **Everything else**: leave unevaluated as ``Sin(arg)``.
+
+    Examples::
+
+        sin(-x)      → Neg(Sin(x))     (odd symmetry)
+        sin(-(-x))   → Sin(x)          (double-neg collapses via recursion)
+        sin(asin(x)) → x               (arc-cancellation)
+        sin(0.5)     → IRFloat(≈0.479) (numeric fold)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1: numeric fold.  Preserve the exact special value sin(0) = 0.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(0)
+        return IRFloat(math.sin(float(n)))
+    # Rule 2: odd symmetry — sin(-x) = -sin(x).
+    if isinstance(arg, IRApply) and arg.head == NEG and len(arg.args) == 1:
+        inner_result = sin_handler(vm, IRApply(SIN, (arg.args[0],)))
+        return IRApply(NEG, (inner_result,))
+    # Rule 3: arc-cancellation — sin(asin(x)) = x.
+    if isinstance(arg, IRApply) and arg.head == ASIN and len(arg.args) == 1:
+        return arg.args[0]
+    # Rule 4: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def cos_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Cos(x)`` — cosine with even-symmetry and arc-cancellation rules.
+
+    Simplification rules (Phase 31)
+    --------------------------------
+    1. **Numeric fold**: integer / rational / float inputs evaluate via
+       ``math.cos``.  The special value ``Cos(0) → 1`` is subsumed by this.
+
+    2. **Even symmetry** ``Cos(-x) → Cos(x)``:
+       Cosine is an even function — ``cos(-x) = cos(x)`` for all real ``x``.
+       The negation is stripped and the handler recurses so that numeric fold
+       and further algebraic rules fire on the inner expression.
+
+    3. **Arc-cancellation** ``Cos(Acos(x)) → x``:
+       ``acos`` maps ``[-1,1] → [0, π]``; ``cos`` restricted to that interval
+       is the exact left inverse, so ``cos(acos(x)) = x`` unconditionally.
+
+    4. **Everything else**: leave unevaluated as ``Cos(arg)``.
+
+    Examples::
+
+        cos(-x)      → Cos(x)          (even symmetry, NEG stripped)
+        cos(-(-x))   → Cos(x)          (double-neg: strip both, same result)
+        cos(acos(x)) → x               (arc-cancellation)
+        cos(0.5)     → IRFloat(≈0.878) (numeric fold)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1: numeric fold.  Preserve the exact special value cos(0) = 1.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(1)
+        return IRFloat(math.cos(float(n)))
+    # Rule 2: even symmetry — cos(-x) = cos(x).
+    if isinstance(arg, IRApply) and arg.head == NEG and len(arg.args) == 1:
+        return cos_handler(vm, IRApply(COS, (arg.args[0],)))
+    # Rule 3: arc-cancellation — cos(acos(x)) = x.
+    if isinstance(arg, IRApply) and arg.head == ACOS and len(arg.args) == 1:
+        return arg.args[0]
+    # Rule 4: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def tan_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Tan(x)`` — tangent with odd-symmetry and arc-cancellation rules.
+
+    Simplification rules (Phase 31)
+    --------------------------------
+    1. **Numeric fold**: integer / rational / float inputs evaluate via
+       ``math.tan``.  The special value ``Tan(0) → 0`` is subsumed by this.
+
+    2. **Odd symmetry** ``Tan(-x) → -Tan(x)``:
+       Tangent is an odd function — ``tan(-x) = -tan(x)`` wherever it is
+       defined.  Same recursive descent as ``sin_handler``.
+
+    3. **Arc-cancellation** ``Tan(Atan(x)) → x``:
+       ``atan`` maps ``ℝ → (-π/2, π/2)`` where ``tan`` is defined and
+       bijective; ``tan(atan(x)) = x`` for all real ``x`` unconditionally.
+
+    4. **Everything else**: leave unevaluated as ``Tan(arg)``.
+
+    Examples::
+
+        tan(-x)      → Neg(Tan(x))     (odd symmetry)
+        tan(atan(x)) → x               (arc-cancellation)
+        tan(0.5)     → IRFloat(≈0.546) (numeric fold)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1: numeric fold.  Preserve the exact special value tan(0) = 0.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(0)
+        return IRFloat(math.tan(float(n)))
+    # Rule 2: odd symmetry — tan(-x) = -tan(x).
+    if isinstance(arg, IRApply) and arg.head == NEG and len(arg.args) == 1:
+        inner_result = tan_handler(vm, IRApply(TAN, (arg.args[0],)))
+        return IRApply(NEG, (inner_result,))
+    # Rule 3: arc-cancellation — tan(atan(x)) = x.
+    if isinstance(arg, IRApply) and arg.head == ATAN and len(arg.args) == 1:
+        return arg.args[0]
+    # Rule 4: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def sinh_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Sinh(x)`` — hyperbolic sine with odd-symmetry and arc-cancellation.
+
+    Simplification rules (Phase 31)
+    --------------------------------
+    1. **Numeric fold**: inputs evaluate via ``math.sinh``.
+       ``Sinh(0) → 0`` is subsumed by the numeric path.
+
+    2. **Odd symmetry** ``Sinh(-x) → -Sinh(x)``:
+       Hyperbolic sine is odd — ``sinh(-x) = -sinh(x)`` for all real ``x``.
+
+    3. **Arc-cancellation** ``Sinh(Asinh(x)) → x``:
+       ``asinh`` maps ``ℝ → ℝ`` and is the exact left inverse of ``sinh``,
+       so ``sinh(asinh(x)) = x`` unconditionally.
+
+    4. **Everything else**: leave unevaluated as ``Sinh(arg)``.
+
+    Examples::
+
+        sinh(-x)       → Neg(Sinh(x))    (odd symmetry)
+        sinh(asinh(x)) → x               (arc-cancellation)
+        sinh(1.0)      → IRFloat(≈1.175) (numeric fold)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1: numeric fold.  Preserve the exact special value sinh(0) = 0.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(0)
+        return IRFloat(math.sinh(float(n)))
+    # Rule 2: odd symmetry — sinh(-x) = -sinh(x).
+    if isinstance(arg, IRApply) and arg.head == NEG and len(arg.args) == 1:
+        inner_result = sinh_handler(vm, IRApply(SINH, (arg.args[0],)))
+        return IRApply(NEG, (inner_result,))
+    # Rule 3: arc-cancellation — sinh(asinh(x)) = x.
+    if isinstance(arg, IRApply) and arg.head == ASINH and len(arg.args) == 1:
+        return arg.args[0]
+    # Rule 4: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def cosh_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Cosh(x)`` — hyperbolic cosine with even-symmetry and arc-cancellation.
+
+    Simplification rules (Phase 31)
+    --------------------------------
+    1. **Numeric fold**: inputs evaluate via ``math.cosh``.
+       ``Cosh(0) → 1`` is subsumed by the numeric path.
+
+    2. **Even symmetry** ``Cosh(-x) → Cosh(x)``:
+       Hyperbolic cosine is even — ``cosh(-x) = cosh(x)`` for all real ``x``.
+
+    3. **Arc-cancellation** ``Cosh(Acosh(x)) → x``:
+       ``acosh`` maps ``[1, ∞) → [0, ∞)``; ``cosh`` restricted to ``[0, ∞)``
+       is bijective onto ``[1, ∞)`` with left inverse ``acosh``, so
+       ``cosh(acosh(x)) = x`` unconditionally.
+
+    4. **Everything else**: leave unevaluated as ``Cosh(arg)``.
+
+    Examples::
+
+        cosh(-x)       → Cosh(x)         (even symmetry, NEG stripped)
+        cosh(acosh(x)) → x               (arc-cancellation)
+        cosh(1.0)      → IRFloat(≈1.543) (numeric fold)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1: numeric fold.  Preserve the exact special value cosh(0) = 1.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(1)
+        return IRFloat(math.cosh(float(n)))
+    # Rule 2: even symmetry — cosh(-x) = cosh(x).
+    if isinstance(arg, IRApply) and arg.head == NEG and len(arg.args) == 1:
+        return cosh_handler(vm, IRApply(COSH, (arg.args[0],)))
+    # Rule 3: arc-cancellation — cosh(acosh(x)) = x.
+    if isinstance(arg, IRApply) and arg.head == ACOSH and len(arg.args) == 1:
+        return arg.args[0]
+    # Rule 4: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def tanh_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Tanh(x)`` — hyperbolic tangent with odd-symmetry and arc-cancellation.
+
+    Simplification rules (Phase 31)
+    --------------------------------
+    1. **Numeric fold**: inputs evaluate via ``math.tanh``.
+       ``Tanh(0) → 0`` is subsumed by the numeric path.
+
+    2. **Odd symmetry** ``Tanh(-x) → -Tanh(x)``:
+       Hyperbolic tangent is odd — ``tanh(-x) = -tanh(x)`` for all real ``x``.
+
+    3. **Arc-cancellation** ``Tanh(Atanh(x)) → x``:
+       ``atanh`` maps ``(-1, 1) → ℝ`` and is the exact left inverse of
+       ``tanh``, so ``tanh(atanh(x)) = x`` unconditionally.
+
+    4. **Everything else**: leave unevaluated as ``Tanh(arg)``.
+
+    Examples::
+
+        tanh(-x)       → Neg(Tanh(x))   (odd symmetry)
+        tanh(atanh(x)) → x              (arc-cancellation)
+        tanh(0.5)      → IRFloat(≈0.462)(numeric fold)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1: numeric fold.  Preserve the exact special value tanh(0) = 0.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(0)
+        return IRFloat(math.tanh(float(n)))
+    # Rule 2: odd symmetry — tanh(-x) = -tanh(x).
+    if isinstance(arg, IRApply) and arg.head == NEG and len(arg.args) == 1:
+        inner_result = tanh_handler(vm, IRApply(TANH, (arg.args[0],)))
+        return IRApply(NEG, (inner_result,))
+    # Rule 3: arc-cancellation — tanh(atanh(x)) = x.
+    if isinstance(arg, IRApply) and arg.head == ATANH and len(arg.args) == 1:
+        return arg.args[0]
+    # Rule 4: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
 def cbrt_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Cbrt(x)`` → exact or numeric cube root.
 
@@ -3123,6 +3421,14 @@ def build_cas_handler_table() -> dict[str, Handler]:
         # and power-rule algebraic identities on top of numeric fold.
         "Log": log_handler,
         "Exp": exp_handler,
+        # Phase 31: override _elementary-factory Sin/Cos/Tan/Sinh/Cosh/Tanh
+        # with odd/even symmetry and arc-cancellation rules on top of numeric fold.
+        "Sin": sin_handler,
+        "Cos": cos_handler,
+        "Tan": tan_handler,
+        "Sinh": sinh_handler,
+        "Cosh": cosh_handler,
+        "Tanh": tanh_handler,
         "Cbrt": cbrt_handler,
         "Floor": floor_handler,
         "Ceiling": ceiling_handler,
