@@ -319,6 +319,10 @@ queries and the CLI should run them as a script. The command prints or emits
 one result record per source query, sets `source_query_index` in JSON formats,
 and exits nonzero if any embedded query has no answers.
 
+Use `--commit` only with one or more ad-hoc `--query` flags. It persists the
+first answer state from those query flags into later query flags or an
+interactive loop, but it is rejected when no ad-hoc query is supplied.
+
 Use `--summary` on non-interactive query runs when scripts, CI jobs, or editor
 integrations need compact totals. Text output appends one summary line, JSONL
 appends a summary record, and JSON wraps result records with summary metadata.
