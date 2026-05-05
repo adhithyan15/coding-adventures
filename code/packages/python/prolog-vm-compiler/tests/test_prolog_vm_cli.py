@@ -158,6 +158,75 @@ def test_cli_check_rejects_ad_hoc_queries(
     assert "--check cannot be combined with --query" in capsys.readouterr().err
 
 
+def test_cli_dump_bytecode_renders_disassembly(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart). ?- parent(homer, Who).",
+        "--dump-bytecode",
+    ])
+
+    assert status == 0
+    lines = capsys.readouterr().out.splitlines()
+    assert lines[0] == "0000: EMIT_RELATION 0 ; parent/2"
+    assert "EMIT_FACT" in lines[1]
+    assert "EMIT_QUERY" in lines[2]
+    assert lines[-1] == "0003: HALT"
+
+
+def test_cli_dump_bytecode_json_reports_pools_and_lines(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart). ?- parent(homer, Who).",
+        "--dump-bytecode",
+        "--format",
+        "json",
+    ])
+
+    payload = json.loads(capsys.readouterr().out)
+
+    assert status == 0
+    assert payload["success"] is True
+    assert payload["mode"] == "bytecode"
+    assert payload["instruction_count"] == 4
+    assert payload["relation_pool_count"] == 1
+    assert payload["fact_pool_count"] == 1
+    assert payload["rule_pool_count"] == 0
+    assert payload["query_pool_count"] == 1
+    assert payload["lines"][0] == {
+        "comment": "parent/2",
+        "index": 0,
+        "opcode": "EMIT_RELATION",
+        "operand": 0,
+    }
+    assert payload["lines"][-1] == {
+        "comment": None,
+        "index": 3,
+        "opcode": "HALT",
+        "operand": None,
+    }
+
+
+def test_cli_dump_bytecode_rejects_execution_modes(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        "--dump-bytecode",
+        "--query",
+        "parent(homer, Who)",
+    ])
+
+    assert status == 2
+    assert "--dump-bytecode cannot be combined with --query" in (
+        capsys.readouterr().err
+    )
+
+
 def test_cli_lists_source_query_variables(
     capsys: pytest.CaptureFixture[str],
 ) -> None:

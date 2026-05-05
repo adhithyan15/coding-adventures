@@ -18,6 +18,7 @@ from cli_builder import (
     ParseResult,
     VersionResult,
 )
+from logic_bytecode import LogicBytecodeProgram, disassemble, disassemble_text
 from logic_engine import Atom, Compound, Disequality, LogicVar, Number, String, Term
 
 from prolog_vm_compiler.compiler import (
@@ -28,6 +29,7 @@ from prolog_vm_compiler.compiler import (
     compile_prolog_file,
     compile_prolog_project_from_files,
     compile_prolog_source,
+    compile_prolog_to_bytecode,
     create_prolog_file_runtime,
     create_prolog_project_file_runtime,
     create_prolog_source_vm_runtime,
@@ -59,6 +61,7 @@ class CliArgs:
     source: str | None
     queries: tuple[str, ...]
     check: bool
+    dump_bytecode: bool
     list_source_queries: bool
     source_query_index: int
     all_source_queries: bool
@@ -160,6 +163,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     all_source_queries = bool(flags["all-source-queries"])
     check = bool(flags["check"])
+    dump_bytecode = bool(flags["dump-bytecode"])
     list_source_queries = bool(flags["list-source-queries"])
     if check and queries:
         msg = "--check cannot be combined with --query"
@@ -169,6 +173,21 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     if check and bool(flags["interactive"]):
         msg = "--check cannot be combined with --interactive"
+        raise ValueError(msg)
+    if dump_bytecode and queries:
+        msg = "--dump-bytecode cannot be combined with --query"
+        raise ValueError(msg)
+    if dump_bytecode and check:
+        msg = "--dump-bytecode cannot be combined with --check"
+        raise ValueError(msg)
+    if dump_bytecode and list_source_queries:
+        msg = "--dump-bytecode cannot be combined with --list-source-queries"
+        raise ValueError(msg)
+    if dump_bytecode and all_source_queries:
+        msg = "--dump-bytecode cannot be combined with --all-source-queries"
+        raise ValueError(msg)
+    if dump_bytecode and bool(flags["interactive"]):
+        msg = "--dump-bytecode cannot be combined with --interactive"
         raise ValueError(msg)
     if list_source_queries and queries:
         msg = "--list-source-queries cannot be combined with --query"
@@ -204,6 +223,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         source=source,
         queries=queries,
         check=check,
+        dump_bytecode=dump_bytecode,
         list_source_queries=list_source_queries,
         source_query_index=source_query_index,
         all_source_queries=all_source_queries,
@@ -345,6 +365,8 @@ def _required_int(value: object, *, name: str) -> int:
 def _run_cli(args: CliArgs) -> int:
     if args.check:
         return _run_check(args)
+    if args.dump_bytecode:
+        return _run_dump_bytecode(args)
     if args.list_source_queries:
         return _run_list_source_queries(args)
 
@@ -386,6 +408,13 @@ def _run_check(args: CliArgs) -> int:
     return 0
 
 
+def _run_dump_bytecode(args: CliArgs) -> int:
+    compiled_program = _compile_source_program(args)
+    bytecode = compile_prolog_to_bytecode(compiled_program)
+    _print_bytecode_dump(bytecode, args=args)
+    return 0
+
+
 def _run_list_source_queries(args: CliArgs) -> int:
     compiled_program = _compile_source_program(args)
     _print_source_query_summary(compiled_program, args=args)
@@ -422,6 +451,41 @@ def _print_source_query_summary(
         "mode": "source_queries",
         "source_query_count": compiled_program.source_query_count,
         "queries": query_summaries,
+    }
+    print(json.dumps(payload, sort_keys=True), file=output)
+
+
+def _print_bytecode_dump(
+    bytecode: LogicBytecodeProgram,
+    *,
+    args: CliArgs,
+    stdout: TextIO | None = None,
+) -> None:
+    output = sys.stdout if stdout is None else stdout
+    if args.output_format == "text":
+        text = disassemble_text(bytecode)
+        if text:
+            print(text, file=output)
+        return
+
+    lines = [
+        {
+            "index": line.index,
+            "opcode": line.opcode,
+            "operand": line.operand,
+            "comment": line.comment,
+        }
+        for line in disassemble(bytecode)
+    ]
+    payload = {
+        "success": True,
+        "mode": "bytecode",
+        "instruction_count": len(bytecode.instructions),
+        "relation_pool_count": len(bytecode.relation_pool),
+        "fact_pool_count": len(bytecode.fact_pool),
+        "rule_pool_count": len(bytecode.rule_pool),
+        "query_pool_count": len(bytecode.query_pool),
+        "lines": lines,
     }
     print(json.dumps(payload, sort_keys=True), file=output)
 
