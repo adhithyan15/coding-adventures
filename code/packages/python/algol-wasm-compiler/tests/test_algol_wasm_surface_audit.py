@@ -83,6 +83,27 @@ _SURFACE_CASES = (
         stdout="7",
     ),
     SurfaceCase(
+        name="forward-switch-declaration-visibility",
+        source="""
+            begin
+              integer result;
+              switch outer := if ready() then inner[1] else fail;
+              switch inner := done;
+              boolean procedure ready; begin ready := true end;
+              goto outer[1];
+            fail:
+              result := 0;
+              goto finish;
+            done:
+              result := 13;
+            finish:
+              print('SWITCH ', result)
+            end
+        """,
+        result=[13],
+        stdout="SWITCH 13",
+    ),
+    SurfaceCase(
         name="for-list-scalar-and-array-control",
         source="""
             begin

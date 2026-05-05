@@ -396,6 +396,19 @@ class SwitchDescriptor:
 
 
 @dataclass(frozen=True)
+class _PendingSwitchDeclaration:
+    """A switch name whose designational list still needs semantic checking."""
+
+    switch_id: int
+    name: str
+    scope: Scope
+    symbol_id: int
+    entries: tuple[ASTNode, ...]
+    line: int
+    column: int
+
+
+@dataclass(frozen=True)
 class ResolvedSwitchSelection:
     """A switch subscript occurrence after semantic lookup."""
 
@@ -569,12 +582,22 @@ class AlgolTypeChecker:
             if child.rule_name == "statement":
                 self._collect_statement_labels(child, scope)
 
+        pending_switches: list[_PendingSwitchDeclaration] = []
         pending_procedures: list[_PendingProcedureDeclaration] = []
         for child in _node_children(block):
             if child.rule_name == "declaration":
+                inner = _first_ast_child(child)
+                if inner is not None and inner.rule_name == "switch_decl":
+                    pending = self._register_switch_declaration(inner, scope)
+                    if pending is not None:
+                        pending_switches.append(pending)
+                    continue
                 pending = self._check_declaration(child, scope)
                 if pending is not None:
                     pending_procedures.append(pending)
+
+        for pending in pending_switches:
+            self._check_pending_switch_declaration(pending)
 
         self._resolve_pending_procedure_write_reasons(pending_procedures)
 
@@ -646,7 +669,9 @@ class AlgolTypeChecker:
             self._check_array_declaration(inner, scope, storage_class="frame")
             return None
         if inner.rule_name == "switch_decl":
-            self._check_switch_declaration(inner, scope)
+            pending = self._register_switch_declaration(inner, scope)
+            if pending is not None:
+                self._check_pending_switch_declaration(pending)
             return None
         if inner.rule_name != "type_decl":
             self._error(inner, f"{inner.rule_name} declarations are not supported yet")
@@ -801,14 +826,18 @@ class AlgolTypeChecker:
                     )
                 )
 
-    def _check_switch_declaration(self, node: ASTNode, scope: Scope) -> None:
+    def _register_switch_declaration(
+        self,
+        node: ASTNode,
+        scope: Scope,
+    ) -> _PendingSwitchDeclaration | None:
         name_token = next(
             (token for token in _direct_tokens(node) if token.type_name == "NAME"),
             None,
         )
         if name_token is None:
             self._error(node, "switch declaration is missing a name")
-            return
+            return None
 
         switch_id = self._next_switch_id
         self._next_switch_id += 1
@@ -828,7 +857,7 @@ class AlgolTypeChecker:
                 name_token,
                 f"{name_token.value!r} is already declared in this scope",
             )
-            return
+            return None
         self._next_symbol_id += 1
         self.semantic_symbols.append(symbol)
 
@@ -836,24 +865,38 @@ class AlgolTypeChecker:
         entries = _direct_nodes(switch_list, "desig_expr")
         if not entries:
             self._error(node, "switch declaration requires at least one entry")
-            return
-        for entry in entries:
+            return None
+        return _PendingSwitchDeclaration(
+            switch_id=switch_id,
+            name=name_token.value,
+            scope=scope,
+            symbol_id=symbol.symbol_id,
+            entries=tuple(entries),
+            line=name_token.line,
+            column=name_token.column,
+        )
+
+    def _check_pending_switch_declaration(
+        self,
+        pending: _PendingSwitchDeclaration,
+    ) -> None:
+        for entry in pending.entries:
             self._check_designational(
                 entry,
-                scope,
+                pending.scope,
                 allow_nonlocal_label=True,
                 allow_switch_selection=True,
-                active_switch_id=switch_id,
+                active_switch_id=pending.switch_id,
             )
         self.semantic_switches.append(
             SwitchDescriptor(
-                switch_id=switch_id,
-                name=name_token.value,
-                declaring_block_id=scope.block_id,
-                symbol_id=symbol.symbol_id,
-                entry_node_ids=tuple(id(entry) for entry in entries),
-                line=name_token.line,
-                column=name_token.column,
+                switch_id=pending.switch_id,
+                name=pending.name,
+                declaring_block_id=pending.scope.block_id,
+                symbol_id=pending.symbol_id,
+                entry_node_ids=tuple(id(entry) for entry in pending.entries),
+                line=pending.line,
+                column=pending.column,
             )
         )
 

@@ -93,12 +93,12 @@ Local conditional designational expressions now lower as condition-controlled
 branch points that only evaluate the selected target. Local switch selections
 evaluate their integer index once, compare against one-based switch entries,
 and lower the chosen designational entry into the same jump path. Switch entries
-may target labels in lexical parent blocks; those entries unwind exited frames
-or propagate pending procedure-crossing gotos just like direct designational
-gotos. An out-of-range switch index follows the existing runtime-failure path
-and returns `0`. Recursive switch self-selection lowers through the switch
-evaluation helper so finite recursive dispatch executes at runtime instead of
-expanding the descriptor at compile time.
+may target labels in lexical parent blocks or later sibling switch declarations;
+those entries unwind exited frames or propagate pending procedure-crossing gotos
+just like direct designational gotos. An out-of-range switch index follows the
+existing runtime-failure path and returns `0`. Recursive switch self-selection
+lowers through the switch evaluation helper so finite recursive dispatch
+executes at runtime instead of expanding the descriptor at compile time.
 
 This phase keeps ALGOL frame memory and its 32-byte runtime state bounded to
 one 64 KiB WASM page, and keeps array descriptors plus element storage inside a

@@ -54,7 +54,8 @@ label ids that later lowering can propagate through calls. Switch declarations
 receive stable descriptors whose entries point at checked designational
 expressions, including entries that target labels in lexical parent blocks, and
 switch selection use sites resolve to their chosen switch symbol, including
-recursive self-selection inside switch entries.
+later sibling switch declarations and recursive self-selection inside switch
+entries.
 
 Unsupported ALGOL 60 features are reported as diagnostics instead of being
 silently accepted by the compiled pipeline. By-name parameters are accepted in

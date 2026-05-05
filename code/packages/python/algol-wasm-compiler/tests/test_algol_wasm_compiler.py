@@ -931,6 +931,20 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
 
+    def test_forward_switch_declaration_entry_dispatches_through_later_switch(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "switch outer := inner[1]; "
+            "switch inner := done; "
+            "goto outer[1]; "
+            "result := 99; "
+            "done: result := 5 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
+
     def test_self_recursive_switch_selection_entry_dispatches_at_runtime(
         self,
     ) -> None:

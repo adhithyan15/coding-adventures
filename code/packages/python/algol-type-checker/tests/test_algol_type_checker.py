@@ -330,6 +330,28 @@ class TestAlgolTypeChecker:
         assert result.semantic.switch_selections[0].name == "s"
         assert result.semantic.gotos[0].target_name == "switch designational expression"
 
+    def test_accepts_forward_switch_declaration_entry(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "switch first := second[1]; "
+            "switch second := done; "
+            "goto first[1]; "
+            "done: result := 5 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert [switch.name for switch in result.semantic.switches] == [
+            "first",
+            "second",
+        ]
+        assert [selection.name for selection in result.semantic.switch_selections] == [
+            "second",
+            "first",
+        ]
+
     def test_rejects_missing_switch_designational_goto(self) -> None:
         ast = parse_algol("begin integer result; goto s[1] end")
         result = check_algol(ast)

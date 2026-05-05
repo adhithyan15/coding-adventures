@@ -40,6 +40,8 @@ the current lane already supports a substantial ALGOL 60 surface:
   ALGOL's omitted-parentheses call syntax for parameterless procedures
 - forward sibling procedure calls and mutually recursive typed procedures
   within a block's declaration part
+- switch entries that select later sibling switch declarations within the same
+  declaration part
 - labels, local and nonlocal `goto`/`go to`, switch designators, and conditional
   designational expressions, including nonlocal branches and nested
   recursive switch entries
@@ -178,8 +180,8 @@ local WASM runtime. Those fixtures cover:
   forms, parenthesized conditional designational expressions, numeric labels,
   boolean operators, real arithmetic, and output
 - a surface-audit matrix for publication notation, procedure-call spellings,
-  forward procedure visibility, loop forms, typed formal procedures, value
-  array copies, nonlocal switch/goto cleanup, and programs without the
+  forward procedure and switch visibility, loop forms, typed formal procedures,
+  value array copies, nonlocal switch/goto cleanup, and programs without the
   `result` compatibility scalar
 
 ## Dependencies

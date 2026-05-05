@@ -603,6 +603,26 @@ class TestAlgolIrCompiler:
         assert any(label.startswith("switch_0_1_next") for label in labels)
         assert any(label.startswith("switch_1_1_next") for label in labels)
 
+    def test_compiles_forward_nested_switch_selection_entry(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "switch outer := inner[1]; "
+                "switch inner := done; "
+                "goto outer[1]; "
+                "done: result := 5 "
+                "end"
+            )
+        )
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+
+        assert any(label.startswith("switch_0_1_next") for label in labels)
+        assert any(label.startswith("switch_1_1_next") for label in labels)
+
     def test_compiles_self_recursive_switch_selection_entry(self) -> None:
         result = compile_algol(
             parse_algol(
