@@ -6,6 +6,90 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — VMCOND00 Phase 4: Restart chain (Layer 4) + Exit-point chain (Layer 5)
+
+Implements VMCOND00 Layers 4 and 5 — named restarts and non-local exits — in
+the vm-core interpreter.  Seven new IIR opcodes complete the full VMCOND00
+condition system.
+
+**New module: `vm_core.restart_chain`**
+
+- **`RestartNode`** — dataclass representing one entry on the restart chain:
+  - `name: str` — the symbolic restart name (e.g. `"use-value"`).
+  - `restart_fn: object` — a string (IIR function name) in Phase 4.
+  - `stack_depth: int` — frame-stack depth at push time, used by `EXIT_TO`
+    to remove stale nodes during unwinding.
+
+**New module: `vm_core.exit_chain`**
+
+- **`ExitPointNode`** — dataclass representing one entry on the exit-point chain:
+  - `tag: str` — the exit-point tag (e.g. `"done"`).
+  - `result_reg: str | None` — name of the register to receive the exit value
+    in the target frame; `None` means discard.
+  - `resume_ip: int` — pre-resolved instruction index to jump to in the target
+    frame when `EXIT_TO` fires.
+  - `frame_depth: int` — frame-stack depth at push time; the target frame is
+    `vm._frames[frame_depth - 1]` after unwinding.
+
+**New error classes** (subclasses of `VMError`):
+
+- **`RestartChainError`** — raised by `pop_restart` on underflow, and by
+  `invoke_restart` when the handle is `None`, is not a `RestartNode`, has a
+  non-string `restart_fn`, or names an unknown IIR function.
+- **`UnboundExitTagError`** — raised by `exit_to` when no matching exit point
+  exists on the chain.  Carries `.tag: str` for inspection by the host.
+
+**New `VMCore` state**
+
+- `_restart_chain: list[RestartNode]` — Layer 4 named-restart stack.
+- `_exit_point_chain: list[ExitPointNode]` — Layer 5 non-local-exit stack.
+  Both are cleared by `VMCore.reset()`.
+
+**New dispatch handlers in `vm_core.dispatch`**
+
+- `handle_push_restart` — reads name from `srcs[0]` and the function name from
+  `frame.resolve(srcs[1])`; wraps them in a `RestartNode` and appends to
+  `vm._restart_chain`.
+- `handle_pop_restart` — pops the most recently pushed restart; raises
+  `RestartChainError` on underflow.
+- `handle_find_restart` — walks `vm._restart_chain` newest-first; writes the
+  first matching `RestartNode` into dest, or `None` if no match.
+- `handle_invoke_restart` — validates the handle (must be a `RestartNode` with
+  a string `restart_fn`), resolves the function from the module, and pushes it
+  as a new call frame (non-unwinding by default).  Mirrors `handle_call`'s
+  `return_dest` integer-index allocation so `handle_ret` can write the return
+  value back to the caller.
+- `handle_compute_restarts` — returns a copy of `vm._restart_chain` as a plain
+  Python list (outermost first); useful for debuggers presenting restart choices.
+- `handle_establish_exit` — resolves the after-label to a resume IP, pre-
+  initialises the result register to `0` in the current frame (so normal
+  fallthrough can still execute `ret result`), and appends an `ExitPointNode`.
+- `handle_exit_to` — searches `vm._exit_point_chain` newest-first for the
+  matching tag; truncates the chain to remove the matched node and all more
+  recently pushed nodes; calls `_unwind_to_depth` to pop frames and chain nodes;
+  assigns the exit value to the result register; jumps to `resume_ip`.
+
+**Helper: `_unwind_to_depth(vm, target_depth)`** — pops `vm._frames`,
+`vm._handler_chain` nodes with `stack_depth > target_depth`, and
+`vm._restart_chain` nodes with `stack_depth > target_depth` until
+`len(vm._frames) == target_depth`.  Used by `EXIT_TO`.
+
+**`_pop_frame` cleanup** — `_pop_frame` now strips restart-chain nodes with
+`stack_depth >= current_depth` and exit-point chain nodes with
+`frame_depth >= current_depth` before the frame is popped.  This handles
+the normal-return path; `_unwind_to_depth` handles the `EXIT_TO` path.
+
+**Tests** — 43 new tests in `tests/test_vmcond00_phase4.py` covering:
+`RestartNode` and `ExitPointNode` dataclass construction, `RestartChainError`
+and `UnboundExitTagError` hierarchy, push/pop/underflow mechanics,
+`find_restart` shadowing, `compute_restarts` ordering, `invoke_restart` return
+value and error paths, `establish_exit` / `exit_to` value delivery, normal
+fallthrough, unknown tag, innermost-tag selection, cross-frame unwinding,
+handler-chain and restart-chain cleanup during unwinding, and the full spec
+acceptance criterion (restart + `exit_to` round-trip).
+
+---
+
 ### Added — VMCOND00 Phase 3: Dynamic handler chain (Layer 3)
 
 Implements VMCOND00 Layer 3 — non-unwinding condition handlers — in the vm-core

@@ -34,6 +34,10 @@ The opcodes are grouped by category:
   Heap:         MAKE_CONS, CAR, CDR, IS_NULL, IS_PAIR,
                 MAKE_SYMBOL, IS_SYMBOL, LOAD_NIL   (TW03 Phase 3)
   Error-aware:  SYSCALL_CHECKED, BRANCH_ERR   (VMCOND00 Phase 1)
+  Handlers:     PUSH_HANDLER, POP_HANDLER, SIGNAL, ERROR, WARN (VMCOND00 Phase 3)
+  Restarts:     PUSH_RESTART, POP_RESTART, FIND_RESTART, INVOKE_RESTART,
+                COMPUTE_RESTARTS   (VMCOND00 Phase 4 — Layer 4)
+  Exits:        ESTABLISH_EXIT, EXIT_TO   (VMCOND00 Phase 4 — Layer 5)
 
 Text Names
 ----------
@@ -555,6 +559,75 @@ class IrOp(IntEnum):
     SIGNAL = 69
     ERROR = 70
     WARN = 71
+
+    # ── VMCOND00 Phase 4 — restart chain (Layer 4) ───────────────────────
+    #
+    # Five opcodes implementing the Layer 4 named-restart protocol.  Restarts
+    # are callable continuations that a handler (established via Layer 3) can
+    # find by name without holding a direct reference, and invoke with a
+    # substitute value.  The restart may return normally (non-unwinding) or
+    # call EXIT_TO (Layer 5) to perform a non-local transfer.
+    #
+    # Operand layouts:
+    #
+    #   PUSH_RESTART  name_sym:imm  fn:reg
+    #     name_sym — IrLabel: the restart's name (matched by FIND_RESTART).
+    #     fn       — IrRegister: the restart callable.
+    #
+    #   POP_RESTART
+    #     (no operands)
+    #
+    #   FIND_RESTART  name_sym:imm → out:reg
+    #     name_sym — IrLabel: name to search for (newest-first).
+    #     out      — IrRegister: receives RestartNode handle or NIL.
+    #
+    #   INVOKE_RESTART  handle:reg  arg:reg
+    #     handle   — IrRegister: a RestartNode handle from FIND_RESTART.
+    #     arg      — IrRegister: argument to pass to the restart function.
+    #     Result (if restart returns normally) written into the dest register.
+    #
+    #   COMPUTE_RESTARTS → out:reg
+    #     Collect all active restart handles into a list.
+    #     out      — IrRegister: receives the list.
+    #
+    # Backend lowering for Layer 4 is deferred to a later phase.  Backends that
+    # do not yet support Layer 4 should reject programs via their pre-flight
+    # validator: "VMCOND00 Layer 4: restarts not yet implemented for this backend."
+    PUSH_RESTART = 72
+    POP_RESTART = 73
+    FIND_RESTART = 74
+    INVOKE_RESTART = 75
+    COMPUTE_RESTARTS = 76
+
+    # ── VMCOND00 Phase 4 — exit-point chain (Layer 5) ────────────────────
+    #
+    # Two opcodes implementing the Layer 5 non-local exit (exit-point) protocol.
+    # An exit point is a dynamically scoped tag; any code in its dynamic extent
+    # can call EXIT_TO to transfer control non-locally, delivering a value and
+    # unwinding the call stack, handler chain, and restart chain to the depth
+    # recorded at ESTABLISH_EXIT time.
+    #
+    # Operand layouts:
+    #
+    #   ESTABLISH_EXIT  tag_sym:imm  result_out:reg  after:label
+    #     tag_sym    — IrLabel: the exit-point tag.
+    #     result_out — IrRegister: receives the value from EXIT_TO (or stays
+    #                  unchanged if no EXIT_TO fires).
+    #     after      — IrLabel: instruction to resume at when EXIT_TO fires.
+    #                  On normal fallthrough, execution reaches this label
+    #                  naturally.
+    #
+    #   EXIT_TO  tag_sym:imm  val:reg
+    #     tag_sym — IrLabel: exit-point tag to find (innermost-first).
+    #     val     — IrRegister: value to deliver to the exit point.
+    #     Unwinds call stack / handler chain / restart chain to frame_depth,
+    #     assigns val to result_out, jumps to after.
+    #     Raises UnboundExitTagError if no matching exit point exists.
+    #
+    # Backend lowering for Layer 5 is deferred.  Backends should reject with
+    # "VMCOND00 Layer 5: non-local exits not yet implemented for this backend."
+    ESTABLISH_EXIT = 77
+    EXIT_TO = 78
 
 
 # Canonical name → opcode mapping. Built from the enum at module load time.

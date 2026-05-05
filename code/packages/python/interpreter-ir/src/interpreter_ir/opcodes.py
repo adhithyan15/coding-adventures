@@ -275,6 +275,104 @@ HANDLER_OPS: frozenset[str] = frozenset(
     {"push_handler", "pop_handler", "signal", "error", "warn"}
 )
 
+# ---------------------------------------------------------------------------
+# VMCOND00 Phase 4 — restart chain (Layer 4) and exit points (Layer 5)
+# ---------------------------------------------------------------------------
+#
+# Layer 4 introduces *named restarts*: callable continuations that a handler
+# can find by name and invoke non-locally.  The restart chain is a per-VM
+# ordered collection of RestartNode objects analogous to the handler chain
+# (Layer 3).
+#
+# Layer 5 introduces *non-local exits*: a dynamically scoped tag that any code
+# within its dynamic extent can jump to via EXIT_TO, delivering a value and
+# unwinding the call stack, handler chain, and restart chain to the depth
+# recorded at ESTABLISH_EXIT time.
+#
+# RESTART_OPS — five opcodes managing the Layer 4 restart chain:
+#
+#   push_restart:
+#     dest = None
+#     srcs = [name_str, fn_reg]
+#     name_str — immediate string: the restart's name (used by FIND_RESTART).
+#     fn_reg   — register name holding the restart callable (string IIR fn
+#                name in Phase 4).
+#     Effect: push RestartNode(name, fn, stack_depth) onto vm._restart_chain.
+#
+#   pop_restart:
+#     dest = None
+#     srcs = []
+#     Effect: pop the most recently pushed restart.  Raises RestartChainError
+#     on underflow (unbalanced push/pop).
+#
+#   find_restart:
+#     dest = result_reg
+#     srcs = [name_str]
+#     name_str — immediate string: name to search for.
+#     Effect: walk vm._restart_chain newest-first; write the first matching
+#     RestartNode handle into dest, or None if not found.
+#
+#   invoke_restart:
+#     dest = result_reg  (may be None if caller ignores the return value)
+#     srcs = [handle_reg, arg_reg]
+#     handle_reg — register holding a RestartNode handle (from find_restart).
+#     arg_reg    — register holding the argument to pass.
+#     Effect: call the restart function as a new frame (non-unwinding if the
+#     restart returns normally).  If the restart calls EXIT_TO internally, the
+#     call stack unwinds as directed by EXIT_TO.
+#
+#   compute_restarts:
+#     dest = result_reg
+#     srcs = []
+#     Effect: collect all active RestartNode handles into a Python list and
+#     store it in dest.  Used by debuggers / REPLs to enumerate choices.
+#
+# EXIT_OPS — two opcodes managing the Layer 5 exit-point chain:
+#
+#   establish_exit:
+#     dest = None
+#     srcs = [tag_str, result_reg_name, after_label]
+#     tag_str       — immediate string: the exit-point tag.
+#     result_reg_name — immediate string: name of the register in the *current*
+#                       frame that will receive the value passed to EXIT_TO.
+#     after_label   — immediate string: label name whose instruction index is
+#                     the resume IP (where EXIT_TO jumps to; on normal
+#                     fallthrough the frontend emits code at this label).
+#     Effect: push ExitPointNode onto vm._exit_point_chain with
+#     resume_ip = label_index(after_label) and frame_depth = len(vm._frames).
+#
+#   exit_to:
+#     dest = None
+#     srcs = [tag_str, val_reg]
+#     tag_str — immediate string: exit-point tag to find.
+#     val_reg — register holding the value to deliver.
+#     Effect:
+#       1. Find the innermost (most recently pushed) exit point with tag==tag_str.
+#       2. Unwind call stack, handler chain, and restart chain to frame_depth.
+#       3. Pop exit-point chain to just before the matched node.
+#       4. Assign val into the matched node's result_reg in the target frame.
+#       5. Set vm._frames[-1].ip = resume_ip.
+#       If no matching exit point exists, raises UnboundExitTagError.
+#
+# Set membership:
+#   - RESTART_OPS ⊆ SIDE_EFFECT_OPS: push/pop/invoke mutate the restart chain
+#     or call arbitrary code; find/compute do not mutate state but are still
+#     considered side-effecting because they expose mutable RestartNode handles.
+#   - EXIT_OPS ⊆ SIDE_EFFECT_OPS: exit_to unwinds the call stack; establish_exit
+#     mutates the exit-point chain.
+#   - RESTART_OPS ∩ VALUE_OPS: find_restart and compute_restarts produce values
+#     (written into dest), so they should be in VALUE_OPS.  invoke_restart may
+#     produce a value when the restart returns normally (dest != None).
+#     For simplicity, RESTART_OPS as a whole is in SIDE_EFFECT_OPS; individual
+#     callers that need to classify producers may check dest != None directly.
+#   - NOT in BRANCH_OPS: RESTART_OPS do not perform static intra-function jumps.
+#   - NOT in CONTROL_OPS: RESTART_OPS don't do function-level returns.
+RESTART_OPS: frozenset[str] = frozenset(
+    {"push_restart", "pop_restart", "find_restart", "invoke_restart", "compute_restarts"}
+)
+
+EXIT_OPS: frozenset[str] = frozenset({"establish_exit", "exit_to"})
+
 # All ops that have side effects beyond producing a value.
 SIDE_EFFECT_OPS: frozenset[str] = (
     BRANCH_OPS
@@ -282,6 +380,8 @@ SIDE_EFFECT_OPS: frozenset[str] = (
     | SYSCALL_CHECKED_OPS
     | THROW_OPS
     | HANDLER_OPS
+    | RESTART_OPS
+    | EXIT_OPS
     | frozenset({"store_reg", "store_mem", "io_out", "type_assert"})
     | frozenset({"field_store", "safepoint"})
 )
@@ -307,5 +407,7 @@ ALL_OPS: frozenset[str] = (
     | SYSCALL_CHECKED_OPS
     | THROW_OPS
     | HANDLER_OPS
+    | RESTART_OPS
+    | EXIT_OPS
     | frozenset({"const"})
 )

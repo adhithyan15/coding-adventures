@@ -141,6 +141,34 @@ class VMCore:
         # that handlers from a previous run never leak into the next one.
         self._handler_chain: list = []  # list[HandlerNode]
 
+        # VMCOND00 Phase 4 — restart chain (Layer 4: Named Restarts).
+        #
+        # A list of RestartNode objects pushed by ``push_restart`` and popped
+        # by ``pop_restart``.  ``find_restart`` searches this list from the END
+        # (innermost / most recently pushed) to find the first node whose name
+        # matches the requested symbol.  ``invoke_restart`` calls the found
+        # node's restart function as a new VM frame (non-unwinding by default).
+        #
+        # Cleared by reset() between executions; also cleaned up by EXIT_TO
+        # (Layer 5) when it unwinds to a target frame depth.
+        self._restart_chain: list = []  # list[RestartNode]
+
+        # VMCOND00 Phase 4 — exit-point chain (Layer 5: Non-Local Exits).
+        #
+        # A list of ExitPointNode objects pushed by ``establish_exit``.  EXIT_TO
+        # searches this list from the END (innermost) for a node whose tag matches
+        # the requested symbol, then:
+        #   1. Pops this node and all more recently pushed nodes.
+        #   2. Unwinds vm._frames, vm._handler_chain, and vm._restart_chain to
+        #      the recorded frame_depth.
+        #   3. Assigns the exit value to the result register in the target frame.
+        #   4. Jumps to resume_ip in the target frame.
+        #
+        # Cleared by reset() between executions; also partially cleaned up by
+        # handle_ret / handle_ret_void when a frame returns normally (removing
+        # exit points established in the popped frame so they do not linger).
+        self._exit_point_chain: list = []  # list[ExitPointNode]
+
         # VMCOND00 Phase 1 — syscall dispatch table.
         #
         # Maps SYSCALL00 canonical syscall number (int) to an implementation
@@ -548,7 +576,9 @@ class VMCore:
         self._interrupted = False
         self._memory = {}
         self._io_ports = {}
-        self._handler_chain = []  # VMCOND00 Phase 3 — clear per execution
+        self._handler_chain = []   # VMCOND00 Phase 3 — clear per execution
+        self._restart_chain = []   # VMCOND00 Phase 4 — clear per execution
+        self._exit_point_chain = []  # VMCOND00 Phase 4 — clear per execution
 
     # ------------------------------------------------------------------
     # LANG06 debug API

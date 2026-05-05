@@ -537,6 +537,94 @@ class TestOpcodeSets:
         from interpreter_ir import THROW_OPS  # noqa: PLC0415
         assert THROW_OPS.issubset(ALL_OPS)
 
+    # VMCOND00 Phase 3 — HANDLER_OPS membership
+
+    def test_handler_ops_frozenset_exported(self) -> None:
+        """HANDLER_OPS is importable from the package root."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        expected = {"push_handler", "pop_handler", "signal", "error", "warn"}
+        assert expected == HANDLER_OPS
+
+    def test_handler_ops_subset_of_side_effect_ops(self) -> None:
+        """HANDLER_OPS is a subset of SIDE_EFFECT_OPS (all have side-effects)."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert HANDLER_OPS.issubset(SIDE_EFFECT_OPS)
+
+    def test_handler_ops_subset_of_all_ops(self) -> None:
+        """HANDLER_OPS is a subset of ALL_OPS."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert HANDLER_OPS.issubset(ALL_OPS)
+
+    # VMCOND00 Phase 4 — RESTART_OPS membership
+
+    def test_restart_ops_frozenset_exported(self) -> None:
+        """RESTART_OPS is importable from the package root."""
+        from interpreter_ir import RESTART_OPS  # noqa: PLC0415
+        expected = {
+            "push_restart", "pop_restart", "find_restart",
+            "invoke_restart", "compute_restarts",
+        }
+        assert expected == RESTART_OPS
+
+    def test_restart_ops_subset_of_side_effect_ops(self) -> None:
+        """RESTART_OPS is a subset of SIDE_EFFECT_OPS."""
+        from interpreter_ir import RESTART_OPS  # noqa: PLC0415
+        assert RESTART_OPS.issubset(SIDE_EFFECT_OPS)
+
+    def test_restart_ops_subset_of_all_ops(self) -> None:
+        """RESTART_OPS is a subset of ALL_OPS."""
+        from interpreter_ir import RESTART_OPS  # noqa: PLC0415
+        assert RESTART_OPS.issubset(ALL_OPS)
+
+    def test_push_restart_in_all_ops(self) -> None:
+        assert "push_restart" in ALL_OPS
+
+    def test_pop_restart_in_all_ops(self) -> None:
+        assert "pop_restart" in ALL_OPS
+
+    def test_find_restart_in_all_ops(self) -> None:
+        assert "find_restart" in ALL_OPS
+
+    def test_invoke_restart_in_all_ops(self) -> None:
+        assert "invoke_restart" in ALL_OPS
+
+    def test_compute_restarts_in_all_ops(self) -> None:
+        assert "compute_restarts" in ALL_OPS
+
+    # VMCOND00 Phase 4 — EXIT_OPS membership
+
+    def test_exit_ops_frozenset_exported(self) -> None:
+        """EXIT_OPS is importable from the package root."""
+        from interpreter_ir import EXIT_OPS  # noqa: PLC0415
+        expected = {"establish_exit", "exit_to"}
+        assert expected == EXIT_OPS
+
+    def test_exit_ops_subset_of_side_effect_ops(self) -> None:
+        """EXIT_OPS is a subset of SIDE_EFFECT_OPS."""
+        from interpreter_ir import EXIT_OPS  # noqa: PLC0415
+        assert EXIT_OPS.issubset(SIDE_EFFECT_OPS)
+
+    def test_exit_ops_subset_of_all_ops(self) -> None:
+        """EXIT_OPS is a subset of ALL_OPS."""
+        from interpreter_ir import EXIT_OPS  # noqa: PLC0415
+        assert EXIT_OPS.issubset(ALL_OPS)
+
+    def test_establish_exit_in_all_ops(self) -> None:
+        assert "establish_exit" in ALL_OPS
+
+    def test_exit_to_in_all_ops(self) -> None:
+        assert "exit_to" in ALL_OPS
+
+    def test_exit_ops_not_in_branch_ops(self) -> None:
+        """Exit opcodes are non-local control transfers, not conditional branches."""
+        assert "establish_exit" not in BRANCH_OPS
+        assert "exit_to" not in BRANCH_OPS
+
+    def test_restart_ops_not_in_branch_ops(self) -> None:
+        """Restart opcodes are not conditional branches."""
+        assert "push_restart" not in BRANCH_OPS
+        assert "invoke_restart" not in BRANCH_OPS
+
 
 # ===========================================================================
 # TestExceptionTableEntry — VMCOND00 Phase 2 static exception table
