@@ -10,11 +10,19 @@
     "CDATA section state",
     "Data state",
     "PLAINTEXT state",
+    "RAWTEXT end tag attributes state",
+    "RAWTEXT end tag name state",
     "RAWTEXT end tag open state",
+    "RAWTEXT end tag whitespace state",
     "RAWTEXT less-than sign state",
+    "RAWTEXT self-closing end tag state",
     "RAWTEXT state",
+    "RCDATA end tag attributes state",
+    "RCDATA end tag name state",
     "RCDATA end tag open state",
+    "RCDATA end tag whitespace state",
     "RCDATA less-than sign state",
+    "RCDATA self-closing end tag state",
     "RCDATA state",
     "Script data double escape end state",
     "Script data double escape start state",
@@ -22,15 +30,23 @@
     "Script data double escaped dash state",
     "Script data double escaped less-than sign state",
     "Script data double escaped state",
+    "Script data end tag attributes state",
+    "Script data end tag name state",
     "Script data end tag open state",
+    "Script data end tag whitespace state",
     "Script data escape start dash state",
     "Script data escape start state",
     "Script data escaped dash dash state",
     "Script data escaped dash state",
+    "Script data escaped end tag attributes state",
+    "Script data escaped end tag name state",
     "Script data escaped end tag open state",
+    "Script data escaped end tag whitespace state",
     "Script data escaped less-than sign state",
+    "Script data escaped self-closing end tag state",
     "Script data escaped state",
     "Script data less-than sign state",
+    "Script data self-closing end tag state",
     "Script data state"
   ],
   "cases": [
@@ -2308,6 +2324,263 @@
       "diagnostics": [],
       "initial_state": "Script data less-than sign state",
       "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-186",
+      "description": "rcdata end tag name state emits seeded matching end tag",
+      "input": ">after",
+      "tokens": [
+        "EndTag(name=title)",
+        "Text(data=after)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA end tag name state",
+      "last_start_tag": "title",
+      "current_end_tag": "title",
+      "temporary_buffer": "title"
+    },
+    {
+      "id": "html5lib-smoke-187",
+      "description": "rawtext end tag name state keeps seeded mismatched end tag text",
+      "input": ">tail</style>",
+      "tokens": [
+        "Text(data=</title>tail)",
+        "EndTag(name=style)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT end tag name state",
+      "last_start_tag": "style",
+      "current_end_tag": "title",
+      "temporary_buffer": "title"
+    },
+    {
+      "id": "html5lib-smoke-188",
+      "description": "script data end tag name state emits seeded eof text",
+      "input": "",
+      "tokens": [
+        "Text(data=</script)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data end tag name state",
+      "last_start_tag": "script",
+      "current_end_tag": "script",
+      "temporary_buffer": "script"
+    },
+    {
+      "id": "html5lib-smoke-189",
+      "description": "script escaped end tag name state emits seeded matching end tag",
+      "input": ">tail",
+      "tokens": [
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data escaped end tag name state",
+      "last_start_tag": "script",
+      "current_end_tag": "script",
+      "temporary_buffer": "script"
+    },
+    {
+      "id": "html5lib-smoke-190",
+      "description": "rcdata end tag whitespace state reports seeded matching whitespace",
+      "input": ">after",
+      "tokens": [
+        "EndTag(name=title)",
+        "Text(data=after)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-whitespace-after-end-tag-name"
+      ],
+      "initial_state": "RCDATA end tag whitespace state",
+      "last_start_tag": "title",
+      "current_end_tag": "title",
+      "temporary_buffer": "title "
+    },
+    {
+      "id": "html5lib-smoke-191",
+      "description": "rawtext end tag whitespace state keeps seeded mismatched text",
+      "input": ">tail</style>",
+      "tokens": [
+        "Text(data=</title >tail)",
+        "EndTag(name=style)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT end tag whitespace state",
+      "last_start_tag": "style",
+      "current_end_tag": "title",
+      "temporary_buffer": "title "
+    },
+    {
+      "id": "html5lib-smoke-192",
+      "description": "script data end tag whitespace state reports seeded matching whitespace",
+      "input": ">tail",
+      "tokens": [
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-whitespace-after-end-tag-name"
+      ],
+      "initial_state": "Script data end tag whitespace state",
+      "last_start_tag": "script",
+      "current_end_tag": "script",
+      "temporary_buffer": "script "
+    },
+    {
+      "id": "html5lib-smoke-193",
+      "description": "script escaped end tag whitespace state reports seeded matching whitespace",
+      "input": ">tail",
+      "tokens": [
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-whitespace-after-end-tag-name"
+      ],
+      "initial_state": "Script data escaped end tag whitespace state",
+      "last_start_tag": "script",
+      "current_end_tag": "script",
+      "temporary_buffer": "script "
+    },
+    {
+      "id": "html5lib-smoke-194",
+      "description": "rcdata end tag attributes state reports seeded matching attributes",
+      "input": ">after",
+      "tokens": [
+        "EndTag(name=title)",
+        "Text(data=after)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "end-tag-with-attributes"
+      ],
+      "initial_state": "RCDATA end tag attributes state",
+      "last_start_tag": "title",
+      "current_end_tag": "title",
+      "temporary_buffer": "title class=x"
+    },
+    {
+      "id": "html5lib-smoke-195",
+      "description": "rawtext end tag attributes state keeps seeded mismatched text",
+      "input": ">tail</style>",
+      "tokens": [
+        "Text(data=</title class=x>tail)",
+        "EndTag(name=style)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT end tag attributes state",
+      "last_start_tag": "style",
+      "current_end_tag": "title",
+      "temporary_buffer": "title class=x"
+    },
+    {
+      "id": "html5lib-smoke-196",
+      "description": "script data end tag attributes state reports seeded matching attributes",
+      "input": ">tail",
+      "tokens": [
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "end-tag-with-attributes"
+      ],
+      "initial_state": "Script data end tag attributes state",
+      "last_start_tag": "script",
+      "current_end_tag": "script",
+      "temporary_buffer": "script class=x"
+    },
+    {
+      "id": "html5lib-smoke-197",
+      "description": "script escaped end tag attributes state reports seeded matching attributes",
+      "input": ">tail",
+      "tokens": [
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "end-tag-with-attributes"
+      ],
+      "initial_state": "Script data escaped end tag attributes state",
+      "last_start_tag": "script",
+      "current_end_tag": "script",
+      "temporary_buffer": "script class=x"
+    },
+    {
+      "id": "html5lib-smoke-198",
+      "description": "rcdata self-closing end tag state reports seeded matching solidus",
+      "input": ">after",
+      "tokens": [
+        "EndTag(name=title)",
+        "Text(data=after)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "end-tag-with-trailing-solidus"
+      ],
+      "initial_state": "RCDATA self-closing end tag state",
+      "last_start_tag": "title",
+      "current_end_tag": "title",
+      "temporary_buffer": "title"
+    },
+    {
+      "id": "html5lib-smoke-199",
+      "description": "rawtext self-closing end tag state keeps seeded mismatched text",
+      "input": ">tail</style>",
+      "tokens": [
+        "Text(data=</title/>tail)",
+        "EndTag(name=style)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT self-closing end tag state",
+      "last_start_tag": "style",
+      "current_end_tag": "title",
+      "temporary_buffer": "title"
+    },
+    {
+      "id": "html5lib-smoke-200",
+      "description": "script data self-closing end tag state reports seeded matching solidus",
+      "input": ">tail",
+      "tokens": [
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "end-tag-with-trailing-solidus"
+      ],
+      "initial_state": "Script data self-closing end tag state",
+      "last_start_tag": "script",
+      "current_end_tag": "script",
+      "temporary_buffer": "script"
+    },
+    {
+      "id": "html5lib-smoke-201",
+      "description": "script escaped self-closing end tag state reports seeded matching solidus",
+      "input": ">tail",
+      "tokens": [
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "end-tag-with-trailing-solidus"
+      ],
+      "initial_state": "Script data escaped self-closing end tag state",
+      "last_start_tag": "script",
+      "current_end_tag": "script",
+      "temporary_buffer": "script"
     }
   ],
   "skipped": []

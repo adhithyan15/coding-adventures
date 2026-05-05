@@ -11,58 +11,109 @@ from typing import Any
 
 
 SUPPORTED_INITIAL_STATES = {
-    "CDATA section state",
     "CDATA section bracket state",
     "CDATA section end state",
+    "CDATA section state",
     "Data state",
     "PLAINTEXT state",
+    "RCDATA end tag attributes state",
+    "RCDATA end tag name state",
     "RCDATA end tag open state",
-    "RCDATA state",
+    "RCDATA end tag whitespace state",
     "RCDATA less-than sign state",
+    "RCDATA self-closing end tag state",
+    "RCDATA state",
+    "RAWTEXT end tag attributes state",
+    "RAWTEXT end tag name state",
     "RAWTEXT end tag open state",
-    "RAWTEXT state",
+    "RAWTEXT end tag whitespace state",
     "RAWTEXT less-than sign state",
+    "RAWTEXT self-closing end tag state",
+    "RAWTEXT state",
     "Script data double escape end state",
     "Script data double escape start state",
     "Script data double escaped dash dash state",
     "Script data double escaped dash state",
     "Script data double escaped less-than sign state",
     "Script data double escaped state",
+    "Script data end tag attributes state",
+    "Script data end tag name state",
+    "Script data end tag open state",
+    "Script data end tag whitespace state",
     "Script data escape start dash state",
     "Script data escape start state",
     "Script data escaped dash dash state",
     "Script data escaped dash state",
+    "Script data escaped end tag attributes state",
+    "Script data escaped end tag name state",
     "Script data escaped end tag open state",
+    "Script data escaped end tag whitespace state",
     "Script data escaped less-than sign state",
+    "Script data escaped self-closing end tag state",
     "Script data escaped state",
-    "Script data end tag open state",
     "Script data less-than sign state",
+    "Script data self-closing end tag state",
     "Script data state",
 }
 
 LAST_START_TAG_INITIAL_STATES = {
-    "RCDATA state",
-    "RCDATA less-than sign state",
+    "RCDATA end tag attributes state",
+    "RCDATA end tag name state",
     "RCDATA end tag open state",
-    "RAWTEXT state",
-    "RAWTEXT less-than sign state",
+    "RCDATA end tag whitespace state",
+    "RCDATA less-than sign state",
+    "RCDATA self-closing end tag state",
+    "RCDATA state",
+    "RAWTEXT end tag attributes state",
+    "RAWTEXT end tag name state",
     "RAWTEXT end tag open state",
+    "RAWTEXT end tag whitespace state",
+    "RAWTEXT less-than sign state",
+    "RAWTEXT self-closing end tag state",
+    "RAWTEXT state",
     "Script data double escape end state",
     "Script data double escape start state",
     "Script data double escaped dash dash state",
     "Script data double escaped dash state",
     "Script data double escaped less-than sign state",
     "Script data double escaped state",
+    "Script data end tag attributes state",
+    "Script data end tag name state",
+    "Script data end tag open state",
+    "Script data end tag whitespace state",
     "Script data escape start dash state",
     "Script data escape start state",
     "Script data escaped dash dash state",
     "Script data escaped dash state",
+    "Script data escaped end tag attributes state",
+    "Script data escaped end tag name state",
     "Script data escaped end tag open state",
+    "Script data escaped end tag whitespace state",
     "Script data escaped less-than sign state",
+    "Script data escaped self-closing end tag state",
     "Script data escaped state",
-    "Script data end tag open state",
     "Script data less-than sign state",
+    "Script data self-closing end tag state",
     "Script data state",
+}
+
+END_TAG_SEED_INITIAL_STATES = {
+    "RCDATA end tag attributes state",
+    "RCDATA end tag name state",
+    "RCDATA end tag whitespace state",
+    "RCDATA self-closing end tag state",
+    "RAWTEXT end tag attributes state",
+    "RAWTEXT end tag name state",
+    "RAWTEXT end tag whitespace state",
+    "RAWTEXT self-closing end tag state",
+    "Script data end tag attributes state",
+    "Script data end tag name state",
+    "Script data end tag whitespace state",
+    "Script data self-closing end tag state",
+    "Script data escaped end tag attributes state",
+    "Script data escaped end tag name state",
+    "Script data escaped end tag whitespace state",
+    "Script data escaped self-closing end tag state",
 }
 
 
@@ -138,6 +189,26 @@ def is_supported(test: dict[str, Any]) -> tuple[bool, str]:
     if last_start_tag is not None and len(needs_last_start_tag) != len(initial_states):
         return False, f"unsupported lastStartTag={last_start_tag!r}"
 
+    needs_end_tag_seed = [
+        initial_state
+        for initial_state in initial_states
+        if initial_state in END_TAG_SEED_INITIAL_STATES
+    ]
+    has_end_tag_seed = isinstance(test.get("currentEndTag"), str) and isinstance(
+        test.get("temporaryBuffer"), str
+    )
+    has_partial_end_tag_seed = test.get("currentEndTag") is not None or test.get(
+        "temporaryBuffer"
+    ) is not None
+    if needs_end_tag_seed and not has_end_tag_seed:
+        return False, f"{needs_end_tag_seed[0]} requires currentEndTag and temporaryBuffer"
+
+    if has_partial_end_tag_seed and not has_end_tag_seed:
+        return False, "currentEndTag and temporaryBuffer must be provided together"
+
+    if has_end_tag_seed and len(needs_end_tag_seed) != len(initial_states):
+        return False, "currentEndTag/temporaryBuffer only supported for continuation states"
+
     for token in test.get("output", []):
         kind = token[0]
         if kind not in {"Character", "StartTag", "EndTag", "Comment", "DOCTYPE"}:
@@ -204,6 +275,14 @@ def normalize_case(
     last_start_tag = test.get("lastStartTag")
     if last_start_tag is not None:
         normalized["last_start_tag"] = last_start_tag
+
+    current_end_tag = test.get("currentEndTag")
+    if current_end_tag is not None:
+        normalized["current_end_tag"] = current_end_tag
+
+    temporary_buffer = test.get("temporaryBuffer")
+    if temporary_buffer is not None:
+        normalized["temporary_buffer"] = temporary_buffer
 
     return normalized
 

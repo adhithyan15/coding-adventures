@@ -35,15 +35,27 @@ pub enum HtmlInitialTokenizerContext {
     Rcdata,
     RcdataLessThanSign,
     RcdataEndTagOpen,
+    RcdataEndTagName,
+    RcdataEndTagWhitespace,
+    RcdataEndTagAttributes,
+    RcdataSelfClosingEndTag,
     Rawtext,
     RawtextLessThanSign,
     RawtextEndTagOpen,
+    RawtextEndTagName,
+    RawtextEndTagWhitespace,
+    RawtextEndTagAttributes,
+    RawtextSelfClosingEndTag,
     ForeignContentCdataSection,
     ForeignContentCdataSectionBracket,
     ForeignContentCdataSectionEnd,
     ScriptData,
     ScriptDataLessThanSign,
     ScriptDataEndTagOpen,
+    ScriptDataEndTagName,
+    ScriptDataEndTagWhitespace,
+    ScriptDataEndTagAttributes,
+    ScriptDataSelfClosingEndTag,
     ScriptDataEscapeStart,
     ScriptDataEscapeStartDash,
     ScriptDataEscaped,
@@ -51,6 +63,10 @@ pub enum HtmlInitialTokenizerContext {
     ScriptDataEscapedDashDash,
     ScriptDataEscapedLessThanSign,
     ScriptDataEscapedEndTagOpen,
+    ScriptDataEscapedEndTagName,
+    ScriptDataEscapedEndTagWhitespace,
+    ScriptDataEscapedEndTagAttributes,
+    ScriptDataEscapedSelfClosingEndTag,
     ScriptDataDoubleEscapeStart,
     ScriptDataDoubleEscaped,
     ScriptDataDoubleEscapedDash,
@@ -70,6 +86,24 @@ impl HtmlInitialTokenizerContext {
                 .with_last_start_tag("title"),
             Self::RcdataEndTagOpen => HtmlLexContext::new(HtmlTokenizerState::RcdataEndTagOpen)
                 .with_last_start_tag("title"),
+            Self::RcdataEndTagName => {
+                seeded_end_tag_lex_context(HtmlTokenizerState::RcdataEndTagName, "title", "title")
+            }
+            Self::RcdataEndTagWhitespace => seeded_end_tag_lex_context(
+                HtmlTokenizerState::RcdataEndTagWhitespace,
+                "title",
+                "title ",
+            ),
+            Self::RcdataEndTagAttributes => seeded_end_tag_lex_context(
+                HtmlTokenizerState::RcdataEndTagAttributes,
+                "title",
+                "title class=x",
+            ),
+            Self::RcdataSelfClosingEndTag => seeded_end_tag_lex_context(
+                HtmlTokenizerState::RcdataSelfClosingEndTag,
+                "title",
+                "title",
+            ),
             Self::Rawtext => {
                 HtmlLexContext::new(HtmlTokenizerState::Rawtext).with_last_start_tag("style")
             }
@@ -79,6 +113,24 @@ impl HtmlInitialTokenizerContext {
             }
             Self::RawtextEndTagOpen => HtmlLexContext::new(HtmlTokenizerState::RawtextEndTagOpen)
                 .with_last_start_tag("style"),
+            Self::RawtextEndTagName => {
+                seeded_end_tag_lex_context(HtmlTokenizerState::RawtextEndTagName, "style", "style")
+            }
+            Self::RawtextEndTagWhitespace => seeded_end_tag_lex_context(
+                HtmlTokenizerState::RawtextEndTagWhitespace,
+                "style",
+                "style ",
+            ),
+            Self::RawtextEndTagAttributes => seeded_end_tag_lex_context(
+                HtmlTokenizerState::RawtextEndTagAttributes,
+                "style",
+                "style class=x",
+            ),
+            Self::RawtextSelfClosingEndTag => seeded_end_tag_lex_context(
+                HtmlTokenizerState::RawtextSelfClosingEndTag,
+                "style",
+                "style",
+            ),
             Self::ForeignContentCdataSection => HtmlLexContext::cdata_section(),
             Self::ForeignContentCdataSectionBracket => {
                 HtmlLexContext::new(HtmlTokenizerState::CdataSectionBracket)
@@ -93,6 +145,26 @@ impl HtmlInitialTokenizerContext {
             Self::ScriptDataEndTagOpen => {
                 script_lex_context(HtmlTokenizerState::ScriptDataEndTagOpen)
             }
+            Self::ScriptDataEndTagName => seeded_end_tag_lex_context(
+                HtmlTokenizerState::ScriptDataEndTagName,
+                "script",
+                "script",
+            ),
+            Self::ScriptDataEndTagWhitespace => seeded_end_tag_lex_context(
+                HtmlTokenizerState::ScriptDataEndTagWhitespace,
+                "script",
+                "script ",
+            ),
+            Self::ScriptDataEndTagAttributes => seeded_end_tag_lex_context(
+                HtmlTokenizerState::ScriptDataEndTagAttributes,
+                "script",
+                "script class=x",
+            ),
+            Self::ScriptDataSelfClosingEndTag => seeded_end_tag_lex_context(
+                HtmlTokenizerState::ScriptDataSelfClosingEndTag,
+                "script",
+                "script",
+            ),
             Self::ScriptDataEscapeStart => {
                 script_lex_context(HtmlTokenizerState::ScriptDataEscapeStart)
             }
@@ -112,6 +184,26 @@ impl HtmlInitialTokenizerContext {
             Self::ScriptDataEscapedEndTagOpen => {
                 script_lex_context(HtmlTokenizerState::ScriptDataEscapedEndTagOpen)
             }
+            Self::ScriptDataEscapedEndTagName => seeded_end_tag_lex_context(
+                HtmlTokenizerState::ScriptDataEscapedEndTagName,
+                "script",
+                "script",
+            ),
+            Self::ScriptDataEscapedEndTagWhitespace => seeded_end_tag_lex_context(
+                HtmlTokenizerState::ScriptDataEscapedEndTagWhitespace,
+                "script",
+                "script ",
+            ),
+            Self::ScriptDataEscapedEndTagAttributes => seeded_end_tag_lex_context(
+                HtmlTokenizerState::ScriptDataEscapedEndTagAttributes,
+                "script",
+                "script class=x",
+            ),
+            Self::ScriptDataEscapedSelfClosingEndTag => seeded_end_tag_lex_context(
+                HtmlTokenizerState::ScriptDataEscapedSelfClosingEndTag,
+                "script",
+                "script",
+            ),
             Self::ScriptDataDoubleEscapeStart => {
                 script_lex_context(HtmlTokenizerState::ScriptDataDoubleEscapeStart)
             }
@@ -136,6 +228,17 @@ impl HtmlInitialTokenizerContext {
 
 fn script_lex_context(state: HtmlTokenizerState) -> HtmlLexContext {
     HtmlLexContext::script_substate(state).expect("parser only exposes valid script substates")
+}
+
+fn seeded_end_tag_lex_context(
+    state: HtmlTokenizerState,
+    last_start_tag: &str,
+    temporary_buffer: &str,
+) -> HtmlLexContext {
+    HtmlLexContext::new(state)
+        .with_last_start_tag(last_start_tag)
+        .with_current_end_tag(last_start_tag)
+        .with_temporary_buffer(temporary_buffer)
 }
 
 /// Parser result that keeps DOM output and diagnostics together.
@@ -1877,6 +1980,74 @@ mod tests {
         assert_eq!(body(&rawtext.document).children[0], Node::text("tail"));
         let paragraph = element(&body(&rawtext.document).children[1]);
         assert_eq!(paragraph.children, vec![Node::text("after")]);
+    }
+
+    #[test]
+    fn parser_can_start_in_seeded_text_end_tag_continuation_contexts() {
+        for (context, source, unmatched_tag, expected_text, expected_lexer_diagnostic) in [
+            (
+                HtmlInitialTokenizerContext::RcdataEndTagName,
+                ">after<p>x</p>",
+                "title",
+                "after",
+                None,
+            ),
+            (
+                HtmlInitialTokenizerContext::RawtextEndTagWhitespace,
+                ">tail<p>x</p>",
+                "style",
+                "tail",
+                Some("unexpected-whitespace-after-end-tag-name"),
+            ),
+            (
+                HtmlInitialTokenizerContext::ScriptDataEndTagAttributes,
+                ">tail<p>x</p>",
+                "script",
+                "tail",
+                Some("end-tag-with-attributes"),
+            ),
+            (
+                HtmlInitialTokenizerContext::ScriptDataEscapedSelfClosingEndTag,
+                ">tail<p>x</p>",
+                "script",
+                "tail",
+                Some("end-tag-with-trailing-solidus"),
+            ),
+        ] {
+            let output = parse_html_with_diagnostics_and_options(
+                source,
+                HtmlParseOptions {
+                    initial_tokenizer_context: context,
+                    ..HtmlParseOptions::default()
+                },
+            )
+            .unwrap();
+
+            assert_eq!(
+                body(&output.document).children[0],
+                Node::text(expected_text)
+            );
+            let paragraph = element(&body(&output.document).children[1]);
+            assert_eq!(paragraph.children, vec![Node::text("x")]);
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "unexpected-end-tag",
+                    format!("end tag `</{unmatched_tag}>` did not match an open element")
+                )],
+                "context {context:?}"
+            );
+            let actual_lexer_diagnostics = output
+                .lexer_diagnostics
+                .iter()
+                .map(|diagnostic| diagnostic.code.as_str())
+                .collect::<Vec<_>>();
+            assert_eq!(
+                actual_lexer_diagnostics,
+                expected_lexer_diagnostic.into_iter().collect::<Vec<_>>(),
+                "context {context:?}"
+            );
+        }
     }
 
     #[test]

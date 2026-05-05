@@ -1,6 +1,6 @@
 use coding_adventures_html_lexer::{
     apply_html_lex_context, create_html_lexer, html1_machine, html_skeleton_machine, Attribute,
-    HtmlLexContext, HtmlLexer, HtmlTokenizerState, Token,
+    HtmlLexContext, HtmlLexer, HtmlTokenizerState, Token, HTML_TOKENIZER_STATES,
 };
 use serde::Deserialize;
 use serde_json::Value;
@@ -32,6 +32,10 @@ struct FixtureCase {
     initial_state: Option<String>,
     #[serde(default)]
     last_start_tag: Option<String>,
+    #[serde(default)]
+    current_end_tag: Option<String>,
+    #[serde(default)]
+    temporary_buffer: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -49,6 +53,10 @@ struct Html5libTokenizerTest {
     initial_states: Vec<String>,
     #[serde(default, rename = "lastStartTag")]
     last_start_tag: Option<String>,
+    #[serde(default, rename = "currentEndTag")]
+    current_end_tag: Option<String>,
+    #[serde(default, rename = "temporaryBuffer")]
+    temporary_buffer: Option<String>,
     #[serde(default)]
     errors: Vec<Html5libTokenizerError>,
 }
@@ -100,7 +108,7 @@ fn fixture_manifests_parse() {
 fn html5lib_smoke_fixture_file_parses() {
     let file = load_html5lib_file(HTML5LIB_RAW_FIXTURES);
 
-    assert_eq!(file.tests.len(), 185);
+    assert!(file.tests.len() >= 185);
     assert_eq!(
         file.tests[0].description,
         "simple start and end tag in data state"
@@ -158,39 +166,12 @@ fn normalized_html5lib_fixture_parses_with_importer_metadata() {
     assert!(!normalized.description.is_empty());
     assert_eq!(normalized.source, "upstream-html5lib-smoke.test");
     assert_eq!(normalized.generator, "normalize_html5lib_fixtures.py");
-    assert_eq!(
-        normalized.supported_initial_states,
-        vec![
-            "CDATA section bracket state".to_string(),
-            "CDATA section end state".to_string(),
-            "CDATA section state".to_string(),
-            "Data state".to_string(),
-            "PLAINTEXT state".to_string(),
-            "RAWTEXT end tag open state".to_string(),
-            "RAWTEXT less-than sign state".to_string(),
-            "RAWTEXT state".to_string(),
-            "RCDATA end tag open state".to_string(),
-            "RCDATA less-than sign state".to_string(),
-            "RCDATA state".to_string(),
-            "Script data double escape end state".to_string(),
-            "Script data double escape start state".to_string(),
-            "Script data double escaped dash dash state".to_string(),
-            "Script data double escaped dash state".to_string(),
-            "Script data double escaped less-than sign state".to_string(),
-            "Script data double escaped state".to_string(),
-            "Script data end tag open state".to_string(),
-            "Script data escape start dash state".to_string(),
-            "Script data escape start state".to_string(),
-            "Script data escaped dash dash state".to_string(),
-            "Script data escaped dash state".to_string(),
-            "Script data escaped end tag open state".to_string(),
-            "Script data escaped less-than sign state".to_string(),
-            "Script data escaped state".to_string(),
-            "Script data less-than sign state".to_string(),
-            "Script data state".to_string()
-        ]
-    );
-    assert_eq!(normalized.cases.len(), 186);
+    let mut supported_states = HTML_TOKENIZER_STATES
+        .map(|state| state.as_html5lib_state().to_string())
+        .to_vec();
+    supported_states.sort();
+    assert_eq!(normalized.supported_initial_states, supported_states);
+    assert!(normalized.cases.len() >= 186);
     assert!(normalized.skipped.is_empty());
     assert_eq!(
         normalized.cases[4].diagnostics,
@@ -265,6 +246,15 @@ fn normalized_html5lib_fixture_parses_with_importer_metadata() {
         normalized.cases[31].last_start_tag.as_deref(),
         Some("style")
     );
+    assert!(
+        normalized
+            .cases
+            .iter()
+            .any(|case| case.current_end_tag.as_deref() == Some("title")
+                && case.temporary_buffer.as_deref() == Some("title")
+                && case.initial_state.as_deref() == Some("RCDATA end tag name state")),
+        "normalized fixtures should include seeded end-tag continuation states"
+    );
 }
 
 #[test]
@@ -306,7 +296,7 @@ fn normalized_html5lib_cases_match_default_wrapper() {
 
     assert_eq!(suite.format, "venture-html-lexer-fixtures/v1");
     assert_eq!(suite.suite, "html5lib-smoke");
-    assert_eq!(suite.cases.len(), 186);
+    assert_eq!(suite.cases.len(), normalized.cases.len());
 
     run_fixture_suite(&suite, |case| {
         let mut lexer = create_html_lexer().map_err(|error| format!("{error:?}"))?;
@@ -377,12 +367,21 @@ fn unsupported_runtime_cases(normalized: &Html5libNormalizedSuite) -> Vec<Fixtur
 
 fn is_supported_by_current_runtime(case: &FixtureCase) -> bool {
     match case.initial_state.as_deref() {
-        None => case.last_start_tag.is_none(),
+        None => {
+            case.last_start_tag.is_none()
+                && case.current_end_tag.is_none()
+                && case.temporary_buffer.is_none()
+        }
         Some(initial_state) => {
             let Some(state) = HtmlTokenizerState::from_html5lib_state(initial_state) else {
                 return false;
             };
+            let has_end_tag_seed =
+                case.current_end_tag.is_some() && case.temporary_buffer.is_some();
             state.requires_last_start_tag() == case.last_start_tag.is_some()
+                && state.requires_end_tag_seed() == has_end_tag_seed
+                && (has_end_tag_seed
+                    || (case.current_end_tag.is_none() && case.temporary_buffer.is_none()))
         }
     }
 }
@@ -438,6 +437,12 @@ fn configure_lexer_for_case(
     let mut context = HtmlLexContext::new(initial_state);
     if let Some(last_start_tag) = case.last_start_tag.as_deref() {
         context = context.with_last_start_tag(last_start_tag);
+    }
+    if let Some(current_end_tag) = case.current_end_tag.as_deref() {
+        context = context.with_current_end_tag(current_end_tag);
+    }
+    if let Some(temporary_buffer) = case.temporary_buffer.as_deref() {
+        context = context.with_temporary_buffer(temporary_buffer);
     }
     apply_html_lex_context(lexer, &context)
 }
