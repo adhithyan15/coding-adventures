@@ -323,6 +323,10 @@ Use `--limit` on query-running modes to cap the number of answers printed per
 query. It is rejected for compile-only diagnostic modes because those modes do
 not enumerate answers.
 
+Use `--values` on query-running modes to print raw answer values instead of
+named bindings. It is rejected for compile-only diagnostic modes because those
+modes do not emit answer records.
+
 Use `--commit` only with one or more ad-hoc `--query` flags. It persists the
 first answer state from those query flags into later query flags or an
 interactive loop, but it is rejected when no ad-hoc query is supplied.
