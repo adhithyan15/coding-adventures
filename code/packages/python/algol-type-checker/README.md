@@ -14,8 +14,9 @@ function. Switch declarations, switch selections, and conditional designational
 `goto` forms are also supported.
 
 The expression checker also accepts chained assignments, ALGOL conditional
-expressions, tolerant trailing/repeated semicolons from the parser, and
-left-associative exponentiation for numeric bases with integer or real
+expressions, nested conditional forms in type-specific arithmetic, Boolean, and
+designational contexts, tolerant trailing/repeated semicolons from the parser,
+and left-associative exponentiation for numeric bases with integer or real
 exponents.
 Mixed integer/real conditional branches resolve to `real`; incompatible branch
 types are still rejected before IR lowering. Standard numeric functions

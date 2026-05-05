@@ -30,6 +30,9 @@ All notable changes to this package will be documented in this file.
   designational branches guarded.
 - Added semantic checking for chained assignments, ALGOL conditional
   expressions, and numeric exponentiation with integer or real exponents.
+- Accepted nested ALGOL conditional expressions in type-specific arithmetic,
+  Boolean, and designational contexts such as subscripts, conditions, and
+  `goto` targets.
 - Added semantic resolution for bare no-argument typed procedure names used as
   expressions, while keeping written by-name actuals from treating those calls
   as assignable scalar storage.

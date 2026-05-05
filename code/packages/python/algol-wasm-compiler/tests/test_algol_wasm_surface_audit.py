@@ -151,6 +151,27 @@ _SURFACE_CASES = (
         result=[23],
     ),
     SurfaceCase(
+        name="nested-conditional-type-contexts",
+        source="""
+            begin
+              integer result;
+              integer array a[1:if true then if false then 2 else 3 else 1];
+              a[if true then if false then 1 else 2 else 3] := 11;
+              goto if true then if false then miss else hit else miss;
+            miss:
+              result := 0;
+              goto done;
+            hit:
+              if if true then if false then false else true else false then
+                result := a[2]
+              else
+                result := 0;
+            done:
+            end
+        """,
+        result=[11],
+    ),
+    SurfaceCase(
         name="typed-formal-procedure-dispatch",
         source="""
             begin

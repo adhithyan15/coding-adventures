@@ -64,6 +64,8 @@ All notable changes to this package will be documented in this file.
 - Lowered chained assignments, branch-selected conditional expressions, and
   ALGOL-left-associative exponentiation for numeric bases with integer or real
   exponents.
+- Lowered nested conditional expressions in type-specific arithmetic, Boolean,
+  and designational contexts, including nested conditional `goto` targets.
 - Lowered boolean `and`, `or`, and `impl` through short-circuiting control
   flow while keeping `eqv` strict.
 - Lowered bare no-argument typed procedure names as expression calls, including

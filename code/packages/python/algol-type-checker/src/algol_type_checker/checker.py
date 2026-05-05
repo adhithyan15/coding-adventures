@@ -1609,16 +1609,13 @@ class AlgolTypeChecker:
         allow_switch_selection: bool = True,
         active_switch_id: int | None = None,
     ) -> ResolvedGoto | None:
-        if any(token.value == "if" for token in _direct_tokens(node)):
-            bool_expr = _first_direct_node(node, "bool_expr")
-            cond_type = (
-                self._infer_expr(bool_expr, scope) if bool_expr is not None else ERROR
-            )
+        conditional = _conditional_designational_parts(node)
+        if conditional is not None:
+            bool_expr, then_desig, else_desig = conditional
+            cond_type = self._infer_expr(bool_expr, scope)
             if cond_type != ERROR and cond_type != BOOLEAN:
                 self._error(node, "conditional designational condition must be boolean")
-            then_desig = _first_direct_node(node, "simple_desig")
-            else_desig = _first_direct_node(node, "desig_expr")
-            if then_desig is not None:
+            if then_desig.rule_name == "simple_desig":
                 self._check_simple_designational(
                     then_desig,
                     scope,
@@ -1626,7 +1623,23 @@ class AlgolTypeChecker:
                     allow_switch_selection=allow_switch_selection,
                     active_switch_id=active_switch_id,
                 )
-            if else_desig is not None:
+            else:
+                self._check_designational(
+                    then_desig,
+                    scope,
+                    allow_nonlocal_label=allow_nonlocal_label,
+                    allow_switch_selection=allow_switch_selection,
+                    active_switch_id=active_switch_id,
+                )
+            if else_desig.rule_name == "simple_desig":
+                self._check_simple_designational(
+                    else_desig,
+                    scope,
+                    allow_nonlocal_label=allow_nonlocal_label,
+                    allow_switch_selection=allow_switch_selection,
+                    active_switch_id=active_switch_id,
+                )
+            else:
                 self._check_designational(
                     else_desig,
                     scope,
@@ -4021,6 +4034,25 @@ def _meaningful_children(node: ASTNode) -> list[ASTNode | Token]:
 def _conditional_expression_parts(
     children: list[ASTNode | Token],
 ) -> tuple[ASTNode, ASTNode, ASTNode] | None:
+    first = children[0] if children else None
+    if not isinstance(first, Token) or first.value != "if":
+        return None
+    then_index = _keyword_child_index(children, "then")
+    else_index = _keyword_child_index(children, "else")
+    if then_index is None or else_index is None or then_index >= else_index:
+        return None
+    condition = _first_ast_child_between(children, 1, then_index)
+    then_expr = _first_ast_child_between(children, then_index + 1, else_index)
+    else_expr = _first_ast_child_between(children, else_index + 1, len(children))
+    if condition is None or then_expr is None or else_expr is None:
+        return None
+    return condition, then_expr, else_expr
+
+
+def _conditional_designational_parts(
+    node: ASTNode,
+) -> tuple[ASTNode, ASTNode, ASTNode] | None:
+    children = _meaningful_children(node)
     first = children[0] if children else None
     if not isinstance(first, Token) or first.value != "if":
         return None

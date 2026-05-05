@@ -9,6 +9,9 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Type-specific conditional grammar rules now allow nested `if ... then ...
+  else ...` forms in arithmetic bounds/subscripts, boolean conditions, and
+  designational `goto` targets.
 - Unified `expression` parsing now accepts ALGOL conditional expressions such
   as `if b then x else y` in assignment values and actual parameters.
 - Block and compound statement lists now tolerate repeated and trailing

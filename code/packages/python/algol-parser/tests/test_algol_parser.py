@@ -925,6 +925,52 @@ class TestMultipleStatements:
 
 
 # ---------------------------------------------------------------------------
+# Nested conditional context tests
+# ---------------------------------------------------------------------------
+
+
+class TestNestedConditionalContexts:
+    """Conditional values can nest in type-specific ALGOL contexts."""
+
+    def test_nested_arithmetic_conditional_in_bounds_and_subscripts(self) -> None:
+        ast = parse(
+            "begin integer result; "
+            "integer array a[1:if true then if false then 2 else 3 else 1]; "
+            "a[if true then if false then 1 else 2 else 3] := 9; "
+            "result := a[2] "
+            "end"
+        )
+
+        assert ast.rule_name == "program"
+        assert len(find_nodes(ast, "arith_expr")) >= 4
+
+    def test_nested_boolean_conditional_in_condition(self) -> None:
+        ast = parse(
+            "begin integer result; "
+            "if if true then if false then false else true else false "
+            "then result := 1 else result := 0 "
+            "end"
+        )
+
+        assert ast.rule_name == "program"
+        assert len(find_nodes(ast, "bool_expr")) >= 3
+
+    def test_nested_designational_conditional_in_goto(self) -> None:
+        ast = parse(
+            "begin integer result; "
+            "goto if true then if false then left else right else fail; "
+            "left: result := 1; goto done; "
+            "right: result := 7; goto done; "
+            "fail: result := 0; "
+            "done: "
+            "end"
+        )
+
+        assert ast.rule_name == "program"
+        assert len(find_nodes(ast, "desig_expr")) >= 3
+
+
+# ---------------------------------------------------------------------------
 # Error case tests
 # ---------------------------------------------------------------------------
 
