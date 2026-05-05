@@ -5,8 +5,13 @@ edition = "2021"
 description = "Abstract Arduino Uno R4 target descriptor and HAL adapter for Board VM"
 
 [dependencies]
+board-vm-device = { path = "../board-vm-device" }
 board-vm-ir = { path = "../board-vm-ir" }
 board-vm-runtime = { path = "../board-vm-runtime" }
+
+[dev-dependencies]
+board-vm-host = { path = "../board-vm-host" }
+board-vm-protocol = { path = "../board-vm-protocol" }
 
 [lib]
 path = "src/lib.rs"
