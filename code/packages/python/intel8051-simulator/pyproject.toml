@@ -1,0 +1,54 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-intel8051-simulator"
+version = "0.1.0"
+description = "Intel 8051 (MCS-51, 1980) behavioral simulator — Layer 07p"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "Adhithya Rajasekaran" }]
+readme = "README.md"
+keywords = [
+    "intel", "8051", "mcs-51", "microcontroller", "simulator",
+    "harvard-architecture", "embedded", "education", "computer-science",
+]
+dependencies = ["coding-adventures-simulator-protocol"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "Topic :: Education",
+    "Topic :: Scientific/Engineering",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/adhithyan15/coding-adventures"
+Repository = "https://github.com/adhithyan15/coding-adventures"
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/intel8051_simulator"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=intel8051_simulator --cov-report=term-missing --cov-fail-under=80"
+
+[tool.coverage.run]
+source = ["src/intel8051_simulator"]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "SIM"]
+ignore = ["E501", "E701", "E702"]
