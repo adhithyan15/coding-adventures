@@ -207,8 +207,10 @@ __all__ = [
     "retracto",
     "same_termo",
     "scanlo",
+    "seeko",
     "setofo",
     "set_prolog_flago",
+    "set_stream_positiono",
     "setup_call_cleanupo",
     "char_codeo",
     "clauseo",
@@ -5044,6 +5046,92 @@ def at_end_of_streamo(stream_value: object) -> GoalExpr:
             yield state
 
     return native_goal(run, stream_value)
+
+
+def _stream_position(term_value: object) -> int | None:
+    position = _integer_value(term_value)
+    if position is None or position < 0:
+        return None
+    return position
+
+
+def _set_read_stream_position(stream: _TextStream, position: int) -> bool:
+    if position < 0 or position > len(stream.contents):
+        return False
+    stream.cursor = position
+    return True
+
+
+def set_stream_positiono(stream_value: object, position_value: object) -> GoalExpr:
+    """Restore a bounded read stream to a captured integer cursor position."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, position_term = args
+        stream = _read_stream(_reified(stream_term, state))
+        position = _stream_position(_reified(position_term, state))
+        if (
+            stream is not None
+            and position is not None
+            and _set_read_stream_position(stream, position)
+        ):
+            yield state
+
+    return native_goal(run, stream_value, position_value)
+
+
+def _seek_target(stream: _TextStream, offset: int, method: str) -> int | None:
+    if method == "bof":
+        return offset
+    if method == "current":
+        return stream.cursor + offset
+    if method == "eof":
+        return len(stream.contents) + offset
+    return None
+
+
+def _seek_offset(term_value: object) -> int | None:
+    offset = _integer_value(term_value)
+    if offset is not None:
+        return offset
+    if (
+        isinstance(term_value, Compound)
+        and term_value.functor.namespace is None
+        and term_value.functor.name == "-"
+        and len(term_value.args) == 1
+    ):
+        positive_offset = _integer_value(term_value.args[0])
+        if positive_offset is not None:
+            return -positive_offset
+    return None
+
+
+def seeko(
+    stream_value: object,
+    offset_value: object,
+    method_value: object,
+    new_location_value: object,
+) -> GoalExpr:
+    """Move a bounded read stream relative to bof/current/eof."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, offset_term, method_term, new_location_term = args
+        stream = _read_stream(_reified(stream_term, state))
+        offset = _seek_offset(_reified(offset_term, state))
+        method = _plain_atom_text(_reified(method_term, state))
+        if stream is None or offset is None or method is None:
+            return
+        target = _seek_target(stream, offset, method)
+        if target is None or not _set_read_stream_position(stream, target):
+            return
+        yield from solve_from(program_value, eq(new_location_term, num(target)), state)
+
+    return native_goal(
+        run,
+        stream_value,
+        offset_value,
+        method_value,
+        new_location_value,
+    )
 
 
 def read_stringo(

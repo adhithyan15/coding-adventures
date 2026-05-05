@@ -224,6 +224,19 @@ def prolog_vm_capabilities() -> tuple[PrologVMCapability, ...]:
                 "structured and bytecode VM stress coverage",
             ),
         ),
+        PrologVMCapability(
+            id="host-stream-positioning",
+            title="Bounded host stream cursor positioning",
+            status="complete",
+            specs=("PR81",),
+            packages=("logic-builtins", "prolog-loader", "prolog-vm-compiler"),
+            features=(
+                "set_stream_position/2 restores stream_property/2 positions",
+                "seek/4 supports bof/current/eof relative cursor movement",
+                "out-of-bounds positioning fails deterministically",
+                "structured and bytecode VM stress coverage",
+            ),
+        ),
     )
 
 
@@ -261,7 +274,7 @@ def deferred_prolog_vm_capabilities() -> tuple[PrologVMCapability, ...]:
             specs=("PR02",),
             packages=("future",),
             features=(
-                "standard streams, binary streams, and repositioning",
+                "standard streams and binary streams",
                 "rich ISO/SWI stream options beyond the bounded UTF-8 subset",
                 "foreign predicates and host callbacks",
                 "engines, concurrency, and async integration",
@@ -274,8 +287,8 @@ def prolog_vm_capability_manifest() -> PrologVMCapabilityManifest:
     """Return the canonical capability manifest for this package."""
 
     return PrologVMCapabilityManifest(
-        track="Prolog-on-Logic-VM PR00-PR80",
-        status="core-plus-stream-metadata",
+        track="Prolog-on-Logic-VM PR00-PR81",
+        status="core-plus-stream-positioning",
         dialects=("iso", "swi"),
         backends=("structured", "bytecode"),
         capabilities=prolog_vm_capabilities(),

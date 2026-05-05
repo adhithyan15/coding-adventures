@@ -376,3 +376,63 @@ class TestPrologBytecodeVMStress:
                 "Mode": atom("write"),
             },
         ]
+
+    def test_stream_positioning_matches_structured_vm(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "stream-position.pltxt"
+        source_path.write_text("abcdef", encoding="utf-8")
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        compiled = compile_swi_prolog_source(
+            f"""
+            ?- open('{path_atom}', read, In, [alias(bytecode_position_stream)]),
+               read_string(In, 2, Prefix),
+               stream_property(In, position(Saved)),
+               set_stream_position(bytecode_position_stream, 0),
+               read_string(In, 2, Replay),
+               seek(In, -1, eof, Seeked),
+               stream_property(In, position(Current)),
+               read_string(In, 1, Suffix),
+               at_end_of_stream(In),
+               close(bytecode_position_stream).
+            """,
+        )
+
+        answers = run_compiled_prolog_bytecode_query_answers(compiled)
+
+        assert _project_answers(
+            answers,
+            "Prefix",
+            "Saved",
+            "Replay",
+            "Seeked",
+            "Current",
+            "Suffix",
+        ) == _project_answers(
+            run_compiled_prolog_query_answers(compiled),
+            "Prefix",
+            "Saved",
+            "Replay",
+            "Seeked",
+            "Current",
+            "Suffix",
+        )
+        assert _project_answers(
+            answers,
+            "Prefix",
+            "Saved",
+            "Replay",
+            "Seeked",
+            "Current",
+            "Suffix",
+        ) == [
+            {
+                "Prefix": string("ab"),
+                "Saved": num(2),
+                "Replay": string("ab"),
+                "Seeked": num(5),
+                "Current": num(5),
+                "Suffix": string("f"),
+            },
+        ]

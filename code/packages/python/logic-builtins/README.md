@@ -64,6 +64,8 @@ ordinary logic goal expressions.
 - `open_optionso/4`, `current_streamo/3`, `stream_propertyo/2`, and
   `flush_outputo/1` for bounded stream aliases, option validation, and
   metadata
+- `set_stream_positiono/2` and `seeko/4` for bounded read-stream cursor
+  repositioning
 - `difo(left, right)` for delayed disequality constraints
 - `clauseo(head, body)` for Prolog-style clause introspection
 - `compare_termo(order, left, right)`, `termo_lto(left, right)`,

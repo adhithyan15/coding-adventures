@@ -1542,6 +1542,39 @@ class TestPrologGoalAdapter:
         ) == [(atom("report_stream"), atom(str(source_path)), atom("write"))]
         assert source_path.read_text(encoding="utf-8") == "tea"
 
+    def test_adapt_prolog_goal_rewrites_stream_positioning(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "stream-position.txt"
+        source_path.write_text("abcdef", encoding="utf-8")
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- open('{path_atom}', read, In, [alias(position_stream)]), "
+            "read_string(In, 2, Prefix), "
+            "stream_property(In, position(Saved)), "
+            "set_stream_position(position_stream, 0), "
+            "read_string(In, 2, Replay), "
+            "seek(In, -1, eof, Seeked), "
+            "stream_property(In, position(Current)), "
+            "read_string(In, 1, Suffix), "
+            "at_end_of_stream(In), "
+            "close(position_stream).",
+        )
+
+        assert solve_all(
+            program(),
+            (
+                parsed.variables["Prefix"],
+                parsed.variables["Saved"],
+                parsed.variables["Replay"],
+                parsed.variables["Seeked"],
+                parsed.variables["Current"],
+                parsed.variables["Suffix"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        ) == [(string("ab"), num(2), string("ab"), num(5), num(5), string("f"))]
+
     def test_adapt_prolog_goal_rewrites_term_read_write_options(self) -> None:
         parsed = parse_swi_query(
             "?- read_term_from_atom('pair(X, Y, X)', Term, "

@@ -154,7 +154,9 @@ from logic_builtins import (
     retracto,
     same_termo,
     scanlo,
+    seeko,
     set_prolog_flago,
+    set_stream_positiono,
     setofo,
     setup_call_cleanupo,
     stream_propertyo,
@@ -311,6 +313,84 @@ class TestFileTextBuiltins:
             atom("story_output"),
         )]
         assert output_path.read_text(encoding="utf-8") == "tea"
+
+    def test_file_stream_positioning_rewinds_and_seeks(self, tmp_path: Path) -> None:
+        source_path = tmp_path / "positioned.txt"
+        source_path.write_text("abcdef", encoding="utf-8")
+        stream = var("Stream")
+        prefix = var("Prefix")
+        saved_position = var("SavedPosition")
+        replay = var("Replay")
+        seek_position = var("SeekPosition")
+        current_position = var("CurrentPosition")
+        suffix = var("Suffix")
+        result = var("Result")
+
+        assert solve_all(
+            program(),
+            result,
+            conj(
+                open_optionso(
+                    atom(str(source_path)),
+                    "read",
+                    stream,
+                    logic_list([term("alias", atom("positioned_stream"))]),
+                ),
+                read_stringo(stream, num(2), prefix),
+                stream_propertyo(stream, term("position", saved_position)),
+                set_stream_positiono(atom("positioned_stream"), num(0)),
+                read_stringo(stream, num(2), replay),
+                seeko(stream, num(-1), atom("eof"), seek_position),
+                stream_propertyo(stream, term("position", current_position)),
+                read_stringo(stream, num(1), suffix),
+                at_end_of_streamo(stream),
+                closeo(stream),
+                eq(
+                    result,
+                    term(
+                        "positions",
+                        prefix,
+                        saved_position,
+                        replay,
+                        seek_position,
+                        current_position,
+                        suffix,
+                    ),
+                ),
+            ),
+        ) == [term(
+            "positions",
+            string("ab"),
+            num(2),
+            string("ab"),
+            num(5),
+            num(5),
+            string("f"),
+        )]
+
+    def test_file_stream_positioning_rejects_out_of_bounds(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "positioned.txt"
+        source_path.write_text("abc", encoding="utf-8")
+        stream = var("Stream")
+
+        [opened_stream] = solve_all(
+            program(),
+            stream,
+            openo(atom(str(source_path)), "read", stream),
+        )
+        assert solve_all(
+            program(),
+            "ok",
+            conj(set_stream_positiono(opened_stream, num(4)), eq("ok", "ok")),
+        ) == []
+        assert solve_all(
+            program(),
+            "ok",
+            conj(closeo(opened_stream), eq("ok", "ok")),
+        ) == [atom("ok")]
 
 
 class TestAdvancedControlBuiltins:

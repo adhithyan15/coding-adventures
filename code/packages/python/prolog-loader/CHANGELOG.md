@@ -9,6 +9,8 @@
   `at_end_of_stream/1`, `write/2`, and `nl/1`
 - adapt source-level bounded stream option and metadata predicates including
   `open/4`, `current_stream/3`, `stream_property/2`, and `flush_output/1`
+- adapt source-level bounded stream positioning predicates including
+  `set_stream_position/2` and `seek/4`
 - preserve source query variables across `goal_expansion/2` rewrites
 - adapt Prolog `call/2..8` into variadic callable-term execution
 - preserve extra arguments while rewriting module-qualified `call/N` meta-goals
