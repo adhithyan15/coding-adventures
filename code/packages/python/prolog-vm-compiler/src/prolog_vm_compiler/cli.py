@@ -181,6 +181,9 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if check and queries:
         msg = "--check cannot be combined with --query"
         raise ValueError(msg)
+    if check and limit is not None:
+        msg = "--limit cannot be combined with --check"
+        raise ValueError(msg)
     if check and all_source_queries:
         msg = "--check cannot be combined with --all-source-queries"
         raise ValueError(msg)
@@ -192,6 +195,9 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     if dump_bytecode and check:
         msg = "--dump-bytecode cannot be combined with --check"
+        raise ValueError(msg)
+    if dump_bytecode and limit is not None:
+        msg = "--limit cannot be combined with --dump-bytecode"
         raise ValueError(msg)
     if dump_bytecode and list_source_queries:
         msg = "--dump-bytecode cannot be combined with --list-source-queries"
@@ -207,6 +213,9 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     if dump_instructions and check:
         msg = "--dump-instructions cannot be combined with --check"
+        raise ValueError(msg)
+    if dump_instructions and limit is not None:
+        msg = "--limit cannot be combined with --dump-instructions"
         raise ValueError(msg)
     if dump_instructions and dump_bytecode:
         msg = "--dump-instructions cannot be combined with --dump-bytecode"
@@ -225,6 +234,9 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     if dump_source_metadata and check:
         msg = "--dump-source-metadata cannot be combined with --check"
+        raise ValueError(msg)
+    if dump_source_metadata and limit is not None:
+        msg = "--limit cannot be combined with --dump-source-metadata"
         raise ValueError(msg)
     if dump_source_metadata and dump_bytecode:
         msg = "--dump-source-metadata cannot be combined with --dump-bytecode"
@@ -249,6 +261,9 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     if list_source_queries and check:
         msg = "--list-source-queries cannot be combined with --check"
+        raise ValueError(msg)
+    if list_source_queries and limit is not None:
+        msg = "--limit cannot be combined with --list-source-queries"
         raise ValueError(msg)
     if list_source_queries and bool(flags["interactive"]):
         msg = "--list-source-queries cannot be combined with --interactive"
