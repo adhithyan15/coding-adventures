@@ -38,6 +38,16 @@ Specs are numbered **top-down** — from the user-facing language down to silico
 | 10-pipeline | Pipeline Orchestrator | Chains all layers together |
 | 11-html-visualizer | HTML Visualizer | Renders pipeline output as HTML |
 
+**Interactive hardware specs**:
+| # | Spec | Purpose |
+|---|------|---------|
+| BVM00 | Board VM Architecture | Interactive physical-board runtime and package map |
+| BVM01 | Board VM Binary Protocol | Compact transport-agnostic host/board protocol |
+| BVM02 | Board VM Bytecode IR | Portable bytecode and capability calls |
+| BVM03 | Board VM Rust Runtime | `no_std` firmware runtime and board HAL contract |
+| BVM04 | Board VM Host SDKs | Language-agnostic SDK and REPL contract |
+| BVM05 | Board VM Blink MVP | First end-to-end Arduino-style blink scenario |
+
 ## Spec Template
 
 Each spec follows this structure:
