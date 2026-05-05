@@ -52,6 +52,8 @@ All notable changes to this package will be documented in this file.
 - Deferred array-bound expression checking until after sibling declaration
   registration, allowing bounds to call later typed procedures in the same
   block.
+- Rejected array bound expressions that read an array declared later in the
+  same block, preserving declaration-order descriptor allocation semantics.
 - Accepted integer-returning procedure actuals for real-valued formal
   procedure parameters, matching scalar integer-to-real promotion.
 - Accepted switch declaration entries that target labels in lexical parent

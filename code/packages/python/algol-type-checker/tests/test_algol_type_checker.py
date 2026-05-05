@@ -2086,6 +2086,35 @@ class TestAlgolTypeChecker:
             "upper",
         ]
 
+    def test_accepts_prior_array_accesses_in_array_bounds(self) -> None:
+        ast = parse_algol(
+            "begin integer result; integer array b[1:1]; "
+            "integer array a[b[1]:b[1]]; result := 0 end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert [array.name for array in result.semantic.arrays] == ["b", "a"]
+        assert [access.name for access in result.semantic.array_accesses] == [
+            "b",
+            "b",
+        ]
+
+    def test_rejects_later_array_accesses_in_array_bounds(self) -> None:
+        ast = parse_algol(
+            "begin integer result; integer array a[b[1]:b[1]]; "
+            "integer array b[1:1]; result := 0 end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert any(
+            "array bound cannot read array 'b' before its descriptor is allocated"
+            in diagnostic.message
+            for diagnostic in result.diagnostics
+        )
+
     def test_accepts_default_real_array_declaration(self) -> None:
         ast = parse_algol("begin array a[1:3]; a[1] := 7 end")
         result = check_algol(ast)

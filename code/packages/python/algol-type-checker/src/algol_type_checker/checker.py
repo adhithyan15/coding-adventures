@@ -413,7 +413,16 @@ class _PendingArrayBounds:
     """Array bound expressions to check after sibling declarations are visible."""
 
     scope: Scope
-    bounds: tuple[tuple[ASTNode, ASTNode], ...]
+    bounds: tuple[_PendingArrayBoundPair, ...]
+
+
+@dataclass(frozen=True)
+class _PendingArrayBoundPair:
+    """One array dimension bound pair plus arrays allocated before it."""
+
+    lower: ASTNode
+    upper: ASTNode
+    visible_array_ids: frozenset[int]
 
 
 @dataclass(frozen=True)
@@ -784,7 +793,7 @@ class AlgolTypeChecker:
             )
             return _PendingArrayBounds(scope=scope, bounds=())
 
-        pending_bounds: list[tuple[ASTNode, ASTNode]] = []
+        pending_bounds: list[_PendingArrayBoundPair] = []
         for segment in _direct_nodes(node, "array_segment"):
             bound_pairs = _direct_nodes(segment, "bound_pair")
             if not bound_pairs:
@@ -799,6 +808,9 @@ class AlgolTypeChecker:
                 continue
 
             dimensions: list[ArrayDimension] = []
+            visible_array_ids = frozenset(
+                array.array_id for array in self.semantic_arrays
+            )
             for bound_pair in bound_pairs:
                 bounds = _direct_nodes(bound_pair, "arith_expr")
                 if len(bounds) != 2:
@@ -806,7 +818,13 @@ class AlgolTypeChecker:
                     continue
                 lower_bound = bounds[0]
                 upper_bound = bounds[1]
-                pending_bounds.append((lower_bound, upper_bound))
+                pending_bounds.append(
+                    _PendingArrayBoundPair(
+                        lower=lower_bound,
+                        upper=upper_bound,
+                        visible_array_ids=visible_array_ids,
+                    )
+                )
                 dimensions.append(
                     ArrayDimension(
                         lower_node_id=id(lower_bound),
@@ -862,11 +880,19 @@ class AlgolTypeChecker:
         return _PendingArrayBounds(scope=scope, bounds=tuple(pending_bounds))
 
     def _check_pending_array_bounds(self, pending: _PendingArrayBounds) -> None:
-        for lower_bound, upper_bound in pending.bounds:
-            for bound in (lower_bound, upper_bound):
+        for pair in pending.bounds:
+            for bound in (pair.lower, pair.upper):
+                previous_access_count = len(self.resolved_array_accesses)
                 bound_type = self._infer_expr(bound, pending.scope)
                 if bound_type != ERROR and bound_type != INTEGER:
                     self._error(bound, "array bounds must be integer")
+                for access in self.resolved_array_accesses[previous_access_count:]:
+                    if access.array_id not in pair.visible_array_ids:
+                        self._error(
+                            bound,
+                            f"array bound cannot read array {access.name!r} "
+                            "before its descriptor is allocated",
+                        )
 
     def _register_switch_declaration(
         self,

@@ -34,7 +34,9 @@ restore the heap pointer to the activation's entry mark, so dynamic arrays keep
 ALGOL block lifetime instead of leaking through loops or recursive calls.
 Because the checker defers bound expression analysis until declaration
 registration completes, those lower/upper expressions can call later sibling
-typed procedures in the same block.
+typed procedures in the same block. Bound expressions may read earlier array
+descriptors, but same-block arrays declared later remain rejected before IR
+lowering because their descriptors do not exist at allocation time.
 
 Expression lowering includes mixed integer/real arithmetic, boolean operators,
 comparisons, chained assignment targets, branch-selected conditional

@@ -121,6 +121,21 @@ _SURFACE_CASES = (
         stdout="ARRAY 13",
     ),
     SurfaceCase(
+        name="array-bound-declaration-order",
+        source="""
+            begin
+              integer result;
+              integer array b[0:0];
+              integer array a[b[0]:b[0]];
+              a[0] := 21;
+              result := a[0];
+              print('ORDER ', result)
+            end
+        """,
+        result=[21],
+        stdout="ORDER 21",
+    ),
+    SurfaceCase(
         name="for-list-scalar-and-array-control",
         source="""
             begin

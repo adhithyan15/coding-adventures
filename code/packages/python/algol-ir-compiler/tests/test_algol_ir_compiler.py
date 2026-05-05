@@ -1615,6 +1615,28 @@ class TestAlgolIrCompiler:
         assert opcodes.count(IrOp.CALL) >= 2
         assert "a@block0" in result.variable_slots
 
+    def test_compiles_prior_array_accesses_in_array_bounds(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "integer array b[1:1]; integer array a[b[1]:b[1]]; "
+                "a[0] := 9; result := a[0] "
+                "end"
+            )
+        )
+
+        assert "b@block0" in result.variable_slots
+        assert "a@block0" in result.variable_slots
+
+    def test_rejects_later_array_accesses_in_array_bounds(self) -> None:
+        with pytest.raises(CompileError, match="before its descriptor is allocated"):
+            compile_algol(
+                parse_algol(
+                    "begin integer result; integer array a[b[1]:b[1]]; "
+                    "integer array b[1:1]; result := 0 end"
+                )
+            )
+
     def test_compiles_integer_value_procedure_call(self) -> None:
         result = compile_algol(
             parse_algol(
