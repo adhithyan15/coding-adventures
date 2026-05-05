@@ -242,6 +242,18 @@ The compile happens in a background worker thread so live dispatches
 aren't blocked.  Once ready, the specialised pipeline is inserted
 into the cache.
 
+> **Implementation status (Phase 3 V3 landed)**: `SpecRouter` ships
+> in `matrix_runtime::router` and ties together the four pieces:
+> Profiler observations → policy → cache → specialiser, end-to-end.
+> Cache lookup happens before the specialiser is invoked; cache miss
+> consults the specialiser; if the specialiser returns `Some`, the
+> kernel is cached for future calls; if it returns `None`, the cache
+> is **not** poisoned (so a backend that can't yet specialise but
+> might later gets retried).  Phase 3 V4 will wire `SpecRouter::route`
+> into the dispatch path inside `image-gpu-core::pipeline` (and any
+> other domain library that does dispatch), with the call site placed
+> right after `record_dispatch`.
+
 ### 5. Specialised cache + dispatch routing
 
 Each executor extends its existing pipeline cache:

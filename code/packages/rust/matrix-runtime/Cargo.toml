@@ -1,6 +1,6 @@
 [package]
 name = "matrix-runtime"
-version = "0.6.0"
+version = "0.7.0"
 edition = "2021"
 description = "MX04 — the brain of the matrix execution layer. Planner, executor registry, and cost-model-driven placement. Lowers matrix-ir Graphs to compute-ir ComputeGraphs by routing each op to the cheapest available executor. v0.2 adds pass 2b (single-executor preference). v0.3 adds the MX05 Phase 1 profile sampler. v0.4 adds MX05 Phase 2a tensor-byte sampling. v0.5 adds MX05 Phase 3 V1: SpecKey, ShapeClass, RangeClass, Specialiser trait, and an LRU SpecCache — the data plumbing for per-backend specialised kernels. No specialisation policy yet; backends opt in by replacing NoopSpecialiser with their own impl. Zero external dependencies."
 license = "MIT"
