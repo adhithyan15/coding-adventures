@@ -125,9 +125,10 @@ and records a `duplicate-attribute` diagnostic. Definitions that want to keep
 duplicates can continue using plain `commit_attribute`.
 
 The runtime also exposes context-seeding helpers such as
-`Tokenizer::set_initial_state` and `Tokenizer::set_last_start_tag` so wrapper
-packages can execute HTML submodes like RCDATA without loading definition files
-at runtime.
+`Tokenizer::set_initial_state`, `Tokenizer::set_last_start_tag`,
+`Tokenizer::set_current_end_tag`, and `Tokenizer::set_temporary_buffer` so
+wrapper packages can execute HTML submodes and continuation states like RCDATA
+end-tag-name without loading definition files at runtime.
 
 Wrapper packages can opt into HTML-style input-stream newline preprocessing
 with `Tokenizer::with_normalized_carriage_returns`. That maps CRLF pairs and

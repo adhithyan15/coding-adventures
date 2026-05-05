@@ -28,9 +28,17 @@ pub enum HtmlTokenizerState {
     Rcdata,
     RcdataLessThanSign,
     RcdataEndTagOpen,
+    RcdataEndTagName,
+    RcdataEndTagWhitespace,
+    RcdataEndTagAttributes,
+    RcdataSelfClosingEndTag,
     Rawtext,
     RawtextLessThanSign,
     RawtextEndTagOpen,
+    RawtextEndTagName,
+    RawtextEndTagWhitespace,
+    RawtextEndTagAttributes,
+    RawtextSelfClosingEndTag,
     Plaintext,
     CdataSection,
     CdataSectionBracket,
@@ -38,6 +46,10 @@ pub enum HtmlTokenizerState {
     ScriptData,
     ScriptDataLessThanSign,
     ScriptDataEndTagOpen,
+    ScriptDataEndTagName,
+    ScriptDataEndTagWhitespace,
+    ScriptDataEndTagAttributes,
+    ScriptDataSelfClosingEndTag,
     ScriptDataEscapeStart,
     ScriptDataEscapeStartDash,
     ScriptDataEscaped,
@@ -45,6 +57,10 @@ pub enum HtmlTokenizerState {
     ScriptDataEscapedDashDash,
     ScriptDataEscapedLessThanSign,
     ScriptDataEscapedEndTagOpen,
+    ScriptDataEscapedEndTagName,
+    ScriptDataEscapedEndTagWhitespace,
+    ScriptDataEscapedEndTagAttributes,
+    ScriptDataEscapedSelfClosingEndTag,
     ScriptDataDoubleEscapeStart,
     ScriptDataDoubleEscaped,
     ScriptDataDoubleEscapedDash,
@@ -54,14 +70,22 @@ pub enum HtmlTokenizerState {
 }
 
 /// Tokenizer states that are valid parser-facing entry points.
-pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 27] = [
+pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 43] = [
     HtmlTokenizerState::Data,
     HtmlTokenizerState::Rcdata,
     HtmlTokenizerState::RcdataLessThanSign,
     HtmlTokenizerState::RcdataEndTagOpen,
+    HtmlTokenizerState::RcdataEndTagName,
+    HtmlTokenizerState::RcdataEndTagWhitespace,
+    HtmlTokenizerState::RcdataEndTagAttributes,
+    HtmlTokenizerState::RcdataSelfClosingEndTag,
     HtmlTokenizerState::Rawtext,
     HtmlTokenizerState::RawtextLessThanSign,
     HtmlTokenizerState::RawtextEndTagOpen,
+    HtmlTokenizerState::RawtextEndTagName,
+    HtmlTokenizerState::RawtextEndTagWhitespace,
+    HtmlTokenizerState::RawtextEndTagAttributes,
+    HtmlTokenizerState::RawtextSelfClosingEndTag,
     HtmlTokenizerState::Plaintext,
     HtmlTokenizerState::CdataSection,
     HtmlTokenizerState::CdataSectionBracket,
@@ -69,6 +93,10 @@ pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 27] = [
     HtmlTokenizerState::ScriptData,
     HtmlTokenizerState::ScriptDataLessThanSign,
     HtmlTokenizerState::ScriptDataEndTagOpen,
+    HtmlTokenizerState::ScriptDataEndTagName,
+    HtmlTokenizerState::ScriptDataEndTagWhitespace,
+    HtmlTokenizerState::ScriptDataEndTagAttributes,
+    HtmlTokenizerState::ScriptDataSelfClosingEndTag,
     HtmlTokenizerState::ScriptDataEscapeStart,
     HtmlTokenizerState::ScriptDataEscapeStartDash,
     HtmlTokenizerState::ScriptDataEscaped,
@@ -76,6 +104,10 @@ pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 27] = [
     HtmlTokenizerState::ScriptDataEscapedDashDash,
     HtmlTokenizerState::ScriptDataEscapedLessThanSign,
     HtmlTokenizerState::ScriptDataEscapedEndTagOpen,
+    HtmlTokenizerState::ScriptDataEscapedEndTagName,
+    HtmlTokenizerState::ScriptDataEscapedEndTagWhitespace,
+    HtmlTokenizerState::ScriptDataEscapedEndTagAttributes,
+    HtmlTokenizerState::ScriptDataEscapedSelfClosingEndTag,
     HtmlTokenizerState::ScriptDataDoubleEscapeStart,
     HtmlTokenizerState::ScriptDataDoubleEscaped,
     HtmlTokenizerState::ScriptDataDoubleEscapedDash,
@@ -85,13 +117,21 @@ pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 27] = [
 ];
 
 /// Tokenizer states used for parser-controlled text or foreign-content fragments.
-pub const HTML_FRAGMENT_TOKENIZER_STATES: [HtmlTokenizerState; 26] = [
+pub const HTML_FRAGMENT_TOKENIZER_STATES: [HtmlTokenizerState; 42] = [
     HtmlTokenizerState::Rcdata,
     HtmlTokenizerState::RcdataLessThanSign,
     HtmlTokenizerState::RcdataEndTagOpen,
+    HtmlTokenizerState::RcdataEndTagName,
+    HtmlTokenizerState::RcdataEndTagWhitespace,
+    HtmlTokenizerState::RcdataEndTagAttributes,
+    HtmlTokenizerState::RcdataSelfClosingEndTag,
     HtmlTokenizerState::Rawtext,
     HtmlTokenizerState::RawtextLessThanSign,
     HtmlTokenizerState::RawtextEndTagOpen,
+    HtmlTokenizerState::RawtextEndTagName,
+    HtmlTokenizerState::RawtextEndTagWhitespace,
+    HtmlTokenizerState::RawtextEndTagAttributes,
+    HtmlTokenizerState::RawtextSelfClosingEndTag,
     HtmlTokenizerState::Plaintext,
     HtmlTokenizerState::CdataSection,
     HtmlTokenizerState::CdataSectionBracket,
@@ -99,6 +139,10 @@ pub const HTML_FRAGMENT_TOKENIZER_STATES: [HtmlTokenizerState; 26] = [
     HtmlTokenizerState::ScriptData,
     HtmlTokenizerState::ScriptDataLessThanSign,
     HtmlTokenizerState::ScriptDataEndTagOpen,
+    HtmlTokenizerState::ScriptDataEndTagName,
+    HtmlTokenizerState::ScriptDataEndTagWhitespace,
+    HtmlTokenizerState::ScriptDataEndTagAttributes,
+    HtmlTokenizerState::ScriptDataSelfClosingEndTag,
     HtmlTokenizerState::ScriptDataEscapeStart,
     HtmlTokenizerState::ScriptDataEscapeStartDash,
     HtmlTokenizerState::ScriptDataEscaped,
@@ -106,6 +150,10 @@ pub const HTML_FRAGMENT_TOKENIZER_STATES: [HtmlTokenizerState; 26] = [
     HtmlTokenizerState::ScriptDataEscapedDashDash,
     HtmlTokenizerState::ScriptDataEscapedLessThanSign,
     HtmlTokenizerState::ScriptDataEscapedEndTagOpen,
+    HtmlTokenizerState::ScriptDataEscapedEndTagName,
+    HtmlTokenizerState::ScriptDataEscapedEndTagWhitespace,
+    HtmlTokenizerState::ScriptDataEscapedEndTagAttributes,
+    HtmlTokenizerState::ScriptDataEscapedSelfClosingEndTag,
     HtmlTokenizerState::ScriptDataDoubleEscapeStart,
     HtmlTokenizerState::ScriptDataDoubleEscaped,
     HtmlTokenizerState::ScriptDataDoubleEscapedDash,
@@ -115,10 +163,14 @@ pub const HTML_FRAGMENT_TOKENIZER_STATES: [HtmlTokenizerState; 26] = [
 ];
 
 /// Tokenizer states that are valid script-substate entry points.
-pub const HTML_SCRIPT_TOKENIZER_STATES: [HtmlTokenizerState; 16] = [
+pub const HTML_SCRIPT_TOKENIZER_STATES: [HtmlTokenizerState; 24] = [
     HtmlTokenizerState::ScriptData,
     HtmlTokenizerState::ScriptDataLessThanSign,
     HtmlTokenizerState::ScriptDataEndTagOpen,
+    HtmlTokenizerState::ScriptDataEndTagName,
+    HtmlTokenizerState::ScriptDataEndTagWhitespace,
+    HtmlTokenizerState::ScriptDataEndTagAttributes,
+    HtmlTokenizerState::ScriptDataSelfClosingEndTag,
     HtmlTokenizerState::ScriptDataEscapeStart,
     HtmlTokenizerState::ScriptDataEscapeStartDash,
     HtmlTokenizerState::ScriptDataEscaped,
@@ -126,6 +178,10 @@ pub const HTML_SCRIPT_TOKENIZER_STATES: [HtmlTokenizerState; 16] = [
     HtmlTokenizerState::ScriptDataEscapedDashDash,
     HtmlTokenizerState::ScriptDataEscapedLessThanSign,
     HtmlTokenizerState::ScriptDataEscapedEndTagOpen,
+    HtmlTokenizerState::ScriptDataEscapedEndTagName,
+    HtmlTokenizerState::ScriptDataEscapedEndTagWhitespace,
+    HtmlTokenizerState::ScriptDataEscapedEndTagAttributes,
+    HtmlTokenizerState::ScriptDataEscapedSelfClosingEndTag,
     HtmlTokenizerState::ScriptDataDoubleEscapeStart,
     HtmlTokenizerState::ScriptDataDoubleEscaped,
     HtmlTokenizerState::ScriptDataDoubleEscapedDash,
@@ -142,9 +198,17 @@ impl HtmlTokenizerState {
             Self::Rcdata => "rcdata",
             Self::RcdataLessThanSign => "rcdata_less_than_sign",
             Self::RcdataEndTagOpen => "rcdata_end_tag_open",
+            Self::RcdataEndTagName => "rcdata_end_tag_name",
+            Self::RcdataEndTagWhitespace => "rcdata_end_tag_whitespace",
+            Self::RcdataEndTagAttributes => "rcdata_end_tag_attributes",
+            Self::RcdataSelfClosingEndTag => "rcdata_self_closing_end_tag",
             Self::Rawtext => "rawtext",
             Self::RawtextLessThanSign => "rawtext_less_than_sign",
             Self::RawtextEndTagOpen => "rawtext_end_tag_open",
+            Self::RawtextEndTagName => "rawtext_end_tag_name",
+            Self::RawtextEndTagWhitespace => "rawtext_end_tag_whitespace",
+            Self::RawtextEndTagAttributes => "rawtext_end_tag_attributes",
+            Self::RawtextSelfClosingEndTag => "rawtext_self_closing_end_tag",
             Self::Plaintext => "plaintext",
             Self::CdataSection => "cdata_section",
             Self::CdataSectionBracket => "cdata_section_bracket",
@@ -152,6 +216,10 @@ impl HtmlTokenizerState {
             Self::ScriptData => "script_data",
             Self::ScriptDataLessThanSign => "script_data_less_than_sign",
             Self::ScriptDataEndTagOpen => "script_data_end_tag_open",
+            Self::ScriptDataEndTagName => "script_data_end_tag_name",
+            Self::ScriptDataEndTagWhitespace => "script_data_end_tag_whitespace",
+            Self::ScriptDataEndTagAttributes => "script_data_end_tag_attributes",
+            Self::ScriptDataSelfClosingEndTag => "script_data_self_closing_end_tag",
             Self::ScriptDataEscapeStart => "script_data_escape_start",
             Self::ScriptDataEscapeStartDash => "script_data_escape_start_dash",
             Self::ScriptDataEscaped => "script_data_escaped",
@@ -159,6 +227,10 @@ impl HtmlTokenizerState {
             Self::ScriptDataEscapedDashDash => "script_data_escaped_dash_dash",
             Self::ScriptDataEscapedLessThanSign => "script_data_escaped_less_than_sign",
             Self::ScriptDataEscapedEndTagOpen => "script_data_escaped_end_tag_open",
+            Self::ScriptDataEscapedEndTagName => "script_data_escaped_end_tag_name",
+            Self::ScriptDataEscapedEndTagWhitespace => "script_data_escaped_end_tag_whitespace",
+            Self::ScriptDataEscapedEndTagAttributes => "script_data_escaped_end_tag_attributes",
+            Self::ScriptDataEscapedSelfClosingEndTag => "script_data_escaped_self_closing_end_tag",
             Self::ScriptDataDoubleEscapeStart => "script_data_double_escape_start",
             Self::ScriptDataDoubleEscaped => "script_data_double_escaped",
             Self::ScriptDataDoubleEscapedDash => "script_data_double_escaped_dash",
@@ -177,9 +249,17 @@ impl HtmlTokenizerState {
             Self::Rcdata => "RCDATA state",
             Self::RcdataLessThanSign => "RCDATA less-than sign state",
             Self::RcdataEndTagOpen => "RCDATA end tag open state",
+            Self::RcdataEndTagName => "RCDATA end tag name state",
+            Self::RcdataEndTagWhitespace => "RCDATA end tag whitespace state",
+            Self::RcdataEndTagAttributes => "RCDATA end tag attributes state",
+            Self::RcdataSelfClosingEndTag => "RCDATA self-closing end tag state",
             Self::Rawtext => "RAWTEXT state",
             Self::RawtextLessThanSign => "RAWTEXT less-than sign state",
             Self::RawtextEndTagOpen => "RAWTEXT end tag open state",
+            Self::RawtextEndTagName => "RAWTEXT end tag name state",
+            Self::RawtextEndTagWhitespace => "RAWTEXT end tag whitespace state",
+            Self::RawtextEndTagAttributes => "RAWTEXT end tag attributes state",
+            Self::RawtextSelfClosingEndTag => "RAWTEXT self-closing end tag state",
             Self::Plaintext => "PLAINTEXT state",
             Self::CdataSection => "CDATA section state",
             Self::CdataSectionBracket => "CDATA section bracket state",
@@ -187,6 +267,10 @@ impl HtmlTokenizerState {
             Self::ScriptData => "Script data state",
             Self::ScriptDataLessThanSign => "Script data less-than sign state",
             Self::ScriptDataEndTagOpen => "Script data end tag open state",
+            Self::ScriptDataEndTagName => "Script data end tag name state",
+            Self::ScriptDataEndTagWhitespace => "Script data end tag whitespace state",
+            Self::ScriptDataEndTagAttributes => "Script data end tag attributes state",
+            Self::ScriptDataSelfClosingEndTag => "Script data self-closing end tag state",
             Self::ScriptDataEscapeStart => "Script data escape start state",
             Self::ScriptDataEscapeStartDash => "Script data escape start dash state",
             Self::ScriptDataEscaped => "Script data escaped state",
@@ -194,6 +278,16 @@ impl HtmlTokenizerState {
             Self::ScriptDataEscapedDashDash => "Script data escaped dash dash state",
             Self::ScriptDataEscapedLessThanSign => "Script data escaped less-than sign state",
             Self::ScriptDataEscapedEndTagOpen => "Script data escaped end tag open state",
+            Self::ScriptDataEscapedEndTagName => "Script data escaped end tag name state",
+            Self::ScriptDataEscapedEndTagWhitespace => {
+                "Script data escaped end tag whitespace state"
+            }
+            Self::ScriptDataEscapedEndTagAttributes => {
+                "Script data escaped end tag attributes state"
+            }
+            Self::ScriptDataEscapedSelfClosingEndTag => {
+                "Script data escaped self-closing end tag state"
+            }
             Self::ScriptDataDoubleEscapeStart => "Script data double escape start state",
             Self::ScriptDataDoubleEscaped => "Script data double escaped state",
             Self::ScriptDataDoubleEscapedDash => "Script data double escaped dash state",
@@ -236,6 +330,29 @@ impl HtmlTokenizerState {
         HTML_FRAGMENT_TOKENIZER_STATES.contains(&self)
     }
 
+    /// Return whether this state resumes an already-started end tag.
+    pub fn requires_end_tag_seed(self) -> bool {
+        matches!(
+            self,
+            Self::RcdataEndTagName
+                | Self::RcdataEndTagWhitespace
+                | Self::RcdataEndTagAttributes
+                | Self::RcdataSelfClosingEndTag
+                | Self::RawtextEndTagName
+                | Self::RawtextEndTagWhitespace
+                | Self::RawtextEndTagAttributes
+                | Self::RawtextSelfClosingEndTag
+                | Self::ScriptDataEndTagName
+                | Self::ScriptDataEndTagWhitespace
+                | Self::ScriptDataEndTagAttributes
+                | Self::ScriptDataSelfClosingEndTag
+                | Self::ScriptDataEscapedEndTagName
+                | Self::ScriptDataEscapedEndTagWhitespace
+                | Self::ScriptDataEscapedEndTagAttributes
+                | Self::ScriptDataEscapedSelfClosingEndTag
+        )
+    }
+
     /// Return whether a seeded state needs the parser's last-start-tag context.
     pub fn requires_last_start_tag(self) -> bool {
         matches!(
@@ -243,9 +360,17 @@ impl HtmlTokenizerState {
             Self::Rcdata
                 | Self::RcdataLessThanSign
                 | Self::RcdataEndTagOpen
+                | Self::RcdataEndTagName
+                | Self::RcdataEndTagWhitespace
+                | Self::RcdataEndTagAttributes
+                | Self::RcdataSelfClosingEndTag
                 | Self::Rawtext
                 | Self::RawtextLessThanSign
                 | Self::RawtextEndTagOpen
+                | Self::RawtextEndTagName
+                | Self::RawtextEndTagWhitespace
+                | Self::RawtextEndTagAttributes
+                | Self::RawtextSelfClosingEndTag
         ) || self.is_script_substate()
     }
 }
@@ -255,6 +380,8 @@ impl HtmlTokenizerState {
 pub struct HtmlLexContext {
     pub initial_state: HtmlTokenizerState,
     pub last_start_tag: Option<String>,
+    pub current_end_tag: Option<String>,
+    pub temporary_buffer: Option<String>,
 }
 
 impl HtmlLexContext {
@@ -262,6 +389,8 @@ impl HtmlLexContext {
         Self {
             initial_state,
             last_start_tag: None,
+            current_end_tag: None,
+            temporary_buffer: None,
         }
     }
 
@@ -297,8 +426,21 @@ impl HtmlLexContext {
         self
     }
 
+    pub fn with_current_end_tag(mut self, tag: impl Into<String>) -> Self {
+        self.current_end_tag = Some(tag.into());
+        self
+    }
+
+    pub fn with_temporary_buffer(mut self, value: impl Into<String>) -> Self {
+        self.temporary_buffer = Some(value.into());
+        self
+    }
+
     pub fn is_data(&self) -> bool {
-        self.initial_state == HtmlTokenizerState::Data && self.last_start_tag.is_none()
+        self.initial_state == HtmlTokenizerState::Data
+            && self.last_start_tag.is_none()
+            && self.current_end_tag.is_none()
+            && self.temporary_buffer.is_none()
     }
 
     /// Return the tokenizer context used for text following a start tag.
@@ -376,6 +518,16 @@ pub fn apply_html_lex_context(lexer: &mut HtmlLexer, context: &HtmlLexContext) -
         lexer.set_last_start_tag(last_start_tag);
     } else {
         lexer.clear_last_start_tag();
+    }
+    if let Some(current_end_tag) = context.current_end_tag.as_deref() {
+        lexer.set_current_end_tag(current_end_tag);
+    } else {
+        lexer.clear_current_token();
+    }
+    if let Some(temporary_buffer) = context.temporary_buffer.as_deref() {
+        lexer.set_temporary_buffer(temporary_buffer);
+    } else {
+        lexer.clear_temporary_buffer();
     }
     Ok(())
 }

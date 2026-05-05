@@ -33,6 +33,7 @@ This first slice intentionally starts small:
 - parser-approved initial tokenizer contexts for data-state documents and
   RCDATA/RAWTEXT, foreign-content CDATA, script-state, and intermediate
   tokenizer fragments exposed by the lexer, including resumable end-tag-open
+  and seeded end-tag continuation states
   contexts
 - simple implied end tags for `p`, `li`, `dt`, `dd`, `option`, `optgroup`,
   ruby annotations, heading elements, legacy paragraph/block boundaries, and

@@ -162,11 +162,13 @@ The generated HTML1 machine also exposes `RCDATA`, `RAWTEXT`, `PLAINTEXT`,
 `script_data_double_escaped_less_than_sign` entry states for parser-controlled
 tokenizer submodes, plus intermediate RCDATA/RAWTEXT less-than and end-tag-open
 states, CDATA bracket/end states, and script less-than, end-tag-open,
-escape-start, escaped end-tag-open, and double-escape start/end states used by
-html5lib/WPT-style tokenizer fixtures. The markup declaration path also
-recognizes `<![CDATA[` and enters the CDATA section state so the generated lexer
-can exercise that tokenizer subflow end to end; a future parser can still decide
-when that opener is valid for foreign-content contexts.
+end-tag-name/whitespace/attributes/self-closing continuation states,
+escape-start, escaped end-tag-open/name/whitespace/attributes/self-closing
+continuations, and double-escape start/end states used by html5lib/WPT-style
+tokenizer fixtures. The markup declaration path also recognizes `<![CDATA[` and
+enters the CDATA section state so the generated lexer can exercise that
+tokenizer subflow end to end; a future parser can still decide when that opener
+is valid for foreign-content contexts.
 The public Rust API now wraps those parser-controlled entry states in
 `HtmlTokenizerState` and `HtmlLexContext`, including an element-to-context map
 for `title`, `textarea`, raw-text elements, `script`, and `plaintext`. A
@@ -174,8 +176,9 @@ scripting-aware variant lets the parser decide whether `noscript` enters
 RAWTEXT or stays ordinary markup. That lets the parser request a statically
 linked lexer in the right tokenizer mode without depending on generated
 machine-state strings. Parsers that keep one lexer alive can call
-`apply_html_lex_context` to move that lexer between data state and text-mode
-states while clearing stale last-start-tag context.
+`apply_html_lex_context` to move that lexer between data state, text-mode
+states, and seeded end-tag continuation states while clearing stale
+last-start-tag, current-token, and temporary-buffer context.
 Foreign-content CDATA is exposed as an explicit
 `HtmlLexContext::cdata_section()` helper rather than as an element-name mapping,
 so future SVG/MathML tree-construction logic can opt into CDATA only after it

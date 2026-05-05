@@ -29,6 +29,8 @@ Each file is a JSON object with this shape:
       ],
       "initial_state": "optional tokenizer state context",
       "last_start_tag": "optional tokenizer tag context",
+      "current_end_tag": "optional in-progress end-tag token context",
+      "temporary_buffer": "optional tokenizer temporary-buffer context",
       "diagnostics": ["optional-diagnostic-code"]
     }
   ]
@@ -62,6 +64,9 @@ letting us mirror broader living-standard cases.
 uses the tokenizer JSON structure documented by the html5lib tokenizer tests:
 top-level `tests`, with each test carrying `description`, `input`, `output`,
 optional `initialStates`, optional `lastStartTag`, and optional `errors`.
+For seeded continuation states that upstream fixtures cannot fully describe,
+this smoke file also accepts `currentEndTag` and `temporaryBuffer` extension
+fields; the normalizer lowers them to `current_end_tag` and `temporary_buffer`.
 
 `normalize_html5lib_fixtures.py` is the checked-in importer for this shape. It
 currently supports:
@@ -85,6 +90,9 @@ currently supports:
   `lastStartTag`
 - script double-escaped `dash`, `dash dash`, and `less-than sign` substates
   together with `lastStartTag`
+- RCDATA, RAWTEXT, script-data, and script-data-escaped end-tag `name`,
+  `whitespace`, `attributes`, and `self-closing` continuation substates
+  together with `lastStartTag`, `currentEndTag`, and `temporaryBuffer`
 - multi-state html5lib fixture entries for supported states, expanded into
   stable per-state Venture fixture cases
 - `StartTag`, `EndTag`, `Character`, `Comment`, and `DOCTYPE` output tokens
@@ -163,13 +171,14 @@ Unsupported raw cases are skipped into metadata in the generated file rather
 than silently disappearing. Rust conformance tests execute the generated
 `html5lib-smoke.json` corpus and separately parse the raw upstream-style file to
 keep the intake path visible. Tokenizer-context cases such as RCDATA, RAWTEXT,
-script submodes, CDATA bracket/end states, and resumable end-tag-open states
-stay in the generated corpus with `initial_state` / `last_start_tag` metadata
-and are seeded into the Rust wrapper at test time, while still unsupported
-upstream states remain recorded under `skipped` instead of being discarded.
-End-tag-open coverage intentionally exercises matching, mismatched, EOF, and
-diagnostic recovery paths so parser/tokenizer handoff regressions show up in the
-shared fixture corpus instead of only in narrow unit tests.
+script submodes, CDATA bracket/end states, resumable end-tag-open states, and
+seeded end-tag continuation states stay in the generated corpus with context
+metadata and are seeded into the Rust wrapper at test time, while still
+unsupported upstream states remain recorded under `skipped` instead of being
+discarded. End-tag continuation coverage intentionally exercises matching,
+mismatched, EOF, and diagnostic recovery paths so parser/tokenizer handoff
+regressions show up in the shared fixture corpus instead of only in narrow unit
+tests.
 
 To regenerate the normalized corpus:
 

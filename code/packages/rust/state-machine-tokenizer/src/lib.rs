@@ -275,6 +275,40 @@ impl Tokenizer {
         self.last_start_tag = None;
     }
 
+    /// Seed the in-progress end-tag token used by tokenizer continuation states.
+    pub fn with_current_end_tag(mut self, name: impl Into<String>) -> Self {
+        self.set_current_end_tag(name);
+        self
+    }
+
+    /// Store the in-progress end-tag token used by tokenizer continuation states.
+    pub fn set_current_end_tag(&mut self, name: impl Into<String>) {
+        self.current_token = Some(CurrentToken::EndTag { name: name.into() });
+        self.current_attribute = None;
+    }
+
+    /// Clear any in-progress token construction state.
+    pub fn clear_current_token(&mut self) {
+        self.current_token = None;
+        self.current_attribute = None;
+    }
+
+    /// Seed the tokenizer temporary buffer used by continuation states.
+    pub fn with_temporary_buffer(mut self, value: impl Into<String>) -> Self {
+        self.set_temporary_buffer(value);
+        self
+    }
+
+    /// Store the tokenizer temporary buffer used by continuation states.
+    pub fn set_temporary_buffer(&mut self, value: impl Into<String>) {
+        self.temporary_buffer = value.into();
+    }
+
+    /// Clear the tokenizer temporary buffer.
+    pub fn clear_temporary_buffer(&mut self) {
+        self.temporary_buffer.clear();
+    }
+
     /// Push one chunk of Unicode text into the tokenizer.
     pub fn push(&mut self, chunk: &str) -> Result<()> {
         if self.finished {

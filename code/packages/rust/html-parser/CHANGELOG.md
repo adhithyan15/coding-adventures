@@ -35,6 +35,9 @@ documented in this file.
 - Parser-approved initial tokenizer contexts now include RCDATA, RAWTEXT,
   script data, and escaped script end-tag-open substates exposed by the lexer,
   keeping parser fragment handoff aligned with the broader tokenizer surface.
+- Parser-approved initial tokenizer contexts now include seeded RCDATA, RAWTEXT,
+  script data, and escaped script end-tag continuation substates, carrying the
+  current end tag and temporary buffer required by those lexer states.
 - Initial table tree-construction recovery for omitted `tbody`/`tr` structure,
   including implicit row groups for bare rows/cells and section closure when a
   new table section starts.

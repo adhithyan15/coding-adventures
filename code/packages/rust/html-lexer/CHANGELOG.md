@@ -17,6 +17,12 @@ documented in this file.
   the crate links static source instead of loading TOML at runtime.
 - Fixture-backed tests proving the generated lexer definition and emitted
   runtime tokens stay aligned.
+- Parser-facing seeded RCDATA/RAWTEXT/script end-tag continuation contexts,
+  including end-tag-name, whitespace, attributes, and self-closing substates
+  with current-end-tag and temporary-buffer seeding.
+- html5lib-style smoke fixture coverage for the seeded continuation states,
+  including matching end tags, mismatched literal recovery, EOF recovery, and
+  whitespace/attribute/trailing-solidus diagnostics.
 
 ### Changed
 - Switched the stable `create_html_lexer` and `lex_html` API over from the

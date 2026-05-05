@@ -2455,6 +2455,385 @@
           "<"
         ]
       ]
+    },
+    {
+      "description": "rcdata end tag name state emits seeded matching end tag",
+      "input": ">after",
+      "initialStates": [
+        "RCDATA end tag name state"
+      ],
+      "lastStartTag": "title",
+      "currentEndTag": "title",
+      "temporaryBuffer": "title",
+      "output": [
+        [
+          "EndTag",
+          "title"
+        ],
+        [
+          "Character",
+          "after"
+        ]
+      ]
+    },
+    {
+      "description": "rawtext end tag name state keeps seeded mismatched end tag text",
+      "input": ">tail</style>",
+      "initialStates": [
+        "RAWTEXT end tag name state"
+      ],
+      "lastStartTag": "style",
+      "currentEndTag": "title",
+      "temporaryBuffer": "title",
+      "output": [
+        [
+          "Character",
+          "</title>tail"
+        ],
+        [
+          "EndTag",
+          "style"
+        ]
+      ]
+    },
+    {
+      "description": "script data end tag name state emits seeded eof text",
+      "input": "",
+      "initialStates": [
+        "Script data end tag name state"
+      ],
+      "lastStartTag": "script",
+      "currentEndTag": "script",
+      "temporaryBuffer": "script",
+      "output": [
+        [
+          "Character",
+          "</script"
+        ]
+      ]
+    },
+    {
+      "description": "script escaped end tag name state emits seeded matching end tag",
+      "input": ">tail",
+      "initialStates": [
+        "Script data escaped end tag name state"
+      ],
+      "lastStartTag": "script",
+      "currentEndTag": "script",
+      "temporaryBuffer": "script",
+      "output": [
+        [
+          "EndTag",
+          "script"
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ]
+    },
+    {
+      "description": "rcdata end tag whitespace state reports seeded matching whitespace",
+      "input": ">after",
+      "initialStates": [
+        "RCDATA end tag whitespace state"
+      ],
+      "lastStartTag": "title",
+      "currentEndTag": "title",
+      "temporaryBuffer": "title ",
+      "output": [
+        [
+          "EndTag",
+          "title"
+        ],
+        [
+          "Character",
+          "after"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "unexpected-whitespace-after-end-tag-name",
+          "line": 1,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "description": "rawtext end tag whitespace state keeps seeded mismatched text",
+      "input": ">tail</style>",
+      "initialStates": [
+        "RAWTEXT end tag whitespace state"
+      ],
+      "lastStartTag": "style",
+      "currentEndTag": "title",
+      "temporaryBuffer": "title ",
+      "output": [
+        [
+          "Character",
+          "</title >tail"
+        ],
+        [
+          "EndTag",
+          "style"
+        ]
+      ]
+    },
+    {
+      "description": "script data end tag whitespace state reports seeded matching whitespace",
+      "input": ">tail",
+      "initialStates": [
+        "Script data end tag whitespace state"
+      ],
+      "lastStartTag": "script",
+      "currentEndTag": "script",
+      "temporaryBuffer": "script ",
+      "output": [
+        [
+          "EndTag",
+          "script"
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "unexpected-whitespace-after-end-tag-name",
+          "line": 1,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "description": "script escaped end tag whitespace state reports seeded matching whitespace",
+      "input": ">tail",
+      "initialStates": [
+        "Script data escaped end tag whitespace state"
+      ],
+      "lastStartTag": "script",
+      "currentEndTag": "script",
+      "temporaryBuffer": "script ",
+      "output": [
+        [
+          "EndTag",
+          "script"
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "unexpected-whitespace-after-end-tag-name",
+          "line": 1,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "description": "rcdata end tag attributes state reports seeded matching attributes",
+      "input": ">after",
+      "initialStates": [
+        "RCDATA end tag attributes state"
+      ],
+      "lastStartTag": "title",
+      "currentEndTag": "title",
+      "temporaryBuffer": "title class=x",
+      "output": [
+        [
+          "EndTag",
+          "title"
+        ],
+        [
+          "Character",
+          "after"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "end-tag-with-attributes",
+          "line": 1,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "description": "rawtext end tag attributes state keeps seeded mismatched text",
+      "input": ">tail</style>",
+      "initialStates": [
+        "RAWTEXT end tag attributes state"
+      ],
+      "lastStartTag": "style",
+      "currentEndTag": "title",
+      "temporaryBuffer": "title class=x",
+      "output": [
+        [
+          "Character",
+          "</title class=x>tail"
+        ],
+        [
+          "EndTag",
+          "style"
+        ]
+      ]
+    },
+    {
+      "description": "script data end tag attributes state reports seeded matching attributes",
+      "input": ">tail",
+      "initialStates": [
+        "Script data end tag attributes state"
+      ],
+      "lastStartTag": "script",
+      "currentEndTag": "script",
+      "temporaryBuffer": "script class=x",
+      "output": [
+        [
+          "EndTag",
+          "script"
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "end-tag-with-attributes",
+          "line": 1,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "description": "script escaped end tag attributes state reports seeded matching attributes",
+      "input": ">tail",
+      "initialStates": [
+        "Script data escaped end tag attributes state"
+      ],
+      "lastStartTag": "script",
+      "currentEndTag": "script",
+      "temporaryBuffer": "script class=x",
+      "output": [
+        [
+          "EndTag",
+          "script"
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "end-tag-with-attributes",
+          "line": 1,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "description": "rcdata self-closing end tag state reports seeded matching solidus",
+      "input": ">after",
+      "initialStates": [
+        "RCDATA self-closing end tag state"
+      ],
+      "lastStartTag": "title",
+      "currentEndTag": "title",
+      "temporaryBuffer": "title",
+      "output": [
+        [
+          "EndTag",
+          "title"
+        ],
+        [
+          "Character",
+          "after"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "end-tag-with-trailing-solidus",
+          "line": 1,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "description": "rawtext self-closing end tag state keeps seeded mismatched text",
+      "input": ">tail</style>",
+      "initialStates": [
+        "RAWTEXT self-closing end tag state"
+      ],
+      "lastStartTag": "style",
+      "currentEndTag": "title",
+      "temporaryBuffer": "title",
+      "output": [
+        [
+          "Character",
+          "</title/>tail"
+        ],
+        [
+          "EndTag",
+          "style"
+        ]
+      ]
+    },
+    {
+      "description": "script data self-closing end tag state reports seeded matching solidus",
+      "input": ">tail",
+      "initialStates": [
+        "Script data self-closing end tag state"
+      ],
+      "lastStartTag": "script",
+      "currentEndTag": "script",
+      "temporaryBuffer": "script",
+      "output": [
+        [
+          "EndTag",
+          "script"
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "end-tag-with-trailing-solidus",
+          "line": 1,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "description": "script escaped self-closing end tag state reports seeded matching solidus",
+      "input": ">tail",
+      "initialStates": [
+        "Script data escaped self-closing end tag state"
+      ],
+      "lastStartTag": "script",
+      "currentEndTag": "script",
+      "temporaryBuffer": "script",
+      "output": [
+        [
+          "EndTag",
+          "script"
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "end-tag-with-trailing-solidus",
+          "line": 1,
+          "col": 1
+        }
+      ]
     }
   ]
 }
