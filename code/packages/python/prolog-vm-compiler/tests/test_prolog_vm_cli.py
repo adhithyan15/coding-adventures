@@ -175,6 +175,32 @@ def test_cli_values_rejects_compile_only_modes(
 
 
 @pytest.mark.parametrize(
+    "diagnostic_flag",
+    [
+        "--dump-bytecode",
+        "--dump-instructions",
+        "--dump-source-metadata",
+        "--list-source-queries",
+    ],
+)
+def test_cli_no_initialize_rejects_non_initializing_diagnostic_modes(
+    diagnostic_flag: str,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        ":- initialization(true). parent(homer, bart). ?- parent(homer, Who).",
+        diagnostic_flag,
+        "--no-initialize",
+    ])
+
+    assert status == 2
+    assert f"--no-initialize cannot be combined with {diagnostic_flag}" in (
+        capsys.readouterr().err
+    )
+
+
+@pytest.mark.parametrize(
     ("mode_flags", "conflicting_flag"),
     [
         (["--query", "parent(homer, Who)"], "--query"),

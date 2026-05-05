@@ -187,6 +187,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     list_source_queries = bool(flags["list-source-queries"])
     values = bool(flags["values"])
     source_query_index_explicit = "source-query-index" in result.explicit_flags
+    no_initialize_explicit = "no-initialize" in result.explicit_flags
     if check and queries:
         msg = "--check cannot be combined with --query"
         raise ValueError(msg)
@@ -220,6 +221,9 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if dump_bytecode and source_query_index_explicit:
         msg = "--source-query-index cannot be combined with --dump-bytecode"
         raise ValueError(msg)
+    if dump_bytecode and no_initialize_explicit:
+        msg = "--no-initialize cannot be combined with --dump-bytecode"
+        raise ValueError(msg)
     if dump_bytecode and list_source_queries:
         msg = "--dump-bytecode cannot be combined with --list-source-queries"
         raise ValueError(msg)
@@ -243,6 +247,9 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     if dump_instructions and source_query_index_explicit:
         msg = "--source-query-index cannot be combined with --dump-instructions"
+        raise ValueError(msg)
+    if dump_instructions and no_initialize_explicit:
+        msg = "--no-initialize cannot be combined with --dump-instructions"
         raise ValueError(msg)
     if dump_instructions and dump_bytecode:
         msg = "--dump-instructions cannot be combined with --dump-bytecode"
@@ -270,6 +277,9 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     if dump_source_metadata and source_query_index_explicit:
         msg = "--source-query-index cannot be combined with --dump-source-metadata"
+        raise ValueError(msg)
+    if dump_source_metadata and no_initialize_explicit:
+        msg = "--no-initialize cannot be combined with --dump-source-metadata"
         raise ValueError(msg)
     if dump_source_metadata and dump_bytecode:
         msg = "--dump-source-metadata cannot be combined with --dump-bytecode"
@@ -303,6 +313,9 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     if list_source_queries and source_query_index_explicit:
         msg = "--source-query-index cannot be combined with --list-source-queries"
+        raise ValueError(msg)
+    if list_source_queries and no_initialize_explicit:
+        msg = "--no-initialize cannot be combined with --list-source-queries"
         raise ValueError(msg)
     if list_source_queries and interactive:
         msg = "--list-source-queries cannot be combined with --interactive"
