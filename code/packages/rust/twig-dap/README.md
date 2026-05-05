@@ -50,17 +50,18 @@ Install the Twig VS Code extension (separate package) to register the
 5. `dap-adapter-core` connects to the VM over TCP and proxies all DAP
    requests (breakpoints, step, continue, variables, call stack).
 
-## Status — SKELETON (LS03 PR B)
+## Status — LS03 PR B complete (0.2.0)
 
-`TwigDebugAdapter` is defined with stub implementations.  The binary exits
-with an error until LS03 PR A (`dap-adapter-core`) is implemented.
+`TwigDebugAdapter::compile()` runs `twig-ir-compiler` and emits a
+real `debug-sidecar` blob; `TwigDebugAdapter::launch_vm()` spawns a
+sibling `twig-vm` process.  An end-to-end smoke test in `tests/`
+spawns `twig-vm --debug-port` and walks through the full
+launch → breakpoint → continue → exited flow over TCP.
 
-**TODO (LS03 PR B):**
-1. Implement `compile()` — run `twig-ir-compiler`, write bytecode to temp
-   file, return sidecar bytes.
-2. Implement `launch_vm()` — spawn `twig-vm --debug-port <port> <bytecode>`.
-3. Implement `twig_dap` main — construct `DapServer::new(TwigDebugAdapter)`
-   and call `run_stdio()`.
+Variable inspection is the one feature still in flight — Twig's IIR
+doesn't yet carry user-variable-name → register-index mapping that DAP's
+`variables` panel needs.  Stepping, breakpoints, and stack traces all
+work today.
 
 ## Spec reference
 
