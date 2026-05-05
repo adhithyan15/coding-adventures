@@ -35,6 +35,27 @@ pub enum LspSemanticTokenType {
     Property,
 }
 
+impl LspSemanticTokenType {
+    /// Return the LSP-spec string name for this token type.
+    ///
+    /// These lowercase strings are what the LSP `semanticTokenTypes` capability
+    /// advertises and what `SemanticToken::token_type` must contain.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Keyword   => "keyword",
+            Self::Operator  => "operator",
+            Self::Variable  => "variable",
+            Self::Function  => "function",
+            Self::Parameter => "parameter",
+            Self::String    => "string",
+            Self::Number    => "number",
+            Self::Comment   => "comment",
+            Self::Type      => "type",
+            Self::Property  => "property",
+        }
+    }
+}
+
 // ---------------------------------------------------------------------------
 // LanguageSpec
 // ---------------------------------------------------------------------------

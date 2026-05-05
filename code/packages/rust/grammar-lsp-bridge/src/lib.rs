@@ -1,10 +1,11 @@
 //! # `grammar-lsp-bridge` — Generic grammar-driven LSP bridge.
 //!
-//! **LS02 PR A** — Implements [`ls00::LanguageBridge`] automatically from a
-//! pair of `.tokens` + `.grammar` files plus a small declarative
-//! [`LanguageSpec`] config.  Any language author who has those two files
-//! gets a fully-functional LSP server (diagnostics, semantic tokens, symbols,
-//! folding, hover, completion, formatting) without writing bespoke Rust.
+//! **LS02 PR A** — Implements [`coding_adventures_ls00::language_bridge::LanguageBridge`]
+//! automatically from a pair of `.tokens` + `.grammar` files plus a small
+//! declarative [`LanguageSpec`] config.  Any language author who has those two
+//! files gets a fully-functional LSP server with diagnostics, semantic tokens,
+//! document symbols, folding ranges, hover, completion, and formatting —
+//! without writing bespoke Rust.
 //!
 //! ## Quick start
 //!
@@ -12,21 +13,24 @@
 //! use grammar_lsp_bridge::{GrammarLanguageBridge, LanguageSpec, LspSemanticTokenType};
 //!
 //! static MY_SPEC: LanguageSpec = LanguageSpec {
-//!     name: "my-lang",
-//!     file_extensions: &["ml"],
-//!     tokens_source: include_str!("../my-lang.tokens"),
-//!     grammar_source: include_str!("../my-lang.grammar"),
-//!     token_kind_map: &[
-//!         ("KEYWORD",  LspSemanticTokenType::Keyword),
-//!         ("NAME",     LspSemanticTokenType::Variable),
-//!         ("INTEGER",  LspSemanticTokenType::Number),
+//!     language_name:     "my-lang",
+//!     file_extensions:   &["ml"],
+//!     tokens_source:     include_str!("my-lang.tokens"),
+//!     grammar_source:    include_str!("my-lang.grammar"),
+//!     token_kind_map:    &[
+//!         ("KEYWORD", LspSemanticTokenType::Keyword),
+//!         ("NAME",    LspSemanticTokenType::Variable),
+//!         ("INTEGER", LspSemanticTokenType::Number),
 //!     ],
-//!     declaration_rules: &["define", "let"],
-//!     keyword_names: &["define", "let", "if", "else"],
-//!     format_fn: None,
+//!     declaration_rules: &["function_def", "let_binding"],
+//!     keyword_names:     &["define", "let", "if", "else"],
+//!     format_fn:         None,
 //! };
 //!
-//! // Then pass GrammarLanguageBridge::new(&MY_SPEC) to ls00::serve().
+//! fn main() {
+//!     let bridge = GrammarLanguageBridge::new(&MY_SPEC);
+//!     coding_adventures_ls00::serve_stdio(bridge).expect("LSP error");
+//! }
 //! ```
 //!
 //! ## Architecture
@@ -34,34 +38,31 @@
 //! ```text
 //! .tokens + .grammar
 //!     │
-//!     ▼ grammar-tools (runtime: GrammarLexer + GrammarParser)
-//! GrammarASTNode tree + token stream
+//!     ▼  grammar-tools parses the grammar specs
+//! TokenGrammar + ParserGrammar   (stored in GrammarLanguageBridge)
 //!     │
-//!     ▼ LanguageSpec (per-language config — ~20 lines)
-//! GrammarLanguageBridge   implements ls00::LanguageBridge
+//!     ▼  lexer::grammar_lexer::GrammarLexer  (runtime tokenisation)
+//! Vec<lexer::token::Token>
 //!     │
-//!     ▼ ls00::LspServer
+//!     ▼  parser::grammar_parser::GrammarParser (runtime parsing)
+//! GrammarASTNode tree  (stored as Box<dyn Any + Send + Sync> in ls00 cache)
+//!     │
+//!     ▼  GrammarLanguageBridge (implements ls00::LanguageBridge)
 //! Editor (VS Code, Neovim, …)
 //! ```
 //!
-//! ## Status — SKELETON (LS02 PR A in progress)
+//! ## Crate layout
 //!
-//! Types and module structure are defined.  Implementations are TODO stubs.
-//! See each module for the detailed implementation plan.
+//! | Module  | Contents                                            |
+//! |---------|-----------------------------------------------------|
+//! | `spec`  | [`LanguageSpec`] + [`LspSemanticTokenType`]         |
+//! | `bridge`| [`GrammarLanguageBridge`] — full `LanguageBridge`   |
 
 #![warn(missing_docs)]
 #![warn(rust_2018_idioms)]
 
-pub mod spec;
 pub mod bridge;
-pub mod tokenize;
-pub mod parse;
-pub mod semantic_tokens;
-pub mod symbols;
-pub mod folding;
-pub mod hover;
-pub mod completion;
-pub mod format;
+pub mod spec;
 
-pub use spec::{LanguageSpec, LspSemanticTokenType};
 pub use bridge::GrammarLanguageBridge;
+pub use spec::{LanguageSpec, LspSemanticTokenType};
