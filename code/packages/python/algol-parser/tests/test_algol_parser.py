@@ -1,7 +1,7 @@
 """Tests for the ALGOL 60 parser thin wrapper.
 
 These tests verify that the grammar-driven parser, configured with
-``algol.grammar``, correctly parses ALGOL 60 source text into ASTs.
+``algol/algol60.grammar``, correctly parses ALGOL 60 source text into ASTs.
 
 ALGOL 60 Parsing Notes
 -----------------------
@@ -31,11 +31,29 @@ The ALGOL 60 grammar differs from JSON in several important ways:
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
+from grammar_tools.compiler import compile_parser_grammar
+from grammar_tools.parser_grammar import parse_parser_grammar
 from lang_parser import ASTNode, GrammarParseError, GrammarParser
 from lexer import Token
 
-from algol_parser import create_algol_parser, parse_algol
+from algol_parser import (
+    DEFAULT_VERSION,
+    SUPPORTED_VERSIONS,
+    create_algol_parser,
+    parse_algol,
+    resolve_version,
+)
+from algol_parser._grammar import PARSER_GRAMMAR
+
+_REPO_ROOT = Path(__file__).resolve().parents[5]
+_SOURCE_GRAMMAR = _REPO_ROOT / "code/grammars/algol/algol60.grammar"
+_GENERATED_GRAMMAR = (
+    _REPO_ROOT
+    / "code/packages/python/algol-parser/src/algol_parser/_grammar.py"
+)
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -93,6 +111,40 @@ class TestFactory:
         assert isinstance(ast, ASTNode)
         assert ast.rule_name == "program"
 
+    def test_default_version_is_algol60(self) -> None:
+        """The default parser grammar is the compiled ALGOL 60 grammar."""
+        assert DEFAULT_VERSION == "algol60"
+        assert sorted(SUPPORTED_VERSIONS) == ["algol60"]
+        assert resolve_version() == "algol60"
+        assert resolve_version(None) == "algol60"
+
+    def test_factory_uses_compiled_parser_grammar(self) -> None:
+        """The parser imports native grammar data instead of reading files."""
+        parser = create_algol_parser("begin end")
+
+        assert parser._grammar is PARSER_GRAMMAR
+
+    def test_compiled_parser_grammar_is_fresh(self) -> None:
+        """The committed Python parser grammar matches the source grammar."""
+        source = _SOURCE_GRAMMAR.read_text(encoding="utf-8")
+        expected = compile_parser_grammar(
+            parse_parser_grammar(source),
+            "algol/algol60.grammar",
+        )
+
+        assert _GENERATED_GRAMMAR.read_text(encoding="utf-8") == expected
+
+    def test_explicit_algol60_version_produces_ast(self) -> None:
+        """The supported version name can be passed explicitly."""
+        ast = parse_algol("begin end", version="algol60")
+
+        assert ast.rule_name == "program"
+
+    def test_unknown_version_is_rejected(self) -> None:
+        """Unknown ALGOL versions fail before falling back to stale files."""
+        with pytest.raises(ValueError, match="Unknown ALGOL version 'algol68'"):
+            resolve_version("algol68")
+
 
 # ---------------------------------------------------------------------------
 # Minimal program tests
@@ -109,8 +161,8 @@ class TestMinimalProgram:
           <statements>
         end
 
-    At least one statement is required. The empty statement (``empty_stmt``)
-    satisfies this requirement.
+    Empty programs are valid, and ALGOL dummy statements appear as zero-width
+    ``dummy_stmt`` nodes where a statement boundary supplies the no-op.
     """
 
     def test_minimal_program_root(self) -> None:
@@ -333,6 +385,18 @@ class TestIfStatement:
         )
         assert ast.rule_name == "program"
 
+    def test_if_then_dummy_statement(self) -> None:
+        """The then-branch may be ALGOL's zero-width dummy statement."""
+        ast = parse("begin integer x; if true then ; x := 1 end")
+        assert ast.rule_name == "program"
+        assert find_nodes(ast, "dummy_stmt")
+
+    def test_if_else_dummy_statement(self) -> None:
+        """The else-branch may also be a dummy statement."""
+        ast = parse("begin integer x; if false then x := 1 else ; end")
+        assert ast.rule_name == "program"
+        assert find_nodes(ast, "dummy_stmt")
+
 
 # ---------------------------------------------------------------------------
 # Goto statement tests
@@ -388,7 +452,9 @@ class TestGotoStatement:
             == 2
         )
 
-        assert all(child.rule_name == "label" for child in child_nodes(statement))
+        nodes = child_nodes(statement)
+        assert [child.rule_name for child in nodes[:2]] == ["label", "label"]
+        assert find_nodes(statement, "dummy_stmt")
 
 
 # ---------------------------------------------------------------------------
@@ -482,6 +548,12 @@ class TestForLoop:
         for_nodes = find_nodes(ast, "for_stmt")
         assert len(for_nodes) == 1
         assert find_nodes(for_nodes[0], "subscripts")
+
+    def test_dummy_statement_body(self) -> None:
+        """For-loop bodies may be empty dummy statements."""
+        ast = parse("begin integer i; for i := 1 do ; i := 2 end")
+        assert ast.rule_name == "program"
+        assert find_nodes(ast, "dummy_stmt")
 
 
 # ---------------------------------------------------------------------------

@@ -1,12 +1,18 @@
 [package]
 name = "twig-dap"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "LS03 PR B — Twig DAP adapter: compile + launch hooks over dap-adapter-core; produces twig-dap binary"
 
 [dependencies]
 dap-adapter-core = { path = "../dap-adapter-core" }
+twig-ir-compiler = { path = "../twig-ir-compiler" }
+interpreter-ir   = { path = "../interpreter-ir" }
+debug-sidecar    = { path = "../debug-sidecar" }
 
 [[bin]]
 name = "twig-dap"
 path = "bin/twig_dap.rs"
+
+[dev-dependencies]
+tempfile = "3"

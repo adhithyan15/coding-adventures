@@ -55,6 +55,12 @@
       "type": "boolean"
     },
     {
+      "id": "dump-capabilities",
+      "long": "dump-capabilities",
+      "description": "Print the supported Prolog VM capability manifest without loading source.",
+      "type": "boolean"
+    },
+    {
       "id": "list-source-queries",
       "long": "list-source-queries",
       "description": "List embedded source-level ?- queries without running them.",

@@ -30,10 +30,13 @@ including John Backus, Peter Naur, and Edsger Dijkstra. Its *Revised Report*
 algol/algol60.grammar (grammar rules)  algol/algol60.tokens (token defs)
       │                                     │
       ▼                                     ▼
-grammar_tools.parse_parser_grammar()   algol-lexer
+grammar_tools.compile_parser_grammar() algol-lexer
       │                                     │ list[Token]
       ▼                                     ▼
-GrammarParser ←── algol-parser (this package, thin wrapper)
+algol_parser._grammar.PARSER_GRAMMAR
+      │
+      ▼
+GrammarParser ←── algol-parser (this package, no runtime file I/O)
       │
       ▼
 ASTNode (generic parse tree)
@@ -41,8 +44,8 @@ ASTNode (generic parse tree)
 
 This package depends on:
 - **`coding-adventures-algol-lexer`**: Tokenizes ALGOL 60 source.
-- **`coding-adventures-grammar-tools`**: Parses `algol.grammar` into a
-  `ParserGrammar` data structure.
+- **`coding-adventures-grammar-tools`**: Compiles `algol/algol60.grammar` into
+  a native `ParserGrammar` module.
 - **`coding-adventures-parser`**: The `GrammarParser` engine that runs the
   grammar against the token stream.
 
@@ -92,8 +95,8 @@ The parser covers the complete ALGOL 60 grammar:
 | Category | Rules |
 |----------|-------|
 | Top level | `program`, `block` |
-| Declarations | `type_decl`, `array_decl`, `switch_decl`, `procedure_decl` |
-| Statements | `assign_stmt`, `cond_stmt`, `for_stmt`, `goto_stmt` (`goto` or `go to`), `proc_stmt`, `compound_stmt`, `empty_stmt` |
+| Declarations | `type_decl`, `own_decl`, `own_array_decl`, `array_decl`, `switch_decl`, `procedure_decl` |
+| Statements | `assign_stmt`, `cond_stmt`, `for_stmt`, `goto_stmt` (`goto` or `go to`), `proc_stmt`, `compound_stmt`, `dummy_stmt` |
 | Arithmetic | `arith_expr`, `simple_arith`, `term`, `factor`, `primary` |
 | Boolean | `bool_expr`, `simple_bool`, `implication`, `bool_term`, `bool_factor`, `bool_secondary`, `bool_primary`, `relation` |
 | Designational | `desig_expr`, `simple_desig` |
@@ -103,6 +106,10 @@ Conditional arithmetic, Boolean, and designational expressions may nest in
 either branch, so type-specific contexts such as array bounds/subscripts,
 conditions, and `goto` targets accept the same nested conditional shape as
 ordinary assignment expressions.
+
+ALGOL dummy statements parse as zero-width `dummy_stmt` nodes at statement
+boundaries, so empty `then`, `else`, and `do` bodies preserve semicolon
+separator semantics instead of consuming the separator as part of the no-op.
 
 Procedure declarations and calls accept the report-style omitted-parentheses
 form for parameterless procedures as well as explicit empty parentheses, so

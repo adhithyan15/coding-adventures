@@ -16,6 +16,11 @@ documented in this file.
   ordinary data-state markup.
 - Implied `html`, `head`, and `body` document shell normalization, including
   preservation of explicit shell attributes and legacy omitted-wrapper pages.
+- Explicit `head` elements now close before `body` starts or non-head body
+  content appears, preventing omitted `</head>` pages from trapping body DOM
+  inside the head.
+- Duplicate open `body` start tags now merge missing attributes into the
+  existing body instead of creating nested body elements.
 - Scripting-aware parse options for parser-controlled tokenizer handoff, so
   `noscript` becomes RAWTEXT with scripting enabled and ordinary fallback
   markup with scripting disabled.
@@ -24,6 +29,9 @@ documented in this file.
 - Parser-approved initial script tokenizer contexts for script data, escaped,
   dash/dash-dash, less-than, and double-escaped substates backed by the typed
   lexer script-substate context helper.
+- Parser-approved initial tokenizer contexts now cover RCDATA/RAWTEXT
+  fragments, CDATA bracket/end substates, script less-than and escape-start
+  substates, and script double-escape start/end substates exposed by the lexer.
 - Initial table tree-construction recovery for omitted `tbody`/`tr` structure,
   including implicit row groups for bare rows/cells and section closure when a
   new table section starts.
@@ -42,3 +50,27 @@ documented in this file.
   paragraphs before insertion, preventing paragraph-nested block DOMs.
 - Ruby annotation starts now close omitted `rb`, `rt`, `rp`, and `rtc` siblings,
   preventing nested ruby annotation DOMs when end tags are omitted.
+- Repeated interactive formatting starts for `a`, `button`, and `nobr` now
+  close the previous open element before inserting the next one, avoiding
+  impossible nested interactive DOMs for common omitted-end-tag markup.
+- Repeated interactive starts now preserve the surrounding paragraph context
+  when they recover, so trailing text and later inline siblings stay under the
+  same paragraph instead of spilling to the body.
+- Paragraph boundary recovery now covers additional legacy and modern block
+  starts, including `button`, `center`, `dir`, `hgroup`, `search`, `listing`,
+  `xmp`, and `plaintext`.
+- Raw-text and plaintext block starts now close an open paragraph before
+  tokenizer handoff, keeping the resulting text-mode elements as paragraph
+  siblings.
+- Nested `form` start tags are now ignored with a parser diagnostic while an
+  outer form remains open, keeping form-associated content in the existing form
+  instead of creating nested form DOMs.
+- Duplicate open `html` and `head` start tags now merge missing attributes into
+  the existing shell elements instead of creating nested shell DOMs.
+- Late `head` start tags after body content has already started are ignored
+  with a parser diagnostic.
+- `</p>` end tags without an open paragraph now create and close an implied
+  empty paragraph with a parser diagnostic, matching common browser recovery.
+- `</br>` now recovers as a `br` start tag with a parser diagnostic.
+- `pre`, `listing`, and `textarea` now strip one immediately following LF text
+  character while preserving later nested text.

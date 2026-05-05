@@ -26,66 +26,112 @@ pub enum HtmlScriptingMode {
 pub enum HtmlTokenizerState {
     Data,
     Rcdata,
+    RcdataLessThanSign,
+    RcdataEndTagOpen,
     Rawtext,
+    RawtextLessThanSign,
+    RawtextEndTagOpen,
     Plaintext,
     CdataSection,
+    CdataSectionBracket,
+    CdataSectionEnd,
     ScriptData,
+    ScriptDataLessThanSign,
+    ScriptDataEndTagOpen,
+    ScriptDataEscapeStart,
+    ScriptDataEscapeStartDash,
     ScriptDataEscaped,
     ScriptDataEscapedDash,
     ScriptDataEscapedDashDash,
     ScriptDataEscapedLessThanSign,
+    ScriptDataEscapedEndTagOpen,
+    ScriptDataDoubleEscapeStart,
     ScriptDataDoubleEscaped,
     ScriptDataDoubleEscapedDash,
     ScriptDataDoubleEscapedDashDash,
     ScriptDataDoubleEscapedLessThanSign,
+    ScriptDataDoubleEscapeEnd,
 }
 
 /// Tokenizer states that are valid parser-facing entry points.
-pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 14] = [
+pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 27] = [
     HtmlTokenizerState::Data,
     HtmlTokenizerState::Rcdata,
+    HtmlTokenizerState::RcdataLessThanSign,
+    HtmlTokenizerState::RcdataEndTagOpen,
     HtmlTokenizerState::Rawtext,
+    HtmlTokenizerState::RawtextLessThanSign,
+    HtmlTokenizerState::RawtextEndTagOpen,
     HtmlTokenizerState::Plaintext,
     HtmlTokenizerState::CdataSection,
+    HtmlTokenizerState::CdataSectionBracket,
+    HtmlTokenizerState::CdataSectionEnd,
     HtmlTokenizerState::ScriptData,
+    HtmlTokenizerState::ScriptDataLessThanSign,
+    HtmlTokenizerState::ScriptDataEndTagOpen,
+    HtmlTokenizerState::ScriptDataEscapeStart,
+    HtmlTokenizerState::ScriptDataEscapeStartDash,
     HtmlTokenizerState::ScriptDataEscaped,
     HtmlTokenizerState::ScriptDataEscapedDash,
     HtmlTokenizerState::ScriptDataEscapedDashDash,
     HtmlTokenizerState::ScriptDataEscapedLessThanSign,
+    HtmlTokenizerState::ScriptDataEscapedEndTagOpen,
+    HtmlTokenizerState::ScriptDataDoubleEscapeStart,
     HtmlTokenizerState::ScriptDataDoubleEscaped,
     HtmlTokenizerState::ScriptDataDoubleEscapedDash,
     HtmlTokenizerState::ScriptDataDoubleEscapedDashDash,
     HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign,
+    HtmlTokenizerState::ScriptDataDoubleEscapeEnd,
 ];
 
 /// Tokenizer states used for parser-controlled text or foreign-content fragments.
-pub const HTML_FRAGMENT_TOKENIZER_STATES: [HtmlTokenizerState; 13] = [
+pub const HTML_FRAGMENT_TOKENIZER_STATES: [HtmlTokenizerState; 26] = [
     HtmlTokenizerState::Rcdata,
+    HtmlTokenizerState::RcdataLessThanSign,
+    HtmlTokenizerState::RcdataEndTagOpen,
     HtmlTokenizerState::Rawtext,
+    HtmlTokenizerState::RawtextLessThanSign,
+    HtmlTokenizerState::RawtextEndTagOpen,
     HtmlTokenizerState::Plaintext,
     HtmlTokenizerState::CdataSection,
+    HtmlTokenizerState::CdataSectionBracket,
+    HtmlTokenizerState::CdataSectionEnd,
     HtmlTokenizerState::ScriptData,
+    HtmlTokenizerState::ScriptDataLessThanSign,
+    HtmlTokenizerState::ScriptDataEndTagOpen,
+    HtmlTokenizerState::ScriptDataEscapeStart,
+    HtmlTokenizerState::ScriptDataEscapeStartDash,
     HtmlTokenizerState::ScriptDataEscaped,
     HtmlTokenizerState::ScriptDataEscapedDash,
     HtmlTokenizerState::ScriptDataEscapedDashDash,
     HtmlTokenizerState::ScriptDataEscapedLessThanSign,
+    HtmlTokenizerState::ScriptDataEscapedEndTagOpen,
+    HtmlTokenizerState::ScriptDataDoubleEscapeStart,
     HtmlTokenizerState::ScriptDataDoubleEscaped,
     HtmlTokenizerState::ScriptDataDoubleEscapedDash,
     HtmlTokenizerState::ScriptDataDoubleEscapedDashDash,
     HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign,
+    HtmlTokenizerState::ScriptDataDoubleEscapeEnd,
 ];
 
 /// Tokenizer states that are valid script-substate entry points.
-pub const HTML_SCRIPT_TOKENIZER_STATES: [HtmlTokenizerState; 9] = [
+pub const HTML_SCRIPT_TOKENIZER_STATES: [HtmlTokenizerState; 16] = [
     HtmlTokenizerState::ScriptData,
+    HtmlTokenizerState::ScriptDataLessThanSign,
+    HtmlTokenizerState::ScriptDataEndTagOpen,
+    HtmlTokenizerState::ScriptDataEscapeStart,
+    HtmlTokenizerState::ScriptDataEscapeStartDash,
     HtmlTokenizerState::ScriptDataEscaped,
     HtmlTokenizerState::ScriptDataEscapedDash,
     HtmlTokenizerState::ScriptDataEscapedDashDash,
     HtmlTokenizerState::ScriptDataEscapedLessThanSign,
+    HtmlTokenizerState::ScriptDataEscapedEndTagOpen,
+    HtmlTokenizerState::ScriptDataDoubleEscapeStart,
     HtmlTokenizerState::ScriptDataDoubleEscaped,
     HtmlTokenizerState::ScriptDataDoubleEscapedDash,
     HtmlTokenizerState::ScriptDataDoubleEscapedDashDash,
     HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign,
+    HtmlTokenizerState::ScriptDataDoubleEscapeEnd,
 ];
 
 impl HtmlTokenizerState {
@@ -94,20 +140,68 @@ impl HtmlTokenizerState {
         match self {
             Self::Data => "data",
             Self::Rcdata => "rcdata",
+            Self::RcdataLessThanSign => "rcdata_less_than_sign",
+            Self::RcdataEndTagOpen => "rcdata_end_tag_open",
             Self::Rawtext => "rawtext",
+            Self::RawtextLessThanSign => "rawtext_less_than_sign",
+            Self::RawtextEndTagOpen => "rawtext_end_tag_open",
             Self::Plaintext => "plaintext",
             Self::CdataSection => "cdata_section",
+            Self::CdataSectionBracket => "cdata_section_bracket",
+            Self::CdataSectionEnd => "cdata_section_end",
             Self::ScriptData => "script_data",
+            Self::ScriptDataLessThanSign => "script_data_less_than_sign",
+            Self::ScriptDataEndTagOpen => "script_data_end_tag_open",
+            Self::ScriptDataEscapeStart => "script_data_escape_start",
+            Self::ScriptDataEscapeStartDash => "script_data_escape_start_dash",
             Self::ScriptDataEscaped => "script_data_escaped",
             Self::ScriptDataEscapedDash => "script_data_escaped_dash",
             Self::ScriptDataEscapedDashDash => "script_data_escaped_dash_dash",
             Self::ScriptDataEscapedLessThanSign => "script_data_escaped_less_than_sign",
+            Self::ScriptDataEscapedEndTagOpen => "script_data_escaped_end_tag_open",
+            Self::ScriptDataDoubleEscapeStart => "script_data_double_escape_start",
             Self::ScriptDataDoubleEscaped => "script_data_double_escaped",
             Self::ScriptDataDoubleEscapedDash => "script_data_double_escaped_dash",
             Self::ScriptDataDoubleEscapedDashDash => "script_data_double_escaped_dash_dash",
             Self::ScriptDataDoubleEscapedLessThanSign => {
                 "script_data_double_escaped_less_than_sign"
             }
+            Self::ScriptDataDoubleEscapeEnd => "script_data_double_escape_end",
+        }
+    }
+
+    /// html5lib tokenizer fixture state label for this parser-facing state.
+    pub fn as_html5lib_state(self) -> &'static str {
+        match self {
+            Self::Data => "Data state",
+            Self::Rcdata => "RCDATA state",
+            Self::RcdataLessThanSign => "RCDATA less-than sign state",
+            Self::RcdataEndTagOpen => "RCDATA end tag open state",
+            Self::Rawtext => "RAWTEXT state",
+            Self::RawtextLessThanSign => "RAWTEXT less-than sign state",
+            Self::RawtextEndTagOpen => "RAWTEXT end tag open state",
+            Self::Plaintext => "PLAINTEXT state",
+            Self::CdataSection => "CDATA section state",
+            Self::CdataSectionBracket => "CDATA section bracket state",
+            Self::CdataSectionEnd => "CDATA section end state",
+            Self::ScriptData => "Script data state",
+            Self::ScriptDataLessThanSign => "Script data less-than sign state",
+            Self::ScriptDataEndTagOpen => "Script data end tag open state",
+            Self::ScriptDataEscapeStart => "Script data escape start state",
+            Self::ScriptDataEscapeStartDash => "Script data escape start dash state",
+            Self::ScriptDataEscaped => "Script data escaped state",
+            Self::ScriptDataEscapedDash => "Script data escaped dash state",
+            Self::ScriptDataEscapedDashDash => "Script data escaped dash dash state",
+            Self::ScriptDataEscapedLessThanSign => "Script data escaped less-than sign state",
+            Self::ScriptDataEscapedEndTagOpen => "Script data escaped end tag open state",
+            Self::ScriptDataDoubleEscapeStart => "Script data double escape start state",
+            Self::ScriptDataDoubleEscaped => "Script data double escaped state",
+            Self::ScriptDataDoubleEscapedDash => "Script data double escaped dash state",
+            Self::ScriptDataDoubleEscapedDashDash => "Script data double escaped dash dash state",
+            Self::ScriptDataDoubleEscapedLessThanSign => {
+                "Script data double escaped less-than sign state"
+            }
+            Self::ScriptDataDoubleEscapeEnd => "Script data double escape end state",
         }
     }
 
@@ -117,6 +211,14 @@ impl HtmlTokenizerState {
             .iter()
             .copied()
             .find(|state| state.as_machine_state() == machine_state)
+    }
+
+    /// Return the typed tokenizer state for a standard html5lib fixture label.
+    pub fn from_html5lib_state(html5lib_state: &str) -> Option<Self> {
+        HTML_TOKENIZER_STATES
+            .iter()
+            .copied()
+            .find(|state| state.as_html5lib_state() == html5lib_state)
     }
 
     /// Return the typed fragment state for a generated machine-state identifier.
@@ -132,6 +234,19 @@ impl HtmlTokenizerState {
     /// Return whether this state is a parser-approved fragment entry point.
     pub fn is_fragment_state(self) -> bool {
         HTML_FRAGMENT_TOKENIZER_STATES.contains(&self)
+    }
+
+    /// Return whether a seeded state needs the parser's last-start-tag context.
+    pub fn requires_last_start_tag(self) -> bool {
+        matches!(
+            self,
+            Self::Rcdata
+                | Self::RcdataLessThanSign
+                | Self::RcdataEndTagOpen
+                | Self::Rawtext
+                | Self::RawtextLessThanSign
+                | Self::RawtextEndTagOpen
+        ) || self.is_script_substate()
     }
 }
 

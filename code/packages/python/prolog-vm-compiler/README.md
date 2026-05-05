@@ -247,6 +247,37 @@ assert [answer.as_dict() for answer in runtime.query("ancestor(homer, Who)")] ==
 ]
 ```
 
+## Capability Manifest
+
+The Prolog-on-Logic-VM implementation track covers PR00 through PR79. The
+package exposes that as a machine-readable manifest so downstream tools and
+future implementation work can distinguish completed functionality from
+deliberately deferred advanced dialect/runtime emulation:
+
+```python
+from prolog_vm_compiler import prolog_vm_capability_manifest
+
+manifest = prolog_vm_capability_manifest()
+
+assert manifest.status == "core-plus-stream-io"
+assert manifest.dialects == ("iso", "swi")
+assert manifest.backends == ("structured", "bytecode")
+```
+
+The completed core batches cover frontend loading, directives, modules, file
+graphs, expansion, structured and bytecode VM execution, source/file/project
+runners, top-level query APIs, the CLI, CLP(FD), dynamic database behavior,
+exceptions, control, collections, term/text predicates, reflection, and bounded
+UTF-8 file text I/O through `exists_file/1`, `read_file_to_string/2`, and
+`read_file_to_codes/2`, plus bounded UTF-8 file stream I/O through `open/3`,
+`close/1`, `read_string/3`, `read_line_to_string/2`, `get_char/2`,
+`at_end_of_stream/1`, `write/2`, and `nl/1`. The manifest also names the
+remaining advanced-dialect work that is intentionally outside the completed
+batches: full external dialect emulation, tabling and well-founded negation,
+generalized attributed-variable/coroutining services, non-FD constraint
+domains, standard/binary/rich stream services, foreign predicates, engines, and
+concurrency.
+
 ## CLI
 
 The package also exposes a `prolog-vm` command backed by the repo's declarative
@@ -260,8 +291,15 @@ prolog-vm \
   --backend bytecode
 ```
 
+Use `--dump-capabilities` without source input to inspect the same support
+manifest from scripts or CI:
+
+```bash
+prolog-vm --dump-capabilities --format json
+```
+
 For linked module projects, pass all entry files and the module context for
-ad-hoc queries:
+ad-hoc or interactive top-level queries:
 
 ```bash
 prolog-vm app.pl family.pl \
@@ -270,9 +308,15 @@ prolog-vm app.pl family.pl \
   --backend bytecode
 ```
 
+`--query-module` only applies to project file graphs with `--query` or
+`--interactive`; it is rejected for inline source, single files, source-query
+execution, and compile-only diagnostics because those paths do not consume a
+module context.
+
 Use `--values` to print raw answer values, omit `--query` to run a source-level
 `?-` directive by index, and use `--dialect iso` when the ISO parser profile is
-the desired frontend.
+the desired frontend. `--source-query-index` only applies to that single stored
+source-query mode and is rejected when another mode would ignore it.
 
 Use `--source-stdin` when editor integrations or shell pipelines should provide
 the source through stdin while query selection still comes from flags:
@@ -319,6 +363,22 @@ queries and the CLI should run them as a script. The command prints or emits
 one result record per source query, sets `source_query_index` in JSON formats,
 and exits nonzero if any embedded query has no answers.
 
+Use `--limit` on query-running modes to cap the number of answers printed per
+query. It is rejected for compile-only diagnostic modes because those modes do
+not enumerate answers.
+
+Use `--values` on query-running modes to print raw answer values instead of
+named bindings. It is rejected for compile-only diagnostic modes because those
+modes do not emit answer records.
+
+Use `--no-initialize` with `--check` or query-running modes when initialization
+directives should not run. It is rejected for dump and source-query listing
+diagnostics because those modes never run initialization directives.
+
+Use `--commit` only with one or more ad-hoc `--query` flags. It persists the
+first answer state from those query flags into later query flags or an
+interactive loop, but it is rejected when no ad-hoc query is supplied.
+
 Use `--summary` on non-interactive query runs when scripts, CI jobs, or editor
 integrations need compact totals. Text output appends one summary line, JSONL
 appends a summary record, and JSON wraps result records with summary metadata.
@@ -327,7 +387,9 @@ diagnostic modes such as `--check`, `--dump-instructions`, `--dump-bytecode`,
 `--dump-source-metadata`, and `--list-source-queries`.
 
 Use `--format json` for a machine-readable result object, or `--format jsonl`
-when repeated queries should stream one result record per line. JSON answers
+when repeated or interactive queries should stream one result record per line.
+Interactive mode rejects `--format json` because it cannot emit a single
+complete JSON document while reading an open-ended query stream. JSON answers
 preserve named bindings, raw values, compound terms, variables, and residual
 constraints without requiring callers to scrape the human text format:
 
@@ -382,6 +444,11 @@ The package includes end-to-end stress tests for:
   `atomic_list_concat/3`, and `number_string/2`
 - text inspection with `atom_length/2`, `string_length/2`, `sub_atom/5`, and
   `sub_string/5`
+- bounded UTF-8 file text I/O with `exists_file/1`,
+  `read_file_to_string/2`, and `read_file_to_codes/2`
+- bounded UTF-8 file stream I/O with `open/3`, `close/1`,
+  `read_string/3`, `read_line_to_string/2`, `get_char/2`,
+  `at_end_of_stream/1`, `write/2`, and `nl/1`
 - term text I/O with `term_to_atom/2`, `atom_to_term/3`,
   `read_term_from_atom/3`, and `write_term_to_atom/3`
 - numbered term variables with `numbervars/3` and `write_term_to_atom/3`

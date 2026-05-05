@@ -26,8 +26,9 @@ the current lane already supports a substantial ALGOL 60 surface:
   string literals
 - chained assignment, conditional expressions, including nested conditionals in
   bounds, subscripts, conditions, and designational targets, tolerant
-  trailing/repeated semicolons, numeric runtime failure guards, and
-  ALGOL-left-associative exponentiation for integer or real exponents
+  trailing/repeated semicolons, zero-width dummy statements in `then`, `else`,
+  and `do` bodies, numeric runtime failure guards, and ALGOL-left-associative
+  exponentiation for integer or real exponents
 - boolean `and`, `or`, and `impl` with short-circuiting RHS evaluation, plus
   strict `eqv`
 - standard numeric functions `abs`, `sign`, `entier`, `sqrt`, `sin`, `cos`,
@@ -176,9 +177,10 @@ local WASM runtime. Those fixtures cover:
   output executes
 - mixed `own` scalar and array storage for real, boolean, and string values,
   plus value-array copies and by-name loop-control storage behavior
-- boolean and string conditional values, conditional subscripts, terminal labels
-  on empty statements, invalid switch indexes, array element caps, and heap
-  exhaustion through the zero-result runtime guard path
+- boolean and string conditional values, conditional subscripts, dummy
+  statements in control-flow positions, terminal labels on empty statements,
+  invalid switch indexes, array element caps, and heap exhaustion through the
+  zero-result runtime guard path
 - real-to-integer and real-output edge cases that would otherwise trap on
   overflow, infinity, or NaN now return through the same zero-result guard path
 - a full-surface convergence program combining `own` scalars and arrays,

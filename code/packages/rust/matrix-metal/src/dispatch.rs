@@ -172,6 +172,46 @@ fn exec_compute(
             output,
         } => transpose_dispatch(ctx, graph, *input, perm, *output),
 
+        // Broadcast: replicate input across size-1 axes to match the
+        // declared target shape.  Single MSL kernel reads from the
+        // input by clamping size-1 axes to index 0.
+        Op::Broadcast {
+            input,
+            output,
+            ..
+        } => broadcast_dispatch(ctx, graph, *input, *output),
+
+        // Cast: dtype conversion.  matrix-metal advertises only F32
+        // as a supported output dtype, so the planner only routes
+        // Casts whose output is F32 to us — three input paths to
+        // handle: U8→F32, I32→F32, F32→F32.
+        Op::Cast {
+            input,
+            dtype,
+            output,
+        } => cast_dispatch(ctx, graph, *input, *dtype, *output),
+
+        // Reductions: V1 supports single-axis only.  Multi-axis errors
+        // at dispatch time and the runtime falls back to CPU.
+        Op::ReduceSum {
+            input,
+            axes,
+            keep_dims,
+            output,
+        } => reduce_dispatch(ctx, graph, "reduce_sum_f32", *input, axes, *keep_dims, *output),
+        Op::ReduceMax {
+            input,
+            axes,
+            keep_dims,
+            output,
+        } => reduce_dispatch(ctx, graph, "reduce_max_f32", *input, axes, *keep_dims, *output),
+        Op::ReduceMean {
+            input,
+            axes,
+            keep_dims,
+            output,
+        } => reduce_dispatch(ctx, graph, "reduce_mean_f32", *input, axes, *keep_dims, *output),
+
         _ => Err(format!(
             "matrix-metal V1 doesn't support op {}; the planner should have routed this to CPU",
             op_kind_name(op)
@@ -454,6 +494,117 @@ fn transpose_dispatch(
 /// buffer's bytes into the output buffer.  Same numel; only the shape
 /// metadata differs, and shapes are tracked at the graph level (not in
 /// the buffer itself), so a byte-level memcpy is the entire
+/// Broadcast: launch the generic axis-replication kernel.  Each
+/// input axis must equal the corresponding output (target) axis or be
+/// 1; the matrix-ir validator enforces this so we don't re-check it
+/// here at dispatch time.
+///
+/// V1 limit: rank ≤ 4, dtype F32 (matches `max_tensor_rank` and the
+/// V1 dtype set advertised in this backend's profile).  Out-of-range
+/// inputs return an error — defence in depth.
+fn broadcast_dispatch(
+    ctx: &mut DispatchCtx<'_>,
+    graph: &ComputeGraph,
+    input: TensorId,
+    output: TensorId,
+) -> Result<(), String> {
+    let in_t = graph
+        .tensor(input)
+        .ok_or_else(|| format!("broadcast input tensor {} not found", input.0))?;
+    let out_t = graph
+        .tensor(output)
+        .ok_or_else(|| format!("broadcast output tensor {} not found", output.0))?;
+    let in_residency = in_t.residency;
+    let out_residency = out_t.residency;
+    let rank = out_t.shape.rank();
+    if in_t.shape.rank() != rank {
+        return Err(format!(
+            "broadcast: input rank {} doesn't match output rank {}",
+            in_t.shape.rank(),
+            rank
+        ));
+    }
+    if rank == 0 {
+        // Scalar broadcast → single-element copy.
+        let n_bytes = in_t
+            .shape
+            .byte_size(in_t.dtype)
+            .ok_or_else(|| "broadcast scalar byte_size overflow".to_string())?;
+        if n_bytes == 0 {
+            return Ok(());
+        }
+        let data = ctx.buffers.read(in_residency.buffer, 0, n_bytes as usize)?;
+        if !ctx.buffers.contains(out_residency.buffer) {
+            ctx.buffers
+                .alloc(ctx.device, out_residency.buffer, n_bytes as usize)?;
+        }
+        ctx.buffers.write(out_residency.buffer, 0, &data)?;
+        return Ok(());
+    }
+    if rank > 4 {
+        return Err(format!(
+            "matrix-metal broadcast: rank {} exceeds the supported maximum of 4",
+            rank
+        ));
+    }
+
+    let numel = out_t
+        .shape
+        .numel()
+        .ok_or_else(|| "broadcast output numel overflow".to_string())? as u32;
+    if numel == 0 {
+        return Ok(());
+    }
+
+    let pipeline = ctx
+        .pipelines
+        .get("broadcast_f32")
+        .ok_or_else(|| "broadcast_f32 pipeline not in cache".to_string())?;
+
+    let in_buf_ptr = ctx.buffers.get(in_residency.buffer)? as *const _;
+    let out_buf_ptr = ctx.buffers.get(out_residency.buffer)? as *const _;
+    // SAFETY: we hold `&BufferStore` via ctx.buffers; both buffer
+    // references live for the dispatch call.  Same pattern as
+    // `unary_dispatch`.
+    let in_buf = unsafe { &*in_buf_ptr };
+    let out_buf = unsafe { &*out_buf_ptr };
+
+    // Encode BroadcastArgs.  Field order matches the MSL struct:
+    //   uint rank;
+    //   uint numel;
+    //   uint in_dims[4];
+    //   uint out_dims[4];
+    // Total: 10 × 4 = 40 bytes.  Round up to 48 (MSL alignment).
+    let mut args = [0u8; 48];
+    let mut off = 0usize;
+    let put_u32 = |v: u32, args: &mut [u8; 48], off: &mut usize| {
+        args[*off..*off + 4].copy_from_slice(&v.to_le_bytes());
+        *off += 4;
+    };
+    put_u32(rank as u32, &mut args, &mut off);
+    put_u32(numel, &mut args, &mut off);
+    for d in 0..4 {
+        let v = if d < rank { in_t.shape.dims[d] } else { 0 };
+        put_u32(v, &mut args, &mut off);
+    }
+    for d in 0..4 {
+        let v = if d < rank { out_t.shape.dims[d] } else { 0 };
+        put_u32(v, &mut args, &mut off);
+    }
+    let _ = off;
+
+    let tg = pipeline.preferred_threads_1d();
+
+    ctx.queue.dispatch(|enc| {
+        enc.set_pipeline(pipeline);
+        enc.set_buffer(in_buf, 0);
+        enc.set_buffer(out_buf, 1);
+        enc.set_bytes(&args, 2);
+        enc.dispatch_threads_1d(numel, tg);
+    });
+    Ok(())
+}
+
 /// implementation.
 ///
 /// V2 polish: matrix-metal could expose this as a `BlitCommandEncoder`
@@ -485,6 +636,191 @@ fn reshape_dispatch(
             .alloc(ctx.device, out_residency.buffer, n_bytes as usize)?;
     }
     ctx.buffers.write(out_residency.buffer, 0, &data)?;
+    Ok(())
+}
+
+/// Cast: dispatch a single-element-wise dtype conversion.  Only
+/// F32-output paths reach us (the planner's capability filter
+/// restricts on output dtype, and matrix-metal advertises F32 only).
+/// Three input dtypes are handled: F32, U8, I32.
+fn cast_dispatch(
+    ctx: &mut DispatchCtx<'_>,
+    graph: &ComputeGraph,
+    input: TensorId,
+    output_dtype: matrix_ir::DType,
+    output: TensorId,
+) -> Result<(), String> {
+    let in_t = graph
+        .tensor(input)
+        .ok_or_else(|| format!("cast input tensor {} not found", input.0))?;
+    let out_residency = lookup_residency(graph, output)?;
+    let n = in_t
+        .shape
+        .numel()
+        .ok_or_else(|| format!("cast input tensor {} numel overflow", input.0))?
+        as u32;
+    if n == 0 {
+        return Ok(());
+    }
+
+    // Defence in depth: matrix-metal only emits F32-output kernels;
+    // routing a non-F32-output cast to us indicates a planner bug.
+    if output_dtype != matrix_ir::DType::F32 {
+        return Err(format!(
+            "matrix-metal cast: unsupported output dtype {:?} (only F32 ships in V1)",
+            output_dtype
+        ));
+    }
+
+    let kernel_name = match in_t.dtype {
+        matrix_ir::DType::F32 => "cast_f32_to_f32",
+        matrix_ir::DType::U8 => "cast_u8_to_f32",
+        matrix_ir::DType::I32 => "cast_i32_to_f32",
+    };
+    let pipeline = ctx
+        .pipelines
+        .get(kernel_name)
+        .ok_or_else(|| format!("pipeline {} not in cache", kernel_name))?;
+
+    let in_buf_ptr = ctx.buffers.get(in_t.residency.buffer)? as *const _;
+    let out_buf_ptr = ctx.buffers.get(out_residency.buffer)? as *const _;
+    // SAFETY: see `unary_dispatch` — same pattern, both buffers live
+    // for the duration of the dispatch call via `&BufferStore`.
+    let in_buf = unsafe { &*in_buf_ptr };
+    let out_buf = unsafe { &*out_buf_ptr };
+
+    let n_bytes = n.to_le_bytes();
+    let tg = pipeline.preferred_threads_1d();
+
+    ctx.queue.dispatch(|enc| {
+        enc.set_pipeline(pipeline);
+        enc.set_buffer(in_buf, 0);
+        enc.set_buffer(out_buf, 1);
+        enc.set_bytes(&n_bytes, 2);
+        enc.dispatch_threads_1d(n, tg);
+    });
+    Ok(())
+}
+
+/// Reduction (sum/max/mean) over a single axis.
+///
+/// V1 only supports single-axis reductions because the kernels are
+/// thread-per-output-element and the args struct hardcodes one
+/// `reduce_axis` field.  Multi-axis reductions (`axes.len() > 1`)
+/// return Err — the runtime can either:
+///
+///   - Surface the error to the caller, or
+///   - Decompose the multi-axis reduce into a chain of single-axis
+///     reductions before dispatching (V2 work).
+///
+/// The MSL kernel (`reduce_{sum,max,mean}_f32`) does the actual
+/// arithmetic; this Rust function packs the args struct, validates
+/// inputs, and launches the kernel.
+fn reduce_dispatch(
+    ctx: &mut DispatchCtx<'_>,
+    graph: &ComputeGraph,
+    kernel_name: &str,
+    input: TensorId,
+    axes: &[u32],
+    keep_dims: bool,
+    output: TensorId,
+) -> Result<(), String> {
+    let in_t = graph
+        .tensor(input)
+        .ok_or_else(|| format!("reduce input tensor {} not found", input.0))?;
+    let out_t = graph
+        .tensor(output)
+        .ok_or_else(|| format!("reduce output tensor {} not found", output.0))?;
+    let out_residency = out_t.residency;
+    let in_residency = in_t.residency;
+
+    if axes.len() != 1 {
+        return Err(format!(
+            "matrix-metal {}: V1 supports single-axis reduce only, got {} axes",
+            kernel_name,
+            axes.len()
+        ));
+    }
+    let reduce_axis = axes[0] as usize;
+    let rank_in = in_t.shape.rank();
+    if rank_in == 0 || rank_in > 4 {
+        return Err(format!(
+            "matrix-metal {}: input rank {} out of range (1..=4)",
+            kernel_name, rank_in
+        ));
+    }
+    if reduce_axis >= rank_in {
+        return Err(format!(
+            "matrix-metal {}: axis {} out of range for rank-{} input",
+            kernel_name, reduce_axis, rank_in
+        ));
+    }
+    let reduce_size = in_t.shape.dims[reduce_axis];
+
+    let numel_out = out_t
+        .shape
+        .numel()
+        .ok_or_else(|| "reduce output numel overflow".to_string())? as u32;
+    if numel_out == 0 {
+        return Ok(());
+    }
+
+    let pipeline = ctx
+        .pipelines
+        .get(kernel_name)
+        .ok_or_else(|| format!("pipeline {} not in cache", kernel_name))?;
+
+    let in_buf_ptr = ctx.buffers.get(in_residency.buffer)? as *const _;
+    let out_buf_ptr = ctx.buffers.get(out_residency.buffer)? as *const _;
+    // SAFETY: see `unary_dispatch`.
+    let in_buf = unsafe { &*in_buf_ptr };
+    let out_buf = unsafe { &*out_buf_ptr };
+
+    // Encode ReduceArgs.  Field order matches the MSL struct:
+    //   uint rank_in;
+    //   uint reduce_axis;
+    //   uint reduce_size;
+    //   uint keep_dims;
+    //   uint numel_out;
+    //   uint in_dims[4];
+    //   uint out_dims[4];
+    // Total: 5 + 4 + 4 = 13 uints = 52 bytes.  Round up to 64 for
+    // MSL alignment.
+    let mut args = [0u8; 64];
+    let mut off = 0usize;
+    let put_u32 = |v: u32, args: &mut [u8; 64], off: &mut usize| {
+        args[*off..*off + 4].copy_from_slice(&v.to_le_bytes());
+        *off += 4;
+    };
+    put_u32(rank_in as u32, &mut args, &mut off);
+    put_u32(reduce_axis as u32, &mut args, &mut off);
+    put_u32(reduce_size, &mut args, &mut off);
+    put_u32(if keep_dims { 1 } else { 0 }, &mut args, &mut off);
+    put_u32(numel_out, &mut args, &mut off);
+    for d in 0..4 {
+        let v = if d < rank_in { in_t.shape.dims[d] } else { 0 };
+        put_u32(v, &mut args, &mut off);
+    }
+    let rank_out = out_t.shape.rank();
+    for d in 0..4 {
+        let v = if d < rank_out {
+            out_t.shape.dims[d]
+        } else {
+            0
+        };
+        put_u32(v, &mut args, &mut off);
+    }
+    let _ = off;
+
+    let tg = pipeline.preferred_threads_1d();
+
+    ctx.queue.dispatch(|enc| {
+        enc.set_pipeline(pipeline);
+        enc.set_buffer(in_buf, 0);
+        enc.set_buffer(out_buf, 1);
+        enc.set_bytes(&args, 2);
+        enc.dispatch_threads_1d(numel_out, tg);
+    });
     Ok(())
 }
 

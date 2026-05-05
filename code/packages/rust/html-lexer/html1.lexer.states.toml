@@ -3189,10 +3189,10 @@ actions = [
 from = "tag_open"
 matcher = { literal = "\u0000" }
 to = "data"
+consume = false
 actions = [
-  "parse_error(unexpected-null-character)",
+  "parse_error(invalid-first-character-of-tag-name)",
   "append_text(<)",
-  "append_text_replacement",
 ]
 
 [[transitions]]
@@ -5290,6 +5290,17 @@ actions = [
 
 [[transitions]]
 from = "cdata_open_bracket"
+matcher = { literal = "\u0000" }
+to = "bogus_comment"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "create_comment",
+  "append_comment([)",
+  "append_comment_replacement",
+]
+
+[[transitions]]
+from = "cdata_open_bracket"
 matcher = { anything = true }
 to = "bogus_comment"
 actions = ["create_comment", "append_comment([)", "append_comment(current)"]
@@ -5314,6 +5325,17 @@ actions = [
 
 [[transitions]]
 from = "cdata_open_c"
+matcher = { literal = "\u0000" }
+to = "bogus_comment"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "create_comment",
+  "append_comment([C)",
+  "append_comment_replacement",
+]
+
+[[transitions]]
+from = "cdata_open_c"
 matcher = { anything = true }
 to = "bogus_comment"
 actions = ["create_comment", "append_comment([C)", "append_comment(current)"]
@@ -5334,6 +5356,17 @@ actions = [
   "append_comment([CD)",
   "emit_current_token",
   "emit(EOF)",
+]
+
+[[transitions]]
+from = "cdata_open_cd"
+matcher = { literal = "\u0000" }
+to = "bogus_comment"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "create_comment",
+  "append_comment([CD)",
+  "append_comment_replacement",
 ]
 
 [[transitions]]
@@ -5366,6 +5399,17 @@ actions = [
 
 [[transitions]]
 from = "cdata_open_cda"
+matcher = { literal = "\u0000" }
+to = "bogus_comment"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "create_comment",
+  "append_comment([CDA)",
+  "append_comment_replacement",
+]
+
+[[transitions]]
+from = "cdata_open_cda"
 matcher = { anything = true }
 to = "bogus_comment"
 actions = [
@@ -5394,6 +5438,17 @@ actions = [
 
 [[transitions]]
 from = "cdata_open_cdat"
+matcher = { literal = "\u0000" }
+to = "bogus_comment"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "create_comment",
+  "append_comment([CDAT)",
+  "append_comment_replacement",
+]
+
+[[transitions]]
+from = "cdata_open_cdat"
 matcher = { anything = true }
 to = "bogus_comment"
 actions = [
@@ -5418,6 +5473,17 @@ actions = [
   "append_comment([CDATA)",
   "emit_current_token",
   "emit(EOF)",
+]
+
+[[transitions]]
+from = "cdata_open_cdata"
+matcher = { literal = "\u0000" }
+to = "bogus_comment"
+actions = [
+  "parse_error(unexpected-null-character)",
+  "create_comment",
+  "append_comment([CDATA)",
+  "append_comment_replacement",
 ]
 
 [[transitions]]
@@ -7173,7 +7239,6 @@ to = "bogus_doctype"
 consume = false
 actions = [
   "parse_error(unexpected-character-after-doctype-system-identifier)",
-  "mark_force_quirks",
 ]
 
 [[transitions]]

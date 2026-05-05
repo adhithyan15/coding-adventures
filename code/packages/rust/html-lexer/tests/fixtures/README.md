@@ -72,14 +72,21 @@ currently supports:
 - `initialStates: ["RAWTEXT state"]` together with `lastStartTag`
 - `initialStates: ["PLAINTEXT state"]`
 - `initialStates: ["CDATA section state"]`
+- CDATA section `bracket` and `end` substates
 - `initialStates: ["Script data state"]` together with `lastStartTag`
+- script `less-than sign`, `escape start`, and `escape start dash` substates
+  together with `lastStartTag`
 - `initialStates: ["Script data escaped state"]` together with `lastStartTag`
 - script escaped `dash`, `dash dash`, and `less-than sign` substates together
   with `lastStartTag`
+- script double-escape `start` and `end` substates together with
+  `lastStartTag`
 - `initialStates: ["Script data double escaped state"]` together with
   `lastStartTag`
 - script double-escaped `dash`, `dash dash`, and `less-than sign` substates
   together with `lastStartTag`
+- multi-state html5lib fixture entries for supported states, expanded into
+  stable per-state Venture fixture cases
 - `StartTag`, `EndTag`, `Character`, `Comment`, and `DOCTYPE` output tokens
 - html5lib start-tag self-closing booleans
 - named character references in data, RCDATA, and attribute values for the
@@ -155,11 +162,11 @@ currently supports:
 Unsupported raw cases are skipped into metadata in the generated file rather
 than silently disappearing. Rust conformance tests execute the generated
 `html5lib-smoke.json` corpus and separately parse the raw upstream-style file to
-keep the intake path visible. Tokenizer-context cases such as RCDATA and
-RAWTEXT stay in the generated corpus with `initial_state` / `last_start_tag`
-metadata and are seeded into the Rust wrapper at test time, while still
-unsupported upstream states remain recorded under `skipped` instead of being
-discarded.
+keep the intake path visible. Tokenizer-context cases such as RCDATA, RAWTEXT,
+script submodes, CDATA bracket/end states, and resumable end-tag-open states
+stay in the generated corpus with `initial_state` / `last_start_tag` metadata
+and are seeded into the Rust wrapper at test time, while still unsupported
+upstream states remain recorded under `skipped` instead of being discarded.
 
 To regenerate the normalized corpus:
 

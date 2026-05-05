@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-sql-vm"
-version = "1.14.0"
+version = "1.15.0"
 description = "Dispatch-loop virtual machine that executes sql-codegen Programs against a pluggable Backend."
 requires-python = ">=3.12"
 license = "MIT"

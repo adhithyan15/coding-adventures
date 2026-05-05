@@ -91,6 +91,8 @@ MOD = IRSymbol("Mod")
 FLOOR = IRSymbol("Floor")
 CEILING = IRSymbol("Ceiling")
 ABS = IRSymbol("Abs")
+# Phase 28 — sign function (returns 1/-1/0 based on sign assumptions).
+SIGN = IRSymbol("Sign")
 
 # Equation-side selectors (C5)
 LHS = IRSymbol("Lhs")
@@ -216,6 +218,7 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "floor": FLOOR,
     "ceiling": CEILING,
     "abs": ABS,
+    "sign": SIGN,      # Phase 28
     # Equation-side selectors (C5)
     "lhs": LHS,
     "rhs": RHS,

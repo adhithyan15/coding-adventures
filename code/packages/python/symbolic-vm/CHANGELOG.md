@@ -1,5 +1,158 @@
 # Changelog
 
+## 0.50.0 — 2026-05-05
+
+**Phase 30 — Algebraic `log` and `exp` cancellation identities.**
+
+Two new handlers override the `_elementary`-factory `Log` and `Exp` handlers
+from `handlers.py` via the standard `handlers.update(build_cas_handler_table())`
+mechanism.  All numeric fold behaviour is preserved.
+
+### `log_handler` (Phase 30, new function)
+
+New algebraic rules on top of the preserved numeric fold:
+
+- **`log(exp(x)) → x`**: Cancellation identity.  `exp` maps all of ℝ into ℝ⁺
+  and `log` is its exact inverse, so this holds for every real `x` without any
+  assumption.
+- **`log(x^n) → n * log(x)`**: Power rule.  Applied only when
+  `vm.assumptions.is_nonneg(x.name)` is True (prevents incorrect simplification
+  in the absence of positivity information).
+- **Guard for undefined inputs**: Negative or zero numeric arguments leave
+  the expression unevaluated (real-valued log is undefined there).
+
+### `exp_handler` (Phase 30, new function)
+
+New algebraic rules on top of the preserved numeric fold:
+
+- **`exp(log(x)) → x`**: Structural cancellation.  Any expression containing
+  `log(x)` already requires `x > 0` in the real domain, so `exp(log(x)) = x`
+  is always safe without an explicit assumption.
+- **`exp(n*log(x)) → x^n`**: Power form.  Recognises both `Mul(n, Log(x))`
+  and the commuted `Mul(Log(x), n)`, returning `Pow(x, n)`.  This simplifies
+  outputs of `logcontract`, `exponentialize`, and user-written expressions
+  like `exp(2*log(x))`.
+
+### Tests
+
+41 new tests in `tests/test_phase30.py` (total suite: 1558 tests, 82.29% coverage):
+
+- `TestPhase30_LogExpCancel` (6) — `log(exp(x))→x`, including compound args
+- `TestPhase30_ExpLogCancel` (7) — `exp(log(x))→x`, `exp(n*log(x))→x^n`
+- `TestPhase30_LogPower` (6) — power rule with/without assumption
+- `TestPhase30_LogNumeric` (5) — numeric fold, `log(1)→0`, negative guard
+- `TestPhase30_ExpNumeric` (5) — numeric fold, `exp(0)→1`
+- `TestPhase30_Regressions` (6) — Phase 29/28/3 regression checks
+- `TestPhase30_Macsyma` (6) — end-to-end MACSYMA surface syntax
+
+## 0.49.0 — 2026-05-04
+
+**Phase 29 — Algebraic `abs` and `sqrt` simplification.**
+
+Pure structural rules that hold for all real inputs with no user assumptions
+required. All Phase 28 assumption-aware folding is fully preserved.
+
+### `abs_handler` extensions (Phase 29)
+
+Four new algebraic rules fire before the "leave unevaluated" fallback:
+
+- **Idempotency**: `abs(abs(x))` → `abs(x)`
+- **Negation strip**: `abs(-x)` = `abs(Neg(x))` → `abs(x)` (|−x| = |x|)
+- **Mul(−1, x) strip**: `abs(Mul(-1, x))` → `abs(x)` (−x after eval)
+- **Even power**: `abs(x^{2k})` → `x^{2k}` for even integer `2k ≥ 2`
+  (x^{2k} ≥ 0 for all real x, so the absolute value is a no-op)
+
+These rules compose correctly with the Phase 28 assumption rules:
+`abs(-x)` strips the negation to `abs(x)`, then the assumption context may
+further fold `abs(x)` → `x` if `x ≥ 0` is known.
+
+### `sqrt_handler` (Phase 29, new function)
+
+A new `sqrt_handler` in `cas_handlers.py` overrides the `_elementary`-factory
+`Sqrt` handler (which was numeric-only) via the standard
+`handlers.update(build_cas_handler_table())` mechanism in `SymbolicBackend`.
+
+Numeric behaviour is fully preserved and enhanced:
+
+- Special values: `sqrt(0) → 0`, `sqrt(1) → 1`
+- Perfect-square integers return `IRInteger` rather than `IRFloat`:
+  `sqrt(4) → 2`, `sqrt(9) → 3`
+- Other numeric inputs fold to `IRFloat` via `math.sqrt`
+
+Algebraic rules for `sqrt(x^{2k})` (positive even exponent):
+
+| `2k` | `k` | result | reason |
+|------|-----|--------|--------|
+| 2    | 1 (odd)  | `Abs(x)`       | sign of x unknown |
+| 4    | 2 (even) | `Pow(x, 2)`    | x² ≥ 0 always |
+| 6    | 3 (odd)  | `Abs(Pow(x,3))`| sign of x³ unknown |
+| 8    | 4 (even) | `Pow(x, 4)`    | x⁴ ≥ 0 always |
+
+Assumption integration (Phase 28): `sqrt(x^2) → x` when `assume(x >= 0)`
+has been issued, since `|x| = x` under non-negativity.
+
+`sqrt(x^n)` for odd `n` remains unevaluated.
+
+### Tests
+
+46 new tests in `tests/test_phase29.py` (total suite: 1517 tests, 82.78% coverage):
+
+- `TestPhase29_AbsNeg` (7) — negation stripping in abs
+- `TestPhase29_AbsEvenPower` (6) — even-power abs folding
+- `TestPhase29_AbsIdempotent` (4) — idempotency
+- `TestPhase29_SqrtEvenPower` (8) — algebraic sqrt reduction
+- `TestPhase29_SqrtNumeric` (6) — numeric fold with perfect-square detection
+- `TestPhase29_SqrtAssumptions` (4) — assumption-aware sqrt(x²)
+- `TestPhase29_Regressions` (6) — Phase 28/27/3 regression checks
+- `TestPhase29_Macsyma` (5) — end-to-end MACSYMA surface syntax
+
+## 0.48.0 — 2026-05-04
+
+**Phase 28 — Assumptions-aware `abs` and `sign` folding.**
+
+Two existing handlers in `cas_handlers.py` are extended to consult the
+per-VM assumption context (`vm.assumptions`, provided by
+`cas_simplify.AssumptionContext`, first wired in Phase 21):
+
+### `abs_handler` (Phase 28 addition)
+
+`Abs(x)` now folds symbolically when the sign of `x` is known:
+
+- `assume(x > 0)` or `assume(x >= 0)` → `abs(x)` = `x`
+- `assume(x < 0)` → `abs(x)` = `-x`
+- Zero case: `sign_of(x) == 0` → `abs(x)` = `0`
+- No assumption → left unevaluated as `Abs(x)` (unchanged behaviour)
+- Numeric inputs (`IRInteger`, `IRRational`, `IRFloat`) still fold via
+  Python's `abs()`.
+
+The local `abs_handler` in `macsyma_runtime.cas_handlers` (which only
+handled numeric inputs) is replaced by a delegation to the full
+`symbolic_vm.cas_handlers.abs_handler` that carries all three rules.
+
+### `sign_handler` (Phase 28 addition)
+
+`Sign(n)` now folds for all numeric IR literals:
+
+- `sign(5)` → `1`, `sign(-3)` → `-1`, `sign(0)` → `0`
+- Works for `IRInteger`, `IRRational`, `IRFloat`
+- Symbolic folding via assumptions was already present from Phase 21;
+  numeric folding is the new addition.
+
+### New test file: `tests/test_phase28.py`
+
+43 tests across 8 classes:
+
+- `TestPhase28_SignNumeric` — 9 tests: int/rational/float → 1/-1/0
+- `TestPhase28_SignSymbolic` — 5 tests: positive/nonneg/negative/unknown/spill
+- `TestPhase28_AbsAssumptions` — 5 tests: pos/nonneg/neg/different-var/forget
+- `TestPhase28_AbsFallthrough` — 5 tests: numeric/no-assumption fallthrough
+- `TestPhase28_AssumeForgetIs` — 6 tests: full round-trip
+- `TestPhase28_KillResetsDB` — 1 test: forget-all
+- `TestPhase28_Regressions` — 4 tests: Phase 27/3/21 regressions
+- `TestPhase28_Macsyma` — 8 tests: end-to-end MACSYMA surface syntax
+
+Total test count: 1471 (up from 1428). Coverage: 82.66%.
+
 ## 0.47.0 — 2026-05-05
 
 **Phase 27 — Polynomial inequality solving.**

@@ -50,17 +50,37 @@ Install the Twig VS Code extension (separate package) to register the
 5. `dap-adapter-core` connects to the VM over TCP and proxies all DAP
    requests (breakpoints, step, continue, variables, call stack).
 
-## Status — SKELETON (LS03 PR B)
+## Trust model — local loopback only
 
-`TwigDebugAdapter` is defined with stub implementations.  The binary exits
-with an error until LS03 PR A (`dap-adapter-core`) is implemented.
+The `twig-vm` debug server binds `127.0.0.1:<PORT>` and accepts the
+**first** TCP connection.  There is no token, secret, or fd-passing
+handshake confirming the peer is the spawning `twig-dap` adapter.  On a
+shared host any local process running as the same user can race to
+connect first and:
 
-**TODO (LS03 PR B):**
-1. Implement `compile()` — run `twig-ir-compiler`, write bytecode to temp
-   file, return sidecar bytes.
-2. Implement `launch_vm()` — spawn `twig-vm --debug-port <port> <bytecode>`.
-3. Implement `twig_dap` main — construct `DapServer::new(TwigDebugAdapter)`
-   and call `run_stdio()`.
+- Read the call stack (`get_call_stack`) and source-level locations
+- Read register/variable values (`get_slot`) — these may carry data the
+  debugged program is processing
+- Drive breakpoints, pauses, and stepping
+
+This is the conventional DAP local-loopback trust model.  It is
+appropriate for single-user developer machines.  **Do not use the debug
+server on multi-user systems or hosts where untrusted local processes
+may exist.**  A future hardening pass may add a one-time token in the
+adapter→VM handshake; for now, the wire is unauthenticated.
+
+## Status — LS03 PR B complete (0.2.0)
+
+`TwigDebugAdapter::compile()` runs `twig-ir-compiler` and emits a
+real `debug-sidecar` blob; `TwigDebugAdapter::launch_vm()` spawns a
+sibling `twig-vm` process.  An end-to-end smoke test in `tests/`
+spawns `twig-vm --debug-port` and walks through the full
+launch → breakpoint → continue → exited flow over TCP.
+
+Variable inspection is the one feature still in flight — Twig's IIR
+doesn't yet carry user-variable-name → register-index mapping that DAP's
+`variables` panel needs.  Stepping, breakpoints, and stack traces all
+work today.
 
 ## Spec reference
 

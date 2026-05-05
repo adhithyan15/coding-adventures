@@ -1,5 +1,55 @@
 # Changelog
 
+## 1.19.0 — 2026-05-04
+
+**Phase 28 — `sign` surface syntax + assumption-driven `abs` folding.**
+
+Exposes the Phase 21 assumptions infrastructure (already in `symbolic-vm`)
+through the MACSYMA surface name `sign`, and fixes `Abs` handler delegation
+so `abs(x)` folds correctly after `assume(x > 0)`.
+
+### New `sign` function
+
+`sign(x)` → `1`, `-1`, `0` for known-sign inputs (numeric or assumed);
+`Sign(x)` unevaluated when sign is unknown.
+
+### Assumption-driven simplification in `abs`
+
+`abs(x)` now delegates to the full `symbolic_vm.cas_handlers.abs_handler`
+(Phase 28) which consults `vm.assumptions`:
+
+- `assume(x > 0)` or `assume(x >= 0)` → `abs(x)` = `x`
+- `assume(x < 0)` → `abs(x)` = `-x`
+
+Previously the local `abs_handler` only folded numeric inputs.
+
+### Surface syntax examples
+
+```macsyma
+assume(x > 0);         →  done
+is(x > 0);             →  true
+is(x >= 0);            →  true    (inferred)
+abs(x);                →  x       (sign-simplified)
+sign(x);               →  1
+forget(x > 0);         →  done
+is(x > 0);             →  unknown
+assume(x < 0);         →  done
+abs(x);                →  -x
+sign(x);               →  -1
+sign(5);               →  1
+sign(-3);              →  -1
+```
+
+### What changed
+
+- `src/macsyma_runtime/cas_handlers.py` — removes local `abs_handler`; imports
+  and uses `symbolic_vm.cas_handlers.abs_handler` as `_abs_handler_full`.
+- `src/macsyma_runtime/name_table.py` — adds `SIGN` symbol and `"sign": SIGN`
+  mapping (Phase 28).
+- `pyproject.toml` — version 1.18.0 → 1.19.0; bumps `symbolic-vm` dep to ≥ 0.48.0.
+
+---
+
 ## 1.18.0 — 2026-05-05
 
 **Phase 27 — Polynomial inequality solving via MACSYMA surface syntax.**

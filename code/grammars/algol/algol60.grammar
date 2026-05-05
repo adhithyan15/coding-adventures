@@ -6,7 +6,7 @@
 # grammar derives directly from the ALGOL 60 report.
 #
 # Notation (repo standard):
-#   UPPERCASE    token kinds from algol.tokens (custom operators, literals)
+#   UPPERCASE    token kinds from algol/algol60.tokens (custom operators, literals)
 #   "keyword"    quoted keyword literals (match token.value for keyword tokens)
 #   lowercase    grammar rules (non-terminals, defined below)
 #   |            alternation (or)
@@ -146,15 +146,11 @@ proc_body    = block | statement ;
 # Any statement may carry one or more labels. Labels can be identifiers or
 # integer literals. Labels are the targets of goto statements.
 #
-# The third alternative supports standalone labels at the end of a block, e.g.
-# `done:` or `done1: done2:` immediately before `end`. This is equivalent to
-# labels on an empty/dummy statement — a common ALGOL 60 idiom for goto targets
-# at the end of a block. Strictly, ALGOL 60 requires a statement after a label,
-# but most implementations accept terminal labels because the block's `end`
-# acts as the associated statement.
+# `dummy_stmt` covers ALGOL 60's empty statement. The lookahead keeps it
+# zero-width, which lets semicolons remain statement separators while still
+# allowing empty bodies after `then`, `else`, `do`, or labels before `end`.
 statement    = { label COLON } unlabeled_stmt
-             | { label COLON } cond_stmt
-             | label COLON { label COLON } ;
+             | { label COLON } cond_stmt ;
 
 label        = NAME | INTEGER_LIT ;
 
@@ -167,11 +163,18 @@ label        = NAME | INTEGER_LIT ;
 # In C and Java, the else binds to the nearest if by convention (not grammar).
 # ALGOL requires explicit begin/end to make nesting unambiguous.
 unlabeled_stmt = assign_stmt
+               | dummy_stmt
                | goto_stmt
                | proc_stmt
                | compound_stmt
                | block
                | for_stmt ;
+
+# Dummy statement: consumes no tokens. It succeeds only when a statement
+# boundary follows, so invalid syntax does not disappear into a no-op.
+dummy_stmt   = &SEMICOLON
+             | &"end"
+             | &"else" ;
 
 # Conditional statement. The then-branch is unlabeled_stmt (excludes conditionals).
 # The else-branch is statement (includes conditionals, enabling if/then/else if chains).

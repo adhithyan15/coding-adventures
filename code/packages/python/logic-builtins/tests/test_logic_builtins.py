@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 from logic_engine import (
     Compound,
@@ -39,6 +41,7 @@ from logic_builtins import (
     argo,
     assertao,
     assertzo,
+    at_end_of_streamo,
     atom_charso,
     atom_codeso,
     atom_concato,
@@ -57,6 +60,7 @@ from logic_builtins import (
     catcho,
     char_codeo,
     clauseo,
+    closeo,
     compare_termo,
     compound_name_argumentso,
     compound_name_arityo,
@@ -73,6 +77,7 @@ from logic_builtins import (
     div,
     dynamico,
     excludeo,
+    exists_fileo,
     failo,
     falseo,
     fd_addo,
@@ -101,6 +106,7 @@ from logic_builtins import (
     forallo,
     functoro,
     geqo,
+    get_charo,
     groundo,
     gto,
     ifthenelseo,
@@ -117,6 +123,7 @@ from logic_builtins import (
     mod,
     mul,
     neg,
+    nlo,
     nonvaro,
     not_same_termo,
     not_variant_termo,
@@ -129,11 +136,16 @@ from logic_builtins import (
     numeqo,
     numneqo,
     onceo,
+    openo,
     partitiono,
     predicate_propertyo,
     prolog_iso,
     prolog_lto,
     prolog_numeqo,
+    read_file_to_codeso,
+    read_file_to_stringo,
+    read_line_to_stringo,
+    read_stringo,
     repeato,
     retractallo,
     retracto,
@@ -165,6 +177,7 @@ from logic_builtins import (
     univo,
     variant_termo,
     varo,
+    writeo,
 )
 
 
@@ -173,6 +186,88 @@ class TestVersion:
 
     def test_version_exists(self) -> None:
         assert __version__ == "0.15.0"
+
+
+class TestFileTextBuiltins:
+    """Bounded file-text helpers should stay deterministic and UTF-8 only."""
+
+    def test_exists_fileo_succeeds_for_regular_files(self, tmp_path: Path) -> None:
+        source_path = tmp_path / "data.txt"
+        source_path.write_text("tea", encoding="utf-8")
+
+        assert solve_all(
+            program(),
+            "ok",
+            conj(eq("ok", "ok"), exists_fileo(string(str(source_path)))),
+        ) == [atom("ok")]
+        assert solve_all(
+            program(),
+            "ok",
+            conj(eq("ok", "ok"), exists_fileo(string(str(tmp_path / "missing.txt")))),
+        ) == []
+
+    def test_read_file_to_stringo_reads_utf8_text(self, tmp_path: Path) -> None:
+        source_path = tmp_path / "data.txt"
+        source_path.write_text("tea\ncake", encoding="utf-8")
+        contents = var("Contents")
+
+        assert solve_all(
+            program(),
+            contents,
+            read_file_to_stringo(atom(str(source_path)), contents),
+        ) == [string("tea\ncake")]
+
+    def test_read_file_to_codeso_reads_code_points(self, tmp_path: Path) -> None:
+        source_path = tmp_path / "data.txt"
+        source_path.write_text("A\n", encoding="utf-8")
+        codes = var("Codes")
+
+        assert solve_all(
+            program(),
+            codes,
+            read_file_to_codeso(string(str(source_path)), codes),
+        ) == [logic_list([num(65), num(10)])]
+
+    def test_file_stream_read_facade_tracks_cursor(self, tmp_path: Path) -> None:
+        source_path = tmp_path / "stream.txt"
+        source_path.write_text("first\nsecond", encoding="utf-8")
+        stream = var("Stream")
+        first_line = var("FirstLine")
+        first_char = var("FirstChar")
+        tail = var("Tail")
+        result = var("Result")
+
+        assert solve_all(
+            program(),
+            result,
+            conj(
+                openo(string(str(source_path)), "read", stream),
+                read_line_to_stringo(stream, first_line),
+                get_charo(stream, first_char),
+                read_stringo(stream, num(5), tail),
+                at_end_of_streamo(stream),
+                closeo(stream),
+                eq(result, term("stream_result", first_line, first_char, tail)),
+            ),
+        ) == [term("stream_result", string("first"), atom("s"), string("econd"))]
+
+    def test_file_stream_write_facade_flushes_text(self, tmp_path: Path) -> None:
+        output_path = tmp_path / "out.txt"
+        stream = var("Stream")
+
+        assert solve_all(
+            program(),
+            "ok",
+            conj(
+                openo(atom(str(output_path)), "write", stream),
+                writeo(stream, string("tea")),
+                nlo(stream),
+                writeo(stream, atom("cake")),
+                closeo(stream),
+                eq("ok", "ok"),
+            ),
+        ) == [atom("ok")]
+        assert output_path.read_text(encoding="utf-8") == "tea\ncake"
 
 
 class TestAdvancedControlBuiltins:

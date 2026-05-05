@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Run bounded source-level UTF-8 file text I/O predicates through structured
+  and bytecode VM paths, including `exists_file/1`,
+  `read_file_to_string/2`, and `read_file_to_codes/2`.
+- Run bounded source-level UTF-8 file stream predicates through structured and
+  bytecode VM paths, including `open/3`, `close/1`, `read_string/3`,
+  `read_line_to_string/2`, `get_char/2`, `at_end_of_stream/1`, `write/2`,
+  and `nl/1`.
+- Add a public Prolog VM capability manifest and `prolog-vm --dump-capabilities`
+  so scripts and future planning can distinguish the completed PR00-PR79 track
+  from deferred advanced dialect/runtime work.
 - Add end-to-end stress coverage for recursive search, modules, DCGs,
   arithmetic, collections, dynamic initialization, named answers, and expansion.
 - Add named answer helpers for source-level query results.

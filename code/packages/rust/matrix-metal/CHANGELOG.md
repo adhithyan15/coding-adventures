@@ -1,5 +1,146 @@
 # Changelog — matrix-metal
 
+## 0.5.0 — 2026-05-05
+
+### Added
+
+- **`Op::ReduceSum / ReduceMax / ReduceMean` support** for **single-
+  axis** F32 reductions.  Capability bitset now includes tags 0x0E,
+  0x0F, 0x10.
+
+  Three new MSL kernels (`reduce_sum_f32`, `reduce_max_f32`,
+  `reduce_mean_f32`) share a `REDUCE_F32_BODY` macro that:
+
+    1. Decomposes `gid` into an output multi-index using `out_dims`.
+    2. Builds a template input multi-index, skipping/adjusting the
+       reduced axis based on `keep_dims`.
+    3. Sweeps `i = 0..reduce_size`, slotting `i` into the reduce-axis
+       position and accumulating.
+    4. Writes the result (sum: as-is; max: starting from `-INFINITY`;
+       mean: divided by `reduce_size`).
+
+  Supports `keep_dims = true` and `keep_dims = false`.  Up to rank 4
+  (matching this backend's advertised `max_tensor_rank`).
+
+  **Multi-axis reductions** (`axes.len() > 1`) return an Err at
+  dispatch time with a clear message — the runtime can either surface
+  the error or decompose into a chain of single-axis reductions.
+  Decomposition is V2 work.
+
+### Tests (4 new integration tests)
+
+- `reduce_sum_axis1_on_gpu` — `[[1,2,3],[4,5,6]]` reduce-sum axis 1 → `[6, 15]`.
+- `reduce_max_axis0_keep_dims_on_gpu` — `[[1,5,3],[4,2,6]]` reduce-max axis 0 with keep_dims → `[[4, 5, 6]]`.
+- `reduce_mean_axis1_on_gpu` — `[[2,4,6,8],[1,3,5,7]]` reduce-mean axis 1 → `[5.0, 4.0]`.
+- `reduce_multi_axis_returns_error` — verifies V1 multi-axis attempt fails cleanly with a "single-axis" error message so the runtime can fall back.
+
+Total integration tests: 17 (was 13).
+
+### Notes
+
+- The kernels are thread-per-output-element with sequential reads
+  along the reduce axis.  Performance is suboptimal for very long
+  reduce axes (no tree reduction within a threadgroup); fine for
+  the rank-2/3/4 reduce sizes typical in image / ML graphs (hundreds
+  to thousands).  V2 polish: tile-and-tree reduction kernels.
+- Reduction completes the V1 elementwise+reduction op set on Metal.
+  Combined with shape ops (Reshape/Transpose/Broadcast in 0.1.1–
+  0.3.0) and casts (0.4.0), matrix-metal now handles the bulk of
+  ML-style F32 graph patterns end-to-end.
+
+## 0.4.0 — 2026-05-05
+
+### Added
+
+- **`Op::Cast` support (F32 output paths only).**  Capability bitset
+  now includes tag 0x1A.
+
+  matrix-metal advertises `supported_dtypes = F32`, which constrains
+  the planner's capability filter to route only Casts whose **output**
+  dtype is F32 to us.  That leaves three input-dtype paths to handle:
+
+    - `F32 → F32` (degenerate identity cast)
+    - `U8 → F32` (widening conversion)
+    - `I32 → F32` (widening conversion)
+
+  Each is a one-line elementwise scalar cast.  MSL's implicit
+  conversions match Rust's `as` semantics for these widening paths
+  (no rounding mode ambiguity; every U8 and I32 value fits in F32
+  exactly or with at most one rounding step).
+
+  The other three Cast directions (`F32 → U8 / I32`, `U8 → I32`,
+  `I32 → U8`) need `supported_dtypes` to advertise U8 / I32 — and
+  that would also let the planner route U8/I32 elementwise ops to us
+  which we don't yet implement.  Keeping the dtype bitset at F32 only
+  means those casts stay on CPU; we ship the F32-output ones today.
+
+### Tests (3 new integration tests)
+
+- `cast_u8_to_f32_on_gpu` — `[0, 1, 200, 255]` (u8) → `[0.0, 1.0, 200.0, 255.0]` (f32).
+- `cast_i32_to_f32_on_gpu` — `[0, 1, -1, 1_000_000, i32::MIN]` (i32) → matching f32 values; verifies that the largest-magnitude path still round-trips correctly (i32::MIN is exactly representable in f32 with no rounding).
+- `cast_f32_to_f32_on_gpu_is_identity` — degenerate path; confirms PI and other arbitrary f32 values round-trip byte-exactly.
+
+Total integration tests: 13 (was 10).
+
+### Notes
+
+- Defence in depth: `cast_dispatch` returns Err if the planner ever
+  routes a non-F32-output cast to us (it shouldn't, given the
+  `supported_dtypes` bitset, but the runtime check guards against
+  planner bugs and future capability changes).
+- This unblocks ML graphs that use U8 image inputs and I32 index
+  buffers but produce F32 intermediates — e.g. `image-gpu-core`'s
+  current pattern of u8-pixels → f32-cast → matmul → u8-pack stays
+  on Metal for the **u8→f32** half (the f32→u8 pack still falls
+  back to CPU).
+
+## 0.3.0 — 2026-05-05
+
+### Added
+
+- **`Op::Broadcast` support.**  Completes the shape-op trio (Reshape
+  in #2077, Transpose in #2122, Broadcast now).  General N-D
+  axis-replication kernel up to rank 4 (matching this backend's
+  advertised `max_tensor_rank`).  Capability bitset now includes
+  tag 0x13.
+
+  The MSL kernel walks the output linearly: for each output element,
+  decomposes the linear index into an output multi-index using the
+  target dims, then builds the input multi-index by clamping each
+  size-1 input axis to index 0 and copying every non-broadcast axis
+  through.  Re-flattens with the input dims and reads.  Memory
+  access is **read-fan-in** — many output threads read the same
+  input element when broadcasting along a hot axis, which Metal
+  handles well via its texture cache on Apple Silicon.
+
+  The args struct (rank, output numel, in_dims[4], out_dims[4]) is
+  encoded as 40 bytes (rounded to 48 for MSL alignment) and passed
+  via `set_bytes`.
+
+  Edge cases:
+    - Rank 0 (scalar) is a no-op single-element copy.
+    - Rank > 4 returns an Err.
+    - Empty output (numel = 0) returns Ok without dispatching.
+    - Input rank ≠ output rank returns an Err.
+    - Input dim ≠ 1 and ≠ output dim is enforced at the matrix-ir
+      validator level; the kernel doesn't re-check.
+
+### Tests (2 new)
+
+- `broadcast_row_to_matrix_on_gpu` — `(1, 3) → (4, 3)` broadcast on axis 0.
+- `broadcast_column_to_matrix_on_gpu` — `(3, 1) → (3, 4)` broadcast on axis 1.
+
+Total: 10 integration tests (was 8).
+
+### Notes
+
+- All three V1 shape ops (Reshape, Transpose, Broadcast) now run on
+  Metal.  The capability filter no longer routes any pure shape op
+  to CPU, so future graphs that mix elementwise + matmul + arbitrary
+  shape ops can stay end-to-end on GPU under uniform-Metal placement.
+- ML-style "bias add" (`out = x + bias` where bias broadcasts across
+  the batch axis) is now expressible end-to-end on Metal.
+
 ## 0.2.0 — 2026-05-05
 
 ### Added

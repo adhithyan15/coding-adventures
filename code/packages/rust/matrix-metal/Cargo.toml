@@ -1,6 +1,6 @@
 [package]
 name = "matrix-metal"
-version = "0.2.0"
+version = "0.5.0"
 edition = "2021"
 description = "First real GPU executor for the matrix execution layer. Lowers a subset of MatrixIR ops to MSL kernels and dispatches via the metal-compute crate. Falls back to CPU automatically (via the planner's capability filter) for ops it doesn't yet support."
 license = "MIT"

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from logic_engine import (
     Compound,
     Disequality,
@@ -999,6 +1001,66 @@ class TestPrologVMStress:
                 "Chain": num(1),
             },
         ]
+
+    def test_file_text_io_predicates_run_through_vm(self, tmp_path: Path) -> None:
+        source_path = tmp_path / "story.pltxt"
+        source_path.write_text("tea\ncake", encoding="utf-8")
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        compiled = compile_swi_prolog_source(
+            f"""
+            ?- exists_file('{path_atom}'),
+               read_file_to_string('{path_atom}', Text),
+               read_file_to_codes('{path_atom}', Codes).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [answer.as_dict() for answer in answers] == [
+            {
+                "Text": string("tea\ncake"),
+                "Codes": logic_list([
+                    num(ord(character)) for character in "tea\ncake"
+                ]),
+            },
+        ]
+
+    def test_file_stream_predicates_run_through_vm(self, tmp_path: Path) -> None:
+        source_path = tmp_path / "stream.pltxt"
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        compiled = compile_swi_prolog_source(
+            f"""
+            ?- open('{path_atom}', write, Out),
+               write(Out, "tea"),
+               nl(Out),
+               write(Out, cake),
+               close(Out),
+               open('{path_atom}', read, In),
+               read_line_to_string(In, Line),
+               get_char(In, Char),
+               read_string(In, 3, Tail),
+               at_end_of_stream(In),
+               close(In).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [
+            {
+                "Line": answer.as_dict()["Line"],
+                "Char": answer.as_dict()["Char"],
+                "Tail": answer.as_dict()["Tail"],
+            }
+            for answer in answers
+        ] == [
+            {
+                "Line": string("tea"),
+                "Char": atom("c"),
+                "Tail": string("ake"),
+            },
+        ]
+        assert source_path.read_text(encoding="utf-8") == "tea\ncake"
 
     def test_initialized_named_answers_keep_runtime_assertions_visible(self) -> None:
         compiled = compile_swi_prolog_source(

@@ -7138,11 +7138,10 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "parse_error(unexpected-null-character)".to_string(),
+                "parse_error(invalid-first-character-of-tag-name)".to_string(),
                 "append_text(<)".to_string(),
-                "append_text_replacement".to_string(),
             ],
-            consume: true,
+            consume: false,
         },
         TransitionDefinition {
             from: "tag_open".to_string(),
@@ -11231,6 +11230,24 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "cdata_open_bracket".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "bogus_comment".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "create_comment".to_string(),
+                "append_comment([)".to_string(),
+                "append_comment_replacement".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "cdata_open_bracket".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
                 "bogus_comment".to_string(),
@@ -11276,6 +11293,24 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "emit(EOF)".to_string(),
             ],
             consume: false,
+        },
+        TransitionDefinition {
+            from: "cdata_open_c".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "bogus_comment".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "create_comment".to_string(),
+                "append_comment([C)".to_string(),
+                "append_comment_replacement".to_string(),
+            ],
+            consume: true,
         },
         TransitionDefinition {
             from: "cdata_open_c".to_string(),
@@ -11329,6 +11364,24 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "cdata_open_cd".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "bogus_comment".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "create_comment".to_string(),
+                "append_comment([CD)".to_string(),
+                "append_comment_replacement".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "cdata_open_cd".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
                 "bogus_comment".to_string(),
@@ -11374,6 +11427,24 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "emit(EOF)".to_string(),
             ],
             consume: false,
+        },
+        TransitionDefinition {
+            from: "cdata_open_cda".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "bogus_comment".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "create_comment".to_string(),
+                "append_comment([CDA)".to_string(),
+                "append_comment_replacement".to_string(),
+            ],
+            consume: true,
         },
         TransitionDefinition {
             from: "cdata_open_cda".to_string(),
@@ -11427,6 +11498,24 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "cdata_open_cdat".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "bogus_comment".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "create_comment".to_string(),
+                "append_comment([CDAT)".to_string(),
+                "append_comment_replacement".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "cdata_open_cdat".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
                 "bogus_comment".to_string(),
@@ -11472,6 +11561,24 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "emit(EOF)".to_string(),
             ],
             consume: false,
+        },
+        TransitionDefinition {
+            from: "cdata_open_cdata".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("\0".to_string())),
+            to: vec![
+                "bogus_comment".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-null-character)".to_string(),
+                "create_comment".to_string(),
+                "append_comment([CDATA)".to_string(),
+                "append_comment_replacement".to_string(),
+            ],
+            consume: true,
         },
         TransitionDefinition {
             from: "cdata_open_cdata".to_string(),
@@ -15033,7 +15140,6 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(unexpected-character-after-doctype-system-identifier)".to_string(),
-                "mark_force_quirks".to_string(),
             ],
             consume: false,
         },

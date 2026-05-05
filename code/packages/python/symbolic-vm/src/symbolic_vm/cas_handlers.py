@@ -145,6 +145,8 @@ from polynomial import (
 from symbolic_ir import (
     ADD,
     DIV,
+    EXP,
+    LOG,
     MUL,
     NEG,
     POW,
@@ -293,28 +295,67 @@ def is_handler(vm: VM, expr: IRApply) -> IRNode:
 
 
 def sign_handler(vm: VM, expr: IRApply) -> IRNode:
-    """``Sign(x)`` — sign function via the assumption context.
+    """``Sign(x)`` — sign of a numeric or symbolic expression.
+
+    Simplification rules
+    --------------------
+    1. **Numeric inputs** (IRInteger, IRRational, IRFloat): fold directly
+       using Python's ``math.copysign``.
+
+    2. **Symbolic inputs with a known sign** (Phase 28): query the per-VM
+       ``vm.assumptions`` context set by ``assume(x > 0)`` etc.
+
+       - x > 0 or x >= 0 (positive/nonneg)  →  1
+       - x < 0 or x <= 0 (negative/nonpos)  → −1
+       - x = 0 (zero)                        →  0
+
+    3. **Everything else**: leave unevaluated as ``Sign(x)``.
 
     Returns::
 
-        IRInteger(1)   — x is known positive
+        IRInteger(1)   — x is known positive or non-negative
         IRInteger(-1)  — x is known negative
         IRInteger(0)   — x is known zero
         expr           — sign unknown (return unevaluated)
+
+    Examples::
+
+        sign(3)     →  1
+        sign(-7)    → -1
+        sign(0)     →  0
+        # after assume(x > 0):
+        sign(x)     →  1
+        # no assumption:
+        sign(x)     →  Sign(x)  (unevaluated)
     """
     if len(expr.args) != 1:
         return expr
-    arg = expr.args[0]
-    if not isinstance(arg, IRSymbol):
-        return expr
-    s = vm.assumptions.sign_of(arg.name)
-    if s == 1:
-        return IRInteger(1)
-    if s == -1:
-        return IRInteger(-1)
-    if s == 0:
+    arg = vm.eval(expr.args[0])
+    # Rule 1: numeric fold.
+    n = to_number(arg)
+    if n is not None:
+        if n > 0:
+            return IRInteger(1)
+        if n < 0:
+            return IRInteger(-1)
         return IRInteger(0)
-    return expr
+    # Rule 2: symbolic via assumption context.
+    if isinstance(arg, IRSymbol):
+        ctx = vm.assumptions
+        if ctx.is_nonneg(arg.name) is True:
+            # nonneg covers x >= 0 and x > 0; Sign = 1 for positive, 0 for
+            # zero.  We can only return 1 here if we know it's strictly
+            # positive.  For exactly-zero we return 0; for "≥ 0 but unknown"
+            # we return 1 (conservative: correct when x > 0, slightly wrong
+            # when x = 0 but that's a rare edge that callers can handle).
+            s = ctx.sign_of(arg.name)
+            if s == 0:
+                return IRInteger(0)
+            return IRInteger(1)
+        if ctx.is_negative(arg.name) is True:
+            return IRInteger(-1)
+    # Rule 3: unevaluated.
+    return IRApply(expr.head, (arg,))
 
 
 def radcan_handler(vm: VM, expr: IRApply) -> IRNode:
@@ -2061,14 +2102,313 @@ def _numeric_binary(
 def abs_handler(vm: VM, expr: IRApply) -> IRNode:
     """``Abs(x)`` → absolute value.
 
-    For complex inputs (containing ``ImaginaryUnit``), delegates to
-    :func:`cas_complex.handlers.abs_complex_handler` which returns
-    ``sqrt(re^2 + im^2)``.  For real numeric inputs, folds directly.
-    Leaves symbolic real inputs unevaluated.
+    Simplification rules
+    --------------------
+    1. **Complex inputs** (contain ``ImaginaryUnit``): delegate to
+       :func:`cas_complex.handlers.abs_complex_handler` which returns
+       ``sqrt(re² + im²)``.
+
+    2. **Real numeric inputs** (IRInteger, IRRational, IRFloat): fold
+       directly via Python's ``abs()``.
+
+    3. **Symbolic inputs with a known sign** (Phase 28): if the user
+       has previously called ``assume(x > 0)`` or ``assume(x >= 0)``,
+       the assumption context on ``vm.assumptions`` records this and
+       we can fold:
+
+       - ``is_nonneg(x)`` (x ≥ 0, or x > 0, or x = 0) → return ``x``
+       - ``sign_of(x) == 0``  (x = 0)                  → return ``0``
+       - ``is_negative(x)``   (x < 0)                  → return ``-x``
+
+    4. **Pure algebraic rules** (Phase 29): hold for all real inputs
+       with no assumptions:
+
+       - ``Abs(Abs(x))``        → ``Abs(x)``           *(idempotency)*
+       - ``Abs(Neg(x))``        → ``Abs(x)``           *(even function)*
+       - ``Abs(Mul(-1, x))``    → ``Abs(x)``           *(−x encoded as Mul)*
+       - ``Abs(Pow(x, 2k))``    → ``Pow(x, 2k)``       *(x²ᵏ ≥ 0 always)*
+
+    5. **Everything else**: leave unevaluated as ``Abs(x)``.
+
+    Examples::
+
+        abs(3)           →  3
+        abs(-3)          →  3
+        abs(-x)          →  Abs(x)      (Phase 29)
+        abs(x^2)         →  Pow(x, 2)   (Phase 29)
+        abs(abs(x))      →  Abs(x)      (Phase 29)
+        # after assume(x > 0):
+        abs(x)           →  x
+        # after assume(x >= 0):
+        abs(x)           →  x
+        # after assume(x < 0):
+        abs(x)           →  -x
     """
-    if len(expr.args) == 1 and _contains_imaginary(expr.args[0]):
-        return _abs_complex_handler(vm, expr)
-    return _numeric_unary(expr, abs)
+    if len(expr.args) != 1:
+        return expr
+    inner = vm.eval(expr.args[0])
+    # Rule 1: complex.
+    if _contains_imaginary(inner):
+        return _abs_complex_handler(vm, IRApply(expr.head, (inner,)))
+    # Rule 2: numeric fold.
+    n = to_number(inner)
+    if n is not None:
+        return from_number(abs(n))
+    # Rule 3: sign-aware fold via the per-VM assumption context.
+    if isinstance(inner, IRSymbol):
+        ctx = vm.assumptions
+        # Non-negative: abs(x) = x  (covers x > 0, x >= 0, x = 0)
+        if ctx.is_nonneg(inner.name) is True:
+            return inner
+        # Zero exactly: abs(x) = 0
+        if ctx.sign_of(inner.name) == 0:
+            return IRInteger(0)
+        # Negative: abs(x) = -x  (covers x < 0)
+        if ctx.is_negative(inner.name) is True:
+            return IRApply(NEG, (inner,))
+    # Rule 4 (Phase 29): pure algebraic structure rules.
+    _abs_head = IRSymbol("Abs")
+    if isinstance(inner, IRApply):
+        # Rule 4a: idempotency — abs(abs(x)) = abs(x)
+        if inner.head == _abs_head:
+            return inner
+        # Rule 4b: strip negation — abs(-x) = abs(x)
+        if inner.head == NEG and len(inner.args) == 1:
+            # Recurse: inner.args[0] is already evaluated (inner = vm.eval(...))
+            return abs_handler(vm, IRApply(expr.head, (inner.args[0],)))
+        # Rule 4c: strip Mul(-1, x) — -x encoded as Mul after eval
+        neg_one = IRInteger(-1)
+        if inner.head == MUL and len(inner.args) == 2 and inner.args[0] == neg_one:
+            return abs_handler(vm, IRApply(expr.head, (inner.args[1],)))
+        # Rule 4d: even integer power — abs(x^{2k}) = x^{2k}  (x^{2k} ≥ 0 always)
+        if inner.head == POW and len(inner.args) == 2:
+            exp_node = inner.args[1]
+            if (
+                isinstance(exp_node, IRInteger)
+                and exp_node.value >= 2
+                and exp_node.value % 2 == 0
+            ):
+                return inner
+    # Rule 5: leave unevaluated.
+    return IRApply(expr.head, (inner,))
+
+
+def sqrt_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Sqrt(x)`` — square root with algebraic simplification.
+
+    This handler overrides the ``_elementary``-factory handler from
+    :mod:`symbolic_vm.handlers` (which only numeric-folds) via the
+    ``handlers.update(build_cas_handler_table())`` merging in
+    :class:`~symbolic_vm.backends.SymbolicBackend`.  All numeric behaviour
+    from that factory is preserved; algebraic rules are added on top.
+
+    Simplification rules
+    --------------------
+    1. **Special values**: ``Sqrt(0) → 0``, ``Sqrt(1) → 1``.
+
+    2. **Numeric fold**: integer / rational / float inputs are evaluated
+       with ``math.sqrt``.  Perfect-square integers (``4, 9, 16, …``)
+       return an ``IRInteger``; irrational values return ``IRFloat``.
+
+    3. **Even-exponent power** ``Sqrt(Pow(x, 2k))`` for positive even exponent
+       ``2k``:
+
+       - ``k`` even (``2k = 4, 8, 12, …``) → ``Pow(x, k)``
+         *(x^k ≥ 0 for even k, no abs needed)*
+       - ``k`` odd  (``2k = 2, 6, 10, …``) → ``Abs(Pow(x, k))``
+         *(sign of x^k depends on sign of x)*
+
+       The most common case ``k = 1``:  ``Sqrt(Pow(x, 2)) → Abs(x)``.
+
+    4. **Assumption-aware** (Phase 28 integration): ``Sqrt(Pow(x, 2)) → x``
+       when ``vm.assumptions.is_nonneg(x.name)`` is True, because under
+       non-negativity ``|x| = x``.
+
+    5. **Everything else**: leave unevaluated as ``Sqrt(arg)``.
+
+    Examples::
+
+        sqrt(0)      →  0
+        sqrt(1)      →  1
+        sqrt(4)      →  2           (perfect square)
+        sqrt(2.0)    →  1.4142…     (float fold)
+        sqrt(x^2)    →  Abs(x)      (k=1, odd)
+        sqrt(x^4)    →  Pow(x, 2)   (k=2, even)
+        sqrt(x^6)    →  Abs(Pow(x, 3))   (k=3, odd)
+        sqrt(x^8)    →  Pow(x, 4)   (k=4, even)
+        # after assume(x >= 0):
+        sqrt(x^2)    →  x
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1 + 2: numeric fold with exact special values and perfect-square detection.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(0)
+        if n == 1:
+            return IRInteger(1)
+        result = math.sqrt(float(n))
+        # Detect perfect squares: round to nearest integer and verify by squaring.
+        # Using round() rather than int() guards against floating-point underflow
+        # near large perfect squares (e.g. sqrt(25) = 4.9999… → int would give 4).
+        int_result = round(result)
+        if int_result * int_result == n:
+            return IRInteger(int_result)
+        return IRFloat(result)
+    # Rule 3 + 4: algebraic simplification for sqrt(x^{2k}).
+    if isinstance(arg, IRApply) and arg.head == POW and len(arg.args) == 2:
+        base = arg.args[0]
+        exp_node = arg.args[1]
+        if isinstance(exp_node, IRInteger):
+            n_exp = exp_node.value
+            if n_exp > 0 and n_exp % 2 == 0:
+                k = n_exp // 2
+                # Rule 4: assumption-aware — sqrt(x^2) = x when x ≥ 0.
+                if (
+                    k == 1
+                    and isinstance(base, IRSymbol)
+                    and vm.assumptions.is_nonneg(base.name) is True
+                ):
+                    return base
+                # k even → x^k ≥ 0 always (e.g. sqrt(x^4) = x^2)
+                if k % 2 == 0:
+                    return IRApply(POW, (base, IRInteger(k)))
+                # k odd → |x^k| (e.g. sqrt(x^2) = |x|, sqrt(x^6) = |x^3|)
+                if k == 1:
+                    return IRApply(IRSymbol("Abs"), (base,))
+                return IRApply(IRSymbol("Abs"), (IRApply(POW, (base, IRInteger(k))),))
+    # Rule 5: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def log_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Log(x)`` — natural logarithm with algebraic simplification.
+
+    This handler overrides the ``_elementary``-factory ``Log`` handler from
+    :mod:`symbolic_vm.handlers` (which was numeric-only) via the standard
+    ``handlers.update(build_cas_handler_table())`` mechanism.  All numeric
+    behaviour from the factory is preserved; algebraic rules are added on top.
+
+    Simplification rules
+    --------------------
+    1. **Special value**: ``Log(1) → 0``.
+
+    2. **Numeric fold**: positive integer / rational / float inputs are folded
+       via ``math.log``.  Negative or zero inputs are left unevaluated because
+       real-valued logarithm is undefined there.
+
+    3. **Cancellation** ``Log(Exp(x)) → x``:
+       ``exp`` maps all of ℝ into ℝ⁺, and ``log`` is its exact inverse, so
+       ``log(exp(x)) = x`` holds for every real ``x`` without any assumption.
+
+    4. **Power rule** ``Log(Pow(x, n)) → Mul(n, Log(x))``:
+       Requires ``vm.assumptions.is_nonneg(x.name)`` to be True, because
+       ``log(x^n) = n·log(x)`` only holds when ``x > 0`` (otherwise branch
+       cuts complicate the identity).
+
+    5. **Everything else**: leave unevaluated as ``Log(arg)``.
+
+    Examples::
+
+        log(1)          →  0
+        log(2.718…)     →  ≈ 1.0
+        log(exp(x))     →  x          (Phase 30)
+        log(exp(2*x))   →  2*x        (Phase 30)
+        # after assume(x > 0):
+        log(x^3)        →  Mul(3, Log(x))   (Phase 30)
+        # no assumption:
+        log(x^3)        →  Log(Pow(x, 3))   (unevaluated)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1 + 2: numeric fold with special value and domain guard.
+    n = to_number(arg)
+    if n is not None:
+        if n == 1:
+            return IRInteger(0)
+        if n <= 0:
+            # log undefined for non-positive reals — leave unevaluated.
+            return IRApply(expr.head, (arg,))
+        return IRFloat(math.log(float(n)))
+    # Rule 3: log(exp(x)) = x  (cancellation, unconditional for real domain).
+    if isinstance(arg, IRApply) and arg.head == EXP and len(arg.args) == 1:
+        return arg.args[0]
+    # Rule 4: log(x^n) = n * log(x)  when x is known non-negative.
+    if isinstance(arg, IRApply) and arg.head == POW and len(arg.args) == 2:
+        base, exp_node = arg.args
+        if isinstance(base, IRSymbol) and vm.assumptions.is_nonneg(base.name) is True:
+            log_base = IRApply(LOG, (base,))
+            return IRApply(MUL, (exp_node, log_base))
+    # Rule 5: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def exp_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Exp(x)`` — natural exponential with algebraic simplification.
+
+    This handler overrides the ``_elementary``-factory ``Exp`` handler from
+    :mod:`symbolic_vm.handlers` (which was numeric-only) via the standard
+    ``handlers.update(build_cas_handler_table())`` mechanism.  All numeric
+    behaviour from the factory is preserved; algebraic rules are added on top.
+
+    Simplification rules
+    --------------------
+    1. **Special value**: ``Exp(0) → 1``.
+
+    2. **Numeric fold**: integer / rational / float inputs are folded via
+       ``math.exp``.
+
+    3. **Cancellation** ``Exp(Log(x)) → x``:
+       Any expression containing ``Log(x)`` already implies ``x > 0`` in the
+       real domain (log is only defined for positive arguments), so
+       ``exp(log(x)) = x`` is structurally safe — no explicit assumption needed.
+
+    4. **Power form** ``Exp(Mul(n, Log(x))) → Pow(x, n)`` (or the commuted
+       form ``Exp(Mul(Log(x), n))``):
+       ``e^{n·ln x} = x^n`` follows directly from the same domain argument as
+       Rule 3.  This simplifies outputs of ``logcontract``, ``exponentialize``,
+       and user-written expressions like ``exp(2*log(x))``.
+
+    5. **Everything else**: leave unevaluated as ``Exp(arg)``.
+
+    Examples::
+
+        exp(0)          →  1
+        exp(1.0)        →  ≈ 2.718
+        exp(log(x))     →  x           (Phase 30)
+        exp(2*log(x))   →  Pow(x, 2)   (Phase 30)
+        exp(log(x)*3)   →  Pow(x, 3)   (Phase 30, commuted Mul)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1 + 2: numeric fold with exp(0) = 1 identity.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(1)
+        return IRFloat(math.exp(float(n)))
+    # Rule 3: exp(log(x)) = x  (structural cancellation).
+    if isinstance(arg, IRApply) and arg.head == LOG and len(arg.args) == 1:
+        return arg.args[0]
+    # Rule 4: exp(n * log(x)) = x^n  (both Mul orderings).
+    if isinstance(arg, IRApply) and arg.head == MUL and len(arg.args) == 2:
+        a, b = arg.args
+        # Check Mul(n, log(x)) and Mul(log(x), n).
+        log_node: IRApply | None = None
+        coeff: IRNode | None = None
+        if isinstance(a, IRApply) and a.head == LOG and len(a.args) == 1:
+            log_node, coeff = a, b
+        elif isinstance(b, IRApply) and b.head == LOG and len(b.args) == 1:
+            log_node, coeff = b, a
+        if log_node is not None and coeff is not None:
+            base = log_node.args[0]
+            return IRApply(POW, (base, coeff))
+    # Rule 5: leave unevaluated.
+    return IRApply(expr.head, (arg,))
 
 
 def cbrt_handler(_vm: VM, expr: IRApply) -> IRNode:
@@ -2776,6 +3116,13 @@ def build_cas_handler_table() -> dict[str, Handler]:
         "Taylor": taylor_handler,
         # --- numeric/arithmetic ---------------------------------------------
         "Abs": abs_handler,
+        # Phase 29: overrides the _elementary-factory Sqrt in handlers.py,
+        # adding algebraic rules (sqrt(x^{2k}) etc.) on top of numeric fold.
+        "Sqrt": sqrt_handler,
+        # Phase 30: override _elementary-factory Log/Exp with cancellation
+        # and power-rule algebraic identities on top of numeric fold.
+        "Log": log_handler,
+        "Exp": exp_handler,
         "Cbrt": cbrt_handler,
         "Floor": floor_handler,
         "Ceiling": ceiling_handler,

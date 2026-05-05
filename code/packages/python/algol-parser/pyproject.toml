@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "coding-adventures-algol-parser"
 version = "0.1.0"
-description = "Parses ALGOL 60 source text into ASTs using the grammar-driven parser — a thin wrapper that loads algol.grammar"
+description = "Parses ALGOL 60 source text into ASTs using the grammar-driven parser — a thin wrapper with compiled algol/algol60.grammar"
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]

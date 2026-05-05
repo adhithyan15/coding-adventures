@@ -17,6 +17,47 @@ explicit support.
 This document defines the dialect surface and the support gaps so future work
 can land in a few coherent batches rather than many tiny compatibility PRs.
 
+## Core Track Status
+
+As of the PR00-PR79 Prolog-on-Logic-VM track, the shared core is implemented
+through the parser, loader, expansion, VM compiler, structured VM runtime,
+bytecode VM runtime, source/file/project runner APIs, top-level query APIs, the
+`prolog-vm` CLI, bounded UTF-8 file text I/O, and bounded UTF-8 file stream
+handles.
+
+The core track is now treated as complete for practical ISO/SWI-subset work:
+
+- ISO and SWI dialect profiles route through one compile/run path.
+- Operator directives, module metadata, imports/exports, qualification,
+  include/consult resolution, DCGs, and expansion are covered.
+- Structured Logic VM execution and Logic bytecode VM execution share the same
+  compiled program model.
+- Source strings, single files, linked file graphs, and project runtimes can be
+  queried through embedded source queries or ad-hoc top-level queries.
+- Initialization directives, branch-local dynamic database updates, Prolog
+  flags, residual constraints, runtime errors, exceptions, cleanup control,
+  collections, higher-order predicates, term/text predicates, reflection, and
+  CLP(FD) modeling predicates are available through the VM path.
+- Bound atom/string paths can be checked and read as UTF-8 text through
+  `exists_file/1`, `read_file_to_string/2`, and `read_file_to_codes/2`.
+- Bound atom/string paths can also be opened as read/write/append UTF-8 stream
+  handles with cursor-based `read_string/3`, `read_line_to_string/2`,
+  `get_char/2`, `at_end_of_stream/1`, `write/2`, `nl/1`, and `close/1`.
+- The CLI provides source/query execution, check mode, structured instruction
+  dumps, bytecode dumps, source-query metadata, all-query execution,
+  interactive mode, text/JSON/JSONL output, summaries, machine-readable
+  diagnostics, and a capability manifest.
+
+The package-level source of truth is `prolog_vm_capability_manifest()` and the
+matching `prolog-vm --dump-capabilities` CLI output. New work should update
+that manifest instead of reopening open-ended PR00-PR79 gap analysis.
+
+Remaining work in this document is advanced dialect and runtime emulation:
+full external Prolog dialect compatibility, tabling, attributed variables,
+generalized coroutining, CHR/non-FD constraint domains, standard/binary/rich
+stream I/O, foreign predicates, engines, concurrency, and async host
+integration.
+
 ## Current Project Surface
 
 Already present:
@@ -49,11 +90,14 @@ I/O predicates, flags, operators, DCGs, and common control constructs.
 Current support:
 
 - Good: terms, clauses, facts, rules, unification, conjunction, disjunction,
-  cut, equality, disequality, many term builtins, arithmetic builtins, some
-  database and introspection builtins.
-- Missing or incomplete: ISO operator declarations, directives, modules,
-  exceptions, streams/I/O, flags, complete arithmetic syntax, complete standard
-  predicate library, DCG expansion, consult/include, and complete error terms.
+  cut, equality, disequality, term builtins, arithmetic builtins, database and
+  introspection builtins, operator declarations, directives, modules,
+  exceptions, flags, CLP(FD), DCG expansion, consult/include, source/file
+  runners, bounded UTF-8 file text reads and file stream handles, bytecode parity, and
+  machine-readable tooling.
+- Missing or incomplete for full ISO-system emulation: standard streams, binary
+  streams, repositioning, rich stream options, full ISO standard-library breadth, every ISO error-term
+  nuance, and implementation-specific dialect services outside the shared core.
 
 ### Edinburgh, DEC-10, Quintus, SICStus Family
 
@@ -188,16 +232,10 @@ The current Logic VM can support:
 - source frontends that lower into existing `logic-engine` goals
 - loader-level tracing and validation
 
-The current Logic VM cannot yet support full dialect behavior for:
+The current Logic VM cannot yet support full external dialect behavior for:
 
-- module systems and module-sensitive predicate lookup
-- directive execution and compile-time expansion
-- operator declarations and per-dialect operator tables
-- DCG expansion
-- complete ISO standard predicate semantics and ISO error terms
-- stream and file I/O
-- exceptions
-- Prolog flags
+- complete ISO standard predicate semantics and every ISO error-term nuance
+- standard streams, binary streams, repositioning, and rich stream options
 - attributed variables
 - generalized coroutining
 - tabled execution and well-founded semantics
@@ -309,7 +347,12 @@ Add a solver mode or backend for tabled execution with:
 
 This is a major runtime feature and should be its own batch.
 
-## Proposed Implementation Batches
+## Historical Implementation Batches
+
+The original gap analysis proposed these implementation batches. PR00-PR79
+completed the core versions of Batches 1-5, added a broad Prolog stdlib and
+CLP(FD) compatibility layer, delivered runner/CLI tooling, and added bounded
+file text and stream I/O. Batch 6 remains future advanced dialect work.
 
 ### Batch 1 - Grammar and Dialect Profile Foundation
 
@@ -351,7 +394,7 @@ This is a major runtime feature and should be its own batch.
 - Add attributed variables and generic constraint stores.
 - Add coroutining primitives.
 - Add tabling as a separate solver backend.
-- Add exceptions and stream I/O.
+- Add exceptions and advanced stream I/O.
 
 ## Sources Consulted
 

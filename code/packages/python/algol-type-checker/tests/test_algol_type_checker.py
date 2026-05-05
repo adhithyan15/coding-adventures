@@ -519,6 +519,21 @@ class TestAlgolTypeChecker:
         )
         assert check_algol(ast).ok
 
+    def test_accepts_dummy_statements_in_control_positions(self) -> None:
+        ast = parse_algol(
+            "begin integer result, i; "
+            "if true then ; "
+            "if false then result := 1 else ; "
+            "for i := 1 do ; "
+            "done: "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert "done" in result.root_scope.children[0].symbols
+
     def test_accepts_boolean_implication_and_equivalence(self) -> None:
         ast = parse_algol(
             "begin integer result; "

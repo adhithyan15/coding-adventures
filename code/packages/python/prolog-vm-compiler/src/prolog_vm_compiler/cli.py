@@ -30,6 +30,10 @@ from logic_instructions import (
     RuleInstruction,
 )
 
+from prolog_vm_compiler.capabilities import (
+    PrologVMCapabilityManifest,
+    prolog_vm_capability_manifest,
+)
 from prolog_vm_compiler.compiler import (
     CompiledPrologVMProgram,
     PrologAnswer,
@@ -71,6 +75,7 @@ class CliArgs:
     queries: tuple[str, ...]
     check: bool
     dump_bytecode: bool
+    dump_capabilities: bool
     dump_instructions: bool
     dump_source_metadata: bool
     list_source_queries: bool
@@ -147,14 +152,71 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     query_module = _optional_string(flags["query-module"])
     limit = _optional_int(flags["limit"])
     source_stdin = bool(flags["source-stdin"])
+    output_format = _output_format(_required_string(flags["format"], name="--format"))
     source_query_index = _required_int(
         flags["source-query-index"],
         name="--source-query-index",
     )
+    interactive = bool(flags["interactive"])
+    all_source_queries = bool(flags["all-source-queries"])
+    check = bool(flags["check"])
+    dump_bytecode = bool(flags["dump-bytecode"])
+    dump_capabilities = bool(flags["dump-capabilities"])
+    dump_instructions = bool(flags["dump-instructions"])
+    dump_source_metadata = bool(flags["dump-source-metadata"])
+    list_source_queries = bool(flags["list-source-queries"])
+    values = bool(flags["values"])
+    summary = bool(flags["summary"])
+    source_query_index_explicit = "source-query-index" in result.explicit_flags
+    no_initialize_explicit = "no-initialize" in result.explicit_flags
 
     if limit is not None and limit < 0:
         msg = "--limit must be non-negative"
         raise ValueError(msg)
+    if dump_capabilities:
+        _validate_capability_dump_mode(
+            files=files,
+            source=source,
+            source_stdin=source_stdin,
+            queries=queries,
+            check=check,
+            dump_bytecode=dump_bytecode,
+            dump_instructions=dump_instructions,
+            dump_source_metadata=dump_source_metadata,
+            list_source_queries=list_source_queries,
+            source_query_index_explicit=source_query_index_explicit,
+            all_source_queries=all_source_queries,
+            query_module=query_module,
+            limit=limit,
+            values=values,
+            summary=summary,
+            commit=bool(flags["commit"]),
+            interactive=interactive,
+            no_initialize_explicit=no_initialize_explicit,
+        )
+        return CliArgs(
+            files=(),
+            source=None,
+            queries=(),
+            check=False,
+            dump_bytecode=False,
+            dump_capabilities=True,
+            dump_instructions=False,
+            dump_source_metadata=False,
+            list_source_queries=False,
+            source_query_index=source_query_index,
+            all_source_queries=False,
+            query_module=None,
+            limit=None,
+            dialect=_dialect(_required_string(flags["dialect"], name="--dialect")),
+            backend=_backend(_required_string(flags["backend"], name="--backend")),
+            values=False,
+            summary=False,
+            output_format=output_format,
+            commit=False,
+            interactive=False,
+            initialize=True,
+        )
     if source is not None and files:
         msg = "--source cannot be combined with file paths"
         raise ValueError(msg)
@@ -164,7 +226,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if source_stdin and files:
         msg = "--source-stdin cannot be combined with file paths"
         raise ValueError(msg)
-    if source_stdin and bool(flags["interactive"]):
+    if source_stdin and interactive:
         msg = "--source-stdin cannot be combined with --interactive"
         raise ValueError(msg)
     if source_stdin:
@@ -172,19 +234,28 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if source is None and not files:
         msg = "provide --source or at least one Prolog file"
         raise ValueError(msg)
-    all_source_queries = bool(flags["all-source-queries"])
-    check = bool(flags["check"])
-    dump_bytecode = bool(flags["dump-bytecode"])
-    dump_instructions = bool(flags["dump-instructions"])
-    dump_source_metadata = bool(flags["dump-source-metadata"])
-    list_source_queries = bool(flags["list-source-queries"])
+    if query_module is not None and source is not None:
+        msg = "--query-module requires a project file graph"
+        raise ValueError(msg)
+    if query_module is not None and len(files) < 2:
+        msg = "--query-module requires a project file graph"
+        raise ValueError(msg)
     if check and queries:
         msg = "--check cannot be combined with --query"
+        raise ValueError(msg)
+    if check and limit is not None:
+        msg = "--limit cannot be combined with --check"
+        raise ValueError(msg)
+    if check and values:
+        msg = "--values cannot be combined with --check"
+        raise ValueError(msg)
+    if check and source_query_index_explicit:
+        msg = "--source-query-index cannot be combined with --check"
         raise ValueError(msg)
     if check and all_source_queries:
         msg = "--check cannot be combined with --all-source-queries"
         raise ValueError(msg)
-    if check and bool(flags["interactive"]):
+    if check and interactive:
         msg = "--check cannot be combined with --interactive"
         raise ValueError(msg)
     if dump_bytecode and queries:
@@ -193,13 +264,25 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if dump_bytecode and check:
         msg = "--dump-bytecode cannot be combined with --check"
         raise ValueError(msg)
+    if dump_bytecode and limit is not None:
+        msg = "--limit cannot be combined with --dump-bytecode"
+        raise ValueError(msg)
+    if dump_bytecode and values:
+        msg = "--values cannot be combined with --dump-bytecode"
+        raise ValueError(msg)
+    if dump_bytecode and source_query_index_explicit:
+        msg = "--source-query-index cannot be combined with --dump-bytecode"
+        raise ValueError(msg)
+    if dump_bytecode and no_initialize_explicit:
+        msg = "--no-initialize cannot be combined with --dump-bytecode"
+        raise ValueError(msg)
     if dump_bytecode and list_source_queries:
         msg = "--dump-bytecode cannot be combined with --list-source-queries"
         raise ValueError(msg)
     if dump_bytecode and all_source_queries:
         msg = "--dump-bytecode cannot be combined with --all-source-queries"
         raise ValueError(msg)
-    if dump_bytecode and bool(flags["interactive"]):
+    if dump_bytecode and interactive:
         msg = "--dump-bytecode cannot be combined with --interactive"
         raise ValueError(msg)
     if dump_instructions and queries:
@@ -207,6 +290,18 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     if dump_instructions and check:
         msg = "--dump-instructions cannot be combined with --check"
+        raise ValueError(msg)
+    if dump_instructions and limit is not None:
+        msg = "--limit cannot be combined with --dump-instructions"
+        raise ValueError(msg)
+    if dump_instructions and values:
+        msg = "--values cannot be combined with --dump-instructions"
+        raise ValueError(msg)
+    if dump_instructions and source_query_index_explicit:
+        msg = "--source-query-index cannot be combined with --dump-instructions"
+        raise ValueError(msg)
+    if dump_instructions and no_initialize_explicit:
+        msg = "--no-initialize cannot be combined with --dump-instructions"
         raise ValueError(msg)
     if dump_instructions and dump_bytecode:
         msg = "--dump-instructions cannot be combined with --dump-bytecode"
@@ -217,7 +312,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if dump_instructions and all_source_queries:
         msg = "--dump-instructions cannot be combined with --all-source-queries"
         raise ValueError(msg)
-    if dump_instructions and bool(flags["interactive"]):
+    if dump_instructions and interactive:
         msg = "--dump-instructions cannot be combined with --interactive"
         raise ValueError(msg)
     if dump_source_metadata and queries:
@@ -225,6 +320,18 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     if dump_source_metadata and check:
         msg = "--dump-source-metadata cannot be combined with --check"
+        raise ValueError(msg)
+    if dump_source_metadata and limit is not None:
+        msg = "--limit cannot be combined with --dump-source-metadata"
+        raise ValueError(msg)
+    if dump_source_metadata and values:
+        msg = "--values cannot be combined with --dump-source-metadata"
+        raise ValueError(msg)
+    if dump_source_metadata and source_query_index_explicit:
+        msg = "--source-query-index cannot be combined with --dump-source-metadata"
+        raise ValueError(msg)
+    if dump_source_metadata and no_initialize_explicit:
+        msg = "--no-initialize cannot be combined with --dump-source-metadata"
         raise ValueError(msg)
     if dump_source_metadata and dump_bytecode:
         msg = "--dump-source-metadata cannot be combined with --dump-bytecode"
@@ -238,7 +345,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if dump_source_metadata and all_source_queries:
         msg = "--dump-source-metadata cannot be combined with --all-source-queries"
         raise ValueError(msg)
-    if dump_source_metadata and bool(flags["interactive"]):
+    if dump_source_metadata and interactive:
         msg = "--dump-source-metadata cannot be combined with --interactive"
         raise ValueError(msg)
     if list_source_queries and queries:
@@ -250,10 +357,21 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if list_source_queries and check:
         msg = "--list-source-queries cannot be combined with --check"
         raise ValueError(msg)
-    if list_source_queries and bool(flags["interactive"]):
+    if list_source_queries and limit is not None:
+        msg = "--limit cannot be combined with --list-source-queries"
+        raise ValueError(msg)
+    if list_source_queries and values:
+        msg = "--values cannot be combined with --list-source-queries"
+        raise ValueError(msg)
+    if list_source_queries and source_query_index_explicit:
+        msg = "--source-query-index cannot be combined with --list-source-queries"
+        raise ValueError(msg)
+    if list_source_queries and no_initialize_explicit:
+        msg = "--no-initialize cannot be combined with --list-source-queries"
+        raise ValueError(msg)
+    if list_source_queries and interactive:
         msg = "--list-source-queries cannot be combined with --interactive"
         raise ValueError(msg)
-    summary = bool(flags["summary"])
     if summary and check:
         msg = "--summary cannot be combined with --check"
         raise ValueError(msg)
@@ -269,14 +387,32 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if summary and list_source_queries:
         msg = "--summary cannot be combined with --list-source-queries"
         raise ValueError(msg)
-    if summary and bool(flags["interactive"]):
+    if summary and interactive:
         msg = "--summary cannot be combined with --interactive"
+        raise ValueError(msg)
+    if interactive and output_format == "json":
+        msg = "--format json cannot be combined with --interactive"
         raise ValueError(msg)
     if all_source_queries and queries:
         msg = "--all-source-queries cannot be combined with --query"
         raise ValueError(msg)
-    if all_source_queries and bool(flags["interactive"]):
+    if all_source_queries and source_query_index_explicit:
+        msg = "--source-query-index cannot be combined with --all-source-queries"
+        raise ValueError(msg)
+    if all_source_queries and interactive:
         msg = "--all-source-queries cannot be combined with --interactive"
+        raise ValueError(msg)
+    if queries and source_query_index_explicit:
+        msg = "--source-query-index cannot be combined with --query"
+        raise ValueError(msg)
+    if interactive and source_query_index_explicit:
+        msg = "--source-query-index cannot be combined with --interactive"
+        raise ValueError(msg)
+    if query_module is not None and not (queries or interactive):
+        msg = "--query-module requires --query or --interactive"
+        raise ValueError(msg)
+    if bool(flags["commit"]) and not queries:
+        msg = "--commit requires at least one --query"
         raise ValueError(msg)
 
     return CliArgs(
@@ -285,6 +421,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         queries=queries,
         check=check,
         dump_bytecode=dump_bytecode,
+        dump_capabilities=dump_capabilities,
         dump_instructions=dump_instructions,
         dump_source_metadata=dump_source_metadata,
         list_source_queries=list_source_queries,
@@ -294,13 +431,11 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         limit=limit,
         dialect=_dialect(_required_string(flags["dialect"], name="--dialect")),
         backend=_backend(_required_string(flags["backend"], name="--backend")),
-        values=bool(flags["values"]),
+        values=values,
         summary=summary,
-        output_format=_output_format(
-            _required_string(flags["format"], name="--format"),
-        ),
+        output_format=output_format,
         commit=bool(flags["commit"]),
-        interactive=bool(flags["interactive"]),
+        interactive=interactive,
         initialize=not bool(flags["no-initialize"]),
     )
 
@@ -317,6 +452,55 @@ def _requested_output_format(argv: Sequence[str] | None) -> CliOutputFormat:
         if value in {"text", "json", "jsonl"}:
             return cast("CliOutputFormat", value)
     return "text"
+
+
+def _validate_capability_dump_mode(
+    *,
+    files: tuple[Path, ...],
+    source: str | None,
+    source_stdin: bool,
+    queries: tuple[str, ...],
+    check: bool,
+    dump_bytecode: bool,
+    dump_instructions: bool,
+    dump_source_metadata: bool,
+    list_source_queries: bool,
+    source_query_index_explicit: bool,
+    all_source_queries: bool,
+    query_module: str | None,
+    limit: int | None,
+    values: bool,
+    summary: bool,
+    commit: bool,
+    interactive: bool,
+    no_initialize_explicit: bool,
+) -> None:
+    """Reject source/query modes for the source-free capability manifest."""
+
+    conflicts = (
+        ("--source", source is not None),
+        ("--source-stdin", source_stdin),
+        ("file paths", bool(files)),
+        ("--query", bool(queries)),
+        ("--check", check),
+        ("--dump-bytecode", dump_bytecode),
+        ("--dump-instructions", dump_instructions),
+        ("--dump-source-metadata", dump_source_metadata),
+        ("--list-source-queries", list_source_queries),
+        ("--source-query-index", source_query_index_explicit),
+        ("--all-source-queries", all_source_queries),
+        ("--query-module", query_module is not None),
+        ("--limit", limit is not None),
+        ("--values", values),
+        ("--summary", summary),
+        ("--commit", commit),
+        ("--interactive", interactive),
+        ("--no-initialize", no_initialize_explicit),
+    )
+    for flag, enabled in conflicts:
+        if enabled:
+            msg = f"--dump-capabilities cannot be combined with {flag}"
+            raise ValueError(msg)
 
 
 def _output_format_from_result(result: ParseResult) -> CliOutputFormat:
@@ -426,6 +610,8 @@ def _required_int(value: object, *, name: str) -> int:
 
 
 def _run_cli(args: CliArgs) -> int:
+    if args.dump_capabilities:
+        return _run_dump_capabilities(args)
     if args.check:
         return _run_check(args)
     if args.dump_instructions:
@@ -498,6 +684,48 @@ def _run_list_source_queries(args: CliArgs) -> int:
     compiled_program = _compile_source_program(args)
     _print_source_query_summary(compiled_program, args=args)
     return 0
+
+
+def _run_dump_capabilities(args: CliArgs) -> int:
+    _print_capability_manifest(prolog_vm_capability_manifest(), args=args)
+    return 0
+
+
+def _print_capability_manifest(
+    manifest: PrologVMCapabilityManifest,
+    *,
+    args: CliArgs,
+    stdout: TextIO | None = None,
+) -> None:
+    output = sys.stdout if stdout is None else stdout
+    if args.output_format == "text":
+        print(f"track: {manifest.track}", file=output)
+        print(f"status: {manifest.status}", file=output)
+        print(f"dialects: {', '.join(manifest.dialects)}", file=output)
+        print(f"backends: {', '.join(manifest.backends)}", file=output)
+        print(f"completed batches: {manifest.complete_count}", file=output)
+        for capability in manifest.capabilities:
+            spec_range = _spec_range_text(capability.specs)
+            print(f"- {capability.id}: {capability.title} ({spec_range})", file=output)
+        print(f"deferred advanced batches: {manifest.deferred_count}", file=output)
+        for capability in manifest.deferred_capabilities:
+            print(f"- {capability.id}: {capability.title}", file=output)
+        return
+
+    payload = {
+        "success": True,
+        "mode": "capabilities",
+        **manifest.as_dict(),
+    }
+    print(json.dumps(payload, sort_keys=True), file=output)
+
+
+def _spec_range_text(specs: tuple[str, ...]) -> str:
+    if not specs:
+        return "no specs"
+    if len(specs) == 1:
+        return specs[0]
+    return f"{specs[0]}-{specs[-1]}"
 
 
 def _source_query_records(
@@ -607,8 +835,9 @@ def _print_instruction_dump(
 
     if args.output_format == "text":
         for record in records:
+            record_index = cast("int", record["index"])
             print(
-                f"{int(record['index']):04d}: {record['opcode']} {record['text']}",
+                f"{record_index:04d}: {record['opcode']} {record['text']}",
                 file=output,
             )
         return

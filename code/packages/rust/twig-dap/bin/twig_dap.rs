@@ -1,7 +1,7 @@
 //! `twig-dap` — Twig Debug Adapter entry point.
 //!
-//! VS Code (and other DAP editors) launch this binary as a subprocess
-//! and communicate via stdin/stdout using the Debug Adapter Protocol.
+//! VS Code (and other DAP editors) launch this binary as a subprocess and
+//! communicate via stdin/stdout using the Debug Adapter Protocol.
 //!
 //! ## Usage
 //!
@@ -10,6 +10,7 @@
 //! ```
 //!
 //! Configure in `.vscode/launch.json`:
+//!
 //! ```json
 //! {
 //!   "type": "twig",
@@ -19,23 +20,23 @@
 //! }
 //! ```
 //!
-//! ## Implementation (LS03 PR B)
+//! ## How it's wired
 //!
-//! ```rust,ignore
-//! use dap_adapter_core::DapServer;
-//! use twig_dap::TwigDebugAdapter;
-//!
-//! fn main() {
-//!     DapServer::new(TwigDebugAdapter)
-//!         .run_stdio()
-//!         .expect("DAP server error");
-//! }
+//! ```text
+//! main()
+//!   │
+//!   ▼  DapServer::new(TwigDebugAdapter)
+//!   │
+//!   ▼  server.run_stdio()    ← blocks until editor sends `disconnect`
 //! ```
-//!
-//! TODO: uncomment once LS03 PR A (dap-adapter-core) is implemented.
+
+use dap_adapter_core::DapServer;
+use twig_dap::TwigDebugAdapter;
 
 fn main() {
-    eprintln!("twig-dap: LS03 PR B not yet implemented.");
-    eprintln!("Implement dap-adapter-core (LS03 PR A) first, then wire here.");
-    std::process::exit(1);
+    let mut server = DapServer::new(TwigDebugAdapter);
+    if let Err(e) = server.run_stdio() {
+        eprintln!("twig-dap: {e}");
+        std::process::exit(1);
+    }
 }
