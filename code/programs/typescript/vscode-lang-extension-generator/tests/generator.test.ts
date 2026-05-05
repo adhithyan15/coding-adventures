@@ -598,6 +598,20 @@ describe("generate", () => {
     const text = fs.readFileSync(path.join(out, "package.json"), "utf-8");
     expect(() => JSON.parse(text)).not.toThrow();
   });
+
+  // Regression: CI runs BUILD via `sh` on Linux (dash), which rejects
+  // bash-isms like `-o pipefail`.  Lock down the generated BUILD to
+  // POSIX-only shell so it works under both bash and dash.
+  it("generated BUILD does not use bash-specific syntax", () => {
+    const out = path.join(tmpRoot, "twig-vscode");
+    generate(fullOpts({ outputDir: out }));
+    const buildText = fs.readFileSync(path.join(out, "BUILD"), "utf-8");
+    expect(buildText).not.toMatch(/pipefail/);
+    expect(buildText).not.toMatch(/^#!\s*\/.*bash/m);
+    // `set -u` (treat unset vars as error) is also bash-flavoured in
+    // some dashes; drop it too.
+    expect(buildText).not.toMatch(/^set\s+-[a-z]*u/m);
+  });
 });
 
 // ----------------------------------------------------------------------

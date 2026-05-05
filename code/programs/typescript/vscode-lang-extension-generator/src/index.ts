@@ -799,13 +799,15 @@ ${opts.lspBinary ? `- LSP integration via \`${opts.lspBinary}\`.\n` : ""}${
 }
 
 function buildBuildScript(): string {
+  // Plain shell commands, no shebang and no `set -euo pipefail`.  The
+  // monorepo's build-tool runs BUILD files via `sh` on Linux CI (which
+  // is dash), and dash rejects `-o pipefail`.  Other TypeScript packages
+  // in the repo follow the same convention.  `npm install` already
+  // exits non-zero on failure, so no extra `set -e` is needed for the
+  // failure mode the repo cares about.
   return [
-    "#!/usr/bin/env bash",
-    "set -euo pipefail",
-    "",
     "# Build the generated VS Code extension package.  Compiles TypeScript",
     "# into ./out/ ready for vsce packaging or local install.",
-    "",
     "npm install --silent",
     "npx tsc -p .",
     "",
