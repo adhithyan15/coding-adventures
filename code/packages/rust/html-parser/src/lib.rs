@@ -247,13 +247,18 @@ impl HtmlParser {
         self.apply_table_implied_contexts(&name);
         self.apply_simple_implied_end_tags(&name);
 
-        let attributes = attributes
+        let attributes: Vec<Attribute> = attributes
             .into_iter()
             .map(|attribute| Attribute {
                 name: attribute.name,
                 value: attribute.value,
             })
             .collect();
+
+        if name == "body" && self.merge_attributes_into_open_element("body", &attributes) {
+            return;
+        }
+
         let child_index = self.append_node(Node::element(name.clone(), attributes));
 
         if !self_closing && !is_void_element(&name) {
@@ -303,6 +308,33 @@ impl HtmlParser {
         let mut path = self.current_parent_path().to_vec();
         path.push(child_index);
         self.open_elements.push(path);
+    }
+
+    fn merge_attributes_into_open_element(
+        &mut self,
+        element_name: &str,
+        attributes: &[Attribute],
+    ) -> bool {
+        let Some(path) = self
+            .open_elements
+            .iter()
+            .rposition(|path| {
+                element_at_path(&self.document, path).is_some_and(|name| name == element_name)
+            })
+            .map(|index| self.open_elements[index].clone())
+        else {
+            return false;
+        };
+
+        let Some(element) = element_at_path_mut(&mut self.document, &path) else {
+            return false;
+        };
+        for attribute in attributes {
+            if element.attribute(&attribute.name).is_none() {
+                element.attributes.push(attribute.clone());
+            }
+        }
+        true
     }
 
     fn apply_document_shell_implied_contexts(&mut self, incoming_name: &str) {
@@ -478,6 +510,29 @@ fn element_at_path<'a>(document: &'a Document, path: &[usize]) -> Option<&'a str
     }
 
     current
+}
+
+fn element_at_path_mut<'a>(
+    document: &'a mut Document,
+    path: &[usize],
+) -> Option<&'a mut dom_core::Element> {
+    let (index, rest) = path.split_first()?;
+    let node = document.children.get_mut(*index)?;
+    element_node_at_path_mut(node, rest)
+}
+
+fn element_node_at_path_mut<'a>(
+    node: &'a mut Node,
+    path: &[usize],
+) -> Option<&'a mut dom_core::Element> {
+    let Node::Element(element) = node else {
+        return None;
+    };
+    let Some((index, rest)) = path.split_first() else {
+        return Some(element);
+    };
+    let child = element.children.get_mut(*index)?;
+    element_node_at_path_mut(child, rest)
 }
 
 fn children_at_path_mut<'a>(nodes: &'a mut Vec<Node>, path: &[usize]) -> Option<&'a mut Vec<Node>> {
@@ -1269,5 +1324,25 @@ mod tests {
         let paragraph = element(&body(&document).children[1]);
         assert_eq!(paragraph.name, "p");
         assert_eq!(paragraph.children, vec![Node::text("x")]);
+    }
+
+    #[test]
+    fn merges_late_body_attributes_without_nesting_body_elements() {
+        let document =
+            parse_html("<body class=main><p>before</p><body id=late class=ignored><p>after</p>")
+                .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.attribute("class"), Some("main"));
+        assert_eq!(body.attribute("id"), Some("late"));
+        assert_eq!(body.children.len(), 2);
+
+        let before = element(&body.children[0]);
+        assert_eq!(before.name, "p");
+        assert_eq!(before.children, vec![Node::text("before")]);
+
+        let after = element(&body.children[1]);
+        assert_eq!(after.name, "p");
+        assert_eq!(after.children, vec![Node::text("after")]);
     }
 }
