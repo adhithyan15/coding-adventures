@@ -22,6 +22,7 @@ pub const ARDUINO_ARM_COMPAT_ROOT_ENV_VAR: &str = "BOARD_VM_UNO_R4_ARM_COMPAT_RO
 pub const ARDUINO_USB_START_SYMBOL: &str = "_Z10__USBStartv";
 pub const RUST_USB_INSTALL_SERIAL_SYMBOL: &str = "_Z18__USBInstallSerialv";
 pub const RUST_USB_CONFIGURE_MUX_SYMBOL: &str = "_Z17configure_usb_muxv";
+pub const RUST_USB_POST_INITIALIZATION_SYMBOL: &str = "_Z23usb_post_initializationv";
 
 pub const UNO_R4_WIFI_FSP_ARCHIVE: &str = "variants/UNOWIFIR4/libs/libfsp.a";
 pub const UNO_R4_WIFI_FSP_LINKER_SCRIPT: &str = "variants/UNOWIFIR4/fsp.ld";
@@ -155,10 +156,13 @@ pub const ARDUINO_USB_LINK_CXXFLAGS: &[&str] = &[
 pub const RUST_PROVIDED_USB_SYMBOLS: &[&str] = &[
     RUST_USB_INSTALL_SERIAL_SYMBOL,
     RUST_USB_CONFIGURE_MUX_SYMBOL,
+    RUST_USB_POST_INITIALIZATION_SYMBOL,
 ];
 
 pub const ARDUINO_PROVIDED_USB_SYMBOLS: &[&str] = &[
     ARDUINO_USB_START_SYMBOL,
+    "R_IOPORT_PinCfg",
+    "R_IOPORT_PinWrite",
     "tud_task_ext",
     "tud_cdc_n_connected",
     "tud_cdc_n_get_line_state",
@@ -229,6 +233,9 @@ mod tests {
         assert_eq!(ARDUINO_USB_START_SYMBOL, "_Z10__USBStartv");
         assert!(RUST_PROVIDED_USB_SYMBOLS.contains(&"_Z18__USBInstallSerialv"));
         assert!(RUST_PROVIDED_USB_SYMBOLS.contains(&"_Z17configure_usb_muxv"));
+        assert!(RUST_PROVIDED_USB_SYMBOLS.contains(&"_Z23usb_post_initializationv"));
+        assert!(ARDUINO_PROVIDED_USB_SYMBOLS.contains(&"R_IOPORT_PinCfg"));
+        assert!(ARDUINO_PROVIDED_USB_SYMBOLS.contains(&"R_IOPORT_PinWrite"));
         assert!(ARDUINO_PROVIDED_USB_SYMBOLS.contains(&"tud_cdc_n_read"));
         assert!(ARDUINO_PROVIDED_USB_SYMBOLS.contains(&"tud_cdc_n_write_flush"));
     }

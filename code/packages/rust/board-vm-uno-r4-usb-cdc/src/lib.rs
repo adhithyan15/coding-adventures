@@ -16,6 +16,7 @@ pub const UNO_R4_WIFI_USB_MAX_PACKET_BYTES: usize = USB_CDC_FULL_SPEED_MAX_PACKE
 pub const ARDUINO_RENESAS_USB_START_SYMBOL: &str = "_Z10__USBStartv";
 pub const ARDUINO_RENESAS_USB_INSTALL_SERIAL_SYMBOL: &str = "_Z18__USBInstallSerialv";
 pub const UNO_R4_WIFI_CONFIGURE_USB_MUX_SYMBOL: &str = "_Z17configure_usb_muxv";
+pub const UNO_R4_WIFI_USB_POST_INITIALIZATION_SYMBOL: &str = "_Z23usb_post_initializationv";
 pub const UNO_R4_WIFI_USB_DESCRIPTOR_HEAP_BYTES: usize = 512;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -321,24 +322,29 @@ pub extern "C" fn arduino_uno_r4_wifi_configure_usb_mux() {
 }
 
 #[cfg(target_arch = "arm")]
+#[unsafe(export_name = "_Z23usb_post_initializationv")]
+pub extern "C" fn arduino_uno_r4_wifi_usb_post_initialization() {
+    unsafe {
+        uno_r4_wifi_usb_mux::enable_ra4m1_usb_regulator();
+    }
+}
+
+#[cfg(target_arch = "arm")]
 mod uno_r4_wifi_usb_mux {
-    use core::ptr::{read_volatile, write_volatile};
+    use core::ptr::{null_mut, read_volatile, write_volatile};
 
     const SYSTEM_PRCR: *mut u16 = 0x4001_E3FE as *mut u16;
     const SYSTEM_VBTBKR1: *mut u8 = 0x4001_E501 as *mut u8;
-    const PORT4_PCNTR1: *mut u32 = 0x4004_0080 as *mut u32;
-    const PORT4_PORR: *mut u16 = 0x4004_0088 as *mut u16;
-    const PMISC_PWPR: *mut u8 = 0x4004_0D03 as *mut u8;
-    const PFS_P408: *mut u32 = 0x4004_0920 as *mut u32;
+    const USBFS_USBMC: *mut u16 = 0x4009_00CC as *mut u16;
 
     const PRCR_KEY: u16 = 0xA500;
     const PRCR_PRC1_UNLOCK: u16 = PRCR_KEY | 0x0002;
     const PRCR_LOCK: u16 = PRCR_KEY;
     const USB_MUX_BACKUP_MARKER: u8 = 40;
-    const USB_SWITCH_MASK: u16 = 1 << 8;
-    const PWPR_B0WI: u8 = 1 << 7;
-    const PWPR_PFSWE: u8 = 1 << 6;
-    const PFS_PDR_OUTPUT: u32 = 1 << 2;
+    const USB_SWITCH_PIN_P408: u16 = 0x0408;
+    const IOPORT_CFG_PORT_DIRECTION_OUTPUT: u32 = 0x0000_0004;
+    const BSP_IO_LEVEL_HIGH: u32 = 1;
+    const USBMC_VDCEN: u16 = 1 << 7;
 
     pub unsafe fn route_usb_c_to_ra4m1() {
         unlock_system_registers();
@@ -348,15 +354,19 @@ mod uno_r4_wifi_usb_mux {
         write_volatile(SYSTEM_VBTBKR1.add(3), 0);
         lock_system_registers();
 
-        enable_pfs_writes();
-        write_volatile(PFS_P408, PFS_PDR_OUTPUT);
-        disable_pfs_writes();
+        unsafe {
+            ffi::R_IOPORT_PinCfg(
+                null_mut(),
+                USB_SWITCH_PIN_P408,
+                IOPORT_CFG_PORT_DIRECTION_OUTPUT,
+            );
+            ffi::R_IOPORT_PinWrite(null_mut(), USB_SWITCH_PIN_P408, BSP_IO_LEVEL_HIGH);
+        }
+    }
 
-        let mut pcntr1 = read_volatile(PORT4_PCNTR1);
-        pcntr1 |= USB_SWITCH_MASK as u32;
-        pcntr1 &= !((USB_SWITCH_MASK as u32) << 16);
-        write_volatile(PORT4_PCNTR1, pcntr1);
-        write_volatile(PORT4_PORR, USB_SWITCH_MASK);
+    pub unsafe fn enable_ra4m1_usb_regulator() {
+        let usbmc = read_volatile(USBFS_USBMC);
+        write_volatile(USBFS_USBMC, usbmc | USBMC_VDCEN);
     }
 
     unsafe fn unlock_system_registers() {
@@ -367,18 +377,11 @@ mod uno_r4_wifi_usb_mux {
         write_volatile(SYSTEM_PRCR, PRCR_LOCK);
     }
 
-    unsafe fn enable_pfs_writes() {
-        let mut pwpr = read_volatile(PMISC_PWPR);
-        pwpr &= !PWPR_B0WI;
-        write_volatile(PMISC_PWPR, pwpr);
-        write_volatile(PMISC_PWPR, pwpr | PWPR_PFSWE);
-    }
-
-    unsafe fn disable_pfs_writes() {
-        let mut pwpr = read_volatile(PMISC_PWPR);
-        pwpr &= !PWPR_B0WI;
-        write_volatile(PMISC_PWPR, pwpr);
-        write_volatile(PMISC_PWPR, pwpr & !PWPR_PFSWE);
+    mod ffi {
+        unsafe extern "C" {
+            pub fn R_IOPORT_PinCfg(p_ctrl: *mut core::ffi::c_void, pin: u16, cfg: u32) -> i32;
+            pub fn R_IOPORT_PinWrite(p_ctrl: *mut core::ffi::c_void, pin: u16, level: u32) -> i32;
+        }
     }
 }
 
@@ -606,6 +609,10 @@ mod tests {
         assert_eq!(
             UNO_R4_WIFI_CONFIGURE_USB_MUX_SYMBOL,
             "_Z17configure_usb_muxv"
+        );
+        assert_eq!(
+            UNO_R4_WIFI_USB_POST_INITIALIZATION_SYMBOL,
+            "_Z23usb_post_initializationv"
         );
         assert_eq!(UNO_R4_WIFI_USB_DESCRIPTOR_HEAP_BYTES, 512);
     }

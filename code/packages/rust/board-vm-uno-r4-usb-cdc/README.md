@@ -16,8 +16,19 @@ host-testable. The ARM FFI backend targets TinyUSB's `tud_cdc_n_*` symbols and
 then marks the CDC stream as ready. The crate also provides the C++-mangled
 `__USBInstallSerial()` hook so Arduino's descriptor builder includes the CDC
 interface without linking the full `SerialUSB.cpp` object, and it overrides the
-Uno R4 WiFi `configure_usb_mux()` weak hook with direct RA4M1 register writes so
-the USB-C connector is routed to the RA4M1 USB peripheral.
+Uno R4 WiFi `configure_usb_mux()` weak hook so the USB-C connector is routed to
+the RA4M1 USB peripheral. It also overrides the variant
+`usb_post_initialization()` hook to enable the RA4M1 USB regulator bit after
+TinyUSB initialization, matching the Arduino Uno R4 WiFi variant startup. The
+mux hook calls the same FSP `R_IOPORT_PinCfg`/`R_IOPORT_PinWrite` path that
+Arduino's `pinMode(21, OUTPUT); digitalWrite(21, HIGH);` sequence uses, without
+linking the full WiFi `variant.cpp` object.
+
+For hardware smoke tests, a board that still enumerates as VID/PID
+`2341:1002` after upload has not handed USB-C off from the bridge. If the bridge
+port disappears but the host sees an unmatched USB device stuck before CDC port
+creation, the mux hook ran and the remaining failure is in RA4M1 USB device
+enumeration.
 
 The Arduino descriptor builder allocates its configuration descriptor at USB
 startup. Because the Rust firmware links without a C runtime allocator, this
