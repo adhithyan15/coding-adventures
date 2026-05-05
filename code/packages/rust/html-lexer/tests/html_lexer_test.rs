@@ -4870,6 +4870,18 @@ fn parser_facing_context_maps_script_and_plaintext_elements() {
 fn parser_facing_context_maps_script_substates() {
     let expected_script_substates = [
         (HtmlTokenizerState::ScriptData, "script_data"),
+        (
+            HtmlTokenizerState::ScriptDataLessThanSign,
+            "script_data_less_than_sign",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapeStart,
+            "script_data_escape_start",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapeStartDash,
+            "script_data_escape_start_dash",
+        ),
         (HtmlTokenizerState::ScriptDataEscaped, "script_data_escaped"),
         (
             HtmlTokenizerState::ScriptDataEscapedDash,
@@ -4882,6 +4894,10 @@ fn parser_facing_context_maps_script_substates() {
         (
             HtmlTokenizerState::ScriptDataEscapedLessThanSign,
             "script_data_escaped_less_than_sign",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataDoubleEscapeStart,
+            "script_data_double_escape_start",
         ),
         (
             HtmlTokenizerState::ScriptDataDoubleEscaped,
@@ -4898,6 +4914,10 @@ fn parser_facing_context_maps_script_substates() {
         (
             HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign,
             "script_data_double_escaped_less_than_sign",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataDoubleEscapeEnd,
+            "script_data_double_escape_end",
         ),
     ];
     assert_eq!(
@@ -4969,18 +4989,27 @@ fn parser_facing_context_exposes_tokenizer_state_sets() {
         [
             "data",
             "rcdata",
+            "rcdata_less_than_sign",
             "rawtext",
+            "rawtext_less_than_sign",
             "plaintext",
             "cdata_section",
+            "cdata_section_bracket",
+            "cdata_section_end",
             "script_data",
+            "script_data_less_than_sign",
+            "script_data_escape_start",
+            "script_data_escape_start_dash",
             "script_data_escaped",
             "script_data_escaped_dash",
             "script_data_escaped_dash_dash",
             "script_data_escaped_less_than_sign",
+            "script_data_double_escape_start",
             "script_data_double_escaped",
             "script_data_double_escaped_dash",
             "script_data_double_escaped_dash_dash",
             "script_data_double_escaped_less_than_sign",
+            "script_data_double_escape_end",
         ]
     );
     assert!(!HtmlTokenizerState::Data.is_fragment_state());
@@ -5013,6 +5042,103 @@ fn parser_facing_context_exposes_tokenizer_state_sets() {
     for state in HTML_FRAGMENT_TOKENIZER_STATES {
         assert!(state.is_fragment_state());
     }
+
+    for state in HTML_TOKENIZER_STATES {
+        assert_eq!(
+            HtmlTokenizerState::from_html5lib_state(state.as_html5lib_state()),
+            Some(state)
+        );
+    }
+    assert_eq!(
+        HtmlTokenizerState::from_html5lib_state("Script data double escape start state"),
+        Some(HtmlTokenizerState::ScriptDataDoubleEscapeStart)
+    );
+    assert_eq!(HtmlTokenizerState::from_html5lib_state("Bogus state"), None);
+
+    assert!(HtmlTokenizerState::RcdataLessThanSign.requires_last_start_tag());
+    assert!(HtmlTokenizerState::RawtextLessThanSign.requires_last_start_tag());
+    assert!(HtmlTokenizerState::ScriptDataEscapeStart.requires_last_start_tag());
+    assert!(!HtmlTokenizerState::CdataSectionEnd.requires_last_start_tag());
+}
+
+#[test]
+fn parser_facing_context_seeds_intermediate_text_states() {
+    let cdata_bracket = HtmlLexContext::new(HtmlTokenizerState::CdataSectionBracket);
+    assert_eq!(
+        lex_html_fragment("", &cdata_bracket).unwrap(),
+        vec![Token::Text("]".to_string()), Token::Eof]
+    );
+
+    let cdata_end = HtmlLexContext::new(HtmlTokenizerState::CdataSectionEnd);
+    assert_eq!(
+        lex_html_fragment(">after", &cdata_end).unwrap(),
+        vec![Token::Text("after".to_string()), Token::Eof]
+    );
+
+    let rcdata_less_than =
+        HtmlLexContext::new(HtmlTokenizerState::RcdataLessThanSign).with_last_start_tag("title");
+    assert_eq!(
+        lex_html_fragment("b &amp;</title>", &rcdata_less_than).unwrap(),
+        vec![
+            Token::Text("<b &".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof
+        ]
+    );
+
+    let rawtext_less_than =
+        HtmlLexContext::new(HtmlTokenizerState::RawtextLessThanSign).with_last_start_tag("style");
+    assert_eq!(
+        lex_html_fragment("b &amp;</style>", &rawtext_less_than).unwrap(),
+        vec![
+            Token::Text("<b &amp;".to_string()),
+            Token::EndTag {
+                name: "style".to_string()
+            },
+            Token::Eof
+        ]
+    );
+
+    let script_less_than =
+        HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataLessThanSign).unwrap();
+    assert_eq!(
+        lex_html_fragment("!-->tail</script>", &script_less_than).unwrap(),
+        vec![
+            Token::Text("<!-->tail".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof
+        ]
+    );
+
+    let double_escape_start =
+        HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataDoubleEscapeStart).unwrap();
+    assert_eq!(
+        lex_html_fragment("script>inside</script>after</script>", &double_escape_start).unwrap(),
+        vec![
+            Token::Text("script>inside</script>after".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof
+        ]
+    );
+
+    let double_escape_end =
+        HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataDoubleEscapeEnd).unwrap();
+    assert_eq!(
+        lex_html_fragment("script>after</script>", &double_escape_end).unwrap(),
+        vec![
+            Token::Text("script>after".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof
+        ]
+    );
 }
 
 #[test]

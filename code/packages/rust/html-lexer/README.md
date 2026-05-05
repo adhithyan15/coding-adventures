@@ -160,10 +160,12 @@ The generated HTML1 machine also exposes `RCDATA`, `RAWTEXT`, `PLAINTEXT`,
 `script_data_escaped_less_than_sign`, `script_data_double_escaped`,
 `script_data_double_escaped_dash`, `script_data_double_escaped_dash_dash`, and
 `script_data_double_escaped_less_than_sign` entry states for parser-controlled
-tokenizer submodes. The markup declaration path also recognizes `<![CDATA[`
-and enters the CDATA section state so the generated lexer can exercise that
-tokenizer subflow end to end; a future parser can still decide when that opener
-is valid for foreign-content contexts.
+tokenizer submodes, plus intermediate RCDATA/RAWTEXT less-than, CDATA
+bracket/end, script less-than, escape-start, and double-escape start/end states
+used by html5lib/WPT-style tokenizer fixtures. The markup declaration path also
+recognizes `<![CDATA[` and enters the CDATA section state so the generated lexer
+can exercise that tokenizer subflow end to end; a future parser can still decide
+when that opener is valid for foreign-content contexts.
 The public Rust API now wraps those parser-controlled entry states in
 `HtmlTokenizerState` and `HtmlLexContext`, including an element-to-context map
 for `title`, `textarea`, raw-text elements, `script`, and `plaintext`. A
@@ -189,10 +191,11 @@ supported surface, `HTML_TOKENIZER_STATES` lists every parser-facing tokenizer
 entry state and `HTML_FRAGMENT_TOKENIZER_STATES` lists the non-data fragment
 states accepted by the wrapper. `HtmlTokenizerState::is_fragment_state()` keeps
 that validation centralized in the lexer package. Code that starts from
-generated machine-state identifiers can use
-`HtmlTokenizerState::from_machine_state(...)` or
-`HtmlTokenizerState::from_fragment_machine_state(...)` to round-trip back to the
-typed API without copying raw state strings.
+generated machine-state identifiers or html5lib fixture labels can use
+`HtmlTokenizerState::from_machine_state(...)`,
+`HtmlTokenizerState::from_fragment_machine_state(...)`, or
+`HtmlTokenizerState::from_html5lib_state(...)` to round-trip back to the typed
+API without copying raw state strings.
 `html-skeleton.lexer.states.toml` remains in the crate as a smaller bootstrap
 machine for comparisons and narrow debugging.
 
@@ -224,6 +227,10 @@ script data double-escaped/dash/less-than substates can already live in the
 shared Venture fixture format. Current Rust conformance tests now seed that
 context into the generated lexer so non-data-state cases execute through the
 same static Rust wrapper as the data-state corpus.
+The importer also expands supported multi-state html5lib entries into stable
+per-state Venture cases and now covers intermediate text-like states such as
+RCDATA/RAWTEXT less-than, CDATA bracket/end, script less-than, script
+escape-start, and script double-escape start/end.
 
 The intended WHATWG/WPT path is to normalize upstream tokenizer cases into this
 same schema rather than teaching the Rust harness to parse raw upstream files
