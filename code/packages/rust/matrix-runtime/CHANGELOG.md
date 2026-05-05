@@ -3,6 +3,43 @@
 All notable changes to `matrix-runtime` are documented here.  The
 format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.3.0] — 2026-05-04
+
+### Added — MX05 Phase 1 (profile sampler)
+
+- New `profile` module exporting `Profiler`, `ProfileObservation`,
+  and `TensorObservation`.  Implements **Phase 1 of spec MX05** —
+  the observation infrastructure that future phases plug
+  specialisation into.
+- `Profiler::record_dispatch(placed: &ComputeGraph)` bumps a per-op
+  invocation counter for every `PlacedOp::Compute` in the graph,
+  keyed by a stable `(graph_subhash, op_index)` pair.  Counters
+  survive re-plans of the same matrix-ir Graph against different
+  executor topologies because the subhash deliberately ignores
+  residency-specific fields.
+- `Profiler::observations()` and
+  `Profiler::invocation_count(subhash, op_index)` expose the
+  counters; `Profiler::reset()` clears them between benchmark runs.
+- `TensorObservation` is reserved for Phase 2 (range / sparsity
+  sampling); Phase 1 always returns it empty.
+
+### Tests
+
+- 8 new tests in `profile::tests::*` covering empty-state behaviour,
+  counter monotonicity past the spec-mandated 1000-invocation
+  threshold, that non-Compute ops don't bump counters, that
+  `last_executor` updates correctly, that subhashes are
+  deterministic and that distinct graphs produce distinct subhashes,
+  and that observation count matches the number of distinct Compute
+  ops.
+
+### Notes
+
+- Phase 1 ships as a module inside `matrix-runtime` rather than its
+  own `matrix-profile` crate (per the eventual layout in spec
+  MX05).  We'll promote it to a separate crate when Phase 2 lands
+  real observation logic with its own dependency surface.
+
 ## [0.2.0] — 2026-05-04
 
 ### Added

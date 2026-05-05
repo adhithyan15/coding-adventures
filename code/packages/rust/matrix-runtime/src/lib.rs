@@ -41,11 +41,13 @@
 
 mod cost;
 mod planner;
+mod profile;
 mod registry;
 mod runtime;
 
 pub use cost::{compute_cost, estimate_flops, transfer_cost_ns};
 pub use planner::{plan, PlanError};
+pub use profile::{ProfileObservation, Profiler, TensorObservation};
 pub use registry::{RegisteredExecutor, Registry};
 pub use runtime::{Runtime, RuntimeError};
 
