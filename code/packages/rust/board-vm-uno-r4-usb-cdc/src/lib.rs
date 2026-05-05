@@ -16,6 +16,7 @@ pub const UNO_R4_WIFI_USB_MAX_PACKET_BYTES: usize = USB_CDC_FULL_SPEED_MAX_PACKE
 pub const ARDUINO_RENESAS_USB_START_SYMBOL: &str = "_Z10__USBStartv";
 pub const ARDUINO_RENESAS_USB_INSTALL_SERIAL_SYMBOL: &str = "_Z18__USBInstallSerialv";
 pub const UNO_R4_WIFI_CONFIGURE_USB_MUX_SYMBOL: &str = "_Z17configure_usb_muxv";
+pub const UNO_R4_WIFI_USB_DESCRIPTOR_HEAP_BYTES: usize = 512;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum UnoR4UsbCdcError {
@@ -382,6 +383,53 @@ mod uno_r4_wifi_usb_mux {
 }
 
 #[cfg(target_arch = "arm")]
+mod arduino_usb_malloc {
+    use core::ptr::null_mut;
+    use core::sync::atomic::{AtomicUsize, Ordering};
+
+    use super::UNO_R4_WIFI_USB_DESCRIPTOR_HEAP_BYTES;
+
+    #[repr(align(8))]
+    struct AlignedHeap([u8; UNO_R4_WIFI_USB_DESCRIPTOR_HEAP_BYTES]);
+
+    static mut HEAP: AlignedHeap = AlignedHeap([0; UNO_R4_WIFI_USB_DESCRIPTOR_HEAP_BYTES]);
+    static NEXT: AtomicUsize = AtomicUsize::new(0);
+
+    #[unsafe(no_mangle)]
+    pub extern "C" fn malloc(size: usize) -> *mut core::ffi::c_void {
+        if size == 0 {
+            return null_mut();
+        }
+
+        let mut current = NEXT.load(Ordering::Relaxed);
+        loop {
+            let aligned = align_up(current, 8);
+            let Some(next) = aligned.checked_add(size) else {
+                return null_mut();
+            };
+            if next > UNO_R4_WIFI_USB_DESCRIPTOR_HEAP_BYTES {
+                return null_mut();
+            }
+
+            match NEXT.compare_exchange(current, next, Ordering::Relaxed, Ordering::Relaxed) {
+                Ok(_) => unsafe {
+                    let base = core::ptr::addr_of_mut!(HEAP.0) as *mut u8;
+                    return base.add(aligned) as *mut core::ffi::c_void;
+                },
+                Err(observed) => current = observed,
+            }
+        }
+    }
+
+    #[unsafe(no_mangle)]
+    pub extern "C" fn free(_ptr: *mut core::ffi::c_void) {}
+
+    const fn align_up(value: usize, align: usize) -> usize {
+        (value + align - 1) & !(align - 1)
+    }
+}
+
+#[cfg(target_arch = "arm")]
 mod ffi {
     #[repr(C, packed)]
     #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -559,6 +607,7 @@ mod tests {
             UNO_R4_WIFI_CONFIGURE_USB_MUX_SYMBOL,
             "_Z17configure_usb_muxv"
         );
+        assert_eq!(UNO_R4_WIFI_USB_DESCRIPTOR_HEAP_BYTES, 512);
     }
 
     #[test]

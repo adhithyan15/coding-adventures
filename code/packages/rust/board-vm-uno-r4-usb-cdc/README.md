@@ -19,6 +19,11 @@ interface without linking the full `SerialUSB.cpp` object, and it overrides the
 Uno R4 WiFi `configure_usb_mux()` weak hook with direct RA4M1 register writes so
 the USB-C connector is routed to the RA4M1 USB peripheral.
 
+The Arduino descriptor builder allocates its configuration descriptor at USB
+startup. Because the Rust firmware links without a C runtime allocator, this
+crate provides a tiny no-free `malloc`/`free` shim sized for that descriptor path
+when built for ARM.
+
 A flashable firmware binary still needs to compile and link the Arduino/FSP
 TinyUSB startup objects listed by `board-vm-uno-r4-firmware`'s Arduino USB link
 manifest.

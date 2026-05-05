@@ -118,8 +118,10 @@ mux hook from Rust, so the final link set does not need Arduino's full
 the built-in USB path: Arduino core version `1.5.3`, FQBN
 `arduino:renesas_uno:unor4wifi`, required TinyUSB C objects, `USB.cpp`,
 `IRQManager.cpp`, the Uno R4 WiFi `libfsp.a`, include directories, compile
-defines, and the Rust-provided C++ ABI hook symbols. It is data-only for now so
-CI can validate the contract without requiring a local Arduino install.
+defines, and the Rust-provided C++ ABI hook symbols. The firmware build script
+uses the same manifest when `BOARD_VM_UNO_R4_LINK_ARDUINO_USB=1`, keeping CI
+independent from a local Arduino install while giving hardware builds an
+explicit link path.
 
 Build the firmware library and host-tested server path now:
 
@@ -128,9 +130,25 @@ cargo test -p board-vm-uno-r4-firmware -- --nocapture
 RUSTC="$(rustup which rustc)" rustup run stable cargo build --target thumbv7em-none-eabihf -p board-vm-uno-r4-firmware --lib
 ```
 
-The final flashable `uno-r4-wifi-serialusb-server` binary still needs the
-follow-up build-script step that compiles the manifest's Arduino/TinyUSB C/C++
-objects and links them into the Rust firmware image.
+Build the SerialUSB server with the Arduino/TinyUSB link path enabled:
+
+```sh
+BOARD_VM_UNO_R4_LINK_ARDUINO_USB=1 \
+BOARD_VM_UNO_R4_ARDUINO_CORE="$HOME/Library/Arduino15/packages/arduino/hardware/renesas_uno/1.5.3" \
+RUSTC="$(rustup which rustc)" \
+rustup run stable cargo build \
+  --target thumbv7em-none-eabihf \
+  -p board-vm-uno-r4-firmware \
+  --bin uno-r4-wifi-serialusb-server \
+  --release
+```
+
+The build script compiles the manifest's Arduino/TinyUSB C/C++ sources into a
+small archive under Cargo's `OUT_DIR`, links it with the Uno R4 WiFi `libfsp.a`
+for `uno-r4-wifi-serialusb-server`, and leaves the other firmware binaries on
+the pure-Rust link path. Override `BOARD_VM_UNO_R4_ARM_GCC`,
+`BOARD_VM_UNO_R4_ARM_GXX`, or `BOARD_VM_UNO_R4_ARM_AR` if the Arduino-packaged
+toolchain cannot run on the host.
 
 After flashing the generated `.bin`, run the host smoke test against the adapter
 serial port:
