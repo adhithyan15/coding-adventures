@@ -2,6 +2,42 @@
 
 ## [Unreleased]
 
+### Added — VMCOND00 Phase 4: PUSH_RESTART, POP_RESTART, FIND_RESTART, INVOKE_RESTART, COMPUTE_RESTARTS, ESTABLISH_EXIT, EXIT_TO opcodes
+
+Adds seven new `IrOp` enum values implementing VMCOND00 Layers 4 and 5 —
+named restarts and non-local exits — in the compiler IR opcode set shared by
+the JVM, CLR, and BEAM backends.
+
+**Layer 4 — Named restarts:**
+
+- **`IrOp.PUSH_RESTART` (72)** — push a named restart onto the restart chain.
+  Operands: `name: IrLabel` (restart's symbolic name) and `fn: IrRegister`.
+- **`IrOp.POP_RESTART` (73)** — pop the most recently pushed restart.  No
+  operands.
+- **`IrOp.FIND_RESTART` (74)** — search the restart chain for a named restart.
+  Operands: `name: IrLabel`; result register receives the `RestartNode` or nil.
+- **`IrOp.INVOKE_RESTART` (75)** — invoke a restart by its handle.  Operands:
+  `handle: IrRegister`, `arg: IrRegister`.
+- **`IrOp.COMPUTE_RESTARTS` (76)** — collect all active restart handles into a
+  list.  Operand: `dest: IrRegister`.
+
+**Layer 5 — Non-local exits:**
+
+- **`IrOp.ESTABLISH_EXIT` (77)** — push an exit point onto the exit-point chain.
+  Operands: `tag: IrLabel`, `result_reg: IrRegister`, `after_label: IrLabel`.
+- **`IrOp.EXIT_TO` (78)** — perform a non-local exit.  Operands: `tag: IrLabel`,
+  `val: IrRegister`.
+
+All seven opcodes are print/parse roundtrip-compatible via the generic
+`print_ir` / `parse_ir` machinery.  Total opcode count: **79** (was 72).
+
+Phase 4 scope is the interpreter / vm-core path only.  JVM, CLR, and BEAM
+backends that encounter these opcodes should reject the program with an
+appropriate "not yet implemented" diagnostic; lowering is deferred to a later
+phase.
+
+---
+
 ### Added — VMCOND00 Phase 3: PUSH_HANDLER, POP_HANDLER, SIGNAL, ERROR, WARN opcodes
 
 Adds five new `IrOp` enum values implementing VMCOND00 Layer 3 — dynamic

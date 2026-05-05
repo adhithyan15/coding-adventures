@@ -2,6 +2,32 @@
 
 ## [Unreleased]
 
+### Added — VMCOND00 Phase 4: RESTART_OPS and EXIT_OPS opcode sets
+
+Implements the opcode-metadata side of VMCOND00 Layers 4 and 5 — named restarts
+and non-local exits — in the interpreter IR world.  Seven new mnemonic strings
+are added to the opcode registry.
+
+**New constant: `RESTART_OPS`** — `frozenset[str]` containing the five Layer 4
+restart opcodes: `"push_restart"`, `"pop_restart"`, `"find_restart"`,
+`"invoke_restart"`, `"compute_restarts"`.
+
+**New constant: `EXIT_OPS`** — `frozenset[str]` containing the two Layer 5 exit
+opcodes: `"establish_exit"`, `"exit_to"`.
+
+Membership guarantees:
+- `RESTART_OPS ⊆ SIDE_EFFECT_OPS` and `RESTART_OPS ⊆ ALL_OPS`.
+- `EXIT_OPS ⊆ SIDE_EFFECT_OPS` and `EXIT_OPS ⊆ ALL_OPS`.
+- Both sets are disjoint from `VALUE_OPS`, `BRANCH_OPS`, and `CONTROL_OPS`.
+
+Both constants are exported from `interpreter_ir.__init__` and listed in
+`__all__`.
+
+**Tests** — 18 new tests in `test_interpreter_ir.py` explicitly verify that
+each new opcode belongs to the correct membership sets.
+
+---
+
 ### Added — VMCOND00 Phase 3: HANDLER_OPS opcode set
 
 Implements the opcode-metadata side of VMCOND00 Layer 3 — dynamic handlers —

@@ -123,10 +123,19 @@ class TestIrOp:
         assert IrOp.SIGNAL == 69
         assert IrOp.ERROR == 70
         assert IrOp.WARN == 71
+        # VMCOND00 Phase 4 — Layer 4 restart chain opcodes
+        assert IrOp.PUSH_RESTART == 72
+        assert IrOp.POP_RESTART == 73
+        assert IrOp.FIND_RESTART == 74
+        assert IrOp.INVOKE_RESTART == 75
+        assert IrOp.COMPUTE_RESTARTS == 76
+        # VMCOND00 Phase 4 — Layer 5 exit-point opcodes
+        assert IrOp.ESTABLISH_EXIT == 77
+        assert IrOp.EXIT_TO == 78
 
     def test_total_opcode_count(self) -> None:
-        """There are exactly 72 opcodes after VMCOND00 Phase 3."""
-        assert len(IrOp) == 72
+        """There are exactly 79 opcodes after VMCOND00 Phase 4."""
+        assert len(IrOp) == 79
 
     def test_name_to_op_roundtrip(self) -> None:
         """NAME_TO_OP[op.name] == op for every opcode."""
@@ -1091,6 +1100,22 @@ class TestAllOpcodesPrintParse:
             IrOp.ERROR:        [IrRegister(0)],
             # WARN condition:reg
             IrOp.WARN:         [IrRegister(0)],
+            # VMCOND00 Phase 4 — Layer 4 restart chain opcodes
+            # PUSH_RESTART name_sym:label fn:reg
+            IrOp.PUSH_RESTART:    [IrLabel("use-value"), IrRegister(2)],
+            # POP_RESTART (no operands)
+            IrOp.POP_RESTART:     [],
+            # FIND_RESTART name_sym:label → out:reg
+            IrOp.FIND_RESTART:    [IrLabel("use-value"), IrRegister(3)],
+            # INVOKE_RESTART handle:reg arg:reg
+            IrOp.INVOKE_RESTART:  [IrRegister(3), IrRegister(4)],
+            # COMPUTE_RESTARTS → out:reg
+            IrOp.COMPUTE_RESTARTS: [IrRegister(5)],
+            # VMCOND00 Phase 4 — Layer 5 exit-point opcodes
+            # ESTABLISH_EXIT tag_sym:label result_out:reg after:label
+            IrOp.ESTABLISH_EXIT: [IrLabel("done"), IrRegister(6), IrLabel("after_block")],
+            # EXIT_TO tag_sym:label val:reg
+            IrOp.EXIT_TO:        [IrLabel("done"), IrRegister(7)],
         }
         for idx, op in enumerate(IrOp):
             operands = operands_by_opcode[op]

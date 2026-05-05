@@ -89,3 +89,58 @@ class HandlerChainError(VMError):
         except HandlerChainError as e:
             print(f"Handler chain underflow: {e}")
     """
+
+
+class RestartChainError(VMError):
+    """Raised when the restart chain is in an invalid state.
+
+    Emitted in the following situations:
+
+    - ``pop_restart`` on an empty chain — a frontend code-generation bug
+      (unbalanced ``push_restart`` / ``pop_restart`` pairs).
+    - ``invoke_restart`` with a ``None`` handle (FIND_RESTART returned NIL
+      and the caller did not check before invoking).
+    - ``invoke_restart`` with an invalid handle value (not a RestartNode).
+    - ``invoke_restart`` referencing an unknown IIR function name.
+
+    Attributes
+    ----------
+    message:
+        A human-readable description of what went wrong.
+
+    Example::
+
+        from vm_core.errors import RestartChainError
+        try:
+            vm.execute(module)
+        except RestartChainError as e:
+            print(f"Restart chain error: {e}")
+    """
+
+
+class UnboundExitTagError(VMError):
+    """Raised when ``exit_to`` cannot find a matching exit-point tag.
+
+    ``exit_to "done", val`` walks ``vm._exit_point_chain`` from the most
+    recently pushed node to the oldest.  If no node has ``tag == "done"``,
+    there is no valid dynamic extent to return to — this indicates either a
+    frontend code-generation bug or a guest program that called ``exit_to``
+    outside any ``establish_exit`` block with the given tag.
+
+    Attributes
+    ----------
+    tag:
+        The tag string that was not found.
+
+    Example::
+
+        from vm_core.errors import UnboundExitTagError
+        try:
+            vm.execute(module)
+        except UnboundExitTagError as e:
+            print(f"No exit point for tag {e.tag!r}")
+    """
+
+    def __init__(self, tag: str) -> None:
+        super().__init__(f"EXIT_TO: no exit point with tag {tag!r}")
+        self.tag = tag
