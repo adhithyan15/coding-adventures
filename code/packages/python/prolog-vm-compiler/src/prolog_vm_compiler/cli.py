@@ -278,6 +278,9 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if all_source_queries and bool(flags["interactive"]):
         msg = "--all-source-queries cannot be combined with --interactive"
         raise ValueError(msg)
+    if bool(flags["commit"]) and not queries:
+        msg = "--commit requires at least one --query"
+        raise ValueError(msg)
 
     return CliArgs(
         files=files,

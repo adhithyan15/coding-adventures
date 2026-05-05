@@ -58,7 +58,7 @@ Important options:
 - `--format text|json|jsonl` selects human text, one JSON document, or
   newline-delimited JSON records.
 - `--commit` persists the first answer state from each ad-hoc query into the
-  next query.
+  next query and is only valid when at least one `--query` is supplied.
 - `--interactive` starts a small top-level query loop after loading the source.
 - `--no-initialize` skips initialization directives.
 

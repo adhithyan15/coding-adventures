@@ -106,6 +106,19 @@ def test_cli_repeated_queries_share_committed_runtime_state(
     ]
 
 
+def test_cli_commit_requires_ad_hoc_query(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart). ?- parent(homer, Who).",
+        "--commit",
+    ])
+
+    assert status == 2
+    assert "--commit requires at least one --query" in capsys.readouterr().err
+
+
 def test_cli_check_compiles_source_without_queries(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
