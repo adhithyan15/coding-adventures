@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.7.0 — 2026-05-05
+
+**Phase 26 — Transcendental equation solving.**
+
+New module `cas_solve/transcendental.py` with a single public function:
+
+- ``try_solve_transcendental(eq_ir, var)`` — dispatches across all recognised
+  transcendental equation families and returns a list of IR solution nodes,
+  or ``None`` if no pattern matches.
+
+Families supported:
+
+- **Trigonometric** (26a): `sin(ax+b) = c` → two periodic families with the
+  free-integer constant ``FreeInteger`` (%k); `cos`, `tan` analogously.
+- **Exponential/Logarithmic** (26b): `exp(ax+b) = c` → `x = (log(c)−b)/a`;
+  `log(ax+b) = c` → `x = (exp(c)−b)/a`.
+- **Lambert W** (26c): `f(x)·exp(f(x)) = c` with `f` linear → `f(x) = W(c)`.
+  Uses the new ``LambertW`` IR head from `symbolic-ir` 0.13.0.
+- **Hyperbolic** (26d): `sinh`, `cosh` (two branches), `tanh` with linear
+  argument; inverted via `asinh`, `acosh`, `atanh`.
+- **Compound substitution** (26e): detects when the equation is a polynomial
+  in exactly one transcendental function of the variable (e.g.
+  `sin(x)^2 + sin(x) = 0`) and solves by first solving the polynomial for the
+  intermediate variable `u`, then inverting `f(x) = u` for each root.
+
+The function is also exported from the package's `__init__.py`.
+
+Dependency bump: `symbolic-ir` ≥ 0.13.0 (for `FREE_INTEGER`, `LAMBERT_W`).
+
+---
+
 ## 0.6.0 — 2026-04-27
 
 Phase 3 — Numeric root-finding and linear-system solver.

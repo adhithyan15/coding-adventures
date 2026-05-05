@@ -1,5 +1,45 @@
 # Changelog
 
+## 0.46.0 — 2026-05-05
+
+**Phase 26 — Transcendental equation solving + Lambert W handler.**
+
+### New handler in `cas_handlers.py`
+
+`lambert_w_handler` evaluates `LambertW(x)` — the principal branch W₀ of the
+Lambert W function — when `x` is a concrete rational or floating-point constant.
+Uses Newton iteration (64 iterations max, quadratic convergence, stopping
+criterion `|Δw| < 1e-12·(1 + |w|)`).  Returns unevaluated for symbolic
+arguments and out-of-domain inputs (`x < −1/e`).
+
+Registered as `"LambertW": lambert_w_handler` in `build_cas_handler_table()`.
+
+### Changes to `solve_handler`
+
+The single-equation `Solve(eq, var)` path now falls through to
+`try_solve_transcendental` from `cas-solve>=0.7.0` before returning
+unevaluated.  This adds five transcendental families:
+
+- **26a — Trigonometric**: `sin/cos/tan(ax+b) = c` → two periodic families with
+  free-integer `%k` (`FreeInteger` IR symbol).
+- **26b — Exponential/Logarithmic**: `exp(ax+b) = c` and `log(ax+b) = c`.
+- **26c — Lambert W**: `f(x)·exp(f(x)) = c` with linear `f` → `LambertW(c)`.
+- **26d — Hyperbolic**: `sinh/cosh/tanh(ax+b) = c` with exact inverse formulas.
+- **26e — Compound substitution**: equations that are polynomials in a single
+  transcendental function of the variable (e.g. `sin²(x) + sin(x) = 0`).
+
+### New imports
+
+`FREE_INTEGER` and `LAMBERT_W` from `symbolic_ir>=0.13.0`;
+`try_solve_transcendental` from `cas_solve>=0.7.0`.
+
+### Dependency bumps
+
+- `symbolic-ir` ≥ 0.13.0 (for `FREE_INTEGER`, `LAMBERT_W`)
+- `cas-solve` ≥ 0.7.0 (for `try_solve_transcendental`)
+
+---
+
 ## 0.45.0 — 2026-05-04
 
 **Phase 25 — Symbolic summation and product evaluation.**

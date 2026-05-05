@@ -467,3 +467,28 @@ FRESNEL_C = IRSymbol("FresnelC")
 #   Π_{k=a}^{b} c   = c^(b−a+1)          (constant factor)
 SUM = IRSymbol("Sum")
 PRODUCT = IRSymbol("Product")
+
+# ---------------------------------------------------------------------------
+# Phase 26 — Transcendental equation solving
+# ---------------------------------------------------------------------------
+#
+# FREE_INTEGER — the free-integer constant %k that appears in periodic
+# solutions of trigonometric equations:
+#
+#   solve(sin(x) = c, x)  →  [arcsin(c) + 2·%k·π,  π − arcsin(c) + 2·%k·π]
+#
+# %k represents an arbitrary integer parameter (n ∈ ℤ), analogous to how
+# MACSYMA returned solutions with a trailing "+ 2·%pi·%k" to encode all
+# branches of the inverse trig.
+#
+# LAMBERT_W — the principal branch W₀ of the Lambert W function, defined as
+# the inverse of  f(w) = w·exp(w):
+#
+#   LambertW(x·exp(x)) = x   for x ≥ −1
+#
+# Appears in the solution of  x·exp(x) = c  →  x = W(c), and more generally
+#   (ax+b)·exp(ax+b) = c  →  x = (W(c) − b) / a
+#
+# Numeric evaluation: Newton iteration on  w_{n+1} = w_n − (w_n·e^w_n − c)/(e^w_n·(w_n+1))
+FREE_INTEGER = IRSymbol("FreeInteger")
+LAMBERT_W = IRSymbol("LambertW")
