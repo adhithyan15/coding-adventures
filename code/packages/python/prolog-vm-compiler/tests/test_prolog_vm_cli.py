@@ -174,6 +174,39 @@ def test_cli_values_rejects_compile_only_modes(
     )
 
 
+@pytest.mark.parametrize(
+    ("mode_flags", "conflicting_flag"),
+    [
+        (["--query", "parent(homer, Who)"], "--query"),
+        (["--all-source-queries"], "--all-source-queries"),
+        (["--check"], "--check"),
+        (["--dump-bytecode"], "--dump-bytecode"),
+        (["--dump-instructions"], "--dump-instructions"),
+        (["--dump-source-metadata"], "--dump-source-metadata"),
+        (["--list-source-queries"], "--list-source-queries"),
+        (["--interactive"], "--interactive"),
+    ],
+)
+def test_cli_source_query_index_rejects_non_source_query_modes(
+    mode_flags: list[str],
+    conflicting_flag: str,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart). ?- parent(homer, Who).",
+        "--source-query-index",
+        "0",
+        *mode_flags,
+    ])
+
+    assert status == 2
+    assert (
+        f"--source-query-index cannot be combined with {conflicting_flag}"
+        in capsys.readouterr().err
+    )
+
+
 def test_cli_check_compiles_source_without_queries(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
