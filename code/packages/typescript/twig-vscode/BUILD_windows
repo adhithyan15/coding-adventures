@@ -1,0 +1,6 @@
+$ErrorActionPreference = 'Stop'
+
+# Build the generated VS Code extension package on Windows.
+
+npm install --silent
+npx tsc -p .

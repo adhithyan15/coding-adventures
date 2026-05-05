@@ -1,0 +1,30 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Twig",
+  "scopeName": "source.twig",
+  "patterns": [
+    {
+      "name": "comment.line.twig",
+      "match": ";.*$"
+    },
+    {
+      "name": "string.quoted.double.twig",
+      "begin": "\"",
+      "end": "\"",
+      "patterns": [
+        {
+          "name": "constant.character.escape.twig",
+          "match": "\\\\."
+        }
+      ]
+    },
+    {
+      "name": "constant.numeric.twig",
+      "match": "\\b-?\\d+(\\.\\d+)?\\b"
+    },
+    {
+      "name": "keyword.control.twig",
+      "match": "\\b(define|if|let|lambda|quote|unquote|quasiquote|cond|when|unless|begin|and|or|not)\\b"
+    }
+  ]
+}

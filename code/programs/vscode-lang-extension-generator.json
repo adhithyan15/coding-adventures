@@ -1,0 +1,94 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "vscode-lang-extension-generator",
+  "display_name": "VS Code Lang Extension Generator",
+  "description": "Generate VS Code extensions wrapping LSP and/or DAP servers for languages built on the LANG-VM pipeline",
+  "version": "0.1.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": { "help": true, "version": true },
+  "flags": [
+    {
+      "id": "language-id",
+      "long": "language-id",
+      "description": "Internal language id, lowercase kebab-case (e.g., 'twig')",
+      "type": "string"
+    },
+    {
+      "id": "language-name",
+      "long": "language-name",
+      "description": "Human-readable display name shown in VS Code (e.g., 'Twig')",
+      "type": "string"
+    },
+    {
+      "id": "file-extensions",
+      "long": "file-extensions",
+      "description": "Comma-separated list of source file extensions, each starting with a dot (e.g., '.twig,.tw')",
+      "type": "string"
+    },
+    {
+      "id": "lsp-binary",
+      "long": "lsp-binary",
+      "description": "Name of the language server binary on PATH (omit if no LSP support)",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "id": "dap-binary",
+      "long": "dap-binary",
+      "description": "Name of the debug adapter binary on PATH (omit if no debugger support)",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "id": "output-dir",
+      "long": "output-dir",
+      "description": "Directory to create the extension package in (must be empty or non-existent)",
+      "type": "string"
+    },
+    {
+      "id": "line-comment",
+      "long": "line-comment",
+      "description": "Single-line comment prefix (e.g., ';' or '//')",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "id": "block-comment-start",
+      "long": "block-comment-start",
+      "description": "Block comment opening sequence (e.g., '/*')",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "id": "block-comment-end",
+      "long": "block-comment-end",
+      "description": "Block comment closing sequence (e.g., '*/')",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "id": "keywords",
+      "long": "keywords",
+      "description": "Comma-separated keywords for a minimal TextMate grammar (omit to skip syntax highlighting)",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "id": "description",
+      "long": "description",
+      "description": "Extension description shown in VS Code marketplace",
+      "type": "string",
+      "default": ""
+    },
+    {
+      "id": "ext-version",
+      "long": "ext-version",
+      "description": "Extension semantic version (defaults to 0.1.0)",
+      "type": "string",
+      "default": "0.1.0"
+    }
+  ],
+  "arguments": [],
+  "commands": [],
+  "mutually_exclusive_groups": []
+}
