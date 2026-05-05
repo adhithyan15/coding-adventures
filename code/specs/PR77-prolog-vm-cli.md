@@ -13,6 +13,7 @@ The goal is practical usability:
 - run Prolog source piped through stdin
 - run a single `.pl` file or linked file graph
 - check that source parses, loads, compiles, and initializes without a query
+- dump structured Logic VM instructions for compile-only diagnostics
 - dump Logic bytecode disassembly for compile-only diagnostics
 - list embedded source-level `?-` query indexes and visible variables
 - run stored source-level `?-` queries by index
@@ -35,6 +36,8 @@ Important options:
   files.
 - `--query QUERY` runs an ad-hoc top-level query. It may be repeated.
 - `--check` parses, loads, compiles, and initializes without running a query.
+- `--dump-instructions` compiles to structured Logic VM instructions and emits
+  them without executing queries.
 - `--dump-bytecode` compiles to Logic bytecode and emits disassembly without
   executing queries.
 - `--list-source-queries` lists embedded `?-` query indexes and visible
@@ -101,6 +104,12 @@ JSON object per query result.
 When `--check` is set, JSON formats emit one success object with `mode:
 "check"`, `source_query_count`, `initialization_query_count`, `backend`, and
 whether initialization ran.
+
+When `--dump-instructions` is set, text output emits indexed structured
+instruction lines. JSON formats emit one success object with `mode:
+"instructions"`, `instruction_count`, and per-instruction records containing
+`index`, `opcode`, and rendered `text`. This mode is compile-only and mutually
+exclusive with query execution modes.
 
 When `--dump-bytecode` is set, text output emits bytecode disassembly lines.
 JSON formats emit one success object with `mode: "bytecode"`, pool counts, an
@@ -175,6 +184,7 @@ The CLI test coverage should prove:
 - inline source ad-hoc queries through bytecode
 - stdin source ad-hoc and stored source queries
 - query-free compile/check mode
+- structured instruction dump mode
 - bytecode disassembly dump mode
 - source query listing without execution
 - stored source-level queries from files

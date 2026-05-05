@@ -20,6 +20,15 @@ from cli_builder import (
 )
 from logic_bytecode import LogicBytecodeProgram, disassemble, disassemble_text
 from logic_engine import Atom, Compound, Disequality, LogicVar, Number, String, Term
+from logic_instructions import (
+    DynamicRelationDefInstruction,
+    FactInstruction,
+    InstructionProgram,
+    LogicInstruction,
+    QueryInstruction,
+    RelationDefInstruction,
+    RuleInstruction,
+)
 
 from prolog_vm_compiler.compiler import (
     CompiledPrologVMProgram,
@@ -62,6 +71,7 @@ class CliArgs:
     queries: tuple[str, ...]
     check: bool
     dump_bytecode: bool
+    dump_instructions: bool
     list_source_queries: bool
     source_query_index: int
     all_source_queries: bool
@@ -164,6 +174,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     all_source_queries = bool(flags["all-source-queries"])
     check = bool(flags["check"])
     dump_bytecode = bool(flags["dump-bytecode"])
+    dump_instructions = bool(flags["dump-instructions"])
     list_source_queries = bool(flags["list-source-queries"])
     if check and queries:
         msg = "--check cannot be combined with --query"
@@ -188,6 +199,24 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     if dump_bytecode and bool(flags["interactive"]):
         msg = "--dump-bytecode cannot be combined with --interactive"
+        raise ValueError(msg)
+    if dump_instructions and queries:
+        msg = "--dump-instructions cannot be combined with --query"
+        raise ValueError(msg)
+    if dump_instructions and check:
+        msg = "--dump-instructions cannot be combined with --check"
+        raise ValueError(msg)
+    if dump_instructions and dump_bytecode:
+        msg = "--dump-instructions cannot be combined with --dump-bytecode"
+        raise ValueError(msg)
+    if dump_instructions and list_source_queries:
+        msg = "--dump-instructions cannot be combined with --list-source-queries"
+        raise ValueError(msg)
+    if dump_instructions and all_source_queries:
+        msg = "--dump-instructions cannot be combined with --all-source-queries"
+        raise ValueError(msg)
+    if dump_instructions and bool(flags["interactive"]):
+        msg = "--dump-instructions cannot be combined with --interactive"
         raise ValueError(msg)
     if list_source_queries and queries:
         msg = "--list-source-queries cannot be combined with --query"
@@ -224,6 +253,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         queries=queries,
         check=check,
         dump_bytecode=dump_bytecode,
+        dump_instructions=dump_instructions,
         list_source_queries=list_source_queries,
         source_query_index=source_query_index,
         all_source_queries=all_source_queries,
@@ -365,6 +395,8 @@ def _required_int(value: object, *, name: str) -> int:
 def _run_cli(args: CliArgs) -> int:
     if args.check:
         return _run_check(args)
+    if args.dump_instructions:
+        return _run_dump_instructions(args)
     if args.dump_bytecode:
         return _run_dump_bytecode(args)
     if args.list_source_queries:
@@ -415,6 +447,12 @@ def _run_dump_bytecode(args: CliArgs) -> int:
     return 0
 
 
+def _run_dump_instructions(args: CliArgs) -> int:
+    compiled_program = _compile_source_program(args)
+    _print_instruction_dump(compiled_program.instructions, args=args)
+    return 0
+
+
 def _run_list_source_queries(args: CliArgs) -> int:
     compiled_program = _compile_source_program(args)
     _print_source_query_summary(compiled_program, args=args)
@@ -453,6 +491,65 @@ def _print_source_query_summary(
         "queries": query_summaries,
     }
     print(json.dumps(payload, sort_keys=True), file=output)
+
+
+def _print_instruction_dump(
+    program: InstructionProgram,
+    *,
+    args: CliArgs,
+    stdout: TextIO | None = None,
+) -> None:
+    output = sys.stdout if stdout is None else stdout
+    records = [
+        _instruction_dump_record(index, instruction)
+        for index, instruction in enumerate(program.instructions)
+    ]
+
+    if args.output_format == "text":
+        for record in records:
+            print(
+                f"{int(record['index']):04d}: {record['opcode']} {record['text']}",
+                file=output,
+            )
+        return
+
+    payload = {
+        "success": True,
+        "mode": "instructions",
+        "instruction_count": len(program.instructions),
+        "instructions": records,
+    }
+    print(json.dumps(payload, sort_keys=True), file=output)
+
+
+def _instruction_dump_record(
+    index: int,
+    instruction: LogicInstruction,
+) -> dict[str, object]:
+    return {
+        "index": index,
+        "opcode": instruction.opcode.value,
+        "text": _instruction_dump_text(instruction),
+    }
+
+
+def _instruction_dump_text(instruction: LogicInstruction) -> str:
+    if isinstance(
+        instruction,
+        RelationDefInstruction | DynamicRelationDefInstruction,
+    ):
+        return str(instruction.relation)
+    if isinstance(instruction, FactInstruction):
+        return str(instruction.head)
+    if isinstance(instruction, RuleInstruction):
+        return f"{instruction.head} :- {instruction.body}"
+    if isinstance(instruction, QueryInstruction):
+        if instruction.outputs is None:
+            return str(instruction.goal)
+        outputs = ", ".join(str(output) for output in instruction.outputs)
+        return f"{instruction.goal} -> {outputs}"
+    msg = f"unsupported instruction type {type(instruction).__name__}"
+    raise TypeError(msg)
 
 
 def _print_bytecode_dump(
