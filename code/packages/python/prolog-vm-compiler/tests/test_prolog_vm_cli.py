@@ -227,6 +227,68 @@ def test_cli_dump_bytecode_rejects_execution_modes(
     )
 
 
+def test_cli_dump_instructions_renders_instruction_stream(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart). ?- parent(homer, Who).",
+        "--dump-instructions",
+    ])
+
+    assert status == 0
+    lines = capsys.readouterr().out.splitlines()
+    assert lines[0] == "0000: DEF_REL parent/2"
+    assert lines[1].startswith("0001: FACT parent(")
+    assert lines[2].startswith("0002: QUERY parent(")
+    assert " -> " in lines[2]
+
+
+def test_cli_dump_instructions_json_reports_instruction_records(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart). ?- parent(homer, Who).",
+        "--dump-instructions",
+        "--format",
+        "json",
+    ])
+
+    payload = json.loads(capsys.readouterr().out)
+
+    assert status == 0
+    assert payload["success"] is True
+    assert payload["mode"] == "instructions"
+    assert payload["instruction_count"] == 3
+    assert payload["instructions"][0] == {
+        "index": 0,
+        "opcode": "DEF_REL",
+        "text": "parent/2",
+    }
+    assert payload["instructions"][1]["opcode"] == "FACT"
+    assert payload["instructions"][1]["text"].startswith("parent(")
+    assert payload["instructions"][2]["opcode"] == "QUERY"
+    assert " -> " in payload["instructions"][2]["text"]
+
+
+def test_cli_dump_instructions_rejects_execution_modes(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        "--dump-instructions",
+        "--query",
+        "parent(homer, Who)",
+    ])
+
+    assert status == 2
+    assert "--dump-instructions cannot be combined with --query" in (
+        capsys.readouterr().err
+    )
+
+
 def test_cli_lists_source_query_variables(
     capsys: pytest.CaptureFixture[str],
 ) -> None:

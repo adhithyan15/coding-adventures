@@ -285,6 +285,16 @@ Use `--check` to parse, load, compile, and initialize source without running a
 query. This is intended for CI and editor integrations that need to validate a
 Prolog file graph even when it does not contain embedded `?-` directives.
 
+Use `--dump-instructions` to compile source into the structured Logic VM
+instruction stream without executing queries. This is the best first diagnostic
+when checking what the Prolog loader emitted before bytecode lowering:
+
+```bash
+prolog-vm \
+  --source "parent(homer, bart). ?- parent(homer, Who)." \
+  --dump-instructions
+```
+
 Use `--dump-bytecode` to compile source into Logic bytecode and print the
 loader-bytecode disassembly without executing queries. This is useful when
 diagnosing convergence between the structured VM and the bytecode VM:
