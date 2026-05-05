@@ -2,6 +2,70 @@
 
 ## [Unreleased]
 
+### Added — VMCOND00 Phase 2: ExceptionTableEntry and throw opcode
+
+Implements VMCOND00 Layer 2 — unwind exceptions — in the interpreter IR world.
+The new `ExceptionTableEntry` type gives each `IIRFunction` a static exception
+table that the VM walks during `throw` propagation, and the `"throw"` mnemonic
+is added to the opcode registry so analyzers and validators see it as a side-
+effecting instruction.
+
+**New module: `interpreter_ir.exception_table`**
+
+- **`CATCH_ALL: str = "*"`** — sentinel `type_id` value that matches every
+  thrown condition regardless of Python type.  Use `"*"` in `type_id` to
+  write a catch-all handler.
+
+- **`ExceptionTableEntry`** — frozen dataclass describing one protected region
+  and its handler:
+  - `from_ip: int` — first IIR instruction index in the guarded range
+    (inclusive).
+  - `to_ip: int` — first IIR instruction index *outside* the guarded range
+    (exclusive).  Semantics: `from_ip <= throw_ip < to_ip` triggers the handler.
+    This matches JVM and CPython half-open convention.
+  - `handler_ip: int` — IIR instruction index of the first handler instruction.
+  - `type_id: str` — `"*"` (catch-all) or a Python type name such as `"ValueError"`.
+    Phase 2 matching is exact name equality (`type(condition).__name__`); subtype
+    hierarchy is deferred to Phase 3.
+  - `val_reg: str` — name of the register that receives the caught condition
+    object when the handler is entered.
+
+**Changes to `interpreter_ir.function`**
+
+- `IIRFunction.exception_table: list[ExceptionTableEntry]` — new per-function
+  field, `default_factory=list`.  The field is marked `repr=False, compare=False`
+  (consistent with `feedback_slots` and `source_map`) so existing equality checks
+  and textual representations are unaffected; the exception table is pure runtime
+  metadata assembled by the front-end and consumed by the VM.
+
+**Changes to `interpreter_ir.opcodes`**
+
+- **`THROW_OPS: frozenset[str] = frozenset({"throw"})`** — new opcode-category
+  frozenset for the single `"throw"` mnemonic.
+- `THROW_OPS` is folded into `SIDE_EFFECT_OPS` (a throw has observable side
+  effects — it may unwind the call stack) and into `ALL_OPS`.  It is intentionally
+  **not** in `BRANCH_OPS` or `CONTROL_OPS`: the VM handles the IP jump internally
+  inside `handle_throw`; the static analyzer does not need to model throw as a
+  branch.
+
+**Exports**
+
+`ExceptionTableEntry`, `CATCH_ALL`, and `THROW_OPS` are now exported from the
+package root (`interpreter_ir.__init__`).
+
+**Test additions (`tests/test_interpreter_ir.py`):**
+
+- 9 new tests in `TestOpcodeSets` covering `THROW_OPS` membership, set-algebra
+  relationships with `SIDE_EFFECT_OPS` / `ALL_OPS`, and the exclusions from
+  `BRANCH_OPS` / `CONTROL_OPS`.
+- New `TestExceptionTableEntry` class (7 tests): construction, immutability
+  (`frozen=True`), equality, hash stability, the `CATCH_ALL` constant, and the
+  `compare=False` contract on `IIRFunction.exception_table`.
+
+**Spec reference:** VMCOND00 §3 Layer 2 — unwind exceptions.
+
+---
+
 ### Added — VMCOND00 Phase 1: syscall_checked and branch_err opcodes
 
 Two new IIR string mnemonics implementing the VMCOND00 Layer 1 result-value
