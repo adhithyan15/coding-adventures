@@ -29,6 +29,61 @@ def test_cli_runs_inline_ad_hoc_query_with_bytecode_values(
     assert capsys.readouterr().out.splitlines() == ["bart.", "lisa."]
 
 
+def test_cli_reads_source_from_stdin_for_ad_hoc_queries(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.setattr(
+        sys,
+        "stdin",
+        io.StringIO("parent(homer, bart). parent(homer, lisa)."),
+    )
+
+    status = main([
+        "--source-stdin",
+        "--query",
+        "parent(homer, Who)",
+        "--backend",
+        "bytecode",
+    ])
+
+    assert status == 0
+    assert capsys.readouterr().out.splitlines() == [
+        "Who = bart.",
+        "Who = lisa.",
+    ]
+
+
+def test_cli_reads_source_queries_from_stdin(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.setattr(
+        sys,
+        "stdin",
+        io.StringIO("parent(homer, bart). ?- parent(homer, Who)."),
+    )
+
+    status = main(["--source-stdin"])
+
+    assert status == 0
+    assert capsys.readouterr().out == "Who = bart.\n"
+
+
+def test_cli_source_stdin_rejects_interactive_mode_without_reading_stdin(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source-stdin",
+        "--interactive",
+    ])
+
+    assert status == 2
+    assert "--source-stdin cannot be combined with --interactive" in (
+        capsys.readouterr().err
+    )
+
+
 def test_cli_repeated_queries_share_committed_runtime_state(
     capsys: pytest.CaptureFixture[str],
 ) -> None:

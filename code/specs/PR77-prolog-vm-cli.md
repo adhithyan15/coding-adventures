@@ -10,6 +10,7 @@ package for argument parsing.
 The goal is practical usability:
 
 - run inline Prolog source through the structured VM or bytecode VM
+- run Prolog source piped through stdin
 - run a single `.pl` file or linked file graph
 - check that source parses, loads, compiles, and initializes without a query
 - list embedded source-level `?-` query indexes and visible variables
@@ -29,6 +30,8 @@ prolog-vm [OPTIONS] [FILE...]
 Important options:
 
 - `--source SOURCE` loads inline source instead of files.
+- `--source-stdin` reads source text from stdin instead of `--source` or
+  files.
 - `--query QUERY` runs an ad-hoc top-level query. It may be repeated.
 - `--check` parses, loads, compiles, and initializes without running a query.
 - `--list-source-queries` lists embedded `?-` query indexes and visible
@@ -71,6 +74,19 @@ Expected output:
 true.
 Value = saved.
 ```
+
+## Pipeline Source Input
+
+`--source-stdin` reads Prolog source text from stdin before selecting the query
+mode. This lets editors, generated source pipelines, and shell scripts avoid
+temporary files while keeping execution on the same compiled VM path:
+
+```bash
+cat family.pl | prolog-vm --source-stdin --query "parent(homer, Who)"
+```
+
+Because `--interactive` also consumes stdin, the two modes are intentionally
+mutually exclusive.
 
 ## Machine-Readable Output
 
@@ -149,6 +165,7 @@ setup phase before entering the top-level loop.
 The CLI test coverage should prove:
 
 - inline source ad-hoc queries through bytecode
+- stdin source ad-hoc and stored source queries
 - query-free compile/check mode
 - source query listing without execution
 - stored source-level queries from files
