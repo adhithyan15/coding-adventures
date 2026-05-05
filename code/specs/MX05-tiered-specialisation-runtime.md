@@ -242,6 +242,19 @@ The compile happens in a background worker thread so live dispatches
 aren't blocked.  Once ready, the specialised pipeline is inserted
 into the cache.
 
+> **Implementation status (Phase 3 V5 landed — matrix-profile crate)**:
+> The full specialisation pipeline (Profiler / sampler / SpecKey /
+> Specialiser / SpecCache / Policy / SpecRouter) lives in its own
+> standalone crate at `code/packages/rust/matrix-profile/`.  Depends
+> only on `matrix-ir` and `compute-ir` — no `executor-protocol`, no
+> `matrix-runtime` — keeping the dependency graph acyclic and the
+> pipeline reusable from any domain library.  `matrix-runtime`
+> re-exports every public item for back-compat so existing
+> `use matrix_runtime::Profiler;` style imports continue to work.
+> 57 tests live in the new crate; matrix-runtime's own test count
+> drops to 17 unit + 8 integration covering planner / registry /
+> cost / runtime.
+
 > **Implementation status (Phase 3 V4 landed — image-gpu-core wired)**:
 > `image-gpu-core::pipeline::run_graph_with_constant_inputs` now
 > drives the full pipeline on every dispatch — `Profiler::record_dispatch`
