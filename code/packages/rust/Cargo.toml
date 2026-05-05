@@ -423,6 +423,7 @@ members = [
     "vault-sync",
     "vault-transport-cli",
     "vault-revisions",
+    "vault-search",
     "storage-fs",
     "context-store",
     "artifact-store",
