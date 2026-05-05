@@ -138,6 +138,17 @@ pub struct TensorObservation {
 }
 ```
 
+> **Implementation status (Phase 3 V2 landed)**: `SpecialisationPolicy`
+> trait + `DefaultPolicy` ship in `matrix_runtime::policy`.  Policy
+> is **passive** in V2 — nothing in the dispatch loop calls it yet;
+> Phase 3 V3 will wire it into a hot-path that invokes the policy
+> after `record_dispatch`, consults `SpecCache`, and asks the
+> backend's `Specialiser` to emit a kernel on cache miss.  Default
+> thresholds match the spec (1000 invocations, 0.95 stability).
+> Shape stability isn't tracked explicitly because `Profiler::subhash`
+> already partitions distinct shapes into distinct observations;
+> cross-shape specialisation is Phase 4 work.
+
 ### 2. Specialisation trigger
 
 A small policy module that consumes profile observations and decides
