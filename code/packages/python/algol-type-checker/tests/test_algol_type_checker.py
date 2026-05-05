@@ -330,6 +330,28 @@ class TestAlgolTypeChecker:
         assert result.semantic.switch_selections[0].name == "s"
         assert result.semantic.gotos[0].target_name == "switch designational expression"
 
+    def test_accepts_forward_switch_declaration_entry(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "switch first := second[1]; "
+            "switch second := done; "
+            "goto first[1]; "
+            "done: result := 5 "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert [switch.name for switch in result.semantic.switches] == [
+            "first",
+            "second",
+        ]
+        assert [selection.name for selection in result.semantic.switch_selections] == [
+            "second",
+            "first",
+        ]
+
     def test_rejects_missing_switch_designational_goto(self) -> None:
         ast = parse_algol("begin integer result; goto s[1] end")
         result = check_algol(ast)
@@ -2044,6 +2066,54 @@ class TestAlgolTypeChecker:
             "write",
             "read",
         ]
+
+    def test_accepts_forward_procedure_calls_in_array_bounds(self) -> None:
+        ast = parse_algol(
+            "begin integer result; "
+            "integer array a[lower():upper()]; "
+            "integer procedure lower; begin lower := 0 end; "
+            "integer procedure upper; begin upper := 0 end; "
+            "a[0] := 5; result := a[0] "
+            "end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert result.semantic.arrays[0].name == "a"
+        assert [call.name for call in result.semantic.procedure_calls[:2]] == [
+            "lower",
+            "upper",
+        ]
+
+    def test_accepts_prior_array_accesses_in_array_bounds(self) -> None:
+        ast = parse_algol(
+            "begin integer result; integer array b[1:1]; "
+            "integer array a[b[1]:b[1]]; result := 0 end"
+        )
+        result = check_algol(ast)
+
+        assert result.ok
+        assert result.semantic is not None
+        assert [array.name for array in result.semantic.arrays] == ["b", "a"]
+        assert [access.name for access in result.semantic.array_accesses] == [
+            "b",
+            "b",
+        ]
+
+    def test_rejects_later_array_accesses_in_array_bounds(self) -> None:
+        ast = parse_algol(
+            "begin integer result; integer array a[b[1]:b[1]]; "
+            "integer array b[1:1]; result := 0 end"
+        )
+        result = check_algol(ast)
+
+        assert not result.ok
+        assert any(
+            "array bound cannot read array 'b' before its descriptor is allocated"
+            in diagnostic.message
+            for diagnostic in result.diagnostics
+        )
 
     def test_accepts_default_real_array_declaration(self) -> None:
         ast = parse_algol("begin array a[1:3]; a[1] := 7 end")

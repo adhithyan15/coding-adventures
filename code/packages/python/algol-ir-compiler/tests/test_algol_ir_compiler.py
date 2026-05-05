@@ -603,6 +603,26 @@ class TestAlgolIrCompiler:
         assert any(label.startswith("switch_0_1_next") for label in labels)
         assert any(label.startswith("switch_1_1_next") for label in labels)
 
+    def test_compiles_forward_nested_switch_selection_entry(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "switch outer := inner[1]; "
+                "switch inner := done; "
+                "goto outer[1]; "
+                "done: result := 5 "
+                "end"
+            )
+        )
+        labels = [
+            instr.operands[0].name
+            for instr in result.program.instructions
+            if instr.opcode == IrOp.LABEL
+        ]
+
+        assert any(label.startswith("switch_0_1_next") for label in labels)
+        assert any(label.startswith("switch_1_1_next") for label in labels)
+
     def test_compiles_self_recursive_switch_selection_entry(self) -> None:
         result = compile_algol(
             parse_algol(
@@ -1578,6 +1598,44 @@ class TestAlgolIrCompiler:
         assert IrOp.DIV in opcodes
         assert opcodes.count(IrOp.MUL) >= 4
         assert opcodes.count(IrOp.CMP_GT) >= 6
+
+    def test_compiles_forward_procedure_calls_in_array_bounds(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "integer array a[lower():upper()]; "
+                "integer procedure lower; begin lower := 0 end; "
+                "integer procedure upper; begin upper := 0 end; "
+                "a[0] := 5; result := a[0] "
+                "end"
+            )
+        )
+        opcodes = [instr.opcode for instr in result.program.instructions]
+
+        assert opcodes.count(IrOp.CALL) >= 2
+        assert "a@block0" in result.variable_slots
+
+    def test_compiles_prior_array_accesses_in_array_bounds(self) -> None:
+        result = compile_algol(
+            parse_algol(
+                "begin integer result; "
+                "integer array b[1:1]; integer array a[b[1]:b[1]]; "
+                "a[0] := 9; result := a[0] "
+                "end"
+            )
+        )
+
+        assert "b@block0" in result.variable_slots
+        assert "a@block0" in result.variable_slots
+
+    def test_rejects_later_array_accesses_in_array_bounds(self) -> None:
+        with pytest.raises(CompileError, match="before its descriptor is allocated"):
+            compile_algol(
+                parse_algol(
+                    "begin integer result; integer array a[b[1]:b[1]]; "
+                    "integer array b[1:1]; result := 0 end"
+                )
+            )
 
     def test_compiles_integer_value_procedure_call(self) -> None:
         result = compile_algol(

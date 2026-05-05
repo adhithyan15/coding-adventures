@@ -3590,6 +3590,33 @@ actions = [
 
 [[transitions]]
 from = "before_attribute_value"
+matcher = { literal = "<" }
+to = "attribute_value_unquoted"
+actions = [
+  "parse_error(unexpected-character-in-unquoted-attribute-value)",
+  "append_attribute_value(current)",
+]
+
+[[transitions]]
+from = "before_attribute_value"
+matcher = { literal = "=" }
+to = "attribute_value_unquoted"
+actions = [
+  "parse_error(unexpected-character-in-unquoted-attribute-value)",
+  "append_attribute_value(current)",
+]
+
+[[transitions]]
+from = "before_attribute_value"
+matcher = { literal = "`" }
+to = "attribute_value_unquoted"
+actions = [
+  "parse_error(unexpected-character-in-unquoted-attribute-value)",
+  "append_attribute_value(current)",
+]
+
+[[transitions]]
+from = "before_attribute_value"
 matcher = { anything = true }
 to = "attribute_value_unquoted"
 actions = ["append_attribute_value(current)"]
@@ -5078,11 +5105,10 @@ actions = [
 [[transitions]]
 from = "after_attribute_value_quoted"
 matcher = { anything = true }
-to = "attribute_name"
+to = "before_attribute_name"
+consume = false
 actions = [
   "parse_error(missing-whitespace-between-attributes)",
-  "start_attribute",
-  "append_attribute_name(current_lowercase)",
 ]
 
 [[transitions]]
@@ -5105,11 +5131,10 @@ actions = [
 [[transitions]]
 from = "self_closing_start_tag"
 matcher = { anything = true }
-to = "attribute_name"
+to = "before_attribute_name"
+consume = false
 actions = [
   "parse_error(unexpected-solidus-in-tag)",
-  "start_attribute",
-  "append_attribute_name(current_lowercase)",
 ]
 
 [[transitions]]

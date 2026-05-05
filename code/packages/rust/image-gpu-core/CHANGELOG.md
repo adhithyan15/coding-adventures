@@ -1,5 +1,39 @@
 # Changelog — image-gpu-core
 
+## 0.3.0 — 2026-05-04
+
+### Added
+
+- **Optional `matrix-metal` backend** behind a default-on `metal-backend`
+  feature.  With the feature enabled, `image-gpu-core` registers both
+  `matrix-cpu` and `matrix-metal` in the runtime and lets the planner
+  pick per graph based on its cost model.  On non-Apple platforms the
+  feature is a no-op (matrix-metal's `local_transport()` returns Err
+  and we transparently fall back to CPU-only dispatch).
+- `pipeline::last_executor()` (re-exported as `image_gpu_core::last_executor`)
+  reports the executor that handled the most recent dispatch on this
+  thread (`"cpu"`, `"metal"`, or `None`).  CLI demos use this to surface
+  which backend ran without changing the public per-op signatures.
+
+### Changed
+
+- `pipeline::run_graph_with_constant_inputs` now plans against the
+  full multi-executor registry when `metal-backend` is enabled, and
+  inspects the resulting `ComputeGraph` for single-executor placement
+  before dispatching.  See `pipeline.rs` for the V1 single-executor
+  dispatch design notes.
+
+### Limitations
+
+- V1 only supports **single-executor placements**: if the planner
+  splits a graph across CPU and Metal (with `Transfer` ops between),
+  we re-plan on a CPU-only registry and run on CPU.  The matrix
+  execution layer's runtime crate doesn't yet ship a multi-executor
+  coordinator that can drive cross-executor dispatch end-to-end —
+  that's V2 work.  In practice the image-filter graphs in this crate
+  are short single-op chains that the planner places homogeneously,
+  so the mixed-placement fallback rarely triggers.
+
 ## 0.2.0 — 2026-05-04
 
 Major migration: backend swapped from `gpu-runtime` (per-backend hand-written

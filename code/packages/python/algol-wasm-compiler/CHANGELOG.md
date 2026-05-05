@@ -92,6 +92,12 @@ All notable changes to this package will be documented in this file.
 - Executed forward sibling procedure calls and mutually recursive typed
   procedures by registering a block's procedure signatures before checking any
   procedure body.
+- Executed switch entries that select later sibling switch declarations,
+  including forward switch lists that use later typed procedure predicates.
+- Executed array bounds that call later sibling typed procedures at block
+  entry.
+- Rejected array bounds that read arrays declared later in the same block while
+  keeping earlier descriptor reads executable.
 - Executed subscripted integer and real array elements as writable `for`
   statement control variables.
 - Rejected formal procedure forwarding when a concrete procedure argument does

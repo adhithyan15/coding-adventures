@@ -206,7 +206,16 @@ def _plan_select(
     # 1. Build the scan / join tree from FROM + JOINs, and the column scope
     #    it exposes. Column resolution later qualifies bare references
     #    against this scope.
-    tree, scope = _build_from_tree(stmt.from_, stmt.joins, schema, working_set=working_set)
+    #
+    #    When from_ is None (SELECT without FROM, e.g. "SELECT 1 + 1"), we
+    #    use a SingleRow leaf — a conceptual one-row, zero-column source that
+    #    causes the SELECT list to be evaluated exactly once.  The scope is
+    #    empty because there are no table columns to reference.
+    if stmt.from_ is None:
+        tree: P.LogicalPlan = P.SingleRow()
+        scope: Scope = {}
+    else:
+        tree, scope = _build_from_tree(stmt.from_, stmt.joins, schema, working_set=working_set)
 
     # 2. WHERE — single Filter above the scan tree. Aggregates are forbidden
     #    inside WHERE (SQL forbids this — WHERE runs per-row before grouping).
@@ -501,6 +510,10 @@ def _source_columns(
     - :class:`P.Project` — recursive call to :func:`_output_columns`.
     - Decorative wrappers (Sort, Limit, Distinct, Having) — transparent.
     """
+    if isinstance(node, P.SingleRow):
+        # No columns — the "dual" row has no fields.
+        return []
+
     if isinstance(node, P.Scan):
         return schema.columns(node.table)
 

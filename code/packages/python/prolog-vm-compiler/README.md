@@ -274,9 +274,24 @@ Use `--values` to print raw answer values, omit `--query` to run a source-level
 `?-` directive by index, and use `--dialect iso` when the ISO parser profile is
 the desired frontend.
 
+Use `--source-stdin` when editor integrations or shell pipelines should provide
+the source through stdin while query selection still comes from flags:
+
+```bash
+cat family.pl | prolog-vm --source-stdin --query "parent(homer, Who)"
+```
+
 Use `--check` to parse, load, compile, and initialize source without running a
 query. This is intended for CI and editor integrations that need to validate a
 Prolog file graph even when it does not contain embedded `?-` directives.
+
+Use `--dump-bytecode` to compile source into Logic bytecode and print the
+loader-bytecode disassembly without executing queries. This is useful when
+diagnosing convergence between the structured VM and the bytecode VM:
+
+```bash
+prolog-vm --source "parent(homer, bart). ?- parent(homer, Who)." --dump-bytecode
+```
 
 Use `--list-source-queries` to inspect embedded `?-` directives before choosing
 what to run. Text output lists the zero-based query index and visible variables;
@@ -286,6 +301,10 @@ Use `--all-source-queries` when a source file contains several embedded `?-`
 queries and the CLI should run them as a script. The command prints or emits
 one result record per source query, sets `source_query_index` in JSON formats,
 and exits nonzero if any embedded query has no answers.
+
+Use `--summary` on non-interactive query runs when scripts, CI jobs, or editor
+integrations need compact totals. Text output appends one summary line, JSONL
+appends a summary record, and JSON wraps result records with summary metadata.
 
 Use `--format json` for a machine-readable result object, or `--format jsonl`
 when repeated queries should stream one result record per line. JSON answers

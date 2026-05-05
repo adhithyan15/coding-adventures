@@ -83,6 +83,59 @@ _SURFACE_CASES = (
         stdout="7",
     ),
     SurfaceCase(
+        name="forward-switch-declaration-visibility",
+        source="""
+            begin
+              integer result;
+              switch outer := if ready() then inner[1] else fail;
+              switch inner := done;
+              boolean procedure ready; begin ready := true end;
+              goto outer[1];
+            fail:
+              result := 0;
+              goto finish;
+            done:
+              result := 13;
+            finish:
+              print('SWITCH ', result)
+            end
+        """,
+        result=[13],
+        stdout="SWITCH 13",
+    ),
+    SurfaceCase(
+        name="forward-array-bound-visibility",
+        source="""
+            begin
+              integer result;
+              integer array a[lower():upper()];
+              integer procedure lower; begin lower := 0 end;
+              integer procedure upper; begin upper := 1 end;
+              a[0] := 5;
+              a[1] := 8;
+              result := a[0] + a[1];
+              print('ARRAY ', result)
+            end
+        """,
+        result=[13],
+        stdout="ARRAY 13",
+    ),
+    SurfaceCase(
+        name="array-bound-declaration-order",
+        source="""
+            begin
+              integer result;
+              integer array b[0:0];
+              integer array a[b[0]:b[0]];
+              a[0] := 21;
+              result := a[0];
+              print('ORDER ', result)
+            end
+        """,
+        result=[21],
+        stdout="ORDER 21",
+    ),
+    SurfaceCase(
         name="for-list-scalar-and-array-control",
         source="""
             begin

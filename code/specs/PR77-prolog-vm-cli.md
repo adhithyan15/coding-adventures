@@ -10,13 +10,16 @@ package for argument parsing.
 The goal is practical usability:
 
 - run inline Prolog source through the structured VM or bytecode VM
+- run Prolog source piped through stdin
 - run a single `.pl` file or linked file graph
 - check that source parses, loads, compiles, and initializes without a query
+- dump Logic bytecode disassembly for compile-only diagnostics
 - list embedded source-level `?-` query indexes and visible variables
 - run stored source-level `?-` queries by index
 - run all stored source-level `?-` queries as an executable script
 - run one or more ad-hoc top-level queries
 - preserve state across repeated queries when explicitly requested
+- emit opt-in run summaries for scripts and CI
 - provide a small stdin-driven interactive loop
 
 ## Public Command
@@ -28,8 +31,12 @@ prolog-vm [OPTIONS] [FILE...]
 Important options:
 
 - `--source SOURCE` loads inline source instead of files.
+- `--source-stdin` reads source text from stdin instead of `--source` or
+  files.
 - `--query QUERY` runs an ad-hoc top-level query. It may be repeated.
 - `--check` parses, loads, compiles, and initializes without running a query.
+- `--dump-bytecode` compiles to Logic bytecode and emits disassembly without
+  executing queries.
 - `--list-source-queries` lists embedded `?-` query indexes and visible
   variables without running them.
 - `--source-query-index INDEX` selects a stored source-level query when no
@@ -41,6 +48,7 @@ Important options:
 - `--backend structured|bytecode` selects the VM backend.
 - `--dialect swi|iso` selects the frontend dialect profile.
 - `--values` prints raw result values instead of named bindings.
+- `--summary` appends compact run totals for non-interactive query execution.
 - `--format text|json|jsonl` selects human text, one JSON document, or
   newline-delimited JSON records.
 - `--commit` persists the first answer state from each ad-hoc query into the
@@ -70,6 +78,19 @@ true.
 Value = saved.
 ```
 
+## Pipeline Source Input
+
+`--source-stdin` reads Prolog source text from stdin before selecting the query
+mode. This lets editors, generated source pipelines, and shell scripts avoid
+temporary files while keeping execution on the same compiled VM path:
+
+```bash
+cat family.pl | prolog-vm --source-stdin --query "parent(homer, Who)"
+```
+
+Because `--interactive` also consumes stdin, the two modes are intentionally
+mutually exclusive.
+
 ## Machine-Readable Output
 
 `--format text` is the default human-facing output. `--format json` emits one
@@ -81,6 +102,11 @@ When `--check` is set, JSON formats emit one success object with `mode:
 "check"`, `source_query_count`, `initialization_query_count`, `backend`, and
 whether initialization ran.
 
+When `--dump-bytecode` is set, text output emits bytecode disassembly lines.
+JSON formats emit one success object with `mode: "bytecode"`, pool counts, an
+`instruction_count`, and structured disassembly `lines`. This mode is
+compile-only and mutually exclusive with query execution modes.
+
 When `--list-source-queries` is set, JSON formats emit one success object with
 `mode: "source_queries"`, `source_query_count`, and a `queries` list containing
 zero-based `index` and visible `variables` metadata for each embedded query.
@@ -88,6 +114,12 @@ zero-based `index` and visible `variables` metadata for each embedded query.
 When `--all-source-queries` is set, each embedded `?-` query produces one result
 object with its `source_query_index`. The process exits with status 1 if any
 source query has no answers, matching repeated ad-hoc query scripts.
+
+When `--summary` is set for non-interactive query execution, text output
+appends one compact line with query, success, failure, and answer totals. JSONL
+appends a final `mode: "summary"` record. JSON wraps result records in an object
+with `results`, `summary`, and aggregate `success` fields so downstream tools
+can consume both details and totals without re-counting.
 
 Each result object includes:
 
@@ -141,7 +173,9 @@ setup phase before entering the top-level loop.
 The CLI test coverage should prove:
 
 - inline source ad-hoc queries through bytecode
+- stdin source ad-hoc and stored source queries
 - query-free compile/check mode
+- bytecode disassembly dump mode
 - source query listing without execution
 - stored source-level queries from files
 - all source-level queries from files and inline source
@@ -150,6 +184,7 @@ The CLI test coverage should prove:
 - no-solution exit behavior
 - JSON and JSONL machine-readable output
 - JSON and JSONL machine-readable diagnostics
+- opt-in query run summaries
 - repeated query scripts with committed runtime state
 - interactive stdin query handling
 - committed setup queries before interactive mode

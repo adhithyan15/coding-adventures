@@ -238,6 +238,121 @@ transfers and (when the same executor is involved) `device_internal_bw`.
 For executor-to-executor transfers, V1 routes through the runtime's host
 memory, so cost is `bytes / source.device_to_host_bw + bytes / dest.host_to_device_bw`.
 
+### Single-executor preference (V1.1)
+
+The greedy cost minimisation in pass 2 is a local rule: for each op,
+pick the cheapest executor *given the current residency map*.  That's
+optimal for one op at a time, but it has a well-known weakness for
+graphs of small ops: it never amortises the up-front transfer cost of
+moving inputs to a faster executor.
+
+#### The pathology
+
+Consider a chain of 10 elementwise F32 ops on a 800×800×4 tensor
+(2.56 MB), with two registered executors:
+
+| | CPU | GPU |
+|---|---|---|
+| `gflops_f32` | 40 | 5000 |
+| `host_to_device_bw` (GB/s) | 100 | 50 |
+| `launch_overhead_ns` | 0 | 5000 |
+
+Per-op compute = `numel(out) / gflops`:
+
+- CPU per op: 640 000 / 40 ≈ 16 000 ns
+- GPU per op: 640 000 / 5000 ≈ 128 ns + 5000 ns launch ≈ 5128 ns
+
+Greedy at op 0 sees:
+
+- CPU: 16 000 ns (no transfer needed — inputs already host-resident)
+- GPU: 5128 ns + transfer (2 560 000 / 50 GB/s) ≈ 5128 + 51 200 ≈ 56 328 ns
+
+Greedy picks CPU.  Op 1's input is now op 0's output, also on CPU.
+Same calculation.  Greedy picks CPU again.  Repeat for all 10 ops.
+
+End-to-end:
+
+- Greedy plan: 10 × 16 000 = **160 000 ns**
+- "Pay the transfer once and stay on GPU": 51 200 + 10 × 5128 = **102 480 ns**
+
+The whole-graph optimum is on GPU, but greedy never sees it because it
+doesn't look past the current op.
+
+#### The fix
+
+Before pass 3, the planner runs an extra mini-pass:
+
+```
+fn single_executor_total(graph, exec_id, registry):
+    # Sum compute_cost for every op as if it ran on exec_id, plus the
+    # one-time transfer-in cost for inputs and constants that start on
+    # CPU and need to move to exec_id.
+    if not all candidates[i].contains(exec_id) for i in graph.ops:
+        return INF                    # can't run the whole graph here
+    total = 0
+    transferred: HashSet<TensorId> = {}      # inputs already moved to exec_id
+    for op in graph.ops:
+        exec = registry[exec_id]
+        total += compute_ns(op, exec)
+        for input in op.inputs():
+            # Charge the transfer once per tensor (not once per op).
+            if !transferred.contains(input)
+              and starts_on_cpu(input)
+              and exec_id != CPU_EXECUTOR:
+                total += transfer_cost_ns(input.bytes, exec.profile, H2D)
+                transferred.insert(input)
+    return total
+
+fn maybe_replace_with_single_executor(graph, greedy_placement, registry):
+    greedy_total = total_cost_for_placement(graph, greedy_placement, registry)
+    best_exec = None
+    best_total = greedy_total
+    for exec in registry.healthy():
+        single_total = single_executor_total(graph, exec.id, registry)
+        if single_total < best_total:
+            best_total = single_total
+            best_exec = exec.id
+    if best_exec.is_some():
+        return [best_exec; graph.ops.len()]      # uniform placement
+    return greedy_placement
+```
+
+That is: try each registered executor as a *uniform* placement candidate.
+If any uniform placement beats the greedy total, replace `placement`
+with the uniform vector.  Pass 3 (transfer insertion) and pass 4
+(lifetime annotation) run unchanged on the new placement.
+
+#### Why this is the right shape
+
+- **Bounded extra work.**  The mini-pass is `O(|executors| × |ops|)` —
+  no worse than the existing greedy.
+- **Capability-safe.**  Uniform placement only competes when the chosen
+  executor is in `candidates[i]` for every op.  Otherwise it's `INF`
+  and can't win.
+- **Conservative.**  We only replace greedy when the uniform alternative
+  is *strictly cheaper*.  In the worst case (graph with capability holes
+  or wildly heterogeneous op costs) this falls back to greedy and the
+  output is identical to V1.0.
+- **No changes to compute-ir, executor-protocol, or the wire format.**
+  Same `ComputeGraph` shape, same `PlacedOp` variants, same `Transfer`
+  semantics.  Only the *contents* of the placement vector change.
+- **Composable with MX05.**  Tiered specialisation operates above the
+  executor surface and can use either a uniform or greedy placement
+  underneath.
+
+#### What this fix does *not* do
+
+- It does not pick a *partial* uniform placement (e.g. "first half of
+  the graph on GPU, last half on CPU").  That would need a more
+  expensive search — left as V2 work.  The greedy fallback already
+  handles capability transitions one op at a time.
+- It does not consider the cost of transferring **outputs** back to
+  host.  V1.0's cost model also omits this (consumers pay it via
+  `DownloadBuffer`), and adding it here would require knowing every
+  consumer's residency expectation, which the planner doesn't see.
+- It does not refit the cost numbers (`gflops_f32`, `launch_overhead_ns`,
+  etc.).  Those stay calibrated per backend exactly as in V1.0.
+
 ### Worked example (the example from MX00)
 
 A 4096x4096 f32 matmul with both inputs in host memory:

@@ -162,5 +162,9 @@ class TestLike:
         assert like_match("", "%") is True
         assert like_match("a", "") is False
 
-    def test_case_sensitive(self) -> None:
-        assert like_match("Abc", "abc") is False
+    def test_case_insensitive(self) -> None:
+        # SQL standard (and SQLite default): LIKE is case-insensitive for ASCII.
+        assert like_match("Abc", "abc") is True
+        assert like_match("ABC", "abc") is True
+        assert like_match("abc", "ABC") is True
+        assert like_match("Hello", "HELLO%") is True

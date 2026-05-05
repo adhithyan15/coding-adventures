@@ -18,6 +18,7 @@ from cli_builder import (
     ParseResult,
     VersionResult,
 )
+from logic_bytecode import LogicBytecodeProgram, disassemble, disassemble_text
 from logic_engine import Atom, Compound, Disequality, LogicVar, Number, String, Term
 
 from prolog_vm_compiler.compiler import (
@@ -28,6 +29,7 @@ from prolog_vm_compiler.compiler import (
     compile_prolog_file,
     compile_prolog_project_from_files,
     compile_prolog_source,
+    compile_prolog_to_bytecode,
     create_prolog_file_runtime,
     create_prolog_project_file_runtime,
     create_prolog_source_vm_runtime,
@@ -59,6 +61,7 @@ class CliArgs:
     source: str | None
     queries: tuple[str, ...]
     check: bool
+    dump_bytecode: bool
     list_source_queries: bool
     source_query_index: int
     all_source_queries: bool
@@ -67,6 +70,7 @@ class CliArgs:
     dialect: CliDialect
     backend: PrologVMBackend
     values: bool
+    summary: bool
     output_format: CliOutputFormat
     commit: bool
     interactive: bool
@@ -131,6 +135,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     queries = _string_tuple(flags["query"])
     query_module = _optional_string(flags["query-module"])
     limit = _optional_int(flags["limit"])
+    source_stdin = bool(flags["source-stdin"])
     source_query_index = _required_int(
         flags["source-query-index"],
         name="--source-query-index",
@@ -142,11 +147,23 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if source is not None and files:
         msg = "--source cannot be combined with file paths"
         raise ValueError(msg)
+    if source_stdin and source is not None:
+        msg = "--source-stdin cannot be combined with --source"
+        raise ValueError(msg)
+    if source_stdin and files:
+        msg = "--source-stdin cannot be combined with file paths"
+        raise ValueError(msg)
+    if source_stdin and bool(flags["interactive"]):
+        msg = "--source-stdin cannot be combined with --interactive"
+        raise ValueError(msg)
+    if source_stdin:
+        source = sys.stdin.read()
     if source is None and not files:
         msg = "provide --source or at least one Prolog file"
         raise ValueError(msg)
     all_source_queries = bool(flags["all-source-queries"])
     check = bool(flags["check"])
+    dump_bytecode = bool(flags["dump-bytecode"])
     list_source_queries = bool(flags["list-source-queries"])
     if check and queries:
         msg = "--check cannot be combined with --query"
@@ -156,6 +173,21 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     if check and bool(flags["interactive"]):
         msg = "--check cannot be combined with --interactive"
+        raise ValueError(msg)
+    if dump_bytecode and queries:
+        msg = "--dump-bytecode cannot be combined with --query"
+        raise ValueError(msg)
+    if dump_bytecode and check:
+        msg = "--dump-bytecode cannot be combined with --check"
+        raise ValueError(msg)
+    if dump_bytecode and list_source_queries:
+        msg = "--dump-bytecode cannot be combined with --list-source-queries"
+        raise ValueError(msg)
+    if dump_bytecode and all_source_queries:
+        msg = "--dump-bytecode cannot be combined with --all-source-queries"
+        raise ValueError(msg)
+    if dump_bytecode and bool(flags["interactive"]):
+        msg = "--dump-bytecode cannot be combined with --interactive"
         raise ValueError(msg)
     if list_source_queries and queries:
         msg = "--list-source-queries cannot be combined with --query"
@@ -169,6 +201,16 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     if list_source_queries and bool(flags["interactive"]):
         msg = "--list-source-queries cannot be combined with --interactive"
         raise ValueError(msg)
+    summary = bool(flags["summary"])
+    if summary and check:
+        msg = "--summary cannot be combined with --check"
+        raise ValueError(msg)
+    if summary and list_source_queries:
+        msg = "--summary cannot be combined with --list-source-queries"
+        raise ValueError(msg)
+    if summary and bool(flags["interactive"]):
+        msg = "--summary cannot be combined with --interactive"
+        raise ValueError(msg)
     if all_source_queries and queries:
         msg = "--all-source-queries cannot be combined with --query"
         raise ValueError(msg)
@@ -181,6 +223,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         source=source,
         queries=queries,
         check=check,
+        dump_bytecode=dump_bytecode,
         list_source_queries=list_source_queries,
         source_query_index=source_query_index,
         all_source_queries=all_source_queries,
@@ -189,6 +232,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         dialect=_dialect(_required_string(flags["dialect"], name="--dialect")),
         backend=_backend(_required_string(flags["backend"], name="--backend")),
         values=bool(flags["values"]),
+        summary=summary,
         output_format=_output_format(
             _required_string(flags["format"], name="--format"),
         ),
@@ -321,6 +365,8 @@ def _required_int(value: object, *, name: str) -> int:
 def _run_cli(args: CliArgs) -> int:
     if args.check:
         return _run_check(args)
+    if args.dump_bytecode:
+        return _run_dump_bytecode(args)
     if args.list_source_queries:
         return _run_list_source_queries(args)
 
@@ -362,6 +408,13 @@ def _run_check(args: CliArgs) -> int:
     return 0
 
 
+def _run_dump_bytecode(args: CliArgs) -> int:
+    compiled_program = _compile_source_program(args)
+    bytecode = compile_prolog_to_bytecode(compiled_program)
+    _print_bytecode_dump(bytecode, args=args)
+    return 0
+
+
 def _run_list_source_queries(args: CliArgs) -> int:
     compiled_program = _compile_source_program(args)
     _print_source_query_summary(compiled_program, args=args)
@@ -398,6 +451,41 @@ def _print_source_query_summary(
         "mode": "source_queries",
         "source_query_count": compiled_program.source_query_count,
         "queries": query_summaries,
+    }
+    print(json.dumps(payload, sort_keys=True), file=output)
+
+
+def _print_bytecode_dump(
+    bytecode: LogicBytecodeProgram,
+    *,
+    args: CliArgs,
+    stdout: TextIO | None = None,
+) -> None:
+    output = sys.stdout if stdout is None else stdout
+    if args.output_format == "text":
+        text = disassemble_text(bytecode)
+        if text:
+            print(text, file=output)
+        return
+
+    lines = [
+        {
+            "index": line.index,
+            "opcode": line.opcode,
+            "operand": line.operand,
+            "comment": line.comment,
+        }
+        for line in disassemble(bytecode)
+    ]
+    payload = {
+        "success": True,
+        "mode": "bytecode",
+        "instruction_count": len(bytecode.instructions),
+        "relation_pool_count": len(bytecode.relation_pool),
+        "fact_pool_count": len(bytecode.fact_pool),
+        "rule_pool_count": len(bytecode.rule_pool),
+        "query_pool_count": len(bytecode.query_pool),
+        "lines": lines,
     }
     print(json.dumps(payload, sort_keys=True), file=output)
 
@@ -686,16 +774,64 @@ def _print_result_records(
                 values=args.values,
                 stdout=output,
             )
+        if args.summary:
+            _print_summary_text(_summary_record(records), stdout=output)
         return
 
     json_records = [_json_record(record) for record in records]
     if args.output_format == "jsonl" or streaming:
         for record in json_records:
             print(json.dumps(record, sort_keys=True), file=output)
+        if args.summary:
+            print(json.dumps(_summary_record(records), sort_keys=True), file=output)
         return
 
     payload: object = json_records[0] if len(json_records) == 1 else json_records
+    if args.summary:
+        payload = {
+            "results": json_records,
+            "summary": _summary_record(records),
+            "success": all(bool(record["success"]) for record in records),
+        }
     print(json.dumps(payload, sort_keys=True), file=output)
+
+
+def _summary_record(records: Sequence[dict[str, object]]) -> dict[str, object]:
+    query_count = len(records)
+    failed_query_count = sum(1 for record in records if not bool(record["success"]))
+    answer_count = sum(
+        len(
+            cast(
+                "list[PrologAnswer] | list[Term | tuple[Term, ...]]",
+                record["results"],
+            ),
+        )
+        for record in records
+    )
+    return {
+        "success": failed_query_count == 0,
+        "mode": "summary",
+        "query_count": query_count,
+        "succeeded_query_count": query_count - failed_query_count,
+        "failed_query_count": failed_query_count,
+        "answer_count": answer_count,
+    }
+
+
+def _print_summary_text(
+    summary: dict[str, object],
+    *,
+    stdout: TextIO | None = None,
+) -> None:
+    output = sys.stdout if stdout is None else stdout
+    print(
+        "summary: "
+        f"queries={summary['query_count']}, "
+        f"succeeded={summary['succeeded_query_count']}, "
+        f"failed={summary['failed_query_count']}, "
+        f"answers={summary['answer_count']}.",
+        file=output,
+    )
 
 
 def _result_record(

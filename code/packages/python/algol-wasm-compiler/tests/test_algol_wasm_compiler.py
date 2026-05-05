@@ -931,6 +931,20 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
 
+    def test_forward_switch_declaration_entry_dispatches_through_later_switch(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "switch outer := inner[1]; "
+            "switch inner := done; "
+            "goto outer[1]; "
+            "result := 99; "
+            "done: result := 5 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
+
     def test_self_recursive_switch_selection_entry_dispatches_at_runtime(
         self,
     ) -> None:
@@ -1820,6 +1834,36 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_forward_procedure_calls_in_array_bounds_execute(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer array a[lower():upper()]; "
+            "integer procedure lower; begin lower := 0 end; "
+            "integer procedure upper; begin upper := 0 end; "
+            "a[0] := 5; result := a[0] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
+
+    def test_prior_array_accesses_in_array_bounds_execute(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer array b[1:1]; integer array a[b[1]:b[1]]; "
+            "a[0] := 9; result := a[0] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
+
+    def test_later_array_accesses_in_array_bounds_are_rejected(self) -> None:
+        with pytest.raises(AlgolWasmError) as excinfo:
+            compile_source(
+                "begin integer result; integer array a[b[1]:b[1]]; "
+                "integer array b[1:1]; result := 0 end"
+            )
+
+        assert excinfo.value.stage == "type-check"
+        assert "before its descriptor is allocated" in excinfo.value.message
 
     def test_procedure_body_sees_later_block_declarations(self) -> None:
         result = compile_source(

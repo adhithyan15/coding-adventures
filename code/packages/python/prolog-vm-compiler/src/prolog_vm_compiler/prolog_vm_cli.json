@@ -17,6 +17,12 @@
       "value_name": "SOURCE"
     },
     {
+      "id": "source-stdin",
+      "long": "source-stdin",
+      "description": "Read Prolog source text from stdin instead of --source or file paths.",
+      "type": "boolean"
+    },
+    {
       "id": "query",
       "long": "query",
       "description": "Ad-hoc top-level query to run; may be repeated for a stateful query script.",
@@ -28,6 +34,12 @@
       "id": "check",
       "long": "check",
       "description": "Parse, load, compile, and optionally initialize without running a query.",
+      "type": "boolean"
+    },
+    {
+      "id": "dump-bytecode",
+      "long": "dump-bytecode",
+      "description": "Compile source to Logic bytecode and print disassembly without running queries.",
       "type": "boolean"
     },
     {
@@ -86,6 +98,12 @@
       "id": "values",
       "long": "values",
       "description": "Print raw answer values instead of named variable bindings.",
+      "type": "boolean"
+    },
+    {
+      "id": "summary",
+      "long": "summary",
+      "description": "Emit a final query-run summary after non-interactive execution.",
       "type": "boolean"
     },
     {

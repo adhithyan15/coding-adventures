@@ -103,6 +103,8 @@ documented in this file.
 - Unquoted attribute values now preserve unexpected characters such as `"`,
   `'`, `<`, `=`, and `` ` `` while reporting
   `unexpected-character-in-unquoted-attribute-value`.
+- Unexpected `<`, `=`, and `` ` `` characters immediately after an attribute
+  `=` now use the same unquoted attribute-value diagnostic recovery.
 - NULL characters in data/RCDATA/RAWTEXT/PLAINTEXT/CDATA/script data and
   attribute values now recover with `unexpected-null-character` and append
   U+FFFD.
@@ -190,6 +192,12 @@ documented in this file.
   after reporting EOF-in-tag diagnostics.
 - EOF inside attribute character-reference substates now also drops the partial
   start tag after preserving the relevant reference diagnostics.
+- Unexpected solidus recovery in start tags now reconsumes in
+  `before_attribute_name`, preserving attributes after malformed slash-space or
+  slash-NULL sequences.
+- Missing-whitespace recovery after quoted attribute values now reconsumes in
+  `before_attribute_name`, preserving jammed attributes while still reporting
+  secondary `=` or NULL attribute-name diagnostics.
 - Added a WHATWG operator/shape named-reference batch covering circled
   operators, integrals, products, squares, lozenges, stars, suits, and symbols.
 - Added a WHATWG box-drawing named-reference batch covering double-line,

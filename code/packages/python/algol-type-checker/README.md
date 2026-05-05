@@ -46,7 +46,11 @@ own bodies still resolve as storage.
 Integer array declarations receive descriptor slots in their declaring frame,
 dimension metadata for lower/upper bound expressions, and resolved read/write
 accesses that preserve the static-link delta and subscript count needed by the
-IR and WASM lowering stages.
+IR and WASM lowering stages. Array bound expressions are checked after the
+block's declaration signatures are registered, so bounds can call later sibling
+typed procedures in the same declaration part; direct array reads in bounds
+are still limited to descriptors already allocated earlier in declaration
+order.
 Labels receive stable label descriptors and direct local `goto`/`go to` statements
 resolve to those descriptors. Direct nonlocal block `goto` statements resolve
 to outer active blocks, and procedure-crossing transfers resolve to pending
@@ -54,7 +58,8 @@ label ids that later lowering can propagate through calls. Switch declarations
 receive stable descriptors whose entries point at checked designational
 expressions, including entries that target labels in lexical parent blocks, and
 switch selection use sites resolve to their chosen switch symbol, including
-recursive self-selection inside switch entries.
+later sibling switch declarations and recursive self-selection inside switch
+entries.
 
 Unsupported ALGOL 60 features are reported as diagnostics instead of being
 silently accepted by the compiled pipeline. By-name parameters are accepted in

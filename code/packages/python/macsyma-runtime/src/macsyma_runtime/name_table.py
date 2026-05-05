@@ -20,13 +20,25 @@ from __future__ import annotations
 from symbolic_ir import (
     APPLY1,
     APPLY2,
+    BETA_FUNC,
+    CHI,
+    CI,
     DEFRULE,
     DIRAC_DELTA,
+    ERF,
+    ERFC,
+    ERFI,
     FOURIER,
+    FRESNEL_C,
+    FRESNEL_S,
+    GAMMA_FUNC,
     IFOURIER,
     ILT,
     LAPLACE,
+    LI2,
     MATCHDECLARE,
+    SHI,
+    SI,
     TELLSIMP,
     UNIT_STEP,
     IRSymbol,
@@ -277,6 +289,24 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "apply1": APPLY1,
     "apply2": APPLY2,
     "tellsimp": TELLSIMP,
+    # Special functions (Phase 23)
+    # Error functions: erf(x), erfc(x), erfi(x)
+    "erf": ERF,
+    "erfc": ERFC,
+    "erfi": ERFI,
+    # Trigonometric integrals: si(x), ci(x), shi(x), chi(x)
+    "si": SI,
+    "ci": CI,
+    "shi": SHI,
+    "chi": CHI,
+    # Dilogarithm: li2(x) (MACSYMA syntax; also li[2](x) but not parsed here)
+    "li2": LI2,
+    # Gamma and Beta functions: gamma(n), beta(a, b)
+    "gamma": GAMMA_FUNC,
+    "beta": BETA_FUNC,
+    # Fresnel integrals: fresnel_s(x), fresnel_c(x)
+    "fresnel_s": FRESNEL_S,
+    "fresnel_c": FRESNEL_C,
 }
 
 

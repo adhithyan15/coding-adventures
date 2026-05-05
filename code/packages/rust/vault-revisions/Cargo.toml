@@ -1,0 +1,7 @@
+[package]
+name = "coding_adventures_vault_revisions"
+version = "0.1.0"
+edition = "2021"
+description = "VLT12 — revision history for the Vault stack. Every `put` archives the prior ciphertext to a sibling history list; `restore(ns, key, rev)` brings back an old revision as a new write. Per-namespace retention policy. RevisionStore trait + InMemoryRevisionStore reference. Ciphertext-only at the storage layer (sealing happens above)."
+
+[dependencies]

@@ -47,6 +47,13 @@ All notable changes to this package will be documented in this file.
 - Registered all procedure signatures in a block before checking procedure
   bodies, allowing forward sibling procedure calls and mutually recursive
   typed procedures.
+- Registered switch names before checking switch designational lists, allowing
+  switch entries to target later sibling switch declarations in the same block.
+- Deferred array-bound expression checking until after sibling declaration
+  registration, allowing bounds to call later typed procedures in the same
+  block.
+- Rejected array bound expressions that read an array declared later in the
+  same block, preserving declaration-order descriptor allocation semantics.
 - Accepted integer-returning procedure actuals for real-valued formal
   procedure parameters, matching scalar integer-to-real promotion.
 - Accepted switch declaration entries that target labels in lexical parent

@@ -1,5 +1,49 @@
 # Changelog
 
+## [1.20.0] - 2026-05-04
+
+### Added — SQLite convergence (parser + runtime)
+
+This release closes four parser-level gaps between mini-sqlite and real SQLite,
+plus two correctness fixes in the shared VM runtime.
+
+**SELECT without FROM** (`sql.grammar`, `sql-planner`, `sql-codegen`, `adapter.py`):
+- The FROM clause is now optional in the grammar (`select_stmt`).
+- The planner emits `SingleRow()` when `from_` is `None`; the codegen runs
+  the body exactly once with no cursor loop, no AdvanceCursor, no CloseScan.
+- `SELECT 1`, `SELECT UPPER('hello')`, `SELECT 1 + 1 WHERE 1 = 1` all work.
+
+**CAST(expr AS type)** (`sql.grammar`, `sql.tokens`, `adapter.py`):
+- `CAST` is now a grammar keyword with its own `cast_expr` rule so the `AS`
+  inside it is never confused with a column alias.
+- Adapter maps `cast_expr` to the existing `cast` scalar function
+  (`FunctionCall(name='cast', args=[expr, Literal(type_name)])`).
+
+**Table alias without AS** (`sql.grammar`, `adapter.py`):
+- `FROM employees e` now accepted in addition to `FROM employees AS e`.
+- Bare-NAME alias detection uses a `saw_table_name` flag to avoid eating
+  SQL keywords (WHERE, JOIN, ON …) as alias names.
+
+**GLOB operator** (`sql.grammar`, `sql.tokens`, `adapter.py`, `sql-vm`):
+- `name GLOB '*.py'` and `name NOT GLOB '*.py'` are now supported.
+- Compiles to `FunctionCall(name='glob', args=[pattern, string])` in the
+  `glob(pattern, string)` argument order matching SQLite's C API.
+- New `glob` scalar function in `sql-vm` using `fnmatch.fnmatchcase` for
+  case-sensitive Unix-style pattern matching.
+
+**Plain JOIN (= INNER JOIN)** (`sql.grammar`, `adapter.py`):
+- `join_type` is now optional in `join_clause`; a bare `JOIN` keyword
+  defaults to `JoinKind.INNER`.
+
+### Fixed
+
+- **LIKE is now case-insensitive** (`sql-vm`) — ANSI SQL and SQLite both
+  treat LIKE as case-insensitive by default for ASCII. `like_match` now
+  folds both value and pattern to lowercase before the DP comparison.
+- **`JumpIfFalse`/`JumpIfTrue` use SQL truthiness** (`sql-vm`) — previously
+  only Python `False` was treated as falsy; now `0`, `0.0`, and `None` are
+  also falsy, fixing GLOB (which returns int 0/1) in WHERE clauses.
+
 ## [1.19.0] - 2026-05-04
 
 ### Added

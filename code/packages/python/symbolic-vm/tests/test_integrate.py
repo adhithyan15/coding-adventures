@@ -277,7 +277,7 @@ def test_integrate_non_symbol_variable_unevaluated(vm: VM) -> None:
 
 
 def test_integrate_wrong_arity_raises(vm: VM) -> None:
-    with pytest.raises(TypeError, match="Integrate expects 2 arguments"):
+    with pytest.raises(TypeError, match="Integrate expects 2 or 4 arguments"):
         vm.eval(IRApply(INTEGRATE, (X,)))
 
 

@@ -15,14 +15,17 @@ This first slice intentionally starts small:
 - adjacent text merging
 - implied document shell creation for omitted `html`, `head`, and `body`
 - implied table `tbody` and `tr` creation for common omitted table structure
-- table caption/column-group boundary recovery before rows and sections
+- implied table `colgroup` creation for bare `col` elements
+- table caption/column-group boundary recovery before bare columns, rows, and
+  sections
 - parser-controlled lexer handoff for `title`, `textarea`, RAWTEXT elements,
   `script`, and `plaintext`
 - parser options for scripting-sensitive tokenizer handoff, including
   `noscript`
 - parser-approved initial tokenizer contexts for data-state documents and
   foreign-content CDATA or script-state fragments
-- simple implied end tags for `p`, `li`, `dt`, and `dd`
+- simple implied end tags for `p`, `li`, `dt`, `dd`, `option`, `optgroup`,
+  and heading elements
 - parser diagnostics for unmatched end tags
 
 Future batches can layer the full WHATWG HTML tree-construction insertion modes

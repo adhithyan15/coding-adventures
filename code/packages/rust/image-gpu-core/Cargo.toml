@@ -1,8 +1,8 @@
 [package]
 name = "image-gpu-core"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
-description = "IMG06: image-domain library built on the matrix execution layer (MX01–MX04). Each operation is a MatrixIR graph dispatched through matrix-runtime to matrix-cpu (or any future GPU executor). Public API unchanged from v0.1; backend swapped from gpu-runtime to matrix-{ir,runtime,cpu}."
+description = "IMG06: image-domain library built on the matrix execution layer (MX01–MX04). Each operation is a MatrixIR graph dispatched through matrix-runtime; v0.3 wires the optional matrix-metal GPU backend behind a default-on feature flag, with transparent fallback to matrix-cpu on non-Apple targets."
 
 [dependencies]
 matrix-ir         = { path = "../matrix-ir" }
@@ -11,6 +11,19 @@ matrix-runtime    = { path = "../matrix-runtime" }
 matrix-cpu        = { path = "../matrix-cpu" }
 executor-protocol = { path = "../executor-protocol" }
 pixel-container   = { path = "../pixel-container" }
+# Optional GPU backend.  Only meaningful on Apple targets; on other
+# platforms matrix-metal still compiles (its public surface is identical)
+# but `MetalExecutor::new` returns Err, so we transparently fall back to
+# matrix-cpu.  The feature is default-on so a plain `cargo build` picks
+# up the GPU automatically when available.
+matrix-metal      = { path = "../matrix-metal", optional = true }
+
+[features]
+default = ["metal-backend"]
+# When enabled, image-gpu-core registers `matrix-metal` alongside
+# `matrix-cpu` and lets the planner pick per graph.  Disable to force
+# CPU-only dispatch (useful for benchmarks isolating the CPU path).
+metal-backend = ["dep:matrix-metal"]
 
 [dev-dependencies]
 image-point-ops = { path = "../image-point-ops" }

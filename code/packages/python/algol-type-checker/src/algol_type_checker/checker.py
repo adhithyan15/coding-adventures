@@ -396,6 +396,36 @@ class SwitchDescriptor:
 
 
 @dataclass(frozen=True)
+class _PendingSwitchDeclaration:
+    """A switch name whose designational list still needs semantic checking."""
+
+    switch_id: int
+    name: str
+    scope: Scope
+    symbol_id: int
+    entries: tuple[ASTNode, ...]
+    line: int
+    column: int
+
+
+@dataclass(frozen=True)
+class _PendingArrayBounds:
+    """Array bound expressions to check after sibling declarations are visible."""
+
+    scope: Scope
+    bounds: tuple[_PendingArrayBoundPair, ...]
+
+
+@dataclass(frozen=True)
+class _PendingArrayBoundPair:
+    """One array dimension bound pair plus arrays allocated before it."""
+
+    lower: ASTNode
+    upper: ASTNode
+    visible_array_ids: frozenset[int]
+
+
+@dataclass(frozen=True)
 class ResolvedSwitchSelection:
     """A switch subscript occurrence after semantic lookup."""
 
@@ -569,12 +599,30 @@ class AlgolTypeChecker:
             if child.rule_name == "statement":
                 self._collect_statement_labels(child, scope)
 
+        pending_array_bounds: list[_PendingArrayBounds] = []
+        pending_switches: list[_PendingSwitchDeclaration] = []
         pending_procedures: list[_PendingProcedureDeclaration] = []
         for child in _node_children(block):
             if child.rule_name == "declaration":
-                pending = self._check_declaration(child, scope)
+                inner = _first_ast_child(child)
+                if inner is not None and inner.rule_name == "switch_decl":
+                    pending = self._register_switch_declaration(inner, scope)
+                    if pending is not None:
+                        pending_switches.append(pending)
+                    continue
+                pending = self._check_declaration(
+                    child,
+                    scope,
+                    pending_array_bounds=pending_array_bounds,
+                )
                 if pending is not None:
                     pending_procedures.append(pending)
+
+        for pending in pending_array_bounds:
+            self._check_pending_array_bounds(pending)
+
+        for pending in pending_switches:
+            self._check_pending_switch_declaration(pending)
 
         self._resolve_pending_procedure_write_reasons(pending_procedures)
 
@@ -630,6 +678,8 @@ class AlgolTypeChecker:
         self,
         declaration: ASTNode,
         scope: Scope,
+        *,
+        pending_array_bounds: list[_PendingArrayBounds] | None = None,
     ) -> _PendingProcedureDeclaration | None:
         inner = _first_ast_child(declaration)
         if inner is None:
@@ -640,13 +690,31 @@ class AlgolTypeChecker:
             self._check_scalar_declaration(inner, scope, storage_class=STATIC)
             return None
         if inner.rule_name == "own_array_decl":
-            self._check_array_declaration(inner, scope, storage_class=STATIC)
+            pending = self._register_array_declaration(
+                inner,
+                scope,
+                storage_class=STATIC,
+            )
+            if pending_array_bounds is None:
+                self._check_pending_array_bounds(pending)
+            else:
+                pending_array_bounds.append(pending)
             return None
         if inner.rule_name == "array_decl":
-            self._check_array_declaration(inner, scope, storage_class="frame")
+            pending = self._register_array_declaration(
+                inner,
+                scope,
+                storage_class="frame",
+            )
+            if pending_array_bounds is None:
+                self._check_pending_array_bounds(pending)
+            else:
+                pending_array_bounds.append(pending)
             return None
         if inner.rule_name == "switch_decl":
-            self._check_switch_declaration(inner, scope)
+            pending = self._register_switch_declaration(inner, scope)
+            if pending is not None:
+                self._check_pending_switch_declaration(pending)
             return None
         if inner.rule_name != "type_decl":
             self._error(inner, f"{inner.rule_name} declarations are not supported yet")
@@ -707,13 +775,13 @@ class AlgolTypeChecker:
         symbol.slot_size = FRAME_WORD_SIZE
         self._next_static_offset += FRAME_WORD_SIZE
 
-    def _check_array_declaration(
+    def _register_array_declaration(
         self,
         node: ASTNode,
         scope: Scope,
         *,
         storage_class: str,
-    ) -> None:
+    ) -> _PendingArrayBounds:
         type_node = _first_direct_node(node, "type")
         element_type = (
             _first_keyword_value(type_node) if type_node is not None else REAL
@@ -723,8 +791,9 @@ class AlgolTypeChecker:
                 node,
                 f"{element_type} arrays are not supported yet",
             )
-            return
+            return _PendingArrayBounds(scope=scope, bounds=())
 
+        pending_bounds: list[_PendingArrayBoundPair] = []
         for segment in _direct_nodes(node, "array_segment"):
             bound_pairs = _direct_nodes(segment, "bound_pair")
             if not bound_pairs:
@@ -739,19 +808,27 @@ class AlgolTypeChecker:
                 continue
 
             dimensions: list[ArrayDimension] = []
+            visible_array_ids = frozenset(
+                array.array_id for array in self.semantic_arrays
+            )
             for bound_pair in bound_pairs:
                 bounds = _direct_nodes(bound_pair, "arith_expr")
                 if len(bounds) != 2:
                     self._error(bound_pair, "array bounds must be lower:upper pairs")
                     continue
-                for bound in bounds:
-                    bound_type = self._infer_expr(bound, scope)
-                    if bound_type != ERROR and bound_type != INTEGER:
-                        self._error(bound, "array bounds must be integer")
+                lower_bound = bounds[0]
+                upper_bound = bounds[1]
+                pending_bounds.append(
+                    _PendingArrayBoundPair(
+                        lower=lower_bound,
+                        upper=upper_bound,
+                        visible_array_ids=visible_array_ids,
+                    )
+                )
                 dimensions.append(
                     ArrayDimension(
-                        lower_node_id=id(bounds[0]),
-                        upper_node_id=id(bounds[1]),
+                        lower_node_id=id(lower_bound),
+                        upper_node_id=id(upper_bound),
                     )
                 )
 
@@ -800,15 +877,35 @@ class AlgolTypeChecker:
                         column=name_token.column,
                     )
                 )
+        return _PendingArrayBounds(scope=scope, bounds=tuple(pending_bounds))
 
-    def _check_switch_declaration(self, node: ASTNode, scope: Scope) -> None:
+    def _check_pending_array_bounds(self, pending: _PendingArrayBounds) -> None:
+        for pair in pending.bounds:
+            for bound in (pair.lower, pair.upper):
+                previous_access_count = len(self.resolved_array_accesses)
+                bound_type = self._infer_expr(bound, pending.scope)
+                if bound_type != ERROR and bound_type != INTEGER:
+                    self._error(bound, "array bounds must be integer")
+                for access in self.resolved_array_accesses[previous_access_count:]:
+                    if access.array_id not in pair.visible_array_ids:
+                        self._error(
+                            bound,
+                            f"array bound cannot read array {access.name!r} "
+                            "before its descriptor is allocated",
+                        )
+
+    def _register_switch_declaration(
+        self,
+        node: ASTNode,
+        scope: Scope,
+    ) -> _PendingSwitchDeclaration | None:
         name_token = next(
             (token for token in _direct_tokens(node) if token.type_name == "NAME"),
             None,
         )
         if name_token is None:
             self._error(node, "switch declaration is missing a name")
-            return
+            return None
 
         switch_id = self._next_switch_id
         self._next_switch_id += 1
@@ -828,7 +925,7 @@ class AlgolTypeChecker:
                 name_token,
                 f"{name_token.value!r} is already declared in this scope",
             )
-            return
+            return None
         self._next_symbol_id += 1
         self.semantic_symbols.append(symbol)
 
@@ -836,24 +933,38 @@ class AlgolTypeChecker:
         entries = _direct_nodes(switch_list, "desig_expr")
         if not entries:
             self._error(node, "switch declaration requires at least one entry")
-            return
-        for entry in entries:
+            return None
+        return _PendingSwitchDeclaration(
+            switch_id=switch_id,
+            name=name_token.value,
+            scope=scope,
+            symbol_id=symbol.symbol_id,
+            entries=tuple(entries),
+            line=name_token.line,
+            column=name_token.column,
+        )
+
+    def _check_pending_switch_declaration(
+        self,
+        pending: _PendingSwitchDeclaration,
+    ) -> None:
+        for entry in pending.entries:
             self._check_designational(
                 entry,
-                scope,
+                pending.scope,
                 allow_nonlocal_label=True,
                 allow_switch_selection=True,
-                active_switch_id=switch_id,
+                active_switch_id=pending.switch_id,
             )
         self.semantic_switches.append(
             SwitchDescriptor(
-                switch_id=switch_id,
-                name=name_token.value,
-                declaring_block_id=scope.block_id,
-                symbol_id=symbol.symbol_id,
-                entry_node_ids=tuple(id(entry) for entry in entries),
-                line=name_token.line,
-                column=name_token.column,
+                switch_id=pending.switch_id,
+                name=pending.name,
+                declaring_block_id=pending.scope.block_id,
+                symbol_id=pending.symbol_id,
+                entry_node_ids=tuple(id(entry) for entry in pending.entries),
+                line=pending.line,
+                column=pending.column,
             )
         )
 

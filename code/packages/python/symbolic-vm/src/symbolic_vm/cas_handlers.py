@@ -146,8 +146,10 @@ from symbolic_ir import (
     MUL,
     NEG,
     POW,
+    SQRT,
     SUB,
     IRApply,
+    IRFloat,
     IRInteger,
     IRNode,
     IRRational,
@@ -158,6 +160,39 @@ from symbolic_vm.backend import Handler
 from symbolic_vm.derivative import _diff as _symbolic_diff
 from symbolic_vm.numeric import from_number, to_number
 from symbolic_vm.polynomial_bridge import from_polynomial, to_rational
+from symbolic_vm.special_functions import (
+    beta_eval as _beta_eval,
+)
+from symbolic_vm.special_functions import (
+    chi_numeric as _chi_numeric,
+)
+from symbolic_vm.special_functions import (
+    ci_numeric as _ci_numeric,
+)
+from symbolic_vm.special_functions import (
+    erf_numeric as _erf_numeric,
+)
+from symbolic_vm.special_functions import (
+    erfi_numeric as _erfi_numeric,
+)
+from symbolic_vm.special_functions import (
+    fresnel_c_numeric as _fresnel_c_numeric,
+)
+from symbolic_vm.special_functions import (
+    fresnel_s_numeric as _fresnel_s_numeric,
+)
+from symbolic_vm.special_functions import (
+    gamma_eval as _gamma_eval,
+)
+from symbolic_vm.special_functions import (
+    li2_numeric as _li2_numeric,
+)
+from symbolic_vm.special_functions import (
+    shi_numeric as _shi_numeric,
+)
+from symbolic_vm.special_functions import (
+    si_numeric as _si_numeric,
+)
 
 if TYPE_CHECKING:
     from symbolic_vm.vm import VM
@@ -2249,6 +2284,257 @@ def at_handler(vm: VM, expr: IRApply) -> IRNode:
 # ===========================================================================
 
 
+# ---------------------------------------------------------------------------
+# Phase 23 — Special function handlers
+# ---------------------------------------------------------------------------
+
+_PI_SYM = IRSymbol("%pi")
+
+
+def _is_zero(node: IRNode) -> bool:
+    """True iff *node* is the integer 0."""
+    return isinstance(node, IRInteger) and node.value == 0
+
+
+def _to_float(node: IRNode) -> float | None:
+    """Return a Python float if *node* is a numeric literal, else None."""
+    if isinstance(node, IRInteger):
+        return float(node.value)
+    if isinstance(node, IRRational):
+        return node.numer / node.denom
+    if isinstance(node, IRFloat):
+        return node.value
+    return None
+
+
+def gamma_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate GammaFunc(z) — Euler's Gamma function.
+
+    Exact results:
+      - Positive integer n: (n−1)!
+      - Half-integer n + 1/2: expressed via √π and rationals.
+
+    Float argument: Lanczos approximation (accurate to ~13 significant
+    figures).  Returns the unevaluated GammaFunc(z) for symbolic z.
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+
+    # ── Positive integer: Γ(n) = (n−1)! ────────────────────────────────────
+    if isinstance(arg, IRInteger) and arg.value >= 1:
+        import math
+        return IRInteger(math.factorial(arg.value - 1))
+
+    # ── Half-integer Γ(1/2) = √π ────────────────────────────────────────────
+    if isinstance(arg, IRRational) and arg.denom == 2 and arg.numer >= 1:
+        # Γ(1/2) = √π, Γ(3/2) = √π/2, Γ(5/2) = 3√π/4, Γ(7/2) = 15√π/8 …
+        # General: Γ(n + 1/2) = (2n−1)!! / 2^n · √π, n = (numer−1)//2
+        n = (arg.numer - 1) // 2  # number of steps from 1/2
+        sqrt_pi: IRNode = IRApply(SQRT, (_PI_SYM,))
+        # Compute (2n−1)!! = 1·3·5·…·(2n−1); for n=0 this is 1 (empty product).
+        double_fact = 1
+        for k in range(1, n + 1):
+            double_fact *= 2 * k - 1
+        two_n = 1 << n  # 2^n
+        from fractions import Fraction as _Frac
+        coeff = _Frac(double_fact, two_n)
+        if coeff == _Frac(1):
+            return sqrt_pi
+        coeff_node: IRNode = (
+            IRInteger(coeff.numerator)
+            if coeff.denominator == 1
+            else IRRational(coeff.numerator, coeff.denominator)
+        )
+        return IRApply(MUL, (coeff_node, sqrt_pi))
+
+    # ── Float argument: Lanczos ──────────────────────────────────────────────
+    z = _to_float(arg)
+    if z is not None and z > 0.0:
+        try:
+            result = _gamma_eval(z)
+            return IRFloat(result)
+        except (ValueError, OverflowError):
+            return expr
+
+    return expr  # symbolic — leave unevaluated
+
+
+def beta_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate BetaFunc(a, b) = Γ(a)·Γ(b) / Γ(a+b).
+
+    Both arguments must be numeric.  Returns IRFloat for float inputs,
+    and exact fractions for integer/half-integer inputs via gamma_handler.
+    """
+    if len(expr.args) != 2:
+        return expr
+    a_node = vm.eval(expr.args[0])
+    b_node = vm.eval(expr.args[1])
+
+    a = _to_float(a_node)
+    b = _to_float(b_node)
+    if a is not None and b is not None and a > 0.0 and b > 0.0:
+        # Special case B(1/2, 1/2) = π.
+        if a == 0.5 and b == 0.5:
+            return _PI_SYM
+        try:
+            result = _beta_eval(a, b)
+            # Try to express as a clean rational if it's close enough.
+            from fractions import Fraction as _Frac
+            approx = _Frac(result).limit_denominator(10000)
+            if abs(float(approx) - result) < 1e-10 * abs(result) + 1e-15:
+                return (
+                    IRInteger(approx.numerator)
+                    if approx.denominator == 1
+                    else IRRational(approx.numerator, approx.denominator)
+                )
+            return IRFloat(result)
+        except (ValueError, OverflowError):
+            return expr
+
+    return expr
+
+
+def erf_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate Erf(x) — exact at 0, numeric for float arguments."""
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    if _is_zero(arg):
+        return IRInteger(0)
+    z = _to_float(arg)
+    if z is not None:
+        return IRFloat(_erf_numeric(z))
+    return expr
+
+
+def erfc_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate Erfc(x) = 1 − erf(x)."""
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    if _is_zero(arg):
+        return IRInteger(1)
+    z = _to_float(arg)
+    if z is not None:
+        return IRFloat(1.0 - _erf_numeric(z))
+    return expr
+
+
+def erfi_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate Erfi(x) — imaginary error function."""
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    if _is_zero(arg):
+        return IRInteger(0)
+    z = _to_float(arg)
+    if z is not None:
+        return IRFloat(_erfi_numeric(z))
+    return expr
+
+
+def si_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate Si(x) — sine integral."""
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    if _is_zero(arg):
+        return IRInteger(0)
+    z = _to_float(arg)
+    if z is not None:
+        return IRFloat(_si_numeric(z))
+    return expr
+
+
+def ci_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate Ci(x) — cosine integral (x > 0)."""
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    z = _to_float(arg)
+    if z is not None and z > 0.0:
+        return IRFloat(_ci_numeric(z))
+    return expr
+
+
+def shi_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate Shi(x) — hyperbolic sine integral."""
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    if _is_zero(arg):
+        return IRInteger(0)
+    z = _to_float(arg)
+    if z is not None:
+        return IRFloat(_shi_numeric(z))
+    return expr
+
+
+def chi_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate Chi(x) — hyperbolic cosine integral (x > 0)."""
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    z = _to_float(arg)
+    if z is not None and z > 0.0:
+        return IRFloat(_chi_numeric(z))
+    return expr
+
+
+def li2_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate Li₂(x) — dilogarithm.
+
+    Exact at 0, 1, −1.  Numeric for float arguments (x < 1).
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    if _is_zero(arg):
+        return IRInteger(0)
+    # Li₂(1) = π²/6
+    if isinstance(arg, IRInteger) and arg.value == 1:
+        return IRApply(DIV, (IRApply(POW, (_PI_SYM, IRInteger(2))), IRInteger(6)))
+    # Li₂(−1) = −π²/12
+    if isinstance(arg, IRInteger) and arg.value == -1:
+        return IRApply(
+            IRSymbol("Neg"),
+            (IRApply(DIV, (IRApply(POW, (_PI_SYM, IRInteger(2))), IRInteger(12))),),
+        )
+    z = _to_float(arg)
+    if z is not None and z < 1.0:
+        val = _li2_numeric(z)
+        if not math.isnan(val):
+            return IRFloat(val)
+    return expr
+
+
+def fresnel_s_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate FresnelS(x) — numeric for float arguments."""
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    if _is_zero(arg):
+        return IRInteger(0)
+    z = _to_float(arg)
+    if z is not None:
+        return IRFloat(_fresnel_s_numeric(z))
+    return expr
+
+
+def fresnel_c_handler(vm: VM, expr: IRApply) -> IRNode:
+    """Evaluate FresnelC(x) — numeric for float arguments."""
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    if _is_zero(arg):
+        return IRInteger(0)
+    z = _to_float(arg)
+    if z is not None:
+        return IRFloat(_fresnel_c_numeric(z))
+    return expr
+
+
 def build_cas_handler_table() -> dict[str, Handler]:
     """Return the full CAS handler table for :class:`SymbolicBackend`.
 
@@ -2369,6 +2655,19 @@ def build_cas_handler_table() -> dict[str, Handler]:
         **_build_algebraic(),
         # --- cas-multivariate (Gröbner bases and ideal solving) -------------
         **_build_multivariate(),
+        # --- Phase 23: special functions ------------------------------------
+        "GammaFunc": gamma_handler,
+        "BetaFunc": beta_handler,
+        "Erf": erf_handler,
+        "Erfc": erfc_handler,
+        "Erfi": erfi_handler,
+        "Si": si_handler,
+        "Ci": ci_handler,
+        "Shi": shi_handler,
+        "Chi": chi_handler,
+        "Li2": li2_handler,
+        "FresnelS": fresnel_s_handler,
+        "FresnelC": fresnel_c_handler,
     }
 
 

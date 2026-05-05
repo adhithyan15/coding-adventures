@@ -1,0 +1,12 @@
+[package]
+name = "board-vm-host"
+version = "0.1.0"
+edition = "2021"
+description = "Reference host-side builders for Board VM sessions"
+
+[dependencies]
+board-vm-ir = { path = "../board-vm-ir" }
+board-vm-protocol = { path = "../board-vm-protocol" }
+
+[lib]
+path = "src/lib.rs"

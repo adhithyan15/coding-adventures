@@ -2,6 +2,22 @@
 
 All notable changes to `matrix-cpu` are documented here.
 
+## [0.1.1] — 2026-05-04
+
+### Fixed
+
+- **`profile().supported_ops` bitmask now includes `Op::Const` (tag 0x1B
+  = bit 27).**  The original mask `0x07FF_FFFF` set only bits 0..=26 and
+  silently dropped `Op::Const`, even though `dispatch.rs` had
+  always implemented the `Op::Const` runtime handler.  The mismatch
+  caused the planner's capability filter to force every `Op::Const`
+  onto a non-CPU backend whenever one was registered, which in turn
+  prevented uniform-CPU placement from ever winning the cost-model
+  comparison and made `image-gpu-core`'s "embedded-as-constants"
+  graphs route work to Metal even at sizes where CPU was clearly
+  cheaper.  Fix: change the mask to `0x0FFF_FFFF` so all 28 V1 ops are
+  advertised correctly.
+
 ## [0.1.0] — 2026-05-04
 
 Initial release.  First executor crate of the matrix execution layer.

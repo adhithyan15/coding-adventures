@@ -8021,6 +8021,54 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "before_attribute_value".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("<".to_string())),
+            to: vec![
+                "attribute_value_unquoted".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-character-in-unquoted-attribute-value)".to_string(),
+                "append_attribute_value(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "before_attribute_value".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("=".to_string())),
+            to: vec![
+                "attribute_value_unquoted".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-character-in-unquoted-attribute-value)".to_string(),
+                "append_attribute_value(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "before_attribute_value".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("`".to_string())),
+            to: vec![
+                "attribute_value_unquoted".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-character-in-unquoted-attribute-value)".to_string(),
+                "append_attribute_value(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "before_attribute_value".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
                 "attribute_value_unquoted".to_string(),
@@ -10847,17 +10895,15 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
-                "attribute_name".to_string(),
+                "before_attribute_name".to_string(),
             ],
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(missing-whitespace-between-attributes)".to_string(),
-                "start_attribute".to_string(),
-                "append_attribute_name(current_lowercase)".to_string(),
             ],
-            consume: true,
+            consume: false,
         },
         TransitionDefinition {
             from: "self_closing_start_tag".to_string(),
@@ -10897,17 +10943,15 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
-                "attribute_name".to_string(),
+                "before_attribute_name".to_string(),
             ],
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(unexpected-solidus-in-tag)".to_string(),
-                "start_attribute".to_string(),
-                "append_attribute_name(current_lowercase)".to_string(),
             ],
-            consume: true,
+            consume: false,
         },
         TransitionDefinition {
             from: "markup_declaration_open".to_string(),

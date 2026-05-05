@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.13.0] - 2026-05-04
+
+### Added
+
+- **`SingleRow` compilation** (`compiler.py`) — `_compile_source` now handles
+  `SingleRow()` plan nodes by invoking `body(ctx)` exactly once with no
+  cursor machinery.  This powers SELECT without FROM (e.g. `SELECT 1 + 1`).
+
 ## [1.12.0] - 2026-05-04
 
 ### Added

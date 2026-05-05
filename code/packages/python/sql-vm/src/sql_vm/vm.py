@@ -672,12 +672,22 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
         return
     if isinstance(ins, JumpIfFalse):
         v = st.pop()
-        if v is False or v is None:
+        # SQL truthiness: NULL, False, 0, and 0.0 are all falsy.
+        # Note: bool is a subclass of int in Python, so ``isinstance(v, bool)``
+        # must be checked before the generic ``int`` branch or ``False`` (= 0)
+        # would also satisfy the numeric-zero check.  Using ``not v`` handles
+        # all three cases uniformly: ``not None`` → True, ``not False`` → True,
+        # ``not 0`` → True, ``not 0.0`` → True.
+        # Scalar functions (e.g. glob()) return integers (0/1) rather than
+        # Python booleans, so we must handle integer-falsy here rather than
+        # only Python-bool-False.
+        if not v:
             st.pc = _resolve(st, ins.label)
         return
     if isinstance(ins, JumpIfTrue):
         v = st.pop()
-        if v is True:
+        # Symmetric with JumpIfFalse: any truthy SQL value triggers the jump.
+        if v:
             st.pc = _resolve(st, ins.label)
         return
 

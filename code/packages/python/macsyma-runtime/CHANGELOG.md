@@ -1,5 +1,86 @@
 # Changelog
 
+## 1.15.0 — 2026-05-04
+
+**Phase 24 — Definite integration end-to-end via MACSYMA surface syntax.**
+
+Bumps `coding-adventures-symbolic-vm>=0.44.0`.
+
+### What changed
+
+No new `cas_handlers.py` or `name_table.py` entries are required.  The
+MACSYMA compiler already maps `integrate(f, x, a, b)` → the 4-argument
+`Integrate(f, x, a, b)` IR node, and the VM's `integrate()` handler
+(updated in symbolic-vm 0.44.0) now processes the 4-argument form using
+the Fundamental Theorem of Calculus.
+
+The end-to-end surface form now works:
+
+```
+integrate(exp(-x^2), x, 0, %inf)   →   sqrt(%pi) / 2
+integrate(x^2, x, 0, 1)            →   1/3
+integrate(sin(x), x, 0, %pi)       →   2
+integrate(sin(x)/x, x, 0, %inf)    →   %pi/2
+integrate(log(x), x, 0, 1)         →   -1
+```
+
+Infinite limits `%inf` and `%minf` are recognised by the VM's definite-
+integration machinery.
+
+---
+
+## 1.14.0 — 2026-05-04
+
+**Phase 23 — Wire MACSYMA surface syntax for special functions (erf, Si/Ci,
+Li₂, Gamma/Beta, Fresnel).**
+
+Bumps `symbolic-ir>=0.11.0` and `symbolic-vm>=0.43.0`.
+
+### `name_table.py`
+
+Adds 13 new entries to `MACSYMA_NAME_TABLE`:
+
+| MACSYMA name | IR head |
+|---|---|
+| `erf` | `ERF` |
+| `erfc` | `ERFC` |
+| `erfi` | `ERFI` |
+| `si` | `SI` |
+| `ci` | `CI` |
+| `shi` | `SHI` |
+| `chi` | `CHI` |
+| `li2` | `LI2` |
+| `gamma` | `GAMMA_FUNC` |
+| `beta` | `BETA_FUNC` |
+| `fresnel_s` | `FRESNEL_S` |
+| `fresnel_c` | `FRESNEL_C` |
+
+### `cas_handlers.py`
+
+Delegates all 12 special-function handlers from
+`symbolic_vm.cas_handlers` into the MacsymaBackend handler table.
+
+### Example MACSYMA sessions
+
+```
+(%i1) integrate(exp(-x^2), x);
+(%o1)                   sqrt(%pi)*erf(x)/2
+
+(%i2) integrate(sin(x)/x, x);
+(%o2)                   si(x)
+
+(%i3) gamma(5);
+(%o3)                   24
+
+(%i4) gamma(1/2);
+(%o4)                   sqrt(%pi)
+
+(%i5) beta(1/2, 1/2);
+(%o5)                   %pi
+```
+
+---
+
 ## 1.13.0 — 2026-05-04
 
 **Phase 22 — Wire MACSYMA surface syntax for matchdeclare / defrule / apply1 / apply2 / tellsimp.**

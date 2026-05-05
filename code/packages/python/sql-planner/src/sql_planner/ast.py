@@ -160,10 +160,22 @@ class Limit:
 
 @dataclass(frozen=True, slots=True)
 class SelectStmt:
-    """A structured SELECT statement — the usual shape from a compiler textbook."""
+    """A structured SELECT statement — the usual shape from a compiler textbook.
 
-    from_: TableRef | DerivedTableRef | RecursiveCTERef
+    ``from_`` is ``None`` when the SELECT has no FROM clause — e.g.
+    ``SELECT 1 + 1``, ``SELECT UPPER('hello')``, ``SELECT CAST(3 AS TEXT)``.
+    The planner maps a ``None`` from_ to a :class:`~sql_planner.plan.SingleRow`
+    leaf that yields exactly one empty row, so the SELECT list is evaluated
+    exactly once.
+
+    Fields are ordered with ``items`` first (required) and ``from_`` second
+    (optional, default ``None``) so Python's dataclass machinery accepts the
+    common ``SelectStmt(items=..., from_=...)`` keyword-argument style while
+    also allowing ``SelectStmt(items=...)`` for from-less queries.
+    """
+
     items: tuple[SelectItem, ...]
+    from_: TableRef | DerivedTableRef | RecursiveCTERef | None = None
     joins: tuple[JoinClause, ...] = field(default_factory=tuple)
     where: Expr | None = None
     group_by: tuple[Expr, ...] = field(default_factory=tuple)

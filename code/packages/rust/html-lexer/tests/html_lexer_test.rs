@@ -167,6 +167,58 @@ fn default_html_lexer_treats_form_feed_as_tag_whitespace() {
 }
 
 #[test]
+fn default_html_lexer_reconsumes_unexpected_solidus_before_attributes() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("<img/ src=one><br//><hr/\0=x>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::StartTag {
+                name: "img".to_string(),
+                attributes: vec![Attribute {
+                    name: "src".to_string(),
+                    value: "one".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "br".to_string(),
+                attributes: Vec::new(),
+                self_closing: true,
+            },
+            Token::StartTag {
+                name: "hr".to_string(),
+                attributes: vec![Attribute {
+                    name: "\u{FFFD}".to_string(),
+                    value: "x".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-solidus-in-tag")
+            .count(),
+        3
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-null-character")
+            .count(),
+        1
+    );
+}
+
+#[test]
 fn default_html_lexer_normalizes_carriage_return_newlines() {
     let tokens = lex_html("<p\r\nclass=x>one\rtwo\r\nthree</p>").unwrap();
 
@@ -281,6 +333,124 @@ fn default_html_lexer_reports_unexpected_chars_in_unquoted_attribute_values() {
             })
             .count(),
         6
+    );
+}
+
+#[test]
+fn default_html_lexer_reports_first_unquoted_attribute_value_characters() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("<a lt=<x eq==x tick=`x ok=value>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "lt".to_string(),
+                        value: "<x".to_string(),
+                    },
+                    Attribute {
+                        name: "eq".to_string(),
+                        value: "=x".to_string(),
+                    },
+                    Attribute {
+                        name: "tick".to_string(),
+                        value: "`x".to_string(),
+                    },
+                    Attribute {
+                        name: "ok".to_string(),
+                        value: "value".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "unexpected-character-in-unquoted-attribute-value"
+            })
+            .count(),
+        3
+    );
+}
+
+#[test]
+fn default_html_lexer_reconsumes_missing_space_after_quoted_attributes() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("<a first=\"1\"second=2 eq=\"x\"==y null=\"z\"\0=w>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "first".to_string(),
+                        value: "1".to_string(),
+                    },
+                    Attribute {
+                        name: "second".to_string(),
+                        value: "2".to_string(),
+                    },
+                    Attribute {
+                        name: "eq".to_string(),
+                        value: "x".to_string(),
+                    },
+                    Attribute {
+                        name: "=".to_string(),
+                        value: "y".to_string(),
+                    },
+                    Attribute {
+                        name: "null".to_string(),
+                        value: "z".to_string(),
+                    },
+                    Attribute {
+                        name: "\u{FFFD}".to_string(),
+                        value: "w".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "missing-whitespace-between-attributes")
+            .count(),
+        3
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-equals-before-attribute-name")
+            .count(),
+        1
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-null-character")
+            .count(),
+        1
     );
 }
 

@@ -29,6 +29,61 @@ def test_cli_runs_inline_ad_hoc_query_with_bytecode_values(
     assert capsys.readouterr().out.splitlines() == ["bart.", "lisa."]
 
 
+def test_cli_reads_source_from_stdin_for_ad_hoc_queries(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.setattr(
+        sys,
+        "stdin",
+        io.StringIO("parent(homer, bart). parent(homer, lisa)."),
+    )
+
+    status = main([
+        "--source-stdin",
+        "--query",
+        "parent(homer, Who)",
+        "--backend",
+        "bytecode",
+    ])
+
+    assert status == 0
+    assert capsys.readouterr().out.splitlines() == [
+        "Who = bart.",
+        "Who = lisa.",
+    ]
+
+
+def test_cli_reads_source_queries_from_stdin(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.setattr(
+        sys,
+        "stdin",
+        io.StringIO("parent(homer, bart). ?- parent(homer, Who)."),
+    )
+
+    status = main(["--source-stdin"])
+
+    assert status == 0
+    assert capsys.readouterr().out == "Who = bart.\n"
+
+
+def test_cli_source_stdin_rejects_interactive_mode_without_reading_stdin(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source-stdin",
+        "--interactive",
+    ])
+
+    assert status == 2
+    assert "--source-stdin cannot be combined with --interactive" in (
+        capsys.readouterr().err
+    )
+
+
 def test_cli_repeated_queries_share_committed_runtime_state(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
@@ -101,6 +156,75 @@ def test_cli_check_rejects_ad_hoc_queries(
 
     assert status == 2
     assert "--check cannot be combined with --query" in capsys.readouterr().err
+
+
+def test_cli_dump_bytecode_renders_disassembly(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart). ?- parent(homer, Who).",
+        "--dump-bytecode",
+    ])
+
+    assert status == 0
+    lines = capsys.readouterr().out.splitlines()
+    assert lines[0] == "0000: EMIT_RELATION 0 ; parent/2"
+    assert "EMIT_FACT" in lines[1]
+    assert "EMIT_QUERY" in lines[2]
+    assert lines[-1] == "0003: HALT"
+
+
+def test_cli_dump_bytecode_json_reports_pools_and_lines(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart). ?- parent(homer, Who).",
+        "--dump-bytecode",
+        "--format",
+        "json",
+    ])
+
+    payload = json.loads(capsys.readouterr().out)
+
+    assert status == 0
+    assert payload["success"] is True
+    assert payload["mode"] == "bytecode"
+    assert payload["instruction_count"] == 4
+    assert payload["relation_pool_count"] == 1
+    assert payload["fact_pool_count"] == 1
+    assert payload["rule_pool_count"] == 0
+    assert payload["query_pool_count"] == 1
+    assert payload["lines"][0] == {
+        "comment": "parent/2",
+        "index": 0,
+        "opcode": "EMIT_RELATION",
+        "operand": 0,
+    }
+    assert payload["lines"][-1] == {
+        "comment": None,
+        "index": 3,
+        "opcode": "HALT",
+        "operand": None,
+    }
+
+
+def test_cli_dump_bytecode_rejects_execution_modes(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        "--dump-bytecode",
+        "--query",
+        "parent(homer, Who)",
+    ])
+
+    assert status == 2
+    assert "--dump-bytecode cannot be combined with --query" in (
+        capsys.readouterr().err
+    )
 
 
 def test_cli_lists_source_query_variables(
@@ -241,6 +365,102 @@ def test_cli_repeated_queries_report_script_failure(
         "Who = bart.",
         "false.",
     ]
+
+
+def test_cli_summary_reports_noninteractive_text_counts(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        "--query",
+        "parent(homer, Who)",
+        "--query",
+        "parent(marge, Who)",
+        "--summary",
+    ])
+
+    assert status == 1
+    assert capsys.readouterr().out.splitlines() == [
+        "Who = bart.",
+        "false.",
+        "summary: queries=2, succeeded=1, failed=1, answers=1.",
+    ]
+
+
+def test_cli_json_summary_wraps_query_results(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart). ?- parent(homer, Who). ?- parent(marge, Who).",
+        "--all-source-queries",
+        "--summary",
+        "--format",
+        "json",
+    ])
+
+    payload = json.loads(capsys.readouterr().out)
+
+    assert status == 1
+    assert payload["success"] is False
+    assert payload["summary"] == {
+        "answer_count": 1,
+        "failed_query_count": 1,
+        "mode": "summary",
+        "query_count": 2,
+        "succeeded_query_count": 1,
+        "success": False,
+    }
+    assert payload["results"][0]["source_query_index"] == 0
+    assert payload["results"][1]["source_query_index"] == 1
+
+
+def test_cli_jsonl_summary_appends_summary_record(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        "--query",
+        "parent(homer, Who)",
+        "--query",
+        "parent(marge, Who)",
+        "--format",
+        "jsonl",
+        "--summary",
+    ])
+
+    records = [
+        json.loads(line)
+        for line in capsys.readouterr().out.splitlines()
+    ]
+
+    assert status == 1
+    assert records[-1] == {
+        "answer_count": 1,
+        "failed_query_count": 1,
+        "mode": "summary",
+        "query_count": 2,
+        "succeeded_query_count": 1,
+        "success": False,
+    }
+
+
+def test_cli_summary_rejects_interactive(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        "--summary",
+        "--interactive",
+    ])
+
+    assert status == 2
+    assert "--summary cannot be combined with --interactive" in (
+        capsys.readouterr().err
+    )
 
 
 def test_cli_interactive_loop_runs_queries_from_stdin(

@@ -32,6 +32,11 @@ block entry, stores row-major stride metadata beside the descriptor, and emits
 checked element loads/stores through the descriptor. Block and procedure exits
 restore the heap pointer to the activation's entry mark, so dynamic arrays keep
 ALGOL block lifetime instead of leaking through loops or recursive calls.
+Because the checker defers bound expression analysis until declaration
+registration completes, those lower/upper expressions can call later sibling
+typed procedures in the same block. Bound expressions may read earlier array
+descriptors, but same-block arrays declared later remain rejected before IR
+lowering because their descriptors do not exist at allocation time.
 
 Expression lowering includes mixed integer/real arithmetic, boolean operators,
 comparisons, chained assignment targets, branch-selected conditional
@@ -93,12 +98,12 @@ Local conditional designational expressions now lower as condition-controlled
 branch points that only evaluate the selected target. Local switch selections
 evaluate their integer index once, compare against one-based switch entries,
 and lower the chosen designational entry into the same jump path. Switch entries
-may target labels in lexical parent blocks; those entries unwind exited frames
-or propagate pending procedure-crossing gotos just like direct designational
-gotos. An out-of-range switch index follows the existing runtime-failure path
-and returns `0`. Recursive switch self-selection lowers through the switch
-evaluation helper so finite recursive dispatch executes at runtime instead of
-expanding the descriptor at compile time.
+may target labels in lexical parent blocks or later sibling switch declarations;
+those entries unwind exited frames or propagate pending procedure-crossing gotos
+just like direct designational gotos. An out-of-range switch index follows the
+existing runtime-failure path and returns `0`. Recursive switch self-selection
+lowers through the switch evaluation helper so finite recursive dispatch
+executes at runtime instead of expanding the descriptor at compile time.
 
 This phase keeps ALGOL frame memory and its 32-byte runtime state bounded to
 one 64 KiB WASM page, and keeps array descriptors plus element storage inside a

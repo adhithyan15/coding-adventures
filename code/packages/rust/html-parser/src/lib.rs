@@ -326,6 +326,12 @@ impl HtmlParser {
                 self.pop_table_cell_row_and_section_contexts();
                 self.pop_current_if(|name| name == "caption" || name == "colgroup");
             }
+            "col" => {
+                self.pop_current_if(|name| name == "caption");
+                if self.current_element_is("table") {
+                    self.append_implied_element("colgroup");
+                }
+            }
             "tr" => {
                 self.pop_current_if(|name| name == "td" || name == "th");
                 self.pop_current_if(|name| name == "tr");
@@ -364,6 +370,14 @@ impl HtmlParser {
             self.pop_current_if(|name| name == "li");
         } else if incoming_name == "dt" || incoming_name == "dd" {
             self.pop_current_if(|name| name == "dt" || name == "dd");
+        } else if incoming_name == "option" {
+            self.pop_current_if(|name| name == "option");
+        } else if incoming_name == "optgroup" {
+            self.pop_current_if(|name| name == "option");
+            self.pop_current_if(|name| name == "optgroup");
+        } else if is_heading_element(incoming_name) {
+            self.pop_current_if(|name| name == "p");
+            self.pop_current_if(is_heading_element);
         }
     }
 
@@ -572,6 +586,10 @@ fn is_table_section(name: &str) -> bool {
     matches!(name, "tbody" | "thead" | "tfoot")
 }
 
+fn is_heading_element(name: &str) -> bool {
+    matches!(name, "h1" | "h2" | "h3" | "h4" | "h5" | "h6")
+}
+
 fn is_void_element(name: &str) -> bool {
     matches!(
         name,
@@ -687,6 +705,69 @@ mod tests {
     }
 
     #[test]
+    fn applies_select_option_implied_end_tags() {
+        let document = parse_html(
+            "<select><option>One<option selected>Two<optgroup label=G><option>Three<optgroup label=H><option>Four</select>",
+        )
+        .unwrap();
+
+        let select = element(&body(&document).children[0]);
+        assert_eq!(select.name, "select");
+        assert_eq!(select.children.len(), 4);
+
+        let first = element(&select.children[0]);
+        assert_eq!(first.name, "option");
+        assert_eq!(first.children, vec![Node::text("One")]);
+
+        let second = element(&select.children[1]);
+        assert_eq!(second.name, "option");
+        assert_eq!(second.attribute("selected"), Some(""));
+        assert_eq!(second.children, vec![Node::text("Two")]);
+
+        let group = element(&select.children[2]);
+        assert_eq!(group.name, "optgroup");
+        assert_eq!(group.attribute("label"), Some("G"));
+        assert_eq!(group.children.len(), 1);
+        assert_eq!(
+            element(&group.children[0]).children,
+            vec![Node::text("Three")]
+        );
+
+        let second_group = element(&select.children[3]);
+        assert_eq!(second_group.name, "optgroup");
+        assert_eq!(second_group.attribute("label"), Some("H"));
+        assert_eq!(second_group.children.len(), 1);
+        assert_eq!(
+            element(&second_group.children[0]).children,
+            vec![Node::text("Four")]
+        );
+    }
+
+    #[test]
+    fn applies_heading_implied_end_tags() {
+        let document = parse_html("<p>Intro<h1>One<h2>Two<h3>Three").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 4);
+
+        let paragraph = element(&body.children[0]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children, vec![Node::text("Intro")]);
+
+        let first = element(&body.children[1]);
+        assert_eq!(first.name, "h1");
+        assert_eq!(first.children, vec![Node::text("One")]);
+
+        let second = element(&body.children[2]);
+        assert_eq!(second.name, "h2");
+        assert_eq!(second.children, vec![Node::text("Two")]);
+
+        let third = element(&body.children[3]);
+        assert_eq!(third.name, "h3");
+        assert_eq!(third.children, vec![Node::text("Three")]);
+    }
+
+    #[test]
     fn synthesizes_table_body_and_row_for_omitted_table_structure() {
         let document = parse_html("<table><td>A<td>B<tr><th>C</table>").unwrap();
 
@@ -788,6 +869,46 @@ mod tests {
             element(&element(&tbody.children[0]).children[0]).children,
             vec![Node::text("B")]
         );
+    }
+
+    #[test]
+    fn wraps_bare_table_columns_in_implied_colgroup() {
+        let document = parse_html("<table><col span=2><col><tr><td>A</table>").unwrap();
+
+        let table = element(&body(&document).children[0]);
+        assert_eq!(table.children.len(), 2);
+
+        let colgroup = element(&table.children[0]);
+        assert_eq!(colgroup.name, "colgroup");
+        assert_eq!(colgroup.children.len(), 2);
+        assert_eq!(element(&colgroup.children[0]).name, "col");
+        assert_eq!(element(&colgroup.children[0]).attribute("span"), Some("2"));
+        assert_eq!(element(&colgroup.children[1]).name, "col");
+
+        let tbody = element(&table.children[1]);
+        let row = element(&tbody.children[0]);
+        assert_eq!(element(&row.children[0]).children, vec![Node::text("A")]);
+    }
+
+    #[test]
+    fn closes_caption_before_bare_table_columns() {
+        let document = parse_html("<table><caption>Cap<col><tr><td>A</table>").unwrap();
+
+        let table = element(&body(&document).children[0]);
+        assert_eq!(table.children.len(), 3);
+
+        let caption = element(&table.children[0]);
+        assert_eq!(caption.name, "caption");
+        assert_eq!(caption.children, vec![Node::text("Cap")]);
+
+        let colgroup = element(&table.children[1]);
+        assert_eq!(colgroup.name, "colgroup");
+        assert_eq!(colgroup.children.len(), 1);
+        assert_eq!(element(&colgroup.children[0]).name, "col");
+
+        let tbody = element(&table.children[2]);
+        let row = element(&tbody.children[0]);
+        assert_eq!(element(&row.children[0]).children, vec![Node::text("A")]);
     }
 
     #[test]

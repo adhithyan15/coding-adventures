@@ -1,5 +1,119 @@
 # Changelog
 
+## 0.44.0 — 2026-05-04
+
+**Phase 24 — Definite integration via the Fundamental Theorem of Calculus.**
+
+### New module: `definite_integral.py`
+
+Evaluates `Integrate(f, x, a, b)` using `F(b) − F(a)` where `F` is any
+antiderivative of `f`.
+
+**Finite limits**: structural substitution via `cas_substitution.subst`,
+then `vm.eval`.  Improper integrals with `log(0)` at `x = 0` are handled by
+`_eval_at_zero_plus`, which applies the symbolic limit
+`lim_{x→0+} xⁿ·log(x) = 0` (n > 0).
+
+**Infinite limits** (`%inf` / `%minf`): `_eval_at_inf` walks the
+antiderivative tree and applies a table of one-sided limits for the special
+functions introduced in Phase 23:
+
+| Function | lim at +∞ | lim at −∞ |
+|----------|-----------|-----------|
+| `erf(u)` | 1 | −1 |
+| `erfc(u)` | 0 | 2 |
+| `Si(u)` | π/2 | −π/2 |
+| `atan(u)` | π/2 | −π/2 |
+| `tanh(u)` / `coth(u)` | 1 | −1 |
+| `sech(u)` / `csch(u)` | 0 | 0 |
+| `FresnelS(u)` / `FresnelC(u)` | 1/2 | −1/2 |
+| `exp(u)` | diverges | 0 |
+
+**Divergent integrals** return the unevaluated `Integrate(f, x, a, b)` node
+rather than raising an error.
+
+### Changes to `integrate.py`
+
+The `Integrate` handler now accepts 2 **or** 4 arguments:
+
+* 2 args: unchanged indefinite integration (Phases 1–23).
+* 4 args: definite integration — computes the indefinite integral via all
+  three routes (rational, Phase-1 table, Phase-23 special-function
+  fallbacks), then calls `evaluate_definite`.
+
+New helper `_contains_integrate(expr)` detects when a partially-evaluated
+rational antiderivative still contains unevaluated `Integrate` sub-nodes
+(which would cause incorrect definite results); those cases fall back to
+returning the 4-argument unevaluated form.
+
+### Updates to tests
+
+* `test_phase24.py` — 54 new tests across 10 test classes covering polynomial,
+  trig, exponential, rational, log, semi-infinite, fully-infinite,
+  special-function, unevaluated, regression, and MACSYMA end-to-end cases.
+* `test_integrate.py` — updated error message match for wrong-arity test.
+* `test_cas_handlers.py` — fixed duplicate `test_expand_wrong_arity_passthrough`
+  function name (renamed second occurrence to `…_two_args`).
+
+---
+
+## 0.43.0 — 2026-05-04
+
+**Phase 23 — Special functions as integration and differentiation fallback.**
+
+Bumps `coding-adventures-symbolic-ir` to `>=0.11.0`.
+
+### New module: `special_functions.py`
+
+Contains all Phase 23 logic: integration pattern matchers, differentiation
+chain-rule rules, and numeric evaluation helpers.
+
+**Integration fallbacks** (appended to `_integrate()` in `integrate.py`):
+| Pattern | Result |
+|---------|--------|
+| `∫ exp(c·x²) dx` (c < 0) | `√π/(2·√\|c\|) · erf(√\|c\|·x)` |
+| `∫ exp(c·x²) dx` (c > 0) | `√π/(2·√c) · erfi(√c·x)` |
+| `∫ sin(ax)/x dx` | `Si(ax)` |
+| `∫ cos(ax)/x dx` | `Ci(ax)` |
+| `∫ sinh(ax)/x dx` | `Shi(ax)` |
+| `∫ cosh(ax)/x dx` | `Chi(ax)` |
+| `∫ log(1−ax)/x dx` | `−Li₂(ax)` |
+| `∫ log(x)/(1−x) dx` | `Li₂(1−x)` |
+| `∫ sin(q·π·x²) dx` | `(1/√(2q))·FresnelS(√(2q)·x)` |
+| `∫ cos(q·π·x²) dx` | `(1/√(2q))·FresnelC(√(2q)·x)` |
+| `∫ sin(a·x²) dx` | `√(π/(2a))·FresnelS(x·√(2a/π))` |
+| `∫ cos(a·x²) dx` | `√(π/(2a))·FresnelC(x·√(2a/π))` |
+
+**Differentiation rules** (dispatched from `derivative.py` via `diff_special`):
+
+`erf`, `erfc`, `erfi`, `Si`, `Ci`, `Shi`, `Chi`, `Li₂`, `FresnelS`, `FresnelC`
+— all via the chain rule `d/dx f(g(x)) = f′(g(x)) · g′(x)`.
+
+**Numeric evaluation helpers** (`gamma_eval`, `beta_eval`, `erf_numeric`,
+`erfi_numeric`, `si_numeric`, `ci_numeric`, `shi_numeric`, `chi_numeric`,
+`li2_numeric`, `fresnel_s_numeric`, `fresnel_c_numeric`).
+
+### New handlers (`cas_handlers.py`)
+
+Twelve new handlers registered in `build_cas_handler_table()`:
+
+| Head | Handler | Special values / method |
+|------|---------|------------------------|
+| `GammaFunc` | `gamma_handler` | Exact for integers/half-integers; Lanczos otherwise |
+| `BetaFunc` | `beta_handler` | Reduces via Γ; `B(½,½) = π` |
+| `Erf` | `erf_handler` | `erf(0) = 0`; float via `math.erf` |
+| `Erfc` | `erfc_handler` | `erfc(0) = 1`; float |
+| `Erfi` | `erfi_handler` | `erfi(0) = 0`; series |
+| `Si` | `si_handler` | `Si(0) = 0`; series |
+| `Ci` | `ci_handler` | Series + log; x > 0 only |
+| `Shi` | `shi_handler` | `Shi(0) = 0`; series |
+| `Chi` | `chi_handler` | Series + log; x > 0 only |
+| `Li2` | `li2_handler` | `Li₂(0)=0`, `Li₂(1)=π²/6`; series |
+| `FresnelS` | `fresnel_s_handler` | `FresnelS(0) = 0`; series |
+| `FresnelC` | `fresnel_c_handler` | `FresnelC(0) = 0`; series |
+
+---
+
 ## 0.42.0 — 2026-05-04
 
 **Phase 22 — MACSYMA pattern-matching rule system: `matchdeclare`, `defrule`,

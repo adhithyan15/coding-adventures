@@ -1,0 +1,37 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-intel-8086-simulator"
+version = "0.1.0"
+description = "Intel 8086 (1978) behavioral simulator — Layer 07m"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "coding-adventures-simulator-protocol",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/intel_8086_simulator"]
+
+[tool.pytest.ini_options]
+addopts = "--cov=intel_8086_simulator --cov-report=term-missing --cov-fail-under=80"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "SIM"]
+# E701/E702: intentional single-line statements used in literate-programming style
+# (constant tables like `_REG_AX = 0; _REG_CX = 1; ...` and `if cond: return val`)
+ignore = ["E701", "E702"]
