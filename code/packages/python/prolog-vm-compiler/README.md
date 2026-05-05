@@ -349,7 +349,9 @@ diagnostic modes such as `--check`, `--dump-instructions`, `--dump-bytecode`,
 `--dump-source-metadata`, and `--list-source-queries`.
 
 Use `--format json` for a machine-readable result object, or `--format jsonl`
-when repeated queries should stream one result record per line. JSON answers
+when repeated or interactive queries should stream one result record per line.
+Interactive mode rejects `--format json` because it cannot emit a single
+complete JSON document while reading an open-ended query stream. JSON answers
 preserve named bindings, raw values, compound terms, variables, and residual
 constraints without requiring callers to scrape the human text format:
 

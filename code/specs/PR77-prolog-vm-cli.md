@@ -199,6 +199,10 @@ prolog-vm family.pl --interactive --backend bytecode
 When stdin is a TTY, the loop prints a `?- ` prompt. Non-TTY input is quiet so
 the mode can be tested and scripted cleanly.
 
+Interactive mode may use text or JSONL output. It rejects `--format json`
+because an open-ended stdin query stream cannot be represented as one complete
+JSON document.
+
 If `--query` and `--interactive` are both supplied, the repeated query script
 runs first in the same runtime. With `--commit`, this gives callers a simple
 setup phase before entering the top-level loop.

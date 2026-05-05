@@ -725,6 +725,23 @@ def test_cli_summary_rejects_interactive(
     )
 
 
+def test_cli_json_format_rejects_interactive(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    status = main([
+        "--source",
+        "parent(homer, bart).",
+        "--interactive",
+        "--format",
+        "json",
+    ])
+
+    assert status == 2
+    assert "--format json cannot be combined with --interactive" in (
+        capsys.readouterr().err
+    )
+
+
 @pytest.mark.parametrize(
     "dump_flag",
     ["--dump-bytecode", "--dump-instructions", "--dump-source-metadata"],
