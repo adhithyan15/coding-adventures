@@ -25,6 +25,8 @@ from sql_backend.in_memory import InMemoryBackend
 from sql_backend.schema import ColumnDef as BackendColumnDef
 from sql_codegen import compile
 from sql_planner import (
+    BinaryExpr,
+    BinaryOp,
     Column,
     ExcludedColumn,
     Insert,
@@ -33,11 +35,6 @@ from sql_planner import (
     UpsertAction,
     UpsertAssignment,
 )
-from sql_planner import (
-    BinaryExpr,
-    BinaryOp,
-)
-from sql_planner.ast import ColumnDef as AstColumnDef
 
 from sql_vm import execute
 
