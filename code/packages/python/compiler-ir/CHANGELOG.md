@@ -2,6 +2,40 @@
 
 ## [Unreleased]
 
+### Added — VMCOND00 Phase 2: THROW opcode
+
+Adds `IrOp.THROW` (66) implementing VMCOND00 Layer 2 — unwind exceptions — in
+the compiler IR opcode set shared by the JVM, CLR, and BEAM backends.
+
+- **`IrOp.THROW` (66)** — raise a condition value and unwind the call stack
+  until a matching handler is found.  Operand layout:
+  `THROW condition_reg`
+  where `condition_reg` is a register holding the condition object (or tagged
+  integer sentinel).  The opcode does not have a destination register — control
+  exits the current instruction stream entirely.
+
+  Backend lowering strategies (for reference):
+
+  - **vm-core**: `handle_throw` walks the static `IIRFunction.exception_table`
+    from innermost to outermost frame, matching `[from_ip, to_ip)` and
+    `type_id`; jumps to `handler_ip` and writes the condition into `val_reg`.
+  - **JVM**: lower to `athrow` after boxing the condition into a synthetic
+    `LangCondition` class that extends `Throwable`; handler entries become
+    JVM exception table rows.
+  - **CLR**: lower to `throw` after boxing into a synthetic
+    `LangCondition : Exception` type; handler entries become CIL `.try / catch`
+    regions.
+
+The total opcode count grows from 66 → 67.  All existing opcode IDs (0–65)
+remain stable; serialized IR text files round-trip unchanged.
+
+The corresponding interpreter-IR mnemonic (`"throw"` added to `THROW_OPS`) and
+vm-core dispatch handler ship in the same PR.
+
+**Spec reference:** VMCOND00 §3 Layer 2 — unwind exceptions.
+
+---
+
 ### Added — VMCOND00 Phase 1: SYSCALL_CHECKED and BRANCH_ERR opcodes
 
 Two new opcodes implementing the VMCOND00 Layer 1 result-value error protocol.

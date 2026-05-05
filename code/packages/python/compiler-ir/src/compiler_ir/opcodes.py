@@ -481,6 +481,39 @@ class IrOp(IntEnum):
     # Execution: if err_reg == 0 (success), fall through; otherwise jump.
     BRANCH_ERR = 65
 
+    # ── VMCOND00 Phase 2 — unwind exceptions ─────────────────────────────
+    #
+    # ``THROW`` implements the Layer 2 result-value escalation path: instead
+    # of returning an error code the caller must check, the front-end can
+    # raise a condition that unwinds the call stack looking for the innermost
+    # matching handler in the static exception table.
+    #
+    # This opcode corresponds directly to:
+    #   - Python's ``raise`` statement
+    #   - Java's ``throw`` statement
+    #   - CLR's IL ``throw`` instruction
+    #   - JVM's ``athrow`` opcode
+    #
+    # Operand layout:
+    #   THROW  condition:reg
+    #
+    # where:
+    #   - ``condition`` — a register holding the condition object to throw.
+    #     In Phase 2 the condition can be any Python/IIR value; the type_id
+    #     matching uses ``type(condition).__name__`` or the catch-all ``"*"``.
+    #     Phase 3 will replace this with the condition type hierarchy.
+    #
+    # Backend lowering:
+    #   - JVM: emit ``athrow`` after loading the object from the register.
+    #          The JVM's own exception-dispatch mechanism handles the rest.
+    #   - CLR: emit ``throw`` after loading the object from the register.
+    #   - BEAM: emit a ``{'EXIT', Condition}`` message or use try/catch.
+    #   - Interpreter (vm-core): walk the static exception table of each
+    #     frame from innermost to outermost; on match, jump to handler_ip
+    #     and assign the condition to val_reg.  If no match, pop frame and
+    #     continue.  If stack exhausted, raise UncaughtConditionError.
+    THROW = 66
+
 
 # Canonical name → opcode mapping. Built from the enum at module load time.
 # Used by the IR parser to convert text opcode names back to IrOp values.

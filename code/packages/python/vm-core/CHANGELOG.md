@@ -6,6 +6,82 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — VMCOND00 Phase 2: throw dispatch + UncaughtConditionError
+
+Implements VMCOND00 Layer 2 — unwind exceptions — in the vm-core interpreter.
+A `throw` instruction now walks the per-function static exception tables of
+every active frame from innermost to outermost, transferring control to the
+first matching handler or aborting execution with `UncaughtConditionError`.
+
+**New exception class: `UncaughtConditionError(VMError)`** (`errors.py`)
+
+Raised when a `throw` propagates to the top of the call stack with no matching
+handler anywhere.  Wraps the original condition object for inspection by the
+host environment:
+
+```python
+from vm_core.errors import UncaughtConditionError
+try:
+    vm.execute(module)
+except UncaughtConditionError as e:
+    print(f"VM aborted: {e.condition!r}")
+```
+
+`UncaughtConditionError` is re-exported from the package root (`vm_core`).
+
+**New dispatch handler: `handle_throw`** (`dispatch.py`)
+
+Implements the full Layer 2 unwind algorithm:
+
+1. Read the condition value from the source register.
+2. Walk `vm._frames` from innermost (top) to outermost (bottom).
+3. For each frame, compute `throw_ip = frame.ip - 1` (the dispatch loop
+   increments `ip` **before** calling the handler, so the instruction that
+   raised is always at `ip - 1`).
+4. Scan the frame's `fn.exception_table` for an `ExceptionTableEntry` where
+   `entry.from_ip <= throw_ip < entry.to_ip` (half-open range, matching JVM /
+   CPython convention).
+5. If the entry also matches `entry.type_id` (see below), redirect the frame:
+   set `frame.ip = entry.handler_ip`, store the condition into `entry.val_reg`,
+   and return normally.
+6. If no entry matches in this frame, pop the frame and continue to the caller.
+7. If all frames are exhausted, raise `UncaughtConditionError(condition)`.
+
+The handler is registered in `STANDARD_OPCODES` under `"throw"`.
+
+**New helper: `_throw_type_matches(condition, type_id) -> bool`** (`dispatch.py`)
+
+Encapsulates Phase 2 type-matching logic:
+
+- `type_id == "*"` (i.e. `CATCH_ALL`) — always matches; write a catch-all
+  handler by setting `type_id="*"` in the `ExceptionTableEntry`.
+- Any other string — exact match against `type(condition).__name__`.
+  Example: `type_id="ValueError"` catches only `ValueError` instances, not
+  subclasses.  Subtype hierarchy is deferred to Phase 3 (`is_subtype` lookup).
+
+**Test additions (`tests/test_vmcond00_phase2.py` — 34 new tests):**
+
+- `TestExceptionTableEntry` (6): construction, frozen immutability, equality,
+  CATCH_ALL constant, typed entry, `compare=False` contract.
+- `TestThrowSameFrame` (7): catch-all catches int/str/None, typed match, typed
+  mismatch raises, val_reg assigned correctly, instructions after throw are
+  unreachable.
+- `TestThrowRangeBoundaries` (3): `from_ip` is inclusive (catches at boundary),
+  `to_ip` is exclusive (does not catch), instruction before range not caught.
+- `TestThrowAcrossFrames` (5): callee throw caught in caller, frames popped on
+  propagation, three-level propagation, no handler raises
+  `UncaughtConditionError`, innermost handler wins over outer.
+- `TestUncaughtConditionError` (4): condition attribute preserved, string repr,
+  `VMError` subclass, root-frame uncaught raises.
+- `TestThrowTypeMatching` (9): catch-all matches int/str/list/None, exact type
+  name matches int/str, type name mismatch, custom class name match/mismatch.
+
+Coverage: 97.84% (267 tests pass; was 233 + 26 phase-1 tests).
+
+**Spec reference:** VMCOND00 §3 Layer 2 — unwind exceptions.
+
+---
+
 ### Added — VMCOND00 Phase 1: syscall_checked and branch_err dispatch + register_syscall API
 
 Implements VMCOND00 Layer 1 — the result-value error protocol — in the vm-core
