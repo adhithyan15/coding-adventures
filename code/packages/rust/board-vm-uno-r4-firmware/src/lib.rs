@@ -4,6 +4,8 @@ use board_vm_ir::{parse_module, validate, ModuleError, ValidateError};
 use board_vm_runtime::{BoardHal, RunReport, Runtime, RuntimeError};
 
 #[cfg(target_arch = "arm")]
+pub mod uno_r4_wifi_backend;
+#[cfg(target_arch = "arm")]
 pub mod uno_r4_wifi_led;
 
 pub const EMBEDDED_BLINK_MODULE: [u8; 36] = [

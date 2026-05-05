@@ -5,7 +5,9 @@ edition = "2021"
 description = "Uno R4 firmware smoke test for the Board VM runtime"
 
 [dependencies]
+board-vm-device = { path = "../board-vm-device" }
 board-vm-ir = { path = "../board-vm-ir" }
+board-vm-protocol = { path = "../board-vm-protocol" }
 board-vm-runtime = { path = "../board-vm-runtime" }
 board-vm-uno-r4 = { path = "../board-vm-uno-r4" }
 
@@ -25,3 +27,7 @@ path = "src/bin/uno_r4_vm_blink_smoke.rs"
 [[bin]]
 name = "uno-r4-wifi-raw-blink-probe"
 path = "src/bin/uno_r4_wifi_raw_blink_probe.rs"
+
+[[bin]]
+name = "uno-r4-wifi-stream-handshake-probe"
+path = "src/bin/uno_r4_wifi_stream_handshake_probe.rs"
