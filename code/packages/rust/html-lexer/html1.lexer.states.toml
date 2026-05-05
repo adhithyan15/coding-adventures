@@ -3189,10 +3189,10 @@ actions = [
 from = "tag_open"
 matcher = { literal = "\u0000" }
 to = "data"
+consume = false
 actions = [
-  "parse_error(unexpected-null-character)",
+  "parse_error(invalid-first-character-of-tag-name)",
   "append_text(<)",
-  "append_text_replacement",
 ]
 
 [[transitions]]

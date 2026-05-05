@@ -135,7 +135,9 @@ embedded NULL characters with U+FFFD before continuing in bogus-comment state.
 The tag-open states now only begin normal tags when the next character is an
 ASCII letter; stray less-than signs such as `a < b` remain text, and malformed
 end-tag openers such as `</3>` recover as bogus comments with a tokenizer
-diagnostic.
+diagnostic. A raw NULL after `<` follows the same invalid tag-open recovery
+before data-state NULL replacement, so both diagnostics are preserved while the
+text becomes `<` plus U+FFFD.
 DOCTYPE tokenization reports missing names and marks force-quirks mode for
 inputs such as `<!DOCTYPE>` and `<!DOCTYPE >`, and EOF recovery after a name
 or inside the `DOCTYPE` keyword emits a force-quirks token. Malformed

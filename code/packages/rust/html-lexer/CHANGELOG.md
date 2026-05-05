@@ -133,6 +133,9 @@ documented in this file.
   incorrectly-opened bogus-comment recovery instead of empty-comment recovery.
 - Invalid tag-open characters now follow HTML recovery: stray `<` text is
   preserved and malformed end-tag openers recover as bogus comments.
+- NULL after `<` now reconsumes through data-state recovery, preserving both
+  `invalid-first-character-of-tag-name` and `unexpected-null-character`
+  diagnostics while emitting `<` followed by U+FFFD.
 - Missing-name DOCTYPE recovery now marks force-quirks mode for `<!DOCTYPE>`
   and whitespace-only DOCTYPE names.
 - DOCTYPE declarations cut off by EOF after a name now emit the current name
