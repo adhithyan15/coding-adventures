@@ -115,6 +115,7 @@ from cas_solve import nsolve_fraction_poly as _nsolve_fraction_poly
 from cas_solve import solve_cubic as _solve_cubic
 from cas_solve import solve_linear_system as _solve_linear_system
 from cas_solve import solve_quartic as _solve_quartic
+from cas_solve import try_solve_inequality as _try_inequality
 from cas_solve import try_solve_transcendental as _try_transcendental
 from cas_substitution import subst
 from polynomial import (
@@ -1063,6 +1064,20 @@ def solve_handler(_vm: VM, expr: IRApply) -> IRNode:
     # -----------------------------------------------------------------
     if not isinstance(var_ir, IRSymbol):
         return expr
+
+    # -----------------------------------------------------------------
+    # Phase 27 — Polynomial inequality solving
+    # Dispatch before polynomial extraction: inequalities are not
+    # equations and _unwrap_equation would strip the comparison head.
+    # -----------------------------------------------------------------
+    if (
+        isinstance(eq_ir, IRApply)
+        and isinstance(eq_ir.head, IRSymbol)
+        and eq_ir.head.name in {"Less", "Greater", "LessEqual", "GreaterEqual"}
+    ):
+        ineq_sols = _try_inequality(eq_ir, var_ir)
+        if ineq_sols is not None:
+            return IRApply(IRSymbol("List"), tuple(ineq_sols))
 
     poly_ir = _unwrap_equation(eq_ir)
     coeffs = _ir_to_fraction_poly(poly_ir, var_ir)
