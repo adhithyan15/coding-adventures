@@ -44,6 +44,7 @@ from logic_builtins import (
     difo,
     dynamico,
     excludeo,
+    exists_fileo,
     failo,
     falseo,
     fd_addo,
@@ -98,6 +99,8 @@ from logic_builtins import (
     prolog_lto,
     prolog_numeqo,
     prolog_numneqo,
+    read_file_to_codeso,
+    read_file_to_stringo,
     repeato,
     retractallo,
     retracto,
@@ -269,6 +272,8 @@ def _adapt_relation_call(
     }
     if goal.relation.arity == 1 and name in unary_list_builtins:
         return unary_list_builtins[name](args[0])
+    if goal.relation.arity == 1 and name == "exists_file":
+        return exists_fileo(args[0])
 
     binary_arithmetic_builtins: dict[str, Callable[[object, object], GoalExpr]] = {
         "is": prolog_iso,
@@ -500,6 +505,10 @@ def _adapt_relation_call(
         return number_codeso(*args)
     if name == "number_string" and goal.relation.arity == 2:
         return number_stringo(*args)
+    if name == "read_file_to_string" and goal.relation.arity == 2:
+        return read_file_to_stringo(*args)
+    if name == "read_file_to_codes" and goal.relation.arity == 2:
+        return read_file_to_codeso(*args)
     if name == "atom_number" and goal.relation.arity == 2:
         return atom_numbero(*args)
     if name == "char_code" and goal.relation.arity == 2:

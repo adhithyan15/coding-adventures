@@ -183,6 +183,19 @@ def prolog_vm_capabilities() -> tuple[PrologVMCapability, ...]:
                 "prolog-vm CLI with diagnostics, JSON/JSONL, summaries, and REPL",
             ),
         ),
+        PrologVMCapability(
+            id="host-file-text-io",
+            title="Bounded host file text I/O",
+            status="complete",
+            specs=("PR78",),
+            packages=("logic-builtins", "prolog-loader", "prolog-vm-compiler"),
+            features=(
+                "exists_file/1 over bound atom/string paths",
+                "read_file_to_string/2 for UTF-8 files",
+                "read_file_to_codes/2 for UTF-8 code-point lists",
+                "structured and bytecode VM stress coverage",
+            ),
+        ),
     )
 
 
@@ -220,7 +233,7 @@ def deferred_prolog_vm_capabilities() -> tuple[PrologVMCapability, ...]:
             specs=("PR02",),
             packages=("future",),
             features=(
-                "streams and rich file I/O",
+                "stream handles and rich stream options",
                 "foreign predicates and host callbacks",
                 "engines, concurrency, and async integration",
             ),
@@ -232,8 +245,8 @@ def prolog_vm_capability_manifest() -> PrologVMCapabilityManifest:
     """Return the canonical capability manifest for this package."""
 
     return PrologVMCapabilityManifest(
-        track="Prolog-on-Logic-VM core track PR00-PR77",
-        status="core-complete",
+        track="Prolog-on-Logic-VM PR00-PR78",
+        status="core-plus-file-io",
         dialects=("iso", "swi"),
         backends=("structured", "bytecode"),
         capabilities=prolog_vm_capabilities(),

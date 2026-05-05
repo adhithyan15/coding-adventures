@@ -249,17 +249,17 @@ assert [answer.as_dict() for answer in runtime.query("ancestor(homer, Who)")] ==
 
 ## Capability Manifest
 
-The core Prolog-on-Logic-VM implementation track covers PR00 through PR77. The
+The Prolog-on-Logic-VM implementation track covers PR00 through PR78. The
 package exposes that as a machine-readable manifest so downstream tools and
-future implementation work can distinguish completed core functionality from
-deliberately deferred advanced dialect emulation:
+future implementation work can distinguish completed functionality from
+deliberately deferred advanced dialect/runtime emulation:
 
 ```python
 from prolog_vm_compiler import prolog_vm_capability_manifest
 
 manifest = prolog_vm_capability_manifest()
 
-assert manifest.status == "core-complete"
+assert manifest.status == "core-plus-file-io"
 assert manifest.dialects == ("iso", "swi")
 assert manifest.backends == ("structured", "bytecode")
 ```
@@ -267,12 +267,13 @@ assert manifest.backends == ("structured", "bytecode")
 The completed core batches cover frontend loading, directives, modules, file
 graphs, expansion, structured and bytecode VM execution, source/file/project
 runners, top-level query APIs, the CLI, CLP(FD), dynamic database behavior,
-exceptions, control, collections, term/text predicates, and reflection. The
-manifest also names the remaining advanced-dialect work that is intentionally
-outside the PR00-PR77 core: full external dialect emulation, tabling and
-well-founded negation, generalized attributed-variable/coroutining services,
-non-FD constraint domains, rich streams/I/O, foreign predicates, engines, and
-concurrency.
+exceptions, control, collections, term/text predicates, reflection, and bounded
+UTF-8 file text I/O through `exists_file/1`, `read_file_to_string/2`, and
+`read_file_to_codes/2`. The manifest also names the remaining advanced-dialect
+work that is intentionally outside the completed batches: full external dialect
+emulation, tabling and well-founded negation, generalized
+attributed-variable/coroutining services, non-FD constraint domains, stream
+handles, foreign predicates, engines, and concurrency.
 
 ## CLI
 
@@ -440,6 +441,8 @@ The package includes end-to-end stress tests for:
   `atomic_list_concat/3`, and `number_string/2`
 - text inspection with `atom_length/2`, `string_length/2`, `sub_atom/5`, and
   `sub_string/5`
+- bounded UTF-8 file text I/O with `exists_file/1`,
+  `read_file_to_string/2`, and `read_file_to_codes/2`
 - term text I/O with `term_to_atom/2`, `atom_to_term/3`,
   `read_term_from_atom/3`, and `write_term_to_atom/3`
 - numbered term variables with `numbervars/3` and `write_term_to_atom/3`
