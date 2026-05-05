@@ -264,3 +264,7 @@ documented in this file.
   include resumable RCDATA/RAWTEXT/script end-tag-open states, giving parser and
   conformance callers standard labels for end-tag handoff points that do not
   require pre-seeded current-token internals.
+- Expanded end-tag-open convergence coverage across RCDATA, RAWTEXT, script
+  data, and escaped script data, including EOF literalization, mismatched end
+  tag text recovery, and matching whitespace/attribute/trailing-solidus
+  diagnostics in both direct lexer tests and html5lib-style fixtures.
