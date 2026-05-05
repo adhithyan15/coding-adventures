@@ -203,6 +203,55 @@ class SelectStmt:
 
 
 @dataclass(frozen=True, slots=True)
+class UpsertAssignment:
+    """One ``col = expr`` in an ``ON CONFLICT DO UPDATE SET`` clause."""
+
+    column: str
+    value: Expr
+
+
+@dataclass(frozen=True, slots=True)
+class UpsertClause:
+    """``ON CONFLICT [(conflict_target)] DO NOTHING | DO UPDATE SET assignments``.
+
+    SQL UPSERT (insert-or-update) semantics
+    ----------------------------------------
+    When an INSERT would violate a unique constraint:
+
+    - ``do_nothing=True``   → silently skip the row (like ``INSERT OR IGNORE``
+                              but scoped to a specific constraint via the target)
+    - ``do_nothing=False``  → run the ``assignments`` in-place on the existing
+                              row, using ``EXCLUDED.*`` to access the values from
+                              the rejected would-be-inserted row.
+
+    The difference from ``INSERT OR REPLACE`` is important:
+
+    - ``REPLACE`` (= delete + re-insert): loses the existing row's primary key
+      value and fires DELETE triggers; not an in-place update.
+    - ``DO UPDATE SET``: in-place mutation; the row keeps its rowid and
+      triggers are not fired for DELETE.
+
+    conflict_target
+    ---------------
+    An optional list of column names identifying *which* unique constraint must
+    be violated for the upsert action to fire.  When empty, any constraint
+    violation triggers the action (same behaviour as SQLite when no target is
+    given).  Most real-world inserts specify a single column target (the primary
+    key or a UNIQUE column).
+
+    assignments
+    -----------
+    Used only when ``do_nothing=False``.  Each assignment uses the resolved
+    ``Expr`` tree; ``EXCLUDED.col`` is represented as ``ExcludedColumn(col=c)``
+    after the adapter rewrites ``Column(table="EXCLUDED", col=c)``.
+    """
+
+    conflict_target: tuple[str, ...] = ()  # column names; empty = any constraint
+    do_nothing: bool = False
+    assignments: tuple[UpsertAssignment, ...] = ()  # non-empty when do_nothing=False
+
+
+@dataclass(frozen=True, slots=True)
 class InsertValuesStmt:
     """INSERT INTO t (cols) VALUES (v1, v2, ...), (w1, w2, ...) [RETURNING ...].
 
@@ -222,6 +271,10 @@ class InsertValuesStmt:
                         statement (not fully emulated — treated as ``ABORT``)
     - ``"ROLLBACK"``  — raise an error and roll back the entire transaction
                         (not fully emulated — treated as ``ABORT``)
+
+    ``upsert_clause`` holds the optional ``ON CONFLICT … DO …`` clause.
+    When present it takes precedence over ``on_conflict`` for constraint
+    handling; both can coexist but the combination is unusual.
     """
 
     table: str
@@ -229,6 +282,7 @@ class InsertValuesStmt:
     rows: tuple[tuple[Expr, ...], ...]
     on_conflict: str | None = None   # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
     returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
+    upsert_clause: UpsertClause | None = None  # ON CONFLICT … DO …
 
 
 @dataclass(frozen=True, slots=True)
@@ -323,6 +377,7 @@ class InsertSelectStmt:
     table's natural column order is used (same semantics as VALUES INSERT).
 
     ``on_conflict`` has the same semantics as :class:`InsertValuesStmt`.
+    ``upsert_clause`` holds the optional ``ON CONFLICT … DO …`` clause.
     """
 
     table: str
@@ -330,6 +385,7 @@ class InsertSelectStmt:
     select: SelectStmt
     on_conflict: str | None = None   # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
     returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
+    upsert_clause: UpsertClause | None = None  # ON CONFLICT … DO …
 
 
 # ---- Transaction-control statements ----------------------------------------

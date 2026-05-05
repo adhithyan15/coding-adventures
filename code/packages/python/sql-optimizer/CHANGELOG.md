@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.8.0] - 2026-05-05
+
+### Fixed
+
+- **`ConstantFolding` now preserves `upsert` on `Insert` nodes**
+  (`constant_folding.py`) — the pattern match for `Insert` was extended to capture
+  `upsert=up`, call `_fold_upsert(up)` on it, and pass `upsert=new_up` to the
+  rebuilt node.  Without this fix the optimizer silently stripped the `UpsertAction`
+  from every `Insert` that passed through constant folding, causing the VM to
+  execute a plain INSERT instead of the intended upsert.
+
+### Added
+
+- **`_fold_upsert(up: UpsertAction | None) -> UpsertAction | None`** — helper
+  that applies constant folding to each assignment's `value` expression inside a
+  `UpsertAction`.  Returns `None` unchanged, forwards DO-NOTHING actions unchanged,
+  and rebuilds `UpsertAction` with folded assignments for DO-UPDATE actions.
+
 ## [0.7.0] - 2026-05-04
 
 ### Fixed

@@ -127,9 +127,10 @@ from sql_planner import (
     WindowAgg as PlanWindowAgg,
 )
 from sql_planner.ast import ColumnDef as AstColumnDef
-from sql_planner.expr import AggregateExpr
+from sql_planner.expr import AggregateExpr, ExcludedColumn
 from sql_planner.plan import AggFunc as PlanAggFunc
 from sql_planner.plan import Limit as PlanLimit
+from sql_planner.plan import UpsertAction as PlanUpsertAction
 from sql_planner.plan import WindowFuncSpec as PlanWindowFuncSpec
 
 from .errors import UnsupportedNode
@@ -180,6 +181,7 @@ from .ir import (
     LimitResult,
     LoadColumn,
     LoadConst,
+    LoadExcludedColumn,
     LoadGroupKey,
     LoadLastInsertedColumn,
     LoadOuterColumn,
@@ -203,6 +205,7 @@ from .ir import (
     UnaryOpCode,
     UpdateAgg,
     UpdateRows,
+    UpsertSpec,
     WinFunc,
     WinFuncSpec,
 )
@@ -211,6 +214,9 @@ from .ir import (
 )
 from .ir import (
     ColumnDef as IrColumnDef,
+)
+from .ir import (
+    UpsertAssignment as IrUpsertAssignment,
 )
 
 # --------------------------------------------------------------------------
@@ -1120,6 +1126,11 @@ def _compile_expr(e: Expr, ctx: _Ctx) -> list[Instruction]:
     match e:
         case Literal(value=v):
             return [LoadConst(value=v)]
+        case ExcludedColumn(col=c):
+            # The EXCLUDED pseudo-table reference inside an ON CONFLICT DO UPDATE
+            # clause.  The VM resolves this against _VmState.excluded_row at
+            # runtime rather than reading from a cursor.
+            return [LoadExcludedColumn(col=c)]
         case Column(table=t, col=c):
             cid = ctx.alias_to_cursor.get(t or "", 0)
             return [LoadColumn(cursor_id=cid, column=c)]
@@ -1334,9 +1345,41 @@ def _compile_returning_cursor_expr(
     return _compile_expr(expr, ctx)
 
 
+def _compile_upsert(upsert: PlanUpsertAction | None, ctx: _Ctx) -> UpsertSpec | None:
+    """Compile a ``PlanUpsertAction`` into a ``UpsertSpec`` IR node.
+
+    Each assignment's RHS expression is compiled into a self-contained flat
+    instruction sequence (without a ``Halt``) that the VM executes in a
+    mini-loop to produce a single stack value.
+
+    ``ExcludedColumn`` nodes inside the RHS compile to ``LoadExcludedColumn``
+    instructions (handled by the extended ``_compile_expr`` below).
+
+    When ``upsert`` is ``None`` (no ON CONFLICT clause), returns ``None``.
+    """
+    if upsert is None:
+        return None
+    if upsert.do_nothing:
+        return UpsertSpec(conflict_target=upsert.conflict_target, do_nothing=True)
+
+    compiled_assignments = tuple(
+        IrUpsertAssignment(
+            column=a.column,
+            instructions=tuple(_compile_expr(a.value, ctx)),
+        )
+        for a in upsert.assignments
+    )
+    return UpsertSpec(
+        conflict_target=upsert.conflict_target,
+        do_nothing=False,
+        assignments=compiled_assignments,
+    )
+
+
 def _compile_insert(ins: Insert, ctx: _Ctx) -> list[Instruction]:
     src = ins.source
     cols = ins.columns or ()
+    upsert_spec = _compile_upsert(ins.upsert, ctx)
 
     # RETURNING preamble: if this INSERT has a RETURNING clause we emit a
     # SetResultSchema once at the top so the VM knows the output column names.
@@ -1356,6 +1399,7 @@ def _compile_insert(ins: Insert, ctx: _Ctx) -> list[Instruction]:
                 table=ins.table,
                 columns=tuple(cols),
                 on_conflict=ins.on_conflict,
+                upsert=upsert_spec,
             ))
             # After InsertRow the VM stores the inserted row in
             # ``last_inserted_row``.  Emit RETURNING columns by reading from it.
@@ -1380,6 +1424,7 @@ def _compile_insert(ins: Insert, ctx: _Ctx) -> list[Instruction]:
         table=ins.table,
         columns=tuple(cols),
         on_conflict=ins.on_conflict,
+        upsert=upsert_spec,
     ))
     return select_instrs
 

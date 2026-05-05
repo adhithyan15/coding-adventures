@@ -89,7 +89,26 @@ conflict_clause   = "OR" ( "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK" 
 insert_stmt       = "INSERT" [ conflict_clause ] "INTO" NAME
                     [ "(" NAME { "," NAME } ")" ]
                     insert_body
+                    [ upsert_clause ]
                     [ returning_clause ] ;
+
+# ON CONFLICT upsert clause (SQLite 3.24+):
+#   ON CONFLICT (col {, col}) DO NOTHING
+#   ON CONFLICT (col {, col}) DO UPDATE SET col = expr {, col = expr}
+#   ON CONFLICT DO NOTHING  (no target = any unique constraint)
+#   ON CONFLICT DO UPDATE SET ...
+#
+# EXCLUDED is a pseudo-table alias for the would-be-inserted row values.
+# It parses as a regular column_ref (table="EXCLUDED", col=NAME) because
+# EXCLUDED is a keyword-that-looks-like-a-name; the adapter rewrites
+# Column(table="EXCLUDED", col=c) → ExcludedColumn(col=c).
+
+upsert_clause     = "ON" "CONFLICT"
+                    [ "(" NAME { "," NAME } ")" ]
+                    ( "DO" "NOTHING"
+                    | "DO" "UPDATE" "SET" upsert_assignment { "," upsert_assignment } ) ;
+
+upsert_assignment = NAME "=" expr ;
 replace_stmt      = "REPLACE" "INTO" NAME
                     [ "(" NAME { "," NAME } ")" ]
                     insert_body

@@ -407,6 +407,49 @@ class InsertSource:
 
 
 @dataclass(frozen=True, slots=True)
+class UpsertAssignment:
+    """One column assignment in an ``ON CONFLICT DO UPDATE SET`` clause.
+
+    ``value`` may reference :class:`~sql_planner.expr.ExcludedColumn` to
+    access the would-be-inserted row's value for that column.
+    """
+
+    column: str
+    value: Expr
+
+
+@dataclass(frozen=True, slots=True)
+class UpsertAction:
+    """The resolved ``ON CONFLICT … DO …`` clause from an INSERT statement.
+
+    UPSERT semantics
+    ----------------
+    When an INSERT would violate a UNIQUE or PRIMARY KEY constraint:
+
+    - ``do_nothing=True``   → silently skip the conflicting row (like
+                              ``INSERT OR IGNORE`` but scoped to the specific
+                              constraint named by ``conflict_target``)
+    - ``do_nothing=False``  → apply ``assignments`` in-place on the existing
+                              conflicting row.  ``ExcludedColumn(col=c)``
+                              expressions inside ``assignments`` resolve to the
+                              would-be-inserted value for column ``c``.
+
+    conflict_target
+    ---------------
+    Column names naming the unique constraint to watch.  When empty, any
+    constraint violation fires the action.  The VM uses this to look up the
+    rowid of the conflicting existing row via ``backend.find_conflicting_row``.
+
+    Codegen uses this node to emit a ``UpsertSpec`` IR value that the VM
+    carries alongside each ``InsertRow`` / ``InsertFromResult`` instruction.
+    """
+
+    conflict_target: tuple[str, ...]  # empty = any unique constraint
+    do_nothing: bool = False
+    assignments: tuple[UpsertAssignment, ...] = ()  # populated when do_nothing=False
+
+
+@dataclass(frozen=True, slots=True)
 class Insert:
     """INSERT INTO t (cols) VALUES (...) or INSERT INTO t SELECT ... [RETURNING ...].
 
@@ -420,6 +463,11 @@ class Insert:
     - ``"ABORT"`` / ``"FAIL"`` / ``"ROLLBACK"`` — raise an error
                         (full FAIL/ROLLBACK transaction semantics are left
                         to the connection layer; the VM raises IntegrityError)
+
+    ``upsert`` holds the resolved ``ON CONFLICT … DO …`` plan node.  When
+    present it takes precedence over ``on_conflict`` for constraint handling.
+    The two may coexist in theory (``INSERT OR ABORT … ON CONFLICT DO NOTHING``
+    is syntactically valid) but in practice only one is used per statement.
     """
 
     table: str
@@ -427,6 +475,7 @@ class Insert:
     source: InsertSource
     on_conflict: str | None = None   # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
     returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
+    upsert: UpsertAction | None = None  # ON CONFLICT … DO …
 
 
 @dataclass(frozen=True, slots=True)

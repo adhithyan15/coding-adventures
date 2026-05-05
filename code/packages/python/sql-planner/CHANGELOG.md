@@ -1,5 +1,39 @@
 # Changelog
 
+## [0.22.0] - 2026-05-05
+
+### Added
+
+- **`ExcludedColumn` expression node** (`expr.py`) — a new `Expr` variant that
+  represents a reference to the *would-be-inserted* row's column value inside
+  an `ON CONFLICT DO UPDATE SET` clause.  `ExcludedColumn(col="qty")` compiles
+  to `LoadExcludedColumn(col="qty")` in the IR, which the VM resolves against
+  `_VmState.excluded_row` at runtime.  The node is intentionally distinct from
+  `Column` so that the type system enforces that EXCLUDED refs only appear in
+  upsert assignment expressions.
+
+- **`UpsertAssignment` and `UpsertClause` AST nodes** (`ast.py`) — two frozen
+  dataclasses for the parsed ON CONFLICT clause:
+  - `UpsertAssignment(column: str, value: Expr)` — one `col = expr` pair.
+  - `UpsertClause(conflict_target, do_nothing, assignments)` — the full parsed
+    clause.  `InsertValuesStmt.upsert_clause` and `InsertSelectStmt.upsert_clause`
+    are both `UpsertClause | None` (default `None`).
+
+- **`UpsertAssignment` and `UpsertAction` plan nodes** (`plan.py`) — the
+  resolver's counterparts:
+  - `UpsertAssignment(column: str, value: Expr)` — an assignment with the planner's
+    `Expr` type (which includes `ExcludedColumn`).
+  - `UpsertAction(conflict_target, do_nothing, assignments)` — carried on
+    `Insert.upsert: UpsertAction | None`.
+
+- **`_resolve_upsert()` and `_resolve_upsert_expr()` in `planner.py`** — convert
+  `UpsertClause` AST → `UpsertAction` plan, passing `ExcludedColumn` nodes through
+  unchanged and recursively resolving `BinaryExpr` operands.  Integrated into
+  `_plan_insert()` and `_plan_insert_select()`.
+
+- **New exports in `__init__.py`**: `AstUpsertAssignment`, `UpsertClause`,
+  `ExcludedColumn`, `UpsertAction`, `UpsertAssignment`.
+
 ## [0.21.0] - 2026-05-04
 
 ### Added

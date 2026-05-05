@@ -74,6 +74,7 @@ from .ir import (
     LimitResult,
     LoadColumn,
     LoadConst,
+    LoadExcludedColumn,
     LoadGroupKey,
     LoadLastInsertedColumn,
     LoadOuterColumn,
@@ -99,6 +100,7 @@ from .ir import (
     UnaryOpCode,
     UpdateAgg,
     UpdateRows,
+    UpsertSpec,
     WinFunc,
     WinFuncSpec,
 )
@@ -107,6 +109,9 @@ from .ir import (
 )
 from .ir import (
     ColumnDef as IrColumnDef,
+)
+from .ir import (
+    UpsertAssignment as IrUpsertAssignment,
 )
 
 __all__ = [
@@ -161,6 +166,7 @@ __all__ = [
     "LimitResult",
     "LoadColumn",
     "LoadConst",
+    "LoadExcludedColumn",
     "LoadGroupKey",
     "LoadLastInsertedColumn",
     "LoadOuterColumn",
@@ -187,6 +193,8 @@ __all__ = [
     "UnsupportedNode",
     "UpdateAgg",
     "UpdateRows",
+    "UpsertSpec",
+    "IrUpsertAssignment",
     "WinFunc",
     "WinFuncSpec",
     "ComputeWindowFunctions",

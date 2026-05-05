@@ -80,7 +80,7 @@ from sql_planner import (
     Update,
 )
 from sql_planner.plan import Assignment as PlanAssignment
-from sql_planner.plan import Limit, SortKey
+from sql_planner.plan import Limit, SortKey, UpsertAction, UpsertAssignment as PlanUpsertAssignment
 
 
 class ConstantFolding:
@@ -142,10 +142,14 @@ def _fold_plan(p: LogicalPlan) -> LogicalPlan:
             return DerivedTable(query=_fold_plan(q), alias=alias, columns=cols)
         case Begin() | Commit() | Rollback():
             return p  # transaction control — nothing to fold
-        case Insert(table=t, columns=cols, source=src, on_conflict=oc, returning=ret):
+        case Insert(table=t, columns=cols, source=src, on_conflict=oc, returning=ret, upsert=up):
             new_src = _fold_insert_source(src)
             new_ret = tuple(_fold_expr(r) for r in ret)
-            return Insert(table=t, columns=cols, source=new_src, on_conflict=oc, returning=new_ret)
+            new_up = _fold_upsert(up)
+            return Insert(
+                table=t, columns=cols, source=new_src, on_conflict=oc,
+                returning=new_ret, upsert=new_up,
+            )
         case Update(table=t, assignments=asgs, predicate=pred, returning=ret):
             return Update(
                 table=t,
@@ -178,6 +182,29 @@ def _fold_plan(p: LogicalPlan) -> LogicalPlan:
             )
         case _:
             return p  # CreateTable, DropTable, CreateIndex, DropIndex — nothing to fold
+
+
+def _fold_upsert(up: UpsertAction | None) -> UpsertAction | None:
+    """Constant-fold expressions inside an upsert action's SET assignments.
+
+    When ``up`` is ``None`` (no upsert clause) or ``do_nothing=True`` (no
+    assignments to fold), the node is returned unchanged.  Otherwise, each
+    assignment value is folded in place.
+    """
+    if up is None or up.do_nothing:
+        return up
+    new_assignments = tuple(
+        PlanUpsertAssignment(column=a.column, value=_fold_expr(a.value))
+        for a in up.assignments
+    )
+    # If nothing changed, return the original node to preserve identity.
+    if new_assignments == up.assignments:
+        return up
+    return UpsertAction(
+        conflict_target=up.conflict_target,
+        do_nothing=False,
+        assignments=new_assignments,
+    )
 
 
 def _fold_insert_source(src: InsertSource) -> InsertSource:

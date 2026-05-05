@@ -1,5 +1,37 @@
 # Changelog
 
+## [1.17.0] - 2026-05-05
+
+### Added
+
+- **`UpsertAssignment`, `UpsertSpec`, `LoadExcludedColumn` IR nodes** (`ir.py`) —
+  three new frozen dataclasses completing the upsert IR layer:
+  - `UpsertAssignment(column: str, instructions: tuple[Instruction, ...])` — one
+    SET column with its pre-compiled expression as a self-contained instruction
+    sequence evaluated by `_upsert_apply` in the VM.
+  - `UpsertSpec(conflict_target, do_nothing, assignments)` — the compiled upsert
+    clause carried on `InsertRow.upsert` and `InsertFromResult.upsert`.
+  - `LoadExcludedColumn(col: str)` — pushes the named column's value from the
+    *would-be-inserted* row onto the operand stack.  The VM resolves this against
+    `_VmState.excluded_row` which is populated by `_upsert_apply` before evaluating
+    each SET expression.
+
+- **`upsert: UpsertSpec | None` on `InsertRow` and `InsertFromResult`** (`ir.py`) —
+  both insert IR nodes now carry the optional upsert spec.  When `None`, the VM
+  behaves as before (no ON CONFLICT handling beyond `on_conflict`).
+
+- **`_compile_upsert(upsert, ctx)` in `compiler.py`** — compiles a
+  `PlanUpsertAction` into a `UpsertSpec`.  For DO-NOTHING returns an assignment-free
+  `UpsertSpec(do_nothing=True)`.  For DO-UPDATE compiles each assignment's `Expr`
+  into a flat instruction tuple via `_compile_expr`, which handles `ExcludedColumn`
+  as `LoadExcludedColumn`.
+
+- **`ExcludedColumn` case in `_compile_expr`** — `ExcludedColumn(col=c)` compiles
+  to `[LoadExcludedColumn(col=c)]`.
+
+- **New exports in `__init__.py`**: `LoadExcludedColumn`, `UpsertSpec`,
+  `IrUpsertAssignment`.
+
 ## [1.16.0] - 2026-05-05
 
 ### Added
