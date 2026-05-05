@@ -130,6 +130,15 @@ impl ErrorCode {
     /// Dispatch exceeded the timeout.
     pub const TIMEOUT: ErrorCode = ErrorCode(0x0061);
 
+    /// The executor recognises the request shape but doesn't yet
+    /// implement it (e.g. `DispatchSpecialised` arrived but the
+    /// backend hasn't installed the corresponding specialised-kernel
+    /// table yet).  Distinct from `UNKNOWN_VARIANT` (which is "I
+    /// don't recognise this tag").  Callers should treat
+    /// `NOT_IMPLEMENTED` as a soft refusal — fall back to the
+    /// generic dispatch path and try again later.
+    pub const NOT_IMPLEMENTED: ErrorCode = ErrorCode(0x0062);
+
     /// Whether this code is in the executor-specific range.
     pub fn is_backend_specific(self) -> bool {
         self.0 >= 0x0080
@@ -177,6 +186,40 @@ pub enum ExecutorRequest {
     /// executor unless the graph itself contains download transfers.
     Dispatch { job_id: u64, graph: ComputeGraph },
 
+    /// Run a previously-emitted **specialised kernel** by handle
+    /// (MX05 Phase 4.1).  The executor looks up the handle in its
+    /// per-process specialised-kernel table (populated by its
+    /// `Specialiser::specialise` calls) and runs that kernel against
+    /// the supplied input/output buffers.
+    ///
+    /// The runtime only sends this request after a `Specialiser::specialise`
+    /// call returned `Some(SpecialisedKernel { handle, .. })` — so the
+    /// handle is already known to the executor.  If the handle is
+    /// unknown (e.g. process restart, driver reset), the executor
+    /// replies with `Error { code: NOT_IMPLEMENTED }` and the runtime
+    /// falls back to the generic `Dispatch` path.
+    ///
+    /// V1 of this variant ships **the protocol surface only**.  Both
+    /// `matrix-cpu` and `matrix-metal` reply with `NOT_IMPLEMENTED`
+    /// until they install their per-handle kernel tables — that's
+    /// the work tracked under "MX05 Phase 4.1: matrix-cpu executes
+    /// specialised kernels".
+    DispatchSpecialised {
+        /// Per-job correlation id, mirrored back in the response.
+        job_id: u64,
+        /// Opaque kernel handle previously emitted by this backend's
+        /// `Specialiser::specialise`.  Identifying which kernel to
+        /// run.
+        handle: u64,
+        /// Buffers holding input data, in slot order.  Already
+        /// resident on this executor (the runtime ensured residency
+        /// before issuing the request).
+        inputs: Vec<BufferId>,
+        /// Buffers to write output data into, in slot order.  Must
+        /// already be allocated.
+        outputs: Vec<BufferId>,
+    },
+
     /// Read bytes from a buffer back into runtime memory.
     DownloadBuffer {
         buffer: BufferId,
@@ -213,6 +256,7 @@ impl ExecutorRequest {
             ExecutorRequest::CancelJob { .. } => 0x07,
             ExecutorRequest::Heartbeat => 0x08,
             ExecutorRequest::Shutdown => 0x09,
+            ExecutorRequest::DispatchSpecialised { .. } => 0x0A,
         }
     }
 }
@@ -338,12 +382,51 @@ mod tests {
             ExecutorRequest::CancelJob { job_id: 0 },
             ExecutorRequest::Heartbeat,
             ExecutorRequest::Shutdown,
+            ExecutorRequest::DispatchSpecialised {
+                job_id: 0,
+                handle: 0,
+                inputs: Vec::new(),
+                outputs: Vec::new(),
+            },
         ];
         let mut tags: Vec<u8> = reqs.iter().map(|r| r.wire_tag()).collect();
         tags.sort();
         let len = tags.len();
         tags.dedup();
         assert_eq!(tags.len(), len);
+    }
+
+    #[test]
+    fn dispatch_specialised_wire_tag_is_0x0a() {
+        let req = ExecutorRequest::DispatchSpecialised {
+            job_id: 0,
+            handle: 0,
+            inputs: Vec::new(),
+            outputs: Vec::new(),
+        };
+        assert_eq!(req.wire_tag(), 0x0A);
+    }
+
+    #[test]
+    fn not_implemented_error_code_in_runtime_range() {
+        // Runtime-defined error codes are < 0x80; backend-specific
+        // start at 0x80.  NOT_IMPLEMENTED must stay in the runtime
+        // range so backends can return it without conflicting with
+        // their own custom codes.
+        assert!(!ErrorCode::NOT_IMPLEMENTED.is_backend_specific());
+        // Distinct from all other named runtime codes.
+        for other in [
+            ErrorCode::MALFORMED_FRAME,
+            ErrorCode::UNKNOWN_VARIANT,
+            ErrorCode::VERSION_MISMATCH,
+            ErrorCode::OUT_OF_MEMORY,
+            ErrorCode::DEVICE_LOST,
+            ErrorCode::COMPILATION_FAILED,
+            ErrorCode::RUNTIME_ERROR,
+            ErrorCode::TIMEOUT,
+        ] {
+            assert_ne!(ErrorCode::NOT_IMPLEMENTED, other);
+        }
     }
 
     #[test]

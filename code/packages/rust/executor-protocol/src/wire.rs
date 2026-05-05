@@ -330,6 +330,23 @@ fn encode_request(req: &ExecutorRequest, w: &mut Writer<'_>) {
         }
         ExecutorRequest::Heartbeat => {}
         ExecutorRequest::Shutdown => {}
+        ExecutorRequest::DispatchSpecialised {
+            job_id,
+            handle,
+            inputs,
+            outputs,
+        } => {
+            w.u64(*job_id);
+            w.u64(*handle);
+            w.u32(inputs.len() as u32);
+            for b in inputs {
+                w.u64(b.0);
+            }
+            w.u32(outputs.len() as u32);
+            for b in outputs {
+                w.u64(b.0);
+            }
+        }
     }
 }
 
@@ -368,6 +385,34 @@ fn decode_request(r: &mut Reader<'_>) -> Result<ExecutorRequest, WireError> {
         0x07 => Ok(ExecutorRequest::CancelJob { job_id: r.u64()? }),
         0x08 => Ok(ExecutorRequest::Heartbeat),
         0x09 => Ok(ExecutorRequest::Shutdown),
+        0x0A => {
+            let job_id = r.u64()?;
+            let handle = r.u64()?;
+            // Each BufferId is 8 wire bytes; bound the pre-allocation
+            // against the bytes actually remaining so an attacker cannot
+            // request a multi-GB Vec via a maliciously large `n_in`.
+            // Same pattern as `OpTiming` decoding above.  If the
+            // attacker lies about the count, the loop below will hit
+            // the truncated-read path and fail cleanly.
+            let n_in = r.u32()? as u64;
+            let cap_in = bounded_capacity(n_in, 8, r.remaining());
+            let mut inputs = Vec::with_capacity(cap_in);
+            for _ in 0..n_in {
+                inputs.push(BufferId(r.u64()?));
+            }
+            let n_out = r.u32()? as u64;
+            let cap_out = bounded_capacity(n_out, 8, r.remaining());
+            let mut outputs = Vec::with_capacity(cap_out);
+            for _ in 0..n_out {
+                outputs.push(BufferId(r.u64()?));
+            }
+            Ok(ExecutorRequest::DispatchSpecialised {
+                job_id,
+                handle,
+                inputs,
+                outputs,
+            })
+        }
         unknown => Err(WireError::UnknownTag {
             what: "ExecutorRequest",
             tag: unknown as u64,
@@ -678,5 +723,69 @@ mod tests {
             MessageFrame::from_bytes(&buf),
             Err(WireError::UnsupportedFrameVersion(99))
         ));
+    }
+
+    #[test]
+    fn dispatch_specialised_request_round_trips() {
+        let original = ExecutorRequest::DispatchSpecialised {
+            job_id: 0xABCD_EF12_3456_7890,
+            handle: 0x1234_5678_9ABC_DEF0,
+            inputs: vec![BufferId(7), BufferId(8), BufferId(9)],
+            outputs: vec![BufferId(10), BufferId(11)],
+        };
+
+        let frame = MessageFrame::request(99, &original);
+        let bytes = frame.to_bytes();
+        let decoded_frame = MessageFrame::from_bytes(&bytes).expect("frame decodes");
+        let decoded_req = decoded_frame.as_request().expect("payload decodes");
+
+        assert_eq!(decoded_req, original);
+    }
+
+    #[test]
+    fn dispatch_specialised_with_empty_buffer_lists_round_trips() {
+        let original = ExecutorRequest::DispatchSpecialised {
+            job_id: 0,
+            handle: 0,
+            inputs: vec![],
+            outputs: vec![],
+        };
+        let frame = MessageFrame::request(0, &original);
+        let bytes = frame.to_bytes();
+        let decoded_frame = MessageFrame::from_bytes(&bytes).expect("frame decodes");
+        assert_eq!(decoded_frame.as_request().unwrap(), original);
+    }
+
+    /// **Security regression test.**  An attacker-supplied `n_inputs` of
+    /// `u32::MAX` would request ~34 GiB if `Vec::with_capacity` were
+    /// passed the raw count.  The decoder must bound capacity against
+    /// remaining wire bytes (each `BufferId` costs 8 bytes), so
+    /// pre-allocation stays small and the truncated-read path catches
+    /// the malformed message cleanly without panicking.
+    #[test]
+    fn dispatch_specialised_oversized_input_count_does_not_oom() {
+        let mut payload = Vec::new();
+        let mut w = Writer::new(&mut payload);
+        // tag 0x0A, job_id, handle
+        w.u8(0x0A);
+        w.u64(0);
+        w.u64(0);
+        // attacker-controlled "n_inputs = u32::MAX" with no actual
+        // buffer ids following.  A naive decoder would allocate
+        // capacity for 4.29B BufferId entries.
+        w.u32(u32::MAX);
+
+        let mut frame_bytes = Vec::new();
+        let mut fw = Writer::new(&mut frame_bytes);
+        fw.u8(1); // format_version
+        fw.u8(0); // kind = Request
+        fw.u64(0); // correlation_id
+        fw.bytes(&payload);
+
+        // Decode must return Err(Truncated) — and crucially, must
+        // return *cleanly* without panic or OOM-abort.
+        let frame = MessageFrame::from_bytes(&frame_bytes).expect("outer frame ok");
+        let res = frame.as_request();
+        assert!(res.is_err(), "decoder must reject the malformed message");
     }
 }

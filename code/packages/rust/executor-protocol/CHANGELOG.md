@@ -3,6 +3,65 @@
 All notable changes to `executor-protocol` are documented here.  The
 format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.0] — 2026-05-05
+
+### Added — MX05 Phase 4.1 protocol surface
+
+- New `ExecutorRequest::DispatchSpecialised { job_id, handle, inputs,
+  outputs }` variant (wire tag `0x0A`) that routes a previously-emitted
+  specialised kernel by **handle**.
+
+  Wire format:
+    - `u8 0x0A`
+    - `u64 job_id`
+    - `u64 handle`
+    - `u32 n_inputs` followed by `n_inputs × u64` buffer ids
+    - `u32 n_outputs` followed by `n_outputs × u64` buffer ids
+
+  Reply uses the existing `ExecutorResponse::DispatchDone { job_id,
+  timings }` on success or `ExecutorResponse::Error { code:
+  NOT_IMPLEMENTED, .. }` if the backend hasn't yet wired execution.
+
+- New `ErrorCode::NOT_IMPLEMENTED` (`0x0062`) — soft refusal for
+  recognised request shapes the backend doesn't yet execute.
+  Distinct from `UNKNOWN_VARIANT`.  Stays in the runtime-defined
+  range (< 0x80).
+
+### Changed
+
+- `PROTOCOL_VERSION` bumped from `1` to `2`.  Forward-compatible
+  with v1 senders: every existing variant still encodes/decodes
+  byte-identically.
+
+### Security hardening
+
+- The `DispatchSpecialised` decoder bounds `Vec::with_capacity` for the
+  `inputs` and `outputs` lists against the bytes actually remaining in
+  the wire reader (each `BufferId` costs 8 bytes), using the same
+  `bounded_capacity` helper that already protects `OpTiming` decoding.
+  Without this bound, an attacker-supplied `n_inputs = u32::MAX` would
+  request a ~34 GiB allocation per malicious frame.
+
+### Tests (5 new)
+
+- `dispatch_specialised_wire_tag_is_0x0a`
+- `not_implemented_error_code_in_runtime_range`
+- `dispatch_specialised_request_round_trips`
+- `dispatch_specialised_with_empty_buffer_lists_round_trips`
+- `dispatch_specialised_oversized_input_count_does_not_oom` — security
+  regression test that asserts the decoder rejects a frame claiming
+  `n_inputs = u32::MAX` cleanly, without OOM-aborting on the
+  pre-allocation.
+- `request_tags_unique` extended to include the new variant.
+
+### Notes
+
+- Both `matrix-cpu` and `matrix-metal` reply with `Error { code:
+  NOT_IMPLEMENTED }` for `DispatchSpecialised`.  The protocol
+  surface lands here; per-backend execution is tracked under
+  "MX05 Phase 4.1: matrix-cpu executes specialised kernels" and
+  "Phase 4.2: matrix-metal MSL emitter".
+
 ## [0.1.0] — 2026-05-04
 
 Initial release.  Implements spec MX03 V1.

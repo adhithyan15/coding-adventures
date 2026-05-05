@@ -204,6 +204,21 @@ pub enum ExecutorRequest {
     /// Graceful shutdown — executor flushes outstanding work and
     /// stops accepting new requests.
     Shutdown,
+
+    /// (v0.2 / protocol v2)  Dispatch a previously-emitted **specialised
+    /// kernel** by handle.  The handle was returned by a `Specialiser`
+    /// at compile time (see MX05 §"SpecRouter") and is opaque to the
+    /// runtime — the executor owns the per-handle table.
+    ///
+    /// Wire tag: `0x0A`.  Backends that recognise the variant but have
+    /// not yet wired execution reply with
+    /// `Error { code: NOT_IMPLEMENTED, .. }`.
+    DispatchSpecialised {
+        job_id:  u64,
+        handle:  u64,
+        inputs:  Vec<BufferId>,
+        outputs: Vec<BufferId>,
+    },
 }
 
 pub enum ExecutorResponse {
@@ -382,7 +397,11 @@ Errors propagate from executor to runtime as `ExecutorResponse::Error
 - **Compilation errors** (`0x40–0x5F`): kernel source rejected.  Does
   not invalidate other state.
 - **Runtime errors** (`0x60–0x7F`): kernel produced NaN, dispatch
-  exceeded timeout.  Per-job, does not invalidate the executor.
+  exceeded timeout.  Per-job, does not invalidate the executor.  This
+  band also holds **`NOT_IMPLEMENTED` (`0x0062`)**, added in protocol
+  v2: the request shape is recognised but this backend has not yet
+  wired execution.  Distinct from the protocol-band `UNKNOWN_VARIANT`
+  (which means the backend doesn't even know the tag).
 - **Executor-specific** (`0x80–0xFF`): backend-defined.
 
 Every error carries a UTF-8 `message` for diagnostics.  Messages are
@@ -428,3 +447,64 @@ Coverage target: **100%** of the public API.
 3. Should `OpTiming` be optional in `DispatchDone`?  Some backends can't
    measure per-op time without overhead.  V1 leaves it always present
    but allows `ns: 0` to mean "unmeasured".
+
+## Protocol version history
+
+### v1 — initial release (executor-protocol 0.1.0)
+
+Everything described above through the V1 lens: 10 request variants,
+11 response variants, 3 event variants.  `PROTOCOL_VERSION = 1`.
+
+### v2 — MX05 Phase 4.1 protocol surface (executor-protocol 0.2.0)
+
+Adds the wire-format support for routing pre-emitted **specialised
+kernels** (see MX05 §"SpecRouter") through the same `Transport` that
+already carries every other request.  `PROTOCOL_VERSION = 2`.
+
+**Forward-compatible with v1 senders.**  Every existing variant still
+encodes/decodes byte-identically.  A v1-only executor receiving the new
+request would fail with `UNKNOWN_VARIANT` (existing behaviour for any
+unknown tag); a v2 executor receiving a v1 request stream decodes it
+unchanged.
+
+Added:
+
+- `ExecutorRequest::DispatchSpecialised { job_id, handle, inputs,
+  outputs }` — wire tag `0x0A`.
+
+  Wire layout of the payload (after the variant tag):
+
+  ```
+  u64           job_id
+  u64           handle
+  u32           n_inputs
+  n_inputs ×    u64 buffer_id
+  u32           n_outputs
+  n_outputs ×   u64 buffer_id
+  ```
+
+  Reply on success: `ExecutorResponse::DispatchDone { job_id, timings }`
+  (existing variant, unchanged).  Reply when execution isn't wired yet:
+  `ExecutorResponse::Error { code: NOT_IMPLEMENTED, .. }`.
+
+- `ErrorCode::NOT_IMPLEMENTED = 0x0062` — soft refusal in the
+  runtime-errors band.  Means "I recognise the request shape, the
+  request is well-formed, but I have not yet wired execution for it."
+  Distinct from `UNKNOWN_VARIANT` (which is a protocol-band hard error).
+
+  V2 backends ship behaviour:
+  - `matrix-cpu` 0.x — replies `NOT_IMPLEMENTED` for `DispatchSpecialised`.
+    Phase 4.1 (next) installs a per-handle closure table so this returns
+    `DispatchDone`.
+  - `matrix-metal` 0.x — same, until Phase 4.2 lands the MSL emitter.
+
+Why a new tag rather than overloading `Dispatch`:
+
+`Dispatch` carries a full `compute_ir::ComputeGraph`; `DispatchSpecialised`
+carries a single opaque `u64` handle plus its buffer arguments.  The
+two payload shapes are disjoint enough that overloading would force
+every reader to peek at sub-fields to disambiguate.  Separate tags keep
+the wire format flat and the decode path branchless.
+
+Reserved tags `0x0B`+ for future MX05 phases (e.g. specialised kernel
+unload, specialised kernel re-emit).
