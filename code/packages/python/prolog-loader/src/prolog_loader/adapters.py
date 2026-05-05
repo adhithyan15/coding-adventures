@@ -12,6 +12,7 @@ from logic_builtins import (
     argo,
     assertao,
     assertzo,
+    at_end_of_current_streamo,
     at_end_of_streamo,
     atom_charso,
     atom_codeso,
@@ -39,6 +40,8 @@ from logic_builtins import (
     copytermo,
     current_atomo,
     current_functoro,
+    current_inputo,
+    current_outputo,
     current_predicateo,
     current_prolog_flago,
     current_streamo,
@@ -71,11 +74,13 @@ from logic_builtins import (
     fd_sum_relationo,
     fd_sumo,
     findallo,
+    flush_current_outputo,
     flush_outputo,
     foldlo,
     forallo,
     functoro,
     get_charo,
+    get_current_charo,
     groundo,
     ifthenelseo,
     iftheno,
@@ -85,6 +90,7 @@ from logic_builtins import (
     labeling_optionso,
     labelingo,
     maplisto,
+    nl_currento,
     nlo,
     nonvaro,
     not_same_termo,
@@ -107,6 +113,8 @@ from logic_builtins import (
     prolog_lto,
     prolog_numeqo,
     prolog_numneqo,
+    read_current_line_to_stringo,
+    read_current_stringo,
     read_file_to_codeso,
     read_file_to_stringo,
     read_line_to_stringo,
@@ -117,6 +125,8 @@ from logic_builtins import (
     same_termo,
     scanlo,
     seeko,
+    set_inputo,
+    set_outputo,
     set_prolog_flago,
     set_stream_positiono,
     setofo,
@@ -144,6 +154,7 @@ from logic_builtins import (
     univo,
     variant_termo,
     varo,
+    write_currento,
     writeo,
 )
 from logic_engine import (
@@ -537,20 +548,42 @@ def _adapt_relation_call(
         return open_optionso(*args)
     if name == "current_stream" and goal.relation.arity == 3:
         return current_streamo(*args)
+    if name == "current_input" and goal.relation.arity == 1:
+        return current_inputo(*args)
+    if name == "current_output" and goal.relation.arity == 1:
+        return current_outputo(*args)
+    if name == "set_input" and goal.relation.arity == 1:
+        return set_inputo(*args)
+    if name == "set_output" and goal.relation.arity == 1:
+        return set_outputo(*args)
     if name == "stream_property" and goal.relation.arity == 2:
         return stream_propertyo(*args)
     if name == "set_stream_position" and goal.relation.arity == 2:
         return set_stream_positiono(*args)
     if name == "seek" and goal.relation.arity == 4:
         return seeko(*args)
+    if name == "at_end_of_stream" and goal.relation.arity == 0:
+        return at_end_of_current_streamo()
     if name == "read_string" and goal.relation.arity == 3:
         return read_stringo(*args)
+    if name == "read_string" and goal.relation.arity == 2:
+        return read_current_stringo(*args)
     if name == "read_line_to_string" and goal.relation.arity == 2:
         return read_line_to_stringo(*args)
+    if name == "read_line_to_string" and goal.relation.arity == 1:
+        return read_current_line_to_stringo(*args)
     if name == "get_char" and goal.relation.arity == 2:
         return get_charo(*args)
+    if name == "get_char" and goal.relation.arity == 1:
+        return get_current_charo(*args)
     if name == "write" and goal.relation.arity == 2:
         return writeo(*args)
+    if name == "write" and goal.relation.arity == 1:
+        return write_currento(*args)
+    if name == "nl" and goal.relation.arity == 0:
+        return nl_currento()
+    if name == "flush_output" and goal.relation.arity == 0:
+        return flush_current_outputo()
     if name == "atom_number" and goal.relation.arity == 2:
         return atom_numbero(*args)
     if name == "char_code" and goal.relation.arity == 2:

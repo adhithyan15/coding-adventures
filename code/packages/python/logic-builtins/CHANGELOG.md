@@ -17,6 +17,8 @@ All notable changes to this package will be documented in this file.
   metadata.
 - `set_stream_positiono/2` and `seeko/4` for bounded read-stream cursor
   repositioning.
+- `set_inputo/1`, `set_outputo/1`, `current_inputo/1`, `current_outputo/1`,
+  and current-stream read/write forms for selected bounded streams.
 - `betweeno(low, high, value)` for finite inclusive integer generation and
   validation, matching the common Prolog `between/3` use case.
 - `integero(term)` for non-bool integer type checks and `succo(predecessor,

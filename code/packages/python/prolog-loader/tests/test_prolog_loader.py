@@ -1575,6 +1575,54 @@ class TestPrologGoalAdapter:
             adapt_prolog_goal(parsed.goal),
         ) == [(string("ab"), num(2), string("ab"), num(5), num(5), string("f"))]
 
+    def test_adapt_prolog_goal_rewrites_current_stream_facade(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        input_path = tmp_path / "current-input.txt"
+        output_path = tmp_path / "current-output.txt"
+        input_path.write_text("abcdef", encoding="utf-8")
+        input_atom = str(input_path).replace("\\", "\\\\").replace("'", "\\'")
+        output_atom = str(output_path).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- open('{input_atom}', read, In, [alias(selected_input)]), "
+            f"open('{output_atom}', write, Out, [alias(selected_output)]), "
+            "set_input(selected_input), "
+            "set_output(selected_output), "
+            "current_input(CurrentIn), "
+            "current_output(CurrentOut), "
+            "get_char(First), "
+            "read_string(2, Chunk), "
+            "read_line_to_string(Line), "
+            "at_end_of_stream, "
+            'write("tea"), '
+            "nl, "
+            "write(cake(slice)), "
+            "flush_output, "
+            "stream_property(In, current_input), "
+            "stream_property(Out, current_output), "
+            "close(In), "
+            "close(Out).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["CurrentIn"],
+                parsed.variables["CurrentOut"],
+                parsed.variables["First"],
+                parsed.variables["Chunk"],
+                parsed.variables["Line"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert len(answers) == 1
+        current_in, current_out, first, chunk, line = answers[0]
+        assert current_in != current_out
+        assert (first, chunk, line) == (atom("a"), string("bc"), string("def"))
+        assert output_path.read_text(encoding="utf-8") == "tea\ncake(slice)"
+
     def test_adapt_prolog_goal_rewrites_term_read_write_options(self) -> None:
         parsed = parse_swi_query(
             "?- read_term_from_atom('pair(X, Y, X)', Term, "

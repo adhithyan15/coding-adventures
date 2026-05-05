@@ -89,6 +89,7 @@ __all__ = [
     "atom_numbero",
     "atomico",
     "atomo",
+    "at_end_of_current_streamo",
     "at_end_of_streamo",
     "atomic_list_concato",
     "atomic_list_concato_with_separator",
@@ -109,6 +110,8 @@ __all__ = [
     "current_functoro",
     "current_prolog_flago",
     "current_predicateo",
+    "current_inputo",
+    "current_outputo",
     "current_streamo",
     "cuto",
     "cyclic_termo",
@@ -147,9 +150,11 @@ __all__ = [
     "foldlo",
     "forallo",
     "flush_outputo",
+    "flush_current_outputo",
     "functoro",
     "geqo",
     "get_charo",
+    "get_current_charo",
     "gto",
     "groundo",
     "ifthenelseo",
@@ -176,6 +181,7 @@ __all__ = [
     "number_stringo",
     "numbero",
     "nlo",
+    "nl_currento",
     "onceo",
     "openo",
     "open_optionso",
@@ -186,6 +192,8 @@ __all__ = [
     "read_file_to_stringo",
     "read_line_to_stringo",
     "read_stringo",
+    "read_current_line_to_stringo",
+    "read_current_stringo",
     "repeato",
     "PrologEvaluationError",
     "PrologFlagStore",
@@ -208,6 +216,8 @@ __all__ = [
     "same_termo",
     "scanlo",
     "seeko",
+    "set_inputo",
+    "set_outputo",
     "setofo",
     "set_prolog_flago",
     "set_stream_positiono",
@@ -236,6 +246,7 @@ __all__ = [
     "unifiableo",
     "unify_with_occurs_checko",
     "varo",
+    "write_currento",
     "writeo",
     "not_variant_termo",
     "subsumes_termo",
@@ -269,6 +280,8 @@ class _TextStream:
 _STREAM_IDS = count(1)
 _STREAMS: dict[str, _TextStream] = {}
 _STREAM_ALIASES: dict[str, str] = {}
+_CURRENT_INPUT_HANDLE: str | None = None
+_CURRENT_OUTPUT_HANDLE: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -5014,6 +5027,8 @@ def closeo(stream_value: object) -> GoalExpr:
     """Close a bounded stream handle created by ``openo/3``."""
 
     def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        global _CURRENT_INPUT_HANDLE, _CURRENT_OUTPUT_HANDLE
+
         [stream_term] = args
         handle_text = _stream_key(_reified(stream_term, state))
         if handle_text is None or handle_text not in _STREAMS:
@@ -5021,19 +5036,110 @@ def closeo(stream_value: object) -> GoalExpr:
         stream = _STREAMS.pop(handle_text)
         if stream.alias is not None:
             _STREAM_ALIASES.pop(stream.alias, None)
+        if handle_text == _CURRENT_INPUT_HANDLE:
+            _CURRENT_INPUT_HANDLE = None
+        if handle_text == _CURRENT_OUTPUT_HANDLE:
+            _CURRENT_OUTPUT_HANDLE = None
         yield state
 
     return native_goal(run, stream_value)
 
 
-def _read_stream(term_value: Term) -> _TextStream | None:
+def _stream_for_mode(
+    term_value: Term,
+    modes: set[str],
+) -> tuple[str, _TextStream] | None:
     handle_text = _stream_key(term_value)
     if handle_text is None:
         return None
     stream = _STREAMS.get(handle_text)
+    if stream is None or stream.mode not in modes:
+        return None
+    return handle_text, stream
+
+
+def _read_stream(term_value: Term) -> _TextStream | None:
+    resolved = _stream_for_mode(term_value, {"read"})
+    return None if resolved is None else resolved[1]
+
+
+def _current_input_stream() -> _TextStream | None:
+    if _CURRENT_INPUT_HANDLE is None:
+        return None
+    stream = _STREAMS.get(_CURRENT_INPUT_HANDLE)
     if stream is None or stream.mode != "read":
         return None
     return stream
+
+
+def _current_output_stream_term() -> Atom | None:
+    if _CURRENT_OUTPUT_HANDLE is None:
+        return None
+    stream = _STREAMS.get(_CURRENT_OUTPUT_HANDLE)
+    if stream is None or stream.mode not in {"write", "append"}:
+        return None
+    return atom(_CURRENT_OUTPUT_HANDLE)
+
+
+def current_inputo(stream_value: object) -> GoalExpr:
+    """Unify with the currently selected bounded input stream handle."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [stream_term] = args
+        if _current_input_stream() is None or _CURRENT_INPUT_HANDLE is None:
+            return
+        yield from solve_from(
+            program_value,
+            eq(stream_term, atom(_CURRENT_INPUT_HANDLE)),
+            state,
+        )
+
+    return native_goal(run, stream_value)
+
+
+def current_outputo(stream_value: object) -> GoalExpr:
+    """Unify with the currently selected bounded output stream handle."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [stream_term] = args
+        output_stream = _current_output_stream_term()
+        if output_stream is None:
+            return
+        yield from solve_from(program_value, eq(stream_term, output_stream), state)
+
+    return native_goal(run, stream_value)
+
+
+def set_inputo(stream_value: object) -> GoalExpr:
+    """Select an open bounded read stream as the current input stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        global _CURRENT_INPUT_HANDLE
+
+        [stream_term] = args
+        resolved = _stream_for_mode(_reified(stream_term, state), {"read"})
+        if resolved is None:
+            return
+        _CURRENT_INPUT_HANDLE = resolved[0]
+        yield state
+
+    return native_goal(run, stream_value)
+
+
+def set_outputo(stream_value: object) -> GoalExpr:
+    """Select an open bounded write/append stream as the current output stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        global _CURRENT_OUTPUT_HANDLE
+
+        [stream_term] = args
+        resolved = _stream_for_mode(_reified(stream_term, state), {"write", "append"})
+        if resolved is None:
+            return
+        _CURRENT_OUTPUT_HANDLE = resolved[0]
+        yield state
+
+    return native_goal(run, stream_value)
 
 
 def at_end_of_streamo(stream_value: object) -> GoalExpr:
@@ -5046,6 +5152,17 @@ def at_end_of_streamo(stream_value: object) -> GoalExpr:
             yield state
 
     return native_goal(run, stream_value)
+
+
+def at_end_of_current_streamo() -> GoalExpr:
+    """Succeed when the selected bounded input stream is exhausted."""
+
+    def run(_program: Program, state: State, _args: NativeArgs) -> Iterator[State]:
+        stream = _current_input_stream()
+        if stream is not None and stream.cursor >= len(stream.contents):
+            yield state
+
+    return native_goal(run)
 
 
 def _stream_position(term_value: object) -> int | None:
@@ -5159,6 +5276,27 @@ def read_stringo(
     return native_goal(run, stream_value, length_value, string_value)
 
 
+def read_current_stringo(length_value: object, string_value: object) -> GoalExpr:
+    """Read up to ``Length`` code points from the selected input stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        length_term, string_term = args
+        stream = _current_input_stream()
+        length = _reified_integer(length_term, state)
+        if stream is None or length is None or length < 0:
+            return
+        start = stream.cursor
+        end = min(start + length, len(stream.contents))
+        stream.cursor = end
+        yield from solve_from(
+            program_value,
+            eq(string_term, String(stream.contents[start:end])),
+            state,
+        )
+
+    return native_goal(run, length_value, string_value)
+
+
 def read_line_to_stringo(stream_value: object, string_value: object) -> GoalExpr:
     """Read one line from a bounded read stream as a string or ``end_of_file``."""
 
@@ -5188,6 +5326,35 @@ def read_line_to_stringo(stream_value: object, string_value: object) -> GoalExpr
     return native_goal(run, stream_value, string_value)
 
 
+def read_current_line_to_stringo(string_value: object) -> GoalExpr:
+    """Read one line from the selected input stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [string_term] = args
+        stream = _current_input_stream()
+        if stream is None:
+            return
+
+        if stream.cursor >= len(stream.contents):
+            yield from solve_from(
+                program_value,
+                eq(string_term, atom("end_of_file")),
+                state,
+            )
+            return
+
+        newline_index = stream.contents.find("\n", stream.cursor)
+        if newline_index == -1:
+            line = stream.contents[stream.cursor :]
+            stream.cursor = len(stream.contents)
+        else:
+            line = stream.contents[stream.cursor : newline_index]
+            stream.cursor = newline_index + 1
+        yield from solve_from(program_value, eq(string_term, String(line)), state)
+
+    return native_goal(run, string_value)
+
+
 def get_charo(stream_value: object, char_value: object) -> GoalExpr:
     """Read one character atom from a bounded read stream or ``end_of_file``."""
 
@@ -5210,6 +5377,30 @@ def get_charo(stream_value: object, char_value: object) -> GoalExpr:
         yield from solve_from(program_value, eq(char_term, atom(character)), state)
 
     return native_goal(run, stream_value, char_value)
+
+
+def get_current_charo(char_value: object) -> GoalExpr:
+    """Read one character atom from the selected input stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [char_term] = args
+        stream = _current_input_stream()
+        if stream is None:
+            return
+
+        if stream.cursor >= len(stream.contents):
+            yield from solve_from(
+                program_value,
+                eq(char_term, atom("end_of_file")),
+                state,
+            )
+            return
+
+        character = stream.contents[stream.cursor]
+        stream.cursor += 1
+        yield from solve_from(program_value, eq(char_term, atom(character)), state)
+
+    return native_goal(run, char_value)
 
 
 def _stream_write_text(term_value: Term) -> str | None:
@@ -5239,6 +5430,13 @@ def _write_stream(term_value: Term, text: str) -> bool:
     return True
 
 
+def _write_current_stream(text: str) -> bool:
+    output_stream = _current_output_stream_term()
+    if output_stream is None:
+        return False
+    return _write_stream(output_stream, text)
+
+
 def writeo(stream_value: object, term_value: object) -> GoalExpr:
     """Write a bounded textual representation to a write/append stream."""
 
@@ -5252,6 +5450,19 @@ def writeo(stream_value: object, term_value: object) -> GoalExpr:
     return native_goal(run, stream_value, term_value)
 
 
+def write_currento(term_value: object) -> GoalExpr:
+    """Write a bounded textual representation to the selected output stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [term_term] = args
+        text = _stream_write_text(_reified(term_term, state))
+        if text is None or not _write_current_stream(text):
+            return
+        yield state
+
+    return native_goal(run, term_value)
+
+
 def nlo(stream_value: object) -> GoalExpr:
     """Write a newline to a write/append stream."""
 
@@ -5261,6 +5472,16 @@ def nlo(stream_value: object) -> GoalExpr:
             yield state
 
     return native_goal(run, stream_value)
+
+
+def nl_currento() -> GoalExpr:
+    """Write a newline to the selected output stream."""
+
+    def run(_program: Program, state: State, _args: NativeArgs) -> Iterator[State]:
+        if _write_current_stream("\n"):
+            yield state
+
+    return native_goal(run)
 
 
 def flush_outputo(stream_value: object) -> GoalExpr:
@@ -5274,6 +5495,16 @@ def flush_outputo(stream_value: object) -> GoalExpr:
             yield state
 
     return native_goal(run, stream_value)
+
+
+def flush_current_outputo() -> GoalExpr:
+    """Validate the selected output stream; writes are already flushed."""
+
+    def run(_program: Program, state: State, _args: NativeArgs) -> Iterator[State]:
+        if _current_output_stream_term() is not None:
+            yield state
+
+    return native_goal(run)
 
 
 def current_streamo(
@@ -5307,10 +5538,14 @@ def _stream_properties(handle_text: str, stream: _TextStream) -> tuple[Term, ...
     ]
     if stream.mode == "read":
         properties.append(atom("input"))
+        if handle_text == _CURRENT_INPUT_HANDLE:
+            properties.append(atom("current_input"))
         eof_state = "at" if stream.cursor >= len(stream.contents) else "not"
         properties.append(term("end_of_stream", atom(eof_state)))
     else:
         properties.append(atom("output"))
+        if handle_text == _CURRENT_OUTPUT_HANDLE:
+            properties.append(atom("current_output"))
     if stream.alias is not None:
         properties.append(term("alias", atom(stream.alias)))
     properties.append(term("handle", atom(handle_text)))

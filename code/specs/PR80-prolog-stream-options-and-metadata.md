@@ -52,8 +52,7 @@ Coverage should prove:
 
 ## Non-goals
 
-- no `current_input/1`, `current_output/1`, `set_input/1`, or `set_output/1`
-- no implicit one-argument `write/1`, `nl/0`, or standard stream aliases
+- no standard stream aliases
 - no binary streams or encodings beyond UTF-8
 - no `read/1`, `read_term/2`, or term parsing from stream handles
 - no foreign predicate or async host callback boundary

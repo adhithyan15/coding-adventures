@@ -1137,6 +1137,51 @@ class TestPrologVMStress:
             },
         ]
 
+    def test_current_stream_facade_runs_through_vm(self, tmp_path: Path) -> None:
+        input_path = tmp_path / "current-input.pltxt"
+        output_path = tmp_path / "current-output.pltxt"
+        input_path.write_text("abcdef", encoding="utf-8")
+        input_atom = str(input_path).replace("\\", "\\\\").replace("'", "\\'")
+        output_atom = str(output_path).replace("\\", "\\\\").replace("'", "\\'")
+        compiled = compile_swi_prolog_source(
+            f"""
+            ?- open('{input_atom}', read, In, [alias(selected_input)]),
+               open('{output_atom}', write, Out, [alias(selected_output)]),
+               set_input(selected_input),
+               set_output(selected_output),
+               current_input(CurrentIn),
+               current_output(CurrentOut),
+               get_char(First),
+               read_string(2, Chunk),
+               read_line_to_string(Line),
+               at_end_of_stream,
+               write("tea"),
+               nl,
+               write(cake(slice)),
+               flush_output,
+               stream_property(In, current_input),
+               stream_property(Out, current_output),
+               close(In),
+               close(Out).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert len(answers) == 1
+        answer = answers[0].as_dict()
+        assert answer["CurrentIn"] != answer["CurrentOut"]
+        assert {
+            "First": answer["First"],
+            "Chunk": answer["Chunk"],
+            "Line": answer["Line"],
+        } == {
+            "First": atom("a"),
+            "Chunk": string("bc"),
+            "Line": string("def"),
+        }
+        assert output_path.read_text(encoding="utf-8") == "tea\ncake(slice)"
+
     def test_initialized_named_answers_keep_runtime_assertions_visible(self) -> None:
         compiled = compile_swi_prolog_source(
             """

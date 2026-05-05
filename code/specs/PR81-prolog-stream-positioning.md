@@ -44,14 +44,13 @@ Coverage should prove:
 - source-level Prolog calls adapt to the builtin layer.
 - structured VM and bytecode VM produce matching answers for positioning
   stream queries.
-- the capability manifest records PR81 as complete while leaving standard
-  streams, binary streams, rich ISO/SWI options, foreign predicates, and async
-  host services deferred.
+- the capability manifest records PR81 as complete while leaving current or
+  console streams, binary streams, rich ISO/SWI options, foreign predicates,
+  and async host services deferred.
 
 ## Non-goals
 
-- no `current_input/1`, `current_output/1`, `set_input/1`, or `set_output/1`
-- no implicit one-argument `write/1`, `nl/0`, or standard stream aliases
+- no standard stream aliases
 - no output-stream truncation or random-access write positioning
 - no binary streams or encodings beyond UTF-8
 - no `read/1`, `read_term/2`, or term parsing from stream handles

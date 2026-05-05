@@ -64,6 +64,10 @@ It keeps parsing side-effect free, then exposes helpers to:
   `at_end_of_stream/1`, `write/2`, `nl/1`, `open/4`, `current_stream/3`,
   `stream_property/2`, `flush_output/1`, `set_stream_position/2`, and
   `seek/4`
+- adapt selected current-stream predicates including `set_input/1`,
+  `set_output/1`, `current_input/1`, `current_output/1`, `get_char/1`,
+  `read_string/2`, `read_line_to_string/1`, `at_end_of_stream/0`,
+  `write/1`, `nl/0`, and `flush_output/0`
 - load SWI-Prolog source graphs from real `.pl` files through relative
   `consult/1`, `ensure_loaded/1`, and file-backed `use_module/1,2`
 - splice `include/1` targets into the including source before project linking

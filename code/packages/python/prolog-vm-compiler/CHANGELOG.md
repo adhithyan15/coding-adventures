@@ -14,8 +14,11 @@
   `stream_property/2`, and `flush_output/1`.
 - Run bounded source-level stream positioning predicates through structured
   and bytecode VM paths, including `set_stream_position/2` and `seek/4`.
+- Run selected current-stream predicates through structured and bytecode VM
+  paths, including `set_input/1`, `set_output/1`, `current_input/1`,
+  `current_output/1`, current-input reads, and current-output writes.
 - Add a public Prolog VM capability manifest and `prolog-vm --dump-capabilities`
-  so scripts and future planning can distinguish the completed PR00-PR81 track
+  so scripts and future planning can distinguish the completed PR00-PR82 track
   from deferred advanced dialect/runtime work.
 - Add end-to-end stress coverage for recursive search, modules, DCGs,
   arithmetic, collections, dynamic initialization, named answers, and expansion.
