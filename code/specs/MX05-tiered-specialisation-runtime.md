@@ -165,6 +165,17 @@ inference, image processing, scientific simulation) can supply their
 own policies that bias toward their workload's specialisation
 opportunities.
 
+> **Implementation status (Phase 3 V1 landed)**: `SpecKey`,
+> `ShapeClass`, `RangeClass`, `Specialiser` trait, `SpecialisedKernel`,
+> and `SpecCache` (bounded LRU, default 64 entries) all live in
+> `matrix_runtime::spec`.  No specialisation policy yet — Phase 3 V2
+> will turn `ProfileObservation`s into `SpecKey`s and gate the cache
+> insertion; Phase 3 V3 will route dispatch through the cache on the
+> hot path.  `RangeClass::Float` is encoded as IEEE-754 bit pairs so
+> the enum can derive `Hash`; the `RangeClass::float(min, max)`
+> constructor handles the encoding and collapses NaN ends to
+> `Unknown`.
+
 ### 3. SpecKey
 
 The unique identifier for a specialised kernel:
