@@ -333,6 +333,10 @@ Use `--values` on query-running modes to print raw answer values instead of
 named bindings. It is rejected for compile-only diagnostic modes because those
 modes do not emit answer records.
 
+Use `--no-initialize` with `--check` or query-running modes when initialization
+directives should not run. It is rejected for dump and source-query listing
+diagnostics because those modes never run initialization directives.
+
 Use `--commit` only with one or more ad-hoc `--query` flags. It persists the
 first answer state from those query flags into later query flags or an
 interactive loop, but it is rejected when no ad-hoc query is supplied.

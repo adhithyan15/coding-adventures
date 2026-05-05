@@ -144,6 +144,10 @@ top-level query modes. Inline source, single-file input, source-query modes, and
 compile-only diagnostics reject it rather than silently ignoring the module
 context.
 
+`--no-initialize` only applies to `--check` and query-running modes. Dump and
+source-query listing diagnostics reject it because they compile and inspect
+source without running initialization directives.
+
 When `--summary` is set for non-interactive query execution, text output
 appends one compact line with query, success, failure, and answer totals. JSONL
 appends a final `mode: "summary"` record. JSON wraps result records in an object
