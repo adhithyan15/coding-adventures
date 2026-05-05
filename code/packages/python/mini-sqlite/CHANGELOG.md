@@ -1,5 +1,51 @@
 # Changelog
 
+## [1.23.0] - 2026-05-05
+
+### Added — DEFAULT column values (end-to-end)
+
+Full end-to-end support for `DEFAULT <literal>` column constraints.  When a
+column is declared with `DEFAULT <value>` and an INSERT omits that column,
+the backend fills the row with the declared default instead of `NULL`.
+
+**Pipeline changes:**
+
+- **`mini-sqlite/adapter.py`** (`_col_def`) — after parsing column
+  constraints, detects `DEFAULT primary` and calls `_primary()` to extract
+  the literal value.  `Literal` results (integer, float, string, `None`) are
+  stored directly; any non-literal expression (function call, parenthesised
+  expression, etc.) is silently ignored and falls back to `NO_DEFAULT`.  The
+  resulting `BackendColumnDef` now includes `default=col_default`.
+
+- **`sql-codegen/ir.py`** — added `NO_COLUMN_DEFAULT` sentinel (`Final`
+  singleton) and `default: object = NO_COLUMN_DEFAULT` field on `ColumnDef`.
+  The sentinel is distinct from `sql_backend.schema.NO_DEFAULT` to keep the
+  IR layer free from backend imports.
+
+- **`sql-codegen/compiler.py`** (`_to_ir_col`) — converts the backend
+  `NO_DEFAULT` sentinel to the IR `NO_COLUMN_DEFAULT`, passes all other
+  values through verbatim.
+
+- **`sql-vm/vm.py`** (`_do_create_table`) — converts `NO_COLUMN_DEFAULT` back
+  to `NO_DEFAULT` when building `BackendColumnDef`, passes real default values
+  through.  `InMemoryBackend._apply_defaults()` uses these values to fill
+  omitted columns at INSERT time.
+
+**Supported DEFAULT literal forms:**
+  - Integer: `DEFAULT 0`, `DEFAULT 42`, `DEFAULT 1`
+  - Real: `DEFAULT 3.14`
+  - Text: `DEFAULT 'active'`
+  - Null: `DEFAULT NULL`
+
+**Not yet supported** (planned follow-on): `DEFAULT -1` (bare negative integer
+requires grammar/adapter support for unary-minus signed literals; use
+`DEFAULT (-1)` as a workaround, though this currently also falls back to
+`NO_DEFAULT` since the adapter only materialises `Literal` nodes).
+
+**Tests:** `tests/test_tier9_column_defaults.py` — 27 oracle-verified tests
+across 7 test classes covering integer/null/text defaults, NOT NULL+DEFAULT,
+SELECT *, UNIQUE+DEFAULT, and edge cases.  Coverage remains ≥ 91%.
+
 ## [1.22.0] - 2026-05-04
 
 ### Added — INSERT OR REPLACE, INSERT OR IGNORE, REPLACE INTO

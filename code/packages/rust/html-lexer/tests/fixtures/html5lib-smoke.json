@@ -10,8 +10,10 @@
     "CDATA section state",
     "Data state",
     "PLAINTEXT state",
+    "RAWTEXT end tag open state",
     "RAWTEXT less-than sign state",
     "RAWTEXT state",
+    "RCDATA end tag open state",
     "RCDATA less-than sign state",
     "RCDATA state",
     "Script data double escape end state",
@@ -20,10 +22,12 @@
     "Script data double escaped dash state",
     "Script data double escaped less-than sign state",
     "Script data double escaped state",
+    "Script data end tag open state",
     "Script data escape start dash state",
     "Script data escape start state",
     "Script data escaped dash dash state",
     "Script data escaped dash state",
+    "Script data escaped end tag open state",
     "Script data escaped less-than sign state",
     "Script data escaped state",
     "Script data less-than sign state",
@@ -2083,6 +2087,58 @@
     },
     {
       "id": "html5lib-smoke-169",
+      "description": "rcdata end tag open state emits matching end tag",
+      "input": "title>after",
+      "tokens": [
+        "EndTag(name=title)",
+        "Text(data=after)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA end tag open state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-170",
+      "description": "rawtext end tag open state emits matching end tag",
+      "input": "style>tail",
+      "tokens": [
+        "EndTag(name=style)",
+        "Text(data=tail)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT end tag open state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-171",
+      "description": "script data end tag open state emits matching end tag",
+      "input": "script>tail",
+      "tokens": [
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data end tag open state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-172",
+      "description": "script escaped end tag open state emits matching end tag",
+      "input": "script>tail",
+      "tokens": [
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data escaped end tag open state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-173",
       "description": "script less-than state emits pending less-than at eof",
       "input": "",
       "tokens": [

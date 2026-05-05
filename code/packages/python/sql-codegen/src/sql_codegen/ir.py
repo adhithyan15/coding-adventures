@@ -33,6 +33,38 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
+from typing import Final
+
+# --------------------------------------------------------------------------
+# Sentinel for ColumnDef.default
+# --------------------------------------------------------------------------
+
+class _NoColumnDefault:
+    """Sentinel type for :data:`NO_COLUMN_DEFAULT`.
+
+    Distinguishes "no DEFAULT clause was written" from "DEFAULT NULL".
+    We cannot use Python's ``None`` for both meanings, because ``None``
+    is a valid SQL NULL default.
+
+    Immutable, singleton.  Always compare with ``is``, never with ``==``.
+    """
+
+    __slots__ = ()
+
+    def __repr__(self) -> str:
+        return "NO_COLUMN_DEFAULT"
+
+    def __bool__(self) -> bool:
+        # Allows ``if c.default is not NO_COLUMN_DEFAULT:`` to read naturally,
+        # and prevents accidental truthiness tests from yielding True.
+        return False
+
+
+NO_COLUMN_DEFAULT: Final[_NoColumnDefault] = _NoColumnDefault()
+"""Sentinel placed in :attr:`ColumnDef.default` when no DEFAULT clause
+was present in the CREATE TABLE statement.  The VM converts this back to
+the backend-layer ``NO_DEFAULT`` sentinel before storing the column schema.
+"""
 
 # --------------------------------------------------------------------------
 # SQL values — what the stack and result buffer hold at runtime.
@@ -566,12 +598,24 @@ class ColumnDef:
     Without this flag the backend would silently accept duplicate values,
     making ``INSERT OR IGNORE`` and ``INSERT OR REPLACE`` unable to detect
     non-PK UNIQUE conflicts.
+
+    ``default`` carries the column's DEFAULT value.  :data:`NO_COLUMN_DEFAULT`
+    means no DEFAULT clause was present.  Any other value — including Python
+    ``None`` which represents SQL NULL — is the literal to supply when an
+    INSERT omits this column.  The VM converts ``NO_COLUMN_DEFAULT`` back to
+    the backend-layer sentinel before registering the column schema.
+
+    Only scalar literals (integers, floats, strings, booleans, NULL) are
+    supported as defaults in this pass.  Expression defaults such as
+    ``DEFAULT (CURRENT_TIMESTAMP)`` or ``DEFAULT (1+1)`` are left as
+    :data:`NO_COLUMN_DEFAULT` and deferred to a future increment.
     """
     name: str
     type: str
     nullable: bool = True
     primary_key: bool = False
     unique: bool = False
+    default: object = NO_COLUMN_DEFAULT
     check_instrs: tuple[Instruction, ...] = ()
     # (ref_table, ref_col_or_None) where None means "reference the parent PK".
     foreign_key: tuple[str, str | None] | None = None
