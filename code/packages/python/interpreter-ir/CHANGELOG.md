@@ -2,6 +2,27 @@
 
 ## [Unreleased]
 
+### Added — VMCOND00 Phase 3: HANDLER_OPS opcode set
+
+Implements the opcode-metadata side of VMCOND00 Layer 3 — dynamic handlers —
+in the interpreter IR world.  Five new mnemonic strings are added to the opcode
+registry so analyzers, validators, and coverage tools can classify them
+correctly.
+
+**New constant: `HANDLER_OPS`** — `frozenset[str]` containing the five Layer 3
+opcodes: `"push_handler"`, `"pop_handler"`, `"signal"`, `"error"`, `"warn"`.
+
+- `HANDLER_OPS ⊆ SIDE_EFFECT_OPS` — all five have observable side effects
+  (mutating the handler chain or invoking a handler frame).
+- `HANDLER_OPS ⊆ ALL_OPS` — included in the complete opcode universe.
+- `HANDLER_OPS` is disjoint from `VALUE_OPS`, `BRANCH_OPS`, `CONTROL_OPS`,
+  and `THROW_OPS` — the handler protocol is orthogonal to Layer 2 throw/unwind.
+
+`HANDLER_OPS` is exported from `interpreter_ir.__init__` and listed in
+`__all__`.
+
+---
+
 ### Added — VMCOND00 Phase 2: ExceptionTableEntry and throw opcode
 
 Implements VMCOND00 Layer 2 — unwind exceptions — in the interpreter IR world.

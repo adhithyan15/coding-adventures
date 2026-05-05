@@ -38,11 +38,13 @@ from interpreter_ir import IIRInstr
 from vm_core.debug import StepMode
 from vm_core.errors import (
     FrameOverflowError,
+    HandlerChainError,
     UncaughtConditionError,
     UnknownOpcodeError,
     VMInterrupt,
 )
 from vm_core.frame import VMFrame
+from vm_core.handler_chain import HandlerNode
 
 if TYPE_CHECKING:
     from vm_core.core import VMCore
@@ -878,7 +880,8 @@ def handle_throw(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> None:
         throw_ip = search_frame.ip - 1
 
         for entry in search_frame.fn.exception_table:
-            if entry.from_ip <= throw_ip < entry.to_ip and _throw_type_matches(condition, entry.type_id):
+            in_range = entry.from_ip <= throw_ip < entry.to_ip
+            if in_range and _throw_type_matches(condition, entry.type_id):
                 # Handler found — jump into it and assign the condition.
                 search_frame.ip = entry.handler_ip
                 search_frame.assign(entry.val_reg, condition)
@@ -889,6 +892,253 @@ def handle_throw(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> None:
 
     # Stack exhausted — the condition propagated past the top frame.
     raise UncaughtConditionError(condition)
+
+
+# ---------------------------------------------------------------------------
+# VMCOND00 Phase 3 — dynamic handler chain (Layer 3)
+# ---------------------------------------------------------------------------
+#
+# Overview
+# --------
+# Layer 3 adds a *non-unwinding* handler mechanism: when a condition is
+# signaled (SIGNAL / ERROR / WARN), the VM searches a per-instance linked
+# list (``vm._handler_chain``) for the most recently pushed handler whose
+# ``condition_type`` matches the condition.  If found, the handler function
+# is *called* — pushed as a new frame on the call stack WITHOUT removing any
+# existing frames.  When the handler returns normally, execution resumes at
+# the instruction immediately after the signaling opcode.
+#
+# Key contrast with Layer 2 (THROW):
+#   - THROW unwinds the call stack searching the STATIC exception table.
+#   - SIGNAL/ERROR/WARN search the DYNAMIC handler chain and never unwind
+#     the call stack on their own.
+#
+# The non-unwinding call works naturally in our dispatch loop model:
+#   1. `signal` advances ip (pre-increment) then calls handle_signal.
+#   2. handle_signal pushes the handler frame onto vm._frames.
+#   3. The dispatch loop continues in the handler frame.
+#   4. When the handler executes `ret`, handle_ret pops the handler frame.
+#   5. The dispatch loop now runs the signal frame, whose ip already points
+#      to the instruction AFTER signal.  Execution resumes correctly.
+#
+# Operand conventions
+# -------------------
+# push_handler:  srcs[0] = type_id (immediate string), srcs[1] = fn_reg
+# pop_handler:   srcs = []
+# signal:        srcs[0] = condition_reg
+# error:         srcs[0] = condition_reg
+# warn:          srcs[0] = condition_reg
+
+
+def _handler_type_matches(condition: object, condition_type: str) -> bool:
+    """Return True if ``condition`` matches the handler's ``condition_type``.
+
+    Matching semantics mirror :func:`_throw_type_matches` (Phase 2):
+    - ``"*"``  → catch-all, always matches.
+    - Other string → exact ``type(condition).__name__`` equality.
+    Phase 4 will replace this with a proper subtype walk via the condition
+    type registry.
+    """
+    if condition_type == "*":
+        return True
+    return type(condition).__name__ == condition_type
+
+
+def _invoke_handler_nonunwinding(
+    vm: VMCore, node: HandlerNode, condition: object
+) -> None:
+    """Push the handler function as a new frame, non-unwinding.
+
+    The current frame (the one that issued signal/error/warn) stays on the
+    stack below the handler frame.  When the handler returns, handle_ret pops
+    the handler frame and the dispatch loop resumes in the original frame at
+    its pre-incremented ip — i.e. at the instruction *after* the signaling
+    opcode.
+
+    Phase 3 constraint: ``node.handler_fn`` must be a string (the name of a
+    callable in ``vm._module``).  Phase 4 will add closure support.
+    """
+    # Validate Phase 3 constraint: handler_fn must be a str (IIR fn name).
+    # A non-string value indicates a code-generation bug in the frontend.
+    if not isinstance(node.handler_fn, str):
+        raise HandlerChainError(
+            f"handler_fn must be a str (IIR function name); "
+            f"got {type(node.handler_fn).__name__!r}"
+        )
+    handler_name: str = node.handler_fn
+    # Guard against the handler function being absent from the module.  An
+    # unguarded None here would produce an opaque AttributeError rather than a
+    # clean VMError that the caller can catch.
+    if vm._module is None:  # pragma: no cover — execute() always sets _module first
+        raise HandlerChainError("handler chain invocation with no module loaded")
+    handler_fn = vm._module.get_function(handler_name)
+    if handler_fn is None:
+        raise HandlerChainError(
+            f"handler chain references unknown function {handler_name!r}"
+        )
+    # Guard against unbounded frame-stack growth.  A guest program that loops
+    # on signal/error/warn with a matching handler could grow vm._frames past
+    # the configured limit, bypassing the FrameOverflowError that handle_call
+    # enforces.  Apply the same check here so the safety contract is consistent.
+    if len(vm._frames) >= vm._max_frames:
+        raise FrameOverflowError(
+            f"call stack depth {vm._max_frames} exceeded "
+            f"invoking handler {handler_name!r}"
+        )
+    # Push handler frame with return_dest=None: SIGNAL does not use the
+    # handler's return value, so we discard it.
+    handler_frame = VMFrame.for_function(handler_fn, return_dest=None)
+    # Pass the condition as the first argument (parameter 0) when the handler
+    # declares at least one parameter.  Mirror the argument-copy loop used by
+    # handle_call (dispatch.py lines ~665-668).
+    if handler_fn.params:
+        handler_frame.registers[0] = condition
+    vm._frames.append(handler_frame)
+
+
+def handle_push_handler(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> None:
+    """Push a new handler onto the handler chain (``push_handler``).
+
+    Operand layout in ``instr.srcs``:
+      [0] type_id — immediate string: ``"*"`` (catch-all) or a type name.
+      [1] fn_reg  — register name holding the handler callable (a string
+                    naming an IIR function in this module, Phase 3).
+
+    Example IIR::
+
+        push_handler "*", my_handler_reg
+
+    After this instruction, the most recently pushed handler on
+    ``vm._handler_chain`` covers all conditions (``"*"``) and calls the
+    function whose name is in ``my_handler_reg``.
+    """
+    type_id: str = instr.srcs[0]  # immediate — used directly
+    handler_fn = frame.resolve(instr.srcs[1])  # register → callable name
+    node = HandlerNode(
+        condition_type=type_id,
+        handler_fn=handler_fn,
+        stack_depth=len(vm._frames),
+    )
+    vm._handler_chain.append(node)
+
+
+def handle_pop_handler(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> None:
+    """Pop the most recently pushed handler (``pop_handler``).
+
+    Raises :exc:`~vm_core.errors.HandlerChainError` on underflow (i.e.
+    ``pop_handler`` with no matching ``push_handler`` on the chain).  This
+    indicates a frontend code-generation bug — PUSH/POP must be paired on
+    every control-flow path that exits a guarded region.
+    """
+    if not vm._handler_chain:
+        raise HandlerChainError(
+            "pop_handler on an empty handler chain — "
+            "push_handler / pop_handler are unbalanced"
+        )
+    vm._handler_chain.pop()
+
+
+def handle_signal(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> None:
+    """Signal a condition, invoking a matching handler non-unwinding.
+
+    Operand layout:
+      srcs[0] = condition_reg — holds the condition object to signal.
+
+    Walks ``vm._handler_chain`` from the most recently pushed handler to the
+    oldest.  On the first match, calls the handler function as a new frame on
+    top of the existing call stack (non-unwinding).  Execution resumes after
+    this instruction when the handler returns.
+
+    If no handler matches, ``signal`` is a **no-op** — execution continues
+    silently at the next instruction.  This is intentional: signaling a
+    condition that nobody handles is not an error at Layer 3; use ``error``
+    if you need the abort-on-unhandled behaviour.
+    """
+    condition = frame.resolve(instr.srcs[0])
+    # Search from END (most recently pushed) to START (oldest).
+    for node in reversed(vm._handler_chain):
+        if _handler_type_matches(condition, node.condition_type):
+            _invoke_handler_nonunwinding(vm, node, condition)
+            return
+    # No matching handler — SIGNAL is a no-op.
+
+
+def handle_error(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> None:
+    """Raise an error condition, aborting if unhandled.
+
+    Operand layout:
+      srcs[0] = condition_reg — holds the condition object.
+
+    Two-phase dispatch:
+    1. **Layer 2 check first.**  If the current instruction's IP is inside a
+       guarded range in ``frame.fn.exception_table`` AND that entry's
+       ``type_id`` matches the condition, delegate to ``handle_throw`` to
+       execute the Layer 2 unwind path.  This ensures that Layer 2 static
+       exception handlers take priority over Layer 3 dynamic handlers when
+       both are in scope.
+    2. **Layer 3 handler chain.**  Walk ``vm._handler_chain`` exactly as
+       ``handle_signal`` does.  On match, call the handler non-unwinding.
+    3. **Abort.**  If neither phase finds a handler, raise
+       :exc:`~vm_core.errors.UncaughtConditionError`.
+    """
+    condition = frame.resolve(instr.srcs[0])
+
+    # Phase 1: check Layer 2 static exception table.
+    throw_ip = frame.ip - 1
+    for entry in frame.fn.exception_table:
+        in_range = entry.from_ip <= throw_ip < entry.to_ip
+        if in_range and _throw_type_matches(condition, entry.type_id):
+            # Delegate to the Layer 2 THROW algorithm.
+            frame.ip = entry.handler_ip
+            frame.assign(entry.val_reg, condition)
+            return
+
+    # Phase 2: walk the Layer 3 handler chain.
+    for node in reversed(vm._handler_chain):
+        if _handler_type_matches(condition, node.condition_type):
+            _invoke_handler_nonunwinding(vm, node, condition)
+            return
+
+    # Phase 3: no handler anywhere — abort.
+    raise UncaughtConditionError(condition)
+
+
+def handle_warn(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> None:
+    """Warn about a condition; emit to stderr if unhandled.
+
+    Operand layout:
+      srcs[0] = condition_reg — holds the condition object.
+
+    Walks the handler chain exactly as ``handle_signal``.  On match, calls
+    the handler non-unwinding.
+
+    If no handler matches, emits a warning line to ``sys.stderr`` and
+    continues execution.  ``warn`` **never** aborts — it is the safe
+    "something unusual happened, but we can keep going" signal.
+    """
+    import sys  # local import — warn is uncommon; keep top-level imports lean
+
+    condition = frame.resolve(instr.srcs[0])
+
+    # Walk handler chain.
+    for node in reversed(vm._handler_chain):
+        if _handler_type_matches(condition, node.condition_type):
+            _invoke_handler_nonunwinding(vm, node, condition)
+            return
+
+    # No handler — emit warning to stderr, continue.
+    # Use the same hardened repr strategy as UncaughtConditionError to guard
+    # against guest objects whose __repr__ raises or returns unbounded strings.
+    try:
+        cond_repr = repr(condition)
+        if len(cond_repr) > 200:
+            cond_repr = cond_repr[:200] + "…"
+    except Exception:  # noqa: BLE001
+        try:
+            cond_repr = f"<{type(condition).__name__} (repr failed)>"
+        except Exception:  # noqa: BLE001
+            cond_repr = "<unknown (repr and type name failed)>"
+    print(f"[vm-core WARN] {cond_repr}", file=sys.stderr)
 
 
 # --- I/O ---
@@ -1007,4 +1257,10 @@ STANDARD_OPCODES: dict[str, Any] = {
     "branch_err": handle_branch_err,
     # VMCOND00 Phase 2 — stack-unwinding exception dispatch.
     "throw": handle_throw,
+    # VMCOND00 Phase 3 — dynamic handler chain (non-unwinding).
+    "push_handler": handle_push_handler,
+    "pop_handler": handle_pop_handler,
+    "signal": handle_signal,
+    "error": handle_error,
+    "warn": handle_warn,
 }
