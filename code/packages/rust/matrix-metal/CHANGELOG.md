@@ -1,5 +1,44 @@
 # Changelog — matrix-metal
 
+## 0.1.1 — 2026-05-04
+
+### Added
+
+- **`Op::Reshape` support.**  Reshape is metadata-only in SSA — same
+  numel, different shape — so the implementation is a same-size memcpy
+  from the input buffer to the output buffer (going through
+  `BufferStore`'s host-side read/write, which on Apple Silicon's
+  unified memory is essentially `memcpy`).  Capability bitset now
+  advertises tag 0x11 alongside the elementwise ops, MatMul, and
+  Const.  `Op::Transpose` (0x12) and `Op::Broadcast` (0x13) need real
+  data movement / index expansion and remain V2 work.
+
+  Why this matters: it lets `image-gpu-core`'s sepia /
+  colour-matrix graphs (which always reshape `pixels` and the matrix
+  before `MatMul`) qualify for uniform-Metal placement under MX04's
+  pass 2b.  Without Reshape support those graphs would always have a
+  capability hole that prevented uniform placement and forced a
+  CPU-only re-plan in the consumer.
+
+### Fixed
+
+- **Dispatch no longer fails on a strict `executor != our_id` check.**
+  V0.1's dispatch handler aborted if the placed op's `executor` field
+  didn't match `MetalExecutor`'s `our_id`, but the runtime never
+  actually called `MetalExecutor::set_our_id`, so `our_id` stayed at
+  `u32::MAX` and every dispatch routed by a multi-executor runtime
+  failed.  V1 single-transport-per-executor doesn't need the strict
+  check anyway — if our `handle()` was called, the dispatch was for
+  us — so the check is now just `executor != CPU_EXECUTOR`.  Real
+  routing-correctness checking is V2 work that needs the runtime to
+  push the assigned id into each executor at registration time.
+
+### Tests
+
+- New `reshape_preserves_bytes_on_gpu` integration test confirms
+  Reshape round-trips a 6-element f32 vector into a 2×3 shape with
+  byte-identical contents.
+
 ## 0.1.0 — 2026-05-04
 
 Initial release.  First specialised executor for the matrix execution

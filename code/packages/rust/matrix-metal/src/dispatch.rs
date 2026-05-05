@@ -92,12 +92,19 @@ pub fn run(ctx: &mut DispatchCtx<'_>, graph: &ComputeGraph) -> Result<Vec<OpTimi
                         op_idx
                     ));
                 }
-                if *executor != ctx.our_id {
-                    return Err(format!(
-                        "op {} routed to executor {} but reached MetalExecutor (id {})",
-                        op_idx, executor.0, ctx.our_id.0
-                    ));
-                }
+                // V1 ran a stricter `*executor != ctx.our_id` check
+                // here, but the runtime never actually calls
+                // `MetalExecutor::set_our_id`, so `our_id` stays at
+                // `u32::MAX` and every dispatch failed once a runtime
+                // *with* multiple executors started routing real work
+                // to us.  In the V1 single-transport-per-executor
+                // world we already know we're the executor that was
+                // dispatched to (the transport made the call), so the
+                // weaker "anything but CPU" check is sufficient.
+                // V2 work: have the runtime push the assigned id into
+                // each executor at registration time so this check
+                // can come back as a real one.
+                let _ = ctx.our_id;
                 exec_compute(ctx, graph, op)?;
                 timings.push(OpTiming {
                     op_index: op_idx as u32,
@@ -150,6 +157,11 @@ fn exec_compute(
 
         // F32 matmul
         Op::MatMul { a, b, output } => matmul_dispatch(ctx, graph, *a, *b, *output),
+
+        // Reshape: metadata-only in SSA → same-size memcpy from input
+        // buffer to output buffer.  No kernel needed.  Apple Silicon's
+        // unified memory makes this essentially `memcpy`.
+        Op::Reshape { input, output, .. } => reshape_dispatch(ctx, graph, *input, *output),
 
         _ => Err(format!(
             "matrix-metal V1 doesn't support op {}; the planner should have routed this to CPU",
@@ -308,6 +320,44 @@ fn matmul_dispatch(
         enc.set_bytes(&dims_bytes, 3);
         enc.dispatch_threads_2d(m, n, tg_x, tg_y);
     });
+    Ok(())
+}
+
+/// Reshape: SSA produces a fresh output tensor, so we copy the input
+/// buffer's bytes into the output buffer.  Same numel; only the shape
+/// metadata differs, and shapes are tracked at the graph level (not in
+/// the buffer itself), so a byte-level memcpy is the entire
+/// implementation.
+///
+/// V2 polish: matrix-metal could expose this as a `BlitCommandEncoder`
+/// copy (`MTLBlitCommandEncoder::copyFromBuffer:...:toBuffer:...`) to
+/// keep the work entirely on the GPU.  V1 goes through `BufferStore`'s
+/// host-side read/write which on Apple Silicon's unified memory is
+/// essentially `memcpy` anyway.
+fn reshape_dispatch(
+    ctx: &mut DispatchCtx<'_>,
+    graph: &ComputeGraph,
+    input: TensorId,
+    output: TensorId,
+) -> Result<(), String> {
+    let in_t = graph
+        .tensor(input)
+        .ok_or_else(|| format!("input tensor {} not found", input.0))?;
+    let in_residency = in_t.residency;
+    let out_residency = lookup_residency(graph, output)?;
+    let n_bytes = in_t
+        .shape
+        .byte_size(in_t.dtype)
+        .ok_or_else(|| format!("reshape input tensor {} byte_size overflow", input.0))?;
+    if n_bytes == 0 {
+        return Ok(());
+    }
+    let data = ctx.buffers.read(in_residency.buffer, 0, n_bytes as usize)?;
+    if !ctx.buffers.contains(out_residency.buffer) {
+        ctx.buffers
+            .alloc(ctx.device, out_residency.buffer, n_bytes as usize)?;
+    }
+    ctx.buffers.write(out_residency.buffer, 0, &data)?;
     Ok(())
 }
 

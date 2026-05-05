@@ -3,6 +3,29 @@
 All notable changes to `matrix-runtime` are documented here.  The
 format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.2.0] — 2026-05-04
+
+### Added
+
+- **Pass 2b: single-executor preference** in the planner (spec MX04
+  §"Single-executor preference (V1.1)").  Greedy cost minimisation
+  in pass 2 makes per-op decisions and never amortises the up-front
+  host→device transfer.  Pass 2b scores each healthy executor as a
+  *uniform* placement candidate for the whole graph and replaces the
+  greedy placement if a uniform alternative is strictly cheaper
+  end-to-end.  When pass 2b fires, it also reassigns every constant
+  source-tensor's residency to the chosen uniform executor so
+  downstream consumers see an honestly-uniform `ComputeGraph`.
+
+### Tests
+
+- 4 new tests in `planner::tests::*` covering the pass 2b paths:
+  `long_elementwise_chain_ships_to_gpu_uniformly`,
+  `single_tiny_op_stays_on_cpu`,
+  `capability_hole_disables_uniform_gpu`,
+  `uniform_replaces_only_when_strictly_cheaper`.
+- All 17 existing tests continue to pass without modification.
+
 ## [0.1.0] — 2026-05-04
 
 Initial release.  Implements spec MX04 V1.
