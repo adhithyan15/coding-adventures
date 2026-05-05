@@ -579,12 +579,27 @@ fn extract_let_type(stmt: &GrammarASTNode) -> Option<String> {
 
 fn type_str_from_node(node: &GrammarASTNode) -> String {
     // The type rule contains a single keyword token like "u4" / "u8".
+    // We widen Nib's narrower integer types to the closest CIR type so
+    // `aot-core::specialise`'s ALLOWED_TYPES accepts them — `u4` widens
+    // to `u8`, `bcd` likewise.  CIR's own typed mnemonics (`add_u8`,
+    // …) operate on full 64-bit registers internally; the narrower
+    // semantic width is enforceable later via masking at the backend
+    // (deferred to a follow-up).
     for c in &node.children {
         if let ASTNodeOrToken::Token(t) = c {
-            return t.value.clone();
+            return widen_nib_type(&t.value).to_string();
         }
     }
     "any".to_string()
+}
+
+/// Map a raw Nib type name to the closest CIR-allowed type string.
+fn widen_nib_type(t: &str) -> &str {
+    match t {
+        "u4"  => "u8",  // Nib's nibble widens to u8 for CIR
+        "bcd" => "u8",  // BCD is byte-encoded
+        other => other, // u8, bool, void all pass through unchanged
+    }
 }
 
 fn first_type_name(node: &GrammarASTNode) -> Option<String> {

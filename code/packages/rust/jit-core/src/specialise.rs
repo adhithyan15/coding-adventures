@@ -160,6 +160,21 @@ fn translate(instr: &IIRInstr, min_obs: u32) -> Vec<CIRInstr> {
         return vec![translate_ret(instr, min_obs)];
     }
 
+    // --- call_builtin: try to lower operator builtins to typed ops ---
+    //
+    // Same pattern as `aot_core::specialise`: when a `call_builtin
+    // "<op>" arg1 arg2` has resolved-type operands (either via
+    // type_hint or via runtime profile feedback in observed_type),
+    // lower it to a typed CIR op that the native backend can emit
+    // as a single CPU instruction.
+    if op == "call_builtin" {
+        if let Some(lowered) = try_specialize_builtin(instr, min_obs) {
+            return vec![lowered];
+        }
+        // Fall through to passthrough for unrecognised builtins or
+        // operands without observed types.
+    }
+
     // --- passthrough ---
     if is_passthrough_op(op) {
         let sp_type = spec_type(instr, min_obs);
@@ -388,6 +403,114 @@ pub fn literal_type(op: Option<&Operand>) -> String {
 }
 
 /// Lift a slice of `Operand` into `Vec<CIROperand>`.
+// ---------------------------------------------------------------------------
+// `call_builtin` operator lowering — same logic as `aot_core::specialise`,
+// but driven by runtime `observed_type` instead of static `inferred` types.
+// ---------------------------------------------------------------------------
+
+/// Map `call_builtin "<name>"` to a typed CIR mnemonic family when both
+/// operands carry the same concrete type (via `type_hint` or
+/// observed-type profile feedback).
+///
+/// Returns `Some(cir_instr)` when the lowering succeeded, `None` when
+/// the builtin is unrecognised or operand types are unknown — caller
+/// then falls back to passthrough.
+fn try_specialize_builtin(instr: &IIRInstr, min_obs: u32) -> Option<CIRInstr> {
+    // First src is `Var("<op_name>")` — the builtin's name string.
+    let op_name = instr.srcs.first().and_then(|s| match s {
+        Operand::Var(n) => Some(n.as_str()),
+        _ => None,
+    })?;
+
+    let arg_srcs = &instr.srcs[1..];
+
+    // Resolve a concrete type from the instruction's profile feedback.
+    // For arithmetic/comparison builtins the JIT's observed_type tells us
+    // what the *result* of this call_builtin tends to be; for unary _move
+    // there's no result-type info, but the source operand is already a
+    // typed register we can default to.
+    let inferred_ty = result_type(instr, min_obs);
+
+    match op_name {
+        // Binary arithmetic
+        "+" | "-" | "*" | "/" => {
+            if arg_srcs.len() != 2 { return None; }
+            let ty = inferred_ty.clone()?;
+            let cir_op = match op_name {
+                "+" => "add", "-" => "sub", "*" => "mul", "/" => "div",
+                _ => unreachable!(),
+            };
+            Some(CIRInstr::new(
+                format!("{cir_op}_{ty}"),
+                instr.dest.clone(),
+                lift_srcs(arg_srcs),
+                ty,
+            ))
+        }
+
+        // Binary comparisons (result is bool, but operands' type
+        // determines the cmp variant — for that we need to look at
+        // operand history rather than the result observation).  For
+        // V1 we use the same observed-type strategy and accept that
+        // it may be conservative.
+        "=" | "==" | "!=" | "<" | "<=" | ">" | ">=" => {
+            if arg_srcs.len() != 2 { return None; }
+            let ty = inferred_ty.clone()?;
+            let cir_op = match op_name {
+                "=" | "==" => "cmp_eq",
+                "!="       => "cmp_ne",
+                "<"        => "cmp_lt",
+                "<="       => "cmp_le",
+                ">"        => "cmp_gt",
+                ">="       => "cmp_ge",
+                _ => unreachable!(),
+            };
+            Some(CIRInstr::new(
+                format!("{cir_op}_{ty}"),
+                instr.dest.clone(),
+                lift_srcs(arg_srcs),
+                "bool".to_string(),
+            ))
+        }
+
+        // Unary move (`if`'s phi-merge in IR-compiler emit).
+        "_move" => {
+            if arg_srcs.len() != 1 { return None; }
+            let ty = inferred_ty.clone()?;
+            Some(CIRInstr::new(
+                format!("mov_{ty}"),
+                instr.dest.clone(),
+                lift_srcs(arg_srcs),
+                ty,
+            ))
+        }
+
+        _ => None,
+    }
+}
+
+/// Resolve the JIT's best concrete type for `instr`'s result.
+///
+/// Tries `type_hint` first, then `observed_type` (when observation
+/// count clears `min_obs`).  Returns `None` if neither yields a
+/// concrete-and-allowed type.
+fn result_type(instr: &IIRInstr, min_obs: u32) -> Option<String> {
+    if instr.type_hint != "any"
+        && instr.type_hint != "void"
+        && ALLOWED_TYPES.contains(&instr.type_hint.as_str())
+    {
+        return Some(instr.type_hint.clone());
+    }
+    if instr.observation_count >= min_obs {
+        if let Some(ot) = &instr.observed_type {
+            if ot != "any" && ot != "void" && ALLOWED_TYPES.contains(&ot.as_str()) {
+                return Some(ot.clone());
+            }
+        }
+    }
+    None
+}
+
 fn lift_srcs(srcs: &[Operand]) -> Vec<CIROperand> {
     srcs.iter().map(CIROperand::from).collect()
 }
