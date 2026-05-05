@@ -109,6 +109,7 @@ __all__ = [
     "current_functoro",
     "current_prolog_flago",
     "current_predicateo",
+    "current_streamo",
     "cuto",
     "cyclic_termo",
     "difo",
@@ -145,6 +146,7 @@ __all__ = [
     "floordiv",
     "foldlo",
     "forallo",
+    "flush_outputo",
     "functoro",
     "geqo",
     "get_charo",
@@ -176,6 +178,7 @@ __all__ = [
     "nlo",
     "onceo",
     "openo",
+    "open_optionso",
     "bagofo",
     "partitiono",
     "predicate_propertyo",
@@ -213,6 +216,7 @@ __all__ = [
     "string_charso",
     "string_lengtho",
     "stringo",
+    "stream_propertyo",
     "sub_atomo",
     "sub_stringo",
     "sub",
@@ -257,10 +261,12 @@ class _TextStream:
     path: Path
     contents: str = ""
     cursor: int = 0
+    alias: str | None = None
 
 
 _STREAM_IDS = count(1)
 _STREAMS: dict[str, _TextStream] = {}
+_STREAM_ALIASES: dict[str, str] = {}
 
 
 @dataclass(frozen=True, slots=True)
@@ -4854,11 +4860,33 @@ def _stream_handle_text(term_value: Term) -> str | None:
     return text
 
 
+def _stream_alias_text(term_value: Term) -> str | None:
+    text = _plain_atom_text(term_value)
+    if text is None or text.startswith("$stream_"):
+        return None
+    return text
+
+
+def _stream_key(term_value: Term) -> str | None:
+    handle_text = _stream_handle_text(term_value)
+    if handle_text is not None and handle_text in _STREAMS:
+        return handle_text
+    alias_text = _stream_alias_text(term_value)
+    if alias_text is not None:
+        return _STREAM_ALIASES.get(alias_text)
+    return None
+
+
 def _stream_handle() -> Atom:
     return atom(f"$stream_{next(_STREAM_IDS)}")
 
 
-def _open_text_stream(path_text: str, mode_text: str) -> _TextStream | None:
+def _open_text_stream(
+    path_text: str,
+    mode_text: str,
+    *,
+    alias_text: str | None = None,
+) -> _TextStream | None:
     path = Path(path_text)
     try:
         if mode_text == "read":
@@ -4868,19 +4896,66 @@ def _open_text_stream(path_text: str, mode_text: str) -> _TextStream | None:
                 mode=mode_text,
                 path=path,
                 contents=path.read_text(encoding="utf-8"),
+                alias=alias_text,
             )
         if mode_text == "write":
             path.write_text("", encoding="utf-8")
-            return _TextStream(mode=mode_text, path=path)
+            return _TextStream(mode=mode_text, path=path, alias=alias_text)
         if mode_text == "append":
             path.parent.mkdir(parents=True, exist_ok=True)
             path.open("a", encoding="utf-8").close()
-            return _TextStream(mode=mode_text, path=path)
+            return _TextStream(mode=mode_text, path=path, alias=alias_text)
     except OSError:
         return None
     except UnicodeDecodeError:
         return None
     return None
+
+
+def _open_options(term_value: Term) -> tuple[str | None] | None:
+    items = _proper_list_items(term_value)
+    if items is None:
+        return None
+
+    alias_text: str | None = None
+    for item in items:
+        if not isinstance(item, Compound) or len(item.args) != 1:
+            return None
+        option_name = item.functor.name if item.functor.namespace is None else None
+        option_arg = item.args[0]
+
+        if option_name == "alias":
+            parsed_alias = _stream_alias_text(option_arg)
+            if parsed_alias is None:
+                return None
+            alias_text = parsed_alias
+            continue
+
+        if option_name == "encoding":
+            encoding_text = _plain_atom_text(option_arg)
+            if encoding_text not in {"utf8", "utf-8"}:
+                return None
+            continue
+
+        if option_name == "type":
+            if _plain_atom_text(option_arg) != "text":
+                return None
+            continue
+
+        return None
+
+    return (alias_text,)
+
+
+def _register_stream(handle: Atom, stream: _TextStream) -> bool:
+    handle_text = handle.symbol.name
+    if stream.alias is not None:
+        existing = _STREAM_ALIASES.get(stream.alias)
+        if existing is not None and existing in _STREAMS:
+            return False
+        _STREAM_ALIASES[stream.alias] = handle_text
+    _STREAMS[handle_text] = stream
+    return True
 
 
 def openo(path_value: object, mode_value: object, stream_value: object) -> GoalExpr:
@@ -4898,10 +4973,39 @@ def openo(path_value: object, mode_value: object, stream_value: object) -> GoalE
             return
 
         handle = _stream_handle()
-        _STREAMS[handle.symbol.name] = stream
+        _register_stream(handle, stream)
         yield from solve_from(program_value, eq(stream_term, handle), state)
 
     return native_goal(run, path_value, mode_value, stream_value)
+
+
+def open_optionso(
+    path_value: object,
+    mode_value: object,
+    stream_value: object,
+    options_value: object,
+) -> GoalExpr:
+    """Open a bounded UTF-8 file stream with a finite option-list subset."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, mode_term, stream_term, options_term = args
+        path_text = _path_text(_reified(path_term, state))
+        mode_text = _mode_text(_reified(mode_term, state))
+        parsed_options = _open_options(_reified(options_term, state))
+        if path_text is None or mode_text is None or parsed_options is None:
+            return
+
+        [alias_text] = parsed_options
+        stream = _open_text_stream(path_text, mode_text, alias_text=alias_text)
+        if stream is None:
+            return
+
+        handle = _stream_handle()
+        if not _register_stream(handle, stream):
+            return
+        yield from solve_from(program_value, eq(stream_term, handle), state)
+
+    return native_goal(run, path_value, mode_value, stream_value, options_value)
 
 
 def closeo(stream_value: object) -> GoalExpr:
@@ -4909,17 +5013,19 @@ def closeo(stream_value: object) -> GoalExpr:
 
     def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
         [stream_term] = args
-        handle_text = _stream_handle_text(_reified(stream_term, state))
+        handle_text = _stream_key(_reified(stream_term, state))
         if handle_text is None or handle_text not in _STREAMS:
             return
-        del _STREAMS[handle_text]
+        stream = _STREAMS.pop(handle_text)
+        if stream.alias is not None:
+            _STREAM_ALIASES.pop(stream.alias, None)
         yield state
 
     return native_goal(run, stream_value)
 
 
 def _read_stream(term_value: Term) -> _TextStream | None:
-    handle_text = _stream_handle_text(term_value)
+    handle_text = _stream_key(term_value)
     if handle_text is None:
         return None
     stream = _STREAMS.get(handle_text)
@@ -5031,7 +5137,7 @@ def _stream_write_text(term_value: Term) -> str | None:
 
 
 def _write_stream(term_value: Term, text: str) -> bool:
-    handle_text = _stream_handle_text(term_value)
+    handle_text = _stream_key(term_value)
     if handle_text is None:
         return False
     stream = _STREAMS.get(handle_text)
@@ -5067,6 +5173,96 @@ def nlo(stream_value: object) -> GoalExpr:
             yield state
 
     return native_goal(run, stream_value)
+
+
+def flush_outputo(stream_value: object) -> GoalExpr:
+    """Validate a write/append stream handle; writes are already flushed."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [stream_term] = args
+        handle_text = _stream_key(_reified(stream_term, state))
+        stream = _STREAMS.get(handle_text) if handle_text is not None else None
+        if stream is not None and stream.mode in {"write", "append"}:
+            yield state
+
+    return native_goal(run, stream_value)
+
+
+def current_streamo(
+    path_value: object,
+    mode_value: object,
+    stream_value: object,
+) -> GoalExpr:
+    """Enumerate currently open bounded streams as path, mode, and handle."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, mode_term, stream_term = args
+        for handle_text, stream in tuple(_STREAMS.items()):
+            yield from solve_from(
+                program_value,
+                conj(
+                    eq(path_term, atom(str(stream.path))),
+                    eq(mode_term, atom(stream.mode)),
+                    eq(stream_term, atom(handle_text)),
+                ),
+                state,
+            )
+
+    return native_goal(run, path_value, mode_value, stream_value)
+
+
+def _stream_properties(handle_text: str, stream: _TextStream) -> tuple[Term, ...]:
+    properties: list[Term] = [
+        term("file_name", atom(str(stream.path))),
+        term("mode", atom(stream.mode)),
+        term("position", num(stream.cursor)),
+    ]
+    if stream.mode == "read":
+        properties.append(atom("input"))
+        eof_state = "at" if stream.cursor >= len(stream.contents) else "not"
+        properties.append(term("end_of_stream", atom(eof_state)))
+    else:
+        properties.append(atom("output"))
+    if stream.alias is not None:
+        properties.append(term("alias", atom(stream.alias)))
+    properties.append(term("handle", atom(handle_text)))
+    return tuple(properties)
+
+
+def stream_propertyo(stream_value: object, property_value: object) -> GoalExpr:
+    """Relate an open bounded stream handle or alias to finite metadata."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, property_term = args
+        reified_stream = _reified(stream_term, state)
+        handle_text = _stream_key(reified_stream)
+
+        streams: tuple[tuple[str, _TextStream], ...]
+        if handle_text is not None:
+            stream = _STREAMS.get(handle_text)
+            streams = () if stream is None else ((handle_text, stream),)
+        elif isinstance(reified_stream, LogicVar):
+            streams = tuple(_STREAMS.items())
+        else:
+            return
+
+        for candidate_handle, stream in streams:
+            for property_candidate in _stream_properties(candidate_handle, stream):
+                stream_goal = (
+                    eq(stream_term, atom(candidate_handle))
+                    if isinstance(reified_stream, LogicVar)
+                    else succeed()
+                )
+                yield from solve_from(
+                    program_value,
+                    conj(
+                        stream_goal,
+                        eq(property_term, property_candidate),
+                    ),
+                    state,
+                )
+
+    return native_goal(run, stream_value, property_value)
 
 
 def compoundo(term_value: object) -> GoalExpr:

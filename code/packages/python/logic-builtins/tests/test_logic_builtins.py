@@ -71,6 +71,7 @@ from logic_builtins import (
     current_functoro,
     current_predicateo,
     current_prolog_flago,
+    current_streamo,
     cuto,
     cyclic_termo,
     difo,
@@ -102,6 +103,7 @@ from logic_builtins import (
     fd_sumo,
     findallo,
     floordiv,
+    flush_outputo,
     foldlo,
     forallo,
     functoro,
@@ -136,6 +138,7 @@ from logic_builtins import (
     numeqo,
     numneqo,
     onceo,
+    open_optionso,
     openo,
     partitiono,
     predicate_propertyo,
@@ -154,6 +157,7 @@ from logic_builtins import (
     set_prolog_flago,
     setofo,
     setup_call_cleanupo,
+    stream_propertyo,
     string_charso,
     string_codeso,
     string_lengtho,
@@ -268,6 +272,45 @@ class TestFileTextBuiltins:
             ),
         ) == [atom("ok")]
         assert output_path.read_text(encoding="utf-8") == "tea\ncake"
+
+    def test_file_stream_alias_options_and_properties(self, tmp_path: Path) -> None:
+        output_path = tmp_path / "aliased.txt"
+        stream = var("Stream")
+        alias_value = var("Alias")
+        current_path = var("CurrentPath")
+        current_mode = var("CurrentMode")
+        result = var("Result")
+
+        answers = solve_all(
+            program(),
+            result,
+            conj(
+                open_optionso(
+                    atom(str(output_path)),
+                    "write",
+                    stream,
+                    logic_list([
+                        term("alias", atom("story_output")),
+                        term("encoding", atom("utf8")),
+                        term("type", atom("text")),
+                    ]),
+                ),
+                writeo(atom("story_output"), string("tea")),
+                flush_outputo(atom("story_output")),
+                stream_propertyo(atom("story_output"), term("alias", alias_value)),
+                current_streamo(current_path, current_mode, stream),
+                closeo(atom("story_output")),
+                eq(result, term("seen", current_path, current_mode, alias_value)),
+            ),
+        )
+
+        assert answers == [term(
+            "seen",
+            atom(str(output_path)),
+            atom("write"),
+            atom("story_output"),
+        )]
+        assert output_path.read_text(encoding="utf-8") == "tea"
 
 
 class TestAdvancedControlBuiltins:

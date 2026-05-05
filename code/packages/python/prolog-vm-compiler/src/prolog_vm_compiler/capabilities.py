@@ -210,6 +210,20 @@ def prolog_vm_capabilities() -> tuple[PrologVMCapability, ...]:
                 "structured and bytecode VM stress coverage",
             ),
         ),
+        PrologVMCapability(
+            id="host-stream-metadata",
+            title="Bounded host stream options and metadata",
+            status="complete",
+            specs=("PR80",),
+            packages=("logic-builtins", "prolog-loader", "prolog-vm-compiler"),
+            features=(
+                "open/4 option lists with alias, encoding(utf8), and type(text)",
+                "alias-addressable close/read/write/flush stream operations",
+                "current_stream/3 enumeration",
+                "stream_property/2 metadata for file_name, mode, alias, and position",
+                "structured and bytecode VM stress coverage",
+            ),
+        ),
     )
 
 
@@ -247,8 +261,8 @@ def deferred_prolog_vm_capabilities() -> tuple[PrologVMCapability, ...]:
             specs=("PR02",),
             packages=("future",),
             features=(
-                "standard streams, binary streams, repositioning",
-                "rich stream options and aliases",
+                "standard streams, binary streams, and repositioning",
+                "rich ISO/SWI stream options beyond the bounded UTF-8 subset",
                 "foreign predicates and host callbacks",
                 "engines, concurrency, and async integration",
             ),
@@ -260,8 +274,8 @@ def prolog_vm_capability_manifest() -> PrologVMCapabilityManifest:
     """Return the canonical capability manifest for this package."""
 
     return PrologVMCapabilityManifest(
-        track="Prolog-on-Logic-VM PR00-PR79",
-        status="core-plus-stream-io",
+        track="Prolog-on-Logic-VM PR00-PR80",
+        status="core-plus-stream-metadata",
         dialects=("iso", "swi"),
         backends=("structured", "bytecode"),
         capabilities=prolog_vm_capabilities(),

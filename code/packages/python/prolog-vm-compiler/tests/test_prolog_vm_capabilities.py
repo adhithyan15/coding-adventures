@@ -9,31 +9,31 @@ from prolog_vm_compiler import (
 )
 
 
-def test_manifest_marks_stream_io_extension_complete() -> None:
+def test_manifest_marks_stream_metadata_extension_complete() -> None:
     manifest = prolog_vm_capability_manifest()
 
-    assert manifest.track == "Prolog-on-Logic-VM PR00-PR79"
-    assert manifest.status == "core-plus-stream-io"
+    assert manifest.track == "Prolog-on-Logic-VM PR00-PR80"
+    assert manifest.status == "core-plus-stream-metadata"
     assert manifest.dialects == ("iso", "swi")
     assert manifest.backends == ("structured", "bytecode")
-    assert manifest.complete_count == 9
+    assert manifest.complete_count == 10
     assert manifest.deferred_count == 3
 
 
-def test_completed_capabilities_cover_pr00_through_pr79_once() -> None:
+def test_completed_capabilities_cover_pr00_through_pr80_once() -> None:
     covered_specs = [
         spec for capability in prolog_vm_capabilities() for spec in capability.specs
     ]
 
-    assert covered_specs == [f"PR{index:02d}" for index in range(80)]
+    assert covered_specs == [f"PR{index:02d}" for index in range(81)]
 
 
 def test_capability_manifest_is_json_serializable() -> None:
     payload = prolog_vm_capability_manifest().as_dict()
 
-    assert payload["status"] == "core-plus-stream-io"
+    assert payload["status"] == "core-plus-stream-metadata"
     assert payload["capabilities"][0]["id"] == "frontend-loader"
-    assert payload["capabilities"][-1]["id"] == "host-file-stream-io"
+    assert payload["capabilities"][-1]["id"] == "host-stream-metadata"
     assert payload["deferred_capabilities"][0]["status"] == "deferred"
 
 

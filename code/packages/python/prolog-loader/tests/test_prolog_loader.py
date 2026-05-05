@@ -1515,6 +1515,33 @@ class TestPrologGoalAdapter:
             adapt_prolog_goal(parsed.goal),
         ) == [(string("tea"), atom("c"), string("ake"))]
 
+    def test_adapt_prolog_goal_rewrites_stream_options_and_properties(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "stream-options.txt"
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- open('{path_atom}', write, Out, "
+            "[alias(report_stream), encoding(utf8), type(text)]), "
+            'write(report_stream, "tea"), '
+            "flush_output(report_stream), "
+            "stream_property(report_stream, alias(Alias)), "
+            "current_stream(Path, Mode, Out), "
+            "close(report_stream).",
+        )
+
+        assert solve_all(
+            program(),
+            (
+                parsed.variables["Alias"],
+                parsed.variables["Path"],
+                parsed.variables["Mode"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        ) == [(atom("report_stream"), atom(str(source_path)), atom("write"))]
+        assert source_path.read_text(encoding="utf-8") == "tea"
+
     def test_adapt_prolog_goal_rewrites_term_read_write_options(self) -> None:
         parsed = parse_swi_query(
             "?- read_term_from_atom('pair(X, Y, X)', Term, "
