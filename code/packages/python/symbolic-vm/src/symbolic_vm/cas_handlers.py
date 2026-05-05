@@ -2424,6 +2424,176 @@ def exp_handler(vm: VM, expr: IRApply) -> IRNode:
 
 
 # ---------------------------------------------------------------------------
+# Phase 33: Trig special values at rational multiples of π
+# ---------------------------------------------------------------------------
+# The three primary angle functions (sin, cos, tan) gain an exact-evaluation
+# rule for arguments of the form ``q · %pi`` where ``q`` is a rational number
+# with denominator in {1, 2, 3, 4, 6} — the 12 sectors of the unit circle
+# used in standard trigonometry.
+#
+# ``_try_pi_multiple(arg)`` detects the supported structural patterns and
+# returns ``q`` as a ``Fraction``.  The sin/cos tables are keyed by ``q mod 2``
+# (period 2π); the tan table is keyed by ``q mod 1`` (period π).
+#
+# Exact IR representations used:
+#   0            → IRInteger(0)
+#   ±1           → IRInteger(±1)
+#   ±1/2         → IRRational(±1, 2)
+#   ±√2/2        → Div(Sqrt(2), 2)  / Neg(…)
+#   ±√3/2        → Div(Sqrt(3), 2)  / Neg(…)
+#   ±√3          → Sqrt(3)          / Neg(…)
+#   ±1/√3 = ±√3/3 → Div(Sqrt(3), 3) / Neg(…)
+#
+# tan at π/2 and 3π/2 is undefined — handler leaves the expression unevaluated.
+# ---------------------------------------------------------------------------
+
+_PHASE33_PI = IRSymbol("%pi")  # canonical π symbol for π-multiple detection
+
+# Exact algebraic IR constants shared by the lookup tables.
+_P33_SQRT2_OVER_2 = IRApply(DIV, (IRApply(SQRT, (IRInteger(2),)), IRInteger(2)))
+_P33_SQRT3_OVER_2 = IRApply(DIV, (IRApply(SQRT, (IRInteger(3),)), IRInteger(2)))
+_P33_SQRT3        = IRApply(SQRT, (IRInteger(3),))
+_P33_SQRT3_OVER_3 = IRApply(DIV, (IRApply(SQRT, (IRInteger(3),)), IRInteger(3)))
+_P33_NEG_SQRT2_OVER_2 = IRApply(NEG, (_P33_SQRT2_OVER_2,))
+_P33_NEG_SQRT3_OVER_2 = IRApply(NEG, (_P33_SQRT3_OVER_2,))
+_P33_NEG_SQRT3        = IRApply(NEG, (_P33_SQRT3,))
+_P33_NEG_SQRT3_OVER_3 = IRApply(NEG, (_P33_SQRT3_OVER_3,))
+
+# sin(q·π) for q ∈ [0, 2)  (period 2π → reduce mod 2)
+_SIN_PI_TABLE: dict[Fraction, IRNode] = {
+    Fraction(0):    IRInteger(0),
+    Fraction(1, 6): IRRational(1, 2),
+    Fraction(1, 4): _P33_SQRT2_OVER_2,
+    Fraction(1, 3): _P33_SQRT3_OVER_2,
+    Fraction(1, 2): IRInteger(1),
+    Fraction(2, 3): _P33_SQRT3_OVER_2,
+    Fraction(3, 4): _P33_SQRT2_OVER_2,
+    Fraction(5, 6): IRRational(1, 2),
+    Fraction(1, 1): IRInteger(0),
+    Fraction(7, 6): IRRational(-1, 2),
+    Fraction(5, 4): _P33_NEG_SQRT2_OVER_2,
+    Fraction(4, 3): _P33_NEG_SQRT3_OVER_2,
+    Fraction(3, 2): IRInteger(-1),
+    Fraction(5, 3): _P33_NEG_SQRT3_OVER_2,
+    Fraction(7, 4): _P33_NEG_SQRT2_OVER_2,
+    Fraction(11, 6): IRRational(-1, 2),
+}
+
+# cos(q·π) for q ∈ [0, 2)  (period 2π → reduce mod 2)
+_COS_PI_TABLE: dict[Fraction, IRNode] = {
+    Fraction(0):    IRInteger(1),
+    Fraction(1, 6): _P33_SQRT3_OVER_2,
+    Fraction(1, 4): _P33_SQRT2_OVER_2,
+    Fraction(1, 3): IRRational(1, 2),
+    Fraction(1, 2): IRInteger(0),
+    Fraction(2, 3): IRRational(-1, 2),
+    Fraction(3, 4): _P33_NEG_SQRT2_OVER_2,
+    Fraction(5, 6): _P33_NEG_SQRT3_OVER_2,
+    Fraction(1, 1): IRInteger(-1),
+    Fraction(7, 6): _P33_NEG_SQRT3_OVER_2,
+    Fraction(5, 4): _P33_NEG_SQRT2_OVER_2,
+    Fraction(4, 3): IRRational(-1, 2),
+    Fraction(3, 2): IRInteger(0),
+    Fraction(5, 3): IRRational(1, 2),
+    Fraction(7, 4): _P33_SQRT2_OVER_2,
+    Fraction(11, 6): _P33_SQRT3_OVER_2,
+}
+
+# tan(q·π) for q ∈ [0, 1)  (period π → reduce mod 1).
+# q = 1/2 is omitted — tan(π/2) is undefined; the handler leaves it unevaluated.
+_TAN_PI_TABLE: dict[Fraction, IRNode] = {
+    Fraction(0):    IRInteger(0),
+    Fraction(1, 6): _P33_SQRT3_OVER_3,
+    Fraction(1, 4): IRInteger(1),
+    Fraction(1, 3): _P33_SQRT3,
+    Fraction(2, 3): _P33_NEG_SQRT3,
+    Fraction(3, 4): IRInteger(-1),
+    Fraction(5, 6): _P33_NEG_SQRT3_OVER_3,
+}
+
+
+def _try_pi_multiple(arg: IRNode) -> Fraction | None:
+    """If ``arg`` equals ``q · π`` for a rational ``q``, return ``q`` as a
+    :class:`~fractions.Fraction`.  Otherwise return ``None``.
+
+    Two detection strategies are used in sequence:
+
+    1. **IRFloat path** — for backends (e.g. MacsymaBackend) that have already
+       evaluated ``%pi`` to ``IRFloat(3.14159…)``.  We divide the float value
+       by ``math.pi`` and check whether the ratio is within 1 × 10⁻⁹ of a
+       rational with denominator in ``{1, 2, 3, 4, 6}`` — the only denominators
+       that appear in the clock-angle lookup tables.
+
+    2. **Structural path** — for backends that keep ``%pi`` as
+       ``IRSymbol("%pi")`` (the normal symbolic path).
+
+    Recognised structural patterns (strategy 2)
+    ---------------------------------------------
+    - ``%pi``                             → Fraction(1)
+    - ``Neg(%pi)``                        → Fraction(-1)
+    - ``Mul(n, %pi)`` / ``Mul(%pi, n)``   → Fraction(n) for numeric n
+    - ``Div(%pi, n)``                     → Fraction(1, n) for numeric n ≠ 0
+    - ``Div(Mul(n, %pi), d)``             → Fraction(n, d) for numeric n, d
+    - ``Div(Mul(%pi, n), d)``             → Fraction(n, d) for numeric n, d
+    - ``Neg(any_of_the_above)``           → negated Fraction
+
+    ``to_number`` is used to extract numeric coefficients; if it returns
+    ``None`` (e.g. the coefficient is itself symbolic), we bail out.
+    """
+    # Strategy 1: IRFloat value ≈ q·π
+    # The VM pre-evaluates arguments before dispatch; with MacsymaBackend
+    # ``%pi`` becomes ``IRFloat(math.pi)`` before we ever see it.  Divide out
+    # π and check for a rational with one of the five "clock" denominators.
+    if isinstance(arg, IRFloat):
+        q_float = arg.value / math.pi
+        for d in (1, 2, 3, 4, 6):
+            p_candidate = round(q_float * d)
+            if abs(q_float * d - p_candidate) < 1e-9:
+                return Fraction(p_candidate, d)
+        return None
+    # Strategy 2: structural match on IR tree
+    if arg == _PHASE33_PI:
+        return Fraction(1)
+    if not isinstance(arg, IRApply):
+        return None
+    # Neg(anything) — recurse and negate
+    if arg.head == NEG and len(arg.args) == 1:
+        inner = _try_pi_multiple(arg.args[0])
+        return -inner if inner is not None else None
+    # Mul(n, %pi) or Mul(%pi, n)
+    if arg.head == MUL and len(arg.args) == 2:
+        a, b = arg.args
+        if b == _PHASE33_PI:
+            n = to_number(a)
+            return Fraction(n).limit_denominator(10**6) if n is not None else None
+        if a == _PHASE33_PI:
+            n = to_number(b)
+            return Fraction(n).limit_denominator(10**6) if n is not None else None
+    # Div(numerator, denominator)
+    if arg.head == DIV and len(arg.args) == 2:
+        num, den = arg.args
+        d = to_number(den)
+        if d is None or d == 0:
+            return None
+        d_frac = Fraction(d).limit_denominator(10**6)
+        # Div(%pi, n) — simple form
+        if num == _PHASE33_PI:
+            return Fraction(1) / d_frac
+        # Div(Mul(n, %pi), d) or Div(Mul(%pi, n), d) — compound numerator
+        if isinstance(num, IRApply) and num.head == MUL and len(num.args) == 2:
+            ma, mb = num.args
+            if mb == _PHASE33_PI:
+                n = to_number(ma)
+                if n is not None:
+                    return Fraction(n).limit_denominator(10**6) / d_frac
+            if ma == _PHASE33_PI:
+                n = to_number(mb)
+                if n is not None:
+                    return Fraction(n).limit_denominator(10**6) / d_frac
+    return None
+
+
+# ---------------------------------------------------------------------------
 # Phase 31: Trig symmetry and arc-cancellation identities
 # ---------------------------------------------------------------------------
 # Each of the six primary trig/hyperbolic functions gets an algebraic handler
@@ -2441,39 +2611,67 @@ def exp_handler(vm: VM, expr: IRApply) -> IRNode:
 #
 # Both rules recurse into the handler to handle chained negations and to
 # allow the numeric fold to fire after stripping negation.
+# Phase 33: π-multiple detection is Rule 4 in sin/cos/tan handlers — fires
+# when arg is q·%pi with q a rational having denominator in {1,2,3,4,6}.
 # ---------------------------------------------------------------------------
 
 
 def sin_handler(vm: VM, expr: IRApply) -> IRNode:
-    """``Sin(x)`` — sine with odd-symmetry and arc-cancellation rules.
+    """``Sin(x)`` — sine with odd-symmetry, arc-cancellation, and π-value rules.
 
-    Simplification rules (Phase 31)
-    --------------------------------
+    Simplification rules (Phases 31 + 33)
+    --------------------------------------
     1. **Numeric fold**: integer / rational / float inputs evaluate via
        ``math.sin``.  The special value ``Sin(0) → 0`` is subsumed by this.
 
-    2. **Odd symmetry** ``Sin(-x) → -Sin(x)``:
+    2. **Odd symmetry** ``Sin(-x) → -Sin(x)`` (Phase 31):
        Sine is an odd function — ``sin(-x) = -sin(x)`` for all real ``x``.
        Recursing into the handler means double negations collapse correctly:
        ``sin(-(-x)) = sin(x)``.
 
-    3. **Arc-cancellation** ``Sin(Asin(x)) → x``:
+    3. **Arc-cancellation** ``Sin(Asin(x)) → x`` (Phase 31):
        ``asin`` maps ``[-1,1] → [-π/2, π/2]``; ``sin`` restricted to that
        interval is the exact left inverse, so ``sin(asin(x)) = x``
        unconditionally (structural identity).
 
-    4. **Everything else**: leave unevaluated as ``Sin(arg)``.
+    4. **π-multiple exact values** ``Sin(q·%pi)`` (Phase 33):
+       When ``arg`` is a rational multiple of ``%pi`` with denominator in
+       {1, 2, 3, 4, 6}, return the exact algebraic value from ``_SIN_PI_TABLE``
+       (exact ``IRInteger``, ``IRRational``, or ``Div/Sqrt`` expression).
+       For example:
+         - ``sin(%pi)     → 0``
+         - ``sin(%pi/6)   → 1/2``
+         - ``sin(%pi/4)   → Div(Sqrt(2), 2)``
+         - ``sin(%pi/3)   → Div(Sqrt(3), 2)``
+         - ``sin(%pi/2)   → 1``
+         - ``sin(2·%pi)   → 0``
+       Arguments not in the table leave the expression unevaluated.
+
+    5. **Everything else**: leave unevaluated as ``Sin(arg)``.
 
     Examples::
 
-        sin(-x)      → Neg(Sin(x))     (odd symmetry)
-        sin(-(-x))   → Sin(x)          (double-neg collapses via recursion)
-        sin(asin(x)) → x               (arc-cancellation)
-        sin(0.5)     → IRFloat(≈0.479) (numeric fold)
+        sin(-x)      → Neg(Sin(x))          (odd symmetry)
+        sin(-(-x))   → Sin(x)               (double-neg collapses via recursion)
+        sin(asin(x)) → x                    (arc-cancellation)
+        sin(%pi)     → IRInteger(0)          (π-multiple exact value)
+        sin(%pi/6)   → IRRational(1, 2)     (π-multiple exact value)
+        sin(%pi/4)   → Div(Sqrt(2), 2)      (π-multiple exact value)
+        sin(0.5)     → IRFloat(≈0.479)      (numeric fold)
     """
     if len(expr.args) != 1:
         return expr
-    arg = vm.eval(expr.args[0])
+    raw_arg = expr.args[0]
+    # Rule 4 (Phase 33): π-multiple exact values — checked on the raw (unevaluated)
+    # argument so that backends which evaluate %pi to IRFloat (e.g. MacsymaBackend)
+    # don't prevent exact-value detection.  Neg(q·%pi) is also handled here via
+    # _try_pi_multiple's recursive Neg branch (e.g. sin(-(%pi/6)) → sin(11π/6) = -1/2).
+    q = _try_pi_multiple(raw_arg)
+    if q is not None:
+        q_mod = q % 2  # sin has period 2π
+        if q_mod in _SIN_PI_TABLE:
+            return _SIN_PI_TABLE[q_mod]
+    arg = vm.eval(raw_arg)
     # Rule 1: numeric fold.  Preserve the exact special value sin(0) = 0.
     n = to_number(arg)
     if n is not None:
@@ -2487,39 +2685,61 @@ def sin_handler(vm: VM, expr: IRApply) -> IRNode:
     # Rule 3: arc-cancellation — sin(asin(x)) = x.
     if isinstance(arg, IRApply) and arg.head == ASIN and len(arg.args) == 1:
         return arg.args[0]
-    # Rule 4: leave unevaluated.
+    # Rule 5: leave unevaluated.
     return IRApply(expr.head, (arg,))
 
 
 def cos_handler(vm: VM, expr: IRApply) -> IRNode:
-    """``Cos(x)`` — cosine with even-symmetry and arc-cancellation rules.
+    """``Cos(x)`` — cosine with even-symmetry, arc-cancellation, and π-value rules.
 
-    Simplification rules (Phase 31)
-    --------------------------------
+    Simplification rules (Phases 31 + 33)
+    --------------------------------------
     1. **Numeric fold**: integer / rational / float inputs evaluate via
        ``math.cos``.  The special value ``Cos(0) → 1`` is subsumed by this.
 
-    2. **Even symmetry** ``Cos(-x) → Cos(x)``:
+    2. **Even symmetry** ``Cos(-x) → Cos(x)`` (Phase 31):
        Cosine is an even function — ``cos(-x) = cos(x)`` for all real ``x``.
        The negation is stripped and the handler recurses so that numeric fold
        and further algebraic rules fire on the inner expression.
 
-    3. **Arc-cancellation** ``Cos(Acos(x)) → x``:
+    3. **Arc-cancellation** ``Cos(Acos(x)) → x`` (Phase 31):
        ``acos`` maps ``[-1,1] → [0, π]``; ``cos`` restricted to that interval
        is the exact left inverse, so ``cos(acos(x)) = x`` unconditionally.
 
-    4. **Everything else**: leave unevaluated as ``Cos(arg)``.
+    4. **π-multiple exact values** ``Cos(q·%pi)`` (Phase 33):
+       When ``arg`` is a rational multiple of ``%pi`` with denominator in
+       {1, 2, 3, 4, 6}, return the exact algebraic value from ``_COS_PI_TABLE``.
+       For example:
+         - ``cos(%pi)     → -1``
+         - ``cos(%pi/2)   → 0``
+         - ``cos(%pi/3)   → 1/2``
+         - ``cos(%pi/4)   → Div(Sqrt(2), 2)``
+         - ``cos(2·%pi)   → 1``
+
+    5. **Everything else**: leave unevaluated as ``Cos(arg)``.
 
     Examples::
 
-        cos(-x)      → Cos(x)          (even symmetry, NEG stripped)
-        cos(-(-x))   → Cos(x)          (double-neg: strip both, same result)
-        cos(acos(x)) → x               (arc-cancellation)
-        cos(0.5)     → IRFloat(≈0.878) (numeric fold)
+        cos(-x)      → Cos(x)               (even symmetry, NEG stripped)
+        cos(-(-x))   → Cos(x)               (double-neg: strip both)
+        cos(acos(x)) → x                    (arc-cancellation)
+        cos(%pi)     → IRInteger(-1)         (π-multiple exact value)
+        cos(%pi/2)   → IRInteger(0)          (π-multiple exact value)
+        cos(%pi/3)   → IRRational(1, 2)     (π-multiple exact value)
+        cos(0.5)     → IRFloat(≈0.878)      (numeric fold)
     """
     if len(expr.args) != 1:
         return expr
-    arg = vm.eval(expr.args[0])
+    raw_arg = expr.args[0]
+    # Rule 4 (Phase 33): π-multiple exact values — checked on the raw argument.
+    # cos(-q·%pi) = cos(q·%pi) by even symmetry, so the Neg is absorbed into
+    # modular reduction: Fraction(-1/3) % 2 = Fraction(5/3) → cos(5π/3) = 1/2.
+    q = _try_pi_multiple(raw_arg)
+    if q is not None:
+        q_mod = q % 2  # cos has period 2π
+        if q_mod in _COS_PI_TABLE:
+            return _COS_PI_TABLE[q_mod]
+    arg = vm.eval(raw_arg)
     # Rule 1: numeric fold.  Preserve the exact special value cos(0) = 1.
     n = to_number(arg)
     if n is not None:
@@ -2532,37 +2752,65 @@ def cos_handler(vm: VM, expr: IRApply) -> IRNode:
     # Rule 3: arc-cancellation — cos(acos(x)) = x.
     if isinstance(arg, IRApply) and arg.head == ACOS and len(arg.args) == 1:
         return arg.args[0]
-    # Rule 4: leave unevaluated.
+    # Rule 5: leave unevaluated.
     return IRApply(expr.head, (arg,))
 
 
 def tan_handler(vm: VM, expr: IRApply) -> IRNode:
-    """``Tan(x)`` — tangent with odd-symmetry and arc-cancellation rules.
+    """``Tan(x)`` — tangent with odd-symmetry, arc-cancellation, and π-value rules.
 
-    Simplification rules (Phase 31)
-    --------------------------------
+    Simplification rules (Phases 31 + 33)
+    --------------------------------------
     1. **Numeric fold**: integer / rational / float inputs evaluate via
        ``math.tan``.  The special value ``Tan(0) → 0`` is subsumed by this.
 
-    2. **Odd symmetry** ``Tan(-x) → -Tan(x)``:
+    2. **Odd symmetry** ``Tan(-x) → -Tan(x)`` (Phase 31):
        Tangent is an odd function — ``tan(-x) = -tan(x)`` wherever it is
        defined.  Same recursive descent as ``sin_handler``.
 
-    3. **Arc-cancellation** ``Tan(Atan(x)) → x``:
+    3. **Arc-cancellation** ``Tan(Atan(x)) → x`` (Phase 31):
        ``atan`` maps ``ℝ → (-π/2, π/2)`` where ``tan`` is defined and
        bijective; ``tan(atan(x)) = x`` for all real ``x`` unconditionally.
 
-    4. **Everything else**: leave unevaluated as ``Tan(arg)``.
+    4. **π-multiple exact values** ``Tan(q·%pi)`` (Phase 33):
+       When ``arg`` is a rational multiple of ``%pi`` with denominator in
+       {1, 2, 3, 4, 6}, return the exact algebraic value from ``_TAN_PI_TABLE``.
+       ``tan(π/2)`` and ``tan(3π/2)`` are **undefined** — handler returns the
+       expression unevaluated rather than raising an exception.
+       For example:
+         - ``tan(%pi)     → 0``
+         - ``tan(%pi/4)   → 1``
+         - ``tan(%pi/3)   → Sqrt(3)``
+         - ``tan(3*%pi/4) → -1``
+
+    5. **Everything else**: leave unevaluated as ``Tan(arg)``.
 
     Examples::
 
-        tan(-x)      → Neg(Tan(x))     (odd symmetry)
-        tan(atan(x)) → x               (arc-cancellation)
-        tan(0.5)     → IRFloat(≈0.546) (numeric fold)
+        tan(-x)      → Neg(Tan(x))          (odd symmetry)
+        tan(atan(x)) → x                    (arc-cancellation)
+        tan(%pi/4)   → IRInteger(1)          (π-multiple exact value)
+        tan(%pi/3)   → Sqrt(3)               (π-multiple exact value)
+        tan(%pi/2)   → Tan(%pi/2)           (undefined — left unevaluated)
+        tan(0.5)     → IRFloat(≈0.546)      (numeric fold)
     """
     if len(expr.args) != 1:
         return expr
-    arg = vm.eval(expr.args[0])
+    raw_arg = expr.args[0]
+    # Rule 4 (Phase 33): π-multiple exact values — checked on the raw argument.
+    # tan(-q·%pi) = -tan(q·%pi) by odd symmetry: Neg wraps the result.
+    # However, tan is undefined at π/2 + nπ; those cases return unevaluated.
+    q = _try_pi_multiple(raw_arg)
+    if q is not None:
+        # Handle Neg: tan(-q·%pi) = -tan(q·%pi).
+        sign = Fraction(-1) if q < 0 else Fraction(1)
+        q_abs = abs(q)
+        q_mod = q_abs % 1  # tan has period π
+        if q_mod in _TAN_PI_TABLE:
+            val = _TAN_PI_TABLE[q_mod]
+            return IRApply(NEG, (val,)) if sign < 0 else val
+        # q_mod = 1/2 means undefined — fall through to leave unevaluated
+    arg = vm.eval(raw_arg)
     # Rule 1: numeric fold.  Preserve the exact special value tan(0) = 0.
     n = to_number(arg)
     if n is not None:
@@ -2576,7 +2824,7 @@ def tan_handler(vm: VM, expr: IRApply) -> IRNode:
     # Rule 3: arc-cancellation — tan(atan(x)) = x.
     if isinstance(arg, IRApply) and arg.head == ATAN and len(arg.args) == 1:
         return arg.args[0]
-    # Rule 4: leave unevaluated.
+    # Rule 5: leave unevaluated.
     return IRApply(expr.head, (arg,))
 
 

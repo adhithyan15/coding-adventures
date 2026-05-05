@@ -1,5 +1,55 @@
 # Changelog
 
+## 0.53.0 — 2026-05-05
+
+**Phase 33 — Trig special values at rational multiples of π.**
+
+The `sin`, `cos`, and `tan` CAS handlers gain a **π-multiple detection** rule
+that fires before the generic numeric fold.  When the argument is recognised as
+`q · π` for a rational `q` with denominator in `{1, 2, 3, 4, 6}`, the handler
+returns the exact algebraic IR constant from a lookup table rather than a
+floating-point approximation.
+
+### `_try_pi_multiple(arg)` helper
+
+A new `_try_pi_multiple` helper extracts the rational coefficient `q` from the
+argument using two strategies:
+
+1. **Structural matching** — recognises `%pi`, `Neg(%pi)`, `Mul(n, %pi)`,
+   `Div(%pi, n)`, `Div(Mul(n, %pi), d)`, and `Neg(any_of_the_above)`.
+2. **IRFloat matching** — for backends such as `MacsymaBackend` that evaluate
+   `%pi → IRFloat(3.14159…)` before the handler sees the argument.  The
+   strategy divides the float value by `math.pi` and checks whether the ratio
+   is within `1 × 10⁻⁹` of a rational with denominator in `{1, 2, 3, 4, 6}`.
+
+### Lookup tables
+
+Three module-level dicts (`_SIN_PI_TABLE`, `_COS_PI_TABLE`, `_TAN_PI_TABLE`)
+cover all 16 special angles in `[0, 2π)`.  Values are represented as exact IR:
+`IRInteger`, `IRRational`, `Div(Sqrt(n), d)`, `Neg(…)`.
+
+`tan(π/2)` and `tan(3π/2)` are **undefined** — they are absent from
+`_TAN_PI_TABLE`, so the handler leaves those expressions unevaluated rather
+than raising an exception.
+
+### Handler changes
+
+- `sin_handler` — periodic reduction `q mod 2`; falls through to Phase 31/30
+  rules for non-special angles.
+- `cos_handler` — same `q mod 2` reduction; even symmetry means
+  `cos(-q·π) = cos(q·π)` is automatically absorbed by `Fraction(-q) % 2`.
+- `tan_handler` — periodic reduction `q mod 1` (tan has period π); sign
+  handling for negative multiples.
+
+### Files changed
+
+- `src/symbolic_vm/cas_handlers.py` — `_try_pi_multiple`, three constant
+  blocks, three updated handlers.
+- `tests/test_phase33.py` — 54 new tests across six classes.
+- `code/specs/phase33-trig-pi-values.md` — full specification.
+
+---
+
 ## 0.52.0 — 2026-05-05
 
 **Phase 32 — Inverse trig/hyperbolic odd symmetry.**
