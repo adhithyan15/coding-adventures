@@ -48,6 +48,9 @@ All notable changes to this package will be documented in this file.
 - Executed chained assignments, ALGOL-left-associative exponentiation with
   integer or real exponents, and branch-selected conditional expressions
   through the full WASM path.
+- Executed nested conditional expressions in arithmetic bounds/subscripts,
+  Boolean conditions, and designational `goto` targets through the full WASM
+  path.
 - Executed boolean `and`, `or`, and `impl` with short-circuiting RHS
   evaluation through the full WASM path, while keeping `eqv` strict.
 - Executed bare no-argument typed procedure names as expression calls,

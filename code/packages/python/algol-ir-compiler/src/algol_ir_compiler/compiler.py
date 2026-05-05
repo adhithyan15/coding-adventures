@@ -1131,31 +1131,38 @@ class AlgolIrCompiler:
     ) -> None:
         if execution_scope is None:
             execution_scope = scope
-        if any(token.value == "if" for token in _direct_tokens(node)):
+        conditional = _conditional_designational_parts(node)
+        if conditional is not None:
+            bool_expr, then_desig, else_desig = conditional
             index = self._next_if_index()
             else_label = f"if_{index}_else"
-            bool_expr = _first_direct_node(node, "bool_expr")
-            if bool_expr is None:
-                raise CompileError("conditional designational is missing a condition")
             condition = self._compile_expr(bool_expr, scope)
             self._emit(IrOp.BRANCH_Z, IrRegister(condition), IrLabel(else_label))
-            then_desig = _first_direct_node(node, "simple_desig")
-            if then_desig is None:
-                raise CompileError("conditional designational is missing then target")
-            self._compile_simple_designational(
-                then_desig,
-                scope,
-                execution_scope=execution_scope,
-            )
+            if then_desig.rule_name == "simple_desig":
+                self._compile_simple_designational(
+                    then_desig,
+                    scope,
+                    execution_scope=execution_scope,
+                )
+            else:
+                self._compile_designational(
+                    then_desig,
+                    scope,
+                    execution_scope=execution_scope,
+                )
             self._label(else_label)
-            else_desig = _first_direct_node(node, "desig_expr")
-            if else_desig is None:
-                raise CompileError("conditional designational is missing else target")
-            self._compile_designational(
-                else_desig,
-                scope,
-                execution_scope=execution_scope,
-            )
+            if else_desig.rule_name == "simple_desig":
+                self._compile_simple_designational(
+                    else_desig,
+                    scope,
+                    execution_scope=execution_scope,
+                )
+            else:
+                self._compile_designational(
+                    else_desig,
+                    scope,
+                    execution_scope=execution_scope,
+                )
             return
 
         simple = _first_direct_node(node, "simple_desig")
@@ -1452,27 +1459,32 @@ class AlgolIrCompiler:
         node: ASTNode,
         scope: _FrameScope,
     ) -> int:
-        if any(token.value == "if" for token in _direct_tokens(node)):
+        conditional = _conditional_designational_parts(node)
+        if conditional is not None:
+            bool_expr, then_desig, else_desig = conditional
             index = self._next_if_index()
             else_label = f"if_{index}_else"
             end_label = f"if_{index}_end"
             result = self._fresh_reg()
-            bool_expr = _first_direct_node(node, "bool_expr")
-            if bool_expr is None:
-                raise CompileError("conditional designational is missing a condition")
             condition = self._compile_expr(bool_expr, scope)
             self._emit(IrOp.BRANCH_Z, IrRegister(condition), IrLabel(else_label))
-            then_desig = _first_direct_node(node, "simple_desig")
-            if then_desig is None:
-                raise CompileError("conditional designational is missing then target")
-            then_value = self._compile_simple_designational_value(then_desig, scope)
+            if then_desig.rule_name == "simple_desig":
+                then_value = self._compile_simple_designational_value(
+                    then_desig,
+                    scope,
+                )
+            else:
+                then_value = self._compile_designational_value(then_desig, scope)
             self._copy_reg(dst=result, src=then_value)
             self._emit(IrOp.JUMP, IrLabel(end_label))
             self._label(else_label)
-            else_desig = _first_direct_node(node, "desig_expr")
-            if else_desig is None:
-                raise CompileError("conditional designational is missing else target")
-            else_value = self._compile_designational_value(else_desig, scope)
+            if else_desig.rule_name == "simple_desig":
+                else_value = self._compile_simple_designational_value(
+                    else_desig,
+                    scope,
+                )
+            else:
+                else_value = self._compile_designational_value(else_desig, scope)
             self._copy_reg(dst=result, src=else_value)
             self._label(end_label)
             return result
@@ -7790,6 +7802,25 @@ def _meaningful_children(node: ASTNode) -> list[ASTNode | Token]:
 def _conditional_expression_parts(
     children: list[ASTNode | Token],
 ) -> tuple[ASTNode, ASTNode, ASTNode] | None:
+    first = children[0] if children else None
+    if not isinstance(first, Token) or first.value != "if":
+        return None
+    then_index = _keyword_child_index(children, "then")
+    else_index = _keyword_child_index(children, "else")
+    if then_index is None or else_index is None or then_index >= else_index:
+        return None
+    condition = _first_ast_child_between(children, 1, then_index)
+    then_expr = _first_ast_child_between(children, then_index + 1, else_index)
+    else_expr = _first_ast_child_between(children, else_index + 1, len(children))
+    if condition is None or then_expr is None or else_expr is None:
+        return None
+    return condition, then_expr, else_expr
+
+
+def _conditional_designational_parts(
+    node: ASTNode,
+) -> tuple[ASTNode, ASTNode, ASTNode] | None:
+    children = _meaningful_children(node)
     first = children[0] if children else None
     if not isinstance(first, Token) or first.value != "if":
         return None

@@ -240,10 +240,10 @@ for_elem     = arith_expr "step" arith_expr "until" arith_expr
 #     exponentiation (left-associative per ALGOL 60 report)
 #     primary (literal, call, variable, parenthesised expression)
 #
-# Only the `expression` rule (used in assignments and actual parameters)
-# needs the full unified hierarchy.  Rules used in type-specific contexts
-# (arith_expr for bounds/subscripts, bool_expr for conditionals) are
-# kept as-is.
+# The `expression` rule is the fully unified hierarchy used in assignments and
+# actual parameters.  Type-specific contexts still use arith_expr, bool_expr,
+# or desig_expr, but their conditional forms also recurse on the then branch so
+# nested conditionals work anywhere ALGOL accepts that value kind.
 expression   = "if" bool_expr "then" expression "else" expression
              | expr_eqv ;
 
@@ -268,7 +268,7 @@ expr_atom    = INTEGER_LIT
 # Arithmetic expression.
 # The conditional form (if b then x else y) produces a numeric value.
 # This is ALGOL's "conditional expression" — cleaner than C's ternary ?: operator.
-arith_expr   = "if" bool_expr "then" simple_arith "else" arith_expr
+arith_expr   = "if" bool_expr "then" arith_expr "else" arith_expr
              | simple_arith ;
 
 # Addition and subtraction. Optional leading sign handles unary + and -.
@@ -303,7 +303,7 @@ primary      = INTEGER_LIT
 #   and    — logical conjunction
 #   not    — logical negation (unary, highest precedence)
 # Then: relation (< = > etc.) and boolean primaries.
-bool_expr    = "if" bool_expr "then" simple_bool "else" bool_expr
+bool_expr    = "if" bool_expr "then" bool_expr "else" bool_expr
              | simple_bool ;
 
 simple_bool  = implication { "eqv" implication } ;
@@ -331,7 +331,7 @@ relation     = simple_arith ( EQ | NEQ | LT | LEQ | GT | GEQ ) simple_arith ;
 # Designational expression: used as the target of goto statements.
 # Resolves to a label — either a direct label, a switch subscript, or
 # a conditional jump (if b then label1 else label2).
-desig_expr   = "if" bool_expr "then" simple_desig "else" desig_expr
+desig_expr   = "if" bool_expr "then" desig_expr "else" desig_expr
              | simple_desig ;
 
 simple_desig = NAME LBRACKET arith_expr RBRACKET

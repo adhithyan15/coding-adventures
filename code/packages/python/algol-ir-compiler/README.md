@@ -42,8 +42,9 @@ bounds, while arrays local to those callees still lower normally.
 
 Expression lowering includes mixed integer/real arithmetic, boolean operators,
 comparisons, chained assignment targets, branch-selected conditional
-expressions, and ALGOL-left-associative exponentiation. Integer exponents use
-the existing loop lowering, real bases with negative integer exponents use a
+expressions, nested conditional forms in type-specific arithmetic and Boolean
+contexts, and ALGOL-left-associative exponentiation. Integer exponents use the
+existing loop lowering, real bases with negative integer exponents use a
 reciprocal path, and real exponents lower through the imported real `pow`
 runtime with a domain-failure guard. Boolean `and`, `or`, and `impl` lower
 through short-circuiting control flow; `eqv` remains strict and evaluates both
@@ -97,12 +98,13 @@ and stack-pointer restoration used by normal block exits before transferring
 control to the outer label. The downstream WASM backend's unstructured
 control-flow lowering handles forward, backward, and nonlocal block jumps.
 Local conditional designational expressions now lower as condition-controlled
-branch points that only evaluate the selected target. Local switch selections
-evaluate their integer index once, compare against one-based switch entries,
-and lower the chosen designational entry into the same jump path. Switch entries
-may target labels in lexical parent blocks or later sibling switch declarations;
-those entries unwind exited frames or propagate pending procedure-crossing gotos
-just like direct designational gotos. An out-of-range switch index follows the
+branch points that only evaluate the selected target, including nested
+conditional designational branches. Local switch selections evaluate their
+integer index once, compare against one-based switch entries, and lower the
+chosen designational entry into the same jump path. Switch entries may target
+labels in lexical parent blocks or later sibling switch declarations; those
+entries unwind exited frames or propagate pending procedure-crossing gotos just
+like direct designational gotos. An out-of-range switch index follows the
 existing runtime-failure path and returns `0`. Recursive switch self-selection
 lowers through the switch evaluation helper so finite recursive dispatch
 executes at runtime instead of expanding the descriptor at compile time.

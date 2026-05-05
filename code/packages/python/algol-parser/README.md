@@ -27,7 +27,7 @@ including John Backus, Peter Naur, and Edsger Dijkstra. Its *Revised Report*
 ## How It Fits the Stack
 
 ```
-algol.grammar (grammar rules)        algol.tokens (token defs)
+algol/algol60.grammar (grammar rules)  algol/algol60.tokens (token defs)
       │                                     │
       ▼                                     ▼
 grammar_tools.parse_parser_grammar()   algol-lexer
@@ -98,6 +98,11 @@ The parser covers the complete ALGOL 60 grammar:
 | Boolean | `bool_expr`, `simple_bool`, `implication`, `bool_term`, `bool_factor`, `bool_secondary`, `bool_primary`, `relation` |
 | Designational | `desig_expr`, `simple_desig` |
 | Variables | `variable`, `subscripts`, `proc_call`, `ident_list` |
+
+Conditional arithmetic, Boolean, and designational expressions may nest in
+either branch, so type-specific contexts such as array bounds/subscripts,
+conditions, and `goto` targets accept the same nested conditional shape as
+ordinary assignment expressions.
 
 Procedure declarations and calls accept the report-style omitted-parentheses
 form for parameterless procedures as well as explicit empty parentheses, so
