@@ -7,6 +7,12 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- Added a generated-grammar freshness test that recompiles
+  `code/grammars/algol/algol60.grammar` and verifies the committed Python parser
+  grammar is current.
+
 ### Changed
 
 - Type-specific conditional grammar rules now allow nested `if ... then ...

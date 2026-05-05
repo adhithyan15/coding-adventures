@@ -31,7 +31,11 @@ The ALGOL 60 grammar differs from JSON in several important ways:
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
+from grammar_tools.compiler import compile_parser_grammar
+from grammar_tools.parser_grammar import parse_parser_grammar
 from lang_parser import ASTNode, GrammarParseError, GrammarParser
 from lexer import Token
 
@@ -43,6 +47,13 @@ from algol_parser import (
     resolve_version,
 )
 from algol_parser._grammar import PARSER_GRAMMAR
+
+_REPO_ROOT = Path(__file__).resolve().parents[5]
+_SOURCE_GRAMMAR = _REPO_ROOT / "code/grammars/algol/algol60.grammar"
+_GENERATED_GRAMMAR = (
+    _REPO_ROOT
+    / "code/packages/python/algol-parser/src/algol_parser/_grammar.py"
+)
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -112,6 +123,16 @@ class TestFactory:
         parser = create_algol_parser("begin end")
 
         assert parser._grammar is PARSER_GRAMMAR
+
+    def test_compiled_parser_grammar_is_fresh(self) -> None:
+        """The committed Python parser grammar matches the source grammar."""
+        source = _SOURCE_GRAMMAR.read_text(encoding="utf-8")
+        expected = compile_parser_grammar(
+            parse_parser_grammar(source),
+            "algol/algol60.grammar",
+        )
+
+        assert _GENERATED_GRAMMAR.read_text(encoding="utf-8") == expected
 
     def test_explicit_algol60_version_produces_ast(self) -> None:
         """The supported version name can be passed explicitly."""
