@@ -297,6 +297,7 @@ members = [
     "matrix-cpu",
     "matrix-ir",
     "matrix-metal",
+    "matrix-profile",
     "matrix-runtime",
     "metal-compute",
     "paint-metal",
