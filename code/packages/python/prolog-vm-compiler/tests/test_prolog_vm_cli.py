@@ -309,8 +309,8 @@ def test_cli_dump_source_metadata_reports_query_counts(
         "instructions: 5",
     ]
     assert lines[5:] == [
-        "query 0 variables: Who",
-        "query 1 variables: (none)",
+        "query 0 (vm query 1) variables: Who",
+        "query 1 (vm query 2) variables: (none)",
     ]
 
 
@@ -337,8 +337,8 @@ def test_cli_dump_source_metadata_json_reports_source_queries(
         "mode": "source_metadata",
         "query_count": 3,
         "source_queries": [
-            {"index": 0, "variables": ["Who"]},
-            {"index": 1, "variables": []},
+            {"index": 0, "variables": ["Who"], "vm_query_index": 1},
+            {"index": 1, "variables": [], "vm_query_index": 2},
         ],
         "source_query_count": 2,
         "success": True,
@@ -373,8 +373,8 @@ def test_cli_lists_source_query_variables(
 
     assert status == 0
     assert capsys.readouterr().out.splitlines() == [
-        "query 0: Who",
-        "query 1: (no variables)",
+        "query 0 (vm query 0): Who",
+        "query 1 (vm query 1): (no variables)",
     ]
 
 
@@ -395,7 +395,7 @@ def test_cli_lists_source_query_variables_as_json(
     assert payload == {
         "mode": "source_queries",
         "queries": [
-            {"index": 0, "variables": ["Who"]},
+            {"index": 0, "variables": ["Who"], "vm_query_index": 0},
         ],
         "source_query_count": 1,
         "success": True,

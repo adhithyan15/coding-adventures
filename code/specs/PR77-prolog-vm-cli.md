@@ -122,12 +122,13 @@ compile-only and mutually exclusive with query execution modes.
 When `--dump-source-metadata` is set, JSON formats emit one success object with
 `mode: "source_metadata"`, `dialect`, `dialect_display_name`, query counts,
 `instruction_count`, and a `source_queries` list containing zero-based `index`
-and visible `variables` metadata. This mode is compile-only and mutually
-exclusive with query execution modes.
+visible `variables`, and `vm_query_index` metadata. This mode is compile-only
+and mutually exclusive with query execution modes.
 
 When `--list-source-queries` is set, JSON formats emit one success object with
 `mode: "source_queries"`, `source_query_count`, and a `queries` list containing
-zero-based `index` and visible `variables` metadata for each embedded query.
+zero-based `index`, `vm_query_index`, and visible `variables` metadata for each
+embedded query.
 
 When `--all-source-queries` is set, each embedded `?-` query produces one result
 object with its `source_query_index`. The process exits with status 1 if any

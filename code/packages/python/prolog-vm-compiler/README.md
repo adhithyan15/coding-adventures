@@ -305,13 +305,14 @@ prolog-vm --source "parent(homer, bart). ?- parent(homer, Who)." --dump-bytecode
 
 Use `--dump-source-metadata` to compile source without executing it and emit a
 small manifest: dialect, initialization/source query counts, total VM queries,
-instruction count, and visible variables for each embedded source query. This is
-intended for editor and CI integrations that need a stable source manifest
-before selecting a query to run.
+instruction count, and visible variables plus VM query indexes for each embedded
+source query. This is intended for editor and CI integrations that need a stable
+source manifest before selecting a query to run.
 
 Use `--list-source-queries` to inspect embedded `?-` directives before choosing
-what to run. Text output lists the zero-based query index and visible variables;
-JSON output emits the same metadata as a stable `source_queries` record.
+what to run. Text output lists the zero-based source query index, VM query
+index, and visible variables; JSON output emits the same metadata as a stable
+`source_queries` record.
 
 Use `--all-source-queries` when a source file contains several embedded `?-`
 queries and the CLI should run them as a script. The command prints or emits

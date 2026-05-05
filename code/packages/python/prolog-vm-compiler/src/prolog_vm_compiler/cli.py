@@ -497,6 +497,7 @@ def _source_query_records(
     return [
         {
             "index": index,
+            "vm_query_index": compiled_program.source_query_vm_index(index),
             "variables": list(compiled_program.source_query_variable_names(index)),
         }
         for index in range(compiled_program.source_query_count)
@@ -530,7 +531,11 @@ def _print_source_metadata(
         for query in query_summaries:
             variables = cast("list[str]", query["variables"])
             variable_text = ", ".join(variables) if variables else "(none)"
-            print(f"query {query['index']} variables: {variable_text}", file=output)
+            print(
+                f"query {query['index']} "
+                f"(vm query {query['vm_query_index']}) variables: {variable_text}",
+                file=output,
+            )
         return
 
     payload = {
@@ -563,7 +568,11 @@ def _print_source_query_summary(
         for query in query_summaries:
             variables = cast("list[str]", query["variables"])
             variable_text = ", ".join(variables) if variables else "(no variables)"
-            print(f"query {query['index']}: {variable_text}", file=output)
+            print(
+                f"query {query['index']} "
+                f"(vm query {query['vm_query_index']}): {variable_text}",
+                file=output,
+            )
         return
 
     payload = {
