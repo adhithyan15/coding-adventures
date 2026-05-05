@@ -2143,6 +2143,78 @@
       ]
     },
     {
+      "description": "rcdata end tag open state emits matching end tag",
+      "input": "title>after",
+      "initialStates": [
+        "RCDATA end tag open state"
+      ],
+      "lastStartTag": "title",
+      "output": [
+        [
+          "EndTag",
+          "title"
+        ],
+        [
+          "Character",
+          "after"
+        ]
+      ]
+    },
+    {
+      "description": "rawtext end tag open state emits matching end tag",
+      "input": "style>tail",
+      "initialStates": [
+        "RAWTEXT end tag open state"
+      ],
+      "lastStartTag": "style",
+      "output": [
+        [
+          "EndTag",
+          "style"
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ]
+    },
+    {
+      "description": "script data end tag open state emits matching end tag",
+      "input": "script>tail",
+      "initialStates": [
+        "Script data end tag open state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "EndTag",
+          "script"
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ]
+    },
+    {
+      "description": "script escaped end tag open state emits matching end tag",
+      "input": "script>tail",
+      "initialStates": [
+        "Script data escaped end tag open state"
+      ],
+      "lastStartTag": "script",
+      "output": [
+        [
+          "EndTag",
+          "script"
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ]
+    },
+    {
       "description": "script less-than state emits pending less-than at eof",
       "input": "",
       "initialStates": [

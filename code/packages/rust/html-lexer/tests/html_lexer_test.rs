@@ -4875,6 +4875,10 @@ fn parser_facing_context_maps_script_substates() {
             "script_data_less_than_sign",
         ),
         (
+            HtmlTokenizerState::ScriptDataEndTagOpen,
+            "script_data_end_tag_open",
+        ),
+        (
             HtmlTokenizerState::ScriptDataEscapeStart,
             "script_data_escape_start",
         ),
@@ -4894,6 +4898,10 @@ fn parser_facing_context_maps_script_substates() {
         (
             HtmlTokenizerState::ScriptDataEscapedLessThanSign,
             "script_data_escaped_less_than_sign",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapedEndTagOpen,
+            "script_data_escaped_end_tag_open",
         ),
         (
             HtmlTokenizerState::ScriptDataDoubleEscapeStart,
@@ -4990,20 +4998,24 @@ fn parser_facing_context_exposes_tokenizer_state_sets() {
             "data",
             "rcdata",
             "rcdata_less_than_sign",
+            "rcdata_end_tag_open",
             "rawtext",
             "rawtext_less_than_sign",
+            "rawtext_end_tag_open",
             "plaintext",
             "cdata_section",
             "cdata_section_bracket",
             "cdata_section_end",
             "script_data",
             "script_data_less_than_sign",
+            "script_data_end_tag_open",
             "script_data_escape_start",
             "script_data_escape_start_dash",
             "script_data_escaped",
             "script_data_escaped_dash",
             "script_data_escaped_dash_dash",
             "script_data_escaped_less_than_sign",
+            "script_data_escaped_end_tag_open",
             "script_data_double_escape_start",
             "script_data_double_escaped",
             "script_data_double_escaped_dash",
@@ -5053,11 +5065,19 @@ fn parser_facing_context_exposes_tokenizer_state_sets() {
         HtmlTokenizerState::from_html5lib_state("Script data double escape start state"),
         Some(HtmlTokenizerState::ScriptDataDoubleEscapeStart)
     );
+    assert_eq!(
+        HtmlTokenizerState::from_html5lib_state("RCDATA end tag open state"),
+        Some(HtmlTokenizerState::RcdataEndTagOpen)
+    );
     assert_eq!(HtmlTokenizerState::from_html5lib_state("Bogus state"), None);
 
     assert!(HtmlTokenizerState::RcdataLessThanSign.requires_last_start_tag());
+    assert!(HtmlTokenizerState::RcdataEndTagOpen.requires_last_start_tag());
     assert!(HtmlTokenizerState::RawtextLessThanSign.requires_last_start_tag());
+    assert!(HtmlTokenizerState::RawtextEndTagOpen.requires_last_start_tag());
+    assert!(HtmlTokenizerState::ScriptDataEndTagOpen.requires_last_start_tag());
     assert!(HtmlTokenizerState::ScriptDataEscapeStart.requires_last_start_tag());
+    assert!(HtmlTokenizerState::ScriptDataEscapedEndTagOpen.requires_last_start_tag());
     assert!(!HtmlTokenizerState::CdataSectionEnd.requires_last_start_tag());
 }
 
@@ -5088,6 +5108,19 @@ fn parser_facing_context_seeds_intermediate_text_states() {
         ]
     );
 
+    let rcdata_end_tag_open =
+        HtmlLexContext::new(HtmlTokenizerState::RcdataEndTagOpen).with_last_start_tag("title");
+    assert_eq!(
+        lex_html_fragment("title>after", &rcdata_end_tag_open).unwrap(),
+        vec![
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Text("after".to_string()),
+            Token::Eof
+        ]
+    );
+
     let rawtext_less_than =
         HtmlLexContext::new(HtmlTokenizerState::RawtextLessThanSign).with_last_start_tag("style");
     assert_eq!(
@@ -5101,6 +5134,19 @@ fn parser_facing_context_seeds_intermediate_text_states() {
         ]
     );
 
+    let rawtext_end_tag_open =
+        HtmlLexContext::new(HtmlTokenizerState::RawtextEndTagOpen).with_last_start_tag("style");
+    assert_eq!(
+        lex_html_fragment("style>tail", &rawtext_end_tag_open).unwrap(),
+        vec![
+            Token::EndTag {
+                name: "style".to_string()
+            },
+            Token::Text("tail".to_string()),
+            Token::Eof
+        ]
+    );
+
     let script_less_than =
         HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataLessThanSign).unwrap();
     assert_eq!(
@@ -5110,6 +5156,32 @@ fn parser_facing_context_seeds_intermediate_text_states() {
             Token::EndTag {
                 name: "script".to_string()
             },
+            Token::Eof
+        ]
+    );
+
+    let script_end_tag_open =
+        HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEndTagOpen).unwrap();
+    assert_eq!(
+        lex_html_fragment("script>tail", &script_end_tag_open).unwrap(),
+        vec![
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Text("tail".to_string()),
+            Token::Eof
+        ]
+    );
+
+    let escaped_script_end_tag_open =
+        HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEscapedEndTagOpen).unwrap();
+    assert_eq!(
+        lex_html_fragment("script>tail", &escaped_script_end_tag_open).unwrap(),
+        vec![
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Text("tail".to_string()),
             Token::Eof
         ]
     );
