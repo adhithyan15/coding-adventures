@@ -1,0 +1,12 @@
+[package]
+name = "nib-iir-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Compile Nib source to InterpreterIR (IIRModule), feeding the LANG-runtime AOT/JIT pipeline."
+
+[dependencies]
+coding-adventures-nib-parser = { path = "../nib-parser" }
+nib-type-checker = { path = "../nib-type-checker" }
+parser           = { path = "../parser" }
+interpreter-ir   = { path = "../interpreter-ir" }
+type-checker-protocol = { path = "../type-checker-protocol" }
