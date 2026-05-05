@@ -3,6 +3,72 @@
 All notable changes to `matrix-runtime` are documented here.  The
 format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.6.0] — 2026-05-05
+
+### Added — MX05 Phase 3 V2 (specialisation policy)
+
+- New `policy` module exporting:
+  - **`SpecialisationPolicy`** trait — `should_specialise(observation,
+    op_kind, output_dtype, backend_id) -> Option<SpecKey>`.  Pluggable
+    so frameworks can supply workload-specific policies (LLM
+    inference, image processing, scientific simulation).  `Send + Sync`
+    for use behind a `Box<dyn>`.
+  - **`DefaultPolicy`** — V1 implementation of the spec rules from
+    MX05 §"Specialisation trigger".  Two configurable thresholds
+    (`min_invocations` default 1000; `stability_threshold` default 0.95).
+
+### Default policy rules
+
+Trigger when `invocation_count >= min_invocations`, AND **at least one** of:
+
+  1. **Constant input**: an input tensor where `observed_min ==
+     observed_max` and `samples / invocation_count >=
+     stability_threshold`.  Emits `RangeClass::Constant { bytes }` with
+     the value little-endian-encoded in the output dtype.
+  2. **Range narrowing**: F32 input with bounded observed range.
+     Emits `RangeClass::FloatBits` with the IEEE-754 bit-encoded
+     bounds.  Backends decide whether to act on the signal in V1
+     (none yet support narrower dtypes; the spec carries the
+     opportunity for Phase 2b's auto-narrow Cast insertion or for
+     workload-specific policies that bias toward narrowing).
+
+Shape stability is implicit in `Profiler::subhash` (which already
+includes per-tensor shape metadata), so this policy doesn't track it
+explicitly.  Cross-shape specialisation is Phase 4 work.
+
+### Tests (12 new)
+
+- `below_min_invocations_returns_none`
+- `at_min_invocations_with_constant_input_fires`
+- `constant_input_below_stability_threshold_falls_through_to_narrowing`
+- `nonconstant_bounded_range_uses_narrowing_branch`
+- `empty_tensor_observations_returns_none`
+- `output_only_observations_dont_fire_constant_branch`
+- `integer_dtype_no_narrowing`
+- `u8_constant_input_fires_with_byte_value`
+- `i32_constant_input_fires_with_le_bytes`
+- `unbounded_range_does_not_fire_narrowing`
+- `custom_thresholds_work`
+- `forced_fire_helper_constructs_a_speckey`
+
+Total tests: 63 unit + 8 integration = 71 (was 51 + 8 = 59).
+
+### Notes
+
+- Policy is **passive** in V2 — it returns SpecKeys but nothing
+  in the dispatch loop calls it yet.  Phase 3 V3 wires
+  `SpecialisationPolicy` + `Specialiser` + `SpecCache` into a
+  hot-path that invokes the policy after `record_dispatch`,
+  consults the cache, and asks the backend's specialiser to emit a
+  kernel on cache miss.
+- Constant-input encoding (`encode_constant_bytes`) clamps to the
+  destination dtype's range — out-of-range observations encode to
+  the nearest representable value.  An aggressive policy that wants
+  to reject out-of-range observations can wrap `DefaultPolicy` and
+  add the check.
+- Image-filter routing on macOS unchanged: `invert` → CPU,
+  `greyscale` / `sepia` → Metal across the synthetic test-image suite.
+
 ## [0.5.0] — 2026-05-05
 
 ### Added — MX05 Phase 3 V1 (SpecKey + Specialiser trait + LRU SpecCache)
