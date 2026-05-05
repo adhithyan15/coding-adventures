@@ -23,10 +23,11 @@ fn main() -> std::process::ExitCode {
         }
     };
 
-    let ArtifactInvocation::Run(run) = invocation else {
+    let ArtifactInvocation::Run(mut run) = invocation else {
         println!("{}", usage());
         return ExitCode::SUCCESS;
     };
+    run.options.fill_host_defaults();
 
     let commands = match run.options.command_plan() {
         Ok(commands) => commands,

@@ -17,6 +17,7 @@ pub const ARDUINO_USB_LINK_ENV_VAR: &str = "BOARD_VM_UNO_R4_LINK_ARDUINO_USB";
 pub const ARDUINO_ARM_GCC_ENV_VAR: &str = "BOARD_VM_UNO_R4_ARM_GCC";
 pub const ARDUINO_ARM_GXX_ENV_VAR: &str = "BOARD_VM_UNO_R4_ARM_GXX";
 pub const ARDUINO_ARM_AR_ENV_VAR: &str = "BOARD_VM_UNO_R4_ARM_AR";
+pub const ARDUINO_ARM_COMPAT_ROOT_ENV_VAR: &str = "BOARD_VM_UNO_R4_ARM_COMPAT_ROOT";
 
 pub const ARDUINO_USB_START_SYMBOL: &str = "_Z10__USBStartv";
 pub const RUST_USB_INSTALL_SERIAL_SYMBOL: &str = "_Z18__USBInstallSerialv";
@@ -189,6 +190,10 @@ mod tests {
         assert_eq!(UNO_R4_WIFI_BOOTLOADER_USB_PID, 0x1002);
         assert_eq!(UNO_R4_WIFI_USB_RHPORT, 0);
         assert_eq!(ARDUINO_USB_LINK_ENV_VAR, "BOARD_VM_UNO_R4_LINK_ARDUINO_USB");
+        assert_eq!(
+            ARDUINO_ARM_COMPAT_ROOT_ENV_VAR,
+            "BOARD_VM_UNO_R4_ARM_COMPAT_ROOT"
+        );
     }
 
     #[test]
