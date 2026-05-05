@@ -1,5 +1,66 @@
 # Changelog
 
+## 0.49.0 — 2026-05-04
+
+**Phase 29 — Algebraic `abs` and `sqrt` simplification.**
+
+Pure structural rules that hold for all real inputs with no user assumptions
+required. All Phase 28 assumption-aware folding is fully preserved.
+
+### `abs_handler` extensions (Phase 29)
+
+Four new algebraic rules fire before the "leave unevaluated" fallback:
+
+- **Idempotency**: `abs(abs(x))` → `abs(x)`
+- **Negation strip**: `abs(-x)` = `abs(Neg(x))` → `abs(x)` (|−x| = |x|)
+- **Mul(−1, x) strip**: `abs(Mul(-1, x))` → `abs(x)` (−x after eval)
+- **Even power**: `abs(x^{2k})` → `x^{2k}` for even integer `2k ≥ 2`
+  (x^{2k} ≥ 0 for all real x, so the absolute value is a no-op)
+
+These rules compose correctly with the Phase 28 assumption rules:
+`abs(-x)` strips the negation to `abs(x)`, then the assumption context may
+further fold `abs(x)` → `x` if `x ≥ 0` is known.
+
+### `sqrt_handler` (Phase 29, new function)
+
+A new `sqrt_handler` in `cas_handlers.py` overrides the `_elementary`-factory
+`Sqrt` handler (which was numeric-only) via the standard
+`handlers.update(build_cas_handler_table())` mechanism in `SymbolicBackend`.
+
+Numeric behaviour is fully preserved and enhanced:
+
+- Special values: `sqrt(0) → 0`, `sqrt(1) → 1`
+- Perfect-square integers return `IRInteger` rather than `IRFloat`:
+  `sqrt(4) → 2`, `sqrt(9) → 3`
+- Other numeric inputs fold to `IRFloat` via `math.sqrt`
+
+Algebraic rules for `sqrt(x^{2k})` (positive even exponent):
+
+| `2k` | `k` | result | reason |
+|------|-----|--------|--------|
+| 2    | 1 (odd)  | `Abs(x)`       | sign of x unknown |
+| 4    | 2 (even) | `Pow(x, 2)`    | x² ≥ 0 always |
+| 6    | 3 (odd)  | `Abs(Pow(x,3))`| sign of x³ unknown |
+| 8    | 4 (even) | `Pow(x, 4)`    | x⁴ ≥ 0 always |
+
+Assumption integration (Phase 28): `sqrt(x^2) → x` when `assume(x >= 0)`
+has been issued, since `|x| = x` under non-negativity.
+
+`sqrt(x^n)` for odd `n` remains unevaluated.
+
+### Tests
+
+46 new tests in `tests/test_phase29.py` (total suite: 1517 tests, 82.78% coverage):
+
+- `TestPhase29_AbsNeg` (7) — negation stripping in abs
+- `TestPhase29_AbsEvenPower` (6) — even-power abs folding
+- `TestPhase29_AbsIdempotent` (4) — idempotency
+- `TestPhase29_SqrtEvenPower` (8) — algebraic sqrt reduction
+- `TestPhase29_SqrtNumeric` (6) — numeric fold with perfect-square detection
+- `TestPhase29_SqrtAssumptions` (4) — assumption-aware sqrt(x²)
+- `TestPhase29_Regressions` (6) — Phase 28/27/3 regression checks
+- `TestPhase29_Macsyma` (5) — end-to-end MACSYMA surface syntax
+
 ## 0.48.0 — 2026-05-04
 
 **Phase 28 — Assumptions-aware `abs` and `sign` folding.**
