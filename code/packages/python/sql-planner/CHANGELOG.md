@@ -1,5 +1,41 @@
 # Changelog
 
+## [0.20.0] - 2026-05-04
+
+### Added
+
+- **`BinaryOp.CONCAT`** (`expr.py`) — SQL `||` string-concatenation operator.
+  Maps to `BinaryOpCode.CONCAT` in codegen and thence to the VM's `_concat`
+  kernel, which enforces string-only operands (NULL propagates).
+
+- **`JoinKind.NATURAL`** (`ast.py`) — string constant for `NATURAL JOIN`,
+  forwarded from the adapter to the planner where schema access is available.
+
+- **`JoinClause.using`** (`ast.py`) — new optional field carrying column names
+  from `JOIN … USING (col1, col2)`.  The adapter sets this field instead of
+  building an ON expression; the planner expands it into a qualified
+  `left.col = right.col AND …` condition once the accumulated join scope is
+  available.  This correctly handles chained three-table USING joins where the
+  USING column may live in an earlier (not immediately preceding) table.
+
+- **NATURAL JOIN resolution** (`planner.py :: _build_from_tree`) — the planner
+  now detects `JoinKind.NATURAL`, collects all shared columns between the left
+  scope and the right table's schema, and builds the equivalent INNER JOIN ON
+  condition.  Falls back to `JoinKind.CROSS` (Cartesian product) when no
+  shared column names exist, matching SQLite behaviour.
+
+- **USING resolution** (`planner.py :: _build_from_tree`) — new `elif j.using`
+  branch that, for each USING column, searches the full accumulated scope for
+  the owning left-side table and emits `Column(table=owner, col=col) = Column(table=right, col=col)`.
+
+### Tests
+
+- `tests/test_planner_join.py` — added `TestJoinUsing` (5 cases: single
+  column, multi-column, three-table chain where USING column lives in an
+  earlier table, unknown column raises, LEFT JOIN USING) and `TestNaturalJoin`
+  (3 cases: shared column → INNER, no shared columns → CROSS, multiple shared
+  columns → AND condition).
+
 ## [0.19.0] - 2026-05-04
 
 ### Added

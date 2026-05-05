@@ -2,6 +2,24 @@
 
 All notable changes to the SQL parser package will be documented in this file.
 
+## [0.14.0] - 2026-05-04
+
+### Added
+
+- **`||` in `additive` grammar rule** (`sql.grammar`) — the `additive`
+  production now includes `"||"` as a valid operator alongside `"+"` and `"-"`,
+  enabling parsing of chained string-concatenation expressions.
+
+- **`NATURAL` in `join_type`** (`sql.grammar`) — `join_type` now includes
+  `"NATURAL"` as an alternative so `NATURAL JOIN` is a valid join syntax.
+
+- **`USING` clause in `join_clause`** (`sql.grammar`) — `join_clause` now
+  accepts either `"ON" expr` or `"USING" "(" NAME { "," NAME } ")"` as the
+  join condition form.
+
+- **Regenerated `_grammar.py`** — the pre-compiled parser grammar cache now
+  reflects all three grammar changes above.
+
 ## [0.13.0] - 2026-05-04
 
 ### Added

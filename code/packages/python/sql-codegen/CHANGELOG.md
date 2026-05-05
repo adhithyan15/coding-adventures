@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.14.0] - 2026-05-04
+
+### Added
+
+- **`BinaryOpCode.CONCAT` mapping** (`compiler.py :: _BINOP_MAP`) — the
+  planner's `BinaryOp.CONCAT` (`||`) now maps to `BinaryOpCode.CONCAT`,
+  which the VM executes via its `_concat` kernel.  Previously missing, this
+  caused the codegen to raise `KeyError` for `||` expressions involving
+  non-constant operands.
+
+### Tests
+
+- `tests/test_expressions.py` — added `test_concat_emits_binary_concat` and
+  `test_concat_column_and_literal` to verify that `BinaryOp.CONCAT` compiles
+  to the correct `BinaryOp(op=BinaryOpCode.CONCAT)` instruction with
+  post-order operand push.
+
 ## [1.13.0] - 2026-05-04
 
 ### Added

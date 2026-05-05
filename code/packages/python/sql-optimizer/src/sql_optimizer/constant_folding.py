@@ -299,6 +299,11 @@ def _apply_binary(op: BinaryOp, lv: object, rv: object) -> object:
             return lv / rv  # type: ignore[operator]
         case BinaryOp.MOD:
             return lv % rv  # type: ignore[operator]
+        case BinaryOp.CONCAT:
+            # SQL || string concatenation. Both sides are strings (the SQL type
+            # system guarantees this; if they aren't, fall through to TypeError
+            # and let the VM raise a proper TypeMismatch at runtime).
+            return str(lv) + str(rv)  # type: ignore[operator]
         case BinaryOp.AND | BinaryOp.OR:
             # Unreachable — handled by _simplify_and / _simplify_or above.
             raise AssertionError("unreachable")

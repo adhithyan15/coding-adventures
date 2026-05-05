@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.6.0] - 2026-05-04
+
+### Fixed
+
+- **`ConstantFolding` silent NULL for `||`** (`constant_folding.py`) — the
+  `_apply_binary` function's `match` statement did not have a case for
+  `BinaryOp.CONCAT`.  Python's structural pattern matching silently falls
+  through unmatched cases and returns `None`, so `'hello' || 'world'` was
+  constant-folded to `Literal(value=None)` instead of `Literal(value='helloworld')`.
+  Added `case BinaryOp.CONCAT: return str(lv) + str(rv)` to fix this.
+
 ## [0.5.0] - 2026-05-04
 
 ### Fixed

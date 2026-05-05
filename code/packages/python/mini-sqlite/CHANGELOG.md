@@ -1,5 +1,47 @@
 # Changelog
 
+## [1.21.0] - 2026-05-04
+
+### Added — String concatenation, JOIN USING, NATURAL JOIN
+
+- **`||` string concatenation** — SQL's standard string-concat operator is now
+  fully supported end-to-end: grammar (`sql.tokens` / `sql.grammar` via
+  `CONCAT_OP = "||"`) → lexer → parser → adapter (`_additive` maps
+  `CONCAT_OP → BinaryOp.CONCAT`) → planner → optimizer (constant-folds
+  `'hello' || 'world' → 'helloworld'`) → codegen → VM.  NULL propagates:
+  `NULL || 'x'` → NULL.
+
+- **`JOIN … USING (col, …)`** — USING syntax is now parsed and correctly
+  desugared for two-table and chained three-table join cases.  The adapter
+  emits `JoinClause(using=(...))` (instead of a pre-built ON expression), and
+  the planner's `_build_from_tree` resolves each USING column against the full
+  accumulated scope.  This is essential for three-table chains like
+  `a JOIN b USING (x) JOIN c USING (y)` where `y` may live in `a`, not `b`.
+  Supports INNER, LEFT, and all other join kinds.
+
+- **`NATURAL JOIN`** — automatically equates all shared column names between
+  the left scope and the right table.  Resolved in the planner where schema
+  access is available.  Falls back to CROSS JOIN when no shared columns exist
+  (matching SQLite semantics).  Grammar adds `NATURAL` keyword and
+  `join_type` alternative; adapter emits `JoinKind.NATURAL`.
+
+### Fixed
+
+- **`ConstantFolding` silent NULL for `||`** — `constant_folding.py`'s
+  `_apply_binary` had no case for `BinaryOp.CONCAT`, causing Python's pattern
+  matching to silently return `None` and fold `'hello' || 'world'` to
+  `Literal(None)`.  Now fixed.
+
+### Tests
+
+- `tests/test_tier7_string_and_joins.py` — 25 new oracle-verified tests
+  covering `||` (10 cases: literals, columns, NULL, WHERE, alias, constant
+  folding, nullable columns), `JOIN USING` (6 cases: single-column, no
+  matches, multi-column, WHERE filter, LEFT JOIN, three-table chain), and
+  `NATURAL JOIN` (7 cases: single shared column, no unmatched rows, multiple
+  shared columns, empty right table, no shared columns → CROSS, WHERE filter,
+  aliased table), plus 2 cross-feature tests combining `||` with JOIN.
+
 ## [1.20.0] - 2026-05-04
 
 ### Added — SQLite convergence (parser + runtime)

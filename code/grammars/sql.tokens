@@ -24,6 +24,7 @@ LESS_EQUALS    = "<="
 GREATER_EQUALS = ">="
 NOT_EQUALS     = "!="
 NEQ_ANSI       = "<>" -> NOT_EQUALS
+CONCAT_OP      = "||"
 
 EQUALS        = "="
 LESS_THAN     = "<"
@@ -123,6 +124,8 @@ keywords:
   RETURNING
   CAST
   GLOB
+  NATURAL
+  USING
 
 skip:
   WHITESPACE    = /[ \t\r\n]+/
