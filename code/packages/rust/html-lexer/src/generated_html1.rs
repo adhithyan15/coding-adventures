@@ -7138,11 +7138,10 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "parse_error(unexpected-null-character)".to_string(),
+                "parse_error(invalid-first-character-of-tag-name)".to_string(),
                 "append_text(<)".to_string(),
-                "append_text_replacement".to_string(),
             ],
-            consume: true,
+            consume: false,
         },
         TransitionDefinition {
             from: "tag_open".to_string(),

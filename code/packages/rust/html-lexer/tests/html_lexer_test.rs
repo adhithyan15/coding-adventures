@@ -1366,6 +1366,31 @@ fn default_html_lexer_recovers_invalid_tag_open_as_text() {
 }
 
 #[test]
+fn default_html_lexer_reconsumes_null_tag_open_as_text() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("Before <\0 after").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("Before ".to_string()),
+            Token::Text("<\u{FFFD} after".to_string()),
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "invalid-first-character-of-tag-name"));
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "unexpected-null-character"));
+}
+
+#[test]
 fn default_html_lexer_recovers_invalid_end_tag_open_as_bogus_comment() {
     let mut lexer = create_html_lexer().unwrap();
 
