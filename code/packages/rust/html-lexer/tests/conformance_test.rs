@@ -1,5 +1,6 @@
 use coding_adventures_html_lexer::{
-    create_html_lexer, html1_machine, html_skeleton_machine, Attribute, HtmlLexer, Token,
+    apply_html_lex_context, create_html_lexer, html1_machine, html_skeleton_machine, Attribute,
+    HtmlLexContext, HtmlLexer, HtmlTokenizerState, Token,
 };
 use serde::Deserialize;
 use serde_json::Value;
@@ -99,7 +100,7 @@ fn fixture_manifests_parse() {
 fn html5lib_smoke_fixture_file_parses() {
     let file = load_html5lib_file(HTML5LIB_RAW_FIXTURES);
 
-    assert_eq!(file.tests.len(), 160);
+    assert_eq!(file.tests.len(), 169);
     assert_eq!(
         file.tests[0].description,
         "simple start and end tag in data state"
@@ -160,23 +161,32 @@ fn normalized_html5lib_fixture_parses_with_importer_metadata() {
     assert_eq!(
         normalized.supported_initial_states,
         vec![
+            "CDATA section bracket state".to_string(),
+            "CDATA section end state".to_string(),
             "CDATA section state".to_string(),
             "Data state".to_string(),
             "PLAINTEXT state".to_string(),
+            "RAWTEXT less-than sign state".to_string(),
             "RAWTEXT state".to_string(),
+            "RCDATA less-than sign state".to_string(),
             "RCDATA state".to_string(),
+            "Script data double escape end state".to_string(),
+            "Script data double escape start state".to_string(),
             "Script data double escaped dash dash state".to_string(),
             "Script data double escaped dash state".to_string(),
             "Script data double escaped less-than sign state".to_string(),
             "Script data double escaped state".to_string(),
+            "Script data escape start dash state".to_string(),
+            "Script data escape start state".to_string(),
             "Script data escaped dash dash state".to_string(),
             "Script data escaped dash state".to_string(),
             "Script data escaped less-than sign state".to_string(),
             "Script data escaped state".to_string(),
+            "Script data less-than sign state".to_string(),
             "Script data state".to_string()
         ]
     );
-    assert_eq!(normalized.cases.len(), 160);
+    assert_eq!(normalized.cases.len(), 170);
     assert!(normalized.skipped.is_empty());
     assert_eq!(
         normalized.cases[4].diagnostics,
@@ -292,7 +302,7 @@ fn normalized_html5lib_cases_match_default_wrapper() {
 
     assert_eq!(suite.format, "venture-html-lexer-fixtures/v1");
     assert_eq!(suite.suite, "html5lib-smoke");
-    assert_eq!(suite.cases.len(), 160);
+    assert_eq!(suite.cases.len(), 170);
 
     run_fixture_suite(&suite, |case| {
         let mut lexer = create_html_lexer().map_err(|error| format!("{error:?}"))?;
@@ -363,21 +373,13 @@ fn unsupported_runtime_cases(normalized: &Html5libNormalizedSuite) -> Vec<Fixtur
 
 fn is_supported_by_current_runtime(case: &FixtureCase) -> bool {
     match case.initial_state.as_deref() {
-        None | Some("Data state") => case.last_start_tag.is_none(),
-        Some("CDATA section state") => case.last_start_tag.is_none(),
-        Some("PLAINTEXT state") => case.last_start_tag.is_none(),
-        Some("RCDATA state") => case.last_start_tag.is_some(),
-        Some("RAWTEXT state") => case.last_start_tag.is_some(),
-        Some("Script data double escaped dash dash state") => case.last_start_tag.is_some(),
-        Some("Script data double escaped dash state") => case.last_start_tag.is_some(),
-        Some("Script data double escaped less-than sign state") => case.last_start_tag.is_some(),
-        Some("Script data double escaped state") => case.last_start_tag.is_some(),
-        Some("Script data escaped dash dash state") => case.last_start_tag.is_some(),
-        Some("Script data escaped dash state") => case.last_start_tag.is_some(),
-        Some("Script data escaped less-than sign state") => case.last_start_tag.is_some(),
-        Some("Script data escaped state") => case.last_start_tag.is_some(),
-        Some("Script data state") => case.last_start_tag.is_some(),
-        Some(_) => false,
+        None => case.last_start_tag.is_none(),
+        Some(initial_state) => {
+            let Some(state) = HtmlTokenizerState::from_html5lib_state(initial_state) else {
+                return false;
+            };
+            state.requires_last_start_tag() == case.last_start_tag.is_some()
+        }
     }
 }
 
@@ -424,35 +426,16 @@ fn configure_lexer_for_case(
     lexer: &mut HtmlLexer,
     case: &FixtureCase,
 ) -> coding_adventures_html_lexer::Result<()> {
-    if let Some(initial_state) = case.initial_state.as_deref() {
-        lexer.set_initial_state(machine_state_for_fixture(initial_state))?;
-    }
+    let initial_state = case
+        .initial_state
+        .as_deref()
+        .and_then(HtmlTokenizerState::from_html5lib_state)
+        .unwrap_or(HtmlTokenizerState::Data);
+    let mut context = HtmlLexContext::new(initial_state);
     if let Some(last_start_tag) = case.last_start_tag.as_deref() {
-        lexer.set_last_start_tag(last_start_tag);
+        context = context.with_last_start_tag(last_start_tag);
     }
-    Ok(())
-}
-
-fn machine_state_for_fixture(state: &str) -> &str {
-    match state {
-        "Data state" => "data",
-        "CDATA section state" => "cdata_section",
-        "PLAINTEXT state" => "plaintext",
-        "RCDATA state" => "rcdata",
-        "RAWTEXT state" => "rawtext",
-        "Script data double escaped dash dash state" => "script_data_double_escaped_dash_dash",
-        "Script data double escaped dash state" => "script_data_double_escaped_dash",
-        "Script data double escaped less-than sign state" => {
-            "script_data_double_escaped_less_than_sign"
-        }
-        "Script data double escaped state" => "script_data_double_escaped",
-        "Script data escaped dash dash state" => "script_data_escaped_dash_dash",
-        "Script data escaped dash state" => "script_data_escaped_dash",
-        "Script data escaped less-than sign state" => "script_data_escaped_less_than_sign",
-        "Script data escaped state" => "script_data_escaped",
-        "Script data state" => "script_data",
-        other => panic!("unsupported fixture state `{other}`"),
-    }
+    apply_html_lex_context(lexer, &context)
 }
 
 fn token_summary(token: Token) -> String {

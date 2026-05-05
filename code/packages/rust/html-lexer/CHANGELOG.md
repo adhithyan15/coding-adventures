@@ -238,6 +238,19 @@ documented in this file.
 - Added `HTML_SCRIPT_TOKENIZER_STATES` and `HtmlTokenizerState::is_script_substate()`
   so parser/conformance adapters can enumerate and validate every supported
   script entry state without duplicating lexer internals.
+- Expanded typed parser-facing tokenizer states to include intermediate
+  text-like html5lib/WPT entry points: RCDATA/RAWTEXT less-than, CDATA
+  bracket/end, script less-than, script escape-start, and script double-escape
+  start/end states.
+- Added html5lib fixture-label round-tripping through
+  `HtmlTokenizerState::as_html5lib_state` and
+  `HtmlTokenizerState::from_html5lib_state`, plus centralized
+  `requires_last_start_tag` validation for conformance importers.
+- Expanded the html5lib smoke importer to support multi-state raw cases by
+  generating stable per-state Venture fixture IDs instead of skipping the whole
+  upstream entry.
+- Added normalized html5lib-style coverage for intermediate CDATA, RCDATA,
+  RAWTEXT, script escape, and script double-escape seeded states.
 - Added `HTML_TOKENIZER_STATES`, `HTML_FRAGMENT_TOKENIZER_STATES`, and
   `HtmlTokenizerState::is_fragment_state()` so parser and fixture importers can
   enumerate the full typed tokenizer-context surface without copying state

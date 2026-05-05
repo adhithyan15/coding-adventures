@@ -116,10 +116,11 @@ class TestIrOp:
         assert IrOp.F64_POW == 63
         assert IrOp.SYSCALL_CHECKED == 64
         assert IrOp.BRANCH_ERR == 65
+        assert IrOp.THROW == 66
 
     def test_total_opcode_count(self) -> None:
-        """There are exactly 66 opcodes after VMCOND00 Phase 1."""
-        assert len(IrOp) == 66
+        """There are exactly 67 opcodes after VMCOND00 Phase 2."""
+        assert len(IrOp) == 67
 
     def test_name_to_op_roundtrip(self) -> None:
         """NAME_TO_OP[op.name] == op for every opcode."""
@@ -1072,6 +1073,8 @@ class TestAllOpcodesPrintParse:
             ],
             # BRANCH_ERR err_reg, label
             IrOp.BRANCH_ERR:   [IrRegister(2), IrLabel("eof_handler")],
+            # THROW condition_reg
+            IrOp.THROW:        [IrRegister(0)],
         }
         for idx, op in enumerate(IrOp):
             operands = operands_by_opcode[op]

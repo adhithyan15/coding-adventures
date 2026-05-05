@@ -36,7 +36,12 @@ from typing import TYPE_CHECKING, Any
 from interpreter_ir import IIRInstr
 
 from vm_core.debug import StepMode
-from vm_core.errors import FrameOverflowError, UnknownOpcodeError, VMInterrupt
+from vm_core.errors import (
+    FrameOverflowError,
+    UncaughtConditionError,
+    UnknownOpcodeError,
+    VMInterrupt,
+)
 from vm_core.frame import VMFrame
 
 if TYPE_CHECKING:
@@ -781,6 +786,111 @@ def handle_branch_err(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> None:
     return None
 
 
+# ---------------------------------------------------------------------------
+# VMCOND00 Phase 2 — handle_throw
+# ---------------------------------------------------------------------------
+#
+# Implements the ``throw`` opcode: Layer 2 (Unwind Exceptions) in the VMCOND00
+# condition-system spec.
+#
+# Algorithm
+# ---------
+# 1. Read condition = frame.resolve(srcs[0]).
+# 2. Walk the call stack from the innermost frame outward (vm._frames[-1] to
+#    vm._frames[0]).  For each frame:
+#      a. Compute the IP of the instruction that caused the throw/propagation.
+#         Because the dispatch loop advances frame.ip BEFORE calling a handler,
+#         the "current instruction" is always at frame.ip - 1:
+#           - For the innermost frame: the throw instruction itself.
+#           - For caller frames: the call instruction whose callee threw.
+#      b. Walk the frame's function's exception_table (in order — the frontend
+#         is responsible for listing entries innermost-first within overlapping
+#         ranges).
+#      c. If an entry's [from_ip, to_ip) range covers the throw IP and the
+#         type_id matches, the handler wins:
+#           - Set frame.ip = entry.handler_ip
+#           - frame.assign(entry.val_reg, condition)
+#           - Return — the dispatch loop continues in the handler frame.
+#      d. If no entry matches, pop the frame and move to the caller.
+# 3. If the stack is exhausted without finding a handler, raise
+#    UncaughtConditionError(condition).
+#
+# Type matching (Phase 2)
+# -----------------------
+# Two patterns are recognised:
+#   "*"   → catch-all (CATCH_ALL sentinel from exception_table module)
+#   str   → exact match against type(condition).__name__
+#
+# Phase 3 will replace exact-name matching with a proper subtype walk once the
+# condition type hierarchy is defined.
+#
+# Note on frame.ip timing
+# -----------------------
+# The dispatch loop structure is:
+#
+#     instr = frame.fn.instructions[frame.ip]
+#     frame.ip += 1                     ← advanced HERE
+#     result = _dispatch_one(vm, frame, instr)
+#
+# So when handle_throw is called, frame.ip already points to the instruction
+# AFTER the throw.  The throw itself is at frame.ip - 1.  For caller frames,
+# the call instruction that triggered the callee frame push is also at
+# frame.ip - 1 (the call instruction's ip was advanced before the callee frame
+# was pushed — see handle_call).
+
+
+def _throw_type_matches(condition: object, type_id: str) -> bool:
+    """Return True if ``condition`` matches the exception table ``type_id``.
+
+    Phase 2 matching rules:
+    - ``"*"``   → matches everything (CATCH_ALL).
+    - Any other string → matches when ``type(condition).__name__ == type_id``.
+
+    Phase 3 will extend this to a full subtype walk.
+    """
+    if type_id == "*":
+        return True
+    return type(condition).__name__ == type_id
+
+
+def handle_throw(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> None:
+    """Unwind the call stack searching for a matching exception table handler.
+
+    Operand layout in ``instr.srcs``:
+      [0] condition_reg — register holding the condition object to throw.
+
+    The handler walks the static exception table of every active frame,
+    innermost first, checking the guarded range ``[from_ip, to_ip)`` and
+    the condition type.  On the first match it sets the frame's instruction
+    pointer to the handler and assigns the condition to the handler's register.
+
+    If no matching entry is found anywhere in the call stack,
+    :exc:`vm_core.errors.UncaughtConditionError` is raised.
+    """
+    condition = frame.resolve(instr.srcs[0])
+
+    # Walk frames from innermost to outermost.  vm._frames is a list with the
+    # innermost (most recently pushed) frame at the END (index -1).
+    while vm._frames:
+        search_frame = vm._frames[-1]
+        # The instruction that caused the throw/propagation is one step behind
+        # the already-advanced ip pointer (see dispatch loop structure above).
+        throw_ip = search_frame.ip - 1
+
+        for entry in search_frame.fn.exception_table:
+            if entry.from_ip <= throw_ip < entry.to_ip and _throw_type_matches(condition, entry.type_id):
+                # Handler found — jump into it and assign the condition.
+                search_frame.ip = entry.handler_ip
+                search_frame.assign(entry.val_reg, condition)
+                return  # dispatch loop continues in search_frame
+
+        # No match in this frame — pop it and search the caller.
+        vm._frames.pop()
+
+    # Stack exhausted — the condition propagated past the top frame.
+    raise UncaughtConditionError(condition)
+
+
 # --- I/O ---
 
 def handle_io_in(vm: VMCore, frame: VMFrame, instr: IIRInstr) -> Any:
@@ -895,4 +1005,6 @@ STANDARD_OPCODES: dict[str, Any] = {
     # VMCOND00 Phase 1 — checked syscalls and error-code branches.
     "syscall_checked": handle_syscall_checked,
     "branch_err": handle_branch_err,
+    # VMCOND00 Phase 2 — stack-unwinding exception dispatch.
+    "throw": handle_throw,
 }

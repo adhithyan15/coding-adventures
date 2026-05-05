@@ -17,7 +17,8 @@ from __future__ import annotations
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
 from hashlib import blake2b
-from itertools import product
+from itertools import count, product
+from pathlib import Path
 
 from logic_engine import (
     Atom,
@@ -88,6 +89,7 @@ __all__ = [
     "atom_numbero",
     "atomico",
     "atomo",
+    "at_end_of_streamo",
     "atomic_list_concato",
     "atomic_list_concato_with_separator",
     "betweeno",
@@ -96,6 +98,7 @@ __all__ = [
     "call_cleanupo",
     "calltermo",
     "catcho",
+    "closeo",
     "compound_name_argumentso",
     "compound_name_arityo",
     "compoundo",
@@ -111,6 +114,7 @@ __all__ = [
     "difo",
     "dynamico",
     "div",
+    "exists_fileo",
     "fd_eqo",
     "fd_elemento",
     "fd_geqo",
@@ -143,6 +147,7 @@ __all__ = [
     "forallo",
     "functoro",
     "geqo",
+    "get_charo",
     "gto",
     "groundo",
     "ifthenelseo",
@@ -168,10 +173,16 @@ __all__ = [
     "number_charso",
     "number_stringo",
     "numbero",
+    "nlo",
     "onceo",
+    "openo",
     "bagofo",
     "partitiono",
     "predicate_propertyo",
+    "read_file_to_codeso",
+    "read_file_to_stringo",
+    "read_line_to_stringo",
+    "read_stringo",
     "repeato",
     "PrologEvaluationError",
     "PrologFlagStore",
@@ -219,6 +230,7 @@ __all__ = [
     "unifiableo",
     "unify_with_occurs_checko",
     "varo",
+    "writeo",
     "not_variant_termo",
     "subsumes_termo",
     "variant_termo",
@@ -235,6 +247,20 @@ type FdOperator = str
 
 _MAX_FD_DOMAIN_SIZE = 10_000
 _DEFAULT_TERM_HASH_RANGE = 2_147_483_647
+
+
+@dataclass(slots=True)
+class _TextStream:
+    """Host-side UTF-8 text stream used by the bounded Prolog facade."""
+
+    mode: str
+    path: Path
+    contents: str = ""
+    cursor: int = 0
+
+
+_STREAM_IDS = count(1)
+_STREAMS: dict[str, _TextStream] = {}
 
 
 @dataclass(frozen=True, slots=True)
@@ -4745,6 +4771,302 @@ def number_stringo(number_value: object, string_value: object) -> GoalExpr:
         yield from solve_from(program_value, eq(number_term, parsed), state)
 
     return native_goal(run, number_value, string_value)
+
+
+def _path_text(term_value: Term) -> str | None:
+    if isinstance(term_value, String):
+        return term_value.value
+    if isinstance(term_value, Atom) and term_value.symbol.namespace is None:
+        return term_value.symbol.name
+    return None
+
+
+def _read_utf8_file(path_text: str) -> str | None:
+    try:
+        return Path(path_text).read_text(encoding="utf-8")
+    except OSError:
+        return None
+    except UnicodeDecodeError:
+        return None
+
+
+def exists_fileo(path_value: object) -> GoalExpr:
+    """Succeed when a bound atom/string path names an existing regular file."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [path_term] = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        if Path(path_text).is_file():
+            yield state
+
+    return native_goal(run, path_value)
+
+
+def read_file_to_stringo(path_value: object, contents: object) -> GoalExpr:
+    """Relate a bound atom/string path to the file's UTF-8 contents as a string."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, contents_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        text = _read_utf8_file(path_text)
+        if text is None:
+            return
+        yield from solve_from(program_value, eq(contents_term, String(text)), state)
+
+    return native_goal(run, path_value, contents)
+
+
+def read_file_to_codeso(path_value: object, codes: object) -> GoalExpr:
+    """Relate a bound atom/string path to the file's UTF-8 code-point list."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, codes_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        text = _read_utf8_file(path_text)
+        if text is None:
+            return
+        yield from solve_from(
+            program_value,
+            eq(codes_term, logic_list([num(ord(character)) for character in text])),
+            state,
+        )
+
+    return native_goal(run, path_value, codes)
+
+
+def _mode_text(term_value: Term) -> str | None:
+    text = _plain_atom_text(term_value)
+    if text in {"read", "write", "append"}:
+        return text
+    return None
+
+
+def _stream_handle_text(term_value: Term) -> str | None:
+    text = _plain_atom_text(term_value)
+    if text is None or not text.startswith("$stream_"):
+        return None
+    return text
+
+
+def _stream_handle() -> Atom:
+    return atom(f"$stream_{next(_STREAM_IDS)}")
+
+
+def _open_text_stream(path_text: str, mode_text: str) -> _TextStream | None:
+    path = Path(path_text)
+    try:
+        if mode_text == "read":
+            if not path.is_file():
+                return None
+            return _TextStream(
+                mode=mode_text,
+                path=path,
+                contents=path.read_text(encoding="utf-8"),
+            )
+        if mode_text == "write":
+            path.write_text("", encoding="utf-8")
+            return _TextStream(mode=mode_text, path=path)
+        if mode_text == "append":
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.open("a", encoding="utf-8").close()
+            return _TextStream(mode=mode_text, path=path)
+    except OSError:
+        return None
+    except UnicodeDecodeError:
+        return None
+    return None
+
+
+def openo(path_value: object, mode_value: object, stream_value: object) -> GoalExpr:
+    """Open a bounded UTF-8 file stream in read, write, or append mode."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, mode_term, stream_term = args
+        path_text = _path_text(_reified(path_term, state))
+        mode_text = _mode_text(_reified(mode_term, state))
+        if path_text is None or mode_text is None:
+            return
+
+        stream = _open_text_stream(path_text, mode_text)
+        if stream is None:
+            return
+
+        handle = _stream_handle()
+        _STREAMS[handle.symbol.name] = stream
+        yield from solve_from(program_value, eq(stream_term, handle), state)
+
+    return native_goal(run, path_value, mode_value, stream_value)
+
+
+def closeo(stream_value: object) -> GoalExpr:
+    """Close a bounded stream handle created by ``openo/3``."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [stream_term] = args
+        handle_text = _stream_handle_text(_reified(stream_term, state))
+        if handle_text is None or handle_text not in _STREAMS:
+            return
+        del _STREAMS[handle_text]
+        yield state
+
+    return native_goal(run, stream_value)
+
+
+def _read_stream(term_value: Term) -> _TextStream | None:
+    handle_text = _stream_handle_text(term_value)
+    if handle_text is None:
+        return None
+    stream = _STREAMS.get(handle_text)
+    if stream is None or stream.mode != "read":
+        return None
+    return stream
+
+
+def at_end_of_streamo(stream_value: object) -> GoalExpr:
+    """Succeed when a bounded read stream has consumed all available text."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [stream_term] = args
+        stream = _read_stream(_reified(stream_term, state))
+        if stream is not None and stream.cursor >= len(stream.contents):
+            yield state
+
+    return native_goal(run, stream_value)
+
+
+def read_stringo(
+    stream_value: object,
+    length_value: object,
+    string_value: object,
+) -> GoalExpr:
+    """Read up to ``Length`` UTF-8 code points from a bounded read stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, length_term, string_term = args
+        stream = _read_stream(_reified(stream_term, state))
+        length = _reified_integer(length_term, state)
+        if stream is None or length is None or length < 0:
+            return
+        start = stream.cursor
+        end = min(start + length, len(stream.contents))
+        stream.cursor = end
+        yield from solve_from(
+            program_value,
+            eq(string_term, String(stream.contents[start:end])),
+            state,
+        )
+
+    return native_goal(run, stream_value, length_value, string_value)
+
+
+def read_line_to_stringo(stream_value: object, string_value: object) -> GoalExpr:
+    """Read one line from a bounded read stream as a string or ``end_of_file``."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, string_term = args
+        stream = _read_stream(_reified(stream_term, state))
+        if stream is None:
+            return
+
+        if stream.cursor >= len(stream.contents):
+            yield from solve_from(
+                program_value,
+                eq(string_term, atom("end_of_file")),
+                state,
+            )
+            return
+
+        newline_index = stream.contents.find("\n", stream.cursor)
+        if newline_index == -1:
+            line = stream.contents[stream.cursor :]
+            stream.cursor = len(stream.contents)
+        else:
+            line = stream.contents[stream.cursor : newline_index]
+            stream.cursor = newline_index + 1
+        yield from solve_from(program_value, eq(string_term, String(line)), state)
+
+    return native_goal(run, stream_value, string_value)
+
+
+def get_charo(stream_value: object, char_value: object) -> GoalExpr:
+    """Read one character atom from a bounded read stream or ``end_of_file``."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, char_term = args
+        stream = _read_stream(_reified(stream_term, state))
+        if stream is None:
+            return
+
+        if stream.cursor >= len(stream.contents):
+            yield from solve_from(
+                program_value,
+                eq(char_term, atom("end_of_file")),
+                state,
+            )
+            return
+
+        character = stream.contents[stream.cursor]
+        stream.cursor += 1
+        yield from solve_from(program_value, eq(char_term, atom(character)), state)
+
+    return native_goal(run, stream_value, char_value)
+
+
+def _stream_write_text(term_value: Term) -> str | None:
+    if isinstance(term_value, String):
+        return term_value.value
+    if isinstance(term_value, Atom):
+        return _plain_atom_text(term_value)
+    if isinstance(term_value, Number):
+        return _number_text(term_value)
+    if isinstance(term_value, Compound):
+        return str(term_value)
+    return None
+
+
+def _write_stream(term_value: Term, text: str) -> bool:
+    handle_text = _stream_handle_text(term_value)
+    if handle_text is None:
+        return False
+    stream = _STREAMS.get(handle_text)
+    if stream is None or stream.mode not in {"write", "append"}:
+        return False
+    try:
+        with stream.path.open("a", encoding="utf-8") as file:
+            file.write(text)
+    except OSError:
+        return False
+    return True
+
+
+def writeo(stream_value: object, term_value: object) -> GoalExpr:
+    """Write a bounded textual representation to a write/append stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, term_term = args
+        text = _stream_write_text(_reified(term_term, state))
+        if text is None or not _write_stream(_reified(stream_term, state), text):
+            return
+        yield state
+
+    return native_goal(run, stream_value, term_value)
+
+
+def nlo(stream_value: object) -> GoalExpr:
+    """Write a newline to a write/append stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [stream_term] = args
+        if _write_stream(_reified(stream_term, state), "\n"):
+            yield state
+
+    return native_goal(run, stream_value)
 
 
 def compoundo(term_value: object) -> GoalExpr:

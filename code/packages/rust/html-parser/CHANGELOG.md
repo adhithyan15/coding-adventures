@@ -29,6 +29,9 @@ documented in this file.
 - Parser-approved initial script tokenizer contexts for script data, escaped,
   dash/dash-dash, less-than, and double-escaped substates backed by the typed
   lexer script-substate context helper.
+- Parser-approved initial tokenizer contexts now cover RCDATA/RAWTEXT
+  fragments, CDATA bracket/end substates, script less-than and escape-start
+  substates, and script double-escape start/end substates exposed by the lexer.
 - Initial table tree-construction recovery for omitted `tbody`/`tr` structure,
   including implicit row groups for bare rows/cells and section closure when a
   new table section starts.
@@ -62,3 +65,12 @@ documented in this file.
 - Nested `form` start tags are now ignored with a parser diagnostic while an
   outer form remains open, keeping form-associated content in the existing form
   instead of creating nested form DOMs.
+- Duplicate open `html` and `head` start tags now merge missing attributes into
+  the existing shell elements instead of creating nested shell DOMs.
+- Late `head` start tags after body content has already started are ignored
+  with a parser diagnostic.
+- `</p>` end tags without an open paragraph now create and close an implied
+  empty paragraph with a parser diagnostic, matching common browser recovery.
+- `</br>` now recovers as a `br` start tag with a parser diagnostic.
+- `pre`, `listing`, and `textarea` now strip one immediately following LF text
+  character while preserving later nested text.

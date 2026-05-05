@@ -12,30 +12,48 @@ from typing import Any
 
 SUPPORTED_INITIAL_STATES = {
     "CDATA section state",
+    "CDATA section bracket state",
+    "CDATA section end state",
     "Data state",
     "PLAINTEXT state",
     "RCDATA state",
+    "RCDATA less-than sign state",
     "RAWTEXT state",
+    "RAWTEXT less-than sign state",
+    "Script data double escape end state",
+    "Script data double escape start state",
     "Script data double escaped dash dash state",
     "Script data double escaped dash state",
     "Script data double escaped less-than sign state",
     "Script data double escaped state",
+    "Script data escape start dash state",
+    "Script data escape start state",
     "Script data escaped dash dash state",
     "Script data escaped dash state",
     "Script data escaped less-than sign state",
     "Script data escaped state",
+    "Script data less-than sign state",
     "Script data state",
 }
 
-SCRIPT_INITIAL_STATES = {
+LAST_START_TAG_INITIAL_STATES = {
+    "RCDATA state",
+    "RCDATA less-than sign state",
+    "RAWTEXT state",
+    "RAWTEXT less-than sign state",
+    "Script data double escape end state",
+    "Script data double escape start state",
     "Script data double escaped dash dash state",
     "Script data double escaped dash state",
     "Script data double escaped less-than sign state",
     "Script data double escaped state",
+    "Script data escape start dash state",
+    "Script data escape start state",
     "Script data escaped dash dash state",
     "Script data escaped dash state",
     "Script data escaped less-than sign state",
     "Script data escaped state",
+    "Script data less-than sign state",
     "Script data state",
 }
 
@@ -71,7 +89,14 @@ def main() -> int:
             )
             continue
 
-        normalized_cases.append(normalize_case(index, test))
+        initial_states = test.get("initialStates", [])
+        if len(initial_states) <= 1:
+            normalized_cases.append(
+                normalize_case(index, test, initial_states[0] if initial_states else None)
+            )
+        else:
+            for variant, initial_state in enumerate(initial_states, start=1):
+                normalized_cases.append(normalize_case(index, test, initial_state, variant))
 
     normalized = {
         "format": "venture-html-lexer-fixtures/v1",
@@ -90,25 +115,19 @@ def main() -> int:
 
 def is_supported(test: dict[str, Any]) -> tuple[bool, str]:
     initial_states = test.get("initialStates", [])
-    if len(initial_states) > 1:
-        return False, f"unsupported initialStates={initial_states!r}"
-
-    if initial_states and initial_states[0] not in SUPPORTED_INITIAL_STATES:
+    if any(initial_state not in SUPPORTED_INITIAL_STATES for initial_state in initial_states):
         return False, f"unsupported initialStates={initial_states!r}"
 
     last_start_tag = test.get("lastStartTag")
-    if (
-        initial_states
-        and initial_states[0] in {"RCDATA state", "RAWTEXT state", *SCRIPT_INITIAL_STATES}
-        and not isinstance(last_start_tag, str)
-    ):
-        return False, f"{initial_states[0]} requires lastStartTag"
+    needs_last_start_tag = [
+        initial_state
+        for initial_state in initial_states
+        if initial_state in LAST_START_TAG_INITIAL_STATES
+    ]
+    if needs_last_start_tag and not isinstance(last_start_tag, str):
+        return False, f"{needs_last_start_tag[0]} requires lastStartTag"
 
-    if (
-        initial_states
-        and initial_states[0] not in {"RCDATA state", "RAWTEXT state", *SCRIPT_INITIAL_STATES}
-        and last_start_tag is not None
-    ):
+    if last_start_tag is not None and len(needs_last_start_tag) != len(initial_states):
         return False, f"unsupported lastStartTag={last_start_tag!r}"
 
     for token in test.get("output", []):
@@ -119,7 +138,9 @@ def is_supported(test: dict[str, Any]) -> tuple[bool, str]:
     return True, ""
 
 
-def normalize_case(index: int, test: dict[str, Any]) -> dict[str, Any]:
+def normalize_case(
+    index: int, test: dict[str, Any], initial_state: str | None, variant: int | None = None
+) -> dict[str, Any]:
     tokens: list[str] = []
     pending_text = ""
 
@@ -162,22 +183,27 @@ def normalize_case(index: int, test: dict[str, Any]) -> dict[str, Any]:
     tokens.append("EOF")
 
     normalized = {
-        "id": f"html5lib-smoke-{index}",
+        "id": normalized_case_id(index, variant),
         "description": test.get("description", f"case {index}"),
         "input": test["input"],
         "tokens": tokens,
         "diagnostics": [error["code"] for error in test.get("errors", [])],
     }
 
-    initial_states = test.get("initialStates", [])
-    if initial_states:
-        normalized["initial_state"] = initial_states[0]
+    if initial_state is not None:
+        normalized["initial_state"] = initial_state
 
     last_start_tag = test.get("lastStartTag")
     if last_start_tag is not None:
         normalized["last_start_tag"] = last_start_tag
 
     return normalized
+
+
+def normalized_case_id(index: int, variant: int | None) -> str:
+    if variant is None:
+        return f"html5lib-smoke-{index}"
+    return f"html5lib-smoke-{index}-{variant}"
 
 
 def normalize_start_tag(token: list[Any]) -> str:

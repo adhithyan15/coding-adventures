@@ -2118,12 +2118,23 @@ def abs_handler(vm: VM, expr: IRApply) -> IRNode:
        - ``sign_of(x) == 0``  (x = 0)                  → return ``0``
        - ``is_negative(x)``   (x < 0)                  → return ``-x``
 
-    4. **Everything else**: leave unevaluated as ``Abs(x)``.
+    4. **Pure algebraic rules** (Phase 29): hold for all real inputs
+       with no assumptions:
+
+       - ``Abs(Abs(x))``        → ``Abs(x)``           *(idempotency)*
+       - ``Abs(Neg(x))``        → ``Abs(x)``           *(even function)*
+       - ``Abs(Mul(-1, x))``    → ``Abs(x)``           *(−x encoded as Mul)*
+       - ``Abs(Pow(x, 2k))``    → ``Pow(x, 2k)``       *(x²ᵏ ≥ 0 always)*
+
+    5. **Everything else**: leave unevaluated as ``Abs(x)``.
 
     Examples::
 
         abs(3)           →  3
         abs(-3)          →  3
+        abs(-x)          →  Abs(x)      (Phase 29)
+        abs(x^2)         →  Pow(x, 2)   (Phase 29)
+        abs(abs(x))      →  Abs(x)      (Phase 29)
         # after assume(x > 0):
         abs(x)           →  x
         # after assume(x >= 0):
@@ -2153,8 +2164,121 @@ def abs_handler(vm: VM, expr: IRApply) -> IRNode:
         # Negative: abs(x) = -x  (covers x < 0)
         if ctx.is_negative(inner.name) is True:
             return IRApply(NEG, (inner,))
-    # Rule 4: leave unevaluated.
+    # Rule 4 (Phase 29): pure algebraic structure rules.
+    _abs_head = IRSymbol("Abs")
+    if isinstance(inner, IRApply):
+        # Rule 4a: idempotency — abs(abs(x)) = abs(x)
+        if inner.head == _abs_head:
+            return inner
+        # Rule 4b: strip negation — abs(-x) = abs(x)
+        if inner.head == NEG and len(inner.args) == 1:
+            # Recurse: inner.args[0] is already evaluated (inner = vm.eval(...))
+            return abs_handler(vm, IRApply(expr.head, (inner.args[0],)))
+        # Rule 4c: strip Mul(-1, x) — -x encoded as Mul after eval
+        neg_one = IRInteger(-1)
+        if inner.head == MUL and len(inner.args) == 2 and inner.args[0] == neg_one:
+            return abs_handler(vm, IRApply(expr.head, (inner.args[1],)))
+        # Rule 4d: even integer power — abs(x^{2k}) = x^{2k}  (x^{2k} ≥ 0 always)
+        if inner.head == POW and len(inner.args) == 2:
+            exp_node = inner.args[1]
+            if (
+                isinstance(exp_node, IRInteger)
+                and exp_node.value >= 2
+                and exp_node.value % 2 == 0
+            ):
+                return inner
+    # Rule 5: leave unevaluated.
     return IRApply(expr.head, (inner,))
+
+
+def sqrt_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Sqrt(x)`` — square root with algebraic simplification.
+
+    This handler overrides the ``_elementary``-factory handler from
+    :mod:`symbolic_vm.handlers` (which only numeric-folds) via the
+    ``handlers.update(build_cas_handler_table())`` merging in
+    :class:`~symbolic_vm.backends.SymbolicBackend`.  All numeric behaviour
+    from that factory is preserved; algebraic rules are added on top.
+
+    Simplification rules
+    --------------------
+    1. **Special values**: ``Sqrt(0) → 0``, ``Sqrt(1) → 1``.
+
+    2. **Numeric fold**: integer / rational / float inputs are evaluated
+       with ``math.sqrt``.  Perfect-square integers (``4, 9, 16, …``)
+       return an ``IRInteger``; irrational values return ``IRFloat``.
+
+    3. **Even-exponent power** ``Sqrt(Pow(x, 2k))`` for positive even exponent
+       ``2k``:
+
+       - ``k`` even (``2k = 4, 8, 12, …``) → ``Pow(x, k)``
+         *(x^k ≥ 0 for even k, no abs needed)*
+       - ``k`` odd  (``2k = 2, 6, 10, …``) → ``Abs(Pow(x, k))``
+         *(sign of x^k depends on sign of x)*
+
+       The most common case ``k = 1``:  ``Sqrt(Pow(x, 2)) → Abs(x)``.
+
+    4. **Assumption-aware** (Phase 28 integration): ``Sqrt(Pow(x, 2)) → x``
+       when ``vm.assumptions.is_nonneg(x.name)`` is True, because under
+       non-negativity ``|x| = x``.
+
+    5. **Everything else**: leave unevaluated as ``Sqrt(arg)``.
+
+    Examples::
+
+        sqrt(0)      →  0
+        sqrt(1)      →  1
+        sqrt(4)      →  2           (perfect square)
+        sqrt(2.0)    →  1.4142…     (float fold)
+        sqrt(x^2)    →  Abs(x)      (k=1, odd)
+        sqrt(x^4)    →  Pow(x, 2)   (k=2, even)
+        sqrt(x^6)    →  Abs(Pow(x, 3))   (k=3, odd)
+        sqrt(x^8)    →  Pow(x, 4)   (k=4, even)
+        # after assume(x >= 0):
+        sqrt(x^2)    →  x
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1 + 2: numeric fold with exact special values and perfect-square detection.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(0)
+        if n == 1:
+            return IRInteger(1)
+        result = math.sqrt(float(n))
+        # Detect perfect squares: round to nearest integer and verify by squaring.
+        # Using round() rather than int() guards against floating-point underflow
+        # near large perfect squares (e.g. sqrt(25) = 4.9999… → int would give 4).
+        int_result = round(result)
+        if int_result * int_result == n:
+            return IRInteger(int_result)
+        return IRFloat(result)
+    # Rule 3 + 4: algebraic simplification for sqrt(x^{2k}).
+    if isinstance(arg, IRApply) and arg.head == POW and len(arg.args) == 2:
+        base = arg.args[0]
+        exp_node = arg.args[1]
+        if isinstance(exp_node, IRInteger):
+            n_exp = exp_node.value
+            if n_exp > 0 and n_exp % 2 == 0:
+                k = n_exp // 2
+                # Rule 4: assumption-aware — sqrt(x^2) = x when x ≥ 0.
+                if (
+                    k == 1
+                    and isinstance(base, IRSymbol)
+                    and vm.assumptions.is_nonneg(base.name) is True
+                ):
+                    return base
+                # k even → x^k ≥ 0 always (e.g. sqrt(x^4) = x^2)
+                if k % 2 == 0:
+                    return IRApply(POW, (base, IRInteger(k)))
+                # k odd → |x^k| (e.g. sqrt(x^2) = |x|, sqrt(x^6) = |x^3|)
+                if k == 1:
+                    return IRApply(IRSymbol("Abs"), (base,))
+                return IRApply(IRSymbol("Abs"), (IRApply(POW, (base, IRInteger(k))),))
+    # Rule 5: leave unevaluated.
+    return IRApply(expr.head, (arg,))
 
 
 def cbrt_handler(_vm: VM, expr: IRApply) -> IRNode:
@@ -2862,6 +2986,9 @@ def build_cas_handler_table() -> dict[str, Handler]:
         "Taylor": taylor_handler,
         # --- numeric/arithmetic ---------------------------------------------
         "Abs": abs_handler,
+        # Phase 29: overrides the _elementary-factory Sqrt in handlers.py,
+        # adding algebraic rules (sqrt(x^{2k}) etc.) on top of numeric fold.
+        "Sqrt": sqrt_handler,
         "Cbrt": cbrt_handler,
         "Floor": floor_handler,
         "Ceiling": ceiling_handler,

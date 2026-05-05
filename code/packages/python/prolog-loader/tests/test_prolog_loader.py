@@ -1464,6 +1464,57 @@ class TestPrologGoalAdapter:
             logic_list([111, 107]),
         )
 
+    def test_adapt_prolog_goal_rewrites_file_text_io_predicates(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "story.txt"
+        source_path.write_text("hi\n", encoding="utf-8")
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- exists_file('{path_atom}'), "
+            f"read_file_to_string('{path_atom}', Text), "
+            f"read_file_to_codes('{path_atom}', Codes).",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            (parsed.variables["Text"], parsed.variables["Codes"]),
+            adapted,
+        ) == [(string("hi\n"), logic_list([104, 105, 10]))]
+
+    def test_adapt_prolog_goal_rewrites_file_stream_predicates(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "stream.txt"
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- open('{path_atom}', write, Out), "
+            'write(Out, "tea"), '
+            "nl(Out), "
+            "write(Out, cake), "
+            "close(Out), "
+            f"open('{path_atom}', read, In), "
+            "read_line_to_string(In, Line), "
+            "get_char(In, Char), "
+            "read_string(In, 3, Tail), "
+            "at_end_of_stream(In), "
+            "close(In).",
+        )
+
+        assert solve_all(
+            program(),
+            (
+                parsed.variables["Line"],
+                parsed.variables["Char"],
+                parsed.variables["Tail"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        ) == [(string("tea"), atom("c"), string("ake"))]
+
     def test_adapt_prolog_goal_rewrites_term_read_write_options(self) -> None:
         parsed = parse_swi_query(
             "?- read_term_from_atom('pair(X, Y, X)', Term, "

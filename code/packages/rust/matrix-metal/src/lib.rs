@@ -64,10 +64,13 @@ use metal_compute::{MetalCommandQueue, MetalComputePipeline, MetalDevice};
 /// Op tags from `matrix_ir::Op::wire_tag()`:
 /// - 0x00 Neg, 0x01 Abs, 0x02 Sqrt, 0x03 Exp, 0x04 Log, 0x05 Tanh, 0x06 Recip
 /// - 0x07 Add, 0x08 Sub, 0x09 Mul, 0x0A Div, 0x0B Max, 0x0C Min, 0x0D Pow
+/// - 0x0E ReduceSum, 0x0F ReduceMax, 0x10 ReduceMean (single-axis only in V1)
 /// - 0x11 Reshape (metadata-only; implemented as a buffer memcpy in SSA)
 /// - 0x12 Transpose (general N-D permutation, max rank 4)
 /// - 0x13 Broadcast (general N-D size-1-axis replication, max rank 4)
-/// - 0x15 MatMul, 0x1B Const
+/// - 0x15 MatMul
+/// - 0x1A Cast (F32 output paths only — input may be F32/U8/I32)
+/// - 0x1B Const
 ///
 /// `Reshape` is included even though Metal has no shader for it: the
 /// SSA form of Reshape produces a fresh output tensor, so we treat it
@@ -92,11 +95,20 @@ fn supported_ops_bitset() -> u32 {
     for tag in 0x07..=0x0Du8 {
         mask |= 1u32 << tag;
     }
-    // Reshape (0x11), Transpose (0x12), Broadcast (0x13), MatMul (0x15), Const (0x1B).
+    // Reductions (0x0E..=0x10): ReduceSum, ReduceMax, ReduceMean.
+    // Single-axis only in V1; multi-axis is dispatched but errors at
+    // run time so the runtime can fall back.  Decompose-into-chain
+    // is V2 work.
+    mask |= 1u32 << 0x0E;
+    mask |= 1u32 << 0x0F;
+    mask |= 1u32 << 0x10;
+    // Reshape (0x11), Transpose (0x12), Broadcast (0x13), MatMul (0x15),
+    // Cast (0x1A), Const (0x1B).
     mask |= 1u32 << 0x11;
     mask |= 1u32 << 0x12;
     mask |= 1u32 << 0x13;
     mask |= 1u32 << 0x15;
+    mask |= 1u32 << 0x1A;
     mask |= 1u32 << 0x1B;
     mask
 }

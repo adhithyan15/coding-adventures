@@ -5,19 +5,28 @@
   "source": "upstream-html5lib-smoke.test",
   "generator": "normalize_html5lib_fixtures.py",
   "supported_initial_states": [
+    "CDATA section bracket state",
+    "CDATA section end state",
     "CDATA section state",
     "Data state",
     "PLAINTEXT state",
+    "RAWTEXT less-than sign state",
     "RAWTEXT state",
+    "RCDATA less-than sign state",
     "RCDATA state",
+    "Script data double escape end state",
+    "Script data double escape start state",
     "Script data double escaped dash dash state",
     "Script data double escaped dash state",
     "Script data double escaped less-than sign state",
     "Script data double escaped state",
+    "Script data escape start dash state",
+    "Script data escape start state",
     "Script data escaped dash dash state",
     "Script data escaped dash state",
     "Script data escaped less-than sign state",
     "Script data escaped state",
+    "Script data less-than sign state",
     "Script data state"
   ],
   "cases": [
@@ -1960,6 +1969,129 @@
         "missing-semicolon-after-character-reference",
         "eof-in-tag"
       ]
+    },
+    {
+      "id": "html5lib-smoke-161",
+      "description": "cdata bracket state emits pending bracket at eof",
+      "input": "",
+      "tokens": [
+        "Text(data=])",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "CDATA section bracket state"
+    },
+    {
+      "id": "html5lib-smoke-162",
+      "description": "cdata end state closes on delimiter and returns to data",
+      "input": ">after",
+      "tokens": [
+        "Text(data=after)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "CDATA section end state"
+    },
+    {
+      "id": "html5lib-smoke-163",
+      "description": "rcdata less-than state recovers literal less-than before references",
+      "input": "b &amp;",
+      "tokens": [
+        "Text(data=<b &)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA less-than sign state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-164",
+      "description": "rawtext less-than state recovers literal less-than",
+      "input": "b &amp;",
+      "tokens": [
+        "Text(data=<b &amp;)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT less-than sign state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-165",
+      "description": "script less-than state enters escaped text then closes script",
+      "input": "!-->tail</script>",
+      "tokens": [
+        "Text(data=<!-->tail)",
+        "EndTag(name=script)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data less-than sign state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-166-1",
+      "description": "script escape start states recover to script data on ordinary text",
+      "input": "x</script>",
+      "tokens": [
+        "Text(data=x)",
+        "EndTag(name=script)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data escape start state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-166-2",
+      "description": "script escape start states recover to script data on ordinary text",
+      "input": "x</script>",
+      "tokens": [
+        "Text(data=x)",
+        "EndTag(name=script)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data escape start dash state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-167",
+      "description": "script double escape start state enters double escaped script text",
+      "input": "script>inside</script>after</script>",
+      "tokens": [
+        "Text(data=script>inside</script>after)",
+        "EndTag(name=script)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data double escape start state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-168",
+      "description": "script double escape end state exits before matching end tag",
+      "input": "script>after</script>",
+      "tokens": [
+        "Text(data=script>after)",
+        "EndTag(name=script)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data double escape end state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-169",
+      "description": "script less-than state emits pending less-than at eof",
+      "input": "",
+      "tokens": [
+        "Text(data=<)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data less-than sign state",
+      "last_start_tag": "script"
     }
   ],
   "skipped": []

@@ -1,5 +1,40 @@
 # Changelog — twig-vm
 
+## [0.7.0] — 2026-05-05
+
+**LS03 PR C — TCP debug server + `--debug-port` CLI.**
+
+### Added
+- **`debug` module**: `DebugHooks` trait + `FrameView` read-only frame
+  snapshot.  The dispatch loop calls `before_instruction` between every
+  IIR instruction, at every recursion depth.  No-op overhead when no
+  debugger is attached: one `Option::is_some` branch per instruction.
+- **`debug_server` module**: `DebugServer` — a `DebugHooks`
+  implementation backed by a TCP socket.  Speaks the newline-delimited
+  JSON wire protocol documented in `dap-adapter-core::vm_conn` (commands:
+  `set_breakpoint`, `clear_breakpoint`, `continue`, `pause`,
+  `step_instruction`, `get_call_stack`, `get_slot`; events: `stopped`,
+  `exited`).  Reconstructs the live call stack from depth deltas; serves
+  blocking-after-stop and non-blocking-while-running command channels.
+- **`bin/twig_vm.rs`**: CLI entry point.  Two modes:
+  - `twig-vm <FILE>` — compile and run normally.
+  - `twig-vm --debug-port <N> <FILE>` — bind 127.0.0.1:N, accept one
+    DAP adapter, run the program under the debug server.
+- **`run_with_debug` entry point** in `dispatch` — runs an `IIRModule`
+  with a caller-supplied `DebugHooks` impl.
+
+### Changed
+- `dispatch`, `exec_call`, `exec_call_builtin`, `exec_apply_closure`
+  now thread `&mut Option<&mut dyn DebugHooks>` through the recursive
+  call chain.  Existing `run_with_profile` / `run_with_state` /
+  `run_with_globals` / `run` call sites pass `None` and pay zero cost.
+- `Frame` is now `pub(crate)` (was `private`) so `FrameView` can wrap it.
+  Two new `Frame` accessors (`register_names`, `debug_print`) expose
+  read-only inspection without leaking internals.
+
+### Dependencies
+- Adds `serde_json = "1"` for the wire-format encoder.
+
 ## [0.6.1] — 2026-05-04
 
 ### Fixed (LANG23 PR 23-E compatibility)

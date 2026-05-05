@@ -179,11 +179,48 @@ VALUE_OPS: frozenset[str] = (
 # in VALUE_OPS (it has two output slots in srcs, not a single dest).
 SYSCALL_CHECKED_OPS: frozenset[str] = frozenset({"syscall_checked"})
 
+# ---------------------------------------------------------------------------
+# VMCOND00 Phase 2 — unwind exceptions (THROW)
+# ---------------------------------------------------------------------------
+#
+# ``throw`` unwinds the call stack searching for a matching entry in the
+# function's static exception table.  It is fundamentally different from the
+# BRANCH_OPS (which are intra-function conditional jumps) and from CONTROL_OPS
+# (which are unconditional or function-return control flow).
+#
+# ``throw`` is not in BRANCH_OPS because it may pop multiple frames — it is
+# inter-frame control flow, not intra-function branching.
+# ``throw`` is not in CONTROL_OPS because it does not return from the current
+# function in the same way ``ret`` / ``ret_void`` do.
+# ``throw`` is not in VALUE_OPS because it produces no value in a dest
+# register (the caught condition is written to the *handler's* val_reg, which
+# is described in the exception table entry, not in the throw instruction).
+#
+# IIR operand convention:
+#
+#   throw:
+#     srcs = [condition_reg]   — register holding the condition object to throw
+#     dest = None
+#
+# The VM THROW handler:
+#   1. Reads condition = frame.resolve(srcs[0])
+#   2. Searches vm._frames from innermost to outermost:
+#        for entry in frame.fn.exception_table:
+#            if entry.from_ip <= (frame.ip - 1) < entry.to_ip:
+#                if matches(condition, entry.type_id):
+#                    frame.ip = entry.handler_ip
+#                    frame.assign(entry.val_reg, condition)
+#                    return
+#        vm._frames.pop()  # no match — propagate to caller
+#   3. If the stack is exhausted, raises UncaughtConditionError.
+THROW_OPS: frozenset[str] = frozenset({"throw"})
+
 # All ops that have side effects beyond producing a value.
 SIDE_EFFECT_OPS: frozenset[str] = (
     BRANCH_OPS
     | CONTROL_OPS
     | SYSCALL_CHECKED_OPS
+    | THROW_OPS
     | frozenset({"store_reg", "store_mem", "io_out", "type_assert"})
     | frozenset({"field_store", "safepoint"})
 )
@@ -207,5 +244,6 @@ ALL_OPS: frozenset[str] = (
     | COERCION_OPS
     | HEAP_OPS
     | SYSCALL_CHECKED_OPS
+    | THROW_OPS
     | frozenset({"const"})
 )
