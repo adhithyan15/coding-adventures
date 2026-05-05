@@ -3,6 +3,59 @@
 All notable changes to `matrix-runtime` are documented here.  The
 format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.4.0] — 2026-05-05
+
+### Added — MX05 Phase 2a (range observation)
+
+- `Profiler::sample_tensor(graph_subhash, op_index, slot, is_input,
+  dtype, bytes)` — accumulates per-(graph, op, slot, direction) running
+  statistics from raw bytes.  Bounded ≤ ~64 bytes of state regardless
+  of `bytes.len()`; work scales with the number of scalars passed in.
+  Supports F32, U8, I32 (the V1 dtype set).  F32 NaNs are skipped (do
+  not poison min/max) but are still counted as samples so sparsity
+  ratios stay honest.  Trailing partial scalars are silently
+  truncated, matching what dispatchers do.
+- `Profiler::tensor_observation(graph_subhash, op_index, slot,
+  is_input)` — read-back accessor for tests and policy code.
+- `Profiler::should_sample()` — counter-based sampling gate;
+  deterministic, returns `true` once per `sample_rate` calls.  Default
+  rate is 100 (≈ 1% sampling, matching the spec).
+- `Profiler::set_sample_rate(rate)` — tunes the gate.  Rate `0` means
+  "never sample", `1` means "always sample", anything in between gives
+  a 1/N hit rate.
+- `Profiler::observations()` now folds sampled `TensorObservation`s
+  into the matching `ProfileObservation`'s `tensor_observations`
+  vector, sorted inputs-before-outputs and by slot.
+- `Profiler::reset()` now also clears tensor observations and rewinds
+  the sample counter.
+
+### Tests (10 new)
+
+- `sample_tensor_f32_records_min_max_zeros`
+- `sample_tensor_u8_records_min_max_zeros`
+- `sample_tensor_i32_records_min_max_zeros`
+- `sample_tensor_accumulates_across_calls`
+- `sample_tensor_f32_skips_nan`
+- `sample_tensor_truncates_partial_trailing_scalar`
+- `observations_includes_tensor_observations`
+- `should_sample_at_default_rate_yields_one_in_hundred`
+- `should_sample_rate_one_always_yields_true`
+- `should_sample_rate_zero_never_yields_true`
+- `reset_clears_tensor_observations_and_sample_counter`
+- `observations_orders_tensor_observations_by_input_then_slot`
+
+Total tests: 38 unit + 8 integration = 46 (was 26 + 8 = 34).
+
+### Notes
+
+- No specialisation policy yet — Phase 2a only ships the data
+  plumbing.  The future Phase 2b (auto-narrow `Cast` insertion) and
+  Phase 3 (`SpecKey` / `Specialiser` trait) consume `tensor_observation`
+  output to decide which graphs / ops are worth specialising.
+- Image-filter routing on macOS is unchanged: `invert` → CPU,
+  `greyscale` / `sepia` → Metal across the synthetic test-image suite
+  (regression check).
+
 ## [0.3.0] — 2026-05-04
 
 ### Added — MX05 Phase 1 (profile sampler)
