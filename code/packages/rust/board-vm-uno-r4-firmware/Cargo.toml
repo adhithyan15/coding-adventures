@@ -31,3 +31,7 @@ path = "src/bin/uno_r4_wifi_raw_blink_probe.rs"
 [[bin]]
 name = "uno-r4-wifi-stream-handshake-probe"
 path = "src/bin/uno_r4_wifi_stream_handshake_probe.rs"
+
+[[bin]]
+name = "uno-r4-wifi-stream-session-probe"
+path = "src/bin/uno_r4_wifi_stream_session_probe.rs"

@@ -4,6 +4,8 @@ use board_vm_ir::{parse_module, validate, ModuleError, ValidateError};
 use board_vm_runtime::{BoardHal, RunReport, Runtime, RuntimeError};
 
 #[cfg(target_arch = "arm")]
+pub mod scripted_probe_stream;
+#[cfg(target_arch = "arm")]
 pub mod uno_r4_wifi_backend;
 #[cfg(target_arch = "arm")]
 pub mod uno_r4_wifi_led;
