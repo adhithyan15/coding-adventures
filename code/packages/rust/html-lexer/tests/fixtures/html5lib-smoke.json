@@ -262,7 +262,7 @@
       "description": "doctype trailing junk after system identifier",
       "input": "<!DOCTYPE html SYSTEM \"about:legacy-compat\" junk>",
       "tokens": [
-        "Doctype(name=html, public_identifier=null, system_identifier=about:legacy-compat, force_quirks=true)",
+        "Doctype(name=html, public_identifier=null, system_identifier=about:legacy-compat, force_quirks=false)",
         "EOF"
       ],
       "diagnostics": [

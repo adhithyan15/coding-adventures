@@ -144,7 +144,8 @@ documented in this file.
   and system identifiers on emitted tokens, including force-quirks recovery for
   missing identifiers.
 - Standalone `SYSTEM` doctypes and trailing junk after system identifiers are
-  now covered, with unexpected trailing junk marking force-quirks mode.
+  now covered, with unexpected trailing junk reporting a diagnostic without
+  forcing quirks mode.
 - DOCTYPE public/system recovery conformance now covers missing whitespace
   around identifiers, missing identifier quotes, and abrupt identifier
   termination.

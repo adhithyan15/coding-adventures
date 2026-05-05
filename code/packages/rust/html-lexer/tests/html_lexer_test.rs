@@ -1166,7 +1166,7 @@ fn default_html_lexer_marks_missing_system_identifier_force_quirks() {
 }
 
 #[test]
-fn default_html_lexer_marks_trailing_junk_after_system_identifier_force_quirks() {
+fn default_html_lexer_reports_trailing_junk_after_system_identifier() {
     let mut lexer = create_html_lexer().unwrap();
 
     lexer
@@ -1181,7 +1181,7 @@ fn default_html_lexer_marks_trailing_junk_after_system_identifier_force_quirks()
                 name: Some("html".to_string()),
                 public_identifier: None,
                 system_identifier: Some("about:legacy-compat".to_string()),
-                force_quirks: true,
+                force_quirks: false,
             },
             Token::Eof,
         ]

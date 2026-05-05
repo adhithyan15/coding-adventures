@@ -146,10 +146,11 @@ or inside the `DOCTYPE` keyword emits a force-quirks token. Malformed
 declarations such as `<!DOCTYPE html PUBLIC "...">` keep the information the
 future tree-construction/parser layer will need for compatibility decisions.
 DOCTYPE system-identifier recovery marks force-quirks mode for missing
-identifiers and unexpected trailing junk. PUBLIC/SYSTEM declarations also report
-the current recovery diagnostics for missing whitespace, missing identifier
-quotes, and abrupt identifier termination while preserving any recoverable
-public/system identifier text.
+identifiers and EOF, while unexpected trailing junk after a closed identifier
+reports a diagnostic without forcing quirks mode. PUBLIC/SYSTEM declarations
+also report the current recovery diagnostics for missing whitespace, missing
+identifier quotes, and abrupt identifier termination while preserving any
+recoverable public/system identifier text.
 The generated HTML1 machine also exposes `RCDATA`, `RAWTEXT`, `PLAINTEXT`,
 `CDATA section`, `script_data`, `script_data_escaped`,
 `script_data_escaped_dash`, `script_data_escaped_dash_dash`,

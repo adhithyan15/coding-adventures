@@ -354,11 +354,11 @@
       ]
     },
     {
-      "id": "doctype-trailing-junk-after-system-identifier-quirks",
-      "description": "Unexpected text after a system identifier marks force-quirks",
+      "id": "doctype-trailing-junk-after-system-identifier",
+      "description": "Unexpected text after a system identifier reports a diagnostic without force-quirks",
       "input": "<!DOCTYPE html SYSTEM \"about:legacy-compat\" junk>",
       "tokens": [
-        "Doctype(name=html, public_identifier=null, system_identifier=about:legacy-compat, force_quirks=true)",
+        "Doctype(name=html, public_identifier=null, system_identifier=about:legacy-compat, force_quirks=false)",
         "EOF"
       ],
       "diagnostics": [
