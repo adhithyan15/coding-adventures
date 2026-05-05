@@ -26,6 +26,7 @@ members = [
     "blas-library",
     "bootloader",
     "board-vm-protocol",
+    "board-vm-host",
     "board-vm-ir",
     "board-vm-runtime",
     "board-vm-uno-r4",
