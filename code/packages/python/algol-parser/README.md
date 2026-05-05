@@ -92,8 +92,8 @@ The parser covers the complete ALGOL 60 grammar:
 | Category | Rules |
 |----------|-------|
 | Top level | `program`, `block` |
-| Declarations | `type_decl`, `array_decl`, `switch_decl`, `procedure_decl` |
-| Statements | `assign_stmt`, `cond_stmt`, `for_stmt`, `goto_stmt` (`goto` or `go to`), `proc_stmt`, `compound_stmt`, `empty_stmt` |
+| Declarations | `type_decl`, `own_decl`, `own_array_decl`, `array_decl`, `switch_decl`, `procedure_decl` |
+| Statements | `assign_stmt`, `cond_stmt`, `for_stmt`, `goto_stmt` (`goto` or `go to`), `proc_stmt`, `compound_stmt`, `dummy_stmt` |
 | Arithmetic | `arith_expr`, `simple_arith`, `term`, `factor`, `primary` |
 | Boolean | `bool_expr`, `simple_bool`, `implication`, `bool_term`, `bool_factor`, `bool_secondary`, `bool_primary`, `relation` |
 | Designational | `desig_expr`, `simple_desig` |
@@ -103,6 +103,10 @@ Conditional arithmetic, Boolean, and designational expressions may nest in
 either branch, so type-specific contexts such as array bounds/subscripts,
 conditions, and `goto` targets accept the same nested conditional shape as
 ordinary assignment expressions.
+
+ALGOL dummy statements parse as zero-width `dummy_stmt` nodes at statement
+boundaries, so empty `then`, `else`, and `do` bodies preserve semicolon
+separator semantics instead of consuming the separator as part of the no-op.
 
 Procedure declarations and calls accept the report-style omitted-parentheses
 form for parameterless procedures as well as explicit empty parentheses, so

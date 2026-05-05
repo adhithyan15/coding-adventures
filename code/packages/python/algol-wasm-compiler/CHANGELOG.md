@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Changed
 
+- Executed ALGOL dummy statements as no-ops in `then`, `else`, `do`, and
+  terminal-label statement positions.
 - Added `algol60-wasm run SOURCE` for shell-level source-to-WASM execution with
   stdout forwarding, optional `_start` result reporting, and a default WASM
   instruction budget.

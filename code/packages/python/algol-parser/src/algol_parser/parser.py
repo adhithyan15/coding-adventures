@@ -187,7 +187,7 @@ def parse_algol(source: str, version: str = "algol60") -> ASTNode:
     - A block contains:
       - ``BEGIN`` token
       - Zero or more ``declaration`` nodes (each followed by SEMICOLON)
-      - One or more ``statement`` nodes (separated by SEMICOLONs)
+      - Zero or more ``statement`` nodes (separated by SEMICOLONs)
       - ``END`` token
 
     Statement node types (``rule_name`` values you will encounter):
@@ -198,7 +198,7 @@ def parse_algol(source: str, version: str = "algol60") -> ASTNode:
     - ``compound_stmt`` — begin/end with only statements (no declarations)
     - ``goto_stmt``   — goto with a designational expression
     - ``proc_stmt``   — procedure call as a statement
-    - ``empty_stmt``  — empty (bare semicolon or trailing)
+    - ``dummy_stmt``  — zero-width ALGOL dummy statement
     - ``block``       — nested block (introduces a new scope)
 
     Declaration node types:

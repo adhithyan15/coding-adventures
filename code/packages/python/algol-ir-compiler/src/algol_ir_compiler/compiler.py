@@ -1100,6 +1100,8 @@ class AlgolIrCompiler:
             return
         if inner.rule_name == "assign_stmt":
             self._compile_assignment(inner, scope)
+        elif inner.rule_name == "dummy_stmt":
+            return
         elif inner.rule_name == "for_stmt":
             self._compile_for(inner, scope)
         elif inner.rule_name == "compound_stmt":
