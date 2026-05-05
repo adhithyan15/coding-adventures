@@ -307,3 +307,38 @@ class TestPrologBytecodeVMStress:
                 ]),
             },
         ]
+
+    def test_file_stream_io_matches_structured_vm(self, tmp_path: Path) -> None:
+        source_path = tmp_path / "stream.pltxt"
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        compiled = compile_swi_prolog_source(
+            f"""
+            ?- open('{path_atom}', write, Out),
+               write(Out, "bytecode"),
+               nl(Out),
+               write(Out, tea),
+               close(Out),
+               open('{path_atom}', read, In),
+               read_line_to_string(In, Line),
+               get_char(In, Char),
+               read_string(In, 2, Tail),
+               at_end_of_stream(In),
+               close(In).
+            """,
+        )
+
+        answers = run_compiled_prolog_bytecode_query_answers(compiled)
+
+        assert _project_answers(answers, "Line", "Char", "Tail") == _project_answers(
+            run_compiled_prolog_query_answers(compiled),
+            "Line",
+            "Char",
+            "Tail",
+        )
+        assert _project_answers(answers, "Line", "Char", "Tail") == [
+            {
+                "Line": string("bytecode"),
+                "Char": atom("t"),
+                "Tail": string("ea"),
+            },
+        ]

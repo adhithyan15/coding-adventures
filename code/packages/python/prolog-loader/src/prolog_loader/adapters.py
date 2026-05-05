@@ -12,6 +12,7 @@ from logic_builtins import (
     argo,
     assertao,
     assertzo,
+    at_end_of_streamo,
     atom_charso,
     atom_codeso,
     atom_concato,
@@ -29,6 +30,7 @@ from logic_builtins import (
     catcho,
     char_codeo,
     clauseo,
+    closeo,
     compare_termo,
     compound_name_argumentso,
     compound_name_arityo,
@@ -71,6 +73,7 @@ from logic_builtins import (
     foldlo,
     forallo,
     functoro,
+    get_charo,
     groundo,
     ifthenelseo,
     iftheno,
@@ -80,6 +83,7 @@ from logic_builtins import (
     labeling_optionso,
     labelingo,
     maplisto,
+    nlo,
     nonvaro,
     not_same_termo,
     not_variant_termo,
@@ -90,6 +94,7 @@ from logic_builtins import (
     numbero,
     numbervarso,
     onceo,
+    openo,
     partitiono,
     predicate_propertyo,
     prolog_geqo,
@@ -101,6 +106,8 @@ from logic_builtins import (
     prolog_numneqo,
     read_file_to_codeso,
     read_file_to_stringo,
+    read_line_to_stringo,
+    read_stringo,
     repeato,
     retractallo,
     retracto,
@@ -131,6 +138,7 @@ from logic_builtins import (
     univo,
     variant_termo,
     varo,
+    writeo,
 )
 from logic_engine import (
     Atom,
@@ -274,6 +282,12 @@ def _adapt_relation_call(
         return unary_list_builtins[name](args[0])
     if goal.relation.arity == 1 and name == "exists_file":
         return exists_fileo(args[0])
+    if goal.relation.arity == 1 and name == "close":
+        return closeo(args[0])
+    if goal.relation.arity == 1 and name == "at_end_of_stream":
+        return at_end_of_streamo(args[0])
+    if goal.relation.arity == 1 and name == "nl":
+        return nlo(args[0])
 
     binary_arithmetic_builtins: dict[str, Callable[[object, object], GoalExpr]] = {
         "is": prolog_iso,
@@ -509,6 +523,16 @@ def _adapt_relation_call(
         return read_file_to_stringo(*args)
     if name == "read_file_to_codes" and goal.relation.arity == 2:
         return read_file_to_codeso(*args)
+    if name == "open" and goal.relation.arity == 3:
+        return openo(*args)
+    if name == "read_string" and goal.relation.arity == 3:
+        return read_stringo(*args)
+    if name == "read_line_to_string" and goal.relation.arity == 2:
+        return read_line_to_stringo(*args)
+    if name == "get_char" and goal.relation.arity == 2:
+        return get_charo(*args)
+    if name == "write" and goal.relation.arity == 2:
+        return writeo(*args)
     if name == "atom_number" and goal.relation.arity == 2:
         return atom_numbero(*args)
     if name == "char_code" and goal.relation.arity == 2:
