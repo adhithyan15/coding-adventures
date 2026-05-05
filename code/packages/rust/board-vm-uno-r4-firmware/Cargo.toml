@@ -10,14 +10,19 @@ board-vm-ir = { path = "../board-vm-ir" }
 board-vm-protocol = { path = "../board-vm-protocol" }
 board-vm-runtime = { path = "../board-vm-runtime" }
 board-vm-uno-r4 = { path = "../board-vm-uno-r4" }
+board-vm-usb-cdc = { path = "../board-vm-usb-cdc" }
 
 [target.'cfg(target_arch = "arm")'.dependencies]
 arduino-uno-r4-hal = "0.1.0"
 board-vm-uart = { path = "../board-vm-uart" }
+board-vm-uno-r4-usb-cdc = { path = "../board-vm-uno-r4-usb-cdc" }
 board-vm-uno-r4-uart = { path = "../board-vm-uno-r4-uart" }
 cortex-m-rt = "0.7"
 embedded-hal = "1.0"
 panic-halt = "0.2"
+
+[dev-dependencies]
+board-vm-host = { path = "../board-vm-host" }
 
 [lib]
 path = "src/lib.rs"
@@ -41,3 +46,7 @@ path = "src/bin/uno_r4_wifi_stream_session_probe.rs"
 [[bin]]
 name = "uno-r4-wifi-uart-server"
 path = "src/bin/uno_r4_wifi_uart_server.rs"
+
+[[bin]]
+name = "uno-r4-wifi-serialusb-server"
+path = "src/bin/uno_r4_wifi_serialusb_server.rs"
