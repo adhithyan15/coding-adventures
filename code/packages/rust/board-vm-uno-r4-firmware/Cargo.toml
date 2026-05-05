@@ -21,3 +21,7 @@ path = "src/lib.rs"
 [[bin]]
 name = "uno-r4-vm-blink-smoke"
 path = "src/bin/uno_r4_vm_blink_smoke.rs"
+
+[[bin]]
+name = "uno-r4-wifi-raw-blink-probe"
+path = "src/bin/uno_r4_wifi_raw_blink_probe.rs"
