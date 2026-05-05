@@ -34,10 +34,11 @@ The resulting ELF is under:
 target/thumbv7em-none-eabihf/release/uno-r4-vm-blink-smoke
 ```
 
-The crate injects the Cortex-M `link.x` linker script and an Uno R4 sketch-slot
-`memory.x` from `build.rs`, so the firmware keeps its vector table and text
-sections even when built from the workspace root. The flash origin is `0x4000`,
-matching the Arduino Renesas core's bootloader-managed sketch region.
+The crate injects the Cortex-M `link.x` linker script for each firmware binary
+and an Uno R4 sketch-slot `memory.x` from `build.rs`, so the firmware keeps its
+vector table and text sections even when built from the workspace root. The
+flash origin is `0x4000`, matching the Arduino Renesas core's bootloader-managed
+sketch region.
 
 To produce the bootloader-ready binary:
 
@@ -52,6 +53,19 @@ On an Uno R4 WiFi, the built-in D13 LED is RA4M1 `P102`; the Uno R4 Minima maps
 D13 differently, to `P111`, and should use a separate Minima smoke backend. For
 the WiFi board, upload through Arduino CLI with the board's serial port and the
 Arduino-patched BOSSA uploader:
+
+The smoke backend configures `P102` directly through the RA4M1 PFS and PORT
+registers. Arduino's Uno R4 WiFi bootloader leaves `LED_BUILTIN` in a PWM
+peripheral state, so the firmware must clear peripheral mode before GPIO writes
+can drive the visible LED.
+
+For hardware bring-up, `uno-r4-wifi-raw-blink-probe` uses the same LED register
+driver without the Board VM runtime. Use it to separate reset/vector/GPIO issues
+from bytecode runtime issues:
+
+```sh
+RUSTC="$(rustup which rustc)" rustup run stable cargo build --target thumbv7em-none-eabihf --bin uno-r4-wifi-raw-blink-probe --release
+```
 
 ```sh
 arduino-cli upload \
