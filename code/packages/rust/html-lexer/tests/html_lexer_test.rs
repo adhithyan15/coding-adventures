@@ -853,6 +853,39 @@ fn default_html_lexer_supports_public_and_system_doctype_identifiers() {
 }
 
 #[test]
+fn default_html_lexer_supports_doctype_identifier_quote_variants() {
+    let tokens = lex_html(
+        "<!DOCTYPE html PUBLIC 'pub'><!DOCTYPE html SYSTEM 'sys'><!DOCTYPE html PUBLIC \"pub\" 'sys'>",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: Some("pub".to_string()),
+                system_identifier: None,
+                force_quirks: false,
+            },
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: Some("sys".to_string()),
+                force_quirks: false,
+            },
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: Some("pub".to_string()),
+                system_identifier: Some("sys".to_string()),
+                force_quirks: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_reports_missing_whitespace_after_doctype_public_keyword() {
     let mut lexer = create_html_lexer().unwrap();
 
@@ -903,6 +936,70 @@ fn default_html_lexer_reports_missing_whitespace_between_doctype_identifiers() {
     assert!(lexer.diagnostics().iter().any(|diagnostic| {
         diagnostic.code == "missing-whitespace-between-doctype-public-and-system-identifiers"
     }));
+}
+
+#[test]
+fn default_html_lexer_marks_public_identifier_boundary_eof_force_quirks() {
+    let cases = [
+        (
+            "<!DOCTYPE html PUBLIC",
+            None,
+            None,
+            "eof after PUBLIC keyword",
+        ),
+        (
+            "<!DOCTYPE html PUBLIC ",
+            None,
+            None,
+            "eof before public identifier",
+        ),
+        (
+            "<!DOCTYPE html PUBLIC \"pub",
+            Some("pub"),
+            None,
+            "eof inside public identifier",
+        ),
+        (
+            "<!DOCTYPE html PUBLIC \"pub\"",
+            Some("pub"),
+            None,
+            "eof after public identifier",
+        ),
+        (
+            "<!DOCTYPE html PUBLIC \"pub\" ",
+            Some("pub"),
+            None,
+            "eof between public and system identifiers",
+        ),
+    ];
+
+    for (input, expected_public, expected_system, label) in cases {
+        let mut lexer = create_html_lexer().unwrap();
+
+        lexer.push(input).unwrap();
+        lexer.finish().unwrap();
+
+        assert_eq!(
+            lexer.drain_tokens(),
+            vec![
+                Token::Doctype {
+                    name: Some("html".to_string()),
+                    public_identifier: expected_public.map(str::to_string),
+                    system_identifier: expected_system.map(str::to_string),
+                    force_quirks: true,
+                },
+                Token::Eof,
+            ],
+            "{label}"
+        );
+        assert!(
+            lexer
+                .diagnostics()
+                .iter()
+                .any(|diagnostic| diagnostic.code == "eof-in-doctype"),
+            "{label}"
+        );
+    }
 }
 
 #[test]
@@ -1089,6 +1186,61 @@ fn default_html_lexer_reports_missing_quote_before_doctype_system_identifier() {
 }
 
 #[test]
+fn default_html_lexer_marks_system_identifier_boundary_eof_force_quirks() {
+    let cases = [
+        ("<!DOCTYPE html SYSTEM", None, "eof after SYSTEM keyword"),
+        (
+            "<!DOCTYPE html SYSTEM ",
+            None,
+            "eof before system identifier",
+        ),
+        (
+            "<!DOCTYPE html SYSTEM \"sys",
+            Some("sys"),
+            "eof inside system identifier",
+        ),
+        (
+            "<!DOCTYPE html SYSTEM \"sys\"",
+            Some("sys"),
+            "eof after system identifier",
+        ),
+        (
+            "<!DOCTYPE html SYSTEM \"sys\" ",
+            Some("sys"),
+            "eof after system identifier whitespace",
+        ),
+    ];
+
+    for (input, expected_system, label) in cases {
+        let mut lexer = create_html_lexer().unwrap();
+
+        lexer.push(input).unwrap();
+        lexer.finish().unwrap();
+
+        assert_eq!(
+            lexer.drain_tokens(),
+            vec![
+                Token::Doctype {
+                    name: Some("html".to_string()),
+                    public_identifier: None,
+                    system_identifier: expected_system.map(str::to_string),
+                    force_quirks: true,
+                },
+                Token::Eof,
+            ],
+            "{label}"
+        );
+        assert!(
+            lexer
+                .diagnostics()
+                .iter()
+                .any(|diagnostic| diagnostic.code == "eof-in-doctype"),
+            "{label}"
+        );
+    }
+}
+
+#[test]
 fn default_html_lexer_reports_abrupt_doctype_system_identifier() {
     let mut lexer = create_html_lexer().unwrap();
 
@@ -1189,6 +1341,51 @@ fn default_html_lexer_reports_trailing_junk_after_system_identifier() {
     assert!(lexer.diagnostics().iter().any(
         |diagnostic| diagnostic.code == "unexpected-character-after-doctype-system-identifier"
     ));
+}
+
+#[test]
+fn default_html_lexer_ignores_nulls_inside_bogus_doctype_recovery() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("<!DOCTYPE html PUBLIC\0bad><!DOCTYPE html SYSTEM\0bad>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: true,
+            },
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: true,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-null-character")
+            .count(),
+        2
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "missing-quote-before-doctype-public-identifier"));
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "missing-quote-before-doctype-system-identifier"));
 }
 
 #[test]

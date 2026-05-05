@@ -366,6 +366,57 @@
       ]
     },
     {
+      "id": "doctype-identifier-quote-variants",
+      "description": "DOCTYPE public and system identifiers support single and double quote variants",
+      "input": "<!DOCTYPE html PUBLIC 'pub'><!DOCTYPE html SYSTEM 'sys'><!DOCTYPE html PUBLIC \"pub\" 'sys'>",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub, system_identifier=null, force_quirks=false)",
+        "Doctype(name=html, public_identifier=null, system_identifier=sys, force_quirks=false)",
+        "Doctype(name=html, public_identifier=pub, system_identifier=sys, force_quirks=false)",
+        "EOF"
+      ]
+    },
+    {
+      "id": "doctype-public-identifier-boundary-eof",
+      "description": "EOF after a closed public identifier marks force-quirks and preserves the identifier",
+      "input": "<!DOCTYPE html PUBLIC \"pub\" ",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub, system_identifier=null, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "eof-in-doctype"
+      ]
+    },
+    {
+      "id": "doctype-system-identifier-boundary-eof",
+      "description": "EOF after a closed system identifier marks force-quirks and preserves the identifier",
+      "input": "<!DOCTYPE html SYSTEM \"sys\" ",
+      "tokens": [
+        "Doctype(name=html, public_identifier=null, system_identifier=sys, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "eof-in-doctype"
+      ]
+    },
+    {
+      "id": "doctype-bogus-null-recovery",
+      "description": "NULL characters in bogus DOCTYPE recovery report diagnostics but are ignored",
+      "input": "<!DOCTYPE html PUBLIC\u0000bad><!DOCTYPE html SYSTEM\u0000bad>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "Doctype(name=html, force_quirks=true)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-quote-before-doctype-public-identifier",
+        "unexpected-null-character",
+        "missing-quote-before-doctype-system-identifier",
+        "unexpected-null-character"
+      ]
+    },
+    {
       "id": "comment-eof-recovery",
       "input": "<!--open",
       "tokens": [
