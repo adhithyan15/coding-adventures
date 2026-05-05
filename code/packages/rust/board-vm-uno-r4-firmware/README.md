@@ -78,6 +78,16 @@ single blink means the probe failed before or during response validation.
 RUSTC="$(rustup which rustc)" rustup run stable cargo build --target thumbv7em-none-eabihf --bin uno-r4-wifi-stream-handshake-probe --release
 ```
 
+`uno-r4-wifi-stream-session-probe` extends the same idea to a complete scripted
+session. It feeds `HELLO`, `CAPS_QUERY`, `PROGRAM_BEGIN`, `PROGRAM_CHUNK`,
+`PROGRAM_END`, and `RUN` wire frames into the device stream endpoint, verifies
+each response, and runs the uploaded blink module through the Uno R4 runtime. A
+repeating four-fast-blink pattern means the full scripted upload/run path passed.
+
+```sh
+RUSTC="$(rustup which rustc)" rustup run stable cargo build --target thumbv7em-none-eabihf --bin uno-r4-wifi-stream-session-probe --release
+```
+
 ```sh
 arduino-cli upload \
   -p /dev/cu.usbmodem... \
