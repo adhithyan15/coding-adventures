@@ -16,6 +16,8 @@ This first slice intentionally starts small:
 - implied document shell creation for omitted `html`, `head`, and `body`
 - explicit `head` to `body` boundary recovery when body starts or body content
   appears before `</head>`
+- duplicate open `body` start-tag recovery that merges missing attributes
+  without creating nested body elements
 - implied table `tbody` and `tr` creation for common omitted table structure
 - implied table `colgroup` creation for bare `col` elements
 - table caption/column-group boundary recovery before bare columns, rows, and

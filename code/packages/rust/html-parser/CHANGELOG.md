@@ -19,6 +19,8 @@ documented in this file.
 - Explicit `head` elements now close before `body` starts or non-head body
   content appears, preventing omitted `</head>` pages from trapping body DOM
   inside the head.
+- Duplicate open `body` start tags now merge missing attributes into the
+  existing body instead of creating nested body elements.
 - Scripting-aware parse options for parser-controlled tokenizer handoff, so
   `noscript` becomes RAWTEXT with scripting enabled and ordinary fallback
   markup with scripting disabled.
