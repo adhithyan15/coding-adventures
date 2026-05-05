@@ -202,7 +202,16 @@ impl AOTCore {
             cir = CIROptimizer::new().run(cir);
         }
 
-        self.backend.compile(&cir)
+        // Prefer the richer `compile_function` entry point so native
+        // backends (ARM64, x86-64) get the param + return-type info they
+        // need for ABI lowering.  IR-only backends (NullBackend, etc.) use
+        // the default trait impl which falls back to `compile(&cir)`.
+        let ctx = jit_core::backend::FunctionContext {
+            name:        &fn_.name,
+            params:      &fn_.params,
+            return_type: &fn_.return_type,
+        };
+        self.backend.compile_function(&ctx, &cir)
     }
 }
 
