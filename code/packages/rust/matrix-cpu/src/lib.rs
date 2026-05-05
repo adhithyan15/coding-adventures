@@ -48,8 +48,18 @@ pub use buffers::BufferStore;
 pub fn profile() -> BackendProfile {
     BackendProfile {
         kind: "cpu".to_string(),
-        // Supports every V1 op (27 ops fit in low 27 bits of u32).
-        supported_ops: 0x07FF_FFFF,
+        // Supports every V1 op.  V1 has 28 ops (tags 0x00..=0x1B);
+        // the original bitset `0x07FF_FFFF` set only bits 0..=26 and
+        // accidentally dropped `Op::Const` (tag 0x1B = bit 27).  That
+        // bug caused the planner's capability filter to force every
+        // Const op onto a non-CPU backend whenever one was registered,
+        // which made image-gpu-core's "embedded-as-constants" graphs
+        // route part of every chain to Metal even when CPU was cheaper
+        // — and worse, prevented uniform-CPU placement from ever
+        // looking attractive in the cost model.  matrix-cpu's
+        // Op::Const handler has always existed (see dispatch.rs); only
+        // the advertisement was wrong.
+        supported_ops: 0x0FFF_FFFF,
         // Supports F32 (bit 0), U8 (bit 1), I32 (bit 2).
         supported_dtypes: 0b0000_0111,
         gflops_f32: 40,
