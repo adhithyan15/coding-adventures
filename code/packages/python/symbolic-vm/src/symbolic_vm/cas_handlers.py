@@ -2709,6 +2709,214 @@ def tanh_handler(vm: VM, expr: IRApply) -> IRNode:
     return IRApply(expr.head, (arg,))
 
 
+# ---------------------------------------------------------------------------
+# Phase 32: Inverse trig/hyperbolic odd symmetry
+# ---------------------------------------------------------------------------
+# The five inverse functions that admit clean algebraic negation rules in the
+# real domain.  Pattern: detect ``Neg(inner)`` as the argument and either
+# negate the result (odd: asin, atan, asinh, atanh) or apply the reflection
+# identity (acos: ``acos(-x) = π - acos(x)``).
+#
+# ``acosh`` is excluded: its domain is ``[1, ∞)``, so ``acosh(-x)`` for
+# positive ``x`` falls outside the real domain — no symmetry rule exists.
+#
+# The ``%pi`` constant is ``IRSymbol("%pi")`` — the same symbol used elsewhere
+# in the VM (e.g. ``_PI_SYM`` defined below for the special-function handlers).
+# We reference it directly here rather than forward-declaring a module alias.
+# ---------------------------------------------------------------------------
+
+_INV_TRIG_PI = IRSymbol("%pi")  # π constant for acos reflection identity
+
+
+def asin_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Asin(x)`` — arc-sine with odd-symmetry rule.
+
+    Simplification rules (Phase 32)
+    --------------------------------
+    1. **Numeric fold**: integer / rational / float inputs evaluate via
+       ``math.asin``.  The special value ``Asin(0) → 0`` is preserved exactly.
+
+    2. **Odd symmetry** ``Asin(-x) → -Asin(x)``:
+       Arc-sine is odd — ``asin(-x) = -asin(x)`` for all ``x ∈ [-1, 1]``.
+       The handler recurses so double negations collapse: ``asin(-(-x)) = asin(x)``.
+
+    3. **Everything else**: leave unevaluated as ``Asin(arg)``.
+
+    Examples::
+
+        asin(-x)    → Neg(Asin(x))      (odd symmetry)
+        asin(-(-x)) → Asin(x)           (double-neg collapses)
+        asin(-0.5)  → IRFloat(≈-0.524)  (numeric fold)
+        asin(0)     → IRInteger(0)       (exact special value)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1: numeric fold.  Preserve the exact special value asin(0) = 0.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(0)
+        return IRFloat(math.asin(float(n)))
+    # Rule 2: odd symmetry — asin(-x) = -asin(x).
+    if isinstance(arg, IRApply) and arg.head == NEG and len(arg.args) == 1:
+        inner_result = asin_handler(vm, IRApply(ASIN, (arg.args[0],)))
+        return IRApply(NEG, (inner_result,))
+    # Rule 3: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def acos_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Acos(x)`` — arc-cosine with reflection identity.
+
+    Simplification rules (Phase 32)
+    --------------------------------
+    1. **Numeric fold**: integer / rational / float inputs evaluate via
+       ``math.acos``.  The special value ``Acos(1) → 0`` is preserved exactly.
+
+    2. **Reflection identity** ``Acos(-x) → π - Acos(x)``:
+       Arc-cosine satisfies the reflection formula ``acos(-x) = π - acos(x)``
+       for all ``x ∈ [-1, 1]``.  The ``π`` constant is represented as
+       ``IRSymbol("%pi")`` (the canonical MACSYMA/CAS pi symbol).
+       Unlike the odd functions, this is *not* pure negation — it subtracts
+       from π, rewriting the expression as ``Sub(%pi, Acos(inner))``.
+
+    3. **Everything else**: leave unevaluated as ``Acos(arg)``.
+
+    Examples::
+
+        acos(-x)    → Sub(%pi, Acos(x))  (reflection identity)
+        acos(-1)    → IRFloat(π)         (numeric fold: acos(-1) = π)
+        acos(1)     → IRInteger(0)       (exact special value)
+        acos(-0.5)  → IRFloat(≈2.094)    (numeric fold)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1: numeric fold.  Preserve the exact special value acos(1) = 0.
+    n = to_number(arg)
+    if n is not None:
+        if n == 1:
+            return IRInteger(0)
+        return IRFloat(math.acos(float(n)))
+    # Rule 2: reflection — acos(-x) = π - acos(x).
+    if isinstance(arg, IRApply) and arg.head == NEG and len(arg.args) == 1:
+        inner_acos = acos_handler(vm, IRApply(ACOS, (arg.args[0],)))
+        return IRApply(SUB, (_INV_TRIG_PI, inner_acos))
+    # Rule 3: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def atan_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Atan(x)`` — arc-tangent with odd-symmetry rule.
+
+    Simplification rules (Phase 32)
+    --------------------------------
+    1. **Numeric fold**: integer / rational / float inputs evaluate via
+       ``math.atan``.  The special value ``Atan(0) → 0`` is preserved exactly.
+
+    2. **Odd symmetry** ``Atan(-x) → -Atan(x)``:
+       Arc-tangent is odd — ``atan(-x) = -atan(x)`` for all real ``x``.
+       The handler recurses so double negations collapse.
+
+    3. **Everything else**: leave unevaluated as ``Atan(arg)``.
+
+    Examples::
+
+        atan(-x)    → Neg(Atan(x))      (odd symmetry)
+        atan(-(-x)) → Atan(x)           (double-neg collapses)
+        atan(-1.0)  → IRFloat(≈-0.785)  (numeric fold)
+        atan(0)     → IRInteger(0)       (exact special value)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1: numeric fold.  Preserve the exact special value atan(0) = 0.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(0)
+        return IRFloat(math.atan(float(n)))
+    # Rule 2: odd symmetry — atan(-x) = -atan(x).
+    if isinstance(arg, IRApply) and arg.head == NEG and len(arg.args) == 1:
+        inner_result = atan_handler(vm, IRApply(ATAN, (arg.args[0],)))
+        return IRApply(NEG, (inner_result,))
+    # Rule 3: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def asinh_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Asinh(x)`` — arc-hyperbolic-sine with odd-symmetry rule.
+
+    Simplification rules (Phase 32)
+    --------------------------------
+    1. **Numeric fold**: inputs evaluate via ``math.asinh``.
+       ``Asinh(0) → 0`` is preserved exactly.
+
+    2. **Odd symmetry** ``Asinh(-x) → -Asinh(x)``:
+       Arc-hyperbolic-sine is odd — ``asinh(-x) = -asinh(x)`` for all real ``x``.
+
+    3. **Everything else**: leave unevaluated as ``Asinh(arg)``.
+
+    Examples::
+
+        asinh(-x)   → Neg(Asinh(x))     (odd symmetry)
+        asinh(-1.0) → IRFloat(≈-0.881)  (numeric fold)
+        asinh(0)    → IRInteger(0)       (exact special value)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1: numeric fold.  Preserve the exact special value asinh(0) = 0.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(0)
+        return IRFloat(math.asinh(float(n)))
+    # Rule 2: odd symmetry — asinh(-x) = -asinh(x).
+    if isinstance(arg, IRApply) and arg.head == NEG and len(arg.args) == 1:
+        inner_result = asinh_handler(vm, IRApply(ASINH, (arg.args[0],)))
+        return IRApply(NEG, (inner_result,))
+    # Rule 3: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
+def atanh_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Atanh(x)`` — arc-hyperbolic-tangent with odd-symmetry rule.
+
+    Simplification rules (Phase 32)
+    --------------------------------
+    1. **Numeric fold**: inputs evaluate via ``math.atanh``.
+       ``Atanh(0) → 0`` is preserved exactly.
+
+    2. **Odd symmetry** ``Atanh(-x) → -Atanh(x)``:
+       Arc-hyperbolic-tangent is odd — ``atanh(-x) = -atanh(x)`` for ``x ∈ (-1,1)``.
+
+    3. **Everything else**: leave unevaluated as ``Atanh(arg)``.
+
+    Examples::
+
+        atanh(-x)   → Neg(Atanh(x))     (odd symmetry)
+        atanh(-0.5) → IRFloat(≈-0.549)  (numeric fold)
+        atanh(0)    → IRInteger(0)       (exact special value)
+    """
+    if len(expr.args) != 1:
+        return expr
+    arg = vm.eval(expr.args[0])
+    # Rule 1: numeric fold.  Preserve the exact special value atanh(0) = 0.
+    n = to_number(arg)
+    if n is not None:
+        if n == 0:
+            return IRInteger(0)
+        return IRFloat(math.atanh(float(n)))
+    # Rule 2: odd symmetry — atanh(-x) = -atanh(x).
+    if isinstance(arg, IRApply) and arg.head == NEG and len(arg.args) == 1:
+        inner_result = atanh_handler(vm, IRApply(ATANH, (arg.args[0],)))
+        return IRApply(NEG, (inner_result,))
+    # Rule 3: leave unevaluated.
+    return IRApply(expr.head, (arg,))
+
+
 def cbrt_handler(_vm: VM, expr: IRApply) -> IRNode:
     """``Cbrt(x)`` → exact or numeric cube root.
 
@@ -3429,6 +3637,13 @@ def build_cas_handler_table() -> dict[str, Handler]:
         "Sinh": sinh_handler,
         "Cosh": cosh_handler,
         "Tanh": tanh_handler,
+        # Phase 32: override _elementary-factory Asin/Acos/Atan/Asinh/Atanh
+        # with odd symmetry (asin/atan/asinh/atanh) and reflection identity (acos).
+        "Asin": asin_handler,
+        "Acos": acos_handler,
+        "Atan": atan_handler,
+        "Asinh": asinh_handler,
+        "Atanh": atanh_handler,
         "Cbrt": cbrt_handler,
         "Floor": floor_handler,
         "Ceiling": ceiling_handler,
