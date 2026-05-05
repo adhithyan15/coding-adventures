@@ -22,6 +22,11 @@ This first slice intentionally starts small:
   attributes without nesting shell elements
 - ignored late `head` start tags after body content has already started, with a
   parser diagnostic
+- ignored self-closing flags on non-void HTML start tags, with parser
+  diagnostics, so `<div/>`, `<script/>`, and `<td/>` still behave like open
+  elements in HTML
+- acknowledged self-closing syntax on void start tags plus ignored void end tags
+  such as `</img>` and `</input>`, with parser diagnostics
 - implied table `tbody` and `tr` creation for common omitted table structure
 - implied table `colgroup` creation for bare `col` elements
 - table caption/column-group boundary recovery before bare columns, rows, and

@@ -447,15 +447,23 @@ impl HtmlParser {
             return;
         }
 
+        let acknowledges_self_closing = self_closing && is_void_element(&name);
+        if self_closing && !acknowledges_self_closing {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "non-void-html-element-self-closing",
+                format!("self-closing flag on non-void HTML element `<{name}>` was ignored"),
+            ));
+        }
+
         let child_index = self.append_node(Node::element(name.clone(), attributes));
 
-        if !self_closing && !is_void_element(&name) {
+        if !acknowledges_self_closing && !is_void_element(&name) {
             let mut path = self.current_parent_path().to_vec();
             path.push(child_index);
             self.open_elements.push(path);
         }
 
-        if preserves_initial_line_feed(&name) && !self_closing {
+        if preserves_initial_line_feed(&name) && !acknowledges_self_closing {
             self.strip_next_leading_lf = true;
         }
     }
@@ -559,6 +567,12 @@ impl HtmlParser {
                     "end tag `</br>` was recovered as a `br` start tag",
                 ));
                 self.append_start_tag("br".to_string(), Vec::new(), true);
+            }
+            name if is_void_element(name) => {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-void-end-tag",
+                    format!("end tag `</{name}>` for a void element was ignored"),
+                ));
             }
             "p" if !self.has_open_element("p") => {
                 self.diagnostics.push(ParserDiagnostic::new(
@@ -754,9 +768,7 @@ impl HtmlParser {
 
     fn text_context_for_token(&self, token: &Token) -> Option<HtmlLexContext> {
         match token {
-            Token::StartTag {
-                name, self_closing, ..
-            } if !self_closing && !is_void_element(name) => {
+            Token::StartTag { name, .. } if !is_void_element(name) => {
                 HtmlLexContext::for_element_text_with_scripting(name, self.options.scripting)
             }
             Token::EndTag { .. } => Some(HtmlLexContext::data()),
@@ -1835,6 +1847,223 @@ mod tests {
 
         let paragraph = element(&body(&document).children[0]);
         assert_eq!(paragraph.children, vec![Node::text("x")]);
+    }
+
+    #[test]
+    fn ignores_self_closing_flag_on_non_void_html_elements() {
+        let output = parse_html_with_diagnostics(
+            "<div/>Text</div><span/>Tail</span><p/>Next<section/>Block</section>",
+        )
+        .unwrap();
+
+        let body = body(&output.document);
+        let div = element(&body.children[0]);
+        assert_eq!(div.name, "div");
+        assert_eq!(div.children, vec![Node::text("Text")]);
+
+        let span = element(&body.children[1]);
+        assert_eq!(span.name, "span");
+        assert_eq!(span.children, vec![Node::text("Tail")]);
+
+        let paragraph = element(&body.children[2]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children, vec![Node::text("Next")]);
+
+        let section = element(&body.children[3]);
+        assert_eq!(section.name, "section");
+        assert_eq!(section.children, vec![Node::text("Block")]);
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .map(|diagnostic| diagnostic.code.as_str())
+                .collect::<Vec<_>>(),
+            vec![
+                "non-void-html-element-self-closing",
+                "non-void-html-element-self-closing",
+                "non-void-html-element-self-closing",
+                "non-void-html-element-self-closing",
+            ]
+        );
+    }
+
+    #[test]
+    fn self_closing_text_mode_elements_still_drive_tokenizer_handoff() {
+        let output = parse_html_with_diagnostics(
+            "<title/>Tom &amp; Jerry</title><style/>a < b &amp; c</style><script/>if (a < b)</script><textarea/>\nA &lt; B</textarea><p>x</p>",
+        )
+        .unwrap();
+
+        let title = element(&head(&output.document).children[0]);
+        assert_eq!(title.name, "title");
+        assert_eq!(title.children, vec![Node::text("Tom & Jerry")]);
+
+        let style = element(&head(&output.document).children[1]);
+        assert_eq!(style.name, "style");
+        assert_eq!(style.children, vec![Node::text("a < b &amp; c")]);
+
+        let textarea = element(&body(&output.document).children[0]);
+        assert_eq!(textarea.name, "textarea");
+        assert_eq!(textarea.children, vec![Node::text("A < B")]);
+
+        let script = element(&head(&output.document).children[2]);
+        assert_eq!(script.name, "script");
+        assert_eq!(script.children, vec![Node::text("if (a < b)")]);
+
+        let paragraph = element(&body(&output.document).children[1]);
+        assert_eq!(paragraph.children, vec![Node::text("x")]);
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .map(|diagnostic| diagnostic.code.as_str())
+                .collect::<Vec<_>>(),
+            vec![
+                "non-void-html-element-self-closing",
+                "non-void-html-element-self-closing",
+                "non-void-html-element-self-closing",
+                "non-void-html-element-self-closing",
+            ]
+        );
+    }
+
+    #[test]
+    fn self_closing_plaintext_still_consumes_until_eof() {
+        let output =
+            parse_html_with_diagnostics("<p>before</p><plaintext/><b>&amp;</b></plaintext>")
+                .unwrap();
+
+        let body = body(&output.document);
+        let paragraph = element(&body.children[0]);
+        assert_eq!(paragraph.children, vec![Node::text("before")]);
+
+        let plaintext = element(&body.children[1]);
+        assert_eq!(
+            plaintext.children,
+            vec![Node::text("<b>&amp;</b></plaintext>")]
+        );
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "non-void-html-element-self-closing",
+                "self-closing flag on non-void HTML element `<plaintext>` was ignored"
+            )]
+        );
+    }
+
+    #[test]
+    fn self_closing_noscript_uses_scripting_sensitive_handoff() {
+        let enabled =
+            parse_html_with_diagnostics("<noscript/><p>&amp;</p></noscript><p>x</p>").unwrap();
+
+        let enabled_noscript = element(&head(&enabled.document).children[0]);
+        assert_eq!(enabled_noscript.name, "noscript");
+        assert_eq!(enabled_noscript.children, vec![Node::text("<p>&amp;</p>")]);
+        assert_eq!(
+            element(&body(&enabled.document).children[0]).children,
+            vec![Node::text("x")]
+        );
+
+        let disabled = parse_html_with_diagnostics_and_options(
+            "<noscript/><p>&amp;</p></noscript><p>x</p>",
+            HtmlParseOptions {
+                scripting: HtmlScriptingMode::Disabled,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+
+        let disabled_noscript = element(&head(&disabled.document).children[0]);
+        assert_eq!(disabled_noscript.name, "noscript");
+        let fallback_paragraph = element(&disabled_noscript.children[0]);
+        assert_eq!(fallback_paragraph.children, vec![Node::text("&")]);
+        assert_eq!(
+            element(&body(&disabled.document).children[0]).children,
+            vec![Node::text("x")]
+        );
+
+        for output in [enabled, disabled] {
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![ParserDiagnostic::new(
+                    "non-void-html-element-self-closing",
+                    "self-closing flag on non-void HTML element `<noscript>` was ignored"
+                )]
+            );
+        }
+    }
+
+    #[test]
+    fn acknowledges_self_closing_void_starts_and_ignores_void_end_tags() {
+        let output = parse_html_with_diagnostics(
+            "<p>Before<br/><img src=hero.png /></img><input></input><hr></hr>After",
+        )
+        .unwrap();
+
+        let paragraph = element(&body(&output.document).children[0]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children[0], Node::text("Before"));
+        assert_eq!(element(&paragraph.children[1]).name, "br");
+        assert_eq!(element(&paragraph.children[2]).name, "img");
+        assert_eq!(
+            element(&paragraph.children[2]).attribute("src"),
+            Some("hero.png")
+        );
+        assert_eq!(element(&paragraph.children[3]).name, "input");
+        assert_eq!(element(&body(&output.document).children[1]).name, "hr");
+        assert_eq!(body(&output.document).children[2], Node::text("After"));
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![
+                ParserDiagnostic::new(
+                    "unexpected-void-end-tag",
+                    "end tag `</img>` for a void element was ignored"
+                ),
+                ParserDiagnostic::new(
+                    "unexpected-void-end-tag",
+                    "end tag `</input>` for a void element was ignored"
+                ),
+                ParserDiagnostic::new(
+                    "unexpected-void-end-tag",
+                    "end tag `</hr>` for a void element was ignored"
+                ),
+            ]
+        );
+    }
+
+    #[test]
+    fn ignores_self_closing_flag_inside_implied_table_structure() {
+        let output =
+            parse_html_with_diagnostics("<table><tr/><td/>A<td/>B</table><p>after</p>").unwrap();
+
+        let table = element(&body(&output.document).children[0]);
+        let tbody = element(&table.children[0]);
+        let row = element(&tbody.children[0]);
+        assert_eq!(row.name, "tr");
+        assert_eq!(row.children.len(), 2);
+
+        let first_cell = element(&row.children[0]);
+        assert_eq!(first_cell.name, "td");
+        assert_eq!(first_cell.children, vec![Node::text("A")]);
+
+        let second_cell = element(&row.children[1]);
+        assert_eq!(second_cell.name, "td");
+        assert_eq!(second_cell.children, vec![Node::text("B")]);
+
+        let paragraph = element(&body(&output.document).children[1]);
+        assert_eq!(paragraph.children, vec![Node::text("after")]);
+        assert_eq!(
+            output
+                .parser_diagnostics
+                .iter()
+                .map(|diagnostic| diagnostic.code.as_str())
+                .collect::<Vec<_>>(),
+            vec![
+                "non-void-html-element-self-closing",
+                "non-void-html-element-self-closing",
+                "non-void-html-element-self-closing",
+            ]
+        );
     }
 
     #[test]

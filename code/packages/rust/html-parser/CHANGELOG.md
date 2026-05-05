@@ -75,6 +75,12 @@ documented in this file.
   the existing shell elements instead of creating nested shell DOMs.
 - Late `head` start tags after body content has already started are ignored
   with a parser diagnostic.
+- Self-closing flags on non-void HTML start tags are now ignored with a parser
+  diagnostic, keeping elements such as `div`, `script`, `textarea`, and table
+  cells open for their real content.
+- Void end tags such as `</img>`, `</input>`, and `</hr>` are now ignored with a
+  parser diagnostic, while self-closing syntax on void start tags remains
+  acknowledged.
 - `</p>` end tags without an open paragraph now create and close an implied
   empty paragraph with a parser diagnostic, matching common browser recovery.
 - `</br>` now recovers as a `br` start tag with a parser diagnostic.
