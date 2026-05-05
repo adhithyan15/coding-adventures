@@ -111,8 +111,9 @@ Arduino/TinyUSB link layer is wired in.
 The Rust entrypoint now starts Arduino Renesas USB through the `__USBStart()`
 C++ ABI symbol exposed by the Arduino core. The `board-vm-uno-r4-usb-cdc`
 backend supplies the serial-install descriptor hook and the Uno R4 WiFi USB-C
-mux hook from Rust, so the final link set does not need Arduino's full
-`SerialUSB.cpp` object or WiFi `variant.cpp` just to expose CDC.
+mux and USB post-initialization hooks from Rust, so the final link set does not
+need Arduino's full `SerialUSB.cpp` object or WiFi `variant.cpp` just to expose
+CDC.
 
 `src/arduino_usb_link.rs` records the Arduino Renesas/TinyUSB link contract for
 the built-in USB path: Arduino core version `1.5.3`, FQBN
