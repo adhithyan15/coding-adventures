@@ -66,6 +66,7 @@ use metal_compute::{MetalCommandQueue, MetalComputePipeline, MetalDevice};
 /// - 0x07 Add, 0x08 Sub, 0x09 Mul, 0x0A Div, 0x0B Max, 0x0C Min, 0x0D Pow
 /// - 0x11 Reshape (metadata-only; implemented as a buffer memcpy in SSA)
 /// - 0x12 Transpose (general N-D permutation, max rank 4)
+/// - 0x13 Broadcast (general N-D size-1-axis replication, max rank 4)
 /// - 0x15 MatMul, 0x1B Const
 ///
 /// `Reshape` is included even though Metal has no shader for it: the
@@ -77,9 +78,10 @@ use metal_compute::{MetalCommandQueue, MetalComputePipeline, MetalDevice};
 /// by reversing the permutation.  Up to rank 4 (matching the
 /// `max_tensor_rank` field in this backend's profile).
 ///
-/// `Broadcast` (0x13) is *not* yet supported because it needs proper
-/// index expansion — strides become non-trivial when broadcasting
-/// across multiple axes.  Adding it is V2 work.
+/// `Broadcast` is implemented as a generic axis-replication kernel
+/// that reads each output element from the input by clamping each
+/// size-1 input axis to index 0 and copying every other axis through.
+/// Up to rank 4.
 fn supported_ops_bitset() -> u32 {
     let mut mask: u32 = 0;
     // Unary (0x00..=0x06).
@@ -90,9 +92,10 @@ fn supported_ops_bitset() -> u32 {
     for tag in 0x07..=0x0Du8 {
         mask |= 1u32 << tag;
     }
-    // Reshape (0x11), Transpose (0x12), MatMul (0x15), Const (0x1B).
+    // Reshape (0x11), Transpose (0x12), Broadcast (0x13), MatMul (0x15), Const (0x1B).
     mask |= 1u32 << 0x11;
     mask |= 1u32 << 0x12;
+    mask |= 1u32 << 0x13;
     mask |= 1u32 << 0x15;
     mask |= 1u32 << 0x1B;
     mask

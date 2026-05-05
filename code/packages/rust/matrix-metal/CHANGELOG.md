@@ -1,5 +1,52 @@
 # Changelog — matrix-metal
 
+## 0.3.0 — 2026-05-05
+
+### Added
+
+- **`Op::Broadcast` support.**  Completes the shape-op trio (Reshape
+  in #2077, Transpose in #2122, Broadcast now).  General N-D
+  axis-replication kernel up to rank 4 (matching this backend's
+  advertised `max_tensor_rank`).  Capability bitset now includes
+  tag 0x13.
+
+  The MSL kernel walks the output linearly: for each output element,
+  decomposes the linear index into an output multi-index using the
+  target dims, then builds the input multi-index by clamping each
+  size-1 input axis to index 0 and copying every non-broadcast axis
+  through.  Re-flattens with the input dims and reads.  Memory
+  access is **read-fan-in** — many output threads read the same
+  input element when broadcasting along a hot axis, which Metal
+  handles well via its texture cache on Apple Silicon.
+
+  The args struct (rank, output numel, in_dims[4], out_dims[4]) is
+  encoded as 40 bytes (rounded to 48 for MSL alignment) and passed
+  via `set_bytes`.
+
+  Edge cases:
+    - Rank 0 (scalar) is a no-op single-element copy.
+    - Rank > 4 returns an Err.
+    - Empty output (numel = 0) returns Ok without dispatching.
+    - Input rank ≠ output rank returns an Err.
+    - Input dim ≠ 1 and ≠ output dim is enforced at the matrix-ir
+      validator level; the kernel doesn't re-check.
+
+### Tests (2 new)
+
+- `broadcast_row_to_matrix_on_gpu` — `(1, 3) → (4, 3)` broadcast on axis 0.
+- `broadcast_column_to_matrix_on_gpu` — `(3, 1) → (3, 4)` broadcast on axis 1.
+
+Total: 10 integration tests (was 8).
+
+### Notes
+
+- All three V1 shape ops (Reshape, Transpose, Broadcast) now run on
+  Metal.  The capability filter no longer routes any pure shape op
+  to CPU, so future graphs that mix elementwise + matmul + arbitrary
+  shape ops can stay end-to-end on GPU under uniform-Metal placement.
+- ML-style "bias add" (`out = x + bias` where bias broadcasts across
+  the batch axis) is now expressible end-to-end on Metal.
+
 ## 0.2.0 — 2026-05-05
 
 ### Added

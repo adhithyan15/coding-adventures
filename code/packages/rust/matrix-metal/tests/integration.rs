@@ -598,6 +598,165 @@ fn transpose_3d_perm_021_on_gpu() {
     );
 }
 
+// ─────────────────── 4d. Broadcast ───────────────────
+
+#[test]
+fn broadcast_row_to_matrix_on_gpu() {
+    // Input  (1 × 3):    [[10, 20, 30]]
+    // Target (4 × 3) → broadcasts axis 0:
+    //   [[10, 20, 30],
+    //    [10, 20, 30],
+    //    [10, 20, 30],
+    //    [10, 20, 30]]
+    let exec = match make_executor() {
+        Some(e) => e,
+        None => return,
+    };
+
+    let in_bytes = f32_bytes(&[10.0, 20.0, 30.0]);
+    let in_shape = Shape::from(&[1, 3]);
+    let out_shape = Shape::from(&[4, 3]);
+
+    let g = ComputeGraph {
+        format_version: compute_ir::WIRE_FORMAT_VERSION,
+        inputs: vec![],
+        outputs: vec![placed_metal(2, DType::F32, out_shape.clone(), metal_buf(2))],
+        constants: vec![PlacedConstant {
+            tensor: TensorId(0),
+            bytes: in_bytes,
+            residency: metal_buf(0),
+        }],
+        ops: vec![
+            PlacedOp::Alloc {
+                residency: metal_buf(1),
+                bytes: 3 * 4,
+            },
+            PlacedOp::Compute {
+                op: Op::Const {
+                    constant: 0,
+                    output: TensorId(1),
+                },
+                executor: METAL_ID,
+                timing: PlanOpTiming { estimated_ns: 0 },
+            },
+            PlacedOp::Alloc {
+                residency: metal_buf(2),
+                bytes: 12 * 4,
+            },
+            PlacedOp::Compute {
+                op: Op::Broadcast {
+                    input: TensorId(1),
+                    target_shape: out_shape.clone(),
+                    output: TensorId(2),
+                },
+                executor: METAL_ID,
+                timing: PlanOpTiming { estimated_ns: 0 },
+            },
+        ],
+        tensors: vec![
+            placed_metal(0, DType::F32, in_shape.clone(), metal_buf(0)),
+            placed_metal(1, DType::F32, in_shape, metal_buf(1)),
+            placed_metal(2, DType::F32, out_shape, metal_buf(2)),
+        ],
+    };
+
+    match exec.handle(ExecutorRequest::Dispatch { job_id: 1, graph: g }) {
+        ExecutorResponse::DispatchDone { .. } => {}
+        other => panic!("expected DispatchDone, got {:?}", other),
+    }
+    let down = exec.handle(ExecutorRequest::DownloadBuffer {
+        buffer: BufferId(2),
+        offset: 0,
+        len: 12 * 4,
+    });
+    let result = match down {
+        ExecutorResponse::BufferData { data, .. } => from_f32(&data),
+        other => panic!("download: {:?}", other),
+    };
+    assert_eq!(
+        result,
+        vec![10.0, 20.0, 30.0, 10.0, 20.0, 30.0, 10.0, 20.0, 30.0, 10.0, 20.0, 30.0]
+    );
+}
+
+#[test]
+fn broadcast_column_to_matrix_on_gpu() {
+    // Input  (3 × 1):    [[1], [2], [3]]
+    // Target (3 × 4) → broadcasts axis 1:
+    //   [[1, 1, 1, 1],
+    //    [2, 2, 2, 2],
+    //    [3, 3, 3, 3]]
+    let exec = match make_executor() {
+        Some(e) => e,
+        None => return,
+    };
+
+    let in_bytes = f32_bytes(&[1.0, 2.0, 3.0]);
+    let in_shape = Shape::from(&[3, 1]);
+    let out_shape = Shape::from(&[3, 4]);
+
+    let g = ComputeGraph {
+        format_version: compute_ir::WIRE_FORMAT_VERSION,
+        inputs: vec![],
+        outputs: vec![placed_metal(2, DType::F32, out_shape.clone(), metal_buf(2))],
+        constants: vec![PlacedConstant {
+            tensor: TensorId(0),
+            bytes: in_bytes,
+            residency: metal_buf(0),
+        }],
+        ops: vec![
+            PlacedOp::Alloc {
+                residency: metal_buf(1),
+                bytes: 3 * 4,
+            },
+            PlacedOp::Compute {
+                op: Op::Const {
+                    constant: 0,
+                    output: TensorId(1),
+                },
+                executor: METAL_ID,
+                timing: PlanOpTiming { estimated_ns: 0 },
+            },
+            PlacedOp::Alloc {
+                residency: metal_buf(2),
+                bytes: 12 * 4,
+            },
+            PlacedOp::Compute {
+                op: Op::Broadcast {
+                    input: TensorId(1),
+                    target_shape: out_shape.clone(),
+                    output: TensorId(2),
+                },
+                executor: METAL_ID,
+                timing: PlanOpTiming { estimated_ns: 0 },
+            },
+        ],
+        tensors: vec![
+            placed_metal(0, DType::F32, in_shape.clone(), metal_buf(0)),
+            placed_metal(1, DType::F32, in_shape, metal_buf(1)),
+            placed_metal(2, DType::F32, out_shape, metal_buf(2)),
+        ],
+    };
+
+    match exec.handle(ExecutorRequest::Dispatch { job_id: 1, graph: g }) {
+        ExecutorResponse::DispatchDone { .. } => {}
+        other => panic!("expected DispatchDone, got {:?}", other),
+    }
+    let down = exec.handle(ExecutorRequest::DownloadBuffer {
+        buffer: BufferId(2),
+        offset: 0,
+        len: 12 * 4,
+    });
+    let result = match down {
+        ExecutorResponse::BufferData { data, .. } => from_f32(&data),
+        other => panic!("download: {:?}", other),
+    };
+    assert_eq!(
+        result,
+        vec![1.0, 1.0, 1.0, 1.0, 2.0, 2.0, 2.0, 2.0, 3.0, 3.0, 3.0, 3.0]
+    );
+}
+
 // ─────────────────── 5. Validation ───────────────────
 
 #[test]

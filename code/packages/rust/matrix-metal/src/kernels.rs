@@ -159,6 +159,62 @@ kernel void transpose_f32(
 
     out[gid] = in[in_linear];
 }
+
+// ──────────────── broadcast (F32, general N-D, max rank 4) ────────────────
+//
+// Replicate input across size-1 axes to match `target_shape`.  Each
+// input axis must equal the corresponding target axis or be 1 (the
+// matrix-ir validator enforces this; we trust the validated graph).
+//
+// Walks the output linearly: for each output element, decompose its
+// linear index into a multi-index using the **target** dims, then
+// build the input multi-index by clamping each size-1 axis to index 0
+// and copying through every non-broadcast axis.  Re-flatten with the
+// input dims and read.
+//
+// The args struct mirrors the Transpose layout (rank, output numel,
+// in_dims[4], out_dims[4]) minus the perm field.  Memory access is
+// **read-fan-in**: many output threads can read the same input
+// element when broadcasting along a hot axis, which Metal handles
+// well via its texture cache on Apple Silicon.
+
+struct BroadcastArgs {
+    uint rank;
+    uint numel;
+    uint in_dims[4];
+    uint out_dims[4];
+};
+
+kernel void broadcast_f32(
+    device const float* in [[buffer(0)]],
+    device float* out [[buffer(1)]],
+    constant BroadcastArgs& args [[buffer(2)]],
+    uint gid [[thread_position_in_grid]]
+) {
+    if (gid >= args.numel) return;
+
+    // 1. Decompose `gid` (output linear index) into output multi-index.
+    uint out_idx[4] = {0u, 0u, 0u, 0u};
+    uint linear = gid;
+    for (int d = (int)args.rank - 1; d >= 0; --d) {
+        uint extent = args.out_dims[d];
+        out_idx[d] = linear % extent;
+        linear /= extent;
+    }
+
+    // 2. Build the input multi-index: clamp size-1 axes to index 0;
+    //    otherwise copy the output index across.  The validator
+    //    guarantees `in_dims[d] == 1 || in_dims[d] == out_dims[d]`.
+    uint in_linear = 0u;
+    uint stride = 1u;
+    for (int d = (int)args.rank - 1; d >= 0; --d) {
+        uint i = (args.in_dims[d] == 1u) ? 0u : out_idx[d];
+        in_linear += i * stride;
+        stride *= args.in_dims[d];
+    }
+
+    out[gid] = in[in_linear];
+}
 "#;
 
 /// Names of every kernel entry point in [`KERNELS_MSL`].  Used at
@@ -186,4 +242,6 @@ pub const KERNEL_ENTRY_POINTS: &[&str] = &[
     "matmul_f32",
     // transpose
     "transpose_f32",
+    // broadcast
+    "broadcast_f32",
 ];
