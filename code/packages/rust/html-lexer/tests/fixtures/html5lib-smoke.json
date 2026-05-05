@@ -2139,6 +2139,166 @@
     },
     {
       "id": "html5lib-smoke-173",
+      "description": "rcdata end tag open state emits literal opener at eof",
+      "input": "",
+      "tokens": [
+        "Text(data=</)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA end tag open state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-174",
+      "description": "rawtext end tag open state emits literal opener at eof",
+      "input": "",
+      "tokens": [
+        "Text(data=</)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT end tag open state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-175",
+      "description": "script data end tag open state emits literal opener at eof",
+      "input": "",
+      "tokens": [
+        "Text(data=</)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data end tag open state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-176",
+      "description": "script escaped end tag open state emits literal opener at eof",
+      "input": "",
+      "tokens": [
+        "Text(data=</)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data escaped end tag open state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-177",
+      "description": "rcdata end tag open state keeps mismatched end tag text",
+      "input": "style>text</title>",
+      "tokens": [
+        "Text(data=</style>text)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RCDATA end tag open state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-178",
+      "description": "rawtext end tag open state keeps mismatched end tag text",
+      "input": "title>tail</style>",
+      "tokens": [
+        "Text(data=</title>tail)",
+        "EndTag(name=style)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "RAWTEXT end tag open state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-179",
+      "description": "script data end tag open state keeps mismatched end tag text",
+      "input": "style>tail</script>",
+      "tokens": [
+        "Text(data=</style>tail)",
+        "EndTag(name=script)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data end tag open state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-180",
+      "description": "script escaped end tag open state keeps mismatched end tag text",
+      "input": "style>tail</script>",
+      "tokens": [
+        "Text(data=</style>tail)",
+        "EndTag(name=script)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Script data escaped end tag open state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-181",
+      "description": "rcdata end tag open state reports matching end tag attributes",
+      "input": "title class=x>after",
+      "tokens": [
+        "EndTag(name=title)",
+        "Text(data=after)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "end-tag-with-attributes"
+      ],
+      "initial_state": "RCDATA end tag open state",
+      "last_start_tag": "title"
+    },
+    {
+      "id": "html5lib-smoke-182",
+      "description": "rawtext end tag open state reports matching end tag whitespace",
+      "input": "style >tail",
+      "tokens": [
+        "EndTag(name=style)",
+        "Text(data=tail)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "unexpected-whitespace-after-end-tag-name"
+      ],
+      "initial_state": "RAWTEXT end tag open state",
+      "last_start_tag": "style"
+    },
+    {
+      "id": "html5lib-smoke-183",
+      "description": "script data end tag open state reports matching trailing solidus",
+      "input": "script/>tail",
+      "tokens": [
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "end-tag-with-trailing-solidus"
+      ],
+      "initial_state": "Script data end tag open state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-184",
+      "description": "script escaped end tag open state reports matching end tag attributes",
+      "input": "script class=x>tail",
+      "tokens": [
+        "EndTag(name=script)",
+        "Text(data=tail)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "end-tag-with-attributes"
+      ],
+      "initial_state": "Script data escaped end tag open state",
+      "last_start_tag": "script"
+    },
+    {
+      "id": "html5lib-smoke-185",
       "description": "script less-than state emits pending less-than at eof",
       "input": "",
       "tokens": [

@@ -5214,6 +5214,145 @@ fn parser_facing_context_seeds_intermediate_text_states() {
 }
 
 #[test]
+fn parser_facing_end_tag_open_contexts_recover_literal_boundaries() {
+    for (context, input, expected_text) in [
+        (
+            HtmlLexContext::new(HtmlTokenizerState::RcdataEndTagOpen).with_last_start_tag("title"),
+            "",
+            "</",
+        ),
+        (
+            HtmlLexContext::new(HtmlTokenizerState::RawtextEndTagOpen).with_last_start_tag("style"),
+            "",
+            "</",
+        ),
+        (
+            HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEndTagOpen).unwrap(),
+            "",
+            "</",
+        ),
+        (
+            HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEscapedEndTagOpen)
+                .unwrap(),
+            "",
+            "</",
+        ),
+    ] {
+        assert_eq!(
+            lex_html_fragment(input, &context).unwrap(),
+            vec![Token::Text(expected_text.to_string()), Token::Eof],
+            "context {:?}",
+            context.initial_state
+        );
+    }
+
+    for (context, input, expected_text, expected_end_tag) in [
+        (
+            HtmlLexContext::new(HtmlTokenizerState::RcdataEndTagOpen).with_last_start_tag("title"),
+            "style>text</title>",
+            "</style>text",
+            "title",
+        ),
+        (
+            HtmlLexContext::new(HtmlTokenizerState::RawtextEndTagOpen).with_last_start_tag("style"),
+            "title>tail</style>",
+            "</title>tail",
+            "style",
+        ),
+        (
+            HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEndTagOpen).unwrap(),
+            "style>tail</script>",
+            "</style>tail",
+            "script",
+        ),
+        (
+            HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEscapedEndTagOpen)
+                .unwrap(),
+            "style>tail</script>",
+            "</style>tail",
+            "script",
+        ),
+    ] {
+        assert_eq!(
+            lex_html_fragment(input, &context).unwrap(),
+            vec![
+                Token::Text(expected_text.to_string()),
+                Token::EndTag {
+                    name: expected_end_tag.to_string()
+                },
+                Token::Eof,
+            ],
+            "context {:?}",
+            context.initial_state
+        );
+    }
+}
+
+#[test]
+fn parser_facing_end_tag_open_contexts_report_matching_recovery_diagnostics() {
+    for (context, input, expected_end_tag, expected_text, expected_diagnostic) in [
+        (
+            HtmlLexContext::new(HtmlTokenizerState::RcdataEndTagOpen).with_last_start_tag("title"),
+            "title class=x>after",
+            "title",
+            "after",
+            "end-tag-with-attributes",
+        ),
+        (
+            HtmlLexContext::new(HtmlTokenizerState::RawtextEndTagOpen).with_last_start_tag("style"),
+            "style >tail",
+            "style",
+            "tail",
+            "unexpected-whitespace-after-end-tag-name",
+        ),
+        (
+            HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEndTagOpen).unwrap(),
+            "script/>tail",
+            "script",
+            "tail",
+            "end-tag-with-trailing-solidus",
+        ),
+        (
+            HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEscapedEndTagOpen)
+                .unwrap(),
+            "script class=x>tail",
+            "script",
+            "tail",
+            "end-tag-with-attributes",
+        ),
+    ] {
+        let mut lexer = create_html_lexer().unwrap();
+        apply_html_lex_context(&mut lexer, &context).unwrap();
+
+        lexer.push(input).unwrap();
+        lexer.finish().unwrap();
+
+        assert_eq!(
+            lexer.drain_tokens(),
+            vec![
+                Token::EndTag {
+                    name: expected_end_tag.to_string()
+                },
+                Token::Text(expected_text.to_string()),
+                Token::Eof,
+            ],
+            "context {:?}",
+            context.initial_state
+        );
+        assert_eq!(
+            lexer
+                .diagnostics()
+                .iter()
+                .map(|diagnostic| diagnostic.code.as_str())
+                .collect::<Vec<_>>(),
+            vec![expected_diagnostic],
+            "context {:?}",
+            context.initial_state
+        );
+    }
+}
+
+#[test]
 fn parser_facing_context_leaves_normal_elements_in_data_state() {
     assert_eq!(HtmlLexContext::for_element_text("p"), None);
     assert!(HtmlLexContext::data().is_data());
