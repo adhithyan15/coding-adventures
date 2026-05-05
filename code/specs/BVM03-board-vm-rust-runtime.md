@@ -45,14 +45,28 @@ Physical board peripherals
 | `board-vm-protocol` | frame parser, payload encoder/decoder |
 | `board-vm-ir` | bytecode module parser, decoder, validator |
 | `board-vm-runtime` | VM state, run loop, capability dispatch |
-| `board-vm-arduino-uno` | AVR/Arduino Uno adapter, if Rust target support is viable |
+| `board-vm-uno-r4` | Arduino Uno R4 / Renesas RA4M1 adapter |
+| `board-vm-avr` | AVR/ATmega/ATtiny shared target support |
+| `board-vm-arduino-uno-r3` | Classic Arduino Uno/Nano style ATmega328P adapter |
+| `board-vm-arduino-mega-2560` | ATmega2560 adapter |
+| `board-vm-mcs51` | 8051/MCS-51 shared target support |
+| `board-vm-at89` | Atmel/Microchip AT89 8051-compatible adapter |
 | `board-vm-rp2040` | RP2040 adapter |
+| `board-vm-rp2350` | RP2350 Arm/RISC-V adapter |
 | `board-vm-esp32` | ESP32 adapter |
+| `board-vm-stm32-*` | STM32 family adapters |
+| `board-vm-sam-*` | Atmel/Microchip SAM Arm Cortex-M adapters |
 | `board-vm-mbed-*` | MBed-style board adapters |
+| `board-vm-rust-backend-*` | Rust compiler/codegen support for targets without usable Rust support |
 
-If a classic AVR Arduino is awkward for Rust or too constrained for the first
-vertical slice, the architecture should still support it later. The first
-implemented board may be whichever gift board and Rust target are practical.
+If classic AVR, ATtiny, or 8051 targets are awkward for Rust or too constrained
+for the first vertical slice, the architecture still supports them. Missing Rust
+compiler support is a backend task, not an exclusion criterion. The first
+implemented board may be whichever hardware and Rust target are practical, but
+the runtime cannot rely on assumptions that make `tiny` targets impossible.
+
+See `BVM06-board-target-matrix.md` for target families, runtime profiles, and
+backend policy.
 
 ## Memory Model
 
@@ -215,7 +229,7 @@ The grace period lets a host recover a board with a bad stored program.
 
 ## Eject Packaging
 
-There are two implementation paths.
+There are three implementation paths.
 
 ### Stored Bytecode
 
@@ -237,6 +251,23 @@ If runtime storage is unavailable or unsafe:
 
 The embedded path is also useful when a project is ready to become a normal
 firmware artifact.
+
+### AOT Firmware
+
+If a target has a native backend:
+
+1. Host freezes a validated bytecode module as the source of truth.
+2. The AOT backend lowers bytecode to target-native code, target assembly, or a
+   linkable compiler artifact.
+3. A conformance runner compares the lowered program's fake-HAL trace against
+   the interpreter's trace for the same descriptor and runtime profile.
+4. The firmware package includes the board startup code, HAL bindings, and the
+   lowered program entrypoint, but may omit the interpreter loop and bytecode
+   decoder.
+
+AOT eject must preserve bytecode semantics. If a target lacks AOT support, or
+if validation cannot prove the selected module is supported by that backend,
+the host must use stored bytecode or embedded-bytecode firmware instead.
 
 ## Public API
 
@@ -289,4 +320,5 @@ or embedded targets make another shape cleaner.
 - DMA-backed serial transports for high-throughput logging.
 - Persistent handle declarations for long-lived peripherals.
 - Firmware image generator for popular boards.
+- AOT eject pipeline for targets that can remove the VM from final firmware.
 - Board self-test command for pins, timers, and storage.

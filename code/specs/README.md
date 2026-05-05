@@ -47,6 +47,7 @@ Specs are numbered **top-down** — from the user-facing language down to silico
 | BVM03 | Board VM Rust Runtime | `no_std` firmware runtime and board HAL contract |
 | BVM04 | Board VM Host SDKs | Language-agnostic SDK and REPL contract |
 | BVM05 | Board VM Blink MVP | First end-to-end Arduino-style blink scenario |
+| BVM06 | Board VM Target Matrix | Explicit board/ISA/backend support plan |
 
 ## Spec Template
 
