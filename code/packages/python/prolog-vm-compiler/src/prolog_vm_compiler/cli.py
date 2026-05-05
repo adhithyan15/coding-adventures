@@ -178,11 +178,15 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
     dump_instructions = bool(flags["dump-instructions"])
     dump_source_metadata = bool(flags["dump-source-metadata"])
     list_source_queries = bool(flags["list-source-queries"])
+    values = bool(flags["values"])
     if check and queries:
         msg = "--check cannot be combined with --query"
         raise ValueError(msg)
     if check and limit is not None:
         msg = "--limit cannot be combined with --check"
+        raise ValueError(msg)
+    if check and values:
+        msg = "--values cannot be combined with --check"
         raise ValueError(msg)
     if check and all_source_queries:
         msg = "--check cannot be combined with --all-source-queries"
@@ -198,6 +202,9 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     if dump_bytecode and limit is not None:
         msg = "--limit cannot be combined with --dump-bytecode"
+        raise ValueError(msg)
+    if dump_bytecode and values:
+        msg = "--values cannot be combined with --dump-bytecode"
         raise ValueError(msg)
     if dump_bytecode and list_source_queries:
         msg = "--dump-bytecode cannot be combined with --list-source-queries"
@@ -216,6 +223,9 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     if dump_instructions and limit is not None:
         msg = "--limit cannot be combined with --dump-instructions"
+        raise ValueError(msg)
+    if dump_instructions and values:
+        msg = "--values cannot be combined with --dump-instructions"
         raise ValueError(msg)
     if dump_instructions and dump_bytecode:
         msg = "--dump-instructions cannot be combined with --dump-bytecode"
@@ -237,6 +247,9 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     if dump_source_metadata and limit is not None:
         msg = "--limit cannot be combined with --dump-source-metadata"
+        raise ValueError(msg)
+    if dump_source_metadata and values:
+        msg = "--values cannot be combined with --dump-source-metadata"
         raise ValueError(msg)
     if dump_source_metadata and dump_bytecode:
         msg = "--dump-source-metadata cannot be combined with --dump-bytecode"
@@ -264,6 +277,9 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         raise ValueError(msg)
     if list_source_queries and limit is not None:
         msg = "--limit cannot be combined with --list-source-queries"
+        raise ValueError(msg)
+    if list_source_queries and values:
+        msg = "--values cannot be combined with --list-source-queries"
         raise ValueError(msg)
     if list_source_queries and bool(flags["interactive"]):
         msg = "--list-source-queries cannot be combined with --interactive"
@@ -312,7 +328,7 @@ def _cli_args_from_result(result: ParseResult) -> CliArgs:
         limit=limit,
         dialect=_dialect(_required_string(flags["dialect"], name="--dialect")),
         backend=_backend(_required_string(flags["backend"], name="--backend")),
-        values=bool(flags["values"]),
+        values=values,
         summary=summary,
         output_format=_output_format(
             _required_string(flags["format"], name="--format"),

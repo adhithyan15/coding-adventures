@@ -54,7 +54,8 @@ Important options:
 - `--backend structured|bytecode` selects the VM backend.
 - `--dialect swi|iso` selects the frontend dialect profile.
 - `--limit N` caps the number of answers emitted per executed query.
-- `--values` prints raw result values instead of named bindings.
+- `--values` prints raw result values instead of named bindings for executed
+  queries.
 - `--summary` appends compact run totals for non-interactive query execution.
 - `--format text|json|jsonl` selects human text, one JSON document, or
   newline-delimited JSON records.
@@ -140,8 +141,8 @@ appends one compact line with query, success, failure, and answer totals. JSONL
 appends a final `mode: "summary"` record. JSON wraps result records in an object
 with `results`, `summary`, and aggregate `success` fields so downstream tools
 can consume both details and totals without re-counting. Compile-only modes
-reject query-execution modifiers such as `--limit` and `--summary` rather than
-silently ignoring them.
+reject query-execution modifiers such as `--limit`, `--values`, and `--summary`
+rather than silently ignoring them.
 
 Each result object includes:
 
