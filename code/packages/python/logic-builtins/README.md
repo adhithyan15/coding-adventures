@@ -61,6 +61,9 @@ ordinary logic goal expressions.
 - `openo/3`, `closeo/1`, `read_stringo/3`, `read_line_to_stringo/2`,
   `get_charo/2`, `at_end_of_streamo/1`, `writeo/2`, and `nlo/1` for bounded
   UTF-8 file stream handles
+- `open_optionso/4`, `current_streamo/3`, `stream_propertyo/2`, and
+  `flush_outputo/1` for bounded stream aliases, option validation, and
+  metadata
 - `difo(left, right)` for delayed disequality constraints
 - `clauseo(head, body)` for Prolog-style clause introspection
 - `compare_termo(order, left, right)`, `termo_lto(left, right)`,
