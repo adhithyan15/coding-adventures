@@ -325,8 +325,12 @@ impl std::error::Error for RunError {}
 /// with a real collector, this struct's storage becomes a root
 /// set and the dispatcher will need to expose it to the GC's
 /// `trace_value` hook.
+///
+/// `pub(crate)` so the [`crate::debug::FrameView`] wrapper can borrow
+/// it.  All callers outside `dispatch` go through `FrameView`'s narrow
+/// API rather than touching the registers HashMap directly.
 #[derive(Debug)]
-struct Frame {
+pub(crate) struct Frame {
     /// SSA name → current value.  Names are unique within a
     /// function (the IIR is in SSA form), so a flat HashMap is
     /// adequate.
@@ -361,6 +365,19 @@ impl Frame {
 
     fn get(&self, name: &str) -> Option<LispyValue> {
         self.registers.get(name).copied()
+    }
+
+    /// All register names live in the frame.  Used by the debug bridge.
+    pub(crate) fn register_names(&self) -> Vec<String> {
+        self.registers.keys().cloned().collect()
+    }
+
+    /// Debug-printable rendering of a register's current value.
+    ///
+    /// Returns `None` if the register is not bound.  Used by the debug
+    /// hook to honour DAP's `variables` request.
+    pub(crate) fn debug_print(&self, name: &str) -> Option<String> {
+        self.registers.get(name).map(|v| format!("{v:?}"))
     }
 
     /// Insert or update `name → value`.
@@ -871,7 +888,40 @@ pub fn run_with_profile(
         .ok_or_else(|| RunError::NoEntryPoint(entry_name.to_string()))?;
 
     let mut budget = ExecutionBudget::new();
-    dispatch(module, entry, &[], 0, &mut budget, globals, ic_table, profile)
+    let mut debug: Option<&mut dyn crate::debug::DebugHooks> = None;
+    dispatch(module, entry, &[], 0, &mut budget, globals, ic_table, profile, &mut debug)
+}
+
+/// Run a module under a debug hook.
+///
+/// The hook is invoked at every safepoint (between IIR instructions at
+/// every recursion depth).  Production callers wire this up to a
+/// [`crate::debug_server::DebugServer`] for DAP support; tests can
+/// supply any [`crate::debug::DebugHooks`] impl.
+///
+/// `globals`, `ic_table`, `profile` follow the same lifetime contract as
+/// [`run_with_profile`] — fresh each call unless the caller is
+/// accumulating state across runs.
+pub fn run_with_debug(
+    module: &IIRModule,
+    globals: &mut Globals,
+    ic_table: &mut ICTable,
+    profile: &mut ProfileTable,
+    debug: &mut dyn crate::debug::DebugHooks,
+) -> Result<LispyValue, RunError> {
+    let entry_name = module
+        .entry_point
+        .as_deref()
+        .ok_or_else(|| RunError::NoEntryPoint("module.entry_point is None".into()))?;
+    let entry = module
+        .functions
+        .iter()
+        .find(|f| f.name == entry_name)
+        .ok_or_else(|| RunError::NoEntryPoint(entry_name.to_string()))?;
+
+    let mut budget = ExecutionBudget::new();
+    let mut debug_opt: Option<&mut dyn crate::debug::DebugHooks> = Some(debug);
+    dispatch(module, entry, &[], 0, &mut budget, globals, ic_table, profile, &mut debug_opt)
 }
 
 // Per-run instruction counter — enforces
@@ -908,6 +958,7 @@ fn dispatch(
     globals: &mut Globals,
     ic_table: &mut ICTable,
     profile: &mut ProfileTable,
+    debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
 ) -> Result<LispyValue, RunError> {
     if depth > MAX_DISPATCH_DEPTH {
         return Err(RunError::DepthExceeded);
@@ -924,6 +975,15 @@ fn dispatch(
 
     let mut pc = 0;
     while pc < func.instructions.len() {
+        // Debug safepoint — between every instruction.  The hook may
+        // process incoming wire commands, detect breakpoints, and
+        // block waiting for a resume.  Cost when no debugger is
+        // attached: one `Option::is_some` branch per instruction.
+        if let Some(d) = debug.as_deref_mut() {
+            let view = crate::debug::FrameView::new(&frame);
+            d.before_instruction(&func.name, depth, pc, &view);
+        }
+
         budget.tick()?;
         let instr = &func.instructions[pc];
         // Capture before the match — `pc` may be updated to an
@@ -938,11 +998,11 @@ fn dispatch(
                 pc += 1;
             }
             "call_builtin" => {
-                exec_call_builtin(module, instr, &mut frame, depth, budget, globals, ic_table, profile)?;
+                exec_call_builtin(module, instr, &mut frame, depth, budget, globals, ic_table, profile, debug)?;
                 pc += 1;
             }
             "call" => {
-                exec_call(module, instr, &mut frame, depth, budget, globals, ic_table, profile)?;
+                exec_call(module, instr, &mut frame, depth, budget, globals, ic_table, profile, debug)?;
                 pc += 1;
             }
             "send" => {
@@ -1079,6 +1139,7 @@ fn exec_call_builtin(
     globals: &mut Globals,
     ic_table: &mut ICTable,
     profile: &mut ProfileTable,
+    debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
 ) -> Result<(), RunError> {
     let name = match instr.srcs.first() {
         Some(Operand::Var(s)) => s.as_str(),
@@ -1101,7 +1162,7 @@ fn exec_call_builtin(
         "global_set" => return exec_global_set(instr, frame, globals),
         "global_get" => return exec_global_get(instr, frame, globals),
         "apply_closure" => {
-            return exec_apply_closure(module, instr, frame, depth, budget, globals, ic_table, profile);
+            return exec_apply_closure(module, instr, frame, depth, budget, globals, ic_table, profile, debug);
         }
         _ => {}
     }
@@ -1136,6 +1197,7 @@ fn exec_call(
     globals: &mut Globals,
     ic_table: &mut ICTable,
     profile: &mut ProfileTable,
+    debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
 ) -> Result<(), RunError> {
     let callee_name = match instr.srcs.first() {
         Some(Operand::Var(s)) => s.as_str(),
@@ -1161,7 +1223,7 @@ fn exec_call(
         call_args.push(v);
     }
 
-    let result = dispatch(module, callee, &call_args, depth + 1, budget, globals, ic_table, profile)?;
+    let result = dispatch(module, callee, &call_args, depth + 1, budget, globals, ic_table, profile, debug)?;
     if let Some(d) = &instr.dest {
         frame.set(d.clone(), result)?;
     }
@@ -1258,6 +1320,7 @@ fn exec_apply_closure(
     globals: &mut Globals,
     ic_table: &mut ICTable,
     profile: &mut ProfileTable,
+    debug: &mut Option<&mut dyn crate::debug::DebugHooks>,
 ) -> Result<(), RunError> {
     if instr.srcs.len() < 2 {
         return Err(RunError::MalformedInstruction(format!(
@@ -1326,7 +1389,7 @@ fn exec_apply_closure(
             .iter()
             .find(|f| f.name == name_str)
             .ok_or_else(|| RunError::UnknownFunction(name_str.clone()))?;
-        dispatch(module, callee, &all_args, depth + 1, budget, globals, ic_table, profile)?
+        dispatch(module, callee, &all_args, depth + 1, budget, globals, ic_table, profile, debug)?
     };
 
     if let Some(d) = &instr.dest {
