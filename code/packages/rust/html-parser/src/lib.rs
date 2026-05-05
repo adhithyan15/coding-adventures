@@ -375,6 +375,9 @@ impl HtmlParser {
         } else if incoming_name == "optgroup" {
             self.pop_current_if(|name| name == "option");
             self.pop_current_if(|name| name == "optgroup");
+        } else if is_heading_element(incoming_name) {
+            self.pop_current_if(|name| name == "p");
+            self.pop_current_if(is_heading_element);
         }
     }
 
@@ -583,6 +586,10 @@ fn is_table_section(name: &str) -> bool {
     matches!(name, "tbody" | "thead" | "tfoot")
 }
 
+fn is_heading_element(name: &str) -> bool {
+    matches!(name, "h1" | "h2" | "h3" | "h4" | "h5" | "h6")
+}
+
 fn is_void_element(name: &str) -> bool {
     matches!(
         name,
@@ -734,6 +741,30 @@ mod tests {
             element(&second_group.children[0]).children,
             vec![Node::text("Four")]
         );
+    }
+
+    #[test]
+    fn applies_heading_implied_end_tags() {
+        let document = parse_html("<p>Intro<h1>One<h2>Two<h3>Three").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 4);
+
+        let paragraph = element(&body.children[0]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children, vec![Node::text("Intro")]);
+
+        let first = element(&body.children[1]);
+        assert_eq!(first.name, "h1");
+        assert_eq!(first.children, vec![Node::text("One")]);
+
+        let second = element(&body.children[2]);
+        assert_eq!(second.name, "h2");
+        assert_eq!(second.children, vec![Node::text("Two")]);
+
+        let third = element(&body.children[3]);
+        assert_eq!(third.name, "h3");
+        assert_eq!(third.children, vec![Node::text("Three")]);
     }
 
     #[test]
