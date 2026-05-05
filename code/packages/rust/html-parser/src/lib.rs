@@ -243,6 +243,7 @@ impl HtmlParser {
         attributes: Vec<LexerAttribute>,
         self_closing: bool,
     ) {
+        self.apply_document_shell_implied_contexts(&name);
         self.apply_table_implied_contexts(&name);
         self.apply_simple_implied_end_tags(&name);
 
@@ -265,6 +266,10 @@ impl HtmlParser {
     fn append_text(&mut self, text: String) {
         if text.is_empty() {
             return;
+        }
+
+        if !text.chars().all(char::is_whitespace) {
+            self.pop_current_if(|name| name == "head");
         }
 
         if let Some(children) = self.current_children_mut() {
@@ -298,6 +303,12 @@ impl HtmlParser {
         let mut path = self.current_parent_path().to_vec();
         path.push(child_index);
         self.open_elements.push(path);
+    }
+
+    fn apply_document_shell_implied_contexts(&mut self, incoming_name: &str) {
+        if starts_body_after_head(incoming_name) {
+            self.pop_current_if(|name| name == "head");
+        }
     }
 
     fn close_element(&mut self, name: &str) {
@@ -582,6 +593,10 @@ fn is_head_element(name: &str) -> bool {
             | "template"
             | "title"
     )
+}
+
+fn starts_body_after_head(name: &str) -> bool {
+    name == "body" || (!is_head_element(name) && name != "head" && name != "html")
 }
 
 fn is_ignorable_before_body(node: &Node) -> bool {
@@ -1227,5 +1242,32 @@ mod tests {
         assert_eq!(body(&document).attribute("class"), Some("home"));
         assert_eq!(element(&head(&document).children[0]).name, "title");
         assert_eq!(element(&body(&document).children[0]).name, "h1");
+    }
+
+    #[test]
+    fn closes_explicit_head_before_body_boundaries() {
+        let document =
+            parse_html("<html><head data-h=yes><title>T</title><body class=main><p>x</p></html>")
+                .unwrap();
+
+        assert_eq!(head(&document).attribute("data-h"), Some("yes"));
+        assert_eq!(head(&document).children.len(), 1);
+        assert_eq!(element(&head(&document).children[0]).name, "title");
+        assert_eq!(body(&document).attribute("class"), Some("main"));
+        let paragraph = element(&body(&document).children[0]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children, vec![Node::text("x")]);
+    }
+
+    #[test]
+    fn closes_explicit_head_before_implicit_body_content() {
+        let document = parse_html("<head><title>T</title>hello<p>x</p>").unwrap();
+
+        assert_eq!(head(&document).children.len(), 1);
+        assert_eq!(element(&head(&document).children[0]).name, "title");
+        assert_eq!(body(&document).children[0], Node::text("hello"));
+        let paragraph = element(&body(&document).children[1]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(paragraph.children, vec![Node::text("x")]);
     }
 }

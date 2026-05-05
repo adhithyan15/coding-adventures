@@ -16,6 +16,9 @@ documented in this file.
   ordinary data-state markup.
 - Implied `html`, `head`, and `body` document shell normalization, including
   preservation of explicit shell attributes and legacy omitted-wrapper pages.
+- Explicit `head` elements now close before `body` starts or non-head body
+  content appears, preventing omitted `</head>` pages from trapping body DOM
+  inside the head.
 - Scripting-aware parse options for parser-controlled tokenizer handoff, so
   `noscript` becomes RAWTEXT with scripting enabled and ordinary fallback
   markup with scripting disabled.

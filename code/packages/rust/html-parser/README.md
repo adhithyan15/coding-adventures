@@ -14,6 +14,8 @@ This first slice intentionally starts small:
 - void element handling
 - adjacent text merging
 - implied document shell creation for omitted `html`, `head`, and `body`
+- explicit `head` to `body` boundary recovery when body starts or body content
+  appears before `</head>`
 - implied table `tbody` and `tr` creation for common omitted table structure
 - implied table `colgroup` creation for bare `col` elements
 - table caption/column-group boundary recovery before bare columns, rows, and
