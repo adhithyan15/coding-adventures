@@ -94,6 +94,71 @@ kernel void matmul_f32(
     }
     c[i * n + j] = acc;
 }
+
+// ──────────────── transpose (F32, general N-D, max rank 4) ────────────────
+//
+// Permutation-driven transpose for tensors up to rank 4.  Bigger
+// ranks fall back to CPU via the planner's capability filter (matrix-
+// metal advertises max_tensor_rank = 4 in its BackendProfile).
+//
+// Walks output linearly: for each output element, decompose its
+// linear index into a multi-index using the **output** dims, then
+// reconstruct the **input** multi-index by reversing the permutation,
+// then re-flatten to a linear index using the **input** dims.
+//
+// The args struct carries rank, output numel, and three rank-4
+// arrays (perm, in_dims, out_dims).  Unused trailing dims at lower
+// ranks are zero-padded.
+//
+// Cost per element: O(rank) divides + O(rank) multiplies.  Memory
+// access pattern is non-coalesced for non-trivial permutations —
+// that's the price of generality.  V2 could special-case the rank-2
+// matrix-transpose path with a tiled shared-memory kernel; V1 keeps
+// the kernel small.
+
+struct TransposeArgs {
+    uint rank;
+    uint numel;
+    uint perm[4];
+    uint in_dims[4];
+    uint out_dims[4];
+};
+
+kernel void transpose_f32(
+    device const float* in [[buffer(0)]],
+    device float* out [[buffer(1)]],
+    constant TransposeArgs& args [[buffer(2)]],
+    uint gid [[thread_position_in_grid]]
+) {
+    if (gid >= args.numel) return;
+
+    // 1. Decompose `gid` (output linear index) into output multi-index.
+    uint out_idx[4] = {0u, 0u, 0u, 0u};
+    uint linear = gid;
+    for (int d = (int)args.rank - 1; d >= 0; --d) {
+        uint extent = args.out_dims[d];
+        out_idx[d] = linear % extent;
+        linear /= extent;
+    }
+
+    // 2. Reverse the permutation to get the input multi-index.
+    //    out_dims[d] == in_dims[perm[d]], and out[i_out] reads
+    //    from in[i_in] where i_in[perm[d]] = i_out[d].
+    uint in_idx[4] = {0u, 0u, 0u, 0u};
+    for (uint d = 0; d < args.rank; ++d) {
+        in_idx[args.perm[d]] = out_idx[d];
+    }
+
+    // 3. Re-flatten the input multi-index using row-major input strides.
+    uint in_linear = 0u;
+    uint stride = 1u;
+    for (int d = (int)args.rank - 1; d >= 0; --d) {
+        in_linear += in_idx[d] * stride;
+        stride *= args.in_dims[d];
+    }
+
+    out[gid] = in[in_linear];
+}
 "#;
 
 /// Names of every kernel entry point in [`KERNELS_MSL`].  Used at
@@ -119,4 +184,6 @@ pub const KERNEL_ENTRY_POINTS: &[&str] = &[
     "pow_f32",
     // matmul
     "matmul_f32",
+    // transpose
+    "transpose_f32",
 ];
