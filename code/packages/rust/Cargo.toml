@@ -25,6 +25,7 @@ members = [
     "rope",
     "blas-library",
     "bootloader",
+    "board-vm-protocol",
     "board-vm-ir",
     "board-vm-runtime",
     "board-vm-uno-r4",
