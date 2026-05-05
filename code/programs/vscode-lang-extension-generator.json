@@ -8,9 +8,16 @@
   "builtin_flags": { "help": true, "version": true },
   "flags": [
     {
+      "id": "language-spec",
+      "long": "language-spec",
+      "description": "Path to a JSON language-spec file (produced by `<lang>-spec-dump`). When set, languageId/Name/keywords/lineComment/etc. are read from this file and the corresponding CLI flags become optional overrides.",
+      "type": "string",
+      "default": ""
+    },
+    {
       "id": "language-id",
       "long": "language-id",
-      "description": "Internal language id, lowercase kebab-case (e.g., 'twig')",
+      "description": "Internal language id, lowercase kebab-case (e.g., 'twig'). Required if --language-spec is not given; otherwise overrides the spec's languageId.",
       "type": "string"
     },
     {

@@ -955,6 +955,80 @@ function splitCsv(s: string): string[] {
 }
 
 /**
+ * Shape of the JSON document produced by `<lang>-spec-dump` (LS04
+ * spec, schema v1).  We type only the fields we consume; unknown
+ * fields are ignored, which lets the schema grow without breaking
+ * older generators.
+ */
+export interface LanguageSpecJson {
+  $schemaVersion?: number;
+  languageId?: string;
+  languageName?: string;
+  fileExtensions?: string[];
+  keywords?: string[];
+  lineComment?: string | null;
+  blockComment?: [string, string] | null;
+  brackets?: Array<[string, string]>;
+  declarationRules?: string[];
+}
+
+/**
+ * Read a `<lang>-spec-dump`-style JSON document from disk and turn it
+ * into a partial `GeneratorOptions` patch.  The patch only contains
+ * fields the spec actually populated; the caller layers it under any
+ * explicit CLI flags so flags take precedence.
+ *
+ * Throws on:
+ * - missing or unreadable file
+ * - non-JSON content
+ * - mismatched schema version (pinned to 1 for now)
+ */
+export function loadLanguageSpec(specPath: string): Partial<GeneratorOptions> {
+  let raw: string;
+  try {
+    raw = fs.readFileSync(specPath, "utf-8");
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : String(e);
+    throw new Error(`failed to read --language-spec ${specPath}: ${msg}`);
+  }
+  let parsed: LanguageSpecJson;
+  try {
+    parsed = JSON.parse(raw) as LanguageSpecJson;
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : String(e);
+    throw new Error(`--language-spec ${specPath} is not valid JSON: ${msg}`);
+  }
+  if (
+    parsed.$schemaVersion !== undefined &&
+    parsed.$schemaVersion !== 1
+  ) {
+    throw new Error(
+      `--language-spec ${specPath} has unsupported $schemaVersion ${parsed.$schemaVersion} ` +
+        `(this generator understands version 1 only)`,
+    );
+  }
+
+  const patch: Partial<GeneratorOptions> = {};
+  if (typeof parsed.languageId === "string") patch.languageId = parsed.languageId;
+  if (typeof parsed.languageName === "string") patch.languageName = parsed.languageName;
+  if (Array.isArray(parsed.fileExtensions)) {
+    // The dump format omits leading dots ("twig"), but the generator
+    // expects them (".twig").  Re-add here so callers don't have to
+    // think about it.
+    patch.fileExtensions = parsed.fileExtensions.map((e) =>
+      e.startsWith(".") ? e : `.${e}`,
+    );
+  }
+  if (Array.isArray(parsed.keywords)) patch.keywords = parsed.keywords.slice();
+  if (typeof parsed.lineComment === "string") patch.lineComment = parsed.lineComment;
+  if (Array.isArray(parsed.blockComment) && parsed.blockComment.length === 2) {
+    patch.blockCommentStart = parsed.blockComment[0];
+    patch.blockCommentEnd = parsed.blockComment[1];
+  }
+  return patch;
+}
+
+/**
  * Parse argv with cli-builder, validate, and run `generate`.  Errors
  * print to stderr and exit non-zero.
  */
@@ -989,19 +1063,64 @@ export async function main(userArgv: string[]): Promise<number> {
   const parsed = result as ParseResult;
   const flags = parsed.flags;
 
+  // Build the option set in three layers so --language-spec drives
+  // most of it but explicit CLI flags can still override:
+  //
+  //   1. Hard-coded defaults (empty strings / arrays).
+  //   2. `loadLanguageSpec()` patch from --language-spec, if given.
+  //   3. CLI flags, only when explicitly present (non-empty).
+  //
+  // This keeps the spec-driven flow ergonomic — the user runs
+  // `twig-spec-dump > twig.spec.json` once, then passes
+  // `--language-spec twig.spec.json` plus the binaries/output dir
+  // and that's it.  No manual keyword listing.
+
+  const specPath = (flags["language-spec"] as string) || "";
+  let specPatch: Partial<GeneratorOptions> = {};
+  if (specPath) {
+    try {
+      specPatch = loadLanguageSpec(specPath);
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      process.stderr.write(`vscode-lang-extension-generator: ${msg}\n`);
+      return 1;
+    }
+  }
+
+  // Helpers — flag values are read as strings; a non-empty string
+  // counts as "explicitly set" and overrides the spec.  The empty
+  // string defaults match the cli-builder spec's `"default": ""`.
+  const flagStr = (name: string): string =>
+    typeof flags[name] === "string" ? (flags[name] as string) : "";
+  const flagPresent = (name: string): boolean => flagStr(name).length > 0;
+
   const opts: GeneratorOptions = {
-    languageId: (flags["language-id"] as string) || "",
-    languageName: (flags["language-name"] as string) || "",
-    fileExtensions: splitCsv((flags["file-extensions"] as string) || ""),
-    lspBinary: (flags["lsp-binary"] as string) || "",
-    dapBinary: (flags["dap-binary"] as string) || "",
-    outputDir: (flags["output-dir"] as string) || "",
-    lineComment: (flags["line-comment"] as string) || "",
-    blockCommentStart: (flags["block-comment-start"] as string) || "",
-    blockCommentEnd: (flags["block-comment-end"] as string) || "",
-    keywords: splitCsv((flags["keywords"] as string) || ""),
-    description: (flags["description"] as string) || "",
-    extensionVersion: (flags["ext-version"] as string) || "0.1.0",
+    languageId: flagPresent("language-id")
+      ? flagStr("language-id")
+      : specPatch.languageId ?? "",
+    languageName: flagPresent("language-name")
+      ? flagStr("language-name")
+      : specPatch.languageName ?? "",
+    fileExtensions: flagPresent("file-extensions")
+      ? splitCsv(flagStr("file-extensions"))
+      : specPatch.fileExtensions ?? [],
+    lspBinary: flagStr("lsp-binary"),
+    dapBinary: flagStr("dap-binary"),
+    outputDir: flagStr("output-dir"),
+    lineComment: flagPresent("line-comment")
+      ? flagStr("line-comment")
+      : specPatch.lineComment ?? "",
+    blockCommentStart: flagPresent("block-comment-start")
+      ? flagStr("block-comment-start")
+      : specPatch.blockCommentStart ?? "",
+    blockCommentEnd: flagPresent("block-comment-end")
+      ? flagStr("block-comment-end")
+      : specPatch.blockCommentEnd ?? "",
+    keywords: flagPresent("keywords")
+      ? splitCsv(flagStr("keywords"))
+      : specPatch.keywords ?? [],
+    description: flagStr("description"),
+    extensionVersion: flagStr("ext-version") || "0.1.0",
   };
 
   if (!opts.outputDir) {

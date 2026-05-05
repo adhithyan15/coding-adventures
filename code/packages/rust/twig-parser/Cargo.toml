@@ -10,6 +10,18 @@ grammar-tools = { path = "../grammar-tools" }
 lexer         = { path = "../lexer" }
 parser        = { path = "../parser" }
 twig-lexer    = { path = "../twig-lexer" }
+# Required by `bin/twig_spec_dump.rs` to pretty-print the language-spec
+# JSON.  Library code in twig-parser does not depend on serde_json.
+serde_json    = "1.0"
 
 [build-dependencies]
 grammar-tools = { path = "../grammar-tools" }
+
+# `twig-spec-dump` emits the language spec JSON for downstream tools
+# (LSP servers, VS Code extensions, syntax-highlight generators).  It
+# pulls from the build-time-compiled lexer + parser grammars baked into
+# the dependency crates — no runtime file I/O, no shipping of
+# `twig.tokens` / `twig.grammar` files.  See LS04.
+[[bin]]
+name = "twig-spec-dump"
+path = "bin/twig_spec_dump.rs"

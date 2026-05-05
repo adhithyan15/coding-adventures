@@ -24,6 +24,7 @@ import {
   GeneratorOptions,
   escapeRegex,
   generate,
+  loadLanguageSpec,
   validateOptions,
   ValidationError,
   buildPackageJson,
@@ -633,6 +634,138 @@ describe("escapeRegex", () => {
 });
 
 // ----------------------------------------------------------------------
+// loadLanguageSpec
+// ----------------------------------------------------------------------
+
+describe("loadLanguageSpec", () => {
+  let tmpDir: string;
+  let specPath: string;
+
+  beforeEach(() => {
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "vscode-ext-gen-spec-"));
+    specPath = path.join(tmpDir, "twig.spec.json");
+  });
+
+  afterEach(() => {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  });
+
+  /** Mirror of what `twig-spec-dump` actually produces. */
+  function writeRealisticSpec(): void {
+    fs.writeFileSync(
+      specPath,
+      JSON.stringify(
+        {
+          $schemaVersion: 1,
+          languageId: "twig",
+          languageName: "Twig",
+          fileExtensions: ["twig", "tw"],
+          keywords: ["define", "lambda", "let", "if"],
+          reservedKeywords: [],
+          contextKeywords: [],
+          lineComment: ";",
+          blockComment: null,
+          brackets: [["(", ")"]],
+          rules: ["program", "expression"],
+          declarationRules: ["define", "module_form"],
+          caseSensitive: true,
+        },
+        null,
+        2,
+      ),
+    );
+  }
+
+  it("extracts languageId/Name/extensions/keywords/lineComment", () => {
+    writeRealisticSpec();
+    const patch = loadLanguageSpec(specPath);
+    expect(patch.languageId).toBe("twig");
+    expect(patch.languageName).toBe("Twig");
+    expect(patch.fileExtensions).toEqual([".twig", ".tw"]);  // dots re-added
+    expect(patch.keywords).toEqual(["define", "lambda", "let", "if"]);
+    expect(patch.lineComment).toBe(";");
+  });
+
+  it("re-adds leading dots to file extensions if absent", () => {
+    fs.writeFileSync(
+      specPath,
+      JSON.stringify({ $schemaVersion: 1, fileExtensions: ["twig", "tw"] }),
+    );
+    const patch = loadLanguageSpec(specPath);
+    expect(patch.fileExtensions).toEqual([".twig", ".tw"]);
+  });
+
+  it("preserves leading dots if already present", () => {
+    fs.writeFileSync(
+      specPath,
+      JSON.stringify({ $schemaVersion: 1, fileExtensions: [".twig"] }),
+    );
+    const patch = loadLanguageSpec(specPath);
+    expect(patch.fileExtensions).toEqual([".twig"]);
+  });
+
+  it("populates blockComment when both endpoints present", () => {
+    fs.writeFileSync(
+      specPath,
+      JSON.stringify({
+        $schemaVersion: 1,
+        blockComment: ["/*", "*/"],
+      }),
+    );
+    const patch = loadLanguageSpec(specPath);
+    expect(patch.blockCommentStart).toBe("/*");
+    expect(patch.blockCommentEnd).toBe("*/");
+  });
+
+  it("leaves blockComment unset when null", () => {
+    fs.writeFileSync(
+      specPath,
+      JSON.stringify({ $schemaVersion: 1, blockComment: null }),
+    );
+    const patch = loadLanguageSpec(specPath);
+    expect(patch.blockCommentStart).toBeUndefined();
+    expect(patch.blockCommentEnd).toBeUndefined();
+  });
+
+  it("throws on missing file", () => {
+    expect(() => loadLanguageSpec(path.join(tmpDir, "nope.json"))).toThrow(
+      /failed to read/,
+    );
+  });
+
+  it("throws on invalid JSON", () => {
+    fs.writeFileSync(specPath, "{ this is not json");
+    expect(() => loadLanguageSpec(specPath)).toThrow(/not valid JSON/);
+  });
+
+  it("rejects unsupported $schemaVersion", () => {
+    fs.writeFileSync(
+      specPath,
+      JSON.stringify({ $schemaVersion: 99, languageId: "x" }),
+    );
+    expect(() => loadLanguageSpec(specPath)).toThrow(/unsupported \$schemaVersion/);
+  });
+
+  it("accepts a spec without $schemaVersion (forward-compat)", () => {
+    fs.writeFileSync(specPath, JSON.stringify({ languageId: "x" }));
+    expect(() => loadLanguageSpec(specPath)).not.toThrow();
+  });
+
+  it("ignores unknown fields without complaint", () => {
+    fs.writeFileSync(
+      specPath,
+      JSON.stringify({
+        $schemaVersion: 1,
+        languageId: "twig",
+        unknownFutureField: { nested: "thing" },
+      }),
+    );
+    const patch = loadLanguageSpec(specPath);
+    expect(patch.languageId).toBe("twig");
+  });
+});
+
+// ----------------------------------------------------------------------
 // CLI main()
 // ----------------------------------------------------------------------
 
@@ -699,6 +832,86 @@ describe("main (CLI entry point)", () => {
 
   it("returns 1 on a parse error (unknown flag)", async () => {
     const code = await main(["--nonexistent-flag", "x"]);
+    expect(code).toBe(1);
+    expect(stderrSpy).toHaveBeenCalled();
+  });
+
+  it("accepts --language-spec and uses it in place of explicit flags", async () => {
+    const specPath = path.join(tmpRoot, "twig.spec.json");
+    fs.writeFileSync(
+      specPath,
+      JSON.stringify({
+        $schemaVersion: 1,
+        languageId: "twig",
+        languageName: "Twig",
+        fileExtensions: ["twig", "tw"],
+        keywords: ["define", "if", "let"],
+        lineComment: ";",
+      }),
+    );
+    const out = path.join(tmpRoot, "twig-vscode");
+    const code = await main([
+      "--language-spec", specPath,
+      "--lsp-binary", "twig-lsp-server",
+      "--dap-binary", "twig-dap",
+      "--output-dir", out,
+    ]);
+    expect(code).toBe(0);
+
+    // The generator must have used the keywords from the spec — verify
+    // by checking the emitted TextMate grammar includes them.
+    const grammarPath = path.join(out, "syntaxes/twig.tmLanguage.json");
+    expect(fs.existsSync(grammarPath)).toBe(true);
+    const grammar = JSON.parse(fs.readFileSync(grammarPath, "utf-8"));
+    const kwPattern = grammar.patterns.find(
+      (p: { name?: string }) => p.name === "keyword.control.twig",
+    );
+    expect(kwPattern.match).toContain("define");
+    expect(kwPattern.match).toContain("if");
+    expect(kwPattern.match).toContain("let");
+  });
+
+  it("CLI flags override the language-spec when both are provided", async () => {
+    const specPath = path.join(tmpRoot, "twig.spec.json");
+    fs.writeFileSync(
+      specPath,
+      JSON.stringify({
+        $schemaVersion: 1,
+        languageId: "twig",
+        languageName: "Twig",
+        fileExtensions: ["twig"],
+        keywords: ["define"],
+      }),
+    );
+    const out = path.join(tmpRoot, "override-vscode");
+    const code = await main([
+      "--language-spec", specPath,
+      "--language-name", "OverriddenName",
+      "--keywords", "alpha,beta",
+      "--lsp-binary", "twig-lsp-server",
+      "--output-dir", out,
+    ]);
+    expect(code).toBe(0);
+    const pkg = JSON.parse(fs.readFileSync(path.join(out, "package.json"), "utf-8"));
+    expect(pkg.displayName).toBe("OverriddenName");
+    const grammar = JSON.parse(
+      fs.readFileSync(path.join(out, "syntaxes/twig.tmLanguage.json"), "utf-8"),
+    );
+    const kwPattern = grammar.patterns.find(
+      (p: { name?: string }) => p.name === "keyword.control.twig",
+    );
+    expect(kwPattern.match).toContain("alpha");
+    expect(kwPattern.match).toContain("beta");
+    expect(kwPattern.match).not.toContain("define");
+  });
+
+  it("returns 1 with a clear error when --language-spec points at missing file", async () => {
+    const out = path.join(tmpRoot, "missing-spec");
+    const code = await main([
+      "--language-spec", path.join(tmpRoot, "nope.json"),
+      "--lsp-binary", "twig-lsp-server",
+      "--output-dir", out,
+    ]);
     expect(code).toBe(1);
     expect(stderrSpy).toHaveBeenCalled();
   });

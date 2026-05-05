@@ -117,6 +117,29 @@ fn twig_token_grammar() -> &'static TokenGrammar {
     TWIG_TOKEN_GRAMMAR.get_or_init(generated_grammar::token_grammar)
 }
 
+/// Public accessor for the build-time-compiled Twig [`TokenGrammar`].
+///
+/// Used by tooling that needs to introspect Twig's keywords, brackets,
+/// or token list without re-parsing the canonical `twig.tokens` file
+/// (which is a build-time-only artifact and isn't shipped at runtime).
+///
+/// The returned reference points at a process-lifetime `OnceLock` —
+/// callers must not retain it across process boundaries, but within a
+/// single process it's safe to hold for the program's entire lifetime.
+///
+/// ## Why expose this
+///
+/// Downstream tools (LSP servers, VS Code extension generators, code
+/// formatters) need to know the language's keyword list and bracket
+/// pairs.  Before this accessor existed they had to re-parse
+/// `twig.tokens` — duplicating effort and risking drift if the file
+/// format evolved.  Pulling the compiled grammar straight from the
+/// lexer crate guarantees a single source of truth: whatever the
+/// lexer recognises at runtime is what tools see.
+pub fn twig_token_grammar_spec() -> &'static TokenGrammar {
+    twig_token_grammar()
+}
+
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------

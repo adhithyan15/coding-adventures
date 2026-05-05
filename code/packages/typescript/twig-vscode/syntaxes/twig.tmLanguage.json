@@ -24,7 +24,7 @@
     },
     {
       "name": "keyword.control.twig",
-      "match": "\\b(define|if|let|lambda|quote|unquote|quasiquote|cond|when|unless|begin|and|or|not)\\b"
+      "match": "\\b(define|lambda|let|if|begin|quote|nil|module|export|import)\\b"
     }
   ]
 }
