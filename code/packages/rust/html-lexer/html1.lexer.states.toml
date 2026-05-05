@@ -3590,6 +3590,33 @@ actions = [
 
 [[transitions]]
 from = "before_attribute_value"
+matcher = { literal = "<" }
+to = "attribute_value_unquoted"
+actions = [
+  "parse_error(unexpected-character-in-unquoted-attribute-value)",
+  "append_attribute_value(current)",
+]
+
+[[transitions]]
+from = "before_attribute_value"
+matcher = { literal = "=" }
+to = "attribute_value_unquoted"
+actions = [
+  "parse_error(unexpected-character-in-unquoted-attribute-value)",
+  "append_attribute_value(current)",
+]
+
+[[transitions]]
+from = "before_attribute_value"
+matcher = { literal = "`" }
+to = "attribute_value_unquoted"
+actions = [
+  "parse_error(unexpected-character-in-unquoted-attribute-value)",
+  "append_attribute_value(current)",
+]
+
+[[transitions]]
+from = "before_attribute_value"
 matcher = { anything = true }
 to = "attribute_value_unquoted"
 actions = ["append_attribute_value(current)"]

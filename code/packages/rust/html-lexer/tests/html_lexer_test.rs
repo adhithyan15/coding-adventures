@@ -337,6 +337,53 @@ fn default_html_lexer_reports_unexpected_chars_in_unquoted_attribute_values() {
 }
 
 #[test]
+fn default_html_lexer_reports_first_unquoted_attribute_value_characters() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("<a lt=<x eq==x tick=`x ok=value>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "lt".to_string(),
+                        value: "<x".to_string(),
+                    },
+                    Attribute {
+                        name: "eq".to_string(),
+                        value: "=x".to_string(),
+                    },
+                    Attribute {
+                        name: "tick".to_string(),
+                        value: "`x".to_string(),
+                    },
+                    Attribute {
+                        name: "ok".to_string(),
+                        value: "value".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "unexpected-character-in-unquoted-attribute-value"
+            })
+            .count(),
+        3
+    );
+}
+
+#[test]
 fn default_html_lexer_reconsumes_missing_space_after_quoted_attributes() {
     let mut lexer = create_html_lexer().unwrap();
 

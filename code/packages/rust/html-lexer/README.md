@@ -85,7 +85,8 @@ reconsume path, so jammed attributes such as `href="x"title=y` still recover
 while `=` and NULL characters receive their normal attribute-name diagnostics.
 Unquoted attribute values also preserve spec-defined unexpected characters
 such as `"`, `'`, `<`, `=`, and `` ` `` while reporting
-`unexpected-character-in-unquoted-attribute-value`.
+`unexpected-character-in-unquoted-attribute-value`, including when the first
+value character appears immediately after `=`.
 EOF inside ordinary start/end tag construction now reports the relevant
 EOF-in-tag diagnostic and drops the incomplete token instead of handing a
 partial tag to the future parser.

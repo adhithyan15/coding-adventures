@@ -8021,6 +8021,54 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "before_attribute_value".to_string(),
             on: None,
+            matcher: Some(MatcherDefinition::Literal("<".to_string())),
+            to: vec![
+                "attribute_value_unquoted".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-character-in-unquoted-attribute-value)".to_string(),
+                "append_attribute_value(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "before_attribute_value".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("=".to_string())),
+            to: vec![
+                "attribute_value_unquoted".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-character-in-unquoted-attribute-value)".to_string(),
+                "append_attribute_value(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "before_attribute_value".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("`".to_string())),
+            to: vec![
+                "attribute_value_unquoted".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(unexpected-character-in-unquoted-attribute-value)".to_string(),
+                "append_attribute_value(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "before_attribute_value".to_string(),
+            on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
                 "attribute_value_unquoted".to_string(),
