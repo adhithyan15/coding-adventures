@@ -508,4 +508,5 @@ members = [
     "twig-vm",
     "twig-lsp-bridge",
     "twig-dap",
+    "conduit",
 ]

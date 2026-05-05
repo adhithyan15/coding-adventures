@@ -463,7 +463,7 @@ mirroring WEB05's `conduit-hello` test suite.
 ## Future work tracked outside this spec
 
 - **WEB07**: Conduit OTP — pure-OTP reimplementation (no Rust)
-- **WEB08**: Conduit Perl — straightforward port matching Lua/TypeScript pattern
+- **WEB09**: Conduit Perl — straightforward port matching Lua/TypeScript pattern
 - **Long-term**: A small BEAM-like VM in Rust (lightweight processes,
   mailboxes, supervisors) backing all language ports — would let us run
   the OTP supervision-tree model in Python, Ruby, Lua, etc. Deferred
