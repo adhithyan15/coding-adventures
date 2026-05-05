@@ -622,6 +622,78 @@ class TestExceptionTableEntry:
 
 
 # ===========================================================================
+# TestHandlerOps — VMCOND00 Phase 3 dynamic handler opcode set
+# ===========================================================================
+
+
+class TestHandlerOps:
+    """Tests for HANDLER_OPS and its membership in the opcode category sets."""
+
+    # VMCOND00 Phase 3 — HANDLER_OPS membership
+
+    def test_handler_ops_exported(self):
+        """HANDLER_OPS is importable from the package root."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert isinstance(HANDLER_OPS, frozenset)
+        assert len(HANDLER_OPS) == 5
+
+    def test_handler_ops_contains_push_handler(self):
+        """push_handler is in HANDLER_OPS."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert "push_handler" in HANDLER_OPS
+
+    def test_handler_ops_contains_pop_handler(self):
+        """pop_handler is in HANDLER_OPS."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert "pop_handler" in HANDLER_OPS
+
+    def test_handler_ops_contains_signal(self):
+        """signal is in HANDLER_OPS."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert "signal" in HANDLER_OPS
+
+    def test_handler_ops_contains_error(self):
+        """error is in HANDLER_OPS."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert "error" in HANDLER_OPS
+
+    def test_handler_ops_contains_warn(self):
+        """warn is in HANDLER_OPS."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert "warn" in HANDLER_OPS
+
+    def test_handler_ops_subset_of_side_effect_ops(self):
+        """HANDLER_OPS is a subset of SIDE_EFFECT_OPS (all have side effects)."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert HANDLER_OPS.issubset(SIDE_EFFECT_OPS)
+
+    def test_handler_ops_subset_of_all_ops(self):
+        """HANDLER_OPS is a subset of ALL_OPS."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert HANDLER_OPS.issubset(ALL_OPS)
+
+    def test_handler_ops_not_in_value_ops(self):
+        """No HANDLER_OP produces a dest register — they are not value ops."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert HANDLER_OPS.isdisjoint(VALUE_OPS)
+
+    def test_handler_ops_not_in_branch_ops(self):
+        """HANDLER_OPS are not intra-function conditional branches."""
+        from interpreter_ir import HANDLER_OPS  # noqa: PLC0415
+        assert HANDLER_OPS.isdisjoint(BRANCH_OPS)
+
+    def test_handler_ops_not_in_control_ops(self):
+        """HANDLER_OPS don't return from the current function."""
+        from interpreter_ir import CONTROL_OPS, HANDLER_OPS  # noqa: PLC0415
+        assert HANDLER_OPS.isdisjoint(CONTROL_OPS)
+
+    def test_handler_ops_disjoint_from_throw_ops(self):
+        """HANDLER_OPS and THROW_OPS are disjoint (different protocol layers)."""
+        from interpreter_ir import HANDLER_OPS, THROW_OPS  # noqa: PLC0415
+        assert HANDLER_OPS.isdisjoint(THROW_OPS)
+
+
+# ===========================================================================
 # Serialisation tests
 # ===========================================================================
 

@@ -81,6 +81,7 @@ pub mod elf64;
 pub mod errors;
 pub mod intel_hex;
 pub mod macho64;
+pub mod macho_object;
 pub mod pe;
 pub mod raw;
 pub mod registry;

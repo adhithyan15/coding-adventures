@@ -1,12 +1,13 @@
 [package]
 name = "code-packager"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "Cross-platform binary packaging for compiled code (LANG10)"
+description = "Cross-platform binary packaging for compiled code (LANG10) — Mach-O on Apple Silicon ships ad-hoc code-signed."
 license = "MIT"
 
 [dependencies]
 wasm-types = { path = "../wasm-types" }
 wasm-module-encoder = { path = "../wasm-module-encoder" }
+coding_adventures_sha256 = { path = "../sha256" }
 
 [dev-dependencies]

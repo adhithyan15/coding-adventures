@@ -242,6 +242,19 @@ The compile happens in a background worker thread so live dispatches
 aren't blocked.  Once ready, the specialised pipeline is inserted
 into the cache.
 
+> **Implementation status (Phase 4 visibility landed — image-gpu-core wired)**:
+> `image-gpu-core::pipeline` now installs `matrix_cpu::specialiser()`
+> in front of its process-wide `SpecRouter`, plus a small custom
+> `HotPolicy` that fires on invocation count alone (threshold 100,
+> down from the spec's 1000 default).  Calling
+> `image_gpu_core::spec_cache_len()` after a few hundred filter
+> invocations is now the first place a domain library can observe
+> the cache rising above zero in production code.  The dispatch
+> path doesn't yet consume the specialised kernel handle (still
+> needs an executor-protocol extension), so routing and output
+> bytes are unchanged from V0.4.0; only the cache-size signal is
+> new.
+
 > **Implementation status (Phase 4 minimum-viable landed — first real backend Specialiser)**:
 > `matrix_cpu::CpuSpecialiser` ships as the workspace's first real
 > `Specialiser` impl (previously every test and demo used
