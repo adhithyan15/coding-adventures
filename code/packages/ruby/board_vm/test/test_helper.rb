@@ -17,15 +17,14 @@ class FakeRunner
   end
 end
 
-class FakeTransport
+class FakeWriteTransport
   attr_reader :frames
 
   def initialize
     @frames = []
   end
 
-  def transact(frame, timeout_ms:)
+  def write(frame)
     @frames << frame
-    "ack".b
   end
 end

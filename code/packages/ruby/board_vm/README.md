@@ -57,6 +57,10 @@ Inside the block, `board.led.blink` creates a
 capabilities, uploads the standard blink module, and starts it through the
 Rust-owned binary protocol. By default the Ruby DSL opens the configured serial
 device, writes the Rust-produced wire frames, and waits for framed responses.
+Responses are decoded by the same Rust language core into Ruby hashes for
+`HELLO_ACK`, capability reports, upload acknowledgements, and run reports, while
+the raw wire frames and raw response bytes remain available from the returned
+session result for debugging.
 Tests and alternate runtimes can inject any transport object that responds to
 `transact(frame, timeout_ms:)` or `write(frame)`.
 
