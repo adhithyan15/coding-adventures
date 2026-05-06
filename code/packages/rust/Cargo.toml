@@ -529,4 +529,5 @@ members = [
     "zwave-serial-api",
     "thread-mle",
     "zigbee-zcl",
+    "hue-client",
 ]
