@@ -32,6 +32,23 @@ pub const BOOT_RUN_IF_NO_HOST: u8 = 0x02;
 pub const NO_PROGRAM_ID: u16 = 0xFFFF;
 pub const NO_BYTECODE_OFFSET: u32 = 0xFFFF_FFFF;
 
+pub const GOLDEN_HELLO_PAYLOAD_BVM_V1: [u8; 10] =
+    [0x01, 0x01, 0x03, b'b', b'v', b'm', 0xCD, 0xAB, 0x34, 0x12];
+pub const GOLDEN_HELLO_RAW_FRAME_BVM_V1: [u8; 18] = [
+    0x01, 0x01, 0x01, 0x34, 0x12, 0x0A, 0x01, 0x01, 0x03, b'b', b'v', b'm', 0xCD, 0xAB, 0x34, 0x12,
+    0x19, 0x49,
+];
+pub const GOLDEN_HELLO_WIRE_FRAME_BVM_V1: [u8; 20] = [
+    0x13, 0x01, 0x01, 0x01, 0x34, 0x12, 0x0A, 0x01, 0x01, 0x03, b'b', b'v', b'm', 0xCD, 0xAB, 0x34,
+    0x12, 0x19, 0x49, 0x00,
+];
+pub const GOLDEN_PROGRAM_BEGIN_PAYLOAD_BVM_V1: [u8; 11] = [
+    0x01, 0x00, 0x01, 0x24, 0x00, 0x00, 0x00, 0xBE, 0xBA, 0xFE, 0xCA,
+];
+pub const GOLDEN_RUN_BACKGROUND_PAYLOAD_BVM_V1: [u8; 11] = [
+    0x01, 0x00, 0x05, 0xE8, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+];
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ProtocolError {
     OutputTooSmall,
@@ -1097,10 +1114,7 @@ mod tests {
         };
         let mut payload = [0u8; 16];
         let len = encode_hello(&hello, &mut payload).unwrap();
-        assert_eq!(
-            &payload[..len],
-            &[0x01, 0x01, 0x03, b'b', b'v', b'm', 0xCD, 0xAB, 0x34, 0x12]
-        );
+        assert_eq!(&payload[..len], GOLDEN_HELLO_PAYLOAD_BVM_V1);
         assert_eq!(decode_hello(&payload[..len]).unwrap(), hello);
     }
 
@@ -1115,14 +1129,28 @@ mod tests {
         };
         let mut out = [0u8; 32];
         let len = encode_frame(&frame, &mut out).unwrap();
-        assert_eq!(
-            &out[..len],
-            &[
-                0x01, 0x01, 0x01, 0x34, 0x12, 0x0A, 0x01, 0x01, 0x03, b'b', b'v', b'm', 0xCD, 0xAB,
-                0x34, 0x12, 0x19, 0x49,
-            ]
-        );
+        assert_eq!(&out[..len], GOLDEN_HELLO_RAW_FRAME_BVM_V1);
         assert_eq!(decode_frame(&out[..len]).unwrap(), frame);
+    }
+
+    #[test]
+    fn encodes_hello_wire_frame_golden_vector() {
+        let frame = Frame {
+            flags: FLAG_RESPONSE_REQUIRED,
+            message_type: MessageType::HELLO,
+            request_id: 0x1234,
+            payload: &GOLDEN_HELLO_PAYLOAD_BVM_V1,
+        };
+        let mut raw = [0u8; 32];
+        let mut wire = [0u8; 32];
+
+        let wire_len = encode_stream_frame(&frame, &mut raw, &mut wire).unwrap();
+
+        assert_eq!(
+            &raw[..GOLDEN_HELLO_RAW_FRAME_BVM_V1.len()],
+            GOLDEN_HELLO_RAW_FRAME_BVM_V1
+        );
+        assert_eq!(&wire[..wire_len], GOLDEN_HELLO_WIRE_FRAME_BVM_V1);
     }
 
     #[test]
@@ -1209,10 +1237,7 @@ mod tests {
             program_crc32: 0xCAFE_BABE,
         };
         let len = encode_program_begin(&begin, &mut out).unwrap();
-        assert_eq!(
-            &out[..len],
-            &[0x01, 0x00, 0x01, 0x24, 0x00, 0x00, 0x00, 0xBE, 0xBA, 0xFE, 0xCA]
-        );
+        assert_eq!(&out[..len], GOLDEN_PROGRAM_BEGIN_PAYLOAD_BVM_V1);
         assert_eq!(decode_program_begin(&out[..len]).unwrap(), begin);
 
         let run = RunRequest {
@@ -1222,10 +1247,7 @@ mod tests {
             time_budget_ms: 0,
         };
         let len = encode_run_request(&run, &mut out).unwrap();
-        assert_eq!(
-            &out[..len],
-            &[0x01, 0x00, 0x05, 0xE8, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]
-        );
+        assert_eq!(&out[..len], GOLDEN_RUN_BACKGROUND_PAYLOAD_BVM_V1);
         assert_eq!(decode_run_request(&out[..len]).unwrap(), run);
     }
 
