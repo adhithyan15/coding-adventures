@@ -15,6 +15,8 @@ Organised in sections that mirror the substrate packages:
 - **list operations** — :mod:`cas_list_operations`
 - **matrix** — :mod:`cas_matrix`
 - **limit / taylor** — :mod:`cas_limit_series`
+- **ODE solving** — :mod:`cas_ode`
+- **Laplace transforms** — :mod:`cas_laplace`
 - **numeric / arithmetic** — builtin Python :mod:`math`
 
 All handlers follow the same defensive contract:
@@ -35,6 +37,8 @@ from fractions import Fraction
 from typing import TYPE_CHECKING
 
 from cas_factor import factor_integer_polynomial
+from cas_laplace import build_laplace_handler_table as _build_laplace_handlers
+from cas_ode import build_ode_handler_table as _build_ode_handlers
 from cas_limit_series import PolynomialError, limit_direct, taylor_polynomial
 from cas_list_operations import (
     LIST,
@@ -863,8 +867,22 @@ def build_cas_handler_table() -> dict[str, Handler]:
     Keys are the canonical IR head names (string).  Values are the
     handler functions defined in this module.  Merge this into the
     backend's ``_handlers`` dict on startup.
+
+    The table is assembled in four layers:
+
+    1. Handlers defined directly in this module (simplify, factor, solve, …).
+    2. ODE handlers from :func:`cas_ode.build_ode_handler_table` — wires
+       ``ODE2`` for MACSYMA's ``ode2(eqn, y, x)`` surface syntax.
+    3. Laplace transform handlers from
+       :func:`cas_laplace.build_laplace_handler_table` — wires ``Laplace``,
+       ``ILT``, ``DiracDelta``, and ``UnitStep``.
+    4. Delegated handlers from :mod:`symbolic_vm` (pattern-matching, special
+       functions, summation, …).
+
+    All four layers are merged left-to-right; later layers override earlier
+    ones for any conflicting key (there are none in practice).
     """
-    return {
+    table: dict[str, Handler] = {
         # Simplify / expand
         "Simplify": simplify_handler,
         "Expand": expand_handler,
@@ -927,3 +945,13 @@ def build_cas_handler_table() -> dict[str, Handler]:
         "Sum": _sum_handler,
         "Product": _product_handler,
     }
+
+    # --- Phase 29: ODE solving (cas-ode) ------------------------------------
+    # Adds: ODE2 (ode2 surface name — 7 ODE types, 1st and 2nd order)
+    table.update(_build_ode_handlers())
+
+    # --- Phase 29: Laplace transforms (cas-laplace) -------------------------
+    # Adds: Laplace, ILT, DiracDelta, UnitStep
+    table.update(_build_laplace_handlers())
+
+    return table

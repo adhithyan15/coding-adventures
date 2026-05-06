@@ -1,5 +1,68 @@
 # Changelog
 
+## 1.20.0 — 2026-05-04
+
+**Phase 29 — ODE solving and Laplace transforms wired into MacsymaBackend.**
+
+Connects two fully-implemented CAS substrate packages (`cas-ode` and
+`cas-laplace`) to the MACSYMA backend so that `ode2`, `laplace`, `ilt`,
+`delta`, and `hstep` surface names reach their handlers for the first time.
+
+### New capabilities
+
+#### ODE solving — `ode2(eqn, y, x)`
+
+Seven ODE types are now live through the `ODE2` head:
+
+1. First-order linear: `y' + P(x)·y = Q(x)` (integrating-factor method)
+2. Separable: `y' = f(x)·g(y)` (separation of variables)
+3. Bernoulli: `y' + P·y = Q·yⁿ` (substitution v = y^(1-n))
+4. Exact: `M dx + N dy = 0` when `∂M/∂y = ∂N/∂x` (potential function)
+5. Second-order constant-coefficient homogeneous (characteristic equation)
+6. Second-order constant-coefficient non-homogeneous (undetermined coefficients)
+
+```macsyma
+ode2(y' + 2*y, y, x);          →  Equal(y, %c·exp(-2·x))
+ode2(y'' + y, y, x);            →  Equal(y, exp(0)·(%c1·cos(x) + %c2·sin(x)))
+ode2(y'' - 3*y' + 2*y, y, x);  →  Equal(y, %c1·exp(x) + %c2·exp(2·x))
+```
+
+#### Laplace transforms — `laplace`, `ilt`, `delta`, `hstep`
+
+~15 standard Laplace transform pairs covering the most common circuit analysis
+forms:
+
+```macsyma
+laplace(exp(2*t), t, s);   →  1/(s-2)
+laplace(sin(t), t, s);     →  1/(s^2+1)
+ilt(1/(s-3), s, t);        →  exp(3·t)
+delta(0);                  →  1
+hstep(-3);                 →  0
+hstep(0);                  →  1/2
+hstep(5);                  →  1
+```
+
+### `name_table.py` fix
+
+`ODE2` was previously defined locally as `IRSymbol("ODE2")`.  It is now
+imported from `symbolic_ir.nodes` (the canonical singleton), preventing any
+accidental identity mismatch.
+
+### What changed
+
+- `src/macsyma_runtime/cas_handlers.py` — imports `build_ode_handler_table`
+  and `build_laplace_handler_table`; `build_cas_handler_table()` now calls
+  both and merges their results into the dispatch table.
+- `src/macsyma_runtime/name_table.py` — imports `ODE2` from
+  `symbolic_ir.nodes` instead of re-defining it locally.
+- `pyproject.toml` — version 1.19.0 → 1.20.0; adds
+  `coding-adventures-cas-ode>=0.2.0` and
+  `coding-adventures-cas-laplace>=0.1.0` as runtime dependencies.
+- `tests/test_ode_wiring.py` — new file: 18 integration tests for ODE wiring,
+  Laplace transforms, DiracDelta/UnitStep folding, and SPICE smoke tests.
+
+---
+
 ## 1.19.0 — 2026-05-04
 
 **Phase 28 — `sign` surface syntax + assumption-driven `abs` folding.**

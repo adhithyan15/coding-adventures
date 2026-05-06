@@ -44,6 +44,7 @@ from symbolic_ir import (
     UNIT_STEP,
     IRSymbol,
 )
+from symbolic_ir.nodes import ODE2  # noqa: F401 — re-exported as part of MACSYMA_NAME_TABLE
 
 # IR heads from substrate packages that may not exist yet — define
 # them here as :class:`IRSymbol` singletons so the table can reference
@@ -126,7 +127,7 @@ MNEWTON = IRSymbol("MNewton")
 # FOURIER, IFOURIER imported from symbolic_ir above.
 
 # ODE solving (D3 — cas-ode)
-ODE2 = IRSymbol("ODE2")
+# ODE2 is imported from symbolic_ir.nodes above.
 
 # Algebraic extension factoring (D5 — cas-algebraic)
 ALG_FACTOR = IRSymbol("AlgFactor")
