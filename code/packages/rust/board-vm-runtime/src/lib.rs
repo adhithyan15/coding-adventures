@@ -79,6 +79,29 @@ pub struct RunReport {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RunCursor {
+    pub ip: usize,
+    pub instructions_executed: u32,
+    pub return_value: Value,
+}
+
+impl RunCursor {
+    pub const fn new() -> Self {
+        Self {
+            ip: 0,
+            instructions_executed: 0,
+            return_value: Value::Unit,
+        }
+    }
+}
+
+impl Default for RunCursor {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct RuntimeError {
     pub ip: usize,
     pub kind: RuntimeErrorKind,
@@ -177,7 +200,8 @@ where
             ip: 0,
             kind: RuntimeErrorKind::ValidationFailed,
         })?;
-        self.run_code(module.code, instruction_budget)
+        let mut cursor = RunCursor::new();
+        self.run_code_slice(module.code, &mut cursor, instruction_budget)
     }
 
     pub fn run_code(
@@ -185,30 +209,55 @@ where
         code: &[u8],
         instruction_budget: u32,
     ) -> Result<RunReport, RuntimeError> {
-        let mut ip = 0usize;
-        let mut instructions_executed = 0u32;
-        let mut return_value = Value::Unit;
+        let mut cursor = RunCursor::new();
+        self.run_code_slice(code, &mut cursor, instruction_budget)
+    }
 
-        while ip < code.len() {
-            if instructions_executed >= instruction_budget {
+    pub fn run_module_slice(
+        &mut self,
+        module: &Module<'_>,
+        cursor: &mut RunCursor,
+        instruction_budget: u32,
+    ) -> Result<RunReport, RuntimeError> {
+        validate(module, self.hal.capabilities(), MAX_STACK as u8).map_err(|_| RuntimeError {
+            ip: 0,
+            kind: RuntimeErrorKind::ValidationFailed,
+        })?;
+        self.run_code_slice(module.code, cursor, instruction_budget)
+    }
+
+    pub fn run_code_slice(
+        &mut self,
+        code: &[u8],
+        cursor: &mut RunCursor,
+        instruction_budget: u32,
+    ) -> Result<RunReport, RuntimeError> {
+        let slice_start = cursor.instructions_executed;
+
+        while cursor.ip < code.len() {
+            if cursor.instructions_executed.saturating_sub(slice_start) >= instruction_budget {
                 return Ok(self.report(
                     RunStatus::BudgetExceeded,
-                    instructions_executed,
-                    return_value,
+                    cursor.instructions_executed,
+                    cursor.return_value,
                 ));
             }
 
-            let instruction_ip = ip;
-            let (op, next_ip) = decode_next(code, ip).map_err(|_| RuntimeError {
+            let instruction_ip = cursor.ip;
+            let (op, next_ip) = decode_next(code, cursor.ip).map_err(|_| RuntimeError {
                 ip: instruction_ip,
                 kind: RuntimeErrorKind::InvalidBytecode,
             })?;
-            ip = next_ip;
-            instructions_executed += 1;
+            cursor.ip = next_ip;
+            cursor.instructions_executed += 1;
 
             match op {
                 Op::Halt => {
-                    return Ok(self.report(RunStatus::Halted, instructions_executed, return_value));
+                    return Ok(self.report(
+                        RunStatus::Halted,
+                        cursor.instructions_executed,
+                        cursor.return_value,
+                    ));
                 }
                 Op::Nop => {}
                 Op::PushFalse => self.push(Value::Bool(false), instruction_ip)?,
@@ -236,28 +285,36 @@ where
                     self.push(value, instruction_ip)?;
                 }
                 Op::JumpS8(offset) => {
-                    ip = jump_target(ip, offset, instruction_ip)?;
+                    cursor.ip = jump_target(cursor.ip, offset, instruction_ip)?;
                 }
                 Op::JumpIfFalseS8(offset) => {
                     if !self.pop_bool(instruction_ip)? {
-                        ip = jump_target(ip, offset, instruction_ip)?;
+                        cursor.ip = jump_target(cursor.ip, offset, instruction_ip)?;
                     }
                 }
                 Op::JumpIfTrueS8(offset) => {
                     if self.pop_bool(instruction_ip)? {
-                        ip = jump_target(ip, offset, instruction_ip)?;
+                        cursor.ip = jump_target(cursor.ip, offset, instruction_ip)?;
                     }
                 }
                 Op::CallU8(capability_id) => self.call(capability_id as u16, instruction_ip)?,
                 Op::CallU16(capability_id) => self.call(capability_id, instruction_ip)?,
                 Op::ReturnTop => {
-                    return_value = self.pop(instruction_ip)?;
-                    return Ok(self.report(RunStatus::Halted, instructions_executed, return_value));
+                    cursor.return_value = self.pop(instruction_ip)?;
+                    return Ok(self.report(
+                        RunStatus::Halted,
+                        cursor.instructions_executed,
+                        cursor.return_value,
+                    ));
                 }
             }
         }
 
-        Ok(self.report(RunStatus::Halted, instructions_executed, return_value))
+        Ok(self.report(
+            RunStatus::Halted,
+            cursor.instructions_executed,
+            cursor.return_value,
+        ))
     }
 
     fn report(
@@ -605,6 +662,39 @@ mod tests {
                 Event::Sleep(250),
             ]
         );
+    }
+
+    #[test]
+    fn run_code_slice_resumes_from_cursor() {
+        let mut runtime: Runtime<FakeHal, 8, 4> = Runtime::new(FakeHal::new());
+        let mut cursor = RunCursor::new();
+
+        let first = runtime.run_code_slice(BLINK_CODE, &mut cursor, 3).unwrap();
+        assert_eq!(first.status, RunStatus::BudgetExceeded);
+        assert_eq!(first.instructions_executed, 3);
+        assert_eq!(
+            runtime.hal().events,
+            vec![Event::Open(13, GpioMode::Output)]
+        );
+
+        let second = runtime.run_code_slice(BLINK_CODE, &mut cursor, 10).unwrap();
+        assert_eq!(second.status, RunStatus::BudgetExceeded);
+        assert_eq!(second.instructions_executed, 13);
+        assert_eq!(
+            runtime.hal().events,
+            vec![
+                Event::Open(13, GpioMode::Output),
+                Event::Write(13, Level::High),
+                Event::Sleep(250),
+                Event::Write(13, Level::Low),
+                Event::Sleep(250),
+            ]
+        );
+
+        let third = runtime.run_code_slice(BLINK_CODE, &mut cursor, 4).unwrap();
+        assert_eq!(third.status, RunStatus::BudgetExceeded);
+        assert_eq!(third.instructions_executed, 17);
+        assert_eq!(&runtime.hal().events[5..], &[Event::Write(13, Level::High)]);
     }
 
     #[test]

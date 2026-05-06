@@ -14,10 +14,14 @@ use board_vm_protocol::{
     CAP_FLAG_PROTOCOL_FEATURE, CAP_PROGRAM_RAM_EXEC, FLAG_IS_ERROR_RESPONSE, FLAG_IS_RESPONSE,
     NO_BYTECODE_OFFSET, NO_PROGRAM_ID, RUN_FLAG_BACKGROUND_RUN, RUN_FLAG_RESET_VM_BEFORE_RUN,
 };
-use board_vm_runtime::{BoardHal, RunStatus as RuntimeRunStatus, Runtime, RuntimeError};
+use board_vm_runtime::{
+    BoardHal, RunCursor, RunReport as RuntimeRunReport, RunStatus as RuntimeRunStatus, Runtime,
+    RuntimeError,
+};
 
 pub const DEFAULT_DEVICE_RUNTIME_ID: &str = "board-vm-device";
 pub const DEFAULT_MAX_FRAME_PAYLOAD: u16 = 256;
+pub const DEFAULT_BACKGROUND_INSTRUCTION_SLICE: u32 = 13;
 
 pub const ERROR_INVALID_FRAME: u16 = 0x0001;
 pub const ERROR_UNSUPPORTED_MESSAGE: u16 = 0x0003;
@@ -125,6 +129,57 @@ impl Default for UploadState {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+struct BackgroundRun {
+    program_id: u16,
+    cursor: RunCursor,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct BackgroundRunReport {
+    pub program_id: u16,
+    pub status: ProtocolRunStatus,
+    pub instructions_executed: u32,
+    pub elapsed_ms: u32,
+    pub stack_depth: u8,
+    pub open_handles: u8,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BackgroundRunError {
+    InvalidProgram,
+    InvalidBytecode,
+    Runtime(RuntimeError),
+}
+
+impl BackgroundRunReport {
+    fn from_runtime(program_id: u16, report: RuntimeRunReport, elapsed_ms: u32) -> Self {
+        Self {
+            program_id,
+            status: protocol_status_from_runtime(report.status),
+            instructions_executed: report.instructions_executed,
+            elapsed_ms,
+            stack_depth: report.stack_depth,
+            open_handles: report.open_handles,
+        }
+    }
+
+    fn from_background(program_id: u16, report: RuntimeRunReport, elapsed_ms: u32) -> Self {
+        let status = match report.status {
+            RuntimeRunStatus::BudgetExceeded => ProtocolRunStatus::Running,
+            other => protocol_status_from_runtime(other),
+        };
+        Self {
+            program_id,
+            status,
+            instructions_executed: report.instructions_executed,
+            elapsed_ms,
+            stack_depth: report.stack_depth,
+            open_handles: report.open_handles,
+        }
+    }
+}
+
 pub struct BoardVmDevice<
     'a,
     H,
@@ -140,6 +195,7 @@ pub struct BoardVmDevice<
     program_len: usize,
     program_id: u16,
     upload: UploadState,
+    background: Option<BackgroundRun>,
 }
 
 impl<'a, H, const MAX_PROGRAM_BYTES: usize, const MAX_STACK: usize, const MAX_HANDLES: usize>
@@ -155,6 +211,7 @@ where
             program_len: 0,
             program_id: 0,
             upload: UploadState::default(),
+            background: None,
         }
     }
 
@@ -184,6 +241,26 @@ where
         } else {
             Some(self.program_id)
         }
+    }
+
+    pub fn background_program_id(&self) -> Option<u16> {
+        self.background.map(|run| run.program_id)
+    }
+
+    pub fn is_background_running(&self) -> bool {
+        self.background.is_some()
+    }
+
+    pub fn poll_background(
+        &mut self,
+        instruction_budget: u32,
+    ) -> Result<Option<BackgroundRunReport>, BackgroundRunError> {
+        if self.background.is_none() {
+            return Ok(None);
+        }
+        self.run_background_slice(limit_background_budget(instruction_budget))
+            .map(Some)
+            .map_err(map_background_run_error)
     }
 
     pub fn handle_raw_frame(
@@ -308,6 +385,8 @@ where
         if begin.total_len as usize > MAX_PROGRAM_BYTES {
             return Err(BoardFault::PayloadTooLarge);
         }
+        self.background = None;
+        self.runtime.reset_vm();
         self.upload = UploadState {
             program_id: begin.program_id,
             expected_len: begin.total_len as usize,
@@ -383,34 +462,25 @@ where
 
         let module = parse_module(&self.program[..self.program_len])
             .map_err(|_| BoardFault::InvalidBytecode)?;
+        if run.flags & RUN_FLAG_BACKGROUND_RUN != 0 {
+            self.background = Some(BackgroundRun {
+                program_id: run.program_id,
+                cursor: RunCursor::new(),
+            });
+            let report =
+                self.run_background_slice(limit_background_budget(run.instruction_budget))?;
+            return write_run_report_response(report, request.request_id, payload_out, frame_out);
+        }
+
+        self.background = None;
         let report = self
             .runtime
             .run_module(&module, run.instruction_budget)
             .map_err(BoardFault::Runtime)?;
-        let status = match report.status {
-            RuntimeRunStatus::Halted => ProtocolRunStatus::Halted,
-            RuntimeRunStatus::BudgetExceeded if run.flags & RUN_FLAG_BACKGROUND_RUN != 0 => {
-                ProtocolRunStatus::Running
-            }
-            RuntimeRunStatus::BudgetExceeded => ProtocolRunStatus::BudgetExceeded,
-            RuntimeRunStatus::Faulted => ProtocolRunStatus::Faulted,
-        };
-        let payload_len = encode_run_report_header(
-            &RunReportHeader {
-                program_id: run.program_id,
-                status,
-                instructions_executed: report.instructions_executed,
-                elapsed_ms: self.runtime.hal().now_ms(),
-                stack_depth: report.stack_depth,
-                open_handles: report.open_handles,
-                return_count: 0,
-            },
-            payload_out,
-        )?;
-        write_response(
-            MessageType::RUN_REPORT,
+        write_run_report_response(
+            BackgroundRunReport::from_runtime(run.program_id, report, self.runtime.hal().now_ms()),
             request.request_id,
-            &payload_out[..payload_len],
+            payload_out,
             frame_out,
         )
     }
@@ -424,6 +494,7 @@ where
         if !request.payload.is_empty() {
             return Err(BoardFault::InvalidFrame);
         }
+        self.background = None;
         self.runtime.reset_vm();
         let payload_len = encode_run_report_header(
             &RunReportHeader {
@@ -443,6 +514,37 @@ where
             &payload_out[..payload_len],
             frame_out,
         )
+    }
+
+    fn run_background_slice(
+        &mut self,
+        instruction_budget: u32,
+    ) -> Result<BackgroundRunReport, BoardFault> {
+        let Some(mut background) = self.background else {
+            return Err(BoardFault::InvalidProgram);
+        };
+        if background.program_id != self.program_id || self.program_len == 0 {
+            self.background = None;
+            return Err(BoardFault::InvalidProgram);
+        }
+
+        let module = parse_module(&self.program[..self.program_len])
+            .map_err(|_| BoardFault::InvalidBytecode)?;
+        let report = self
+            .runtime
+            .run_module_slice(&module, &mut background.cursor, instruction_budget)
+            .map_err(BoardFault::Runtime)?;
+        let report = BackgroundRunReport::from_background(
+            background.program_id,
+            report,
+            self.runtime.hal().now_ms(),
+        );
+        if report.status == ProtocolRunStatus::Running {
+            self.background = Some(background);
+        } else {
+            self.background = None;
+        }
+        Ok(report)
     }
 
     fn write_error_response(
@@ -616,6 +718,29 @@ fn map_device_stream_error<E>(error: DeviceError) -> DeviceStreamError<E> {
     }
 }
 
+fn map_background_run_error(error: BoardFault) -> BackgroundRunError {
+    match error {
+        BoardFault::InvalidProgram => BackgroundRunError::InvalidProgram,
+        BoardFault::InvalidBytecode => BackgroundRunError::InvalidBytecode,
+        BoardFault::Runtime(error) => BackgroundRunError::Runtime(error),
+        _ => BackgroundRunError::InvalidProgram,
+    }
+}
+
+fn protocol_status_from_runtime(status: RuntimeRunStatus) -> ProtocolRunStatus {
+    match status {
+        RuntimeRunStatus::Halted => ProtocolRunStatus::Halted,
+        RuntimeRunStatus::BudgetExceeded => ProtocolRunStatus::BudgetExceeded,
+        RuntimeRunStatus::Faulted => ProtocolRunStatus::Faulted,
+    }
+}
+
+fn limit_background_budget(instruction_budget: u32) -> u32 {
+    instruction_budget
+        .max(1)
+        .min(DEFAULT_BACKGROUND_INSTRUCTION_SLICE)
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum BoardFault {
     Protocol(ProtocolError),
@@ -731,6 +856,32 @@ fn write_program_end_response(
     let payload_len = encode_program_end(&end, payload_out)?;
     write_response(
         MessageType::PROGRAM_END,
+        request_id,
+        &payload_out[..payload_len],
+        frame_out,
+    )
+}
+
+fn write_run_report_response(
+    report: BackgroundRunReport,
+    request_id: u16,
+    payload_out: &mut [u8],
+    frame_out: &mut [u8],
+) -> Result<usize, BoardFault> {
+    let payload_len = encode_run_report_header(
+        &RunReportHeader {
+            program_id: report.program_id,
+            status: report.status,
+            instructions_executed: report.instructions_executed,
+            elapsed_ms: report.elapsed_ms,
+            stack_depth: report.stack_depth,
+            open_handles: report.open_handles,
+            return_count: 0,
+        },
+        payload_out,
+    )?;
+    write_response(
+        MessageType::RUN_REPORT,
         request_id,
         &payload_out[..payload_len],
         frame_out,
@@ -1093,8 +1244,12 @@ mod tests {
         decoder.finish().unwrap();
         assert_eq!(report.program_id, DEFAULT_PROGRAM_ID);
         assert_eq!(report.status, RunStatus::Running);
-        assert!(report.instructions_executed > 0);
+        assert_eq!(
+            report.instructions_executed,
+            DEFAULT_BACKGROUND_INSTRUCTION_SLICE
+        );
         assert_eq!(report.open_handles, 1);
+        assert_eq!(device.background_program_id(), Some(DEFAULT_PROGRAM_ID));
         assert_eq!(
             &device.hal().events()[..5],
             &[
@@ -1102,6 +1257,29 @@ mod tests {
                     pin: 13,
                     mode: GpioMode::Output
                 }),
+                Some(Event::GpioWrite {
+                    token: 1,
+                    level: Level::High
+                }),
+                Some(Event::SleepMs(250)),
+                Some(Event::GpioWrite {
+                    token: 1,
+                    level: Level::Low
+                }),
+                Some(Event::SleepMs(250)),
+            ]
+        );
+
+        let poll = device.poll_background(100).unwrap().unwrap();
+        assert_eq!(poll.program_id, DEFAULT_PROGRAM_ID);
+        assert_eq!(poll.status, RunStatus::Running);
+        assert_eq!(
+            poll.instructions_executed,
+            DEFAULT_BACKGROUND_INSTRUCTION_SLICE * 2
+        );
+        assert_eq!(
+            &device.hal().events()[5..9],
+            &[
                 Some(Event::GpioWrite {
                     token: 1,
                     level: Level::High
@@ -1127,6 +1305,8 @@ mod tests {
         decoder.finish().unwrap();
         assert_eq!(report.status, RunStatus::Stopped);
         assert_eq!(report.open_handles, 0);
+        assert!(!device.is_background_running());
+        assert_eq!(device.poll_background(100).unwrap(), None);
     }
 
     #[test]
