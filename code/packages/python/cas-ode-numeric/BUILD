@@ -1,3 +1,3 @@
 uv venv --quiet --clear
 uv pip install -e ../grammar-tools -e ../graph -e ../directed-graph -e ../state-machine -e ../lexer -e ../parser -e ../macsyma-lexer -e ../macsyma-parser -e ../symbolic-ir -e ../polynomial -e ../macsyma-compiler -e ../cas-pattern-matching -e ../cas-substitution -e ../cas-mnewton -e ../cas-simplify -e ../cas-factor -e ../cas-solve -e ../cas-laplace -e ../cas-fourier -e ../cas-list-operations -e ../cas-matrix -e ../cas-limit-series -e ../cas-number-theory -e ../cas-complex -e ../cas-trig -e ../cas-algebraic -e ../cas-multivariate -e ../cas-ode -e ../cas-summation -e ../symbolic-vm -e ../macsyma-runtime -e ".[dev]" --quiet
-.venv/Scripts/python.exe -m pytest tests/ -v --tb=short
+.venv/bin/python -m pytest tests/ -v --tb=short
