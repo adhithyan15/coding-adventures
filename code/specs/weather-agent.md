@@ -164,35 +164,47 @@ message per tick.
 
 ### RWS analysis
 
+Per `read-write-separation.md` and `agent-discovery.md`'s
+bridge-time RWS check, the orchestrator validates each bridge
+when it is created. Manifest-level RWS is checked at manifest
+load (capability-cage); bridge-time RWS is checked when
+`find_and_connect` runs.
+
 - `weather-fetcher`:
-  - inputs: `net:connect:api.weather.gov:443` (untrusted)
-  - outputs: `channel:write:weather-snapshots` (internal channel)
-  - actuation? No — internal channel writes are not actuation per
-    `read-write-separation.md`.
+  - inputs: `net:connect:api.weather.gov:443` (untrusted ingestion)
+  - outputs: outbound side of the bridge created when classifier
+    discovers `weather-snapshot-source`. Internal channel write,
+    not actuation.
   - **Verdict:** RWS-clean. One untrusted input, no actuation.
 
 - `weather-classifier`:
-  - inputs: `channel:read:weather-snapshots` (originator is
-    `weather-fetcher`, which read untrusted bytes — so the channel
-    content is transitively untrusted UNLESS the channel is
-    schema-pinned for trust laundering).
-  - outputs: `channel:write:weather-recommendations` (internal)
-  - actuation? No.
-  - **Verdict:** RWS-clean even before schema laundering, because
-    the classifier has no actuation. (The schema pinning matters
-    for the *next* hop.)
+  - inputs: inbound side of the bridge from the fetcher. The
+    bridge is NOT trust-laundered (fetcher's `provides` declares
+    `trust_laundering: false` because the snapshot's
+    `raw_response_body` is attacker-influenceable). So the
+    classifier's read is treated as untrusted by RWS.
+  - outputs: outbound side of the bridge to the file-writer.
+    Internal channel write, not actuation.
+  - **Verdict:** RWS-clean. Untrusted input + no actuation.
+    The schema pinning on the *outbound* side matters for the
+    next hop's RWS, not this hop.
 
 - `file-writer`:
-  - inputs: `channel:read:weather-recommendations` (originator
-    is `weather-classifier`).
+  - inputs: inbound side of the bridge from the classifier.
   - outputs: `fs:write:./weather-log.txt` (actuation).
-  - **Verdict:** RWS-clean **iff** `weather-recommendations` is
-    schema-pinned for trust-laundering. The schema (defined below)
-    has no string fields, only a fixed enum and numbers, so no
-    attacker-controlled bytes can cross it. The classifier
-    structurally cannot inject a payload into the recommendation;
-    it can only emit one of four enum values plus two clamped
-    numbers.
+  - **Verdict:** RWS-clean **iff** the file-writer ↔ classifier
+    bridge is trust-laundered. The orchestrator's bridge-time
+    check verifies:
+    - classifier's `provides.trust_laundering == true` ✓
+    - schemas hash-match (file-writer's `schema_accept_hash` ==
+      classifier's `schema_emit_hash`) ✓
+    - schema has no string-arm injection surface (kind: enum,
+      high_temp_f / precip_pct: clamped numbers, tick_id: hex
+      pattern, additionalProperties: false) ✓
+    With these the bridge is marked `trust_laundered`, the
+    file-writer reads only validated values, RWS permits the
+    actuation. If any check fails the bridge is refused
+    with `RwsViolation` and the tick exits non-zero.
 
 ---
 
@@ -287,94 +299,135 @@ satisfies the v2 check by construction).
 
 ## Manifests
 
+Per `dynamic-topology.md` and the per-host spec amendments, the
+manifests use `provides` and `discover` instead of `channel:read`
+and `channel:write` capabilities. Channel ids come at runtime
+from the orchestrator's bridge creation.
+
 ### `weather-fetcher`
+
+See `weather-fetcher-host.md` (amended by #2265) for the full
+manifest. Summary:
 
 ```json
 {
-  "version": 1,
-  "package": "rust/weather-fetcher-host",
   "capabilities": [
-    {
-      "category":      "net",
-      "action":        "connect",
-      "target":        "api.weather.gov:443",
-      "flavor":        "ingestion",
-      "trust":         "untrusted",
-      "justification": "Fetch current Seattle forecast"
-    },
-    {
-      "category":      "channel",
-      "action":        "write",
-      "target":        "weather-snapshots",
-      "flavor":        "internal",
-      "justification": "Publish raw forecast for the classifier"
-    }
+    { "category": "net", "action": "connect", "target": "api.weather.gov:443",
+      "flavor": "ingestion", "trust": "untrusted" }
   ],
-  "justification": "Ingestion-only host; reads weather, publishes raw to channel; no actuation."
+  "provides": [
+    { "role": "weather-snapshot-source",
+      "qualifier": { "location": "seattle" },
+      "schema_emit": "schemas/weather-snapshot.schema.json",
+      "trust_laundering": false,
+      "discoverable_by": [
+        { "agent_id": "weather-classifier" },
+        { "agent_id": "weather-agent" }
+      ] }
+  ]
 }
 ```
 
 ### `weather-classifier`
 
+See `weather-classifier-host.md` for the full manifest. Summary:
+
 ```json
 {
-  "version": 1,
-  "package": "rust/weather-classifier-host",
-  "capabilities": [
-    {
-      "category":      "channel",
-      "action":        "read",
-      "target":        "weather-snapshots",
-      "trust":         "untrusted",
-      "justification": "Read raw forecast from fetcher"
-    },
-    {
-      "category":      "channel",
-      "action":        "write",
-      "target":        "weather-recommendations",
-      "flavor":        "internal",
-      "justification": "Publish enum recommendation"
-    }
+  "capabilities": [],
+  "discover": [
+    { "role": "weather-snapshot-source",
+      "qualifier_query": { "location": "seattle" },
+      "schema_accept": "schemas/weather-snapshot.schema.json" }
   ],
-  "justification": "Trust-laundering middle; reads untrusted, emits schema-pinned enum; no actuation."
+  "provides": [
+    { "role": "weather-recommendation-source",
+      "qualifier": { "location": "seattle" },
+      "schema_emit": "schemas/weather-recommendation.schema.json",
+      "trust_laundering": true,
+      "discoverable_by": [
+        { "agent_id": "file-writer" },
+        { "agent_id": "weather-agent" }
+      ] }
+  ]
 }
 ```
 
 ### `file-writer`
 
+See `file-writer-host.md` for the full manifest. Summary:
+
 ```json
 {
-  "version": 1,
-  "package": "rust/file-writer-host",
   "capabilities": [
-    {
-      "category":      "channel",
-      "action":        "read",
-      "target":        "weather-recommendations",
-      "trust":         "trusted",
-      "justification": "Read schema-pinned (trust-laundered) recommendation"
-    },
-    {
-      "category":      "fs",
-      "action":        "write",
-      "target":        "./weather-log.txt",
-      "flavor":        "actuation",
-      "justification": "Append one structured line per tick"
-    }
+    { "category": "fs", "action": "write", "target": "./weather-log.txt",
+      "flavor": "actuation", "trust": "trusted" }
   ],
-  "justification": "Actuator; reads trust-laundered enum from internal channel, appends to log file."
+  "discover": [
+    { "role": "weather-recommendation-source",
+      "qualifier_query": { "location": "seattle" },
+      "schema_accept": "schemas/weather-recommendation.schema.json" }
+  ]
 }
 ```
 
-The `trust: "trusted"` annotation on the file-writer's read of
-`weather-recommendations` is what the orchestrator validates
-against the channel's `trust_laundering: true` flag. The agent
-author is asserting "this channel's schema is restrictive enough
-that I treat its content as trusted." The orchestrator confirms
-that `trust_laundering: true` is set in the pipeline config and
-that the channel schema exists.
+### `weather-agent` (the parent program)
+
+The parent's manifest declares its sub-agents via
+`spawn_children` (the only thing dynamic-topology permits to be
+predefined). It does not pre-wire any channels.
+
+```json
+{
+  "version": 1,
+  "package": "rust/weather-agent",
+  "capabilities": [],
+  "spawn_children": [
+    { "child_id": "weather-fetcher",
+      "package": "./agents/weather-fetcher.agent",
+      "restart": "transient",
+      "shutdown": { "graceful": "5s" } },
+    { "child_id": "weather-classifier",
+      "package": "./agents/weather-classifier.agent",
+      "restart": "transient",
+      "shutdown": { "graceful": "5s" } },
+    { "child_id": "file-writer",
+      "package": "./agents/file-writer.agent",
+      "restart": "transient",
+      "shutdown": { "graceful": "5s" } }
+  ],
+  "provides": [
+    { "role": "weather-agent",
+      "discoverable_by": [],
+      "justification": "Identity stub so children's discoverable_by can include us" }
+  ],
+  "discover": [],
+  "justification": "Per-tick coordinator. Spawns three sub-agents; they discover each other at runtime."
+}
+```
+
+### Trust laundering
+
+The `file-writer` declares `trust: "trusted"` on its
+`schema_accept` for `weather-recommendation-source`. The
+orchestrator validates this at bridge time:
+- the classifier's `provides.trust_laundering` is `true`,
+- the schema hashes match (file-writer's `schema_accept_hash` ==
+  classifier's `schema_emit_hash`),
+- the schema has no string-arm injection surface.
+
+If all three hold, the bridge is marked `trust_laundered` and
+RWS permits the file-writer's `fs:write` actuation paired with
+the channel read. If any fail, the orchestrator refuses the
+bridge with `RwsViolation` and the discovery call returns that
+error to the file-writer.
 
 ### Orchestrator manifest (this PoC's `.orchestrator/orchestrator.toml`)
+
+Per `dynamic-topology.md`, there are no `[channel.*]` sections.
+Channel topology is created at runtime via agent-discovery.
+The `[host.*]` sections retain only lifecycle hints; they say
+nothing about who reads or writes which channel.
 
 ```toml
 state_dir = "./.orchestrator"
@@ -394,85 +447,75 @@ capabilities = [
   { category = "fs", action = "write", target = "./.orchestrator/*" },
 ]
 
-# Pipeline definition
+# Per-host lifecycle hints. No channel topology.
 
 [host.weather-fetcher]
-package = "./agents/weather-fetcher.agent"
-restart = "transient"        # one-shot per tick
-shutdown = { graceful = "5s" }
+package        = "./agents/weather-fetcher.agent"
+restart        = "transient"        # one-shot per tick
+shutdown       = { graceful = "5s" }
+idle_shutdown  = "10m"               # retire if no consumer for 10m
+min_instances  = 0
+max_instances  = 1
 
 [host.weather-classifier]
-package = "./agents/weather-classifier.agent"
-restart = "transient"
-shutdown = { graceful = "5s" }
+package        = "./agents/weather-classifier.agent"
+restart        = "transient"
+shutdown       = { graceful = "5s" }
+idle_shutdown  = "10m"
+min_instances  = 0
+max_instances  = 1
 
 [host.file-writer]
-package = "./agents/file-writer.agent"
-restart = "transient"
-shutdown = { graceful = "5s" }
-
-[channel.weather-snapshots]
-originator       = "weather-fetcher"
-receivers        = ["weather-classifier"]
-trust_laundering = false
-
-[channel.weather-recommendations]
-originator       = "weather-classifier"
-receivers        = ["file-writer"]
-schema_path      = "schemas/weather-recommendation.schema.json"
-trust_laundering = true
+package        = "./agents/file-writer.agent"
+restart        = "transient"
+shutdown       = { graceful = "5s" }
+idle_shutdown  = "10m"
+min_instances  = 0
+max_instances  = 1
 ```
+
+Channel topology (which host emits to which) lives entirely in
+the per-host manifests under `provides` and `discover` (defined
+in those host specs). The orchestrator wires the bridges at
+discovery time, not from this config.
 
 ---
 
 ## Supervision Tree
 
-```rust
-let orchestrator = SupervisorSpec {
-    strategy:     Strategy::OneForAll,    // tightly-coupled: a tick is all-or-nothing
-    max_restarts: 0,                      // do not retry within a tick
-    max_seconds:  60,
-    manifest:     orchestrator_manifest(),
-    children: vec![
-        ChildSpec {
-            id:       ChildId::new("weather-fetcher"),
-            kind:     ChildKind::HostProcess,
-            start:    Box::new(|| spawn_host_process("./agents/weather-fetcher.agent")),
-            restart:  Restart::Transient,
-            shutdown: Shutdown::Graceful(Duration::from_secs(5)),
-            manifest: load_manifest(".../weather-fetcher.agent/required_capabilities.json"),
-            ..Default::default()
-        },
-        ChildSpec {
-            id:       ChildId::new("weather-classifier"),
-            kind:     ChildKind::HostProcess,
-            start:    Box::new(|| spawn_host_process("./agents/weather-classifier.agent")),
-            restart:  Restart::Transient,
-            shutdown: Shutdown::Graceful(Duration::from_secs(5)),
-            manifest: load_manifest(".../weather-classifier.agent/required_capabilities.json"),
-            ..Default::default()
-        },
-        ChildSpec {
-            id:       ChildId::new("file-writer"),
-            kind:     ChildKind::HostProcess,
-            start:    Box::new(|| spawn_host_process("./agents/file-writer.agent")),
-            restart:  Restart::Transient,
-            shutdown: Shutdown::Graceful(Duration::from_secs(5)),
-            manifest: load_manifest(".../file-writer.agent/required_capabilities.json"),
-            ..Default::default()
-        },
-    ],
-    ..Default::default()
-};
+The parent agent (`weather-agent`) declares its three sub-agents
+via `spawn_children` in its manifest (per `dynamic-topology.md`).
+The host runtime translates these declarations into ChildSpecs
+on its in-process supervisor when the parent starts. The
+orchestrator's own supervisor sees only `weather-agent` as a
+top-level host process; it doesn't separately track the three
+children — they are part of `weather-agent`'s sub-tree.
 
-let root = Supervisor::start(orchestrator)?;
+The shape:
+
+```
+Orchestrator (supervisor)
+├── Strategy: OneForOne (only one top-level child for this PoC)
+└── ChildSpec: weather-agent
+    │
+    │  weather-agent's host runtime spawns its sub-tree
+    │  per spawn_children:
+    │
+    └── In-process supervisor (Strategy: OneForAll, max_restarts: 0)
+        ├── weather-fetcher    (Transient, Graceful 5s)
+        ├── weather-classifier (Transient, Graceful 5s)
+        └── file-writer        (Transient, Graceful 5s)
 ```
 
-`Strategy::OneForAll` because the three hosts coordinate via
-channels; if one dies mid-tick the others' state is meaningless,
-restart them together. `Restart::Transient` means a clean exit
-(the host completed its single message) is honored — the host is
-not restarted within the same tick.
+`Strategy::OneForAll` for the sub-tree because the three hosts
+coordinate via discovery; if one dies mid-tick the others'
+discovery bridges go stale and the tick is no longer
+recoverable. Restart all three together so the next tick (the
+next scheduled launch) is a fresh attempt.
+
+`Restart::Transient` means a clean exit (the host completed its
+single message) is honored — the host is not restarted within
+the same tick.
 
 `max_restarts = 0` because we don't want to re-attempt within a
 single scheduled invocation; a failed tick exits non-zero and
@@ -483,36 +526,74 @@ the next scheduled tick is a fresh process.
 ## Per-Tick Lifecycle
 
 ```
-T=0    Windows Task Scheduler launches weather-agent.exe --once
-T+5ms  weather-agent main():
-       - parse args
-       - start orchestrator with the three-host SupervisorSpec
-T+50ms orchestrator:
-       - verifies signatures of three packages
-       - generates per-spawn ephemeral X25519 keys
-       - launches three host processes (fork+exec each)
-       - completes X3DH handshake with each (in parallel)
-T+200ms hosts running:
-       - weather-fetcher's agent logic begins:
-          - call host.network.fetch("https://api.weather.gov/...")
-          - on response, call host.channel.write("weather-snapshots", ...)
-          - on success, return Stop (clean exit)
-       - weather-classifier:
-          - host.channel.read("weather-snapshots") — blocks until message
-          - on message, parse, apply rule, host.channel.write(
-              "weather-recommendations", recommendation)
-          - return Stop
-       - file-writer:
-          - host.channel.read("weather-recommendations") — blocks
-          - on message, format line, host.fs.write("./weather-log.txt", line)
-          - return Stop
-T+~700ms all three hosts have returned Stop.
-       supervisor sees all transient children exited normally.
-       weather-agent.main() observes all-children-stopped, exits 0.
-T+~750ms Windows Task Scheduler records exit 0; logs the tick.
+T=0    Windows Task Scheduler launches weather-agent.exe --once.
+T+5ms  weather-agent main() starts the orchestrator.
+T+50ms Orchestrator verifies weather-agent's package signature
+       + hash-pin (per agent-registry); spawns the host process;
+       completes X3DH handshake.
+T+100ms weather-agent's host runtime reads its manifest, sees
+       spawn_children, spawns the three sub-agent host processes
+       in parallel; each completes its own X3DH handshake with
+       the orchestrator.
+
+T+200ms All four hosts running (parent + 3 children).
+       The orchestrator now knows three providers exist:
+         weather-snapshot-source        (weather-fetcher)
+         weather-recommendation-source  (weather-classifier)
+
+       weather-fetcher's agent logic begins:
+         - host.network.fetch("https://api.weather.gov/...")
+         - host.provide.accept_one("weather-snapshot-source",
+                                    timeout: 5s)
+           ... waits for the classifier to discover us ...
+
+       weather-classifier's agent logic begins:
+         - host.discovery.find_and_connect(
+             role: "weather-snapshot-source",
+             qualifier: { location: "seattle" },
+             schema_accept: weather-snapshot.schema.json,
+           )
+         - Orchestrator finds the running fetcher, RWS-checks
+           the bridge, creates two ratcheted channels, hands
+           handles to both sides. The fetcher's accept_one
+           returns; the classifier's find_and_connect returns.
+
+       Bridge between weather-fetcher and weather-classifier
+       established, ratcheted, schema-pinned (false on this
+       hop because the snapshot's raw_response_body is
+       attacker-influenceable).
+
+       file-writer's agent logic begins:
+         - host.discovery.find_and_connect(
+             role: "weather-recommendation-source",
+             qualifier: { location: "seattle" },
+             schema_accept: weather-recommendation.schema.json,
+           )
+         - Orchestrator finds the classifier, RWS-checks. The
+           classifier's provides has trust_laundering: true and
+           the schemas hash-match → bridge is trust-laundered.
+           Channels created; handles delivered.
+
+T+~250ms NWS responds. Fetcher writes Snapshot to its outbound
+       channel; returns Stop.
+T+~252ms Classifier reads Snapshot, defensively parses, applies
+       rule, writes Recommendation to its outbound channel;
+       returns Stop.
+T+~255ms File-writer reads Recommendation, formats line,
+       host.fs.write("./weather-log.txt", line); returns Stop.
+T+~258ms All three sub-agents have returned Stop. Parent's
+       in-process supervisor sees all transient children exited
+       normally; signals parent to exit.
+T+~260ms weather-agent.main() exits 0.
+T+~280ms Orchestrator sees its top-level child exited normally;
+       cleans up; exits 0.
+T+~300ms Windows Task Scheduler records exit 0; logs the tick.
 ```
 
-Total wallclock: ~700 ms - 2 s depending on api.weather.gov RTT.
+Total wallclock: ~300 ms - 2 s depending on api.weather.gov RTT
+plus the discovery handshakes. The discovery overhead per bridge
+is ~10-20 ms (X3DH plus the orchestrator's RWS check); two
+bridges add ~20-40 ms total.
 
 ---
 
