@@ -8,7 +8,7 @@
 #![deny(unsafe_code)]
 
 use ieee802154_core::{
-    Address, AuxiliarySecurityHeader, FrameCounter, KeyIdentifier, SecurityLevel,
+    Address, AuxiliarySecurityHeader, FrameCounter, KeyIdentifier, MacFrame, SecurityLevel,
 };
 use std::collections::BTreeMap;
 use std::fmt;
@@ -72,6 +72,52 @@ pub fn security_context_from_parts(
         security_level: header.security_control.security_level,
         key_identifier: NormalizedKeyIdentifier::from_key_identifier(header.key_identifier),
     })
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SecuredFrameParts {
+    pub context: SecurityContext,
+    pub nonce: CcmStarNonce,
+    pub authenticated_data: Vec<u8>,
+    pub encrypted_payload: Vec<u8>,
+    pub mic: Vec<u8>,
+}
+
+impl SecuredFrameParts {
+    pub fn from_frame(frame: &MacFrame) -> Result<Self, SecurityError> {
+        let source = frame.source.ok_or(SecurityError::SourceAddressRequired)?;
+        let header = frame
+            .auxiliary_security_header
+            .as_ref()
+            .ok_or(SecurityError::AuxiliarySecurityHeaderRequired)?;
+        let context = security_context_from_parts(source, header)?;
+        let mic_len = context.security_level.mic_len();
+
+        if frame.payload.len() < mic_len {
+            return Err(SecurityError::PayloadShorterThanMic {
+                payload_len: frame.payload.len(),
+                mic_len,
+            });
+        }
+
+        let encrypted_len = frame.payload.len() - mic_len;
+        let encrypted_payload = frame.payload[..encrypted_len].to_vec();
+        let mic = frame.payload[encrypted_len..].to_vec();
+        let authenticated_data = authenticated_data_without_payload(frame)?;
+        let nonce = context.nonce();
+
+        Ok(Self {
+            context,
+            nonce,
+            authenticated_data,
+            encrypted_payload,
+            mic,
+        })
+    }
+
+    pub fn has_encrypted_payload(&self) -> bool {
+        self.context.security_level.encrypts()
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
@@ -171,15 +217,23 @@ impl Default for ReplayWindow {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum SecurityError {
+    SourceAddressRequired,
+    AuxiliarySecurityHeaderRequired,
     ExtendedSourceAddressRequired,
     FrameCounterRequired,
     UnsupportedFrameCounterSize,
+    PayloadShorterThanMic { payload_len: usize, mic_len: usize },
     UnknownKeyIdentifier,
+    FrameEncodingFailed(String),
 }
 
 impl fmt::Display for SecurityError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
+            Self::SourceAddressRequired => write!(f, "source address is required"),
+            Self::AuxiliarySecurityHeaderRequired => {
+                write!(f, "auxiliary security header is required")
+            }
             Self::ExtendedSourceAddressRequired => {
                 write!(
                     f,
@@ -192,7 +246,15 @@ impl fmt::Display for SecurityError {
             Self::UnsupportedFrameCounterSize => {
                 write!(f, "40-bit frame counters are not supported yet")
             }
+            Self::PayloadShorterThanMic {
+                payload_len,
+                mic_len,
+            } => write!(
+                f,
+                "payload is shorter than required MIC: payload {payload_len} bytes, MIC {mic_len} bytes"
+            ),
             Self::UnknownKeyIdentifier => write!(f, "unknown key identifier"),
+            Self::FrameEncodingFailed(message) => write!(f, "frame encoding failed: {message}"),
         }
     }
 }
@@ -212,10 +274,21 @@ fn security_level_bits(security_level: SecurityLevel) -> u8 {
     }
 }
 
+fn authenticated_data_without_payload(frame: &MacFrame) -> Result<Vec<u8>, SecurityError> {
+    let mut clone = frame.clone();
+    clone.payload.clear();
+    clone.fcs = None;
+    clone
+        .encode()
+        .map_err(|err| SecurityError::FrameEncodingFailed(err.to_string()))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
-    use ieee802154_core::{KeyIdentifierMode, SecurityControl};
+    use ieee802154_core::{
+        AddressMode, FrameControl, FrameType, FrameVersion, KeyIdentifierMode, SecurityControl,
+    };
 
     fn secured_header() -> AuxiliarySecurityHeader {
         AuxiliarySecurityHeader {
@@ -299,6 +372,130 @@ mod tests {
         assert_eq!(
             store.lookup(&NormalizedKeyIdentifier::Implicit),
             Err(SecurityError::UnknownKeyIdentifier)
+        );
+    }
+
+    #[test]
+    fn extracts_secured_frame_parts_with_encrypted_payload_and_mic() {
+        let frame = MacFrame {
+            frame_control: FrameControl {
+                frame_type: FrameType::Data,
+                security_enabled: true,
+                frame_pending: false,
+                ack_request: false,
+                pan_id_compression: true,
+                sequence_number_suppression: false,
+                information_elements_present: false,
+                destination_address_mode: AddressMode::Short,
+                frame_version: FrameVersion::Ieee8021542006,
+                source_address_mode: AddressMode::Extended,
+            },
+            sequence_number: Some(0x7a),
+            destination_pan_id: Some(0x1234),
+            destination: Some(Address::Short(0x5678)),
+            source_pan_id: Some(0x1234),
+            source: Some(Address::Extended(0x8877_6655_4433_2211)),
+            auxiliary_security_header: Some(secured_header()),
+            payload: vec![0xaa, 0xbb, 0xcc, 0xdd, 0x10, 0x11, 0x12, 0x13],
+            fcs: Some(0xbeef),
+        };
+
+        let parts = SecuredFrameParts::from_frame(&frame).unwrap();
+
+        assert!(parts.has_encrypted_payload());
+        assert_eq!(parts.context.source_address, 0x8877_6655_4433_2211);
+        assert_eq!(parts.encrypted_payload, vec![0xaa, 0xbb, 0xcc, 0xdd]);
+        assert_eq!(parts.mic, vec![0x10, 0x11, 0x12, 0x13]);
+        assert_eq!(
+            parts.nonce.as_bytes(),
+            &[0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x04, 0x03, 0x02, 0x01, 0x05,]
+        );
+        assert_eq!(
+            parts.authenticated_data,
+            vec![
+                0x49, 0xd8, // frame control
+                0x7a, // sequence number
+                0x34, 0x12, // destination PAN id
+                0x78, 0x56, // destination short address
+                0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, // source extended address
+                0x0d, // security control
+                0x04, 0x03, 0x02, 0x01, // frame counter
+                0x02, // key index
+            ]
+        );
+    }
+
+    #[test]
+    fn mic_only_frame_has_authenticated_payload_and_empty_encrypted_payload() {
+        let mut header = secured_header();
+        header.security_control.security_level = SecurityLevel::Mic64;
+        let frame = MacFrame {
+            frame_control: FrameControl {
+                frame_type: FrameType::Data,
+                security_enabled: true,
+                frame_pending: false,
+                ack_request: false,
+                pan_id_compression: true,
+                sequence_number_suppression: false,
+                information_elements_present: false,
+                destination_address_mode: AddressMode::Short,
+                frame_version: FrameVersion::Ieee8021542006,
+                source_address_mode: AddressMode::Extended,
+            },
+            sequence_number: Some(1),
+            destination_pan_id: Some(0x1234),
+            destination: Some(Address::Short(0x5678)),
+            source_pan_id: Some(0x1234),
+            source: Some(Address::Extended(0x8877_6655_4433_2211)),
+            auxiliary_security_header: Some(header),
+            payload: vec![0, 1, 2, 3, 4, 5, 6, 7],
+            fcs: None,
+        };
+
+        let parts = SecuredFrameParts::from_frame(&frame).unwrap();
+
+        assert!(!parts.has_encrypted_payload());
+        assert!(parts.encrypted_payload.is_empty());
+        assert_eq!(parts.mic, vec![0, 1, 2, 3, 4, 5, 6, 7]);
+    }
+
+    #[test]
+    fn rejects_payload_shorter_than_mic() {
+        let mut frame = MacFrame {
+            frame_control: FrameControl {
+                frame_type: FrameType::Data,
+                security_enabled: true,
+                frame_pending: false,
+                ack_request: false,
+                pan_id_compression: true,
+                sequence_number_suppression: false,
+                information_elements_present: false,
+                destination_address_mode: AddressMode::Short,
+                frame_version: FrameVersion::Ieee8021542006,
+                source_address_mode: AddressMode::Extended,
+            },
+            sequence_number: Some(1),
+            destination_pan_id: Some(0x1234),
+            destination: Some(Address::Short(0x5678)),
+            source_pan_id: Some(0x1234),
+            source: Some(Address::Extended(0x8877_6655_4433_2211)),
+            auxiliary_security_header: Some(secured_header()),
+            payload: vec![1, 2, 3],
+            fcs: None,
+        };
+        frame
+            .auxiliary_security_header
+            .as_mut()
+            .unwrap()
+            .security_control
+            .security_level = SecurityLevel::EncMic32;
+
+        assert_eq!(
+            SecuredFrameParts::from_frame(&frame),
+            Err(SecurityError::PayloadShorterThanMic {
+                payload_len: 3,
+                mic_len: 4,
+            })
         );
     }
 }
