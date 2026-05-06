@@ -7,6 +7,8 @@
 
 #![deny(unsafe_code)]
 
+use coding_adventures_aes::encrypt_block;
+use coding_adventures_ct_compare::ct_eq;
 use ieee802154_core::{
     Address, AuxiliarySecurityHeader, FrameCounter, KeyIdentifier, MacFrame, SecurityLevel,
 };
@@ -15,6 +17,9 @@ use std::fmt;
 
 pub const AES_128_KEY_LEN: usize = 16;
 pub const CCM_STAR_NONCE_LEN: usize = 13;
+const AES_BLOCK_LEN: usize = 16;
+const CCM_L: usize = 2;
+const CCM_L_PRIME: u8 = (CCM_L as u8) - 1;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SecurityContext {
@@ -34,6 +39,10 @@ impl SecurityContext {
 pub struct CcmStarNonce([u8; CCM_STAR_NONCE_LEN]);
 
 impl CcmStarNonce {
+    pub fn new(bytes: [u8; CCM_STAR_NONCE_LEN]) -> Self {
+        Self(bytes)
+    }
+
     pub fn as_bytes(&self) -> &[u8; CCM_STAR_NONCE_LEN] {
         &self.0
     }
@@ -118,6 +127,95 @@ impl SecuredFrameParts {
     pub fn has_encrypted_payload(&self) -> bool {
         self.context.security_level.encrypts()
     }
+
+    pub fn decrypt_and_verify(&self, key: Aes128Key) -> Result<Vec<u8>, SecurityError> {
+        ccm_star_decrypt(
+            key,
+            self.nonce,
+            &self.authenticated_data,
+            &self.encrypted_payload,
+            &self.mic,
+            self.context.security_level,
+        )
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CcmStarOutput {
+    pub payload: Vec<u8>,
+    pub mic: Vec<u8>,
+}
+
+pub fn ccm_star_encrypt(
+    key: Aes128Key,
+    nonce: CcmStarNonce,
+    authenticated_data: &[u8],
+    plaintext: &[u8],
+    security_level: SecurityLevel,
+) -> Result<CcmStarOutput, SecurityError> {
+    let mic_len = security_level.mic_len();
+    validate_mic_len(mic_len)?;
+
+    let mic = if mic_len == 0 {
+        Vec::new()
+    } else {
+        encrypted_mic(
+            key,
+            nonce,
+            authenticated_data,
+            plaintext,
+            security_level,
+            mic_len,
+        )?
+    };
+
+    let payload = if security_level.encrypts() {
+        ctr_crypt(key, nonce, plaintext)?
+    } else {
+        plaintext.to_vec()
+    };
+
+    Ok(CcmStarOutput { payload, mic })
+}
+
+pub fn ccm_star_decrypt(
+    key: Aes128Key,
+    nonce: CcmStarNonce,
+    authenticated_data: &[u8],
+    encrypted_payload: &[u8],
+    mic: &[u8],
+    security_level: SecurityLevel,
+) -> Result<Vec<u8>, SecurityError> {
+    let mic_len = security_level.mic_len();
+    validate_mic_len(mic_len)?;
+    if mic.len() != mic_len {
+        return Err(SecurityError::InvalidMicLength {
+            expected: mic_len,
+            actual: mic.len(),
+        });
+    }
+
+    let plaintext = if security_level.encrypts() {
+        ctr_crypt(key, nonce, encrypted_payload)?
+    } else {
+        encrypted_payload.to_vec()
+    };
+
+    if mic_len != 0 {
+        let expected = encrypted_mic(
+            key,
+            nonce,
+            authenticated_data,
+            &plaintext,
+            security_level,
+            mic_len,
+        )?;
+        if !ct_eq(&expected, mic) {
+            return Err(SecurityError::AuthenticationFailed);
+        }
+    }
+
+    Ok(plaintext)
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
@@ -225,6 +323,12 @@ pub enum SecurityError {
     PayloadShorterThanMic { payload_len: usize, mic_len: usize },
     UnknownKeyIdentifier,
     FrameEncodingFailed(String),
+    InvalidMicLength { expected: usize, actual: usize },
+    UnsupportedMicLength(usize),
+    MessageTooLong { len: usize },
+    AuthenticatedDataTooLong { len: usize },
+    CryptoFailed(String),
+    AuthenticationFailed,
 }
 
 impl fmt::Display for SecurityError {
@@ -255,6 +359,16 @@ impl fmt::Display for SecurityError {
             ),
             Self::UnknownKeyIdentifier => write!(f, "unknown key identifier"),
             Self::FrameEncodingFailed(message) => write!(f, "frame encoding failed: {message}"),
+            Self::InvalidMicLength { expected, actual } => {
+                write!(f, "invalid MIC length: expected {expected}, got {actual}")
+            }
+            Self::UnsupportedMicLength(len) => write!(f, "unsupported MIC length: {len}"),
+            Self::MessageTooLong { len } => write!(f, "message is too long for L=2 CCM*: {len}"),
+            Self::AuthenticatedDataTooLong { len } => {
+                write!(f, "authenticated data is too long for this encoder: {len}")
+            }
+            Self::CryptoFailed(message) => write!(f, "crypto operation failed: {message}"),
+            Self::AuthenticationFailed => write!(f, "authentication failed"),
         }
     }
 }
@@ -281,6 +395,185 @@ fn authenticated_data_without_payload(frame: &MacFrame) -> Result<Vec<u8>, Secur
     clone
         .encode()
         .map_err(|err| SecurityError::FrameEncodingFailed(err.to_string()))
+}
+
+fn encrypted_mic(
+    key: Aes128Key,
+    nonce: CcmStarNonce,
+    authenticated_data: &[u8],
+    plaintext: &[u8],
+    security_level: SecurityLevel,
+    mic_len: usize,
+) -> Result<Vec<u8>, SecurityError> {
+    let tag = cbc_mac(
+        key,
+        nonce,
+        authenticated_data,
+        plaintext,
+        security_level,
+        mic_len,
+    )?;
+    let s0 = encrypt_block(&counter_block(nonce, 0), key.expose_for_crypto())
+        .map_err(SecurityError::CryptoFailed)?;
+    Ok(tag
+        .iter()
+        .zip(s0.iter())
+        .map(|(tag_byte, stream_byte)| tag_byte ^ stream_byte)
+        .collect())
+}
+
+fn cbc_mac(
+    key: Aes128Key,
+    nonce: CcmStarNonce,
+    authenticated_data: &[u8],
+    plaintext: &[u8],
+    security_level: SecurityLevel,
+    mic_len: usize,
+) -> Result<Vec<u8>, SecurityError> {
+    if plaintext.len() > u16::MAX as usize {
+        return Err(SecurityError::MessageTooLong {
+            len: plaintext.len(),
+        });
+    }
+
+    let mut x = [0u8; AES_BLOCK_LEN];
+    for block in ccm_mac_blocks(
+        nonce,
+        authenticated_data,
+        plaintext,
+        security_level,
+        mic_len,
+    )? {
+        let xored = xor_block(&x, &block);
+        x = encrypt_block(&xored, key.expose_for_crypto()).map_err(SecurityError::CryptoFailed)?;
+    }
+
+    Ok(x[..mic_len].to_vec())
+}
+
+fn ccm_mac_blocks(
+    nonce: CcmStarNonce,
+    authenticated_data: &[u8],
+    plaintext: &[u8],
+    security_level: SecurityLevel,
+    mic_len: usize,
+) -> Result<Vec<[u8; AES_BLOCK_LEN]>, SecurityError> {
+    let mut blocks = Vec::new();
+    blocks.push(b0_block(
+        nonce,
+        !authenticated_data.is_empty(),
+        plaintext.len(),
+        security_level,
+        mic_len,
+    )?);
+
+    if !authenticated_data.is_empty() {
+        blocks.extend(padded_blocks(&encode_authenticated_data(
+            authenticated_data,
+        )?));
+    }
+
+    if !plaintext.is_empty() {
+        blocks.extend(padded_blocks(plaintext));
+    }
+
+    Ok(blocks)
+}
+
+fn b0_block(
+    nonce: CcmStarNonce,
+    has_authenticated_data: bool,
+    message_len: usize,
+    security_level: SecurityLevel,
+    mic_len: usize,
+) -> Result<[u8; AES_BLOCK_LEN], SecurityError> {
+    if message_len > u16::MAX as usize {
+        return Err(SecurityError::MessageTooLong { len: message_len });
+    }
+
+    let mut block = [0u8; AES_BLOCK_LEN];
+    block[0] = b0_flags(has_authenticated_data, security_level, mic_len)?;
+    block[1..14].copy_from_slice(nonce.as_bytes());
+    block[14..16].copy_from_slice(&(message_len as u16).to_be_bytes());
+    Ok(block)
+}
+
+fn b0_flags(
+    has_authenticated_data: bool,
+    security_level: SecurityLevel,
+    mic_len: usize,
+) -> Result<u8, SecurityError> {
+    validate_mic_len(mic_len)?;
+    let adata = if has_authenticated_data { 0x40 } else { 0x00 };
+    let mic_bits = if mic_len == 0 {
+        0
+    } else {
+        (((mic_len - 2) / 2) as u8) << 3
+    };
+    Ok(adata | mic_bits | CCM_L_PRIME | ccm_star_auth_only_bit(security_level))
+}
+
+fn ccm_star_auth_only_bit(_security_level: SecurityLevel) -> u8 {
+    0
+}
+
+fn encode_authenticated_data(authenticated_data: &[u8]) -> Result<Vec<u8>, SecurityError> {
+    if authenticated_data.len() >= 0xff00 {
+        return Err(SecurityError::AuthenticatedDataTooLong {
+            len: authenticated_data.len(),
+        });
+    }
+
+    let mut encoded = Vec::with_capacity(2 + authenticated_data.len());
+    encoded.extend_from_slice(&(authenticated_data.len() as u16).to_be_bytes());
+    encoded.extend_from_slice(authenticated_data);
+    Ok(encoded)
+}
+
+fn padded_blocks(bytes: &[u8]) -> Vec<[u8; AES_BLOCK_LEN]> {
+    let mut blocks = Vec::new();
+    for chunk in bytes.chunks(AES_BLOCK_LEN) {
+        let mut block = [0u8; AES_BLOCK_LEN];
+        block[..chunk.len()].copy_from_slice(chunk);
+        blocks.push(block);
+    }
+    blocks
+}
+
+fn ctr_crypt(key: Aes128Key, nonce: CcmStarNonce, input: &[u8]) -> Result<Vec<u8>, SecurityError> {
+    let mut output = Vec::with_capacity(input.len());
+    for (block_index, chunk) in input.chunks(AES_BLOCK_LEN).enumerate() {
+        let counter = (block_index + 1) as u16;
+        let stream = encrypt_block(&counter_block(nonce, counter), key.expose_for_crypto())
+            .map_err(SecurityError::CryptoFailed)?;
+        for (i, byte) in chunk.iter().enumerate() {
+            output.push(byte ^ stream[i]);
+        }
+    }
+    Ok(output)
+}
+
+fn counter_block(nonce: CcmStarNonce, counter: u16) -> [u8; AES_BLOCK_LEN] {
+    let mut block = [0u8; AES_BLOCK_LEN];
+    block[0] = CCM_L_PRIME;
+    block[1..14].copy_from_slice(nonce.as_bytes());
+    block[14..16].copy_from_slice(&counter.to_be_bytes());
+    block
+}
+
+fn validate_mic_len(mic_len: usize) -> Result<(), SecurityError> {
+    match mic_len {
+        0 | 4 | 8 | 16 => Ok(()),
+        other => Err(SecurityError::UnsupportedMicLength(other)),
+    }
+}
+
+fn xor_block(left: &[u8; AES_BLOCK_LEN], right: &[u8; AES_BLOCK_LEN]) -> [u8; AES_BLOCK_LEN] {
+    let mut out = [0u8; AES_BLOCK_LEN];
+    for i in 0..AES_BLOCK_LEN {
+        out[i] = left[i] ^ right[i];
+    }
+    out
 }
 
 #[cfg(test)]
@@ -496,6 +789,100 @@ mod tests {
                 payload_len: 3,
                 mic_len: 4,
             })
+        );
+    }
+
+    #[test]
+    fn ccm_star_encrypts_rfc3610_packet_vector_1() {
+        let key = Aes128Key::new([
+            0xc0, 0xc1, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7, 0xc8, 0xc9, 0xca, 0xcb, 0xcc, 0xcd,
+            0xce, 0xcf,
+        ]);
+        let nonce = CcmStarNonce::new([
+            0x00, 0x00, 0x00, 0x03, 0x02, 0x01, 0x00, 0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5,
+        ]);
+        let authenticated_data = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07];
+        let plaintext = [
+            0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15,
+            0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e,
+        ];
+
+        let output = ccm_star_encrypt(
+            key,
+            nonce,
+            &authenticated_data,
+            &plaintext,
+            SecurityLevel::EncMic64,
+        )
+        .unwrap();
+
+        assert_eq!(
+            output.payload,
+            vec![
+                0x58, 0x8c, 0x97, 0x9a, 0x61, 0xc6, 0x63, 0xd2, 0xf0, 0x66, 0xd0, 0xc2, 0xc0, 0xf9,
+                0x89, 0x80, 0x6d, 0x5f, 0x6b, 0x61, 0xda, 0xc3, 0x84,
+            ]
+        );
+        assert_eq!(
+            output.mic,
+            vec![0x17, 0xe8, 0xd1, 0x2c, 0xfd, 0xf9, 0x26, 0xe0]
+        );
+    }
+
+    #[test]
+    fn ccm_star_decrypts_rfc3610_packet_vector_1() {
+        let key = Aes128Key::new([
+            0xc0, 0xc1, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7, 0xc8, 0xc9, 0xca, 0xcb, 0xcc, 0xcd,
+            0xce, 0xcf,
+        ]);
+        let nonce = CcmStarNonce::new([
+            0x00, 0x00, 0x00, 0x03, 0x02, 0x01, 0x00, 0xa0, 0xa1, 0xa2, 0xa3, 0xa4, 0xa5,
+        ]);
+        let authenticated_data = [0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07];
+        let ciphertext = [
+            0x58, 0x8c, 0x97, 0x9a, 0x61, 0xc6, 0x63, 0xd2, 0xf0, 0x66, 0xd0, 0xc2, 0xc0, 0xf9,
+            0x89, 0x80, 0x6d, 0x5f, 0x6b, 0x61, 0xda, 0xc3, 0x84,
+        ];
+        let mic = [0x17, 0xe8, 0xd1, 0x2c, 0xfd, 0xf9, 0x26, 0xe0];
+
+        let plaintext = ccm_star_decrypt(
+            key,
+            nonce,
+            &authenticated_data,
+            &ciphertext,
+            &mic,
+            SecurityLevel::EncMic64,
+        )
+        .unwrap();
+
+        assert_eq!(
+            plaintext,
+            vec![
+                0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15,
+                0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e,
+            ]
+        );
+    }
+
+    #[test]
+    fn ccm_star_rejects_modified_mic() {
+        let key = Aes128Key::new([0; AES_128_KEY_LEN]);
+        let nonce = CcmStarNonce::new([0; CCM_STAR_NONCE_LEN]);
+        let encrypted =
+            ccm_star_encrypt(key, nonce, b"header", b"payload", SecurityLevel::EncMic32).unwrap();
+        let mut bad_mic = encrypted.mic.clone();
+        bad_mic[0] ^= 0x01;
+
+        assert_eq!(
+            ccm_star_decrypt(
+                key,
+                nonce,
+                b"header",
+                &encrypted.payload,
+                &bad_mic,
+                SecurityLevel::EncMic32,
+            ),
+            Err(SecurityError::AuthenticationFailed)
         );
     }
 }

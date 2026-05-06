@@ -6,4 +6,6 @@ description = "From-scratch IEEE 802.15.4 security primitives: nonce constructio
 license = "MIT"
 
 [dependencies]
+coding_adventures_aes = { path = "../aes" }
+coding_adventures_ct_compare = { path = "../ct-compare" }
 ieee802154-core = { path = "../ieee802154-core" }
