@@ -582,6 +582,10 @@ pub trait DeviceByteStream {
 
     fn read_byte(&mut self) -> Result<u8, Self::Error>;
 
+    fn try_read_byte(&mut self) -> Result<Option<u8>, Self::Error> {
+        self.read_byte().map(Some)
+    }
+
     fn write_all(&mut self, bytes: &[u8]) -> Result<(), Self::Error>;
 
     fn flush(&mut self) -> Result<(), Self::Error> {
@@ -597,6 +601,12 @@ pub enum DeviceStreamError<E> {
     ResponseWireFrameTooLarge,
     Protocol(ProtocolError),
     Device(DeviceError),
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DeviceStreamPoll {
+    Idle,
+    Served(usize),
 }
 
 pub struct DeviceStreamEndpoint<
@@ -657,6 +667,79 @@ where
         H: BoardHal,
     {
         let wire_len = self.read_wire_frame()?;
+        self.handle_wire_frame(device, wire_len)
+    }
+
+    pub fn serve_available<
+        'a,
+        H,
+        const MAX_PROGRAM_BYTES: usize,
+        const MAX_STACK: usize,
+        const MAX_HANDLES: usize,
+    >(
+        &mut self,
+        device: &mut BoardVmDevice<'a, H, MAX_PROGRAM_BYTES, MAX_STACK, MAX_HANDLES>,
+    ) -> Result<DeviceStreamPoll, DeviceStreamError<S::Error>>
+    where
+        H: BoardHal,
+    {
+        let Some(first_byte) = self
+            .stream
+            .try_read_byte()
+            .map_err(DeviceStreamError::Stream)?
+        else {
+            return Ok(DeviceStreamPoll::Idle);
+        };
+        let wire_len = self.read_wire_frame_after_first(first_byte)?;
+        let write_len = self.handle_wire_frame(device, wire_len)?;
+        Ok(DeviceStreamPoll::Served(write_len))
+    }
+
+    fn read_wire_frame(&mut self) -> Result<usize, DeviceStreamError<S::Error>> {
+        let first_byte = self.stream.read_byte().map_err(DeviceStreamError::Stream)?;
+        self.read_wire_frame_after_first(first_byte)
+    }
+
+    fn read_wire_frame_after_first(
+        &mut self,
+        first_byte: u8,
+    ) -> Result<usize, DeviceStreamError<S::Error>> {
+        let mut len = 0;
+        self.wire[len] = first_byte;
+        len += 1;
+        if first_byte == 0 {
+            return Ok(len);
+        }
+
+        loop {
+            if len >= self.wire.len() {
+                return Err(DeviceStreamError::IncomingWireFrameTooLarge);
+            }
+
+            let byte = self.stream.read_byte().map_err(DeviceStreamError::Stream)?;
+            self.wire[len] = byte;
+            len += 1;
+
+            if byte == 0 {
+                return Ok(len);
+            }
+        }
+    }
+
+    fn handle_wire_frame<
+        'a,
+        H,
+        const MAX_PROGRAM_BYTES: usize,
+        const MAX_STACK: usize,
+        const MAX_HANDLES: usize,
+    >(
+        &mut self,
+        device: &mut BoardVmDevice<'a, H, MAX_PROGRAM_BYTES, MAX_STACK, MAX_HANDLES>,
+        wire_len: usize,
+    ) -> Result<usize, DeviceStreamError<S::Error>>
+    where
+        H: BoardHal,
+    {
         let request_len = decode_wire_frame(&self.wire[..wire_len], &mut self.raw_request)
             .map_err(map_decode_wire_error)?;
         let response_len = device
@@ -673,23 +756,6 @@ where
             .map_err(DeviceStreamError::Stream)?;
         self.stream.flush().map_err(DeviceStreamError::Stream)?;
         Ok(write_len)
-    }
-
-    fn read_wire_frame(&mut self) -> Result<usize, DeviceStreamError<S::Error>> {
-        let mut len = 0;
-        loop {
-            if len >= self.wire.len() {
-                return Err(DeviceStreamError::IncomingWireFrameTooLarge);
-            }
-
-            let byte = self.stream.read_byte().map_err(DeviceStreamError::Stream)?;
-            self.wire[len] = byte;
-            len += 1;
-
-            if byte == 0 {
-                return Ok(len);
-            }
-        }
     }
 }
 
@@ -1048,6 +1114,13 @@ mod tests {
             Ok(byte)
         }
 
+        fn try_read_byte(&mut self) -> Result<Option<u8>, Self::Error> {
+            if self.read_offset >= self.read_len {
+                return Ok(None);
+            }
+            self.read_byte().map(Some)
+        }
+
         fn write_all(&mut self, bytes: &[u8]) -> Result<(), Self::Error> {
             let end = self
                 .written_len
@@ -1109,6 +1182,44 @@ mod tests {
         assert_eq!(hello_ack.runtime_name, DEFAULT_DEVICE_RUNTIME_ID);
         assert_eq!(hello_ack.host_nonce, 0xCAFE_BABE);
         assert_eq!(hello_ack.board_nonce, 0xB04D_1001);
+    }
+
+    #[test]
+    fn stream_endpoint_serves_available_wire_frame() {
+        let mut device = new_device();
+        let mut session = HostSession::new();
+        let mut host_payload = [0u8; 96];
+        let mut request = [0u8; 128];
+        let mut request_wire = [0u8; 192];
+        let mut raw_response = [0u8; 128];
+
+        let hello = session
+            .hello_frame("stream-host", 0xCAFE_BABE, &mut host_payload, &mut request)
+            .unwrap();
+        let request_wire_len = encode_wire_frame(&request[..hello.len], &mut request_wire).unwrap();
+        let stream = ScriptedByteStream::<192, 192>::with_read(&request_wire[..request_wire_len]);
+        let mut endpoint = DeviceStreamEndpoint::<_, 192, 128, 128>::new(stream);
+
+        let poll = endpoint.serve_available(&mut device).unwrap();
+        let stream = endpoint.into_inner();
+        assert_eq!(poll, DeviceStreamPoll::Served(stream.written().len()));
+
+        let raw_len = decode_wire_frame(stream.written(), &mut raw_response).unwrap();
+        let frame = decode_frame(&raw_response[..raw_len]).unwrap();
+        assert_eq!(frame.message_type, MessageType::HELLO_ACK);
+        assert_eq!(frame.request_id, hello.request_id);
+    }
+
+    #[test]
+    fn stream_endpoint_reports_idle_when_no_byte_is_available() {
+        let mut device = new_device();
+        let stream = ScriptedByteStream::<8, 8>::with_read(&[]);
+        let mut endpoint = DeviceStreamEndpoint::<_, 8, 8, 8>::new(stream);
+
+        assert_eq!(
+            endpoint.serve_available(&mut device),
+            Ok(DeviceStreamPoll::Idle)
+        );
     }
 
     #[test]

@@ -106,7 +106,9 @@ USB-C `SerialUSB` route. It attaches `DeviceStreamEndpoint` to
 `UsbCdcByteStream<UnoR4WifiSerialUsb>` and uses the same Uno R4 WiFi board
 runtime as the UART server. The reusable server helper is host-tested with a
 fake CDC transport so the Board VM wire-frame path is validated before the
-Arduino/TinyUSB link layer is wired in.
+Arduino/TinyUSB link layer is wired in. The firmware loop uses the nonblocking
+`serve_available()` path so an active background `RUN` can keep advancing in
+small instruction slices while the USB host is idle.
 
 The Rust entrypoint now starts Arduino Renesas USB through the `__USBStart()`
 C++ ABI symbol exposed by the Arduino core. The `board-vm-uno-r4-usb-cdc`

@@ -134,6 +134,19 @@ where
         }
     }
 
+    fn try_read_byte(&mut self) -> Result<Option<u8>, Self::Error> {
+        self.ensure_started()?;
+        let mut byte = [0];
+        self.api.poll();
+        if !self.api.connected() {
+            return Err(UnoR4UsbCdcError::NotConnected);
+        }
+        if self.api.available() == 0 {
+            return Ok(None);
+        }
+        Ok((self.api.read(&mut byte) == 1).then_some(byte[0]))
+    }
+
     fn write_packet(&mut self, bytes: &[u8]) -> Result<(), Self::Error> {
         self.ensure_started()?;
         if bytes.len() > UNO_R4_WIFI_USB_MAX_PACKET_BYTES {
@@ -846,6 +859,23 @@ mod tests {
         assert_eq!(api.flushes, 2);
         assert_eq!(api.line_coding, UsbCdcLineCoding::new(115_200));
         assert!(api.line_state.connected());
+    }
+
+    #[test]
+    fn try_read_byte_polls_once_and_reports_idle() {
+        let mut cdc = UnoR4WifiSerialUsbCdc::started(FakeTinyUsb::new(&[]));
+
+        assert_eq!(cdc.try_read_byte().unwrap(), None);
+        assert_eq!(cdc.api().polls, 1);
+    }
+
+    #[test]
+    fn try_read_byte_returns_available_byte_without_spinning() {
+        let mut cdc = UnoR4WifiSerialUsbCdc::started(FakeTinyUsb::new(&[0x33]));
+
+        assert_eq!(cdc.try_read_byte().unwrap(), Some(0x33));
+        assert_eq!(cdc.api().polls, 1);
+        assert_eq!(cdc.api().read_offset, 1);
     }
 
     #[test]
