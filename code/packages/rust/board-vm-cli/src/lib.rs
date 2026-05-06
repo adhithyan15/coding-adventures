@@ -1,4 +1,5 @@
 use core::fmt;
+use std::fs;
 use std::io::{BufRead, Write};
 use std::time::Duration;
 
@@ -6,7 +7,12 @@ use board_vm_client::{
     BoardDescriptorInfo, BoardVmClient, ClientError, HelloAckInfo, RawFrameTransport,
     RunReportInfo, UploadReport,
 };
+use board_vm_eject::{
+    build_blink_eject_artifact, write_embedded_rust_constants,
+    EjectOptions as ArtifactEjectOptions, RustConstNames, DEFAULT_BOOT_POLICY, DEFAULT_EJECT_SLOT,
+};
 use board_vm_host::{write_blink_module, BlinkProgram, BLINK_MODULE_LEN};
+use board_vm_protocol::{BOOT_RUN_AT_BOOT, BOOT_RUN_IF_NO_HOST, BOOT_STORE_ONLY};
 use board_vm_serial::{
     available_ports, BoardSerialTransport, SerialConfig, SerialPortInfo, SerialTransportError,
     DEFAULT_BAUD_RATE, DEFAULT_TIMEOUT_MS,
@@ -23,6 +29,7 @@ pub enum CliCommand {
     ListPorts,
     Smoke(SmokeOptions),
     Repl(ReplOptions),
+    EjectBlink(EjectBlinkOptions),
     Help,
 }
 
@@ -68,6 +75,14 @@ impl ReplOptions {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EjectBlinkOptions {
+    pub output: String,
+    pub program_id: u16,
+    pub slot: u8,
+    pub boot_policy: u8,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ReplCommand {
     Empty,
@@ -96,6 +111,7 @@ pub enum CliError {
     Serial(String),
     Io(String),
     Client(ClientError),
+    Eject(String),
     Smoke {
         stage: SmokeStage,
         source: ClientError,
@@ -117,6 +133,7 @@ impl fmt::Display for CliError {
             Self::Serial(error) => write!(f, "serial error: {error}"),
             Self::Io(error) => write!(f, "io error: {error}"),
             Self::Client(error) => write!(f, "client error: {error:?}"),
+            Self::Eject(error) => write!(f, "eject error: {error}"),
             Self::Smoke { stage, source } => write!(f, "smoke failed during {stage}: {source:?}"),
         }
     }
@@ -156,6 +173,7 @@ where
         "list-ports" => Ok(CliCommand::ListPorts),
         "smoke" => parse_smoke_args(args),
         "repl" => parse_repl_args(args),
+        "eject" => parse_eject_args(args),
         "help" | "--help" | "-h" => Ok(CliCommand::Help),
         other => Err(CliError::UnknownCommand(other.to_owned())),
     }
@@ -198,6 +216,51 @@ where
         program_id: options.program_id,
         instruction_budget: options.instruction_budget,
         host_nonce: options.host_nonce,
+    }))
+}
+
+fn parse_eject_args<I>(mut args: I) -> Result<CliCommand, CliError>
+where
+    I: Iterator<Item = String>,
+{
+    let target = args
+        .next()
+        .ok_or(CliError::MissingRequired("eject target"))?;
+    match target.as_str() {
+        "blink" => parse_eject_blink_args(args),
+        other => Err(CliError::UnknownCommand(format!("eject {other}"))),
+    }
+}
+
+fn parse_eject_blink_args<I>(mut args: I) -> Result<CliCommand, CliError>
+where
+    I: Iterator<Item = String>,
+{
+    let mut output = None;
+    let mut program_id = DEFAULT_PROGRAM_ID;
+    let mut slot = DEFAULT_EJECT_SLOT;
+    let mut boot_policy = DEFAULT_BOOT_POLICY;
+
+    while let Some(option) = args.next() {
+        match option.as_str() {
+            "--out" | "--output" | "-o" => output = Some(next_value(&mut args, "--out")?),
+            "--program-id" => {
+                program_id = parse_number(next_value(&mut args, "--program-id")?, "--program-id")?
+            }
+            "--slot" => slot = parse_number(next_value(&mut args, "--slot")?, "--slot")?,
+            "--boot-policy" => {
+                boot_policy = parse_boot_policy(next_value(&mut args, "--boot-policy")?)?
+            }
+            other => return Err(CliError::UnknownOption(other.to_owned())),
+        }
+    }
+
+    let output = output.ok_or(CliError::MissingRequired("--out"))?;
+    Ok(CliCommand::EjectBlink(EjectBlinkOptions {
+        output,
+        program_id,
+        slot,
+        boot_policy,
     }))
 }
 
@@ -272,6 +335,15 @@ pub fn parse_repl_line(line: &str) -> Result<ReplCommand, CliError> {
     Ok(command)
 }
 
+fn parse_boot_policy(value: String) -> Result<u8, CliError> {
+    match value.as_str() {
+        "store-only" => Ok(BOOT_STORE_ONLY),
+        "run-at-boot" => Ok(BOOT_RUN_AT_BOOT),
+        "run-if-no-host" => Ok(BOOT_RUN_IF_NO_HOST),
+        _ => parse_number(value, "--boot-policy"),
+    }
+}
+
 fn optional_repl_budget(
     value: Option<&str>,
     command: &'static str,
@@ -323,6 +395,16 @@ impl fmt::Display for SmokeStage {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EjectReport {
+    pub output: String,
+    pub program_id: u16,
+    pub slot: u8,
+    pub boot_policy: u8,
+    pub module_len: usize,
+    pub module_crc32: u32,
+}
+
 pub fn run_smoke(options: &SmokeOptions) -> Result<SmokeReport, CliError> {
     let transport = BoardSerialTransport::<_, 1024>::open(&options.serial_config())?;
     let mut client: BoardVmClient<_, 512, 768, 768> = BoardVmClient::new(transport);
@@ -361,6 +443,40 @@ pub fn run_smoke(options: &SmokeOptions) -> Result<SmokeReport, CliError> {
         descriptor,
         run,
     })
+}
+
+pub fn run_eject_blink(options: &EjectBlinkOptions) -> Result<EjectReport, CliError> {
+    let (source, report) = render_blink_eject(options)?;
+    fs::write(&options.output, source)?;
+    Ok(report)
+}
+
+pub fn render_blink_eject(options: &EjectBlinkOptions) -> Result<(String, EjectReport), CliError> {
+    let mut module = [0u8; BLINK_MODULE_LEN];
+    let artifact = build_blink_eject_artifact(
+        BlinkProgram::onboard_led(),
+        ArtifactEjectOptions::new(options.program_id)
+            .slot(options.slot)
+            .boot_policy(options.boot_policy),
+        &mut module,
+    )
+    .map_err(|error| CliError::Eject(format!("{error:?}")))?;
+
+    let mut source = String::new();
+    source.push_str("// Generated by board-vm eject blink.\n");
+    source.push_str("// Embed this from a board-specific firmware crate.\n\n");
+    write_embedded_rust_constants(&artifact, RustConstNames::board_vm_defaults(), &mut source)
+        .map_err(|error| CliError::Eject(format!("{error:?}")))?;
+
+    let report = EjectReport {
+        output: options.output.clone(),
+        program_id: artifact.program_id,
+        slot: artifact.slot,
+        boot_policy: artifact.boot_policy,
+        module_len: artifact.module_len(),
+        module_crc32: artifact.module_crc32,
+    };
+    Ok((source, report))
 }
 
 pub fn run_repl<R, W>(options: &ReplOptions, input: R, mut output: W) -> Result<(), CliError>
@@ -573,7 +689,7 @@ pub fn list_ports() -> Result<Vec<SerialPortInfo>, CliError> {
 }
 
 pub fn usage() -> &'static str {
-    "usage:\n  board-vm list-ports\n  board-vm smoke --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm repl --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]"
+    "usage:\n  board-vm list-ports\n  board-vm smoke --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm repl --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm eject blink --out <path> [--program-id <id>] [--slot <slot>] [--boot-policy store-only|run-at-boot|run-if-no-host|<u8>]"
 }
 
 #[cfg(test)]
@@ -684,6 +800,112 @@ mod tests {
     }
 
     #[test]
+    fn parses_eject_blink_defaults() {
+        let command = parse_args(["eject", "blink", "--out", "/tmp/blink.rs"]).unwrap();
+
+        assert_eq!(
+            command,
+            CliCommand::EjectBlink(EjectBlinkOptions {
+                output: "/tmp/blink.rs".to_owned(),
+                program_id: DEFAULT_PROGRAM_ID,
+                slot: DEFAULT_EJECT_SLOT,
+                boot_policy: DEFAULT_BOOT_POLICY,
+            })
+        );
+    }
+
+    #[test]
+    fn parses_eject_blink_overrides() {
+        let command = parse_args([
+            "eject",
+            "blink",
+            "--output",
+            "blink.rs",
+            "--program-id",
+            "9",
+            "--slot",
+            "3",
+            "--boot-policy",
+            "run-at-boot",
+        ])
+        .unwrap();
+
+        assert_eq!(
+            command,
+            CliCommand::EjectBlink(EjectBlinkOptions {
+                output: "blink.rs".to_owned(),
+                program_id: 9,
+                slot: 3,
+                boot_policy: BOOT_RUN_AT_BOOT,
+            })
+        );
+
+        let numeric =
+            parse_args(["eject", "blink", "--out", "blink.rs", "--boot-policy", "0"]).unwrap();
+        assert_eq!(
+            numeric,
+            CliCommand::EjectBlink(EjectBlinkOptions {
+                output: "blink.rs".to_owned(),
+                program_id: DEFAULT_PROGRAM_ID,
+                slot: DEFAULT_EJECT_SLOT,
+                boot_policy: BOOT_STORE_ONLY,
+            })
+        );
+    }
+
+    #[test]
+    fn renders_blink_eject_constants() {
+        let options = EjectBlinkOptions {
+            output: "blink.rs".to_owned(),
+            program_id: 7,
+            slot: 2,
+            boot_policy: BOOT_RUN_IF_NO_HOST,
+        };
+
+        let (source, report) = render_blink_eject(&options).unwrap();
+
+        assert_eq!(
+            report,
+            EjectReport {
+                output: "blink.rs".to_owned(),
+                program_id: 7,
+                slot: 2,
+                boot_policy: BOOT_RUN_IF_NO_HOST,
+                module_len: BLINK_MODULE_LEN,
+                module_crc32: 0xBAD6_949E,
+            }
+        );
+        assert!(source.starts_with("// Generated by board-vm eject blink."));
+        assert!(source.contains("pub const BOARD_VM_PROGRAM_ID: u16 = 7;"));
+        assert!(source.contains("pub const BOARD_VM_PROGRAM_SLOT: u8 = 2;"));
+        assert!(source.contains("pub const BOARD_VM_BOOT_POLICY: u8 = 2;"));
+        assert!(source.contains("pub const BOARD_VM_PROGRAM: [u8; 36] = ["));
+    }
+
+    #[test]
+    fn run_eject_blink_writes_file() {
+        let mut path = std::env::temp_dir();
+        path.push(format!(
+            "board-vm-cli-eject-blink-{}.rs",
+            std::process::id()
+        ));
+        let _ = std::fs::remove_file(&path);
+        let options = EjectBlinkOptions {
+            output: path.display().to_string(),
+            program_id: DEFAULT_PROGRAM_ID,
+            slot: DEFAULT_EJECT_SLOT,
+            boot_policy: DEFAULT_BOOT_POLICY,
+        };
+
+        let report = run_eject_blink(&options).unwrap();
+        let source = std::fs::read_to_string(&path).unwrap();
+        let _ = std::fs::remove_file(&path);
+
+        assert_eq!(report.output, options.output);
+        assert!(source.contains("pub const BOARD_VM_PROGRAM_ID: u16 = 1;"));
+    }
+
+    #[test]
     fn repl_serial_config_asserts_dtr_and_clears_stale_bytes() {
         let options = ReplOptions {
             port: "/dev/cu.usbmodem-test".to_owned(),
@@ -775,6 +997,14 @@ mod tests {
             parse_args(["repl"]).unwrap_err(),
             CliError::MissingRequired("--port")
         );
+        assert_eq!(
+            parse_args(["eject"]).unwrap_err(),
+            CliError::MissingRequired("eject target")
+        );
+        assert_eq!(
+            parse_args(["eject", "blink"]).unwrap_err(),
+            CliError::MissingRequired("--out")
+        );
     }
 
     #[test]
@@ -794,6 +1024,14 @@ mod tests {
         assert_eq!(
             parse_repl_line("run 10 extra").unwrap_err(),
             CliError::UnexpectedArgument("extra".to_owned())
+        );
+        assert_eq!(
+            parse_args(["eject", "wat"]).unwrap_err(),
+            CliError::UnknownCommand("eject wat".to_owned())
+        );
+        assert_eq!(
+            parse_args(["eject", "blink", "--out", "blink.rs", "--wat"]).unwrap_err(),
+            CliError::UnknownOption("--wat".to_owned())
         );
     }
 }
