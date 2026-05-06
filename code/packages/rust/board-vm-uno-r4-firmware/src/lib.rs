@@ -1,9 +1,13 @@
 #![no_std]
 
-use board_vm_ir::{parse_module, validate, ModuleError, ValidateError};
+use board_vm_ir::{
+    parse_module, validate, CapabilitySet, Module, ModuleError, ValidateError, MODULE_VERSION,
+};
+use board_vm_protocol::{ProgramFormat, BOOT_RUN_AT_BOOT, BOOT_RUN_IF_NO_HOST, BOOT_STORE_ONLY};
 use board_vm_runtime::{BoardHal, RunReport, Runtime, RuntimeError};
 
 pub mod arduino_usb_link;
+pub mod ejected_blink;
 #[cfg(target_arch = "arm")]
 pub mod scripted_probe_stream;
 #[cfg(not(target_arch = "arm"))]
@@ -21,12 +25,49 @@ pub const EMBEDDED_BLINK_MODULE: [u8; 36] = [
 ];
 
 pub const SMOKE_INSTRUCTION_BUDGET: u32 = 100;
+pub const EJECTED_INSTRUCTION_BUDGET: u32 = SMOKE_INSTRUCTION_BUDGET;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct EjectedFirmwareProgram<'a> {
+    pub program_id: u16,
+    pub slot: u8,
+    pub boot_policy: u8,
+    pub program_format: u8,
+    pub module_version: u8,
+    pub module_flags: u8,
+    pub max_stack: u8,
+    pub module_crc32: u32,
+    pub module: &'a [u8],
+}
+
+impl<'a> EjectedFirmwareProgram<'a> {
+    pub const fn module_len(self) -> usize {
+        self.module.len()
+    }
+
+    pub const fn blink() -> Self {
+        Self {
+            program_id: ejected_blink::BOARD_VM_PROGRAM_ID,
+            slot: ejected_blink::BOARD_VM_PROGRAM_SLOT,
+            boot_policy: ejected_blink::BOARD_VM_BOOT_POLICY,
+            program_format: ejected_blink::BOARD_VM_PROGRAM_FORMAT,
+            module_version: ejected_blink::BOARD_VM_MODULE_VERSION,
+            module_flags: ejected_blink::BOARD_VM_MODULE_FLAGS,
+            max_stack: ejected_blink::BOARD_VM_MODULE_MAX_STACK,
+            module_crc32: ejected_blink::BOARD_VM_PROGRAM_CRC32,
+            module: &ejected_blink::BOARD_VM_PROGRAM,
+        }
+    }
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum FirmwareSmokeError {
     Module(ModuleError),
     Validate(ValidateError),
     Runtime(RuntimeError),
+    UnsupportedProgramFormat(u8),
+    InvalidBootPolicy(u8),
+    ArtifactMetadataMismatch,
 }
 
 impl From<ModuleError> for FirmwareSmokeError {
@@ -57,6 +98,38 @@ pub fn validate_embedded_blink_module(board_max_stack: u8) -> Result<(), Firmwar
     Ok(())
 }
 
+pub fn validate_ejected_program(
+    program: EjectedFirmwareProgram<'_>,
+    capabilities: CapabilitySet,
+    board_max_stack: u8,
+) -> Result<(), FirmwareSmokeError> {
+    let module = parse_checked_ejected_program(program)?;
+    validate(&module, capabilities, board_max_stack)?;
+    Ok(())
+}
+
+pub fn validate_ejected_blink_program(board_max_stack: u8) -> Result<(), FirmwareSmokeError> {
+    validate_ejected_program(
+        EjectedFirmwareProgram::blink(),
+        CapabilitySet::blink_mvp(),
+        board_max_stack,
+    )
+}
+
+pub fn run_ejected_program_once<H, const MAX_STACK: usize, const MAX_HANDLES: usize>(
+    runtime: &mut Runtime<H, MAX_STACK, MAX_HANDLES>,
+    program: EjectedFirmwareProgram<'_>,
+    instruction_budget: u32,
+) -> Result<RunReport, FirmwareSmokeError>
+where
+    H: BoardHal,
+{
+    let module = parse_checked_ejected_program(program)?;
+    validate(&module, runtime.hal().capabilities(), MAX_STACK as u8)?;
+    runtime.reset_vm();
+    Ok(runtime.run_module(&module, instruction_budget)?)
+}
+
 pub fn run_blink_smoke_once<H, const MAX_STACK: usize, const MAX_HANDLES: usize>(
     runtime: &mut Runtime<H, MAX_STACK, MAX_HANDLES>,
     instruction_budget: u32,
@@ -67,6 +140,31 @@ where
     let module = parse_module(&EMBEDDED_BLINK_MODULE)?;
     runtime.reset_vm();
     Ok(runtime.run_module(&module, instruction_budget)?)
+}
+
+fn parse_checked_ejected_program(
+    program: EjectedFirmwareProgram<'_>,
+) -> Result<Module<'_>, FirmwareSmokeError> {
+    if program.program_format != ProgramFormat::BvmModule.as_u8() {
+        return Err(FirmwareSmokeError::UnsupportedProgramFormat(
+            program.program_format,
+        ));
+    }
+    match program.boot_policy {
+        BOOT_STORE_ONLY | BOOT_RUN_AT_BOOT | BOOT_RUN_IF_NO_HOST => {}
+        other => return Err(FirmwareSmokeError::InvalidBootPolicy(other)),
+    }
+    if program.module_version != MODULE_VERSION {
+        return Err(FirmwareSmokeError::Module(ModuleError::UnsupportedVersion(
+            program.module_version,
+        )));
+    }
+
+    let module = parse_module(program.module)?;
+    if module.flags != program.module_flags || module.max_stack != program.max_stack {
+        return Err(FirmwareSmokeError::ArtifactMetadataMismatch);
+    }
+    Ok(module)
 }
 
 #[cfg(any(test, not(target_arch = "arm")))]
@@ -149,11 +247,71 @@ mod tests {
     }
 
     #[test]
+    fn ejected_blink_program_matches_embedded_blink_bytecode() {
+        let program = EjectedFirmwareProgram::blink();
+
+        assert_eq!(program.program_id, 1);
+        assert_eq!(program.slot, 0);
+        assert_eq!(program.boot_policy, BOOT_RUN_IF_NO_HOST);
+        assert_eq!(program.program_format, ProgramFormat::BvmModule.as_u8());
+        assert_eq!(program.module_version, MODULE_VERSION);
+        assert_eq!(program.module_len(), EMBEDDED_BLINK_MODULE.len());
+        assert_eq!(program.module, &EMBEDDED_BLINK_MODULE);
+        validate_ejected_blink_program(16).unwrap();
+    }
+
+    #[test]
+    fn rejects_ejected_artifact_metadata_mismatch() {
+        let mut program = EjectedFirmwareProgram::blink();
+        program.max_stack = program.max_stack.saturating_add(1);
+
+        assert_eq!(
+            validate_ejected_program(program, CapabilitySet::blink_mvp(), 16).unwrap_err(),
+            FirmwareSmokeError::ArtifactMetadataMismatch
+        );
+    }
+
+    #[test]
     fn smoke_cycle_runs_blink_bytecode_against_hal() {
         let hal = FakeHal::new();
         let mut runtime: Runtime<_, 16, 8> = Runtime::new(hal);
 
         let report = run_blink_smoke_once(&mut runtime, SMOKE_INSTRUCTION_BUDGET).unwrap();
+
+        assert_eq!(report.status, RunStatus::BudgetExceeded);
+        assert_eq!(report.open_handles, 1);
+        assert_eq!(
+            &runtime.hal().events[..5],
+            &[
+                Event::Open {
+                    pin: 13,
+                    mode: GpioMode::Output
+                },
+                Event::Write {
+                    token: 1,
+                    level: Level::High
+                },
+                Event::Sleep(250),
+                Event::Write {
+                    token: 1,
+                    level: Level::Low
+                },
+                Event::Sleep(250),
+            ]
+        );
+    }
+
+    #[test]
+    fn ejected_cycle_runs_blink_bytecode_against_hal() {
+        let hal = FakeHal::new();
+        let mut runtime: Runtime<_, 16, 8> = Runtime::new(hal);
+
+        let report = run_ejected_program_once(
+            &mut runtime,
+            EjectedFirmwareProgram::blink(),
+            EJECTED_INSTRUCTION_BUDGET,
+        )
+        .unwrap();
 
         assert_eq!(report.status, RunStatus::BudgetExceeded);
         assert_eq!(report.open_handles, 1);
