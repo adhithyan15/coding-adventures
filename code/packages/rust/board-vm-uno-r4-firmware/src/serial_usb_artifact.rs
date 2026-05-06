@@ -6,7 +6,11 @@ use std::format;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::string::{String, ToString};
+use std::thread;
+use std::time::{Duration, Instant};
 use std::vec::Vec;
+
+use board_vm_serial::{available_ports, touch_arduino_bootloader_with_timing};
 
 use crate::arduino_usb_link::{
     ARDUINO_ARM_AR_ENV_VAR, ARDUINO_ARM_COMPAT_ROOT_ENV_VAR, ARDUINO_ARM_GCC_ENV_VAR,
@@ -18,6 +22,10 @@ pub const TARGET_TRIPLE: &str = "thumbv7em-none-eabihf";
 pub const FIRMWARE_PACKAGE: &str = "board-vm-uno-r4-firmware";
 pub const DEFAULT_BAUD_RATE: u32 = 115_200;
 pub const DEFAULT_TIMEOUT_MS: u64 = 1_000;
+pub const DEFAULT_BOOTLOADER_TOUCH_TIMEOUT_MS: u64 = 250;
+pub const DEFAULT_BOOTLOADER_TOUCH_SETTLE_MS: u64 = 1_500;
+pub const DEFAULT_BOOTLOADER_PORT_WAIT_MS: u64 = 5_000;
+pub const DEFAULT_BOOTLOADER_PORT_POLL_MS: u64 = 100;
 pub const ARDUINO_BOSSAC_PATH_ENV_VAR: &str = "BOARD_VM_UNO_R4_BOSSAC_PATH";
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -98,6 +106,10 @@ pub struct SerialUsbArtifactOptions {
     pub release: bool,
     pub port: Option<String>,
     pub upload: bool,
+    pub touch_bootloader: bool,
+    pub bootloader_touch_timeout_ms: u64,
+    pub bootloader_touch_settle_ms: u64,
+    pub bootloader_port_wait_ms: u64,
     pub smoke: bool,
     pub smoke_baud_rate: u32,
     pub smoke_timeout_ms: u64,
@@ -119,6 +131,10 @@ impl Default for SerialUsbArtifactOptions {
             release: true,
             port: None,
             upload: false,
+            touch_bootloader: true,
+            bootloader_touch_timeout_ms: DEFAULT_BOOTLOADER_TOUCH_TIMEOUT_MS,
+            bootloader_touch_settle_ms: DEFAULT_BOOTLOADER_TOUCH_SETTLE_MS,
+            bootloader_port_wait_ms: DEFAULT_BOOTLOADER_PORT_WAIT_MS,
             smoke: false,
             smoke_baud_rate: DEFAULT_BAUD_RATE,
             smoke_timeout_ms: DEFAULT_TIMEOUT_MS,
@@ -234,14 +250,15 @@ impl SerialUsbArtifactOptions {
     }
 
     pub fn upload_command(&self) -> Result<CommandSpec, ArtifactCliError> {
-        let port = self.port.as_ref().ok_or(ArtifactCliError::MissingPort(
-            "--port is required with --upload",
-        ))?;
+        let port = self.upload_port()?;
+        Ok(self.upload_command_for_port(port))
+    }
 
+    pub fn upload_command_for_port(&self, port: &str) -> CommandSpec {
         let mut command = CommandSpec::new(self.arduino_cli.as_os_str().to_os_string())
             .arg("upload")
             .arg("-p")
-            .arg(port.as_str())
+            .arg(port)
             .arg("-b")
             .arg(UNO_R4_WIFI_FQBN)
             .arg("-i")
@@ -254,7 +271,29 @@ impl SerialUsbArtifactOptions {
             ));
         }
 
-        Ok(command)
+        command
+    }
+
+    pub fn upload_port(&self) -> Result<&str, ArtifactCliError> {
+        self.port.as_deref().ok_or(ArtifactCliError::MissingPort(
+            "--port is required with --upload",
+        ))
+    }
+
+    pub fn touch_bootloader_port(&self, port: &str) -> Result<String, ArtifactCliError> {
+        let before = serial_port_names()?;
+        touch_arduino_bootloader_with_timing(
+            port,
+            Duration::from_millis(self.bootloader_touch_timeout_ms),
+            Duration::from_millis(self.bootloader_touch_settle_ms),
+        )
+        .map_err(|error| ArtifactCliError::BootloaderTouch(error.to_string()))?;
+        wait_for_bootloader_port(
+            port,
+            &before,
+            Duration::from_millis(self.bootloader_port_wait_ms),
+            Duration::from_millis(DEFAULT_BOOTLOADER_PORT_POLL_MS),
+        )
     }
 
     pub fn smoke_command(&self) -> Result<CommandSpec, ArtifactCliError> {
@@ -308,6 +347,44 @@ pub fn parse_new_upload_port(output: &str) -> Option<String> {
     })
 }
 
+pub fn choose_bootloader_port(
+    requested: &str,
+    before: &[String],
+    after: &[String],
+) -> Option<String> {
+    after
+        .iter()
+        .find(|port| !before.contains(port) && port.contains("usbmodem"))
+        .or_else(|| after.iter().find(|port| !before.contains(port)))
+        .or_else(|| after.iter().find(|port| port.as_str() == requested))
+        .cloned()
+}
+
+fn wait_for_bootloader_port(
+    requested: &str,
+    before: &[String],
+    wait: Duration,
+    poll: Duration,
+) -> Result<String, ArtifactCliError> {
+    let deadline = Instant::now() + wait;
+    loop {
+        let after = serial_port_names()?;
+        if let Some(port) = choose_bootloader_port(requested, before, &after) {
+            return Ok(port);
+        }
+        if Instant::now() >= deadline {
+            return Ok(requested.to_string());
+        }
+        thread::sleep(poll);
+    }
+}
+
+fn serial_port_names() -> Result<Vec<String>, ArtifactCliError> {
+    available_ports()
+        .map(|ports| ports.into_iter().map(|port| port.port_name).collect())
+        .map_err(|error| ArtifactCliError::BootloaderPortList(error.to_string()))
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SerialUsbArtifactRun {
     pub options: SerialUsbArtifactOptions,
@@ -325,6 +402,8 @@ pub enum ArtifactCliError {
     MissingValue(&'static str),
     MissingPort(&'static str),
     InvalidNumber { option: &'static str, value: String },
+    BootloaderTouch(String),
+    BootloaderPortList(String),
     UnknownOption(String),
 }
 
@@ -336,6 +415,8 @@ impl fmt::Display for ArtifactCliError {
             Self::InvalidNumber { option, value } => {
                 write!(f, "invalid numeric value for {option}: {value}")
             }
+            Self::BootloaderTouch(error) => write!(f, "bootloader touch failed: {error}"),
+            Self::BootloaderPortList(error) => write!(f, "bootloader port listing failed: {error}"),
             Self::UnknownOption(option) => write!(f, "unknown option: {option}"),
         }
     }
@@ -405,8 +486,27 @@ where
                 options.smoke_timeout_ms =
                     parse_number(next_value(&mut args, "--timeout-ms")?, "--timeout-ms")?;
             }
+            "--bootloader-touch-timeout-ms" => {
+                options.bootloader_touch_timeout_ms = parse_number(
+                    next_value(&mut args, "--bootloader-touch-timeout-ms")?,
+                    "--bootloader-touch-timeout-ms",
+                )?;
+            }
+            "--bootloader-touch-settle-ms" => {
+                options.bootloader_touch_settle_ms = parse_number(
+                    next_value(&mut args, "--bootloader-touch-settle-ms")?,
+                    "--bootloader-touch-settle-ms",
+                )?;
+            }
+            "--bootloader-port-wait-ms" => {
+                options.bootloader_port_wait_ms = parse_number(
+                    next_value(&mut args, "--bootloader-port-wait-ms")?,
+                    "--bootloader-port-wait-ms",
+                )?;
+            }
             "--debug" => options.release = false,
             "--upload" => options.upload = true,
+            "--no-bootloader-touch" => options.touch_bootloader = false,
             "--smoke" => options.smoke = true,
             "--print-only" => print_only = true,
             other => return Err(ArtifactCliError::UnknownOption(other.to_string())),
@@ -420,7 +520,7 @@ where
 }
 
 pub fn usage() -> &'static str {
-    "usage:\n  uno-r4-wifi-serialusb-artifact [--core <arduino-core>] [--rustc <path>] [--arm-toolchain-bin <dir>] [--arm-gcc <path>] [--arm-gxx <path>] [--arm-ar <path>] [--arm-compat-root <dir>] [--target-dir <dir>] [--objcopy <path>] [--arduino-cli <path>] [--bossac-path <dir>] [--print-only] [--upload --port <bootloader-or-runtime-port>] [--smoke --port <serial-port>] [--baud <rate>] [--timeout-ms <ms>]"
+    "usage:\n  uno-r4-wifi-serialusb-artifact [--core <arduino-core>] [--rustc <path>] [--arm-toolchain-bin <dir>] [--arm-gcc <path>] [--arm-gxx <path>] [--arm-ar <path>] [--arm-compat-root <dir>] [--target-dir <dir>] [--objcopy <path>] [--arduino-cli <path>] [--bossac-path <dir>] [--print-only] [--upload --port <bootloader-or-runtime-port>] [--no-bootloader-touch] [--bootloader-touch-timeout-ms <ms>] [--bootloader-touch-settle-ms <ms>] [--bootloader-port-wait-ms <ms>] [--smoke --port <serial-port>] [--baud <rate>] [--timeout-ms <ms>]"
 }
 
 pub fn resolve_rust_llvm_objcopy() -> Option<PathBuf> {
@@ -538,6 +638,7 @@ fn shell_escape(value: &OsStr) -> String {
 mod tests {
     use super::*;
     use std::ffi::OsString;
+    use std::vec;
 
     fn options() -> SerialUsbArtifactOptions {
         SerialUsbArtifactOptions {
@@ -554,6 +655,10 @@ mod tests {
             release: true,
             port: None,
             upload: false,
+            touch_bootloader: true,
+            bootloader_touch_timeout_ms: DEFAULT_BOOTLOADER_TOUCH_TIMEOUT_MS,
+            bootloader_touch_settle_ms: DEFAULT_BOOTLOADER_TOUCH_SETTLE_MS,
+            bootloader_port_wait_ms: DEFAULT_BOOTLOADER_PORT_WAIT_MS,
             smoke: false,
             smoke_baud_rate: DEFAULT_BAUD_RATE,
             smoke_timeout_ms: DEFAULT_TIMEOUT_MS,
@@ -743,6 +848,35 @@ mod tests {
     }
 
     #[test]
+    fn bootloader_port_selection_prefers_new_usbmodem_ports() {
+        let before = vec![
+            "/dev/cu.debug-console".to_string(),
+            "/dev/cu.usbmodem1101".to_string(),
+        ];
+        let after = vec![
+            "/dev/cu.debug-console".to_string(),
+            "/dev/cu.usbserial-abc".to_string(),
+            "/dev/cu.usbmodem2201".to_string(),
+        ];
+
+        assert_eq!(
+            choose_bootloader_port("/dev/cu.usbmodem1101", &before, &after),
+            Some("/dev/cu.usbmodem2201".to_string())
+        );
+    }
+
+    #[test]
+    fn bootloader_port_selection_falls_back_to_requested_port() {
+        let before = vec!["/dev/cu.usbmodem1101".to_string()];
+        let after = vec!["/dev/cu.usbmodem1101".to_string()];
+
+        assert_eq!(
+            choose_bootloader_port("/dev/cu.usbmodem1101", &before, &after),
+            Some("/dev/cu.usbmodem1101".to_string())
+        );
+    }
+
+    #[test]
     fn upload_requires_a_port() {
         let mut options = options();
         options.upload = true;
@@ -810,9 +944,41 @@ mod tests {
         assert_eq!(run.options.bossac_path, Some(PathBuf::from("/bossac/bin")));
         assert_eq!(run.options.port, Some("/dev/cu.usbmodem-test".to_string()));
         assert!(run.options.upload);
+        assert!(run.options.touch_bootloader);
         assert!(run.options.smoke);
         assert_eq!(run.options.smoke_baud_rate, 57_600);
         assert_eq!(run.options.smoke_timeout_ms, 250);
+    }
+
+    #[test]
+    fn parses_bootloader_touch_overrides() {
+        let invocation = parse_artifact_args(
+            [
+                "--upload",
+                "--port",
+                "/dev/cu.usbmodem-test",
+                "--no-bootloader-touch",
+                "--bootloader-touch-timeout-ms",
+                "25",
+                "--bootloader-touch-settle-ms",
+                "50",
+                "--bootloader-port-wait-ms",
+                "75",
+            ],
+            SerialUsbArtifactOptions::default(),
+        )
+        .unwrap();
+
+        let ArtifactInvocation::Run(run) = invocation else {
+            panic!("expected run invocation");
+        };
+
+        assert!(run.options.upload);
+        assert_eq!(run.options.port, Some("/dev/cu.usbmodem-test".to_string()));
+        assert!(!run.options.touch_bootloader);
+        assert_eq!(run.options.bootloader_touch_timeout_ms, 25);
+        assert_eq!(run.options.bootloader_touch_settle_ms, 50);
+        assert_eq!(run.options.bootloader_port_wait_ms, 75);
     }
 
     #[test]

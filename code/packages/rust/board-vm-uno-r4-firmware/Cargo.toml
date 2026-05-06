@@ -21,6 +21,9 @@ cortex-m-rt = "0.7"
 embedded-hal = "1.0"
 panic-halt = "0.2"
 
+[target.'cfg(not(target_arch = "arm"))'.dependencies]
+board-vm-serial = { path = "../board-vm-serial" }
+
 [dev-dependencies]
 board-vm-host = { path = "../board-vm-host" }
 
