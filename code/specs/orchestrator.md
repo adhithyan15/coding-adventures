@@ -25,11 +25,22 @@ The orchestrator's responsibilities are exactly four:
 2. **Supervise host processes** as the root of the OS-process
    supervision tree, applying restart strategies and capability
    inheritance.
-3. **Maintain a service registry** mapping host names to running
-   process handles, so that pipelines can be wired and inspected.
+3. **Maintain a host registry** mapping host names to running
+   process handles, so the orchestrator can resolve discovery
+   queries and report status.
 4. **Coordinate the panic-broadcast network** as the root authority,
    triggering tree-wide quarantine when the global panic rate
    exceeds threshold and paging a human.
+5. **Manage provider lifecycle** for every discoverable role:
+   spawn-on-discovery when no provider is active, idle-shutdown
+   when no consumer is using one, and pool sizing per the
+   role's `min_instances` / `max_instances` / `idle_shutdown`
+   declarations. (Per `dynamic-topology.md` and
+   `agent-discovery.md`.)
+6. **Bridge agent-discovery requests** by creating fresh
+   ratcheted channels via `secure-host-channel`, applying the
+   RWS analysis on the post-bridge topology, and refusing
+   bridges that would violate the rule.
 
 Plus one supporting role: **bootstrap secure channels** to each
 host using the per-spawn X3DH dance defined in `secure-host-channel.md`,
@@ -43,10 +54,15 @@ The orchestrator does **not**:
 - decrypt host ↔ agent traffic (it cannot — it has no key)
 - hold vault secrets (the vault is a sibling actor, not a child)
 - understand what any agent does
+- pre-wire channel topology — per `dynamic-topology.md`, all
+  agent-to-agent channels are established at runtime via
+  agent-discovery; the orchestrator never declares
+  `[channel.*]` in its config
 
 This spec defines what the orchestrator *does* do: signature
-verification, supervision, registry, panic root, and channel
-bootstrap. Everything else is delegated.
+verification, supervision, registry, panic root, channel
+bootstrap, **provider lifecycle management**, and
+**discovery-bridge creation**. Everything else is delegated.
 
 ---
 
@@ -347,6 +363,88 @@ log** to a write-only audit file under
 `./.orchestrator/panic-log.jsonl`, append-only, fsync on every
 write, with file permissions that prevent any host from reading
 it (it is a forensic record, not telemetry).
+
+---
+
+### Provider Lifecycle Management
+
+Per `dynamic-topology.md`, the orchestrator owns the lifecycle
+of every discoverable provider. There are no predefined
+channels; every channel is created at runtime via
+`agent-discovery.md`'s `find_and_connect`. The orchestrator
+must therefore decide:
+
+- **When to spawn a provider** (no active instance, but a
+  consumer wants one)
+- **When to retire one** (no active bridges and the configured
+  idle threshold has passed)
+- **How many to keep alive** (load-driven scaling within the
+  `min_instances` / `max_instances` envelope each provider
+  declares)
+
+The full semantics live in `agent-discovery.md`'s "Provider
+Lifecycle" section and `dynamic-topology.md`'s rules. The
+orchestrator's responsibilities are:
+
+1. **Spawn-on-discovery.** When a `find_and_connect` request
+   arrives for a role with no active provider, the orchestrator
+   consults the agent-registry, selects a registered package
+   that provides the role and matches the qualifier, and
+   launches it through the normal `launch_host` path
+   (including the registry hash pin, signature verify, and
+   tier challenge). The consumer's discovery call blocks until
+   the new host completes its X3DH handshake (default timeout
+   10 s) or returns `NoProvidersFound`.
+
+2. **Idle-shutdown.** Per provider, the orchestrator tracks
+   time-since-last-active-bridge. When it exceeds the
+   provider's declared `idle_shutdown` AND no current bridges
+   exist AND `min_instances` would not be violated, the
+   orchestrator gracefully terminates the provider (sends
+   Terminate, waits for shutdown timeout per supervisor rules,
+   reaps the OS process, removes from the registry).
+
+3. **Pool sizing.** The orchestrator scales a role's instance
+   count between `min_instances` and `max_instances` based on
+   load. When the average `current_load` across active
+   instances exceeds 75% of `max_concurrent`, spawn another
+   (up to the cap). When average drops below 25% and at least
+   one instance has been idle past `idle_shutdown`, retire
+   that one. `min_instances` is always honored: if a crash
+   drops the count below it, spawn a replacement immediately
+   without waiting for a discovery.
+
+4. **Bridge creation.** Per `agent-discovery.md`'s bridging
+   sequence, after providers are resolved the orchestrator
+   creates two ratcheted channels via `secure-host-channel`,
+   pushes endpoint handles to both sides via control-priority
+   messages, and updates the bridge ledger.
+
+5. **Bridge teardown.** When either side disconnects (clean
+   close or process exit), the orchestrator notifies the peer,
+   reclaims the channel slots, decrements the provider's
+   `current_load`, and (if applicable) starts the
+   idle-shutdown timer for that provider.
+
+The orchestrator's bridge ledger is persisted to disk
+alongside the registry (`./.orchestrator/bridges.json`,
+atomic write) so a mid-bridge orchestrator crash can
+reconstruct active bridges on restart and avoid duplicating
+or orphaning them.
+
+The default policy (`min_instances: 0`, `max_instances: 1`,
+`idle_shutdown: never`) yields "exactly one instance once
+discovered, kept alive forever" — operationally identical to
+a pre-spawned model, with no extra config burden on the
+agent author.
+
+**There is no `[channel.*]` section in `orchestrator.toml`.**
+Channels exist only as the result of discovery calls at
+runtime. The TOML config retains `[host.*]` for per-host
+lifecycle hints (`restart`, `shutdown`, `idle_shutdown`,
+`min_instances`, `max_instances`) and `[panic_thresholds]`
+for the panic root, but channel topology is invisible at the
+config level — it is a runtime-only concept.
 
 ---
 
