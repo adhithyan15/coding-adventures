@@ -13,6 +13,11 @@ pub const UNO_R4_WIFI_USB_PRODUCT: &str = "UNO R4 WiFi";
 pub const UNO_R4_WIFI_SERIAL_USB_NAME: &str = "SerialUSB";
 pub const UNO_R4_WIFI_USB_CDC_INTERFACE: u8 = 0;
 pub const UNO_R4_WIFI_USB_MAX_PACKET_BYTES: usize = USB_CDC_FULL_SPEED_MAX_PACKET_BYTES;
+pub const UNO_R4_WIFI_CORTEX_VECTOR_TABLE_ENTRIES: usize = 16;
+pub const UNO_R4_WIFI_ICU_VECTOR_TABLE_ENTRIES: usize = 32;
+pub const UNO_R4_WIFI_MUTABLE_VECTOR_TABLE_ENTRIES: usize =
+    UNO_R4_WIFI_CORTEX_VECTOR_TABLE_ENTRIES + UNO_R4_WIFI_ICU_VECTOR_TABLE_ENTRIES;
+pub const UNO_R4_WIFI_MUTABLE_VECTOR_TABLE_ALIGNMENT_BYTES: usize = 256;
 pub const ARDUINO_RENESAS_USB_START_SYMBOL: &str = "_Z10__USBStartv";
 pub const ARDUINO_RENESAS_USB_INSTALL_SERIAL_SYMBOL: &str = "_Z18__USBInstallSerialv";
 pub const UNO_R4_WIFI_CONFIGURE_USB_MUX_SYMBOL: &str = "_Z17configure_usb_muxv";
@@ -209,6 +214,7 @@ impl Default for TinyUsbCdc0 {
 impl TinyUsbCdcApi for TinyUsbCdc0 {
     fn start(&mut self) {
         unsafe {
+            arduino_irq_vectors::install_mutable_table();
             ffi::arduino_renesas_usb_start();
         }
     }
@@ -307,6 +313,48 @@ fn parity_from_tinyusb(parity: u8) -> UsbCdcParity {
 #[cfg(target_arch = "arm")]
 fn control_line_state_from_tinyusb(line_state: u8) -> UsbCdcControlLineState {
     UsbCdcControlLineState::new(line_state & 0x01 != 0, line_state & 0x02 != 0)
+}
+
+#[cfg(target_arch = "arm")]
+mod arduino_irq_vectors {
+    use core::ptr::{addr_of_mut, read_volatile, write_volatile};
+    use core::sync::atomic::{AtomicBool, Ordering};
+
+    use super::{
+        UNO_R4_WIFI_MUTABLE_VECTOR_TABLE_ALIGNMENT_BYTES, UNO_R4_WIFI_MUTABLE_VECTOR_TABLE_ENTRIES,
+    };
+
+    const SCB_VTOR: *mut u32 = 0xE000_ED08 as *mut u32;
+
+    #[repr(C, align(256))]
+    struct MutableVectorTable([u32; UNO_R4_WIFI_MUTABLE_VECTOR_TABLE_ENTRIES]);
+
+    static INSTALLED: AtomicBool = AtomicBool::new(false);
+    static mut VECTOR_TABLE: MutableVectorTable =
+        MutableVectorTable([0; UNO_R4_WIFI_MUTABLE_VECTOR_TABLE_ENTRIES]);
+
+    pub unsafe fn install_mutable_table() {
+        if INSTALLED.swap(true, Ordering::AcqRel) {
+            return;
+        }
+
+        let source = read_volatile(SCB_VTOR) as *const u32;
+        let destination = addr_of_mut!(VECTOR_TABLE.0) as *mut u32;
+        if source != destination {
+            for index in 0..UNO_R4_WIFI_MUTABLE_VECTOR_TABLE_ENTRIES {
+                write_volatile(destination.add(index), read_volatile(source.add(index)));
+            }
+
+            write_volatile(SCB_VTOR, destination as u32);
+            synchronize_vector_table_update();
+        }
+    }
+
+    unsafe fn synchronize_vector_table_update() {
+        core::arch::asm!("dsb sy", "isb sy", options(nostack, preserves_flags));
+    }
+
+    const _: () = assert!(UNO_R4_WIFI_MUTABLE_VECTOR_TABLE_ALIGNMENT_BYTES == 256);
 }
 
 #[cfg(target_arch = "arm")]
@@ -601,6 +649,10 @@ mod tests {
         assert_eq!(UNO_R4_WIFI_USB_PRODUCT, "UNO R4 WiFi");
         assert_eq!(UNO_R4_WIFI_SERIAL_USB_NAME, "SerialUSB");
         assert_eq!(UNO_R4_WIFI_USB_MAX_PACKET_BYTES, 64);
+        assert_eq!(UNO_R4_WIFI_CORTEX_VECTOR_TABLE_ENTRIES, 16);
+        assert_eq!(UNO_R4_WIFI_ICU_VECTOR_TABLE_ENTRIES, 32);
+        assert_eq!(UNO_R4_WIFI_MUTABLE_VECTOR_TABLE_ENTRIES, 48);
+        assert_eq!(UNO_R4_WIFI_MUTABLE_VECTOR_TABLE_ALIGNMENT_BYTES, 256);
         assert_eq!(ARDUINO_RENESAS_USB_START_SYMBOL, "_Z10__USBStartv");
         assert_eq!(
             ARDUINO_RENESAS_USB_INSTALL_SERIAL_SYMBOL,

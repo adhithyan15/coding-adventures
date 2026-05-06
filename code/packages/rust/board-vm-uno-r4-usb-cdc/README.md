@@ -24,6 +24,12 @@ mux hook calls the same FSP `R_IOPORT_PinCfg`/`R_IOPORT_PinWrite` path that
 Arduino's `pinMode(21, OUTPUT); digitalWrite(21, HIGH);` sequence uses, without
 linking the full WiFi `variant.cpp` object.
 
+Before starting Arduino USB, the backend copies the active Cortex-M/FSP vector
+table into a 256-byte-aligned RAM table and points `SCB->VTOR` at that mutable
+copy. Arduino's `IRQManager` patches USBFS interrupt entries at runtime, so the
+Rust firmware must provide the same mutable vector-table setup that Arduino's
+`main.cpp` normally performs before calling `__USBStart()`.
+
 For hardware smoke tests, a board that still enumerates as VID/PID
 `2341:1002` after upload has not handed USB-C off from the bridge. If the bridge
 port disappears but the host sees an unmatched USB device stuck before CDC port
