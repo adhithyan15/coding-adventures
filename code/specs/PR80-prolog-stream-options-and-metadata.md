@@ -54,5 +54,6 @@ Coverage should prove:
 
 - no standard stream aliases
 - no binary streams or encodings beyond UTF-8
-- no `read/1`, `read_term/2`, or term parsing from stream handles
+- parser-backed `read/1`, `read_term/2`, and stream term parsing are deferred
+  to PR83
 - no foreign predicate or async host callback boundary

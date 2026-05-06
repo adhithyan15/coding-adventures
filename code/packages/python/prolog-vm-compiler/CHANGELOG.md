@@ -17,8 +17,11 @@
 - Run selected current-stream predicates through structured and bytecode VM
   paths, including `set_input/1`, `set_output/1`, `current_input/1`,
   `current_output/1`, current-input reads, and current-output writes.
+- Run parser-backed stream term I/O predicates through structured and bytecode
+  VM paths, including `read/1`, `read/2`, `read_term/2`, `read_term/3`,
+  `write_term/2`, and `write_term/3`.
 - Add a public Prolog VM capability manifest and `prolog-vm --dump-capabilities`
-  so scripts and future planning can distinguish the completed PR00-PR82 track
+  so scripts and future planning can distinguish the completed PR00-PR83 track
   from deferred advanced dialect/runtime work.
 - Add end-to-end stress coverage for recursive search, modules, DCGs,
   arithmetic, collections, dynamic initialization, named answers, and expansion.

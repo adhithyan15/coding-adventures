@@ -252,6 +252,21 @@ def prolog_vm_capabilities() -> tuple[PrologVMCapability, ...]:
                 "structured and bytecode VM stress coverage",
             ),
         ),
+        PrologVMCapability(
+            id="host-stream-term-io",
+            title="Parser-backed bounded stream term I/O",
+            status="complete",
+            specs=("PR83",),
+            packages=("prolog-loader", "prolog-vm-compiler"),
+            features=(
+                "read/2 and read_term/3 parse one term from explicit streams",
+                "read/1 and read_term/2 parse from the selected current input",
+                "read_term variable_names/1 and variables/1 options on streams",
+                "end_of_file handling after stream terms are consumed",
+                "write_term/3 and write_term/2 render to explicit/current output",
+                "structured and bytecode VM stress coverage",
+            ),
+        ),
     )
 
 
@@ -302,8 +317,8 @@ def prolog_vm_capability_manifest() -> PrologVMCapabilityManifest:
     """Return the canonical capability manifest for this package."""
 
     return PrologVMCapabilityManifest(
-        track="Prolog-on-Logic-VM PR00-PR82",
-        status="core-plus-current-streams",
+        track="Prolog-on-Logic-VM PR00-PR83",
+        status="core-plus-stream-term-io",
         dialects=("iso", "swi"),
         backends=("structured", "bytecode"),
         capabilities=prolog_vm_capabilities(),

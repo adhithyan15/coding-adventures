@@ -1623,6 +1623,80 @@ class TestPrologGoalAdapter:
         assert (first, chunk, line) == (atom("a"), string("bc"), string("def"))
         assert output_path.read_text(encoding="utf-8") == "tea\ncake(slice)"
 
+    def test_adapt_prolog_goal_rewrites_stream_term_io(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        input_path = tmp_path / "terms.pltxt"
+        output_path = tmp_path / "written-terms.pltxt"
+        input_path.write_text(
+            "% leading layout is skipped\n"
+            "box(cake).\n"
+            "/* block comments are layout */\n"
+            "pair(tea, X).\n",
+            encoding="utf-8",
+        )
+        input_atom = str(input_path).replace("\\", "\\\\").replace("'", "\\'")
+        output_atom = str(output_path).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- open('{input_atom}', read, In, [alias(term_input)]), "
+            "read(In, First), "
+            "read_term(In, Second, [variable_names(Names), variables(Vars)]), "
+            "read(In, Eof), "
+            "close(In), "
+            f"open('{input_atom}', read, CurrentIn, [alias(current_term_input)]), "
+            f"open('{output_atom}', write, Out, [alias(term_output)]), "
+            "set_input(CurrentIn), "
+            "set_output(Out), "
+            "read(CurrentFirst), "
+            "read_term(CurrentSecond, []), "
+            "write_term(Out, First, []), "
+            "write(Out, '.'), "
+            "nl, "
+            "write_term(CurrentFirst, []), "
+            "write('.'), "
+            "nl, "
+            "write_term(CurrentSecond, []), "
+            "close(CurrentIn), "
+            "close(Out).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["First"],
+                parsed.variables["Second"],
+                parsed.variables["Names"],
+                parsed.variables["Vars"],
+                parsed.variables["Eof"],
+                parsed.variables["CurrentFirst"],
+                parsed.variables["CurrentSecond"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert len(answers) == 1
+        (
+            first,
+            second,
+            names,
+            vars_value,
+            eof,
+            current_first,
+            current_second,
+        ) = answers[0]
+        assert first == term("box", "cake")
+        assert isinstance(second, Compound)
+        assert second == term("pair", "tea", second.args[1])
+        assert names == logic_list([term("=", "X", second.args[1])])
+        assert vars_value == logic_list([second.args[1]])
+        assert eof == atom("end_of_file")
+        assert current_first == first
+        assert current_second == term("pair", "tea", current_second.args[1])
+        assert output_path.read_text(encoding="utf-8") == (
+            "box(cake).\nbox(cake).\npair(tea, X)"
+        )
+
     def test_adapt_prolog_goal_rewrites_term_read_write_options(self) -> None:
         parsed = parse_swi_query(
             "?- read_term_from_atom('pair(X, Y, X)', Term, "
