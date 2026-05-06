@@ -1,6 +1,6 @@
 use std::env;
 
-use board_vm_cli::{list_ports, parse_args, run_smoke, usage, CliCommand};
+use board_vm_cli::{list_ports, parse_args, run_repl, run_smoke, usage, CliCommand};
 
 fn main() {
     match parse_args(env::args().skip(1)).and_then(run_command) {
@@ -48,6 +48,11 @@ fn run_command(command: CliCommand) -> Result<(), board_vm_cli::CliError> {
                 report.run.open_handles
             );
             Ok(())
+        }
+        CliCommand::Repl(options) => {
+            let stdin = std::io::stdin();
+            let stdout = std::io::stdout();
+            run_repl(&options, stdin.lock(), stdout.lock())
         }
         CliCommand::Help => {
             println!("{}", usage());
