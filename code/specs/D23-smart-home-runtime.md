@@ -750,6 +750,12 @@ integration lifecycle.
 
 Uses D19 actors and D18D tools.
 
+**Initial Rust implementation:** `code/packages/rust/smart-home-runtime` now
+provides a synchronous runtime core over the normalized registry: event-bus
+subscriptions, command validation against entity capabilities, accepted command
+results with optimistic state expiry, device-event replay into the state cache,
+bridge health updates, and supervised bridge-worker heartbeat/restart signals.
+
 ### `smart-home-discovery`
 
 Reusable discovery helpers:

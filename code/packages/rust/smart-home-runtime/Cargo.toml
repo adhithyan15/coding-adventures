@@ -1,0 +1,10 @@
+[package]
+name = "smart-home-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "Smart-home runtime coordinator for event routing, command validation, state cache, and supervision"
+license = "MIT"
+
+[dependencies]
+smart-home-core = { path = "../smart-home-core" }
+smart-home-registry = { path = "../smart-home-registry" }

@@ -1,0 +1,14 @@
+# Changelog
+
+All notable changes to this package will be documented in this file.
+
+## [0.1.0] - 2026-05-06
+
+### Added
+
+- Runtime event bus with subscription filters for all, bridge, entity, command,
+  and supervision events.
+- `SmartHomeRuntime` facade over `smart-home-registry` for command validation,
+  optimistic state caching, event replay, and bridge health updates.
+- Supervisor primitives for bridge-worker heartbeat tracking and restart
+  signaling.
