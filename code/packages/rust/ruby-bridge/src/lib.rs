@@ -22,6 +22,7 @@
 //! On 64-bit systems, VALUE is `u64`. On 32-bit, it's `u32`.
 
 use std::ffi::{c_char, c_int, c_long, c_void, CString};
+use std::slice;
 
 // ---------------------------------------------------------------------------
 // The VALUE type
@@ -121,7 +122,9 @@ extern "C" {
     pub static rb_eRuntimeError: VALUE;
 
     // -- String operations -------------------------------------------------
+    pub fn rb_str_new(ptr: *const c_char, len: c_long) -> VALUE;
     pub fn rb_utf8_str_new(ptr: *const c_char, len: c_long) -> VALUE;
+    fn rb_string_value_ptr(ptr: *mut VALUE) -> *const c_char;
     fn rb_string_value_cstr(ptr: *mut VALUE) -> *const c_char;
 
     // -- Array operations --------------------------------------------------
@@ -288,6 +291,40 @@ pub fn str_from_rb(val: VALUE) -> Option<String> {
         }
         let c_str = std::ffi::CStr::from_ptr(ptr);
         c_str.to_str().ok().map(|s| s.to_string())
+    }
+}
+
+/// Convert a Rust byte slice to a Ruby String without interpreting it as
+/// UTF-8. This is the right helper for compact binary protocols, COBS frames,
+/// checksummed payloads, and buffers that may contain NUL bytes.
+pub fn bytes_to_rb(bytes: &[u8]) -> VALUE {
+    unsafe { rb_str_new(bytes.as_ptr() as *const c_char, bytes.len() as c_long) }
+}
+
+/// Convert a Ruby String VALUE to an owned Rust byte buffer.
+///
+/// Unlike `str_from_rb`, this preserves embedded NUL bytes and invalid UTF-8.
+pub fn bytes_from_rb(val: VALUE) -> Option<Vec<u8>> {
+    unsafe {
+        let mut v = val;
+        let ptr = rb_string_value_ptr(&mut v);
+        if ptr.is_null() {
+            return None;
+        }
+
+        let mid = rb_intern(b"bytesize\0".as_ptr() as *const c_char);
+        let len_val = rb_funcallv(v, mid, 0, std::ptr::null());
+        let len = rb_num2long(len_val);
+        if len < 0 {
+            return None;
+        }
+
+        let ptr = rb_string_value_ptr(&mut v);
+        if ptr.is_null() {
+            return None;
+        }
+
+        Some(slice::from_raw_parts(ptr as *const u8, len as usize).to_vec())
     }
 }
 

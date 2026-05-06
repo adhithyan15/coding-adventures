@@ -14,6 +14,7 @@ A ~350-line crate that wraps only the raw Ruby C API functions needed to build n
 | Classes | `define_class_under` |
 | Methods | `define_method`, `define_singleton_method` |
 | Strings | `str_to_rb`, `str_from_rb` |
+| Binary strings | `bytes_to_rb`, `bytes_from_rb` |
 | Arrays | `array_new`, `array_push`, `vec_str_to_rb`, `vec_str_from_rb`, `vec_vec_str_to_rb` |
 | Booleans | `bool_to_rb`, `qtrue`, `qfalse`, `qnil` |
 | Integers | `usize_to_rb` |
