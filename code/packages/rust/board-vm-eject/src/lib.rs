@@ -118,6 +118,16 @@ pub fn build_blink_eject_artifact<'a>(
 
     let module_len = write_blink_module(program, module_out)?;
     let module = &module_out[..module_len];
+    build_module_eject_artifact(module, &BLINK_REQUIRED_CAPABILITIES, options)
+}
+
+pub fn build_module_eject_artifact<'a>(
+    module: &'a [u8],
+    required_capabilities: &'static [u16],
+    options: EjectOptions,
+) -> Result<EjectedProgram<'a>, EjectError> {
+    validate_boot_policy(options.boot_policy)?;
+
     let parsed = parse_module(module).map_err(HostError::from)?;
 
     Ok(EjectedProgram {
@@ -130,7 +140,7 @@ pub fn build_blink_eject_artifact<'a>(
         max_stack: parsed.max_stack,
         module_crc32: crc32_ieee(module),
         module,
-        required_capabilities: &BLINK_REQUIRED_CAPABILITIES,
+        required_capabilities,
     })
 }
 
@@ -209,6 +219,7 @@ fn validate_boot_policy(boot_policy: u8) -> Result<(), EjectError> {
 mod tests {
     use super::*;
     use board_vm_host::{BLINK_MODULE_LEN, DEFAULT_PROGRAM_ID};
+    use board_vm_ir::ModuleError;
     use std::string::String;
 
     #[test]
@@ -232,6 +243,44 @@ mod tests {
         assert_eq!(artifact.module_crc32, crc32_ieee(artifact.module));
         assert_eq!(artifact.required_capabilities, BLINK_REQUIRED_CAPABILITIES);
         parse_module(artifact.module).unwrap();
+    }
+
+    #[test]
+    fn builds_generic_module_eject_artifact() {
+        let mut module = [0u8; BLINK_MODULE_LEN];
+        let module_len = write_blink_module(BlinkProgram::onboard_led(), &mut module).unwrap();
+        let module = &module[..module_len];
+
+        let artifact = build_module_eject_artifact(
+            module,
+            &BLINK_REQUIRED_CAPABILITIES,
+            EjectOptions::new(DEFAULT_PROGRAM_ID).slot(9),
+        )
+        .unwrap();
+
+        assert_eq!(artifact.program_id, DEFAULT_PROGRAM_ID);
+        assert_eq!(artifact.slot, 9);
+        assert_eq!(artifact.format, ProgramFormat::BvmModule);
+        assert_eq!(artifact.module_version, MODULE_VERSION);
+        assert_eq!(artifact.max_stack, 4);
+        assert_eq!(artifact.module_crc32, crc32_ieee(module));
+        assert_eq!(artifact.module, module);
+        assert_eq!(artifact.required_capabilities, BLINK_REQUIRED_CAPABILITIES);
+    }
+
+    #[test]
+    fn rejects_invalid_generic_module() {
+        let error = build_module_eject_artifact(
+            b"not-bvm",
+            &BLINK_REQUIRED_CAPABILITIES,
+            EjectOptions::new(DEFAULT_PROGRAM_ID),
+        )
+        .unwrap_err();
+
+        assert_eq!(
+            error,
+            EjectError::Host(HostError::Module(ModuleError::TooShort))
+        );
     }
 
     #[test]
