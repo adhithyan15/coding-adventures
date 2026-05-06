@@ -1,11 +1,47 @@
 # frozen_string_literal: true
 
 require "rake/testtask"
+require "rbconfig"
+
+DLEXT = RbConfig::CONFIG["DLEXT"]
+EXT_DIR = File.expand_path("ext/board_vm_native", __dir__)
+LIB_DIR = File.expand_path("lib", __dir__)
+CARGO_LIB = case RbConfig::CONFIG["host_os"]
+            when /darwin/
+              "libboard_vm_native.dylib"
+            when /mingw|mswin|cygwin/
+              "board_vm_native.dll"
+            else
+              "libboard_vm_native.so"
+            end
+TARGET = "board_vm_native.#{DLEXT}"
+
+desc "Compile the Rust Board VM native extension"
+task :compile do
+  cd EXT_DIR do
+    sh "cargo build --release"
+  end
+
+  src = File.join(EXT_DIR, "target", "release", CARGO_LIB)
+  dst = File.join(LIB_DIR, TARGET)
+  mkdir_p LIB_DIR
+  cp src, dst
+end
 
 Rake::TestTask.new(:test) do |t|
   t.libs << "test"
   t.libs << "lib"
   t.test_files = FileList["test/**/test_*.rb"]
+end
+
+task test: :compile
+
+desc "Remove native extension build artifacts"
+task :clean do
+  cd EXT_DIR do
+    sh "cargo clean" if File.exist?("Cargo.toml")
+  end
+  rm_f Dir[File.join(LIB_DIR, "board_vm_native.*")]
 end
 
 task default: :test

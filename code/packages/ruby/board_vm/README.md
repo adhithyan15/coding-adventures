@@ -39,6 +39,19 @@ The helper output is inspected for Arduino CLI's `New upload port:` handoff so
 subsequent Ruby DSL commands use the runtime CDC port when the board
 re-enumerates.
 
+The gem now ships a `board_vm_native` extension built with `ruby-bridge`. That
+extension exposes `CodingAdventures::BoardVM::Native::Session`, whose methods
+return binary Ruby strings produced by `board-vm-language-core`:
+
+```ruby
+session = CodingAdventures::BoardVM::Native::Session.new
+frames = session.blink_upload_run_frames(1, 12, 13, 250, 250, 4)
+```
+
+Each element in `frames` is a COBS/CRC-framed Board VM request ready for a
+transport to write to the board. Ruby owns the friendly shape; Rust owns the
+wire bytes.
+
 Inside the block, `board.led.blink` currently runs the shared Rust host smoke
 command:
 
@@ -47,11 +60,11 @@ cargo run -p board-vm-cli --bin board-vm -- smoke ...
 ```
 
 That smoke command sends `HELLO`, queries capabilities, uploads the standard
-blink module, and starts it through the binary protocol. Future Ruby releases
-should replace this subprocess bridge with a native extension built on
-`ruby-bridge` and `board-vm-language-core`, then send the Rust-built wire frames
-through a transport. The DSL surface should stay Ruby-shaped, but every board
-operation should still dispatch the Board VM binary protocol produced by Rust.
+blink module, and starts it through the binary protocol. The next Ruby step is
+to route `board.led.blink` through `BoardVM::Native::Session` plus a transport
+instead of through this subprocess bridge. The DSL surface should stay
+Ruby-shaped, but every board operation should still dispatch the Board VM
+binary protocol produced by Rust.
 
 The DSL also exposes the current board-agnostic blink ejection path:
 

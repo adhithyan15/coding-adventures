@@ -88,6 +88,26 @@ module CodingAdventures
         ], runner.calls.first[:argv]
       end
 
+      def test_native_session_builds_protocol_bytes_in_rust
+        session = BoardVM::Native::Session.new
+
+        hello = session.hello_wire("bvm", 0x1234_ABCD)
+        assert_instance_of String, hello
+        assert_operator hello.bytesize, :>, 0
+        assert_equal 2, session.next_request_id
+
+        default_nonce_hello = session.hello_wire("bvm", BoardVM::DEFAULT_HOST_NONCE)
+        assert_operator default_nonce_hello.bytesize, :>, 0
+
+        module_bytes = session.blink_module(13, 250, 250, 4)
+        assert_instance_of String, module_bytes
+        assert_operator module_bytes.bytesize, :>, 0
+
+        frames = BoardVM::Native::Session.new.blink_upload_run_frames(7, 12, 13, 250, 250, 4)
+        assert_equal 4, frames.length
+        assert frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
+      end
+
       def test_eject_blink_writes_a_board_agnostic_artifact
         runner = FakeRunner.new
 

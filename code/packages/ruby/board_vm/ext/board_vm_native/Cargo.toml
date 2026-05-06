@@ -1,0 +1,16 @@
+[workspace]
+
+[package]
+name = "board-vm-native-ruby"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[lib]
+name = "board_vm_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+board-vm-host = { path = "../../../../rust/board-vm-host" }
+board-vm-language-core = { path = "../../../../rust/board-vm-language-core" }
+ruby-bridge = { path = "../../../../rust/ruby-bridge" }
