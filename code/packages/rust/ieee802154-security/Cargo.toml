@@ -1,0 +1,9 @@
+[package]
+name = "ieee802154-security"
+version = "0.1.0"
+edition = "2021"
+description = "From-scratch IEEE 802.15.4 security primitives: nonce construction, replay windows, and key lookup scaffolding."
+license = "MIT"
+
+[dependencies]
+ieee802154-core = { path = "../ieee802154-core" }

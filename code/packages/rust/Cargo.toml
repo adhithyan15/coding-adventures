@@ -426,6 +426,7 @@ members = [
     "bitset-c",
     "http-core",
     "ieee802154-core",
+    "ieee802154-security",
     "http1",
     "storage-core",
     "vault-sealed-store",
