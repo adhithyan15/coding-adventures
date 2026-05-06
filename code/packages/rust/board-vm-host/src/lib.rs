@@ -72,6 +72,30 @@ impl BlinkProgram {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ModuleSpec<'a> {
+    pub flags: u8,
+    pub max_stack: u8,
+    pub code: &'a [u8],
+    pub const_pool: &'a [u8],
+}
+
+impl<'a> ModuleSpec<'a> {
+    pub const fn new(flags: u8, max_stack: u8, code: &'a [u8]) -> Self {
+        Self {
+            flags,
+            max_stack,
+            code,
+            const_pool: &[],
+        }
+    }
+
+    pub const fn const_pool(mut self, const_pool: &'a [u8]) -> Self {
+        self.const_pool = const_pool;
+        self
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct WrittenFrame {
     pub request_id: u16,
     pub len: usize,
@@ -329,18 +353,36 @@ pub fn write_blink_module(program: BlinkProgram, out: &mut [u8]) -> Result<usize
 
     let mut code = [0u8; BLINK_CODE_LEN];
     let code_len = write_blink_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(
+            FLAG_PROGRAM_MAY_RUN_FOREVER,
+            program.max_stack,
+            &code[..code_len],
+        ),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(&module, CapabilitySet::blink_mvp(), program.max_stack)?;
+    Ok(offset)
+}
+
+pub fn write_module(spec: ModuleSpec<'_>, out: &mut [u8]) -> Result<usize, HostError> {
+    if spec.code.len() > u32::MAX as usize || spec.const_pool.len() > u32::MAX as usize {
+        return Err(HostError::ProgramTooLarge);
+    }
+
     let mut offset = 0;
     write_slice(out, &mut offset, &MODULE_MAGIC)?;
     write_u8(out, &mut offset, MODULE_VERSION)?;
-    write_u8(out, &mut offset, FLAG_PROGRAM_MAY_RUN_FOREVER)?;
-    write_u8(out, &mut offset, program.max_stack)?;
+    write_u8(out, &mut offset, spec.flags)?;
+    write_u8(out, &mut offset, spec.max_stack)?;
     write_u8(out, &mut offset, 0)?;
-    write_uleb128(out, &mut offset, code_len as u32)?;
-    write_slice(out, &mut offset, &code[..code_len])?;
-    write_uleb128(out, &mut offset, 0)?;
+    write_uleb128(out, &mut offset, spec.code.len() as u32)?;
+    write_slice(out, &mut offset, spec.code)?;
+    write_uleb128(out, &mut offset, spec.const_pool.len() as u32)?;
+    write_slice(out, &mut offset, spec.const_pool)?;
 
-    let module = parse_module(&out[..offset])?;
-    validate(&module, CapabilitySet::blink_mvp(), program.max_stack)?;
+    parse_module(&out[..offset])?;
     Ok(offset)
 }
 
@@ -426,7 +468,7 @@ fn write_slice(out: &mut [u8], offset: &mut usize, value: &[u8]) -> Result<(), H
 #[cfg(test)]
 mod tests {
     use super::*;
-    use board_vm_ir::{parse_module, validate, CapabilitySet};
+    use board_vm_ir::{parse_module, validate, CapabilitySet, ModuleError};
     use board_vm_protocol::{
         decode_frame, decode_program_begin, decode_program_chunk, decode_program_end,
         decode_run_request, MessageType, RUN_FLAG_BACKGROUND_RUN, RUN_FLAG_RESET_VM_BEFORE_RUN,
@@ -447,6 +489,36 @@ mod tests {
 
         let parsed = parse_module(&module).unwrap();
         validate(&parsed, CapabilitySet::blink_mvp(), 4).unwrap();
+    }
+
+    #[test]
+    fn writes_generic_module_from_code_and_const_pool() {
+        let code = [0x00];
+        let const_pool = [0xAA, 0x55];
+        let mut module = [0u8; 32];
+
+        let len = write_module(
+            ModuleSpec::new(0, 1, &code).const_pool(&const_pool),
+            &mut module,
+        )
+        .unwrap();
+
+        let parsed = parse_module(&module[..len]).unwrap();
+        assert_eq!(parsed.flags, 0);
+        assert_eq!(parsed.max_stack, 1);
+        assert_eq!(parsed.code, &code);
+        assert_eq!(parsed.const_pool, &const_pool);
+    }
+
+    #[test]
+    fn rejects_invalid_generic_module_flags() {
+        let code = [0x00];
+        let mut module = [0u8; 16];
+
+        assert_eq!(
+            write_module(ModuleSpec::new(0x80, 1, &code), &mut module),
+            Err(HostError::Module(ModuleError::ReservedFlags(0x80)))
+        );
     }
 
     #[test]
