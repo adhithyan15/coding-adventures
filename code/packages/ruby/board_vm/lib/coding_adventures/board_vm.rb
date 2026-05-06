@@ -4,6 +4,7 @@ require_relative "board_vm/version"
 require_relative "board_vm/command_runner"
 require_relative "board_vm/native"
 require_relative "board_vm/transport"
+require_relative "board_vm/session"
 require_relative "board_vm/connection"
 
 module CodingAdventures

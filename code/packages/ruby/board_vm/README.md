@@ -64,6 +64,25 @@ session result for debugging.
 Tests and alternate runtimes can inject any transport object that responds to
 `transact(frame, timeout_ms:)` or `write(frame)`.
 
+For REPL-style sessions, the Ruby surface exposes named commands while keeping
+the same Rust-owned protocol boundary:
+
+```ruby
+CodingAdventures::BoardVM.uno_r4_wifi(port: "/dev/cu.usbmodem1101") do |board|
+  board.session do |vm|
+    vm.hello
+    vm.capabilities
+    vm.run_command("blink 24")
+  end
+end
+```
+
+`hello`, `capabilities`, `upload_blink`, `run`, `blink`, and `run_command`
+return dispatch results with the Rust-produced frame, optional raw response
+bytes, and optional Rust-decoded response hash. The text command parser is Ruby
+sugar only; every dispatched frame still comes from
+`CodingAdventures::BoardVM::Native::Session`.
+
 The DSL also exposes the current board-agnostic blink ejection path:
 
 ```ruby

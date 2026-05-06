@@ -5,7 +5,46 @@ require "rbconfig"
 
 module CodingAdventures
   module BoardVM
-    SessionResult = Struct.new(:frames, :responses, :decoded_responses, keyword_init: true)
+    ProtocolResult = Struct.new(
+      :command,
+      :frame,
+      :response,
+      :decoded_response,
+      keyword_init: true
+    ) do
+      def kind
+        decoded_response && decoded_response["kind"]
+      end
+
+      def error?
+        !!(decoded_response && decoded_response["error"])
+      end
+    end
+
+    SessionResult = Struct.new(
+      :results,
+      :frames,
+      :responses,
+      :decoded_responses,
+      keyword_init: true
+    ) do
+      def initialize(results: nil, frames: nil, responses: nil, decoded_responses: nil)
+        results ||= []
+        frames ||= results.map(&:frame)
+        responses ||= results.map(&:response)
+        decoded_responses ||= results.map(&:decoded_response)
+        super(
+          results: results,
+          frames: frames,
+          responses: responses,
+          decoded_responses: decoded_responses
+        )
+      end
+
+      def error?
+        results.any?(&:error?)
+      end
+    end
 
     class TransportError < StandardError; end
 

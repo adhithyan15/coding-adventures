@@ -28,3 +28,19 @@ class FakeWriteTransport
     @frames << frame
   end
 end
+
+class FakeTransactTransport
+  attr_reader :frames, :timeout_values
+
+  def initialize(responses = [])
+    @responses = responses
+    @frames = []
+    @timeout_values = []
+  end
+
+  def transact(frame, timeout_ms:)
+    @frames << frame
+    @timeout_values << timeout_ms
+    @responses.shift
+  end
+end
