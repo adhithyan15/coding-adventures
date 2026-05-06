@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "board_vm/version"
+require_relative "board_vm/capabilities"
 require_relative "board_vm/command_runner"
 require_relative "board_vm/native"
 require_relative "board_vm/transport"

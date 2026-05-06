@@ -16,6 +16,14 @@ module CodingAdventures
         decoded_response && decoded_response["kind"]
       end
 
+      def payload
+        decoded_response && decoded_response["payload"]
+      end
+
+      def board_descriptor
+        BoardDescriptor.from_decoded_response(decoded_response)
+      end
+
       def error?
         !!(decoded_response && decoded_response["error"])
       end
@@ -43,6 +51,14 @@ module CodingAdventures
 
       def error?
         results.any?(&:error?)
+      end
+
+      def board_descriptor
+        results.each do |result|
+          descriptor = result.board_descriptor
+          return descriptor if descriptor
+        end
+        nil
       end
     end
 

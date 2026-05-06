@@ -6,9 +6,10 @@ use board_vm_host::{BlinkProgram, BLINK_MODULE_LEN};
 use board_vm_language_core::{
     build_blink_module, build_caps_query_wire_frame, build_hello_wire_frame,
     build_program_begin_wire_frame, build_program_chunk_wire_frame, build_program_end_wire_frame,
-    build_run_background_wire_frame, decode_wire_response, program_format_name, run_status_name,
-    BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
-    LanguageCoreError,
+    build_run_background_wire_frame, capability_board_metadata, capability_bytecode_callable,
+    capability_flag_names, capability_protocol_feature, decode_wire_response, program_format_name,
+    run_status_name, BoardVmLanguageSession, DecodedLanguageResponse,
+    DecodedLanguageResponseBody, LanguageCoreError,
 };
 use ruby_bridge::VALUE;
 
@@ -302,6 +303,22 @@ fn response_body_to_rb(body: &DecodedLanguageResponseBody, payload_len: usize) -
                 hash_set(item, "version", rb_usize(capability.version));
                 hash_set(item, "flags", rb_usize(capability.flags));
                 hash_set(item, "name", ruby_bridge::str_to_rb(&capability.name));
+                hash_set(
+                    item,
+                    "bytecode_callable",
+                    ruby_bridge::bool_to_rb(capability_bytecode_callable(capability.flags)),
+                );
+                hash_set(
+                    item,
+                    "protocol_feature",
+                    ruby_bridge::bool_to_rb(capability_protocol_feature(capability.flags)),
+                );
+                hash_set(
+                    item,
+                    "board_metadata",
+                    ruby_bridge::bool_to_rb(capability_board_metadata(capability.flags)),
+                );
+                hash_set(item, "flag_names", capability_flag_names_to_rb(capability.flags));
                 ruby_bridge::array_push(capabilities, item);
             }
             hash_set(hash, "capabilities", capabilities);
@@ -354,6 +371,16 @@ fn response_body_to_rb(body: &DecodedLanguageResponseBody, payload_len: usize) -
         }
     }
     hash
+}
+
+fn capability_flag_names_to_rb(flags: u16) -> VALUE {
+    let mut names = [""; 3];
+    let count = capability_flag_names(flags, &mut names);
+    let array = ruby_bridge::array_new();
+    for name in &names[..count] {
+        ruby_bridge::array_push(array, ruby_bridge::str_to_rb(name));
+    }
+    array
 }
 
 fn message_type_name(code: u8) -> &'static str {

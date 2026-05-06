@@ -20,7 +20,8 @@ use board_vm_protocol::{
     decode_caps_report_header, decode_error_payload, decode_frame, decode_hello_ack,
     decode_program_begin, decode_program_chunk, decode_program_end, decode_run_report_header,
     decode_wire_frame, encode_wire_frame, Frame, MessageType, ProgramFormat, ProtocolError,
-    RunStatus, FLAG_IS_ERROR_RESPONSE, FLAG_IS_RESPONSE,
+    RunStatus, CAP_FLAG_BOARD_METADATA, CAP_FLAG_BYTECODE_CALLABLE, CAP_FLAG_PROTOCOL_FEATURE,
+    FLAG_IS_ERROR_RESPONSE, FLAG_IS_RESPONSE,
 };
 
 pub const LANGUAGE_CORE_VERSION_MAJOR: u16 = 0;
@@ -273,6 +274,41 @@ pub const fn run_status_name(status: RunStatus) -> &'static str {
         RunStatus::Stopped => "stopped",
         RunStatus::BudgetExceeded => "budget_exceeded",
         RunStatus::Faulted => "faulted",
+    }
+}
+
+pub const fn capability_bytecode_callable(flags: u16) -> bool {
+    flags & CAP_FLAG_BYTECODE_CALLABLE != 0
+}
+
+pub const fn capability_protocol_feature(flags: u16) -> bool {
+    flags & CAP_FLAG_PROTOCOL_FEATURE != 0
+}
+
+pub const fn capability_board_metadata(flags: u16) -> bool {
+    flags & CAP_FLAG_BOARD_METADATA != 0
+}
+
+pub fn capability_flag_names(flags: u16, out: &mut [&'static str]) -> usize {
+    let mut count = 0;
+    if capability_bytecode_callable(flags) {
+        count = push_flag_name(out, count, "bytecode_callable");
+    }
+    if capability_protocol_feature(flags) {
+        count = push_flag_name(out, count, "protocol_feature");
+    }
+    if capability_board_metadata(flags) {
+        count = push_flag_name(out, count, "board_metadata");
+    }
+    count
+}
+
+fn push_flag_name(out: &mut [&'static str], count: usize, name: &'static str) -> usize {
+    if let Some(slot) = out.get_mut(count) {
+        *slot = name;
+        count + 1
+    } else {
+        count
     }
 }
 
@@ -1166,6 +1202,35 @@ mod tests {
                 .into_owned()
         };
         assert!(message.contains("module_out"));
+    }
+
+    #[test]
+    fn rust_core_names_capability_flags_for_language_bindings() {
+        let mut names = [""; 3];
+        let count = capability_flag_names(
+            board_vm_protocol::CAP_FLAG_BYTECODE_CALLABLE
+                | board_vm_protocol::CAP_FLAG_PROTOCOL_FEATURE
+                | board_vm_protocol::CAP_FLAG_BOARD_METADATA,
+            &mut names,
+        );
+
+        assert_eq!(
+            &names[..count],
+            &[
+                "bytecode_callable",
+                "protocol_feature",
+                "board_metadata"
+            ]
+        );
+
+        let mut short = [""; 1];
+        let count = capability_flag_names(
+            board_vm_protocol::CAP_FLAG_BYTECODE_CALLABLE
+                | board_vm_protocol::CAP_FLAG_PROTOCOL_FEATURE,
+            &mut short,
+        );
+        assert_eq!(count, 1);
+        assert_eq!(short[0], "bytecode_callable");
     }
 
     fn decode_response_fixture(
