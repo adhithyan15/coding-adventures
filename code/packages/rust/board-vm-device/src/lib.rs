@@ -2,7 +2,7 @@
 
 use board_vm_ir::{
     parse_module, validate, CAP_GPIO_CLOSE, CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE,
-    CAP_TIME_SLEEP_MS,
+    CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
 };
 use board_vm_protocol::{
     decode_frame, decode_hello, decode_program_begin, decode_program_chunk, decode_program_end,
@@ -31,7 +31,7 @@ pub const ERROR_INVALID_PROGRAM: u16 = 0x0200;
 pub const ERROR_INVALID_BYTECODE: u16 = 0x0201;
 pub const ERROR_BOARD_FAULT: u16 = 0x0400;
 
-pub const BLINK_MVP_CAPABILITIES: [CapabilityDescriptor<'static>; 6] = [
+pub const BLINK_MVP_CAPABILITIES: [CapabilityDescriptor<'static>; 7] = [
     CapabilityDescriptor {
         id: CAP_GPIO_OPEN,
         version: 1,
@@ -61,6 +61,12 @@ pub const BLINK_MVP_CAPABILITIES: [CapabilityDescriptor<'static>; 6] = [
         version: 1,
         flags: CAP_FLAG_BYTECODE_CALLABLE,
         name: "time.sleep_ms",
+    },
+    CapabilityDescriptor {
+        id: CAP_TIME_NOW_MS,
+        version: 1,
+        flags: CAP_FLAG_BYTECODE_CALLABLE,
+        name: "time.now_ms",
     },
     CapabilityDescriptor {
         id: CAP_PROGRAM_RAM_EXEC,
@@ -1280,9 +1286,21 @@ mod tests {
         assert_eq!(header.max_handles, 8);
         assert!(!header.supports_store_program);
         assert_eq!(header.capability_count, BLINK_MVP_CAPABILITIES.len() as u32);
-        let first = decoder.read_capability_descriptor().unwrap();
-        assert_eq!(first.id, CAP_GPIO_OPEN);
-        assert_eq!(first.name, "gpio.open");
+        let mut found_time_now_ms = false;
+        for index in 0..header.capability_count {
+            let capability = decoder.read_capability_descriptor().unwrap();
+            if index == 0 {
+                assert_eq!(capability.id, CAP_GPIO_OPEN);
+                assert_eq!(capability.name, "gpio.open");
+            }
+            if capability.id == CAP_TIME_NOW_MS {
+                found_time_now_ms = true;
+                assert_eq!(capability.name, "time.now_ms");
+                assert_eq!(capability.flags, CAP_FLAG_BYTECODE_CALLABLE);
+            }
+        }
+        decoder.finish().unwrap();
+        assert!(found_time_now_ms);
     }
 
     #[test]
