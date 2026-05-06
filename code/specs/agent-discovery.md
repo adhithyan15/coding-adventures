@@ -2,15 +2,12 @@
 
 ## Overview
 
-Agent Discovery is the dynamic counterpart to pre-wired pipelines.
-A pre-wired pipeline (per `weather-agent.md`) declares at config
-time exactly which agents talk to which other agents over which
-channels. Agent Discovery lets an agent ask the orchestrator at
-**runtime** to find a peer that provides a particular role or
-capability and to bridge them with a fresh secure channel. The
-agent never learns the peer's identity beyond what the
-orchestrator chooses to disclose; the orchestrator is the only
-place that knows the full picture.
+Agent Discovery is **the only way** an agent can establish a
+channel to another agent in this system. Per
+`dynamic-topology.md`, there are no predefined channels: every
+agent-to-agent connection is established at runtime through
+this API. The orchestrator owns the discovery, the bridge
+creation, and the lifecycle of the providers being discovered.
 
 The pattern in plain words:
 
@@ -18,15 +15,16 @@ The pattern in plain words:
 > directory. Orchestrator, find me one and put a channel between
 > us."
 
-The orchestrator looks up which active agents declare they
-provide that role, applies authorization (does the requester's
-manifest permit discovering this kind of peer? does the provider
-permit being discovered by this kind of requester?), creates two
-new ratcheted channels via `secure-host-channel`, hands one
-endpoint to each agent, and goes back to its supervisory job.
+The orchestrator looks up which agents declare they provide
+that role (spawning one if necessary; see Spawn-On-Discovery
+below), applies authorization (does the requester's manifest
+permit discovering this kind of peer? does the provider permit
+being discovered by this kind of requester?), creates two new
+ratcheted channels via `secure-host-channel`, hands one endpoint
+to each agent, and goes back to its supervisory job.
 
 This is the agent-system equivalent of Erlang's `:global` or
-Kubernetes service discovery, but with three properties those
+Kubernetes service discovery, but with four properties those
 systems don't have:
 
 1. **Capability-cage gated on both sides.** Discovery is itself a
@@ -48,18 +46,17 @@ systems don't have:
    as `trust_laundering: true` so RWS treats it as a trust
    boundary).
 
-Discovery does not replace pre-wired pipelines. The two coexist:
+4. **Provider lifecycle is orchestrator-managed.** Discovery
+   triggers spawn when no provider is active. Idle providers
+   are gracefully shut down. Pool size scales with load. See
+   the Provider Lifecycle section.
 
-- **Pre-wired** is for static topologies known at deploy time
-  (the v1 PoC weather agent uses this).
-- **Discovery** is for dynamic topologies where the requester
-  doesn't know the provider's identity at deploy time, or where
-  multiple instances of the same role might satisfy the request.
-
-For the v1 PoC, the weather agent does not use discovery — its
-pipeline is fully pre-wired. This spec is the foundation that
-future agents (coding agent, smart-home controllers, iPaaS
-workflows) will build on.
+For the v1 PoC, the weather agent uses discovery for every
+channel including those between sibling sub-agents. The
+`weather-agent` parent declares its three children via
+`spawn_children` (the only thing that can be predefined per
+`dynamic-topology.md`); the children find each other at
+runtime via this API.
 
 ---
 
@@ -492,6 +489,115 @@ provider sees a new inbound channel ready for reads.
 If the provider terminates, the orchestrator reclaims both
 channels (sends close to the requester) and the bridge entry
 is removed.
+
+---
+
+## Provider Lifecycle
+
+Per `dynamic-topology.md`, the orchestrator manages the
+lifecycle of every discoverable provider: when to spawn,
+when to shut down idle, how many to keep alive. The semantics
+below are the contract this spec implements.
+
+### Spawn-On-Discovery
+
+When `find_and_connect` (or `find`) is called for a role with
+no currently-active provider:
+
+```
+1. Consult the agent-registry for any registered package whose
+   manifest declares provides:role:<role>.
+2. Filter by qualifier match against the requester's
+   qualifier_query.
+3. If no matching package exists in the registry → return
+   NoProvidersFound.
+4. Otherwise, select one (default: stable order by agent_id).
+5. Launch via the orchestrator's normal launch_host path
+   (registry hash pin, signature verify, manifest load,
+   tier challenge if effective_tier > 0,
+   secure-host-channel bootstrap).
+6. Wait for the new host's handshake (default timeout: 10s).
+7. Continue the bridging sequence from step 3 (the new
+   provider is now active and counted toward
+   providers_returned).
+```
+
+Tier challenges fire **synchronously** inside the requester's
+discovery call. If the user denies, the consumer receives a
+structured error (CapabilityDenied / TrustBoundaryDenied)
+rather than a successful bridge.
+
+### Idle-Shutdown
+
+A provider's `provides` entry can declare:
+
+```json
+{
+  "provides": [
+    {
+      "role":           "weather-snapshot-source",
+      /* ... */
+      "idle_shutdown":  "5m"
+    }
+  ]
+}
+```
+
+When set, the orchestrator tracks the time since the
+provider's last active bridge. When it exceeds
+`idle_shutdown` AND no current bridges are outstanding, the
+orchestrator gracefully terminates the provider. A
+subsequent discovery for that role triggers
+spawn-on-discovery again.
+
+`idle_shutdown` is per-role, not per-package. A provider that
+exports multiple roles is only shut down when **all** of its
+roles have been idle past their thresholds.
+
+`min_instances` (declared on the host's config in
+`orchestrator.toml`, set per-package) overrides idle-shutdown:
+if `min_instances >= 1`, the orchestrator will not reduce
+below that count.
+
+### Pool Sizing
+
+```json
+{
+  "provides": [
+    {
+      "role":           "oauth-broker:google",
+      "max_concurrent": 4,
+      "min_instances":  0,
+      "max_instances":  3,
+      "idle_shutdown":  "5m"
+    }
+  ]
+}
+```
+
+- **min_instances:** never let active count drop below this.
+  If a provider crashes and active count drops below
+  `min_instances`, the orchestrator spawns a replacement
+  immediately (independent of any pending discovery).
+- **max_instances:** never spawn more than this. When all
+  instances are at `max_concurrent` and a new bridge would
+  exceed pool capacity, the consumer receives
+  `BridgeQuotaExceeded { which: PoolSaturated }` with a
+  `retry_after`.
+- **load-driven scaling:** when the average current_load
+  across active instances exceeds 75% of `max_concurrent`,
+  the orchestrator spawns one more instance (up to
+  `max_instances`). When average drops below 25% and there is
+  at least one instance with zero active bridges past
+  `idle_shutdown`, that one is shut down (down to
+  `min_instances`).
+
+Default policy: `min_instances: 0`, `max_instances: 1`,
+`idle_shutdown: never`. So out-of-the-box behavior is
+"exactly one instance once you discover me, kept alive
+forever" — matching the simplest possible operational model.
+Opting in to richer lifecycle is a deliberate choice the
+agent's author makes per role.
 
 ---
 
