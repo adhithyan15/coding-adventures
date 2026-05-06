@@ -10,6 +10,8 @@ security engine needs: CCM* nonces, replay checks, and key lookup.
 
 - CCM* nonce construction for the IEEE 802.15.4-2006 style nonce:
   `source extended address || frame counter || security level`
+- secured-frame byte material extraction:
+  authenticated header bytes, encrypted payload bytes, and MIC bytes
 - security source address extraction
 - replay-window acceptance for monotonic incoming frame counters
 - key identifier normalization
@@ -19,7 +21,7 @@ security engine needs: CCM* nonces, replay checks, and key lookup.
 
 - AES-CCM* encryption/decryption
 - MIC verification
-- associated-data construction
+- full associated-data construction for AES-CCM*
 - outgoing frame counter allocation
 - persistent replay databases
 - integration with Vault-backed real key custody
@@ -38,3 +40,20 @@ ieee802154-core
 
 This package is still pure computation. It does not know about radios, files,
 Vault, or OS services.
+
+## Secured Frame Parts
+
+`SecuredFrameParts::from_frame` turns a parsed `MacFrame` into the byte slices
+that the later AES-CCM* layer will need:
+
+```text
+MacFrame
+  -> SecurityContext
+  -> CCM* nonce
+  -> authenticated_data    frame header + addressing + auxiliary security header
+  -> encrypted_payload     payload bytes excluding trailing MIC
+  -> mic                   trailing bytes selected by security level
+```
+
+The package does not decrypt, encrypt, or authenticate yet. It only performs
+the byte accounting so that the future crypto layer can stay small and testable.
