@@ -95,6 +95,11 @@ ZCL remain future packages/layers.
 - APS commands
 - fragmentation model
 
+**Initial Rust implementation:** `code/packages/rust/zigbee-aps` now provides
+APS frame-control, endpoint/group addressing, cluster/profile id, counter, and
+payload parser/encoder primitives. Binding tables, APS commands,
+fragmentation, and security remain future layers.
+
 ### `zigbee-zdo`
 
 - node descriptors

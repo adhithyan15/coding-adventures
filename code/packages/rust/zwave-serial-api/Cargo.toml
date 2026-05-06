@@ -1,0 +1,9 @@
+[package]
+name = "zwave-serial-api"
+version = "0.1.0"
+edition = "2021"
+description = "Z-Wave Serial API request, response, callback, and controller capability primitives"
+license = "MIT"
+
+[dependencies]
+zwave-core = { path = "../zwave-core" }
