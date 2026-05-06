@@ -184,6 +184,11 @@ including comment start/dash, less-than/bang/dash substates, end-dash/end-bang,
 and bogus-comment recovery. This lets html5lib-style importer cases resume
 comment tokenization with an in-progress comment token instead of treating those
 states as runtime gaps.
+DOCTYPE continuation states are also exposed through the same typed layer. A
+seeded `DoctypeSeed` carries the partial name, public identifier, system
+identifier, and force-quirks flag so importer and parser-adapter tests can
+resume keyword, name, public/system identifier, trailing-junk, and bogus
+DOCTYPE recovery paths without relying on raw generated state strings.
 Foreign-content CDATA is exposed as an explicit
 `HtmlLexContext::cdata_section()` helper rather than as an element-name mapping,
 so future SVG/MathML tree-construction logic can opt into CDATA only after it
@@ -231,7 +236,7 @@ fixture normalization logic to live forever inside the Rust tests.
 
 The normalized corpus now carries optional tokenizer-context metadata such as
 `initial_state` and `last_start_tag`, so upstream RCDATA, RAWTEXT, PLAINTEXT,
-CDATA section, comment continuation states, script data, script data
+CDATA section, comment and DOCTYPE continuation states, script data, script data
 escaped/dash/less-than/end-tag-open substates, and script data
 double-escaped/dash/less-than substates can already live in the shared Venture
 fixture format. Current Rust conformance tests now seed that context into the
@@ -246,6 +251,9 @@ mismatched tags that must remain literal text, EOF recovery that preserves the
 pending `</`, and matching end-tag diagnostics for whitespace, attributes, and
 trailing solidus. Comment continuation fixtures cover seeded body, pending dash,
 pending bang, nested-comment, abrupt-close, and bogus-comment recovery paths.
+DOCTYPE continuation fixtures cover keyword/name continuation, public/system
+identifier accumulation, missing-whitespace diagnostics, and bogus-doctype
+force-quirks preservation.
 
 The intended WHATWG/WPT path is to normalize upstream tokenizer cases into this
 same schema rather than teaching the Rust harness to parse raw upstream files

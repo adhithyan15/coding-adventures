@@ -7,8 +7,8 @@
 use state_machine::{EffectfulStateMachine, StateMachineDefinition};
 
 pub use state_machine_tokenizer::{
-    Attribute, Diagnostic, Result, SourcePosition, Token, Tokenizer as HtmlLexer, TokenizerError,
-    TokenizerTraceEntry,
+    Attribute, Diagnostic, DoctypeSeed, Result, SourcePosition, Token, Tokenizer as HtmlLexer,
+    TokenizerError, TokenizerTraceEntry,
 };
 
 mod generated_html1;
@@ -54,6 +54,38 @@ pub enum HtmlTokenizerState {
     CommentEnd,
     CommentEndBang,
     BogusComment,
+    DoctypeKeywordO,
+    DoctypeKeywordC,
+    DoctypeKeywordT,
+    DoctypeKeywordY,
+    DoctypeKeywordP,
+    DoctypeKeywordE,
+    DoctypeAfterKeyword,
+    BeforeDoctypeName,
+    DoctypeName,
+    AfterDoctypeName,
+    DoctypePublicKeywordU,
+    DoctypePublicKeywordB,
+    DoctypePublicKeywordL,
+    DoctypePublicKeywordI,
+    DoctypePublicKeywordC,
+    AfterDoctypePublicKeyword,
+    BeforeDoctypePublicIdentifier,
+    DoctypePublicIdentifierDoubleQuoted,
+    DoctypePublicIdentifierSingleQuoted,
+    AfterDoctypePublicIdentifier,
+    BetweenDoctypePublicAndSystemIdentifiers,
+    DoctypeSystemKeywordY,
+    DoctypeSystemKeywordS,
+    DoctypeSystemKeywordT,
+    DoctypeSystemKeywordE,
+    DoctypeSystemKeywordM,
+    AfterDoctypeSystemKeyword,
+    BeforeDoctypeSystemIdentifier,
+    DoctypeSystemIdentifierDoubleQuoted,
+    DoctypeSystemIdentifierSingleQuoted,
+    AfterDoctypeSystemIdentifier,
+    BogusDoctype,
     ScriptData,
     ScriptDataLessThanSign,
     ScriptDataEndTagOpen,
@@ -81,7 +113,7 @@ pub enum HtmlTokenizerState {
 }
 
 /// Tokenizer states that are valid parser-facing entry points.
-pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 54] = [
+pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 86] = [
     HtmlTokenizerState::Data,
     HtmlTokenizerState::Rcdata,
     HtmlTokenizerState::RcdataLessThanSign,
@@ -112,6 +144,38 @@ pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 54] = [
     HtmlTokenizerState::CommentEnd,
     HtmlTokenizerState::CommentEndBang,
     HtmlTokenizerState::BogusComment,
+    HtmlTokenizerState::DoctypeKeywordO,
+    HtmlTokenizerState::DoctypeKeywordC,
+    HtmlTokenizerState::DoctypeKeywordT,
+    HtmlTokenizerState::DoctypeKeywordY,
+    HtmlTokenizerState::DoctypeKeywordP,
+    HtmlTokenizerState::DoctypeKeywordE,
+    HtmlTokenizerState::DoctypeAfterKeyword,
+    HtmlTokenizerState::BeforeDoctypeName,
+    HtmlTokenizerState::DoctypeName,
+    HtmlTokenizerState::AfterDoctypeName,
+    HtmlTokenizerState::DoctypePublicKeywordU,
+    HtmlTokenizerState::DoctypePublicKeywordB,
+    HtmlTokenizerState::DoctypePublicKeywordL,
+    HtmlTokenizerState::DoctypePublicKeywordI,
+    HtmlTokenizerState::DoctypePublicKeywordC,
+    HtmlTokenizerState::AfterDoctypePublicKeyword,
+    HtmlTokenizerState::BeforeDoctypePublicIdentifier,
+    HtmlTokenizerState::DoctypePublicIdentifierDoubleQuoted,
+    HtmlTokenizerState::DoctypePublicIdentifierSingleQuoted,
+    HtmlTokenizerState::AfterDoctypePublicIdentifier,
+    HtmlTokenizerState::BetweenDoctypePublicAndSystemIdentifiers,
+    HtmlTokenizerState::DoctypeSystemKeywordY,
+    HtmlTokenizerState::DoctypeSystemKeywordS,
+    HtmlTokenizerState::DoctypeSystemKeywordT,
+    HtmlTokenizerState::DoctypeSystemKeywordE,
+    HtmlTokenizerState::DoctypeSystemKeywordM,
+    HtmlTokenizerState::AfterDoctypeSystemKeyword,
+    HtmlTokenizerState::BeforeDoctypeSystemIdentifier,
+    HtmlTokenizerState::DoctypeSystemIdentifierDoubleQuoted,
+    HtmlTokenizerState::DoctypeSystemIdentifierSingleQuoted,
+    HtmlTokenizerState::AfterDoctypeSystemIdentifier,
+    HtmlTokenizerState::BogusDoctype,
     HtmlTokenizerState::ScriptData,
     HtmlTokenizerState::ScriptDataLessThanSign,
     HtmlTokenizerState::ScriptDataEndTagOpen,
@@ -139,7 +203,7 @@ pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 54] = [
 ];
 
 /// Tokenizer states used for parser-controlled text or foreign-content fragments.
-pub const HTML_FRAGMENT_TOKENIZER_STATES: [HtmlTokenizerState; 53] = [
+pub const HTML_FRAGMENT_TOKENIZER_STATES: [HtmlTokenizerState; 85] = [
     HtmlTokenizerState::Rcdata,
     HtmlTokenizerState::RcdataLessThanSign,
     HtmlTokenizerState::RcdataEndTagOpen,
@@ -169,6 +233,38 @@ pub const HTML_FRAGMENT_TOKENIZER_STATES: [HtmlTokenizerState; 53] = [
     HtmlTokenizerState::CommentEnd,
     HtmlTokenizerState::CommentEndBang,
     HtmlTokenizerState::BogusComment,
+    HtmlTokenizerState::DoctypeKeywordO,
+    HtmlTokenizerState::DoctypeKeywordC,
+    HtmlTokenizerState::DoctypeKeywordT,
+    HtmlTokenizerState::DoctypeKeywordY,
+    HtmlTokenizerState::DoctypeKeywordP,
+    HtmlTokenizerState::DoctypeKeywordE,
+    HtmlTokenizerState::DoctypeAfterKeyword,
+    HtmlTokenizerState::BeforeDoctypeName,
+    HtmlTokenizerState::DoctypeName,
+    HtmlTokenizerState::AfterDoctypeName,
+    HtmlTokenizerState::DoctypePublicKeywordU,
+    HtmlTokenizerState::DoctypePublicKeywordB,
+    HtmlTokenizerState::DoctypePublicKeywordL,
+    HtmlTokenizerState::DoctypePublicKeywordI,
+    HtmlTokenizerState::DoctypePublicKeywordC,
+    HtmlTokenizerState::AfterDoctypePublicKeyword,
+    HtmlTokenizerState::BeforeDoctypePublicIdentifier,
+    HtmlTokenizerState::DoctypePublicIdentifierDoubleQuoted,
+    HtmlTokenizerState::DoctypePublicIdentifierSingleQuoted,
+    HtmlTokenizerState::AfterDoctypePublicIdentifier,
+    HtmlTokenizerState::BetweenDoctypePublicAndSystemIdentifiers,
+    HtmlTokenizerState::DoctypeSystemKeywordY,
+    HtmlTokenizerState::DoctypeSystemKeywordS,
+    HtmlTokenizerState::DoctypeSystemKeywordT,
+    HtmlTokenizerState::DoctypeSystemKeywordE,
+    HtmlTokenizerState::DoctypeSystemKeywordM,
+    HtmlTokenizerState::AfterDoctypeSystemKeyword,
+    HtmlTokenizerState::BeforeDoctypeSystemIdentifier,
+    HtmlTokenizerState::DoctypeSystemIdentifierDoubleQuoted,
+    HtmlTokenizerState::DoctypeSystemIdentifierSingleQuoted,
+    HtmlTokenizerState::AfterDoctypeSystemIdentifier,
+    HtmlTokenizerState::BogusDoctype,
     HtmlTokenizerState::ScriptData,
     HtmlTokenizerState::ScriptDataLessThanSign,
     HtmlTokenizerState::ScriptDataEndTagOpen,
@@ -223,6 +319,42 @@ pub const HTML_SCRIPT_TOKENIZER_STATES: [HtmlTokenizerState; 24] = [
     HtmlTokenizerState::ScriptDataDoubleEscapeEnd,
 ];
 
+/// Tokenizer states that resume an already-created DOCTYPE token.
+pub const HTML_DOCTYPE_TOKENIZER_STATES: [HtmlTokenizerState; 32] = [
+    HtmlTokenizerState::DoctypeKeywordO,
+    HtmlTokenizerState::DoctypeKeywordC,
+    HtmlTokenizerState::DoctypeKeywordT,
+    HtmlTokenizerState::DoctypeKeywordY,
+    HtmlTokenizerState::DoctypeKeywordP,
+    HtmlTokenizerState::DoctypeKeywordE,
+    HtmlTokenizerState::DoctypeAfterKeyword,
+    HtmlTokenizerState::BeforeDoctypeName,
+    HtmlTokenizerState::DoctypeName,
+    HtmlTokenizerState::AfterDoctypeName,
+    HtmlTokenizerState::DoctypePublicKeywordU,
+    HtmlTokenizerState::DoctypePublicKeywordB,
+    HtmlTokenizerState::DoctypePublicKeywordL,
+    HtmlTokenizerState::DoctypePublicKeywordI,
+    HtmlTokenizerState::DoctypePublicKeywordC,
+    HtmlTokenizerState::AfterDoctypePublicKeyword,
+    HtmlTokenizerState::BeforeDoctypePublicIdentifier,
+    HtmlTokenizerState::DoctypePublicIdentifierDoubleQuoted,
+    HtmlTokenizerState::DoctypePublicIdentifierSingleQuoted,
+    HtmlTokenizerState::AfterDoctypePublicIdentifier,
+    HtmlTokenizerState::BetweenDoctypePublicAndSystemIdentifiers,
+    HtmlTokenizerState::DoctypeSystemKeywordY,
+    HtmlTokenizerState::DoctypeSystemKeywordS,
+    HtmlTokenizerState::DoctypeSystemKeywordT,
+    HtmlTokenizerState::DoctypeSystemKeywordE,
+    HtmlTokenizerState::DoctypeSystemKeywordM,
+    HtmlTokenizerState::AfterDoctypeSystemKeyword,
+    HtmlTokenizerState::BeforeDoctypeSystemIdentifier,
+    HtmlTokenizerState::DoctypeSystemIdentifierDoubleQuoted,
+    HtmlTokenizerState::DoctypeSystemIdentifierSingleQuoted,
+    HtmlTokenizerState::AfterDoctypeSystemIdentifier,
+    HtmlTokenizerState::BogusDoctype,
+];
+
 impl HtmlTokenizerState {
     /// Machine-state identifier used by the generated static lexer.
     pub fn as_machine_state(self) -> &'static str {
@@ -257,6 +389,40 @@ impl HtmlTokenizerState {
             Self::CommentEnd => "comment_end",
             Self::CommentEndBang => "comment_end_bang",
             Self::BogusComment => "bogus_comment",
+            Self::DoctypeKeywordO => "doctype_keyword_o",
+            Self::DoctypeKeywordC => "doctype_keyword_c",
+            Self::DoctypeKeywordT => "doctype_keyword_t",
+            Self::DoctypeKeywordY => "doctype_keyword_y",
+            Self::DoctypeKeywordP => "doctype_keyword_p",
+            Self::DoctypeKeywordE => "doctype_keyword_e",
+            Self::DoctypeAfterKeyword => "doctype_after_keyword",
+            Self::BeforeDoctypeName => "before_doctype_name",
+            Self::DoctypeName => "doctype_name",
+            Self::AfterDoctypeName => "after_doctype_name",
+            Self::DoctypePublicKeywordU => "doctype_public_keyword_u",
+            Self::DoctypePublicKeywordB => "doctype_public_keyword_b",
+            Self::DoctypePublicKeywordL => "doctype_public_keyword_l",
+            Self::DoctypePublicKeywordI => "doctype_public_keyword_i",
+            Self::DoctypePublicKeywordC => "doctype_public_keyword_c",
+            Self::AfterDoctypePublicKeyword => "after_doctype_public_keyword",
+            Self::BeforeDoctypePublicIdentifier => "before_doctype_public_identifier",
+            Self::DoctypePublicIdentifierDoubleQuoted => "doctype_public_identifier_double_quoted",
+            Self::DoctypePublicIdentifierSingleQuoted => "doctype_public_identifier_single_quoted",
+            Self::AfterDoctypePublicIdentifier => "after_doctype_public_identifier",
+            Self::BetweenDoctypePublicAndSystemIdentifiers => {
+                "between_doctype_public_and_system_identifiers"
+            }
+            Self::DoctypeSystemKeywordY => "doctype_system_keyword_y",
+            Self::DoctypeSystemKeywordS => "doctype_system_keyword_s",
+            Self::DoctypeSystemKeywordT => "doctype_system_keyword_t",
+            Self::DoctypeSystemKeywordE => "doctype_system_keyword_e",
+            Self::DoctypeSystemKeywordM => "doctype_system_keyword_m",
+            Self::AfterDoctypeSystemKeyword => "after_doctype_system_keyword",
+            Self::BeforeDoctypeSystemIdentifier => "before_doctype_system_identifier",
+            Self::DoctypeSystemIdentifierDoubleQuoted => "doctype_system_identifier_double_quoted",
+            Self::DoctypeSystemIdentifierSingleQuoted => "doctype_system_identifier_single_quoted",
+            Self::AfterDoctypeSystemIdentifier => "after_doctype_system_identifier",
+            Self::BogusDoctype => "bogus_doctype",
             Self::ScriptData => "script_data",
             Self::ScriptDataLessThanSign => "script_data_less_than_sign",
             Self::ScriptDataEndTagOpen => "script_data_end_tag_open",
@@ -319,6 +485,48 @@ impl HtmlTokenizerState {
             Self::CommentEnd => "Comment end state",
             Self::CommentEndBang => "Comment end bang state",
             Self::BogusComment => "Bogus comment state",
+            Self::DoctypeKeywordO => "DOCTYPE keyword O state",
+            Self::DoctypeKeywordC => "DOCTYPE keyword C state",
+            Self::DoctypeKeywordT => "DOCTYPE keyword T state",
+            Self::DoctypeKeywordY => "DOCTYPE keyword Y state",
+            Self::DoctypeKeywordP => "DOCTYPE keyword P state",
+            Self::DoctypeKeywordE => "DOCTYPE keyword E state",
+            Self::DoctypeAfterKeyword => "DOCTYPE after keyword state",
+            Self::BeforeDoctypeName => "Before DOCTYPE name state",
+            Self::DoctypeName => "DOCTYPE name state",
+            Self::AfterDoctypeName => "After DOCTYPE name state",
+            Self::DoctypePublicKeywordU => "DOCTYPE public keyword U state",
+            Self::DoctypePublicKeywordB => "DOCTYPE public keyword B state",
+            Self::DoctypePublicKeywordL => "DOCTYPE public keyword L state",
+            Self::DoctypePublicKeywordI => "DOCTYPE public keyword I state",
+            Self::DoctypePublicKeywordC => "DOCTYPE public keyword C state",
+            Self::AfterDoctypePublicKeyword => "After DOCTYPE public keyword state",
+            Self::BeforeDoctypePublicIdentifier => "Before DOCTYPE public identifier state",
+            Self::DoctypePublicIdentifierDoubleQuoted => {
+                "DOCTYPE public identifier double quoted state"
+            }
+            Self::DoctypePublicIdentifierSingleQuoted => {
+                "DOCTYPE public identifier single quoted state"
+            }
+            Self::AfterDoctypePublicIdentifier => "After DOCTYPE public identifier state",
+            Self::BetweenDoctypePublicAndSystemIdentifiers => {
+                "Between DOCTYPE public and system identifiers state"
+            }
+            Self::DoctypeSystemKeywordY => "DOCTYPE system keyword Y state",
+            Self::DoctypeSystemKeywordS => "DOCTYPE system keyword S state",
+            Self::DoctypeSystemKeywordT => "DOCTYPE system keyword T state",
+            Self::DoctypeSystemKeywordE => "DOCTYPE system keyword E state",
+            Self::DoctypeSystemKeywordM => "DOCTYPE system keyword M state",
+            Self::AfterDoctypeSystemKeyword => "After DOCTYPE system keyword state",
+            Self::BeforeDoctypeSystemIdentifier => "Before DOCTYPE system identifier state",
+            Self::DoctypeSystemIdentifierDoubleQuoted => {
+                "DOCTYPE system identifier double quoted state"
+            }
+            Self::DoctypeSystemIdentifierSingleQuoted => {
+                "DOCTYPE system identifier single quoted state"
+            }
+            Self::AfterDoctypeSystemIdentifier => "After DOCTYPE system identifier state",
+            Self::BogusDoctype => "Bogus DOCTYPE state",
             Self::ScriptData => "Script data state",
             Self::ScriptDataLessThanSign => "Script data less-than sign state",
             Self::ScriptDataEndTagOpen => "Script data end tag open state",
@@ -378,6 +586,11 @@ impl HtmlTokenizerState {
     /// Return whether this state is a parser-approved script tokenizer substate.
     pub fn is_script_substate(self) -> bool {
         HTML_SCRIPT_TOKENIZER_STATES.contains(&self)
+    }
+
+    /// Return whether this state resumes an already-started DOCTYPE token.
+    pub fn requires_doctype_seed(self) -> bool {
+        HTML_DOCTYPE_TOKENIZER_STATES.contains(&self)
     }
 
     /// Return whether this state is a parser-approved fragment entry point.
@@ -455,6 +668,7 @@ pub struct HtmlLexContext {
     pub last_start_tag: Option<String>,
     pub current_end_tag: Option<String>,
     pub current_comment: Option<String>,
+    pub current_doctype: Option<DoctypeSeed>,
     pub temporary_buffer: Option<String>,
 }
 
@@ -465,6 +679,7 @@ impl HtmlLexContext {
             last_start_tag: None,
             current_end_tag: None,
             current_comment: None,
+            current_doctype: None,
             temporary_buffer: None,
         }
     }
@@ -511,6 +726,11 @@ impl HtmlLexContext {
         self
     }
 
+    pub fn with_current_doctype(mut self, doctype: DoctypeSeed) -> Self {
+        self.current_doctype = Some(doctype);
+        self
+    }
+
     pub fn with_temporary_buffer(mut self, value: impl Into<String>) -> Self {
         self.temporary_buffer = Some(value.into());
         self
@@ -521,6 +741,7 @@ impl HtmlLexContext {
             && self.last_start_tag.is_none()
             && self.current_end_tag.is_none()
             && self.current_comment.is_none()
+            && self.current_doctype.is_none()
             && self.temporary_buffer.is_none()
     }
 
@@ -536,6 +757,22 @@ impl HtmlLexContext {
     ) -> Option<Self> {
         if initial_state.requires_comment_seed() {
             Some(Self::new(initial_state).with_current_comment(data))
+        } else {
+            None
+        }
+    }
+
+    /// Return a DOCTYPE tokenizer continuation context for importer/parser tests.
+    ///
+    /// These states resume after markup-declaration logic has already created
+    /// the current DOCTYPE token. The seed carries whatever name/identifier and
+    /// force-quirks data the chosen state has already accumulated.
+    pub fn doctype_continuation(
+        initial_state: HtmlTokenizerState,
+        seed: DoctypeSeed,
+    ) -> Option<Self> {
+        if initial_state.requires_doctype_seed() {
+            Some(Self::new(initial_state).with_current_doctype(seed))
         } else {
             None
         }
@@ -621,6 +858,8 @@ pub fn apply_html_lex_context(lexer: &mut HtmlLexer, context: &HtmlLexContext) -
         lexer.set_current_end_tag(current_end_tag);
     } else if let Some(current_comment) = context.current_comment.as_deref() {
         lexer.set_current_comment(current_comment);
+    } else if let Some(current_doctype) = context.current_doctype.as_ref() {
+        lexer.set_current_doctype(current_doctype.clone());
     } else {
         lexer.clear_current_token();
     }

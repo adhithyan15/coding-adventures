@@ -5,6 +5,16 @@
   "source": "upstream-html5lib-smoke.test",
   "generator": "normalize_html5lib_fixtures.py",
   "supported_initial_states": [
+    "After DOCTYPE name state",
+    "After DOCTYPE public identifier state",
+    "After DOCTYPE public keyword state",
+    "After DOCTYPE system identifier state",
+    "After DOCTYPE system keyword state",
+    "Before DOCTYPE name state",
+    "Before DOCTYPE public identifier state",
+    "Before DOCTYPE system identifier state",
+    "Between DOCTYPE public and system identifiers state",
+    "Bogus DOCTYPE state",
     "Bogus comment state",
     "CDATA section bracket state",
     "CDATA section end state",
@@ -19,6 +29,28 @@
     "Comment start dash state",
     "Comment start state",
     "Comment state",
+    "DOCTYPE after keyword state",
+    "DOCTYPE keyword C state",
+    "DOCTYPE keyword E state",
+    "DOCTYPE keyword O state",
+    "DOCTYPE keyword P state",
+    "DOCTYPE keyword T state",
+    "DOCTYPE keyword Y state",
+    "DOCTYPE name state",
+    "DOCTYPE public identifier double quoted state",
+    "DOCTYPE public identifier single quoted state",
+    "DOCTYPE public keyword B state",
+    "DOCTYPE public keyword C state",
+    "DOCTYPE public keyword I state",
+    "DOCTYPE public keyword L state",
+    "DOCTYPE public keyword U state",
+    "DOCTYPE system identifier double quoted state",
+    "DOCTYPE system identifier single quoted state",
+    "DOCTYPE system keyword E state",
+    "DOCTYPE system keyword M state",
+    "DOCTYPE system keyword S state",
+    "DOCTYPE system keyword T state",
+    "DOCTYPE system keyword Y state",
     "Data state",
     "PLAINTEXT state",
     "RAWTEXT end tag attributes state",
@@ -2687,6 +2719,81 @@
       "diagnostics": [],
       "initial_state": "Bogus comment state",
       "current_comment": "bogus-"
+    },
+    {
+      "id": "html5lib-smoke-209",
+      "description": "doctype keyword continuation completes keyword and name",
+      "input": "OCTYPE html>tail",
+      "tokens": [
+        "Doctype(name=html, force_quirks=false)",
+        "Text(data=tail)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "DOCTYPE keyword O state",
+      "current_doctype": {}
+    },
+    {
+      "id": "html5lib-smoke-210",
+      "description": "doctype name continuation appends to seeded name",
+      "input": "ml>",
+      "tokens": [
+        "Doctype(name=html, force_quirks=false)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "DOCTYPE name state",
+      "current_doctype": {
+        "name": "ht"
+      }
+    },
+    {
+      "id": "html5lib-smoke-211",
+      "description": "doctype public identifier continuation completes public and system ids",
+      "input": "b\" \"sys\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub, system_identifier=sys, force_quirks=false)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "DOCTYPE public identifier double quoted state",
+      "current_doctype": {
+        "name": "html",
+        "public_identifier": "pu"
+      }
+    },
+    {
+      "id": "html5lib-smoke-212",
+      "description": "doctype after public identifier continuation reports missing whitespace before system id",
+      "input": "\"sys\">",
+      "tokens": [
+        "Doctype(name=html, public_identifier=pub, system_identifier=sys, force_quirks=false)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-whitespace-between-doctype-public-and-system-identifiers"
+      ],
+      "initial_state": "After DOCTYPE public identifier state",
+      "current_doctype": {
+        "name": "html",
+        "public_identifier": "pub"
+      }
+    },
+    {
+      "id": "html5lib-smoke-213",
+      "description": "bogus doctype continuation preserves seeded force quirks",
+      "input": "ignored>tail",
+      "tokens": [
+        "Doctype(name=html, force_quirks=true)",
+        "Text(data=tail)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Bogus DOCTYPE state",
+      "current_doctype": {
+        "name": "html",
+        "force_quirks": true
+      }
     }
   ],
   "skipped": []

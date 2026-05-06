@@ -127,9 +127,11 @@ duplicates can continue using plain `commit_attribute`.
 The runtime also exposes context-seeding helpers such as
 `Tokenizer::set_initial_state`, `Tokenizer::set_last_start_tag`,
 `Tokenizer::set_current_end_tag`, `Tokenizer::set_current_comment`, and
-`Tokenizer::set_temporary_buffer` so wrapper packages can execute HTML submodes
-and continuation states like RCDATA end-tag-name or comment end-dash without
-loading definition files at runtime.
+`Tokenizer::set_current_doctype` with `DoctypeSeed`, plus
+`Tokenizer::set_temporary_buffer`, so wrapper packages can execute HTML
+submodes and continuation states like RCDATA end-tag-name, comment end-dash, or
+DOCTYPE public identifier continuation without loading definition files at
+runtime.
 
 Wrapper packages can opt into HTML-style input-stream newline preprocessing
 with `Tokenizer::with_normalized_carriage_returns`. That maps CRLF pairs and

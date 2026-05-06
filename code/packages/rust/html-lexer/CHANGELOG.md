@@ -29,6 +29,12 @@ documented in this file.
 - html5lib-style smoke fixture coverage for seeded comment continuations,
   including pending dash/bang preservation, abrupt close diagnostics, and
   bogus-comment recovery.
+- Parser/importer-facing seeded DOCTYPE continuation contexts, including
+  keyword/name, public/system identifier, after-identifier, and bogus-doctype
+  substates with partial doctype-token seeding.
+- html5lib-style smoke fixture coverage for seeded DOCTYPE continuations,
+  including missing-whitespace diagnostics, identifier accumulation, and
+  force-quirks preservation.
 
 ### Changed
 - Switched the stable `create_html_lexer` and `lex_html` API over from the

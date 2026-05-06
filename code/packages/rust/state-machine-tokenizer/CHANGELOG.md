@@ -45,3 +45,6 @@ All notable changes to the `state-machine-tokenizer` crate will be documented in
   without `;`.
 - Added current-comment seeding helpers so wrapper packages can resume
   comment-token continuation states without loading tokenizer definition files.
+- Added `DoctypeSeed` and current-DOCTYPE seeding helpers so wrapper packages
+  can resume DOCTYPE continuation states while preserving partial name,
+  identifier, and force-quirks data.

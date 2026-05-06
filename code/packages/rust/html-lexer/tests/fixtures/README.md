@@ -30,6 +30,7 @@ Each file is a JSON object with this shape:
       "initial_state": "optional tokenizer state context",
       "last_start_tag": "optional tokenizer tag context",
       "current_end_tag": "optional in-progress end-tag token context",
+      "current_doctype": "optional in-progress doctype token context",
       "temporary_buffer": "optional tokenizer temporary-buffer context",
       "diagnostics": ["optional-diagnostic-code"]
     }
@@ -70,6 +71,9 @@ fields; the normalizer lowers them to `current_end_tag` and `temporary_buffer`.
 Comment continuation fixtures likewise accept a `currentComment` extension
 field, lowered to `current_comment`, so html5lib-style comment substates can
 resume with an already-created comment token.
+DOCTYPE continuation fixtures accept a `currentDoctype` extension object,
+lowered to `current_doctype`, with optional `name`, `public_identifier`,
+`system_identifier`, and `force_quirks` fields for the partial doctype token.
 
 `normalize_html5lib_fixtures.py` is the checked-in importer for this shape. It
 currently supports:
@@ -84,6 +88,8 @@ currently supports:
 - comment `start`, `start dash`, body, less-than-sign, less-than-sign bang,
   less-than-sign bang dash, less-than-sign bang dash dash, end-dash, end,
   end-bang, and bogus-comment substates together with `currentComment`
+- DOCTYPE keyword/name, public/system keyword, public/system identifier,
+  after-identifier, and bogus-doctype substates together with `currentDoctype`
 - `initialStates: ["Script data state"]` together with `lastStartTag`
 - script `less-than sign`, `escape start`, and `escape start dash` substates
   together with `lastStartTag`
@@ -178,14 +184,15 @@ than silently disappearing. Rust conformance tests execute the generated
 `html5lib-smoke.json` corpus and separately parse the raw upstream-style file to
 keep the intake path visible. Tokenizer-context cases such as RCDATA, RAWTEXT,
 script submodes, CDATA bracket/end states, resumable end-tag-open states, and
-seeded end-tag and comment continuation states stay in the generated corpus with context
-metadata and are seeded into the Rust wrapper at test time, while still
+seeded end-tag, comment, and DOCTYPE continuation states stay in the generated
+corpus with context metadata and are seeded into the Rust wrapper at test time, while still
 unsupported upstream states remain recorded under `skipped` instead of being
 discarded. End-tag continuation coverage intentionally exercises matching,
 mismatched, EOF, and diagnostic recovery paths so parser/tokenizer handoff
 regressions show up in the shared fixture corpus instead of only in narrow unit
 tests. Comment continuation coverage does the same for pending dash/bang and
-bogus-comment recovery paths.
+bogus-comment recovery paths. DOCTYPE continuation coverage exercises partial
+keyword/name, identifier, diagnostic, and bogus-doctype recovery paths.
 
 To regenerate the normalized corpus:
 

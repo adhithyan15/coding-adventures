@@ -2974,6 +2974,117 @@
           "after"
         ]
       ]
+    },
+    {
+      "description": "doctype keyword continuation completes keyword and name",
+      "input": "OCTYPE html>tail",
+      "initialStates": [
+        "DOCTYPE keyword O state"
+      ],
+      "currentDoctype": {},
+      "output": [
+        [
+          "DOCTYPE",
+          "html",
+          null,
+          null,
+          true
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ]
+    },
+    {
+      "description": "doctype name continuation appends to seeded name",
+      "input": "ml>",
+      "initialStates": [
+        "DOCTYPE name state"
+      ],
+      "currentDoctype": {
+        "name": "ht"
+      },
+      "output": [
+        [
+          "DOCTYPE",
+          "html",
+          null,
+          null,
+          true
+        ]
+      ]
+    },
+    {
+      "description": "doctype public identifier continuation completes public and system ids",
+      "input": "b\" \"sys\">",
+      "initialStates": [
+        "DOCTYPE public identifier double quoted state"
+      ],
+      "currentDoctype": {
+        "name": "html",
+        "public_identifier": "pu"
+      },
+      "output": [
+        [
+          "DOCTYPE",
+          "html",
+          "pub",
+          "sys",
+          true
+        ]
+      ]
+    },
+    {
+      "description": "doctype after public identifier continuation reports missing whitespace before system id",
+      "input": "\"sys\">",
+      "initialStates": [
+        "After DOCTYPE public identifier state"
+      ],
+      "currentDoctype": {
+        "name": "html",
+        "public_identifier": "pub"
+      },
+      "output": [
+        [
+          "DOCTYPE",
+          "html",
+          "pub",
+          "sys",
+          true
+        ]
+      ],
+      "errors": [
+        {
+          "code": "missing-whitespace-between-doctype-public-and-system-identifiers",
+          "line": 1,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "description": "bogus doctype continuation preserves seeded force quirks",
+      "input": "ignored>tail",
+      "initialStates": [
+        "Bogus DOCTYPE state"
+      ],
+      "currentDoctype": {
+        "name": "html",
+        "force_quirks": true
+      },
+      "output": [
+        [
+          "DOCTYPE",
+          "html",
+          null,
+          null,
+          false
+        ],
+        [
+          "Character",
+          "tail"
+        ]
+      ]
     }
   ]
 }

@@ -26,6 +26,38 @@ SUPPORTED_INITIAL_STATES = {
     "Comment start state",
     "Comment state",
     "Data state",
+    "DOCTYPE after keyword state",
+    "DOCTYPE keyword C state",
+    "DOCTYPE keyword E state",
+    "DOCTYPE keyword O state",
+    "DOCTYPE keyword P state",
+    "DOCTYPE keyword T state",
+    "DOCTYPE keyword Y state",
+    "DOCTYPE name state",
+    "DOCTYPE public identifier double quoted state",
+    "DOCTYPE public identifier single quoted state",
+    "DOCTYPE public keyword B state",
+    "DOCTYPE public keyword C state",
+    "DOCTYPE public keyword I state",
+    "DOCTYPE public keyword L state",
+    "DOCTYPE public keyword U state",
+    "DOCTYPE system identifier double quoted state",
+    "DOCTYPE system identifier single quoted state",
+    "DOCTYPE system keyword E state",
+    "DOCTYPE system keyword M state",
+    "DOCTYPE system keyword S state",
+    "DOCTYPE system keyword T state",
+    "DOCTYPE system keyword Y state",
+    "After DOCTYPE name state",
+    "After DOCTYPE public identifier state",
+    "After DOCTYPE public keyword state",
+    "After DOCTYPE system identifier state",
+    "After DOCTYPE system keyword state",
+    "Before DOCTYPE name state",
+    "Before DOCTYPE public identifier state",
+    "Before DOCTYPE system identifier state",
+    "Between DOCTYPE public and system identifiers state",
+    "Bogus DOCTYPE state",
     "PLAINTEXT state",
     "RCDATA end tag attributes state",
     "RCDATA end tag name state",
@@ -141,6 +173,41 @@ COMMENT_SEED_INITIAL_STATES = {
     "Comment state",
 }
 
+DOCTYPE_SEED_INITIAL_STATES = {
+    "DOCTYPE after keyword state",
+    "DOCTYPE keyword C state",
+    "DOCTYPE keyword E state",
+    "DOCTYPE keyword O state",
+    "DOCTYPE keyword P state",
+    "DOCTYPE keyword T state",
+    "DOCTYPE keyword Y state",
+    "DOCTYPE name state",
+    "DOCTYPE public identifier double quoted state",
+    "DOCTYPE public identifier single quoted state",
+    "DOCTYPE public keyword B state",
+    "DOCTYPE public keyword C state",
+    "DOCTYPE public keyword I state",
+    "DOCTYPE public keyword L state",
+    "DOCTYPE public keyword U state",
+    "DOCTYPE system identifier double quoted state",
+    "DOCTYPE system identifier single quoted state",
+    "DOCTYPE system keyword E state",
+    "DOCTYPE system keyword M state",
+    "DOCTYPE system keyword S state",
+    "DOCTYPE system keyword T state",
+    "DOCTYPE system keyword Y state",
+    "After DOCTYPE name state",
+    "After DOCTYPE public identifier state",
+    "After DOCTYPE public keyword state",
+    "After DOCTYPE system identifier state",
+    "After DOCTYPE system keyword state",
+    "Before DOCTYPE name state",
+    "Before DOCTYPE public identifier state",
+    "Before DOCTYPE system identifier state",
+    "Between DOCTYPE public and system identifiers state",
+    "Bogus DOCTYPE state",
+}
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -249,6 +316,21 @@ def is_supported(test: dict[str, Any]) -> tuple[bool, str]:
     if has_comment_seed and (has_end_tag_seed or has_partial_end_tag_seed):
         return False, "currentComment cannot be combined with end-tag continuation context"
 
+    needs_doctype_seed = [
+        initial_state
+        for initial_state in initial_states
+        if initial_state in DOCTYPE_SEED_INITIAL_STATES
+    ]
+    has_doctype_seed = isinstance(test.get("currentDoctype"), dict)
+    if needs_doctype_seed and not has_doctype_seed:
+        return False, f"{needs_doctype_seed[0]} requires currentDoctype"
+
+    if has_doctype_seed and len(needs_doctype_seed) != len(initial_states):
+        return False, "currentDoctype only supported for doctype continuation states"
+
+    if has_doctype_seed and (has_end_tag_seed or has_partial_end_tag_seed or has_comment_seed):
+        return False, "currentDoctype cannot be combined with other current-token context"
+
     for token in test.get("output", []):
         kind = token[0]
         if kind not in {"Character", "StartTag", "EndTag", "Comment", "DOCTYPE"}:
@@ -327,6 +409,10 @@ def normalize_case(
     current_comment = test.get("currentComment")
     if current_comment is not None:
         normalized["current_comment"] = current_comment
+
+    current_doctype = test.get("currentDoctype")
+    if current_doctype is not None:
+        normalized["current_doctype"] = current_doctype
 
     return normalized
 
