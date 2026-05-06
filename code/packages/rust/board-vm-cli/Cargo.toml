@@ -6,7 +6,9 @@ description = "Command-line smoke tools for Board VM hardware sessions"
 
 [dependencies]
 board-vm-client = { path = "../board-vm-client" }
+board-vm-eject = { path = "../board-vm-eject" }
 board-vm-host = { path = "../board-vm-host" }
+board-vm-protocol = { path = "../board-vm-protocol" }
 board-vm-serial = { path = "../board-vm-serial" }
 
 [lib]

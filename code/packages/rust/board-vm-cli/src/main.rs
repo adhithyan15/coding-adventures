@@ -1,6 +1,8 @@
 use std::env;
 
-use board_vm_cli::{list_ports, parse_args, run_repl, run_smoke, usage, CliCommand};
+use board_vm_cli::{
+    list_ports, parse_args, run_eject_blink, run_repl, run_smoke, usage, CliCommand,
+};
 
 fn main() {
     match parse_args(env::args().skip(1)).and_then(run_command) {
@@ -53,6 +55,19 @@ fn run_command(command: CliCommand) -> Result<(), board_vm_cli::CliError> {
             let stdin = std::io::stdin();
             let stdout = std::io::stdout();
             run_repl(&options, stdin.lock(), stdout.lock())
+        }
+        CliCommand::EjectBlink(options) => {
+            let report = run_eject_blink(&options)?;
+            println!(
+                "eject output={} program_id={} slot={} boot_policy={} bytes={} crc32=0x{:08X}",
+                report.output,
+                report.program_id,
+                report.slot,
+                report.boot_policy,
+                report.module_len,
+                report.module_crc32
+            );
+            Ok(())
         }
         CliCommand::Help => {
             println!("{}", usage());
