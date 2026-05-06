@@ -45,7 +45,9 @@ indirection.
 ```
    weather-agent program
         │
-        │  spawns this host as a process child
+        │  declares this host as a spawn_children entry
+        │  (per dynamic-topology; sub-agents are the only
+        │   thing that can be predefined)
         ▼
    weather-fetcher-host (this spec)
         │
@@ -54,10 +56,14 @@ indirection.
         │             host-runtime-rust (the Tier 1 SDK)
         │
         ├── manifest: net:connect:api.weather.gov:443 (ingestion)
-        │             channel:write:weather-snapshots
+        │             provides: weather-snapshot-source
+        │             (NO channel:write — channels created at
+        │              runtime via agent-discovery)
         │
-        ├── publishes: one Snapshot per tick on the
-        │             "weather-snapshots" channel
+        ├── publishes: one Snapshot per tick on whichever
+        │             channel the orchestrator bridged to us
+        │             when a consumer (the classifier) called
+        │             find_and_connect("weather-snapshot-source")
         │
         └── exits Stop on success, fails the tick on any error
 ```
@@ -212,6 +218,12 @@ a NWS forecast document.
 
 ## Manifest
 
+Per `dynamic-topology.md`, channels are not declared in
+manifests; they're created at runtime via `agent-discovery`.
+The fetcher publishes its output by **providing** a role
+(`weather-snapshot-source`); whoever needs raw forecasts
+discovers that role and the orchestrator bridges them.
+
 ```json
 {
   "version": 1,
@@ -224,28 +236,69 @@ a NWS forecast document.
       "flavor":        "ingestion",
       "trust":         "untrusted",
       "justification": "Fetch current Seattle forecast from NWS public API"
-    },
-    {
-      "category":      "channel",
-      "action":        "write",
-      "target":        "weather-snapshots",
-      "flavor":        "internal",
-      "justification": "Publish raw forecast for the classifier"
     }
   ],
-  "justification": "Ingestion-only host. One network endpoint, one channel write. RWS-clean: untrusted input + internal channel write only, no actuation. Cannot reach any other host, cannot read/write files, cannot exec processes."
+  "discover": [],
+  "provides": [
+    {
+      "role":             "weather-snapshot-source",
+      "qualifier":        { "location": "seattle" },
+      "schema_emit":      "schemas/weather-snapshot.schema.json",
+      "schema_accept":    "schemas/weather-snapshot-ack.schema.json",
+      "trust_laundering": false,
+      "max_concurrent":   3,
+      "min_instances":    0,
+      "max_instances":    1,
+      "idle_shutdown":    "10m",
+      "discoverable_by": [
+        { "agent_id": "weather-classifier" },
+        { "agent_id": "weather-agent" }
+      ],
+      "justification":    "Publish raw NWS forecast bytes for downstream classification"
+    }
+  ],
+  "justification": "Ingestion-only host. One network endpoint, one provided role (no actuation, no other capabilities). RWS-clean: untrusted input + internal channel writes only via the discovered bridge."
 }
 ```
 
-The `flavor: ingestion` annotation on the network capability is
-what RWS uses to decide this host is *not* an actuator on its
-network. The `flavor: internal` on the channel write is what
-makes it not an actuation either. Together: untrusted input only
-+ no actuation = RWS-clean.
+Notes on the new fields:
+
+- **No `channel:write` capability.** Under `dynamic-topology.md`,
+  the channel id this host writes to is not known at config
+  time; it's created when a consumer (the classifier) calls
+  `find_and_connect("weather-snapshot-source", ...)` and the
+  orchestrator bridges them. The host's authority to write to
+  that channel comes from being the registered provider of
+  the role, not from a capability-cage entry.
+- **`trust_laundering: false`** on this `provides` entry —
+  the snapshot the fetcher emits is *not* trust-laundered.
+  Its content includes a `raw_response_body` string that came
+  from `api.weather.gov`, which is by definition
+  attacker-influenceable. The classifier reads this snapshot
+  knowing it must defensively parse. The trust laundering
+  happens one hop downstream at the
+  `weather-recommendation-source` boundary.
+- **`idle_shutdown: "10m"`** — if no consumer discovers this
+  fetcher for 10 minutes, the orchestrator gracefully retires
+  it. Per-tick agents (the v1 PoC pattern) will respawn it on
+  the next tick's discovery; long-running consumers keep it
+  alive.
+- **`max_instances: 1`** — only one fetcher instance at a
+  time. A bursty load that needed two would hit
+  `BridgeQuotaExceeded { which: PoolSaturated }` rather than
+  spawn a second; for the v1 PoC this is fine since the
+  classifier consumes one snapshot per tick.
+- **`discoverable_by`** restricts who can discover us. The
+  classifier, plus the parent `weather-agent` (for inspection),
+  are the only permitted discoverers.
+
+The `flavor: ingestion` annotation on the network capability
+is what RWS uses to decide this host is *not* an actuator on
+its network.
 
 The capability cage's manifest loader, the supervisor's
-registration check, and the orchestrator's pipeline-wiring check
-all independently verify this manifest is RWS-clean.
+registration check, and the orchestrator's bridge-time RWS
+analysis all independently verify this manifest is RWS-clean.
 
 ---
 
@@ -319,7 +372,20 @@ fn boot(host: &Host) -> Result<(), HostError> {
             "forecast request returned {}", forecast_resp.status).into()));
     }
 
-    // Step 3: publish the Snapshot
+    // Step 3: serve discovery requests for our role.
+    //
+    // Under dynamic-topology, the channel id we write to is not
+    // known at config time; the orchestrator created it at the
+    // moment the classifier called find_and_connect on our
+    // weather-snapshot-source role. The host runtime hands us
+    // back a channel handle for each accepted bridge. For the
+    // v1 PoC's per-tick model, we serve exactly one bridge per
+    // tick and exit.
+    let bridge = host::provide::accept_one(
+        "weather-snapshot-source",
+        Duration::from_secs(5),    // wait up to 5s for a consumer
+    )?;
+
     let snapshot = json::object! {
         "endpoint_url":      forecast_url,
         "http_status":       forecast_resp.status,
@@ -327,7 +393,8 @@ fn boot(host: &Host) -> Result<(), HostError> {
         "raw_response_body": String::from_utf8(forecast_resp.body)?,
     };
 
-    host::channel::write("weather-snapshots", snapshot.to_string().as_bytes())?;
+    host::channel::write(&bridge.outbound_channel,
+                         snapshot.to_string().as_bytes())?;
 
     // Step 4: clean exit; supervisor sees Transient + Normal exit and
     // does not restart us within this tick.
