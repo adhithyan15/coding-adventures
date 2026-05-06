@@ -16,12 +16,13 @@ Current scope:
 - optional sequence-number suppression
 - PAN id compression for common intra-PAN frames
 - short and extended address parsing
+- auxiliary security header parsing
+- security level and key identifier modeling
 - payload extraction
 - optional FCS handling
 
 Not yet implemented:
 
-- auxiliary security header parsing
 - AES-CCM security processing
 - MAC command payload semantics
 - beacon payload semantics
@@ -50,6 +51,21 @@ assert_eq!(frame.destination, Some(Address::Short(0x5678)));
 assert_eq!(frame.source, Some(Address::Short(0x9abc)));
 assert_eq!(frame.payload, vec![0x01, 0x02]);
 ```
+
+## Security Boundary
+
+This package parses the IEEE 802.15.4 auxiliary security header. It does not
+decrypt payloads, authenticate MICs, choose keys, or enforce replay protection.
+
+That split is intentional:
+
+- `ieee802154-core` owns frame structure
+- `ieee802154-security` will own AES-CCM, nonce construction, replay windows,
+  and key lookup
+
+Secured payload bytes remain payload bytes here. Higher layers can inspect the
+security control field, frame counter, key identifier, and expected MIC length
+before handing the frame to a security package.
 
 ## Layer Position
 

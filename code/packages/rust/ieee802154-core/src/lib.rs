@@ -12,6 +12,8 @@ const PAN_ID_LEN: usize = 2;
 const SHORT_ADDR_LEN: usize = 2;
 const EXTENDED_ADDR_LEN: usize = 8;
 const FCS_LEN: usize = 2;
+const FRAME_COUNTER_32_LEN: usize = 4;
+const FRAME_COUNTER_40_LEN: usize = 5;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum FrameType {
@@ -186,6 +188,7 @@ pub struct MacFrame {
     pub destination: Option<Address>,
     pub source_pan_id: Option<u16>,
     pub source: Option<Address>,
+    pub auxiliary_security_header: Option<AuxiliarySecurityHeader>,
     pub payload: Vec<u8>,
     pub fcs: Option<u16>,
 }
@@ -234,6 +237,15 @@ impl MacFrame {
             encode_address(source, &mut out);
         }
 
+        if self.frame_control.security_enabled {
+            self.auxiliary_security_header
+                .as_ref()
+                .ok_or(MacFrameError::MissingAuxiliarySecurityHeader)?
+                .encode(&mut out);
+        } else if self.auxiliary_security_header.is_some() {
+            return Err(MacFrameError::UnexpectedAuxiliarySecurityHeader);
+        }
+
         out.extend_from_slice(&self.payload);
 
         if let Some(fcs) = self.fcs {
@@ -249,10 +261,6 @@ impl MacFrame {
         let frame_control = FrameControl::parse(raw_fcf);
 
         reject_reserved_address_modes(frame_control)?;
-
-        if frame_control.security_enabled {
-            return Err(MacFrameError::SecurityHeaderNotYetSupported);
-        }
 
         let sequence_number = if frame_control.sequence_number_suppression {
             None
@@ -272,6 +280,12 @@ impl MacFrame {
         };
 
         let source = read_address(&mut cursor, frame_control.source_address_mode)?;
+
+        let auxiliary_security_header = if frame_control.security_enabled {
+            Some(AuxiliarySecurityHeader::parse(&mut cursor)?)
+        } else {
+            None
+        };
 
         let remaining = cursor.remaining();
         let payload_len = if has_fcs {
@@ -299,9 +313,223 @@ impl MacFrame {
             destination,
             source_pan_id,
             source,
+            auxiliary_security_header,
             payload,
             fcs,
         })
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SecurityLevel {
+    None,
+    Mic32,
+    Mic64,
+    Mic128,
+    Enc,
+    EncMic32,
+    EncMic64,
+    EncMic128,
+}
+
+impl SecurityLevel {
+    fn from_bits(bits: u8) -> Self {
+        match bits {
+            0 => Self::None,
+            1 => Self::Mic32,
+            2 => Self::Mic64,
+            3 => Self::Mic128,
+            4 => Self::Enc,
+            5 => Self::EncMic32,
+            6 => Self::EncMic64,
+            _ => Self::EncMic128,
+        }
+    }
+
+    fn bits(self) -> u8 {
+        match self {
+            Self::None => 0,
+            Self::Mic32 => 1,
+            Self::Mic64 => 2,
+            Self::Mic128 => 3,
+            Self::Enc => 4,
+            Self::EncMic32 => 5,
+            Self::EncMic64 => 6,
+            Self::EncMic128 => 7,
+        }
+    }
+
+    pub fn encrypts(self) -> bool {
+        matches!(
+            self,
+            Self::Enc | Self::EncMic32 | Self::EncMic64 | Self::EncMic128
+        )
+    }
+
+    pub fn mic_len(self) -> usize {
+        match self {
+            Self::None | Self::Enc => 0,
+            Self::Mic32 | Self::EncMic32 => 4,
+            Self::Mic64 | Self::EncMic64 => 8,
+            Self::Mic128 | Self::EncMic128 => 16,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum KeyIdentifierMode {
+    Implicit,
+    KeyIndex,
+    KeySource4,
+    KeySource8,
+}
+
+impl KeyIdentifierMode {
+    fn from_bits(bits: u8) -> Self {
+        match bits {
+            0 => Self::Implicit,
+            1 => Self::KeyIndex,
+            2 => Self::KeySource4,
+            _ => Self::KeySource8,
+        }
+    }
+
+    fn bits(self) -> u8 {
+        match self {
+            Self::Implicit => 0,
+            Self::KeyIndex => 1,
+            Self::KeySource4 => 2,
+            Self::KeySource8 => 3,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SecurityControl {
+    pub security_level: SecurityLevel,
+    pub key_identifier_mode: KeyIdentifierMode,
+    pub frame_counter_suppression: bool,
+    pub frame_counter_size_5: bool,
+}
+
+impl SecurityControl {
+    pub fn parse(raw: u8) -> Self {
+        Self {
+            security_level: SecurityLevel::from_bits(raw & 0b111),
+            key_identifier_mode: KeyIdentifierMode::from_bits((raw >> 3) & 0b11),
+            frame_counter_suppression: raw & (1 << 5) != 0,
+            frame_counter_size_5: raw & (1 << 6) != 0,
+        }
+    }
+
+    pub fn encode(self) -> u8 {
+        let mut raw = self.security_level.bits();
+        raw |= self.key_identifier_mode.bits() << 3;
+        raw |= (self.frame_counter_suppression as u8) << 5;
+        raw |= (self.frame_counter_size_5 as u8) << 6;
+        raw
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum FrameCounter {
+    Counter32(u32),
+    Counter40(u64),
+}
+
+impl FrameCounter {
+    pub fn value(self) -> u64 {
+        match self {
+            Self::Counter32(value) => value as u64,
+            Self::Counter40(value) => value,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum KeyIdentifier {
+    Implicit,
+    KeyIndex(u8),
+    KeySource4 { source: [u8; 4], index: u8 },
+    KeySource8 { source: [u8; 8], index: u8 },
+}
+
+impl KeyIdentifier {
+    pub fn mode(self) -> KeyIdentifierMode {
+        match self {
+            Self::Implicit => KeyIdentifierMode::Implicit,
+            Self::KeyIndex(_) => KeyIdentifierMode::KeyIndex,
+            Self::KeySource4 { .. } => KeyIdentifierMode::KeySource4,
+            Self::KeySource8 { .. } => KeyIdentifierMode::KeySource8,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AuxiliarySecurityHeader {
+    pub security_control: SecurityControl,
+    pub frame_counter: Option<FrameCounter>,
+    pub key_identifier: KeyIdentifier,
+}
+
+impl AuxiliarySecurityHeader {
+    fn parse(cursor: &mut Cursor<'_>) -> Result<Self, MacFrameError> {
+        let security_control = SecurityControl::parse(cursor.read_u8()?);
+
+        let frame_counter = if security_control.frame_counter_suppression {
+            None
+        } else if security_control.frame_counter_size_5 {
+            Some(FrameCounter::Counter40(cursor.read_u40_le()?))
+        } else {
+            Some(FrameCounter::Counter32(cursor.read_u32_le()?))
+        };
+
+        let key_identifier = match security_control.key_identifier_mode {
+            KeyIdentifierMode::Implicit => KeyIdentifier::Implicit,
+            KeyIdentifierMode::KeyIndex => KeyIdentifier::KeyIndex(cursor.read_u8()?),
+            KeyIdentifierMode::KeySource4 => {
+                let source = cursor.read_array_4()?;
+                let index = cursor.read_u8()?;
+                KeyIdentifier::KeySource4 { source, index }
+            }
+            KeyIdentifierMode::KeySource8 => {
+                let source = cursor.read_array_8()?;
+                let index = cursor.read_u8()?;
+                KeyIdentifier::KeySource8 { source, index }
+            }
+        };
+
+        Ok(Self {
+            security_control,
+            frame_counter,
+            key_identifier,
+        })
+    }
+
+    fn encode(&self, out: &mut Vec<u8>) {
+        out.push(self.security_control.encode());
+
+        match self.frame_counter {
+            Some(FrameCounter::Counter32(value)) => out.extend_from_slice(&value.to_le_bytes()),
+            Some(FrameCounter::Counter40(value)) => {
+                let bytes = value.to_le_bytes();
+                out.extend_from_slice(&bytes[..FRAME_COUNTER_40_LEN]);
+            }
+            None => {}
+        }
+
+        match self.key_identifier {
+            KeyIdentifier::Implicit => {}
+            KeyIdentifier::KeyIndex(index) => out.push(index),
+            KeyIdentifier::KeySource4 { source, index } => {
+                out.extend_from_slice(&source);
+                out.push(index);
+            }
+            KeyIdentifier::KeySource8 { source, index } => {
+                out.extend_from_slice(&source);
+                out.push(index);
+            }
+        }
     }
 }
 
@@ -313,7 +541,13 @@ pub enum MacFrameError {
     MissingSequenceNumber,
     MissingDestinationPanId,
     MissingSourcePanId,
-    SecurityHeaderNotYetSupported,
+    MissingAuxiliarySecurityHeader,
+    UnexpectedAuxiliarySecurityHeader,
+    MissingFrameCounter,
+    UnexpectedFrameCounter,
+    FrameCounterSizeMismatch,
+    FrameCounterOutOfRange,
+    KeyIdentifierModeMismatch,
 }
 
 impl fmt::Display for MacFrameError {
@@ -332,12 +566,17 @@ impl fmt::Display for MacFrameError {
             Self::MissingSequenceNumber => write!(f, "missing sequence number"),
             Self::MissingDestinationPanId => write!(f, "missing destination PAN id"),
             Self::MissingSourcePanId => write!(f, "missing source PAN id"),
-            Self::SecurityHeaderNotYetSupported => {
-                write!(
-                    f,
-                    "auxiliary security header parsing is not implemented yet"
-                )
+            Self::MissingAuxiliarySecurityHeader => {
+                write!(f, "missing auxiliary security header")
             }
+            Self::UnexpectedAuxiliarySecurityHeader => {
+                write!(f, "unexpected auxiliary security header")
+            }
+            Self::MissingFrameCounter => write!(f, "missing frame counter"),
+            Self::UnexpectedFrameCounter => write!(f, "unexpected frame counter"),
+            Self::FrameCounterSizeMismatch => write!(f, "frame counter size mismatch"),
+            Self::FrameCounterOutOfRange => write!(f, "40-bit frame counter is out of range"),
+            Self::KeyIdentifierModeMismatch => write!(f, "key identifier mode mismatch"),
         }
     }
 }
@@ -381,7 +620,46 @@ fn validate_modes(frame: &MacFrame) -> Result<(), MacFrameError> {
         return Err(MacFrameError::AddressModeMismatch { field: "source" });
     }
 
+    match (
+        frame.frame_control.security_enabled,
+        &frame.auxiliary_security_header,
+    ) {
+        (true, Some(header)) => validate_auxiliary_security_header(header)?,
+        (true, None) => return Err(MacFrameError::MissingAuxiliarySecurityHeader),
+        (false, Some(_)) => return Err(MacFrameError::UnexpectedAuxiliarySecurityHeader),
+        (false, None) => {}
+    }
+
     Ok(())
+}
+
+fn validate_auxiliary_security_header(
+    header: &AuxiliarySecurityHeader,
+) -> Result<(), MacFrameError> {
+    if header.key_identifier.mode() != header.security_control.key_identifier_mode {
+        return Err(MacFrameError::KeyIdentifierModeMismatch);
+    }
+
+    match (
+        header.security_control.frame_counter_suppression,
+        header.security_control.frame_counter_size_5,
+        header.frame_counter,
+    ) {
+        (true, _, None) => Ok(()),
+        (true, _, Some(_)) => Err(MacFrameError::UnexpectedFrameCounter),
+        (false, false, Some(FrameCounter::Counter32(_))) => Ok(()),
+        (false, true, Some(FrameCounter::Counter40(value))) if value <= 0x00ff_ffff_ffff => Ok(()),
+        (false, _, None) => Err(MacFrameError::MissingFrameCounter),
+        (false, false, Some(FrameCounter::Counter40(_))) => {
+            Err(MacFrameError::FrameCounterSizeMismatch)
+        }
+        (false, true, Some(FrameCounter::Counter32(_))) => {
+            Err(MacFrameError::FrameCounterSizeMismatch)
+        }
+        (false, true, Some(FrameCounter::Counter40(_))) => {
+            Err(MacFrameError::FrameCounterOutOfRange)
+        }
+    }
 }
 
 fn read_pan_and_address(
@@ -439,11 +717,35 @@ impl<'a> Cursor<'a> {
         Ok(u16::from_le_bytes([bytes[0], bytes[1]]))
     }
 
+    fn read_u32_le(&mut self) -> Result<u32, MacFrameError> {
+        let bytes = self.read_bytes(FRAME_COUNTER_32_LEN)?;
+        Ok(u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]))
+    }
+
+    fn read_u40_le(&mut self) -> Result<u64, MacFrameError> {
+        let bytes = self.read_bytes(FRAME_COUNTER_40_LEN)?;
+        Ok(u64::from_le_bytes([
+            bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], 0, 0, 0,
+        ]))
+    }
+
     fn read_u64_le(&mut self) -> Result<u64, MacFrameError> {
         let bytes = self.read_bytes(EXTENDED_ADDR_LEN)?;
         Ok(u64::from_le_bytes([
             bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7],
         ]))
+    }
+
+    fn read_array_4(&mut self) -> Result<[u8; 4], MacFrameError> {
+        let bytes = self.read_bytes(4)?;
+        Ok([bytes[0], bytes[1], bytes[2], bytes[3]])
+    }
+
+    fn read_array_8(&mut self) -> Result<[u8; 8], MacFrameError> {
+        let bytes = self.read_bytes(8)?;
+        Ok([
+            bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7],
+        ])
     }
 
     fn read_bytes(&mut self, len: usize) -> Result<&'a [u8], MacFrameError> {
@@ -499,6 +801,7 @@ mod tests {
         assert_eq!(frame.destination, Some(Address::Short(0x5678)));
         assert_eq!(frame.source_pan_id, Some(0x1234));
         assert_eq!(frame.source, Some(Address::Short(0x9abc)));
+        assert_eq!(frame.auxiliary_security_header, None);
         assert_eq!(frame.payload, vec![0x01, 0x02]);
         assert_eq!(frame.fcs, None);
     }
@@ -512,6 +815,7 @@ mod tests {
             destination: Some(Address::Short(0x5678)),
             source_pan_id: Some(0x1234),
             source: Some(Address::Short(0x9abc)),
+            auxiliary_security_header: None,
             payload: vec![0x01, 0x02],
             fcs: None,
         };
@@ -580,16 +884,104 @@ mod tests {
     }
 
     #[test]
-    fn rejects_security_until_aux_header_is_implemented() {
+    fn parses_auxiliary_security_header_with_key_index() {
         let bytes = [
             0x49, 0x98, // data frame plus security enabled
-            0x07, 0x34, 0x12, 0x78, 0x56, 0xbc, 0x9a,
+            0x07, // sequence number
+            0x34, 0x12, // destination PAN id
+            0x78, 0x56, // destination short address
+            0xbc, 0x9a, // source short address
+            0x0d, // EncMic32 plus key-index mode
+            0x44, 0x33, 0x22, 0x11, // frame counter
+            0x02, // key index
+            0xaa, 0xbb, // encrypted payload bytes, not decrypted here
         ];
 
+        let frame = MacFrame::parse_without_fcs(&bytes).unwrap();
+
         assert_eq!(
-            MacFrame::parse_without_fcs(&bytes),
-            Err(MacFrameError::SecurityHeaderNotYetSupported)
+            frame.auxiliary_security_header,
+            Some(AuxiliarySecurityHeader {
+                security_control: SecurityControl {
+                    security_level: SecurityLevel::EncMic32,
+                    key_identifier_mode: KeyIdentifierMode::KeyIndex,
+                    frame_counter_suppression: false,
+                    frame_counter_size_5: false,
+                },
+                frame_counter: Some(FrameCounter::Counter32(0x1122_3344)),
+                key_identifier: KeyIdentifier::KeyIndex(2),
+            })
         );
+        assert_eq!(frame.payload, vec![0xaa, 0xbb]);
+    }
+
+    #[test]
+    fn encodes_auxiliary_security_header_with_key_source8() {
+        let frame = MacFrame {
+            frame_control: FrameControl {
+                security_enabled: true,
+                ..data_frame_control()
+            },
+            sequence_number: Some(7),
+            destination_pan_id: Some(0x1234),
+            destination: Some(Address::Short(0x5678)),
+            source_pan_id: Some(0x1234),
+            source: Some(Address::Short(0x9abc)),
+            auxiliary_security_header: Some(AuxiliarySecurityHeader {
+                security_control: SecurityControl {
+                    security_level: SecurityLevel::EncMic64,
+                    key_identifier_mode: KeyIdentifierMode::KeySource8,
+                    frame_counter_suppression: false,
+                    frame_counter_size_5: true,
+                },
+                frame_counter: Some(FrameCounter::Counter40(0x0001_0203_0405)),
+                key_identifier: KeyIdentifier::KeySource8 {
+                    source: [0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17],
+                    index: 0x22,
+                },
+            }),
+            payload: vec![0xaa],
+            fcs: None,
+        };
+
+        assert_eq!(
+            frame.encode().unwrap(),
+            vec![
+                0x49, 0x98, 0x07, 0x34, 0x12, 0x78, 0x56, 0xbc, 0x9a, 0x5e, 0x05, 0x04, 0x03, 0x02,
+                0x01, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x22, 0xaa,
+            ]
+        );
+    }
+
+    #[test]
+    fn rejects_security_enabled_encode_without_auxiliary_header() {
+        let frame = MacFrame {
+            frame_control: FrameControl {
+                security_enabled: true,
+                ..data_frame_control()
+            },
+            sequence_number: Some(7),
+            destination_pan_id: Some(0x1234),
+            destination: Some(Address::Short(0x5678)),
+            source_pan_id: Some(0x1234),
+            source: Some(Address::Short(0x9abc)),
+            auxiliary_security_header: None,
+            payload: vec![],
+            fcs: None,
+        };
+
+        assert_eq!(
+            frame.encode(),
+            Err(MacFrameError::MissingAuxiliarySecurityHeader)
+        );
+    }
+
+    #[test]
+    fn security_level_reports_mic_length_and_encryption() {
+        assert!(!SecurityLevel::Mic64.encrypts());
+        assert_eq!(SecurityLevel::Mic64.mic_len(), 8);
+        assert!(SecurityLevel::EncMic128.encrypts());
+        assert_eq!(SecurityLevel::EncMic128.mic_len(), 16);
     }
 
     #[test]
