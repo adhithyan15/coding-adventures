@@ -524,4 +524,5 @@ members = [
     "zigbee-nwk",
     "zwave-core",
     "sixlowpan",
+    "smart-home-registry",
 ]

@@ -1,0 +1,9 @@
+[package]
+name = "smart-home-registry"
+version = "0.1.0"
+edition = "2021"
+description = "In-memory smart-home registry for normalized bridge, device, entity, scene, and protocol mappings"
+license = "MIT"
+
+[dependencies]
+smart-home-core = { path = "../smart-home-core" }
