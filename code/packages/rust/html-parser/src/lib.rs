@@ -7,7 +7,8 @@
 
 use coding_adventures_html_lexer::{
     apply_html_lex_context, create_html_lexer, Attribute as LexerAttribute, Diagnostic,
-    HtmlLexContext, HtmlLexer, HtmlScriptingMode, HtmlTokenizerState, Token, TokenizerError,
+    DoctypeSeed, HtmlLexContext, HtmlLexer, HtmlScriptingMode, HtmlTokenizerState, Token,
+    TokenizerError,
 };
 use dom_core::{Attribute, Document, DocumentType, Node};
 use std::fmt;
@@ -61,6 +62,38 @@ pub enum HtmlInitialTokenizerContext {
     CommentEnd,
     CommentEndBang,
     BogusComment,
+    DoctypeKeywordO,
+    DoctypeKeywordC,
+    DoctypeKeywordT,
+    DoctypeKeywordY,
+    DoctypeKeywordP,
+    DoctypeKeywordE,
+    DoctypeAfterKeyword,
+    BeforeDoctypeName,
+    DoctypeName,
+    AfterDoctypeName,
+    DoctypePublicKeywordU,
+    DoctypePublicKeywordB,
+    DoctypePublicKeywordL,
+    DoctypePublicKeywordI,
+    DoctypePublicKeywordC,
+    AfterDoctypePublicKeyword,
+    BeforeDoctypePublicIdentifier,
+    DoctypePublicIdentifierDoubleQuoted,
+    DoctypePublicIdentifierSingleQuoted,
+    AfterDoctypePublicIdentifier,
+    BetweenDoctypePublicAndSystemIdentifiers,
+    DoctypeSystemKeywordY,
+    DoctypeSystemKeywordS,
+    DoctypeSystemKeywordT,
+    DoctypeSystemKeywordE,
+    DoctypeSystemKeywordM,
+    AfterDoctypeSystemKeyword,
+    BeforeDoctypeSystemIdentifier,
+    DoctypeSystemIdentifierDoubleQuoted,
+    DoctypeSystemIdentifierSingleQuoted,
+    AfterDoctypeSystemIdentifier,
+    BogusDoctype,
     ScriptData,
     ScriptDataLessThanSign,
     ScriptDataEndTagOpen,
@@ -180,6 +213,133 @@ impl HtmlInitialTokenizerContext {
             Self::BogusComment => {
                 seeded_comment_lex_context(HtmlTokenizerState::BogusComment, "bogus-")
             }
+            Self::DoctypeKeywordO => {
+                seeded_doctype_lex_context(HtmlTokenizerState::DoctypeKeywordO, DoctypeSeed::new())
+            }
+            Self::DoctypeKeywordC => {
+                seeded_doctype_lex_context(HtmlTokenizerState::DoctypeKeywordC, DoctypeSeed::new())
+            }
+            Self::DoctypeKeywordT => {
+                seeded_doctype_lex_context(HtmlTokenizerState::DoctypeKeywordT, DoctypeSeed::new())
+            }
+            Self::DoctypeKeywordY => {
+                seeded_doctype_lex_context(HtmlTokenizerState::DoctypeKeywordY, DoctypeSeed::new())
+            }
+            Self::DoctypeKeywordP => {
+                seeded_doctype_lex_context(HtmlTokenizerState::DoctypeKeywordP, DoctypeSeed::new())
+            }
+            Self::DoctypeKeywordE => {
+                seeded_doctype_lex_context(HtmlTokenizerState::DoctypeKeywordE, DoctypeSeed::new())
+            }
+            Self::DoctypeAfterKeyword => seeded_doctype_lex_context(
+                HtmlTokenizerState::DoctypeAfterKeyword,
+                DoctypeSeed::new(),
+            ),
+            Self::BeforeDoctypeName => seeded_doctype_lex_context(
+                HtmlTokenizerState::BeforeDoctypeName,
+                DoctypeSeed::new(),
+            ),
+            Self::DoctypeName => seeded_doctype_lex_context(
+                HtmlTokenizerState::DoctypeName,
+                DoctypeSeed::with_name("ht"),
+            ),
+            Self::AfterDoctypeName => seeded_doctype_lex_context(
+                HtmlTokenizerState::AfterDoctypeName,
+                DoctypeSeed::with_name("html"),
+            ),
+            Self::DoctypePublicKeywordU => seeded_doctype_lex_context(
+                HtmlTokenizerState::DoctypePublicKeywordU,
+                DoctypeSeed::with_name("html"),
+            ),
+            Self::DoctypePublicKeywordB => seeded_doctype_lex_context(
+                HtmlTokenizerState::DoctypePublicKeywordB,
+                DoctypeSeed::with_name("html"),
+            ),
+            Self::DoctypePublicKeywordL => seeded_doctype_lex_context(
+                HtmlTokenizerState::DoctypePublicKeywordL,
+                DoctypeSeed::with_name("html"),
+            ),
+            Self::DoctypePublicKeywordI => seeded_doctype_lex_context(
+                HtmlTokenizerState::DoctypePublicKeywordI,
+                DoctypeSeed::with_name("html"),
+            ),
+            Self::DoctypePublicKeywordC => seeded_doctype_lex_context(
+                HtmlTokenizerState::DoctypePublicKeywordC,
+                DoctypeSeed::with_name("html"),
+            ),
+            Self::AfterDoctypePublicKeyword => seeded_doctype_lex_context(
+                HtmlTokenizerState::AfterDoctypePublicKeyword,
+                DoctypeSeed::with_name("html"),
+            ),
+            Self::BeforeDoctypePublicIdentifier => seeded_doctype_lex_context(
+                HtmlTokenizerState::BeforeDoctypePublicIdentifier,
+                DoctypeSeed::with_name("html"),
+            ),
+            Self::DoctypePublicIdentifierDoubleQuoted => seeded_doctype_lex_context(
+                HtmlTokenizerState::DoctypePublicIdentifierDoubleQuoted,
+                doctype_seed_with_public("html", "pu"),
+            ),
+            Self::DoctypePublicIdentifierSingleQuoted => seeded_doctype_lex_context(
+                HtmlTokenizerState::DoctypePublicIdentifierSingleQuoted,
+                doctype_seed_with_public("html", "pu"),
+            ),
+            Self::AfterDoctypePublicIdentifier => seeded_doctype_lex_context(
+                HtmlTokenizerState::AfterDoctypePublicIdentifier,
+                doctype_seed_with_public("html", "pub"),
+            ),
+            Self::BetweenDoctypePublicAndSystemIdentifiers => seeded_doctype_lex_context(
+                HtmlTokenizerState::BetweenDoctypePublicAndSystemIdentifiers,
+                doctype_seed_with_public("html", "pub"),
+            ),
+            Self::DoctypeSystemKeywordY => seeded_doctype_lex_context(
+                HtmlTokenizerState::DoctypeSystemKeywordY,
+                DoctypeSeed::with_name("html"),
+            ),
+            Self::DoctypeSystemKeywordS => seeded_doctype_lex_context(
+                HtmlTokenizerState::DoctypeSystemKeywordS,
+                DoctypeSeed::with_name("html"),
+            ),
+            Self::DoctypeSystemKeywordT => seeded_doctype_lex_context(
+                HtmlTokenizerState::DoctypeSystemKeywordT,
+                DoctypeSeed::with_name("html"),
+            ),
+            Self::DoctypeSystemKeywordE => seeded_doctype_lex_context(
+                HtmlTokenizerState::DoctypeSystemKeywordE,
+                DoctypeSeed::with_name("html"),
+            ),
+            Self::DoctypeSystemKeywordM => seeded_doctype_lex_context(
+                HtmlTokenizerState::DoctypeSystemKeywordM,
+                DoctypeSeed::with_name("html"),
+            ),
+            Self::AfterDoctypeSystemKeyword => seeded_doctype_lex_context(
+                HtmlTokenizerState::AfterDoctypeSystemKeyword,
+                DoctypeSeed::with_name("html"),
+            ),
+            Self::BeforeDoctypeSystemIdentifier => seeded_doctype_lex_context(
+                HtmlTokenizerState::BeforeDoctypeSystemIdentifier,
+                DoctypeSeed::with_name("html"),
+            ),
+            Self::DoctypeSystemIdentifierDoubleQuoted => seeded_doctype_lex_context(
+                HtmlTokenizerState::DoctypeSystemIdentifierDoubleQuoted,
+                doctype_seed_with_system("html", "sy"),
+            ),
+            Self::DoctypeSystemIdentifierSingleQuoted => seeded_doctype_lex_context(
+                HtmlTokenizerState::DoctypeSystemIdentifierSingleQuoted,
+                doctype_seed_with_system("html", "sy"),
+            ),
+            Self::AfterDoctypeSystemIdentifier => seeded_doctype_lex_context(
+                HtmlTokenizerState::AfterDoctypeSystemIdentifier,
+                doctype_seed_with_system("html", "sys"),
+            ),
+            Self::BogusDoctype => seeded_doctype_lex_context(
+                HtmlTokenizerState::BogusDoctype,
+                DoctypeSeed {
+                    name: Some("html".to_string()),
+                    public_identifier: None,
+                    system_identifier: None,
+                    force_quirks: true,
+                },
+            ),
             Self::ScriptData => script_lex_context(HtmlTokenizerState::ScriptData),
             Self::ScriptDataLessThanSign => {
                 script_lex_context(HtmlTokenizerState::ScriptDataLessThanSign)
@@ -275,6 +435,29 @@ fn script_lex_context(state: HtmlTokenizerState) -> HtmlLexContext {
 fn seeded_comment_lex_context(state: HtmlTokenizerState, data: &str) -> HtmlLexContext {
     HtmlLexContext::comment_continuation(state, data)
         .expect("parser only exposes valid comment continuation states")
+}
+
+fn seeded_doctype_lex_context(state: HtmlTokenizerState, seed: DoctypeSeed) -> HtmlLexContext {
+    HtmlLexContext::doctype_continuation(state, seed)
+        .expect("parser only exposes valid doctype continuation states")
+}
+
+fn doctype_seed_with_public(name: &str, public_identifier: &str) -> DoctypeSeed {
+    DoctypeSeed {
+        name: Some(name.to_string()),
+        public_identifier: Some(public_identifier.to_string()),
+        system_identifier: None,
+        force_quirks: false,
+    }
+}
+
+fn doctype_seed_with_system(name: &str, system_identifier: &str) -> DoctypeSeed {
+    DoctypeSeed {
+        name: Some(name.to_string()),
+        public_identifier: None,
+        system_identifier: Some(system_identifier.to_string()),
+        force_quirks: false,
+    }
 }
 
 fn seeded_end_tag_lex_context(
@@ -2419,6 +2602,175 @@ mod tests {
             .unwrap();
 
             assert_eq!(output.document.children[0], Node::comment(expected_comment));
+            let paragraph = element(&body(&output.document).children[0]);
+            assert_eq!(paragraph.children, vec![Node::text("x")]);
+            assert!(output.parser_diagnostics.is_empty(), "context {context:?}");
+
+            let actual_lexer_diagnostics = output
+                .lexer_diagnostics
+                .iter()
+                .map(|diagnostic| diagnostic.code.as_str())
+                .collect::<Vec<_>>();
+            assert_eq!(
+                actual_lexer_diagnostics, expected_lexer_diagnostics,
+                "context {context:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn parser_exposes_all_seeded_doctype_continuation_contexts() {
+        for context in [
+            HtmlInitialTokenizerContext::DoctypeKeywordO,
+            HtmlInitialTokenizerContext::DoctypeKeywordC,
+            HtmlInitialTokenizerContext::DoctypeKeywordT,
+            HtmlInitialTokenizerContext::DoctypeKeywordY,
+            HtmlInitialTokenizerContext::DoctypeKeywordP,
+            HtmlInitialTokenizerContext::DoctypeKeywordE,
+            HtmlInitialTokenizerContext::DoctypeAfterKeyword,
+            HtmlInitialTokenizerContext::BeforeDoctypeName,
+            HtmlInitialTokenizerContext::DoctypeName,
+            HtmlInitialTokenizerContext::AfterDoctypeName,
+            HtmlInitialTokenizerContext::DoctypePublicKeywordU,
+            HtmlInitialTokenizerContext::DoctypePublicKeywordB,
+            HtmlInitialTokenizerContext::DoctypePublicKeywordL,
+            HtmlInitialTokenizerContext::DoctypePublicKeywordI,
+            HtmlInitialTokenizerContext::DoctypePublicKeywordC,
+            HtmlInitialTokenizerContext::AfterDoctypePublicKeyword,
+            HtmlInitialTokenizerContext::BeforeDoctypePublicIdentifier,
+            HtmlInitialTokenizerContext::DoctypePublicIdentifierDoubleQuoted,
+            HtmlInitialTokenizerContext::DoctypePublicIdentifierSingleQuoted,
+            HtmlInitialTokenizerContext::AfterDoctypePublicIdentifier,
+            HtmlInitialTokenizerContext::BetweenDoctypePublicAndSystemIdentifiers,
+            HtmlInitialTokenizerContext::DoctypeSystemKeywordY,
+            HtmlInitialTokenizerContext::DoctypeSystemKeywordS,
+            HtmlInitialTokenizerContext::DoctypeSystemKeywordT,
+            HtmlInitialTokenizerContext::DoctypeSystemKeywordE,
+            HtmlInitialTokenizerContext::DoctypeSystemKeywordM,
+            HtmlInitialTokenizerContext::AfterDoctypeSystemKeyword,
+            HtmlInitialTokenizerContext::BeforeDoctypeSystemIdentifier,
+            HtmlInitialTokenizerContext::DoctypeSystemIdentifierDoubleQuoted,
+            HtmlInitialTokenizerContext::DoctypeSystemIdentifierSingleQuoted,
+            HtmlInitialTokenizerContext::AfterDoctypeSystemIdentifier,
+            HtmlInitialTokenizerContext::BogusDoctype,
+        ] {
+            let context = context.lex_context();
+            assert!(context.initial_state.requires_doctype_seed());
+        }
+    }
+
+    #[test]
+    fn parser_can_start_in_seeded_doctype_continuation_contexts() {
+        for (
+            context,
+            source,
+            expected_name,
+            expected_public,
+            expected_system,
+            expected_force_quirks,
+            expected_lexer_diagnostics,
+        ) in [
+            (
+                HtmlInitialTokenizerContext::DoctypeKeywordO,
+                "OCTYPE html><p>x</p>",
+                Some("html"),
+                None,
+                None,
+                false,
+                Vec::<&str>::new(),
+            ),
+            (
+                HtmlInitialTokenizerContext::DoctypeName,
+                "ml><p>x</p>",
+                Some("html"),
+                None,
+                None,
+                false,
+                Vec::<&str>::new(),
+            ),
+            (
+                HtmlInitialTokenizerContext::AfterDoctypeName,
+                "PUBLIC \"pub\" \"sys\"><p>x</p>",
+                Some("html"),
+                Some("pub"),
+                Some("sys"),
+                false,
+                Vec::<&str>::new(),
+            ),
+            (
+                HtmlInitialTokenizerContext::DoctypePublicIdentifierDoubleQuoted,
+                "b\" \"sys\"><p>x</p>",
+                Some("html"),
+                Some("pub"),
+                Some("sys"),
+                false,
+                Vec::<&str>::new(),
+            ),
+            (
+                HtmlInitialTokenizerContext::AfterDoctypePublicIdentifier,
+                "\"sys\"><p>x</p>",
+                Some("html"),
+                Some("pub"),
+                Some("sys"),
+                false,
+                vec!["missing-whitespace-between-doctype-public-and-system-identifiers"],
+            ),
+            (
+                HtmlInitialTokenizerContext::BeforeDoctypePublicIdentifier,
+                "><p>x</p>",
+                Some("html"),
+                None,
+                None,
+                true,
+                vec!["missing-doctype-public-identifier"],
+            ),
+            (
+                HtmlInitialTokenizerContext::DoctypeSystemIdentifierSingleQuoted,
+                "s'><p>x</p>",
+                Some("html"),
+                None,
+                Some("sys"),
+                false,
+                Vec::<&str>::new(),
+            ),
+            (
+                HtmlInitialTokenizerContext::AfterDoctypeSystemIdentifier,
+                "junk><p>x</p>",
+                Some("html"),
+                None,
+                Some("sys"),
+                false,
+                vec!["unexpected-character-after-doctype-system-identifier"],
+            ),
+            (
+                HtmlInitialTokenizerContext::BogusDoctype,
+                "ignored><p>x</p>",
+                Some("html"),
+                None,
+                None,
+                true,
+                Vec::<&str>::new(),
+            ),
+        ] {
+            let output = parse_html_with_diagnostics_and_options(
+                source,
+                HtmlParseOptions {
+                    initial_tokenizer_context: context,
+                    ..HtmlParseOptions::default()
+                },
+            )
+            .unwrap();
+
+            assert_eq!(
+                output.document.children[0],
+                Node::DocumentType(DocumentType {
+                    name: expected_name.map(str::to_string),
+                    public_identifier: expected_public.map(str::to_string),
+                    system_identifier: expected_system.map(str::to_string),
+                    force_quirks: expected_force_quirks,
+                }),
+                "context {context:?}"
+            );
             let paragraph = element(&body(&output.document).children[0]);
             assert_eq!(paragraph.children, vec![Node::text("x")]);
             assert!(output.parser_diagnostics.is_empty(), "context {context:?}");
