@@ -20,3 +20,7 @@ let hello = client.hello(0x1234_5678)?;
 
 The crate does not assume Arduino, USB CDC, or UART semantics beyond "a byte
 stream with read/write timeouts". Board detection and flashing remain separate.
+Hosts that need CDC-style connection signaling can opt into
+`SerialConfig::dtr_on_open(true)`, and smoke tools can request
+`clear_on_open(true)` plus a short `settle_on_open(...)` delay to drop stale
+bytes before a fresh protocol session.

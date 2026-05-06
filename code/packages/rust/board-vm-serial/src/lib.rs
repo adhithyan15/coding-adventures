@@ -3,7 +3,9 @@ use std::time::Duration;
 
 use board_vm_client::{RawFrameTransport, TransportError};
 use board_vm_stream::{StreamTransport, StreamTransportError};
-pub use serialport::{DataBits, FlowControl, Parity, SerialPort, SerialPortInfo, StopBits};
+pub use serialport::{
+    ClearBuffer, DataBits, FlowControl, Parity, SerialPort, SerialPortInfo, StopBits,
+};
 
 pub const DEFAULT_BAUD_RATE: u32 = 115_200;
 pub const DEFAULT_TIMEOUT_MS: u64 = 1_000;
@@ -17,6 +19,9 @@ pub struct SerialConfig {
     pub flow_control: FlowControl,
     pub parity: Parity,
     pub stop_bits: StopBits,
+    pub dtr_on_open: Option<bool>,
+    pub clear_on_open: bool,
+    pub settle_on_open: Duration,
 }
 
 impl SerialConfig {
@@ -29,6 +34,9 @@ impl SerialConfig {
             flow_control: FlowControl::None,
             parity: Parity::None,
             stop_bits: StopBits::One,
+            dtr_on_open: None,
+            clear_on_open: false,
+            settle_on_open: Duration::ZERO,
         }
     }
 
@@ -61,11 +69,32 @@ impl SerialConfig {
         self.stop_bits = stop_bits;
         self
     }
+
+    pub fn dtr_on_open(mut self, dtr_on_open: bool) -> Self {
+        self.dtr_on_open = Some(dtr_on_open);
+        self
+    }
+
+    pub fn preserve_dtr_on_open(mut self) -> Self {
+        self.dtr_on_open = None;
+        self
+    }
+
+    pub fn clear_on_open(mut self, clear_on_open: bool) -> Self {
+        self.clear_on_open = clear_on_open;
+        self
+    }
+
+    pub fn settle_on_open(mut self, settle_on_open: Duration) -> Self {
+        self.settle_on_open = settle_on_open;
+        self
+    }
 }
 
 #[derive(Debug)]
 pub enum SerialTransportError {
     Open(serialport::Error),
+    Configure(serialport::Error),
     Stream(StreamTransportError),
 }
 
@@ -128,14 +157,29 @@ impl<S, const WIRE_BYTES: usize> BoardSerialTransport<S, WIRE_BYTES> {
 
 impl<const WIRE_BYTES: usize> BoardSerialTransport<Box<dyn SerialPort>, WIRE_BYTES> {
     pub fn open(config: &SerialConfig) -> Result<Self, SerialTransportError> {
-        let port = serialport::new(&config.path, config.baud_rate)
+        let mut builder = serialport::new(&config.path, config.baud_rate)
             .timeout(config.timeout)
             .data_bits(config.data_bits)
             .flow_control(config.flow_control)
             .parity(config.parity)
-            .stop_bits(config.stop_bits)
-            .open()
-            .map_err(SerialTransportError::Open)?;
+            .stop_bits(config.stop_bits);
+
+        if let Some(dtr_on_open) = config.dtr_on_open {
+            builder = builder.dtr_on_open(dtr_on_open);
+        }
+
+        let port = builder.open().map_err(SerialTransportError::Open)?;
+        if config.clear_on_open {
+            port.clear(ClearBuffer::All)
+                .map_err(SerialTransportError::Configure)?;
+        }
+        if !config.settle_on_open.is_zero() {
+            std::thread::sleep(config.settle_on_open);
+            if config.clear_on_open {
+                port.clear(ClearBuffer::All)
+                    .map_err(SerialTransportError::Configure)?;
+            }
+        }
         Ok(Self::from_stream(port))
     }
 }
@@ -261,6 +305,9 @@ mod tests {
         assert_eq!(config.flow_control, FlowControl::None);
         assert_eq!(config.parity, Parity::None);
         assert_eq!(config.stop_bits, StopBits::One);
+        assert_eq!(config.dtr_on_open, None);
+        assert!(!config.clear_on_open);
+        assert_eq!(config.settle_on_open, Duration::ZERO);
     }
 
     #[test]
@@ -271,7 +318,10 @@ mod tests {
             .data_bits(DataBits::Seven)
             .flow_control(FlowControl::Software)
             .parity(Parity::Even)
-            .stop_bits(StopBits::Two);
+            .stop_bits(StopBits::Two)
+            .dtr_on_open(true)
+            .clear_on_open(true)
+            .settle_on_open(Duration::from_millis(50));
 
         assert_eq!(config.path, "COM7");
         assert_eq!(config.baud_rate, 230_400);
@@ -280,6 +330,18 @@ mod tests {
         assert_eq!(config.flow_control, FlowControl::Software);
         assert_eq!(config.parity, Parity::Even);
         assert_eq!(config.stop_bits, StopBits::Two);
+        assert_eq!(config.dtr_on_open, Some(true));
+        assert!(config.clear_on_open);
+        assert_eq!(config.settle_on_open, Duration::from_millis(50));
+    }
+
+    #[test]
+    fn config_builder_can_preserve_dtr_after_override() {
+        let config = SerialConfig::new("COM7")
+            .dtr_on_open(true)
+            .preserve_dtr_on_open();
+
+        assert_eq!(config.dtr_on_open, None);
     }
 
     #[test]
