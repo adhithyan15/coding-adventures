@@ -1,0 +1,14 @@
+[package]
+name = "board-vm-language-core"
+version = "0.1.0"
+edition = "2021"
+description = "Stable Rust-owned Board VM host protocol boundary for language frontends"
+license = "MIT"
+
+[lib]
+crate-type = ["rlib", "staticlib", "cdylib"]
+path = "src/lib.rs"
+
+[dependencies]
+board-vm-host = { path = "../board-vm-host" }
+board-vm-protocol = { path = "../board-vm-protocol" }
