@@ -77,6 +77,12 @@ pub enum ValidateError {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RequiredCapabilitiesError {
+    Decode(DecodeError),
+    OutputTooSmall,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Module<'a> {
     pub flags: u8,
     pub max_stack: u8,
@@ -215,6 +221,23 @@ pub fn validate(
     Ok(())
 }
 
+pub fn collect_required_capabilities(
+    module: &Module<'_>,
+    out: &mut [u16],
+) -> Result<usize, RequiredCapabilitiesError> {
+    let mut ip = 0;
+    let mut count = 0;
+    while ip < module.code.len() {
+        let (op, next_ip) =
+            decode_next(module.code, ip).map_err(RequiredCapabilitiesError::Decode)?;
+        if let Some(capability_id) = called_capability(op) {
+            count = push_unique_capability(out, count, capability_id)?;
+        }
+        ip = next_ip;
+    }
+    Ok(count)
+}
+
 fn validate_stack_effect(
     op: Op,
     instruction_start: usize,
@@ -233,16 +256,40 @@ fn validate_stack_effect(
 }
 
 fn validate_capability(op: Op, board_caps: CapabilitySet) -> Result<(), ValidateError> {
-    let capability_id = match op {
-        Op::CallU8(id) => id as u16,
-        Op::CallU16(id) => id,
-        _ => return Ok(()),
+    let Some(capability_id) = called_capability(op) else {
+        return Ok(());
     };
     if board_caps.supports(capability_id) {
         Ok(())
     } else {
         Err(ValidateError::UnsupportedCapability(capability_id))
     }
+}
+
+pub fn called_capability(op: Op) -> Option<u16> {
+    match op {
+        Op::CallU8(id) => Some(id as u16),
+        Op::CallU16(id) => Some(id),
+        _ => None,
+    }
+}
+
+fn push_unique_capability(
+    out: &mut [u16],
+    count: usize,
+    capability_id: u16,
+) -> Result<usize, RequiredCapabilitiesError> {
+    if out[..count]
+        .iter()
+        .any(|existing| *existing == capability_id)
+    {
+        return Ok(count);
+    }
+    let Some(slot) = out.get_mut(count) else {
+        return Err(RequiredCapabilitiesError::OutputTooSmall);
+    };
+    *slot = capability_id;
+    Ok(count + 1)
 }
 
 fn validate_jump_target(code: &[u8], op: Op, next_ip: usize) -> Result<(), ValidateError> {
@@ -378,6 +425,75 @@ mod tests {
             const_pool: &[],
         };
         validate(&module, CapabilitySet::blink_mvp(), 8).unwrap();
+    }
+
+    #[test]
+    fn collects_unique_required_capabilities() {
+        let module = Module {
+            flags: FLAG_PROGRAM_MAY_RUN_FOREVER,
+            max_stack: 4,
+            code: BLINK_CODE,
+            const_pool: &[],
+        };
+        let mut capabilities = [0u16; 4];
+
+        let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
+
+        assert_eq!(count, 3);
+        assert_eq!(
+            &capabilities[..count],
+            &[CAP_GPIO_OPEN, CAP_GPIO_WRITE, CAP_TIME_SLEEP_MS]
+        );
+    }
+
+    #[test]
+    fn collects_call_u16_capabilities() {
+        let module = Module {
+            flags: 0,
+            max_stack: 1,
+            code: &[0x41, 0x34, 0x12, 0x41, 0x34, 0x12],
+            const_pool: &[],
+        };
+        let mut capabilities = [0u16; 2];
+
+        let count = collect_required_capabilities(&module, &mut capabilities).unwrap();
+
+        assert_eq!(count, 1);
+        assert_eq!(capabilities[0], 0x1234);
+    }
+
+    #[test]
+    fn rejects_capability_output_overflow() {
+        let module = Module {
+            flags: 0,
+            max_stack: 1,
+            code: &[0x40, 0x01, 0x40, 0x02],
+            const_pool: &[],
+        };
+        let mut capabilities = [0u16; 1];
+
+        assert_eq!(
+            collect_required_capabilities(&module, &mut capabilities),
+            Err(RequiredCapabilitiesError::OutputTooSmall)
+        );
+    }
+
+    #[test]
+    fn reports_decode_error_while_collecting_capabilities() {
+        let module = Module {
+            flags: 0,
+            max_stack: 1,
+            code: &[0x41, 0x01],
+            const_pool: &[],
+        };
+        let mut capabilities = [0u16; 1];
+
+        assert_eq!(
+            collect_required_capabilities(&module, &mut capabilities),
+            Err(RequiredCapabilitiesError::Decode(
+                DecodeError::UnexpectedEof
+            ))
+        );
     }
 
     #[test]
