@@ -7,3 +7,5 @@
 - Added key identifier normalization and in-memory key lookup scaffolding.
 - Added secured-frame material extraction for nonce, authenticated header bytes,
   encrypted payload bytes, and MIC bytes.
+- Added first AES-CCM* encrypt/decrypt implementation with RFC 3610 vector
+  coverage and constant-time MIC comparison.
