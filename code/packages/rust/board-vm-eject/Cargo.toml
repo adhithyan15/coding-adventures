@@ -1,0 +1,13 @@
+[package]
+name = "board-vm-eject"
+version = "0.1.0"
+edition = "2021"
+description = "Target-independent Board VM eject artifacts"
+
+[dependencies]
+board-vm-host = { path = "../board-vm-host" }
+board-vm-ir = { path = "../board-vm-ir" }
+board-vm-protocol = { path = "../board-vm-protocol" }
+
+[lib]
+path = "src/lib.rs"
