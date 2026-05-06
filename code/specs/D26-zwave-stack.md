@@ -66,6 +66,12 @@ integrations, learning tools.
 - regional profile metadata
 - parse errors
 
+**Initial Rust implementation:** `code/packages/rust/zwave-core` now provides
+Home ID, classic node id, Long Range node id, region profile, command-class id,
+and Serial API frame parse/encode primitives with checksum validation. The
+controller state machine, inclusion, callbacks, command classes, and S2 remain
+future layers.
+
 ### `zwave-serial-api`
 
 - serial framing

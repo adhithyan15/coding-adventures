@@ -519,4 +519,9 @@ members = [
     "twig-lsp-bridge",
     "twig-dap",
     "conduit",
+    "smart-home-core",
+    "hue-core",
+    "zigbee-nwk",
+    "zwave-core",
+    "sixlowpan",
 ]

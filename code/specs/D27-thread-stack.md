@@ -80,6 +80,12 @@ ieee802154-*      MAC/PHY foundation from D24
 - mesh addressing helpers
 - UDP compression
 
+**Initial Rust implementation:** `code/packages/rust/sixlowpan` now provides
+dispatch-byte classification, LOWPAN_IPHC first/second byte parsing, and
+fragment first/next header parse/encode helpers. Full IPv6/UDP decompression,
+reassembly, MLE, commissioning, and border-router behavior remain future
+layers.
+
 ### `thread-mle`
 
 - roles and neighbor state

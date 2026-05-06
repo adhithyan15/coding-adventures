@@ -1,0 +1,8 @@
+[package]
+name = "smart-home-core"
+version = "0.1.0"
+edition = "2021"
+description = "Repository-owned normalized smart-home model shared by integrations, tools, and agents"
+license = "MIT"
+
+[dependencies]
