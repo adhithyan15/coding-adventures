@@ -528,4 +528,5 @@ members = [
     "zigbee-aps",
     "zwave-serial-api",
     "thread-mle",
+    "zigbee-zcl",
 ]
