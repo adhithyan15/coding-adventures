@@ -13,3 +13,8 @@ CDC, BLE, TCP tunnel, or simulator byte stream with `DeviceStreamEndpoint`. The
 stream endpoint reads one zero-terminated COBS wire frame, dispatches it through
 the device, writes the encoded response frame, and keeps the transport itself
 board-specific.
+
+Background `RUN` requests are scheduled into a resumable VM cursor and execute a
+bounded instruction slice before returning `RUN_REPORT`. Firmware can call
+`poll_background()` between transport events to continue the active program
+without making the protocol server disappear behind a long-running bytecode loop.
