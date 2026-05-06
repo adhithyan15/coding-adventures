@@ -16,3 +16,16 @@ class FakeRunner
     @results.shift || CodingAdventures::BoardVM::CommandResult.new(argv, chdir, "", "", 0)
   end
 end
+
+class FakeTransport
+  attr_reader :frames
+
+  def initialize
+    @frames = []
+  end
+
+  def transact(frame, timeout_ms:)
+    @frames << frame
+    "ack".b
+  end
+end

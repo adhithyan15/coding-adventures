@@ -60,32 +60,27 @@ module CodingAdventures
         ], runner.calls.first[:argv]
       end
 
-      def test_led_blink_runs_the_generic_board_vm_smoke_command
+      def test_led_blink_dispatches_native_protocol_frames_through_transport
         runner = FakeRunner.new
+        transport = FakeTransport.new
+        result = nil
 
         BoardVM.uno_r4_wifi(
           port: "/dev/cu.usbmodem2201",
           cargo_workspace: "/repo/code/packages/rust",
           runner: runner,
+          transport: transport,
           baud: 57_600,
           timeout_ms: 250
         ) do |board|
-          board.led.blink(program_id: 9, budget: 32, host_nonce: 123)
+          result = board.led.blink(program_id: 9, budget: 32, host_nonce: 123)
         end
 
-        assert_equal [
-          "cargo", "run",
-          "-p", "board-vm-cli",
-          "--bin", "board-vm",
-          "--",
-          "smoke",
-          "--port", "/dev/cu.usbmodem2201",
-          "--baud", "57600",
-          "--timeout-ms", "250",
-          "--program-id", "9",
-          "--budget", "32",
-          "--host-nonce", "123"
-        ], runner.calls.first[:argv]
+        assert_empty runner.calls
+        assert_equal 6, transport.frames.length
+        assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
+        assert_equal transport.frames, result.frames
+        assert_equal Array.new(6, "ack".b), result.responses
       end
 
       def test_native_session_builds_protocol_bytes_in_rust

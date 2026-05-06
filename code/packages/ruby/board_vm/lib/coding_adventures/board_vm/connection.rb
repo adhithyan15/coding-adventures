@@ -5,7 +5,7 @@ module CodingAdventures
     class UnsupportedBoardError < ArgumentError; end
 
     class Connection
-      attr_reader :board, :cargo_workspace, :runner, :baud_rate, :timeout_ms
+      attr_reader :board, :cargo_workspace, :runner, :transport, :baud_rate, :timeout_ms
       attr_accessor :port
 
       def initialize(
@@ -13,6 +13,7 @@ module CodingAdventures
         port:,
         cargo_workspace:,
         runner:,
+        transport:,
         baud_rate:,
         timeout_ms:,
         arduino_core: nil,
@@ -35,6 +36,7 @@ module CodingAdventures
         @port = port
         @cargo_workspace = cargo_workspace
         @runner = runner
+        @transport = transport
         @baud_rate = baud_rate
         @timeout_ms = timeout_ms
         @arduino_core = arduino_core
@@ -74,22 +76,22 @@ module CodingAdventures
       def blink!(
         program_id: DEFAULT_PROGRAM_ID,
         budget: DEFAULT_INSTRUCTION_BUDGET,
-        host_nonce: DEFAULT_HOST_NONCE
+        host_nonce: DEFAULT_HOST_NONCE,
+        pin: 13,
+        high_ms: 250,
+        low_ms: 250,
+        max_stack: 4
       )
         ensure_uno_r4_wifi!
 
-        runner.call(
-          board_vm_cli_command(
-            "smoke",
-            "--port", port,
-            "--baud", baud_rate.to_s,
-            "--timeout-ms", timeout_ms.to_s,
-            "--program-id", program_id.to_s,
-            "--budget", budget.to_s,
-            "--host-nonce", host_nonce.to_s
-          ),
-          chdir: cargo_workspace
-        )
+        session = Native::Session.new
+        frames = [
+          session.hello_wire("ruby-board-vm", host_nonce),
+          session.caps_query_wire,
+          *session.blink_upload_run_frames(program_id, budget, pin, high_ms, low_ms, max_stack)
+        ]
+        responses = frames.map { |frame| dispatch_frame(frame) }
+        SessionResult.new(frames: frames, responses: responses)
       end
 
       def eject_blink!(
@@ -164,6 +166,21 @@ module CodingAdventures
         cargo_command("run", "-p", "board-vm-cli", "--bin", "board-vm", "--", *args)
       end
 
+      def dispatch_frame(frame)
+        if active_transport.respond_to?(:transact)
+          active_transport.transact(frame, timeout_ms: timeout_ms)
+        elsif active_transport.respond_to?(:write)
+          active_transport.write(frame)
+          nil
+        else
+          raise TransportError, "Board VM transport must respond to #transact or #write"
+        end
+      end
+
+      def active_transport
+        @transport ||= SerialTransport.new(port: port, baud_rate: baud_rate, timeout_ms: timeout_ms)
+      end
+
       def cargo_command(*args)
         ["cargo"] + args
       end
@@ -192,9 +209,21 @@ module CodingAdventures
       def blink(
         program_id: DEFAULT_PROGRAM_ID,
         budget: DEFAULT_INSTRUCTION_BUDGET,
-        host_nonce: DEFAULT_HOST_NONCE
+        host_nonce: DEFAULT_HOST_NONCE,
+        pin: 13,
+        high_ms: 250,
+        low_ms: 250,
+        max_stack: 4
       )
-        @connection.blink!(program_id: program_id, budget: budget, host_nonce: host_nonce)
+        @connection.blink!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          pin: pin,
+          high_ms: high_ms,
+          low_ms: low_ms,
+          max_stack: max_stack
+        )
       end
     end
 
