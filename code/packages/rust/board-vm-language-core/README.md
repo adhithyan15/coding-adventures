@@ -12,10 +12,16 @@ binary protocol details stay in Rust:
 - program upload/run frame construction
 - raw response frame decoding and payload offset reporting
 
-This crate exports both a normal Rust API and a small C ABI-friendly surface.
-Ruby can load the dynamic library with `Fiddle`, Python can use `ctypes` or
-`cffi`, and other runtimes can wrap the same symbols without reimplementing the
-wire format.
+This crate exports a normal Rust API for the repo's language bridge packages.
+Ruby bindings should be built on `ruby-bridge`, Python bindings on
+`python-bridge`, and other runtimes should follow the same pattern with their
+own bridge crates. Those bridge packages provide the language-native surface;
+this crate provides the shared Board VM bytes underneath them.
+
+The small C ABI-friendly surface is intentionally secondary. It is useful for
+tools, experiments, or runtimes that do not yet have a first-class bridge crate,
+but it should not become a parallel protocol implementation path for Ruby,
+Python, or any other supported language.
 
 The crate deliberately does not open serial ports or USB devices yet. Language
 frontends may own ergonomic transport discovery in the short term, but the bytes
