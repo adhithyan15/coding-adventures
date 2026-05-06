@@ -33,6 +33,7 @@ members = [
     "board-vm-eject",
     "board-vm-protocol",
     "board-vm-host",
+    "board-vm-language-core",
     "board-vm-client",
     "board-vm-cli",
     "board-vm-stream",

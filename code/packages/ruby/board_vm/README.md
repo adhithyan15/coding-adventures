@@ -2,6 +2,12 @@
 
 Ruby DSL for Board VM hardware sessions.
 
+Ruby is syntax sugar over the Rust Board VM host core. It should not carry its
+own implementation of request ids, CRCs, COBS framing, payload encoders, or
+binary message layouts. Those pieces live in Rust crates, with
+`board-vm-language-core` providing the ABI-friendly boundary that Ruby, Python,
+Lua, Java, and other frontends can wrap.
+
 The first target is the Arduino Uno R4 WiFi. The DSL keeps the frontend shape
 language-level and board-agnostic, while the implementation delegates the
 board-specific pieces to the Rust packages that already know how to build,
@@ -41,8 +47,10 @@ cargo run -p board-vm-cli --bin board-vm -- smoke ...
 
 That smoke command sends `HELLO`, queries capabilities, uploads the standard
 blink module, and starts it through the binary protocol. Future Ruby releases
-can replace this subprocess bridge with a direct Ruby protocol transport while
-preserving the DSL surface.
+should replace this subprocess bridge by loading `board-vm-language-core` and
+sending the Rust-built wire frames through a transport. The DSL surface should
+stay Ruby-shaped, but every board operation should still dispatch the Board VM
+binary protocol produced by Rust.
 
 The DSL also exposes the current board-agnostic blink ejection path:
 
