@@ -15,6 +15,13 @@ cargo run -p board-vm-cli --bin board-vm -- smoke \
   --timeout-ms 1000
 ```
 
+```sh
+cargo run -p board-vm-cli --bin board-vm -- repl \
+  --port /dev/cu.usbmodem... \
+  --baud 115200 \
+  --timeout-ms 1000
+```
+
 `smoke` opens the selected serial device, sends `HELLO`, queries capabilities,
 uploads the standard onboard LED blink module, and starts it with a bounded
 instruction budget. It is transport-hosting glue only; the board firmware still
@@ -23,3 +30,10 @@ open, waits briefly, and clears the serial buffers before the first request so
 USB CDC boards start each run from a clean host session. Its default run budget
 is intentionally small because the current firmware executes blink bytecode
 synchronously while it prepares the run report.
+
+`repl` opens the same serial transport, sends `HELLO`, and then accepts a small
+interactive command set: `caps`, `upload-blink`, `run [budget]`,
+`blink [budget]`, `stop`, `hello`, `help`, and `quit`. This is the first
+language-agnostic host shell: it drives the binary protocol through the shared
+client library, while future frontend packages can put richer syntax on top of
+the same transport calls.
