@@ -52,19 +52,13 @@ Each element in `frames` is a COBS/CRC-framed Board VM request ready for a
 transport to write to the board. Ruby owns the friendly shape; Rust owns the
 wire bytes.
 
-Inside the block, `board.led.blink` currently runs the shared Rust host smoke
-command:
-
-```sh
-cargo run -p board-vm-cli --bin board-vm -- smoke ...
-```
-
-That smoke command sends `HELLO`, queries capabilities, uploads the standard
-blink module, and starts it through the binary protocol. The next Ruby step is
-to route `board.led.blink` through `BoardVM::Native::Session` plus a transport
-instead of through this subprocess bridge. The DSL surface should stay
-Ruby-shaped, but every board operation should still dispatch the Board VM
-binary protocol produced by Rust.
+Inside the block, `board.led.blink` creates a
+`CodingAdventures::BoardVM::Native::Session`, sends `HELLO`, queries
+capabilities, uploads the standard blink module, and starts it through the
+Rust-owned binary protocol. By default the Ruby DSL opens the configured serial
+device, writes the Rust-produced wire frames, and waits for framed responses.
+Tests and alternate runtimes can inject any transport object that responds to
+`transact(frame, timeout_ms:)` or `write(frame)`.
 
 The DSL also exposes the current board-agnostic blink ejection path:
 

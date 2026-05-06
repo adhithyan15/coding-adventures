@@ -2,8 +2,9 @@
 
 require_relative "board_vm/version"
 require_relative "board_vm/command_runner"
-require_relative "board_vm/connection"
 require_relative "board_vm/native"
+require_relative "board_vm/transport"
+require_relative "board_vm/connection"
 
 module CodingAdventures
   module BoardVM
@@ -24,6 +25,7 @@ module CodingAdventures
       flash: false,
       cargo_workspace: DEFAULT_RUST_WORKSPACE,
       runner: CommandRunner.new,
+      transport: nil,
       **options
     )
       connection = Connection.new(
@@ -31,6 +33,7 @@ module CodingAdventures
         port: port,
         cargo_workspace: cargo_workspace,
         runner: runner,
+        transport: transport,
         baud_rate: options.delete(:baud_rate) || options.delete(:baud) || DEFAULT_BAUD_RATE,
         timeout_ms: options.delete(:timeout_ms) || DEFAULT_TIMEOUT_MS,
         **options
