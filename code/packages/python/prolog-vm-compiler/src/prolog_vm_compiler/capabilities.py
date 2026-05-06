@@ -267,6 +267,21 @@ def prolog_vm_capabilities() -> tuple[PrologVMCapability, ...]:
                 "structured and bytecode VM stress coverage",
             ),
         ),
+        PrologVMCapability(
+            id="host-term-io-conveniences",
+            title="Bounded term I/O convenience predicates",
+            status="complete",
+            specs=("PR84",),
+            packages=("prolog-loader", "prolog-vm-compiler"),
+            features=(
+                "read_term singletons/1 option support on atom/current/stream reads",
+                "writeq/1,2 quoted term rendering",
+                "write_canonical/1,2 numbervars-aware canonical rendering",
+                "writeln/1,2 newline-terminating term writes",
+                "portray_clause/1,2 clause-terminating canonical writes",
+                "structured and bytecode VM stress coverage",
+            ),
+        ),
     )
 
 
@@ -317,8 +332,8 @@ def prolog_vm_capability_manifest() -> PrologVMCapabilityManifest:
     """Return the canonical capability manifest for this package."""
 
     return PrologVMCapabilityManifest(
-        track="Prolog-on-Logic-VM PR00-PR83",
-        status="core-plus-stream-term-io",
+        track="Prolog-on-Logic-VM PR00-PR84",
+        status="core-plus-term-io-conveniences",
         dialects=("iso", "swi"),
         backends=("structured", "bytecode"),
         capabilities=prolog_vm_capabilities(),
