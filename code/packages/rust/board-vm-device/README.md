@@ -12,7 +12,9 @@ either feed decoded raw frames into `BoardVmDevice` directly or wrap a UART, USB
 CDC, BLE, TCP tunnel, or simulator byte stream with `DeviceStreamEndpoint`. The
 stream endpoint reads one zero-terminated COBS wire frame, dispatches it through
 the device, writes the encoded response frame, and keeps the transport itself
-board-specific.
+board-specific. Blocking transports can use `serve_one()`, while USB CDC-style
+transports can use `serve_available()` to return quickly when no host byte is
+ready.
 
 Background `RUN` requests are scheduled into a resumable VM cursor and execute a
 bounded instruction slice before returning `RUN_REPORT`. Firmware can call

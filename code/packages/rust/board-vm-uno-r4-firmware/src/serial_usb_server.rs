@@ -1,4 +1,4 @@
-use board_vm_device::{BoardVmDevice, DeviceStreamEndpoint, DeviceStreamError};
+use board_vm_device::{BoardVmDevice, DeviceStreamEndpoint, DeviceStreamError, DeviceStreamPoll};
 use board_vm_runtime::BoardHal;
 use board_vm_usb_cdc::{BlockingUsbCdc, UsbCdcByteStream};
 
@@ -36,6 +36,24 @@ where
     H: BoardHal,
 {
     endpoint.serve_one(device)
+}
+
+pub fn serve_serial_usb_available<
+    'a,
+    C,
+    H,
+    const MAX_PROGRAM_BYTES: usize,
+    const MAX_STACK: usize,
+    const MAX_HANDLES: usize,
+>(
+    endpoint: &mut SerialUsbEndpoint<C>,
+    device: &mut BoardVmDevice<'a, H, MAX_PROGRAM_BYTES, MAX_STACK, MAX_HANDLES>,
+) -> Result<DeviceStreamPoll, DeviceStreamError<C::Error>>
+where
+    C: BlockingUsbCdc,
+    H: BoardHal,
+{
+    endpoint.serve_available(device)
 }
 
 #[cfg(test)]
@@ -78,6 +96,13 @@ mod tests {
             let byte = self.read[self.read_offset];
             self.read_offset += 1;
             Ok(byte)
+        }
+
+        fn try_read_byte(&mut self) -> Result<Option<u8>, Self::Error> {
+            if self.read_offset >= self.read.len() {
+                return Ok(None);
+            }
+            self.read_byte().map(Some)
         }
 
         fn write_packet(&mut self, bytes: &[u8]) -> Result<(), Self::Error> {
@@ -143,5 +168,17 @@ mod tests {
         assert_eq!(ack.host_nonce, 0xCAFE_BABE);
         assert_eq!(ack.board_name, "arduino-uno-r4-minima");
         assert_eq!(ack.runtime_name, "board-vm-uno-r4");
+    }
+
+    #[test]
+    fn serial_usb_endpoint_reports_idle_without_input() {
+        let cdc = FakeCdc::new(Vec::new());
+        let mut endpoint = serial_usb_endpoint(cdc);
+        let mut device = minima_device(FakeBackend, 0xB04D_1005);
+
+        assert_eq!(
+            serve_serial_usb_available(&mut endpoint, &mut device),
+            Ok(DeviceStreamPoll::Idle)
+        );
     }
 }

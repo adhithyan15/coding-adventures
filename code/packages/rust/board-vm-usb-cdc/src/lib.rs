@@ -101,6 +101,10 @@ pub trait BlockingUsbCdc {
 
     fn read_byte(&mut self) -> Result<u8, Self::Error>;
 
+    fn try_read_byte(&mut self) -> Result<Option<u8>, Self::Error> {
+        self.read_byte().map(Some)
+    }
+
     fn write_packet(&mut self, bytes: &[u8]) -> Result<(), Self::Error>;
 
     fn flush(&mut self) -> Result<(), Self::Error> {
@@ -158,6 +162,10 @@ where
 
     fn read_byte(&mut self) -> Result<u8, Self::Error> {
         self.cdc.read_byte()
+    }
+
+    fn try_read_byte(&mut self) -> Result<Option<u8>, Self::Error> {
+        self.cdc.try_read_byte()
     }
 
     fn write_all(&mut self, bytes: &[u8]) -> Result<(), Self::Error> {
@@ -221,6 +229,13 @@ mod tests {
             Ok(byte)
         }
 
+        fn try_read_byte(&mut self) -> Result<Option<u8>, Self::Error> {
+            if self.read_offset >= self.read_len {
+                return Ok(None);
+            }
+            self.read_byte().map(Some)
+        }
+
         fn write_packet(&mut self, bytes: &[u8]) -> Result<(), Self::Error> {
             self.packets += 1;
             let end = self
@@ -278,6 +293,13 @@ mod tests {
         assert_eq!(cdc.flushes, 1);
         assert!(cdc.connected());
         assert_eq!(cdc.line_coding(), UsbCdcLineCoding::default());
+    }
+
+    #[test]
+    fn usb_cdc_byte_stream_can_report_idle_without_error() {
+        let mut stream = UsbCdcByteStream::new(FakeCdc::with_read(&[]));
+
+        assert_eq!(stream.try_read_byte().unwrap(), None);
     }
 
     #[test]
