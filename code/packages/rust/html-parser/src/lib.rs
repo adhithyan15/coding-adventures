@@ -46,9 +46,21 @@ pub enum HtmlInitialTokenizerContext {
     RawtextEndTagWhitespace,
     RawtextEndTagAttributes,
     RawtextSelfClosingEndTag,
+    Plaintext,
     ForeignContentCdataSection,
     ForeignContentCdataSectionBracket,
     ForeignContentCdataSectionEnd,
+    CommentStart,
+    CommentStartDash,
+    Comment,
+    CommentLessThanSign,
+    CommentLessThanSignBang,
+    CommentLessThanSignBangDash,
+    CommentLessThanSignBangDashDash,
+    CommentEndDash,
+    CommentEnd,
+    CommentEndBang,
+    BogusComment,
     ScriptData,
     ScriptDataLessThanSign,
     ScriptDataEndTagOpen,
@@ -131,12 +143,42 @@ impl HtmlInitialTokenizerContext {
                 "style",
                 "style",
             ),
+            Self::Plaintext => HtmlLexContext::new(HtmlTokenizerState::Plaintext),
             Self::ForeignContentCdataSection => HtmlLexContext::cdata_section(),
             Self::ForeignContentCdataSectionBracket => {
                 HtmlLexContext::new(HtmlTokenizerState::CdataSectionBracket)
             }
             Self::ForeignContentCdataSectionEnd => {
                 HtmlLexContext::new(HtmlTokenizerState::CdataSectionEnd)
+            }
+            Self::CommentStart => seeded_comment_lex_context(HtmlTokenizerState::CommentStart, ""),
+            Self::CommentStartDash => {
+                seeded_comment_lex_context(HtmlTokenizerState::CommentStartDash, "")
+            }
+            Self::Comment => seeded_comment_lex_context(HtmlTokenizerState::Comment, "seed"),
+            Self::CommentLessThanSign => {
+                seeded_comment_lex_context(HtmlTokenizerState::CommentLessThanSign, "seed<")
+            }
+            Self::CommentLessThanSignBang => {
+                seeded_comment_lex_context(HtmlTokenizerState::CommentLessThanSignBang, "seed<!")
+            }
+            Self::CommentLessThanSignBangDash => seeded_comment_lex_context(
+                HtmlTokenizerState::CommentLessThanSignBangDash,
+                "seed<!",
+            ),
+            Self::CommentLessThanSignBangDashDash => seeded_comment_lex_context(
+                HtmlTokenizerState::CommentLessThanSignBangDashDash,
+                "seed<!",
+            ),
+            Self::CommentEndDash => {
+                seeded_comment_lex_context(HtmlTokenizerState::CommentEndDash, "seed")
+            }
+            Self::CommentEnd => seeded_comment_lex_context(HtmlTokenizerState::CommentEnd, "seed"),
+            Self::CommentEndBang => {
+                seeded_comment_lex_context(HtmlTokenizerState::CommentEndBang, "seed")
+            }
+            Self::BogusComment => {
+                seeded_comment_lex_context(HtmlTokenizerState::BogusComment, "bogus-")
             }
             Self::ScriptData => script_lex_context(HtmlTokenizerState::ScriptData),
             Self::ScriptDataLessThanSign => {
@@ -228,6 +270,11 @@ impl HtmlInitialTokenizerContext {
 
 fn script_lex_context(state: HtmlTokenizerState) -> HtmlLexContext {
     HtmlLexContext::script_substate(state).expect("parser only exposes valid script substates")
+}
+
+fn seeded_comment_lex_context(state: HtmlTokenizerState, data: &str) -> HtmlLexContext {
+    HtmlLexContext::comment_continuation(state, data)
+        .expect("parser only exposes valid comment continuation states")
 }
 
 fn seeded_end_tag_lex_context(
@@ -2168,6 +2215,19 @@ mod tests {
         assert_eq!(body(&cdata_end).children[0], Node::text("after"));
         let paragraph = element(&body(&cdata_end).children[1]);
         assert_eq!(paragraph.children, vec![Node::text("x")]);
+
+        let plaintext = parse_html_with_options(
+            "<b>&amp;</b></plaintext><p>x</p>",
+            HtmlParseOptions {
+                initial_tokenizer_context: HtmlInitialTokenizerContext::Plaintext,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+        assert_eq!(
+            body(&plaintext).children,
+            vec![Node::text("<b>&amp;</b></plaintext><p>x</p>")]
+        );
     }
 
     #[test]
@@ -2274,6 +2334,102 @@ mod tests {
             assert_eq!(
                 actual_lexer_diagnostics,
                 expected_lexer_diagnostic.into_iter().collect::<Vec<_>>(),
+                "context {context:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn parser_can_start_in_seeded_comment_continuation_contexts() {
+        for (context, source, expected_comment, expected_lexer_diagnostics) in [
+            (
+                HtmlInitialTokenizerContext::CommentStart,
+                "body --><p>x</p>",
+                "-body --",
+                vec!["incorrectly-opened-comment"],
+            ),
+            (
+                HtmlInitialTokenizerContext::CommentStartDash,
+                "><p>x</p>",
+                "",
+                vec!["abrupt-closing-of-empty-comment"],
+            ),
+            (
+                HtmlInitialTokenizerContext::Comment,
+                " body --><p>x</p>",
+                "seed body ",
+                Vec::<&str>::new(),
+            ),
+            (
+                HtmlInitialTokenizerContext::CommentLessThanSign,
+                "x--><p>x</p>",
+                "seed<x",
+                Vec::<&str>::new(),
+            ),
+            (
+                HtmlInitialTokenizerContext::CommentLessThanSignBang,
+                "x--><p>x</p>",
+                "seed<!x",
+                Vec::<&str>::new(),
+            ),
+            (
+                HtmlInitialTokenizerContext::CommentLessThanSignBangDash,
+                "x--><p>x</p>",
+                "seed<!-x",
+                Vec::<&str>::new(),
+            ),
+            (
+                HtmlInitialTokenizerContext::CommentLessThanSignBangDashDash,
+                "x--><p>x</p>",
+                "seed<!--x",
+                vec!["nested-comment"],
+            ),
+            (
+                HtmlInitialTokenizerContext::CommentEndDash,
+                "x--><p>x</p>",
+                "seed-x",
+                Vec::<&str>::new(),
+            ),
+            (
+                HtmlInitialTokenizerContext::CommentEnd,
+                "!><p>x</p>",
+                "seed",
+                vec!["incorrectly-closed-comment"],
+            ),
+            (
+                HtmlInitialTokenizerContext::CommentEndBang,
+                "y--><p>x</p>",
+                "seed--!y",
+                Vec::<&str>::new(),
+            ),
+            (
+                HtmlInitialTokenizerContext::BogusComment,
+                "tail><p>x</p>",
+                "bogus-tail",
+                Vec::<&str>::new(),
+            ),
+        ] {
+            let output = parse_html_with_diagnostics_and_options(
+                source,
+                HtmlParseOptions {
+                    initial_tokenizer_context: context,
+                    ..HtmlParseOptions::default()
+                },
+            )
+            .unwrap();
+
+            assert_eq!(output.document.children[0], Node::comment(expected_comment));
+            let paragraph = element(&body(&output.document).children[0]);
+            assert_eq!(paragraph.children, vec![Node::text("x")]);
+            assert!(output.parser_diagnostics.is_empty(), "context {context:?}");
+
+            let actual_lexer_diagnostics = output
+                .lexer_diagnostics
+                .iter()
+                .map(|diagnostic| diagnostic.code.as_str())
+                .collect::<Vec<_>>();
+            assert_eq!(
+                actual_lexer_diagnostics, expected_lexer_diagnostics,
                 "context {context:?}"
             );
         }
