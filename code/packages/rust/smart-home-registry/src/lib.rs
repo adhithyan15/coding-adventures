@@ -8,9 +8,9 @@
 #![forbid(unsafe_code)]
 
 use smart_home_core::{
-    Bridge, BridgeId, Device, DeviceEvent, DeviceEventType, DeviceId, Entity, EntityId, EventId,
-    ProtocolFamily, ProtocolIdentifier, Scene, SceneId, StateConfidence, StateSnapshot,
-    StateSource, Value,
+    Bridge, BridgeId, CapabilityId, Device, DeviceEvent, DeviceEventType, DeviceId, Entity,
+    EntityId, EntityKind, EventId, Health, ProtocolFamily, ProtocolIdentifier, Scene, SceneId,
+    StateConfidence, StateSnapshot, StateSource, Value,
 };
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
@@ -107,6 +107,96 @@ pub struct RegistryCounts {
     pub protocol_identifiers: usize,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum StateFreshness {
+    Any,
+    Present,
+    Missing,
+    FreshAt(u64),
+    StaleAt(u64),
+    NeedsRefreshAt(u64),
+}
+
+impl Default for StateFreshness {
+    fn default() -> Self {
+        Self::Any
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct DeviceSelector {
+    pub bridge_id: Option<BridgeId>,
+    pub health: Option<Health>,
+    pub capability_id: Option<CapabilityId>,
+}
+
+impl DeviceSelector {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_bridge(mut self, bridge_id: BridgeId) -> Self {
+        self.bridge_id = Some(bridge_id);
+        self
+    }
+
+    pub fn with_health(mut self, health: Health) -> Self {
+        self.health = Some(health);
+        self
+    }
+
+    pub fn with_capability(mut self, capability_id: CapabilityId) -> Self {
+        self.capability_id = Some(capability_id);
+        self
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct EntitySelector {
+    pub bridge_id: Option<BridgeId>,
+    pub device_id: Option<DeviceId>,
+    pub kind: Option<EntityKind>,
+    pub capability_id: Option<CapabilityId>,
+    pub device_health: Option<Health>,
+    pub state_freshness: StateFreshness,
+}
+
+impl EntitySelector {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_bridge(mut self, bridge_id: BridgeId) -> Self {
+        self.bridge_id = Some(bridge_id);
+        self
+    }
+
+    pub fn for_device(mut self, device_id: DeviceId) -> Self {
+        self.device_id = Some(device_id);
+        self
+    }
+
+    pub fn with_kind(mut self, kind: EntityKind) -> Self {
+        self.kind = Some(kind);
+        self
+    }
+
+    pub fn with_capability(mut self, capability_id: CapabilityId) -> Self {
+        self.capability_id = Some(capability_id);
+        self
+    }
+
+    pub fn with_device_health(mut self, health: Health) -> Self {
+        self.device_health = Some(health);
+        self
+    }
+
+    pub fn with_state_freshness(mut self, state_freshness: StateFreshness) -> Self {
+        self.state_freshness = state_freshness;
+        self
+    }
+}
+
 #[derive(Debug, Clone, Default)]
 pub struct InMemorySmartHomeRegistry {
     bridges: BTreeMap<BridgeId, Bridge>,
@@ -196,6 +286,10 @@ impl InMemorySmartHomeRegistry {
         self.devices.get(device_id)
     }
 
+    pub fn devices(&self) -> impl Iterator<Item = &Device> {
+        self.devices.values()
+    }
+
     pub fn devices_for_bridge(&self, bridge_id: &BridgeId) -> impl Iterator<Item = &Device> {
         self.bridge_devices
             .get(bridge_id)
@@ -236,6 +330,10 @@ impl InMemorySmartHomeRegistry {
         self.entities.get(entity_id)
     }
 
+    pub fn entities(&self) -> impl Iterator<Item = &Entity> {
+        self.entities.values()
+    }
+
     pub fn entities_for_device(&self, device_id: &DeviceId) -> impl Iterator<Item = &Entity> {
         self.device_entities
             .get(device_id)
@@ -269,6 +367,10 @@ impl InMemorySmartHomeRegistry {
         self.scenes.get(scene_id)
     }
 
+    pub fn scenes(&self) -> impl Iterator<Item = &Scene> {
+        self.scenes.values()
+    }
+
     pub fn apply_state_snapshot(
         &mut self,
         snapshot: StateSnapshot,
@@ -283,6 +385,10 @@ impl InMemorySmartHomeRegistry {
 
     pub fn state(&self, entity_id: &EntityId) -> Option<&StateSnapshot> {
         self.states.get(entity_id)
+    }
+
+    pub fn states(&self) -> impl Iterator<Item = &StateSnapshot> {
+        self.states.values()
     }
 
     pub fn record_event(&mut self, event: DeviceEvent) -> Result<(), RegistryError> {
@@ -353,6 +459,27 @@ impl InMemorySmartHomeRegistry {
         self.event_order.iter().filter_map(|id| self.events.get(id))
     }
 
+    pub fn query_devices(&self, selector: &DeviceSelector) -> Vec<&Device> {
+        self.devices
+            .values()
+            .filter(|device| self.device_matches_selector(device, selector))
+            .collect()
+    }
+
+    pub fn query_entities(&self, selector: &EntitySelector) -> Vec<&Entity> {
+        self.entities
+            .values()
+            .filter(|entity| self.entity_matches_selector(entity, selector))
+            .collect()
+    }
+
+    pub fn stale_states_at(&self, now_ms: u64) -> Vec<&StateSnapshot> {
+        self.states
+            .values()
+            .filter(|snapshot| snapshot.is_stale_at(now_ms))
+            .collect()
+    }
+
     pub fn lookup_protocol(&self, identifier: &ProtocolIdentifier) -> Option<&RegistryTarget> {
         self.protocol_index.get(&ProtocolIndexKey::from(identifier))
     }
@@ -376,6 +503,73 @@ impl InMemorySmartHomeRegistry {
             Some(RegistryTarget::Scene(id)) => self.scenes.get(id),
             _ => None,
         }
+    }
+
+    fn device_matches_selector(&self, device: &Device, selector: &DeviceSelector) -> bool {
+        if selector
+            .bridge_id
+            .as_ref()
+            .is_some_and(|bridge_id| &device.bridge_id != bridge_id)
+        {
+            return false;
+        }
+        if selector
+            .health
+            .is_some_and(|health| device.health != health)
+        {
+            return false;
+        }
+        if let Some(capability_id) = &selector.capability_id {
+            return self
+                .entities_for_device(&device.device_id)
+                .any(|entity| entity_has_capability(entity, capability_id));
+        }
+        true
+    }
+
+    fn entity_matches_selector(&self, entity: &Entity, selector: &EntitySelector) -> bool {
+        if selector
+            .device_id
+            .as_ref()
+            .is_some_and(|device_id| &entity.device_id != device_id)
+        {
+            return false;
+        }
+        if selector.kind.is_some_and(|kind| entity.kind != kind) {
+            return false;
+        }
+        if selector
+            .capability_id
+            .as_ref()
+            .is_some_and(|capability_id| !entity_has_capability(entity, capability_id))
+        {
+            return false;
+        }
+        if !state_matches_freshness(self.state(&entity.entity_id), selector.state_freshness) {
+            return false;
+        }
+
+        let device = self.devices.get(&entity.device_id);
+        if selector.bridge_id.is_some() || selector.device_health.is_some() {
+            let Some(device) = device else {
+                return false;
+            };
+            if selector
+                .bridge_id
+                .as_ref()
+                .is_some_and(|bridge_id| &device.bridge_id != bridge_id)
+            {
+                return false;
+            }
+            if selector
+                .device_health
+                .is_some_and(|health| device.health != health)
+            {
+                return false;
+            }
+        }
+
+        true
     }
 
     fn replace_protocol_indexes(
@@ -461,6 +655,30 @@ fn push_unique<T: PartialEq>(values: &mut Vec<T>, value: T) {
     }
 }
 
+fn entity_has_capability(entity: &Entity, capability_id: &CapabilityId) -> bool {
+    entity
+        .capabilities
+        .iter()
+        .any(|capability| &capability.capability_id == capability_id)
+}
+
+fn state_matches_freshness(snapshot: Option<&StateSnapshot>, freshness: StateFreshness) -> bool {
+    match freshness {
+        StateFreshness::Any => true,
+        StateFreshness::Present => snapshot.is_some(),
+        StateFreshness::Missing => snapshot.is_none(),
+        StateFreshness::FreshAt(now_ms) => {
+            snapshot.is_some_and(|snapshot| !snapshot.is_stale_at(now_ms))
+        }
+        StateFreshness::StaleAt(now_ms) => {
+            snapshot.is_some_and(|snapshot| snapshot.is_stale_at(now_ms))
+        }
+        StateFreshness::NeedsRefreshAt(now_ms) => {
+            snapshot.map_or(true, |snapshot| snapshot.is_stale_at(now_ms))
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -478,6 +696,13 @@ mod tests {
         bridge.identifiers.push(
             ProtocolIdentifier::new(ProtocolFamily::Hue, "bridge", "bridge-native-1").unwrap(),
         );
+        bridge
+    }
+
+    fn bridge_with_native(id: &str, native_id: &str) -> Bridge {
+        let mut bridge = bridge(id);
+        bridge.identifiers =
+            vec![ProtocolIdentifier::new(ProtocolFamily::Hue, "bridge", native_id).unwrap()];
         bridge
     }
 
@@ -503,6 +728,13 @@ mod tests {
         }
     }
 
+    fn device_with_native(id: &str, bridge_id: &str, native_id: &str) -> Device {
+        let mut device = device(id, bridge_id);
+        device.identifiers =
+            vec![ProtocolIdentifier::new(ProtocolFamily::Hue, "device", native_id).unwrap()];
+        device
+    }
+
     fn entity(id: &str, device_id: &str) -> Entity {
         Entity {
             entity_id: EntityId::trusted(id),
@@ -513,6 +745,14 @@ mod tests {
             state: None,
             metadata: Vec::new(),
         }
+    }
+
+    fn sensor_entity(id: &str, device_id: &str) -> Entity {
+        let mut entity = entity(id, device_id);
+        entity.kind = EntityKind::Sensor;
+        entity.name = "Kitchen Motion".to_string();
+        entity.capabilities = vec![Capability::sensor_occupancy()];
+        entity
     }
 
     #[test]
@@ -694,6 +934,98 @@ mod tests {
             registry.scene_by_protocol(&scene_ref).unwrap().scene_id,
             SceneId::trusted("scene-1")
         );
+    }
+
+    #[test]
+    fn query_devices_filters_by_bridge_health_and_entity_capability() {
+        let mut registry = InMemorySmartHomeRegistry::new();
+        registry
+            .upsert_bridge(bridge_with_native("bridge-1", "bridge-native-1"))
+            .unwrap();
+        registry
+            .upsert_bridge(bridge_with_native("bridge-2", "bridge-native-2"))
+            .unwrap();
+
+        let mut online_light = device_with_native("device-1", "bridge-1", "device-native-1");
+        online_light.health = smart_home_core::Health::Online;
+        let mut offline_sensor = device_with_native("device-2", "bridge-1", "device-native-2");
+        offline_sensor.health = smart_home_core::Health::Offline;
+        let mut other_bridge = device_with_native("device-3", "bridge-2", "device-native-3");
+        other_bridge.health = smart_home_core::Health::Online;
+
+        registry.upsert_device(online_light).unwrap();
+        registry.upsert_device(offline_sensor).unwrap();
+        registry.upsert_device(other_bridge).unwrap();
+        registry
+            .upsert_entity(entity("entity-1", "device-1"))
+            .unwrap();
+        registry
+            .upsert_entity(sensor_entity("entity-2", "device-2"))
+            .unwrap();
+
+        let selector = DeviceSelector::new()
+            .for_bridge(BridgeId::trusted("bridge-1"))
+            .with_health(smart_home_core::Health::Online)
+            .with_capability(CapabilityId::trusted("light.on_off"));
+        let device_ids: Vec<_> = registry
+            .query_devices(&selector)
+            .into_iter()
+            .map(|device| device.device_id.clone())
+            .collect();
+
+        assert_eq!(device_ids, vec![DeviceId::trusted("device-1")]);
+    }
+
+    #[test]
+    fn query_entities_filters_by_kind_capability_health_and_freshness() {
+        let mut registry = InMemorySmartHomeRegistry::new();
+        registry.upsert_bridge(bridge("bridge-1")).unwrap();
+        let mut light_device = device_with_native("device-1", "bridge-1", "device-native-1");
+        light_device.health = smart_home_core::Health::Online;
+        let mut sensor_device = device_with_native("device-2", "bridge-1", "device-native-2");
+        sensor_device.health = smart_home_core::Health::Offline;
+        registry.upsert_device(light_device).unwrap();
+        registry.upsert_device(sensor_device).unwrap();
+
+        let mut light = entity("entity-1", "device-1");
+        light.state = Some(StateSnapshot {
+            entity_id: EntityId::trusted("entity-1"),
+            value: Value::Bool(true),
+            source: StateSource::Poll,
+            observed_at_ms: 100,
+            received_at_ms: 101,
+            expires_at_ms: Some(500),
+            confidence: StateConfidence::Confirmed,
+        });
+        registry.upsert_entity(light).unwrap();
+        registry
+            .upsert_entity(sensor_entity("entity-2", "device-2"))
+            .unwrap();
+
+        let fresh_lights = registry.query_entities(
+            &EntitySelector::new()
+                .with_kind(EntityKind::Light)
+                .with_capability(CapabilityId::trusted("light.on_off"))
+                .with_device_health(smart_home_core::Health::Online)
+                .with_state_freshness(StateFreshness::FreshAt(400)),
+        );
+        assert_eq!(fresh_lights.len(), 1);
+        assert_eq!(fresh_lights[0].entity_id, EntityId::trusted("entity-1"));
+
+        let needs_refresh: Vec<_> = registry
+            .query_entities(
+                &EntitySelector::new()
+                    .for_bridge(BridgeId::trusted("bridge-1"))
+                    .with_state_freshness(StateFreshness::NeedsRefreshAt(600)),
+            )
+            .into_iter()
+            .map(|entity| entity.entity_id.clone())
+            .collect();
+        assert_eq!(
+            needs_refresh,
+            vec![EntityId::trusted("entity-1"), EntityId::trusted("entity-2")]
+        );
+        assert_eq!(registry.stale_states_at(600).len(), 1);
     }
 
     #[test]
