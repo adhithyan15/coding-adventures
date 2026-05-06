@@ -101,17 +101,35 @@ module CodingAdventures
             caps = session.capabilities
             upload = session.upload_blink(program_id: 4)
             run = session.run(program_id: 4, budget: 77)
+            stop = session.stop
 
             assert_equal :hello, hello.command
             assert_equal :capabilities, caps.command
             assert_equal [:program_begin, :program_chunk, :program_end], upload.results.map(&:command)
             assert_equal :run, run.command
+            assert_equal :stop, stop.command
           end
         end
 
         assert_empty runner.calls
-        assert_equal 6, transport.frames.length
+        assert_equal 7, transport.frames.length
         assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
+      end
+
+      def test_session_run_command_accepts_repl_style_stop
+        transport = FakeWriteTransport.new
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new,
+          transport: transport
+        ) do |board|
+          result = board.session.run_command("stop")
+
+          assert_equal [:stop], result.results.map(&:command)
+          assert_equal result.frames, transport.frames
+        end
       end
 
       def test_session_run_command_accepts_repl_style_blink
@@ -190,10 +208,16 @@ module CodingAdventures
 
         default_nonce_hello = session.hello_wire("bvm", BoardVM::DEFAULT_HOST_NONCE)
         assert_operator default_nonce_hello.bytesize, :>, 0
+        assert_equal 3, session.next_request_id
 
         module_bytes = session.blink_module(13, 250, 250, 4)
         assert_instance_of String, module_bytes
         assert_operator module_bytes.bytesize, :>, 0
+
+        stop = session.stop_wire
+        assert_instance_of String, stop
+        assert_operator stop.bytesize, :>, 0
+        assert_equal 4, session.next_request_id
 
         frames = BoardVM::Native::Session.new.blink_upload_run_frames(7, 12, 13, 250, 250, 4)
         assert_equal 4, frames.length
