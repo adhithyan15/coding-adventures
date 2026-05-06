@@ -1,6 +1,6 @@
 use coding_adventures_html_lexer::{
     apply_html_lex_context, create_html_lexer, html1_machine, html_skeleton_machine, Attribute,
-    HtmlLexContext, HtmlLexer, HtmlTokenizerState, Token, HTML_TOKENIZER_STATES,
+    DoctypeSeed, HtmlLexContext, HtmlLexer, HtmlTokenizerState, Token, HTML_TOKENIZER_STATES,
 };
 use serde::Deserialize;
 use serde_json::Value;
@@ -37,7 +37,22 @@ struct FixtureCase {
     #[serde(default)]
     current_comment: Option<String>,
     #[serde(default)]
+    current_doctype: Option<FixtureDoctypeSeed>,
+    #[serde(default)]
     temporary_buffer: Option<String>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[allow(dead_code)]
+struct FixtureDoctypeSeed {
+    #[serde(default)]
+    name: Option<String>,
+    #[serde(default)]
+    public_identifier: Option<String>,
+    #[serde(default)]
+    system_identifier: Option<String>,
+    #[serde(default)]
+    force_quirks: bool,
 }
 
 #[derive(Debug, Deserialize)]
@@ -61,6 +76,8 @@ struct Html5libTokenizerTest {
     temporary_buffer: Option<String>,
     #[serde(default, rename = "currentComment")]
     current_comment: Option<String>,
+    #[serde(default, rename = "currentDoctype")]
+    current_doctype: Option<FixtureDoctypeSeed>,
     #[serde(default)]
     errors: Vec<Html5libTokenizerError>,
 }
@@ -267,6 +284,16 @@ fn normalized_html5lib_fixture_parses_with_importer_metadata() {
                 && case.initial_state.as_deref() == Some("Comment end dash state")),
         "normalized fixtures should include seeded comment continuation states"
     );
+    assert!(
+        normalized.cases.iter().any(|case| case
+            .current_doctype
+            .as_ref()
+            .and_then(|seed| seed.name.as_deref())
+            == Some("html")
+            && case.initial_state.as_deref()
+                == Some("DOCTYPE public identifier double quoted state")),
+        "normalized fixtures should include seeded doctype continuation states"
+    );
 }
 
 #[test]
@@ -383,6 +410,7 @@ fn is_supported_by_current_runtime(case: &FixtureCase) -> bool {
             case.last_start_tag.is_none()
                 && case.current_end_tag.is_none()
                 && case.current_comment.is_none()
+                && case.current_doctype.is_none()
                 && case.temporary_buffer.is_none()
         }
         Some(initial_state) => {
@@ -392,11 +420,17 @@ fn is_supported_by_current_runtime(case: &FixtureCase) -> bool {
             let has_end_tag_seed =
                 case.current_end_tag.is_some() && case.temporary_buffer.is_some();
             let has_comment_seed = case.current_comment.is_some();
+            let has_doctype_seed = case.current_doctype.is_some();
             state.requires_last_start_tag() == case.last_start_tag.is_some()
                 && state.requires_end_tag_seed() == has_end_tag_seed
                 && state.requires_comment_seed() == has_comment_seed
+                && state.requires_doctype_seed() == has_doctype_seed
                 && (has_end_tag_seed
                     || (case.current_end_tag.is_none() && case.temporary_buffer.is_none()))
+                && (!has_doctype_seed
+                    || (case.current_end_tag.is_none()
+                        && case.current_comment.is_none()
+                        && case.temporary_buffer.is_none()))
         }
     }
 }
@@ -458,6 +492,14 @@ fn configure_lexer_for_case(
     }
     if let Some(current_comment) = case.current_comment.as_deref() {
         context = context.with_current_comment(current_comment);
+    }
+    if let Some(current_doctype) = case.current_doctype.as_ref() {
+        context = context.with_current_doctype(DoctypeSeed {
+            name: current_doctype.name.clone(),
+            public_identifier: current_doctype.public_identifier.clone(),
+            system_identifier: current_doctype.system_identifier.clone(),
+            force_quirks: current_doctype.force_quirks,
+        });
     }
     if let Some(temporary_buffer) = case.temporary_buffer.as_deref() {
         context = context.with_temporary_buffer(temporary_buffer);

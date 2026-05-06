@@ -1,8 +1,9 @@
 use coding_adventures_html_lexer::{
     apply_html_lex_context, create_html_lexer, create_html_lexer_with_context, html1_definition,
     html1_machine, html_skeleton_definition, html_skeleton_machine, lex_html, lex_html_fragment,
-    Attribute, HtmlLexContext, HtmlScriptingMode, HtmlTokenizerState, Token,
-    HTML_FRAGMENT_TOKENIZER_STATES, HTML_SCRIPT_TOKENIZER_STATES, HTML_TOKENIZER_STATES,
+    Attribute, DoctypeSeed, HtmlLexContext, HtmlScriptingMode, HtmlTokenizerState, Token,
+    HTML_DOCTYPE_TOKENIZER_STATES, HTML_FRAGMENT_TOKENIZER_STATES, HTML_SCRIPT_TOKENIZER_STATES,
+    HTML_TOKENIZER_STATES,
 };
 use state_machine::END_INPUT;
 
@@ -5057,6 +5058,38 @@ fn parser_facing_context_exposes_tokenizer_state_sets() {
             "comment_end",
             "comment_end_bang",
             "bogus_comment",
+            "doctype_keyword_o",
+            "doctype_keyword_c",
+            "doctype_keyword_t",
+            "doctype_keyword_y",
+            "doctype_keyword_p",
+            "doctype_keyword_e",
+            "doctype_after_keyword",
+            "before_doctype_name",
+            "doctype_name",
+            "after_doctype_name",
+            "doctype_public_keyword_u",
+            "doctype_public_keyword_b",
+            "doctype_public_keyword_l",
+            "doctype_public_keyword_i",
+            "doctype_public_keyword_c",
+            "after_doctype_public_keyword",
+            "before_doctype_public_identifier",
+            "doctype_public_identifier_double_quoted",
+            "doctype_public_identifier_single_quoted",
+            "after_doctype_public_identifier",
+            "between_doctype_public_and_system_identifiers",
+            "doctype_system_keyword_y",
+            "doctype_system_keyword_s",
+            "doctype_system_keyword_t",
+            "doctype_system_keyword_e",
+            "doctype_system_keyword_m",
+            "after_doctype_system_keyword",
+            "before_doctype_system_identifier",
+            "doctype_system_identifier_double_quoted",
+            "doctype_system_identifier_single_quoted",
+            "after_doctype_system_identifier",
+            "bogus_doctype",
             "script_data",
             "script_data_less_than_sign",
             "script_data_end_tag_open",
@@ -5148,9 +5181,51 @@ fn parser_facing_context_exposes_tokenizer_state_sets() {
     assert!(HtmlTokenizerState::Comment.requires_comment_seed());
     assert!(HtmlTokenizerState::CommentEndDash.requires_comment_seed());
     assert!(HtmlTokenizerState::BogusComment.requires_comment_seed());
+    assert!(HtmlTokenizerState::DoctypeName.requires_doctype_seed());
+    assert!(HtmlTokenizerState::AfterDoctypePublicIdentifier.requires_doctype_seed());
+    assert!(HtmlTokenizerState::BogusDoctype.requires_doctype_seed());
     assert!(!HtmlTokenizerState::RcdataEndTagOpen.requires_end_tag_seed());
     assert!(!HtmlTokenizerState::CdataSectionEnd.requires_last_start_tag());
     assert!(!HtmlTokenizerState::Data.requires_comment_seed());
+    assert!(!HtmlTokenizerState::Data.requires_doctype_seed());
+
+    assert_eq!(
+        HTML_DOCTYPE_TOKENIZER_STATES.map(HtmlTokenizerState::as_machine_state),
+        [
+            "doctype_keyword_o",
+            "doctype_keyword_c",
+            "doctype_keyword_t",
+            "doctype_keyword_y",
+            "doctype_keyword_p",
+            "doctype_keyword_e",
+            "doctype_after_keyword",
+            "before_doctype_name",
+            "doctype_name",
+            "after_doctype_name",
+            "doctype_public_keyword_u",
+            "doctype_public_keyword_b",
+            "doctype_public_keyword_l",
+            "doctype_public_keyword_i",
+            "doctype_public_keyword_c",
+            "after_doctype_public_keyword",
+            "before_doctype_public_identifier",
+            "doctype_public_identifier_double_quoted",
+            "doctype_public_identifier_single_quoted",
+            "after_doctype_public_identifier",
+            "between_doctype_public_and_system_identifiers",
+            "doctype_system_keyword_y",
+            "doctype_system_keyword_s",
+            "doctype_system_keyword_t",
+            "doctype_system_keyword_e",
+            "doctype_system_keyword_m",
+            "after_doctype_system_keyword",
+            "before_doctype_system_identifier",
+            "doctype_system_identifier_double_quoted",
+            "doctype_system_identifier_single_quoted",
+            "after_doctype_system_identifier",
+            "bogus_doctype",
+        ]
+    );
 }
 
 #[test]
@@ -5389,6 +5464,152 @@ fn parser_facing_context_seeds_comment_continuation_states() {
 
     assert_eq!(
         HtmlLexContext::comment_continuation(HtmlTokenizerState::Rcdata, "nope"),
+        None
+    );
+}
+
+#[test]
+fn parser_facing_context_seeds_doctype_continuation_states() {
+    let keyword = HtmlLexContext::doctype_continuation(
+        HtmlTokenizerState::DoctypeKeywordO,
+        DoctypeSeed::new(),
+    )
+    .unwrap();
+    assert_eq!(
+        lex_html_fragment("OCTYPE html>tail", &keyword).unwrap(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: false
+            },
+            Token::Text("tail".to_string()),
+            Token::Eof
+        ]
+    );
+
+    let name = HtmlLexContext::doctype_continuation(
+        HtmlTokenizerState::DoctypeName,
+        DoctypeSeed::with_name("ht"),
+    )
+    .unwrap();
+    assert_eq!(
+        lex_html_fragment("ml>", &name).unwrap(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: false
+            },
+            Token::Eof
+        ]
+    );
+
+    let after_name = HtmlLexContext::doctype_continuation(
+        HtmlTokenizerState::AfterDoctypeName,
+        DoctypeSeed::with_name("html"),
+    )
+    .unwrap();
+    assert_eq!(
+        lex_html_fragment("PUBLIC \"pub\" \"sys\">", &after_name).unwrap(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: Some("pub".to_string()),
+                system_identifier: Some("sys".to_string()),
+                force_quirks: false
+            },
+            Token::Eof
+        ]
+    );
+
+    let public_identifier = HtmlLexContext::doctype_continuation(
+        HtmlTokenizerState::DoctypePublicIdentifierDoubleQuoted,
+        DoctypeSeed {
+            name: Some("html".to_string()),
+            public_identifier: Some("pu".to_string()),
+            system_identifier: None,
+            force_quirks: false,
+        },
+    )
+    .unwrap();
+    assert_eq!(
+        lex_html_fragment("b\" \"sys\">", &public_identifier).unwrap(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: Some("pub".to_string()),
+                system_identifier: Some("sys".to_string()),
+                force_quirks: false
+            },
+            Token::Eof
+        ]
+    );
+
+    let mut lexer = create_html_lexer_with_context(
+        &HtmlLexContext::doctype_continuation(
+            HtmlTokenizerState::AfterDoctypePublicIdentifier,
+            DoctypeSeed {
+                name: Some("html".to_string()),
+                public_identifier: Some("pub".to_string()),
+                system_identifier: None,
+                force_quirks: false,
+            },
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    lexer.push("\"sys\">").unwrap();
+    lexer.finish().unwrap();
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: Some("pub".to_string()),
+                system_identifier: Some("sys".to_string()),
+                force_quirks: false
+            },
+            Token::Eof
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .map(|diagnostic| diagnostic.code.as_str())
+            .collect::<Vec<_>>(),
+        vec!["missing-whitespace-between-doctype-public-and-system-identifiers"]
+    );
+
+    let bogus = HtmlLexContext::doctype_continuation(
+        HtmlTokenizerState::BogusDoctype,
+        DoctypeSeed {
+            name: Some("html".to_string()),
+            public_identifier: None,
+            system_identifier: None,
+            force_quirks: true,
+        },
+    )
+    .unwrap();
+    assert_eq!(
+        lex_html_fragment("ignored>tail", &bogus).unwrap(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: true
+            },
+            Token::Text("tail".to_string()),
+            Token::Eof
+        ]
+    );
+
+    assert_eq!(
+        HtmlLexContext::doctype_continuation(HtmlTokenizerState::Rcdata, DoctypeSeed::new()),
         None
     );
 }

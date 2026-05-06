@@ -47,6 +47,34 @@ pub enum Token {
     Eof,
 }
 
+/// Seed data for resuming tokenizer states with an in-progress DOCTYPE token.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct DoctypeSeed {
+    /// Optional doctype name accumulated so far.
+    pub name: Option<String>,
+    /// Optional public identifier accumulated so far.
+    pub public_identifier: Option<String>,
+    /// Optional system identifier accumulated so far.
+    pub system_identifier: Option<String>,
+    /// Whether the partial doctype has already entered force-quirks mode.
+    pub force_quirks: bool,
+}
+
+impl DoctypeSeed {
+    /// Build an empty DOCTYPE seed.
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Build a DOCTYPE seed with an already-accumulated name.
+    pub fn with_name(name: impl Into<String>) -> Self {
+        Self {
+            name: Some(name.into()),
+            ..Self::default()
+        }
+    }
+}
+
 /// Attribute attached to a start tag.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Attribute {
@@ -296,6 +324,23 @@ impl Tokenizer {
     /// Store the in-progress comment token used by tokenizer continuation states.
     pub fn set_current_comment(&mut self, data: impl Into<String>) {
         self.current_token = Some(CurrentToken::Comment { data: data.into() });
+        self.current_attribute = None;
+    }
+
+    /// Seed the in-progress DOCTYPE token used by tokenizer continuation states.
+    pub fn with_current_doctype(mut self, doctype: DoctypeSeed) -> Self {
+        self.set_current_doctype(doctype);
+        self
+    }
+
+    /// Store the in-progress DOCTYPE token used by tokenizer continuation states.
+    pub fn set_current_doctype(&mut self, doctype: DoctypeSeed) {
+        self.current_token = Some(CurrentToken::Doctype {
+            name: doctype.name,
+            public_identifier: doctype.public_identifier,
+            system_identifier: doctype.system_identifier,
+            force_quirks: doctype.force_quirks,
+        });
         self.current_attribute = None;
     }
 
