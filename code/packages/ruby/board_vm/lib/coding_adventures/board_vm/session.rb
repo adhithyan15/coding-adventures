@@ -35,6 +35,11 @@ module CodingAdventures
       end
       alias caps capabilities
 
+      def board_descriptor
+        capabilities.board_descriptor
+      end
+      alias describe board_descriptor
+
       def upload(program_id: @program_id, module_bytes:)
         SessionResult.new(results: [
           dispatch(:program_begin, native_session.program_begin_wire(program_id, module_bytes)),

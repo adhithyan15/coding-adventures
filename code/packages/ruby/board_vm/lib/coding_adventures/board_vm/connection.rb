@@ -64,6 +64,10 @@ module CodingAdventures
         Ejector.new(self)
       end
 
+      def capabilities
+        session.board_descriptor
+      end
+
       def session(**options)
         protocol_session = Session.new(self, **options)
         return protocol_session unless block_given?

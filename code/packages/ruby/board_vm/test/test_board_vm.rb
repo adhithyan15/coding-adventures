@@ -131,6 +131,55 @@ module CodingAdventures
         end
       end
 
+      def test_board_descriptor_wraps_rust_decoded_capability_report
+        decoded = {
+          "kind" => "caps_report",
+          "payload" => {
+            "board_id" => "arduino-uno-r4-wifi",
+            "runtime_id" => "board-vm-uno-r4",
+            "max_program_bytes" => 1024,
+            "max_stack_values" => 16,
+            "max_handles" => 4,
+            "supports_store_program" => false,
+            "capabilities" => [
+              {
+                "id" => 1,
+                "version" => 1,
+                "flags" => 1,
+                "name" => "gpio.open",
+                "bytecode_callable" => true,
+                "protocol_feature" => false,
+                "board_metadata" => false,
+                "flag_names" => ["bytecode_callable"]
+              },
+              {
+                "id" => 0x7001,
+                "version" => 1,
+                "flags" => 2,
+                "name" => "program.ram_exec",
+                "bytecode_callable" => false,
+                "protocol_feature" => true,
+                "board_metadata" => false,
+                "flag_names" => ["protocol_feature"]
+              }
+            ]
+          }
+        }
+
+        descriptor = ProtocolResult.new(decoded_response: decoded).board_descriptor
+
+        assert_equal "arduino-uno-r4-wifi", descriptor.board_id
+        assert_equal "board-vm-uno-r4", descriptor.runtime_id
+        assert_equal ["gpio.open", "program.ram_exec"], descriptor.capability_names
+        assert descriptor.supports?("gpio.open")
+        assert descriptor.supports?(0x7001)
+        assert descriptor["gpio.open"].bytecode_callable?
+        assert descriptor["program.ram_exec"].protocol_feature?
+        refute descriptor.store_program?
+        assert_equal ["gpio.open"], descriptor.gpio.map(&:name)
+        assert_equal ["program.ram_exec"], descriptor.program.map(&:name)
+      end
+
       def test_native_session_builds_protocol_bytes_in_rust
         session = BoardVM::Native::Session.new
 

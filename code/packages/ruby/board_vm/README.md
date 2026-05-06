@@ -83,6 +83,23 @@ bytes, and optional Rust-decoded response hash. The text command parser is Ruby
 sugar only; every dispatched frame still comes from
 `CodingAdventures::BoardVM::Native::Session`.
 
+Capability reports can be lifted into Ruby objects after Rust decodes the board
+response:
+
+```ruby
+CodingAdventures::BoardVM.uno_r4_wifi(port: "/dev/cu.usbmodem1101") do |board|
+  descriptor = board.capabilities
+  descriptor.supports?("gpio.write")
+  descriptor.bytecode_capabilities.map(&:name)
+  descriptor.protocol_features.map(&:name)
+end
+```
+
+The descriptor exposes board/runtime ids, VM limits, store-program support, and
+capability groups such as `gpio`, `time`, and `program`. Capability flag names
+and booleans are supplied by the Rust language core, keeping Ruby out of the
+protocol-bit interpretation business.
+
 The DSL also exposes the current board-agnostic blink ejection path:
 
 ```ruby
