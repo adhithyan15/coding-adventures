@@ -30,6 +30,7 @@ members = [
     "rope",
     "blas-library",
     "bootloader",
+    "board-vm-eject",
     "board-vm-protocol",
     "board-vm-host",
     "board-vm-client",
