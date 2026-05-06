@@ -185,7 +185,7 @@ impl SerialUsbArtifactOptions {
         Ok(commands)
     }
 
-    fn build_command(&self) -> CommandSpec {
+    pub fn build_command(&self) -> CommandSpec {
         let mut command = CommandSpec::new("rustup")
             .arg("run")
             .arg("stable")
@@ -225,7 +225,7 @@ impl SerialUsbArtifactOptions {
         command
     }
 
-    fn objcopy_command(&self) -> CommandSpec {
+    pub fn objcopy_command(&self) -> CommandSpec {
         CommandSpec::new(self.objcopy.as_os_str().to_os_string())
             .arg("-O")
             .arg("binary")
@@ -233,7 +233,7 @@ impl SerialUsbArtifactOptions {
             .arg_path(&self.bin_path())
     }
 
-    fn upload_command(&self) -> Result<CommandSpec, ArtifactCliError> {
+    pub fn upload_command(&self) -> Result<CommandSpec, ArtifactCliError> {
         let port = self.port.as_ref().ok_or(ArtifactCliError::MissingPort(
             "--port is required with --upload",
         ))?;
@@ -257,12 +257,16 @@ impl SerialUsbArtifactOptions {
         Ok(command)
     }
 
-    fn smoke_command(&self) -> Result<CommandSpec, ArtifactCliError> {
+    pub fn smoke_command(&self) -> Result<CommandSpec, ArtifactCliError> {
         let port = self.port.as_ref().ok_or(ArtifactCliError::MissingPort(
             "--port is required with --smoke",
         ))?;
 
-        Ok(CommandSpec::new("cargo")
+        Ok(self.smoke_command_for_port(port))
+    }
+
+    pub fn smoke_command_for_port(&self, port: &str) -> CommandSpec {
+        CommandSpec::new("cargo")
             .arg("run")
             .arg("-p")
             .arg("board-vm-cli")
@@ -271,12 +275,37 @@ impl SerialUsbArtifactOptions {
             .arg("--")
             .arg("smoke")
             .arg("--port")
-            .arg(port.as_str())
+            .arg(port)
             .arg("--baud")
             .arg(self.smoke_baud_rate.to_string())
             .arg("--timeout-ms")
-            .arg(self.smoke_timeout_ms.to_string()))
+            .arg(self.smoke_timeout_ms.to_string())
     }
+
+    pub fn smoke_port_after_upload_output(
+        &self,
+        upload_output: &str,
+    ) -> Result<String, ArtifactCliError> {
+        if let Some(port) = parse_new_upload_port(upload_output) {
+            return Ok(port);
+        }
+
+        self.port.clone().ok_or(ArtifactCliError::MissingPort(
+            "--port is required with --smoke",
+        ))
+    }
+}
+
+pub fn parse_new_upload_port(output: &str) -> Option<String> {
+    output.lines().rev().find_map(|line| {
+        let (_, port) = line.split_once("New upload port:")?;
+        let port = port
+            .trim()
+            .split_once(" (")
+            .map_or_else(|| port.trim(), |(port, _)| port.trim());
+
+        (!port.is_empty()).then(|| port.to_string())
+    })
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -391,7 +420,7 @@ where
 }
 
 pub fn usage() -> &'static str {
-    "usage:\n  uno-r4-wifi-serialusb-artifact [--core <arduino-core>] [--rustc <path>] [--arm-toolchain-bin <dir>] [--arm-gcc <path>] [--arm-gxx <path>] [--arm-ar <path>] [--arm-compat-root <dir>] [--target-dir <dir>] [--objcopy <path>] [--arduino-cli <path>] [--bossac-path <dir>] [--print-only] [--upload --port <path>] [--smoke --port <path>] [--baud <rate>] [--timeout-ms <ms>]"
+    "usage:\n  uno-r4-wifi-serialusb-artifact [--core <arduino-core>] [--rustc <path>] [--arm-toolchain-bin <dir>] [--arm-gcc <path>] [--arm-gxx <path>] [--arm-ar <path>] [--arm-compat-root <dir>] [--target-dir <dir>] [--objcopy <path>] [--arduino-cli <path>] [--bossac-path <dir>] [--print-only] [--upload --port <bootloader-or-runtime-port>] [--smoke --port <serial-port>] [--baud <rate>] [--timeout-ms <ms>]"
 }
 
 pub fn resolve_rust_llvm_objcopy() -> Option<PathBuf> {
@@ -648,6 +677,68 @@ mod tests {
                 "--timeout-ms",
                 "1000",
             ]
+        );
+    }
+
+    #[test]
+    fn parses_new_upload_port_from_arduino_cli_output() {
+        assert_eq!(
+            parse_new_upload_port(
+                "Sketch uses 30720 bytes.\nNew upload port: /dev/cu.usbmodem1101 (serial)\n"
+            ),
+            Some("/dev/cu.usbmodem1101".to_string())
+        );
+        assert_eq!(
+            parse_new_upload_port(
+                "New upload port: /dev/cu.usbmodem9070692469E42 (serial)\n\
+                 New upload port: /dev/cu.usbmodem1101 (serial)\n"
+            ),
+            Some("/dev/cu.usbmodem1101".to_string())
+        );
+        assert_eq!(parse_new_upload_port("No new serial port found."), None);
+    }
+
+    #[test]
+    fn smoke_after_upload_prefers_the_runtime_port_reported_by_arduino_cli() {
+        let mut options = options();
+        options.port = Some("/dev/cu.usbmodem9070692469E42".to_string());
+
+        let port = options
+            .smoke_port_after_upload_output(
+                "Resetting board...\nNew upload port: /dev/cu.usbmodem1101 (serial)\n",
+            )
+            .unwrap();
+        let smoke = options.smoke_command_for_port(&port);
+
+        assert_eq!(port, "/dev/cu.usbmodem1101");
+        assert_eq!(
+            args(&smoke),
+            [
+                "run",
+                "-p",
+                "board-vm-cli",
+                "--bin",
+                "board-vm",
+                "--",
+                "smoke",
+                "--port",
+                "/dev/cu.usbmodem1101",
+                "--baud",
+                "115200",
+                "--timeout-ms",
+                "1000",
+            ]
+        );
+    }
+
+    #[test]
+    fn smoke_after_upload_falls_back_to_the_requested_port_without_a_handoff() {
+        let mut options = options();
+        options.port = Some("/dev/cu.usbmodem1101".to_string());
+
+        assert_eq!(
+            options.smoke_port_after_upload_output("No new upload port found."),
+            Ok("/dev/cu.usbmodem1101".to_string())
         );
     }
 

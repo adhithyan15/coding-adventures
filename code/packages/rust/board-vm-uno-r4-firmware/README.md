@@ -159,8 +159,10 @@ reuse those headers.
 For the built-in USB route, the host artifact helper wraps the repeatable
 hardware path: build the linked SerialUSB firmware, convert the ELF to the
 bootloader `.bin`, optionally upload it with Arduino CLI, and optionally run the
-Board VM smoke session against the same serial port. Use `--print-only` first to
-inspect the exact commands:
+Board VM smoke session. When `--upload` and `--smoke` are used together, the
+helper follows Arduino CLI's reported `New upload port` so the smoke session
+targets the runtime CDC port after the board re-enumerates. Use `--print-only`
+first to inspect the static command plan:
 
 ```sh
 cargo run -p board-vm-uno-r4-firmware --bin uno-r4-wifi-serialusb-artifact -- \
@@ -176,7 +178,7 @@ cargo run -p board-vm-uno-r4-firmware --bin uno-r4-wifi-serialusb-artifact -- \
 When the Arduino Renesas core and a compatible ARM GCC toolchain are available,
 drop `--print-only` to produce
 `target/thumbv7em-none-eabihf/release/uno-r4-wifi-serialusb-server.bin`, flash
-it, and run the host smoke path:
+it, follow the post-upload runtime port, and run the host smoke path:
 
 ```sh
 cargo run -p board-vm-uno-r4-firmware --bin uno-r4-wifi-serialusb-artifact -- \
