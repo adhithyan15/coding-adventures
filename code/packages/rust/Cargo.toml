@@ -425,6 +425,7 @@ members = [
     "nib-jvm-compiler",
     "bitset-c",
     "http-core",
+    "ieee802154-core",
     "http1",
     "storage-core",
     "vault-sealed-store",

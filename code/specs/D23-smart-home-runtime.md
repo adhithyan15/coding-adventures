@@ -29,6 +29,22 @@ If the Hue adapter is cut correctly, the same substrate can host Zigbee radios,
 Z-Wave controllers, Thread border routers, Matter controllers, cloud APIs, and
 arbitrary user-written integrations.
 
+D23 is the application substrate. It does not mean Zigbee, Z-Wave, and Thread
+should remain opaque forever. Those protocols are low-level enough that this
+repository should implement them from scratch as separate learning-oriented
+stacks:
+
+- D24 IEEE 802.15.4 for the shared MAC/PHY foundation used by Zigbee and Thread
+- D25 Zigbee Stack for network, APS, ZDO, ZCL, coordinator, and simulator work
+- D26 Z-Wave Stack for controller, inclusion, command-class, security, and Long
+  Range work
+- D27 Thread Stack for 6LoWPAN, MLE, commissioning, border routing, and Matter
+  diagnostics
+
+The smart-home runtime consumes those stacks through normalized bridge, device,
+entity, event, and command interfaces. The protocol packages own frame formats,
+state machines, security handshakes, routing, and simulators.
+
 ---
 
 ## Where It Fits
@@ -84,6 +100,10 @@ Infrastructure:
   D18D Tool API    -> model/workflow-facing command surface
   D21 Cage/Policy  -> capability and tier enforcement
   Vault packages   -> bridge app keys, radio network keys, fabric credentials
+  D24 IEEE 802.15.4 -> shared low-level radio foundation for Zigbee/Thread
+  D25 Zigbee Stack  -> from-scratch Zigbee implementation track
+  D26 Z-Wave Stack  -> from-scratch Z-Wave implementation track
+  D27 Thread Stack  -> from-scratch Thread implementation track
 ```
 
 **Depends on:** D19 Actor, D18A Stores, D18C Job Framework, D18D Tool API,
@@ -111,8 +131,9 @@ style products.
    integrations are supervised actors with restart policy and health state.
 7. **State is cached, but truth is external.** The cache represents the latest
    known state plus freshness metadata. It is never treated as omniscient.
-8. **User-written integrations are welcome.** WASM, BEAM-native, and external
-   process adapters can participate if they speak the same host protocol.
+8. **Rust implementation is the rule.** Repository-owned integrations and
+   protocol stacks are written in Rust and isolated by actors/processes rather
+   than mixed implementation languages.
 
 ---
 
@@ -142,7 +163,7 @@ Integration
 |-- integration_id
 |-- display_name
 |-- version
-|-- runtime_kind        native | wasm | deno | node | python | ruby | executable
+|-- runtime_kind        in_process_rust | rust_worker_process
 |-- capabilities[]
 |-- discovery_handlers[]
 |-- pairing_handlers[]
@@ -626,6 +647,11 @@ binding/reporting    -> adapter-private configuration
 network key          -> Vault secret
 ```
 
+The implementation should be repository-owned and layered through D24/D25:
+frame parsing first, deterministic simulation second, hardware adapters third.
+USB coordinator support is an adapter around our Zigbee stack, not the
+definition of the stack.
+
 ### Z-Wave
 
 Z-Wave is controller-mediated. It should also be a separate integration because
@@ -645,6 +671,11 @@ S2 keys              -> Vault secrets
 
 The runtime must understand that some Z-Wave commands are slow, sleepy,
 queued, or require secure inclusion before they are available.
+
+The implementation should be repository-owned and layered through D26. Existing
+controller APIs are useful references and hardware access paths, but the stack
+should model frames, inclusion, command classes, security, node interviews, and
+Long Range topology explicitly.
 
 ### Thread and Matter
 
@@ -669,6 +700,11 @@ fabric credentials   -> Vault secrets
 Thread diagnostics are still valuable: border-router health, network partition
 state, route reachability, and multicast/service-discovery health affect Matter
 reliability.
+
+The implementation should be repository-owned and layered through D24/D27.
+Thread is networking, not device automation. Matter-over-Thread should consume
+Thread reachability and diagnostics while keeping Matter clusters in the
+application layer.
 
 ---
 
@@ -839,26 +875,18 @@ audit log content.
 
 ---
 
-## Guest Integrations
+## Rust Integration Runtime
 
-Some users will want to write integrations in JavaScript, Python, Ruby, Elixir,
-Rust, or something stranger. D23 should allow that without making the runtime
-unsafe.
+All repository-owned smart-home integration code is written in Rust. That
+includes Hue, Zigbee, Z-Wave, Thread, Matter, MQTT, protocol simulators,
+hardware adapters, and diagnostic tools.
 
-Supported runtime classes:
+The runtime can still preserve a process boundary between the smart-home host
+and an integration package. That boundary is for supervision, capability
+control, restart isolation, and memory accounting, not for allowing arbitrary
+implementation languages inside the core stack.
 
-```text
-wasm        preferred portable sandbox for small adapters
-beam        native Elixir/Erlang actor integration
-native      repository-owned Rust/Elixir package
-deno        external process, user owns V8 footprint
-node        external process, user owns V8 footprint
-python      external process, user owns interpreter footprint
-ruby        external process, user owns interpreter footprint
-executable  explicit process contract
-```
-
-Every guest integration speaks the same host protocol:
+Every integration process speaks the same host protocol:
 
 ```text
 host.discover
@@ -869,10 +897,10 @@ host.subscribe
 host.health
 ```
 
-The host grants capabilities, Vault leases, network access, serial access, and
-filesystem access explicitly. External runtimes are useful, but they are not
-cheap. A million logical integrations can exist as records; a million Python,
-Node, or Deno processes cannot.
+The host grants capabilities, Vault leases, network access, serial access, radio
+access, and filesystem access explicitly. A million logical integrations can
+exist as records; real integration workers are supervised Rust processes or
+actors with explicit resource budgets.
 
 ---
 
@@ -931,7 +959,7 @@ scriptable event streams. Integration authors should be able to test:
 - adapters cannot read credentials except through explicit Vault leases
 - command tools emit audit records on allow and deny
 - high-risk commands require stronger policy than ordinary lighting commands
-- guest integrations receive only declared host capabilities
+- integration workers receive only declared host capabilities
 - raw diagnostic payload retention follows configured policy
 
 ---
@@ -953,12 +981,12 @@ scriptable event streams. Integration authors should be able to test:
 
 1. Should Matter be a first-class D23 integration immediately, or should it wait
    until Hue and one direct-radio adapter prove the normalized model?
-2. Should the first implementation target Rust actors, Elixir/OTP supervisors, or
-   a split model where BEAM supervises Rust bridge workers?
+2. Should the first implementation use in-process Rust actors, separate Rust
+   worker processes, or both depending on adapter risk?
 3. How much raw protocol payload should be retained by default for debugging?
 4. Should automations consume only normalized events, or should expert workflows
    be allowed to subscribe to protocol-native events?
-5. What is the minimum WASI/host ABI required for guest integrations to be
+5. What is the minimum Rust host protocol required for integration workers to be
    useful without exposing ambient authority?
 
 ---
