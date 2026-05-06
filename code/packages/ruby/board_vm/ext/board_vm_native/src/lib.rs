@@ -6,10 +6,10 @@ use board_vm_host::{BlinkProgram, BLINK_MODULE_LEN};
 use board_vm_language_core::{
     build_blink_module, build_caps_query_wire_frame, build_hello_wire_frame,
     build_program_begin_wire_frame, build_program_chunk_wire_frame, build_program_end_wire_frame,
-    build_run_background_wire_frame, capability_board_metadata, capability_bytecode_callable,
-    capability_flag_names, capability_protocol_feature, decode_wire_response, program_format_name,
-    run_status_name, BoardVmLanguageSession, DecodedLanguageResponse,
-    DecodedLanguageResponseBody, LanguageCoreError,
+    build_run_background_wire_frame, build_stop_wire_frame, capability_board_metadata,
+    capability_bytecode_callable, capability_flag_names, capability_protocol_feature,
+    decode_wire_response, program_format_name, run_status_name, BoardVmLanguageSession,
+    DecodedLanguageResponse, DecodedLanguageResponseBody, LanguageCoreError,
 };
 use ruby_bridge::VALUE;
 
@@ -144,6 +144,14 @@ extern "C" fn session_run_background_wire(
             instruction_budget,
             &mut wire,
         )?;
+        Ok(bytes_result(&wire, written.len))
+    })
+}
+
+extern "C" fn session_stop_wire(self_val: VALUE) -> VALUE {
+    with_session_mut(self_val, |session| {
+        let mut wire = [0u8; 64];
+        let written = build_stop_wire_frame(&mut session.inner, &mut wire)?;
         Ok(bytes_result(&wire, written.len))
     })
 }
@@ -539,6 +547,12 @@ pub extern "C" fn Init_board_vm_native() {
         "run_background_wire",
         session_run_background_wire as *const c_void,
         2,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "stop_wire",
+        session_stop_wire as *const c_void,
+        0,
     );
     ruby_bridge::define_method_raw(
         session_class,

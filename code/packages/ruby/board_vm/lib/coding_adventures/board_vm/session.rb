@@ -72,6 +72,10 @@ module CodingAdventures
         )
       end
 
+      def stop
+        dispatch(:stop, native_session.stop_wire)
+      end
+
       def blink(
         program_id: @program_id,
         budget: @instruction_budget,
@@ -121,6 +125,9 @@ module CodingAdventures
           upload_blink(**options)
         when "run"
           SessionResult.new(results: [run(**options.merge(optional_budget(words, command)))])
+        when "stop"
+          ensure_no_extra_arguments!(words, command)
+          SessionResult.new(results: [stop])
         when "blink"
           blink(**options.merge(optional_budget(words, command)))
         else

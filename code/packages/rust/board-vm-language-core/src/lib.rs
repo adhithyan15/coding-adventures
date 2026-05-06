@@ -453,6 +453,21 @@ pub fn build_run_background_wire_frame(
     })
 }
 
+pub fn build_stop_wire_frame(
+    session: &mut BoardVmLanguageSession,
+    wire_out: &mut [u8],
+) -> Result<BuiltWireFrame, LanguageCoreError> {
+    let mut raw = [0u8; 16];
+    let mut host = session.host_session();
+    let written = host.stop_frame(&mut raw)?;
+    let wire_len = encode_wire_frame(&raw[..written.len], wire_out)?;
+    session.update_from_host_session(&host);
+    Ok(BuiltWireFrame {
+        request_id: written.request_id,
+        len: wire_len,
+    })
+}
+
 pub fn decode_wire_frame_into_raw(
     wire_frame: &[u8],
     raw_out: &mut [u8],
@@ -799,6 +814,23 @@ pub unsafe extern "C" fn board_vm_language_run_background_wire(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn board_vm_language_stop_wire(
+    session: *mut BoardVmLanguageSession,
+    wire_out: *mut u8,
+    wire_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let session = unsafe { mut_ref(session, "board_vm_language_stop_wire session") }?;
+        let wire_out = unsafe { out_slice(wire_out, wire_cap, "wire_out") }?;
+        let written = build_stop_wire_frame(session, wire_out)?;
+        Ok(BoardVmLanguageStatus::written(
+            written.request_id,
+            written.len,
+        ))
+    })
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn board_vm_language_decode_wire_frame(
     wire_frame: *const u8,
     wire_frame_len: u64,
@@ -1064,6 +1096,15 @@ mod tests {
             run_payload.flags,
             RUN_FLAG_RESET_VM_BEFORE_RUN | RUN_FLAG_BACKGROUND_RUN
         );
+
+        let stop = unsafe {
+            board_vm_language_stop_wire(&mut session, wire.as_mut_ptr(), wire.len() as u64)
+        };
+        assert_eq!(stop.request_id, 5);
+        let decoded = decode_wire_frame_into_raw(&wire[..stop.len as usize], &mut raw).unwrap();
+        assert_eq!(decoded.message_type, MessageType::STOP.0);
+        let frame = decode_frame(&raw[..decoded.len as usize]).unwrap();
+        assert!(frame.payload.is_empty());
     }
 
     #[test]
