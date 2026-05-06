@@ -1,6 +1,7 @@
 use board_vm_ir::{
-    parse_module, validate, CapabilitySet, ModuleError, ValidateError, CAP_GPIO_OPEN,
-    CAP_GPIO_WRITE, CAP_TIME_SLEEP_MS, FLAG_PROGRAM_MAY_RUN_FOREVER, MODULE_MAGIC, MODULE_VERSION,
+    parse_module, validate, CapabilitySet, ModuleError, ValidateError, CAP_GPIO_CLOSE,
+    CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_TIME_SLEEP_MS, FLAG_PROGRAM_MAY_RUN_FOREVER,
+    MODULE_MAGIC, MODULE_VERSION,
 };
 use board_vm_protocol::{
     encode_frame, encode_hello, encode_program_begin, encode_program_chunk, encode_program_end,
@@ -15,14 +16,23 @@ pub const DEFAULT_PROGRAM_ID: u16 = 1;
 pub const DEFAULT_INSTRUCTION_BUDGET: u32 = 1000;
 pub const BLINK_CODE_LEN: usize = 26;
 pub const BLINK_MODULE_LEN: usize = 36;
+pub const GPIO_READ_CODE_LEN: usize = 13;
+pub const GPIO_READ_MODULE_LEN: usize = 23;
+
+pub const GPIO_MODE_INPUT: u8 = 0;
+pub const GPIO_MODE_OUTPUT: u8 = 1;
+pub const GPIO_MODE_INPUT_PULLUP: u8 = 2;
+pub const GPIO_MODE_INPUT_PULLDOWN: u8 = 3;
 
 const OP_PUSH_FALSE: u8 = 0x10;
 const OP_PUSH_TRUE: u8 = 0x11;
 const OP_PUSH_U8: u8 = 0x12;
 const OP_PUSH_U16: u8 = 0x13;
 const OP_DUP: u8 = 0x20;
+const OP_SWAP: u8 = 0x22;
 const OP_JUMP_S8: u8 = 0x30;
 const OP_CALL_U8: u8 = 0x40;
+const OP_RETURN_TOP: u8 = 0x50;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum HostError {
@@ -32,6 +42,7 @@ pub enum HostError {
     Validate(ValidateError),
     ProgramTooLarge,
     JumpOutOfRange,
+    InvalidGpioReadMode(u8),
 }
 
 impl From<ProtocolError> for HostError {
@@ -67,6 +78,39 @@ impl BlinkProgram {
             high_ms: 250,
             low_ms: 250,
             max_stack: 4,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct GpioReadProgram {
+    pub pin: u8,
+    pub mode: u8,
+    pub max_stack: u8,
+}
+
+impl GpioReadProgram {
+    pub const fn input(pin: u8) -> Self {
+        Self {
+            pin,
+            mode: GPIO_MODE_INPUT,
+            max_stack: 2,
+        }
+    }
+
+    pub const fn input_pullup(pin: u8) -> Self {
+        Self {
+            pin,
+            mode: GPIO_MODE_INPUT_PULLUP,
+            max_stack: 2,
+        }
+    }
+
+    pub const fn input_pulldown(pin: u8) -> Self {
+        Self {
+            pin,
+            mode: GPIO_MODE_INPUT_PULLDOWN,
+            max_stack: 2,
         }
     }
 }
@@ -366,6 +410,52 @@ pub fn write_blink_module(program: BlinkProgram, out: &mut [u8]) -> Result<usize
     Ok(offset)
 }
 
+pub fn write_gpio_read_code(program: GpioReadProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < GPIO_READ_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+    validate_gpio_read_mode(program.mode)?;
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.pin)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.mode)?;
+    write_call_u8(out, &mut offset, CAP_GPIO_OPEN)?;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_call_u8(out, &mut offset, CAP_GPIO_READ)?;
+    write_u8(out, &mut offset, OP_SWAP)?;
+    write_call_u8(out, &mut offset, CAP_GPIO_CLOSE)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+fn validate_gpio_read_mode(mode: u8) -> Result<(), HostError> {
+    match mode {
+        GPIO_MODE_INPUT | GPIO_MODE_INPUT_PULLUP | GPIO_MODE_INPUT_PULLDOWN => Ok(()),
+        other => Err(HostError::InvalidGpioReadMode(other)),
+    }
+}
+
+pub fn write_gpio_read_module(
+    program: GpioReadProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < GPIO_READ_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; GPIO_READ_CODE_LEN];
+    let code_len = write_gpio_read_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(&module, CapabilitySet::blink_mvp(), program.max_stack)?;
+    Ok(offset)
+}
+
 pub fn write_module(spec: ModuleSpec<'_>, out: &mut [u8]) -> Result<usize, HostError> {
     if spec.code.len() > u32::MAX as usize || spec.const_pool.len() > u32::MAX as usize {
         return Err(HostError::ProgramTooLarge);
@@ -468,7 +558,9 @@ fn write_slice(out: &mut [u8], offset: &mut usize, value: &[u8]) -> Result<(), H
 #[cfg(test)]
 mod tests {
     use super::*;
-    use board_vm_ir::{parse_module, validate, CapabilitySet, ModuleError};
+    use board_vm_ir::{
+        collect_required_capabilities, parse_module, validate, CapabilitySet, ModuleError,
+    };
     use board_vm_protocol::{
         decode_frame, decode_program_begin, decode_program_chunk, decode_program_end,
         decode_run_request, MessageType, RUN_FLAG_BACKGROUND_RUN, RUN_FLAG_RESET_VM_BEFORE_RUN,
@@ -478,6 +570,10 @@ mod tests {
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x01, 0x04, 0x00, 0x1A, 0x12, 0x0D, 0x12, 0x01, 0x40, 0x01,
         0x20, 0x11, 0x40, 0x02, 0x13, 0xFA, 0x00, 0x40, 0x10, 0x20, 0x10, 0x40, 0x02, 0x13, 0xFA,
         0x00, 0x40, 0x10, 0x30, 0xEC, 0x00,
+    ];
+    const GPIO_READ_PULLUP_MODULE_HEX: [u8; GPIO_READ_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x0D, 0x12, 0x0D, 0x12, 0x02, 0x40, 0x01,
+        0x20, 0x40, 0x03, 0x22, 0x40, 0x04, 0x50, 0x00,
     ];
 
     #[test]
@@ -489,6 +585,38 @@ mod tests {
 
         let parsed = parse_module(&module).unwrap();
         validate(&parsed, CapabilitySet::blink_mvp(), 4).unwrap();
+    }
+
+    #[test]
+    fn builds_gpio_read_module_with_close_and_return() {
+        let mut module = [0u8; GPIO_READ_MODULE_LEN];
+        let len = write_gpio_read_module(GpioReadProgram::input_pullup(13), &mut module).unwrap();
+        assert_eq!(len, GPIO_READ_MODULE_LEN);
+        assert_eq!(module, GPIO_READ_PULLUP_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp(), 2).unwrap();
+        let mut capabilities = [0u16; 4];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(
+            &capabilities[..count],
+            &[CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_CLOSE]
+        );
+    }
+
+    #[test]
+    fn rejects_output_mode_for_gpio_read_module() {
+        let mut module = [0u8; GPIO_READ_MODULE_LEN];
+        let program = GpioReadProgram {
+            pin: 13,
+            mode: GPIO_MODE_OUTPUT,
+            max_stack: 2,
+        };
+
+        assert_eq!(
+            write_gpio_read_module(program, &mut module),
+            Err(HostError::InvalidGpioReadMode(GPIO_MODE_OUTPUT))
+        );
     }
 
     #[test]
