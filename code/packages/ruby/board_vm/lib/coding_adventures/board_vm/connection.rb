@@ -91,7 +91,12 @@ module CodingAdventures
           *session.blink_upload_run_frames(program_id, budget, pin, high_ms, low_ms, max_stack)
         ]
         responses = frames.map { |frame| dispatch_frame(frame) }
-        SessionResult.new(frames: frames, responses: responses)
+        decoded_responses = responses.map { |response| decode_response(session, response) }
+        SessionResult.new(
+          frames: frames,
+          responses: responses,
+          decoded_responses: decoded_responses
+        )
       end
 
       def eject_blink!(
@@ -179,6 +184,12 @@ module CodingAdventures
 
       def active_transport
         @transport ||= SerialTransport.new(port: port, baud_rate: baud_rate, timeout_ms: timeout_ms)
+      end
+
+      def decode_response(session, response)
+        return nil if response.nil?
+
+        session.decode_response(response)
       end
 
       def cargo_command(*args)

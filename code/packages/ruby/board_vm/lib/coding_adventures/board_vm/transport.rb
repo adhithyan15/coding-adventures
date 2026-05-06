@@ -5,7 +5,7 @@ require "rbconfig"
 
 module CodingAdventures
   module BoardVM
-    SessionResult = Struct.new(:frames, :responses, keyword_init: true)
+    SessionResult = Struct.new(:frames, :responses, :decoded_responses, keyword_init: true)
 
     class TransportError < StandardError; end
 

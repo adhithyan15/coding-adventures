@@ -16,7 +16,12 @@ use board_vm_host::{
     write_blink_module, BlinkProgram, HostError, HostSession, BLINK_MODULE_LEN,
     DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID,
 };
-use board_vm_protocol::{decode_frame, decode_wire_frame, encode_wire_frame, Frame, ProtocolError};
+use board_vm_protocol::{
+    decode_caps_report_header, decode_error_payload, decode_frame, decode_hello_ack,
+    decode_program_begin, decode_program_chunk, decode_program_end, decode_run_report_header,
+    decode_wire_frame, encode_wire_frame, Frame, MessageType, ProgramFormat, ProtocolError,
+    RunStatus, FLAG_IS_ERROR_RESPONSE, FLAG_IS_RESPONSE,
+};
 
 pub const LANGUAGE_CORE_VERSION_MAJOR: u16 = 0;
 pub const LANGUAGE_CORE_VERSION_MINOR: u16 = 1;
@@ -138,6 +143,137 @@ impl Default for BoardVmLanguageSession {
 pub struct BuiltWireFrame {
     pub request_id: u16,
     pub len: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DecodedLanguageResponse {
+    pub request_id: u16,
+    pub message_type: MessageType,
+    pub flags: u8,
+    pub payload_len: usize,
+    pub body: DecodedLanguageResponseBody,
+}
+
+impl DecodedLanguageResponse {
+    pub const fn is_response(&self) -> bool {
+        self.flags & FLAG_IS_RESPONSE != 0
+    }
+
+    pub const fn is_error_response(&self) -> bool {
+        self.flags & FLAG_IS_ERROR_RESPONSE != 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum DecodedLanguageResponseBody {
+    HelloAck(LanguageHelloAck),
+    CapsReport(LanguageBoardDescriptor),
+    ProgramBegin(LanguageProgramBegin),
+    ProgramChunk(LanguageProgramChunk),
+    ProgramEnd(LanguageProgramEnd),
+    RunReport(LanguageRunReport),
+    Error(LanguageBoardError),
+    Raw,
+}
+
+impl DecodedLanguageResponseBody {
+    pub const fn kind(&self) -> &'static str {
+        match self {
+            Self::HelloAck(_) => "hello_ack",
+            Self::CapsReport(_) => "caps_report",
+            Self::ProgramBegin(_) => "program_begin",
+            Self::ProgramChunk(_) => "program_chunk",
+            Self::ProgramEnd(_) => "program_end",
+            Self::RunReport(_) => "run_report",
+            Self::Error(_) => "error",
+            Self::Raw => "raw",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageHelloAck {
+    pub selected_version: u8,
+    pub board_name: String,
+    pub runtime_name: String,
+    pub host_nonce: u32,
+    pub board_nonce: u32,
+    pub max_frame_payload: u16,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageCapability {
+    pub id: u16,
+    pub version: u8,
+    pub flags: u16,
+    pub name: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageBoardDescriptor {
+    pub board_id: String,
+    pub runtime_id: String,
+    pub max_program_bytes: u32,
+    pub max_stack_values: u8,
+    pub max_handles: u8,
+    pub supports_store_program: bool,
+    pub capabilities: Vec<LanguageCapability>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageProgramBegin {
+    pub program_id: u16,
+    pub format: ProgramFormat,
+    pub total_len: u32,
+    pub program_crc32: u32,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageProgramChunk {
+    pub program_id: u16,
+    pub offset: u32,
+    pub len: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageProgramEnd {
+    pub program_id: u16,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageRunReport {
+    pub program_id: u16,
+    pub status: RunStatus,
+    pub instructions_executed: u32,
+    pub elapsed_ms: u32,
+    pub stack_depth: u8,
+    pub open_handles: u8,
+    pub return_count: u32,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageBoardError {
+    pub code: u16,
+    pub request_id: u16,
+    pub program_id: u16,
+    pub bytecode_offset: u32,
+    pub message: String,
+}
+
+pub const fn program_format_name(format: ProgramFormat) -> &'static str {
+    match format {
+        ProgramFormat::BvmModule => "bvm_module",
+    }
+}
+
+pub const fn run_status_name(status: RunStatus) -> &'static str {
+    match status {
+        RunStatus::Halted => "halted",
+        RunStatus::Running => "running",
+        RunStatus::Stopped => "stopped",
+        RunStatus::BudgetExceeded => "budget_exceeded",
+        RunStatus::Faulted => "faulted",
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -292,6 +428,124 @@ pub fn decode_wire_frame_into_raw(
         raw_out.as_ptr(),
         raw_len,
     ))
+}
+
+pub fn decode_wire_response(
+    wire_frame: &[u8],
+    raw_out: &mut [u8],
+) -> Result<DecodedLanguageResponse, LanguageCoreError> {
+    let raw_len = decode_wire_frame(wire_frame, raw_out)?;
+    decode_raw_response(&raw_out[..raw_len])
+}
+
+pub fn decode_raw_response(raw_frame: &[u8]) -> Result<DecodedLanguageResponse, LanguageCoreError> {
+    let frame = decode_frame(raw_frame)?;
+    let body = if frame.flags & FLAG_IS_ERROR_RESPONSE != 0 {
+        let error = decode_error_payload(frame.payload)?;
+        DecodedLanguageResponseBody::Error(LanguageBoardError {
+            code: error.code,
+            request_id: error.request_id,
+            program_id: error.program_id,
+            bytecode_offset: error.bytecode_offset,
+            message: error.message.to_owned(),
+        })
+    } else {
+        decode_response_body(&frame)?
+    };
+
+    Ok(DecodedLanguageResponse {
+        request_id: frame.request_id,
+        message_type: frame.message_type,
+        flags: frame.flags,
+        payload_len: frame.payload.len(),
+        body,
+    })
+}
+
+fn decode_response_body(
+    frame: &Frame<'_>,
+) -> Result<DecodedLanguageResponseBody, LanguageCoreError> {
+    match frame.message_type {
+        MessageType::HELLO_ACK => {
+            let ack = decode_hello_ack(frame.payload)?;
+            Ok(DecodedLanguageResponseBody::HelloAck(LanguageHelloAck {
+                selected_version: ack.selected_version,
+                board_name: ack.board_name.to_owned(),
+                runtime_name: ack.runtime_name.to_owned(),
+                host_nonce: ack.host_nonce,
+                board_nonce: ack.board_nonce,
+                max_frame_payload: ack.max_frame_payload,
+            }))
+        }
+        MessageType::CAPS_REPORT => {
+            let (header, mut decoder) = decode_caps_report_header(frame.payload)?;
+            let mut capabilities = Vec::new();
+            for _ in 0..header.capability_count {
+                let capability = decoder.read_capability_descriptor()?;
+                capabilities.push(LanguageCapability {
+                    id: capability.id,
+                    version: capability.version,
+                    flags: capability.flags,
+                    name: capability.name.to_owned(),
+                });
+            }
+            decoder.finish()?;
+            Ok(DecodedLanguageResponseBody::CapsReport(
+                LanguageBoardDescriptor {
+                    board_id: header.board_id.to_owned(),
+                    runtime_id: header.runtime_id.to_owned(),
+                    max_program_bytes: header.max_program_bytes,
+                    max_stack_values: header.max_stack_values,
+                    max_handles: header.max_handles,
+                    supports_store_program: header.supports_store_program,
+                    capabilities,
+                },
+            ))
+        }
+        MessageType::PROGRAM_BEGIN => {
+            let begin = decode_program_begin(frame.payload)?;
+            Ok(DecodedLanguageResponseBody::ProgramBegin(
+                LanguageProgramBegin {
+                    program_id: begin.program_id,
+                    format: begin.format,
+                    total_len: begin.total_len,
+                    program_crc32: begin.program_crc32,
+                },
+            ))
+        }
+        MessageType::PROGRAM_CHUNK => {
+            let chunk = decode_program_chunk(frame.payload)?;
+            Ok(DecodedLanguageResponseBody::ProgramChunk(
+                LanguageProgramChunk {
+                    program_id: chunk.program_id,
+                    offset: chunk.offset,
+                    len: chunk.bytes.len(),
+                },
+            ))
+        }
+        MessageType::PROGRAM_END => {
+            let end = decode_program_end(frame.payload)?;
+            Ok(DecodedLanguageResponseBody::ProgramEnd(
+                LanguageProgramEnd {
+                    program_id: end.program_id,
+                },
+            ))
+        }
+        MessageType::RUN_REPORT => {
+            let (report, decoder) = decode_run_report_header(frame.payload)?;
+            decoder.finish()?;
+            Ok(DecodedLanguageResponseBody::RunReport(LanguageRunReport {
+                program_id: report.program_id,
+                status: report.status,
+                instructions_executed: report.instructions_executed,
+                elapsed_ms: report.elapsed_ms,
+                stack_depth: report.stack_depth,
+                open_handles: report.open_handles,
+                return_count: report.return_count,
+            }))
+        }
+        _ => Ok(DecodedLanguageResponseBody::Raw),
+    }
 }
 
 thread_local! {
@@ -666,8 +920,9 @@ mod tests {
     use super::*;
     use board_vm_protocol::{
         decode_program_begin, decode_program_chunk, decode_program_end, decode_run_request,
-        encode_frame, encode_wire_frame, Frame, MessageType, RunReportHeader, RunStatus,
-        FLAG_IS_RESPONSE, GOLDEN_HELLO_WIRE_FRAME_BVM_V1, RUN_FLAG_BACKGROUND_RUN,
+        encode_caps_report, encode_frame, encode_hello_ack, encode_wire_frame,
+        CapabilityDescriptor, CapsReportHeader, Frame, HelloAck, MessageType, RunReportHeader,
+        RunStatus, FLAG_IS_RESPONSE, GOLDEN_HELLO_WIRE_FRAME_BVM_V1, RUN_FLAG_BACKGROUND_RUN,
         RUN_FLAG_RESET_VM_BEFORE_RUN,
     };
 
@@ -822,6 +1077,81 @@ mod tests {
     }
 
     #[test]
+    fn rust_core_decodes_structured_response_bodies() {
+        let hello = HelloAck {
+            selected_version: 1,
+            board_name: "uno-r4-wifi",
+            runtime_name: "board-vm",
+            host_nonce: 0xAABB_CCDD,
+            board_nonce: 0x1122_3344,
+            max_frame_payload: 512,
+        };
+        let mut payload = [0u8; 128];
+        let payload_len = encode_hello_ack(&hello, &mut payload).unwrap();
+        let decoded = decode_response_fixture(MessageType::HELLO_ACK, 11, &payload[..payload_len]);
+        assert_eq!(decoded.request_id, 11);
+        assert!(decoded.is_response());
+        assert_eq!(decoded.body.kind(), "hello_ack");
+        match decoded.body {
+            DecodedLanguageResponseBody::HelloAck(ack) => {
+                assert_eq!(ack.board_name, "uno-r4-wifi");
+                assert_eq!(ack.runtime_name, "board-vm");
+                assert_eq!(ack.host_nonce, 0xAABB_CCDD);
+                assert_eq!(ack.max_frame_payload, 512);
+            }
+            other => panic!("unexpected hello response body: {other:?}"),
+        }
+
+        let caps = CapsReportHeader {
+            board_id: "arduino:uno-r4-wifi",
+            runtime_id: "board-vm-rust",
+            max_program_bytes: 1024,
+            max_stack_values: 16,
+            max_handles: 4,
+            supports_store_program: true,
+            capability_count: 1,
+        };
+        let capabilities = [CapabilityDescriptor {
+            id: board_vm_protocol::CAP_PROGRAM_RAM_EXEC,
+            version: 1,
+            flags: board_vm_protocol::CAP_FLAG_BYTECODE_CALLABLE,
+            name: "program.ram.exec",
+        }];
+        let payload_len = encode_caps_report(&caps, &capabilities, &mut payload).unwrap();
+        let decoded =
+            decode_response_fixture(MessageType::CAPS_REPORT, 12, &payload[..payload_len]);
+        match decoded.body {
+            DecodedLanguageResponseBody::CapsReport(report) => {
+                assert_eq!(report.board_id, "arduino:uno-r4-wifi");
+                assert!(report.supports_store_program);
+                assert_eq!(report.capabilities.len(), 1);
+                assert_eq!(report.capabilities[0].name, "program.ram.exec");
+            }
+            other => panic!("unexpected caps response body: {other:?}"),
+        }
+
+        let run = RunReportHeader {
+            program_id: 7,
+            status: RunStatus::Running,
+            instructions_executed: 42,
+            elapsed_ms: 8,
+            stack_depth: 2,
+            open_handles: 1,
+            return_count: 0,
+        };
+        let payload_len = board_vm_protocol::encode_run_report_header(&run, &mut payload).unwrap();
+        let decoded = decode_response_fixture(MessageType::RUN_REPORT, 13, &payload[..payload_len]);
+        match decoded.body {
+            DecodedLanguageResponseBody::RunReport(report) => {
+                assert_eq!(report.program_id, 7);
+                assert_eq!(report.status, RunStatus::Running);
+                assert_eq!(report.instructions_executed, 42);
+            }
+            other => panic!("unexpected run response body: {other:?}"),
+        }
+    }
+
+    #[test]
     fn c_abi_reports_null_output_buffers_without_unwinding() {
         let status = unsafe { board_vm_language_blink_module(13, 250, 250, 4, ptr::null_mut(), 0) };
 
@@ -836,5 +1166,27 @@ mod tests {
                 .into_owned()
         };
         assert!(message.contains("module_out"));
+    }
+
+    fn decode_response_fixture(
+        message_type: MessageType,
+        request_id: u16,
+        payload: &[u8],
+    ) -> DecodedLanguageResponse {
+        let mut raw = [0u8; 256];
+        let raw_len = encode_frame(
+            &Frame {
+                flags: FLAG_IS_RESPONSE,
+                message_type,
+                request_id,
+                payload,
+            },
+            &mut raw,
+        )
+        .unwrap();
+        let mut wire = [0u8; 320];
+        let wire_len = encode_wire_frame(&raw[..raw_len], &mut wire).unwrap();
+        let mut decoded_raw = [0u8; 256];
+        decode_wire_response(&wire[..wire_len], &mut decoded_raw).unwrap()
     }
 }

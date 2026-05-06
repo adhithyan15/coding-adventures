@@ -6,7 +6,9 @@ use board_vm_host::{BlinkProgram, BLINK_MODULE_LEN};
 use board_vm_language_core::{
     build_blink_module, build_caps_query_wire_frame, build_hello_wire_frame,
     build_program_begin_wire_frame, build_program_chunk_wire_frame, build_program_end_wire_frame,
-    build_run_background_wire_frame, BoardVmLanguageSession, LanguageCoreError,
+    build_run_background_wire_frame, decode_wire_response, program_format_name, run_status_name,
+    BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
+    LanguageCoreError,
 };
 use ruby_bridge::VALUE;
 
@@ -205,6 +207,15 @@ extern "C" fn session_blink_upload_run_frames(
     })
 }
 
+extern "C" fn session_decode_response(_self_val: VALUE, wire_val: VALUE) -> VALUE {
+    let wire = ruby_bridge::bytes_from_rb(wire_val)
+        .unwrap_or_else(|| ruby_bridge::raise_arg_error("wire response must be a binary String"));
+    let mut raw = vec![0; wire.len().max(64)];
+    let decoded = decode_wire_response(&wire, &mut raw)
+        .unwrap_or_else(|error| raise_core_error("decode_response", error));
+    decoded_response_to_rb(&decoded)
+}
+
 fn with_session_mut(
     self_val: VALUE,
     operation: impl FnOnce(&mut RubyBoardVmSession) -> Result<VALUE, LanguageCoreError>,
@@ -218,6 +229,166 @@ fn with_session_mut(
 
 fn bytes_result(buffer: &[u8], len: usize) -> VALUE {
     ruby_bridge::bytes_to_rb(&buffer[..len])
+}
+
+fn decoded_response_to_rb(decoded: &DecodedLanguageResponse) -> VALUE {
+    let hash = ruby_bridge::hash_new();
+    hash_set(hash, "request_id", rb_usize(decoded.request_id));
+    hash_set(
+        hash,
+        "message_type",
+        ruby_bridge::str_to_rb(message_type_name(decoded.message_type.0)),
+    );
+    hash_set(hash, "message_type_code", rb_usize(decoded.message_type.0));
+    hash_set(hash, "flags", rb_usize(decoded.flags));
+    hash_set(
+        hash,
+        "response",
+        ruby_bridge::bool_to_rb(decoded.is_response()),
+    );
+    hash_set(
+        hash,
+        "error",
+        ruby_bridge::bool_to_rb(decoded.is_error_response()),
+    );
+    hash_set(hash, "kind", ruby_bridge::str_to_rb(decoded.body.kind()));
+    hash_set(hash, "payload_len", rb_usize(decoded.payload_len));
+    hash_set(
+        hash,
+        "payload",
+        response_body_to_rb(&decoded.body, decoded.payload_len),
+    );
+    hash
+}
+
+fn response_body_to_rb(body: &DecodedLanguageResponseBody, payload_len: usize) -> VALUE {
+    let hash = ruby_bridge::hash_new();
+    match body {
+        DecodedLanguageResponseBody::HelloAck(ack) => {
+            hash_set(hash, "selected_version", rb_usize(ack.selected_version));
+            hash_set(hash, "board_name", ruby_bridge::str_to_rb(&ack.board_name));
+            hash_set(
+                hash,
+                "runtime_name",
+                ruby_bridge::str_to_rb(&ack.runtime_name),
+            );
+            hash_set(hash, "host_nonce", rb_usize(ack.host_nonce));
+            hash_set(hash, "board_nonce", rb_usize(ack.board_nonce));
+            hash_set(hash, "max_frame_payload", rb_usize(ack.max_frame_payload));
+        }
+        DecodedLanguageResponseBody::CapsReport(report) => {
+            hash_set(hash, "board_id", ruby_bridge::str_to_rb(&report.board_id));
+            hash_set(
+                hash,
+                "runtime_id",
+                ruby_bridge::str_to_rb(&report.runtime_id),
+            );
+            hash_set(
+                hash,
+                "max_program_bytes",
+                rb_usize(report.max_program_bytes),
+            );
+            hash_set(hash, "max_stack_values", rb_usize(report.max_stack_values));
+            hash_set(hash, "max_handles", rb_usize(report.max_handles));
+            hash_set(
+                hash,
+                "supports_store_program",
+                ruby_bridge::bool_to_rb(report.supports_store_program),
+            );
+            let capabilities = ruby_bridge::array_new();
+            for capability in &report.capabilities {
+                let item = ruby_bridge::hash_new();
+                hash_set(item, "id", rb_usize(capability.id));
+                hash_set(item, "version", rb_usize(capability.version));
+                hash_set(item, "flags", rb_usize(capability.flags));
+                hash_set(item, "name", ruby_bridge::str_to_rb(&capability.name));
+                ruby_bridge::array_push(capabilities, item);
+            }
+            hash_set(hash, "capabilities", capabilities);
+        }
+        DecodedLanguageResponseBody::ProgramBegin(begin) => {
+            hash_set(hash, "program_id", rb_usize(begin.program_id));
+            hash_set(
+                hash,
+                "format",
+                ruby_bridge::str_to_rb(program_format_name(begin.format)),
+            );
+            hash_set(hash, "total_len", rb_usize(begin.total_len));
+            hash_set(hash, "program_crc32", rb_usize(begin.program_crc32));
+        }
+        DecodedLanguageResponseBody::ProgramChunk(chunk) => {
+            hash_set(hash, "program_id", rb_usize(chunk.program_id));
+            hash_set(hash, "offset", rb_usize(chunk.offset));
+            hash_set(hash, "len", rb_usize(chunk.len));
+        }
+        DecodedLanguageResponseBody::ProgramEnd(end) => {
+            hash_set(hash, "program_id", rb_usize(end.program_id));
+        }
+        DecodedLanguageResponseBody::RunReport(report) => {
+            hash_set(hash, "program_id", rb_usize(report.program_id));
+            hash_set(
+                hash,
+                "status",
+                ruby_bridge::str_to_rb(run_status_name(report.status)),
+            );
+            hash_set(hash, "status_code", rb_usize(report.status.as_u8()));
+            hash_set(
+                hash,
+                "instructions_executed",
+                rb_usize(report.instructions_executed),
+            );
+            hash_set(hash, "elapsed_ms", rb_usize(report.elapsed_ms));
+            hash_set(hash, "stack_depth", rb_usize(report.stack_depth));
+            hash_set(hash, "open_handles", rb_usize(report.open_handles));
+            hash_set(hash, "return_count", rb_usize(report.return_count));
+        }
+        DecodedLanguageResponseBody::Error(error) => {
+            hash_set(hash, "code", rb_usize(error.code));
+            hash_set(hash, "request_id", rb_usize(error.request_id));
+            hash_set(hash, "program_id", rb_usize(error.program_id));
+            hash_set(hash, "bytecode_offset", rb_usize(error.bytecode_offset));
+            hash_set(hash, "message", ruby_bridge::str_to_rb(&error.message));
+        }
+        DecodedLanguageResponseBody::Raw => {
+            hash_set(hash, "payload_len", rb_usize(payload_len));
+        }
+    }
+    hash
+}
+
+fn message_type_name(code: u8) -> &'static str {
+    match code {
+        0x01 => "hello",
+        0x02 => "hello_ack",
+        0x03 => "caps_query",
+        0x04 => "caps_report",
+        0x05 => "program_begin",
+        0x06 => "program_chunk",
+        0x07 => "program_end",
+        0x08 => "run",
+        0x09 => "run_report",
+        0x0A => "stop",
+        0x0B => "reset_vm",
+        0x0C => "store_program",
+        0x0D => "run_stored",
+        0x0E => "read_state",
+        0x0F => "state_report",
+        0x10 => "subscribe",
+        0x11 => "event",
+        0x12 => "log",
+        0x13 => "error",
+        0x14 => "ping",
+        0x15 => "pong",
+        _ => "unknown",
+    }
+}
+
+fn hash_set(hash: VALUE, key: &str, value: VALUE) {
+    ruby_bridge::hash_aset(hash, ruby_bridge::str_to_rb(key), value);
+}
+
+fn rb_usize(value: impl TryInto<usize>) -> VALUE {
+    ruby_bridge::usize_to_rb(value.try_into().unwrap_or(usize::MAX))
 }
 
 fn build_blink_module_value(
@@ -347,5 +518,11 @@ pub extern "C" fn Init_board_vm_native() {
         "blink_upload_run_frames",
         session_blink_upload_run_frames as *const c_void,
         -1,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "decode_response",
+        session_decode_response as *const c_void,
+        1,
     );
 }

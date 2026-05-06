@@ -62,7 +62,7 @@ module CodingAdventures
 
       def test_led_blink_dispatches_native_protocol_frames_through_transport
         runner = FakeRunner.new
-        transport = FakeTransport.new
+        transport = FakeWriteTransport.new
         result = nil
 
         BoardVM.uno_r4_wifi(
@@ -80,7 +80,8 @@ module CodingAdventures
         assert_equal 6, transport.frames.length
         assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
         assert_equal transport.frames, result.frames
-        assert_equal Array.new(6, "ack".b), result.responses
+        assert_equal Array.new(6), result.responses
+        assert_equal Array.new(6), result.decoded_responses
       end
 
       def test_native_session_builds_protocol_bytes_in_rust
