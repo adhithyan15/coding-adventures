@@ -737,6 +737,12 @@ Durable storage for bridge/device/entity identity and protocol mapping tables.
 
 Uses D18A stores and Vault references.
 
+**Initial Rust implementation:** `code/packages/rust/smart-home-registry` now
+provides an in-memory registry for normalized bridge/device/entity/scene
+records, protocol-native identifier indexes, state snapshots, and event logs.
+It is deliberately pure; durable D18A storage and Vault-backed credential
+resolution remain later layers.
+
 ### `smart-home-runtime`
 
 Actor supervisors, command router, event bus, state cache, health model, and
