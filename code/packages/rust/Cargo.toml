@@ -525,4 +525,7 @@ members = [
     "zwave-core",
     "sixlowpan",
     "smart-home-registry",
+    "zigbee-aps",
+    "zwave-serial-api",
+    "thread-mle",
 ]

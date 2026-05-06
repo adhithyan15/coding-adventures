@@ -79,6 +79,12 @@ future layers.
 - callbacks
 - controller capabilities
 
+**Initial Rust implementation:** `code/packages/rust/zwave-serial-api` now
+provides function ids, request/response/callback classification, controller
+capability decoding, Memory Get ID parsing, and request tracking with callback
+correlation and timeout expiry. Real serial-port I/O and controller loops remain
+future layers.
+
 ### `zwave-command-classes`
 
 - command-class registry

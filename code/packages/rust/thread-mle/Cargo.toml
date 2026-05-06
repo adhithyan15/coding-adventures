@@ -1,0 +1,9 @@
+[package]
+name = "thread-mle"
+version = "0.1.0"
+edition = "2021"
+description = "Thread Mesh Link Establishment roles, TLVs, and attach-state primitives"
+license = "MIT"
+
+[dependencies]
+sixlowpan = { path = "../sixlowpan" }

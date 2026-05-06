@@ -94,6 +94,11 @@ layers.
 - attach/detach flows
 - network data model
 
+**Initial Rust implementation:** `code/packages/rust/thread-mle` now provides
+Thread role, MLE command, TLV, scan-mask, mode, message parser/encoder, and
+deterministic parent/child attach-state primitives. Neighbor tables, network
+data, UDP/CoAP/DTLS, and commissioning remain future layers.
+
 ### `thread-commissioning`
 
 - commissioning state model
