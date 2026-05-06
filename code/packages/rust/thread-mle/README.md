@@ -10,9 +10,11 @@ This crate starts the D27 Thread control-plane layer above 6LoWPAN:
 - MLE message/TLV parsing and encoding
 - scan-mask and mode bit helpers
 - deterministic parent/child attach-state skeleton
+- neighbor table primitives for parent/child/router relationships, link margin,
+  timeout freshness, and parent-candidate selection
 
 It does not yet implement UDP, CoAP, DTLS, commissioning, network data,
-neighbor tables, border routing, or real radio behavior.
+border routing, or real radio behavior.
 
 ## Dependencies
 

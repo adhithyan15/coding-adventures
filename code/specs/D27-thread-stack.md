@@ -96,8 +96,10 @@ layers.
 
 **Initial Rust implementation:** `code/packages/rust/thread-mle` now provides
 Thread role, MLE command, TLV, scan-mask, mode, message parser/encoder, and
-deterministic parent/child attach-state primitives. Neighbor tables, network
-data, UDP/CoAP/DTLS, and commissioning remain future layers.
+deterministic parent/child attach-state primitives plus neighbor table support
+for parent/child/router relationships, link margins, timeout freshness, and
+parent-candidate selection. Network data, UDP/CoAP/DTLS, and commissioning
+remain future layers.
 
 ### `thread-commissioning`
 
