@@ -64,6 +64,14 @@ module CodingAdventures
         Ejector.new(self)
       end
 
+      def session(**options)
+        protocol_session = Session.new(self, **options)
+        return protocol_session unless block_given?
+
+        yield protocol_session
+        protocol_session
+      end
+
       def flash!
         ensure_uno_r4_wifi!
 
@@ -84,18 +92,16 @@ module CodingAdventures
       )
         ensure_uno_r4_wifi!
 
-        session = Native::Session.new
-        frames = [
-          session.hello_wire("ruby-board-vm", host_nonce),
-          session.caps_query_wire,
-          *session.blink_upload_run_frames(program_id, budget, pin, high_ms, low_ms, max_stack)
-        ]
-        responses = frames.map { |frame| dispatch_frame(frame) }
-        decoded_responses = responses.map { |response| decode_response(session, response) }
-        SessionResult.new(
-          frames: frames,
-          responses: responses,
-          decoded_responses: decoded_responses
+        session.blink(
+          program_id: program_id,
+          budget: budget,
+          pin: pin,
+          high_ms: high_ms,
+          low_ms: low_ms,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
         )
       end
 
@@ -128,6 +134,11 @@ module CodingAdventures
           port = candidate unless candidate.nil? || candidate.empty?
         end
         port
+      end
+
+      def dispatch_protocol_frame(frame, native_session:)
+        response = dispatch_frame(frame)
+        [response, decode_response(native_session, response)]
       end
 
       private
