@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from logic_engine import Number, atom, logic_list, num, string, term
+from logic_engine import Compound, Number, atom, logic_list, num, string, term
 
 from prolog_vm_compiler import (
     PrologAnswer,
@@ -495,3 +495,69 @@ class TestPrologBytecodeVMStress:
             "Line": string("def"),
         }
         assert output_path.read_text(encoding="utf-8") == "tea\ncake(slice)"
+
+    def test_stream_term_io_matches_structured_vm(self, tmp_path: Path) -> None:
+        input_path = tmp_path / "bytecode-terms.pltxt"
+        output_path = tmp_path / "bytecode-written-terms.pltxt"
+        input_path.write_text(
+            "% leading layout is skipped\n"
+            "box(cake).\n"
+            "/* block comments are layout */\n"
+            "pair(tea, X).\n",
+            encoding="utf-8",
+        )
+        input_atom = str(input_path).replace("\\", "\\\\").replace("'", "\\'")
+        output_atom = str(output_path).replace("\\", "\\\\").replace("'", "\\'")
+        compiled = compile_swi_prolog_source(
+            f"""
+            ?- open('{input_atom}', read, In, [alias(bytecode_term_input)]),
+               read(In, First),
+               read_term(In, Second, [variable_names(Names), variables(Vars)]),
+               read(In, Eof),
+               close(In),
+               open('{input_atom}', read, CurrentIn,
+                    [alias(bytecode_current_term_input)]),
+               open('{output_atom}', write, Out,
+                    [alias(bytecode_term_output)]),
+               set_input(CurrentIn),
+               set_output(Out),
+               read(CurrentFirst),
+               read_term(CurrentSecond, []),
+               write_term(Out, First, []),
+               write(Out, '.'),
+               nl,
+               write_term(CurrentFirst, []),
+               write('.'),
+               nl,
+               write_term(CurrentSecond, []),
+               close(CurrentIn),
+               close(Out).
+            """,
+        )
+
+        answers = run_compiled_prolog_bytecode_query_answers(compiled)
+
+        assert _project_answers(
+            answers,
+            "First",
+            "Eof",
+            "CurrentFirst",
+        ) == _project_answers(
+            run_compiled_prolog_query_answers(compiled),
+            "First",
+            "Eof",
+            "CurrentFirst",
+        )
+        assert len(answers) == 1
+        answer = answers[0].as_dict()
+        assert answer["First"] == term("box", "cake")
+        second = answer["Second"]
+        assert isinstance(second, Compound)
+        assert second == term("pair", "tea", second.args[1])
+        assert answer["Names"] == logic_list([term("=", "X", second.args[1])])
+        assert answer["Vars"] == logic_list([second.args[1]])
+        assert answer["Eof"] == atom("end_of_file")
+        assert answer["CurrentFirst"] == answer["First"]
+        assert output_path.read_text(encoding="utf-8") == (
+            "box(cake).\nbox(cake).\npair(tea, X)"
+        )

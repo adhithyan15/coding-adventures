@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Callable, Iterator
+from typing import Protocol
 
 from logic_builtins import (
     abolisho,
@@ -157,6 +158,12 @@ from logic_builtins import (
     write_currento,
     writeo,
 )
+from logic_builtins.builtins import (
+    _current_input_stream,
+    _read_stream,
+    _write_current_stream,
+    _write_stream,
+)
 from logic_engine import (
     Atom,
     Compound,
@@ -203,6 +210,7 @@ from logic_stdlib import (
     sorto,
 )
 from prolog_core import OperatorTable, expand_dcg_phrase
+from prolog_operator_parser import ParsedOperatorTerm
 from prolog_parser import PrologParseError
 from swi_prolog_parser import parse_swi_term
 
@@ -212,6 +220,11 @@ _FD_REIFIABLE_RELATIONS = frozenset({"#=", "#\\=", "#<", "#=<", "#>", "#>="})
 _PLAIN_ATOM_RE = re.compile(r"^[a-z][A-Za-z0-9_]*$")
 _VARIABLE_RE = re.compile(r"^(?:[A-Z_][A-Za-z0-9_]*)$")
 type IndicatorBuilder = Callable[[Term, Term], GoalExpr]
+
+
+class _StreamTermReader(Protocol):
+    contents: str
+    cursor: int
 
 
 def adapt_prolog_goal(
@@ -520,6 +533,18 @@ def _adapt_relation_call(
         return _read_term_from_atom_goal(*args)
     if name == "write_term_to_atom" and goal.relation.arity == 3:
         return _write_term_to_atom_goal(*args)
+    if name == "read" and goal.relation.arity == 1:
+        return _read_current_term_goal(args[0], logic_list([]))
+    if name == "read" and goal.relation.arity == 2:
+        return _read_stream_term_goal(args[0], args[1], logic_list([]))
+    if name == "read_term" and goal.relation.arity == 2:
+        return _read_current_term_goal(*args)
+    if name == "read_term" and goal.relation.arity == 3:
+        return _read_stream_term_goal(*args)
+    if name == "write_term" and goal.relation.arity == 2:
+        return _write_current_term_goal(*args)
+    if name == "write_term" and goal.relation.arity == 3:
+        return _write_stream_term_goal(*args)
     if name == "atom_concat" and goal.relation.arity == 3:
         return atom_concato(*args)
     if name == "atom_length" and goal.relation.arity == 2:
@@ -769,6 +794,62 @@ def _read_term_from_atom_goal(
     return native_goal(run, atom_value, term_value, options)
 
 
+def _read_current_term_goal(term_value: object, options: object) -> GoalExpr:
+    def run(
+        program_value: Program,
+        state: State,
+        args: tuple[Term, ...],
+    ) -> Iterator[State]:
+        term_arg, options_arg = args
+        stream = _current_input_stream()
+        if stream is None:
+            return
+        parsed = _read_next_stream_term(stream)
+        if parsed is None:
+            return
+        parsed_term, variables = parsed
+        options_goal = _read_term_options_goal(options_arg, variables)
+        if options_goal is None:
+            return
+        yield from solve_from(
+            program_value,
+            conj(eq(term_arg, parsed_term), options_goal),
+            state,
+        )
+
+    return native_goal(run, term_value, options)
+
+
+def _read_stream_term_goal(
+    stream_value: object,
+    term_value: object,
+    options: object,
+) -> GoalExpr:
+    def run(
+        program_value: Program,
+        state: State,
+        args: tuple[Term, ...],
+    ) -> Iterator[State]:
+        stream_arg, term_arg, options_arg = args
+        stream = _read_stream(reify(stream_arg, state.substitution))
+        if stream is None:
+            return
+        parsed = _read_next_stream_term(stream)
+        if parsed is None:
+            return
+        parsed_term, variables = parsed
+        options_goal = _read_term_options_goal(options_arg, variables)
+        if options_goal is None:
+            return
+        yield from solve_from(
+            program_value,
+            conj(eq(term_arg, parsed_term), options_goal),
+            state,
+        )
+
+    return native_goal(run, stream_value, term_value, options)
+
+
 def _write_term_to_atom_goal(
     term_value: object,
     atom_value: object,
@@ -795,11 +876,153 @@ def _write_term_to_atom_goal(
     return native_goal(run, term_value, atom_value, options)
 
 
-def _parse_atom_text(atom_value: Atom) -> object | None:
+def _write_current_term_goal(term_value: object, options: object) -> GoalExpr:
+    def run(_program: Program, state: State, args: tuple[Term, ...]) -> Iterator[State]:
+        term_arg, options_arg = args
+        reified_term = reify(term_arg, state.substitution)
+        if isinstance(reified_term, LogicVar):
+            return
+        write_options = _write_term_options(reify(options_arg, state.substitution))
+        if write_options is None:
+            return
+        rendered = _render_prolog_term(
+            reified_term,
+            numbervars=write_options["numbervars"],
+        )
+        if _write_current_stream(rendered):
+            yield state
+
+    return native_goal(run, term_value, options)
+
+
+def _write_stream_term_goal(
+    stream_value: object,
+    term_value: object,
+    options: object,
+) -> GoalExpr:
+    def run(_program: Program, state: State, args: tuple[Term, ...]) -> Iterator[State]:
+        stream_arg, term_arg, options_arg = args
+        reified_term = reify(term_arg, state.substitution)
+        if isinstance(reified_term, LogicVar):
+            return
+        write_options = _write_term_options(reify(options_arg, state.substitution))
+        if write_options is None:
+            return
+        rendered = _render_prolog_term(
+            reified_term,
+            numbervars=write_options["numbervars"],
+        )
+        if _write_stream(reify(stream_arg, state.substitution), rendered):
+            yield state
+
+    return native_goal(run, stream_value, term_value, options)
+
+
+def _parse_atom_text(atom_value: Atom) -> ParsedOperatorTerm | None:
+    return _parse_term_text(atom_value.symbol.name)
+
+
+def _parse_term_text(text: str) -> ParsedOperatorTerm | None:
     try:
-        return parse_swi_term(atom_value.symbol.name)
+        return parse_swi_term(text)
     except PrologParseError:
         return None
+
+
+def _read_next_stream_term(
+    stream: _StreamTermReader,
+) -> tuple[Term, dict[str, LogicVar]] | None:
+    text = stream.contents
+    start = _skip_stream_layout(text, stream.cursor)
+    if start >= len(text):
+        stream.cursor = len(text)
+        return atom("end_of_file"), {}
+
+    terminator = _stream_term_terminator(text, start)
+    if terminator is None:
+        return None
+
+    term_text = text[start:terminator].strip()
+    if not term_text:
+        return None
+    parsed = _parse_term_text(term_text)
+    if parsed is None:
+        return None
+
+    stream.cursor = _skip_stream_layout(text, terminator + 1)
+    return parsed.term, parsed.variables
+
+
+def _skip_stream_layout(text: str, index: int) -> int:
+    while index < len(text):
+        while index < len(text) and text[index].isspace():
+            index += 1
+        if text.startswith("%", index):
+            newline_index = text.find("\n", index)
+            if newline_index == -1:
+                return len(text)
+            index = newline_index + 1
+            continue
+        if text.startswith("/*", index):
+            comment_end = text.find("*/", index + 2)
+            if comment_end == -1:
+                return len(text)
+            index = comment_end + 2
+            continue
+        return index
+    return index
+
+
+def _stream_term_terminator(text: str, start: int) -> int | None:
+    index = start
+    depth = 0
+    quote: str | None = None
+    escaped = False
+
+    while index < len(text):
+        character = text[index]
+        if quote is not None:
+            if escaped:
+                escaped = False
+            elif character == "\\":
+                escaped = True
+            elif character == quote:
+                quote = None
+            index += 1
+            continue
+
+        if character in {"'", '"', "`"}:
+            quote = character
+            index += 1
+            continue
+        if text.startswith("%", index):
+            newline_index = text.find("\n", index)
+            index = len(text) if newline_index == -1 else newline_index + 1
+            continue
+        if text.startswith("/*", index):
+            comment_end = text.find("*/", index + 2)
+            if comment_end == -1:
+                return None
+            index = comment_end + 2
+            continue
+        if character in "([{":
+            depth += 1
+        elif character in ")]}":
+            depth = max(0, depth - 1)
+        elif character == "." and depth == 0 and _dot_ends_stream_term(text, index):
+            return index
+        index += 1
+    return None
+
+
+def _dot_ends_stream_term(text: str, dot_index: int) -> bool:
+    next_index = dot_index + 1
+    return (
+        next_index >= len(text)
+        or text[next_index].isspace()
+        or text.startswith("%", next_index)
+        or text.startswith("/*", next_index)
+    )
 
 
 def _variable_bindings(variables: dict[str, LogicVar]) -> Term:

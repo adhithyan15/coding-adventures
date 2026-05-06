@@ -1182,6 +1182,60 @@ class TestPrologVMStress:
         }
         assert output_path.read_text(encoding="utf-8") == "tea\ncake(slice)"
 
+    def test_stream_term_io_runs_through_vm(self, tmp_path: Path) -> None:
+        input_path = tmp_path / "terms.pltxt"
+        output_path = tmp_path / "written-terms.pltxt"
+        input_path.write_text(
+            "% leading layout is skipped\n"
+            "box(cake).\n"
+            "/* block comments are layout */\n"
+            "pair(tea, X).\n",
+            encoding="utf-8",
+        )
+        input_atom = str(input_path).replace("\\", "\\\\").replace("'", "\\'")
+        output_atom = str(output_path).replace("\\", "\\\\").replace("'", "\\'")
+        compiled = compile_swi_prolog_source(
+            f"""
+            ?- open('{input_atom}', read, In, [alias(vm_term_input)]),
+               read(In, First),
+               read_term(In, Second, [variable_names(Names), variables(Vars)]),
+               read(In, Eof),
+               close(In),
+               open('{input_atom}', read, CurrentIn,
+                    [alias(vm_current_term_input)]),
+               open('{output_atom}', write, Out, [alias(vm_term_output)]),
+               set_input(CurrentIn),
+               set_output(Out),
+               read(CurrentFirst),
+               read_term(CurrentSecond, []),
+               write_term(Out, First, []),
+               write(Out, '.'),
+               nl,
+               write_term(CurrentFirst, []),
+               write('.'),
+               nl,
+               write_term(CurrentSecond, []),
+               close(CurrentIn),
+               close(Out).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert len(answers) == 1
+        answer = answers[0].as_dict()
+        assert answer["First"] == term("box", "cake")
+        second = answer["Second"]
+        assert isinstance(second, Compound)
+        assert second == term("pair", "tea", second.args[1])
+        assert answer["Names"] == logic_list([term("=", "X", second.args[1])])
+        assert answer["Vars"] == logic_list([second.args[1]])
+        assert answer["Eof"] == atom("end_of_file")
+        assert answer["CurrentFirst"] == answer["First"]
+        assert output_path.read_text(encoding="utf-8") == (
+            "box(cake).\nbox(cake).\npair(tea, X)"
+        )
+
     def test_initialized_named_answers_keep_runtime_assertions_visible(self) -> None:
         compiled = compile_swi_prolog_source(
             """

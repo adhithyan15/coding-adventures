@@ -14,6 +14,8 @@
 - adapt selected current-stream predicates including `set_input/1`,
   `set_output/1`, `current_input/1`, `current_output/1`, current-input read
   forms, and current-output write/flush forms
+- adapt parser-backed stream term I/O predicates including `read/1`,
+  `read/2`, `read_term/2`, `read_term/3`, `write_term/2`, and `write_term/3`
 - preserve source query variables across `goal_expansion/2` rewrites
 - adapt Prolog `call/2..8` into variadic callable-term execution
 - preserve extra arguments while rewriting module-qualified `call/N` meta-goals

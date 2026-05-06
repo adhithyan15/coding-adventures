@@ -249,7 +249,7 @@ assert [answer.as_dict() for answer in runtime.query("ancestor(homer, Who)")] ==
 
 ## Capability Manifest
 
-The Prolog-on-Logic-VM implementation track covers PR00 through PR82. The
+The Prolog-on-Logic-VM implementation track covers PR00 through PR83. The
 package exposes that as a machine-readable manifest so downstream tools and
 future implementation work can distinguish completed functionality from
 deliberately deferred advanced dialect/runtime emulation:
@@ -259,7 +259,7 @@ from prolog_vm_compiler import prolog_vm_capability_manifest
 
 manifest = prolog_vm_capability_manifest()
 
-assert manifest.status == "core-plus-current-streams"
+assert manifest.status == "core-plus-stream-term-io"
 assert manifest.dialects == ("iso", "swi")
 assert manifest.backends == ("structured", "bytecode")
 ```
@@ -277,8 +277,9 @@ bounded cursor repositioning via `set_stream_position/2` and `seek/4`, and
 selected current-stream forms via `set_input/1`, `set_output/1`,
 `current_input/1`, `current_output/1`, `get_char/1`, `read_string/2`,
 `read_line_to_string/1`, `at_end_of_stream/0`, `write/1`, `nl/0`, and
-`flush_output/0`. The
-manifest also names the remaining advanced-dialect work that is intentionally
+`flush_output/0`, plus parser-backed stream term I/O through `read/1`,
+`read/2`, `read_term/2`, `read_term/3`, `write_term/2`, and `write_term/3`.
+The manifest also names the remaining advanced-dialect work that is intentionally
 outside the completed batches: full external dialect emulation, tabling and
 well-founded negation, generalized attributed-variable/coroutining services,
 non-FD constraint domains, console/binary/rich stream services beyond the
