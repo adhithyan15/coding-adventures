@@ -727,6 +727,10 @@ Repository-owned types:
 
 No protocol dependencies.
 
+**Initial Rust implementation:** `code/packages/rust/smart-home-core` now owns
+the normalized D23 data model plus D18D-style smart-home tool descriptors. It is
+pure data and performs no I/O.
+
 ### `smart-home-registry`
 
 Durable storage for bridge/device/entity identity and protocol mapping tables.
@@ -752,6 +756,11 @@ Reusable discovery helpers:
 ### `hue-core`
 
 Hue-specific types and mapping code. No network I/O.
+
+**Initial Rust implementation:** `code/packages/rust/hue-core` now owns CLIP v2
+resource/id/path primitives, structured Hue command intents, and bridge/device/
+light projection into `smart-home-core`. HTTPS, TLS policy, Vault leases, and
+event-stream transport remain for `hue-client` and `hue-integration`.
 
 ### `hue-client`
 

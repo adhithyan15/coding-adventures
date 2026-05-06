@@ -1,0 +1,9 @@
+[package]
+name = "sixlowpan"
+version = "0.1.0"
+edition = "2021"
+description = "6LoWPAN IPv6 adaptation primitives for Thread over IEEE 802.15.4"
+license = "MIT"
+
+[dependencies]
+ieee802154-core = { path = "../ieee802154-core" }

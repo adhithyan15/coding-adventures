@@ -1,0 +1,747 @@
+//! Repository-owned smart-home vocabulary shared by integrations, tools, and
+//! Chief of Staff agents.
+//!
+//! The types in this crate are intentionally protocol-neutral. A Hue light,
+//! Zigbee endpoint, Z-Wave node value, Thread/Matter endpoint, or MQTT device
+//! can all be projected into the same bridge/device/entity/event/command model.
+
+#![forbid(unsafe_code)]
+
+use std::fmt;
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum SmartHomeError {
+    EmptyIdentifier { kind: &'static str },
+    InvalidPercentage { value: u16 },
+    MissingCapability { command_type: CommandType },
+}
+
+impl fmt::Display for SmartHomeError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::EmptyIdentifier { kind } => write!(f, "{kind} must not be empty"),
+            Self::InvalidPercentage { value } => {
+                write!(f, "percentage value {value} is outside 0..=100")
+            }
+            Self::MissingCapability { command_type } => {
+                write!(
+                    f,
+                    "no canonical capability for command type {command_type:?}"
+                )
+            }
+        }
+    }
+}
+
+impl std::error::Error for SmartHomeError {}
+
+macro_rules! id_type {
+    ($name:ident, $kind:literal) => {
+        #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+        pub struct $name(String);
+
+        impl $name {
+            pub fn new(value: impl Into<String>) -> Result<Self, SmartHomeError> {
+                let value = value.into();
+                if value.trim().is_empty() {
+                    return Err(SmartHomeError::EmptyIdentifier { kind: $kind });
+                }
+                Ok(Self(value))
+            }
+
+            pub fn trusted(value: impl Into<String>) -> Self {
+                Self(value.into())
+            }
+
+            pub fn as_str(&self) -> &str {
+                &self.0
+            }
+        }
+
+        impl fmt::Display for $name {
+            fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+                f.write_str(&self.0)
+            }
+        }
+    };
+}
+
+id_type!(IntegrationId, "integration id");
+id_type!(BridgeId, "bridge id");
+id_type!(DeviceId, "device id");
+id_type!(EntityId, "entity id");
+id_type!(SceneId, "scene id");
+id_type!(CapabilityId, "capability id");
+id_type!(CommandId, "command id");
+id_type!(EventId, "event id");
+id_type!(CorrelationId, "correlation id");
+id_type!(VaultRef, "vault reference");
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RuntimeKind {
+    InProcessRust,
+    RustWorkerProcess,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BridgeTransport {
+    LanHttp,
+    Mdns,
+    Serial,
+    Ble,
+    Cloud,
+    LocalProcess,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Health {
+    Unknown,
+    Discoverable,
+    Unpaired,
+    Online,
+    Degraded,
+    Offline,
+    AuthFailed,
+    Unsupported,
+    Removed,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum EntityKind {
+    Light,
+    LightGroup,
+    Switch,
+    Sensor,
+    Lock,
+    Thermostat,
+    Scene,
+    Input,
+    BridgeHealth,
+    NetworkDiagnostic,
+    Unknown,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum CapabilityMode {
+    Observe,
+    Command,
+    ObserveAndCommand,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ValueKind {
+    Boolean,
+    Integer,
+    Number,
+    Percentage,
+    Text,
+    Object,
+    Array,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum Value {
+    Null,
+    Bool(bool),
+    Integer(i64),
+    Number(f64),
+    Percentage(u8),
+    Text(String),
+    Object(Vec<(String, Value)>),
+    Array(Vec<Value>),
+}
+
+impl Value {
+    pub fn percentage(value: u16) -> Result<Self, SmartHomeError> {
+        if value > 100 {
+            return Err(SmartHomeError::InvalidPercentage { value });
+        }
+        Ok(Self::Percentage(value as u8))
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct Capability {
+    pub capability_id: CapabilityId,
+    pub mode: CapabilityMode,
+    pub value_kind: ValueKind,
+    pub unit: Option<String>,
+    pub min: Option<f64>,
+    pub max: Option<f64>,
+    pub step: Option<f64>,
+}
+
+impl Capability {
+    pub fn new(capability_id: CapabilityId, mode: CapabilityMode, value_kind: ValueKind) -> Self {
+        Self {
+            capability_id,
+            mode,
+            value_kind,
+            unit: None,
+            min: None,
+            max: None,
+            step: None,
+        }
+    }
+
+    pub fn with_range(mut self, min: f64, max: f64, step: Option<f64>) -> Self {
+        self.min = Some(min);
+        self.max = Some(max);
+        self.step = step;
+        self
+    }
+
+    pub fn light_on_off() -> Self {
+        Self::new(
+            CapabilityId::trusted("light.on_off"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Boolean,
+        )
+    }
+
+    pub fn light_brightness() -> Self {
+        Self::new(
+            CapabilityId::trusted("light.brightness"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Percentage,
+        )
+        .with_range(0.0, 100.0, Some(1.0))
+    }
+
+    pub fn light_color_temperature() -> Self {
+        let mut capability = Self::new(
+            CapabilityId::trusted("light.color_temperature"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Integer,
+        );
+        capability.unit = Some("mirek".to_string());
+        capability
+    }
+
+    pub fn sensor_occupancy() -> Self {
+        Self::new(
+            CapabilityId::trusted("sensor.occupancy"),
+            CapabilityMode::Observe,
+            ValueKind::Boolean,
+        )
+    }
+
+    pub fn input_button() -> Self {
+        Self::new(
+            CapabilityId::trusted("input.button"),
+            CapabilityMode::Observe,
+            ValueKind::Text,
+        )
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ProtocolFamily {
+    Hue,
+    Zigbee,
+    ZWave,
+    Thread,
+    Matter,
+    Mqtt,
+    Vendor(String),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ProtocolIdentifier {
+    pub family: ProtocolFamily,
+    pub kind: String,
+    pub value: String,
+}
+
+impl ProtocolIdentifier {
+    pub fn new(
+        family: ProtocolFamily,
+        kind: impl Into<String>,
+        value: impl Into<String>,
+    ) -> Result<Self, SmartHomeError> {
+        let kind = kind.into();
+        if kind.trim().is_empty() {
+            return Err(SmartHomeError::EmptyIdentifier {
+                kind: "protocol identifier kind",
+            });
+        }
+        let value = value.into();
+        if value.trim().is_empty() {
+            return Err(SmartHomeError::EmptyIdentifier {
+                kind: "protocol identifier value",
+            });
+        }
+        Ok(Self {
+            family,
+            kind,
+            value,
+        })
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Metadata {
+    pub key: String,
+    pub value: String,
+}
+
+impl Metadata {
+    pub fn new(key: impl Into<String>, value: impl Into<String>) -> Self {
+        Self {
+            key: key.into(),
+            value: value.into(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationDescriptor {
+    pub integration_id: IntegrationId,
+    pub display_name: String,
+    pub version: String,
+    pub runtime_kind: RuntimeKind,
+    pub capabilities: Vec<CapabilityId>,
+    pub discovery_roles: Vec<String>,
+    pub pairing_roles: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Bridge {
+    pub bridge_id: BridgeId,
+    pub integration_id: IntegrationId,
+    pub transport: BridgeTransport,
+    pub address: Option<String>,
+    pub hardware_model: Option<String>,
+    pub firmware_version: Option<String>,
+    pub auth_ref: Option<VaultRef>,
+    pub health: Health,
+    pub last_seen_at_ms: Option<u64>,
+    pub identifiers: Vec<ProtocolIdentifier>,
+    pub metadata: Vec<Metadata>,
+}
+
+impl Bridge {
+    pub fn new(
+        bridge_id: BridgeId,
+        integration_id: IntegrationId,
+        transport: BridgeTransport,
+    ) -> Self {
+        Self {
+            bridge_id,
+            integration_id,
+            transport,
+            address: None,
+            hardware_model: None,
+            firmware_version: None,
+            auth_ref: None,
+            health: Health::Unknown,
+            last_seen_at_ms: None,
+            identifiers: Vec::new(),
+            metadata: Vec::new(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Device {
+    pub device_id: DeviceId,
+    pub bridge_id: BridgeId,
+    pub manufacturer: String,
+    pub model: String,
+    pub name: String,
+    pub serial: Option<String>,
+    pub firmware_version: Option<String>,
+    pub room_id: Option<String>,
+    pub entity_ids: Vec<EntityId>,
+    pub identifiers: Vec<ProtocolIdentifier>,
+    pub health: Health,
+    pub metadata: Vec<Metadata>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct Entity {
+    pub entity_id: EntityId,
+    pub device_id: DeviceId,
+    pub kind: EntityKind,
+    pub name: String,
+    pub capabilities: Vec<Capability>,
+    pub state: Option<StateSnapshot>,
+    pub metadata: Vec<Metadata>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum StateSource {
+    EventStream,
+    Poll,
+    OptimisticCommand,
+    Manual,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum StateConfidence {
+    Confirmed,
+    Optimistic,
+    Stale,
+    Unknown,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct StateSnapshot {
+    pub entity_id: EntityId,
+    pub value: Value,
+    pub source: StateSource,
+    pub observed_at_ms: u64,
+    pub received_at_ms: u64,
+    pub expires_at_ms: Option<u64>,
+    pub confidence: StateConfidence,
+}
+
+impl StateSnapshot {
+    pub fn is_stale_at(&self, now_ms: u64) -> bool {
+        self.confidence == StateConfidence::Stale
+            || self.expires_at_ms.is_some_and(|expires| now_ms >= expires)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DeviceEventType {
+    Discovered,
+    Updated,
+    Removed,
+    Unavailable,
+    Error,
+    Health,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct StateDelta {
+    pub capability_id: CapabilityId,
+    pub value: Value,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeviceEvent {
+    pub event_id: EventId,
+    pub bridge_id: BridgeId,
+    pub device_id: Option<DeviceId>,
+    pub entity_id: Option<EntityId>,
+    pub observed_at_ms: u64,
+    pub received_at_ms: u64,
+    pub event_type: DeviceEventType,
+    pub state_delta: Option<StateDelta>,
+    pub raw_ref: Option<String>,
+    pub correlation_id: Option<CorrelationId>,
+    pub metadata: Vec<Metadata>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum CommandType {
+    TurnOn,
+    TurnOff,
+    SetBrightness,
+    SetColor,
+    SetColorTemperature,
+    RecallScene,
+    SetLock,
+    SetThermostatSetpoint,
+}
+
+impl CommandType {
+    pub fn canonical_capability_id(self) -> Option<CapabilityId> {
+        match self {
+            Self::TurnOn | Self::TurnOff => Some(CapabilityId::trusted("light.on_off")),
+            Self::SetBrightness => Some(CapabilityId::trusted("light.brightness")),
+            Self::SetColor => Some(CapabilityId::trusted("light.color")),
+            Self::SetColorTemperature => Some(CapabilityId::trusted("light.color_temperature")),
+            Self::RecallScene => Some(CapabilityId::trusted("scene.recall")),
+            Self::SetLock => Some(CapabilityId::trusted("lock.state")),
+            Self::SetThermostatSetpoint => Some(CapabilityId::trusted("climate.setpoint")),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum PrivilegeTier {
+    ReadOnly,
+    LowRisk,
+    HumanApproval,
+    HighRisk,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DeviceCommand {
+    pub command_id: CommandId,
+    pub entity_id: EntityId,
+    pub command_type: CommandType,
+    pub arguments: Value,
+    pub requested_by: String,
+    pub idempotency_key: Option<String>,
+    pub required_tier: PrivilegeTier,
+    pub required_capabilities: Vec<CapabilityId>,
+    pub timeout_ms: u64,
+    pub correlation_id: CorrelationId,
+}
+
+impl DeviceCommand {
+    pub fn new(
+        command_id: CommandId,
+        entity_id: EntityId,
+        command_type: CommandType,
+        arguments: Value,
+        requested_by: impl Into<String>,
+        correlation_id: CorrelationId,
+    ) -> Result<Self, SmartHomeError> {
+        let capability = command_type
+            .canonical_capability_id()
+            .ok_or(SmartHomeError::MissingCapability { command_type })?;
+        Ok(Self {
+            command_id,
+            entity_id,
+            command_type,
+            arguments,
+            requested_by: requested_by.into(),
+            idempotency_key: None,
+            required_tier: tier_for_command(command_type),
+            required_capabilities: vec![capability],
+            timeout_ms: 5_000,
+            correlation_id,
+        })
+    }
+}
+
+pub fn tier_for_command(command_type: CommandType) -> PrivilegeTier {
+    match command_type {
+        CommandType::SetLock => PrivilegeTier::HighRisk,
+        CommandType::SetThermostatSetpoint => PrivilegeTier::HumanApproval,
+        CommandType::TurnOn
+        | CommandType::TurnOff
+        | CommandType::SetBrightness
+        | CommandType::SetColor
+        | CommandType::SetColorTemperature
+        | CommandType::RecallScene => PrivilegeTier::LowRisk,
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum CommandStatus {
+    Accepted,
+    Rejected,
+    TimedOut,
+    Failed,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CommandResult {
+    pub command_id: CommandId,
+    pub status: CommandStatus,
+    pub bridge_id: BridgeId,
+    pub correlation_id: CorrelationId,
+    pub message: Option<String>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SceneScope {
+    Room,
+    Zone,
+    Home,
+    Bridge,
+    Custom,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct SceneAction {
+    pub entity_id: EntityId,
+    pub desired_state: Value,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct Scene {
+    pub scene_id: SceneId,
+    pub scope: SceneScope,
+    pub native_ref: Option<ProtocolIdentifier>,
+    pub actions: Vec<SceneAction>,
+    pub metadata: Vec<Metadata>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolSideEffects {
+    None,
+    Read,
+    Write,
+    External,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ToolDescriptor {
+    pub tool_id: &'static str,
+    pub side_effects: ToolSideEffects,
+    pub required_capabilities: Vec<CapabilityId>,
+    pub required_tier: PrivilegeTier,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SmartHomeTool {
+    Discover,
+    PairBridge,
+    ListBridges,
+    ListDevices,
+    GetState,
+    Command,
+    Subscribe,
+    DescribeCapabilities,
+    GetHealth,
+}
+
+impl SmartHomeTool {
+    pub fn descriptor(self) -> ToolDescriptor {
+        match self {
+            Self::Discover => ToolDescriptor {
+                tool_id: "smart_home.discover",
+                side_effects: ToolSideEffects::Read,
+                required_capabilities: vec![CapabilityId::trusted("smart_home.read")],
+                required_tier: PrivilegeTier::ReadOnly,
+            },
+            Self::PairBridge => ToolDescriptor {
+                tool_id: "smart_home.pair_bridge",
+                side_effects: ToolSideEffects::External,
+                required_capabilities: vec![CapabilityId::trusted("smart_home.pair")],
+                required_tier: PrivilegeTier::HumanApproval,
+            },
+            Self::ListBridges => read_tool("smart_home.list_bridges"),
+            Self::ListDevices => read_tool("smart_home.list_devices"),
+            Self::GetState => read_tool("smart_home.get_state"),
+            Self::Command => ToolDescriptor {
+                tool_id: "smart_home.command",
+                side_effects: ToolSideEffects::External,
+                required_capabilities: vec![CapabilityId::trusted("smart_home.command.light")],
+                required_tier: PrivilegeTier::LowRisk,
+            },
+            Self::Subscribe => read_tool("smart_home.subscribe"),
+            Self::DescribeCapabilities => read_tool("smart_home.describe_capabilities"),
+            Self::GetHealth => read_tool("smart_home.get_health"),
+        }
+    }
+}
+
+pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
+    [
+        SmartHomeTool::Discover,
+        SmartHomeTool::PairBridge,
+        SmartHomeTool::ListBridges,
+        SmartHomeTool::ListDevices,
+        SmartHomeTool::GetState,
+        SmartHomeTool::Command,
+        SmartHomeTool::Subscribe,
+        SmartHomeTool::DescribeCapabilities,
+        SmartHomeTool::GetHealth,
+    ]
+    .into_iter()
+    .map(SmartHomeTool::descriptor)
+    .collect()
+}
+
+fn read_tool(tool_id: &'static str) -> ToolDescriptor {
+    ToolDescriptor {
+        tool_id,
+        side_effects: ToolSideEffects::Read,
+        required_capabilities: vec![CapabilityId::trusted("smart_home.read")],
+        required_tier: PrivilegeTier::ReadOnly,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn ids_reject_empty_values() {
+        assert_eq!(
+            BridgeId::new("   "),
+            Err(SmartHomeError::EmptyIdentifier { kind: "bridge id" })
+        );
+        assert_eq!(
+            EntityId::new("light.kitchen").unwrap().as_str(),
+            "light.kitchen"
+        );
+    }
+
+    #[test]
+    fn protocol_identifiers_keep_native_ids_out_of_entity_ids() {
+        let hue = ProtocolIdentifier::new(
+            ProtocolFamily::Hue,
+            "light",
+            "25a6d2a2-5f19-452e-a944-9d0b75fb3b2d",
+        )
+        .unwrap();
+        let zigbee =
+            ProtocolIdentifier::new(ProtocolFamily::Zigbee, "ieee_address", "0x00124b0024c8abcd")
+                .unwrap();
+
+        assert_ne!(hue.family, zigbee.family);
+        assert_eq!(hue.kind, "light");
+        assert_eq!(zigbee.kind, "ieee_address");
+    }
+
+    #[test]
+    fn command_constructor_sets_policy_shape() {
+        let command = DeviceCommand::new(
+            CommandId::trusted("cmd-1"),
+            EntityId::trusted("entity.light.kitchen"),
+            CommandType::SetBrightness,
+            Value::percentage(42).unwrap(),
+            "agent:lighting-planner",
+            CorrelationId::trusted("corr-1"),
+        )
+        .unwrap();
+
+        assert_eq!(command.required_tier, PrivilegeTier::LowRisk);
+        assert_eq!(
+            command.required_capabilities,
+            vec![CapabilityId::trusted("light.brightness")]
+        );
+    }
+
+    #[test]
+    fn high_risk_commands_are_tiered_differently() {
+        assert_eq!(
+            tier_for_command(CommandType::SetLock),
+            PrivilegeTier::HighRisk
+        );
+        assert_eq!(
+            tier_for_command(CommandType::SetThermostatSetpoint),
+            PrivilegeTier::HumanApproval
+        );
+    }
+
+    #[test]
+    fn state_snapshot_knows_staleness() {
+        let snapshot = StateSnapshot {
+            entity_id: EntityId::trusted("entity.light.kitchen"),
+            value: Value::Bool(true),
+            source: StateSource::OptimisticCommand,
+            observed_at_ms: 1_000,
+            received_at_ms: 1_001,
+            expires_at_ms: Some(2_000),
+            confidence: StateConfidence::Optimistic,
+        };
+
+        assert!(!snapshot.is_stale_at(1_999));
+        assert!(snapshot.is_stale_at(2_000));
+    }
+
+    #[test]
+    fn tool_catalog_exposes_model_facing_smart_home_surface() {
+        let catalog = smart_home_tool_catalog();
+        let command = catalog
+            .iter()
+            .find(|tool| tool.tool_id == "smart_home.command")
+            .unwrap();
+
+        assert_eq!(catalog.len(), 9);
+        assert_eq!(command.side_effects, ToolSideEffects::External);
+        assert_eq!(
+            command.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.command.light")]
+        );
+    }
+}
