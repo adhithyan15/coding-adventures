@@ -94,6 +94,12 @@ loops remain future layers.
 - interview descriptors
 - mapping into D23 capabilities
 
+**Initial Rust implementation:** `code/packages/rust/zwave-command-classes`
+now provides command-class command parse/encode helpers, get/set builders for
+binary switch, multilevel switch, and door lock classes, value-report parsing
+for common switch/sensor/lock classes, and first D23 capability/state-delta
+mappings.
+
 ### `zwave-security`
 
 - S0 model for historical understanding

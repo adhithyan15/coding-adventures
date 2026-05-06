@@ -534,4 +534,5 @@ members = [
     "smart-home-runtime",
     "zigbee-zcl",
     "hue-client",
+    "zwave-command-classes",
 ]
