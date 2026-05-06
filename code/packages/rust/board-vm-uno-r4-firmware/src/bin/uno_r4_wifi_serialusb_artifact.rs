@@ -61,14 +61,31 @@ fn main() -> std::process::ExitCode {
 
     let mut upload_output_text = String::new();
     if run.options.upload {
-        let command = match run.options.upload_command() {
-            Ok(command) => command,
+        let requested_port = match run.options.upload_port() {
+            Ok(port) => port,
             Err(error) => {
                 eprintln!("error: {error}");
                 eprintln!("{}", usage());
                 return ExitCode::from(2);
             }
         };
+        let upload_port = if run.options.touch_bootloader {
+            println!("+ touch-arduino-bootloader --port {requested_port} --baud 1200");
+            match run.options.touch_bootloader_port(requested_port) {
+                Ok(port) => {
+                    println!("+ bootloader upload port {port}");
+                    port
+                }
+                Err(error) => {
+                    eprintln!("error: {error}");
+                    return ExitCode::FAILURE;
+                }
+            }
+        } else {
+            requested_port.to_string()
+        };
+
+        let command = run.options.upload_command_for_port(&upload_port);
 
         if run.options.smoke {
             let output = match run_command_capture(&command) {

@@ -194,7 +194,12 @@ The helper discovers Rust's bundled `llvm-objcopy`, the stable rustup `rustc`,
 and `arm-none-eabi-*` tools on `PATH` when available. Override `--rustc`,
 `--arm-gcc`, `--arm-gxx`, `--arm-ar`, `--arm-compat-root`, `--objcopy`,
 `--arduino-cli`, `--bossac-path`, `--target-dir`, `--baud`, or `--timeout-ms`
-for local tooling differences.
+for local tooling differences. Before upload, the helper now performs the
+Arduino-compatible 1200-baud bootloader touch on the requested port and polls
+for the bootloader port before invoking Arduino CLI. Pass `--no-bootloader-touch`
+when the board is already in bootloader mode, or tune
+`--bootloader-touch-timeout-ms`, `--bootloader-touch-settle-ms`, and
+`--bootloader-port-wait-ms` for local USB timing.
 
 After flashing any Board VM server image manually, run the host smoke test
 against the adapter serial port:

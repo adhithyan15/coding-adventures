@@ -9,6 +9,10 @@ pub use serialport::{
 
 pub const DEFAULT_BAUD_RATE: u32 = 115_200;
 pub const DEFAULT_TIMEOUT_MS: u64 = 1_000;
+pub const ARDUINO_BOOTLOADER_TOUCH_BAUD_RATE: u32 = 1_200;
+pub const ARDUINO_BOOTLOADER_TOUCH_TIMEOUT_MS: u64 = 250;
+pub const ARDUINO_BOOTLOADER_TOUCH_DTR_HIGH_MS: u64 = 50;
+pub const ARDUINO_BOOTLOADER_TOUCH_SETTLE_MS: u64 = 1_500;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SerialConfig {
@@ -201,6 +205,35 @@ pub fn available_ports() -> Result<Vec<SerialPortInfo>, serialport::Error> {
     serialport::available_ports()
 }
 
+pub fn touch_arduino_bootloader(path: &str) -> Result<(), serialport::Error> {
+    touch_arduino_bootloader_with_timing(
+        path,
+        Duration::from_millis(ARDUINO_BOOTLOADER_TOUCH_TIMEOUT_MS),
+        Duration::from_millis(ARDUINO_BOOTLOADER_TOUCH_SETTLE_MS),
+    )
+}
+
+pub fn touch_arduino_bootloader_with_timing(
+    path: &str,
+    timeout: Duration,
+    settle: Duration,
+) -> Result<(), serialport::Error> {
+    let mut port = serialport::new(path, ARDUINO_BOOTLOADER_TOUCH_BAUD_RATE)
+        .timeout(timeout)
+        .dtr_on_open(true)
+        .open()?;
+    port.write_data_terminal_ready(true)?;
+    std::thread::sleep(Duration::from_millis(ARDUINO_BOOTLOADER_TOUCH_DTR_HIGH_MS));
+    port.write_data_terminal_ready(false)?;
+    drop(port);
+
+    if !settle.is_zero() {
+        std::thread::sleep(settle);
+    }
+
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -342,6 +375,14 @@ mod tests {
             .preserve_dtr_on_open();
 
         assert_eq!(config.dtr_on_open, None);
+    }
+
+    #[test]
+    fn arduino_bootloader_touch_uses_the_reset_baud_rate() {
+        assert_eq!(ARDUINO_BOOTLOADER_TOUCH_BAUD_RATE, 1_200);
+        assert_eq!(ARDUINO_BOOTLOADER_TOUCH_TIMEOUT_MS, 250);
+        assert_eq!(ARDUINO_BOOTLOADER_TOUCH_DTR_HIGH_MS, 50);
+        assert_eq!(ARDUINO_BOOTLOADER_TOUCH_SETTLE_MS, 1_500);
     }
 
     #[test]
