@@ -103,14 +103,32 @@ impl LanguageDebugAdapter for TwigDebugAdapter {
 /// One source file is registered (the absolute path of `source_path`).
 /// For each function:
 /// - `begin_function(name, start=0, param_count=params.len())`
+/// - For each parameter, emit `declare_variable` covering the whole
+///   function (parameters are live throughout the body).
+/// - For each instruction with a user-named `dest` (i.e. the SSA name
+///   doesn't start with `_`), emit `declare_variable` covering
+///   instructions `[idx..n_instrs)` — SSA never re-binds, so live
+///   range extends to the end of the function.  These show up in
+///   the editor's Variables panel.
 /// - For every `(instr_index, source_loc)` pair where `source_loc` is
 ///   non-synthetic (line ≠ 0), `record(...)` emits a row.
 /// - `end_function(name, n_instrs)`
 ///
-/// Variable declarations are not emitted — Twig's IIR doesn't carry user
-/// variable names through to register IDs in a way that maps cleanly to
-/// the sidecar's `(name, reg_index)` shape.  The DAP `variables` panel
-/// will be empty until that mapping lands as a follow-up.
+/// ## Why filter `_`-prefixed names
+///
+/// `twig-ir-compiler` synthesises register names like `_r1`, `_r2` for
+/// intermediate values that have no user-visible source identifier.
+/// Showing these in the panel would clutter without informing.  User
+/// names from `(define x 5)` and `(let ((y 7)) ...)` come through
+/// verbatim and are the ones we want to surface.
+///
+/// ## reg_index field
+///
+/// The DAP layer queries the VM by name (LS06), so the sidecar's
+/// `reg_index` is no longer used for runtime lookup — we still need
+/// to pass *some* unique value per declaration so the format invariant
+/// holds.  We use the instruction index where the variable was first
+/// written, which is naturally unique.
 pub fn build_sidecar(module: &IIRModule, source_path: &Path) -> Vec<u8> {
     let mut w = DebugSidecarWriter::new();
     let path_str = source_path.to_string_lossy().to_string();
@@ -119,6 +137,47 @@ pub fn build_sidecar(module: &IIRModule, source_path: &Path) -> Vec<u8> {
     for func in &module.functions {
         let n_instrs = func.instructions.len();
         w.begin_function(&func.name, 0, func.params.len());
+
+        // Track which names we've already declared this function so we
+        // don't double-declare (the IIR is in SSA so each name should
+        // appear in `dest` exactly once, but defensive de-dup costs
+        // nothing).
+        let mut declared: std::collections::HashSet<&str> =
+            std::collections::HashSet::new();
+
+        // Parameters first — they're live for the full body.  Use a
+        // synthetic reg_index in the high range so it can't collide
+        // with the per-instruction indices below.
+        for (param_idx, (name, ty)) in func.params.iter().enumerate() {
+            if name.starts_with('_') {
+                continue;
+            }
+            // u32::MAX..u32::MAX-N reserves a small block for params.
+            let reg_index = u32::MAX - param_idx as u32;
+            w.declare_variable(&func.name, reg_index, name, ty, 0, n_instrs);
+            declared.insert(name.as_str());
+        }
+
+        // Per-instruction user-named destinations.
+        for (idx, instr) in func.instructions.iter().enumerate() {
+            let Some(dest) = instr.dest.as_deref() else { continue };
+            if dest.starts_with('_') || declared.contains(dest) {
+                continue;
+            }
+            // Use idx as the reg_index — naturally unique within a
+            // function and the runtime layer (LS06) ignores it
+            // anyway, querying the VM by name.
+            w.declare_variable(
+                &func.name,
+                idx as u32,
+                dest,
+                instr.type_hint.as_str(),
+                idx,
+                n_instrs,
+            );
+            declared.insert(dest);
+        }
+
         for (idx, loc) in func.source_map.iter().enumerate() {
             // SourceLoc::SYNTHETIC is line=0, col=0 — skip; the sidecar
             // reader's DWARF-style "previous row" lookup covers
@@ -248,6 +307,68 @@ mod tests {
         let m = IIRModule::new("empty", "twig");
         let bytes = build_sidecar(&m, Path::new("dummy.twig"));
         SidecarIndex::from_bytes(&bytes).expect("parses");
+    }
+
+    /// LS06: user-named locals from `(let ((x 1) (y 2)) ...)` should
+    /// land in the sidecar as live variables.  The Variables panel
+    /// queries `live_variables` and queries the VM by name; this test
+    /// pins down the build-side half of that contract.
+    #[test]
+    fn build_sidecar_records_user_let_bindings_as_live_variables() {
+        let (p, _g) = write_temp_twig(
+            "(define (f a) (let ((x (+ a 1)) (y 2)) (+ x y)))\n(f 5)\n"
+        );
+        let a = TwigDebugAdapter;
+        let (_, bytes) = a.compile(&p, Path::new(".")).expect("ok");
+        let idx = SidecarIndex::from_bytes(&bytes).expect("valid sidecar");
+
+        // Walk the function `f` and collect every name that's ever
+        // declared live in any of its instructions.
+        let reader = idx.reader();
+        let (start, end) = reader
+            .function_range("f")
+            .unwrap_or_else(|| panic!("function 'f' missing from sidecar"));
+        let n = end - start;
+        let mut names = std::collections::HashSet::new();
+        for i in 0..n {
+            for v in reader.live_variables("f", i) {
+                names.insert(v.name);
+            }
+        }
+        assert!(names.contains("a"), "param `a` should be in live set: {names:?}");
+        assert!(names.contains("x"), "let-binding `x` should be in live set: {names:?}");
+        assert!(names.contains("y"), "let-binding `y` should be in live set: {names:?}");
+    }
+
+    /// Synthesised SSA names like `_r1` should NOT appear in the
+    /// Variables panel — they're internal to the IR and would just
+    /// clutter without informing.
+    #[test]
+    fn build_sidecar_filters_underscore_prefixed_names() {
+        let (p, _g) = write_temp_twig(
+            "(define (g a b) (+ a b))\n(g 1 2)\n"
+        );
+        let a = TwigDebugAdapter;
+        let (_, bytes) = a.compile(&p, Path::new(".")).expect("ok");
+        let idx = SidecarIndex::from_bytes(&bytes).expect("valid sidecar");
+
+        let reader = idx.reader();
+        let n = reader
+            .function_range("g")
+            .map(|(s, e)| e - s)
+            .unwrap_or(0);
+        let mut names = std::collections::HashSet::new();
+        for i in 0..n {
+            for v in reader.live_variables("g", i) {
+                names.insert(v.name);
+            }
+        }
+        for name in &names {
+            assert!(
+                !name.starts_with('_'),
+                "synthesised SSA name leaked into sidecar: {name:?} (full set: {names:?})",
+            );
+        }
     }
 
     #[test]

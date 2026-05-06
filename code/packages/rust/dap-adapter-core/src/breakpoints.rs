@@ -6,8 +6,11 @@
 //! and we replace the entire breakpoint list for that file in one shot.
 //!
 //! For each requested source line we ask [`SidecarIndex`] for every reachable
-//! [`VmLocation`] on that line and install a VM breakpoint at each.  This is
-//! a "splatter" strategy: any path through the source line will trip.
+//! [`VmLocation`] on that line and install a VM breakpoint at the **first**
+//! one.  Earlier drafts installed at all of them ("splatter strategy"), but
+//! that caused users to see N hits per Continue when one source line
+//! compiled to N IR instructions.  Twig has no intra-line back-edges, so
+//! the first instruction always dominates the source-line entry.
 //!
 //! When a previously-set breakpoint no longer appears in a `setBreakpoints`
 //! request, we remove its VM breakpoints.
@@ -90,9 +93,27 @@ impl BreakpointManager {
         let mut to_install: Vec<VmLocation> = Vec::new();
 
         for &line in lines {
-            let vm_locs: Vec<VmLocation> = sidecar
+            let all_locs: Vec<VmLocation> = sidecar
                 .map(|sc| sc.source_to_locs(&file_str, line))
                 .unwrap_or_default();
+
+            // Only install the breakpoint at the FIRST IR instruction
+            // mapped to this source line.  Without this, a single source
+            // line that compiles to N IR instructions causes the user
+            // to hit the same breakpoint N times in a row when they
+            // press Continue — once per instruction.
+            //
+            // `line_to_locs` is built in instruction-emission order
+            // (see SidecarIndex::build), so element 0 is the lowest
+            // instr_index for that (file, line).  Twig has no
+            // intra-line back-edges (all back-edges cross function
+            // boundaries via lambda calls), so stopping on the first
+            // instruction always sees every visit to the line.  If a
+            // future language with computed gotos lands here, a
+            // smarter line-entry detector belongs in the sidecar
+            // builder, not here.
+            let vm_locs: Vec<VmLocation> = all_locs.into_iter().take(1).collect();
+
             let verified = !vm_locs.is_empty();
             to_install.extend(vm_locs.iter().cloned());
             new_bps.push(UserBreakpoint { line, vm_locs, verified });
@@ -206,6 +227,49 @@ mod tests {
         let (_, diff) = m.set_breakpoints(&f, &[2, 3], Some(&sc));
         assert_eq!(diff.to_clear.len(), 1, "old BP cleared");
         assert_eq!(diff.to_install.len(), 2, "two new BPs installed");
+    }
+
+    /// Regression: a single source line can compile to multiple IR
+    /// instructions.  We must install the breakpoint only at the
+    /// FIRST instruction so the user sees one hit per visit, not N.
+    /// Earlier "splatter" behaviour caused F5 → continue → break at
+    /// instr 0 → continue → break at instr 1 → … on the same line.
+    #[test]
+    fn set_breakpoints_installs_only_first_instruction_per_line() {
+        let mut w = DebugSidecarWriter::new();
+        let fid = w.add_source_file("p.tw", b"");
+        w.begin_function("main", 0, 0);
+        // Three instructions all on line 5 — like a Twig
+        // `(define x (+ a b))` that produces a compute, a store,
+        // and a label all mapped back to the same source line.
+        w.record("main", 0, fid, 5, 1);
+        w.record("main", 1, fid, 5, 2);
+        w.record("main", 2, fid, 5, 3);
+        // One more instruction on line 6 so we can also assert
+        // breakpoints on different lines remain independent.
+        w.record("main", 3, fid, 6, 1);
+        w.end_function("main", 4);
+        let sc = SidecarIndex::from_bytes(&w.finish()).unwrap();
+
+        let mut m = BreakpointManager::new();
+        let (bps, diff) = m.set_breakpoints(
+            &PathBuf::from("p.tw"),
+            &[5, 6],
+            Some(&sc),
+        );
+        assert_eq!(bps.len(), 2);
+        assert!(bps[0].verified);
+        assert!(bps[1].verified);
+        // Crucially: 2 install entries (one per line), not 4.
+        assert_eq!(
+            diff.to_install.len(),
+            2,
+            "expected exactly one VmLocation per source line, got: {:?}",
+            diff.to_install,
+        );
+        // And specifically the FIRST instruction at each line.
+        assert_eq!(diff.to_install[0].instr_index, 0);  // line 5 → instr 0
+        assert_eq!(diff.to_install[1].instr_index, 3);  // line 6 → instr 3
     }
 
     #[test]

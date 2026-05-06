@@ -178,6 +178,23 @@ pub trait VmConnection: Send {
     /// Returns a printable representation.
     fn get_slot(&mut self, frame: usize, slot: u32) -> Result<String, String>;
 
+    /// Read the register named `name` in frame `frame` (0 = top of stack).
+    /// Returns a printable representation, or the literal `"<undef>"` if
+    /// no register with that name is live in the frame.
+    ///
+    /// LS06: this is the lookup that powers the Variables panel.  Going
+    /// by name (rather than slot index) is stable across instructions —
+    /// the VM's snapshot list is sorted at every stop, so slot indices
+    /// shift as new registers come into scope, but names don't.
+    ///
+    /// The default implementation falls back to scanning slots via
+    /// [`get_slot`] for backends that don't implement a name index of
+    /// their own; concrete implementations should override for O(1)
+    /// lookups when possible.
+    fn get_slot_by_name(&mut self, _frame: usize, _name: &str) -> Result<String, String> {
+        Err("get_slot_by_name: not implemented for this VmConnection".into())
+    }
+
     /// Non-blocking poll for a server-pushed event.
     ///
     /// Returns `Ok(None)` if no event is ready, `Ok(Some(event))` if one was
@@ -210,6 +227,9 @@ struct MockState {
     breakpoints:  Vec<VmLocation>,
     call_stack:   Vec<VmFrame>,
     slots:        std::collections::HashMap<(usize, u32), String>,
+    /// Name-keyed slot table for `get_slot_by_name`.
+    /// `(frame_index, name) → repr`.  LS06.
+    named_slots:  std::collections::HashMap<(usize, String), String>,
     events:       VecDeque<StoppedEvent>,
     /// Events to enqueue the *next* time `cont()` is called.  Lets tests
     /// model the realistic "continue, then VM hits a breakpoint" flow
@@ -234,6 +254,7 @@ impl MockVmConnection {
                 breakpoints: Vec::new(),
                 call_stack:  Vec::new(),
                 slots:       std::collections::HashMap::new(),
+                named_slots: std::collections::HashMap::new(),
                 events:      VecDeque::new(),
                 cont_triggered_events: VecDeque::new(),
                 call_log:    Vec::new(),
@@ -254,6 +275,21 @@ impl MockVmConnection {
     /// Set the value `get_slot(frame, slot)` will return.
     pub fn set_slot(&self, frame: usize, slot: u32, value: impl Into<String>) {
         self.inner.lock().unwrap().slots.insert((frame, slot), value.into());
+    }
+
+    /// Set the value `get_slot_by_name(frame, name)` will return.
+    /// Mirrors `set_slot` but indexes by name (LS06).
+    pub fn set_slot_by_name(
+        &self,
+        frame: usize,
+        name: impl Into<String>,
+        value: impl Into<String>,
+    ) {
+        self.inner
+            .lock()
+            .unwrap()
+            .named_slots
+            .insert((frame, name.into()), value.into());
     }
 
     /// Push an event to be returned by the next `poll_event()` call.
@@ -324,6 +360,15 @@ impl VmConnection for MockVmConnection {
         let s = self.inner.lock().unwrap();
         Ok(s.slots
             .get(&(frame, slot))
+            .cloned()
+            .unwrap_or_else(|| "<undef>".to_string()))
+    }
+
+    fn get_slot_by_name(&mut self, frame: usize, name: &str) -> Result<String, String> {
+        self.record("get_slot_by_name");
+        let s = self.inner.lock().unwrap();
+        Ok(s.named_slots
+            .get(&(frame, name.to_string()))
             .cloned()
             .unwrap_or_else(|| "<undef>".to_string()))
     }
@@ -612,6 +657,21 @@ impl VmConnection for TcpVmConnection {
         }
         // Some VMs may return the value under a different key — fall back to
         // the whole response stringified rather than fail.
+        Ok(resp.to_string())
+    }
+
+    fn get_slot_by_name(&mut self, frame: usize, name: &str) -> Result<String, String> {
+        // LS06.  Sends `get_slot_by_name {frame, name}` to the VM and
+        // returns the `repr` field.  Same envelope as `get_slot` so the
+        // RPC fallback for malformed responses applies.
+        let resp = self.rpc(json!({
+            "cmd":   "get_slot_by_name",
+            "frame": frame,
+            "name":  name,
+        }))?;
+        if let Some(repr) = resp.get("repr").and_then(|v| v.as_str()) {
+            return Ok(repr.to_string());
+        }
         Ok(resp.to_string())
     }
 

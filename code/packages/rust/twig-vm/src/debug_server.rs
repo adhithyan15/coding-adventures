@@ -268,6 +268,25 @@ impl DebugServer {
                 self.write_json(json!({"kind": "any", "repr": repr}))?;
                 Ok(false)
             }
+            // LS06: name-keyed register lookup.  The slot-index variant
+            // above is fragile because the snapshot list is sorted at
+            // each stop and slot positions shift as new registers come
+            // into scope; querying by name is stable across instructions.
+            // The DAP adapter calls this from `handle_variables`, where
+            // the name comes from the debug-sidecar's variable table.
+            // Returns the same `{kind, repr}` shape as `get_slot` so the
+            // response parser doesn't need a new branch.
+            "get_slot_by_name" => {
+                let name = v.get("name").and_then(|s| s.as_str()).unwrap_or("");
+                let repr = self
+                    .last_frame_registers
+                    .iter()
+                    .find(|(n, _)| n == name)
+                    .map(|(_, r)| r.clone())
+                    .unwrap_or_else(|| "<undef>".to_string());
+                self.write_json(json!({"kind": "any", "repr": repr}))?;
+                Ok(false)
+            }
             other => {
                 self.write_json(json!({"ok": false, "error": format!("unknown cmd: {other}")}))?;
                 Ok(false)
@@ -487,6 +506,55 @@ mod tests {
         assert!(unblocks);
         assert!(server.single_step);
         let _ = read_line(&mut client);
+    }
+
+    /// LS06: name-keyed register lookup returns the repr stored in
+    /// `last_frame_registers` for a matching name, and the literal
+    /// `"<undef>"` when the name isn't in the current frame.  The
+    /// snapshot list ordering doesn't matter — the lookup is a linear
+    /// scan over (name, repr) pairs.
+    #[test]
+    fn get_slot_by_name_returns_repr_for_known_name() {
+        let (server_side, mut client) = loopback_pair();
+        let mut server = DebugServer::new(server_side).unwrap();
+        // Pre-populate the snapshot the way `before_instruction` would.
+        server.last_frame_registers = vec![
+            ("bill".to_string(), "50".to_string()),
+            ("percent".to_string(), "18".to_string()),
+            ("tip".to_string(), "9".to_string()),
+        ];
+        client.write_all(b"{\"cmd\":\"get_slot_by_name\",\"name\":\"percent\"}\n").unwrap();
+        let cmd = server.read_json_blocking().unwrap().unwrap();
+        let unblocks = server.handle_command(cmd).unwrap();
+        assert!(!unblocks, "get_slot_by_name must not unblock the VM");
+        let resp = read_line(&mut client);
+        assert!(resp.contains("\"repr\":\"18\""), "got: {resp}");
+    }
+
+    #[test]
+    fn get_slot_by_name_returns_undef_for_unknown_name() {
+        let (server_side, mut client) = loopback_pair();
+        let mut server = DebugServer::new(server_side).unwrap();
+        server.last_frame_registers = vec![("x".to_string(), "1".to_string())];
+        client.write_all(b"{\"cmd\":\"get_slot_by_name\",\"name\":\"y\"}\n").unwrap();
+        let cmd = server.read_json_blocking().unwrap().unwrap();
+        server.handle_command(cmd).unwrap();
+        let resp = read_line(&mut client);
+        assert!(resp.contains("\"repr\":\"<undef>\""), "got: {resp}");
+    }
+
+    #[test]
+    fn get_slot_by_name_with_no_name_arg_treats_as_empty() {
+        // Defensive: a malformed command missing `name` shouldn't
+        // crash the VM.  The name defaults to "" → no match → <undef>.
+        let (server_side, mut client) = loopback_pair();
+        let mut server = DebugServer::new(server_side).unwrap();
+        server.last_frame_registers = vec![("x".to_string(), "1".to_string())];
+        client.write_all(b"{\"cmd\":\"get_slot_by_name\"}\n").unwrap();
+        let cmd = server.read_json_blocking().unwrap().unwrap();
+        server.handle_command(cmd).unwrap();
+        let resp = read_line(&mut client);
+        assert!(resp.contains("\"repr\":\"<undef>\""), "got: {resp}");
     }
 
     #[test]

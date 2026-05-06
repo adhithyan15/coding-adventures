@@ -381,8 +381,14 @@ impl<A: LanguageDebugAdapter> DapServer<A> {
 
         let mut out = Vec::with_capacity(live_vars.len());
         for v in &live_vars {
+            // LS06: query by name, not by slot index.  The slot index
+            // in the sidecar is no longer reliable across instructions
+            // (the VM re-sorts its snapshot list at every stop), but
+            // the name is stable.  `get_slot_by_name` returns
+            // `"<undef>"` when the name isn't in the current frame,
+            // which we surface to the user rather than hiding.
             let value = self.vm_conn.as_deref_mut().unwrap()
-                .get_slot(frame_idx, v.reg_index)
+                .get_slot_by_name(frame_idx, &v.name)
                 .unwrap_or_else(|_| "<error>".to_string());
             out.push(json!({
                 "name":               v.name,
@@ -753,9 +759,11 @@ mod tests {
 
     #[test]
     fn variables_returns_live_locals_with_values() {
+        // LS06: handle_variables now queries by name, not by slot
+        // index — populate the mock's named-slot table accordingly.
         let (mut srv, mock) = server_with_mock_vm();
         mock.set_call_stack(vec![VmFrame { location: VmLocation::new("main", 1) }]);
-        mock.set_slot(0, 0, "42");
+        mock.set_slot_by_name(0, "x", "42");
         let req = DapRequest { seq: 1, typ: "request".into(),
                                command: "variables".into(),
                                arguments: json!({"variablesReference": 1}) };
@@ -765,6 +773,25 @@ mod tests {
         assert_eq!(vars[0]["name"],  "x");
         assert_eq!(vars[0]["value"], "42");
         assert_eq!(vars[0]["type"],  "int");
+    }
+
+    /// Regression: when a variable's name isn't in the current frame
+    /// (e.g. it was scoped out by a step), `handle_variables` returns
+    /// `"<undef>"` for that variable rather than failing the entire
+    /// response.  Mirrors the VM-side fallback.
+    #[test]
+    fn variables_returns_undef_for_missing_name() {
+        let (mut srv, mock) = server_with_mock_vm();
+        mock.set_call_stack(vec![VmFrame { location: VmLocation::new("main", 1) }]);
+        // Don't populate named_slots — the MockVmConnection's default
+        // behaviour returns "<undef>" for unknown names.
+        let req = DapRequest { seq: 1, typ: "request".into(),
+                               command: "variables".into(),
+                               arguments: json!({"variablesReference": 1}) };
+        let body = srv.handle_variables(&req).unwrap();
+        let vars = body["variables"].as_array().unwrap();
+        assert_eq!(vars.len(), 1);
+        assert_eq!(vars[0]["value"], "<undef>");
     }
 
     #[test]
