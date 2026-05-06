@@ -30,6 +30,13 @@ copy. Arduino's `IRQManager` patches USBFS interrupt entries at runtime, so the
 Rust firmware must provide the same mutable vector-table setup that Arduino's
 `main.cpp` normally performs before calling `__USBStart()`.
 
+Because this firmware intentionally avoids linking Arduino's full
+`SerialUSB.cpp`, the crate also supplies the TinyUSB CDC line-state and
+line-coding callbacks needed for Arduino CLI's 1200-baud upload touch. When the
+host sets the CDC baud rate to `1200` and drops DTR, the backend writes the Uno
+R4 double-tap bootloader magic, disconnects the USB pull-up, and requests a
+system reset so the board comes back on the bootloader VID/PID for upload.
+
 For hardware smoke tests, a board that still enumerates as VID/PID
 `2341:1002` after upload has not handed USB-C off from the bridge. If the bridge
 port disappears but the host sees an unmatched USB device stuck before CDC port

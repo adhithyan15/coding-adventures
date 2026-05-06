@@ -23,6 +23,10 @@ pub const ARDUINO_RENESAS_USB_INSTALL_SERIAL_SYMBOL: &str = "_Z18__USBInstallSer
 pub const UNO_R4_WIFI_CONFIGURE_USB_MUX_SYMBOL: &str = "_Z17configure_usb_muxv";
 pub const UNO_R4_WIFI_USB_POST_INITIALIZATION_SYMBOL: &str = "_Z23usb_post_initializationv";
 pub const UNO_R4_WIFI_USB_DESCRIPTOR_HEAP_BYTES: usize = 512;
+pub const UNO_R4_WIFI_BOOTLOADER_TOUCH_BAUD: u32 = 1_200;
+pub const UNO_R4_WIFI_BOOTLOADER_DOUBLE_TAP_MAGIC: u32 = 0x0773_8135;
+pub const TINYUSB_CDC_LINE_STATE_CALLBACK_SYMBOL: &str = "tud_cdc_line_state_cb";
+pub const TINYUSB_CDC_LINE_CODING_CALLBACK_SYMBOL: &str = "tud_cdc_line_coding_cb";
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum UnoR4UsbCdcError {
@@ -49,6 +53,13 @@ pub trait TinyUsbCdcApi {
     fn control_line_state(&self) -> UsbCdcControlLineState {
         UsbCdcControlLineState::new(self.connected(), false)
     }
+}
+
+pub const fn bootloader_touch_requests_reset(
+    line_coding: UsbCdcLineCoding,
+    control_line_state: UsbCdcControlLineState,
+) -> bool {
+    line_coding.baud_rate == UNO_R4_WIFI_BOOTLOADER_TOUCH_BAUD && !control_line_state.dtr
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -378,6 +389,115 @@ pub extern "C" fn arduino_uno_r4_wifi_usb_post_initialization() {
 }
 
 #[cfg(target_arch = "arm")]
+#[unsafe(no_mangle)]
+pub extern "C" fn tud_cdc_line_state_cb(interface: u8, dtr: bool, rts: bool) {
+    if interface == UNO_R4_WIFI_USB_CDC_INTERFACE {
+        arduino_bootloader_touch::update_line_state(dtr, rts);
+    }
+}
+
+#[cfg(target_arch = "arm")]
+#[unsafe(no_mangle)]
+pub extern "C" fn tud_cdc_line_coding_cb(
+    interface: u8,
+    line_coding: *const ffi::TinyUsbLineCoding,
+) {
+    if interface != UNO_R4_WIFI_USB_CDC_INTERFACE || line_coding.is_null() {
+        return;
+    }
+
+    let line_coding = unsafe { *line_coding };
+    arduino_bootloader_touch::update_line_coding(line_coding_from_tinyusb(line_coding));
+}
+
+#[cfg(target_arch = "arm")]
+mod arduino_bootloader_touch {
+    use core::sync::atomic::{AtomicBool, AtomicU32, Ordering};
+
+    use board_vm_usb_cdc::{UsbCdcControlLineState, UsbCdcLineCoding};
+
+    use super::{arduino_bootloader_reset, bootloader_touch_requests_reset};
+
+    static CDC_BAUD_RATE: AtomicU32 = AtomicU32::new(115_200);
+    static CDC_DTR: AtomicBool = AtomicBool::new(false);
+    static CDC_RTS: AtomicBool = AtomicBool::new(false);
+
+    pub fn update_line_state(dtr: bool, rts: bool) {
+        CDC_DTR.store(dtr, Ordering::Release);
+        CDC_RTS.store(rts, Ordering::Release);
+        maybe_reset_to_bootloader();
+    }
+
+    pub fn update_line_coding(line_coding: UsbCdcLineCoding) {
+        CDC_BAUD_RATE.store(line_coding.baud_rate, Ordering::Release);
+        maybe_reset_to_bootloader();
+    }
+
+    fn maybe_reset_to_bootloader() {
+        let line_coding = UsbCdcLineCoding::new(CDC_BAUD_RATE.load(Ordering::Acquire));
+        let line_state = UsbCdcControlLineState::new(
+            CDC_DTR.load(Ordering::Acquire),
+            CDC_RTS.load(Ordering::Acquire),
+        );
+
+        if bootloader_touch_requests_reset(line_coding, line_state) {
+            unsafe {
+                arduino_bootloader_reset::go_bootloader();
+            }
+        }
+    }
+}
+
+#[cfg(target_arch = "arm")]
+mod arduino_bootloader_reset {
+    use core::ptr::{read_volatile, write_volatile};
+
+    use super::UNO_R4_WIFI_BOOTLOADER_DOUBLE_TAP_MAGIC;
+
+    const SYSTEM_PRCR: *mut u16 = 0x4001_E3FE as *mut u16;
+    const SYSTEM_VBTBKR0: *mut u32 = 0x4001_E500 as *mut u32;
+    const USBFS_SYSCFG: *mut u16 = 0x4009_0000 as *mut u16;
+    const SCB_AIRCR: *mut u32 = 0xE000_ED0C as *mut u32;
+
+    const PRCR_KEY: u16 = 0xA500;
+    const PRCR_PRC1_UNLOCK: u16 = PRCR_KEY | 0x0002;
+    const PRCR_LOCK: u16 = PRCR_KEY;
+    const USB_SYSCFG_DPRPU: u16 = 1 << 4;
+    const AIRCR_VECTKEY: u32 = 0x05FA << 16;
+    const AIRCR_PRIGROUP_MASK: u32 = 0x0000_0700;
+    const AIRCR_SYSRESETREQ: u32 = 1 << 2;
+
+    pub unsafe fn go_bootloader() -> ! {
+        unlock_system_registers();
+        write_volatile(SYSTEM_VBTBKR0, UNO_R4_WIFI_BOOTLOADER_DOUBLE_TAP_MAGIC);
+        lock_system_registers();
+
+        let syscfg = read_volatile(USBFS_SYSCFG);
+        write_volatile(USBFS_SYSCFG, syscfg & !USB_SYSCFG_DPRPU);
+        system_reset();
+    }
+
+    unsafe fn unlock_system_registers() {
+        write_volatile(SYSTEM_PRCR, PRCR_PRC1_UNLOCK);
+    }
+
+    unsafe fn lock_system_registers() {
+        write_volatile(SYSTEM_PRCR, PRCR_LOCK);
+    }
+
+    unsafe fn system_reset() -> ! {
+        core::arch::asm!("dsb sy", options(nostack, preserves_flags));
+        let aircr = read_volatile(SCB_AIRCR) & AIRCR_PRIGROUP_MASK;
+        write_volatile(SCB_AIRCR, AIRCR_VECTKEY | aircr | AIRCR_SYSRESETREQ);
+        core::arch::asm!("dsb sy", options(nostack, preserves_flags));
+
+        loop {
+            core::hint::spin_loop();
+        }
+    }
+}
+
+#[cfg(target_arch = "arm")]
 mod uno_r4_wifi_usb_mux {
     use core::ptr::{null_mut, read_volatile, write_volatile};
 
@@ -667,6 +787,36 @@ mod tests {
             "_Z23usb_post_initializationv"
         );
         assert_eq!(UNO_R4_WIFI_USB_DESCRIPTOR_HEAP_BYTES, 512);
+        assert_eq!(UNO_R4_WIFI_BOOTLOADER_TOUCH_BAUD, 1_200);
+        assert_eq!(UNO_R4_WIFI_BOOTLOADER_DOUBLE_TAP_MAGIC, 0x0773_8135);
+        assert_eq!(
+            TINYUSB_CDC_LINE_STATE_CALLBACK_SYMBOL,
+            "tud_cdc_line_state_cb"
+        );
+        assert_eq!(
+            TINYUSB_CDC_LINE_CODING_CALLBACK_SYMBOL,
+            "tud_cdc_line_coding_cb"
+        );
+    }
+
+    #[test]
+    fn bootloader_touch_matches_arduino_serialusb_reset_rule() {
+        assert!(bootloader_touch_requests_reset(
+            UsbCdcLineCoding::new(1_200),
+            UsbCdcControlLineState::disconnected(),
+        ));
+        assert!(bootloader_touch_requests_reset(
+            UsbCdcLineCoding::new(1_200),
+            UsbCdcControlLineState::new(false, true),
+        ));
+        assert!(!bootloader_touch_requests_reset(
+            UsbCdcLineCoding::new(1_200),
+            UsbCdcControlLineState::new(true, false),
+        ));
+        assert!(!bootloader_touch_requests_reset(
+            UsbCdcLineCoding::new(115_200),
+            UsbCdcControlLineState::disconnected(),
+        ));
     }
 
     #[test]
