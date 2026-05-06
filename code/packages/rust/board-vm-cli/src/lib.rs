@@ -4,15 +4,17 @@ use std::time::Duration;
 use board_vm_client::{
     BoardDescriptorInfo, BoardVmClient, ClientError, HelloAckInfo, RunReportInfo,
 };
+use board_vm_host::{write_blink_module, BlinkProgram, BLINK_MODULE_LEN};
 use board_vm_serial::{
     available_ports, BoardSerialTransport, SerialConfig, SerialPortInfo, SerialTransportError,
     DEFAULT_BAUD_RATE, DEFAULT_TIMEOUT_MS,
 };
 
 pub const DEFAULT_PROGRAM_ID: u16 = 1;
-pub const DEFAULT_INSTRUCTION_BUDGET: u32 = 100;
+pub const DEFAULT_INSTRUCTION_BUDGET: u32 = 12;
 pub const DEFAULT_HOST_NONCE: u32 = 0xB0A2_D001;
 pub const DEFAULT_HOST_NAME: &str = "board-vm-cli";
+pub const DEFAULT_OPEN_SETTLE_MS: u64 = 250;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CliCommand {
@@ -36,6 +38,9 @@ impl SmokeOptions {
         SerialConfig::new(&self.port)
             .baud_rate(self.baud_rate)
             .timeout(Duration::from_millis(self.timeout_ms))
+            .dtr_on_open(true)
+            .clear_on_open(true)
+            .settle_on_open(Duration::from_millis(DEFAULT_OPEN_SETTLE_MS))
     }
 }
 
@@ -45,10 +50,17 @@ pub enum CliError {
     UnknownCommand(String),
     MissingValue(&'static str),
     MissingRequired(&'static str),
-    InvalidNumber { option: &'static str, value: String },
+    InvalidNumber {
+        option: &'static str,
+        value: String,
+    },
     UnknownOption(String),
     Serial(String),
     Client(ClientError),
+    Smoke {
+        stage: SmokeStage,
+        source: ClientError,
+    },
 }
 
 impl fmt::Display for CliError {
@@ -64,6 +76,7 @@ impl fmt::Display for CliError {
             Self::UnknownOption(option) => write!(f, "unknown option: {option}"),
             Self::Serial(error) => write!(f, "serial error: {error}"),
             Self::Client(error) => write!(f, "client error: {error:?}"),
+            Self::Smoke { stage, source } => write!(f, "smoke failed during {stage}: {source:?}"),
         }
     }
 }
@@ -167,12 +180,58 @@ pub struct SmokeReport {
     pub run: RunReportInfo,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SmokeStage {
+    Hello,
+    Capabilities,
+    UploadBlink,
+    RunBlink,
+}
+
+impl fmt::Display for SmokeStage {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Hello => write!(f, "hello"),
+            Self::Capabilities => write!(f, "capabilities"),
+            Self::UploadBlink => write!(f, "blink upload"),
+            Self::RunBlink => write!(f, "blink run"),
+        }
+    }
+}
+
 pub fn run_smoke(options: &SmokeOptions) -> Result<SmokeReport, CliError> {
     let transport = BoardSerialTransport::<_, 1024>::open(&options.serial_config())?;
     let mut client: BoardVmClient<_, 512, 768, 768> = BoardVmClient::new(transport);
-    let hello = client.hello_with_name(DEFAULT_HOST_NAME, options.host_nonce)?;
-    let descriptor = client.query_caps()?;
-    let run = client.blink_onboard_led(options.program_id, options.instruction_budget)?;
+    let hello = client
+        .hello_with_name(DEFAULT_HOST_NAME, options.host_nonce)
+        .map_err(|source| CliError::Smoke {
+            stage: SmokeStage::Hello,
+            source,
+        })?;
+    let descriptor = client.query_caps().map_err(|source| CliError::Smoke {
+        stage: SmokeStage::Capabilities,
+        source,
+    })?;
+    let mut module = [0u8; BLINK_MODULE_LEN];
+    let module_len =
+        write_blink_module(BlinkProgram::onboard_led(), &mut module).map_err(|source| {
+            CliError::Smoke {
+                stage: SmokeStage::UploadBlink,
+                source: source.into(),
+            }
+        })?;
+    client
+        .upload_program(options.program_id, &module[..module_len])
+        .map_err(|source| CliError::Smoke {
+            stage: SmokeStage::UploadBlink,
+            source,
+        })?;
+    let run = client
+        .run_background(options.program_id, options.instruction_budget)
+        .map_err(|source| CliError::Smoke {
+            stage: SmokeStage::RunBlink,
+            source,
+        })?;
     Ok(SmokeReport {
         hello,
         descriptor,
@@ -243,6 +302,30 @@ mod tests {
                 instruction_budget: 200,
                 host_nonce: 1234,
             })
+        );
+    }
+
+    #[test]
+    fn smoke_serial_config_asserts_dtr_and_clears_stale_bytes() {
+        let options = SmokeOptions {
+            port: "/dev/cu.usbmodem-test".to_owned(),
+            baud_rate: 57_600,
+            timeout_ms: 250,
+            program_id: 7,
+            instruction_budget: 200,
+            host_nonce: 1234,
+        };
+
+        let config = options.serial_config();
+
+        assert_eq!(config.path, "/dev/cu.usbmodem-test");
+        assert_eq!(config.baud_rate, 57_600);
+        assert_eq!(config.timeout, Duration::from_millis(250));
+        assert_eq!(config.dtr_on_open, Some(true));
+        assert!(config.clear_on_open);
+        assert_eq!(
+            config.settle_on_open,
+            Duration::from_millis(DEFAULT_OPEN_SETTLE_MS)
         );
     }
 
