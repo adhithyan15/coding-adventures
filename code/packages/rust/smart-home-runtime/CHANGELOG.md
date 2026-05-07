@@ -14,3 +14,5 @@ All notable changes to this package will be documented in this file.
   signaling.
 - Desired-state reconciliation for missing, stale, or drifted entity state,
   producing deterministic corrective commands and supervision events.
+- Deterministic supervision ticks that combine optimistic-state expiry,
+  desired-state reconciliation, and worker restart checks into one report.
