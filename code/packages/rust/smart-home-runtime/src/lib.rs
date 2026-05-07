@@ -215,6 +215,53 @@ pub enum WorkerStatus {
     Stopped,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum WorkerRestartReason {
+    HeartbeatOverdue,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct WorkerRestartInstruction {
+    pub bridge_id: BridgeId,
+    pub integration_id: IntegrationId,
+    pub reason: WorkerRestartReason,
+    pub status: WorkerStatus,
+    pub last_heartbeat_at_ms: u64,
+    pub heartbeat_timeout_ms: u64,
+    pub due_at_ms: u64,
+    pub planned_at_ms: u64,
+    pub restart_attempt: u32,
+}
+
+impl WorkerRestartInstruction {
+    pub fn overdue_by_ms(&self) -> u64 {
+        self.planned_at_ms.saturating_sub(self.due_at_ms)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct WorkerRestartPlan {
+    pub generated_at_ms: u64,
+    pub instructions: Vec<WorkerRestartInstruction>,
+}
+
+impl WorkerRestartPlan {
+    pub fn is_empty(&self) -> bool {
+        self.instructions.is_empty()
+    }
+
+    pub fn len(&self) -> usize {
+        self.instructions.len()
+    }
+
+    pub fn instructions_for_bridge(&self, bridge_id: &BridgeId) -> Vec<&WorkerRestartInstruction> {
+        self.instructions
+            .iter()
+            .filter(|instruction| &instruction.bridge_id == bridge_id)
+            .collect()
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SupervisedBridgeWorker {
     pub bridge_id: BridgeId,
@@ -255,6 +302,26 @@ impl SupervisedBridgeWorker {
             >= self
                 .last_heartbeat_at_ms
                 .saturating_add(self.heartbeat_timeout_ms)
+    }
+
+    pub fn restart_instruction_at(&self, now_ms: u64) -> Option<WorkerRestartInstruction> {
+        if !self.is_overdue_at(now_ms) {
+            return None;
+        }
+        let due_at_ms = self
+            .last_heartbeat_at_ms
+            .saturating_add(self.heartbeat_timeout_ms);
+        Some(WorkerRestartInstruction {
+            bridge_id: self.bridge_id.clone(),
+            integration_id: self.integration_id.clone(),
+            reason: WorkerRestartReason::HeartbeatOverdue,
+            status: self.status,
+            last_heartbeat_at_ms: self.last_heartbeat_at_ms,
+            heartbeat_timeout_ms: self.heartbeat_timeout_ms,
+            due_at_ms,
+            planned_at_ms: now_ms,
+            restart_attempt: self.restart_count.saturating_add(1),
+        })
     }
 }
 
@@ -297,6 +364,18 @@ impl RuntimeSupervisor {
             .values()
             .filter(|worker| worker.is_overdue_at(now_ms))
             .collect()
+    }
+
+    pub fn restart_plan_at(&self, now_ms: u64) -> WorkerRestartPlan {
+        let instructions = self
+            .workers
+            .values()
+            .filter_map(|worker| worker.restart_instruction_at(now_ms))
+            .collect();
+        WorkerRestartPlan {
+            generated_at_ms: now_ms,
+            instructions,
+        }
     }
 
     pub fn mark_restart_requested(
@@ -655,26 +734,27 @@ impl SmartHomeRuntime {
     }
 
     pub fn reconcile_supervision(&mut self, now_ms: u64) -> Vec<RuntimeEvent> {
-        let overdue: Vec<_> = self
-            .supervisor
-            .workers_needing_restart_at(now_ms)
-            .into_iter()
-            .map(|worker| (worker.bridge_id.clone(), worker.integration_id.clone()))
-            .collect();
+        let plan = self.supervisor.restart_plan_at(now_ms);
 
-        overdue
+        plan.instructions
             .into_iter()
-            .filter_map(|(bridge_id, integration_id)| {
+            .filter_map(|instruction| {
+                let bridge_id = instruction.bridge_id;
+                let integration_id = instruction.integration_id;
                 self.supervisor.mark_restart_requested(&bridge_id).ok()?;
                 let event = RuntimeEvent::WorkerNeedsRestart {
                     bridge_id,
                     integration_id,
-                    overdue_at_ms: now_ms,
+                    overdue_at_ms: instruction.planned_at_ms,
                 };
                 self.event_bus.publish(event.clone());
                 Some(event)
             })
             .collect()
+    }
+
+    pub fn worker_restart_plan_at(&self, now_ms: u64) -> WorkerRestartPlan {
+        self.supervisor.restart_plan_at(now_ms)
     }
 
     pub fn run_supervision_tick(
@@ -1283,6 +1363,50 @@ mod tests {
     }
 
     #[test]
+    fn supervisor_builds_restart_plan_without_mutating_workers() {
+        let mut supervisor = RuntimeSupervisor::new();
+        let bridge_id = BridgeId::trusted("bridge-1");
+        supervisor.register_worker(SupervisedBridgeWorker::new(
+            bridge_id.clone(),
+            IntegrationId::trusted("hue"),
+            1_000,
+            100,
+        ));
+        supervisor.register_worker(SupervisedBridgeWorker::new(
+            BridgeId::trusted("bridge-2"),
+            IntegrationId::trusted("thread"),
+            1_000,
+            500,
+        ));
+
+        let plan = supervisor.restart_plan_at(1_125);
+        let worker = supervisor.worker(&bridge_id).unwrap();
+
+        assert_eq!(plan.generated_at_ms, 1_125);
+        assert_eq!(plan.len(), 1);
+        assert!(!plan.is_empty());
+        assert!(matches!(
+            plan.instructions.as_slice(),
+            [WorkerRestartInstruction {
+                bridge_id: instruction_bridge_id,
+                integration_id,
+                reason: WorkerRestartReason::HeartbeatOverdue,
+                status: WorkerStatus::Starting,
+                last_heartbeat_at_ms: 1_000,
+                heartbeat_timeout_ms: 100,
+                due_at_ms: 1_100,
+                planned_at_ms: 1_125,
+                restart_attempt: 1,
+            }] if instruction_bridge_id == &bridge_id
+                && integration_id == &IntegrationId::trusted("hue")
+        ));
+        assert_eq!(plan.instructions[0].overdue_by_ms(), 25);
+        assert_eq!(plan.instructions_for_bridge(&bridge_id).len(), 1);
+        assert_eq!(worker.status, WorkerStatus::Starting);
+        assert_eq!(worker.restart_count, 0);
+    }
+
+    #[test]
     fn supervisor_marks_overdue_workers_for_restart() {
         let mut runtime = SmartHomeRuntime::new();
         let bridge_id = BridgeId::trusted("bridge-1");
@@ -1305,6 +1429,15 @@ mod tests {
             .unwrap();
 
         assert!(runtime.reconcile_supervision(1_100).is_empty());
+        let plan = runtime.worker_restart_plan_at(1_126);
+        assert!(matches!(
+            plan.instructions.as_slice(),
+            [WorkerRestartInstruction {
+                bridge_id: instruction_bridge_id,
+                restart_attempt: 1,
+                ..
+            }] if instruction_bridge_id == &bridge_id
+        ));
         let events = runtime.reconcile_supervision(1_126);
         let deliveries = runtime.event_bus_mut().drain(&subscription).unwrap();
         let worker = runtime.supervisor().worker(&bridge_id).unwrap();
