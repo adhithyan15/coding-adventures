@@ -84,8 +84,9 @@ ieee802154-*     MAC/PHY foundation from D24
 **Initial Rust implementation:** `code/packages/rust/zigbee-nwk` now provides
 the first NWK byte-boundary primitives: network addresses, frame-control bits,
 radius/sequence fields, optional IEEE source/destination addresses, multicast
-control, and payload round-tripping. Routing, joins, security, APS, ZDO, and
-ZCL remain future packages/layers.
+control, payload round-tripping, and first neighbor/route table primitives for
+freshness and next-hop lookup. Route discovery messages, joins, security, APS,
+ZDO, and ZCL remain future packages/layers.
 
 ### `zigbee-aps`
 

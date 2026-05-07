@@ -9,3 +9,5 @@ All notable changes to this package will be documented in this file.
 - Zigbee NWK address and frame-control primitives.
 - NWK frame parser/encoder for base headers, optional IEEE addresses,
   multicast control, radius, sequence, and payload bytes.
+- Neighbor and route table primitives for router/end-device relationships,
+  freshness expiry, router candidate ranking, and next-hop lookup.
