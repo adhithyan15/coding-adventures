@@ -71,6 +71,9 @@ It keeps parsing side-effect free, then exposes helpers to:
 - adapt parser-backed stream term I/O predicates including `read/1`,
   `read/2`, `read_term/2`, `read_term/3`, `write_term/2`, and
   `write_term/3`
+- adapt term I/O conveniences including `read_term` `singletons/1`,
+  `writeq/1,2`, `write_canonical/1,2`, `writeln/1,2`, and
+  `portray_clause/1,2`
 - load SWI-Prolog source graphs from real `.pl` files through relative
   `consult/1`, `ensure_loaded/1`, and file-backed `use_module/1,2`
 - splice `include/1` targets into the including source before project linking

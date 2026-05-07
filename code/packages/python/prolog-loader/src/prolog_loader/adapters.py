@@ -545,6 +545,22 @@ def _adapt_relation_call(
         return _write_current_term_goal(*args)
     if name == "write_term" and goal.relation.arity == 3:
         return _write_stream_term_goal(*args)
+    if name == "writeq" and goal.relation.arity == 1:
+        return _write_current_term_goal(args[0], _quoted_write_options())
+    if name == "writeq" and goal.relation.arity == 2:
+        return _write_stream_term_goal(args[0], args[1], _quoted_write_options())
+    if name == "write_canonical" and goal.relation.arity == 1:
+        return _write_current_term_goal(args[0], _canonical_write_options())
+    if name == "write_canonical" and goal.relation.arity == 2:
+        return _write_stream_term_goal(args[0], args[1], _canonical_write_options())
+    if name == "writeln" and goal.relation.arity == 1:
+        return _writeln_current_term_goal(args[0])
+    if name == "writeln" and goal.relation.arity == 2:
+        return _writeln_stream_term_goal(*args)
+    if name == "portray_clause" and goal.relation.arity == 1:
+        return _portray_current_clause_goal(args[0])
+    if name == "portray_clause" and goal.relation.arity == 2:
+        return _portray_stream_clause_goal(*args)
     if name == "atom_concat" and goal.relation.arity == 3:
         return atom_concato(*args)
     if name == "atom_length" and goal.relation.arity == 2:
@@ -782,7 +798,11 @@ def _read_term_from_atom_goal(
         parsed = _parse_atom_text(reified_atom)
         if parsed is None:
             return
-        options_goal = _read_term_options_goal(options_arg, parsed.variables)
+        options_goal = _read_term_options_goal(
+            options_arg,
+            parsed.term,
+            parsed.variables,
+        )
         if options_goal is None:
             return
         yield from solve_from(
@@ -808,7 +828,7 @@ def _read_current_term_goal(term_value: object, options: object) -> GoalExpr:
         if parsed is None:
             return
         parsed_term, variables = parsed
-        options_goal = _read_term_options_goal(options_arg, variables)
+        options_goal = _read_term_options_goal(options_arg, parsed_term, variables)
         if options_goal is None:
             return
         yield from solve_from(
@@ -838,7 +858,7 @@ def _read_stream_term_goal(
         if parsed is None:
             return
         parsed_term, variables = parsed
-        options_goal = _read_term_options_goal(options_arg, variables)
+        options_goal = _read_term_options_goal(options_arg, parsed_term, variables)
         if options_goal is None:
             return
         yield from solve_from(
@@ -916,6 +936,78 @@ def _write_stream_term_goal(
             yield state
 
     return native_goal(run, stream_value, term_value, options)
+
+
+def _writeln_current_term_goal(term_value: object) -> GoalExpr:
+    def run(_program: Program, state: State, args: tuple[Term, ...]) -> Iterator[State]:
+        [term_arg] = args
+        rendered = _render_bound_term(reify(term_arg, state.substitution))
+        if rendered is not None and _write_current_stream(f"{rendered}\n"):
+            yield state
+
+    return native_goal(run, term_value)
+
+
+def _writeln_stream_term_goal(stream_value: object, term_value: object) -> GoalExpr:
+    def run(_program: Program, state: State, args: tuple[Term, ...]) -> Iterator[State]:
+        stream_arg, term_arg = args
+        rendered = _render_bound_term(reify(term_arg, state.substitution))
+        if rendered is not None and _write_stream(
+            reify(stream_arg, state.substitution),
+            f"{rendered}\n",
+        ):
+            yield state
+
+    return native_goal(run, stream_value, term_value)
+
+
+def _portray_current_clause_goal(term_value: object) -> GoalExpr:
+    def run(_program: Program, state: State, args: tuple[Term, ...]) -> Iterator[State]:
+        [term_arg] = args
+        rendered = _render_bound_term(
+            reify(term_arg, state.substitution),
+            numbervars=True,
+        )
+        if rendered is not None and _write_current_stream(f"{rendered}.\n"):
+            yield state
+
+    return native_goal(run, term_value)
+
+
+def _portray_stream_clause_goal(stream_value: object, term_value: object) -> GoalExpr:
+    def run(_program: Program, state: State, args: tuple[Term, ...]) -> Iterator[State]:
+        stream_arg, term_arg = args
+        rendered = _render_bound_term(
+            reify(term_arg, state.substitution),
+            numbervars=True,
+        )
+        if rendered is not None and _write_stream(
+            reify(stream_arg, state.substitution),
+            f"{rendered}.\n",
+        ):
+            yield state
+
+    return native_goal(run, stream_value, term_value)
+
+
+def _render_bound_term(term_value: Term, *, numbervars: bool = False) -> str | None:
+    if isinstance(term_value, LogicVar):
+        return None
+    return _render_prolog_term(term_value, numbervars=numbervars)
+
+
+def _quoted_write_options() -> Term:
+    return logic_list([term("quoted", atom("true"))])
+
+
+def _canonical_write_options() -> Term:
+    return logic_list(
+        [
+            term("quoted", atom("true")),
+            term("ignore_ops", atom("true")),
+            term("numbervars", atom("true")),
+        ],
+    )
 
 
 def _parse_atom_text(atom_value: Atom) -> ParsedOperatorTerm | None:
@@ -1035,8 +1127,33 @@ def _variable_values(variables: dict[str, LogicVar]) -> Term:
     return logic_list(list(variables.values()))
 
 
+def _variable_singletons(
+    parsed_term: Term,
+    variables: dict[str, LogicVar],
+) -> Term:
+    counts: dict[LogicVar, int] = {}
+    _count_term_variables(parsed_term, counts)
+    return logic_list(
+        [
+            term("=", atom(name), variable)
+            for name, variable in variables.items()
+            if counts.get(variable, 0) == 1
+        ],
+    )
+
+
+def _count_term_variables(term_value: Term, counts: dict[LogicVar, int]) -> None:
+    if isinstance(term_value, LogicVar):
+        counts[term_value] = counts.get(term_value, 0) + 1
+        return
+    if isinstance(term_value, Compound):
+        for argument in term_value.args:
+            _count_term_variables(argument, counts)
+
+
 def _read_term_options_goal(
     options: Term,
+    parsed_term: Term,
     variables: dict[str, LogicVar],
 ) -> GoalExpr | None:
     items = _logic_list_items(options)
@@ -1051,6 +1168,8 @@ def _read_term_options_goal(
             goals.append(eq(item.args[0], _variable_bindings(variables)))
         elif item.functor.name == "variables":
             goals.append(eq(item.args[0], _variable_values(variables)))
+        elif item.functor.name == "singletons":
+            goals.append(eq(item.args[0], _variable_singletons(parsed_term, variables)))
         else:
             return None
     return conj(*goals)
