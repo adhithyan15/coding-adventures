@@ -8,15 +8,16 @@ use board_vm_protocol::{
     decode_frame, decode_hello, decode_program_begin, decode_program_chunk, decode_program_end,
     decode_run_request, decode_wire_frame, encode_caps_report, encode_error_payload, encode_frame,
     encode_hello_ack, encode_program_begin, encode_program_chunk, encode_program_end,
-    encode_run_report_header, encode_wire_frame, CapabilityDescriptor, CapsReportHeader,
-    ErrorPayload, Frame, HelloAck, MessageType, ProgramBegin, ProgramChunk, ProgramEnd,
-    ProtocolError, RunReportHeader, RunStatus as ProtocolRunStatus, CAP_FLAG_BYTECODE_CALLABLE,
-    CAP_FLAG_PROTOCOL_FEATURE, CAP_PROGRAM_RAM_EXEC, FLAG_IS_ERROR_RESPONSE, FLAG_IS_RESPONSE,
-    NO_BYTECODE_OFFSET, NO_PROGRAM_ID, RUN_FLAG_BACKGROUND_RUN, RUN_FLAG_RESET_VM_BEFORE_RUN,
+    encode_run_report_header, encode_value, encode_wire_frame, CapabilityDescriptor,
+    CapsReportHeader, ErrorPayload, Frame, HelloAck, MessageType, ProgramBegin, ProgramChunk,
+    ProgramEnd, ProtocolError, RunReportHeader, RunStatus as ProtocolRunStatus,
+    Value as ProtocolValue, CAP_FLAG_BYTECODE_CALLABLE, CAP_FLAG_PROTOCOL_FEATURE,
+    CAP_PROGRAM_RAM_EXEC, FLAG_IS_ERROR_RESPONSE, FLAG_IS_RESPONSE, NO_BYTECODE_OFFSET,
+    NO_PROGRAM_ID, RUN_FLAG_BACKGROUND_RUN, RUN_FLAG_RESET_VM_BEFORE_RUN,
 };
 use board_vm_runtime::{
     BoardHal, RunCursor, RunReport as RuntimeRunReport, RunStatus as RuntimeRunStatus, Runtime,
-    RuntimeError,
+    RuntimeError, Value as RuntimeValue,
 };
 
 pub const DEFAULT_DEVICE_RUNTIME_ID: &str = "board-vm-device";
@@ -149,6 +150,7 @@ pub struct BackgroundRunReport {
     pub elapsed_ms: u32,
     pub stack_depth: u8,
     pub open_handles: u8,
+    pub return_value: RuntimeValue,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -167,6 +169,7 @@ impl BackgroundRunReport {
             elapsed_ms,
             stack_depth: report.stack_depth,
             open_handles: report.open_handles,
+            return_value: report.return_value,
         }
     }
 
@@ -182,6 +185,7 @@ impl BackgroundRunReport {
             elapsed_ms,
             stack_depth: report.stack_depth,
             open_handles: report.open_handles,
+            return_value: report.return_value,
         }
     }
 }
@@ -940,7 +944,8 @@ fn write_run_report_response(
     payload_out: &mut [u8],
     frame_out: &mut [u8],
 ) -> Result<usize, BoardFault> {
-    let payload_len = encode_run_report_header(
+    let return_count = runtime_return_count(report.status, report.return_value);
+    let mut payload_len = encode_run_report_header(
         &RunReportHeader {
             program_id: report.program_id,
             status: report.status,
@@ -948,16 +953,42 @@ fn write_run_report_response(
             elapsed_ms: report.elapsed_ms,
             stack_depth: report.stack_depth,
             open_handles: report.open_handles,
-            return_count: 0,
+            return_count,
         },
         payload_out,
     )?;
+    if return_count == 1 {
+        let value = protocol_value_from_runtime(report.return_value);
+        payload_len += encode_value(&value, &mut payload_out[payload_len..])?;
+    }
     write_response(
         MessageType::RUN_REPORT,
         request_id,
         &payload_out[..payload_len],
         frame_out,
     )
+}
+
+fn runtime_return_count(status: ProtocolRunStatus, value: RuntimeValue) -> u32 {
+    if status == ProtocolRunStatus::Halted && value != RuntimeValue::Unit {
+        1
+    } else {
+        0
+    }
+}
+
+fn protocol_value_from_runtime(value: RuntimeValue) -> ProtocolValue<'static> {
+    match value {
+        RuntimeValue::Unit => ProtocolValue::Unit,
+        RuntimeValue::Bool(value) => ProtocolValue::Bool(value),
+        RuntimeValue::U8(value) => ProtocolValue::U8(value),
+        RuntimeValue::U16(value) => ProtocolValue::U16(value),
+        RuntimeValue::U32(value) => ProtocolValue::U32(value),
+        RuntimeValue::I16(value) => ProtocolValue::I16(value),
+        RuntimeValue::Handle(value) => {
+            ProtocolValue::Handle(u16::from(value.index) | (u16::from(value.generation) << 8))
+        }
+    }
 }
 
 fn crc32_ieee(bytes: &[u8]) -> u32 {
@@ -978,11 +1009,14 @@ fn crc32_ieee(bytes: &[u8]) -> u32 {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use board_vm_host::{write_blink_module, BlinkProgram, HostSession, DEFAULT_PROGRAM_ID};
+    use board_vm_host::{
+        write_blink_module, write_time_now_module, BlinkProgram, HostSession, TimeNowProgram,
+        DEFAULT_PROGRAM_ID,
+    };
     use board_vm_ir::CapabilitySet;
     use board_vm_protocol::{
         decode_caps_report_header, decode_error_payload, decode_frame, decode_hello_ack,
-        decode_run_report_header, decode_wire_frame, encode_wire_frame, RunStatus,
+        decode_run_report_header, decode_wire_frame, encode_wire_frame, RunStatus, Value,
     };
     use board_vm_runtime::{GpioMode, HalError, Level};
 
@@ -1436,6 +1470,69 @@ mod tests {
         assert_eq!(report.open_handles, 0);
         assert!(!device.is_background_running());
         assert_eq!(device.poll_background(100).unwrap(), None);
+    }
+
+    #[test]
+    fn run_report_encodes_return_value_for_halting_module() {
+        let mut device = new_device();
+        let mut session = HostSession::new();
+        let mut module = [0u8; board_vm_host::TIME_NOW_MODULE_LEN];
+        let module_len = write_time_now_module(TimeNowProgram::new(), &mut module).unwrap();
+        let module = &module[..module_len];
+        let mut host_payload = [0u8; 128];
+        let mut request = [0u8; 192];
+        let mut device_payload = [0u8; 256];
+        let mut response = [0u8; 320];
+
+        let begin = session
+            .program_begin_frame(DEFAULT_PROGRAM_ID, module, &mut host_payload, &mut request)
+            .unwrap();
+        handle(
+            &mut device,
+            &request[..begin.len],
+            &mut device_payload,
+            &mut response,
+        );
+        let chunk = session
+            .program_chunk_frame(
+                DEFAULT_PROGRAM_ID,
+                0,
+                module,
+                &mut host_payload,
+                &mut request,
+            )
+            .unwrap();
+        handle(
+            &mut device,
+            &request[..chunk.len],
+            &mut device_payload,
+            &mut response,
+        );
+        let end = session
+            .program_end_frame(DEFAULT_PROGRAM_ID, &mut host_payload, &mut request)
+            .unwrap();
+        handle(
+            &mut device,
+            &request[..end.len],
+            &mut device_payload,
+            &mut response,
+        );
+
+        let run = session
+            .run_background_frame(DEFAULT_PROGRAM_ID, 10, &mut host_payload, &mut request)
+            .unwrap();
+        let response_len = handle(
+            &mut device,
+            &request[..run.len],
+            &mut device_payload,
+            &mut response,
+        );
+        let frame = decode_frame(&response[..response_len]).unwrap();
+        let (report, mut decoder) = decode_run_report_header(frame.payload).unwrap();
+        assert_eq!(report.status, RunStatus::Halted);
+        assert_eq!(report.return_count, 1);
+        assert_eq!(decoder.read_value().unwrap(), Value::U32(0));
+        decoder.finish().unwrap();
     }
 
     #[test]

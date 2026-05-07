@@ -13,15 +13,16 @@ use std::slice;
 use std::str;
 
 use board_vm_host::{
-    write_blink_module, BlinkProgram, HostError, HostSession, BLINK_MODULE_LEN,
-    DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID,
+    write_blink_module, write_time_now_module, BlinkProgram, HostError, HostSession,
+    TimeNowProgram, BLINK_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID,
+    TIME_NOW_MODULE_LEN,
 };
 use board_vm_protocol::{
     decode_caps_report_header, decode_error_payload, decode_frame, decode_hello_ack,
     decode_program_begin, decode_program_chunk, decode_program_end, decode_run_report_header,
     decode_wire_frame, encode_wire_frame, Frame, MessageType, ProgramFormat, ProtocolError,
-    RunStatus, CAP_FLAG_BOARD_METADATA, CAP_FLAG_BYTECODE_CALLABLE, CAP_FLAG_PROTOCOL_FEATURE,
-    FLAG_IS_ERROR_RESPONSE, FLAG_IS_RESPONSE,
+    RunStatus, Value as ProtocolValue, CAP_FLAG_BOARD_METADATA, CAP_FLAG_BYTECODE_CALLABLE,
+    CAP_FLAG_PROTOCOL_FEATURE, FLAG_IS_ERROR_RESPONSE, FLAG_IS_RESPONSE,
 };
 
 pub const LANGUAGE_CORE_VERSION_MAJOR: u16 = 0;
@@ -250,6 +251,36 @@ pub struct LanguageRunReport {
     pub stack_depth: u8,
     pub open_handles: u8,
     pub return_count: u32,
+    pub returns: Vec<LanguageValue>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum LanguageValue {
+    Unit,
+    Bool(bool),
+    U8(u8),
+    U16(u16),
+    U32(u32),
+    I16(i16),
+    Handle(u16),
+    Bytes(Vec<u8>),
+    String(String),
+}
+
+impl LanguageValue {
+    pub const fn kind(&self) -> &'static str {
+        match self {
+            Self::Unit => "unit",
+            Self::Bool(_) => "bool",
+            Self::U8(_) => "u8",
+            Self::U16(_) => "u16",
+            Self::U32(_) => "u32",
+            Self::I16(_) => "i16",
+            Self::Handle(_) => "handle",
+            Self::Bytes(_) => "bytes",
+            Self::String(_) => "string",
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -378,6 +409,13 @@ pub fn build_blink_module(
     out: &mut [u8],
 ) -> Result<usize, LanguageCoreError> {
     Ok(write_blink_module(program, out)?)
+}
+
+pub fn build_time_now_module(
+    program: TimeNowProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_time_now_module(program, out)?)
 }
 
 pub fn build_program_begin_wire_frame(
@@ -583,7 +621,11 @@ fn decode_response_body(
             ))
         }
         MessageType::RUN_REPORT => {
-            let (report, decoder) = decode_run_report_header(frame.payload)?;
+            let (report, mut decoder) = decode_run_report_header(frame.payload)?;
+            let mut returns = Vec::with_capacity(report.return_count as usize);
+            for _ in 0..report.return_count {
+                returns.push(language_value_from_protocol(decoder.read_value()?)?);
+            }
             decoder.finish()?;
             Ok(DecodedLanguageResponseBody::RunReport(LanguageRunReport {
                 program_id: report.program_id,
@@ -593,10 +635,27 @@ fn decode_response_body(
                 stack_depth: report.stack_depth,
                 open_handles: report.open_handles,
                 return_count: report.return_count,
+                returns,
             }))
         }
         _ => Ok(DecodedLanguageResponseBody::Raw),
     }
+}
+
+fn language_value_from_protocol(
+    value: ProtocolValue<'_>,
+) -> Result<LanguageValue, LanguageCoreError> {
+    Ok(match value {
+        ProtocolValue::Unit => LanguageValue::Unit,
+        ProtocolValue::Bool(value) => LanguageValue::Bool(value),
+        ProtocolValue::U8(value) => LanguageValue::U8(value),
+        ProtocolValue::U16(value) => LanguageValue::U16(value),
+        ProtocolValue::U32(value) => LanguageValue::U32(value),
+        ProtocolValue::I16(value) => LanguageValue::I16(value),
+        ProtocolValue::Handle(value) => LanguageValue::Handle(value),
+        ProtocolValue::Bytes(value) => LanguageValue::Bytes(value.to_vec()),
+        ProtocolValue::String(value) => LanguageValue::String(value.to_owned()),
+    })
 }
 
 thread_local! {
@@ -733,6 +792,22 @@ pub unsafe extern "C" fn board_vm_language_blink_module(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn board_vm_language_time_now_module(
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_time_now_module(TimeNowProgram { max_stack }, module_out)?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn board_vm_language_program_begin_wire(
     session: *mut BoardVmLanguageSession,
     program_id: u16,
@@ -857,6 +932,11 @@ pub extern "C" fn board_vm_language_default_instruction_budget() -> u32 {
 #[no_mangle]
 pub extern "C" fn board_vm_language_blink_module_len() -> u64 {
     BLINK_MODULE_LEN as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_time_now_module_len() -> u64 {
+    TIME_NOW_MODULE_LEN as u64
 }
 
 fn catch_status(
@@ -988,10 +1068,10 @@ mod tests {
     use super::*;
     use board_vm_protocol::{
         decode_program_begin, decode_program_chunk, decode_program_end, decode_run_request,
-        encode_caps_report, encode_frame, encode_hello_ack, encode_wire_frame,
+        encode_caps_report, encode_frame, encode_hello_ack, encode_value, encode_wire_frame,
         CapabilityDescriptor, CapsReportHeader, Frame, HelloAck, MessageType, RunReportHeader,
-        RunStatus, FLAG_IS_RESPONSE, GOLDEN_HELLO_WIRE_FRAME_BVM_V1, RUN_FLAG_BACKGROUND_RUN,
-        RUN_FLAG_RESET_VM_BEFORE_RUN,
+        RunStatus, Value, FLAG_IS_RESPONSE, GOLDEN_HELLO_WIRE_FRAME_BVM_V1,
+        RUN_FLAG_BACKGROUND_RUN, RUN_FLAG_RESET_VM_BEFORE_RUN,
     };
 
     #[test]
@@ -1026,6 +1106,17 @@ mod tests {
         };
         assert_eq!(module_status.code, BoardVmLanguageStatusCode::Ok as u32);
         assert_eq!(module_status.len, BLINK_MODULE_LEN as u64);
+
+        let mut time_now_module = [0u8; TIME_NOW_MODULE_LEN];
+        let time_now_status = unsafe {
+            board_vm_language_time_now_module(
+                1,
+                time_now_module.as_mut_ptr(),
+                time_now_module.len() as u64,
+            )
+        };
+        assert_eq!(time_now_status.code, BoardVmLanguageStatusCode::Ok as u32);
+        assert_eq!(time_now_status.len, TIME_NOW_MODULE_LEN as u64);
 
         let begin = unsafe {
             board_vm_language_program_begin_wire(
@@ -1209,20 +1300,24 @@ mod tests {
 
         let run = RunReportHeader {
             program_id: 7,
-            status: RunStatus::Running,
+            status: RunStatus::Halted,
             instructions_executed: 42,
             elapsed_ms: 8,
             stack_depth: 2,
             open_handles: 1,
-            return_count: 0,
+            return_count: 1,
         };
-        let payload_len = board_vm_protocol::encode_run_report_header(&run, &mut payload).unwrap();
+        let mut payload_len =
+            board_vm_protocol::encode_run_report_header(&run, &mut payload).unwrap();
+        payload_len += encode_value(&Value::U32(1234), &mut payload[payload_len..]).unwrap();
         let decoded = decode_response_fixture(MessageType::RUN_REPORT, 13, &payload[..payload_len]);
         match decoded.body {
             DecodedLanguageResponseBody::RunReport(report) => {
                 assert_eq!(report.program_id, 7);
-                assert_eq!(report.status, RunStatus::Running);
+                assert_eq!(report.status, RunStatus::Halted);
                 assert_eq!(report.instructions_executed, 42);
+                assert_eq!(report.return_count, 1);
+                assert_eq!(report.returns, vec![LanguageValue::U32(1234)]);
             }
             other => panic!("unexpected run response body: {other:?}"),
         }
@@ -1257,11 +1352,7 @@ mod tests {
 
         assert_eq!(
             &names[..count],
-            &[
-                "bytecode_callable",
-                "protocol_feature",
-                "board_metadata"
-            ]
+            &["bytecode_callable", "protocol_feature", "board_metadata"]
         );
 
         let mut short = [""; 1];

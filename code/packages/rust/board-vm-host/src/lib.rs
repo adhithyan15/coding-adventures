@@ -1,7 +1,7 @@
 use board_vm_ir::{
     parse_module, validate, CapabilitySet, ModuleError, ValidateError, CAP_GPIO_CLOSE,
-    CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_TIME_SLEEP_MS, FLAG_PROGRAM_MAY_RUN_FOREVER,
-    MODULE_MAGIC, MODULE_VERSION,
+    CAP_GPIO_OPEN, CAP_GPIO_READ, CAP_GPIO_WRITE, CAP_TIME_NOW_MS, CAP_TIME_SLEEP_MS,
+    FLAG_PROGRAM_MAY_RUN_FOREVER, MODULE_MAGIC, MODULE_VERSION,
 };
 use board_vm_protocol::{
     encode_frame, encode_hello, encode_program_begin, encode_program_chunk, encode_program_end,
@@ -18,6 +18,8 @@ pub const BLINK_CODE_LEN: usize = 26;
 pub const BLINK_MODULE_LEN: usize = 36;
 pub const GPIO_READ_CODE_LEN: usize = 13;
 pub const GPIO_READ_MODULE_LEN: usize = 23;
+pub const TIME_NOW_CODE_LEN: usize = 3;
+pub const TIME_NOW_MODULE_LEN: usize = 13;
 
 pub const GPIO_MODE_INPUT: u8 = 0;
 pub const GPIO_MODE_OUTPUT: u8 = 1;
@@ -112,6 +114,23 @@ impl GpioReadProgram {
             mode: GPIO_MODE_INPUT_PULLDOWN,
             max_stack: 2,
         }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct TimeNowProgram {
+    pub max_stack: u8,
+}
+
+impl TimeNowProgram {
+    pub const fn new() -> Self {
+        Self { max_stack: 1 }
+    }
+}
+
+impl Default for TimeNowProgram {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -456,6 +475,33 @@ pub fn write_gpio_read_module(
     Ok(offset)
 }
 
+pub fn write_time_now_code(_program: TimeNowProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < TIME_NOW_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_call_u8(out, &mut offset, CAP_TIME_NOW_MS)?;
+    write_u8(out, &mut offset, OP_RETURN_TOP)?;
+    Ok(offset)
+}
+
+pub fn write_time_now_module(program: TimeNowProgram, out: &mut [u8]) -> Result<usize, HostError> {
+    if out.len() < TIME_NOW_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; TIME_NOW_CODE_LEN];
+    let code_len = write_time_now_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(&module, CapabilitySet::blink_mvp(), program.max_stack)?;
+    Ok(offset)
+}
+
 pub fn write_module(spec: ModuleSpec<'_>, out: &mut [u8]) -> Result<usize, HostError> {
     if spec.code.len() > u32::MAX as usize || spec.const_pool.len() > u32::MAX as usize {
         return Err(HostError::ProgramTooLarge);
@@ -575,6 +621,9 @@ mod tests {
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x0D, 0x12, 0x0D, 0x12, 0x02, 0x40, 0x01,
         0x20, 0x40, 0x03, 0x22, 0x40, 0x04, 0x50, 0x00,
     ];
+    const TIME_NOW_MODULE_HEX: [u8; TIME_NOW_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x03, 0x40, 0x11, 0x50, 0x00,
+    ];
 
     #[test]
     fn builds_blink_module_from_bvm05_fixture() {
@@ -617,6 +666,20 @@ mod tests {
             write_gpio_read_module(program, &mut module),
             Err(HostError::InvalidGpioReadMode(GPIO_MODE_OUTPUT))
         );
+    }
+
+    #[test]
+    fn builds_time_now_module_with_return() {
+        let mut module = [0u8; TIME_NOW_MODULE_LEN];
+        let len = write_time_now_module(TimeNowProgram::new(), &mut module).unwrap();
+        assert_eq!(len, TIME_NOW_MODULE_LEN);
+        assert_eq!(module, TIME_NOW_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp(), 1).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_TIME_NOW_MS]);
     }
 
     #[test]
