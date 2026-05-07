@@ -13,6 +13,8 @@ Included surfaces:
 - command validation against entity capabilities and command modes
 - accepted command results that remain separate from confirmed device state
 - optimistic command state with expiry into stale snapshots
+- desired-state reconciliation that detects missing, stale, or drifted state
+  and reissues corrective commands
 - replay of device events into the registry-backed state cache
 - bridge health reports that update health without removing identities
 - supervised bridge-worker heartbeat tracking and restart signals

@@ -8,9 +8,10 @@
 #![forbid(unsafe_code)]
 
 use smart_home_core::{
-    Bridge, BridgeId, CapabilityId, CapabilityMode, CommandResult, CommandStatus, CommandType,
-    Device, DeviceCommand, DeviceEvent, DeviceEventType, DeviceId, Entity, EntityId, EventId,
-    Health, IntegrationId, Metadata, StateConfidence, StateSnapshot, StateSource, Value,
+    tier_for_command, Bridge, BridgeId, CapabilityId, CapabilityMode, CommandId, CommandResult,
+    CommandStatus, CommandType, CorrelationId, Device, DeviceCommand, DeviceEvent, DeviceEventType,
+    DeviceId, Entity, EntityId, EventId, Health, IntegrationId, Metadata, StateConfidence,
+    StateDelta, StateSnapshot, StateSource, Value,
 };
 use smart_home_registry::{InMemorySmartHomeRegistry, RegistryError};
 use std::collections::{BTreeMap, VecDeque};
@@ -29,6 +30,10 @@ pub enum RuntimeError {
         capability_id: CapabilityId,
     },
     ReadOnlyCapability {
+        entity_id: EntityId,
+        capability_id: CapabilityId,
+    },
+    UnsupportedDesiredState {
         entity_id: EntityId,
         capability_id: CapabilityId,
     },
@@ -56,6 +61,13 @@ impl fmt::Display for RuntimeError {
             } => write!(
                 f,
                 "entity {entity_id} exposes capability {capability_id} as observe-only"
+            ),
+            Self::UnsupportedDesiredState {
+                entity_id,
+                capability_id,
+            } => write!(
+                f,
+                "entity {entity_id} desired state for capability {capability_id} cannot be mapped to a command"
             ),
         }
     }
@@ -112,6 +124,13 @@ pub enum RuntimeEvent {
         entity_id: EntityId,
         expired_at_ms: u64,
     },
+    DesiredStateDrift {
+        bridge_id: BridgeId,
+        entity_id: EntityId,
+        capability_id: CapabilityId,
+        reason: ReconciliationReason,
+        detected_at_ms: u64,
+    },
     WorkerNeedsRestart {
         bridge_id: BridgeId,
         integration_id: IntegrationId,
@@ -126,7 +145,10 @@ impl RuntimeEventFilter {
             Self::Bridge(expected) => event_bridge_id(event) == Some(expected),
             Self::Entity(expected) => event_entity_id(event) == Some(expected),
             Self::Commands => matches!(event, RuntimeEvent::CommandResult(_)),
-            Self::Supervision => matches!(event, RuntimeEvent::WorkerNeedsRestart { .. }),
+            Self::Supervision => matches!(
+                event,
+                RuntimeEvent::DesiredStateDrift { .. } | RuntimeEvent::WorkerNeedsRestart { .. }
+            ),
         }
     }
 }
@@ -291,6 +313,53 @@ impl RuntimeSupervisor {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ReconciliationReason {
+    MissingState,
+    StaleState,
+    Drifted,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct DesiredEntityState {
+    pub entity_id: EntityId,
+    pub desired: Vec<StateDelta>,
+    pub requested_by: String,
+    pub command_timeout_ms: u64,
+}
+
+impl DesiredEntityState {
+    pub fn new(entity_id: EntityId, desired: Vec<StateDelta>) -> Self {
+        Self {
+            entity_id,
+            desired,
+            requested_by: "runtime:desired-state".to_string(),
+            command_timeout_ms: 5_000,
+        }
+    }
+
+    pub fn requested_by(mut self, requested_by: impl Into<String>) -> Self {
+        self.requested_by = requested_by.into();
+        self
+    }
+
+    pub fn with_command_timeout(mut self, command_timeout_ms: u64) -> Self {
+        self.command_timeout_ms = command_timeout_ms;
+        self
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum DesiredStateAction {
+    CommandIssued {
+        entity_id: EntityId,
+        capability_id: CapabilityId,
+        reason: ReconciliationReason,
+        command: DeviceCommand,
+        result: CommandResult,
+    },
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BridgeHealthReport {
     pub event_id: EventId,
@@ -307,6 +376,7 @@ pub struct SmartHomeRuntime {
     event_bus: RuntimeEventBus,
     supervisor: RuntimeSupervisor,
     optimistic_states: BTreeMap<EntityId, StateSnapshot>,
+    desired_states: BTreeMap<EntityId, DesiredEntityState>,
 }
 
 impl SmartHomeRuntime {
@@ -316,6 +386,7 @@ impl SmartHomeRuntime {
             event_bus: RuntimeEventBus::new(),
             supervisor: RuntimeSupervisor::new(),
             optimistic_states: BTreeMap::new(),
+            desired_states: BTreeMap::new(),
         }
     }
 
@@ -345,6 +416,32 @@ impl SmartHomeRuntime {
 
     pub fn optimistic_state_count(&self) -> usize {
         self.optimistic_states.len()
+    }
+
+    pub fn desired_state_count(&self) -> usize {
+        self.desired_states.len()
+    }
+
+    pub fn desired_state(&self, entity_id: &EntityId) -> Option<&DesiredEntityState> {
+        self.desired_states.get(entity_id)
+    }
+
+    pub fn upsert_desired_state(
+        &mut self,
+        desired_state: DesiredEntityState,
+    ) -> Result<Option<DesiredEntityState>, RuntimeError> {
+        let entity = self
+            .registry
+            .entity(&desired_state.entity_id)
+            .ok_or_else(|| RuntimeError::UnknownEntity(desired_state.entity_id.clone()))?;
+        validate_desired_state(entity, &desired_state)?;
+        Ok(self
+            .desired_states
+            .insert(desired_state.entity_id.clone(), desired_state))
+    }
+
+    pub fn remove_desired_state(&mut self, entity_id: &EntityId) -> Option<DesiredEntityState> {
+        self.desired_states.remove(entity_id)
     }
 
     pub fn upsert_bridge(&mut self, bridge: Bridge) -> Result<Option<Bridge>, RuntimeError> {
@@ -474,6 +571,69 @@ impl SmartHomeRuntime {
         Ok(stale_ids)
     }
 
+    pub fn reconcile_desired_states(
+        &mut self,
+        now_ms: u64,
+    ) -> Result<Vec<DesiredStateAction>, RuntimeError> {
+        let mut planned_commands = Vec::new();
+
+        for desired_state in self.desired_states.values() {
+            let entity = self
+                .registry
+                .entity(&desired_state.entity_id)
+                .cloned()
+                .ok_or_else(|| RuntimeError::UnknownEntity(desired_state.entity_id.clone()))?;
+            validate_desired_state(&entity, desired_state)?;
+            let device = self
+                .registry
+                .device(&entity.device_id)
+                .cloned()
+                .ok_or_else(|| RuntimeError::UnknownDevice(entity.device_id.clone()))?;
+            let snapshot = self.registry.state(&desired_state.entity_id).cloned();
+
+            for desired in &desired_state.desired {
+                let Some(reason) = desired_state_reason(snapshot.as_ref(), desired, now_ms) else {
+                    continue;
+                };
+                let command = command_for_desired_state(
+                    desired_state,
+                    desired,
+                    reason,
+                    now_ms,
+                    planned_commands.len(),
+                )?;
+                planned_commands.push((
+                    device.bridge_id.clone(),
+                    desired_state.entity_id.clone(),
+                    desired.capability_id.clone(),
+                    reason,
+                    command,
+                ));
+            }
+        }
+
+        let mut actions = Vec::with_capacity(planned_commands.len());
+        for (bridge_id, entity_id, capability_id, reason, command) in planned_commands {
+            self.event_bus.publish(RuntimeEvent::DesiredStateDrift {
+                bridge_id,
+                entity_id: entity_id.clone(),
+                capability_id: capability_id.clone(),
+                reason,
+                detected_at_ms: now_ms,
+            });
+            let result = self.submit_command(command.clone(), now_ms)?;
+            actions.push(DesiredStateAction::CommandIssued {
+                entity_id,
+                capability_id,
+                reason,
+                command,
+                result,
+            });
+        }
+
+        Ok(actions)
+    }
+
     pub fn reconcile_supervision(&mut self, now_ms: u64) -> Vec<RuntimeEvent> {
         let overdue: Vec<_> = self
             .supervisor
@@ -544,6 +704,149 @@ fn validate_command_capabilities(
     Ok(())
 }
 
+fn validate_desired_state(
+    entity: &Entity,
+    desired_state: &DesiredEntityState,
+) -> Result<(), RuntimeError> {
+    for desired in &desired_state.desired {
+        let capability = entity
+            .capabilities
+            .iter()
+            .find(|capability| capability.capability_id == desired.capability_id)
+            .ok_or_else(|| RuntimeError::UnsupportedCapability {
+                entity_id: entity.entity_id.clone(),
+                capability_id: desired.capability_id.clone(),
+            })?;
+        if !matches!(
+            capability.mode,
+            CapabilityMode::Command | CapabilityMode::ObserveAndCommand
+        ) {
+            return Err(RuntimeError::ReadOnlyCapability {
+                entity_id: entity.entity_id.clone(),
+                capability_id: desired.capability_id.clone(),
+            });
+        }
+    }
+    Ok(())
+}
+
+fn desired_state_reason(
+    snapshot: Option<&StateSnapshot>,
+    desired: &StateDelta,
+    now_ms: u64,
+) -> Option<ReconciliationReason> {
+    let Some(snapshot) = snapshot else {
+        return Some(ReconciliationReason::MissingState);
+    };
+    if snapshot.is_stale_at(now_ms) {
+        return Some(ReconciliationReason::StaleState);
+    }
+    match snapshot_value_for(snapshot, &desired.capability_id) {
+        None => Some(ReconciliationReason::MissingState),
+        Some(current) if current == &desired.value => None,
+        Some(_) => Some(ReconciliationReason::Drifted),
+    }
+}
+
+fn snapshot_value_for<'a>(
+    snapshot: &'a StateSnapshot,
+    capability_id: &CapabilityId,
+) -> Option<&'a Value> {
+    match &snapshot.value {
+        Value::Object(fields) => fields
+            .iter()
+            .find(|(key, _)| key == capability_id.as_str())
+            .map(|(_, value)| value),
+        value => Some(value),
+    }
+}
+
+fn command_for_desired_state(
+    desired_state: &DesiredEntityState,
+    desired: &StateDelta,
+    reason: ReconciliationReason,
+    now_ms: u64,
+    sequence: usize,
+) -> Result<DeviceCommand, RuntimeError> {
+    let command_type = command_type_for_desired_state(&desired_state.entity_id, desired)?;
+    let arguments = match command_type {
+        CommandType::TurnOn | CommandType::TurnOff => Value::Null,
+        CommandType::SetBrightness
+        | CommandType::SetColor
+        | CommandType::SetColorTemperature
+        | CommandType::SetLock
+        | CommandType::SetThermostatSetpoint => desired.value.clone(),
+        CommandType::RecallScene => Value::Null,
+    };
+    let command_id = CommandId::trusted(format!(
+        "reconcile:{}:{}:{now_ms}:{sequence}",
+        desired_state.entity_id.as_str(),
+        desired.capability_id.as_str()
+    ));
+    let correlation_id = CorrelationId::trusted(format!(
+        "desired-state:{}:{}:{now_ms}",
+        desired_state.entity_id.as_str(),
+        desired.capability_id.as_str()
+    ));
+    let required_capability = command_type.canonical_capability_id().ok_or_else(|| {
+        RuntimeError::UnsupportedDesiredState {
+            entity_id: desired_state.entity_id.clone(),
+            capability_id: desired.capability_id.clone(),
+        }
+    })?;
+
+    Ok(DeviceCommand {
+        command_id,
+        entity_id: desired_state.entity_id.clone(),
+        command_type,
+        arguments,
+        requested_by: desired_state.requested_by.clone(),
+        idempotency_key: Some(format!(
+            "desired-state:{}:{}:{}",
+            desired_state.entity_id.as_str(),
+            desired.capability_id.as_str(),
+            reconciliation_reason_name(reason)
+        )),
+        required_tier: tier_for_command(command_type),
+        required_capabilities: vec![required_capability],
+        timeout_ms: desired_state.command_timeout_ms,
+        correlation_id,
+    })
+}
+
+fn command_type_for_desired_state(
+    entity_id: &EntityId,
+    desired: &StateDelta,
+) -> Result<CommandType, RuntimeError> {
+    match desired.capability_id.as_str() {
+        "light.on_off" => match &desired.value {
+            Value::Bool(true) => Ok(CommandType::TurnOn),
+            Value::Bool(false) => Ok(CommandType::TurnOff),
+            _ => Err(RuntimeError::UnsupportedDesiredState {
+                entity_id: entity_id.clone(),
+                capability_id: desired.capability_id.clone(),
+            }),
+        },
+        "light.brightness" => Ok(CommandType::SetBrightness),
+        "light.color" => Ok(CommandType::SetColor),
+        "light.color_temperature" => Ok(CommandType::SetColorTemperature),
+        "lock.state" => Ok(CommandType::SetLock),
+        "climate.setpoint" => Ok(CommandType::SetThermostatSetpoint),
+        _ => Err(RuntimeError::UnsupportedDesiredState {
+            entity_id: entity_id.clone(),
+            capability_id: desired.capability_id.clone(),
+        }),
+    }
+}
+
+fn reconciliation_reason_name(reason: ReconciliationReason) -> &'static str {
+    match reason {
+        ReconciliationReason::MissingState => "missing",
+        ReconciliationReason::StaleState => "stale",
+        ReconciliationReason::Drifted => "drifted",
+    }
+}
+
 fn optimistic_snapshot_for_command(command: &DeviceCommand, now_ms: u64) -> Option<StateSnapshot> {
     let capability_id = command.command_type.canonical_capability_id()?;
     let value = match command.command_type {
@@ -573,6 +876,7 @@ fn event_bridge_id(event: &RuntimeEvent) -> Option<&BridgeId> {
         RuntimeEvent::Device(event) => Some(&event.bridge_id),
         RuntimeEvent::CommandResult(result) => Some(&result.bridge_id),
         RuntimeEvent::BridgeHealth { bridge_id, .. }
+        | RuntimeEvent::DesiredStateDrift { bridge_id, .. }
         | RuntimeEvent::WorkerNeedsRestart { bridge_id, .. } => Some(bridge_id),
         RuntimeEvent::StateExpired { .. } => None,
     }
@@ -581,6 +885,7 @@ fn event_bridge_id(event: &RuntimeEvent) -> Option<&BridgeId> {
 fn event_entity_id(event: &RuntimeEvent) -> Option<&EntityId> {
     match event {
         RuntimeEvent::Device(event) => event.entity_id.as_ref(),
+        RuntimeEvent::DesiredStateDrift { entity_id, .. } => Some(entity_id),
         RuntimeEvent::StateExpired { entity_id, .. } => Some(entity_id),
         RuntimeEvent::CommandResult(_)
         | RuntimeEvent::BridgeHealth { .. }
@@ -778,6 +1083,142 @@ mod tests {
             .unwrap();
         assert_eq!(snapshot.confidence, StateConfidence::Confirmed);
         assert_eq!(runtime.optimistic_state_count(), 0);
+    }
+
+    #[test]
+    fn desired_state_reconciliation_noops_when_state_matches() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        runtime
+            .registry_mut()
+            .apply_state_snapshot(StateSnapshot {
+                entity_id: EntityId::trusted("entity-1"),
+                value: Value::Object(vec![("light.on_off".to_string(), Value::Bool(true))]),
+                source: StateSource::EventStream,
+                observed_at_ms: 1_000,
+                received_at_ms: 1_001,
+                expires_at_ms: None,
+                confidence: StateConfidence::Confirmed,
+            })
+            .unwrap();
+        runtime
+            .upsert_desired_state(DesiredEntityState::new(
+                EntityId::trusted("entity-1"),
+                vec![StateDelta {
+                    capability_id: CapabilityId::trusted("light.on_off"),
+                    value: Value::Bool(true),
+                }],
+            ))
+            .unwrap();
+
+        let actions = runtime.reconcile_desired_states(2_000).unwrap();
+
+        assert!(actions.is_empty());
+        assert_eq!(runtime.event_bus().published().len(), 0);
+        assert_eq!(runtime.desired_state_count(), 1);
+    }
+
+    #[test]
+    fn desired_state_reconciliation_commands_drift_back_to_target() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        let subscription = RuntimeSubscriptionId::trusted("supervision");
+        runtime
+            .event_bus_mut()
+            .subscribe(subscription.clone(), RuntimeEventFilter::Supervision)
+            .unwrap();
+        runtime
+            .registry_mut()
+            .apply_state_snapshot(StateSnapshot {
+                entity_id: EntityId::trusted("entity-1"),
+                value: Value::Object(vec![("light.on_off".to_string(), Value::Bool(false))]),
+                source: StateSource::EventStream,
+                observed_at_ms: 1_000,
+                received_at_ms: 1_001,
+                expires_at_ms: None,
+                confidence: StateConfidence::Confirmed,
+            })
+            .unwrap();
+        runtime
+            .upsert_desired_state(
+                DesiredEntityState::new(
+                    EntityId::trusted("entity-1"),
+                    vec![StateDelta {
+                        capability_id: CapabilityId::trusted("light.on_off"),
+                        value: Value::Bool(true),
+                    }],
+                )
+                .requested_by("agent:supervisor"),
+            )
+            .unwrap();
+
+        let actions = runtime.reconcile_desired_states(2_000).unwrap();
+        let deliveries = runtime.event_bus_mut().drain(&subscription).unwrap();
+        let snapshot = runtime
+            .registry()
+            .state(&EntityId::trusted("entity-1"))
+            .unwrap();
+
+        assert!(matches!(
+            actions.as_slice(),
+            [DesiredStateAction::CommandIssued {
+                capability_id,
+                reason: ReconciliationReason::Drifted,
+                command,
+                result,
+                ..
+            }] if capability_id == &CapabilityId::trusted("light.on_off")
+                && command.command_type == CommandType::TurnOn
+                && command.requested_by == "agent:supervisor"
+                && result.status == CommandStatus::Accepted
+        ));
+        assert!(matches!(
+            deliveries.as_slice(),
+            [RuntimeEvent::DesiredStateDrift {
+                reason: ReconciliationReason::Drifted,
+                ..
+            }]
+        ));
+        assert_eq!(snapshot.confidence, StateConfidence::Optimistic);
+        assert_eq!(
+            snapshot.value,
+            Value::Object(vec![("light.on_off".to_string(), Value::Bool(true))])
+        );
+    }
+
+    #[test]
+    fn desired_state_reconciliation_refreshes_missing_or_stale_state() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_brightness()]);
+        runtime
+            .upsert_desired_state(
+                DesiredEntityState::new(
+                    EntityId::trusted("entity-1"),
+                    vec![StateDelta {
+                        capability_id: CapabilityId::trusted("light.brightness"),
+                        value: Value::Percentage(64),
+                    }],
+                )
+                .with_command_timeout(250),
+            )
+            .unwrap();
+
+        let missing = runtime.reconcile_desired_states(2_000).unwrap();
+        let stale = runtime.reconcile_desired_states(2_250).unwrap();
+
+        assert!(matches!(
+            missing.as_slice(),
+            [DesiredStateAction::CommandIssued {
+                reason: ReconciliationReason::MissingState,
+                command,
+                ..
+            }] if command.command_type == CommandType::SetBrightness
+                && command.timeout_ms == 250
+        ));
+        assert!(matches!(
+            stale.as_slice(),
+            [DesiredStateAction::CommandIssued {
+                reason: ReconciliationReason::StaleState,
+                ..
+            }]
+        ));
     }
 
     #[test]
