@@ -18,6 +18,7 @@ Current scope:
 - selector-based device/entity queries
 - state freshness helpers for stale or missing cached state
 - refresh plans for missing or stale entity state by bridge/device identity
+- refresh-result application with refreshed/missing entity reports
 - state snapshot cache
 - immutable event log in arrival order
 - state updates from normalized event deltas
