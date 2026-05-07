@@ -1,0 +1,30 @@
+# smart-home-runtime
+
+Smart-home runtime coordinator for event routing, command validation, state cache, and supervision.
+
+`smart-home-runtime` is the first layer above the normalized D23 model and the
+in-memory registry. It is synchronous and deterministic so later actor systems,
+transport workers, protocol bridges, and Chief of Staff tools can share the same
+small set of runtime rules.
+
+Included surfaces:
+
+- in-process event bus with explicit subscriptions and filters
+- command validation against entity capabilities and command modes
+- accepted command results that remain separate from confirmed device state
+- optimistic command state with expiry into stale snapshots
+- replay of device events into the registry-backed state cache
+- bridge health reports that update health without removing identities
+- supervised bridge-worker heartbeat tracking and restart signals
+
+## Dependencies
+
+- smart-home-core
+- smart-home-registry
+
+## Development
+
+```bash
+# Run tests
+bash BUILD
+```
