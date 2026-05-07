@@ -38,6 +38,10 @@ def test_native_session_builds_protocol_bytes_in_rust():
     assert isinstance(time_module, bytes)
     assert len(time_module) > 0
 
+    sleep_module = session.time_sleep_ms_module(250, max_stack=1)
+    assert isinstance(sleep_module, bytes)
+    assert len(sleep_module) > 0
+
     stop = session.stop()
     assert isinstance(stop.frame, bytes)
     assert len(stop.frame) > 0
@@ -146,6 +150,27 @@ def test_run_command_accepts_repl_style_time_now():
         "run",
     ]
     assert result.frames == transport.frames
+
+
+def test_run_command_accepts_repl_style_time_sleep_ms():
+    transport = FakeWriteTransport()
+    session = Session(transport=transport)
+
+    result = session.run_command("time-sleep-ms 250 42", program_id=9)
+    upload = session.run_command("upload-time-sleep-ms 125", program_id=10)
+
+    assert [item.command for item in result.results] == [
+        "program_begin",
+        "program_chunk",
+        "program_end",
+        "run",
+    ]
+    assert [item.command for item in upload.results] == [
+        "program_begin",
+        "program_chunk",
+        "program_end",
+    ]
+    assert result.frames + upload.frames == transport.frames
 
 
 def test_board_descriptor_wraps_rust_decoded_capability_payload():

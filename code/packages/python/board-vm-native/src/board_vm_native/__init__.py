@@ -198,6 +198,9 @@ class Session:
     def time_now_module(self, max_stack: int = 1) -> bytes:
         return _native.time_now_module(max_stack)
 
+    def time_sleep_ms_module(self, duration_ms: int, max_stack: int = 1) -> bytes:
+        return _native.time_sleep_ms_module(duration_ms, max_stack)
+
     def upload(self, *, program_id: int = DEFAULT_PROGRAM_ID, module_bytes: bytes) -> SessionResult:
         return SessionResult([
             self._dispatch("program_begin", self._call_native(_native.program_begin_wire, program_id, module_bytes)),
@@ -254,6 +257,18 @@ class Session:
         return self.upload(
             program_id=program_id,
             module_bytes=self.time_now_module(max_stack=max_stack),
+        )
+
+    def upload_time_sleep_ms(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        duration_ms: int,
+        max_stack: int = 1,
+    ) -> SessionResult:
+        return self.upload(
+            program_id=program_id,
+            module_bytes=self.time_sleep_ms_module(duration_ms, max_stack=max_stack),
         )
 
     def run(self, *, program_id: int = DEFAULT_PROGRAM_ID, instruction_budget: int = DEFAULT_INSTRUCTION_BUDGET) -> ProtocolResult:
@@ -371,6 +386,33 @@ class Session:
         results.append(self.run(program_id=program_id, instruction_budget=instruction_budget))
         return SessionResult(results)
 
+    def time_sleep_ms(
+        self,
+        duration_ms: int,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        instruction_budget: int = DEFAULT_INSTRUCTION_BUDGET,
+        handshake: bool = False,
+        query_caps: bool = False,
+        max_stack: int = 1,
+    ) -> SessionResult:
+        results: list[ProtocolResult] = []
+        if handshake:
+            results.append(self.hello())
+        if query_caps:
+            results.append(self.capabilities())
+        results.extend(
+            self.upload_time_sleep_ms(
+                program_id=program_id,
+                duration_ms=duration_ms,
+                max_stack=max_stack,
+            ).results
+        )
+        results.append(self.run(program_id=program_id, instruction_budget=instruction_budget))
+        return SessionResult(results)
+
+    sleep_ms = time_sleep_ms
+
     def run_command(self, line: str, **options: Any) -> SessionResult:
         words = line.split()
         if not words:
@@ -396,6 +438,10 @@ class Session:
         if command in {"upload-time-now", "upload-time.now"}:
             self._ensure_no_extra(words, command)
             return self.upload_time_now(**options)
+        if command in {"upload-time-sleep-ms", "upload-time.sleep_ms", "upload-sleep-ms"}:
+            return self.upload_time_sleep_ms(
+                **self._with_time_sleep_ms_options(words, command, options, allow_budget=False)
+            )
         if command == "run":
             return SessionResult([self.run(**self._with_optional_budget(words, command, options))])
         if command == "stop":
@@ -413,6 +459,10 @@ class Session:
             return self.gpio_write(**self._with_gpio_level_options(words, command, options, value=False))
         if command in {"time-now", "time.now", "now"}:
             return self.time_now(**self._with_optional_budget(words, command, options))
+        if command in {"time-sleep-ms", "time.sleep_ms", "sleep-ms"}:
+            return self.time_sleep_ms(
+                **self._with_time_sleep_ms_options(words, command, options)
+            )
         raise ValueError(f"unknown Board VM session command: {command}")
 
     def decode_response(self, response: bytes) -> dict[str, Any]:
@@ -472,6 +522,24 @@ class Session:
         self._ensure_no_extra(words, command)
         if "pin" not in merged:
             raise ValueError(f"{command} requires pin")
+        return merged
+
+    def _with_time_sleep_ms_options(
+        self,
+        words: list[str],
+        command: str,
+        options: dict[str, Any],
+        *,
+        allow_budget: bool = True,
+    ) -> dict[str, Any]:
+        merged = dict(options)
+        if words:
+            merged["duration_ms"] = int(words.pop(0))
+        if allow_budget and words:
+            merged["instruction_budget"] = int(words.pop(0))
+        self._ensure_no_extra(words, command)
+        if "duration_ms" not in merged:
+            raise ValueError(f"{command} requires duration_ms")
         return merged
 
     @staticmethod

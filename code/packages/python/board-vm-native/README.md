@@ -14,6 +14,7 @@ frames = session.blink(program_id=1, instruction_budget=12).frames
 read_frames = session.gpio_read(pin=13, mode="pullup").frames
 write_frames = session.gpio_write(pin=13, value=True).frames
 now_frames = session.time_now(program_id=2, instruction_budget=12).frames
+sleep_frames = session.time_sleep_ms(250, program_id=3, instruction_budget=12).frames
 ```
 
 Each frame is a Rust-produced Board VM wire frame ready for a transport to
@@ -23,6 +24,9 @@ write to a board. A `Session` can also dispatch through any object that exposes
 `time_now()` uploads a Rust-built `time.now_ms` module and returns the board's
 millisecond clock through Rust-decoded run-report values when the transport
 returns a response.
+
+`time_sleep_ms()` uploads a Rust-built `time.sleep_ms` module and runs it; the
+duration argument is Python sugar over a Rust-owned bytecode module builder.
 
 GPIO reads follow the same path: Python resolves friendly mode names, while
 the GPIO-read module bytes, request IDs, frames, and response decoding stay in
@@ -41,6 +45,7 @@ The REPL-style sugar is intentionally thin as well:
 ```python
 session.run_command("gpio-read 13 pullup 24")
 session.run_command("gpio-write 13 high 24")
+session.run_command("time-sleep-ms 250 24")
 session.run_command("stop")
 ```
 

@@ -108,6 +108,28 @@ module CodingAdventures
           result.results.map(&:command)
       end
 
+      def test_time_sleep_ms_dispatches_native_protocol_frames_through_transport
+        runner = FakeRunner.new
+        transport = FakeWriteTransport.new
+        result = nil
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          transport: transport
+        ) do |board|
+          result = board.time.sleep_ms(250, program_id: 10, budget: 24)
+        end
+
+        assert_empty runner.calls
+        assert_equal 6, transport.frames.length
+        assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
+        assert_equal transport.frames, result.frames
+        assert_equal [:hello, :capabilities, :program_begin, :program_chunk, :program_end, :run],
+          result.results.map(&:command)
+      end
+
       def test_gpio_read_dispatches_native_protocol_frames_through_transport
         runner = FakeRunner.new
         transport = FakeWriteTransport.new
@@ -167,6 +189,7 @@ module CodingAdventures
             caps = session.capabilities
             upload = session.upload_blink(program_id: 4)
             time_upload = session.upload_time_now(program_id: 5)
+            sleep_upload = session.upload_time_sleep_ms(program_id: 8, duration_ms: 250)
             gpio_upload = session.upload_gpio_read(program_id: 6, pin: 13, mode: :pullup)
             gpio_write_upload = session.upload_gpio_write(program_id: 7, pin: 13, value: true)
             run = session.run(program_id: 4, budget: 77)
@@ -178,6 +201,8 @@ module CodingAdventures
             assert_equal [:program_begin, :program_chunk, :program_end],
               time_upload.results.map(&:command)
             assert_equal [:program_begin, :program_chunk, :program_end],
+              sleep_upload.results.map(&:command)
+            assert_equal [:program_begin, :program_chunk, :program_end],
               gpio_upload.results.map(&:command)
             assert_equal [:program_begin, :program_chunk, :program_end],
               gpio_write_upload.results.map(&:command)
@@ -187,7 +212,7 @@ module CodingAdventures
         end
 
         assert_empty runner.calls
-        assert_equal 16, transport.frames.length
+        assert_equal 19, transport.frames.length
         assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
       end
 
@@ -281,6 +306,26 @@ module CodingAdventures
         end
       end
 
+      def test_session_run_command_accepts_repl_style_time_sleep_ms
+        transport = FakeWriteTransport.new
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new,
+          transport: transport
+        ) do |board|
+          result = board.session.run_command("time-sleep-ms 250 24", program_id: 9)
+          upload = board.session.run_command("upload-time-sleep-ms 125", program_id: 10)
+
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            result.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end],
+            upload.results.map(&:command)
+          assert_equal result.frames + upload.frames, transport.frames
+        end
+      end
+
       def test_board_descriptor_wraps_rust_decoded_capability_report
         decoded = {
           "kind" => "caps_report",
@@ -349,6 +394,10 @@ module CodingAdventures
         time_module_bytes = session.time_now_module(1)
         assert_instance_of String, time_module_bytes
         assert_operator time_module_bytes.bytesize, :>, 0
+
+        sleep_module_bytes = session.time_sleep_ms_module(250, 1)
+        assert_instance_of String, sleep_module_bytes
+        assert_operator sleep_module_bytes.bytesize, :>, 0
 
         gpio_module_bytes = session.gpio_read_module(13, 2, 2)
         assert_instance_of String, gpio_module_bytes
