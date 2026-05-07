@@ -13,8 +13,9 @@ use std::slice;
 use std::str;
 
 use board_vm_host::{
-    write_blink_module, BlinkProgram, HostError, HostSession, BLINK_MODULE_LEN,
-    DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID,
+    write_blink_module, write_gpio_read_module, BlinkProgram, GpioReadProgram, HostError,
+    HostSession, BLINK_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID,
+    GPIO_READ_MODULE_LEN,
 };
 use board_vm_protocol::{
     decode_caps_report_header, decode_error_payload, decode_frame, decode_hello_ack,
@@ -380,6 +381,13 @@ pub fn build_blink_module(
     Ok(write_blink_module(program, out)?)
 }
 
+pub fn build_gpio_read_module(
+    program: GpioReadProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_gpio_read_module(program, out)?)
+}
+
 pub fn build_program_begin_wire_frame(
     session: &mut BoardVmLanguageSession,
     program_id: u16,
@@ -733,6 +741,31 @@ pub unsafe extern "C" fn board_vm_language_blink_module(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn board_vm_language_gpio_read_module(
+    pin: u8,
+    mode: u8,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_gpio_read_module(
+            GpioReadProgram {
+                pin,
+                mode,
+                max_stack,
+            },
+            module_out,
+        )?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn board_vm_language_program_begin_wire(
     session: *mut BoardVmLanguageSession,
     program_id: u16,
@@ -857,6 +890,11 @@ pub extern "C" fn board_vm_language_default_instruction_budget() -> u32 {
 #[no_mangle]
 pub extern "C" fn board_vm_language_blink_module_len() -> u64 {
     BLINK_MODULE_LEN as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_gpio_read_module_len() -> u64 {
+    GPIO_READ_MODULE_LEN as u64
 }
 
 fn catch_status(
@@ -1026,6 +1064,19 @@ mod tests {
         };
         assert_eq!(module_status.code, BoardVmLanguageStatusCode::Ok as u32);
         assert_eq!(module_status.len, BLINK_MODULE_LEN as u64);
+
+        let mut gpio_read_module = [0u8; GPIO_READ_MODULE_LEN];
+        let gpio_read_status = unsafe {
+            board_vm_language_gpio_read_module(
+                13,
+                board_vm_host::GPIO_MODE_INPUT_PULLUP,
+                2,
+                gpio_read_module.as_mut_ptr(),
+                gpio_read_module.len() as u64,
+            )
+        };
+        assert_eq!(gpio_read_status.code, BoardVmLanguageStatusCode::Ok as u32);
+        assert_eq!(gpio_read_status.len, GPIO_READ_MODULE_LEN as u64);
 
         let begin = unsafe {
             board_vm_language_program_begin_wire(
@@ -1257,11 +1308,7 @@ mod tests {
 
         assert_eq!(
             &names[..count],
-            &[
-                "bytecode_callable",
-                "protocol_feature",
-                "board_metadata"
-            ]
+            &["bytecode_callable", "protocol_feature", "board_metadata"]
         );
 
         let mut short = [""; 1];

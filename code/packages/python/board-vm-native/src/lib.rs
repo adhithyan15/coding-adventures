@@ -1,13 +1,14 @@
 use std::ffi::{c_char, c_long};
 use std::ptr;
 
-use board_vm_host::{BlinkProgram, BLINK_MODULE_LEN};
+use board_vm_host::{BlinkProgram, GpioReadProgram, BLINK_MODULE_LEN, GPIO_READ_MODULE_LEN};
 use board_vm_language_core::{
-    build_blink_module, build_caps_query_wire_frame, build_hello_wire_frame,
-    build_program_begin_wire_frame, build_program_chunk_wire_frame, build_program_end_wire_frame,
-    build_run_background_wire_frame, capability_board_metadata, capability_bytecode_callable,
-    capability_flag_names, capability_protocol_feature, decode_wire_response, program_format_name,
-    run_status_name, BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
+    build_blink_module, build_caps_query_wire_frame, build_gpio_read_module,
+    build_hello_wire_frame, build_program_begin_wire_frame, build_program_chunk_wire_frame,
+    build_program_end_wire_frame, build_run_background_wire_frame, build_stop_wire_frame,
+    capability_board_metadata, capability_bytecode_callable, capability_flag_names,
+    capability_protocol_feature, decode_wire_response, program_format_name, run_status_name,
+    BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
     LanguageCoreError,
 };
 use python_bridge::*;
@@ -76,6 +77,27 @@ unsafe extern "C" fn py_blink_module(_module: PyObjectPtr, args: PyObjectPtr) ->
     let module = match build_blink_module_value(pin, high_ms, low_ms, max_stack) {
         Ok(module) => module,
         Err(error) => return raise_core_error("blink_module", error),
+    };
+    bytes_to_py(&module)
+}
+
+unsafe extern "C" fn py_gpio_read_module(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
+    let pin = match parse_arg_u8(args, 0, "pin") {
+        Some(value) => value,
+        None => return ptr::null_mut(),
+    };
+    let mode = match parse_arg_u8(args, 1, "mode") {
+        Some(value) => value,
+        None => return ptr::null_mut(),
+    };
+    let max_stack = match parse_arg_u8(args, 2, "max_stack") {
+        Some(value) => value,
+        None => return ptr::null_mut(),
+    };
+
+    let module = match build_gpio_read_module_value(pin, mode, max_stack) {
+        Ok(module) => module,
+        Err(error) => return raise_core_error("gpio_read_module", error),
     };
     bytes_to_py(&module)
 }
@@ -165,6 +187,19 @@ unsafe extern "C" fn py_run_background_wire(
         let mut wire = [0u8; 96];
         let written =
             build_run_background_wire_frame(session, program_id, instruction_budget, &mut wire)?;
+        Ok(wire_result(&wire, written.len, session))
+    })
+}
+
+unsafe extern "C" fn py_stop_wire(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
+    let next_request_id = match parse_arg_u16(args, 0, "next_request_id") {
+        Some(value) => value,
+        None => return ptr::null_mut(),
+    };
+
+    with_session(next_request_id, |session| {
+        let mut wire = [0u8; 64];
+        let written = build_stop_wire_frame(session, &mut wire)?;
         Ok(wire_result(&wire, written.len, session))
     })
 }
@@ -402,6 +437,24 @@ fn build_blink_module_value(
     Ok(module)
 }
 
+fn build_gpio_read_module_value(
+    pin: u8,
+    mode: u8,
+    max_stack: u8,
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; GPIO_READ_MODULE_LEN];
+    let len = build_gpio_read_module(
+        GpioReadProgram {
+            pin,
+            mode,
+            max_stack,
+        },
+        &mut module,
+    )?;
+    module.truncate(len);
+    Ok(module)
+}
+
 unsafe fn parse_arg_bytes(args: PyObjectPtr, index: isize, name: &str) -> Option<Vec<u8>> {
     let arg = PyTuple_GetItem(args, index);
     if arg.is_null() {
@@ -503,7 +556,7 @@ unsafe fn raise_core_error(context: &str, error: LanguageCoreError) -> PyObjectP
 
 #[no_mangle]
 pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
-    let methods: &'static mut [PyMethodDef; 9] = Box::leak(Box::new([
+    let methods: &'static mut [PyMethodDef; 11] = Box::leak(Box::new([
         PyMethodDef {
             ml_name: b"hello_wire\0".as_ptr() as *const c_char,
             ml_meth: Some(py_hello_wire),
@@ -521,6 +574,12 @@ pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
             ml_meth: Some(py_blink_module),
             ml_flags: METH_VARARGS,
             ml_doc: b"Build a Board VM blink BVM module in Rust.\0".as_ptr() as *const c_char,
+        },
+        PyMethodDef {
+            ml_name: b"gpio_read_module\0".as_ptr() as *const c_char,
+            ml_meth: Some(py_gpio_read_module),
+            ml_flags: METH_VARARGS,
+            ml_doc: b"Build a Board VM GPIO read BVM module in Rust.\0".as_ptr() as *const c_char,
         },
         PyMethodDef {
             ml_name: b"program_begin_wire\0".as_ptr() as *const c_char,
@@ -548,6 +607,12 @@ pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
             ml_flags: METH_VARARGS,
             ml_doc: b"Build a Board VM background RUN wire frame in Rust.\0".as_ptr()
                 as *const c_char,
+        },
+        PyMethodDef {
+            ml_name: b"stop_wire\0".as_ptr() as *const c_char,
+            ml_meth: Some(py_stop_wire),
+            ml_flags: METH_VARARGS,
+            ml_doc: b"Build a Board VM STOP wire frame in Rust.\0".as_ptr() as *const c_char,
         },
         PyMethodDef {
             ml_name: b"decode_response\0".as_ptr() as *const c_char,

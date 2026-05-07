@@ -12,6 +12,13 @@ DEFAULT_HOST_NAME = "python-board-vm"
 DEFAULT_HOST_NONCE = 0xB0A2D001
 DEFAULT_PROGRAM_ID = 1
 DEFAULT_INSTRUCTION_BUDGET = 12
+GPIO_READ_MODES = {
+    "input": 0,
+    "input_pullup": 2,
+    "pullup": 2,
+    "input_pulldown": 3,
+    "pulldown": 3,
+}
 
 
 @dataclass(frozen=True)
@@ -182,6 +189,9 @@ class Session:
     def blink_module(self, pin: int = 13, high_ms: int = 250, low_ms: int = 250, max_stack: int = 4) -> bytes:
         return _native.blink_module(pin, high_ms, low_ms, max_stack)
 
+    def gpio_read_module(self, *, pin: int, mode: str | int = "input", max_stack: int = 2) -> bytes:
+        return _native.gpio_read_module(pin, self._gpio_read_mode(mode), max_stack)
+
     def upload(self, *, program_id: int = DEFAULT_PROGRAM_ID, module_bytes: bytes) -> SessionResult:
         return SessionResult([
             self._dispatch("program_begin", self._call_native(_native.program_begin_wire, program_id, module_bytes)),
@@ -203,9 +213,26 @@ class Session:
             module_bytes=self.blink_module(pin=pin, high_ms=high_ms, low_ms=low_ms, max_stack=max_stack),
         )
 
+    def upload_gpio_read(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        pin: int,
+        mode: str | int = "input",
+        max_stack: int = 2,
+    ) -> SessionResult:
+        return self.upload(
+            program_id=program_id,
+            module_bytes=self.gpio_read_module(pin=pin, mode=mode, max_stack=max_stack),
+        )
+
     def run(self, *, program_id: int = DEFAULT_PROGRAM_ID, instruction_budget: int = DEFAULT_INSTRUCTION_BUDGET) -> ProtocolResult:
         frame = self._call_native(_native.run_background_wire, program_id, instruction_budget)
         return self._dispatch("run", frame)
+
+    def stop(self) -> ProtocolResult:
+        frame = self._call_native(_native.stop_wire)
+        return self._dispatch("stop", frame)
 
     def blink(
         self,
@@ -236,6 +263,33 @@ class Session:
         results.append(self.run(program_id=program_id, instruction_budget=instruction_budget))
         return SessionResult(results)
 
+    def gpio_read(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        instruction_budget: int = DEFAULT_INSTRUCTION_BUDGET,
+        handshake: bool = False,
+        query_caps: bool = False,
+        pin: int,
+        mode: str | int = "input",
+        max_stack: int = 2,
+    ) -> SessionResult:
+        results: list[ProtocolResult] = []
+        if handshake:
+            results.append(self.hello())
+        if query_caps:
+            results.append(self.capabilities())
+        results.extend(
+            self.upload_gpio_read(
+                program_id=program_id,
+                pin=pin,
+                mode=mode,
+                max_stack=max_stack,
+            ).results
+        )
+        results.append(self.run(program_id=program_id, instruction_budget=instruction_budget))
+        return SessionResult(results)
+
     def run_command(self, line: str, **options: Any) -> SessionResult:
         words = line.split()
         if not words:
@@ -250,10 +304,19 @@ class Session:
         if command == "upload-blink":
             self._ensure_no_extra(words, command)
             return self.upload_blink(**options)
+        if command in {"upload-gpio-read", "upload-gpio.read"}:
+            return self.upload_gpio_read(
+                **self._with_gpio_read_options(words, command, options, allow_budget=False)
+            )
         if command == "run":
             return SessionResult([self.run(**self._with_optional_budget(words, command, options))])
+        if command == "stop":
+            self._ensure_no_extra(words, command)
+            return SessionResult([self.stop()])
         if command == "blink":
             return self.blink(**self._with_optional_budget(words, command, options))
+        if command in {"gpio-read", "gpio.read"}:
+            return self.gpio_read(**self._with_gpio_read_options(words, command, options))
         raise ValueError(f"unknown Board VM session command: {command}")
 
     def decode_response(self, response: bytes) -> dict[str, Any]:
@@ -291,10 +354,47 @@ class Session:
         self._ensure_no_extra(words, command)
         return merged
 
+    def _with_gpio_read_options(
+        self,
+        words: list[str],
+        command: str,
+        options: dict[str, Any],
+        *,
+        allow_budget: bool = True,
+    ) -> dict[str, Any]:
+        merged = dict(options)
+        if words:
+            merged["pin"] = int(words.pop(0))
+        if words:
+            mode_or_budget = words.pop(0)
+            if allow_budget and mode_or_budget.isdecimal():
+                merged["instruction_budget"] = int(mode_or_budget)
+            else:
+                merged["mode"] = mode_or_budget
+        if allow_budget and words:
+            merged["instruction_budget"] = int(words.pop(0))
+        self._ensure_no_extra(words, command)
+        if "pin" not in merged:
+            raise ValueError(f"{command} requires pin")
+        return merged
+
+    @staticmethod
+    def _gpio_read_mode(mode: str | int) -> int:
+        if isinstance(mode, int):
+            return mode
+        normalized = str(mode).replace("-", "_")
+        if normalized.isdecimal():
+            return int(normalized)
+        try:
+            return GPIO_READ_MODES[normalized]
+        except KeyError as exc:
+            raise ValueError(f"unsupported GPIO read mode: {mode!r}") from exc
+
 
 __all__ = [
     "BoardDescriptor",
     "Capability",
+    "GPIO_READ_MODES",
     "ProtocolResult",
     "Session",
     "SessionResult",
