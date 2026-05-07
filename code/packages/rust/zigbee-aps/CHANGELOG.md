@@ -10,3 +10,5 @@ All notable changes to this package will be documented in this file.
   mode primitives.
 - APS frame parser/encoder for unicast, broadcast, group, and indirect
   addressing with payload preservation.
+- Endpoint/cluster/profile addressing helpers and an in-memory APS binding table
+  for device and group destinations.

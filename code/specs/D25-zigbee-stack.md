@@ -97,7 +97,8 @@ ZCL remain future packages/layers.
 
 **Initial Rust implementation:** `code/packages/rust/zigbee-aps` now provides
 APS frame-control, endpoint/group addressing, cluster/profile id, counter, and
-payload parser/encoder primitives. Binding tables, APS commands,
+payload parser/encoder primitives plus endpoint/cluster/profile helpers and an
+in-memory binding table for device/group destinations. APS commands,
 fragmentation, and security remain future layers.
 
 ### `zigbee-zdo`
