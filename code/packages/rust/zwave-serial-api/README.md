@@ -12,6 +12,8 @@ control-plane layer:
 - controller capability flag decoding
 - Serial API Get Init Data node inventory decoding
 - Application Command Handler source/command envelopes
+- Application Command Handler-to-command-class frame projection
+- SendData request, response, callback, and transmit-option primitives
 - Memory Get ID payload decoding
 - request tracker with callback correlation and timeout expiry
 

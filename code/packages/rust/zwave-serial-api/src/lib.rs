@@ -8,7 +8,9 @@
 
 use std::collections::BTreeMap;
 use std::fmt;
-use zwave_core::{CommandClassId, HomeId, NodeId, SerialFrame, SerialFrameType, ZWaveError};
+use zwave_core::{
+    CommandClassFrame, CommandClassId, HomeId, NodeId, SerialFrame, SerialFrameType, ZWaveError,
+};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct FunctionId(pub u8);
@@ -42,7 +44,10 @@ pub struct SerialMessage {
 impl SerialMessage {
     pub fn from_frame(frame: SerialFrame) -> Self {
         let function_id = FunctionId(frame.function_id);
-        let callback_id = callback_id_for(function_id, &frame.payload);
+        let callback_id = match frame.frame_type {
+            SerialFrameType::Response => None,
+            SerialFrameType::Request => callback_id_for(function_id, &frame.payload),
+        };
         let kind = match frame.frame_type {
             SerialFrameType::Response => SerialMessageKind::Response,
             SerialFrameType::Request if callback_id.is_some() => SerialMessageKind::Callback,
@@ -216,9 +221,177 @@ impl ApplicationCommand {
     }
 
     pub fn command_class_id(&self) -> Option<CommandClassId> {
-        self.command
-            .first()
-            .map(|id| CommandClassId(u16::from(*id)))
+        self.command_class_frame()
+            .ok()
+            .map(|frame| frame.command_class_id)
+    }
+
+    pub fn command_class_frame(&self) -> Result<CommandClassFrame, SerialApiError> {
+        CommandClassFrame::parse(&self.command).map_err(SerialApiError::from)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct TransmitOptions {
+    pub acknowledge: bool,
+    pub low_power: bool,
+    pub auto_route: bool,
+    pub no_route: bool,
+    pub explore: bool,
+}
+
+impl TransmitOptions {
+    pub fn reliable() -> Self {
+        Self {
+            acknowledge: true,
+            low_power: false,
+            auto_route: true,
+            no_route: false,
+            explore: true,
+        }
+    }
+
+    pub fn parse(flags: u8) -> Self {
+        Self {
+            acknowledge: flags & 0x01 != 0,
+            low_power: flags & 0x02 != 0,
+            auto_route: flags & 0x04 != 0,
+            no_route: flags & 0x10 != 0,
+            explore: flags & 0x20 != 0,
+        }
+    }
+
+    pub fn encode(self) -> u8 {
+        (self.acknowledge as u8)
+            | ((self.low_power as u8) << 1)
+            | ((self.auto_route as u8) << 2)
+            | ((self.no_route as u8) << 4)
+            | ((self.explore as u8) << 5)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SendDataTransmitStatus {
+    CompleteOk,
+    CompleteNoAck,
+    CompleteFail,
+    RoutingNotIdle,
+    NoRoute,
+    Verified,
+    Unknown(u8),
+}
+
+impl SendDataTransmitStatus {
+    pub fn parse(value: u8) -> Self {
+        match value {
+            0x00 => Self::CompleteOk,
+            0x01 => Self::CompleteNoAck,
+            0x02 => Self::CompleteFail,
+            0x03 => Self::RoutingNotIdle,
+            0x04 => Self::NoRoute,
+            0x05 => Self::Verified,
+            other => Self::Unknown(other),
+        }
+    }
+
+    pub fn is_success(self) -> bool {
+        matches!(self, Self::CompleteOk | Self::Verified)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SendDataRequest {
+    pub destination_node: NodeId,
+    pub command: CommandClassFrame,
+    pub transmit_options: TransmitOptions,
+    pub callback_id: u8,
+}
+
+impl SendDataRequest {
+    pub fn new(
+        destination_node: NodeId,
+        command: CommandClassFrame,
+        transmit_options: TransmitOptions,
+        callback_id: u8,
+    ) -> Self {
+        Self {
+            destination_node,
+            command,
+            transmit_options,
+            callback_id,
+        }
+    }
+
+    pub fn to_message(&self) -> Result<SerialMessage, SerialApiError> {
+        let node_id = match self.destination_node {
+            NodeId::Classic(node_id) => node_id,
+            NodeId::LongRange(node_id) => {
+                return Err(SerialApiError::UnsupportedLongRangeNodeId(node_id));
+            }
+        };
+        let command = self.command.encode().map_err(SerialApiError::from)?;
+        if command.len() > u8::MAX as usize {
+            return Err(SerialApiError::PayloadTooLong(command.len()));
+        }
+
+        let mut payload = Vec::with_capacity(command.len() + 4);
+        payload.push(node_id);
+        payload.push(command.len() as u8);
+        payload.extend_from_slice(&command);
+        payload.push(self.transmit_options.encode());
+        payload.push(self.callback_id);
+
+        Ok(SerialMessage::request(FunctionId::SEND_DATA, payload))
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SendDataResponse {
+    pub accepted: bool,
+}
+
+impl SendDataResponse {
+    pub fn parse(payload: &[u8]) -> Result<Self, SerialApiError> {
+        if payload.is_empty() {
+            return Err(SerialApiError::Truncated {
+                needed: 1,
+                remaining: 0,
+            });
+        }
+        Ok(Self {
+            accepted: payload[0] != 0,
+        })
+    }
+
+    pub fn from_message(message: &SerialMessage) -> Result<Self, SerialApiError> {
+        expect_function(message, FunctionId::SEND_DATA)?;
+        Self::parse(&message.payload)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SendDataCallback {
+    pub callback_id: u8,
+    pub transmit_status: SendDataTransmitStatus,
+}
+
+impl SendDataCallback {
+    pub fn parse(payload: &[u8]) -> Result<Self, SerialApiError> {
+        if payload.len() < 2 {
+            return Err(SerialApiError::Truncated {
+                needed: 2,
+                remaining: payload.len(),
+            });
+        }
+        Ok(Self {
+            callback_id: payload[0],
+            transmit_status: SendDataTransmitStatus::parse(payload[1]),
+        })
+    }
+
+    pub fn from_message(message: &SerialMessage) -> Result<Self, SerialApiError> {
+        expect_function(message, FunctionId::SEND_DATA)?;
+        Self::parse(&message.payload)
     }
 }
 
@@ -342,6 +515,8 @@ pub enum SerialApiError {
         expected: FunctionId,
         actual: FunctionId,
     },
+    PayloadTooLong(usize),
+    UnsupportedLongRangeNodeId(u16),
     NotRequest,
     Core(String),
 }
@@ -358,6 +533,11 @@ impl fmt::Display for SerialApiError {
                 "expected Z-Wave Serial API function 0x{:02x}, got 0x{:02x}",
                 expected.0, actual.0
             ),
+            Self::PayloadTooLong(len) => write!(f, "Z-Wave Serial API payload too long: {len}"),
+            Self::UnsupportedLongRangeNodeId(node_id) => write!(
+                f,
+                "classic Z-Wave SendData does not support Long Range node id {node_id}"
+            ),
             Self::NotRequest => write!(f, "only request messages can be tracked"),
             Self::Core(message) => write!(f, "Z-Wave core error: {message}"),
         }
@@ -366,11 +546,27 @@ impl fmt::Display for SerialApiError {
 
 impl std::error::Error for SerialApiError {}
 
+impl From<ZWaveError> for SerialApiError {
+    fn from(error: ZWaveError) -> Self {
+        Self::Core(error.to_string())
+    }
+}
+
 fn callback_id_for(function_id: FunctionId, payload: &[u8]) -> Option<u8> {
     match function_id {
-        FunctionId::SEND_DATA | FunctionId::REQUEST_NODE_INFO => payload.last().copied(),
+        FunctionId::SEND_DATA => {
+            send_data_request_callback_id(payload).or_else(|| payload.first().copied())
+        }
+        FunctionId::REQUEST_NODE_INFO => payload.last().copied(),
         _ => None,
     }
+}
+
+fn send_data_request_callback_id(payload: &[u8]) -> Option<u8> {
+    let command_len = usize::from(*payload.get(1)?);
+    (payload.len() == command_len.saturating_add(4))
+        .then(|| payload.last().copied())
+        .flatten()
 }
 
 fn expect_function(message: &SerialMessage, expected: FunctionId) -> Result<(), SerialApiError> {
@@ -427,7 +623,14 @@ mod tests {
 
     #[test]
     fn serial_message_round_trips_through_core_frame() {
-        let message = SerialMessage::request(FunctionId::SEND_DATA, vec![0x02, 0x25, 0x01, 0x44]);
+        let message = SendDataRequest::new(
+            NodeId::Classic(2),
+            CommandClassFrame::new(CommandClassId::SWITCH_BINARY, 0x01, vec![0xff]),
+            TransmitOptions::reliable(),
+            0x44,
+        )
+        .to_message()
+        .unwrap();
         let encoded = message.encode().unwrap();
         let parsed = SerialMessage::from_frame(SerialFrame::parse(&encoded).unwrap());
 
@@ -516,6 +719,67 @@ mod tests {
             command.command_class_id(),
             Some(CommandClassId::SWITCH_BINARY)
         );
+        assert_eq!(
+            command.command_class_frame().unwrap(),
+            CommandClassFrame::new(CommandClassId::SWITCH_BINARY, 0x03, vec![0xff])
+        );
+    }
+
+    #[test]
+    fn send_data_request_wraps_command_class_frame_with_options() {
+        let request = SendDataRequest::new(
+            NodeId::Classic(5),
+            CommandClassFrame::new(CommandClassId::SWITCH_BINARY, 0x01, vec![0xff]),
+            TransmitOptions::reliable(),
+            0x42,
+        );
+
+        let message = request.to_message().unwrap();
+
+        assert_eq!(message.kind, SerialMessageKind::Request);
+        assert_eq!(message.function_id, FunctionId::SEND_DATA);
+        assert_eq!(message.callback_id, Some(0x42));
+        assert_eq!(
+            message.payload,
+            vec![0x05, 0x03, 0x25, 0x01, 0xff, 0x25, 0x42]
+        );
+    }
+
+    #[test]
+    fn send_data_response_and_callback_parse_status() {
+        let response = SerialMessage {
+            kind: SerialMessageKind::Response,
+            function_id: FunctionId::SEND_DATA,
+            callback_id: None,
+            payload: vec![0x01],
+        };
+        let callback = SerialMessage {
+            kind: SerialMessageKind::Callback,
+            function_id: FunctionId::SEND_DATA,
+            callback_id: Some(0x42),
+            payload: vec![0x42, 0x05],
+        };
+
+        assert!(SendDataResponse::from_message(&response).unwrap().accepted);
+        let callback = SendDataCallback::from_message(&callback).unwrap();
+        assert_eq!(callback.callback_id, 0x42);
+        assert_eq!(callback.transmit_status, SendDataTransmitStatus::Verified);
+        assert!(callback.transmit_status.is_success());
+    }
+
+    #[test]
+    fn classic_send_data_rejects_long_range_node_ids() {
+        let request = SendDataRequest::new(
+            NodeId::LongRange(256),
+            CommandClassFrame::new(CommandClassId::SWITCH_BINARY, 0x01, Vec::new()),
+            TransmitOptions::reliable(),
+            0x01,
+        );
+
+        assert_eq!(
+            request.to_message(),
+            Err(SerialApiError::UnsupportedLongRangeNodeId(256))
+        );
     }
 
     #[test]
@@ -541,17 +805,29 @@ mod tests {
 
     #[test]
     fn request_tracker_correlates_callback_by_callback_id() {
-        let request = SerialMessage::request(FunctionId::SEND_DATA, vec![0x02, 0x25, 0x01, 0x44]);
-        let callback = SerialMessage {
-            kind: SerialMessageKind::Callback,
-            function_id: FunctionId::SEND_DATA,
-            callback_id: Some(0x44),
-            payload: vec![0x44, 0x00],
-        };
+        let request = SendDataRequest::new(
+            NodeId::Classic(2),
+            CommandClassFrame::new(CommandClassId::SWITCH_BINARY, 0x01, vec![0xff]),
+            TransmitOptions::reliable(),
+            0x44,
+        )
+        .to_message()
+        .unwrap();
+        let callback = SerialMessage::from_frame(
+            SerialFrame::new(
+                SerialFrameType::Request,
+                FunctionId::SEND_DATA.0,
+                vec![0x44, 0x00],
+            )
+            .encode()
+            .and_then(|bytes| SerialFrame::parse(&bytes))
+            .unwrap(),
+        );
         let mut tracker = RequestTracker::new();
         let key = tracker.track(&request, 100, 500).unwrap();
 
         assert_eq!(key.callback_id, Some(0x44));
+        assert_eq!(callback.callback_id, Some(0x44));
         assert!(tracker.complete(&callback).is_some());
         assert_eq!(tracker.pending_len(), 0);
     }
