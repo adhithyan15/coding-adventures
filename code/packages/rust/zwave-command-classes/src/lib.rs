@@ -25,6 +25,9 @@ pub const SENSOR_MULTILEVEL_REPORT: u8 = 0x05;
 pub const DOOR_LOCK_OPERATION_SET: u8 = 0x01;
 pub const DOOR_LOCK_OPERATION_GET: u8 = 0x02;
 pub const DOOR_LOCK_OPERATION_REPORT: u8 = 0x03;
+pub const NOTIFICATION_GET: u8 = 0x04;
+pub const NOTIFICATION_REPORT: u8 = 0x05;
+pub const COMMAND_CLASS_NOTIFICATION: CommandClassId = CommandClassId(0x71);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ZWaveCommand {
@@ -112,6 +115,7 @@ pub enum ZWaveValueReport {
     DoorLock {
         mode: DoorLockMode,
     },
+    Notification(NotificationReport),
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -119,6 +123,73 @@ pub enum DoorLockMode {
     Unsecured,
     Secured,
     Unknown(u8),
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum NotificationType {
+    Smoke,
+    AccessControl,
+    HomeSecurity,
+    Water,
+    Heat,
+    CarbonMonoxide,
+    CarbonDioxide,
+    Unknown(u8),
+}
+
+impl NotificationType {
+    pub fn parse(value: u8) -> Self {
+        match value {
+            0x01 => Self::Smoke,
+            0x06 => Self::AccessControl,
+            0x07 => Self::HomeSecurity,
+            0x05 => Self::Water,
+            0x04 => Self::Heat,
+            0x02 => Self::CarbonMonoxide,
+            0x03 => Self::CarbonDioxide,
+            other => Self::Unknown(other),
+        }
+    }
+
+    pub fn as_byte(self) -> u8 {
+        match self {
+            Self::Smoke => 0x01,
+            Self::CarbonMonoxide => 0x02,
+            Self::CarbonDioxide => 0x03,
+            Self::Heat => 0x04,
+            Self::Water => 0x05,
+            Self::AccessControl => 0x06,
+            Self::HomeSecurity => 0x07,
+            Self::Unknown(value) => value,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct NotificationReport {
+    pub v1_alarm_type: u8,
+    pub v1_alarm_level: u8,
+    pub notification_status: u8,
+    pub notification_type: NotificationType,
+    pub event: u8,
+    pub event_parameters: Vec<u8>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum NotificationState {
+    Idle,
+    MotionDetected,
+    DoorOpen,
+    DoorClosed,
+    Locked,
+    Unlocked,
+    SmokeDetected,
+    WaterLeakDetected,
+    Alarm,
+    Unknown {
+        notification_type: NotificationType,
+        event: u8,
+    },
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -244,6 +315,9 @@ pub fn parse_value_report(command: &ZWaveCommand) -> Result<ZWaveValueReport, Co
                 mode: door_lock_mode(command.payload[0]),
             })
         }
+        (COMMAND_CLASS_NOTIFICATION, NOTIFICATION_REPORT) => Ok(ZWaveValueReport::Notification(
+            parse_notification_report(&command.payload)?,
+        )),
         _ => Err(CommandClassError::UnsupportedReport {
             command_class: command.command_class,
             command_id: command.command_id,
@@ -268,6 +342,19 @@ pub fn capabilities_for_command_class(command_class: CommandClassId) -> Vec<Capa
             CapabilityMode::ObserveAndCommand,
             ValueKind::Text,
         )],
+        COMMAND_CLASS_NOTIFICATION => vec![
+            Capability::sensor_occupancy(),
+            Capability::new(
+                CapabilityId::trusted("sensor.contact"),
+                CapabilityMode::Observe,
+                ValueKind::Boolean,
+            ),
+            Capability::new(
+                CapabilityId::trusted("sensor.alarm"),
+                CapabilityMode::Observe,
+                ValueKind::Text,
+            ),
+        ],
         _ => Vec::new(),
     }
 }
@@ -303,6 +390,7 @@ pub fn state_delta_for_report(report: &ZWaveValueReport) -> StateDelta {
             capability_id: CapabilityId::trusted("lock.state"),
             value: Value::Text(door_lock_state_name(*mode).to_string()),
         },
+        ZWaveValueReport::Notification(report) => state_delta_for_notification(report),
     }
 }
 
@@ -354,6 +442,100 @@ pub fn multilevel_sensor_capability_id(sensor_type: u8) -> CapabilityId {
         0x05 => CapabilityId::trusted("sensor.humidity"),
         _ => CapabilityId::trusted("sensor.value"),
     }
+}
+
+pub fn notification_state(report: &NotificationReport) -> NotificationState {
+    match (report.notification_type, report.event) {
+        (_, 0x00) => NotificationState::Idle,
+        (NotificationType::HomeSecurity, 0x07 | 0x08 | 0x09) => NotificationState::MotionDetected,
+        (NotificationType::AccessControl, 0x16) => NotificationState::DoorOpen,
+        (NotificationType::AccessControl, 0x17) => NotificationState::DoorClosed,
+        (NotificationType::AccessControl, 0x01 | 0x03 | 0x05) => NotificationState::Locked,
+        (NotificationType::AccessControl, 0x02 | 0x04 | 0x06) => NotificationState::Unlocked,
+        (NotificationType::Smoke, _) => NotificationState::SmokeDetected,
+        (NotificationType::Water, _) => NotificationState::WaterLeakDetected,
+        (
+            NotificationType::Heat
+            | NotificationType::CarbonMonoxide
+            | NotificationType::CarbonDioxide,
+            _,
+        ) => NotificationState::Alarm,
+        (notification_type, event) => NotificationState::Unknown {
+            notification_type,
+            event,
+        },
+    }
+}
+
+pub fn state_delta_for_notification(report: &NotificationReport) -> StateDelta {
+    match notification_state(report) {
+        NotificationState::Idle => StateDelta {
+            capability_id: CapabilityId::trusted("sensor.occupancy"),
+            value: Value::Bool(false),
+        },
+        NotificationState::MotionDetected => StateDelta {
+            capability_id: CapabilityId::trusted("sensor.occupancy"),
+            value: Value::Bool(true),
+        },
+        NotificationState::DoorOpen => StateDelta {
+            capability_id: CapabilityId::trusted("sensor.contact"),
+            value: Value::Bool(true),
+        },
+        NotificationState::DoorClosed => StateDelta {
+            capability_id: CapabilityId::trusted("sensor.contact"),
+            value: Value::Bool(false),
+        },
+        NotificationState::Locked => StateDelta {
+            capability_id: CapabilityId::trusted("lock.state"),
+            value: Value::Text("locked".to_string()),
+        },
+        NotificationState::Unlocked => StateDelta {
+            capability_id: CapabilityId::trusted("lock.state"),
+            value: Value::Text("unlocked".to_string()),
+        },
+        NotificationState::SmokeDetected => StateDelta {
+            capability_id: CapabilityId::trusted("sensor.alarm"),
+            value: Value::Text("smoke".to_string()),
+        },
+        NotificationState::WaterLeakDetected => StateDelta {
+            capability_id: CapabilityId::trusted("sensor.alarm"),
+            value: Value::Text("water_leak".to_string()),
+        },
+        NotificationState::Alarm => StateDelta {
+            capability_id: CapabilityId::trusted("sensor.alarm"),
+            value: Value::Text("alarm".to_string()),
+        },
+        NotificationState::Unknown {
+            notification_type,
+            event,
+        } => StateDelta {
+            capability_id: CapabilityId::trusted("sensor.alarm"),
+            value: Value::Text(format!(
+                "notification.{:02x}.{:02x}",
+                notification_type.as_byte(),
+                event
+            )),
+        },
+    }
+}
+
+fn parse_notification_report(payload: &[u8]) -> Result<NotificationReport, CommandClassError> {
+    require_len(payload, 6)?;
+    let event_parameters = if let Some(parameter_len) = payload.get(6).copied() {
+        let parameter_len = usize::from(parameter_len);
+        require_len(payload, 7 + parameter_len)?;
+        payload[7..7 + parameter_len].to_vec()
+    } else {
+        Vec::new()
+    };
+    Ok(NotificationReport {
+        v1_alarm_type: payload[0],
+        v1_alarm_level: payload[1],
+        notification_status: payload[3],
+        notification_type: NotificationType::parse(payload[4]),
+        event: payload[5],
+        event_parameters,
+    })
 }
 
 fn parse_multilevel_sensor_report(payload: &[u8]) -> Result<ZWaveValueReport, CommandClassError> {
@@ -500,6 +682,71 @@ mod tests {
     }
 
     #[test]
+    fn parses_notification_reports_with_event_parameters() {
+        let report = ZWaveCommand::new(
+            COMMAND_CLASS_NOTIFICATION,
+            NOTIFICATION_REPORT,
+            vec![0x00, 0x00, 0x00, 0xff, 0x07, 0x08, 0x02, 0xaa, 0xbb],
+        );
+
+        assert_eq!(
+            parse_value_report(&report).unwrap(),
+            ZWaveValueReport::Notification(NotificationReport {
+                v1_alarm_type: 0x00,
+                v1_alarm_level: 0x00,
+                notification_status: 0xff,
+                notification_type: NotificationType::HomeSecurity,
+                event: 0x08,
+                event_parameters: vec![0xaa, 0xbb],
+            })
+        );
+    }
+
+    #[test]
+    fn notification_reports_project_common_states() {
+        let motion = NotificationReport {
+            v1_alarm_type: 0,
+            v1_alarm_level: 0,
+            notification_status: 0xff,
+            notification_type: NotificationType::HomeSecurity,
+            event: 0x08,
+            event_parameters: Vec::new(),
+        };
+        let door_closed = NotificationReport {
+            notification_type: NotificationType::AccessControl,
+            event: 0x17,
+            ..motion.clone()
+        };
+        let unlocked = NotificationReport {
+            notification_type: NotificationType::AccessControl,
+            event: 0x02,
+            ..motion.clone()
+        };
+
+        assert_eq!(
+            state_delta_for_notification(&motion),
+            StateDelta {
+                capability_id: CapabilityId::trusted("sensor.occupancy"),
+                value: Value::Bool(true),
+            }
+        );
+        assert_eq!(
+            state_delta_for_notification(&door_closed),
+            StateDelta {
+                capability_id: CapabilityId::trusted("sensor.contact"),
+                value: Value::Bool(false),
+            }
+        );
+        assert_eq!(
+            state_delta_for_notification(&unlocked),
+            StateDelta {
+                capability_id: CapabilityId::trusted("lock.state"),
+                value: Value::Text("unlocked".to_string()),
+            }
+        );
+    }
+
+    #[test]
     fn command_classes_project_capabilities() {
         assert_eq!(
             capabilities_for_command_class(CommandClassId::SWITCH_BINARY)[0].capability_id,
@@ -509,6 +756,9 @@ mod tests {
             capabilities_for_command_class(CommandClassId::DOOR_LOCK)[0].capability_id,
             CapabilityId::trusted("lock.state")
         );
+        assert!(capabilities_for_command_class(COMMAND_CLASS_NOTIFICATION)
+            .iter()
+            .any(|capability| capability.capability_id == CapabilityId::trusted("sensor.alarm")));
         assert!(capabilities_for_command_class(CommandClassId::BASIC).is_empty());
     }
 

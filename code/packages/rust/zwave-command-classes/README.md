@@ -11,7 +11,7 @@ Included surfaces:
 - command-class command parse/encode helpers
 - binary switch, multilevel switch, and door lock get/set builders
 - value-report parsing for Basic, Switch Binary, Switch Multilevel, Sensor
-  Binary, Sensor Multilevel, and Door Lock
+  Binary, Sensor Multilevel, Door Lock, and Notification
 - Z-Wave level/boolean/door-lock normalization helpers
 - D23 capability projection for common command classes
 - D23 `StateDelta` projection for common value reports
