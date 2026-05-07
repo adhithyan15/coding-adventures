@@ -20,3 +20,4 @@ All notable changes to this package will be documented in this file.
   entities.
 - Capability-grant storage, principal indexes, active-grant queries, and
   status updates for Chief of Staff agent authorization.
+- Authorization-decision audit storage with principal and outcome lookup.
