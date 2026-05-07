@@ -5,6 +5,7 @@
 This crate starts D27 below Thread MLE:
 
 - dispatch byte classification
+- mesh header hop-limit and short/extended address parsing
 - LOWPAN_IPHC first/second byte parsing
 - fragment first/next header parse and encode
 - fragment payload parsing and deterministic reassembly buffers
