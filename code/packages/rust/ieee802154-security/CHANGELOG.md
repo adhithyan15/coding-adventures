@@ -9,3 +9,5 @@
   encrypted payload bytes, and MIC bytes.
 - Added first AES-CCM* encrypt/decrypt implementation with RFC 3610 vector
   coverage and constant-time MIC comparison.
+- Added outgoing frame counter allocation per source/key tuple with restored
+  next-counter support for future persistent stores.

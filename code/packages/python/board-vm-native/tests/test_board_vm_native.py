@@ -30,6 +30,10 @@ def test_native_session_builds_protocol_bytes_in_rust():
     assert isinstance(gpio_module, bytes)
     assert len(gpio_module) > 0
 
+    time_module = session.time_now_module(max_stack=1)
+    assert isinstance(time_module, bytes)
+    assert len(time_module) > 0
+
     stop = session.stop()
     assert isinstance(stop.frame, bytes)
     assert len(stop.frame) > 0
@@ -86,6 +90,21 @@ def test_run_command_accepts_repl_style_gpio_read():
     session = Session(transport=transport)
 
     result = session.run_command("gpio-read 13 pullup 24", program_id=9)
+
+    assert [item.command for item in result.results] == [
+        "program_begin",
+        "program_chunk",
+        "program_end",
+        "run",
+    ]
+    assert result.frames == transport.frames
+
+
+def test_run_command_accepts_repl_style_time_now():
+    transport = FakeWriteTransport()
+    session = Session(transport=transport)
+
+    result = session.run_command("time-now 42", program_id=9)
 
     assert [item.command for item in result.results] == [
         "program_begin",

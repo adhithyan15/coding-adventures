@@ -272,6 +272,87 @@ impl InMemoryKeyStore {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub struct OutgoingFrameCounterKey {
+    pub source_address: u64,
+    pub key_identifier: NormalizedKeyIdentifier,
+}
+
+impl OutgoingFrameCounterKey {
+    pub fn new(source_address: u64, key_identifier: NormalizedKeyIdentifier) -> Self {
+        Self {
+            source_address,
+            key_identifier,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct OutgoingFrameCounterLease {
+    pub source_address: u64,
+    pub key_identifier: NormalizedKeyIdentifier,
+    pub frame_counter: u32,
+}
+
+impl OutgoingFrameCounterLease {
+    pub fn frame_counter(&self) -> FrameCounter {
+        FrameCounter::Counter32(self.frame_counter)
+    }
+
+    pub fn security_context(&self, security_level: SecurityLevel) -> SecurityContext {
+        SecurityContext {
+            source_address: self.source_address,
+            frame_counter: self.frame_counter,
+            security_level,
+            key_identifier: self.key_identifier.clone(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct OutgoingFrameCounterStore {
+    next_by_key: BTreeMap<OutgoingFrameCounterKey, u64>,
+}
+
+impl OutgoingFrameCounterStore {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn restore_next_counter(&mut self, key: OutgoingFrameCounterKey, next_counter: u32) {
+        self.next_by_key.insert(key, next_counter as u64);
+    }
+
+    pub fn peek_next_counter(&self, key: &OutgoingFrameCounterKey) -> Option<u32> {
+        let next = self.next_by_key.get(key).copied().unwrap_or(0);
+        u32::try_from(next).ok()
+    }
+
+    pub fn reserve_next(
+        &mut self,
+        source_address: u64,
+        key_identifier: NormalizedKeyIdentifier,
+    ) -> Result<OutgoingFrameCounterLease, SecurityError> {
+        self.reserve_next_for_key(OutgoingFrameCounterKey::new(source_address, key_identifier))
+    }
+
+    pub fn reserve_next_for_key(
+        &mut self,
+        key: OutgoingFrameCounterKey,
+    ) -> Result<OutgoingFrameCounterLease, SecurityError> {
+        let next = self.next_by_key.get(&key).copied().unwrap_or(0);
+        let frame_counter =
+            u32::try_from(next).map_err(|_| SecurityError::OutgoingFrameCounterExhausted)?;
+        self.next_by_key.insert(key.clone(), next + 1);
+
+        Ok(OutgoingFrameCounterLease {
+            source_address: key.source_address,
+            key_identifier: key.key_identifier,
+            frame_counter,
+        })
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ReplayDecision {
     Accept,
@@ -329,6 +410,7 @@ pub enum SecurityError {
     AuthenticatedDataTooLong { len: usize },
     CryptoFailed(String),
     AuthenticationFailed,
+    OutgoingFrameCounterExhausted,
 }
 
 impl fmt::Display for SecurityError {
@@ -369,6 +451,9 @@ impl fmt::Display for SecurityError {
             }
             Self::CryptoFailed(message) => write!(f, "crypto operation failed: {message}"),
             Self::AuthenticationFailed => write!(f, "authentication failed"),
+            Self::OutgoingFrameCounterExhausted => {
+                write!(f, "outgoing frame counter space is exhausted")
+            }
         }
     }
 }
@@ -665,6 +750,75 @@ mod tests {
         assert_eq!(
             store.lookup(&NormalizedKeyIdentifier::Implicit),
             Err(SecurityError::UnknownKeyIdentifier)
+        );
+    }
+
+    #[test]
+    fn outgoing_frame_counter_store_reserves_monotonic_leases_per_key() {
+        let mut store = OutgoingFrameCounterStore::new();
+        let source_address = 0x8877_6655_4433_2211;
+        let first_key = NormalizedKeyIdentifier::KeyIndex(1);
+        let second_key = NormalizedKeyIdentifier::KeyIndex(2);
+
+        let first = store
+            .reserve_next(source_address, first_key.clone())
+            .unwrap();
+        let second = store
+            .reserve_next(source_address, first_key.clone())
+            .unwrap();
+        let other_key_first = store
+            .reserve_next(source_address, second_key.clone())
+            .unwrap();
+        let other_source_first = store
+            .reserve_next(0x0102_0304_0506_0708, first_key.clone())
+            .unwrap();
+
+        assert_eq!(first.frame_counter, 0);
+        assert_eq!(first.frame_counter(), FrameCounter::Counter32(0));
+        assert_eq!(second.frame_counter, 1);
+        assert_eq!(other_key_first.frame_counter, 0);
+        assert_eq!(other_source_first.frame_counter, 0);
+        assert_eq!(
+            store.peek_next_counter(&OutgoingFrameCounterKey::new(source_address, first_key)),
+            Some(2)
+        );
+
+        let context = second.security_context(SecurityLevel::EncMic32);
+        assert_eq!(context.frame_counter, 1);
+        assert_eq!(context.key_identifier, NormalizedKeyIdentifier::KeyIndex(1));
+    }
+
+    #[test]
+    fn outgoing_frame_counter_store_restores_persisted_next_counter() {
+        let mut store = OutgoingFrameCounterStore::new();
+        let key = OutgoingFrameCounterKey::new(
+            0x8877_6655_4433_2211,
+            NormalizedKeyIdentifier::KeySource4 {
+                source: [1, 2, 3, 4],
+                index: 7,
+            },
+        );
+        store.restore_next_counter(key.clone(), 41);
+
+        let lease = store.reserve_next_for_key(key.clone()).unwrap();
+
+        assert_eq!(lease.frame_counter, 41);
+        assert_eq!(store.peek_next_counter(&key), Some(42));
+    }
+
+    #[test]
+    fn outgoing_frame_counter_store_rejects_after_counter_space_is_exhausted() {
+        let mut store = OutgoingFrameCounterStore::new();
+        let key = OutgoingFrameCounterKey::new(1, NormalizedKeyIdentifier::Implicit);
+        store.restore_next_counter(key.clone(), u32::MAX);
+
+        let final_lease = store.reserve_next_for_key(key.clone()).unwrap();
+
+        assert_eq!(final_lease.frame_counter, u32::MAX);
+        assert_eq!(store.peek_next_counter(&key), None);
+        assert_eq!(
+            store.reserve_next_for_key(key),
+            Err(SecurityError::OutgoingFrameCounterExhausted)
         );
     }
 

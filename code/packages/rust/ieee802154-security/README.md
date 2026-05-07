@@ -16,14 +16,15 @@ encryption/decryption, replay checks, and key lookup.
 - AES-CCM* encryption/decryption for 13-byte nonces and the 32-bit frame-counter
   profile used by the first 802.15.4 security track
 - security source address extraction
+- outgoing frame counter allocation per source/key tuple
 - replay-window acceptance for monotonic incoming frame counters
 - key identifier normalization
 - small in-memory key store for tests and simulators
 
 ## Not Yet Implemented
 
-- outgoing frame counter allocation
 - persistent replay databases
+- persistent outgoing frame counter storage
 - integration with Vault-backed real key custody
 
 ## Layer Position
@@ -73,3 +74,10 @@ used by this stack:
 The implementation is checked against RFC 3610 packet vector #1 for the
 underlying CCM byte layout. Higher-level Zigbee and Thread packages will decide
 which keys, frame counters, and replay state apply to a given frame.
+
+## Outgoing Frame Counters
+
+`OutgoingFrameCounterStore` reserves monotonically increasing 32-bit counters
+per `(source extended address, normalized key identifier)` tuple. The store is
+in-memory by design, but accepts restored next-counter values so a future
+persistent backend can safely resume without reusing a secured frame counter.

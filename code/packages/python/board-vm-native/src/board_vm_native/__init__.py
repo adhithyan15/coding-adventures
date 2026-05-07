@@ -192,6 +192,9 @@ class Session:
     def gpio_read_module(self, *, pin: int, mode: str | int = "input", max_stack: int = 2) -> bytes:
         return _native.gpio_read_module(pin, self._gpio_read_mode(mode), max_stack)
 
+    def time_now_module(self, max_stack: int = 1) -> bytes:
+        return _native.time_now_module(max_stack)
+
     def upload(self, *, program_id: int = DEFAULT_PROGRAM_ID, module_bytes: bytes) -> SessionResult:
         return SessionResult([
             self._dispatch("program_begin", self._call_native(_native.program_begin_wire, program_id, module_bytes)),
@@ -224,6 +227,17 @@ class Session:
         return self.upload(
             program_id=program_id,
             module_bytes=self.gpio_read_module(pin=pin, mode=mode, max_stack=max_stack),
+        )
+
+    def upload_time_now(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        max_stack: int = 1,
+    ) -> SessionResult:
+        return self.upload(
+            program_id=program_id,
+            module_bytes=self.time_now_module(max_stack=max_stack),
         )
 
     def run(self, *, program_id: int = DEFAULT_PROGRAM_ID, instruction_budget: int = DEFAULT_INSTRUCTION_BUDGET) -> ProtocolResult:
@@ -290,6 +304,24 @@ class Session:
         results.append(self.run(program_id=program_id, instruction_budget=instruction_budget))
         return SessionResult(results)
 
+    def time_now(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        instruction_budget: int = DEFAULT_INSTRUCTION_BUDGET,
+        handshake: bool = False,
+        query_caps: bool = False,
+        max_stack: int = 1,
+    ) -> SessionResult:
+        results: list[ProtocolResult] = []
+        if handshake:
+            results.append(self.hello())
+        if query_caps:
+            results.append(self.capabilities())
+        results.extend(self.upload_time_now(program_id=program_id, max_stack=max_stack).results)
+        results.append(self.run(program_id=program_id, instruction_budget=instruction_budget))
+        return SessionResult(results)
+
     def run_command(self, line: str, **options: Any) -> SessionResult:
         words = line.split()
         if not words:
@@ -308,6 +340,9 @@ class Session:
             return self.upload_gpio_read(
                 **self._with_gpio_read_options(words, command, options, allow_budget=False)
             )
+        if command in {"upload-time-now", "upload-time.now"}:
+            self._ensure_no_extra(words, command)
+            return self.upload_time_now(**options)
         if command == "run":
             return SessionResult([self.run(**self._with_optional_budget(words, command, options))])
         if command == "stop":
@@ -317,6 +352,8 @@ class Session:
             return self.blink(**self._with_optional_budget(words, command, options))
         if command in {"gpio-read", "gpio.read"}:
             return self.gpio_read(**self._with_gpio_read_options(words, command, options))
+        if command in {"time-now", "time.now", "now"}:
+            return self.time_now(**self._with_optional_budget(words, command, options))
         raise ValueError(f"unknown Board VM session command: {command}")
 
     def decode_response(self, response: bytes) -> dict[str, Any]:

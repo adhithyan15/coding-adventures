@@ -9,6 +9,16 @@
 use std::collections::BTreeMap;
 use std::fmt;
 
+use ieee802154_core::Address;
+
+const MESH_DISPATCH_PREFIX: u8 = 0b1000_0000;
+const MESH_ORIGINATOR_EXTENDED: u8 = 1 << 5;
+const MESH_FINAL_EXTENDED: u8 = 1 << 4;
+const MESH_HOPS_LEFT_MASK: u8 = 0b0000_1111;
+const MESH_EXTENDED_HOPS_LEFT: u8 = 0b0000_1111;
+const SHORT_ADDRESS_LEN: usize = 2;
+const EXTENDED_ADDRESS_LEN: usize = 8;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Dispatch {
     Ipv6,
@@ -33,6 +43,103 @@ impl Dispatch {
             value if value & 0b1111_0000 == 0b0101_0000 => Self::Broadcast,
             other => Self::Unknown(other),
         }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct MeshHeader {
+    pub hops_left: u8,
+    pub originator: Address,
+    pub final_destination: Address,
+}
+
+impl MeshHeader {
+    pub fn new(hops_left: u8, originator: Address, final_destination: Address) -> Self {
+        Self {
+            hops_left,
+            originator,
+            final_destination,
+        }
+    }
+
+    pub fn parse(bytes: &[u8]) -> Result<Self, SixlowpanError> {
+        Self::parse_with_len(bytes).map(|(header, _)| header)
+    }
+
+    pub fn encode(self) -> Vec<u8> {
+        let mut out = Vec::with_capacity(self.encoded_len());
+        let mut first = MESH_DISPATCH_PREFIX;
+        if matches!(self.originator, Address::Extended(_)) {
+            first |= MESH_ORIGINATOR_EXTENDED;
+        }
+        if matches!(self.final_destination, Address::Extended(_)) {
+            first |= MESH_FINAL_EXTENDED;
+        }
+        if self.hops_left >= MESH_EXTENDED_HOPS_LEFT {
+            first |= MESH_EXTENDED_HOPS_LEFT;
+            out.push(first);
+            out.push(self.hops_left);
+        } else {
+            first |= self.hops_left & MESH_HOPS_LEFT_MASK;
+            out.push(first);
+        }
+        encode_mesh_address(self.originator, &mut out);
+        encode_mesh_address(self.final_destination, &mut out);
+        out
+    }
+
+    pub fn encoded_len(self) -> usize {
+        1 + usize::from(self.hops_left >= MESH_EXTENDED_HOPS_LEFT)
+            + mesh_address_len(self.originator)
+            + mesh_address_len(self.final_destination)
+    }
+
+    fn parse_with_len(bytes: &[u8]) -> Result<(Self, usize), SixlowpanError> {
+        let Some((&first, _)) = bytes.split_first() else {
+            return Err(SixlowpanError::Truncated {
+                needed: 1,
+                remaining: 0,
+            });
+        };
+        if Dispatch::parse(first) != Dispatch::Mesh {
+            return Err(SixlowpanError::NotMesh(first));
+        }
+
+        let mut pos = 1;
+        let compressed_hops_left = first & MESH_HOPS_LEFT_MASK;
+        let hops_left = if compressed_hops_left == MESH_EXTENDED_HOPS_LEFT {
+            read_u8(bytes, &mut pos)?
+        } else {
+            compressed_hops_left
+        };
+        let originator = read_mesh_address(bytes, &mut pos, first & MESH_ORIGINATOR_EXTENDED != 0)?;
+        let final_destination =
+            read_mesh_address(bytes, &mut pos, first & MESH_FINAL_EXTENDED != 0)?;
+
+        Ok((
+            Self {
+                hops_left,
+                originator,
+                final_destination,
+            },
+            pos,
+        ))
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MeshPacket {
+    pub header: MeshHeader,
+    pub payload: Vec<u8>,
+}
+
+impl MeshPacket {
+    pub fn parse(bytes: &[u8]) -> Result<Self, SixlowpanError> {
+        let (header, header_len) = MeshHeader::parse_with_len(bytes)?;
+        Ok(Self {
+            header,
+            payload: bytes[header_len..].to_vec(),
+        })
     }
 }
 
@@ -402,6 +509,7 @@ pub enum SixlowpanError {
     },
     NotIphc(u8),
     NotFragment(u8),
+    NotMesh(u8),
     DatagramSizeTooLarge(u16),
     FragmentKeyMismatch {
         expected: ReassemblyKey,
@@ -429,6 +537,9 @@ impl fmt::Display for SixlowpanError {
             Self::NotFragment(value) => {
                 write!(f, "dispatch 0x{value:02x} is not a 6LoWPAN fragment header")
             }
+            Self::NotMesh(value) => {
+                write!(f, "dispatch 0x{value:02x} is not a 6LoWPAN mesh header")
+            }
             Self::DatagramSizeTooLarge(value) => {
                 write!(f, "6LoWPAN datagram size {value} exceeds 11-bit field")
             }
@@ -452,6 +563,54 @@ impl fmt::Display for SixlowpanError {
 }
 
 impl std::error::Error for SixlowpanError {}
+
+fn mesh_address_len(address: Address) -> usize {
+    match address {
+        Address::Short(_) => SHORT_ADDRESS_LEN,
+        Address::Extended(_) => EXTENDED_ADDRESS_LEN,
+    }
+}
+
+fn encode_mesh_address(address: Address, out: &mut Vec<u8>) {
+    match address {
+        Address::Short(value) => out.extend_from_slice(&value.to_le_bytes()),
+        Address::Extended(value) => out.extend_from_slice(&value.to_le_bytes()),
+    }
+}
+
+fn read_mesh_address(
+    bytes: &[u8],
+    pos: &mut usize,
+    extended: bool,
+) -> Result<Address, SixlowpanError> {
+    if extended {
+        Ok(Address::Extended(u64::from_le_bytes(read_array::<8>(
+            bytes, pos,
+        )?)))
+    } else {
+        Ok(Address::Short(u16::from_le_bytes(read_array::<2>(
+            bytes, pos,
+        )?)))
+    }
+}
+
+fn read_u8(bytes: &[u8], pos: &mut usize) -> Result<u8, SixlowpanError> {
+    Ok(read_array::<1>(bytes, pos)?[0])
+}
+
+fn read_array<const N: usize>(bytes: &[u8], pos: &mut usize) -> Result<[u8; N], SixlowpanError> {
+    let remaining = bytes.len().saturating_sub(*pos);
+    if remaining < N {
+        return Err(SixlowpanError::Truncated {
+            needed: N,
+            remaining,
+        });
+    }
+    let mut out = [0u8; N];
+    out.copy_from_slice(&bytes[*pos..*pos + N]);
+    *pos += N;
+    Ok(out)
+}
 
 fn validate_datagram_size(datagram_size: u16) -> Result<(), SixlowpanError> {
     if datagram_size > 0x07ff {
@@ -485,6 +644,55 @@ mod tests {
         assert_eq!(Dispatch::parse(0xc2), Dispatch::FragmentFirst);
         assert_eq!(Dispatch::parse(0xe2), Dispatch::FragmentNext);
         assert_eq!(Dispatch::parse(0x80), Dispatch::Mesh);
+    }
+
+    #[test]
+    fn mesh_header_round_trips_short_addresses() {
+        let header = MeshHeader::new(7, Address::Short(0x1234), Address::Short(0xabcd));
+        let encoded = header.encode();
+
+        assert_eq!(encoded, vec![0x87, 0x34, 0x12, 0xcd, 0xab]);
+        assert_eq!(MeshHeader::parse(&encoded).unwrap(), header);
+    }
+
+    #[test]
+    fn mesh_header_round_trips_extended_hops_and_addresses() {
+        let header = MeshHeader::new(
+            42,
+            Address::Extended(0x0012_4b00_0000_0001),
+            Address::Short(0xabcd),
+        );
+        let encoded = header.encode();
+
+        assert_eq!(encoded[0], 0xaf);
+        assert_eq!(encoded[1], 42);
+        assert_eq!(MeshHeader::parse(&encoded).unwrap(), header);
+    }
+
+    #[test]
+    fn mesh_packet_parser_strips_mesh_header() {
+        let mut bytes = MeshHeader::new(3, Address::Short(0x1001), Address::Short(0x1002)).encode();
+        bytes.extend_from_slice(&[0x60, 0xaa, 0xbb]);
+
+        let packet = MeshPacket::parse(&bytes).unwrap();
+
+        assert_eq!(packet.header.hops_left, 3);
+        assert_eq!(packet.payload, vec![0x60, 0xaa, 0xbb]);
+    }
+
+    #[test]
+    fn mesh_header_rejects_non_mesh_dispatch_and_truncation() {
+        assert_eq!(
+            MeshHeader::parse(&[0x41]),
+            Err(SixlowpanError::NotMesh(0x41))
+        );
+        assert_eq!(
+            MeshHeader::parse(&[0x8f]),
+            Err(SixlowpanError::Truncated {
+                needed: 1,
+                remaining: 0
+            })
+        );
     }
 
     #[test]

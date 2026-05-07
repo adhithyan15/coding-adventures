@@ -84,6 +84,17 @@ module CodingAdventures
         )
       end
 
+      def time_now_module(max_stack: 1)
+        native_session.time_now_module(max_stack)
+      end
+
+      def upload_time_now(program_id: @program_id, max_stack: 1)
+        upload(
+          program_id: program_id,
+          module_bytes: time_now_module(max_stack: max_stack)
+        )
+      end
+
       def run(
         program_id: @program_id,
         budget: @instruction_budget,
@@ -161,6 +172,27 @@ module CodingAdventures
         SessionResult.new(results: results)
       end
 
+      def time_now(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        max_stack: 1,
+        handshake: false,
+        query_caps: false,
+        host_name: @host_name,
+        host_nonce: @host_nonce
+      )
+        results = []
+        results << hello(host_name: host_name, host_nonce: host_nonce) if handshake
+        results << capabilities if query_caps
+        results.concat(upload_time_now(program_id: program_id, max_stack: max_stack).results)
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget
+        )
+        SessionResult.new(results: results)
+      end
+
       def run_command(line, **options)
         words = line.to_s.split
         command = words.shift
@@ -178,6 +210,9 @@ module CodingAdventures
           upload_blink(**options)
         when "upload-gpio-read", "upload-gpio.read"
           upload_gpio_read(**gpio_read_command_options(words, command, options, require_budget: false))
+        when "upload-time-now", "upload-time.now"
+          ensure_no_extra_arguments!(words, command)
+          upload_time_now(**options)
         when "run"
           SessionResult.new(results: [run(**options.merge(optional_budget(words, command)))])
         when "stop"
@@ -187,6 +222,8 @@ module CodingAdventures
           blink(**options.merge(optional_budget(words, command)))
         when "gpio-read", "gpio.read"
           gpio_read(**gpio_read_command_options(words, command, options))
+        when "time-now", "time.now", "now"
+          time_now(**options.merge(optional_budget(words, command)))
         else
           raise UnknownSessionCommandError, "unknown Board VM session command: #{command}"
         end

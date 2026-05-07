@@ -1,15 +1,18 @@
 use std::ffi::{c_char, c_long};
 use std::ptr;
 
-use board_vm_host::{BlinkProgram, GpioReadProgram, BLINK_MODULE_LEN, GPIO_READ_MODULE_LEN};
+use board_vm_host::{
+    BlinkProgram, GpioReadProgram, TimeNowProgram, BLINK_MODULE_LEN, GPIO_READ_MODULE_LEN,
+    TIME_NOW_MODULE_LEN,
+};
 use board_vm_language_core::{
     build_blink_module, build_caps_query_wire_frame, build_gpio_read_module,
     build_hello_wire_frame, build_program_begin_wire_frame, build_program_chunk_wire_frame,
     build_program_end_wire_frame, build_run_background_wire_frame, build_stop_wire_frame,
-    capability_board_metadata, capability_bytecode_callable, capability_flag_names,
-    capability_protocol_feature, decode_wire_response, program_format_name, run_status_name,
-    BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
-    LanguageCoreError,
+    build_time_now_module, capability_board_metadata, capability_bytecode_callable,
+    capability_flag_names, capability_protocol_feature, decode_wire_response, program_format_name,
+    run_status_name, BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
+    LanguageCoreError, LanguageValue,
 };
 use python_bridge::*;
 
@@ -98,6 +101,19 @@ unsafe extern "C" fn py_gpio_read_module(_module: PyObjectPtr, args: PyObjectPtr
     let module = match build_gpio_read_module_value(pin, mode, max_stack) {
         Ok(module) => module,
         Err(error) => return raise_core_error("gpio_read_module", error),
+    };
+    bytes_to_py(&module)
+}
+
+unsafe extern "C" fn py_time_now_module(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
+    let max_stack = match parse_arg_u8(args, 0, "max_stack") {
+        Some(value) => value,
+        None => return ptr::null_mut(),
+    };
+
+    let module = match build_time_now_module_value(max_stack) {
+        Ok(module) => module,
+        Err(error) => return raise_core_error("time_now_module", error),
     };
     bytes_to_py(&module)
 }
@@ -388,6 +404,7 @@ unsafe fn response_body_to_py(
                 "return_count",
                 usize_to_py(report.return_count as usize),
             );
+            dict_set(dict, "returns", language_values_to_py(&report.returns));
         }
         DecodedLanguageResponseBody::Error(error) => {
             dict_set(dict, "code", usize_to_py(error.code as usize));
@@ -417,6 +434,32 @@ unsafe fn capability_flag_names_to_py(flags: u16) -> PyObjectPtr {
     list
 }
 
+unsafe fn language_values_to_py(values: &[LanguageValue]) -> PyObjectPtr {
+    let list = PyList_New(values.len() as isize);
+    for (index, value) in values.iter().enumerate() {
+        PyList_SetItem(list, index as isize, language_value_to_py(value));
+    }
+    list
+}
+
+unsafe fn language_value_to_py(value: &LanguageValue) -> PyObjectPtr {
+    let dict = PyDict_New();
+    dict_set(dict, "kind", str_to_py(value.kind()));
+    let value_py = match value {
+        LanguageValue::Unit => py_none(),
+        LanguageValue::Bool(value) => bool_to_py(*value),
+        LanguageValue::U8(value) => usize_to_py(*value as usize),
+        LanguageValue::U16(value) => usize_to_py(*value as usize),
+        LanguageValue::U32(value) => usize_to_py(*value as usize),
+        LanguageValue::I16(value) => PyLong_FromLong(*value as c_long),
+        LanguageValue::Handle(value) => usize_to_py(*value as usize),
+        LanguageValue::Bytes(value) => bytes_to_py(value),
+        LanguageValue::String(value) => str_to_py(value),
+    };
+    dict_set(dict, "value", value_py);
+    dict
+}
+
 fn build_blink_module_value(
     pin: u8,
     high_ms: u16,
@@ -433,6 +476,13 @@ fn build_blink_module_value(
         },
         &mut module,
     )?;
+    module.truncate(len);
+    Ok(module)
+}
+
+fn build_time_now_module_value(max_stack: u8) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; TIME_NOW_MODULE_LEN];
+    let len = build_time_now_module(TimeNowProgram { max_stack }, &mut module)?;
     module.truncate(len);
     Ok(module)
 }
@@ -556,7 +606,7 @@ unsafe fn raise_core_error(context: &str, error: LanguageCoreError) -> PyObjectP
 
 #[no_mangle]
 pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
-    let methods: &'static mut [PyMethodDef; 11] = Box::leak(Box::new([
+    let methods: &'static mut [PyMethodDef; 12] = Box::leak(Box::new([
         PyMethodDef {
             ml_name: b"hello_wire\0".as_ptr() as *const c_char,
             ml_meth: Some(py_hello_wire),
@@ -580,6 +630,12 @@ pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
             ml_meth: Some(py_gpio_read_module),
             ml_flags: METH_VARARGS,
             ml_doc: b"Build a Board VM GPIO read BVM module in Rust.\0".as_ptr() as *const c_char,
+        },
+        PyMethodDef {
+            ml_name: b"time_now_module\0".as_ptr() as *const c_char,
+            ml_meth: Some(py_time_now_module),
+            ml_flags: METH_VARARGS,
+            ml_doc: b"Build a Board VM time.now_ms BVM module in Rust.\0".as_ptr() as *const c_char,
         },
         PyMethodDef {
             ml_name: b"program_begin_wire\0".as_ptr() as *const c_char,

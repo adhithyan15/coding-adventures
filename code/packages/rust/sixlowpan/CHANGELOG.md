@@ -8,6 +8,8 @@ All notable changes to this package will be documented in this file.
 
 - 6LoWPAN dispatch classification for IPv6, HC1, IPHC, mesh, broadcast, and
   fragmentation headers.
+- Mesh header parse/encode helpers for hop limits and short/extended
+  originator/final addresses.
 - LOWPAN_IPHC first/second byte parsing plus fragment first/next header
   parse/encode helpers.
 - Fragment payload parsing plus deterministic tag/size-keyed reassembly

@@ -751,6 +751,12 @@ integration lifecycle.
 
 Uses D19 actors and D18D tools.
 
+**Initial Rust implementation:** `code/packages/rust/smart-home-runtime` now
+provides a synchronous runtime core over the normalized registry: event-bus
+subscriptions, command validation against entity capabilities, accepted command
+results with optimistic state expiry, device-event replay into the state cache,
+bridge health updates, and supervised bridge-worker heartbeat/restart signals.
+
 ### `smart-home-discovery`
 
 Reusable discovery helpers:
@@ -778,6 +784,13 @@ Hue CLIP v2 HTTP client:
 - resource commands
 - event stream connection
 - bridge diagnostics
+
+**Initial Rust implementation:** `code/packages/rust/hue-client` now owns a
+transport-neutral CLIP v2 request/response layer. It builds registration,
+resource, command, and event-stream HTTP-shaped messages, parses Hue v2
+envelopes/errors and registration responses, decodes light resources, and uses
+an injectable transport trait so HTTPS/TLS, simulator, and sandbox bindings can
+remain later runtime choices.
 
 ### `hue-integration`
 

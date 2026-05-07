@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.DataMatrix.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>ISO/IEC 16022:2006 Data Matrix ECC200 encoder for F# — produces a ModuleGrid scannable by any standard decoder</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>CodingAdventures.DataMatrix.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../barcode-2d/CodingAdventures.Barcode2D.fsproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataMatrix.fs" />
+  </ItemGroup>
+</Project>

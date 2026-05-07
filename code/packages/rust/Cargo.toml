@@ -531,5 +531,8 @@ members = [
     "zigbee-aps",
     "zwave-serial-api",
     "thread-mle",
+    "smart-home-runtime",
     "zigbee-zcl",
+    "hue-client",
+    "zwave-command-classes",
 ]
