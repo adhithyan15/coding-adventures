@@ -6,7 +6,9 @@
 
 #![forbid(unsafe_code)]
 
+use std::collections::BTreeMap;
 use std::fmt;
+use zigbee_nwk::{IeeeAddress, NetworkAddress};
 
 const FRAME_CONTROL_LEN: usize = 1;
 const ENDPOINT_LEN: usize = 1;
@@ -15,7 +17,7 @@ const CLUSTER_ID_LEN: usize = 2;
 const PROFILE_ID_LEN: usize = 2;
 const COUNTER_LEN: usize = 1;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct Endpoint(pub u8);
 
 impl Endpoint {
@@ -25,6 +27,10 @@ impl Endpoint {
 
     pub fn is_application(self) -> bool {
         (Self::MIN_APPLICATION.0..=Self::MAX_APPLICATION.0).contains(&self.0)
+    }
+
+    pub fn is_zdo(self) -> bool {
+        self == Self::ZDO
     }
 }
 
@@ -40,6 +46,17 @@ impl ClusterId {
     pub const LEVEL_CONTROL: Self = Self(0x0008);
     pub const TEMPERATURE_MEASUREMENT: Self = Self(0x0402);
     pub const OCCUPANCY_SENSING: Self = Self(0x0406);
+
+    pub fn kind(self) -> ClusterKind {
+        match self {
+            Self::BASIC | Self::ON_OFF | Self::LEVEL_CONTROL => ClusterKind::General,
+            Self::TEMPERATURE_MEASUREMENT | Self::OCCUPANCY_SENSING => {
+                ClusterKind::MeasurementAndSensing
+            }
+            Self(0xfc00..=0xffff) => ClusterKind::ManufacturerSpecific,
+            _ => ClusterKind::Unknown,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -48,6 +65,31 @@ pub struct ProfileId(pub u16);
 impl ProfileId {
     pub const ZIGBEE_DEVICE_PROFILE: Self = Self(0x0000);
     pub const HOME_AUTOMATION: Self = Self(0x0104);
+
+    pub fn kind(self) -> ProfileKind {
+        match self {
+            Self::ZIGBEE_DEVICE_PROFILE => ProfileKind::ZigbeeDeviceProfile,
+            Self::HOME_AUTOMATION => ProfileKind::HomeAutomation,
+            Self(0xc000..=0xffff) => ProfileKind::ManufacturerSpecific,
+            _ => ProfileKind::Unknown,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ProfileKind {
+    ZigbeeDeviceProfile,
+    HomeAutomation,
+    ManufacturerSpecific,
+    Unknown,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ClusterKind {
+    General,
+    MeasurementAndSensing,
+    ManufacturerSpecific,
+    Unknown,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -176,6 +218,199 @@ pub struct ApsFrame {
     pub profile_id: ProfileId,
     pub counter: u8,
     pub payload: Vec<u8>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct EndpointAddress {
+    pub network_address: NetworkAddress,
+    pub endpoint: Endpoint,
+}
+
+impl EndpointAddress {
+    pub fn new(network_address: NetworkAddress, endpoint: Endpoint) -> Self {
+        Self {
+            network_address,
+            endpoint,
+        }
+    }
+
+    pub fn coordinator_zdo() -> Self {
+        Self::new(NetworkAddress::COORDINATOR, Endpoint::ZDO)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct ClusterEndpoint {
+    pub endpoint: Endpoint,
+    pub profile_id: ProfileId,
+    pub cluster_id: ClusterId,
+}
+
+impl ClusterEndpoint {
+    pub fn new(endpoint: Endpoint, profile_id: ProfileId, cluster_id: ClusterId) -> Self {
+        Self {
+            endpoint,
+            profile_id,
+            cluster_id,
+        }
+    }
+
+    pub fn is_home_automation(self) -> bool {
+        self.profile_id.kind() == ProfileKind::HomeAutomation
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct BindingSource {
+    pub ieee_address: IeeeAddress,
+    pub endpoint: Endpoint,
+}
+
+impl BindingSource {
+    pub fn new(ieee_address: IeeeAddress, endpoint: Endpoint) -> Self {
+        Self {
+            ieee_address,
+            endpoint,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum BindingDestination {
+    Group(GroupAddress),
+    Device {
+        ieee_address: IeeeAddress,
+        endpoint: Endpoint,
+    },
+}
+
+impl BindingDestination {
+    pub fn device(ieee_address: IeeeAddress, endpoint: Endpoint) -> Self {
+        Self::Device {
+            ieee_address,
+            endpoint,
+        }
+    }
+
+    pub fn group(group: GroupAddress) -> Self {
+        Self::Group(group)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BindingEntry {
+    pub source: BindingSource,
+    pub cluster_id: ClusterId,
+    pub destination: BindingDestination,
+}
+
+impl BindingEntry {
+    pub fn new(
+        source: BindingSource,
+        cluster_id: ClusterId,
+        destination: BindingDestination,
+    ) -> Self {
+        Self {
+            source,
+            cluster_id,
+            destination,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct BindingTable {
+    entries: BTreeMap<BindingKey, BindingEntry>,
+}
+
+impl BindingTable {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn len(&self) -> usize {
+        self.entries.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.entries.is_empty()
+    }
+
+    pub fn upsert(&mut self, entry: BindingEntry) -> Option<BindingEntry> {
+        self.entries.insert(BindingKey::from(&entry), entry)
+    }
+
+    pub fn remove(&mut self, entry: &BindingEntry) -> Option<BindingEntry> {
+        self.entries.remove(&BindingKey::from(entry))
+    }
+
+    pub fn entries(&self) -> impl Iterator<Item = &BindingEntry> {
+        self.entries.values()
+    }
+
+    pub fn bindings_for(
+        &self,
+        source: BindingSource,
+        cluster_id: ClusterId,
+    ) -> impl Iterator<Item = &BindingEntry> {
+        self.entries
+            .values()
+            .filter(move |entry| entry.source == source && entry.cluster_id == cluster_id)
+    }
+
+    pub fn destinations_for(
+        &self,
+        source: BindingSource,
+        cluster_id: ClusterId,
+    ) -> Vec<BindingDestination> {
+        self.bindings_for(source, cluster_id)
+            .map(|entry| entry.destination)
+            .collect()
+    }
+
+    pub fn groups_for(&self, source: BindingSource, cluster_id: ClusterId) -> Vec<GroupAddress> {
+        self.destinations_for(source, cluster_id)
+            .into_iter()
+            .filter_map(|destination| match destination {
+                BindingDestination::Group(group) => Some(group),
+                BindingDestination::Device { .. } => None,
+            })
+            .collect()
+    }
+
+    pub fn device_destinations_for(
+        &self,
+        source: BindingSource,
+        cluster_id: ClusterId,
+    ) -> Vec<(IeeeAddress, Endpoint)> {
+        self.destinations_for(source, cluster_id)
+            .into_iter()
+            .filter_map(|destination| match destination {
+                BindingDestination::Device {
+                    ieee_address,
+                    endpoint,
+                } => Some((ieee_address, endpoint)),
+                BindingDestination::Group(_) => None,
+            })
+            .collect()
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+struct BindingKey {
+    source: BindingSource,
+    cluster_id: ClusterId,
+    destination: BindingDestination,
+}
+
+impl From<&BindingEntry> for BindingKey {
+    fn from(entry: &BindingEntry) -> Self {
+        Self {
+            source: entry.source,
+            cluster_id: entry.cluster_id,
+            destination: entry.destination,
+        }
+    }
 }
 
 impl ApsFrame {
@@ -448,8 +683,91 @@ mod tests {
     #[test]
     fn endpoint_knows_application_range() {
         assert!(!Endpoint::ZDO.is_application());
+        assert!(Endpoint::ZDO.is_zdo());
         assert!(Endpoint(1).is_application());
         assert!(Endpoint(240).is_application());
         assert!(!Endpoint(241).is_application());
+    }
+
+    #[test]
+    fn profile_and_cluster_ids_are_classified() {
+        assert_eq!(
+            ProfileId::ZIGBEE_DEVICE_PROFILE.kind(),
+            ProfileKind::ZigbeeDeviceProfile
+        );
+        assert_eq!(
+            ProfileId::HOME_AUTOMATION.kind(),
+            ProfileKind::HomeAutomation
+        );
+        assert_eq!(ProfileId(0xc001).kind(), ProfileKind::ManufacturerSpecific);
+        assert_eq!(ClusterId::ON_OFF.kind(), ClusterKind::General);
+        assert_eq!(
+            ClusterId::OCCUPANCY_SENSING.kind(),
+            ClusterKind::MeasurementAndSensing
+        );
+        assert_eq!(ClusterId(0xfc00).kind(), ClusterKind::ManufacturerSpecific);
+    }
+
+    #[test]
+    fn endpoint_addresses_keep_nwk_and_aps_identity_together() {
+        let address = EndpointAddress::new(NetworkAddress(0x1234), Endpoint(11));
+        assert_eq!(address.network_address, NetworkAddress(0x1234));
+        assert_eq!(address.endpoint, Endpoint(11));
+        assert_eq!(EndpointAddress::coordinator_zdo().endpoint, Endpoint::ZDO);
+
+        let cluster_endpoint =
+            ClusterEndpoint::new(Endpoint(1), ProfileId::HOME_AUTOMATION, ClusterId::ON_OFF);
+        assert!(cluster_endpoint.is_home_automation());
+    }
+
+    #[test]
+    fn binding_table_tracks_device_and_group_destinations() {
+        let source = BindingSource::new(IeeeAddress(0x0012_4b00_0000_0001), Endpoint(1));
+        let device_destination =
+            BindingDestination::device(IeeeAddress(0x0012_4b00_0000_0002), Endpoint(2));
+        let group_destination = BindingDestination::group(GroupAddress(0x1234));
+        let mut table = BindingTable::new();
+
+        assert!(table.is_empty());
+        assert_eq!(
+            table.upsert(BindingEntry::new(
+                source,
+                ClusterId::ON_OFF,
+                device_destination
+            )),
+            None
+        );
+        assert_eq!(
+            table.upsert(BindingEntry::new(
+                source,
+                ClusterId::ON_OFF,
+                group_destination
+            )),
+            None
+        );
+
+        assert_eq!(table.len(), 2);
+        assert_eq!(
+            table.destinations_for(source, ClusterId::ON_OFF),
+            vec![group_destination, device_destination]
+        );
+        assert_eq!(
+            table.groups_for(source, ClusterId::ON_OFF),
+            vec![GroupAddress(0x1234)]
+        );
+        assert_eq!(
+            table.device_destinations_for(source, ClusterId::ON_OFF),
+            vec![(IeeeAddress(0x0012_4b00_0000_0002), Endpoint(2))]
+        );
+
+        let removed = table
+            .remove(&BindingEntry::new(
+                source,
+                ClusterId::ON_OFF,
+                device_destination,
+            ))
+            .unwrap();
+        assert_eq!(removed.destination, device_destination);
+        assert_eq!(table.len(), 1);
     }
 }
