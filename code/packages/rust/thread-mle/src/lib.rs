@@ -212,6 +212,112 @@ impl Tlv {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct LeaderData {
+    pub partition_id: u32,
+    pub weighting: u8,
+    pub data_version: u8,
+    pub stable_data_version: u8,
+    pub leader_router_id: u8,
+}
+
+impl LeaderData {
+    pub const ENCODED_LEN: usize = 8;
+
+    pub fn parse(value: &[u8]) -> Result<Self, MleError> {
+        if value.len() != Self::ENCODED_LEN {
+            return Err(MleError::InvalidTlvLength {
+                tlv_type: TlvType::LeaderData,
+                expected: Self::ENCODED_LEN,
+                actual: value.len(),
+            });
+        }
+        Ok(Self {
+            partition_id: u32::from_be_bytes([value[0], value[1], value[2], value[3]]),
+            weighting: value[4],
+            data_version: value[5],
+            stable_data_version: value[6],
+            leader_router_id: value[7],
+        })
+    }
+
+    pub fn encode(self) -> [u8; Self::ENCODED_LEN] {
+        let partition_id = self.partition_id.to_be_bytes();
+        [
+            partition_id[0],
+            partition_id[1],
+            partition_id[2],
+            partition_id[3],
+            self.weighting,
+            self.data_version,
+            self.stable_data_version,
+            self.leader_router_id,
+        ]
+    }
+
+    pub fn to_tlv(self) -> Tlv {
+        Tlv {
+            tlv_type: TlvType::LeaderData,
+            value: self.encode().to_vec(),
+        }
+    }
+
+    pub fn has_newer_network_data_than(self, other: Self) -> bool {
+        version_is_newer(self.data_version, other.data_version)
+            || version_is_newer(self.stable_data_version, other.stable_data_version)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ThreadNetworkData {
+    pub bytes: Vec<u8>,
+}
+
+impl ThreadNetworkData {
+    pub fn new(bytes: Vec<u8>) -> Result<Self, MleError> {
+        if bytes.len() > u8::MAX as usize {
+            return Err(MleError::TlvTooLong(bytes.len()));
+        }
+        Ok(Self { bytes })
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.bytes.is_empty()
+    }
+
+    pub fn len(&self) -> usize {
+        self.bytes.len()
+    }
+
+    pub fn to_tlv(&self) -> Tlv {
+        Tlv {
+            tlv_type: TlvType::NetworkData,
+            value: self.bytes.clone(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct NetworkDataAdvertisement {
+    pub leader_data: Option<LeaderData>,
+    pub network_data: Option<ThreadNetworkData>,
+}
+
+impl NetworkDataAdvertisement {
+    pub fn from_message(message: &MleMessage) -> Result<Self, MleError> {
+        Ok(Self {
+            leader_data: leader_data_from_message(message)?,
+            network_data: network_data_from_message(message),
+        })
+    }
+
+    pub fn has_network_data(&self) -> bool {
+        self.network_data
+            .as_ref()
+            .is_some_and(|network_data| !network_data.is_empty())
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MleMessage {
     pub command: MleCommand,
@@ -567,8 +673,16 @@ impl Default for AttachMachine {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum MleError {
-    Truncated { needed: usize, remaining: usize },
+    Truncated {
+        needed: usize,
+        remaining: usize,
+    },
     TlvTooLong(usize),
+    InvalidTlvLength {
+        tlv_type: TlvType,
+        expected: usize,
+        actual: usize,
+    },
     UnknownNeighbor(ThreadNeighborId),
 }
 
@@ -582,6 +696,14 @@ impl fmt::Display for MleError {
                 )
             }
             Self::TlvTooLong(len) => write!(f, "Thread MLE TLV too long: {len}"),
+            Self::InvalidTlvLength {
+                tlv_type,
+                expected,
+                actual,
+            } => write!(
+                f,
+                "Thread MLE {tlv_type:?} TLV has length {actual}, expected {expected}"
+            ),
             Self::UnknownNeighbor(neighbor_id) => {
                 write!(f, "unknown Thread neighbor 0x{:04x}", neighbor_id.0)
             }
@@ -590,6 +712,26 @@ impl fmt::Display for MleError {
 }
 
 impl std::error::Error for MleError {}
+
+pub fn leader_data_from_message(message: &MleMessage) -> Result<Option<LeaderData>, MleError> {
+    message
+        .find_tlv(TlvType::LeaderData)
+        .map(|tlv| LeaderData::parse(&tlv.value))
+        .transpose()
+}
+
+pub fn network_data_from_message(message: &MleMessage) -> Option<ThreadNetworkData> {
+    message
+        .find_tlv(TlvType::NetworkData)
+        .map(|tlv| ThreadNetworkData {
+            bytes: tlv.value.clone(),
+        })
+}
+
+pub fn version_is_newer(candidate: u8, current: u8) -> bool {
+    let distance = candidate.wrapping_sub(current);
+    distance != 0 && distance < 128
+}
 
 fn role_from_child_id_response(message: &MleMessage) -> DeviceRole {
     let mode = mode_from_message(message);
@@ -703,6 +845,69 @@ mod tests {
 
         assert_eq!(ScanMask::parse(scan.encode()), scan);
         assert_eq!(Mode::parse(mode.encode()), mode);
+    }
+
+    #[test]
+    fn leader_data_tlv_round_trips_and_compares_versions() {
+        let current = LeaderData {
+            partition_id: 0x0102_0304,
+            weighting: 64,
+            data_version: 254,
+            stable_data_version: 10,
+            leader_router_id: 7,
+        };
+        let newer = LeaderData {
+            data_version: 1,
+            stable_data_version: 11,
+            ..current
+        };
+
+        assert_eq!(LeaderData::parse(&current.encode()).unwrap(), current);
+        assert_eq!(current.to_tlv().tlv_type, TlvType::LeaderData);
+        assert!(newer.has_newer_network_data_than(current));
+        assert!(!current.has_newer_network_data_than(newer));
+    }
+
+    #[test]
+    fn network_data_advertisement_extracts_leader_and_raw_network_data() {
+        let leader_data = LeaderData {
+            partition_id: 0x1122_3344,
+            weighting: 16,
+            data_version: 9,
+            stable_data_version: 7,
+            leader_router_id: 3,
+        };
+        let network_data = ThreadNetworkData::new(vec![0x12, 0x34, 0x56]).unwrap();
+        let message = MleMessage {
+            command: MleCommand::DataResponse,
+            tlvs: vec![leader_data.to_tlv(), network_data.to_tlv()],
+        };
+
+        let advertisement = NetworkDataAdvertisement::from_message(&message).unwrap();
+
+        assert_eq!(advertisement.leader_data, Some(leader_data));
+        assert_eq!(
+            advertisement.network_data.as_ref().unwrap().bytes,
+            vec![0x12, 0x34, 0x56]
+        );
+        assert!(advertisement.has_network_data());
+    }
+
+    #[test]
+    fn leader_data_rejects_wrong_length_tlv() {
+        let message = MleMessage {
+            command: MleCommand::DataResponse,
+            tlvs: vec![Tlv::new(TlvType::LeaderData, vec![0, 1, 2]).unwrap()],
+        };
+
+        assert_eq!(
+            leader_data_from_message(&message),
+            Err(MleError::InvalidTlvLength {
+                tlv_type: TlvType::LeaderData,
+                expected: LeaderData::ENCODED_LEN,
+                actual: 3,
+            })
+        );
     }
 
     #[test]
