@@ -12,6 +12,7 @@ from board_vm_native import Session
 session = Session()
 frames = session.blink(program_id=1, instruction_budget=12).frames
 read_frames = session.gpio_read(pin=13, mode="pullup").frames
+write_frames = session.gpio_write(pin=13, value=True).frames
 now_frames = session.time_now(program_id=2, instruction_budget=12).frames
 ```
 
@@ -27,10 +28,19 @@ GPIO reads follow the same path: Python resolves friendly mode names, while
 the GPIO-read module bytes, request IDs, frames, and response decoding stay in
 Rust.
 
+GPIO writes are also one-shot Rust-built modules:
+
+```python
+session.gpio_write(pin=13, value=True)
+session.gpio_high(pin=13)
+session.gpio_low(pin=13)
+```
+
 The REPL-style sugar is intentionally thin as well:
 
 ```python
 session.run_command("gpio-read 13 pullup 24")
+session.run_command("gpio-write 13 high 24")
 session.run_command("stop")
 ```
 

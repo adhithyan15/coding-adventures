@@ -13,9 +13,10 @@ use std::slice;
 use std::str;
 
 use board_vm_host::{
-    write_blink_module, write_gpio_read_module, write_time_now_module, BlinkProgram,
-    GpioReadProgram, HostError, HostSession, TimeNowProgram, BLINK_MODULE_LEN,
-    DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID, GPIO_READ_MODULE_LEN, TIME_NOW_MODULE_LEN,
+    write_blink_module, write_gpio_read_module, write_gpio_write_module, write_time_now_module,
+    BlinkProgram, GpioReadProgram, GpioWriteProgram, HostError, HostSession, TimeNowProgram,
+    BLINK_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID, GPIO_READ_MODULE_LEN,
+    GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN,
 };
 use board_vm_protocol::{
     decode_caps_report_header, decode_error_payload, decode_frame, decode_hello_ack,
@@ -416,6 +417,13 @@ pub fn build_gpio_read_module(
     out: &mut [u8],
 ) -> Result<usize, LanguageCoreError> {
     Ok(write_gpio_read_module(program, out)?)
+}
+
+pub fn build_gpio_write_module(
+    program: GpioWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_gpio_write_module(program, out)?)
 }
 
 pub fn build_time_now_module(
@@ -824,6 +832,31 @@ pub unsafe extern "C" fn board_vm_language_gpio_read_module(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn board_vm_language_gpio_write_module(
+    pin: u8,
+    value: u8,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_gpio_write_module(
+            GpioWriteProgram {
+                pin,
+                value: value != 0,
+                max_stack,
+            },
+            module_out,
+        )?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn board_vm_language_time_now_module(
     max_stack: u8,
     module_out: *mut u8,
@@ -969,6 +1002,11 @@ pub extern "C" fn board_vm_language_blink_module_len() -> u64 {
 #[no_mangle]
 pub extern "C" fn board_vm_language_gpio_read_module_len() -> u64 {
     GPIO_READ_MODULE_LEN as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_gpio_write_module_len() -> u64 {
+    GPIO_WRITE_MODULE_LEN as u64
 }
 
 #[no_mangle]
@@ -1167,6 +1205,19 @@ mod tests {
         };
         assert_eq!(gpio_read_status.code, BoardVmLanguageStatusCode::Ok as u32);
         assert_eq!(gpio_read_status.len, GPIO_READ_MODULE_LEN as u64);
+
+        let mut gpio_write_module = [0u8; GPIO_WRITE_MODULE_LEN];
+        let gpio_write_status = unsafe {
+            board_vm_language_gpio_write_module(
+                13,
+                1,
+                3,
+                gpio_write_module.as_mut_ptr(),
+                gpio_write_module.len() as u64,
+            )
+        };
+        assert_eq!(gpio_write_status.code, BoardVmLanguageStatusCode::Ok as u32);
+        assert_eq!(gpio_write_status.len, GPIO_WRITE_MODULE_LEN as u64);
 
         let begin = unsafe {
             board_vm_language_program_begin_wire(

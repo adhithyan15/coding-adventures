@@ -30,6 +30,10 @@ def test_native_session_builds_protocol_bytes_in_rust():
     assert isinstance(gpio_module, bytes)
     assert len(gpio_module) > 0
 
+    gpio_write_module = session.gpio_write_module(pin=13, value=True, max_stack=3)
+    assert isinstance(gpio_write_module, bytes)
+    assert len(gpio_write_module) > 0
+
     time_module = session.time_now_module(max_stack=1)
     assert isinstance(time_module, bytes)
     assert len(time_module) > 0
@@ -98,6 +102,35 @@ def test_run_command_accepts_repl_style_gpio_read():
         "run",
     ]
     assert result.frames == transport.frames
+
+
+def test_run_command_accepts_repl_style_gpio_write_and_levels():
+    transport = FakeWriteTransport()
+    session = Session(transport=transport)
+
+    result = session.run_command("gpio-write 13 high 24", program_id=9)
+    high = session.run_command("gpio-high 13 24", program_id=10)
+    low = session.run_command("gpio-low 13 24", program_id=11)
+
+    assert [item.command for item in result.results] == [
+        "program_begin",
+        "program_chunk",
+        "program_end",
+        "run",
+    ]
+    assert [item.command for item in high.results] == [
+        "program_begin",
+        "program_chunk",
+        "program_end",
+        "run",
+    ]
+    assert [item.command for item in low.results] == [
+        "program_begin",
+        "program_chunk",
+        "program_end",
+        "run",
+    ]
+    assert result.frames + high.frames + low.frames == transport.frames
 
 
 def test_run_command_accepts_repl_style_time_now():

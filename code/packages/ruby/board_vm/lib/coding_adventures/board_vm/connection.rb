@@ -139,6 +139,28 @@ module CodingAdventures
         )
       end
 
+      def gpio_write!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        pin:,
+        value:,
+        max_stack: 3
+      )
+        ensure_uno_r4_wifi!
+
+        session.gpio_write(
+          program_id: program_id,
+          budget: budget,
+          pin: pin,
+          value: value,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
+        )
+      end
+
       def time_now!(
         program_id: DEFAULT_PROGRAM_ID,
         budget: DEFAULT_INSTRUCTION_BUDGET,
@@ -342,6 +364,32 @@ module CodingAdventures
           mode: mode,
           max_stack: max_stack
         )
+      end
+
+      def write(
+        pin:,
+        value:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 3
+      )
+        @connection.gpio_write!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          pin: pin,
+          value: value,
+          max_stack: max_stack
+        )
+      end
+
+      def high(pin:, **options)
+        write(pin: pin, value: true, **options)
+      end
+
+      def low(pin:, **options)
+        write(pin: pin, value: false, **options)
       end
     end
 
