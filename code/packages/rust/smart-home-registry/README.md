@@ -23,6 +23,7 @@ Current scope:
 - immutable event log in arrival order
 - state updates from normalized event deltas
 - conflict detection for duplicate protocol identifiers
+- capability-grant storage and active-grant lookup by Chief of Staff agent
 
 Out of scope:
 

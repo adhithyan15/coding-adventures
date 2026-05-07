@@ -18,3 +18,5 @@ All notable changes to this package will be documented in this file.
   bridge/device identity for pollers and supervisors.
 - State refresh result application with reports for refreshed and still-missing
   entities.
+- Capability-grant storage, principal indexes, active-grant queries, and
+  status updates for Chief of Staff agent authorization.
