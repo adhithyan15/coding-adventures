@@ -60,6 +60,10 @@ module CodingAdventures
         Led.new(self)
       end
 
+      def time
+        TimeApi.new(self)
+      end
+
       def eject
         Ejector.new(self)
       end
@@ -102,6 +106,24 @@ module CodingAdventures
           pin: pin,
           high_ms: high_ms,
           low_ms: low_ms,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
+        )
+      end
+
+      def time_now!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 1
+      )
+        ensure_uno_r4_wifi!
+
+        session.time_now(
+          program_id: program_id,
+          budget: budget,
           max_stack: max_stack,
           handshake: true,
           query_caps: true,
@@ -248,6 +270,26 @@ module CodingAdventures
           pin: pin,
           high_ms: high_ms,
           low_ms: low_ms,
+          max_stack: max_stack
+        )
+      end
+    end
+
+    class TimeApi
+      def initialize(connection)
+        @connection = connection
+      end
+
+      def now_ms(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 1
+      )
+        @connection.time_now!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
           max_stack: max_stack
         )
       end
