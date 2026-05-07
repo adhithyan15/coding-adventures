@@ -3,7 +3,7 @@ use board_vm_protocol::{
     decode_caps_report_header, decode_error_payload, decode_frame, decode_hello_ack,
     decode_program_begin, decode_program_chunk, decode_program_end, decode_run_report_header,
     ErrorPayload, HelloAck, MessageType, ProgramBegin, ProgramChunk, ProgramEnd, ProtocolError,
-    RunReportHeader, RunStatus, FLAG_IS_ERROR_RESPONSE,
+    RunReportHeader, RunStatus, Value, FLAG_IS_ERROR_RESPONSE,
 };
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -165,7 +165,36 @@ impl From<ProgramEnd> for ProgramEndReport {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum RunValue {
+    Unit,
+    Bool(bool),
+    U8(u8),
+    U16(u16),
+    U32(u32),
+    I16(i16),
+    Handle(u16),
+    Bytes(Vec<u8>),
+    String(String),
+}
+
+impl From<Value<'_>> for RunValue {
+    fn from(value: Value<'_>) -> Self {
+        match value {
+            Value::Unit => Self::Unit,
+            Value::Bool(value) => Self::Bool(value),
+            Value::U8(value) => Self::U8(value),
+            Value::U16(value) => Self::U16(value),
+            Value::U32(value) => Self::U32(value),
+            Value::I16(value) => Self::I16(value),
+            Value::Handle(value) => Self::Handle(value),
+            Value::Bytes(value) => Self::Bytes(value.to_vec()),
+            Value::String(value) => Self::String(value.to_owned()),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct RunReportInfo {
     pub program_id: u16,
     pub status: RunStatus,
@@ -173,6 +202,7 @@ pub struct RunReportInfo {
     pub elapsed_ms: u32,
     pub stack_depth: u8,
     pub open_handles: u8,
+    pub returns: Vec<RunValue>,
 }
 
 impl From<RunReportHeader> for RunReportInfo {
@@ -184,6 +214,7 @@ impl From<RunReportHeader> for RunReportInfo {
             elapsed_ms: value.elapsed_ms,
             stack_depth: value.stack_depth,
             open_handles: value.open_handles,
+            returns: Vec::new(),
         }
     }
 }
@@ -360,9 +391,21 @@ where
         request_len: usize,
     ) -> Result<RunReportInfo, ClientError> {
         let payload = self.exchange_checked(request_id, request_len, MessageType::RUN_REPORT)?;
-        let (report, decoder) = decode_run_report_header(payload)?;
+        let (report, mut decoder) = decode_run_report_header(payload)?;
+        let mut returns = Vec::with_capacity(report.return_count as usize);
+        for _ in 0..report.return_count {
+            returns.push(decoder.read_value()?.into());
+        }
         decoder.finish()?;
-        Ok(report.into())
+        Ok(RunReportInfo {
+            program_id: report.program_id,
+            status: report.status,
+            instructions_executed: report.instructions_executed,
+            elapsed_ms: report.elapsed_ms,
+            stack_depth: report.stack_depth,
+            open_handles: report.open_handles,
+            returns,
+        })
     }
 
     fn exchange_checked(
@@ -475,6 +518,7 @@ mod tests {
         assert_eq!(run.status, RunStatus::Running);
         assert!(run.instructions_executed > 0);
         assert_eq!(run.open_handles, 1);
+        assert!(run.returns.is_empty());
 
         let board = &client.transport().board;
         assert_eq!(
@@ -501,6 +545,61 @@ mod tests {
         let stop = client.stop().unwrap();
         assert_eq!(stop.status, RunStatus::Stopped);
         assert_eq!(stop.open_handles, 0);
+    }
+
+    #[test]
+    fn decodes_run_report_return_values() {
+        use board_vm_protocol::{
+            decode_frame, encode_frame, encode_run_report_header, encode_value, Frame,
+            RunReportHeader, Value, FLAG_IS_RESPONSE,
+        };
+
+        struct ReturnValueTransport {
+            payload: [u8; 64],
+        }
+
+        impl RawFrameTransport for ReturnValueTransport {
+            fn exchange_raw_frame(
+                &mut self,
+                request: &[u8],
+                response_out: &mut [u8],
+            ) -> Result<usize, TransportError> {
+                let request = decode_frame(request).map_err(|_| TransportError::Io)?;
+                let mut payload_len = encode_run_report_header(
+                    &RunReportHeader {
+                        program_id: 2,
+                        status: RunStatus::Halted,
+                        instructions_executed: 3,
+                        elapsed_ms: 4,
+                        stack_depth: 1,
+                        open_handles: 0,
+                        return_count: 2,
+                    },
+                    &mut self.payload,
+                )
+                .map_err(|_| TransportError::Io)?;
+                payload_len += encode_value(&Value::Bool(false), &mut self.payload[payload_len..])
+                    .map_err(|_| TransportError::Io)?;
+                payload_len += encode_value(&Value::U32(42), &mut self.payload[payload_len..])
+                    .map_err(|_| TransportError::Io)?;
+                encode_frame(
+                    &Frame {
+                        flags: FLAG_IS_RESPONSE,
+                        message_type: MessageType::RUN_REPORT,
+                        request_id: request.request_id,
+                        payload: &self.payload[..payload_len],
+                    },
+                    response_out,
+                )
+                .map_err(|_| TransportError::Io)
+            }
+        }
+
+        let transport = ReturnValueTransport { payload: [0; 64] };
+        let mut client: BoardVmClient<_, 256, 512, 512> = BoardVmClient::new(transport);
+
+        let run = client.run_background(2, 32).unwrap();
+        assert_eq!(run.returns, vec![RunValue::Bool(false), RunValue::U32(42)]);
     }
 
     #[test]
