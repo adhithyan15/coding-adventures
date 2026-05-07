@@ -8,9 +8,10 @@
 #![forbid(unsafe_code)]
 
 use smart_home_core::{
-    Bridge, BridgeId, CapabilityId, Device, DeviceEvent, DeviceEventType, DeviceId, Entity,
-    EntityId, EntityKind, EventId, Health, ProtocolFamily, ProtocolIdentifier, Scene, SceneId,
-    StateConfidence, StateSnapshot, StateSource, Value,
+    AgentId, Bridge, BridgeId, CapabilityGrant, CapabilityGrantId, CapabilityGrantStatus,
+    CapabilityId, Device, DeviceEvent, DeviceEventType, DeviceId, Entity, EntityId, EntityKind,
+    EventId, Health, ProtocolFamily, ProtocolIdentifier, Scene, SceneId, StateConfidence,
+    StateSnapshot, StateSource, Value,
 };
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
@@ -29,6 +30,7 @@ pub enum RegistryError {
     UnknownDevice(DeviceId),
     UnknownEntity(EntityId),
     UnknownScene(SceneId),
+    UnknownCapabilityGrant(CapabilityGrantId),
     DuplicateEvent(EventId),
     EventBridgeMismatch {
         event_id: EventId,
@@ -60,6 +62,9 @@ impl fmt::Display for RegistryError {
             Self::UnknownDevice(id) => write!(f, "unknown smart-home device {id}"),
             Self::UnknownEntity(id) => write!(f, "unknown smart-home entity {id}"),
             Self::UnknownScene(id) => write!(f, "unknown smart-home scene {id}"),
+            Self::UnknownCapabilityGrant(id) => {
+                write!(f, "unknown smart-home capability grant {id}")
+            }
             Self::DuplicateEvent(id) => write!(f, "duplicate smart-home event {id}"),
             Self::EventBridgeMismatch {
                 event_id,
@@ -113,6 +118,7 @@ pub struct RegistryCounts {
     pub states: usize,
     pub events: usize,
     pub protocol_identifiers: usize,
+    pub capability_grants: usize,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -274,9 +280,11 @@ pub struct InMemorySmartHomeRegistry {
     scenes: BTreeMap<SceneId, Scene>,
     states: BTreeMap<EntityId, StateSnapshot>,
     events: BTreeMap<EventId, DeviceEvent>,
+    capability_grants: BTreeMap<CapabilityGrantId, CapabilityGrant>,
     event_order: Vec<EventId>,
     bridge_devices: BTreeMap<BridgeId, BTreeSet<DeviceId>>,
     device_entities: BTreeMap<DeviceId, BTreeSet<EntityId>>,
+    principal_grants: BTreeMap<AgentId, BTreeSet<CapabilityGrantId>>,
     protocol_index: BTreeMap<ProtocolIndexKey, RegistryTarget>,
 }
 
@@ -294,6 +302,7 @@ impl InMemorySmartHomeRegistry {
             states: self.states.len(),
             events: self.events.len(),
             protocol_identifiers: self.protocol_index.len(),
+            capability_grants: self.capability_grants.len(),
         }
     }
 
@@ -526,6 +535,63 @@ impl InMemorySmartHomeRegistry {
 
     pub fn events(&self) -> impl Iterator<Item = &DeviceEvent> {
         self.event_order.iter().filter_map(|id| self.events.get(id))
+    }
+
+    pub fn upsert_capability_grant(&mut self, grant: CapabilityGrant) -> Option<CapabilityGrant> {
+        let old = self
+            .capability_grants
+            .insert(grant.grant_id.clone(), grant.clone());
+        if let Some(old) = &old {
+            if old.principal_id != grant.principal_id {
+                remove_from_index_set(&mut self.principal_grants, &old.principal_id, &old.grant_id);
+            }
+        }
+        self.principal_grants
+            .entry(grant.principal_id.clone())
+            .or_default()
+            .insert(grant.grant_id.clone());
+        old
+    }
+
+    pub fn capability_grant(&self, grant_id: &CapabilityGrantId) -> Option<&CapabilityGrant> {
+        self.capability_grants.get(grant_id)
+    }
+
+    pub fn capability_grants(&self) -> impl Iterator<Item = &CapabilityGrant> {
+        self.capability_grants.values()
+    }
+
+    pub fn capability_grants_for_principal(&self, principal_id: &AgentId) -> Vec<&CapabilityGrant> {
+        self.principal_grants
+            .get(principal_id)
+            .into_iter()
+            .flat_map(|grant_ids| grant_ids.iter())
+            .filter_map(|grant_id| self.capability_grants.get(grant_id))
+            .collect()
+    }
+
+    pub fn active_capability_grants_for_principal_at(
+        &self,
+        principal_id: &AgentId,
+        now_ms: u64,
+    ) -> Vec<&CapabilityGrant> {
+        self.capability_grants_for_principal(principal_id)
+            .into_iter()
+            .filter(|grant| grant.is_active_at(now_ms))
+            .collect()
+    }
+
+    pub fn update_capability_grant_status(
+        &mut self,
+        grant_id: &CapabilityGrantId,
+        status: CapabilityGrantStatus,
+    ) -> Result<CapabilityGrant, RegistryError> {
+        let grant = self
+            .capability_grants
+            .get_mut(grant_id)
+            .ok_or_else(|| RegistryError::UnknownCapabilityGrant(grant_id.clone()))?;
+        grant.status = status;
+        Ok(grant.clone())
     }
 
     pub fn query_devices(&self, selector: &DeviceSelector) -> Vec<&Device> {
@@ -833,8 +899,9 @@ fn state_matches_freshness(snapshot: Option<&StateSnapshot>, freshness: StateFre
 mod tests {
     use super::*;
     use smart_home_core::{
-        BridgeTransport, Capability, CapabilityId, EntityKind, IntegrationId, Metadata,
-        ProtocolFamily, SceneAction, SceneScope, StateDelta,
+        AgentId, BridgeTransport, Capability, CapabilityGrant, CapabilityGrantId, CapabilityId,
+        EntityKind, IntegrationId, Metadata, PrivilegeTier, ProtocolFamily, SceneAction,
+        SceneScope, StateDelta,
     };
 
     fn bridge(id: &str) -> Bridge {
@@ -1051,6 +1118,84 @@ mod tests {
                 .unwrap()
                 .value,
             Value::Object(vec![("light.on_off".to_string(), Value::Bool(true))])
+        );
+    }
+
+    #[test]
+    fn capability_grants_are_indexed_by_principal_and_status() {
+        let mut registry = InMemorySmartHomeRegistry::new();
+        let principal = AgentId::trusted("agent:lighting-planner");
+        let other_principal = AgentId::trusted("agent:energy-saver");
+        let read_grant = CapabilityGrant::for_capability(
+            CapabilityGrantId::trusted("grant-read"),
+            principal.clone(),
+            CapabilityId::trusted("smart_home.read"),
+            PrivilegeTier::ReadOnly,
+            "chief-of-staff",
+            1_000,
+        );
+        let command_grant = CapabilityGrant::for_capability(
+            CapabilityGrantId::trusted("grant-command"),
+            principal.clone(),
+            CapabilityId::trusted("smart_home.command.light"),
+            PrivilegeTier::LowRisk,
+            "chief-of-staff",
+            1_000,
+        )
+        .with_expiry(2_000);
+        let other_grant = CapabilityGrant::for_capability(
+            CapabilityGrantId::trusted("grant-other"),
+            other_principal.clone(),
+            CapabilityId::trusted("smart_home.read"),
+            PrivilegeTier::ReadOnly,
+            "chief-of-staff",
+            1_000,
+        );
+
+        assert!(registry.upsert_capability_grant(read_grant).is_none());
+        assert!(registry.upsert_capability_grant(command_grant).is_none());
+        registry.upsert_capability_grant(other_grant);
+
+        let principal_grant_count = registry.capability_grants_for_principal(&principal).len();
+        let active_at_1_500_count = registry
+            .active_capability_grants_for_principal_at(&principal, 1_500)
+            .len();
+        let active_at_2_000_count = registry
+            .active_capability_grants_for_principal_at(&principal, 2_000)
+            .len();
+        let revoked = registry
+            .update_capability_grant_status(
+                &CapabilityGrantId::trusted("grant-read"),
+                CapabilityGrantStatus::Revoked,
+            )
+            .unwrap();
+        let active_after_revoke =
+            registry.active_capability_grants_for_principal_at(&principal, 1_500);
+
+        assert_eq!(registry.counts().capability_grants, 3);
+        assert_eq!(principal_grant_count, 2);
+        assert_eq!(active_at_1_500_count, 2);
+        assert_eq!(active_at_2_000_count, 1);
+        assert_eq!(revoked.status, CapabilityGrantStatus::Revoked);
+        assert_eq!(active_after_revoke.len(), 1);
+        assert_eq!(
+            registry.capability_grant(&CapabilityGrantId::trusted("grant-command")),
+            active_after_revoke.first().copied()
+        );
+        assert_eq!(
+            registry.update_capability_grant_status(
+                &CapabilityGrantId::trusted("missing"),
+                CapabilityGrantStatus::Revoked,
+            ),
+            Err(RegistryError::UnknownCapabilityGrant(
+                CapabilityGrantId::trusted("missing")
+            ))
+        );
+        assert_eq!(
+            registry
+                .capability_grants_for_principal(&other_principal)
+                .len(),
+            1
         );
     }
 
