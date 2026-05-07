@@ -8,9 +8,10 @@
 #![forbid(unsafe_code)]
 
 use smart_home_core::{
-    tier_for_command, Bridge, BridgeId, CapabilityId, CapabilityMode, CommandId, CommandResult,
-    CommandStatus, CommandType, CorrelationId, Device, DeviceCommand, DeviceEvent, DeviceEventType,
-    DeviceId, Entity, EntityId, EventId, Health, IntegrationId, Metadata, StateConfidence,
+    tier_for_command, AgentId, Bridge, BridgeId, CapabilityGrant, CapabilityGrantScope,
+    CapabilityId, CapabilityMode, CommandId, CommandResult, CommandStatus, CommandType,
+    CorrelationId, Device, DeviceCommand, DeviceEvent, DeviceEventType, DeviceId, Entity, EntityId,
+    EventId, Health, IntegrationId, Metadata, PrivilegeTier, SmartHomeTool, StateConfidence,
     StateDelta, StateSnapshot, StateSource, Value,
 };
 use smart_home_registry::{InMemorySmartHomeRegistry, RegistryError};
@@ -36,6 +37,12 @@ pub enum RuntimeError {
     UnsupportedDesiredState {
         entity_id: EntityId,
         capability_id: CapabilityId,
+    },
+    UnauthorizedCommand {
+        command_id: CommandId,
+        principal_id: AgentId,
+        required_tier: PrivilegeTier,
+        missing_capabilities: Vec<CapabilityId>,
     },
 }
 
@@ -68,6 +75,15 @@ impl fmt::Display for RuntimeError {
             } => write!(
                 f,
                 "entity {entity_id} desired state for capability {capability_id} cannot be mapped to a command"
+            ),
+            Self::UnauthorizedCommand {
+                command_id,
+                principal_id,
+                required_tier,
+                missing_capabilities,
+            } => write!(
+                f,
+                "agent {principal_id} is not authorized for command {command_id} at tier {required_tier:?}; missing grants for {missing_capabilities:?}"
             ),
         }
     }
@@ -258,6 +274,48 @@ impl WorkerRestartPlan {
         self.instructions
             .iter()
             .filter(|instruction| &instruction.bridge_id == bridge_id)
+            .collect()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CommandAuthorization {
+    pub principal_id: AgentId,
+    pub grants: Vec<CapabilityGrant>,
+}
+
+impl CommandAuthorization {
+    pub fn new(principal_id: AgentId, grants: Vec<CapabilityGrant>) -> Self {
+        Self {
+            principal_id,
+            grants,
+        }
+    }
+
+    pub fn allows_command_at(&self, command: &DeviceCommand, now_ms: u64) -> bool {
+        self.missing_capabilities_for(command, now_ms).is_empty()
+    }
+
+    pub fn missing_capabilities_for(
+        &self,
+        command: &DeviceCommand,
+        now_ms: u64,
+    ) -> Vec<CapabilityId> {
+        command
+            .required_capabilities
+            .iter()
+            .filter(|capability_id| {
+                !self.grants.iter().any(|grant| {
+                    grant_covers_command_capability(
+                        grant,
+                        &self.principal_id,
+                        command,
+                        capability_id,
+                        now_ms,
+                    )
+                })
+            })
+            .cloned()
             .collect()
     }
 }
@@ -644,6 +702,24 @@ impl SmartHomeRuntime {
         Ok(result)
     }
 
+    pub fn submit_authorized_command(
+        &mut self,
+        authorization: &CommandAuthorization,
+        command: DeviceCommand,
+        now_ms: u64,
+    ) -> Result<CommandResult, RuntimeError> {
+        let missing_capabilities = authorization.missing_capabilities_for(&command, now_ms);
+        if !missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedCommand {
+                command_id: command.command_id.clone(),
+                principal_id: authorization.principal_id.clone(),
+                required_tier: command.required_tier,
+                missing_capabilities,
+            });
+        }
+        self.submit_command(command, now_ms)
+    }
+
     pub fn expire_optimistic_states(&mut self, now_ms: u64) -> Result<Vec<EntityId>, RuntimeError> {
         let stale_ids: Vec<_> = self
             .optimistic_states
@@ -818,6 +894,27 @@ fn validate_command_capabilities(
         }
     }
     Ok(())
+}
+
+fn grant_covers_command_capability(
+    grant: &CapabilityGrant,
+    principal_id: &AgentId,
+    command: &DeviceCommand,
+    capability_id: &CapabilityId,
+    now_ms: u64,
+) -> bool {
+    grant.principal_id == *principal_id
+        && grant.is_active_at(now_ms)
+        && grant.max_tier >= command.required_tier
+        && match &grant.scope {
+            CapabilityGrantScope::Tool(tool) => *tool == SmartHomeTool::Command,
+            CapabilityGrantScope::Capability(granted) => granted == capability_id,
+            CapabilityGrantScope::EntityCapability {
+                entity_id,
+                capability_id: granted,
+            } => entity_id == &command.entity_id && granted == capability_id,
+            CapabilityGrantScope::AllSmartHome => true,
+        }
 }
 
 fn validate_desired_state(
@@ -1013,8 +1110,8 @@ fn event_entity_id(event: &RuntimeEvent) -> Option<&EntityId> {
 mod tests {
     use super::*;
     use smart_home_core::{
-        BridgeTransport, Capability, CommandId, CorrelationId, EntityKind, IntegrationId,
-        ProtocolFamily, ProtocolIdentifier, StateDelta,
+        BridgeTransport, Capability, CapabilityGrantId, CommandId, CorrelationId, EntityKind,
+        IntegrationId, ProtocolFamily, ProtocolIdentifier, StateDelta,
     };
 
     fn bridge(id: &str) -> Bridge {
@@ -1108,6 +1205,82 @@ mod tests {
             .registry()
             .state(&EntityId::trusted("entity-1"))
             .is_none());
+    }
+
+    #[test]
+    fn authorized_commands_require_active_agent_grants() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        let principal = AgentId::trusted("agent:lighting-planner");
+        let authorization = CommandAuthorization::new(principal.clone(), Vec::new());
+
+        let error = runtime
+            .submit_authorized_command(
+                &authorization,
+                command(CommandType::TurnOn, Value::Null),
+                1_000,
+            )
+            .unwrap_err();
+
+        assert!(matches!(
+            error,
+            RuntimeError::UnauthorizedCommand {
+                principal_id,
+                missing_capabilities,
+                ..
+            } if principal_id == principal
+                && missing_capabilities == vec![CapabilityId::trusted("light.on_off")]
+        ));
+        assert!(runtime
+            .registry()
+            .state(&EntityId::trusted("entity-1"))
+            .is_none());
+        assert!(runtime.event_bus().published().is_empty());
+    }
+
+    #[test]
+    fn authorized_commands_accept_matching_entity_capability_grants() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        let principal = AgentId::trusted("agent:lighting-planner");
+        let grant = CapabilityGrant::for_entity_capability(
+            CapabilityGrantId::trusted("grant-1"),
+            principal.clone(),
+            EntityId::trusted("entity-1"),
+            CapabilityId::trusted("light.on_off"),
+            PrivilegeTier::LowRisk,
+            "chief-of-staff",
+            900,
+        )
+        .with_expiry(2_000);
+        let authorization = CommandAuthorization::new(principal, vec![grant]);
+        let turn_on = command(CommandType::TurnOn, Value::Null);
+
+        assert!(authorization.allows_command_at(&turn_on, 1_000));
+        let result = runtime
+            .submit_authorized_command(&authorization, turn_on, 1_000)
+            .unwrap();
+        let snapshot_confidence = runtime
+            .registry()
+            .state(&EntityId::trusted("entity-1"))
+            .unwrap()
+            .confidence;
+        let rejected = runtime
+            .submit_authorized_command(
+                &authorization,
+                command(CommandType::TurnOff, Value::Null),
+                2_000,
+            )
+            .unwrap_err();
+
+        assert_eq!(result.status, CommandStatus::Accepted);
+        assert_eq!(snapshot_confidence, StateConfidence::Optimistic);
+        assert!(matches!(
+            rejected,
+            RuntimeError::UnauthorizedCommand {
+                missing_capabilities,
+                ..
+            } if missing_capabilities == vec![CapabilityId::trusted("light.on_off")]
+        ));
+        assert_eq!(runtime.event_bus().published().len(), 1);
     }
 
     #[test]

@@ -10,6 +10,8 @@ All notable changes to this package will be documented in this file.
   and supervision events.
 - `SmartHomeRuntime` facade over `smart-home-registry` for command validation,
   optimistic state caching, event replay, and bridge health updates.
+- Grant-backed command authorization path for checking Chief of Staff agent
+  capabilities before command acceptance.
 - Supervisor primitives for bridge-worker heartbeat tracking and restart
   signaling.
 - Desired-state reconciliation for missing, stale, or drifted entity state,
