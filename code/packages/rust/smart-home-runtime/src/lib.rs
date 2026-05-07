@@ -370,6 +370,26 @@ pub struct BridgeHealthReport {
     pub metadata: Vec<Metadata>,
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct SupervisionTickReport {
+    pub ticked_at_ms: u64,
+    pub expired_entities: Vec<EntityId>,
+    pub desired_state_actions: Vec<DesiredStateAction>,
+    pub worker_events: Vec<RuntimeEvent>,
+}
+
+impl SupervisionTickReport {
+    pub fn is_idle(&self) -> bool {
+        self.expired_entities.is_empty()
+            && self.desired_state_actions.is_empty()
+            && self.worker_events.is_empty()
+    }
+
+    pub fn action_count(&self) -> usize {
+        self.expired_entities.len() + self.desired_state_actions.len() + self.worker_events.len()
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct SmartHomeRuntime {
     registry: InMemorySmartHomeRegistry,
@@ -655,6 +675,22 @@ impl SmartHomeRuntime {
                 Some(event)
             })
             .collect()
+    }
+
+    pub fn run_supervision_tick(
+        &mut self,
+        now_ms: u64,
+    ) -> Result<SupervisionTickReport, RuntimeError> {
+        let expired_entities = self.expire_optimistic_states(now_ms)?;
+        let desired_state_actions = self.reconcile_desired_states(now_ms)?;
+        let worker_events = self.reconcile_supervision(now_ms);
+
+        Ok(SupervisionTickReport {
+            ticked_at_ms: now_ms,
+            expired_entities,
+            desired_state_actions,
+            worker_events,
+        })
     }
 }
 
@@ -1278,5 +1314,72 @@ mod tests {
         assert_eq!(worker.status, WorkerStatus::Restarting);
         assert_eq!(worker.restart_count, 1);
         assert!(runtime.reconcile_supervision(1_127).is_empty());
+    }
+
+    #[test]
+    fn supervision_tick_runs_expiry_reconciliation_and_worker_restart() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        let bridge_id = BridgeId::trusted("bridge-1");
+        let subscription = RuntimeSubscriptionId::trusted("supervision");
+        runtime
+            .event_bus_mut()
+            .subscribe(subscription.clone(), RuntimeEventFilter::Supervision)
+            .unwrap();
+        runtime
+            .supervisor_mut()
+            .register_worker(SupervisedBridgeWorker::new(
+                bridge_id.clone(),
+                IntegrationId::trusted("hue"),
+                1_000,
+                50,
+            ));
+        let mut command = command(CommandType::TurnOn, Value::Null);
+        command.timeout_ms = 50;
+        runtime.submit_command(command, 1_000).unwrap();
+        runtime
+            .upsert_desired_state(DesiredEntityState::new(
+                EntityId::trusted("entity-1"),
+                vec![StateDelta {
+                    capability_id: CapabilityId::trusted("light.on_off"),
+                    value: Value::Bool(true),
+                }],
+            ))
+            .unwrap();
+
+        let report = runtime.run_supervision_tick(1_050).unwrap();
+        let deliveries = runtime.event_bus_mut().drain(&subscription).unwrap();
+        let worker = runtime.supervisor().worker(&bridge_id).unwrap();
+
+        assert_eq!(report.ticked_at_ms, 1_050);
+        assert_eq!(report.expired_entities, vec![EntityId::trusted("entity-1")]);
+        assert!(matches!(
+            report.desired_state_actions.as_slice(),
+            [DesiredStateAction::CommandIssued {
+                reason: ReconciliationReason::StaleState,
+                command,
+                ..
+            }] if command.command_type == CommandType::TurnOn
+        ));
+        assert!(matches!(
+            report.worker_events.as_slice(),
+            [RuntimeEvent::WorkerNeedsRestart { bridge_id: event_bridge_id, .. }]
+                if event_bridge_id == &bridge_id
+        ));
+        assert_eq!(report.action_count(), 3);
+        assert!(!report.is_idle());
+        assert_eq!(worker.status, WorkerStatus::Restarting);
+        assert_eq!(worker.restart_count, 1);
+        assert_eq!(deliveries.len(), 2);
+    }
+
+    #[test]
+    fn supervision_tick_reports_idle_when_no_work_is_due() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+
+        let report = runtime.run_supervision_tick(1_000).unwrap();
+
+        assert_eq!(report.ticked_at_ms, 1_000);
+        assert!(report.is_idle());
+        assert_eq!(report.action_count(), 0);
     }
 }
