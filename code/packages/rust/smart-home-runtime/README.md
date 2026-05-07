@@ -11,6 +11,8 @@ Included surfaces:
 
 - in-process event bus with explicit subscriptions and filters
 - command validation against entity capabilities and command modes
+- grant-backed command authorization for Chief of Staff agents and sandboxed
+  tools
 - accepted command results that remain separate from confirmed device state
 - optimistic command state with expiry into stale snapshots
 - desired-state reconciliation that detects missing, stale, or drifted state
