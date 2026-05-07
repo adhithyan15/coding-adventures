@@ -116,6 +116,12 @@ fragmentation, and security remain future layers.
 - foundation commands
 - common smart-home clusters mapped to D23 capabilities
 
+**Initial Rust implementation:** `code/packages/rust/zigbee-zcl` now provides
+ZCL cluster/attribute identifiers, frame-control and frame parser/encoder
+primitives, foundation read-attributes and on/off command builders, typed
+attribute-report parsing, and first D23 capability/state-delta mappings for
+on/off, level, color-temperature, occupancy, door-lock, and thermostat clusters.
+
 ### `zigbee-coordinator`
 
 - network formation
