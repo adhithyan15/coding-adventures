@@ -14,6 +14,7 @@ const NWK_FRAME_CONTROL_LEN: usize = 2;
 const NWK_ADDR_LEN: usize = 2;
 const IEEE_ADDR_LEN: usize = 8;
 const NWK_BASE_HEADER_LEN: usize = NWK_FRAME_CONTROL_LEN + (NWK_ADDR_LEN * 2) + 2;
+const SOURCE_ROUTE_FIXED_LEN: usize = 2;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct NetworkAddress(pub u16);
@@ -407,6 +408,67 @@ impl NwkFrameControl {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SourceRoute {
+    pub relay_index: u8,
+    pub relays: Vec<NetworkAddress>,
+}
+
+impl SourceRoute {
+    pub fn new(relay_index: u8, relays: Vec<NetworkAddress>) -> Result<Self, NwkError> {
+        if relays.len() > u8::MAX as usize {
+            return Err(NwkError::TooManySourceRouteRelays {
+                count: relays.len(),
+            });
+        }
+        Ok(Self {
+            relay_index,
+            relays,
+        })
+    }
+
+    pub fn relay_count(&self) -> usize {
+        self.relays.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.relays.is_empty()
+    }
+
+    pub fn next_relay(&self) -> Option<NetworkAddress> {
+        self.relays.get(self.relay_index as usize).copied()
+    }
+
+    fn parse(cursor: &mut Cursor<'_>) -> Result<Self, NwkError> {
+        let relay_count = cursor.read_u8()?;
+        let relay_index = cursor.read_u8()?;
+        let mut relays = Vec::with_capacity(relay_count as usize);
+        for _ in 0..relay_count {
+            relays.push(NetworkAddress(cursor.read_u16_le()?));
+        }
+        Ok(Self {
+            relay_index,
+            relays,
+        })
+    }
+
+    fn encode_into(&self, out: &mut Vec<u8>) -> Result<(), NwkError> {
+        if self.relays.len() > u8::MAX as usize {
+            return Err(NwkError::TooManySourceRouteRelays {
+                count: self.relays.len(),
+            });
+        }
+
+        out.reserve(SOURCE_ROUTE_FIXED_LEN + (self.relays.len() * NWK_ADDR_LEN));
+        out.push(self.relays.len() as u8);
+        out.push(self.relay_index);
+        for relay in &self.relays {
+            out.extend_from_slice(&relay.0.to_le_bytes());
+        }
+        Ok(())
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct NwkFrame {
     pub frame_control: NwkFrameControl,
     pub destination: NetworkAddress,
@@ -416,6 +478,7 @@ pub struct NwkFrame {
     pub destination_ieee: Option<IeeeAddress>,
     pub source_ieee: Option<IeeeAddress>,
     pub multicast_control: Option<u8>,
+    pub source_route: Option<SourceRoute>,
     pub payload: Vec<u8>,
 }
 
@@ -450,6 +513,11 @@ impl NwkFrame {
         } else {
             None
         };
+        let source_route = if frame_control.source_route {
+            Some(SourceRoute::parse(&mut cursor)?)
+        } else {
+            None
+        };
         let payload = cursor.remaining_bytes().to_vec();
 
         Ok(Self {
@@ -461,6 +529,7 @@ impl NwkFrame {
             destination_ieee,
             source_ieee,
             multicast_control,
+            source_route,
             payload,
         })
     }
@@ -477,6 +546,9 @@ impl NwkFrame {
         if self.frame_control.multicast != self.multicast_control.is_some() {
             return Err(NwkError::MulticastControlMismatch);
         }
+        if self.frame_control.source_route != self.source_route.is_some() {
+            return Err(NwkError::SourceRouteMismatch);
+        }
 
         let mut out = Vec::with_capacity(NWK_BASE_HEADER_LEN + self.payload.len());
         out.extend_from_slice(&self.frame_control.encode().to_le_bytes());
@@ -492,6 +564,9 @@ impl NwkFrame {
         }
         if let Some(multicast_control) = self.multicast_control {
             out.push(multicast_control);
+        }
+        if let Some(source_route) = &self.source_route {
+            source_route.encode_into(&mut out)?;
         }
         out.extend_from_slice(&self.payload);
         Ok(out)
@@ -513,6 +588,7 @@ impl NwkFrame {
             destination_ieee: None,
             source_ieee: None,
             multicast_control: None,
+            source_route: None,
             payload,
         }
     }
@@ -523,6 +599,8 @@ pub enum NwkError {
     Truncated { needed: usize, remaining: usize },
     ExtendedAddressMismatch { field: &'static str },
     MulticastControlMismatch,
+    SourceRouteMismatch,
+    TooManySourceRouteRelays { count: usize },
 }
 
 impl fmt::Display for NwkError {
@@ -541,6 +619,16 @@ impl fmt::Display for NwkError {
             Self::MulticastControlMismatch => {
                 write!(f, "multicast flag does not match multicast control field")
             }
+            Self::SourceRouteMismatch => {
+                write!(
+                    f,
+                    "source-route flag does not match source-route relay subframe"
+                )
+            }
+            Self::TooManySourceRouteRelays { count } => write!(
+                f,
+                "source-route relay count {count} exceeds the NWK u8 relay count field"
+            ),
         }
     }
 }
@@ -647,6 +735,7 @@ mod tests {
             destination_ieee: Some(IeeeAddress(0x8877_6655_4433_2211)),
             source_ieee: Some(IeeeAddress(0x1100_ffee_ddcc_bbaa)),
             multicast_control: None,
+            source_route: None,
             payload: vec![0xaa],
         };
 
@@ -666,6 +755,59 @@ mod tests {
         assert_eq!(
             frame.encode(),
             Err(NwkError::ExtendedAddressMismatch { field: "source" })
+        );
+    }
+
+    #[test]
+    fn source_route_subframe_round_trips() {
+        let mut control = NwkFrameControl::zigbee_pro_2007(NwkFrameType::Data);
+        control.source_route = true;
+        let frame = NwkFrame {
+            frame_control: control,
+            destination: NetworkAddress(0x3000),
+            source: NetworkAddress(0x0000),
+            radius: 30,
+            sequence_number: 42,
+            destination_ieee: None,
+            source_ieee: None,
+            multicast_control: None,
+            source_route: Some(
+                SourceRoute::new(
+                    1,
+                    vec![
+                        NetworkAddress(0x1001),
+                        NetworkAddress(0x1002),
+                        NetworkAddress(0x1003),
+                    ],
+                )
+                .unwrap(),
+            ),
+            payload: vec![0xaa, 0xbb],
+        };
+
+        let parsed = NwkFrame::parse(&frame.encode().unwrap()).unwrap();
+
+        assert_eq!(parsed, frame);
+        assert_eq!(
+            parsed.source_route.as_ref().unwrap().next_relay(),
+            Some(NetworkAddress(0x1002))
+        );
+    }
+
+    #[test]
+    fn rejects_source_route_flag_without_subframe() {
+        let mut frame =
+            NwkFrame::plain_data(NetworkAddress(1), NetworkAddress(2), 1, 1, Vec::new());
+        frame.frame_control.source_route = true;
+
+        assert_eq!(frame.encode(), Err(NwkError::SourceRouteMismatch));
+    }
+
+    #[test]
+    fn rejects_source_routes_that_exceed_wire_count_field() {
+        assert_eq!(
+            SourceRoute::new(0, vec![NetworkAddress(0x1001); 256]),
+            Err(NwkError::TooManySourceRouteRelays { count: 256 })
         );
     }
 

@@ -10,6 +10,7 @@ This crate starts D25 at the NWK byte boundary:
 - radius and sequence fields
 - optional extended source/destination addresses
 - optional multicast control byte
+- optional source-route relay subframes
 - neighbor table primitives for router/end-device relationships and freshness
 - route table primitives for destination-to-next-hop lookups
 - payload extraction and round-trip encoding
