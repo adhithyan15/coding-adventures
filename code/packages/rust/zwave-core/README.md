@@ -8,6 +8,7 @@ Current scope:
 - Home ID and classic/Long Range node id models
 - region profile metadata
 - common command-class ids
+- command-class payload frame parse/encode for short and extended class ids
 - Serial API SOF/ACK/NAK/CAN constants
 - Serial API request/response frame parse and encode
 - checksum validation
@@ -18,7 +19,7 @@ Out of scope:
 - inclusion/exclusion
 - S0/S2 security
 - node interview
-- command-class semantics
+- command-class semantics beyond the shared byte frame
 - Long Range topology behavior
 
 ## Development

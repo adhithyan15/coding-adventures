@@ -9,3 +9,5 @@ All notable changes to this package will be documented in this file.
 - Z-Wave Home ID, classic node id, Long Range node id, region profile, and
   command-class id primitives.
 - Serial API frame parser/encoder with SOF and checksum validation.
+- Command-class payload frame parser/encoder with short and extended
+  command-class id support.
