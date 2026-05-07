@@ -21,6 +21,7 @@ Current scope:
 - beacon payload parsing:
   superframe fields, GTS descriptors, pending addresses, and residual payload
 - scan-facing PAN descriptors derived from received beacon frames
+- PAN scan summaries with channel filtering and association-candidate ranking
 - payload extraction
 - optional FCS handling
 
@@ -92,3 +93,7 @@ remaining beacon payload bytes. `PanDescriptor::from_beacon_frame` combines a
 received beacon frame with radio metadata such as channel, channel page, and
 link quality so higher Zigbee and Thread discovery layers can rank candidates
 without learning the MAC byte layout.
+
+`PanScanSummary` groups descriptors from one scan pass and exposes helpers for
+channel filtering, association-permitted candidates, and the strongest
+association candidate by link quality.
