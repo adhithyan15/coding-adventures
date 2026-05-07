@@ -7,6 +7,7 @@
 
 #![forbid(unsafe_code)]
 
+use std::collections::BTreeMap;
 use std::fmt;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -298,6 +299,203 @@ impl Mode {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct ThreadNeighborId(pub u16);
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum NeighborRelationship {
+    Parent,
+    Child,
+    RouterPeer,
+    Leader,
+    Unknown,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub struct LinkMetrics {
+    pub link_margin: Option<u8>,
+    pub incoming_link_quality: Option<u8>,
+    pub outgoing_link_quality: Option<u8>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ThreadNeighbor {
+    pub neighbor_id: ThreadNeighborId,
+    pub role: DeviceRole,
+    pub relationship: NeighborRelationship,
+    pub mode: Option<Mode>,
+    pub metrics: LinkMetrics,
+    pub last_heard_at_ms: u64,
+    pub timeout_ms: u64,
+}
+
+impl ThreadNeighbor {
+    pub fn new(
+        neighbor_id: ThreadNeighborId,
+        role: DeviceRole,
+        relationship: NeighborRelationship,
+        last_heard_at_ms: u64,
+        timeout_ms: u64,
+    ) -> Self {
+        Self {
+            neighbor_id,
+            role,
+            relationship,
+            mode: None,
+            metrics: LinkMetrics::default(),
+            last_heard_at_ms,
+            timeout_ms,
+        }
+    }
+
+    pub fn with_mode(mut self, mode: Mode) -> Self {
+        self.mode = Some(mode);
+        self
+    }
+
+    pub fn with_link_margin(mut self, link_margin: u8) -> Self {
+        self.metrics.link_margin = Some(link_margin);
+        self
+    }
+
+    pub fn is_stale_at(&self, now_ms: u64) -> bool {
+        now_ms >= self.last_heard_at_ms.saturating_add(self.timeout_ms)
+    }
+
+    pub fn can_route(&self) -> bool {
+        self.role.can_route()
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct NeighborTable {
+    local_role: DeviceRole,
+    neighbors: BTreeMap<ThreadNeighborId, ThreadNeighbor>,
+    parent: Option<ThreadNeighborId>,
+}
+
+impl NeighborTable {
+    pub fn new(local_role: DeviceRole) -> Self {
+        Self {
+            local_role,
+            neighbors: BTreeMap::new(),
+            parent: None,
+        }
+    }
+
+    pub fn local_role(&self) -> DeviceRole {
+        self.local_role
+    }
+
+    pub fn len(&self) -> usize {
+        self.neighbors.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.neighbors.is_empty()
+    }
+
+    pub fn upsert(&mut self, neighbor: ThreadNeighbor) -> Option<ThreadNeighbor> {
+        if neighbor.relationship == NeighborRelationship::Parent {
+            self.parent = Some(neighbor.neighbor_id);
+        }
+        self.neighbors.insert(neighbor.neighbor_id, neighbor)
+    }
+
+    pub fn mark_parent(&mut self, neighbor_id: ThreadNeighborId) -> Result<(), MleError> {
+        let neighbor = self
+            .neighbors
+            .get_mut(&neighbor_id)
+            .ok_or(MleError::UnknownNeighbor(neighbor_id))?;
+        neighbor.relationship = NeighborRelationship::Parent;
+        self.parent = Some(neighbor_id);
+        Ok(())
+    }
+
+    pub fn neighbor(&self, neighbor_id: ThreadNeighborId) -> Option<&ThreadNeighbor> {
+        self.neighbors.get(&neighbor_id)
+    }
+
+    pub fn parent(&self) -> Option<&ThreadNeighbor> {
+        self.parent.and_then(|id| self.neighbors.get(&id))
+    }
+
+    pub fn children(&self) -> impl Iterator<Item = &ThreadNeighbor> {
+        self.neighbors
+            .values()
+            .filter(|neighbor| neighbor.relationship == NeighborRelationship::Child)
+    }
+
+    pub fn routers(&self) -> impl Iterator<Item = &ThreadNeighbor> {
+        self.neighbors
+            .values()
+            .filter(|neighbor| neighbor.can_route())
+    }
+
+    pub fn stale_neighbors_at(&self, now_ms: u64) -> Vec<ThreadNeighborId> {
+        self.neighbors
+            .values()
+            .filter(|neighbor| neighbor.is_stale_at(now_ms))
+            .map(|neighbor| neighbor.neighbor_id)
+            .collect()
+    }
+
+    pub fn expire_stale(&mut self, now_ms: u64) -> Vec<ThreadNeighborId> {
+        let stale = self.stale_neighbors_at(now_ms);
+        for neighbor_id in &stale {
+            self.neighbors.remove(neighbor_id);
+            if self.parent == Some(*neighbor_id) {
+                self.parent = None;
+            }
+        }
+        stale
+    }
+
+    pub fn best_parent_candidate(&self) -> Option<&ThreadNeighbor> {
+        self.routers().max_by_key(|neighbor| {
+            (
+                neighbor.metrics.link_margin.unwrap_or(0),
+                neighbor.last_heard_at_ms,
+            )
+        })
+    }
+}
+
+impl Default for NeighborTable {
+    fn default() -> Self {
+        Self::new(DeviceRole::Detached)
+    }
+}
+
+pub fn neighbor_from_parent_response(
+    neighbor_id: ThreadNeighborId,
+    message: &MleMessage,
+    received_at_ms: u64,
+    default_timeout_ms: u64,
+) -> ThreadNeighbor {
+    let mode = mode_from_message(message);
+    let timeout_ms = timeout_ms_from_message(message).unwrap_or(default_timeout_ms);
+    let link_margin = link_margin_from_message(message);
+    let role = match mode {
+        Some(mode) if !mode.full_thread_device => DeviceRole::Child,
+        _ => DeviceRole::Router,
+    };
+    let mut neighbor = ThreadNeighbor::new(
+        neighbor_id,
+        role,
+        NeighborRelationship::Parent,
+        received_at_ms,
+        timeout_ms,
+    );
+    if let Some(mode) = mode {
+        neighbor = neighbor.with_mode(mode);
+    }
+    if let Some(link_margin) = link_margin {
+        neighbor = neighbor.with_link_margin(link_margin);
+    }
+    neighbor
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum AttachState {
     Detached,
@@ -371,6 +569,7 @@ impl Default for AttachMachine {
 pub enum MleError {
     Truncated { needed: usize, remaining: usize },
     TlvTooLong(usize),
+    UnknownNeighbor(ThreadNeighborId),
 }
 
 impl fmt::Display for MleError {
@@ -383,6 +582,9 @@ impl fmt::Display for MleError {
                 )
             }
             Self::TlvTooLong(len) => write!(f, "Thread MLE TLV too long: {len}"),
+            Self::UnknownNeighbor(neighbor_id) => {
+                write!(f, "unknown Thread neighbor 0x{:04x}", neighbor_id.0)
+            }
         }
     }
 }
@@ -390,14 +592,33 @@ impl fmt::Display for MleError {
 impl std::error::Error for MleError {}
 
 fn role_from_child_id_response(message: &MleMessage) -> DeviceRole {
-    let mode = message
-        .find_tlv(TlvType::Mode)
-        .and_then(|tlv| tlv.value.first().copied())
-        .map(Mode::parse);
+    let mode = mode_from_message(message);
     match mode {
         Some(mode) if mode.full_thread_device => DeviceRole::Router,
         _ => DeviceRole::Child,
     }
+}
+
+fn mode_from_message(message: &MleMessage) -> Option<Mode> {
+    message
+        .find_tlv(TlvType::Mode)
+        .and_then(|tlv| tlv.value.first().copied())
+        .map(Mode::parse)
+}
+
+fn link_margin_from_message(message: &MleMessage) -> Option<u8> {
+    message
+        .find_tlv(TlvType::LinkMargin)
+        .and_then(|tlv| tlv.value.first().copied())
+}
+
+fn timeout_ms_from_message(message: &MleMessage) -> Option<u64> {
+    let value = &message.find_tlv(TlvType::Timeout)?.value;
+    if value.len() != 4 {
+        return None;
+    }
+    let seconds = u32::from_be_bytes([value[0], value[1], value[2], value[3]]);
+    Some(u64::from(seconds) * 1_000)
 }
 
 struct Cursor<'a> {
@@ -560,5 +781,111 @@ mod tests {
                 remaining: 1
             })
         );
+    }
+
+    #[test]
+    fn neighbor_table_tracks_parent_children_and_router_candidates() {
+        let mut table = NeighborTable::new(DeviceRole::Child);
+        table.upsert(
+            ThreadNeighbor::new(
+                ThreadNeighborId(0x1000),
+                DeviceRole::Router,
+                NeighborRelationship::Parent,
+                1_000,
+                10_000,
+            )
+            .with_link_margin(40),
+        );
+        table.upsert(ThreadNeighbor::new(
+            ThreadNeighborId(0x2000),
+            DeviceRole::Child,
+            NeighborRelationship::Child,
+            1_100,
+            5_000,
+        ));
+        table.upsert(
+            ThreadNeighbor::new(
+                ThreadNeighborId(0x3000),
+                DeviceRole::Router,
+                NeighborRelationship::RouterPeer,
+                1_200,
+                10_000,
+            )
+            .with_link_margin(60),
+        );
+
+        assert_eq!(table.local_role(), DeviceRole::Child);
+        assert_eq!(
+            table.parent().unwrap().neighbor_id,
+            ThreadNeighborId(0x1000)
+        );
+        assert_eq!(table.children().count(), 1);
+        assert_eq!(
+            table.best_parent_candidate().unwrap().neighbor_id,
+            ThreadNeighborId(0x3000)
+        );
+    }
+
+    #[test]
+    fn neighbor_table_expires_stale_neighbors_and_clears_parent() {
+        let mut table = NeighborTable::new(DeviceRole::Child);
+        table.upsert(ThreadNeighbor::new(
+            ThreadNeighborId(0x1000),
+            DeviceRole::Router,
+            NeighborRelationship::Parent,
+            1_000,
+            500,
+        ));
+
+        assert!(table.stale_neighbors_at(1_499).is_empty());
+        assert_eq!(table.expire_stale(1_500), vec![ThreadNeighborId(0x1000)]);
+        assert!(table.parent().is_none());
+        assert!(table.is_empty());
+    }
+
+    #[test]
+    fn parent_response_builds_neighbor_from_mle_tlvs() {
+        let message = MleMessage {
+            command: MleCommand::ParentResponse,
+            tlvs: vec![
+                Tlv::new(
+                    TlvType::Mode,
+                    vec![Mode {
+                        receiver_on_when_idle: true,
+                        secure_data_requests: true,
+                        full_thread_device: true,
+                        full_network_data: true,
+                    }
+                    .encode()],
+                )
+                .unwrap(),
+                Tlv::new(TlvType::LinkMargin, vec![73]).unwrap(),
+                Tlv::new(TlvType::Timeout, 30_u32.to_be_bytes().to_vec()).unwrap(),
+            ],
+        };
+
+        let neighbor =
+            neighbor_from_parent_response(ThreadNeighborId(0x1234), &message, 9_000, 5_000);
+
+        assert_eq!(neighbor.role, DeviceRole::Router);
+        assert_eq!(neighbor.relationship, NeighborRelationship::Parent);
+        assert_eq!(neighbor.metrics.link_margin, Some(73));
+        assert_eq!(neighbor.timeout_ms, 30_000);
+    }
+
+    #[test]
+    fn parent_response_without_mode_still_tracks_router_parent() {
+        let message = MleMessage {
+            command: MleCommand::ParentResponse,
+            tlvs: vec![Tlv::new(TlvType::LinkMargin, vec![55]).unwrap()],
+        };
+
+        let neighbor =
+            neighbor_from_parent_response(ThreadNeighborId(0x1234), &message, 9_000, 5_000);
+
+        assert_eq!(neighbor.role, DeviceRole::Router);
+        assert_eq!(neighbor.relationship, NeighborRelationship::Parent);
+        assert_eq!(neighbor.metrics.link_margin, Some(55));
+        assert_eq!(neighbor.timeout_ms, 5_000);
     }
 }

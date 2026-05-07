@@ -12,3 +12,5 @@ All notable changes to this package will be documented in this file.
   future Matter resources cannot silently alias different normalized records.
 - Event recording and state-cache updates from normalized `DeviceEvent`
   `StateDelta` values.
+- Device/entity selectors for bridge, health, kind, capability, and cached-state
+  freshness queries.

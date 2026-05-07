@@ -10,10 +10,12 @@ This crate starts D25 at the NWK byte boundary:
 - radius and sequence fields
 - optional extended source/destination addresses
 - optional multicast control byte
+- neighbor table primitives for router/end-device relationships and freshness
+- route table primitives for destination-to-next-hop lookups
 - payload extraction and round-trip encoding
 
-It intentionally does not implement APS, ZDO, ZCL, route discovery state,
-joining, security policy, or coordinator behavior yet.
+It intentionally does not implement APS, ZDO, ZCL, route discovery protocol
+messages, joining, security policy, or coordinator behavior yet.
 
 ## Dependencies
 

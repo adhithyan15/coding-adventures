@@ -6,6 +6,7 @@
 
 #![forbid(unsafe_code)]
 
+use std::collections::BTreeMap;
 use std::fmt;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -206,6 +207,170 @@ impl FragmentHeader {
         }
         out
     }
+
+    pub fn encoded_len(self) -> usize {
+        match self.kind {
+            FragmentKind::First => 4,
+            FragmentKind::Next => 5,
+        }
+    }
+
+    pub fn byte_offset(self) -> usize {
+        self.datagram_offset
+            .map(|offset| usize::from(offset) * 8)
+            .unwrap_or(0)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FragmentPacket {
+    pub header: FragmentHeader,
+    pub payload: Vec<u8>,
+}
+
+impl FragmentPacket {
+    pub fn parse(bytes: &[u8]) -> Result<Self, SixlowpanError> {
+        let header = FragmentHeader::parse(bytes)?;
+        let header_len = header.encoded_len();
+        Ok(Self {
+            header,
+            payload: bytes[header_len..].to_vec(),
+        })
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct ReassemblyKey {
+    pub datagram_size: u16,
+    pub datagram_tag: u16,
+}
+
+impl From<FragmentHeader> for ReassemblyKey {
+    fn from(header: FragmentHeader) -> Self {
+        Self {
+            datagram_size: header.datagram_size,
+            datagram_tag: header.datagram_tag,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ReassemblyProgress {
+    InProgress { received_bytes: usize },
+    Complete(Vec<u8>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FragmentReassemblyBuffer {
+    key: ReassemblyKey,
+    bytes: Vec<u8>,
+    ranges: Vec<(usize, usize)>,
+}
+
+impl FragmentReassemblyBuffer {
+    pub fn new(key: ReassemblyKey) -> Self {
+        Self {
+            key,
+            bytes: vec![0; usize::from(key.datagram_size)],
+            ranges: Vec::new(),
+        }
+    }
+
+    pub fn key(&self) -> ReassemblyKey {
+        self.key
+    }
+
+    pub fn received_bytes(&self) -> usize {
+        self.ranges.iter().map(|(start, end)| end - start).sum()
+    }
+
+    pub fn is_complete(&self) -> bool {
+        self.ranges.len() == 1 && self.ranges[0] == (0, usize::from(self.key.datagram_size))
+    }
+
+    pub fn reassembled(&self) -> Option<Vec<u8>> {
+        self.is_complete().then(|| self.bytes.clone())
+    }
+
+    pub fn insert_fragment(
+        &mut self,
+        header: FragmentHeader,
+        payload: &[u8],
+    ) -> Result<ReassemblyProgress, SixlowpanError> {
+        let incoming_key = ReassemblyKey::from(header);
+        if incoming_key != self.key {
+            return Err(SixlowpanError::FragmentKeyMismatch {
+                expected: self.key,
+                actual: incoming_key,
+            });
+        }
+
+        let start = header.byte_offset();
+        let end = start.saturating_add(payload.len());
+        let datagram_size = usize::from(self.key.datagram_size);
+        if end > datagram_size {
+            return Err(SixlowpanError::FragmentOutOfBounds {
+                offset: start,
+                len: payload.len(),
+                datagram_size,
+            });
+        }
+        if self
+            .ranges
+            .iter()
+            .any(|(existing_start, existing_end)| start < *existing_end && end > *existing_start)
+        {
+            return Err(SixlowpanError::FragmentOverlap {
+                offset: start,
+                len: payload.len(),
+            });
+        }
+
+        self.bytes[start..end].copy_from_slice(payload);
+        self.ranges.push((start, end));
+        self.ranges.sort_unstable();
+        merge_contiguous_ranges(&mut self.ranges);
+
+        if self.is_complete() {
+            Ok(ReassemblyProgress::Complete(self.bytes.clone()))
+        } else {
+            Ok(ReassemblyProgress::InProgress {
+                received_bytes: self.received_bytes(),
+            })
+        }
+    }
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct ReassemblyTable {
+    buffers: BTreeMap<ReassemblyKey, FragmentReassemblyBuffer>,
+}
+
+impl ReassemblyTable {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn pending_count(&self) -> usize {
+        self.buffers.len()
+    }
+
+    pub fn push_fragment(
+        &mut self,
+        header: FragmentHeader,
+        payload: &[u8],
+    ) -> Result<ReassemblyProgress, SixlowpanError> {
+        let key = ReassemblyKey::from(header);
+        let buffer = self
+            .buffers
+            .entry(key)
+            .or_insert_with(|| FragmentReassemblyBuffer::new(key));
+        let progress = buffer.insert_fragment(header, payload)?;
+        if matches!(progress, ReassemblyProgress::Complete(_)) {
+            self.buffers.remove(&key);
+        }
+        Ok(progress)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -231,10 +396,26 @@ impl LowpanFrame {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum SixlowpanError {
-    Truncated { needed: usize, remaining: usize },
+    Truncated {
+        needed: usize,
+        remaining: usize,
+    },
     NotIphc(u8),
     NotFragment(u8),
     DatagramSizeTooLarge(u16),
+    FragmentKeyMismatch {
+        expected: ReassemblyKey,
+        actual: ReassemblyKey,
+    },
+    FragmentOutOfBounds {
+        offset: usize,
+        len: usize,
+        datagram_size: usize,
+    },
+    FragmentOverlap {
+        offset: usize,
+        len: usize,
+    },
 }
 
 impl fmt::Display for SixlowpanError {
@@ -251,6 +432,21 @@ impl fmt::Display for SixlowpanError {
             Self::DatagramSizeTooLarge(value) => {
                 write!(f, "6LoWPAN datagram size {value} exceeds 11-bit field")
             }
+            Self::FragmentKeyMismatch { expected, actual } => write!(
+                f,
+                "6LoWPAN fragment key mismatch: expected {expected:?}, got {actual:?}"
+            ),
+            Self::FragmentOutOfBounds {
+                offset,
+                len,
+                datagram_size,
+            } => write!(
+                f,
+                "6LoWPAN fragment at offset {offset} with length {len} exceeds datagram size {datagram_size}"
+            ),
+            Self::FragmentOverlap { offset, len } => {
+                write!(f, "6LoWPAN fragment at offset {offset} with length {len} overlaps existing bytes")
+            }
         }
     }
 }
@@ -262,6 +458,20 @@ fn validate_datagram_size(datagram_size: u16) -> Result<(), SixlowpanError> {
         return Err(SixlowpanError::DatagramSizeTooLarge(datagram_size));
     }
     Ok(())
+}
+
+fn merge_contiguous_ranges(ranges: &mut Vec<(usize, usize)>) {
+    let mut merged: Vec<(usize, usize)> = Vec::with_capacity(ranges.len());
+    for (start, end) in ranges.drain(..) {
+        if let Some((_, last_end)) = merged.last_mut() {
+            if *last_end == start {
+                *last_end = end;
+                continue;
+            }
+        }
+        merged.push((start, end));
+    }
+    *ranges = merged;
 }
 
 #[cfg(test)]
@@ -316,5 +526,73 @@ mod tests {
 
         assert_eq!(frame.dispatch, Dispatch::Ipv6);
         assert_eq!(frame.payload, vec![0xaa, 0xbb]);
+    }
+
+    #[test]
+    fn fragment_packet_parser_strips_fragment_header() {
+        let mut bytes = FragmentHeader::next(20, 0x3344, 2).unwrap().encode();
+        bytes.extend_from_slice(&[1, 2, 3, 4]);
+
+        let packet = FragmentPacket::parse(&bytes).unwrap();
+
+        assert_eq!(packet.header.byte_offset(), 16);
+        assert_eq!(packet.payload, vec![1, 2, 3, 4]);
+    }
+
+    #[test]
+    fn reassembly_buffer_completes_in_order_fragments() {
+        let first = FragmentHeader::first(20, 0x3344).unwrap();
+        let next = FragmentHeader::next(20, 0x3344, 2).unwrap();
+        let mut buffer = FragmentReassemblyBuffer::new(ReassemblyKey::from(first));
+
+        assert_eq!(
+            buffer.insert_fragment(first, &[0; 16]).unwrap(),
+            ReassemblyProgress::InProgress { received_bytes: 16 }
+        );
+        assert_eq!(
+            buffer.insert_fragment(next, &[1, 2, 3, 4]).unwrap(),
+            ReassemblyProgress::Complete(vec![
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4
+            ])
+        );
+    }
+
+    #[test]
+    fn reassembly_table_accepts_out_of_order_fragments() {
+        let first = FragmentHeader::first(12, 0x7788).unwrap();
+        let next = FragmentHeader::next(12, 0x7788, 1).unwrap();
+        let mut table = ReassemblyTable::new();
+
+        assert_eq!(
+            table.push_fragment(next, &[8, 9, 10, 11]).unwrap(),
+            ReassemblyProgress::InProgress { received_bytes: 4 }
+        );
+        assert_eq!(table.pending_count(), 1);
+        assert_eq!(
+            table
+                .push_fragment(first, &[0, 1, 2, 3, 4, 5, 6, 7])
+                .unwrap(),
+            ReassemblyProgress::Complete(vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
+        );
+        assert_eq!(table.pending_count(), 0);
+    }
+
+    #[test]
+    fn reassembly_rejects_overlaps_and_bounds_errors() {
+        let first = FragmentHeader::first(12, 0x7788).unwrap();
+        let overlap = FragmentHeader::next(12, 0x7788, 1).unwrap();
+        let out_of_bounds = FragmentHeader::next(12, 0x7788, 2).unwrap();
+        let mut buffer = FragmentReassemblyBuffer::new(ReassemblyKey::from(first));
+
+        buffer.insert_fragment(first, &[0; 10]).unwrap();
+
+        assert!(matches!(
+            buffer.insert_fragment(overlap, &[1, 2]),
+            Err(SixlowpanError::FragmentOverlap { .. })
+        ));
+        assert!(matches!(
+            buffer.insert_fragment(out_of_bounds, &[1]),
+            Err(SixlowpanError::FragmentOutOfBounds { .. })
+        ));
     }
 }

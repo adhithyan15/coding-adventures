@@ -1236,6 +1236,41 @@ class TestPrologVMStress:
             "box(cake).\nbox(cake).\npair(tea, X)"
         )
 
+    def test_term_writer_conveniences_run_through_vm(self, tmp_path: Path) -> None:
+        output_path = tmp_path / "writer-conveniences.pltxt"
+        output_atom = str(output_path).replace("\\", "\\\\").replace("'", "\\'")
+        compiled = compile_swi_prolog_source(
+            f"""
+            ?- read_term_from_atom('pair(X, Y, X, Z)', Term,
+                   [singletons(Singletons)]),
+               open('{output_atom}', write, Out, [alias(vm_writer_output)]),
+               writeq(Out, 'two words'),
+               nl(Out),
+               write_canonical(Out, '$VAR'(0)),
+               nl(Out),
+               writeln(Out, line(one)),
+               set_output(vm_writer_output),
+               portray_clause(fact('$VAR'(1))),
+               close(Out).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert len(answers) == 1
+        answer = answers[0].as_dict()
+        parsed_term = answer["Term"]
+        assert isinstance(parsed_term, Compound)
+        assert answer["Singletons"] == logic_list(
+            [
+                term("=", "Y", parsed_term.args[1]),
+                term("=", "Z", parsed_term.args[3]),
+            ],
+        )
+        assert output_path.read_text(encoding="utf-8") == (
+            "'two words'\nA\nline(one)\nfact(B).\n"
+        )
+
     def test_initialized_named_answers_keep_runtime_assertions_visible(self) -> None:
         compiled = compile_swi_prolog_source(
             """

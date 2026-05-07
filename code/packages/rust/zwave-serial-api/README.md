@@ -10,11 +10,13 @@ control-plane layer:
 - request/response/callback classification
 - request callback ids
 - controller capability flag decoding
+- Serial API Get Init Data node inventory decoding
+- Application Command Handler source/command envelopes
 - Memory Get ID payload decoding
 - request tracker with callback correlation and timeout expiry
 
-It does not yet open a serial port, interview nodes, handle inclusion, or map
-command classes.
+It does not yet open a serial port, interview nodes, handle inclusion, or decode
+command-class payload semantics.
 
 ## Dependencies
 

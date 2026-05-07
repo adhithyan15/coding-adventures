@@ -1641,7 +1641,8 @@ class TestPrologGoalAdapter:
         parsed = parse_swi_query(
             f"?- open('{input_atom}', read, In, [alias(term_input)]), "
             "read(In, First), "
-            "read_term(In, Second, [variable_names(Names), variables(Vars)]), "
+            "read_term(In, Second, "
+            "[variable_names(Names), variables(Vars), singletons(Singletons)]), "
             "read(In, Eof), "
             "close(In), "
             f"open('{input_atom}', read, CurrentIn, [alias(current_term_input)]), "
@@ -1668,6 +1669,7 @@ class TestPrologGoalAdapter:
                 parsed.variables["Second"],
                 parsed.variables["Names"],
                 parsed.variables["Vars"],
+                parsed.variables["Singletons"],
                 parsed.variables["Eof"],
                 parsed.variables["CurrentFirst"],
                 parsed.variables["CurrentSecond"],
@@ -1681,6 +1683,7 @@ class TestPrologGoalAdapter:
             second,
             names,
             vars_value,
+            singletons,
             eof,
             current_first,
             current_second,
@@ -1690,11 +1693,51 @@ class TestPrologGoalAdapter:
         assert second == term("pair", "tea", second.args[1])
         assert names == logic_list([term("=", "X", second.args[1])])
         assert vars_value == logic_list([second.args[1]])
+        assert singletons == logic_list([term("=", "X", second.args[1])])
         assert eof == atom("end_of_file")
         assert current_first == first
         assert current_second == term("pair", "tea", current_second.args[1])
         assert output_path.read_text(encoding="utf-8") == (
             "box(cake).\nbox(cake).\npair(tea, X)"
+        )
+
+    def test_adapt_prolog_goal_rewrites_term_writer_conveniences(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        output_path = tmp_path / "writer-conveniences.pltxt"
+        output_atom = str(output_path).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- read_term_from_atom('pair(X, Y, X, Z)', Term, "
+            "[singletons(Singletons)]), "
+            f"open('{output_atom}', write, Out, [alias(writer_output)]), "
+            "writeq(Out, 'two words'), "
+            "nl(Out), "
+            "write_canonical(Out, '$VAR'(0)), "
+            "nl(Out), "
+            "writeln(Out, line(one)), "
+            "set_output(writer_output), "
+            "portray_clause(fact('$VAR'(1))), "
+            "close(Out).",
+        )
+
+        answers = solve_all(
+            program(),
+            (parsed.variables["Term"], parsed.variables["Singletons"]),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert len(answers) == 1
+        parsed_term, singletons = answers[0]
+        assert isinstance(parsed_term, Compound)
+        assert singletons == logic_list(
+            [
+                term("=", "Y", parsed_term.args[1]),
+                term("=", "Z", parsed_term.args[3]),
+            ],
+        )
+        assert output_path.read_text(encoding="utf-8") == (
+            "'two words'\nA\nline(one)\nfact(B).\n"
         )
 
     def test_adapt_prolog_goal_rewrites_term_read_write_options(self) -> None:

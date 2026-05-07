@@ -84,8 +84,9 @@ ieee802154-*     MAC/PHY foundation from D24
 **Initial Rust implementation:** `code/packages/rust/zigbee-nwk` now provides
 the first NWK byte-boundary primitives: network addresses, frame-control bits,
 radius/sequence fields, optional IEEE source/destination addresses, multicast
-control, and payload round-tripping. Routing, joins, security, APS, ZDO, and
-ZCL remain future packages/layers.
+control, payload round-tripping, and first neighbor/route table primitives for
+freshness and next-hop lookup. Route discovery messages, joins, security, APS,
+ZDO, and ZCL remain future packages/layers.
 
 ### `zigbee-aps`
 
@@ -97,7 +98,8 @@ ZCL remain future packages/layers.
 
 **Initial Rust implementation:** `code/packages/rust/zigbee-aps` now provides
 APS frame-control, endpoint/group addressing, cluster/profile id, counter, and
-payload parser/encoder primitives. Binding tables, APS commands,
+payload parser/encoder primitives plus endpoint/cluster/profile helpers and an
+in-memory binding table for device/group destinations. APS commands,
 fragmentation, and security remain future layers.
 
 ### `zigbee-zdo`
@@ -115,6 +117,12 @@ fragmentation, and security remain future layers.
 - command frames
 - foundation commands
 - common smart-home clusters mapped to D23 capabilities
+
+**Initial Rust implementation:** `code/packages/rust/zigbee-zcl` now provides
+ZCL cluster/attribute identifiers, frame-control and frame parser/encoder
+primitives, foundation read-attributes and on/off command builders, typed
+attribute-report parsing, and first D23 capability/state-delta mappings for
+on/off, level, color-temperature, occupancy, door-lock, and thermostat clusters.
 
 ### `zigbee-coordinator`
 

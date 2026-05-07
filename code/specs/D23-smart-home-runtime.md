@@ -739,9 +739,10 @@ Uses D18A stores and Vault references.
 
 **Initial Rust implementation:** `code/packages/rust/smart-home-registry` now
 provides an in-memory registry for normalized bridge/device/entity/scene
-records, protocol-native identifier indexes, state snapshots, and event logs.
-It is deliberately pure; durable D18A storage and Vault-backed credential
-resolution remain later layers.
+records, protocol-native identifier indexes, state snapshots, event logs, and
+selector-based device/entity queries over bridge, health, kind, capability, and
+state freshness. It is deliberately pure; durable D18A storage and Vault-backed
+credential resolution remain later layers.
 
 ### `smart-home-runtime`
 

@@ -8,7 +8,7 @@
 
 use std::collections::BTreeMap;
 use std::fmt;
-use zwave_core::{HomeId, NodeId, SerialFrame, SerialFrameType, ZWaveError};
+use zwave_core::{CommandClassId, HomeId, NodeId, SerialFrame, SerialFrameType, ZWaveError};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct FunctionId(pub u8);
@@ -96,6 +96,129 @@ impl ControllerCapabilities {
             is_suc: flags & 0x08 != 0,
             supports_timers: flags & 0x10 != 0,
         }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct InitDataCapabilities {
+    pub is_end_device_api: bool,
+    pub supports_timers: bool,
+    pub is_secondary_controller: bool,
+    pub is_sis: bool,
+}
+
+impl InitDataCapabilities {
+    pub fn parse(flags: u8) -> Self {
+        Self {
+            is_end_device_api: flags & 0x01 != 0,
+            supports_timers: flags & 0x02 != 0,
+            is_secondary_controller: flags & 0x04 != 0,
+            is_sis: flags & 0x08 != 0,
+        }
+    }
+
+    pub fn is_controller_api(self) -> bool {
+        !self.is_end_device_api
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ZWaveChip {
+    pub chip_type: u8,
+    pub chip_version: u8,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SerialApiInitData {
+    pub version: u8,
+    pub capabilities: InitDataCapabilities,
+    pub nodes: Vec<NodeId>,
+    pub chip: ZWaveChip,
+}
+
+impl SerialApiInitData {
+    pub fn parse(payload: &[u8]) -> Result<Self, SerialApiError> {
+        if payload.len() < 5 {
+            return Err(SerialApiError::Truncated {
+                needed: 5,
+                remaining: payload.len(),
+            });
+        }
+
+        let version = payload[0];
+        let capabilities = InitDataCapabilities::parse(payload[1]);
+        let node_mask_len = payload[2] as usize;
+        let needed = 3 + node_mask_len + 2;
+        if payload.len() < needed {
+            return Err(SerialApiError::Truncated {
+                needed,
+                remaining: payload.len(),
+            });
+        }
+
+        let node_mask = &payload[3..3 + node_mask_len];
+        let chip = ZWaveChip {
+            chip_type: payload[3 + node_mask_len],
+            chip_version: payload[4 + node_mask_len],
+        };
+        Ok(Self {
+            version,
+            capabilities,
+            nodes: classic_nodes_from_mask(node_mask)?,
+            chip,
+        })
+    }
+
+    pub fn from_message(message: &SerialMessage) -> Result<Self, SerialApiError> {
+        expect_function(message, FunctionId::SERIAL_API_GET_INIT_DATA)?;
+        Self::parse(&message.payload)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ApplicationCommand {
+    pub rx_status: u8,
+    pub source_node: NodeId,
+    pub command: Vec<u8>,
+    pub trailing: Vec<u8>,
+}
+
+impl ApplicationCommand {
+    pub fn parse(payload: &[u8]) -> Result<Self, SerialApiError> {
+        if payload.len() < 3 {
+            return Err(SerialApiError::Truncated {
+                needed: 3,
+                remaining: payload.len(),
+            });
+        }
+
+        let command_len = payload[2] as usize;
+        let needed = 3 + command_len;
+        if payload.len() < needed {
+            return Err(SerialApiError::Truncated {
+                needed,
+                remaining: payload.len(),
+            });
+        }
+
+        Ok(Self {
+            rx_status: payload[0],
+            source_node: NodeId::classic(payload[1])
+                .map_err(|err| SerialApiError::Core(err.to_string()))?,
+            command: payload[3..needed].to_vec(),
+            trailing: payload[needed..].to_vec(),
+        })
+    }
+
+    pub fn from_message(message: &SerialMessage) -> Result<Self, SerialApiError> {
+        expect_function(message, FunctionId::APPLICATION_COMMAND_HANDLER)?;
+        Self::parse(&message.payload)
+    }
+
+    pub fn command_class_id(&self) -> Option<CommandClassId> {
+        self.command
+            .first()
+            .map(|id| CommandClassId(u16::from(*id)))
     }
 }
 
@@ -211,7 +334,14 @@ impl RequestTracker {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum SerialApiError {
-    Truncated { needed: usize, remaining: usize },
+    Truncated {
+        needed: usize,
+        remaining: usize,
+    },
+    UnexpectedFunction {
+        expected: FunctionId,
+        actual: FunctionId,
+    },
     NotRequest,
     Core(String),
 }
@@ -222,6 +352,11 @@ impl fmt::Display for SerialApiError {
             Self::Truncated { needed, remaining } => write!(
                 f,
                 "truncated Z-Wave Serial API payload: needed {needed} bytes, had {remaining}"
+            ),
+            Self::UnexpectedFunction { expected, actual } => write!(
+                f,
+                "expected Z-Wave Serial API function 0x{:02x}, got 0x{:02x}",
+                expected.0, actual.0
             ),
             Self::NotRequest => write!(f, "only request messages can be tracked"),
             Self::Core(message) => write!(f, "Z-Wave core error: {message}"),
@@ -238,6 +373,38 @@ fn callback_id_for(function_id: FunctionId, payload: &[u8]) -> Option<u8> {
     }
 }
 
+fn expect_function(message: &SerialMessage, expected: FunctionId) -> Result<(), SerialApiError> {
+    if message.function_id == expected {
+        Ok(())
+    } else {
+        Err(SerialApiError::UnexpectedFunction {
+            expected,
+            actual: message.function_id,
+        })
+    }
+}
+
+fn classic_nodes_from_mask(mask: &[u8]) -> Result<Vec<NodeId>, SerialApiError> {
+    let mut nodes = Vec::new();
+    for (byte_index, byte) in mask.iter().enumerate() {
+        for bit_index in 0..8 {
+            if byte & (1 << bit_index) != 0 {
+                let raw_node_id = byte_index * 8 + bit_index + 1;
+                if raw_node_id > u8::MAX as usize {
+                    return Err(SerialApiError::Core(format!(
+                        "classic Z-Wave node id {raw_node_id} exceeds one byte"
+                    )));
+                }
+                nodes.push(
+                    NodeId::classic(raw_node_id as u8)
+                        .map_err(|err| SerialApiError::Core(err.to_string()))?,
+                );
+            }
+        }
+    }
+    Ok(nodes)
+}
+
 fn remove_first_function_match(
     pending: &mut BTreeMap<RequestKey, PendingRequest>,
     function_id: FunctionId,
@@ -252,6 +419,11 @@ fn remove_first_function_match(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn set_node(mask: &mut [u8], node_id: usize) {
+        let zero_based = node_id - 1;
+        mask[zero_based / 8] |= 1 << (zero_based % 8);
+    }
 
     #[test]
     fn serial_message_round_trips_through_core_frame() {
@@ -273,6 +445,90 @@ mod tests {
         assert!(!caps.was_real_primary);
         assert!(caps.is_suc);
         assert!(caps.supports_timers);
+    }
+
+    #[test]
+    fn serial_api_init_data_extracts_controller_nodes_from_bitmask() {
+        let mut node_mask = vec![0; 29];
+        set_node(&mut node_mask, 1);
+        set_node(&mut node_mask, 5);
+        set_node(&mut node_mask, 9);
+        set_node(&mut node_mask, 232);
+        let mut payload = vec![7, 0b0000_1010, node_mask.len() as u8];
+        payload.extend_from_slice(&node_mask);
+        payload.extend_from_slice(&[0x08, 0x00]);
+
+        let init = SerialApiInitData::parse(&payload).unwrap();
+
+        assert_eq!(init.version, 7);
+        assert!(init.capabilities.is_controller_api());
+        assert!(init.capabilities.supports_timers);
+        assert!(init.capabilities.is_sis);
+        assert_eq!(
+            init.nodes,
+            vec![
+                NodeId::Classic(1),
+                NodeId::Classic(5),
+                NodeId::Classic(9),
+                NodeId::Classic(232)
+            ]
+        );
+        assert_eq!(
+            init.chip,
+            ZWaveChip {
+                chip_type: 0x08,
+                chip_version: 0x00
+            }
+        );
+    }
+
+    #[test]
+    fn serial_api_init_data_accepts_end_device_payload_without_nodes() {
+        let message = SerialMessage {
+            kind: SerialMessageKind::Response,
+            function_id: FunctionId::SERIAL_API_GET_INIT_DATA,
+            callback_id: None,
+            payload: vec![7, 0b0000_0001, 0, 0x08, 0x00],
+        };
+
+        let init = SerialApiInitData::from_message(&message).unwrap();
+
+        assert!(init.capabilities.is_end_device_api);
+        assert!(init.nodes.is_empty());
+    }
+
+    #[test]
+    fn application_command_handler_wraps_source_and_command_bytes() {
+        let message = SerialMessage {
+            kind: SerialMessageKind::Request,
+            function_id: FunctionId::APPLICATION_COMMAND_HANDLER,
+            callback_id: None,
+            payload: vec![0x01, 0x05, 0x03, 0x25, 0x03, 0xff, 0x99],
+        };
+
+        let command = ApplicationCommand::from_message(&message).unwrap();
+
+        assert_eq!(command.rx_status, 0x01);
+        assert_eq!(command.source_node, NodeId::Classic(5));
+        assert_eq!(command.command, vec![0x25, 0x03, 0xff]);
+        assert_eq!(command.trailing, vec![0x99]);
+        assert_eq!(
+            command.command_class_id(),
+            Some(CommandClassId::SWITCH_BINARY)
+        );
+    }
+
+    #[test]
+    fn typed_payload_helpers_reject_wrong_function_id() {
+        let message = SerialMessage::request(FunctionId::GET_VERSION, Vec::new());
+
+        assert_eq!(
+            SerialApiInitData::from_message(&message),
+            Err(SerialApiError::UnexpectedFunction {
+                expected: FunctionId::SERIAL_API_GET_INIT_DATA,
+                actual: FunctionId::GET_VERSION
+            })
+        );
     }
 
     #[test]

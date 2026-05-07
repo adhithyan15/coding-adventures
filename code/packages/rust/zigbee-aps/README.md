@@ -10,11 +10,13 @@ boundary:
 - delivery modes: unicast, indirect, broadcast, group
 - endpoint and group addressing
 - cluster/profile ids
+- cluster/profile classification helpers
+- binding table records for device and group destinations
 - APS counters
 - payload preservation
 
-It does not yet implement binding tables, APS commands, fragmentation, security,
-ZDO discovery, or ZCL command semantics.
+It does not yet implement APS commands, fragmentation, security, ZDO discovery,
+or ZCL command semantics.
 
 ## Dependencies
 

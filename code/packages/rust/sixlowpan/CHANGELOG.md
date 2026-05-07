@@ -10,3 +10,5 @@ All notable changes to this package will be documented in this file.
   fragmentation headers.
 - LOWPAN_IPHC first/second byte parsing plus fragment first/next header
   parse/encode helpers.
+- Fragment payload parsing plus deterministic tag/size-keyed reassembly
+  buffers and tables with overlap and bounds validation.

@@ -529,4 +529,5 @@ members = [
     "zwave-serial-api",
     "thread-mle",
     "smart-home-runtime",
+    "zigbee-zcl",
 ]
