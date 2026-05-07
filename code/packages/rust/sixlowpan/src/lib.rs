@@ -16,6 +16,12 @@ const MESH_ORIGINATOR_EXTENDED: u8 = 1 << 5;
 const MESH_FINAL_EXTENDED: u8 = 1 << 4;
 const MESH_HOPS_LEFT_MASK: u8 = 0b0000_1111;
 const MESH_EXTENDED_HOPS_LEFT: u8 = 0b0000_1111;
+const UDP_NHC_PREFIX: u8 = 0b1111_0000;
+const UDP_NHC_MASK: u8 = 0b1111_1000;
+const UDP_NHC_CHECKSUM_ELIDED: u8 = 1 << 2;
+const UDP_NHC_PORTS_MASK: u8 = 0b0000_0011;
+const UDP_8BIT_PORT_BASE: u16 = 0xf000;
+const UDP_4BIT_PORT_BASE: u16 = 0xf0b0;
 const SHORT_ADDRESS_LEN: usize = 2;
 const EXTENDED_ADDRESS_LEN: usize = 8;
 
@@ -230,6 +236,174 @@ impl IphcEncoding {
             destination_address_compression: second & (1 << 2) != 0,
             destination_address_mode: IphcAddressMode::from_bits(second),
         })
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum UdpPortCompression {
+    Inline,
+    SourceInlineDestinationCompressed,
+    SourceCompressedDestinationInline,
+    BothCompressed,
+}
+
+impl UdpPortCompression {
+    fn from_bits(bits: u8) -> Self {
+        match bits & UDP_NHC_PORTS_MASK {
+            0 => Self::Inline,
+            1 => Self::SourceInlineDestinationCompressed,
+            2 => Self::SourceCompressedDestinationInline,
+            _ => Self::BothCompressed,
+        }
+    }
+
+    fn bits(self) -> u8 {
+        match self {
+            Self::Inline => 0,
+            Self::SourceInlineDestinationCompressed => 1,
+            Self::SourceCompressedDestinationInline => 2,
+            Self::BothCompressed => 3,
+        }
+    }
+
+    fn encoded_ports_len(self) -> usize {
+        match self {
+            Self::Inline => 4,
+            Self::SourceInlineDestinationCompressed | Self::SourceCompressedDestinationInline => 3,
+            Self::BothCompressed => 1,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct UdpNhcHeader {
+    pub source_port: u16,
+    pub destination_port: u16,
+    pub checksum: Option<u16>,
+}
+
+impl UdpNhcHeader {
+    pub fn new(source_port: u16, destination_port: u16, checksum: Option<u16>) -> Self {
+        Self {
+            source_port,
+            destination_port,
+            checksum,
+        }
+    }
+
+    pub fn parse(bytes: &[u8]) -> Result<Self, SixlowpanError> {
+        let Some((&first, _)) = bytes.split_first() else {
+            return Err(SixlowpanError::Truncated {
+                needed: 1,
+                remaining: 0,
+            });
+        };
+        if first & UDP_NHC_MASK != UDP_NHC_PREFIX {
+            return Err(SixlowpanError::NotUdpNhc(first));
+        }
+
+        let mut pos = 1;
+        let compression = UdpPortCompression::from_bits(first);
+        let (source_port, destination_port) = match compression {
+            UdpPortCompression::Inline => {
+                let source = u16::from_be_bytes(read_array::<2>(bytes, &mut pos)?);
+                let destination = u16::from_be_bytes(read_array::<2>(bytes, &mut pos)?);
+                (source, destination)
+            }
+            UdpPortCompression::SourceInlineDestinationCompressed => {
+                let source = u16::from_be_bytes(read_array::<2>(bytes, &mut pos)?);
+                let destination = UDP_8BIT_PORT_BASE | u16::from(read_u8(bytes, &mut pos)?);
+                (source, destination)
+            }
+            UdpPortCompression::SourceCompressedDestinationInline => {
+                let source = UDP_8BIT_PORT_BASE | u16::from(read_u8(bytes, &mut pos)?);
+                let destination = u16::from_be_bytes(read_array::<2>(bytes, &mut pos)?);
+                (source, destination)
+            }
+            UdpPortCompression::BothCompressed => {
+                let compressed = read_u8(bytes, &mut pos)?;
+                (
+                    UDP_4BIT_PORT_BASE | u16::from(compressed >> 4),
+                    UDP_4BIT_PORT_BASE | u16::from(compressed & 0x0f),
+                )
+            }
+        };
+        let checksum = if first & UDP_NHC_CHECKSUM_ELIDED == 0 {
+            Some(u16::from_be_bytes(read_array::<2>(bytes, &mut pos)?))
+        } else {
+            None
+        };
+
+        Ok(Self {
+            source_port,
+            destination_port,
+            checksum,
+        })
+    }
+
+    pub fn encode(&self) -> Result<Vec<u8>, SixlowpanError> {
+        self.encode_with_compression(self.preferred_port_compression())
+    }
+
+    pub fn encode_with_compression(
+        &self,
+        compression: UdpPortCompression,
+    ) -> Result<Vec<u8>, SixlowpanError> {
+        validate_udp_ports_for_compression(self.source_port, self.destination_port, compression)?;
+
+        let mut out = Vec::with_capacity(self.encoded_len_with_compression(compression));
+        let mut first = UDP_NHC_PREFIX | compression.bits();
+        if self.checksum.is_none() {
+            first |= UDP_NHC_CHECKSUM_ELIDED;
+        }
+        out.push(first);
+
+        match compression {
+            UdpPortCompression::Inline => {
+                out.extend_from_slice(&self.source_port.to_be_bytes());
+                out.extend_from_slice(&self.destination_port.to_be_bytes());
+            }
+            UdpPortCompression::SourceInlineDestinationCompressed => {
+                out.extend_from_slice(&self.source_port.to_be_bytes());
+                out.push((self.destination_port - UDP_8BIT_PORT_BASE) as u8);
+            }
+            UdpPortCompression::SourceCompressedDestinationInline => {
+                out.push((self.source_port - UDP_8BIT_PORT_BASE) as u8);
+                out.extend_from_slice(&self.destination_port.to_be_bytes());
+            }
+            UdpPortCompression::BothCompressed => {
+                out.push(
+                    (((self.source_port - UDP_4BIT_PORT_BASE) as u8) << 4)
+                        | ((self.destination_port - UDP_4BIT_PORT_BASE) as u8),
+                );
+            }
+        }
+        if let Some(checksum) = self.checksum {
+            out.extend_from_slice(&checksum.to_be_bytes());
+        }
+        Ok(out)
+    }
+
+    pub fn preferred_port_compression(&self) -> UdpPortCompression {
+        if compressible_4bit_udp_port(self.source_port)
+            && compressible_4bit_udp_port(self.destination_port)
+        {
+            UdpPortCompression::BothCompressed
+        } else if compressible_8bit_udp_port(self.source_port) {
+            UdpPortCompression::SourceCompressedDestinationInline
+        } else if compressible_8bit_udp_port(self.destination_port) {
+            UdpPortCompression::SourceInlineDestinationCompressed
+        } else {
+            UdpPortCompression::Inline
+        }
+    }
+
+    pub fn encoded_len(&self) -> usize {
+        self.encoded_len_with_compression(self.preferred_port_compression())
+    }
+
+    pub fn encoded_len_with_compression(&self, compression: UdpPortCompression) -> usize {
+        1 + compression.encoded_ports_len() + usize::from(self.checksum.is_some()) * 2
     }
 }
 
@@ -508,8 +682,13 @@ pub enum SixlowpanError {
         remaining: usize,
     },
     NotIphc(u8),
+    NotUdpNhc(u8),
     NotFragment(u8),
     NotMesh(u8),
+    UdpPortNotCompressible {
+        port: u16,
+        compression: UdpPortCompression,
+    },
     DatagramSizeTooLarge(u16),
     FragmentKeyMismatch {
         expected: ReassemblyKey,
@@ -534,12 +713,17 @@ impl fmt::Display for SixlowpanError {
                 "truncated 6LoWPAN frame: needed {needed} bytes, had {remaining}"
             ),
             Self::NotIphc(value) => write!(f, "dispatch 0x{value:02x} is not LOWPAN_IPHC"),
+            Self::NotUdpNhc(value) => write!(f, "dispatch 0x{value:02x} is not LOWPAN_NHC UDP"),
             Self::NotFragment(value) => {
                 write!(f, "dispatch 0x{value:02x} is not a 6LoWPAN fragment header")
             }
             Self::NotMesh(value) => {
                 write!(f, "dispatch 0x{value:02x} is not a 6LoWPAN mesh header")
             }
+            Self::UdpPortNotCompressible { port, compression } => write!(
+                f,
+                "UDP port {port} cannot use 6LoWPAN compression mode {compression:?}"
+            ),
             Self::DatagramSizeTooLarge(value) => {
                 write!(f, "6LoWPAN datagram size {value} exceeds 11-bit field")
             }
@@ -617,6 +801,59 @@ fn validate_datagram_size(datagram_size: u16) -> Result<(), SixlowpanError> {
         return Err(SixlowpanError::DatagramSizeTooLarge(datagram_size));
     }
     Ok(())
+}
+
+fn validate_udp_ports_for_compression(
+    source_port: u16,
+    destination_port: u16,
+    compression: UdpPortCompression,
+) -> Result<(), SixlowpanError> {
+    match compression {
+        UdpPortCompression::Inline => Ok(()),
+        UdpPortCompression::SourceInlineDestinationCompressed => {
+            if compressible_8bit_udp_port(destination_port) {
+                Ok(())
+            } else {
+                Err(SixlowpanError::UdpPortNotCompressible {
+                    port: destination_port,
+                    compression,
+                })
+            }
+        }
+        UdpPortCompression::SourceCompressedDestinationInline => {
+            if compressible_8bit_udp_port(source_port) {
+                Ok(())
+            } else {
+                Err(SixlowpanError::UdpPortNotCompressible {
+                    port: source_port,
+                    compression,
+                })
+            }
+        }
+        UdpPortCompression::BothCompressed => {
+            if !compressible_4bit_udp_port(source_port) {
+                Err(SixlowpanError::UdpPortNotCompressible {
+                    port: source_port,
+                    compression,
+                })
+            } else if !compressible_4bit_udp_port(destination_port) {
+                Err(SixlowpanError::UdpPortNotCompressible {
+                    port: destination_port,
+                    compression,
+                })
+            } else {
+                Ok(())
+            }
+        }
+    }
+}
+
+fn compressible_8bit_udp_port(port: u16) -> bool {
+    (UDP_8BIT_PORT_BASE..=UDP_8BIT_PORT_BASE + u16::from(u8::MAX)).contains(&port)
+}
+
+fn compressible_4bit_udp_port(port: u16) -> bool {
+    (UDP_4BIT_PORT_BASE..=UDP_4BIT_PORT_BASE + 0x0f).contains(&port)
 }
 
 fn merge_contiguous_ranges(ranges: &mut Vec<(usize, usize)>) {
@@ -709,6 +946,61 @@ mod tests {
         assert_eq!(encoding.source_address_mode, IphcAddressMode::Elided);
         assert!(encoding.multicast_destination);
         assert_eq!(encoding.destination_address_mode, IphcAddressMode::Elided);
+    }
+
+    #[test]
+    fn udp_nhc_header_round_trips_inline_ports_and_checksum() {
+        let header = UdpNhcHeader::new(12_345, 54_321, Some(0xbeef));
+        let encoded = header.encode().unwrap();
+
+        assert_eq!(encoded, vec![0xf0, 0x30, 0x39, 0xd4, 0x31, 0xbe, 0xef]);
+        assert_eq!(UdpNhcHeader::parse(&encoded).unwrap(), header);
+        assert_eq!(
+            header.preferred_port_compression(),
+            UdpPortCompression::Inline
+        );
+    }
+
+    #[test]
+    fn udp_nhc_header_round_trips_compressed_ports() {
+        let source_inline = UdpNhcHeader::new(6_161, 0xf012, Some(0x4567));
+        let source_compressed = UdpNhcHeader::new(0xf034, 6_162, Some(0x89ab));
+        let both_compressed = UdpNhcHeader::new(0xf0b1, 0xf0bf, None);
+
+        assert_eq!(
+            source_inline
+                .encode_with_compression(UdpPortCompression::SourceInlineDestinationCompressed)
+                .unwrap(),
+            vec![0xf1, 0x18, 0x11, 0x12, 0x45, 0x67]
+        );
+        assert_eq!(
+            source_compressed
+                .encode_with_compression(UdpPortCompression::SourceCompressedDestinationInline)
+                .unwrap(),
+            vec![0xf2, 0x34, 0x18, 0x12, 0x89, 0xab]
+        );
+        assert_eq!(both_compressed.encode().unwrap(), vec![0xf7, 0x1f]);
+        assert_eq!(
+            UdpNhcHeader::parse(&both_compressed.encode().unwrap()).unwrap(),
+            both_compressed
+        );
+    }
+
+    #[test]
+    fn udp_nhc_rejects_invalid_dispatch_and_bad_compression() {
+        let header = UdpNhcHeader::new(12_345, 54_321, Some(0xbeef));
+
+        assert_eq!(
+            UdpNhcHeader::parse(&[0x41]),
+            Err(SixlowpanError::NotUdpNhc(0x41))
+        );
+        assert_eq!(
+            header.encode_with_compression(UdpPortCompression::BothCompressed),
+            Err(SixlowpanError::UdpPortNotCompressible {
+                port: 12_345,
+                compression: UdpPortCompression::BothCompressed,
+            })
+        );
     }
 
     #[test]
