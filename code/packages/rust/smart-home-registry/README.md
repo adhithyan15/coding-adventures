@@ -15,6 +15,8 @@ Current scope:
 - bridge/device/entity/scene upserts
 - bridge-to-device and device-to-entity indexes
 - protocol-native identifier lookup
+- selector-based device/entity queries
+- state freshness helpers for stale or missing cached state
 - state snapshot cache
 - immutable event log in arrival order
 - state updates from normalized event deltas
