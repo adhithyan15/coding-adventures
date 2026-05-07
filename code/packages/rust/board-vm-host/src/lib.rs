@@ -22,6 +22,8 @@ pub const GPIO_READ_CODE_LEN: usize = 13;
 pub const GPIO_READ_MODULE_LEN: usize = 23;
 pub const TIME_NOW_CODE_LEN: usize = 3;
 pub const TIME_NOW_MODULE_LEN: usize = 13;
+pub const TIME_SLEEP_MS_CODE_LEN: usize = 5;
+pub const TIME_SLEEP_MS_MODULE_LEN: usize = 15;
 
 pub const GPIO_MODE_INPUT: u8 = 0;
 pub const GPIO_MODE_OUTPUT: u8 = 1;
@@ -158,6 +160,21 @@ impl TimeNowProgram {
 impl Default for TimeNowProgram {
     fn default() -> Self {
         Self::new()
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct TimeSleepMsProgram {
+    pub duration_ms: u16,
+    pub max_stack: u8,
+}
+
+impl TimeSleepMsProgram {
+    pub const fn new(duration_ms: u16) -> Self {
+        Self {
+            duration_ms,
+            max_stack: 1,
+        }
     }
 }
 
@@ -577,6 +594,39 @@ pub fn write_time_now_module(program: TimeNowProgram, out: &mut [u8]) -> Result<
     Ok(offset)
 }
 
+pub fn write_time_sleep_ms_code(
+    program: TimeSleepMsProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < TIME_SLEEP_MS_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_push_u16(out, &mut offset, program.duration_ms)?;
+    write_call_u8(out, &mut offset, CAP_TIME_SLEEP_MS)?;
+    Ok(offset)
+}
+
+pub fn write_time_sleep_ms_module(
+    program: TimeSleepMsProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < TIME_SLEEP_MS_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; TIME_SLEEP_MS_CODE_LEN];
+    let code_len = write_time_sleep_ms_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(&module, CapabilitySet::blink_mvp(), program.max_stack)?;
+    Ok(offset)
+}
+
 pub fn write_module(spec: ModuleSpec<'_>, out: &mut [u8]) -> Result<usize, HostError> {
     if spec.code.len() > u32::MAX as usize || spec.const_pool.len() > u32::MAX as usize {
         return Err(HostError::ProgramTooLarge);
@@ -703,6 +753,9 @@ mod tests {
     const TIME_NOW_MODULE_HEX: [u8; TIME_NOW_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x03, 0x40, 0x11, 0x50, 0x00,
     ];
+    const TIME_SLEEP_MS_MODULE_HEX: [u8; TIME_SLEEP_MS_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x05, 0x13, 0xFA, 0x00, 0x40, 0x10, 0x00,
+    ];
 
     #[test]
     fn builds_blink_module_from_bvm05_fixture() {
@@ -776,6 +829,20 @@ mod tests {
         let mut capabilities = [0u16; 1];
         let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
         assert_eq!(&capabilities[..count], &[CAP_TIME_NOW_MS]);
+    }
+
+    #[test]
+    fn builds_time_sleep_ms_module_without_return() {
+        let mut module = [0u8; TIME_SLEEP_MS_MODULE_LEN];
+        let len = write_time_sleep_ms_module(TimeSleepMsProgram::new(250), &mut module).unwrap();
+        assert_eq!(len, TIME_SLEEP_MS_MODULE_LEN);
+        assert_eq!(module, TIME_SLEEP_MS_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp(), 1).unwrap();
+        let mut capabilities = [0u16; 1];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(&capabilities[..count], &[CAP_TIME_SLEEP_MS]);
     }
 
     #[test]

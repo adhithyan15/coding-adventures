@@ -112,10 +112,21 @@ module CodingAdventures
         native_session.time_now_module(max_stack)
       end
 
+      def time_sleep_ms_module(duration_ms:, max_stack: 1)
+        native_session.time_sleep_ms_module(duration_ms, max_stack)
+      end
+
       def upload_time_now(program_id: @program_id, max_stack: 1)
         upload(
           program_id: program_id,
           module_bytes: time_now_module(max_stack: max_stack)
+        )
+      end
+
+      def upload_time_sleep_ms(program_id: @program_id, duration_ms:, max_stack: 1)
+        upload(
+          program_id: program_id,
+          module_bytes: time_sleep_ms_module(duration_ms: duration_ms, max_stack: max_stack)
         )
       end
 
@@ -255,6 +266,35 @@ module CodingAdventures
         SessionResult.new(results: results)
       end
 
+      def time_sleep_ms(
+        duration_ms:,
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        max_stack: 1,
+        handshake: false,
+        query_caps: false,
+        host_name: @host_name,
+        host_nonce: @host_nonce
+      )
+        results = []
+        results << hello(host_name: host_name, host_nonce: host_nonce) if handshake
+        results << capabilities if query_caps
+        results.concat(
+          upload_time_sleep_ms(
+            program_id: program_id,
+            duration_ms: duration_ms,
+            max_stack: max_stack
+          ).results
+        )
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget
+        )
+        SessionResult.new(results: results)
+      end
+      alias sleep_ms time_sleep_ms
+
       def run_command(line, **options)
         words = line.to_s.split
         command = words.shift
@@ -277,6 +317,8 @@ module CodingAdventures
         when "upload-time-now", "upload-time.now"
           ensure_no_extra_arguments!(words, command)
           upload_time_now(**options)
+        when "upload-time-sleep-ms", "upload-time.sleep_ms", "upload-sleep-ms"
+          upload_time_sleep_ms(**time_sleep_ms_command_options(words, command, options, require_budget: false))
         when "run"
           SessionResult.new(results: [run(**options.merge(optional_budget(words, command)))])
         when "stop"
@@ -294,6 +336,8 @@ module CodingAdventures
           gpio_write(**gpio_level_command_options(words, command, options, value: false))
         when "time-now", "time.now", "now"
           time_now(**options.merge(optional_budget(words, command)))
+        when "time-sleep-ms", "time.sleep_ms", "sleep-ms"
+          time_sleep_ms(**time_sleep_ms_command_options(words, command, options))
         else
           raise UnknownSessionCommandError, "unknown Board VM session command: #{command}"
         end
@@ -346,6 +390,20 @@ module CodingAdventures
 
         ensure_no_extra_arguments!(words, command)
         raise ArgumentError, "#{command} requires pin" unless merged.key?(:pin)
+
+        merged
+      end
+
+      def time_sleep_ms_command_options(words, command, options, require_budget: true)
+        merged = options.dup
+        merged[:duration_ms] = integer_argument(words.shift, "#{command} duration_ms") unless words.empty?
+
+        if require_budget && !words.empty?
+          merged[:instruction_budget] = integer_argument(words.shift, "#{command} budget")
+        end
+
+        ensure_no_extra_arguments!(words, command)
+        raise ArgumentError, "#{command} requires duration_ms" unless merged.key?(:duration_ms)
 
         merged
       end

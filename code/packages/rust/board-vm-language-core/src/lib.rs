@@ -14,9 +14,10 @@ use std::str;
 
 use board_vm_host::{
     write_blink_module, write_gpio_read_module, write_gpio_write_module, write_time_now_module,
-    BlinkProgram, GpioReadProgram, GpioWriteProgram, HostError, HostSession, TimeNowProgram,
-    BLINK_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID, GPIO_READ_MODULE_LEN,
-    GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN,
+    write_time_sleep_ms_module, BlinkProgram, GpioReadProgram, GpioWriteProgram, HostError,
+    HostSession, TimeNowProgram, TimeSleepMsProgram, BLINK_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET,
+    DEFAULT_PROGRAM_ID, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN,
+    TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_protocol::{
     decode_caps_report_header, decode_error_payload, decode_frame, decode_hello_ack,
@@ -431,6 +432,13 @@ pub fn build_time_now_module(
     out: &mut [u8],
 ) -> Result<usize, LanguageCoreError> {
     Ok(write_time_now_module(program, out)?)
+}
+
+pub fn build_time_sleep_ms_module(
+    program: TimeSleepMsProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_time_sleep_ms_module(program, out)?)
 }
 
 pub fn build_program_begin_wire_frame(
@@ -873,6 +881,29 @@ pub unsafe extern "C" fn board_vm_language_time_now_module(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn board_vm_language_time_sleep_ms_module(
+    duration_ms: u16,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_time_sleep_ms_module(
+            TimeSleepMsProgram {
+                duration_ms,
+                max_stack,
+            },
+            module_out,
+        )?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn board_vm_language_program_begin_wire(
     session: *mut BoardVmLanguageSession,
     program_id: u16,
@@ -1012,6 +1043,11 @@ pub extern "C" fn board_vm_language_gpio_write_module_len() -> u64 {
 #[no_mangle]
 pub extern "C" fn board_vm_language_time_now_module_len() -> u64 {
     TIME_NOW_MODULE_LEN as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_time_sleep_ms_module_len() -> u64 {
+    TIME_SLEEP_MS_MODULE_LEN as u64
 }
 
 fn catch_status(
@@ -1192,6 +1228,18 @@ mod tests {
         };
         assert_eq!(time_now_status.code, BoardVmLanguageStatusCode::Ok as u32);
         assert_eq!(time_now_status.len, TIME_NOW_MODULE_LEN as u64);
+
+        let mut time_sleep_module = [0u8; TIME_SLEEP_MS_MODULE_LEN];
+        let time_sleep_status = unsafe {
+            board_vm_language_time_sleep_ms_module(
+                250,
+                1,
+                time_sleep_module.as_mut_ptr(),
+                time_sleep_module.len() as u64,
+            )
+        };
+        assert_eq!(time_sleep_status.code, BoardVmLanguageStatusCode::Ok as u32);
+        assert_eq!(time_sleep_status.len, TIME_SLEEP_MS_MODULE_LEN as u64);
 
         let mut gpio_read_module = [0u8; GPIO_READ_MODULE_LEN];
         let gpio_read_status = unsafe {

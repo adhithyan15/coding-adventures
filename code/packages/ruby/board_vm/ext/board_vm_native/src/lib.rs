@@ -3,17 +3,19 @@ use std::ptr;
 use std::slice;
 
 use board_vm_host::{
-    BlinkProgram, GpioReadProgram, GpioWriteProgram, TimeNowProgram, BLINK_MODULE_LEN,
-    GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN,
+    BlinkProgram, GpioReadProgram, GpioWriteProgram, TimeNowProgram, TimeSleepMsProgram,
+    BLINK_MODULE_LEN, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN,
+    TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_language_core::{
     build_blink_module, build_caps_query_wire_frame, build_gpio_read_module,
     build_gpio_write_module, build_hello_wire_frame, build_program_begin_wire_frame,
     build_program_chunk_wire_frame, build_program_end_wire_frame, build_run_background_wire_frame,
-    build_stop_wire_frame, build_time_now_module, capability_board_metadata,
-    capability_bytecode_callable, capability_flag_names, capability_protocol_feature,
-    decode_wire_response, program_format_name, run_status_name, BoardVmLanguageSession,
-    DecodedLanguageResponse, DecodedLanguageResponseBody, LanguageCoreError, LanguageValue,
+    build_stop_wire_frame, build_time_now_module, build_time_sleep_ms_module,
+    capability_board_metadata, capability_bytecode_callable, capability_flag_names,
+    capability_protocol_feature, decode_wire_response, program_format_name, run_status_name,
+    BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
+    LanguageCoreError, LanguageValue,
 };
 use ruby_bridge::VALUE;
 
@@ -116,6 +118,19 @@ extern "C" fn session_time_now_module(_self_val: VALUE, max_stack_val: VALUE) ->
 
     let module = build_time_now_module_value(max_stack)
         .unwrap_or_else(|error| raise_core_error("time_now_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_time_sleep_ms_module(
+    _self_val: VALUE,
+    duration_ms_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let duration_ms = rb_u16(duration_ms_val, "duration_ms");
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_time_sleep_ms_module_value(duration_ms, max_stack)
+        .unwrap_or_else(|error| raise_core_error("time_sleep_ms_module", error));
     ruby_bridge::bytes_to_rb(&module)
 }
 
@@ -530,6 +545,22 @@ fn build_time_now_module_value(max_stack: u8) -> Result<Vec<u8>, LanguageCoreErr
     Ok(module)
 }
 
+fn build_time_sleep_ms_module_value(
+    duration_ms: u16,
+    max_stack: u8,
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; TIME_SLEEP_MS_MODULE_LEN];
+    let len = build_time_sleep_ms_module(
+        TimeSleepMsProgram {
+            duration_ms,
+            max_stack,
+        },
+        &mut module,
+    )?;
+    module.truncate(len);
+    Ok(module)
+}
+
 fn build_gpio_read_module_value(
     pin: u8,
     mode: u8,
@@ -661,6 +692,12 @@ pub extern "C" fn Init_board_vm_native() {
         "time_now_module",
         session_time_now_module as *const c_void,
         1,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "time_sleep_ms_module",
+        session_time_sleep_ms_module as *const c_void,
+        2,
     );
     ruby_bridge::define_method_raw(
         session_class,

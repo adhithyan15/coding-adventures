@@ -74,6 +74,14 @@ CodingAdventures::BoardVM.uno_r4_wifi(port: "/dev/cu.usbmodem1101") do |board|
 end
 ```
 
+`time.sleep_ms` is exposed as a one-shot Rust-built module too:
+
+```ruby
+CodingAdventures::BoardVM.uno_r4_wifi(port: "/dev/cu.usbmodem1101") do |board|
+  board.time.sleep_ms(250)
+end
+```
+
 GPIO reads follow the same path:
 
 ```ruby
@@ -107,16 +115,17 @@ CodingAdventures::BoardVM.uno_r4_wifi(port: "/dev/cu.usbmodem1101") do |board|
     vm.run_command("gpio-read 13 pullup 24")
     vm.run_command("gpio-write 13 high 24")
     vm.run_command("time-now 24")
+    vm.run_command("time-sleep-ms 250 24")
   end
 end
 ```
 
 `hello`, `capabilities`, `upload_blink`, `upload_gpio_read`, `upload_time_now`,
-`upload_gpio_write`, `run`, `stop`, `blink`, `gpio_read`, `gpio_write`,
-`time_now`, and `run_command` return dispatch results with the Rust-produced
-frame, optional raw response bytes, and optional Rust-decoded response hash. The
-text command parser is Ruby sugar only; every dispatched frame still comes from
-`CodingAdventures::BoardVM::Native::Session`.
+`upload_time_sleep_ms`, `upload_gpio_write`, `run`, `stop`, `blink`,
+`gpio_read`, `gpio_write`, `time_now`, `time_sleep_ms`, and `run_command` return
+dispatch results with the Rust-produced frame, optional raw response bytes, and
+optional Rust-decoded response hash. The text command parser is Ruby sugar only;
+every dispatched frame still comes from `CodingAdventures::BoardVM::Native::Session`.
 
 Capability reports can be lifted into Ruby objects after Rust decodes the board
 response:

@@ -179,6 +179,26 @@ module CodingAdventures
         )
       end
 
+      def time_sleep_ms!(
+        duration_ms:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 1
+      )
+        ensure_uno_r4_wifi!
+
+        session.time_sleep_ms(
+          duration_ms: duration_ms,
+          program_id: program_id,
+          budget: budget,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
+        )
+      end
+
       def eject_blink!(
         output:,
         program_id: DEFAULT_PROGRAM_ID,
@@ -335,6 +355,22 @@ module CodingAdventures
         max_stack: 1
       )
         @connection.time_now!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          max_stack: max_stack
+        )
+      end
+
+      def sleep_ms(
+        duration_ms,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 1
+      )
+        @connection.time_sleep_ms!(
+          duration_ms: duration_ms,
           program_id: program_id,
           budget: budget,
           host_nonce: host_nonce,
