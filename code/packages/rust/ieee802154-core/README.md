@@ -18,6 +18,9 @@ Current scope:
 - short and extended address parsing
 - auxiliary security header parsing
 - security level and key identifier modeling
+- beacon payload parsing:
+  superframe fields, GTS descriptors, pending addresses, and residual payload
+- scan-facing PAN descriptors derived from received beacon frames
 - payload extraction
 - optional FCS handling
 
@@ -25,7 +28,6 @@ Not yet implemented:
 
 - AES-CCM security processing
 - MAC command payload semantics
-- beacon payload semantics
 - CSMA/CA state machines
 - PHY/baseband behavior
 
@@ -81,3 +83,12 @@ ieee802154-mac / ieee802154-security / ieee802154-radio
 
 The package has no hardware dependency. Radio drivers and simulators should
 consume these types rather than reimplementing frame parsing.
+
+## Beacon Scanning
+
+`BeaconPayload::parse` decodes the fixed IEEE 802.15.4 beacon payload fields:
+superframe specification, GTS fields, pending short/extended addresses, and the
+remaining beacon payload bytes. `PanDescriptor::from_beacon_frame` combines a
+received beacon frame with radio metadata such as channel, channel page, and
+link quality so higher Zigbee and Thread discovery layers can rank candidates
+without learning the MAC byte layout.
