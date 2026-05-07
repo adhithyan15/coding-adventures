@@ -9,6 +9,7 @@ All notable changes to this package will be documented in this file.
 - Hue CLIP v2 resource type/id/path primitives.
 - Structured Hue command intents for light, grouped-light, color-temperature,
   and scene requests.
+- Typed Hue bridge resources for paired bridge identity/health refresh.
 - Typed Hue device resources with product metadata and service references.
 - Mapping helpers from discovered Hue bridge/device/light records into
   `smart-home-core`.

@@ -319,6 +319,49 @@ pub fn discovered_bridge_to_core(discovered: DiscoveredHueBridge) -> Bridge {
     bridge
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueBridgeResource {
+    pub id: HueResourceId,
+    pub owner_device_id: Option<HueResourceId>,
+    pub bridge_id: Option<String>,
+    pub time_zone: Option<String>,
+}
+
+impl HueBridgeResource {
+    pub fn to_core(&self, address: Option<String>) -> Bridge {
+        let bridge_identifier = self
+            .bridge_id
+            .as_deref()
+            .unwrap_or_else(|| self.id.as_str());
+        let mut bridge = Bridge::new(
+            BridgeId::trusted(format!("hue.bridge.{bridge_identifier}")),
+            IntegrationId::trusted(HUE_INTEGRATION_ID),
+            BridgeTransport::LanHttp,
+        );
+        bridge.address = address;
+        bridge.health = Health::Online;
+        bridge.identifiers.push(
+            ProtocolIdentifier::new(ProtocolFamily::Hue, "bridge", bridge_identifier)
+                .expect("Hue bridge resources have a non-empty identifier"),
+        );
+        bridge
+            .metadata
+            .push(Metadata::new("hue.resource_id", self.id.as_str()));
+        if let Some(owner_device_id) = &self.owner_device_id {
+            bridge.metadata.push(Metadata::new(
+                "hue.owner_device_id",
+                owner_device_id.as_str(),
+            ));
+        }
+        if let Some(time_zone) = &self.time_zone {
+            bridge
+                .metadata
+                .push(Metadata::new("hue.time_zone", time_zone));
+        }
+        bridge
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct HueLightResource {
     pub id: HueResourceId,
@@ -560,6 +603,31 @@ mod tests {
         assert_eq!(bridge.health, Health::Unpaired);
         assert_eq!(bridge.transport, BridgeTransport::LanHttp);
         assert_eq!(bridge.identifiers[0].kind, "bridge");
+    }
+
+    #[test]
+    fn hue_bridge_resource_projects_to_online_core_bridge() {
+        let bridge = HueBridgeResource {
+            id: HueResourceId::trusted("bridge-resource-1"),
+            owner_device_id: Some(HueResourceId::trusted("device-bridge")),
+            bridge_id: Some("001788fffeabcdef".to_string()),
+            time_zone: Some("America/Los_Angeles".to_string()),
+        }
+        .to_core(Some("https://192.0.2.10".to_string()));
+
+        assert_eq!(bridge.bridge_id.as_str(), "hue.bridge.001788fffeabcdef");
+        assert_eq!(bridge.integration_id, IntegrationId::trusted("hue"));
+        assert_eq!(bridge.health, Health::Online);
+        assert_eq!(bridge.address.as_deref(), Some("https://192.0.2.10"));
+        assert_eq!(bridge.identifiers[0].value, "001788fffeabcdef");
+        assert!(bridge
+            .metadata
+            .iter()
+            .any(|metadata| metadata.value == "bridge-resource-1"));
+        assert!(bridge
+            .metadata
+            .iter()
+            .any(|metadata| metadata.value == "America/Los_Angeles"));
     }
 
     #[test]

@@ -10,9 +10,9 @@ use coding_adventures_json_serializer::serialize;
 use coding_adventures_json_value::{parse as parse_json, JsonNumber, JsonValue};
 use http_core::{find_header, Header};
 use hue_core::{
-    validate_brightness, HueCommand, HueDeviceResource, HueLightResource, HueLightStateUpdate,
-    HueMethod, HueRequest, HueRequestBody, HueResourceId, HueResourceRef, HueResourceType,
-    CLIP_V2_EVENT_STREAM_PATH, CLIP_V2_RESOURCE_ROOT, HUE_APPLICATION_KEY_HEADER,
+    validate_brightness, HueBridgeResource, HueCommand, HueDeviceResource, HueLightResource,
+    HueLightStateUpdate, HueMethod, HueRequest, HueRequestBody, HueResourceId, HueResourceRef,
+    HueResourceType, CLIP_V2_EVENT_STREAM_PATH, CLIP_V2_RESOURCE_ROOT, HUE_APPLICATION_KEY_HEADER,
 };
 use std::fmt;
 
@@ -237,6 +237,11 @@ impl<T: HueTransport> HueClient<T> {
     pub fn get_light_resources(&mut self) -> Result<Vec<HueLightResource>, HueClientError> {
         let envelope = self.get_collection(HueResourceType::Light)?;
         parse_lights_from_envelope(&envelope)
+    }
+
+    pub fn get_bridge_resources(&mut self) -> Result<Vec<HueBridgeResource>, HueClientError> {
+        let envelope = self.get_collection(HueResourceType::Bridge)?;
+        parse_bridges_from_envelope(&envelope)
     }
 
     pub fn get_device_resources(&mut self) -> Result<Vec<HueDeviceResource>, HueClientError> {
@@ -539,6 +544,18 @@ pub fn parse_lights_from_envelope(
     Ok(lights)
 }
 
+pub fn parse_bridges_from_envelope(
+    envelope: &HueEnvelope,
+) -> Result<Vec<HueBridgeResource>, HueClientError> {
+    let mut bridges = Vec::new();
+    for resource in &envelope.data {
+        if object_string_field(resource, "type") == Some(HueResourceType::Bridge.as_hue_type()) {
+            bridges.push(parse_bridge_resource(resource)?);
+        }
+    }
+    Ok(bridges)
+}
+
 pub fn parse_devices_from_envelope(
     envelope: &HueEnvelope,
 ) -> Result<Vec<HueDeviceResource>, HueClientError> {
@@ -748,6 +765,24 @@ fn parse_light_state_update(resource: &JsonValue) -> Result<HueLightStateUpdate,
         on,
         brightness,
         color_temperature_mirek,
+    })
+}
+
+fn parse_bridge_resource(resource: &JsonValue) -> Result<HueBridgeResource, HueClientError> {
+    let id = object_string_field(resource, "id")
+        .ok_or_else(|| HueClientError::unexpected_json("Hue bridge resource is missing id"))?;
+    let owner_device_id = object_field(resource, "owner")
+        .and_then(|owner| object_string_field(owner, "rid"))
+        .map(HueResourceId::trusted);
+    let time_zone = object_field(resource, "time_zone")
+        .and_then(|time_zone| object_string_field(time_zone, "time_zone"))
+        .map(str::to_string);
+
+    Ok(HueBridgeResource {
+        id: HueResourceId::trusted(id),
+        owner_device_id,
+        bridge_id: object_string_field(resource, "bridge_id").map(str::to_string),
+        time_zone,
     })
 }
 
@@ -1082,6 +1117,23 @@ mod tests {
     }
 
     #[test]
+    fn client_reads_bridge_collection_through_injected_transport() {
+        let transport = RecordingTransport::with_response(
+            r#"{"data":[{"id":"bridge-resource-1","type":"bridge","bridge_id":"001788fffeabcdef"}],"errors":[]}"#,
+        );
+        let mut client = HueClient::new(HueClientConfig::paired("app-key"), transport);
+
+        let bridges = client.get_bridge_resources().unwrap();
+        let transport = client.into_transport();
+
+        assert_eq!(bridges.len(), 1);
+        assert_eq!(bridges[0].id.as_str(), "bridge-resource-1");
+        assert_eq!(bridges[0].bridge_id.as_deref(), Some("001788fffeabcdef"));
+        assert_eq!(transport.requests.len(), 1);
+        assert_eq!(transport.requests[0].path, "/clip/v2/resource/bridge");
+    }
+
+    #[test]
     fn parses_registration_success() {
         let registration = parse_registration_response(
             br#"[{"success":{"username":"app-key","clientkey":"client-key"}}]"#,
@@ -1120,6 +1172,28 @@ mod tests {
         assert_eq!(lights[0].on, Some(true));
         assert_eq!(lights[0].brightness, Some(42));
         assert_eq!(lights[0].color_temperature_mirek, Some(366));
+    }
+
+    #[test]
+    fn parses_bridge_resources_from_snapshot_envelope() {
+        let envelope = parse_hue_envelope(
+            br#"{"data":[{"id":"bridge-resource-1","type":"bridge","bridge_id":"001788fffeabcdef","owner":{"rid":"device-bridge","rtype":"device"},"time_zone":{"time_zone":"America/Los_Angeles"}},{"id":"device-1","type":"device"}],"errors":[]}"#,
+        )
+        .unwrap();
+
+        let bridges = parse_bridges_from_envelope(&envelope).unwrap();
+
+        assert_eq!(bridges.len(), 1);
+        assert_eq!(bridges[0].id.as_str(), "bridge-resource-1");
+        assert_eq!(
+            bridges[0]
+                .owner_device_id
+                .as_ref()
+                .map(HueResourceId::as_str),
+            Some("device-bridge")
+        );
+        assert_eq!(bridges[0].bridge_id.as_deref(), Some("001788fffeabcdef"));
+        assert_eq!(bridges[0].time_zone.as_deref(), Some("America/Los_Angeles"));
     }
 
     #[test]
