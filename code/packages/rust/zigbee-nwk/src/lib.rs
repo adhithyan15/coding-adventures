@@ -7,6 +7,7 @@
 
 #![forbid(unsafe_code)]
 
+use std::collections::BTreeMap;
 use std::fmt;
 
 const NWK_FRAME_CONTROL_LEN: usize = 2;
@@ -33,6 +34,263 @@ pub struct IeeeAddress(pub u64);
 impl IeeeAddress {
     pub fn to_le_bytes(self) -> [u8; IEEE_ADDR_LEN] {
         self.0.to_le_bytes()
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum NwkDeviceRole {
+    Coordinator,
+    Router,
+    EndDevice,
+    Unknown,
+}
+
+impl NwkDeviceRole {
+    pub fn can_route(self) -> bool {
+        matches!(self, Self::Coordinator | Self::Router)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum NeighborRelationship {
+    Parent,
+    Child,
+    Sibling,
+    PreviousChild,
+    Unknown,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct NeighborEntry {
+    pub network_address: NetworkAddress,
+    pub ieee_address: Option<IeeeAddress>,
+    pub role: NwkDeviceRole,
+    pub relationship: NeighborRelationship,
+    pub depth: Option<u8>,
+    pub lqi: Option<u8>,
+    pub outgoing_cost: Option<u8>,
+    pub last_seen_at_ms: u64,
+    pub timeout_ms: u64,
+}
+
+impl NeighborEntry {
+    pub fn new(
+        network_address: NetworkAddress,
+        role: NwkDeviceRole,
+        relationship: NeighborRelationship,
+        last_seen_at_ms: u64,
+        timeout_ms: u64,
+    ) -> Self {
+        Self {
+            network_address,
+            ieee_address: None,
+            role,
+            relationship,
+            depth: None,
+            lqi: None,
+            outgoing_cost: None,
+            last_seen_at_ms,
+            timeout_ms,
+        }
+    }
+
+    pub fn with_ieee_address(mut self, ieee_address: IeeeAddress) -> Self {
+        self.ieee_address = Some(ieee_address);
+        self
+    }
+
+    pub fn with_link_metrics(mut self, lqi: u8, outgoing_cost: u8) -> Self {
+        self.lqi = Some(lqi);
+        self.outgoing_cost = Some(outgoing_cost);
+        self
+    }
+
+    pub fn is_stale_at(&self, now_ms: u64) -> bool {
+        now_ms >= self.last_seen_at_ms.saturating_add(self.timeout_ms)
+    }
+
+    pub fn can_route(&self) -> bool {
+        self.role.can_route()
+    }
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct NeighborTable {
+    neighbors: BTreeMap<NetworkAddress, NeighborEntry>,
+    ieee_index: BTreeMap<IeeeAddress, NetworkAddress>,
+}
+
+impl NeighborTable {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn len(&self) -> usize {
+        self.neighbors.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.neighbors.is_empty()
+    }
+
+    pub fn upsert(&mut self, entry: NeighborEntry) -> Option<NeighborEntry> {
+        if let Some(old) = self.neighbors.get(&entry.network_address) {
+            if let Some(old_ieee) = old.ieee_address {
+                self.ieee_index.remove(&old_ieee);
+            }
+        }
+        if let Some(ieee_address) = entry.ieee_address {
+            self.ieee_index.insert(ieee_address, entry.network_address);
+        }
+        self.neighbors.insert(entry.network_address, entry)
+    }
+
+    pub fn neighbor(&self, network_address: NetworkAddress) -> Option<&NeighborEntry> {
+        self.neighbors.get(&network_address)
+    }
+
+    pub fn neighbor_by_ieee(&self, ieee_address: IeeeAddress) -> Option<&NeighborEntry> {
+        self.ieee_index
+            .get(&ieee_address)
+            .and_then(|network_address| self.neighbors.get(network_address))
+    }
+
+    pub fn routers(&self) -> impl Iterator<Item = &NeighborEntry> {
+        self.neighbors.values().filter(|entry| entry.can_route())
+    }
+
+    pub fn children(&self) -> impl Iterator<Item = &NeighborEntry> {
+        self.neighbors
+            .values()
+            .filter(|entry| entry.relationship == NeighborRelationship::Child)
+    }
+
+    pub fn stale_neighbors_at(&self, now_ms: u64) -> Vec<NetworkAddress> {
+        self.neighbors
+            .values()
+            .filter(|entry| entry.is_stale_at(now_ms))
+            .map(|entry| entry.network_address)
+            .collect()
+    }
+
+    pub fn expire_stale(&mut self, now_ms: u64) -> Vec<NeighborEntry> {
+        let stale = self.stale_neighbors_at(now_ms);
+        stale
+            .into_iter()
+            .filter_map(|network_address| self.remove(network_address))
+            .collect()
+    }
+
+    pub fn remove(&mut self, network_address: NetworkAddress) -> Option<NeighborEntry> {
+        let removed = self.neighbors.remove(&network_address)?;
+        if let Some(ieee_address) = removed.ieee_address {
+            self.ieee_index.remove(&ieee_address);
+        }
+        Some(removed)
+    }
+
+    pub fn best_router_candidate(&self) -> Option<&NeighborEntry> {
+        self.routers().max_by_key(|entry| {
+            (
+                entry.lqi.unwrap_or(0),
+                u8::MAX.saturating_sub(entry.outgoing_cost.unwrap_or(u8::MAX)),
+                entry.last_seen_at_ms,
+            )
+        })
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RouteStatus {
+    Active,
+    DiscoveryUnderway,
+    DiscoveryFailed,
+    Inactive,
+}
+
+impl RouteStatus {
+    pub fn is_usable(self) -> bool {
+        self == Self::Active
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RouteEntry {
+    pub destination: NetworkAddress,
+    pub next_hop: NetworkAddress,
+    pub status: RouteStatus,
+    pub route_record_required: bool,
+    pub many_to_one: bool,
+    pub last_updated_at_ms: u64,
+}
+
+impl RouteEntry {
+    pub fn active(
+        destination: NetworkAddress,
+        next_hop: NetworkAddress,
+        last_updated_at_ms: u64,
+    ) -> Self {
+        Self {
+            destination,
+            next_hop,
+            status: RouteStatus::Active,
+            route_record_required: false,
+            many_to_one: false,
+            last_updated_at_ms,
+        }
+    }
+
+    pub fn is_usable(&self) -> bool {
+        self.status.is_usable()
+    }
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct RouteTable {
+    routes: BTreeMap<NetworkAddress, RouteEntry>,
+}
+
+impl RouteTable {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn len(&self) -> usize {
+        self.routes.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.routes.is_empty()
+    }
+
+    pub fn upsert(&mut self, entry: RouteEntry) -> Option<RouteEntry> {
+        self.routes.insert(entry.destination, entry)
+    }
+
+    pub fn route_to(&self, destination: NetworkAddress) -> Option<&RouteEntry> {
+        self.routes.get(&destination)
+    }
+
+    pub fn next_hop_for(&self, destination: NetworkAddress) -> Option<NetworkAddress> {
+        self.route_to(destination)
+            .filter(|entry| entry.is_usable())
+            .map(|entry| entry.next_hop)
+    }
+
+    pub fn routes_via(&self, next_hop: NetworkAddress) -> impl Iterator<Item = &RouteEntry> {
+        self.routes
+            .values()
+            .filter(move |entry| entry.next_hop == next_hop)
+    }
+
+    pub fn remove(&mut self, destination: NetworkAddress) -> Option<RouteEntry> {
+        self.routes.remove(&destination)
+    }
+
+    pub fn mark_inactive(&mut self, destination: NetworkAddress) -> Option<&RouteEntry> {
+        let entry = self.routes.get_mut(&destination)?;
+        entry.status = RouteStatus::Inactive;
+        Some(entry)
     }
 }
 
@@ -415,5 +673,104 @@ mod tests {
     fn broadcast_addresses_are_identified() {
         assert!(NetworkAddress::BROADCAST_ALL_DEVICES.is_broadcast());
         assert!(!NetworkAddress(0x1234).is_broadcast());
+    }
+
+    #[test]
+    fn neighbor_table_tracks_indexes_and_router_candidates() {
+        let mut table = NeighborTable::new();
+        table.upsert(
+            NeighborEntry::new(
+                NetworkAddress(0x1001),
+                NwkDeviceRole::Router,
+                NeighborRelationship::Parent,
+                1_000,
+                10_000,
+            )
+            .with_ieee_address(IeeeAddress(0x0012_4b00_0000_0001))
+            .with_link_metrics(180, 3),
+        );
+        table.upsert(
+            NeighborEntry::new(
+                NetworkAddress(0x1002),
+                NwkDeviceRole::Router,
+                NeighborRelationship::Sibling,
+                1_100,
+                10_000,
+            )
+            .with_link_metrics(200, 1),
+        );
+        table.upsert(NeighborEntry::new(
+            NetworkAddress(0x1003),
+            NwkDeviceRole::EndDevice,
+            NeighborRelationship::Child,
+            1_200,
+            10_000,
+        ));
+
+        assert_eq!(table.len(), 3);
+        assert_eq!(table.children().count(), 1);
+        assert_eq!(
+            table
+                .neighbor_by_ieee(IeeeAddress(0x0012_4b00_0000_0001))
+                .unwrap()
+                .network_address,
+            NetworkAddress(0x1001)
+        );
+        assert_eq!(
+            table.best_router_candidate().unwrap().network_address,
+            NetworkAddress(0x1002)
+        );
+    }
+
+    #[test]
+    fn neighbor_table_expires_stale_entries_and_ieee_index() {
+        let mut table = NeighborTable::new();
+        table.upsert(
+            NeighborEntry::new(
+                NetworkAddress(0x1001),
+                NwkDeviceRole::Router,
+                NeighborRelationship::Parent,
+                1_000,
+                500,
+            )
+            .with_ieee_address(IeeeAddress(0x0012_4b00_0000_0001)),
+        );
+
+        assert!(table.stale_neighbors_at(1_499).is_empty());
+        let expired = table.expire_stale(1_500);
+
+        assert_eq!(expired.len(), 1);
+        assert!(table.neighbor(NetworkAddress(0x1001)).is_none());
+        assert!(table
+            .neighbor_by_ieee(IeeeAddress(0x0012_4b00_0000_0001))
+            .is_none());
+    }
+
+    #[test]
+    fn route_table_tracks_active_next_hops() {
+        let mut table = RouteTable::new();
+        table.upsert(RouteEntry::active(
+            NetworkAddress(0x2001),
+            NetworkAddress(0x1001),
+            1_000,
+        ));
+        table.upsert(RouteEntry {
+            destination: NetworkAddress(0x2002),
+            next_hop: NetworkAddress(0x1001),
+            status: RouteStatus::DiscoveryUnderway,
+            route_record_required: true,
+            many_to_one: false,
+            last_updated_at_ms: 1_100,
+        });
+
+        assert_eq!(
+            table.next_hop_for(NetworkAddress(0x2001)),
+            Some(NetworkAddress(0x1001))
+        );
+        assert_eq!(table.next_hop_for(NetworkAddress(0x2002)), None);
+        assert_eq!(table.routes_via(NetworkAddress(0x1001)).count(), 2);
+
+        table.mark_inactive(NetworkAddress(0x2001)).unwrap();
+        assert_eq!(table.next_hop_for(NetworkAddress(0x2001)), None);
     }
 }
