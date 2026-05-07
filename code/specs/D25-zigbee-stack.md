@@ -110,6 +110,11 @@ fragmentation, and security remain future layers.
 - bind/unbind requests
 - management requests
 
+**Initial Rust implementation:** `code/packages/rust/zigbee-zdo` now provides
+ZDO cluster ids, node/simple descriptor parsing, active endpoint response
+parsing, APS request builders for common interview requests, and a first
+interview-summary projection into normalized D23 `Device` records.
+
 ### `zigbee-zcl`
 
 - cluster ids

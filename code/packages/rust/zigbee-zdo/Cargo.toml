@@ -1,0 +1,11 @@
+[package]
+name = "zigbee-zdo"
+version = "0.1.0"
+edition = "2021"
+description = "Zigbee Device Object descriptor and discovery primitives"
+license = "MIT"
+
+[dependencies]
+smart-home-core = { path = "../smart-home-core" }
+zigbee-nwk = { path = "../zigbee-nwk" }
+zigbee-aps = { path = "../zigbee-aps" }
