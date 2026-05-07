@@ -49,6 +49,8 @@ pub enum RegistryError {
         existing: RegistryTarget,
         attempted: RegistryTarget,
     },
+    DuplicateRefreshSnapshot(EntityId),
+    UnexpectedRefreshSnapshot(EntityId),
 }
 
 impl fmt::Display for RegistryError {
@@ -90,6 +92,12 @@ impl fmt::Display for RegistryError {
                 f,
                 "protocol identifier {family}:{kind}:{value} already maps to {existing:?}, not {attempted:?}"
             ),
+            Self::DuplicateRefreshSnapshot(id) => {
+                write!(f, "duplicate refresh snapshot for entity {id}")
+            }
+            Self::UnexpectedRefreshSnapshot(id) => {
+                write!(f, "refresh snapshot for entity {id} was not in the refresh plan")
+            }
         }
     }
 }
@@ -159,6 +167,28 @@ impl StateRefreshPlan {
             .iter()
             .filter(|target| &target.bridge_id == bridge_id)
             .collect()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct StateRefreshReport {
+    pub generated_at_ms: u64,
+    pub completed_at_ms: u64,
+    pub refreshed: Vec<EntityId>,
+    pub missing: Vec<EntityId>,
+}
+
+impl StateRefreshReport {
+    pub fn is_complete(&self) -> bool {
+        self.missing.is_empty()
+    }
+
+    pub fn refreshed_count(&self) -> usize {
+        self.refreshed.len()
+    }
+
+    pub fn missing_count(&self) -> usize {
+        self.missing.len()
     }
 }
 
@@ -548,6 +578,56 @@ impl InMemorySmartHomeRegistry {
             generated_at_ms: now_ms,
             targets,
         }
+    }
+
+    pub fn apply_state_refresh_results<I>(
+        &mut self,
+        plan: &StateRefreshPlan,
+        snapshots: I,
+        completed_at_ms: u64,
+    ) -> Result<StateRefreshReport, RegistryError>
+    where
+        I: IntoIterator<Item = StateSnapshot>,
+    {
+        let planned_entities = plan
+            .targets
+            .iter()
+            .map(|target| target.entity_id.clone())
+            .collect::<BTreeSet<_>>();
+        let snapshots = snapshots.into_iter().collect::<Vec<_>>();
+        let mut seen = BTreeSet::new();
+
+        for snapshot in &snapshots {
+            let entity_id = snapshot.entity_id.clone();
+            if !planned_entities.contains(&entity_id) {
+                return Err(RegistryError::UnexpectedRefreshSnapshot(entity_id));
+            }
+            if !seen.insert(entity_id.clone()) {
+                return Err(RegistryError::DuplicateRefreshSnapshot(entity_id));
+            }
+        }
+
+        let mut refreshed = Vec::new();
+        for snapshot in snapshots {
+            let entity_id = snapshot.entity_id.clone();
+
+            self.apply_state_snapshot(snapshot)?;
+            refreshed.push(entity_id);
+        }
+
+        let missing = plan
+            .targets
+            .iter()
+            .filter(|target| !seen.contains(&target.entity_id))
+            .map(|target| target.entity_id.clone())
+            .collect();
+
+        Ok(StateRefreshReport {
+            generated_at_ms: plan.generated_at_ms,
+            completed_at_ms,
+            refreshed,
+            missing,
+        })
     }
 
     pub fn lookup_protocol(&self, identifier: &ProtocolIdentifier) -> Option<&RegistryTarget> {
@@ -1185,6 +1265,129 @@ mod tests {
                 },
             ]
         );
+    }
+
+    #[test]
+    fn applies_state_refresh_results_and_reports_missing_targets() {
+        let mut registry = InMemorySmartHomeRegistry::new();
+        registry.upsert_bridge(bridge("bridge-1")).unwrap();
+        registry
+            .upsert_device(device("device-1", "bridge-1"))
+            .unwrap();
+        registry
+            .upsert_entity(entity("entity-1", "device-1"))
+            .unwrap();
+        registry
+            .upsert_entity(sensor_entity("entity-2", "device-1"))
+            .unwrap();
+
+        let plan = registry.state_refresh_plan_at(500);
+        let report = registry
+            .apply_state_refresh_results(
+                &plan,
+                vec![StateSnapshot {
+                    entity_id: EntityId::trusted("entity-1"),
+                    value: Value::Bool(true),
+                    source: StateSource::Poll,
+                    observed_at_ms: 501,
+                    received_at_ms: 502,
+                    expires_at_ms: Some(1_000),
+                    confidence: StateConfidence::Confirmed,
+                }],
+                503,
+            )
+            .unwrap();
+
+        assert_eq!(report.generated_at_ms, 500);
+        assert_eq!(report.completed_at_ms, 503);
+        assert_eq!(report.refreshed, vec![EntityId::trusted("entity-1")]);
+        assert_eq!(report.missing, vec![EntityId::trusted("entity-2")]);
+        assert_eq!(report.refreshed_count(), 1);
+        assert_eq!(report.missing_count(), 1);
+        assert!(!report.is_complete());
+        assert_eq!(
+            registry
+                .state(&EntityId::trusted("entity-1"))
+                .unwrap()
+                .value,
+            Value::Bool(true)
+        );
+        assert!(registry.state(&EntityId::trusted("entity-2")).is_none());
+    }
+
+    #[test]
+    fn refresh_results_reject_duplicate_snapshots_without_partial_updates() {
+        let mut registry = InMemorySmartHomeRegistry::new();
+        registry.upsert_bridge(bridge("bridge-1")).unwrap();
+        registry
+            .upsert_device(device("device-1", "bridge-1"))
+            .unwrap();
+        registry
+            .upsert_entity(entity("entity-1", "device-1"))
+            .unwrap();
+
+        let plan = registry.state_refresh_plan_at(500);
+        let snapshot = StateSnapshot {
+            entity_id: EntityId::trusted("entity-1"),
+            value: Value::Bool(true),
+            source: StateSource::Poll,
+            observed_at_ms: 501,
+            received_at_ms: 502,
+            expires_at_ms: None,
+            confidence: StateConfidence::Confirmed,
+        };
+
+        assert_eq!(
+            registry.apply_state_refresh_results(&plan, vec![snapshot.clone(), snapshot], 503),
+            Err(RegistryError::DuplicateRefreshSnapshot(EntityId::trusted(
+                "entity-1"
+            )))
+        );
+        assert!(registry.state(&EntityId::trusted("entity-1")).is_none());
+    }
+
+    #[test]
+    fn refresh_results_reject_snapshots_outside_the_plan() {
+        let mut registry = InMemorySmartHomeRegistry::new();
+        registry.upsert_bridge(bridge("bridge-1")).unwrap();
+        registry
+            .upsert_device(device("device-1", "bridge-1"))
+            .unwrap();
+        registry
+            .upsert_entity(entity("entity-1", "device-1"))
+            .unwrap();
+        registry
+            .upsert_entity(sensor_entity("entity-2", "device-1"))
+            .unwrap();
+
+        let plan = StateRefreshPlan {
+            generated_at_ms: 500,
+            targets: vec![StateRefreshTarget {
+                bridge_id: BridgeId::trusted("bridge-1"),
+                device_id: DeviceId::trusted("device-1"),
+                entity_id: EntityId::trusted("entity-1"),
+                kind: EntityKind::Light,
+                capabilities: vec![CapabilityId::trusted("light.on_off")],
+                reason: StateRefreshReason::Missing,
+            }],
+        };
+        let snapshot = StateSnapshot {
+            entity_id: EntityId::trusted("entity-2"),
+            value: Value::Bool(false),
+            source: StateSource::Poll,
+            observed_at_ms: 501,
+            received_at_ms: 502,
+            expires_at_ms: None,
+            confidence: StateConfidence::Confirmed,
+        };
+
+        assert_eq!(
+            registry.apply_state_refresh_results(&plan, vec![snapshot], 503),
+            Err(RegistryError::UnexpectedRefreshSnapshot(EntityId::trusted(
+                "entity-2"
+            )))
+        );
+        assert!(registry.state(&EntityId::trusted("entity-2")).is_none());
     }
 
     #[test]
