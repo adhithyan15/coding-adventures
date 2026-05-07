@@ -8,9 +8,10 @@
 #![forbid(unsafe_code)]
 
 use smart_home_core::{
-    Bridge, BridgeId, BridgeTransport, Capability, Device, DeviceId, Entity, EntityId, EntityKind,
-    Health, IntegrationDescriptor, IntegrationId, Metadata, ProtocolFamily, ProtocolIdentifier,
-    RuntimeKind, StateConfidence, StateSnapshot, StateSource, Value,
+    Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, Device, DeviceId, Entity,
+    EntityId, EntityKind, Health, IntegrationDescriptor, IntegrationId, Metadata, ProtocolFamily,
+    ProtocolIdentifier, RuntimeKind, StateConfidence, StateDelta, StateSnapshot, StateSource,
+    Value,
 };
 use std::fmt;
 
@@ -337,6 +338,60 @@ impl HueLightResource {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct HueLightStateUpdate {
+    pub id: HueResourceId,
+    pub owner_device_id: Option<HueResourceId>,
+    pub name: Option<String>,
+    pub on: Option<bool>,
+    pub brightness: Option<u8>,
+    pub color_temperature_mirek: Option<u16>,
+}
+
+impl HueLightStateUpdate {
+    pub fn from_light_resource(light: &HueLightResource) -> Self {
+        Self {
+            id: light.id.clone(),
+            owner_device_id: Some(light.owner_device_id.clone()),
+            name: Some(light.name.clone()),
+            on: light.on,
+            brightness: light.brightness,
+            color_temperature_mirek: light.color_temperature_mirek,
+        }
+    }
+
+    pub fn has_state(&self) -> bool {
+        self.on.is_some() || self.brightness.is_some() || self.color_temperature_mirek.is_some()
+    }
+
+    pub fn state_deltas(&self) -> Vec<StateDelta> {
+        hue_light_state_deltas(self)
+    }
+}
+
+pub fn hue_light_state_deltas(update: &HueLightStateUpdate) -> Vec<StateDelta> {
+    let mut deltas = Vec::new();
+    if let Some(on) = update.on {
+        deltas.push(StateDelta {
+            capability_id: CapabilityId::trusted("light.on_off"),
+            value: Value::Bool(on),
+        });
+    }
+    if let Some(brightness) = update.brightness {
+        deltas.push(StateDelta {
+            capability_id: CapabilityId::trusted("light.brightness"),
+            value: Value::Percentage(brightness),
+        });
+    }
+    if let Some(mirek) = update.color_temperature_mirek {
+        deltas.push(StateDelta {
+            capability_id: CapabilityId::trusted("light.color_temperature"),
+            value: Value::Integer(i64::from(mirek)),
+        });
+    }
+    deltas
+}
+
 pub fn hue_device_to_core(
     bridge_id: &BridgeId,
     hue_device_id: HueResourceId,
@@ -486,6 +541,37 @@ mod tests {
             .any(|capability| capability.capability_id.as_str() == "light.color_temperature"));
         assert_eq!(entity.metadata[1].value, "light-1");
         assert_eq!(entity.state.unwrap().confidence, StateConfidence::Confirmed);
+    }
+
+    #[test]
+    fn hue_light_state_update_maps_known_fields_to_deltas() {
+        let update = HueLightStateUpdate {
+            id: HueResourceId::trusted("light-1"),
+            owner_device_id: None,
+            name: None,
+            on: Some(false),
+            brightness: Some(12),
+            color_temperature_mirek: Some(366),
+        };
+
+        assert!(update.has_state());
+        assert_eq!(
+            update.state_deltas(),
+            vec![
+                StateDelta {
+                    capability_id: CapabilityId::trusted("light.on_off"),
+                    value: Value::Bool(false),
+                },
+                StateDelta {
+                    capability_id: CapabilityId::trusted("light.brightness"),
+                    value: Value::Percentage(12),
+                },
+                StateDelta {
+                    capability_id: CapabilityId::trusted("light.color_temperature"),
+                    value: Value::Integer(366),
+                },
+            ]
+        );
     }
 
     #[test]

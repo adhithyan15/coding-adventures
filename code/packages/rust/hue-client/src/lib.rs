@@ -10,8 +10,8 @@ use coding_adventures_json_serializer::serialize;
 use coding_adventures_json_value::{parse as parse_json, JsonNumber, JsonValue};
 use http_core::{find_header, Header};
 use hue_core::{
-    validate_brightness, HueCommand, HueLightResource, HueMethod, HueRequest, HueRequestBody,
-    HueResourceId, HueResourceRef, HueResourceType, CLIP_V2_EVENT_STREAM_PATH,
+    validate_brightness, HueCommand, HueLightResource, HueLightStateUpdate, HueMethod, HueRequest,
+    HueRequestBody, HueResourceId, HueResourceRef, HueResourceType, CLIP_V2_EVENT_STREAM_PATH,
     CLIP_V2_RESOURCE_ROOT, HUE_APPLICATION_KEY_HEADER,
 };
 use std::fmt;
@@ -237,6 +237,11 @@ impl<T: HueTransport> HueClient<T> {
     pub fn get_light_resources(&mut self) -> Result<Vec<HueLightResource>, HueClientError> {
         let envelope = self.get_collection(HueResourceType::Light)?;
         parse_lights_from_envelope(&envelope)
+    }
+
+    pub fn get_light_state_updates(&mut self) -> Result<Vec<HueLightStateUpdate>, HueClientError> {
+        let envelope = self.get_collection(HueResourceType::Light)?;
+        parse_light_state_updates_from_envelope(&envelope)
     }
 
     pub fn send_command(&mut self, command: HueCommand) -> Result<HueEnvelope, HueClientError> {
@@ -509,37 +514,54 @@ pub fn parse_lights_from_envelope(
             continue;
         }
 
-        let id = object_string_field(resource, "id")
-            .ok_or_else(|| HueClientError::unexpected_json("Hue light resource is missing id"))?;
-        let owner = object_field(resource, "owner")
-            .and_then(|owner| object_string_field(owner, "rid"))
-            .ok_or_else(|| {
-                HueClientError::unexpected_json("Hue light resource is missing owner.rid")
-            })?;
-        let name = object_field(resource, "metadata")
-            .and_then(|metadata| object_string_field(metadata, "name"))
-            .unwrap_or(id)
-            .to_string();
-        let on = object_field(resource, "on").and_then(|on| object_bool_field(on, "on"));
-        let brightness = object_field(resource, "dimming")
-            .and_then(|dimming| object_field(dimming, "brightness"))
-            .map(json_number_to_percent)
-            .transpose()?;
-        let color_temperature_mirek = object_field(resource, "color_temperature")
-            .and_then(|color_temperature| object_field(color_temperature, "mirek"))
-            .map(json_number_to_u16)
-            .transpose()?;
+        let update = parse_light_state_update(resource)?;
+        let owner_device_id = update.owner_device_id.ok_or_else(|| {
+            HueClientError::unexpected_json("Hue light resource is missing owner.rid")
+        })?;
+        let name = update
+            .name
+            .unwrap_or_else(|| update.id.as_str().to_string());
 
         lights.push(HueLightResource {
-            id: HueResourceId::trusted(id),
-            owner_device_id: HueResourceId::trusted(owner),
+            id: update.id,
+            owner_device_id,
             name,
-            on,
-            brightness,
-            color_temperature_mirek,
+            on: update.on,
+            brightness: update.brightness,
+            color_temperature_mirek: update.color_temperature_mirek,
         });
     }
     Ok(lights)
+}
+
+pub fn parse_light_state_updates_from_envelope(
+    envelope: &HueEnvelope,
+) -> Result<Vec<HueLightStateUpdate>, HueClientError> {
+    let mut updates = Vec::new();
+    for resource in &envelope.data {
+        if object_string_field(resource, "type") == Some(HueResourceType::Light.as_hue_type()) {
+            updates.push(parse_light_state_update(resource)?);
+        }
+    }
+    Ok(updates)
+}
+
+pub fn parse_light_state_updates_from_event_batches(
+    batches: &[HueEventStreamBatch],
+) -> Result<Vec<HueLightStateUpdate>, HueClientError> {
+    let mut updates = Vec::new();
+    for batch in batches {
+        for event in &batch.events {
+            for resource in &event.data {
+                if object_string_field(resource, "type")
+                    == Some(HueResourceType::Light.as_hue_type())
+                {
+                    updates.push(parse_light_state_update(resource)?);
+                }
+            }
+        }
+    }
+    Ok(updates)
 }
 
 pub fn parse_event_stream(body: &[u8]) -> Result<Vec<HueEventStreamBatch>, HueClientError> {
@@ -680,6 +702,35 @@ fn parse_event_record(value: &JsonValue) -> Result<HueEventRecord, HueClientErro
         event_type: object_string_field(value, "type").map(str::to_string),
         creation_time: object_string_field(value, "creationtime").map(str::to_string),
         data,
+    })
+}
+
+fn parse_light_state_update(resource: &JsonValue) -> Result<HueLightStateUpdate, HueClientError> {
+    let id = object_string_field(resource, "id")
+        .ok_or_else(|| HueClientError::unexpected_json("Hue light resource is missing id"))?;
+    let owner_device_id = object_field(resource, "owner")
+        .and_then(|owner| object_string_field(owner, "rid"))
+        .map(HueResourceId::trusted);
+    let name = object_field(resource, "metadata")
+        .and_then(|metadata| object_string_field(metadata, "name"))
+        .map(str::to_string);
+    let on = object_field(resource, "on").and_then(|on| object_bool_field(on, "on"));
+    let brightness = object_field(resource, "dimming")
+        .and_then(|dimming| object_field(dimming, "brightness"))
+        .map(json_number_to_percent)
+        .transpose()?;
+    let color_temperature_mirek = object_field(resource, "color_temperature")
+        .and_then(|color_temperature| object_field(color_temperature, "mirek"))
+        .map(json_number_to_u16)
+        .transpose()?;
+
+    Ok(HueLightStateUpdate {
+        id: HueResourceId::trusted(id),
+        owner_device_id,
+        name,
+        on,
+        brightness,
+        color_temperature_mirek,
     })
 }
 
@@ -888,6 +939,30 @@ mod tests {
     }
 
     #[test]
+    fn parses_light_state_updates_from_event_stream_batches() {
+        let batches = parse_event_stream(
+            b"data: [{\"id\":\"event-1\",\"type\":\"update\",\"data\":[{\"id\":\"light-1\",\"type\":\"light\",\"on\":{\"on\":false},\"dimming\":{\"brightness\":5},\"color_temperature\":{\"mirek\":250}}]}]\n\n",
+        )
+        .unwrap();
+
+        let updates = parse_light_state_updates_from_event_batches(&batches).unwrap();
+
+        assert_eq!(updates.len(), 1);
+        assert_eq!(updates[0].id.as_str(), "light-1");
+        assert_eq!(updates[0].owner_device_id, None);
+        assert_eq!(updates[0].name, None);
+        assert_eq!(updates[0].on, Some(false));
+        assert_eq!(updates[0].brightness, Some(5));
+        assert_eq!(updates[0].color_temperature_mirek, Some(250));
+
+        let deltas = updates[0].state_deltas();
+        assert_eq!(deltas.len(), 3);
+        assert_eq!(deltas[0].capability_id.as_str(), "light.on_off");
+        assert_eq!(deltas[1].capability_id.as_str(), "light.brightness");
+        assert_eq!(deltas[2].capability_id.as_str(), "light.color_temperature");
+    }
+
+    #[test]
     fn event_stream_parser_accepts_multiline_data() {
         let batches = parse_event_stream(
             b"data: [{\"id\":\"event-1\",\"type\":\"update\",\"data\":[]}\ndata: ,{\"id\":\"event-2\",\"type\":\"add\",\"data\":[]}]\n\n",
@@ -959,6 +1034,21 @@ mod tests {
         assert_eq!(lights[0].on, Some(true));
         assert_eq!(lights[0].brightness, Some(42));
         assert_eq!(lights[0].color_temperature_mirek, Some(366));
+    }
+
+    #[test]
+    fn parses_light_state_updates_from_snapshot_envelope() {
+        let envelope = parse_hue_envelope(
+            br#"{"data":[{"id":"light-1","type":"light","on":{"on":true}},{"id":"room-1","type":"room"}],"errors":[]}"#,
+        )
+        .unwrap();
+
+        let updates = parse_light_state_updates_from_envelope(&envelope).unwrap();
+
+        assert_eq!(updates.len(), 1);
+        assert_eq!(updates[0].id.as_str(), "light-1");
+        assert_eq!(updates[0].on, Some(true));
+        assert!(updates[0].has_state());
     }
 
     #[test]
