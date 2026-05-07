@@ -66,6 +66,7 @@ module CodingAdventures.AztecCode
 
 import Data.Bits  ((.&.), (.|.), shiftL, shiftR, xor)
 import Data.Char  (ord)
+import Data.List  (foldl')
 import qualified Data.Vector as V
 
 import qualified CodingAdventures.Barcode2D as B2D
