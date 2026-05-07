@@ -13,3 +13,5 @@ All notable changes to this package will be documented in this file.
 - D18D-style smart-home tool descriptors and command risk-tier helpers.
 - Agent capability grant primitives for checking smart-home tool access before
   runtime dispatch.
+- Authorization-decision records for capturing allowed or denied tool/command
+  checks with matched and missing grants.
