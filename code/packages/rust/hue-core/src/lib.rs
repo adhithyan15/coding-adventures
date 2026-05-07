@@ -338,6 +338,51 @@ impl HueLightResource {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueDeviceResource {
+    pub id: HueResourceId,
+    pub name: String,
+    pub manufacturer: Option<String>,
+    pub model: Option<String>,
+    pub product_name: Option<String>,
+    pub software_version: Option<String>,
+    pub services: Vec<HueResourceRef>,
+}
+
+impl HueDeviceResource {
+    pub fn to_core(&self, bridge_id: &BridgeId) -> Device {
+        let manufacturer = self
+            .manufacturer
+            .clone()
+            .unwrap_or_else(|| "Philips Hue".to_string());
+        let model = self
+            .model
+            .clone()
+            .or_else(|| self.product_name.clone())
+            .unwrap_or_else(|| "unknown".to_string());
+        let mut device = hue_device_to_core(
+            bridge_id,
+            self.id.clone(),
+            manufacturer,
+            model,
+            self.name.clone(),
+        );
+        device.firmware_version = self.software_version.clone();
+        if let Some(product_name) = &self.product_name {
+            device
+                .metadata
+                .push(Metadata::new("hue.product_name", product_name));
+        }
+        for service in &self.services {
+            device.metadata.push(Metadata::new(
+                "hue.service",
+                format!("{}:{}", service.resource_type.as_hue_type(), service.id),
+            ));
+        }
+        device
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct HueLightStateUpdate {
     pub id: HueResourceId,
@@ -541,6 +586,37 @@ mod tests {
             .any(|capability| capability.capability_id.as_str() == "light.color_temperature"));
         assert_eq!(entity.metadata[1].value, "light-1");
         assert_eq!(entity.state.unwrap().confidence, StateConfidence::Confirmed);
+    }
+
+    #[test]
+    fn hue_device_resource_maps_to_normalized_device() {
+        let bridge_id = BridgeId::trusted("hue.bridge.001788");
+        let device = HueDeviceResource {
+            id: HueResourceId::trusted("device-1"),
+            name: "Kitchen lamp".to_string(),
+            manufacturer: Some("Signify Netherlands B.V.".to_string()),
+            model: Some("LCA001".to_string()),
+            product_name: Some("Hue color lamp".to_string()),
+            software_version: Some("1.116.3".to_string()),
+            services: vec![HueResourceRef::new(
+                HueResourceType::Light,
+                HueResourceId::trusted("light-1"),
+            )],
+        }
+        .to_core(&bridge_id);
+
+        assert_eq!(device.bridge_id, bridge_id);
+        assert_eq!(
+            device.device_id.as_str(),
+            "hue.device.hue.bridge.001788.device-1"
+        );
+        assert_eq!(device.model, "LCA001");
+        assert_eq!(device.firmware_version.as_deref(), Some("1.116.3"));
+        assert_eq!(device.identifiers[0].kind, "device");
+        assert!(device
+            .metadata
+            .iter()
+            .any(|metadata| metadata.value == "light:light-1"));
     }
 
     #[test]
