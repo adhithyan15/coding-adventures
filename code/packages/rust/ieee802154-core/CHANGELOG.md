@@ -7,3 +7,5 @@
 - Added security level, frame counter, and key identifier models.
 - Added beacon payload parsing and scan-facing PAN descriptors for Zigbee and
   Thread discovery work.
+- Added PAN scan summaries with channel filters and association-candidate
+  ranking by link quality.

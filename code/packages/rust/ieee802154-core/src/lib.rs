@@ -501,6 +501,55 @@ impl PanDescriptor {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PanScanSummary {
+    pub scanned_at_ms: u64,
+    pub descriptors: Vec<PanDescriptor>,
+}
+
+impl PanScanSummary {
+    pub fn new(scanned_at_ms: u64, descriptors: Vec<PanDescriptor>) -> Self {
+        Self {
+            scanned_at_ms,
+            descriptors,
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.descriptors.is_empty()
+    }
+
+    pub fn len(&self) -> usize {
+        self.descriptors.len()
+    }
+
+    pub fn descriptors_for_channel(&self, channel: u8) -> Vec<&PanDescriptor> {
+        self.descriptors
+            .iter()
+            .filter(|descriptor| descriptor.channel == channel)
+            .collect()
+    }
+
+    pub fn association_candidates(&self) -> Vec<&PanDescriptor> {
+        self.descriptors
+            .iter()
+            .filter(|descriptor| descriptor.association_permitted())
+            .collect()
+    }
+
+    pub fn best_association_candidate(&self) -> Option<&PanDescriptor> {
+        self.descriptors
+            .iter()
+            .filter(|descriptor| descriptor.association_permitted())
+            .max_by_key(|descriptor| {
+                (
+                    descriptor.link_quality,
+                    descriptor.beacon.superframe.pan_coordinator(),
+                )
+            })
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum BeaconPayloadError {
     ExpectedBeaconFrame,
     MissingBeaconSourceAddress,
@@ -1385,6 +1434,29 @@ mod tests {
     }
 
     #[test]
+    fn pan_scan_summary_filters_and_ranks_association_candidates() {
+        let closed = pan_descriptor(0x1001, 11, 180, false);
+        let weak = pan_descriptor(0x1002, 12, 80, true);
+        let strong = pan_descriptor(0x1003, 12, 220, true);
+        let summary = PanScanSummary::new(5_000, vec![closed, weak.clone(), strong.clone()]);
+
+        assert_eq!(summary.scanned_at_ms, 5_000);
+        assert_eq!(summary.len(), 3);
+        assert!(!summary.is_empty());
+        assert_eq!(summary.descriptors_for_channel(12).len(), 2);
+        assert_eq!(summary.association_candidates(), vec![&weak, &strong]);
+        assert_eq!(summary.best_association_candidate(), Some(&strong));
+    }
+
+    #[test]
+    fn pan_scan_summary_returns_none_without_open_candidate() {
+        let summary = PanScanSummary::new(5_000, vec![pan_descriptor(0x1001, 11, 240, false)]);
+
+        assert_eq!(summary.association_candidates().len(), 0);
+        assert_eq!(summary.best_association_candidate(), None);
+    }
+
+    #[test]
     fn reports_truncated_frame() {
         let bytes = [0x41];
 
@@ -1402,5 +1474,35 @@ mod tests {
         assert_eq!(AddressMode::None.encoded_len(), 0);
         assert_eq!(AddressMode::Short.encoded_len(), 2);
         assert_eq!(AddressMode::Extended.encoded_len(), 8);
+    }
+
+    fn pan_descriptor(
+        pan_id: u16,
+        channel: u8,
+        link_quality: u8,
+        association_permit: bool,
+    ) -> PanDescriptor {
+        let association_bit = if association_permit { 1 << 15 } else { 0 };
+        PanDescriptor {
+            coordinator_pan_id: pan_id,
+            coordinator_address: Address::Extended(0x8877_6655_4433_2211 + u64::from(pan_id)),
+            channel,
+            channel_page: 0,
+            link_quality,
+            beacon: BeaconPayload {
+                superframe: SuperframeSpecification::new(0x4000 | association_bit),
+                gts: GtsFields {
+                    descriptor_count: 0,
+                    permit: false,
+                    directions: None,
+                    descriptors: Vec::new(),
+                },
+                pending_addresses: PendingAddressFields {
+                    short_addresses: Vec::new(),
+                    extended_addresses: Vec::new(),
+                },
+                payload: Vec::new(),
+            },
+        }
     }
 }
