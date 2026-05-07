@@ -14,6 +14,8 @@ const EXTENDED_ADDR_LEN: usize = 8;
 const FCS_LEN: usize = 2;
 const FRAME_COUNTER_32_LEN: usize = 4;
 const FRAME_COUNTER_40_LEN: usize = 5;
+const SUPERFRAME_SPEC_LEN: usize = 2;
+const U8_FIELD_LEN: usize = 1;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum FrameType {
@@ -319,6 +321,218 @@ impl MacFrame {
         })
     }
 }
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SuperframeSpecification {
+    raw: u16,
+}
+
+impl SuperframeSpecification {
+    pub fn new(raw: u16) -> Self {
+        Self { raw }
+    }
+
+    pub fn raw(self) -> u16 {
+        self.raw
+    }
+
+    pub fn beacon_order(self) -> u8 {
+        (self.raw & 0x000f) as u8
+    }
+
+    pub fn superframe_order(self) -> u8 {
+        ((self.raw >> 4) & 0x000f) as u8
+    }
+
+    pub fn final_cap_slot(self) -> u8 {
+        ((self.raw >> 8) & 0x000f) as u8
+    }
+
+    pub fn battery_life_extension(self) -> bool {
+        self.raw & (1 << 12) != 0
+    }
+
+    pub fn pan_coordinator(self) -> bool {
+        self.raw & (1 << 14) != 0
+    }
+
+    pub fn association_permit(self) -> bool {
+        self.raw & (1 << 15) != 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct GtsFields {
+    pub descriptor_count: u8,
+    pub permit: bool,
+    pub directions: Option<u8>,
+    pub descriptors: Vec<GtsDescriptor>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct GtsDescriptor {
+    pub short_address: u16,
+    pub starting_slot: u8,
+    pub length: u8,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PendingAddressFields {
+    pub short_addresses: Vec<u16>,
+    pub extended_addresses: Vec<u64>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BeaconPayload {
+    pub superframe: SuperframeSpecification,
+    pub gts: GtsFields,
+    pub pending_addresses: PendingAddressFields,
+    pub payload: Vec<u8>,
+}
+
+impl BeaconPayload {
+    pub fn parse(bytes: &[u8]) -> Result<Self, BeaconPayloadError> {
+        let mut offset = 0;
+        let raw_superframe = read_beacon_u16_le(bytes, &mut offset, "superframe specification")?;
+        let superframe = SuperframeSpecification::new(raw_superframe);
+
+        let gts_spec = read_beacon_u8(bytes, &mut offset, "GTS specification")?;
+        let descriptor_count = gts_spec & 0b0000_0111;
+        let permit = gts_spec & 0b1000_0000 != 0;
+        let directions = if descriptor_count == 0 {
+            None
+        } else {
+            Some(read_beacon_u8(bytes, &mut offset, "GTS directions")?)
+        };
+
+        let mut descriptors = Vec::with_capacity(descriptor_count as usize);
+        for _ in 0..descriptor_count {
+            let short_address = read_beacon_u16_le(bytes, &mut offset, "GTS descriptor")?;
+            let slot_and_length = read_beacon_u8(bytes, &mut offset, "GTS descriptor")?;
+            descriptors.push(GtsDescriptor {
+                short_address,
+                starting_slot: slot_and_length & 0x0f,
+                length: (slot_and_length >> 4) & 0x0f,
+            });
+        }
+
+        let pending_spec = read_beacon_u8(bytes, &mut offset, "pending address specification")?;
+        let short_count = pending_spec & 0b0000_0111;
+        let extended_count = (pending_spec >> 4) & 0b0000_0111;
+        let mut short_addresses = Vec::with_capacity(short_count as usize);
+        let mut extended_addresses = Vec::with_capacity(extended_count as usize);
+
+        for _ in 0..short_count {
+            short_addresses.push(read_beacon_u16_le(
+                bytes,
+                &mut offset,
+                "pending short address",
+            )?);
+        }
+
+        for _ in 0..extended_count {
+            extended_addresses.push(read_beacon_u64_le(
+                bytes,
+                &mut offset,
+                "pending extended address",
+            )?);
+        }
+
+        Ok(Self {
+            superframe,
+            gts: GtsFields {
+                descriptor_count,
+                permit,
+                directions,
+                descriptors,
+            },
+            pending_addresses: PendingAddressFields {
+                short_addresses,
+                extended_addresses,
+            },
+            payload: bytes[offset..].to_vec(),
+        })
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PanDescriptor {
+    pub coordinator_pan_id: u16,
+    pub coordinator_address: Address,
+    pub channel: u8,
+    pub channel_page: u8,
+    pub link_quality: u8,
+    pub beacon: BeaconPayload,
+}
+
+impl PanDescriptor {
+    pub fn from_beacon_frame(
+        frame: &MacFrame,
+        channel: u8,
+        channel_page: u8,
+        link_quality: u8,
+    ) -> Result<Self, BeaconPayloadError> {
+        if frame.frame_control.frame_type != FrameType::Beacon {
+            return Err(BeaconPayloadError::ExpectedBeaconFrame);
+        }
+
+        let coordinator_address = frame
+            .source
+            .ok_or(BeaconPayloadError::MissingBeaconSourceAddress)?;
+        let coordinator_pan_id = frame
+            .source_pan_id
+            .or(frame.destination_pan_id)
+            .ok_or(BeaconPayloadError::MissingBeaconPanId)?;
+        let beacon = BeaconPayload::parse(&frame.payload)?;
+
+        Ok(Self {
+            coordinator_pan_id,
+            coordinator_address,
+            channel,
+            channel_page,
+            link_quality,
+            beacon,
+        })
+    }
+
+    pub fn association_permitted(&self) -> bool {
+        self.beacon.superframe.association_permit()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum BeaconPayloadError {
+    ExpectedBeaconFrame,
+    MissingBeaconSourceAddress,
+    MissingBeaconPanId,
+    TruncatedField {
+        field: &'static str,
+        needed: usize,
+        remaining: usize,
+    },
+}
+
+impl fmt::Display for BeaconPayloadError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::ExpectedBeaconFrame => write!(f, "expected an IEEE 802.15.4 beacon frame"),
+            Self::MissingBeaconSourceAddress => {
+                write!(f, "beacon frame is missing coordinator source address")
+            }
+            Self::MissingBeaconPanId => write!(f, "beacon frame is missing coordinator PAN id"),
+            Self::TruncatedField {
+                field,
+                needed,
+                remaining,
+            } => write!(
+                f,
+                "truncated IEEE 802.15.4 beacon payload field {field}: needed {needed} bytes, had {remaining}"
+            ),
+        }
+    }
+}
+
+impl std::error::Error for BeaconPayloadError {}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SecurityLevel {
@@ -694,6 +908,54 @@ fn encode_address(address: Address, out: &mut Vec<u8>) {
     }
 }
 
+fn read_beacon_u8(
+    bytes: &[u8],
+    offset: &mut usize,
+    field: &'static str,
+) -> Result<u8, BeaconPayloadError> {
+    Ok(read_beacon_bytes(bytes, offset, U8_FIELD_LEN, field)?[0])
+}
+
+fn read_beacon_u16_le(
+    bytes: &[u8],
+    offset: &mut usize,
+    field: &'static str,
+) -> Result<u16, BeaconPayloadError> {
+    let bytes = read_beacon_bytes(bytes, offset, SUPERFRAME_SPEC_LEN, field)?;
+    Ok(u16::from_le_bytes([bytes[0], bytes[1]]))
+}
+
+fn read_beacon_u64_le(
+    bytes: &[u8],
+    offset: &mut usize,
+    field: &'static str,
+) -> Result<u64, BeaconPayloadError> {
+    let bytes = read_beacon_bytes(bytes, offset, EXTENDED_ADDR_LEN, field)?;
+    Ok(u64::from_le_bytes([
+        bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7],
+    ]))
+}
+
+fn read_beacon_bytes<'a>(
+    bytes: &'a [u8],
+    offset: &mut usize,
+    len: usize,
+    field: &'static str,
+) -> Result<&'a [u8], BeaconPayloadError> {
+    let remaining = bytes.len().saturating_sub(*offset);
+    if remaining < len {
+        return Err(BeaconPayloadError::TruncatedField {
+            field,
+            needed: len,
+            remaining,
+        });
+    }
+
+    let start = *offset;
+    *offset += len;
+    Ok(&bytes[start..*offset])
+}
+
 struct Cursor<'a> {
     bytes: &'a [u8],
     offset: usize,
@@ -982,6 +1244,144 @@ mod tests {
         assert_eq!(SecurityLevel::Mic64.mic_len(), 8);
         assert!(SecurityLevel::EncMic128.encrypts());
         assert_eq!(SecurityLevel::EncMic128.mic_len(), 16);
+    }
+
+    #[test]
+    fn parses_beacon_payload_with_pending_addresses() {
+        let bytes = [
+            0xff,
+            0xdf, // superframe spec: BO/SO/FCS=15, BLE, PAN coordinator, association permit
+            0x80, // GTS permit, no descriptors
+            0x11, // one short and one extended pending address
+            0x34, 0x12, // pending short address
+            0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, // pending extended address
+            0xaa, 0xbb, // beacon payload
+        ];
+
+        let beacon = BeaconPayload::parse(&bytes).unwrap();
+
+        assert_eq!(beacon.superframe.raw(), 0xdfff);
+        assert_eq!(beacon.superframe.beacon_order(), 15);
+        assert_eq!(beacon.superframe.superframe_order(), 15);
+        assert_eq!(beacon.superframe.final_cap_slot(), 15);
+        assert!(beacon.superframe.battery_life_extension());
+        assert!(beacon.superframe.pan_coordinator());
+        assert!(beacon.superframe.association_permit());
+        assert_eq!(beacon.gts.descriptor_count, 0);
+        assert!(beacon.gts.permit);
+        assert_eq!(beacon.gts.directions, None);
+        assert!(beacon.gts.descriptors.is_empty());
+        assert_eq!(beacon.pending_addresses.short_addresses, vec![0x1234]);
+        assert_eq!(
+            beacon.pending_addresses.extended_addresses,
+            vec![0x8877_6655_4433_2211]
+        );
+        assert_eq!(beacon.payload, vec![0xaa, 0xbb]);
+    }
+
+    #[test]
+    fn parses_beacon_payload_with_gts_descriptors() {
+        let bytes = [
+            0xcf, 0x0f, // superframe spec: BO=15, SO=12, final CAP slot=15
+            0x81, // GTS permit and one descriptor
+            0x01, // first descriptor is receive direction
+            0x67, 0x45, // GTS short address
+            0x35, // starting slot 5, length 3
+            0x00, // no pending addresses
+        ];
+
+        let beacon = BeaconPayload::parse(&bytes).unwrap();
+
+        assert_eq!(beacon.superframe.beacon_order(), 15);
+        assert_eq!(beacon.superframe.superframe_order(), 12);
+        assert_eq!(beacon.gts.descriptor_count, 1);
+        assert_eq!(beacon.gts.directions, Some(0x01));
+        assert_eq!(
+            beacon.gts.descriptors,
+            vec![GtsDescriptor {
+                short_address: 0x4567,
+                starting_slot: 5,
+                length: 3,
+            }]
+        );
+        assert!(beacon.pending_addresses.short_addresses.is_empty());
+        assert!(beacon.payload.is_empty());
+    }
+
+    #[test]
+    fn derives_pan_descriptor_from_beacon_frame() {
+        let frame = MacFrame {
+            frame_control: FrameControl {
+                frame_type: FrameType::Beacon,
+                security_enabled: false,
+                frame_pending: false,
+                ack_request: false,
+                pan_id_compression: false,
+                sequence_number_suppression: false,
+                information_elements_present: false,
+                destination_address_mode: AddressMode::None,
+                frame_version: FrameVersion::Ieee8021542006,
+                source_address_mode: AddressMode::Extended,
+            },
+            sequence_number: Some(0x2a),
+            destination_pan_id: None,
+            destination: None,
+            source_pan_id: Some(0x1234),
+            source: Some(Address::Extended(0x8877_6655_4433_2211)),
+            auxiliary_security_header: None,
+            payload: vec![0xff, 0xdf, 0x00, 0x00],
+            fcs: None,
+        };
+
+        let descriptor = PanDescriptor::from_beacon_frame(&frame, 15, 0, 244).unwrap();
+
+        assert_eq!(descriptor.coordinator_pan_id, 0x1234);
+        assert_eq!(
+            descriptor.coordinator_address,
+            Address::Extended(0x8877_6655_4433_2211)
+        );
+        assert_eq!(descriptor.channel, 15);
+        assert_eq!(descriptor.channel_page, 0);
+        assert_eq!(descriptor.link_quality, 244);
+        assert!(descriptor.association_permitted());
+    }
+
+    #[test]
+    fn rejects_truncated_beacon_payload() {
+        let bytes = [
+            0xff, 0xdf, // superframe spec
+            0x00, // no GTS descriptors
+            0x10, // one extended pending address, but no address bytes
+        ];
+
+        assert_eq!(
+            BeaconPayload::parse(&bytes),
+            Err(BeaconPayloadError::TruncatedField {
+                field: "pending extended address",
+                needed: 8,
+                remaining: 0,
+            })
+        );
+    }
+
+    #[test]
+    fn rejects_pan_descriptor_from_non_beacon_frame() {
+        let frame = MacFrame {
+            frame_control: data_frame_control(),
+            sequence_number: Some(0x2a),
+            destination_pan_id: Some(0x1234),
+            destination: Some(Address::Short(0xffff)),
+            source_pan_id: Some(0x1234),
+            source: Some(Address::Short(0x0001)),
+            auxiliary_security_header: None,
+            payload: vec![],
+            fcs: None,
+        };
+
+        assert_eq!(
+            PanDescriptor::from_beacon_frame(&frame, 11, 0, 128),
+            Err(BeaconPayloadError::ExpectedBeaconFrame)
+        );
     }
 
     #[test]
