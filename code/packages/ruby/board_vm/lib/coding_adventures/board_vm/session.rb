@@ -6,6 +6,13 @@ module CodingAdventures
 
     class Session
       DEFAULT_HOST_NAME = "ruby-board-vm"
+      GPIO_READ_MODES = {
+        input: 0,
+        input_pullup: 2,
+        pullup: 2,
+        input_pulldown: 3,
+        pulldown: 3
+      }.freeze
 
       attr_reader :connection, :native_session, :host_name, :host_nonce, :program_id,
         :instruction_budget
@@ -58,6 +65,22 @@ module CodingAdventures
         upload(
           program_id: program_id,
           module_bytes: native_session.blink_module(pin, high_ms, low_ms, max_stack)
+        )
+      end
+
+      def gpio_read_module(pin:, mode: :input, max_stack: 2)
+        native_session.gpio_read_module(pin, gpio_read_mode(mode), max_stack)
+      end
+
+      def upload_gpio_read(
+        program_id: @program_id,
+        pin:,
+        mode: :input,
+        max_stack: 2
+      )
+        upload(
+          program_id: program_id,
+          module_bytes: gpio_read_module(pin: pin, mode: mode, max_stack: max_stack)
         )
       end
 
@@ -119,6 +142,36 @@ module CodingAdventures
         SessionResult.new(results: results)
       end
 
+      def gpio_read(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        pin:,
+        mode: :input,
+        max_stack: 2,
+        handshake: false,
+        query_caps: false,
+        host_name: @host_name,
+        host_nonce: @host_nonce
+      )
+        results = []
+        results << hello(host_name: host_name, host_nonce: host_nonce) if handshake
+        results << capabilities if query_caps
+        results.concat(
+          upload_gpio_read(
+            program_id: program_id,
+            pin: pin,
+            mode: mode,
+            max_stack: max_stack
+          ).results
+        )
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget
+        )
+        SessionResult.new(results: results)
+      end
+
       def time_now(
         program_id: @program_id,
         budget: @instruction_budget,
@@ -155,6 +208,8 @@ module CodingAdventures
         when "upload-blink"
           ensure_no_extra_arguments!(words, command)
           upload_blink(**options)
+        when "upload-gpio-read", "upload-gpio.read"
+          upload_gpio_read(**gpio_read_command_options(words, command, options, require_budget: false))
         when "upload-time-now", "upload-time.now"
           ensure_no_extra_arguments!(words, command)
           upload_time_now(**options)
@@ -165,6 +220,8 @@ module CodingAdventures
           SessionResult.new(results: [stop])
         when "blink"
           blink(**options.merge(optional_budget(words, command)))
+        when "gpio-read", "gpio.read"
+          gpio_read(**gpio_read_command_options(words, command, options))
         when "time-now", "time.now", "now"
           time_now(**options.merge(optional_budget(words, command)))
         else
@@ -198,6 +255,50 @@ module CodingAdventures
         end
         ensure_no_extra_arguments!(words, command)
         {instruction_budget: budget}
+      end
+
+      def gpio_read_command_options(words, command, options, require_budget: true)
+        merged = options.dup
+        merged[:pin] = integer_argument(words.shift, "#{command} pin") unless words.empty?
+
+        unless words.empty?
+          mode_or_budget = words.shift
+          if integer_literal?(mode_or_budget) && require_budget
+            merged[:instruction_budget] = Integer(mode_or_budget, 10)
+          else
+            merged[:mode] = mode_or_budget
+          end
+        end
+
+        if require_budget && !words.empty?
+          merged[:instruction_budget] = integer_argument(words.shift, "#{command} budget")
+        end
+
+        ensure_no_extra_arguments!(words, command)
+        raise ArgumentError, "#{command} requires pin" unless merged.key?(:pin)
+
+        merged
+      end
+
+      def gpio_read_mode(mode)
+        return mode if mode.is_a?(Integer)
+
+        text = mode.to_s.tr("-", "_")
+        return Integer(text, 10) if integer_literal?(text)
+
+        GPIO_READ_MODES.fetch(text.to_sym) do
+          raise ArgumentError, "unsupported GPIO read mode: #{mode.inspect}"
+        end
+      end
+
+      def integer_argument(value, name)
+        Integer(value, 10)
+      rescue ArgumentError
+        raise ArgumentError, "#{name} must be an integer: #{value}"
+      end
+
+      def integer_literal?(value)
+        /\A\d+\z/.match?(value.to_s)
       end
 
       def ensure_no_extra_arguments!(words, command)

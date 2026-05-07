@@ -26,9 +26,18 @@ def test_native_session_builds_protocol_bytes_in_rust():
     assert isinstance(module, bytes)
     assert len(module) > 0
 
+    gpio_module = session.gpio_read_module(pin=13, mode="pullup", max_stack=2)
+    assert isinstance(gpio_module, bytes)
+    assert len(gpio_module) > 0
+
     time_module = session.time_now_module(max_stack=1)
     assert isinstance(time_module, bytes)
     assert len(time_module) > 0
+
+    stop = session.stop()
+    assert isinstance(stop.frame, bytes)
+    assert len(stop.frame) > 0
+    assert session.next_request_id == 4
 
 
 def test_session_dispatches_frames_through_write_transport():
@@ -56,6 +65,31 @@ def test_run_command_accepts_repl_style_blink():
     session = Session(transport=transport)
 
     result = session.run_command("blink 42", program_id=9)
+
+    assert [item.command for item in result.results] == [
+        "program_begin",
+        "program_chunk",
+        "program_end",
+        "run",
+    ]
+    assert result.frames == transport.frames
+
+
+def test_run_command_accepts_repl_style_stop():
+    transport = FakeWriteTransport()
+    session = Session(transport=transport)
+
+    result = session.run_command("stop")
+
+    assert [item.command for item in result.results] == ["stop"]
+    assert result.frames == transport.frames
+
+
+def test_run_command_accepts_repl_style_gpio_read():
+    transport = FakeWriteTransport()
+    session = Session(transport=transport)
+
+    result = session.run_command("gpio-read 13 pullup 24", program_id=9)
 
     assert [item.command for item in result.results] == [
         "program_begin",

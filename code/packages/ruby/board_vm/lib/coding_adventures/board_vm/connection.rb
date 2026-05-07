@@ -64,6 +64,10 @@ module CodingAdventures
         TimeApi.new(self)
       end
 
+      def gpio
+        Gpio.new(self)
+      end
+
       def eject
         Ejector.new(self)
       end
@@ -106,6 +110,28 @@ module CodingAdventures
           pin: pin,
           high_ms: high_ms,
           low_ms: low_ms,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
+        )
+      end
+
+      def gpio_read!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        pin:,
+        mode: :input,
+        max_stack: 2
+      )
+        ensure_uno_r4_wifi!
+
+        session.gpio_read(
+          program_id: program_id,
+          budget: budget,
+          pin: pin,
+          mode: mode,
           max_stack: max_stack,
           handshake: true,
           query_caps: true,
@@ -290,6 +316,30 @@ module CodingAdventures
           program_id: program_id,
           budget: budget,
           host_nonce: host_nonce,
+          max_stack: max_stack
+        )
+      end
+    end
+
+    class Gpio
+      def initialize(connection)
+        @connection = connection
+      end
+
+      def read(
+        pin:,
+        mode: :input,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 2
+      )
+        @connection.gpio_read!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          pin: pin,
+          mode: mode,
           max_stack: max_stack
         )
       end
