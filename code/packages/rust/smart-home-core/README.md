@@ -17,6 +17,7 @@ MQTT, and future adapters project into these same records:
 - `StateSnapshot`
 - `IntegrationDescriptor`
 - `SmartHomeTool` / `ToolDescriptor`
+- `CapabilityGrant`
 
 Protocol-private identifiers stay in `ProtocolIdentifier` records rather than
 becoming repository-owned entity ids.
@@ -31,6 +32,7 @@ Current scope:
 - command risk tier helpers
 - state freshness helpers
 - D18D-style smart-home tool descriptors
+- agent capability grants for checking tool access before dispatch
 
 Out of scope:
 
