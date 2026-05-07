@@ -5,13 +5,16 @@ use std::time::Duration;
 
 use board_vm_client::{
     BoardDescriptorInfo, BoardVmClient, ClientError, HelloAckInfo, RawFrameTransport,
-    RunReportInfo, UploadReport,
+    RunReportInfo, RunValue, UploadReport,
 };
 use board_vm_eject::{
     build_blink_eject_artifact, write_embedded_rust_constants,
     EjectOptions as ArtifactEjectOptions, RustConstNames, DEFAULT_BOOT_POLICY, DEFAULT_EJECT_SLOT,
 };
-use board_vm_host::{write_blink_module, BlinkProgram, BLINK_MODULE_LEN};
+use board_vm_host::{
+    write_blink_module, write_gpio_read_module, write_time_now_module, BlinkProgram,
+    GpioReadProgram, TimeNowProgram, BLINK_MODULE_LEN, GPIO_READ_MODULE_LEN, TIME_NOW_MODULE_LEN,
+};
 use board_vm_protocol::{BOOT_RUN_AT_BOOT, BOOT_RUN_IF_NO_HOST, BOOT_STORE_ONLY};
 use board_vm_serial::{
     available_ports, BoardSerialTransport, SerialConfig, SerialPortInfo, SerialTransportError,
@@ -90,10 +93,44 @@ pub enum ReplCommand {
     Hello,
     Caps,
     UploadBlink,
-    Run { instruction_budget: Option<u32> },
-    Blink { instruction_budget: Option<u32> },
+    UploadGpioRead {
+        pin: u8,
+        mode: ReplGpioReadMode,
+    },
+    UploadTimeNow,
+    Run {
+        instruction_budget: Option<u32>,
+    },
+    Blink {
+        instruction_budget: Option<u32>,
+    },
+    GpioRead {
+        pin: u8,
+        mode: ReplGpioReadMode,
+        instruction_budget: Option<u32>,
+    },
+    TimeNow {
+        instruction_budget: Option<u32>,
+    },
     Stop,
     Quit,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ReplGpioReadMode {
+    Input,
+    InputPullup,
+    InputPulldown,
+}
+
+impl ReplGpioReadMode {
+    fn program(self, pin: u8) -> GpioReadProgram {
+        match self {
+            Self::Input => GpioReadProgram::input(pin),
+            Self::InputPullup => GpioReadProgram::input_pullup(pin),
+            Self::InputPulldown => GpioReadProgram::input_pulldown(pin),
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -317,11 +354,28 @@ pub fn parse_repl_line(line: &str) -> Result<ReplCommand, CliError> {
         "hello" => Ok(ReplCommand::Hello),
         "caps" | "capabilities" => Ok(ReplCommand::Caps),
         "upload-blink" => Ok(ReplCommand::UploadBlink),
+        "upload-gpio-read" | "upload-gpio.read" => {
+            let (pin, mode, _) = parse_repl_gpio_read_args(&mut words, "upload-gpio-read", false)?;
+            Ok(ReplCommand::UploadGpioRead { pin, mode })
+        }
+        "upload-time-now" | "upload-time.now" => Ok(ReplCommand::UploadTimeNow),
         "run" => Ok(ReplCommand::Run {
             instruction_budget: optional_repl_budget(words.next(), "run")?,
         }),
         "blink" => Ok(ReplCommand::Blink {
             instruction_budget: optional_repl_budget(words.next(), "blink")?,
+        }),
+        "gpio-read" | "gpio.read" => {
+            let (pin, mode, instruction_budget) =
+                parse_repl_gpio_read_args(&mut words, "gpio-read", true)?;
+            Ok(ReplCommand::GpioRead {
+                pin,
+                mode,
+                instruction_budget,
+            })
+        }
+        "time-now" | "time.now" | "now" => Ok(ReplCommand::TimeNow {
+            instruction_budget: optional_repl_budget(words.next(), "time-now")?,
         }),
         "stop" => Ok(ReplCommand::Stop),
         "quit" | "exit" => Ok(ReplCommand::Quit),
@@ -351,6 +405,52 @@ fn optional_repl_budget(
     value
         .map(|value| parse_number(value.to_owned(), command))
         .transpose()
+}
+
+fn parse_repl_gpio_read_args<'a, I>(
+    words: &mut I,
+    command: &'static str,
+    allow_budget: bool,
+) -> Result<(u8, ReplGpioReadMode, Option<u32>), CliError>
+where
+    I: Iterator<Item = &'a str>,
+{
+    let pin = words
+        .next()
+        .ok_or(CliError::MissingRequired("gpio-read pin"))
+        .and_then(|value| parse_number(value.to_owned(), command))?;
+    let mut mode = ReplGpioReadMode::Input;
+    let mut instruction_budget = None;
+
+    if let Some(value) = words.next() {
+        if allow_budget && integer_literal(value) {
+            instruction_budget = Some(parse_number(value.to_owned(), command)?);
+        } else {
+            mode = parse_repl_gpio_read_mode(value)?;
+        }
+    }
+
+    if allow_budget && instruction_budget.is_none() {
+        instruction_budget = optional_repl_budget(words.next(), command)?;
+    }
+
+    Ok((pin, mode, instruction_budget))
+}
+
+fn parse_repl_gpio_read_mode(value: &str) -> Result<ReplGpioReadMode, CliError> {
+    match value {
+        "input" | "in" => Ok(ReplGpioReadMode::Input),
+        "pullup" | "input-pullup" | "input_pullup" => Ok(ReplGpioReadMode::InputPullup),
+        "pulldown" | "input-pulldown" | "input_pulldown" => Ok(ReplGpioReadMode::InputPulldown),
+        other => Err(CliError::InvalidNumber {
+            option: "gpio-read mode",
+            value: other.to_owned(),
+        }),
+    }
+}
+
+fn integer_literal(value: &str) -> bool {
+    !value.is_empty() && value.bytes().all(|byte| byte.is_ascii_digit())
 }
 
 fn next_value<I>(args: &mut I, option: &'static str) -> Result<String, CliError>
@@ -563,6 +663,14 @@ where
             let upload = upload_blink(client, state.program_id)?;
             write_upload(output, &upload)?;
         }
+        ReplCommand::UploadGpioRead { pin, mode } => {
+            let upload = upload_gpio_read(client, state.program_id, pin, mode)?;
+            write_upload(output, &upload)?;
+        }
+        ReplCommand::UploadTimeNow => {
+            let upload = upload_time_now(client, state.program_id)?;
+            write_upload(output, &upload)?;
+        }
         ReplCommand::Run { instruction_budget } => {
             let run = client.run_background(
                 state.program_id,
@@ -572,6 +680,28 @@ where
         }
         ReplCommand::Blink { instruction_budget } => {
             let upload = upload_blink(client, state.program_id)?;
+            write_upload(output, &upload)?;
+            let run = client.run_background(
+                state.program_id,
+                instruction_budget.unwrap_or(state.instruction_budget),
+            )?;
+            write_run(output, &run)?;
+        }
+        ReplCommand::GpioRead {
+            pin,
+            mode,
+            instruction_budget,
+        } => {
+            let upload = upload_gpio_read(client, state.program_id, pin, mode)?;
+            write_upload(output, &upload)?;
+            let run = client.run_background(
+                state.program_id,
+                instruction_budget.unwrap_or(state.instruction_budget),
+            )?;
+            write_run(output, &run)?;
+        }
+        ReplCommand::TimeNow { instruction_budget } => {
+            let upload = upload_time_now(client, state.program_id)?;
             write_upload(output, &upload)?;
             let run = client.run_background(
                 state.program_id,
@@ -597,6 +727,38 @@ where
 {
     let mut module = [0u8; BLINK_MODULE_LEN];
     let module_len = write_blink_module(BlinkProgram::onboard_led(), &mut module)
+        .map_err(|source| CliError::Client(source.into()))?;
+    client
+        .upload_program(program_id, &module[..module_len])
+        .map_err(CliError::from)
+}
+
+fn upload_gpio_read<T>(
+    client: &mut BoardVmClient<T, 512, 768, 768>,
+    program_id: u16,
+    pin: u8,
+    mode: ReplGpioReadMode,
+) -> Result<UploadReport, CliError>
+where
+    T: RawFrameTransport,
+{
+    let mut module = [0u8; GPIO_READ_MODULE_LEN];
+    let module_len = write_gpio_read_module(mode.program(pin), &mut module)
+        .map_err(|source| CliError::Client(source.into()))?;
+    client
+        .upload_program(program_id, &module[..module_len])
+        .map_err(CliError::from)
+}
+
+fn upload_time_now<T>(
+    client: &mut BoardVmClient<T, 512, 768, 768>,
+    program_id: u16,
+) -> Result<UploadReport, CliError>
+where
+    T: RawFrameTransport,
+{
+    let mut module = [0u8; TIME_NOW_MODULE_LEN];
+    let module_len = write_time_now_module(TimeNowProgram::new(), &mut module)
         .map_err(|source| CliError::Client(source.into()))?;
     client
         .upload_program(program_id, &module[..module_len])
@@ -660,17 +822,56 @@ fn write_run<W>(output: &mut W, run: &RunReportInfo) -> Result<(), CliError>
 where
     W: Write,
 {
-    writeln!(
-        output,
-        "run program_id={} status={:?} instructions={} elapsed_ms={} stack_depth={} open_handles={}",
-        run.program_id,
-        run.status,
-        run.instructions_executed,
-        run.elapsed_ms,
-        run.stack_depth,
-        run.open_handles
-    )?;
+    if run.returns.is_empty() {
+        writeln!(
+            output,
+            "run program_id={} status={:?} instructions={} elapsed_ms={} stack_depth={} open_handles={}",
+            run.program_id,
+            run.status,
+            run.instructions_executed,
+            run.elapsed_ms,
+            run.stack_depth,
+            run.open_handles
+        )?;
+    } else {
+        writeln!(
+            output,
+            "run program_id={} status={:?} instructions={} elapsed_ms={} stack_depth={} open_handles={} returns=[{}]",
+            run.program_id,
+            run.status,
+            run.instructions_executed,
+            run.elapsed_ms,
+            run.stack_depth,
+            run.open_handles,
+            format_run_values(&run.returns)
+        )?;
+    }
     Ok(())
+}
+
+fn format_run_values(values: &[RunValue]) -> String {
+    let mut out = String::new();
+    for (index, value) in values.iter().enumerate() {
+        if index > 0 {
+            out.push_str(", ");
+        }
+        out.push_str(&format_run_value(value));
+    }
+    out
+}
+
+fn format_run_value(value: &RunValue) -> String {
+    match value {
+        RunValue::Unit => "unit".to_owned(),
+        RunValue::Bool(value) => value.to_string(),
+        RunValue::U8(value) => value.to_string(),
+        RunValue::U16(value) => value.to_string(),
+        RunValue::U32(value) => value.to_string(),
+        RunValue::I16(value) => value.to_string(),
+        RunValue::Handle(value) => format!("handle:{value}"),
+        RunValue::Bytes(value) => format!("bytes:{}b", value.len()),
+        RunValue::String(value) => format!("string:{value}"),
+    }
 }
 
 fn write_repl_help<W>(output: &mut W) -> Result<(), CliError>
@@ -679,7 +880,7 @@ where
 {
     writeln!(
         output,
-        "commands: hello, caps, upload-blink, run [budget], blink [budget], stop, help, quit"
+        "commands: hello, caps, upload-blink, upload-gpio-read <pin> [mode], upload-time-now, run [budget], blink [budget], gpio-read <pin> [mode] [budget], time-now [budget], stop, help, quit"
     )?;
     Ok(())
 }
@@ -941,6 +1142,17 @@ mod tests {
             ReplCommand::UploadBlink
         );
         assert_eq!(
+            parse_repl_line("upload-gpio-read 13 pullup").unwrap(),
+            ReplCommand::UploadGpioRead {
+                pin: 13,
+                mode: ReplGpioReadMode::InputPullup,
+            }
+        );
+        assert_eq!(
+            parse_repl_line("upload-time-now").unwrap(),
+            ReplCommand::UploadTimeNow
+        );
+        assert_eq!(
             parse_repl_line("run").unwrap(),
             ReplCommand::Run {
                 instruction_budget: None
@@ -955,6 +1167,28 @@ mod tests {
         assert_eq!(
             parse_repl_line("blink 24").unwrap(),
             ReplCommand::Blink {
+                instruction_budget: Some(24)
+            }
+        );
+        assert_eq!(
+            parse_repl_line("gpio-read 13 pullup 24").unwrap(),
+            ReplCommand::GpioRead {
+                pin: 13,
+                mode: ReplGpioReadMode::InputPullup,
+                instruction_budget: Some(24),
+            }
+        );
+        assert_eq!(
+            parse_repl_line("gpio-read 13 24").unwrap(),
+            ReplCommand::GpioRead {
+                pin: 13,
+                mode: ReplGpioReadMode::Input,
+                instruction_budget: Some(24),
+            }
+        );
+        assert_eq!(
+            parse_repl_line("time-now 24").unwrap(),
+            ReplCommand::TimeNow {
                 instruction_budget: Some(24)
             }
         );
