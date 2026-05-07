@@ -76,6 +76,8 @@ id_type!(CommandId, "command id");
 id_type!(EventId, "event id");
 id_type!(CorrelationId, "correlation id");
 id_type!(VaultRef, "vault reference");
+id_type!(AgentId, "agent id");
+id_type!(CapabilityGrantId, "capability grant id");
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum RuntimeKind {
@@ -460,7 +462,7 @@ impl CommandType {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum PrivilegeTier {
     ReadOnly,
     LowRisk,
@@ -623,6 +625,201 @@ impl SmartHomeTool {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum CapabilityGrantStatus {
+    Pending,
+    Active,
+    Revoked,
+    Expired,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum CapabilityGrantScope {
+    Tool(SmartHomeTool),
+    Capability(CapabilityId),
+    EntityCapability {
+        entity_id: EntityId,
+        capability_id: CapabilityId,
+    },
+    AllSmartHome,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CapabilityGrant {
+    pub grant_id: CapabilityGrantId,
+    pub principal_id: AgentId,
+    pub scope: CapabilityGrantScope,
+    pub max_tier: PrivilegeTier,
+    pub granted_by: String,
+    pub granted_at_ms: u64,
+    pub expires_at_ms: Option<u64>,
+    pub status: CapabilityGrantStatus,
+    pub metadata: Vec<Metadata>,
+}
+
+impl CapabilityGrant {
+    pub fn new(
+        grant_id: CapabilityGrantId,
+        principal_id: AgentId,
+        scope: CapabilityGrantScope,
+        max_tier: PrivilegeTier,
+        granted_by: impl Into<String>,
+        granted_at_ms: u64,
+    ) -> Self {
+        Self {
+            grant_id,
+            principal_id,
+            scope,
+            max_tier,
+            granted_by: granted_by.into(),
+            granted_at_ms,
+            expires_at_ms: None,
+            status: CapabilityGrantStatus::Active,
+            metadata: Vec::new(),
+        }
+    }
+
+    pub fn for_tool(
+        grant_id: CapabilityGrantId,
+        principal_id: AgentId,
+        tool: SmartHomeTool,
+        granted_by: impl Into<String>,
+        granted_at_ms: u64,
+    ) -> Self {
+        let descriptor = tool.descriptor();
+        Self::new(
+            grant_id,
+            principal_id,
+            CapabilityGrantScope::Tool(tool),
+            descriptor.required_tier,
+            granted_by,
+            granted_at_ms,
+        )
+    }
+
+    pub fn for_capability(
+        grant_id: CapabilityGrantId,
+        principal_id: AgentId,
+        capability_id: CapabilityId,
+        max_tier: PrivilegeTier,
+        granted_by: impl Into<String>,
+        granted_at_ms: u64,
+    ) -> Self {
+        Self::new(
+            grant_id,
+            principal_id,
+            CapabilityGrantScope::Capability(capability_id),
+            max_tier,
+            granted_by,
+            granted_at_ms,
+        )
+    }
+
+    pub fn for_entity_capability(
+        grant_id: CapabilityGrantId,
+        principal_id: AgentId,
+        entity_id: EntityId,
+        capability_id: CapabilityId,
+        max_tier: PrivilegeTier,
+        granted_by: impl Into<String>,
+        granted_at_ms: u64,
+    ) -> Self {
+        Self::new(
+            grant_id,
+            principal_id,
+            CapabilityGrantScope::EntityCapability {
+                entity_id,
+                capability_id,
+            },
+            max_tier,
+            granted_by,
+            granted_at_ms,
+        )
+    }
+
+    pub fn for_all_smart_home(
+        grant_id: CapabilityGrantId,
+        principal_id: AgentId,
+        max_tier: PrivilegeTier,
+        granted_by: impl Into<String>,
+        granted_at_ms: u64,
+    ) -> Self {
+        Self::new(
+            grant_id,
+            principal_id,
+            CapabilityGrantScope::AllSmartHome,
+            max_tier,
+            granted_by,
+            granted_at_ms,
+        )
+    }
+
+    pub fn with_expiry(mut self, expires_at_ms: u64) -> Self {
+        self.expires_at_ms = Some(expires_at_ms);
+        self
+    }
+
+    pub fn with_status(mut self, status: CapabilityGrantStatus) -> Self {
+        self.status = status;
+        self
+    }
+
+    pub fn status_at(&self, now_ms: u64) -> CapabilityGrantStatus {
+        if self.status == CapabilityGrantStatus::Active
+            && self.expires_at_ms.is_some_and(|expires| now_ms >= expires)
+        {
+            CapabilityGrantStatus::Expired
+        } else {
+            self.status
+        }
+    }
+
+    pub fn is_active_at(&self, now_ms: u64) -> bool {
+        self.status_at(now_ms) == CapabilityGrantStatus::Active
+    }
+
+    pub fn covers_capability(&self, capability_id: &CapabilityId) -> bool {
+        match &self.scope {
+            CapabilityGrantScope::Capability(granted) => granted == capability_id,
+            CapabilityGrantScope::EntityCapability {
+                capability_id: granted,
+                ..
+            } => granted == capability_id,
+            CapabilityGrantScope::AllSmartHome => true,
+            CapabilityGrantScope::Tool(_) => false,
+        }
+    }
+
+    pub fn covers_tool(&self, tool: SmartHomeTool) -> bool {
+        match &self.scope {
+            CapabilityGrantScope::Tool(granted) => *granted == tool,
+            CapabilityGrantScope::AllSmartHome => true,
+            CapabilityGrantScope::Capability(_) | CapabilityGrantScope::EntityCapability { .. } => {
+                false
+            }
+        }
+    }
+
+    pub fn allows_tool_at(&self, tool: SmartHomeTool, principal_id: &AgentId, now_ms: u64) -> bool {
+        self.principal_id == *principal_id
+            && self.is_active_at(now_ms)
+            && self.max_tier >= tool.descriptor().required_tier
+            && self.covers_tool(tool)
+    }
+}
+
+impl ToolDescriptor {
+    pub fn is_satisfied_by<'a, I>(&self, principal_id: &AgentId, grants: I, now_ms: u64) -> bool
+    where
+        I: IntoIterator<Item = &'a CapabilityGrant>,
+    {
+        let grants = grants.into_iter().collect::<Vec<_>>();
+        self.required_capabilities.iter().all(|required| {
+            grant_covers_descriptor_capability(self, principal_id, &grants, required, now_ms)
+        })
+    }
+}
+
 pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
     [
         SmartHomeTool::Discover,
@@ -638,6 +835,32 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
     .into_iter()
     .map(SmartHomeTool::descriptor)
     .collect()
+}
+
+fn grant_covers_descriptor_capability(
+    descriptor: &ToolDescriptor,
+    principal_id: &AgentId,
+    grants: &[&CapabilityGrant],
+    capability_id: &CapabilityId,
+    now_ms: u64,
+) -> bool {
+    grants.iter().any(|grant| {
+        grant.principal_id == *principal_id
+            && grant.is_active_at(now_ms)
+            && grant.max_tier >= descriptor.required_tier
+            && (grant.covers_capability(capability_id)
+                || grant_covers_tool_descriptor(grant, descriptor))
+    })
+}
+
+fn grant_covers_tool_descriptor(grant: &CapabilityGrant, descriptor: &ToolDescriptor) -> bool {
+    match &grant.scope {
+        CapabilityGrantScope::Tool(tool) => tool.descriptor().tool_id == descriptor.tool_id,
+        CapabilityGrantScope::AllSmartHome => true,
+        CapabilityGrantScope::Capability(_) | CapabilityGrantScope::EntityCapability { .. } => {
+            false
+        }
+    }
 }
 
 fn read_tool(tool_id: &'static str) -> ToolDescriptor {
@@ -743,5 +966,36 @@ mod tests {
             command.required_capabilities,
             vec![CapabilityId::trusted("smart_home.command.light")]
         );
+    }
+
+    #[test]
+    fn capability_grants_gate_tool_descriptors_by_agent_tier_and_time() {
+        let principal = AgentId::trusted("agent:lighting-planner");
+        let other_principal = AgentId::trusted("agent:other");
+        let get_state = SmartHomeTool::GetState.descriptor();
+        let command = SmartHomeTool::Command.descriptor();
+        let read_grant = CapabilityGrant::for_capability(
+            CapabilityGrantId::trusted("grant-read"),
+            principal.clone(),
+            CapabilityId::trusted("smart_home.read"),
+            PrivilegeTier::ReadOnly,
+            "chief-of-staff",
+            1_000,
+        );
+        let command_grant = CapabilityGrant::for_tool(
+            CapabilityGrantId::trusted("grant-command"),
+            principal.clone(),
+            SmartHomeTool::Command,
+            "chief-of-staff",
+            1_000,
+        )
+        .with_expiry(2_000);
+        let grants = vec![read_grant, command_grant];
+
+        assert!(get_state.is_satisfied_by(&principal, &grants, 1_500));
+        assert!(command.is_satisfied_by(&principal, &grants, 1_999));
+        assert!(!command.is_satisfied_by(&principal, &grants, 2_000));
+        assert!(!command.is_satisfied_by(&other_principal, &grants, 1_500));
+        assert_eq!(grants[1].status_at(2_000), CapabilityGrantStatus::Expired);
     }
 }

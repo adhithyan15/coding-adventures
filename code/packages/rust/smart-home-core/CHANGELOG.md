@@ -11,3 +11,5 @@ All notable changes to this package will be documented in this file.
 - Protocol identifier records for Hue, Zigbee, Z-Wave, Thread, Matter, MQTT,
   and vendor adapters.
 - D18D-style smart-home tool descriptors and command risk-tier helpers.
+- Agent capability grant primitives for checking smart-home tool access before
+  runtime dispatch.
