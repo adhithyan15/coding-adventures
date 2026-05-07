@@ -112,6 +112,22 @@ impl HueEnvelope {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct HueEventRecord {
+    pub id: Option<String>,
+    pub event_type: Option<String>,
+    pub creation_time: Option<String>,
+    pub data: Vec<JsonValue>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct HueEventStreamBatch {
+    pub sse_id: Option<String>,
+    pub sse_event_type: Option<String>,
+    pub retry_ms: Option<u64>,
+    pub events: Vec<HueEventRecord>,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct HueHttpRequest {
     pub method: HueMethod,
@@ -526,6 +542,29 @@ pub fn parse_lights_from_envelope(
     Ok(lights)
 }
 
+pub fn parse_event_stream(body: &[u8]) -> Result<Vec<HueEventStreamBatch>, HueClientError> {
+    let text = std::str::from_utf8(body).map_err(|error| HueClientError::JsonDecode {
+        message: error.to_string(),
+    })?;
+    let mut batches = Vec::new();
+    let mut current = PartialSseEvent::default();
+
+    for line in text.lines() {
+        if line.is_empty() {
+            if let Some(batch) = current.finish()? {
+                batches.push(batch);
+            }
+            continue;
+        }
+        current.push_line(line)?;
+    }
+    if let Some(batch) = current.finish()? {
+        batches.push(batch);
+    }
+
+    Ok(batches)
+}
+
 fn parse_envelope_response(response: HueHttpResponse) -> Result<HueEnvelope, HueClientError> {
     ensure_success_status(&response)?;
     parse_hue_envelope(&response.body)?.ensure_success()
@@ -551,6 +590,96 @@ fn parse_body(body: &[u8]) -> Result<JsonValue, HueClientError> {
     })?;
     parse_json(text).map_err(|error| HueClientError::JsonDecode {
         message: error.message,
+    })
+}
+
+#[derive(Debug, Default)]
+struct PartialSseEvent {
+    sse_id: Option<String>,
+    sse_event_type: Option<String>,
+    retry_ms: Option<u64>,
+    data_lines: Vec<String>,
+    saw_field: bool,
+}
+
+impl PartialSseEvent {
+    fn push_line(&mut self, line: &str) -> Result<(), HueClientError> {
+        if line.starts_with(':') {
+            return Ok(());
+        }
+        self.saw_field = true;
+        let (field, value) = line.split_once(':').map_or((line, ""), |(field, value)| {
+            (field, value.strip_prefix(' ').unwrap_or(value))
+        });
+        match field {
+            "id" => self.sse_id = Some(value.to_string()),
+            "event" => self.sse_event_type = Some(value.to_string()),
+            "retry" => {
+                self.retry_ms = Some(value.parse::<u64>().map_err(|error| {
+                    HueClientError::unexpected_json(format!("invalid Hue SSE retry field: {error}"))
+                })?);
+            }
+            "data" => self.data_lines.push(value.to_string()),
+            _ => {}
+        }
+        Ok(())
+    }
+
+    fn finish(&mut self) -> Result<Option<HueEventStreamBatch>, HueClientError> {
+        if !self.saw_field {
+            return Ok(None);
+        }
+        let sse_id = self.sse_id.take();
+        let sse_event_type = self.sse_event_type.take();
+        let retry_ms = self.retry_ms.take();
+        let data = self.data_lines.join("\n");
+        let events = if data.trim().is_empty() {
+            Vec::new()
+        } else {
+            parse_event_stream_records(&data)?
+        };
+        *self = Self::default();
+        Ok(Some(HueEventStreamBatch {
+            sse_id,
+            sse_event_type,
+            retry_ms,
+            events,
+        }))
+    }
+}
+
+fn parse_event_stream_records(data: &str) -> Result<Vec<HueEventRecord>, HueClientError> {
+    let value = parse_json(data).map_err(|error| HueClientError::JsonDecode {
+        message: error.message,
+    })?;
+    let JsonValue::Array(entries) = value else {
+        return Err(HueClientError::unexpected_json(
+            "Hue event-stream data field must be a JSON array",
+        ));
+    };
+    entries.iter().map(parse_event_record).collect()
+}
+
+fn parse_event_record(value: &JsonValue) -> Result<HueEventRecord, HueClientError> {
+    let JsonValue::Object(_) = value else {
+        return Err(HueClientError::unexpected_json(
+            "Hue event-stream entry must be a JSON object",
+        ));
+    };
+    let data = match object_field(value, "data") {
+        Some(JsonValue::Array(values)) => values.clone(),
+        Some(_) => {
+            return Err(HueClientError::unexpected_json(
+                "Hue event-stream entry data field must be an array",
+            ))
+        }
+        None => Vec::new(),
+    };
+    Ok(HueEventRecord {
+        id: object_string_field(value, "id").map(str::to_string),
+        event_type: object_string_field(value, "type").map(str::to_string),
+        creation_time: object_string_field(value, "creationtime").map(str::to_string),
+        data,
     })
 }
 
@@ -732,6 +861,50 @@ mod tests {
         assert_eq!(request.path, "/eventstream/clip/v2");
         assert_eq!(request.header("Accept"), Some(ACCEPT_EVENT_STREAM));
         assert_eq!(request.header(HUE_APPLICATION_KEY_HEADER), Some("app-key"));
+    }
+
+    #[test]
+    fn parses_hue_event_stream_batches() {
+        let batches = parse_event_stream(
+            b": keepalive\nid: stream-1\nevent: update\nretry: 5000\ndata: [{\"creationtime\":\"2026-05-07T01:00:00Z\",\"data\":[{\"id\":\"light-1\",\"type\":\"light\",\"on\":{\"on\":true}}],\"id\":\"event-1\",\"type\":\"update\"}]\n\n",
+        )
+        .unwrap();
+
+        assert_eq!(batches.len(), 1);
+        assert_eq!(batches[0].sse_id.as_deref(), Some("stream-1"));
+        assert_eq!(batches[0].sse_event_type.as_deref(), Some("update"));
+        assert_eq!(batches[0].retry_ms, Some(5_000));
+        assert_eq!(batches[0].events.len(), 1);
+        assert_eq!(batches[0].events[0].id.as_deref(), Some("event-1"));
+        assert_eq!(batches[0].events[0].event_type.as_deref(), Some("update"));
+        assert_eq!(
+            batches[0].events[0].creation_time.as_deref(),
+            Some("2026-05-07T01:00:00Z")
+        );
+        assert_eq!(
+            object_string_field(&batches[0].events[0].data[0], "id"),
+            Some("light-1")
+        );
+    }
+
+    #[test]
+    fn event_stream_parser_accepts_multiline_data() {
+        let batches = parse_event_stream(
+            b"data: [{\"id\":\"event-1\",\"type\":\"update\",\"data\":[]}\ndata: ,{\"id\":\"event-2\",\"type\":\"add\",\"data\":[]}]\n\n",
+        )
+        .unwrap();
+
+        assert_eq!(batches.len(), 1);
+        assert_eq!(batches[0].events.len(), 2);
+        assert_eq!(batches[0].events[1].event_type.as_deref(), Some("add"));
+    }
+
+    #[test]
+    fn event_stream_parser_rejects_invalid_data_shape() {
+        assert!(matches!(
+            parse_event_stream(b"data: {\"type\":\"update\"}\n\n"),
+            Err(HueClientError::UnexpectedJson { .. })
+        ));
     }
 
     #[test]
