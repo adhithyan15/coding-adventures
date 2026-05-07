@@ -8,10 +8,10 @@
 #![forbid(unsafe_code)]
 
 use smart_home_core::{
-    AgentId, Bridge, BridgeId, CapabilityGrant, CapabilityGrantId, CapabilityGrantStatus,
-    CapabilityId, Device, DeviceEvent, DeviceEventType, DeviceId, Entity, EntityId, EntityKind,
-    EventId, Health, ProtocolFamily, ProtocolIdentifier, Scene, SceneId, StateConfidence,
-    StateSnapshot, StateSource, Value,
+    AgentId, AuthorizationDecision, AuthorizationOutcome, Bridge, BridgeId, CapabilityGrant,
+    CapabilityGrantId, CapabilityGrantStatus, CapabilityId, Device, DeviceEvent, DeviceEventType,
+    DeviceId, Entity, EntityId, EntityKind, EventId, Health, ProtocolFamily, ProtocolIdentifier,
+    Scene, SceneId, StateConfidence, StateSnapshot, StateSource, Value,
 };
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
@@ -119,6 +119,7 @@ pub struct RegistryCounts {
     pub events: usize,
     pub protocol_identifiers: usize,
     pub capability_grants: usize,
+    pub authorization_decisions: usize,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -272,6 +273,28 @@ impl EntitySelector {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct AuthorizationDecisionSelector {
+    pub principal_id: Option<AgentId>,
+    pub outcome: Option<AuthorizationOutcome>,
+}
+
+impl AuthorizationDecisionSelector {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_principal(mut self, principal_id: AgentId) -> Self {
+        self.principal_id = Some(principal_id);
+        self
+    }
+
+    pub fn with_outcome(mut self, outcome: AuthorizationOutcome) -> Self {
+        self.outcome = Some(outcome);
+        self
+    }
+}
+
 #[derive(Debug, Clone, Default)]
 pub struct InMemorySmartHomeRegistry {
     bridges: BTreeMap<BridgeId, Bridge>,
@@ -281,10 +304,12 @@ pub struct InMemorySmartHomeRegistry {
     states: BTreeMap<EntityId, StateSnapshot>,
     events: BTreeMap<EventId, DeviceEvent>,
     capability_grants: BTreeMap<CapabilityGrantId, CapabilityGrant>,
+    authorization_decisions: Vec<AuthorizationDecision>,
     event_order: Vec<EventId>,
     bridge_devices: BTreeMap<BridgeId, BTreeSet<DeviceId>>,
     device_entities: BTreeMap<DeviceId, BTreeSet<EntityId>>,
     principal_grants: BTreeMap<AgentId, BTreeSet<CapabilityGrantId>>,
+    principal_authorization_decisions: BTreeMap<AgentId, Vec<usize>>,
     protocol_index: BTreeMap<ProtocolIndexKey, RegistryTarget>,
 }
 
@@ -303,6 +328,7 @@ impl InMemorySmartHomeRegistry {
             events: self.events.len(),
             protocol_identifiers: self.protocol_index.len(),
             capability_grants: self.capability_grants.len(),
+            authorization_decisions: self.authorization_decisions.len(),
         }
     }
 
@@ -594,6 +620,42 @@ impl InMemorySmartHomeRegistry {
         Ok(grant.clone())
     }
 
+    pub fn record_authorization_decision(&mut self, decision: AuthorizationDecision) -> usize {
+        let index = self.authorization_decisions.len();
+        self.principal_authorization_decisions
+            .entry(decision.principal_id.clone())
+            .or_default()
+            .push(index);
+        self.authorization_decisions.push(decision);
+        index
+    }
+
+    pub fn authorization_decisions(&self) -> impl Iterator<Item = &AuthorizationDecision> {
+        self.authorization_decisions.iter()
+    }
+
+    pub fn authorization_decisions_for_principal(
+        &self,
+        principal_id: &AgentId,
+    ) -> Vec<&AuthorizationDecision> {
+        self.principal_authorization_decisions
+            .get(principal_id)
+            .into_iter()
+            .flat_map(|indexes| indexes.iter())
+            .filter_map(|index| self.authorization_decisions.get(*index))
+            .collect()
+    }
+
+    pub fn query_authorization_decisions(
+        &self,
+        selector: &AuthorizationDecisionSelector,
+    ) -> Vec<&AuthorizationDecision> {
+        self.authorization_decisions
+            .iter()
+            .filter(|decision| authorization_decision_matches_selector(decision, selector))
+            .collect()
+    }
+
     pub fn query_devices(&self, selector: &DeviceSelector) -> Vec<&Device> {
         self.devices
             .values()
@@ -878,6 +940,26 @@ fn entity_has_capability(entity: &Entity, capability_id: &CapabilityId) -> bool 
         .any(|capability| &capability.capability_id == capability_id)
 }
 
+fn authorization_decision_matches_selector(
+    decision: &AuthorizationDecision,
+    selector: &AuthorizationDecisionSelector,
+) -> bool {
+    if selector
+        .principal_id
+        .as_ref()
+        .is_some_and(|principal_id| &decision.principal_id != principal_id)
+    {
+        return false;
+    }
+    if selector
+        .outcome
+        .is_some_and(|outcome| decision.outcome != outcome)
+    {
+        return false;
+    }
+    true
+}
+
 fn state_matches_freshness(snapshot: Option<&StateSnapshot>, freshness: StateFreshness) -> bool {
     match freshness {
         StateFreshness::Any => true,
@@ -901,7 +983,7 @@ mod tests {
     use smart_home_core::{
         AgentId, BridgeTransport, Capability, CapabilityGrant, CapabilityGrantId, CapabilityId,
         EntityKind, IntegrationId, Metadata, PrivilegeTier, ProtocolFamily, SceneAction,
-        SceneScope, StateDelta,
+        SceneScope, SmartHomeTool, StateDelta,
     };
 
     fn bridge(id: &str) -> Bridge {
@@ -1196,6 +1278,60 @@ mod tests {
                 .capability_grants_for_principal(&other_principal)
                 .len(),
             1
+        );
+    }
+
+    #[test]
+    fn authorization_decisions_are_recorded_in_order_and_indexed_by_principal() {
+        let mut registry = InMemorySmartHomeRegistry::new();
+        let principal = AgentId::trusted("agent:lighting-planner");
+        let other_principal = AgentId::trusted("agent:energy-saver");
+        let read_grant = CapabilityGrant::for_capability(
+            CapabilityGrantId::trusted("grant-read"),
+            principal.clone(),
+            CapabilityId::trusted("smart_home.read"),
+            PrivilegeTier::ReadOnly,
+            "chief-of-staff",
+            1_000,
+        );
+        let allowed = AuthorizationDecision::for_tool(
+            principal.clone(),
+            SmartHomeTool::GetState,
+            [&read_grant],
+            1_500,
+        );
+        let denied = AuthorizationDecision::for_tool(
+            other_principal.clone(),
+            SmartHomeTool::Command,
+            std::iter::empty::<&CapabilityGrant>(),
+            1_501,
+        );
+
+        assert_eq!(registry.record_authorization_decision(allowed), 0);
+        assert_eq!(registry.record_authorization_decision(denied), 1);
+
+        let all_principals = registry
+            .authorization_decisions()
+            .map(|decision| decision.principal_id.clone())
+            .collect::<Vec<_>>();
+        let principal_decisions = registry.authorization_decisions_for_principal(&principal);
+        let denied_for_other = registry.query_authorization_decisions(
+            &AuthorizationDecisionSelector::new()
+                .for_principal(other_principal.clone())
+                .with_outcome(AuthorizationOutcome::Denied),
+        );
+
+        assert_eq!(registry.counts().authorization_decisions, 2);
+        assert_eq!(all_principals, vec![principal.clone(), other_principal]);
+        assert_eq!(principal_decisions.len(), 1);
+        assert_eq!(
+            principal_decisions[0].outcome,
+            AuthorizationOutcome::Allowed
+        );
+        assert_eq!(denied_for_other.len(), 1);
+        assert_eq!(
+            denied_for_other[0].missing_capabilities,
+            vec![CapabilityId::trusted("smart_home.command.light")]
         );
     }
 

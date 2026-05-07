@@ -24,6 +24,7 @@ Current scope:
 - state updates from normalized event deltas
 - conflict detection for duplicate protocol identifiers
 - capability-grant storage and active-grant lookup by Chief of Staff agent
+- authorization-decision audit storage and principal/outcome lookup
 
 Out of scope:
 
