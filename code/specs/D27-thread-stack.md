@@ -81,10 +81,11 @@ ieee802154-*      MAC/PHY foundation from D24
 - UDP compression
 
 **Initial Rust implementation:** `code/packages/rust/sixlowpan` now provides
-dispatch-byte classification, LOWPAN_IPHC first/second byte parsing, and
-fragment first/next header parse/encode helpers. Full IPv6/UDP decompression,
-reassembly, MLE, commissioning, and border-router behavior remain future
-layers.
+dispatch-byte classification, LOWPAN_IPHC first/second byte parsing, fragment
+first/next header parse/encode helpers, fragment payload parsing, and
+deterministic reassembly buffers/tables with overlap and bounds validation. Full
+IPv6/UDP decompression, MLE, commissioning, and border-router behavior remain
+future layers.
 
 ### `thread-mle`
 
