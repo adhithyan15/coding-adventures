@@ -12,5 +12,6 @@ All notable changes to this package will be documented in this file.
   originator/final addresses.
 - LOWPAN_IPHC first/second byte parsing plus fragment first/next header
   parse/encode helpers.
+- LOWPAN_NHC UDP compressed port and checksum-elision parse/encode helpers.
 - Fragment payload parsing plus deterministic tag/size-keyed reassembly
   buffers and tables with overlap and bounds validation.
