@@ -88,6 +88,7 @@ module CodingAdventures.PDF417
 
 import Data.Bits (shiftR, shiftL, (.&.))
 import Data.Char (ord, isDigit, isUpper, isLower)
+import Data.List (foldl')
 import Data.Word (Word8)
 import qualified Data.Vector as V
 import qualified Data.Vector.Unboxed as U
