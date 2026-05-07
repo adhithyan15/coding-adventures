@@ -14,6 +14,7 @@ Included surfaces:
 - resource-specific reads
 - structured command request bodies from `hue-core`
 - event-stream request shape
+- event-stream batch parsing from Server-Sent Events data frames
 - Hue v2 envelope/error parsing
 - Hue light resource decoding
 
