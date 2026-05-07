@@ -94,6 +94,72 @@ impl CommandClassId {
     pub const SENSOR_MULTILEVEL: Self = Self(0x31);
     pub const DOOR_LOCK: Self = Self(0x62);
     pub const SECURITY_2: Self = Self(0x9f);
+
+    pub fn encoded_len(self) -> usize {
+        if self.0 <= u8::MAX as u16 {
+            1
+        } else {
+            2
+        }
+    }
+
+    pub fn encode(self, out: &mut Vec<u8>) {
+        if self.0 <= u8::MAX as u16 {
+            out.push(self.0 as u8);
+        } else {
+            out.extend_from_slice(&self.0.to_be_bytes());
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CommandClassFrame {
+    pub command_class_id: CommandClassId,
+    pub command_id: u8,
+    pub payload: Vec<u8>,
+}
+
+impl CommandClassFrame {
+    pub fn new(command_class_id: CommandClassId, command_id: u8, payload: Vec<u8>) -> Self {
+        Self {
+            command_class_id,
+            command_id,
+            payload,
+        }
+    }
+
+    pub fn parse(bytes: &[u8]) -> Result<Self, ZWaveError> {
+        let (command_class_id, command_id_offset) = parse_command_class_id(bytes)?;
+        let command_id = *bytes.get(command_id_offset).ok_or(ZWaveError::Truncated {
+            needed: command_id_offset + 1,
+            remaining: bytes.len(),
+        })?;
+        let payload = bytes[command_id_offset + 1..].to_vec();
+
+        Ok(Self {
+            command_class_id,
+            command_id,
+            payload,
+        })
+    }
+
+    pub fn encode(&self) -> Result<Vec<u8>, ZWaveError> {
+        let len = self
+            .command_class_id
+            .encoded_len()
+            .checked_add(1)
+            .and_then(|len| len.checked_add(self.payload.len()))
+            .ok_or(ZWaveError::CommandPayloadTooLong(self.payload.len()))?;
+        if len > u8::MAX as usize {
+            return Err(ZWaveError::CommandPayloadTooLong(self.payload.len()));
+        }
+
+        let mut out = Vec::with_capacity(len);
+        self.command_class_id.encode(&mut out);
+        out.push(self.command_id);
+        out.extend_from_slice(&self.payload);
+        Ok(out)
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -216,6 +282,7 @@ pub enum ZWaveError {
     InvalidFrameType(u8),
     Truncated { needed: usize, remaining: usize },
     PayloadTooLong(usize),
+    CommandPayloadTooLong(usize),
     ChecksumMismatch { expected: u8, actual: u8 },
 }
 
@@ -238,6 +305,9 @@ impl fmt::Display for ZWaveError {
                 "truncated Z-Wave frame: needed {needed} bytes, had {remaining}"
             ),
             Self::PayloadTooLong(len) => write!(f, "Z-Wave serial payload too long: {len}"),
+            Self::CommandPayloadTooLong(len) => {
+                write!(f, "Z-Wave command-class payload too long: {len}")
+            }
             Self::ChecksumMismatch { expected, actual } => write!(
                 f,
                 "Z-Wave checksum mismatch: expected 0x{expected:02x}, got 0x{actual:02x}"
@@ -247,6 +317,22 @@ impl fmt::Display for ZWaveError {
 }
 
 impl std::error::Error for ZWaveError {}
+
+fn parse_command_class_id(bytes: &[u8]) -> Result<(CommandClassId, usize), ZWaveError> {
+    let first = *bytes.first().ok_or(ZWaveError::Truncated {
+        needed: 1,
+        remaining: 0,
+    })?;
+    if first >= 0xf0 {
+        let second = *bytes.get(1).ok_or(ZWaveError::Truncated {
+            needed: 2,
+            remaining: bytes.len(),
+        })?;
+        Ok((CommandClassId(u16::from_be_bytes([first, second])), 2))
+    } else {
+        Ok((CommandClassId(u16::from(first)), 1))
+    }
+}
 
 #[cfg(test)]
 mod tests {
@@ -299,5 +385,42 @@ mod tests {
     fn common_command_class_ids_are_stable() {
         assert_eq!(CommandClassId::SWITCH_BINARY.0, 0x25);
         assert_eq!(CommandClassId::SECURITY_2.0, 0x9f);
+    }
+
+    #[test]
+    fn command_class_frame_round_trips_short_id() {
+        let frame = CommandClassFrame::new(CommandClassId::SWITCH_BINARY, 0x01, vec![0xff]);
+        let encoded = frame.encode().unwrap();
+
+        assert_eq!(encoded, vec![0x25, 0x01, 0xff]);
+        assert_eq!(CommandClassFrame::parse(&encoded).unwrap(), frame);
+    }
+
+    #[test]
+    fn command_class_frame_round_trips_extended_id() {
+        let frame = CommandClassFrame::new(CommandClassId(0xf100), 0x02, vec![0x01, 0x02]);
+        let encoded = frame.encode().unwrap();
+
+        assert_eq!(CommandClassId(0xf100).encoded_len(), 2);
+        assert_eq!(encoded, vec![0xf1, 0x00, 0x02, 0x01, 0x02]);
+        assert_eq!(CommandClassFrame::parse(&encoded).unwrap(), frame);
+    }
+
+    #[test]
+    fn command_class_frame_rejects_truncated_bytes() {
+        assert_eq!(
+            CommandClassFrame::parse(&[0xf1]),
+            Err(ZWaveError::Truncated {
+                needed: 2,
+                remaining: 1,
+            })
+        );
+        assert_eq!(
+            CommandClassFrame::parse(&[0x25]),
+            Err(ZWaveError::Truncated {
+                needed: 2,
+                remaining: 1,
+            })
+        );
     }
 }
