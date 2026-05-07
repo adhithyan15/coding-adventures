@@ -16,6 +16,8 @@ pub const DEFAULT_PROGRAM_ID: u16 = 1;
 pub const DEFAULT_INSTRUCTION_BUDGET: u32 = 1000;
 pub const BLINK_CODE_LEN: usize = 26;
 pub const BLINK_MODULE_LEN: usize = 36;
+pub const GPIO_WRITE_CODE_LEN: usize = 12;
+pub const GPIO_WRITE_MODULE_LEN: usize = 22;
 pub const GPIO_READ_CODE_LEN: usize = 13;
 pub const GPIO_READ_MODULE_LEN: usize = 23;
 pub const TIME_NOW_CODE_LEN: usize = 3;
@@ -113,6 +115,31 @@ impl GpioReadProgram {
             pin,
             mode: GPIO_MODE_INPUT_PULLDOWN,
             max_stack: 2,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct GpioWriteProgram {
+    pub pin: u8,
+    pub value: bool,
+    pub max_stack: u8,
+}
+
+impl GpioWriteProgram {
+    pub const fn high(pin: u8) -> Self {
+        Self {
+            pin,
+            value: true,
+            max_stack: 3,
+        }
+    }
+
+    pub const fn low(pin: u8) -> Self {
+        Self {
+            pin,
+            value: false,
+            max_stack: 3,
         }
     }
 }
@@ -449,6 +476,54 @@ pub fn write_gpio_read_code(program: GpioReadProgram, out: &mut [u8]) -> Result<
     Ok(offset)
 }
 
+pub fn write_gpio_write_code(
+    program: GpioWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < GPIO_WRITE_CODE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut offset = 0;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, program.pin)?;
+    write_u8(out, &mut offset, OP_PUSH_U8)?;
+    write_u8(out, &mut offset, GPIO_MODE_OUTPUT)?;
+    write_call_u8(out, &mut offset, CAP_GPIO_OPEN)?;
+    write_u8(out, &mut offset, OP_DUP)?;
+    write_u8(
+        out,
+        &mut offset,
+        if program.value {
+            OP_PUSH_TRUE
+        } else {
+            OP_PUSH_FALSE
+        },
+    )?;
+    write_call_u8(out, &mut offset, CAP_GPIO_WRITE)?;
+    write_call_u8(out, &mut offset, CAP_GPIO_CLOSE)?;
+    Ok(offset)
+}
+
+pub fn write_gpio_write_module(
+    program: GpioWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, HostError> {
+    if out.len() < GPIO_WRITE_MODULE_LEN {
+        return Err(HostError::OutputTooSmall);
+    }
+
+    let mut code = [0u8; GPIO_WRITE_CODE_LEN];
+    let code_len = write_gpio_write_code(program, &mut code)?;
+    let offset = write_module(
+        ModuleSpec::new(0, program.max_stack, &code[..code_len]),
+        out,
+    )?;
+    let module = parse_module(&out[..offset])?;
+    validate(&module, CapabilitySet::blink_mvp(), program.max_stack)?;
+    Ok(offset)
+}
+
 fn validate_gpio_read_mode(mode: u8) -> Result<(), HostError> {
     match mode {
         GPIO_MODE_INPUT | GPIO_MODE_INPUT_PULLUP | GPIO_MODE_INPUT_PULLDOWN => Ok(()),
@@ -621,6 +696,10 @@ mod tests {
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x02, 0x00, 0x0D, 0x12, 0x0D, 0x12, 0x02, 0x40, 0x01,
         0x20, 0x40, 0x03, 0x22, 0x40, 0x04, 0x50, 0x00,
     ];
+    const GPIO_WRITE_HIGH_MODULE_HEX: [u8; GPIO_WRITE_MODULE_LEN] = [
+        0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x03, 0x00, 0x0C, 0x12, 0x0D, 0x12, 0x01, 0x40, 0x01,
+        0x20, 0x11, 0x40, 0x02, 0x40, 0x04, 0x00,
+    ];
     const TIME_NOW_MODULE_HEX: [u8; TIME_NOW_MODULE_LEN] = [
         0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x03, 0x40, 0x11, 0x50, 0x00,
     ];
@@ -665,6 +744,23 @@ mod tests {
         assert_eq!(
             write_gpio_read_module(program, &mut module),
             Err(HostError::InvalidGpioReadMode(GPIO_MODE_OUTPUT))
+        );
+    }
+
+    #[test]
+    fn builds_gpio_write_module_with_close() {
+        let mut module = [0u8; GPIO_WRITE_MODULE_LEN];
+        let len = write_gpio_write_module(GpioWriteProgram::high(13), &mut module).unwrap();
+        assert_eq!(len, GPIO_WRITE_MODULE_LEN);
+        assert_eq!(module, GPIO_WRITE_HIGH_MODULE_HEX);
+
+        let parsed = parse_module(&module).unwrap();
+        validate(&parsed, CapabilitySet::blink_mvp(), 3).unwrap();
+        let mut capabilities = [0u16; 4];
+        let count = collect_required_capabilities(&parsed, &mut capabilities).unwrap();
+        assert_eq!(
+            &capabilities[..count],
+            &[CAP_GPIO_OPEN, CAP_GPIO_WRITE, CAP_GPIO_CLOSE]
         );
     }
 

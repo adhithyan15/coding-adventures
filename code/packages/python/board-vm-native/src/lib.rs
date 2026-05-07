@@ -2,17 +2,17 @@ use std::ffi::{c_char, c_long};
 use std::ptr;
 
 use board_vm_host::{
-    BlinkProgram, GpioReadProgram, TimeNowProgram, BLINK_MODULE_LEN, GPIO_READ_MODULE_LEN,
-    TIME_NOW_MODULE_LEN,
+    BlinkProgram, GpioReadProgram, GpioWriteProgram, TimeNowProgram, BLINK_MODULE_LEN,
+    GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN,
 };
 use board_vm_language_core::{
     build_blink_module, build_caps_query_wire_frame, build_gpio_read_module,
-    build_hello_wire_frame, build_program_begin_wire_frame, build_program_chunk_wire_frame,
-    build_program_end_wire_frame, build_run_background_wire_frame, build_stop_wire_frame,
-    build_time_now_module, capability_board_metadata, capability_bytecode_callable,
-    capability_flag_names, capability_protocol_feature, decode_wire_response, program_format_name,
-    run_status_name, BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
-    LanguageCoreError, LanguageValue,
+    build_gpio_write_module, build_hello_wire_frame, build_program_begin_wire_frame,
+    build_program_chunk_wire_frame, build_program_end_wire_frame, build_run_background_wire_frame,
+    build_stop_wire_frame, build_time_now_module, capability_board_metadata,
+    capability_bytecode_callable, capability_flag_names, capability_protocol_feature,
+    decode_wire_response, program_format_name, run_status_name, BoardVmLanguageSession,
+    DecodedLanguageResponse, DecodedLanguageResponseBody, LanguageCoreError, LanguageValue,
 };
 use python_bridge::*;
 
@@ -101,6 +101,27 @@ unsafe extern "C" fn py_gpio_read_module(_module: PyObjectPtr, args: PyObjectPtr
     let module = match build_gpio_read_module_value(pin, mode, max_stack) {
         Ok(module) => module,
         Err(error) => return raise_core_error("gpio_read_module", error),
+    };
+    bytes_to_py(&module)
+}
+
+unsafe extern "C" fn py_gpio_write_module(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
+    let pin = match parse_arg_u8(args, 0, "pin") {
+        Some(value) => value,
+        None => return ptr::null_mut(),
+    };
+    let value = match parse_arg_u8(args, 1, "value") {
+        Some(value) => value,
+        None => return ptr::null_mut(),
+    };
+    let max_stack = match parse_arg_u8(args, 2, "max_stack") {
+        Some(value) => value,
+        None => return ptr::null_mut(),
+    };
+
+    let module = match build_gpio_write_module_value(pin, value != 0, max_stack) {
+        Ok(module) => module,
+        Err(error) => return raise_core_error("gpio_write_module", error),
     };
     bytes_to_py(&module)
 }
@@ -505,6 +526,24 @@ fn build_gpio_read_module_value(
     Ok(module)
 }
 
+fn build_gpio_write_module_value(
+    pin: u8,
+    value: bool,
+    max_stack: u8,
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; GPIO_WRITE_MODULE_LEN];
+    let len = build_gpio_write_module(
+        GpioWriteProgram {
+            pin,
+            value,
+            max_stack,
+        },
+        &mut module,
+    )?;
+    module.truncate(len);
+    Ok(module)
+}
+
 unsafe fn parse_arg_bytes(args: PyObjectPtr, index: isize, name: &str) -> Option<Vec<u8>> {
     let arg = PyTuple_GetItem(args, index);
     if arg.is_null() {
@@ -606,7 +645,7 @@ unsafe fn raise_core_error(context: &str, error: LanguageCoreError) -> PyObjectP
 
 #[no_mangle]
 pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
-    let methods: &'static mut [PyMethodDef; 12] = Box::leak(Box::new([
+    let methods: &'static mut [PyMethodDef; 13] = Box::leak(Box::new([
         PyMethodDef {
             ml_name: b"hello_wire\0".as_ptr() as *const c_char,
             ml_meth: Some(py_hello_wire),
@@ -630,6 +669,12 @@ pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
             ml_meth: Some(py_gpio_read_module),
             ml_flags: METH_VARARGS,
             ml_doc: b"Build a Board VM GPIO read BVM module in Rust.\0".as_ptr() as *const c_char,
+        },
+        PyMethodDef {
+            ml_name: b"gpio_write_module\0".as_ptr() as *const c_char,
+            ml_meth: Some(py_gpio_write_module),
+            ml_flags: METH_VARARGS,
+            ml_doc: b"Build a Board VM GPIO write BVM module in Rust.\0".as_ptr() as *const c_char,
         },
         PyMethodDef {
             ml_name: b"time_now_module\0".as_ptr() as *const c_char,
