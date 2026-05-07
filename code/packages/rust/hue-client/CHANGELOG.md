@@ -12,6 +12,7 @@ All notable changes to this package will be documented in this file.
   runtime adapters.
 - Hue v2 envelope/error parsing, registration response parsing, and light
   resource decoding.
+- Hue device resource decoding with product metadata and CLIP v2 service refs.
 - Hue event-stream Server-Sent Events parsing into batches and raw resource
   records.
 - Hue light state update extraction from resource snapshots and event-stream

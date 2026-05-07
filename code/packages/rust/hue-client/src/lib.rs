@@ -10,9 +10,9 @@ use coding_adventures_json_serializer::serialize;
 use coding_adventures_json_value::{parse as parse_json, JsonNumber, JsonValue};
 use http_core::{find_header, Header};
 use hue_core::{
-    validate_brightness, HueCommand, HueLightResource, HueLightStateUpdate, HueMethod, HueRequest,
-    HueRequestBody, HueResourceId, HueResourceRef, HueResourceType, CLIP_V2_EVENT_STREAM_PATH,
-    CLIP_V2_RESOURCE_ROOT, HUE_APPLICATION_KEY_HEADER,
+    validate_brightness, HueCommand, HueDeviceResource, HueLightResource, HueLightStateUpdate,
+    HueMethod, HueRequest, HueRequestBody, HueResourceId, HueResourceRef, HueResourceType,
+    CLIP_V2_EVENT_STREAM_PATH, CLIP_V2_RESOURCE_ROOT, HUE_APPLICATION_KEY_HEADER,
 };
 use std::fmt;
 
@@ -237,6 +237,11 @@ impl<T: HueTransport> HueClient<T> {
     pub fn get_light_resources(&mut self) -> Result<Vec<HueLightResource>, HueClientError> {
         let envelope = self.get_collection(HueResourceType::Light)?;
         parse_lights_from_envelope(&envelope)
+    }
+
+    pub fn get_device_resources(&mut self) -> Result<Vec<HueDeviceResource>, HueClientError> {
+        let envelope = self.get_collection(HueResourceType::Device)?;
+        parse_devices_from_envelope(&envelope)
     }
 
     pub fn get_light_state_updates(&mut self) -> Result<Vec<HueLightStateUpdate>, HueClientError> {
@@ -534,6 +539,18 @@ pub fn parse_lights_from_envelope(
     Ok(lights)
 }
 
+pub fn parse_devices_from_envelope(
+    envelope: &HueEnvelope,
+) -> Result<Vec<HueDeviceResource>, HueClientError> {
+    let mut devices = Vec::new();
+    for resource in &envelope.data {
+        if object_string_field(resource, "type") == Some(HueResourceType::Device.as_hue_type()) {
+            devices.push(parse_device_resource(resource)?);
+        }
+    }
+    Ok(devices)
+}
+
 pub fn parse_light_state_updates_from_envelope(
     envelope: &HueEnvelope,
 ) -> Result<Vec<HueLightStateUpdate>, HueClientError> {
@@ -732,6 +749,58 @@ fn parse_light_state_update(resource: &JsonValue) -> Result<HueLightStateUpdate,
         brightness,
         color_temperature_mirek,
     })
+}
+
+fn parse_device_resource(resource: &JsonValue) -> Result<HueDeviceResource, HueClientError> {
+    let id = object_string_field(resource, "id")
+        .ok_or_else(|| HueClientError::unexpected_json("Hue device resource is missing id"))?;
+    let name = object_field(resource, "metadata")
+        .and_then(|metadata| object_string_field(metadata, "name"))
+        .unwrap_or(id)
+        .to_string();
+    let product_data = object_field(resource, "product_data");
+    let services = match object_field(resource, "services") {
+        Some(JsonValue::Array(values)) => parse_resource_refs(values)?,
+        Some(_) => {
+            return Err(HueClientError::unexpected_json(
+                "Hue device services field must be an array",
+            ))
+        }
+        None => Vec::new(),
+    };
+
+    Ok(HueDeviceResource {
+        id: HueResourceId::trusted(id),
+        name,
+        manufacturer: product_data
+            .and_then(|data| object_string_field(data, "manufacturer_name"))
+            .map(str::to_string),
+        model: product_data
+            .and_then(|data| object_string_field(data, "model_id"))
+            .map(str::to_string),
+        product_name: product_data
+            .and_then(|data| object_string_field(data, "product_name"))
+            .map(str::to_string),
+        software_version: product_data
+            .and_then(|data| object_string_field(data, "software_version"))
+            .map(str::to_string),
+        services,
+    })
+}
+
+fn parse_resource_refs(values: &[JsonValue]) -> Result<Vec<HueResourceRef>, HueClientError> {
+    values.iter().map(parse_resource_ref).collect()
+}
+
+fn parse_resource_ref(value: &JsonValue) -> Result<HueResourceRef, HueClientError> {
+    let rid = object_string_field(value, "rid")
+        .ok_or_else(|| HueClientError::unexpected_json("Hue resource ref is missing rid"))?;
+    let rtype = object_string_field(value, "rtype")
+        .ok_or_else(|| HueClientError::unexpected_json("Hue resource ref is missing rtype"))?;
+    Ok(HueResourceRef::new(
+        HueResourceType::from_hue_type(rtype),
+        HueResourceId::trusted(rid),
+    ))
 }
 
 fn parse_api_errors(values: &[JsonValue]) -> Result<Vec<HueApiError>, HueClientError> {
@@ -996,6 +1065,23 @@ mod tests {
     }
 
     #[test]
+    fn client_reads_device_collection_through_injected_transport() {
+        let transport = RecordingTransport::with_response(
+            r#"{"data":[{"id":"device-1","type":"device","metadata":{"name":"Kitchen lamp"}}],"errors":[]}"#,
+        );
+        let mut client = HueClient::new(HueClientConfig::paired("app-key"), transport);
+
+        let devices = client.get_device_resources().unwrap();
+        let transport = client.into_transport();
+
+        assert_eq!(devices.len(), 1);
+        assert_eq!(devices[0].id.as_str(), "device-1");
+        assert_eq!(devices[0].name, "Kitchen lamp");
+        assert_eq!(transport.requests.len(), 1);
+        assert_eq!(transport.requests[0].path, "/clip/v2/resource/device");
+    }
+
+    #[test]
     fn parses_registration_success() {
         let registration = parse_registration_response(
             br#"[{"success":{"username":"app-key","clientkey":"client-key"}}]"#,
@@ -1034,6 +1120,47 @@ mod tests {
         assert_eq!(lights[0].on, Some(true));
         assert_eq!(lights[0].brightness, Some(42));
         assert_eq!(lights[0].color_temperature_mirek, Some(366));
+    }
+
+    #[test]
+    fn parses_device_resources_from_snapshot_envelope() {
+        let envelope = parse_hue_envelope(
+            br#"{"data":[{"id":"device-1","type":"device","metadata":{"name":"Kitchen lamp"},"product_data":{"manufacturer_name":"Signify Netherlands B.V.","model_id":"LCA001","product_name":"Hue color lamp","software_version":"1.116.3"},"services":[{"rid":"light-1","rtype":"light"},{"rid":"button-1","rtype":"button"}]},{"id":"light-1","type":"light"}],"errors":[]}"#,
+        )
+        .unwrap();
+
+        let devices = parse_devices_from_envelope(&envelope).unwrap();
+
+        assert_eq!(devices.len(), 1);
+        assert_eq!(devices[0].id.as_str(), "device-1");
+        assert_eq!(devices[0].name, "Kitchen lamp");
+        assert_eq!(
+            devices[0].manufacturer.as_deref(),
+            Some("Signify Netherlands B.V.")
+        );
+        assert_eq!(devices[0].model.as_deref(), Some("LCA001"));
+        assert_eq!(devices[0].product_name.as_deref(), Some("Hue color lamp"));
+        assert_eq!(devices[0].software_version.as_deref(), Some("1.116.3"));
+        assert_eq!(devices[0].services.len(), 2);
+        assert_eq!(devices[0].services[0].resource_type, HueResourceType::Light);
+        assert_eq!(devices[0].services[0].id.as_str(), "light-1");
+        assert_eq!(
+            devices[0].services[1].resource_type,
+            HueResourceType::Button
+        );
+    }
+
+    #[test]
+    fn device_resource_parser_rejects_malformed_services() {
+        let envelope = parse_hue_envelope(
+            br#"{"data":[{"id":"device-1","type":"device","services":{"rid":"light-1","rtype":"light"}}],"errors":[]}"#,
+        )
+        .unwrap();
+
+        assert!(matches!(
+            parse_devices_from_envelope(&envelope),
+            Err(HueClientError::UnexpectedJson { .. })
+        ));
     }
 
     #[test]
