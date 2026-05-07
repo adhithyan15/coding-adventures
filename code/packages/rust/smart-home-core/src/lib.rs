@@ -820,6 +820,103 @@ impl ToolDescriptor {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AuthorizationOutcome {
+    Allowed,
+    Denied,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum AuthorizationSubject {
+    Tool(SmartHomeTool),
+    Command {
+        command_id: CommandId,
+        entity_id: EntityId,
+        command_type: CommandType,
+    },
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct AuthorizationDecision {
+    pub principal_id: AgentId,
+    pub subject: AuthorizationSubject,
+    pub outcome: AuthorizationOutcome,
+    pub required_tier: PrivilegeTier,
+    pub required_capabilities: Vec<CapabilityId>,
+    pub matched_grants: Vec<CapabilityGrantId>,
+    pub missing_capabilities: Vec<CapabilityId>,
+    pub decided_at_ms: u64,
+}
+
+impl AuthorizationDecision {
+    pub fn for_tool<'a, I>(
+        principal_id: AgentId,
+        tool: SmartHomeTool,
+        grants: I,
+        decided_at_ms: u64,
+    ) -> Self
+    where
+        I: IntoIterator<Item = &'a CapabilityGrant>,
+    {
+        let descriptor = tool.descriptor();
+        let grants = grants.into_iter().collect::<Vec<_>>();
+        let (matched_grants, missing_capabilities) =
+            evaluate_required_capabilities(&descriptor, &principal_id, &grants, decided_at_ms);
+        let outcome = if missing_capabilities.is_empty() {
+            AuthorizationOutcome::Allowed
+        } else {
+            AuthorizationOutcome::Denied
+        };
+        Self {
+            principal_id,
+            subject: AuthorizationSubject::Tool(tool),
+            outcome,
+            required_tier: descriptor.required_tier,
+            required_capabilities: descriptor.required_capabilities,
+            matched_grants,
+            missing_capabilities,
+            decided_at_ms,
+        }
+    }
+
+    pub fn for_command<'a, I>(
+        principal_id: AgentId,
+        command: &DeviceCommand,
+        grants: I,
+        decided_at_ms: u64,
+    ) -> Self
+    where
+        I: IntoIterator<Item = &'a CapabilityGrant>,
+    {
+        let grants = grants.into_iter().collect::<Vec<_>>();
+        let (matched_grants, missing_capabilities) =
+            evaluate_command_capabilities(command, &principal_id, &grants, decided_at_ms);
+        let outcome = if missing_capabilities.is_empty() {
+            AuthorizationOutcome::Allowed
+        } else {
+            AuthorizationOutcome::Denied
+        };
+        Self {
+            principal_id,
+            subject: AuthorizationSubject::Command {
+                command_id: command.command_id.clone(),
+                entity_id: command.entity_id.clone(),
+                command_type: command.command_type,
+            },
+            outcome,
+            required_tier: command.required_tier,
+            required_capabilities: command.required_capabilities.clone(),
+            matched_grants,
+            missing_capabilities,
+            decided_at_ms,
+        }
+    }
+
+    pub fn is_allowed(&self) -> bool {
+        self.outcome == AuthorizationOutcome::Allowed
+    }
+}
+
 pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
     [
         SmartHomeTool::Discover,
@@ -835,6 +932,85 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
     .into_iter()
     .map(SmartHomeTool::descriptor)
     .collect()
+}
+
+fn evaluate_required_capabilities(
+    descriptor: &ToolDescriptor,
+    principal_id: &AgentId,
+    grants: &[&CapabilityGrant],
+    now_ms: u64,
+) -> (Vec<CapabilityGrantId>, Vec<CapabilityId>) {
+    let mut matched_grants = Vec::new();
+    let mut missing_capabilities = Vec::new();
+    for capability_id in &descriptor.required_capabilities {
+        let matches = grants
+            .iter()
+            .filter(|grant| {
+                grant_covers_descriptor_capability(
+                    descriptor,
+                    principal_id,
+                    &[*grant],
+                    capability_id,
+                    now_ms,
+                )
+            })
+            .collect::<Vec<_>>();
+        if matches.is_empty() {
+            missing_capabilities.push(capability_id.clone());
+        } else {
+            for grant in matches {
+                push_unique_grant_id(&mut matched_grants, grant.grant_id.clone());
+            }
+        }
+    }
+    (matched_grants, missing_capabilities)
+}
+
+fn evaluate_command_capabilities(
+    command: &DeviceCommand,
+    principal_id: &AgentId,
+    grants: &[&CapabilityGrant],
+    now_ms: u64,
+) -> (Vec<CapabilityGrantId>, Vec<CapabilityId>) {
+    let mut matched_grants = Vec::new();
+    let mut missing_capabilities = Vec::new();
+    for capability_id in &command.required_capabilities {
+        let matches = grants
+            .iter()
+            .filter(|grant| {
+                grant_covers_command_capability(grant, principal_id, command, capability_id, now_ms)
+            })
+            .collect::<Vec<_>>();
+        if matches.is_empty() {
+            missing_capabilities.push(capability_id.clone());
+        } else {
+            for grant in matches {
+                push_unique_grant_id(&mut matched_grants, grant.grant_id.clone());
+            }
+        }
+    }
+    (matched_grants, missing_capabilities)
+}
+
+fn grant_covers_command_capability(
+    grant: &CapabilityGrant,
+    principal_id: &AgentId,
+    command: &DeviceCommand,
+    capability_id: &CapabilityId,
+    now_ms: u64,
+) -> bool {
+    grant.principal_id == *principal_id
+        && grant.is_active_at(now_ms)
+        && grant.max_tier >= command.required_tier
+        && match &grant.scope {
+            CapabilityGrantScope::Tool(tool) => *tool == SmartHomeTool::Command,
+            CapabilityGrantScope::Capability(granted) => granted == capability_id,
+            CapabilityGrantScope::EntityCapability {
+                entity_id,
+                capability_id: granted,
+            } => entity_id == &command.entity_id && granted == capability_id,
+            CapabilityGrantScope::AllSmartHome => true,
+        }
 }
 
 fn grant_covers_descriptor_capability(
@@ -860,6 +1036,12 @@ fn grant_covers_tool_descriptor(grant: &CapabilityGrant, descriptor: &ToolDescri
         CapabilityGrantScope::Capability(_) | CapabilityGrantScope::EntityCapability { .. } => {
             false
         }
+    }
+}
+
+fn push_unique_grant_id(values: &mut Vec<CapabilityGrantId>, value: CapabilityGrantId) {
+    if !values.contains(&value) {
+        values.push(value);
     }
 }
 
@@ -997,5 +1179,80 @@ mod tests {
         assert!(!command.is_satisfied_by(&principal, &grants, 2_000));
         assert!(!command.is_satisfied_by(&other_principal, &grants, 1_500));
         assert_eq!(grants[1].status_at(2_000), CapabilityGrantStatus::Expired);
+    }
+
+    #[test]
+    fn authorization_decisions_record_allowed_tool_grants() {
+        let principal = AgentId::trusted("agent:lighting-planner");
+        let grant = CapabilityGrant::for_tool(
+            CapabilityGrantId::trusted("grant-command"),
+            principal.clone(),
+            SmartHomeTool::Command,
+            "chief-of-staff",
+            1_000,
+        );
+
+        let decision =
+            AuthorizationDecision::for_tool(principal, SmartHomeTool::Command, [&grant], 1_500);
+
+        assert!(decision.is_allowed());
+        assert_eq!(decision.outcome, AuthorizationOutcome::Allowed);
+        assert_eq!(
+            decision.subject,
+            AuthorizationSubject::Tool(SmartHomeTool::Command)
+        );
+        assert_eq!(decision.required_tier, PrivilegeTier::LowRisk);
+        assert_eq!(
+            decision.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.command.light")]
+        );
+        assert_eq!(
+            decision.matched_grants,
+            vec![CapabilityGrantId::trusted("grant-command")]
+        );
+        assert!(decision.missing_capabilities.is_empty());
+    }
+
+    #[test]
+    fn authorization_decisions_record_command_denials() {
+        let principal = AgentId::trusted("agent:security-agent");
+        let low_risk_lock_grant = CapabilityGrant::for_entity_capability(
+            CapabilityGrantId::trusted("grant-lock-low"),
+            principal.clone(),
+            EntityId::trusted("entity.lock.front-door"),
+            CapabilityId::trusted("lock.state"),
+            PrivilegeTier::LowRisk,
+            "chief-of-staff",
+            1_000,
+        );
+        let command = DeviceCommand::new(
+            CommandId::trusted("cmd-lock"),
+            EntityId::trusted("entity.lock.front-door"),
+            CommandType::SetLock,
+            Value::Text("locked".to_string()),
+            "agent:security-agent",
+            CorrelationId::trusted("corr-lock"),
+        )
+        .unwrap();
+
+        let decision =
+            AuthorizationDecision::for_command(principal, &command, [&low_risk_lock_grant], 1_500);
+
+        assert!(!decision.is_allowed());
+        assert_eq!(decision.outcome, AuthorizationOutcome::Denied);
+        assert_eq!(
+            decision.subject,
+            AuthorizationSubject::Command {
+                command_id: CommandId::trusted("cmd-lock"),
+                entity_id: EntityId::trusted("entity.lock.front-door"),
+                command_type: CommandType::SetLock,
+            }
+        );
+        assert_eq!(decision.required_tier, PrivilegeTier::HighRisk);
+        assert!(decision.matched_grants.is_empty());
+        assert_eq!(
+            decision.missing_capabilities,
+            vec![CapabilityId::trusted("lock.state")]
+        );
     }
 }

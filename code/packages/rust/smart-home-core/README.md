@@ -18,6 +18,7 @@ MQTT, and future adapters project into these same records:
 - `IntegrationDescriptor`
 - `SmartHomeTool` / `ToolDescriptor`
 - `CapabilityGrant`
+- `AuthorizationDecision`
 
 Protocol-private identifiers stay in `ProtocolIdentifier` records rather than
 becoming repository-owned entity ids.
@@ -33,6 +34,7 @@ Current scope:
 - state freshness helpers
 - D18D-style smart-home tool descriptors
 - agent capability grants for checking tool access before dispatch
+- authorization decisions that can be logged by runtimes and agents
 
 Out of scope:
 
