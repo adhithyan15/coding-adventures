@@ -14,3 +14,5 @@ All notable changes to this package will be documented in this file.
   resource decoding.
 - Hue event-stream Server-Sent Events parsing into batches and raw resource
   records.
+- Hue light state update extraction from resource snapshots and event-stream
+  batches for normalized runtime state deltas.

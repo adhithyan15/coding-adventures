@@ -11,6 +11,7 @@ packages a typed surface for:
 - structured Hue command intents
 - discovery-to-`Bridge` projection
 - Hue light/device-to-normalized-model projection
+- Hue light state update-to-`StateDelta` projection
 - integration descriptor metadata for Chief of Staff discovery
 
 ## Dependencies

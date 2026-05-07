@@ -17,6 +17,7 @@ Included surfaces:
 - event-stream batch parsing from Server-Sent Events data frames
 - Hue v2 envelope/error parsing
 - Hue light resource decoding
+- Hue light state update extraction from snapshots and event-stream batches
 
 ## Dependencies
 
