@@ -1,0 +1,55 @@
+cabal-version:      2.4
+name:               aztec-code
+version:            0.1.0.0
+synopsis:           ISO/IEC 24778:2008 Aztec Code encoder
+description:
+    Aztec Code encoder — ISO/IEC 24778:2008 compliant.
+    .
+    Encodes any UTF-8 string into a scannable Aztec Code symbol. Outputs a
+    ModuleGrid (abstract boolean grid) that can be passed to barcode-2d's
+    layout() for pixel rendering.
+    .
+    Supports:
+    .
+    * Compact Aztec (1-4 layers, 15x15 to 27x27)
+    * Full Aztec (1-32 layers, 19x19 to 143x143)
+    * Binary-Shift byte-mode encoding (v0.1.0 — byte mode only)
+    * GF(256)/0x12D Reed-Solomon ECC (same polynomial as Data Matrix)
+    * GF(16) Reed-Solomon for the mode message (layers + codeword count)
+    * Bit-stuffing (insert complement after 4 consecutive identical bits)
+    * Bullseye finder pattern with orientation marks
+    * Reference grid for full symbols
+    * Clockwise layer spiral data placement
+license:            MIT
+author:             Coding Adventures
+maintainer:         contact@coding-adventures.com
+category:           Graphics
+homepage:           https://github.com/adhithyan15/coding-adventures
+bug-reports:        https://github.com/adhithyan15/coding-adventures/issues
+extra-doc-files:    README.md
+                    CHANGELOG.md
+
+library
+    exposed-modules:  CodingAdventures.AztecCode
+    build-depends:    base                >= 4.7 && < 5
+                    , vector              >= 0.12
+                    , containers          >= 0.6
+                    , barcode-2d
+                    , paint-instructions
+    hs-source-dirs:   src
+    default-language: Haskell2010
+    ghc-options:      -Wall
+
+test-suite aztec-code-test
+    default-language: Haskell2010
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Spec.hs
+    other-modules:    AztecCodeSpec
+    build-depends:      base       >= 4.7 && < 5
+                      , vector     >= 0.12
+                      , aztec-code
+                      , barcode-2d
+                      , hspec      == 2.*
+    build-tool-depends: hspec-discover:hspec-discover == 2.*
+    ghc-options:        -Wall
