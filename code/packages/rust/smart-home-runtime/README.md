@@ -20,6 +20,8 @@ Included surfaces:
 - replay of device events into the registry-backed state cache
 - bridge health reports that update health without removing identities
 - supervised bridge-worker heartbeat tracking and restart signals
+- deterministic worker restart plans that can be inspected before an actor,
+  sandbox, or process runner performs the restart
 
 ## Dependencies
 

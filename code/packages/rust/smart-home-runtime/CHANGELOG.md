@@ -16,3 +16,5 @@ All notable changes to this package will be documented in this file.
   producing deterministic corrective commands and supervision events.
 - Deterministic supervision ticks that combine optimistic-state expiry,
   desired-state reconciliation, and worker restart checks into one report.
+- Deterministic worker restart plans for inspecting overdue bridge workers
+  before mutating supervisor state.
