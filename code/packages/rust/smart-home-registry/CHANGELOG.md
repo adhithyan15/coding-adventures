@@ -14,3 +14,5 @@ All notable changes to this package will be documented in this file.
   `StateDelta` values.
 - Device/entity selectors for bridge, health, kind, capability, and cached-state
   freshness queries.
+- State refresh plans that enumerate missing or stale entity state with
+  bridge/device identity for pollers and supervisors.

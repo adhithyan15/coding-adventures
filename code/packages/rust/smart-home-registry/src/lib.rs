@@ -123,6 +123,45 @@ impl Default for StateFreshness {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum StateRefreshReason {
+    Missing,
+    Stale,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct StateRefreshTarget {
+    pub bridge_id: BridgeId,
+    pub device_id: DeviceId,
+    pub entity_id: EntityId,
+    pub kind: EntityKind,
+    pub capabilities: Vec<CapabilityId>,
+    pub reason: StateRefreshReason,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct StateRefreshPlan {
+    pub generated_at_ms: u64,
+    pub targets: Vec<StateRefreshTarget>,
+}
+
+impl StateRefreshPlan {
+    pub fn is_empty(&self) -> bool {
+        self.targets.is_empty()
+    }
+
+    pub fn len(&self) -> usize {
+        self.targets.len()
+    }
+
+    pub fn targets_for_bridge(&self, bridge_id: &BridgeId) -> Vec<&StateRefreshTarget> {
+        self.targets
+            .iter()
+            .filter(|target| &target.bridge_id == bridge_id)
+            .collect()
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct DeviceSelector {
     pub bridge_id: Option<BridgeId>,
@@ -478,6 +517,37 @@ impl InMemorySmartHomeRegistry {
             .values()
             .filter(|snapshot| snapshot.is_stale_at(now_ms))
             .collect()
+    }
+
+    pub fn state_refresh_plan_at(&self, now_ms: u64) -> StateRefreshPlan {
+        let targets = self
+            .entities
+            .values()
+            .filter_map(|entity| {
+                let reason = match self.state(&entity.entity_id) {
+                    None => StateRefreshReason::Missing,
+                    Some(snapshot) if snapshot.is_stale_at(now_ms) => StateRefreshReason::Stale,
+                    Some(_) => return None,
+                };
+                let device = self.devices.get(&entity.device_id)?;
+                Some(StateRefreshTarget {
+                    bridge_id: device.bridge_id.clone(),
+                    device_id: entity.device_id.clone(),
+                    entity_id: entity.entity_id.clone(),
+                    kind: entity.kind,
+                    capabilities: entity
+                        .capabilities
+                        .iter()
+                        .map(|capability| capability.capability_id.clone())
+                        .collect(),
+                    reason,
+                })
+            })
+            .collect();
+        StateRefreshPlan {
+            generated_at_ms: now_ms,
+            targets,
+        }
     }
 
     pub fn lookup_protocol(&self, identifier: &ProtocolIdentifier) -> Option<&RegistryTarget> {
@@ -1026,6 +1096,95 @@ mod tests {
             vec![EntityId::trusted("entity-1"), EntityId::trusted("entity-2")]
         );
         assert_eq!(registry.stale_states_at(600).len(), 1);
+    }
+
+    #[test]
+    fn state_refresh_plan_lists_missing_and_stale_entity_state() {
+        let mut registry = InMemorySmartHomeRegistry::new();
+        registry
+            .upsert_bridge(bridge_with_native("bridge-1", "bridge-native-1"))
+            .unwrap();
+        registry
+            .upsert_bridge(bridge_with_native("bridge-2", "bridge-native-2"))
+            .unwrap();
+        registry
+            .upsert_device(device_with_native(
+                "device-1",
+                "bridge-1",
+                "device-native-1",
+            ))
+            .unwrap();
+        registry
+            .upsert_device(device_with_native(
+                "device-2",
+                "bridge-1",
+                "device-native-2",
+            ))
+            .unwrap();
+        registry
+            .upsert_device(device_with_native(
+                "device-3",
+                "bridge-2",
+                "device-native-3",
+            ))
+            .unwrap();
+
+        let mut fresh = entity("entity-1", "device-1");
+        fresh.state = Some(StateSnapshot {
+            entity_id: EntityId::trusted("entity-1"),
+            value: Value::Bool(true),
+            source: StateSource::Poll,
+            observed_at_ms: 100,
+            received_at_ms: 101,
+            expires_at_ms: Some(1_000),
+            confidence: StateConfidence::Confirmed,
+        });
+        let mut stale = entity("entity-2", "device-2");
+        stale.state = Some(StateSnapshot {
+            entity_id: EntityId::trusted("entity-2"),
+            value: Value::Bool(false),
+            source: StateSource::Poll,
+            observed_at_ms: 100,
+            received_at_ms: 101,
+            expires_at_ms: Some(200),
+            confidence: StateConfidence::Confirmed,
+        });
+        registry.upsert_entity(fresh).unwrap();
+        registry.upsert_entity(stale).unwrap();
+        registry
+            .upsert_entity(sensor_entity("entity-3", "device-3"))
+            .unwrap();
+
+        let plan = registry.state_refresh_plan_at(500);
+
+        assert_eq!(plan.generated_at_ms, 500);
+        assert_eq!(plan.len(), 2);
+        assert_eq!(
+            plan.targets_for_bridge(&BridgeId::trusted("bridge-1"))
+                .len(),
+            1
+        );
+        assert_eq!(
+            plan.targets,
+            vec![
+                StateRefreshTarget {
+                    bridge_id: BridgeId::trusted("bridge-1"),
+                    device_id: DeviceId::trusted("device-2"),
+                    entity_id: EntityId::trusted("entity-2"),
+                    kind: EntityKind::Light,
+                    capabilities: vec![CapabilityId::trusted("light.on_off")],
+                    reason: StateRefreshReason::Stale,
+                },
+                StateRefreshTarget {
+                    bridge_id: BridgeId::trusted("bridge-2"),
+                    device_id: DeviceId::trusted("device-3"),
+                    entity_id: EntityId::trusted("entity-3"),
+                    kind: EntityKind::Sensor,
+                    capabilities: vec![CapabilityId::trusted("sensor.occupancy")],
+                    reason: StateRefreshReason::Missing,
+                },
+            ]
+        );
     }
 
     #[test]
