@@ -35,6 +35,12 @@ documented in this file.
 - html5lib-style smoke fixture coverage for seeded DOCTYPE continuations,
   including missing-whitespace diagnostics, identifier accumulation, and
   force-quirks preservation.
+- Parser/importer-facing seeded text/RCDATA character-reference continuation
+  contexts, including named, numeric, decimal, and hexadecimal substates with
+  temporary-buffer plus return-state seeding.
+- html5lib-style smoke fixture coverage for seeded character-reference
+  continuations returning to both data and RCDATA, including missing-semicolon
+  and absence-of-digits diagnostics.
 
 ### Changed
 - Switched the stable `create_html_lexer` and `lex_html` API over from the
@@ -286,3 +292,6 @@ documented in this file.
   data, and escaped script data, including EOF literalization, mismatched end
   tag text recovery, and matching whitespace/attribute/trailing-solidus
   diagnostics in both direct lexer tests and html5lib-style fixtures.
+- Added typed character-reference continuation contexts and importer
+  `returnState` metadata so normalized html5lib-style fixtures can resume
+  text/RCDATA named and numeric reference substates.

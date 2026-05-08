@@ -86,6 +86,12 @@ pub enum HtmlTokenizerState {
     DoctypeSystemIdentifierSingleQuoted,
     AfterDoctypeSystemIdentifier,
     BogusDoctype,
+    TextCharacterReference,
+    TextNamedCharacterReference,
+    TextNumericCharacterReference,
+    TextNumericHexCharacterReferenceStart,
+    TextNumericHexCharacterReference,
+    TextNumericDecimalCharacterReference,
     ScriptData,
     ScriptDataLessThanSign,
     ScriptDataEndTagOpen,
@@ -113,7 +119,7 @@ pub enum HtmlTokenizerState {
 }
 
 /// Tokenizer states that are valid parser-facing entry points.
-pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 86] = [
+pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 92] = [
     HtmlTokenizerState::Data,
     HtmlTokenizerState::Rcdata,
     HtmlTokenizerState::RcdataLessThanSign,
@@ -176,6 +182,12 @@ pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 86] = [
     HtmlTokenizerState::DoctypeSystemIdentifierSingleQuoted,
     HtmlTokenizerState::AfterDoctypeSystemIdentifier,
     HtmlTokenizerState::BogusDoctype,
+    HtmlTokenizerState::TextCharacterReference,
+    HtmlTokenizerState::TextNamedCharacterReference,
+    HtmlTokenizerState::TextNumericCharacterReference,
+    HtmlTokenizerState::TextNumericHexCharacterReferenceStart,
+    HtmlTokenizerState::TextNumericHexCharacterReference,
+    HtmlTokenizerState::TextNumericDecimalCharacterReference,
     HtmlTokenizerState::ScriptData,
     HtmlTokenizerState::ScriptDataLessThanSign,
     HtmlTokenizerState::ScriptDataEndTagOpen,
@@ -203,7 +215,7 @@ pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 86] = [
 ];
 
 /// Tokenizer states used for parser-controlled text or foreign-content fragments.
-pub const HTML_FRAGMENT_TOKENIZER_STATES: [HtmlTokenizerState; 85] = [
+pub const HTML_FRAGMENT_TOKENIZER_STATES: [HtmlTokenizerState; 91] = [
     HtmlTokenizerState::Rcdata,
     HtmlTokenizerState::RcdataLessThanSign,
     HtmlTokenizerState::RcdataEndTagOpen,
@@ -265,6 +277,12 @@ pub const HTML_FRAGMENT_TOKENIZER_STATES: [HtmlTokenizerState; 85] = [
     HtmlTokenizerState::DoctypeSystemIdentifierSingleQuoted,
     HtmlTokenizerState::AfterDoctypeSystemIdentifier,
     HtmlTokenizerState::BogusDoctype,
+    HtmlTokenizerState::TextCharacterReference,
+    HtmlTokenizerState::TextNamedCharacterReference,
+    HtmlTokenizerState::TextNumericCharacterReference,
+    HtmlTokenizerState::TextNumericHexCharacterReferenceStart,
+    HtmlTokenizerState::TextNumericHexCharacterReference,
+    HtmlTokenizerState::TextNumericDecimalCharacterReference,
     HtmlTokenizerState::ScriptData,
     HtmlTokenizerState::ScriptDataLessThanSign,
     HtmlTokenizerState::ScriptDataEndTagOpen,
@@ -423,6 +441,16 @@ impl HtmlTokenizerState {
             Self::DoctypeSystemIdentifierSingleQuoted => "doctype_system_identifier_single_quoted",
             Self::AfterDoctypeSystemIdentifier => "after_doctype_system_identifier",
             Self::BogusDoctype => "bogus_doctype",
+            Self::TextCharacterReference => "text_character_reference",
+            Self::TextNamedCharacterReference => "text_named_character_reference",
+            Self::TextNumericCharacterReference => "text_numeric_character_reference",
+            Self::TextNumericHexCharacterReferenceStart => {
+                "text_numeric_hex_character_reference_start"
+            }
+            Self::TextNumericHexCharacterReference => "text_numeric_hex_character_reference",
+            Self::TextNumericDecimalCharacterReference => {
+                "text_numeric_decimal_character_reference"
+            }
             Self::ScriptData => "script_data",
             Self::ScriptDataLessThanSign => "script_data_less_than_sign",
             Self::ScriptDataEndTagOpen => "script_data_end_tag_open",
@@ -527,6 +555,14 @@ impl HtmlTokenizerState {
             }
             Self::AfterDoctypeSystemIdentifier => "After DOCTYPE system identifier state",
             Self::BogusDoctype => "Bogus DOCTYPE state",
+            Self::TextCharacterReference => "Character reference state",
+            Self::TextNamedCharacterReference => "Named character reference state",
+            Self::TextNumericCharacterReference => "Numeric character reference state",
+            Self::TextNumericHexCharacterReferenceStart => {
+                "Hexadecimal character reference start state"
+            }
+            Self::TextNumericHexCharacterReference => "Hexadecimal character reference state",
+            Self::TextNumericDecimalCharacterReference => "Decimal character reference state",
             Self::ScriptData => "Script data state",
             Self::ScriptDataLessThanSign => "Script data less-than sign state",
             Self::ScriptDataEndTagOpen => "Script data end tag open state",
@@ -591,6 +627,24 @@ impl HtmlTokenizerState {
     /// Return whether this state resumes an already-started DOCTYPE token.
     pub fn requires_doctype_seed(self) -> bool {
         HTML_DOCTYPE_TOKENIZER_STATES.contains(&self)
+    }
+
+    /// Return whether this state resumes an in-progress text character reference.
+    pub fn requires_character_reference_seed(self) -> bool {
+        matches!(
+            self,
+            Self::TextCharacterReference
+                | Self::TextNamedCharacterReference
+                | Self::TextNumericCharacterReference
+                | Self::TextNumericHexCharacterReferenceStart
+                | Self::TextNumericHexCharacterReference
+                | Self::TextNumericDecimalCharacterReference
+        )
+    }
+
+    /// Return whether this state can receive recovered character-reference text.
+    pub fn is_character_reference_return_state(self) -> bool {
+        matches!(self, Self::Data | Self::Rcdata)
     }
 
     /// Return whether this state is a parser-approved fragment entry point.
@@ -670,6 +724,7 @@ pub struct HtmlLexContext {
     pub current_comment: Option<String>,
     pub current_doctype: Option<DoctypeSeed>,
     pub temporary_buffer: Option<String>,
+    pub return_state: Option<HtmlTokenizerState>,
 }
 
 impl HtmlLexContext {
@@ -681,6 +736,7 @@ impl HtmlLexContext {
             current_comment: None,
             current_doctype: None,
             temporary_buffer: None,
+            return_state: None,
         }
     }
 
@@ -736,6 +792,11 @@ impl HtmlLexContext {
         self
     }
 
+    pub fn with_return_state(mut self, state: HtmlTokenizerState) -> Self {
+        self.return_state = Some(state);
+        self
+    }
+
     pub fn is_data(&self) -> bool {
         self.initial_state == HtmlTokenizerState::Data
             && self.last_start_tag.is_none()
@@ -743,6 +804,7 @@ impl HtmlLexContext {
             && self.current_comment.is_none()
             && self.current_doctype.is_none()
             && self.temporary_buffer.is_none()
+            && self.return_state.is_none()
     }
 
     /// Return a comment tokenizer continuation context for importer/parser tests.
@@ -773,6 +835,29 @@ impl HtmlLexContext {
     ) -> Option<Self> {
         if initial_state.requires_doctype_seed() {
             Some(Self::new(initial_state).with_current_doctype(seed))
+        } else {
+            None
+        }
+    }
+
+    /// Return a text/RCDATA character-reference continuation context.
+    ///
+    /// These states resume after the caller has already consumed `&` and
+    /// accumulated any partial reference text in the temporary buffer. The
+    /// return state records whether recovery should resume in data or RCDATA.
+    pub fn character_reference_continuation(
+        initial_state: HtmlTokenizerState,
+        return_state: HtmlTokenizerState,
+        temporary_buffer: impl Into<String>,
+    ) -> Option<Self> {
+        if initial_state.requires_character_reference_seed()
+            && return_state.is_character_reference_return_state()
+        {
+            Some(
+                Self::new(initial_state)
+                    .with_return_state(return_state)
+                    .with_temporary_buffer(temporary_buffer),
+            )
         } else {
             None
         }
@@ -867,6 +952,11 @@ pub fn apply_html_lex_context(lexer: &mut HtmlLexer, context: &HtmlLexContext) -
         lexer.set_temporary_buffer(temporary_buffer);
     } else {
         lexer.clear_temporary_buffer();
+    }
+    if let Some(return_state) = context.return_state {
+        lexer.set_return_state(return_state.as_machine_state())?;
+    } else {
+        lexer.clear_return_state();
     }
     Ok(())
 }

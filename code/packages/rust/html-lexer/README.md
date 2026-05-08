@@ -184,6 +184,10 @@ including comment start/dash, less-than/bang/dash substates, end-dash/end-bang,
 and bogus-comment recovery. This lets html5lib-style importer cases resume
 comment tokenization with an in-progress comment token instead of treating those
 states as runtime gaps.
+It also covers text/RCDATA character-reference continuation states. A seeded
+temporary buffer plus return state lets importer and parser-adapter fixtures
+resume named, numeric, decimal, and hexadecimal reference recovery without
+depending on raw generated machine internals.
 DOCTYPE continuation states are also exposed through the same typed layer. A
 seeded `DoctypeSeed` carries the partial name, public identifier, system
 identifier, and force-quirks flag so importer and parser-adapter tests can
@@ -236,8 +240,8 @@ fixture normalization logic to live forever inside the Rust tests.
 
 The normalized corpus now carries optional tokenizer-context metadata such as
 `initial_state` and `last_start_tag`, so upstream RCDATA, RAWTEXT, PLAINTEXT,
-CDATA section, comment and DOCTYPE continuation states, script data, script data
-escaped/dash/less-than/end-tag-open substates, and script data
+CDATA section, comment, character-reference, and DOCTYPE continuation states,
+script data, script data escaped/dash/less-than/end-tag-open substates, and script data
 double-escaped/dash/less-than substates can already live in the shared Venture
 fixture format. Current Rust conformance tests now seed that context into the
 generated lexer so non-data-state cases execute through the same static Rust
@@ -251,6 +255,8 @@ mismatched tags that must remain literal text, EOF recovery that preserves the
 pending `</`, and matching end-tag diagnostics for whitespace, attributes, and
 trailing solidus. Comment continuation fixtures cover seeded body, pending dash,
 pending bang, nested-comment, abrupt-close, and bogus-comment recovery paths.
+Character-reference continuation fixtures cover seeded named and numeric
+buffers returning to both data and RCDATA.
 DOCTYPE continuation fixtures cover keyword/name continuation, public/system
 identifier accumulation, missing-whitespace diagnostics, and bogus-doctype
 force-quirks preservation.

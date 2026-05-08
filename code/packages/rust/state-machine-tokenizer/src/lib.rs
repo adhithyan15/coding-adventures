@@ -356,6 +356,12 @@ impl Tokenizer {
         self
     }
 
+    /// Seed the tokenizer return state used by character-reference continuations.
+    pub fn with_return_state(mut self, state: &str) -> Result<Self> {
+        self.set_return_state(state)?;
+        Ok(self)
+    }
+
     /// Store the tokenizer temporary buffer used by continuation states.
     pub fn set_temporary_buffer(&mut self, value: impl Into<String>) {
         self.temporary_buffer = value.into();
@@ -364,6 +370,20 @@ impl Tokenizer {
     /// Clear the tokenizer temporary buffer.
     pub fn clear_temporary_buffer(&mut self) {
         self.temporary_buffer.clear();
+    }
+
+    /// Store the tokenizer return state used by continuation states.
+    pub fn set_return_state(&mut self, state: &str) -> Result<()> {
+        if !self.machine.has_state(state) {
+            return Err(TokenizerError::Machine(format!("Unknown state '{state}'")));
+        }
+        self.return_state = Some(state.to_string());
+        Ok(())
+    }
+
+    /// Clear the tokenizer return state.
+    pub fn clear_return_state(&mut self) {
+        self.return_state = None;
     }
 
     /// Push one chunk of Unicode text into the tokenizer.
