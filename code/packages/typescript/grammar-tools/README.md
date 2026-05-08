@@ -84,6 +84,22 @@ const crossIssues = crossValidate(tokenGrammar, parserGrammar);
 
 - `crossValidate(tokenGrammar, parserGrammar): string[]` -- Check consistency between grammars
 
+### Program
+
+The package also ships a CLI-builder-backed `grammar-tools` program for
+compiling grammar files into static TypeScript modules:
+
+```bash
+grammar-tools compile path/to/lang.tokens --out src/generated/token-grammar.ts
+grammar-tools compile path/to/lang.grammar --out src/generated/parser-grammar.ts
+grammar-tools compile-tokens path/to/lang.tokens --out src/generated/token-grammar.ts
+grammar-tools compile-grammar path/to/lang.grammar --out src/generated/parser-grammar.ts
+```
+
+`compile` infers the grammar kind from `.tokens` or `.grammar`. Use
+`--kind tokens` or `--kind grammar` when compiling from a non-standard file
+extension.
+
 ## Grammar Element Types
 
 The parser grammar AST uses TypeScript discriminated unions. Each node has a `type` field:

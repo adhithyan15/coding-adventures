@@ -1,0 +1,29 @@
+{
+  "name": "@coding-adventures/macsyma-parser",
+  "version": "0.1.0",
+  "description": "MACSYMA parser backed by statically compiled grammar data",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": ["macsyma", "parser", "cas", "grammar-driven"],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/macsyma-lexer": "file:../macsyma-lexer",
+    "@coding-adventures/parser": "file:../parser",
+    "@coding-adventures/state-machine": "file:../state-machine"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}
