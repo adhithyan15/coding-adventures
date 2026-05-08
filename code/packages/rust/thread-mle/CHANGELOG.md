@@ -11,5 +11,7 @@ All notable changes to this package will be documented in this file.
   skeleton for simulator-first Thread work.
 - Typed Leader Data TLV helpers plus opaque Network Data extraction from MLE
   messages for diagnostics and simulator fixtures.
+- Typed Connectivity TLV helpers for route-cost, link-quality, active-router,
+  and sleepy-end-device diagnostic fields.
 - Neighbor table primitives for parent/child/router relationships, stale
   timeout expiry, link margin tracking, and parent-candidate selection.

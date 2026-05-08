@@ -318,6 +318,83 @@ impl NetworkDataAdvertisement {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Connectivity {
+    pub parent_priority: i8,
+    pub link_quality_3: u8,
+    pub link_quality_2: u8,
+    pub link_quality_1: u8,
+    pub leader_cost: u8,
+    pub id_sequence: u8,
+    pub active_router_count: u8,
+    pub sleepy_end_device_buffer_size: Option<u16>,
+    pub sleepy_end_device_datagram_count: Option<u8>,
+}
+
+impl Connectivity {
+    pub const BASE_ENCODED_LEN: usize = 7;
+    pub const SLEEPY_END_DEVICE_ENCODED_LEN: usize = 10;
+
+    pub fn parse(value: &[u8]) -> Result<Self, MleError> {
+        if value.len() != Self::BASE_ENCODED_LEN
+            && value.len() != Self::SLEEPY_END_DEVICE_ENCODED_LEN
+        {
+            return Err(MleError::InvalidTlvLength {
+                tlv_type: TlvType::Connectivity,
+                expected: Self::BASE_ENCODED_LEN,
+                actual: value.len(),
+            });
+        }
+        let has_sleepy_end_device_fields = value.len() == Self::SLEEPY_END_DEVICE_ENCODED_LEN;
+        let sleepy_end_device_buffer_size =
+            has_sleepy_end_device_fields.then(|| u16::from_be_bytes([value[7], value[8]]));
+        let sleepy_end_device_datagram_count = has_sleepy_end_device_fields.then(|| value[9]);
+        Ok(Self {
+            parent_priority: value[0] as i8,
+            link_quality_3: value[1],
+            link_quality_2: value[2],
+            link_quality_1: value[3],
+            leader_cost: value[4],
+            id_sequence: value[5],
+            active_router_count: value[6],
+            sleepy_end_device_buffer_size,
+            sleepy_end_device_datagram_count,
+        })
+    }
+
+    pub fn encode(self) -> Vec<u8> {
+        let mut out = vec![
+            self.parent_priority as u8,
+            self.link_quality_3,
+            self.link_quality_2,
+            self.link_quality_1,
+            self.leader_cost,
+            self.id_sequence,
+            self.active_router_count,
+        ];
+        if let (Some(buffer_size), Some(datagram_count)) = (
+            self.sleepy_end_device_buffer_size,
+            self.sleepy_end_device_datagram_count,
+        ) {
+            out.extend_from_slice(&buffer_size.to_be_bytes());
+            out.push(datagram_count);
+        }
+        out
+    }
+
+    pub fn to_tlv(self) -> Tlv {
+        Tlv {
+            tlv_type: TlvType::Connectivity,
+            value: self.encode(),
+        }
+    }
+
+    pub fn has_sleepy_end_device_capacity(self) -> bool {
+        self.sleepy_end_device_buffer_size.is_some()
+            && self.sleepy_end_device_datagram_count.is_some()
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MleMessage {
     pub command: MleCommand,
@@ -728,6 +805,13 @@ pub fn network_data_from_message(message: &MleMessage) -> Option<ThreadNetworkDa
         })
 }
 
+pub fn connectivity_from_message(message: &MleMessage) -> Result<Option<Connectivity>, MleError> {
+    message
+        .find_tlv(TlvType::Connectivity)
+        .map(|tlv| Connectivity::parse(&tlv.value))
+        .transpose()
+}
+
 pub fn version_is_newer(candidate: u8, current: u8) -> bool {
     let distance = candidate.wrapping_sub(current);
     distance != 0 && distance < 128
@@ -891,6 +975,58 @@ mod tests {
             vec![0x12, 0x34, 0x56]
         );
         assert!(advertisement.has_network_data());
+    }
+
+    #[test]
+    fn connectivity_tlv_round_trips_base_and_sleepy_capacity_fields() {
+        let connectivity = Connectivity {
+            parent_priority: -1,
+            link_quality_3: 3,
+            link_quality_2: 2,
+            link_quality_1: 1,
+            leader_cost: 4,
+            id_sequence: 9,
+            active_router_count: 16,
+            sleepy_end_device_buffer_size: Some(1_280),
+            sleepy_end_device_datagram_count: Some(3),
+        };
+
+        let parsed = Connectivity::parse(&connectivity.encode()).unwrap();
+
+        assert_eq!(parsed, connectivity);
+        assert_eq!(connectivity.to_tlv().tlv_type, TlvType::Connectivity);
+        assert!(parsed.has_sleepy_end_device_capacity());
+
+        let base = Connectivity::parse(&[0, 4, 3, 2, 1, 7, 8]).unwrap();
+        assert_eq!(base.parent_priority, 0);
+        assert_eq!(base.leader_cost, 1);
+        assert!(!base.has_sleepy_end_device_capacity());
+    }
+
+    #[test]
+    fn connectivity_from_message_extracts_diagnostics_tlv() {
+        let message = MleMessage {
+            command: MleCommand::Advertisement,
+            tlvs: vec![Tlv::new(TlvType::Connectivity, vec![1, 3, 2, 1, 5, 8, 12]).unwrap()],
+        };
+
+        let connectivity = connectivity_from_message(&message).unwrap().unwrap();
+
+        assert_eq!(connectivity.parent_priority, 1);
+        assert_eq!(connectivity.link_quality_3, 3);
+        assert_eq!(connectivity.active_router_count, 12);
+    }
+
+    #[test]
+    fn connectivity_rejects_unknown_length() {
+        assert_eq!(
+            Connectivity::parse(&[1, 2, 3]),
+            Err(MleError::InvalidTlvLength {
+                tlv_type: TlvType::Connectivity,
+                expected: Connectivity::BASE_ENCODED_LEN,
+                actual: 3,
+            })
+        );
     }
 
     #[test]
