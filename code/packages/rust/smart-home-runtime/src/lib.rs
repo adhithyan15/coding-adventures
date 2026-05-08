@@ -20,7 +20,7 @@ use std::fmt;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RuntimeError {
-    Registry(RegistryError),
+    Registry(Box<RegistryError>),
     UnknownBridge(BridgeId),
     UnknownDevice(DeviceId),
     UnknownEntity(EntityId),
@@ -93,7 +93,7 @@ impl std::error::Error for RuntimeError {}
 
 impl From<RegistryError> for RuntimeError {
     fn from(error: RegistryError) -> Self {
-        Self::Registry(error)
+        Self::Registry(Box::new(error))
     }
 }
 
@@ -113,6 +113,26 @@ impl RuntimeSubscriptionId {
 impl fmt::Display for RuntimeSubscriptionId {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.write_str(&self.0)
+    }
+}
+
+/// Replay cursor into the runtime event log.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct RuntimeEventCheckpoint {
+    next_sequence: u64,
+}
+
+impl RuntimeEventCheckpoint {
+    pub fn start() -> Self {
+        Self { next_sequence: 0 }
+    }
+
+    pub fn from_next_sequence(next_sequence: u64) -> Self {
+        Self { next_sequence }
+    }
+
+    pub fn next_sequence(self) -> u64 {
+        self.next_sequence
     }
 }
 
@@ -186,11 +206,22 @@ impl RuntimeEventBus {
         subscription_id: RuntimeSubscriptionId,
         filter: RuntimeEventFilter,
     ) -> Result<(), RuntimeError> {
+        self.subscribe_from_checkpoint(subscription_id, filter, self.checkpoint())
+    }
+
+    pub fn subscribe_from_checkpoint(
+        &mut self,
+        subscription_id: RuntimeSubscriptionId,
+        filter: RuntimeEventFilter,
+        checkpoint: RuntimeEventCheckpoint,
+    ) -> Result<(), RuntimeError> {
         if self.subscriptions.contains_key(&subscription_id) {
             return Err(RuntimeError::DuplicateSubscription(subscription_id));
         }
+        let replay = self.replay_from(checkpoint, &filter);
         self.subscriptions.insert(subscription_id.clone(), filter);
-        self.deliveries.insert(subscription_id, VecDeque::new());
+        self.deliveries
+            .insert(subscription_id, replay.into_iter().collect());
         Ok(())
     }
 
@@ -204,6 +235,24 @@ impl RuntimeEventBus {
             }
         }
         self.published.push(event);
+    }
+
+    pub fn checkpoint(&self) -> RuntimeEventCheckpoint {
+        RuntimeEventCheckpoint::from_next_sequence(self.published.len() as u64)
+    }
+
+    pub fn replay_from(
+        &self,
+        checkpoint: RuntimeEventCheckpoint,
+        filter: &RuntimeEventFilter,
+    ) -> Vec<RuntimeEvent> {
+        let start = checkpoint.next_sequence.min(self.published.len() as u64) as usize;
+        self.published
+            .iter()
+            .skip(start)
+            .filter(|event| filter.matches(event))
+            .cloned()
+            .collect()
     }
 
     pub fn drain(
@@ -1197,6 +1246,63 @@ mod tests {
             .upsert_entity(light_entity("entity-1", "device-1", capabilities))
             .unwrap();
         runtime
+    }
+
+    fn bridge_health_runtime_event(event_id: &str, bridge_id: &str, at_ms: u64) -> RuntimeEvent {
+        RuntimeEvent::BridgeHealth {
+            event_id: EventId::trusted(event_id),
+            bridge_id: BridgeId::trusted(bridge_id),
+            health: Health::Online,
+            observed_at_ms: at_ms,
+            received_at_ms: at_ms,
+        }
+    }
+
+    #[test]
+    fn event_bus_replays_from_checkpoint_and_continues_delivery() {
+        let mut bus = RuntimeEventBus::new();
+        let start = RuntimeEventCheckpoint::start();
+        bus.publish(bridge_health_runtime_event("health-1", "bridge-1", 1_000));
+        bus.publish(bridge_health_runtime_event("health-2", "bridge-2", 1_001));
+        let after_two = bus.checkpoint();
+
+        let bridge_one_replay = bus.replay_from(
+            start,
+            &RuntimeEventFilter::Bridge(BridgeId::trusted("bridge-1")),
+        );
+        assert_eq!(after_two.next_sequence(), 2);
+        assert!(matches!(
+            bridge_one_replay.as_slice(),
+            [RuntimeEvent::BridgeHealth { event_id, bridge_id, .. }]
+                if event_id == &EventId::trusted("health-1")
+                    && bridge_id == &BridgeId::trusted("bridge-1")
+        ));
+
+        let replaying_subscription = RuntimeSubscriptionId::trusted("bridge-1-replay");
+        bus.subscribe_from_checkpoint(
+            replaying_subscription.clone(),
+            RuntimeEventFilter::Bridge(BridgeId::trusted("bridge-1")),
+            start,
+        )
+        .unwrap();
+        assert_eq!(bus.drain(&replaying_subscription).unwrap().len(), 1);
+
+        bus.publish(bridge_health_runtime_event("health-3", "bridge-1", 1_002));
+        let future = bus.drain(&replaying_subscription).unwrap();
+        assert!(matches!(
+            future.as_slice(),
+            [RuntimeEvent::BridgeHealth { event_id, .. }]
+                if event_id == &EventId::trusted("health-3")
+        ));
+
+        let current_subscription = RuntimeSubscriptionId::trusted("current-only");
+        bus.subscribe_from_checkpoint(
+            current_subscription.clone(),
+            RuntimeEventFilter::All,
+            bus.checkpoint(),
+        )
+        .unwrap();
+        assert!(bus.drain(&current_subscription).unwrap().is_empty());
     }
 
     #[test]

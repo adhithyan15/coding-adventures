@@ -8,6 +8,10 @@ All notable changes to this package will be documented in this file.
 
 - Runtime event bus with subscription filters for all, bridge, entity, command,
   and supervision events.
+- Event replay checkpoints that let new subscribers catch up from a prior
+  runtime event-log position before receiving live deliveries.
+- Boxed registry-backed runtime errors to keep public `Result` error payloads
+  small as the runtime API grows.
 - `SmartHomeRuntime` facade over `smart-home-registry` for command validation,
   optimistic state caching, event replay, and bridge health updates.
 - Grant-backed command authorization path for checking Chief of Staff agent

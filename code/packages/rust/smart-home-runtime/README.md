@@ -10,6 +10,8 @@ small set of runtime rules.
 Included surfaces:
 
 - in-process event bus with explicit subscriptions and filters
+- replay checkpoints so subscribers can rebuild state from an earlier event-log
+  position before receiving live updates
 - command validation against entity capabilities and command modes
 - grant-backed command authorization for Chief of Staff agents and sandboxed
   tools
