@@ -13,6 +13,8 @@ Included surfaces:
 - command validation against entity capabilities and command modes
 - grant-backed command authorization for Chief of Staff agents and sandboxed
   tools
+- registry-backed authorization decision auditing for accepted and rejected
+  authorized commands
 - accepted command results that remain separate from confirmed device state
 - optimistic command state with expiry into stale snapshots
 - desired-state reconciliation that detects missing, stale, or drifted state

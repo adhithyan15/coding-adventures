@@ -8,11 +8,11 @@
 #![forbid(unsafe_code)]
 
 use smart_home_core::{
-    tier_for_command, AgentId, Bridge, BridgeId, CapabilityGrant, CapabilityGrantScope,
-    CapabilityId, CapabilityMode, CommandId, CommandResult, CommandStatus, CommandType,
-    CorrelationId, Device, DeviceCommand, DeviceEvent, DeviceEventType, DeviceId, Entity, EntityId,
-    EventId, Health, IntegrationId, Metadata, PrivilegeTier, SmartHomeTool, StateConfidence,
-    StateDelta, StateSnapshot, StateSource, Value,
+    tier_for_command, AgentId, AuthorizationDecision, Bridge, BridgeId, CapabilityGrant,
+    CapabilityGrantScope, CapabilityId, CapabilityMode, CommandId, CommandResult, CommandStatus,
+    CommandType, CorrelationId, Device, DeviceCommand, DeviceEvent, DeviceEventType, DeviceId,
+    Entity, EntityId, EventId, Health, IntegrationId, Metadata, PrivilegeTier, SmartHomeTool,
+    StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
 };
 use smart_home_registry::{InMemorySmartHomeRegistry, RegistryError};
 use std::collections::{BTreeMap, VecDeque};
@@ -708,7 +708,14 @@ impl SmartHomeRuntime {
         command: DeviceCommand,
         now_ms: u64,
     ) -> Result<CommandResult, RuntimeError> {
-        let missing_capabilities = authorization.missing_capabilities_for(&command, now_ms);
+        let decision = AuthorizationDecision::for_command(
+            authorization.principal_id.clone(),
+            &command,
+            authorization.grants.iter(),
+            now_ms,
+        );
+        let missing_capabilities = decision.missing_capabilities.clone();
+        self.registry.record_authorization_decision(decision);
         if !missing_capabilities.is_empty() {
             return Err(RuntimeError::UnauthorizedCommand {
                 command_id: command.command_id.clone(),
@@ -1110,8 +1117,8 @@ fn event_entity_id(event: &RuntimeEvent) -> Option<&EntityId> {
 mod tests {
     use super::*;
     use smart_home_core::{
-        BridgeTransport, Capability, CapabilityGrantId, CommandId, CorrelationId, EntityKind,
-        IntegrationId, ProtocolFamily, ProtocolIdentifier, StateDelta,
+        AuthorizationOutcome, BridgeTransport, Capability, CapabilityGrantId, CommandId,
+        CorrelationId, EntityKind, IntegrationId, ProtocolFamily, ProtocolIdentifier, StateDelta,
     };
 
     fn bridge(id: &str) -> Bridge {
@@ -1235,6 +1242,16 @@ mod tests {
             .state(&EntityId::trusted("entity-1"))
             .is_none());
         assert!(runtime.event_bus().published().is_empty());
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+        assert_eq!(runtime.registry().counts().authorization_decisions, 1);
+        assert_eq!(decisions.len(), 1);
+        assert_eq!(decisions[0].outcome, AuthorizationOutcome::Denied);
+        assert_eq!(
+            decisions[0].missing_capabilities,
+            vec![CapabilityId::trusted("light.on_off")]
+        );
     }
 
     #[test]
@@ -1281,6 +1298,12 @@ mod tests {
             } if missing_capabilities == vec![CapabilityId::trusted("light.on_off")]
         ));
         assert_eq!(runtime.event_bus().published().len(), 1);
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&AgentId::trusted("agent:lighting-planner"));
+        assert_eq!(decisions.len(), 2);
+        assert_eq!(decisions[0].outcome, AuthorizationOutcome::Allowed);
+        assert_eq!(decisions[1].outcome, AuthorizationOutcome::Denied);
     }
 
     #[test]
