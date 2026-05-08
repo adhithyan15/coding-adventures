@@ -64,7 +64,7 @@ mod tests {
 
     fn manifest_with(category: Category, action: Action, target: &str) -> Manifest {
         Manifest::new(vec![
-            Capability::new(category, action, target, "test").unwrap(),
+            Capability::new(category, action, target, "test").unwrap()
         ])
     }
 
@@ -117,16 +117,17 @@ mod tests {
         delete_file(&m, Path::new("./out.txt")).unwrap();
         let calls = backend.calls();
         assert_eq!(calls.len(), 3);
-        assert!(matches!(&calls[0], TestBackendCall::WriteFile(p, d) if p == Path::new("./out.txt") && d == b"data"));
+        assert!(
+            matches!(&calls[0], TestBackendCall::WriteFile(p, d) if p == Path::new("./out.txt") && d == b"data")
+        );
         assert!(matches!(&calls[1], TestBackendCall::CreateFile(p) if p == Path::new("./out.txt")));
         assert!(matches!(&calls[2], TestBackendCall::DeleteFile(p) if p == Path::new("./out.txt")));
     }
 
     #[test]
     fn list_dir_with_manifest() {
-        let backend = Arc::new(
-            TestBackend::new().with_dir_response("./tmp", vec!["a".into(), "b".into()]),
-        );
+        let backend =
+            Arc::new(TestBackend::new().with_dir_response("./tmp", vec!["a".into(), "b".into()]));
         let _guard = with_backend(backend);
         let m = manifest_with(Category::Fs, Action::List, "./tmp");
         let entries = list_dir(&m, Path::new("./tmp")).unwrap();

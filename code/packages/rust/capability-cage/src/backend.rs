@@ -11,7 +11,7 @@
 
 use std::io;
 use std::path::{Path, PathBuf};
-use std::sync::{Arc, Mutex, RwLock};
+use std::sync::{Arc, Mutex, MutexGuard, RwLock};
 
 /// The contract the cage delegates OS work to.
 ///
@@ -185,10 +185,10 @@ impl Backend for TestBackend {
     }
 
     fn write_file(&self, path: &Path, data: &[u8]) -> io::Result<()> {
-        self.log
-            .lock()
-            .unwrap()
-            .push(TestBackendCall::WriteFile(path.to_path_buf(), data.to_vec()));
+        self.log.lock().unwrap().push(TestBackendCall::WriteFile(
+            path.to_path_buf(),
+            data.to_vec(),
+        ));
         Ok(())
     }
 
@@ -231,6 +231,8 @@ impl Backend for TestBackend {
 
 static DEFAULT_BACKEND: once_cell_shim::Lazy<RwLock<Arc<dyn Backend>>> =
     once_cell_shim::Lazy::new(|| RwLock::new(Arc::new(OpenBackend)));
+static BACKEND_OVERRIDE_LOCK: once_cell_shim::Lazy<Mutex<()>> =
+    once_cell_shim::Lazy::new(|| Mutex::new(()));
 
 mod once_cell_shim {
     //! Tiny replacement for `once_cell::sync::Lazy` so we don't take an
@@ -267,6 +269,7 @@ mod once_cell_shim {
 /// Returned by [`with_backend`]. Restores the previous backend on drop.
 pub struct BackendGuard {
     previous: Arc<dyn Backend>,
+    _override_guard: MutexGuard<'static, ()>,
 }
 
 impl Drop for BackendGuard {
@@ -278,17 +281,31 @@ impl Drop for BackendGuard {
 }
 
 /// Replace the process-wide default backend until the returned guard
-/// is dropped. Concurrent test runs must not call this in parallel;
-/// run such tests with `--test-threads=1` if needed.
+/// is dropped.
+///
+/// Only one override can be active at a time. That keeps parallel Rust
+/// tests from restoring each other's process-wide backend mid-call.
 pub fn with_backend(backend: Arc<dyn Backend>) -> BackendGuard {
-    let mut slot = DEFAULT_BACKEND.write().expect("default backend lock poisoned");
+    let override_guard = BACKEND_OVERRIDE_LOCK
+        .lock()
+        .expect("backend override lock poisoned");
+    let mut slot = DEFAULT_BACKEND
+        .write()
+        .expect("default backend lock poisoned");
     let previous = std::mem::replace(&mut *slot, backend);
-    BackendGuard { previous }
+    BackendGuard {
+        previous,
+        _override_guard: override_guard,
+    }
 }
 
 /// Internal accessor for secure-wrapper modules.
 pub(crate) fn current_backend() -> Arc<dyn Backend> {
-    Arc::clone(&DEFAULT_BACKEND.read().expect("default backend lock poisoned"))
+    Arc::clone(
+        &DEFAULT_BACKEND
+            .read()
+            .expect("default backend lock poisoned"),
+    )
 }
 
 #[cfg(test)]
@@ -345,15 +362,16 @@ mod tests {
         b.delete_file(Path::new("./z")).unwrap();
         let calls = b.calls();
         assert_eq!(calls.len(), 3);
-        assert!(matches!(&calls[0], TestBackendCall::WriteFile(p, d) if p == Path::new("./x") && d == b"data"));
+        assert!(
+            matches!(&calls[0], TestBackendCall::WriteFile(p, d) if p == Path::new("./x") && d == b"data")
+        );
         assert!(matches!(&calls[1], TestBackendCall::CreateFile(p) if p == Path::new("./y")));
         assert!(matches!(&calls[2], TestBackendCall::DeleteFile(p) if p == Path::new("./z")));
     }
 
     #[test]
     fn test_backend_dir_listing() {
-        let b = TestBackend::new()
-            .with_dir_response("./dir", vec!["a.txt".into(), "b.txt".into()]);
+        let b = TestBackend::new().with_dir_response("./dir", vec!["a.txt".into(), "b.txt".into()]);
         let entries = b.list_dir(Path::new("./dir")).unwrap();
         assert_eq!(entries, vec!["a.txt".to_string(), "b.txt".to_string()]);
     }

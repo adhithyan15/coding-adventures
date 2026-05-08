@@ -15,9 +15,9 @@ use coding_adventures_json_value::{parse, JsonNumber, JsonValue};
 
 use crate::capability::Capability;
 use crate::category::{Action, Category};
-use crate::errors::{CapabilityViolationError, ManifestError};
 #[cfg(test)]
 use crate::errors::InvalidCombination;
+use crate::errors::{CapabilityViolationError, ManifestError};
 use crate::glob::match_target;
 
 /// An immutable capability manifest.
@@ -101,16 +101,16 @@ impl Manifest {
                     })
                 }
             };
-            let category_str = lookup(entry_obj, "category").and_then(json_as_str).ok_or_else(
-                || ManifestError::Schema {
+            let category_str = lookup(entry_obj, "category")
+                .and_then(json_as_str)
+                .ok_or_else(|| ManifestError::Schema {
                     reason: format!("capabilities[{idx}] missing string 'category'"),
-                },
-            )?;
-            let action_str = lookup(entry_obj, "action").and_then(json_as_str).ok_or_else(
-                || ManifestError::Schema {
+                })?;
+            let action_str = lookup(entry_obj, "action")
+                .and_then(json_as_str)
+                .ok_or_else(|| ManifestError::Schema {
                     reason: format!("capabilities[{idx}] missing string 'action'"),
-                },
-            )?;
+                })?;
             let target = lookup(entry_obj, "target")
                 .and_then(json_as_str)
                 .ok_or_else(|| ManifestError::Schema {
@@ -122,16 +122,13 @@ impl Manifest {
                 .map(|s| s.to_string())
                 .unwrap_or_default();
 
-            let category: Category =
-                category_str.parse().map_err(|()| ManifestError::Schema {
-                    reason: format!(
-                        "capabilities[{idx}].category '{category_str}' is not a known category"
-                    ),
-                })?;
-            let action: Action = action_str.parse().map_err(|()| ManifestError::Schema {
+            let category: Category = category_str.parse().map_err(|()| ManifestError::Schema {
                 reason: format!(
-                    "capabilities[{idx}].action '{action_str}' is not a known action"
+                    "capabilities[{idx}].category '{category_str}' is not a known category"
                 ),
+            })?;
+            let action: Action = action_str.parse().map_err(|()| ManifestError::Schema {
+                reason: format!("capabilities[{idx}].action '{action_str}' is not a known action"),
             })?;
             let cap = Capability::new(category, action, target, justification)?;
             caps.push(cap);
@@ -145,9 +142,7 @@ impl Manifest {
     /// manifest are matched against the literal `target` argument.
     pub fn has(&self, category: Category, action: Action, target: &str) -> bool {
         self.capabilities.iter().any(|cap| {
-            cap.category == category
-                && cap.action == action
-                && match_target(&cap.target, target)
+            cap.category == category && cap.action == action && match_target(&cap.target, target)
         })
     }
 

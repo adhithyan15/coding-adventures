@@ -78,8 +78,9 @@ let _guard = with_backend(backend.clone());
 let calls = backend.calls();
 ```
 
-Run such tests with `--test-threads=1` for the affected suite —
-the backend slot is process-wide.
+The backend slot is process-wide, but `with_backend` serializes
+overlapping overrides so the crate's own tests can run with Rust's
+default parallel test scheduler.
 
 ## Out of scope (V1)
 

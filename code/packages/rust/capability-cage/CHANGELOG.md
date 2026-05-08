@@ -23,7 +23,8 @@ Initial release. V1 scope per `code/specs/capability-cage-rust.md`:
   - `OpenBackend` — calls stdlib `std::fs`
   - `DenyAllBackend` — refuses every call (good test default)
   - `TestBackend` — records every call, returns scripted responses
-- `with_backend(...)` for scoped process-wide backend swap.
+- `with_backend(...)` for scoped process-wide backend swap, including
+  serialized overrides for parallel test safety.
 - `secure_file` module with `read_file`, `write_file`, `create_file`,
   `delete_file`, `list_dir` — all manifest-checked and delegating to
   the current backend.

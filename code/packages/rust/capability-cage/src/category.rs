@@ -182,9 +182,7 @@ mod tests {
 
     #[test]
     fn category_round_trips() {
-        for s in [
-            "fs", "net", "proc", "env", "ffi", "time", "stdin", "stdout",
-        ] {
+        for s in ["fs", "net", "proc", "env", "ffi", "time", "stdin", "stdout"] {
             let cat: Category = s.parse().unwrap();
             assert_eq!(cat.as_str(), s);
             assert_eq!(format!("{cat}"), s);
@@ -194,8 +192,8 @@ mod tests {
     #[test]
     fn action_round_trips() {
         for s in [
-            "read", "write", "create", "delete", "list", "connect", "listen",
-            "dns", "exec", "fork", "signal", "call", "load", "sleep",
+            "read", "write", "create", "delete", "list", "connect", "listen", "dns", "exec",
+            "fork", "signal", "call", "load", "sleep",
         ] {
             let act: Action = s.parse().unwrap();
             assert_eq!(act.as_str(), s);
@@ -239,10 +237,7 @@ mod tests {
             (Category::Stdout, Action::Write),
         ];
         for (c, a) in valid {
-            assert!(
-                is_valid_combination(c, a),
-                "expected {c}:{a} to be valid"
-            );
+            assert!(is_valid_combination(c, a), "expected {c}:{a} to be valid");
         }
     }
 

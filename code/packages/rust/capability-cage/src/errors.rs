@@ -29,14 +29,9 @@ impl std::error::Error for CapabilityViolationError {}
 /// per the cage taxonomy, or a target / format that does not parse.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum InvalidCombination {
-    UnsupportedPair {
-        category: Category,
-        action: Action,
-    },
+    UnsupportedPair { category: Category, action: Action },
     EmptyTarget,
-    InvalidTargetFormat {
-        reason: String,
-    },
+    InvalidTargetFormat { reason: String },
 }
 
 impl fmt::Display for InvalidCombination {
@@ -76,7 +71,9 @@ impl fmt::Display for ManifestError {
         match self {
             ManifestError::Parse(msg) => write!(f, "manifest parse error: {msg}"),
             ManifestError::Schema { reason } => write!(f, "manifest schema error: {reason}"),
-            ManifestError::InvalidCombination(inner) => write!(f, "manifest validation error: {inner}"),
+            ManifestError::InvalidCombination(inner) => {
+                write!(f, "manifest validation error: {inner}")
+            }
             ManifestError::Io(err) => write!(f, "manifest I/O error: {err}"),
         }
     }

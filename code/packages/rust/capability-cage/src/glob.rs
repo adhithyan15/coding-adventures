@@ -165,10 +165,7 @@ mod tests {
     #[test]
     fn single_star_one_component() {
         assert!(match_target("./grammars/*", "./grammars/json.tokens"));
-        assert!(!match_target(
-            "./grammars/*",
-            "./grammars/sub/json.tokens"
-        ));
+        assert!(!match_target("./grammars/*", "./grammars/sub/json.tokens"));
     }
 
     #[test]
@@ -185,7 +182,10 @@ mod tests {
     fn extension_glob_within_segment() {
         assert!(match_target("*.tokens", "json.tokens"));
         assert!(!match_target("*.tokens", "json.toml"));
-        assert!(match_target("./grammars/*.tokens", "./grammars/json.tokens"));
+        assert!(match_target(
+            "./grammars/*.tokens",
+            "./grammars/json.tokens"
+        ));
     }
 
     #[test]
@@ -199,10 +199,7 @@ mod tests {
     fn net_target_match() {
         assert!(match_target("api.weather.gov:443", "api.weather.gov:443"));
         assert!(!match_target("api.weather.gov:443", "api.weather.gov:80"));
-        assert!(!match_target(
-            "api.weather.gov:443",
-            "evil.example.com:443"
-        ));
+        assert!(!match_target("api.weather.gov:443", "evil.example.com:443"));
     }
 
     #[test]

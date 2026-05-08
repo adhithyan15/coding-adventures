@@ -17,7 +17,7 @@ mod glob;
 mod manifest;
 pub mod secure_file;
 
-pub use backend::{Backend, BackendGuard, DenyAllBackend, OpenBackend, TestBackend, with_backend};
+pub use backend::{with_backend, Backend, BackendGuard, DenyAllBackend, OpenBackend, TestBackend};
 pub use capability::Capability;
 pub use category::{Action, Category};
 pub use errors::{CapabilityViolationError, InvalidCombination, ManifestError};
