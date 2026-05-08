@@ -6,6 +6,11 @@ pub const DEFAULT_BAUD_RATE: u32 = 115_200;
 pub const DEFAULT_TIMEOUT_MS: u64 = 1_000;
 pub const ESP_CHECKSUM_SEED: u8 = 0xEF;
 pub const CHIP_DETECT_MAGIC_REG_ADDR: u32 = 0x4000_1000;
+pub const DEFAULT_FLASH_BLOCK_SIZE: u32 = 0x400;
+pub const DEFAULT_SPI_FLASH_BLOCK_SIZE: u32 = 0x1_0000;
+pub const DEFAULT_SPI_FLASH_SECTOR_SIZE: u32 = 0x1000;
+pub const DEFAULT_SPI_FLASH_PAGE_SIZE: u32 = 0x100;
+pub const DEFAULT_SPI_FLASH_STATUS_MASK: u32 = 0xFFFF;
 
 pub const SLIP_END: u8 = 0xC0;
 pub const SLIP_ESC: u8 = 0xDB;
@@ -27,6 +32,8 @@ pub enum EspRomError {
     RomStatus { status: u8, error: u8 },
     UnsupportedChipId(u32),
     UnsupportedMagicValue(u32),
+    InvalidFlashBlockSize(u32),
+    InvalidMd5Digest(usize),
     Io(String),
     Serial(String),
 }
@@ -62,6 +69,12 @@ impl fmt::Display for EspRomError {
             }
             Self::UnsupportedMagicValue(value) => {
                 write!(f, "unsupported ESP magic value: 0x{value:08X}")
+            }
+            Self::InvalidFlashBlockSize(size) => {
+                write!(f, "invalid ESP flash block size: {size}")
+            }
+            Self::InvalidMd5Digest(len) => {
+                write!(f, "invalid ESP flash MD5 digest payload length: {len}")
             }
             Self::Io(error) => write!(f, "io error: {error}"),
             Self::Serial(error) => write!(f, "serial error: {error}"),
@@ -390,6 +403,131 @@ pub fn read_reg_payload(address: u32) -> [u8; 4] {
     address.to_le_bytes()
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SpiFlashParams {
+    pub flash_id: u32,
+    pub total_size: u32,
+    pub block_size: u32,
+    pub sector_size: u32,
+    pub page_size: u32,
+    pub status_mask: u32,
+}
+
+impl SpiFlashParams {
+    pub const fn default_for_size(total_size: u32) -> Self {
+        Self {
+            flash_id: 0,
+            total_size,
+            block_size: DEFAULT_SPI_FLASH_BLOCK_SIZE,
+            sector_size: DEFAULT_SPI_FLASH_SECTOR_SIZE,
+            page_size: DEFAULT_SPI_FLASH_PAGE_SIZE,
+            status_mask: DEFAULT_SPI_FLASH_STATUS_MASK,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct FlashBeginParams {
+    pub erase_size: u32,
+    pub block_count: u32,
+    pub block_size: u32,
+    pub offset: u32,
+}
+
+impl FlashBeginParams {
+    pub fn for_region(offset: u32, size: u32, block_size: u32) -> Result<Self, EspRomError> {
+        if block_size == 0 {
+            return Err(EspRomError::InvalidFlashBlockSize(block_size));
+        }
+        Ok(Self {
+            erase_size: size,
+            block_count: ceil_div_u32(size, block_size),
+            block_size,
+            offset,
+        })
+    }
+}
+
+pub fn spi_attach_payload(spi_connection: u32) -> [u8; 4] {
+    spi_connection.to_le_bytes()
+}
+
+pub fn spi_set_params_payload(params: SpiFlashParams) -> [u8; 24] {
+    let mut payload = [0u8; 24];
+    write_u32_le(&mut payload, 0, params.flash_id);
+    write_u32_le(&mut payload, 4, params.total_size);
+    write_u32_le(&mut payload, 8, params.block_size);
+    write_u32_le(&mut payload, 12, params.sector_size);
+    write_u32_le(&mut payload, 16, params.page_size);
+    write_u32_le(&mut payload, 20, params.status_mask);
+    payload
+}
+
+pub fn flash_begin_payload(params: FlashBeginParams) -> [u8; 16] {
+    let mut payload = [0u8; 16];
+    write_u32_le(&mut payload, 0, params.erase_size);
+    write_u32_le(&mut payload, 4, params.block_count);
+    write_u32_le(&mut payload, 8, params.block_size);
+    write_u32_le(&mut payload, 12, params.offset);
+    payload
+}
+
+pub fn flash_data_payload(
+    sequence: u32,
+    data: &[u8],
+    out: &mut [u8],
+) -> Result<usize, EspRomError> {
+    let needed = 16 + data.len();
+    if data.len() > u32::MAX as usize {
+        return Err(EspRomError::PayloadTooLarge(data.len()));
+    }
+    if out.len() < needed {
+        return Err(EspRomError::OutputTooSmall {
+            needed,
+            available: out.len(),
+        });
+    }
+    write_u32_le(out, 0, data.len() as u32);
+    write_u32_le(out, 4, sequence);
+    write_u32_le(out, 8, 0);
+    write_u32_le(out, 12, 0);
+    out[16..needed].copy_from_slice(data);
+    Ok(needed)
+}
+
+pub fn flash_end_payload(stay_in_bootloader: bool) -> [u8; 4] {
+    u32::from(stay_in_bootloader).to_le_bytes()
+}
+
+pub fn spi_flash_md5_payload(address: u32, size: u32) -> [u8; 16] {
+    let mut payload = [0u8; 16];
+    write_u32_le(&mut payload, 0, address);
+    write_u32_le(&mut payload, 4, size);
+    write_u32_le(&mut payload, 8, 0);
+    write_u32_le(&mut payload, 12, 0);
+    payload
+}
+
+pub fn parse_spi_flash_md5_payload(payload: &[u8]) -> Result<[u8; 16], EspRomError> {
+    if payload.len() >= 32 && payload[..32].iter().all(|byte| byte.is_ascii_hexdigit()) {
+        let mut digest = [0u8; 16];
+        for (index, slot) in digest.iter_mut().enumerate() {
+            let high = hex_nibble(payload[index * 2])
+                .ok_or(EspRomError::InvalidMd5Digest(payload.len()))?;
+            let low = hex_nibble(payload[index * 2 + 1])
+                .ok_or(EspRomError::InvalidMd5Digest(payload.len()))?;
+            *slot = (high << 4) | low;
+        }
+        return Ok(digest);
+    }
+    if payload.len() >= 16 {
+        let mut digest = [0u8; 16];
+        digest.copy_from_slice(&payload[..16]);
+        return Ok(digest);
+    }
+    Err(EspRomError::InvalidMd5Digest(payload.len()))
+}
+
 pub fn command_packet(
     command: EspRomCommand,
     payload: &[u8],
@@ -498,16 +636,16 @@ pub fn slip_decode(wire: &[u8], out: &mut [u8]) -> Result<usize, EspRomError> {
 
 pub struct EspRomSession<S> {
     stream: S,
-    frame: [u8; 1024],
-    wire: [u8; 2048],
+    frame: [u8; 8192],
+    wire: [u8; 16384],
 }
 
 impl<S> EspRomSession<S> {
     pub fn new(stream: S) -> Self {
         Self {
             stream,
-            frame: [0; 1024],
-            wire: [0; 2048],
+            frame: [0; 8192],
+            wire: [0; 16384],
         }
     }
 
@@ -554,6 +692,47 @@ where
         }
         let magic_value = self.read_reg(CHIP_DETECT_MAGIC_REG_ADDR)?;
         EspDetection::from_magic_value(magic_value)
+    }
+
+    pub fn spi_attach(&mut self, spi_connection: u32) -> Result<(), EspRomError> {
+        let response = self.exchange(
+            EspRomCommand::SpiAttach,
+            &spi_attach_payload(spi_connection),
+            0,
+        )?;
+        response.check_status()
+    }
+
+    pub fn spi_set_params(&mut self, params: SpiFlashParams) -> Result<(), EspRomError> {
+        let payload = spi_set_params_payload(params);
+        let response = self.exchange(EspRomCommand::SpiSetParams, &payload, 0)?;
+        response.check_status()
+    }
+
+    pub fn flash_begin(&mut self, params: FlashBeginParams) -> Result<(), EspRomError> {
+        let payload = flash_begin_payload(params);
+        let response = self.exchange(EspRomCommand::FlashBegin, &payload, 0)?;
+        response.check_status()
+    }
+
+    pub fn flash_data(&mut self, sequence: u32, data: &[u8]) -> Result<(), EspRomError> {
+        let payload_len = flash_data_payload(sequence, data, &mut self.frame)?;
+        let payload = self.frame[..payload_len].to_vec();
+        let response = self.exchange(EspRomCommand::FlashData, &payload, checksum(data))?;
+        response.check_status()
+    }
+
+    pub fn flash_end(&mut self, stay_in_bootloader: bool) -> Result<(), EspRomError> {
+        let payload = flash_end_payload(stay_in_bootloader);
+        let response = self.exchange(EspRomCommand::FlashEnd, &payload, 0)?;
+        response.check_status()
+    }
+
+    pub fn spi_flash_md5(&mut self, address: u32, size: u32) -> Result<[u8; 16], EspRomError> {
+        let payload = spi_flash_md5_payload(address, size);
+        let response = self.exchange(EspRomCommand::SpiFlashMd5, &payload, 0)?;
+        response.check_status()?;
+        parse_spi_flash_md5_payload(response.payload_without_status())
     }
 
     fn exchange(
@@ -688,6 +867,23 @@ fn read_u32_le(bytes: &[u8], offset: usize) -> Result<u32, EspRomError> {
     Ok(u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]))
 }
 
+fn write_u32_le(out: &mut [u8], offset: usize, value: u32) {
+    out[offset..offset + 4].copy_from_slice(&value.to_le_bytes());
+}
+
+fn ceil_div_u32(value: u32, divisor: u32) -> u32 {
+    value / divisor + u32::from(value % divisor != 0)
+}
+
+fn hex_nibble(byte: u8) -> Option<u8> {
+    match byte {
+        b'0'..=b'9' => Some(byte - b'0'),
+        b'a'..=b'f' => Some(byte - b'a' + 10),
+        b'A'..=b'F' => Some(byte - b'A' + 10),
+        _ => None,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -730,6 +926,31 @@ mod tests {
         }
     }
 
+    fn rom_response(command: EspRomCommand, value: u32, data: &[u8]) -> Vec<u8> {
+        let mut frame = vec![0u8; 8 + data.len()];
+        frame[0] = RESPONSE_DIRECTION;
+        frame[1] = command.code();
+        frame[2..4].copy_from_slice(&(data.len() as u16).to_le_bytes());
+        frame[4..8].copy_from_slice(&value.to_le_bytes());
+        frame[8..].copy_from_slice(data);
+        let mut wire = vec![0u8; frame.len() * 2 + 2];
+        let wire_len = slip_encode(&frame, &mut wire).unwrap();
+        wire.truncate(wire_len);
+        wire
+    }
+
+    fn decode_written_frames(wire: &[u8]) -> Vec<Vec<u8>> {
+        let mut cursor = io::Cursor::new(wire);
+        let mut frames = Vec::new();
+        loop {
+            let mut frame = [0u8; 2048];
+            match read_slip_frame(&mut cursor, &mut frame) {
+                Ok(frame_len) => frames.push(frame[..frame_len].to_vec()),
+                Err(_) => return frames,
+            }
+        }
+    }
+
     #[test]
     fn slip_round_trips_escaped_bytes() {
         let payload = [0x00, SLIP_END, SLIP_ESC, 0x55];
@@ -763,6 +984,48 @@ mod tests {
         assert_eq!(&packet[..8], &[0x00, 0x08, 0x24, 0x00, 0, 0, 0, 0]);
         assert_eq!(&packet[8..12], &[0x07, 0x07, 0x12, 0x20]);
         assert!(packet[12..packet_len].iter().all(|byte| *byte == 0x55));
+    }
+
+    #[test]
+    fn flash_payload_builders_match_rom_protocol() {
+        assert_eq!(spi_attach_payload(0), [0, 0, 0, 0]);
+
+        let params = SpiFlashParams::default_for_size(4 * 1024 * 1024);
+        assert_eq!(
+            spi_set_params_payload(params),
+            [0, 0, 0, 0, 0, 0, 0x40, 0, 0, 0, 1, 0, 0, 0x10, 0, 0, 0, 1, 0, 0, 0xFF, 0xFF, 0, 0,]
+        );
+
+        let begin = FlashBeginParams::for_region(0x10000, 1500, DEFAULT_FLASH_BLOCK_SIZE).unwrap();
+        assert_eq!(begin.block_count, 2);
+        assert_eq!(
+            flash_begin_payload(begin),
+            [0xDC, 0x05, 0, 0, 2, 0, 0, 0, 0, 4, 0, 0, 0, 0, 1, 0,]
+        );
+
+        let data = [0xC0, 0xDB, 0x34];
+        let mut payload = [0u8; 32];
+        let len = flash_data_payload(7, &data, &mut payload).unwrap();
+        assert_eq!(
+            &payload[..16],
+            &[3, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        );
+        assert_eq!(&payload[16..len], &data);
+        assert_eq!(checksum(&data), ESP_CHECKSUM_SEED ^ 0xC0 ^ 0xDB ^ 0x34);
+
+        assert_eq!(flash_end_payload(false), [0, 0, 0, 0]);
+        assert_eq!(flash_end_payload(true), [1, 0, 0, 0]);
+        assert_eq!(
+            spi_flash_md5_payload(0x10000, 0x2000),
+            [0, 0, 1, 0, 0, 0x20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        );
+        assert_eq!(
+            parse_spi_flash_md5_payload(b"00112233445566778899aabbccddeeff").unwrap(),
+            [
+                0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD,
+                0xEE, 0xFF,
+            ]
+        );
     }
 
     #[test]
@@ -841,5 +1104,55 @@ mod tests {
             .written
             .windows(3)
             .any(|window| window == [SLIP_END, 0x00, 0x14]));
+    }
+
+    #[test]
+    fn session_writes_flash_command_sequence() {
+        let data = [1, 2, 3, 4];
+        let md5 = [
+            0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD,
+            0xEE, 0xFF,
+        ];
+        let mut md5_response = md5.to_vec();
+        md5_response.extend_from_slice(&[0, 0]);
+        let mut read = Vec::new();
+        for command in [
+            EspRomCommand::SpiAttach,
+            EspRomCommand::SpiSetParams,
+            EspRomCommand::FlashBegin,
+            EspRomCommand::FlashData,
+            EspRomCommand::FlashEnd,
+        ] {
+            read.extend_from_slice(&rom_response(command, 0, &[0, 0]));
+        }
+        read.extend_from_slice(&rom_response(EspRomCommand::SpiFlashMd5, 0, &md5_response));
+        let stream = ScriptedStream::with_read(&read);
+
+        let mut session = EspRomSession::new(stream);
+        session.spi_attach(0).unwrap();
+        session
+            .spi_set_params(SpiFlashParams::default_for_size(4 * 1024 * 1024))
+            .unwrap();
+        session
+            .flash_begin(FlashBeginParams::for_region(0x10000, data.len() as u32, 1024).unwrap())
+            .unwrap();
+        session.flash_data(0, &data).unwrap();
+        session.flash_end(false).unwrap();
+        assert_eq!(
+            session.spi_flash_md5(0x10000, data.len() as u32).unwrap(),
+            md5
+        );
+
+        let frames = decode_written_frames(&session.into_inner().written);
+        let commands: Vec<u8> = frames.iter().map(|frame| frame[1]).collect();
+        assert_eq!(commands, vec![0x0D, 0x0B, 0x02, 0x03, 0x04, 0x13]);
+        let flash_data = &frames[3];
+        assert_eq!(&flash_data[0..4], &[0x00, 0x03, 0x14, 0x00]);
+        assert_eq!(flash_data[4], checksum(&data));
+        assert_eq!(
+            &flash_data[8..24],
+            &[4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        );
+        assert_eq!(&flash_data[24..28], &data);
     }
 }
