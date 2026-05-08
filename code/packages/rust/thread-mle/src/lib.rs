@@ -10,6 +10,11 @@
 use std::collections::BTreeMap;
 use std::fmt;
 
+const NETWORK_DATA_STABLE_FLAG: u8 = 0x80;
+const NETWORK_DATA_TYPE_MASK: u8 = 0x7f;
+const IPV6_PREFIX_MAX_BITS: u8 = 128;
+const IPV6_PREFIX_MAX_BYTES: usize = 16;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DeviceRole {
     Disabled,
@@ -295,6 +300,186 @@ impl ThreadNetworkData {
             value: self.bytes.clone(),
         }
     }
+
+    pub fn from_tlvs(tlvs: Vec<NetworkDataTlv>) -> Result<Self, MleError> {
+        let mut bytes = Vec::new();
+        for tlv in &tlvs {
+            tlv.encode(&mut bytes)?;
+        }
+        Self::new(bytes)
+    }
+
+    pub fn tlvs(&self) -> Result<Vec<NetworkDataTlv>, MleError> {
+        NetworkDataTlv::parse_many(&self.bytes)
+    }
+
+    pub fn prefixes(&self) -> Result<Vec<ThreadPrefixData>, MleError> {
+        self.tlvs()?
+            .iter()
+            .filter(|tlv| tlv.tlv_type == NetworkDataTlvType::Prefix)
+            .map(ThreadPrefixData::parse)
+            .collect()
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum NetworkDataTlvType {
+    HasRoute,
+    Prefix,
+    BorderRouter,
+    LowpanId,
+    CommissioningData,
+    Service,
+    Server,
+    Context,
+    Unknown(u8),
+}
+
+impl NetworkDataTlvType {
+    pub fn from_byte(value: u8) -> Self {
+        match value & NETWORK_DATA_TYPE_MASK {
+            0 => Self::HasRoute,
+            1 => Self::Prefix,
+            2 => Self::BorderRouter,
+            3 => Self::LowpanId,
+            4 => Self::CommissioningData,
+            5 => Self::Service,
+            6 => Self::Server,
+            7 => Self::Context,
+            other => Self::Unknown(other),
+        }
+    }
+
+    pub fn as_byte(self) -> u8 {
+        match self {
+            Self::HasRoute => 0,
+            Self::Prefix => 1,
+            Self::BorderRouter => 2,
+            Self::LowpanId => 3,
+            Self::CommissioningData => 4,
+            Self::Service => 5,
+            Self::Server => 6,
+            Self::Context => 7,
+            Self::Unknown(value) => value & NETWORK_DATA_TYPE_MASK,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct NetworkDataTlv {
+    pub tlv_type: NetworkDataTlvType,
+    pub stable: bool,
+    pub value: Vec<u8>,
+}
+
+impl NetworkDataTlv {
+    pub fn new(
+        tlv_type: NetworkDataTlvType,
+        stable: bool,
+        value: Vec<u8>,
+    ) -> Result<Self, MleError> {
+        if value.len() > u8::MAX as usize {
+            return Err(MleError::TlvTooLong(value.len()));
+        }
+        Ok(Self {
+            tlv_type,
+            stable,
+            value,
+        })
+    }
+
+    pub fn parse_many(bytes: &[u8]) -> Result<Vec<Self>, MleError> {
+        let mut cursor = Cursor::new(bytes);
+        let mut tlvs = Vec::new();
+        while cursor.remaining() > 0 {
+            let header = cursor.read_u8()?;
+            let len = cursor.read_u8()? as usize;
+            let value = cursor.read_bytes(len)?.to_vec();
+            tlvs.push(Self {
+                tlv_type: NetworkDataTlvType::from_byte(header),
+                stable: header & NETWORK_DATA_STABLE_FLAG != 0,
+                value,
+            });
+        }
+        Ok(tlvs)
+    }
+
+    pub fn encode(&self, out: &mut Vec<u8>) -> Result<(), MleError> {
+        if self.value.len() > u8::MAX as usize {
+            return Err(MleError::TlvTooLong(self.value.len()));
+        }
+        let stable = if self.stable {
+            NETWORK_DATA_STABLE_FLAG
+        } else {
+            0
+        };
+        out.push(stable | self.tlv_type.as_byte());
+        out.push(self.value.len() as u8);
+        out.extend_from_slice(&self.value);
+        Ok(())
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ThreadPrefixData {
+    pub stable: bool,
+    pub domain_id: u8,
+    pub prefix_length_bits: u8,
+    pub prefix_bytes: Vec<u8>,
+    pub sub_tlvs: Vec<NetworkDataTlv>,
+}
+
+impl ThreadPrefixData {
+    pub fn new(
+        stable: bool,
+        domain_id: u8,
+        prefix_length_bits: u8,
+        prefix_bytes: Vec<u8>,
+        sub_tlvs: Vec<NetworkDataTlv>,
+    ) -> Result<Self, MleError> {
+        validate_prefix_bytes(prefix_length_bits, prefix_bytes.len())?;
+        Ok(Self {
+            stable,
+            domain_id,
+            prefix_length_bits,
+            prefix_bytes,
+            sub_tlvs,
+        })
+    }
+
+    pub fn parse(tlv: &NetworkDataTlv) -> Result<Self, MleError> {
+        if tlv.tlv_type != NetworkDataTlvType::Prefix {
+            return Err(MleError::InvalidNetworkDataTlv {
+                tlv_type: tlv.tlv_type,
+                reason: "expected Thread Network Data Prefix TLV",
+            });
+        }
+        let mut cursor = Cursor::new(&tlv.value);
+        let domain_id = cursor.read_u8()?;
+        let prefix_length_bits = cursor.read_u8()?;
+        let prefix_len = prefix_byte_len(prefix_length_bits)?;
+        let prefix_bytes = cursor.read_bytes(prefix_len)?.to_vec();
+        let sub_tlvs = NetworkDataTlv::parse_many(cursor.remaining_bytes())?;
+        Self::new(
+            tlv.stable,
+            domain_id,
+            prefix_length_bits,
+            prefix_bytes,
+            sub_tlvs,
+        )
+    }
+
+    pub fn to_tlv(&self) -> Result<NetworkDataTlv, MleError> {
+        validate_prefix_bytes(self.prefix_length_bits, self.prefix_bytes.len())?;
+        let mut value = Vec::with_capacity(2 + self.prefix_bytes.len());
+        value.push(self.domain_id);
+        value.push(self.prefix_length_bits);
+        value.extend_from_slice(&self.prefix_bytes);
+        for sub_tlv in &self.sub_tlvs {
+            sub_tlv.encode(&mut value)?;
+        }
+        NetworkDataTlv::new(NetworkDataTlvType::Prefix, self.stable, value)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -315,6 +500,13 @@ impl NetworkDataAdvertisement {
         self.network_data
             .as_ref()
             .is_some_and(|network_data| !network_data.is_empty())
+    }
+
+    pub fn prefixes(&self) -> Result<Vec<ThreadPrefixData>, MleError> {
+        self.network_data
+            .as_ref()
+            .map(ThreadNetworkData::prefixes)
+            .unwrap_or_else(|| Ok(Vec::new()))
     }
 }
 
@@ -760,6 +952,10 @@ pub enum MleError {
         expected: usize,
         actual: usize,
     },
+    InvalidNetworkDataTlv {
+        tlv_type: NetworkDataTlvType,
+        reason: &'static str,
+    },
     UnknownNeighbor(ThreadNeighborId),
 }
 
@@ -781,6 +977,12 @@ impl fmt::Display for MleError {
                 f,
                 "Thread MLE {tlv_type:?} TLV has length {actual}, expected {expected}"
             ),
+            Self::InvalidNetworkDataTlv { tlv_type, reason } => {
+                write!(
+                    f,
+                    "Thread Network Data {tlv_type:?} TLV is invalid: {reason}"
+                )
+            }
             Self::UnknownNeighbor(neighbor_id) => {
                 write!(f, "unknown Thread neighbor 0x{:04x}", neighbor_id.0)
             }
@@ -884,6 +1086,31 @@ impl<'a> Cursor<'a> {
         self.pos += len;
         Ok(bytes)
     }
+
+    fn remaining_bytes(&self) -> &'a [u8] {
+        &self.bytes[self.pos..]
+    }
+}
+
+fn prefix_byte_len(prefix_length_bits: u8) -> Result<usize, MleError> {
+    if prefix_length_bits > IPV6_PREFIX_MAX_BITS {
+        return Err(MleError::InvalidNetworkDataTlv {
+            tlv_type: NetworkDataTlvType::Prefix,
+            reason: "IPv6 prefix length exceeds 128 bits",
+        });
+    }
+    Ok(usize::from(prefix_length_bits).div_ceil(8))
+}
+
+fn validate_prefix_bytes(prefix_length_bits: u8, actual_len: usize) -> Result<(), MleError> {
+    let expected_len = prefix_byte_len(prefix_length_bits)?;
+    if actual_len != expected_len || actual_len > IPV6_PREFIX_MAX_BYTES {
+        return Err(MleError::InvalidNetworkDataTlv {
+            tlv_type: NetworkDataTlvType::Prefix,
+            reason: "prefix byte length does not match prefix length",
+        });
+    }
+    Ok(())
 }
 
 #[cfg(test)]
@@ -975,6 +1202,77 @@ mod tests {
             vec![0x12, 0x34, 0x56]
         );
         assert!(advertisement.has_network_data());
+    }
+
+    #[test]
+    fn network_data_tlvs_round_trip_stable_prefixes() {
+        let border_router = NetworkDataTlv::new(
+            NetworkDataTlvType::BorderRouter,
+            true,
+            vec![0x12, 0x34, 0x80, 0x00],
+        )
+        .unwrap();
+        let prefix = ThreadPrefixData::new(
+            true,
+            3,
+            64,
+            vec![0xfd, 0x00, 0xab, 0xcd, 0, 0, 0, 0],
+            vec![border_router.clone()],
+        )
+        .unwrap();
+        let unknown =
+            NetworkDataTlv::new(NetworkDataTlvType::Unknown(42), false, vec![1, 2, 3]).unwrap();
+        let network_data =
+            ThreadNetworkData::from_tlvs(vec![prefix.to_tlv().unwrap(), unknown.clone()]).unwrap();
+
+        let tlvs = network_data.tlvs().unwrap();
+        let prefixes = network_data.prefixes().unwrap();
+
+        assert_eq!(tlvs.len(), 2);
+        assert_eq!(tlvs[0].tlv_type, NetworkDataTlvType::Prefix);
+        assert!(tlvs[0].stable);
+        assert_eq!(tlvs[1], unknown);
+        assert_eq!(prefixes, vec![prefix]);
+        assert_eq!(prefixes[0].sub_tlvs, vec![border_router]);
+    }
+
+    #[test]
+    fn network_data_advertisement_projects_prefixes() {
+        let prefix =
+            ThreadPrefixData::new(false, 1, 48, vec![0xfd, 0x12, 0x34, 0, 0, 0], Vec::new())
+                .unwrap();
+        let network_data = ThreadNetworkData::from_tlvs(vec![prefix.to_tlv().unwrap()]).unwrap();
+        let advertisement = NetworkDataAdvertisement {
+            leader_data: None,
+            network_data: Some(network_data),
+        };
+
+        assert_eq!(advertisement.prefixes().unwrap(), vec![prefix]);
+    }
+
+    #[test]
+    fn network_data_rejects_truncated_tlv_value() {
+        let data =
+            ThreadNetworkData::new(vec![NetworkDataTlvType::Prefix.as_byte(), 4, 0, 64]).unwrap();
+
+        assert_eq!(
+            data.tlvs(),
+            Err(MleError::Truncated {
+                needed: 4,
+                remaining: 2,
+            })
+        );
+    }
+
+    #[test]
+    fn prefix_tlv_rejects_mismatched_prefix_bytes() {
+        assert_eq!(
+            ThreadPrefixData::new(false, 0, 64, vec![0xfd], Vec::new()),
+            Err(MleError::InvalidNetworkDataTlv {
+                tlv_type: NetworkDataTlvType::Prefix,
+                reason: "prefix byte length does not match prefix length",
+            })
+        );
     }
 
     #[test]
