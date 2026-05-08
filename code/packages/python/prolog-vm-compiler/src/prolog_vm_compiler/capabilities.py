@@ -326,6 +326,21 @@ def prolog_vm_capabilities() -> tuple[PrologVMCapability, ...]:
                 "structured and bytecode VM stress coverage",
             ),
         ),
+        PrologVMCapability(
+            id="host-filesystem-operations",
+            title="Bounded host filesystem operations",
+            status="complete",
+            specs=("PR88",),
+            packages=("logic-builtins", "prolog-loader", "prolog-vm-compiler"),
+            features=(
+                "directory_files/2 enumerates sorted directory entry names",
+                "make_directory/1 and delete_directory/1 manage empty directories",
+                "delete_file/1 removes one bound regular file path",
+                "rename_file/2 renames one bound filesystem path",
+                "working_directory/2 changes to an explicit bound directory",
+                "structured and bytecode VM stress coverage",
+            ),
+        ),
     )
 
 
@@ -365,7 +380,7 @@ def deferred_prolog_vm_capabilities() -> tuple[PrologVMCapability, ...]:
             features=(
                 "console-backed standard streams and richer binary stream services",
                 "rich ISO/SWI stream options beyond bounded text/binary files",
-                "mutable filesystem services beyond read-only metadata",
+                "recursive and wildcard filesystem services beyond bounded paths",
                 "foreign predicates and host callbacks",
                 "engines, concurrency, and async integration",
             ),
@@ -377,8 +392,8 @@ def prolog_vm_capability_manifest() -> PrologVMCapabilityManifest:
     """Return the canonical capability manifest for this package."""
 
     return PrologVMCapabilityManifest(
-        track="Prolog-on-Logic-VM PR00-PR87",
-        status="core-plus-filesystem-metadata",
+        track="Prolog-on-Logic-VM PR00-PR88",
+        status="core-plus-filesystem-operations",
         dialects=("iso", "swi"),
         backends=("structured", "bytecode"),
         capabilities=prolog_vm_capabilities(),

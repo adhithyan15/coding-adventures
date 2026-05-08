@@ -50,7 +50,10 @@ from logic_builtins import (
     current_streamo,
     cuto,
     cyclic_termo,
+    delete_directoryo,
+    delete_fileo,
     difo,
+    directory_fileso,
     directory_file_patho,
     dynamico,
     excludeo,
@@ -102,6 +105,7 @@ from logic_builtins import (
     labeling_optionso,
     labelingo,
     maplisto,
+    make_directoryo,
     nl_currento,
     nlo,
     nonvaro,
@@ -143,6 +147,7 @@ from logic_builtins import (
     read_file_to_stringo,
     read_line_to_stringo,
     read_stringo,
+    rename_fileo,
     repeato,
     retractallo,
     retracto,
@@ -183,6 +188,7 @@ from logic_builtins import (
     varo,
     write_currento,
     writeo,
+    working_directoryo,
 )
 from logic_builtins.builtins import (
     _current_input_stream,
@@ -629,6 +635,18 @@ def _adapt_relation_call(
         return size_fileo(*args)
     if name == "time_file" and goal.relation.arity == 2:
         return time_fileo(*args)
+    if name == "directory_files" and goal.relation.arity == 2:
+        return directory_fileso(*args)
+    if name == "make_directory" and goal.relation.arity == 1:
+        return make_directoryo(*args)
+    if name == "delete_file" and goal.relation.arity == 1:
+        return delete_fileo(*args)
+    if name == "delete_directory" and goal.relation.arity == 1:
+        return delete_directoryo(*args)
+    if name == "rename_file" and goal.relation.arity == 2:
+        return rename_fileo(*args)
+    if name == "working_directory" and goal.relation.arity == 2:
+        return working_directoryo(*args)
     if name == "open" and goal.relation.arity == 3:
         return openo(*args)
     if name == "open" and goal.relation.arity == 4:

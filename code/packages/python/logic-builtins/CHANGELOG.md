@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `directory_fileso/2`, `make_directoryo/1`, `delete_fileo/1`,
+  `delete_directoryo/1`, `rename_fileo/2`, and `working_directoryo/2` for
+  bounded explicit filesystem operations over bound atom/string paths.
 - `exists_directoryo/1`, `absolute_file_nameo/2`, `access_fileo/2`,
   `file_directory_nameo/2`, `file_base_nameo/2`, `directory_file_patho/3`,
   `file_name_extensiono/3`, `same_fileo/2`, `size_fileo/2`, and

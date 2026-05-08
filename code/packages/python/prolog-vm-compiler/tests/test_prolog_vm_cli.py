@@ -21,11 +21,11 @@ def test_cli_dumps_capability_manifest_without_source(
     assert status == 0
     assert payload["success"] is True
     assert payload["mode"] == "capabilities"
-    assert payload["status"] == "core-plus-filesystem-metadata"
+    assert payload["status"] == "core-plus-filesystem-operations"
     assert payload["dialects"] == ["iso", "swi"]
     assert payload["backends"] == ["structured", "bytecode"]
     assert payload["capabilities"][0]["specs"][0] == "PR00"
-    assert payload["capabilities"][-1]["specs"][-1] == "PR87"
+    assert payload["capabilities"][-1]["specs"][-1] == "PR88"
 
 
 def test_cli_dump_capabilities_rejects_source_modes(

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 from logic_engine import Compound, Number, atom, logic_list, num, string, term
@@ -358,6 +359,47 @@ class TestPrologBytecodeVMStress:
             },
         ]
         assert isinstance(answers[0].as_dict()["Time"], Number)
+
+    def test_file_operation_predicates_run_through_bytecode_vm(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "draft.txt"
+        renamed_path = tmp_path / "final.txt"
+        created_directory = tmp_path / "created"
+        source_path.write_text("draft\n", encoding="utf-8")
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        renamed_atom = str(renamed_path).replace("\\", "\\\\").replace("'", "\\'")
+        created_atom = str(created_directory).replace("\\", "\\\\").replace("'", "\\'")
+        root_atom = str(tmp_path).replace("\\", "\\\\").replace("'", "\\'")
+        old_cwd = Path.cwd()
+        compiled = compile_swi_prolog_source(
+            f"""
+            ?- make_directory('{created_atom}'),
+               rename_file('{path_atom}', '{renamed_atom}'),
+               directory_files('{root_atom}', Entries),
+               delete_file('{renamed_atom}'),
+               delete_directory('{created_atom}'),
+               working_directory(OldDirectory, '{root_atom}'),
+               directory_files('.', CwdEntries).
+            """,
+        )
+
+        try:
+            answers = run_compiled_prolog_bytecode_query_answers(compiled)
+        finally:
+            os.chdir(old_cwd)
+
+        assert _answer_dicts(answers) == [
+            {
+                "Entries": logic_list(["created", "final.txt"]),
+                "OldDirectory": atom(str(old_cwd)),
+                "CwdEntries": logic_list([]),
+            },
+        ]
+        assert not source_path.exists()
+        assert not renamed_path.exists()
+        assert not created_directory.exists()
 
     def test_file_stream_io_matches_structured_vm(self, tmp_path: Path) -> None:
         source_path = tmp_path / "stream.pltxt"
