@@ -49,6 +49,8 @@ from __future__ import annotations
 
 import cmath
 import math
+import random
+import statistics
 from dataclasses import dataclass, field
 
 from spice_engine.elements import (
@@ -2443,4 +2445,332 @@ def sens_dc(
         nominal_voltage=v_out_nominal,
         entries=entries,
         converged=all_converged,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Section 7 — Monte Carlo Analysis (.MC analysis)
+# ---------------------------------------------------------------------------
+#
+# Background: what is Monte Carlo analysis?
+# ------------------------------------------
+# Component tolerances are unavoidable in real manufacturing.  A resistor
+# marked "1 kΩ ±5%" might measure anywhere from 950 Ω to 1050 Ω.  Monte
+# Carlo (MC) analysis quantifies the resulting spread in circuit performance:
+#
+#   1. Run N DC operating points, each with ALL element parameters randomly
+#      varied by their specified tolerance.
+#   2. Record the output voltage at a chosen node for each trial.
+#   3. Report the mean and standard deviation of those N samples.
+#
+# This mirrors the SPICE .MC command (also called .WCASE, .STRESS in some
+# simulators) and answers: "Given real component spreads, what is the
+# probability that V_out stays within my design budget?"
+#
+# Two variation distributions
+# ----------------------------
+# 1. **Gaussian** (default) — models the bell-curve spread seen in tightly
+#    controlled manufacturing lots.  The parameter P is drawn from:
+#
+#       P_varied = P_nominal × (1 + σ × N(0, 1))
+#       where σ = tolerance / 3
+#
+#    The ÷3 factor is the "3-sigma" convention: the tolerance band is the
+#    ±3σ range, so 99.73% of drawn values fall within ±tolerance of nominal.
+#
+# 2. **Uniform** — models worst-case flat spread (e.g., wirewound resistors
+#    or deliberately oversized bins).  Each draw is:
+#
+#       P_varied = random.uniform(P_nominal × (1−tolerance),
+#                                 P_nominal × (1+tolerance))
+#
+# What is varied
+# --------------
+# Same set as sens_dc: Resistor, VoltageSource, CurrentSource, Diode.Is,
+# BJT.Is and BJT.beta_f.  Capacitors, inductors, and MOSFETs are unchanged.
+# Each element's parameter is independently varied per trial.
+#
+# Seed reproducibility
+# --------------------
+# Passing ``seed`` to mc_dc calls ``random.seed(seed)`` before the loop.
+# Running with the same seed on the same circuit always produces identical
+# trial vectors — essential for regression tests and debugging.
+#
+# Reading the results
+# -------------------
+# ``McResult.mean`` and ``McResult.std_dev`` describe the output voltage
+# distribution across all converged trials.  The individual ``McPoint``
+# entries are stored in ``McResult.points`` for histogram plotting:
+#
+#     voltages = [pt.node_voltages.get(output_node, 0.0)
+#                 for pt in result.points if pt.converged]
+#     # → histogram shows the manufactured spread of V_out
+#
+# Note: ``statistics.stdev`` (sample stdev, N-1 denominator) is used
+# rather than population stdev (N denominator) because the trials are a
+# *sample* of the infinite ensemble of possible component lots.
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class McPoint:
+    """Result of one Monte Carlo trial.
+
+    Attributes
+    ----------
+    trial : int
+        Zero-based trial index (0 … N−1).
+    node_voltages : dict[str, float]
+        DC node voltages at this trial's random parameter draw.
+    branch_currents : dict[str, float]
+        Branch currents for all voltage sources in the circuit.
+    converged : bool
+        ``True`` when the Newton-Raphson DC solve converged at this trial.
+        Unconverged trials are included in ``McResult.points`` but excluded
+        from the mean / std_dev statistics.
+    """
+
+    trial: int
+    node_voltages: dict[str, float]
+    branch_currents: dict[str, float]
+    converged: bool
+
+
+@dataclass
+class McResult:
+    """Collected results from a Monte Carlo DC analysis.
+
+    Returned by :func:`mc_dc`.
+
+    Attributes
+    ----------
+    output_node : str
+        The node whose voltage was observed across trials.
+    points : list[McPoint]
+        One :class:`McPoint` per trial, in trial order (0 … n_trials−1).
+    n_trials : int
+        Total number of trials requested (including unconverged ones).
+    mean : float
+        Sample mean of V(output_node) across all *converged* trials.
+        ``0.0`` if no trial converged.
+    std_dev : float
+        Sample standard deviation (N−1 denominator) of V(output_node)
+        across all *converged* trials.  ``0.0`` if fewer than 2 trials
+        converged.
+
+    Examples
+    --------
+    Quick histogram of the output spread::
+
+        import statistics
+        result = mc_dc(circuit, "out", n_trials=500, tolerance=0.05, seed=42)
+        voltages = [pt.node_voltages["out"] for pt in result.points if pt.converged]
+        print(f"V_out = {result.mean:.4f} ± {result.std_dev:.4f} V  "
+              f"({len(voltages)}/{result.n_trials} converged)")
+    """
+
+    output_node: str
+    points: list[McPoint]
+    n_trials: int
+    mean: float
+    std_dev: float
+
+
+def _vary_element(el: Element, tolerance: float, distribution: str) -> Element:
+    """Return a copy of *el* with its DC parameter(s) randomly varied.
+
+    Parameters
+    ----------
+    el : Element
+        The original circuit element.
+    tolerance : float
+        Relative tolerance (e.g., 0.05 for ±5%).
+    distribution : str
+        ``"gaussian"`` (σ = tolerance/3) or ``"uniform"`` (flat ±tolerance).
+
+    Returns
+    -------
+    Element
+        A new frozen dataclass instance with the varied parameter.
+        Elements with no tunable DC parameter (Capacitor, Inductor, Mosfet)
+        are returned unchanged.
+    """
+
+    def _draw(nominal: float) -> float:
+        """Draw one random multiplier and apply it to *nominal*."""
+        if distribution == "gaussian":
+            # σ = tolerance/3 → 99.73% of values within ±tolerance
+            sigma = tolerance / 3.0
+            return nominal * (1.0 + random.gauss(0.0, sigma))
+        # Uniform: flat distribution over [nominal*(1−tol), nominal*(1+tol)]
+        return nominal * random.uniform(1.0 - tolerance, 1.0 + tolerance)
+
+    if isinstance(el, Resistor):
+        return Resistor(el.name, el.n_plus, el.n_minus, _draw(el.resistance))
+
+    if isinstance(el, VoltageSource):
+        return VoltageSource(el.name, el.n_plus, el.n_minus, _draw(el.voltage))
+
+    if isinstance(el, CurrentSource):
+        return CurrentSource(el.name, el.n_plus, el.n_minus, _draw(el.current))
+
+    if isinstance(el, Diode):
+        return Diode(el.name, el.anode, el.cathode, _draw(el.Is), el.Vt)
+
+    if isinstance(el, BJT):
+        return BJT(
+            el.name, el.collector, el.base, el.emitter,
+            polarity=el.polarity,
+            Is=_draw(el.Is),
+            beta_f=_draw(el.beta_f),
+            Vt=el.Vt,
+        )
+
+    # Capacitor, Inductor, Mosfet — no tunable DC parameter; return unchanged.
+    return el
+
+
+def mc_dc(
+    circuit: Circuit,
+    output_node: str,
+    n_trials: int = 100,
+    *,
+    tolerance: float = 0.05,
+    distribution: str = "gaussian",
+    seed: int | None = None,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> McResult:
+    """Monte Carlo DC analysis (SPICE ``.MC``).
+
+    Runs *n_trials* DC operating points, each with every element parameter
+    independently varied by a random draw from the specified distribution.
+    Reports the mean and standard deviation of V(*output_node*) across all
+    converged trials.
+
+    Parameters
+    ----------
+    circuit : Circuit
+        The circuit to analyse.  All elements with tunable DC parameters
+        (Resistor, VoltageSource, CurrentSource, Diode, BJT) are varied
+        each trial.
+    output_node : str
+        Name of the observation node.
+    n_trials : int
+        Number of Monte Carlo trials to run.  Default 100.  More trials
+        give a more accurate standard deviation estimate; the error in
+        ``std_dev`` scales as ``σ / √(2N)``.
+    tolerance : float, keyword-only
+        Relative parameter tolerance (e.g., 0.05 for ±5%).  Applied to
+        every varied parameter in every trial.  Default 0.05.
+    distribution : str, keyword-only
+        ``"gaussian"`` (default) — draws from N(0, σ=tolerance/3), so
+        ±tolerance spans ≈ 3σ (99.73% coverage).
+        ``"uniform"`` — draws uniformly from [1−tolerance, 1+tolerance].
+    seed : int | None, keyword-only
+        If provided, ``random.seed(seed)`` is called before the trial loop.
+        Identical seeds with identical circuits reproduce identical results.
+    max_iterations : int, keyword-only
+        Newton-Raphson iteration limit per DC solve.  Default 50.
+    tol : float, keyword-only
+        Newton-Raphson convergence tolerance.  Default 1e-6.
+
+    Returns
+    -------
+    McResult
+        ``points`` holds all N :class:`McPoint` objects (including
+        unconverged trials).  ``mean`` and ``std_dev`` are computed only
+        over converged trials; ``std_dev`` is 0.0 if fewer than 2 trials
+        converged.
+
+    Raises
+    ------
+    ValueError
+        If *output_node* is not a ground alias and is not in the circuit.
+    ValueError
+        If *distribution* is not ``"gaussian"`` or ``"uniform"``.
+    ValueError
+        If *n_trials* < 1.
+
+    Notes
+    -----
+    The random state is module-global (``random`` module).  If other code
+    in the same process uses ``random``, set *seed* to isolate results.
+
+    Examples
+    --------
+    5% Gaussian tolerance on a resistor divider::
+
+        from spice_engine import Circuit, VoltageSource, Resistor, mc_dc
+
+        c = Circuit()
+        c.add(VoltageSource("Vin", "in", "0", 10.0))
+        c.add(Resistor("R1", "in", "mid", 1000.0))
+        c.add(Resistor("R2", "mid", "0", 1000.0))
+
+        result = mc_dc(c, "mid", n_trials=1000, tolerance=0.05, seed=42)
+        # result.mean    ≈ 5.0 V  (symmetric tolerance → no mean shift)
+        # result.std_dev > 0.0 V  (spread due to ±5% on R1 and R2)
+    """
+    # ---- Input validation ---------------------------------------------------
+    if n_trials < 1:
+        raise ValueError(f"mc_dc: n_trials must be >= 1, got {n_trials}")
+    if distribution not in ("gaussian", "uniform"):
+        raise ValueError(
+            f"mc_dc: distribution must be 'gaussian' or 'uniform', got {distribution!r}"
+        )
+    node_to_idx, _ = _node_index(circuit)
+    if not _is_ground(output_node) and output_node not in node_to_idx:
+        raise ValueError(
+            f"mc_dc: output node {output_node!r} not found in circuit.  "
+            f"Known nodes: {sorted(node_to_idx.keys())}"
+        )
+
+    # ---- Seed the RNG if requested -----------------------------------------
+    if seed is not None:
+        random.seed(seed)
+
+    # ---- Run N trials -------------------------------------------------------
+    points: list[McPoint] = []
+
+    for trial_idx in range(n_trials):
+        # Vary every element independently for this trial.
+        varied_elements = [
+            _vary_element(el, tolerance, distribution)
+            for el in circuit.elements
+        ]
+        trial_circuit = Circuit(elements=varied_elements)
+
+        dc_result = dc_op(trial_circuit, max_iterations=max_iterations, tol=tol)
+
+        points.append(McPoint(
+            trial=trial_idx,
+            node_voltages=dc_result.node_voltages,
+            branch_currents=dc_result.branch_currents,
+            converged=dc_result.converged,
+        ))
+
+    # ---- Compute statistics over converged trials --------------------------
+    converged_voltages = [
+        _node_voltage(output_node, pt.node_voltages)
+        for pt in points
+        if pt.converged
+    ]
+
+    if len(converged_voltages) == 0:
+        mean = 0.0
+        std_dev = 0.0
+    elif len(converged_voltages) == 1:
+        mean = converged_voltages[0]
+        std_dev = 0.0
+    else:
+        mean = statistics.mean(converged_voltages)
+        std_dev = statistics.stdev(converged_voltages)
+
+    return McResult(
+        output_node=output_node,
+        points=points,
+        n_trials=n_trials,
+        mean=mean,
+        std_dev=std_dev,
     )
