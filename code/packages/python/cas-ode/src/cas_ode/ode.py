@@ -1,6 +1,6 @@
 """Symbolic ODE solver — the heart of cas-ode.
 
-This module provides pure-Python functions that recognise and solve seven
+This module provides pure-Python functions that recognise and solve eight
 classes of ordinary differential equations whose solutions can always be
 written in closed form:
 
@@ -16,6 +16,9 @@ written in closed form:
 6. **Second-order constant-coefficient non-homogeneous**:
    ``a·y'' + b·y' + c·y = f(x)`` where f is a constant, polynomial
    (degree ≤ 2), exponential, sin/cos, or e^(αx)·sin/cos(βx)
+7. **Homogeneous-type** (Phase 18c): ``dy/dx = f(y/x)`` — the right-hand
+   side depends only on the ratio ``y/x``.  Solved by the substitution
+   ``v = y/x`` which reduces it to a separable ODE in ``(v, x)``.
 
 Every public function takes IR nodes as input and returns IR nodes as
 output.  No floats are used for exact computation; rational arithmetic
@@ -50,11 +53,14 @@ Read the functions in this order:
 7.  :func:`_is_pow_y` — helper: detect ``Pow(y, n)`` atoms
 8.  :func:`_try_bernoulli` — Bernoulli substitution ``v = y^(1-n)``
 9.  :func:`_try_exact` — exact ODE potential-function method
-10. :func:`_collect_second_order_nonhom` — collect (a,b,c,f) from non-hom ODE
-11. :func:`_classify_forcing` — identify the forcing-function family
-12. :func:`_compute_particular` — undetermined-coefficient ansatz
-13. :func:`_try_second_order_nonhom` — non-homogeneous 2nd-order dispatcher
-14. :func:`solve_ode` — the top-level dispatcher
+10. :func:`_subst_ir` — pure IR tree substitution helper
+11. :func:`_subst_ratio_ir` — structural substitution of ``Div(y,x) → v``
+12. :func:`_try_homogeneous_type` — Phase 18c: homogeneous-type ``y' = f(y/x)``
+13. :func:`_collect_second_order_nonhom` — collect (a,b,c,f) from non-hom ODE
+14. :func:`_classify_forcing` — identify the forcing-function family
+15. :func:`_compute_particular` — undetermined-coefficient ansatz
+16. :func:`_try_second_order_nonhom` — non-homogeneous 2nd-order dispatcher
+17. :func:`solve_ode` — the top-level dispatcher
 """
 
 from __future__ import annotations
@@ -70,6 +76,7 @@ from symbolic_ir import (
     EQUAL,
     EXP,
     INTEGRATE,
+    LOG,
     MUL,
     NEG,
     POW,
@@ -1338,6 +1345,273 @@ def _try_exact(
 
 
 # ---------------------------------------------------------------------------
+# Section 9b — Phase 18c: Homogeneous-type ODE  y' = f(y/x)
+# ---------------------------------------------------------------------------
+
+
+def _subst_ir(node: IRNode, var: IRSymbol, replacement: IRNode) -> IRNode:
+    """Recursively substitute every occurrence of ``var`` with ``replacement``.
+
+    This is a pure structural tree walk.  Every node of type ``IRSymbol``
+    that equals ``var`` is replaced; all other nodes are rebuilt with the
+    same head and substituted arguments.
+
+    Parameters
+    ----------
+    node:
+        Root of the IR tree to walk.
+    var:
+        The symbol to replace.
+    replacement:
+        The IR expression to place at each matching position.
+
+    Returns
+    -------
+    A new IR tree with all occurrences of ``var`` replaced by
+    ``replacement``.  The original tree is not mutated.
+
+    Examples::
+
+        _subst_ir(Add(x, y), y, IRInteger(2))     → Add(x, 2)
+        _subst_ir(Mul(x, Pow(y, 2)), y, Div(y,x)) → Mul(x, Pow(Div(y,x), 2))
+        _subst_ir(IRInteger(1), y, IRInteger(0))   → IRInteger(1)  (unchanged)
+    """
+    if isinstance(node, IRSymbol):
+        return replacement if node == var else node
+    if isinstance(node, (IRInteger, IRRational)):
+        return node
+    if isinstance(node, IRApply):
+        new_args = tuple(_subst_ir(a, var, replacement) for a in node.args)
+        return IRApply(node.head, new_args)
+    return node  # IRFloat or other literals — unchanged
+
+
+def _subst_ratio_ir(
+    node: IRNode,
+    y: IRSymbol,
+    x: IRSymbol,
+    v: IRSymbol,
+) -> IRNode | None:
+    """Substitute every ``Div(y, x)`` occurrence in ``node`` with ``v``.
+
+    This is the structural substitution ``y/x → v`` used in the homogeneous-
+    type ODE detector.  It is **more restrictive than** :func:`_subst_ir`:
+
+    - A bare ``y`` symbol (not inside ``Div(y, x)``) causes the function to
+      return ``None`` — this signals that ``y`` appears in a form we cannot
+      reduce to ``v`` without algebraic cancellation.
+    - ``Div(y, x)`` is replaced by ``v`` regardless of nesting depth.
+    - All other nodes are recursively rebuilt; if any argument returns
+      ``None``, the whole call returns ``None``.
+
+    Parameters
+    ----------
+    node:
+        The IR subtree to transform.
+    y, x:
+        The dependent and independent variable symbols.
+    v:
+        The substitution variable (``y/x → v``).
+
+    Returns
+    -------
+    The transformed IR tree, or ``None`` if ``y`` appears outside
+    ``Div(y, x)`` (meaning the expression is not purely a function of
+    ``y/x``).
+
+    Examples::
+
+        _subst_ratio_ir(Pow(Div(y,x), 2), y, x, v)     → Pow(v, 2)
+        _subst_ratio_ir(Add(Div(y,x), Div(y,x)), y, x, v)  → Add(v, v)
+        _subst_ratio_ir(y, y, x, v)                     → None  (bare y)
+        _subst_ratio_ir(Div(Add(y,x), x), y, x, v)     → None  (y not as Div(y,x))
+        _subst_ratio_ir(IRInteger(3), y, x, v)           → IRInteger(3)
+    """
+    if isinstance(node, IRSymbol):
+        if node == y:
+            return None  # bare y — not the y/x form we can substitute
+        return node  # x or any other symbol — unchanged
+    if isinstance(node, (IRInteger, IRRational)):
+        return node
+    if isinstance(node, IRApply):
+        # Match Div(y, x) exactly — replace with v.
+        if (
+            node.head == DIV
+            and len(node.args) == 2
+            and node.args[0] == y
+            and node.args[1] == x
+        ):
+            return v
+        # Recurse; propagate None on failure.
+        new_args: list[IRNode] = []
+        for a in node.args:
+            r = _subst_ratio_ir(a, y, x, v)
+            if r is None:
+                return None
+            new_args.append(r)
+        return IRApply(node.head, tuple(new_args))
+    return node  # IRFloat or other literals — unchanged
+
+
+def _try_homogeneous_type(
+    expr: IRNode,
+    y: IRSymbol,
+    x: IRSymbol,
+    vm: "VM",
+) -> IRNode | None:
+    """Solve ``y' = f(y/x)`` — a homogeneous-type first-order ODE.
+
+    Background
+    ----------
+    An ODE is *homogeneous of degree zero* when the right-hand side depends
+    only on the ratio ``v = y/x``::
+
+        dy/dx = f(y/x)
+
+    The substitution ``y = v·x`` (so ``dy/dx = v + x·dv/dx``) transforms
+    this into a separable equation::
+
+        v + x·dv/dx = f(v)
+        x·dv/dx = f(v) - v
+        dv / (f(v) - v)  =  dx / x
+
+    Integrating both sides::
+
+        H(v) = ∫ dv / (f(v) - v)  =  ∫ dx/x  =  log(x) + C
+
+    Back-substituting ``v = y/x`` yields the **implicit** solution::
+
+        H(y/x) = log(x) + C
+
+    Degenerate case
+    ---------------
+    When ``f(v) = v`` (i.e. ``f(y/x) = y/x``), the denominator ``f(v)−v``
+    is zero.  This means ``x·v' = 0``, so ``v = C``, i.e. ``y = C·x``.
+    We return ``Equal(y, Mul(%c, x))`` directly.
+
+    Detection strategy
+    ------------------
+    We use :func:`_subst_ratio_ir` to check whether ``y`` appears in
+    ``rhs`` *only* through the ratio ``Div(y, x)``.  This structural check
+    succeeds for textbook homogeneous forms such as::
+
+        y' = (y/x)^2              f(v) = v²
+        y' = exp(y/x)             f(v) = exp(v)
+        y' = (y/x)² + (y/x)      f(v) = v² + v
+        y' = sin(y/x)             f(v) = sin(v)
+
+    It does **not** catch forms where ``y`` and ``x`` are mixed inside a
+    numerator, e.g. ``y' = (y + x)/x``.  Such cases require polynomial
+    simplification by the VM (see the linear/separable routes which do
+    catch ``(y + x)/x = 1 + y/x`` when the VM distributes the division).
+
+    Parameters
+    ----------
+    expr:
+        The ODE in zero form (``lhs − rhs = 0``).
+    y, x:
+        Dependent and independent variable symbols.
+    vm:
+        Live symbolic VM — used for integration and evaluation.
+
+    Returns
+    -------
+    ``Equal(H(y/x), Add(Log(x), C_CONST))`` on success (implicit solution),
+    or ``Equal(y, Mul(C_CONST, x))`` for the degenerate case,
+    or ``None`` to signal fall-through to the next solver.
+    """
+    # ---- Step 1: Extract y' and the right-hand side -------------------------
+    terms = _flatten_add(expr)
+    y_prime = IRApply(D, (y, x))
+
+    yprime_found = False
+    other_terms: list[IRNode] = []
+
+    for term in terms:
+        neg, core = _unwrap_neg(term)
+        if core == y_prime and not neg:
+            yprime_found = True
+        elif core == y_prime and neg:
+            # –y' on the left — not standard form; give up.
+            return None
+        else:
+            # Move term to the right-hand side by negating.
+            other_terms.append(_neg(term))
+
+    if not yprime_found:
+        return None
+
+    # Build rhs and let the VM collapse any obvious identities.
+    if not other_terms:
+        rhs: IRNode = _ZERO
+    elif len(other_terms) == 1:
+        rhs = other_terms[0]
+    else:
+        rhs = other_terms[0]
+        for t in other_terms[1:]:
+            rhs = _add(rhs, t)
+
+    rhs = vm.eval(rhs)
+
+    # ---- Step 2: Quick filters ----------------------------------------------
+    # If rhs is free of y, it's handled by separable/linear — not homogeneous.
+    if _is_const_wrt(rhs, y):
+        return None
+
+    # ---- Step 3: Try structural substitution y/x → v -----------------------
+    # Use a deliberately obscure name to avoid clashing with user variables.
+    v = IRSymbol("_hom_v")
+
+    f_v_raw = _subst_ratio_ir(rhs, y, x, v)
+    if f_v_raw is None:
+        return None  # y appears outside the ratio y/x — can't handle
+
+    # Evaluate f(v) through the VM to fold any numeric subexpressions.
+    f_v = vm.eval(f_v_raw)
+
+    # Verify the substituted expression is free of x.
+    # (It always should be after _subst_ratio_ir, but we double-check
+    # in case the VM introduced unexpected x-dependencies.)
+    if not _is_const_wrt(f_v, x):
+        return None
+
+    # ---- Step 4: Degenerate case: f(v) = v ----------------------------------
+    # When f(v) = v the denominator f(v) − v = 0, meaning dv/dx = 0, so
+    # v = constant and y = C·x.  The ODE y' = y/x has solutions y = C·x.
+    if f_v == v:
+        return IRApply(EQUAL, (y, _mul(C_CONST, x)))
+
+    # ---- Step 5: Separable equation for v -----------------------------------
+    # dv / (f(v) − v) = dx / x
+    # Integrate the left side with respect to v.
+    denom_v = vm.eval(_sub(f_v, v))
+    integrand_v = vm.eval(_div(_ONE, denom_v))
+
+    H_v = vm.eval(IRApply(INTEGRATE, (integrand_v, v)))
+    if _is_unevaluated_integrate(H_v, v):
+        return None  # Integration failed — can't produce a closed form
+
+    # ---- Step 6: Integrate 1/x dx = Log(x) ---------------------------------
+    # We use the VM rather than hard-coding Log(x) so the result stays
+    # consistent with however the VM emits logarithms.
+    log_x = vm.eval(IRApply(INTEGRATE, (_div(_ONE, x), x)))
+    # Fallback: if the VM somehow fails (shouldn't happen), hard-code.
+    if _is_unevaluated_integrate(log_x, x):
+        log_x = IRApply(LOG, (x,))  # Log(x)
+
+    # ---- Step 7: Back-substitute v → y/x in H(v) ---------------------------
+    # Replace the temporary symbol _hom_v with Div(y, x).
+    y_over_x = _div(y, x)
+    H_yx_raw = _subst_ir(H_v, v, y_over_x)
+    H_yx = vm.eval(H_yx_raw)
+
+    # ---- Step 8: Build the implicit solution --------------------------------
+    # H(y/x) = Log(x) + C
+    rhs_solution = vm.eval(_add(log_x, C_CONST))
+    return IRApply(EQUAL, (H_yx, rhs_solution))
+
+
+# ---------------------------------------------------------------------------
 # Section 10 — 2nd-order non-homogeneous: undetermined coefficients
 # ---------------------------------------------------------------------------
 
@@ -1895,14 +2169,15 @@ def solve_ode(
 
     Dispatch order
     --------------
-    1. Check for **non-homogeneous** 2nd-order (new Phase 18) — must come
+    1. Check for **non-homogeneous** 2nd-order (Phase 18) — must come
        before the homogeneous check, because the homogeneous recogniser
        silently ignores forcing terms and would mis-classify.
     2. Check for second-order const-coeff **homogeneous**.
-    3. Check for **Bernoulli** (new Phase 18).
-    4. Check for **exact** (new Phase 18).
-    5. Check for first-order **linear** ``y' + P(x)·y = Q(x)``.
-    6. Check for **separable** ``y' = f(x)·g(y)``.
+    3. Check for **Bernoulli** (Phase 18).
+    4. Check for first-order **linear** ``y' + P(x)·y = Q(x)``.
+    5. Check for **separable** ``y' = f(x)·g(y)``.
+    6. Check for **homogeneous-type** ``y' = f(y/x)`` (Phase 18c).
+    7. Check for **exact** (Phase 18).
 
     Returns ``Equal(y, solution)`` or ``Equal(F, C)`` (exact) on success,
     or ``None`` on failure.
@@ -1960,6 +2235,14 @@ def solve_ode(
     sep = _try_separable(expr, y, x, vm)
     if sep is not None:
         return sep
+
+    # ---- Phase 18c: Homogeneous-type ODE y' = f(y/x) -----------------------
+    # Runs after separable because a separable ODE f(x)·g(y) with f(x)=1/x
+    # and g(y)=y is already caught above as a linear special case.  The true
+    # homogeneous-type ODEs reach here: they have y appearing only as y/x.
+    hom = _try_homogeneous_type(expr, y, x, vm)
+    if hom is not None:
+        return hom
 
     # ---- Phase 18: Exact ODE (last resort for first-order) ------------------
     # Exact runs last so that explicitly solvable ODEs (y'=f(x), y'+Py=Q)

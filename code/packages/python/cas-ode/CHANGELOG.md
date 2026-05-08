@@ -2,6 +2,71 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] — 2026-05-06
+
+### Added
+
+- **Homogeneous-type ODE solver** (`_try_homogeneous_type`) — Phase 18c
+  - Recognises `dy/dx = f(y/x)`, where the right-hand side depends only
+    on the ratio `y/x`.
+  - Uses structural pattern matching (`_subst_ratio_ir`) to replace every
+    `Div(y, x)` node with the temporary symbol `_hom_v`, yielding `f(v)`.
+    Returns `None` immediately if any bare `y` appears outside `Div(y, x)`.
+  - Builds the separable equation `dv/(f(v)−v) = dx/x`, then delegates
+    both integrations to the existing VM `Integrate` handler (including
+    the Hermite partial-fraction path for rational `1/(f(v)−v)`).
+  - **Degenerate case** `f(v) = v` (i.e. `y' = y/x`): denominator is zero,
+    so `v = const`, and the solution is returned directly as
+    `Equal(y, Mul(%c, x))`.
+  - **Implicit solution** for the general case:
+    `Equal(H(y/x), Add(Log(x), %c))` where `H(v) = ∫ dv/(f(v)−v)`.
+  - Falls through to `None` if the RHS integrand has no closed-form
+    antiderivative (e.g. `f(v) = exp(v)`).
+  - Runs in the dispatcher after separable and before exact, ensuring
+    that linear/separable ODEs that happen to be expressible as `f(y/x)`
+    are handled by the simpler (explicit) routes first.
+
+- **IR tree substitution helper** (`_subst_ir`)
+  - Pure structural tree walk replacing every occurrence of a given
+    `IRSymbol` with a replacement IR node.  Used for back-substitution
+    `v → y/x` after computing `H(v)`.
+
+- **Structural ratio substitution helper** (`_subst_ratio_ir`)
+  - Replaces exactly the pattern `Div(y, x)` with a symbol `v`, without
+    needing algebraic simplification.  Returns `None` if `y` appears in
+    any form other than `Div(y, x)`, ensuring correctness for the VM
+    that cannot simplify `(v·x)/x → v`.
+
+### Changed
+
+- `solve_ode` dispatcher — updated order (step 6 added):
+  1. `_try_second_order_nonhom`
+  2. `_collect_second_order_coeffs` / `solve_second_order_const_coeff`
+  3. `_try_bernoulli`
+  4. `_collect_linear_first_order` / `solve_linear_first_order`
+  5. `_try_separable`
+  6. **`_try_homogeneous_type`** ← new (Phase 18c)
+  7. `_try_exact`
+
+- Module docstring updated to list homogeneous-type as the 7th ODE class.
+- Literate reading guide updated: entries 10–12 added for new helpers;
+  former entries 10–14 renumbered to 13–17.
+
+### Tests
+
+- **26 new tests** in `tests/test_ode.py` across three new classes:
+  - `TestSubstIr` — 7 tests: symbol replaced, no-op, integer, rational,
+    nested Add, Pow back-sub, absent symbol unchanged.
+  - `TestSubstRatioIr` — 9 tests: Div(y,x)→v, bare y→None, Pow,
+    integer/symbol passthrough, Add of two ratios, y-in-Add-numerator→None,
+    unrelated symbol, Mul(y,x)→None.
+  - `TestHomogeneousTypeODE` — 15 tests: degenerate case, ratio², ratio²+ratio,
+    2·(y/x), transcendental fall-through, const/linear/y·x fall-through,
+    no-y'-term, full `solve_ode` degenerate, ODE2 VM dispatch ×2,
+    linear ODE captured by separable not homogeneous.
+
+---
+
 ## [0.2.0] — 2026-04-29
 
 ### Added
