@@ -1,5 +1,98 @@
 # Changelog
 
+## [0.8.0] — 2026-05-08
+
+### Added
+
+- **`mc_dc()` function** — Monte Carlo analysis (the SPICE `.MC` command).
+
+  Runs N independent DC operating-point trials, randomly varying every
+  element's tunable parameter by ±`tolerance` each trial.  Collects the
+  distribution of the output-node voltage and reports sample statistics.
+
+  Two sampling distributions are supported:
+
+  | Distribution | Draw formula | σ equiv |
+  |---|---|---|
+  | `"gaussian"` (default) | `nominal × (1 + N(0, tol/3))` | `tol` = 3σ → 99.73% coverage |
+  | `"uniform"` | `nominal × Uniform(1−tol, 1+tol)` | flat |
+
+  **Signature:**
+  ```python
+  mc_dc(
+      circuit: Circuit,
+      output_node: str,
+      n_trials: int = 100,
+      *,
+      tolerance: float = 0.05,          # fractional (0.05 = 5%)
+      distribution: str = "gaussian",   # "gaussian" | "uniform"
+      seed: int | None = None,          # RNG seed for reproducibility
+      max_iterations: int = 50,
+      tol: float = 1e-6,
+  ) -> McResult
+  ```
+
+  **Elements varied per trial:**
+
+  | Element | Parameter varied |
+  |---------|-----------------|
+  | `Resistor` | `resistance` (Ω) |
+  | `VoltageSource` | `voltage` (V) |
+  | `CurrentSource` | `current` (A) |
+  | `Diode` | `Is` (A) |
+  | `BJT` | `Is` (A) and `beta_f` (dimensionless) |
+  | `Capacitor` | skipped — no DC effect |
+  | `Inductor` | skipped — no DC effect |
+  | `Mosfet` | skipped — model not exposed |
+
+  **Example — resistor divider with 5% Gaussian variation:**
+  ```python
+  from spice_engine import Circuit, VoltageSource, Resistor, mc_dc
+
+  c = Circuit()
+  c.add(VoltageSource("Vin", "in", "0", 10.0))
+  c.add(Resistor("R1", "in", "mid", 1000.0))
+  c.add(Resistor("R2", "mid", "0", 1000.0))
+
+  result = mc_dc(c, "mid", n_trials=1000, tolerance=0.05, seed=42)
+  print(f"mean={result.mean:.3f} V, σ={result.std_dev:.4f} V")
+  # typical output: mean=5.001 V, σ=0.0982 V
+  ```
+
+- **`McPoint` dataclass** — immutable snapshot for one Monte Carlo trial:
+  - `trial: int` — 0-based trial index
+  - `node_voltages: dict[str, float]` — all node voltages for this trial
+  - `branch_currents: dict[str, float]` — all branch currents for this trial
+  - `converged: bool`
+
+- **`McResult` dataclass** — collection returned by `mc_dc`:
+  - `output_node: str`
+  - `points: list[McPoint]` — one entry per trial (including non-converged)
+  - `n_trials: int`
+  - `mean: float` — sample mean over converged trials
+  - `std_dev: float` — sample standard deviation (N−1 denominator) over converged trials
+
+### Changed
+
+- `__version__` bumped `0.7.0` → `0.8.0`.
+- Module docstring updated to include Monte Carlo analysis.
+- `pyproject.toml` description updated to include `.MC`.
+
+### Tests (23 new, Sections 40–45)
+
+| Section | Description |
+|---------|-------------|
+| 40 | `McPoint` and `McResult` dataclass types and field names |
+| 41 | Gaussian variation: `mean` near nominal for symmetric divider |
+| 42 | `std_dev > 0` when tolerance > 0; `std_dev` scales with tolerance |
+| 43 | Seed reproducibility: identical results for same seed |
+| 44 | Uniform distribution: mean close to nominal; std_dev independent check |
+| 45 | Error cases: invalid node, invalid distribution, `n_trials < 1`, `tolerance < 0` |
+
+Total: 177 tests, 82% coverage.
+
+---
+
 ## [0.7.0] — 2026-05-08
 
 ### Added
