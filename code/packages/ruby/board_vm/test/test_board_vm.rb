@@ -130,6 +130,27 @@ module CodingAdventures
           result.results.map(&:command)
       end
 
+      def test_store_program_dispatches_native_protocol_frame_through_transport
+        runner = FakeRunner.new
+        transport = FakeWriteTransport.new
+        result = nil
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          transport: transport
+        ) do |board|
+          result = board.store_program!(program_id: 10, slot: 2, boot_policy: :run_at_boot)
+        end
+
+        assert_empty runner.calls
+        assert_equal 1, transport.frames.length
+        assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
+        assert_equal transport.frames.first, result.frame
+        assert_equal :store_program, result.command
+      end
+
       def test_gpio_read_dispatches_native_protocol_frames_through_transport
         runner = FakeRunner.new
         transport = FakeWriteTransport.new
@@ -192,6 +213,7 @@ module CodingAdventures
             sleep_upload = session.upload_time_sleep_ms(program_id: 8, duration_ms: 250)
             gpio_upload = session.upload_gpio_read(program_id: 6, pin: 13, mode: :pullup)
             gpio_write_upload = session.upload_gpio_write(program_id: 7, pin: 13, value: true)
+            store = session.store_program(program_id: 4, slot: 2, boot_policy: :run_at_boot)
             run = session.run(program_id: 4, budget: 77)
             stop = session.stop
 
@@ -206,13 +228,14 @@ module CodingAdventures
               gpio_upload.results.map(&:command)
             assert_equal [:program_begin, :program_chunk, :program_end],
               gpio_write_upload.results.map(&:command)
+            assert_equal :store_program, store.command
             assert_equal :run, run.command
             assert_equal :stop, stop.command
           end
         end
 
         assert_empty runner.calls
-        assert_equal 19, transport.frames.length
+        assert_equal 20, transport.frames.length
         assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
       end
 
@@ -228,6 +251,22 @@ module CodingAdventures
           result = board.session.run_command("stop")
 
           assert_equal [:stop], result.results.map(&:command)
+          assert_equal result.frames, transport.frames
+        end
+      end
+
+      def test_session_run_command_accepts_repl_style_store_program
+        transport = FakeWriteTransport.new
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new,
+          transport: transport
+        ) do |board|
+          result = board.session.run_command("store-program 9 2 run-at-boot")
+
+          assert_equal [:store_program], result.results.map(&:command)
           assert_equal result.frames, transport.frames
         end
       end
@@ -407,10 +446,15 @@ module CodingAdventures
         assert_instance_of String, gpio_write_module_bytes
         assert_operator gpio_write_module_bytes.bytesize, :>, 0
 
+        store = session.store_program_wire(7, 2, 1)
+        assert_instance_of String, store
+        assert_operator store.bytesize, :>, 0
+        assert_equal 4, session.next_request_id
+
         stop = session.stop_wire
         assert_instance_of String, stop
         assert_operator stop.bytesize, :>, 0
-        assert_equal 4, session.next_request_id
+        assert_equal 5, session.next_request_id
 
         frames = BoardVM::Native::Session.new.blink_upload_run_frames(7, 12, 13, 250, 250, 4)
         assert_equal 4, frames.length

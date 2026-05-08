@@ -344,11 +344,28 @@ impl HostSession {
         payload_out: &mut [u8],
         frame_out: &mut [u8],
     ) -> Result<WrittenFrame, HostError> {
+        self.store_program_with_boot_policy_frame(
+            program_id,
+            slot,
+            BOOT_RUN_IF_NO_HOST,
+            payload_out,
+            frame_out,
+        )
+    }
+
+    pub fn store_program_with_boot_policy_frame(
+        &mut self,
+        program_id: u16,
+        slot: u8,
+        boot_policy: u8,
+        payload_out: &mut [u8],
+        frame_out: &mut [u8],
+    ) -> Result<WrittenFrame, HostError> {
         let payload_len = encode_store_program(
             &StoreProgram {
                 program_id,
                 slot,
-                boot_policy: BOOT_RUN_IF_NO_HOST,
+                boot_policy,
             },
             payload_out,
         )?;

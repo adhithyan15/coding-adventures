@@ -15,6 +15,7 @@ read_frames = session.gpio_read(pin=13, mode="pullup").frames
 write_frames = session.gpio_write(pin=13, value=True).frames
 now_frames = session.time_now(program_id=2, instruction_budget=12).frames
 sleep_frames = session.time_sleep_ms(250, program_id=3, instruction_budget=12).frames
+store_frame = session.store_program(program_id=1, slot=0, boot_policy="run-if-no-host").frame
 ```
 
 Each frame is a Rust-produced Board VM wire frame ready for a transport to
@@ -43,6 +44,7 @@ session.gpio_low(pin=13)
 The REPL-style sugar is intentionally thin as well:
 
 ```python
+session.run_command("store-program 1 0 run-if-no-host")
 session.run_command("gpio-read 13 pullup 24")
 session.run_command("gpio-write 13 high 24")
 session.run_command("time-sleep-ms 250 24")

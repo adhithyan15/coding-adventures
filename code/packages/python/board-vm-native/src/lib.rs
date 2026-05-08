@@ -10,10 +10,10 @@ use board_vm_language_core::{
     build_blink_module, build_caps_query_wire_frame, build_gpio_read_module,
     build_gpio_write_module, build_hello_wire_frame, build_program_begin_wire_frame,
     build_program_chunk_wire_frame, build_program_end_wire_frame, build_run_background_wire_frame,
-    build_stop_wire_frame, build_time_now_module, build_time_sleep_ms_module,
-    capability_board_metadata, capability_bytecode_callable, capability_flag_names,
-    capability_protocol_feature, decode_wire_response, program_format_name, run_status_name,
-    BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
+    build_stop_wire_frame, build_store_program_wire_frame, build_time_now_module,
+    build_time_sleep_ms_module, capability_board_metadata, capability_bytecode_callable,
+    capability_flag_names, capability_protocol_feature, decode_wire_response, program_format_name,
+    run_status_name, BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
     LanguageCoreError, LanguageValue,
 };
 use python_bridge::*;
@@ -221,6 +221,32 @@ unsafe extern "C" fn py_program_end_wire(_module: PyObjectPtr, args: PyObjectPtr
     with_session(next_request_id, |session| {
         let mut wire = [0u8; 64];
         let written = build_program_end_wire_frame(session, program_id, &mut wire)?;
+        Ok(wire_result(&wire, written.len, session))
+    })
+}
+
+unsafe extern "C" fn py_store_program_wire(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
+    let next_request_id = match parse_arg_u16(args, 0, "next_request_id") {
+        Some(value) => value,
+        None => return ptr::null_mut(),
+    };
+    let program_id = match parse_arg_u16(args, 1, "program_id") {
+        Some(value) => value,
+        None => return ptr::null_mut(),
+    };
+    let slot = match parse_arg_u8(args, 2, "slot") {
+        Some(value) => value,
+        None => return ptr::null_mut(),
+    };
+    let boot_policy = match parse_arg_u8(args, 3, "boot_policy") {
+        Some(value) => value,
+        None => return ptr::null_mut(),
+    };
+
+    with_session(next_request_id, |session| {
+        let mut wire = [0u8; 64];
+        let written =
+            build_store_program_wire_frame(session, program_id, slot, boot_policy, &mut wire)?;
         Ok(wire_result(&wire, written.len, session))
     })
 }
@@ -683,7 +709,7 @@ unsafe fn raise_core_error(context: &str, error: LanguageCoreError) -> PyObjectP
 
 #[no_mangle]
 pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
-    let methods: &'static mut [PyMethodDef; 14] = Box::leak(Box::new([
+    let methods: &'static mut [PyMethodDef; 15] = Box::leak(Box::new([
         PyMethodDef {
             ml_name: b"hello_wire\0".as_ptr() as *const c_char,
             ml_meth: Some(py_hello_wire),
@@ -746,6 +772,13 @@ pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
             ml_meth: Some(py_program_end_wire),
             ml_flags: METH_VARARGS,
             ml_doc: b"Build a Board VM PROGRAM_END wire frame in Rust.\0".as_ptr() as *const c_char,
+        },
+        PyMethodDef {
+            ml_name: b"store_program_wire\0".as_ptr() as *const c_char,
+            ml_meth: Some(py_store_program_wire),
+            ml_flags: METH_VARARGS,
+            ml_doc: b"Build a Board VM STORE_PROGRAM wire frame in Rust.\0".as_ptr()
+                as *const c_char,
         },
         PyMethodDef {
             ml_name: b"run_background_wire\0".as_ptr() as *const c_char,

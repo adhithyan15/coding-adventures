@@ -495,6 +495,31 @@ pub fn build_program_end_wire_frame(
     })
 }
 
+pub fn build_store_program_wire_frame(
+    session: &mut BoardVmLanguageSession,
+    program_id: u16,
+    slot: u8,
+    boot_policy: u8,
+    wire_out: &mut [u8],
+) -> Result<BuiltWireFrame, LanguageCoreError> {
+    let mut payload = [0u8; 8];
+    let mut raw = [0u8; 16];
+    let mut host = session.host_session();
+    let written = host.store_program_with_boot_policy_frame(
+        program_id,
+        slot,
+        boot_policy,
+        &mut payload,
+        &mut raw,
+    )?;
+    let wire_len = encode_wire_frame(&raw[..written.len], wire_out)?;
+    session.update_from_host_session(&host);
+    Ok(BuiltWireFrame {
+        request_id: written.request_id,
+        len: wire_len,
+    })
+}
+
 pub fn build_run_background_wire_frame(
     session: &mut BoardVmLanguageSession,
     program_id: u16,
@@ -965,6 +990,27 @@ pub unsafe extern "C" fn board_vm_language_program_end_wire(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn board_vm_language_store_program_wire(
+    session: *mut BoardVmLanguageSession,
+    program_id: u16,
+    slot: u8,
+    boot_policy: u8,
+    wire_out: *mut u8,
+    wire_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let session = unsafe { mut_ref(session, "board_vm_language_store_program_wire session") }?;
+        let wire_out = unsafe { out_slice(wire_out, wire_cap, "wire_out") }?;
+        let written =
+            build_store_program_wire_frame(session, program_id, slot, boot_policy, wire_out)?;
+        Ok(BoardVmLanguageStatus::written(
+            written.request_id,
+            written.len,
+        ))
+    })
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn board_vm_language_run_background_wire(
     session: *mut BoardVmLanguageSession,
     program_id: u16,
@@ -1317,6 +1363,28 @@ mod tests {
         let frame = decode_frame(&raw[..decoded.len as usize]).unwrap();
         assert_eq!(decode_program_end(frame.payload).unwrap().program_id, 7);
 
+        let store = unsafe {
+            board_vm_language_store_program_wire(
+                &mut session,
+                7,
+                2,
+                board_vm_protocol::BOOT_RUN_AT_BOOT,
+                wire.as_mut_ptr(),
+                wire.len() as u64,
+            )
+        };
+        assert_eq!(store.request_id, 4);
+        let decoded = decode_wire_frame_into_raw(&wire[..store.len as usize], &mut raw).unwrap();
+        assert_eq!(decoded.message_type, MessageType::STORE_PROGRAM.0);
+        let frame = decode_frame(&raw[..decoded.len as usize]).unwrap();
+        let store_payload = board_vm_protocol::decode_store_program(frame.payload).unwrap();
+        assert_eq!(store_payload.program_id, 7);
+        assert_eq!(store_payload.slot, 2);
+        assert_eq!(
+            store_payload.boot_policy,
+            board_vm_protocol::BOOT_RUN_AT_BOOT
+        );
+
         let run = unsafe {
             board_vm_language_run_background_wire(
                 &mut session,
@@ -1326,7 +1394,7 @@ mod tests {
                 wire.len() as u64,
             )
         };
-        assert_eq!(run.request_id, 4);
+        assert_eq!(run.request_id, 5);
         let decoded = decode_wire_frame_into_raw(&wire[..run.len as usize], &mut raw).unwrap();
         assert_eq!(decoded.message_type, MessageType::RUN.0);
         let frame = decode_frame(&raw[..decoded.len as usize]).unwrap();
@@ -1340,7 +1408,7 @@ mod tests {
         let stop = unsafe {
             board_vm_language_stop_wire(&mut session, wire.as_mut_ptr(), wire.len() as u64)
         };
-        assert_eq!(stop.request_id, 5);
+        assert_eq!(stop.request_id, 6);
         let decoded = decode_wire_frame_into_raw(&wire[..stop.len as usize], &mut raw).unwrap();
         assert_eq!(decoded.message_type, MessageType::STOP.0);
         let frame = decode_frame(&raw[..decoded.len as usize]).unwrap();
