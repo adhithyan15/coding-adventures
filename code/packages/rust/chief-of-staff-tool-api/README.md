@@ -10,6 +10,8 @@ The crate intentionally stops at the contract layer:
 - structured tool events and final results
 - JSON-schema-like argument validation
 - a deterministic in-memory registry for runtimes and tests
+- a deterministic in-memory runtime that validates, invokes handlers, emits
+  ordered events, and returns canonical `ToolResult` records
 
 Runtime adapters, sandboxing, approval gates, and built-in tool handlers can all
 depend on this package without inventing their own wire vocabulary.
