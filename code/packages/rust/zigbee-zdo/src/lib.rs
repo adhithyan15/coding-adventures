@@ -10,7 +10,7 @@ use smart_home_core::{
     BridgeId, Device, DeviceId, Health, Metadata, ProtocolFamily, ProtocolIdentifier,
 };
 use std::fmt;
-use zigbee_aps::{ApsFrame, ClusterId, Endpoint, ProfileId};
+use zigbee_aps::{ApsFrame, ClusterId, Endpoint, GroupAddress, ProfileId};
 use zigbee_nwk::{IeeeAddress, NetworkAddress};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -21,12 +21,14 @@ impl ZdoClusterId {
     pub const SIMPLE_DESCRIPTOR_REQUEST: Self = Self(0x0004);
     pub const ACTIVE_ENDPOINTS_REQUEST: Self = Self(0x0005);
     pub const BIND_REQUEST: Self = Self(0x0021);
+    pub const UNBIND_REQUEST: Self = Self(0x0022);
     pub const MGMT_LQI_REQUEST: Self = Self(0x0031);
 
     pub const NODE_DESCRIPTOR_RESPONSE: Self = Self(0x8002);
     pub const SIMPLE_DESCRIPTOR_RESPONSE: Self = Self(0x8004);
     pub const ACTIVE_ENDPOINTS_RESPONSE: Self = Self(0x8005);
     pub const BIND_RESPONSE: Self = Self(0x8021);
+    pub const UNBIND_RESPONSE: Self = Self(0x8022);
     pub const MGMT_LQI_RESPONSE: Self = Self(0x8031);
 }
 
@@ -202,6 +204,43 @@ pub struct ActiveEndpointsResponse {
     pub endpoints: Vec<Endpoint>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BindingTarget {
+    Group(GroupAddress),
+    Device {
+        ieee_address: IeeeAddress,
+        endpoint: Endpoint,
+    },
+}
+
+impl BindingTarget {
+    const GROUP_ADDRESS_MODE: u8 = 0x01;
+    const EXTENDED_ADDRESS_MODE: u8 = 0x03;
+
+    fn encode_into(self, out: &mut Vec<u8>) {
+        match self {
+            Self::Group(group) => {
+                out.push(Self::GROUP_ADDRESS_MODE);
+                out.extend_from_slice(&group.0.to_le_bytes());
+            }
+            Self::Device {
+                ieee_address,
+                endpoint,
+            } => {
+                out.push(Self::EXTENDED_ADDRESS_MODE);
+                out.extend_from_slice(&ieee_address.to_le_bytes());
+                out.push(endpoint.0);
+            }
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct BindingResponse {
+    pub transaction_sequence_number: u8,
+    pub status: ZdoStatus,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ZigbeeInterviewSummary {
     pub network_address: NetworkAddress,
@@ -278,6 +317,44 @@ pub fn active_endpoints_request(
     )
 }
 
+pub fn bind_request(
+    aps_counter: u8,
+    transaction_sequence_number: u8,
+    source_ieee_address: IeeeAddress,
+    source_endpoint: Endpoint,
+    cluster_id: ClusterId,
+    target: BindingTarget,
+) -> ApsFrame {
+    binding_request_frame(
+        ZdoClusterId::BIND_REQUEST,
+        aps_counter,
+        transaction_sequence_number,
+        source_ieee_address,
+        source_endpoint,
+        cluster_id,
+        target,
+    )
+}
+
+pub fn unbind_request(
+    aps_counter: u8,
+    transaction_sequence_number: u8,
+    source_ieee_address: IeeeAddress,
+    source_endpoint: Endpoint,
+    cluster_id: ClusterId,
+    target: BindingTarget,
+) -> ApsFrame {
+    binding_request_frame(
+        ZdoClusterId::UNBIND_REQUEST,
+        aps_counter,
+        transaction_sequence_number,
+        source_ieee_address,
+        source_endpoint,
+        cluster_id,
+        target,
+    )
+}
+
 pub fn parse_node_descriptor_response(payload: &[u8]) -> Result<NodeDescriptorResponse, ZdoError> {
     let mut cursor = Cursor::new(payload);
     let transaction_sequence_number = cursor.read_u8()?;
@@ -347,6 +424,14 @@ pub fn parse_active_endpoints_response(
     })
 }
 
+pub fn parse_bind_response(payload: &[u8]) -> Result<BindingResponse, ZdoError> {
+    parse_binding_response(payload)
+}
+
+pub fn parse_unbind_response(payload: &[u8]) -> Result<BindingResponse, ZdoError> {
+    parse_binding_response(payload)
+}
+
 pub fn interview_to_device(bridge_id: &BridgeId, summary: &ZigbeeInterviewSummary) -> Device {
     let node_hex = format!("0x{:04x}", summary.network_address.0);
     let mut identifiers = vec![
@@ -393,6 +478,36 @@ pub fn interview_to_device(bridge_id: &BridgeId, summary: &ZigbeeInterviewSummar
             ),
         ],
     }
+}
+
+fn binding_request_frame(
+    cluster_id: ZdoClusterId,
+    aps_counter: u8,
+    transaction_sequence_number: u8,
+    source_ieee_address: IeeeAddress,
+    source_endpoint: Endpoint,
+    bound_cluster_id: ClusterId,
+    target: BindingTarget,
+) -> ApsFrame {
+    let mut payload = Vec::with_capacity(1 + 8 + 1 + 2 + 10);
+    payload.extend_from_slice(&source_ieee_address.to_le_bytes());
+    payload.push(source_endpoint.0);
+    payload.extend_from_slice(&bound_cluster_id.0.to_le_bytes());
+    target.encode_into(&mut payload);
+    zdo_request_frame(
+        cluster_id,
+        aps_counter,
+        transaction_sequence_number,
+        payload,
+    )
+}
+
+fn parse_binding_response(payload: &[u8]) -> Result<BindingResponse, ZdoError> {
+    let mut cursor = Cursor::new(payload);
+    Ok(BindingResponse {
+        transaction_sequence_number: cursor.read_u8()?,
+        status: ZdoStatus::parse(cursor.read_u8()?),
+    })
 }
 
 fn zdo_request_frame(
@@ -553,6 +668,64 @@ mod tests {
 
         assert_eq!(frame.cluster_id, ClusterId(0x0004));
         assert_eq!(frame.payload, vec![0xbb, 0x34, 0x12, 11]);
+    }
+
+    #[test]
+    fn bind_request_encodes_unicast_target() {
+        let frame = bind_request(
+            9,
+            0xcc,
+            IeeeAddress(0x0012_4b00_24c8_abcd),
+            Endpoint(1),
+            ClusterId::ON_OFF,
+            BindingTarget::Device {
+                ieee_address: IeeeAddress(0x0017_88ff_fead_beef),
+                endpoint: Endpoint(11),
+            },
+        );
+
+        assert_eq!(frame.cluster_id, ClusterId(0x0021));
+        assert_eq!(frame.profile_id, ProfileId::ZIGBEE_DEVICE_PROFILE);
+        assert_eq!(frame.counter, 9);
+        assert_eq!(
+            frame.payload,
+            vec![
+                0xcc, 0xcd, 0xab, 0xc8, 0x24, 0x00, 0x4b, 0x12, 0x00, 1, 0x06, 0x00, 0x03, 0xef,
+                0xbe, 0xad, 0xfe, 0xff, 0x88, 0x17, 0x00, 11,
+            ]
+        );
+    }
+
+    #[test]
+    fn unbind_request_encodes_group_target() {
+        let frame = unbind_request(
+            10,
+            0xdd,
+            IeeeAddress(0x0012_4b00_24c8_abcd),
+            Endpoint(1),
+            ClusterId::LEVEL_CONTROL,
+            BindingTarget::Group(GroupAddress(0x2345)),
+        );
+
+        assert_eq!(frame.cluster_id, ClusterId(0x0022));
+        assert_eq!(
+            frame.payload,
+            vec![
+                0xdd, 0xcd, 0xab, 0xc8, 0x24, 0x00, 0x4b, 0x12, 0x00, 1, 0x08, 0x00, 0x01, 0x45,
+                0x23,
+            ]
+        );
+    }
+
+    #[test]
+    fn parses_bind_and_unbind_responses() {
+        let bind = parse_bind_response(&[0xee, 0x00]).unwrap();
+        let unbind = parse_unbind_response(&[0xef, 0x84]).unwrap();
+
+        assert_eq!(bind.transaction_sequence_number, 0xee);
+        assert_eq!(bind.status, ZdoStatus::Success);
+        assert_eq!(unbind.transaction_sequence_number, 0xef);
+        assert_eq!(unbind.status, ZdoStatus::NotSupported);
     }
 
     #[test]
