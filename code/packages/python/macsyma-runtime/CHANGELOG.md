@@ -1,5 +1,103 @@
 # Changelog
 
+## 1.25.0 — 2026-05-08
+
+**Phase 34 — End-to-end pipeline tests for special functions (Phase 23),
+assumption system (Phase 21), and extended number theory (Phase B3).**
+
+### Why this release
+
+Three families of operations were fully implemented in their respective
+substrate packages but had never been exercised through the complete MACSYMA
+pipeline (`surface syntax → parse → compile → VM → result`):
+
+1. **Special functions (Phase 23)** — `erf`, `erfc`, `erfi`, `gamma`, `beta`,
+   `si`, `ci`, `shi`, `li2`, `fresnel_s`, `fresnel_c`, `lambert_w` all have
+   handlers in `symbolic-vm` and entries in the MACSYMA name table since
+   Phase 23, but the pipeline was never tested end-to-end.
+
+2. **Assumption system (Phase 21)** — `assume(x > 0)`, `is(x > 0)`,
+   `forget()`, and `forget(relation)` are runtime-owned heads wired into
+   `SymbolicBackend`.  Pipeline testing requires a *shared* VM across
+   statements (assumptions persist on the VM), so a new helper
+   `_eval_seq(*sources)` is added to the test module.
+
+3. **Extended number theory (Phase B3)** — `prev_prime`, `moebius`, `jacobi`,
+   `chinese`, and `numdigits` are in the MACSYMA name table (alongside the
+   already-tested `primep`, `next_prime`, `ifactor`, etc.) but Section K of
+   the pipeline tests missed them.
+
+### New pipeline tests
+
+#### Section HH — Special Functions (17 tests)
+
+| Test | Expression | Expected |
+|------|-----------|---------|
+| `test_pipeline_erf_zero` | `erf(0)` | `0` (exact) |
+| `test_pipeline_erf_numeric` | `erf(1.0)` | `IRFloat(≈ 0.8427)` |
+| `test_pipeline_erfc_numeric` | `erfc(1.0)` | `IRFloat(≈ 0.1573)` |
+| `test_pipeline_gamma_positive_integer` | `gamma(5)` | `24` (4! exact) |
+| `test_pipeline_gamma_one` | `gamma(1)` | `1` (0! exact) |
+| `test_pipeline_gamma_half` | `gamma(1/2)` | `Sqrt(%pi)` or `IRFloat(√π)` |
+| `test_pipeline_beta_integers` | `beta(2, 3)` | `IRRational(1, 12)` |
+| `test_pipeline_si_zero` | `si(0)` | `0` (exact) |
+| `test_pipeline_si_numeric` | `si(1.0)` | `IRFloat(≈ 0.9461)` |
+| `test_pipeline_ci_numeric` | `ci(1.0)` | `IRFloat(≈ 0.3374)` |
+| `test_pipeline_shi_zero` | `shi(0)` | `0` (exact) |
+| `test_pipeline_li2_zero` | `li2(0)` | `0` (exact) |
+| `test_pipeline_li2_numeric` | `li2(0.5)` | `IRFloat(≈ 0.5822)` |
+| `test_pipeline_fresnel_s_zero` | `fresnel_s(0)` | `0` (exact) |
+| `test_pipeline_fresnel_c_zero` | `fresnel_c(0)` | `0` (exact) |
+| `test_pipeline_lambert_w_zero` | `lambert_w(0)` | `IRFloat(≈ 0.0)` |
+| `test_pipeline_lambert_w_one` | `lambert_w(1.0)` | `IRFloat(≈ 0.5671)` (Ω) |
+
+#### Section II — Assumption System (5 tests)
+
+A new helper `_eval_seq(*sources)` evaluates multiple MACSYMA expressions on
+a **single VM** so that assumptions set by `assume(...)` persist through
+subsequent `is(...)` calls, exactly as in a REPL session.
+
+| Test | Sequence | Expected |
+|------|---------|---------|
+| `test_pipeline_assume_is_true` | `assume(x>0); is(x>0)` | `"true"` |
+| `test_pipeline_is_without_assumption_unknown` | `is(x>0)` (fresh VM) | `"unknown"` |
+| `test_pipeline_assume_returns_done` | `assume(x>0)` | `"done"` |
+| `test_pipeline_forget_clears_assumption` | `assume(x>0); forget(); is(x>0)` | `"unknown"` |
+| `test_pipeline_assume_is_negative_true` | `assume(y<0); is(y<0)` | `"true"` |
+
+#### Section JJ — Extended Number Theory (10 tests)
+
+| Test | Expression | Expected |
+|------|-----------|---------|
+| `test_pipeline_prev_prime_10` | `prev_prime(10)` | `7` |
+| `test_pipeline_prev_prime_8` | `prev_prime(8)` | `7` |
+| `test_pipeline_moebius_prime` | `moebius(2)` | `−1` |
+| `test_pipeline_moebius_square_factor` | `moebius(12)` | `0` |
+| `test_pipeline_moebius_squarefree_two_factors` | `moebius(6)` | `1` |
+| `test_pipeline_jacobi_symbol` | `jacobi(2, 5)` | `−1` |
+| `test_pipeline_jacobi_one_is_always_one` | `jacobi(1, 7)` | `1` |
+| `test_pipeline_chinese_remainder` | `chinese([2,3],[3,5])` | `8` |
+| `test_pipeline_numdigits_thousand` | `numdigits(1000)` | `4` |
+| `test_pipeline_numdigits_one` | `numdigits(1)` | `1` |
+
+### New helper function
+
+`_eval_seq(*sources)` — evaluates multiple MACSYMA expressions sequentially
+on a single shared VM.  Needed for any test where state (assumptions,
+variable bindings, named rules) must persist across REPL-style statements.
+
+### Changed
+
+- `pyproject.toml` version bumped `1.24.0` → `1.25.0`.
+- Module description updated to reflect Phase 34 additions.
+
+### Stats
+
+- **433 tests** (up from 401), all passing.
+- Coverage maintained above 80% threshold.
+
+---
+
 ## 1.24.0 — 2026-05-08
 
 **Phase 33 — End-to-end pipeline tests for Fourier transforms, Newton's method,

@@ -1506,3 +1506,366 @@ def test_pipeline_poly_reduce_zero_remainder() -> None:
         f"Expected 0 from poly_reduce(x^2-1, [x^2-1], [x]), got {result}"
     )
 
+
+# ===========================================================================
+# Section HH — Special Functions (Phase 23 pipeline tests)
+# ===========================================================================
+#
+# Phase 23 added handlers for the transcendental special functions that arise
+# as integration fallbacks and CAS building blocks:
+#
+#   erf(x), erfc(x), erfi(x)   — error functions
+#   gamma(z)                    — Euler's Gamma function
+#   beta(a, b)                  — Euler's Beta function
+#   si(x), ci(x)                — trigonometric integrals
+#   shi(x), chi(x)              — hyperbolic integrals
+#   li2(x)                      — Spence's dilogarithm
+#   fresnel_s(x), fresnel_c(x)  — Fresnel integrals
+#   lambert_w(x)                — principal branch of the Lambert W function
+#
+# The MACSYMA name table has mapped all these names to canonical IR heads
+# (e.g. ``erf`` → ``Erf``, ``gamma`` → ``GammaFunc``) since Phase 23.  The
+# symbolic-vm handlers implement:
+#
+#   - Exact results at known special values (e.g. erf(0) = 0, Γ(n) = (n-1)!)
+#   - Numeric evaluation via pure-Python series/Lanczos for float inputs
+#
+# These tests validate the full pipeline (MACSYMA surface → parse → compile
+# → VM → result) for the first time.
+# ===========================================================================
+
+
+def test_pipeline_erf_zero() -> None:
+    """erf(0) → 0  (exact; erf(0) = 0 by definition)."""
+    result = _eval("erf(0)")
+    assert result == IRInteger(0), f"Expected 0, got {result!r}"
+
+
+def test_pipeline_erf_numeric() -> None:
+    """erf(1.0) → IRFloat(≈ 0.8427)  (Gauss error function at x = 1)."""
+    import math as _math
+
+    result = _eval("erf(1.0)")
+    assert isinstance(result, IRFloat), f"Expected IRFloat, got {type(result).__name__}"
+    assert abs(result.value - _math.erf(1.0)) < 1e-9, (
+        f"erf(1.0) = {result.value}, expected ≈ {_math.erf(1.0)}"
+    )
+
+
+def test_pipeline_erfc_numeric() -> None:
+    """erfc(1.0) → IRFloat(≈ 0.1573)  (complementary error function; erfc = 1 − erf)."""
+    import math as _math
+
+    result = _eval("erfc(1.0)")
+    assert isinstance(result, IRFloat), f"Expected IRFloat, got {type(result).__name__}"
+    expected = 1.0 - _math.erf(1.0)
+    assert abs(result.value - expected) < 1e-9, (
+        f"erfc(1.0) = {result.value}, expected ≈ {expected}"
+    )
+
+
+def test_pipeline_gamma_positive_integer() -> None:
+    """gamma(5) → 24  (Γ(5) = 4! = 24, exact integer result)."""
+    result = _eval("gamma(5)")
+    assert result == IRInteger(24), f"Expected 24, got {result!r}"
+
+
+def test_pipeline_gamma_one() -> None:
+    """gamma(1) → 1  (Γ(1) = 0! = 1, exact integer result)."""
+    result = _eval("gamma(1)")
+    assert result == IRInteger(1), f"Expected 1, got {result!r}"
+
+
+def test_pipeline_gamma_half() -> None:
+    """gamma(1/2) → √π  (Γ(1/2) = √π; returned as Sqrt(%pi) or an IRFloat).
+
+    The ``gamma_handler`` recognises the half-integer form and returns the
+    symbolic node ``Sqrt(%pi)`` (because %pi is looked up by name in the
+    handler, not pre-substituted).  The test accepts either exact symbolic
+    form or a float approximation of √π.
+    """
+    import math as _math
+
+    result = _eval("gamma(1/2)")
+    # The handler returns IRApply(Sqrt, (%pi,)); %pi inside the returned node
+    # is NOT automatically evaluated because the VM does not re-enter the
+    # returned node.  Accept both the symbolic and numeric forms.
+    if isinstance(result, IRApply):
+        assert result.head.name == "Sqrt", (
+            f"Expected Sqrt head from gamma(1/2), got {result.head.name!r}"
+        )
+    else:
+        assert isinstance(result, IRFloat), (
+            f"Expected IRApply(Sqrt,...) or IRFloat from gamma(1/2), got {result!r}"
+        )
+        assert abs(result.value - _math.sqrt(_math.pi)) < 1e-9
+
+
+def test_pipeline_beta_integers() -> None:
+    """beta(2, 3) → 1/12  (B(2,3) = Γ(2)·Γ(3)/Γ(5) = 1·2/24 = 1/12).
+
+    The ``beta_handler`` rationalises the float result to the nearest
+    simple fraction when the denominator fits in 10 000, returning
+    ``IRRational(1, 12)`` for integer arguments.
+    """
+    result = _eval("beta(2, 3)")
+    assert result == IRRational(1, 12), (
+        f"Expected IRRational(1, 12) from beta(2, 3), got {result!r}"
+    )
+
+
+def test_pipeline_si_zero() -> None:
+    """si(0) → 0  (exact; Si(0) = 0 by definition of the sine integral)."""
+    result = _eval("si(0)")
+    assert result == IRInteger(0), f"Expected 0, got {result!r}"
+
+
+def test_pipeline_si_numeric() -> None:
+    """si(1.0) → IRFloat  (Si(1) ≈ 0.9461, the sine integral at x = 1)."""
+    result = _eval("si(1.0)")
+    assert isinstance(result, IRFloat), f"Expected IRFloat, got {type(result).__name__}"
+    # Si(1) ≈ 0.9460831 — verify to 4 decimal places
+    assert abs(result.value - 0.9461) < 1e-3, (
+        f"si(1.0) = {result.value}, expected ≈ 0.9461"
+    )
+
+
+def test_pipeline_ci_numeric() -> None:
+    """ci(1.0) → IRFloat  (Ci(1) ≈ 0.3374, the cosine integral at x = 1)."""
+    result = _eval("ci(1.0)")
+    assert isinstance(result, IRFloat), f"Expected IRFloat, got {type(result).__name__}"
+    # Ci(1) ≈ 0.3374039229 — verify to 4 decimal places
+    assert abs(result.value - 0.3374) < 1e-3, (
+        f"ci(1.0) = {result.value}, expected ≈ 0.3374"
+    )
+
+
+def test_pipeline_shi_zero() -> None:
+    """shi(0) → 0  (exact; Shi(0) = 0 by definition of the hyperbolic sine integral)."""
+    result = _eval("shi(0)")
+    assert result == IRInteger(0), f"Expected 0, got {result!r}"
+
+
+def test_pipeline_li2_zero() -> None:
+    """li2(0) → 0  (exact; Li₂(0) = 0 by definition of the dilogarithm)."""
+    result = _eval("li2(0)")
+    assert result == IRInteger(0), f"Expected 0, got {result!r}"
+
+
+def test_pipeline_li2_numeric() -> None:
+    """li2(0.5) → IRFloat(≈ 0.5822)  (Spence's dilogarithm at x = 1/2).
+
+    The exact value is Li₂(1/2) = π²/12 − (ln 2)²/2 ≈ 0.5822.
+    """
+    result = _eval("li2(0.5)")
+    assert isinstance(result, IRFloat), f"Expected IRFloat, got {type(result).__name__}"
+    assert abs(result.value - 0.5822) < 1e-3, (
+        f"li2(0.5) = {result.value}, expected ≈ 0.5822"
+    )
+
+
+def test_pipeline_fresnel_s_zero() -> None:
+    """fresnel_s(0) → 0  (exact; FresnelS(0) = 0 by definition)."""
+    result = _eval("fresnel_s(0)")
+    assert result == IRInteger(0), f"Expected 0, got {result!r}"
+
+
+def test_pipeline_fresnel_c_zero() -> None:
+    """fresnel_c(0) → 0  (exact; FresnelC(0) = 0 by definition)."""
+    result = _eval("fresnel_c(0)")
+    assert result == IRInteger(0), f"Expected 0, got {result!r}"
+
+
+def test_pipeline_lambert_w_zero() -> None:
+    """lambert_w(0) → IRFloat(≈ 0.0)  (W₀(0) = 0 exactly)."""
+    result = _eval("lambert_w(0)")
+    assert isinstance(result, IRFloat), f"Expected IRFloat, got {type(result).__name__}"
+    assert abs(result.value) < 1e-9, (
+        f"lambert_w(0) = {result.value}, expected ≈ 0"
+    )
+
+
+def test_pipeline_lambert_w_one() -> None:
+    """lambert_w(1.0) → IRFloat(≈ 0.5671)  (W₀(1) = Ω, the Omega constant).
+
+    The Omega constant Ω = W₀(1) ≈ 0.56714329… is the unique positive
+    solution of Ω·e^Ω = 1.  Newton's method converges in a few iterations.
+    """
+    result = _eval("lambert_w(1.0)")
+    assert isinstance(result, IRFloat), f"Expected IRFloat, got {type(result).__name__}"
+    assert abs(result.value - 0.5671) < 1e-3, (
+        f"lambert_w(1.0) = {result.value}, expected ≈ 0.5671 (Omega constant)"
+    )
+
+
+# ===========================================================================
+# Section II — Assumption System (assume / is / forget — Phase 21 pipeline)
+# ===========================================================================
+#
+# Phase 21 introduced the assumption framework to the symbolic VM:
+#
+#   assume(x > 0)   — record that x is positive
+#   is(x > 0)       — query; returns "true", "false", or "unknown"
+#   forget()        — clear all assumptions
+#   forget(x > 0)   — remove one specific assumption
+#
+# These are runtime-owned heads (``Assume``, ``Is``, ``Forget``) registered
+# in the MACSYMA name table and dispatched by SymbolicBackend.
+#
+# The pipeline tests below use a shared VM via ``_eval_seq`` so that
+# assumptions persist from one statement to the next, mirroring REPL use.
+# ===========================================================================
+
+
+def _eval_seq(*sources: str) -> object:
+    """Evaluate multiple MACSYMA expressions sequentially on a single VM.
+
+    Assumptions, variable bindings, and other per-VM state persist across
+    calls.  Returns the result of the *last* expression evaluated.
+
+    Used for assumption-system tests where ``assume(...)`` must fire before
+    ``is(...)`` is evaluated.
+    """
+    vm = VM(MacsymaBackend())
+    result: object = None
+    for src in sources:
+        s = src.strip().rstrip(";$").strip()
+        ast = parse_macsyma(s + ";")
+        stmts = compile_macsyma(ast, wrap_terminators=False)
+        assert len(stmts) == 1, f"expected 1 statement, got {len(stmts)}"
+        result = vm.eval(stmts[0])
+    return result
+
+
+def test_pipeline_assume_is_true() -> None:
+    """assume(x > 0); is(x > 0) → IRSymbol("true").
+
+    After recording the fact that x is positive, the ``Is`` handler
+    consults the assumption context and returns ``"true"``.
+    """
+    result = _eval_seq("assume(x > 0)", "is(x > 0)")
+    assert result == IRSymbol("true"), (
+        f"Expected 'true' after assume(x>0), is(x>0), got {result!r}"
+    )
+
+
+def test_pipeline_is_without_assumption_unknown() -> None:
+    """is(x > 0) on a fresh VM (no prior assume) → IRSymbol("unknown").
+
+    When no assumption has been made about x, the ``Is`` handler cannot
+    determine the truth value and returns ``"unknown"``.
+    """
+    result = _eval("is(x > 0)")
+    assert result == IRSymbol("unknown"), (
+        f"Expected 'unknown' with no assumptions, got {result!r}"
+    )
+
+
+def test_pipeline_assume_returns_done() -> None:
+    """assume(x > 0) → IRSymbol("done")  (side-effect; return value is "done")."""
+    result = _eval("assume(x > 0)")
+    assert result == IRSymbol("done"), f"Expected 'done', got {result!r}"
+
+
+def test_pipeline_forget_clears_assumption() -> None:
+    """assume(x > 0); forget(); is(x > 0) → IRSymbol("unknown").
+
+    ``forget()`` with no arguments clears all recorded facts.  After that,
+    ``is(x > 0)`` must return ``"unknown"`` again.
+    """
+    result = _eval_seq("assume(x > 0)", "forget()", "is(x > 0)")
+    assert result == IRSymbol("unknown"), (
+        f"Expected 'unknown' after forget(), got {result!r}"
+    )
+
+
+def test_pipeline_assume_is_negative_true() -> None:
+    """assume(y < 0); is(y < 0) → IRSymbol("true")."""
+    result = _eval_seq("assume(y < 0)", "is(y < 0)")
+    assert result == IRSymbol("true"), (
+        f"Expected 'true' after assume(y<0), is(y<0), got {result!r}"
+    )
+
+
+# ===========================================================================
+# Section JJ — Extended Number Theory (Phase B3 pipeline)
+# ===========================================================================
+#
+# Section K tested the core number-theory names (``primep``, ``next_prime``,
+# ``ifactor``, ``divisors``, ``totient``).  Five further names from the
+# ``cas-number-theory`` substrate were mapped in the MACSYMA name table but
+# never exercised through the pipeline:
+#
+#   prev_prime(n)           — largest prime strictly less than n
+#   moebius(n)              — Möbius μ function
+#   jacobi(a, n)            — Jacobi / Legendre symbol
+#   chinese([rem], [mod])   — Chinese Remainder Theorem
+#   numdigits(n)            — number of base-10 digits
+#
+# ===========================================================================
+
+
+def test_pipeline_prev_prime_10() -> None:
+    """prev_prime(10) → 7  (the largest prime < 10)."""
+    result = _eval("prev_prime(10)")
+    assert result == IRInteger(7), f"Expected 7, got {result!r}"
+
+
+def test_pipeline_prev_prime_8() -> None:
+    """prev_prime(8) → 7  (7 is prime and < 8)."""
+    result = _eval("prev_prime(8)")
+    assert result == IRInteger(7), f"Expected 7, got {result!r}"
+
+
+def test_pipeline_moebius_prime() -> None:
+    """moebius(2) → -1  (μ(p) = -1 for any prime p)."""
+    result = _eval("moebius(2)")
+    assert result == IRInteger(-1), f"Expected -1, got {result!r}"
+
+
+def test_pipeline_moebius_square_factor() -> None:
+    """moebius(12) → 0  (μ(n) = 0 when n has a squared prime factor; 12 = 4·3)."""
+    result = _eval("moebius(12)")
+    assert result == IRInteger(0), f"Expected 0, got {result!r}"
+
+
+def test_pipeline_moebius_squarefree_two_factors() -> None:
+    """moebius(6) → 1  (μ(pq) = 1 for distinct primes p, q; 6 = 2·3)."""
+    result = _eval("moebius(6)")
+    assert result == IRInteger(1), f"Expected 1, got {result!r}"
+
+
+def test_pipeline_jacobi_symbol() -> None:
+    """jacobi(2, 5) → -1  (Legendre symbol (2/5): 2 is not a QR mod 5)."""
+    result = _eval("jacobi(2, 5)")
+    assert result == IRInteger(-1), f"Expected -1, got {result!r}"
+
+
+def test_pipeline_jacobi_one_is_always_one() -> None:
+    """jacobi(1, 7) → 1  (1 is a quadratic residue modulo any odd integer)."""
+    result = _eval("jacobi(1, 7)")
+    assert result == IRInteger(1), f"Expected 1, got {result!r}"
+
+
+def test_pipeline_chinese_remainder() -> None:
+    """chinese([2, 3], [3, 5]) → 8  (x ≡ 2 mod 3, x ≡ 3 mod 5 → x = 8).
+
+    The unique solution in [0, 15) is x = 8:
+      8 mod 3 = 2 ✓
+      8 mod 5 = 3 ✓
+    """
+    result = _eval("chinese([2, 3], [3, 5])")
+    assert result == IRInteger(8), f"Expected 8, got {result!r}"
+
+
+def test_pipeline_numdigits_thousand() -> None:
+    """numdigits(1000) → 4  (1000 has 4 decimal digits)."""
+    result = _eval("numdigits(1000)")
+    assert result == IRInteger(4), f"Expected 4, got {result!r}"
+
+
+def test_pipeline_numdigits_one() -> None:
+    """numdigits(1) → 1  (a single digit)."""
+    result = _eval("numdigits(1)")
+    assert result == IRInteger(1), f"Expected 1, got {result!r}"
+
