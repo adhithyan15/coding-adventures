@@ -732,6 +732,454 @@ impl InMemoryToolRegistry {
 }
 
 // ============================================================================
+// Runtime
+// ============================================================================
+
+/// Canonical call status used by runtime records.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolCallStatus {
+    Queued,
+    Validating,
+    AwaitingApproval,
+    Running,
+    Completed,
+    Failed,
+    Cancelled,
+}
+
+impl ToolCallStatus {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Queued => "queued",
+            Self::Validating => "validating",
+            Self::AwaitingApproval => "awaiting_approval",
+            Self::Running => "running",
+            Self::Completed => "completed",
+            Self::Failed => "failed",
+            Self::Cancelled => "cancelled",
+        }
+    }
+}
+
+impl Display for ToolCallStatus {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Approval state recorded for one invocation.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ApprovalState {
+    NotRequired,
+    Pending,
+    Granted,
+    Denied,
+    Expired,
+}
+
+impl ApprovalState {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::NotRequired => "not_required",
+            Self::Pending => "pending",
+            Self::Granted => "granted",
+            Self::Denied => "denied",
+            Self::Expired => "expired",
+        }
+    }
+}
+
+impl Display for ApprovalState {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Durable summary of one tool call lifecycle.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ToolCallRecord {
+    pub call_id: String,
+    pub tool_id: ToolId,
+    pub status: ToolCallStatus,
+    pub started_at: Option<TimestampMs>,
+    pub completed_at: Option<TimestampMs>,
+    pub lock_scope: Option<String>,
+    pub approval_state: ApprovalState,
+    pub metrics: ToolMetrics,
+}
+
+impl ToolCallRecord {
+    fn new(request: &ToolInvocationRequest, definition: Option<&ToolDefinition>) -> Self {
+        Self {
+            call_id: request.call_id.clone(),
+            tool_id: request.tool_id.clone(),
+            status: ToolCallStatus::Queued,
+            started_at: None,
+            completed_at: None,
+            lock_scope: definition.and_then(|definition| definition.preferred_lock_scope.clone()),
+            approval_state: ApprovalState::NotRequired,
+            metrics: ToolMetrics::default(),
+        }
+    }
+}
+
+/// Cooperative cancellation handle passed into handlers.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub struct CancellationToken {
+    cancelled: bool,
+}
+
+impl CancellationToken {
+    pub fn active() -> Self {
+        Self { cancelled: false }
+    }
+
+    pub fn cancelled() -> Self {
+        Self { cancelled: true }
+    }
+
+    pub fn is_cancelled(self) -> bool {
+        self.cancelled
+    }
+}
+
+/// Explicit execution context passed to a handler.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ToolExecutionContext {
+    pub call_id: String,
+    pub tool_id: ToolId,
+    pub requested_by: RequestedBy,
+    pub session_id: Option<String>,
+    pub job_id: Option<String>,
+    pub agent_id: Option<String>,
+    pub user_id: Option<String>,
+    pub requested_at: TimestampMs,
+    pub deadline_at: Option<TimestampMs>,
+    pub cancellation_token: CancellationToken,
+}
+
+impl ToolExecutionContext {
+    pub fn from_request(request: &ToolInvocationRequest) -> Self {
+        Self {
+            call_id: request.call_id.clone(),
+            tool_id: request.tool_id.clone(),
+            requested_by: request.requested_by,
+            session_id: request.session_id.clone(),
+            job_id: request.job_id.clone(),
+            agent_id: request.agent_id.clone(),
+            user_id: request.user_id.clone(),
+            requested_at: request.requested_at,
+            deadline_at: request.deadline_at,
+            cancellation_token: CancellationToken::active(),
+        }
+    }
+}
+
+/// One non-terminal event requested by a handler.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ToolHandlerEvent {
+    pub kind: ToolEventKind,
+    pub payload: JsonValue,
+}
+
+/// Domain output returned by a handler before runtime wrapping.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ToolHandlerOutput {
+    pub output: JsonValue,
+    pub artifact_refs: Vec<String>,
+    pub memory_refs: Vec<String>,
+    pub events: Vec<ToolHandlerEvent>,
+}
+
+impl ToolHandlerOutput {
+    pub fn new(output: JsonValue) -> Self {
+        Self {
+            output,
+            artifact_refs: Vec::new(),
+            memory_refs: Vec::new(),
+            events: Vec::new(),
+        }
+    }
+
+    pub fn with_artifact_ref(mut self, artifact_ref: impl Into<String>) -> Self {
+        self.artifact_refs.push(artifact_ref.into());
+        self
+    }
+
+    pub fn with_memory_ref(mut self, memory_ref: impl Into<String>) -> Self {
+        self.memory_refs.push(memory_ref.into());
+        self
+    }
+
+    pub fn with_event(mut self, kind: ToolEventKind, payload: JsonValue) -> Self {
+        self.events.push(ToolHandlerEvent { kind, payload });
+        self
+    }
+}
+
+/// Handler contract for in-process tool runtimes.
+pub trait ToolHandler {
+    fn invoke(
+        &self,
+        arguments: JsonValue,
+        context: ToolExecutionContext,
+    ) -> Result<ToolHandlerOutput, ToolCallError>;
+}
+
+impl<F> ToolHandler for F
+where
+    F: Fn(JsonValue, ToolExecutionContext) -> Result<ToolHandlerOutput, ToolCallError>,
+{
+    fn invoke(
+        &self,
+        arguments: JsonValue,
+        context: ToolExecutionContext,
+    ) -> Result<ToolHandlerOutput, ToolCallError> {
+        self(arguments, context)
+    }
+}
+
+/// Result plus event stream and call record for one invocation.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ToolExecutionTrace {
+    pub record: ToolCallRecord,
+    pub events: Vec<ToolEvent>,
+    pub result: ToolResult,
+}
+
+/// Deterministic in-memory runtime for tests, built-ins, and small hosts.
+#[derive(Default)]
+pub struct InMemoryToolRuntime {
+    registry: InMemoryToolRegistry,
+    handlers: BTreeMap<ToolId, Box<dyn ToolHandler>>,
+}
+
+impl InMemoryToolRuntime {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Register one definition and its in-process handler.
+    pub fn register_handler<H>(
+        &mut self,
+        definition: ToolDefinition,
+        handler: H,
+    ) -> Result<(), ToolApiError>
+    where
+        H: ToolHandler + 'static,
+    {
+        let tool_id = definition.tool_id.clone();
+        self.registry.register(definition)?;
+        self.handlers.insert(tool_id, Box::new(handler));
+        Ok(())
+    }
+
+    /// Fetch a registered definition.
+    pub fn get(&self, tool_id: &str) -> Option<&ToolDefinition> {
+        self.registry.get(tool_id)
+    }
+
+    /// List registered definitions sorted by tool id.
+    pub fn list(&self) -> Vec<&ToolDefinition> {
+        self.registry.list()
+    }
+
+    /// Validate request metadata and arguments without invoking the handler.
+    pub fn validate(&self, request: &ToolInvocationRequest) -> ToolValidationReport {
+        self.registry.validate_call(request)
+    }
+
+    /// Invoke a tool and return only the terminal result.
+    pub fn invoke(&self, request: &ToolInvocationRequest) -> ToolResult {
+        self.invoke_with_events(request).result
+    }
+
+    /// Invoke a tool and return the canonical event stream plus call record.
+    pub fn invoke_with_events(&self, request: &ToolInvocationRequest) -> ToolExecutionTrace {
+        let definition = self.registry.get(&request.tool_id);
+        let mut record = ToolCallRecord::new(request, definition);
+        record.status = ToolCallStatus::Validating;
+
+        let validation = self.registry.validate_call(request);
+        if !validation.ok {
+            let result = ToolResult::failed(
+                request.call_id.clone(),
+                ToolCallError {
+                    kind: ToolErrorKind::ToolValidationError,
+                    message: "tool invocation failed validation".to_string(),
+                    details: validation_errors_to_json(&validation.errors),
+                },
+            );
+            record.status = ToolCallStatus::Failed;
+            record.completed_at = Some(request.requested_at);
+            return trace_with_terminal(record, request, Vec::new(), result);
+        }
+
+        let Some(handler) = self.handlers.get(&request.tool_id) else {
+            let result = ToolResult::failed(
+                request.call_id.clone(),
+                ToolCallError::new(
+                    ToolErrorKind::ToolNotFound,
+                    "tool handler is not registered",
+                ),
+            );
+            record.status = ToolCallStatus::Failed;
+            record.completed_at = Some(request.requested_at);
+            return trace_with_terminal(record, request, Vec::new(), result);
+        };
+
+        record.status = ToolCallStatus::Running;
+        record.started_at = Some(request.requested_at);
+        let context = ToolExecutionContext::from_request(request);
+        if context.cancellation_token.is_cancelled() {
+            let result = ToolResult::failed(
+                request.call_id.clone(),
+                ToolCallError::new(ToolErrorKind::ToolCancelled, "tool call was cancelled"),
+            );
+            record.status = ToolCallStatus::Cancelled;
+            record.completed_at = Some(request.requested_at);
+            return trace_with_terminal(record, request, started_event(request), result);
+        }
+
+        match handler.invoke(request.arguments.clone(), context) {
+            Ok(output) if output.events.iter().any(|event| event.kind.is_terminal()) => {
+                let result = ToolResult::failed(
+                    request.call_id.clone(),
+                    ToolCallError::new(
+                        ToolErrorKind::ToolExecutionError,
+                        "handlers must not emit terminal events directly",
+                    ),
+                );
+                record.status = ToolCallStatus::Failed;
+                record.completed_at = Some(request.requested_at);
+                trace_with_terminal(record, request, started_event(request), result)
+            }
+            Ok(output) => {
+                let mut result = ToolResult::completed(request.call_id.clone(), output.output);
+                result.artifact_refs = output.artifact_refs;
+                result.memory_refs = output.memory_refs;
+                record.status = ToolCallStatus::Completed;
+                record.completed_at = Some(request.requested_at);
+                let mut events = started_event(request);
+                events.extend(handler_events(request, output.events, events.len() as u64));
+                trace_with_terminal(record, request, events, result)
+            }
+            Err(error) => {
+                let status = if error.kind == ToolErrorKind::ToolCancelled {
+                    ToolCallStatus::Cancelled
+                } else {
+                    ToolCallStatus::Failed
+                };
+                let result = ToolResult::failed(request.call_id.clone(), error);
+                record.status = status;
+                record.completed_at = Some(request.requested_at);
+                trace_with_terminal(record, request, started_event(request), result)
+            }
+        }
+    }
+}
+
+fn started_event(request: &ToolInvocationRequest) -> Vec<ToolEvent> {
+    vec![ToolEvent {
+        call_id: request.call_id.clone(),
+        sequence: 0,
+        at: request.requested_at,
+        kind: ToolEventKind::Started,
+        payload: JsonValue::Null,
+    }]
+}
+
+fn handler_events(
+    request: &ToolInvocationRequest,
+    events: Vec<ToolHandlerEvent>,
+    sequence_start: u64,
+) -> Vec<ToolEvent> {
+    events
+        .into_iter()
+        .enumerate()
+        .map(|(index, event)| ToolEvent {
+            call_id: request.call_id.clone(),
+            sequence: sequence_start + index as u64,
+            at: request.requested_at,
+            kind: event.kind,
+            payload: event.payload,
+        })
+        .collect()
+}
+
+fn trace_with_terminal(
+    mut record: ToolCallRecord,
+    request: &ToolInvocationRequest,
+    mut events: Vec<ToolEvent>,
+    result: ToolResult,
+) -> ToolExecutionTrace {
+    record.metrics = result.metrics;
+    events.push(ToolEvent {
+        call_id: request.call_id.clone(),
+        sequence: events.len() as u64,
+        at: request.requested_at,
+        kind: terminal_kind(&result),
+        payload: terminal_payload(&result),
+    });
+    ToolExecutionTrace {
+        record,
+        events,
+        result,
+    }
+}
+
+fn terminal_kind(result: &ToolResult) -> ToolEventKind {
+    if result.ok {
+        ToolEventKind::Completed
+    } else if result
+        .error
+        .as_ref()
+        .is_some_and(|error| error.kind == ToolErrorKind::ToolCancelled)
+    {
+        ToolEventKind::Cancelled
+    } else {
+        ToolEventKind::Failed
+    }
+}
+
+fn terminal_payload(result: &ToolResult) -> JsonValue {
+    if let Some(output) = &result.output {
+        output.clone()
+    } else if let Some(error) = &result.error {
+        JsonValue::Object(vec![
+            (
+                "kind".to_string(),
+                JsonValue::String(error.kind.as_str().to_string()),
+            ),
+            (
+                "message".to_string(),
+                JsonValue::String(error.message.clone()),
+            ),
+            ("details".to_string(), error.details.clone()),
+        ])
+    } else {
+        JsonValue::Null
+    }
+}
+
+fn validation_errors_to_json(errors: &[ToolValidationIssue]) -> JsonValue {
+    JsonValue::Array(
+        errors
+            .iter()
+            .map(|error| {
+                JsonValue::Object(vec![
+                    ("path".to_string(), JsonValue::String(error.path.clone())),
+                    (
+                        "message".to_string(),
+                        JsonValue::String(error.message.clone()),
+                    ),
+                ])
+            })
+            .collect(),
+    )
+}
+
+// ============================================================================
 // Validation reports and crate errors
 // ============================================================================
 
@@ -1086,6 +1534,141 @@ mod tests {
         assert!(cancelled.terminal_matches_result(&cancelled_result));
     }
 
+    #[test]
+    fn runtime_invokes_registered_handler_and_emits_ordered_events() {
+        let mut runtime = InMemoryToolRuntime::new();
+        runtime
+            .register_handler(
+                artifact_create_definition(),
+                |arguments: JsonValue, context: ToolExecutionContext| {
+                    assert_eq!(context.call_id, "call_1");
+                    assert!(matches!(arguments, JsonValue::Object(_)));
+                    Ok(ToolHandlerOutput::new(JsonValue::Object(vec![(
+                        "artifact_ref".to_string(),
+                        JsonValue::String("artifact_1/rev_1".to_string()),
+                    )]))
+                    .with_artifact_ref("artifact_1/rev_1")
+                    .with_event(
+                        ToolEventKind::Progress,
+                        JsonValue::String("writing revision".to_string()),
+                    ))
+                },
+            )
+            .unwrap();
+
+        let trace = runtime.invoke_with_events(&artifact_create_request());
+
+        assert!(trace.result.ok);
+        assert_eq!(trace.result.artifact_refs, vec!["artifact_1/rev_1"]);
+        assert_eq!(trace.record.status, ToolCallStatus::Completed);
+        assert_eq!(
+            trace
+                .events
+                .iter()
+                .map(|event| event.kind)
+                .collect::<Vec<_>>(),
+            vec![
+                ToolEventKind::Started,
+                ToolEventKind::Progress,
+                ToolEventKind::Completed,
+            ]
+        );
+        assert!(trace
+            .events
+            .last()
+            .unwrap()
+            .terminal_matches_result(&trace.result));
+    }
+
+    #[test]
+    fn runtime_rejects_invalid_arguments_before_handler_execution() {
+        use std::sync::{Arc, Mutex};
+
+        let called = Arc::new(Mutex::new(false));
+        let called_by_handler = Arc::clone(&called);
+        let mut runtime = InMemoryToolRuntime::new();
+        runtime
+            .register_handler(artifact_create_definition(), move |_, _| {
+                *called_by_handler.lock().unwrap() = true;
+                Ok(ToolHandlerOutput::new(JsonValue::Null))
+            })
+            .unwrap();
+
+        let mut request = artifact_create_request();
+        request.arguments = JsonValue::Object(vec![(
+            "collection".to_string(),
+            JsonValue::String("session-artifacts".to_string()),
+        )]);
+
+        let trace = runtime.invoke_with_events(&request);
+
+        assert!(!trace.result.ok);
+        assert_eq!(
+            trace.result.error.as_ref().unwrap().kind,
+            ToolErrorKind::ToolValidationError
+        );
+        assert_eq!(trace.record.status, ToolCallStatus::Failed);
+        assert_eq!(trace.events.len(), 1);
+        assert_eq!(trace.events[0].kind, ToolEventKind::Failed);
+        assert!(!*called.lock().unwrap());
+    }
+
+    #[test]
+    fn runtime_wraps_handler_errors_as_failed_terminal_events() {
+        let mut runtime = InMemoryToolRuntime::new();
+        runtime
+            .register_handler(artifact_create_definition(), |_, _| {
+                Err(ToolCallError::new(
+                    ToolErrorKind::ToolExecutionError,
+                    "storage backend failed",
+                ))
+            })
+            .unwrap();
+
+        let trace = runtime.invoke_with_events(&artifact_create_request());
+
+        assert!(!trace.result.ok);
+        assert_eq!(trace.record.status, ToolCallStatus::Failed);
+        assert_eq!(
+            trace
+                .events
+                .iter()
+                .map(|event| event.kind)
+                .collect::<Vec<_>>(),
+            vec![ToolEventKind::Started, ToolEventKind::Failed]
+        );
+        assert!(trace
+            .events
+            .last()
+            .unwrap()
+            .terminal_matches_result(&trace.result));
+    }
+
+    #[test]
+    fn runtime_rejects_handler_emitted_terminal_events() {
+        let mut runtime = InMemoryToolRuntime::new();
+        runtime
+            .register_handler(artifact_create_definition(), |_, _| {
+                Ok(ToolHandlerOutput::new(JsonValue::Null)
+                    .with_event(ToolEventKind::Completed, JsonValue::Null))
+            })
+            .unwrap();
+
+        let trace = runtime.invoke_with_events(&artifact_create_request());
+
+        assert!(!trace.result.ok);
+        assert_eq!(
+            trace.result.error.as_ref().unwrap().kind,
+            ToolErrorKind::ToolExecutionError
+        );
+        assert_eq!(
+            trace.result.error.as_ref().unwrap().message,
+            "handlers must not emit terminal events directly"
+        );
+        assert_eq!(trace.events.len(), 2);
+        assert_eq!(trace.events[1].kind, ToolEventKind::Failed);
+    }
+
     fn artifact_create_definition() -> ToolDefinition {
         ToolDefinition {
             tool_id: "artifact.create".to_string(),
@@ -1123,6 +1706,35 @@ mod tests {
                 "body_base64".to_string(),
             ],
             allow_unknown_fields: false,
+        }
+    }
+
+    fn artifact_create_request() -> ToolInvocationRequest {
+        ToolInvocationRequest {
+            call_id: "call_1".to_string(),
+            tool_id: "artifact.create".to_string(),
+            arguments: JsonValue::Object(vec![
+                (
+                    "collection".to_string(),
+                    JsonValue::String("session-artifacts".to_string()),
+                ),
+                (
+                    "name".to_string(),
+                    JsonValue::String("brief.md".to_string()),
+                ),
+                (
+                    "body_base64".to_string(),
+                    JsonValue::String("SGVsbG8=".to_string()),
+                ),
+            ]),
+            requested_by: RequestedBy::Agent,
+            session_id: Some("session_1".to_string()),
+            job_id: None,
+            agent_id: Some("agent_1".to_string()),
+            user_id: None,
+            requested_at: 100,
+            deadline_at: Some(200),
+            idempotency_key: Some("artifact-create-1".to_string()),
         }
     }
 }
