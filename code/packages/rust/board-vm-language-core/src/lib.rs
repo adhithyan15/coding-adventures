@@ -16,8 +16,8 @@ use board_vm_host::{
     write_blink_module, write_gpio_read_module, write_gpio_write_module, write_module,
     write_time_now_module, write_time_sleep_ms_module, BlinkProgram, GpioReadProgram,
     GpioWriteProgram, HostError, HostSession, ModuleSpec, TimeNowProgram, TimeSleepMsProgram,
-    BLINK_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID, GPIO_READ_MODULE_LEN,
-    GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
+    BLINK_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID, DEFAULT_RUN_FLAGS,
+    GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_protocol::{
     decode_caps_report_header, decode_error_payload, decode_frame, decode_hello_ack,
@@ -30,6 +30,12 @@ use board_vm_protocol::{
 pub const LANGUAGE_CORE_VERSION_MAJOR: u16 = 0;
 pub const LANGUAGE_CORE_VERSION_MINOR: u16 = 1;
 pub const LANGUAGE_CORE_VERSION_PATCH: u16 = 0;
+pub const LANGUAGE_DEFAULT_RUN_FLAGS: u8 = DEFAULT_RUN_FLAGS;
+pub const LANGUAGE_RUN_FLAG_RESET_VM_BEFORE_RUN: u8 =
+    board_vm_protocol::RUN_FLAG_RESET_VM_BEFORE_RUN;
+pub const LANGUAGE_RUN_FLAG_KEEP_HANDLES_AFTER_RUN: u8 =
+    board_vm_protocol::RUN_FLAG_KEEP_HANDLES_AFTER_RUN;
+pub const LANGUAGE_RUN_FLAG_BACKGROUND_RUN: u8 = board_vm_protocol::RUN_FLAG_BACKGROUND_RUN;
 
 #[repr(u32)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -549,11 +555,35 @@ pub fn build_run_background_wire_frame(
     instruction_budget: u32,
     wire_out: &mut [u8],
 ) -> Result<BuiltWireFrame, LanguageCoreError> {
+    build_run_wire_frame(
+        session,
+        program_id,
+        DEFAULT_RUN_FLAGS,
+        instruction_budget,
+        0,
+        wire_out,
+    )
+}
+
+pub fn build_run_wire_frame(
+    session: &mut BoardVmLanguageSession,
+    program_id: u16,
+    flags: u8,
+    instruction_budget: u32,
+    time_budget_ms: u32,
+    wire_out: &mut [u8],
+) -> Result<BuiltWireFrame, LanguageCoreError> {
     let mut payload = [0u8; 16];
     let mut raw = [0u8; 32];
     let mut host = session.host_session();
-    let written =
-        host.run_background_frame(program_id, instruction_budget, &mut payload, &mut raw)?;
+    let written = host.run_frame(
+        program_id,
+        flags,
+        instruction_budget,
+        time_budget_ms,
+        &mut payload,
+        &mut raw,
+    )?;
     let wire_len = encode_wire_frame(&raw[..written.len], wire_out)?;
     session.update_from_host_session(&host);
     Ok(BuiltWireFrame {
@@ -1077,6 +1107,34 @@ pub unsafe extern "C" fn board_vm_language_run_background_wire(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn board_vm_language_run_wire(
+    session: *mut BoardVmLanguageSession,
+    program_id: u16,
+    flags: u8,
+    instruction_budget: u32,
+    time_budget_ms: u32,
+    wire_out: *mut u8,
+    wire_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let session = unsafe { mut_ref(session, "board_vm_language_run_wire session") }?;
+        let wire_out = unsafe { out_slice(wire_out, wire_cap, "wire_out") }?;
+        let written = build_run_wire_frame(
+            session,
+            program_id,
+            flags,
+            instruction_budget,
+            time_budget_ms,
+            wire_out,
+        )?;
+        Ok(BoardVmLanguageStatus::written(
+            written.request_id,
+            written.len,
+        ))
+    })
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn board_vm_language_stop_wire(
     session: *mut BoardVmLanguageSession,
     wire_out: *mut u8,
@@ -1115,6 +1173,26 @@ pub extern "C" fn board_vm_language_default_program_id() -> u16 {
 #[no_mangle]
 pub extern "C" fn board_vm_language_default_instruction_budget() -> u32 {
     DEFAULT_INSTRUCTION_BUDGET
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_default_run_flags() -> u8 {
+    LANGUAGE_DEFAULT_RUN_FLAGS
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_run_flag_reset_vm_before_run() -> u8 {
+    LANGUAGE_RUN_FLAG_RESET_VM_BEFORE_RUN
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_run_flag_keep_handles_after_run() -> u8 {
+    LANGUAGE_RUN_FLAG_KEEP_HANDLES_AFTER_RUN
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_run_flag_background_run() -> u8 {
+    LANGUAGE_RUN_FLAG_BACKGROUND_RUN
 }
 
 #[no_mangle]
@@ -1308,7 +1386,7 @@ mod tests {
         encode_caps_report, encode_frame, encode_hello_ack, encode_value, encode_wire_frame,
         CapabilityDescriptor, CapsReportHeader, Frame, HelloAck, MessageType, RunReportHeader,
         RunStatus, Value, FLAG_IS_RESPONSE, GOLDEN_HELLO_WIRE_FRAME_BVM_V1,
-        RUN_FLAG_BACKGROUND_RUN, RUN_FLAG_RESET_VM_BEFORE_RUN,
+        RUN_FLAG_BACKGROUND_RUN, RUN_FLAG_KEEP_HANDLES_AFTER_RUN, RUN_FLAG_RESET_VM_BEFORE_RUN,
     };
 
     #[test]
@@ -1485,10 +1563,31 @@ mod tests {
             RUN_FLAG_RESET_VM_BEFORE_RUN | RUN_FLAG_BACKGROUND_RUN
         );
 
+        let run = unsafe {
+            board_vm_language_run_wire(
+                &mut session,
+                7,
+                RUN_FLAG_KEEP_HANDLES_AFTER_RUN,
+                456,
+                250,
+                wire.as_mut_ptr(),
+                wire.len() as u64,
+            )
+        };
+        assert_eq!(run.request_id, 6);
+        let decoded = decode_wire_frame_into_raw(&wire[..run.len as usize], &mut raw).unwrap();
+        assert_eq!(decoded.message_type, MessageType::RUN.0);
+        let frame = decode_frame(&raw[..decoded.len as usize]).unwrap();
+        let run_payload = decode_run_request(frame.payload).unwrap();
+        assert_eq!(run_payload.program_id, 7);
+        assert_eq!(run_payload.flags, RUN_FLAG_KEEP_HANDLES_AFTER_RUN);
+        assert_eq!(run_payload.instruction_budget, 456);
+        assert_eq!(run_payload.time_budget_ms, 250);
+
         let stop = unsafe {
             board_vm_language_stop_wire(&mut session, wire.as_mut_ptr(), wire.len() as u64)
         };
-        assert_eq!(stop.request_id, 6);
+        assert_eq!(stop.request_id, 7);
         let decoded = decode_wire_frame_into_raw(&wire[..stop.len as usize], &mut raw).unwrap();
         assert_eq!(decoded.message_type, MessageType::STOP.0);
         let frame = decode_frame(&raw[..decoded.len as usize]).unwrap();

@@ -26,6 +26,18 @@ module CodingAdventures
         run_at_boot: 1,
         run_if_no_host: 2
       }.freeze
+      RUN_FLAG_RESET_VM_BEFORE_RUN = 0x01
+      RUN_FLAG_KEEP_HANDLES_AFTER_RUN = 0x02
+      RUN_FLAG_BACKGROUND_RUN = 0x04
+      DEFAULT_RUN_FLAGS = RUN_FLAG_RESET_VM_BEFORE_RUN | RUN_FLAG_BACKGROUND_RUN
+      RUN_FLAGS = {
+        reset_vm_before_run: RUN_FLAG_RESET_VM_BEFORE_RUN,
+        reset_vm: RUN_FLAG_RESET_VM_BEFORE_RUN,
+        keep_handles_after_run: RUN_FLAG_KEEP_HANDLES_AFTER_RUN,
+        keep_handles: RUN_FLAG_KEEP_HANDLES_AFTER_RUN,
+        background_run: RUN_FLAG_BACKGROUND_RUN,
+        background: RUN_FLAG_BACKGROUND_RUN
+      }.freeze
 
       attr_reader :connection, :native_session, :host_name, :host_nonce, :program_id,
         :instruction_budget
@@ -162,11 +174,26 @@ module CodingAdventures
       def run(
         program_id: @program_id,
         budget: @instruction_budget,
-        instruction_budget: nil
+        instruction_budget: nil,
+        flags: nil,
+        reset_vm: true,
+        keep_handles: false,
+        background: true,
+        time_budget_ms: 0
       )
         dispatch(
           :run,
-          native_session.run_background_wire(program_id, instruction_budget || budget)
+          native_session.run_wire(
+            program_id,
+            run_flags(
+              flags: flags,
+              reset_vm: reset_vm,
+              keep_handles: keep_handles,
+              background: background
+            ),
+            instruction_budget || budget,
+            time_budget_ms
+          )
         )
       end
 
@@ -510,6 +537,24 @@ module CodingAdventures
         BOOT_POLICIES.fetch(text.to_sym) do
           raise ArgumentError, "unsupported boot policy: #{value.inspect}"
         end
+      end
+
+      def run_flags(flags:, reset_vm:, keep_handles:, background:)
+        return flags if flags.is_a?(Integer)
+
+        if flags
+          return Array(flags).reduce(0) do |mask, flag|
+            mask | RUN_FLAGS.fetch(flag.to_s.tr("-", "_").to_sym) do
+              raise ArgumentError, "unsupported run flag: #{flag.inspect}"
+            end
+          end
+        end
+
+        value = 0
+        value |= RUN_FLAG_RESET_VM_BEFORE_RUN if reset_vm
+        value |= RUN_FLAG_KEEP_HANDLES_AFTER_RUN if keep_handles
+        value |= RUN_FLAG_BACKGROUND_RUN if background
+        value
       end
 
       def integer_argument(value, name)

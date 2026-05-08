@@ -14,6 +14,7 @@ use board_vm_protocol::{
 pub const DEFAULT_HOST_NAME: &str = "board-vm-host";
 pub const DEFAULT_PROGRAM_ID: u16 = 1;
 pub const DEFAULT_INSTRUCTION_BUDGET: u32 = 1000;
+pub const DEFAULT_RUN_FLAGS: u8 = RUN_FLAG_RESET_VM_BEFORE_RUN | RUN_FLAG_BACKGROUND_RUN;
 pub const BLINK_CODE_LEN: usize = 26;
 pub const BLINK_MODULE_LEN: usize = 36;
 pub const GPIO_WRITE_CODE_LEN: usize = 12;
@@ -325,12 +326,31 @@ impl HostSession {
         payload_out: &mut [u8],
         frame_out: &mut [u8],
     ) -> Result<WrittenFrame, HostError> {
+        self.run_frame(
+            program_id,
+            DEFAULT_RUN_FLAGS,
+            instruction_budget,
+            0,
+            payload_out,
+            frame_out,
+        )
+    }
+
+    pub fn run_frame(
+        &mut self,
+        program_id: u16,
+        flags: u8,
+        instruction_budget: u32,
+        time_budget_ms: u32,
+        payload_out: &mut [u8],
+        frame_out: &mut [u8],
+    ) -> Result<WrittenFrame, HostError> {
         let payload_len = encode_run_request(
             &RunRequest {
                 program_id,
-                flags: RUN_FLAG_RESET_VM_BEFORE_RUN | RUN_FLAG_BACKGROUND_RUN,
+                flags,
                 instruction_budget,
-                time_budget_ms: 0,
+                time_budget_ms,
             },
             payload_out,
         )?;
@@ -751,7 +771,8 @@ mod tests {
     };
     use board_vm_protocol::{
         decode_frame, decode_program_begin, decode_program_chunk, decode_program_end,
-        decode_run_request, MessageType, RUN_FLAG_BACKGROUND_RUN, RUN_FLAG_RESET_VM_BEFORE_RUN,
+        decode_run_request, MessageType, RUN_FLAG_BACKGROUND_RUN, RUN_FLAG_KEEP_HANDLES_AFTER_RUN,
+        RUN_FLAG_RESET_VM_BEFORE_RUN,
     };
 
     const BLINK_MODULE_HEX: [u8; BLINK_MODULE_LEN] = [
@@ -988,6 +1009,31 @@ mod tests {
             RUN_FLAG_RESET_VM_BEFORE_RUN | RUN_FLAG_BACKGROUND_RUN
         );
         assert_eq!(run_payload.instruction_budget, DEFAULT_INSTRUCTION_BUDGET);
+    }
+
+    #[test]
+    fn writes_configurable_run_frame() {
+        let mut session = HostSession::new();
+        let mut payload = [0u8; 16];
+        let mut frame = [0u8; 48];
+
+        let written = session
+            .run_frame(
+                42,
+                RUN_FLAG_KEEP_HANDLES_AFTER_RUN,
+                777,
+                250,
+                &mut payload,
+                &mut frame,
+            )
+            .unwrap();
+        let decoded = decode_frame(&frame[..written.len]).unwrap();
+        assert_eq!(decoded.message_type, MessageType::RUN);
+        let run_payload = decode_run_request(decoded.payload).unwrap();
+        assert_eq!(run_payload.program_id, 42);
+        assert_eq!(run_payload.flags, RUN_FLAG_KEEP_HANDLES_AFTER_RUN);
+        assert_eq!(run_payload.instruction_budget, 777);
+        assert_eq!(run_payload.time_budget_ms, 250);
     }
 
     #[test]

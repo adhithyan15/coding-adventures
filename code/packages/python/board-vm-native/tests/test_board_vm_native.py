@@ -111,6 +111,24 @@ def test_store_program_dispatches_rust_owned_wire_frame():
     assert command.frames == transport.frames[1:]
 
 
+def test_run_accepts_configurable_rust_owned_flags():
+    transport = FakeWriteTransport()
+    session = Session(transport=transport)
+
+    result = session.run(
+        program_id=9,
+        instruction_budget=42,
+        keep_handles=True,
+        background=False,
+        time_budget_ms=250,
+    )
+
+    assert result.command == "run"
+    assert isinstance(result.frame, bytes)
+    assert result.frame == transport.frames[0]
+    assert session.next_request_id == 2
+
+
 def test_run_command_accepts_repl_style_gpio_read():
     transport = FakeWriteTransport()
     session = Session(transport=transport)

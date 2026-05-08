@@ -369,6 +369,24 @@ where
         self.expect_run_report(written.request_id, written.len)
     }
 
+    pub fn run(
+        &mut self,
+        program_id: u16,
+        flags: u8,
+        instruction_budget: u32,
+        time_budget_ms: u32,
+    ) -> Result<RunReportInfo, ClientError> {
+        let written = self.session.run_frame(
+            program_id,
+            flags,
+            instruction_budget,
+            time_budget_ms,
+            &mut self.payload,
+            &mut self.request,
+        )?;
+        self.expect_run_report(written.request_id, written.len)
+    }
+
     pub fn stop(&mut self) -> Result<RunReportInfo, ClientError> {
         let written = self.session.stop_frame(&mut self.request)?;
         self.expect_run_report(written.request_id, written.len)
