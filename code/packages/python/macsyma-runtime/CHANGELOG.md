@@ -1,5 +1,61 @@
 # Changelog
 
+## 1.23.0 — 2026-05-08
+
+**Phase 32 — MACSYMA name-table extensions: advanced matrix ops, cube root, log/exp transformations.**
+
+All 14 new names were already implemented end-to-end in `symbolic-vm ≥ 0.53.0`
+(via `cas-matrix`, `cas-simplify`, etc.) but were **never added to
+`MACSYMA_NAME_TABLE`** in `name_table.py`.  The MACSYMA compiler therefore
+passed them through as unevaluated function calls with lowercase head names
+(e.g. `IRApply(head=IRSymbol("eigenvalues"), …)`) instead of the canonical
+capitalized heads (`Eigenvalues`) that the VM's dispatch table keys on.
+
+### Added to `MACSYMA_NAME_TABLE`
+
+**Advanced matrix operations** (all backed by `cas-matrix` handlers in `symbolic-vm`):
+
+| MACSYMA name | IR head | Description |
+|---|---|---|
+| `eigenvalues` | `Eigenvalues` | Returns a `List` of eigenvalues (algebraic + numeric for 2×2/3×3) |
+| `eigenvectors` | `Eigenvectors` | Returns a `List` of `[eigenvalue, multiplicity, [vector]]` triples |
+| `charpoly` | `CharPoly` | Characteristic polynomial `det(λI − A)` in a given variable |
+| `nullspace` | `NullSpace` | List of basis vectors spanning the null space (kernel) |
+| `columnspace` | `ColumnSpace` | List of basis vectors spanning the column space (image) |
+| `rowspace` | `RowSpace` | List of basis vectors spanning the row space |
+| `norm` | `Norm` | Euclidean (Frobenius) norm: `√Σ aᵢⱼ²` |
+| `lu` | `LU` | LU decomposition: `[L, U, P]` where `P·A = L·U` |
+
+**Cube root:**
+
+| MACSYMA name | IR head | Description |
+|---|---|---|
+| `cbrt` | `Cbrt` | Exact integer cube root for perfect cubes; `IRFloat` otherwise |
+
+**Log / radical / Euler transformations** (backed by `cas-simplify` in `symbolic-vm`):
+
+| MACSYMA name | IR head | Description |
+|---|---|---|
+| `radcan` | `Radcan` | Radical canonical form: `√(x²)` → `\|x\|`, etc. |
+| `logcontract` | `LogContract` | Contracts a sum of logs: `log(a)+log(b)` → `log(a·b)` |
+| `logexpand` | `LogExpand` | Expands a log of a product: `log(a·b)` → `log(a)+log(b)` |
+| `exponentialize` | `Exponentialize` | Replaces trig/hyperbolic functions with complex exponentials |
+| `demoivre` | `DeMoivre` | Expands `exp(i·x)` as `cos(x) + i·sin(x)` (de Moivre's theorem) |
+
+### Tests added (Sections AA–CC, 12 new tests)
+
+| Section | Tests |
+|---------|-------|
+| AA | Advanced matrix: `eigenvalues`, `charpoly`, `nullspace`, `rowreduce` (already in table, still tested), `norm` (2 tests) |
+| BB | Cube root: `cbrt(8)`, `cbrt(-27)`, `cbrt(2.0)` |
+| CC | Log transformations: `logcontract(log(x)+log(y))`, `logexpand(log(x*y))`, `radcan(sqrt(x^2))` |
+
+### Changed
+
+- `pyproject.toml` version bumped `1.22.0` → `1.23.0`.
+
+---
+
 ## 1.22.0 — 2026-05-08
 
 **Phase 31 — End-to-end pipeline tests for Phases 28–33 of `symbolic-vm`.**

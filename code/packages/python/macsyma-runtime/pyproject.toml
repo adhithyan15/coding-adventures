@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-macsyma-runtime"
-version = "1.22.0"
-description = "MACSYMA-specific runtime layer on top of the symbolic VM — history, $/; terminators, kill, ev, name table, float() coercion, pipeline tests for Phases 30-33."
+version = "1.23.0"
+description = "MACSYMA-specific runtime layer on top of the symbolic VM — history, $/; terminators, kill, ev, name table, float() coercion, advanced matrix/log/trig ops."
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]

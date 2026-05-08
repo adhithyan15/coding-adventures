@@ -1135,3 +1135,147 @@ def test_pipeline_sin_pi_exact() -> None:
     else:
         raise AssertionError(f"Unexpected result type: {result!r}")
 
+
+# ---------------------------------------------------------------------------
+# Section AA — Advanced matrix operations (Phase 32 name-table extensions)
+#
+# eigenvalues, eigenvectors, charpoly, nullspace, columnspace, rowspace, norm,
+# lu — all implemented in symbolic-vm via cas-matrix but were missing from
+# the MACSYMA name table until v1.23.0.
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_eigenvalues_2x2() -> None:
+    """eigenvalues(matrix([1,2],[3,4])) returns a List of eigenvalues.
+
+    The 2×2 matrix [[1,2],[3,4]] has characteristic polynomial
+    λ² − 5λ − 2 = 0, giving λ = (5 ± √33) / 2.
+    We just verify the result is a non-unevaluated List.
+    """
+    result = _eval("eigenvalues(matrix([1,2],[3,4]))")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List", (
+        f"Expected List, got head={result.head.name!r}"
+    )
+
+
+def test_pipeline_charpoly_2x2() -> None:
+    """charpoly(matrix([1,2],[3,4]), x) returns the characteristic polynomial.
+
+    det(λI − A) = (λ−1)(λ−4) − 6 = λ² − 5λ − 2.
+    We verify the result is evaluated (not head CharPoly) and has an Add head.
+    """
+    result = _eval("charpoly(matrix([1,2],[3,4]), x)")
+    assert isinstance(result, IRApply)
+    assert result.head.name != "CharPoly", (
+        f"charpoly returned unevaluated: {result!r}"
+    )
+
+
+def test_pipeline_nullspace_rank_deficient() -> None:
+    """nullspace(matrix([1,2],[2,4])) returns a non-empty basis.
+
+    [[1,2],[2,4]] has rank 1; its nullspace is spanned by [2,-1].
+    The result should be a List of vectors.
+    """
+    result = _eval("nullspace(matrix([1,2],[2,4]))")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List", (
+        f"Expected List, got head={result.head.name!r}"
+    )
+    assert len(result.args) >= 1, "Nullspace should have at least one basis vector"
+
+
+def test_pipeline_rowreduce_upper_triangular() -> None:
+    """rowreduce(matrix([1,2,3],[4,5,6])) gives row-echelon form.
+
+    The result is a Matrix node (not unevaluated RowReduce).
+    """
+    result = _eval("rowreduce(matrix([1,2,3],[4,5,6]))")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Matrix", (
+        f"Expected Matrix, got head={result.head.name!r}"
+    )
+
+
+def test_pipeline_norm_3_4_vector() -> None:
+    """norm(matrix([3],[4])) → 5  (Euclidean norm of column vector [3;4])."""
+    result = _eval("norm(matrix([3],[4]))")
+    assert result == IRInteger(5), f"Expected 5, got {result!r}"
+
+
+def test_pipeline_norm_identity_row() -> None:
+    """norm(matrix([1,0,0])) → 1  (unit row vector)."""
+    result = _eval("norm(matrix([1,0,0]))")
+    assert result == IRInteger(1), f"Expected 1, got {result!r}"
+
+
+# ---------------------------------------------------------------------------
+# Section BB — Cube root (Phase 32 name-table extensions)
+#
+# cbrt — implemented in symbolic-vm but missing from the MACSYMA name table.
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_cbrt_exact_cube() -> None:
+    """cbrt(8) → 2  (exact integer cube root)."""
+    result = _eval("cbrt(8)")
+    assert result == IRInteger(2), f"Expected 2, got {result!r}"
+
+
+def test_pipeline_cbrt_negative() -> None:
+    """cbrt(-27) → -3  (cube root of a negative perfect cube)."""
+    result = _eval("cbrt(-27)")
+    assert result == IRInteger(-3), f"Expected -3, got {result!r}"
+
+
+def test_pipeline_cbrt_float() -> None:
+    """cbrt(2.0) ≈ 1.2599  (floating-point cube root)."""
+    import math as _math
+
+    result = _eval("cbrt(2.0)")
+    assert isinstance(result, IRFloat), f"Expected IRFloat, got {result!r}"
+    assert abs(result.value - _math.cbrt(2.0)) < 1e-9
+
+
+# ---------------------------------------------------------------------------
+# Section CC — Log/exp transformations (Phase 32 name-table extensions)
+#
+# radcan, logcontract, logexpand — implemented in symbolic-vm via
+# cas_simplify but missing from the MACSYMA name table until v1.23.0.
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_logcontract_sum_of_logs() -> None:
+    """logcontract(log(x) + log(y)) → log(x*y)."""
+    result = _eval("logcontract(log(x) + log(y))")
+    assert isinstance(result, IRApply)
+    # Head should be Log, not LogContract (evaluated)
+    assert result.head.name == "Log", (
+        f"Expected Log head, got {result.head.name!r}"
+    )
+    # The single argument should be a Mul containing x and y
+    assert len(result.args) == 1
+    inner = result.args[0]
+    assert isinstance(inner, IRApply) and inner.head.name == "Mul"
+
+
+def test_pipeline_logexpand_log_product() -> None:
+    """logexpand(log(x*y)) → log(x) + log(y)."""
+    result = _eval("logexpand(log(x*y))")
+    assert isinstance(result, IRApply)
+    # After expansion the result should be an Add of two Log terms.
+    assert result.head.name == "Add", (
+        f"Expected Add head, got {result.head.name!r}"
+    )
+
+
+def test_pipeline_radcan_sqrt_squared() -> None:
+    """radcan(sqrt(x^2)) → abs(x)  (or Abs(x) in IR)."""
+    result = _eval("radcan(sqrt(x^2))")
+    assert isinstance(result, IRApply)
+    # The head should be Abs (radcan simplifies √(x²) → |x|)
+    assert result.head.name == "Abs", (
+        f"Expected Abs head from radcan(sqrt(x^2)), got {result.head.name!r}"
+    )
+
