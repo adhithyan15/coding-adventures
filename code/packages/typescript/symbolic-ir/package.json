@@ -1,0 +1,25 @@
+{
+  "name": "@coding-adventures/symbolic-ir",
+  "version": "0.1.0",
+  "description": "Pure TypeScript symbolic expression IR for CAS frontends and backends",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "cas",
+    "symbolic",
+    "ir",
+    "browser"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}
