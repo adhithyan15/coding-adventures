@@ -102,6 +102,17 @@ impl ControllerCapabilities {
             supports_timers: flags & 0x10 != 0,
         }
     }
+
+    pub fn from_message(message: &SerialMessage) -> Result<Self, SerialApiError> {
+        expect_function(message, FunctionId::GET_CONTROLLER_CAPABILITIES)?;
+        let Some(flags) = message.payload.first() else {
+            return Err(SerialApiError::Truncated {
+                needed: 1,
+                remaining: 0,
+            });
+        };
+        Ok(Self::parse(*flags))
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -176,6 +187,42 @@ impl SerialApiInitData {
 
     pub fn from_message(message: &SerialMessage) -> Result<Self, SerialApiError> {
         expect_function(message, FunctionId::SERIAL_API_GET_INIT_DATA)?;
+        Self::parse(&message.payload)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SerialApiVersion {
+    pub version: String,
+    pub library_type: u8,
+}
+
+impl SerialApiVersion {
+    pub fn parse(payload: &[u8]) -> Result<Self, SerialApiError> {
+        let Some((&library_type, version_bytes)) = payload.split_last() else {
+            return Err(SerialApiError::Truncated {
+                needed: 1,
+                remaining: 0,
+            });
+        };
+        let version_len = version_bytes
+            .iter()
+            .position(|byte| *byte == 0)
+            .unwrap_or(version_bytes.len());
+        let version = std::str::from_utf8(&version_bytes[..version_len])
+            .map_err(|error| {
+                SerialApiError::Core(format!("invalid Z-Wave version string: {error}"))
+            })?
+            .trim()
+            .to_string();
+        Ok(Self {
+            version,
+            library_type,
+        })
+    }
+
+    pub fn from_message(message: &SerialMessage) -> Result<Self, SerialApiError> {
+        expect_function(message, FunctionId::GET_VERSION)?;
         Self::parse(&message.payload)
     }
 }
@@ -417,6 +464,11 @@ impl MemoryId {
                 .map_err(|err| SerialApiError::Core(err.to_string()))?,
         })
     }
+
+    pub fn from_message(message: &SerialMessage) -> Result<Self, SerialApiError> {
+        expect_function(message, FunctionId::MEMORY_GET_ID)?;
+        Self::parse(&message.payload)
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -552,6 +604,22 @@ impl From<ZWaveError> for SerialApiError {
     }
 }
 
+pub fn serial_api_get_init_data_request() -> SerialMessage {
+    SerialMessage::request(FunctionId::SERIAL_API_GET_INIT_DATA, Vec::new())
+}
+
+pub fn get_controller_capabilities_request() -> SerialMessage {
+    SerialMessage::request(FunctionId::GET_CONTROLLER_CAPABILITIES, Vec::new())
+}
+
+pub fn get_version_request() -> SerialMessage {
+    SerialMessage::request(FunctionId::GET_VERSION, Vec::new())
+}
+
+pub fn memory_get_id_request() -> SerialMessage {
+    SerialMessage::request(FunctionId::MEMORY_GET_ID, Vec::new())
+}
+
 fn callback_id_for(function_id: FunctionId, payload: &[u8]) -> Option<u8> {
     match function_id {
         FunctionId::SEND_DATA => {
@@ -648,6 +716,63 @@ mod tests {
         assert!(!caps.was_real_primary);
         assert!(caps.is_suc);
         assert!(caps.supports_timers);
+    }
+
+    #[test]
+    fn bootstrap_request_builders_use_expected_function_ids() {
+        let requests = [
+            (
+                serial_api_get_init_data_request(),
+                FunctionId::SERIAL_API_GET_INIT_DATA,
+            ),
+            (
+                get_controller_capabilities_request(),
+                FunctionId::GET_CONTROLLER_CAPABILITIES,
+            ),
+            (get_version_request(), FunctionId::GET_VERSION),
+            (memory_get_id_request(), FunctionId::MEMORY_GET_ID),
+        ];
+
+        for (request, function_id) in requests {
+            assert_eq!(request.kind, SerialMessageKind::Request);
+            assert_eq!(request.function_id, function_id);
+            assert_eq!(request.callback_id, None);
+            assert!(request.payload.is_empty());
+        }
+    }
+
+    #[test]
+    fn controller_capabilities_from_message_reads_response_payload() {
+        let message = SerialMessage {
+            kind: SerialMessageKind::Response,
+            function_id: FunctionId::GET_CONTROLLER_CAPABILITIES,
+            callback_id: None,
+            payload: vec![0b0001_0011],
+        };
+
+        let caps = ControllerCapabilities::from_message(&message).unwrap();
+
+        assert!(caps.is_secondary);
+        assert!(caps.is_sis_present);
+        assert!(!caps.is_suc);
+        assert!(caps.supports_timers);
+    }
+
+    #[test]
+    fn serial_api_version_parses_nul_terminated_version_and_library_type() {
+        let mut payload = b"Z-Wave 7.18\0\0".to_vec();
+        payload.push(0x01);
+        let message = SerialMessage {
+            kind: SerialMessageKind::Response,
+            function_id: FunctionId::GET_VERSION,
+            callback_id: None,
+            payload,
+        };
+
+        let version = SerialApiVersion::from_message(&message).unwrap();
+
+        assert_eq!(version.version, "Z-Wave 7.18");
+        assert_eq!(version.library_type, 0x01);
     }
 
     #[test]
@@ -797,7 +922,13 @@ mod tests {
 
     #[test]
     fn memory_id_extracts_home_and_controller_node() {
-        let id = MemoryId::parse(&[0x12, 0x34, 0x56, 0x78, 0x05]).unwrap();
+        let message = SerialMessage {
+            kind: SerialMessageKind::Response,
+            function_id: FunctionId::MEMORY_GET_ID,
+            callback_id: None,
+            payload: vec![0x12, 0x34, 0x56, 0x78, 0x05],
+        };
+        let id = MemoryId::from_message(&message).unwrap();
 
         assert_eq!(id.home_id, HomeId(0x1234_5678));
         assert_eq!(id.controller_node_id, NodeId::Classic(5));
