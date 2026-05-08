@@ -15,6 +15,7 @@ Included surfaces:
   tools
 - registry-backed authorization decision auditing for accepted and rejected
   authorized commands
+- registry-backed tool authorization decisions for Chief of Staff tool calls
 - accepted command results that remain separate from confirmed device state
 - optimistic command state with expiry into stale snapshots
 - desired-state reconciliation that detects missing, stale, or drifted state

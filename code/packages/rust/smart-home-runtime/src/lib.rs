@@ -666,6 +666,19 @@ impl SmartHomeRuntime {
         Ok(())
     }
 
+    pub fn authorize_tool_for_principal(
+        &mut self,
+        principal_id: AgentId,
+        tool: SmartHomeTool,
+        now_ms: u64,
+    ) -> AuthorizationDecision {
+        let grants = self.registry.capability_grants_for_principal(&principal_id);
+        let decision = AuthorizationDecision::for_tool(principal_id, tool, grants, now_ms);
+        self.registry
+            .record_authorization_decision(decision.clone());
+        decision
+    }
+
     pub fn submit_command(
         &mut self,
         command: DeviceCommand,
@@ -1304,6 +1317,48 @@ mod tests {
         assert_eq!(decisions.len(), 2);
         assert_eq!(decisions[0].outcome, AuthorizationOutcome::Allowed);
         assert_eq!(decisions[1].outcome, AuthorizationOutcome::Denied);
+    }
+
+    #[test]
+    fn tool_authorization_records_decisions_without_dispatching_commands() {
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:lighting-planner");
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-read"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.read"),
+                PrivilegeTier::ReadOnly,
+                "chief-of-staff",
+                1_000,
+            )
+            .with_expiry(2_000),
+        );
+
+        let allowed =
+            runtime.authorize_tool_for_principal(principal.clone(), SmartHomeTool::GetState, 1_500);
+        let denied =
+            runtime.authorize_tool_for_principal(principal.clone(), SmartHomeTool::Command, 1_500);
+        let expired =
+            runtime.authorize_tool_for_principal(principal.clone(), SmartHomeTool::GetState, 2_000);
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+
+        assert_eq!(allowed.outcome, AuthorizationOutcome::Allowed);
+        assert_eq!(denied.outcome, AuthorizationOutcome::Denied);
+        assert_eq!(expired.outcome, AuthorizationOutcome::Denied);
+        assert_eq!(runtime.registry().counts().authorization_decisions, 3);
+        assert_eq!(decisions.len(), 3);
+        assert!(runtime.event_bus().published().is_empty());
+        assert_eq!(
+            denied.missing_capabilities,
+            vec![CapabilityId::trusted("smart_home.command.light")]
+        );
+        assert_eq!(
+            expired.missing_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
     }
 
     #[test]
