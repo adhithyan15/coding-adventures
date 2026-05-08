@@ -379,6 +379,20 @@ impl HueLightResource {
             on,
         }
     }
+
+    pub fn command_set_brightness(&self, brightness: u8) -> HueCommand {
+        HueCommand::SetLightBrightness {
+            light_id: self.id.clone(),
+            brightness,
+        }
+    }
+
+    pub fn command_set_color_temperature(&self, mirek: u16) -> HueCommand {
+        HueCommand::SetLightColorTemperature {
+            light_id: self.id.clone(),
+            mirek,
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -456,14 +470,17 @@ impl HueSceneAction {
     pub fn desired_state(&self) -> Value {
         let mut fields = Vec::new();
         if let Some(on) = self.on {
-            fields.push(("on".to_string(), Value::Bool(on)));
+            fields.push(("light.on_off".to_string(), Value::Bool(on)));
         }
         if let Some(brightness) = self.brightness {
-            fields.push(("brightness".to_string(), Value::Percentage(brightness)));
+            fields.push((
+                "light.brightness".to_string(),
+                Value::Percentage(brightness),
+            ));
         }
         if let Some(mirek) = self.color_temperature_mirek {
             fields.push((
-                "color_temperature".to_string(),
+                "light.color_temperature".to_string(),
                 Value::Integer(i64::from(mirek)),
             ));
         }
@@ -652,9 +669,9 @@ pub fn hue_light_to_entity(
     let state = light.on.map(|on| StateSnapshot {
         entity_id: entity_id.clone(),
         value: Value::Object(vec![
-            ("on".to_string(), Value::Bool(on)),
+            ("light.on_off".to_string(), Value::Bool(on)),
             (
-                "brightness".to_string(),
+                "light.brightness".to_string(),
                 light
                     .brightness
                     .map(Value::Percentage)
@@ -803,7 +820,40 @@ mod tests {
             .iter()
             .any(|capability| capability.capability_id.as_str() == "light.color_temperature"));
         assert_eq!(entity.metadata[1].value, "light-1");
-        assert_eq!(entity.state.unwrap().confidence, StateConfidence::Confirmed);
+        let state = entity.state.unwrap();
+        assert_eq!(state.confidence, StateConfidence::Confirmed);
+        assert_eq!(
+            state.value,
+            Value::Object(vec![
+                ("light.on_off".to_string(), Value::Bool(true)),
+                ("light.brightness".to_string(), Value::Percentage(42)),
+            ])
+        );
+    }
+
+    #[test]
+    fn hue_light_resource_builds_direct_light_commands() {
+        let light = HueLightResource {
+            id: HueResourceId::trusted("light-1"),
+            owner_device_id: HueResourceId::trusted("device-1"),
+            name: "Kitchen".to_string(),
+            on: Some(true),
+            brightness: Some(42),
+            color_temperature_mirek: Some(366),
+        };
+
+        assert_eq!(
+            light.command_set_on(false).to_request().body,
+            Some(HueRequestBody::SetOn { on: false })
+        );
+        assert_eq!(
+            light.command_set_brightness(55).to_request().body,
+            Some(HueRequestBody::SetBrightness { brightness: 55 })
+        );
+        assert_eq!(
+            light.command_set_color_temperature(370).to_request().body,
+            Some(HueRequestBody::SetColorTemperature { mirek: 370 })
+        );
     }
 
     #[test]
@@ -906,9 +956,9 @@ mod tests {
         assert_eq!(
             core_scene.actions[0].desired_state,
             Value::Object(vec![
-                ("on".to_string(), Value::Bool(true)),
-                ("brightness".to_string(), Value::Percentage(66)),
-                ("color_temperature".to_string(), Value::Integer(366)),
+                ("light.on_off".to_string(), Value::Bool(true)),
+                ("light.brightness".to_string(), Value::Percentage(66)),
+                ("light.color_temperature".to_string(), Value::Integer(366)),
             ])
         );
     }
