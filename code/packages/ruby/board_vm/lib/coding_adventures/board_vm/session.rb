@@ -128,6 +128,11 @@ module CodingAdventures
         native_session.time_sleep_ms_module(duration_ms, max_stack)
       end
 
+      def raw_module(code:, max_stack:, flags: 0, const_pool: +"")
+        native_session.raw_module(flags, max_stack, code.b, const_pool.b)
+      end
+      alias module raw_module
+
       def upload_time_now(program_id: @program_id, max_stack: 1)
         upload(
           program_id: program_id,
@@ -139,6 +144,18 @@ module CodingAdventures
         upload(
           program_id: program_id,
           module_bytes: time_sleep_ms_module(duration_ms: duration_ms, max_stack: max_stack)
+        )
+      end
+
+      def upload_raw_module(program_id: @program_id, code:, max_stack:, flags: 0, const_pool: +"")
+        upload(
+          program_id: program_id,
+          module_bytes: raw_module(
+            code: code,
+            max_stack: max_stack,
+            flags: flags,
+            const_pool: const_pool
+          )
         )
       end
 

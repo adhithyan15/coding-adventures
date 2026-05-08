@@ -209,6 +209,18 @@ class Session:
     def time_sleep_ms_module(self, duration_ms: int, max_stack: int = 1) -> bytes:
         return _native.time_sleep_ms_module(duration_ms, max_stack)
 
+    def raw_module(
+        self,
+        *,
+        code: bytes | bytearray,
+        max_stack: int,
+        flags: int = 0,
+        const_pool: bytes | bytearray = b"",
+    ) -> bytes:
+        return _native.raw_module(flags, max_stack, bytes(code), bytes(const_pool))
+
+    module = raw_module
+
     def upload(self, *, program_id: int = DEFAULT_PROGRAM_ID, module_bytes: bytes) -> SessionResult:
         return SessionResult([
             self._dispatch("program_begin", self._call_native(_native.program_begin_wire, program_id, module_bytes)),
@@ -292,6 +304,25 @@ class Session:
         return self.upload(
             program_id=program_id,
             module_bytes=self.time_sleep_ms_module(duration_ms, max_stack=max_stack),
+        )
+
+    def upload_raw_module(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        code: bytes | bytearray,
+        max_stack: int,
+        flags: int = 0,
+        const_pool: bytes | bytearray = b"",
+    ) -> SessionResult:
+        return self.upload(
+            program_id=program_id,
+            module_bytes=self.raw_module(
+                code=code,
+                max_stack=max_stack,
+                flags=flags,
+                const_pool=const_pool,
+            ),
         )
 
     def run(self, *, program_id: int = DEFAULT_PROGRAM_ID, instruction_budget: int = DEFAULT_INSTRUCTION_BUDGET) -> ProtocolResult:

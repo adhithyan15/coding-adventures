@@ -146,6 +146,20 @@ capability groups such as `gpio`, `time`, and `program`. Capability flag names
 and booleans are supplied by the Rust language core, keeping Ruby out of the
 protocol-bit interpretation business.
 
+For lower-level language experiments, Ruby can pass raw bytecode while still
+leaving module framing to Rust:
+
+```ruby
+board.session do |vm|
+  module_bytes = vm.raw_module(code: "\x00".b, max_stack: 1)
+  vm.upload(program_id: 42, module_bytes: module_bytes)
+end
+```
+
+`raw_module` is still sugar over `CodingAdventures::BoardVM::Native::Session`;
+the BVM header, length encoding, validation, and upload frames are produced by
+`board-vm-language-core`.
+
 The DSL also exposes the current board-agnostic blink ejection path:
 
 ```ruby
