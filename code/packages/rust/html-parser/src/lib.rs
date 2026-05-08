@@ -94,6 +94,18 @@ pub enum HtmlInitialTokenizerContext {
     DoctypeSystemIdentifierSingleQuoted,
     AfterDoctypeSystemIdentifier,
     BogusDoctype,
+    CharacterReference,
+    NamedCharacterReference,
+    NumericCharacterReference,
+    NumericHexCharacterReferenceStart,
+    NumericHexCharacterReference,
+    NumericDecimalCharacterReference,
+    RcdataCharacterReference,
+    RcdataNamedCharacterReference,
+    RcdataNumericCharacterReference,
+    RcdataNumericHexCharacterReferenceStart,
+    RcdataNumericHexCharacterReference,
+    RcdataNumericDecimalCharacterReference,
     ScriptData,
     ScriptDataLessThanSign,
     ScriptDataEndTagOpen,
@@ -340,6 +352,74 @@ impl HtmlInitialTokenizerContext {
                     force_quirks: true,
                 },
             ),
+            Self::CharacterReference => seeded_character_reference_lex_context(
+                HtmlTokenizerState::TextCharacterReference,
+                HtmlTokenizerState::Data,
+                "&",
+            ),
+            Self::NamedCharacterReference => seeded_character_reference_lex_context(
+                HtmlTokenizerState::TextNamedCharacterReference,
+                HtmlTokenizerState::Data,
+                "&co",
+            ),
+            Self::NumericCharacterReference => seeded_character_reference_lex_context(
+                HtmlTokenizerState::TextNumericCharacterReference,
+                HtmlTokenizerState::Data,
+                "&#",
+            ),
+            Self::NumericHexCharacterReferenceStart => seeded_character_reference_lex_context(
+                HtmlTokenizerState::TextNumericHexCharacterReferenceStart,
+                HtmlTokenizerState::Data,
+                "&#x",
+            ),
+            Self::NumericHexCharacterReference => seeded_character_reference_lex_context(
+                HtmlTokenizerState::TextNumericHexCharacterReference,
+                HtmlTokenizerState::Data,
+                "&#x4",
+            ),
+            Self::NumericDecimalCharacterReference => seeded_character_reference_lex_context(
+                HtmlTokenizerState::TextNumericDecimalCharacterReference,
+                HtmlTokenizerState::Data,
+                "&#6",
+            ),
+            Self::RcdataCharacterReference => seeded_character_reference_lex_context(
+                HtmlTokenizerState::TextCharacterReference,
+                HtmlTokenizerState::Rcdata,
+                "&",
+            )
+            .with_last_start_tag("title"),
+            Self::RcdataNamedCharacterReference => seeded_character_reference_lex_context(
+                HtmlTokenizerState::TextNamedCharacterReference,
+                HtmlTokenizerState::Rcdata,
+                "&a",
+            )
+            .with_last_start_tag("title"),
+            Self::RcdataNumericCharacterReference => seeded_character_reference_lex_context(
+                HtmlTokenizerState::TextNumericCharacterReference,
+                HtmlTokenizerState::Rcdata,
+                "&#",
+            )
+            .with_last_start_tag("title"),
+            Self::RcdataNumericHexCharacterReferenceStart => {
+                seeded_character_reference_lex_context(
+                    HtmlTokenizerState::TextNumericHexCharacterReferenceStart,
+                    HtmlTokenizerState::Rcdata,
+                    "&#x",
+                )
+                .with_last_start_tag("title")
+            }
+            Self::RcdataNumericHexCharacterReference => seeded_character_reference_lex_context(
+                HtmlTokenizerState::TextNumericHexCharacterReference,
+                HtmlTokenizerState::Rcdata,
+                "&#x4",
+            )
+            .with_last_start_tag("title"),
+            Self::RcdataNumericDecimalCharacterReference => seeded_character_reference_lex_context(
+                HtmlTokenizerState::TextNumericDecimalCharacterReference,
+                HtmlTokenizerState::Rcdata,
+                "&#6",
+            )
+            .with_last_start_tag("title"),
             Self::ScriptData => script_lex_context(HtmlTokenizerState::ScriptData),
             Self::ScriptDataLessThanSign => {
                 script_lex_context(HtmlTokenizerState::ScriptDataLessThanSign)
@@ -440,6 +520,15 @@ fn seeded_comment_lex_context(state: HtmlTokenizerState, data: &str) -> HtmlLexC
 fn seeded_doctype_lex_context(state: HtmlTokenizerState, seed: DoctypeSeed) -> HtmlLexContext {
     HtmlLexContext::doctype_continuation(state, seed)
         .expect("parser only exposes valid doctype continuation states")
+}
+
+fn seeded_character_reference_lex_context(
+    state: HtmlTokenizerState,
+    return_state: HtmlTokenizerState,
+    temporary_buffer: &str,
+) -> HtmlLexContext {
+    HtmlLexContext::character_reference_continuation(state, return_state, temporary_buffer)
+        .expect("parser only exposes valid character-reference continuation states")
 }
 
 fn doctype_seed_with_public(name: &str, public_identifier: &str) -> DoctypeSeed {
@@ -2774,6 +2863,225 @@ mod tests {
             let paragraph = element(&body(&output.document).children[0]);
             assert_eq!(paragraph.children, vec![Node::text("x")]);
             assert!(output.parser_diagnostics.is_empty(), "context {context:?}");
+
+            let actual_lexer_diagnostics = output
+                .lexer_diagnostics
+                .iter()
+                .map(|diagnostic| diagnostic.code.as_str())
+                .collect::<Vec<_>>();
+            assert_eq!(
+                actual_lexer_diagnostics, expected_lexer_diagnostics,
+                "context {context:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn parser_exposes_all_seeded_character_reference_continuation_contexts() {
+        for (context, return_state, temporary_buffer) in [
+            (
+                HtmlInitialTokenizerContext::CharacterReference,
+                HtmlTokenizerState::Data,
+                "&",
+            ),
+            (
+                HtmlInitialTokenizerContext::NamedCharacterReference,
+                HtmlTokenizerState::Data,
+                "&co",
+            ),
+            (
+                HtmlInitialTokenizerContext::NumericCharacterReference,
+                HtmlTokenizerState::Data,
+                "&#",
+            ),
+            (
+                HtmlInitialTokenizerContext::NumericHexCharacterReferenceStart,
+                HtmlTokenizerState::Data,
+                "&#x",
+            ),
+            (
+                HtmlInitialTokenizerContext::NumericHexCharacterReference,
+                HtmlTokenizerState::Data,
+                "&#x4",
+            ),
+            (
+                HtmlInitialTokenizerContext::NumericDecimalCharacterReference,
+                HtmlTokenizerState::Data,
+                "&#6",
+            ),
+            (
+                HtmlInitialTokenizerContext::RcdataCharacterReference,
+                HtmlTokenizerState::Rcdata,
+                "&",
+            ),
+            (
+                HtmlInitialTokenizerContext::RcdataNamedCharacterReference,
+                HtmlTokenizerState::Rcdata,
+                "&a",
+            ),
+            (
+                HtmlInitialTokenizerContext::RcdataNumericCharacterReference,
+                HtmlTokenizerState::Rcdata,
+                "&#",
+            ),
+            (
+                HtmlInitialTokenizerContext::RcdataNumericHexCharacterReferenceStart,
+                HtmlTokenizerState::Rcdata,
+                "&#x",
+            ),
+            (
+                HtmlInitialTokenizerContext::RcdataNumericHexCharacterReference,
+                HtmlTokenizerState::Rcdata,
+                "&#x4",
+            ),
+            (
+                HtmlInitialTokenizerContext::RcdataNumericDecimalCharacterReference,
+                HtmlTokenizerState::Rcdata,
+                "&#6",
+            ),
+        ] {
+            let context = context.lex_context();
+            assert!(context.initial_state.requires_character_reference_seed());
+            assert_eq!(context.return_state, Some(return_state));
+            assert_eq!(context.temporary_buffer.as_deref(), Some(temporary_buffer));
+            if return_state == HtmlTokenizerState::Rcdata {
+                assert_eq!(context.last_start_tag.as_deref(), Some("title"));
+            }
+        }
+    }
+
+    #[test]
+    fn parser_can_start_in_seeded_character_reference_continuation_contexts() {
+        for (
+            context,
+            source,
+            expected_text,
+            expected_lexer_diagnostics,
+            expected_parser_diagnostics,
+        ) in [
+            (
+                HtmlInitialTokenizerContext::CharacterReference,
+                " nope<p>x</p>",
+                "& nope",
+                Vec::<&str>::new(),
+                Vec::<ParserDiagnostic>::new(),
+            ),
+            (
+                HtmlInitialTokenizerContext::NamedCharacterReference,
+                "py;<p>x</p>",
+                "©",
+                Vec::<&str>::new(),
+                Vec::<ParserDiagnostic>::new(),
+            ),
+            (
+                HtmlInitialTokenizerContext::NumericCharacterReference,
+                "65;!<p>x</p>",
+                "A!",
+                Vec::<&str>::new(),
+                Vec::<ParserDiagnostic>::new(),
+            ),
+            (
+                HtmlInitialTokenizerContext::NumericHexCharacterReferenceStart,
+                "41;!<p>x</p>",
+                "A!",
+                Vec::<&str>::new(),
+                Vec::<ParserDiagnostic>::new(),
+            ),
+            (
+                HtmlInitialTokenizerContext::NumericHexCharacterReference,
+                "1!<p>x</p>",
+                "A!",
+                vec!["missing-semicolon-after-character-reference"],
+                Vec::<ParserDiagnostic>::new(),
+            ),
+            (
+                HtmlInitialTokenizerContext::NumericDecimalCharacterReference,
+                "5;!<p>x</p>",
+                "A!",
+                Vec::<&str>::new(),
+                Vec::<ParserDiagnostic>::new(),
+            ),
+            (
+                HtmlInitialTokenizerContext::RcdataCharacterReference,
+                " nope</title><p>x</p>",
+                "& nope",
+                Vec::<&str>::new(),
+                vec![ParserDiagnostic::new(
+                    "unexpected-end-tag",
+                    "end tag `</title>` did not match an open element",
+                )],
+            ),
+            (
+                HtmlInitialTokenizerContext::RcdataNamedCharacterReference,
+                "mp; &amp;</title><p>x</p>",
+                "& &",
+                Vec::<&str>::new(),
+                vec![ParserDiagnostic::new(
+                    "unexpected-end-tag",
+                    "end tag `</title>` did not match an open element",
+                )],
+            ),
+            (
+                HtmlInitialTokenizerContext::RcdataNumericCharacterReference,
+                "65;</title><p>x</p>",
+                "A",
+                Vec::<&str>::new(),
+                vec![ParserDiagnostic::new(
+                    "unexpected-end-tag",
+                    "end tag `</title>` did not match an open element",
+                )],
+            ),
+            (
+                HtmlInitialTokenizerContext::RcdataNumericHexCharacterReferenceStart,
+                "41;</title><p>x</p>",
+                "A",
+                Vec::<&str>::new(),
+                vec![ParserDiagnostic::new(
+                    "unexpected-end-tag",
+                    "end tag `</title>` did not match an open element",
+                )],
+            ),
+            (
+                HtmlInitialTokenizerContext::RcdataNumericHexCharacterReference,
+                "1!</title><p>x</p>",
+                "A!",
+                vec!["missing-semicolon-after-character-reference"],
+                vec![ParserDiagnostic::new(
+                    "unexpected-end-tag",
+                    "end tag `</title>` did not match an open element",
+                )],
+            ),
+            (
+                HtmlInitialTokenizerContext::RcdataNumericDecimalCharacterReference,
+                "5;</title><p>x</p>",
+                "A",
+                Vec::<&str>::new(),
+                vec![ParserDiagnostic::new(
+                    "unexpected-end-tag",
+                    "end tag `</title>` did not match an open element",
+                )],
+            ),
+        ] {
+            let output = parse_html_with_diagnostics_and_options(
+                source,
+                HtmlParseOptions {
+                    initial_tokenizer_context: context,
+                    ..HtmlParseOptions::default()
+                },
+            )
+            .unwrap();
+
+            assert_eq!(
+                body(&output.document).children[0],
+                Node::text(expected_text),
+                "context {context:?}"
+            );
+            let paragraph = element(&body(&output.document).children[1]);
+            assert_eq!(paragraph.children, vec![Node::text("x")]);
+            assert_eq!(
+                output.parser_diagnostics, expected_parser_diagnostics,
+                "context {context:?}"
+            );
 
             let actual_lexer_diagnostics = output
                 .lexer_diagnostics

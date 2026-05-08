@@ -39,7 +39,8 @@ This first slice intentionally starts small:
   RCDATA/RAWTEXT, PLAINTEXT, foreign-content CDATA, comment, DOCTYPE,
   script-state, and intermediate tokenizer fragments exposed by the lexer,
   including resumable end-tag-open, seeded end-tag continuation, seeded comment
-  continuation, and seeded DOCTYPE continuation contexts
+  continuation, seeded text/RCDATA character-reference continuation, and seeded
+  DOCTYPE continuation contexts
 - simple implied end tags for `p`, `li`, `dt`, `dd`, `option`, `optgroup`,
   ruby annotations, heading elements, legacy paragraph/block boundaries, and
   raw-text block starts
