@@ -9,7 +9,10 @@ control-plane layer:
 - function id constants
 - request/response/callback classification
 - request callback ids
+- bootstrap request builders for version, init-data, controller capabilities,
+  and Memory Get ID
 - controller capability flag decoding
+- Serial API version payload decoding
 - Serial API Get Init Data node inventory decoding
 - Application Command Handler source/command envelopes
 - Application Command Handler-to-command-class frame projection
