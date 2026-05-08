@@ -1,0 +1,90 @@
+# Parser grammar for mosmodel — Component Interface Language
+# @version 1
+#
+# A .mosmodel file declares exactly one component with:
+#   - slot declarations  (typed data inputs the host pushes IN)
+#   - emit declarations  (typed event outputs the component fires OUT)
+#
+# Nothing else is grammatically valid.
+#
+# Notation:
+#   |     alternation (choice)
+#   { }   repetition (zero or more)
+#   [ ]   optional (zero or one)
+#   ( )   grouping
+#   "x"   literal match
+# UPPERCASE = token reference, lowercase = rule reference
+
+# ============================================================================
+# Top-Level Structure
+# ============================================================================
+# A mosmodel file is exactly one component definition.
+
+file = component_def ;
+
+# ============================================================================
+# Component Declaration
+# ============================================================================
+# The component name is PascalCase (e.g. Button, Grid, FormulaBar).
+# Members are zero or more slot or emit declarations in any order.
+#
+#   component Button {
+#     slot label   : text ;
+#     slot disabled : bool = false ;
+#     emit onClick ;
+#     emit onLongPress ;
+#   }
+
+component_def = KEYWORD NAME LBRACE { member } RBRACE ;
+
+member = slot_decl | emit_decl ;
+
+# ============================================================================
+# Slot Declarations
+# ============================================================================
+# Slots are kebab-case typed input channels set by the host.
+# A default value may be provided for optional slots.
+#
+#   slot label        : text ;
+#   slot disabled     : bool = false ;
+#   slot total-rows   : number ;
+#   slot column-headers : list<text> ;
+#   slot active-cell  : CellAddress ;
+
+slot_decl = KEYWORD NAME COLON slot_type [ EQUALS slot_default ] SEMICOLON ;
+
+# slot_type: a scalar keyword, a list<T>, or a named component type (NAME)
+slot_type = scalar_type
+          | list_type
+          | NAME ;
+
+# The six scalar type keywords
+scalar_type = KEYWORD ;
+
+# list<T> where T is a scalar or named component type
+list_type = KEYWORD LANGLE inner_type RANGLE ;
+
+inner_type = scalar_type | NAME ;
+
+# Allowed inline defaults: string, number, or bool literal
+slot_default = STRING | NUMBER | KEYWORD ;
+
+# ============================================================================
+# Emit Declarations
+# ============================================================================
+# Emits are kebab-case typed output channels the component fires.
+# They carry an optional payload of typed parameters.
+#
+#   emit onClick ;
+#   emit onNavigate ( row : number , col : number ) ;
+#   emit onEditCommit ( value : text ) ;
+
+emit_decl = KEYWORD NAME [ LPAREN emit_param_list RPAREN ] SEMICOLON ;
+
+emit_param_list = emit_param { COMMA emit_param } ;
+
+# Each parameter has a kebab-case name and an emit-payload type
+emit_param = NAME COLON emit_payload_type ;
+
+# Emit payload types: same as scalars minus image/node (events carry data, not subtrees)
+emit_payload_type = KEYWORD | NAME ;
