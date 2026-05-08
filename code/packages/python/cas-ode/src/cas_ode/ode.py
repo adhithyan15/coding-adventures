@@ -19,6 +19,11 @@ written in closed form:
 7. **Homogeneous-type** (Phase 18c): ``dy/dx = f(y/x)`` — the right-hand
    side depends only on the ratio ``y/x``.  Solved by the substitution
    ``v = y/x`` which reduces it to a separable ODE in ``(v, x)``.
+8. **Euler-Cauchy equidimensional** (Phase 19): ``a·x²·y'' + b·x·y' + c·y = 0``
+   — each term has the same *weight* (power of x equals order of derivative).
+   Solved by the ansatz ``y = x^r`` which yields the indicial quadratic
+   ``a·r² + (b − a)·r + c = 0``.  Three cases: distinct real roots, repeated
+   root, and complex conjugate roots.
 
 Every public function takes IR nodes as input and returns IR nodes as
 output.  No floats are used for exact computation; rational arithmetic
@@ -56,11 +61,15 @@ Read the functions in this order:
 10. :func:`_subst_ir` — pure IR tree substitution helper
 11. :func:`_subst_ratio_ir` — structural substitution of ``Div(y,x) → v``
 12. :func:`_try_homogeneous_type` — Phase 18c: homogeneous-type ``y' = f(y/x)``
-13. :func:`_collect_second_order_nonhom` — collect (a,b,c,f) from non-hom ODE
-14. :func:`_classify_forcing` — identify the forcing-function family
-15. :func:`_compute_particular` — undetermined-coefficient ansatz
-16. :func:`_try_second_order_nonhom` — non-homogeneous 2nd-order dispatcher
-17. :func:`solve_ode` — the top-level dispatcher
+13. :func:`_flatten_product` — product analogue of ``_flatten_add``
+14. :func:`_collect_euler_cauchy_coeffs` — pattern-match ``a·x²·y''+b·x·y'+c·y``
+15. :func:`solve_euler_cauchy` — indicial equation → three root cases
+16. :func:`_try_euler_cauchy` — Phase 19 entry point
+17. :func:`_collect_second_order_nonhom` — collect (a,b,c,f) from non-hom ODE
+18. :func:`_classify_forcing` — identify the forcing-function family
+19. :func:`_compute_particular` — undetermined-coefficient ansatz
+20. :func:`_try_second_order_nonhom` — non-homogeneous 2nd-order dispatcher
+21. :func:`solve_ode` — the top-level dispatcher
 """
 
 from __future__ import annotations
@@ -531,6 +540,294 @@ def _isqrt_exact(n: int) -> int | None:
         return None
     r = math.isqrt(n)
     return r if r * r == n else None
+
+
+# ---------------------------------------------------------------------------
+# Section 2b — Euler-Cauchy (equidimensional) 2nd-order ODE
+# ---------------------------------------------------------------------------
+#
+# An Euler-Cauchy ODE has the form
+#
+#     a · x² · y'' + b · x · y' + c · y = 0
+#
+# where a, b, c are rational constants.  Unlike the constant-coefficient
+# case, the coefficient of y'' grows as x².  The classical method replaces
+# the power-law ansatz y = x^r, yielding the *indicial equation*
+#
+#     a · r(r−1) + b · r + c = 0   →   a·r² + (b−a)·r + c = 0
+#
+# which is a plain quadratic in r.  Three cases:
+#
+#   1. Two distinct real roots r₁, r₂:
+#         y = C₁·x^{r₁} + C₂·x^{r₂}
+#
+#   2. One repeated root r:
+#         y = (C₁ + C₂·ln x)·x^r
+#
+#   3. Complex conjugate roots α ± βi:
+#         y = x^α·(C₁·cos(β·ln x) + C₂·sin(β·ln x))
+#
+# This is the *same* pattern as the constant-coefficient solver but with
+# exp(r·x) replaced by x^r and x replaced by ln(x) inside the trig
+# argument.  We factor out the common logic through the indicial equation.
+# ---------------------------------------------------------------------------
+
+
+def _flatten_product(node: IRNode) -> tuple[Fraction, list[IRNode]]:
+    """Recursively flatten a ``Mul`` tree, extracting every rational scalar.
+
+    Returns ``(total_rational_coefficient, [non_rational_factors])``.
+
+    This is the product analogue of :func:`_flatten_add`.  It is used by
+    :func:`_collect_euler_cauchy_coeffs` to strip the leading coefficient from
+    terms like ``Mul(Mul(3, Pow(x, 2)), D(D(y, x), x))``.
+
+    Examples::
+
+        _flatten_product(Mul(2, Mul(x, D(y, x))))       → (Frac(2), [x, D(y,x)])
+        _flatten_product(Mul(Mul(3, Pow(x,2)), y''))    → (Frac(3), [Pow(x,2), y''])
+        _flatten_product(Neg(Mul(2, y)))                 → (Frac(-2), [y])
+        _flatten_product(x)                              → (Frac(1), [x])
+        _flatten_product(IRInteger(5))                   → (Frac(5), [])
+    """
+    if isinstance(node, IRApply) and node.head == MUL and len(node.args) == 2:
+        l_k, l_fs = _flatten_product(node.args[0])
+        r_k, r_fs = _flatten_product(node.args[1])
+        return (l_k * r_k, l_fs + r_fs)
+    if isinstance(node, IRApply) and node.head == NEG and len(node.args) == 1:
+        inner_k, inner_fs = _flatten_product(node.args[0])
+        return (-inner_k, inner_fs)
+    if isinstance(node, IRInteger):
+        return (Fraction(node.value), [])
+    if isinstance(node, IRRational):
+        return (Fraction(node.numer, node.denom), [])
+    # Any other node (symbol, IRApply, etc.) is a single non-rational factor.
+    return (Fraction(1), [node])
+
+
+def _collect_euler_cauchy_coeffs(
+    expr: IRNode,
+    y: IRSymbol,
+    x: IRSymbol,
+) -> tuple[Fraction, Fraction, Fraction] | None:
+    """Try to read ``a``, ``b``, ``c`` from ``a·x²·y'' + b·x·y' + c·y = 0``.
+
+    Each term in the flattened sum must match exactly one of:
+
+    - ``k · x² · y''`` — coefficient of ``x²·y''`` contributes to ``a``
+    - ``k · x · y'``  — coefficient of ``x·y'``  contributes to ``b``
+    - ``k · y``        — coefficient of ``y``       contributes to ``c``
+
+    where ``k`` is a rational constant (possibly zero or negative).
+
+    The x-squared term is expected as ``Pow(x, 2)`` (as generated by the
+    MACSYMA compiler for ``x^2``).  The function does *not* simplify
+    ``Mul(x, x)`` → ``Pow(x, 2)``; that would require algebraic rewrites
+    which are outside the scope of the ODE recogniser.
+
+    Parameters
+    ----------
+    expr:
+        ODE expression equal to zero (all terms on the left).
+    y, x:
+        Dependent and independent variable symbols.
+
+    Returns
+    -------
+    (a, b, c) as Fractions, or None if the pattern does not match.
+    """
+    y_prime = IRApply(D, (y, x))
+    y_double = IRApply(D, (y_prime, x))
+    x_sq = IRApply(POW, (x, _TWO))  # Pow(x, 2) — canonical form of x²
+
+    terms = _flatten_add(expr)
+    a = Fraction(0)
+    b = Fraction(0)
+    c = Fraction(0)
+    matched = 0
+
+    for term in terms:
+        k, factors = _flatten_product(term)
+
+        if len(factors) == 1:
+            if factors[0] == y:
+                c += k
+            else:
+                return None  # e.g. bare x, y', sin(x), … — not Euler-Cauchy
+        elif len(factors) == 2:
+            fl, fr = factors
+            # x · y'  (either order)
+            if (fl == x and fr == y_prime) or (fl == y_prime and fr == x):
+                b += k
+            # x² · y''  (either order)
+            elif (fl == x_sq and fr == y_double) or (fl == y_double and fr == x_sq):
+                a += k
+            else:
+                return None  # unrecognised 2-factor product
+        else:
+            return None  # 0, 3, or more non-rational factors
+
+        matched += 1
+
+    # Require at least the y'' term (a ≠ 0) and one additional term.
+    if a == Fraction(0) or matched < 2:
+        return None
+
+    return (a, b, c)
+
+
+def solve_euler_cauchy(
+    a: Fraction,
+    b: Fraction,
+    c: Fraction,
+    y: IRSymbol,
+    x: IRSymbol,
+) -> IRNode:
+    """Solve ``a·x²·y'' + b·x·y' + c·y = 0`` via the indicial equation.
+
+    Substituting ``y = x^r`` into the ODE and dividing by ``x^r`` yields
+    the *indicial equation* (also called the characteristic equation for
+    Euler-Cauchy ODEs)::
+
+        a·r(r−1) + b·r + c = 0
+        ≡  a·r² + (b−a)·r + c = 0
+
+    This is the same quadratic structure as for constant-coefficient ODEs,
+    but the solutions are expressed in terms of powers of ``x`` and
+    ``ln(x)`` rather than exponentials and polynomials:
+
+    +---------------------+-----------------------------------------+
+    | Root type           | General solution                        |
+    +=====================+=========================================+
+    | Distinct real r₁,r₂ | C₁·x^{r₁} + C₂·x^{r₂}                 |
+    +---------------------+-----------------------------------------+
+    | Repeated root r     | (C₁ + C₂·ln x)·x^r                     |
+    +---------------------+-----------------------------------------+
+    | Complex α ± βi      | x^α·(C₁·cos(β ln x) + C₂·sin(β ln x)) |
+    +---------------------+-----------------------------------------+
+
+    All arithmetic is exact (Fraction-based); irrational discriminants are
+    left as symbolic ``Pow(disc, 1/2)`` nodes.
+
+    Parameters
+    ----------
+    a, b, c:
+        Rational coefficients of the Euler-Cauchy ODE.
+    y:
+        The dependent variable symbol.
+    x:
+        The independent variable symbol.
+
+    Returns
+    -------
+    ``Equal(y, solution)`` IR node.
+    """
+    # Indicial equation coefficients: A·r² + B·r + C = 0
+    A = a
+    B = b - a          # because a·r(r-1) = a·r² - a·r ⟹ coeff of r is b - a
+    C = c
+
+    disc = B * B - Fraction(4) * A * C
+
+    log_x = IRApply(LOG, (x,))  # ln(x)
+
+    def _x_pow(r: Fraction) -> IRNode:
+        """Build ``x^r`` as the canonical IR node.
+
+        Special cases:
+        - ``r = 0`` → ``1`` (avoids useless ``Pow(x, 0)``)
+        - ``r = 1`` → ``x``
+        - ``r > 0`` → ``Pow(x, r_ir)``
+        - ``r < 0`` → ``Pow(x, Neg(|r|_ir))``   (keep the sign in the exponent)
+        """
+        if r == 0:
+            return _ONE
+        if r == 1:
+            return x
+        if r > 0:
+            return _pow(x, _frac_to_ir(r))
+        # Negative exponent: write as Pow(x, Neg(|r|)) so the printer renders
+        # it as x^{-2} rather than x^{Neg(2)}.
+        return _pow(x, _neg(_frac_to_ir(-r)))
+
+    def _x_pow_ir(r_ir: IRNode) -> IRNode:
+        """Build ``Pow(x, r_ir)`` for a symbolic (non-Fraction) exponent."""
+        return _pow(x, r_ir)
+
+    if disc > 0:
+        # ---- Case 1: two distinct real roots --------------------------------
+        sqrt_disc = _exact_sqrt_fraction(disc)
+
+        if sqrt_disc is not None:
+            # Roots are exact rationals.
+            r1 = (-B + sqrt_disc) / (2 * A)
+            r2 = (-B - sqrt_disc) / (2 * A)
+            term1 = _mul(C1, _x_pow(r1))
+            term2 = _mul(C2, _x_pow(r2))
+        else:
+            # Irrational discriminant — represent sqrt symbolically.
+            sqrt_ir = _pow(_frac_to_ir(disc), IRRational(1, 2))
+            neg_B_ir = _frac_to_ir(-B) if -B >= 0 else _neg(_frac_to_ir(B))
+            denom_ir = _frac_to_ir(2 * A)
+            r1_ir = _div(_add(neg_B_ir, sqrt_ir), denom_ir)
+            r2_ir = _div(_sub(neg_B_ir, sqrt_ir), denom_ir)
+            term1 = _mul(C1, _x_pow_ir(r1_ir))
+            term2 = _mul(C2, _x_pow_ir(r2_ir))
+
+        solution = _add(term1, term2)
+
+    elif disc == 0:
+        # ---- Case 2: repeated root ------------------------------------------
+        # r = -B / (2A)
+        r = (-B) / (2 * A)
+        x_r = _x_pow(r)
+        # y = (C1 + C2·ln(x)) · x^r
+        inside = _add(C1, _mul(C2, log_x))
+        solution = _mul(inside, x_r)
+
+    else:
+        # ---- Case 3: complex conjugate roots --------------------------------
+        # α = -B / (2A),   β = sqrt(|disc|) / (2A)
+        alpha = (-B) / (2 * A)
+        abs_disc = -disc  # positive since disc < 0
+        beta_sq = abs_disc / (4 * A * A)
+        sqrt_beta = _exact_sqrt_fraction(beta_sq)
+
+        x_alpha = _x_pow(alpha)
+
+        if sqrt_beta is not None:
+            # sqrt_beta is always positive by construction (beta_sq >= 0)
+            beta_ir: IRNode = _frac_to_ir(sqrt_beta)
+        else:
+            beta_ir = _pow(_frac_to_ir(beta_sq), IRRational(1, 2))
+
+        # y = x^α · (C1·cos(β·ln x) + C2·sin(β·ln x))
+        cos_term = _mul(C1, _cos(_mul(beta_ir, log_x)))
+        sin_term = _mul(C2, _sin(_mul(beta_ir, log_x)))
+        trig_sum = _add(cos_term, sin_term)
+        solution = _mul(x_alpha, trig_sum)
+
+    return IRApply(EQUAL, (y, solution))
+
+
+def _try_euler_cauchy(
+    expr: IRNode,
+    y: IRSymbol,
+    x: IRSymbol,
+) -> IRNode | None:
+    """Attempt to solve ``expr = 0`` as an Euler-Cauchy ODE.
+
+    Returns ``Equal(y, solution)`` on success, ``None`` on pattern mismatch.
+
+    This is the public entry point used by :func:`solve_ode`.  It calls
+    :func:`_collect_euler_cauchy_coeffs` to recognise the pattern and
+    :func:`solve_euler_cauchy` to build the solution.
+    """
+    coeffs = _collect_euler_cauchy_coeffs(expr, y, x)
+    if coeffs is None:
+        return None
+    a, b, c = coeffs
+    return solve_euler_cauchy(a, b, c, y, x)
 
 
 # ---------------------------------------------------------------------------
@@ -1457,7 +1754,7 @@ def _try_homogeneous_type(
     expr: IRNode,
     y: IRSymbol,
     x: IRSymbol,
-    vm: "VM",
+    vm: VM,
 ) -> IRNode | None:
     """Solve ``y' = f(y/x)`` — a homogeneous-type first-order ODE.
 
@@ -2173,11 +2470,14 @@ def solve_ode(
        before the homogeneous check, because the homogeneous recogniser
        silently ignores forcing terms and would mis-classify.
     2. Check for second-order const-coeff **homogeneous**.
-    3. Check for **Bernoulli** (Phase 18).
-    4. Check for first-order **linear** ``y' + P(x)·y = Q(x)``.
-    5. Check for **separable** ``y' = f(x)·g(y)``.
-    6. Check for **homogeneous-type** ``y' = f(y/x)`` (Phase 18c).
-    7. Check for **exact** (Phase 18).
+    3. Check for **Euler-Cauchy equidimensional** (Phase 19) —
+       ``a·x²·y'' + b·x·y' + c·y = 0``.  Must follow const-coeff so that
+       equations with literal number coefficients are already handled above.
+    4. Check for **Bernoulli** (Phase 18).
+    5. Check for first-order **linear** ``y' + P(x)·y = Q(x)``.
+    6. Check for **separable** ``y' = f(x)·g(y)``.
+    7. Check for **homogeneous-type** ``y' = f(y/x)`` (Phase 18c).
+    8. Check for **exact** (Phase 18).
 
     Returns ``Equal(y, solution)`` or ``Equal(F, C)`` (exact) on success,
     or ``None`` on failure.
@@ -2207,6 +2507,16 @@ def solve_ode(
     if coeffs is not None:
         a, b, c = coeffs
         return solve_second_order_const_coeff(a, b, c, y, x)
+
+    # ---- Phase 19: Euler-Cauchy equidimensional ODE -------------------------
+    # a·x²·y'' + b·x·y' + c·y = 0  →  indicial equation a·r²+(b-a)·r+c=0.
+    # Must run AFTER const-coeff because both handle second-order equations;
+    # const-coeff will already have returned if its coefficients are literal
+    # numbers (no x factor), so we only reach here for variable-coefficient
+    # equidimensional equations.
+    euler = _try_euler_cauchy(expr, y, x)
+    if euler is not None:
+        return euler
 
     # ---- Phase 18: Bernoulli ------------------------------------------------
     bern = _try_bernoulli(expr, y, x, vm)
