@@ -11,6 +11,7 @@ use board_vm_eject::{
     build_blink_eject_artifact, write_embedded_rust_constants,
     EjectOptions as ArtifactEjectOptions, RustConstNames, DEFAULT_BOOT_POLICY, DEFAULT_EJECT_SLOT,
 };
+use board_vm_esp_rom::{detect_esp_rom, EspDetection, EspRomError, EspRomSerialOptions};
 use board_vm_host::{
     write_blink_module, write_gpio_read_module, write_time_now_module, BlinkProgram,
     GpioReadProgram, TimeNowProgram, BLINK_MODULE_LEN, GPIO_READ_MODULE_LEN, TIME_NOW_MODULE_LEN,
@@ -30,6 +31,7 @@ pub const DEFAULT_OPEN_SETTLE_MS: u64 = 250;
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CliCommand {
     ListPorts,
+    EspDetect(EspDetectOptions),
     Smoke(SmokeOptions),
     Repl(ReplOptions),
     EjectBlink(EjectBlinkOptions),
@@ -54,6 +56,23 @@ impl SmokeOptions {
             .dtr_on_open(true)
             .clear_on_open(true)
             .settle_on_open(Duration::from_millis(DEFAULT_OPEN_SETTLE_MS))
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EspDetectOptions {
+    pub port: String,
+    pub baud_rate: u32,
+    pub timeout_ms: u64,
+    pub reset_into_bootloader: bool,
+}
+
+impl EspDetectOptions {
+    pub fn serial_options(&self) -> EspRomSerialOptions {
+        EspRomSerialOptions::new(&self.port)
+            .baud_rate(self.baud_rate)
+            .timeout(Duration::from_millis(self.timeout_ms))
+            .reset_into_bootloader(self.reset_into_bootloader)
     }
 }
 
@@ -149,6 +168,7 @@ pub enum CliError {
     Io(String),
     Client(ClientError),
     Eject(String),
+    EspRom(String),
     Smoke {
         stage: SmokeStage,
         source: ClientError,
@@ -171,6 +191,7 @@ impl fmt::Display for CliError {
             Self::Io(error) => write!(f, "io error: {error}"),
             Self::Client(error) => write!(f, "client error: {error:?}"),
             Self::Eject(error) => write!(f, "eject error: {error}"),
+            Self::EspRom(error) => write!(f, "esp rom error: {error}"),
             Self::Smoke { stage, source } => write!(f, "smoke failed during {stage}: {source:?}"),
         }
     }
@@ -196,6 +217,12 @@ impl From<std::io::Error> for CliError {
     }
 }
 
+impl From<EspRomError> for CliError {
+    fn from(value: EspRomError) -> Self {
+        Self::EspRom(value.to_string())
+    }
+}
+
 pub fn parse_args<I, S>(args: I) -> Result<CliCommand, CliError>
 where
     I: IntoIterator<Item = S>,
@@ -208,12 +235,45 @@ where
 
     match command.as_str() {
         "list-ports" => Ok(CliCommand::ListPorts),
+        "esp-detect" | "detect-esp" => parse_esp_detect_args(args),
         "smoke" => parse_smoke_args(args),
         "repl" => parse_repl_args(args),
         "eject" => parse_eject_args(args),
         "help" | "--help" | "-h" => Ok(CliCommand::Help),
         other => Err(CliError::UnknownCommand(other.to_owned())),
     }
+}
+
+fn parse_esp_detect_args<I>(mut args: I) -> Result<CliCommand, CliError>
+where
+    I: Iterator<Item = String>,
+{
+    let mut port = None;
+    let mut baud_rate = board_vm_esp_rom::DEFAULT_BAUD_RATE;
+    let mut timeout_ms = board_vm_esp_rom::DEFAULT_TIMEOUT_MS;
+    let mut reset_into_bootloader = true;
+
+    while let Some(option) = args.next() {
+        match option.as_str() {
+            "--port" | "-p" => port = Some(next_value(&mut args, "--port")?),
+            "--baud" | "-b" => {
+                baud_rate = parse_number(next_value(&mut args, "--baud")?, "--baud")?
+            }
+            "--timeout-ms" => {
+                timeout_ms = parse_number(next_value(&mut args, "--timeout-ms")?, "--timeout-ms")?
+            }
+            "--no-reset" => reset_into_bootloader = false,
+            other => return Err(CliError::UnknownOption(other.to_owned())),
+        }
+    }
+
+    let port = port.ok_or(CliError::MissingRequired("--port"))?;
+    Ok(CliCommand::EspDetect(EspDetectOptions {
+        port,
+        baud_rate,
+        timeout_ms,
+        reset_into_bootloader,
+    }))
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -543,6 +603,10 @@ pub fn run_smoke(options: &SmokeOptions) -> Result<SmokeReport, CliError> {
         descriptor,
         run,
     })
+}
+
+pub fn run_esp_detect(options: &EspDetectOptions) -> Result<EspDetection, CliError> {
+    detect_esp_rom(&options.serial_options()).map_err(CliError::from)
 }
 
 pub fn run_eject_blink(options: &EjectBlinkOptions) -> Result<EjectReport, CliError> {
@@ -890,7 +954,7 @@ pub fn list_ports() -> Result<Vec<SerialPortInfo>, CliError> {
 }
 
 pub fn usage() -> &'static str {
-    "usage:\n  board-vm list-ports\n  board-vm smoke --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm repl --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm eject blink --out <path> [--program-id <id>] [--slot <slot>] [--boot-policy store-only|run-at-boot|run-if-no-host|<u8>]"
+    "usage:\n  board-vm list-ports\n  board-vm esp-detect --port <path> [--baud <rate>] [--timeout-ms <ms>] [--no-reset]\n  board-vm smoke --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm repl --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm eject blink --out <path> [--program-id <id>] [--slot <slot>] [--boot-policy store-only|run-at-boot|run-if-no-host|<u8>]"
 }
 
 #[cfg(test)]
@@ -900,6 +964,46 @@ mod tests {
     #[test]
     fn parses_list_ports_command() {
         assert_eq!(parse_args(["list-ports"]).unwrap(), CliCommand::ListPorts);
+    }
+
+    #[test]
+    fn parses_esp_detect_defaults() {
+        let command = parse_args(["esp-detect", "--port", "/dev/cu.usbserial-test"]).unwrap();
+
+        assert_eq!(
+            command,
+            CliCommand::EspDetect(EspDetectOptions {
+                port: "/dev/cu.usbserial-test".to_owned(),
+                baud_rate: board_vm_esp_rom::DEFAULT_BAUD_RATE,
+                timeout_ms: board_vm_esp_rom::DEFAULT_TIMEOUT_MS,
+                reset_into_bootloader: true,
+            })
+        );
+    }
+
+    #[test]
+    fn parses_esp_detect_overrides() {
+        let command = parse_args([
+            "detect-esp",
+            "--port",
+            "COM7",
+            "--baud",
+            "230400",
+            "--timeout-ms",
+            "750",
+            "--no-reset",
+        ])
+        .unwrap();
+
+        assert_eq!(
+            command,
+            CliCommand::EspDetect(EspDetectOptions {
+                port: "COM7".to_owned(),
+                baud_rate: 230_400,
+                timeout_ms: 750,
+                reset_into_bootloader: false,
+            })
+        );
     }
 
     #[test]

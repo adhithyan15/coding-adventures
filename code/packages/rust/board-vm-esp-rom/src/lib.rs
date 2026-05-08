@@ -1,0 +1,845 @@
+use std::fmt;
+use std::io::{Read, Write};
+use std::time::Duration;
+
+pub const DEFAULT_BAUD_RATE: u32 = 115_200;
+pub const DEFAULT_TIMEOUT_MS: u64 = 1_000;
+pub const ESP_CHECKSUM_SEED: u8 = 0xEF;
+pub const CHIP_DETECT_MAGIC_REG_ADDR: u32 = 0x4000_1000;
+
+pub const SLIP_END: u8 = 0xC0;
+pub const SLIP_ESC: u8 = 0xDB;
+pub const SLIP_ESC_END: u8 = 0xDC;
+pub const SLIP_ESC_ESC: u8 = 0xDD;
+
+const REQUEST_DIRECTION: u8 = 0x00;
+const RESPONSE_DIRECTION: u8 = 0x01;
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum EspRomError {
+    PayloadTooLarge(usize),
+    OutputTooSmall { needed: usize, available: usize },
+    TruncatedPacket,
+    InvalidDirection(u8),
+    InvalidSlipEscape(u8),
+    MissingSlipEnd,
+    UnexpectedCommand { expected: u8, actual: u8 },
+    RomStatus { status: u8, error: u8 },
+    UnsupportedChipId(u32),
+    UnsupportedMagicValue(u32),
+    Io(String),
+    Serial(String),
+}
+
+impl fmt::Display for EspRomError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::PayloadTooLarge(len) => write!(f, "payload too large for ESP ROM packet: {len}"),
+            Self::OutputTooSmall { needed, available } => {
+                write!(
+                    f,
+                    "output buffer too small: needed {needed}, available {available}"
+                )
+            }
+            Self::TruncatedPacket => write!(f, "truncated ESP ROM packet"),
+            Self::InvalidDirection(direction) => {
+                write!(f, "invalid ESP ROM packet direction: 0x{direction:02X}")
+            }
+            Self::InvalidSlipEscape(byte) => write!(f, "invalid SLIP escape byte: 0x{byte:02X}"),
+            Self::MissingSlipEnd => write!(f, "missing SLIP frame terminator"),
+            Self::UnexpectedCommand { expected, actual } => write!(
+                f,
+                "unexpected ESP ROM response command: expected 0x{expected:02X}, got 0x{actual:02X}"
+            ),
+            Self::RomStatus { status, error } => {
+                write!(
+                    f,
+                    "ESP ROM command failed: status={status} error=0x{error:02X}"
+                )
+            }
+            Self::UnsupportedChipId(chip_id) => {
+                write!(f, "unsupported ESP chip ID: {chip_id}")
+            }
+            Self::UnsupportedMagicValue(value) => {
+                write!(f, "unsupported ESP magic value: 0x{value:08X}")
+            }
+            Self::Io(error) => write!(f, "io error: {error}"),
+            Self::Serial(error) => write!(f, "serial error: {error}"),
+        }
+    }
+}
+
+impl std::error::Error for EspRomError {}
+
+impl From<std::io::Error> for EspRomError {
+    fn from(value: std::io::Error) -> Self {
+        Self::Io(value.to_string())
+    }
+}
+
+impl From<serialport::Error> for EspRomError {
+    fn from(value: serialport::Error) -> Self {
+        Self::Serial(value.to_string())
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(u8)]
+pub enum EspRomCommand {
+    FlashBegin = 0x02,
+    FlashData = 0x03,
+    FlashEnd = 0x04,
+    MemBegin = 0x05,
+    MemEnd = 0x06,
+    MemData = 0x07,
+    Sync = 0x08,
+    WriteReg = 0x09,
+    ReadReg = 0x0A,
+    SpiSetParams = 0x0B,
+    SpiAttach = 0x0D,
+    ChangeBaudrate = 0x0F,
+    FlashDeflBegin = 0x10,
+    FlashDeflData = 0x11,
+    FlashDeflEnd = 0x12,
+    SpiFlashMd5 = 0x13,
+    GetSecurityInfo = 0x14,
+}
+
+impl EspRomCommand {
+    pub const fn code(self) -> u8 {
+        self as u8
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum InstructionSet {
+    Xtensa,
+    RiscV,
+}
+
+impl InstructionSet {
+    pub const fn name(self) -> &'static str {
+        match self {
+            Self::Xtensa => "xtensa",
+            Self::RiscV => "risc-v",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum EspChip {
+    Esp32,
+    Esp32S2,
+    Esp32S3,
+    Esp32C2,
+    Esp32C3,
+    Esp32C5,
+    Esp32C6,
+    Esp32H2,
+    Esp32P4,
+}
+
+impl EspChip {
+    pub const fn name(self) -> &'static str {
+        match self {
+            Self::Esp32 => "ESP32",
+            Self::Esp32S2 => "ESP32-S2",
+            Self::Esp32S3 => "ESP32-S3",
+            Self::Esp32C2 => "ESP32-C2",
+            Self::Esp32C3 => "ESP32-C3",
+            Self::Esp32C5 => "ESP32-C5",
+            Self::Esp32C6 => "ESP32-C6",
+            Self::Esp32H2 => "ESP32-H2",
+            Self::Esp32P4 => "ESP32-P4",
+        }
+    }
+
+    pub const fn image_chip_id(self) -> u32 {
+        match self {
+            Self::Esp32 => 0,
+            Self::Esp32S2 => 2,
+            Self::Esp32C3 => 5,
+            Self::Esp32S3 => 9,
+            Self::Esp32C2 => 12,
+            Self::Esp32C6 => 13,
+            Self::Esp32H2 => 16,
+            Self::Esp32P4 => 18,
+            Self::Esp32C5 => 23,
+        }
+    }
+
+    pub const fn magic_value(self) -> Option<u32> {
+        match self {
+            Self::Esp32 => Some(0x00F0_1D83),
+            Self::Esp32S2 => Some(0x0000_07C6),
+            _ => None,
+        }
+    }
+
+    pub const fn instruction_set(self) -> InstructionSet {
+        match self {
+            Self::Esp32 | Self::Esp32S2 | Self::Esp32S3 => InstructionSet::Xtensa,
+            Self::Esp32C2
+            | Self::Esp32C3
+            | Self::Esp32C5
+            | Self::Esp32C6
+            | Self::Esp32H2
+            | Self::Esp32P4 => InstructionSet::RiscV,
+        }
+    }
+
+    pub const fn rust_target_hint(self) -> &'static str {
+        match self {
+            Self::Esp32 => "xtensa-esp32-none-elf",
+            Self::Esp32S2 => "xtensa-esp32s2-none-elf",
+            Self::Esp32S3 => "xtensa-esp32s3-none-elf",
+            Self::Esp32C2
+            | Self::Esp32C3
+            | Self::Esp32C5
+            | Self::Esp32C6
+            | Self::Esp32H2
+            | Self::Esp32P4 => "riscv32imc-unknown-none-elf",
+        }
+    }
+
+    pub const fn from_image_chip_id(chip_id: u32) -> Option<Self> {
+        match chip_id {
+            0 => Some(Self::Esp32),
+            2 => Some(Self::Esp32S2),
+            5 => Some(Self::Esp32C3),
+            9 => Some(Self::Esp32S3),
+            12 => Some(Self::Esp32C2),
+            13 => Some(Self::Esp32C6),
+            16 => Some(Self::Esp32H2),
+            18 => Some(Self::Esp32P4),
+            23 => Some(Self::Esp32C5),
+            _ => None,
+        }
+    }
+
+    pub const fn from_magic_value(value: u32) -> Option<Self> {
+        match value {
+            0x00F0_1D83 => Some(Self::Esp32),
+            0x0000_07C6 => Some(Self::Esp32S2),
+            _ => None,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SecurityInfo {
+    pub flags: u32,
+    pub flash_crypt_cnt: u8,
+    pub key_purposes: [u8; 7],
+    pub chip_id: Option<u32>,
+    pub api_version: Option<u32>,
+}
+
+impl SecurityInfo {
+    pub fn parse(payload: &[u8]) -> Result<Self, EspRomError> {
+        if payload.len() != 12 && payload.len() != 20 {
+            return Err(EspRomError::TruncatedPacket);
+        }
+        let flags = read_u32_le(payload, 0)?;
+        let flash_crypt_cnt = payload[4];
+        let mut key_purposes = [0u8; 7];
+        key_purposes.copy_from_slice(&payload[5..12]);
+        let (chip_id, api_version) = if payload.len() == 20 {
+            (
+                Some(read_u32_le(payload, 12)?),
+                Some(read_u32_le(payload, 16)?),
+            )
+        } else {
+            (None, None)
+        };
+        Ok(Self {
+            flags,
+            flash_crypt_cnt,
+            key_purposes,
+            chip_id,
+            api_version,
+        })
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EspDetection {
+    pub chip: EspChip,
+    pub instruction_set: InstructionSet,
+    pub rust_target_hint: &'static str,
+    pub chip_id: Option<u32>,
+    pub magic_value: Option<u32>,
+    pub api_version: Option<u32>,
+}
+
+impl EspDetection {
+    pub fn from_chip_id(chip_id: u32, api_version: Option<u32>) -> Result<Self, EspRomError> {
+        let chip =
+            EspChip::from_image_chip_id(chip_id).ok_or(EspRomError::UnsupportedChipId(chip_id))?;
+        Ok(Self::new(chip, Some(chip_id), None, api_version))
+    }
+
+    pub fn from_magic_value(magic_value: u32) -> Result<Self, EspRomError> {
+        let chip = EspChip::from_magic_value(magic_value)
+            .ok_or(EspRomError::UnsupportedMagicValue(magic_value))?;
+        Ok(Self::new(chip, None, Some(magic_value), None))
+    }
+
+    fn new(
+        chip: EspChip,
+        chip_id: Option<u32>,
+        magic_value: Option<u32>,
+        api_version: Option<u32>,
+    ) -> Self {
+        Self {
+            chip,
+            instruction_set: chip.instruction_set(),
+            rust_target_hint: chip.rust_target_hint(),
+            chip_id,
+            magic_value,
+            api_version,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EspRomResponse {
+    pub command: u8,
+    pub value: u32,
+    pub data: Vec<u8>,
+}
+
+impl EspRomResponse {
+    pub fn parse(frame: &[u8]) -> Result<Self, EspRomError> {
+        if frame.len() < 8 {
+            return Err(EspRomError::TruncatedPacket);
+        }
+        if frame[0] != RESPONSE_DIRECTION {
+            return Err(EspRomError::InvalidDirection(frame[0]));
+        }
+        let size = u16::from_le_bytes([frame[2], frame[3]]) as usize;
+        let needed = 8 + size;
+        if frame.len() < needed {
+            return Err(EspRomError::TruncatedPacket);
+        }
+        Ok(Self {
+            command: frame[1],
+            value: u32::from_le_bytes([frame[4], frame[5], frame[6], frame[7]]),
+            data: frame[8..needed].to_vec(),
+        })
+    }
+
+    pub fn expect_command(self, command: EspRomCommand) -> Result<Self, EspRomError> {
+        let expected = command.code();
+        if self.command != expected {
+            return Err(EspRomError::UnexpectedCommand {
+                expected,
+                actual: self.command,
+            });
+        }
+        Ok(self)
+    }
+
+    pub fn check_status(&self) -> Result<(), EspRomError> {
+        let Some((status, error)) = self.status_bytes() else {
+            return Ok(());
+        };
+        if status == 0 {
+            Ok(())
+        } else {
+            Err(EspRomError::RomStatus { status, error })
+        }
+    }
+
+    pub fn payload_without_status(&self) -> &[u8] {
+        match self.status_len() {
+            Some(len) if self.data.len() >= len => &self.data[..self.data.len() - len],
+            _ => &self.data,
+        }
+    }
+
+    fn status_bytes(&self) -> Option<(u8, u8)> {
+        let len = self.status_len()?;
+        Some((
+            self.data[self.data.len() - len],
+            self.data[self.data.len() - len + 1],
+        ))
+    }
+
+    fn status_len(&self) -> Option<usize> {
+        match self.data.len() {
+            0 | 1 => None,
+            4 if self.data[2] == 0 && self.data[3] == 0 => Some(4),
+            _ => Some(2),
+        }
+    }
+}
+
+pub fn checksum(data: &[u8]) -> u8 {
+    data.iter()
+        .fold(ESP_CHECKSUM_SEED, |state, byte| state ^ byte)
+}
+
+pub fn sync_payload() -> [u8; 36] {
+    let mut payload = [0x55; 36];
+    payload[0..4].copy_from_slice(&[0x07, 0x07, 0x12, 0x20]);
+    payload
+}
+
+pub fn read_reg_payload(address: u32) -> [u8; 4] {
+    address.to_le_bytes()
+}
+
+pub fn command_packet(
+    command: EspRomCommand,
+    payload: &[u8],
+    checksum: u8,
+    out: &mut [u8],
+) -> Result<usize, EspRomError> {
+    if payload.len() > u16::MAX as usize {
+        return Err(EspRomError::PayloadTooLarge(payload.len()));
+    }
+    let needed = 8 + payload.len();
+    if out.len() < needed {
+        return Err(EspRomError::OutputTooSmall {
+            needed,
+            available: out.len(),
+        });
+    }
+    out[0] = REQUEST_DIRECTION;
+    out[1] = command.code();
+    out[2..4].copy_from_slice(&(payload.len() as u16).to_le_bytes());
+    out[4..8].copy_from_slice(&(checksum as u32).to_le_bytes());
+    out[8..needed].copy_from_slice(payload);
+    Ok(needed)
+}
+
+pub fn slip_encode(payload: &[u8], out: &mut [u8]) -> Result<usize, EspRomError> {
+    let mut needed = 2;
+    for byte in payload {
+        needed += match *byte {
+            SLIP_END | SLIP_ESC => 2,
+            _ => 1,
+        };
+    }
+    if out.len() < needed {
+        return Err(EspRomError::OutputTooSmall {
+            needed,
+            available: out.len(),
+        });
+    }
+    let mut index = 0;
+    out[index] = SLIP_END;
+    index += 1;
+    for byte in payload {
+        match *byte {
+            SLIP_END => {
+                out[index] = SLIP_ESC;
+                out[index + 1] = SLIP_ESC_END;
+                index += 2;
+            }
+            SLIP_ESC => {
+                out[index] = SLIP_ESC;
+                out[index + 1] = SLIP_ESC_ESC;
+                index += 2;
+            }
+            byte => {
+                out[index] = byte;
+                index += 1;
+            }
+        }
+    }
+    out[index] = SLIP_END;
+    Ok(index + 1)
+}
+
+pub fn slip_decode(wire: &[u8], out: &mut [u8]) -> Result<usize, EspRomError> {
+    let start = wire
+        .iter()
+        .position(|byte| *byte == SLIP_END)
+        .ok_or(EspRomError::MissingSlipEnd)?;
+    let mut index = 0;
+    let mut escaped = false;
+    for byte in &wire[start + 1..] {
+        if escaped {
+            let decoded = match *byte {
+                SLIP_ESC_END => SLIP_END,
+                SLIP_ESC_ESC => SLIP_ESC,
+                other => return Err(EspRomError::InvalidSlipEscape(other)),
+            };
+            if index >= out.len() {
+                return Err(EspRomError::OutputTooSmall {
+                    needed: index + 1,
+                    available: out.len(),
+                });
+            }
+            out[index] = decoded;
+            index += 1;
+            escaped = false;
+            continue;
+        }
+        match *byte {
+            SLIP_END => return Ok(index),
+            SLIP_ESC => escaped = true,
+            byte => {
+                if index >= out.len() {
+                    return Err(EspRomError::OutputTooSmall {
+                        needed: index + 1,
+                        available: out.len(),
+                    });
+                }
+                out[index] = byte;
+                index += 1;
+            }
+        }
+    }
+    Err(EspRomError::MissingSlipEnd)
+}
+
+pub struct EspRomSession<S> {
+    stream: S,
+    frame: [u8; 1024],
+    wire: [u8; 2048],
+}
+
+impl<S> EspRomSession<S> {
+    pub fn new(stream: S) -> Self {
+        Self {
+            stream,
+            frame: [0; 1024],
+            wire: [0; 2048],
+        }
+    }
+
+    pub fn into_inner(self) -> S {
+        self.stream
+    }
+}
+
+impl<S> EspRomSession<S>
+where
+    S: Read + Write,
+{
+    pub fn sync(&mut self) -> Result<(), EspRomError> {
+        let response = self.exchange(EspRomCommand::Sync, &sync_payload(), 0)?;
+        response.check_status()
+    }
+
+    pub fn read_reg(&mut self, address: u32) -> Result<u32, EspRomError> {
+        let response = self.exchange(EspRomCommand::ReadReg, &read_reg_payload(address), 0)?;
+        response.check_status()?;
+        Ok(response.value)
+    }
+
+    pub fn get_security_info(&mut self) -> Result<SecurityInfo, EspRomError> {
+        let response = self.exchange(EspRomCommand::GetSecurityInfo, &[], 0)?;
+        response.check_status()?;
+        SecurityInfo::parse(response.payload_without_status()).or_else(|_| {
+            if response.data.len() >= 20 {
+                SecurityInfo::parse(&response.data[..20])
+            } else if response.data.len() >= 12 {
+                SecurityInfo::parse(&response.data[..12])
+            } else {
+                Err(EspRomError::TruncatedPacket)
+            }
+        })
+    }
+
+    pub fn detect_chip(&mut self) -> Result<EspDetection, EspRomError> {
+        self.sync()?;
+        if let Ok(info) = self.get_security_info() {
+            if let Some(chip_id) = info.chip_id {
+                return EspDetection::from_chip_id(chip_id, info.api_version);
+            }
+        }
+        let magic_value = self.read_reg(CHIP_DETECT_MAGIC_REG_ADDR)?;
+        EspDetection::from_magic_value(magic_value)
+    }
+
+    fn exchange(
+        &mut self,
+        command: EspRomCommand,
+        payload: &[u8],
+        checksum: u8,
+    ) -> Result<EspRomResponse, EspRomError> {
+        let packet_len = command_packet(command, payload, checksum, &mut self.frame)?;
+        let wire_len = slip_encode(&self.frame[..packet_len], &mut self.wire)?;
+        self.stream.write_all(&self.wire[..wire_len])?;
+        self.stream.flush()?;
+        loop {
+            let frame_len = read_slip_frame(&mut self.stream, &mut self.frame)?;
+            let response = EspRomResponse::parse(&self.frame[..frame_len])?;
+            if response.command == command.code() {
+                return Ok(response);
+            }
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EspRomSerialOptions {
+    pub port: String,
+    pub baud_rate: u32,
+    pub timeout: Duration,
+    pub reset_into_bootloader: bool,
+}
+
+impl EspRomSerialOptions {
+    pub fn new(port: impl Into<String>) -> Self {
+        Self {
+            port: port.into(),
+            baud_rate: DEFAULT_BAUD_RATE,
+            timeout: Duration::from_millis(DEFAULT_TIMEOUT_MS),
+            reset_into_bootloader: true,
+        }
+    }
+
+    pub fn baud_rate(mut self, baud_rate: u32) -> Self {
+        self.baud_rate = baud_rate;
+        self
+    }
+
+    pub fn timeout(mut self, timeout: Duration) -> Self {
+        self.timeout = timeout;
+        self
+    }
+
+    pub fn reset_into_bootloader(mut self, reset_into_bootloader: bool) -> Self {
+        self.reset_into_bootloader = reset_into_bootloader;
+        self
+    }
+}
+
+pub fn detect_esp_rom(options: &EspRomSerialOptions) -> Result<EspDetection, EspRomError> {
+    let mut port = serialport::new(&options.port, options.baud_rate)
+        .timeout(options.timeout)
+        .open()?;
+    if options.reset_into_bootloader {
+        enter_uart_bootloader(&mut *port)?;
+    }
+    EspRomSession::new(port).detect_chip()
+}
+
+pub fn enter_uart_bootloader(port: &mut dyn serialport::SerialPort) -> Result<(), EspRomError> {
+    port.write_data_terminal_ready(false)?;
+    port.write_request_to_send(true)?;
+    std::thread::sleep(Duration::from_millis(100));
+    port.write_data_terminal_ready(true)?;
+    port.write_request_to_send(false)?;
+    std::thread::sleep(Duration::from_millis(50));
+    port.write_data_terminal_ready(false)?;
+    std::thread::sleep(Duration::from_millis(100));
+    Ok(())
+}
+
+fn read_slip_frame<R: Read>(reader: &mut R, out: &mut [u8]) -> Result<usize, EspRomError> {
+    let mut started = false;
+    let mut escaped = false;
+    let mut index = 0;
+    let mut byte = [0u8; 1];
+    loop {
+        reader.read_exact(&mut byte)?;
+        let byte = byte[0];
+        if !started {
+            if byte == SLIP_END {
+                started = true;
+            }
+            continue;
+        }
+        if escaped {
+            let decoded = match byte {
+                SLIP_ESC_END => SLIP_END,
+                SLIP_ESC_ESC => SLIP_ESC,
+                other => return Err(EspRomError::InvalidSlipEscape(other)),
+            };
+            if index >= out.len() {
+                return Err(EspRomError::OutputTooSmall {
+                    needed: index + 1,
+                    available: out.len(),
+                });
+            }
+            out[index] = decoded;
+            index += 1;
+            escaped = false;
+            continue;
+        }
+        match byte {
+            SLIP_END if index == 0 => continue,
+            SLIP_END => return Ok(index),
+            SLIP_ESC => escaped = true,
+            byte => {
+                if index >= out.len() {
+                    return Err(EspRomError::OutputTooSmall {
+                        needed: index + 1,
+                        available: out.len(),
+                    });
+                }
+                out[index] = byte;
+                index += 1;
+            }
+        }
+    }
+}
+
+fn read_u32_le(bytes: &[u8], offset: usize) -> Result<u32, EspRomError> {
+    let Some(bytes) = bytes.get(offset..offset + 4) else {
+        return Err(EspRomError::TruncatedPacket);
+    };
+    Ok(u32::from_le_bytes([bytes[0], bytes[1], bytes[2], bytes[3]]))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::collections::VecDeque;
+    use std::io;
+
+    #[derive(Default)]
+    struct ScriptedStream {
+        read: VecDeque<u8>,
+        written: Vec<u8>,
+    }
+
+    impl ScriptedStream {
+        fn with_read(read: &[u8]) -> Self {
+            Self {
+                read: read.iter().copied().collect(),
+                written: Vec::new(),
+            }
+        }
+    }
+
+    impl Read for ScriptedStream {
+        fn read(&mut self, out: &mut [u8]) -> io::Result<usize> {
+            if self.read.is_empty() {
+                return Ok(0);
+            }
+            out[0] = self.read.pop_front().unwrap();
+            Ok(1)
+        }
+    }
+
+    impl Write for ScriptedStream {
+        fn write(&mut self, bytes: &[u8]) -> io::Result<usize> {
+            self.written.extend_from_slice(bytes);
+            Ok(bytes.len())
+        }
+
+        fn flush(&mut self) -> io::Result<()> {
+            Ok(())
+        }
+    }
+
+    #[test]
+    fn slip_round_trips_escaped_bytes() {
+        let payload = [0x00, SLIP_END, SLIP_ESC, 0x55];
+        let mut encoded = [0u8; 16];
+        let encoded_len = slip_encode(&payload, &mut encoded).unwrap();
+        assert_eq!(
+            &encoded[..encoded_len],
+            &[
+                SLIP_END,
+                0x00,
+                SLIP_ESC,
+                SLIP_ESC_END,
+                SLIP_ESC,
+                SLIP_ESC_ESC,
+                0x55,
+                SLIP_END
+            ]
+        );
+
+        let mut decoded = [0u8; 8];
+        let decoded_len = slip_decode(&encoded[..encoded_len], &mut decoded).unwrap();
+        assert_eq!(&decoded[..decoded_len], payload);
+    }
+
+    #[test]
+    fn sync_command_matches_rom_trace_shape() {
+        let mut packet = [0u8; 64];
+        let payload = sync_payload();
+        let packet_len = command_packet(EspRomCommand::Sync, &payload, 0, &mut packet).unwrap();
+
+        assert_eq!(&packet[..8], &[0x00, 0x08, 0x24, 0x00, 0, 0, 0, 0]);
+        assert_eq!(&packet[8..12], &[0x07, 0x07, 0x12, 0x20]);
+        assert!(packet[12..packet_len].iter().all(|byte| *byte == 0x55));
+    }
+
+    #[test]
+    fn parses_read_reg_response_value_and_rom_status() {
+        let frame = [
+            0x01, 0x0A, 0x04, 0x00, 0x83, 0x1D, 0xF0, 0x00, 0x00, 0x00, 0x00, 0x00,
+        ];
+        let response = EspRomResponse::parse(&frame)
+            .unwrap()
+            .expect_command(EspRomCommand::ReadReg)
+            .unwrap();
+
+        assert_eq!(response.value, 0x00F0_1D83);
+        response.check_status().unwrap();
+        assert_eq!(response.payload_without_status(), &[]);
+    }
+
+    #[test]
+    fn security_info_parses_chip_id_and_api_version() {
+        let payload = [
+            0x04, 0x00, 0x00, 0x00, 0x03, 1, 2, 3, 4, 5, 6, 7, 0x05, 0x00, 0x00, 0x00, 0x02, 0x00,
+            0x00, 0x00,
+        ];
+        let info = SecurityInfo::parse(&payload).unwrap();
+
+        assert_eq!(info.flags, 4);
+        assert_eq!(info.flash_crypt_cnt, 3);
+        assert_eq!(info.key_purposes, [1, 2, 3, 4, 5, 6, 7]);
+        assert_eq!(info.chip_id, Some(5));
+        assert_eq!(info.api_version, Some(2));
+    }
+
+    #[test]
+    fn chip_mapping_selects_instruction_sets() {
+        let c3 = EspDetection::from_chip_id(5, Some(2)).unwrap();
+        assert_eq!(c3.chip, EspChip::Esp32C3);
+        assert_eq!(c3.instruction_set, InstructionSet::RiscV);
+        assert_eq!(c3.rust_target_hint, "riscv32imc-unknown-none-elf");
+
+        let s3 = EspDetection::from_chip_id(9, Some(2)).unwrap();
+        assert_eq!(s3.chip, EspChip::Esp32S3);
+        assert_eq!(s3.instruction_set, InstructionSet::Xtensa);
+        assert_eq!(s3.rust_target_hint, "xtensa-esp32s3-none-elf");
+
+        let legacy = EspDetection::from_magic_value(0x00F0_1D83).unwrap();
+        assert_eq!(legacy.chip, EspChip::Esp32);
+        assert_eq!(legacy.instruction_set, InstructionSet::Xtensa);
+    }
+
+    #[test]
+    fn session_detects_chip_from_security_info() {
+        let mut sync_response = [0u8; 12];
+        sync_response[0..8].copy_from_slice(&[0x01, 0x08, 0x04, 0x00, 0x07, 0x07, 0x12, 0x20]);
+        let mut security_response = [0u8; 30];
+        security_response[0..8].copy_from_slice(&[0x01, 0x14, 0x16, 0x00, 0, 0, 0, 0]);
+        security_response[8..28]
+            .copy_from_slice(&[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 2, 0, 0, 0]);
+        security_response[28..30].copy_from_slice(&[0, 0]);
+
+        let mut wire = [0u8; 96];
+        let sync_wire_len = slip_encode(&sync_response, &mut wire).unwrap();
+        let security_start = sync_wire_len;
+        let security_wire_len =
+            slip_encode(&security_response, &mut wire[security_start..]).unwrap();
+        let read = &wire[..security_start + security_wire_len];
+        let stream = ScriptedStream::with_read(read);
+
+        let mut session = EspRomSession::new(stream);
+        let detection = session.detect_chip().unwrap();
+
+        assert_eq!(detection.chip, EspChip::Esp32C6);
+        assert_eq!(detection.instruction_set, InstructionSet::RiscV);
+        let stream = session.into_inner();
+        assert!(stream.written.starts_with(&[SLIP_END, 0x00, 0x08]));
+        assert!(stream
+            .written
+            .windows(3)
+            .any(|window| window == [SLIP_END, 0x00, 0x14]));
+    }
+}
