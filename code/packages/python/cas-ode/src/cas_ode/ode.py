@@ -1,6 +1,6 @@
 """Symbolic ODE solver — the heart of cas-ode.
 
-This module provides pure-Python functions that recognise and solve eight
+This module provides pure-Python functions that recognise and solve nine
 classes of ordinary differential equations whose solutions can always be
 written in closed form:
 
@@ -13,9 +13,9 @@ written in closed form:
    (produces an implicit solution ``F(x,y) = C``)
 5. **Second-order constant-coefficient homogeneous**:
    ``a·y'' + b·y' + c·y = 0``
-6. **Second-order constant-coefficient non-homogeneous**:
-   ``a·y'' + b·y' + c·y = f(x)`` where f is a constant, polynomial
-   (degree ≤ 2), exponential, sin/cos, or e^(αx)·sin/cos(βx)
+6. **Second-order constant-coefficient non-homogeneous (undetermined
+   coefficients)**: ``a·y'' + b·y' + c·y = f(x)`` where f is a constant,
+   polynomial (degree ≤ 2), exponential, sin/cos, or e^(αx)·sin/cos(βx)
 7. **Homogeneous-type** (Phase 18c): ``dy/dx = f(y/x)`` — the right-hand
    side depends only on the ratio ``y/x``.  Solved by the substitution
    ``v = y/x`` which reduces it to a separable ODE in ``(v, x)``.
@@ -24,6 +24,13 @@ written in closed form:
    Solved by the ansatz ``y = x^r`` which yields the indicial quadratic
    ``a·r² + (b − a)·r + c = 0``.  Three cases: distinct real roots, repeated
    root, and complex conjugate roots.
+9. **Second-order constant-coefficient non-homogeneous (variation of
+   parameters)** (Phase 20): ``a·y'' + b·y' + c·y = f(x)`` for any
+   forcing function whose primitives the integration engine can evaluate.
+   The Wronskian formula gives closed-form integrands analytically for each
+   discriminant case (distinct real, repeated, complex roots); the VM then
+   integrates them.  Falls back gracefully (returns ``None``) when the
+   integrals are not computable.
 
 Every public function takes IR nodes as input and returns IR nodes as
 output.  No floats are used for exact computation; rational arithmetic
@@ -69,7 +76,14 @@ Read the functions in this order:
 18. :func:`_classify_forcing` — identify the forcing-function family
 19. :func:`_compute_particular` — undetermined-coefficient ansatz
 20. :func:`_try_second_order_nonhom` — non-homogeneous 2nd-order dispatcher
-21. :func:`solve_ode` — the top-level dispatcher
+21. :func:`_signed_frac_to_ir` — lift a signed Fraction to IR (module-level;
+    replaces the former local ``_ir_from_frac`` inside each solver)
+22. :func:`_exp_r` — build ``exp(r·x)`` with special-case collapsing
+23. :func:`_vop_integrand_pair` — Wronskian-derived VoP integrands for each
+    root case (distinct real, repeated, complex)
+24. :func:`_try_vop` — Phase 20 entry point; integrates and assembles the
+    general solution ``y = y_h + y_p``
+25. :func:`solve_ode` — the top-level dispatcher
 """
 
 from __future__ import annotations
@@ -174,10 +188,34 @@ def _frac_to_ir(f: Fraction) -> IRNode:
 
     ``Fraction(2, 1)`` → ``IRInteger(2)``.
     ``Fraction(1, 2)`` → ``IRRational(1, 2)``.
+
+    The input is assumed non-negative; use :func:`_signed_frac_to_ir` for
+    values that may be negative.
     """
     if f.denominator == 1:
         return IRInteger(f.numerator)
     return IRRational(f.numerator, f.denominator)
+
+
+def _signed_frac_to_ir(f: Fraction) -> IRNode:
+    """Lift a signed ``Fraction`` to IR, keeping negative sign explicit.
+
+    Unlike :func:`_frac_to_ir` (used for non-negative values), this function
+    wraps negative inputs with ``Neg`` so the printer renders them as
+    ``−3/2`` rather than the less-readable ``Rational(−3, 2)``::
+
+        Fraction(-3, 2)  → Neg(Rational(3, 2))
+        Fraction(3, 2)   → Rational(3, 2)
+        Fraction(0)      → Integer(0)
+        Fraction(-1)     → Neg(Integer(1))
+
+    Used wherever a coefficient might be negative — particularly in the
+    second-order ODE solvers (roots of characteristic polynomial) and the
+    variation-of-parameters integrand builder.
+    """
+    if f >= 0:
+        return _frac_to_ir(f)
+    return _neg(_frac_to_ir(-f))
 
 
 # ---------------------------------------------------------------------------
@@ -427,11 +465,9 @@ def solve_second_order_const_coeff(
     # (the sign of Δ equals the sign of ``disc_numer`` since a^2 > 0).
     disc_numer = b * b - Fraction(4) * a * c
 
-    def _ir_from_frac(f: Fraction) -> IRNode:
-        """Return the IR literal for a possibly-negative Fraction."""
-        if f >= 0:
-            return _frac_to_ir(f)
-        return _neg(_frac_to_ir(-f))
+    # Use the module-level _signed_frac_to_ir (replaces the former local
+    # _ir_from_frac that lived here in earlier versions).
+    _ir_from_frac = _signed_frac_to_ir
 
     if disc_numer > 0:
         # ---- Case 1: two distinct real roots --------------------------------
@@ -767,7 +803,7 @@ def solve_euler_cauchy(
         else:
             # Irrational discriminant — represent sqrt symbolically.
             sqrt_ir = _pow(_frac_to_ir(disc), IRRational(1, 2))
-            neg_B_ir = _frac_to_ir(-B) if -B >= 0 else _neg(_frac_to_ir(B))
+            neg_B_ir = _signed_frac_to_ir(-B)
             denom_ir = _frac_to_ir(2 * A)
             r1_ir = _div(_add(neg_B_ir, sqrt_ir), denom_ir)
             r2_ir = _div(_sub(neg_B_ir, sqrt_ir), denom_ir)
@@ -2449,6 +2485,318 @@ def _try_second_order_nonhom(
 
 
 # ---------------------------------------------------------------------------
+# Section 10b — Phase 20: Variation of Parameters
+# ---------------------------------------------------------------------------
+#
+# Variation of parameters (VoP) is the *general* method for second-order
+# linear constant-coefficient ODEs with arbitrary forcing:
+#
+#     a·y'' + b·y' + c·y = f(x)
+#
+# Unlike the method of undetermined coefficients (Section 10), VoP places
+# no restriction on f(x) — it works for any f whose primitive can be
+# computed by the integration engine.
+#
+# The formula
+# -----------
+# Given two fundamental solutions y₁, y₂ of the homogeneous equation, the
+# particular solution is:
+#
+#     y_p = y₁·u₁ + y₂·u₂
+#
+# where u₁, u₂ satisfy:
+#
+#     u₁' = −y₂·f / W,   u₂' = y₁·f / W
+#
+# and W = y₁·y₂' − y₂·y₁' is the Wronskian.  For constant-coefficient
+# ODEs the Wronskian simplifies analytically for each root case:
+#
+# +--------------------+------------------+----------------------------------+
+# | Root type          | W(x)             | u₁', u₂'                         |
+# +====================+==================+==================================+
+# | Distinct r₁ ≠ r₂  | (r₂−r₁)e^(r₁+r₂)x| f·e^{-r₁x}/(r₁-r₂),            |
+# |                    |                  | f·e^{-r₂x}/(r₂-r₁)              |
+# | Repeated r         | e^{2rx}          | -f·x·e^{-rx}, f·e^{-rx}          |
+# | Complex α ± βi     | β·e^{2αx}        | -f·sin(βx)·e^{-αx}/β,           |
+# |                    |                  | f·cos(βx)·e^{-αx}/β             |
+# +--------------------+------------------+----------------------------------+
+#
+# These closed forms avoid symbolic Wronskian computation — we hard-code
+# the formulas for each discriminant case.
+#
+# Why VoP after undetermined coefficients?
+# -----------------------------------------
+# Undetermined coefficients gives cleaner, more compact particular solutions
+# when applicable (EPT-family forcing).  VoP is the correct fallback for:
+#   • Non-EPT forcing (e.g. tan(x), sec(x), ln(x), polynomial of degree > 2)
+#   • Resonance cases not yet handled by the undetermined-coefficient code
+# ---------------------------------------------------------------------------
+
+
+def _exp_r(r: Fraction, x: IRSymbol) -> IRNode:
+    """Build ``exp(r·x)``, collapsing trivial cases.
+
+    Special cases keep the output readable and prevent the VM from seeing
+    ``Mul(IRInteger(0), x)`` inside an ``Exp``::
+
+        r = 0   →  IRInteger(1)         (e⁰ = 1)
+        r = 1   →  Exp(x)
+        r = -1  →  Exp(Neg(x))
+        r > 0   →  Exp(Mul(r, x))
+        r < 0   →  Exp(Neg(Mul(|r|, x)))
+
+    This is a module-level helper used by :func:`_vop_integrand_pair`.
+    """
+    if r == 0:
+        return _ONE
+    if r == 1:
+        return _exp(x)
+    if r == -1:
+        return _exp(_neg(x))
+    return _exp(_mul(_signed_frac_to_ir(r), x))
+
+
+def _vop_integrand_pair(
+    a: Fraction,
+    b: Fraction,
+    c: Fraction,
+    f_ir: IRNode,
+    x: IRSymbol,
+) -> tuple[IRNode, IRNode, IRNode, IRNode] | None:
+    """Compute VoP integrands and fundamental solutions for ``a·y''+b·y'+c·y = f``.
+
+    Returns ``(u1_prime, u2_prime, y1, y2)`` where the particular solution is::
+
+        y_p = y1 · ∫u1' dx + y2 · ∫u2' dx
+
+    The integrands derive from the Wronskian formula (see the section header
+    above for the derivation table).  All three root cases are handled:
+
+    +---------------------+----------------------------+-----------------------------+
+    | Root type           | y1, y2                     | u1', u2'                    |
+    +=====================+============================+=============================+
+    | Distinct r₁ ≠ r₂   | e^{r₁x}, e^{r₂x}          | f·e^{−r₁x}/(r₁−r₂),        |
+    |                     |                            | f·e^{−r₂x}/(r₂−r₁)         |
+    +---------------------+----------------------------+-----------------------------+
+    | Repeated r          | e^{rx}, x·e^{rx}           | −f·x·e^{−rx}, f·e^{−rx}    |
+    +---------------------+----------------------------+-----------------------------+
+    | Complex α ± βi      | e^{αx}·cos(βx),            | −f·sin(βx)·e^{−αx}/β,      |
+    |                     | e^{αx}·sin(βx)             | f·cos(βx)·e^{−αx}/β        |
+    +---------------------+----------------------------+-----------------------------+
+
+    Irrational roots (discriminant not a perfect-square Fraction) return
+    ``None`` — the integrands would contain symbolic sqrt expressions whose
+    integrals the VM cannot compute in general.
+
+    Parameters
+    ----------
+    a, b, c : Fraction
+        Rational coefficients of the characteristic polynomial.
+    f_ir : IRNode
+        Forcing function (already simplified via VM before calling here).
+    x : IRSymbol
+        Independent variable.
+
+    Returns
+    -------
+    ``(u1_prime, u2_prime, y1, y2)`` on success, ``None`` if the roots are
+    irrational or the discriminant case is not handled.
+    """
+    disc = b * b - Fraction(4) * a * c
+
+    if disc > 0:
+        # ---- Case 1: two distinct real roots --------------------------------
+        # y1 = e^(r1·x),  y2 = e^(r2·x)
+        # W  = (r2 − r1) · e^((r1+r2)·x)         (Abel's identity)
+        # u1' = −y2·f/W = f · e^{−r1·x} / (r1−r2)
+        # u2' = y1·f/W  = f · e^{−r2·x} / (r2−r1)
+        sqrt_disc = _exact_sqrt_fraction(disc)
+        if sqrt_disc is None:
+            return None  # Irrational roots — integrands not tractable
+
+        r1 = (-b + sqrt_disc) / (2 * a)
+        r2 = (-b - sqrt_disc) / (2 * a)
+
+        y1: IRNode = _exp_r(r1, x)
+        y2: IRNode = _exp_r(r2, x)
+
+        # Integrand coefficients:
+        #   coeff1 = 1/(r1−r2) > 0 when a > 0  (since r1 > r2 when disc > 0 and a > 0)
+        #   coeff2 = 1/(r2−r1) = −coeff1  < 0
+        # |coeff1| = |coeff2| = 1/|r1−r2|
+        coeff1 = Fraction(1) / (r1 - r2)
+        coeff_abs = abs(coeff1)
+
+        e_neg_r1 = _exp_r(-r1, x)
+        e_neg_r2 = _exp_r(-r2, x)
+
+        # Build the positive-coefficient products, then apply sign at the
+        # *outer* level.  This is critical for integration: if we embedded
+        # the sign as _mul(Neg(1), Exp(...)) the exp-product recogniser in
+        # integrate.py would not find the bare Exp node as a Mul child.
+        # Wrapping with _neg(…) at the top level lets the Neg-distribution
+        # rule in _integrate kick in first, stripping the negation before
+        # _try_exp_product sees the inner Mul(coeff, Exp).
+        base1 = _mul(_mul(_frac_to_ir(coeff_abs), e_neg_r1), f_ir)
+        base2 = _mul(_mul(_frac_to_ir(coeff_abs), e_neg_r2), f_ir)
+
+        if coeff1 > 0:
+            # Standard case: a > 0, r1 > r2  →  coeff1 > 0, coeff2 < 0
+            u1_prime: IRNode = base1
+            u2_prime: IRNode = _neg(base2)
+        else:
+            # a < 0  →  coeff1 < 0, coeff2 > 0
+            u1_prime = _neg(base1)
+            u2_prime = base2
+
+        return (u1_prime, u2_prime, y1, y2)
+
+    elif disc == 0:
+        # ---- Case 2: repeated root ------------------------------------------
+        # r = −b/(2a)
+        # y1 = e^{rx},  y2 = x·e^{rx}
+        # W  = e^{2rx}                             (direct computation)
+        # u1' = −y2·f/W = −f · x · e^{−rx}
+        # u2' = y1·f/W  =  f · e^{−rx}
+        r = (-b) / (2 * a)
+
+        e_r_x = _exp_r(r, x)
+        y1 = e_r_x
+        y2 = _mul(x, e_r_x)
+
+        e_neg_r = _exp_r(-r, x)
+
+        # u1' = −x · e^{−rx} · f
+        u1_prime = _neg(_mul(_mul(x, e_neg_r), f_ir))
+        # u2' = e^{−rx} · f
+        u2_prime = _mul(e_neg_r, f_ir)
+
+        return (u1_prime, u2_prime, y1, y2)
+
+    else:
+        # ---- Case 3: complex conjugate roots --------------------------------
+        # α = −b/(2a),  β = √(|disc|)/(2a)  (β > 0)
+        # y1 = e^{αx}·cos(βx),  y2 = e^{αx}·sin(βx)
+        # W  = β · e^{2αx}                         (standard Wronskian result)
+        # u1' = −y2·f/W = −f · sin(βx) · e^{−αx} / β
+        # u2' = y1·f/W  =  f · cos(βx) · e^{−αx} / β
+        alpha = (-b) / (2 * a)
+        abs_disc = -disc   # positive since disc < 0
+        beta_sq = abs_disc / (4 * a * a)
+        beta = _exact_sqrt_fraction(beta_sq)
+        if beta is None:
+            return None  # Irrational β — integrands not tractable
+
+        beta_ir = _frac_to_ir(beta)
+        beta_x = _mul(beta_ir, x)
+
+        e_alpha_x = _exp_r(alpha, x)
+        e_neg_alpha = _exp_r(-alpha, x)
+
+        y1 = _mul(e_alpha_x, _cos(beta_x))
+        y2 = _mul(e_alpha_x, _sin(beta_x))
+
+        # 1/β coefficient (always positive since β > 0)
+        inv_beta = Fraction(1) / beta
+        inv_beta_ir = _frac_to_ir(inv_beta)
+
+        # u1' = −f · sin(βx) · e^{−αx} / β
+        u1_prime = _neg(_mul(_mul(_mul(inv_beta_ir, e_neg_alpha), _sin(beta_x)), f_ir))
+        # u2' = f · cos(βx) · e^{−αx} / β
+        u2_prime = _mul(_mul(_mul(inv_beta_ir, e_neg_alpha), _cos(beta_x)), f_ir)
+
+        return (u1_prime, u2_prime, y1, y2)
+
+
+def _try_vop(
+    expr: IRNode,
+    y: IRSymbol,
+    x: IRSymbol,
+    vm: VM,
+) -> IRNode | None:
+    """Solve ``a·y'' + b·y' + c·y = f(x)`` by variation of parameters.
+
+    This is the Phase 20 entry point.  It is called as a fallback after
+    :func:`_try_second_order_nonhom` (undetermined coefficients) returns
+    ``None`` — which happens when the forcing function is not in the EPT
+    family or when resonance makes the undetermined-coefficient ansatz
+    degenerate.
+
+    Algorithm
+    ---------
+    1. :func:`_collect_second_order_nonhom` — extract ``(a, b, c, f)``
+       (fails for non-constant-coefficient or homogeneous ODEs).
+    2. :func:`_vop_integrand_pair` — compute ``(u1', u2', y1, y2)``
+       analytically from the Wronskian formula.
+    3. Simplify u1', u2' through the VM (cleans up zero exponents, identity
+       coefficients, etc.).
+    4. Integrate: ``u1 = ∫u1' dx``,  ``u2 = ∫u2' dx``
+       via the VM's ``Integrate`` handler.  If either integral is
+       unevaluated, return ``None`` and let the dispatcher return the raw
+       ``ODE2`` node.
+    5. Particular solution: ``y_p = y1·u1 + y2·u2`` (simplified through VM).
+    6. Homogeneous solution from :func:`solve_second_order_const_coeff`.
+    7. Return ``Equal(y, y_h + y_p)``.
+
+    Parameters
+    ----------
+    expr : IRNode
+        ODE in zero form.
+    y, x : IRSymbol
+        Dependent and independent variable.
+    vm : VM
+        Live VM — used for integration and simplification.
+
+    Returns
+    -------
+    ``Equal(y, solution)`` on success, ``None`` to fall through.
+    """
+    collected = _collect_second_order_nonhom(expr, y, x)
+    if collected is None:
+        return None
+
+    a, b, c, f_ir = collected
+    # Simplify the forcing function through the VM so that structural
+    # noise (double negation, identity multiplication) is cleared before
+    # the integrand builder sees it.
+    f_ir = vm.eval(f_ir)
+
+    result = _vop_integrand_pair(a, b, c, f_ir, x)
+    if result is None:
+        return None
+
+    u1_prime, u2_prime, y1, y2 = result
+
+    # Further simplification of integrands through the VM (e.g. 1*sin(x) → sin(x)).
+    u1_prime = vm.eval(u1_prime)
+    u2_prime = vm.eval(u2_prime)
+
+    def _integrate(f: IRNode) -> IRNode:
+        """Evaluate ∫ f dx (no constant of integration — absorbed into %c1/%c2)."""
+        return vm.eval(IRApply(INTEGRATE, (f, x)))
+
+    u1 = _integrate(u1_prime)
+    if _is_unevaluated_integrate(u1, x):
+        return None  # VM could not compute ∫ u1' dx
+
+    u2 = _integrate(u2_prime)
+    if _is_unevaluated_integrate(u2, x):
+        return None  # VM could not compute ∫ u2' dx
+
+    # Particular solution y_p = y1·u1 + y2·u2, simplified through VM.
+    y_p = vm.eval(_add(_mul(y1, u1), _mul(y2, u2)))
+
+    # Homogeneous solution from the constant-coefficient solver.
+    hom_result = solve_second_order_const_coeff(a, b, c, y, x)
+    if not (isinstance(hom_result, IRApply) and hom_result.head == EQUAL):
+        return None
+
+    y_h = hom_result.args[1]
+    y_gen = vm.eval(_add(y_h, y_p))
+    return IRApply(EQUAL, (y, y_gen))
+
+
+# ---------------------------------------------------------------------------
 # Section 11 — Top-level dispatcher
 # ---------------------------------------------------------------------------
 
@@ -2466,18 +2814,23 @@ def solve_ode(
 
     Dispatch order
     --------------
-    1. Check for **non-homogeneous** 2nd-order (Phase 18) — must come
-       before the homogeneous check, because the homogeneous recogniser
-       silently ignores forcing terms and would mis-classify.
-    2. Check for second-order const-coeff **homogeneous**.
-    3. Check for **Euler-Cauchy equidimensional** (Phase 19) —
+    1. Check for **non-homogeneous** 2nd-order via undetermined coefficients
+       (Phase 18) — must come before the homogeneous check, because the
+       homogeneous recogniser silently ignores forcing terms.
+    2. Check for **non-homogeneous** 2nd-order via **variation of parameters**
+       (Phase 20) — fires when undetermined coefficients fails (non-EPT
+       forcing or resonance case).  Still before the homogeneous check so
+       that a non-EPT forcing doesn't accidentally fall through to the
+       homogeneous solver (which would give a wrong answer by ignoring f).
+    3. Check for second-order const-coeff **homogeneous**.
+    4. Check for **Euler-Cauchy equidimensional** (Phase 19) —
        ``a·x²·y'' + b·x·y' + c·y = 0``.  Must follow const-coeff so that
        equations with literal number coefficients are already handled above.
-    4. Check for **Bernoulli** (Phase 18).
-    5. Check for first-order **linear** ``y' + P(x)·y = Q(x)``.
-    6. Check for **separable** ``y' = f(x)·g(y)``.
-    7. Check for **homogeneous-type** ``y' = f(y/x)`` (Phase 18c).
-    8. Check for **exact** (Phase 18).
+    5. Check for **Bernoulli** (Phase 18).
+    6. Check for first-order **linear** ``y' + P(x)·y = Q(x)``.
+    7. Check for **separable** ``y' = f(x)·g(y)``.
+    8. Check for **homogeneous-type** ``y' = f(y/x)`` (Phase 18c).
+    9. Check for **exact** (Phase 18).
 
     Returns ``Equal(y, solution)`` or ``Equal(F, C)`` (exact) on success,
     or ``None`` on failure.
@@ -2497,10 +2850,21 @@ def solve_ode(
     -------
     An ``Equal`` IR node if a solver matches, else ``None``.
     """
-    # ---- Phase 18: 2nd-order non-homogeneous --------------------------------
+    # ---- Phase 18: 2nd-order non-homogeneous (undetermined coefficients) ----
     nonhom = _try_second_order_nonhom(expr, y, x, vm)
     if nonhom is not None:
         return nonhom
+
+    # ---- Phase 20: variation of parameters (VoP) ----------------------------
+    # Fires when undetermined coefficients fails — i.e. when the forcing
+    # function is not in the EPT family (constants, polynomials, exp, sin/cos,
+    # exp×sin/cos), or when resonance makes the ansatz degenerate and no
+    # fallback is implemented in _compute_particular.
+    # VoP must precede the *homogeneous* check so that a non-EPT forcing ODE
+    # is not misrouted to the homogeneous solver (which ignores the RHS).
+    vop = _try_vop(expr, y, x, vm)
+    if vop is not None:
+        return vop
 
     # ---- 2nd-order homogeneous (Phase 0.1.0) --------------------------------
     coeffs = _collect_second_order_coeffs(expr, y, x)
