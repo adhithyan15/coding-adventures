@@ -29,6 +29,11 @@ Test organisation
 25. TF analysis: resistive circuits (voltage-source input)
 26. TF analysis: current-source input + transimpedance
 27. TF analysis: error cases and edge cases
+28. DC sweep: DcSweepPoint / DcSweepResult dataclasses
+29. DC sweep: linear resistive circuits
+30. DC sweep: nonlinear (diode) circuit
+31. DC sweep: current-source sweeps
+32. DC sweep: error cases and edge cases
 """
 
 import cmath
@@ -44,6 +49,8 @@ from spice_engine import (
     Capacitor,
     Circuit,
     CurrentSource,
+    DcSweepPoint,
+    DcSweepResult,
     Diode,
     Inductor,
     Resistor,
@@ -51,6 +58,7 @@ from spice_engine import (
     VoltageSource,
     ac_sweep,
     dc_op,
+    dc_sweep,
     tf,
     transient,
 )
@@ -1882,3 +1890,344 @@ def test_tf_multiple_sources_only_one_excited():
 
     result = tf(c, output_node="out", input_source="V1")
     assert isclose(result.transfer_ratio, 0.5, rel_tol=1e-6)
+
+
+# ---------------------------------------------------------------------------
+# Section 28 — DC sweep: DcSweepPoint / DcSweepResult dataclasses
+# ---------------------------------------------------------------------------
+
+
+def test_dcsweeppoint_is_frozen() -> None:
+    """DcSweepPoint is a frozen dataclass — fields are immutable after creation."""
+    pt = DcSweepPoint(
+        source_value=1.0,
+        node_voltages={"a": 0.5},
+        branch_currents={"V1": 0.001},
+        converged=True,
+    )
+    with pytest.raises((AttributeError, TypeError)):
+        pt.source_value = 2.0  # type: ignore[misc]
+
+
+def test_dcsweeppoint_fields() -> None:
+    """All four fields of DcSweepPoint are accessible."""
+    pt = DcSweepPoint(
+        source_value=3.3,
+        node_voltages={"out": 1.65},
+        branch_currents={"Vin": -0.001},
+        converged=True,
+    )
+    assert pt.source_value == 3.3
+    assert pt.node_voltages == {"out": 1.65}
+    assert pt.branch_currents == {"Vin": -0.001}
+    assert pt.converged is True
+
+
+def test_dcsweepresult_fields() -> None:
+    """DcSweepResult stores points and source_name."""
+    pt = DcSweepPoint(1.0, {"n": 0.5}, {}, True)
+    result = DcSweepResult(points=[pt], source_name="Vin")
+    assert result.source_name == "Vin"
+    assert len(result.points) == 1
+    assert result.points[0] is pt
+
+
+def test_dcsweepresult_exported() -> None:
+    """DcSweepPoint, DcSweepResult, and dc_sweep are importable from spice_engine."""
+    import spice_engine as se
+
+    assert hasattr(se, "DcSweepPoint")
+    assert hasattr(se, "DcSweepResult")
+    assert hasattr(se, "dc_sweep")
+    assert callable(se.dc_sweep)
+
+
+# ---------------------------------------------------------------------------
+# Section 29 — DC sweep: linear resistive circuits
+# ---------------------------------------------------------------------------
+
+
+def test_dc_sweep_voltage_divider_exact() -> None:
+    """Voltage-divider: V_out = V_in / 2 at every sweep step.
+
+    Circuit::
+
+        Vin("in", "0") → R1("in","out", 1kΩ) → R2("out","0", 1kΩ) → GND
+
+    By the resistor voltage-divider formula V_out = V_in * R2/(R1+R2) = V_in/2.
+    We sweep Vin from 0 V to 5 V in 1 V steps and verify the ratio at each step.
+    """
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 0.0))
+    c.add(Resistor("R1", "in", "out", 1000.0))
+    c.add(Resistor("R2", "out", "0", 1000.0))
+
+    result = dc_sweep(c, "Vin", 0.0, 5.0, 1.0)
+
+    assert result.source_name == "Vin"
+    assert len(result.points) == 6  # 0, 1, 2, 3, 4, 5
+
+    for pt in result.points:
+        assert pt.converged
+        expected_vout = pt.source_value / 2.0
+        assert isclose(pt.node_voltages["out"], expected_vout, abs_tol=1e-9)
+
+
+def test_dc_sweep_source_value_sequence() -> None:
+    """Sweep values are monotone-ascending from start to stop."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "n", "0", 0.0))
+    c.add(Resistor("R1", "n", "0", 100.0))
+
+    result = dc_sweep(c, "V1", 0.0, 1.0, 0.25)
+
+    values = [pt.source_value for pt in result.points]
+    assert values == pytest.approx([0.0, 0.25, 0.50, 0.75, 1.0], abs=1e-9)
+
+
+def test_dc_sweep_original_circuit_unchanged() -> None:
+    """The original Circuit object is not mutated during the sweep.
+
+    dc_sweep must create modified copies for each step; the caller's circuit
+    must remain at its original source value.
+    """
+    c = Circuit()
+    c.add(VoltageSource("V1", "n", "0", 2.0))
+    c.add(Resistor("R1", "n", "0", 500.0))
+
+    dc_sweep(c, "V1", 0.0, 4.0, 1.0)
+
+    # The VoltageSource in the original circuit must still be at 2.0 V.
+    original_vsrc = c.elements[0]
+    assert isinstance(original_vsrc, VoltageSource)
+    assert original_vsrc.voltage == 2.0
+
+
+def test_dc_sweep_descending_step() -> None:
+    """Descending sweep (start > stop, step < 0) produces reverse-ordered values."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "n", "0", 0.0))
+    c.add(Resistor("R1", "n", "0", 1000.0))
+
+    result = dc_sweep(c, "V1", 5.0, 0.0, -1.0)
+
+    values = [pt.source_value for pt in result.points]
+    assert values == pytest.approx([5.0, 4.0, 3.0, 2.0, 1.0, 0.0], abs=1e-9)
+
+
+def test_dc_sweep_wrong_sign_step_returns_empty() -> None:
+    """If step sign does not match start-to-stop direction, result is empty.
+
+    E.g. start=0, stop=5, step=-1 → no valid sweep values.
+    """
+    c = Circuit()
+    c.add(VoltageSource("V1", "n", "0", 0.0))
+    c.add(Resistor("R1", "n", "0", 1000.0))
+
+    result = dc_sweep(c, "V1", 0.0, 5.0, -1.0)
+    assert result.points == []
+
+
+def test_dc_sweep_single_step() -> None:
+    """When start == stop, exactly one point is returned."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "n", "0", 0.0))
+    c.add(Resistor("R1", "n", "0", 1000.0))
+
+    result = dc_sweep(c, "V1", 3.0, 3.0, 0.1)
+    assert len(result.points) == 1
+    assert isclose(result.points[0].source_value, 3.0, abs_tol=1e-9)
+
+
+def test_dc_sweep_branch_currents_recorded() -> None:
+    """Branch currents are recorded at each sweep step.
+
+    For a single resistor R=1kΩ driven by Vin, I = Vin/R (Ohm's law).
+    The MNA branch current for the voltage source has MNA sign convention
+    (negative when source delivers current into the circuit).
+    """
+    c = Circuit()
+    c.add(VoltageSource("Vin", "n", "0", 0.0))
+    c.add(Resistor("R1", "n", "0", 1000.0))
+
+    result = dc_sweep(c, "Vin", 1.0, 3.0, 1.0)
+
+    for pt in result.points:
+        # DcResult keyed by "I(<name>)" — e.g. "I(Vin)"
+        key = "I(Vin)"
+        assert key in pt.branch_currents
+        # Current = V / R = source_value / 1000
+        # MNA sign: delivering current is negative
+        expected_i = -pt.source_value / 1000.0
+        assert isclose(pt.branch_currents[key], expected_i, rel_tol=1e-6)
+
+
+def test_dc_sweep_three_node_ladder() -> None:
+    """Three-resistor ladder: verifies intermediate node voltages at every step.
+
+    Circuit::
+
+        Vin → R1(1kΩ) → n1 → R2(1kΩ) → n2 → R3(1kΩ) → GND
+
+    By symmetry (equal resistors): V_n1 = 2/3 * Vin, V_n2 = 1/3 * Vin.
+    """
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 0.0))
+    c.add(Resistor("R1", "in", "n1", 1000.0))
+    c.add(Resistor("R2", "n1", "n2", 1000.0))
+    c.add(Resistor("R3", "n2", "0", 1000.0))
+
+    result = dc_sweep(c, "Vin", 0.0, 3.0, 1.0)
+
+    for pt in result.points:
+        if pt.source_value == 0.0:
+            continue  # all zeros
+        v = pt.source_value
+        assert isclose(pt.node_voltages["n1"], 2.0 / 3.0 * v, rel_tol=1e-6)
+        assert isclose(pt.node_voltages["n2"], 1.0 / 3.0 * v, rel_tol=1e-6)
+
+
+# ---------------------------------------------------------------------------
+# Section 30 — DC sweep: nonlinear (diode) circuit
+# ---------------------------------------------------------------------------
+
+
+def test_dc_sweep_diode_all_points_converged() -> None:
+    """A diode + resistor circuit converges across a forward-bias sweep.
+
+    Circuit::
+
+        Vin("anode","0") → D1(Is=1e-14, n=1) anode→cathode → R(cathode,"0", 1kΩ)
+
+    At every sweep step (0 V to 2 V in 0.2 V) Newton-Raphson should converge.
+    """
+    c = Circuit()
+    c.add(VoltageSource("Vin", "anode", "0", 0.0))
+    c.add(Diode("D1", "anode", "cathode", Is=1e-14))
+    c.add(Resistor("R1", "cathode", "0", 1000.0))
+
+    result = dc_sweep(c, "Vin", 0.0, 2.0, 0.2)
+
+    assert len(result.points) == 11
+    assert all(pt.converged for pt in result.points)
+
+
+def test_dc_sweep_diode_forward_bias_increasing_current() -> None:
+    """Diode cathode voltage increases monotonically as Vin increases.
+
+    When the source voltage rises, more current flows through the diode.
+    The cathode voltage (= voltage across the resistor) must be strictly
+    monotone-increasing once the diode is forward-biased.
+    """
+    c = Circuit()
+    c.add(VoltageSource("Vin", "anode", "0", 0.0))
+    c.add(Diode("D1", "anode", "cathode", Is=1e-14))
+    c.add(Resistor("R1", "cathode", "0", 1000.0))
+
+    result = dc_sweep(c, "Vin", 0.5, 2.0, 0.5)
+
+    v_cathode = [pt.node_voltages["cathode"] for pt in result.points]
+    for i in range(1, len(v_cathode)):
+        assert v_cathode[i] > v_cathode[i - 1], (
+            f"cathode voltage not increasing: {v_cathode[i-1]:.4f} → {v_cathode[i]:.4f}"
+        )
+
+
+# ---------------------------------------------------------------------------
+# Section 31 — DC sweep: current-source sweeps
+# ---------------------------------------------------------------------------
+
+
+def test_dc_sweep_current_source_into_resistor() -> None:
+    """Sweep a current source into a single resistor: V = I * R at each step.
+
+    The MNA stamp for CurrentSource(n_plus, n_minus, I) ADDS current to n_minus
+    and SUBTRACTS from n_plus.  To inject current INTO node "n" we use
+    n_plus="0" (ground, excluded) and n_minus="n".
+
+    Circuit::
+
+        I1("0","n") [current injected into "n"] ‖ R1("n","0", 1kΩ)
+
+    By Ohm's law: V_n = I1 * R = I1 * 1000.
+    Sweep I1 from 1 mA to 5 mA in 1 mA steps.
+    """
+    c = Circuit()
+    c.add(CurrentSource("I1", "0", "n", 0.001))
+    c.add(Resistor("R1", "n", "0", 1000.0))
+
+    result = dc_sweep(c, "I1", 0.001, 0.005, 0.001)
+
+    assert len(result.points) == 5
+    for pt in result.points:
+        assert pt.converged
+        expected_v = pt.source_value * 1000.0
+        assert isclose(pt.node_voltages["n"], expected_v, rel_tol=1e-6)
+
+
+def test_dc_sweep_current_source_descending() -> None:
+    """Descending current sweep produces reverse-ordered source values."""
+    c = Circuit()
+    c.add(CurrentSource("I1", "0", "n", 0.0))
+    c.add(Resistor("R1", "n", "0", 500.0))
+
+    result = dc_sweep(c, "I1", 0.004, 0.001, -0.001)
+
+    values = [pt.source_value for pt in result.points]
+    assert values == pytest.approx([0.004, 0.003, 0.002, 0.001], abs=1e-12)
+
+
+# ---------------------------------------------------------------------------
+# Section 32 — DC sweep: error cases and edge cases
+# ---------------------------------------------------------------------------
+
+
+def test_dc_sweep_zero_step_raises() -> None:
+    """A zero step size raises ValueError immediately."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "n", "0", 0.0))
+    c.add(Resistor("R1", "n", "0", 1000.0))
+
+    with pytest.raises(ValueError, match="step"):
+        dc_sweep(c, "V1", 0.0, 5.0, 0.0)
+
+
+def test_dc_sweep_missing_source_raises() -> None:
+    """Referencing a source name that does not exist raises ValueError."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "n", "0", 1.0))
+    c.add(Resistor("R1", "n", "0", 1000.0))
+
+    with pytest.raises(ValueError, match="Vbad"):
+        dc_sweep(c, "Vbad", 0.0, 1.0, 0.1)
+
+
+def test_dc_sweep_resistor_not_accepted_as_source() -> None:
+    """A Resistor element is not a valid sweep source; raises ValueError."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "n", "0", 1.0))
+    c.add(Resistor("R1", "n", "0", 1000.0))
+
+    with pytest.raises(ValueError, match="R1"):
+        dc_sweep(c, "R1", 0.0, 1.0, 0.1)
+
+
+def test_dc_sweep_fine_step_count() -> None:
+    """Fine-grained step: 0 to 1 V in 0.1 V steps → exactly 11 points."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "n", "0", 0.0))
+    c.add(Resistor("R1", "n", "0", 1000.0))
+
+    result = dc_sweep(c, "V1", 0.0, 1.0, 0.1)
+    assert len(result.points) == 11
+
+
+def test_dc_sweep_all_converged_linear() -> None:
+    """All points converge for a purely linear circuit."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "n", "0", 0.0))
+    c.add(Resistor("R1", "n", "0", 1000.0))
+
+    result = dc_sweep(c, "V1", -5.0, 5.0, 1.0)
+
+    assert all(pt.converged for pt in result.points)

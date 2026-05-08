@@ -1,5 +1,82 @@
 # Changelog
 
+## [0.6.0] — 2026-05-08
+
+### Added
+
+- **`dc_sweep()` function** — DC parameter sweep analysis (the SPICE `.DC` command).
+
+  Steps one independent source (`VoltageSource` or `CurrentSource`) through a
+  user-specified range `[start, stop]` with increment `step` and records a full
+  DC operating-point snapshot at each step.  This enables transfer-curve
+  measurements, bias-point sensitivity analysis, and DC load-line characterisation.
+
+  **Signature:**
+  ```python
+  dc_sweep(
+      circuit: Circuit,
+      source_name: str,
+      start: float,
+      stop: float,
+      step: float,
+      *,
+      max_iterations: int = 50,
+      tol: float = 1e-6,
+  ) -> DcSweepResult
+  ```
+
+  **Algorithm:**
+  1. Validate that `step != 0`; locate the named source element in the circuit.
+  2. Build the sweep-value list using integer-counted steps to avoid floating-point
+     drift (`start + i * step` for i = 0, 1, …); stop value is included within
+     half-step tolerance.  Wrong-sign steps silently produce an empty result list.
+  3. For each sweep value:
+     a. Create a **new** source element with the swept value (frozen dataclasses
+        cannot be mutated; the original circuit is never modified).
+     b. Rebuild the circuit with the new element in place of the original.
+     c. Call `dc_op` on the modified circuit.
+     d. Append a `DcSweepPoint` capturing `source_value`, `node_voltages`,
+        `branch_currents`, and `converged`.
+  4. Return `DcSweepResult(points=[…], source_name=source_name)`.
+
+  **Why integer-counted steps:**  Floating-point addition accumulates error.
+  After 100 steps of 0.1 V, `0.1 * 100 == 10.0` exactly in IEEE-754, but
+  `sum(0.1 for _ in range(100))` drifts to ~9.99999…  Integer multiplication is
+  exact and avoids accumulating any ULP error.
+
+  **Original circuit immutability:** All elements are `frozen=True` dataclasses.
+  To "change" a value dc_sweep creates a new instance and rebuilds the element
+  list; the caller's `Circuit` object remains unchanged.
+
+- **`DcSweepPoint` dataclass** — frozen snapshot of one DC operating point during
+  a parameter sweep.
+  - `source_value: float` — swept source value at this step (V or A).
+  - `node_voltages: dict[str, float]` — DC node voltages (V), ground excluded.
+  - `branch_currents: dict[str, float]` — DC branch currents (A) for all
+    voltage sources, keyed by source name.
+  - `converged: bool` — `True` when Newton-Raphson converged.
+
+- **`DcSweepResult` dataclass** — collected results from `dc_sweep()`.
+  - `points: list[DcSweepPoint]` — one entry per evaluated step, in sweep order.
+  - `source_name: str` — name of the swept source.
+
+### Tests added (sections 28-32)
+
+| Section | Coverage |
+|---------|----------|
+| 28 | `DcSweepPoint` / `DcSweepResult` dataclass fields, frozen semantics, public API export |
+| 29 | Linear resistive circuits: voltage-divider ratio, step sequence, circuit immutability, descending sweep, wrong-sign empty result, single-step, branch current recording, three-node ladder |
+| 30 | Nonlinear diode circuit: all-converged forward-bias sweep, monotone-increasing cathode voltage |
+| 31 | Current-source sweeps: Ohm's law at each step, descending current sweep |
+| 32 | Error cases: zero step, missing source name, resistor (not a source) |
+
+### Changed
+
+- `__version__` bumped from `0.5.0` → `0.6.0`.
+- Module docstring updated to mention DC sweep.
+
+---
+
 ## [0.5.0] — 2026-05-08
 
 ### Added

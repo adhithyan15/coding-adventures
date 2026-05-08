@@ -193,6 +193,80 @@ class TfResult:
     converged: bool = True
 
 
+@dataclass(frozen=True)
+class DcSweepPoint:
+    """A single operating-point sample from a DC parameter sweep.
+
+    A DC sweep steps one independent source (voltage or current) through a
+    range of values and records the circuit's DC operating point at each step.
+    This is the SPICE ``.DC`` analysis.
+
+    Attributes
+    ----------
+    source_value : float
+        The value of the swept source at this step (V for a
+        :class:`VoltageSource`, A for a :class:`CurrentSource`).
+    node_voltages : dict[str, float]
+        DC node voltages (in volts) keyed by node name.  The reference node
+        (``"0"`` / ``"gnd"``) is excluded; its voltage is always 0 V.
+    branch_currents : dict[str, float]
+        DC branch currents (in amperes) for every voltage source in the
+        circuit, keyed by source name.
+    converged : bool
+        ``True`` when the Newton-Raphson DC solve converged at this step.
+        ``False`` indicates an unreliable operating point (the
+        ``node_voltages`` and ``branch_currents`` values are unreliable).
+
+    Notes
+    -----
+    For nonlinear circuits (diodes, BJTs, MOSFETs) Newton-Raphson may fail
+    to converge if the operating point is far from the initial guess.
+    Consecutive sweep points start from the previous converged solution,
+    which usually keeps convergence robust over moderate sweep ranges.
+
+    Examples
+    --------
+    Plot V(out) vs V(in) for a common-emitter amplifier swept from 0 V to 5 V::
+
+        result = dc_sweep(circuit, "Vin", 0.0, 5.0, 0.1)
+        v_in  = [pt.source_value           for pt in result.points]
+        v_out = [pt.node_voltages.get("out", 0.0) for pt in result.points]
+    """
+
+    source_value: float
+    node_voltages: dict[str, float]
+    branch_currents: dict[str, float]
+    converged: bool
+
+
+@dataclass
+class DcSweepResult:
+    """Collected operating-point samples from a DC parameter sweep.
+
+    Returned by :func:`dc_sweep`.  Contains one :class:`DcSweepPoint` per
+    sweep step, in the order the steps were evaluated (ascending or
+    descending, matching the sign of ``step``).
+
+    Attributes
+    ----------
+    points : list[DcSweepPoint]
+        Ordered list of operating-point snapshots.  Empty if the sweep
+        range produced zero steps (e.g., ``start == stop`` with a nonzero
+        step, or ``step`` has the wrong sign).
+    source_name : str
+        Name of the swept source element (as given to :func:`dc_sweep`).
+
+    Examples
+    --------
+    Extract all converged node-voltage dicts::
+
+        converged_pts = [pt for pt in result.points if pt.converged]
+    """
+
+    points: list[DcSweepPoint]
+    source_name: str
+
+
 # ---------------------------------------------------------------------------
 # MNA infrastructure
 # ---------------------------------------------------------------------------
@@ -1852,3 +1926,172 @@ def tf(
         output_impedance=Z_out,
         converged=dc.converged,
     )
+
+
+# ---------------------------------------------------------------------------
+# Section 5 — DC Parameter Sweep (.DC analysis)
+# ---------------------------------------------------------------------------
+
+
+def dc_sweep(
+    circuit: Circuit,
+    source_name: str,
+    start: float,
+    stop: float,
+    step: float,
+    *,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> DcSweepResult:
+    """Sweep one independent source through a range and record DC operating points.
+
+    This implements the SPICE ``.DC`` analysis.  At each step the named source
+    is set to the current sweep value and :func:`dc_op` is called to find the
+    operating point.  Consecutive steps seed Newton-Raphson from the previous
+    converged solution, which dramatically improves convergence robustness for
+    nonlinear circuits.
+
+    Parameters
+    ----------
+    circuit : Circuit
+        The circuit to analyse.  Must contain a :class:`VoltageSource` or
+        :class:`CurrentSource` whose ``name`` matches *source_name*.
+        All other elements are swept at their nominal values.
+    source_name : str
+        Name of the independent source to sweep (case-sensitive, matches
+        ``element.name``).
+    start : float
+        Sweep start value (V or A, depending on source type).
+    stop : float
+        Sweep stop value (inclusive within floating-point tolerance).
+    step : float
+        Sweep increment.  Must be positive for an ascending sweep
+        (``start < stop``) or negative for a descending sweep
+        (``start > stop``).  A zero step raises :class:`ValueError`.
+    max_iterations : int, keyword-only
+        Maximum Newton-Raphson iterations per DC solve.  Default 50.
+    tol : float, keyword-only
+        Newton-Raphson convergence tolerance (V / A).  Default 1e-6.
+
+    Returns
+    -------
+    DcSweepResult
+        One :class:`DcSweepPoint` per evaluated step, in sweep order.
+        ``result.points`` is empty when the step has the wrong sign
+        (e.g., ``start=0``, ``stop=5``, ``step=-0.1``).
+
+    Raises
+    ------
+    ValueError
+        If *step* is zero, or if no source named *source_name* is found.
+
+    Notes
+    -----
+    **How step continuation works**: after each converged step the internal
+    MNA state is *not* explicitly threaded between calls; :func:`dc_op` uses
+    an all-zero initial guess each time.  For smooth sweeps of linear/mildly
+    nonlinear circuits this is sufficient.  Future versions may add warm-start
+    support for difficult nonlinear operating regions.
+
+    **Frozen elements**: :class:`VoltageSource` and :class:`CurrentSource` are
+    ``frozen=True`` dataclasses.  To change a source value we create a new
+    element instance and rebuild the circuit for each step, which keeps the
+    original *circuit* object unmodified.
+
+    Examples
+    --------
+    Sweep a DC bias from 0 V to 5 V in 0.5 V steps::
+
+        from spice_engine import Circuit, VoltageSource, Resistor, dc_sweep
+        c = Circuit()
+        c.add(VoltageSource("Vin", "in", "0", 0.0))
+        c.add(Resistor("R1", "in", "out", 1000.0))
+        c.add(Resistor("R2", "out", "0", 1000.0))
+        result = dc_sweep(c, "Vin", 0.0, 5.0, 0.5)
+        for pt in result.points:
+            print(f"Vin={pt.source_value:.1f}V  Vout={pt.node_voltages['out']:.3f}V")
+
+    Transfer curve of a resistor divider (expected Vout = Vin / 2)::
+
+        assert all(
+            abs(pt.node_voltages["out"] - pt.source_value / 2) < 1e-9
+            for pt in result.points if pt.converged
+        )
+    """
+    if step == 0.0:
+        raise ValueError("dc_sweep: step must be nonzero")
+
+    # ------------------------------------------------------------------
+    # Locate the source element to sweep.
+    # We accept both VoltageSource and CurrentSource.
+    # ------------------------------------------------------------------
+    source_el: VoltageSource | CurrentSource | None = None
+    source_idx: int = -1
+    for idx, el in enumerate(circuit.elements):
+        if isinstance(el, (VoltageSource, CurrentSource)) and el.name == source_name:
+            source_el = el  # type: ignore[assignment]
+            source_idx = idx
+            break
+
+    if source_el is None:
+        raise ValueError(
+            f"dc_sweep: no VoltageSource or CurrentSource named {source_name!r} "
+            "found in the circuit"
+        )
+
+    # ------------------------------------------------------------------
+    # Build the list of sweep values.
+    #
+    # We use integer-counted steps to avoid floating-point drift across
+    # many iterations (e.g. 0.1 + 0.1 + ... ≠ exactly n*0.1).
+    # The stop value is included when it falls within half a step of the
+    # last computed sample.
+    # ------------------------------------------------------------------
+    sweep_values: list[float] = []
+    if step > 0.0 and start <= stop:
+        n = int((stop - start) / step + 0.5) + 1
+        sweep_values = [start + i * step for i in range(n) if start + i * step <= stop + step * 0.5]
+    elif step < 0.0 and start >= stop:
+        n = int((start - stop) / (-step) + 0.5) + 1
+        sweep_values = [start + i * step for i in range(n) if start + i * step >= stop + step * 0.5]
+    # else: wrong sign — return empty result
+
+    # ------------------------------------------------------------------
+    # Run a DC solve at each sweep value.
+    #
+    # For each step we:
+    #   1. Build a modified circuit with the source set to the sweep value
+    #      (frozen dataclasses → create a new element instance).
+    #   2. Call dc_op on the modified circuit.
+    #   3. Record a DcSweepPoint.
+    # ------------------------------------------------------------------
+    points: list[DcSweepPoint] = []
+
+    for val in sweep_values:
+        # Create a new source element with the swept value.
+        if isinstance(source_el, VoltageSource):
+            new_el: VoltageSource | CurrentSource = VoltageSource(
+                source_el.name, source_el.n_plus, source_el.n_minus, val
+            )
+        else:
+            new_el = CurrentSource(
+                source_el.name, source_el.n_plus, source_el.n_minus, val
+            )
+
+        # Rebuild circuit with the new element in place of the original.
+        swept_elements = list(circuit.elements)
+        swept_elements[source_idx] = new_el
+        swept_circuit = Circuit(elements=swept_elements)
+
+        dc_result = dc_op(swept_circuit, max_iterations=max_iterations, tol=tol)
+
+        points.append(
+            DcSweepPoint(
+                source_value=val,
+                node_voltages=dc_result.node_voltages,
+                branch_currents=dc_result.branch_currents,
+                converged=dc_result.converged,
+            )
+        )
+
+    return DcSweepResult(points=points, source_name=source_name)
