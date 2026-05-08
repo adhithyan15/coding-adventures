@@ -296,6 +296,21 @@ def prolog_vm_capabilities() -> tuple[PrologVMCapability, ...]:
                 "structured and bytecode VM stress coverage",
             ),
         ),
+        PrologVMCapability(
+            id="host-binary-byte-stream-io",
+            title="Bounded binary byte stream I/O",
+            status="complete",
+            specs=("PR86",),
+            packages=("logic-builtins", "prolog-loader", "prolog-vm-compiler"),
+            features=(
+                "open/4 accepts type(binary) for bounded byte streams",
+                "stream_property/2 exposes type(text) and type(binary)",
+                "get_byte/1,2 and peek_byte/1,2 read bytes with -1 at EOF",
+                "put_byte/1,2 writes integer bytes 0..255",
+                "explicit and selected current binary stream forms",
+                "structured and bytecode VM stress coverage",
+            ),
+        ),
     )
 
 
@@ -333,8 +348,8 @@ def deferred_prolog_vm_capabilities() -> tuple[PrologVMCapability, ...]:
             specs=("PR02",),
             packages=("future",),
             features=(
-                "console-backed standard streams and binary streams",
-                "rich ISO/SWI stream options beyond the bounded UTF-8 subset",
+                "console-backed standard streams and richer binary stream services",
+                "rich ISO/SWI stream options beyond bounded text/binary files",
                 "foreign predicates and host callbacks",
                 "engines, concurrency, and async integration",
             ),
@@ -346,8 +361,8 @@ def prolog_vm_capability_manifest() -> PrologVMCapabilityManifest:
     """Return the canonical capability manifest for this package."""
 
     return PrologVMCapabilityManifest(
-        track="Prolog-on-Logic-VM PR00-PR85",
-        status="core-plus-stream-character-code-io",
+        track="Prolog-on-Logic-VM PR00-PR86",
+        status="core-plus-binary-byte-stream-io",
         dialects=("iso", "swi"),
         backends=("structured", "bytecode"),
         capabilities=prolog_vm_capabilities(),

@@ -1636,6 +1636,70 @@ class TestPrologGoalAdapter:
         ]
         assert output_path.read_text(encoding="utf-8") == "hi!\n"
 
+    def test_adapt_prolog_goal_rewrites_binary_byte_stream_io(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        input_path = tmp_path / "byte-input.bin"
+        output_path = tmp_path / "byte-output.bin"
+        input_path.write_bytes(bytes([65, 0, 255]))
+        input_atom = str(input_path).replace("\\", "\\\\").replace("'", "\\'")
+        output_atom = str(output_path).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- open('{input_atom}', read, In, "
+            "[alias(byte_input), type(binary)]), "
+            "stream_property(In, type(binary)), "
+            "peek_byte(In, Peeked), "
+            "get_byte(In, First), "
+            "get_byte(In, Zero), "
+            "stream_property(In, position(Position)), "
+            "peek_byte(In, High), "
+            "get_byte(In, High), "
+            "get_byte(In, Eof), "
+            "at_end_of_stream(In), "
+            "set_stream_position(byte_input, 1), "
+            "set_input(In), "
+            "peek_byte(CurrentPeek), "
+            "get_byte(CurrentFirst), "
+            "close(In), "
+            f"open('{output_atom}', write, Out, "
+            "[alias(byte_output), type(binary)]), "
+            "put_byte(Out, 65), "
+            "put_byte(Out, 0), "
+            "set_output(byte_output), "
+            "put_byte(255), "
+            "close(Out).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["Peeked"],
+                parsed.variables["First"],
+                parsed.variables["Zero"],
+                parsed.variables["Position"],
+                parsed.variables["High"],
+                parsed.variables["Eof"],
+                parsed.variables["CurrentPeek"],
+                parsed.variables["CurrentFirst"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert answers == [
+            (
+                num(65),
+                num(65),
+                num(0),
+                num(2),
+                num(255),
+                num(-1),
+                num(0),
+                num(0),
+            ),
+        ]
+        assert output_path.read_bytes() == bytes([65, 0, 255])
+
     def test_adapt_prolog_goal_rewrites_current_stream_facade(
         self,
         tmp_path: Path,

@@ -153,8 +153,10 @@ __all__ = [
     "flush_current_outputo",
     "functoro",
     "geqo",
+    "get_byteo",
     "get_charo",
     "get_codeo",
+    "get_current_byteo",
     "get_current_charo",
     "get_current_codeo",
     "gto",
@@ -189,13 +191,17 @@ __all__ = [
     "open_optionso",
     "bagofo",
     "partitiono",
+    "peek_byteo",
     "peek_charo",
     "peek_codeo",
+    "peek_current_byteo",
     "peek_current_charo",
     "peek_current_codeo",
     "predicate_propertyo",
+    "put_byteo",
     "put_charo",
     "put_codeo",
+    "put_current_byteo",
     "put_current_charo",
     "put_current_codeo",
     "read_file_to_codeso",
@@ -278,11 +284,13 @@ _DEFAULT_TERM_HASH_RANGE = 2_147_483_647
 
 @dataclass(slots=True)
 class _TextStream:
-    """Host-side UTF-8 text stream used by the bounded Prolog facade."""
+    """Host-side stream used by the bounded Prolog facade."""
 
     mode: str
     path: Path
+    stream_type: str = "text"
     contents: str = ""
+    binary_contents: bytes = b""
     cursor: int = 0
     alias: str | None = None
 
@@ -4923,25 +4931,66 @@ def _open_text_stream(
     mode_text: str,
     *,
     alias_text: str | None = None,
+    stream_type: str = "text",
 ) -> _TextStream | None:
     path = Path(path_text)
     try:
-        if mode_text == "read":
-            if not path.is_file():
-                return None
-            return _TextStream(
-                mode=mode_text,
-                path=path,
-                contents=path.read_text(encoding="utf-8"),
-                alias=alias_text,
-            )
-        if mode_text == "write":
-            path.write_text("", encoding="utf-8")
-            return _TextStream(mode=mode_text, path=path, alias=alias_text)
-        if mode_text == "append":
-            path.parent.mkdir(parents=True, exist_ok=True)
-            path.open("a", encoding="utf-8").close()
-            return _TextStream(mode=mode_text, path=path, alias=alias_text)
+        if stream_type == "text":
+            if mode_text == "read":
+                if not path.is_file():
+                    return None
+                return _TextStream(
+                    mode=mode_text,
+                    path=path,
+                    stream_type=stream_type,
+                    contents=path.read_text(encoding="utf-8"),
+                    alias=alias_text,
+                )
+            if mode_text == "write":
+                path.write_text("", encoding="utf-8")
+                return _TextStream(
+                    mode=mode_text,
+                    path=path,
+                    stream_type=stream_type,
+                    alias=alias_text,
+                )
+            if mode_text == "append":
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.open("a", encoding="utf-8").close()
+                return _TextStream(
+                    mode=mode_text,
+                    path=path,
+                    stream_type=stream_type,
+                    alias=alias_text,
+                )
+        if stream_type == "binary":
+            if mode_text == "read":
+                if not path.is_file():
+                    return None
+                return _TextStream(
+                    mode=mode_text,
+                    path=path,
+                    stream_type=stream_type,
+                    binary_contents=path.read_bytes(),
+                    alias=alias_text,
+                )
+            if mode_text == "write":
+                path.write_bytes(b"")
+                return _TextStream(
+                    mode=mode_text,
+                    path=path,
+                    stream_type=stream_type,
+                    alias=alias_text,
+                )
+            if mode_text == "append":
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.open("ab").close()
+                return _TextStream(
+                    mode=mode_text,
+                    path=path,
+                    stream_type=stream_type,
+                    alias=alias_text,
+                )
     except OSError:
         return None
     except UnicodeDecodeError:
@@ -4949,12 +4998,14 @@ def _open_text_stream(
     return None
 
 
-def _open_options(term_value: Term) -> tuple[str | None] | None:
+def _open_options(term_value: Term) -> tuple[str | None, str] | None:
     items = _proper_list_items(term_value)
     if items is None:
         return None
 
     alias_text: str | None = None
+    stream_type = "text"
+    has_encoding = False
     for item in items:
         if not isinstance(item, Compound) or len(item.args) != 1:
             return None
@@ -4972,16 +5023,21 @@ def _open_options(term_value: Term) -> tuple[str | None] | None:
             encoding_text = _plain_atom_text(option_arg)
             if encoding_text not in {"utf8", "utf-8"}:
                 return None
+            has_encoding = True
             continue
 
         if option_name == "type":
-            if _plain_atom_text(option_arg) != "text":
+            parsed_type = _plain_atom_text(option_arg)
+            if parsed_type not in {"text", "binary"}:
                 return None
+            stream_type = parsed_type
             continue
 
         return None
 
-    return (alias_text,)
+    if stream_type == "binary" and has_encoding:
+        return None
+    return (alias_text, stream_type)
 
 
 def _register_stream(handle: Atom, stream: _TextStream) -> bool:
@@ -5032,8 +5088,13 @@ def open_optionso(
         if path_text is None or mode_text is None or parsed_options is None:
             return
 
-        [alias_text] = parsed_options
-        stream = _open_text_stream(path_text, mode_text, alias_text=alias_text)
+        alias_text, stream_type = parsed_options
+        stream = _open_text_stream(
+            path_text,
+            mode_text,
+            alias_text=alias_text,
+            stream_type=stream_type,
+        )
         if stream is None:
             return
 
@@ -5085,11 +5146,39 @@ def _read_stream(term_value: Term) -> _TextStream | None:
     return None if resolved is None else resolved[1]
 
 
+def _read_text_stream(term_value: Term) -> _TextStream | None:
+    stream = _read_stream(term_value)
+    if stream is None or stream.stream_type != "text":
+        return None
+    return stream
+
+
+def _read_binary_stream(term_value: Term) -> _TextStream | None:
+    stream = _read_stream(term_value)
+    if stream is None or stream.stream_type != "binary":
+        return None
+    return stream
+
+
 def _current_input_stream() -> _TextStream | None:
     if _CURRENT_INPUT_HANDLE is None:
         return None
     stream = _STREAMS.get(_CURRENT_INPUT_HANDLE)
     if stream is None or stream.mode != "read":
+        return None
+    return stream
+
+
+def _current_input_text_stream() -> _TextStream | None:
+    stream = _current_input_stream()
+    if stream is None or stream.stream_type != "text":
+        return None
+    return stream
+
+
+def _current_input_binary_stream() -> _TextStream | None:
+    stream = _current_input_stream()
+    if stream is None or stream.stream_type != "binary":
         return None
     return stream
 
@@ -5101,6 +5190,12 @@ def _current_output_stream_term() -> Atom | None:
     if stream is None or stream.mode not in {"write", "append"}:
         return None
     return atom(_CURRENT_OUTPUT_HANDLE)
+
+
+def _stream_length(stream: _TextStream) -> int:
+    if stream.stream_type == "binary":
+        return len(stream.binary_contents)
+    return len(stream.contents)
 
 
 def current_inputo(stream_value: object) -> GoalExpr:
@@ -5165,12 +5260,12 @@ def set_outputo(stream_value: object) -> GoalExpr:
 
 
 def at_end_of_streamo(stream_value: object) -> GoalExpr:
-    """Succeed when a bounded read stream has consumed all available text."""
+    """Succeed when a bounded read stream has consumed all available data."""
 
     def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
         [stream_term] = args
         stream = _read_stream(_reified(stream_term, state))
-        if stream is not None and stream.cursor >= len(stream.contents):
+        if stream is not None and stream.cursor >= _stream_length(stream):
             yield state
 
     return native_goal(run, stream_value)
@@ -5181,7 +5276,7 @@ def at_end_of_current_streamo() -> GoalExpr:
 
     def run(_program: Program, state: State, _args: NativeArgs) -> Iterator[State]:
         stream = _current_input_stream()
-        if stream is not None and stream.cursor >= len(stream.contents):
+        if stream is not None and stream.cursor >= _stream_length(stream):
             yield state
 
     return native_goal(run)
@@ -5195,7 +5290,7 @@ def _stream_position(term_value: object) -> int | None:
 
 
 def _set_read_stream_position(stream: _TextStream, position: int) -> bool:
-    if position < 0 or position > len(stream.contents):
+    if position < 0 or position > _stream_length(stream):
         return False
     stream.cursor = position
     return True
@@ -5224,7 +5319,7 @@ def _seek_target(stream: _TextStream, offset: int, method: str) -> int | None:
     if method == "current":
         return stream.cursor + offset
     if method == "eof":
-        return len(stream.contents) + offset
+        return _stream_length(stream) + offset
     return None
 
 
@@ -5254,7 +5349,7 @@ def seeko(
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         stream_term, offset_term, method_term, new_location_term = args
-        stream = _read_stream(_reified(stream_term, state))
+        stream = _read_text_stream(_reified(stream_term, state))
         offset = _seek_offset(_reified(offset_term, state))
         method = _plain_atom_text(_reified(method_term, state))
         if stream is None or offset is None or method is None:
@@ -5282,7 +5377,7 @@ def read_stringo(
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         stream_term, length_term, string_term = args
-        stream = _read_stream(_reified(stream_term, state))
+        stream = _read_text_stream(_reified(stream_term, state))
         length = _reified_integer(length_term, state)
         if stream is None or length is None or length < 0:
             return
@@ -5303,7 +5398,7 @@ def read_current_stringo(length_value: object, string_value: object) -> GoalExpr
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         length_term, string_term = args
-        stream = _current_input_stream()
+        stream = _current_input_text_stream()
         length = _reified_integer(length_term, state)
         if stream is None or length is None or length < 0:
             return
@@ -5324,7 +5419,7 @@ def read_line_to_stringo(stream_value: object, string_value: object) -> GoalExpr
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         stream_term, string_term = args
-        stream = _read_stream(_reified(stream_term, state))
+        stream = _read_text_stream(_reified(stream_term, state))
         if stream is None:
             return
 
@@ -5353,7 +5448,7 @@ def read_current_line_to_stringo(string_value: object) -> GoalExpr:
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         [string_term] = args
-        stream = _current_input_stream()
+        stream = _current_input_text_stream()
         if stream is None:
             return
 
@@ -5382,7 +5477,7 @@ def get_charo(stream_value: object, char_value: object) -> GoalExpr:
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         stream_term, char_term = args
-        stream = _read_stream(_reified(stream_term, state))
+        stream = _read_text_stream(_reified(stream_term, state))
         if stream is None:
             return
 
@@ -5406,7 +5501,7 @@ def get_current_charo(char_value: object) -> GoalExpr:
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         [char_term] = args
-        stream = _current_input_stream()
+        stream = _current_input_text_stream()
         if stream is None:
             return
 
@@ -5446,6 +5541,23 @@ def _character_code_term(character: str | None) -> Number:
     return num(-1 if character is None else ord(character))
 
 
+def _peek_stream_byte(stream: _TextStream) -> int | None:
+    if stream.cursor >= len(stream.binary_contents):
+        return None
+    return stream.binary_contents[stream.cursor]
+
+
+def _read_stream_byte(stream: _TextStream) -> int | None:
+    byte = _peek_stream_byte(stream)
+    if byte is not None:
+        stream.cursor += 1
+    return byte
+
+
+def _byte_term(byte_value: int | None) -> Number:
+    return num(-1 if byte_value is None else byte_value)
+
+
 def _write_character_text(term_value: Term) -> str | None:
     text = _plain_atom_text(term_value)
     if text is None or len(text) != 1:
@@ -5463,12 +5575,19 @@ def _write_code_text(term_value: Term) -> str | None:
         return None
 
 
+def _write_byte_value(term_value: Term) -> int | None:
+    byte_value = _integer_value(term_value)
+    if byte_value is None or byte_value < 0 or byte_value > 255:
+        return None
+    return byte_value
+
+
 def get_codeo(stream_value: object, code_value: object) -> GoalExpr:
     """Read one Unicode code point from a bounded read stream or ``-1`` at EOF."""
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         stream_term, code_term = args
-        stream = _read_stream(_reified(stream_term, state))
+        stream = _read_text_stream(_reified(stream_term, state))
         if stream is None:
             return
 
@@ -5486,7 +5605,7 @@ def get_current_codeo(code_value: object) -> GoalExpr:
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         [code_term] = args
-        stream = _current_input_stream()
+        stream = _current_input_text_stream()
         if stream is None:
             return
 
@@ -5497,6 +5616,42 @@ def get_current_codeo(code_value: object) -> GoalExpr:
         )
 
     return native_goal(run, code_value)
+
+
+def get_byteo(stream_value: object, byte_value: object) -> GoalExpr:
+    """Read one byte from a bounded binary stream or ``-1`` at EOF."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, byte_term = args
+        stream = _read_binary_stream(_reified(stream_term, state))
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(byte_term, _byte_term(_read_stream_byte(stream))),
+            state,
+        )
+
+    return native_goal(run, stream_value, byte_value)
+
+
+def get_current_byteo(byte_value: object) -> GoalExpr:
+    """Read one byte from the selected binary input stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [byte_term] = args
+        stream = _current_input_binary_stream()
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(byte_term, _byte_term(_read_stream_byte(stream))),
+            state,
+        )
+
+    return native_goal(run, byte_value)
 
 
 def peek_charo(stream_value: object, char_value: object) -> GoalExpr:
@@ -5522,7 +5677,7 @@ def peek_current_charo(char_value: object) -> GoalExpr:
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         [char_term] = args
-        stream = _current_input_stream()
+        stream = _current_input_text_stream()
         if stream is None:
             return
 
@@ -5540,7 +5695,7 @@ def peek_codeo(stream_value: object, code_value: object) -> GoalExpr:
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         stream_term, code_term = args
-        stream = _read_stream(_reified(stream_term, state))
+        stream = _read_text_stream(_reified(stream_term, state))
         if stream is None:
             return
 
@@ -5558,7 +5713,7 @@ def peek_current_codeo(code_value: object) -> GoalExpr:
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         [code_term] = args
-        stream = _current_input_stream()
+        stream = _current_input_text_stream()
         if stream is None:
             return
 
@@ -5569,6 +5724,42 @@ def peek_current_codeo(code_value: object) -> GoalExpr:
         )
 
     return native_goal(run, code_value)
+
+
+def peek_byteo(stream_value: object, byte_value: object) -> GoalExpr:
+    """Peek one byte from a bounded binary stream without advancing."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, byte_term = args
+        stream = _read_binary_stream(_reified(stream_term, state))
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(byte_term, _byte_term(_peek_stream_byte(stream))),
+            state,
+        )
+
+    return native_goal(run, stream_value, byte_value)
+
+
+def peek_current_byteo(byte_value: object) -> GoalExpr:
+    """Peek one byte from the selected binary input stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [byte_term] = args
+        stream = _current_input_binary_stream()
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(byte_term, _byte_term(_peek_stream_byte(stream))),
+            state,
+        )
+
+    return native_goal(run, byte_value)
 
 
 def put_charo(stream_value: object, char_value: object) -> GoalExpr:
@@ -5619,6 +5810,30 @@ def put_current_codeo(code_value: object) -> GoalExpr:
     return native_goal(run, code_value)
 
 
+def put_byteo(stream_value: object, byte_value: object) -> GoalExpr:
+    """Write one byte to a bounded binary write/append stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, byte_term = args
+        byte = _write_byte_value(_reified(byte_term, state))
+        if byte is not None and _write_byte_stream(_reified(stream_term, state), byte):
+            yield state
+
+    return native_goal(run, stream_value, byte_value)
+
+
+def put_current_byteo(byte_value: object) -> GoalExpr:
+    """Write one byte to the selected binary output stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [byte_term] = args
+        byte = _write_byte_value(_reified(byte_term, state))
+        if byte is not None and _write_current_byte_stream(byte):
+            yield state
+
+    return native_goal(run, byte_value)
+
+
 def _stream_write_text(term_value: Term) -> str | None:
     if isinstance(term_value, String):
         return term_value.value
@@ -5636,11 +5851,34 @@ def _write_stream(term_value: Term, text: str) -> bool:
     if handle_text is None:
         return False
     stream = _STREAMS.get(handle_text)
-    if stream is None or stream.mode not in {"write", "append"}:
+    if (
+        stream is None
+        or stream.mode not in {"write", "append"}
+        or stream.stream_type != "text"
+    ):
         return False
     try:
         with stream.path.open("a", encoding="utf-8") as file:
             file.write(text)
+    except OSError:
+        return False
+    return True
+
+
+def _write_byte_stream(term_value: Term, byte_value: int) -> bool:
+    handle_text = _stream_key(term_value)
+    if handle_text is None:
+        return False
+    stream = _STREAMS.get(handle_text)
+    if (
+        stream is None
+        or stream.mode not in {"write", "append"}
+        or stream.stream_type != "binary"
+    ):
+        return False
+    try:
+        with stream.path.open("ab") as file:
+            file.write(bytes([byte_value]))
     except OSError:
         return False
     return True
@@ -5651,6 +5889,13 @@ def _write_current_stream(text: str) -> bool:
     if output_stream is None:
         return False
     return _write_stream(output_stream, text)
+
+
+def _write_current_byte_stream(byte_value: int) -> bool:
+    output_stream = _current_output_stream_term()
+    if output_stream is None:
+        return False
+    return _write_byte_stream(output_stream, byte_value)
 
 
 def writeo(stream_value: object, term_value: object) -> GoalExpr:
@@ -5750,13 +5995,14 @@ def _stream_properties(handle_text: str, stream: _TextStream) -> tuple[Term, ...
     properties: list[Term] = [
         term("file_name", atom(str(stream.path))),
         term("mode", atom(stream.mode)),
+        term("type", atom(stream.stream_type)),
         term("position", num(stream.cursor)),
     ]
     if stream.mode == "read":
         properties.append(atom("input"))
         if handle_text == _CURRENT_INPUT_HANDLE:
             properties.append(atom("current_input"))
-        eof_state = "at" if stream.cursor >= len(stream.contents) else "not"
+        eof_state = "at" if stream.cursor >= _stream_length(stream) else "not"
         properties.append(term("end_of_stream", atom(eof_state)))
     else:
         properties.append(atom("output"))

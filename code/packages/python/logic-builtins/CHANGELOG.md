@@ -22,6 +22,8 @@ All notable changes to this package will be documented in this file.
 - `get_codeo/2`, `peek_charo/2`, `peek_codeo/2`, `put_charo/2`,
   `put_codeo/2`, and current-stream variants for bounded UTF-8
   character/code stream I/O.
+- `get_byteo/2`, `peek_byteo/2`, `put_byteo/2`, and current-stream variants
+  for bounded binary file stream I/O opened with `type(binary)`.
 - `betweeno(low, high, value)` for finite inclusive integer generation and
   validation, matching the common Prolog `between/3` use case.
 - `integero(term)` for non-bool integer type checks and `succo(predecessor,

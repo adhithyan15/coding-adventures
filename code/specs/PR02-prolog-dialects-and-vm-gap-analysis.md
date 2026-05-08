@@ -61,8 +61,8 @@ that manifest instead of reopening open-ended PR00-PR82 gap analysis.
 Remaining work in this document is advanced dialect and runtime emulation:
 full external Prolog dialect compatibility, tabling, attributed variables,
 generalized coroutining, CHR/non-FD constraint domains, console/binary/rich
-stream I/O beyond the bounded UTF-8 subset, foreign predicates, engines, concurrency, and async host
-integration.
+stream services beyond the bounded file-backed text/binary subset, foreign
+predicates, engines, concurrency, and async host integration.
 
 ## Current Project Surface
 
@@ -100,12 +100,13 @@ Current support:
   introspection builtins, operator declarations, directives, modules,
   exceptions, flags, CLP(FD), DCG expansion, consult/include, source/file
   runners, bounded UTF-8 file text reads and file stream handles with aliases,
-  current-stream selection, cursor positioning, bytecode parity, and
-  machine-readable tooling.
+  current-stream selection, cursor positioning, bounded binary byte stream I/O,
+  bytecode parity, and machine-readable tooling.
 - Missing or incomplete for full ISO-system emulation: console-backed standard
-  streams, binary streams, rich stream options beyond the bounded UTF-8 subset,
-  full ISO standard-library breadth, every ISO error-term
-  nuance, and implementation-specific dialect services outside the shared core.
+  streams, richer binary stream services, rich stream options beyond the
+  bounded file-backed subset, full ISO standard-library breadth, every ISO
+  error-term nuance, and implementation-specific dialect services outside the
+  shared core.
 
 ### Edinburgh, DEC-10, Quintus, SICStus Family
 
@@ -243,8 +244,8 @@ The current Logic VM can support:
 The current Logic VM cannot yet support full external dialect behavior for:
 
 - complete ISO standard predicate semantics and every ISO error-term nuance
-- console-backed standard streams, binary streams, and rich stream options
-  beyond the bounded UTF-8 subset
+- console-backed standard streams, richer binary stream services, and rich
+  stream options beyond the bounded file-backed subset
 - attributed variables
 - generalized coroutining
 - tabled execution and well-founded semantics

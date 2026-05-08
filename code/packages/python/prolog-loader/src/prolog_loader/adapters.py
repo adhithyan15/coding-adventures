@@ -80,8 +80,10 @@ from logic_builtins import (
     foldlo,
     forallo,
     functoro,
+    get_byteo,
     get_charo,
     get_codeo,
+    get_current_byteo,
     get_current_charo,
     get_current_codeo,
     groundo,
@@ -108,8 +110,10 @@ from logic_builtins import (
     open_optionso,
     openo,
     partitiono,
+    peek_byteo,
     peek_charo,
     peek_codeo,
+    peek_current_byteo,
     peek_current_charo,
     peek_current_codeo,
     predicate_propertyo,
@@ -120,8 +124,10 @@ from logic_builtins import (
     prolog_lto,
     prolog_numeqo,
     prolog_numneqo,
+    put_byteo,
     put_charo,
     put_codeo,
+    put_current_byteo,
     put_current_charo,
     put_current_codeo,
     read_current_line_to_stringo,
@@ -631,6 +637,10 @@ def _adapt_relation_call(
         return get_codeo(*args)
     if name == "get_code" and goal.relation.arity == 1:
         return get_current_codeo(*args)
+    if name == "get_byte" and goal.relation.arity == 2:
+        return get_byteo(*args)
+    if name == "get_byte" and goal.relation.arity == 1:
+        return get_current_byteo(*args)
     if name == "peek_char" and goal.relation.arity == 2:
         return peek_charo(*args)
     if name == "peek_char" and goal.relation.arity == 1:
@@ -639,6 +649,10 @@ def _adapt_relation_call(
         return peek_codeo(*args)
     if name == "peek_code" and goal.relation.arity == 1:
         return peek_current_codeo(*args)
+    if name == "peek_byte" and goal.relation.arity == 2:
+        return peek_byteo(*args)
+    if name == "peek_byte" and goal.relation.arity == 1:
+        return peek_current_byteo(*args)
     if name == "put_char" and goal.relation.arity == 2:
         return put_charo(*args)
     if name == "put_char" and goal.relation.arity == 1:
@@ -647,6 +661,10 @@ def _adapt_relation_call(
         return put_codeo(*args)
     if name == "put_code" and goal.relation.arity == 1:
         return put_current_codeo(*args)
+    if name == "put_byte" and goal.relation.arity == 2:
+        return put_byteo(*args)
+    if name == "put_byte" and goal.relation.arity == 1:
+        return put_current_byteo(*args)
     if name == "write" and goal.relation.arity == 2:
         return writeo(*args)
     if name == "write" and goal.relation.arity == 1:

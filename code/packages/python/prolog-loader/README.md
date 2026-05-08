@@ -70,6 +70,8 @@ It keeps parsing side-effect free, then exposes helpers to:
   `write/1`, `nl/0`, and `flush_output/0`
 - adapt bounded character/code stream predicates including `get_code/1,2`,
   `peek_char/1,2`, `peek_code/1,2`, `put_char/1,2`, and `put_code/1,2`
+- adapt bounded binary byte stream predicates including `open/4`
+  `type(binary)`, `get_byte/1,2`, `peek_byte/1,2`, and `put_byte/1,2`
 - adapt parser-backed stream term I/O predicates including `read/1`,
   `read/2`, `read_term/2`, `read_term/3`, `write_term/2`, and
   `write_term/3`

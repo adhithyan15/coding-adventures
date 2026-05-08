@@ -112,8 +112,10 @@ from logic_builtins import (
     forallo,
     functoro,
     geqo,
+    get_byteo,
     get_charo,
     get_codeo,
+    get_current_byteo,
     get_current_charo,
     get_current_codeo,
     groundo,
@@ -149,16 +151,20 @@ from logic_builtins import (
     open_optionso,
     openo,
     partitiono,
+    peek_byteo,
     peek_charo,
     peek_codeo,
+    peek_current_byteo,
     peek_current_charo,
     peek_current_codeo,
     predicate_propertyo,
     prolog_iso,
     prolog_lto,
     prolog_numeqo,
+    put_byteo,
     put_charo,
     put_codeo,
+    put_current_byteo,
     put_current_charo,
     put_current_codeo,
     read_current_line_to_stringo,
@@ -498,6 +504,97 @@ class TestFileTextBuiltins:
             ),
         ]
         assert output_path.read_text(encoding="utf-8") == "hi!\n"
+
+    def test_binary_file_stream_byte_io(self, tmp_path: Path) -> None:
+        input_path = tmp_path / "bytes-input.bin"
+        output_path = tmp_path / "bytes-output.bin"
+        input_path.write_bytes(bytes([65, 0, 255]))
+        input_stream = var("InputStream")
+        output_stream = var("OutputStream")
+        peeked = var("Peeked")
+        first = var("First")
+        zero = var("Zero")
+        high = var("High")
+        eof = var("Eof")
+        current_peek = var("CurrentPeek")
+        current_first = var("CurrentFirst")
+        type_property = var("TypeProperty")
+        position = var("Position")
+        result = var("Result")
+
+        answers = solve_all(
+            program(),
+            result,
+            conj(
+                open_optionso(
+                    atom(str(input_path)),
+                    "read",
+                    input_stream,
+                    logic_list([
+                        term("alias", atom("byte_input")),
+                        term("type", atom("binary")),
+                    ]),
+                ),
+                stream_propertyo(input_stream, type_property),
+                eq(type_property, term("type", atom("binary"))),
+                peek_byteo(input_stream, peeked),
+                get_byteo(input_stream, first),
+                get_byteo(input_stream, zero),
+                stream_propertyo(input_stream, term("position", position)),
+                peek_byteo(input_stream, high),
+                get_byteo(input_stream, high),
+                get_byteo(input_stream, eof),
+                at_end_of_streamo(input_stream),
+                set_stream_positiono(atom("byte_input"), num(1)),
+                set_inputo(input_stream),
+                peek_current_byteo(current_peek),
+                get_current_byteo(current_first),
+                closeo(input_stream),
+                open_optionso(
+                    atom(str(output_path)),
+                    "write",
+                    output_stream,
+                    logic_list([
+                        term("alias", atom("byte_output")),
+                        term("type", atom("binary")),
+                    ]),
+                ),
+                put_byteo(output_stream, num(65)),
+                put_byteo(output_stream, num(0)),
+                set_outputo(atom("byte_output")),
+                put_current_byteo(num(255)),
+                closeo(output_stream),
+                eq(
+                    result,
+                    term(
+                        "bytes",
+                        peeked,
+                        first,
+                        zero,
+                        position,
+                        high,
+                        eof,
+                        current_peek,
+                        current_first,
+                    ),
+                ),
+            ),
+        )
+
+        assert answers == [
+            term(
+                "bytes",
+                num(65),
+                num(65),
+                num(0),
+                num(2),
+                num(255),
+                num(-1),
+                num(0),
+                num(0),
+            ),
+        ]
+        assert output_path.read_bytes() == bytes([65, 0, 255])
 
     def test_current_stream_facade_reads_and_writes_selected_streams(
         self,
