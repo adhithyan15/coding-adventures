@@ -1,5 +1,116 @@
 # Changelog
 
+## [0.4.0] — 2026-05-08
+
+### Added
+
+- **`ac_sweep` function** — Small-signal AC frequency sweep (the SPICE `.AC` analysis).
+
+  **Algorithm:**
+  1. Compute DC operating point via `dc_op` to obtain bias voltages for
+     nonlinear device linearisation.
+  2. Build a frequency grid (log-spaced or linear).
+  3. For each frequency ω = 2πf: construct a complex MNA matrix G_c, stamp every
+     element with its complex admittance or small-signal model, then solve
+     `G_c · x_c = b_c` via complex Gaussian elimination.
+  4. Return one `AcPoint` per frequency containing phasor node voltages.
+
+  **Linear element AC admittances:**
+  - Resistor: `Y = 1/R` (purely real, frequency-independent)
+  - Capacitor: `Y_C = jωC` (open circuit at DC, purely imaginary)
+  - Inductor: `Y_L = 1/(jωL)` (short circuit at DC → modelled as `G = 1e12 S`
+    when `ω = 0` to keep the matrix non-singular)
+  - VoltageSource: ideal AC source at its `voltage` amplitude; a 0 V source is a
+    short circuit (correct for DC-bias sources in AC analysis)
+  - CurrentSource: phasor current injection into the RHS vector
+
+  **Nonlinear element small-signal models** (linearised at DC OP):
+  - **Diode**: `gd = (Is/Vt) · exp(Vd/Vt)` — small-signal conductance between
+    anode and cathode; no Norton offset (DC terms vanish in AC)
+  - **MOSFET**: `gds` (output conductance, drain–source) + `gm` VCCS
+    (gate–source controls drain–source current); same stamp pattern as the DC
+    Newton stamp but in the complex domain
+  - **BJT**: `g_π = gm/beta_f` (junction conductance, B–E for NPN, E–B for PNP)
+    + `gm` VCCS (junction voltage controls collector current)
+
+  **Robustness:** if the AC MNA matrix is singular at a particular frequency
+  (e.g. a floating node), all node voltages for that frequency are set to zero
+  and the sweep continues.
+
+- **`AcPoint` dataclass** — Phasor voltages at one frequency.
+  - Fields: `freq` (Hz), `node_voltages` (dict `str → complex`).
+  - Use `abs(v)` for magnitude, `cmath.phase(v)` for phase in radians.
+
+- **`AcResult` dataclass** — Frequency-sweep output.
+  - Field: `points` (list of `AcPoint`, ascending by frequency, empty when
+    `n_points < 1`).
+
+- **`_solve_complex` helper** — Gaussian elimination with partial pivoting for
+  complex-valued matrices.  Same algorithm as `_solve` but operates on
+  `list[list[complex]]` and `list[complex]`; pivot selection uses `abs()` (complex
+  modulus) to choose the largest-magnitude pivot.
+
+- **`_stamp_g_c` helper** — Stamps a complex admittance between two nodes onto the
+  complex MNA matrix.  Parallel to the real-valued `_stamp_g` used in DC analysis.
+
+- **`_stamp_ac` helper** — Dispatches AC stamping for all supported element types.
+
+### Changed
+
+- `__init__.py` now exports `AcPoint`, `AcResult`, `ac_sweep`.
+- Version bumped: `0.3.0` → `0.4.0`.
+- Package description updated to mention AC analysis.
+
+### Tests
+
+- **Section 15 — Complex linear solver** (5 tests):
+  - `test_solve_complex_2x2_real_system` — matches real solver output
+  - `test_solve_complex_purely_imaginary_diagonal` — imaginary diagonal matrix
+  - `test_solve_complex_empty` — empty system returns empty list
+  - `test_solve_complex_singular_raises` — singular matrix raises `ZeroDivisionError`
+  - `test_solve_complex_3x3` — verifies A·x = b for a 3×3 complex system
+
+- **Section 16 — Data structures** (5 tests):
+  - `test_acpoint_fields`, `test_acresult_fields` — field storage
+  - `test_ac_sweep_returns_acresult` — return type check
+  - `test_ac_sweep_point_count` — exactly n_points points returned
+  - `test_ac_sweep_zero_points`, `test_ac_sweep_single_point` — edge cases
+  - `test_ac_sweep_point_has_node_voltages` — node names present in each point
+  - `test_ac_sweep_frequencies_ascending` — frequencies in order
+
+- **Section 17 — Resistive circuits** (3 tests):
+  - `test_ac_resistive_voltage_divider_real_valued` — gain=0.5, Im≈0
+  - `test_ac_source_node_equals_source_voltage` — source node matches amplitude
+  - `test_ac_unequal_resistive_divider` — R2/(R1+R2) gain at all frequencies
+
+- **Section 18 — RC low-pass filter** (5 tests):
+  - `test_ac_rc_lowpass_dc_gain_unity` — gain ≈ 1 at very low f
+  - `test_ac_rc_lowpass_3db_at_cutoff` — |H| = 1/√2 at f_c = 1/(2πRC)
+  - `test_ac_rc_lowpass_phase_at_cutoff` — phase ≈ −45° at f_c
+  - `test_ac_rc_lowpass_rolloff_above_cutoff` — 20 dB/decade roll-off
+  - `test_ac_rc_lowpass_gain_monotone_decreasing` — strict monotone decrease
+
+- **Section 19 — RL high-pass filter** (2 tests):
+  - `test_ac_rl_highpass_gain_increases_with_frequency` — monotone increasing
+  - `test_ac_rl_highpass_3db_at_cutoff` — 1/√2 at f_c = R/(2πL)
+
+- **Section 20 — Sweep modes** (4 tests):
+  - Log/lin first and last frequency endpoints
+  - Linear spacing uniformity
+  - Log decade spacing ratio
+
+- **Section 21 — Small-signal nonlinear elements** (3 tests):
+  - `test_ac_diode_small_signal_forward_biased` — heavy shunting when forward-biased
+  - `test_ac_diode_reverse_biased_acts_like_open` — voltage divider unchanged
+  - `test_ac_bjt_npn_small_signal` — node presence and convergence
+
+- **Section 22 — Current source injection** (3 tests):
+  - `test_ac_current_source_into_resistor` — V = I×R at all frequencies
+  - `test_ac_current_source_with_capacitor_shunt` — voltage decreases with frequency
+  - `test_ac_inductor_acts_as_short_at_very_low_frequency` — near-unity gain at DC
+
+---
+
 ## [0.3.0] — 2026-05-08
 
 ### Added
