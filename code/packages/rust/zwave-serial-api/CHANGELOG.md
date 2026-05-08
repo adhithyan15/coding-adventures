@@ -15,3 +15,5 @@ All notable changes to this package will be documented in this file.
   Handler envelopes for command-class routing.
 - Application Command Handler-to-command-class frame projection plus SendData
   request, response, callback, and transmit-option primitives.
+- SendData transaction state machine for accepted responses, terminal callback
+  outcomes, callback-id mismatches, and timeout expiry.
