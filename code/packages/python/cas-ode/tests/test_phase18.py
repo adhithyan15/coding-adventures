@@ -699,12 +699,24 @@ class TestPhase18_Fallthrough:
         result = eval_ode(expr)
         _was_evaluated(result)   # linear solver handles y' + y = x^2
 
-    def test_trig_resonance_unevaluated(self) -> None:
-        """y'' + y = sin(x) — trig resonance det=0, particular not computed."""
-        # sin(x) with β=1 and c-aβ²=0 → det=0 → falls through
+    def test_trig_resonance_solved_by_vop(self) -> None:
+        """y'' + y = sin(x) — trig resonance, undetermined-coeff det=0.
+
+        Phase 18 (undetermined coefficients) cannot handle this because the
+        det of the linear system is 0 (resonance: sin(x) is part of the
+        homogeneous solution).  Phase 20 (variation of parameters) handles
+        it via the Wronskian formula and tabular integration-by-parts.
+
+        VoP integrands:  u1' = -sin²(x),  u2' = sin(x)·cos(x)
+        Both are polynomial×trig which the VM integrates symbolically.
+        Classical particular solution: y_p = -x·cos(x)/2.
+        """
         expr = _sub(_add(Y_DOUBLE, Y), _sin(X))
         result = eval_ode(expr)
-        _is_unevaluated(result)
+        # VoP should produce Equal(y, ...) — not unevaluated
+        assert isinstance(result, IRApply)
+        assert result.head.name == "Equal"  # type: ignore[union-attr]
+        assert result.args[0] == Y
 
     def test_no_y_prime_unevaluated(self) -> None:
         """x·y = 1 — algebraic equation, not an ODE → unevaluated."""

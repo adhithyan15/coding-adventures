@@ -2,6 +2,98 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] — 2026-05-08
+
+### Added
+
+- **Variation of parameters (VoP) ODE solver** — Phase 20
+  - Handles `a·y'' + b·y' + c·y = f(x)` for any forcing function whose
+    primitives the integration engine can evaluate.
+  - Fires as a fallback after undetermined coefficients (Phase 18), so EPT-family
+    forcing (const, poly ≤ 2, exp, sin/cos, exp×sin/cos) is still handled by
+    the cleaner undetermined-coefficient solver first.
+  - VoP runs *before* the homogeneous solver so that a non-EPT forcing is not
+    misrouted to the homogeneous solver (which silently ignores the RHS).
+  - **Wronskian closed forms** — hard-coded analytically for each root case to
+    avoid symbolic Wronskian computation at runtime:
+    - **Distinct real roots** `r₁ ≠ r₂` (disc > 0, rational √disc):
+      `u₁' = f·e^{−r₁x}/(r₁−r₂)`, `u₂' = f·e^{−r₂x}/(r₂−r₁)`.
+      Negative coefficient is placed at the *outer* level as `Neg(...)` so
+      the integration engine's Neg-distribution rule fires before the
+      exp-product recogniser — this prevents the buried `Mul(Neg(1), Exp(…))`
+      structure that blocked integration.
+    - **Repeated root** `r` (disc = 0):
+      `u₁' = −f·x·e^{−rx}`, `u₂' = f·e^{−rx}`.
+    - **Complex roots** `α ± βi` (disc < 0, rational β):
+      `u₁' = −f·sin(βx)·e^{−αx}/β`, `u₂' = f·cos(βx)·e^{−αx}/β`.
+  - Irrational discriminants and irrational β return `None` — the integrands
+    would contain symbolic √ expressions the VM cannot integrate in general.
+  - Integration falls through gracefully: if either `∫u₁' dx` or `∫u₂' dx` is
+    unevaluated, `_try_vop` returns `None` and the ODE remains unevaluated.
+  - **Trig resonance handled** — `y'' + y = sin(x)` was previously unevaluated
+    (undetermined-coeff det = 0); VoP now returns the correct general solution
+    with particular solution `y_p = −x·cos(x)/2`.
+  - Entry point `_try_vop(expr, y, x, vm)` returns `Equal(y, y_h + y_p)` or
+    `None` on pattern mismatch or integration failure.
+
+- **`_signed_frac_to_ir`** — new module-level helper (replaces duplicate local
+  `_ir_from_frac` closures in `solve_second_order_const_coeff` and
+  `solve_euler_cauchy`).
+  - Lifts a signed `Fraction` to the canonical IR literal, wrapping negative
+    values with `Neg(...)` for clean printing.
+  - `_signed_frac_to_ir(Fraction(-3, 2))` → `Neg(Rational(3, 2))`.
+
+- **`_exp_r`** — new helper that builds `exp(r·x)` with trivial-case collapsing:
+  - `r = 0` → `IRInteger(1)` (e⁰ = 1)
+  - `r = 1` → `Exp(x)`
+  - `r = -1` → `Exp(Neg(x))`
+  - Other rational `r` → `Exp(Mul(r_ir, x))`
+  - Avoids `Mul(0, x)` inside Exp for zero exponents.
+
+- **`_vop_integrand_pair`** — Wronskian-derived VoP integrands for each root
+  case (distinct real, repeated, complex).  Returns `(u1_prime, u2_prime, y1, y2)`
+  or `None` for irrational roots.
+
+### Changed
+
+- `solve_ode` dispatcher — VoP step 2 added between undetermined coefficients
+  and the homogeneous solver:
+  1. `_try_second_order_nonhom` (undetermined coefficients)
+  2. **`_try_vop`** ← new (Phase 20)
+  3. `_collect_second_order_coeffs` / `solve_second_order_const_coeff`
+  4. `_try_euler_cauchy`
+  5. `_try_bernoulli`
+  6. `_collect_linear_first_order` / `solve_linear_first_order`
+  7. `_try_separable`
+  8. `_try_homogeneous_type`
+  9. `_try_exact`
+
+- Module docstring updated: "eight" → "nine" ODE classes; Phase 20 description
+  added.
+- Literate reading guide: entries 21–25 added for `_signed_frac_to_ir`,
+  `_exp_r`, `_vop_integrand_pair`, `_try_vop`, and `solve_ode`.
+- `pyproject.toml` description updated to include variation-of-parameters.
+- `tests/test_phase18.py` — `test_trig_resonance_unevaluated` renamed to
+  `test_trig_resonance_solved_by_vop` and updated to assert that VoP *does*
+  return a solution for `y'' + y = sin(x)` (previously expected unevaluated
+  fall-through; VoP now handles this resonance case correctly).
+
+### Tests
+
+- **32 new tests** in `tests/test_ode.py` across five new classes:
+  - `TestSignedFracToIr` — 5 tests: positive integer, zero, positive rational,
+    negative integer, negative rational.
+  - `TestExpR` — 5 tests: r=0, r=1, r=-1, positive fraction, negative fraction.
+  - `TestVopIntegrandPair` — 11 tests: distinct/repeated/complex root tuples,
+    y1/y2 structure, alpha=0 no-exp check, irrational disc/beta None, sign checks.
+  - `TestTryVop` — 7 tests: homogeneous None, irrational-disc None, distinct-roots
+    poly-3 success, C1/C2 present, complex-roots poly-3 success, C1/C2, EPT success.
+  - `TestSolveOdeVopDispatch` — 4 tests: dispatch to VoP, distinct-roots dispatch,
+    EPT not routed through VoP, homogeneous not routed.
+- Combined coverage: **85.54%** (237 tests total).
+
+---
+
 ## [0.4.0] — 2026-05-08
 
 ### Added
