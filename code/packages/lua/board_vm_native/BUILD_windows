@@ -1,0 +1,1 @@
+echo Skipping lua/board_vm_native on Windows -- Lua native extension requires a Lua import library
