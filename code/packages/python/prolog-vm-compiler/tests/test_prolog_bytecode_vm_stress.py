@@ -437,6 +437,87 @@ class TestPrologBytecodeVMStress:
             },
         ]
 
+    def test_stream_character_code_io_matches_structured_vm(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        input_path = tmp_path / "bytecode-chars-input.pltxt"
+        output_path = tmp_path / "bytecode-chars-output.pltxt"
+        input_path.write_text("Az\n", encoding="utf-8")
+        input_atom = str(input_path).replace("\\", "\\\\").replace("'", "\\'")
+        output_atom = str(output_path).replace("\\", "\\\\").replace("'", "\\'")
+        compiled = compile_swi_prolog_source(
+            f"""
+            ?- open('{input_atom}', read, In, [alias(bytecode_char_input)]),
+               peek_char(In, Peeked),
+               get_code(In, FirstCode),
+               peek_code(In, PeekedCode),
+               get_char(In, SecondChar),
+               get_code(In, NewlineCode),
+               get_code(In, EofCode),
+               set_stream_position(bytecode_char_input, 0),
+               set_input(In),
+               get_char(CurrentFirst),
+               peek_code(CurrentNextCode),
+               get_code(CurrentNextCode),
+               close(In),
+               open('{output_atom}', write, Out, [alias(bytecode_char_output)]),
+               put_char(Out, h),
+               put_code(Out, 105),
+               set_output(bytecode_char_output),
+               put_char('!'),
+               put_code(10),
+               close(Out).
+            """,
+        )
+
+        answers = run_compiled_prolog_bytecode_query_answers(compiled)
+
+        assert _project_answers(
+            answers,
+            "Peeked",
+            "FirstCode",
+            "PeekedCode",
+            "SecondChar",
+            "NewlineCode",
+            "EofCode",
+            "CurrentFirst",
+            "CurrentNextCode",
+        ) == _project_answers(
+            run_compiled_prolog_query_answers(compiled),
+            "Peeked",
+            "FirstCode",
+            "PeekedCode",
+            "SecondChar",
+            "NewlineCode",
+            "EofCode",
+            "CurrentFirst",
+            "CurrentNextCode",
+        )
+        assert _project_answers(
+            answers,
+            "Peeked",
+            "FirstCode",
+            "PeekedCode",
+            "SecondChar",
+            "NewlineCode",
+            "EofCode",
+            "CurrentFirst",
+            "CurrentNextCode",
+        ) == [
+            {
+                "Peeked": atom("A"),
+                "FirstCode": num(ord("A")),
+                "PeekedCode": num(ord("z")),
+                "SecondChar": atom("z"),
+                "NewlineCode": num(10),
+                "EofCode": num(-1),
+                "CurrentFirst": atom("A"),
+                "CurrentNextCode": num(ord("z")),
+            },
+        ]
+        assert output_path.read_text(encoding="utf-8") == "hi!\n"
+
     def test_current_stream_facade_matches_structured_vm(
         self,
         tmp_path: Path,

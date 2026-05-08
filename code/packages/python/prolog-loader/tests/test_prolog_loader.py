@@ -1575,6 +1575,67 @@ class TestPrologGoalAdapter:
             adapt_prolog_goal(parsed.goal),
         ) == [(string("ab"), num(2), string("ab"), num(5), num(5), string("f"))]
 
+    def test_adapt_prolog_goal_rewrites_stream_character_code_io(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        input_path = tmp_path / "char-input.txt"
+        output_path = tmp_path / "char-output.txt"
+        input_path.write_text("Az\n", encoding="utf-8")
+        input_atom = str(input_path).replace("\\", "\\\\").replace("'", "\\'")
+        output_atom = str(output_path).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- open('{input_atom}', read, In, [alias(char_input)]), "
+            "peek_char(In, Peeked), "
+            "get_code(In, FirstCode), "
+            "peek_code(In, PeekedCode), "
+            "get_char(In, SecondChar), "
+            "get_code(In, NewlineCode), "
+            "get_code(In, EofCode), "
+            "set_stream_position(char_input, 0), "
+            "set_input(In), "
+            "get_char(CurrentFirst), "
+            "peek_code(CurrentNextCode), "
+            "get_code(CurrentNextCode), "
+            "close(In), "
+            f"open('{output_atom}', write, Out, [alias(char_output)]), "
+            "put_char(Out, h), "
+            "put_code(Out, 105), "
+            "set_output(char_output), "
+            "put_char('!'), "
+            "put_code(10), "
+            "close(Out).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["Peeked"],
+                parsed.variables["FirstCode"],
+                parsed.variables["PeekedCode"],
+                parsed.variables["SecondChar"],
+                parsed.variables["NewlineCode"],
+                parsed.variables["EofCode"],
+                parsed.variables["CurrentFirst"],
+                parsed.variables["CurrentNextCode"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert answers == [
+            (
+                atom("A"),
+                num(ord("A")),
+                num(ord("z")),
+                atom("z"),
+                num(10),
+                num(-1),
+                atom("A"),
+                num(ord("z")),
+            ),
+        ]
+        assert output_path.read_text(encoding="utf-8") == "hi!\n"
+
     def test_adapt_prolog_goal_rewrites_current_stream_facade(
         self,
         tmp_path: Path,

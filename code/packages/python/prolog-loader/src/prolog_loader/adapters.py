@@ -81,7 +81,9 @@ from logic_builtins import (
     forallo,
     functoro,
     get_charo,
+    get_codeo,
     get_current_charo,
+    get_current_codeo,
     groundo,
     ifthenelseo,
     iftheno,
@@ -106,6 +108,10 @@ from logic_builtins import (
     open_optionso,
     openo,
     partitiono,
+    peek_charo,
+    peek_codeo,
+    peek_current_charo,
+    peek_current_codeo,
     predicate_propertyo,
     prolog_geqo,
     prolog_gto,
@@ -114,6 +120,10 @@ from logic_builtins import (
     prolog_lto,
     prolog_numeqo,
     prolog_numneqo,
+    put_charo,
+    put_codeo,
+    put_current_charo,
+    put_current_codeo,
     read_current_line_to_stringo,
     read_current_stringo,
     read_file_to_codeso,
@@ -617,6 +627,26 @@ def _adapt_relation_call(
         return get_charo(*args)
     if name == "get_char" and goal.relation.arity == 1:
         return get_current_charo(*args)
+    if name == "get_code" and goal.relation.arity == 2:
+        return get_codeo(*args)
+    if name == "get_code" and goal.relation.arity == 1:
+        return get_current_codeo(*args)
+    if name == "peek_char" and goal.relation.arity == 2:
+        return peek_charo(*args)
+    if name == "peek_char" and goal.relation.arity == 1:
+        return peek_current_charo(*args)
+    if name == "peek_code" and goal.relation.arity == 2:
+        return peek_codeo(*args)
+    if name == "peek_code" and goal.relation.arity == 1:
+        return peek_current_codeo(*args)
+    if name == "put_char" and goal.relation.arity == 2:
+        return put_charo(*args)
+    if name == "put_char" and goal.relation.arity == 1:
+        return put_current_charo(*args)
+    if name == "put_code" and goal.relation.arity == 2:
+        return put_codeo(*args)
+    if name == "put_code" and goal.relation.arity == 1:
+        return put_current_codeo(*args)
     if name == "write" and goal.relation.arity == 2:
         return writeo(*args)
     if name == "write" and goal.relation.arity == 1:

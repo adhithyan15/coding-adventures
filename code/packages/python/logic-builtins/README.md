@@ -68,6 +68,9 @@ ordinary logic goal expressions.
   repositioning
 - `set_inputo/1`, `set_outputo/1`, `current_inputo/1`, `current_outputo/1`,
   and current-stream read/write forms for selected bounded streams
+- `get_codeo/2`, `peek_charo/2`, `peek_codeo/2`, `put_charo/2`,
+  `put_codeo/2`, and current-stream variants for bounded UTF-8
+  character/code stream I/O
 - `difo(left, right)` for delayed disequality constraints
 - `clauseo(head, body)` for Prolog-style clause introspection
 - `compare_termo(order, left, right)`, `termo_lto(left, right)`,

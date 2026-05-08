@@ -282,6 +282,20 @@ def prolog_vm_capabilities() -> tuple[PrologVMCapability, ...]:
                 "structured and bytecode VM stress coverage",
             ),
         ),
+        PrologVMCapability(
+            id="host-stream-character-code-io",
+            title="Bounded stream character and code I/O",
+            status="complete",
+            specs=("PR85",),
+            packages=("logic-builtins", "prolog-loader", "prolog-vm-compiler"),
+            features=(
+                "get_code/1,2 reads Unicode code points with -1 at EOF",
+                "peek_char/1,2 and peek_code/1,2 inspect without advancing",
+                "put_char/1,2 and put_code/1,2 write one character/code point",
+                "explicit and selected current stream forms",
+                "structured and bytecode VM stress coverage",
+            ),
+        ),
     )
 
 
@@ -332,8 +346,8 @@ def prolog_vm_capability_manifest() -> PrologVMCapabilityManifest:
     """Return the canonical capability manifest for this package."""
 
     return PrologVMCapabilityManifest(
-        track="Prolog-on-Logic-VM PR00-PR84",
-        status="core-plus-term-io-conveniences",
+        track="Prolog-on-Logic-VM PR00-PR85",
+        status="core-plus-stream-character-code-io",
         dialects=("iso", "swi"),
         backends=("structured", "bytecode"),
         capabilities=prolog_vm_capabilities(),

@@ -113,7 +113,9 @@ from logic_builtins import (
     functoro,
     geqo,
     get_charo,
+    get_codeo,
     get_current_charo,
+    get_current_codeo,
     groundo,
     gto,
     ifthenelseo,
@@ -147,10 +149,18 @@ from logic_builtins import (
     open_optionso,
     openo,
     partitiono,
+    peek_charo,
+    peek_codeo,
+    peek_current_charo,
+    peek_current_codeo,
     predicate_propertyo,
     prolog_iso,
     prolog_lto,
     prolog_numeqo,
+    put_charo,
+    put_codeo,
+    put_current_charo,
+    put_current_codeo,
     read_current_line_to_stringo,
     read_current_stringo,
     read_file_to_codeso,
@@ -402,6 +412,92 @@ class TestFileTextBuiltins:
             "ok",
             conj(closeo(opened_stream), eq("ok", "ok")),
         ) == [atom("ok")]
+
+    def test_file_stream_character_and_code_io(self, tmp_path: Path) -> None:
+        input_path = tmp_path / "chars-input.txt"
+        output_path = tmp_path / "chars-output.txt"
+        input_path.write_text("Az\n", encoding="utf-8")
+        input_stream = var("InputStream")
+        output_stream = var("OutputStream")
+        peeked = var("Peeked")
+        first_code = var("FirstCode")
+        peeked_code = var("PeekedCode")
+        second_char = var("SecondChar")
+        newline_code = var("NewlineCode")
+        eof_code = var("EofCode")
+        current_peek = var("CurrentPeek")
+        current_first = var("CurrentFirst")
+        current_next_code = var("CurrentNextCode")
+        result = var("Result")
+
+        answers = solve_all(
+            program(),
+            result,
+            conj(
+                open_optionso(
+                    atom(str(input_path)),
+                    "read",
+                    input_stream,
+                    logic_list([term("alias", atom("char_input"))]),
+                ),
+                peek_charo(input_stream, peeked),
+                get_codeo(input_stream, first_code),
+                peek_codeo(input_stream, peeked_code),
+                get_charo(input_stream, second_char),
+                get_codeo(input_stream, newline_code),
+                get_codeo(input_stream, eof_code),
+                set_stream_positiono(atom("char_input"), num(0)),
+                set_inputo(input_stream),
+                peek_current_charo(current_peek),
+                get_current_charo(current_first),
+                peek_current_codeo(current_next_code),
+                get_current_codeo(current_next_code),
+                closeo(input_stream),
+                open_optionso(
+                    atom(str(output_path)),
+                    "write",
+                    output_stream,
+                    logic_list([term("alias", atom("char_output"))]),
+                ),
+                put_charo(output_stream, atom("h")),
+                put_codeo(output_stream, num(ord("i"))),
+                set_outputo(atom("char_output")),
+                put_current_charo(atom("!")),
+                put_current_codeo(num(10)),
+                closeo(output_stream),
+                eq(
+                    result,
+                    term(
+                        "chars",
+                        peeked,
+                        first_code,
+                        peeked_code,
+                        second_char,
+                        newline_code,
+                        eof_code,
+                        current_peek,
+                        current_first,
+                        current_next_code,
+                    ),
+                ),
+            ),
+        )
+
+        assert answers == [
+            term(
+                "chars",
+                atom("A"),
+                num(ord("A")),
+                num(ord("z")),
+                atom("z"),
+                num(10),
+                num(-1),
+                atom("A"),
+                atom("A"),
+                num(ord("z")),
+            ),
+        ]
+        assert output_path.read_text(encoding="utf-8") == "hi!\n"
 
     def test_current_stream_facade_reads_and_writes_selected_streams(
         self,

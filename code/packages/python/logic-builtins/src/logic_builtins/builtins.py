@@ -154,7 +154,9 @@ __all__ = [
     "functoro",
     "geqo",
     "get_charo",
+    "get_codeo",
     "get_current_charo",
+    "get_current_codeo",
     "gto",
     "groundo",
     "ifthenelseo",
@@ -187,7 +189,15 @@ __all__ = [
     "open_optionso",
     "bagofo",
     "partitiono",
+    "peek_charo",
+    "peek_codeo",
+    "peek_current_charo",
+    "peek_current_codeo",
     "predicate_propertyo",
+    "put_charo",
+    "put_codeo",
+    "put_current_charo",
+    "put_current_codeo",
     "read_file_to_codeso",
     "read_file_to_stringo",
     "read_line_to_stringo",
@@ -464,6 +474,10 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("forallo", 2),
     ("functoro", 3),
     ("geqo", 2),
+    ("get_charo", 2),
+    ("get_codeo", 2),
+    ("get_current_charo", 1),
+    ("get_current_codeo", 1),
     ("groundo", 1),
     ("gto", 2),
     ("ifthenelseo", 3),
@@ -491,7 +505,15 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("numbero", 1),
     ("onceo", 1),
     ("partitiono", 4),
+    ("peek_charo", 2),
+    ("peek_codeo", 2),
+    ("peek_current_charo", 1),
+    ("peek_current_codeo", 1),
     ("predicate_propertyo", 3),
+    ("put_charo", 2),
+    ("put_codeo", 2),
+    ("put_current_charo", 1),
+    ("put_current_codeo", 1),
     ("repeato", 0),
     ("retractallo", 1),
     ("retracto", 1),
@@ -5401,6 +5423,200 @@ def get_current_charo(char_value: object) -> GoalExpr:
         yield from solve_from(program_value, eq(char_term, atom(character)), state)
 
     return native_goal(run, char_value)
+
+
+def _peek_stream_character(stream: _TextStream) -> str | None:
+    if stream.cursor >= len(stream.contents):
+        return None
+    return stream.contents[stream.cursor]
+
+
+def _read_stream_character(stream: _TextStream) -> str | None:
+    character = _peek_stream_character(stream)
+    if character is not None:
+        stream.cursor += 1
+    return character
+
+
+def _character_atom_term(character: str | None) -> Atom:
+    return atom("end_of_file") if character is None else atom(character)
+
+
+def _character_code_term(character: str | None) -> Number:
+    return num(-1 if character is None else ord(character))
+
+
+def _write_character_text(term_value: Term) -> str | None:
+    text = _plain_atom_text(term_value)
+    if text is None or len(text) != 1:
+        return None
+    return text
+
+
+def _write_code_text(term_value: Term) -> str | None:
+    code = _integer_value(term_value)
+    if code is None or code < 0:
+        return None
+    try:
+        return chr(code)
+    except ValueError:
+        return None
+
+
+def get_codeo(stream_value: object, code_value: object) -> GoalExpr:
+    """Read one Unicode code point from a bounded read stream or ``-1`` at EOF."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, code_term = args
+        stream = _read_stream(_reified(stream_term, state))
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(code_term, _character_code_term(_read_stream_character(stream))),
+            state,
+        )
+
+    return native_goal(run, stream_value, code_value)
+
+
+def get_current_codeo(code_value: object) -> GoalExpr:
+    """Read one Unicode code point from the selected input stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [code_term] = args
+        stream = _current_input_stream()
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(code_term, _character_code_term(_read_stream_character(stream))),
+            state,
+        )
+
+    return native_goal(run, code_value)
+
+
+def peek_charo(stream_value: object, char_value: object) -> GoalExpr:
+    """Peek one character atom from a bounded read stream without advancing."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, char_term = args
+        stream = _read_stream(_reified(stream_term, state))
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(char_term, _character_atom_term(_peek_stream_character(stream))),
+            state,
+        )
+
+    return native_goal(run, stream_value, char_value)
+
+
+def peek_current_charo(char_value: object) -> GoalExpr:
+    """Peek one character atom from the selected input stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [char_term] = args
+        stream = _current_input_stream()
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(char_term, _character_atom_term(_peek_stream_character(stream))),
+            state,
+        )
+
+    return native_goal(run, char_value)
+
+
+def peek_codeo(stream_value: object, code_value: object) -> GoalExpr:
+    """Peek one Unicode code point from a bounded read stream without advancing."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, code_term = args
+        stream = _read_stream(_reified(stream_term, state))
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(code_term, _character_code_term(_peek_stream_character(stream))),
+            state,
+        )
+
+    return native_goal(run, stream_value, code_value)
+
+
+def peek_current_codeo(code_value: object) -> GoalExpr:
+    """Peek one Unicode code point from the selected input stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [code_term] = args
+        stream = _current_input_stream()
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(code_term, _character_code_term(_peek_stream_character(stream))),
+            state,
+        )
+
+    return native_goal(run, code_value)
+
+
+def put_charo(stream_value: object, char_value: object) -> GoalExpr:
+    """Write one character atom to a bounded write/append stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, char_term = args
+        text = _write_character_text(_reified(char_term, state))
+        if text is not None and _write_stream(_reified(stream_term, state), text):
+            yield state
+
+    return native_goal(run, stream_value, char_value)
+
+
+def put_current_charo(char_value: object) -> GoalExpr:
+    """Write one character atom to the selected output stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [char_term] = args
+        text = _write_character_text(_reified(char_term, state))
+        if text is not None and _write_current_stream(text):
+            yield state
+
+    return native_goal(run, char_value)
+
+
+def put_codeo(stream_value: object, code_value: object) -> GoalExpr:
+    """Write one Unicode code point to a bounded write/append stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, code_term = args
+        text = _write_code_text(_reified(code_term, state))
+        if text is not None and _write_stream(_reified(stream_term, state), text):
+            yield state
+
+    return native_goal(run, stream_value, code_value)
+
+
+def put_current_codeo(code_value: object) -> GoalExpr:
+    """Write one Unicode code point to the selected output stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [code_term] = args
+        text = _write_code_text(_reified(code_term, state))
+        if text is not None and _write_current_stream(text):
+            yield state
+
+    return native_goal(run, code_value)
 
 
 def _stream_write_text(term_value: Term) -> str | None:
