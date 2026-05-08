@@ -10,6 +10,8 @@ write credentials. It gives discovery workers a shared shape for:
 - manual bridge address normalization
 - mDNS advertisement endpoint helpers
 - deterministic candidate catalogs
+- source/address/time preference scoring for duplicate bridge candidates
+- freshness filtering for supervisor/discovery loops
 - projection into unpaired `smart-home-core::Bridge` records
 
 Network transports, Hue-specific discovery, Vault credential storage, and actor
