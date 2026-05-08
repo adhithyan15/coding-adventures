@@ -118,7 +118,10 @@ __all__ = [
     "current_streamo",
     "cuto",
     "cyclic_termo",
+    "delete_directoryo",
+    "delete_fileo",
     "difo",
+    "directory_fileso",
     "directory_file_patho",
     "dynamico",
     "div",
@@ -178,6 +181,7 @@ __all__ = [
     "leqo",
     "labelingo",
     "lto",
+    "make_directoryo",
     "maplisto",
     "mod",
     "mul",
@@ -218,6 +222,7 @@ __all__ = [
     "read_stringo",
     "read_current_line_to_stringo",
     "read_current_stringo",
+    "rename_fileo",
     "repeato",
     "PrologEvaluationError",
     "PrologFlagStore",
@@ -275,6 +280,7 @@ __all__ = [
     "varo",
     "write_currento",
     "writeo",
+    "working_directoryo",
     "not_variant_termo",
     "subsumes_termo",
     "variant_termo",
@@ -5078,6 +5084,114 @@ def time_fileo(path_value: object, time_value: object) -> GoalExpr:
         yield from solve_from(program_value, eq(time_term, num(modified_at)), state)
 
     return native_goal(run, path_value, time_value)
+
+
+def directory_fileso(path_value: object, entries_value: object) -> GoalExpr:
+    """Relate a bound directory path to a sorted list of entry-name atoms."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, entries_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            entries = sorted(path.name for path in Path(path_text).iterdir())
+        except OSError:
+            return
+        yield from solve_from(
+            program_value,
+            eq(entries_term, logic_list([atom(entry) for entry in entries])),
+            state,
+        )
+
+    return native_goal(run, path_value, entries_value)
+
+
+def make_directoryo(path_value: object) -> GoalExpr:
+    """Create one bound directory path if the immediate parent exists."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [path_term] = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            Path(path_text).mkdir()
+        except OSError:
+            return
+        yield state
+
+    return native_goal(run, path_value)
+
+
+def delete_fileo(path_value: object) -> GoalExpr:
+    """Delete one bound regular file path."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [path_term] = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            Path(path_text).unlink()
+        except OSError:
+            return
+        yield state
+
+    return native_goal(run, path_value)
+
+
+def delete_directoryo(path_value: object) -> GoalExpr:
+    """Delete one bound empty directory path."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [path_term] = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            Path(path_text).rmdir()
+        except OSError:
+            return
+        yield state
+
+    return native_goal(run, path_value)
+
+
+def rename_fileo(old_path_value: object, new_path_value: object) -> GoalExpr:
+    """Rename one bound filesystem path to another bound path."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        old_path_term, new_path_term = args
+        old_path_text = _path_text(_reified(old_path_term, state))
+        new_path_text = _path_text(_reified(new_path_term, state))
+        if old_path_text is None or new_path_text is None:
+            return
+        try:
+            Path(old_path_text).rename(new_path_text)
+        except OSError:
+            return
+        yield state
+
+    return native_goal(run, old_path_value, new_path_value)
+
+
+def working_directoryo(old_value: object, new_value: object) -> GoalExpr:
+    """Relate the current working directory and change to a bound directory."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        old_term, new_term = args
+        new_text = _path_text(_reified(new_term, state))
+        if new_text is None:
+            return
+        old_text = os.getcwd()
+        try:
+            os.chdir(new_text)
+        except OSError:
+            return
+        yield from solve_from(program_value, eq(old_term, atom(old_text)), state)
+
+    return native_goal(run, old_value, new_value)
 
 
 def read_file_to_stringo(path_value: object, contents: object) -> GoalExpr:

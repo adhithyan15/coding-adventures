@@ -58,7 +58,10 @@ from logic_builtins.builtins import (
     current_streamo,
     cuto,
     cyclic_termo,
+    delete_directoryo,
+    delete_fileo,
     difo,
+    directory_fileso,
     directory_file_patho,
     div,
     dynamico,
@@ -117,6 +120,7 @@ from logic_builtins.builtins import (
     labelingo,
     leqo,
     lto,
+    make_directoryo,
     maplisto,
     mod,
     mul,
@@ -164,6 +168,7 @@ from logic_builtins.builtins import (
     read_file_to_stringo,
     read_line_to_stringo,
     read_stringo,
+    rename_fileo,
     repeato,
     retractallo,
     retracto,
@@ -205,6 +210,7 @@ from logic_builtins.builtins import (
     varo,
     write_currento,
     writeo,
+    working_directoryo,
 )
 
 __all__ = [
@@ -253,7 +259,10 @@ __all__ = [
     "current_streamo",
     "cuto",
     "cyclic_termo",
+    "delete_directoryo",
+    "delete_fileo",
     "difo",
+    "directory_fileso",
     "directory_file_patho",
     "div",
     "fd_addo",
@@ -314,6 +323,7 @@ __all__ = [
     "labelingo",
     "leqo",
     "lto",
+    "make_directoryo",
     "maplisto",
     "mod",
     "mul",
@@ -368,6 +378,7 @@ __all__ = [
     "read_file_to_stringo",
     "read_line_to_stringo",
     "read_stringo",
+    "rename_fileo",
     "retractallo",
     "retracto",
     "same_fileo",
@@ -409,6 +420,7 @@ __all__ = [
     "variant_termo",
     "write_currento",
     "writeo",
+    "working_directoryo",
 ]
 
 __version__ = "0.15.0"

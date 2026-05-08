@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import pytest
@@ -79,7 +80,10 @@ from logic_builtins import (
     current_streamo,
     cuto,
     cyclic_termo,
+    delete_directoryo,
+    delete_fileo,
     difo,
+    directory_fileso,
     directory_file_patho,
     div,
     dynamico,
@@ -137,6 +141,7 @@ from logic_builtins import (
     labelingo,
     leqo,
     lto,
+    make_directoryo,
     maplisto,
     mod,
     mul,
@@ -180,6 +185,7 @@ from logic_builtins import (
     read_file_to_stringo,
     read_line_to_stringo,
     read_stringo,
+    rename_fileo,
     repeato,
     retractallo,
     retracto,
@@ -221,6 +227,7 @@ from logic_builtins import (
     varo,
     write_currento,
     writeo,
+    working_directoryo,
 )
 
 
@@ -346,6 +353,56 @@ class TestFileTextBuiltins:
         assert size_term == num(len("fact(a).\n"))
         assert isinstance(time_term, Number)
         assert isinstance(time_term.value, int | float)
+
+    def test_file_operation_facade_mutates_bounded_paths(self, tmp_path: Path) -> None:
+        source_path = tmp_path / "draft.txt"
+        renamed_path = tmp_path / "final.txt"
+        created_directory = tmp_path / "created"
+        source_path.write_text("draft\n", encoding="utf-8")
+        old_cwd = Path.cwd()
+
+        entries = var("Entries")
+        old_directory = var("OldDirectory")
+        cwd_entries = var("CwdEntries")
+        result = var("Result")
+
+        try:
+            answers = solve_all(
+                program(),
+                result,
+                conj(
+                    make_directoryo(atom(str(created_directory))),
+                    rename_fileo(atom(str(source_path)), atom(str(renamed_path))),
+                    directory_fileso(atom(str(tmp_path)), entries),
+                    delete_fileo(atom(str(renamed_path))),
+                    delete_directoryo(atom(str(created_directory))),
+                    working_directoryo(old_directory, atom(str(tmp_path))),
+                    directory_fileso(atom("."), cwd_entries),
+                    eq(
+                        result,
+                        term(
+                            "file_operations",
+                            entries,
+                            old_directory,
+                            cwd_entries,
+                        ),
+                    ),
+                ),
+            )
+        finally:
+            os.chdir(old_cwd)
+
+        assert answers == [
+            term(
+                "file_operations",
+                logic_list(["created", "final.txt"]),
+                atom(str(old_cwd)),
+                logic_list([]),
+            ),
+        ]
+        assert not source_path.exists()
+        assert not renamed_path.exists()
+        assert not created_directory.exists()
 
     def test_file_stream_read_facade_tracks_cursor(self, tmp_path: Path) -> None:
         source_path = tmp_path / "stream.txt"

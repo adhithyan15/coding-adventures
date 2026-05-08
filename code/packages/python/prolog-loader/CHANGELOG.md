@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- adapt source-level bounded filesystem operation predicates including
+  `directory_files/2`, `make_directory/1`, `delete_file/1`,
+  `delete_directory/1`, `rename_file/2`, and `working_directory/2` into the
+  executable logic builtin layer
 - adapt source-level read-only filesystem metadata predicates including
   `exists_directory/1`, `absolute_file_name/2`, `access_file/2`,
   `file_directory_name/2`, `file_base_name/2`, `directory_file_path/3`,

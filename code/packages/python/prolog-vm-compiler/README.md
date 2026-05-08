@@ -249,7 +249,7 @@ assert [answer.as_dict() for answer in runtime.query("ancestor(homer, Who)")] ==
 
 ## Capability Manifest
 
-The Prolog-on-Logic-VM implementation track covers PR00 through PR87. The
+The Prolog-on-Logic-VM implementation track covers PR00 through PR88. The
 package exposes that as a machine-readable manifest so downstream tools and
 future implementation work can distinguish completed functionality from
 deliberately deferred advanced dialect/runtime emulation:
@@ -259,7 +259,7 @@ from prolog_vm_compiler import prolog_vm_capability_manifest
 
 manifest = prolog_vm_capability_manifest()
 
-assert manifest.status == "core-plus-filesystem-metadata"
+assert manifest.status == "core-plus-filesystem-operations"
 assert manifest.dialects == ("iso", "swi")
 assert manifest.backends == ("structured", "bytecode")
 ```
@@ -287,13 +287,16 @@ byte stream I/O through `open/4` `type(binary)`, `get_byte/1,2`,
 `peek_byte/1,2`, and `put_byte/1,2`, plus read-only filesystem metadata
 through `exists_directory/1`, `absolute_file_name/2`, `access_file/2`,
 `file_directory_name/2`, `file_base_name/2`, `directory_file_path/3`,
-`file_name_extension/3`, `same_file/2`, `size_file/2`, and `time_file/2`.
+`file_name_extension/3`, `same_file/2`, `size_file/2`, and `time_file/2`, plus
+bounded filesystem operations through `directory_files/2`,
+`make_directory/1`, `delete_file/1`, `delete_directory/1`, `rename_file/2`,
+and `working_directory/2`.
 The manifest also names the remaining advanced-dialect work that is intentionally
 outside the completed batches: full external dialect emulation, tabling and
 well-founded negation, generalized attributed-variable/coroutining services,
-non-FD constraint domains, console streams, mutable filesystem services, richer
-stream services beyond the bounded file-backed subset, foreign predicates,
-engines, and concurrency.
+non-FD constraint domains, console streams, recursive or wildcard filesystem
+services, richer stream services beyond the bounded file-backed subset, foreign
+predicates, engines, and concurrency.
 
 ## CLI
 
@@ -467,6 +470,9 @@ The package includes end-to-end stress tests for:
   `absolute_file_name/2`, `access_file/2`, `file_directory_name/2`,
   `file_base_name/2`, `directory_file_path/3`, `file_name_extension/3`,
   `same_file/2`, `size_file/2`, and `time_file/2`
+- bounded filesystem operations with `directory_files/2`, `make_directory/1`,
+  `delete_file/1`, `delete_directory/1`, `rename_file/2`, and
+  `working_directory/2`
 - bounded UTF-8 file stream I/O with `open/3`, `close/1`,
   `read_string/3`, `read_line_to_string/2`, `get_char/2`,
   `at_end_of_stream/1`, `write/2`, and `nl/1`

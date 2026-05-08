@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import pytest
@@ -1532,6 +1533,53 @@ class TestPrologGoalAdapter:
         assert extension == atom("data")
         assert size == num(len("tea\n"))
         assert isinstance(timestamp, Number)
+
+    def test_adapt_prolog_goal_rewrites_file_operation_predicates(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "draft.txt"
+        renamed_path = tmp_path / "final.txt"
+        created_directory = tmp_path / "created"
+        source_path.write_text("draft\n", encoding="utf-8")
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        renamed_atom = str(renamed_path).replace("\\", "\\\\").replace("'", "\\'")
+        created_atom = str(created_directory).replace("\\", "\\\\").replace("'", "\\'")
+        root_atom = str(tmp_path).replace("\\", "\\\\").replace("'", "\\'")
+        old_cwd = Path.cwd()
+        parsed = parse_swi_query(
+            f"?- make_directory('{created_atom}'), "
+            f"rename_file('{path_atom}', '{renamed_atom}'), "
+            f"directory_files('{root_atom}', Entries), "
+            f"delete_file('{renamed_atom}'), "
+            f"delete_directory('{created_atom}'), "
+            f"working_directory(OldDirectory, '{root_atom}'), "
+            "directory_files('.', CwdEntries).",
+        )
+
+        try:
+            answers = solve_all(
+                program(),
+                (
+                    parsed.variables["Entries"],
+                    parsed.variables["OldDirectory"],
+                    parsed.variables["CwdEntries"],
+                ),
+                adapt_prolog_goal(parsed.goal),
+            )
+        finally:
+            os.chdir(old_cwd)
+
+        assert answers == [
+            (
+                logic_list(["created", "final.txt"]),
+                atom(str(old_cwd)),
+                logic_list([]),
+            ),
+        ]
+        assert not source_path.exists()
+        assert not renamed_path.exists()
+        assert not created_directory.exists()
 
     def test_adapt_prolog_goal_rewrites_file_stream_predicates(
         self,
