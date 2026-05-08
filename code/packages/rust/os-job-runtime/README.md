@@ -21,6 +21,11 @@ three pure native backends:
 Jobs that rely on backend-specific features are rejected before install planning
 with a portability validation error.
 
+For tests, development sandboxes, and constrained hosts, callers can explicitly
+select the in-process fallback backend with `NativeJobRuntime::for_in_process()`.
+That path lets the selected backend own its support boundary instead of applying
+the all-native portability target.
+
 ## Example
 
 ```rust
@@ -65,6 +70,7 @@ assert!(!plan.files_to_write.is_empty());
 - macos-job-backend-launchd-files
 - linux-job-backend-systemd-files
 - windows-job-backend-task-xml
+- in-process fallback planner
 
 ## Development
 
