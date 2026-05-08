@@ -1,0 +1,9 @@
+[package]
+name = "smart-home-discovery"
+version = "0.1.0"
+edition = "2021"
+description = "Transport-neutral smart-home bridge discovery records"
+license = "MIT"
+
+[dependencies]
+smart-home-core = { path = "../smart-home-core" }

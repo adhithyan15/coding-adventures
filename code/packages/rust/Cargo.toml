@@ -529,6 +529,7 @@ members = [
     "twig-dap",
     "conduit",
     "smart-home-core",
+    "smart-home-discovery",
     "hue-core",
     "zigbee-nwk",
     "zwave-core",
