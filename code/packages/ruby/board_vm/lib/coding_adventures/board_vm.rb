@@ -21,6 +21,14 @@ module CodingAdventures
 
     module_function
 
+    def known_targets
+      Native.known_targets
+    end
+
+    def find_target(board_id)
+      known_targets.find { |target| target["board_id"] == board_id.to_s }
+    end
+
     def connect(
       board: :uno_r4_wifi,
       port:,

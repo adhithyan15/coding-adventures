@@ -10,16 +10,17 @@ use board_vm_host::{
     GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_language_core::{
-    build_blink_module, build_caps_query_wire_frame, build_gpio_handle_close_module,
-    build_gpio_handle_read_module, build_gpio_handle_write_module, build_gpio_open_module,
-    build_gpio_read_module, build_gpio_write_module, build_hello_wire_frame,
-    build_program_begin_wire_frame, build_program_chunk_wire_frame, build_program_end_wire_frame,
-    build_raw_module, build_run_background_wire_frame, build_run_wire_frame, build_stop_wire_frame,
-    build_store_program_wire_frame, build_time_now_module, build_time_sleep_ms_module,
-    capability_board_metadata, capability_bytecode_callable, capability_flag_names,
-    capability_protocol_feature, decode_wire_response, program_format_name, raw_module_len,
+    board_family_name, build_blink_module, build_caps_query_wire_frame,
+    build_gpio_handle_close_module, build_gpio_handle_read_module, build_gpio_handle_write_module,
+    build_gpio_open_module, build_gpio_read_module, build_gpio_write_module,
+    build_hello_wire_frame, build_program_begin_wire_frame, build_program_chunk_wire_frame,
+    build_program_end_wire_frame, build_raw_module, build_run_background_wire_frame,
+    build_run_wire_frame, build_stop_wire_frame, build_store_program_wire_frame,
+    build_time_now_module, build_time_sleep_ms_module, capability_board_metadata,
+    capability_bytecode_callable, capability_flag_names, capability_protocol_feature,
+    decode_wire_response, known_targets, onboard_led_kind, program_format_name, raw_module_len,
     run_status_name, BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
-    LanguageCoreError, LanguageValue,
+    LanguageCoreError, LanguageOnboardLed, LanguageTargetInfo, LanguageValue,
 };
 use ruby_bridge::VALUE;
 
@@ -398,6 +399,10 @@ extern "C" fn session_decode_response(_self_val: VALUE, wire_val: VALUE) -> VALU
     decoded_response_to_rb(&decoded)
 }
 
+extern "C" fn native_known_targets(_self_val: VALUE) -> VALUE {
+    language_targets_to_rb(&known_targets())
+}
+
 fn with_session_mut(
     self_val: VALUE,
     operation: impl FnOnce(&mut RubyBoardVmSession) -> Result<VALUE, LanguageCoreError>,
@@ -567,6 +572,76 @@ fn capability_flag_names_to_rb(flags: u16) -> VALUE {
         ruby_bridge::array_push(array, ruby_bridge::str_to_rb(name));
     }
     array
+}
+
+fn language_targets_to_rb(targets: &[LanguageTargetInfo]) -> VALUE {
+    let array = ruby_bridge::array_new();
+    for target in targets {
+        ruby_bridge::array_push(array, language_target_to_rb(target));
+    }
+    array
+}
+
+fn language_target_to_rb(target: &LanguageTargetInfo) -> VALUE {
+    let hash = ruby_bridge::hash_new();
+    hash_set(hash, "board_id", ruby_bridge::str_to_rb(&target.board_id));
+    hash_set(
+        hash,
+        "display_name",
+        ruby_bridge::str_to_rb(&target.display_name),
+    );
+    hash_set(
+        hash,
+        "family",
+        ruby_bridge::str_to_rb(board_family_name(target.family)),
+    );
+    hash_set(
+        hash,
+        "runtime_id",
+        ruby_bridge::str_to_rb(&target.runtime_id),
+    );
+    hash_set(hash, "mcu", ruby_bridge::str_to_rb(&target.mcu));
+    hash_set(hash, "core", ruby_bridge::str_to_rb(&target.core));
+    hash_set(
+        hash,
+        "rust_target",
+        ruby_bridge::str_to_rb(&target.rust_target),
+    );
+    hash_set(hash, "clock_hz", rb_usize(target.clock_hz));
+    hash_set(
+        hash,
+        "operating_voltage_mv",
+        rb_usize(target.operating_voltage_mv),
+    );
+    hash_set(
+        hash,
+        "onboard_led",
+        language_onboard_led_to_rb(target.onboard_led),
+    );
+    hash_set(
+        hash,
+        "digital_pin_count",
+        rb_usize(target.digital_pin_count),
+    );
+    let capabilities = ruby_bridge::array_new();
+    for capability in &target.capabilities {
+        ruby_bridge::array_push(capabilities, ruby_bridge::str_to_rb(capability));
+    }
+    hash_set(hash, "capabilities", capabilities);
+    hash
+}
+
+fn language_onboard_led_to_rb(led: Option<LanguageOnboardLed>) -> VALUE {
+    let Some(led) = led else {
+        return ruby_bridge::QNIL;
+    };
+    let hash = ruby_bridge::hash_new();
+    hash_set(hash, "kind", ruby_bridge::str_to_rb(onboard_led_kind(led)));
+    let pin = match led {
+        LanguageOnboardLed::Gpio(pin) | LanguageOnboardLed::WirelessChipGpio(pin) => pin,
+    };
+    hash_set(hash, "pin", rb_usize(pin));
+    hash
 }
 
 fn language_values_to_rb(values: &[LanguageValue]) -> VALUE {
@@ -815,6 +890,13 @@ pub extern "C" fn Init_board_vm_native() {
     let native = ruby_bridge::define_module_under(board_vm, "Native");
     let session_class =
         ruby_bridge::define_class_under(native, "Session", ruby_bridge::object_class());
+
+    ruby_bridge::define_module_function_raw(
+        native,
+        "known_targets",
+        native_known_targets as *const c_void,
+        0,
+    );
 
     ruby_bridge::define_alloc_func(session_class, session_alloc);
     ruby_bridge::define_method_raw(

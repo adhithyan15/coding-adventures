@@ -10,6 +10,7 @@ board-vm-eject = { path = "../board-vm-eject" }
 board-vm-host = { path = "../board-vm-host" }
 board-vm-protocol = { path = "../board-vm-protocol" }
 board-vm-serial = { path = "../board-vm-serial" }
+board-vm-targets = { path = "../board-vm-targets" }
 
 [lib]
 path = "src/lib.rs"

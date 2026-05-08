@@ -1,0 +1,13 @@
+[package]
+name = "board-vm-targets"
+version = "0.1.0"
+edition = "2021"
+description = "Host-side Board VM target registry for supported boards"
+
+[dependencies]
+board-vm-esp32 = { path = "../board-vm-esp32" }
+board-vm-pico = { path = "../board-vm-pico" }
+board-vm-uno-r4 = { path = "../board-vm-uno-r4" }
+
+[lib]
+path = "src/lib.rs"
