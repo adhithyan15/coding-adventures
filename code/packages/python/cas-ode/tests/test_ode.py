@@ -30,8 +30,10 @@ from __future__ import annotations
 from symbolic_ir import (
     ADD,
     COS,
+    DIV,
     EQUAL,
     EXP,
+    LOG,
     MUL,
     NEG,
     POW,
@@ -43,7 +45,7 @@ from symbolic_ir import (
     IRRational,
     IRSymbol,
 )
-from symbolic_ir.nodes import ODE2, D
+from symbolic_ir.nodes import C_CONST, ODE2, D
 from symbolic_vm import VM, SymbolicBackend
 
 from cas_ode import build_ode_handler_table, solve_ode
@@ -55,6 +57,9 @@ from cas_ode.ode import (
     _flatten_add,
     _is_const_wrt,
     _isqrt_exact,
+    _subst_ir,
+    _subst_ratio_ir,
+    _try_homogeneous_type,
     solve_second_order_const_coeff,
 )
 
@@ -964,3 +969,372 @@ class TestIsFlattenAddFloat:
         from symbolic_ir import IRFloat
         node = IRFloat(3.14)
         assert _is_const_wrt(node, X)
+
+
+# ---------------------------------------------------------------------------
+# Section P: _subst_ir unit tests
+# ---------------------------------------------------------------------------
+
+
+def _div_node(a: IRNode, b: IRNode) -> IRApply:
+    """Build Div(a, b) — local helper to avoid clashing with test helpers."""
+    return IRApply(DIV, (a, b))
+
+
+class TestSubstIr:
+    """Unit tests for the pure IR tree substitution helper _subst_ir.
+
+    _subst_ir(node, var, replacement) replaces every occurrence of ``var``
+    in ``node`` with ``replacement``, leaving all other sub-trees unchanged.
+    """
+
+    def test_substitute_symbol_directly(self) -> None:
+        """A symbol that equals var is replaced by the replacement."""
+        v = IRSymbol("v")
+        result = _subst_ir(v, v, IRInteger(5))
+        assert result == IRInteger(5)
+
+    def test_different_symbol_unchanged(self) -> None:
+        """A symbol that is not var is left as-is."""
+        v = IRSymbol("v")
+        result = _subst_ir(X, v, IRInteger(5))
+        assert result == X
+
+    def test_integer_unchanged(self) -> None:
+        """IRInteger nodes are returned unmodified regardless of var."""
+        v = IRSymbol("v")
+        result = _subst_ir(IRInteger(7), v, IRInteger(0))
+        assert result == IRInteger(7)
+
+    def test_rational_unchanged(self) -> None:
+        """IRRational nodes are returned unmodified."""
+        v = IRSymbol("v")
+        result = _subst_ir(IRRational(1, 3), v, IRInteger(0))
+        assert result == IRRational(1, 3)
+
+    def test_nested_add(self) -> None:
+        """Substitution descends into both args of Add."""
+        v = IRSymbol("v")
+        # Add(v, x) → Add(IRInteger(2), x)
+        expr = IRApply(ADD, (v, X))
+        result = _subst_ir(expr, v, IRInteger(2))
+        assert isinstance(result, IRApply)
+        assert result.head == ADD
+        assert result.args[0] == IRInteger(2)
+        assert result.args[1] == X
+
+    def test_pow_back_substitution(self) -> None:
+        """Replacing v in Pow(v, 2) with Div(y, x) for back-substitution."""
+        v = IRSymbol("v")
+        y_over_x = _div_node(Y, X)
+        expr = IRApply(POW, (v, IRInteger(2)))
+        result = _subst_ir(expr, v, y_over_x)
+        assert isinstance(result, IRApply)
+        assert result.head == POW
+        assert result.args[0] == y_over_x
+        assert result.args[1] == IRInteger(2)
+
+    def test_no_occurrence_leaves_tree_identical(self) -> None:
+        """If var does not appear, the tree is returned structurally unchanged."""
+        v = IRSymbol("v")
+        expr = IRApply(MUL, (X, Y))
+        result = _subst_ir(expr, v, IRInteger(99))
+        assert result == expr
+
+
+# ---------------------------------------------------------------------------
+# Section Q: _subst_ratio_ir unit tests
+# ---------------------------------------------------------------------------
+
+
+class TestSubstRatioIr:
+    """Unit tests for the structural Div(y,x) → v substitution helper.
+
+    _subst_ratio_ir(node, y, x, v) replaces every exact ``Div(y, x)``
+    pattern with the symbol v.  If y appears in any form other than
+    ``Div(y, x)``, the function returns None (signalling that the
+    expression cannot be written purely in terms of y/x).
+    """
+
+    def test_div_y_x_becomes_v(self) -> None:
+        """The exact Div(y, x) node is replaced by v."""
+        v = IRSymbol("v")
+        node = _div_node(Y, X)
+        result = _subst_ratio_ir(node, Y, X, v)
+        assert result == v
+
+    def test_bare_y_returns_none(self) -> None:
+        """A bare y symbol (not inside Div(y,x)) causes None."""
+        v = IRSymbol("v")
+        result = _subst_ratio_ir(Y, Y, X, v)
+        assert result is None
+
+    def test_pow_div_y_x_squared(self) -> None:
+        """Pow(Div(y,x), 2) → Pow(v, 2)."""
+        v = IRSymbol("v")
+        node = IRApply(POW, (_div_node(Y, X), IRInteger(2)))
+        result = _subst_ratio_ir(node, Y, X, v)
+        assert result == IRApply(POW, (v, IRInteger(2)))
+
+    def test_integer_passes_through(self) -> None:
+        """IRInteger nodes pass through unmodified."""
+        v = IRSymbol("v")
+        result = _subst_ratio_ir(IRInteger(3), Y, X, v)
+        assert result == IRInteger(3)
+
+    def test_x_symbol_unchanged(self) -> None:
+        """The independent variable x (not matching y) is returned as-is."""
+        v = IRSymbol("v")
+        result = _subst_ratio_ir(X, Y, X, v)
+        assert result == X
+
+    def test_sum_of_two_ratios(self) -> None:
+        """Add(Div(y,x), Div(y,x)) → Add(v, v)."""
+        v = IRSymbol("v")
+        y_over_x = _div_node(Y, X)
+        node = IRApply(ADD, (y_over_x, y_over_x))
+        result = _subst_ratio_ir(node, Y, X, v)
+        assert result == IRApply(ADD, (v, v))
+
+    def test_y_in_add_numerator_fails(self) -> None:
+        """Div(Add(y, x), x) — y inside Add in numerator → None.
+
+        This pattern arises in (y + x)/x = 1 + y/x.  We deliberately
+        return None here and let the VM's simplification (via linear/
+        separable) handle it, rather than depending on algebraic distribution.
+        """
+        v = IRSymbol("v")
+        node = _div_node(IRApply(ADD, (Y, X)), X)
+        result = _subst_ratio_ir(node, Y, X, v)
+        assert result is None
+
+    def test_unrelated_symbol_unchanged(self) -> None:
+        """An unrelated symbol 'z' passes through without triggering None."""
+        v = IRSymbol("v")
+        z = IRSymbol("z")
+        result = _subst_ratio_ir(z, Y, X, v)
+        assert result == z
+
+    def test_nested_y_not_in_div_fails(self) -> None:
+        """Mul(y, x) — y inside Mul but not Div(y,x) → None."""
+        v = IRSymbol("v")
+        node = IRApply(MUL, (Y, X))
+        result = _subst_ratio_ir(node, Y, X, v)
+        assert result is None
+
+
+# ---------------------------------------------------------------------------
+# Section R: _try_homogeneous_type and full-pipeline tests (Phase 18c)
+# ---------------------------------------------------------------------------
+
+
+class TestHomogeneousTypeODE:
+    """Tests for the homogeneous-type ODE solver (Phase 18c).
+
+    A homogeneous-type ODE has the form::
+
+        dy/dx = f(y/x)
+
+    The substitution v = y/x reduces it to a separable equation in (v, x).
+    The solver returns an implicit solution  H(y/x) = Log(x) + C  when it
+    can integrate 1/(f(v) − v) in closed form.  The degenerate case
+    f(v) = v (i.e. y' = y/x) is handled separately: y = C·x.
+
+    All ODE expressions are passed in zero form: LHS − RHS = 0.
+    """
+
+    # ------------------------------------------------------------------ #
+    # Direct calls to _try_homogeneous_type                               #
+    # ------------------------------------------------------------------ #
+
+    def test_degenerate_case_y_prime_eq_y_over_x(self) -> None:
+        """y' = y/x is the degenerate case f(v)=v → y = %c·x.
+
+        When f(v) = v the equation x·dv/dx = f(v)−v = 0 forces v = const,
+        so y = v·x = C·x.  The solver detects this via an identity check
+        and returns the explicit solution Equal(y, Mul(%c, x)).
+        """
+        vm = make_vm()
+        # Zero form: D(y,x) − y/x = Sub(D(y,x), Div(y,x))
+        expr = IRApply(SUB, (Y_PRIME, _div_node(Y, X)))
+        result = _try_homogeneous_type(expr, Y, X, vm)
+
+        assert result is not None
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        # Explicit solution: lhs is y
+        assert result.args[0] == Y
+        # RHS is Mul(%c, x) — integration constant times x
+        rhs = result.args[1]
+        assert isinstance(rhs, IRApply)
+        assert rhs.head == MUL
+        c_sym = IRSymbol("%c")
+        assert c_sym in rhs.args
+        assert X in rhs.args
+
+    def test_y_prime_eq_ratio_squared_returns_equal(self) -> None:
+        """y' = (y/x)^2 — f(v)=v², denom=v²−v, integral = Log((v−1)/v).
+
+        This is a proper homogeneous-type ODE that requires the Hermite
+        partial-fraction path.  We verify the solver produces some implicit
+        Equal(...) form rather than returning None.
+        """
+        vm = make_vm()
+        y_over_x = _div_node(Y, X)
+        expr = IRApply(SUB, (Y_PRIME, IRApply(POW, (y_over_x, IRInteger(2)))))
+        result = _try_homogeneous_type(expr, Y, X, vm)
+
+        assert result is not None
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+
+    def test_y_prime_eq_ratio_squared_solution_contains_c(self) -> None:
+        """The implicit solution for y' = (y/x)² carries the constant %c."""
+        vm = make_vm()
+        y_over_x = _div_node(Y, X)
+        expr = IRApply(SUB, (Y_PRIME, IRApply(POW, (y_over_x, IRInteger(2)))))
+        result = _try_homogeneous_type(expr, Y, X, vm)
+
+        assert result is not None
+        assert "%c" in str(result)
+
+    def test_y_prime_eq_ratio_squared_plus_ratio(self) -> None:
+        """y' = (y/x)^2 + (y/x) — f(v)=v²+v, denom=v², integral=−1/v.
+
+        The denominator f(v)−v = v²+v−v = v², so the integrand is 1/v²
+        whose antiderivative is −v⁻¹.  After back-substitution this gives
+        −x/y = Log(x) + C.
+        """
+        vm = make_vm()
+        y_over_x = _div_node(Y, X)
+        rhs_expr = IRApply(ADD, (
+            IRApply(POW, (y_over_x, IRInteger(2))),
+            y_over_x,
+        ))
+        expr = IRApply(SUB, (Y_PRIME, rhs_expr))
+        result = _try_homogeneous_type(expr, Y, X, vm)
+
+        assert result is not None
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        assert "%c" in str(result)
+
+    def test_y_prime_eq_2_times_ratio(self) -> None:
+        """y' = 2·(y/x) — f(v)=2v, denom=v, integral=Log(v).
+
+        After back-substitution: Log(y/x) = Log(x) + C, which is the
+        implicit form of the analytic solution y = A·x² (A constant).
+        """
+        vm = make_vm()
+        y_over_x = _div_node(Y, X)
+        rhs_expr = IRApply(MUL, (IRInteger(2), y_over_x))
+        expr = IRApply(SUB, (Y_PRIME, rhs_expr))
+        result = _try_homogeneous_type(expr, Y, X, vm)
+
+        assert result is not None
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        # Log(y/x) should appear on the left or in the solution.
+        result_str = str(result)
+        assert "Log" in result_str
+        assert "%c" in result_str
+
+    # ------------------------------------------------------------------ #
+    # Fall-through: non-homogeneous expressions → None                    #
+    # ------------------------------------------------------------------ #
+
+    def test_rhs_free_of_y_returns_none(self) -> None:
+        """y' = sin(x) — rhs is free of y, so not homogeneous-type."""
+        vm = make_vm()
+        expr = IRApply(SUB, (Y_PRIME, IRApply(SIN, (X,))))
+        result = _try_homogeneous_type(expr, Y, X, vm)
+        assert result is None
+
+    def test_bare_y_in_rhs_returns_none(self) -> None:
+        """y' = y + x — bare y in rhs, _subst_ratio_ir returns None."""
+        vm = make_vm()
+        expr = IRApply(SUB, (Y_PRIME, IRApply(ADD, (Y, X))))
+        result = _try_homogeneous_type(expr, Y, X, vm)
+        assert result is None
+
+    def test_y_times_x_in_rhs_returns_none(self) -> None:
+        """y' = y·x — y appears as Mul(y,x), not as Div(y,x) → None."""
+        vm = make_vm()
+        expr = IRApply(SUB, (Y_PRIME, IRApply(MUL, (Y, X))))
+        result = _try_homogeneous_type(expr, Y, X, vm)
+        assert result is None
+
+    def test_no_y_prime_term_returns_none(self) -> None:
+        """Expression with no D(y,x) term returns None (not an ODE)."""
+        vm = make_vm()
+        expr = IRApply(ADD, (Y, X))
+        result = _try_homogeneous_type(expr, Y, X, vm)
+        assert result is None
+
+    def test_transcendental_rhs_fails_integration_returns_none(self) -> None:
+        """y' = exp(y/x) — denom e^v − v has no closed-form antiderivative.
+
+        The Hermite reduction cannot integrate 1/(e^v − v), so the solver
+        correctly falls through by returning None.
+        """
+        vm = make_vm()
+        y_over_x = _div_node(Y, X)
+        rhs_expr = IRApply(EXP, (y_over_x,))
+        expr = IRApply(SUB, (Y_PRIME, rhs_expr))
+        result = _try_homogeneous_type(expr, Y, X, vm)
+        # Integration of 1/(e^v − v) fails → None
+        assert result is None
+
+    # ------------------------------------------------------------------ #
+    # Full pipeline: solve_ode and VM ODE2 dispatch                       #
+    # ------------------------------------------------------------------ #
+
+    def test_solve_ode_degenerate(self) -> None:
+        """solve_ode() returns Equal(y, %c·x) for the degenerate case."""
+        vm = make_vm()
+        expr = IRApply(SUB, (Y_PRIME, _div_node(Y, X)))
+        result = solve_ode(expr, Y, X, vm)
+
+        assert result is not None
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        assert result.args[0] == Y
+
+    def test_ode2_dispatch_degenerate_via_vm(self) -> None:
+        """ODE2(D(y,x)−y/x, y, x) through the VM handler → explicit y=%c·x."""
+        vm = make_vm()
+        expr = IRApply(SUB, (Y_PRIME, _div_node(Y, X)))
+        result = vm.eval(IRApply(ODE2, (expr, Y, X)))
+
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        assert result.args[0] == Y
+        assert "%c" in str(result)
+
+    def test_ode2_dispatch_ratio_squared(self) -> None:
+        """ODE2 dispatch for y' = (y/x)^2 returns an implicit Equal node."""
+        vm = make_vm()
+        y_over_x = _div_node(Y, X)
+        expr = IRApply(SUB, (Y_PRIME, IRApply(POW, (y_over_x, IRInteger(2)))))
+        result = vm.eval(IRApply(ODE2, (expr, Y, X)))
+
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        assert "%c" in str(result)
+
+    def test_linear_ode_not_captured_by_homogeneous(self) -> None:
+        """y' − 2y = 0 is handled by the linear/separable route before the
+        homogeneous-type solver sees it.  The solution must contain Exp
+        (from the integrating-factor method), not the implicit Log form.
+        """
+        vm = make_vm()
+        # D(y,x) − 2*y = 0
+        expr = IRApply(SUB, (Y_PRIME, IRApply(MUL, (IRInteger(2), Y))))
+        result = vm.eval(IRApply(ODE2, (expr, Y, X)))
+
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        assert result.args[0] == Y
+        # Exponential solution from linear/separable, not the Log implicit form
+        result_str = str(result)
+        assert "Exp" in result_str
