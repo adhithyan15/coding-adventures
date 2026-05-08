@@ -218,6 +218,7 @@ members = [
     "vendor-api-simulators",
     "verilog-lexer",
     "verilog-parser",
+    "venture-browser-core",
     "vhdl-lexer",
     "vhdl-parser",
     "debug-sidecar",

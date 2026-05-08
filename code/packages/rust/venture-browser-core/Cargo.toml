@@ -1,0 +1,7 @@
+[package]
+name = "venture-browser-core"
+version = "0.1.0"
+edition = "2021"
+description = "Core navigation, scrolling, and hit-testing primitives for the Venture browser"
+
+[dependencies]
