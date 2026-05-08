@@ -1,4 +1,4 @@
-"""spice-engine: SPICE-compatible analog simulator (MNA + DC + transient)."""
+"""spice-engine: SPICE-compatible analog simulator (MNA + DC + transient + AC)."""
 
 from spice_engine.elements import (
     BJT,
@@ -12,17 +12,22 @@ from spice_engine.elements import (
     VoltageSource,
 )
 from spice_engine.engine import (
+    AcPoint,
+    AcResult,
     Circuit,
     DcResult,
     TransientPoint,
     TransientResult,
+    ac_sweep,
     dc_op,
     transient,
 )
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 __all__ = [
+    "AcPoint",
+    "AcResult",
     "BJT",
     "Capacitor",
     "Circuit",
@@ -37,6 +42,7 @@ __all__ = [
     "TransientResult",
     "VoltageSource",
     "__version__",
+    "ac_sweep",
     "dc_op",
     "transient",
 ]

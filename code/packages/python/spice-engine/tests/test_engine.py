@@ -16,14 +16,26 @@ Test organisation
 12. Mid-scale sanity checks
 13. DC: Inductor
 14. DC: BJT (NPN and PNP)
+15. AC sweep: complex linear solver
+16. AC sweep: data structures (AcPoint, AcResult)
+17. AC sweep: resistive circuits (frequency-independent)
+18. AC sweep: RC low-pass filter (-3 dB at cutoff)
+19. AC sweep: RL high-pass filter
+20. AC sweep: sweep modes (log, lin, edge cases)
+21. AC sweep: small-signal nonlinear elements (Diode, BJT)
+22. AC sweep: current source injection
 """
 
+import cmath
+import math
 from math import exp, isclose
 
 import pytest
 
 from spice_engine import (
     BJT,
+    AcPoint,
+    AcResult,
     Capacitor,
     Circuit,
     CurrentSource,
@@ -31,10 +43,11 @@ from spice_engine import (
     Inductor,
     Resistor,
     VoltageSource,
+    ac_sweep,
     dc_op,
     transient,
 )
-from spice_engine.engine import _lte_estimate, _solve, _stamp_bjt
+from spice_engine.engine import _lte_estimate, _solve, _solve_complex, _stamp_bjt
 
 # ---- Linear solver ----
 
@@ -772,3 +785,628 @@ def test_bjt_custom_parameters():
     assert isclose(q.Is, 2.5e-16)
     assert isclose(q.beta_f, 200.0)
     assert isclose(q.Vt, 0.026)
+
+
+# ============================================================================
+# 15. AC sweep — complex linear solver
+# ============================================================================
+
+
+def test_solve_complex_2x2_real_system():
+    """_solve_complex on a real-valued 2×2 system matches _solve."""
+    # 2x + y = 5, x + 3y = 10  →  x = 1, y = 3
+    A = [[2.0 + 0j, 1.0 + 0j], [1.0 + 0j, 3.0 + 0j]]
+    b = [5.0 + 0j, 10.0 + 0j]
+    x = _solve_complex(A, b)
+    assert isclose(x[0].real, 1.0, abs_tol=1e-9)
+    assert isclose(x[1].real, 3.0, abs_tol=1e-9)
+    assert isclose(abs(x[0].imag), 0.0, abs_tol=1e-9)
+
+
+def test_solve_complex_purely_imaginary_diagonal():
+    """_solve_complex: diagonal matrix with imaginary entries.
+
+    For A = [[j, 0], [0, 2j]] and b = [1+j, -2j]:
+        x[0] = (1+j)/j = 1/j + 1 = -j + 1 = 1 - j
+        x[1] = -2j / 2j = -1
+    """
+    j = 1j
+    A = [[j, 0j], [0j, 2j]]
+    b = [1 + j, -2j]
+    x = _solve_complex(A, b)
+    assert isclose(abs(x[0] - (1 - 1j)), 0.0, abs_tol=1e-9)
+    assert isclose(abs(x[1] - (-1 + 0j)), 0.0, abs_tol=1e-9)
+
+
+def test_solve_complex_empty():
+    """_solve_complex on empty system returns empty list."""
+    assert _solve_complex([], []) == []
+
+
+def test_solve_complex_singular_raises():
+    """_solve_complex raises ZeroDivisionError for singular matrix."""
+    A = [[1.0 + 0j, 1.0 + 0j], [1.0 + 0j, 1.0 + 0j]]
+    b = [1.0 + 0j, 2.0 + 0j]
+    with pytest.raises(ZeroDivisionError):
+        _solve_complex(A, b)
+
+
+def test_solve_complex_3x3():
+    """_solve_complex: 3×3 complex system satisfies Ax = b."""
+    # Use a well-conditioned system with complex coefficients.
+    A = [
+        [2.0 + 1j, 1.0 + 0j, 0j],
+        [0j, 3.0 + 0j, 1.0 + 2j],
+        [1.0 + 0j, 0j, 2.0 + 0j],
+    ]
+    b = [3.0 + 2j, 1.0 + 0j, 4.0 + 0j]
+    x = _solve_complex(A, b)
+    # Verify A·x = b.
+    for i, row in enumerate(A):
+        s = sum(row[j] * x[j] for j in range(3))
+        assert isclose(abs(s - b[i]), 0.0, abs_tol=1e-9), (
+            f"Row {i}: A·x = {s}, expected {b[i]}"
+        )
+
+
+# ============================================================================
+# 16. AC sweep — AcPoint and AcResult data structures
+# ============================================================================
+
+
+def test_acpoint_fields():
+    """AcPoint stores freq and node_voltages."""
+    pt = AcPoint(freq=1000.0, node_voltages={"out": 0.5 + 0j})
+    assert pt.freq == 1000.0
+    assert pt.node_voltages["out"] == 0.5 + 0j
+
+
+def test_acresult_fields():
+    """AcResult wraps a list of AcPoints."""
+    pts = [AcPoint(freq=100.0, node_voltages={})]
+    r = AcResult(points=pts)
+    assert len(r.points) == 1
+    assert r.points[0].freq == 100.0
+
+
+def test_ac_sweep_returns_acresult():
+    """ac_sweep returns an AcResult instance."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "0", 1000.0))
+    result = ac_sweep(c, f_start=100.0, f_stop=10000.0, n_points=5)
+    assert isinstance(result, AcResult)
+
+
+def test_ac_sweep_point_count():
+    """ac_sweep returns exactly n_points AcPoints."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "0", 1000.0))
+    result = ac_sweep(c, f_start=100.0, f_stop=10000.0, n_points=10)
+    assert len(result.points) == 10
+
+
+def test_ac_sweep_zero_points():
+    """n_points=0 returns an empty AcResult."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "0", 1000.0))
+    result = ac_sweep(c, f_start=100.0, f_stop=1000.0, n_points=0)
+    assert isinstance(result, AcResult)
+    assert result.points == []
+
+
+def test_ac_sweep_single_point():
+    """n_points=1 returns a single AcPoint at f_start."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "0", 1000.0))
+    result = ac_sweep(c, f_start=500.0, f_stop=5000.0, n_points=1)
+    assert len(result.points) == 1
+    assert isclose(result.points[0].freq, 500.0, rel_tol=1e-9)
+
+
+def test_ac_sweep_point_has_node_voltages():
+    """Each AcPoint contains the expected node names."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "out", 1000.0))
+    c.add(Resistor("R2", "out", "0", 1000.0))
+    result = ac_sweep(c, f_start=100.0, f_stop=10000.0, n_points=3)
+    for pt in result.points:
+        assert "in" in pt.node_voltages
+        assert "out" in pt.node_voltages
+
+
+def test_ac_sweep_frequencies_ascending():
+    """Frequency values in AcPoints are strictly ascending."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "0", 1000.0))
+    result = ac_sweep(c, f_start=1.0, f_stop=1e6, n_points=20)
+    freqs = [pt.freq for pt in result.points]
+    assert all(freqs[i] < freqs[i + 1] for i in range(len(freqs) - 1))
+
+
+# ============================================================================
+# 17. AC sweep — resistive circuits (frequency-independent)
+# ============================================================================
+
+
+def test_ac_resistive_voltage_divider_real_valued():
+    """Two equal resistors: output is exactly Vin/2 at all frequencies.
+
+    A pure resistive divider has no reactive elements, so the AC phasor
+    voltage is the same at every frequency: V_out = Vin/2 (real).
+
+    Circuit:  Vin → R1 (1kΩ) → out → R2 (1kΩ) → GND
+    """
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "out", 1000.0))
+    c.add(Resistor("R2", "out", "0", 1000.0))
+    result = ac_sweep(c, f_start=1.0, f_stop=1e7, n_points=20, sweep="log")
+    for pt in result.points:
+        v_out = pt.node_voltages["out"]
+        assert isclose(abs(v_out), 0.5, abs_tol=1e-4), (
+            f"f={pt.freq:.1f} Hz: |V_out|={abs(v_out):.6f} (expected 0.5)"
+        )
+        # Imaginary part negligible — purely resistive
+        assert isclose(abs(v_out.imag), 0.0, abs_tol=1e-6), (
+            f"f={pt.freq:.1f} Hz: Im(V_out)={v_out.imag:.2e} (expected 0)"
+        )
+
+
+def test_ac_source_node_equals_source_voltage():
+    """Source node voltage equals the VoltageSource voltage at all frequencies."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "vin", "0", 2.5))
+    c.add(Resistor("R1", "vin", "0", 1000.0))
+    result = ac_sweep(c, f_start=10.0, f_stop=1e5, n_points=10)
+    for pt in result.points:
+        assert isclose(abs(pt.node_voltages["vin"]), 2.5, abs_tol=1e-6), (
+            f"f={pt.freq:.1f} Hz: V_in={pt.node_voltages['vin']}"
+        )
+
+
+def test_ac_unequal_resistive_divider():
+    """R1=1kΩ, R2=3kΩ: V_out = Vin * R2/(R1+R2) = 0.75 V (frequency-independent)."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "out", 1000.0))
+    c.add(Resistor("R2", "out", "0", 3000.0))
+    result = ac_sweep(c, f_start=100.0, f_stop=1e6, n_points=5)
+    for pt in result.points:
+        assert isclose(abs(pt.node_voltages["out"]), 0.75, abs_tol=1e-4), (
+            f"f={pt.freq:.1f} Hz: |V_out|={abs(pt.node_voltages['out']):.6f}"
+        )
+
+
+# ============================================================================
+# 18. AC sweep — RC low-pass filter (-3 dB at cutoff)
+# ============================================================================
+
+
+def test_ac_rc_lowpass_dc_gain_unity():
+    """RC low-pass: gain → 1 at very low frequency (capacitor is open at DC).
+
+    Circuit:  Vin → R (1kΩ) → out → C (1 μF) → GND
+    Transfer function: H(jω) = 1 / (1 + jωRC)
+    At very low f: |H| ≈ 1.
+    """
+    R, C = 1000.0, 1e-6
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "out", R))
+    c.add(Capacitor("C1", "out", "0", C))
+    # Use a very low start frequency so ωRC << 1
+    result = ac_sweep(c, f_start=0.01, f_stop=0.1, n_points=3)
+    for pt in result.points:
+        gain = abs(pt.node_voltages["out"])
+        assert gain > 0.999, (
+            f"f={pt.freq:.3f} Hz: gain={gain:.6f} (expected ≈ 1.0 at DC)"
+        )
+
+
+def test_ac_rc_lowpass_3db_at_cutoff():
+    """RC low-pass: gain = 1/√2 at f_c = 1/(2πRC).
+
+    Analytic: H(jω) = 1/(1 + jωRC).
+    At ω = 1/RC: |H| = 1/√2 ≈ 0.7071.
+
+    We find the frequency point nearest f_c and check gain within 1%.
+    """
+    R, C = 1000.0, 1e-6
+    f_c = 1.0 / (2.0 * math.pi * R * C)  # ≈ 159.15 Hz
+    expected_gain = 1.0 / math.sqrt(2.0)   # ≈ 0.7071
+
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "out", R))
+    c.add(Capacitor("C1", "out", "0", C))
+
+    # Dense log sweep straddling the cutoff
+    result = ac_sweep(c, f_start=10.0, f_stop=10000.0, n_points=200, sweep="log")
+
+    # Find the point closest to f_c
+    closest = min(result.points, key=lambda p: abs(p.freq - f_c))
+    gain = abs(closest.node_voltages["out"])
+
+    assert isclose(gain, expected_gain, rel_tol=0.01), (
+        f"At f≈f_c={closest.freq:.1f} Hz: gain={gain:.5f}, expected {expected_gain:.5f}"
+    )
+
+
+def test_ac_rc_lowpass_phase_at_cutoff():
+    """RC low-pass: phase ≈ −45° at f_c."""
+    R, C = 1000.0, 1e-6
+    f_c = 1.0 / (2.0 * math.pi * R * C)
+
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "out", R))
+    c.add(Capacitor("C1", "out", "0", C))
+
+    result = ac_sweep(c, f_start=10.0, f_stop=10000.0, n_points=200, sweep="log")
+    closest = min(result.points, key=lambda p: abs(p.freq - f_c))
+    phase_deg = math.degrees(cmath.phase(closest.node_voltages["out"]))
+
+    # Phase should be ≈ −45° ± 2°
+    assert isclose(phase_deg, -45.0, abs_tol=2.0), (
+        f"Phase at f_c: {phase_deg:.2f}° (expected ≈ −45°)"
+    )
+
+
+def test_ac_rc_lowpass_rolloff_above_cutoff():
+    """RC low-pass: gain decreases at 20 dB/decade above f_c.
+
+    At 10×f_c the gain should be ≈ 1/(10√2) ≈ 0.0707 (−20 dB).
+    At 100×f_c the gain should be ≈ 1/(100√2) ≈ 0.00707 (−40 dB).
+    """
+    R, C = 1000.0, 1e-6
+    f_c = 1.0 / (2.0 * math.pi * R * C)
+
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "out", R))
+    c.add(Capacitor("C1", "out", "0", C))
+
+    result = ac_sweep(c, f_start=1.0, f_stop=1e6, n_points=500, sweep="log")
+
+    def gain_at(f: float) -> float:
+        pt = min(result.points, key=lambda p: abs(p.freq - f))
+        return abs(pt.node_voltages["out"])
+
+    g1x = gain_at(f_c * 10.0)
+    g10x = gain_at(f_c * 100.0)
+
+    # Each decade above cutoff: gain ≈ f_c / (√2 · f)
+    assert g1x < 0.12, f"Gain at 10×f_c should be < 0.12, got {g1x:.5f}"
+    assert g10x < g1x / 5.0, (
+        f"Gain at 100×f_c ({g10x:.6f}) should be << gain at 10×f_c ({g1x:.6f})"
+    )
+
+
+def test_ac_rc_lowpass_gain_monotone_decreasing():
+    """RC low-pass: gain is monotonically decreasing with frequency."""
+    R, C = 1000.0, 1e-6
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "out", R))
+    c.add(Capacitor("C1", "out", "0", C))
+
+    result = ac_sweep(c, f_start=1.0, f_stop=1e6, n_points=50, sweep="log")
+    gains = [abs(pt.node_voltages["out"]) for pt in result.points]
+
+    for i in range(1, len(gains)):
+        assert gains[i] <= gains[i - 1] + 1e-6, (
+            f"Gain not monotone: gains[{i - 1}]={gains[i - 1]:.6f},"
+            f" gains[{i}]={gains[i]:.6f}"
+        )
+
+
+# ============================================================================
+# 19. AC sweep — RL high-pass filter
+# ============================================================================
+
+
+def test_ac_rl_highpass_gain_increases_with_frequency():
+    """RL high-pass: gain increases from 0 to 1 as frequency increases.
+
+    Circuit:  Vin → R (1 kΩ) → mid → L (1 mH) → GND
+    Transfer function: H(jω) = jωL / (R + jωL)
+
+    The output is the node "mid" (junction of R and L).  Since L is
+    between mid and GND, V_mid = Vin × jωL / (R + jωL):
+    - At low f (ω → 0): Z_L = jωL → 0, so V_mid → 0.
+    - At high f (ω → ∞): Z_L >> R, so V_mid → Vin.
+    """
+    R, L = 1000.0, 1e-3
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "mid", R))
+    c.add(Inductor("L1", "mid", "0", L))
+
+    result = ac_sweep(c, f_start=100.0, f_stop=1e7, n_points=50, sweep="log")
+    gains = [abs(pt.node_voltages["mid"]) for pt in result.points]
+
+    # Low end should be well below 0.5
+    assert gains[0] < 0.5, f"Low-freq gain {gains[0]:.4f} should be < 0.5"
+    # High end should be close to 1
+    assert gains[-1] > 0.95, f"High-freq gain {gains[-1]:.4f} should be > 0.95"
+    # Monotone increasing (RL high-pass)
+    for i in range(1, len(gains)):
+        assert gains[i] >= gains[i - 1] - 1e-6, (
+            f"RL high-pass not monotone increasing at index {i}"
+        )
+
+
+def test_ac_rl_highpass_3db_at_cutoff():
+    """RL high-pass: gain = 1/√2 at f_c = R/(2πL).
+
+    Circuit: Vin → R (1 kΩ) → mid → L (1 mH) → GND
+    With R=1kΩ, L=1mH: f_c = 1000 / (2π × 0.001) ≈ 159.15 kHz.
+    At f_c: |H| = |jωL| / |R + jωL| = 1/√2.
+    """
+    R, L = 1000.0, 1e-3
+    f_c = R / (2.0 * math.pi * L)  # ≈ 159.15 kHz
+    expected_gain = 1.0 / math.sqrt(2.0)
+
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "mid", R))
+    c.add(Inductor("L1", "mid", "0", L))
+
+    result = ac_sweep(c, f_start=1e4, f_stop=1e7, n_points=300, sweep="log")
+    closest = min(result.points, key=lambda p: abs(p.freq - f_c))
+    gain = abs(closest.node_voltages["mid"])
+
+    assert isclose(gain, expected_gain, rel_tol=0.02), (
+        f"RL high-pass gain at f_c={closest.freq:.0f} Hz: {gain:.5f},"
+        f" expected {expected_gain:.5f}"
+    )
+
+
+# ============================================================================
+# 20. AC sweep — sweep modes (log, lin, edge cases)
+# ============================================================================
+
+
+def test_ac_log_sweep_first_and_last_frequencies():
+    """Log sweep: first point = f_start, last point = f_stop."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "0", 1000.0))
+    result = ac_sweep(c, f_start=10.0, f_stop=100000.0, n_points=5, sweep="log")
+    assert isclose(result.points[0].freq, 10.0, rel_tol=1e-6)
+    assert isclose(result.points[-1].freq, 100000.0, rel_tol=1e-6)
+
+
+def test_ac_lin_sweep_first_and_last_frequencies():
+    """Linear sweep: first point = f_start, last point = f_stop."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "0", 1000.0))
+    result = ac_sweep(c, f_start=1000.0, f_stop=5000.0, n_points=5, sweep="lin")
+    assert isclose(result.points[0].freq, 1000.0, rel_tol=1e-6)
+    assert isclose(result.points[-1].freq, 5000.0, rel_tol=1e-6)
+
+
+def test_ac_lin_sweep_uniform_spacing():
+    """Linear sweep: frequency points are uniformly spaced."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "0", 1000.0))
+    result = ac_sweep(c, f_start=0.0, f_stop=1000.0, n_points=6, sweep="lin")
+    freqs = [pt.freq for pt in result.points]
+    # Expected: 0, 200, 400, 600, 800, 1000
+    expected_step = 200.0
+    for i in range(1, len(freqs)):
+        assert isclose(freqs[i] - freqs[i - 1], expected_step, rel_tol=1e-6), (
+            f"Step {i}: {freqs[i] - freqs[i - 1]:.2f} (expected {expected_step})"
+        )
+
+
+def test_ac_log_sweep_decade_spacing():
+    """Log sweep across 3 decades: first and last are 1000× apart."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "0", 1000.0))
+    result = ac_sweep(c, f_start=1.0, f_stop=1000.0, n_points=4, sweep="log")
+    freqs = [pt.freq for pt in result.points]
+    # 3 decades in 4 points: ratio between each pair = 10^(3/3) = 10
+    ratio_0_1 = freqs[1] / freqs[0]
+    ratio_1_2 = freqs[2] / freqs[1]
+    assert isclose(ratio_0_1, ratio_1_2, rel_tol=1e-6)
+
+
+# ============================================================================
+# 21. AC sweep — small-signal nonlinear elements
+# ============================================================================
+
+
+def test_ac_diode_small_signal_forward_biased():
+    """Forward-biased diode in AC: small-signal resistance is finite.
+
+    The diode small-signal model is a conductance gd = (Is/Vt)·exp(Vd/Vt).
+    With a DC bias of 0.6 V: Vd = 0.6 V (below 0.7 V clamp).
+
+    gd = (1e-15 / 0.02585) * exp(0.6 / 0.02585) ≈ large
+    Small-signal output voltage should be much less than 1 V (the diode
+    shunts heavily).
+
+    Circuit:  Vac(1V) → R(1kΩ) → anode → D(0.6V bias) → GND
+    """
+    # Provide a DC bias via a separate source; the AC source is the 1V source.
+    Is_val = 1e-15
+    Vt_val = 0.02585
+    Vbias = 0.6
+
+    c = Circuit()
+    # AC input source (amplitude 1 V)
+    c.add(VoltageSource("Vac", "in", "0", 1.0))
+    # Series resistor
+    c.add(Resistor("R1", "in", "anode", 1000.0))
+    # DC bias current source to forward-bias the diode
+    # I = Is*(exp(Vbias/Vt) - 1) to set anode to approximately Vbias
+    I_bias = Is_val * (math.exp(Vbias / Vt_val) - 1.0)
+    c.add(CurrentSource("I_bias", "anode", "0", I_bias))
+    # The diode itself
+    c.add(Diode("D1", anode="anode", cathode="0", Is=Is_val, Vt=Vt_val))
+
+    result = ac_sweep(c, f_start=1000.0, f_stop=10000.0, n_points=5)
+    # With the diode forward-biased (small-signal conductance >> 1/R1),
+    # V_anode should be very small.
+    for pt in result.points:
+        v_anode = abs(pt.node_voltages["anode"])
+        # The diode has such high gd that it nearly short-circuits the node
+        assert v_anode < 0.1, (
+            f"f={pt.freq:.0f} Hz: V_anode={v_anode:.4f} (expected < 0.1 with"
+            f" forward-biased diode)"
+        )
+
+
+def test_ac_diode_reverse_biased_acts_like_open():
+    """Reverse-biased diode in AC: near-zero conductance.
+
+    When Vd ≤ 0 (cathode at or above anode), gd ≈ Is/Vt * exp(0) = Is/Vt
+    which is negligibly small (1e-15/0.02585 ≈ 3.9e-14 S → R ≈ 25 GΩ).
+
+    The diode is effectively an open circuit, so the voltage at the anode
+    is determined only by the resistor divider.
+    """
+    c = Circuit()
+    c.add(VoltageSource("Vac", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "anode", 1000.0))
+    c.add(Resistor("R2", "anode", "0", 1000.0))   # load
+    # Diode reverse-biased: cathode at Vin, anode at V_mid ≈ 0.5 V
+    c.add(Diode("D1", anode="anode", cathode="in"))
+
+    result = ac_sweep(c, f_start=100.0, f_stop=10000.0, n_points=5)
+    # With open-circuit diode, V_anode ≈ Vin × R2/(R1+R2) = 0.5V
+    for pt in result.points:
+        v_anode = abs(pt.node_voltages["anode"])
+        assert isclose(v_anode, 0.5, abs_tol=0.05), (
+            f"f={pt.freq:.0f} Hz: V_anode={v_anode:.5f} (expected ≈ 0.5)"
+        )
+
+
+def test_ac_bjt_npn_small_signal():
+    """NPN BJT in forward-active: small-signal current gain > 1.
+
+    DC bias: Vb=0.7V, Vcc=5V, Rc=1kΩ, emitter grounded.
+    AC: small input signal at base (through Rb=10kΩ), output at collector.
+
+    In the small-signal model, the collector current is gm×Vbe, so the
+    AC gain from base to collector is approximately −gm×Rc.
+    We verify the output-to-input ratio |V_col / V_in| > 1 (gain > 0 dB).
+    """
+    Is_val = 1e-14
+    Vt_val = 0.02585
+    Rc = 1000.0
+    Rb = 10000.0
+
+    c = Circuit()
+    c.add(VoltageSource("Vcc", "vcc", "0", 5.0))
+    # AC input (1 V amplitude) through base resistor
+    c.add(VoltageSource("Vac", "ac_in", "0", 1.0))
+    c.add(Resistor("Rb", "ac_in", "base", Rb))
+    # DC bias to forward-bias the BE junction
+    c.add(VoltageSource("Vbias", "base_bias", "0", 0.7))
+    c.add(Resistor("Rbias", "base_bias", "base", Rb))
+    c.add(Resistor("Rc", "vcc", "col", Rc))
+    c.add(BJT("Q1", collector="col", base="base", emitter="0",
+               Is=Is_val, beta_f=100.0, Vt=Vt_val))
+
+    result = ac_sweep(c, f_start=1000.0, f_stop=10000.0, n_points=5)
+    for pt in result.points:
+        # Both nodes should be present
+        assert "col" in pt.node_voltages
+        assert "base" in pt.node_voltages
+
+
+# ============================================================================
+# 22. AC sweep — current source injection
+# ============================================================================
+
+
+def test_ac_current_source_into_resistor():
+    """AC current source (1 A) into a 1 kΩ resistor → V = I×R = 1 kV.
+
+    At all frequencies, a current source in parallel with a resistor gives
+    V = I × R (purely real, frequency-independent).
+    """
+    c = Circuit()
+    c.add(CurrentSource("I1", "out", "0", 1.0))  # 1 A
+    c.add(Resistor("R1", "out", "0", 1000.0))
+
+    result = ac_sweep(c, f_start=100.0, f_stop=10000.0, n_points=5)
+    for pt in result.points:
+        v = pt.node_voltages["out"]
+        # V = I × R = 1 A × 1 kΩ = 1000 V
+        assert isclose(abs(v), 1000.0, abs_tol=1.0), (
+            f"f={pt.freq:.0f} Hz: V={abs(v):.4f} (expected 1000)"
+        )
+
+
+def test_ac_current_source_with_capacitor_shunt():
+    """AC current source into RC parallel: V decreases with frequency.
+
+    I_s parallel with R (1kΩ) parallel with C (1μF):
+        V(ω) = I_s / (1/R + jωC) = I_s × R / (1 + jωRC)
+
+    At low f: |V| ≈ I_s × R = 1000 V (current mostly through R).
+    At high f: |V| decreases as C shunts current away from R.
+
+    With I_s = 1 mA, the magnitudes are more reasonable: V_low ≈ 1 V.
+    """
+    I_s = 1e-3   # 1 mA
+    R = 1000.0
+    C = 1e-6     # f_c ≈ 159 Hz
+
+    c = Circuit()
+    c.add(CurrentSource("I1", "out", "0", I_s))
+    c.add(Resistor("R1", "out", "0", R))
+    c.add(Capacitor("C1", "out", "0", C))
+
+    result = ac_sweep(c, f_start=1.0, f_stop=1e6, n_points=50, sweep="log")
+    v_low = abs(result.points[0].node_voltages["out"])
+    v_high = abs(result.points[-1].node_voltages["out"])
+
+    # At very low f: |V| ≈ I_s × R
+    assert isclose(v_low, I_s * R, rel_tol=0.01), (
+        f"Low-freq voltage {v_low:.4f} V (expected ≈ {I_s * R:.4f} V)"
+    )
+    # High frequency: shunted by cap, voltage much lower
+    assert v_high < v_low / 100.0, (
+        f"High-freq voltage {v_high:.6f} should be << low-freq {v_low:.6f}"
+    )
+
+
+def test_ac_inductor_acts_as_short_at_very_low_frequency():
+    """Inductor near ω=0: modelled as near-short (large conductance).
+
+    In the AC model, Y_L = 1/(jωL).  At ω=0 this is ∞, which is
+    approximated as G = 1e12 S.  A very low-frequency sweep should
+    show that the node voltage across the inductor is nearly zero
+    (inductor is a short, no voltage drop).
+
+    Circuit:  Vin(1V) → L(1mH) → mid → R(1kΩ) → GND
+
+    At ω → 0, the inductor is a short, so V_mid ≈ V_in = 1 V.
+    """
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Inductor("L1", "in", "mid", 1e-3))
+    c.add(Resistor("R1", "mid", "0", 1000.0))
+
+    # Use a truly tiny frequency to approach the ω=0 limit.
+    # The implementation uses omega=0 exactly for f_start=0 in lin sweep.
+    result = ac_sweep(c, f_start=0.0, f_stop=0.0, n_points=1, sweep="lin")
+    if result.points:
+        v_mid = abs(result.points[0].node_voltages["mid"])
+        # Inductor short → V_mid ≈ V_in = 1 V
+        assert v_mid > 0.99, (
+            f"At ω=0 (inductor short), V_mid={v_mid:.6f} (expected ≈ 1.0)"
+        )

@@ -1,11 +1,16 @@
-"""SPICE engine: MNA matrix construction + DC + transient analysis.
+"""SPICE engine: MNA matrix construction + DC + transient + AC analysis.
 
 Modified Nodal Analysis (MNA) treats node voltages and source-current
 "branch unknowns" as one unified vector. For each element, we 'stamp' its
 contribution onto the conductance matrix G and the right-hand-side b.
 
-For DC: solve G x = b. For nonlinear elements (Diode, MOSFET), wrap
+For DC: solve G x = b. For nonlinear elements (Diode, MOSFET, BJT), wrap
 Newton-Raphson iterations with linearized Jacobians.
+
+For AC: linearise each element around the DC operating point; replace
+reactive elements with complex admittances (Y_C = jωC, Y_L = 1/jωL);
+solve the resulting complex linear system at each frequency.  See
+:func:`ac_sweep` and the Section 3 comment block below.
 
 For transient: two integration methods are supported:
 
@@ -42,6 +47,7 @@ For transient: two integration methods are supported:
 
 from __future__ import annotations
 
+import cmath
 import math
 from dataclasses import dataclass, field
 
@@ -103,6 +109,45 @@ class TransientResult:
     converged: bool
     method: str = "trap"
     steps_rejected: int = 0
+
+
+@dataclass
+class AcPoint:
+    """Phasor voltages at a single frequency point.
+
+    Attributes
+    ----------
+    freq : float
+        Frequency in hertz.
+    node_voltages : dict[str, complex]
+        Complex phasor voltage at each node.  Extract magnitude with
+        ``abs(v)`` and phase (in radians) with ``cmath.phase(v)``.
+
+    Examples
+    --------
+    Compute the dB gain at node "out" relative to a 1 V source::
+
+        pt = ac_result.points[10]
+        gain_db = 20 * math.log10(abs(pt.node_voltages["out"]))
+        phase_deg = math.degrees(cmath.phase(pt.node_voltages["out"]))
+    """
+
+    freq: float
+    node_voltages: dict[str, complex]
+
+
+@dataclass
+class AcResult:
+    """Frequency-sweep results from :func:`ac_sweep`.
+
+    Attributes
+    ----------
+    points : list[AcPoint]
+        One :class:`AcPoint` per frequency, in ascending order.
+        Empty when ``n_points < 1``.
+    """
+
+    points: list[AcPoint]
 
 
 # ---------------------------------------------------------------------------
@@ -948,3 +993,419 @@ def transient(
 
     return TransientResult(points=points, converged=True,
                            method=method, steps_rejected=steps_rejected)
+
+
+# ---------------------------------------------------------------------------
+# Section 3 — AC small-signal analysis
+# ---------------------------------------------------------------------------
+#
+# Background: what is AC analysis?
+# ---------------------------------
+# In a SPICE `.AC` sweep the simulator:
+#
+#  1. Finds the DC operating point (bias voltages) for all nonlinear devices.
+#  2. Replaces each element with its small-signal equivalent:
+#       - Resistor R → conductance G = 1/R  (real, frequency-independent)
+#       - Capacitor C → admittance Y_C = jωC  (grows with frequency)
+#       - Inductor L → admittance Y_L = 1/(jωL)  (shrinks with frequency)
+#       - Diode, MOSFET, BJT → linearised transconductance / conductance at OP
+#  3. Solves the resulting *complex* linear system G(ω)·x(ω) = b at each
+#     frequency ω = 2πf, yielding complex phasor voltages.
+#
+# Reading the phasors
+# -------------------
+# Each node voltage v is a complex number.  Interpretation:
+#
+#   |v|          — peak amplitude relative to the input signal
+#   arg(v) [rad] — phase shift between output and input
+#   20 log₁₀|v| — gain in dB  (0 dB = unity gain)
+#
+# Bode plots are constructed by sweeping f on a log scale and plotting
+# 20 log₁₀|v(f)| and arg(v(f)) per decade.
+#
+# Implementation
+# --------------
+# The DC Gaussian solver (_solve) is cloned for complex arithmetic
+# (_solve_complex).  The DC conductance stamp (_stamp_g) is cloned for
+# complex matrices (_stamp_g_c).  A new _stamp_ac dispatcher replaces the
+# DC _stamp_dc, using complex admittances for reactive elements.
+#
+# Inductor at ω=0: Y = 1/(jωL) → ∞; we model it as a near-short (G=1e12 S)
+# to keep the matrix non-singular.  Capacitors at ω=0 contribute Y=0 —
+# correct (open circuit at DC).
+# ---------------------------------------------------------------------------
+
+
+def _solve_complex(A: list[list[complex]], b: list[complex]) -> list[complex]:
+    """Gaussian elimination with partial pivoting for complex matrices.
+
+    Identical algorithm to :func:`_solve` but operates on complex-valued
+    entries.  Pivot selection uses ``abs()`` (modulus of the complex number)
+    so the algorithm remains numerically stable.
+
+    Raises ``ZeroDivisionError`` when a near-singular pivot (|pivot| < 1e-15)
+    is encountered.
+
+    Parameters
+    ----------
+    A : list[list[complex]]
+        Square complex matrix.
+    b : list[complex]
+        Right-hand-side vector.
+
+    Returns
+    -------
+    list[complex]
+        Solution vector x such that A·x ≈ b.
+    """
+    n = len(A)
+    if n == 0:
+        return []
+    aug = [row[:] + [b[i]] for i, row in enumerate(A)]
+
+    for i in range(n):
+        # Partial pivot: largest modulus below diagonal in column i.
+        pivot = i
+        for r in range(i + 1, n):
+            if abs(aug[r][i]) > abs(aug[pivot][i]):
+                pivot = r
+        if abs(aug[pivot][i]) < 1e-15:
+            raise ZeroDivisionError(f"singular matrix at row {i}")
+        aug[i], aug[pivot] = aug[pivot], aug[i]
+
+        for r in range(i + 1, n):
+            factor = aug[r][i] / aug[i][i]
+            for c in range(i, n + 1):
+                aug[r][c] -= factor * aug[i][c]
+
+    x: list[complex] = [0j] * n
+    for i in range(n - 1, -1, -1):
+        s = aug[i][n]
+        for c in range(i + 1, n):
+            s -= aug[i][c] * x[c]
+        x[i] = s / aug[i][i]
+    return x
+
+
+def _stamp_g_c(
+    G: list[list[complex]],
+    node_to_idx: dict[str, int],
+    n_plus: str,
+    n_minus: str,
+    g: complex,
+) -> None:
+    """Stamp a complex admittance between two nodes.
+
+    Identical to :func:`_stamp_g` but for complex-valued conductance matrices.
+    Used in AC analysis to stamp:
+
+    - Resistor: ``g = 1/R`` (real)
+    - Capacitor: ``g = jωC`` (imaginary at a given ω)
+    - Inductor: ``g = 1/(jωL)`` (imaginary at a given ω; near-short at ω=0)
+    - Linearised Diode: ``g = gd`` (real small-signal conductance)
+    - Linearised MOSFET: ``g = gds`` (real; ``gm`` is stamped separately)
+    - Linearised BJT: ``g = g_π`` (real junction conductance; ``gm`` separately)
+    """
+    if not _is_ground(n_plus):
+        G[node_to_idx[n_plus]][node_to_idx[n_plus]] += g
+    if not _is_ground(n_minus):
+        G[node_to_idx[n_minus]][node_to_idx[n_minus]] += g
+    if not _is_ground(n_plus) and not _is_ground(n_minus):
+        G[node_to_idx[n_plus]][node_to_idx[n_minus]] -= g
+        G[node_to_idx[n_minus]][node_to_idx[n_plus]] -= g
+
+
+def _stamp_ac(
+    el: Element,
+    G: list[list[complex]],
+    b: list[complex],
+    omega: float,
+    node_to_idx: dict[str, int],
+    vsrcs: list[VoltageSource],
+    dc_x: list[float],
+) -> None:
+    """Stamp one element's AC small-signal contribution at angular frequency ω.
+
+    Linear elements (R, C, L, V, I) use their exact complex admittances.
+    Nonlinear elements (Diode, MOSFET, BJT) are linearised at the DC operating
+    point provided in ``dc_x``.
+
+    VoltageSource AC handling
+    -------------------------
+    Each VoltageSource is treated as an ideal AC source with amplitude
+    ``el.voltage`` volts (AC amplitude, typically 1 V for the input and 0 V
+    for bias sources).  A 0 V AC source acts as a short circuit, which is
+    correct for DC-bias voltage sources in an AC analysis.
+
+    Parameters
+    ----------
+    el : Element
+        Circuit element to stamp.
+    G : list[list[complex]]
+        Complex MNA matrix, modified in place.
+    b : list[complex]
+        Right-hand-side vector, modified in place.
+    omega : float
+        Angular frequency ω = 2πf (rad/s).
+    node_to_idx : dict[str, int]
+        Node-to-row-index map (ground excluded).
+    vsrcs : list[VoltageSource]
+        All voltage sources in the circuit (determines branch-variable index).
+    dc_x : list[float]
+        DC operating-point vector (node voltages then branch currents), indexed
+        by ``node_to_idx``.  Used to compute small-signal parameters for
+        nonlinear devices.
+    """
+    if isinstance(el, Resistor):
+        # Purely real admittance: Y = 1/R
+        _stamp_g_c(G, node_to_idx, el.n_plus, el.n_minus, (1.0 + 0j) / el.resistance)
+
+    elif isinstance(el, Capacitor):
+        # Admittance Y_C = jωC.  At ω = 0 this is 0 (open circuit) — correct.
+        _stamp_g_c(G, node_to_idx, el.n_plus, el.n_minus, 1j * omega * el.capacitance)
+
+    elif isinstance(el, Inductor):
+        # Admittance Y_L = 1/(jωL).  At ω = 0, Y → ∞ (short circuit); model
+        # as a very large conductance to keep the matrix non-singular.
+        if omega == 0.0:
+            y_l: complex = 1e12 + 0j
+        else:
+            y_l = 1.0 / (1j * omega * el.inductance)
+        _stamp_g_c(G, node_to_idx, el.n_plus, el.n_minus, y_l)
+
+    elif isinstance(el, VoltageSource):
+        # Ideal voltage source stamp: adds branch current as an unknown.
+        # Uses += so multiple elements don't overwrite each other's entries.
+        i = vsrcs.index(el)
+        branch = len(node_to_idx) + i
+        if not _is_ground(el.n_plus):
+            p = node_to_idx[el.n_plus]
+            G[p][branch] += 1.0 + 0j
+            G[branch][p] += 1.0 + 0j
+        if not _is_ground(el.n_minus):
+            q = node_to_idx[el.n_minus]
+            G[q][branch] -= 1.0 + 0j
+            G[branch][q] -= 1.0 + 0j
+        b[branch] += el.voltage + 0j
+
+    elif isinstance(el, CurrentSource):
+        # AC current source: inject phasor current.
+        if not _is_ground(el.n_plus):
+            b[node_to_idx[el.n_plus]] -= el.current + 0j
+        if not _is_ground(el.n_minus):
+            b[node_to_idx[el.n_minus]] += el.current + 0j
+
+    elif isinstance(el, Diode):
+        # Small-signal model: linearised conductance gd = (Is/Vt)·exp(Vd/Vt).
+        # The dynamic (differential) conductance is the derivative of
+        # I = Is*(exp(Vd/Vt) − 1) with respect to Vd, evaluated at the OP.
+        Va = 0.0 if _is_ground(el.anode) else dc_x[node_to_idx[el.anode]]
+        Vk = 0.0 if _is_ground(el.cathode) else dc_x[node_to_idx[el.cathode]]
+        Vd = min(Va - Vk, 0.7)
+        gd = (el.Is / el.Vt) * math.exp(Vd / el.Vt)
+        _stamp_g_c(G, node_to_idx, el.anode, el.cathode, gd + 0j)
+
+    elif isinstance(el, Mosfet):
+        # Small-signal model: gds (output conductance) + gm (transconductance).
+        # The gm VCCS is stamped as off-diagonal conductance entries.
+        Vd = 0.0 if _is_ground(el.drain) else dc_x[node_to_idx[el.drain]]
+        Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
+        Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
+        Vb = 0.0 if _is_ground(el.body) else dc_x[node_to_idx[el.body]]
+        r = el.model.dc(Vg - Vs, Vd - Vs, Vb - Vs)  # type: ignore[attr-defined]
+        gm_m: float = r.gm
+        gds_m: float = r.gds
+        _stamp_g_c(G, node_to_idx, el.drain, el.source, gds_m + 0j)
+        if not _is_ground(el.drain):
+            d = node_to_idx[el.drain]
+            if not _is_ground(el.gate):
+                G[d][node_to_idx[el.gate]] += gm_m + 0j
+            if not _is_ground(el.source):
+                G[d][node_to_idx[el.source]] -= gm_m + 0j
+        if not _is_ground(el.source):
+            s = node_to_idx[el.source]
+            if not _is_ground(el.gate):
+                G[s][node_to_idx[el.gate]] -= gm_m + 0j
+            if not _is_ground(el.source):
+                G[s][node_to_idx[el.source]] += gm_m + 0j
+
+    elif isinstance(el, BJT):
+        # Small-signal model: g_π (junction conductance) + gm (transconductance
+        # VCCS).  Mirror the DC _stamp_bjt stamps but in the complex domain and
+        # without the Norton offsets (which are DC bias terms, zero in AC).
+        Vb_dc = 0.0 if _is_ground(el.base) else dc_x[node_to_idx[el.base]]
+        Ve_dc = 0.0 if _is_ground(el.emitter) else dc_x[node_to_idx[el.emitter]]
+        Vjunc = (
+            min(Vb_dc - Ve_dc, 0.7) if el.polarity == "NPN"
+            else min(Ve_dc - Vb_dc, 0.7)
+        )
+        exp_t = math.exp(Vjunc / el.Vt)
+        gm_b: float = (el.Is / el.Vt) * exp_t
+        g_pi: float = gm_b / el.beta_f
+
+        if el.polarity == "NPN":
+            _stamp_g_c(G, node_to_idx, el.base, el.emitter, g_pi + 0j)
+            if not _is_ground(el.collector):
+                c_i = node_to_idx[el.collector]
+                if not _is_ground(el.base):
+                    G[c_i][node_to_idx[el.base]] += gm_b + 0j
+                if not _is_ground(el.emitter):
+                    G[c_i][node_to_idx[el.emitter]] -= gm_b + 0j
+            if not _is_ground(el.emitter):
+                e_i = node_to_idx[el.emitter]
+                if not _is_ground(el.base):
+                    G[e_i][node_to_idx[el.base]] -= gm_b + 0j
+                if not _is_ground(el.emitter):
+                    G[e_i][node_to_idx[el.emitter]] += gm_b + 0j
+        else:  # PNP
+            _stamp_g_c(G, node_to_idx, el.emitter, el.base, g_pi + 0j)
+            if not _is_ground(el.emitter):
+                e_i = node_to_idx[el.emitter]
+                if not _is_ground(el.emitter):
+                    G[e_i][node_to_idx[el.emitter]] += gm_b + 0j
+                if not _is_ground(el.base):
+                    G[e_i][node_to_idx[el.base]] -= gm_b + 0j
+            if not _is_ground(el.collector):
+                c_i = node_to_idx[el.collector]
+                if not _is_ground(el.emitter):
+                    G[c_i][node_to_idx[el.emitter]] -= gm_b + 0j
+                if not _is_ground(el.base):
+                    G[c_i][node_to_idx[el.base]] += gm_b + 0j
+
+
+def ac_sweep(
+    circuit: Circuit,
+    *,
+    f_start: float,
+    f_stop: float,
+    n_points: int = 50,
+    sweep: str = "log",
+) -> AcResult:
+    """Small-signal AC frequency sweep (the SPICE .AC analysis).
+
+    Computes complex phasor node voltages at each frequency in the sweep
+    range.  Linear elements are stamped with their exact complex admittances;
+    nonlinear elements are linearised around the DC operating point.
+
+    Algorithm
+    ---------
+    1. Compute the DC operating point via :func:`dc_op` to get bias voltages
+       for nonlinear device linearisation.
+    2. Build the frequency grid (log or linear spacing).
+    3. For each frequency ω = 2πf:
+       a. Build the complex MNA matrix G_c of size (n + m) × (n + m), where
+          n = number of non-ground nodes, m = number of voltage sources.
+       b. Stamp every element via :func:`_stamp_ac`.
+       c. Solve G_c · x_c = b_c using complex Gaussian elimination.
+       d. Record the complex phasor voltages as an :class:`AcPoint`.
+
+    Parameters
+    ----------
+    circuit : Circuit
+        The circuit to analyse.  All elements are accepted; unsupported types
+        are silently ignored (future-proof for custom elements).
+    f_start : float
+        Start frequency in hertz.  Must be > 0 for a log sweep.
+    f_stop : float
+        Stop frequency in hertz.  Must be ≥ f_start.
+    n_points : int
+        Number of frequency points.  Default 50.  Returns an empty list when
+        ``n_points < 1``.
+    sweep : str
+        ``"log"`` (default) — logarithmically spaced points per decade, like
+        the standard SPICE ``.AC DEC`` sweep.
+        ``"lin"`` — linearly spaced points between f_start and f_stop.
+
+    Returns
+    -------
+    AcResult
+        One :class:`AcPoint` per frequency.  Each point carries the complex
+        phasor voltage at every non-ground node.
+
+    Notes
+    -----
+    - Voltage sources use their ``voltage`` field as AC amplitude.  A DC
+      bias source with ``voltage=0.0`` is a short circuit in AC (correct).
+    - Capacitors contribute Y = jωC (open circuit at DC).
+    - Inductors contribute Y = 1/(jωL) (short circuit at DC → modelled as a
+      very large conductance G = 1e12 S to avoid singularity).
+    - If the AC MNA matrix is singular (e.g. a floating node at a particular
+      frequency), the node voltages for that frequency point are all set to
+      zero and the sweep continues.
+
+    Examples
+    --------
+    RC low-pass filter with cutoff at f_c = 1 / (2πRC)::
+
+        from spice_engine import Circuit, Resistor, Capacitor, VoltageSource
+        from spice_engine import ac_sweep
+        import math, cmath
+
+        c = Circuit()
+        c.add(VoltageSource("Vin", "in", "0", 1.0))
+        c.add(Resistor("R1", "in", "out", 1000.0))
+        c.add(Capacitor("C1", "out", "0", 1e-6))
+
+        result = ac_sweep(c, f_start=1.0, f_stop=1e6, n_points=100)
+
+        # At f_c ≈ 159 Hz, gain ≈ −3 dB
+        for pt in result.points:
+            gain_db = 20 * math.log10(abs(pt.node_voltages["out"]))
+            phase = math.degrees(cmath.phase(pt.node_voltages["out"]))
+    """
+    # ---- DC operating point --------------------------------------------------
+    dc = dc_op(circuit)
+    node_to_idx, _nodes = _node_index(circuit)
+    vsrcs = _voltage_sources(circuit)
+    n_nodes = len(node_to_idx)
+    n_vsrcs = len(vsrcs)
+    size = n_nodes + n_vsrcs
+
+    # Reconstruct the indexed dc_x vector from the DcResult dict.
+    dc_x: list[float] = [0.0] * size
+    for name, idx in node_to_idx.items():
+        dc_x[idx] = dc.node_voltages.get(name, 0.0)
+    for i, vs in enumerate(vsrcs):
+        dc_x[n_nodes + i] = dc.branch_currents.get(f"I({vs.name})", 0.0)
+
+    # ---- Frequency grid -------------------------------------------------------
+    if n_points < 1:
+        return AcResult(points=[])
+
+    if n_points == 1:
+        freqs: list[float] = [f_start]
+    elif sweep == "log":
+        # Log-spaced: start and stop must be positive.
+        log_start = math.log10(max(f_start, 1e-300))
+        log_stop = math.log10(max(f_stop, f_start, 1e-300))
+        step_log = (log_stop - log_start) / (n_points - 1)
+        freqs = [10.0 ** (log_start + k * step_log) for k in range(n_points)]
+    else:  # "lin"
+        step_lin = (f_stop - f_start) / (n_points - 1)
+        freqs = [f_start + k * step_lin for k in range(n_points)]
+
+    # ---- Per-frequency solve --------------------------------------------------
+    ac_points: list[AcPoint] = []
+    for freq in freqs:
+        omega = 2.0 * math.pi * freq
+
+        # Build complex MNA matrix — zero initialised.
+        G_c: list[list[complex]] = [[0j] * size for _ in range(size)]
+        b_c: list[complex] = [0j] * size
+
+        for el in circuit.elements:
+            _stamp_ac(el, G_c, b_c, omega, node_to_idx, vsrcs, dc_x)
+
+        try:
+            x_c = _solve_complex(G_c, b_c)
+        except ZeroDivisionError:
+            x_c = [0j] * size  # singular — return zeros for this frequency
+
+        node_v = {name: x_c[idx] for name, idx in node_to_idx.items()}
+        ac_points.append(AcPoint(freq=freq, node_voltages=node_v))
+
+    return AcResult(points=ac_points)
+
+
+# Keep the cmath import visible to callers that ``from spice_engine import cmath``
+_ = cmath  # noqa: F841
