@@ -568,6 +568,14 @@ pub struct ParseOutput {
     pub parser_diagnostics: Vec<ParserDiagnostic>,
 }
 
+/// Parser result for body-fragment parsing.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FragmentOutput {
+    pub nodes: Vec<Node>,
+    pub lexer_diagnostics: Vec<Diagnostic>,
+    pub parser_diagnostics: Vec<ParserDiagnostic>,
+}
+
 /// Tree-construction diagnostic emitted by this parser layer.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ParserDiagnostic {
@@ -616,12 +624,30 @@ pub fn parse_html_with_diagnostics(source: &str) -> Result<ParseOutput, ParseErr
     parse_html_with_diagnostics_and_options(source, HtmlParseOptions::default())
 }
 
+/// Parse an HTML body fragment into DOM nodes without returning the implied shell.
+pub fn parse_html_fragment(source: &str) -> Result<Vec<Node>, ParseError> {
+    Ok(parse_html_fragment_with_diagnostics(source)?.nodes)
+}
+
+/// Parse an HTML body fragment into DOM nodes plus lexer/parser diagnostics.
+pub fn parse_html_fragment_with_diagnostics(source: &str) -> Result<FragmentOutput, ParseError> {
+    parse_html_fragment_with_diagnostics_and_options(source, HtmlParseOptions::default())
+}
+
 /// Parse a complete HTML string into a DOM document with explicit parser options.
 pub fn parse_html_with_options(
     source: &str,
     options: HtmlParseOptions,
 ) -> Result<Document, ParseError> {
     Ok(parse_html_with_diagnostics_and_options(source, options)?.document)
+}
+
+/// Parse an HTML body fragment into DOM nodes with explicit parser options.
+pub fn parse_html_fragment_with_options(
+    source: &str,
+    options: HtmlParseOptions,
+) -> Result<Vec<Node>, ParseError> {
+    Ok(parse_html_fragment_with_diagnostics_and_options(source, options)?.nodes)
 }
 
 /// Parse a complete HTML string into a DOM document plus diagnostics with explicit parser options.
@@ -652,6 +678,34 @@ pub fn parse_html_with_diagnostics_and_options(
     })
 }
 
+/// Parse an HTML body fragment into DOM nodes plus diagnostics with explicit parser options.
+pub fn parse_html_fragment_with_diagnostics_and_options(
+    source: &str,
+    options: HtmlParseOptions,
+) -> Result<FragmentOutput, ParseError> {
+    let mut lexer = create_html_lexer()?;
+    apply_html_lex_context(&mut lexer, &options.initial_tokenizer_context.lex_context())?;
+    let mut parser = HtmlParser::with_body_fragment_options(options);
+
+    for ch in source.chars() {
+        let mut buffer = [0; 4];
+        lexer.push(ch.encode_utf8(&mut buffer))?;
+        drain_parser_tokens(&mut lexer, &mut parser)?;
+    }
+
+    lexer.finish()?;
+    drain_parser_tokens(&mut lexer, &mut parser)?;
+
+    let lexer_diagnostics = lexer.diagnostics().to_vec();
+    let document = parser.finish_document();
+
+    Ok(FragmentOutput {
+        nodes: body_fragment_nodes(document),
+        lexer_diagnostics,
+        parser_diagnostics: parser.diagnostics,
+    })
+}
+
 /// Streaming-friendly parser core over already-tokenized HTML.
 #[derive(Debug, Default)]
 pub struct HtmlParser {
@@ -671,6 +725,30 @@ impl HtmlParser {
         Self {
             options,
             ..Self::default()
+        }
+    }
+
+    fn with_body_fragment_options(options: HtmlParseOptions) -> Self {
+        let mut html = Node::element("html".to_string(), Vec::new());
+        let Node::Element(ref mut html_element) = html else {
+            unreachable!("Node::element must construct an element");
+        };
+        html_element
+            .children
+            .push(Node::element("head".to_string(), Vec::new()));
+        html_element
+            .children
+            .push(Node::element("body".to_string(), Vec::new()));
+
+        let mut document = Document::new();
+        document.push_child(html);
+
+        Self {
+            document,
+            open_elements: vec![vec![0], vec![0, 1]],
+            diagnostics: Vec::new(),
+            options,
+            strip_next_leading_lf: false,
         }
     }
 
@@ -921,6 +999,9 @@ impl HtmlParser {
             .iter()
             .rposition(|path| element_at_path(&self.document, path).is_some_and(|n| n == name))
         {
+            if is_formatting_element(name) && self.has_table_context_above(index) {
+                return;
+            }
             self.open_elements.truncate(index);
             return;
         }
@@ -1049,6 +1130,13 @@ impl HtmlParser {
         self.open_elements
             .iter()
             .any(|path| element_at_path(&self.document, path).is_some_and(|n| n == name))
+    }
+
+    fn has_table_context_above(&self, element_index: usize) -> bool {
+        self.open_elements
+            .iter()
+            .skip(element_index + 1)
+            .any(|path| element_at_path(&self.document, path).is_some_and(is_table_context_element))
     }
 
     fn pop_current_if(&mut self, predicate: impl FnOnce(&str) -> bool) {
@@ -1188,6 +1276,35 @@ fn normalize_document_shell(document: Document) -> Document {
     normalized
 }
 
+fn body_fragment_nodes(mut document: Document) -> Vec<Node> {
+    let mut fragment = Vec::new();
+
+    for node in document.children.drain(..) {
+        match node {
+            Node::DocumentType(_) => {}
+            Node::Comment(_) | Node::Text(_) => fragment.push(node),
+            Node::Element(mut element) if element.name == "html" => {
+                for child in element.children.drain(..) {
+                    match child {
+                        Node::Element(body) if body.name == "body" => {
+                            fragment.extend(
+                                body.children
+                                    .into_iter()
+                                    .filter(|node| !matches!(node, Node::DocumentType(_))),
+                            );
+                        }
+                        Node::Comment(_) | Node::Text(_) => fragment.push(child),
+                        _ => {}
+                    }
+                }
+            }
+            Node::Element(_) => fragment.push(node),
+        }
+    }
+
+    fragment
+}
+
 #[derive(Debug, Default)]
 struct DocumentShellBuilder {
     seen_document_element: bool,
@@ -1279,6 +1396,32 @@ fn is_ignorable_before_body(node: &Node) -> bool {
 
 fn is_table_section(name: &str) -> bool {
     matches!(name, "tbody" | "thead" | "tfoot")
+}
+
+fn is_table_context_element(name: &str) -> bool {
+    matches!(
+        name,
+        "table" | "caption" | "colgroup" | "tbody" | "thead" | "tfoot" | "tr" | "td" | "th"
+    )
+}
+
+fn is_formatting_element(name: &str) -> bool {
+    matches!(
+        name,
+        "a" | "b"
+            | "big"
+            | "code"
+            | "em"
+            | "font"
+            | "i"
+            | "nobr"
+            | "s"
+            | "small"
+            | "strike"
+            | "strong"
+            | "tt"
+            | "u"
+    )
 }
 
 fn is_heading_element(name: &str) -> bool {
@@ -1393,6 +1536,55 @@ mod tests {
         let em = element(&h1.children[1]);
         assert_eq!(em.name, "em");
         assert_eq!(em.children, vec![Node::text("Venture")]);
+    }
+
+    #[test]
+    fn parses_body_fragments_without_returning_implied_shell() {
+        let nodes = parse_html_fragment("<p>one<p>two").unwrap();
+
+        assert_eq!(nodes.len(), 2);
+        let first = element(&nodes[0]);
+        assert_eq!(first.name, "p");
+        assert_eq!(first.children, vec![Node::text("one")]);
+        let second = element(&nodes[1]);
+        assert_eq!(second.name, "p");
+        assert_eq!(second.children, vec![Node::text("two")]);
+    }
+
+    #[test]
+    fn fragment_parsing_keeps_comment_text_and_void_body_nodes() {
+        let nodes = parse_html_fragment("<!doctype html><!--note-->before<br>after").unwrap();
+
+        assert_eq!(nodes.len(), 4);
+        assert_eq!(nodes[0], Node::comment("note"));
+        assert_eq!(nodes[1], Node::text("before"));
+        assert_eq!(element(&nodes[2]).name, "br");
+        assert_eq!(nodes[3], Node::text("after"));
+    }
+
+    #[test]
+    fn fragment_parsing_keeps_diagnostics_and_parser_options() {
+        let output = parse_html_fragment_with_diagnostics("text</section>").unwrap();
+        assert_eq!(output.nodes, vec![Node::text("text")]);
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-end-tag",
+                "end tag `</section>` did not match an open element"
+            )]
+        );
+
+        let noscript_nodes = parse_html_fragment_with_options(
+            "<noscript><p>Fallback</p></noscript>",
+            HtmlParseOptions {
+                scripting: HtmlScriptingMode::Disabled,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+        let noscript = element(&noscript_nodes[0]);
+        assert_eq!(noscript.name, "noscript");
+        assert_eq!(element(&noscript.children[0]).name, "p");
     }
 
     #[test]
