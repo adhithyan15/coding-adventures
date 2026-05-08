@@ -36,10 +36,10 @@ This first slice intentionally starts small:
 - parser options for scripting-sensitive tokenizer handoff, including
   `noscript`
 - parser-approved initial tokenizer contexts for data-state documents and
-  RCDATA/RAWTEXT, PLAINTEXT, foreign-content CDATA, comment, script-state, and
-  intermediate tokenizer fragments exposed by the lexer, including resumable
-  end-tag-open, seeded end-tag continuation, and seeded comment continuation
-  contexts
+  RCDATA/RAWTEXT, PLAINTEXT, foreign-content CDATA, comment, DOCTYPE,
+  script-state, and intermediate tokenizer fragments exposed by the lexer,
+  including resumable end-tag-open, seeded end-tag continuation, seeded comment
+  continuation, and seeded DOCTYPE continuation contexts
 - simple implied end tags for `p`, `li`, `dt`, `dd`, `option`, `optgroup`,
   ruby annotations, heading elements, legacy paragraph/block boundaries, and
   raw-text block starts
@@ -107,6 +107,15 @@ let comment_fragment = parse_html_with_options(
     " body --><p>done</p>",
     HtmlParseOptions {
         initial_tokenizer_context: HtmlInitialTokenizerContext::Comment,
+        ..HtmlParseOptions::default()
+    },
+)
+.unwrap();
+
+let doctype_fragment = parse_html_with_options(
+    "ml><p>done</p>",
+    HtmlParseOptions {
+        initial_tokenizer_context: HtmlInitialTokenizerContext::DoctypeName,
         ..HtmlParseOptions::default()
     },
 )
