@@ -45,6 +45,9 @@ documented in this file.
   continuation substates, carrying current comment data through comment body,
   pending dash/bang, nested-comment, abrupt-close, and bogus-comment recovery
   paths exposed by the lexer.
+- Parser-approved initial tokenizer contexts now include seeded text/RCDATA
+  character-reference continuation substates, carrying temporary buffers and
+  return states through named, numeric, decimal, and hexadecimal recovery paths.
 - Initial table tree-construction recovery for omitted `tbody`/`tr` structure,
   including implicit row groups for bare rows/cells and section closure when a
   new table section starts.
