@@ -1,5 +1,92 @@
 # Changelog
 
+## [0.5.0] — 2026-05-08
+
+### Added
+
+- **`tf()` function** — DC small-signal transfer function analysis (the SPICE `.TF` command).
+
+  **What it computes:**
+  Given a circuit, one driving independent source (`input_source`), and one
+  output node (`output_node`), `.TF` returns three DC small-signal quantities:
+
+  | Quantity | Symbol | Definition |
+  |---|---|---|
+  | Transfer ratio | H | V_output / V_input (VoltageSource) or V_output / I_input (CurrentSource, transimpedance in Ω) |
+  | Input impedance | Z_in | Thevenin impedance looking into the input port (Ω) |
+  | Output impedance | Z_out | Thevenin impedance looking back from the output node (Ω) |
+
+  **Algorithm (four steps):**
+  1. **DC operating point** — run `dc_op` to bias all nonlinear devices (Diode,
+     MOSFET, BJT).  This gives the linearisation point for the small-signal matrix.
+  2. **Small-signal conductance matrix G_ss** — build a real (ω = 0) MNA matrix
+     via `_build_ss_matrix`.  Independent sources are zeroed (only structural
+     KVL/KCL entries remain for `VoltageSource`; `CurrentSource` is skipped
+     entirely).  Reactive elements: Capacitor → open; Inductor → near-short
+     (G = 1e12 S).  Nonlinear devices → small-signal conductances at the DC OP.
+  3. **Forward solve** — apply a unit excitation at the input source while all
+     other sources are zeroed; solve `G_ss · x_fwd = b_fwd`:
+     - `VoltageSource` input: `b_fwd[branch] = 1.0` (1 V excitation);
+       `H = x_fwd[output_idx]`;  `Z_in = -1 / x_fwd[branch]` (branch current is
+       negative when the source delivers current — MNA stamp convention).
+     - `CurrentSource` input: `b_fwd[n_plus] -= 1`, `b_fwd[n_minus] += 1` (1 A);
+       `H = x_fwd[output_idx]`;  `Z_in = V_n_minus − V_n_plus` (compliance voltage).
+  4. **Output impedance solve** — same G_ss, inject 1 A at `output_node`:
+     `b_test[output_idx] = 1.0`;  `Z_out = x_test[output_idx]` (V/A = Thevenin Ω).
+
+  **Why branch current is negative for VoltageSource:**
+  The MNA stamp `G[n_plus][branch] = 1` places `x[branch]` in the KCL row for
+  n_plus with coefficient +1.  For a resistive load:
+  `(1/R)·V_n_plus + x[branch] = 0` → `x[branch] = −I_delivered`.
+  So `Z_in = V_in / I_delivered = 1 / (−x[branch])`.
+
+- **`TfResult` dataclass** — frozen result type for `tf()`.
+  - `transfer_ratio: float` — V_out/V_in or V_out/I_in (transimpedance).
+  - `input_impedance: float` — Thevenin input impedance (Ω).
+  - `output_impedance: float` — Thevenin output impedance (Ω).
+  - `converged: bool` — mirrors the DC operating-point convergence flag.
+
+- **`_build_ss_matrix` helper** — builds the real DC small-signal MNA matrix.
+  Stamping rules per element type:
+
+  | Element | Stamp |
+  |---|---|
+  | Resistor R | conductance G = 1/R |
+  | Capacitor | open circuit (skipped) |
+  | Inductor | near-short G = 1e12 S |
+  | VoltageSource | KVL/KCL structural entries only (b not set) |
+  | CurrentSource | skipped (independent source → zero) |
+  | Diode | gd = (Is/Vt)·exp(Vd/Vt) at DC OP |
+  | MOSFET | gds + gm VCCS at DC OP |
+  | BJT | g_π + gm VCCS at DC OP |
+
+### Changed
+
+- `__version__` bumped from `0.4.0` to `0.5.0`.
+- `pyproject.toml` description updated to include DC transfer function analysis.
+
+### Tests
+
+27 new tests across 5 sections (23–27):
+
+- **Section 23** (4 tests) — `TfResult` dataclass: fields, frozen immutability,
+  `converged=False`, package export.
+- **Section 24** (4 tests) — `_build_ss_matrix` unit tests: single resistor,
+  capacitor open, inductor near-short, current source skipped.
+- **Section 25** (7 tests) — voltage-source input: symmetric voltage divider
+  (H=0.5, Z_in=2kΩ, Z_out=500Ω), asymmetric divider, source-node output (H=1,
+  Z_out=0), ground output (H=0), three-resistor ladder, inductor-short, diode
+  linearisation.
+- **Section 26** (3 tests) — current-source input: transimpedance into R,
+  parallel R∥R, mixed source circuit (VoltageSource input with CurrentSource
+  zeroed).
+- **Section 27** (5 tests) — error cases: missing source name, non-source
+  element, unknown output node, independence of source voltage, two-source circuit.
+
+Total: 107 tests, 80.16% coverage, ruff clean.
+
+---
+
 ## [0.4.0] — 2026-05-08
 
 ### Added

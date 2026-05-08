@@ -24,6 +24,11 @@ Test organisation
 20. AC sweep: sweep modes (log, lin, edge cases)
 21. AC sweep: small-signal nonlinear elements (Diode, BJT)
 22. AC sweep: current source injection
+23. TF analysis: TfResult dataclass
+24. TF analysis: _build_ss_matrix helper
+25. TF analysis: resistive circuits (voltage-source input)
+26. TF analysis: current-source input + transimpedance
+27. TF analysis: error cases and edge cases
 """
 
 import cmath
@@ -42,12 +47,22 @@ from spice_engine import (
     Diode,
     Inductor,
     Resistor,
+    TfResult,
     VoltageSource,
     ac_sweep,
     dc_op,
+    tf,
     transient,
 )
-from spice_engine.engine import _lte_estimate, _solve, _solve_complex, _stamp_bjt
+from spice_engine.engine import (
+    _build_ss_matrix,
+    _lte_estimate,
+    _node_index,
+    _solve,
+    _solve_complex,
+    _stamp_bjt,
+    _voltage_sources,
+)
 
 # ---- Linear solver ----
 
@@ -1410,3 +1425,460 @@ def test_ac_inductor_acts_as_short_at_very_low_frequency():
         assert v_mid > 0.99, (
             f"At ω=0 (inductor short), V_mid={v_mid:.6f} (expected ≈ 1.0)"
         )
+
+
+# ============================================================================
+# 23. TF analysis: TfResult dataclass
+# ============================================================================
+
+
+def test_tfresult_fields():
+    """TfResult is a frozen dataclass with the expected fields."""
+    r = TfResult(transfer_ratio=0.5, input_impedance=2000.0, output_impedance=500.0)
+    assert isclose(r.transfer_ratio, 0.5)
+    assert isclose(r.input_impedance, 2000.0)
+    assert isclose(r.output_impedance, 500.0)
+    assert r.converged is True  # default
+
+
+def test_tfresult_converged_false():
+    """TfResult.converged can be set to False."""
+    r = TfResult(
+        transfer_ratio=0.0,
+        input_impedance=float("inf"),
+        output_impedance=float("inf"),
+        converged=False,
+    )
+    assert not r.converged
+    assert r.input_impedance == float("inf")
+
+
+def test_tfresult_is_frozen():
+    """TfResult is frozen — attributes cannot be reassigned."""
+    r = TfResult(transfer_ratio=1.0, input_impedance=100.0, output_impedance=50.0)
+    with pytest.raises((AttributeError, TypeError)):
+        r.transfer_ratio = 0.0  # type: ignore[misc]
+
+
+def test_tfresult_exported():
+    """TfResult is importable from the top-level spice_engine package."""
+    from spice_engine import TfResult as TfResult_exported
+    assert TfResult_exported is TfResult
+
+
+# ============================================================================
+# 24. TF analysis: _build_ss_matrix helper
+# ============================================================================
+
+
+def test_build_ss_matrix_single_resistor():
+    """Single resistor: G_ss has correct conductance value.
+
+    Circuit: V1("v", "0") + R1("v", "0", 1kΩ)
+    G_ss size = 2×2 (1 node "v" + 1 vsrc branch).
+    G[0][0] = 1/1000, G[0][1] = G[1][0] = 1.0, G[1][1] = 0.
+    """
+    c = Circuit()
+    c.add(VoltageSource("V1", "v", "0", 10.0))
+    c.add(Resistor("R1", "v", "0", 1000.0))
+
+    node_to_idx, _ = _node_index(c)
+    vsrcs = _voltage_sources(c)
+    dc_x = [0.0] * (len(node_to_idx) + len(vsrcs))
+
+    G = _build_ss_matrix(c, node_to_idx, vsrcs, dc_x)
+
+    # G[v][v] = 1/1000 (R1 conductance)
+    v_idx = node_to_idx["v"]
+    assert isclose(G[v_idx][v_idx], 1.0 / 1000.0, rel_tol=1e-9)
+    # Structural VoltageSource entries
+    branch_idx = len(node_to_idx) + 0
+    assert isclose(G[v_idx][branch_idx], 1.0)
+    assert isclose(G[branch_idx][v_idx], 1.0)
+
+
+def test_build_ss_matrix_capacitor_is_open():
+    """Capacitor contributes nothing to G_ss (open circuit at ω=0)."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 5.0))
+    c.add(Capacitor("C1", "in", "out", 1e-6))
+    c.add(Resistor("R1", "out", "0", 1000.0))
+
+    node_to_idx, _ = _node_index(c)
+    vsrcs = _voltage_sources(c)
+    n = len(node_to_idx)
+    dc_x = [0.0] * (n + len(vsrcs))
+
+    G = _build_ss_matrix(c, node_to_idx, vsrcs, dc_x)
+
+    # "out" row should only contain R1's conductance (no cap contribution).
+    out_idx = node_to_idx["out"]
+    assert isclose(G[out_idx][out_idx], 1.0 / 1000.0, rel_tol=1e-9)
+
+
+def test_build_ss_matrix_inductor_is_short():
+    """Inductor is modelled as a near-short (G = 1e12 S) at ω=0."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Inductor("L1", "in", "mid", 1e-3))
+    c.add(Resistor("R1", "mid", "0", 1000.0))
+
+    node_to_idx, _ = _node_index(c)
+    vsrcs = _voltage_sources(c)
+    dc_x = [0.0] * (len(node_to_idx) + len(vsrcs))
+
+    G = _build_ss_matrix(c, node_to_idx, vsrcs, dc_x)
+
+    in_idx = node_to_idx["in"]
+    mid_idx = node_to_idx["mid"]
+    # L1 adds conductance 1e12 to both diagonals and -1e12 off-diagonals.
+    assert G[in_idx][mid_idx] < -1e11  # off-diagonal < 0
+
+
+def test_build_ss_matrix_current_source_skipped():
+    """CurrentSource does not contribute to G_ss (independent → zeroed)."""
+    c = Circuit()
+    c.add(CurrentSource("I1", "0", "n1", current=1e-3))
+    c.add(Resistor("R1", "n1", "0", 1000.0))
+
+    node_to_idx, _ = _node_index(c)
+    vsrcs = _voltage_sources(c)
+    dc_x = [0.0] * (len(node_to_idx) + len(vsrcs))
+
+    G = _build_ss_matrix(c, node_to_idx, vsrcs, dc_x)
+
+    # Only R1's conductance should be present.  Size = 1×1 (no vsrcs).
+    n1_idx = node_to_idx["n1"]
+    assert isclose(G[n1_idx][n1_idx], 1.0 / 1000.0, rel_tol=1e-9)
+    # Only one row and column since there are no voltage sources.
+    assert len(G) == 1
+
+
+# ============================================================================
+# 25. TF analysis: resistive circuits (voltage-source input)
+# ============================================================================
+
+
+def test_tf_voltage_divider_transfer_ratio():
+    """Symmetric voltage divider: H = R2 / (R1 + R2) = 0.5.
+
+    Circuit:
+        V1 (10 V)  →  R1 (1kΩ)  →  vmid  →  R2 (1kΩ)  →  GND
+
+    Transfer ratio (vmid / vin):  H = R2/(R1+R2) = 0.5
+    Input impedance:               Z_in = R1 + R2 = 2000 Ω
+    Output impedance:              Z_out = R1 ∥ R2 = 500 Ω
+    """
+    c = Circuit()
+    c.add(VoltageSource("V1", "vin", "0", 10.0))
+    c.add(Resistor("R1", "vin", "vmid", 1000.0))
+    c.add(Resistor("R2", "vmid", "0", 1000.0))
+
+    result = tf(c, output_node="vmid", input_source="V1")
+
+    assert result.converged
+    assert isclose(result.transfer_ratio, 0.5, rel_tol=1e-6)
+    assert isclose(result.input_impedance, 2000.0, rel_tol=1e-6)
+    assert isclose(result.output_impedance, 500.0, rel_tol=1e-6)
+
+
+def test_tf_asymmetric_divider():
+    """Asymmetric divider: R1=3kΩ, R2=1kΩ.
+
+    H    = R2/(R1+R2) = 1/4 = 0.25
+    Z_in = R1 + R2 = 4000 Ω
+    Z_out = R1∥R2 = 3000·1000/4000 = 750 Ω
+    """
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 5.0))
+    c.add(Resistor("R1", "in", "out", 3000.0))
+    c.add(Resistor("R2", "out", "0", 1000.0))
+
+    result = tf(c, output_node="out", input_source="Vin")
+
+    assert isclose(result.transfer_ratio, 0.25, rel_tol=1e-6)
+    assert isclose(result.input_impedance, 4000.0, rel_tol=1e-6)
+    assert isclose(result.output_impedance, 750.0, rel_tol=1e-6)
+
+
+def test_tf_series_resistor_output_at_source():
+    """Output node is the input node itself: H = 1, Z_out = 0 (source node).
+
+    Circuit:  V1("in", "0") + R1("in", "0").
+
+    At the source node (vin) the voltage is fixed by V1, so H = 1 and
+    Z_out = 0 (the ideal voltage source clamps the output).
+    """
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 10.0))
+    c.add(Resistor("R1", "in", "0", 1000.0))
+
+    result = tf(c, output_node="in", input_source="V1")
+
+    assert isclose(result.transfer_ratio, 1.0, rel_tol=1e-6)
+    assert isclose(result.input_impedance, 1000.0, rel_tol=1e-6)
+    # V1 forces V_in → Z_out = 0 (voltage source is a short for the test)
+    assert isclose(result.output_impedance, 0.0, abs_tol=1e-9)
+
+
+def test_tf_output_is_ground_node():
+    """Output node is ground (0 V): H = 0 regardless of circuit."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 10.0))
+    c.add(Resistor("R1", "in", "0", 1000.0))
+
+    result = tf(c, output_node="0", input_source="V1")
+    assert isclose(result.transfer_ratio, 0.0, abs_tol=1e-12)
+
+
+def test_tf_three_resistor_ladder():
+    """Three-resistor ladder: R1→R2→R3 to ground.
+
+    Circuit:  V1(1V) → R1(1kΩ) → n1 → R2(1kΩ) → n2 → R3(1kΩ) → GND
+
+    At n2 (output): voltage divider with R1+R2 vs R3.
+    H = R3 / (R1 + R2 + R3) = 1/3  (all equal)
+    Wait — this isn't quite right for a ladder. Let me use the exact formula.
+
+    Using KCL:
+      V_n1 = V_in * R_parallel(n1→gnd) / (R1 + R_parallel(n1→gnd))
+           where R_parallel = R2 + R3 = 2kΩ
+      V_n1 = 1 * 2000 / (1000 + 2000) = 2/3
+
+      V_n2 = V_n1 * R3 / (R2 + R3) = (2/3) * 1000 / 2000 = 1/3
+    """
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "n1", 1000.0))
+    c.add(Resistor("R2", "n1", "n2", 1000.0))
+    c.add(Resistor("R3", "n2", "0", 1000.0))
+
+    result = tf(c, output_node="n2", input_source="V1")
+
+    assert isclose(result.transfer_ratio, 1.0 / 3.0, rel_tol=1e-5)
+
+
+def test_tf_inductor_short_at_dc():
+    """Inductor is a near-short at ω=0: V across it is ≈ 0.
+
+    Circuit:  V1(1V) → L1(1mH) → mid → R1(1kΩ) → GND
+
+    At DC (ω=0): L is a short → V_mid ≈ V_in = 1 V, H ≈ 1.
+    Z_in ≈ 0 (inductor short + R1 in parallel with near-zero L impedance ≈ 0)
+    but numerically G_L = 1e12 >> G_R1, so Z_in ≈ 1/1e12 ≈ 0.
+    """
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Inductor("L1", "in", "mid", 1e-3))
+    c.add(Resistor("R1", "mid", "0", 1000.0))
+
+    result = tf(c, output_node="mid", input_source="V1")
+
+    assert result.converged
+    # Inductor is a near-short: V_mid ≈ V_in, H ≈ 1
+    assert isclose(result.transfer_ratio, 1.0, rel_tol=0.001)
+
+
+def test_tf_converged_flag_matches_dc():
+    """TfResult.converged mirrors the DC operating-point convergence."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 5.0))
+    c.add(Resistor("R1", "in", "out", 1000.0))
+    c.add(Resistor("R2", "out", "0", 1000.0))
+
+    result = tf(c, output_node="out", input_source="V1")
+    assert result.converged  # simple linear circuit always converges
+
+
+def test_tf_diode_circuit_linearised():
+    """Diode in series with a resistor: .TF linearises around the DC OP.
+
+    Circuit:  V1(0.7V) → D1 → n_diode → R1(1kΩ) → GND
+
+    At Vd ≈ 0.7 V (clamped), gd = (Is/Vt)·exp(0.7/Vt).
+    Transfer ratio is the small-signal gain, not the DC ratio.
+    We just verify the result has the right shape (converged, 0 < H < 1).
+    """
+    c = Circuit()
+    c.add(VoltageSource("V1", "a", "0", 0.7))
+    c.add(Diode("D1", anode="a", cathode="n_d"))
+    c.add(Resistor("R1", "n_d", "0", 1000.0))
+
+    result = tf(c, output_node="n_d", input_source="V1")
+
+    assert result.converged
+    assert 0.0 < result.transfer_ratio < 1.0
+
+
+# ============================================================================
+# 26. TF analysis: current-source input + transimpedance
+# ============================================================================
+
+
+def test_tf_current_source_into_resistor():
+    """CurrentSource 1mA into 1kΩ: transimpedance H = V_out/I_in = R = 1kΩ.
+
+    Circuit:  I1("0", "n1", 1mA) ∥ R1("n1", "0", 1kΩ)
+
+    Transfer ratio H = V_n1 / I_source = R = 1000 Ω/A → 1000 V/A
+    Z_in = parallel impedance from the source terminals = R = 1000 Ω
+    Z_out = R = 1000 Ω (looking in from n1 with I1 zeroed → just R1)
+    """
+    c = Circuit()
+    c.add(CurrentSource("I1", "0", "n1", current=1e-3))
+    c.add(Resistor("R1", "n1", "0", 1000.0))
+
+    result = tf(c, output_node="n1", input_source="I1")
+
+    assert result.converged
+    # H = V_n1 / 1A = R1 = 1000 V/A  (transimpedance)
+    assert isclose(result.transfer_ratio, 1000.0, rel_tol=1e-6)
+    # Z_in = V_source / I_source = R1 (load seen by source)
+    assert isclose(result.input_impedance, 1000.0, rel_tol=1e-6)
+    # Z_out = R1 (only R1 remains when I1 is zeroed)
+    assert isclose(result.output_impedance, 1000.0, rel_tol=1e-6)
+
+
+def test_tf_current_source_divider():
+    """Current source into parallel R1∥R2: Z_in = R1∥R2.
+
+    Circuit: I1("0", "n1") ∥ R1("n1","0", 1kΩ) ∥ R2("n1","0", 1kΩ)
+
+    H    = V_n1 / 1 A = R1∥R2 = 500 Ω  (transimpedance in V/A)
+    Z_in = R1∥R2 = 500 Ω
+    Z_out = R1∥R2 = 500 Ω
+    """
+    c = Circuit()
+    c.add(CurrentSource("I1", "0", "n1", current=1e-3))
+    c.add(Resistor("R1", "n1", "0", 1000.0))
+    c.add(Resistor("R2", "n1", "0", 1000.0))
+
+    result = tf(c, output_node="n1", input_source="I1")
+
+    assert isclose(result.transfer_ratio, 500.0, rel_tol=1e-6)
+    assert isclose(result.input_impedance, 500.0, rel_tol=1e-6)
+    assert isclose(result.output_impedance, 500.0, rel_tol=1e-6)
+
+
+def test_tf_mixed_source_types():
+    """Circuit with both a VoltageSource and a CurrentSource.
+
+    When the voltage source is the input, the current source is zeroed
+    (open circuit), and vice versa.
+
+    Circuit:
+        V1("vin", "0", 5V) + R1("vin","out", 1kΩ) + R2("out","0", 2kΩ)
+        + I1("0","out", 1mA)
+
+    With I1 zeroed (TF from V1 to "out"):
+        H = R2 / (R1 + R2) = 2/3 ≈ 0.667
+        Z_in = R1 + R2 = 3000 Ω
+        Z_out = R1∥R2 = 1000·2000/3000 ≈ 666.7 Ω
+    """
+    c = Circuit()
+    c.add(VoltageSource("V1", "vin", "0", 5.0))
+    c.add(Resistor("R1", "vin", "out", 1000.0))
+    c.add(Resistor("R2", "out", "0", 2000.0))
+    c.add(CurrentSource("I1", "0", "out", 1e-3))  # zeroed in the V1 TF
+
+    result = tf(c, output_node="out", input_source="V1")
+
+    assert isclose(result.transfer_ratio, 2.0 / 3.0, rel_tol=1e-5)
+    assert isclose(result.input_impedance, 3000.0, rel_tol=1e-5)
+    assert isclose(result.output_impedance, 1000.0 * 2000.0 / 3000.0, rel_tol=1e-5)
+
+
+# ============================================================================
+# 27. TF analysis: error cases and edge cases
+# ============================================================================
+
+
+def test_tf_raises_on_missing_source():
+    """tf() raises ValueError when the named source is not in the circuit."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "0", 1000.0))
+
+    with pytest.raises(ValueError, match="nonexistent"):
+        tf(c, output_node="in", input_source="nonexistent")
+
+
+def test_tf_raises_on_non_source_element():
+    """tf() raises ValueError when the named element is not a source."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "out", 1000.0))
+
+    with pytest.raises(ValueError, match="VoltageSource or CurrentSource"):
+        tf(c, output_node="out", input_source="R1")
+
+
+def test_tf_raises_on_unknown_output_node():
+    """tf() raises ValueError when the output node is not in the circuit."""
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "0", 1000.0))
+
+    with pytest.raises(ValueError, match="ghost_node"):
+        tf(c, output_node="ghost_node", input_source="V1")
+
+
+def test_tf_result_exported_and_callable():
+    """tf() is exported from the top-level spice_engine package."""
+    from spice_engine import tf as tf_exported
+    assert tf_exported is tf
+
+
+def test_tf_voltage_divider_independence_of_source_voltage():
+    """Transfer ratio is independent of the source voltage (it's a ratio).
+
+    H = V_out / V_in = R2/(R1+R2) regardless of the absolute source value.
+    """
+    c5 = Circuit()
+    c5.add(VoltageSource("V1", "in", "0", 5.0))
+    c5.add(Resistor("R1", "in", "out", 1000.0))
+    c5.add(Resistor("R2", "out", "0", 1000.0))
+
+    c100 = Circuit()
+    c100.add(VoltageSource("V1", "in", "0", 100.0))
+    c100.add(Resistor("R1", "in", "out", 1000.0))
+    c100.add(Resistor("R2", "out", "0", 1000.0))
+
+    r5 = tf(c5, output_node="out", input_source="V1")
+    r100 = tf(c100, output_node="out", input_source="V1")
+
+    assert isclose(r5.transfer_ratio, r100.transfer_ratio, rel_tol=1e-9)
+    assert isclose(r5.input_impedance, r100.input_impedance, rel_tol=1e-9)
+    assert isclose(r5.output_impedance, r100.output_impedance, rel_tol=1e-9)
+
+
+def test_tf_multiple_sources_only_one_excited():
+    """With two voltage sources, TF from V1 ignores V2 (it becomes 0 V short).
+
+    Circuit:
+        V1("in", "0", 1V) → R1("in","mid", 1kΩ) → mid
+        V2("mid", "out", 0V) → R2("out","0", 1kΩ) → GND
+
+    V2 is a 0 V source (wire).  The whole thing is a series 2kΩ divider.
+    H = V_out / V_in_V1 should be 1.0 (V2 is a short, so V_out = V_mid = V_in
+    through R1+R2... wait, let me compute properly).
+
+    Actually: V1 forces vin=1V. R1 connects vin→mid, V2 (0V) forces
+    V_out = V_mid. R2 connects out→GND.
+
+    V2 is a 0V wire: V_mid = V_out.
+    KCL at mid (= out via V2):
+      (V_in - V_mid)/R1 = V_mid/R2
+      (1 - V_mid)/1000 = V_mid/1000
+      1 - V_mid = V_mid → V_mid = 0.5
+
+    H = V_out / V_in = 0.5.
+    """
+    c = Circuit()
+    c.add(VoltageSource("V1", "in", "0", 1.0))
+    c.add(Resistor("R1", "in", "mid", 1000.0))
+    c.add(VoltageSource("V2", "mid", "out", 0.0))  # wire
+    c.add(Resistor("R2", "out", "0", 1000.0))
+
+    result = tf(c, output_node="out", input_source="V1")
+    assert isclose(result.transfer_ratio, 0.5, rel_tol=1e-6)
