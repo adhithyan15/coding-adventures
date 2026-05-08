@@ -1,5 +1,96 @@
 # Changelog
 
+## 1.24.0 — 2026-05-08
+
+**Phase 33 — End-to-end pipeline tests for Fourier transforms, Newton's method,
+algebraic extension factoring, and Gröbner bases; plus edge-case coverage
+for list handler wrong-arity branches, factor/solve edge cases, and numeric
+handler error paths.**
+
+### Why this release
+
+`symbolic-vm ≥ 0.53.0` ships fully-implemented handlers for `Fourier`,
+`IFourier`, `MNewton`, `AlgFactor`, `Groebner`, and `PolyReduce`, and the
+MACSYMA name table (added in earlier phases) already maps the user-visible
+names to the correct IR heads.  However, the complete pipeline —
+`macsyma surface → compiler → VM → result` — had never been validated for
+these four capabilities.  This release adds the first end-to-end pipeline
+tests for each, making these operations first-class tested members of the
+MACSYMA CAS.
+
+The release also brings `cas_handlers.py` coverage up from **89% → 94%** by
+adding targeted unit tests for every uncovered `return expr` guard path.
+
+### New pipeline tests (Sections DD–GG in `test_cas_pipeline.py`)
+
+#### Section DD — Fourier transforms (`fourier`, `ifourier`)
+
+| Test | Expected result |
+|------|----------------|
+| `fourier(1, t, w)` | `2π · DiracDelta(w)` — Fourier of constant |
+| `ifourier(1, w, t)` | `DiracDelta(t)` — inverse Fourier of 1 |
+| `fourier(delta(t), t, w)` | Result exists and is non-null |
+| `ifourier(delta(w), w, t)` | Result exists and is non-null |
+
+#### Section EE — Newton's method (`mnewton`)
+
+| Test | Expected result |
+|------|----------------|
+| `mnewton(x^2 - 4, x, 1.5)` | `≈ 2.0` (positive root of x²=4) |
+| `mnewton(x^3 - 8, x, 2.0)` | `≈ 2.0` (real cube root of 8) |
+| `mnewton(sin(x), x, 3)` | `≈ π ≈ 3.14159` (nearest root of sin) |
+| `mnewton(exp(x) - 2, x, 0.5)` | `≈ ln(2) ≈ 0.6931` |
+
+#### Section FF — Algebraic extension factoring (`algfactor`)
+
+| Test | Expected result |
+|------|----------------|
+| `algfactor(x^2 - 2, sqrt(2))` | `Mul(…, …)` — 2 linear factors over Q[√2] |
+| `algfactor(x^2 - 3, sqrt(3))` | `Mul(…, …)` — 2 linear factors over Q[√3] |
+| `algfactor(x^2 + 1, sqrt(2))` | unevaluated (irreducible over Q[√2]) |
+
+#### Section GG — Gröbner bases (`groebner`, `poly_reduce`)
+
+| Test | Expected result |
+|------|----------------|
+| `groebner([x^2-1, x-1], [x])` | `[x-1]` — 1-element basis |
+| `groebner([x^2+y^2-1, x-y], [x,y])` | `List(…)` — non-empty basis |
+| `poly_reduce(x^3, [x^2-1], [x])` | `x` — reduction by `x³ = x·(x²-1) + x` |
+| `poly_reduce(x^2-1, [x^2-1], [x])` | `0` — exact divisibility |
+
+### New unit tests (Phase 33 section in `test_cas_handlers.py`)
+
+| Test | What it covers |
+|------|---------------|
+| `test_length_wrong_arity_returns_unevaluated` | `Length(a, b)` — line 519 |
+| `test_first_wrong_arity_returns_unevaluated` | `First(a, b)` — line 529 |
+| `test_rest_wrong_arity_returns_unevaluated` | `Rest(a, b)` — line 539 |
+| `test_last_wrong_arity_returns_unevaluated` | `Last(a, b)` — line 549 |
+| `test_append_single_arg_returns_unevaluated` | `Append(list)` — line 559 |
+| `test_reverse_wrong_arity_returns_unevaluated` | `Reverse(a, b)` — line 569 |
+| `test_expand_multivariate_uses_canonical_fallback` | multi-var expand — line 156 |
+| `test_factor_rational_polynomial_returns_unevaluated` | rational poly — line 207 |
+| `test_factor_multivariate_returns_unevaluated_p33` | two-variable Factor |
+| `test_solve_constant_equation_returns_empty_list` | degree-0 Solve — line 453 |
+| `test_solve_transcendental_returns_unevaluated` | non-polynomial Solve — line 440 |
+| `test_floor_symbolic_returns_unevaluated` | Floor(x) — line 818 |
+| `test_ceiling_wrong_arity_returns_unevaluated` | Ceiling(a,b) — line 825 |
+| `test_mod_symbolic_divisor_returns_unevaluated` | Mod(3,x) — line 835 |
+| `test_gcd_wrong_arity_returns_unevaluated` | Gcd(a) — line 847 |
+| `test_lcm_wrong_arity_returns_unevaluated` | Lcm(a) — line 857 |
+
+### Changed
+
+- `pyproject.toml` version bumped `1.23.0` → `1.24.0`.
+- Module description updated to include Fourier, MNewton, algebraic factoring, Gröbner.
+
+### Stats
+
+- **401 tests** (up from 370), all passing.
+- **94.46% coverage** (up from 92.38%).
+
+---
+
 ## 1.23.0 — 2026-05-08
 
 **Phase 32 — MACSYMA name-table extensions: advanced matrix ops, cube root, log/exp transformations.**
