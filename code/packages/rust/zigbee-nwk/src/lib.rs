@@ -15,6 +15,21 @@ const NWK_ADDR_LEN: usize = 2;
 const IEEE_ADDR_LEN: usize = 8;
 const NWK_BASE_HEADER_LEN: usize = NWK_FRAME_CONTROL_LEN + (NWK_ADDR_LEN * 2) + 2;
 const SOURCE_ROUTE_FIXED_LEN: usize = 2;
+const ROUTE_REQUEST_FIXED_LEN: usize = 5;
+const ROUTE_REPLY_FIXED_LEN: usize = 7;
+const NETWORK_STATUS_LEN: usize = 3;
+const ROUTE_REQUEST_MANY_TO_ONE_MASK: u8 = 0b0001_1000;
+const ROUTE_REQUEST_MANY_TO_ONE_SHIFT: u8 = 3;
+const ROUTE_REQUEST_DESTINATION_IEEE_FLAG: u8 = 1 << 5;
+const ROUTE_REQUEST_MULTICAST_FLAG: u8 = 1 << 6;
+const ROUTE_REPLY_ORIGINATOR_IEEE_FLAG: u8 = 1 << 4;
+const ROUTE_REPLY_RESPONDER_IEEE_FLAG: u8 = 1 << 5;
+const ROUTE_REPLY_MULTICAST_FLAG: u8 = 1 << 6;
+
+pub const NWK_COMMAND_ROUTE_REQUEST: u8 = 0x01;
+pub const NWK_COMMAND_ROUTE_REPLY: u8 = 0x02;
+pub const NWK_COMMAND_NETWORK_STATUS: u8 = 0x03;
+pub const NWK_COMMAND_ROUTE_RECORD: u8 = 0x05;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct NetworkAddress(pub u16);
@@ -352,6 +367,496 @@ impl DiscoverRoute {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum NwkCommandId {
+    RouteRequest,
+    RouteReply,
+    NetworkStatus,
+    RouteRecord,
+    Unknown(u8),
+}
+
+impl NwkCommandId {
+    pub fn from_byte(value: u8) -> Self {
+        match value {
+            NWK_COMMAND_ROUTE_REQUEST => Self::RouteRequest,
+            NWK_COMMAND_ROUTE_REPLY => Self::RouteReply,
+            NWK_COMMAND_NETWORK_STATUS => Self::NetworkStatus,
+            NWK_COMMAND_ROUTE_RECORD => Self::RouteRecord,
+            other => Self::Unknown(other),
+        }
+    }
+
+    pub fn as_byte(self) -> u8 {
+        match self {
+            Self::RouteRequest => NWK_COMMAND_ROUTE_REQUEST,
+            Self::RouteReply => NWK_COMMAND_ROUTE_REPLY,
+            Self::NetworkStatus => NWK_COMMAND_NETWORK_STATUS,
+            Self::RouteRecord => NWK_COMMAND_ROUTE_RECORD,
+            Self::Unknown(value) => value,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub struct RouteCommandOptions(u8);
+
+impl RouteCommandOptions {
+    pub fn new(raw: u8) -> Self {
+        Self(raw)
+    }
+
+    pub fn raw(self) -> u8 {
+        self.0
+    }
+
+    pub fn route_request_many_to_one(self) -> u8 {
+        (self.0 & ROUTE_REQUEST_MANY_TO_ONE_MASK) >> ROUTE_REQUEST_MANY_TO_ONE_SHIFT
+    }
+
+    pub fn route_request_destination_ieee_present(self) -> bool {
+        self.has_flag(ROUTE_REQUEST_DESTINATION_IEEE_FLAG)
+    }
+
+    pub fn route_request_multicast(self) -> bool {
+        self.has_flag(ROUTE_REQUEST_MULTICAST_FLAG)
+    }
+
+    pub fn with_route_request_destination_ieee_present(self, present: bool) -> Self {
+        self.with_flag(ROUTE_REQUEST_DESTINATION_IEEE_FLAG, present)
+    }
+
+    pub fn route_reply_originator_ieee_present(self) -> bool {
+        self.has_flag(ROUTE_REPLY_ORIGINATOR_IEEE_FLAG)
+    }
+
+    pub fn route_reply_responder_ieee_present(self) -> bool {
+        self.has_flag(ROUTE_REPLY_RESPONDER_IEEE_FLAG)
+    }
+
+    pub fn route_reply_multicast(self) -> bool {
+        self.has_flag(ROUTE_REPLY_MULTICAST_FLAG)
+    }
+
+    pub fn with_route_reply_originator_ieee_present(self, present: bool) -> Self {
+        self.with_flag(ROUTE_REPLY_ORIGINATOR_IEEE_FLAG, present)
+    }
+
+    pub fn with_route_reply_responder_ieee_present(self, present: bool) -> Self {
+        self.with_flag(ROUTE_REPLY_RESPONDER_IEEE_FLAG, present)
+    }
+
+    fn has_flag(self, flag: u8) -> bool {
+        self.0 & flag != 0
+    }
+
+    fn with_flag(mut self, flag: u8, present: bool) -> Self {
+        if present {
+            self.0 |= flag;
+        } else {
+            self.0 &= !flag;
+        }
+        self
+    }
+}
+
+impl From<u8> for RouteCommandOptions {
+    fn from(value: u8) -> Self {
+        Self::new(value)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RouteRequest {
+    pub options: RouteCommandOptions,
+    pub request_id: u8,
+    pub destination: NetworkAddress,
+    pub path_cost: u8,
+    pub destination_ieee: Option<IeeeAddress>,
+}
+
+impl RouteRequest {
+    pub fn new(request_id: u8, destination: NetworkAddress, path_cost: u8) -> Self {
+        Self {
+            options: RouteCommandOptions::default(),
+            request_id,
+            destination,
+            path_cost,
+            destination_ieee: None,
+        }
+    }
+
+    pub fn with_options(mut self, options: RouteCommandOptions) -> Self {
+        self.options = options;
+        self
+    }
+
+    pub fn with_destination_ieee(mut self, destination_ieee: IeeeAddress) -> Self {
+        self.destination_ieee = Some(destination_ieee);
+        self.options = self
+            .options
+            .with_route_request_destination_ieee_present(true);
+        self
+    }
+
+    fn parse(cursor: &mut Cursor<'_>) -> Result<Self, NwkError> {
+        let options = RouteCommandOptions::new(cursor.read_u8()?);
+        let request_id = cursor.read_u8()?;
+        let destination = NetworkAddress(cursor.read_u16_le()?);
+        let path_cost = cursor.read_u8()?;
+        let destination_ieee = if options.route_request_destination_ieee_present() {
+            Some(IeeeAddress(cursor.read_u64_le()?))
+        } else {
+            None
+        };
+        ensure_no_command_tail(cursor, NWK_COMMAND_ROUTE_REQUEST)?;
+
+        Ok(Self {
+            options,
+            request_id,
+            destination,
+            path_cost,
+            destination_ieee,
+        })
+    }
+
+    fn encode_into(&self, out: &mut Vec<u8>) -> Result<(), NwkError> {
+        if self.options.route_request_destination_ieee_present() != self.destination_ieee.is_some()
+        {
+            return Err(NwkError::InvalidCommandPayload {
+                command_id: NWK_COMMAND_ROUTE_REQUEST,
+                reason: "route request destination IEEE flag does not match address field",
+            });
+        }
+
+        out.reserve(ROUTE_REQUEST_FIXED_LEN + self.destination_ieee.map_or(0, |_| IEEE_ADDR_LEN));
+        out.push(self.options.raw());
+        out.push(self.request_id);
+        out.extend_from_slice(&self.destination.0.to_le_bytes());
+        out.push(self.path_cost);
+        if let Some(address) = self.destination_ieee {
+            out.extend_from_slice(&address.to_le_bytes());
+        }
+        Ok(())
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RouteReply {
+    pub options: RouteCommandOptions,
+    pub request_id: u8,
+    pub originator: NetworkAddress,
+    pub responder: NetworkAddress,
+    pub path_cost: u8,
+    pub originator_ieee: Option<IeeeAddress>,
+    pub responder_ieee: Option<IeeeAddress>,
+}
+
+impl RouteReply {
+    pub fn new(
+        request_id: u8,
+        originator: NetworkAddress,
+        responder: NetworkAddress,
+        path_cost: u8,
+    ) -> Self {
+        Self {
+            options: RouteCommandOptions::default(),
+            request_id,
+            originator,
+            responder,
+            path_cost,
+            originator_ieee: None,
+            responder_ieee: None,
+        }
+    }
+
+    pub fn with_options(mut self, options: RouteCommandOptions) -> Self {
+        self.options = options;
+        self
+    }
+
+    pub fn with_originator_ieee(mut self, originator_ieee: IeeeAddress) -> Self {
+        self.originator_ieee = Some(originator_ieee);
+        self.options = self.options.with_route_reply_originator_ieee_present(true);
+        self
+    }
+
+    pub fn with_responder_ieee(mut self, responder_ieee: IeeeAddress) -> Self {
+        self.responder_ieee = Some(responder_ieee);
+        self.options = self.options.with_route_reply_responder_ieee_present(true);
+        self
+    }
+
+    fn parse(cursor: &mut Cursor<'_>) -> Result<Self, NwkError> {
+        let options = RouteCommandOptions::new(cursor.read_u8()?);
+        let request_id = cursor.read_u8()?;
+        let originator = NetworkAddress(cursor.read_u16_le()?);
+        let responder = NetworkAddress(cursor.read_u16_le()?);
+        let path_cost = cursor.read_u8()?;
+        let originator_ieee = if options.route_reply_originator_ieee_present() {
+            Some(IeeeAddress(cursor.read_u64_le()?))
+        } else {
+            None
+        };
+        let responder_ieee = if options.route_reply_responder_ieee_present() {
+            Some(IeeeAddress(cursor.read_u64_le()?))
+        } else {
+            None
+        };
+        ensure_no_command_tail(cursor, NWK_COMMAND_ROUTE_REPLY)?;
+
+        Ok(Self {
+            options,
+            request_id,
+            originator,
+            responder,
+            path_cost,
+            originator_ieee,
+            responder_ieee,
+        })
+    }
+
+    fn encode_into(&self, out: &mut Vec<u8>) -> Result<(), NwkError> {
+        if self.options.route_reply_originator_ieee_present() != self.originator_ieee.is_some() {
+            return Err(NwkError::InvalidCommandPayload {
+                command_id: NWK_COMMAND_ROUTE_REPLY,
+                reason: "route reply originator IEEE flag does not match address field",
+            });
+        }
+        if self.options.route_reply_responder_ieee_present() != self.responder_ieee.is_some() {
+            return Err(NwkError::InvalidCommandPayload {
+                command_id: NWK_COMMAND_ROUTE_REPLY,
+                reason: "route reply responder IEEE flag does not match address field",
+            });
+        }
+
+        out.reserve(
+            ROUTE_REPLY_FIXED_LEN
+                + self.originator_ieee.map_or(0, |_| IEEE_ADDR_LEN)
+                + self.responder_ieee.map_or(0, |_| IEEE_ADDR_LEN),
+        );
+        out.push(self.options.raw());
+        out.push(self.request_id);
+        out.extend_from_slice(&self.originator.0.to_le_bytes());
+        out.extend_from_slice(&self.responder.0.to_le_bytes());
+        out.push(self.path_cost);
+        if let Some(address) = self.originator_ieee {
+            out.extend_from_slice(&address.to_le_bytes());
+        }
+        if let Some(address) = self.responder_ieee {
+            out.extend_from_slice(&address.to_le_bytes());
+        }
+        Ok(())
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum NetworkStatusCode {
+    NoRouteAvailable,
+    TreeLinkFailure,
+    NonTreeLinkFailure,
+    LowBattery,
+    NoRoutingCapacity,
+    NoIndirectCapacity,
+    IndirectTransactionExpiry,
+    TargetDeviceUnavailable,
+    TargetAddressUnallocated,
+    ParentLinkFailure,
+    ValidateRoute,
+    SourceRouteFailure,
+    ManyToOneRouteFailure,
+    AddressConflict,
+    VerifyAddresses,
+    PanIdentifierUpdate,
+    NetworkAddressUpdate,
+    BadFrameCounter,
+    BadKeySequenceNumber,
+    Unknown(u8),
+}
+
+impl NetworkStatusCode {
+    pub fn from_byte(value: u8) -> Self {
+        match value {
+            0x00 => Self::NoRouteAvailable,
+            0x01 => Self::TreeLinkFailure,
+            0x02 => Self::NonTreeLinkFailure,
+            0x03 => Self::LowBattery,
+            0x04 => Self::NoRoutingCapacity,
+            0x05 => Self::NoIndirectCapacity,
+            0x06 => Self::IndirectTransactionExpiry,
+            0x07 => Self::TargetDeviceUnavailable,
+            0x08 => Self::TargetAddressUnallocated,
+            0x09 => Self::ParentLinkFailure,
+            0x0a => Self::ValidateRoute,
+            0x0b => Self::SourceRouteFailure,
+            0x0c => Self::ManyToOneRouteFailure,
+            0x0d => Self::AddressConflict,
+            0x0e => Self::VerifyAddresses,
+            0x0f => Self::PanIdentifierUpdate,
+            0x10 => Self::NetworkAddressUpdate,
+            0x11 => Self::BadFrameCounter,
+            0x12 => Self::BadKeySequenceNumber,
+            other => Self::Unknown(other),
+        }
+    }
+
+    pub fn as_byte(self) -> u8 {
+        match self {
+            Self::NoRouteAvailable => 0x00,
+            Self::TreeLinkFailure => 0x01,
+            Self::NonTreeLinkFailure => 0x02,
+            Self::LowBattery => 0x03,
+            Self::NoRoutingCapacity => 0x04,
+            Self::NoIndirectCapacity => 0x05,
+            Self::IndirectTransactionExpiry => 0x06,
+            Self::TargetDeviceUnavailable => 0x07,
+            Self::TargetAddressUnallocated => 0x08,
+            Self::ParentLinkFailure => 0x09,
+            Self::ValidateRoute => 0x0a,
+            Self::SourceRouteFailure => 0x0b,
+            Self::ManyToOneRouteFailure => 0x0c,
+            Self::AddressConflict => 0x0d,
+            Self::VerifyAddresses => 0x0e,
+            Self::PanIdentifierUpdate => 0x0f,
+            Self::NetworkAddressUpdate => 0x10,
+            Self::BadFrameCounter => 0x11,
+            Self::BadKeySequenceNumber => 0x12,
+            Self::Unknown(value) => value,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NetworkStatus {
+    pub status: NetworkStatusCode,
+    pub destination: NetworkAddress,
+}
+
+impl NetworkStatus {
+    pub fn new(status: NetworkStatusCode, destination: NetworkAddress) -> Self {
+        Self {
+            status,
+            destination,
+        }
+    }
+
+    fn parse(cursor: &mut Cursor<'_>) -> Result<Self, NwkError> {
+        let status = NetworkStatusCode::from_byte(cursor.read_u8()?);
+        let destination = NetworkAddress(cursor.read_u16_le()?);
+        ensure_no_command_tail(cursor, NWK_COMMAND_NETWORK_STATUS)?;
+        Ok(Self {
+            status,
+            destination,
+        })
+    }
+
+    fn encode_into(self, out: &mut Vec<u8>) {
+        out.reserve(NETWORK_STATUS_LEN);
+        out.push(self.status.as_byte());
+        out.extend_from_slice(&self.destination.0.to_le_bytes());
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RouteRecord {
+    pub relays: Vec<NetworkAddress>,
+}
+
+impl RouteRecord {
+    pub fn new(relays: Vec<NetworkAddress>) -> Result<Self, NwkError> {
+        if relays.len() > u8::MAX as usize {
+            return Err(NwkError::TooManyRouteRecordRelays {
+                count: relays.len(),
+            });
+        }
+        Ok(Self { relays })
+    }
+
+    pub fn relay_count(&self) -> usize {
+        self.relays.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.relays.is_empty()
+    }
+
+    fn parse(cursor: &mut Cursor<'_>) -> Result<Self, NwkError> {
+        let relay_count = cursor.read_u8()? as usize;
+        let mut relays = Vec::with_capacity(relay_count);
+        for _ in 0..relay_count {
+            relays.push(NetworkAddress(cursor.read_u16_le()?));
+        }
+        ensure_no_command_tail(cursor, NWK_COMMAND_ROUTE_RECORD)?;
+        Ok(Self { relays })
+    }
+
+    fn encode_into(&self, out: &mut Vec<u8>) -> Result<(), NwkError> {
+        if self.relays.len() > u8::MAX as usize {
+            return Err(NwkError::TooManyRouteRecordRelays {
+                count: self.relays.len(),
+            });
+        }
+
+        out.reserve(1 + (self.relays.len() * NWK_ADDR_LEN));
+        out.push(self.relays.len() as u8);
+        for relay in &self.relays {
+            out.extend_from_slice(&relay.0.to_le_bytes());
+        }
+        Ok(())
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum NwkCommand {
+    RouteRequest(RouteRequest),
+    RouteReply(RouteReply),
+    NetworkStatus(NetworkStatus),
+    RouteRecord(RouteRecord),
+    Unknown { command_id: u8, payload: Vec<u8> },
+}
+
+impl NwkCommand {
+    pub fn command_id(&self) -> NwkCommandId {
+        match self {
+            Self::RouteRequest(_) => NwkCommandId::RouteRequest,
+            Self::RouteReply(_) => NwkCommandId::RouteReply,
+            Self::NetworkStatus(_) => NwkCommandId::NetworkStatus,
+            Self::RouteRecord(_) => NwkCommandId::RouteRecord,
+            Self::Unknown { command_id, .. } => NwkCommandId::Unknown(*command_id),
+        }
+    }
+
+    pub fn parse(bytes: &[u8]) -> Result<Self, NwkError> {
+        let mut cursor = Cursor::new(bytes);
+        let command_id = cursor.read_u8()?;
+        match NwkCommandId::from_byte(command_id) {
+            NwkCommandId::RouteRequest => Ok(Self::RouteRequest(RouteRequest::parse(&mut cursor)?)),
+            NwkCommandId::RouteReply => Ok(Self::RouteReply(RouteReply::parse(&mut cursor)?)),
+            NwkCommandId::NetworkStatus => {
+                Ok(Self::NetworkStatus(NetworkStatus::parse(&mut cursor)?))
+            }
+            NwkCommandId::RouteRecord => Ok(Self::RouteRecord(RouteRecord::parse(&mut cursor)?)),
+            NwkCommandId::Unknown(command_id) => Ok(Self::Unknown {
+                command_id,
+                payload: cursor.remaining_bytes().to_vec(),
+            }),
+        }
+    }
+
+    pub fn encode(&self) -> Result<Vec<u8>, NwkError> {
+        let mut out = Vec::new();
+        out.push(self.command_id().as_byte());
+        match self {
+            Self::RouteRequest(command) => command.encode_into(&mut out)?,
+            Self::RouteReply(command) => command.encode_into(&mut out)?,
+            Self::NetworkStatus(command) => command.encode_into(&mut out),
+            Self::RouteRecord(command) => command.encode_into(&mut out)?,
+            Self::Unknown { payload, .. } => out.extend_from_slice(payload),
+        }
+        Ok(out)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct NwkFrameControl {
     pub frame_type: NwkFrameType,
     pub protocol_version: u8,
@@ -592,15 +1097,62 @@ impl NwkFrame {
             payload,
         }
     }
+
+    pub fn plain_command(
+        destination: NetworkAddress,
+        source: NetworkAddress,
+        radius: u8,
+        sequence_number: u8,
+        command: NwkCommand,
+    ) -> Result<Self, NwkError> {
+        Ok(Self {
+            frame_control: NwkFrameControl::zigbee_pro_2007(NwkFrameType::Command),
+            destination,
+            source,
+            radius,
+            sequence_number,
+            destination_ieee: None,
+            source_ieee: None,
+            multicast_control: None,
+            source_route: None,
+            payload: command.encode()?,
+        })
+    }
+
+    pub fn parse_command(&self) -> Result<NwkCommand, NwkError> {
+        if self.frame_control.frame_type != NwkFrameType::Command {
+            return Err(NwkError::NotCommandFrame {
+                frame_type: self.frame_control.frame_type,
+            });
+        }
+        NwkCommand::parse(&self.payload)
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum NwkError {
-    Truncated { needed: usize, remaining: usize },
-    ExtendedAddressMismatch { field: &'static str },
+    Truncated {
+        needed: usize,
+        remaining: usize,
+    },
+    NotCommandFrame {
+        frame_type: NwkFrameType,
+    },
+    InvalidCommandPayload {
+        command_id: u8,
+        reason: &'static str,
+    },
+    ExtendedAddressMismatch {
+        field: &'static str,
+    },
     MulticastControlMismatch,
     SourceRouteMismatch,
-    TooManySourceRouteRelays { count: usize },
+    TooManySourceRouteRelays {
+        count: usize,
+    },
+    TooManyRouteRecordRelays {
+        count: usize,
+    },
 }
 
 impl fmt::Display for NwkError {
@@ -609,6 +1161,13 @@ impl fmt::Display for NwkError {
             Self::Truncated { needed, remaining } => write!(
                 f,
                 "truncated Zigbee NWK frame: needed {needed} bytes, had {remaining}"
+            ),
+            Self::NotCommandFrame { frame_type } => {
+                write!(f, "expected Zigbee NWK command frame, got {frame_type:?}")
+            }
+            Self::InvalidCommandPayload { command_id, reason } => write!(
+                f,
+                "invalid Zigbee NWK command 0x{command_id:02x} payload: {reason}"
             ),
             Self::ExtendedAddressMismatch { field } => {
                 write!(
@@ -628,6 +1187,10 @@ impl fmt::Display for NwkError {
             Self::TooManySourceRouteRelays { count } => write!(
                 f,
                 "source-route relay count {count} exceeds the NWK u8 relay count field"
+            ),
+            Self::TooManyRouteRecordRelays { count } => write!(
+                f,
+                "route-record relay count {count} exceeds the NWK u8 relay count field"
             ),
         }
     }
@@ -684,6 +1247,16 @@ impl<'a> Cursor<'a> {
     fn remaining_bytes(&self) -> &'a [u8] {
         &self.bytes[self.pos..]
     }
+}
+
+fn ensure_no_command_tail(cursor: &Cursor<'_>, command_id: u8) -> Result<(), NwkError> {
+    if !cursor.remaining_bytes().is_empty() {
+        return Err(NwkError::InvalidCommandPayload {
+            command_id,
+            reason: "unexpected trailing bytes",
+        });
+    }
+    Ok(())
 }
 
 #[cfg(test)]
@@ -914,5 +1487,153 @@ mod tests {
 
         table.mark_inactive(NetworkAddress(0x2001)).unwrap();
         assert_eq!(table.next_hop_for(NetworkAddress(0x2001)), None);
+    }
+
+    #[test]
+    fn route_request_command_round_trips_with_destination_ieee() {
+        let command = NwkCommand::RouteRequest(
+            RouteRequest::new(7, NetworkAddress(0x3344), 12)
+                .with_options(RouteCommandOptions::new(0x08))
+                .with_destination_ieee(IeeeAddress(0x0012_4b00_0000_abcd)),
+        );
+
+        let encoded = command.encode().unwrap();
+        assert_eq!(encoded[0], NWK_COMMAND_ROUTE_REQUEST);
+        assert_eq!(
+            encoded[1],
+            ROUTE_REQUEST_DESTINATION_IEEE_FLAG | (1 << ROUTE_REQUEST_MANY_TO_ONE_SHIFT)
+        );
+        if let NwkCommand::RouteRequest(request) = &command {
+            assert_eq!(request.options.route_request_many_to_one(), 1);
+            assert!(request.options.route_request_destination_ieee_present());
+        }
+        assert_eq!(NwkCommand::parse(&encoded).unwrap(), command);
+    }
+
+    #[test]
+    fn route_reply_command_round_trips_with_extended_addresses() {
+        let command = NwkCommand::RouteReply(
+            RouteReply::new(7, NetworkAddress(0x0000), NetworkAddress(0x3344), 9)
+                .with_originator_ieee(IeeeAddress(0x0012_4b00_0000_0001))
+                .with_responder_ieee(IeeeAddress(0x0012_4b00_0000_0002)),
+        );
+
+        let encoded = command.encode().unwrap();
+
+        assert_eq!(encoded[0], NWK_COMMAND_ROUTE_REPLY);
+        assert_eq!(
+            encoded[1],
+            ROUTE_REPLY_ORIGINATOR_IEEE_FLAG | ROUTE_REPLY_RESPONDER_IEEE_FLAG
+        );
+        assert_eq!(NwkCommand::parse(&encoded).unwrap(), command);
+    }
+
+    #[test]
+    fn route_reply_round_trips_responder_ieee_without_originator_ieee() {
+        let command = NwkCommand::RouteReply(
+            RouteReply::new(7, NetworkAddress(0x0000), NetworkAddress(0x3344), 9)
+                .with_responder_ieee(IeeeAddress(0x0012_4b00_0000_0002)),
+        );
+        let encoded = command.encode().unwrap();
+
+        assert_eq!(encoded[1], ROUTE_REPLY_RESPONDER_IEEE_FLAG);
+        assert_eq!(NwkCommand::parse(&encoded).unwrap(), command);
+    }
+
+    #[test]
+    fn route_reply_rejects_option_flag_without_matching_address() {
+        let command = NwkCommand::RouteReply(
+            RouteReply::new(7, NetworkAddress(0x0000), NetworkAddress(0x3344), 9)
+                .with_options(RouteCommandOptions::new(ROUTE_REPLY_ORIGINATOR_IEEE_FLAG)),
+        );
+
+        assert_eq!(
+            command.encode(),
+            Err(NwkError::InvalidCommandPayload {
+                command_id: NWK_COMMAND_ROUTE_REPLY,
+                reason: "route reply originator IEEE flag does not match address field",
+            })
+        );
+    }
+
+    #[test]
+    fn network_status_command_round_trips() {
+        let command = NwkCommand::NetworkStatus(NetworkStatus::new(
+            NetworkStatusCode::SourceRouteFailure,
+            NetworkAddress(0x3344),
+        ));
+
+        let encoded = command.encode().unwrap();
+
+        assert_eq!(encoded, vec![NWK_COMMAND_NETWORK_STATUS, 0x0b, 0x44, 0x33]);
+        assert_eq!(NwkCommand::parse(&encoded).unwrap(), command);
+    }
+
+    #[test]
+    fn route_record_command_round_trips_relays() {
+        let command = NwkCommand::RouteRecord(
+            RouteRecord::new(vec![
+                NetworkAddress(0x1001),
+                NetworkAddress(0x1002),
+                NetworkAddress(0x1003),
+            ])
+            .unwrap(),
+        );
+
+        let encoded = command.encode().unwrap();
+        let parsed = NwkCommand::parse(&encoded).unwrap();
+
+        assert_eq!(encoded[0], NWK_COMMAND_ROUTE_RECORD);
+        assert_eq!(parsed, command);
+        if let NwkCommand::RouteRecord(record) = parsed {
+            assert_eq!(record.relay_count(), 3);
+        } else {
+            panic!("expected route record command");
+        }
+    }
+
+    #[test]
+    fn rejects_route_records_that_exceed_wire_count_field() {
+        assert_eq!(
+            RouteRecord::new(vec![NetworkAddress(0x1001); 256]),
+            Err(NwkError::TooManyRouteRecordRelays { count: 256 })
+        );
+    }
+
+    #[test]
+    fn command_frames_parse_typed_payloads() {
+        let frame = NwkFrame::plain_command(
+            NetworkAddress::BROADCAST_RX_ON_WHEN_IDLE,
+            NetworkAddress(0x0000),
+            30,
+            44,
+            NwkCommand::RouteRequest(RouteRequest::new(5, NetworkAddress(0x3344), 1)),
+        )
+        .unwrap();
+        let encoded = frame.encode().unwrap();
+        let parsed = NwkFrame::parse(&encoded).unwrap();
+
+        assert_eq!(
+            parsed.parse_command().unwrap(),
+            NwkCommand::RouteRequest(RouteRequest::new(5, NetworkAddress(0x3344), 1))
+        );
+    }
+
+    #[test]
+    fn data_frames_reject_typed_command_parsing() {
+        let frame = NwkFrame::plain_data(
+            NetworkAddress(0x1234),
+            NetworkAddress(0x0000),
+            30,
+            7,
+            vec![0x01],
+        );
+
+        assert_eq!(
+            frame.parse_command(),
+            Err(NwkError::NotCommandFrame {
+                frame_type: NwkFrameType::Data,
+            })
+        );
     }
 }

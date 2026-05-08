@@ -13,10 +13,15 @@ This crate starts D25 at the NWK byte boundary:
 - optional source-route relay subframes
 - neighbor table primitives for router/end-device relationships and freshness
 - route table primitives for destination-to-next-hop lookups
+- typed NWK route-discovery command payloads:
+  - route request
+  - route reply
+  - network status
+  - route record
 - payload extraction and round-trip encoding
 
-It intentionally does not implement APS, ZDO, ZCL, route discovery protocol
-messages, joining, security policy, or coordinator behavior yet.
+It intentionally does not implement APS, ZDO, ZCL, joining, security policy, or
+coordinator behavior yet.
 
 ## Dependencies
 
