@@ -12,6 +12,14 @@ DEFAULT_HOST_NAME = "python-board-vm"
 DEFAULT_HOST_NONCE = 0xB0A2D001
 DEFAULT_PROGRAM_ID = 1
 DEFAULT_INSTRUCTION_BUDGET = 12
+BOOT_POLICIES = {
+    "store_only": 0,
+    "store-only": 0,
+    "run_at_boot": 1,
+    "run-at-boot": 1,
+    "run_if_no_host": 2,
+    "run-if-no-host": 2,
+}
 GPIO_READ_MODES = {
     "input": 0,
     "input_pullup": 2,
@@ -207,6 +215,21 @@ class Session:
             self._dispatch("program_chunk", self._call_native(_native.program_chunk_wire, program_id, 0, module_bytes)),
             self._dispatch("program_end", self._call_native(_native.program_end_wire, program_id)),
         ])
+
+    def store_program(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        slot: int = 0,
+        boot_policy: str | int = "run_if_no_host",
+    ) -> ProtocolResult:
+        frame = self._call_native(
+            _native.store_program_wire,
+            program_id,
+            slot,
+            self._boot_policy(boot_policy),
+        )
+        return self._dispatch("store_program", frame)
 
     def upload_blink(
         self,
@@ -442,6 +465,8 @@ class Session:
             return self.upload_time_sleep_ms(
                 **self._with_time_sleep_ms_options(words, command, options, allow_budget=False)
             )
+        if command in {"store-program", "store.program"}:
+            return SessionResult([self.store_program(**self._with_store_program_options(words, command, options))])
         if command == "run":
             return SessionResult([self.run(**self._with_optional_budget(words, command, options))])
         if command == "stop":
@@ -500,6 +525,22 @@ class Session:
         self._ensure_no_extra(words, command)
         return merged
 
+    def _with_store_program_options(
+        self,
+        words: list[str],
+        command: str,
+        options: dict[str, Any],
+    ) -> dict[str, Any]:
+        merged = dict(options)
+        if words:
+            merged["program_id"] = int(words.pop(0))
+        if words:
+            merged["slot"] = int(words.pop(0))
+        if words:
+            merged["boot_policy"] = words.pop(0)
+        self._ensure_no_extra(words, command)
+        return merged
+
     def _with_gpio_read_options(
         self,
         words: list[str],
@@ -553,6 +594,18 @@ class Session:
             return GPIO_READ_MODES[normalized]
         except KeyError as exc:
             raise ValueError(f"unsupported GPIO read mode: {mode!r}") from exc
+
+    @staticmethod
+    def _boot_policy(policy: str | int) -> int:
+        if isinstance(policy, int):
+            return policy
+        normalized = str(policy).replace("-", "_")
+        if normalized.isdecimal():
+            return int(normalized)
+        try:
+            return BOOT_POLICIES[normalized]
+        except KeyError as exc:
+            raise ValueError(f"unsupported boot policy: {policy!r}") from exc
 
     def _with_gpio_write_options(
         self,
@@ -611,6 +664,7 @@ class Session:
 
 __all__ = [
     "BoardDescriptor",
+    "BOOT_POLICIES",
     "Capability",
     "GPIO_READ_MODES",
     "ProtocolResult",

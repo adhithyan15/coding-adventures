@@ -11,10 +11,10 @@ use board_vm_language_core::{
     build_blink_module, build_caps_query_wire_frame, build_gpio_read_module,
     build_gpio_write_module, build_hello_wire_frame, build_program_begin_wire_frame,
     build_program_chunk_wire_frame, build_program_end_wire_frame, build_run_background_wire_frame,
-    build_stop_wire_frame, build_time_now_module, build_time_sleep_ms_module,
-    capability_board_metadata, capability_bytecode_callable, capability_flag_names,
-    capability_protocol_feature, decode_wire_response, program_format_name, run_status_name,
-    BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
+    build_stop_wire_frame, build_store_program_wire_frame, build_time_now_module,
+    build_time_sleep_ms_module, capability_board_metadata, capability_bytecode_callable,
+    capability_flag_names, capability_protocol_feature, decode_wire_response, program_format_name,
+    run_status_name, BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
     LanguageCoreError, LanguageValue,
 };
 use ruby_bridge::VALUE;
@@ -181,6 +181,29 @@ extern "C" fn session_program_end_wire(self_val: VALUE, program_id_val: VALUE) -
     with_session_mut(self_val, |session| {
         let mut wire = [0u8; 64];
         let written = build_program_end_wire_frame(&mut session.inner, program_id, &mut wire)?;
+        Ok(bytes_result(&wire, written.len))
+    })
+}
+
+extern "C" fn session_store_program_wire(
+    self_val: VALUE,
+    program_id_val: VALUE,
+    slot_val: VALUE,
+    boot_policy_val: VALUE,
+) -> VALUE {
+    let program_id = rb_u16(program_id_val, "program_id");
+    let slot = rb_u8(slot_val, "slot");
+    let boot_policy = rb_u8(boot_policy_val, "boot_policy");
+
+    with_session_mut(self_val, |session| {
+        let mut wire = [0u8; 64];
+        let written = build_store_program_wire_frame(
+            &mut session.inner,
+            program_id,
+            slot,
+            boot_policy,
+            &mut wire,
+        )?;
         Ok(bytes_result(&wire, written.len))
     })
 }
@@ -716,6 +739,12 @@ pub extern "C" fn Init_board_vm_native() {
         "program_end_wire",
         session_program_end_wire as *const c_void,
         1,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "store_program_wire",
+        session_store_program_wire as *const c_void,
+        3,
     );
     ruby_bridge::define_method_raw(
         session_class,

@@ -112,6 +112,7 @@ CodingAdventures::BoardVM.uno_r4_wifi(port: "/dev/cu.usbmodem1101") do |board|
     vm.hello
     vm.capabilities
     vm.run_command("blink 24")
+    vm.run_command("store-program 1 0 run-if-no-host")
     vm.run_command("gpio-read 13 pullup 24")
     vm.run_command("gpio-write 13 high 24")
     vm.run_command("time-now 24")
@@ -120,12 +121,13 @@ CodingAdventures::BoardVM.uno_r4_wifi(port: "/dev/cu.usbmodem1101") do |board|
 end
 ```
 
-`hello`, `capabilities`, `upload_blink`, `upload_gpio_read`, `upload_time_now`,
-`upload_time_sleep_ms`, `upload_gpio_write`, `run`, `stop`, `blink`,
-`gpio_read`, `gpio_write`, `time_now`, `time_sleep_ms`, and `run_command` return
-dispatch results with the Rust-produced frame, optional raw response bytes, and
-optional Rust-decoded response hash. The text command parser is Ruby sugar only;
-every dispatched frame still comes from `CodingAdventures::BoardVM::Native::Session`.
+`hello`, `capabilities`, `upload_blink`, `store_program`, `upload_gpio_read`,
+`upload_time_now`, `upload_time_sleep_ms`, `upload_gpio_write`, `run`, `stop`,
+`blink`, `gpio_read`, `gpio_write`, `time_now`, `time_sleep_ms`, and
+`run_command` return dispatch results with the Rust-produced frame, optional raw
+response bytes, and optional Rust-decoded response hash. The text command parser
+is Ruby sugar only; every dispatched frame still comes from
+`CodingAdventures::BoardVM::Native::Session`.
 
 Capability reports can be lifted into Ruby objects after Rust decodes the board
 response:

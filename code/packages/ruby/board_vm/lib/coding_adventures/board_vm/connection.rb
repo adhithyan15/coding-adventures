@@ -199,6 +199,20 @@ module CodingAdventures
         )
       end
 
+      def store_program!(
+        program_id: DEFAULT_PROGRAM_ID,
+        slot: DEFAULT_EJECT_SLOT,
+        boot_policy: DEFAULT_BOOT_POLICY
+      )
+        ensure_uno_r4_wifi!
+
+        session.store_program(
+          program_id: program_id,
+          slot: slot,
+          boot_policy: boot_policy
+        )
+      end
+
       def eject_blink!(
         output:,
         program_id: DEFAULT_PROGRAM_ID,

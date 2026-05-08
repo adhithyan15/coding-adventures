@@ -21,6 +21,11 @@ module CodingAdventures
         off: false,
         :"false" => false
       }.freeze
+      BOOT_POLICIES = {
+        store_only: 0,
+        run_at_boot: 1,
+        run_if_no_host: 2
+      }.freeze
 
       attr_reader :connection, :native_session, :host_name, :host_nonce, :program_id,
         :instruction_budget
@@ -61,6 +66,13 @@ module CodingAdventures
           dispatch(:program_chunk, native_session.program_chunk_wire(program_id, 0, module_bytes)),
           dispatch(:program_end, native_session.program_end_wire(program_id))
         ])
+      end
+
+      def store_program(program_id: @program_id, slot: 0, boot_policy: DEFAULT_BOOT_POLICY)
+        dispatch(
+          :store_program,
+          native_session.store_program_wire(program_id, slot, boot_policy_value(boot_policy))
+        )
       end
 
       def upload_blink(
@@ -319,6 +331,8 @@ module CodingAdventures
           upload_time_now(**options)
         when "upload-time-sleep-ms", "upload-time.sleep_ms", "upload-sleep-ms"
           upload_time_sleep_ms(**time_sleep_ms_command_options(words, command, options, require_budget: false))
+        when "store-program", "store.program"
+          SessionResult.new(results: [store_program(**store_program_command_options(words, command, options))])
         when "run"
           SessionResult.new(results: [run(**options.merge(optional_budget(words, command)))])
         when "stop"
@@ -369,6 +383,15 @@ module CodingAdventures
         end
         ensure_no_extra_arguments!(words, command)
         {instruction_budget: budget}
+      end
+
+      def store_program_command_options(words, command, options)
+        merged = options.dup
+        merged[:program_id] = integer_argument(words.shift, "#{command} program_id") unless words.empty?
+        merged[:slot] = integer_argument(words.shift, "#{command} slot") unless words.empty?
+        merged[:boot_policy] = words.shift unless words.empty?
+        ensure_no_extra_arguments!(words, command)
+        merged
       end
 
       def gpio_read_command_options(words, command, options, require_budget: true)
@@ -458,6 +481,17 @@ module CodingAdventures
 
         GPIO_WRITE_VALUES.fetch(text.to_sym) do
           raise ArgumentError, "unsupported GPIO write value: #{value.inspect}"
+        end
+      end
+
+      def boot_policy_value(value)
+        return value if value.is_a?(Integer)
+
+        text = value.to_s.tr("-", "_")
+        return Integer(text, 10) if integer_literal?(text)
+
+        BOOT_POLICIES.fetch(text.to_sym) do
+          raise ArgumentError, "unsupported boot policy: #{value.inspect}"
         end
       end
 

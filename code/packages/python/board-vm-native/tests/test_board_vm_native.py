@@ -93,6 +93,20 @@ def test_run_command_accepts_repl_style_stop():
     assert result.frames == transport.frames
 
 
+def test_store_program_dispatches_rust_owned_wire_frame():
+    transport = FakeWriteTransport()
+    session = Session(transport=transport)
+
+    result = session.store_program(program_id=9, slot=2, boot_policy="run-at-boot")
+    command = session.run_command("store-program 10 3 store-only")
+
+    assert result.command == "store_program"
+    assert isinstance(result.frame, bytes)
+    assert result.frame == transport.frames[0]
+    assert [item.command for item in command.results] == ["store_program"]
+    assert command.frames == transport.frames[1:]
+
+
 def test_run_command_accepts_repl_style_gpio_read():
     transport = FakeWriteTransport()
     session = Session(transport=transport)
