@@ -168,6 +168,7 @@ export interface TokenGrammar {
   readonly mode?: string;
   readonly escapeMode?: string;
   readonly skipDefinitions?: readonly TokenDefinition[];
+  readonly errorDefinitions?: readonly TokenDefinition[];
   readonly reservedKeywords?: readonly string[];
   readonly groups?: Readonly<Record<string, PatternGroup>>;
   readonly layoutKeywords?: readonly string[];
