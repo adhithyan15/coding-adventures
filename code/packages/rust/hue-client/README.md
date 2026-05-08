@@ -20,6 +20,7 @@ Included surfaces:
 - Hue device resource decoding with product metadata and service references
 - Hue grouped-light resource decoding for room/zone aggregate lights
 - Hue room, zone, and scene resource decoding
+- Hue motion and button resource decoding for sensor/input entities
 - Hue light resource decoding
 - Hue light state update extraction from snapshots and event-stream batches
 

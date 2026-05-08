@@ -13,9 +13,11 @@ packages a typed surface for:
 - typed Hue device resources and service references
 - typed Hue grouped-light resources for room/zone aggregate lights
 - typed Hue room, zone, and scene resources
+- typed Hue motion and button resources for sensor/input surfaces
 - discovery-to-`Bridge` projection
 - Hue light/device-to-normalized-model projection
 - Hue scene-to-normalized-`Scene` projection
+- Hue motion/button-to-normalized-`Entity` projection
 - Hue light state update-to-`StateDelta` projection
 - Hue snapshot and scene desired-state values keyed by canonical D23 capability
   ids such as `light.on_off` and `light.brightness`
