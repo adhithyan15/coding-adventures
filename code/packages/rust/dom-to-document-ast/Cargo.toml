@@ -1,0 +1,12 @@
+[package]
+name = "dom-to-document-ast"
+version = "0.1.0"
+edition = "2021"
+description = "Convert Venture DOM trees into the format-agnostic Document AST"
+
+[dependencies]
+document-ast = { path = "../document-ast" }
+dom-core = { path = "../dom-core" }
+
+[dev-dependencies]
+coding-adventures-html-parser = { path = "../html-parser" }

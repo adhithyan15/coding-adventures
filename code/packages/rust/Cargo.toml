@@ -244,6 +244,7 @@ members = [
     "wasm-opcodes",
     "wasm-types",
     "document-ast",
+    "dom-to-document-ast",
     "commonmark-parser",
     "gfm-parser",
     "graph",
