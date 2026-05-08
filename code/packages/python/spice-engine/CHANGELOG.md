@@ -1,5 +1,132 @@
 # Changelog
 
+## [0.9.0] — 2026-05-08
+
+### Added
+
+- **`noise_ac()` function** — Small-signal noise analysis (the SPICE `.NOISE` command).
+
+  Computes the voltage noise power spectral density (PSD) at a chosen output
+  node due to **thermal** (Johnson-Nyquist) and **shot** noise in every circuit
+  element, at each frequency in a user-supplied or default sweep.  Also reports
+  **input-referred noise** — the equivalent input noise that would produce the
+  same output noise — for direct comparison to the signal level.
+
+  **Physics modelled:**
+
+  | Element | Noise model | PSD formula |
+  |---|---|---|
+  | `Resistor` | Thermal (Johnson-Nyquist) | `S_i = 4kT/R` A²/Hz |
+  | `Diode` | Shot noise | `S_i = 2q|I_D|` A²/Hz |
+  | `BJT` | Shot noise (B-E junction) | `S_i = 2q|I_C|` A²/Hz |
+  | `Capacitor`, `Inductor`, `VoltageSource`, `CurrentSource`, `Mosfet` | Noiseless | — |
+
+  **Algorithm — adjoint method (one solve per frequency, not N):**
+
+  At each frequency ω = 2πf:
+  1. Build complex AC MNA matrix G(jω) (identical to `ac_sweep` linearisation).
+  2. Solve the *adjoint* system: G(jω)^T × **v** = **e**_out (unit vector at output node).
+  3. For each noise source k between nodes (a, b):
+     - Transfer impedance: H_k = v[a] − v[b]
+     - Output contribution: S_out_k = |H_k|² × S_k
+  4. Total: S_out = Σ_k S_out_k
+  5. Input-referred: S_in = S_out / |H_signal|², where H_signal is the adjoint-
+     derived transfer from `input_source` to `output_node`.
+
+  The adjoint method is O(N) in the number of noise sources, versus O(N²) for
+  direct injection of each source separately.  For a 10-resistor circuit with
+  one matrix solve per frequency, the saving is 10×.
+
+  **Signature:**
+  ```python
+  noise_ac(
+      circuit: Circuit,
+      output_node: str,
+      input_source: str,
+      freqs: list[float] | None = None,  # default: 50 log-pts, 1 Hz – 1 MHz
+      *,
+      temperature: float = 300.0,  # Kelvin
+      max_iterations: int = 50,
+      tol: float = 1e-6,
+  ) -> NoiseResult
+  ```
+
+  **Example — RC filter noise:**
+  ```python
+  from spice_engine import Circuit, VoltageSource, Resistor, noise_ac
+  import math
+
+  c = Circuit()
+  c.add(VoltageSource("Vin", "in", "0", 0.0))
+  c.add(Resistor("R1", "in", "out", 1000.0))
+  c.add(Resistor("R2", "out", "0", 1000.0))
+
+  result = noise_ac(c, "out", "Vin", temperature=300.0)
+  pt = result.points[0]
+  print(f"Output noise: {math.sqrt(pt.output_psd)*1e9:.2f} nV/√Hz")
+  # → ≈ 2.88 nV/√Hz  (= sqrt(4kT × 500 Ω) × 1e9)
+  ```
+
+- **`NoiseEntry` frozen dataclass** — contribution from one element at one frequency:
+  - `element_name: str`
+  - `noise_type: str` — `"thermal"` or `"shot"`
+  - `source_psd: float` — A²/Hz (the element's own current noise PSD)
+  - `output_psd: float` — V²/Hz (contribution to output after transfer)
+
+- **`NoisePoint` frozen dataclass** — noise result at one frequency:
+  - `freq: float` — Hz
+  - `output_psd: float` — V²/Hz (total output noise spectral density)
+  - `input_referred_psd: float` — V²/Hz (input-referred noise)
+  - `entries: tuple[NoiseEntry, ...]` — per-element breakdown, sorted by
+    `output_psd` descending (loudest contributor first)
+
+- **`NoiseResult` dataclass** — complete `.NOISE` analysis:
+  - `output_node: str`
+  - `input_source: str`
+  - `temperature: float` — Kelvin
+  - `points: list[NoisePoint]` — one per frequency, ascending order
+
+### Changed
+
+- `pyproject.toml` version bumped `0.8.0` → `0.9.0`.
+- `__init__.py` description updated; `NoiseEntry`, `NoisePoint`, `NoiseResult`,
+  `noise_ac` added to imports and `__all__`.
+
+### Tests
+
+- **Sections 46–52** added (50 new tests; 177 → 227 total):
+  - Section 46: dataclass type checks, field values, noise_type strings.
+  - Section 47: analytical Nyquist verification — `S_out = 4kT × R_eq` for a
+    symmetric resistor divider; white spectrum (flat PSD at all frequencies
+    for resistor-only circuits); temperature-linear scaling.
+  - Section 48: per-element breakdown count, entries sorted loudest-first,
+    sum of entries equals total PSD, symmetric equal contributions,
+    asymmetric divider (larger R wins), 3-resistor T-network entry count.
+  - Section 49: input-referred formula `S_in = S_out / |H|²`; attenuator
+    produces `S_in > S_out`; unknown source gives 0 input-referred PSD;
+    inverse gain dependence; CurrentSource input path.
+  - Section 50: diode and BJT shot noise — type string, positive source_psd,
+    monotone increase with bias current.
+  - Section 51: default sweep (50 points, 1 Hz – 1 MHz, ascending); custom
+    freq list respected; single-point sweep; all default PSDs positive.
+  - Section 52: unknown/ground output node → empty points; empty freqs list;
+    Capacitor/Inductor/VoltageSource noiseless; output_psd ≥ 0; frozen
+    dataclass immutability.
+
+- Coverage: 82.25% (v0.8.0) → **83.90%** (v0.9.0).
+
+### Rationale for adjoint method
+
+The forward approach would require one linear solve per noise source.  For a
+circuit with N noisy elements and F frequency points, that is N × F solves.
+The adjoint method solves G^T × **v** = **e**_out *once* per frequency and then
+reads off all N transfer impedances as v[a] − v[b].  For a 20-element circuit
+and 50 frequencies, the saving is 20× in linear-algebra work.
+
+The adjoint relationship G × x = b ↔ G^T × v = e_out comes from the identity:
+x[out] = e_out^T G^{-1} b = (G^{-T} e_out)^T b = v^T b for any b.
+This holds for non-symmetric matrices (circuits with MOSFETs and BJTs).
+
 ## [0.8.0] — 2026-05-08
 
 ### Added
