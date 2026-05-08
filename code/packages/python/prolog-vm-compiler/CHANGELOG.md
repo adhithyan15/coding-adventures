@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Run bounded source-level read-only filesystem metadata predicates through
+  structured and bytecode VM paths, including `exists_directory/1`,
+  `absolute_file_name/2`, `access_file/2`, `file_directory_name/2`,
+  `file_base_name/2`, `directory_file_path/3`, `file_name_extension/3`,
+  `same_file/2`, `size_file/2`, and `time_file/2`.
 - Run bounded source-level UTF-8 file text I/O predicates through structured
   and bytecode VM paths, including `exists_file/1`,
   `read_file_to_string/2`, and `read_file_to_codes/2`.
@@ -30,7 +35,7 @@
   paths, including `open/4` `type(binary)`, `get_byte/1,2`, `peek_byte/1,2`,
   and `put_byte/1,2`.
 - Add a public Prolog VM capability manifest and `prolog-vm --dump-capabilities`
-  so scripts and future planning can distinguish the completed PR00-PR86 track
+  so scripts and future planning can distinguish the completed PR00-PR87 track
   from deferred advanced dialect/runtime work.
 - Add end-to-end stress coverage for recursive search, modules, DCGs,
   arithmetic, collections, dynamic initialization, named answers, and expansion.

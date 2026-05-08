@@ -1485,6 +1485,54 @@ class TestPrologGoalAdapter:
             adapted,
         ) == [(string("hi\n"), logic_list([104, 105, 10]))]
 
+    def test_adapt_prolog_goal_rewrites_file_metadata_predicates(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "nested" / "story.data"
+        source_path.parent.mkdir()
+        source_path.write_text("tea\n", encoding="utf-8")
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        dir_atom = str(source_path.parent).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- exists_directory('{dir_atom}'), "
+            f"access_file('{path_atom}', read), "
+            f"absolute_file_name('{path_atom}', Absolute), "
+            f"file_directory_name('{path_atom}', Directory), "
+            f"file_base_name('{path_atom}', Base), "
+            "directory_file_path(Directory, Base, Joined), "
+            "file_name_extension(Name, Extension, Base), "
+            f"same_file('{path_atom}', Joined), "
+            f"size_file('{path_atom}', Size), "
+            f"time_file('{path_atom}', Time).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["Absolute"],
+                parsed.variables["Directory"],
+                parsed.variables["Base"],
+                parsed.variables["Joined"],
+                parsed.variables["Name"],
+                parsed.variables["Extension"],
+                parsed.variables["Size"],
+                parsed.variables["Time"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert len(answers) == 1
+        absolute, directory, base, joined, name, extension, size, timestamp = answers[0]
+        assert absolute == atom(str(source_path.resolve(strict=False)))
+        assert directory == atom(str(source_path.parent))
+        assert base == atom("story.data")
+        assert joined == atom(str(source_path))
+        assert name == atom("story")
+        assert extension == atom("data")
+        assert size == num(len("tea\n"))
+        assert isinstance(timestamp, Number)
+
     def test_adapt_prolog_goal_rewrites_file_stream_predicates(
         self,
         tmp_path: Path,
