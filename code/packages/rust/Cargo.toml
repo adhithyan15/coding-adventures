@@ -161,6 +161,8 @@ members = [
     "lisp-lexer",
     "lisp-parser",
     "lisp-vm",
+    "macsyma-lexer",
+    "macsyma-parser",
     "logic-gates",
     "loss-functions",
     "markov-chain",
