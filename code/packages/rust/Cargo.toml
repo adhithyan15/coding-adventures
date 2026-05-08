@@ -456,6 +456,7 @@ members = [
     "vault-attachments",
     "vault-import-export",
     "storage-fs",
+    "chief-of-staff-tool-api",
     "context-store",
     "artifact-store",
     "skill-store",

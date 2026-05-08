@@ -1,0 +1,9 @@
+[package]
+name = "chief-of-staff-tool-api"
+version = "0.1.0"
+edition = "2021"
+description = "Chief of Staff model-facing tool contract and validation primitives"
+license = "MIT"
+
+[dependencies]
+coding-adventures-json-value = { path = "../json-value" }
