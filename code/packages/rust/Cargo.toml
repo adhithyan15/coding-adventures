@@ -47,6 +47,7 @@ members = [
     "board-vm-runtime",
     "board-vm-esp32",
     "board-vm-esp32-firmware",
+    "board-vm-esp-rom",
     "board-vm-pico",
     "board-vm-pico-firmware",
     "board-vm-targets",

@@ -1,8 +1,8 @@
 use std::env;
 
 use board_vm_cli::{
-    format_onboard_led, list_ports, list_targets, parse_args, run_eject_blink, run_repl, run_smoke,
-    usage, CliCommand,
+    format_onboard_led, list_ports, list_targets, parse_args, run_eject_blink, run_esp_detect,
+    run_repl, run_smoke, usage, CliCommand,
 };
 
 fn main() {
@@ -36,6 +36,19 @@ fn run_command(command: CliCommand) -> Result<(), board_vm_cli::CliError> {
                     target.capabilities.join(",")
                 );
             }
+            Ok(())
+        }
+        CliCommand::EspDetect(options) => {
+            let detection = run_esp_detect(&options)?;
+            println!(
+                "esp chip={} isa={} rust_target={} chip_id={} magic={} api_version={}",
+                detection.chip.name(),
+                detection.instruction_set.name(),
+                detection.rust_target_hint,
+                format_optional_u32(detection.chip_id),
+                format_optional_hex(detection.magic_value),
+                format_optional_u32(detection.api_version)
+            );
             Ok(())
         }
         CliCommand::Smoke(options) => {
@@ -90,4 +103,16 @@ fn run_command(command: CliCommand) -> Result<(), board_vm_cli::CliError> {
             Ok(())
         }
     }
+}
+
+fn format_optional_u32(value: Option<u32>) -> String {
+    value
+        .map(|value| value.to_string())
+        .unwrap_or_else(|| "n/a".to_owned())
+}
+
+fn format_optional_hex(value: Option<u32>) -> String {
+    value
+        .map(|value| format!("0x{value:08X}"))
+        .unwrap_or_else(|| "n/a".to_owned())
 }
