@@ -30,6 +30,7 @@ use board_vm_protocol::{
     RunStatus, Value as ProtocolValue, CAP_FLAG_BOARD_METADATA, CAP_FLAG_BYTECODE_CALLABLE,
     CAP_FLAG_PROTOCOL_FEATURE, FLAG_IS_ERROR_RESPONSE, FLAG_IS_RESPONSE,
 };
+use board_vm_targets::{all_targets, BoardFamily, OnboardLed as TargetOnboardLed};
 
 pub const LANGUAGE_CORE_VERSION_MAJOR: u16 = 0;
 pub const LANGUAGE_CORE_VERSION_MINOR: u16 = 1;
@@ -234,6 +235,35 @@ pub struct LanguageBoardDescriptor {
     pub capabilities: Vec<LanguageCapability>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageBoardFamily {
+    ArduinoUnoR4,
+    Esp32,
+    RaspberryPiPico,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageOnboardLed {
+    Gpio(u8),
+    WirelessChipGpio(u8),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageTargetInfo {
+    pub board_id: String,
+    pub display_name: String,
+    pub family: LanguageBoardFamily,
+    pub runtime_id: String,
+    pub mcu: String,
+    pub core: String,
+    pub rust_target: String,
+    pub clock_hz: u32,
+    pub operating_voltage_mv: u16,
+    pub onboard_led: Option<LanguageOnboardLed>,
+    pub digital_pin_count: usize,
+    pub capabilities: Vec<String>,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageProgramBegin {
     pub program_id: u16,
@@ -332,6 +362,21 @@ pub const fn capability_board_metadata(flags: u16) -> bool {
     flags & CAP_FLAG_BOARD_METADATA != 0
 }
 
+pub const fn board_family_name(family: LanguageBoardFamily) -> &'static str {
+    match family {
+        LanguageBoardFamily::ArduinoUnoR4 => "arduino_uno_r4",
+        LanguageBoardFamily::Esp32 => "esp32",
+        LanguageBoardFamily::RaspberryPiPico => "raspberry_pi_pico",
+    }
+}
+
+pub const fn onboard_led_kind(led: LanguageOnboardLed) -> &'static str {
+    match led {
+        LanguageOnboardLed::Gpio(_) => "gpio",
+        LanguageOnboardLed::WirelessChipGpio(_) => "wireless_chip_gpio",
+    }
+}
+
 pub fn capability_flag_names(flags: u16, out: &mut [&'static str]) -> usize {
     let mut count = 0;
     if capability_bytecode_callable(flags) {
@@ -344,6 +389,51 @@ pub fn capability_flag_names(flags: u16, out: &mut [&'static str]) -> usize {
         count = push_flag_name(out, count, "board_metadata");
     }
     count
+}
+
+pub fn known_targets() -> Vec<LanguageTargetInfo> {
+    all_targets()
+        .iter()
+        .map(|target| LanguageTargetInfo {
+            board_id: target.board_id.to_owned(),
+            display_name: target.display_name.to_owned(),
+            family: language_family(target.family),
+            runtime_id: target.runtime_id.to_owned(),
+            mcu: target.mcu.to_owned(),
+            core: target.core.to_owned(),
+            rust_target: target.rust_target.to_owned(),
+            clock_hz: target.clock_hz,
+            operating_voltage_mv: target.operating_voltage_mv,
+            onboard_led: target.onboard_led.map(language_onboard_led),
+            digital_pin_count: target.digital_pin_count,
+            capabilities: target
+                .capabilities
+                .iter()
+                .map(|capability| (*capability).to_owned())
+                .collect(),
+        })
+        .collect()
+}
+
+pub fn known_target(board_id: &str) -> Option<LanguageTargetInfo> {
+    known_targets()
+        .into_iter()
+        .find(|target| target.board_id == board_id)
+}
+
+fn language_family(family: BoardFamily) -> LanguageBoardFamily {
+    match family {
+        BoardFamily::ArduinoUnoR4 => LanguageBoardFamily::ArduinoUnoR4,
+        BoardFamily::Esp32 => LanguageBoardFamily::Esp32,
+        BoardFamily::RaspberryPiPico => LanguageBoardFamily::RaspberryPiPico,
+    }
+}
+
+fn language_onboard_led(led: TargetOnboardLed) -> LanguageOnboardLed {
+    match led {
+        TargetOnboardLed::Gpio(pin) => LanguageOnboardLed::Gpio(pin),
+        TargetOnboardLed::WirelessChipGpio(pin) => LanguageOnboardLed::WirelessChipGpio(pin),
+    }
 }
 
 fn push_flag_name(out: &mut [&'static str], count: usize, name: &'static str) -> usize {
@@ -1532,6 +1622,26 @@ mod tests {
         assert_eq!(written.len, GOLDEN_HELLO_WIRE_FRAME_BVM_V1.len());
         assert_eq!(&wire[..written.len], GOLDEN_HELLO_WIRE_FRAME_BVM_V1);
         assert_eq!(session.next_request_id(), 0x1235);
+    }
+
+    #[test]
+    fn known_targets_are_owned_by_rust_language_core() {
+        let targets = known_targets();
+        let esp32 = known_target("esp32-devkit-v1").unwrap();
+        let pico_w = known_target("raspberry-pi-pico-w").unwrap();
+
+        assert!(targets
+            .iter()
+            .any(|target| target.board_id == esp32.board_id));
+        assert_eq!(esp32.family, LanguageBoardFamily::Esp32);
+        assert_eq!(board_family_name(esp32.family), "esp32");
+        assert_eq!(esp32.runtime_id, "board-vm-esp32");
+        assert_eq!(esp32.onboard_led, Some(LanguageOnboardLed::Gpio(2)));
+        assert!(esp32.capabilities.contains(&"gpio.open".to_owned()));
+        assert_eq!(
+            pico_w.onboard_led,
+            Some(LanguageOnboardLed::WirelessChipGpio(0))
+        );
     }
 
     #[test]
