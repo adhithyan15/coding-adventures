@@ -34,6 +34,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `InMemoryStorageBackend`'s) — durable cross-process leases
   would require platform-specific `flock`/`lockf` and are
   deferred.
+- Shared `storage-core` conformance coverage for initialize,
+  put/get, stale compare-and-swap rejection, idempotent delete,
+  prefix listing order, and lease expiry.
 - 19 unit tests covering: put/get round-trip, missing-record
   read returns None, overwrite advances revision, CAS with
   correct/wrong/missing-record `if_revision`, delete +
