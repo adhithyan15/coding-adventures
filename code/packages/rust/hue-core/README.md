@@ -17,6 +17,8 @@ packages a typed surface for:
 - Hue light/device-to-normalized-model projection
 - Hue scene-to-normalized-`Scene` projection
 - Hue light state update-to-`StateDelta` projection
+- Hue snapshot and scene desired-state values keyed by canonical D23 capability
+  ids such as `light.on_off` and `light.brightness`
 - integration descriptor metadata for Chief of Staff discovery
 
 ## Dependencies
