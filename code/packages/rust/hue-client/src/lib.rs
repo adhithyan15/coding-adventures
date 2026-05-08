@@ -10,9 +10,10 @@ use coding_adventures_json_serializer::serialize;
 use coding_adventures_json_value::{parse as parse_json, JsonNumber, JsonValue};
 use http_core::{find_header, Header};
 use hue_core::{
-    validate_brightness, HueBridgeResource, HueCommand, HueDeviceResource, HueLightResource,
-    HueLightStateUpdate, HueMethod, HueRequest, HueRequestBody, HueResourceId, HueResourceRef,
-    HueResourceType, CLIP_V2_EVENT_STREAM_PATH, CLIP_V2_RESOURCE_ROOT, HUE_APPLICATION_KEY_HEADER,
+    validate_brightness, HueBridgeResource, HueCommand, HueDeviceResource, HueGroupedLightResource,
+    HueLightResource, HueLightStateUpdate, HueMethod, HueRequest, HueRequestBody, HueResourceId,
+    HueResourceRef, HueResourceType, CLIP_V2_EVENT_STREAM_PATH, CLIP_V2_RESOURCE_ROOT,
+    HUE_APPLICATION_KEY_HEADER,
 };
 use std::fmt;
 
@@ -237,6 +238,13 @@ impl<T: HueTransport> HueClient<T> {
     pub fn get_light_resources(&mut self) -> Result<Vec<HueLightResource>, HueClientError> {
         let envelope = self.get_collection(HueResourceType::Light)?;
         parse_lights_from_envelope(&envelope)
+    }
+
+    pub fn get_grouped_light_resources(
+        &mut self,
+    ) -> Result<Vec<HueGroupedLightResource>, HueClientError> {
+        let envelope = self.get_collection(HueResourceType::GroupedLight)?;
+        parse_grouped_lights_from_envelope(&envelope)
     }
 
     pub fn get_bridge_resources(&mut self) -> Result<Vec<HueBridgeResource>, HueClientError> {
@@ -544,6 +552,20 @@ pub fn parse_lights_from_envelope(
     Ok(lights)
 }
 
+pub fn parse_grouped_lights_from_envelope(
+    envelope: &HueEnvelope,
+) -> Result<Vec<HueGroupedLightResource>, HueClientError> {
+    let mut grouped_lights = Vec::new();
+    for resource in &envelope.data {
+        if object_string_field(resource, "type")
+            == Some(HueResourceType::GroupedLight.as_hue_type())
+        {
+            grouped_lights.push(parse_grouped_light_resource(resource)?);
+        }
+    }
+    Ok(grouped_lights)
+}
+
 pub fn parse_bridges_from_envelope(
     envelope: &HueEnvelope,
 ) -> Result<Vec<HueBridgeResource>, HueClientError> {
@@ -783,6 +805,33 @@ fn parse_bridge_resource(resource: &JsonValue) -> Result<HueBridgeResource, HueC
         owner_device_id,
         bridge_id: object_string_field(resource, "bridge_id").map(str::to_string),
         time_zone,
+    })
+}
+
+fn parse_grouped_light_resource(
+    resource: &JsonValue,
+) -> Result<HueGroupedLightResource, HueClientError> {
+    let id = object_string_field(resource, "id").ok_or_else(|| {
+        HueClientError::unexpected_json("Hue grouped_light resource is missing id")
+    })?;
+    let owner = object_field(resource, "owner")
+        .ok_or_else(|| HueClientError::unexpected_json("Hue grouped_light is missing owner"))?;
+    let name = object_field(resource, "metadata")
+        .and_then(|metadata| object_string_field(metadata, "name"))
+        .unwrap_or(id)
+        .to_string();
+    let on = object_field(resource, "on").and_then(|on| object_bool_field(on, "on"));
+    let brightness = object_field(resource, "dimming")
+        .and_then(|dimming| object_field(dimming, "brightness"))
+        .map(json_number_to_percent)
+        .transpose()?;
+
+    Ok(HueGroupedLightResource {
+        id: HueResourceId::trusted(id),
+        owner: parse_resource_ref(owner)?,
+        name,
+        on,
+        brightness,
     })
 }
 
@@ -1134,6 +1183,26 @@ mod tests {
     }
 
     #[test]
+    fn client_reads_grouped_light_collection_through_injected_transport() {
+        let transport = RecordingTransport::with_response(
+            r#"{"data":[{"id":"grouped-light-1","type":"grouped_light","owner":{"rid":"room-1","rtype":"room"}}],"errors":[]}"#,
+        );
+        let mut client = HueClient::new(HueClientConfig::paired("app-key"), transport);
+
+        let grouped_lights = client.get_grouped_light_resources().unwrap();
+        let transport = client.into_transport();
+
+        assert_eq!(grouped_lights.len(), 1);
+        assert_eq!(grouped_lights[0].id.as_str(), "grouped-light-1");
+        assert_eq!(grouped_lights[0].owner.resource_type, HueResourceType::Room);
+        assert_eq!(transport.requests.len(), 1);
+        assert_eq!(
+            transport.requests[0].path,
+            "/clip/v2/resource/grouped_light"
+        );
+    }
+
+    #[test]
     fn parses_registration_success() {
         let registration = parse_registration_response(
             br#"[{"success":{"username":"app-key","clientkey":"client-key"}}]"#,
@@ -1172,6 +1241,37 @@ mod tests {
         assert_eq!(lights[0].on, Some(true));
         assert_eq!(lights[0].brightness, Some(42));
         assert_eq!(lights[0].color_temperature_mirek, Some(366));
+    }
+
+    #[test]
+    fn parses_grouped_light_resources_from_snapshot_envelope() {
+        let envelope = parse_hue_envelope(
+            br#"{"data":[{"id":"grouped-light-1","type":"grouped_light","metadata":{"name":"Kitchen"},"owner":{"rid":"room-1","rtype":"room"},"on":{"on":true},"dimming":{"brightness":84}},{"id":"light-1","type":"light"}],"errors":[]}"#,
+        )
+        .unwrap();
+
+        let grouped_lights = parse_grouped_lights_from_envelope(&envelope).unwrap();
+
+        assert_eq!(grouped_lights.len(), 1);
+        assert_eq!(grouped_lights[0].id.as_str(), "grouped-light-1");
+        assert_eq!(grouped_lights[0].name, "Kitchen");
+        assert_eq!(grouped_lights[0].owner.resource_type, HueResourceType::Room);
+        assert_eq!(grouped_lights[0].owner.id.as_str(), "room-1");
+        assert_eq!(grouped_lights[0].on, Some(true));
+        assert_eq!(grouped_lights[0].brightness, Some(84));
+    }
+
+    #[test]
+    fn grouped_light_parser_rejects_missing_owner() {
+        let envelope = parse_hue_envelope(
+            br#"{"data":[{"id":"grouped-light-1","type":"grouped_light"}],"errors":[]}"#,
+        )
+        .unwrap();
+
+        assert!(matches!(
+            parse_grouped_lights_from_envelope(&envelope),
+            Err(HueClientError::UnexpectedJson { .. })
+        ));
     }
 
     #[test]
