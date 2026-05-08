@@ -10,8 +10,8 @@
 use smart_home_core::{
     Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, Device, DeviceId, Entity,
     EntityId, EntityKind, Health, IntegrationDescriptor, IntegrationId, Metadata, ProtocolFamily,
-    ProtocolIdentifier, RuntimeKind, StateConfidence, StateDelta, StateSnapshot, StateSource,
-    Value,
+    ProtocolIdentifier, RuntimeKind, Scene, SceneAction, SceneId, SceneScope, StateConfidence,
+    StateDelta, StateSnapshot, StateSource, Value,
 };
 use std::fmt;
 
@@ -407,6 +407,113 @@ impl HueGroupedLightResource {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueRoomResource {
+    pub id: HueResourceId,
+    pub name: String,
+    pub archetype: Option<String>,
+    pub children: Vec<HueResourceRef>,
+    pub services: Vec<HueResourceRef>,
+}
+
+impl HueRoomResource {
+    pub fn grouped_light_service(&self) -> Option<&HueResourceRef> {
+        self.services
+            .iter()
+            .find(|service| service.resource_type == HueResourceType::GroupedLight)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueZoneResource {
+    pub id: HueResourceId,
+    pub name: String,
+    pub archetype: Option<String>,
+    pub children: Vec<HueResourceRef>,
+    pub services: Vec<HueResourceRef>,
+}
+
+impl HueZoneResource {
+    pub fn grouped_light_service(&self) -> Option<&HueResourceRef> {
+        self.services
+            .iter()
+            .find(|service| service.resource_type == HueResourceType::GroupedLight)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueSceneAction {
+    pub target: HueResourceRef,
+    pub on: Option<bool>,
+    pub brightness: Option<u8>,
+    pub color_temperature_mirek: Option<u16>,
+}
+
+impl HueSceneAction {
+    pub fn has_state(&self) -> bool {
+        self.on.is_some() || self.brightness.is_some() || self.color_temperature_mirek.is_some()
+    }
+
+    pub fn desired_state(&self) -> Value {
+        let mut fields = Vec::new();
+        if let Some(on) = self.on {
+            fields.push(("on".to_string(), Value::Bool(on)));
+        }
+        if let Some(brightness) = self.brightness {
+            fields.push(("brightness".to_string(), Value::Percentage(brightness)));
+        }
+        if let Some(mirek) = self.color_temperature_mirek {
+            fields.push((
+                "color_temperature".to_string(),
+                Value::Integer(i64::from(mirek)),
+            ));
+        }
+        Value::Object(fields)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueSceneResource {
+    pub id: HueResourceId,
+    pub group: HueResourceRef,
+    pub name: String,
+    pub actions: Vec<HueSceneAction>,
+}
+
+impl HueSceneResource {
+    pub fn command_recall(&self) -> HueCommand {
+        HueCommand::RecallScene {
+            scene_id: self.id.clone(),
+        }
+    }
+
+    pub fn to_core(&self, bridge_id: &BridgeId) -> Scene {
+        Scene {
+            scene_id: SceneId::trusted(format!("hue.scene.{}.{}", bridge_id, self.id)),
+            scope: scene_scope_for_group(&self.group),
+            native_ref: Some(
+                HueResourceRef::new(HueResourceType::Scene, self.id.clone()).protocol_identifier(),
+            ),
+            actions: self
+                .actions
+                .iter()
+                .filter(|action| action.has_state())
+                .map(|action| SceneAction {
+                    entity_id: hue_entity_id_for_resource_ref(bridge_id, &action.target),
+                    desired_state: action.desired_state(),
+                })
+                .collect(),
+            metadata: vec![
+                Metadata::new("hue.resource_type", "scene"),
+                Metadata::new("hue.resource_id", self.id.as_str()),
+                Metadata::new("hue.name", &self.name),
+                Metadata::new("hue.group_type", self.group.resource_type.as_hue_type()),
+                Metadata::new("hue.group_id", self.group.id.as_str()),
+            ],
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct HueDeviceResource {
     pub id: HueResourceId,
     pub name: String,
@@ -575,6 +682,24 @@ pub fn hue_light_to_entity(
     }
 }
 
+fn scene_scope_for_group(group: &HueResourceRef) -> SceneScope {
+    match group.resource_type {
+        HueResourceType::Room => SceneScope::Room,
+        HueResourceType::Zone => SceneScope::Zone,
+        HueResourceType::Bridge => SceneScope::Bridge,
+        _ => SceneScope::Custom,
+    }
+}
+
+fn hue_entity_id_for_resource_ref(bridge_id: &BridgeId, resource: &HueResourceRef) -> EntityId {
+    EntityId::trusted(format!(
+        "hue.{}.{}.{}",
+        resource.resource_type.as_hue_type(),
+        bridge_id,
+        resource.id
+    ))
+}
+
 pub fn validate_brightness(value: u16) -> Result<u8, HueError> {
     if value > 100 {
         return Err(HueError::InvalidBrightness { value });
@@ -704,6 +829,88 @@ mod tests {
             Some(HueRequestBody::SetBrightness { brightness: 55 })
         );
         assert_eq!(grouped.owner.resource_type, HueResourceType::Room);
+    }
+
+    #[test]
+    fn hue_room_and_zone_resources_expose_grouped_light_services() {
+        let room = HueRoomResource {
+            id: HueResourceId::trusted("room-1"),
+            name: "Kitchen".to_string(),
+            archetype: Some("kitchen".to_string()),
+            children: vec![HueResourceRef::new(
+                HueResourceType::Device,
+                HueResourceId::trusted("device-1"),
+            )],
+            services: vec![HueResourceRef::new(
+                HueResourceType::GroupedLight,
+                HueResourceId::trusted("grouped-light-1"),
+            )],
+        };
+        let zone = HueZoneResource {
+            id: HueResourceId::trusted("zone-1"),
+            name: "Downstairs".to_string(),
+            archetype: None,
+            children: vec![HueResourceRef::new(
+                HueResourceType::Room,
+                HueResourceId::trusted("room-1"),
+            )],
+            services: room.services.clone(),
+        };
+
+        assert_eq!(
+            room.grouped_light_service().unwrap().id.as_str(),
+            "grouped-light-1"
+        );
+        assert_eq!(
+            zone.grouped_light_service().unwrap().resource_type,
+            HueResourceType::GroupedLight
+        );
+    }
+
+    #[test]
+    fn hue_scene_resource_builds_recall_command_and_core_scene() {
+        let bridge_id = BridgeId::trusted("hue.bridge.001788");
+        let scene = HueSceneResource {
+            id: HueResourceId::trusted("scene-1"),
+            group: HueResourceRef::new(HueResourceType::Room, HueResourceId::trusted("room-1")),
+            name: "Dinner".to_string(),
+            actions: vec![HueSceneAction {
+                target: HueResourceRef::new(
+                    HueResourceType::Light,
+                    HueResourceId::trusted("light-1"),
+                ),
+                on: Some(true),
+                brightness: Some(66),
+                color_temperature_mirek: Some(366),
+            }],
+        };
+
+        assert_eq!(
+            scene.command_recall().to_request().path,
+            "/clip/v2/resource/scene/scene-1"
+        );
+
+        let core_scene = scene.to_core(&bridge_id);
+
+        assert_eq!(
+            core_scene.scene_id.as_str(),
+            "hue.scene.hue.bridge.001788.scene-1"
+        );
+        assert_eq!(core_scene.scope, SceneScope::Room);
+        assert_eq!(core_scene.native_ref.as_ref().unwrap().kind, "scene");
+        assert_eq!(core_scene.actions.len(), 1);
+        assert_eq!(
+            core_scene.actions[0].entity_id.as_str(),
+            "hue.light.hue.bridge.001788.light-1"
+        );
+        assert_eq!(
+            core_scene.actions[0].desired_state,
+            Value::Object(vec![
+                ("on".to_string(), Value::Bool(true)),
+                ("brightness".to_string(), Value::Percentage(66)),
+                ("color_temperature".to_string(), Value::Integer(366)),
+            ])
+        );
     }
 
     #[test]
