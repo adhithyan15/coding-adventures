@@ -5,6 +5,7 @@
 ### Added
 - `DocumentTheme` struct — a complete, explicit set of visual tokens (body / h1..h6 / code / blockquote fonts, text / heading / link / code / blockquote colors, paragraph / heading / list / blockquote / code-block spacing, page width + padding).
 - `document_default_theme()` — a legible, system-default theme. Uses the empty string for font family so the renderer resolves the OS default UI font.
+- `mosaic_era_theme()` — BR01/Venture defaults for Times New Roman document text, Courier New code, classic link blue, and Mosaic gray page background.
 - `document_ast_to_layout(&DocumentNode, &DocumentTheme) -> LayoutNode` — the UI06 conversion entry point.
 - Block mappings for: Document (root), Heading (1..=6, level→font size), Paragraph, CodeBlock (trailing newline stripped, monospace font, background rect via `ext["paint"]`), Blockquote (padded container with background + border), List (ordered/unordered with numeric/bullet markers, proper left indent), ListItem, TaskItem (ASCII `[ ]` marker), ThematicBreak.
 - `flatten_inline_text(&[InlineNode]) -> String` — concatenates inline content with v1 styling-lost simplification. Handles: Text, Emphasis, Strong, Strikethrough, CodeSpan (value only), Link (inner text + URL when they differ), Image (`[image: alt]`), Autolink (URL), RawInline (stripped), HardBreak (newline), SoftBreak (space).

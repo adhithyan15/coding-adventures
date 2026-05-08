@@ -36,9 +36,8 @@ use document_ast::{
     ListChildNode, ListItemNode, ListNode, ParagraphNode, TaskItemNode, ThematicBreakNode,
 };
 use layout_ir::{
-    color_black, color_white, edges_all, edges_xy, font_bold, font_spec, rgb,
-    rgba, size_fill, size_fixed, size_wrap, Color, Content, Edges, ExtValue, FontSpec, LayoutNode,
-    TextAlign, TextContent,
+    color_black, color_white, edges_all, edges_xy, font_bold, font_spec, rgb, rgba, size_fill,
+    size_fixed, size_wrap, Color, Edges, ExtValue, FontSpec, LayoutNode, TextAlign, TextContent,
 };
 
 pub const VERSION: &str = "0.1.0";
@@ -136,6 +135,49 @@ pub fn document_default_theme() -> DocumentTheme {
     }
 }
 
+/// Mosaic-era browser defaults for Venture v0.1.
+///
+/// The values mirror BR01's native-browser target: Times New Roman document
+/// text, Courier New code, classic unvisited-link blue, and the system-gray
+/// page background that made early Mosaic pages feel native.
+pub fn mosaic_era_theme() -> DocumentTheme {
+    let body = font_spec("Times New Roman", 14.0);
+    let code = font_spec("Courier New", 13.0);
+
+    DocumentTheme {
+        body_font: body.clone(),
+        h1_font: font_bold(font_spec("Times New Roman", 24.0)),
+        h2_font: font_bold(font_spec("Times New Roman", 20.0)),
+        h3_font: font_bold(font_spec("Times New Roman", 18.0)),
+        h4_font: font_bold(font_spec("Times New Roman", 16.0)),
+        h5_font: font_bold(font_spec("Times New Roman", 14.0)),
+        h6_font: font_bold(font_spec("Times New Roman", 12.0)),
+        code_font: code,
+        blockquote_font: body.clone(),
+
+        text_color: color_black(),
+        heading_color: color_black(),
+        link_color: rgb(0, 0, 238),
+        code_color: color_black(),
+        code_bg_color: rgba(224, 224, 224, 255),
+        blockquote_bg_color: rgba(224, 224, 224, 255),
+        blockquote_border_color: rgb(128, 128, 128),
+        hr_color: rgb(128, 128, 128),
+        page_background: rgb(192, 192, 192),
+
+        paragraph_spacing: 12.0,
+        heading_spacing: 16.0,
+        list_indent: 24.0,
+        list_item_spacing: 4.0,
+        blockquote_padding: 12.0,
+        code_block_padding: 8.0,
+        hr_height: 2.0,
+
+        page_width: 760.0,
+        page_padding: edges_all(16.0),
+    }
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // Entry point
 // ═══════════════════════════════════════════════════════════════════════════
@@ -154,7 +196,13 @@ pub fn document_ast_to_layout(doc: &DocumentNode, theme: &DocumentTheme) -> Layo
         .with_height(size_wrap())
         .with_ext(
             "paint",
-            ExtValue::Map(std::iter::once(("backgroundColor".to_string(), color_to_ext(theme.page_background))).collect()),
+            ExtValue::Map(
+                std::iter::once((
+                    "backgroundColor".to_string(),
+                    color_to_ext(theme.page_background),
+                ))
+                .collect(),
+            ),
         )
         .with_ext("block", block_ext_display_block())
 }
@@ -246,7 +294,10 @@ fn code_block_node(cb: &CodeBlockNode, theme: &DocumentTheme) -> LayoutNode {
     let content = cb.value.trim_end_matches('\n').to_string();
 
     let mut paint = std::collections::HashMap::new();
-    paint.insert("backgroundColor".to_string(), color_to_ext(theme.code_bg_color));
+    paint.insert(
+        "backgroundColor".to_string(),
+        color_to_ext(theme.code_bg_color),
+    );
     paint.insert("cornerRadius".to_string(), ExtValue::Float(4.0));
 
     LayoutNode::leaf_text(TextContent {
@@ -521,7 +572,7 @@ fn block_as_plain_text(b: &BlockNode) -> String {
             .map(block_as_plain_text)
             .collect::<Vec<_>>()
             .join("\n"),
-        BlockNode::List(_) => String::new(),  // nested list flattening is a v2 concern
+        BlockNode::List(_) => String::new(), // nested list flattening is a v2 concern
         BlockNode::ListItem(li) => li
             .children
             .iter()
@@ -548,7 +599,10 @@ fn block_as_plain_text(b: &BlockNode) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use document_ast::{EmphasisNode, HardBreakNode, LinkNode, SoftBreakNode, StrongNode, TextNode};
+    use document_ast::{
+        EmphasisNode, HardBreakNode, LinkNode, SoftBreakNode, StrongNode, TextNode,
+    };
+    use layout_ir::Content;
 
     fn txt(s: &str) -> InlineNode {
         InlineNode::Text(TextNode { value: s.into() })
@@ -560,6 +614,21 @@ mod tests {
         assert_eq!(t.body_font.size, 16.0);
         assert_eq!(t.h1_font.weight, 700);
         assert!(t.h1_font.size > t.body_font.size);
+    }
+
+    #[test]
+    fn mosaic_era_theme_matches_venture_defaults() {
+        let t = mosaic_era_theme();
+
+        assert_eq!(t.body_font.family, "Times New Roman");
+        assert_eq!(t.body_font.size, 14.0);
+        assert_eq!(t.h1_font.size, 24.0);
+        assert_eq!(t.h6_font.size, 12.0);
+        assert_eq!(t.code_font.family, "Courier New");
+        assert_eq!(t.code_font.size, 13.0);
+        assert_eq!(t.link_color, rgb(0, 0, 238));
+        assert_eq!(t.page_background, rgb(192, 192, 192));
+        assert_eq!(t.paragraph_spacing, 12.0);
     }
 
     #[test]
