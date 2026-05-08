@@ -64,11 +64,13 @@ It keeps parsing side-effect free, then exposes helpers to:
   `directory_file_path/3`, `file_name_extension/3`, `same_file/2`,
   `size_file/2`, `time_file/2`, `directory_files/2`, `make_directory/1`,
   `delete_file/1`, `delete_directory/1`, `rename_file/2`,
-  `working_directory/2`, `read_file_to_string/2`, `read_file_to_codes/2`,
-  `open/3`, `close/1`, `read_string/3`, `read_line_to_string/2`,
-  `get_char/2`, `at_end_of_stream/1`, `write/2`, `nl/1`, `open/4`,
-  `current_stream/3`, `stream_property/2`, `flush_output/1`,
-  `set_stream_position/2`, and `seek/4`
+  `working_directory/2`, `expand_file_name/2`, `make_directory_path/1`,
+  `delete_directory_and_contents/1`, `copy_file/2`,
+  `read_file_to_string/2`, `read_file_to_codes/2`, `open/3`, `close/1`,
+  `read_string/3`, `read_line_to_string/2`, `get_char/2`,
+  `at_end_of_stream/1`, `write/2`, `nl/1`, `open/4`, `current_stream/3`,
+  `stream_property/2`, `flush_output/1`, `set_stream_position/2`, and
+  `seek/4`
 - adapt selected current-stream predicates including `set_input/1`,
   `set_output/1`, `current_input/1`, `current_output/1`, `get_char/1`,
   `read_string/2`, `read_line_to_string/1`, `at_end_of_stream/0`,

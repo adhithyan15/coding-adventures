@@ -50,6 +50,8 @@ from logic_builtins import (
     current_streamo,
     cuto,
     cyclic_termo,
+    copy_fileo,
+    delete_directory_and_contentso,
     delete_directoryo,
     delete_fileo,
     difo,
@@ -57,6 +59,7 @@ from logic_builtins import (
     directory_file_patho,
     dynamico,
     excludeo,
+    expand_file_nameo,
     exists_directoryo,
     exists_fileo,
     failo,
@@ -105,6 +108,7 @@ from logic_builtins import (
     labeling_optionso,
     labelingo,
     maplisto,
+    make_directory_patho,
     make_directoryo,
     nl_currento,
     nlo,
@@ -647,6 +651,14 @@ def _adapt_relation_call(
         return rename_fileo(*args)
     if name == "working_directory" and goal.relation.arity == 2:
         return working_directoryo(*args)
+    if name == "expand_file_name" and goal.relation.arity == 2:
+        return expand_file_nameo(*args)
+    if name == "make_directory_path" and goal.relation.arity == 1:
+        return make_directory_patho(*args)
+    if name == "delete_directory_and_contents" and goal.relation.arity == 1:
+        return delete_directory_and_contentso(*args)
+    if name == "copy_file" and goal.relation.arity == 2:
+        return copy_fileo(*args)
     if name == "open" and goal.relation.arity == 3:
         return openo(*args)
     if name == "open" and goal.relation.arity == 4:

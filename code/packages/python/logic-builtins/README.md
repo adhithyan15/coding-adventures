@@ -61,9 +61,11 @@ ordinary logic goal expressions.
   `directory_file_patho/3`, `file_name_extensiono/3`, `same_fileo/2`,
   `size_fileo/2`, `time_fileo/2`, `directory_fileso/2`,
   `make_directoryo/1`, `delete_fileo/1`, `delete_directoryo/1`,
-  `rename_fileo/2`, `working_directoryo/2`, `read_file_to_stringo/2`, and
-  `read_file_to_codeso/2` for bounded file metadata, explicit filesystem
-  operations, and UTF-8 file text reads
+  `rename_fileo/2`, `working_directoryo/2`, `expand_file_nameo/2`,
+  `make_directory_patho/1`, `delete_directory_and_contentso/1`,
+  `copy_fileo/2`, `read_file_to_stringo/2`, and `read_file_to_codeso/2` for
+  bounded file metadata, explicit filesystem operations, recursive/wildcard
+  filesystem helpers, and UTF-8 file text reads
 - `openo/3`, `closeo/1`, `read_stringo/3`, `read_line_to_stringo/2`,
   `get_charo/2`, `at_end_of_streamo/1`, `writeo/2`, and `nlo/1` for bounded
   UTF-8 file stream handles

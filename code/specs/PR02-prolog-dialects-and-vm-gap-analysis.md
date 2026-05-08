@@ -19,13 +19,13 @@ can land in a few coherent batches rather than many tiny compatibility PRs.
 
 ## Core Track Status
 
-As of the PR00-PR88 Prolog-on-Logic-VM track, the shared core is implemented
+As of the PR00-PR89 Prolog-on-Logic-VM track, the shared core is implemented
 through the parser, loader, expansion, VM compiler, structured VM runtime,
 bytecode VM runtime, source/file/project runner APIs, top-level query APIs, the
 `prolog-vm` CLI, bounded UTF-8 file text I/O, and bounded UTF-8 file stream
 handles with alias/metadata/positioning/current-stream support, bounded binary
 byte stream I/O, read-only filesystem metadata predicates, and bounded
-filesystem operations.
+filesystem operations including recursive/wildcard helpers.
 
 The core track is now treated as complete for practical ISO/SWI-subset work:
 
@@ -62,6 +62,10 @@ The core track is now treated as complete for practical ISO/SWI-subset work:
   filesystem operation predicates including `directory_files/2`,
   `make_directory/1`, `delete_file/1`, `delete_directory/1`, `rename_file/2`,
   and `working_directory/2`.
+- Bound atom/string wildcard paths and directory trees can be handled with
+  recursive/wildcard filesystem predicates including `expand_file_name/2`,
+  `make_directory_path/1`, `delete_directory_and_contents/1`, and
+  `copy_file/2`.
 - The CLI provides source/query execution, check mode, structured instruction
   dumps, bytecode dumps, source-query metadata, all-query execution,
   interactive mode, text/JSON/JSONL output, summaries, machine-readable
@@ -69,14 +73,13 @@ The core track is now treated as complete for practical ISO/SWI-subset work:
 
 The package-level source of truth is `prolog_vm_capability_manifest()` and the
 matching `prolog-vm --dump-capabilities` CLI output. New work should update
-that manifest instead of reopening open-ended PR00-PR88 gap analysis.
+that manifest instead of reopening open-ended PR00-PR89 gap analysis.
 
 Remaining work in this document is advanced dialect and runtime emulation:
 full external Prolog dialect compatibility, tabling, attributed variables,
 generalized coroutining, CHR/non-FD constraint domains, console/rich stream
-services beyond the bounded file-backed text/binary subset, recursive or
-wildcard filesystem services, foreign predicates, engines, concurrency, and
-async host integration.
+services beyond the bounded file-backed text/binary subset, foreign
+predicates, engines, concurrency, and async host integration.
 
 ## Current Project Surface
 
@@ -116,7 +119,8 @@ Current support:
   runners, bounded UTF-8 file text reads and file stream handles with aliases,
   current-stream selection, cursor positioning, bounded binary byte stream I/O,
   read-only filesystem metadata predicates, bounded filesystem operations,
-  bytecode parity, and machine-readable tooling.
+  recursive/wildcard filesystem helpers, bytecode parity, and
+  machine-readable tooling.
 - Missing or incomplete for full ISO-system emulation: console-backed standard
   streams, richer binary stream services, rich stream options beyond the
   bounded file-backed subset, full ISO standard-library breadth, every ISO
@@ -375,12 +379,13 @@ This is a major runtime feature and should be its own batch.
 
 ## Historical Implementation Batches
 
-The original gap analysis proposed these implementation batches. PR00-PR88
+The original gap analysis proposed these implementation batches. PR00-PR89
 completed the core versions of Batches 1-5, added a broad Prolog stdlib and
 CLP(FD) compatibility layer, delivered runner/CLI tooling, and added bounded
 file text and stream I/O with aliases/metadata/positioning/current-stream
 selection, bounded binary byte stream I/O, read-only filesystem metadata, and
-bounded filesystem operations. Batch 6 remains future advanced dialect work.
+bounded filesystem operations including recursive/wildcard helpers. Batch 6
+remains future advanced dialect work.
 
 ### Batch 1 - Grammar and Dialect Profile Foundation
 
