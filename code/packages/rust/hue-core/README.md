@@ -12,8 +12,10 @@ packages a typed surface for:
 - typed Hue bridge resources for paired bridge identity/health refresh
 - typed Hue device resources and service references
 - typed Hue grouped-light resources for room/zone aggregate lights
+- typed Hue room, zone, and scene resources
 - discovery-to-`Bridge` projection
 - Hue light/device-to-normalized-model projection
+- Hue scene-to-normalized-`Scene` projection
 - Hue light state update-to-`StateDelta` projection
 - integration descriptor metadata for Chief of Staff discovery
 

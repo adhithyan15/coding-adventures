@@ -15,6 +15,7 @@ All notable changes to this package will be documented in this file.
 - Hue bridge resource decoding for paired bridge identity and time zone data.
 - Hue device resource decoding with product metadata and CLIP v2 service refs.
 - Hue grouped-light resource decoding for room/zone aggregate lights.
+- Hue room, zone, and scene resource decoding for area-scoped scene recall.
 - Hue event-stream Server-Sent Events parsing into batches and raw resource
   records.
 - Hue light state update extraction from resource snapshots and event-stream

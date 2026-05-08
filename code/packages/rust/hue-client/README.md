@@ -19,6 +19,7 @@ Included surfaces:
 - Hue bridge resource decoding for paired bridge identity and time zone data
 - Hue device resource decoding with product metadata and service references
 - Hue grouped-light resource decoding for room/zone aggregate lights
+- Hue room, zone, and scene resource decoding
 - Hue light resource decoding
 - Hue light state update extraction from snapshots and event-stream batches
 

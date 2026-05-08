@@ -12,8 +12,8 @@ use http_core::{find_header, Header};
 use hue_core::{
     validate_brightness, HueBridgeResource, HueCommand, HueDeviceResource, HueGroupedLightResource,
     HueLightResource, HueLightStateUpdate, HueMethod, HueRequest, HueRequestBody, HueResourceId,
-    HueResourceRef, HueResourceType, CLIP_V2_EVENT_STREAM_PATH, CLIP_V2_RESOURCE_ROOT,
-    HUE_APPLICATION_KEY_HEADER,
+    HueResourceRef, HueResourceType, HueRoomResource, HueSceneAction, HueSceneResource,
+    HueZoneResource, CLIP_V2_EVENT_STREAM_PATH, CLIP_V2_RESOURCE_ROOT, HUE_APPLICATION_KEY_HEADER,
 };
 use std::fmt;
 
@@ -245,6 +245,21 @@ impl<T: HueTransport> HueClient<T> {
     ) -> Result<Vec<HueGroupedLightResource>, HueClientError> {
         let envelope = self.get_collection(HueResourceType::GroupedLight)?;
         parse_grouped_lights_from_envelope(&envelope)
+    }
+
+    pub fn get_room_resources(&mut self) -> Result<Vec<HueRoomResource>, HueClientError> {
+        let envelope = self.get_collection(HueResourceType::Room)?;
+        parse_rooms_from_envelope(&envelope)
+    }
+
+    pub fn get_zone_resources(&mut self) -> Result<Vec<HueZoneResource>, HueClientError> {
+        let envelope = self.get_collection(HueResourceType::Zone)?;
+        parse_zones_from_envelope(&envelope)
+    }
+
+    pub fn get_scene_resources(&mut self) -> Result<Vec<HueSceneResource>, HueClientError> {
+        let envelope = self.get_collection(HueResourceType::Scene)?;
+        parse_scenes_from_envelope(&envelope)
     }
 
     pub fn get_bridge_resources(&mut self) -> Result<Vec<HueBridgeResource>, HueClientError> {
@@ -566,6 +581,42 @@ pub fn parse_grouped_lights_from_envelope(
     Ok(grouped_lights)
 }
 
+pub fn parse_rooms_from_envelope(
+    envelope: &HueEnvelope,
+) -> Result<Vec<HueRoomResource>, HueClientError> {
+    let mut rooms = Vec::new();
+    for resource in &envelope.data {
+        if object_string_field(resource, "type") == Some(HueResourceType::Room.as_hue_type()) {
+            rooms.push(parse_room_resource(resource)?);
+        }
+    }
+    Ok(rooms)
+}
+
+pub fn parse_zones_from_envelope(
+    envelope: &HueEnvelope,
+) -> Result<Vec<HueZoneResource>, HueClientError> {
+    let mut zones = Vec::new();
+    for resource in &envelope.data {
+        if object_string_field(resource, "type") == Some(HueResourceType::Zone.as_hue_type()) {
+            zones.push(parse_zone_resource(resource)?);
+        }
+    }
+    Ok(zones)
+}
+
+pub fn parse_scenes_from_envelope(
+    envelope: &HueEnvelope,
+) -> Result<Vec<HueSceneResource>, HueClientError> {
+    let mut scenes = Vec::new();
+    for resource in &envelope.data {
+        if object_string_field(resource, "type") == Some(HueResourceType::Scene.as_hue_type()) {
+            scenes.push(parse_scene_resource(resource)?);
+        }
+    }
+    Ok(scenes)
+}
+
 pub fn parse_bridges_from_envelope(
     envelope: &HueEnvelope,
 ) -> Result<Vec<HueBridgeResource>, HueClientError> {
@@ -835,6 +886,97 @@ fn parse_grouped_light_resource(
     })
 }
 
+fn parse_room_resource(resource: &JsonValue) -> Result<HueRoomResource, HueClientError> {
+    let id = object_string_field(resource, "id")
+        .ok_or_else(|| HueClientError::unexpected_json("Hue room resource is missing id"))?;
+    let (name, archetype) = parse_area_metadata(resource, id);
+    Ok(HueRoomResource {
+        id: HueResourceId::trusted(id),
+        name,
+        archetype,
+        children: parse_optional_resource_refs(resource, "children")?,
+        services: parse_optional_resource_refs(resource, "services")?,
+    })
+}
+
+fn parse_zone_resource(resource: &JsonValue) -> Result<HueZoneResource, HueClientError> {
+    let id = object_string_field(resource, "id")
+        .ok_or_else(|| HueClientError::unexpected_json("Hue zone resource is missing id"))?;
+    let (name, archetype) = parse_area_metadata(resource, id);
+    Ok(HueZoneResource {
+        id: HueResourceId::trusted(id),
+        name,
+        archetype,
+        children: parse_optional_resource_refs(resource, "children")?,
+        services: parse_optional_resource_refs(resource, "services")?,
+    })
+}
+
+fn parse_area_metadata(resource: &JsonValue, fallback_name: &str) -> (String, Option<String>) {
+    let metadata = object_field(resource, "metadata");
+    let name = metadata
+        .and_then(|metadata| object_string_field(metadata, "name"))
+        .unwrap_or(fallback_name)
+        .to_string();
+    let archetype = metadata
+        .and_then(|metadata| object_string_field(metadata, "archetype"))
+        .map(str::to_string);
+    (name, archetype)
+}
+
+fn parse_scene_resource(resource: &JsonValue) -> Result<HueSceneResource, HueClientError> {
+    let id = object_string_field(resource, "id")
+        .ok_or_else(|| HueClientError::unexpected_json("Hue scene resource is missing id"))?;
+    let group = object_field(resource, "group")
+        .ok_or_else(|| HueClientError::unexpected_json("Hue scene resource is missing group"))?;
+    let name = object_field(resource, "metadata")
+        .and_then(|metadata| object_string_field(metadata, "name"))
+        .unwrap_or(id)
+        .to_string();
+    let actions = match object_field(resource, "actions") {
+        Some(JsonValue::Array(values)) => values
+            .iter()
+            .map(parse_scene_action)
+            .collect::<Result<Vec<_>, _>>()?,
+        Some(_) => {
+            return Err(HueClientError::unexpected_json(
+                "Hue scene actions field must be an array",
+            ))
+        }
+        None => Vec::new(),
+    };
+
+    Ok(HueSceneResource {
+        id: HueResourceId::trusted(id),
+        group: parse_resource_ref(group)?,
+        name,
+        actions,
+    })
+}
+
+fn parse_scene_action(value: &JsonValue) -> Result<HueSceneAction, HueClientError> {
+    let target = object_field(value, "target")
+        .ok_or_else(|| HueClientError::unexpected_json("Hue scene action is missing target"))?;
+    let action = object_field(value, "action")
+        .ok_or_else(|| HueClientError::unexpected_json("Hue scene action is missing action"))?;
+    let on = object_field(action, "on").and_then(|on| object_bool_field(on, "on"));
+    let brightness = object_field(action, "dimming")
+        .and_then(|dimming| object_field(dimming, "brightness"))
+        .map(json_number_to_percent)
+        .transpose()?;
+    let color_temperature_mirek = object_field(action, "color_temperature")
+        .and_then(|color_temperature| object_field(color_temperature, "mirek"))
+        .map(json_number_to_u16)
+        .transpose()?;
+
+    Ok(HueSceneAction {
+        target: parse_resource_ref(target)?,
+        on,
+        brightness,
+        color_temperature_mirek,
+    })
+}
+
 fn parse_device_resource(resource: &JsonValue) -> Result<HueDeviceResource, HueClientError> {
     let id = object_string_field(resource, "id")
         .ok_or_else(|| HueClientError::unexpected_json("Hue device resource is missing id"))?;
@@ -870,6 +1012,19 @@ fn parse_device_resource(resource: &JsonValue) -> Result<HueDeviceResource, HueC
             .map(str::to_string),
         services,
     })
+}
+
+fn parse_optional_resource_refs(
+    resource: &JsonValue,
+    field_name: &str,
+) -> Result<Vec<HueResourceRef>, HueClientError> {
+    match object_field(resource, field_name) {
+        Some(JsonValue::Array(values)) => parse_resource_refs(values),
+        Some(_) => Err(HueClientError::unexpected_json(format!(
+            "Hue resource {field_name} field must be an array"
+        ))),
+        None => Ok(Vec::new()),
+    }
 }
 
 fn parse_resource_refs(values: &[JsonValue]) -> Result<Vec<HueResourceRef>, HueClientError> {
@@ -1203,6 +1358,65 @@ mod tests {
     }
 
     #[test]
+    fn client_reads_room_collection_through_injected_transport() {
+        let transport = RecordingTransport::with_response(
+            r#"{"data":[{"id":"room-1","type":"room","metadata":{"name":"Kitchen","archetype":"kitchen"},"children":[{"rid":"device-1","rtype":"device"}],"services":[{"rid":"grouped-light-1","rtype":"grouped_light"}]}],"errors":[]}"#,
+        );
+        let mut client = HueClient::new(HueClientConfig::paired("app-key"), transport);
+
+        let rooms = client.get_room_resources().unwrap();
+        let transport = client.into_transport();
+
+        assert_eq!(rooms.len(), 1);
+        assert_eq!(rooms[0].id.as_str(), "room-1");
+        assert_eq!(rooms[0].name, "Kitchen");
+        assert_eq!(rooms[0].archetype.as_deref(), Some("kitchen"));
+        assert_eq!(rooms[0].children[0].resource_type, HueResourceType::Device);
+        assert_eq!(
+            rooms[0].grouped_light_service().unwrap().id.as_str(),
+            "grouped-light-1"
+        );
+        assert_eq!(transport.requests[0].path, "/clip/v2/resource/room");
+    }
+
+    #[test]
+    fn client_reads_zone_collection_through_injected_transport() {
+        let transport = RecordingTransport::with_response(
+            r#"{"data":[{"id":"zone-1","type":"zone","metadata":{"name":"Downstairs"},"children":[{"rid":"room-1","rtype":"room"}],"services":[{"rid":"grouped-light-1","rtype":"grouped_light"}]}],"errors":[]}"#,
+        );
+        let mut client = HueClient::new(HueClientConfig::paired("app-key"), transport);
+
+        let zones = client.get_zone_resources().unwrap();
+        let transport = client.into_transport();
+
+        assert_eq!(zones.len(), 1);
+        assert_eq!(zones[0].id.as_str(), "zone-1");
+        assert_eq!(zones[0].name, "Downstairs");
+        assert_eq!(zones[0].children[0].resource_type, HueResourceType::Room);
+        assert_eq!(transport.requests[0].path, "/clip/v2/resource/zone");
+    }
+
+    #[test]
+    fn client_reads_scene_collection_through_injected_transport() {
+        let transport = RecordingTransport::with_response(
+            r#"{"data":[{"id":"scene-1","type":"scene","metadata":{"name":"Dinner"},"group":{"rid":"room-1","rtype":"room"},"actions":[{"target":{"rid":"light-1","rtype":"light"},"action":{"on":{"on":true},"dimming":{"brightness":66},"color_temperature":{"mirek":366}}}]}],"errors":[]}"#,
+        );
+        let mut client = HueClient::new(HueClientConfig::paired("app-key"), transport);
+
+        let scenes = client.get_scene_resources().unwrap();
+        let transport = client.into_transport();
+
+        assert_eq!(scenes.len(), 1);
+        assert_eq!(scenes[0].id.as_str(), "scene-1");
+        assert_eq!(scenes[0].name, "Dinner");
+        assert_eq!(scenes[0].group.resource_type, HueResourceType::Room);
+        assert_eq!(scenes[0].actions.len(), 1);
+        assert_eq!(scenes[0].actions[0].brightness, Some(66));
+        assert_eq!(scenes[0].actions[0].color_temperature_mirek, Some(366));
+        assert_eq!(transport.requests[0].path, "/clip/v2/resource/scene");
+    }
+
+    #[test]
     fn parses_registration_success() {
         let registration = parse_registration_response(
             br#"[{"success":{"username":"app-key","clientkey":"client-key"}}]"#,
@@ -1270,6 +1484,69 @@ mod tests {
 
         assert!(matches!(
             parse_grouped_lights_from_envelope(&envelope),
+            Err(HueClientError::UnexpectedJson { .. })
+        ));
+    }
+
+    #[test]
+    fn parses_room_and_zone_resources_from_snapshot_envelope() {
+        let envelope = parse_hue_envelope(
+            br#"{"data":[{"id":"room-1","type":"room","metadata":{"name":"Kitchen","archetype":"kitchen"},"children":[{"rid":"device-1","rtype":"device"}],"services":[{"rid":"grouped-light-1","rtype":"grouped_light"}]},{"id":"zone-1","type":"zone","metadata":{"name":"Downstairs","archetype":"floor"},"children":[{"rid":"room-1","rtype":"room"}],"services":[{"rid":"grouped-light-2","rtype":"grouped_light"}]}],"errors":[]}"#,
+        )
+        .unwrap();
+
+        let rooms = parse_rooms_from_envelope(&envelope).unwrap();
+        let zones = parse_zones_from_envelope(&envelope).unwrap();
+
+        assert_eq!(rooms.len(), 1);
+        assert_eq!(rooms[0].id.as_str(), "room-1");
+        assert_eq!(rooms[0].archetype.as_deref(), Some("kitchen"));
+        assert_eq!(rooms[0].children[0].id.as_str(), "device-1");
+        assert_eq!(
+            rooms[0].grouped_light_service().unwrap().id.as_str(),
+            "grouped-light-1"
+        );
+        assert_eq!(zones.len(), 1);
+        assert_eq!(zones[0].children[0].resource_type, HueResourceType::Room);
+        assert_eq!(
+            zones[0].grouped_light_service().unwrap().id.as_str(),
+            "grouped-light-2"
+        );
+    }
+
+    #[test]
+    fn parses_scene_resources_from_snapshot_envelope() {
+        let envelope = parse_hue_envelope(
+            br#"{"data":[{"id":"scene-1","type":"scene","metadata":{"name":"Dinner"},"group":{"rid":"room-1","rtype":"room"},"actions":[{"target":{"rid":"light-1","rtype":"light"},"action":{"on":{"on":true},"dimming":{"brightness":66},"color_temperature":{"mirek":366}}},{"target":{"rid":"grouped-light-1","rtype":"grouped_light"},"action":{"on":{"on":false}}}]},{"id":"light-1","type":"light"}],"errors":[]}"#,
+        )
+        .unwrap();
+
+        let scenes = parse_scenes_from_envelope(&envelope).unwrap();
+
+        assert_eq!(scenes.len(), 1);
+        assert_eq!(scenes[0].id.as_str(), "scene-1");
+        assert_eq!(scenes[0].name, "Dinner");
+        assert_eq!(scenes[0].group.id.as_str(), "room-1");
+        assert_eq!(scenes[0].actions.len(), 2);
+        assert_eq!(
+            scenes[0].actions[0].target.resource_type,
+            HueResourceType::Light
+        );
+        assert_eq!(scenes[0].actions[0].on, Some(true));
+        assert_eq!(scenes[0].actions[0].brightness, Some(66));
+        assert_eq!(scenes[0].actions[0].color_temperature_mirek, Some(366));
+        assert_eq!(scenes[0].actions[1].on, Some(false));
+    }
+
+    #[test]
+    fn scene_parser_rejects_malformed_actions() {
+        let envelope = parse_hue_envelope(
+            br#"{"data":[{"id":"scene-1","type":"scene","group":{"rid":"room-1","rtype":"room"},"actions":{"target":{"rid":"light-1","rtype":"light"}}}],"errors":[]}"#,
+        )
+        .unwrap();
+
+        assert!(matches!(
+            parse_scenes_from_envelope(&envelope),
             Err(HueClientError::UnexpectedJson { .. })
         ));
     }
