@@ -14,6 +14,7 @@ SUPPORTED_INITIAL_STATES = {
     "CDATA section bracket state",
     "CDATA section end state",
     "CDATA section state",
+    "Character reference state",
     "Bogus comment state",
     "Comment end bang state",
     "Comment end dash state",
@@ -58,6 +59,11 @@ SUPPORTED_INITIAL_STATES = {
     "Before DOCTYPE system identifier state",
     "Between DOCTYPE public and system identifiers state",
     "Bogus DOCTYPE state",
+    "Decimal character reference state",
+    "Hexadecimal character reference start state",
+    "Hexadecimal character reference state",
+    "Named character reference state",
+    "Numeric character reference state",
     "PLAINTEXT state",
     "RCDATA end tag attributes state",
     "RCDATA end tag name state",
@@ -208,6 +214,20 @@ DOCTYPE_SEED_INITIAL_STATES = {
     "Bogus DOCTYPE state",
 }
 
+CHARACTER_REFERENCE_INITIAL_STATES = {
+    "Character reference state",
+    "Decimal character reference state",
+    "Hexadecimal character reference start state",
+    "Hexadecimal character reference state",
+    "Named character reference state",
+    "Numeric character reference state",
+}
+
+CHARACTER_REFERENCE_RETURN_STATES = {
+    "Data state",
+    "RCDATA state",
+}
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -275,10 +295,18 @@ def is_supported(test: dict[str, Any]) -> tuple[bool, str]:
         for initial_state in initial_states
         if initial_state in LAST_START_TAG_INITIAL_STATES
     ]
+    character_reference_returns_to_rcdata = (
+        any(initial_state in CHARACTER_REFERENCE_INITIAL_STATES for initial_state in initial_states)
+        and test.get("returnState") == "RCDATA state"
+    )
     if needs_last_start_tag and not isinstance(last_start_tag, str):
         return False, f"{needs_last_start_tag[0]} requires lastStartTag"
 
-    if last_start_tag is not None and len(needs_last_start_tag) != len(initial_states):
+    if (
+        last_start_tag is not None
+        and len(needs_last_start_tag) != len(initial_states)
+        and not character_reference_returns_to_rcdata
+    ):
         return False, f"unsupported lastStartTag={last_start_tag!r}"
 
     needs_end_tag_seed = [
@@ -289,9 +317,13 @@ def is_supported(test: dict[str, Any]) -> tuple[bool, str]:
     has_end_tag_seed = isinstance(test.get("currentEndTag"), str) and isinstance(
         test.get("temporaryBuffer"), str
     )
-    has_partial_end_tag_seed = test.get("currentEndTag") is not None or test.get(
-        "temporaryBuffer"
-    ) is not None
+    has_partial_end_tag_seed = test.get("currentEndTag") is not None or (
+        test.get("temporaryBuffer") is not None
+        and not any(
+            initial_state in CHARACTER_REFERENCE_INITIAL_STATES
+            for initial_state in initial_states
+        )
+    )
     if needs_end_tag_seed and not has_end_tag_seed:
         return False, f"{needs_end_tag_seed[0]} requires currentEndTag and temporaryBuffer"
 
@@ -300,6 +332,30 @@ def is_supported(test: dict[str, Any]) -> tuple[bool, str]:
 
     if has_end_tag_seed and len(needs_end_tag_seed) != len(initial_states):
         return False, "currentEndTag/temporaryBuffer only supported for continuation states"
+
+    needs_character_reference_seed = [
+        initial_state
+        for initial_state in initial_states
+        if initial_state in CHARACTER_REFERENCE_INITIAL_STATES
+    ]
+    has_character_reference_seed = isinstance(test.get("returnState"), str) and isinstance(
+        test.get("temporaryBuffer"), str
+    )
+    has_partial_character_reference_seed = test.get("returnState") is not None
+    if needs_character_reference_seed and not has_character_reference_seed:
+        return False, f"{needs_character_reference_seed[0]} requires returnState and temporaryBuffer"
+
+    if has_partial_character_reference_seed and not has_character_reference_seed:
+        return False, "returnState and temporaryBuffer must be provided together"
+
+    if has_character_reference_seed and len(needs_character_reference_seed) != len(initial_states):
+        return False, "returnState/temporaryBuffer only supported for character-reference states"
+
+    if has_character_reference_seed and test.get("returnState") not in CHARACTER_REFERENCE_RETURN_STATES:
+        return False, "character-reference returnState must be Data state or RCDATA state"
+
+    if has_end_tag_seed and has_character_reference_seed:
+        return False, "end-tag and character-reference continuations cannot be combined"
 
     needs_comment_seed = [
         initial_state
@@ -313,7 +369,12 @@ def is_supported(test: dict[str, Any]) -> tuple[bool, str]:
     if has_comment_seed and len(needs_comment_seed) != len(initial_states):
         return False, "currentComment only supported for comment continuation states"
 
-    if has_comment_seed and (has_end_tag_seed or has_partial_end_tag_seed):
+    if has_comment_seed and (
+        has_end_tag_seed
+        or has_partial_end_tag_seed
+        or has_character_reference_seed
+        or has_partial_character_reference_seed
+    ):
         return False, "currentComment cannot be combined with end-tag continuation context"
 
     needs_doctype_seed = [
@@ -328,7 +389,13 @@ def is_supported(test: dict[str, Any]) -> tuple[bool, str]:
     if has_doctype_seed and len(needs_doctype_seed) != len(initial_states):
         return False, "currentDoctype only supported for doctype continuation states"
 
-    if has_doctype_seed and (has_end_tag_seed or has_partial_end_tag_seed or has_comment_seed):
+    if has_doctype_seed and (
+        has_end_tag_seed
+        or has_partial_end_tag_seed
+        or has_comment_seed
+        or has_character_reference_seed
+        or has_partial_character_reference_seed
+    ):
         return False, "currentDoctype cannot be combined with other current-token context"
 
     for token in test.get("output", []):
@@ -405,6 +472,10 @@ def normalize_case(
     temporary_buffer = test.get("temporaryBuffer")
     if temporary_buffer is not None:
         normalized["temporary_buffer"] = temporary_buffer
+
+    return_state = test.get("returnState")
+    if return_state is not None:
+        normalized["return_state"] = return_state
 
     current_comment = test.get("currentComment")
     if current_comment is not None:

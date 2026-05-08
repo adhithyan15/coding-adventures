@@ -3085,6 +3085,115 @@
           "tail"
         ]
       ]
+    },
+    {
+      "description": "named character reference continuation returns to data state",
+      "input": "py;!",
+      "initialStates": [
+        "Named character reference state"
+      ],
+      "returnState": "Data state",
+      "temporaryBuffer": "&co",
+      "output": [
+        [
+          "Character",
+          "©!"
+        ]
+      ]
+    },
+    {
+      "description": "named character reference continuation can return to rcdata",
+      "input": "mp; &amp;</title>",
+      "initialStates": [
+        "Named character reference state"
+      ],
+      "returnState": "RCDATA state",
+      "temporaryBuffer": "&a",
+      "lastStartTag": "title",
+      "output": [
+        [
+          "Character",
+          "& &"
+        ],
+        [
+          "EndTag",
+          "title"
+        ]
+      ]
+    },
+    {
+      "description": "numeric character reference continuation resumes decimal digits",
+      "input": "5;!",
+      "initialStates": [
+        "Decimal character reference state"
+      ],
+      "returnState": "Data state",
+      "temporaryBuffer": "&#6",
+      "output": [
+        [
+          "Character",
+          "A!"
+        ]
+      ]
+    },
+    {
+      "description": "hex character reference continuation recovers missing semicolon",
+      "input": "1!",
+      "initialStates": [
+        "Hexadecimal character reference state"
+      ],
+      "returnState": "Data state",
+      "temporaryBuffer": "&#x4",
+      "output": [
+        [
+          "Character",
+          "A!"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "missing-semicolon-after-character-reference",
+          "line": 1,
+          "col": 2
+        }
+      ]
+    },
+    {
+      "description": "numeric character reference start continuation reports absent digits",
+      "input": ";!",
+      "initialStates": [
+        "Numeric character reference state"
+      ],
+      "returnState": "Data state",
+      "temporaryBuffer": "&#",
+      "output": [
+        [
+          "Character",
+          "&#;!"
+        ]
+      ],
+      "errors": [
+        {
+          "code": "absence-of-digits-in-numeric-character-reference",
+          "line": 1,
+          "col": 1
+        }
+      ]
+    },
+    {
+      "description": "character reference state falls back through temporary buffer",
+      "input": " nope",
+      "initialStates": [
+        "Character reference state"
+      ],
+      "returnState": "Data state",
+      "temporaryBuffer": "&",
+      "output": [
+        [
+          "Character",
+          "& nope"
+        ]
+      ]
     }
   ]
 }

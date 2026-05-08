@@ -32,6 +32,7 @@ Each file is a JSON object with this shape:
       "current_end_tag": "optional in-progress end-tag token context",
       "current_doctype": "optional in-progress doctype token context",
       "temporary_buffer": "optional tokenizer temporary-buffer context",
+      "return_state": "optional tokenizer return-state context",
       "diagnostics": ["optional-diagnostic-code"]
     }
   ]
@@ -74,6 +75,9 @@ resume with an already-created comment token.
 DOCTYPE continuation fixtures accept a `currentDoctype` extension object,
 lowered to `current_doctype`, with optional `name`, `public_identifier`,
 `system_identifier`, and `force_quirks` fields for the partial doctype token.
+Character-reference continuation fixtures accept `temporaryBuffer` plus
+`returnState`, lowered to `temporary_buffer` and `return_state`, so seeded
+named/numeric reference substates can recover back into data or RCDATA.
 
 `normalize_html5lib_fixtures.py` is the checked-in importer for this shape. It
 currently supports:
@@ -85,6 +89,9 @@ currently supports:
 - `initialStates: ["PLAINTEXT state"]`
 - `initialStates: ["CDATA section state"]`
 - CDATA section `bracket` and `end` substates
+- character-reference, named-reference, numeric-reference, decimal-reference,
+  and hexadecimal-reference substates together with `temporaryBuffer` and
+  `returnState`
 - comment `start`, `start dash`, body, less-than-sign, less-than-sign bang,
   less-than-sign bang dash, less-than-sign bang dash dash, end-dash, end,
   end-bang, and bogus-comment substates together with `currentComment`
@@ -191,8 +198,10 @@ discarded. End-tag continuation coverage intentionally exercises matching,
 mismatched, EOF, and diagnostic recovery paths so parser/tokenizer handoff
 regressions show up in the shared fixture corpus instead of only in narrow unit
 tests. Comment continuation coverage does the same for pending dash/bang and
-bogus-comment recovery paths. DOCTYPE continuation coverage exercises partial
-keyword/name, identifier, diagnostic, and bogus-doctype recovery paths.
+bogus-comment recovery paths. Character-reference continuation coverage
+exercises seeded named/numeric reference recovery returning to data and RCDATA.
+DOCTYPE continuation coverage exercises partial keyword/name, identifier,
+diagnostic, and bogus-doctype recovery paths.
 
 To regenerate the normalized corpus:
 

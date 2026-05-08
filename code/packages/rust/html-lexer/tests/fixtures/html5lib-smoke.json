@@ -19,6 +19,7 @@
     "CDATA section bracket state",
     "CDATA section end state",
     "CDATA section state",
+    "Character reference state",
     "Comment end bang state",
     "Comment end dash state",
     "Comment end state",
@@ -52,6 +53,11 @@
     "DOCTYPE system keyword T state",
     "DOCTYPE system keyword Y state",
     "Data state",
+    "Decimal character reference state",
+    "Hexadecimal character reference start state",
+    "Hexadecimal character reference state",
+    "Named character reference state",
+    "Numeric character reference state",
     "PLAINTEXT state",
     "RAWTEXT end tag attributes state",
     "RAWTEXT end tag name state",
@@ -2794,6 +2800,90 @@
         "name": "html",
         "force_quirks": true
       }
+    },
+    {
+      "id": "html5lib-smoke-214",
+      "description": "named character reference continuation returns to data state",
+      "input": "py;!",
+      "tokens": [
+        "Text(data=\u00a9!)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Named character reference state",
+      "temporary_buffer": "&co",
+      "return_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-215",
+      "description": "named character reference continuation can return to rcdata",
+      "input": "mp; &amp;</title>",
+      "tokens": [
+        "Text(data=& &)",
+        "EndTag(name=title)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Named character reference state",
+      "last_start_tag": "title",
+      "temporary_buffer": "&a",
+      "return_state": "RCDATA state"
+    },
+    {
+      "id": "html5lib-smoke-216",
+      "description": "numeric character reference continuation resumes decimal digits",
+      "input": "5;!",
+      "tokens": [
+        "Text(data=A!)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Decimal character reference state",
+      "temporary_buffer": "&#6",
+      "return_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-217",
+      "description": "hex character reference continuation recovers missing semicolon",
+      "input": "1!",
+      "tokens": [
+        "Text(data=A!)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "missing-semicolon-after-character-reference"
+      ],
+      "initial_state": "Hexadecimal character reference state",
+      "temporary_buffer": "&#x4",
+      "return_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-218",
+      "description": "numeric character reference start continuation reports absent digits",
+      "input": ";!",
+      "tokens": [
+        "Text(data=&#;!)",
+        "EOF"
+      ],
+      "diagnostics": [
+        "absence-of-digits-in-numeric-character-reference"
+      ],
+      "initial_state": "Numeric character reference state",
+      "temporary_buffer": "&#",
+      "return_state": "Data state"
+    },
+    {
+      "id": "html5lib-smoke-219",
+      "description": "character reference state falls back through temporary buffer",
+      "input": " nope",
+      "tokens": [
+        "Text(data=& nope)",
+        "EOF"
+      ],
+      "diagnostics": [],
+      "initial_state": "Character reference state",
+      "temporary_buffer": "&",
+      "return_state": "Data state"
     }
   ],
   "skipped": []
