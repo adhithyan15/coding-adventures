@@ -1,5 +1,96 @@
 # Changelog
 
+## 1.22.0 — 2026-05-08
+
+**Phase 31 — End-to-end pipeline tests for Phases 28–33 of `symbolic-vm`.**
+
+This release adds comprehensive MACSYMA-surface pipeline tests — source string
+→ `parse_macsyma` → `compile_macsyma` → `VM(MacsymaBackend).eval` — for the
+advanced CAS capabilities that were wired into `symbolic-vm` in Phases 28–33
+but never validated through the MACSYMA surface syntax.
+
+### Why this matters
+
+The MACSYMA pipeline has two independent concerns: (a) the VM handlers that
+compute answers, and (b) the compiler name-table that maps MACSYMA identifiers
+to the correct IR heads.  The handler-level unit tests in `symbolic-vm/tests/`
+and `test_ode_wiring.py` verify (a); the new Section U–Z tests in
+`test_cas_pipeline.py` verify (b) — that `taylor(…)`, `sum(…)`, `laplace(…)`,
+`ode2(…)`, `log(exp(x))`, `asin(-x)`, and `sin(%pi/6)` compile to the right
+IR heads and produce correct results end-to-end.
+
+### New test sections in `test_cas_pipeline.py`
+
+| Section | Feature | Handler / Phase |
+|---------|---------|-----------------|
+| **U** | Taylor series | `Taylor` handler, `cas-limit-series` Phase 28 |
+| **V** | Symbolic summation | `Sum` handler, `cas-summation` Phase 25 |
+| **W** | Laplace transforms | `Laplace` handler, `cas-laplace` Phase 29 |
+| **X** | ODE solving | `ODE2` handler, `cas-ode` Phase 29 |
+| **Y** | Log/exp cancellation | `log_handler` / `exp_handler`, `symbolic-vm` Phase 30 |
+| **Z** | Inverse trig symmetry + trig special values | `asin_handler`, `sin_handler`, `cos_handler`, `symbolic-vm` Phases 32–33 |
+
+### Section details
+
+#### Section U — Taylor series (3 tests)
+
+- `taylor(x^2, x, 0, 2)` — result is an expanded polynomial, not
+  unevaluated `Taylor(...)`.
+- `taylor(3, x, 0, 1)` → `3` (constant stays constant).
+- `taylor(x + 1, x, 0, 1)` — result is an expanded form, not unevaluated.
+
+#### Section V — Symbolic summation (3 tests)
+
+- `sum(k, k, 1, 4)` → `10` (Faulhaber: 1+2+3+4 = 10).
+- `sum(2, k, 1, 5)` → `10` (constant 2 summed 5 times).
+- `sum(k^2, k, 1, 3)` → `14` (1² + 2² + 3² = 14).
+
+#### Section W — Laplace transforms (2 tests)
+
+- `laplace(1, t, s)` — returns `IRApply` containing `s`  (L{1} = 1/s).
+- `laplace(t, t, s)` — returns `IRApply` containing `s`  (L{t} = 1/s²).
+
+#### Section X — ODE solving (2 tests)
+
+- `ode2(diff(y, x) + y, y, x)` → `Equal(y, C·exp(-x))`.
+- `ode2(diff(y, x) + 2*y, y, x)` → `Equal(y, C·exp(-2x))`.
+
+Both verify `Equal(y, …)` structural form.
+
+#### Section Y — Log/exp cancellation (3 tests)
+
+`symbolic-vm` Phase 30 added algebraic cancellation rules:
+
+- `log(exp(x))` → `x`  (log is left-inverse of exp).
+- `exp(log(x))` → `x`  (exp is left-inverse of log).
+- `log(1)` → `0`  (numeric fold: ln(1) = 0).
+
+#### Section Z — Inverse trig + trig special values (5 tests)
+
+`symbolic-vm` Phase 32 added odd-symmetry rules; Phase 33 added
+π-multiple detection to return exact algebraic values:
+
+- `asin(-x)` — result head is NOT `Asin` (odd-symmetry rule fired).
+- `sin(%pi/6)` → `IRRational(1, 2)`  (π/6 detected from `IRFloat(pi/6)`).
+- `cos(%pi/3)` → `IRRational(1, 2)`.
+- `cos(%pi)` → `-1`.
+- `sin(%pi)` → `0` or `IRFloat(≈0)`.
+
+### Version requirement update
+
+- `pyproject.toml`: `coding-adventures-symbolic-vm` minimum bumped from
+  `>=0.48.0` to `>=0.53.0` to formally declare the dependency on Phases 30–33.
+
+### What changed
+
+| File | Change |
+|------|--------|
+| `tests/test_cas_pipeline.py` | Added Sections U–Z (18 new tests) |
+| `pyproject.toml` | Version `1.21.0` → `1.22.0`; `symbolic-vm` min `>=0.53.0` |
+| `CHANGELOG.md` | This entry |
+
+---
+
 ## 1.21.0 — 2026-05-08
 
 **Phase 30 — `float()` function and proper `numer` evaluation mode.**

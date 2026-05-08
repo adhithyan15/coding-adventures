@@ -875,3 +875,263 @@ def test_pipeline_abs_negative() -> None:
     result = _eval("abs(-5)")
     assert result == IRInteger(5)
 
+
+# ---------------------------------------------------------------------------
+# Section U — Taylor series (cas-limit-series, Phase 28)
+# ---------------------------------------------------------------------------
+#
+# ``taylor(expr, var, point, order)`` calls the ``Taylor`` CAS handler via
+# the ``macsyma_runtime.cas_handlers`` dispatcher.  The polynomial bridge
+# converts the IR expression to a coefficient list, computes the expansion,
+# and returns an IR polynomial.
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_taylor_polynomial() -> None:
+    """taylor(x^2, x, 0, 2) produces an expanded polynomial (not unevaluated)."""
+    result = _eval("taylor(x^2, x, 0, 2)")
+    # The Taylor handler must return a simplified polynomial, not the unevaluated
+    # Taylor(x^2, x, 0, 2) form.
+    assert isinstance(result, (IRApply, IRInteger, IRSymbol, IRRational, IRFloat))
+    if isinstance(result, IRApply):
+        assert result.head.name != "Taylor", (
+            f"Expected expanded polynomial, got unevaluated Taylor: {result!r}"
+        )
+
+
+def test_pipeline_taylor_constant() -> None:
+    """taylor(3, x, 0, 1) → 3 (a constant is its own Taylor expansion)."""
+    result = _eval("taylor(3, x, 0, 1)")
+    assert result == IRInteger(3)
+
+
+def test_pipeline_taylor_linear() -> None:
+    """taylor(x + 1, x, 0, 1) → x + 1 (linear polynomial is exact)."""
+    result = _eval("taylor(x + 1, x, 0, 1)")
+    assert isinstance(result, (IRApply, IRSymbol))
+    if isinstance(result, IRApply):
+        assert result.head.name != "Taylor", (
+            f"Expected expanded form, got unevaluated: {result!r}"
+        )
+
+
+# ---------------------------------------------------------------------------
+# Section V — Symbolic summation (cas-summation, Phase 25)
+# ---------------------------------------------------------------------------
+#
+# ``sum(expr, var, lower, upper)`` maps to the ``Sum`` CAS handler via the
+# compiler's ``_STANDARD_FUNCTIONS`` table.  ``cas_summation.evaluate_sum``
+# recognises polynomial summands (k^n) and applies Faulhaber's formulas to
+# produce a closed-form integer result when bounds are concrete.
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_sum_k_concrete() -> None:
+    """sum(k, k, 1, 4) → 10 (1 + 2 + 3 + 4)."""
+    result = _eval("sum(k, k, 1, 4)")
+    assert result == IRInteger(10)
+
+
+def test_pipeline_sum_constant_body() -> None:
+    """sum(2, k, 1, 5) → 10 (constant 2 summed 5 times)."""
+    result = _eval("sum(2, k, 1, 5)")
+    assert result == IRInteger(10)
+
+
+def test_pipeline_sum_squares() -> None:
+    """sum(k^2, k, 1, 3) → 14 (1 + 4 + 9)."""
+    result = _eval("sum(k^2, k, 1, 3)")
+    assert result == IRInteger(14)
+
+
+# ---------------------------------------------------------------------------
+# Section W — Laplace transforms (cas-laplace, Phase 29)
+# ---------------------------------------------------------------------------
+#
+# ``laplace(f, t, s)`` maps to the ``Laplace`` CAS head, dispatched by the
+# ``_build_laplace_handlers()`` layer.  Tests verify the transform evaluates
+# to an expression involving the frequency variable ``s``; exact form checks
+# are done in ``test_ode_wiring.py`` at the IR level.
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_laplace_constant() -> None:
+    """laplace(1, t, s) evaluates to a rational function of s  (L{1} = 1/s)."""
+    result = _eval("laplace(1, t, s)")
+    assert isinstance(result, IRApply), (
+        f"Expected IRApply (rational of s), got {result!r}"
+    )
+    # The result must involve the frequency variable s.
+    result_str = repr(result)
+    assert "s" in result_str, f"Expected 's' in result: {result_str}"
+
+
+def test_pipeline_laplace_linear() -> None:
+    """laplace(t, t, s) evaluates (L{t} = 1/s²) to an IRApply containing s."""
+    result = _eval("laplace(t, t, s)")
+    assert isinstance(result, IRApply), (
+        f"Expected IRApply (rational of s), got {result!r}"
+    )
+    result_str = repr(result)
+    assert "s" in result_str, f"Expected 's' in result: {result_str}"
+
+
+# ---------------------------------------------------------------------------
+# Section X — ODE solving via MACSYMA surface (cas-ode, Phase 29)
+# ---------------------------------------------------------------------------
+#
+# ``ode2(eqn, y, x)`` calls the ``ODE2`` CAS handler.  First-order linear
+# homogeneous ODEs (y' + p(x)*y = 0) are solved by the integrating-factor
+# path; the result is ``Equal(y, C*exp(…))``.  Full ODE tests at IR level
+# live in ``test_ode_wiring.py``; here we validate the MACSYMA surface
+# (parse → compile → eval) end-to-end.
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_ode2_first_order_homogeneous() -> None:
+    """ode2(diff(y, x) + y, y, x) → Equal(y, C·exp(-x)).
+
+    First-order linear homogeneous ODE:  y' + y = 0.
+    Integrating factor μ = exp(x) → y = C·exp(-x).
+    """
+    result = _eval("ode2(diff(y, x) + y, y, x)")
+    assert isinstance(result, IRApply), f"Expected IRApply, got {result!r}"
+    assert result.head.name == "Equal", (
+        f"Expected Equal(y, ...), got head={result.head!r}"
+    )
+    # lhs of Equal must be the y symbol
+    assert isinstance(result.args[0], IRSymbol)
+    assert result.args[0].name == "y", (
+        f"Expected lhs = y, got {result.args[0]!r}"
+    )
+
+
+def test_pipeline_ode2_first_order_decaying() -> None:
+    """ode2(diff(y, x) + 2*y, y, x) → Equal(y, C·exp(-2x)).
+
+    Faster-decaying case: P(x) = 2.  Solution: y = C·exp(-2x).
+    """
+    result = _eval("ode2(diff(y, x) + 2*y, y, x)")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "Equal", (
+        f"Expected Equal result, got {result!r}"
+    )
+    lhs = result.args[0]
+    assert isinstance(lhs, IRSymbol) and lhs.name == "y"
+
+
+# ---------------------------------------------------------------------------
+# Section Y — Log/exp cancellation (symbolic-vm Phase 30)
+# ---------------------------------------------------------------------------
+#
+# Phase 30 of symbolic-vm adds algebraic cancellation rules to the ``Log``
+# and ``Exp`` handlers:
+#
+#   log(exp(x))  → x          (cancel: log is left-inverse of exp)
+#   exp(log(x))  → x          (cancel: exp is left-inverse of log)
+#
+# These identities hold for all real x without any assumption because:
+# - exp maps ℝ into ℝ⁺ and log is its exact inverse on ℝ⁺.
+# - log(x) requires x > 0 in the real domain, so exp(log(x)) = x is safe.
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_log_exp_cancel() -> None:
+    """log(exp(x)) → x  (Phase 30 log/exp cancellation)."""
+    result = _eval("log(exp(x))")
+    assert result == IRSymbol("x"), (
+        f"Expected IRSymbol('x'), got {result!r}"
+    )
+
+
+def test_pipeline_exp_log_cancel() -> None:
+    """exp(log(x)) → x  (Phase 30 exp/log cancellation)."""
+    result = _eval("exp(log(x))")
+    assert result == IRSymbol("x"), (
+        f"Expected IRSymbol('x'), got {result!r}"
+    )
+
+
+def test_pipeline_log_numeric_fold() -> None:
+    """log(1) → 0  (numeric fold: ln(1) = 0)."""
+    result = _eval("log(1)")
+    assert result == IRInteger(0), f"Expected 0, got {result!r}"
+
+
+# ---------------------------------------------------------------------------
+# Section Z — Inverse trig symmetry + trig special values
+#             (symbolic-vm Phases 32 and 33)
+# ---------------------------------------------------------------------------
+#
+# Phase 32 added odd-symmetry rules to inverse-trig handlers:
+#
+#   asin(-x) → -asin(x)
+#   atan(-x) → -atan(x)
+#
+# Phase 33 added π-multiple detection to sin/cos/tan handlers, returning
+# exact algebraic values:
+#
+#   sin(π/6) = 1/2,   cos(π/3) = 1/2,   cos(π) = -1, etc.
+#
+# ``MacsymaBackend`` pre-binds ``%pi → IRFloat(math.pi)``.  Phase 33's
+# IRFloat-matching strategy divides by ``math.pi`` and checks for rationals
+# with denominator in {1, 2, 3, 4, 6}, so ``sin(%pi/6)`` correctly returns
+# the exact ``IRRational(1, 2)`` rather than a float approximation.
+# ---------------------------------------------------------------------------
+
+
+def test_pipeline_asin_odd_symmetry() -> None:
+    """asin(-x) should be simplified (Phase 32 odd-symmetry rule).
+
+    The Phase 32 ``asin_handler`` simplifies ``Asin(Neg(x)) → Neg(Asin(x))``.
+    The result must NOT be an unevaluated ``Asin`` applied directly to a
+    negated argument.
+    """
+    result = _eval("asin(-x)")
+    assert isinstance(result, IRApply), f"Expected IRApply, got {result!r}"
+    # The head should NOT still be Asin (that would mean the symmetry rule
+    # was not applied and the expression is still unevaluated asin(-x)).
+    assert result.head.name != "Asin", (
+        f"Expected odd-symmetry simplification, got unevaluated asin: {result!r}"
+    )
+
+
+def test_pipeline_sin_pi_sixth_exact() -> None:
+    """sin(%pi/6) → IRRational(1, 2)  (Phase 33 trig special values).
+
+    ``%pi`` is pre-bound to ``IRFloat(math.pi)`` in ``MacsymaBackend``.
+    Phase 33 detects that ``IRFloat(pi/6)`` is within 10⁻⁹ of ``π/6`` and
+    returns the exact algebraic value ``1/2`` as ``IRRational(1, 2)``.
+    """
+    result = _eval("sin(%pi/6)")
+    assert result == IRRational(1, 2), (
+        f"Expected IRRational(1, 2), got {result!r}"
+    )
+
+
+def test_pipeline_cos_pi_third_exact() -> None:
+    """cos(%pi/3) → IRRational(1, 2)  (Phase 33 trig special values)."""
+    result = _eval("cos(%pi/3)")
+    assert result == IRRational(1, 2), (
+        f"Expected IRRational(1, 2), got {result!r}"
+    )
+
+
+def test_pipeline_cos_pi_exact() -> None:
+    """cos(%pi) → -1  (Phase 33 trig special values: cos(π) = -1)."""
+    result = _eval("cos(%pi)")
+    assert result == IRInteger(-1), f"Expected -1, got {result!r}"
+
+
+def test_pipeline_sin_pi_exact() -> None:
+    """sin(%pi) → 0  (Phase 33 trig special values: sin(π) = 0)."""
+    # %pi is pre-bound as a float; the numeric fold should give 0 or near-0.
+    # Phase 33 may return IRInteger(0) directly.
+    result = _eval("sin(%pi)")
+    if isinstance(result, IRInteger):
+        assert result == IRInteger(0)
+    elif isinstance(result, IRFloat):
+        assert abs(result.value) < 1e-10, f"Expected ≈0, got {result.value!r}"
+    else:
+        raise AssertionError(f"Unexpected result type: {result!r}")
+
