@@ -9,6 +9,10 @@ All notable changes to this package will be documented in this file.
 - Initial pure discovery package for D23 smart-home bridge candidates.
 - Discovery source taxonomy for mDNS, SSDP, manual, cloud fallback, and
   simulator/test records.
+- Discovery source taxonomy now covers Bluetooth, USB, DHCP, MQTT, and webhook
+  observations for the broader primitive roadmap.
+- Discovery records can carry confidence, pairing requirement, network
+  interface, and explicit expiry metadata.
 - Manual bridge input normalization into discovery records.
 - mDNS advertisement endpoint helpers.
 - Deterministic in-memory discovery catalog with replacement and query helpers.

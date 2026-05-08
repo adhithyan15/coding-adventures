@@ -1,8 +1,9 @@
 //! Transport-neutral discovery records for the D23 smart-home runtime.
 //!
-//! Discovery workers can use this crate to normalize mDNS, SSDP, vendor cloud,
-//! manual address, or simulator findings before a runtime decides whether to
-//! pair, ignore, or supervise a bridge. The crate deliberately performs no I/O.
+//! Discovery workers can use this crate to normalize LAN, radio, USB, MQTT,
+//! cloud, webhook, manual, or simulator findings before a runtime decides
+//! whether to pair, ignore, or supervise a bridge. The crate deliberately
+//! performs no I/O.
 
 #![forbid(unsafe_code)]
 
@@ -36,8 +37,13 @@ impl std::error::Error for DiscoveryError {}
 pub enum DiscoverySource {
     Mdns,
     Ssdp,
+    Bluetooth,
+    Usb,
+    Dhcp,
+    Mqtt,
     Manual,
     CloudFallback,
+    Webhook,
     Simulator,
 }
 
@@ -46,8 +52,13 @@ impl DiscoverySource {
         match self {
             Self::Mdns => "mdns",
             Self::Ssdp => "ssdp",
+            Self::Bluetooth => "bluetooth",
+            Self::Usb => "usb",
+            Self::Dhcp => "dhcp",
+            Self::Mqtt => "mqtt",
             Self::Manual => "manual",
             Self::CloudFallback => "cloud_fallback",
+            Self::Webhook => "webhook",
             Self::Simulator => "simulator",
         }
     }
@@ -57,6 +68,11 @@ impl DiscoverySource {
             Self::Manual => 100,
             Self::Mdns => 80,
             Self::Ssdp => 70,
+            Self::Usb => 65,
+            Self::Bluetooth => 60,
+            Self::Mqtt => 55,
+            Self::Dhcp => 45,
+            Self::Webhook => 45,
             Self::CloudFallback => 40,
             Self::Simulator => 10,
         }
@@ -64,6 +80,75 @@ impl DiscoverySource {
 }
 
 impl fmt::Display for DiscoverySource {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum DiscoveryConfidence {
+    Hint,
+    Candidate,
+    Verified,
+    Paired,
+}
+
+impl DiscoveryConfidence {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Hint => "hint",
+            Self::Candidate => "candidate",
+            Self::Verified => "verified",
+            Self::Paired => "paired",
+        }
+    }
+
+    pub fn preference_rank(self) -> u8 {
+        match self {
+            Self::Hint => 10,
+            Self::Candidate => 40,
+            Self::Verified => 80,
+            Self::Paired => 100,
+        }
+    }
+}
+
+impl fmt::Display for DiscoveryConfidence {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum PairingRequirement {
+    Unknown,
+    None,
+    PhysicalPresence,
+    LocalCode,
+    Credentials,
+    OAuth2,
+    Certificate,
+    RadioInclusion,
+    MqttCredentials,
+}
+
+impl PairingRequirement {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Unknown => "unknown",
+            Self::None => "none",
+            Self::PhysicalPresence => "physical_presence",
+            Self::LocalCode => "local_code",
+            Self::Credentials => "credentials",
+            Self::OAuth2 => "oauth2",
+            Self::Certificate => "certificate",
+            Self::RadioInclusion => "radio_inclusion",
+            Self::MqttCredentials => "mqtt_credentials",
+        }
+    }
+}
+
+impl fmt::Display for PairingRequirement {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
     }
@@ -78,9 +163,13 @@ pub struct DiscoveryRecord {
     pub source: DiscoverySource,
     pub transport: BridgeTransport,
     pub address: Option<String>,
+    pub network_interface: Option<String>,
     pub hardware_model: Option<String>,
     pub firmware_version: Option<String>,
+    pub confidence: DiscoveryConfidence,
+    pub pairing_requirement: PairingRequirement,
     pub discovered_at_ms: u64,
+    pub expires_at_ms: Option<u64>,
     pub metadata: Vec<Metadata>,
 }
 
@@ -102,9 +191,13 @@ impl DiscoveryRecord {
             source,
             transport,
             address: None,
+            network_interface: None,
             hardware_model: None,
             firmware_version: None,
+            confidence: DiscoveryConfidence::Candidate,
+            pairing_requirement: PairingRequirement::Unknown,
             discovered_at_ms,
+            expires_at_ms: None,
             metadata: Vec::new(),
         })
     }
@@ -119,6 +212,14 @@ impl DiscoveryRecord {
         self
     }
 
+    pub fn with_network_interface(
+        mut self,
+        network_interface: impl Into<String>,
+    ) -> Result<Self, DiscoveryError> {
+        self.network_interface = Some(non_empty("network_interface", network_interface)?);
+        Ok(self)
+    }
+
     pub fn with_hardware_model(mut self, hardware_model: impl Into<String>) -> Self {
         self.hardware_model = Some(hardware_model.into());
         self
@@ -126,6 +227,21 @@ impl DiscoveryRecord {
 
     pub fn with_firmware_version(mut self, firmware_version: impl Into<String>) -> Self {
         self.firmware_version = Some(firmware_version.into());
+        self
+    }
+
+    pub fn with_confidence(mut self, confidence: DiscoveryConfidence) -> Self {
+        self.confidence = confidence;
+        self
+    }
+
+    pub fn with_pairing_requirement(mut self, pairing_requirement: PairingRequirement) -> Self {
+        self.pairing_requirement = pairing_requirement;
+        self
+    }
+
+    pub fn with_expires_at_ms(mut self, expires_at_ms: u64) -> Self {
+        self.expires_at_ms = Some(expires_at_ms);
         self
     }
 
@@ -156,7 +272,12 @@ impl DiscoveryRecord {
     }
 
     pub fn is_stale_at(&self, now_ms: u64, ttl_ms: u64) -> bool {
-        self.age_ms_at(now_ms) >= ttl_ms
+        self.is_expired_at(now_ms) || self.age_ms_at(now_ms) >= ttl_ms
+    }
+
+    pub fn is_expired_at(&self, now_ms: u64) -> bool {
+        self.expires_at_ms
+            .is_some_and(|expires_at_ms| now_ms >= expires_at_ms)
     }
 
     pub fn has_address(&self) -> bool {
@@ -167,6 +288,7 @@ impl DiscoveryRecord {
 
     pub fn preference_key(&self) -> DiscoveryPreferenceKey {
         DiscoveryPreferenceKey {
+            confidence_rank: self.confidence.preference_rank(),
             source_rank: self.source.preference_rank(),
             has_address: self.has_address(),
             discovered_at_ms: self.discovered_at_ms,
@@ -196,10 +318,30 @@ impl DiscoveryRecord {
             "smart_home.discovery.native_bridge_id",
             self.native_bridge_id.as_str(),
         ));
+        bridge.metadata.push(Metadata::new(
+            "smart_home.discovery.confidence",
+            self.confidence.as_str(),
+        ));
+        bridge.metadata.push(Metadata::new(
+            "smart_home.discovery.pairing_requirement",
+            self.pairing_requirement.as_str(),
+        ));
         if let Some(display_name) = &self.display_name {
             bridge.metadata.push(Metadata::new(
                 "smart_home.discovery.display_name",
                 display_name,
+            ));
+        }
+        if let Some(network_interface) = &self.network_interface {
+            bridge.metadata.push(Metadata::new(
+                "smart_home.discovery.network_interface",
+                network_interface,
+            ));
+        }
+        if let Some(expires_at_ms) = self.expires_at_ms {
+            bridge.metadata.push(Metadata::new(
+                "smart_home.discovery.expires_at_ms",
+                expires_at_ms.to_string(),
             ));
         }
         bridge.metadata.extend(self.metadata.clone());
@@ -209,6 +351,7 @@ impl DiscoveryRecord {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct DiscoveryPreferenceKey {
+    pub confidence_rank: u8,
     pub source_rank: u8,
     pub has_address: bool,
     pub discovered_at_ms: u64,
@@ -627,6 +770,85 @@ mod tests {
         assert!(record.is_stale_at(1_500, 500));
         assert_eq!(catalog.fresh_records(1_499, 500).len(), 1);
         assert!(catalog.fresh_records(1_500, 500).is_empty());
+    }
+
+    #[test]
+    fn discovery_records_can_carry_primitive_observation_metadata() {
+        let record = DiscoveryRecord::new(
+            IntegrationId::trusted("matter"),
+            ProtocolFamily::Matter,
+            "fabric-candidate-1",
+            DiscoverySource::Mdns,
+            BridgeTransport::Mdns,
+            1_000,
+        )
+        .unwrap()
+        .with_network_interface("en0")
+        .unwrap()
+        .with_confidence(DiscoveryConfidence::Verified)
+        .with_pairing_requirement(PairingRequirement::Certificate)
+        .with_expires_at_ms(2_000);
+
+        let bridge = record.to_bridge_candidate();
+
+        assert_eq!(record.network_interface.as_deref(), Some("en0"));
+        assert_eq!(record.confidence, DiscoveryConfidence::Verified);
+        assert_eq!(record.pairing_requirement, PairingRequirement::Certificate);
+        assert!(!record.is_expired_at(1_999));
+        assert!(record.is_expired_at(2_000));
+        assert!(bridge.metadata.iter().any(|metadata| metadata.key
+            == "smart_home.discovery.network_interface"
+            && metadata.value == "en0"));
+        assert!(bridge
+            .metadata
+            .iter()
+            .any(|metadata| metadata.key == "smart_home.discovery.confidence"
+                && metadata.value == "verified"));
+        assert!(bridge.metadata.iter().any(|metadata| metadata.key
+            == "smart_home.discovery.pairing_requirement"
+            && metadata.value == "certificate"));
+    }
+
+    #[test]
+    fn higher_confidence_observations_replace_lower_rank_sources() {
+        let integration_id = IntegrationId::trusted("mqtt");
+        let dhcp_hint = DiscoveryRecord::new(
+            integration_id.clone(),
+            ProtocolFamily::Mqtt,
+            "broker-1",
+            DiscoverySource::Dhcp,
+            BridgeTransport::LanHttp,
+            2_000,
+        )
+        .unwrap()
+        .with_address("http://192.0.2.20")
+        .with_confidence(DiscoveryConfidence::Hint);
+        let mqtt_verified = DiscoveryRecord::new(
+            integration_id.clone(),
+            ProtocolFamily::Mqtt,
+            "broker-1",
+            DiscoverySource::Mqtt,
+            BridgeTransport::LocalProcess,
+            1_000,
+        )
+        .unwrap()
+        .with_confidence(DiscoveryConfidence::Verified)
+        .with_pairing_requirement(PairingRequirement::MqttCredentials);
+
+        let mut catalog = DiscoveryCatalog::new();
+
+        assert_eq!(
+            catalog.record_preferred(dhcp_hint),
+            DiscoveryUpsert::Inserted
+        );
+        assert!(matches!(
+            catalog.record_preferred(mqtt_verified),
+            DiscoveryUpsert::Replaced(_)
+        ));
+        assert_eq!(
+            catalog.get(&integration_id, "broker-1").unwrap().source,
+            DiscoverySource::Mqtt
+        );
     }
 
     #[test]
