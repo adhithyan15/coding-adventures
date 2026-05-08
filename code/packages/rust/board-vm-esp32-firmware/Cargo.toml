@@ -1,0 +1,16 @@
+[package]
+name = "board-vm-esp32-firmware"
+version = "0.1.0"
+edition = "2021"
+description = "ESP32 Board VM firmware server scaffolding"
+
+[dependencies]
+board-vm-device = { path = "../board-vm-device" }
+board-vm-esp32 = { path = "../board-vm-esp32" }
+board-vm-runtime = { path = "../board-vm-runtime" }
+
+[dev-dependencies]
+board-vm-protocol = { path = "../board-vm-protocol" }
+
+[lib]
+path = "src/lib.rs"
