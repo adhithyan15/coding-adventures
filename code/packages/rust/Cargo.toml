@@ -45,6 +45,8 @@ members = [
     "board-vm-loopback",
     "board-vm-ir",
     "board-vm-runtime",
+    "board-vm-esp32",
+    "board-vm-pico",
     "board-vm-uno-r4",
     "board-vm-uno-r4-usb-cdc",
     "board-vm-uno-r4-uart",
