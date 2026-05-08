@@ -80,6 +80,8 @@ from logic_builtins import (
     current_streamo,
     cuto,
     cyclic_termo,
+    copy_fileo,
+    delete_directory_and_contentso,
     delete_directoryo,
     delete_fileo,
     difo,
@@ -88,6 +90,7 @@ from logic_builtins import (
     div,
     dynamico,
     excludeo,
+    expand_file_nameo,
     exists_directoryo,
     exists_fileo,
     failo,
@@ -141,6 +144,7 @@ from logic_builtins import (
     labelingo,
     leqo,
     lto,
+    make_directory_patho,
     make_directoryo,
     maplisto,
     mod,
@@ -403,6 +407,50 @@ class TestFileTextBuiltins:
         assert not source_path.exists()
         assert not renamed_path.exists()
         assert not created_directory.exists()
+
+    def test_recursive_file_operation_facade_uses_bounded_paths(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        nested_directory = tmp_path / "nested" / "deep"
+        source_path = nested_directory / "alpha.txt"
+        copied_path = nested_directory / "alpha-copy.txt"
+
+        matches = var("Matches")
+        copied_contents = var("CopiedContents")
+        result = var("Result")
+        pattern = str(tmp_path / "**" / "*.txt")
+
+        assert solve_all(
+            program(),
+            atom("ok"),
+            conj(
+                make_directory_patho(atom(str(nested_directory))),
+                eq(atom("ok"), atom("ok")),
+            ),
+        ) == [atom("ok")]
+        source_path.write_text("alpha\n", encoding="utf-8")
+
+        answers = solve_all(
+            program(),
+            result,
+            conj(
+                copy_fileo(atom(str(source_path)), atom(str(copied_path))),
+                expand_file_nameo(atom(pattern), matches),
+                read_file_to_stringo(atom(str(copied_path)), copied_contents),
+                delete_directory_and_contentso(atom(str(tmp_path / "nested"))),
+                eq(result, term("recursive_file_ops", matches, copied_contents)),
+            ),
+        )
+
+        assert answers == [
+            term(
+                "recursive_file_ops",
+                logic_list([str(copied_path), str(source_path)]),
+                string("alpha\n"),
+            ),
+        ]
+        assert not nested_directory.exists()
 
     def test_file_stream_read_facade_tracks_cursor(self, tmp_path: Path) -> None:
         source_path = tmp_path / "stream.txt"

@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- adapt source-level recursive/wildcard filesystem operation predicates
+  including `expand_file_name/2`, `make_directory_path/1`,
+  `delete_directory_and_contents/1`, and `copy_file/2` into the executable
+  logic builtin layer
 - adapt source-level bounded filesystem operation predicates including
   `directory_files/2`, `make_directory/1`, `delete_file/1`,
   `delete_directory/1`, `rename_file/2`, and `working_directory/2` into the

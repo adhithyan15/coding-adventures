@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `expand_file_nameo/2`, `make_directory_patho/1`,
+  `delete_directory_and_contentso/1`, and `copy_fileo/2` for bounded
+  recursive/wildcard filesystem operations over bound atom/string paths.
 - `directory_fileso/2`, `make_directoryo/1`, `delete_fileo/1`,
   `delete_directoryo/1`, `rename_fileo/2`, and `working_directoryo/2` for
   bounded explicit filesystem operations over bound atom/string paths.

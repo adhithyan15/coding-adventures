@@ -14,7 +14,9 @@ keeps the user-facing predicates in a separate library layer.
 
 from __future__ import annotations
 
+import glob
 import os
+import shutil
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
 from hashlib import blake2b
@@ -107,6 +109,7 @@ __all__ = [
     "compound_name_arityo",
     "compoundo",
     "compare_termo",
+    "copy_fileo",
     "copytermo",
     "convlisto",
     "current_atomo",
@@ -118,6 +121,7 @@ __all__ = [
     "current_streamo",
     "cuto",
     "cyclic_termo",
+    "delete_directory_and_contentso",
     "delete_directoryo",
     "delete_fileo",
     "difo",
@@ -125,6 +129,7 @@ __all__ = [
     "directory_file_patho",
     "dynamico",
     "div",
+    "expand_file_nameo",
     "exists_fileo",
     "exists_directoryo",
     "fd_eqo",
@@ -181,6 +186,7 @@ __all__ = [
     "leqo",
     "labelingo",
     "lto",
+    "make_directory_patho",
     "make_directoryo",
     "maplisto",
     "mod",
@@ -5192,6 +5198,88 @@ def working_directoryo(old_value: object, new_value: object) -> GoalExpr:
         yield from solve_from(program_value, eq(old_term, atom(old_text)), state)
 
     return native_goal(run, old_value, new_value)
+
+
+def expand_file_nameo(pattern_value: object, matches_value: object) -> GoalExpr:
+    """Relate a bound wildcard path pattern to sorted matching path atoms."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        pattern_term, matches_term = args
+        pattern_text = _path_text(_reified(pattern_term, state))
+        if pattern_text is None:
+            return
+        try:
+            expanded_pattern = os.path.expanduser(pattern_text)
+            matches = sorted(glob.glob(expanded_pattern, recursive=True))
+        except OSError:
+            return
+        yield from solve_from(
+            program_value,
+            eq(matches_term, logic_list([atom(match) for match in matches])),
+            state,
+        )
+
+    return native_goal(run, pattern_value, matches_value)
+
+
+def make_directory_patho(path_value: object) -> GoalExpr:
+    """Create a bound directory path and any missing parents."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [path_term] = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            Path(path_text).mkdir(parents=True, exist_ok=True)
+        except OSError:
+            return
+        if Path(path_text).is_dir():
+            yield state
+
+    return native_goal(run, path_value)
+
+
+def delete_directory_and_contentso(path_value: object) -> GoalExpr:
+    """Delete a bound directory path and its contents recursively."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [path_term] = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        path = Path(path_text)
+        if not path.is_dir():
+            return
+        try:
+            shutil.rmtree(path)
+        except OSError:
+            return
+        if not path.exists():
+            yield state
+
+    return native_goal(run, path_value)
+
+
+def copy_fileo(source_value: object, target_value: object) -> GoalExpr:
+    """Copy one bound regular file path to another bound path."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        source_term, target_term = args
+        source_text = _path_text(_reified(source_term, state))
+        target_text = _path_text(_reified(target_term, state))
+        if source_text is None or target_text is None:
+            return
+        if not Path(source_text).is_file():
+            return
+        try:
+            shutil.copyfile(source_text, target_text)
+        except OSError:
+            return
+        if Path(target_text).is_file():
+            yield state
+
+    return native_goal(run, source_value, target_value)
 
 
 def read_file_to_stringo(path_value: object, contents: object) -> GoalExpr:

@@ -341,6 +341,20 @@ def prolog_vm_capabilities() -> tuple[PrologVMCapability, ...]:
                 "structured and bytecode VM stress coverage",
             ),
         ),
+        PrologVMCapability(
+            id="host-recursive-filesystem-operations",
+            title="Bounded recursive and wildcard filesystem operations",
+            status="complete",
+            specs=("PR89",),
+            packages=("logic-builtins", "prolog-loader", "prolog-vm-compiler"),
+            features=(
+                "expand_file_name/2 expands sorted wildcard path matches",
+                "make_directory_path/1 creates missing parent directories",
+                "delete_directory_and_contents/1 removes explicit directory trees",
+                "copy_file/2 copies one bound regular file path to another",
+                "structured and bytecode VM stress coverage",
+            ),
+        ),
     )
 
 
@@ -380,7 +394,6 @@ def deferred_prolog_vm_capabilities() -> tuple[PrologVMCapability, ...]:
             features=(
                 "console-backed standard streams and richer binary stream services",
                 "rich ISO/SWI stream options beyond bounded text/binary files",
-                "recursive and wildcard filesystem services beyond bounded paths",
                 "foreign predicates and host callbacks",
                 "engines, concurrency, and async integration",
             ),
@@ -392,8 +405,8 @@ def prolog_vm_capability_manifest() -> PrologVMCapabilityManifest:
     """Return the canonical capability manifest for this package."""
 
     return PrologVMCapabilityManifest(
-        track="Prolog-on-Logic-VM PR00-PR88",
-        status="core-plus-filesystem-operations",
+        track="Prolog-on-Logic-VM PR00-PR89",
+        status="core-plus-recursive-filesystem",
         dialects=("iso", "swi"),
         backends=("structured", "bytecode"),
         capabilities=prolog_vm_capabilities(),

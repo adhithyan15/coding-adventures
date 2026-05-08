@@ -401,6 +401,46 @@ class TestPrologBytecodeVMStress:
         assert not renamed_path.exists()
         assert not created_directory.exists()
 
+    def test_recursive_file_operation_predicates_run_through_bytecode_vm(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "source.txt"
+        target_directory = tmp_path / "made" / "deep"
+        copied_path = target_directory / "source-copy.txt"
+        source_path.write_text("alpha\n", encoding="utf-8")
+        source_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        target_dir_atom = str(target_directory).replace(
+            "\\",
+            "\\\\",
+        ).replace("'", "\\'")
+        copied_atom = str(copied_path).replace("\\", "\\\\").replace("'", "\\'")
+        root_atom = str(tmp_path).replace("\\", "\\\\").replace("'", "\\'")
+        pattern_atom = str(tmp_path / "**" / "*.txt").replace(
+            "\\",
+            "\\\\",
+        ).replace("'", "\\'")
+        compiled = compile_swi_prolog_source(
+            f"""
+            ?- make_directory_path('{target_dir_atom}'),
+               copy_file('{source_atom}', '{copied_atom}'),
+               expand_file_name('{pattern_atom}', Matches),
+               read_file_to_string('{copied_atom}', Contents),
+               delete_directory_and_contents('{root_atom}/made').
+            """,
+        )
+
+        answers = run_compiled_prolog_bytecode_query_answers(compiled)
+
+        assert _answer_dicts(answers) == [
+            {
+                "Matches": logic_list([str(copied_path), str(source_path)]),
+                "Contents": string("alpha\n"),
+            },
+        ]
+        assert source_path.exists()
+        assert not target_directory.exists()
+
     def test_file_stream_io_matches_structured_vm(self, tmp_path: Path) -> None:
         source_path = tmp_path / "stream.pltxt"
         path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
