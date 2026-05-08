@@ -51,6 +51,16 @@ impl DiscoverySource {
             Self::Simulator => "simulator",
         }
     }
+
+    pub fn preference_rank(self) -> u8 {
+        match self {
+            Self::Manual => 100,
+            Self::Mdns => 80,
+            Self::Ssdp => 70,
+            Self::CloudFallback => 40,
+            Self::Simulator => 10,
+        }
+    }
 }
 
 impl fmt::Display for DiscoverySource {
@@ -141,6 +151,32 @@ impl DiscoveryRecord {
         .expect("discovery records validate native bridge ids")
     }
 
+    pub fn age_ms_at(&self, now_ms: u64) -> u64 {
+        now_ms.saturating_sub(self.discovered_at_ms)
+    }
+
+    pub fn is_stale_at(&self, now_ms: u64, ttl_ms: u64) -> bool {
+        self.age_ms_at(now_ms) >= ttl_ms
+    }
+
+    pub fn has_address(&self) -> bool {
+        self.address
+            .as_ref()
+            .is_some_and(|address| !address.is_empty())
+    }
+
+    pub fn preference_key(&self) -> DiscoveryPreferenceKey {
+        DiscoveryPreferenceKey {
+            source_rank: self.source.preference_rank(),
+            has_address: self.has_address(),
+            discovered_at_ms: self.discovered_at_ms,
+        }
+    }
+
+    pub fn is_preferred_over(&self, other: &Self) -> bool {
+        self.preference_key() > other.preference_key()
+    }
+
     pub fn to_bridge_candidate(&self) -> Bridge {
         let mut bridge = Bridge::new(
             self.bridge_id(),
@@ -169,6 +205,13 @@ impl DiscoveryRecord {
         bridge.metadata.extend(self.metadata.clone());
         bridge
     }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub struct DiscoveryPreferenceKey {
+    pub source_rank: u8,
+    pub has_address: bool,
+    pub discovered_at_ms: u64,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -298,6 +341,13 @@ pub struct DiscoveryCatalog {
     records: BTreeMap<DiscoveryKey, DiscoveryRecord>,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum DiscoveryUpsert {
+    Inserted,
+    Replaced(DiscoveryRecord),
+    Ignored(DiscoveryRecord),
+}
+
 impl DiscoveryCatalog {
     pub fn new() -> Self {
         Self::default()
@@ -306,6 +356,24 @@ impl DiscoveryCatalog {
     pub fn record(&mut self, record: DiscoveryRecord) -> Option<DiscoveryRecord> {
         let key = DiscoveryKey::new(&record.integration_id, &record.native_bridge_id);
         self.records.insert(key, record)
+    }
+
+    pub fn record_preferred(&mut self, record: DiscoveryRecord) -> DiscoveryUpsert {
+        let key = DiscoveryKey::new(&record.integration_id, &record.native_bridge_id);
+        match self.records.get(&key) {
+            None => {
+                self.records.insert(key, record);
+                DiscoveryUpsert::Inserted
+            }
+            Some(existing) if record.is_preferred_over(existing) => {
+                let replaced = self
+                    .records
+                    .insert(key, record)
+                    .expect("existing discovery record disappeared during replacement");
+                DiscoveryUpsert::Replaced(replaced)
+            }
+            Some(_) => DiscoveryUpsert::Ignored(record),
+        }
     }
 
     pub fn len(&self) -> usize {
@@ -340,6 +408,13 @@ impl DiscoveryCatalog {
         self.records
             .values()
             .filter(|record| record.source == source)
+            .collect()
+    }
+
+    pub fn fresh_records(&self, now_ms: u64, ttl_ms: u64) -> Vec<&DiscoveryRecord> {
+        self.records
+            .values()
+            .filter(|record| !record.is_stale_at(now_ms, ttl_ms))
             .collect()
     }
 
@@ -477,6 +552,81 @@ mod tests {
         assert_eq!(catalog.records_for_integration(&integration_id).len(), 1);
         assert_eq!(catalog.records_for_source(DiscoverySource::Manual).len(), 1);
         assert_eq!(catalog.bridge_candidates()[0].health, Health::Unpaired);
+    }
+
+    #[test]
+    fn catalog_can_keep_preferred_candidate_for_same_bridge() {
+        let integration_id = IntegrationId::trusted("hue");
+        let manual = ManualBridgeInput {
+            integration_id: integration_id.clone(),
+            protocol_family: ProtocolFamily::Hue,
+            native_bridge_id: "bridge-1".to_string(),
+            address: "https://192.0.2.10".to_string(),
+            transport: BridgeTransport::LanHttp,
+            discovered_at_ms: 1_000,
+        }
+        .into_record()
+        .unwrap();
+        let mdns = DiscoveryRecord::new(
+            integration_id.clone(),
+            ProtocolFamily::Hue,
+            "bridge-1",
+            DiscoverySource::Mdns,
+            BridgeTransport::Mdns,
+            2_000,
+        )
+        .unwrap()
+        .with_address("https://192.0.2.11");
+        let cloud = DiscoveryRecord::new(
+            integration_id.clone(),
+            ProtocolFamily::Hue,
+            "bridge-1",
+            DiscoverySource::CloudFallback,
+            BridgeTransport::Cloud,
+            3_000,
+        )
+        .unwrap();
+
+        let mut catalog = DiscoveryCatalog::new();
+
+        assert_eq!(
+            catalog.record_preferred(manual.clone()),
+            DiscoveryUpsert::Inserted
+        );
+        assert_eq!(
+            catalog.record_preferred(mdns.clone()),
+            DiscoveryUpsert::Ignored(mdns)
+        );
+        assert_eq!(
+            catalog.record_preferred(cloud.clone()),
+            DiscoveryUpsert::Ignored(cloud)
+        );
+        assert_eq!(
+            catalog.get(&integration_id, "bridge-1").unwrap().address,
+            manual.address
+        );
+    }
+
+    #[test]
+    fn discovery_records_report_freshness_at_time() {
+        let record = ManualBridgeInput {
+            integration_id: IntegrationId::trusted("zwave"),
+            protocol_family: ProtocolFamily::ZWave,
+            native_bridge_id: "controller-1".to_string(),
+            address: "/dev/tty.usbmodem1".to_string(),
+            transport: BridgeTransport::Serial,
+            discovered_at_ms: 1_000,
+        }
+        .into_record()
+        .unwrap();
+        let mut catalog = DiscoveryCatalog::new();
+        catalog.record(record.clone());
+
+        assert_eq!(record.age_ms_at(1_250), 250);
+        assert!(!record.is_stale_at(1_499, 500));
+        assert!(record.is_stale_at(1_500, 500));
+        assert_eq!(catalog.fresh_records(1_499, 500).len(), 1);
+        assert!(catalog.fresh_records(1_500, 500).is_empty());
     }
 
     #[test]
