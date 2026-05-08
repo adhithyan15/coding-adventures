@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+import pytest
 from logic_engine import (
     Compound,
     Disequality,
@@ -1197,10 +1198,17 @@ class TestPrologVMStress:
         compiled = compile_swi_prolog_source(
             f"""
             ?- open('{path_atom}', write, Out,
-                    [alias(report_stream), encoding(utf8), type(text)]),
+                    [alias(report_stream), encoding(utf8), type(text),
+                     reposition(true), eof_action(eof_code), buffer(line),
+                     close_on_abort(false)]),
                write(report_stream, "tea"),
                flush_output(report_stream),
                stream_property(report_stream, alias(Alias)),
+               stream_property(report_stream, encoding(Encoding)),
+               stream_property(report_stream, reposition(Reposition)),
+               stream_property(report_stream, eof_action(EofAction)),
+               stream_property(report_stream, buffer(Buffer)),
+               stream_property(report_stream, close_on_abort(CloseOnAbort)),
                current_stream(Path, Mode, Out),
                close(report_stream).
             """,
@@ -1211,6 +1219,11 @@ class TestPrologVMStress:
         assert [
             {
                 "Alias": answer.as_dict()["Alias"],
+                "Encoding": answer.as_dict()["Encoding"],
+                "Reposition": answer.as_dict()["Reposition"],
+                "EofAction": answer.as_dict()["EofAction"],
+                "Buffer": answer.as_dict()["Buffer"],
+                "CloseOnAbort": answer.as_dict()["CloseOnAbort"],
                 "Path": answer.as_dict()["Path"],
                 "Mode": answer.as_dict()["Mode"],
             }
@@ -1218,6 +1231,11 @@ class TestPrologVMStress:
         ] == [
             {
                 "Alias": atom("report_stream"),
+                "Encoding": atom("utf8"),
+                "Reposition": atom("true"),
+                "EofAction": atom("eof_code"),
+                "Buffer": atom("line"),
+                "CloseOnAbort": atom("false"),
                 "Path": atom(str(source_path)),
                 "Mode": atom("write"),
             },
@@ -1431,6 +1449,40 @@ class TestPrologVMStress:
             "Line": string("def"),
         }
         assert output_path.read_text(encoding="utf-8") == "tea\ncake(slice)"
+
+    def test_standard_streams_run_through_vm(
+        self,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            ?- set_input(user_input),
+               set_output(user_output),
+               current_input(CurrentIn),
+               current_output(CurrentOut),
+               at_end_of_stream,
+               write("stdout"),
+               nl,
+               write(user_error, "stderr"),
+               flush_output,
+               flush_output(user_error),
+               stream_property(user_input, alias(user_input)),
+               stream_property(user_output, alias(user_output)),
+               current_stream(user_error, append, '$stream_user_error').
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        captured = capsys.readouterr()
+        assert [answer.as_dict() for answer in answers] == [
+            {
+                "CurrentIn": atom("$stream_user_input"),
+                "CurrentOut": atom("$stream_user_output"),
+            },
+        ]
+        assert captured.out == "stdout\n"
+        assert captured.err == "stderr"
 
     def test_stream_term_io_runs_through_vm(self, tmp_path: Path) -> None:
         input_path = tmp_path / "terms.pltxt"

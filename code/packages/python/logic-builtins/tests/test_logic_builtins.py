@@ -869,6 +869,55 @@ class TestFileTextBuiltins:
         assert line_answer == string("def")
         assert output_path.read_text(encoding="utf-8") == "tea\ncake(slice)"
 
+    def test_standard_streams_are_available_by_default(
+        self,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        current_input = var("CurrentInput")
+        current_output = var("CurrentOutput")
+        path = var("Path")
+        mode = var("Mode")
+        handle = var("Handle")
+        result = var("Result")
+
+        answers = solve_all(
+            program(),
+            result,
+            conj(
+                set_inputo(atom("user_input")),
+                set_outputo(atom("user_output")),
+                current_inputo(current_input),
+                current_outputo(current_output),
+                at_end_of_current_streamo(),
+                write_currento(string("stdout")),
+                nl_currento(),
+                writeo(atom("user_error"), string("stderr")),
+                flush_current_outputo(),
+                flush_outputo(atom("user_error")),
+                stream_propertyo(atom("user_input"), term("alias", atom("user_input"))),
+                stream_propertyo(
+                    atom("user_output"),
+                    term("alias", atom("user_output")),
+                ),
+                current_streamo(path, mode, handle),
+                eq(path, atom("user_error")),
+                eq(mode, atom("append")),
+                eq(handle, atom("$stream_user_error")),
+                eq(result, term("standard_streams", current_input, current_output)),
+            ),
+        )
+
+        captured = capsys.readouterr()
+        assert answers == [
+            term(
+                "standard_streams",
+                atom("$stream_user_input"),
+                atom("$stream_user_output"),
+            ),
+        ]
+        assert captured.out == "stdout\n"
+        assert captured.err == "stderr"
+
 
 class TestAdvancedControlBuiltins:
     """Advanced control should stay honest about committed search behavior."""

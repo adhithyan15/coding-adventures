@@ -355,6 +355,21 @@ def prolog_vm_capabilities() -> tuple[PrologVMCapability, ...]:
                 "structured and bytecode VM stress coverage",
             ),
         ),
+        PrologVMCapability(
+            id="host-standard-streams",
+            title="Standard streams and richer stream options",
+            status="complete",
+            specs=("PR90",),
+            packages=("logic-builtins", "prolog-loader", "prolog-vm-compiler"),
+            features=(
+                "user_input, user_output, and user_error standard stream aliases",
+                "current_input/1 and current_output/1 default to standard streams",
+                "current output writes can target stdout and stderr",
+                "open/4 accepts reposition, eof_action, buffer, and close_on_abort",
+                "stream_property/2 exposes accepted stream option metadata",
+                "structured and bytecode VM stress coverage",
+            ),
+        ),
     )
 
 
@@ -392,8 +407,8 @@ def deferred_prolog_vm_capabilities() -> tuple[PrologVMCapability, ...]:
             specs=("PR02",),
             packages=("future",),
             features=(
-                "console-backed standard streams and richer binary stream services",
-                "rich ISO/SWI stream options beyond bounded text/binary files",
+                "richer binary stream services",
+                "remaining ISO/SWI stream options beyond the bounded subset",
                 "foreign predicates and host callbacks",
                 "engines, concurrency, and async integration",
             ),
@@ -405,8 +420,8 @@ def prolog_vm_capability_manifest() -> PrologVMCapabilityManifest:
     """Return the canonical capability manifest for this package."""
 
     return PrologVMCapabilityManifest(
-        track="Prolog-on-Logic-VM PR00-PR89",
-        status="core-plus-recursive-filesystem",
+        track="Prolog-on-Logic-VM PR00-PR90",
+        status="core-plus-standard-streams",
         dialects=("iso", "swi"),
         backends=("structured", "bytecode"),
         capabilities=prolog_vm_capabilities(),

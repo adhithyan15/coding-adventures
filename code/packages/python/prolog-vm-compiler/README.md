@@ -249,7 +249,7 @@ assert [answer.as_dict() for answer in runtime.query("ancestor(homer, Who)")] ==
 
 ## Capability Manifest
 
-The Prolog-on-Logic-VM implementation track covers PR00 through PR89. The
+The Prolog-on-Logic-VM implementation track covers PR00 through PR90. The
 package exposes that as a machine-readable manifest so downstream tools and
 future implementation work can distinguish completed functionality from
 deliberately deferred advanced dialect/runtime emulation:
@@ -259,7 +259,7 @@ from prolog_vm_compiler import prolog_vm_capability_manifest
 
 manifest = prolog_vm_capability_manifest()
 
-assert manifest.status == "core-plus-recursive-filesystem"
+assert manifest.status == "core-plus-standard-streams"
 assert manifest.dialects == ("iso", "swi")
 assert manifest.backends == ("structured", "bytecode")
 ```
@@ -272,7 +272,10 @@ UTF-8 file text I/O through `exists_file/1`, `read_file_to_string/2`, and
 `read_file_to_codes/2`, plus bounded UTF-8 file stream I/O through `open/3`,
 `close/1`, `read_string/3`, `read_line_to_string/2`, `get_char/2`,
 `at_end_of_stream/1`, `write/2`, and `nl/1`, with alias/metadata support via
-`open/4`, `current_stream/3`, `stream_property/2`, and `flush_output/1`, plus
+`open/4`, `current_stream/3`, `stream_property/2`, and `flush_output/1`,
+standard `user_input`, `user_output`, and `user_error` streams, and accepted
+stream options for `reposition`, `eof_action`, `buffer`, and
+`close_on_abort`, plus
 bounded cursor repositioning via `set_stream_position/2` and `seek/4`, and
 selected current-stream forms via `set_input/1`, `set_output/1`,
 `current_input/1`, `current_output/1`, `get_char/1`, `read_string/2`,
@@ -296,8 +299,8 @@ and `working_directory/2`, plus recursive/wildcard filesystem helpers through
 The manifest also names the remaining advanced-dialect work that is intentionally
 outside the completed batches: full external dialect emulation, tabling and
 well-founded negation, generalized attributed-variable/coroutining services,
-non-FD constraint domains, console streams, richer stream services beyond the
-bounded file-backed subset, foreign predicates, engines, and concurrency.
+non-FD constraint domains, remaining richer stream services beyond the bounded
+subset, foreign predicates, engines, and concurrency.
 
 ## CLI
 
@@ -482,6 +485,9 @@ The package includes end-to-end stress tests for:
   `at_end_of_stream/1`, `write/2`, and `nl/1`
 - bounded stream aliases and metadata with `open/4`, `current_stream/3`,
   `stream_property/2`, and `flush_output/1`
+- standard stream aliases and richer accepted stream options with `user_input`,
+  `user_output`, `user_error`, `reposition/1`, `eof_action/1`, `buffer/1`,
+  and `close_on_abort/1`
 - bounded binary byte stream I/O with `open/4` `type(binary)`,
   `get_byte/1,2`, `peek_byte/1,2`, and `put_byte/1,2`
 - bounded stream cursor repositioning with `set_stream_position/2` and

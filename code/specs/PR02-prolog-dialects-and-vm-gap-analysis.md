@@ -19,13 +19,14 @@ can land in a few coherent batches rather than many tiny compatibility PRs.
 
 ## Core Track Status
 
-As of the PR00-PR89 Prolog-on-Logic-VM track, the shared core is implemented
+As of the PR00-PR90 Prolog-on-Logic-VM track, the shared core is implemented
 through the parser, loader, expansion, VM compiler, structured VM runtime,
 bytecode VM runtime, source/file/project runner APIs, top-level query APIs, the
 `prolog-vm` CLI, bounded UTF-8 file text I/O, and bounded UTF-8 file stream
 handles with alias/metadata/positioning/current-stream support, bounded binary
-byte stream I/O, read-only filesystem metadata predicates, and bounded
-filesystem operations including recursive/wildcard helpers.
+byte stream I/O, read-only filesystem metadata predicates, bounded filesystem
+operations including recursive/wildcard helpers, standard streams, and richer
+accepted stream options.
 
 The core track is now treated as complete for practical ISO/SWI-subset work:
 
@@ -51,6 +52,9 @@ The core track is now treated as complete for practical ISO/SWI-subset work:
   `set_stream_position/2` and `seek/4`.
 - Opened bounded streams can be selected as current input/output streams, and
   current-stream read/write forms run through the same VM path.
+- Standard `user_input`, `user_output`, and `user_error` stream aliases are
+  available, and accepted `open/4` stream options include `reposition/1`,
+  `eof_action/1`, `buffer/1`, and `close_on_abort/1` metadata.
 - Bounded binary streams support byte reads, peeks, and writes through
   `get_byte/1,2`, `peek_byte/1,2`, and `put_byte/1,2`.
 - Bound atom/string paths can be inspected with read-only filesystem metadata
@@ -73,13 +77,13 @@ The core track is now treated as complete for practical ISO/SWI-subset work:
 
 The package-level source of truth is `prolog_vm_capability_manifest()` and the
 matching `prolog-vm --dump-capabilities` CLI output. New work should update
-that manifest instead of reopening open-ended PR00-PR89 gap analysis.
+that manifest instead of reopening open-ended PR00-PR90 gap analysis.
 
 Remaining work in this document is advanced dialect and runtime emulation:
 full external Prolog dialect compatibility, tabling, attributed variables,
-generalized coroutining, CHR/non-FD constraint domains, console/rich stream
-services beyond the bounded file-backed text/binary subset, foreign
-predicates, engines, concurrency, and async host integration.
+generalized coroutining, CHR/non-FD constraint domains, remaining rich stream
+services beyond the bounded text/binary subset, foreign predicates, engines,
+concurrency, and async host integration.
 
 ## Current Project Surface
 
@@ -117,15 +121,14 @@ Current support:
   introspection builtins, operator declarations, directives, modules,
   exceptions, flags, CLP(FD), DCG expansion, consult/include, source/file
   runners, bounded UTF-8 file text reads and file stream handles with aliases,
-  current-stream selection, cursor positioning, bounded binary byte stream I/O,
-  read-only filesystem metadata predicates, bounded filesystem operations,
-  recursive/wildcard filesystem helpers, bytecode parity, and
-  machine-readable tooling.
-- Missing or incomplete for full ISO-system emulation: console-backed standard
-  streams, richer binary stream services, rich stream options beyond the
-  bounded file-backed subset, full ISO standard-library breadth, every ISO
-  error-term nuance, and implementation-specific dialect services outside the
-  shared core.
+  current-stream selection, standard streams, cursor positioning, bounded
+  binary byte stream I/O, read-only filesystem metadata predicates, bounded
+  filesystem operations, recursive/wildcard filesystem helpers, bytecode
+  parity, and machine-readable tooling.
+- Missing or incomplete for full ISO-system emulation: richer binary stream
+  services, remaining rich stream options beyond the bounded subset, full ISO
+  standard-library breadth, every ISO error-term nuance, and
+  implementation-specific dialect services outside the shared core.
 
 ### Edinburgh, DEC-10, Quintus, SICStus Family
 
@@ -379,13 +382,14 @@ This is a major runtime feature and should be its own batch.
 
 ## Historical Implementation Batches
 
-The original gap analysis proposed these implementation batches. PR00-PR89
+The original gap analysis proposed these implementation batches. PR00-PR90
 completed the core versions of Batches 1-5, added a broad Prolog stdlib and
 CLP(FD) compatibility layer, delivered runner/CLI tooling, and added bounded
 file text and stream I/O with aliases/metadata/positioning/current-stream
-selection, bounded binary byte stream I/O, read-only filesystem metadata, and
-bounded filesystem operations including recursive/wildcard helpers. Batch 6
-remains future advanced dialect work.
+selection, bounded binary byte stream I/O, read-only filesystem metadata,
+bounded filesystem operations including recursive/wildcard helpers, standard
+streams, and richer accepted stream options. Batch 6 remains future advanced
+dialect work.
 
 ### Batch 1 - Grammar and Dialect Profile Foundation
 

@@ -17,6 +17,7 @@ from __future__ import annotations
 import glob
 import os
 import shutil
+import sys
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
 from hashlib import blake2b
@@ -316,13 +317,45 @@ class _TextStream:
     binary_contents: bytes = b""
     cursor: int = 0
     alias: str | None = None
+    display_name: str | None = None
+    standard_stream: str | None = None
+    option_properties: tuple[Term, ...] = ()
 
 
 _STREAM_IDS = count(1)
-_STREAMS: dict[str, _TextStream] = {}
-_STREAM_ALIASES: dict[str, str] = {}
-_CURRENT_INPUT_HANDLE: str | None = None
-_CURRENT_OUTPUT_HANDLE: str | None = None
+_STANDARD_INPUT_HANDLE = "$stream_user_input"
+_STANDARD_OUTPUT_HANDLE = "$stream_user_output"
+_STANDARD_ERROR_HANDLE = "$stream_user_error"
+_STREAMS: dict[str, _TextStream] = {
+    _STANDARD_INPUT_HANDLE: _TextStream(
+        mode="read",
+        path=Path("<user_input>"),
+        alias="user_input",
+        display_name="user_input",
+        standard_stream="user_input",
+    ),
+    _STANDARD_OUTPUT_HANDLE: _TextStream(
+        mode="append",
+        path=Path("<user_output>"),
+        alias="user_output",
+        display_name="user_output",
+        standard_stream="user_output",
+    ),
+    _STANDARD_ERROR_HANDLE: _TextStream(
+        mode="append",
+        path=Path("<user_error>"),
+        alias="user_error",
+        display_name="user_error",
+        standard_stream="user_error",
+    ),
+}
+_STREAM_ALIASES: dict[str, str] = {
+    "user_input": _STANDARD_INPUT_HANDLE,
+    "user_output": _STANDARD_OUTPUT_HANDLE,
+    "user_error": _STANDARD_ERROR_HANDLE,
+}
+_CURRENT_INPUT_HANDLE: str | None = _STANDARD_INPUT_HANDLE
+_CURRENT_OUTPUT_HANDLE: str | None = _STANDARD_OUTPUT_HANDLE
 
 
 @dataclass(frozen=True, slots=True)
@@ -5359,6 +5392,7 @@ def _open_text_stream(
     *,
     alias_text: str | None = None,
     stream_type: str = "text",
+    option_properties: tuple[Term, ...] = (),
 ) -> _TextStream | None:
     path = Path(path_text)
     try:
@@ -5372,6 +5406,7 @@ def _open_text_stream(
                     stream_type=stream_type,
                     contents=path.read_text(encoding="utf-8"),
                     alias=alias_text,
+                    option_properties=option_properties,
                 )
             if mode_text == "write":
                 path.write_text("", encoding="utf-8")
@@ -5380,6 +5415,7 @@ def _open_text_stream(
                     path=path,
                     stream_type=stream_type,
                     alias=alias_text,
+                    option_properties=option_properties,
                 )
             if mode_text == "append":
                 path.parent.mkdir(parents=True, exist_ok=True)
@@ -5389,6 +5425,7 @@ def _open_text_stream(
                     path=path,
                     stream_type=stream_type,
                     alias=alias_text,
+                    option_properties=option_properties,
                 )
         if stream_type == "binary":
             if mode_text == "read":
@@ -5400,6 +5437,7 @@ def _open_text_stream(
                     stream_type=stream_type,
                     binary_contents=path.read_bytes(),
                     alias=alias_text,
+                    option_properties=option_properties,
                 )
             if mode_text == "write":
                 path.write_bytes(b"")
@@ -5408,6 +5446,7 @@ def _open_text_stream(
                     path=path,
                     stream_type=stream_type,
                     alias=alias_text,
+                    option_properties=option_properties,
                 )
             if mode_text == "append":
                 path.parent.mkdir(parents=True, exist_ok=True)
@@ -5417,6 +5456,7 @@ def _open_text_stream(
                     path=path,
                     stream_type=stream_type,
                     alias=alias_text,
+                    option_properties=option_properties,
                 )
     except OSError:
         return None
@@ -5425,7 +5465,14 @@ def _open_text_stream(
     return None
 
 
-def _open_options(term_value: Term) -> tuple[str | None, str] | None:
+def _boolean_option_value(term_value: Term) -> str | None:
+    value_text = _plain_atom_text(term_value)
+    if value_text in {"true", "false"}:
+        return value_text
+    return None
+
+
+def _open_options(term_value: Term) -> tuple[str | None, str, tuple[Term, ...]] | None:
     items = _proper_list_items(term_value)
     if items is None:
         return None
@@ -5433,6 +5480,7 @@ def _open_options(term_value: Term) -> tuple[str | None, str] | None:
     alias_text: str | None = None
     stream_type = "text"
     has_encoding = False
+    option_properties: list[Term] = []
     for item in items:
         if not isinstance(item, Compound) or len(item.args) != 1:
             return None
@@ -5451,6 +5499,7 @@ def _open_options(term_value: Term) -> tuple[str | None, str] | None:
             if encoding_text not in {"utf8", "utf-8"}:
                 return None
             has_encoding = True
+            option_properties.append(term("encoding", atom("utf8")))
             continue
 
         if option_name == "type":
@@ -5460,11 +5509,39 @@ def _open_options(term_value: Term) -> tuple[str | None, str] | None:
             stream_type = parsed_type
             continue
 
+        if option_name == "reposition":
+            reposition_text = _boolean_option_value(option_arg)
+            if reposition_text is None:
+                return None
+            option_properties.append(term("reposition", atom(reposition_text)))
+            continue
+
+        if option_name == "eof_action":
+            eof_action_text = _plain_atom_text(option_arg)
+            if eof_action_text not in {"eof_code", "error", "reset"}:
+                return None
+            option_properties.append(term("eof_action", atom(eof_action_text)))
+            continue
+
+        if option_name == "buffer":
+            buffer_text = _plain_atom_text(option_arg)
+            if buffer_text not in {"full", "line", "false"}:
+                return None
+            option_properties.append(term("buffer", atom(buffer_text)))
+            continue
+
+        if option_name == "close_on_abort":
+            close_on_abort_text = _boolean_option_value(option_arg)
+            if close_on_abort_text is None:
+                return None
+            option_properties.append(term("close_on_abort", atom(close_on_abort_text)))
+            continue
+
         return None
 
     if stream_type == "binary" and has_encoding:
         return None
-    return (alias_text, stream_type)
+    return (alias_text, stream_type, tuple(option_properties))
 
 
 def _register_stream(handle: Atom, stream: _TextStream) -> bool:
@@ -5515,12 +5592,13 @@ def open_optionso(
         if path_text is None or mode_text is None or parsed_options is None:
             return
 
-        alias_text, stream_type = parsed_options
+        alias_text, stream_type, option_properties = parsed_options
         stream = _open_text_stream(
             path_text,
             mode_text,
             alias_text=alias_text,
             stream_type=stream_type,
+            option_properties=option_properties,
         )
         if stream is None:
             return
@@ -5542,6 +5620,12 @@ def closeo(stream_value: object) -> GoalExpr:
         [stream_term] = args
         handle_text = _stream_key(_reified(stream_term, state))
         if handle_text is None or handle_text not in _STREAMS:
+            return
+        if handle_text in {
+            _STANDARD_INPUT_HANDLE,
+            _STANDARD_OUTPUT_HANDLE,
+            _STANDARD_ERROR_HANDLE,
+        }:
             return
         stream = _STREAMS.pop(handle_text)
         if stream.alias is not None:
@@ -6284,6 +6368,16 @@ def _write_stream(term_value: Term, text: str) -> bool:
         or stream.stream_type != "text"
     ):
         return False
+    if stream.standard_stream == "user_output":
+        sys.stdout.write(text)
+        stream.contents += text
+        stream.cursor += len(text)
+        return True
+    if stream.standard_stream == "user_error":
+        sys.stderr.write(text)
+        stream.contents += text
+        stream.cursor += len(text)
+        return True
     try:
         with stream.path.open("a", encoding="utf-8") as file:
             file.write(text)
@@ -6380,6 +6474,10 @@ def flush_outputo(stream_value: object) -> GoalExpr:
         handle_text = _stream_key(_reified(stream_term, state))
         stream = _STREAMS.get(handle_text) if handle_text is not None else None
         if stream is not None and stream.mode in {"write", "append"}:
+            if stream.standard_stream == "user_output":
+                sys.stdout.flush()
+            if stream.standard_stream == "user_error":
+                sys.stderr.flush()
             yield state
 
     return native_goal(run, stream_value)
@@ -6389,7 +6487,13 @@ def flush_current_outputo() -> GoalExpr:
     """Validate the selected output stream; writes are already flushed."""
 
     def run(_program: Program, state: State, _args: NativeArgs) -> Iterator[State]:
-        if _current_output_stream_term() is not None:
+        output_stream = _current_output_stream_term()
+        if output_stream is not None:
+            stream = _STREAMS.get(output_stream.symbol.name)
+            if stream is not None and stream.standard_stream == "user_output":
+                sys.stdout.flush()
+            if stream is not None and stream.standard_stream == "user_error":
+                sys.stderr.flush()
             yield state
 
     return native_goal(run)
@@ -6408,7 +6512,7 @@ def current_streamo(
             yield from solve_from(
                 program_value,
                 conj(
-                    eq(path_term, atom(str(stream.path))),
+                    eq(path_term, atom(_stream_display_name(stream))),
                     eq(mode_term, atom(stream.mode)),
                     eq(stream_term, atom(handle_text)),
                 ),
@@ -6418,9 +6522,13 @@ def current_streamo(
     return native_goal(run, path_value, mode_value, stream_value)
 
 
+def _stream_display_name(stream: _TextStream) -> str:
+    return stream.display_name if stream.display_name is not None else str(stream.path)
+
+
 def _stream_properties(handle_text: str, stream: _TextStream) -> tuple[Term, ...]:
     properties: list[Term] = [
-        term("file_name", atom(str(stream.path))),
+        term("file_name", atom(_stream_display_name(stream))),
         term("mode", atom(stream.mode)),
         term("type", atom(stream.stream_type)),
         term("position", num(stream.cursor)),
@@ -6437,6 +6545,7 @@ def _stream_properties(handle_text: str, stream: _TextStream) -> tuple[Term, ...
             properties.append(atom("current_output"))
     if stream.alias is not None:
         properties.append(term("alias", atom(stream.alias)))
+    properties.extend(stream.option_properties)
     properties.append(term("handle", atom(handle_text)))
     return tuple(properties)
 
