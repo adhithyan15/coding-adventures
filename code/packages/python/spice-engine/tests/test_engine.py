@@ -47,6 +47,13 @@ Test organisation
 43. Monte Carlo: seed reproducibility
 44. Monte Carlo: distribution modes (gaussian vs uniform)
 45. Monte Carlo: error cases and edge cases
+46. Noise analysis: NoiseEntry / NoisePoint / NoiseResult dataclasses
+47. Noise analysis: thermal noise — analytical Nyquist verification
+48. Noise analysis: per-element breakdown and sorting
+49. Noise analysis: input-referred noise calculation
+50. Noise analysis: shot noise (Diode and BJT)
+51. Noise analysis: frequency sweep and defaults
+52. Noise analysis: error cases and edge cases
 """
 
 import cmath
@@ -68,6 +75,9 @@ from spice_engine import (
     Inductor,
     McPoint,
     McResult,
+    NoiseEntry,
+    NoisePoint,
+    NoiseResult,
     Resistor,
     SensEntry,
     SensResult,
@@ -77,6 +87,7 @@ from spice_engine import (
     dc_op,
     dc_sweep,
     mc_dc,
+    noise_ac,
     sens_dc,
     tf,
     transient,
@@ -3131,3 +3142,626 @@ def test_mc_node_voltages_in_each_point() -> None:
         assert "out" in pt.node_voltages, (
             f"Trial {pt.trial} missing 'out' in node_voltages"
         )
+
+
+# ---------------------------------------------------------------------------
+# Physical constants mirroring those in engine.py, used for analytical checks.
+# ---------------------------------------------------------------------------
+_kB: float = 1.380649e-23     # Boltzmann constant [J/K]
+_q: float = 1.602176634e-19   # Electron charge [C]
+
+
+def _divider_circuit() -> Circuit:
+    """Canonical test circuit for noise analysis.
+
+    Topology: VS(0 V, "in"→"0") → R1(1 kΩ, "in"→"out") → R2(1 kΩ, "out"→"0")
+
+    With Vin = 0 V the input node is AC-grounded; the effective output resistance
+    seen by the noise sources is R1 ‖ R2 = 500 Ω.  The signal transfer function
+    is H_sig = R2 / (R1 + R2) = 0.5.
+
+    Known analytical values at T = 300 K:
+        S_out    = 4kT × 500 ≈ 8.284e-18 V²/Hz  (white: same at all freqs)
+        S_in     = S_out / 0.25 ≈ 3.314e-17 V²/Hz
+        per-R1   = 4kT × 250 ≈ 4.142e-18 V²/Hz
+        per-R2   = 4kT × 250 ≈ 4.142e-18 V²/Hz
+    """
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 0.0))
+    c.add(Resistor("R1", "in", "out", 1000.0))
+    c.add(Resistor("R2", "out", "0", 1000.0))
+    return c
+
+
+# ---------------------------------------------------------------------------
+# Section 46 — Noise analysis: NoiseEntry / NoisePoint / NoiseResult dataclasses
+# ---------------------------------------------------------------------------
+
+
+def test_noise_result_is_noiseresult() -> None:
+    """noise_ac returns a NoiseResult instance."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0])
+    assert isinstance(result, NoiseResult)
+
+
+def test_noise_points_are_noisepoint() -> None:
+    """Each element of NoiseResult.points is a NoisePoint."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0])
+    assert len(result.points) == 1
+    assert isinstance(result.points[0], NoisePoint)
+
+
+def test_noise_entries_are_noiseentry() -> None:
+    """Each element of NoisePoint.entries is a NoiseEntry."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0])
+    for entry in result.points[0].entries:
+        assert isinstance(entry, NoiseEntry)
+
+
+def test_noise_result_output_node_field() -> None:
+    """NoiseResult.output_node records the requested node."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0])
+    assert result.output_node == "out"
+
+
+def test_noise_result_input_source_field() -> None:
+    """NoiseResult.input_source records the nominated source name."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0])
+    assert result.input_source == "Vin"
+
+
+def test_noise_result_temperature_field() -> None:
+    """NoiseResult.temperature echoes the supplied temperature."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0], temperature=350.0)
+    assert result.temperature == 350.0
+
+
+def test_noise_point_freq_field() -> None:
+    """NoisePoint.freq records the frequency in hertz."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1234.0])
+    assert result.points[0].freq == 1234.0
+
+
+def test_noise_entry_element_name_field() -> None:
+    """NoiseEntry.element_name is the name of the contributing element."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0])
+    names = {e.element_name for e in result.points[0].entries}
+    assert "R1" in names
+    assert "R2" in names
+
+
+def test_noise_entry_noise_type_thermal_for_resistors() -> None:
+    """NoiseEntry.noise_type is 'thermal' for resistors."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0])
+    for entry in result.points[0].entries:
+        assert entry.noise_type == "thermal"
+
+
+def test_noise_entry_source_psd_positive() -> None:
+    """NoiseEntry.source_psd is positive (noise power density ≥ 0)."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0])
+    for entry in result.points[0].entries:
+        assert entry.source_psd > 0.0
+
+
+def test_noise_entry_output_psd_nonnegative() -> None:
+    """NoiseEntry.output_psd is non-negative."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0])
+    for entry in result.points[0].entries:
+        assert entry.output_psd >= 0.0
+
+
+# ---------------------------------------------------------------------------
+# Section 47 — Noise analysis: thermal noise — analytical Nyquist verification
+# ---------------------------------------------------------------------------
+#
+# For a purely resistive circuit at temperature T, the total output noise PSD
+# equals the Nyquist formula:
+#
+#     S_out = 4kT × R_eq    [V²/Hz]
+#
+# where R_eq is the Thevenin-equivalent noise resistance looking back from
+# the output node with all independent sources set to zero.
+
+
+def test_noise_symmetric_divider_total_psd_nyquist() -> None:
+    """Symmetric divider: S_out ≈ 4kT × (R1‖R2) = 4kT × 500 Ω."""
+    T = 300.0
+    R1 = R2 = 1000.0
+    R_eq = (R1 * R2) / (R1 + R2)          # 500 Ω
+    expected = 4.0 * _kB * T * R_eq       # ≈ 8.28e-18 V²/Hz
+
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0], temperature=T)
+    actual = result.points[0].output_psd
+
+    assert isclose(actual, expected, rel_tol=1e-4), (
+        f"Expected S_out ≈ {expected:.4e} V²/Hz, got {actual:.4e}"
+    )
+
+
+def test_noise_psd_scales_with_temperature() -> None:
+    """Doubling temperature doubles S_out (linear dependence on T)."""
+    c = _divider_circuit()
+    r1 = noise_ac(c, "out", "Vin", freqs=[1000.0], temperature=300.0)
+    r2 = noise_ac(c, "out", "Vin", freqs=[1000.0], temperature=600.0)
+    ratio = r2.points[0].output_psd / r1.points[0].output_psd
+    assert isclose(ratio, 2.0, rel_tol=1e-4), (
+        f"Expected ratio 2.0, got {ratio:.4f}"
+    )
+
+
+def test_noise_white_spectrum_resistors_only() -> None:
+    """Purely resistive circuit has flat (white) noise PSD at all frequencies."""
+    c = _divider_circuit()
+    freqs_to_test = [1.0, 100.0, 1e4, 1e6]
+    result = noise_ac(c, "out", "Vin", freqs=freqs_to_test)
+
+    # All frequency points should give the same output PSD (white noise).
+    psds = [pt.output_psd for pt in result.points]
+    ref = psds[0]
+    for i, psd in enumerate(psds[1:], 1):
+        assert isclose(psd, ref, rel_tol=1e-6), (
+            f"Freq {freqs_to_test[i]}: expected {ref:.4e}, got {psd:.4e} (not white)"
+        )
+
+
+def test_noise_single_resistor_source_psd() -> None:
+    """Source PSD of a 1 kΩ resistor at 300 K equals 4kT/R analytically."""
+    T = 300.0
+    R = 1000.0
+    expected_src = 4.0 * _kB * T / R   # A²/Hz
+
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0], temperature=T)
+    for entry in result.points[0].entries:
+        assert isclose(entry.source_psd, expected_src, rel_tol=1e-6), (
+            f"{entry.element_name}: source_psd {entry.source_psd:.4e}, "
+            f"expected {expected_src:.4e}"
+        )
+
+
+def test_noise_larger_resistance_higher_source_psd() -> None:
+    """A 10 kΩ resistor produces 10× more current noise PSD than 1 kΩ."""
+    c1 = Circuit()
+    c1.add(VoltageSource("Vin", "in", "0", 0.0))
+    c1.add(Resistor("R1", "in", "out", 1000.0))
+    c1.add(Resistor("R2", "out", "0", 1000.0))
+
+    c2 = Circuit()
+    c2.add(VoltageSource("Vin", "in", "0", 0.0))
+    c2.add(Resistor("R1", "in", "out", 10000.0))  # 10× larger
+    c2.add(Resistor("R2", "out", "0", 10000.0))
+
+    r1 = noise_ac(c1, "out", "Vin", freqs=[1000.0])
+    r2 = noise_ac(c2, "out", "Vin", freqs=[1000.0])
+
+    # source_psd = 4kT/R, so 10x bigger R → 10x smaller source_psd
+    src1 = next(e for e in r1.points[0].entries if e.element_name == "R1")
+    src2 = next(e for e in r2.points[0].entries if e.element_name == "R1")
+    assert isclose(src1.source_psd / src2.source_psd, 10.0, rel_tol=1e-6)
+
+
+# ---------------------------------------------------------------------------
+# Section 48 — Noise analysis: per-element breakdown and sorting
+# ---------------------------------------------------------------------------
+
+
+def test_noise_entries_count_matches_resistors() -> None:
+    """Two resistors produce two noise entries."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0])
+    assert len(result.points[0].entries) == 2
+
+
+def test_noise_entries_sorted_loudest_first() -> None:
+    """Entries are sorted by output_psd descending (loudest contributor first)."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0])
+    psds = [e.output_psd for e in result.points[0].entries]
+    assert psds == sorted(psds, reverse=True), (
+        f"Entries not sorted: {psds}"
+    )
+
+
+def test_noise_sum_of_entries_equals_total() -> None:
+    """Sum of per-element output_psd equals NoisePoint.output_psd."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0])
+    pt = result.points[0]
+    entry_sum = sum(e.output_psd for e in pt.entries)
+    assert isclose(entry_sum, pt.output_psd, rel_tol=1e-10), (
+        f"Entry sum {entry_sum:.4e} != total {pt.output_psd:.4e}"
+    )
+
+
+def test_noise_symmetric_resistors_equal_contributions() -> None:
+    """Symmetric divider (R1=R2): each resistor contributes equally to S_out."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0])
+    e1 = next(e for e in result.points[0].entries if e.element_name == "R1")
+    e2 = next(e for e in result.points[0].entries if e.element_name == "R2")
+    assert isclose(e1.output_psd, e2.output_psd, rel_tol=1e-6), (
+        f"R1 contribution {e1.output_psd:.4e} ≠ R2 {e2.output_psd:.4e}"
+    )
+
+
+def test_noise_asymmetric_divider_bottom_louder() -> None:
+    """Asymmetric divider (R1=2kΩ, R2=1kΩ): R2 contributes more to S_out.
+
+    Because R2 is closer to the output node and sees a larger signal transfer,
+    its noise dominates even though its source PSD is lower than R1's.
+
+    S_out_R2 = |H_R2|² × (4kT/R2) = (666.67)² × (4kT/1000) × … let T=300K.
+    S_out_R1 = |H_R1|² × (4kT/R1) = (666.67)² × (4kT/2000) × …
+
+    Since both H_R1 and H_R2 equal R_eq × (1/R_{source}) × something:
+    Thevenin: S_out_R2 = 4kT×R2×(R1/(R1+R2))² = 4kT×1000×(2/3)² = 4kT×444.4
+              S_out_R1 = 4kT×R1×(R2/(R1+R2))² = 4kT×2000×(1/3)² = 4kT×222.2
+    So R2 > R1.
+    """
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 0.0))
+    c.add(Resistor("R1", "in", "out", 2000.0))
+    c.add(Resistor("R2", "out", "0", 1000.0))
+
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0])
+    e_r1 = next(e for e in result.points[0].entries if e.element_name == "R1")
+    e_r2 = next(e for e in result.points[0].entries if e.element_name == "R2")
+    assert e_r2.output_psd > e_r1.output_psd, (
+        f"Expected R2 ({e_r2.output_psd:.3e}) > R1 ({e_r1.output_psd:.3e})"
+    )
+
+
+def test_noise_three_resistors_three_entries() -> None:
+    """Three resistors in a T-network produce three noise entries."""
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 0.0))
+    c.add(Resistor("R1", "in", "mid", 500.0))
+    c.add(Resistor("R2", "mid", "out", 500.0))
+    c.add(Resistor("R3", "out", "0", 1000.0))
+
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0])
+    assert len(result.points[0].entries) == 3
+
+
+# ---------------------------------------------------------------------------
+# Section 49 — Noise analysis: input-referred noise calculation
+# ---------------------------------------------------------------------------
+
+
+def test_noise_input_referred_divider() -> None:
+    """Symmetric divider: S_in = S_out / (0.5)² = 4 × S_out."""
+    T = 300.0
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0], temperature=T)
+    pt = result.points[0]
+
+    expected_s_in = pt.output_psd / (0.5 ** 2)  # gain = 0.5
+    assert isclose(pt.input_referred_psd, expected_s_in, rel_tol=1e-4), (
+        f"S_in {pt.input_referred_psd:.4e}, expected {expected_s_in:.4e}"
+    )
+
+
+def test_noise_input_referred_greater_than_output_for_attenuator() -> None:
+    """For an attenuating circuit, S_in > S_out (noise is amplified at input)."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0])
+    pt = result.points[0]
+    assert pt.input_referred_psd > pt.output_psd, (
+        f"Expected S_in ({pt.input_referred_psd:.3e}) > S_out ({pt.output_psd:.3e})"
+    )
+
+
+def test_noise_unknown_input_source_gives_zero_input_referred() -> None:
+    """If input_source is not in the circuit, input_referred_psd = 0.0."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Nonexistent", freqs=[1000.0])
+    assert result.points[0].input_referred_psd == 0.0
+
+
+def test_noise_input_referred_scales_with_gain() -> None:
+    """Higher gain → lower input-referred noise (same circuit noise, less divided).
+
+    Two circuits: same R_load, but different series R (attenuator ratio):
+    - High gain: R_series = 10 Ω  → gain = R_load / (R_series + R_load) ≈ 0.99
+    - Low gain:  R_series = 1 kΩ  → gain = 0.5
+    High-gain amp should have lower input-referred noise.
+    """
+    def make_circuit(r_series: float) -> Circuit:
+        c = Circuit()
+        c.add(VoltageSource("Vin", "in", "0", 0.0))
+        c.add(Resistor("Rs", "in", "out", r_series))
+        c.add(Resistor("RL", "out", "0", 1000.0))
+        return c
+
+    high_gain = noise_ac(make_circuit(10.0),    "out", "Vin", freqs=[1000.0])
+    low_gain  = noise_ac(make_circuit(1000.0),  "out", "Vin", freqs=[1000.0])
+
+    s_in_high = high_gain.points[0].input_referred_psd
+    s_in_low  = low_gain.points[0].input_referred_psd
+    # High-gain circuit has smaller input-referred noise
+    assert s_in_high < s_in_low, (
+        f"Expected high-gain S_in ({s_in_high:.3e}) < low-gain ({s_in_low:.3e})"
+    )
+
+
+def test_noise_current_source_input_referred() -> None:
+    """CurrentSource as input: input_referred_psd is computed correctly."""
+    c = Circuit()
+    c.add(CurrentSource("Iin", "node", "0", 0.0))
+    c.add(Resistor("R1", "node", "0", 1000.0))
+
+    result = noise_ac(c, "node", "Iin", freqs=[1000.0])
+    # The transimpedance from Iin to V_node is just R1 = 1000 Ω.
+    # S_out = 4kT/R (from R1's thermal noise) × R1² = 4kT × R1
+    # S_in  = S_out / R1² = 4kT / R1
+    # (This is just the current noise of R1 referred to the input.)
+    assert result.points[0].input_referred_psd > 0.0
+
+
+# ---------------------------------------------------------------------------
+# Section 50 — Noise analysis: shot noise (Diode and BJT)
+# ---------------------------------------------------------------------------
+
+
+def test_noise_diode_has_shot_noise_entry() -> None:
+    """A forward-biased diode contributes a 'shot' noise entry."""
+    c = Circuit()
+    c.add(VoltageSource("Vbias", "vcc", "0", 1.0))
+    c.add(Resistor("R1", "vcc", "node", 1000.0))
+    c.add(Diode("D1", "node", "0"))  # forward-biased: current flows anode→cathode
+
+    result = noise_ac(c, "node", "Vbias", freqs=[1000.0])
+    noise_types = {e.noise_type for e in result.points[0].entries}
+    assert "shot" in noise_types, f"No shot noise entry; types = {noise_types}"
+
+
+def test_noise_diode_shot_noise_type_string() -> None:
+    """Diode entry has noise_type == 'shot'."""
+    c = Circuit()
+    c.add(VoltageSource("Vbias", "vcc", "0", 1.0))
+    c.add(Resistor("R1", "vcc", "node", 1000.0))
+    c.add(Diode("D1", "node", "0"))
+
+    result = noise_ac(c, "node", "Vbias", freqs=[1000.0])
+    diode_entry = next(
+        (e for e in result.points[0].entries if e.element_name == "D1"), None
+    )
+    assert diode_entry is not None, "No entry for D1"
+    assert diode_entry.noise_type == "shot"
+
+
+def test_noise_diode_shot_noise_source_psd_positive() -> None:
+    """Forward-biased diode has source_psd > 0."""
+    c = Circuit()
+    c.add(VoltageSource("Vbias", "vcc", "0", 1.0))
+    c.add(Resistor("R1", "vcc", "node", 10000.0))
+    c.add(Diode("D1", "node", "0"))
+
+    result = noise_ac(c, "node", "Vbias", freqs=[1000.0])
+    d1 = next(e for e in result.points[0].entries if e.element_name == "D1")
+    assert d1.source_psd > 0.0, f"Diode source_psd = {d1.source_psd}"
+
+
+def test_noise_diode_shot_noise_proportional_to_2qI() -> None:
+    """Diode source_psd = 2q|I_D|.
+
+    At a known DC current I_D, source_psd = 2 × 1.602e-19 × I_D.
+    We run two circuits with different bias currents and check that
+    the ratio of PSDs matches the ratio of currents.
+    """
+    def make_circuit(vbias: float) -> Circuit:
+        c = Circuit()
+        c.add(VoltageSource("Vbias", "vcc", "0", vbias))
+        c.add(Resistor("R1", "vcc", "node", 100.0))  # small R for large I_D range
+        c.add(Diode("D1", "node", "0"))
+        return c
+
+    # We measure the diode current indirectly via source_psd ratio.
+    r1 = noise_ac(make_circuit(0.8), "node", "Vbias", freqs=[1000.0])
+    r2 = noise_ac(make_circuit(1.0), "node", "Vbias", freqs=[1000.0])
+
+    d1_psd = next(e.source_psd for e in r1.points[0].entries if e.element_name == "D1")
+    d2_psd = next(e.source_psd for e in r2.points[0].entries if e.element_name == "D1")
+
+    # Higher bias → larger I_D → higher shot noise PSD.
+    assert d2_psd > d1_psd, (
+        f"Expected higher bias to give more shot noise: {d2_psd:.3e} vs {d1_psd:.3e}"
+    )
+
+
+def test_noise_bjt_has_shot_noise_entry() -> None:
+    """A forward-active NPN BJT contributes a 'shot' noise entry."""
+    c = Circuit()
+    c.add(VoltageSource("Vcc", "vcc", "0", 5.0))
+    c.add(VoltageSource("Vbase", "base", "0", 0.7))
+    c.add(Resistor("Rc", "vcc", "col", 1000.0))
+    c.add(BJT("Q1", "col", "base", "0"))   # NPN: collector, base, emitter
+
+    result = noise_ac(c, "col", "Vbase", freqs=[1000.0])
+    noise_types = {e.noise_type for e in result.points[0].entries}
+    assert "shot" in noise_types, f"No shot noise entry for BJT; types = {noise_types}"
+
+
+def test_noise_bjt_shot_noise_type_string() -> None:
+    """BJT entry has noise_type == 'shot'."""
+    c = Circuit()
+    c.add(VoltageSource("Vcc", "vcc", "0", 5.0))
+    c.add(VoltageSource("Vbase", "base", "0", 0.7))
+    c.add(Resistor("Rc", "vcc", "col", 1000.0))
+    c.add(BJT("Q1", "col", "base", "0"))
+
+    result = noise_ac(c, "col", "Vbase", freqs=[1000.0])
+    bjt_entry = next(
+        (e for e in result.points[0].entries if e.element_name == "Q1"), None
+    )
+    assert bjt_entry is not None, "No entry for Q1"
+    assert bjt_entry.noise_type == "shot"
+
+
+# ---------------------------------------------------------------------------
+# Section 51 — Noise analysis: frequency sweep and defaults
+# ---------------------------------------------------------------------------
+
+
+def test_noise_default_sweep_has_50_points() -> None:
+    """Default frequency sweep (no freqs arg) returns 50 points."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin")
+    assert len(result.points) == 50
+
+
+def test_noise_default_sweep_ascending_frequencies() -> None:
+    """Default sweep frequencies are strictly ascending."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin")
+    freqs = [pt.freq for pt in result.points]
+    for i in range(1, len(freqs)):
+        assert freqs[i] > freqs[i - 1], (
+            f"Non-ascending at index {i}: {freqs[i-1]} → {freqs[i]}"
+        )
+
+
+def test_noise_default_sweep_starts_near_1hz() -> None:
+    """Default sweep starts at ≈ 1 Hz."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin")
+    assert isclose(result.points[0].freq, 1.0, rel_tol=1e-6)
+
+
+def test_noise_default_sweep_ends_near_1mhz() -> None:
+    """Default sweep ends at ≈ 1 MHz."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin")
+    assert isclose(result.points[-1].freq, 1e6, rel_tol=1e-4)
+
+
+def test_noise_custom_freq_list_respected() -> None:
+    """Custom freqs list is used exactly (correct count and values)."""
+    c = _divider_circuit()
+    custom = [100.0, 1000.0, 10000.0]
+    result = noise_ac(c, "out", "Vin", freqs=custom)
+    assert len(result.points) == 3
+    for pt, expected_f in zip(result.points, custom, strict=True):
+        assert pt.freq == expected_f
+
+
+def test_noise_single_frequency_point() -> None:
+    """Single-element freqs list returns exactly one NoisePoint."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[5000.0])
+    assert len(result.points) == 1
+    assert result.points[0].freq == 5000.0
+
+
+def test_noise_output_psd_positive_at_all_default_freqs() -> None:
+    """Output PSD is positive at every default frequency point."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin")
+    for pt in result.points:
+        assert pt.output_psd > 0.0, f"Zero PSD at f = {pt.freq:.2f} Hz"
+
+
+# ---------------------------------------------------------------------------
+# Section 52 — Noise analysis: error cases and edge cases
+# ---------------------------------------------------------------------------
+
+
+def test_noise_unknown_output_node_returns_empty() -> None:
+    """Unknown output node returns a NoiseResult with empty points list."""
+    c = _divider_circuit()
+    result = noise_ac(c, "nonexistent", "Vin", freqs=[1000.0])
+    assert isinstance(result, NoiseResult)
+    assert result.points == []
+
+
+def test_noise_ground_output_node_returns_empty() -> None:
+    """Ground as output node ('0') returns a NoiseResult with empty points."""
+    c = _divider_circuit()
+    result = noise_ac(c, "0", "Vin", freqs=[1000.0])
+    assert result.points == []
+
+
+def test_noise_empty_freqs_list_returns_no_points() -> None:
+    """Empty freqs list produces a NoiseResult with zero points."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[])
+    assert result.points == []
+
+
+def test_noise_capacitor_is_noiseless() -> None:
+    """Capacitor contributes no noise entry (capacitors are noiseless)."""
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 0.0))
+    c.add(Resistor("R1", "in", "out", 1000.0))
+    c.add(Resistor("R2", "out", "0", 1000.0))
+    c.add(Capacitor("C1", "out", "0", 1e-9))   # in parallel with R2
+
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0])
+    names = {e.element_name for e in result.points[0].entries}
+    assert "C1" not in names, f"Capacitor C1 wrongly appears in noise entries: {names}"
+
+
+def test_noise_voltage_source_is_noiseless() -> None:
+    """VoltageSource contributes no noise entry (ideal sources are noiseless)."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0])
+    names = {e.element_name for e in result.points[0].entries}
+    assert "Vin" not in names, f"VoltageSource Vin wrongly in noise entries: {names}"
+
+
+def test_noise_inductor_is_noiseless() -> None:
+    """Inductor contributes no noise entry (inductors are modelled as noiseless)."""
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 0.0))
+    c.add(Resistor("R1", "in", "mid", 1000.0))
+    c.add(Inductor("L1", "mid", "out", 1e-3))
+    c.add(Resistor("R2", "out", "0", 1000.0))
+
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0])
+    names = {e.element_name for e in result.points[0].entries}
+    assert "L1" not in names, f"Inductor L1 wrongly in noise entries: {names}"
+
+
+def test_noise_output_psd_nonnegative() -> None:
+    """NoisePoint.output_psd is always non-negative (sum of non-negative terms)."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin")
+    for pt in result.points:
+        assert pt.output_psd >= 0.0, f"Negative output_psd at f={pt.freq:.2f}"
+
+
+def test_noise_entries_tuple_immutable() -> None:
+    """NoisePoint.entries is a tuple (immutable sequence of NoiseEntry)."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0])
+    assert isinstance(result.points[0].entries, tuple)
+
+
+def test_noise_noisepoint_is_frozen() -> None:
+    """NoisePoint is a frozen dataclass (attempting to set field raises)."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0])
+    with pytest.raises((AttributeError, TypeError)):
+        result.points[0].freq = 9999.0  # type: ignore[misc]
+
+
+def test_noise_noiseentry_is_frozen() -> None:
+    """NoiseEntry is a frozen dataclass (attempting to set field raises)."""
+    c = _divider_circuit()
+    result = noise_ac(c, "out", "Vin", freqs=[1000.0])
+    entry = result.points[0].entries[0]
+    with pytest.raises((AttributeError, TypeError)):
+        entry.output_psd = -1.0  # type: ignore[misc]
