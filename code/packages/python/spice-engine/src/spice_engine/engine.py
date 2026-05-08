@@ -2774,3 +2774,523 @@ def mc_dc(
         mean=mean,
         std_dev=std_dev,
     )
+
+
+# ---------------------------------------------------------------------------
+# Section 8 — Noise Analysis (.NOISE analysis)
+# ---------------------------------------------------------------------------
+#
+# Background: what is noise analysis?
+# ------------------------------------
+# Every real circuit element generates noise — tiny random voltage or current
+# fluctuations that limit the minimum detectable signal.  Two sources dominate
+# at the DC/audio/RF frequencies we model here:
+#
+#   1. Johnson-Nyquist (thermal) noise — Resistors
+#      Any resistor R at temperature T generates a white (flat PSD) current
+#      noise in parallel with its conductance:
+#
+#          S_i = 4kT / R   [A²/Hz]
+#
+#      Physical cause: thermal agitation of electrons.  Discovered by Johnson
+#      (1928) and explained by Nyquist using thermodynamics.  The factor 4
+#      comes from the Nyquist theorem for two-sided spectra.
+#
+#   2. Shot noise — Diodes and BJT junctions
+#      A p-n junction carrying DC current I_DC has a white current noise:
+#
+#          S_i = 2q |I_DC|   [A²/Hz]
+#
+#      Physical cause: the discreteness of charge carriers (electrons and
+#      holes) crossing the junction independently of each other — a Poisson
+#      process.  The factor 2 arises from the two-sided PSD convention.
+#
+# Noise model for each element
+# ----------------------------
+#   Resistor R : S_i = 4kT/R, current noise in parallel (across R terminals)
+#   Diode       : S_i = 2q|I_D|, current noise anode → cathode
+#   BJT         : S_i = 2q|I_C|, current noise base → emitter (collector
+#                 junction — approximated as proportional to I_C)
+#   All others (Capacitor, Inductor, VoltageSource, CurrentSource, Mosfet):
+#                 treated as noiseless in this model
+#
+# The adjoint method — computing all contributions in one solve
+# -------------------------------------------------------------
+# A naive approach: for each of the N noise sources, inject a unit test
+# current, solve the full MNA system, and read off V_out.  That's N solves.
+#
+# The adjoint approach does it in ONE solve:
+#
+#   Forward:  G(jω) × x = b         → x[out] = e_out^T G^{-1} b
+#   Adjoint:  G(jω)^T × v = e_out   → solve once per frequency
+#
+# Then for any noise current source k injecting between nodes a and b:
+#
+#   H_k = v[a] - v[b]               (transfer impedance, Ω)
+#   S_out_k = |H_k|² × S_k          (contribution to output noise, V²/Hz)
+#
+# Total output noise:   S_out = Σ_k |H_k|² × S_k
+#
+# Proof: forward output = e_out^T G^{-1} b = (G^{-T} e_out)^T b = v^T b
+# For b_k = e_a - e_b:  v^T b_k = v[a] - v[b] = H_k  ✓
+#
+# Input-referred noise
+# --------------------
+# The input-referred noise spectral density is the hypothetical input noise
+# that would produce the same total output noise as the circuit generates
+# internally.  It allows direct comparison with the signal level:
+#
+#   S_in = S_out / |H_signal(jω)|²
+#
+# H_signal is the AC gain from the nominated ``input_source`` to ``output_node``.
+# Using the adjoint (same v already computed):
+#   For a VoltageSource with branch index k:  H_signal = v[n_nodes + k]
+#   For a CurrentSource between (n+, n-):     H_signal = v[n-_idx] - v[n+_idx]
+#
+# Why input-referred noise matters
+# ---------------------------------
+# Suppose a low-noise amplifier has S_in = 1 nV²/Hz at 1 kHz.  This means
+# signals smaller than √(1e-9) ≈ 32 nV (in a 1 Hz bandwidth) cannot be
+# resolved.  Comparing S_in to the signal PSD immediately tells you whether
+# the circuit meets its dynamic-range requirement.
+#
+# Temperature
+# -----------
+# The default temperature is 300 K (≈ 27 °C, close to room temperature and
+# used as the SPICE reference).  Thermal noise scales as T, so cold circuits
+# (cryogenic amplifiers, superconducting detectors) have dramatically lower
+# Johnson noise.
+#
+# Units reminder
+# --------------
+#   S (power spectral density) has units V²/Hz or A²/Hz
+#   √S has units V/√Hz or A/√Hz  ("voltage noise density", commonly plotted)
+# ---------------------------------------------------------------------------
+
+# Physical constants used in noise calculations.
+_BOLTZMANN: float = 1.380649e-23  # Boltzmann constant [J/K]
+_ELECTRON_CHARGE: float = 1.602176634e-19  # Electron charge [C]
+
+
+@dataclass(frozen=True)
+class NoiseEntry:
+    """Noise contribution from one element at one frequency.
+
+    Attributes
+    ----------
+    element_name : str
+        Name of the circuit element generating this noise.
+    noise_type : str
+        ``"thermal"`` (Johnson-Nyquist noise, for resistors) or
+        ``"shot"`` (Poisson/shot noise, for diodes and BJTs).
+    source_psd : float
+        Noise current power spectral density at the source itself, in A²/Hz.
+        For resistors: ``4kT/R``.  For diodes/BJTs: ``2q|I_DC|``.
+    output_psd : float
+        Contribution to the output voltage noise spectral density, in V²/Hz.
+        Computed as ``|H_k(jω)|² × source_psd`` where ``H_k`` is the transfer
+        impedance from this source's nodes to the output node.
+    """
+
+    element_name: str
+    noise_type: str
+    source_psd: float
+    output_psd: float
+
+
+@dataclass(frozen=True)
+class NoisePoint:
+    """Noise analysis result at one frequency point.
+
+    Attributes
+    ----------
+    freq : float
+        Frequency in hertz.
+    output_psd : float
+        Total output voltage noise power spectral density in V²/Hz.
+        This is the sum of all element contributions.
+        Take the square root to get the noise voltage density in V/√Hz.
+    input_referred_psd : float
+        Total noise referred back to the input, in V²/Hz (or A²/Hz if the
+        input source is a current source).  Computed as
+        ``output_psd / |H_signal(jω)|²``.  Zero when ``|H_signal|`` is
+        negligibly small (< 1e-50) at that frequency.
+    entries : tuple[NoiseEntry, ...]
+        Per-element noise breakdown, sorted by ``output_psd`` descending
+        (loudest contributor first).
+    """
+
+    freq: float
+    output_psd: float
+    input_referred_psd: float
+    entries: tuple[NoiseEntry, ...]
+
+
+@dataclass
+class NoiseResult:
+    """Full .NOISE analysis result returned by :func:`noise_ac`.
+
+    Attributes
+    ----------
+    output_node : str
+        Node at which output noise is measured.
+    input_source : str
+        Name of the element used for input-referred noise calculation.
+    temperature : float
+        Analysis temperature in Kelvin (default 300 K).
+    points : list[NoisePoint]
+        One :class:`NoisePoint` per frequency, in ascending frequency order.
+
+    Examples
+    --------
+    Compute output noise density in nV/√Hz at each frequency::
+
+        import math
+        result = noise_ac(circuit, "out", "Vin")
+        for pt in result.points:
+            density_nv = math.sqrt(pt.output_psd) * 1e9
+            print(f"{pt.freq:.1f} Hz: {density_nv:.2f} nV/√Hz")
+    """
+
+    output_node: str
+    input_source: str
+    temperature: float
+    points: list[NoisePoint]
+
+
+def _collect_noise_sources(
+    circuit: Circuit,
+    node_to_idx: dict[str, int],
+    dc_x: list[float],
+    temperature: float,
+) -> list[tuple[str, str, int | None, int | None, float]]:
+    """Enumerate noise current sources for all noisy circuit elements.
+
+    Each element that contributes noise is modelled as an ideal Norton
+    (parallel) current noise source between its principal terminals.
+
+    Parameters
+    ----------
+    circuit : Circuit
+        The circuit whose elements are scanned.
+    node_to_idx : dict[str, int]
+        Node-to-index map (ground excluded).
+    dc_x : list[float]
+        DC operating-point solution vector (node voltages then branch currents).
+    temperature : float
+        Temperature in Kelvin for thermal noise calculations.
+
+    Returns
+    -------
+    list of 5-tuples (element_name, noise_type, n_plus_idx, n_minus_idx, psd)
+        ``n_plus_idx`` and ``n_minus_idx`` are integer matrix indices, or
+        ``None`` when the terminal connects to ground.
+        ``psd`` is the current noise PSD in A²/Hz.
+    """
+    kT4 = 4.0 * _BOLTZMANN * temperature  # 4kT factor
+    q2 = 2.0 * _ELECTRON_CHARGE           # 2q factor
+
+    sources: list[tuple[str, str, int | None, int | None, float]] = []
+
+    for el in circuit.elements:
+        if isinstance(el, Resistor):
+            # Johnson-Nyquist thermal noise: S_i = 4kT/R
+            psd = kT4 / el.resistance
+            n_p = node_to_idx.get(el.n_plus)   # None for ground
+            n_m = node_to_idx.get(el.n_minus)  # None for ground
+            sources.append((el.name, "thermal", n_p, n_m, psd))
+
+        elif isinstance(el, Diode):
+            # Shot noise: S_i = 2q |I_D|
+            # Use the actual converged DC voltage from dc_x — no clamp needed here
+            # because we are evaluating at the operating point, not iterating Newton.
+            # (The 0.7 V clamp in the Newton loop prevents divergence during
+            # iterations; at convergence, Vd is the physically correct value.)
+            Va = 0.0 if _is_ground(el.anode) else dc_x[node_to_idx[el.anode]]
+            Vk = 0.0 if _is_ground(el.cathode) else dc_x[node_to_idx[el.cathode]]
+            Vd = Va - Vk  # actual operating-point junction voltage
+            I_D = el.Is * (math.exp(Vd / el.Vt) - 1.0)
+            psd = q2 * abs(I_D)
+            n_a = None if _is_ground(el.anode) else node_to_idx[el.anode]
+            n_k = None if _is_ground(el.cathode) else node_to_idx[el.cathode]
+            sources.append((el.name, "shot", n_a, n_k, psd))
+
+        elif isinstance(el, BJT):
+            # Shot noise on the base-emitter junction: S_i = 2q |I_C|
+            # I_C ≈ Is × exp(V_BE / Vt)  (dominates for forward-active BJT)
+            # Use actual converged dc_x voltages — no clamp — same reasoning as Diode.
+            Vb = 0.0 if _is_ground(el.base) else dc_x[node_to_idx[el.base]]
+            Ve = 0.0 if _is_ground(el.emitter) else dc_x[node_to_idx[el.emitter]]
+            Vjunc = (
+                Vb - Ve if el.polarity == "NPN"
+                else Ve - Vb
+            )
+            I_C = el.Is * math.exp(Vjunc / el.Vt)
+            psd = q2 * abs(I_C)
+            n_b = None if _is_ground(el.base) else node_to_idx[el.base]
+            n_e = None if _is_ground(el.emitter) else node_to_idx[el.emitter]
+            sources.append((el.name, "shot", n_b, n_e, psd))
+
+        # Capacitors, Inductors, VoltageSources, CurrentSources, MOSFETs:
+        # noiseless in this first-order model.
+
+    return sources
+
+
+def noise_ac(
+    circuit: Circuit,
+    output_node: str,
+    input_source: str,
+    freqs: list[float] | None = None,
+    *,
+    temperature: float = 300.0,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> NoiseResult:
+    """Small-signal noise analysis (the SPICE .NOISE analysis).
+
+    Computes the voltage noise power spectral density (PSD) at ``output_node``
+    due to thermal noise (Johnson-Nyquist) in resistors and shot noise in
+    diodes and BJTs, at each frequency in ``freqs``.  Also reports the noise
+    referred back to ``input_source`` so you can compare it directly to your
+    signal level.
+
+    Algorithm
+    ---------
+    1. Find the DC operating point to compute shot-noise PSDs
+       (diode/BJT currents are bias-dependent).
+    2. Build the noise-source list: for each noisy element compute its
+       current noise PSD ``S_k`` (A²/Hz).
+    3. For each frequency ω = 2πf:
+
+       a. Build the complex AC MNA matrix G(jω) using :func:`_stamp_ac`.
+       b. Solve the *adjoint* system G(jω)^T × v = e_out once per frequency,
+          where e_out is a unit vector at ``output_node``'s matrix row.
+       c. For each noise source k between nodes (a, b):
+              H_k = v[a] − v[b]          (transfer impedance, Ω)
+              S_out_k = |H_k|² × S_k    (contribution to output PSD, V²/Hz)
+       d. Total output noise:  S_out = Σ_k S_out_k
+       e. Input-referred noise: S_in = S_out / |H_signal|²
+          where H_signal = transfer from ``input_source`` to ``output_node``.
+
+    The adjoint method requires only ONE linear solve per frequency regardless
+    of how many noise sources the circuit contains.
+
+    Parameters
+    ----------
+    circuit : Circuit
+        The circuit to analyse.
+    output_node : str
+        Node at which to measure the output noise voltage.
+    input_source : str
+        Name of the element (VoltageSource or CurrentSource) used as the
+        signal reference for input-referred noise computation.
+        If not found in the circuit, ``input_referred_psd`` will be 0.0 at
+        every frequency.
+    freqs : list[float] | None
+        Frequency points in Hz.  If ``None``, defaults to a logarithmic sweep
+        of 50 points from 1 Hz to 1 MHz.
+    temperature : float
+        Ambient temperature in Kelvin.  Default 300 K (≈ 27 °C).
+        Affects thermal (Johnson-Nyquist) noise only; shot noise depends on
+        DC current, not temperature.
+    max_iterations : int
+        Newton-Raphson iteration limit for the DC operating-point solve.
+    tol : float
+        Convergence tolerance for the DC operating-point solve.
+
+    Returns
+    -------
+    NoiseResult
+        One :class:`NoisePoint` per frequency, each containing the total
+        output PSD, input-referred PSD, and per-element breakdown.
+
+    Notes
+    -----
+    - Noiseless elements: Capacitor, Inductor, VoltageSource, CurrentSource,
+      Mosfet.  Extending to MOSFET channel noise (``4kT γ gm``) is future work.
+    - If the AC matrix is singular at a frequency, that point's PSDs are 0.0.
+    - Output PSD in V²/Hz; take ``math.sqrt(pt.output_psd)`` for V/√Hz density.
+
+    Examples
+    --------
+    Noise figure of an RC filter::
+
+        from spice_engine import Circuit, VoltageSource, Resistor, Capacitor
+        from spice_engine import noise_ac
+        import math
+
+        c = Circuit()
+        c.add(VoltageSource("Vin", "in", "0", 1.0))
+        c.add(Resistor("R1", "in", "out", 1000.0))
+        c.add(Capacitor("C1", "out", "0", 1e-9))
+
+        result = noise_ac(c, "out", "Vin", temperature=300.0)
+        for pt in result.points:
+            v_noise = math.sqrt(pt.output_psd) * 1e9  # nV/√Hz
+            v_in_ref = math.sqrt(pt.input_referred_psd) * 1e9
+            print(f"{pt.freq:8.1f} Hz: out={v_noise:.2f} nV/√Hz  "
+                  f"in-ref={v_in_ref:.2f} nV/√Hz")
+    """
+    # ---- DC operating point --------------------------------------------------
+    dc = dc_op(circuit, max_iterations=max_iterations, tol=tol)
+
+    # ---- Matrix bookkeeping --------------------------------------------------
+    node_to_idx, _nodes = _node_index(circuit)
+    vsrcs = _voltage_sources(circuit)
+    n_nodes = len(node_to_idx)
+    n_vsrcs = len(vsrcs)
+    size = n_nodes + n_vsrcs
+
+    # Reconstruct dc_x solution vector for linearisation of nonlinear devices.
+    dc_x: list[float] = [0.0] * size
+    for name, idx in node_to_idx.items():
+        dc_x[idx] = dc.node_voltages.get(name, 0.0)
+    for i, vs in enumerate(vsrcs):
+        dc_x[n_nodes + i] = dc.branch_currents.get(f"I({vs.name})", 0.0)
+
+    # ---- Validate output node -----------------------------------------------
+    if _is_ground(output_node):
+        # Ground is always 0 V; no noise to measure there.
+        return NoiseResult(
+            output_node=output_node,
+            input_source=input_source,
+            temperature=temperature,
+            points=[],
+        )
+    out_idx = node_to_idx.get(output_node)
+    if out_idx is None:
+        return NoiseResult(
+            output_node=output_node,
+            input_source=input_source,
+            temperature=temperature,
+            points=[],
+        )
+
+    # ---- Build noise source list from DC operating point --------------------
+    noise_sources = _collect_noise_sources(circuit, node_to_idx, dc_x, temperature)
+
+    # ---- Locate the input source element for input-referred noise ----------
+    input_el: VoltageSource | CurrentSource | None = None
+    for el in circuit.elements:
+        if el.name == input_source and isinstance(el, (VoltageSource, CurrentSource)):
+            input_el = el  # type: ignore[assignment]
+            break
+
+    # ---- Default frequency sweep: 50 log-spaced points, 1 Hz … 1 MHz ------
+    if freqs is None:
+        log_start = 0.0      # log10(1 Hz)
+        log_stop = 6.0       # log10(1 MHz)
+        step = (log_stop - log_start) / 49
+        freqs = [10.0 ** (log_start + k * step) for k in range(50)]
+
+    # ---- Adjoint vector: unit vector at output node -------------------------
+    # This is the RHS of the adjoint solve: G^T × v = e_out
+    e_out: list[complex] = [0j] * size
+    e_out[out_idx] = 1.0 + 0j
+
+    # ---- Per-frequency noise computation ------------------------------------
+    points: list[NoisePoint] = []
+
+    for freq in freqs:
+        omega = 2.0 * math.pi * freq
+
+        # Build complex MNA matrix G_c at this frequency.
+        G_c: list[list[complex]] = [[0j] * size for _ in range(size)]
+        b_c: list[complex] = [0j] * size  # dummy RHS for stamping (unused)
+        for el in circuit.elements:
+            _stamp_ac(el, G_c, b_c, omega, node_to_idx, vsrcs, dc_x)
+
+        # Transpose G_c → G_T for the adjoint solve.
+        # G_T[i][j] = G_c[j][i]
+        G_T: list[list[complex]] = [
+            [G_c[j][i] for j in range(size)]
+            for i in range(size)
+        ]
+
+        # Solve adjoint: G_T × v_adj = e_out
+        # v_adj[k] = transfer impedance from current injection at node k
+        # to voltage at output_node.
+        try:
+            v_adj = _solve_complex(G_T, list(e_out))  # copy e_out (mutated)
+        except ZeroDivisionError:
+            # Singular matrix at this frequency — skip with zero PSD.
+            zero_entries: tuple[NoiseEntry, ...] = tuple(
+                NoiseEntry(
+                    element_name=name,
+                    noise_type=ntype,
+                    source_psd=psd,
+                    output_psd=0.0,
+                )
+                for (name, ntype, _, _, psd) in noise_sources
+            )
+            points.append(NoisePoint(
+                freq=freq,
+                output_psd=0.0,
+                input_referred_psd=0.0,
+                entries=zero_entries,
+            ))
+            continue
+
+        # Accumulate noise contributions.
+        # For each noise current source k between nodes (n_p, n_m):
+        #   H_k = v_adj[n_p] - v_adj[n_m]   (None → ground → 0)
+        #   S_out_k = |H_k|² × S_k
+        entries_list: list[NoiseEntry] = []
+        total_psd = 0.0
+
+        for (elem_name, noise_type, n_p, n_m, src_psd) in noise_sources:
+            h_p: complex = v_adj[n_p] if n_p is not None else 0j
+            h_m: complex = v_adj[n_m] if n_m is not None else 0j
+            H_k = h_p - h_m
+            contrib = (abs(H_k) ** 2) * src_psd
+            total_psd += contrib
+            entries_list.append(NoiseEntry(
+                element_name=elem_name,
+                noise_type=noise_type,
+                source_psd=src_psd,
+                output_psd=contrib,
+            ))
+
+        # Sort entries loudest-first.
+        entries_list.sort(key=lambda e: e.output_psd, reverse=True)
+
+        # Input-referred noise: S_in = S_out / |H_signal|²
+        # H_signal is the adjoint-derived transfer from input_source to output.
+        # The adjoint v_adj satisfies: v_adj^T × b = x[out] for any forward b.
+        # For VS with branch index k: b[n_nodes+k]=1 → H = v_adj[n_nodes+k]
+        # For IS between (n+, n-): b[n+]=-1, b[n-]=+1 → H = v_adj[n-] - v_adj[n+]
+        input_referred_psd = 0.0
+        if input_el is not None:
+            if isinstance(input_el, VoltageSource):
+                vs_idx = vsrcs.index(input_el)
+                H_sig = v_adj[n_nodes + vs_idx]
+            else:  # CurrentSource
+                h_n_plus: complex = (
+                    v_adj[node_to_idx[input_el.n_plus]]
+                    if not _is_ground(input_el.n_plus)
+                    else 0j
+                )
+                h_n_minus: complex = (
+                    v_adj[node_to_idx[input_el.n_minus]]
+                    if not _is_ground(input_el.n_minus)
+                    else 0j
+                )
+                H_sig = h_n_minus - h_n_plus
+            H_sig_sq = abs(H_sig) ** 2
+            if H_sig_sq > 1e-100:
+                input_referred_psd = total_psd / H_sig_sq
+
+        points.append(NoisePoint(
+            freq=freq,
+            output_psd=total_psd,
+            input_referred_psd=input_referred_psd,
+            entries=tuple(entries_list),
+        ))
+
+    return NoiseResult(
+        output_node=output_node,
+        input_source=input_source,
+        temperature=temperature,
+        points=points,
+    )

@@ -636,6 +636,7 @@ fn revision_to_u64(r: &Revision) -> Option<u64> {
 mod tests {
     use super::*;
     use std::env;
+    use storage_core::conformance;
 
     fn temp_root() -> PathBuf {
         let mut p = env::temp_dir();
@@ -656,6 +657,46 @@ mod tests {
             body: body.to_vec(),
             if_revision: None,
         }
+    }
+
+    fn with_backend<T>(test: impl FnOnce(&FsStorageBackend) -> T) -> T {
+        let root = temp_root();
+        let be = FsStorageBackend::new(&root);
+        let output = test(&be);
+        let _ = fs::remove_dir_all(&root);
+        output
+    }
+
+    // --- Shared storage-core conformance ---
+
+    #[test]
+    fn conformance_initialize_twice_is_safe() {
+        with_backend(|be| conformance::initialize_twice_is_safe(be).unwrap());
+    }
+
+    #[test]
+    fn conformance_put_then_get_round_trips() {
+        with_backend(|be| conformance::put_then_get_round_trips(be).unwrap());
+    }
+
+    #[test]
+    fn conformance_stale_revision_is_rejected() {
+        with_backend(|be| conformance::stale_revision_is_rejected(be).unwrap());
+    }
+
+    #[test]
+    fn conformance_delete_is_idempotent() {
+        with_backend(|be| conformance::delete_is_idempotent(be).unwrap());
+    }
+
+    #[test]
+    fn conformance_prefix_listing_is_stable() {
+        with_backend(|be| conformance::prefix_listing_is_stable(be).unwrap());
+    }
+
+    #[test]
+    fn conformance_advisory_lease_expires() {
+        with_backend(|be| conformance::advisory_lease_expires(be).unwrap());
     }
 
     // --- Round-trip ---

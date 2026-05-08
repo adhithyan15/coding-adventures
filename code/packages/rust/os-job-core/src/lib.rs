@@ -43,6 +43,9 @@
 use std::error::Error;
 use std::fmt::{self, Display, Formatter};
 
+/// Milliseconds since the Unix epoch.
+pub type TimestampMs = u64;
+
 // ============================================================================
 // BackendKind
 // ============================================================================
@@ -399,6 +402,268 @@ pub struct OutputPolicy {
 }
 
 // ============================================================================
+// Installed jobs and run observability
+// ============================================================================
+
+/// A job after it has been installed into one scheduler backend.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct InstalledJob {
+    pub job_id: String,
+    pub backend: BackendKind,
+    pub spec: JobSpec,
+    pub installed_at: TimestampMs,
+    pub native_identifier: Option<String>,
+    pub enabled: bool,
+}
+
+impl InstalledJob {
+    /// Build an installed-job record from the portable spec and backend.
+    pub fn new(
+        backend: BackendKind,
+        spec: JobSpec,
+        installed_at: TimestampMs,
+        native_identifier: Option<String>,
+    ) -> Self {
+        Self {
+            job_id: spec.job_id.clone(),
+            enabled: spec.enabled,
+            backend,
+            spec,
+            installed_at,
+            native_identifier,
+        }
+    }
+
+    /// Validate the portable installed-job metadata.
+    pub fn validate(&self) -> ValidationResult {
+        let mut result = self.spec.validate();
+        if self.job_id != self.spec.job_id {
+            result.push_error("job_id", "must match spec.job_id");
+        }
+        if let Some(native_identifier) = &self.native_identifier {
+            validate_non_empty("native_identifier", native_identifier, &mut result);
+            validate_single_line("native_identifier", native_identifier, &mut result);
+        }
+        result
+    }
+}
+
+/// High-level status returned by a job runtime.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum JobStatusKind {
+    Missing,
+    Installed,
+    Running,
+    Disabled,
+    Failed,
+}
+
+impl JobStatusKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Missing => "missing",
+            Self::Installed => "installed",
+            Self::Running => "running",
+            Self::Disabled => "disabled",
+            Self::Failed => "failed",
+        }
+    }
+}
+
+impl Display for JobStatusKind {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Runtime status for one installed job.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct JobStatus {
+    pub job_id: String,
+    pub backend: BackendKind,
+    pub status: JobStatusKind,
+    pub enabled: bool,
+    pub last_run: Option<JobRunReceipt>,
+    pub next_run_hint: Option<DateTimeParts>,
+}
+
+impl JobStatus {
+    pub fn validate(&self) -> ValidationResult {
+        let mut result = ValidationResult::new();
+        validate_identifier("job_id", &self.job_id, &mut result);
+        if let Some(receipt) = &self.last_run {
+            let receipt_result = receipt.validate();
+            for message in receipt_result.errors {
+                result.push_error(format!("last_run.{}", message.field), message.message);
+            }
+            for message in receipt_result.warnings {
+                result.push_warning(format!("last_run.{}", message.field), message.message);
+            }
+            if receipt.job_id != self.job_id {
+                result.push_error("last_run.job_id", "must match job_id");
+            }
+        }
+        if let Some(next_run_hint) = self.next_run_hint {
+            validate_datetime("next_run_hint", next_run_hint, &mut result);
+        }
+        result
+    }
+}
+
+/// Coarse outcome of one job run.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum JobRunOutcome {
+    Succeeded,
+    Failed,
+    TimedOut,
+    Cancelled,
+}
+
+impl JobRunOutcome {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Succeeded => "succeeded",
+            Self::Failed => "failed",
+            Self::TimedOut => "timed_out",
+            Self::Cancelled => "cancelled",
+        }
+    }
+
+    pub fn is_success(self) -> bool {
+        self == Self::Succeeded
+    }
+}
+
+impl Display for JobRunOutcome {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Portable exit status for one job run.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct JobExitStatus {
+    pub outcome: JobRunOutcome,
+    pub code: Option<i32>,
+}
+
+impl JobExitStatus {
+    pub fn succeeded(code: i32) -> Self {
+        Self {
+            outcome: JobRunOutcome::Succeeded,
+            code: Some(code),
+        }
+    }
+
+    pub fn failed(code: Option<i32>) -> Self {
+        Self {
+            outcome: JobRunOutcome::Failed,
+            code,
+        }
+    }
+
+    pub fn timed_out() -> Self {
+        Self {
+            outcome: JobRunOutcome::TimedOut,
+            code: None,
+        }
+    }
+
+    pub fn cancelled() -> Self {
+        Self {
+            outcome: JobRunOutcome::Cancelled,
+            code: None,
+        }
+    }
+
+    pub fn is_success(&self) -> bool {
+        self.outcome.is_success()
+    }
+}
+
+/// D18C receipt emitted after every attempted run.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct JobRunReceipt {
+    pub run_id: String,
+    pub job_id: String,
+    pub started_at: TimestampMs,
+    pub finished_at: TimestampMs,
+    pub exit_status: JobExitStatus,
+    pub output_refs: Vec<String>,
+    pub error: Option<String>,
+}
+
+impl JobRunReceipt {
+    pub fn succeeded(
+        run_id: impl Into<String>,
+        job_id: impl Into<String>,
+        started_at: TimestampMs,
+        finished_at: TimestampMs,
+        output_refs: Vec<String>,
+    ) -> Self {
+        Self {
+            run_id: run_id.into(),
+            job_id: job_id.into(),
+            started_at,
+            finished_at,
+            exit_status: JobExitStatus::succeeded(0),
+            output_refs,
+            error: None,
+        }
+    }
+
+    pub fn failed(
+        run_id: impl Into<String>,
+        job_id: impl Into<String>,
+        started_at: TimestampMs,
+        finished_at: TimestampMs,
+        exit_status: JobExitStatus,
+        error: impl Into<String>,
+    ) -> Self {
+        Self {
+            run_id: run_id.into(),
+            job_id: job_id.into(),
+            started_at,
+            finished_at,
+            exit_status,
+            output_refs: Vec::new(),
+            error: Some(error.into()),
+        }
+    }
+
+    pub fn duration_ms(&self) -> u64 {
+        self.finished_at.saturating_sub(self.started_at)
+    }
+
+    pub fn validate(&self) -> ValidationResult {
+        let mut result = ValidationResult::new();
+        validate_identifier("run_id", &self.run_id, &mut result);
+        validate_identifier("job_id", &self.job_id, &mut result);
+        if self.finished_at < self.started_at {
+            result.push_error("finished_at", "must be greater than or equal to started_at");
+        }
+        if self.exit_status.is_success() && self.error.is_some() {
+            result.push_error("error", "must be absent when exit_status succeeded");
+        }
+        if !self.exit_status.is_success() {
+            match self.error.as_deref() {
+                Some(error) => {
+                    validate_non_empty("error", error, &mut result);
+                    validate_single_line("error", error, &mut result);
+                }
+                None => {
+                    result.push_error("error", "must be present when exit_status did not succeed");
+                }
+            }
+        }
+        for output_ref in &self.output_refs {
+            validate_run_ref("output_refs", output_ref, &mut result);
+        }
+        result
+    }
+}
+
+// ============================================================================
 // InstallPlan
 // ============================================================================
 
@@ -597,7 +862,11 @@ pub fn validate_job_spec(spec: &JobSpec) -> ValidationResult {
 
 fn validate_action(action: &JobAction, result: &mut ValidationResult) {
     match action {
-        JobAction::Command { program, args, input } => {
+        JobAction::Command {
+            program,
+            args,
+            input,
+        } => {
             validate_non_empty("action.program", program, result);
             validate_single_line("action.program", program, result);
             for arg in args {
@@ -721,10 +990,7 @@ fn validate_environment(entries: &[EnvironmentEntry], result: &mut ValidationRes
             result.push_error("env.value", "must not contain NUL bytes");
         }
         if entry.value.contains('\n') || entry.value.contains('\r') {
-            result.push_error(
-                "env.value",
-                "must not contain carriage returns or newlines",
-            );
+            result.push_error("env.value", "must not contain carriage returns or newlines");
         }
         if !seen.insert(entry.key.clone()) {
             result.push_error(
@@ -746,6 +1012,11 @@ fn validate_identifier(field: &str, value: &str, result: &mut ValidationResult) 
             "must contain only ASCII letters, digits, dots, underscores, or hyphens",
         );
     }
+}
+
+fn validate_run_ref(field: &str, value: &str, result: &mut ValidationResult) {
+    validate_non_empty(field, value, result);
+    validate_single_line(field, value, result);
 }
 
 fn validate_non_empty(field: &str, value: &str, result: &mut ValidationResult) {
@@ -1063,5 +1334,103 @@ mod tests {
 
         assert_eq!(datetime.to_iso8601_local(), "2026-04-17T09:05:00");
         assert_eq!(datetime.to_systemd_calendar(), "2026-04-17 09:05:00");
+    }
+
+    #[test]
+    fn installed_job_preserves_spec_identity_and_backend_metadata() {
+        let spec = example_job(JobTrigger::Daily {
+            hour: 3,
+            minute: 15,
+        });
+        let installed = InstalledJob::new(
+            BackendKind::SystemdUser,
+            spec.clone(),
+            1_776_000_000_000,
+            Some("chief-of-staff-memory-extract.service".to_string()),
+        );
+
+        assert_eq!(installed.job_id, spec.job_id);
+        assert_eq!(installed.backend, BackendKind::SystemdUser);
+        assert_eq!(installed.enabled, spec.enabled);
+        assert!(installed.validate().is_valid());
+    }
+
+    #[test]
+    fn successful_run_receipts_validate_and_report_duration() {
+        let receipt = JobRunReceipt::succeeded(
+            "run-1",
+            "memory-extract",
+            1_000,
+            1_250,
+            vec!["artifact:logs/memory-extract/run-1".to_string()],
+        );
+
+        assert!(receipt.exit_status.is_success());
+        assert_eq!(receipt.duration_ms(), 250);
+        assert!(receipt.validate().is_valid());
+    }
+
+    #[test]
+    fn failed_run_receipts_require_error_text() {
+        let mut receipt = JobRunReceipt::failed(
+            "run-2",
+            "memory-extract",
+            1_000,
+            2_000,
+            JobExitStatus::failed(Some(1)),
+            "agent runner exited with status 1",
+        );
+
+        assert!(receipt.validate().is_valid());
+
+        receipt.error = None;
+        let result = receipt.validate();
+        assert!(!result.is_valid());
+        assert!(result.errors.iter().any(|message| message.field == "error"));
+    }
+
+    #[test]
+    fn run_receipts_reject_time_travel_and_multiline_refs() {
+        let receipt = JobRunReceipt::succeeded(
+            "run-3",
+            "memory-extract",
+            2_000,
+            1_000,
+            vec!["artifact:logs\nbad".to_string()],
+        );
+
+        let result = receipt.validate();
+        assert!(!result.is_valid());
+        assert!(result
+            .errors
+            .iter()
+            .any(|message| message.field == "finished_at"));
+        assert!(result
+            .errors
+            .iter()
+            .any(|message| message.field == "output_refs"));
+    }
+
+    #[test]
+    fn job_status_validates_last_run_and_next_run_hint() {
+        let receipt = JobRunReceipt::succeeded("run-4", "memory-extract", 1_000, 1_100, Vec::new());
+        let status = JobStatus {
+            job_id: "memory-extract".to_string(),
+            backend: BackendKind::Launchd,
+            status: JobStatusKind::Installed,
+            enabled: true,
+            last_run: Some(receipt),
+            next_run_hint: Some(DateTimeParts {
+                year: 2026,
+                month: 5,
+                day: 8,
+                hour: 3,
+                minute: 15,
+                second: 0,
+            }),
+        };
+
+        assert!(status.validate().is_valid());
+        assert_eq!(status.status.to_string(), "installed");
     }
 }
