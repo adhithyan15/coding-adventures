@@ -531,6 +531,7 @@ members = [
     "conduit",
     "smart-home-core",
     "smart-home-discovery",
+    "smart-home-integration-catalog",
     "hue-core",
     "zigbee-nwk",
     "zwave-core",
