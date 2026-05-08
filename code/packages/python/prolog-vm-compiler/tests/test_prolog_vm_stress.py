@@ -1137,6 +1137,65 @@ class TestPrologVMStress:
             },
         ]
 
+    def test_stream_character_code_io_runs_through_vm(self, tmp_path: Path) -> None:
+        input_path = tmp_path / "chars-input.pltxt"
+        output_path = tmp_path / "chars-output.pltxt"
+        input_path.write_text("Az\n", encoding="utf-8")
+        input_atom = str(input_path).replace("\\", "\\\\").replace("'", "\\'")
+        output_atom = str(output_path).replace("\\", "\\\\").replace("'", "\\'")
+        compiled = compile_swi_prolog_source(
+            f"""
+            ?- open('{input_atom}', read, In, [alias(vm_char_input)]),
+               peek_char(In, Peeked),
+               get_code(In, FirstCode),
+               peek_code(In, PeekedCode),
+               get_char(In, SecondChar),
+               get_code(In, NewlineCode),
+               get_code(In, EofCode),
+               set_stream_position(vm_char_input, 0),
+               set_input(In),
+               get_char(CurrentFirst),
+               peek_code(CurrentNextCode),
+               get_code(CurrentNextCode),
+               close(In),
+               open('{output_atom}', write, Out, [alias(vm_char_output)]),
+               put_char(Out, h),
+               put_code(Out, 105),
+               set_output(vm_char_output),
+               put_char('!'),
+               put_code(10),
+               close(Out).
+            """,
+        )
+
+        answers = run_compiled_prolog_query_answers(compiled)
+
+        assert [
+            {
+                "Peeked": answer.as_dict()["Peeked"],
+                "FirstCode": answer.as_dict()["FirstCode"],
+                "PeekedCode": answer.as_dict()["PeekedCode"],
+                "SecondChar": answer.as_dict()["SecondChar"],
+                "NewlineCode": answer.as_dict()["NewlineCode"],
+                "EofCode": answer.as_dict()["EofCode"],
+                "CurrentFirst": answer.as_dict()["CurrentFirst"],
+                "CurrentNextCode": answer.as_dict()["CurrentNextCode"],
+            }
+            for answer in answers
+        ] == [
+            {
+                "Peeked": atom("A"),
+                "FirstCode": num(ord("A")),
+                "PeekedCode": num(ord("z")),
+                "SecondChar": atom("z"),
+                "NewlineCode": num(10),
+                "EofCode": num(-1),
+                "CurrentFirst": atom("A"),
+                "CurrentNextCode": num(ord("z")),
+            },
+        ]
+        assert output_path.read_text(encoding="utf-8") == "hi!\n"
+
     def test_current_stream_facade_runs_through_vm(self, tmp_path: Path) -> None:
         input_path = tmp_path / "current-input.pltxt"
         output_path = tmp_path / "current-output.pltxt"

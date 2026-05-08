@@ -14,6 +14,8 @@
 - adapt selected current-stream predicates including `set_input/1`,
   `set_output/1`, `current_input/1`, `current_output/1`, current-input read
   forms, and current-output write/flush forms
+- adapt bounded character/code stream predicates including `get_code/1,2`,
+  `peek_char/1,2`, `peek_code/1,2`, `put_char/1,2`, and `put_code/1,2`
 - adapt parser-backed stream term I/O predicates including `read/1`,
   `read/2`, `read_term/2`, `read_term/3`, `write_term/2`, and `write_term/3`
 - adapt term I/O conveniences including `read_term` `singletons/1`,

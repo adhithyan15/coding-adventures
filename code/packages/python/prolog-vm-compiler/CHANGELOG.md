@@ -23,8 +23,11 @@
 - Run term I/O convenience predicates through structured and bytecode VM paths,
   including `read_term` `singletons/1`, `writeq/1,2`,
   `write_canonical/1,2`, `writeln/1,2`, and `portray_clause/1,2`.
+- Run bounded character/code stream predicates through structured and bytecode
+  VM paths, including `get_code/1,2`, `peek_char/1,2`, `peek_code/1,2`,
+  `put_char/1,2`, and `put_code/1,2`.
 - Add a public Prolog VM capability manifest and `prolog-vm --dump-capabilities`
-  so scripts and future planning can distinguish the completed PR00-PR84 track
+  so scripts and future planning can distinguish the completed PR00-PR85 track
   from deferred advanced dialect/runtime work.
 - Add end-to-end stress coverage for recursive search, modules, DCGs,
   arithmetic, collections, dynamic initialization, named answers, and expansion.
