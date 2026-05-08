@@ -87,6 +87,16 @@ IDENTITY_MATRIX = IRSymbol("IdentityMatrix")
 ZERO_MATRIX = IRSymbol("ZeroMatrix")
 RANK = IRSymbol("Rank")
 ROW_REDUCE = IRSymbol("RowReduce")
+# Phase 32 — advanced matrix operations implemented in symbolic-vm ≥ 0.53.0
+# but missing from the MACSYMA name table until this release.
+EIGENVALUES = IRSymbol("Eigenvalues")
+EIGENVECTORS = IRSymbol("Eigenvectors")
+CHAR_POLY = IRSymbol("CharPoly")
+NULL_SPACE = IRSymbol("NullSpace")
+COLUMN_SPACE = IRSymbol("ColumnSpace")
+ROW_SPACE = IRSymbol("RowSpace")
+NORM = IRSymbol("Norm")
+LU = IRSymbol("LU")
 
 GCD = IRSymbol("Gcd")
 LCM = IRSymbol("Lcm")
@@ -140,6 +150,18 @@ ALG_FACTOR = IRSymbol("AlgFactor")
 GROEBNER = IRSymbol("Groebner")       # groebner(polys, vars) — Gröbner basis
 POLY_REDUCE = IRSymbol("PolyReduce")  # poly_reduce(f, polys, vars) — reduction
 IDEAL_SOLVE = IRSymbol("IdealSolve")  # ideal_solve(polys, vars) — solve system
+
+# Phase 32 — log/exp/trig transformation operations (A4)
+# These are implemented in symbolic-vm via cas_simplify.radcan,
+# cas_simplify.logcontract, etc. but were never added to the MACSYMA name table.
+RADCAN = IRSymbol("Radcan")
+LOG_CONTRACT = IRSymbol("LogContract")
+LOG_EXPAND = IRSymbol("LogExpand")
+EXPONENTIALIZE = IRSymbol("Exponentialize")
+DE_MOIVRE = IRSymbol("DeMoivre")
+
+# Phase 32 — cube root
+CBRT = IRSymbol("Cbrt")
 
 # Trig transformation heads (B1)
 TRIG_SIMPLIFY = IRSymbol("TrigSimplify")
@@ -214,6 +236,15 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "zeromatrix": ZERO_MATRIX,  # m×n zero matrix
     "rank": RANK,
     "rowreduce": ROW_REDUCE,
+    # Advanced matrix operations (Phase 32)
+    "eigenvalues": EIGENVALUES,
+    "eigenvectors": EIGENVECTORS,
+    "charpoly": CHAR_POLY,
+    "nullspace": NULL_SPACE,
+    "columnspace": COLUMN_SPACE,
+    "rowspace": ROW_SPACE,
+    "norm": NORM,
+    "lu": LU,
     # Newton's method numeric root finder
     "mnewton": MNEWTON,
     # Number-theoretic
@@ -243,6 +274,16 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "jacobi": JACOBI_SYMBOL,
     "chinese": CHINESE_REMAINDER,
     "numdigits": INTEGER_LENGTH,
+    # Log/exp/trig transformation operations (A4, Phase 32)
+    # These call into cas_simplify.radcan, cas_simplify.logcontract, etc.
+    # which are already wired in SymbolicBackend but needed MACSYMA name bindings.
+    "radcan": RADCAN,
+    "logcontract": LOG_CONTRACT,
+    "logexpand": LOG_EXPAND,
+    "exponentialize": EXPONENTIALIZE,
+    "demoivre": DE_MOIVRE,
+    # Cube root (Phase 32)
+    "cbrt": CBRT,
     # Trig transformation operations (B1)
     "trigsimp": TRIG_SIMPLIFY,
     "trigexpand": TRIG_EXPAND,
