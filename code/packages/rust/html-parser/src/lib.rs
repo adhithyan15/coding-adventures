@@ -844,6 +844,8 @@ impl HtmlParser {
             return;
         }
 
+        let formatting_reconstruction = self.take_formatting_reconstruction_for(&name);
+
         let acknowledges_self_closing = self_closing && is_void_element(&name);
         if self_closing && !acknowledges_self_closing {
             self.diagnostics.push(ParserDiagnostic::new(
@@ -855,6 +857,14 @@ impl HtmlParser {
         let child_index = self.append_node(Node::element(name.clone(), attributes));
 
         if !acknowledges_self_closing && !is_void_element(&name) {
+            let mut path = self.current_parent_path().to_vec();
+            path.push(child_index);
+            self.open_elements.push(path);
+        }
+
+        if let Some((formatting_name, formatting_attributes)) = formatting_reconstruction {
+            let child_index =
+                self.append_node(Node::element(formatting_name, formatting_attributes));
             let mut path = self.current_parent_path().to_vec();
             path.push(child_index);
             self.open_elements.push(path);
@@ -944,6 +954,25 @@ impl HtmlParser {
         true
     }
 
+    fn take_formatting_reconstruction_for(
+        &mut self,
+        incoming_name: &str,
+    ) -> Option<(String, Vec<Attribute>)> {
+        if !starts_formatting_reconstruction_boundary(incoming_name) {
+            return None;
+        }
+
+        let path = self.open_elements.last()?.clone();
+        let element = element_ref_at_path(&self.document, &path)?;
+        if !is_formatting_element(&element.name) {
+            return None;
+        }
+
+        let formatting = (element.name.clone(), element.attributes.clone());
+        self.open_elements.pop();
+        Some(formatting)
+    }
+
     fn apply_document_shell_implied_contexts(&mut self, incoming_name: &str) {
         if starts_body_after_head(incoming_name) {
             self.pop_current_if(|name| name == "head");
@@ -1000,6 +1029,9 @@ impl HtmlParser {
             .rposition(|path| element_at_path(&self.document, path).is_some_and(|n| n == name))
         {
             if is_formatting_element(name) && self.has_table_context_above(index) {
+                return;
+            }
+            if !is_special_element(name) && self.has_special_element_above(index) {
                 return;
             }
             self.open_elements.truncate(index);
@@ -1139,6 +1171,13 @@ impl HtmlParser {
             .any(|path| element_at_path(&self.document, path).is_some_and(is_table_context_element))
     }
 
+    fn has_special_element_above(&self, element_index: usize) -> bool {
+        self.open_elements
+            .iter()
+            .skip(element_index + 1)
+            .any(|path| element_at_path(&self.document, path).is_some_and(is_special_element))
+    }
+
     fn pop_current_if(&mut self, predicate: impl FnOnce(&str) -> bool) {
         let Some(path) = self.open_elements.last() else {
             return;
@@ -1198,6 +1237,13 @@ fn drain_parser_tokens(lexer: &mut HtmlLexer, parser: &mut HtmlParser) -> Result
 }
 
 fn element_at_path<'a>(document: &'a Document, path: &[usize]) -> Option<&'a str> {
+    element_ref_at_path(document, path).map(|element| element.name.as_str())
+}
+
+fn element_ref_at_path<'a>(
+    document: &'a Document,
+    path: &[usize],
+) -> Option<&'a dom_core::Element> {
     let mut nodes = document.children.as_slice();
     let mut current = None;
 
@@ -1205,7 +1251,7 @@ fn element_at_path<'a>(document: &'a Document, path: &[usize]) -> Option<&'a str
         let node = nodes.get(*index)?;
         match node {
             Node::Element(element) => {
-                current = Some(element.name.as_str());
+                current = Some(element);
                 nodes = element.children.as_slice();
             }
             _ => return None,
@@ -1422,6 +1468,14 @@ fn is_formatting_element(name: &str) -> bool {
             | "tt"
             | "u"
     )
+}
+
+fn starts_formatting_reconstruction_boundary(name: &str) -> bool {
+    matches!(name, "button" | "p")
+}
+
+fn is_special_element(name: &str) -> bool {
+    matches!(name, "button") || is_table_context_element(name)
 }
 
 fn is_heading_element(name: &str) -> bool {
