@@ -1,6 +1,7 @@
 """spice-engine: SPICE-compatible analog simulator (MNA + DC + transient)."""
 
 from spice_engine.elements import (
+    BJT,
     Capacitor,
     CurrentSource,
     Diode,
@@ -19,9 +20,10 @@ from spice_engine.engine import (
     transient,
 )
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 __all__ = [
+    "BJT",
     "Capacitor",
     "Circuit",
     "CurrentSource",

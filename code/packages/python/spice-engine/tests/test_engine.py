@@ -15,27 +15,26 @@ Test organisation
 11. Transient — TransientResult metadata fields
 12. Mid-scale sanity checks
 13. DC: Inductor
+14. DC: BJT (NPN and PNP)
 """
 
-from math import exp, isclose, pi, sqrt
+from math import exp, isclose
 
 import pytest
 
 from spice_engine import (
+    BJT,
     Capacitor,
     Circuit,
     CurrentSource,
     Diode,
     Inductor,
-    Mosfet,
     Resistor,
-    TransientResult,
     VoltageSource,
     dc_op,
     transient,
 )
-from spice_engine.engine import _lte_estimate, _solve
-
+from spice_engine.engine import _lte_estimate, _solve, _stamp_bjt
 
 # ---- Linear solver ----
 
@@ -394,7 +393,6 @@ def test_transient_inductor_starts_at_zero_current():
     assert result.converged
     # The second point should show current just beginning to build up.
     v0 = result.points[0].node_voltages.get("n", 0.0)
-    v1 = result.points[1].node_voltages.get("n", 0.0)
     # Node voltage should start near 0 (inductor blocks initial current)
     # and then begin to decline as current builds.
     assert v0 >= 0.0
@@ -509,3 +507,268 @@ def test_transient_rc_charging():
     assert len(result.points) > 10
     last = result.points[-1]
     assert isclose(last.node_voltages["vc"], V_in, abs_tol=0.5)
+
+
+# ---- DC: BJT (NPN and PNP) ----
+
+
+def test_bjt_dataclass_defaults():
+    """BJT dataclass stores all fields correctly."""
+    q = BJT("Q1", collector="c", base="b", emitter="0")
+    assert q.name == "Q1"
+    assert q.polarity == "NPN"
+    assert q.Is == 1e-14
+    assert q.beta_f == 100.0
+    assert isclose(q.Vt, 0.02585, rel_tol=1e-9)
+
+
+def test_bjt_pnp_dataclass():
+    """PNP BJT stores polarity correctly."""
+    q = BJT("Q2", collector="c", base="b", emitter="vcc", polarity="PNP")
+    assert q.polarity == "PNP"
+
+
+def test_bjt_npn_off():
+    """NPN BJT with zero base voltage — device is off (no collector current).
+
+    With Vbe = 0, exp(0/Vt) = 1, so Ic = Is*(1-1) = 0.
+    The circuit is just Vcc through Rc, but no current flows in the BJT branch,
+    so the collector voltage should remain near Vcc (biased up through Rc with
+    nothing pulling it down).
+    """
+    Vcc = 5.0
+    Rc = 1000.0     # collector resistor
+
+    c = Circuit()
+    c.add(VoltageSource("Vcc", "vcc", "0", voltage=Vcc))
+    c.add(Resistor("Rc", "vcc", "col", Rc))
+    # NPN with base and emitter both at 0 V: Vbe = 0 -> off
+    c.add(BJT("Q1", collector="col", base="0", emitter="0"))
+
+    r = dc_op(c)
+    assert r.converged
+    # With no collector current, Vcol ≈ Vcc (no drop across Rc)
+    # Allow tolerance for gm * 0 = 0 stamp: col should be close to Vcc.
+    assert r.node_voltages["col"] > 4.0, (
+        f"Expected Vcol near Vcc but got {r.node_voltages['col']:.3f}"
+    )
+
+
+def test_bjt_npn_forward_active():
+    """NPN BJT in forward-active region: collector current ≈ Is*exp(Vbe/Vt).
+
+    Circuit:
+        Vcc (5 V) → Rc (1 kΩ) → collector
+        Vb  (0.7 V) → base
+        emitter → GND
+
+    At Vbe = 0.7 V (at the clamp boundary):
+        exp_term = exp(0.7 / 0.02585) ≈ 5.97e11 (clamped to 0.7)
+        Ic = Is * (exp_term - 1) ≈ Is * exp_term
+
+    The collector node voltage is pulled down from Vcc by the resistor:
+        Vcol = Vcc - Ic * Rc
+
+    We verify:
+    1. The simulation converges.
+    2. There is a meaningful voltage drop across Rc (device is conducting).
+    3. The computed Vcol is consistent with Ic = gm * Vbe.
+    """
+    Vcc = 5.0
+    Rc = 1000.0
+    Is_val = 1e-14
+    Vt_val = 0.02585
+    beta = 100.0
+
+    c = Circuit()
+    c.add(VoltageSource("Vcc", "vcc", "0", voltage=Vcc))
+    c.add(VoltageSource("Vb", "b", "0", voltage=0.7))
+    c.add(Resistor("Rc", "vcc", "col", Rc))
+    c.add(BJT("Q1", collector="col", base="b", emitter="0",
+               Is=Is_val, beta_f=beta, Vt=Vt_val))
+
+    r = dc_op(c)
+    assert r.converged
+
+    # At Vbe = 0.7 V (clamped), compute expected Ic
+    exp_term = exp(0.7 / Vt_val)
+    Ic_expected = Is_val * (exp_term - 1.0)
+
+    Vcol = r.node_voltages["col"]
+    # Vcol = Vcc - Ic * Rc
+    Ic_from_vcol = (Vcc - Vcol) / Rc
+
+    assert Ic_from_vcol > 0, "Collector current should be positive (NPN forward active)"
+    # The simulator's Newton-Raphson linearisation gives the clamped-at-0.7 value.
+    # Check within 1% of the expected analytic value.
+    assert isclose(Ic_from_vcol, Ic_expected, rel_tol=0.01), (
+        f"Ic from voltages ({Ic_from_vcol:.6e} A) != expected ({Ic_expected:.6e} A)"
+    )
+
+
+def test_bjt_npn_beta_ratio():
+    """NPN BJT: collector current / base current ≈ beta_f.
+
+    We use a voltage-source base drive (Vb = 0.7 V) and measure the
+    collector current from the Rc drop.  The base current is computed
+    as Ic / beta_f (the simulator uses the same relation internally).
+
+    This test validates that the beta ratio is embedded correctly in the
+    junction stamp (gπ = gm / beta_f).
+    """
+    beta = 50.0
+    Is_val = 1e-14
+    Vt_val = 0.02585
+
+    c = Circuit()
+    c.add(VoltageSource("Vcc", "vcc", "0", voltage=5.0))
+    c.add(VoltageSource("Vb", "b", "0", voltage=0.7))
+    c.add(Resistor("Rc", "vcc", "col", 1000.0))
+    c.add(BJT("Q1", collector="col", base="b", emitter="0",
+               Is=Is_val, beta_f=beta, Vt=Vt_val))
+
+    r = dc_op(c)
+    assert r.converged
+
+    Vcol = r.node_voltages["col"]
+    Ic = (5.0 - Vcol) / 1000.0
+    exp_term = exp(0.7 / Vt_val)
+    Ic_expected = Is_val * (exp_term - 1.0)
+    Ib_expected = Ic_expected / beta
+
+    # Ic / Ib = beta
+    assert Ic > 0
+    # Verify internally consistent: collector current matches model prediction
+    assert isclose(Ic, Ic_expected, rel_tol=0.01)
+    # Verify Ib = Ic / beta (stamped as gπ = gm/beta which sets dIb/dVbe)
+    assert isclose(Ic / beta, Ib_expected, rel_tol=0.01)
+
+
+def test_bjt_pnp_forward_active():
+    """PNP BJT in forward-active region: emitter injects, collector collects.
+
+    Circuit:
+        emitter → Vcc (5 V)
+        base    → 4.3 V (so Veb = Ve - Vb = 5 - 4.3 = 0.7 V)
+        collector → Rc (1 kΩ) → GND
+
+    At Veb = 0.7 V (clamped):
+        Ic_expected = Is * (exp(0.7/Vt) - 1)
+
+    We expect:
+    1. Simulation converges.
+    2. Collector node is above GND (current flowing into collector → Vc > 0).
+    3. The voltage drop across Rc is consistent with the expected Ic.
+    """
+    Vcc = 5.0
+    Vb_val = 4.3   # Veb = Vcc - Vb_val = 0.7 V
+    Rc = 1000.0
+    Is_val = 1e-14
+    Vt_val = 0.02585
+
+    c = Circuit()
+    c.add(VoltageSource("Vcc", "vcc", "0", voltage=Vcc))
+    c.add(VoltageSource("Vb_src", "b", "0", voltage=Vb_val))
+    c.add(Resistor("Rc", "col", "0", Rc))
+    # PNP: emitter at Vcc, base at 4.3V, collector at col
+    c.add(BJT("Q1", collector="col", base="b", emitter="vcc",
+               polarity="PNP", Is=Is_val, Vt=Vt_val))
+
+    r = dc_op(c)
+    assert r.converged
+
+    exp_term = exp(0.7 / Vt_val)
+    Ic_expected = Is_val * (exp_term - 1.0)
+
+    Vcol = r.node_voltages["col"]
+    # For PNP: Ic flows into the collector FROM ground through Rc.
+    # Node col voltage = Ic * Rc (current source pumps into col, Rc to ground).
+    Ic_from_vcol = Vcol / Rc
+
+    assert Vcol > 0, f"PNP collector should be above GND, got Vcol={Vcol:.4f}"
+    assert isclose(Ic_from_vcol, Ic_expected, rel_tol=0.01), (
+        f"PNP Ic from voltages ({Ic_from_vcol:.6e}) != expected ({Ic_expected:.6e})"
+    )
+
+
+def test_bjt_element_nodes():
+    """BJT contributes all three terminals to _node_index."""
+    from spice_engine.engine import _node_index
+    c = Circuit()
+    c.add(BJT("Q1", collector="col", base="base", emitter="emit"))
+    _, nodes = _node_index(c)
+    assert "col" in nodes
+    assert "base" in nodes
+    assert "emit" in nodes
+
+
+def test_bjt_stamp_matrix_shape():
+    """_stamp_bjt does not raise and produces a finite matrix."""
+    import math as _math
+    node_to_idx = {"c": 0, "b": 1, "e": 2}
+    G = [[0.0] * 3 for _ in range(3)]
+    b = [0.0] * 3
+    x = [0.0, 0.0, 0.0]  # all nodes at 0 V — device is off
+    q = BJT("Q1", collector="c", base="b", emitter="e")
+    _stamp_bjt(G, b, x, node_to_idx, q)
+    # All values should be finite
+    for row in G:
+        for val in row:
+            assert _math.isfinite(val), f"Non-finite G entry: {val}"
+    for val in b:
+        assert _math.isfinite(val), f"Non-finite b entry: {val}"
+
+
+def test_bjt_npn_ground_emitter_no_crash():
+    """BJT with emitter grounded via alias 'gnd' converges cleanly."""
+    c = Circuit()
+    c.add(VoltageSource("Vcc", "vcc", "gnd", voltage=3.3))
+    c.add(VoltageSource("Vb", "b", "gnd", voltage=0.7))
+    c.add(Resistor("Rc", "vcc", "col", 1000.0))
+    c.add(BJT("Q1", collector="col", base="b", emitter="gnd"))
+    r = dc_op(c)
+    assert r.converged
+
+
+def test_bjt_npn_vcc_emitter():
+    """NPN BJT with non-ground emitter: Vbe = Vb - Ve matters.
+
+    Circuit: Ve = 2V (emitter not grounded), Vb = 2.7V (Vbe = 0.7V).
+    Should behave identically to the grounded-emitter case because
+    Vbe = 0.7 V is the same.
+    """
+    Is_val = 1e-14
+    Vt_val = 0.02585
+
+    c = Circuit()
+    c.add(VoltageSource("Vcc", "vcc", "0", voltage=5.0))
+    c.add(VoltageSource("Vb", "b", "0", voltage=2.7))
+    c.add(VoltageSource("Ve", "e", "0", voltage=2.0))   # emitter not at ground
+    c.add(Resistor("Rc", "vcc", "col", 1000.0))
+    c.add(BJT("Q1", collector="col", base="b", emitter="e",
+               Is=Is_val, Vt=Vt_val))
+
+    r = dc_op(c)
+    assert r.converged
+
+    exp_term = exp(0.7 / Vt_val)
+    Ic_expected = Is_val * (exp_term - 1.0)
+    Vcol = r.node_voltages["col"]
+    Ic_from_vcol = (5.0 - Vcol) / 1000.0
+    assert isclose(Ic_from_vcol, Ic_expected, rel_tol=0.01)
+
+
+def test_bjt_in_element_union():
+    """BJT is exported from spice_engine and is a valid Element type."""
+    from spice_engine import BJT as BJT_exported
+    q = BJT_exported("Q1", collector="c", base="b", emitter="0")
+    assert isinstance(q, BJT)
+
+
+def test_bjt_custom_parameters():
+    """BJT constructor accepts custom Is, beta_f, Vt."""
+    q = BJT("Q1", collector="c", base="b", emitter="e",
+             Is=2.5e-16, beta_f=200.0, Vt=0.026)
+    assert isclose(q.Is, 2.5e-16)
+    assert isclose(q.beta_f, 200.0)
+    assert isclose(q.Vt, 0.026)

@@ -46,6 +46,7 @@ import math
 from dataclasses import dataclass, field
 
 from spice_engine.elements import (
+    BJT,
     Capacitor,
     CurrentSource,
     Diode,
@@ -132,6 +133,8 @@ def _element_nodes(el: Element) -> list[str]:
         return [el.anode, el.cathode]
     if isinstance(el, Mosfet):
         return [el.drain, el.gate, el.source, el.body]
+    if isinstance(el, BJT):
+        return [el.collector, el.base, el.emitter]
     return []
 
 
@@ -213,6 +216,8 @@ def _stamp_dc(
         _stamp_diode(G, b, x, node_to_idx, el)
     elif isinstance(el, Mosfet):
         _stamp_mosfet(G, b, x, node_to_idx, el)
+    elif isinstance(el, BJT):
+        _stamp_bjt(G, b, x, node_to_idx, el)
     elif isinstance(el, Capacitor):
         # In DC, capacitors are open circuits — no conductance contribution
         pass
@@ -328,6 +333,144 @@ def _stamp_mosfet(
         b[node_to_idx[el.drain]] -= Ieq
     if not _is_ground(el.source):
         b[node_to_idx[el.source]] += Ieq
+
+
+def _stamp_bjt(
+    G: list[list[float]],
+    b: list[float],
+    x: list[float],
+    node_to_idx: dict[str, int],
+    el: BJT,
+) -> None:
+    """Linearized BJT using a simplified Ebers-Moll (forward-active) model.
+
+    Simplified Ebers-Moll (forward-active only)
+    -------------------------------------------
+    The full Ebers-Moll model has both forward- and reverse-saturation currents.
+    For the forward-active region (the dominant operating mode of a BJT amplifier
+    or switch) the collector current is well approximated by::
+
+        Ic = Is * (exp(Vjunc / Vt) - 1)
+
+    where Vjunc is the controlling junction voltage (Vbe for NPN, Veb for PNP).
+    The base current follows from the current gain: Ib = Ic / beta_f.
+
+    Newton linearisation
+    --------------------
+    At operating point voltage Vjunc0 (clamped to 0.7 V to prevent exp overflow)::
+
+        exp_term = exp(Vjunc0 / Vt)
+        Ic0      = Is * (exp_term - 1)          # collector current at OP
+        gm       = (Is / Vt) * exp_term          # transconductance dIc/dVjunc
+        gπ       = gm / beta_f                   # junction conductance dIb/dVjunc
+        Ib0      = Ic0 / beta_f                  # base current at OP
+
+    The linearised device model has two stamping components:
+
+    1. **Junction conductance gπ** (models the B-E diode resistance):
+       Stamped as a conductance between the junction terminals:
+       - NPN: between B and E  (controls base current)
+       - PNP: between E and B  (same, but polarity-flipped circuit)
+
+       Norton companion for the junction:
+           Ieq_junc = Ib0 - gπ * Vjunc0
+
+    2. **Voltage-controlled current source (VCCS) for gm** (transconductance):
+       Ic = gm * Vjunc, controlled by the junction voltage.
+       The VCCS has its *control* nodes on the junction pair and its
+       *output* nodes on the collector-emitter pair.
+
+       For NPN (Vjunc = Vb - Ve, current flows into C):
+           G[C][B] += gm   (drain: collector, control+: base)
+           G[C][E] -= gm   (drain: collector, control-: emitter)
+           G[E][B] -= gm   (source: emitter, control+: base — KCL)
+           G[E][E] += gm   (source: emitter, control-: emitter — KCL)
+           b[C]    -= Ieq_c   (Norton offset, Ieq_c = Ic0 - gm*Vjunc0)
+           b[E]    += Ieq_c
+
+       For PNP (Vjunc = Ve - Vb, current flows out of C, i.e. leaves E):
+           G[E][E] += gm   (drain-side: emitter plays C role for PNP)
+           G[E][B] -= gm
+           G[C][E] -= gm
+           G[C][B] += gm
+           b[E]    -= Ieq_c
+           b[C]    += Ieq_c
+
+    Why the sign inversion for PNP?  In a PNP the emitter is the injecting
+    terminal (analogous to the NPN collector) and current flows from emitter
+    to collector in the conventional direction.  Swapping C↔E and negating
+    the control voltage (Ve - Vb vs Vb - Ve) yields the correct KCL stamps.
+    """
+    # --- Resolve node voltages at the current Newton iterate -----------------
+    Vb = 0.0 if _is_ground(el.base) else x[node_to_idx[el.base]]
+    Ve = 0.0 if _is_ground(el.emitter) else x[node_to_idx[el.emitter]]
+
+    # --- Controlling junction voltage (clamped to avoid exp overflow) --------
+    Vjunc = min(Vb - Ve, 0.7) if el.polarity == "NPN" else min(Ve - Vb, 0.7)
+
+    exp_term = math.exp(Vjunc / el.Vt)
+    Ic0 = el.Is * (exp_term - 1.0)
+    gm = (el.Is / el.Vt) * exp_term
+    g_pi = gm / el.beta_f
+    Ib0 = Ic0 / el.beta_f
+
+    Ieq_junc = Ib0 - g_pi * Vjunc      # junction Norton offset
+    Ieq_coll = Ic0 - gm * Vjunc        # VCCS Norton offset
+
+    if el.polarity == "NPN":
+        # --- Junction stamp: gπ between B and E ------------------------------
+        _stamp_g(G, node_to_idx, el.base, el.emitter, g_pi)
+        if not _is_ground(el.base):
+            b[node_to_idx[el.base]] -= Ieq_junc
+        if not _is_ground(el.emitter):
+            b[node_to_idx[el.emitter]] += Ieq_junc
+
+        # --- VCCS stamp: gm * (Vb - Ve) drives Ic into C, out of E ----------
+        if not _is_ground(el.collector):
+            c_idx = node_to_idx[el.collector]
+            if not _is_ground(el.base):
+                G[c_idx][node_to_idx[el.base]] += gm
+            if not _is_ground(el.emitter):
+                G[c_idx][node_to_idx[el.emitter]] -= gm
+        if not _is_ground(el.emitter):
+            e_idx = node_to_idx[el.emitter]
+            if not _is_ground(el.base):
+                G[e_idx][node_to_idx[el.base]] -= gm
+            if not _is_ground(el.emitter):
+                G[e_idx][node_to_idx[el.emitter]] += gm
+        # Norton companion for collector current
+        if not _is_ground(el.collector):
+            b[node_to_idx[el.collector]] -= Ieq_coll
+        if not _is_ground(el.emitter):
+            b[node_to_idx[el.emitter]] += Ieq_coll
+
+    else:
+        # PNP: Vjunc = Ve - Vb; emitter injects, collector collects.
+        # --- Junction stamp: gπ between E and B ------------------------------
+        _stamp_g(G, node_to_idx, el.emitter, el.base, g_pi)
+        if not _is_ground(el.emitter):
+            b[node_to_idx[el.emitter]] -= Ieq_junc
+        if not _is_ground(el.base):
+            b[node_to_idx[el.base]] += Ieq_junc
+
+        # --- VCCS stamp: gm * (Ve - Vb) drives Ic out of E, into C ----------
+        if not _is_ground(el.emitter):
+            e_idx = node_to_idx[el.emitter]
+            if not _is_ground(el.emitter):
+                G[e_idx][node_to_idx[el.emitter]] += gm
+            if not _is_ground(el.base):
+                G[e_idx][node_to_idx[el.base]] -= gm
+        if not _is_ground(el.collector):
+            c_idx = node_to_idx[el.collector]
+            if not _is_ground(el.emitter):
+                G[c_idx][node_to_idx[el.emitter]] -= gm
+            if not _is_ground(el.base):
+                G[c_idx][node_to_idx[el.base]] += gm
+        # Norton companion for collector current (enters C, leaves E)
+        if not _is_ground(el.emitter):
+            b[node_to_idx[el.emitter]] -= Ieq_coll
+        if not _is_ground(el.collector):
+            b[node_to_idx[el.collector]] += Ieq_coll
 
 
 # ---------------------------------------------------------------------------
@@ -780,7 +923,6 @@ def transient(
                 continue
 
             # Accept step; consider doubling h for the next step.
-            t_cur = t
             t_actual = t  # the time we are committing to
             _update_reactive_state(
                 circuit, h, method, op,
