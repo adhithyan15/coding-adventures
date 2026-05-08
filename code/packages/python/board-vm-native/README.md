@@ -13,6 +13,10 @@ session = Session()
 frames = session.blink(program_id=1, instruction_budget=12).frames
 read_frames = session.gpio_read(pin=13, mode="pullup").frames
 write_frames = session.gpio_write(pin=13, value=True).frames
+open_frames = session.gpio_open(pin=13, mode="output").frames
+handle_write_frames = session.gpio_handle_write(value=True).frames
+handle_read_frames = session.gpio_handle_read().frames
+handle_close_frames = session.gpio_handle_close().frames
 now_frames = session.time_now(program_id=2, instruction_budget=12).frames
 sleep_frames = session.time_sleep_ms(250, program_id=3, instruction_budget=12).frames
 store_frame = session.store_program(program_id=1, slot=0, boot_policy="run-if-no-host").frame
@@ -53,12 +57,22 @@ session.gpio_high(pin=13)
 session.gpio_low(pin=13)
 ```
 
+For REPL-style sessions that keep a handle open across calls, the handle helpers
+use Rust-built modules that operate on the VM's top stack handle. `gpio_open()`
+duplicates the opened handle so the host can see it in the decoded run report
+while the VM keeps the original handle for later `gpio_handle_read()`,
+`gpio_handle_write()`, and `gpio_handle_close()` calls.
+
 The REPL-style sugar is intentionally thin as well:
 
 ```python
 session.run_command("store-program 1 0 run-if-no-host")
 session.run_command("gpio-read 13 pullup 24")
 session.run_command("gpio-write 13 high 24")
+session.run_command("gpio-open 13 output 24")
+session.run_command("gpio-handle-write high 24")
+session.run_command("gpio-handle-read 24")
+session.run_command("gpio-handle-close 24")
 session.run_command("time-sleep-ms 250 24")
 session.run_command("stop")
 ```

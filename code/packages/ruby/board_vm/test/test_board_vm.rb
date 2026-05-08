@@ -213,6 +213,10 @@ module CodingAdventures
             sleep_upload = session.upload_time_sleep_ms(program_id: 8, duration_ms: 250)
             gpio_upload = session.upload_gpio_read(program_id: 6, pin: 13, mode: :pullup)
             gpio_write_upload = session.upload_gpio_write(program_id: 7, pin: 13, value: true)
+            gpio_open_upload = session.upload_gpio_open(program_id: 10, pin: 13, mode: :output)
+            gpio_handle_read_upload = session.upload_gpio_handle_read(program_id: 11)
+            gpio_handle_write_upload = session.upload_gpio_handle_write(program_id: 12, value: true)
+            gpio_handle_close_upload = session.upload_gpio_handle_close(program_id: 13)
             store = session.store_program(program_id: 4, slot: 2, boot_policy: :run_at_boot)
             raw_module = session.raw_module(code: "\x00".b, max_stack: 1, const_pool: "\xAA\x55".b)
             raw_upload = session.upload_raw_module(
@@ -242,6 +246,14 @@ module CodingAdventures
               gpio_upload.results.map(&:command)
             assert_equal [:program_begin, :program_chunk, :program_end],
               gpio_write_upload.results.map(&:command)
+            assert_equal [:program_begin, :program_chunk, :program_end],
+              gpio_open_upload.results.map(&:command)
+            assert_equal [:program_begin, :program_chunk, :program_end],
+              gpio_handle_read_upload.results.map(&:command)
+            assert_equal [:program_begin, :program_chunk, :program_end],
+              gpio_handle_write_upload.results.map(&:command)
+            assert_equal [:program_begin, :program_chunk, :program_end],
+              gpio_handle_close_upload.results.map(&:command)
             assert_equal :store_program, store.command
             assert raw_module.start_with?("BVM1")
             assert raw_module.end_with?("\xAA\x55".b)
@@ -254,7 +266,7 @@ module CodingAdventures
         end
 
         assert_empty runner.calls
-        assert_equal 24, transport.frames.length
+        assert_equal 36, transport.frames.length
         assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
       end
 
@@ -344,6 +356,32 @@ module CodingAdventures
           assert_equal [:program_begin, :program_chunk, :program_end, :run],
             low.results.map(&:command)
           assert_equal write.frames + high.frames + low.frames, transport.frames
+        end
+      end
+
+      def test_session_run_command_accepts_repl_style_gpio_handle_commands
+        transport = FakeWriteTransport.new
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new,
+          transport: transport
+        ) do |board|
+          open = board.session.run_command("gpio-open 13 output 24", program_id: 9)
+          read = board.session.run_command("gpio-handle-read 24", program_id: 10)
+          write = board.session.run_command("gpio-handle-write high 24", program_id: 11)
+          close = board.session.run_command("gpio-handle-close 24", program_id: 12)
+
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            open.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            read.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            write.results.map(&:command)
+          assert_equal [:program_begin, :program_chunk, :program_end, :run],
+            close.results.map(&:command)
+          assert_equal open.frames + read.frames + write.frames + close.frames, transport.frames
         end
       end
 
@@ -464,6 +502,22 @@ module CodingAdventures
         gpio_write_module_bytes = session.gpio_write_module(13, 1, 3)
         assert_instance_of String, gpio_write_module_bytes
         assert_operator gpio_write_module_bytes.bytesize, :>, 0
+
+        gpio_open_module_bytes = session.gpio_open_module(13, 1, 2)
+        assert_instance_of String, gpio_open_module_bytes
+        assert_operator gpio_open_module_bytes.bytesize, :>, 0
+
+        gpio_handle_read_module_bytes = session.gpio_handle_read_module(2)
+        assert_instance_of String, gpio_handle_read_module_bytes
+        assert_operator gpio_handle_read_module_bytes.bytesize, :>, 0
+
+        gpio_handle_write_module_bytes = session.gpio_handle_write_module(1, 3)
+        assert_instance_of String, gpio_handle_write_module_bytes
+        assert_operator gpio_handle_write_module_bytes.bytesize, :>, 0
+
+        gpio_handle_close_module_bytes = session.gpio_handle_close_module(1)
+        assert_instance_of String, gpio_handle_close_module_bytes
+        assert_operator gpio_handle_close_module_bytes.bytesize, :>, 0
 
         store = session.store_program_wire(7, 2, 1)
         assert_instance_of String, store

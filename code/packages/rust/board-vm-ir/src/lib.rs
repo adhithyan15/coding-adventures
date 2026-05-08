@@ -209,7 +209,11 @@ pub fn validate(
     }
 
     let mut ip = 0;
-    let mut depth: i16 = 0;
+    let mut depth: i16 = if module.flags & FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES != 0 {
+        1
+    } else {
+        0
+    };
     while ip < module.code.len() {
         let instruction_start = ip;
         let (op, next_ip) = decode_next(module.code, ip).map_err(ValidateError::Decode)?;
@@ -460,6 +464,33 @@ mod tests {
 
         assert_eq!(count, 1);
         assert_eq!(capabilities[0], 0x1234);
+    }
+
+    #[test]
+    fn persistent_handle_modules_validate_with_existing_stack_handle() {
+        let module = Module {
+            flags: FLAG_PROGRAM_REQUESTS_PERSISTENT_HANDLES,
+            max_stack: 1,
+            code: &[0x40, CAP_GPIO_CLOSE as u8],
+            const_pool: &[],
+        };
+
+        validate(&module, CapabilitySet::blink_mvp(), 8).unwrap();
+    }
+
+    #[test]
+    fn handle_stack_modules_without_persistent_flag_still_underflow() {
+        let module = Module {
+            flags: 0,
+            max_stack: 1,
+            code: &[0x40, CAP_GPIO_CLOSE as u8],
+            const_pool: &[],
+        };
+
+        assert_eq!(
+            validate(&module, CapabilitySet::blink_mvp(), 8),
+            Err(ValidateError::StackUnderflow(0))
+        );
     }
 
     #[test]

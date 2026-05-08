@@ -39,6 +39,10 @@ GPIO_READ_MODES = {
     "input_pulldown": 3,
     "pulldown": 3,
 }
+GPIO_MODES = {
+    **GPIO_READ_MODES,
+    "output": 1,
+}
 
 
 @dataclass(frozen=True)
@@ -215,6 +219,18 @@ class Session:
     def gpio_write_module(self, *, pin: int, value: bool, max_stack: int = 3) -> bytes:
         return _native.gpio_write_module(pin, 1 if value else 0, max_stack)
 
+    def gpio_open_module(self, *, pin: int, mode: str | int = "output", max_stack: int = 2) -> bytes:
+        return _native.gpio_open_module(pin, self._gpio_mode(mode), max_stack)
+
+    def gpio_handle_read_module(self, max_stack: int = 2) -> bytes:
+        return _native.gpio_handle_read_module(max_stack)
+
+    def gpio_handle_write_module(self, *, value: bool, max_stack: int = 3) -> bytes:
+        return _native.gpio_handle_write_module(1 if value else 0, max_stack)
+
+    def gpio_handle_close_module(self, max_stack: int = 1) -> bytes:
+        return _native.gpio_handle_close_module(max_stack)
+
     def time_now_module(self, max_stack: int = 1) -> bytes:
         return _native.time_now_module(max_stack)
 
@@ -293,6 +309,53 @@ class Session:
         return self.upload(
             program_id=program_id,
             module_bytes=self.gpio_write_module(pin=pin, value=value, max_stack=max_stack),
+        )
+
+    def upload_gpio_open(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        pin: int,
+        mode: str | int = "output",
+        max_stack: int = 2,
+    ) -> SessionResult:
+        return self.upload(
+            program_id=program_id,
+            module_bytes=self.gpio_open_module(pin=pin, mode=mode, max_stack=max_stack),
+        )
+
+    def upload_gpio_handle_read(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        max_stack: int = 2,
+    ) -> SessionResult:
+        return self.upload(
+            program_id=program_id,
+            module_bytes=self.gpio_handle_read_module(max_stack=max_stack),
+        )
+
+    def upload_gpio_handle_write(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        value: bool,
+        max_stack: int = 3,
+    ) -> SessionResult:
+        return self.upload(
+            program_id=program_id,
+            module_bytes=self.gpio_handle_write_module(value=value, max_stack=max_stack),
+        )
+
+    def upload_gpio_handle_close(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        max_stack: int = 1,
+    ) -> SessionResult:
+        return self.upload(
+            program_id=program_id,
+            module_bytes=self.gpio_handle_close_module(max_stack=max_stack),
         )
 
     def upload_time_now(
@@ -455,6 +518,101 @@ class Session:
     def gpio_low(self, *, pin: int, **options: Any) -> SessionResult:
         return self.gpio_write(pin=pin, value=False, **options)
 
+    def gpio_open(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        instruction_budget: int = DEFAULT_INSTRUCTION_BUDGET,
+        handshake: bool = False,
+        query_caps: bool = False,
+        pin: int,
+        mode: str | int = "output",
+        max_stack: int = 2,
+    ) -> SessionResult:
+        results: list[ProtocolResult] = []
+        if handshake:
+            results.append(self.hello())
+        if query_caps:
+            results.append(self.capabilities())
+        results.extend(
+            self.upload_gpio_open(
+                program_id=program_id,
+                pin=pin,
+                mode=mode,
+                max_stack=max_stack,
+            ).results
+        )
+        results.append(
+            self.run(
+                program_id=program_id,
+                instruction_budget=instruction_budget,
+                keep_handles=True,
+                background=False,
+            )
+        )
+        return SessionResult(results)
+
+    def gpio_handle_read(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        instruction_budget: int = DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: int = 2,
+    ) -> SessionResult:
+        results = self.upload_gpio_handle_read(program_id=program_id, max_stack=max_stack).results
+        results.append(
+            self.run(
+                program_id=program_id,
+                instruction_budget=instruction_budget,
+                reset_vm=False,
+                keep_handles=True,
+                background=False,
+            )
+        )
+        return SessionResult(results)
+
+    def gpio_handle_write(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        instruction_budget: int = DEFAULT_INSTRUCTION_BUDGET,
+        value: bool,
+        max_stack: int = 3,
+    ) -> SessionResult:
+        results = self.upload_gpio_handle_write(
+            program_id=program_id,
+            value=value,
+            max_stack=max_stack,
+        ).results
+        results.append(
+            self.run(
+                program_id=program_id,
+                instruction_budget=instruction_budget,
+                reset_vm=False,
+                keep_handles=True,
+                background=False,
+            )
+        )
+        return SessionResult(results)
+
+    def gpio_handle_close(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        instruction_budget: int = DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: int = 1,
+    ) -> SessionResult:
+        results = self.upload_gpio_handle_close(program_id=program_id, max_stack=max_stack).results
+        results.append(
+            self.run(
+                program_id=program_id,
+                instruction_budget=instruction_budget,
+                reset_vm=False,
+                background=False,
+            )
+        )
+        return SessionResult(results)
+
     def time_now(
         self,
         *,
@@ -522,6 +680,20 @@ class Session:
             return self.upload_gpio_write(
                 **self._with_gpio_write_options(words, command, options, allow_budget=False)
             )
+        if command in {"upload-gpio-open", "upload-gpio.open"}:
+            return self.upload_gpio_open(
+                **self._with_gpio_open_options(words, command, options, allow_budget=False)
+            )
+        if command in {"upload-gpio-handle-read", "upload-gpio.handle-read"}:
+            self._ensure_no_extra(words, command)
+            return self.upload_gpio_handle_read(**options)
+        if command in {"upload-gpio-handle-write", "upload-gpio.handle-write"}:
+            return self.upload_gpio_handle_write(
+                **self._with_gpio_handle_write_options(words, command, options, allow_budget=False)
+            )
+        if command in {"upload-gpio-handle-close", "upload-gpio.handle-close"}:
+            self._ensure_no_extra(words, command)
+            return self.upload_gpio_handle_close(**options)
         if command in {"upload-time-now", "upload-time.now"}:
             self._ensure_no_extra(words, command)
             return self.upload_time_now(**options)
@@ -546,6 +718,16 @@ class Session:
             return self.gpio_write(**self._with_gpio_level_options(words, command, options, value=True))
         if command in {"gpio-low", "gpio.low"}:
             return self.gpio_write(**self._with_gpio_level_options(words, command, options, value=False))
+        if command in {"gpio-open", "gpio.open"}:
+            return self.gpio_open(**self._with_gpio_open_options(words, command, options))
+        if command in {"gpio-handle-read", "gpio.handle-read"}:
+            return self.gpio_handle_read(**self._with_optional_budget(words, command, options))
+        if command in {"gpio-handle-write", "gpio.handle-write"}:
+            return self.gpio_handle_write(
+                **self._with_gpio_handle_write_options(words, command, options)
+            )
+        if command in {"gpio-handle-close", "gpio.handle-close"}:
+            return self.gpio_handle_close(**self._with_optional_budget(words, command, options))
         if command in {"time-now", "time.now", "now"}:
             return self.time_now(**self._with_optional_budget(words, command, options))
         if command in {"time-sleep-ms", "time.sleep_ms", "sleep-ms"}:
@@ -679,6 +861,18 @@ class Session:
             raise ValueError(f"unsupported GPIO read mode: {mode!r}") from exc
 
     @staticmethod
+    def _gpio_mode(mode: str | int) -> int:
+        if isinstance(mode, int):
+            return mode
+        normalized = str(mode).replace("-", "_")
+        if normalized.isdecimal():
+            return int(normalized)
+        try:
+            return GPIO_MODES[normalized]
+        except KeyError as exc:
+            raise ValueError(f"unsupported GPIO mode: {mode!r}") from exc
+
+    @staticmethod
     def _boot_policy(policy: str | int) -> int:
         if isinstance(policy, int):
             return policy
@@ -708,6 +902,48 @@ class Session:
         self._ensure_no_extra(words, command)
         if "pin" not in merged:
             raise ValueError(f"{command} requires pin")
+        if "value" not in merged:
+            raise ValueError(f"{command} requires value")
+        return merged
+
+    def _with_gpio_open_options(
+        self,
+        words: list[str],
+        command: str,
+        options: dict[str, Any],
+        *,
+        allow_budget: bool = True,
+    ) -> dict[str, Any]:
+        merged = dict(options)
+        if words:
+            merged["pin"] = int(words.pop(0))
+        if words:
+            mode_or_budget = words.pop(0)
+            if allow_budget and mode_or_budget.isdecimal():
+                merged["instruction_budget"] = int(mode_or_budget)
+            else:
+                merged["mode"] = mode_or_budget
+        if allow_budget and words:
+            merged["instruction_budget"] = int(words.pop(0))
+        self._ensure_no_extra(words, command)
+        if "pin" not in merged:
+            raise ValueError(f"{command} requires pin")
+        return merged
+
+    def _with_gpio_handle_write_options(
+        self,
+        words: list[str],
+        command: str,
+        options: dict[str, Any],
+        *,
+        allow_budget: bool = True,
+    ) -> dict[str, Any]:
+        merged = dict(options)
+        if words:
+            merged["value"] = self._gpio_write_value(words.pop(0))
+        if allow_budget and words:
+            merged["instruction_budget"] = int(words.pop(0))
+        self._ensure_no_extra(words, command)
         if "value" not in merged:
             raise ValueError(f"{command} requires value")
         return merged
@@ -750,6 +986,7 @@ __all__ = [
     "BOOT_POLICIES",
     "Capability",
     "DEFAULT_RUN_FLAGS",
+    "GPIO_MODES",
     "GPIO_READ_MODES",
     "ProtocolResult",
     "RUN_FLAG_BACKGROUND_RUN",
