@@ -16,7 +16,7 @@ use linux_job_backend_systemd_files::SystemdUserFileBackend;
 use macos_job_backend_launchd_files::LaunchdFileBackend;
 use os_job_core::{
     BackendKind, InstallPlan, JobBackend, JobError, JobSpec, JobTrigger, OutputPolicy,
-    PortabilityReport, RetryPolicy,
+    PermissionRequirement, PortabilityReport, RetryPolicy,
 };
 use windows_job_backend_task_xml::WindowsTaskSchedulerXmlBackend;
 
@@ -31,6 +31,8 @@ pub enum BackendSelection {
     SystemdUser,
     /// Force the Windows Task Scheduler backend.
     WindowsTaskScheduler,
+    /// Force the pure in-process fallback backend.
+    InProcess,
 }
 
 /// The portability contract the runtime enforces before compiling an install
@@ -40,6 +42,8 @@ pub enum PortabilityTarget {
     /// Accept only jobs that work across macOS, Linux, and Windows using the
     /// repository's pure native backends.
     AllNativeOses,
+    /// Let the selected backend decide its own support boundary.
+    SelectedBackendOnly,
 }
 
 /// Portable entry point used by higher-level language bindings.
@@ -66,6 +70,20 @@ impl NativeJobRuntime {
         }
     }
 
+    /// Construct a runtime pinned to the in-process fallback backend.
+    pub fn for_in_process() -> Self {
+        Self {
+            selection: BackendSelection::InProcess,
+            portability_target: PortabilityTarget::SelectedBackendOnly,
+        }
+    }
+
+    /// Return a copy of this runtime with a different portability target.
+    pub fn with_portability_target(mut self, portability_target: PortabilityTarget) -> Self {
+        self.portability_target = portability_target;
+        self
+    }
+
     /// Return the backend the runtime will use.
     pub fn backend_kind(&self) -> Result<BackendKind, JobError> {
         resolve_backend_kind(self.selection)
@@ -89,9 +107,7 @@ impl NativeJobRuntime {
             BackendKind::Launchd => LaunchdFileBackend.install_plan(spec),
             BackendKind::SystemdUser => SystemdUserFileBackend.install_plan(spec),
             BackendKind::WindowsTaskScheduler => WindowsTaskSchedulerXmlBackend.install_plan(spec),
-            BackendKind::InProcess => Err(JobError::UnsupportedPlatform(
-                "the in-process fallback backend is not implemented yet".to_string(),
-            )),
+            BackendKind::InProcess => InProcessFallbackBackend.install_plan(spec),
         }
     }
 
@@ -108,11 +124,12 @@ impl Default for NativeJobRuntime {
 }
 
 /// Return all backends exposed by this crate.
-pub fn supported_backends() -> [BackendKind; 3] {
+pub fn supported_backends() -> [BackendKind; 4] {
     [
         BackendKind::Launchd,
         BackendKind::SystemdUser,
         BackendKind::WindowsTaskScheduler,
+        BackendKind::InProcess,
     ]
 }
 
@@ -120,6 +137,33 @@ pub fn supported_backends() -> [BackendKind; 3] {
 pub fn validate_portability(spec: &JobSpec, target: PortabilityTarget) -> PortabilityReport {
     match target {
         PortabilityTarget::AllNativeOses => validate_all_native_oses(spec),
+        PortabilityTarget::SelectedBackendOnly => PortabilityReport::new(),
+    }
+}
+
+/// Pure fallback backend for tests, development sandboxes, and constrained hosts.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct InProcessFallbackBackend;
+
+impl JobBackend for InProcessFallbackBackend {
+    fn kind(&self) -> BackendKind {
+        BackendKind::InProcess
+    }
+
+    fn install_plan(&self, spec: &JobSpec) -> Result<InstallPlan, JobError> {
+        spec.validate().into_result()?;
+        Ok(InstallPlan {
+            backend: BackendKind::InProcess,
+            files_to_write: Vec::new(),
+            commands_to_run: Vec::new(),
+            permissions_needed: vec![PermissionRequirement {
+                scope: "process-lifetime".to_string(),
+                detail: format!(
+                    "job `{}` runs only while the hosting process is alive",
+                    spec.job_id
+                ),
+            }],
+        })
     }
 }
 
@@ -174,7 +218,10 @@ fn validate_all_native_oses(spec: &JobSpec) -> PortabilityReport {
         );
     }
 
-    if !matches!(spec.concurrency_policy, os_job_core::ConcurrencyPolicy::Skip) {
+    if !matches!(
+        spec.concurrency_policy,
+        os_job_core::ConcurrencyPolicy::Skip
+    ) {
         report.push_issue(
             "concurrency_policy",
             "only `skip` is currently treated as the portable subset across all native backends",
@@ -234,6 +281,7 @@ fn resolve_backend_kind(selection: BackendSelection) -> Result<BackendKind, JobE
         BackendSelection::Launchd => Ok(BackendKind::Launchd),
         BackendSelection::SystemdUser => Ok(BackendKind::SystemdUser),
         BackendSelection::WindowsTaskScheduler => Ok(BackendKind::WindowsTaskScheduler),
+        BackendSelection::InProcess => Ok(BackendKind::InProcess),
         BackendSelection::CurrentOs => current_platform_backend(),
     }
 }
@@ -320,6 +368,54 @@ mod tests {
     }
 
     #[test]
+    fn explicit_in_process_selection_compiles_fallback_plan() {
+        let runtime = NativeJobRuntime::for_in_process();
+        let plan = runtime
+            .install_plan(&sample_job())
+            .expect("in-process plan should compile");
+
+        assert_eq!(runtime.backend_kind().unwrap(), BackendKind::InProcess);
+        assert_eq!(plan.backend, BackendKind::InProcess);
+        assert!(plan.files_to_write.is_empty());
+        assert!(plan.commands_to_run.is_empty());
+        assert_eq!(plan.permissions_needed[0].scope, "process-lifetime");
+    }
+
+    #[test]
+    fn in_process_selection_can_skip_native_portability_rejections() {
+        let mut job = sample_job();
+        job.trigger = JobTrigger::Once {
+            at: os_job_core::DateTimeParts {
+                year: 2026,
+                month: 4,
+                day: 18,
+                hour: 10,
+                minute: 0,
+                second: 0,
+            },
+        };
+
+        assert!(!NativeJobRuntime::default()
+            .validate_portability(&job)
+            .is_portable());
+        assert!(NativeJobRuntime::for_in_process()
+            .validate_portability(&job)
+            .is_portable());
+        assert_eq!(
+            NativeJobRuntime::for_in_process()
+                .install_plan(&job)
+                .unwrap()
+                .backend,
+            BackendKind::InProcess
+        );
+    }
+
+    #[test]
+    fn supported_backends_include_in_process_fallback() {
+        assert!(supported_backends().contains(&BackendKind::InProcess));
+    }
+
+    #[test]
     fn portability_validation_rejects_one_shot_jobs() {
         let mut job = sample_job();
         job.trigger = JobTrigger::Once {
@@ -336,10 +432,8 @@ mod tests {
         let report = NativeJobRuntime::default().validate_portability(&job);
 
         assert!(!report.is_portable());
-        assert!(report
-            .issues
-            .iter()
-            .any(|issue| issue.field == "trigger" && issue.unsupported_backends.contains(&BackendKind::Launchd)));
+        assert!(report.issues.iter().any(|issue| issue.field == "trigger"
+            && issue.unsupported_backends.contains(&BackendKind::Launchd)));
     }
 
     #[test]
