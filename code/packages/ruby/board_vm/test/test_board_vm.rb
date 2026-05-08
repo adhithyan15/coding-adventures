@@ -222,6 +222,13 @@ module CodingAdventures
               const_pool: "\xAA\x55".b
             )
             run = session.run(program_id: 4, budget: 77)
+            run_with_handles = session.run(
+              program_id: 4,
+              budget: 77,
+              keep_handles: true,
+              background: false,
+              time_budget_ms: 250
+            )
             stop = session.stop
 
             assert_equal :hello, hello.command
@@ -241,12 +248,13 @@ module CodingAdventures
             assert_equal [:program_begin, :program_chunk, :program_end],
               raw_upload.results.map(&:command)
             assert_equal :run, run.command
+            assert_equal :run, run_with_handles.command
             assert_equal :stop, stop.command
           end
         end
 
         assert_empty runner.calls
-        assert_equal 23, transport.frames.length
+        assert_equal 24, transport.frames.length
         assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
       end
 
@@ -462,10 +470,15 @@ module CodingAdventures
         assert_operator store.bytesize, :>, 0
         assert_equal 4, session.next_request_id
 
+        run = session.run_wire(7, BoardVM::Session::RUN_FLAG_KEEP_HANDLES_AFTER_RUN, 77, 250)
+        assert_instance_of String, run
+        assert_operator run.bytesize, :>, 0
+        assert_equal 5, session.next_request_id
+
         stop = session.stop_wire
         assert_instance_of String, stop
         assert_operator stop.bytesize, :>, 0
-        assert_equal 5, session.next_request_id
+        assert_equal 6, session.next_request_id
 
         frames = BoardVM::Native::Session.new.blink_upload_run_frames(7, 12, 13, 250, 250, 4)
         assert_equal 4, frames.length

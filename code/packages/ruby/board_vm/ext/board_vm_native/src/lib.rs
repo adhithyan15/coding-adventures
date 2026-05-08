@@ -11,11 +11,11 @@ use board_vm_language_core::{
     build_blink_module, build_caps_query_wire_frame, build_gpio_read_module,
     build_gpio_write_module, build_hello_wire_frame, build_program_begin_wire_frame,
     build_program_chunk_wire_frame, build_program_end_wire_frame, build_raw_module,
-    build_run_background_wire_frame, build_stop_wire_frame, build_store_program_wire_frame,
-    build_time_now_module, build_time_sleep_ms_module, capability_board_metadata,
-    capability_bytecode_callable, capability_flag_names, capability_protocol_feature,
-    decode_wire_response, program_format_name, raw_module_len, run_status_name,
-    BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
+    build_run_background_wire_frame, build_run_wire_frame, build_stop_wire_frame,
+    build_store_program_wire_frame, build_time_now_module, build_time_sleep_ms_module,
+    capability_board_metadata, capability_bytecode_callable, capability_flag_names,
+    capability_protocol_feature, decode_wire_response, program_format_name, raw_module_len,
+    run_status_name, BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
     LanguageCoreError, LanguageValue,
 };
 use ruby_bridge::VALUE;
@@ -242,6 +242,32 @@ extern "C" fn session_run_background_wire(
             &mut session.inner,
             program_id,
             instruction_budget,
+            &mut wire,
+        )?;
+        Ok(bytes_result(&wire, written.len))
+    })
+}
+
+extern "C" fn session_run_wire(
+    self_val: VALUE,
+    program_id_val: VALUE,
+    flags_val: VALUE,
+    instruction_budget_val: VALUE,
+    time_budget_ms_val: VALUE,
+) -> VALUE {
+    let program_id = rb_u16(program_id_val, "program_id");
+    let flags = rb_u8(flags_val, "flags");
+    let instruction_budget = rb_u32(instruction_budget_val, "instruction_budget");
+    let time_budget_ms = rb_u32(time_budget_ms_val, "time_budget_ms");
+
+    with_session_mut(self_val, |session| {
+        let mut wire = [0u8; 96];
+        let written = build_run_wire_frame(
+            &mut session.inner,
+            program_id,
+            flags,
+            instruction_budget,
+            time_budget_ms,
             &mut wire,
         )?;
         Ok(bytes_result(&wire, written.len))
@@ -790,6 +816,12 @@ pub extern "C" fn Init_board_vm_native() {
         "run_background_wire",
         session_run_background_wire as *const c_void,
         2,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "run_wire",
+        session_run_wire as *const c_void,
+        4,
     );
     ruby_bridge::define_method_raw(
         session_class,

@@ -17,11 +17,22 @@ now_frames = session.time_now(program_id=2, instruction_budget=12).frames
 sleep_frames = session.time_sleep_ms(250, program_id=3, instruction_budget=12).frames
 store_frame = session.store_program(program_id=1, slot=0, boot_policy="run-if-no-host").frame
 raw_module = session.raw_module(code=b"\x00", max_stack=1)
+run_frame = session.run(
+    program_id=1,
+    instruction_budget=1_000,
+    keep_handles=True,
+    background=False,
+    time_budget_ms=250,
+).frame
 ```
 
 Each frame is a Rust-produced Board VM wire frame ready for a transport to
 write to a board. A `Session` can also dispatch through any object that exposes
 `transact(frame, timeout_ms=...)` or `write(frame)`.
+
+`run()` is configurable sugar over Rust-owned RUN wire-frame construction:
+Python can request reset/background/keep-handle behavior or pass a raw flag
+mask, but `board-vm-language-core` owns the actual payload encoding.
 
 `time_now()` uploads a Rust-built `time.now_ms` module and returns the board's
 millisecond clock through Rust-decoded run-report values when the transport

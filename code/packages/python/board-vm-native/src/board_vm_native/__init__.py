@@ -20,6 +20,18 @@ BOOT_POLICIES = {
     "run_if_no_host": 2,
     "run-if-no-host": 2,
 }
+RUN_FLAG_RESET_VM_BEFORE_RUN = 0x01
+RUN_FLAG_KEEP_HANDLES_AFTER_RUN = 0x02
+RUN_FLAG_BACKGROUND_RUN = 0x04
+DEFAULT_RUN_FLAGS = RUN_FLAG_RESET_VM_BEFORE_RUN | RUN_FLAG_BACKGROUND_RUN
+RUN_FLAGS = {
+    "reset_vm_before_run": RUN_FLAG_RESET_VM_BEFORE_RUN,
+    "reset-vm-before-run": RUN_FLAG_RESET_VM_BEFORE_RUN,
+    "keep_handles_after_run": RUN_FLAG_KEEP_HANDLES_AFTER_RUN,
+    "keep-handles-after-run": RUN_FLAG_KEEP_HANDLES_AFTER_RUN,
+    "background_run": RUN_FLAG_BACKGROUND_RUN,
+    "background-run": RUN_FLAG_BACKGROUND_RUN,
+}
 GPIO_READ_MODES = {
     "input": 0,
     "input_pullup": 2,
@@ -325,8 +337,29 @@ class Session:
             ),
         )
 
-    def run(self, *, program_id: int = DEFAULT_PROGRAM_ID, instruction_budget: int = DEFAULT_INSTRUCTION_BUDGET) -> ProtocolResult:
-        frame = self._call_native(_native.run_background_wire, program_id, instruction_budget)
+    def run(
+        self,
+        *,
+        program_id: int = DEFAULT_PROGRAM_ID,
+        instruction_budget: int = DEFAULT_INSTRUCTION_BUDGET,
+        flags: int | None = None,
+        reset_vm: bool = True,
+        keep_handles: bool = False,
+        background: bool = True,
+        time_budget_ms: int = 0,
+    ) -> ProtocolResult:
+        frame = self._call_native(
+            _native.run_wire,
+            program_id,
+            self._run_flags(
+                flags=flags,
+                reset_vm=reset_vm,
+                keep_handles=keep_handles,
+                background=background,
+            ),
+            instruction_budget,
+            time_budget_ms,
+        )
         return self._dispatch("run", frame)
 
     def stop(self) -> ProtocolResult:
@@ -556,6 +589,25 @@ class Session:
         self._ensure_no_extra(words, command)
         return merged
 
+    @staticmethod
+    def _run_flags(
+        *,
+        flags: int | None,
+        reset_vm: bool,
+        keep_handles: bool,
+        background: bool,
+    ) -> int:
+        if flags is not None:
+            return int(flags)
+        value = 0
+        if reset_vm:
+            value |= RUN_FLAG_RESET_VM_BEFORE_RUN
+        if keep_handles:
+            value |= RUN_FLAG_KEEP_HANDLES_AFTER_RUN
+        if background:
+            value |= RUN_FLAG_BACKGROUND_RUN
+        return value
+
     def _with_store_program_options(
         self,
         words: list[str],
@@ -697,8 +749,13 @@ __all__ = [
     "BoardDescriptor",
     "BOOT_POLICIES",
     "Capability",
+    "DEFAULT_RUN_FLAGS",
     "GPIO_READ_MODES",
     "ProtocolResult",
+    "RUN_FLAG_BACKGROUND_RUN",
+    "RUN_FLAG_KEEP_HANDLES_AFTER_RUN",
+    "RUN_FLAG_RESET_VM_BEFORE_RUN",
+    "RUN_FLAGS",
     "Session",
     "SessionResult",
 ]

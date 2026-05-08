@@ -129,6 +129,18 @@ response bytes, and optional Rust-decoded response hash. The text command parser
 is Ruby sugar only; every dispatched frame still comes from
 `CodingAdventures::BoardVM::Native::Session`.
 
+`run` also accepts protocol-level options without moving protocol work into
+Ruby:
+
+```ruby
+board.session do |vm|
+  vm.run(program_id: 1, keep_handles: true, background: false, time_budget_ms: 250)
+end
+```
+
+Ruby turns friendly keywords into a flag mask; the RUN request payload and wire
+frame are still built by `board-vm-language-core`.
+
 Capability reports can be lifted into Ruby objects after Rust decodes the board
 response:
 
