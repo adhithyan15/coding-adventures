@@ -58,12 +58,15 @@ It keeps parsing side-effect free, then exposes helpers to:
 - adapt higher-order list predicates such as `maplist/2..5`, `convlist/3`,
   `include/3`, `exclude/3`, `partition/4`, `foldl/4..7`, and `scanl/4..7`
   into callable-term-backed builtin goals
-- adapt bounded UTF-8 file text and stream predicates such as `exists_file/1`,
-  `read_file_to_string/2`, `read_file_to_codes/2`, `open/3`, `close/1`,
-  `read_string/3`, `read_line_to_string/2`, `get_char/2`,
-  `at_end_of_stream/1`, `write/2`, `nl/1`, `open/4`, `current_stream/3`,
-  `stream_property/2`, `flush_output/1`, `set_stream_position/2`, and
-  `seek/4`
+- adapt bounded file metadata, UTF-8 file text, and stream predicates such as
+  `exists_file/1`, `exists_directory/1`, `absolute_file_name/2`,
+  `access_file/2`, `file_directory_name/2`, `file_base_name/2`,
+  `directory_file_path/3`, `file_name_extension/3`, `same_file/2`,
+  `size_file/2`, `time_file/2`, `read_file_to_string/2`,
+  `read_file_to_codes/2`, `open/3`, `close/1`, `read_string/3`,
+  `read_line_to_string/2`, `get_char/2`, `at_end_of_stream/1`, `write/2`,
+  `nl/1`, `open/4`, `current_stream/3`, `stream_property/2`,
+  `flush_output/1`, `set_stream_position/2`, and `seek/4`
 - adapt selected current-stream predicates including `set_input/1`,
   `set_output/1`, `current_input/1`, `current_output/1`, `get_char/1`,
   `read_string/2`, `read_line_to_string/1`, `at_end_of_stream/0`,

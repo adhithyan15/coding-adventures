@@ -36,6 +36,8 @@ from logic_builtins import (
     __version__,
     abolisho,
     acyclic_termo,
+    absolute_file_nameo,
+    access_fileo,
     add,
     all_differento,
     argo,
@@ -78,9 +80,11 @@ from logic_builtins import (
     cuto,
     cyclic_termo,
     difo,
+    directory_file_patho,
     div,
     dynamico,
     excludeo,
+    exists_directoryo,
     exists_fileo,
     failo,
     falseo,
@@ -105,6 +109,9 @@ from logic_builtins import (
     fd_sum_relationo,
     fd_sumo,
     findallo,
+    file_base_nameo,
+    file_directory_nameo,
+    file_name_extensiono,
     floordiv,
     flush_current_outputo,
     flush_outputo,
@@ -176,6 +183,7 @@ from logic_builtins import (
     repeato,
     retractallo,
     retracto,
+    same_fileo,
     same_termo,
     scanlo,
     seeko,
@@ -185,6 +193,7 @@ from logic_builtins import (
     set_stream_positiono,
     setofo,
     setup_call_cleanupo,
+    size_fileo,
     stream_propertyo,
     string_charso,
     string_codeso,
@@ -203,6 +212,7 @@ from logic_builtins import (
     termo_leqo,
     termo_lto,
     throwo,
+    time_fileo,
     trueo,
     unifiableo,
     unify_with_occurs_checko,
@@ -260,6 +270,82 @@ class TestFileTextBuiltins:
             codes,
             read_file_to_codeso(string(str(source_path)), codes),
         ) == [logic_list([num(65), num(10)])]
+
+    def test_file_path_metadata_facade(self, tmp_path: Path) -> None:
+        directory = tmp_path / "nested"
+        directory.mkdir()
+        source_path = directory / "story.pl"
+        source_path.write_text("fact(a).\n", encoding="utf-8")
+        symlink_path = tmp_path / "story-link.pl"
+        try:
+            symlink_path.symlink_to(source_path)
+        except OSError:
+            symlink_path = source_path
+
+        directory_answer = var("Directory")
+        base_answer = var("Base")
+        joined_answer = var("Joined")
+        name_answer = var("Name")
+        extension_answer = var("Extension")
+        absolute_answer = var("Absolute")
+        size_answer = var("Size")
+        time_answer = var("Time")
+        result = var("Result")
+
+        answers = solve_all(
+            program(),
+            result,
+            conj(
+                exists_directoryo(atom(str(directory))),
+                access_fileo(atom(str(source_path)), atom("read")),
+                absolute_file_nameo(atom(str(source_path)), absolute_answer),
+                file_directory_nameo(atom(str(source_path)), directory_answer),
+                file_base_nameo(atom(str(source_path)), base_answer),
+                directory_file_patho(directory_answer, base_answer, joined_answer),
+                file_name_extensiono(name_answer, extension_answer, base_answer),
+                same_fileo(atom(str(source_path)), atom(str(symlink_path))),
+                size_fileo(atom(str(source_path)), size_answer),
+                time_fileo(atom(str(source_path)), time_answer),
+                eq(
+                    result,
+                    term(
+                        "file_metadata",
+                        directory_answer,
+                        base_answer,
+                        joined_answer,
+                        name_answer,
+                        extension_answer,
+                        absolute_answer,
+                        size_answer,
+                        time_answer,
+                    ),
+                ),
+            ),
+        )
+
+        assert len(answers) == 1
+        [answer] = answers
+        assert isinstance(answer, Compound)
+        assert answer.functor.name == "file_metadata"
+        (
+            directory_term,
+            base_term,
+            joined_term,
+            name_term,
+            extension_term,
+            absolute_term,
+            size_term,
+            time_term,
+        ) = answer.args
+        assert directory_term == atom(str(directory))
+        assert base_term == atom("story.pl")
+        assert joined_term == atom(str(source_path))
+        assert name_term == atom("story")
+        assert extension_term == atom("pl")
+        assert absolute_term == atom(str(source_path.resolve(strict=False)))
+        assert size_term == num(len("fact(a).\n"))
+        assert isinstance(time_term, Number)
+        assert isinstance(time_term.value, int | float)
 
     def test_file_stream_read_facade_tracks_cursor(self, tmp_path: Path) -> None:
         source_path = tmp_path / "stream.txt"

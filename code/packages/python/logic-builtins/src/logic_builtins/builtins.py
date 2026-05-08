@@ -14,6 +14,7 @@ keeps the user-facing predicates in a separate library layer.
 
 from __future__ import annotations
 
+import os
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
 from hashlib import blake2b
@@ -79,7 +80,9 @@ from logic_engine import (
 
 __all__ = [
     "add",
+    "absolute_file_nameo",
     "acyclic_termo",
+    "access_fileo",
     "all_differento",
     "argo",
     "atom_concato",
@@ -116,9 +119,11 @@ __all__ = [
     "cuto",
     "cyclic_termo",
     "difo",
+    "directory_file_patho",
     "dynamico",
     "div",
     "exists_fileo",
+    "exists_directoryo",
     "fd_eqo",
     "fd_elemento",
     "fd_geqo",
@@ -146,6 +151,9 @@ __all__ = [
     "FiniteDomainConstraint",
     "FiniteDomainStore",
     "findallo",
+    "file_base_nameo",
+    "file_directory_nameo",
+    "file_name_extensiono",
     "floordiv",
     "foldlo",
     "forallo",
@@ -230,6 +238,7 @@ __all__ = [
     "retractallo",
     "retracto",
     "same_termo",
+    "same_fileo",
     "scanlo",
     "seeko",
     "set_inputo",
@@ -237,6 +246,7 @@ __all__ = [
     "setofo",
     "set_prolog_flago",
     "set_stream_positiono",
+    "size_fileo",
     "setup_call_cleanupo",
     "char_codeo",
     "clauseo",
@@ -257,6 +267,7 @@ __all__ = [
     "term_hash_boundedo",
     "term_hasho",
     "throwo",
+    "time_fileo",
     "trueo",
     "univo",
     "unifiableo",
@@ -4853,6 +4864,220 @@ def exists_fileo(path_value: object) -> GoalExpr:
             yield state
 
     return native_goal(run, path_value)
+
+
+def exists_directoryo(path_value: object) -> GoalExpr:
+    """Succeed when a bound atom/string path names an existing directory."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [path_term] = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        if Path(path_text).is_dir():
+            yield state
+
+    return native_goal(run, path_value)
+
+
+def absolute_file_nameo(path_value: object, absolute_value: object) -> GoalExpr:
+    """Relate a bound path to a deterministic absolute pathname atom."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, absolute_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            absolute_text = str(Path(path_text).expanduser().resolve(strict=False))
+        except OSError:
+            return
+        yield from solve_from(program_value, eq(absolute_term, atom(absolute_text)), state)
+
+    return native_goal(run, path_value, absolute_value)
+
+
+def _access_mode(term_value: Term) -> int | None:
+    mode_text = _plain_atom_text(term_value)
+    if mode_text == "read":
+        return os.R_OK
+    if mode_text == "write":
+        return os.W_OK
+    if mode_text == "execute":
+        return os.X_OK
+    if mode_text == "exist":
+        return os.F_OK
+    return None
+
+
+def access_fileo(path_value: object, mode_value: object) -> GoalExpr:
+    """Succeed when a bound path has the requested bounded access mode."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, mode_term = args
+        path_text = _path_text(_reified(path_term, state))
+        access_mode = _access_mode(_reified(mode_term, state))
+        if path_text is None or access_mode is None:
+            return
+        if os.access(path_text, access_mode):
+            yield state
+
+    return native_goal(run, path_value, mode_value)
+
+
+def file_directory_nameo(path_value: object, directory_value: object) -> GoalExpr:
+    """Relate a bound path to its directory component as an atom."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, directory_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        directory_text = os.path.dirname(path_text) or "."
+        yield from solve_from(program_value, eq(directory_term, atom(directory_text)), state)
+
+    return native_goal(run, path_value, directory_value)
+
+
+def file_base_nameo(path_value: object, base_value: object) -> GoalExpr:
+    """Relate a bound path to its final path component as an atom."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, base_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        yield from solve_from(
+            program_value,
+            eq(base_term, atom(os.path.basename(path_text))),
+            state,
+        )
+
+    return native_goal(run, path_value, base_value)
+
+
+def directory_file_patho(
+    directory_value: object,
+    file_value: object,
+    path_value: object,
+) -> GoalExpr:
+    """Relate directory/file components to a pathname atom in finite modes."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        directory_term, file_term, path_term = args
+        directory_text = _path_text(_reified(directory_term, state))
+        file_text = _path_text(_reified(file_term, state))
+        path_text = _path_text(_reified(path_term, state))
+
+        goals: list[GoalExpr] = []
+        if directory_text is not None and file_text is not None:
+            goals.append(eq(path_term, atom(str(Path(directory_text) / file_text))))
+        elif path_text is not None:
+            goals.append(eq(directory_term, atom(os.path.dirname(path_text) or ".")))
+            goals.append(eq(file_term, atom(os.path.basename(path_text))))
+        else:
+            return
+
+        yield from solve_from(program_value, conj(*goals), state)
+
+    return native_goal(run, directory_value, file_value, path_value)
+
+
+def _file_name_extension_parts(name_text: str) -> tuple[str, str]:
+    base_text, extension_text = os.path.splitext(name_text)
+    if extension_text.startswith("."):
+        extension_text = extension_text[1:]
+    return base_text, extension_text
+
+
+def _join_file_name_extension(base_text: str, extension_text: str) -> str:
+    if extension_text == "":
+        return base_text
+    return f"{base_text}.{extension_text}"
+
+
+def file_name_extensiono(
+    base_value: object,
+    extension_value: object,
+    name_value: object,
+) -> GoalExpr:
+    """Relate a file base, extension, and name in finite modes."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        base_term, extension_term, name_term = args
+        base_text = _path_text(_reified(base_term, state))
+        extension_text = _plain_atom_text(_reified(extension_term, state))
+        name_text = _path_text(_reified(name_term, state))
+
+        goals: list[GoalExpr] = []
+        if name_text is not None:
+            parsed_base, parsed_extension = _file_name_extension_parts(name_text)
+            goals.append(eq(base_term, atom(parsed_base)))
+            goals.append(eq(extension_term, atom(parsed_extension)))
+        elif base_text is not None and extension_text is not None:
+            goals.append(
+                eq(name_term, atom(_join_file_name_extension(base_text, extension_text))),
+            )
+        else:
+            return
+
+        yield from solve_from(program_value, conj(*goals), state)
+
+    return native_goal(run, base_value, extension_value, name_value)
+
+
+def same_fileo(left_value: object, right_value: object) -> GoalExpr:
+    """Succeed when two bound paths refer to the same existing file."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        left_term, right_term = args
+        left_text = _path_text(_reified(left_term, state))
+        right_text = _path_text(_reified(right_term, state))
+        if left_text is None or right_text is None:
+            return
+        try:
+            if Path(left_text).samefile(right_text):
+                yield state
+        except OSError:
+            return
+
+    return native_goal(run, left_value, right_value)
+
+
+def size_fileo(path_value: object, size_value: object) -> GoalExpr:
+    """Relate a bound regular file path to its byte size."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, size_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            stat_result = Path(path_text).stat()
+        except OSError:
+            return
+        if not Path(path_text).is_file():
+            return
+        yield from solve_from(program_value, eq(size_term, num(stat_result.st_size)), state)
+
+    return native_goal(run, path_value, size_value)
+
+
+def time_fileo(path_value: object, time_value: object) -> GoalExpr:
+    """Relate a bound existing path to its modification timestamp."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, time_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            modified_at = Path(path_text).stat().st_mtime
+        except OSError:
+            return
+        yield from solve_from(program_value, eq(time_term, num(modified_at)), state)
+
+    return native_goal(run, path_value, time_value)
 
 
 def read_file_to_stringo(path_value: object, contents: object) -> GoalExpr:

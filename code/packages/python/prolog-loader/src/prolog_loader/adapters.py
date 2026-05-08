@@ -8,7 +8,9 @@ from typing import Protocol
 
 from logic_builtins import (
     abolisho,
+    absolute_file_nameo,
     acyclic_termo,
+    access_fileo,
     all_differento,
     argo,
     assertao,
@@ -49,8 +51,10 @@ from logic_builtins import (
     cuto,
     cyclic_termo,
     difo,
+    directory_file_patho,
     dynamico,
     excludeo,
+    exists_directoryo,
     exists_fileo,
     failo,
     falseo,
@@ -80,6 +84,9 @@ from logic_builtins import (
     foldlo,
     forallo,
     functoro,
+    file_base_nameo,
+    file_directory_nameo,
+    file_name_extensiono,
     get_byteo,
     get_charo,
     get_codeo,
@@ -139,6 +146,7 @@ from logic_builtins import (
     repeato,
     retractallo,
     retracto,
+    same_fileo,
     same_termo,
     scanlo,
     seeko,
@@ -148,6 +156,7 @@ from logic_builtins import (
     set_stream_positiono,
     setofo,
     setup_call_cleanupo,
+    size_fileo,
     stream_propertyo,
     string_charso,
     string_codeso,
@@ -165,6 +174,7 @@ from logic_builtins import (
     termo_leqo,
     termo_lto,
     throwo,
+    time_fileo,
     trueo,
     unifiableo,
     unify_with_occurs_checko,
@@ -599,6 +609,26 @@ def _adapt_relation_call(
         return read_file_to_stringo(*args)
     if name == "read_file_to_codes" and goal.relation.arity == 2:
         return read_file_to_codeso(*args)
+    if name == "exists_directory" and goal.relation.arity == 1:
+        return exists_directoryo(*args)
+    if name == "absolute_file_name" and goal.relation.arity == 2:
+        return absolute_file_nameo(*args)
+    if name == "access_file" and goal.relation.arity == 2:
+        return access_fileo(*args)
+    if name == "file_directory_name" and goal.relation.arity == 2:
+        return file_directory_nameo(*args)
+    if name == "file_base_name" and goal.relation.arity == 2:
+        return file_base_nameo(*args)
+    if name == "directory_file_path" and goal.relation.arity == 3:
+        return directory_file_patho(*args)
+    if name == "file_name_extension" and goal.relation.arity == 3:
+        return file_name_extensiono(*args)
+    if name == "same_file" and goal.relation.arity == 2:
+        return same_fileo(*args)
+    if name == "size_file" and goal.relation.arity == 2:
+        return size_fileo(*args)
+    if name == "time_file" and goal.relation.arity == 2:
+        return time_fileo(*args)
     if name == "open" and goal.relation.arity == 3:
         return openo(*args)
     if name == "open" and goal.relation.arity == 4:

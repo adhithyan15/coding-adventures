@@ -311,6 +311,21 @@ def prolog_vm_capabilities() -> tuple[PrologVMCapability, ...]:
                 "structured and bytecode VM stress coverage",
             ),
         ),
+        PrologVMCapability(
+            id="host-filesystem-metadata",
+            title="Bounded host filesystem metadata",
+            status="complete",
+            specs=("PR87",),
+            packages=("logic-builtins", "prolog-loader", "prolog-vm-compiler"),
+            features=(
+                "exists_directory/1 and access_file/2 over bound paths",
+                "absolute_file_name/2 path canonicalization",
+                "file_directory_name/2, file_base_name/2, directory_file_path/3",
+                "file_name_extension/3 file-name decomposition and composition",
+                "same_file/2, size_file/2, and time_file/2 metadata checks",
+                "structured and bytecode VM stress coverage",
+            ),
+        ),
     )
 
 
@@ -350,6 +365,7 @@ def deferred_prolog_vm_capabilities() -> tuple[PrologVMCapability, ...]:
             features=(
                 "console-backed standard streams and richer binary stream services",
                 "rich ISO/SWI stream options beyond bounded text/binary files",
+                "mutable filesystem services beyond read-only metadata",
                 "foreign predicates and host callbacks",
                 "engines, concurrency, and async integration",
             ),
@@ -361,8 +377,8 @@ def prolog_vm_capability_manifest() -> PrologVMCapabilityManifest:
     """Return the canonical capability manifest for this package."""
 
     return PrologVMCapabilityManifest(
-        track="Prolog-on-Logic-VM PR00-PR86",
-        status="core-plus-binary-byte-stream-io",
+        track="Prolog-on-Logic-VM PR00-PR87",
+        status="core-plus-filesystem-metadata",
         dialects=("iso", "swi"),
         backends=("structured", "bytecode"),
         capabilities=prolog_vm_capabilities(),

@@ -308,6 +308,57 @@ class TestPrologBytecodeVMStress:
             },
         ]
 
+    def test_file_metadata_predicates_match_structured_vm(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "nested" / "story.data"
+        source_path.parent.mkdir()
+        source_path.write_text("bytecode\n", encoding="utf-8")
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        dir_atom = str(source_path.parent).replace("\\", "\\\\").replace("'", "\\'")
+        compiled = compile_swi_prolog_source(
+            f"""
+            ?- exists_directory('{dir_atom}'),
+               access_file('{path_atom}', read),
+               absolute_file_name('{path_atom}', Absolute),
+               file_directory_name('{path_atom}', Directory),
+               file_base_name('{path_atom}', Base),
+               directory_file_path(Directory, Base, Joined),
+               file_name_extension(Name, Extension, Base),
+               same_file('{path_atom}', Joined),
+               size_file('{path_atom}', Size),
+               time_file('{path_atom}', Time).
+            """,
+        )
+
+        answers = run_compiled_prolog_bytecode_query_answers(compiled)
+
+        assert _answer_dicts(answers) == _answer_dicts(
+            run_compiled_prolog_query_answers(compiled),
+        )
+        assert _project_answers(
+            answers,
+            "Absolute",
+            "Directory",
+            "Base",
+            "Joined",
+            "Name",
+            "Extension",
+            "Size",
+        ) == [
+            {
+                "Absolute": atom(str(source_path.resolve(strict=False))),
+                "Directory": atom(str(source_path.parent)),
+                "Base": atom("story.data"),
+                "Joined": atom(str(source_path)),
+                "Name": atom("story"),
+                "Extension": atom("data"),
+                "Size": num(len("bytecode\n")),
+            },
+        ]
+        assert isinstance(answers[0].as_dict()["Time"], Number)
+
     def test_file_stream_io_matches_structured_vm(self, tmp_path: Path) -> None:
         source_path = tmp_path / "stream.pltxt"
         path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")

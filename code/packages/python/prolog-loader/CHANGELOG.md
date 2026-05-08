@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- adapt source-level read-only filesystem metadata predicates including
+  `exists_directory/1`, `absolute_file_name/2`, `access_file/2`,
+  `file_directory_name/2`, `file_base_name/2`, `directory_file_path/3`,
+  `file_name_extension/3`, `same_file/2`, `size_file/2`, and `time_file/2`
+  into the executable logic builtin layer
 - adapt source-level `exists_file/1`, `read_file_to_string/2`, and
   `read_file_to_codes/2` into the executable logic builtin layer
 - adapt source-level bounded file stream predicates including `open/3`,

@@ -6,6 +6,11 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- `exists_directoryo/1`, `absolute_file_nameo/2`, `access_fileo/2`,
+  `file_directory_nameo/2`, `file_base_nameo/2`, `directory_file_patho/3`,
+  `file_name_extensiono/3`, `same_fileo/2`, `size_fileo/2`, and
+  `time_fileo/2` for bounded read-only filesystem/path metadata over bound
+  atom/string paths.
 - `exists_fileo(path)`, `read_file_to_stringo(path, contents)`, and
   `read_file_to_codeso(path, codes)` for bounded UTF-8 file text I/O from
   bound atom/string paths.
