@@ -38,7 +38,6 @@ from typing import TYPE_CHECKING
 
 from cas_factor import factor_integer_polynomial
 from cas_laplace import build_laplace_handler_table as _build_laplace_handlers
-from cas_ode import build_ode_handler_table as _build_ode_handlers
 from cas_limit_series import PolynomialError, limit_direct, taylor_polynomial
 from cas_list_operations import (
     LIST,
@@ -59,6 +58,7 @@ from cas_list_operations import (
     sort_,
 )
 from cas_matrix import MatrixError, determinant, inverse, matrix, transpose
+from cas_ode import build_ode_handler_table as _build_ode_handlers
 from cas_simplify import canonical, simplify
 from cas_solve import (
     ALL,
@@ -104,6 +104,11 @@ from symbolic_vm.cas_handlers import sum_handler as _sum_handler
 from symbolic_vm.cas_handlers import tellsimp_handler as _tellsimp_handler
 from symbolic_vm.numeric import from_number, to_number
 from symbolic_vm.polynomial_bridge import from_polynomial, to_rational
+
+# _numer_fold is defined in handlers.py — import here so float_handler can
+# reuse the same exact-to-float fold logic without duplicating code.  There
+# is no circular import risk: handlers.py does not import cas_handlers.py.
+from macsyma_runtime.handlers import _numer_fold
 
 if TYPE_CHECKING:
     from symbolic_vm import VM
@@ -857,6 +862,35 @@ def lcm_handler(_vm: VM, expr: IRApply) -> IRNode:
 
 
 # ---------------------------------------------------------------------------
+# Float coercion (Phase 30)
+# ---------------------------------------------------------------------------
+
+
+def float_handler(vm: VM, expr: IRApply) -> IRNode:
+    """``Float(expr)`` — coerce expression to floating-point representation.
+
+    This is the function form of ``ev(expr, numer)``.  It evaluates the
+    argument through the VM then recursively converts every exact numeric
+    leaf (``IRInteger``, ``IRRational``) to ``IRFloat``.
+
+    Examples::
+
+        float(1/2)       →  0.5
+        float(3)         →  3.0
+        float(%pi)       →  3.141592653589793   (pre-bound as IRFloat)
+        float(sin(%pi))  →  1.2246467991473532e-16   (near zero)
+        float(x + 1/3)   →  x + 0.3333333333333333   (symbolic + float)
+
+    Arity: ``Float`` takes exactly one argument.  Wrong-arity calls are
+    returned unevaluated.
+    """
+    if len(expr.args) != 1:
+        return expr
+    result: IRNode = vm.eval(expr.args[0])
+    return _numer_fold(result)
+
+
+# ---------------------------------------------------------------------------
 # Handler-table builder
 # ---------------------------------------------------------------------------
 
@@ -922,6 +956,8 @@ def build_cas_handler_table() -> dict[str, Handler]:
         "Mod": mod_handler,
         "Gcd": gcd_handler,
         "Lcm": lcm_handler,
+        # Float coercion (Phase 30)
+        "Float": float_handler,
         # Pattern-matching rule system (Phase 22) — delegated to symbolic_vm
         "MatchDeclare": _matchdeclare_handler,
         "Defrule": _defrule_handler,

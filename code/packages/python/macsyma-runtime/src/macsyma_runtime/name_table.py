@@ -44,7 +44,9 @@ from symbolic_ir import (
     UNIT_STEP,
     IRSymbol,
 )
-from symbolic_ir.nodes import ODE2  # noqa: F401 — re-exported as part of MACSYMA_NAME_TABLE
+from symbolic_ir.nodes import (
+    ODE2,  # noqa: F401 — re-exported as part of MACSYMA_NAME_TABLE
+)
 
 # IR heads from substrate packages that may not exist yet — define
 # them here as :class:`IRSymbol` singletons so the table can reference
@@ -94,6 +96,8 @@ CEILING = IRSymbol("Ceiling")
 ABS = IRSymbol("Abs")
 # Phase 28 — sign function (returns 1/-1/0 based on sign assumptions).
 SIGN = IRSymbol("Sign")
+# Phase 30 — float() coercion function (force exact → IRFloat).
+FLOAT_FUNC = IRSymbol("Float")
 
 # Equation-side selectors (C5)
 LHS = IRSymbol("Lhs")
@@ -220,6 +224,8 @@ MACSYMA_NAME_TABLE: dict[str, IRSymbol] = {
     "ceiling": CEILING,
     "abs": ABS,
     "sign": SIGN,      # Phase 28
+    # Float coercion (Phase 30) — ``float(expr)`` forces numeric evaluation.
+    "float": FLOAT_FUNC,
     # Equation-side selectors (C5)
     "lhs": LHS,
     "rhs": RHS,

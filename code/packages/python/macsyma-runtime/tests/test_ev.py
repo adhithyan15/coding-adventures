@@ -23,16 +23,17 @@ def test_ev_unknown_flag_silently_ignored() -> None:
     assert vm.eval(expr) == IRInteger(2)
 
 
-def test_ev_numer_sets_flag_briefly() -> None:
-    """Phase-A `numer` is a hint; we only verify the with_numer
-    context manager toggles the flag during the evaluation, not that
-    the result actually changes (that's Phase B+ work)."""
+def test_ev_numer_folds_integer_to_float() -> None:
+    """ev(2, numer) — integer leaves are coerced to IRFloat by _numer_fold."""
+    from symbolic_ir import IRFloat
+
     backend = MacsymaBackend()
     vm = VM(backend)
     expr = IRApply(EV, (IRInteger(2), IRSymbol("numer")))
-    # During eval, backend.numer should have flipped to True; after
-    # eval, it should be back to False (the default).
-    assert vm.eval(expr) == IRInteger(2)
+    result = vm.eval(expr)
+    # Phase 30: _numer_fold converts exact integers to IRFloat.
+    assert result == IRFloat(2.0)
+    # The with_numer context manager should have restored the flag.
     assert backend.numer is False
 
 
@@ -54,13 +55,15 @@ def test_with_numer_restores_on_exception() -> None:
 
 
 def test_ev_float_flag_same_as_numer() -> None:
-    """ev(expr, float) is an alias for ev(expr, numer)."""
+    """ev(expr, float) is an alias for ev(expr, numer) — folds to IRFloat."""
+    from symbolic_ir import IRFloat
+
     backend = MacsymaBackend()
     vm = VM(backend)
-    # float flag: integer expression stays integer (no change for exact ints)
+    # Phase 30: float flag coerces exact integers to IRFloat via _numer_fold.
     expr = IRApply(EV, (IRInteger(42), IRSymbol("float")))
     result = vm.eval(expr)
-    assert result == IRInteger(42)
+    assert result == IRFloat(42.0)
     assert backend.numer is False  # flag restored after eval
 
 
