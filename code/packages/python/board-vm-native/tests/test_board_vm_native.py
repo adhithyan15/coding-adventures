@@ -1,4 +1,4 @@
-from board_vm_native import BoardDescriptor, ProtocolResult, Session
+from board_vm_native import BoardDescriptor, BoardTarget, ProtocolResult, Session, find_target, known_targets
 
 
 class FakeWriteTransport:
@@ -66,6 +66,21 @@ def test_native_session_builds_protocol_bytes_in_rust():
     assert isinstance(stop.frame, bytes)
     assert len(stop.frame) > 0
     assert session.next_request_id == 4
+
+
+def test_known_targets_are_exposed_from_rust_registry():
+    targets = known_targets()
+    esp32 = find_target("esp32-devkit-v1")
+    pico_w = find_target("raspberry-pi-pico-w")
+
+    assert all(isinstance(target, BoardTarget) for target in targets)
+    assert esp32 is not None
+    assert esp32.family == "esp32"
+    assert esp32.runtime_id == "board-vm-esp32"
+    assert esp32.onboard_led_pin == 2
+    assert "gpio.open" in esp32.capabilities
+    assert pico_w is not None
+    assert pico_w.onboard_led == {"kind": "wireless_chip_gpio", "pin": 0}
 
 
 def test_session_dispatches_frames_through_write_transport():

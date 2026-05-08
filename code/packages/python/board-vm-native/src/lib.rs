@@ -9,16 +9,17 @@ use board_vm_host::{
     GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_language_core::{
-    build_blink_module, build_caps_query_wire_frame, build_gpio_handle_close_module,
-    build_gpio_handle_read_module, build_gpio_handle_write_module, build_gpio_open_module,
-    build_gpio_read_module, build_gpio_write_module, build_hello_wire_frame,
-    build_program_begin_wire_frame, build_program_chunk_wire_frame, build_program_end_wire_frame,
-    build_raw_module, build_run_background_wire_frame, build_run_wire_frame, build_stop_wire_frame,
-    build_store_program_wire_frame, build_time_now_module, build_time_sleep_ms_module,
-    capability_board_metadata, capability_bytecode_callable, capability_flag_names,
-    capability_protocol_feature, decode_wire_response, program_format_name, raw_module_len,
+    board_family_name, build_blink_module, build_caps_query_wire_frame,
+    build_gpio_handle_close_module, build_gpio_handle_read_module, build_gpio_handle_write_module,
+    build_gpio_open_module, build_gpio_read_module, build_gpio_write_module,
+    build_hello_wire_frame, build_program_begin_wire_frame, build_program_chunk_wire_frame,
+    build_program_end_wire_frame, build_raw_module, build_run_background_wire_frame,
+    build_run_wire_frame, build_stop_wire_frame, build_store_program_wire_frame,
+    build_time_now_module, build_time_sleep_ms_module, capability_board_metadata,
+    capability_bytecode_callable, capability_flag_names, capability_protocol_feature,
+    decode_wire_response, known_targets, onboard_led_kind, program_format_name, raw_module_len,
     run_status_name, BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
-    LanguageCoreError, LanguageValue,
+    LanguageCoreError, LanguageOnboardLed, LanguageTargetInfo, LanguageValue,
 };
 use python_bridge::*;
 
@@ -440,6 +441,10 @@ unsafe extern "C" fn py_decode_response(_module: PyObjectPtr, args: PyObjectPtr)
     decoded_response_to_py(&decoded)
 }
 
+unsafe extern "C" fn py_known_targets(_module: PyObjectPtr, _args: PyObjectPtr) -> PyObjectPtr {
+    language_targets_to_py(&known_targets())
+}
+
 fn with_session(
     next_request_id: u16,
     operation: impl FnOnce(&mut BoardVmLanguageSession) -> Result<PyObjectPtr, LanguageCoreError>,
@@ -639,6 +644,60 @@ unsafe fn capability_flag_names_to_py(flags: u16) -> PyObjectPtr {
         PyList_SetItem(list, index as isize, str_to_py(name));
     }
     list
+}
+
+unsafe fn language_targets_to_py(targets: &[LanguageTargetInfo]) -> PyObjectPtr {
+    let list = PyList_New(targets.len() as isize);
+    for (index, target) in targets.iter().enumerate() {
+        PyList_SetItem(list, index as isize, language_target_to_py(target));
+    }
+    list
+}
+
+unsafe fn language_target_to_py(target: &LanguageTargetInfo) -> PyObjectPtr {
+    let dict = PyDict_New();
+    dict_set(dict, "board_id", str_to_py(&target.board_id));
+    dict_set(dict, "display_name", str_to_py(&target.display_name));
+    dict_set(dict, "family", str_to_py(board_family_name(target.family)));
+    dict_set(dict, "runtime_id", str_to_py(&target.runtime_id));
+    dict_set(dict, "mcu", str_to_py(&target.mcu));
+    dict_set(dict, "core", str_to_py(&target.core));
+    dict_set(dict, "rust_target", str_to_py(&target.rust_target));
+    dict_set(dict, "clock_hz", usize_to_py(target.clock_hz as usize));
+    dict_set(
+        dict,
+        "operating_voltage_mv",
+        usize_to_py(target.operating_voltage_mv as usize),
+    );
+    dict_set(
+        dict,
+        "onboard_led",
+        language_onboard_led_to_py(target.onboard_led),
+    );
+    dict_set(
+        dict,
+        "digital_pin_count",
+        usize_to_py(target.digital_pin_count),
+    );
+    let capabilities = PyList_New(target.capabilities.len() as isize);
+    for (index, capability) in target.capabilities.iter().enumerate() {
+        PyList_SetItem(capabilities, index as isize, str_to_py(capability));
+    }
+    dict_set(dict, "capabilities", capabilities);
+    dict
+}
+
+unsafe fn language_onboard_led_to_py(led: Option<LanguageOnboardLed>) -> PyObjectPtr {
+    let Some(led) = led else {
+        return py_none();
+    };
+    let dict = PyDict_New();
+    dict_set(dict, "kind", str_to_py(onboard_led_kind(led)));
+    let pin = match led {
+        LanguageOnboardLed::Gpio(pin) | LanguageOnboardLed::WirelessChipGpio(pin) => pin,
+    };
+    dict_set(dict, "pin", usize_to_py(pin as usize));
+    dict
 }
 
 unsafe fn language_values_to_py(values: &[LanguageValue]) -> PyObjectPtr {
@@ -903,7 +962,7 @@ unsafe fn raise_core_error(context: &str, error: LanguageCoreError) -> PyObjectP
 
 #[no_mangle]
 pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
-    let methods: &'static mut [PyMethodDef; 21] = Box::leak(Box::new([
+    let methods: &'static mut [PyMethodDef; 22] = Box::leak(Box::new([
         PyMethodDef {
             ml_name: b"hello_wire\0".as_ptr() as *const c_char,
             ml_meth: Some(py_hello_wire),
@@ -1034,6 +1093,12 @@ pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
             ml_meth: Some(py_decode_response),
             ml_flags: METH_VARARGS,
             ml_doc: b"Decode a Board VM wire response in Rust.\0".as_ptr() as *const c_char,
+        },
+        PyMethodDef {
+            ml_name: b"known_targets\0".as_ptr() as *const c_char,
+            ml_meth: Some(py_known_targets),
+            ml_flags: METH_VARARGS,
+            ml_doc: b"Return known Board VM targets from Rust.\0".as_ptr() as *const c_char,
         },
         method_def_sentinel(),
     ]));
