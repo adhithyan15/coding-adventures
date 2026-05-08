@@ -17,6 +17,8 @@ control-plane layer:
 - Application Command Handler source/command envelopes
 - Application Command Handler-to-command-class frame projection
 - SendData request, response, callback, and transmit-option primitives
+- SendData transaction outcome tracking across response, callback, failure, and
+  timeout states
 - Memory Get ID payload decoding
 - request tracker with callback correlation and timeout expiry
 

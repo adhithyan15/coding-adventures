@@ -442,6 +442,101 @@ impl SendDataCallback {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SendDataFailure {
+    RejectedByController,
+    TransmitStatus(SendDataTransmitStatus),
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SendDataTransactionState {
+    AwaitingResponse,
+    AwaitingCallback,
+    Succeeded,
+    Failed(SendDataFailure),
+    TimedOut,
+}
+
+impl SendDataTransactionState {
+    pub fn is_terminal(self) -> bool {
+        matches!(self, Self::Succeeded | Self::Failed(_) | Self::TimedOut)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SendDataTransaction {
+    pub callback_id: u8,
+    pub sent_at_ms: u64,
+    pub timeout_at_ms: u64,
+    state: SendDataTransactionState,
+}
+
+impl SendDataTransaction {
+    pub fn new(request: &SendDataRequest, sent_at_ms: u64, timeout_ms: u64) -> Self {
+        Self {
+            callback_id: request.callback_id,
+            sent_at_ms,
+            timeout_at_ms: sent_at_ms.saturating_add(timeout_ms),
+            state: SendDataTransactionState::AwaitingResponse,
+        }
+    }
+
+    pub fn state(&self) -> SendDataTransactionState {
+        self.state
+    }
+
+    pub fn is_terminal(&self) -> bool {
+        self.state.is_terminal()
+    }
+
+    pub fn on_response(&mut self, response: SendDataResponse) -> SendDataTransactionState {
+        if self.is_terminal() {
+            return self.state;
+        }
+        self.state = if response.accepted {
+            SendDataTransactionState::AwaitingCallback
+        } else {
+            SendDataTransactionState::Failed(SendDataFailure::RejectedByController)
+        };
+        self.state
+    }
+
+    pub fn on_callback(
+        &mut self,
+        callback: SendDataCallback,
+    ) -> Result<SendDataTransactionState, SerialApiError> {
+        if callback.callback_id != self.callback_id {
+            return Err(SerialApiError::UnexpectedCallbackId {
+                expected: self.callback_id,
+                actual: callback.callback_id,
+            });
+        }
+        if self.is_terminal() {
+            return Ok(self.state);
+        }
+
+        self.state = if callback.transmit_status.is_success() {
+            SendDataTransactionState::Succeeded
+        } else {
+            SendDataTransactionState::Failed(SendDataFailure::TransmitStatus(
+                callback.transmit_status,
+            ))
+        };
+        Ok(self.state)
+    }
+
+    pub fn has_timed_out_at(&self, now_ms: u64) -> bool {
+        !self.is_terminal() && now_ms >= self.timeout_at_ms
+    }
+
+    pub fn expire_at(&mut self, now_ms: u64) -> SendDataTransactionState {
+        if self.has_timed_out_at(now_ms) {
+            self.state = SendDataTransactionState::TimedOut;
+        }
+        self.state
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MemoryId {
     pub home_id: HomeId,
@@ -569,6 +664,10 @@ pub enum SerialApiError {
     },
     PayloadTooLong(usize),
     UnsupportedLongRangeNodeId(u16),
+    UnexpectedCallbackId {
+        expected: u8,
+        actual: u8,
+    },
     NotRequest,
     Core(String),
 }
@@ -589,6 +688,10 @@ impl fmt::Display for SerialApiError {
             Self::UnsupportedLongRangeNodeId(node_id) => write!(
                 f,
                 "classic Z-Wave SendData does not support Long Range node id {node_id}"
+            ),
+            Self::UnexpectedCallbackId { expected, actual } => write!(
+                f,
+                "expected Z-Wave SendData callback id 0x{expected:02x}, got 0x{actual:02x}"
             ),
             Self::NotRequest => write!(f, "only request messages can be tracked"),
             Self::Core(message) => write!(f, "Z-Wave core error: {message}"),
@@ -890,6 +993,90 @@ mod tests {
         assert_eq!(callback.callback_id, 0x42);
         assert_eq!(callback.transmit_status, SendDataTransmitStatus::Verified);
         assert!(callback.transmit_status.is_success());
+    }
+
+    #[test]
+    fn send_data_transaction_tracks_successful_response_and_callback() {
+        let request = SendDataRequest::new(
+            NodeId::Classic(5),
+            CommandClassFrame::new(CommandClassId::SWITCH_BINARY, 0x01, vec![0xff]),
+            TransmitOptions::reliable(),
+            0x42,
+        );
+        let mut transaction = SendDataTransaction::new(&request, 1_000, 5_000);
+
+        assert_eq!(
+            transaction.on_response(SendDataResponse { accepted: true }),
+            SendDataTransactionState::AwaitingCallback
+        );
+        assert_eq!(
+            transaction
+                .on_callback(SendDataCallback {
+                    callback_id: 0x42,
+                    transmit_status: SendDataTransmitStatus::CompleteOk,
+                })
+                .unwrap(),
+            SendDataTransactionState::Succeeded
+        );
+        assert!(transaction.is_terminal());
+    }
+
+    #[test]
+    fn send_data_transaction_records_rejection_and_transmit_failures() {
+        let request = SendDataRequest::new(
+            NodeId::Classic(5),
+            CommandClassFrame::new(CommandClassId::SWITCH_BINARY, 0x01, vec![0xff]),
+            TransmitOptions::reliable(),
+            0x42,
+        );
+        let mut rejected = SendDataTransaction::new(&request, 1_000, 5_000);
+        let mut failed = SendDataTransaction::new(&request, 1_000, 5_000);
+
+        assert_eq!(
+            rejected.on_response(SendDataResponse { accepted: false }),
+            SendDataTransactionState::Failed(SendDataFailure::RejectedByController)
+        );
+        failed.on_response(SendDataResponse { accepted: true });
+        assert_eq!(
+            failed
+                .on_callback(SendDataCallback {
+                    callback_id: 0x42,
+                    transmit_status: SendDataTransmitStatus::NoRoute,
+                })
+                .unwrap(),
+            SendDataTransactionState::Failed(SendDataFailure::TransmitStatus(
+                SendDataTransmitStatus::NoRoute
+            ))
+        );
+    }
+
+    #[test]
+    fn send_data_transaction_rejects_mismatched_callback_id_and_times_out() {
+        let request = SendDataRequest::new(
+            NodeId::Classic(5),
+            CommandClassFrame::new(CommandClassId::SWITCH_BINARY, 0x01, vec![0xff]),
+            TransmitOptions::reliable(),
+            0x42,
+        );
+        let mut transaction = SendDataTransaction::new(&request, 1_000, 500);
+        transaction.on_response(SendDataResponse { accepted: true });
+
+        assert_eq!(
+            transaction.on_callback(SendDataCallback {
+                callback_id: 0x41,
+                transmit_status: SendDataTransmitStatus::CompleteOk,
+            }),
+            Err(SerialApiError::UnexpectedCallbackId {
+                expected: 0x42,
+                actual: 0x41,
+            })
+        );
+        assert!(!transaction.has_timed_out_at(1_499));
+        assert_eq!(
+            transaction.expire_at(1_500),
+            SendDataTransactionState::TimedOut
+        );
+        assert!(transaction.is_terminal());
     }
 
     #[test]
