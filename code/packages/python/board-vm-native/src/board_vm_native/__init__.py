@@ -1046,11 +1046,15 @@ def known_targets() -> list[BoardTarget]:
     return [BoardTarget(raw) for raw in _native.known_targets()]
 
 
+def detect_target(selector: str) -> BoardTarget | None:
+    raw = _native.detect_target(str(selector))
+    if raw is None:
+        return None
+    return BoardTarget(raw)
+
+
 def find_target(board_id: str) -> BoardTarget | None:
-    for target in known_targets():
-        if target.board_id == board_id:
-            return target
-    return None
+    return detect_target(board_id)
 
 
 __all__ = [
@@ -1068,6 +1072,7 @@ __all__ = [
     "RUN_FLAGS",
     "Session",
     "SessionResult",
+    "detect_target",
     "find_target",
     "known_targets",
 ]

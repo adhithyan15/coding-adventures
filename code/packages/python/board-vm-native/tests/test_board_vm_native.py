@@ -1,4 +1,12 @@
-from board_vm_native import BoardDescriptor, BoardTarget, ProtocolResult, Session, find_target, known_targets
+from board_vm_native import (
+    BoardDescriptor,
+    BoardTarget,
+    ProtocolResult,
+    Session,
+    detect_target,
+    find_target,
+    known_targets,
+)
 
 
 class FakeWriteTransport:
@@ -81,6 +89,21 @@ def test_known_targets_are_exposed_from_rust_registry():
     assert "gpio.open" in esp32.capabilities
     assert pico_w is not None
     assert pico_w.onboard_led == {"kind": "wireless_chip_gpio", "pin": 0}
+
+
+def test_targets_are_detected_from_rust_owned_aliases():
+    esp32 = detect_target("esp32")
+    pico = detect_target("Raspberry Pi Pico")
+    pico_w = find_target("pico-w")
+
+    assert esp32 is not None
+    assert esp32.board_id == "esp32-devkit-v1"
+    assert esp32.rust_target == "xtensa-esp32-none-elf"
+    assert pico is not None
+    assert pico.board_id == "raspberry-pi-pico"
+    assert pico_w is not None
+    assert pico_w.board_id == "raspberry-pi-pico-w"
+    assert detect_target("not-a-board") is None
 
 
 def test_session_dispatches_frames_through_write_transport():

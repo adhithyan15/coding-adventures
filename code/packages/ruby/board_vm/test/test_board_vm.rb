@@ -36,6 +36,20 @@ module CodingAdventures
         assert_equal({ "kind" => "wireless_chip_gpio", "pin" => 0 }, pico_w["onboard_led"])
       end
 
+      def test_targets_are_detected_from_rust_owned_aliases
+        esp32 = BoardVM.detect_target("esp32")
+        pico = BoardVM.detect_target("Raspberry Pi Pico")
+        pico_w = BoardVM.find_target("pico-w")
+
+        assert_equal "esp32-devkit-v1", esp32["board_id"]
+        assert_equal "xtensa-esp32-none-elf", esp32["rust_target"]
+        assert_equal "raspberry-pi-pico", pico["board_id"]
+        assert_equal "raspberry-pi-pico-w", pico_w["board_id"]
+        assert_nil BoardVM.detect_target("not-a-board")
+        assert_equal :esp32_devkit_v1, BoardVM.normalize_board(:esp32)
+        assert_equal :raspberry_pi_pico_w, BoardVM.normalize_board("pico-w")
+      end
+
       def test_connect_flash_uploads_the_uno_r4_serialusb_vm_and_tracks_runtime_port
         upload = CommandResult.new(
           ["cargo"],
@@ -587,7 +601,7 @@ module CodingAdventures
         runner = FakeRunner.new
 
         assert_raises(UnsupportedBoardError) do
-          BoardVM.connect(board: :esp32, port: "/dev/cu.usbserial", runner: runner)
+          BoardVM.connect(board: :unknown_board, port: "/dev/cu.usbserial", runner: runner)
         end
 
         assert_empty runner.calls

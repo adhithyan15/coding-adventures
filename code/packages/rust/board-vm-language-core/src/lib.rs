@@ -30,7 +30,7 @@ use board_vm_protocol::{
     RunStatus, Value as ProtocolValue, CAP_FLAG_BOARD_METADATA, CAP_FLAG_BYTECODE_CALLABLE,
     CAP_FLAG_PROTOCOL_FEATURE, FLAG_IS_ERROR_RESPONSE, FLAG_IS_RESPONSE,
 };
-use board_vm_targets::{all_targets, BoardFamily, OnboardLed as TargetOnboardLed};
+use board_vm_targets::{all_targets, BoardFamily, BoardTargetInfo, OnboardLed as TargetOnboardLed};
 
 pub const LANGUAGE_CORE_VERSION_MAJOR: u16 = 0;
 pub const LANGUAGE_CORE_VERSION_MINOR: u16 = 1;
@@ -392,33 +392,91 @@ pub fn capability_flag_names(flags: u16, out: &mut [&'static str]) -> usize {
 }
 
 pub fn known_targets() -> Vec<LanguageTargetInfo> {
-    all_targets()
-        .iter()
-        .map(|target| LanguageTargetInfo {
-            board_id: target.board_id.to_owned(),
-            display_name: target.display_name.to_owned(),
-            family: language_family(target.family),
-            runtime_id: target.runtime_id.to_owned(),
-            mcu: target.mcu.to_owned(),
-            core: target.core.to_owned(),
-            rust_target: target.rust_target.to_owned(),
-            clock_hz: target.clock_hz,
-            operating_voltage_mv: target.operating_voltage_mv,
-            onboard_led: target.onboard_led.map(language_onboard_led),
-            digital_pin_count: target.digital_pin_count,
-            capabilities: target
-                .capabilities
-                .iter()
-                .map(|capability| (*capability).to_owned())
-                .collect(),
-        })
-        .collect()
+    all_targets().iter().map(language_target_info).collect()
 }
 
 pub fn known_target(board_id: &str) -> Option<LanguageTargetInfo> {
-    known_targets()
-        .into_iter()
+    all_targets()
+        .iter()
         .find(|target| target.board_id == board_id)
+        .map(language_target_info)
+}
+
+pub fn detect_target(selector: &str) -> Option<LanguageTargetInfo> {
+    let normalized = normalize_target_selector(selector);
+    if normalized.is_empty() {
+        return None;
+    }
+
+    for target in all_targets() {
+        if normalize_target_selector(target.board_id) == normalized
+            || normalize_target_selector(target.display_name) == normalized
+        {
+            return Some(language_target_info(target));
+        }
+    }
+
+    let board_id = match normalized.as_str() {
+        "uno_r4" | "uno_r4_wifi" | "arduino_uno_r4" | "arduino_uno_r4_wifi" => {
+            "arduino-uno-r4-wifi"
+        }
+        "uno_r4_minima" | "arduino_uno_r4_minima" => "arduino-uno-r4-minima",
+        "esp" | "esp32" | "esp32_devkit" | "esp32_devkit_v1" | "espressif_esp32" => {
+            "esp32-devkit-v1"
+        }
+        "pico" | "rp2040" | "rpi_pico" | "raspberry_pico" | "raspberry_pi_pico" => {
+            "raspberry-pi-pico"
+        }
+        "pico_w"
+        | "picow"
+        | "rp2040_w"
+        | "rpi_pico_w"
+        | "raspberry_pico_w"
+        | "raspberry_pi_pico_w" => "raspberry-pi-pico-w",
+        _ => return None,
+    };
+    known_target(board_id)
+}
+
+pub fn normalize_target_selector(selector: &str) -> String {
+    let mut normalized = String::new();
+    let mut last_was_separator = false;
+    for character in selector.trim().chars() {
+        if character.is_ascii_alphanumeric() {
+            normalized.push(character.to_ascii_lowercase());
+            last_was_separator = false;
+        } else if character == '-' || character == '_' || character.is_ascii_whitespace() {
+            if !normalized.is_empty() && !last_was_separator {
+                normalized.push('_');
+                last_was_separator = true;
+            }
+        }
+    }
+    if normalized.ends_with('_') {
+        normalized.pop();
+    }
+    normalized
+}
+
+fn language_target_info(target: &BoardTargetInfo) -> LanguageTargetInfo {
+    LanguageTargetInfo {
+        board_id: target.board_id.to_owned(),
+        display_name: target.display_name.to_owned(),
+        family: language_family(target.family),
+        runtime_id: target.runtime_id.to_owned(),
+        mcu: target.mcu.to_owned(),
+        core: target.core.to_owned(),
+        rust_target: target.rust_target.to_owned(),
+        clock_hz: target.clock_hz,
+        operating_voltage_mv: target.operating_voltage_mv,
+        onboard_led: target.onboard_led.map(language_onboard_led),
+        digital_pin_count: target.digital_pin_count,
+        capabilities: target
+            .capabilities
+            .iter()
+            .map(|capability| (*capability).to_owned())
+            .collect(),
+    }
 }
 
 fn language_family(family: BoardFamily) -> LanguageBoardFamily {
@@ -1642,6 +1700,28 @@ mod tests {
             pico_w.onboard_led,
             Some(LanguageOnboardLed::WirelessChipGpio(0))
         );
+    }
+
+    #[test]
+    fn rust_core_detects_targets_from_human_selectors() {
+        assert_eq!(
+            detect_target("UNO R4 WiFi").unwrap().board_id,
+            "arduino-uno-r4-wifi"
+        );
+        assert_eq!(detect_target("esp32").unwrap().board_id, "esp32-devkit-v1");
+        assert_eq!(
+            detect_target("pico-w").unwrap().board_id,
+            "raspberry-pi-pico-w"
+        );
+        assert_eq!(
+            detect_target("Raspberry Pi Pico").unwrap().rust_target,
+            "thumbv6m-none-eabi"
+        );
+        assert_eq!(
+            normalize_target_selector("ESP32 DevKit V1"),
+            "esp32_devkit_v1"
+        );
+        assert!(detect_target("definitely-not-a-board").is_none());
     }
 
     #[test]
