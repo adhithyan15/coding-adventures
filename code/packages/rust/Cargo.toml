@@ -47,6 +47,7 @@ members = [
     "board-vm-runtime",
     "board-vm-esp32",
     "board-vm-pico",
+    "board-vm-targets",
     "board-vm-uno-r4",
     "board-vm-uno-r4-usb-cdc",
     "board-vm-uno-r4-uart",
