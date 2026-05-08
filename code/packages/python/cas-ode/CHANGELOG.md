@@ -2,6 +2,65 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] — 2026-05-08
+
+### Added
+
+- **Euler-Cauchy equidimensional ODE solver** — Phase 19
+  - Recognises `a·x²·y'' + b·x·y' + c·y = 0` via `_collect_euler_cauchy_coeffs`.
+  - Each term must have the same *weight* (power of x equals derivative order);
+    the recogniser rejects bare constants, plain `y'`, or any 3-factor products.
+  - Extracts rational coefficients `(a, b, c)` using `_flatten_product`, the Mul-tree
+    analogue of the existing `_flatten_add` helper.
+  - Solves via the **indicial equation** `a·r² + (b−a)·r + c = 0` (derived by
+    the ansatz `y = x^r`):
+    - **Distinct real roots** `r₁ ≠ r₂` → `y = C₁·x^{r₁} + C₂·x^{r₂}`
+    - **Repeated root** `r` → `y = (C₁ + C₂·ln x)·x^r`
+    - **Complex conjugate roots** `α ± βi` → `y = x^α·(C₁·cos(β ln x) + C₂·sin(β ln x))`
+  - Irrational discriminants are represented as symbolic `Pow(disc, 1/2)` nodes
+    (exact arithmetic throughout — no floats).
+  - Entry point `_try_euler_cauchy(expr, y, x)` returns `Equal(y, solution)` or
+    `None` on pattern mismatch.
+
+- **`_flatten_product`** — new helper in Section 2b
+  - Recursively decomposes a `Mul` tree into `(total_rational_coefficient, [non_rational_factors])`.
+  - Handles `Neg(...)` (flips sign), `IRInteger`, `IRRational`, and any other
+    node (treated as a single factor with coefficient 1).
+  - Mirrors `_flatten_add` in spirit: enables the Euler-Cauchy recogniser to
+    extract coefficients without knowing the nesting depth of the `Mul` tree.
+
+### Changed
+
+- `solve_ode` dispatcher — new step 3 added:
+  1. `_try_second_order_nonhom`
+  2. `_collect_second_order_coeffs` / `solve_second_order_const_coeff`
+  3. **`_try_euler_cauchy`** ← new (Phase 19)
+  4. `_try_bernoulli`
+  5. `_collect_linear_first_order` / `solve_linear_first_order`
+  6. `_try_separable`
+  7. `_try_homogeneous_type`
+  8. `_try_exact`
+
+- Module docstring updated to list Euler-Cauchy as the 8th ODE class.
+- Literate reading guide entries 13–16 added for the four new helpers/functions;
+  former entries 13–17 renumbered to 17–21.
+
+### Tests
+
+- **47 new tests** in `tests/test_ode.py` across four new classes:
+  - `TestFlattenProduct` — 9 tests: integer, rational, symbol, Neg, Mul(int, sym),
+    triple product, etc.
+  - `TestCollectEulerCauchyCoeffs` — 8 tests: full 3-term, two-term, scaled leading
+    coefficient, missing-x² returns None, const-coeff returns None, single term,
+    bare-x term.
+  - `TestSolveEulerCauchy` — 12 tests: all three root cases (distinct real ×2,
+    repeated ×3, complex ×3), solution head/structure, C1/C2 presence.
+  - `TestEulerCauchyViaDispatcher` — 6 tests: full `solve_ode` pipeline for each
+    root type, const-coeff not consumed by EC, `eval_ode` dispatch, scaled coeffs.
+- Combined coverage: **84.54%** (205 tests total).
+
+---
+
 ## [0.3.0] — 2026-05-06
 
 ### Added

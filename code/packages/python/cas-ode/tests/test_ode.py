@@ -33,7 +33,6 @@ from symbolic_ir import (
     DIV,
     EQUAL,
     EXP,
-    LOG,
     MUL,
     NEG,
     POW,
@@ -45,21 +44,25 @@ from symbolic_ir import (
     IRRational,
     IRSymbol,
 )
-from symbolic_ir.nodes import C_CONST, ODE2, D
+from symbolic_ir.nodes import C1, C2, ODE2, D
 from symbolic_vm import VM, SymbolicBackend
 
 from cas_ode import build_ode_handler_table, solve_ode
 from cas_ode.handlers import ode2_handler
 from cas_ode.ode import (
+    _collect_euler_cauchy_coeffs,
     _collect_linear_first_order,
     _collect_second_order_coeffs,
     _exact_sqrt_fraction,
     _flatten_add,
+    _flatten_product,
     _is_const_wrt,
     _isqrt_exact,
     _subst_ir,
     _subst_ratio_ir,
+    _try_euler_cauchy,
     _try_homogeneous_type,
+    solve_euler_cauchy,
     solve_second_order_const_coeff,
 )
 
@@ -1338,3 +1341,494 @@ class TestHomogeneousTypeODE:
         # Exponential solution from linear/separable, not the Log implicit form
         result_str = str(result)
         assert "Exp" in result_str
+
+
+# ---------------------------------------------------------------------------
+# Section J: Euler-Cauchy equidimensional ODE (Phase 19)
+# ---------------------------------------------------------------------------
+
+# Shared IR atoms for the Euler-Cauchy tests.
+X_SQ = IRApply(POW, (X, IRInteger(2)))   # Pow(x, 2) = x²
+
+
+def _ec_term_x2_yprime2(coeff: int = 1) -> IRNode:
+    """Build coeff · x² · y'' as a product tree."""
+    base = _mul(X_SQ, Y_DOUBLE)
+    if coeff == 1:
+        return base
+    return _mul(IRInteger(coeff), base)
+
+
+def _ec_term_x_yprime(coeff: int = 1) -> IRNode:
+    """Build coeff · x · y' as a product tree."""
+    base = _mul(X, Y_PRIME)
+    if coeff == 1:
+        return base
+    return _mul(IRInteger(coeff), base)
+
+
+def _ec_term_y(coeff: int = 1) -> IRNode:
+    """Build coeff · y."""
+    if coeff == 1:
+        return Y
+    return _mul(IRInteger(coeff), Y)
+
+
+def _build_ec_expr(a: int, b: int, c: int) -> IRNode:
+    """Assemble a · x²y'' + b · x·y' + c · y as a left-folded Add tree."""
+    terms = []
+    if a != 0:
+        terms.append(_ec_term_x2_yprime2(a))
+    if b != 0:
+        terms.append(_ec_term_x_yprime(b))
+    if c != 0:
+        terms.append(_ec_term_y(c))
+    if len(terms) == 1:
+        return terms[0]
+    result = terms[0]
+    for t in terms[1:]:
+        result = _add(result, t)
+    return result
+
+
+class TestFlattenProduct:
+    """Unit tests for _flatten_product — the Mul-tree analogue of _flatten_add."""
+
+    def test_integer_node(self) -> None:
+        """A bare IRInteger gives coefficient = that integer, no factors."""
+        k, fs = _flatten_product(IRInteger(7))
+        from fractions import Fraction
+        assert k == Fraction(7)
+        assert fs == []
+
+    def test_rational_node(self) -> None:
+        """A bare IRRational gives the corresponding Fraction, no factors."""
+        k, fs = _flatten_product(IRRational(3, 4))
+        from fractions import Fraction
+        assert k == Fraction(3, 4)
+        assert fs == []
+
+    def test_symbol_node(self) -> None:
+        """A bare symbol is a factor with coefficient 1."""
+        k, fs = _flatten_product(X)
+        from fractions import Fraction
+        assert k == Fraction(1)
+        assert fs == [X]
+
+    def test_neg_integer(self) -> None:
+        """Neg(IRInteger(5)) → coefficient = −5, no factors."""
+        k, fs = _flatten_product(_neg(IRInteger(5)))
+        from fractions import Fraction
+        assert k == Fraction(-5)
+        assert fs == []
+
+    def test_neg_symbol(self) -> None:
+        """Neg(x) → coefficient = −1, factors = [x]."""
+        k, fs = _flatten_product(_neg(X))
+        from fractions import Fraction
+        assert k == Fraction(-1)
+        assert fs == [X]
+
+    def test_mul_two_symbols(self) -> None:
+        """Mul(x, y) → coefficient = 1, factors = [x, y]."""
+        k, fs = _flatten_product(_mul(X, Y))
+        from fractions import Fraction
+        assert k == Fraction(1)
+        assert set(fs) == {X, Y}
+
+    def test_mul_int_symbol(self) -> None:
+        """Mul(3, x) → coefficient = 3, factors = [x]."""
+        k, fs = _flatten_product(_mul(IRInteger(3), X))
+        from fractions import Fraction
+        assert k == Fraction(3)
+        assert fs == [X]
+
+    def test_mul_neg_int_symbol(self) -> None:
+        """Mul(-2, y) → coefficient = −2, factors = [y]."""
+        k, fs = _flatten_product(_mul(IRInteger(-2), Y))
+        from fractions import Fraction
+        assert k == Fraction(-2)
+        assert fs == [Y]
+
+    def test_triple_product(self) -> None:
+        """Mul(3, Mul(x², y'')) → coefficient = 3, factors = [x², y'']."""
+        node = _mul(IRInteger(3), _mul(X_SQ, Y_DOUBLE))
+        k, fs = _flatten_product(node)
+        from fractions import Fraction
+        assert k == Fraction(3)
+        assert X_SQ in fs
+        assert Y_DOUBLE in fs
+
+
+class TestCollectEulerCauchyCoeffs:
+    """Unit tests for _collect_euler_cauchy_coeffs."""
+
+    def test_basic_x2_yprime2_plus_y(self) -> None:
+        """x²y'' + y must give a=1, b=0, c=1."""
+        from fractions import Fraction
+        expr = _add(_ec_term_x2_yprime2(1), _ec_term_y(1))
+        result = _collect_euler_cauchy_coeffs(expr, Y, X)
+        assert result is not None
+        a, b, c = result
+        assert a == Fraction(1)
+        assert b == Fraction(0)
+        assert c == Fraction(1)
+
+    def test_full_three_term(self) -> None:
+        """x²y'' + 2xy' − 2y → a=1, b=2, c=−2."""
+        from fractions import Fraction
+        expr = _build_ec_expr(1, 2, -2)
+        result = _collect_euler_cauchy_coeffs(expr, Y, X)
+        assert result is not None
+        a, b, c = result
+        assert a == Fraction(1)
+        assert b == Fraction(2)
+        assert c == Fraction(-2)
+
+    def test_negative_b_and_c(self) -> None:
+        """x²y'' − 5xy' + 9y → a=1, b=−5, c=9."""
+        from fractions import Fraction
+        expr = _build_ec_expr(1, -5, 9)
+        result = _collect_euler_cauchy_coeffs(expr, Y, X)
+        assert result is not None
+        a, b, c = result
+        assert a == Fraction(1)
+        assert b == Fraction(-5)
+        assert c == Fraction(9)
+
+    def test_scaled_leading_coeff(self) -> None:
+        """3x²y'' + 6xy' − 6y → a=3, b=6, c=−6."""
+        from fractions import Fraction
+        expr = _build_ec_expr(3, 6, -6)
+        result = _collect_euler_cauchy_coeffs(expr, Y, X)
+        assert result is not None
+        a, b, c = result
+        assert a == Fraction(3)
+        assert b == Fraction(6)
+        assert c == Fraction(-6)
+
+    def test_missing_x2_term_returns_none(self) -> None:
+        """xy' + y = 0 has no x²·y'' term → None (a=0)."""
+        expr = _add(_ec_term_x_yprime(1), _ec_term_y(1))
+        assert _collect_euler_cauchy_coeffs(expr, Y, X) is None
+
+    def test_const_coeff_ode_returns_none(self) -> None:
+        """y'' + y' + y = 0 has no x² or x multipliers → None."""
+        expr = _add(_add(Y_DOUBLE, Y_PRIME), Y)
+        assert _collect_euler_cauchy_coeffs(expr, Y, X) is None
+
+    def test_only_one_term_returns_none(self) -> None:
+        """A single x²y'' term has matched < 2 → None."""
+        expr = _ec_term_x2_yprime2(1)
+        assert _collect_euler_cauchy_coeffs(expr, Y, X) is None
+
+    def test_bare_x_term_returns_none(self) -> None:
+        """x²y'' + 2xy' + c·x = 0 has a bare x term (not c·y) → None."""
+        expr = _add(_add(_ec_term_x2_yprime2(1), _ec_term_x_yprime(2)), X)
+        assert _collect_euler_cauchy_coeffs(expr, Y, X) is None
+
+
+class TestSolveEulerCauchy:
+    """Unit tests for solve_euler_cauchy with all three root cases."""
+
+    # ------------------------------------------------------------------ #
+    # Case 1: distinct real roots (positive discriminant)                #
+    # ------------------------------------------------------------------ #
+
+    def test_distinct_real_roots_positive(self) -> None:
+        """x²y'' + 2xy' − 2y = 0 → y = C1·x + C2·x^{-2}.
+
+        Indicial: r² + (2−1)r − 2 = 0  → r² + r − 2 = 0
+        Roots: r=1, r=−2.
+        """
+        from fractions import Fraction
+        result = solve_euler_cauchy(Fraction(1), Fraction(2), Fraction(-2), Y, X)
+
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        assert result.args[0] == Y
+
+        # The solution is Add(Mul(C1, x), Mul(C2, Pow(x, Neg(IRInteger(2)))))
+        sol = result.args[1]
+        sol_str = str(sol)
+        # Both integration constants must appear.
+        assert "c1" in sol_str or C1 in _walk_nodes(sol)
+        assert "c2" in sol_str or C2 in _walk_nodes(sol)
+        # Log must NOT appear (real distinct roots → no logarithm).
+        assert "Log" not in sol_str
+
+    def test_distinct_real_roots_symmetric(self) -> None:
+        """x²y'' + xy' − 4y = 0 → y = C1·x² + C2·x^{-2}.
+
+        Indicial: r² + 0·r − 4 = 0  → roots ±2.
+        """
+        from fractions import Fraction
+        result = solve_euler_cauchy(Fraction(1), Fraction(1), Fraction(-4), Y, X)
+
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        sol = result.args[1]
+        sol_str = str(sol)
+        assert "Log" not in sol_str
+        assert "Cos" not in sol_str and "Sin" not in sol_str
+
+    def test_distinct_real_roots_result_is_add(self) -> None:
+        """The solution for two distinct roots is an Add of two Mul terms."""
+        from fractions import Fraction
+        result = solve_euler_cauchy(Fraction(1), Fraction(2), Fraction(-2), Y, X)
+        sol = result.args[1]
+        # Top level must be Add(Mul(C1, ...), Mul(C2, ...))
+        assert isinstance(sol, IRApply)
+        assert sol.head == ADD
+
+    # ------------------------------------------------------------------ #
+    # Case 2: repeated root (zero discriminant)                          #
+    # ------------------------------------------------------------------ #
+
+    def test_repeated_root_order_three(self) -> None:
+        """x²y'' − 5xy' + 9y = 0 → y = (C1 + C2·ln x)·x³.
+
+        Indicial: r² + (−5−1)r + 9 = 0  → r² − 6r + 9 = 0  → (r−3)² = 0.
+        """
+        from fractions import Fraction
+        result = solve_euler_cauchy(Fraction(1), Fraction(-5), Fraction(9), Y, X)
+
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        sol = result.args[1]
+        sol_str = str(sol)
+        # Repeated root → logarithm appears.
+        assert "Log" in sol_str
+        # No trig functions.
+        assert "Cos" not in sol_str and "Sin" not in sol_str
+
+    def test_repeated_root_order_one(self) -> None:
+        """x²y'' − xy' + y = 0 → y = (C1 + C2·ln x)·x.
+
+        Indicial: r² + (−1−1)r + 1 = 0  → r² − 2r + 1 = 0  → (r−1)² = 0.
+        """
+        from fractions import Fraction
+        result = solve_euler_cauchy(Fraction(1), Fraction(-1), Fraction(1), Y, X)
+
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        sol = result.args[1]
+        sol_str = str(sol)
+        assert "Log" in sol_str
+        # x to the first power appears (not x^3 or anything else)
+        # We check that x itself is a factor somewhere in the solution.
+        assert X in _walk_nodes(sol)
+
+    def test_repeated_root_solution_structure(self) -> None:
+        """Repeated root: top-level node is Mul, inner Add contains C1 and C2."""
+        from fractions import Fraction
+        result = solve_euler_cauchy(Fraction(1), Fraction(-5), Fraction(9), Y, X)
+        sol = result.args[1]
+        # Top level: Mul((C1 + C2·ln x), x^r)
+        assert isinstance(sol, IRApply)
+        assert sol.head == MUL
+
+    # ------------------------------------------------------------------ #
+    # Case 3: complex conjugate roots (negative discriminant)            #
+    # ------------------------------------------------------------------ #
+
+    def test_complex_roots_zero_alpha(self) -> None:
+        """x²y'' + xy' + y = 0 → y = C1·cos(ln x) + C2·sin(ln x).
+
+        Indicial: r² + 0·r + 1 = 0  → roots ±i.  α=0, β=1.
+        """
+        from fractions import Fraction
+        result = solve_euler_cauchy(Fraction(1), Fraction(1), Fraction(1), Y, X)
+
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        sol = result.args[1]
+        sol_str = str(sol)
+        assert "Cos" in sol_str
+        assert "Sin" in sol_str
+        assert "Log" in sol_str  # β·ln(x) appears inside trig
+        # No Pow(x, ...) other than multiplied by the whole expression
+        # (alpha=0 means x^alpha = 1, still wrapped in Mul(1,...))
+
+    def test_complex_roots_negative_alpha(self) -> None:
+        """x²y'' + 3xy' + 2y = 0 → y = x^{-1}·(C1·cos(ln x) + C2·sin(ln x)).
+
+        Indicial: r² + 2r + 2 = 0  → r = −1 ± i.  α=−1, β=1.
+        """
+        from fractions import Fraction
+        result = solve_euler_cauchy(Fraction(1), Fraction(3), Fraction(2), Y, X)
+
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        sol = result.args[1]
+        sol_str = str(sol)
+        assert "Cos" in sol_str
+        assert "Sin" in sol_str
+        assert "Log" in sol_str
+        # x^{-1} must appear → Pow node with Neg exponent
+        assert "Pow" in sol_str
+
+    def test_complex_roots_solution_is_mul(self) -> None:
+        """Complex case: top-level is Mul(x^α, Add(cos_term, sin_term))."""
+        from fractions import Fraction
+        result = solve_euler_cauchy(Fraction(1), Fraction(3), Fraction(2), Y, X)
+        sol = result.args[1]
+        assert isinstance(sol, IRApply)
+        assert sol.head == MUL
+
+    # ------------------------------------------------------------------ #
+    # Edge cases                                                          #
+    # ------------------------------------------------------------------ #
+
+    def test_solution_head_is_equal(self) -> None:
+        """All cases: result is Equal(y, ...)."""
+        from fractions import Fraction
+        for a, b, c in [
+            (Fraction(1), Fraction(2), Fraction(-2)),   # distinct real
+            (Fraction(1), Fraction(-5), Fraction(9)),   # repeated
+            (Fraction(1), Fraction(1), Fraction(1)),    # complex
+        ]:
+            r = solve_euler_cauchy(a, b, c, Y, X)
+            assert isinstance(r, IRApply)
+            assert r.head == EQUAL
+            assert r.args[0] == Y
+
+    def test_c1_c2_constants_present(self) -> None:
+        """All three root cases must contain both %c1 and %c2."""
+        from fractions import Fraction
+        for a, b, c in [
+            (Fraction(1), Fraction(2), Fraction(-2)),
+            (Fraction(1), Fraction(-5), Fraction(9)),
+            (Fraction(1), Fraction(1), Fraction(1)),
+        ]:
+            sol = solve_euler_cauchy(a, b, c, Y, X).args[1]
+            nodes = _walk_nodes(sol)
+            assert C1 in nodes, f"C1 missing for a={a},b={b},c={c}"
+            assert C2 in nodes, f"C2 missing for a={a},b={b},c={c}"
+
+
+class TestTryEulerCauchy:
+    """Integration tests for _try_euler_cauchy (pattern-match + solve)."""
+
+    def test_matches_distinct_real(self) -> None:
+        """x²y'' + 2xy' − 2y = 0 is recognised and solved."""
+        expr = _build_ec_expr(1, 2, -2)
+        result = _try_euler_cauchy(expr, Y, X)
+        assert result is not None
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        assert result.args[0] == Y
+
+    def test_matches_repeated_root(self) -> None:
+        """x²y'' − 5xy' + 9y = 0 is recognised and solved (Log appears)."""
+        expr = _build_ec_expr(1, -5, 9)
+        result = _try_euler_cauchy(expr, Y, X)
+        assert result is not None
+        assert "Log" in str(result)
+
+    def test_matches_complex_roots(self) -> None:
+        """x²y'' + xy' + y = 0 is recognised and solved (Cos/Sin appear)."""
+        expr = _build_ec_expr(1, 1, 1)
+        result = _try_euler_cauchy(expr, Y, X)
+        assert result is not None
+        sol_str = str(result)
+        assert "Cos" in sol_str
+        assert "Sin" in sol_str
+
+    def test_no_x2_term_returns_none(self) -> None:
+        """y'' + y' + y = 0 (constant-coeff) is not Euler-Cauchy → None."""
+        expr = _add(_add(Y_DOUBLE, Y_PRIME), Y)
+        assert _try_euler_cauchy(expr, Y, X) is None
+
+    def test_first_order_returns_none(self) -> None:
+        """y' + y = 0 has no y'' term → None."""
+        expr = _add(Y_PRIME, Y)
+        assert _try_euler_cauchy(expr, Y, X) is None
+
+    def test_ec_two_term_only_x2_and_y(self) -> None:
+        """x²y'' + y = 0 (b=0) is a valid two-term Euler-Cauchy."""
+        # Indicial: r² + (-1)r + 1 = 0 → r² - r + 1 = 0
+        # disc = 1 - 4 = -3 < 0 → complex roots
+        expr = _add(_ec_term_x2_yprime2(1), _ec_term_y(1))
+        result = _try_euler_cauchy(expr, Y, X)
+        assert result is not None
+        assert result.head == EQUAL
+
+
+class TestEulerCauchyViaDispatcher:
+    """End-to-end tests: solve_ode / eval_ode dispatches to Euler-Cauchy."""
+
+    def test_dispatch_distinct_real_via_solve_ode(self) -> None:
+        """solve_ode(x²y''+2xy'-2y, y, x, vm) → Equal(y, ...) with no Log."""
+        vm = make_vm()
+        expr = _build_ec_expr(1, 2, -2)
+        result = solve_ode(expr, Y, X, vm)
+        assert result is not None
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        assert "Log" not in str(result)
+
+    def test_dispatch_repeated_root_via_solve_ode(self) -> None:
+        """solve_ode(x²y''-5xy'+9y, y, x, vm) → Equal(y, ...) with Log."""
+        vm = make_vm()
+        expr = _build_ec_expr(1, -5, 9)
+        result = solve_ode(expr, Y, X, vm)
+        assert result is not None
+        assert "Log" in str(result)
+
+    def test_dispatch_complex_via_solve_ode(self) -> None:
+        """solve_ode(x²y''+xy'+y, y, x, vm) → Equal(y, ...) with Cos/Sin."""
+        vm = make_vm()
+        expr = _build_ec_expr(1, 1, 1)
+        result = solve_ode(expr, Y, X, vm)
+        assert result is not None
+        sol_str = str(result)
+        assert "Cos" in sol_str
+        assert "Sin" in sol_str
+
+    def test_const_coeff_not_consumed_by_euler_cauchy(self) -> None:
+        """y'' − 3y' + 2y = 0 is constant-coeff, not Euler-Cauchy.
+        It must be solved by the const-coeff solver (Exp in the result).
+        """
+        vm = make_vm()
+        # y'' - 3y' + 2y = 0  (standard const-coeff, roots 1 and 2)
+        expr = _add(_add(Y_DOUBLE, _mul(IRInteger(-3), Y_PRIME)), _mul(IRInteger(2), Y))
+        result = solve_ode(expr, Y, X, vm)
+        assert result is not None
+        assert "Exp" in str(result)
+
+    def test_eval_ode_ode2_dispatch_euler_cauchy(self) -> None:
+        """eval_ode wraps solve_ode via ODE2 — same result."""
+        expr = _build_ec_expr(1, 2, -2)
+        result = eval_ode(expr)
+        assert result is not None
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        assert result.args[0] == Y
+
+    def test_euler_cauchy_scaled_coefficients(self) -> None:
+        """2x²y'' + 4xy' − 4y = 0 is equivalent to x²y''+2xy'-2y=0 after division.
+        The solver works with integer coefficients directly — same roots.
+        """
+        vm = make_vm()
+        expr = _build_ec_expr(2, 4, -4)   # 2·(x²y''+2xy'-2y)=0
+        result = solve_ode(expr, Y, X, vm)
+        # Indicial: 2r²+(4-2)r-4=0 → 2r²+2r-4=0 → r²+r-2=0 → r=1,-2
+        # Exact same roots as the unscaled case.
+        assert result is not None
+        assert result.head == EQUAL
+        assert "Log" not in str(result)
+
+
+# ---------------------------------------------------------------------------
+# Shared walk helper (used by Euler-Cauchy tests above)
+# ---------------------------------------------------------------------------
+
+
+def _walk_nodes(node: IRNode) -> list[IRNode]:
+    """Collect all nodes in an IR tree (depth-first, pre-order)."""
+    acc: list[IRNode] = [node]
+    if isinstance(node, IRApply):
+        for arg in node.args:
+            acc.extend(_walk_nodes(arg))
+    return acc

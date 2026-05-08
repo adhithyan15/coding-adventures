@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-cas-ode"
-version = "0.3.0"
-description = "Symbolic ODE solver for the MACSYMA CAS system — separable, first-order linear, Bernoulli, exact, homogeneous-type, and second-order constant-coefficient ODEs."
+version = "0.4.0"
+description = "Symbolic ODE solver for the MACSYMA CAS system — separable, first-order linear, Bernoulli, exact, homogeneous-type, second-order constant-coefficient, and Euler-Cauchy equidimensional ODEs."
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
