@@ -1,4 +1,4 @@
-"""spice-engine: SPICE-compatible analog simulator (MNA + DC + transient + AC)."""
+"""spice-engine: SPICE-compatible analog simulator (MNA + DC + transient + AC + DC sweep)."""
 
 from spice_engine.elements import (
     BJT,
@@ -16,16 +16,19 @@ from spice_engine.engine import (
     AcResult,
     Circuit,
     DcResult,
+    DcSweepPoint,
+    DcSweepResult,
     TfResult,
     TransientPoint,
     TransientResult,
     ac_sweep,
     dc_op,
+    dc_sweep,
     tf,
     transient,
 )
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
 
 __all__ = [
     "AcPoint",
@@ -35,6 +38,8 @@ __all__ = [
     "Circuit",
     "CurrentSource",
     "DcResult",
+    "DcSweepPoint",
+    "DcSweepResult",
     "Diode",
     "Element",
     "Inductor",
@@ -47,6 +52,7 @@ __all__ = [
     "__version__",
     "ac_sweep",
     "dc_op",
+    "dc_sweep",
     "tf",
     "transient",
 ]
