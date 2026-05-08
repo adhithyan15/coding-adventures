@@ -27,3 +27,5 @@ All notable changes to this package will be documented in this file.
   desired-state reconciliation, and worker restart checks into one report.
 - Deterministic worker restart plans for inspecting overdue bridge workers
   before mutating supervisor state.
+- Worker restart reconciliation marks registered bridges degraded and emits
+  deterministic health events.

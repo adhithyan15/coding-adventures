@@ -881,21 +881,27 @@ impl SmartHomeRuntime {
     pub fn reconcile_supervision(&mut self, now_ms: u64) -> Vec<RuntimeEvent> {
         let plan = self.supervisor.restart_plan_at(now_ms);
 
-        plan.instructions
-            .into_iter()
-            .filter_map(|instruction| {
-                let bridge_id = instruction.bridge_id;
-                let integration_id = instruction.integration_id;
-                self.supervisor.mark_restart_requested(&bridge_id).ok()?;
-                let event = RuntimeEvent::WorkerNeedsRestart {
-                    bridge_id,
-                    integration_id,
-                    overdue_at_ms: instruction.planned_at_ms,
-                };
-                self.event_bus.publish(event.clone());
-                Some(event)
-            })
-            .collect()
+        let mut events = Vec::new();
+        for instruction in plan.instructions {
+            let bridge_id = instruction.bridge_id;
+            let integration_id = instruction.integration_id;
+            if self.supervisor.mark_restart_requested(&bridge_id).is_err() {
+                continue;
+            }
+            self.mark_registered_bridge_degraded_for_restart(
+                &bridge_id,
+                &integration_id,
+                instruction.planned_at_ms,
+            );
+            let event = RuntimeEvent::WorkerNeedsRestart {
+                bridge_id,
+                integration_id,
+                overdue_at_ms: instruction.planned_at_ms,
+            };
+            self.event_bus.publish(event.clone());
+            events.push(event);
+        }
+        events
     }
 
     pub fn worker_restart_plan_at(&self, now_ms: u64) -> WorkerRestartPlan {
@@ -916,6 +922,56 @@ impl SmartHomeRuntime {
             desired_state_actions,
             worker_events,
         })
+    }
+
+    fn mark_registered_bridge_degraded_for_restart(
+        &mut self,
+        bridge_id: &BridgeId,
+        integration_id: &IntegrationId,
+        now_ms: u64,
+    ) {
+        let Some(mut bridge) = self.registry.bridge(bridge_id).cloned() else {
+            return;
+        };
+        bridge.health = Health::Degraded;
+        self.registry
+            .upsert_bridge(bridge)
+            .expect("supervision health update uses an existing bridge");
+
+        let event = DeviceEvent {
+            event_id: EventId::trusted(format!(
+                "supervision.restart.health:{}:{now_ms}",
+                bridge_id.as_str()
+            )),
+            bridge_id: bridge_id.clone(),
+            device_id: None,
+            entity_id: None,
+            observed_at_ms: now_ms,
+            received_at_ms: now_ms,
+            event_type: DeviceEventType::Health,
+            state_delta: None,
+            raw_ref: None,
+            correlation_id: None,
+            metadata: vec![
+                Metadata::new("smart_home.health", health_name(Health::Degraded)),
+                Metadata::new("smart_home.supervision.reason", "heartbeat_overdue"),
+                Metadata::new(
+                    "smart_home.supervision.integration_id",
+                    integration_id.as_str(),
+                ),
+            ],
+        };
+        self.registry
+            .record_event(event.clone())
+            .expect("supervision health events reference an existing bridge");
+        self.event_bus.publish(RuntimeEvent::Device(event.clone()));
+        self.event_bus.publish(RuntimeEvent::BridgeHealth {
+            event_id: event.event_id,
+            bridge_id: bridge_id.clone(),
+            health: Health::Degraded,
+            observed_at_ms: now_ms,
+            received_at_ms: now_ms,
+        });
     }
 }
 
@@ -1804,6 +1860,59 @@ mod tests {
         assert_eq!(worker.status, WorkerStatus::Restarting);
         assert_eq!(worker.restart_count, 1);
         assert!(runtime.reconcile_supervision(1_127).is_empty());
+    }
+
+    #[test]
+    fn supervisor_restart_marks_registered_bridge_degraded() {
+        let mut runtime = SmartHomeRuntime::new();
+        let bridge_id = BridgeId::trusted("bridge-1");
+        let subscription = RuntimeSubscriptionId::trusted("bridge-health");
+        runtime.upsert_bridge(bridge("bridge-1")).unwrap();
+        runtime
+            .event_bus_mut()
+            .subscribe(
+                subscription.clone(),
+                RuntimeEventFilter::Bridge(bridge_id.clone()),
+            )
+            .unwrap();
+        runtime
+            .supervisor_mut()
+            .register_worker(SupervisedBridgeWorker::new(
+                bridge_id.clone(),
+                IntegrationId::trusted("hue"),
+                1_000,
+                100,
+            ));
+
+        let events = runtime.reconcile_supervision(1_100);
+        let deliveries = runtime.event_bus_mut().drain(&subscription).unwrap();
+        let bridge = runtime.registry().bridge(&bridge_id).unwrap();
+        let health_event = runtime
+            .registry()
+            .event(&EventId::trusted(
+                "supervision.restart.health:bridge-1:1100",
+            ))
+            .unwrap();
+
+        assert_eq!(events.len(), 1);
+        assert_eq!(bridge.health, Health::Degraded);
+        assert_eq!(runtime.registry().counts().events, 1);
+        assert_eq!(health_event.event_type, DeviceEventType::Health);
+        assert!(health_event
+            .metadata
+            .iter()
+            .any(|metadata| metadata.key == "smart_home.supervision.reason"
+                && metadata.value == "heartbeat_overdue"));
+        assert!(deliveries.iter().any(|event| matches!(
+            event,
+            RuntimeEvent::BridgeHealth {
+                health: Health::Degraded,
+                ..
+            }
+        )));
+        assert!(deliveries
+            .iter()
+            .any(|event| matches!(event, RuntimeEvent::WorkerNeedsRestart { .. })));
     }
 
     #[test]
