@@ -13,10 +13,14 @@ use std::slice;
 use std::str;
 
 use board_vm_host::{
-    write_blink_module, write_gpio_read_module, write_gpio_write_module, write_module,
-    write_time_now_module, write_time_sleep_ms_module, BlinkProgram, GpioReadProgram,
-    GpioWriteProgram, HostError, HostSession, ModuleSpec, TimeNowProgram, TimeSleepMsProgram,
-    BLINK_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID, DEFAULT_RUN_FLAGS,
+    write_blink_module, write_gpio_handle_close_module, write_gpio_handle_read_module,
+    write_gpio_handle_write_module, write_gpio_open_module, write_gpio_read_module,
+    write_gpio_write_module, write_module, write_time_now_module, write_time_sleep_ms_module,
+    BlinkProgram, GpioHandleCloseProgram, GpioHandleReadProgram, GpioHandleWriteProgram,
+    GpioOpenProgram, GpioReadProgram, GpioWriteProgram, HostError, HostSession, ModuleSpec,
+    TimeNowProgram, TimeSleepMsProgram, BLINK_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET,
+    DEFAULT_PROGRAM_ID, DEFAULT_RUN_FLAGS, GPIO_HANDLE_CLOSE_MODULE_LEN,
+    GPIO_HANDLE_READ_MODULE_LEN, GPIO_HANDLE_WRITE_MODULE_LEN, GPIO_OPEN_MODULE_LEN,
     GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_protocol::{
@@ -431,6 +435,34 @@ pub fn build_gpio_write_module(
     out: &mut [u8],
 ) -> Result<usize, LanguageCoreError> {
     Ok(write_gpio_write_module(program, out)?)
+}
+
+pub fn build_gpio_open_module(
+    program: GpioOpenProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_gpio_open_module(program, out)?)
+}
+
+pub fn build_gpio_handle_read_module(
+    program: GpioHandleReadProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_gpio_handle_read_module(program, out)?)
+}
+
+pub fn build_gpio_handle_write_module(
+    program: GpioHandleWriteProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_gpio_handle_write_module(program, out)?)
+}
+
+pub fn build_gpio_handle_close_module(
+    program: GpioHandleCloseProgram,
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_gpio_handle_close_module(program, out)?)
 }
 
 pub fn build_time_now_module(
@@ -943,6 +975,86 @@ pub unsafe extern "C" fn board_vm_language_gpio_write_module(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn board_vm_language_gpio_open_module(
+    pin: u8,
+    mode: u8,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_gpio_open_module(
+            GpioOpenProgram {
+                pin,
+                mode,
+                max_stack,
+            },
+            module_out,
+        )?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn board_vm_language_gpio_handle_read_module(
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_gpio_handle_read_module(GpioHandleReadProgram { max_stack }, module_out)?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn board_vm_language_gpio_handle_write_module(
+    value: u8,
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_gpio_handle_write_module(
+            GpioHandleWriteProgram {
+                value: value != 0,
+                max_stack,
+            },
+            module_out,
+        )?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn board_vm_language_gpio_handle_close_module(
+    max_stack: u8,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_gpio_handle_close_module(GpioHandleCloseProgram { max_stack }, module_out)?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn board_vm_language_time_now_module(
     max_stack: u8,
     module_out: *mut u8,
@@ -1211,6 +1323,26 @@ pub extern "C" fn board_vm_language_gpio_write_module_len() -> u64 {
 }
 
 #[no_mangle]
+pub extern "C" fn board_vm_language_gpio_open_module_len() -> u64 {
+    GPIO_OPEN_MODULE_LEN as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_gpio_handle_read_module_len() -> u64 {
+    GPIO_HANDLE_READ_MODULE_LEN as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_gpio_handle_write_module_len() -> u64 {
+    GPIO_HANDLE_WRITE_MODULE_LEN as u64
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_gpio_handle_close_module_len() -> u64 {
+    GPIO_HANDLE_CLOSE_MODULE_LEN as u64
+}
+
+#[no_mangle]
 pub extern "C" fn board_vm_language_time_now_module_len() -> u64 {
     TIME_NOW_MODULE_LEN as u64
 }
@@ -1470,6 +1602,71 @@ mod tests {
         };
         assert_eq!(gpio_write_status.code, BoardVmLanguageStatusCode::Ok as u32);
         assert_eq!(gpio_write_status.len, GPIO_WRITE_MODULE_LEN as u64);
+
+        let mut gpio_open_module = [0u8; GPIO_OPEN_MODULE_LEN];
+        let gpio_open_status = unsafe {
+            board_vm_language_gpio_open_module(
+                13,
+                board_vm_host::GPIO_MODE_OUTPUT,
+                2,
+                gpio_open_module.as_mut_ptr(),
+                gpio_open_module.len() as u64,
+            )
+        };
+        assert_eq!(gpio_open_status.code, BoardVmLanguageStatusCode::Ok as u32);
+        assert_eq!(gpio_open_status.len, GPIO_OPEN_MODULE_LEN as u64);
+
+        let mut gpio_handle_read_module = [0u8; GPIO_HANDLE_READ_MODULE_LEN];
+        let gpio_handle_read_status = unsafe {
+            board_vm_language_gpio_handle_read_module(
+                2,
+                gpio_handle_read_module.as_mut_ptr(),
+                gpio_handle_read_module.len() as u64,
+            )
+        };
+        assert_eq!(
+            gpio_handle_read_status.code,
+            BoardVmLanguageStatusCode::Ok as u32
+        );
+        assert_eq!(
+            gpio_handle_read_status.len,
+            GPIO_HANDLE_READ_MODULE_LEN as u64
+        );
+
+        let mut gpio_handle_write_module = [0u8; GPIO_HANDLE_WRITE_MODULE_LEN];
+        let gpio_handle_write_status = unsafe {
+            board_vm_language_gpio_handle_write_module(
+                1,
+                3,
+                gpio_handle_write_module.as_mut_ptr(),
+                gpio_handle_write_module.len() as u64,
+            )
+        };
+        assert_eq!(
+            gpio_handle_write_status.code,
+            BoardVmLanguageStatusCode::Ok as u32
+        );
+        assert_eq!(
+            gpio_handle_write_status.len,
+            GPIO_HANDLE_WRITE_MODULE_LEN as u64
+        );
+
+        let mut gpio_handle_close_module = [0u8; GPIO_HANDLE_CLOSE_MODULE_LEN];
+        let gpio_handle_close_status = unsafe {
+            board_vm_language_gpio_handle_close_module(
+                1,
+                gpio_handle_close_module.as_mut_ptr(),
+                gpio_handle_close_module.len() as u64,
+            )
+        };
+        assert_eq!(
+            gpio_handle_close_status.code,
+            BoardVmLanguageStatusCode::Ok as u32
+        );
+        assert_eq!(
+            gpio_handle_close_status.len,
+            GPIO_HANDLE_CLOSE_MODULE_LEN as u64
+        );
 
         let begin = unsafe {
             board_vm_language_program_begin_wire(

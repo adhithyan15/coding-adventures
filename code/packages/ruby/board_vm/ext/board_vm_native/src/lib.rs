@@ -3,15 +3,18 @@ use std::ptr;
 use std::slice;
 
 use board_vm_host::{
-    BlinkProgram, GpioReadProgram, GpioWriteProgram, TimeNowProgram, TimeSleepMsProgram,
-    BLINK_MODULE_LEN, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN,
-    TIME_SLEEP_MS_MODULE_LEN,
+    BlinkProgram, GpioHandleCloseProgram, GpioHandleReadProgram, GpioHandleWriteProgram,
+    GpioOpenProgram, GpioReadProgram, GpioWriteProgram, TimeNowProgram, TimeSleepMsProgram,
+    BLINK_MODULE_LEN, GPIO_HANDLE_CLOSE_MODULE_LEN, GPIO_HANDLE_READ_MODULE_LEN,
+    GPIO_HANDLE_WRITE_MODULE_LEN, GPIO_OPEN_MODULE_LEN, GPIO_READ_MODULE_LEN,
+    GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_language_core::{
-    build_blink_module, build_caps_query_wire_frame, build_gpio_read_module,
-    build_gpio_write_module, build_hello_wire_frame, build_program_begin_wire_frame,
-    build_program_chunk_wire_frame, build_program_end_wire_frame, build_raw_module,
-    build_run_background_wire_frame, build_run_wire_frame, build_stop_wire_frame,
+    build_blink_module, build_caps_query_wire_frame, build_gpio_handle_close_module,
+    build_gpio_handle_read_module, build_gpio_handle_write_module, build_gpio_open_module,
+    build_gpio_read_module, build_gpio_write_module, build_hello_wire_frame,
+    build_program_begin_wire_frame, build_program_chunk_wire_frame, build_program_end_wire_frame,
+    build_raw_module, build_run_background_wire_frame, build_run_wire_frame, build_stop_wire_frame,
     build_store_program_wire_frame, build_time_now_module, build_time_sleep_ms_module,
     capability_board_metadata, capability_bytecode_callable, capability_flag_names,
     capability_protocol_feature, decode_wire_response, program_format_name, raw_module_len,
@@ -111,6 +114,50 @@ extern "C" fn session_gpio_write_module(
 
     let module = build_gpio_write_module_value(pin, value, max_stack)
         .unwrap_or_else(|error| raise_core_error("gpio_write_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_gpio_open_module(
+    _self_val: VALUE,
+    pin_val: VALUE,
+    mode_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let pin = rb_u8(pin_val, "pin");
+    let mode = rb_u8(mode_val, "mode");
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_gpio_open_module_value(pin, mode, max_stack)
+        .unwrap_or_else(|error| raise_core_error("gpio_open_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_gpio_handle_read_module(_self_val: VALUE, max_stack_val: VALUE) -> VALUE {
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_gpio_handle_read_module_value(max_stack)
+        .unwrap_or_else(|error| raise_core_error("gpio_handle_read_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_gpio_handle_write_module(
+    _self_val: VALUE,
+    value_val: VALUE,
+    max_stack_val: VALUE,
+) -> VALUE {
+    let value = rb_u8(value_val, "value") != 0;
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_gpio_handle_write_module_value(value, max_stack)
+        .unwrap_or_else(|error| raise_core_error("gpio_handle_write_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_gpio_handle_close_module(_self_val: VALUE, max_stack_val: VALUE) -> VALUE {
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+
+    let module = build_gpio_handle_close_module_value(max_stack)
+        .unwrap_or_else(|error| raise_core_error("gpio_handle_close_module", error));
     ruby_bridge::bytes_to_rb(&module)
 }
 
@@ -679,6 +726,49 @@ fn build_gpio_write_module_value(
     Ok(module)
 }
 
+fn build_gpio_open_module_value(
+    pin: u8,
+    mode: u8,
+    max_stack: u8,
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; GPIO_OPEN_MODULE_LEN];
+    let len = build_gpio_open_module(
+        GpioOpenProgram {
+            pin,
+            mode,
+            max_stack,
+        },
+        &mut module,
+    )?;
+    module.truncate(len);
+    Ok(module)
+}
+
+fn build_gpio_handle_read_module_value(max_stack: u8) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; GPIO_HANDLE_READ_MODULE_LEN];
+    let len = build_gpio_handle_read_module(GpioHandleReadProgram { max_stack }, &mut module)?;
+    module.truncate(len);
+    Ok(module)
+}
+
+fn build_gpio_handle_write_module_value(
+    value: bool,
+    max_stack: u8,
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; GPIO_HANDLE_WRITE_MODULE_LEN];
+    let len =
+        build_gpio_handle_write_module(GpioHandleWriteProgram { value, max_stack }, &mut module)?;
+    module.truncate(len);
+    Ok(module)
+}
+
+fn build_gpio_handle_close_module_value(max_stack: u8) -> Result<Vec<u8>, LanguageCoreError> {
+    let mut module = vec![0; GPIO_HANDLE_CLOSE_MODULE_LEN];
+    let len = build_gpio_handle_close_module(GpioHandleCloseProgram { max_stack }, &mut module)?;
+    module.truncate(len);
+    Ok(module)
+}
+
 fn rb_u8(value: VALUE, name: &str) -> u8 {
     let value = rb_nonnegative_integer(value, name);
     if value > u8::MAX as u64 {
@@ -768,6 +858,30 @@ pub extern "C" fn Init_board_vm_native() {
         "gpio_write_module",
         session_gpio_write_module as *const c_void,
         3,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "gpio_open_module",
+        session_gpio_open_module as *const c_void,
+        3,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "gpio_handle_read_module",
+        session_gpio_handle_read_module as *const c_void,
+        1,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "gpio_handle_write_module",
+        session_gpio_handle_write_module as *const c_void,
+        2,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "gpio_handle_close_module",
+        session_gpio_handle_close_module as *const c_void,
+        1,
     );
     ruby_bridge::define_method_raw(
         session_class,

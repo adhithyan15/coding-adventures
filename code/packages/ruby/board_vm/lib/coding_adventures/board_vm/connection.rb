@@ -161,6 +161,72 @@ module CodingAdventures
         )
       end
 
+      def gpio_open!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        pin:,
+        mode: :output,
+        max_stack: 2
+      )
+        ensure_uno_r4_wifi!
+
+        session.gpio_open(
+          program_id: program_id,
+          budget: budget,
+          pin: pin,
+          mode: mode,
+          max_stack: max_stack,
+          handshake: true,
+          query_caps: true,
+          host_nonce: host_nonce
+        )
+      end
+
+      def gpio_handle_read!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: 2
+      )
+        ensure_uno_r4_wifi!
+
+        session.gpio_handle_read(
+          program_id: program_id,
+          budget: budget,
+          max_stack: max_stack
+        )
+      end
+
+      def gpio_handle_write!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        value:,
+        max_stack: 3
+      )
+        ensure_uno_r4_wifi!
+
+        session.gpio_handle_write(
+          program_id: program_id,
+          budget: budget,
+          value: value,
+          max_stack: max_stack
+        )
+      end
+
+      def gpio_handle_close!(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: 1
+      )
+        ensure_uno_r4_wifi!
+
+        session.gpio_handle_close(
+          program_id: program_id,
+          budget: budget,
+          max_stack: max_stack
+        )
+      end
+
       def time_now!(
         program_id: DEFAULT_PROGRAM_ID,
         budget: DEFAULT_INSTRUCTION_BUDGET,
@@ -440,6 +506,62 @@ module CodingAdventures
 
       def low(pin:, **options)
         write(pin: pin, value: false, **options)
+      end
+
+      def open(
+        pin:,
+        mode: :output,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        host_nonce: DEFAULT_HOST_NONCE,
+        max_stack: 2
+      )
+        @connection.gpio_open!(
+          program_id: program_id,
+          budget: budget,
+          host_nonce: host_nonce,
+          pin: pin,
+          mode: mode,
+          max_stack: max_stack
+        )
+      end
+
+      def handle_read(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: 2
+      )
+        @connection.gpio_handle_read!(
+          program_id: program_id,
+          budget: budget,
+          max_stack: max_stack
+        )
+      end
+
+      def handle_write(
+        value:,
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: 3
+      )
+        @connection.gpio_handle_write!(
+          program_id: program_id,
+          budget: budget,
+          value: value,
+          max_stack: max_stack
+        )
+      end
+
+      def handle_close(
+        program_id: DEFAULT_PROGRAM_ID,
+        budget: DEFAULT_INSTRUCTION_BUDGET,
+        max_stack: 1
+      )
+        @connection.gpio_handle_close!(
+          program_id: program_id,
+          budget: budget,
+          max_stack: max_stack
+        )
       end
     end
 

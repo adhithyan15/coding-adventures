@@ -34,6 +34,22 @@ def test_native_session_builds_protocol_bytes_in_rust():
     assert isinstance(gpio_write_module, bytes)
     assert len(gpio_write_module) > 0
 
+    gpio_open_module = session.gpio_open_module(pin=13, mode="output", max_stack=2)
+    assert isinstance(gpio_open_module, bytes)
+    assert len(gpio_open_module) > 0
+
+    gpio_handle_read_module = session.gpio_handle_read_module(max_stack=2)
+    assert isinstance(gpio_handle_read_module, bytes)
+    assert len(gpio_handle_read_module) > 0
+
+    gpio_handle_write_module = session.gpio_handle_write_module(value=True, max_stack=3)
+    assert isinstance(gpio_handle_write_module, bytes)
+    assert len(gpio_handle_write_module) > 0
+
+    gpio_handle_close_module = session.gpio_handle_close_module(max_stack=1)
+    assert isinstance(gpio_handle_close_module, bytes)
+    assert len(gpio_handle_close_module) > 0
+
     time_module = session.time_now_module(max_stack=1)
     assert isinstance(time_module, bytes)
     assert len(time_module) > 0
@@ -171,6 +187,42 @@ def test_run_command_accepts_repl_style_gpio_write_and_levels():
         "run",
     ]
     assert result.frames + high.frames + low.frames == transport.frames
+
+
+def test_run_command_accepts_repl_style_gpio_handle_commands():
+    transport = FakeWriteTransport()
+    session = Session(transport=transport)
+
+    open_result = session.run_command("gpio-open 13 output 24", program_id=9)
+    read = session.run_command("gpio-handle-read 24", program_id=10)
+    write = session.run_command("gpio-handle-write high 24", program_id=11)
+    close = session.run_command("gpio-handle-close 24", program_id=12)
+
+    assert [item.command for item in open_result.results] == [
+        "program_begin",
+        "program_chunk",
+        "program_end",
+        "run",
+    ]
+    assert [item.command for item in read.results] == [
+        "program_begin",
+        "program_chunk",
+        "program_end",
+        "run",
+    ]
+    assert [item.command for item in write.results] == [
+        "program_begin",
+        "program_chunk",
+        "program_end",
+        "run",
+    ]
+    assert [item.command for item in close.results] == [
+        "program_begin",
+        "program_chunk",
+        "program_end",
+        "run",
+    ]
+    assert open_result.frames + read.frames + write.frames + close.frames == transport.frames
 
 
 def test_run_command_accepts_repl_style_time_now():

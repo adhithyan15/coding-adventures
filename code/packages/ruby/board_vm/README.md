@@ -122,11 +122,14 @@ end
 ```
 
 `hello`, `capabilities`, `upload_blink`, `store_program`, `upload_gpio_read`,
-`upload_time_now`, `upload_time_sleep_ms`, `upload_gpio_write`, `run`, `stop`,
-`blink`, `gpio_read`, `gpio_write`, `time_now`, `time_sleep_ms`, and
-`run_command` return dispatch results with the Rust-produced frame, optional raw
-response bytes, and optional Rust-decoded response hash. The text command parser
-is Ruby sugar only; every dispatched frame still comes from
+`upload_time_now`, `upload_time_sleep_ms`, `upload_gpio_write`,
+`upload_gpio_open`, `upload_gpio_handle_read`, `upload_gpio_handle_write`,
+`upload_gpio_handle_close`, `run`, `stop`, `blink`, `gpio_read`, `gpio_write`,
+`gpio_open`, `gpio_handle_read`, `gpio_handle_write`, `gpio_handle_close`,
+`time_now`, `time_sleep_ms`, and `run_command` return dispatch results with the
+Rust-produced frame, optional raw response bytes, and optional Rust-decoded
+response hash. The text command parser is Ruby sugar only; every dispatched
+frame still comes from
 `CodingAdventures::BoardVM::Native::Session`.
 
 `run` also accepts protocol-level options without moving protocol work into
@@ -140,6 +143,22 @@ end
 
 Ruby turns friendly keywords into a flag mask; the RUN request payload and wire
 frame are still built by `board-vm-language-core`.
+
+For REPL-style GPIO sessions, Ruby can keep a VM stack handle open across
+commands:
+
+```ruby
+board.session do |vm|
+  vm.gpio_open(pin: 13, mode: :output)
+  vm.gpio_handle_write(value: :high)
+  vm.gpio_handle_read
+  vm.gpio_handle_close
+end
+```
+
+Those calls still upload and run Rust-built modules. The open module duplicates
+the handle so the host can receive it in the decoded run report while the VM
+keeps the original as the top stack value for later read/write/close helpers.
 
 Capability reports can be lifted into Ruby objects after Rust decodes the board
 response:

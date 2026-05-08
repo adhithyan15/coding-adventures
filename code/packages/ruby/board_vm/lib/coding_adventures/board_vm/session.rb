@@ -13,6 +13,7 @@ module CodingAdventures
         input_pulldown: 3,
         pulldown: 3
       }.freeze
+      GPIO_MODES = GPIO_READ_MODES.merge(output: 1).freeze
       GPIO_WRITE_VALUES = {
         high: true,
         on: true,
@@ -108,6 +109,22 @@ module CodingAdventures
         native_session.gpio_write_module(pin, gpio_write_value(value) ? 1 : 0, max_stack)
       end
 
+      def gpio_open_module(pin:, mode: :output, max_stack: 2)
+        native_session.gpio_open_module(pin, gpio_mode(mode), max_stack)
+      end
+
+      def gpio_handle_read_module(max_stack: 2)
+        native_session.gpio_handle_read_module(max_stack)
+      end
+
+      def gpio_handle_write_module(value:, max_stack: 3)
+        native_session.gpio_handle_write_module(gpio_write_value(value) ? 1 : 0, max_stack)
+      end
+
+      def gpio_handle_close_module(max_stack: 1)
+        native_session.gpio_handle_close_module(max_stack)
+      end
+
       def upload_gpio_read(
         program_id: @program_id,
         pin:,
@@ -129,6 +146,39 @@ module CodingAdventures
         upload(
           program_id: program_id,
           module_bytes: gpio_write_module(pin: pin, value: value, max_stack: max_stack)
+        )
+      end
+
+      def upload_gpio_open(
+        program_id: @program_id,
+        pin:,
+        mode: :output,
+        max_stack: 2
+      )
+        upload(
+          program_id: program_id,
+          module_bytes: gpio_open_module(pin: pin, mode: mode, max_stack: max_stack)
+        )
+      end
+
+      def upload_gpio_handle_read(program_id: @program_id, max_stack: 2)
+        upload(
+          program_id: program_id,
+          module_bytes: gpio_handle_read_module(max_stack: max_stack)
+        )
+      end
+
+      def upload_gpio_handle_write(program_id: @program_id, value:, max_stack: 3)
+        upload(
+          program_id: program_id,
+          module_bytes: gpio_handle_write_module(value: value, max_stack: max_stack)
+        )
+      end
+
+      def upload_gpio_handle_close(program_id: @program_id, max_stack: 1)
+        upload(
+          program_id: program_id,
+          module_bytes: gpio_handle_close_module(max_stack: max_stack)
         )
       end
 
@@ -301,6 +351,93 @@ module CodingAdventures
         gpio_write(pin: pin, value: false, **options)
       end
 
+      def gpio_open(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        pin:,
+        mode: :output,
+        max_stack: 2,
+        handshake: false,
+        query_caps: false,
+        host_name: @host_name,
+        host_nonce: @host_nonce
+      )
+        results = []
+        results << hello(host_name: host_name, host_nonce: host_nonce) if handshake
+        results << capabilities if query_caps
+        results.concat(
+          upload_gpio_open(
+            program_id: program_id,
+            pin: pin,
+            mode: mode,
+            max_stack: max_stack
+          ).results
+        )
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget,
+          keep_handles: true,
+          background: false
+        )
+        SessionResult.new(results: results)
+      end
+
+      def gpio_handle_read(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        max_stack: 2
+      )
+        results = upload_gpio_handle_read(program_id: program_id, max_stack: max_stack).results
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget,
+          reset_vm: false,
+          keep_handles: true,
+          background: false
+        )
+        SessionResult.new(results: results)
+      end
+
+      def gpio_handle_write(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        value:,
+        max_stack: 3
+      )
+        results = upload_gpio_handle_write(
+          program_id: program_id,
+          value: value,
+          max_stack: max_stack
+        ).results
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget,
+          reset_vm: false,
+          keep_handles: true,
+          background: false
+        )
+        SessionResult.new(results: results)
+      end
+
+      def gpio_handle_close(
+        program_id: @program_id,
+        budget: @instruction_budget,
+        instruction_budget: nil,
+        max_stack: 1
+      )
+        results = upload_gpio_handle_close(program_id: program_id, max_stack: max_stack).results
+        results << run(
+          program_id: program_id,
+          instruction_budget: instruction_budget || budget,
+          reset_vm: false,
+          background: false
+        )
+        SessionResult.new(results: results)
+      end
+
       def time_now(
         program_id: @program_id,
         budget: @instruction_budget,
@@ -370,6 +507,16 @@ module CodingAdventures
           upload_gpio_read(**gpio_read_command_options(words, command, options, require_budget: false))
         when "upload-gpio-write", "upload-gpio.write"
           upload_gpio_write(**gpio_write_command_options(words, command, options, require_budget: false))
+        when "upload-gpio-open", "upload-gpio.open"
+          upload_gpio_open(**gpio_open_command_options(words, command, options, require_budget: false))
+        when "upload-gpio-handle-read", "upload-gpio.handle-read"
+          ensure_no_extra_arguments!(words, command)
+          upload_gpio_handle_read(**options)
+        when "upload-gpio-handle-write", "upload-gpio.handle-write"
+          upload_gpio_handle_write(**gpio_handle_write_command_options(words, command, options, require_budget: false))
+        when "upload-gpio-handle-close", "upload-gpio.handle-close"
+          ensure_no_extra_arguments!(words, command)
+          upload_gpio_handle_close(**options)
         when "upload-time-now", "upload-time.now"
           ensure_no_extra_arguments!(words, command)
           upload_time_now(**options)
@@ -392,6 +539,14 @@ module CodingAdventures
           gpio_write(**gpio_level_command_options(words, command, options, value: true))
         when "gpio-low", "gpio.low"
           gpio_write(**gpio_level_command_options(words, command, options, value: false))
+        when "gpio-open", "gpio.open"
+          gpio_open(**gpio_open_command_options(words, command, options))
+        when "gpio-handle-read", "gpio.handle-read"
+          gpio_handle_read(**options.merge(optional_budget(words, command)))
+        when "gpio-handle-write", "gpio.handle-write"
+          gpio_handle_write(**gpio_handle_write_command_options(words, command, options))
+        when "gpio-handle-close", "gpio.handle-close"
+          gpio_handle_close(**options.merge(optional_budget(words, command)))
         when "time-now", "time.now", "now"
           time_now(**options.merge(optional_budget(words, command)))
         when "time-sleep-ms", "time.sleep_ms", "sleep-ms"
@@ -486,6 +641,17 @@ module CodingAdventures
         end
       end
 
+      def gpio_mode(mode)
+        return mode if mode.is_a?(Integer)
+
+        text = mode.to_s.tr("-", "_")
+        return Integer(text, 10) if integer_literal?(text)
+
+        GPIO_MODES.fetch(text.to_sym) do
+          raise ArgumentError, "unsupported GPIO mode: #{mode.inspect}"
+        end
+      end
+
       def gpio_write_command_options(words, command, options, require_budget: true)
         merged = options.dup
         merged[:pin] = integer_argument(words.shift, "#{command} pin") unless words.empty?
@@ -497,6 +663,43 @@ module CodingAdventures
 
         ensure_no_extra_arguments!(words, command)
         raise ArgumentError, "#{command} requires pin" unless merged.key?(:pin)
+        raise ArgumentError, "#{command} requires value" unless merged.key?(:value)
+
+        merged
+      end
+
+      def gpio_open_command_options(words, command, options, require_budget: true)
+        merged = options.dup
+        merged[:pin] = integer_argument(words.shift, "#{command} pin") unless words.empty?
+
+        unless words.empty?
+          mode_or_budget = words.shift
+          if integer_literal?(mode_or_budget) && require_budget
+            merged[:instruction_budget] = Integer(mode_or_budget, 10)
+          else
+            merged[:mode] = mode_or_budget
+          end
+        end
+
+        if require_budget && !words.empty?
+          merged[:instruction_budget] = integer_argument(words.shift, "#{command} budget")
+        end
+
+        ensure_no_extra_arguments!(words, command)
+        raise ArgumentError, "#{command} requires pin" unless merged.key?(:pin)
+
+        merged
+      end
+
+      def gpio_handle_write_command_options(words, command, options, require_budget: true)
+        merged = options.dup
+        merged[:value] = gpio_write_value(words.shift) unless words.empty?
+
+        if require_budget && !words.empty?
+          merged[:instruction_budget] = integer_argument(words.shift, "#{command} budget")
+        end
+
+        ensure_no_extra_arguments!(words, command)
         raise ArgumentError, "#{command} requires value" unless merged.key?(:value)
 
         merged
