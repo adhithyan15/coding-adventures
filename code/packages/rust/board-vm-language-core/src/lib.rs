@@ -13,11 +13,11 @@ use std::slice;
 use std::str;
 
 use board_vm_host::{
-    write_blink_module, write_gpio_read_module, write_gpio_write_module, write_time_now_module,
-    write_time_sleep_ms_module, BlinkProgram, GpioReadProgram, GpioWriteProgram, HostError,
-    HostSession, TimeNowProgram, TimeSleepMsProgram, BLINK_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET,
-    DEFAULT_PROGRAM_ID, GPIO_READ_MODULE_LEN, GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN,
-    TIME_SLEEP_MS_MODULE_LEN,
+    write_blink_module, write_gpio_read_module, write_gpio_write_module, write_module,
+    write_time_now_module, write_time_sleep_ms_module, BlinkProgram, GpioReadProgram,
+    GpioWriteProgram, HostError, HostSession, ModuleSpec, TimeNowProgram, TimeSleepMsProgram,
+    BLINK_MODULE_LEN, DEFAULT_INSTRUCTION_BUDGET, DEFAULT_PROGRAM_ID, GPIO_READ_MODULE_LEN,
+    GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_protocol::{
     decode_caps_report_header, decode_error_payload, decode_frame, decode_hello_ack,
@@ -439,6 +439,29 @@ pub fn build_time_sleep_ms_module(
     out: &mut [u8],
 ) -> Result<usize, LanguageCoreError> {
     Ok(write_time_sleep_ms_module(program, out)?)
+}
+
+pub fn build_raw_module(
+    flags: u8,
+    max_stack: u8,
+    code: &[u8],
+    const_pool: &[u8],
+    out: &mut [u8],
+) -> Result<usize, LanguageCoreError> {
+    Ok(write_module(
+        ModuleSpec::new(flags, max_stack, code).const_pool(const_pool),
+        out,
+    )?)
+}
+
+pub fn raw_module_len(code_len: u64, const_pool_len: u64) -> Result<usize, LanguageCoreError> {
+    if code_len > u32::MAX as u64 || const_pool_len > u32::MAX as u64 {
+        return Err(LanguageCoreError::ValueTooLarge);
+    }
+    let code_len = usize::try_from(code_len).map_err(|_| LanguageCoreError::ValueTooLarge)?;
+    let const_pool_len =
+        usize::try_from(const_pool_len).map_err(|_| LanguageCoreError::ValueTooLarge)?;
+    checked_module_len(code_len, const_pool_len)
 }
 
 pub fn build_program_begin_wire_frame(
@@ -929,6 +952,29 @@ pub unsafe extern "C" fn board_vm_language_time_sleep_ms_module(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn board_vm_language_raw_module(
+    flags: u8,
+    max_stack: u8,
+    code: *const u8,
+    code_len: u64,
+    const_pool: *const u8,
+    const_pool_len: u64,
+    module_out: *mut u8,
+    module_cap: u64,
+) -> BoardVmLanguageStatus {
+    catch_status(|| {
+        let code = unsafe { in_slice(code, code_len, "code") }?;
+        let const_pool = unsafe { in_slice(const_pool, const_pool_len, "const_pool") }?;
+        let module_out = unsafe { out_slice(module_out, module_cap, "module_out") }?;
+        let len = build_raw_module(flags, max_stack, code, const_pool, module_out)?;
+        Ok(BoardVmLanguageStatus {
+            len: len as u64,
+            ..BoardVmLanguageStatus::ok()
+        })
+    })
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn board_vm_language_program_begin_wire(
     session: *mut BoardVmLanguageSession,
     program_id: u16,
@@ -1096,6 +1142,19 @@ pub extern "C" fn board_vm_language_time_sleep_ms_module_len() -> u64 {
     TIME_SLEEP_MS_MODULE_LEN as u64
 }
 
+#[no_mangle]
+pub extern "C" fn board_vm_language_raw_module_len(code_len: u64, const_pool_len: u64) -> u64 {
+    clear_error();
+    match raw_module_len(code_len, const_pool_len) {
+        Ok(len) => len as u64,
+        Err(error) => {
+            let code = status_code_for_error(&error);
+            set_error(code, error_message(&error));
+            0
+        }
+    }
+}
+
 fn catch_status(
     operation: impl FnOnce() -> Result<BoardVmLanguageStatus, LanguageCoreError>,
 ) -> BoardVmLanguageStatus {
@@ -1143,6 +1202,27 @@ fn clear_error() {
 fn set_error(code: BoardVmLanguageStatusCode, message: impl AsRef<str>) {
     LAST_ERROR_CODE.with(|slot| slot.set(code as u32));
     LAST_ERROR_MESSAGE.with(|slot| *slot.borrow_mut() = Some(sanitize_message(message.as_ref())));
+}
+
+fn checked_module_len(code_len: usize, const_pool_len: usize) -> Result<usize, LanguageCoreError> {
+    let code_len_len = uleb128_len(code_len)?;
+    let const_pool_len_len = uleb128_len(const_pool_len)?;
+    8usize
+        .checked_add(code_len_len)
+        .and_then(|len| len.checked_add(code_len))
+        .and_then(|len| len.checked_add(const_pool_len_len))
+        .and_then(|len| len.checked_add(const_pool_len))
+        .ok_or(LanguageCoreError::ValueTooLarge)
+}
+
+fn uleb128_len(value: usize) -> Result<usize, LanguageCoreError> {
+    let mut value = u32::try_from(value).map_err(|_| LanguageCoreError::ValueTooLarge)?;
+    let mut len = 1usize;
+    while value >= 0x80 {
+        value >>= 7;
+        len += 1;
+    }
+    Ok(len)
 }
 
 fn sanitize_message(message: &str) -> CString {
@@ -1413,6 +1493,22 @@ mod tests {
         assert_eq!(decoded.message_type, MessageType::STOP.0);
         let frame = decode_frame(&raw[..decoded.len as usize]).unwrap();
         assert!(frame.payload.is_empty());
+    }
+
+    #[test]
+    fn rust_core_builds_raw_module_from_code_and_const_pool() {
+        let code = [0x00];
+        let const_pool = [0xAA, 0x55];
+        let expected_len = raw_module_len(code.len() as u64, const_pool.len() as u64).unwrap();
+        let mut module = vec![0u8; expected_len];
+
+        let len = build_raw_module(0, 1, &code, &const_pool, &mut module).unwrap();
+
+        assert_eq!(len, expected_len);
+        assert_eq!(
+            module,
+            [0x42, 0x56, 0x4D, 0x31, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x02, 0xAA, 0x55,]
+        );
     }
 
     #[test]

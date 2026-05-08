@@ -42,6 +42,10 @@ def test_native_session_builds_protocol_bytes_in_rust():
     assert isinstance(sleep_module, bytes)
     assert len(sleep_module) > 0
 
+    raw_module = session.raw_module(code=b"\x00", max_stack=1, const_pool=b"\xAA\x55")
+    assert raw_module.startswith(b"BVM1")
+    assert raw_module.endswith(b"\xAA\x55")
+
     stop = session.stop()
     assert isinstance(stop.frame, bytes)
     assert len(stop.frame) > 0
@@ -185,6 +189,25 @@ def test_run_command_accepts_repl_style_time_sleep_ms():
         "program_end",
     ]
     assert result.frames + upload.frames == transport.frames
+
+
+def test_upload_raw_module_uses_rust_owned_module_builder():
+    transport = FakeWriteTransport()
+    session = Session(transport=transport)
+
+    result = session.upload_raw_module(
+        program_id=12,
+        code=b"\x00",
+        max_stack=1,
+        const_pool=b"\xAA\x55",
+    )
+
+    assert [item.command for item in result.results] == [
+        "program_begin",
+        "program_chunk",
+        "program_end",
+    ]
+    assert result.frames == transport.frames
 
 
 def test_board_descriptor_wraps_rust_decoded_capability_payload():

@@ -16,6 +16,7 @@ write_frames = session.gpio_write(pin=13, value=True).frames
 now_frames = session.time_now(program_id=2, instruction_budget=12).frames
 sleep_frames = session.time_sleep_ms(250, program_id=3, instruction_budget=12).frames
 store_frame = session.store_program(program_id=1, slot=0, boot_policy="run-if-no-host").frame
+raw_module = session.raw_module(code=b"\x00", max_stack=1)
 ```
 
 Each frame is a Rust-produced Board VM wire frame ready for a transport to
@@ -54,3 +55,8 @@ session.run_command("stop")
 Python parses the friendly command text, then delegates module construction,
 request IDs, framing, and response decoding to `board-vm-language-core` through
 the repo-local `python-bridge` extension.
+
+For lower-level language experiments, `raw_module(code:, max_stack:, flags:,
+const_pool:)` still routes through Rust. Python supplies bytecode bytes, while
+`board-vm-language-core` owns the BVM header, length encoding, validation, and
+upload framing.

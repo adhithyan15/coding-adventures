@@ -10,11 +10,12 @@ use board_vm_host::{
 use board_vm_language_core::{
     build_blink_module, build_caps_query_wire_frame, build_gpio_read_module,
     build_gpio_write_module, build_hello_wire_frame, build_program_begin_wire_frame,
-    build_program_chunk_wire_frame, build_program_end_wire_frame, build_run_background_wire_frame,
-    build_stop_wire_frame, build_store_program_wire_frame, build_time_now_module,
-    build_time_sleep_ms_module, capability_board_metadata, capability_bytecode_callable,
-    capability_flag_names, capability_protocol_feature, decode_wire_response, program_format_name,
-    run_status_name, BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
+    build_program_chunk_wire_frame, build_program_end_wire_frame, build_raw_module,
+    build_run_background_wire_frame, build_stop_wire_frame, build_store_program_wire_frame,
+    build_time_now_module, build_time_sleep_ms_module, capability_board_metadata,
+    capability_bytecode_callable, capability_flag_names, capability_protocol_feature,
+    decode_wire_response, program_format_name, raw_module_len, run_status_name,
+    BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
     LanguageCoreError, LanguageValue,
 };
 use ruby_bridge::VALUE;
@@ -131,6 +132,25 @@ extern "C" fn session_time_sleep_ms_module(
 
     let module = build_time_sleep_ms_module_value(duration_ms, max_stack)
         .unwrap_or_else(|error| raise_core_error("time_sleep_ms_module", error));
+    ruby_bridge::bytes_to_rb(&module)
+}
+
+extern "C" fn session_raw_module(
+    _self_val: VALUE,
+    flags_val: VALUE,
+    max_stack_val: VALUE,
+    code_val: VALUE,
+    const_pool_val: VALUE,
+) -> VALUE {
+    let flags = rb_u8(flags_val, "flags");
+    let max_stack = rb_u8(max_stack_val, "max_stack");
+    let code = ruby_bridge::bytes_from_rb(code_val)
+        .unwrap_or_else(|| ruby_bridge::raise_arg_error("code must be a Ruby binary String"));
+    let const_pool = ruby_bridge::bytes_from_rb(const_pool_val)
+        .unwrap_or_else(|| ruby_bridge::raise_arg_error("const_pool must be a Ruby binary String"));
+
+    let module = build_raw_module_value(flags, max_stack, &code, &const_pool)
+        .unwrap_or_else(|error| raise_core_error("raw_module", error));
     ruby_bridge::bytes_to_rb(&module)
 }
 
@@ -584,6 +604,19 @@ fn build_time_sleep_ms_module_value(
     Ok(module)
 }
 
+fn build_raw_module_value(
+    flags: u8,
+    max_stack: u8,
+    code: &[u8],
+    const_pool: &[u8],
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let module_len = raw_module_len(code.len() as u64, const_pool.len() as u64)?;
+    let mut module = vec![0; module_len];
+    let len = build_raw_module(flags, max_stack, code, const_pool, &mut module)?;
+    module.truncate(len);
+    Ok(module)
+}
+
 fn build_gpio_read_module_value(
     pin: u8,
     mode: u8,
@@ -721,6 +754,12 @@ pub extern "C" fn Init_board_vm_native() {
         "time_sleep_ms_module",
         session_time_sleep_ms_module as *const c_void,
         2,
+    );
+    ruby_bridge::define_method_raw(
+        session_class,
+        "raw_module",
+        session_raw_module as *const c_void,
+        4,
     );
     ruby_bridge::define_method_raw(
         session_class,

@@ -9,11 +9,12 @@ use board_vm_host::{
 use board_vm_language_core::{
     build_blink_module, build_caps_query_wire_frame, build_gpio_read_module,
     build_gpio_write_module, build_hello_wire_frame, build_program_begin_wire_frame,
-    build_program_chunk_wire_frame, build_program_end_wire_frame, build_run_background_wire_frame,
-    build_stop_wire_frame, build_store_program_wire_frame, build_time_now_module,
-    build_time_sleep_ms_module, capability_board_metadata, capability_bytecode_callable,
-    capability_flag_names, capability_protocol_feature, decode_wire_response, program_format_name,
-    run_status_name, BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
+    build_program_chunk_wire_frame, build_program_end_wire_frame, build_raw_module,
+    build_run_background_wire_frame, build_stop_wire_frame, build_store_program_wire_frame,
+    build_time_now_module, build_time_sleep_ms_module, capability_board_metadata,
+    capability_bytecode_callable, capability_flag_names, capability_protocol_feature,
+    decode_wire_response, program_format_name, raw_module_len, run_status_name,
+    BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
     LanguageCoreError, LanguageValue,
 };
 use python_bridge::*;
@@ -157,6 +158,31 @@ unsafe extern "C" fn py_time_sleep_ms_module(
     let module = match build_time_sleep_ms_module_value(duration_ms, max_stack) {
         Ok(module) => module,
         Err(error) => return raise_core_error("time_sleep_ms_module", error),
+    };
+    bytes_to_py(&module)
+}
+
+unsafe extern "C" fn py_raw_module(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
+    let flags = match parse_arg_u8(args, 0, "flags") {
+        Some(value) => value,
+        None => return ptr::null_mut(),
+    };
+    let max_stack = match parse_arg_u8(args, 1, "max_stack") {
+        Some(value) => value,
+        None => return ptr::null_mut(),
+    };
+    let code = match parse_arg_bytes(args, 2, "code") {
+        Some(value) => value,
+        None => return ptr::null_mut(),
+    };
+    let const_pool = match parse_arg_bytes(args, 3, "const_pool") {
+        Some(value) => value,
+        None => return ptr::null_mut(),
+    };
+
+    let module = match build_raw_module_value(flags, max_stack, &code, &const_pool) {
+        Ok(module) => module,
+        Err(error) => return raise_core_error("raw_module", error),
     };
     bytes_to_py(&module)
 }
@@ -572,6 +598,19 @@ fn build_time_sleep_ms_module_value(
     Ok(module)
 }
 
+fn build_raw_module_value(
+    flags: u8,
+    max_stack: u8,
+    code: &[u8],
+    const_pool: &[u8],
+) -> Result<Vec<u8>, LanguageCoreError> {
+    let module_len = raw_module_len(code.len() as u64, const_pool.len() as u64)?;
+    let mut module = vec![0; module_len];
+    let len = build_raw_module(flags, max_stack, code, const_pool, &mut module)?;
+    module.truncate(len);
+    Ok(module)
+}
+
 fn build_gpio_read_module_value(
     pin: u8,
     mode: u8,
@@ -709,7 +748,7 @@ unsafe fn raise_core_error(context: &str, error: LanguageCoreError) -> PyObjectP
 
 #[no_mangle]
 pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
-    let methods: &'static mut [PyMethodDef; 15] = Box::leak(Box::new([
+    let methods: &'static mut [PyMethodDef; 16] = Box::leak(Box::new([
         PyMethodDef {
             ml_name: b"hello_wire\0".as_ptr() as *const c_char,
             ml_meth: Some(py_hello_wire),
@@ -751,6 +790,13 @@ pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
             ml_meth: Some(py_time_sleep_ms_module),
             ml_flags: METH_VARARGS,
             ml_doc: b"Build a Board VM time.sleep_ms BVM module in Rust.\0".as_ptr()
+                as *const c_char,
+        },
+        PyMethodDef {
+            ml_name: b"raw_module\0".as_ptr() as *const c_char,
+            ml_meth: Some(py_raw_module),
+            ml_flags: METH_VARARGS,
+            ml_doc: b"Build a generic BVM module from raw bytecode in Rust.\0".as_ptr()
                 as *const c_char,
         },
         PyMethodDef {

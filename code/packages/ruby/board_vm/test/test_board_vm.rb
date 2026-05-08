@@ -214,6 +214,13 @@ module CodingAdventures
             gpio_upload = session.upload_gpio_read(program_id: 6, pin: 13, mode: :pullup)
             gpio_write_upload = session.upload_gpio_write(program_id: 7, pin: 13, value: true)
             store = session.store_program(program_id: 4, slot: 2, boot_policy: :run_at_boot)
+            raw_module = session.raw_module(code: "\x00".b, max_stack: 1, const_pool: "\xAA\x55".b)
+            raw_upload = session.upload_raw_module(
+              program_id: 9,
+              code: "\x00".b,
+              max_stack: 1,
+              const_pool: "\xAA\x55".b
+            )
             run = session.run(program_id: 4, budget: 77)
             stop = session.stop
 
@@ -229,13 +236,17 @@ module CodingAdventures
             assert_equal [:program_begin, :program_chunk, :program_end],
               gpio_write_upload.results.map(&:command)
             assert_equal :store_program, store.command
+            assert raw_module.start_with?("BVM1")
+            assert raw_module.end_with?("\xAA\x55".b)
+            assert_equal [:program_begin, :program_chunk, :program_end],
+              raw_upload.results.map(&:command)
             assert_equal :run, run.command
             assert_equal :stop, stop.command
           end
         end
 
         assert_empty runner.calls
-        assert_equal 20, transport.frames.length
+        assert_equal 23, transport.frames.length
         assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
       end
 
