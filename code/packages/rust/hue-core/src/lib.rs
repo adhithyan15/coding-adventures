@@ -531,6 +531,23 @@ impl HueSceneResource {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueMotionResource {
+    pub id: HueResourceId,
+    pub owner_device_id: HueResourceId,
+    pub name: String,
+    pub motion: Option<bool>,
+    pub motion_valid: Option<bool>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueButtonResource {
+    pub id: HueResourceId,
+    pub owner_device_id: HueResourceId,
+    pub name: String,
+    pub last_event: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct HueDeviceResource {
     pub id: HueResourceId,
     pub name: String,
@@ -695,6 +712,80 @@ pub fn hue_light_to_entity(
         metadata: vec![
             Metadata::new("hue.resource_type", "light"),
             Metadata::new("hue.resource_id", light.id.as_str()),
+        ],
+    }
+}
+
+pub fn hue_motion_to_entity(
+    bridge_id: &BridgeId,
+    device_id: DeviceId,
+    motion: HueMotionResource,
+    received_at_ms: u64,
+) -> Entity {
+    let entity_id = EntityId::trusted(format!("hue.motion.{}.{}", bridge_id, motion.id));
+    let state = motion.motion.map(|active| StateSnapshot {
+        entity_id: entity_id.clone(),
+        value: Value::Object(vec![
+            ("sensor.occupancy".to_string(), Value::Bool(active)),
+            (
+                "hue.motion_valid".to_string(),
+                motion.motion_valid.map(Value::Bool).unwrap_or(Value::Null),
+            ),
+        ]),
+        source: StateSource::Poll,
+        observed_at_ms: received_at_ms,
+        received_at_ms,
+        expires_at_ms: None,
+        confidence: if motion.motion_valid == Some(false) {
+            StateConfidence::Stale
+        } else {
+            StateConfidence::Confirmed
+        },
+    });
+
+    Entity {
+        entity_id,
+        device_id,
+        kind: EntityKind::Sensor,
+        name: motion.name,
+        capabilities: vec![Capability::sensor_occupancy()],
+        state,
+        metadata: vec![
+            Metadata::new("hue.resource_type", "motion"),
+            Metadata::new("hue.resource_id", motion.id.as_str()),
+            Metadata::new("hue.owner_device_id", motion.owner_device_id.as_str()),
+        ],
+    }
+}
+
+pub fn hue_button_to_entity(
+    bridge_id: &BridgeId,
+    device_id: DeviceId,
+    button: HueButtonResource,
+    received_at_ms: u64,
+) -> Entity {
+    let entity_id = EntityId::trusted(format!("hue.button.{}.{}", bridge_id, button.id));
+    let state = button.last_event.clone().map(|last_event| StateSnapshot {
+        entity_id: entity_id.clone(),
+        value: Value::Object(vec![("input.button".to_string(), Value::Text(last_event))]),
+        source: StateSource::Poll,
+        observed_at_ms: received_at_ms,
+        received_at_ms,
+        expires_at_ms: None,
+        confidence: StateConfidence::Confirmed,
+    });
+
+    Entity {
+        entity_id,
+        device_id,
+        kind: EntityKind::Input,
+        name: button.name,
+        capabilities: vec![Capability::input_button()],
+        state,
+        metadata: vec![
+            Metadata::new("hue.resource_type", "button"),
+            Metadata::new("hue.resource_id", button.id.as_str()),
+            Metadata::new("hue.owner_device_id", button.owner_device_id.as_str()),
         ],
     }
 }
@@ -960,6 +1051,85 @@ mod tests {
                 ("light.brightness".to_string(), Value::Percentage(66)),
                 ("light.color_temperature".to_string(), Value::Integer(366)),
             ])
+        );
+    }
+
+    #[test]
+    fn hue_motion_resource_maps_to_occupancy_entity() {
+        let bridge_id = BridgeId::trusted("hue.bridge.001788");
+        let entity = hue_motion_to_entity(
+            &bridge_id,
+            DeviceId::trusted("hue.device.1"),
+            HueMotionResource {
+                id: HueResourceId::trusted("motion-1"),
+                owner_device_id: HueResourceId::trusted("device-1"),
+                name: "Hallway motion".to_string(),
+                motion: Some(true),
+                motion_valid: Some(true),
+            },
+            1_000,
+        );
+
+        assert_eq!(entity.kind, EntityKind::Sensor);
+        assert_eq!(
+            entity.capabilities[0].capability_id.as_str(),
+            "sensor.occupancy"
+        );
+        assert_eq!(entity.metadata[1].value, "motion-1");
+        assert_eq!(
+            entity.state.unwrap().value,
+            Value::Object(vec![
+                ("sensor.occupancy".to_string(), Value::Bool(true)),
+                ("hue.motion_valid".to_string(), Value::Bool(true)),
+            ])
+        );
+    }
+
+    #[test]
+    fn hue_invalid_motion_marks_state_stale() {
+        let bridge_id = BridgeId::trusted("hue.bridge.001788");
+        let entity = hue_motion_to_entity(
+            &bridge_id,
+            DeviceId::trusted("hue.device.1"),
+            HueMotionResource {
+                id: HueResourceId::trusted("motion-1"),
+                owner_device_id: HueResourceId::trusted("device-1"),
+                name: "Hallway motion".to_string(),
+                motion: Some(false),
+                motion_valid: Some(false),
+            },
+            1_000,
+        );
+
+        assert_eq!(entity.state.unwrap().confidence, StateConfidence::Stale);
+    }
+
+    #[test]
+    fn hue_button_resource_maps_to_input_entity() {
+        let bridge_id = BridgeId::trusted("hue.bridge.001788");
+        let entity = hue_button_to_entity(
+            &bridge_id,
+            DeviceId::trusted("hue.device.1"),
+            HueButtonResource {
+                id: HueResourceId::trusted("button-1"),
+                owner_device_id: HueResourceId::trusted("device-1"),
+                name: "Dimmer button".to_string(),
+                last_event: Some("short_release".to_string()),
+            },
+            1_000,
+        );
+
+        assert_eq!(entity.kind, EntityKind::Input);
+        assert_eq!(
+            entity.capabilities[0].capability_id.as_str(),
+            "input.button"
+        );
+        assert_eq!(
+            entity.state.unwrap().value,
+            Value::Object(vec![(
+                "input.button".to_string(),
+                Value::Text("short_release".to_string()),
+            )])
         );
     }
 

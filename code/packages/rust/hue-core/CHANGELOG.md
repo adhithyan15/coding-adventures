@@ -14,6 +14,8 @@ All notable changes to this package will be documented in this file.
 - Typed Hue grouped-light resources for room/zone aggregate lights.
 - Typed Hue room, zone, and scene resources with scene recall/core projection
   helpers.
+- Typed Hue motion and button resources with normalized sensor/input entity
+  projection helpers.
 - Mapping helpers from discovered Hue bridge/device/light records into
   `smart-home-core`.
 - Hue light state update helpers that project partial Hue light changes into

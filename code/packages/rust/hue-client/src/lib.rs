@@ -10,10 +10,11 @@ use coding_adventures_json_serializer::serialize;
 use coding_adventures_json_value::{parse as parse_json, JsonNumber, JsonValue};
 use http_core::{find_header, Header};
 use hue_core::{
-    validate_brightness, HueBridgeResource, HueCommand, HueDeviceResource, HueGroupedLightResource,
-    HueLightResource, HueLightStateUpdate, HueMethod, HueRequest, HueRequestBody, HueResourceId,
-    HueResourceRef, HueResourceType, HueRoomResource, HueSceneAction, HueSceneResource,
-    HueZoneResource, CLIP_V2_EVENT_STREAM_PATH, CLIP_V2_RESOURCE_ROOT, HUE_APPLICATION_KEY_HEADER,
+    validate_brightness, HueBridgeResource, HueButtonResource, HueCommand, HueDeviceResource,
+    HueGroupedLightResource, HueLightResource, HueLightStateUpdate, HueMethod, HueMotionResource,
+    HueRequest, HueRequestBody, HueResourceId, HueResourceRef, HueResourceType, HueRoomResource,
+    HueSceneAction, HueSceneResource, HueZoneResource, CLIP_V2_EVENT_STREAM_PATH,
+    CLIP_V2_RESOURCE_ROOT, HUE_APPLICATION_KEY_HEADER,
 };
 use std::fmt;
 
@@ -260,6 +261,16 @@ impl<T: HueTransport> HueClient<T> {
     pub fn get_scene_resources(&mut self) -> Result<Vec<HueSceneResource>, HueClientError> {
         let envelope = self.get_collection(HueResourceType::Scene)?;
         parse_scenes_from_envelope(&envelope)
+    }
+
+    pub fn get_motion_resources(&mut self) -> Result<Vec<HueMotionResource>, HueClientError> {
+        let envelope = self.get_collection(HueResourceType::Motion)?;
+        parse_motion_resources_from_envelope(&envelope)
+    }
+
+    pub fn get_button_resources(&mut self) -> Result<Vec<HueButtonResource>, HueClientError> {
+        let envelope = self.get_collection(HueResourceType::Button)?;
+        parse_button_resources_from_envelope(&envelope)
     }
 
     pub fn get_bridge_resources(&mut self) -> Result<Vec<HueBridgeResource>, HueClientError> {
@@ -615,6 +626,30 @@ pub fn parse_scenes_from_envelope(
         }
     }
     Ok(scenes)
+}
+
+pub fn parse_motion_resources_from_envelope(
+    envelope: &HueEnvelope,
+) -> Result<Vec<HueMotionResource>, HueClientError> {
+    let mut motions = Vec::new();
+    for resource in &envelope.data {
+        if object_string_field(resource, "type") == Some(HueResourceType::Motion.as_hue_type()) {
+            motions.push(parse_motion_resource(resource)?);
+        }
+    }
+    Ok(motions)
+}
+
+pub fn parse_button_resources_from_envelope(
+    envelope: &HueEnvelope,
+) -> Result<Vec<HueButtonResource>, HueClientError> {
+    let mut buttons = Vec::new();
+    for resource in &envelope.data {
+        if object_string_field(resource, "type") == Some(HueResourceType::Button.as_hue_type()) {
+            buttons.push(parse_button_resource(resource)?);
+        }
+    }
+    Ok(buttons)
 }
 
 pub fn parse_bridges_from_envelope(
@@ -977,13 +1012,65 @@ fn parse_scene_action(value: &JsonValue) -> Result<HueSceneAction, HueClientErro
     })
 }
 
+fn parse_motion_resource(resource: &JsonValue) -> Result<HueMotionResource, HueClientError> {
+    let id = object_string_field(resource, "id")
+        .ok_or_else(|| HueClientError::unexpected_json("Hue motion resource is missing id"))?;
+    let owner_device_id = parse_owner_device_id(resource, "Hue motion resource")?;
+    let name = parse_resource_name(resource, id);
+    let motion =
+        object_field(resource, "motion").and_then(|motion| object_bool_field(motion, "motion"));
+    let motion_valid = object_field(resource, "motion")
+        .and_then(|motion| object_bool_field(motion, "motion_valid"));
+
+    Ok(HueMotionResource {
+        id: HueResourceId::trusted(id),
+        owner_device_id,
+        name,
+        motion,
+        motion_valid,
+    })
+}
+
+fn parse_button_resource(resource: &JsonValue) -> Result<HueButtonResource, HueClientError> {
+    let id = object_string_field(resource, "id")
+        .ok_or_else(|| HueClientError::unexpected_json("Hue button resource is missing id"))?;
+    let owner_device_id = parse_owner_device_id(resource, "Hue button resource")?;
+    let name = parse_resource_name(resource, id);
+    let last_event = object_field(resource, "button")
+        .and_then(|button| object_string_field(button, "last_event"))
+        .map(str::to_string);
+
+    Ok(HueButtonResource {
+        id: HueResourceId::trusted(id),
+        owner_device_id,
+        name,
+        last_event,
+    })
+}
+
+fn parse_owner_device_id(
+    resource: &JsonValue,
+    resource_label: &str,
+) -> Result<HueResourceId, HueClientError> {
+    object_field(resource, "owner")
+        .and_then(|owner| object_string_field(owner, "rid"))
+        .map(HueResourceId::trusted)
+        .ok_or_else(|| {
+            HueClientError::unexpected_json(format!("{resource_label} is missing owner.rid"))
+        })
+}
+
+fn parse_resource_name(resource: &JsonValue, fallback_name: &str) -> String {
+    object_field(resource, "metadata")
+        .and_then(|metadata| object_string_field(metadata, "name"))
+        .unwrap_or(fallback_name)
+        .to_string()
+}
+
 fn parse_device_resource(resource: &JsonValue) -> Result<HueDeviceResource, HueClientError> {
     let id = object_string_field(resource, "id")
         .ok_or_else(|| HueClientError::unexpected_json("Hue device resource is missing id"))?;
-    let name = object_field(resource, "metadata")
-        .and_then(|metadata| object_string_field(metadata, "name"))
-        .unwrap_or(id)
-        .to_string();
+    let name = parse_resource_name(resource, id);
     let product_data = object_field(resource, "product_data");
     let services = match object_field(resource, "services") {
         Some(JsonValue::Array(values)) => parse_resource_refs(values)?,
@@ -1417,6 +1504,41 @@ mod tests {
     }
 
     #[test]
+    fn client_reads_motion_collection_through_injected_transport() {
+        let transport = RecordingTransport::with_response(
+            r#"{"data":[{"id":"motion-1","type":"motion","owner":{"rid":"device-1","rtype":"device"},"metadata":{"name":"Hallway motion"},"motion":{"motion":true,"motion_valid":true}}],"errors":[]}"#,
+        );
+        let mut client = HueClient::new(HueClientConfig::paired("app-key"), transport);
+
+        let motions = client.get_motion_resources().unwrap();
+        let transport = client.into_transport();
+
+        assert_eq!(motions.len(), 1);
+        assert_eq!(motions[0].id.as_str(), "motion-1");
+        assert_eq!(motions[0].owner_device_id.as_str(), "device-1");
+        assert_eq!(motions[0].motion, Some(true));
+        assert_eq!(motions[0].motion_valid, Some(true));
+        assert_eq!(transport.requests[0].path, "/clip/v2/resource/motion");
+    }
+
+    #[test]
+    fn client_reads_button_collection_through_injected_transport() {
+        let transport = RecordingTransport::with_response(
+            r#"{"data":[{"id":"button-1","type":"button","owner":{"rid":"device-1","rtype":"device"},"metadata":{"name":"Dimmer button"},"button":{"last_event":"short_release"}}],"errors":[]}"#,
+        );
+        let mut client = HueClient::new(HueClientConfig::paired("app-key"), transport);
+
+        let buttons = client.get_button_resources().unwrap();
+        let transport = client.into_transport();
+
+        assert_eq!(buttons.len(), 1);
+        assert_eq!(buttons[0].id.as_str(), "button-1");
+        assert_eq!(buttons[0].owner_device_id.as_str(), "device-1");
+        assert_eq!(buttons[0].last_event.as_deref(), Some("short_release"));
+        assert_eq!(transport.requests[0].path, "/clip/v2/resource/button");
+    }
+
+    #[test]
     fn parses_registration_success() {
         let registration = parse_registration_response(
             br#"[{"success":{"username":"app-key","clientkey":"client-key"}}]"#,
@@ -1547,6 +1669,47 @@ mod tests {
 
         assert!(matches!(
             parse_scenes_from_envelope(&envelope),
+            Err(HueClientError::UnexpectedJson { .. })
+        ));
+    }
+
+    #[test]
+    fn parses_motion_and_button_resources_from_snapshot_envelope() {
+        let envelope = parse_hue_envelope(
+            br#"{"data":[{"id":"motion-1","type":"motion","metadata":{"name":"Hallway motion"},"owner":{"rid":"device-1","rtype":"device"},"motion":{"motion":false,"motion_valid":true}},{"id":"button-1","type":"button","metadata":{"name":"Dimmer button"},"owner":{"rid":"device-1","rtype":"device"},"button":{"last_event":"initial_press"}},{"id":"light-1","type":"light"}],"errors":[]}"#,
+        )
+        .unwrap();
+
+        let motions = parse_motion_resources_from_envelope(&envelope).unwrap();
+        let buttons = parse_button_resources_from_envelope(&envelope).unwrap();
+
+        assert_eq!(motions.len(), 1);
+        assert_eq!(motions[0].id.as_str(), "motion-1");
+        assert_eq!(motions[0].name, "Hallway motion");
+        assert_eq!(motions[0].owner_device_id.as_str(), "device-1");
+        assert_eq!(motions[0].motion, Some(false));
+        assert_eq!(motions[0].motion_valid, Some(true));
+        assert_eq!(buttons.len(), 1);
+        assert_eq!(buttons[0].id.as_str(), "button-1");
+        assert_eq!(buttons[0].name, "Dimmer button");
+        assert_eq!(buttons[0].last_event.as_deref(), Some("initial_press"));
+    }
+
+    #[test]
+    fn motion_and_button_parsers_reject_missing_owner() {
+        let motion_envelope =
+            parse_hue_envelope(br#"{"data":[{"id":"motion-1","type":"motion"}],"errors":[]}"#)
+                .unwrap();
+        let button_envelope =
+            parse_hue_envelope(br#"{"data":[{"id":"button-1","type":"button"}],"errors":[]}"#)
+                .unwrap();
+
+        assert!(matches!(
+            parse_motion_resources_from_envelope(&motion_envelope),
+            Err(HueClientError::UnexpectedJson { .. })
+        ));
+        assert!(matches!(
+            parse_button_resources_from_envelope(&button_envelope),
             Err(HueClientError::UnexpectedJson { .. })
         ));
     }
