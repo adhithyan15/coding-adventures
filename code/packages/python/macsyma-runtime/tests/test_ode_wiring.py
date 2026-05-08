@@ -21,27 +21,21 @@ organised in five sections:
 
 from __future__ import annotations
 
-import math
-
 from symbolic_ir import (
     ADD,
-    COS,
     DIV,
     EQUAL,
     EXP,
     MUL,
-    NEG,
-    POW,
     SIN,
     SUB,
     IRApply,
-    IRFloat,
     IRInteger,
     IRNode,
     IRRational,
     IRSymbol,
 )
-from symbolic_ir.nodes import C1, C2, C_CONST, D, ODE2
+from symbolic_ir.nodes import ODE2, D
 from symbolic_vm import VM
 
 from macsyma_runtime import MacsymaBackend
@@ -339,7 +333,6 @@ def test_ilt_wrong_arity_unevaluated() -> None:
     """ILT with wrong arity returns unevaluated."""
     vm = _vm()
     s = _sym("s")
-    t = _sym("t")
     F = IRApply(DIV, (_int(1), s))
     result = vm.eval(_apply("ILT", F, s))  # only 2 args
     assert isinstance(result, IRApply)

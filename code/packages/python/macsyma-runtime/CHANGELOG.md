@@ -1,5 +1,111 @@
 # Changelog
 
+## 1.21.0 — 2026-05-08
+
+**Phase 30 — `float()` function and proper `numer` evaluation mode.**
+
+Makes `ev(expr, numer)`, `ev(expr, float)`, and the surface-syntax
+`float(expr)` actually fold exact numerics to floating-point values — a
+capability that was listed in the `ev` docstring but never implemented.
+
+### New capabilities
+
+#### `_numer_fold(node)` — recursive exact-to-float conversion
+
+New pure helper in `handlers.py`.  Walks an IR tree and converts every
+exact-numeric leaf to `IRFloat`:
+
+| Input node | Output |
+|---|---|
+| `IRInteger(n)` | `IRFloat(float(n))` |
+| `IRRational(p, q)` | `IRFloat(p / q)` |
+| `IRFloat(x)` | `IRFloat(x)` (identity) |
+| `IRSymbol(name)` | `IRSymbol(name)` (identity) |
+| `IRApply(Pow, (base, exp))` | base folded, exponent kept exact |
+| `IRApply(head, args)` | all args folded recursively |
+
+The Pow exponent guard is essential: downstream numeric routines test
+`isinstance(exp, IRInteger)` to distinguish `x^2` from `x^2.0`.
+
+#### `ev(expr, numer)` / `ev(expr, float)` — now actually folds
+
+Previously the `numer`/`float` branch of `ev_handler` evaluated `inner`
+and returned it unchanged (the `with_numer()` context manager toggled a
+backend flag but nothing consumed it).  The handler now calls
+`_numer_fold(result)` before returning:
+
+```macsyma
+ev(1/2, numer);   →  0.5          ← was 1/2 before this release
+ev(42, numer);    →  42.0         ← was 42
+ev(%pi/6, numer); →  0.523598...  ← was %pi/6
+```
+
+`with_numer()` is still called so nested `ev` calls inherit the mode.
+
+#### `float(expr)` — new surface function
+
+`float` is now wired end-to-end:
+
+1. **Name table** — `"float": FLOAT_FUNC` maps the MACSYMA token to
+   `IRSymbol("Float")`.
+2. **Handler** — `float_handler` in `cas_handlers.py` evaluates the
+   argument through the VM then applies `_numer_fold`.  One-argument
+   form only; wrong arity is returned unevaluated.
+3. **Dispatch table** — `build_cas_handler_table()` now includes
+   `"Float": float_handler`.
+
+```macsyma
+float(1/2);    →  0.5
+float(3);      →  3.0
+float(%pi);    →  3.141592653589793
+float(%e);     →  2.718281828459045
+float(1/3);    →  0.3333333333333333
+```
+
+### What changed
+
+| File | Change |
+|------|--------|
+| `src/macsyma_runtime/handlers.py` | Added `_numer_fold`; imports `IRFloat`, `IRInteger`, `IRRational`; `ev_handler` numer branch now calls `_numer_fold(result)` |
+| `src/macsyma_runtime/cas_handlers.py` | Added `float_handler`; imports `_numer_fold` from `handlers`; registered `"Float": float_handler` in `build_cas_handler_table()` |
+| `src/macsyma_runtime/name_table.py` | Added `FLOAT_FUNC = IRSymbol("Float")`; added `"float": FLOAT_FUNC` to `MACSYMA_NAME_TABLE` |
+| `pyproject.toml` | Version 1.20.0 → 1.21.0; description updated |
+| `tests/test_float_numer.py` | **New** — 41 tests (see below) |
+| `tests/test_ev.py` | Updated 2 tests to reflect new float-folding behaviour |
+| `tests/test_ode_wiring.py` | Fixed pre-existing unused-import/variable ruff warnings |
+
+### Tests (41 new in `test_float_numer.py`)
+
+**Section A — `_numer_fold` unit tests** (13 tests):
+`test_integer_becomes_float`, `test_integer_zero_becomes_float`,
+`test_negative_integer_becomes_float`, `test_rational_becomes_float`,
+`test_rational_one_third`, `test_float_passthrough`, `test_symbol_passthrough`,
+`test_apply_no_numerics_unchanged`, `test_apply_folds_integer_arg`,
+`test_apply_folds_rational_arg`, `test_pow_base_folded_exponent_preserved`,
+`test_pow_symbol_base_unchanged`, `test_nested_apply_folds_all_levels`
+
+**Section B — Float handler IR tests** (8 tests):
+`test_float_of_integer`, `test_float_of_rational`, `test_float_of_symbol_stays_symbolic`,
+`test_float_of_pi_constant`, `test_float_of_e_constant`, `test_float_of_zero`,
+`test_float_wrong_arity_returns_unevaluated`, `test_float_of_integer_expression`
+
+**Section C — `ev(expr, numer)` pipeline tests** (7 tests):
+`test_ev_numer_folds_integer`, `test_ev_float_folds_integer`,
+`test_ev_numer_folds_rational`, `test_ev_numer_folds_sum_of_integers`,
+`test_ev_numer_symbol_stays_symbolic`, `test_ev_numer_symbolic_expression_folds_constants`,
+`test_ev_numer_backend_flag_restored`
+
+**Section D — full compiler-pipeline tests** (11 tests):
+`test_float_of_integer_literal`, `test_float_of_fraction`, `test_float_of_one_third`,
+`test_float_of_pi`, `test_float_of_e`, `test_ev_numer_of_fraction`,
+`test_ev_numer_of_integer`, `test_ev_float_of_fraction`,
+`test_float_in_name_table`, `test_float_handler_in_dispatch_table`,
+`test_float_func_symbol_name`
+
+Coverage: **92.23%** (340 tests total).
+
+---
+
 ## 1.20.0 — 2026-05-04
 
 **Phase 29 — ODE solving and Laplace transforms wired into MacsymaBackend.**
