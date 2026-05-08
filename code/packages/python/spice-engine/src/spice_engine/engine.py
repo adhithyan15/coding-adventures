@@ -150,6 +150,49 @@ class AcResult:
     points: list[AcPoint]
 
 
+@dataclass(frozen=True)
+class TfResult:
+    """DC small-signal transfer function, input impedance, and output impedance.
+
+    This is the Python equivalent of the SPICE ``.TF`` analysis.  Given a
+    linear (or linearised) circuit, a signal input (voltage or current source)
+    and an output node, ``.TF`` computes three quantities:
+
+    transfer_ratio
+        The ratio V_output / V_input for a :class:`VoltageSource` input, or
+        V_output / I_input (transimpedance, in Ω) for a
+        :class:`CurrentSource` input.  Both are measured with all other
+        independent sources zeroed (DC small-signal sense).
+
+    input_impedance
+        The Thevenin equivalent impedance seen looking into the input port
+        (in Ω).  For a VoltageSource input this is ``-V_in / I_in`` where
+        the negative sign accounts for the MNA branch-current convention
+        (x[branch] is negative when the source delivers current).  For a
+        CurrentSource input this is the compliance voltage V_minus − V_plus
+        developed across the source when 1 A is forced.
+
+    output_impedance
+        The Thevenin equivalent impedance seen looking back into the circuit
+        from the output node (in Ω).  Computed by zeroing all independent
+        sources and injecting 1 A at the output; Z_out = V_output / 1 A.
+
+    converged
+        ``False`` when the DC operating-point Newton-Raphson failed to
+        converge.  The transfer function values are unreliable in this case.
+
+    Notes
+    -----
+    All three values are real-valued DC small-signal quantities (ω = 0).
+    For frequency-domain transfer functions use :func:`ac_sweep`.
+    """
+
+    transfer_ratio: float
+    input_impedance: float
+    output_impedance: float
+    converged: bool = True
+
+
 # ---------------------------------------------------------------------------
 # MNA infrastructure
 # ---------------------------------------------------------------------------
@@ -1409,3 +1452,403 @@ def ac_sweep(
 
 # Keep the cmath import visible to callers that ``from spice_engine import cmath``
 _ = cmath  # noqa: F841
+
+
+# ---------------------------------------------------------------------------
+# Section 4 — DC small-signal transfer function (.TF) analysis
+# ---------------------------------------------------------------------------
+#
+# Background: what is .TF analysis?
+# ----------------------------------
+# SPICE ``.TF`` computes three DC small-signal quantities in one pass:
+#
+#  1. **Transfer ratio H** — the ratio of a chosen output voltage to the
+#     excitation provided by one independent source, with all other
+#     independent sources zeroed (superposition at ω = 0).
+#
+#  2. **Input impedance Z_in** — the Thevenin equivalent impedance looking
+#     into the input source terminals.
+#
+#  3. **Output impedance Z_out** — the Thevenin equivalent impedance
+#     looking back into the circuit from the output node.
+#
+# Algorithm
+# ---------
+# Step 1: DC operating point.
+#     Run :func:`dc_op` to bias all nonlinear devices (Diode, MOSFET, BJT).
+#     This gives the linearisation point for the small-signal matrix.
+#
+# Step 2: Small-signal conductance matrix G_ss.
+#     Build a *real* MNA matrix at ω = 0 via :func:`_build_ss_matrix`.
+#     Independent sources (VoltageSource voltage, CurrentSource current) are
+#     zeroed — only their structural KVL/KCL entries remain.
+#     Reactive elements: Capacitor → open (skipped); Inductor → near-short
+#     (G = 1e12 S).  Nonlinear elements are replaced by their linearised
+#     small-signal conductances at the DC operating point.
+#
+# Step 3: Forward solve (transfer ratio + input impedance).
+#     Apply a unit excitation at the input source while keeping all other
+#     sources zeroed:
+#       - VoltageSource input: set b_fwd[branch_idx] = 1.0 (1 V excitation).
+#       - CurrentSource input: set b_fwd[n_plus] -= 1.0, b_fwd[n_minus] += 1.0
+#         (1 A injection following the DC stamp convention).
+#     Solve G_ss · x_fwd = b_fwd.
+#       - H = x_fwd[output_node_idx].
+#       - Z_in (VoltageSource): x_fwd[branch] < 0 when source delivers
+#         current (MNA convention), so Z_in = -1 / x_fwd[branch].
+#       - Z_in (CurrentSource): compliance voltage = V_n_minus − V_n_plus.
+#
+# Step 4: Output impedance solve.
+#     Use the same G_ss (all independent sources still zeroed).
+#     Inject 1 A at the output node: b_test[output_idx] = 1.0.
+#     Solve G_ss · x_test = b_test.
+#     Z_out = x_test[output_idx] (V_output / 1 A = Thevenin impedance).
+#
+# Why MNA branch-current sign is negative for delivering sources
+# -------------------------------------------------------------
+# The VoltageSource stamp places x[branch] in the KCL row for n_plus with
+# coefficient +1.  For a node with a resistive load to ground:
+#
+#   (1/R) * V_n_plus + x[branch] = 0
+#   ⟹  x[branch] = -(1/R) * V_n_plus = -I_delivered
+#
+# So x[branch] = -I_delivered: negative when the source delivers current.
+# The input impedance is V_in / I_delivered = 1 / (−x[branch]) = -1/x[branch].
+# ---------------------------------------------------------------------------
+
+
+def _build_ss_matrix(
+    circuit: Circuit,
+    node_to_idx: dict[str, int],
+    vsrcs: list[VoltageSource],
+    dc_x: list[float],
+) -> list[list[float]]:
+    """Build the real DC small-signal MNA conductance matrix (ω = 0).
+
+    This is the real-valued analogue of the complex :func:`_stamp_ac` loop.
+    Independent sources are excluded (zeroed), leaving only conductance and
+    structural KVL/KCL entries.
+
+    Stamping rules
+    --------------
+    +-------------------+-----------------------------------------------+
+    | Element type      | Small-signal stamp                            |
+    +===================+===============================================+
+    | Resistor R        | conductance G = 1/R                           |
+    +-------------------+-----------------------------------------------+
+    | Capacitor         | open circuit — skipped                        |
+    +-------------------+-----------------------------------------------+
+    | Inductor          | near-short: G = 1e12 S                        |
+    +-------------------+-----------------------------------------------+
+    | VoltageSource     | KVL/KCL structural entries (b NOT set)        |
+    +-------------------+-----------------------------------------------+
+    | CurrentSource     | skipped (independent source → zero in ss)     |
+    +-------------------+-----------------------------------------------+
+    | Diode             | gd = (Is/Vt) · exp(Vd/Vt) at DC OP           |
+    +-------------------+-----------------------------------------------+
+    | MOSFET            | gds + gm VCCS at DC OP                        |
+    +-------------------+-----------------------------------------------+
+    | BJT               | g_π + gm VCCS at DC OP                        |
+    +-------------------+-----------------------------------------------+
+
+    Parameters
+    ----------
+    circuit : Circuit
+        The circuit being analysed.
+    node_to_idx : dict[str, int]
+        Node-to-row-index mapping (ground excluded).
+    vsrcs : list[VoltageSource]
+        Ordered list of voltage sources (determines branch column indices).
+    dc_x : list[float]
+        DC operating-point vector (node voltages then branch currents).
+
+    Returns
+    -------
+    list[list[float]]
+        Square real MNA matrix of size ``(n_nodes + n_vsrcs)^2``.
+    """
+    n_nodes = len(node_to_idx)
+    size = n_nodes + len(vsrcs)
+    G: list[list[float]] = [[0.0] * size for _ in range(size)]
+
+    for el in circuit.elements:
+        if isinstance(el, Resistor):
+            # Real conductance: G = 1/R.
+            _stamp_g(G, node_to_idx, el.n_plus, el.n_minus, 1.0 / el.resistance)
+
+        elif isinstance(el, Capacitor):
+            # At ω = 0, Y_C = jωC = 0 — open circuit.  Nothing to stamp.
+            pass
+
+        elif isinstance(el, Inductor):
+            # At ω = 0, Y_L = 1/(jωL) → ∞.  Model as near-short (G = 1e12 S)
+            # to keep the matrix non-singular, mirroring the AC analysis.
+            _stamp_g(G, node_to_idx, el.n_plus, el.n_minus, 1e12)
+
+        elif isinstance(el, VoltageSource):
+            # Stamp structural KVL/KCL entries exactly as in _stamp_vsrc, but
+            # intentionally leave b alone (independent source zeroed).
+            i = vsrcs.index(el)
+            branch_idx = n_nodes + i
+            if not _is_ground(el.n_plus):
+                p = node_to_idx[el.n_plus]
+                G[p][branch_idx] = 1.0
+                G[branch_idx][p] = 1.0
+            if not _is_ground(el.n_minus):
+                q = node_to_idx[el.n_minus]
+                G[q][branch_idx] = -1.0
+                G[branch_idx][q] = -1.0
+
+        elif isinstance(el, CurrentSource):
+            # Independent current source → zero in small-signal analysis.
+            pass
+
+        elif isinstance(el, Diode):
+            # Small-signal conductance: gd = dI/dVd = (Is/Vt)·exp(Vd/Vt).
+            Va = 0.0 if _is_ground(el.anode) else dc_x[node_to_idx[el.anode]]
+            Vk = 0.0 if _is_ground(el.cathode) else dc_x[node_to_idx[el.cathode]]
+            Vd = min(Va - Vk, 0.7)
+            gd = (el.Is / el.Vt) * math.exp(Vd / el.Vt)
+            _stamp_g(G, node_to_idx, el.anode, el.cathode, gd)
+
+        elif isinstance(el, Mosfet):
+            # Small-signal model: gds (drain–source) + gm VCCS (gate–source
+            # controls drain current).  Mirrors the AC _stamp_ac Mosfet block.
+            Vd = 0.0 if _is_ground(el.drain) else dc_x[node_to_idx[el.drain]]
+            Vg = 0.0 if _is_ground(el.gate) else dc_x[node_to_idx[el.gate]]
+            Vs = 0.0 if _is_ground(el.source) else dc_x[node_to_idx[el.source]]
+            Vb = 0.0 if _is_ground(el.body) else dc_x[node_to_idx[el.body]]
+            r = el.model.dc(Vg - Vs, Vd - Vs, Vb - Vs)  # type: ignore[attr-defined]
+            gm_m: float = r.gm
+            gds_m: float = r.gds
+            _stamp_g(G, node_to_idx, el.drain, el.source, gds_m)
+            if not _is_ground(el.drain):
+                d = node_to_idx[el.drain]
+                if not _is_ground(el.gate):
+                    G[d][node_to_idx[el.gate]] += gm_m
+                if not _is_ground(el.source):
+                    G[d][node_to_idx[el.source]] -= gm_m
+            if not _is_ground(el.source):
+                s = node_to_idx[el.source]
+                if not _is_ground(el.gate):
+                    G[s][node_to_idx[el.gate]] -= gm_m
+                if not _is_ground(el.source):
+                    G[s][node_to_idx[el.source]] += gm_m
+
+        elif isinstance(el, BJT):
+            # Small-signal model: g_π (junction conductance) + gm VCCS.
+            # Mirrors the AC _stamp_ac BJT block in the real domain.
+            Vb_dc = 0.0 if _is_ground(el.base) else dc_x[node_to_idx[el.base]]
+            Ve_dc = 0.0 if _is_ground(el.emitter) else dc_x[node_to_idx[el.emitter]]
+            Vjunc = (
+                min(Vb_dc - Ve_dc, 0.7) if el.polarity == "NPN"
+                else min(Ve_dc - Vb_dc, 0.7)
+            )
+            exp_t = math.exp(Vjunc / el.Vt)
+            gm_b: float = (el.Is / el.Vt) * exp_t
+            g_pi: float = gm_b / el.beta_f
+
+            if el.polarity == "NPN":
+                _stamp_g(G, node_to_idx, el.base, el.emitter, g_pi)
+                if not _is_ground(el.collector):
+                    c_i = node_to_idx[el.collector]
+                    if not _is_ground(el.base):
+                        G[c_i][node_to_idx[el.base]] += gm_b
+                    if not _is_ground(el.emitter):
+                        G[c_i][node_to_idx[el.emitter]] -= gm_b
+                if not _is_ground(el.emitter):
+                    e_i = node_to_idx[el.emitter]
+                    if not _is_ground(el.base):
+                        G[e_i][node_to_idx[el.base]] -= gm_b
+                    if not _is_ground(el.emitter):
+                        G[e_i][node_to_idx[el.emitter]] += gm_b
+            else:  # PNP — emitter injects, collector collects
+                _stamp_g(G, node_to_idx, el.emitter, el.base, g_pi)
+                if not _is_ground(el.emitter):
+                    e_i = node_to_idx[el.emitter]
+                    if not _is_ground(el.emitter):
+                        G[e_i][node_to_idx[el.emitter]] += gm_b
+                    if not _is_ground(el.base):
+                        G[e_i][node_to_idx[el.base]] -= gm_b
+                if not _is_ground(el.collector):
+                    c_i = node_to_idx[el.collector]
+                    if not _is_ground(el.emitter):
+                        G[c_i][node_to_idx[el.emitter]] -= gm_b
+                    if not _is_ground(el.base):
+                        G[c_i][node_to_idx[el.base]] += gm_b
+
+    return G
+
+
+def tf(
+    circuit: Circuit,
+    *,
+    output_node: str,
+    input_source: str,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+) -> TfResult:
+    """DC small-signal transfer function analysis (the SPICE ``.TF`` command).
+
+    Computes the transfer ratio, input impedance, and output impedance for
+    a linear or linearised analog circuit at DC (ω = 0).
+
+    Parameters
+    ----------
+    circuit : Circuit
+        The circuit to analyse.
+    output_node : str
+        Name of the output node.  The transfer ratio is ``V_output / V_input``
+        (or ``V_output / I_input`` for a current-source input).
+    input_source : str
+        Name of the driving independent source (a :class:`VoltageSource` or
+        :class:`CurrentSource` element whose ``.name`` matches this string).
+    max_iterations : int
+        Maximum Newton-Raphson iterations for the DC operating point.
+    tol : float
+        Convergence tolerance for the DC solve.
+
+    Returns
+    -------
+    TfResult
+        Dataclass holding ``transfer_ratio``, ``input_impedance``,
+        ``output_impedance``, and ``converged``.
+
+    Raises
+    ------
+    ValueError
+        If ``input_source`` is not found in the circuit, or if the named
+        element is not a :class:`VoltageSource` or :class:`CurrentSource`.
+    ValueError
+        If ``output_node`` is not found in the circuit.
+
+    Algorithm
+    ---------
+    See the Section 4 comment block above :func:`_build_ss_matrix` for a
+    detailed walkthrough.
+
+    Examples
+    --------
+    Voltage divider::
+
+        from spice_engine import Circuit, VoltageSource, Resistor, tf
+
+        c = Circuit()
+        c.add(VoltageSource("V1", "vin", "0", 10.0))
+        c.add(Resistor("R1", "vin", "vmid", 1000.0))
+        c.add(Resistor("R2", "vmid", "0", 1000.0))
+
+        result = tf(c, output_node="vmid", input_source="V1")
+        # result.transfer_ratio  ≈ 0.5  (V_mid / V_in = R2/(R1+R2))
+        # result.input_impedance ≈ 2000  (R1 + R2)
+        # result.output_impedance ≈ 500  (R1 ∥ R2)
+    """
+    # ---- Step 1: DC operating point ------------------------------------------
+    dc = dc_op(circuit, max_iterations=max_iterations, tol=tol)
+    node_to_idx, _nodes = _node_index(circuit)
+    vsrcs = _voltage_sources(circuit)
+    n_nodes = len(node_to_idx)
+    size = n_nodes + len(vsrcs)
+
+    # Reconstruct the indexed dc_x vector from the DcResult dicts.
+    dc_x: list[float] = [0.0] * size
+    for name, idx in node_to_idx.items():
+        dc_x[idx] = dc.node_voltages.get(name, 0.0)
+    for i, vs in enumerate(vsrcs):
+        dc_x[n_nodes + i] = dc.branch_currents.get(f"I({vs.name})", 0.0)
+
+    # ---- Step 2: Small-signal conductance matrix -----------------------------
+    G_ss = _build_ss_matrix(circuit, node_to_idx, vsrcs, dc_x)
+
+    # ---- Locate the input source element ------------------------------------
+    input_el: Element | None = None
+    for el in circuit.elements:
+        if hasattr(el, "name") and el.name == input_source:
+            input_el = el
+            break
+    if input_el is None:
+        raise ValueError(
+            f"No element named {input_source!r} in circuit.  "
+            f"Available elements: {[e.name for e in circuit.elements if hasattr(e, 'name')]}"
+        )
+    if not isinstance(input_el, (VoltageSource, CurrentSource)):
+        raise ValueError(
+            f"Input element {input_source!r} must be a VoltageSource or CurrentSource, "
+            f"got {type(input_el).__name__}"
+        )
+
+    # Validate output node
+    if not _is_ground(output_node) and output_node not in node_to_idx:
+        raise ValueError(
+            f"Output node {output_node!r} not found.  "
+            f"Known nodes: {list(node_to_idx.keys())}"
+        )
+    output_idx: int | None = None if _is_ground(output_node) else node_to_idx[output_node]
+
+    # ---- Step 3: Forward solve (unit excitation at input) --------------------
+    #
+    # Apply a 1 V or 1 A excitation at the input source; all other independent
+    # sources remain zeroed because G_ss was built with b = 0 everywhere.
+    b_fwd = [0.0] * size
+
+    if isinstance(input_el, VoltageSource):
+        # 1 V across the source: set the KVL constraint row b[branch] = 1.0.
+        vsrc_idx = vsrcs.index(input_el)
+        b_fwd[n_nodes + vsrc_idx] = 1.0
+    else:
+        # CurrentSource: inject 1 A following the same sign convention as the
+        # DC stamp — b[n_plus] -= 1 (extract from n_plus), b[n_minus] += 1
+        # (inject into n_minus).
+        if not _is_ground(input_el.n_plus):
+            b_fwd[node_to_idx[input_el.n_plus]] -= 1.0
+        if not _is_ground(input_el.n_minus):
+            b_fwd[node_to_idx[input_el.n_minus]] += 1.0
+
+    try:
+        x_fwd = _solve(G_ss, b_fwd)
+    except ZeroDivisionError:
+        return TfResult(
+            transfer_ratio=0.0,
+            input_impedance=float("inf"),
+            output_impedance=float("inf"),
+            converged=False,
+        )
+
+    # Transfer ratio H = V_output (excitation is 1 V or 1 A).
+    H: float = 0.0 if output_idx is None else x_fwd[output_idx]
+
+    # Input impedance
+    if isinstance(input_el, VoltageSource):
+        vsrc_idx = vsrcs.index(input_el)
+        i_branch = x_fwd[n_nodes + vsrc_idx]
+        # MNA convention: x[branch] < 0 when the source delivers current
+        # (the branch current enters n_plus FROM the circuit, not from the
+        # source).  Z_in = V_in / I_delivered = 1 / (-x[branch]).
+        Z_in: float = (-1.0 / i_branch) if abs(i_branch) > 1e-30 else float("inf")
+    else:
+        # CurrentSource: Z_in = compliance voltage V_n_minus − V_n_plus.
+        # (The port voltage developed across the source when 1 A is forced.)
+        v_plus = 0.0 if _is_ground(input_el.n_plus) else x_fwd[node_to_idx[input_el.n_plus]]
+        v_minus = 0.0 if _is_ground(input_el.n_minus) else x_fwd[node_to_idx[input_el.n_minus]]
+        Z_in = v_minus - v_plus
+
+    # ---- Step 4: Output impedance (Thevenin) ---------------------------------
+    #
+    # Same G_ss (all independent sources zeroed).  Inject 1 A at the output
+    # node; Thevenin says Z_out = V_open / I_test = V_output / 1 A.
+    b_test = [0.0] * size
+    if output_idx is not None:
+        b_test[output_idx] = 1.0
+
+    try:
+        x_test = _solve(G_ss, b_test)
+        Z_out: float = 0.0 if output_idx is None else x_test[output_idx]
+    except ZeroDivisionError:
+        Z_out = float("inf")
+
+    return TfResult(
+        transfer_ratio=H,
+        input_impedance=Z_in,
+        output_impedance=Z_out,
+        converged=dc.converged,
+    )

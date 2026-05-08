@@ -16,14 +16,16 @@ from spice_engine.engine import (
     AcResult,
     Circuit,
     DcResult,
+    TfResult,
     TransientPoint,
     TransientResult,
     ac_sweep,
     dc_op,
+    tf,
     transient,
 )
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 
 __all__ = [
     "AcPoint",
@@ -38,11 +40,13 @@ __all__ = [
     "Inductor",
     "Mosfet",
     "Resistor",
+    "TfResult",
     "TransientPoint",
     "TransientResult",
     "VoltageSource",
     "__version__",
     "ac_sweep",
     "dc_op",
+    "tf",
     "transient",
 ]
