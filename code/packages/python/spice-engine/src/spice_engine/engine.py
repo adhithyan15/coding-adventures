@@ -2095,3 +2095,352 @@ def dc_sweep(
         )
 
     return DcSweepResult(points=points, source_name=source_name)
+
+
+# ---------------------------------------------------------------------------
+# Section 6 — DC Sensitivity Analysis (.SENS analysis)
+# ---------------------------------------------------------------------------
+#
+# Background: what is sensitivity analysis?
+# -----------------------------------------
+# Sensitivity analysis answers the question: "If element X changes by a small
+# amount δ, how much does the output voltage V_out change?"
+#
+# Formally, the DC sensitivity of V_out with respect to parameter P is:
+#
+#     S(P) = ∂V_out / ∂P  ≈  [V_out(P + δ) − V_out(P)] / δ
+#
+# where δ is a small perturbation chosen as a fixed fraction of P (typically
+# 0.1%, 0.5%, or 1%).
+#
+# Three flavours of sensitivity
+# ------------------------------
+# 1. **Absolute sensitivity** S(P) — units of V/Ω (for a resistor),  V/V
+#    (for a voltage source), V/A (for a current source).  Tells you the
+#    slope: "1 Ω change in R1 shifts V_out by S Volts."
+#
+# 2. **Relative (normalised) sensitivity** S_rel — dimensionless.
+#    Computed as (P / V_out) × S(P).  Tells you: "a 1% change in P produces
+#    a S_rel% change in V_out."  Useful for comparing components with
+#    very different units.
+#
+# 3. **Element contribution** — sum over all elements to see which one
+#    dominates.
+#
+# Why finite differences?
+# -----------------------
+# For a general MNA circuit (including nonlinear devices) the closed-form
+# adjoint sensitivity requires differentiating through the Newton-Raphson
+# loop, which is complex to implement.  Finite differences are simpler,
+# correct to O(δ) for a forward difference, and practically accurate for
+# the perturbation sizes used in SPICE (δ ≈ 0.001× nominal).
+#
+# What is perturbed?
+# ------------------
+# Each element contributes its one free DC parameter:
+#
+#   Resistor     → resistance (Ω)
+#   VoltageSource → voltage (V)
+#   CurrentSource → current (A)
+#   Diode        → Is (A)  — the reverse saturation current
+#   BJT          → Is (A) and beta_f (dimensionless)
+#   Capacitor    → skipped (open circuit at DC; C has no DC effect)
+#   Inductor     → skipped (short circuit at DC; L has no DC effect)
+#   Mosfet       → skipped (model object; perturbing internal params
+#                   requires model introspection not yet exposed)
+#
+# Perturbation size
+# -----------------
+# For each parameter P, δ = max(|P| × perturbation_fraction, abs_floor).
+# The default fraction is 0.001 (0.1%).  The absolute floor is 1e-10 to
+# handle zero-valued sources (e.g., a 0 V bias).
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class SensEntry:
+    """Sensitivity of V_out with respect to one element parameter.
+
+    Attributes
+    ----------
+    element_name : str
+        Name of the circuit element (e.g. ``"R1"``, ``"Vin"``).
+    parameter : str
+        Which parameter was perturbed: ``"resistance"``, ``"voltage"``,
+        ``"current"``, ``"Is"``, or ``"beta_f"``.
+    nominal_value : float
+        The unperturbed value of the parameter.
+    sensitivity : float
+        Absolute sensitivity ∂V_out/∂P in units of [V / unit(P)].
+        For a resistor this is V/Ω; for a voltage source, V/V; etc.
+    rel_sensitivity : float
+        Dimensionless relative sensitivity ``(P / V_out) × ∂V_out/∂P``.
+        Gives the percentage change in V_out per percentage change in P.
+        Set to 0.0 when V_out is zero (undefined otherwise).
+
+    Notes
+    -----
+    A large absolute value of *rel_sensitivity* indicates that this
+    component dominates the output tolerance budget.  Entries are sorted
+    by ``abs(rel_sensitivity)`` descending in :class:`SensResult`.
+    """
+
+    element_name: str
+    parameter: str
+    nominal_value: float
+    sensitivity: float
+    rel_sensitivity: float
+
+
+@dataclass
+class SensResult:
+    """DC sensitivity analysis results from :func:`sens_dc`.
+
+    Attributes
+    ----------
+    output_node : str
+        The node whose voltage was observed.
+    nominal_voltage : float
+        V_out at the unperturbed DC operating point.
+    entries : list[SensEntry]
+        One entry per perturbed (element, parameter) pair, sorted by
+        ``abs(rel_sensitivity)`` descending so the most influential
+        components appear first.
+    converged : bool
+        ``True`` when every DC solve (nominal + all perturbations) converged.
+        ``False`` if any solve failed; individual entries may be unreliable.
+
+    Examples
+    --------
+    Print a ranked sensitivity table::
+
+        result = sens_dc(circuit, "out")
+        for e in result.entries:
+            print(f"{e.element_name}({e.parameter}): "
+                  f"{e.rel_sensitivity:+.2%} / % change")
+    """
+
+    output_node: str
+    nominal_voltage: float
+    entries: list[SensEntry]
+    converged: bool
+
+
+
+def sens_dc(
+    circuit: Circuit,
+    output_node: str,
+    *,
+    max_iterations: int = 50,
+    tol: float = 1e-6,
+    perturbation: float = 1e-3,
+    abs_floor: float = 1e-10,
+) -> SensResult:
+    """DC sensitivity analysis (SPICE ``.SENS``).
+
+    Computes how sensitive the DC voltage at *output_node* is to small
+    changes in each element's parameter, using forward finite differences.
+
+    Parameters
+    ----------
+    circuit : Circuit
+        The circuit to analyse.
+    output_node : str
+        Name of the observation node.  Use ``"0"`` or ``"gnd"`` to observe
+        the reference (always 0 V — not useful but allowed for completeness).
+    max_iterations : int, keyword-only
+        Maximum Newton-Raphson iterations per DC solve.  Default 50.
+    tol : float, keyword-only
+        Newton-Raphson convergence tolerance.  Default 1e-6.
+    perturbation : float, keyword-only
+        Relative perturbation fraction.  Each parameter P is perturbed by
+        ``δ = max(|P| × perturbation, abs_floor)``.  Default 0.001 (0.1 %).
+    abs_floor : float, keyword-only
+        Minimum absolute perturbation (used when P ≈ 0).  Default 1e-10.
+
+    Returns
+    -------
+    SensResult
+        ``entries`` sorted by ``abs(rel_sensitivity)`` descending.
+        ``converged`` is ``False`` if any DC solve diverged.
+
+    Raises
+    ------
+    ValueError
+        If *output_node* is not a ground alias and is not found in the
+        circuit's node set.
+
+    Notes
+    -----
+    **What is perturbed**: Resistor (resistance), VoltageSource (voltage),
+    CurrentSource (current), Diode (Is), BJT (Is, beta_f).  Capacitors and
+    inductors are skipped (no DC effect); MOSFETs are skipped (model object
+    introspection not yet implemented).
+
+    **Interpretation**: A ``rel_sensitivity`` of ``0.5`` means a 1% increase
+    in that parameter causes a 0.5% increase in V_out.  A ``-1.0`` means a
+    1% increase causes a 1% decrease (like the top resistor in a divider).
+
+    Examples
+    --------
+    Resistor divider: R1 and R2 both 1 kΩ, V_in = 10 V::
+
+        from spice_engine import Circuit, VoltageSource, Resistor, sens_dc
+
+        c = Circuit()
+        c.add(VoltageSource("Vin", "in", "0", 10.0))
+        c.add(Resistor("R1", "in", "mid", 1000.0))
+        c.add(Resistor("R2", "mid", "0", 1000.0))
+
+        result = sens_dc(c, "mid")
+        # result.nominal_voltage ≈ 5.0
+        # R1 rel_sensitivity ≈ -0.5  (increasing R1 lowers V_mid)
+        # R2 rel_sensitivity ≈ +0.5  (increasing R2 raises V_mid)
+        # Vin rel_sensitivity ≈ +1.0 (V_mid tracks Vin linearly)
+    """
+    # ---- Validate output node ------------------------------------------------
+    node_to_idx, _ = _node_index(circuit)
+    if not _is_ground(output_node) and output_node not in node_to_idx:
+        raise ValueError(
+            f"sens_dc: output node {output_node!r} not found in circuit.  "
+            f"Known nodes: {sorted(node_to_idx.keys())}"
+        )
+
+    # ---- Nominal DC operating point ------------------------------------------
+    nominal = dc_op(circuit, max_iterations=max_iterations, tol=tol)
+    if not nominal.converged:
+        return SensResult(
+            output_node=output_node,
+            nominal_voltage=0.0,
+            entries=[],
+            converged=False,
+        )
+
+    v_out_nominal = _node_voltage(output_node, nominal.node_voltages)
+    all_converged = True
+    entries: list[SensEntry] = []
+
+    # ---- Finite-difference perturbation for each element ---------------------
+    #
+    # For each (element, parameter) pair:
+    #   1. Compute δ = max(|param| × perturbation, abs_floor).
+    #   2. Build a perturbed circuit with param → param + δ.
+    #      (Frozen dataclasses → create a new element, rebuild circuit list.)
+    #   3. Solve dc_op on the perturbed circuit.
+    #   4. Sensitivity = (V_out_pert − V_out_nominal) / δ.
+    #   5. Relative sensitivity = sensitivity × (param / V_out_nominal).
+    #
+    for idx, el in enumerate(circuit.elements):
+
+        def _make_entry(
+            param_name: str,
+            nominal_val: float,
+            perturbed_el: Element,
+            _idx: int = idx,
+            _el: Element = el,
+        ) -> None:
+            """Inner helper: run perturbed solve and append a SensEntry.
+
+            The default-argument captures (``_idx=idx``, ``_el=el``) are
+            necessary to correctly bind the loop variables inside the closure.
+            Python's late-binding would otherwise share the loop variable
+            values from the *last* iteration for all closures.
+            """
+            nonlocal all_converged
+            delta = max(abs(nominal_val) * perturbation, abs_floor)
+            # Rebuild circuit with the perturbed element at position _idx.
+            pert_elements = list(circuit.elements)
+            pert_elements[_idx] = perturbed_el
+            pert_circ = Circuit(elements=pert_elements)
+            pert_dc = dc_op(pert_circ, max_iterations=max_iterations, tol=tol)
+            if not pert_dc.converged:
+                all_converged = False
+                return
+            v_out_pert = _node_voltage(output_node, pert_dc.node_voltages)
+            sens = (v_out_pert - v_out_nominal) / delta
+            rel = sens * nominal_val / v_out_nominal if abs(v_out_nominal) > abs_floor else 0.0
+            entries.append(SensEntry(
+                element_name=_el.name,
+                parameter=param_name,
+                nominal_value=nominal_val,
+                sensitivity=sens,
+                rel_sensitivity=rel,
+            ))
+
+        if isinstance(el, Resistor):
+            # Perturb resistance by δ.  New element: same name/nodes, R + δ.
+            delta_r = max(abs(el.resistance) * perturbation, abs_floor)
+            _make_entry(
+                "resistance",
+                el.resistance,
+                Resistor(el.name, el.n_plus, el.n_minus, el.resistance + delta_r),
+            )
+
+        elif isinstance(el, VoltageSource):
+            # Perturb voltage by δ.
+            delta_v = max(abs(el.voltage) * perturbation, abs_floor)
+            _make_entry(
+                "voltage",
+                el.voltage,
+                VoltageSource(el.name, el.n_plus, el.n_minus, el.voltage + delta_v),
+            )
+
+        elif isinstance(el, CurrentSource):
+            # Perturb current by δ.
+            delta_i = max(abs(el.current) * perturbation, abs_floor)
+            _make_entry(
+                "current",
+                el.current,
+                CurrentSource(el.name, el.n_plus, el.n_minus, el.current + delta_i),
+            )
+
+        elif isinstance(el, Diode):
+            # Perturb Is (saturation current).  Large relative change of Is
+            # has a logarithmic (Vd ≈ Vt ln(Id/Is)) effect on Vd.
+            delta_is = max(abs(el.Is) * perturbation, abs_floor)
+            _make_entry(
+                "Is",
+                el.Is,
+                Diode(el.name, el.anode, el.cathode, el.Is + delta_is, el.Vt),
+            )
+
+        elif isinstance(el, BJT):
+            # Perturb Is and beta_f independently.
+            # BJT field order: name, collector, base, emitter, polarity, Is, beta_f, Vt
+            # (polarity is positional with a default, so use keyword args to be safe.)
+            delta_is = max(abs(el.Is) * perturbation, abs_floor)
+            _make_entry(
+                "Is",
+                el.Is,
+                BJT(
+                    el.name, el.collector, el.base, el.emitter,
+                    polarity=el.polarity,
+                    Is=el.Is + delta_is,
+                    beta_f=el.beta_f,
+                    Vt=el.Vt,
+                ),
+            )
+            delta_beta = max(abs(el.beta_f) * perturbation, abs_floor)
+            _make_entry(
+                "beta_f",
+                el.beta_f,
+                BJT(
+                    el.name, el.collector, el.base, el.emitter,
+                    polarity=el.polarity,
+                    Is=el.Is,
+                    beta_f=el.beta_f + delta_beta,
+                    Vt=el.Vt,
+                ),
+            )
+
+        # Capacitor, Inductor, Mosfet: no DC parameter to perturb.
+
+    # Sort by |rel_sensitivity| descending so biggest drivers appear first.
+    entries.sort(key=lambda e: abs(e.rel_sensitivity), reverse=True)
+
+    return SensResult(
+        output_node=output_node,
+        nominal_voltage=v_out_nominal,
+        entries=entries,
+        converged=all_converged,
+    )

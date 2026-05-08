@@ -1,5 +1,102 @@
 # Changelog
 
+## [0.7.0] — 2026-05-08
+
+### Added
+
+- **`sens_dc()` function** — DC sensitivity analysis (the SPICE `.SENS` command).
+
+  Computes how sensitive the DC voltage at a named output node is to small
+  changes in each element's tunable parameter, using forward finite differences.
+  For each `(element, parameter)` pair:
+
+  ```
+  sensitivity     = ∂V_out / ∂P  ≈  (V_out(P + δ) − V_out(P)) / δ
+  rel_sensitivity = (P / V_out) × ∂V_out/∂P   (dimensionless)
+  ```
+
+  **Signature:**
+  ```python
+  sens_dc(
+      circuit: Circuit,
+      output_node: str,
+      *,
+      max_iterations: int = 50,
+      tol: float = 1e-6,
+      perturbation: float = 1e-3,   # relative δ: δ = max(|P| × 0.001, 1e-10)
+      abs_floor: float = 1e-10,
+  ) -> SensResult
+  ```
+
+  **Parameters perturbed per element type:**
+
+  | Element | Parameter |
+  |---------|-----------|
+  | `Resistor` | `resistance` (Ω) |
+  | `VoltageSource` | `voltage` (V) |
+  | `CurrentSource` | `current` (A) |
+  | `Diode` | `Is` (A) — reverse saturation current |
+  | `BJT` | `Is` (A) and `beta_f` (dimensionless) |
+  | `Capacitor` | skipped — no DC effect |
+  | `Inductor` | skipped — no DC effect |
+  | `Mosfet` | skipped — model introspection not yet exposed |
+
+  **Interpreting results:**
+  - `rel_sensitivity = 0.5` → a 1% increase in P causes a 0.5% increase in V_out.
+  - `rel_sensitivity = -1.0` → a 1% increase in P causes a 1% decrease in V_out.
+  - Entries are sorted by `abs(rel_sensitivity)` descending so the most influential
+    components appear first.
+
+  **Example — resistor divider:**
+  ```python
+  from spice_engine import Circuit, VoltageSource, Resistor, sens_dc
+
+  c = Circuit()
+  c.add(VoltageSource("Vin", "in", "0", 10.0))
+  c.add(Resistor("R1", "in", "mid", 1000.0))
+  c.add(Resistor("R2", "mid", "0", 1000.0))
+
+  result = sens_dc(c, "mid")
+  # result.nominal_voltage = 5.0
+  # Vin  rel_sensitivity ≈ +1.00  (V_mid tracks V_in)
+  # R1   rel_sensitivity ≈ −0.50  (increasing R1 lowers V_mid)
+  # R2   rel_sensitivity ≈ +0.50  (increasing R2 raises V_mid)
+  ```
+
+- **`SensEntry` dataclass** — immutable result for one `(element, parameter)` pair:
+  - `element_name: str`
+  - `parameter: str` — `"resistance"`, `"voltage"`, `"current"`, `"Is"`, `"beta_f"`
+  - `nominal_value: float` — unperturbed parameter value
+  - `sensitivity: float` — absolute ∂V_out/∂P in V/unit(P)
+  - `rel_sensitivity: float` — dimensionless (P/V_out) × ∂V_out/∂P
+
+- **`SensResult` dataclass** — collection returned by `sens_dc`:
+  - `output_node: str`
+  - `nominal_voltage: float`
+  - `entries: list[SensEntry]` sorted by `|rel_sensitivity|` descending
+  - `converged: bool`
+
+### Changed
+
+- `__version__` bumped `0.6.0` → `0.7.0`.
+- Module docstring updated to include `.SENS` analysis.
+
+### Tests (26 new, Section 33–39)
+
+| Section | Description |
+|---------|-------------|
+| 33 | Dataclass types, nominal voltage, converged flag |
+| 34 | Resistor-divider analytical verification (equal and asymmetric) |
+| 35 | Voltage-source (rel = 1.0) and current-source sensitivities |
+| 36 | Nonlinear Diode Is sensitivity (positive direction) |
+| 37 | BJT Is and beta_f both present; beta negative on collector |
+| 38 | Sorted-descending ordering; Vin dominates; nominal_value stored |
+| 39 | Invalid node ValueError; ground alias; skipped C/L; clamped-node R |
+
+Total: 154 tests, 82% coverage.
+
+---
+
 ## [0.6.0] — 2026-05-08
 
 ### Added

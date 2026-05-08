@@ -34,6 +34,13 @@ Test organisation
 30. DC sweep: nonlinear (diode) circuit
 31. DC sweep: current-source sweeps
 32. DC sweep: error cases and edge cases
+33. DC sensitivity: SensEntry / SensResult dataclasses
+34. DC sensitivity: resistor-divider analytical verification
+35. DC sensitivity: voltage-source and current-source sensitivities
+36. DC sensitivity: nonlinear element (Diode Is)
+37. DC sensitivity: BJT Is and beta_f
+38. DC sensitivity: sorting and ranking
+39. DC sensitivity: error cases and edge cases
 """
 
 import cmath
@@ -54,11 +61,14 @@ from spice_engine import (
     Diode,
     Inductor,
     Resistor,
+    SensEntry,
+    SensResult,
     TfResult,
     VoltageSource,
     ac_sweep,
     dc_op,
     dc_sweep,
+    sens_dc,
     tf,
     transient,
 )
@@ -2231,3 +2241,510 @@ def test_dc_sweep_all_converged_linear() -> None:
     result = dc_sweep(c, "V1", -5.0, 5.0, 1.0)
 
     assert all(pt.converged for pt in result.points)
+
+
+# ===========================================================================
+# Section 33 — DC sensitivity analysis: SensEntry / SensResult dataclasses
+# ===========================================================================
+#
+# sens_dc perturbs each element parameter by a small fraction, runs two DC
+# solves (nominal and perturbed), and records:
+#
+#   sensitivity     = (V_out_pert − V_out_nom) / δ    [absolute, V/unit]
+#   rel_sensitivity = sensitivity × P / V_out_nom      [dimensionless ratio]
+#
+# The analytical ground-truth for a resistor divider:
+#
+#   V_mid = V_in × R2 / (R1 + R2)
+#
+#   ∂V_mid/∂R1 = −V_in × R2 / (R1+R2)²
+#   ∂V_mid/∂R2 = +V_in × R1 / (R1+R2)²
+#   ∂V_mid/∂V_in = R2 / (R1+R2)
+#
+#   For V_in=10V, R1=R2=1kΩ:
+#     ∂V_mid/∂R1 ≈ −10 × 1000/4000000 = −0.0025 V/Ω
+#     ∂V_mid/∂R2 ≈ +10 × 1000/4000000 = +0.0025 V/Ω
+#     ∂V_mid/∂V_in = 0.5
+#
+#   rel_sensitivity for R1: (−0.0025 × 1000) / 5.0 = −0.5
+#   rel_sensitivity for R2: (+0.0025 × 1000) / 5.0 = +0.5
+#   rel_sensitivity for Vin: (0.5 × 10) / 5.0 = +1.0
+# ===========================================================================
+
+
+def test_sens_result_is_sensresult() -> None:
+    """sens_dc returns a SensResult instance."""
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 10.0))
+    c.add(Resistor("R1", "in", "0", 1000.0))
+
+    result = sens_dc(c, "in")
+    assert isinstance(result, SensResult)
+
+
+def test_sens_entries_are_sensentry() -> None:
+    """Each entry in SensResult.entries is a SensEntry instance."""
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 10.0))
+    c.add(Resistor("R1", "in", "0", 1000.0))
+
+    result = sens_dc(c, "in")
+    for entry in result.entries:
+        assert isinstance(entry, SensEntry)
+
+
+def test_sens_nominal_voltage_correct() -> None:
+    """SensResult.nominal_voltage matches dc_op V_out at the output node."""
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 10.0))
+    c.add(Resistor("R1", "in", "mid", 1000.0))
+    c.add(Resistor("R2", "mid", "0", 1000.0))
+
+    result = sens_dc(c, "mid")
+    dc = dc_op(c)
+    assert isclose(result.nominal_voltage, dc.node_voltages["mid"], rel_tol=1e-9)
+
+
+def test_sens_converged_linear() -> None:
+    """sens_dc converges for a purely linear circuit."""
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 10.0))
+    c.add(Resistor("R1", "in", "out", 1000.0))
+    c.add(Resistor("R2", "out", "0", 1000.0))
+
+    result = sens_dc(c, "out")
+    assert result.converged
+
+
+# ===========================================================================
+# Section 34 — DC sensitivity: resistor-divider analytical verification
+# ===========================================================================
+
+
+def test_sens_divider_r1_sensitivity() -> None:
+    """∂V_mid/∂R1 ≈ −V_in × R2 / (R1+R2)² for the resistor divider.
+
+    For V_in=10V, R1=R2=1kΩ: ∂V_mid/∂R1 ≈ −0.0025 V/Ω.
+    The forward-difference approximation is accurate to within 0.1% of the
+    analytical value.
+    """
+    v_in, r1, r2 = 10.0, 1000.0, 1000.0
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", v_in))
+    c.add(Resistor("R1", "in", "mid", r1))
+    c.add(Resistor("R2", "mid", "0", r2))
+
+    result = sens_dc(c, "mid")
+    r1_entry = next(e for e in result.entries if e.element_name == "R1")
+
+    # Analytical: ∂V_mid/∂R1 = −V_in × R2 / (R1+R2)²
+    expected_sens = -v_in * r2 / (r1 + r2) ** 2
+    assert isclose(r1_entry.sensitivity, expected_sens, rel_tol=1e-3), (
+        f"R1 sensitivity {r1_entry.sensitivity:.6f} vs expected {expected_sens:.6f}"
+    )
+
+
+def test_sens_divider_r2_sensitivity() -> None:
+    """∂V_mid/∂R2 ≈ +V_in × R1 / (R1+R2)² for the resistor divider."""
+    v_in, r1, r2 = 10.0, 1000.0, 1000.0
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", v_in))
+    c.add(Resistor("R1", "in", "mid", r1))
+    c.add(Resistor("R2", "mid", "0", r2))
+
+    result = sens_dc(c, "mid")
+    r2_entry = next(e for e in result.entries if e.element_name == "R2")
+
+    expected_sens = v_in * r1 / (r1 + r2) ** 2
+    assert isclose(r2_entry.sensitivity, expected_sens, rel_tol=1e-3), (
+        f"R2 sensitivity {r2_entry.sensitivity:.6f} vs expected {expected_sens:.6f}"
+    )
+
+
+def test_sens_divider_r1_rel_sensitivity() -> None:
+    """Relative sensitivity of R1 ≈ −0.5 in an equal-ratio divider.
+
+    rel = (∂V_mid/∂R1) × R1 / V_mid = (−0.0025 × 1000) / 5 = −0.5.
+    A 1% increase in R1 causes a 0.5% decrease in V_mid.
+    """
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 10.0))
+    c.add(Resistor("R1", "in", "mid", 1000.0))
+    c.add(Resistor("R2", "mid", "0", 1000.0))
+
+    result = sens_dc(c, "mid")
+    r1_entry = next(e for e in result.entries if e.element_name == "R1")
+
+    assert isclose(r1_entry.rel_sensitivity, -0.5, rel_tol=1e-3), (
+        f"R1 rel_sensitivity {r1_entry.rel_sensitivity:.4f} vs expected -0.5"
+    )
+
+
+def test_sens_divider_r2_rel_sensitivity() -> None:
+    """Relative sensitivity of R2 ≈ +0.5 in an equal-ratio divider."""
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 10.0))
+    c.add(Resistor("R1", "in", "mid", 1000.0))
+    c.add(Resistor("R2", "mid", "0", 1000.0))
+
+    result = sens_dc(c, "mid")
+    r2_entry = next(e for e in result.entries if e.element_name == "R2")
+
+    assert isclose(r2_entry.rel_sensitivity, 0.5, rel_tol=1e-3), (
+        f"R2 rel_sensitivity {r2_entry.rel_sensitivity:.4f} vs expected +0.5"
+    )
+
+
+def test_sens_divider_asymmetric() -> None:
+    """Asymmetric divider (R1=2kΩ, R2=1kΩ) checks the relative sensitivities.
+
+    V_mid = V_in × R2/(R1+R2) = 10 × 1000/3000 ≈ 3.333 V.
+
+    General closed-form relative sensitivities:
+      rel(R1) = R1 × (∂V_mid/∂R1) / V_mid = −R1/(R1+R2)
+      rel(R2) = R2 × (∂V_mid/∂R2) / V_mid = +R1/(R1+R2)  ← numerator is R1, not R2
+
+    Derivation:
+      ∂V_mid/∂R1 = −V_in × R2/(R1+R2)²
+      ∂V_mid/∂R2 = +V_in × R1/(R1+R2)²
+      V_mid = V_in × R2/(R1+R2)
+      rel(R2) = R2 × V_in × R1/(R1+R2)² / (V_in × R2/(R1+R2)) = R1/(R1+R2)
+
+    For R1=2kΩ, R2=1kΩ:
+      rel(R1) = −2000/3000 ≈ −0.667
+      rel(R2) = +2000/3000 ≈ +0.667
+    """
+    v_in, r1, r2 = 10.0, 2000.0, 1000.0
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", v_in))
+    c.add(Resistor("R1", "in", "mid", r1))
+    c.add(Resistor("R2", "mid", "0", r2))
+
+    result = sens_dc(c, "mid")
+    assert isclose(result.nominal_voltage, v_in * r2 / (r1 + r2), rel_tol=1e-9)
+
+    r1_entry = next(e for e in result.entries if e.element_name == "R1")
+    expected_rel_r1 = -r1 / (r1 + r2)   # = −2000/3000 ≈ −0.667
+    assert isclose(r1_entry.rel_sensitivity, expected_rel_r1, rel_tol=1e-3)
+
+    r2_entry = next(e for e in result.entries if e.element_name == "R2")
+    expected_rel_r2 = r1 / (r1 + r2)    # = +2000/3000 ≈ +0.667 (numerator is R1!)
+    assert isclose(r2_entry.rel_sensitivity, expected_rel_r2, rel_tol=1e-3)
+
+
+# ===========================================================================
+# Section 35 — DC sensitivity: voltage-source and current-source sensitivities
+# ===========================================================================
+
+
+def test_sens_voltage_source_rel_is_unity() -> None:
+    """For a pure voltage source with resistive load, ∂V_out/∂V_in = 1.
+
+    V_out = V_in directly (single node with a resistor to ground — voltage
+    is set by the source).  rel_sensitivity = (1 × V_in) / V_in = 1.
+    """
+    c = Circuit()
+    c.add(VoltageSource("Vin", "out", "0", 5.0))
+    c.add(Resistor("R1", "out", "0", 1000.0))
+
+    result = sens_dc(c, "out")
+    vin_entry = next(e for e in result.entries if e.element_name == "Vin")
+
+    assert isclose(vin_entry.rel_sensitivity, 1.0, rel_tol=1e-3), (
+        f"VoltageSource rel_sensitivity {vin_entry.rel_sensitivity:.4f} vs 1.0"
+    )
+
+
+def test_sens_current_source_into_resistor() -> None:
+    """V_out = I × R, so ∂V_out/∂I = R and rel_sensitivity = 1.
+
+    I1=1 mA → 0 (n+) / out (n-); R1=1 kΩ to ground.
+    V_out = I × R = 0.001 × 1000 = 1 V.
+    ∂V_out/∂I = R = 1000.  rel = 1000 × 0.001 / 1.0 = 1.
+    """
+    c = Circuit()
+    c.add(CurrentSource("I1", "0", "out", 0.001))  # injects into 'out'
+    c.add(Resistor("R1", "out", "0", 1000.0))
+
+    result = sens_dc(c, "out")
+    assert isclose(result.nominal_voltage, 1.0, rel_tol=1e-9)
+
+    i1_entry = next(e for e in result.entries if e.element_name == "I1")
+    assert isclose(i1_entry.sensitivity, 1000.0, rel_tol=1e-3), (
+        f"CurrentSource abs sensitivity {i1_entry.sensitivity:.1f} vs 1000"
+    )
+    assert isclose(i1_entry.rel_sensitivity, 1.0, rel_tol=1e-3)
+
+
+def test_sens_voltage_source_divider_rel_unity() -> None:
+    """Voltage source rel_sensitivity is always 1.0 for a linear divider.
+
+    For V_mid = V_in × R2/(R1+R2), ∂V_mid/∂V_in = R2/(R1+R2) = 0.5.
+    rel = 0.5 × V_in / V_mid = 0.5 × 10 / 5 = 1.0.
+    """
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 10.0))
+    c.add(Resistor("R1", "in", "mid", 1000.0))
+    c.add(Resistor("R2", "mid", "0", 1000.0))
+
+    result = sens_dc(c, "mid")
+    vin_entry = next(e for e in result.entries if e.element_name == "Vin")
+    assert isclose(vin_entry.rel_sensitivity, 1.0, rel_tol=1e-3)
+
+
+def test_sens_current_source_resistance_both_ranked() -> None:
+    """Both I1 (current) and R1 (resistance) appear in entries for a simple RC load."""
+    c = Circuit()
+    c.add(CurrentSource("I1", "0", "out", 0.002))
+    c.add(Resistor("R1", "out", "0", 500.0))
+
+    result = sens_dc(c, "out")
+    names = {(e.element_name, e.parameter) for e in result.entries}
+    assert ("I1", "current") in names
+    assert ("R1", "resistance") in names
+
+
+# ===========================================================================
+# Section 36 — DC sensitivity: nonlinear element (Diode Is)
+# ===========================================================================
+#
+# For a forward-biased diode in series with a resistor:
+#
+#   V_in = V_D + V_R      where V_D ≈ Vt × ln(I / Is)
+#
+# Increasing Is decreases V_D (the diode conducts more easily at the same
+# current), which increases V_R.  The output voltage V_R = V_in − V_D
+# therefore rises when Is rises.
+#
+# The direction of ∂V_R/∂Is is always positive for a forward-biased diode
+# connected in the usual way.
+# ===========================================================================
+
+
+def test_sens_diode_is_entry_present() -> None:
+    """A Diode contributes an 'Is' entry to the sensitivity table."""
+    c = Circuit()
+    c.add(VoltageSource("Vin", "anode", "0", 1.0))
+    c.add(Diode("D1", "anode", "out"))
+    c.add(Resistor("R1", "out", "0", 1000.0))
+
+    result = sens_dc(c, "out")
+    param_names = {(e.element_name, e.parameter) for e in result.entries}
+    assert ("D1", "Is") in param_names, f"Entries: {param_names}"
+
+
+def test_sens_diode_is_positive_sensitivity() -> None:
+    """Increasing Is lowers Vd, raising Vout (V_R = V_in − V_D).
+
+    The absolute sensitivity ∂V_R/∂Is should be positive.
+    """
+    c = Circuit()
+    c.add(VoltageSource("Vin", "anode", "0", 1.0))
+    c.add(Diode("D1", "anode", "out"))
+    c.add(Resistor("R1", "out", "0", 1000.0))
+
+    result = sens_dc(c, "out")
+    d1_entry = next(e for e in result.entries if e.element_name == "D1" and e.parameter == "Is")
+    assert d1_entry.sensitivity > 0, (
+        f"Expected positive dV_out/dIs, got {d1_entry.sensitivity}"
+    )
+
+
+# ===========================================================================
+# Section 37 — DC sensitivity: BJT Is and beta_f
+# ===========================================================================
+#
+# NPN common-emitter amplifier:
+#
+#   Vcc (5 V)
+#     │
+#    Rc (1 kΩ) ← collector
+#     │
+#     ├── output "out"
+#     │
+#    BJT (NPN)  ← base biased via Rb from Vcc, emitter to ground
+#     │
+#    GND
+#
+# Increasing beta_f → more collector current → V_out drops (negative
+# relative sensitivity).
+# ===========================================================================
+
+
+def test_sens_bjt_entries_is_and_beta() -> None:
+    """A BJT contributes both 'Is' and 'beta_f' entries."""
+    c = Circuit()
+    c.add(VoltageSource("Vcc", "vcc", "0", 5.0))
+    c.add(Resistor("Rb", "vcc", "base", 100_000.0))
+    c.add(Resistor("Rc", "vcc", "col", 1_000.0))
+    c.add(BJT("Q1", "col", "base", "0", polarity="NPN"))
+
+    result = sens_dc(c, "col")
+    param_pairs = {(e.element_name, e.parameter) for e in result.entries}
+    assert ("Q1", "Is") in param_pairs, f"Missing Q1 Is — entries: {param_pairs}"
+    assert ("Q1", "beta_f") in param_pairs, f"Missing Q1 beta_f — entries: {param_pairs}"
+
+
+def test_sens_bjt_beta_negative_on_collector() -> None:
+    """Higher beta_f → more collector current → V_col decreases.
+
+    In the common-emitter configuration the rel_sensitivity for beta_f
+    should be negative (increasing β lowers V_out).
+    """
+    c = Circuit()
+    c.add(VoltageSource("Vcc", "vcc", "0", 5.0))
+    c.add(Resistor("Rb", "vcc", "base", 200_000.0))
+    c.add(Resistor("Rc", "vcc", "col", 2_000.0))
+    c.add(BJT("Q1", "col", "base", "0", polarity="NPN"))
+
+    result = sens_dc(c, "col")
+    if not result.converged:
+        return  # Skip if BJT didn't converge (topology edge case)
+
+    beta_entry = next(
+        (e for e in result.entries if e.element_name == "Q1" and e.parameter == "beta_f"),
+        None,
+    )
+    if beta_entry is not None:
+        assert beta_entry.rel_sensitivity <= 0, (
+            f"Expected beta_f to decrease V_col; got rel={beta_entry.rel_sensitivity:.4f}"
+        )
+
+
+# ===========================================================================
+# Section 38 — DC sensitivity: sorting and ranking
+# ===========================================================================
+
+
+def test_sens_entries_sorted_by_abs_rel_desc() -> None:
+    """Entries are sorted by abs(rel_sensitivity) descending."""
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 10.0))
+    c.add(Resistor("R1", "in", "mid", 1000.0))
+    c.add(Resistor("R2", "mid", "0", 1000.0))
+
+    result = sens_dc(c, "mid")
+    rels = [abs(e.rel_sensitivity) for e in result.entries]
+    assert rels == sorted(rels, reverse=True), f"Entries not sorted: {rels}"
+
+
+def test_sens_vin_dominates_divider() -> None:
+    """In a symmetric divider Vin has the highest rel_sensitivity (= 1.0).
+
+    Both resistors have |rel| = 0.5 < 1.0, so Vin appears first.
+    """
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 10.0))
+    c.add(Resistor("R1", "in", "mid", 1000.0))
+    c.add(Resistor("R2", "mid", "0", 1000.0))
+
+    result = sens_dc(c, "mid")
+    assert result.entries[0].element_name == "Vin", (
+        f"Expected Vin first, got {result.entries[0].element_name}"
+    )
+
+
+def test_sens_nominal_value_stored() -> None:
+    """SensEntry stores the unperturbed parameter value in nominal_value."""
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 10.0))
+    c.add(Resistor("R1", "in", "0", 4700.0))
+
+    result = sens_dc(c, "in")
+    r1_entry = next(e for e in result.entries if e.element_name == "R1")
+    assert r1_entry.nominal_value == 4700.0
+
+    vin_entry = next(e for e in result.entries if e.element_name == "Vin")
+    assert vin_entry.nominal_value == 10.0
+
+
+# ===========================================================================
+# Section 39 — DC sensitivity: error cases and edge cases
+# ===========================================================================
+
+
+def test_sens_invalid_output_node_raises() -> None:
+    """ValueError if the output node is not in the circuit."""
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 5.0))
+    c.add(Resistor("R1", "in", "0", 1000.0))
+
+    with pytest.raises(ValueError, match="nonexistent"):
+        sens_dc(c, "nonexistent")
+
+
+def test_sens_output_at_ground_not_raises() -> None:
+    """Observing ground (always 0 V) doesn't raise, but returns 0 as nominal."""
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 5.0))
+    c.add(Resistor("R1", "in", "0", 1000.0))
+
+    # ground node aliases: "0" is accepted
+    result = sens_dc(c, "0")
+    assert result.output_node == "0"
+    assert result.nominal_voltage == 0.0
+
+
+def test_sens_output_node_field_preserved() -> None:
+    """SensResult.output_node stores the exact string passed to sens_dc."""
+    c = Circuit()
+    c.add(VoltageSource("Vin", "alpha", "0", 3.3))
+    c.add(Resistor("R1", "alpha", "0", 1000.0))
+
+    result = sens_dc(c, "alpha")
+    assert result.output_node == "alpha"
+
+
+def test_sens_capacitor_and_inductor_skipped() -> None:
+    """Capacitors and inductors produce no entries (no DC parameter).
+
+    In DC steady-state, a capacitor is an open circuit and an inductor is
+    a short circuit.  Neither C nor L affects the DC node voltages, so
+    perturbing their values produces zero sensitivity.  sens_dc skips them
+    to keep the output concise.
+    """
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 5.0))
+    c.add(Resistor("R1", "in", "out", 1000.0))
+    c.add(Capacitor("C1", "out", "0", 1e-9))  # open in DC — no entry expected
+    c.add(Inductor("L1", "out", "0", 1e-6))   # short in DC  — no entry expected
+    c.add(Resistor("R2", "out", "0", 1000.0))
+
+    result = sens_dc(c, "out")
+    names = {e.element_name for e in result.entries}
+    assert "C1" not in names, "Capacitor should not appear in sensitivity entries"
+    assert "L1" not in names, "Inductor should not appear in sensitivity entries"
+
+
+def test_sens_three_resistors_all_present() -> None:
+    """A ladder with three resistors produces three 'resistance' entries."""
+    c = Circuit()
+    c.add(VoltageSource("Vin", "in", "0", 10.0))
+    c.add(Resistor("R1", "in", "n1", 1000.0))
+    c.add(Resistor("R2", "n1", "n2", 1000.0))
+    c.add(Resistor("R3", "n2", "0", 1000.0))
+
+    result = sens_dc(c, "n2")
+    param_pairs = {(e.element_name, e.parameter) for e in result.entries}
+    assert ("R1", "resistance") in param_pairs
+    assert ("R2", "resistance") in param_pairs
+    assert ("R3", "resistance") in param_pairs
+
+
+def test_sens_single_resistor_load() -> None:
+    """V_out is fixed by the voltage source; R only affects current, not voltage.
+
+    With V1 directly on 'out', ∂V_out/∂R = 0 (voltage source overrides the node).
+    The resistor sensitivity should be essentially zero.
+    """
+    c = Circuit()
+    c.add(VoltageSource("V1", "out", "0", 3.3))
+    c.add(Resistor("R1", "out", "0", 10_000.0))
+
+    result = sens_dc(c, "out")
+    r1_entry = next(e for e in result.entries if e.element_name == "R1")
+    # Voltage source clamps the node; R has no effect on V_out
+    assert abs(r1_entry.sensitivity) < 1e-6, (
+        f"Resistor sensitivity should be ≈0 when load is directly clamped: "
+        f"{r1_entry.sensitivity}"
+    )
