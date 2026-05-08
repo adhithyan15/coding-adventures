@@ -542,4 +542,5 @@ members = [
     "hue-client",
     "zigbee-zdo",
     "zwave-command-classes",
+    "capability-cage",
 ]
