@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Run standard stream aliases and richer accepted stream options through
+  structured and bytecode VM paths, including `user_input`, `user_output`,
+  `user_error`, `reposition/1`, `eof_action/1`, `buffer/1`, and
+  `close_on_abort/1`.
 - Run bounded source-level recursive/wildcard filesystem operation predicates
   through structured and bytecode VM paths, including `expand_file_name/2`,
   `make_directory_path/1`, `delete_directory_and_contents/1`, and
@@ -43,7 +47,7 @@
   paths, including `open/4` `type(binary)`, `get_byte/1,2`, `peek_byte/1,2`,
   and `put_byte/1,2`.
 - Add a public Prolog VM capability manifest and `prolog-vm --dump-capabilities`
-  so scripts and future planning can distinguish the completed PR00-PR89 track
+  so scripts and future planning can distinguish the completed PR00-PR90 track
   from deferred advanced dialect/runtime work.
 - Add end-to-end stress coverage for recursive search, modules, DCGs,
   arithmetic, collections, dynamic initialization, named answers, and expansion.

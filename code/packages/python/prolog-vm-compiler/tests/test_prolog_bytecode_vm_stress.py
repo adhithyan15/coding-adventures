@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+import pytest
 from logic_engine import Compound, Number, atom, logic_list, num, string, term
 
 from prolog_vm_compiler import (
@@ -485,10 +486,17 @@ class TestPrologBytecodeVMStress:
         compiled = compile_swi_prolog_source(
             f"""
             ?- open('{path_atom}', write, Out,
-                    [alias(bytecode_report), encoding(utf8), type(text)]),
+                    [alias(bytecode_report), encoding(utf8), type(text),
+                     reposition(true), eof_action(eof_code), buffer(line),
+                     close_on_abort(false)]),
                write(bytecode_report, "tea"),
                flush_output(bytecode_report),
                stream_property(bytecode_report, alias(Alias)),
+               stream_property(bytecode_report, encoding(Encoding)),
+               stream_property(bytecode_report, reposition(Reposition)),
+               stream_property(bytecode_report, eof_action(EofAction)),
+               stream_property(bytecode_report, buffer(Buffer)),
+               stream_property(bytecode_report, close_on_abort(CloseOnAbort)),
                current_stream(Path, Mode, Out),
                close(bytecode_report).
             """,
@@ -496,15 +504,28 @@ class TestPrologBytecodeVMStress:
 
         answers = run_compiled_prolog_bytecode_query_answers(compiled)
 
-        assert _project_answers(answers, "Alias", "Path", "Mode") == _project_answers(
-            run_compiled_prolog_query_answers(compiled),
+        names = (
             "Alias",
+            "Encoding",
+            "Reposition",
+            "EofAction",
+            "Buffer",
+            "CloseOnAbort",
             "Path",
             "Mode",
         )
-        assert _project_answers(answers, "Alias", "Path", "Mode") == [
+        assert _project_answers(answers, *names) == _project_answers(
+            run_compiled_prolog_query_answers(compiled),
+            *names,
+        )
+        assert _project_answers(answers, *names) == [
             {
                 "Alias": atom("bytecode_report"),
+                "Encoding": atom("utf8"),
+                "Reposition": atom("true"),
+                "EofAction": atom("eof_code"),
+                "Buffer": atom("line"),
+                "CloseOnAbort": atom("false"),
                 "Path": atom(str(source_path)),
                 "Mode": atom("write"),
             },
@@ -793,6 +814,45 @@ class TestPrologBytecodeVMStress:
             "Line": string("def"),
         }
         assert output_path.read_text(encoding="utf-8") == "tea\ncake(slice)"
+
+    def test_standard_streams_match_structured_vm(
+        self,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        compiled = compile_swi_prolog_source(
+            """
+            ?- set_input(user_input),
+               set_output(user_output),
+               current_input(CurrentIn),
+               current_output(CurrentOut),
+               at_end_of_stream,
+               write("stdout"),
+               nl,
+               write(user_error, "stderr"),
+               flush_output,
+               flush_output(user_error),
+               stream_property(user_input, alias(user_input)),
+               stream_property(user_output, alias(user_output)),
+               current_stream(user_error, append, '$stream_user_error').
+            """,
+        )
+
+        answers = run_compiled_prolog_bytecode_query_answers(compiled)
+        bytecode_capture = capsys.readouterr()
+        structured_answers = run_compiled_prolog_query_answers(compiled)
+        structured_capture = capsys.readouterr()
+
+        assert _project_answers(answers, "CurrentIn", "CurrentOut") == (
+            _project_answers(structured_answers, "CurrentIn", "CurrentOut")
+        )
+        assert _project_answers(answers, "CurrentIn", "CurrentOut") == [
+            {
+                "CurrentIn": atom("$stream_user_input"),
+                "CurrentOut": atom("$stream_user_output"),
+            },
+        ]
+        assert bytecode_capture.out == structured_capture.out == "stdout\n"
+        assert bytecode_capture.err == structured_capture.err == "stderr"
 
     def test_stream_term_io_matches_structured_vm(self, tmp_path: Path) -> None:
         input_path = tmp_path / "bytecode-terms.pltxt"

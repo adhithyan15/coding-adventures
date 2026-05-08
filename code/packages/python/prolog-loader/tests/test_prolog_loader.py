@@ -1661,10 +1661,17 @@ class TestPrologGoalAdapter:
         path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
         parsed = parse_swi_query(
             f"?- open('{path_atom}', write, Out, "
-            "[alias(report_stream), encoding(utf8), type(text)]), "
+            "[alias(report_stream), encoding(utf8), type(text), "
+            "reposition(true), eof_action(eof_code), buffer(line), "
+            "close_on_abort(false)]), "
             'write(report_stream, "tea"), '
             "flush_output(report_stream), "
             "stream_property(report_stream, alias(Alias)), "
+            "stream_property(report_stream, encoding(Encoding)), "
+            "stream_property(report_stream, reposition(Reposition)), "
+            "stream_property(report_stream, eof_action(EofAction)), "
+            "stream_property(report_stream, buffer(Buffer)), "
+            "stream_property(report_stream, close_on_abort(CloseOnAbort)), "
             "current_stream(Path, Mode, Out), "
             "close(report_stream).",
         )
@@ -1673,12 +1680,59 @@ class TestPrologGoalAdapter:
             program(),
             (
                 parsed.variables["Alias"],
+                parsed.variables["Encoding"],
+                parsed.variables["Reposition"],
+                parsed.variables["EofAction"],
+                parsed.variables["Buffer"],
+                parsed.variables["CloseOnAbort"],
                 parsed.variables["Path"],
                 parsed.variables["Mode"],
             ),
             adapt_prolog_goal(parsed.goal),
-        ) == [(atom("report_stream"), atom(str(source_path)), atom("write"))]
+        ) == [
+            (
+                atom("report_stream"),
+                atom("utf8"),
+                atom("true"),
+                atom("eof_code"),
+                atom("line"),
+                atom("false"),
+                atom(str(source_path)),
+                atom("write"),
+            ),
+        ]
         assert source_path.read_text(encoding="utf-8") == "tea"
+
+    def test_adapt_prolog_goal_rewrites_standard_streams(
+        self,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        parsed = parse_swi_query(
+            "?- set_input(user_input), "
+            "set_output(user_output), "
+            "current_input(CurrentIn), "
+            "current_output(CurrentOut), "
+            "at_end_of_stream, "
+            'write("stdout"), '
+            "nl, "
+            'write(user_error, "stderr"), '
+            "flush_output, "
+            "flush_output(user_error), "
+            "stream_property(user_input, alias(user_input)), "
+            "stream_property(user_output, alias(user_output)), "
+            "current_stream(user_error, append, '$stream_user_error').",
+        )
+
+        answers = solve_all(
+            program(),
+            (parsed.variables["CurrentIn"], parsed.variables["CurrentOut"]),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        captured = capsys.readouterr()
+        assert answers == [(atom("$stream_user_input"), atom("$stream_user_output"))]
+        assert captured.out == "stdout\n"
+        assert captured.err == "stderr"
 
     def test_adapt_prolog_goal_rewrites_stream_positioning(
         self,

@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- standard `user_input`, `user_output`, and `user_error` stream aliases plus
+  richer accepted `open_optionso/4` metadata for `reposition`, `eof_action`,
+  `buffer`, and `close_on_abort`.
 - `expand_file_nameo/2`, `make_directory_patho/1`,
   `delete_directory_and_contentso/1`, and `copy_fileo/2` for bounded
   recursive/wildcard filesystem operations over bound atom/string paths.

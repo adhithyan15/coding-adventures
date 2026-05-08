@@ -70,8 +70,9 @@ ordinary logic goal expressions.
   `get_charo/2`, `at_end_of_streamo/1`, `writeo/2`, and `nlo/1` for bounded
   UTF-8 file stream handles
 - `open_optionso/4`, `current_streamo/3`, `stream_propertyo/2`, and
-  `flush_outputo/1` for bounded stream aliases, option validation, and
-  metadata
+  `flush_outputo/1` for bounded stream aliases, option validation, metadata,
+  standard `user_input`/`user_output`/`user_error` streams, and accepted
+  `reposition`, `eof_action`, `buffer`, and `close_on_abort` options
 - `set_stream_positiono/2` and `seeko/4` for bounded read-stream cursor
   repositioning
 - `set_inputo/1`, `set_outputo/1`, `current_inputo/1`, `current_outputo/1`,

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- adapt source-level standard stream aliases and richer stream options,
+  including `user_input`, `user_output`, `user_error`, `reposition/1`,
+  `eof_action/1`, `buffer/1`, and `close_on_abort/1`
 - adapt source-level recursive/wildcard filesystem operation predicates
   including `expand_file_name/2`, `make_directory_path/1`,
   `delete_directory_and_contents/1`, and `copy_file/2` into the executable
