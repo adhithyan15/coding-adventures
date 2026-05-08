@@ -381,6 +381,31 @@ impl HueLightResource {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct HueGroupedLightResource {
+    pub id: HueResourceId,
+    pub owner: HueResourceRef,
+    pub name: String,
+    pub on: Option<bool>,
+    pub brightness: Option<u8>,
+}
+
+impl HueGroupedLightResource {
+    pub fn command_set_on(&self, on: bool) -> HueCommand {
+        HueCommand::SetGroupedLightOn {
+            grouped_light_id: self.id.clone(),
+            on,
+        }
+    }
+
+    pub fn command_set_brightness(&self, brightness: u8) -> HueCommand {
+        HueCommand::SetGroupedLightBrightness {
+            grouped_light_id: self.id.clone(),
+            brightness,
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct HueDeviceResource {
     pub id: HueResourceId,
@@ -654,6 +679,31 @@ mod tests {
             .any(|capability| capability.capability_id.as_str() == "light.color_temperature"));
         assert_eq!(entity.metadata[1].value, "light-1");
         assert_eq!(entity.state.unwrap().confidence, StateConfidence::Confirmed);
+    }
+
+    #[test]
+    fn hue_grouped_light_resource_builds_group_commands() {
+        let grouped = HueGroupedLightResource {
+            id: HueResourceId::trusted("grouped-light-1"),
+            owner: HueResourceRef::new(HueResourceType::Room, HueResourceId::trusted("room-1")),
+            name: "Kitchen".to_string(),
+            on: Some(false),
+            brightness: Some(20),
+        };
+
+        assert_eq!(
+            grouped.command_set_on(true).to_request(),
+            HueRequest {
+                method: HueMethod::Put,
+                path: "/clip/v2/resource/grouped_light/grouped-light-1".to_string(),
+                body: Some(HueRequestBody::SetOn { on: true }),
+            }
+        );
+        assert_eq!(
+            grouped.command_set_brightness(55).to_request().body,
+            Some(HueRequestBody::SetBrightness { brightness: 55 })
+        );
+        assert_eq!(grouped.owner.resource_type, HueResourceType::Room);
     }
 
     #[test]
