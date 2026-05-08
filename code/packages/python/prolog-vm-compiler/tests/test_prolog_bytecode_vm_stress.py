@@ -518,6 +518,90 @@ class TestPrologBytecodeVMStress:
         ]
         assert output_path.read_text(encoding="utf-8") == "hi!\n"
 
+    def test_binary_byte_stream_io_matches_structured_vm(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        input_path = tmp_path / "bytecode-bytes-input.bin"
+        output_path = tmp_path / "bytecode-bytes-output.bin"
+        input_path.write_bytes(bytes([65, 0, 255]))
+        input_atom = str(input_path).replace("\\", "\\\\").replace("'", "\\'")
+        output_atom = str(output_path).replace("\\", "\\\\").replace("'", "\\'")
+        compiled = compile_swi_prolog_source(
+            f"""
+            ?- open('{input_atom}', read, In,
+                    [alias(bytecode_byte_input), type(binary)]),
+               stream_property(In, type(binary)),
+               peek_byte(In, Peeked),
+               get_byte(In, First),
+               get_byte(In, Zero),
+               stream_property(In, position(Position)),
+               peek_byte(In, High),
+               get_byte(In, High),
+               get_byte(In, Eof),
+               at_end_of_stream(In),
+               set_stream_position(bytecode_byte_input, 1),
+               set_input(In),
+               peek_byte(CurrentPeek),
+               get_byte(CurrentFirst),
+               close(In),
+               open('{output_atom}', write, Out,
+                    [alias(bytecode_byte_output), type(binary)]),
+               put_byte(Out, 65),
+               put_byte(Out, 0),
+               set_output(bytecode_byte_output),
+               put_byte(255),
+               close(Out).
+            """,
+        )
+
+        answers = run_compiled_prolog_bytecode_query_answers(compiled)
+
+        assert _project_answers(
+            answers,
+            "Peeked",
+            "First",
+            "Zero",
+            "Position",
+            "High",
+            "Eof",
+            "CurrentPeek",
+            "CurrentFirst",
+        ) == _project_answers(
+            run_compiled_prolog_query_answers(compiled),
+            "Peeked",
+            "First",
+            "Zero",
+            "Position",
+            "High",
+            "Eof",
+            "CurrentPeek",
+            "CurrentFirst",
+        )
+        assert _project_answers(
+            answers,
+            "Peeked",
+            "First",
+            "Zero",
+            "Position",
+            "High",
+            "Eof",
+            "CurrentPeek",
+            "CurrentFirst",
+        ) == [
+            {
+                "Peeked": num(65),
+                "First": num(65),
+                "Zero": num(0),
+                "Position": num(2),
+                "High": num(255),
+                "Eof": num(-1),
+                "CurrentPeek": num(0),
+                "CurrentFirst": num(0),
+            },
+        ]
+        assert output_path.read_bytes() == bytes([65, 0, 255])
+
     def test_current_stream_facade_matches_structured_vm(
         self,
         tmp_path: Path,

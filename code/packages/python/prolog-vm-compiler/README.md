@@ -249,7 +249,7 @@ assert [answer.as_dict() for answer in runtime.query("ancestor(homer, Who)")] ==
 
 ## Capability Manifest
 
-The Prolog-on-Logic-VM implementation track covers PR00 through PR85. The
+The Prolog-on-Logic-VM implementation track covers PR00 through PR86. The
 package exposes that as a machine-readable manifest so downstream tools and
 future implementation work can distinguish completed functionality from
 deliberately deferred advanced dialect/runtime emulation:
@@ -259,7 +259,7 @@ from prolog_vm_compiler import prolog_vm_capability_manifest
 
 manifest = prolog_vm_capability_manifest()
 
-assert manifest.status == "core-plus-stream-character-code-io"
+assert manifest.status == "core-plus-binary-byte-stream-io"
 assert manifest.dialects == ("iso", "swi")
 assert manifest.backends == ("structured", "bytecode")
 ```
@@ -282,12 +282,14 @@ selected current-stream forms via `set_input/1`, `set_output/1`,
 plus term I/O conveniences through `read_term` `singletons/1`, `writeq/1,2`,
 `write_canonical/1,2`, `writeln/1,2`, and `portray_clause/1,2`, plus bounded
 character/code stream I/O through `get_code/1,2`, `peek_char/1,2`,
-`peek_code/1,2`, `put_char/1,2`, and `put_code/1,2`.
+`peek_code/1,2`, `put_char/1,2`, and `put_code/1,2`, plus bounded binary
+byte stream I/O through `open/4` `type(binary)`, `get_byte/1,2`,
+`peek_byte/1,2`, and `put_byte/1,2`.
 The manifest also names the remaining advanced-dialect work that is intentionally
 outside the completed batches: full external dialect emulation, tabling and
 well-founded negation, generalized attributed-variable/coroutining services,
-non-FD constraint domains, console/binary/rich stream services beyond the
-bounded UTF-8 subset, foreign predicates, engines, and concurrency.
+non-FD constraint domains, console streams, richer stream services beyond the
+bounded file-backed subset, foreign predicates, engines, and concurrency.
 
 ## CLI
 
@@ -462,6 +464,8 @@ The package includes end-to-end stress tests for:
   `at_end_of_stream/1`, `write/2`, and `nl/1`
 - bounded stream aliases and metadata with `open/4`, `current_stream/3`,
   `stream_property/2`, and `flush_output/1`
+- bounded binary byte stream I/O with `open/4` `type(binary)`,
+  `get_byte/1,2`, `peek_byte/1,2`, and `put_byte/1,2`
 - bounded stream cursor repositioning with `set_stream_position/2` and
   `seek/4`
 - selected current-stream I/O with `set_input/1`, `set_output/1`,
