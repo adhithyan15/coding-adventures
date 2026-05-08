@@ -14,6 +14,7 @@ All notable changes to this package will be documented in this file.
   capabilities before command acceptance.
 - Registry-backed authorization decision auditing for accepted and rejected
   authorized commands.
+- Registry-backed tool authorization decisions for Chief of Staff tool calls.
 - Supervisor primitives for bridge-worker heartbeat tracking and restart
   signaling.
 - Desired-state reconciliation for missing, stale, or drifted entity state,
