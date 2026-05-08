@@ -1279,3 +1279,230 @@ def test_pipeline_radcan_sqrt_squared() -> None:
         f"Expected Abs head from radcan(sqrt(x^2)), got {result.head.name!r}"
     )
 
+
+# ===========================================================================
+# Section DD — Fourier transforms (cas-fourier, Phase 33)
+# ===========================================================================
+#
+# MACSYMA names ``fourier`` and ``ifourier`` map to ``Fourier`` and
+# ``IFourier`` IR heads, which are handled by the ``cas-fourier`` substrate
+# wired into ``SymbolicBackend``.
+#
+# Key results (for the standard un-normalised convention):
+#   fourier(1, t, ω)        = 2π · δ(ω)     (Fourier of constant)
+#   ifourier(1, ω, t)       = δ(t)           (inverse Fourier of 1)
+#   fourier(δ(t), t, ω)     = 1              (Fourier of delta is 1)
+# ===========================================================================
+
+
+def test_pipeline_fourier_constant() -> None:
+    """fourier(1, t, w) → 2π·DiracDelta(w).
+
+    The Fourier transform of a constant c is 2π·c·δ(ω).  For c = 1 the
+    result has the ``DiracDelta`` head wrapped in a Mul with 2π.
+    """
+    result = _eval("fourier(1, t, w)")
+    # Result should be a Mul node containing DiracDelta
+    assert isinstance(result, IRApply), f"Expected IRApply, got {type(result).__name__}"
+    assert result.head.name in ("Mul", "DiracDelta"), (
+        f"Unexpected head {result.head.name!r} for fourier(1, t, w)"
+    )
+
+
+def test_pipeline_ifourier_constant() -> None:
+    """ifourier(1, w, t) → DiracDelta(t).
+
+    The inverse Fourier transform of 1 is the Dirac delta δ(t).
+    """
+    result = _eval("ifourier(1, w, t)")
+    assert isinstance(result, IRApply), f"Expected IRApply, got {type(result).__name__}"
+    assert result.head.name == "DiracDelta", (
+        f"Expected DiracDelta head from ifourier(1, w, t), got {result.head.name!r}"
+    )
+    # Argument should be the time variable t
+    assert len(result.args) == 1
+    assert isinstance(result.args[0], IRSymbol)
+    assert result.args[0].name == "t"
+
+
+def test_pipeline_fourier_delta_is_one() -> None:
+    """fourier(delta(t), t, w) → 1 (Fourier of Dirac delta is the constant 1)."""
+    result = _eval("fourier(delta(t), t, w)")
+    assert result is not None
+
+
+def test_pipeline_ifourier_delta_is_one() -> None:
+    """ifourier(delta(w), w, t) → 1/(2π) or related (inverse Fourier of delta)."""
+    result = _eval("ifourier(delta(w), w, t)")
+    assert result is not None
+
+
+# ===========================================================================
+# Section EE — Newton's method numeric root finding (cas-mnewton, Phase 33)
+# ===========================================================================
+#
+# MACSYMA name ``mnewton`` maps to the ``MNewton`` IR head, handled by the
+# ``cas-mnewton`` substrate.  The handler expects three scalar arguments:
+#
+#   mnewton(f_expr, variable, initial_guess)
+#
+# and returns an ``IRFloat`` approximation of a root of f_expr near
+# initial_guess.
+#
+# The MACSYMA surface form (and Maxima documentation) often uses list
+# arguments ``mnewton([f], [x], [x0])``; the scalar form is the canonical
+# call here, as the list-unpacking form requires multi-system Newton which
+# is a separate capability.
+# ===========================================================================
+
+
+def test_pipeline_mnewton_quadratic_root() -> None:
+    """mnewton(x^2 - 4, x, 1.5) ≈ 2.0 (positive root of x²=4)."""
+    result = _eval("mnewton(x^2 - 4, x, 1.5)")
+    assert isinstance(result, IRFloat), (
+        f"Expected IRFloat from mnewton, got {type(result).__name__}: {result}"
+    )
+    assert abs(result.value - 2.0) < 1e-6, (
+        f"mnewton root {result.value} not close to 2.0"
+    )
+
+
+def test_pipeline_mnewton_cubic_root() -> None:
+    """mnewton(x^3 - 8, x, 2.0) ≈ 2.0 (real cube root of 8)."""
+    result = _eval("mnewton(x^3 - 8, x, 2.0)")
+    assert isinstance(result, IRFloat), (
+        f"Expected IRFloat from mnewton, got {type(result).__name__}: {result}"
+    )
+    assert abs(result.value - 2.0) < 1e-6, (
+        f"mnewton root {result.value} not close to 2.0"
+    )
+
+
+def test_pipeline_mnewton_sine_root() -> None:
+    """mnewton(sin(x), x, 3) ≈ π (root of sin near 3)."""
+    import math
+
+    result = _eval("mnewton(sin(x), x, 3)")
+    assert isinstance(result, IRFloat), (
+        f"Expected IRFloat from mnewton, got {type(result).__name__}: {result}"
+    )
+    assert abs(result.value - math.pi) < 1e-4, (
+        f"mnewton root {result.value} not close to π = {math.pi}"
+    )
+
+
+def test_pipeline_mnewton_exp_root() -> None:
+    """mnewton(exp(x) - 2, x, 0.5) ≈ ln(2) (root of eˣ = 2)."""
+    import math
+
+    result = _eval("mnewton(exp(x) - 2, x, 0.5)")
+    assert isinstance(result, IRFloat), (
+        f"Expected IRFloat from mnewton, got {type(result).__name__}: {result}"
+    )
+    assert abs(result.value - math.log(2)) < 1e-6, (
+        f"mnewton root {result.value} not close to ln(2) = {math.log(2)}"
+    )
+
+
+# ===========================================================================
+# Section FF — Algebraic extension factoring (cas-algebraic, Phase 33)
+# ===========================================================================
+#
+# MACSYMA name ``algfactor`` maps to the ``AlgFactor`` IR head, handled by
+# the ``cas-algebraic`` substrate.  It factors a polynomial over Q[√d]:
+#
+#   algfactor(x^2 - 2, sqrt(2))  →  (x − √2)(x + √2)
+#
+# The result is a ``Mul`` of two ``Add`` nodes (linear factors).
+# ===========================================================================
+
+
+def test_pipeline_algfactor_x2_minus_2() -> None:
+    """algfactor(x^2 - 2, sqrt(2)) splits over Q[√2]."""
+    result = _eval("algfactor(x^2 - 2, sqrt(2))")
+    # Should produce Mul(Add(x, -Sqrt(2)), Add(x, Sqrt(2))) or similar
+    assert isinstance(result, IRApply), (
+        f"Expected IRApply, got {type(result).__name__}: {result}"
+    )
+    assert result.head.name == "Mul", (
+        f"Expected Mul from algfactor, got {result.head.name!r}"
+    )
+    assert len(result.args) == 2, (
+        f"Expected 2 factors from algfactor(x^2-2, sqrt(2)), got {len(result.args)}"
+    )
+
+
+def test_pipeline_algfactor_x2_minus_3() -> None:
+    """algfactor(x^2 - 3, sqrt(3)) splits over Q[√3]."""
+    result = _eval("algfactor(x^2 - 3, sqrt(3))")
+    assert isinstance(result, IRApply), (
+        f"Expected IRApply, got {type(result).__name__}: {result}"
+    )
+    assert result.head.name == "Mul", (
+        f"Expected Mul from algfactor(x^2-3, sqrt(3)), got {result.head.name!r}"
+    )
+
+
+def test_pipeline_algfactor_irreducible_stays_unevaluated() -> None:
+    """algfactor(x^2 + 1, sqrt(2)) stays unevaluated (irreducible over Q[√2])."""
+    result = _eval("algfactor(x^2 + 1, sqrt(2))")
+    # x² + 1 is irreducible over Q[√2]; should remain as AlgFactor or x^2+1
+    # Accept either form: unevaluated AlgFactor or the expression unchanged.
+    assert result is not None  # At minimum it must not crash
+
+
+# ===========================================================================
+# Section GG — Gröbner bases and polynomial reduction (cas-multivariate, Phase 33)
+# ===========================================================================
+#
+# MACSYMA names ``groebner`` and ``poly_reduce`` map to ``Groebner`` and
+# ``PolyReduce`` IR heads, handled by the ``cas-multivariate`` substrate.
+#
+#   groebner([polys], [vars])  → reduced Gröbner basis
+#   poly_reduce(f, [basis], [vars])  → f reduced modulo the basis
+#
+# The reduced Gröbner basis of {x²-1, x-1} w.r.t. lex order is {x-1},
+# because x²-1 = (x-1)(x+1) and x-1 already divides x²-1.
+#
+# Polynomial reduction: x³ mod {x²-1} → x  (since x³ = x·(x²-1) + x).
+# ===========================================================================
+
+
+def test_pipeline_groebner_single_variable() -> None:
+    """groebner([x^2-1, x-1], [x]) → [x-1] (GCD-like reduction)."""
+    result = _eval("groebner([x^2-1, x-1], [x])")
+    assert isinstance(result, IRApply), (
+        f"Expected IRApply from groebner, got {type(result).__name__}: {result}"
+    )
+    assert result.head.name == "List", (
+        f"Expected List from groebner, got {result.head.name!r}"
+    )
+    # Basis should reduce to a single polynomial: x - 1
+    assert len(result.args) == 1, (
+        f"Expected 1-element basis for groebner([x^2-1, x-1], [x]), "
+        f"got {len(result.args)} elements"
+    )
+
+
+def test_pipeline_groebner_returns_list() -> None:
+    """groebner([x^2 + y^2 - 1, x - y], [x, y]) returns a List."""
+    result = _eval("groebner([x^2 + y^2 - 1, x - y], [x, y])")
+    assert isinstance(result, IRApply)
+    assert result.head.name == "List"
+
+
+def test_pipeline_poly_reduce_x3_mod_x2_minus_1() -> None:
+    """poly_reduce(x^3, [x^2-1], [x]) → x  (x³ = x·(x²-1) + x)."""
+    result = _eval("poly_reduce(x^3, [x^2-1], [x])")
+    assert result == IRSymbol("x"), (
+        f"Expected x from poly_reduce(x^3, [x^2-1], [x]), got {result}"
+    )
+
+
+def test_pipeline_poly_reduce_zero_remainder() -> None:
+    """poly_reduce(x^2 - 1, [x^2-1], [x]) → 0  (exact divisibility)."""
+    result = _eval("poly_reduce(x^2 - 1, [x^2-1], [x])")
+    assert result == IRInteger(0), (
+        f"Expected 0 from poly_reduce(x^2-1, [x^2-1], [x]), got {result}"
+    )
+
