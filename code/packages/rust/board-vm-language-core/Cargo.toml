@@ -12,3 +12,4 @@ path = "src/lib.rs"
 [dependencies]
 board-vm-host = { path = "../board-vm-host" }
 board-vm-protocol = { path = "../board-vm-protocol" }
+board-vm-targets = { path = "../board-vm-targets" }

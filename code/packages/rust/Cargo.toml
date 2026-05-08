@@ -50,6 +50,7 @@ members = [
     "board-vm-esp-rom",
     "board-vm-pico",
     "board-vm-pico-firmware",
+    "board-vm-targets",
     "board-vm-uno-r4",
     "board-vm-uno-r4-usb-cdc",
     "board-vm-uno-r4-uart",
@@ -542,4 +543,5 @@ members = [
     "hue-client",
     "zigbee-zdo",
     "zwave-command-classes",
+    "capability-cage",
 ]

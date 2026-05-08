@@ -141,6 +141,67 @@ class BoardDescriptor:
 
 
 @dataclass(frozen=True)
+class BoardTarget:
+    raw: dict[str, Any]
+
+    @property
+    def board_id(self) -> str:
+        return str(self.raw["board_id"])
+
+    @property
+    def display_name(self) -> str:
+        return str(self.raw["display_name"])
+
+    @property
+    def family(self) -> str:
+        return str(self.raw["family"])
+
+    @property
+    def runtime_id(self) -> str:
+        return str(self.raw["runtime_id"])
+
+    @property
+    def mcu(self) -> str:
+        return str(self.raw["mcu"])
+
+    @property
+    def core(self) -> str:
+        return str(self.raw["core"])
+
+    @property
+    def rust_target(self) -> str:
+        return str(self.raw["rust_target"])
+
+    @property
+    def clock_hz(self) -> int:
+        return int(self.raw["clock_hz"])
+
+    @property
+    def operating_voltage_mv(self) -> int:
+        return int(self.raw["operating_voltage_mv"])
+
+    @property
+    def onboard_led(self) -> dict[str, Any] | None:
+        led = self.raw.get("onboard_led")
+        return None if led is None else dict(led)
+
+    @property
+    def onboard_led_pin(self) -> int | None:
+        led = self.onboard_led
+        if led is None:
+            return None
+        return int(led["pin"])
+
+    @property
+    def digital_pin_count(self) -> int:
+        return int(self.raw["digital_pin_count"])
+
+    @property
+    def capabilities(self) -> list[str]:
+        return [str(capability) for capability in self.raw.get("capabilities", [])]
+
+
+@dataclass(frozen=True)
 class ProtocolResult:
     command: str
     frame: bytes
@@ -981,8 +1042,20 @@ class Session:
         raise ValueError(f"unsupported GPIO write value: {value!r}")
 
 
+def known_targets() -> list[BoardTarget]:
+    return [BoardTarget(raw) for raw in _native.known_targets()]
+
+
+def find_target(board_id: str) -> BoardTarget | None:
+    for target in known_targets():
+        if target.board_id == board_id:
+            return target
+    return None
+
+
 __all__ = [
     "BoardDescriptor",
+    "BoardTarget",
     "BOOT_POLICIES",
     "Capability",
     "DEFAULT_RUN_FLAGS",
@@ -995,4 +1068,6 @@ __all__ = [
     "RUN_FLAGS",
     "Session",
     "SessionResult",
+    "find_target",
+    "known_targets",
 ]

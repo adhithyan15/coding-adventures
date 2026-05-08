@@ -21,6 +21,7 @@ use board_vm_serial::{
     available_ports, BoardSerialTransport, SerialConfig, SerialPortInfo, SerialTransportError,
     DEFAULT_BAUD_RATE, DEFAULT_TIMEOUT_MS,
 };
+use board_vm_targets::{all_targets, BoardTargetInfo, OnboardLed};
 
 pub const DEFAULT_PROGRAM_ID: u16 = 1;
 pub const DEFAULT_INSTRUCTION_BUDGET: u32 = 12;
@@ -31,6 +32,7 @@ pub const DEFAULT_OPEN_SETTLE_MS: u64 = 250;
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CliCommand {
     ListPorts,
+    ListTargets,
     EspDetect(EspDetectOptions),
     Smoke(SmokeOptions),
     Repl(ReplOptions),
@@ -235,6 +237,7 @@ where
 
     match command.as_str() {
         "list-ports" => Ok(CliCommand::ListPorts),
+        "list-targets" | "targets" => Ok(CliCommand::ListTargets),
         "esp-detect" | "detect-esp" => parse_esp_detect_args(args),
         "smoke" => parse_smoke_args(args),
         "repl" => parse_repl_args(args),
@@ -953,8 +956,20 @@ pub fn list_ports() -> Result<Vec<SerialPortInfo>, CliError> {
     available_ports().map_err(|error| CliError::Serial(error.to_string()))
 }
 
+pub fn list_targets() -> &'static [BoardTargetInfo] {
+    all_targets()
+}
+
+pub fn format_onboard_led(led: Option<OnboardLed>) -> String {
+    match led {
+        Some(OnboardLed::Gpio(pin)) => format!("gpio:{pin}"),
+        Some(OnboardLed::WirelessChipGpio(pin)) => format!("wireless-gpio:{pin}"),
+        None => "none".to_owned(),
+    }
+}
+
 pub fn usage() -> &'static str {
-    "usage:\n  board-vm list-ports\n  board-vm esp-detect --port <path> [--baud <rate>] [--timeout-ms <ms>] [--no-reset]\n  board-vm smoke --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm repl --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm eject blink --out <path> [--program-id <id>] [--slot <slot>] [--boot-policy store-only|run-at-boot|run-if-no-host|<u8>]"
+    "usage:\n  board-vm list-ports\n  board-vm list-targets\n  board-vm esp-detect --port <path> [--baud <rate>] [--timeout-ms <ms>] [--no-reset]\n  board-vm smoke --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm repl --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm eject blink --out <path> [--program-id <id>] [--slot <slot>] [--boot-policy store-only|run-at-boot|run-if-no-host|<u8>]"
 }
 
 #[cfg(test)]
@@ -964,6 +979,31 @@ mod tests {
     #[test]
     fn parses_list_ports_command() {
         assert_eq!(parse_args(["list-ports"]).unwrap(), CliCommand::ListPorts);
+    }
+
+    #[test]
+    fn parses_list_targets_command() {
+        assert_eq!(
+            parse_args(["list-targets"]).unwrap(),
+            CliCommand::ListTargets
+        );
+        assert_eq!(parse_args(["targets"]).unwrap(), CliCommand::ListTargets);
+    }
+
+    #[test]
+    fn exposes_known_targets_for_frontends() {
+        let targets = list_targets();
+
+        assert!(targets
+            .iter()
+            .any(|target| target.board_id == "arduino-uno-r4-wifi"));
+        assert!(targets
+            .iter()
+            .any(|target| target.board_id == "esp32-devkit-v1"));
+        assert!(targets
+            .iter()
+            .any(|target| target.board_id == "raspberry-pi-pico"));
+        assert_eq!(format_onboard_led(targets[0].onboard_led), "gpio:13");
     }
 
     #[test]

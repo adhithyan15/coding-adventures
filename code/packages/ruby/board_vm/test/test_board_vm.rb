@@ -23,6 +23,19 @@ module CodingAdventures
         assert_empty runner.calls
       end
 
+      def test_known_targets_are_exposed_from_rust_registry
+        targets = BoardVM.known_targets
+        esp32 = BoardVM.find_target("esp32-devkit-v1")
+        pico_w = BoardVM.find_target("raspberry-pi-pico-w")
+
+        assert targets.any? { |target| target["board_id"] == "arduino-uno-r4-wifi" }
+        assert_equal "esp32", esp32["family"]
+        assert_equal "board-vm-esp32", esp32["runtime_id"]
+        assert_equal({ "kind" => "gpio", "pin" => 2 }, esp32["onboard_led"])
+        assert_includes esp32["capabilities"], "gpio.open"
+        assert_equal({ "kind" => "wireless_chip_gpio", "pin" => 0 }, pico_w["onboard_led"])
+      end
+
       def test_connect_flash_uploads_the_uno_r4_serialusb_vm_and_tracks_runtime_port
         upload = CommandResult.new(
           ["cargo"],

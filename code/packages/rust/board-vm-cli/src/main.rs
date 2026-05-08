@@ -1,7 +1,8 @@
 use std::env;
 
 use board_vm_cli::{
-    list_ports, parse_args, run_eject_blink, run_esp_detect, run_repl, run_smoke, usage, CliCommand,
+    format_onboard_led, list_ports, list_targets, parse_args, run_eject_blink, run_esp_detect,
+    run_repl, run_smoke, usage, CliCommand,
 };
 
 fn main() {
@@ -19,6 +20,21 @@ fn run_command(command: CliCommand) -> Result<(), board_vm_cli::CliError> {
         CliCommand::ListPorts => {
             for port in list_ports()? {
                 println!("{}\t{:?}", port.port_name, port.port_type);
+            }
+            Ok(())
+        }
+        CliCommand::ListTargets => {
+            for target in list_targets() {
+                println!(
+                    "{}\t{}\truntime={}\trust_target={}\tled={}\tpins={}\tcaps={}",
+                    target.board_id,
+                    target.display_name,
+                    target.runtime_id,
+                    target.rust_target,
+                    format_onboard_led(target.onboard_led),
+                    target.digital_pin_count,
+                    target.capabilities.join(",")
+                );
             }
             Ok(())
         }
