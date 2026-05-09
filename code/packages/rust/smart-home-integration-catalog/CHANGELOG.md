@@ -26,6 +26,9 @@ All notable changes to this package will be documented in this file.
   primitive family, implementation status, and rollout priority.
 - Primitive backlog planning helpers for ranking the shared primitive families
   needed by priority-bounded rollout waves.
+- Integration activation planning helpers for resolving virtual aliases,
+  standard-backed products, required primitives, capabilities, auth modes,
+  dependencies, and review tiers before enabling an integration.
 - Computed policy-surface helpers so Chief of Staff tools can identify camera,
   entry-access, climate, energy, cloud, credential, radio-network, and local
   actuation review boundaries before activating integrations.
