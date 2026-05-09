@@ -13,7 +13,12 @@ use smart_home_core::{
     ProtocolFamily, ProtocolIdentifier, StateConfidence, StateDelta, StateSnapshot, StateSource,
     Value,
 };
+use smart_home_event_streams::{
+    EventStreamCheckpoint, EventStreamRestartReason, EventStreamSpec, EventStreamState,
+    EventStreamStatus,
+};
 use smart_home_registry::{InMemorySmartHomeRegistry, RegistryError};
+use smart_home_runtime::{BridgeHealthReport, RuntimeError, SmartHomeRuntime};
 use std::collections::VecDeque;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -129,6 +134,116 @@ impl FakeEventStream {
 
     pub fn len(&self) -> usize {
         self.events.len()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct FakeEventStreamStepReport {
+    pub step: ScriptedEvent,
+    pub checkpoint: EventStreamCheckpoint,
+    pub status: EventStreamStatus,
+    pub restart_reason: Option<EventStreamRestartReason>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct FakeEventStreamDriver {
+    stream: FakeEventStream,
+    state: EventStreamState,
+}
+
+impl FakeEventStreamDriver {
+    pub fn new(spec: EventStreamSpec, stream: FakeEventStream, connected_at_ms: u64) -> Self {
+        let mut state = EventStreamState::new(spec, connected_at_ms);
+        state.mark_connected(connected_at_ms);
+        Self { stream, state }
+    }
+
+    pub fn hue_sse(
+        fixture: &SmartHomeFixture,
+        stream: FakeEventStream,
+        connected_at_ms: u64,
+    ) -> Self {
+        Self::new(hue_sse_stream_spec(fixture), stream, connected_at_ms)
+    }
+
+    pub fn state(&self) -> &EventStreamState {
+        &self.state
+    }
+
+    pub fn stream_len(&self) -> usize {
+        self.stream.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.stream.is_empty()
+    }
+
+    pub fn next_step(&mut self) -> Option<FakeEventStreamStepReport> {
+        let step = self.stream.next_step()?;
+        let observed_at_ms = scripted_event_observed_at_ms(&step);
+
+        match &step {
+            ScriptedEvent::Event(event) => {
+                self.state.record_event(
+                    event.event_id.clone(),
+                    Some(format!("fixture:{}", event.event_id.as_str())),
+                    event.observed_at_ms,
+                );
+            }
+            ScriptedEvent::Disconnect { at_ms, .. } => {
+                self.state.mark_disconnected(*at_ms);
+            }
+            ScriptedEvent::Gap {
+                missing_events,
+                at_ms,
+            } => {
+                self.state.record_gap(*missing_events, *at_ms);
+            }
+        }
+
+        let restart_reason = self
+            .state
+            .restart_plan_at(observed_at_ms)
+            .map(|plan| plan.reason);
+
+        Some(FakeEventStreamStepReport {
+            step,
+            checkpoint: self.state.checkpoint(),
+            status: self.state.status,
+            restart_reason,
+        })
+    }
+
+    pub fn next_runtime_step(
+        &mut self,
+        runtime: &mut SmartHomeRuntime,
+    ) -> Result<Option<FakeEventStreamStepReport>, RuntimeError> {
+        let Some(report) = self.next_step() else {
+            return Ok(None);
+        };
+
+        match &report.step {
+            ScriptedEvent::Event(event) => runtime.apply_device_event((**event).clone())?,
+            ScriptedEvent::Disconnect { reason, at_ms } => {
+                runtime.apply_bridge_health(BridgeHealthReport {
+                    event_id: EventId::trusted(format!(
+                        "fixture.disconnect:{}:{at_ms}",
+                        self.state.spec.bridge_id.as_str()
+                    )),
+                    bridge_id: self.state.spec.bridge_id.clone(),
+                    health: Health::Degraded,
+                    observed_at_ms: *at_ms,
+                    received_at_ms: *at_ms,
+                    metadata: vec![
+                        Metadata::new("fixture", "event_stream_disconnect"),
+                        Metadata::new("fixture.disconnect.reason", reason),
+                    ],
+                })?;
+            }
+            ScriptedEvent::Gap { .. } => {}
+        }
+
+        Ok(Some(report))
     }
 }
 
@@ -485,6 +600,51 @@ pub fn hue_lighting_registry() -> InMemorySmartHomeRegistry {
         .expect("hue lighting fixture records are internally consistent")
 }
 
+pub fn runtime_with_fixture(fixture: &SmartHomeFixture) -> Result<SmartHomeRuntime, RuntimeError> {
+    let mut runtime = SmartHomeRuntime::new();
+    runtime.upsert_bridge(fixture.bridge.clone())?;
+    runtime.upsert_device(fixture.device.clone())?;
+    for entity in fixture.entities() {
+        runtime.upsert_entity(entity.clone())?;
+    }
+    Ok(runtime)
+}
+
+pub fn hue_lighting_runtime() -> SmartHomeRuntime {
+    runtime_with_fixture(&SmartHomeFixture::hue_lighting())
+        .expect("hue lighting fixture records are internally consistent")
+}
+
+pub fn hue_sse_stream_spec(fixture: &SmartHomeFixture) -> EventStreamSpec {
+    EventStreamSpec::hue_sse(
+        fixture.bridge.bridge_id.clone(),
+        fixture
+            .bridge
+            .address
+            .as_deref()
+            .unwrap_or("https://192.0.2.10")
+            .trim_end_matches('/')
+            .to_string()
+            + "/eventstream/clip/v2",
+    )
+    .with_heartbeat_timeout(1_000)
+    .with_stale_after(5_000)
+    .with_metadata(Metadata::new("fixture", "hue_sse_stream"))
+}
+
+pub fn hue_sse_stream_state(fixture: &SmartHomeFixture, connected_at_ms: u64) -> EventStreamState {
+    let mut state = EventStreamState::new(hue_sse_stream_spec(fixture), connected_at_ms);
+    state.mark_connected(connected_at_ms);
+    state
+}
+
+fn scripted_event_observed_at_ms(step: &ScriptedEvent) -> u64 {
+    match step {
+        ScriptedEvent::Event(event) => event.observed_at_ms,
+        ScriptedEvent::Disconnect { at_ms, .. } | ScriptedEvent::Gap { at_ms, .. } => *at_ms,
+    }
+}
+
 fn protocol_id(
     family: ProtocolFamily,
     kind: &'static str,
@@ -558,6 +718,85 @@ mod tests {
             })
         );
         assert!(stream.is_empty());
+    }
+
+    #[test]
+    fn hue_sse_stream_fixture_builds_connected_state() {
+        let fixture = SmartHomeFixture::hue_lighting();
+        let state = hue_sse_stream_state(&fixture, 1_000);
+
+        assert_eq!(state.spec.integration_id, IntegrationId::trusted("hue"));
+        assert_eq!(state.spec.bridge_id, fixture.bridge.bridge_id);
+        assert_eq!(
+            state.spec.endpoint.as_deref(),
+            Some("https://192.0.2.10/eventstream/clip/v2")
+        );
+        assert_eq!(state.status, EventStreamStatus::Healthy);
+        assert_eq!(state.connected_at_ms, Some(1_000));
+        assert_eq!(state.last_heartbeat_at_ms, Some(1_000));
+    }
+
+    #[test]
+    fn fake_event_stream_driver_updates_stream_state_and_runtime() {
+        let fixture = SmartHomeFixture::hue_lighting();
+        let event = light_on_event(
+            "event-1",
+            &fixture.bridge.bridge_id,
+            &fixture.device.device_id,
+            &fixture.light.entity_id,
+            1_100,
+        );
+        let stream = FakeEventStream::new()
+            .push_event(event.clone())
+            .push_gap(2, 1_200)
+            .push_disconnect("bridge closed stream", 1_300);
+        let mut driver = FakeEventStreamDriver::hue_sse(&fixture, stream, 1_000);
+        let mut runtime = runtime_with_fixture(&fixture).unwrap();
+
+        let first = driver.next_runtime_step(&mut runtime).unwrap().unwrap();
+
+        assert_eq!(first.status, EventStreamStatus::Healthy);
+        assert_eq!(first.checkpoint.cursor.sequence, 1);
+        assert_eq!(
+            runtime
+                .registry()
+                .state(&fixture.light.entity_id)
+                .unwrap()
+                .value,
+            Value::Object(vec![("light.on_off".to_string(), Value::Bool(true))])
+        );
+        assert_eq!(runtime.event_bus().published().len(), 1);
+
+        let gap = driver.next_runtime_step(&mut runtime).unwrap().unwrap();
+
+        assert_eq!(gap.status, EventStreamStatus::Degraded);
+        assert_eq!(gap.restart_reason, Some(EventStreamRestartReason::EventGap));
+        assert_eq!(runtime.event_bus().published().len(), 1);
+
+        let disconnect = driver.next_runtime_step(&mut runtime).unwrap().unwrap();
+
+        assert_eq!(disconnect.status, EventStreamStatus::Disconnected);
+        assert!(driver.is_empty());
+        assert_eq!(
+            runtime
+                .registry()
+                .bridge(&fixture.bridge.bridge_id)
+                .unwrap()
+                .health,
+            Health::Degraded
+        );
+        assert_eq!(runtime.event_bus().published().len(), 3);
+    }
+
+    #[test]
+    fn runtime_fixture_seeds_runtime_without_bespoke_setup() {
+        let fixture = SmartHomeFixture::hue_lighting();
+        let runtime = runtime_with_fixture(&fixture).unwrap();
+
+        assert_eq!(runtime.registry().counts().bridges, 1);
+        assert_eq!(runtime.registry().counts().devices, 1);
+        assert_eq!(runtime.registry().counts().entities, 2);
+        assert!(runtime.event_bus().published().is_empty());
     }
 
     #[test]

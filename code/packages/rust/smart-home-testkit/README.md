@@ -13,6 +13,8 @@ a shared way to build:
 - confirmed, stale, and optimistic state snapshots
 - deterministic device events
 - scripted fake event streams with disconnect and gap markers
+- Hue SSE event-stream specs, connected stream states, and drivers that apply
+  scripts to both event-stream supervision state and `smart-home-runtime`
 - fake command buses with queued command/result pairs
 - fake MQTT broker publications with retained-message and metadata markers
 - simple logical clocks for freshness and supervision tests
@@ -20,7 +22,9 @@ a shared way to build:
 ## Dependencies
 
 - `smart-home-core`
+- `smart-home-event-streams`
 - `smart-home-registry`
+- `smart-home-runtime`
 
 ## Development
 
