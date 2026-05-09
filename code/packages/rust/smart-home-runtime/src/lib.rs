@@ -12,7 +12,7 @@ use smart_home_core::{
     CapabilityGrant, CapabilityGrantScope, CapabilityId, CapabilityMode, CommandId, CommandResult,
     CommandStatus, CommandType, CorrelationId, Device, DeviceCommand, DeviceEvent, DeviceEventType,
     DeviceId, Entity, EntityId, EventId, Health, IntegrationId, Metadata, PrivilegeTier,
-    SmartHomeTool, StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
+    SmartHomeError, SmartHomeTool, StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
 };
 use smart_home_registry::{DeviceSelector, InMemorySmartHomeRegistry, RegistryError};
 use std::collections::{BTreeMap, VecDeque};
@@ -21,6 +21,7 @@ use std::fmt;
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RuntimeError {
     Registry(Box<RegistryError>),
+    Core(Box<SmartHomeError>),
     UnknownBridge(BridgeId),
     UnknownDevice(DeviceId),
     UnknownEntity(EntityId),
@@ -55,6 +56,7 @@ impl fmt::Display for RuntimeError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Registry(error) => write!(f, "{error}"),
+            Self::Core(error) => write!(f, "{error}"),
             Self::UnknownBridge(id) => write!(f, "unknown runtime bridge {id}"),
             Self::UnknownDevice(id) => write!(f, "unknown runtime device {id}"),
             Self::UnknownEntity(id) => write!(f, "unknown runtime entity {id}"),
@@ -107,6 +109,12 @@ impl std::error::Error for RuntimeError {}
 impl From<RegistryError> for RuntimeError {
     fn from(error: RegistryError) -> Self {
         Self::Registry(Box::new(error))
+    }
+}
+
+impl From<SmartHomeError> for RuntimeError {
+    fn from(error: SmartHomeError) -> Self {
+        Self::Core(Box::new(error))
     }
 }
 
@@ -620,6 +628,58 @@ impl RuntimeReadToolRequest {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct RuntimeCommandToolRequest {
+    pub entity_id: EntityId,
+    pub command_type: CommandType,
+    pub arguments: Value,
+    pub idempotency_key: Option<String>,
+    pub timeout_ms: Option<u64>,
+}
+
+impl RuntimeCommandToolRequest {
+    pub fn new(entity_id: EntityId, command_type: CommandType, arguments: Value) -> Self {
+        Self {
+            entity_id,
+            command_type,
+            arguments,
+            idempotency_key: None,
+            timeout_ms: None,
+        }
+    }
+
+    pub fn with_idempotency_key(mut self, idempotency_key: impl Into<String>) -> Self {
+        self.idempotency_key = Some(idempotency_key.into());
+        self
+    }
+
+    pub fn with_timeout_ms(mut self, timeout_ms: u64) -> Self {
+        self.timeout_ms = Some(timeout_ms);
+        self
+    }
+
+    fn into_command(
+        self,
+        command_id: CommandId,
+        requested_by: impl Into<String>,
+        correlation_id: CorrelationId,
+    ) -> Result<DeviceCommand, RuntimeError> {
+        let mut command = DeviceCommand::new(
+            command_id,
+            self.entity_id,
+            self.command_type,
+            self.arguments,
+            requested_by,
+            correlation_id,
+        )?;
+        command.idempotency_key = self.idempotency_key;
+        if let Some(timeout_ms) = self.timeout_ms {
+            command.timeout_ms = timeout_ms;
+        }
+        Ok(command)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BridgeHealthSnapshot {
     pub bridge_id: BridgeId,
@@ -886,6 +946,45 @@ impl SmartHomeRuntime {
                 )),
             },
         }
+    }
+
+    pub fn execute_command_tool(
+        &mut self,
+        principal_id: AgentId,
+        request: RuntimeCommandToolRequest,
+        now_ms: u64,
+    ) -> Result<CommandResult, RuntimeError> {
+        let tool = SmartHomeTool::Command;
+        let decision = self.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
+        if !decision.missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedTool {
+                principal_id,
+                tool,
+                missing_capabilities: decision.missing_capabilities,
+            });
+        }
+
+        let sequence = self.registry.counts().authorization_decisions;
+        let command_id = CommandId::trusted(format!(
+            "tool:{}:{}:{now_ms}:{sequence}",
+            principal_id.as_str(),
+            request.entity_id.as_str()
+        ));
+        let correlation_id = CorrelationId::trusted(format!(
+            "tool:{}:{}:{now_ms}:{sequence}",
+            principal_id.as_str(),
+            request.entity_id.as_str()
+        ));
+        let grants = self
+            .registry
+            .capability_grants_for_principal(&principal_id)
+            .into_iter()
+            .cloned()
+            .collect();
+        let command = request.into_command(command_id, principal_id.as_str(), correlation_id)?;
+        let authorization = CommandAuthorization::new(principal_id, grants);
+
+        self.submit_authorized_command(&authorization, command, now_ms)
     }
 
     pub fn submit_command(
@@ -1710,6 +1809,165 @@ mod tests {
         assert_eq!(decisions.len(), 1);
         assert_eq!(decisions[0].outcome, AuthorizationOutcome::Denied);
         assert!(runtime.event_bus().published().is_empty());
+    }
+
+    #[test]
+    fn command_tool_requires_command_tool_grant_before_dispatch() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        let principal = AgentId::trusted("agent:lighting-planner");
+
+        let error = runtime
+            .execute_command_tool(
+                principal.clone(),
+                RuntimeCommandToolRequest::new(
+                    EntityId::trusted("entity-1"),
+                    CommandType::TurnOn,
+                    Value::Null,
+                ),
+                1_500,
+            )
+            .unwrap_err();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+
+        assert!(matches!(
+            error,
+            RuntimeError::UnauthorizedTool {
+                tool: SmartHomeTool::Command,
+                missing_capabilities,
+                ..
+            } if missing_capabilities == vec![CapabilityId::trusted("smart_home.command.light")]
+        ));
+        assert_eq!(decisions.len(), 1);
+        assert_eq!(decisions[0].outcome, AuthorizationOutcome::Denied);
+        assert!(runtime.event_bus().published().is_empty());
+        assert!(runtime
+            .registry()
+            .state(&EntityId::trusted("entity-1"))
+            .is_none());
+    }
+
+    #[test]
+    fn command_tool_requires_entity_command_grants_after_tool_grant() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        let principal = AgentId::trusted("agent:lighting-planner");
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-tool-capability"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.command.light"),
+                PrivilegeTier::LowRisk,
+                "chief-of-staff",
+                1_000,
+            )
+            .with_expiry(2_000),
+        );
+
+        let error = runtime
+            .execute_command_tool(
+                principal.clone(),
+                RuntimeCommandToolRequest::new(
+                    EntityId::trusted("entity-1"),
+                    CommandType::TurnOn,
+                    Value::Null,
+                ),
+                1_500,
+            )
+            .unwrap_err();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+
+        assert!(matches!(
+            error,
+            RuntimeError::UnauthorizedCommand {
+                principal_id,
+                missing_capabilities,
+                ..
+            } if principal_id == principal
+                && missing_capabilities == vec![CapabilityId::trusted("light.on_off")]
+        ));
+        assert_eq!(decisions.len(), 2);
+        assert_eq!(decisions[0].outcome, AuthorizationOutcome::Allowed);
+        assert_eq!(decisions[1].outcome, AuthorizationOutcome::Denied);
+        assert!(runtime.event_bus().published().is_empty());
+        assert!(runtime
+            .registry()
+            .state(&EntityId::trusted("entity-1"))
+            .is_none());
+    }
+
+    #[test]
+    fn command_tool_authorizes_and_dispatches_device_commands() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        let principal = AgentId::trusted("agent:lighting-planner");
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-command-tool"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.command.light"),
+                PrivilegeTier::LowRisk,
+                "chief-of-staff",
+                1_000,
+            )
+            .with_expiry(2_000),
+        );
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_entity_capability(
+                CapabilityGrantId::trusted("grant-entity-command"),
+                principal.clone(),
+                EntityId::trusted("entity-1"),
+                CapabilityId::trusted("light.on_off"),
+                PrivilegeTier::LowRisk,
+                "chief-of-staff",
+                1_000,
+            )
+            .with_expiry(2_000),
+        );
+
+        let result = runtime
+            .execute_command_tool(
+                principal.clone(),
+                RuntimeCommandToolRequest::new(
+                    EntityId::trusted("entity-1"),
+                    CommandType::TurnOn,
+                    Value::Null,
+                )
+                .with_idempotency_key("turn-on:kitchen")
+                .with_timeout_ms(1_234),
+                1_500,
+            )
+            .unwrap();
+        let snapshot = runtime
+            .registry()
+            .state(&EntityId::trusted("entity-1"))
+            .unwrap();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+
+        assert_eq!(result.status, CommandStatus::Accepted);
+        assert_eq!(result.bridge_id, BridgeId::trusted("bridge-1"));
+        assert!(result
+            .command_id
+            .as_str()
+            .starts_with("tool:agent:lighting-planner:entity-1:1500:"));
+        assert_eq!(result.command_id.as_str(), result.correlation_id.as_str());
+        assert_eq!(
+            snapshot.value,
+            Value::Object(vec![("light.on_off".to_string(), Value::Bool(true))])
+        );
+        assert_eq!(snapshot.source, StateSource::OptimisticCommand);
+        assert_eq!(snapshot.expires_at_ms, Some(2_734));
+        assert!(matches!(
+            runtime.event_bus().published(),
+            [RuntimeEvent::CommandResult(command_result)]
+                if command_result.command_id == result.command_id
+        ));
+        assert_eq!(decisions.len(), 2);
+        assert_eq!(decisions[0].outcome, AuthorizationOutcome::Allowed);
+        assert_eq!(decisions[1].outcome, AuthorizationOutcome::Allowed);
     }
 
     #[test]
