@@ -12,6 +12,7 @@ from board_vm_native import (
     ProtocolResult,
     Session,
     TcpTransport,
+    bluetooth_endpoint,
     connect,
     connection_option_list,
     connection_options,
@@ -175,6 +176,29 @@ def test_connection_options_are_exposed_from_rust_registry():
         "wire_protocol": "board_vm_cobs_crc",
     } in options
     assert "Wi-Fi [commands, OTA]" in connection_option_list("uno-r4-wifi")
+
+
+def test_bluetooth_endpoints_are_parsed_by_rust_language_core():
+    ble = bluetooth_endpoint("ble://uno-r4-wifi/180f/2a19/2a1a")
+    rfcomm = bluetooth_endpoint("btspp://ESP32-BoardVM:3")
+
+    assert ble is not None
+    assert ble["transport"] == "bluetooth_le"
+    assert ble["endpoint_transport"] == "bluetooth_le_gatt"
+    assert ble["endpoint_scheme"] == "ble"
+    assert ble["device"] == "uno-r4-wifi"
+    assert ble["service_uuid"] == "180f"
+    assert ble["write_characteristic_uuid"] == "2a19"
+    assert ble["notify_characteristic_uuid"] == "2a1a"
+    assert ble["channel"] is None
+
+    assert rfcomm is not None
+    assert rfcomm["transport"] == "bluetooth_classic"
+    assert rfcomm["endpoint_transport"] == "bluetooth_classic_rfcomm"
+    assert rfcomm["endpoint_scheme"] == "btspp"
+    assert rfcomm["device"] == "ESP32-BoardVM"
+    assert rfcomm["channel"] == 3
+    assert bluetooth_endpoint("tcp://board-vm.local:4170") is None
 
 
 def test_connection_options_can_be_selected_without_exposing_ports():

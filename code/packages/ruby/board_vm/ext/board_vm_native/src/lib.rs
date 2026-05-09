@@ -23,9 +23,10 @@ use board_vm_language_core::{
     discover_pico_bootsel_mounts as core_discover_pico_bootsel_mounts,
     discover_pico_bootsel_mounts_in_roots, esp_upload_options_for_target,
     host_endpoint_transport_name, known_targets, onboard_led_kind,
-    pico_uf2_upload_options_for_target, program_format_name, raw_module_len, run_status_name,
-    wireless_transport_name, BoardVmLanguageSession, DecodedLanguageResponse,
-    DecodedLanguageResponseBody, LanguageConnectionOption, LanguageCoreError,
+    parse_bluetooth_endpoint as core_parse_bluetooth_endpoint, pico_uf2_upload_options_for_target,
+    program_format_name, raw_module_len, run_status_name, wireless_transport_name,
+    BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
+    LanguageBluetoothEndpoint, LanguageConnectionOption, LanguageCoreError,
     LanguageEspUploadOptions, LanguageHostDevice, LanguageOnboardLed, LanguagePicoUf2UploadOptions,
     LanguageTargetInfo, LanguageValue, LanguageWirelessInterface,
 };
@@ -419,6 +420,15 @@ extern "C" fn native_detect_target(_self_val: VALUE, selector_val: VALUE) -> VAL
     }
 }
 
+extern "C" fn native_bluetooth_endpoint(_self_val: VALUE, endpoint_val: VALUE) -> VALUE {
+    let endpoint = ruby_bridge::str_from_rb(endpoint_val)
+        .unwrap_or_else(|| ruby_bridge::raise_arg_error("endpoint must be a Ruby String"));
+    match core_parse_bluetooth_endpoint(&endpoint) {
+        Some(endpoint) => bluetooth_endpoint_to_rb(&endpoint),
+        None => ruby_bridge::nil_value(),
+    }
+}
+
 extern "C" fn native_esp_upload_options(_self_val: VALUE, selector_val: VALUE) -> VALUE {
     let selector = ruby_bridge::str_from_rb(selector_val)
         .unwrap_or_else(|| ruby_bridge::raise_arg_error("selector must be a Ruby String"));
@@ -757,6 +767,63 @@ fn language_connection_options_to_rb(options: &[LanguageConnectionOption]) -> VA
         ruby_bridge::array_push(array, hash);
     }
     array
+}
+
+fn bluetooth_endpoint_to_rb(endpoint: &LanguageBluetoothEndpoint) -> VALUE {
+    let hash = ruby_bridge::hash_new();
+    hash_set(hash, "endpoint", ruby_bridge::str_to_rb(&endpoint.endpoint));
+    hash_set(
+        hash,
+        "transport",
+        ruby_bridge::str_to_rb(connection_transport_name(endpoint.transport)),
+    );
+    hash_set(
+        hash,
+        "endpoint_transport",
+        ruby_bridge::str_to_rb(host_endpoint_transport_name(endpoint.endpoint_transport)),
+    );
+    hash_set(
+        hash,
+        "endpoint_scheme",
+        ruby_bridge::str_to_rb(&endpoint.endpoint_scheme),
+    );
+    hash_set(hash, "device", ruby_bridge::str_to_rb(&endpoint.device));
+    hash_set(
+        hash,
+        "service_uuid",
+        endpoint
+            .service_uuid
+            .as_ref()
+            .map(|value| ruby_bridge::str_to_rb(value))
+            .unwrap_or_else(ruby_bridge::nil_value),
+    );
+    hash_set(
+        hash,
+        "write_characteristic_uuid",
+        endpoint
+            .write_characteristic_uuid
+            .as_ref()
+            .map(|value| ruby_bridge::str_to_rb(value))
+            .unwrap_or_else(ruby_bridge::nil_value),
+    );
+    hash_set(
+        hash,
+        "notify_characteristic_uuid",
+        endpoint
+            .notify_characteristic_uuid
+            .as_ref()
+            .map(|value| ruby_bridge::str_to_rb(value))
+            .unwrap_or_else(ruby_bridge::nil_value),
+    );
+    hash_set(
+        hash,
+        "channel",
+        endpoint
+            .channel
+            .map(rb_usize)
+            .unwrap_or_else(ruby_bridge::nil_value),
+    );
+    hash
 }
 
 fn esp_upload_options_to_rb(options: &LanguageEspUploadOptions) -> VALUE {
@@ -1137,6 +1204,12 @@ pub extern "C" fn Init_board_vm_native() {
         native,
         "detect_target",
         native_detect_target as *const c_void,
+        1,
+    );
+    ruby_bridge::define_module_function_raw(
+        native,
+        "bluetooth_endpoint",
+        native_bluetooth_endpoint as *const c_void,
         1,
     );
     ruby_bridge::define_module_function_raw(

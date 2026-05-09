@@ -77,6 +77,27 @@ module CodingAdventures
         }
       end
 
+      def test_bluetooth_endpoints_are_parsed_by_rust_language_core
+        ble = BoardVM.bluetooth_endpoint("ble://uno-r4-wifi/180f/2a19/2a1a")
+        rfcomm = BoardVM.bluetooth_endpoint("btspp://ESP32-BoardVM:3")
+
+        assert_equal "bluetooth_le", ble.fetch("transport")
+        assert_equal "bluetooth_le_gatt", ble.fetch("endpoint_transport")
+        assert_equal "ble", ble.fetch("endpoint_scheme")
+        assert_equal "uno-r4-wifi", ble.fetch("device")
+        assert_equal "180f", ble.fetch("service_uuid")
+        assert_equal "2a19", ble.fetch("write_characteristic_uuid")
+        assert_equal "2a1a", ble.fetch("notify_characteristic_uuid")
+        assert_nil ble.fetch("channel")
+
+        assert_equal "bluetooth_classic", rfcomm.fetch("transport")
+        assert_equal "bluetooth_classic_rfcomm", rfcomm.fetch("endpoint_transport")
+        assert_equal "btspp", rfcomm.fetch("endpoint_scheme")
+        assert_equal "ESP32-BoardVM", rfcomm.fetch("device")
+        assert_equal 3, rfcomm.fetch("channel")
+        assert_nil BoardVM.bluetooth_endpoint("tcp://board-vm.local:4170")
+      end
+
       def test_connection_options_can_be_selected_without_exposing_ports
         default = BoardVM.select_connection_option(:uno_r4_wifi)
         wifi = BoardVM.select_connection_option(:uno_r4_wifi, transport: :wifi)

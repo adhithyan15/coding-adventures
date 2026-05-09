@@ -1453,6 +1453,11 @@ def find_target(board_id: str) -> BoardTarget | None:
     return detect_target(board_id)
 
 
+def bluetooth_endpoint(endpoint: str) -> dict[str, Any] | None:
+    parsed = _native.bluetooth_endpoint(str(endpoint))
+    return None if parsed is None else dict(parsed)
+
+
 def connection_options(selector: str) -> list[dict[str, Any]]:
     target = detect_target(selector)
     if target is None:

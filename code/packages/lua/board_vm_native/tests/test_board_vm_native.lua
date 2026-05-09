@@ -57,6 +57,27 @@ describe("coding_adventures.board_vm_native", function()
         assert.is_nil(board_vm.esp_upload_options("pico"))
     end)
 
+    it("parses Bluetooth endpoints through Rust-owned metadata", function()
+        local ble = board_vm.bluetooth_endpoint("ble://uno-r4-wifi/180f/2a19/2a1a")
+        local rfcomm = board_vm.bluetooth_endpoint("btspp://ESP32-BoardVM:3")
+
+        assert.are.equal("bluetooth_le", ble.transport)
+        assert.are.equal("bluetooth_le_gatt", ble.endpoint_transport)
+        assert.are.equal("ble", ble.endpoint_scheme)
+        assert.are.equal("uno-r4-wifi", ble.device)
+        assert.are.equal("180f", ble.service_uuid)
+        assert.are.equal("2a19", ble.write_characteristic_uuid)
+        assert.are.equal("2a1a", ble.notify_characteristic_uuid)
+        assert.is_nil(ble.channel)
+
+        assert.are.equal("bluetooth_classic", rfcomm.transport)
+        assert.are.equal("bluetooth_classic_rfcomm", rfcomm.endpoint_transport)
+        assert.are.equal("btspp", rfcomm.endpoint_scheme)
+        assert.are.equal("ESP32-BoardVM", rfcomm.device)
+        assert.are.equal(3, rfcomm.channel)
+        assert.is_nil(board_vm.bluetooth_endpoint("tcp://board-vm.local:4170"))
+    end)
+
     it("classifies host devices through Rust-owned discovery rules", function()
         local devices = board_vm.devices({
             "/dev/cu.usbmodem1101",
