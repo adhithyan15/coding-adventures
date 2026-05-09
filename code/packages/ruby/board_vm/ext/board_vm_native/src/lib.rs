@@ -18,9 +18,10 @@ use board_vm_language_core::{
     build_run_wire_frame, build_stop_wire_frame, build_store_program_wire_frame,
     build_time_now_module, build_time_sleep_ms_module, capability_board_metadata,
     capability_bytecode_callable, capability_flag_names, capability_protocol_feature,
-    decode_wire_response, known_targets, onboard_led_kind, program_format_name, raw_module_len,
-    run_status_name, BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
-    LanguageCoreError, LanguageOnboardLed, LanguageTargetInfo, LanguageValue,
+    decode_wire_response, detect_target as core_detect_target, known_targets, onboard_led_kind,
+    program_format_name, raw_module_len, run_status_name, BoardVmLanguageSession,
+    DecodedLanguageResponse, DecodedLanguageResponseBody, LanguageCoreError, LanguageOnboardLed,
+    LanguageTargetInfo, LanguageValue,
 };
 use ruby_bridge::VALUE;
 
@@ -403,6 +404,15 @@ extern "C" fn native_known_targets(_self_val: VALUE) -> VALUE {
     language_targets_to_rb(&known_targets())
 }
 
+extern "C" fn native_detect_target(_self_val: VALUE, selector_val: VALUE) -> VALUE {
+    let selector = ruby_bridge::str_from_rb(selector_val)
+        .unwrap_or_else(|| ruby_bridge::raise_arg_error("selector must be a Ruby String"));
+    match core_detect_target(&selector) {
+        Some(target) => language_target_to_rb(&target),
+        None => ruby_bridge::nil_value(),
+    }
+}
+
 fn with_session_mut(
     self_val: VALUE,
     operation: impl FnOnce(&mut RubyBoardVmSession) -> Result<VALUE, LanguageCoreError>,
@@ -633,7 +643,7 @@ fn language_target_to_rb(target: &LanguageTargetInfo) -> VALUE {
 
 fn language_onboard_led_to_rb(led: Option<LanguageOnboardLed>) -> VALUE {
     let Some(led) = led else {
-        return ruby_bridge::QNIL;
+        return ruby_bridge::nil_value();
     };
     let hash = ruby_bridge::hash_new();
     hash_set(hash, "kind", ruby_bridge::str_to_rb(onboard_led_kind(led)));
@@ -656,7 +666,7 @@ fn language_value_to_rb(value: &LanguageValue) -> VALUE {
     let hash = ruby_bridge::hash_new();
     hash_set(hash, "kind", ruby_bridge::str_to_rb(value.kind()));
     let value_rb = match value {
-        LanguageValue::Unit => ruby_bridge::QNIL,
+        LanguageValue::Unit => ruby_bridge::nil_value(),
         LanguageValue::Bool(value) => ruby_bridge::bool_to_rb(*value),
         LanguageValue::U8(value) => rb_usize(*value),
         LanguageValue::U16(value) => rb_usize(*value),
@@ -896,6 +906,12 @@ pub extern "C" fn Init_board_vm_native() {
         "known_targets",
         native_known_targets as *const c_void,
         0,
+    );
+    ruby_bridge::define_module_function_raw(
+        native,
+        "detect_target",
+        native_detect_target as *const c_void,
+        1,
     );
 
     ruby_bridge::define_alloc_func(session_class, session_alloc);

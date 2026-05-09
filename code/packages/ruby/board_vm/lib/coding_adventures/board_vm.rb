@@ -25,8 +25,12 @@ module CodingAdventures
       Native.known_targets
     end
 
+    def detect_target(selector)
+      Native.detect_target(selector.to_s)
+    end
+
     def find_target(board_id)
-      known_targets.find { |target| target["board_id"] == board_id.to_s }
+      detect_target(board_id)
     end
 
     def connect(
@@ -61,11 +65,28 @@ module CodingAdventures
     end
 
     def normalize_board(board)
-      case board.to_s.tr("-", "_")
-      when "uno_r4", "uno_r4_wifi", "arduino_uno_r4", "arduino_uno_r4_wifi"
-        :uno_r4_wifi
-      else
+      target = detect_target(board)
+      unless target
         raise UnsupportedBoardError, "unsupported board: #{board.inspect}"
+      end
+
+      board_symbol(target.fetch("board_id"))
+    end
+
+    def board_symbol(board_id)
+      case board_id
+      when "arduino-uno-r4-wifi"
+        :uno_r4_wifi
+      when "arduino-uno-r4-minima"
+        :uno_r4_minima
+      when "esp32-devkit-v1"
+        :esp32_devkit_v1
+      when "raspberry-pi-pico"
+        :raspberry_pi_pico
+      when "raspberry-pi-pico-w"
+        :raspberry_pi_pico_w
+      else
+        board_id.to_s.tr("-", "_").to_sym
       end
     end
   end

@@ -17,9 +17,10 @@ use board_vm_language_core::{
     build_run_wire_frame, build_stop_wire_frame, build_store_program_wire_frame,
     build_time_now_module, build_time_sleep_ms_module, capability_board_metadata,
     capability_bytecode_callable, capability_flag_names, capability_protocol_feature,
-    decode_wire_response, known_targets, onboard_led_kind, program_format_name, raw_module_len,
-    run_status_name, BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
-    LanguageCoreError, LanguageOnboardLed, LanguageTargetInfo, LanguageValue,
+    decode_wire_response, detect_target as core_detect_target, known_targets, onboard_led_kind,
+    program_format_name, raw_module_len, run_status_name, BoardVmLanguageSession,
+    DecodedLanguageResponse, DecodedLanguageResponseBody, LanguageCoreError, LanguageOnboardLed,
+    LanguageTargetInfo, LanguageValue,
 };
 use python_bridge::*;
 
@@ -443,6 +444,24 @@ unsafe extern "C" fn py_decode_response(_module: PyObjectPtr, args: PyObjectPtr)
 
 unsafe extern "C" fn py_known_targets(_module: PyObjectPtr, _args: PyObjectPtr) -> PyObjectPtr {
     language_targets_to_py(&known_targets())
+}
+
+unsafe extern "C" fn py_detect_target(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
+    let selector = match parse_arg_str(args, 0) {
+        Some(value) => value,
+        None => {
+            set_error(
+                type_error_class(),
+                "detect_target() requires selector as str",
+            );
+            return ptr::null_mut();
+        }
+    };
+
+    match core_detect_target(&selector) {
+        Some(target) => language_target_to_py(&target),
+        None => py_none(),
+    }
 }
 
 fn with_session(
@@ -962,7 +981,7 @@ unsafe fn raise_core_error(context: &str, error: LanguageCoreError) -> PyObjectP
 
 #[no_mangle]
 pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
-    let methods: &'static mut [PyMethodDef; 22] = Box::leak(Box::new([
+    let methods: &'static mut [PyMethodDef; 23] = Box::leak(Box::new([
         PyMethodDef {
             ml_name: b"hello_wire\0".as_ptr() as *const c_char,
             ml_meth: Some(py_hello_wire),
@@ -1099,6 +1118,13 @@ pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
             ml_meth: Some(py_known_targets),
             ml_flags: METH_VARARGS,
             ml_doc: b"Return known Board VM targets from Rust.\0".as_ptr() as *const c_char,
+        },
+        PyMethodDef {
+            ml_name: b"detect_target\0".as_ptr() as *const c_char,
+            ml_meth: Some(py_detect_target),
+            ml_flags: METH_VARARGS,
+            ml_doc: b"Resolve a Board VM target selector using Rust-owned aliases.\0".as_ptr()
+                as *const c_char,
         },
         method_def_sentinel(),
     ]));
