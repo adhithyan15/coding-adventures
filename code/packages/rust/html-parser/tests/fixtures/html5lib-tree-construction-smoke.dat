@@ -599,3 +599,16 @@ Line1<br>Line2<br>Line3<br>Line4
 | <html>
 |   <head>
 |   <body>
+
+#data
+<?COMMENT?>
+#errors
+(1,1): expected-tag-name-but-got-question-mark
+(1,11): expected-doctype-but-got-eof
+#new-errors
+(1:2) unexpected-question-mark-instead-of-tag-name
+#document
+| <!-- ?COMMENT? -->
+| <html>
+|   <head>
+|   <body>
