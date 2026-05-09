@@ -21,3 +21,4 @@ All notable changes to this package will be documented in this file.
 - Capability-grant storage, principal indexes, active-grant queries, and
   status updates for Chief of Staff agent authorization.
 - Authorization-decision audit storage with principal and outcome lookup.
+- Read-only and read-write registry views for D18D-style read/write separation.
