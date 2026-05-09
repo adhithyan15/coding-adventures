@@ -1311,3 +1311,15 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <script>
 |       "--><link>"
 |   <body>
+
+#data
+<head><meta></head><link>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,25): unexpected-start-tag-out-of-my-head
+#document
+| <html>
+|   <head>
+|     <meta>
+|     <link>
+|   <body>
