@@ -22,3 +22,6 @@ All notable changes to this package will be documented in this file.
 - Expanded D18D first-party catalog parity for ContextStore snapshots,
   ArtifactStore revision/list/retention tools, MemoryStore lifecycle tools, and
   Job runtime list/status/run/uninstall tools.
+- Explicit `ToolApprovalGrant` support so approval-required calls can be replayed
+  through the same validated runtime path while stale or mismatched grants are
+  rejected before handler execution.

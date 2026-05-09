@@ -2067,6 +2067,43 @@ impl Display for ApprovalState {
     }
 }
 
+/// Explicit approval token for replaying a previously blocked invocation.
+///
+/// The grant is intentionally scoped to one call id and one tool id. Policy
+/// engines still decide whether approval is required; the runtime only accepts
+/// this token for the `RequiresApproval` path and never lets it override
+/// permission or tier denials.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ToolApprovalGrant {
+    pub call_id: String,
+    pub tool_id: ToolId,
+    pub granted_by: String,
+    pub granted_at: TimestampMs,
+    pub expires_at: Option<TimestampMs>,
+}
+
+impl ToolApprovalGrant {
+    pub fn new(
+        call_id: impl Into<String>,
+        tool_id: impl Into<String>,
+        granted_by: impl Into<String>,
+        granted_at: TimestampMs,
+    ) -> Self {
+        Self {
+            call_id: call_id.into(),
+            tool_id: tool_id.into(),
+            granted_by: granted_by.into(),
+            granted_at,
+            expires_at: None,
+        }
+    }
+
+    pub fn with_expires_at(mut self, expires_at: TimestampMs) -> Self {
+        self.expires_at = Some(expires_at);
+        self
+    }
+}
+
 /// Durable summary of one tool call lifecycle.
 #[derive(Debug, Clone, PartialEq)]
 pub struct ToolCallRecord {
@@ -2486,8 +2523,35 @@ impl InMemoryToolRuntime {
         self.invoke_with_events(request).result
     }
 
+    /// Invoke a tool with an explicit approval grant and return only the result.
+    pub fn invoke_with_approval(
+        &self,
+        request: &ToolInvocationRequest,
+        approval_grant: &ToolApprovalGrant,
+    ) -> ToolResult {
+        self.invoke_with_events_with_approval(request, approval_grant)
+            .result
+    }
+
     /// Invoke a tool and return the canonical event stream plus call record.
     pub fn invoke_with_events(&self, request: &ToolInvocationRequest) -> ToolExecutionTrace {
+        self.invoke_with_events_inner(request, None)
+    }
+
+    /// Invoke a tool with an explicit approval grant and return the full trace.
+    pub fn invoke_with_events_with_approval(
+        &self,
+        request: &ToolInvocationRequest,
+        approval_grant: &ToolApprovalGrant,
+    ) -> ToolExecutionTrace {
+        self.invoke_with_events_inner(request, Some(approval_grant))
+    }
+
+    fn invoke_with_events_inner(
+        &self,
+        request: &ToolInvocationRequest,
+        approval_grant: Option<&ToolApprovalGrant>,
+    ) -> ToolExecutionTrace {
         let definition = self.registry.get(&request.tool_id);
         let mut record = ToolCallRecord::new(request, definition);
         record.status = ToolCallStatus::Validating;
@@ -2537,18 +2601,33 @@ impl InMemoryToolRuntime {
                 return trace_with_terminal(record, request, Vec::new(), result);
             }
             ToolPolicyOutcome::RequiresApproval => {
-                let result = ToolResult::failed(
-                    request.call_id.clone(),
-                    ToolCallError {
-                        kind: ToolErrorKind::ToolApprovalRequired,
-                        message: policy_decision.message,
-                        details: policy_decision.details,
-                    },
-                );
-                record.status = ToolCallStatus::AwaitingApproval;
-                record.approval_state = ApprovalState::Pending;
-                record.completed_at = Some(request.requested_at);
-                return trace_with_terminal(record, request, Vec::new(), result);
+                if let Some(approval_grant) = approval_grant {
+                    match validate_approval_grant(approval_grant, request) {
+                        Ok(()) => {
+                            record.approval_state = ApprovalState::Granted;
+                        }
+                        Err((approval_state, error)) => {
+                            let result = ToolResult::failed(request.call_id.clone(), error);
+                            record.status = ToolCallStatus::Failed;
+                            record.approval_state = approval_state;
+                            record.completed_at = Some(request.requested_at);
+                            return trace_with_terminal(record, request, Vec::new(), result);
+                        }
+                    }
+                } else {
+                    let result = ToolResult::failed(
+                        request.call_id.clone(),
+                        ToolCallError {
+                            kind: ToolErrorKind::ToolApprovalRequired,
+                            message: policy_decision.message,
+                            details: policy_decision.details,
+                        },
+                    );
+                    record.status = ToolCallStatus::AwaitingApproval;
+                    record.approval_state = ApprovalState::Pending;
+                    record.completed_at = Some(request.requested_at);
+                    return trace_with_terminal(record, request, Vec::new(), result);
+                }
             }
         }
 
@@ -2614,6 +2693,83 @@ impl InMemoryToolRuntime {
             }
         }
     }
+}
+
+fn validate_approval_grant(
+    grant: &ToolApprovalGrant,
+    request: &ToolInvocationRequest,
+) -> Result<(), (ApprovalState, ToolCallError)> {
+    if grant.call_id != request.call_id {
+        return Err((
+            ApprovalState::Denied,
+            approval_error(
+                "approval grant call_id does not match invocation",
+                grant_details(grant),
+            ),
+        ));
+    }
+    if grant.tool_id != request.tool_id {
+        return Err((
+            ApprovalState::Denied,
+            approval_error(
+                "approval grant tool_id does not match invocation",
+                grant_details(grant),
+            ),
+        ));
+    }
+    if grant.granted_by.trim().is_empty() {
+        return Err((
+            ApprovalState::Denied,
+            approval_error("approval grant is missing granted_by", grant_details(grant)),
+        ));
+    }
+    if grant
+        .expires_at
+        .is_some_and(|expires_at| expires_at < request.requested_at)
+    {
+        return Err((
+            ApprovalState::Expired,
+            approval_error("approval grant has expired", grant_details(grant)),
+        ));
+    }
+
+    Ok(())
+}
+
+fn approval_error(message: impl Into<String>, details: JsonValue) -> ToolCallError {
+    ToolCallError {
+        kind: ToolErrorKind::ToolApprovalDenied,
+        message: message.into(),
+        details,
+    }
+}
+
+fn grant_details(grant: &ToolApprovalGrant) -> JsonValue {
+    let mut fields = vec![
+        (
+            "call_id".to_string(),
+            JsonValue::String(grant.call_id.clone()),
+        ),
+        (
+            "tool_id".to_string(),
+            JsonValue::String(grant.tool_id.clone()),
+        ),
+        (
+            "granted_by".to_string(),
+            JsonValue::String(grant.granted_by.clone()),
+        ),
+        (
+            "granted_at".to_string(),
+            JsonValue::Number(JsonNumber::Integer(grant.granted_at as i64)),
+        ),
+    ];
+    if let Some(expires_at) = grant.expires_at {
+        fields.push((
+            "expires_at".to_string(),
+            JsonValue::Number(JsonNumber::Integer(expires_at as i64)),
+        ));
+    }
+    JsonValue::Object(fields)
 }
 
 fn started_event(request: &ToolInvocationRequest) -> Vec<ToolEvent> {
@@ -3510,6 +3666,114 @@ mod tests {
             .contains("requires approval"));
         assert_eq!(trace.events.len(), 1);
         assert_eq!(trace.events[0].kind, ToolEventKind::Failed);
+        assert!(!*called.lock().unwrap());
+    }
+
+    #[test]
+    fn runtime_invokes_approval_required_calls_with_matching_grants() {
+        use std::sync::{Arc, Mutex};
+
+        let called = Arc::new(Mutex::new(false));
+        let called_by_handler = Arc::clone(&called);
+        let policy =
+            ToolPolicyProfile::allow_all().with_approval_required_for(vec![ToolSideEffects::Write]);
+        let mut runtime = InMemoryToolRuntime::with_policy(policy);
+        runtime
+            .register_handler(artifact_create_definition(), move |_, _| {
+                *called_by_handler.lock().unwrap() = true;
+                Ok(ToolHandlerOutput::new(JsonValue::Object(vec![(
+                    "artifact_ref".to_string(),
+                    JsonValue::String("artifact_1".to_string()),
+                )])))
+            })
+            .unwrap();
+        let request = artifact_create_request();
+        let grant = ToolApprovalGrant::new(
+            request.call_id.clone(),
+            request.tool_id.clone(),
+            "user_1",
+            request.requested_at + 10,
+        )
+        .with_expires_at(request.requested_at + 1_000);
+
+        let trace = runtime.invoke_with_events_with_approval(&request, &grant);
+
+        assert!(trace.result.ok);
+        assert_eq!(trace.record.status, ToolCallStatus::Completed);
+        assert_eq!(trace.record.approval_state, ApprovalState::Granted);
+        assert_eq!(
+            trace
+                .events
+                .iter()
+                .map(|event| event.kind)
+                .collect::<Vec<_>>(),
+            vec![ToolEventKind::Started, ToolEventKind::Completed]
+        );
+        assert!(trace
+            .events
+            .last()
+            .unwrap()
+            .terminal_matches_result(&trace.result));
+        assert!(*called.lock().unwrap());
+    }
+
+    #[test]
+    fn runtime_rejects_stale_or_mismatched_approval_grants() {
+        use std::sync::{Arc, Mutex};
+
+        let called = Arc::new(Mutex::new(false));
+        let called_by_handler = Arc::clone(&called);
+        let policy =
+            ToolPolicyProfile::allow_all().with_approval_required_for(vec![ToolSideEffects::Write]);
+        let mut runtime = InMemoryToolRuntime::with_policy(policy);
+        runtime
+            .register_handler(artifact_create_definition(), move |_, _| {
+                *called_by_handler.lock().unwrap() = true;
+                Ok(ToolHandlerOutput::new(JsonValue::Null))
+            })
+            .unwrap();
+        let request = artifact_create_request();
+        let stale = ToolApprovalGrant::new(
+            request.call_id.clone(),
+            request.tool_id.clone(),
+            "user_1",
+            request.requested_at,
+        )
+        .with_expires_at(request.requested_at - 1);
+
+        let stale_trace = runtime.invoke_with_events_with_approval(&request, &stale);
+
+        assert!(!stale_trace.result.ok);
+        assert_eq!(stale_trace.record.status, ToolCallStatus::Failed);
+        assert_eq!(stale_trace.record.approval_state, ApprovalState::Expired);
+        assert_eq!(
+            stale_trace.result.error.as_ref().unwrap().kind,
+            ToolErrorKind::ToolApprovalDenied
+        );
+        assert!(stale_trace
+            .result
+            .error
+            .as_ref()
+            .unwrap()
+            .message
+            .contains("expired"));
+        assert_eq!(stale_trace.events.len(), 1);
+        assert_eq!(stale_trace.events[0].kind, ToolEventKind::Failed);
+
+        let mismatched = ToolApprovalGrant::new(
+            request.call_id.clone(),
+            "artifact.read",
+            "user_1",
+            request.requested_at,
+        );
+        let mismatch_trace = runtime.invoke_with_events_with_approval(&request, &mismatched);
+
+        assert!(!mismatch_trace.result.ok);
+        assert_eq!(mismatch_trace.record.approval_state, ApprovalState::Denied);
+        assert_eq!(
+            mismatch_trace.result.error.as_ref().unwrap().kind,
+            ToolErrorKind::ToolApprovalDenied
+        );
         assert!(!*called.lock().unwrap());
     }
 
