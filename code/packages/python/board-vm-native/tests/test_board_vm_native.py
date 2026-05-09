@@ -1,3 +1,5 @@
+import io
+
 from board_vm_native import (
     BoardDevice,
     BoardDescriptor,
@@ -12,6 +14,7 @@ from board_vm_native import (
     esp_upload_options,
     find_target,
     known_targets,
+    pick_device,
     select_device,
 )
 
@@ -251,6 +254,25 @@ def test_devices_are_classified_by_rust_language_core():
     rendered = device_list(found)
     assert "ESP32 DevKit V1" in rendered
     assert "/dev/cu.usbmodem1101" in rendered
+
+
+def test_pick_device_prompts_for_ambiguous_devices():
+    found = devices([
+        "/dev/cu.usbmodem1101",
+        "/dev/cu.usbmodem2201",
+    ])
+    output = io.StringIO()
+
+    selected = pick_device(
+        device_candidates=found,
+        input_func=lambda _prompt: "2",
+        output=output,
+    )
+
+    assert selected.port == "/dev/cu.usbmodem2201"
+    assert "1. Unknown board" in output.getvalue()
+    assert "2. Unknown board" in output.getvalue()
+    assert "Select board [1-2]: " in output.getvalue()
 
 
 def test_session_dispatches_frames_through_write_transport():

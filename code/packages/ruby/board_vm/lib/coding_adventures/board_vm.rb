@@ -71,6 +71,35 @@ module CodingAdventures
       raise DeviceSelectionError, "#{reason}.\n#{device_list(candidates)}"
     end
 
+    def pick_device(board: :auto, devices: nil, input: $stdin, output: $stdout)
+      candidates = devices || self.devices
+      raise DeviceSelectionError, "No Board VM devices found. Plug in a board." if candidates.empty?
+
+      begin
+        return select_device(board: board, devices: candidates)
+      rescue DeviceSelectionError
+        # Fall through to an explicit numbered picker for REPL/script use.
+      end
+
+      output.puts device_list(candidates)
+      output.print "Select board [1-#{candidates.length}]: "
+      choice = input.gets
+      index = Integer(choice.to_s.strip, exception: false)
+      unless index && index.between?(1, candidates.length)
+        raise DeviceSelectionError, "Invalid Board VM device selection: #{choice.inspect}"
+      end
+
+      selected = candidates.fetch(index - 1)
+      requested_board = board == :auto ? :auto : normalize_board(board)
+      selected_board = device_target_board(selected)
+      if requested_board != :auto && selected_board && selected_board != requested_board
+        raise DeviceSelectionError,
+          "Selected #{selected.fetch("port")} is #{selected_board}, not #{requested_board}."
+      end
+
+      selected
+    end
+
     def known_targets
       Native.known_targets
     end
@@ -132,12 +161,19 @@ module CodingAdventures
       port: nil,
       device: nil,
       devices: nil,
+      pick: false,
+      input: $stdin,
+      output: $stdout,
       flash: false,
       cargo_workspace: DEFAULT_RUST_WORKSPACE,
       runner: CommandRunner.new,
       transport: nil,
       **options
     )
+      if pick && port.nil? && device.nil?
+        device = pick_device(board: board, devices: devices, input: input, output: output)
+      end
+
       selection = connection_selection(board: board, port: port, device: device, devices: devices)
       connection = Connection.new(
         board: selection.fetch(:board),

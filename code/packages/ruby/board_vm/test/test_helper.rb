@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "minitest/autorun"
+require "stringio"
 require "coding_adventures_board_vm"
 
 class FakeRunner

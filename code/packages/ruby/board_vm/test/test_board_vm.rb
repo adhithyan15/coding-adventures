@@ -150,6 +150,43 @@ module CodingAdventures
         assert_includes error.message, "/dev/cu.usbmodem2201"
       end
 
+      def test_pick_device_prompts_for_ambiguous_devices
+        devices = BoardVM.devices(paths: [
+          "/dev/cu.usbmodem1101",
+          "/dev/cu.usbmodem2201"
+        ])
+        output = StringIO.new
+        input = StringIO.new("2\n")
+
+        selected = BoardVM.pick_device(devices: devices, input: input, output: output)
+
+        assert_equal "/dev/cu.usbmodem2201", selected["port"]
+        assert_includes output.string, "1. Unknown board"
+        assert_includes output.string, "2. Unknown board"
+        assert_includes output.string, "Select board [1-2]: "
+      end
+
+      def test_connect_can_use_interactive_picker_without_a_port
+        runner = FakeRunner.new
+        devices = BoardVM.devices(paths: [
+          "/dev/cu.usbmodem1101",
+          "/dev/tty.usbserial-CP2102-esp32"
+        ])
+
+        connection = BoardVM.connect(
+          pick: true,
+          devices: devices,
+          input: StringIO.new("2\n"),
+          output: StringIO.new,
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner
+        )
+
+        assert_equal :esp32_devkit_v1, connection.board
+        assert_equal "/dev/tty.usbserial-CP2102-esp32", connection.port
+        assert_empty runner.calls
+      end
+
       def test_connect_flash_uploads_the_uno_r4_serialusb_vm_and_tracks_runtime_port
         upload = CommandResult.new(
           ["cargo"],

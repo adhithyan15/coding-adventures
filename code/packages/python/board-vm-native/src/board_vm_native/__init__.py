@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import sys
 from dataclasses import dataclass
 from typing import Any, Iterable
 
@@ -1238,6 +1239,46 @@ def select_device(
     raise ValueError(f"{reason}.\n{device_list(candidates)}")
 
 
+def pick_device(
+    selector: str = "auto",
+    *,
+    device_candidates: Iterable[BoardDevice | dict[str, Any]] | None = None,
+    input_func: Any = input,
+    output: Any = None,
+) -> BoardDevice:
+    candidates = [
+        item if isinstance(item, BoardDevice) else BoardDevice(item)
+        for item in (devices() if device_candidates is None else device_candidates)
+    ]
+    if not candidates:
+        raise ValueError("No Board VM devices found. Plug in a board.")
+
+    try:
+        return select_device(selector, device_candidates=candidates)
+    except ValueError:
+        pass
+
+    output = sys.stdout if output is None else output
+    output.write(device_list(candidates))
+    output.write("\n")
+    output.write(f"Select board [1-{len(candidates)}]: ")
+    choice = input_func("")
+    try:
+        index = int(str(choice).strip())
+    except ValueError as error:
+        raise ValueError(f"Invalid Board VM device selection: {choice!r}") from error
+    if not 1 <= index <= len(candidates):
+        raise ValueError(f"Invalid Board VM device selection: {choice!r}")
+
+    selected = candidates[index - 1]
+    target = None if selector == "auto" else detect_target(selector)
+    if target is not None and selected.target is not None and selected.target.board_id != target.board_id:
+        raise ValueError(
+            f"Selected {selected.port} is {selected.target.board_id}, not {target.board_id}."
+        )
+    return selected
+
+
 def esp_upload_command(
     selector: str = "esp32-devkit-v1",
     *,
@@ -1333,5 +1374,6 @@ __all__ = [
     "esp_upload_options",
     "find_target",
     "known_targets",
+    "pick_device",
     "select_device",
 ]
