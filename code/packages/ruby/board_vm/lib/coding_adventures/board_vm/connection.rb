@@ -36,6 +36,7 @@ module CodingAdventures
         esp_image: nil,
         esp_upload_options: nil,
         pico_uf2_mount: nil,
+        pico_uf2_mount_roots: nil,
         pico_uf2_upload_options: nil
       )
         @board = board
@@ -63,6 +64,7 @@ module CodingAdventures
         @firmware_image = firmware_image || esp_image
         @esp_upload_options = esp_upload_options || {}
         @pico_uf2_mount = pico_uf2_mount
+        @pico_uf2_mount_roots = pico_uf2_mount_roots
         @pico_uf2_upload_options = pico_uf2_upload_options || {}
       end
 
@@ -368,6 +370,7 @@ module CodingAdventures
               board,
               image: @firmware_image,
               mount: @pico_uf2_mount,
+              roots: @pico_uf2_mount_roots,
               **pico_uf2_upload_overrides
             )
           ),

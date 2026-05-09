@@ -136,10 +136,25 @@ module CodingAdventures
       Native.pico_uf2_mounts(roots&.map(&:to_s))
     end
 
+    def pico_uf2_mount(roots: nil)
+      mounts = pico_uf2_mounts(roots: roots)
+      return mounts.first if mounts.length == 1
+
+      if mounts.empty?
+        raise DeviceSelectionError,
+          "No Pico BOOTSEL UF2 mount found. Hold BOOTSEL while plugging in the Pico/Pico W."
+      end
+
+      mount_list = mounts.each_with_index.map { |mount, index| "#{index + 1}. #{mount}" }.join("\n")
+      raise DeviceSelectionError, "Multiple Pico BOOTSEL UF2 mounts found; choose one.\n#{mount_list}"
+    end
+
     def pico_uf2_upload_command(
       board = :raspberry_pi_pico,
       image:,
       mount: nil,
+      roots: nil,
+      auto_mount: true,
       **overrides
     )
       options = pico_uf2_upload_options(board, **overrides)
@@ -147,6 +162,7 @@ module CodingAdventures
         raise UnsupportedBoardError, "Pico UF2 upload is not supported for #{board.inspect}"
       end
 
+      mount ||= pico_uf2_mount(roots: roots) if auto_mount
       command = [
         options.fetch("command"),
         "--image", image.to_s
