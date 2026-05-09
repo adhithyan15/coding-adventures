@@ -933,6 +933,10 @@ impl HtmlParser {
             return;
         }
 
+        if !text.chars().all(char::is_whitespace) {
+            self.reconstruct_pending_formatting();
+        }
+
         self.append_text_to_current(text);
     }
 
@@ -1029,6 +1033,10 @@ impl HtmlParser {
             return;
         }
 
+        self.reconstruct_pending_formatting();
+    }
+
+    fn reconstruct_pending_formatting(&mut self) {
         let formatting = std::mem::take(&mut self.pending_formatting_reconstruction);
         for (formatting_name, formatting_attributes) in formatting {
             let child_index =
@@ -1224,6 +1232,9 @@ impl HtmlParser {
             let path = self.open_elements[index].clone();
             let remove_empty_reconstructed_formatting =
                 self.is_empty_reconstructed_formatting_element(&path);
+            if is_formatting_element(name) {
+                self.capture_formatting_above(index);
+            }
             self.open_elements.truncate(index);
             if remove_empty_reconstructed_formatting {
                 self.remove_reconstructed_formatting_node(&path);
@@ -2341,6 +2352,29 @@ mod tests {
         assert_eq!(inner_bold.name, "b");
         assert_eq!(inner_bold.attribute("id"), Some("b"));
         assert_eq!(outer_bold.children[1], Node::text("TEST"));
+    }
+
+    #[test]
+    fn reconstructs_formatting_before_text_after_formatting_end_tag() {
+        let document = parse_html("<font><p>hello<b>cruel</font>world").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+        assert_eq!(element(&body.children[0]).name, "font");
+
+        let paragraph = element(&body.children[1]);
+        assert_eq!(paragraph.name, "p");
+
+        let font = element(&paragraph.children[0]);
+        assert_eq!(font.name, "font");
+        assert_eq!(font.children[0], Node::text("hello"));
+        let first_bold = element(&font.children[1]);
+        assert_eq!(first_bold.name, "b");
+        assert_eq!(first_bold.children, vec![Node::text("cruel")]);
+
+        let second_bold = element(&paragraph.children[1]);
+        assert_eq!(second_bold.name, "b");
+        assert_eq!(second_bold.children, vec![Node::text("world")]);
     }
 
     #[test]
