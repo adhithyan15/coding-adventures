@@ -15,5 +15,7 @@ All notable changes to this package will be documented in this file.
   typed Prefix TLV projection for prefix diagnostics.
 - Typed Connectivity TLV helpers for route-cost, link-quality, active-router,
   and sleepy-end-device diagnostic fields.
+- Thread diagnostic snapshots that combine neighbor, leader, connectivity,
+  partition, and prefix state for D23-facing health reads.
 - Neighbor table primitives for parent/child/router relationships, stale
   timeout expiry, link margin tracking, and parent-candidate selection.

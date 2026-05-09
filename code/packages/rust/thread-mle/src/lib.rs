@@ -834,6 +834,14 @@ impl NeighborTable {
             )
         })
     }
+
+    pub fn diagnostic_snapshot(
+        &self,
+        message: Option<&MleMessage>,
+        captured_at_ms: u64,
+    ) -> Result<ThreadDiagnosticSnapshot, MleError> {
+        ThreadDiagnosticSnapshot::from_parts(self, message, captured_at_ms)
+    }
 }
 
 impl Default for NeighborTable {
@@ -869,6 +877,100 @@ pub fn neighbor_from_parent_response(
         neighbor = neighbor.with_link_margin(link_margin);
     }
     neighbor
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ThreadDiagnosticHealth {
+    Offline,
+    Detached,
+    Degraded,
+    Healthy,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ThreadDiagnosticSnapshot {
+    pub captured_at_ms: u64,
+    pub local_role: DeviceRole,
+    pub parent: Option<ThreadNeighborId>,
+    pub router_count: usize,
+    pub child_count: usize,
+    pub stale_neighbors: Vec<ThreadNeighborId>,
+    pub best_parent_candidate: Option<ThreadNeighborId>,
+    pub leader_data: Option<LeaderData>,
+    pub connectivity: Option<Connectivity>,
+    pub prefixes: Vec<ThreadPrefixData>,
+}
+
+impl ThreadDiagnosticSnapshot {
+    pub fn from_parts(
+        neighbors: &NeighborTable,
+        message: Option<&MleMessage>,
+        captured_at_ms: u64,
+    ) -> Result<Self, MleError> {
+        let advertisement = message
+            .map(NetworkDataAdvertisement::from_message)
+            .transpose()?;
+        let connectivity = message
+            .map(connectivity_from_message)
+            .transpose()?
+            .flatten();
+        let prefixes = advertisement
+            .as_ref()
+            .map(NetworkDataAdvertisement::prefixes)
+            .transpose()?
+            .unwrap_or_default();
+
+        Ok(Self {
+            captured_at_ms,
+            local_role: neighbors.local_role(),
+            parent: neighbors.parent().map(|neighbor| neighbor.neighbor_id),
+            router_count: neighbors.routers().count(),
+            child_count: neighbors.children().count(),
+            stale_neighbors: neighbors.stale_neighbors_at(captured_at_ms),
+            best_parent_candidate: neighbors
+                .best_parent_candidate()
+                .map(|neighbor| neighbor.neighbor_id),
+            leader_data: advertisement.and_then(|advertisement| advertisement.leader_data),
+            connectivity,
+            prefixes,
+        })
+    }
+
+    pub fn partition_id(&self) -> Option<u32> {
+        self.leader_data.map(|leader_data| leader_data.partition_id)
+    }
+
+    pub fn active_router_count(&self) -> Option<u8> {
+        self.connectivity
+            .map(|connectivity| connectivity.active_router_count)
+    }
+
+    pub fn health(&self) -> ThreadDiagnosticHealth {
+        if self.local_role == DeviceRole::Disabled {
+            return ThreadDiagnosticHealth::Offline;
+        }
+        if !self.local_role.is_attached() {
+            return ThreadDiagnosticHealth::Detached;
+        }
+        if self.local_role == DeviceRole::Child && self.parent.is_none() {
+            return ThreadDiagnosticHealth::Degraded;
+        }
+        if self
+            .parent
+            .is_some_and(|parent| self.stale_neighbors.contains(&parent))
+        {
+            return ThreadDiagnosticHealth::Degraded;
+        }
+        if self
+            .connectivity
+            .is_some_and(|connectivity| connectivity.active_router_count == 0)
+            && self.local_role.can_route()
+            && self.local_role != DeviceRole::Leader
+        {
+            return ThreadDiagnosticHealth::Degraded;
+        }
+        ThreadDiagnosticHealth::Healthy
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1463,6 +1565,115 @@ mod tests {
             table.best_parent_candidate().unwrap().neighbor_id,
             ThreadNeighborId(0x3000)
         );
+    }
+
+    #[test]
+    fn diagnostic_snapshot_combines_neighbors_and_mle_data() {
+        let mut table = NeighborTable::new(DeviceRole::Child);
+        table.upsert(
+            ThreadNeighbor::new(
+                ThreadNeighborId(0x1000),
+                DeviceRole::Router,
+                NeighborRelationship::Parent,
+                1_000,
+                10_000,
+            )
+            .with_link_margin(50),
+        );
+        table.upsert(
+            ThreadNeighbor::new(
+                ThreadNeighborId(0x3000),
+                DeviceRole::Router,
+                NeighborRelationship::RouterPeer,
+                1_100,
+                10_000,
+            )
+            .with_link_margin(60),
+        );
+        table.upsert(ThreadNeighbor::new(
+            ThreadNeighborId(0x4000),
+            DeviceRole::Child,
+            NeighborRelationship::Child,
+            1_200,
+            10_000,
+        ));
+
+        let leader_data = LeaderData {
+            partition_id: 0x0102_0304,
+            weighting: 32,
+            data_version: 4,
+            stable_data_version: 3,
+            leader_router_id: 1,
+        };
+        let prefix = ThreadPrefixData::new(
+            true,
+            0,
+            64,
+            vec![0xfd, 0, 0xab, 0xcd, 0, 0, 0, 0],
+            Vec::new(),
+        )
+        .unwrap();
+        let network_data = ThreadNetworkData::from_tlvs(vec![prefix.to_tlv().unwrap()]).unwrap();
+        let connectivity = Connectivity {
+            parent_priority: 0,
+            link_quality_3: 3,
+            link_quality_2: 2,
+            link_quality_1: 1,
+            leader_cost: 2,
+            id_sequence: 9,
+            active_router_count: 12,
+            sleepy_end_device_buffer_size: None,
+            sleepy_end_device_datagram_count: None,
+        };
+        let message = MleMessage {
+            command: MleCommand::Advertisement,
+            tlvs: vec![
+                leader_data.to_tlv(),
+                network_data.to_tlv(),
+                connectivity.to_tlv(),
+            ],
+        };
+
+        let snapshot = table.diagnostic_snapshot(Some(&message), 2_000).unwrap();
+
+        assert_eq!(snapshot.local_role, DeviceRole::Child);
+        assert_eq!(snapshot.parent, Some(ThreadNeighborId(0x1000)));
+        assert_eq!(snapshot.router_count, 2);
+        assert_eq!(snapshot.child_count, 1);
+        assert!(snapshot.stale_neighbors.is_empty());
+        assert_eq!(
+            snapshot.best_parent_candidate,
+            Some(ThreadNeighborId(0x3000))
+        );
+        assert_eq!(snapshot.partition_id(), Some(0x0102_0304));
+        assert_eq!(snapshot.active_router_count(), Some(12));
+        assert_eq!(snapshot.prefixes, vec![prefix]);
+        assert_eq!(snapshot.health(), ThreadDiagnosticHealth::Healthy);
+    }
+
+    #[test]
+    fn diagnostic_snapshot_flags_detached_and_stale_parent_states() {
+        let detached = NeighborTable::new(DeviceRole::Detached);
+        let detached_snapshot = detached.diagnostic_snapshot(None, 10_000).unwrap();
+
+        assert_eq!(detached_snapshot.health(), ThreadDiagnosticHealth::Detached);
+
+        let mut child = NeighborTable::new(DeviceRole::Child);
+        child.upsert(ThreadNeighbor::new(
+            ThreadNeighborId(0x1000),
+            DeviceRole::Router,
+            NeighborRelationship::Parent,
+            1_000,
+            500,
+        ));
+
+        let stale_snapshot = child.diagnostic_snapshot(None, 2_000).unwrap();
+
+        assert_eq!(
+            stale_snapshot.stale_neighbors,
+            vec![ThreadNeighborId(0x1000)]
+        );
+        assert_eq!(stale_snapshot.health(), ThreadDiagnosticHealth::Degraded);
     }
 
     #[test]
