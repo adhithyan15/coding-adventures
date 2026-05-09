@@ -19,6 +19,9 @@ All notable changes to this package will be documented in this file.
 - Registry-backed authorization decision auditing for accepted and rejected
   authorized commands.
 - Registry-backed tool authorization decisions for Chief of Staff tool calls.
+- D18D-style read tool execution for listing bridges/devices, reading entity
+  state, describing entity capabilities, and inspecting bridge health through
+  the registry without dispatching integration work.
 - Supervisor primitives for bridge-worker heartbeat tracking and restart
   signaling.
 - Desired-state reconciliation for missing, stale, or drifted entity state,
