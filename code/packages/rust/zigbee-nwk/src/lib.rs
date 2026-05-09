@@ -214,6 +214,51 @@ impl NeighborTable {
             )
         })
     }
+
+    pub fn summary_at(&self, now_ms: u64) -> NeighborTableSummary {
+        let mut summary = NeighborTableSummary {
+            total_neighbors: self.neighbors.len(),
+            route_capable_neighbors: 0,
+            child_neighbors: 0,
+            stale_neighbors: 0,
+            best_router_candidate: self
+                .best_router_candidate()
+                .map(|entry| entry.network_address),
+        };
+
+        for entry in self.neighbors.values() {
+            if entry.can_route() {
+                summary.route_capable_neighbors += 1;
+            }
+            if entry.relationship == NeighborRelationship::Child {
+                summary.child_neighbors += 1;
+            }
+            if entry.is_stale_at(now_ms) {
+                summary.stale_neighbors += 1;
+            }
+        }
+
+        summary
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NeighborTableSummary {
+    pub total_neighbors: usize,
+    pub route_capable_neighbors: usize,
+    pub child_neighbors: usize,
+    pub stale_neighbors: usize,
+    pub best_router_candidate: Option<NetworkAddress>,
+}
+
+impl NeighborTableSummary {
+    pub fn has_stale_neighbors(self) -> bool {
+        self.stale_neighbors > 0
+    }
+
+    pub fn has_router_candidate(self) -> bool {
+        self.best_router_candidate.is_some()
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -307,6 +352,77 @@ impl RouteTable {
         let entry = self.routes.get_mut(&destination)?;
         entry.status = RouteStatus::Inactive;
         Some(entry)
+    }
+
+    pub fn summary(&self) -> RouteTableSummary {
+        let mut summary = RouteTableSummary {
+            total_routes: self.routes.len(),
+            usable_routes: 0,
+            discovery_underway_routes: 0,
+            discovery_failed_routes: 0,
+            inactive_routes: 0,
+            many_to_one_routes: 0,
+            route_record_required_routes: 0,
+        };
+
+        for entry in self.routes.values() {
+            match entry.status {
+                RouteStatus::Active => summary.usable_routes += 1,
+                RouteStatus::DiscoveryUnderway => summary.discovery_underway_routes += 1,
+                RouteStatus::DiscoveryFailed => summary.discovery_failed_routes += 1,
+                RouteStatus::Inactive => summary.inactive_routes += 1,
+            }
+            if entry.many_to_one {
+                summary.many_to_one_routes += 1;
+            }
+            if entry.route_record_required {
+                summary.route_record_required_routes += 1;
+            }
+        }
+
+        summary
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RouteTableSummary {
+    pub total_routes: usize,
+    pub usable_routes: usize,
+    pub discovery_underway_routes: usize,
+    pub discovery_failed_routes: usize,
+    pub inactive_routes: usize,
+    pub many_to_one_routes: usize,
+    pub route_record_required_routes: usize,
+}
+
+impl RouteTableSummary {
+    pub fn has_discovery_failures(self) -> bool {
+        self.discovery_failed_routes > 0
+    }
+
+    pub fn has_usable_routes(self) -> bool {
+        self.usable_routes > 0
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NwkTopologySummary {
+    pub generated_at_ms: u64,
+    pub neighbors: NeighborTableSummary,
+    pub routes: RouteTableSummary,
+}
+
+impl NwkTopologySummary {
+    pub fn new(generated_at_ms: u64, neighbors: &NeighborTable, routes: &RouteTable) -> Self {
+        Self {
+            generated_at_ms,
+            neighbors: neighbors.summary_at(generated_at_ms),
+            routes: routes.summary(),
+        }
+    }
+
+    pub fn needs_supervision(self) -> bool {
+        self.neighbors.has_stale_neighbors() || self.routes.has_discovery_failures()
     }
 }
 
@@ -1487,6 +1603,123 @@ mod tests {
 
         table.mark_inactive(NetworkAddress(0x2001)).unwrap();
         assert_eq!(table.next_hop_for(NetworkAddress(0x2001)), None);
+    }
+
+    #[test]
+    fn neighbor_table_summary_tracks_freshness_and_router_candidates() {
+        let mut table = NeighborTable::new();
+        table.upsert(
+            NeighborEntry::new(
+                NetworkAddress(0x1001),
+                NwkDeviceRole::Router,
+                NeighborRelationship::Parent,
+                1_000,
+                500,
+            )
+            .with_link_metrics(180, 3),
+        );
+        table.upsert(
+            NeighborEntry::new(
+                NetworkAddress(0x1002),
+                NwkDeviceRole::Router,
+                NeighborRelationship::Sibling,
+                1_200,
+                10_000,
+            )
+            .with_link_metrics(210, 1),
+        );
+        table.upsert(NeighborEntry::new(
+            NetworkAddress(0x1003),
+            NwkDeviceRole::EndDevice,
+            NeighborRelationship::Child,
+            1_300,
+            10_000,
+        ));
+
+        let summary = table.summary_at(1_500);
+
+        assert_eq!(summary.total_neighbors, 3);
+        assert_eq!(summary.route_capable_neighbors, 2);
+        assert_eq!(summary.child_neighbors, 1);
+        assert_eq!(summary.stale_neighbors, 1);
+        assert_eq!(summary.best_router_candidate, Some(NetworkAddress(0x1002)));
+        assert!(summary.has_stale_neighbors());
+        assert!(summary.has_router_candidate());
+    }
+
+    #[test]
+    fn route_table_summary_tracks_route_health() {
+        let mut table = RouteTable::new();
+        table.upsert(RouteEntry::active(
+            NetworkAddress(0x2001),
+            NetworkAddress(0x1001),
+            1_000,
+        ));
+        table.upsert(RouteEntry {
+            destination: NetworkAddress(0x2002),
+            next_hop: NetworkAddress(0x1002),
+            status: RouteStatus::DiscoveryUnderway,
+            route_record_required: true,
+            many_to_one: false,
+            last_updated_at_ms: 1_100,
+        });
+        table.upsert(RouteEntry {
+            destination: NetworkAddress(0x2003),
+            next_hop: NetworkAddress(0x1003),
+            status: RouteStatus::DiscoveryFailed,
+            route_record_required: false,
+            many_to_one: true,
+            last_updated_at_ms: 1_200,
+        });
+        table.upsert(RouteEntry {
+            destination: NetworkAddress(0x2004),
+            next_hop: NetworkAddress(0x1004),
+            status: RouteStatus::Inactive,
+            route_record_required: false,
+            many_to_one: false,
+            last_updated_at_ms: 1_300,
+        });
+
+        let summary = table.summary();
+
+        assert_eq!(summary.total_routes, 4);
+        assert_eq!(summary.usable_routes, 1);
+        assert_eq!(summary.discovery_underway_routes, 1);
+        assert_eq!(summary.discovery_failed_routes, 1);
+        assert_eq!(summary.inactive_routes, 1);
+        assert_eq!(summary.many_to_one_routes, 1);
+        assert_eq!(summary.route_record_required_routes, 1);
+        assert!(summary.has_usable_routes());
+        assert!(summary.has_discovery_failures());
+    }
+
+    #[test]
+    fn topology_summary_marks_supervision_needs() {
+        let mut neighbors = NeighborTable::new();
+        neighbors.upsert(NeighborEntry::new(
+            NetworkAddress(0x1001),
+            NwkDeviceRole::Router,
+            NeighborRelationship::Parent,
+            1_000,
+            500,
+        ));
+
+        let mut routes = RouteTable::new();
+        routes.upsert(RouteEntry {
+            destination: NetworkAddress(0x2001),
+            next_hop: NetworkAddress(0x1001),
+            status: RouteStatus::DiscoveryFailed,
+            route_record_required: false,
+            many_to_one: false,
+            last_updated_at_ms: 1_100,
+        });
+
+        let summary = NwkTopologySummary::new(1_500, &neighbors, &routes);
+
+        assert_eq!(summary.generated_at_ms, 1_500);
+        assert_eq!(summary.neighbors.stale_neighbors, 1);
+        assert_eq!(summary.routes.discovery_failed_routes, 1);
+        assert!(summary.needs_supervision());
     }
 
     #[test]
