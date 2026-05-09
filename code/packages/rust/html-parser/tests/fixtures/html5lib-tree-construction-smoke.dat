@@ -477,3 +477,21 @@ Line1<br>Line2<br>Line3<br>Line4
 |           "do"
 |       "you"
 |   <!-- do -->
+
+#data
+<!DOCTYPE html>A<option>B<optgroup>C<select>D</option>E
+#errors
+(1,54): unexpected-end-tag-in-select
+(1,55): eof-in-select
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     "A"
+|     <option>
+|       "B"
+|     <optgroup>
+|       "C"
+|       <select>
+|         "DE"
