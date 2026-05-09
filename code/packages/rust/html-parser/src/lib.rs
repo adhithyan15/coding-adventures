@@ -667,6 +667,7 @@ pub fn parse_html_with_diagnostics_and_options(
 
     lexer.finish()?;
     drain_parser_tokens(&mut lexer, &mut parser)?;
+    parser.process_token(Token::Eof);
 
     let lexer_diagnostics = lexer.diagnostics().to_vec();
     let document = parser.finish_document();
@@ -695,6 +696,7 @@ pub fn parse_html_fragment_with_diagnostics_and_options(
 
     lexer.finish()?;
     drain_parser_tokens(&mut lexer, &mut parser)?;
+    parser.process_token(Token::Eof);
 
     let lexer_diagnostics = lexer.diagnostics().to_vec();
     let document = parser.finish_document();
@@ -717,6 +719,11 @@ pub struct HtmlParser {
     options: HtmlParseOptions,
     quirks_mode: bool,
     strip_next_leading_lf: bool,
+    explicit_body_end_seen: bool,
+    explicit_body_start_seen: bool,
+    explicit_html_end_seen: bool,
+    pending_table_text: String,
+    strip_next_leading_noscript_literal: bool,
 }
 
 impl Default for HtmlParser {
@@ -730,6 +737,11 @@ impl Default for HtmlParser {
             options: HtmlParseOptions::default(),
             quirks_mode: true,
             strip_next_leading_lf: false,
+            explicit_body_end_seen: false,
+            explicit_body_start_seen: false,
+            explicit_html_end_seen: false,
+            pending_table_text: String::new(),
+            strip_next_leading_noscript_literal: false,
         }
     }
 }
@@ -770,6 +782,11 @@ impl HtmlParser {
             options,
             quirks_mode: true,
             strip_next_leading_lf: false,
+            explicit_body_end_seen: false,
+            explicit_body_start_seen: false,
+            explicit_html_end_seen: false,
+            pending_table_text: String::new(),
+            strip_next_leading_noscript_literal: false,
         }
     }
 
@@ -792,6 +809,7 @@ impl HtmlParser {
         match token {
             Token::Text(text) => self.append_text(text),
             token => {
+                self.flush_pending_table_text();
                 self.strip_next_leading_lf = false;
                 match token {
                     Token::StartTag {
@@ -800,23 +818,30 @@ impl HtmlParser {
                         self_closing,
                     } => self.append_start_tag(name, attributes, self_closing),
                     Token::EndTag { name } => self.handle_end_tag(&name),
-                    Token::Comment(comment) => {
-                        self.append_node(Node::comment(comment));
-                    }
+                    Token::Comment(comment) => self.append_comment(comment),
                     Token::Doctype {
                         name,
                         public_identifier,
                         system_identifier,
                         force_quirks,
                     } => {
-                        if self.current_element_is("frameset") || self.has_document_type() {
+                        if self.current_element_is("frameset")
+                            || self.has_document_type()
+                            || self.has_document_element()
+                            || self.has_non_comment_document_content()
+                        {
                             self.diagnostics.push(ParserDiagnostic::new(
                                 "unexpected-doctype",
                                 "doctype token outside the initial document position was ignored",
                             ));
                             return;
                         }
-                        self.quirks_mode = force_quirks;
+                        self.quirks_mode = force_quirks
+                            || doctype_triggers_quirks(
+                                name.as_deref(),
+                                public_identifier.as_deref(),
+                                system_identifier.as_deref(),
+                            );
                         self.append_node(Node::DocumentType(DocumentType {
                             name,
                             public_identifier,
@@ -844,16 +869,176 @@ impl HtmlParser {
             ));
             name = "img".to_string();
         }
+        if name == "body" {
+            self.explicit_body_start_seen = true;
+        }
 
-        self.apply_document_shell_implied_contexts(&name);
-        self.close_fostered_formatting_before_table_context(&name);
-        self.apply_table_implied_contexts(&name);
+        let in_foreign_content = self.current_namespace().is_some()
+            && !self.current_node_is_svg_html_integration_point()
+            && !self.current_node_is_mathml_text_integration_point();
+        if in_foreign_content
+            && !self.current_node_is_svg_html_integration_point()
+            && exits_foreign_content_on_start_tag(&name, &attributes)
+        {
+            if self.has_open_svg_html_integration_point() {
+                while self.current_namespace().is_some()
+                    && !self.current_node_is_svg_html_integration_point()
+                {
+                    self.open_elements.pop();
+                }
+                let attributes: Vec<Attribute> = attributes
+                    .into_iter()
+                    .map(|attribute| Attribute {
+                        name: attribute.name,
+                        value: attribute.value,
+                    })
+                    .collect();
+                let child_index = self.append_node(Node::element(name.clone(), attributes));
+                if !is_void_element(&name) {
+                    let mut path = self.current_parent_path().to_vec();
+                    path.push(child_index);
+                    self.open_elements.push(path);
+                }
+                return;
+            }
+            self.pop_foreign_elements();
+            self.append_start_tag(name, attributes, self_closing);
+            return;
+        }
+
+        if !in_foreign_content
+            && self.current_element_is("frameset")
+            && !matches!(name.as_str(), "frame" | "frameset" | "noframes")
+        {
+            return;
+        }
+        if !in_foreign_content
+            && self.open_elements.is_empty()
+            && self.document_has_closed_frameset()
+            && name != "noframes"
+            && name != "html"
+            && name != "frameset"
+        {
+            return;
+        }
+        if !in_foreign_content
+            && self.document_has_closed_frameset()
+            && !self.current_element_is("frameset")
+            && name != "noframes"
+            && name != "html"
+            && name != "frameset"
+        {
+            return;
+        }
+        if !in_foreign_content
+            && name == "noframes"
+            && self.document_has_closed_frameset()
+            && !self.current_element_is("frameset")
+            && !self.has_open_element("noframes")
+        {
+            let attributes: Vec<Attribute> = attributes
+                .into_iter()
+                .map(|attribute| Attribute {
+                    name: attribute.name,
+                    value: attribute.value,
+                })
+                .collect();
+            if let Some(path) = self.append_node_to_document_html(Node::element(name, attributes)) {
+                self.open_elements.push(path);
+            }
+            return;
+        }
+        if !in_foreign_content
+            && self.open_elements.is_empty()
+            && self.has_document_element()
+            && !self.document_has_body_element()
+            && !self.body_has_non_whitespace_child()
+            && is_head_element(&name)
+            && name != "head"
+        {
+            self.reopen_document_head();
+        }
+        if !in_foreign_content && self.open_elements.is_empty() && self.has_document_element() {
+            self.reopen_document_body();
+        }
+        if !in_foreign_content
+            && self.open_elements.is_empty()
+            && !self.has_document_element()
+            && !self.document.children.iter().any(is_body_content_node)
+            && !self.document_has_closed_frameset()
+            && (is_head_element(&name) || name == "head")
+            && name != "html"
+        {
+            self.append_implied_element("html");
+            if name != "head" {
+                self.append_implied_element("head");
+            }
+        }
+        if !in_foreign_content
+            && self.open_elements.is_empty()
+            && !self.has_document_element()
+            && name == "frameset"
+        {
+            self.append_implied_element("html");
+        }
+        if !in_foreign_content
+            && self.open_elements.is_empty()
+            && !self.has_document_element()
+            && name != "frameset"
+            && starts_body_after_head(&name)
+        {
+            self.append_implied_element("html");
+            self.append_implied_element("body");
+        }
+        if !in_foreign_content
+            && self.current_element_is("html")
+            && !self.has_open_element("head")
+            && !self.has_open_element("body")
+            && !self.document_has_body_element()
+            && !self.body_has_non_whitespace_child()
+            && !self.document_has_closed_frameset()
+            && is_head_element(&name)
+            && name != "head"
+        {
+            self.append_implied_element("head");
+        }
+
+        if !in_foreign_content {
+            if self.has_open_element("head")
+                && !self.current_element_is("head")
+                && !self.has_open_element("template")
+                && starts_body_after_head(&name)
+            {
+                self.pop_head_descendants();
+            }
+            self.apply_document_shell_implied_contexts(&name);
+            self.close_fostered_formatting_before_table_context(&name);
+            if self.has_open_element("select")
+                && self.has_open_table_context()
+                && (name == "table" || starts_table_context(&name))
+            {
+                self.close_open_element_if(|name| name == "select");
+                if name == "table" {
+                    self.close_element("table");
+                }
+            }
+            self.apply_table_implied_contexts(&name);
+        }
         self.clear_pending_formatting_unless_next_reconstructs(&name);
         let prunes_empty_formatting_inside = name == "p" && self.has_open_element("p");
         let formatting_inside = self.take_formatting_reconstruction_inside_for(&name);
-        self.apply_simple_implied_end_tags(&name);
+        if !in_foreign_content
+            && !self.current_node_is_svg_html_integration_point()
+            && !self.current_node_is_mathml_text_integration_point()
+        {
+            self.apply_simple_implied_end_tags(&name);
+        }
 
-        if is_table_only_start_tag(&name) && !self.has_open_element("table") {
+        if !in_foreign_content
+            && is_table_only_start_tag(&name)
+            && !self.has_open_element("table")
+            && !self.has_open_element("template")
+        {
             self.diagnostics.push(ParserDiagnostic::new(
                 "unexpected-table-start-tag",
                 format!("start tag `<{name}>` outside a table was ignored"),
@@ -861,7 +1046,76 @@ impl HtmlParser {
             return;
         }
 
-        if name == "col" && !self.current_element_is("colgroup") {
+        if !in_foreign_content
+            && self.has_open_element("template")
+            && !self.has_open_element("table")
+            && self.current_last_child_element_is("col")
+            && name != "col"
+            && name != "template"
+        {
+            return;
+        }
+
+        if !in_foreign_content
+            && self.has_open_element("template")
+            && !self.has_open_element("table")
+            && name == "tr"
+            && self.current_element_is("template")
+            && !self.current_has_child_element("tr")
+            && !self.current_has_child_element("thead")
+            && self.current_has_non_whitespace_child()
+        {
+            return;
+        }
+
+        if !in_foreign_content
+            && self.has_open_element("template")
+            && !self.has_open_element("table")
+            && name == "tr"
+            && self.current_has_child_element("thead")
+            && !self.current_element_is("tbody")
+        {
+            self.append_implied_element("tbody");
+        }
+
+        if !in_foreign_content
+            && self.has_open_element("template")
+            && !self.has_open_element("table")
+            && name == "tr"
+            && !self.current_element_is("template")
+            && !self.current_element_is("tbody")
+        {
+            return;
+        }
+
+        if !in_foreign_content
+            && self.has_open_element("template")
+            && !self.has_open_element("table")
+            && (is_table_section(&name) || matches!(name.as_str(), "caption" | "colgroup"))
+            && !(name == "tfoot" && self.current_has_child_element("thead"))
+            && (self.current_last_child_element_is("td")
+                || self.current_last_child_element_is("th")
+                || self.current_last_child_element_is("tr")
+                || self.current_last_child_element_is("col"))
+        {
+            return;
+        }
+
+        if !in_foreign_content
+            && self.has_open_element("template")
+            && !self.has_open_element("table")
+            && matches!(name.as_str(), "td" | "th")
+            && !self.current_element_is("tr")
+            && self.current_has_child_element("tr")
+        {
+            self.append_implied_element("tr");
+        }
+
+        if !in_foreign_content
+            && name == "col"
+            && !self.current_element_is("colgroup")
+            && !self.has_open_element("template")
+        {
             self.diagnostics.push(ParserDiagnostic::new(
                 "unexpected-col-start-tag",
                 "start tag `<col>` outside a column group was ignored",
@@ -869,11 +1123,29 @@ impl HtmlParser {
             return;
         }
 
-        if name == "frame" && !self.current_element_is("frameset") {
+        if !in_foreign_content && name == "frame" && !self.current_element_is("frameset") {
             self.diagnostics.push(ParserDiagnostic::new(
                 "unexpected-frame-start-tag",
                 "start tag `<frame>` outside a frameset was ignored",
             ));
+            return;
+        }
+
+        if !in_foreign_content && name == "frameset" && self.has_open_element("template") {
+            return;
+        }
+
+        if !in_foreign_content
+            && name == "frameset"
+            && !self.current_element_is("frameset")
+            && (self.explicit_body_start_seen
+                || self.document_has_non_frameset_compatible_body_content())
+            && self.has_open_element("body")
+        {
+            return;
+        }
+
+        if !in_foreign_content && name == "template" && self.current_element_is("frameset") {
             return;
         }
 
@@ -885,11 +1157,107 @@ impl HtmlParser {
             })
             .collect();
 
-        if matches!(name.as_str(), "br" | "plaintext") && self.current_element_is_table_structure()
+        if !in_foreign_content && name == "frameset" && self.current_element_is("frameset") {
+            let child_index = self.append_node(Node::element(name.clone(), attributes));
+            let mut path = self.current_parent_path().to_vec();
+            path.push(child_index);
+            self.open_elements.push(path);
+            return;
+        }
+
+        if !in_foreign_content
+            && matches!(name.as_str(), "svg" | "math")
+            && self.current_element_is_table_structure()
+        {
+            let namespace = self.namespace_for_start_tag(&name);
+            let name = adjusted_foreign_start_tag_name(name, namespace);
+            let attributes = adjusted_foreign_attributes(attributes, namespace);
+            if let Some(path) = self.insert_node_before_open_table(element_node(
+                name.clone(),
+                attributes,
+                namespace,
+            )) {
+                self.open_elements.push(path);
+            }
+            return;
+        }
+
+        if !in_foreign_content
+            && self.has_open_element("select")
+            && self.has_open_table_context()
+            && (name == "table" || starts_table_context(&name))
+        {
+            self.close_open_element_if(|name| name == "select");
+        }
+
+        if !in_foreign_content && name == "form" && self.current_element_is_table_structure() {
+            self.append_node(Node::element(name, attributes));
+            return;
+        }
+
+        if !in_foreign_content && name == "meta" && self.current_element_is_table_structure() {
+            self.insert_node_before_open_table(Node::element(name, attributes));
+            return;
+        }
+
+        if !in_foreign_content && name == "input" && self.current_element_is_table_structure() {
+            if attribute_value(&attributes, "type")
+                .is_some_and(|value| value.eq_ignore_ascii_case("hidden"))
+            {
+                self.append_node(Node::element(name, attributes));
+            } else {
+                self.insert_node_before_open_table(Node::element(name, attributes));
+            }
+            return;
+        }
+
+        if !in_foreign_content
+            && name == "select"
+            && self.has_open_element("template")
+            && !self.has_open_element("table")
+            && self.current_element_is_table_structure()
+        {
+            self.close_open_element_if(is_table_context_element);
+        }
+
+        if !in_foreign_content && name == "select" && self.current_element_is_table_structure() {
+            if let Some(path) = self.insert_node_before_open_table(Node::element(name, attributes))
+            {
+                self.open_elements.push(path);
+            }
+            return;
+        }
+
+        if !in_foreign_content
+            && self.has_open_element("template")
+            && !self.has_open_element("table")
+            && self.current_element_is_table_structure()
+            && is_paragraph_boundary_element(&name)
+        {
+            self.close_open_element_if(is_table_context_element);
+        }
+
+        if !in_foreign_content
+            && is_paragraph_boundary_element(&name)
+            && self.current_element_is_table_structure()
+        {
+            if let Some(path) =
+                self.insert_node_before_open_table(Node::element(name.clone(), attributes))
+            {
+                self.open_elements.push(path);
+            }
+            return;
+        }
+
+        if !in_foreign_content
+            && matches!(name.as_str(), "br" | "p" | "plaintext")
+            && self.current_element_is_table_structure()
         {
             let acknowledges_self_closing = self_closing && is_void_element(&name);
             let is_void = is_void_element(&name);
-            if let Some(path) = self.insert_node_before_open_table(Node::element(name.clone(), attributes)) {
+            if let Some(path) =
+                self.insert_node_before_open_table(Node::element(name.clone(), attributes))
+            {
                 if !acknowledges_self_closing && !is_void {
                     self.open_elements.push(path);
                 }
@@ -897,27 +1265,53 @@ impl HtmlParser {
             return;
         }
 
-        if self.foster_formatting_start_in_table_context(&name, &attributes) {
+        if !in_foreign_content && self.foster_formatting_start_in_table_context(&name, &attributes)
+        {
             return;
         }
 
-        if self.apply_interactive_implied_contexts(&name) {
+        if !in_foreign_content && self.apply_interactive_implied_contexts(&name) {
             return;
         }
-        if self.apply_select_implied_contexts(&name) {
-            return;
-        }
-
-        if name == "html" && self.merge_attributes_into_open_element("html", &attributes) {
+        if !in_foreign_content && self.apply_select_implied_contexts(&name) {
             return;
         }
 
-        if name == "head" && self.has_open_element("head") {
+        if !in_foreign_content && name == "html" && self.has_open_element("template") {
+            return;
+        }
+
+        if !in_foreign_content
+            && name == "html"
+            && self.merge_attributes_into_open_element("html", &attributes)
+        {
+            return;
+        }
+        if !in_foreign_content
+            && name == "html"
+            && self.merge_attributes_into_document_element(&attributes)
+        {
+            return;
+        }
+        if !in_foreign_content && name == "html" && self.has_document_element() {
+            self.document.push_child(Node::element(name, attributes));
+            return;
+        }
+
+        if !in_foreign_content
+            && name == "head"
+            && self.has_open_element("head")
+            && !self.current_element_is("head")
+        {
+            return;
+        }
+
+        if !in_foreign_content && name == "head" && self.has_open_element("head") {
             self.merge_attributes_into_open_element("head", &attributes);
             return;
         }
 
-        if name == "head" && self.has_open_element("body") {
+        if !in_foreign_content && name == "head" && self.has_open_element("body") {
             self.diagnostics.push(ParserDiagnostic::new(
                 "unexpected-head-start-tag",
                 "head start tag was ignored after body content had already started",
@@ -925,13 +1319,37 @@ impl HtmlParser {
             return;
         }
 
-        if name == "body" && self.merge_attributes_into_open_element("body", &attributes) {
+        if !in_foreign_content
+            && name == "noscript"
+            && self.current_element_is("noscript")
+            && attributes.is_empty()
+        {
+            self.append_text_to_current("<noscript>".to_string());
+            return;
+        }
+
+        if !in_foreign_content && name == "noscript" && self.has_open_element("noscript") {
+            return;
+        }
+
+        if !in_foreign_content && name == "body" && self.has_open_element("template") {
+            return;
+        }
+
+        if !in_foreign_content
+            && name == "body"
+            && self.merge_attributes_into_open_element("body", &attributes)
+        {
             return;
         }
 
         self.reconstruct_formatting_before_if_needed(&name);
 
-        let acknowledges_self_closing = self_closing && is_void_element(&name);
+        let namespace = self.namespace_for_start_tag(&name);
+        let name = adjusted_foreign_start_tag_name(name, namespace);
+        let attributes = adjusted_foreign_attributes(attributes, namespace);
+        let html_void_element = namespace.is_none() && is_void_element(&name);
+        let acknowledges_self_closing = self_closing && (html_void_element || namespace.is_some());
         if self_closing && !acknowledges_self_closing {
             self.diagnostics.push(ParserDiagnostic::new(
                 "non-void-html-element-self-closing",
@@ -939,9 +1357,8 @@ impl HtmlParser {
             ));
         }
 
-        let child_index = self.append_node(Node::element(name.clone(), attributes));
-
-        if !acknowledges_self_closing && !is_void_element(&name) {
+        let child_index = self.append_node(element_node(name.clone(), attributes, namespace));
+        if !acknowledges_self_closing && !html_void_element {
             let mut path = self.current_parent_path().to_vec();
             path.push(child_index);
             self.open_elements.push(path);
@@ -969,9 +1386,42 @@ impl HtmlParser {
             return;
         }
 
+        if self.document_has_closed_frameset() && !self.current_element_is("noframes") {
+            let whitespace = text
+                .chars()
+                .filter(|character| character.is_whitespace())
+                .collect::<String>();
+            if !whitespace.is_empty() {
+                self.append_text_to_document_html(whitespace);
+            }
+            return;
+        }
+
+        let text = if self.strip_next_leading_noscript_literal {
+            self.strip_next_leading_noscript_literal = false;
+            text.strip_prefix("<noscript>").unwrap_or(&text).to_string()
+        } else if text.starts_with("<noscript>")
+            && !self.body_has_non_whitespace_child()
+            && self.append_to_last_head_noscript_text_ending("<!--", "<noscript>")
+        {
+            text["<noscript>".len()..].to_string()
+        } else if text.starts_with("<iframe>")
+            && !self.body_has_non_whitespace_child()
+            && append_to_last_element_text(&mut self.document.children, "noscript", "<iframe>")
+        {
+            text["<iframe>".len()..].to_string()
+        } else {
+            text
+        };
+
         let text = if self.strip_next_leading_lf {
             self.strip_next_leading_lf = false;
             text.strip_prefix('\n').unwrap_or(&text).to_string()
+        } else {
+            text
+        };
+        let text = if text.contains('\r') {
+            text.replace('\r', "\n")
         } else {
             text
         };
@@ -979,11 +1429,50 @@ impl HtmlParser {
             return;
         }
 
+        let text = if text.contains('\u{FFFD}')
+            && (self.current_node_is_svg_html_integration_point()
+                || self.current_namespace() == Some("math")
+                || (self.replacement_text_is_ignorable_in_current_context(&text)
+                    && !self.current_element_is("plaintext")))
+        {
+            text.replace('\u{FFFD}', "")
+        } else {
+            text
+        };
+        if text.is_empty() {
+            return;
+        }
+
+        if self.current_node_is_svg_html_integration_point() {
+            if let Some(tag_name) = simple_start_tag_text(&text) {
+                self.append_start_tag(tag_name.to_string(), Vec::new(), false);
+                return;
+            }
+        }
+
+        if self.has_open_element("template")
+            && !self.has_open_element("table")
+            && self.current_last_child_element_is("col")
+        {
+            return;
+        }
+
         if self.open_elements.is_empty()
             && text.chars().all(char::is_whitespace)
+            && !self.has_document_element()
             && !self.document.children.iter().any(is_body_content_node)
         {
             return;
+        }
+
+        if self.open_elements.is_empty() && self.has_document_element() {
+            self.reopen_document_body();
+        }
+        if self.explicit_body_end_seen
+            && !self.explicit_html_end_seen
+            && self.current_element_is("html")
+        {
+            self.reopen_body_under_current_html();
         }
 
         let text = if self.in_frameset_text_context() {
@@ -1003,8 +1492,43 @@ impl HtmlParser {
             return;
         }
 
+        if self.has_open_element("head")
+            && !self.current_element_is("head")
+            && !self.has_open_element("template")
+            && !self.current_element_is("noframes")
+            && !self.current_element_is("script")
+            && !self.current_element_is("style")
+            && !self.current_element_is("title")
+            && !(self.current_element_is("noscript")
+                && self.options.scripting == HtmlScriptingMode::Enabled)
+            && !text.chars().all(char::is_whitespace)
+        {
+            self.pop_head_descendants();
+        }
+
+        if self.current_element_is("script") {
+            if let Some((end_tag_start, end_tag_end)) = rfind_script_end_marker(&text) {
+                if script_text_is_in_double_escaped_state(&text[..end_tag_start]) {
+                    self.append_text_to_current(text);
+                    return;
+                }
+                let before = text[..end_tag_start].to_string();
+                if !before.is_empty() {
+                    self.append_text_to_current(before);
+                }
+                self.close_element("script");
+                if end_tag_end < text.len() {
+                    self.append_text(text[end_tag_end..].to_string());
+                }
+                return;
+            }
+        }
+
         let text = if self.current_element_is("head") {
-            match text.char_indices().find(|(_, character)| !character.is_whitespace()) {
+            match text
+                .char_indices()
+                .find(|(_, character)| !character.is_whitespace())
+            {
                 Some((0, _)) => text,
                 Some((leading_end, _)) => {
                     self.append_text_to_current(text[..leading_end].to_string());
@@ -1016,17 +1540,59 @@ impl HtmlParser {
             text
         };
 
-        if !text.chars().all(char::is_whitespace) {
+        if !text.chars().all(char::is_whitespace) && self.current_element_is("head") {
             self.pop_current_if(|name| name == "head");
         }
 
+        let text = if self.current_element_is_table_structure() && text.contains('\u{FFFD}') {
+            text.replace('\u{FFFD}', "")
+        } else {
+            text
+        };
+
+        if self.current_element_is("colgroup") {
+            let leading_end = text
+                .char_indices()
+                .find(|(_, character)| !character.is_whitespace())
+                .map(|(index, _)| index);
+            match leading_end {
+                Some(0) => {
+                    if self.foster_text_before_open_table(text.clone()) {
+                        return;
+                    }
+                }
+                Some(index) => {
+                    self.append_text_to_current(text[..index].to_string());
+                    if self.foster_text_before_open_table(text[index..].to_string()) {
+                        return;
+                    }
+                }
+                None => {}
+            }
+        }
+
+        if self.current_element_is_table_structure() && !self.current_element_is("colgroup") {
+            self.pending_table_text.push_str(&text);
+            if self.pending_table_text.chars().all(char::is_whitespace) {
+                return;
+            }
+            let pending = std::mem::take(&mut self.pending_table_text);
+            if self.foster_text_before_open_table(pending) {
+                return;
+            }
+        }
+
         if self.current_element_is_table_structure()
+            && !text.chars().all(char::is_whitespace)
             && self.foster_text_before_open_table(text.clone())
         {
             return;
         }
 
-        if !text.chars().all(char::is_whitespace) && !self.has_open_table_context() {
+        if (!text.chars().all(char::is_whitespace)
+            || !self.pending_formatting_reconstruction.is_empty())
+            && !self.current_parent_has_table_ancestor()
+        {
             self.reconstruct_pending_formatting();
         }
 
@@ -1050,6 +1616,105 @@ impl HtmlParser {
         }
     }
 
+    fn append_text_to_document_html(&mut self, text: String) {
+        let Some(Node::Element(html)) = self
+            .document
+            .children
+            .iter_mut()
+            .find(|node| matches!(node, Node::Element(element) if element.name == "html"))
+        else {
+            self.append_text_to_current(text);
+            return;
+        };
+        if let Some(Node::Text(existing)) = html.children.last_mut() {
+            existing.data.push_str(&text);
+        } else {
+            html.children.push(Node::text(text));
+        }
+    }
+
+    fn flush_pending_table_text(&mut self) {
+        if self.pending_table_text.is_empty() {
+            return;
+        }
+        let pending = std::mem::take(&mut self.pending_table_text);
+        if pending.chars().all(char::is_whitespace) {
+            self.append_text_to_current(pending);
+        } else {
+            self.foster_text_before_open_table(pending);
+        }
+    }
+
+    fn append_comment(&mut self, comment: String) {
+        if self.current_namespace().is_some() {
+            if let Some(cdata) = comment
+                .strip_prefix("[CDATA[")
+                .and_then(|data| data.strip_suffix("]]"))
+            {
+                self.append_text_to_current(cdata.to_string());
+                return;
+            }
+        }
+        let node = Node::comment(comment);
+        if self.open_elements.is_empty()
+            && self.has_document_element()
+            && !self.explicit_html_end_seen
+            && !self.document_has_body_element()
+            && !self.body_has_non_whitespace_child()
+        {
+            if let Some(Node::Element(html)) = self
+                .document
+                .children
+                .iter_mut()
+                .find(|node| matches!(node, Node::Element(element) if element.name == "html"))
+            {
+                html.children.push(node);
+                return;
+            }
+        }
+        if self.document_has_closed_frameset()
+            && self.explicit_html_end_seen
+            && !self.current_element_is("noframes")
+        {
+            self.document.children.push(node);
+            return;
+        }
+        if self.explicit_body_end_seen {
+            if let Some(Node::Element(html)) = self
+                .document
+                .children
+                .iter_mut()
+                .find(|node| matches!(node, Node::Element(element) if element.name == "html"))
+            {
+                html.children.push(node);
+                return;
+            }
+            if !self
+                .document
+                .children
+                .iter()
+                .any(|node| matches!(node, Node::Element(element) if element.name == "body"))
+            {
+                self.document
+                    .children
+                    .push(Node::element("body".to_string(), Vec::new()));
+            }
+            self.document.children.push(node);
+            return;
+        }
+        if self.open_elements.is_empty()
+            || (self.current_element_is("html") && !self.explicit_body_end_seen)
+        {
+            if let Some(body_children) = children_at_path_mut(&mut self.document.children, &[0, 1])
+                .filter(|children| !children.is_empty())
+            {
+                body_children.push(node);
+                return;
+            }
+        }
+        self.append_node(node);
+    }
+
     fn append_node(&mut self, node: Node) -> usize {
         if let Some(children) = self.current_children_mut() {
             children.push(node);
@@ -1058,6 +1723,18 @@ impl HtmlParser {
             self.document.push_child(node);
             self.document.children.len() - 1
         }
+    }
+
+    fn append_node_to_document_html(&mut self, node: Node) -> Option<Vec<usize>> {
+        let html_index =
+            self.document.children.iter().position(
+                |node| matches!(node, Node::Element(element) if element.name == "html"),
+            )?;
+        let Some(Node::Element(html)) = self.document.children.get_mut(html_index) else {
+            return None;
+        };
+        html.children.push(node);
+        Some(vec![html_index, html.children.len() - 1])
     }
 
     fn append_implied_element(&mut self, name: &str) {
@@ -1094,6 +1771,26 @@ impl HtmlParser {
         true
     }
 
+    fn merge_attributes_into_document_element(&mut self, attributes: &[Attribute]) -> bool {
+        let Some(element) = self
+            .document
+            .children
+            .iter_mut()
+            .find_map(|node| match node {
+                Node::Element(element) if element.name == "html" => Some(element),
+                _ => None,
+            })
+        else {
+            return false;
+        };
+        for attribute in attributes {
+            if element.attribute(&attribute.name).is_none() {
+                element.attributes.push(attribute.clone());
+            }
+        }
+        true
+    }
+
     fn take_formatting_reconstruction_inside_for(
         &mut self,
         incoming_name: &str,
@@ -1103,8 +1800,14 @@ impl HtmlParser {
         }
         if incoming_name == "p"
             && !self.has_open_element("p")
-            && (self.current_element_is("b") || self.current_element_is("i"))
+            && (self.current_element_is("b")
+                || self.current_element_is("i")
+                || self.current_element_is("u")
+                || (self.current_empty_element_is("a") && self.current_has_formatting_ancestor()))
         {
+            return Vec::new();
+        }
+        if incoming_name == "button" && self.current_element_is("span") {
             return Vec::new();
         }
 
@@ -1121,14 +1824,22 @@ impl HtmlParser {
         }
 
         formatting.reverse();
-        formatting
+        trim_formatting_reconstruction_noah_ark(formatting)
     }
 
     fn reconstruct_formatting_before_if_needed(&mut self, incoming_name: &str) {
         if !starts_before_formatting_reconstruction_boundary(incoming_name) {
             return;
         }
-        if self.has_open_table_context() {
+        if self.current_element_is_table_structure() {
+            return;
+        }
+        if self.has_open_table_context()
+            && self
+                .pending_formatting_reconstruction
+                .iter()
+                .any(|(name, _)| name == "a")
+        {
             return;
         }
 
@@ -1148,6 +1859,9 @@ impl HtmlParser {
 
     fn clear_pending_formatting_unless_next_reconstructs(&mut self, incoming_name: &str) {
         if starts_table_context(incoming_name) && self.current_element_is_table_structure() {
+            return;
+        }
+        if incoming_name == "p" && self.current_element_is_table_structure() {
             return;
         }
         if !starts_before_formatting_reconstruction_boundary(incoming_name) {
@@ -1195,7 +1909,9 @@ impl HtmlParser {
         if self.pending_formatting_reconstruction.is_empty()
             || text.chars().all(char::is_whitespace)
         {
-            return self.insert_node_before_open_table(Node::text(text)).is_some();
+            return self
+                .insert_node_before_open_table(Node::text(text))
+                .is_some();
         }
 
         self.remove_empty_pending_formatting_before_open_table();
@@ -1275,7 +1991,11 @@ impl HtmlParser {
             children.insert(table_index, node);
         }
 
-        increment_open_element_paths_after_insert(&mut self.open_elements, parent_path, table_index);
+        increment_open_element_paths_after_insert(
+            &mut self.open_elements,
+            parent_path,
+            table_index,
+        );
         let mut inserted_path = parent_path.to_vec();
         inserted_path.push(table_index);
         Some(inserted_path)
@@ -1285,11 +2005,9 @@ impl HtmlParser {
         if !starts_table_context(incoming_name) {
             return;
         }
-        let Some(table_stack_index) = self
-            .open_elements
-            .iter()
-            .rposition(|path| element_at_path(&self.document, path).is_some_and(|name| name == "table"))
-        else {
+        let Some(table_stack_index) = self.open_elements.iter().rposition(|path| {
+            element_at_path(&self.document, path).is_some_and(|name| name == "table")
+        }) else {
             return;
         };
         let Some(table_path) = self.open_elements.get(table_stack_index).cloned() else {
@@ -1311,12 +2029,41 @@ impl HtmlParser {
     }
 
     fn apply_document_shell_implied_contexts(&mut self, incoming_name: &str) {
-        if starts_body_after_head(incoming_name) {
+        if starts_body_after_head(incoming_name) && self.current_element_is("head") {
             self.pop_current_if(|name| name == "head");
         }
     }
 
     fn handle_end_tag(&mut self, name: &str) {
+        if name == "script" && self.current_script_text_treats_next_end_tag_as_data() {
+            self.append_text_to_current("</script>".to_string());
+            return;
+        }
+        if self.has_open_svg_html_integration_point()
+            && name != "template"
+            && !self.current_element_is(name)
+            && !is_table_context_element(name)
+        {
+            return;
+        }
+        if self.current_namespace().is_some()
+            && !self.current_element_is(name)
+            && self.has_open_element(name)
+            && (is_table_context_element(name) || self.current_namespace() == Some("svg"))
+        {
+            self.pop_foreign_elements();
+        } else if self.current_namespace().is_some() && !self.current_element_is(name) {
+            return;
+        }
+        if name == "b" && self.adopt_b_end_tag_across_cite_div() {
+            return;
+        }
+        if name == "body" {
+            self.explicit_body_end_seen = true;
+        }
+        if name == "html" {
+            self.explicit_html_end_seen = true;
+        }
         match name {
             "head" if !self.has_open_element("head") && !self.has_open_element("body") => {
                 self.strip_next_leading_lf = false;
@@ -1330,13 +2077,21 @@ impl HtmlParser {
             "body" if !self.has_open_element("body") && !self.open_elements.is_empty() => {
                 self.open_elements.clear();
             }
+            "body" if self.open_elements.is_empty() && !self.has_document_element() => {
+                self.append_implied_element("html");
+                self.append_implied_element("body");
+                self.open_elements.clear();
+            }
             "br" => {
                 self.diagnostics.push(ParserDiagnostic::new(
                     "unexpected-br-end-tag",
                     "end tag `</br>` was recovered as a `br` start tag",
                 ));
+                self.pop_head_descendants();
                 self.append_start_tag("br".to_string(), Vec::new(), true);
             }
+            "menuitem" => self.close_non_paragraph_children_above_menuitem(),
+            "template" => self.close_open_element_without_scope_checks("template"),
             name if is_void_element(name) => {
                 self.diagnostics.push(ParserDiagnostic::new(
                     "unexpected-void-end-tag",
@@ -1349,6 +2104,9 @@ impl HtmlParser {
                     "end tag `</p>` before body content was ignored",
                 ));
             }
+            "p" if !self.has_open_element("body")
+                && !self.document_has_body_element()
+                && !self.body_has_non_whitespace_child() => {}
             "p" if !self.has_open_element("p") => {
                 self.diagnostics.push(ParserDiagnostic::new(
                     "unexpected-p-end-tag",
@@ -1360,6 +2118,12 @@ impl HtmlParser {
             "html" if self.has_open_element("head") && !self.has_open_element("body") => {
                 self.pop_current_if(|current| current == "head");
                 self.append_implied_element("body");
+            }
+            "html" if self.has_open_table_context() => {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-html-end-tag-in-table",
+                    "end tag `</html>` inside a table context was ignored",
+                ));
             }
             "li" => {
                 if !self.close_open_list_item_if_in_scope() {
@@ -1373,6 +2137,10 @@ impl HtmlParser {
                 if self.has_open_element("html") {
                     self.pop_current_if(|current| current == "body");
                     self.close_element(name);
+                } else if self.open_elements.is_empty() && !self.has_document_element() {
+                    self.append_implied_element("html");
+                    self.append_implied_element("body");
+                    self.open_elements.clear();
                 } else if !self.open_elements.is_empty() {
                     self.open_elements.clear();
                 } else {
@@ -1389,20 +2157,52 @@ impl HtmlParser {
                     self.close_open_formatting_element_silently("a");
                 }
             }
-            name
-                if is_formatting_element(name)
-                    && self.current_element_is(name)
-                    && self.current_formatting_contains_closed_paragraph(name) => {}
+            name if is_formatting_element(name)
+                && self.current_element_is(name)
+                && self.current_formatting_contains_closed_paragraph(name) =>
+            {
+                self.remove_pending_formatting_reconstruction(name);
+            }
+            name if is_heading_element(name) => {
+                self.close_open_heading_if_in_scope(None);
+            }
             _ => self.close_element(name),
         }
     }
 
     fn close_element(&mut self, name: &str) {
-        if let Some(index) = self
-            .open_elements
-            .iter()
-            .rposition(|path| element_at_path(&self.document, path).is_some_and(|n| n == name))
-        {
+        let lower_bound = if name == "template" {
+            0
+        } else {
+            self.open_elements
+                .iter()
+                .rposition(|path| {
+                    element_at_path(&self.document, path).is_some_and(|n| n == "template")
+                })
+                .map_or(0, |index| index + 1)
+        };
+        if let Some(relative_index) = self.open_elements[lower_bound..].iter().rposition(|path| {
+            element_ref_at_path(&self.document, path).is_some_and(|element| {
+                element.name.eq_ignore_ascii_case(name)
+                    && (!is_table_context_element(name) || element.namespace.is_none())
+            })
+        }) {
+            let index = lower_bound + relative_index;
+            if name == "span" && self.has_special_element_above(index) {
+                return;
+            }
+            if name == "form" && self.has_table_context_above(index) {
+                return;
+            }
+            if is_heading_element(name) && self.has_special_element_above(index) {
+                while self
+                    .current_element_name()
+                    .is_some_and(|name| is_formatting_element(name) || is_heading_element(name))
+                {
+                    self.open_elements.pop();
+                }
+                return;
+            }
             if is_formatting_element(name) && self.has_table_context_above(index) {
                 return;
             }
@@ -1425,6 +2225,10 @@ impl HtmlParser {
             let remove_empty_reconstructed_formatting =
                 self.is_empty_reconstructed_formatting_element(&path);
             if is_formatting_element(name) {
+                self.capture_formatting_above(index);
+                self.remove_pending_formatting_reconstruction(name);
+            }
+            if matches!(name, "p" | "select") {
                 self.capture_formatting_above(index);
             }
             self.open_elements.truncate(index);
@@ -1503,16 +2307,17 @@ impl HtmlParser {
             self.close_open_element_if(|name| name == "option");
             self.close_open_element_if(|name| name == "optgroup");
         } else if incoming_name == "rb" {
-            self.close_open_element_if(is_ruby_annotation_element);
-            self.close_open_element_if(|name| name == "rtc");
+            self.close_open_ruby_element_if(is_ruby_annotation_element);
+            self.close_open_ruby_element_if(|name| name == "rtc");
         } else if incoming_name == "rt" || incoming_name == "rp" {
-            self.close_open_element_if(|name| name == "rb" || name == "rt" || name == "rp");
+            self.close_open_element_if(|name| name == "p");
+            self.close_open_ruby_element_if(|name| name == "rb" || name == "rt" || name == "rp");
         } else if incoming_name == "rtc" {
-            self.close_open_element_if(|name| name == "rb" || name == "rt" || name == "rp");
-            self.close_open_element_if(|name| name == "rtc");
+            self.close_open_ruby_element_if(|name| name == "rb" || name == "rt" || name == "rp");
+            self.close_open_ruby_element_if(|name| name == "rtc");
         } else if is_heading_element(incoming_name) {
             self.close_open_element_if(|name| name == "p");
-            self.close_open_heading_if_in_scope();
+            self.close_open_heading_if_in_scope(None);
         } else if is_paragraph_boundary_element(incoming_name) {
             if incoming_name == "table" && self.quirks_mode {
                 return;
@@ -1529,8 +2334,8 @@ impl HtmlParser {
                 {
                     return true;
                 }
-                let consumes_pending_anchor =
-                    !self.has_open_table_context() && !matches!(self.current_element_name(), Some("p"));
+                let consumes_pending_anchor = !self.has_open_table_context()
+                    && !matches!(self.current_element_name(), Some("p"));
                 if consumes_pending_anchor {
                     self.remove_pending_formatting_reconstruction("a");
                 }
@@ -1538,7 +2343,9 @@ impl HtmlParser {
                     .current_element_is("p")
                     .then(|| self.open_formatting_element_before_current("a"))
                     .flatten();
-                if self.close_open_formatting_element_silently("a") && consumes_pending_anchor {
+                let closed_existing_anchor = self.close_open_formatting_element_silently("a")
+                    || self.adopt_open_formatting_element_silently("a");
+                if closed_existing_anchor && consumes_pending_anchor {
                     self.remove_pending_formatting_reconstruction("a");
                 }
                 if let Some(formatting) = reconstruct_anchor_above_paragraph {
@@ -1579,12 +2386,38 @@ impl HtmlParser {
         self.close_open_element_if(|candidate| candidate == name)
     }
 
-    fn close_open_list_item_if_in_scope(&mut self) -> bool {
-        let Some(index) = self
+    fn pop_head_descendants(&mut self) {
+        let Some(head_index) = self.open_elements.iter().rposition(|path| {
+            element_at_path(&self.document, path).is_some_and(|name| name == "head")
+        }) else {
+            return;
+        };
+        if self.open_elements.len() > head_index + 1 {
+            self.open_elements.truncate(head_index + 1);
+        }
+    }
+
+    fn close_non_paragraph_children_above_menuitem(&mut self) {
+        let Some(index) = self.open_elements.iter().rposition(|path| {
+            element_at_path(&self.document, path).is_some_and(|name| name == "menuitem")
+        }) else {
+            return;
+        };
+        if self
             .open_elements
             .iter()
-            .rposition(|path| element_at_path(&self.document, path).is_some_and(|name| name == "li"))
-        else {
+            .skip(index + 1)
+            .any(|path| element_at_path(&self.document, path).is_some_and(|name| name == "p"))
+        {
+            return;
+        }
+        self.open_elements.truncate(index);
+    }
+
+    fn close_open_list_item_if_in_scope(&mut self) -> bool {
+        let Some(index) = self.open_elements.iter().rposition(|path| {
+            element_at_path(&self.document, path).is_some_and(|name| name == "li")
+        }) else {
             return false;
         };
         if self.open_elements.iter().skip(index + 1).any(|path| {
@@ -1596,13 +2429,22 @@ impl HtmlParser {
         true
     }
 
-    fn close_open_heading_if_in_scope(&mut self) -> bool {
+    fn close_open_heading_if_in_scope(&mut self, expected_name: Option<&str>) -> bool {
         let Some(index) = self.open_elements.iter().rposition(|path| {
-            element_at_path(&self.document, path).is_some_and(is_heading_element)
+            element_at_path(&self.document, path).is_some_and(|name| {
+                is_heading_element(name) && expected_name.map_or(true, |expected| name == expected)
+            })
         }) else {
             return false;
         };
-        if self.has_table_context_above(index) {
+        if self.has_special_element_above(index) {
+            while self
+                .current_element_name()
+                .is_some_and(is_formatting_element)
+            {
+                self.open_elements.pop();
+            }
+            self.pop_current_if(is_heading_element);
             return false;
         }
         self.open_elements.truncate(index);
@@ -1628,6 +2470,85 @@ impl HtmlParser {
         true
     }
 
+    fn adopt_open_formatting_element_silently(&mut self, name: &str) -> bool {
+        let Some(index) = self
+            .open_elements
+            .iter()
+            .rposition(|path| element_at_path(&self.document, path).is_some_and(|n| n == name))
+        else {
+            return false;
+        };
+
+        self.adopt_formatting_end_tag_across_paragraph(index)
+            || self.adopt_formatting_end_tag_across_nested_paragraph(index)
+            || self.adopt_formatting_end_tag_across_div(index)
+    }
+
+    fn adopt_b_end_tag_across_cite_div(&mut self) -> bool {
+        let Some(b_stack_index) = self.open_elements.iter().rposition(|path| {
+            element_at_path(&self.document, path).is_some_and(|name| name == "b")
+        }) else {
+            return false;
+        };
+        let b_path = self.open_elements[b_stack_index].clone();
+        let Some(b_element) = element_ref_at_path(&self.document, &b_path) else {
+            return false;
+        };
+        let b_attributes = b_element.attributes.clone();
+        let Some((cite_index, div_index)) =
+            b_element
+                .children
+                .iter()
+                .enumerate()
+                .find_map(|(cite_index, node)| {
+                    let Node::Element(cite) = node else {
+                        return None;
+                    };
+                    if cite.name != "cite" {
+                        return None;
+                    }
+                    cite.children
+                        .iter()
+                        .position(|child| matches!(child, Node::Element(div) if div.name == "div"))
+                        .map(|div_index| (cite_index, div_index))
+                })
+        else {
+            return false;
+        };
+        let Some((b_child_index, b_parent_path)) = b_path.split_last() else {
+            return false;
+        };
+        let b_child_index = *b_child_index;
+        let mut cite_path = b_path.clone();
+        cite_path.push(cite_index);
+        let Some(cite_children) = children_at_path_mut(&mut self.document.children, &cite_path)
+        else {
+            return false;
+        };
+        let mut moved_div = cite_children.remove(div_index);
+        if let Node::Element(div) = &mut moved_div {
+            let mut reconstructed_b = Node::element("b".to_string(), b_attributes);
+            if let Node::Element(reconstructed_b) = &mut reconstructed_b {
+                reconstructed_b.children = std::mem::take(&mut div.children);
+            }
+            div.children.push(reconstructed_b);
+        } else {
+            return false;
+        }
+        let Some(parent_children) =
+            children_at_path_mut(&mut self.document.children, b_parent_path)
+        else {
+            return false;
+        };
+        let insert_index = b_child_index + 1;
+        parent_children.insert(insert_index, moved_div);
+        self.open_elements.truncate(b_stack_index);
+        let mut moved_div_path = b_parent_path.to_vec();
+        moved_div_path.push(insert_index);
+        self.open_elements.push(moved_div_path);
+        true
+    }
+
     fn close_open_element_if(&mut self, predicate: impl Fn(&str) -> bool) -> bool {
         let Some(index) = self.open_elements.iter().rposition(|path| {
             element_at_path(&self.document, path).is_some_and(|name| predicate(name))
@@ -1646,6 +2567,30 @@ impl HtmlParser {
         true
     }
 
+    fn close_open_element_without_scope_checks(&mut self, name: &str) {
+        if let Some(index) = self.open_elements.iter().rposition(|path| {
+            element_ref_at_path(&self.document, path).is_some_and(|element| {
+                element.name == name && (name != "template" || element.namespace.is_none())
+            })
+        }) {
+            self.open_elements.truncate(index);
+        }
+    }
+
+    fn close_open_ruby_element_if(&mut self, predicate: impl Fn(&str) -> bool) -> bool {
+        let last_ruby = self.open_elements.iter().rposition(|path| {
+            element_at_path(&self.document, path).is_some_and(|name| name == "ruby")
+        });
+        let lower_bound = last_ruby.map_or(0, |index| index + 1);
+        let Some(relative_index) = self.open_elements[lower_bound..].iter().rposition(|path| {
+            element_at_path(&self.document, path).is_some_and(|name| predicate(name))
+        }) else {
+            return false;
+        };
+        self.open_elements.truncate(lower_bound + relative_index);
+        true
+    }
+
     fn capture_formatting_above(&mut self, element_index: usize) {
         let formatting = self
             .open_elements
@@ -1659,7 +2604,8 @@ impl HtmlParser {
             .collect::<Vec<_>>();
 
         if !formatting.is_empty() {
-            self.pending_formatting_reconstruction = formatting;
+            self.pending_formatting_reconstruction =
+                trim_formatting_reconstruction_noah_ark(formatting);
         }
     }
 
@@ -1692,8 +2638,7 @@ impl HtmlParser {
             return false;
         }
 
-        element_ref_at_path(&self.document, path)
-            .is_some_and(|element| element.children.is_empty())
+        element_ref_at_path(&self.document, path).is_some_and(|element| element.children.is_empty())
     }
 
     fn remove_reconstructed_formatting_node(&mut self, path: &[usize]) {
@@ -1818,8 +2763,7 @@ impl HtmlParser {
             return false;
         };
 
-        let mut reconstructed_formatting =
-            Node::element(formatting_name, formatting_attributes);
+        let mut reconstructed_formatting = Node::element(formatting_name, formatting_attributes);
         if let Node::Element(reconstructed_element) = &mut reconstructed_formatting {
             reconstructed_element.children = std::mem::take(&mut paragraph_element.children);
         }
@@ -1866,7 +2810,7 @@ impl HtmlParser {
         let formatting_name = formatting_element.name.clone();
         let formatting_attributes = formatting_element.attributes.clone();
 
-        let Some(div_path) = self
+        let Some(first_div_path) = self
             .open_elements
             .iter()
             .skip(formatting_index + 1)
@@ -1875,27 +2819,94 @@ impl HtmlParser {
         else {
             return false;
         };
-        if !div_path.starts_with(&formatting_path) || div_path.len() <= formatting_path.len() {
+        if !first_div_path.starts_with(&formatting_path)
+            || first_div_path.len() <= formatting_path.len()
+        {
             return false;
         }
+
+        let mut wrapper_elements = Vec::new();
+        for depth in formatting_path.len() + 1..first_div_path.len() {
+            let ancestor_path = &first_div_path[..depth];
+            let Some(element) = element_ref_at_path(&self.document, ancestor_path) else {
+                return false;
+            };
+            if !is_formatting_element(&element.name) {
+                return false;
+            }
+            wrapper_elements.push((element.name.clone(), element.attributes.clone()));
+        }
+
+        let furthest_div_path = self
+            .open_elements
+            .iter()
+            .skip(formatting_index + 1)
+            .filter(|path| {
+                path.starts_with(&first_div_path)
+                    && element_at_path(&self.document, path).is_some_and(|name| name == "div")
+            })
+            .last()
+            .cloned()
+            .unwrap_or_else(|| first_div_path.clone());
+
+        let boundary_child_index = if wrapper_elements.is_empty() {
+            self.open_elements
+                .iter()
+                .skip(formatting_index + 1)
+                .find_map(|path| {
+                    if path.len() == first_div_path.len() + 1 && path.starts_with(&first_div_path) {
+                        let child_index = *path.last()?;
+                        element_at_path(&self.document, path)
+                            .is_some_and(is_paragraph_boundary_element)
+                            .then_some(child_index)
+                    } else {
+                        None
+                    }
+                })
+        } else {
+            None
+        };
 
         let Some((&formatting_child_index, formatting_parent_path)) = formatting_path.split_last()
         else {
             return false;
         };
-        let Some(mut div) = remove_node_at_path(&mut self.document.children, &div_path) else {
+        let Some(mut div) = remove_node_at_path(&mut self.document.children, &first_div_path)
+        else {
             return false;
         };
-        let Node::Element(div_element) = &mut div else {
-            return false;
-        };
-
-        let mut reconstructed_formatting =
-            Node::element(formatting_name, formatting_attributes);
-        if let Node::Element(reconstructed_element) = &mut reconstructed_formatting {
-            reconstructed_element.children = std::mem::take(&mut div_element.children);
+        let relative_div_path = &furthest_div_path[first_div_path.len()..];
+        let adoption_path_len = relative_div_path.len().min(7);
+        if let Some(boundary_child_index) =
+            boundary_child_index.filter(|_| relative_div_path.is_empty())
+        {
+            seed_formatting_around_boundary_child(
+                &mut div,
+                boundary_child_index,
+                &formatting_name,
+                &formatting_attributes,
+            );
+        } else {
+            wrap_formatting_along_path(
+                &mut div,
+                &relative_div_path[..adoption_path_len],
+                &formatting_name,
+                &formatting_attributes,
+            );
         }
-        div_element.children.push(reconstructed_formatting);
+        let mut adopted_subtree = div;
+        let cloned_wrappers = if wrapper_elements.len() > 1 && relative_div_path.is_empty() {
+            &wrapper_elements[1..]
+        } else {
+            wrapper_elements.as_slice()
+        };
+        for (wrapper_name, wrapper_attributes) in cloned_wrappers.iter().rev() {
+            let mut wrapper = Node::element(wrapper_name.clone(), wrapper_attributes.clone());
+            if let Node::Element(wrapper_element) = &mut wrapper {
+                wrapper_element.children.push(adopted_subtree);
+            }
+            adopted_subtree = wrapper;
+        }
 
         let Some(formatting_parent_children) =
             children_at_path_mut(&mut self.document.children, formatting_parent_path)
@@ -1906,12 +2917,26 @@ impl HtmlParser {
         if insert_index > formatting_parent_children.len() {
             return false;
         }
-        formatting_parent_children.insert(insert_index, div);
+        formatting_parent_children.insert(insert_index, adopted_subtree);
 
         self.open_elements.truncate(formatting_index);
         let mut moved_div_path = formatting_parent_path.to_vec();
         moved_div_path.push(insert_index);
-        self.open_elements.push(moved_div_path);
+        for _ in cloned_wrappers {
+            self.open_elements.push(moved_div_path.clone());
+            moved_div_path.push(0);
+        }
+        self.open_elements.push(moved_div_path.clone());
+        if let Some(boundary_child_index) =
+            boundary_child_index.filter(|_| relative_div_path.is_empty())
+        {
+            moved_div_path.push(usize::from(boundary_child_index > 0));
+            self.open_elements.push(moved_div_path.clone());
+        }
+        for index in &relative_div_path[..adoption_path_len] {
+            moved_div_path.push(*index);
+            self.open_elements.push(moved_div_path.clone());
+        }
         true
     }
 
@@ -1942,6 +2967,111 @@ impl HtmlParser {
             .any(|node| matches!(node, Node::DocumentType(_)))
     }
 
+    fn has_document_element(&self) -> bool {
+        self.document
+            .children
+            .iter()
+            .any(|node| matches!(node, Node::Element(element) if element.name == "html"))
+    }
+
+    fn has_non_comment_document_content(&self) -> bool {
+        self.document
+            .children
+            .iter()
+            .any(|node| !matches!(node, Node::Comment(_)))
+    }
+
+    fn reopen_document_body(&mut self) {
+        let Some(html_index) = self
+            .document
+            .children
+            .iter()
+            .position(|node| matches!(node, Node::Element(element) if element.name == "html"))
+        else {
+            return;
+        };
+        self.open_elements.push(vec![html_index]);
+
+        let Some(Node::Element(html)) = self.document.children.get_mut(html_index) else {
+            return;
+        };
+        let body_index = html
+            .children
+            .iter()
+            .position(|node| matches!(node, Node::Element(element) if element.name == "body"))
+            .unwrap_or_else(|| {
+                html.children
+                    .push(Node::element("body".to_string(), Vec::new()));
+                html.children.len() - 1
+            });
+        self.open_elements.push(vec![html_index, body_index]);
+    }
+
+    fn reopen_body_under_current_html(&mut self) {
+        let Some(html_path) = self.open_elements.last().cloned() else {
+            return;
+        };
+        if element_at_path(&self.document, &html_path) != Some("html") {
+            return;
+        }
+        let Some(html) = element_ref_at_path(&self.document, &html_path) else {
+            return;
+        };
+        let Some(body_index) = html
+            .children
+            .iter()
+            .position(|node| matches!(node, Node::Element(element) if element.name == "body"))
+        else {
+            return;
+        };
+        let mut body_path = html_path;
+        body_path.push(body_index);
+        self.open_elements.push(body_path);
+    }
+
+    fn reopen_document_head(&mut self) {
+        let Some(html_index) = self
+            .document
+            .children
+            .iter()
+            .position(|node| matches!(node, Node::Element(element) if element.name == "html"))
+        else {
+            return;
+        };
+        self.open_elements.push(vec![html_index]);
+
+        let Some(Node::Element(html)) = self.document.children.get_mut(html_index) else {
+            return;
+        };
+        let head_index = html
+            .children
+            .iter()
+            .position(|node| matches!(node, Node::Element(element) if element.name == "head"))
+            .unwrap_or_else(|| {
+                html.children
+                    .insert(0, Node::element("head".to_string(), Vec::new()));
+                0
+            });
+        self.open_elements.push(vec![html_index, head_index]);
+    }
+
+    fn document_has_closed_frameset(&self) -> bool {
+        if self.has_open_element("frameset") {
+            return false;
+        }
+        self.document
+            .children
+            .iter()
+            .any(|node| node_contains_element_named(node, "frameset"))
+    }
+
+    fn document_has_body_element(&self) -> bool {
+        self.document
+            .children
+            .iter()
+            .any(|node| node_contains_element_named(node, "body"))
+    }
+
     fn has_table_context_above(&self, element_index: usize) -> bool {
         self.open_elements
             .iter()
@@ -1953,6 +3083,14 @@ impl HtmlParser {
         self.open_elements
             .iter()
             .any(|path| element_at_path(&self.document, path).is_some_and(is_table_context_element))
+    }
+
+    fn current_parent_has_table_ancestor(&self) -> bool {
+        let current_parent_path = self.current_parent_path();
+        self.open_elements.iter().any(|path| {
+            current_parent_path.starts_with(path)
+                && element_at_path(&self.document, path).is_some_and(is_table_context_element)
+        })
     }
 
     fn has_special_element_above(&self, element_index: usize) -> bool {
@@ -1978,7 +3116,7 @@ impl HtmlParser {
 
     fn current_element_is(&self, name: &str) -> bool {
         self.current_element_name()
-            .is_some_and(|current| current == name)
+            .is_some_and(|current| current.eq_ignore_ascii_case(name))
     }
 
     fn current_empty_element_is(&self, name: &str) -> bool {
@@ -2003,11 +3141,95 @@ impl HtmlParser {
         element_at_path(&self.document, parent_path).is_some_and(predicate)
     }
 
+    fn current_last_child_element_is(&self, name: &str) -> bool {
+        let Some(path) = self.open_elements.last() else {
+            return false;
+        };
+        let Some(element) = element_ref_at_path(&self.document, path) else {
+            return false;
+        };
+        matches!(element.children.last(), Some(Node::Element(child)) if child.name == name)
+    }
+
+    fn current_has_child_element(&self, name: &str) -> bool {
+        let Some(path) = self.open_elements.last() else {
+            return false;
+        };
+        let Some(element) = element_ref_at_path(&self.document, path) else {
+            return false;
+        };
+        element
+            .children
+            .iter()
+            .any(|child| matches!(child, Node::Element(child) if child.name == name))
+    }
+
+    fn current_has_non_whitespace_child(&self) -> bool {
+        let Some(path) = self.open_elements.last() else {
+            return false;
+        };
+        let Some(element) = element_ref_at_path(&self.document, path) else {
+            return false;
+        };
+        element
+            .children
+            .iter()
+            .any(|child| !matches!(child, Node::Text(text) if text.data.chars().all(char::is_whitespace)))
+    }
+
+    fn body_has_non_whitespace_child(&self) -> bool {
+        self.document.children.iter().any(|node| {
+            if matches!(node, Node::Text(text) if !text.data.chars().all(char::is_whitespace)) {
+                return true;
+            }
+            let Node::Element(element) = node else {
+                return false;
+            };
+            if element.name == "body" {
+                return element
+                    .children
+                    .iter()
+                    .any(|child| !matches!(child, Node::Text(text) if text.data.chars().all(char::is_whitespace)));
+            }
+            if element.name != "html" {
+                return false;
+            }
+            element.children.iter().any(|child| match child {
+                Node::Text(text) => !text.data.chars().all(char::is_whitespace),
+                Node::Element(body) if body.name == "body" => body.children.iter().any(|child| {
+                    !matches!(
+                        child,
+                        Node::Text(text) if text.data.chars().all(char::is_whitespace)
+                    )
+                }),
+                _ => false,
+            })
+        })
+    }
+
+    fn document_has_non_frameset_compatible_body_content(&self) -> bool {
+        self.document.children.iter().any(|node| {
+            !matches!(node, Node::DocumentType(_) | Node::Comment(_))
+                && !is_ignorable_before_frameset_node(node)
+        })
+    }
+
+    fn current_has_formatting_ancestor(&self) -> bool {
+        let Some(current_path) = self.open_elements.last() else {
+            return false;
+        };
+        self.open_elements.iter().any(|path| {
+            path != current_path
+                && current_path.starts_with(path)
+                && element_at_path(&self.document, path).is_some_and(is_formatting_element)
+        })
+    }
+
     fn current_element_is_table_structure(&self) -> bool {
         self.current_element_name().is_some_and(|current| {
             matches!(
                 current,
-                "table" | "tbody" | "thead" | "tfoot" | "tr"
+                "table" | "colgroup" | "tbody" | "thead" | "tfoot" | "tr"
             )
         })
     }
@@ -2017,16 +3239,117 @@ impl HtmlParser {
             return true;
         }
         self.open_elements.is_empty()
-            && self
-                .document
-                .children
-                .last()
-                .is_some_and(|node| matches!(node, Node::Element(element) if element.name == "frameset"))
+            && self.document.children.last().is_some_and(
+                |node| matches!(node, Node::Element(element) if element.name == "frameset"),
+            )
     }
 
     fn current_element_name(&self) -> Option<&str> {
         let path = self.open_elements.last()?;
         element_at_path(&self.document, path)
+    }
+
+    fn current_script_text_treats_next_end_tag_as_data(&self) -> bool {
+        if !self.current_element_is("script") {
+            return false;
+        }
+        let Some(path) = self.open_elements.last() else {
+            return false;
+        };
+        let Some(element) = element_ref_at_path(&self.document, path) else {
+            return false;
+        };
+        let Some(Node::Text(text)) = element.children.last() else {
+            return false;
+        };
+        script_text_is_in_double_escaped_state(&text.data)
+            && rfind_ascii_case_insensitive(&text.data, "</script>").is_none()
+    }
+
+    fn append_to_last_head_noscript_text_ending(&mut self, suffix: &str, text: &str) -> bool {
+        append_to_last_element_text_ending(&mut self.document.children, "noscript", suffix, text)
+    }
+
+    fn namespace_for_start_tag(&self, name: &str) -> Option<&'static str> {
+        if name == "svg" {
+            return Some("svg");
+        }
+        if name == "math" {
+            return Some("math");
+        }
+        if self.current_node_is_mathml_text_integration_point()
+            && matches!(name, "mglyph" | "malignmark")
+        {
+            return Some("math");
+        }
+        if self.current_node_is_svg_html_integration_point()
+            || self.current_node_is_mathml_text_integration_point()
+        {
+            return None;
+        }
+        self.current_namespace()
+    }
+
+    fn current_namespace(&self) -> Option<&'static str> {
+        let path = self.open_elements.last()?;
+        let element = element_ref_at_path(&self.document, path)?;
+        match element.namespace.as_deref() {
+            Some("svg") => Some("svg"),
+            Some("math") => Some("math"),
+            _ => None,
+        }
+    }
+
+    fn current_node_is_svg_html_integration_point(&self) -> bool {
+        let Some(path) = self.open_elements.last() else {
+            return false;
+        };
+        let Some(element) = element_ref_at_path(&self.document, path) else {
+            return false;
+        };
+        element.namespace.as_deref() == Some("svg")
+            && matches!(
+                element.name.as_str(),
+                "desc" | "foreignObject" | "foreignobject" | "title"
+            )
+    }
+
+    fn current_node_is_mathml_text_integration_point(&self) -> bool {
+        let Some(path) = self.open_elements.last() else {
+            return false;
+        };
+        let Some(element) = element_ref_at_path(&self.document, path) else {
+            return false;
+        };
+        element.namespace.as_deref() == Some("math")
+            && matches!(element.name.as_str(), "mi" | "mo" | "mn" | "ms" | "mtext")
+    }
+
+    fn has_open_svg_html_integration_point(&self) -> bool {
+        self.open_elements.iter().any(|path| {
+            element_ref_at_path(&self.document, path).is_some_and(|element| {
+                element.namespace.as_deref() == Some("svg")
+                    && matches!(
+                        element.name.as_str(),
+                        "desc" | "foreignObject" | "foreignobject" | "title"
+                    )
+            })
+        })
+    }
+
+    fn replacement_text_is_ignorable_in_current_context(&self, text: &str) -> bool {
+        text.chars()
+            .all(|character| character.is_whitespace() || character == '\u{FFFD}')
+            && (self.current_element_is("html")
+                || self.current_element_is("body")
+                || self.current_element_is("select")
+                || self.open_elements.is_empty())
+    }
+
+    fn pop_foreign_elements(&mut self) {
+        while self.current_namespace().is_some() {
+            self.open_elements.pop();
+        }
     }
 
     fn current_parent_path(&self) -> &[usize] {
@@ -2040,22 +3363,31 @@ impl HtmlParser {
         let path = self.current_parent_path().to_vec();
         children_at_path_mut(&mut self.document.children, &path)
     }
-
-    fn text_context_for_token(&self, token: &Token) -> Option<HtmlLexContext> {
-        match token {
-            Token::StartTag { name, .. } if !is_void_element(name) => {
-                HtmlLexContext::for_element_text_with_scripting(name, self.options.scripting)
-            }
-            Token::EndTag { .. } => Some(HtmlLexContext::data()),
-            _ => None,
-        }
-    }
 }
 
 fn drain_parser_tokens(lexer: &mut HtmlLexer, parser: &mut HtmlParser) -> Result<(), ParseError> {
     for token in lexer.drain_tokens() {
-        let next_context = parser.text_context_for_token(&token);
+        if matches!(token, Token::Eof) {
+            continue;
+        }
+        let resets_to_data = matches!(token, Token::EndTag { .. });
+        let start_tag_name = match &token {
+            Token::StartTag { name, .. } if !is_void_element(name) => Some(name.clone()),
+            _ => None,
+        };
         parser.process_token(token);
+
+        let next_context = if let Some(name) = start_tag_name {
+            (parser.current_namespace().is_none())
+                .then(|| {
+                    HtmlLexContext::for_element_text_with_scripting(&name, parser.options.scripting)
+                })
+                .flatten()
+        } else if resets_to_data {
+            Some(HtmlLexContext::data())
+        } else {
+            None
+        };
 
         if let Some(context) = next_context {
             apply_html_lex_context(lexer, &context)?;
@@ -2067,6 +3399,148 @@ fn drain_parser_tokens(lexer: &mut HtmlLexer, parser: &mut HtmlParser) -> Result
 
 fn element_at_path<'a>(document: &'a Document, path: &[usize]) -> Option<&'a str> {
     element_ref_at_path(document, path).map(|element| element.name.as_str())
+}
+
+fn element_node(name: String, attributes: Vec<Attribute>, namespace: Option<&str>) -> Node {
+    match namespace {
+        Some(namespace) => Node::namespaced_element(namespace.to_string(), name, attributes),
+        None => Node::element(name, attributes),
+    }
+}
+
+fn trim_formatting_reconstruction_noah_ark(
+    formatting: Vec<(String, Vec<Attribute>)>,
+) -> Vec<(String, Vec<Attribute>)> {
+    let mut retained = Vec::new();
+    for entry in formatting.into_iter().rev() {
+        let identical_count = retained
+            .iter()
+            .filter(|(name, attributes)| name == &entry.0 && attributes == &entry.1)
+            .count();
+        if identical_count < 3 {
+            retained.push(entry);
+        }
+    }
+    retained.reverse();
+    retained
+}
+
+fn rfind_ascii_case_insensitive(haystack: &str, needle: &str) -> Option<usize> {
+    haystack
+        .as_bytes()
+        .windows(needle.len())
+        .rposition(|window| window.eq_ignore_ascii_case(needle.as_bytes()))
+}
+
+fn rfind_script_end_marker(haystack: &str) -> Option<(usize, usize)> {
+    let mut search_end = haystack.len();
+    while let Some(relative_start) =
+        rfind_ascii_case_insensitive(&haystack[..search_end], "</script")
+    {
+        let after_name = relative_start + "</script".len();
+        let bytes = haystack.as_bytes();
+        match bytes.get(after_name).copied() {
+            Some(b'>') => return Some((relative_start, after_name + 1)),
+            Some(byte) if byte.is_ascii_whitespace() => {
+                if let Some(close) = find_tag_close_ignoring_quoted_text(haystack, after_name + 1) {
+                    return Some((relative_start, close + 1));
+                }
+                if haystack[after_name..]
+                    .bytes()
+                    .all(|byte| byte.is_ascii_whitespace())
+                {
+                    return Some((relative_start, haystack.len()));
+                }
+            }
+            Some(b'/') => {
+                let mut cursor = after_name + 1;
+                while bytes
+                    .get(cursor)
+                    .is_some_and(|byte| byte.is_ascii_whitespace())
+                {
+                    cursor += 1;
+                }
+                if cursor == haystack.len() {
+                    return Some((relative_start, haystack.len()));
+                }
+                if bytes.get(cursor) == Some(&b'>') {
+                    return Some((relative_start, cursor + 1));
+                }
+            }
+            _ => {}
+        }
+        if relative_start == 0 {
+            return None;
+        }
+        search_end = relative_start;
+    }
+    None
+}
+
+fn script_text_is_in_double_escaped_state(text: &str) -> bool {
+    let lower = text.to_ascii_lowercase();
+    let bytes = lower.as_bytes();
+    let mut in_escaped_comment = false;
+    let mut in_double_escaped = false;
+    let mut index = 0;
+
+    while index < bytes.len() {
+        if bytes[index..].starts_with(b"<!--") {
+            in_escaped_comment = true;
+            index += "<!--".len();
+            continue;
+        }
+        if in_escaped_comment && bytes[index..].starts_with(b"-->") {
+            in_escaped_comment = false;
+            in_double_escaped = false;
+            index += "-->".len();
+            continue;
+        }
+        if in_escaped_comment && script_marker_has_delimiter(bytes, index, b"<script") {
+            in_double_escaped = true;
+            index += "<script".len();
+            continue;
+        }
+        if in_double_escaped && script_marker_has_delimiter(bytes, index, b"</script") {
+            in_double_escaped = false;
+            index += "</script".len();
+            continue;
+        }
+        index += 1;
+    }
+
+    in_double_escaped
+}
+
+fn script_marker_has_delimiter(bytes: &[u8], index: usize, marker: &[u8]) -> bool {
+    if !bytes[index..].starts_with(marker) {
+        return false;
+    }
+    bytes
+        .get(index + marker.len())
+        .is_some_and(|byte| *byte == b'>' || *byte == b'/' || byte.is_ascii_whitespace())
+}
+
+fn simple_start_tag_text(text: &str) -> Option<&str> {
+    let inner = text.strip_prefix('<')?.strip_suffix('>')?;
+    (!inner.is_empty()
+        && inner
+            .chars()
+            .all(|character| character.is_ascii_alphanumeric()))
+    .then_some(inner)
+}
+
+fn find_tag_close_ignoring_quoted_text(haystack: &str, start: usize) -> Option<usize> {
+    let mut quote = None;
+    for (offset, byte) in haystack.as_bytes()[start..].iter().copied().enumerate() {
+        match (quote, byte) {
+            (Some(active), current) if current == active => quote = None,
+            (None, b'"' | b'\'') => quote = Some(byte),
+            (None, b'>') => return Some(start + offset),
+            _ => {}
+        }
+    }
+    None
 }
 
 fn element_ref_at_path<'a>(
@@ -2134,6 +3608,90 @@ fn remove_node_at_path(nodes: &mut Vec<Node>, path: &[usize]) -> Option<Node> {
     Some(parent_children.remove(remove_index))
 }
 
+fn wrap_formatting_along_path(
+    node: &mut Node,
+    relative_path: &[usize],
+    formatting_name: &str,
+    formatting_attributes: &[Attribute],
+) {
+    let Node::Element(element) = node else {
+        return;
+    };
+
+    if relative_path.is_empty() {
+        wrap_element_children_in_formatting(element, formatting_name, formatting_attributes, true);
+        return;
+    }
+
+    let child_index = relative_path[0];
+    if child_index >= element.children.len() {
+        return;
+    }
+    let child = element.children.remove(child_index);
+    wrap_element_children_in_formatting(element, formatting_name, formatting_attributes, true);
+    let insert_index = element.children.len().min(child_index + 1);
+    element.children.insert(insert_index, child);
+    if let Some(descendant) = element.children.get_mut(insert_index) {
+        wrap_formatting_along_path(
+            descendant,
+            &relative_path[1..],
+            formatting_name,
+            formatting_attributes,
+        );
+    }
+}
+
+fn wrap_element_children_in_formatting(
+    element: &mut Element,
+    formatting_name: &str,
+    formatting_attributes: &[Attribute],
+    preserve_empty_wrapper: bool,
+) {
+    if element.children.is_empty() && !preserve_empty_wrapper {
+        return;
+    }
+    let mut reconstructed_formatting =
+        Node::element(formatting_name.to_string(), formatting_attributes.to_vec());
+    if let Node::Element(reconstructed_element) = &mut reconstructed_formatting {
+        reconstructed_element.children = std::mem::take(&mut element.children);
+    }
+    element.children.push(reconstructed_formatting);
+}
+
+fn seed_formatting_around_boundary_child(
+    node: &mut Node,
+    boundary_child_index: usize,
+    formatting_name: &str,
+    formatting_attributes: &[Attribute],
+) {
+    let Node::Element(element) = node else {
+        return;
+    };
+    if boundary_child_index >= element.children.len() {
+        return;
+    }
+
+    if boundary_child_index > 0 {
+        let wrapped_children = element.children.drain(..boundary_child_index).collect();
+        let mut reconstructed_formatting =
+            Node::element(formatting_name.to_string(), formatting_attributes.to_vec());
+        if let Node::Element(reconstructed_element) = &mut reconstructed_formatting {
+            reconstructed_element.children = wrapped_children;
+        }
+        element.children.insert(0, reconstructed_formatting);
+    }
+
+    let adjusted_boundary_index = usize::from(boundary_child_index > 0);
+    let Some(Node::Element(boundary_element)) = element.children.get_mut(adjusted_boundary_index)
+    else {
+        return;
+    };
+    boundary_element.children.insert(
+        0,
+        Node::element(formatting_name.to_string(), formatting_attributes.to_vec()),
+    );
+}
+
 fn increment_open_element_paths_after_insert(
     open_elements: &mut [Vec<usize>],
     parent_path: &[usize],
@@ -2174,20 +3732,38 @@ fn normalize_document_shell(document: Document) -> Document {
             Node::Comment(_) if !builder.seen_document_element => normalized.push_child(node),
             Node::Element(mut element) if element.name == "html" => {
                 builder.seen_document_element = true;
-                builder.html_attributes.extend(element.attributes);
+                builder.seen_html_element_node = true;
+                append_missing_attributes(&mut builder.html_attributes, element.attributes);
                 for child in element.children.drain(..) {
                     builder.push_html_child(child);
                 }
             }
+            Node::Comment(_) if builder.seen_html_element_node => {
+                builder.trailing_document_children.push(node);
+            }
             node => {
                 builder.seen_document_element = true;
+                builder.seen_html_element_node = false;
                 builder.push_html_child(node);
             }
         }
     }
 
+    let trailing_document_children = std::mem::take(&mut builder.trailing_document_children);
     normalized.push_child(builder.finish());
+    normalized.children.extend(trailing_document_children);
     normalized
+}
+
+fn append_missing_attributes(target: &mut Vec<Attribute>, attributes: Vec<Attribute>) {
+    for attribute in attributes {
+        if target
+            .iter()
+            .all(|existing| existing.name != attribute.name)
+        {
+            target.push(attribute);
+        }
+    }
 }
 
 fn body_fragment_nodes(mut document: Document) -> Vec<Node> {
@@ -2222,22 +3798,27 @@ fn body_fragment_nodes(mut document: Document) -> Vec<Node> {
 #[derive(Debug, Default)]
 struct DocumentShellBuilder {
     seen_document_element: bool,
+    seen_html_element_node: bool,
+    seen_head_element: bool,
     seen_body_content: bool,
     seen_body_element: bool,
     html_attributes: Vec<Attribute>,
     head_attributes: Vec<Attribute>,
     body_attributes: Vec<Attribute>,
+    pre_head_html_children: Vec<Node>,
     head_children: Vec<Node>,
     pre_body_html_children: Vec<Node>,
     body_children: Vec<Node>,
     trailing_html_children: Vec<Node>,
+    trailing_document_children: Vec<Node>,
 }
 
 impl DocumentShellBuilder {
     fn push_html_child(&mut self, node: Node) {
         match node {
             Node::Element(mut element) if element.name == "head" => {
-                self.head_attributes.extend(element.attributes);
+                self.seen_head_element = true;
+                append_missing_attributes(&mut self.head_attributes, element.attributes);
                 for child in element.children.drain(..) {
                     self.push_head_child(child);
                 }
@@ -2245,23 +3826,33 @@ impl DocumentShellBuilder {
             Node::Element(mut element) if element.name == "body" => {
                 self.seen_body_content = true;
                 self.seen_body_element = true;
-                self.body_attributes.extend(element.attributes);
+                append_missing_attributes(&mut self.body_attributes, element.attributes);
                 self.body_children.append(&mut element.children);
+            }
+            Node::Comment(_) if self.seen_body_content && !self.seen_body_element => {
+                self.body_children.push(node);
             }
             Node::Comment(_) if self.seen_body_content => {
                 self.trailing_html_children.push(node);
             }
             Node::Comment(_) if !self.seen_body_content => {
-                self.pre_body_html_children.push(node);
+                if !self.seen_head_element && self.head_children.is_empty() {
+                    self.pre_head_html_children.push(node);
+                } else if !self.seen_head_element {
+                    self.head_children.push(node);
+                } else {
+                    self.pre_body_html_children.push(node);
+                }
             }
             Node::Element(element)
                 if !self.seen_body_content && is_head_element(element.name.as_str()) =>
             {
+                if !self.seen_head_element && !self.pre_body_html_children.is_empty() {
+                    self.head_children.append(&mut self.pre_body_html_children);
+                }
                 self.head_children.push(Node::Element(element));
             }
-            Node::Text(mut text)
-                if !self.seen_body_content && !self.head_children.is_empty() =>
-            {
+            Node::Text(mut text) if !self.seen_body_content => {
                 match text
                     .data
                     .char_indices()
@@ -2273,11 +3864,17 @@ impl DocumentShellBuilder {
                     }
                     Some((body_start, _)) => {
                         let body_text = text.data.split_off(body_start);
-                        self.push_head_text(text.data);
+                        if !self.head_children.is_empty() {
+                            self.push_head_text(text.data);
+                        }
                         self.seen_body_content = true;
                         self.body_children.push(Node::text(body_text));
                     }
-                    None => self.push_head_text(text.data),
+                    None => {
+                        if !self.head_children.is_empty() {
+                            self.push_head_text(text.data);
+                        }
+                    }
                 }
             }
             node => {
@@ -2303,7 +3900,7 @@ impl DocumentShellBuilder {
     fn push_head_child(&mut self, node: Node) {
         match node {
             Node::Element(mut element) if element.name == "html" => {
-                self.html_attributes.extend(element.attributes);
+                append_missing_attributes(&mut self.html_attributes, element.attributes);
                 for child in element.children.drain(..) {
                     self.push_html_child(child);
                 }
@@ -2326,10 +3923,12 @@ impl DocumentShellBuilder {
             unreachable!("Node::element always returns an element")
         };
         body.children = self.body_children;
+        coalesce_adjacent_text_nodes(&mut body.children);
 
         let Node::Element(ref mut html_element) = html else {
             unreachable!("Node::element always returns an element")
         };
+        html_element.children.extend(self.pre_head_html_children);
         html_element.children.push(Node::Element(head));
         html_element.children.extend(self.pre_body_html_children);
         html_element.children.extend(body_or_frameset_nodes(body));
@@ -2338,13 +3937,130 @@ impl DocumentShellBuilder {
     }
 }
 
-fn body_or_frameset_nodes(body: Element) -> Vec<Node> {
-    if body.attributes.is_empty()
-        && matches!(body.children.first(), Some(Node::Element(element)) if element.name == "frameset")
-    {
-        return body.children;
+fn coalesce_adjacent_text_nodes(nodes: &mut Vec<Node>) {
+    let mut index = 1;
+    while index < nodes.len() {
+        let merge = match (&nodes[index - 1], &nodes[index]) {
+            (Node::Text(_), Node::Text(_)) => true,
+            _ => false,
+        };
+        if !merge {
+            index += 1;
+            continue;
+        }
+        let Node::Text(next) = nodes.remove(index) else {
+            unreachable!("node kind checked before removal")
+        };
+        let Some(Node::Text(previous)) = nodes.get_mut(index - 1) else {
+            unreachable!("node kind checked before removal")
+        };
+        previous.data.push_str(&next.data);
     }
+}
+
+fn body_or_frameset_nodes(mut body: Element) -> Vec<Node> {
+    let has_frameset_child = body
+        .children
+        .iter()
+        .any(|node| matches!(node, Node::Element(element) if element.name == "frameset"));
+    if body.attributes.is_empty() {
+        let first_non_hidden = body
+            .children
+            .iter()
+            .position(|node| !is_ignorable_before_frameset_node(node));
+        if matches!(
+            first_non_hidden.and_then(|index| body.children.get(index)),
+            Some(Node::Element(element)) if element.name == "frameset"
+        ) {
+            return body
+                .children
+                .into_iter()
+                .skip(first_non_hidden.unwrap_or_default())
+                .collect();
+        }
+        if let Some(nodes) = first_non_hidden
+            .and_then(|index| body.children.get(index))
+            .and_then(frameset_nodes_from_paragraph_child)
+        {
+            return nodes;
+        }
+    }
+    if has_frameset_child {
+        strip_replacement_characters_from_direct_text(&mut body.children);
+    }
+    body.children
+        .retain(|node| !matches!(node, Node::Element(element) if element.name == "frameset"));
     vec![Node::Element(body)]
+}
+
+fn frameset_nodes_from_paragraph_child(node: &Node) -> Option<Vec<Node>> {
+    let Node::Element(element) = node else {
+        return None;
+    };
+    if element.name != "p" || !element.attributes.is_empty() {
+        return None;
+    }
+    let first_non_ignorable = element
+        .children
+        .iter()
+        .position(|node| !is_ignorable_before_frameset_node(node))?;
+    if !matches!(
+        element.children.get(first_non_ignorable),
+        Some(Node::Element(child)) if child.name == "frameset"
+    ) {
+        return None;
+    }
+    Some(
+        element
+            .children
+            .iter()
+            .skip(first_non_ignorable)
+            .cloned()
+            .collect(),
+    )
+}
+
+fn strip_replacement_characters_from_direct_text(nodes: &mut [Node]) {
+    for node in nodes {
+        if let Node::Text(text) = node {
+            if text.data.contains('\u{FFFD}') {
+                text.data = text.data.replace('\u{FFFD}', "");
+            }
+        }
+    }
+}
+
+fn is_hidden_input_node(node: &Node) -> bool {
+    matches!(
+        node,
+        Node::Element(element)
+            if element.name == "input"
+                && element.attribute("type").is_some_and(|value| value.eq_ignore_ascii_case("hidden"))
+    )
+}
+
+fn is_ignorable_before_frameset_node(node: &Node) -> bool {
+    is_hidden_input_node(node)
+        || matches!(
+            node,
+            Node::Text(text)
+                if text
+                    .data
+                    .chars()
+                    .all(|character| character.is_whitespace() || character == '\u{FFFD}')
+        )
+        || matches!(
+            node,
+            Node::Element(element)
+                if matches!(element.name.as_str(), "html" | "body" | "p")
+                    && element.children.iter().all(is_ignorable_before_frameset_node)
+        )
+        || matches!(
+            node,
+            Node::Element(element)
+                if element.namespace.is_some()
+                    && element.children.iter().all(is_ignorable_before_frameset_node)
+        )
 }
 
 fn is_head_element(name: &str) -> bool {
@@ -2355,6 +4071,7 @@ fn is_head_element(name: &str) -> bool {
             | "bgsound"
             | "link"
             | "meta"
+            | "noframes"
             | "noscript"
             | "script"
             | "style"
@@ -2381,6 +4098,91 @@ fn is_body_content_node(node: &Node) -> bool {
         Node::Text(text) => !text.data.chars().all(char::is_whitespace),
         Node::Element(_) => true,
     }
+}
+
+fn node_contains_element_named(node: &Node, name: &str) -> bool {
+    let Node::Element(element) = node else {
+        return false;
+    };
+    element.name == name
+        || element
+            .children
+            .iter()
+            .any(|child| node_contains_element_named(child, name))
+}
+
+fn append_to_last_element_text_ending(
+    nodes: &mut [Node],
+    element_name: &str,
+    suffix: &str,
+    text: &str,
+) -> bool {
+    for node in nodes.iter_mut().rev() {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if append_to_last_element_text_ending(&mut element.children, element_name, suffix, text) {
+            return true;
+        }
+        if element.name != element_name {
+            continue;
+        }
+        let Some(Node::Text(existing)) = element.children.last_mut() else {
+            continue;
+        };
+        if existing.data.ends_with(suffix) {
+            existing.data.push_str(text);
+            return true;
+        }
+    }
+    false
+}
+
+fn append_to_last_element_text(nodes: &mut [Node], element_name: &str, text: &str) -> bool {
+    for node in nodes.iter_mut().rev() {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if append_to_last_element_text(&mut element.children, element_name, text) {
+            return true;
+        }
+        if element.name != element_name {
+            continue;
+        }
+        if let Some(Node::Text(existing)) = element.children.last_mut() {
+            existing.data.push_str(text);
+        } else {
+            element.children.push(Node::text(text.to_string()));
+        }
+        return true;
+    }
+    false
+}
+
+fn doctype_triggers_quirks(
+    name: Option<&str>,
+    public_identifier: Option<&str>,
+    system_identifier: Option<&str>,
+) -> bool {
+    if !name.is_some_and(|name| name.eq_ignore_ascii_case("html")) {
+        return true;
+    }
+
+    if let Some(public_identifier) = public_identifier {
+        let public_identifier = public_identifier.to_ascii_lowercase();
+        if public_identifier == "html"
+            || public_identifier.starts_with("-//w3c//dtd html 3.2")
+            || public_identifier.starts_with("-//w3c//dtd html 4.01 frameset")
+            || public_identifier.starts_with("-//w3c//dtd html 4.01 transitional")
+        {
+            return true;
+        }
+    }
+
+    system_identifier.is_some_and(|system_identifier| {
+        system_identifier
+            .eq_ignore_ascii_case("http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd")
+    })
 }
 
 fn is_table_section(name: &str) -> bool {
@@ -2420,6 +4222,7 @@ fn is_formatting_element(name: &str) -> bool {
             | "nobr"
             | "s"
             | "small"
+            | "span"
             | "strike"
             | "strong"
             | "tt"
@@ -2427,12 +4230,209 @@ fn is_formatting_element(name: &str) -> bool {
     )
 }
 
+fn exits_foreign_content_on_start_tag(name: &str, attributes: &[LexerAttribute]) -> bool {
+    if name == "font" {
+        return attributes
+            .iter()
+            .any(|attribute| matches!(attribute.name.as_str(), "color" | "face" | "size"));
+    }
+
+    matches!(
+        name,
+        "b" | "big"
+            | "blockquote"
+            | "body"
+            | "br"
+            | "center"
+            | "code"
+            | "dd"
+            | "div"
+            | "dl"
+            | "dt"
+            | "em"
+            | "embed"
+            | "h1"
+            | "h2"
+            | "h3"
+            | "h4"
+            | "h5"
+            | "h6"
+            | "head"
+            | "hr"
+            | "i"
+            | "img"
+            | "li"
+            | "listing"
+            | "menu"
+            | "meta"
+            | "nobr"
+            | "ol"
+            | "p"
+            | "pre"
+            | "ruby"
+            | "s"
+            | "small"
+            | "span"
+            | "strong"
+            | "strike"
+            | "sub"
+            | "sup"
+            | "table"
+            | "tt"
+            | "u"
+            | "ul"
+            | "var"
+    )
+}
+
+fn attribute_value<'a>(attributes: &'a [Attribute], name: &str) -> Option<&'a str> {
+    attributes
+        .iter()
+        .find(|attribute| attribute.name == name)
+        .map(|attribute| attribute.value.as_str())
+}
+
+fn adjusted_foreign_start_tag_name(name: String, namespace: Option<&str>) -> String {
+    if namespace == Some("svg") {
+        return match name.as_str() {
+            "altglyph" => "altGlyph",
+            "altglyphdef" => "altGlyphDef",
+            "altglyphitem" => "altGlyphItem",
+            "animatecolor" => "animateColor",
+            "animatemotion" => "animateMotion",
+            "animatetransform" => "animateTransform",
+            "clippath" => "clipPath",
+            "feblend" => "feBlend",
+            "fecolormatrix" => "feColorMatrix",
+            "fecomponenttransfer" => "feComponentTransfer",
+            "fecomposite" => "feComposite",
+            "feconvolvematrix" => "feConvolveMatrix",
+            "fediffuselighting" => "feDiffuseLighting",
+            "fedisplacementmap" => "feDisplacementMap",
+            "fedistantlight" => "feDistantLight",
+            "feflood" => "feFlood",
+            "fefunca" => "feFuncA",
+            "fefuncb" => "feFuncB",
+            "fefuncg" => "feFuncG",
+            "fefuncr" => "feFuncR",
+            "fegaussianblur" => "feGaussianBlur",
+            "feimage" => "feImage",
+            "femerge" => "feMerge",
+            "femergenode" => "feMergeNode",
+            "femorphology" => "feMorphology",
+            "feoffset" => "feOffset",
+            "fepointlight" => "fePointLight",
+            "fespecularlighting" => "feSpecularLighting",
+            "fespotlight" => "feSpotLight",
+            "fetile" => "feTile",
+            "feturbulence" => "feTurbulence",
+            "foreignobject" => "foreignObject",
+            "glyphref" => "glyphRef",
+            "lineargradient" => "linearGradient",
+            "radialgradient" => "radialGradient",
+            "textpath" => "textPath",
+            _ => name.as_str(),
+        }
+        .to_string();
+    }
+    name
+}
+
+fn adjusted_foreign_attributes(
+    attributes: Vec<Attribute>,
+    namespace: Option<&str>,
+) -> Vec<Attribute> {
+    attributes
+        .into_iter()
+        .map(|mut attribute| {
+            attribute.name = adjusted_foreign_attribute_name(&attribute.name, namespace);
+            attribute
+        })
+        .collect()
+}
+
+fn adjusted_foreign_attribute_name(name: &str, namespace: Option<&str>) -> String {
+    if namespace == Some("math") && name == "definitionurl" {
+        return "definitionURL".to_string();
+    }
+
+    if namespace == Some("svg") {
+        return match name {
+            "attributename" => "attributeName",
+            "attributetype" => "attributeType",
+            "basefrequency" => "baseFrequency",
+            "baseprofile" => "baseProfile",
+            "calcmode" => "calcMode",
+            "clippathunits" => "clipPathUnits",
+            "diffuseconstant" => "diffuseConstant",
+            "edgemode" => "edgeMode",
+            "filterunits" => "filterUnits",
+            "glyphref" => "glyphRef",
+            "gradienttransform" => "gradientTransform",
+            "gradientunits" => "gradientUnits",
+            "kernelmatrix" => "kernelMatrix",
+            "kernelunitlength" => "kernelUnitLength",
+            "keypoints" => "keyPoints",
+            "keysplines" => "keySplines",
+            "keytimes" => "keyTimes",
+            "lengthadjust" => "lengthAdjust",
+            "limitingconeangle" => "limitingConeAngle",
+            "markerheight" => "markerHeight",
+            "markerunits" => "markerUnits",
+            "markerwidth" => "markerWidth",
+            "maskcontentunits" => "maskContentUnits",
+            "maskunits" => "maskUnits",
+            "numoctaves" => "numOctaves",
+            "pathlength" => "pathLength",
+            "patterncontentunits" => "patternContentUnits",
+            "patterntransform" => "patternTransform",
+            "patternunits" => "patternUnits",
+            "pointsatx" => "pointsAtX",
+            "pointsaty" => "pointsAtY",
+            "pointsatz" => "pointsAtZ",
+            "preservealpha" => "preserveAlpha",
+            "preserveaspectratio" => "preserveAspectRatio",
+            "primitiveunits" => "primitiveUnits",
+            "refx" => "refX",
+            "refy" => "refY",
+            "repeatcount" => "repeatCount",
+            "repeatdur" => "repeatDur",
+            "requiredextensions" => "requiredExtensions",
+            "requiredfeatures" => "requiredFeatures",
+            "specularconstant" => "specularConstant",
+            "specularexponent" => "specularExponent",
+            "spreadmethod" => "spreadMethod",
+            "startoffset" => "startOffset",
+            "stddeviation" => "stdDeviation",
+            "stitchtiles" => "stitchTiles",
+            "surfacescale" => "surfaceScale",
+            "systemlanguage" => "systemLanguage",
+            "tablevalues" => "tableValues",
+            "targetx" => "targetX",
+            "targety" => "targetY",
+            "textlength" => "textLength",
+            "viewbox" => "viewBox",
+            "viewtarget" => "viewTarget",
+            "xchannelselector" => "xChannelSelector",
+            "ychannelselector" => "yChannelSelector",
+            "zoomandpan" => "zoomAndPan",
+            _ => name,
+        }
+        .to_string();
+    }
+
+    name.to_string()
+}
+
 fn starts_inner_formatting_reconstruction_boundary(name: &str) -> bool {
-    matches!(name, "button" | "p")
+    matches!(name, "button" | "menu" | "p")
 }
 
 fn starts_before_formatting_reconstruction_boundary(name: &str) -> bool {
-    matches!(name, "a" | "b" | "code" | "marquee" | "option")
+    matches!(
+        name,
+        "a" | "b" | "code" | "marquee" | "menuitem" | "option" | "span"
+    )
 }
 
 fn is_special_element(name: &str) -> bool {
@@ -2489,6 +4489,7 @@ fn is_paragraph_boundary_element(name: &str) -> bool {
         "pre",
         "search",
         "section",
+        "summary",
         "table",
         "ul",
         "xmp",
@@ -2506,6 +4507,8 @@ fn is_void_element(name: &str) -> bool {
         name,
         "area"
             | "base"
+            | "basefont"
+            | "bgsound"
             | "br"
             | "col"
             | "embed"
@@ -3502,19 +5505,31 @@ mod tests {
         assert_eq!(table.children.len(), 7);
 
         assert_eq!(element(&table.children[0]).name, "colgroup");
-        assert_eq!(element(&element(&table.children[0]).children[0]).name, "col");
+        assert_eq!(
+            element(&element(&table.children[0]).children[0]).name,
+            "col"
+        );
         assert_eq!(element(&table.children[1]).name, "tbody");
         assert_eq!(element(&table.children[2]).name, "colgroup");
-        assert_eq!(element(&element(&table.children[2]).children[0]).name, "col");
+        assert_eq!(
+            element(&element(&table.children[2]).children[0]).name,
+            "col"
+        );
         assert_eq!(element(&table.children[3]).name, "tbody");
         assert_eq!(element(&element(&table.children[3]).children[0]).name, "tr");
         assert_eq!(element(&table.children[4]).name, "colgroup");
-        assert_eq!(element(&element(&table.children[4]).children[0]).name, "col");
+        assert_eq!(
+            element(&element(&table.children[4]).children[0]).name,
+            "col"
+        );
         assert_eq!(element(&table.children[5]).name, "tbody");
         let cell = element(&element(&element(&table.children[5]).children[0]).children[0]);
         assert_eq!(cell.name, "td");
         assert_eq!(element(&table.children[6]).name, "colgroup");
-        assert_eq!(element(&element(&table.children[6]).children[0]).name, "col");
+        assert_eq!(
+            element(&element(&table.children[6]).children[0]).name,
+            "col"
+        );
     }
 
     #[test]
@@ -3598,9 +5613,10 @@ mod tests {
 
     #[test]
     fn fosters_reconstructed_anchor_text_around_table_content() {
-        let document =
-            parse_html("<a href=\"blah\">aba<table><a href=\"foo\">br<tr><td></td></tr>x</table>aoe")
-                .unwrap();
+        let document = parse_html(
+            "<a href=\"blah\">aba<table><a href=\"foo\">br<tr><td></td></tr>x</table>aoe",
+        )
+        .unwrap();
 
         let body = body(&document);
         assert_eq!(body.children.len(), 2);
@@ -3630,9 +5646,10 @@ mod tests {
 
     #[test]
     fn skips_fostered_anchor_reconstruction_inside_table_cells() {
-        let document =
-            parse_html("<table><a href=\"blah\">aba<tr><td><a href=\"foo\">br</td></tr>x</table>aoe")
-                .unwrap();
+        let document = parse_html(
+            "<table><a href=\"blah\">aba<tr><td><a href=\"foo\">br</td></tr>x</table>aoe",
+        )
+        .unwrap();
 
         let body = body(&document);
         assert_eq!(body.children.len(), 4);
@@ -3888,22 +5905,34 @@ mod tests {
 
         let disabled_noscript = element(&head(&disabled.document).children[0]);
         assert_eq!(disabled_noscript.name, "noscript");
-        let fallback_paragraph = element(&disabled_noscript.children[0]);
+        assert!(disabled_noscript.children.is_empty());
+        let fallback_paragraph = element(&body(&disabled.document).children[0]);
         assert_eq!(fallback_paragraph.children, vec![Node::text("&")]);
         assert_eq!(
-            element(&body(&disabled.document).children[0]).children,
+            element(&body(&disabled.document).children[1]).children,
             vec![Node::text("x")]
         );
 
-        for output in [enabled, disabled] {
-            assert_eq!(
-                output.parser_diagnostics,
-                vec![ParserDiagnostic::new(
+        assert_eq!(
+            enabled.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "non-void-html-element-self-closing",
+                "self-closing flag on non-void HTML element `<noscript>` was ignored"
+            )]
+        );
+        assert_eq!(
+            disabled.parser_diagnostics,
+            vec![
+                ParserDiagnostic::new(
                     "non-void-html-element-self-closing",
                     "self-closing flag on non-void HTML element `<noscript>` was ignored"
-                )]
-            );
-        }
+                ),
+                ParserDiagnostic::new(
+                    "unexpected-end-tag",
+                    "end tag `</noscript>` did not match an open element"
+                )
+            ]
+        );
     }
 
     #[test]
@@ -3946,9 +5975,10 @@ mod tests {
 
     #[test]
     fn top_level_frameset_replaces_implied_body_and_frame_is_void() {
-        let document =
-            parse_html("<frameset><frame><frameset><frame></frameset><noframes></noframes></frameset>")
-                .unwrap();
+        let document = parse_html(
+            "<frameset><frame><frameset><frame></frameset><noframes></noframes></frameset>",
+        )
+        .unwrap();
 
         let html = html(&document);
         assert_eq!(html.children.len(), 2);
@@ -4043,13 +6073,17 @@ mod tests {
 
     #[test]
     fn keeps_comments_after_head_before_body_at_html_level() {
-        let document = parse_html("<head></head><!-- --><style></style><!-- --><script></script>").unwrap();
+        let document =
+            parse_html("<head></head><!-- --><style></style><!-- --><script></script>").unwrap();
 
         let html = html(&document);
         assert_eq!(element(&html.children[0]).name, "head");
         assert!(matches!(html.children[1], Node::Comment(_)));
-        assert!(matches!(html.children[2], Node::Comment(_)));
-        assert_eq!(element(&html.children[3]).name, "body");
+        let head = element(&html.children[0]);
+        assert_eq!(element(&head.children[0]).name, "style");
+        assert!(matches!(head.children[1], Node::Comment(_)));
+        assert_eq!(element(&head.children[2]).name, "script");
+        assert_eq!(element(&html.children[2]).name, "body");
     }
 
     #[test]
@@ -4151,12 +6185,13 @@ mod tests {
 
         let noscript = element(&head(&document).children[0]);
         assert_eq!(noscript.name, "noscript");
+        assert!(noscript.children.is_empty());
 
-        let fallback_paragraph = element(&noscript.children[0]);
+        let fallback_paragraph = element(&body(&document).children[0]);
         assert_eq!(fallback_paragraph.name, "p");
         assert_eq!(fallback_paragraph.children, vec![Node::text("&")]);
 
-        let paragraph = element(&body(&document).children[0]);
+        let paragraph = element(&body(&document).children[1]);
         assert_eq!(paragraph.name, "p");
         assert_eq!(paragraph.children, vec![Node::text("x")]);
     }
@@ -5240,12 +7275,11 @@ mod tests {
 
         let explicit = parse_html("<html><body><p>x</body>y</html>z").unwrap();
         let explicit_body = body(&explicit);
-        assert_eq!(explicit_body.children.len(), 3);
+        assert_eq!(explicit_body.children.len(), 2);
         assert_eq!(
             element(&explicit_body.children[0]).children,
             vec![Node::text("x")]
         );
-        assert_eq!(explicit_body.children[1], Node::text("y"));
-        assert_eq!(explicit_body.children[2], Node::text("z"));
+        assert_eq!(explicit_body.children[1], Node::text("yz"));
     }
 }
