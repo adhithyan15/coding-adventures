@@ -83,9 +83,26 @@ fn dump_node(node: &Node, depth: usize, lines: &mut Vec<String>) {
     match node {
         Node::DocumentType(doctype) => dump_doctype(doctype, depth, lines),
         Node::Element(element) => dump_element(element, depth, lines),
-        Node::Text(text) => lines.push(format!("{}\"{}\"", prefix(depth), text.data)),
+        Node::Text(text) => dump_text(&text.data, depth, lines),
         Node::Comment(comment) => {
             lines.push(format!("{}<!-- {} -->", prefix(depth), comment.data));
+        }
+    }
+}
+
+fn dump_text(text: &str, depth: usize, lines: &mut Vec<String>) {
+    let parts = text.split('\n').collect::<Vec<_>>();
+    if parts.len() == 1 {
+        lines.push(format!("{}\"{}\"", prefix(depth), text));
+        return;
+    }
+
+    let last_index = parts.len() - 1;
+    for (index, part) in parts.iter().enumerate() {
+        match index {
+            0 => lines.push(format!("{}\"{}", prefix(depth), part)),
+            index if index == last_index => lines.push(format!("{part}\"")),
+            _ => lines.push((*part).to_string()),
         }
     }
 }
