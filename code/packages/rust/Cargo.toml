@@ -534,6 +534,7 @@ members = [
     "smart-home-core",
     "smart-home-discovery",
     "smart-home-integration-catalog",
+    "smart-home-testkit",
     "hue-core",
     "zigbee-nwk",
     "zwave-core",
