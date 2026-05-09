@@ -120,6 +120,148 @@ impl fmt::Display for DiscoveryConfidence {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct DiscoveryFingerprint(String);
+
+impl DiscoveryFingerprint {
+    pub fn new(value: impl Into<String>) -> Result<Self, DiscoveryError> {
+        Ok(Self(non_empty("discovery_fingerprint", value)?))
+    }
+
+    pub fn for_record(record: &DiscoveryRecord) -> Self {
+        Self(format!(
+            "{}:{}:{}",
+            record.source.as_str(),
+            record.integration_id.as_str(),
+            record.native_bridge_id
+        ))
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+}
+
+impl fmt::Display for DiscoveryFingerprint {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.0)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DiscoverySignalStatus {
+    Fresh,
+    Stale,
+    Expired,
+}
+
+impl DiscoverySignalStatus {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Fresh => "fresh",
+            Self::Stale => "stale",
+            Self::Expired => "expired",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DiscoverySignal {
+    pub fingerprint: DiscoveryFingerprint,
+    pub integration_id: IntegrationId,
+    pub native_bridge_id: String,
+    pub source: DiscoverySource,
+    pub confidence: DiscoveryConfidence,
+    pub observed_at_ms: u64,
+    pub stale_at_ms: u64,
+    pub expires_at_ms: Option<u64>,
+    pub metadata: Vec<Metadata>,
+}
+
+impl DiscoverySignal {
+    pub fn from_record(record: &DiscoveryRecord, ttl_ms: u64) -> Self {
+        Self {
+            fingerprint: DiscoveryFingerprint::for_record(record),
+            integration_id: record.integration_id.clone(),
+            native_bridge_id: record.native_bridge_id.clone(),
+            source: record.source,
+            confidence: record.confidence,
+            observed_at_ms: record.discovered_at_ms,
+            stale_at_ms: record.discovered_at_ms.saturating_add(ttl_ms),
+            expires_at_ms: record.expires_at_ms,
+            metadata: record.metadata.clone(),
+        }
+    }
+
+    pub fn age_ms_at(&self, now_ms: u64) -> u64 {
+        now_ms.saturating_sub(self.observed_at_ms)
+    }
+
+    pub fn status_at(&self, now_ms: u64) -> DiscoverySignalStatus {
+        if self
+            .expires_at_ms
+            .is_some_and(|expires_at_ms| now_ms >= expires_at_ms)
+        {
+            DiscoverySignalStatus::Expired
+        } else if now_ms >= self.stale_at_ms {
+            DiscoverySignalStatus::Stale
+        } else {
+            DiscoverySignalStatus::Fresh
+        }
+    }
+
+    pub fn next_transition_at_ms(&self, now_ms: u64) -> Option<u64> {
+        match self.status_at(now_ms) {
+            DiscoverySignalStatus::Fresh => [Some(self.stale_at_ms), self.expires_at_ms]
+                .into_iter()
+                .flatten()
+                .filter(|deadline| *deadline > now_ms)
+                .min(),
+            DiscoverySignalStatus::Stale => self
+                .expires_at_ms
+                .filter(|expires_at_ms| *expires_at_ms > now_ms),
+            DiscoverySignalStatus::Expired => None,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DiscoverySignalSummary {
+    pub fresh: usize,
+    pub stale: usize,
+    pub expired: usize,
+    pub next_transition_at_ms: Option<u64>,
+}
+
+impl DiscoverySignalSummary {
+    pub fn from_signals(signals: &[DiscoverySignal], now_ms: u64) -> Self {
+        let mut summary = Self {
+            fresh: 0,
+            stale: 0,
+            expired: 0,
+            next_transition_at_ms: None,
+        };
+
+        for signal in signals {
+            match signal.status_at(now_ms) {
+                DiscoverySignalStatus::Fresh => summary.fresh += 1,
+                DiscoverySignalStatus::Stale => summary.stale += 1,
+                DiscoverySignalStatus::Expired => summary.expired += 1,
+            }
+
+            if let Some(deadline) = signal.next_transition_at_ms(now_ms) {
+                summary.next_transition_at_ms = Some(
+                    summary
+                        .next_transition_at_ms
+                        .map_or(deadline, |current| current.min(deadline)),
+                );
+            }
+        }
+
+        summary
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum PairingRequirement {
     Unknown,
@@ -388,6 +530,14 @@ impl DiscoveryRecord {
         self.preference_key() > other.preference_key()
     }
 
+    pub fn fingerprint(&self) -> DiscoveryFingerprint {
+        DiscoveryFingerprint::for_record(self)
+    }
+
+    pub fn signal(&self, ttl_ms: u64) -> DiscoverySignal {
+        DiscoverySignal::from_record(self, ttl_ms)
+    }
+
     pub fn to_bridge_candidate(&self) -> Bridge {
         let mut bridge = Bridge::new(
             self.bridge_id(),
@@ -648,6 +798,14 @@ impl DiscoveryCatalog {
             .values()
             .filter(|record| !record.is_stale_at(now_ms, ttl_ms))
             .collect()
+    }
+
+    pub fn signals(&self, ttl_ms: u64) -> Vec<DiscoverySignal> {
+        self.records().map(|record| record.signal(ttl_ms)).collect()
+    }
+
+    pub fn signal_summary_at(&self, now_ms: u64, ttl_ms: u64) -> DiscoverySignalSummary {
+        DiscoverySignalSummary::from_signals(&self.signals(ttl_ms), now_ms)
     }
 
     pub fn bridge_candidates(&self) -> Vec<Bridge> {
@@ -1011,6 +1169,106 @@ mod tests {
         assert!(record.is_stale_at(1_500, 500));
         assert_eq!(catalog.fresh_records(1_499, 500).len(), 1);
         assert!(catalog.fresh_records(1_500, 500).is_empty());
+    }
+
+    #[test]
+    fn discovery_records_project_fingerprints_and_freshness_signals() {
+        let record = ManualBridgeInput {
+            integration_id: IntegrationId::trusted("hue"),
+            protocol_family: ProtocolFamily::Hue,
+            native_bridge_id: "bridge-1".to_string(),
+            address: "https://192.0.2.10".to_string(),
+            transport: BridgeTransport::LanHttp,
+            discovered_at_ms: 1_000,
+        }
+        .into_record()
+        .unwrap()
+        .with_metadata("source_detail", "manual-entry");
+
+        let signal = record.signal(500);
+
+        assert_eq!(record.fingerprint().as_str(), "manual:hue:bridge-1");
+        assert_eq!(signal.fingerprint.as_str(), "manual:hue:bridge-1");
+        assert_eq!(signal.stale_at_ms, 1_500);
+        assert_eq!(signal.age_ms_at(1_250), 250);
+        assert_eq!(signal.status_at(1_499), DiscoverySignalStatus::Fresh);
+        assert_eq!(signal.status_at(1_500), DiscoverySignalStatus::Stale);
+        assert_eq!(signal.next_transition_at_ms(1_250), Some(1_500));
+        assert!(signal
+            .metadata
+            .contains(&Metadata::new("source_detail", "manual-entry")));
+    }
+
+    #[test]
+    fn explicit_expiry_takes_priority_over_ttl_staleness() {
+        let record = DiscoveryRecord::new(
+            IntegrationId::trusted("matter"),
+            ProtocolFamily::Matter,
+            "fabric-candidate-1",
+            DiscoverySource::Mdns,
+            BridgeTransport::Mdns,
+            1_000,
+        )
+        .unwrap()
+        .with_expires_at_ms(1_200);
+
+        let signal = record.signal(1_000);
+
+        assert_eq!(signal.status_at(1_199), DiscoverySignalStatus::Fresh);
+        assert_eq!(signal.status_at(1_200), DiscoverySignalStatus::Expired);
+        assert_eq!(signal.next_transition_at_ms(1_001), Some(1_200));
+        assert_eq!(signal.next_transition_at_ms(1_200), None);
+    }
+
+    #[test]
+    fn discovery_catalog_summarizes_signal_freshness() {
+        let mut catalog = DiscoveryCatalog::new();
+        let fresh = DiscoveryRecord::new(
+            IntegrationId::trusted("hue"),
+            ProtocolFamily::Hue,
+            "bridge-fresh",
+            DiscoverySource::Mdns,
+            BridgeTransport::Mdns,
+            1_800,
+        )
+        .unwrap();
+        let stale = DiscoveryRecord::new(
+            IntegrationId::trusted("mqtt"),
+            ProtocolFamily::Mqtt,
+            "broker-stale",
+            DiscoverySource::Mqtt,
+            BridgeTransport::LocalProcess,
+            1_000,
+        )
+        .unwrap()
+        .with_expires_at_ms(3_000);
+        let expired = DiscoveryRecord::new(
+            IntegrationId::trusted("matter"),
+            ProtocolFamily::Matter,
+            "fabric-expired",
+            DiscoverySource::Mdns,
+            BridgeTransport::Mdns,
+            1_700,
+        )
+        .unwrap()
+        .with_expires_at_ms(1_900);
+
+        catalog.record(fresh);
+        catalog.record(stale);
+        catalog.record(expired);
+
+        let summary = catalog.signal_summary_at(2_000, 500);
+
+        assert_eq!(
+            summary,
+            DiscoverySignalSummary {
+                fresh: 1,
+                stale: 1,
+                expired: 1,
+                next_transition_at_ms: Some(2_300),
+            }
+        );
+        assert_eq!(catalog.signals(500).len(), 3);
     }
 
     #[test]

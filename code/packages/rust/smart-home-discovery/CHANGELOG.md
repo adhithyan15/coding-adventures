@@ -13,11 +13,15 @@ All notable changes to this package will be documented in this file.
   observations for the broader primitive roadmap.
 - Discovery records can carry confidence, pairing requirement, network
   interface, and explicit expiry metadata.
+- Discovery records can project stable fingerprints and freshness signals for
+  supervisor loops.
 - Manual bridge input normalization into discovery records.
 - mDNS advertisement endpoint helpers.
 - Deterministic in-memory discovery catalog with replacement and query helpers.
 - Preferred-record upserts and freshness filtering for repeated discovery
   loops.
+- Catalog-level signal summaries count fresh, stale, and expired records and
+  report the next freshness transition.
 - Projection from discovery candidates into unpaired `smart-home-core::Bridge`
   records.
 - Catalog-backed discovery hints that translate first-party integration entries
