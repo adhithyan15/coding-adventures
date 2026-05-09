@@ -24,6 +24,8 @@ targets.
 - Opt-in stdio worker restart policies that can revive a dead worker slot while
   preserving worker-index affinity.
 - Capability and limit metadata that adapters can inspect.
+- Non-consuming executor snapshots for supervisor/read-side tools, including
+  live workers, in-flight jobs, queued jobs, running jobs, and saturation.
 
 The crate does not know about TCP, RESP, Redis, IRC, or sockets. Those adapters
 submit typed job payloads and decide how to apply responses.
