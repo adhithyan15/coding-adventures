@@ -16,6 +16,9 @@ use std::ptr;
 use std::slice;
 use std::str;
 
+use board_vm_bluetooth::{
+    parse_bluetooth_endpoint as parse_board_vm_bluetooth_endpoint, BluetoothEndpoint,
+};
 use board_vm_esp_rom::{
     DEFAULT_BAUD_RATE as ESP_DEFAULT_BAUD_RATE,
     DEFAULT_FLASH_BLOCK_SIZE as ESP_DEFAULT_FLASH_BLOCK_SIZE,
@@ -304,6 +307,19 @@ pub struct LanguageConnectionOption {
     pub endpoint_transport: LanguageHostEndpointTransport,
     pub endpoint_scheme: String,
     pub wire_protocol: String,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageBluetoothEndpoint {
+    pub endpoint: String,
+    pub transport: LanguageConnectionTransport,
+    pub endpoint_transport: LanguageHostEndpointTransport,
+    pub endpoint_scheme: String,
+    pub device: String,
+    pub service_uuid: Option<String>,
+    pub write_characteristic_uuid: Option<String>,
+    pub notify_characteristic_uuid: Option<String>,
+    pub channel: Option<u8>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -599,6 +615,33 @@ pub fn connection_options_for_target(selector: &str) -> Option<Vec<LanguageConne
     Some(target.connection_options)
 }
 
+pub fn parse_bluetooth_endpoint(endpoint: &str) -> Option<LanguageBluetoothEndpoint> {
+    match parse_board_vm_bluetooth_endpoint(endpoint).ok()? {
+        BluetoothEndpoint::BleGatt(endpoint) => Some(LanguageBluetoothEndpoint {
+            endpoint: endpoint.endpoint,
+            transport: LanguageConnectionTransport::BluetoothLe,
+            endpoint_transport: LanguageHostEndpointTransport::BluetoothLeGatt,
+            endpoint_scheme: "ble".to_owned(),
+            device: endpoint.device,
+            service_uuid: Some(endpoint.service_uuid),
+            write_characteristic_uuid: Some(endpoint.write_characteristic_uuid),
+            notify_characteristic_uuid: Some(endpoint.notify_characteristic_uuid),
+            channel: None,
+        }),
+        BluetoothEndpoint::Rfcomm(endpoint) => Some(LanguageBluetoothEndpoint {
+            endpoint: endpoint.endpoint.clone(),
+            transport: LanguageConnectionTransport::BluetoothClassic,
+            endpoint_transport: LanguageHostEndpointTransport::BluetoothClassicRfcomm,
+            endpoint_scheme: bluetooth_endpoint_scheme(&endpoint.endpoint).to_owned(),
+            device: endpoint.device,
+            service_uuid: None,
+            write_characteristic_uuid: None,
+            notify_characteristic_uuid: None,
+            channel: Some(endpoint.channel),
+        }),
+    }
+}
+
 pub fn discover_devices() -> Vec<LanguageHostDevice> {
     let mut paths = env_device_paths();
 
@@ -798,6 +841,13 @@ const fn connection_endpoint_scheme(transport: LanguageConnectionTransport) -> &
         LanguageConnectionTransport::BluetoothLe => "ble",
         LanguageConnectionTransport::BluetoothClassic => "btspp",
     }
+}
+
+fn bluetooth_endpoint_scheme(endpoint: &str) -> &str {
+    endpoint
+        .split_once("://")
+        .map(|(scheme, _)| scheme)
+        .unwrap_or("")
 }
 
 fn language_family(family: BoardFamily) -> LanguageBoardFamily {
@@ -2324,6 +2374,37 @@ mod tests {
             "bluetooth_classic_rfcomm"
         );
         assert!(connection_options_for_target("not-a-board").is_none());
+    }
+
+    #[test]
+    fn bluetooth_endpoint_metadata_is_owned_by_rust_language_core() {
+        let ble = parse_bluetooth_endpoint("ble://uno-r4-wifi/180f/2a19/2a1a").unwrap();
+        let rfcomm = parse_bluetooth_endpoint("btspp://ESP32-BoardVM:3").unwrap();
+
+        assert_eq!(ble.transport, LanguageConnectionTransport::BluetoothLe);
+        assert_eq!(
+            ble.endpoint_transport,
+            LanguageHostEndpointTransport::BluetoothLeGatt
+        );
+        assert_eq!(ble.endpoint_scheme, "ble");
+        assert_eq!(ble.device, "uno-r4-wifi");
+        assert_eq!(ble.service_uuid.as_deref(), Some("180f"));
+        assert_eq!(ble.write_characteristic_uuid.as_deref(), Some("2a19"));
+        assert_eq!(ble.notify_characteristic_uuid.as_deref(), Some("2a1a"));
+        assert_eq!(ble.channel, None);
+
+        assert_eq!(
+            rfcomm.transport,
+            LanguageConnectionTransport::BluetoothClassic
+        );
+        assert_eq!(
+            rfcomm.endpoint_transport,
+            LanguageHostEndpointTransport::BluetoothClassicRfcomm
+        );
+        assert_eq!(rfcomm.endpoint_scheme, "btspp");
+        assert_eq!(rfcomm.device, "ESP32-BoardVM");
+        assert_eq!(rfcomm.channel, Some(3));
+        assert!(parse_bluetooth_endpoint("tcp://board-vm.local:4170").is_none());
     }
 
     #[test]

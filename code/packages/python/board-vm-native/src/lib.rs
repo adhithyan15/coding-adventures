@@ -22,9 +22,10 @@ use board_vm_language_core::{
     discover_pico_bootsel_mounts as core_discover_pico_bootsel_mounts,
     discover_pico_bootsel_mounts_in_roots, esp_upload_options_for_target,
     host_endpoint_transport_name, known_targets, onboard_led_kind,
-    pico_uf2_upload_options_for_target, program_format_name, raw_module_len, run_status_name,
-    wireless_transport_name, BoardVmLanguageSession, DecodedLanguageResponse,
-    DecodedLanguageResponseBody, LanguageConnectionOption, LanguageCoreError,
+    parse_bluetooth_endpoint as core_parse_bluetooth_endpoint, pico_uf2_upload_options_for_target,
+    program_format_name, raw_module_len, run_status_name, wireless_transport_name,
+    BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
+    LanguageBluetoothEndpoint, LanguageConnectionOption, LanguageCoreError,
     LanguageEspUploadOptions, LanguageHostDevice, LanguageOnboardLed, LanguagePicoUf2UploadOptions,
     LanguageTargetInfo, LanguageValue, LanguageWirelessInterface,
 };
@@ -470,6 +471,24 @@ unsafe extern "C" fn py_detect_target(_module: PyObjectPtr, args: PyObjectPtr) -
     }
 }
 
+unsafe extern "C" fn py_bluetooth_endpoint(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
+    let endpoint = match parse_arg_str(args, 0) {
+        Some(value) => value,
+        None => {
+            set_error(
+                type_error_class(),
+                "bluetooth_endpoint() requires endpoint as str",
+            );
+            return ptr::null_mut();
+        }
+    };
+
+    match core_parse_bluetooth_endpoint(&endpoint) {
+        Some(endpoint) => language_bluetooth_endpoint_to_py(&endpoint),
+        None => py_none(),
+    }
+}
+
 unsafe extern "C" fn py_esp_upload_options(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
     let selector = match parse_arg_str(args, 0) {
         Some(value) => value,
@@ -853,6 +872,63 @@ unsafe fn language_connection_options_to_py(options: &[LanguageConnectionOption]
     list
 }
 
+unsafe fn language_bluetooth_endpoint_to_py(endpoint: &LanguageBluetoothEndpoint) -> PyObjectPtr {
+    let dict = PyDict_New();
+    dict_set(dict, "endpoint", str_to_py(&endpoint.endpoint));
+    dict_set(
+        dict,
+        "transport",
+        str_to_py(connection_transport_name(endpoint.transport)),
+    );
+    dict_set(
+        dict,
+        "endpoint_transport",
+        str_to_py(host_endpoint_transport_name(endpoint.endpoint_transport)),
+    );
+    dict_set(
+        dict,
+        "endpoint_scheme",
+        str_to_py(&endpoint.endpoint_scheme),
+    );
+    dict_set(dict, "device", str_to_py(&endpoint.device));
+    dict_set(
+        dict,
+        "service_uuid",
+        endpoint
+            .service_uuid
+            .as_ref()
+            .map(|value| str_to_py(value))
+            .unwrap_or_else(|| py_none()),
+    );
+    dict_set(
+        dict,
+        "write_characteristic_uuid",
+        endpoint
+            .write_characteristic_uuid
+            .as_ref()
+            .map(|value| str_to_py(value))
+            .unwrap_or_else(|| py_none()),
+    );
+    dict_set(
+        dict,
+        "notify_characteristic_uuid",
+        endpoint
+            .notify_characteristic_uuid
+            .as_ref()
+            .map(|value| str_to_py(value))
+            .unwrap_or_else(|| py_none()),
+    );
+    dict_set(
+        dict,
+        "channel",
+        endpoint
+            .channel
+            .map(|value| usize_to_py(value as usize))
+            .unwrap_or_else(|| py_none()),
+    );
+    dict
+}
+
 unsafe fn esp_upload_options_to_py(options: &LanguageEspUploadOptions) -> PyObjectPtr {
     let dict = PyDict_New();
     dict_set(dict, "board_id", str_to_py(&options.board_id));
@@ -1216,7 +1292,7 @@ unsafe fn raise_core_error(context: &str, error: LanguageCoreError) -> PyObjectP
 
 #[no_mangle]
 pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
-    let methods: &'static mut [PyMethodDef; 28] = Box::leak(Box::new([
+    let methods: &'static mut [PyMethodDef; 29] = Box::leak(Box::new([
         PyMethodDef {
             ml_name: b"hello_wire\0".as_ptr() as *const c_char,
             ml_meth: Some(py_hello_wire),
@@ -1360,6 +1436,12 @@ pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
             ml_flags: METH_VARARGS,
             ml_doc: b"Resolve a Board VM target selector using Rust-owned aliases.\0".as_ptr()
                 as *const c_char,
+        },
+        PyMethodDef {
+            ml_name: b"bluetooth_endpoint\0".as_ptr() as *const c_char,
+            ml_meth: Some(py_bluetooth_endpoint),
+            ml_flags: METH_VARARGS,
+            ml_doc: b"Parse a Board VM Bluetooth endpoint in Rust.\0".as_ptr() as *const c_char,
         },
         PyMethodDef {
             ml_name: b"esp_upload_options\0".as_ptr() as *const c_char,

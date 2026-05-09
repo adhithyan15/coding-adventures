@@ -146,6 +146,10 @@ module CodingAdventures
       detect_target(board_id)
     end
 
+    def bluetooth_endpoint(endpoint)
+      Native.bluetooth_endpoint(endpoint.to_s)
+    end
+
     def connection_options(board)
       target = detect_target(board)
       unless target

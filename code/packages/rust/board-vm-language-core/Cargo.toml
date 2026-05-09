@@ -10,6 +10,7 @@ crate-type = ["rlib", "staticlib", "cdylib"]
 path = "src/lib.rs"
 
 [dependencies]
+board-vm-bluetooth = { path = "../board-vm-bluetooth" }
 board-vm-esp-rom = { path = "../board-vm-esp-rom" }
 board-vm-host = { path = "../board-vm-host" }
 board-vm-protocol = { path = "../board-vm-protocol" }
