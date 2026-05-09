@@ -911,3 +911,17 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <div>
 |       " abc "
 |       <b>
+
+#data
+<DIV> abc <B> def
+#errors
+(1,5): expected-doctype-but-got-start-tag
+(1,17): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       " abc "
+|       <b>
+|         " def"
