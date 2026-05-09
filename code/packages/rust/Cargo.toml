@@ -165,6 +165,7 @@ members = [
     "macsyma-parser",
     "macsyma-compiler",
     "macsyma-runtime",
+    "macsyma-wasm",
     "logic-gates",
     "loss-functions",
     "markov-chain",
