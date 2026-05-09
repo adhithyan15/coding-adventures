@@ -19,3 +19,6 @@ All notable changes to this package will be documented in this file.
   records.
 - Policy decision hooks and deterministic policy profiles for permission, tier,
   side-effect, and approval gates before handler execution.
+- Expanded D18D first-party catalog parity for ContextStore snapshots,
+  ArtifactStore revision/list/retention tools, MemoryStore lifecycle tools, and
+  Job runtime list/status/run/uninstall tools.
