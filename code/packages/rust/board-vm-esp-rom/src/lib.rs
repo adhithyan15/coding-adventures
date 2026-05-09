@@ -1124,6 +1124,22 @@ pub fn detect_esp_rom(options: &EspRomSerialOptions) -> Result<EspDetection, Esp
     EspRomSession::new(port).detect_chip()
 }
 
+pub fn upload_esp_rom_image(
+    serial_options: &EspRomSerialOptions,
+    image: &[u8],
+    upload_options: EspFlashImageUploadOptions,
+) -> Result<EspFlashImageUploadReport, EspRomError> {
+    let mut port = serialport::new(&serial_options.port, serial_options.baud_rate)
+        .timeout(serial_options.timeout)
+        .open()?;
+    if serial_options.reset_into_bootloader {
+        enter_uart_bootloader(&mut *port)?;
+    }
+    let mut session = EspRomSession::new(port);
+    session.sync()?;
+    session.upload_flash_image(image, upload_options)
+}
+
 pub fn enter_uart_bootloader(port: &mut dyn serialport::SerialPort) -> Result<(), EspRomError> {
     port.write_data_terminal_ready(false)?;
     port.write_request_to_send(true)?;
