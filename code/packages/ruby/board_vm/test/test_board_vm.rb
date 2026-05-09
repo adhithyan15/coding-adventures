@@ -219,6 +219,51 @@ module CodingAdventures
         ], runner.calls.first[:argv]
       end
 
+      def test_esp_upload_command_can_select_a_discovered_esp_device
+        devices = BoardVM.devices(paths: [
+          "/dev/cu.usbmodem1101",
+          "/dev/tty.usbserial-CP2102-esp32"
+        ])
+
+        command = BoardVM.esp_upload_command(
+          :esp32,
+          devices: devices,
+          image: "/tmp/board-vm-esp32.bin",
+          offset: 0x2000,
+          verify_md5: false
+        )
+
+        assert_equal [
+          "esp-upload",
+          "--port", "/dev/tty.usbserial-CP2102-esp32",
+          "--image", "/tmp/board-vm-esp32.bin",
+          "--baud", "115200",
+          "--timeout-ms", "1000",
+          "--offset", "8192",
+          "--block-size", "1024",
+          "--flash-size", "4194304",
+          "--no-verify"
+        ], command
+      end
+
+      def test_esp32_helper_flashes_the_selected_discovered_device
+        upload = CommandResult.new(["cargo"], "/repo/code/packages/rust", "uploaded\n", "", 0)
+        runner = FakeRunner.new([upload])
+        devices = BoardVM.devices(paths: ["/dev/tty.usbserial-CP2102-esp32"])
+
+        connection = BoardVM.esp32(
+          devices: devices,
+          flash: true,
+          firmware_image: "/tmp/board-vm-esp32.bin",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner
+        )
+
+        assert_equal :esp32_devkit_v1, connection.board
+        assert_equal "/dev/tty.usbserial-CP2102-esp32", connection.port
+        assert_equal "/dev/tty.usbserial-CP2102-esp32", runner.calls.first[:argv][9]
+      end
+
       def test_esp_upload_command_rejects_non_esp_targets
         error = assert_raises(UnsupportedBoardError) do
           BoardVM.esp_upload_command(:raspberry_pi_pico, port: "/dev/cu.usbmodem", image: "fw.bin")

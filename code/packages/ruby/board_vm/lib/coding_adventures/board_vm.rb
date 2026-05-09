@@ -49,10 +49,8 @@ module CodingAdventures
       matches = if normalized_board == :auto
         candidates.select { |device| device_target_board(device) }
       else
-        candidates.select do |device|
-          target_board = device_target_board(device)
-          target_board.nil? || target_board == normalized_board
-        end
+        exact_matches = candidates.select { |device| device_target_board(device) == normalized_board }
+        exact_matches.empty? ? candidates.select { |device| device_target_board(device).nil? } : exact_matches
       end
 
       matches = candidates if normalized_board == :auto && matches.empty? && candidates.length == 1
@@ -95,11 +93,22 @@ module CodingAdventures
       options
     end
 
-    def esp_upload_command(board = :esp32_devkit_v1, port:, image:, **overrides)
+    def esp_upload_command(
+      board = :esp32_devkit_v1,
+      port: nil,
+      device: nil,
+      devices: nil,
+      image:,
+      **overrides
+    )
       options = esp_upload_options(board, **overrides)
       unless options
         raise UnsupportedBoardError, "ESP upload is not supported for #{board.inspect}"
       end
+
+      selected_device = resolve_device_reference(device, devices: devices) if device
+      selected_device ||= select_device(board: board, devices: devices) if port.nil?
+      port ||= selected_device && selected_device.fetch("port")
 
       command = [
         "esp-upload",
@@ -150,6 +159,14 @@ module CodingAdventures
 
     def uno_r4_wifi(**options, &block)
       connect(board: :uno_r4_wifi, **options, &block)
+    end
+
+    def esp32_devkit_v1(**options, &block)
+      connect(board: :esp32_devkit_v1, **options, &block)
+    end
+
+    def esp32(**options, &block)
+      esp32_devkit_v1(**options, &block)
     end
 
     def connection_selection(board:, port:, device:, devices:)

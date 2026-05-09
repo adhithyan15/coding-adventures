@@ -1149,16 +1149,88 @@ def esp_upload_options(
     return EspUploadOptions(merged)
 
 
+DeviceReference = BoardDevice | dict[str, Any] | str | int
+
+
+def select_device(
+    selector: str = "auto",
+    *,
+    device: DeviceReference | None = None,
+    device_candidates: Iterable[BoardDevice | dict[str, Any]] | None = None,
+) -> BoardDevice:
+    candidates = [
+        item if isinstance(item, BoardDevice) else BoardDevice(item)
+        for item in (devices() if device_candidates is None else device_candidates)
+    ]
+
+    if isinstance(device, BoardDevice):
+        return device
+    if isinstance(device, dict):
+        return BoardDevice(device)
+    if isinstance(device, int):
+        try:
+            return candidates[device]
+        except IndexError as error:
+            raise ValueError(f"No Board VM device at index {device}.") from error
+    if device is not None:
+        needle = str(device)
+        for candidate in candidates:
+            if candidate.id == needle or candidate.port == needle:
+                return candidate
+        raise ValueError(f"No Board VM device named {needle!r}.\n{device_list(candidates)}")
+
+    target = None if selector == "auto" else detect_target(selector)
+    if selector != "auto" and target is None:
+        raise ValueError(f"unsupported board: {selector!r}")
+
+    if target is None:
+        matches = [candidate for candidate in candidates if candidate.target is not None]
+    else:
+        exact_matches = [
+            candidate
+            for candidate in candidates
+            if candidate.target is not None and candidate.target.board_id == target.board_id
+        ]
+        matches = exact_matches or [
+            candidate for candidate in candidates if candidate.target is None
+        ]
+
+    if target is None and not matches and len(candidates) == 1:
+        matches = candidates
+    if len(matches) == 1:
+        return matches[0]
+
+    if not candidates:
+        raise ValueError("No Board VM devices found. Plug in a board or pass an explicit device.")
+
+    if not matches and target is None:
+        reason = "Multiple Board VM devices found; choose one"
+    elif not matches:
+        reason = "No matching Board VM device found"
+    else:
+        reason = "Multiple Board VM devices match"
+    raise ValueError(f"{reason}.\n{device_list(candidates)}")
+
+
 def esp_upload_command(
     selector: str = "esp32-devkit-v1",
     *,
-    port: str,
+    port: str | None = None,
+    device: DeviceReference | None = None,
+    device_candidates: Iterable[BoardDevice | dict[str, Any]] | None = None,
     image: str,
     **overrides: Any,
 ) -> list[str]:
     options = esp_upload_options(selector, **overrides)
     if options is None:
         raise ValueError(f"ESP upload is not supported for {selector!r}")
+
+    if port is None:
+        port = select_device(
+            selector,
+            device=device,
+            device_candidates=device_candidates,
+        ).port
 
     command = [
         "esp-upload",
@@ -1235,4 +1307,5 @@ __all__ = [
     "esp_upload_options",
     "find_target",
     "known_targets",
+    "select_device",
 ]
