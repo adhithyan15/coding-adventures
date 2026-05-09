@@ -1344,3 +1344,20 @@ Line1<br>Line2<br>Line3<br>Line4
 |           <th>
 |             <span>
 |               "X"
+
+#data
+<body><body><base><link><meta><title><p></title><body><p></body>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,12): unexpected-start-tag
+(1,54): unexpected-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <base>
+|     <link>
+|     <meta>
+|     <title>
+|       "<p>"
+|     <p>
