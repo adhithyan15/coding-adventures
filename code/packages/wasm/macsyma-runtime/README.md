@@ -12,3 +12,14 @@ callers can consume a stable schema without depending on Rust enum layouts:
 - `resetHistory()` clears `%i`/`%o` history without rebuilding the session.
 
 Build with `wasm-pack build --target web` or `wasm-pack build --target nodejs`.
+
+For browser TypeScript callers, build this package with `wasm-pack --target web`
+and load the generated module through
+`@coding-adventures/macsyma-wasm-runtime`:
+
+```ts
+import { loadMacsymaWasmRuntime } from "@coding-adventures/macsyma-wasm-runtime";
+
+const runtime = await loadMacsymaWasmRuntime(() => import("./pkg/macsyma_runtime_wasm.js"));
+const result = runtime.eval("x : 5$\nx + 2;");
+```

@@ -40,6 +40,7 @@ pub enum CliCommand {
     EspDetect(EspDetectOptions),
     EspUpload(EspUploadOptions),
     PicoUf2Upload(PicoUf2Options),
+    PicoUf2List,
     Smoke(SmokeOptions),
     Repl(ReplOptions),
     EjectBlink(EjectBlinkOptions),
@@ -295,6 +296,7 @@ where
         "esp-detect" | "detect-esp" => parse_esp_detect_args(args),
         "esp-upload" | "upload-esp" => parse_esp_upload_args(args),
         "pico-uf2" | "pico-upload" | "upload-pico" => parse_pico_uf2_args(args),
+        "pico-uf2-list" | "list-pico-uf2" | "list-pico" => Ok(CliCommand::PicoUf2List),
         "smoke" => parse_smoke_args(args),
         "repl" => parse_repl_args(args),
         "eject" => parse_eject_args(args),
@@ -405,6 +407,7 @@ where
 
     while let Some(option) = args.next() {
         match option.as_str() {
+            "--list" | "list" => return Ok(CliCommand::PicoUf2List),
             "--image" | "--input" | "-i" => image = Some(next_value(&mut args, "--image")?),
             "--mount" | "--volume" | "-m" => mount = Some(next_value(&mut args, "--mount")?),
             other => return Err(CliError::UnknownOption(other.to_owned())),
@@ -817,6 +820,10 @@ pub fn run_pico_uf2_upload(options: &PicoUf2Options) -> Result<PicoUf2Report, Cl
 
 pub fn detect_pico_bootsel_mounts() -> Vec<String> {
     detect_pico_bootsel_mounts_in_roots(default_pico_mount_roots())
+}
+
+pub fn list_pico_bootsel_mounts() -> Vec<String> {
+    detect_pico_bootsel_mounts()
 }
 
 pub fn detect_pico_bootsel_mounts_in_roots<I, P>(roots: I) -> Vec<String>
@@ -1274,7 +1281,7 @@ pub fn format_onboard_led(led: Option<OnboardLed>) -> String {
 }
 
 pub fn usage() -> &'static str {
-    "usage:\n  board-vm list-ports\n  board-vm list-targets\n  board-vm esp-detect --port <path> [--baud <rate>] [--timeout-ms <ms>] [--no-reset]\n  board-vm esp-upload --port <path> --image <path> [--offset <addr>] [--block-size <bytes>] [--flash-size <bytes>] [--baud <rate>] [--timeout-ms <ms>] [--no-reset] [--no-verify] [--stay-in-bootloader]\n  board-vm pico-uf2 --image <path.uf2> [--mount <RPI-RP2 mount>]\n  board-vm smoke --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm repl --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm eject blink --out <path> [--program-id <id>] [--slot <slot>] [--boot-policy store-only|run-at-boot|run-if-no-host|<u8>]"
+    "usage:\n  board-vm list-ports\n  board-vm list-targets\n  board-vm esp-detect --port <path> [--baud <rate>] [--timeout-ms <ms>] [--no-reset]\n  board-vm esp-upload --port <path> --image <path> [--offset <addr>] [--block-size <bytes>] [--flash-size <bytes>] [--baud <rate>] [--timeout-ms <ms>] [--no-reset] [--no-verify] [--stay-in-bootloader]\n  board-vm pico-uf2 --image <path.uf2> [--mount <RPI-RP2 mount>]\n  board-vm pico-uf2 --list\n  board-vm smoke --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm repl --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm eject blink --out <path> [--program-id <id>] [--slot <slot>] [--boot-policy store-only|run-at-boot|run-if-no-host|<u8>]"
 }
 
 #[cfg(test)]
@@ -1497,6 +1504,19 @@ mod tests {
                 mount: Some("/Volumes/RPI-RP2".to_owned()),
             })
         );
+    }
+
+    #[test]
+    fn parses_pico_uf2_list_aliases() {
+        assert_eq!(
+            parse_args(["pico-uf2", "--list"]).unwrap(),
+            CliCommand::PicoUf2List
+        );
+        assert_eq!(
+            parse_args(["pico-uf2-list"]).unwrap(),
+            CliCommand::PicoUf2List
+        );
+        assert_eq!(parse_args(["list-pico"]).unwrap(), CliCommand::PicoUf2List);
     }
 
     #[test]

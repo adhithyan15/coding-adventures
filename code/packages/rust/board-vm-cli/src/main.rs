@@ -1,8 +1,9 @@
 use std::env;
 
 use board_vm_cli::{
-    format_onboard_led, list_ports, list_targets, parse_args, run_eject_blink, run_esp_detect,
-    run_esp_upload, run_pico_uf2_upload, run_repl, run_smoke, usage, CliCommand,
+    format_onboard_led, list_pico_bootsel_mounts, list_ports, list_targets, parse_args,
+    run_eject_blink, run_esp_detect, run_esp_upload, run_pico_uf2_upload, run_repl, run_smoke,
+    usage, CliCommand,
 };
 
 fn main() {
@@ -71,6 +72,12 @@ fn run_command(command: CliCommand) -> Result<(), board_vm_cli::CliError> {
                 "pico-uf2 image={} mount={} output={} bytes={}",
                 report.image, report.mount, report.output, report.bytes
             );
+            Ok(())
+        }
+        CliCommand::PicoUf2List => {
+            for mount in list_pico_bootsel_mounts() {
+                println!("pico-uf2 mount={mount}");
+            }
             Ok(())
         }
         CliCommand::Smoke(options) => {
