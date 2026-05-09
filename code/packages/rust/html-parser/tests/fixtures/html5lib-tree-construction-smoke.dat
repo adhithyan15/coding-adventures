@@ -717,3 +717,20 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <p>
 |       <b>
 |       "TEST"
+
+#data
+<p id=a><b><p id=b></b>TEST
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,19): unexpected-end-tag
+(1,23): adoption-agency-1.2
+#document
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       id="a"
+|       <b>
+|     <p>
+|       id="b"
+|       "TEST"

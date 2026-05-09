@@ -712,6 +712,7 @@ pub struct HtmlParser {
     document: Document,
     open_elements: Vec<Vec<usize>>,
     pending_formatting_reconstruction: Vec<(String, Vec<Attribute>)>,
+    prunable_empty_reconstructed_formatting_paths: Vec<Vec<usize>>,
     diagnostics: Vec<ParserDiagnostic>,
     options: HtmlParseOptions,
     strip_next_leading_lf: bool,
@@ -748,6 +749,7 @@ impl HtmlParser {
             document,
             open_elements: vec![vec![0], vec![0, 1]],
             pending_formatting_reconstruction: Vec::new(),
+            prunable_empty_reconstructed_formatting_paths: Vec::new(),
             diagnostics: Vec::new(),
             options,
             strip_next_leading_lf: false,
@@ -814,6 +816,7 @@ impl HtmlParser {
         self.close_fostered_formatting_before_table_context(&name);
         self.apply_table_implied_contexts(&name);
         self.clear_pending_formatting_unless_next_reconstructs(&name);
+        let prunes_empty_formatting_inside = name == "p" && self.has_open_element("p");
         let formatting_inside = self.take_formatting_reconstruction_inside_for(&name);
         self.apply_simple_implied_end_tags(&name);
 
@@ -880,6 +883,10 @@ impl HtmlParser {
                 self.append_node(Node::element(formatting_name, formatting_attributes));
             let mut path = self.current_parent_path().to_vec();
             path.push(child_index);
+            if prunes_empty_formatting_inside {
+                self.prunable_empty_reconstructed_formatting_paths
+                    .push(path.clone());
+            }
             self.open_elements.push(path);
         }
 
@@ -1203,7 +1210,13 @@ impl HtmlParser {
             if !is_special_element(name) && self.has_special_element_above(index) {
                 return;
             }
+            let path = self.open_elements[index].clone();
+            let remove_empty_reconstructed_formatting =
+                self.is_empty_reconstructed_formatting_element(&path);
             self.open_elements.truncate(index);
+            if remove_empty_reconstructed_formatting {
+                self.remove_reconstructed_formatting_node(&path);
+            }
             return;
         }
 
@@ -1395,6 +1408,25 @@ impl HtmlParser {
         }
     }
 
+    fn is_empty_reconstructed_formatting_element(&self, path: &[usize]) -> bool {
+        if !self
+            .prunable_empty_reconstructed_formatting_paths
+            .iter()
+            .any(|candidate| candidate.as_slice() == path)
+        {
+            return false;
+        }
+
+        element_ref_at_path(&self.document, path)
+            .is_some_and(|element| element.children.is_empty())
+    }
+
+    fn remove_reconstructed_formatting_node(&mut self, path: &[usize]) {
+        remove_node_at_path(&mut self.document.children, path);
+        self.prunable_empty_reconstructed_formatting_paths
+            .retain(|candidate| candidate.as_slice() != path);
+    }
+
     fn has_open_element(&self, name: &str) -> bool {
         self.open_elements
             .iter()
@@ -1540,6 +1572,15 @@ fn children_at_path_mut<'a>(nodes: &'a mut Vec<Node>, path: &[usize]) -> Option<
         Node::Element(element) => children_at_path_mut(&mut element.children, rest),
         _ => None,
     }
+}
+
+fn remove_node_at_path(nodes: &mut Vec<Node>, path: &[usize]) -> Option<Node> {
+    let (&remove_index, parent_path) = path.split_last()?;
+    let parent_children = children_at_path_mut(nodes, parent_path)?;
+    if remove_index >= parent_children.len() {
+        return None;
+    }
+    Some(parent_children.remove(remove_index))
 }
 
 fn increment_open_element_paths_after_insert(
@@ -2161,6 +2202,52 @@ mod tests {
         let second_nobr = element(&second_paragraph.children[2]);
         assert_eq!(second_nobr.name, "nobr");
         assert_eq!(second_nobr.children, vec![Node::text("B")]);
+    }
+
+    #[test]
+    fn drops_empty_reconstructed_formatting_after_paragraph_boundary() {
+        let document = parse_html("<p id=a><b><p id=b></b>TEST").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let first_paragraph = element(&body.children[0]);
+        assert_eq!(first_paragraph.name, "p");
+        assert_eq!(first_paragraph.attribute("id"), Some("a"));
+        assert_eq!(element(&first_paragraph.children[0]).name, "b");
+
+        let second_paragraph = element(&body.children[1]);
+        assert_eq!(second_paragraph.name, "p");
+        assert_eq!(second_paragraph.attribute("id"), Some("b"));
+        assert_eq!(second_paragraph.children, vec![Node::text("TEST")]);
+    }
+
+    #[test]
+    fn keeps_empty_reconstructed_formatting_without_prior_paragraph() {
+        let document = parse_html("<b><p></b>TEST").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+        assert_eq!(element(&body.children[0]).name, "b");
+
+        let paragraph = element(&body.children[1]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(element(&paragraph.children[0]).name, "b");
+        assert_eq!(paragraph.children[1], Node::text("TEST"));
+    }
+
+    #[test]
+    fn preserves_explicit_empty_formatting_elements() {
+        let document = parse_html("<p><b></b>tail").unwrap();
+
+        let body = body(&document);
+        let paragraph = element(&body.children[0]);
+        assert_eq!(paragraph.children.len(), 2);
+
+        let bold = element(&paragraph.children[0]);
+        assert_eq!(bold.name, "b");
+        assert!(bold.children.is_empty());
+        assert_eq!(paragraph.children[1], Node::text("tail"));
     }
 
     #[test]
