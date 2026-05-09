@@ -6,7 +6,10 @@
 
 #![forbid(unsafe_code)]
 
-use smart_home_core::{CapabilityId, EntityKind, IntegrationId, ProtocolFamily, RuntimeKind};
+use smart_home_core::{
+    CapabilityId, EntityKind, IntegrationId, PrivilegeTier, ProtocolFamily, RuntimeKind,
+    ToolDescriptor, ToolSideEffects,
+};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationCategory {
@@ -134,6 +137,75 @@ pub enum PrimitiveFamily {
     TestSimulator,
 }
 
+impl PrimitiveFamily {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::NormalizedModel => "normalized_model",
+            Self::DiscoveryIndex => "discovery_index",
+            Self::Mdns => "mdns",
+            Self::Ssdp => "ssdp",
+            Self::Dhcp => "dhcp",
+            Self::LocalHttp => "local_http",
+            Self::WebSocket => "websocket",
+            Self::ServerSentEvents => "server_sent_events",
+            Self::Mqtt => "mqtt",
+            Self::BluetoothLowEnergy => "bluetooth_low_energy",
+            Self::Usb => "usb",
+            Self::SerialController => "serial_controller",
+            Self::Radio802154 => "radio_802154",
+            Self::ZWaveSerialApi => "zwave_serial_api",
+            Self::MatterCommissioning => "matter_commissioning",
+            Self::HomeKitPairing => "homekit_pairing",
+            Self::CloudApi => "cloud_api",
+            Self::Webhook => "webhook",
+            Self::OAuth2 => "oauth2",
+            Self::LocalPairing => "local_pairing",
+            Self::LocalToken => "local_token",
+            Self::CertificatePairing => "certificate_pairing",
+            Self::RadioNetworkKey => "radio_network_key",
+            Self::MqttCredentials => "mqtt_credentials",
+            Self::CameraMedia => "camera_media",
+            Self::EnergyTelemetry => "energy_telemetry",
+            Self::CalculatedState => "calculated_state",
+            Self::CommandMapping => "command_mapping",
+            Self::CapabilityPolicy => "capability_policy",
+            Self::VaultLease => "vault_lease",
+            Self::Supervision => "supervision",
+            Self::TestSimulator => "test_simulator",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationCatalogTool {
+    ListIntegrations,
+    DescribeIntegration,
+    ListPrimitives,
+    DescribePrimitive,
+}
+
+impl IntegrationCatalogTool {
+    pub fn tool_id(self) -> &'static str {
+        match self {
+            Self::ListIntegrations => "smart_home.list_integrations",
+            Self::DescribeIntegration => "smart_home.describe_integration",
+            Self::ListPrimitives => "smart_home.list_primitives",
+            Self::DescribePrimitive => "smart_home.describe_primitive",
+        }
+    }
+
+    pub fn descriptor(self) -> ToolDescriptor {
+        read_catalog_tool(self.tool_id())
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct PrimitiveFamilyDescriptor {
+    pub primitive: PrimitiveFamily,
+    pub display_name: &'static str,
+    pub summary: &'static str,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SourceReference {
     pub label: String,
@@ -200,6 +272,180 @@ impl IntegrationCatalogEntry {
     pub fn requires_primitive(&self, primitive: PrimitiveFamily) -> bool {
         self.required_primitives.contains(&primitive)
     }
+}
+
+pub fn integration_catalog_tool_descriptors() -> Vec<ToolDescriptor> {
+    [
+        IntegrationCatalogTool::ListIntegrations,
+        IntegrationCatalogTool::DescribeIntegration,
+        IntegrationCatalogTool::ListPrimitives,
+        IntegrationCatalogTool::DescribePrimitive,
+    ]
+    .into_iter()
+    .map(IntegrationCatalogTool::descriptor)
+    .collect()
+}
+
+pub fn primitive_family_descriptors() -> Vec<PrimitiveFamilyDescriptor> {
+    all_primitive_families()
+        .iter()
+        .copied()
+        .map(describe_primitive_family)
+        .collect()
+}
+
+pub fn describe_primitive_family(primitive: PrimitiveFamily) -> PrimitiveFamilyDescriptor {
+    let (display_name, summary) = match primitive {
+        PrimitiveFamily::NormalizedModel => (
+            "Normalized Model",
+            "Bridge, device, entity, capability, event, command, health, and audit records.",
+        ),
+        PrimitiveFamily::DiscoveryIndex => (
+            "Discovery Index",
+            "Reusable observations that connect discovery sources to catalog entries.",
+        ),
+        PrimitiveFamily::Mdns => (
+            "mDNS",
+            "Local DNS-SD discovery for LAN devices and bridges.",
+        ),
+        PrimitiveFamily::Ssdp => (
+            "SSDP",
+            "UPnP-style discovery for media and legacy LAN devices.",
+        ),
+        PrimitiveFamily::Dhcp => (
+            "DHCP",
+            "Network-observed address hints for LAN device candidates.",
+        ),
+        PrimitiveFamily::LocalHttp => (
+            "Local HTTP",
+            "HTTP/HTTPS request primitives for local APIs.",
+        ),
+        PrimitiveFamily::WebSocket => ("WebSocket", "Bidirectional local or cloud event streams."),
+        PrimitiveFamily::ServerSentEvents => (
+            "Server-Sent Events",
+            "One-way event streams such as Hue CLIP v2 SSE.",
+        ),
+        PrimitiveFamily::Mqtt => (
+            "MQTT",
+            "Broker topics, retained state, and command publications.",
+        ),
+        PrimitiveFamily::BluetoothLowEnergy => (
+            "Bluetooth Low Energy",
+            "BLE advertisements, GATT reads, and host adapter health.",
+        ),
+        PrimitiveFamily::Usb => ("USB", "USB device enumeration for radios and controllers."),
+        PrimitiveFamily::SerialController => (
+            "Serial Controller",
+            "Serial transport leases for radio and fieldbus controllers.",
+        ),
+        PrimitiveFamily::Radio802154 => (
+            "802.15.4 Radio",
+            "Low-power radio substrate used by Zigbee and Thread-class stacks.",
+        ),
+        PrimitiveFamily::ZWaveSerialApi => (
+            "Z-Wave Serial API",
+            "Z-Wave controller serial API framing and lifecycle.",
+        ),
+        PrimitiveFamily::MatterCommissioning => (
+            "Matter Commissioning",
+            "Matter onboarding, fabrics, and commissioning metadata.",
+        ),
+        PrimitiveFamily::HomeKitPairing => (
+            "HomeKit Pairing",
+            "HAP pairing and accessory model projection.",
+        ),
+        PrimitiveFamily::CloudApi => ("Cloud API", "OAuth/API-key cloud service calls and quotas."),
+        PrimitiveFamily::Webhook => ("Webhook", "Inbound callback registration and delivery."),
+        PrimitiveFamily::OAuth2 => ("OAuth2", "Cloud account authorization and token refresh."),
+        PrimitiveFamily::LocalPairing => {
+            ("Local Pairing", "Physical-presence or local-code setup.")
+        }
+        PrimitiveFamily::LocalToken => ("Local Token", "Local API token storage and leasing."),
+        PrimitiveFamily::CertificatePairing => (
+            "Certificate Pairing",
+            "Certificate or mTLS-style local trust setup.",
+        ),
+        PrimitiveFamily::RadioNetworkKey => (
+            "Radio Network Key",
+            "Mesh/radio network secrets and rotation.",
+        ),
+        PrimitiveFamily::MqttCredentials => (
+            "MQTT Credentials",
+            "Broker credentials and client identity leases.",
+        ),
+        PrimitiveFamily::CameraMedia => (
+            "Camera Media",
+            "Privacy-sensitive snapshots, streams, and camera events.",
+        ),
+        PrimitiveFamily::EnergyTelemetry => (
+            "Energy Telemetry",
+            "Energy, climate, utility, and production measurements.",
+        ),
+        PrimitiveFamily::CalculatedState => (
+            "Calculated State",
+            "Internal derived entities and dependency-driven state.",
+        ),
+        PrimitiveFamily::CommandMapping => (
+            "Command Mapping",
+            "Idempotent mapping from canonical commands to native effects.",
+        ),
+        PrimitiveFamily::CapabilityPolicy => (
+            "Capability Policy",
+            "Capability, privilege, and approval rules for tool execution.",
+        ),
+        PrimitiveFamily::VaultLease => ("Vault Lease", "Time-bounded secret access for workers."),
+        PrimitiveFamily::Supervision => (
+            "Supervision",
+            "Worker health, restart, backoff, heartbeat, and stale-state policy.",
+        ),
+        PrimitiveFamily::TestSimulator => (
+            "Test Simulator",
+            "Fake bridges, brokers, radios, streams, and cloud APIs.",
+        ),
+    };
+
+    PrimitiveFamilyDescriptor {
+        primitive,
+        display_name,
+        summary,
+    }
+}
+
+pub fn all_primitive_families() -> &'static [PrimitiveFamily] {
+    &[
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::DiscoveryIndex,
+        PrimitiveFamily::Mdns,
+        PrimitiveFamily::Ssdp,
+        PrimitiveFamily::Dhcp,
+        PrimitiveFamily::LocalHttp,
+        PrimitiveFamily::WebSocket,
+        PrimitiveFamily::ServerSentEvents,
+        PrimitiveFamily::Mqtt,
+        PrimitiveFamily::BluetoothLowEnergy,
+        PrimitiveFamily::Usb,
+        PrimitiveFamily::SerialController,
+        PrimitiveFamily::Radio802154,
+        PrimitiveFamily::ZWaveSerialApi,
+        PrimitiveFamily::MatterCommissioning,
+        PrimitiveFamily::HomeKitPairing,
+        PrimitiveFamily::CloudApi,
+        PrimitiveFamily::Webhook,
+        PrimitiveFamily::OAuth2,
+        PrimitiveFamily::LocalPairing,
+        PrimitiveFamily::LocalToken,
+        PrimitiveFamily::CertificatePairing,
+        PrimitiveFamily::RadioNetworkKey,
+        PrimitiveFamily::MqttCredentials,
+        PrimitiveFamily::CameraMedia,
+        PrimitiveFamily::EnergyTelemetry,
+        PrimitiveFamily::CalculatedState,
+        PrimitiveFamily::CommandMapping,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::VaultLease,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ]
 }
 
 pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
@@ -1268,6 +1514,15 @@ fn capability(value: &'static str) -> CapabilityId {
     CapabilityId::trusted(value)
 }
 
+fn read_catalog_tool(tool_id: &'static str) -> ToolDescriptor {
+    ToolDescriptor {
+        tool_id,
+        side_effects: ToolSideEffects::Read,
+        required_capabilities: vec![CapabilityId::trusted("smart_home.read")],
+        required_tier: PrivilegeTier::ReadOnly,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1281,6 +1536,39 @@ mod tests {
         assert!(find_entry(&catalog, &IntegrationId::trusted("matter")).is_some());
         assert!(find_entry(&catalog, &IntegrationId::trusted("esphome")).is_some());
         assert!(catalog.len() >= 30);
+    }
+
+    #[test]
+    fn catalog_tools_are_read_only_d18d_descriptors() {
+        let descriptors = integration_catalog_tool_descriptors();
+
+        assert_eq!(descriptors.len(), 4);
+        assert!(descriptors
+            .iter()
+            .any(|descriptor| descriptor.tool_id == "smart_home.list_integrations"));
+        assert!(descriptors
+            .iter()
+            .all(|descriptor| descriptor.side_effects == ToolSideEffects::Read));
+        assert!(descriptors
+            .iter()
+            .all(|descriptor| descriptor.required_tier == PrivilegeTier::ReadOnly));
+        assert!(descriptors.iter().all(|descriptor| descriptor
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.read"))));
+    }
+
+    #[test]
+    fn primitive_family_descriptors_cover_every_primitive() {
+        let descriptors = primitive_family_descriptors();
+
+        assert_eq!(descriptors.len(), all_primitive_families().len());
+        assert!(descriptors
+            .iter()
+            .any(|descriptor| descriptor.primitive == PrimitiveFamily::Mqtt
+                && descriptor.display_name == "MQTT"));
+        assert!(descriptors.iter().any(|descriptor| descriptor.primitive
+            == PrimitiveFamily::Supervision
+            && descriptor.summary.contains("restart")));
     }
 
     #[test]

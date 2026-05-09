@@ -14,6 +14,8 @@ runtime and Chief of Staff tools a typed catalog for:
 - required primitive-family hints
 - required capability hints
 - target entity kind hints
+- read-only D18D tool descriptors for listing/describing integrations and
+  primitive families
 - first-party rollout seed entries
 - virtual product aliases that point to real implementations or standards
 
