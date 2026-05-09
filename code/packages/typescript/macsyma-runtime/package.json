@@ -1,0 +1,31 @@
+{
+  "name": "@coding-adventures/macsyma-runtime",
+  "version": "0.1.0",
+  "description": "Pure TypeScript MACSYMA runtime session over the symbolic VM",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": ["macsyma", "cas", "runtime", "symbolic-vm", "browser"],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "dependencies": {
+    "@coding-adventures/directed-graph": "file:../directed-graph",
+    "@coding-adventures/grammar-tools": "file:../grammar-tools",
+    "@coding-adventures/lexer": "file:../lexer",
+    "@coding-adventures/macsyma-compiler": "file:../macsyma-compiler",
+    "@coding-adventures/parser": "file:../parser",
+    "@coding-adventures/state-machine": "file:../state-machine",
+    "@coding-adventures/symbolic-ir": "file:../symbolic-ir",
+    "@coding-adventures/symbolic-vm": "file:../symbolic-vm"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

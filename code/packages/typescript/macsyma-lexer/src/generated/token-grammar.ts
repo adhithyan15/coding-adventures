@@ -1,6 +1,6 @@
 // AUTO-GENERATED FILE - DO NOT EDIT
-// Source: code/grammars/macsyma/macsyma.tokens
-// Regenerate with: grammar-tools compile-tokens code/grammars/macsyma/macsyma.tokens
+// Source: ../../../grammars/macsyma/macsyma.tokens
+// Regenerate with: grammar-tools compile-tokens ../../../grammars/macsyma/macsyma.tokens
 //
 // This file embeds a TokenGrammar as native TypeScript object literals.
 // Import it directly instead of reading and parsing the .tokens file at
@@ -8,7 +8,7 @@
 
 import type { TokenGrammar } from "@coding-adventures/grammar-tools";
 
-export const TOKEN_GRAMMAR = {
+export const TOKEN_GRAMMAR: TokenGrammar = {
   version: 1,
   caseInsensitive: false,
   caseSensitive: true,
@@ -17,169 +17,169 @@ export const TOKEN_GRAMMAR = {
       name: "COLONEQ",
       pattern: ":=",
       isRegex: false,
-      lineNumber: 47,
+      lineNumber: 48,
     },
     {
       name: "STAREQ",
       pattern: "**",
       isRegex: false,
-      lineNumber: 48,
+      lineNumber: 49,
     },
     {
       name: "LEQ",
       pattern: "<=",
       isRegex: false,
-      lineNumber: 49,
+      lineNumber: 50,
     },
     {
       name: "GEQ",
       pattern: ">=",
       isRegex: false,
-      lineNumber: 50,
+      lineNumber: 51,
     },
     {
       name: "ARROW",
       pattern: "->",
       isRegex: false,
-      lineNumber: 51,
+      lineNumber: 52,
     },
     {
       name: "PLUS",
       pattern: "+",
       isRegex: false,
-      lineNumber: 57,
+      lineNumber: 58,
     },
     {
       name: "MINUS",
       pattern: "-",
       isRegex: false,
-      lineNumber: 58,
+      lineNumber: 59,
     },
     {
       name: "STAR",
       pattern: "*",
       isRegex: false,
-      lineNumber: 59,
+      lineNumber: 60,
     },
     {
       name: "SLASH",
       pattern: "/",
       isRegex: false,
-      lineNumber: 60,
+      lineNumber: 61,
     },
     {
       name: "CARET",
       pattern: "^",
       isRegex: false,
-      lineNumber: 61,
+      lineNumber: 62,
     },
     {
       name: "COLON",
       pattern: ":",
       isRegex: false,
-      lineNumber: 62,
+      lineNumber: 63,
     },
     {
       name: "EQ",
       pattern: "=",
       isRegex: false,
-      lineNumber: 63,
+      lineNumber: 64,
     },
     {
       name: "HASH",
       pattern: "#",
       isRegex: false,
-      lineNumber: 64,
+      lineNumber: 65,
     },
     {
       name: "LT",
       pattern: "<",
       isRegex: false,
-      lineNumber: 65,
+      lineNumber: 66,
     },
     {
       name: "GT",
       pattern: ">",
       isRegex: false,
-      lineNumber: 66,
+      lineNumber: 67,
     },
     {
       name: "BANG",
       pattern: "!",
       isRegex: false,
-      lineNumber: 67,
+      lineNumber: 68,
     },
     {
       name: "LPAREN",
       pattern: "(",
       isRegex: false,
-      lineNumber: 69,
+      lineNumber: 70,
     },
     {
       name: "RPAREN",
       pattern: ")",
       isRegex: false,
-      lineNumber: 70,
+      lineNumber: 71,
     },
     {
       name: "LBRACKET",
       pattern: "[",
       isRegex: false,
-      lineNumber: 71,
+      lineNumber: 72,
     },
     {
       name: "RBRACKET",
       pattern: "]",
       isRegex: false,
-      lineNumber: 72,
+      lineNumber: 73,
     },
     {
       name: "LBRACE",
       pattern: "{",
       isRegex: false,
-      lineNumber: 73,
+      lineNumber: 74,
     },
     {
       name: "RBRACE",
       pattern: "}",
       isRegex: false,
-      lineNumber: 74,
+      lineNumber: 75,
     },
     {
       name: "COMMA",
       pattern: ",",
       isRegex: false,
-      lineNumber: 76,
+      lineNumber: 77,
     },
     {
       name: "SEMI",
       pattern: ";",
       isRegex: false,
-      lineNumber: 77,
+      lineNumber: 78,
     },
     {
       name: "DOLLAR",
       pattern: "$",
       isRegex: false,
-      lineNumber: 78,
+      lineNumber: 79,
     },
     {
       name: "NUMBER",
       pattern: "[0-9]+\\.?[0-9]*([eE][+-]?[0-9]+)?",
       isRegex: true,
-      lineNumber: 95,
+      lineNumber: 96,
     },
     {
       name: "NAME",
-      pattern: "%?[a-zA-Z_][a-zA-Z0-9_]*",
+      pattern: "%[a-zA-Z_][a-zA-Z0-9_]*|%|[a-zA-Z_][a-zA-Z0-9_]*",
       isRegex: true,
-      lineNumber: 96,
+      lineNumber: 97,
     },
     {
       name: "STRING",
       pattern: "\"([^\"\\\\]|\\\\.)*\"",
       isRegex: true,
-      lineNumber: 97,
+      lineNumber: 98,
     },
   ],
   keywords: ["and","or","not","if","then","else","elseif","true","false","do","for","while","unless","in","step","thru","block","return"],
@@ -190,13 +190,13 @@ export const TOKEN_GRAMMAR = {
       name: "WHITESPACE",
       pattern: "[ \\t\\r\\n]+",
       isRegex: true,
-      lineNumber: 136,
+      lineNumber: 137,
     },
     {
       name: "LINECOMMENT",
       pattern: "\\/\\*([^*]|\\*[^\\/])*\\*\\/",
       isRegex: true,
-      lineNumber: 137,
+      lineNumber: 138,
     },
   ],
   reservedKeywords: [],
@@ -204,4 +204,5 @@ export const TOKEN_GRAMMAR = {
   contextKeywords: [],
   errorDefinitions: [],
   groups: {},
-} as unknown as TokenGrammar;
+  softKeywords: [],
+};

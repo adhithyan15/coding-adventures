@@ -18,12 +18,12 @@ fn token_values(source: &str) -> Vec<String> {
 }
 
 #[test]
-fn tokenizes_numbers_names_and_percent_constants() {
+fn tokenizes_numbers_names_percent_constants_and_history_references() {
     assert_eq!(
-        token_types("42 3.14 1.5e10 x %pi"),
-        vec!["NUMBER", "NUMBER", "NUMBER", "NAME", "NAME"]
+        token_types("42 3.14 1.5e10 x %pi % %i1 %o2"),
+        vec!["NUMBER", "NUMBER", "NUMBER", "NAME", "NAME", "NAME", "NAME", "NAME"]
     );
-    assert_eq!(token_values("%pi"), vec!["%pi"]);
+    assert_eq!(token_values("%pi % %i1 %o2"), vec!["%pi", "%", "%i1", "%o2"]);
 }
 
 #[test]

@@ -10,9 +10,11 @@ function valuesOf(source: string): string[] {
 }
 
 describe("macsyma lexer", () => {
-  it("tokenizes numbers, names, and percent constants", () => {
-    expect(typesOf("42 3.14 1.5e10 x %pi")).toEqual(["NUMBER", "NUMBER", "NUMBER", "NAME", "NAME"]);
-    expect(valuesOf("%pi")).toEqual(["%pi"]);
+  it("tokenizes numbers, names, percent constants, and history references", () => {
+    expect(typesOf("42 3.14 1.5e10 x %pi % %i1 %o2")).toEqual([
+      "NUMBER", "NUMBER", "NUMBER", "NAME", "NAME", "NAME", "NAME", "NAME",
+    ]);
+    expect(valuesOf("%pi % %i1 %o2")).toEqual(["%pi", "%", "%i1", "%o2"]);
   });
 
   it("uses the compiled grammar's longest-match operator order", () => {
