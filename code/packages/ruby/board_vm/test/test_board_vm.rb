@@ -339,6 +339,55 @@ module CodingAdventures
         assert_equal "/dev/tty.usbserial-CP2102-esp32", runner.calls.first[:argv][9]
       end
 
+      def test_pico_helper_flashes_uf2_image_without_requiring_a_serial_port
+        upload = CommandResult.new(["cargo"], "/repo/code/packages/rust", "copied uf2\n", "", 0)
+        runner = FakeRunner.new([upload])
+
+        connection = BoardVM.pico(
+          flash: true,
+          firmware_image: "/tmp/board-vm-pico.uf2",
+          cargo_workspace: "/repo/code/packages/rust",
+          pico_uf2_mount: "/Volumes/RPI-RP2",
+          runner: runner
+        )
+
+        assert_equal :raspberry_pi_pico, connection.board
+        assert_nil connection.port
+        assert_equal "/repo/code/packages/rust", runner.calls.first[:chdir]
+        assert_equal [
+          "cargo", "run",
+          "-p", "board-vm-cli",
+          "--bin", "board-vm",
+          "--",
+          "pico-uf2",
+          "--image", "/tmp/board-vm-pico.uf2",
+          "--mount", "/Volumes/RPI-RP2"
+        ], runner.calls.first[:argv]
+      end
+
+      def test_pico_flash_uses_auto_detected_bootsel_mount_by_default
+        upload = CommandResult.new(["cargo"], "/repo/code/packages/rust", "copied uf2\n", "", 0)
+        runner = FakeRunner.new([upload])
+
+        connection = BoardVM.pico_w(
+          flash: true,
+          firmware_image: "/tmp/board-vm-pico-w.uf2",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner
+        )
+
+        assert_equal :raspberry_pi_pico_w, connection.board
+        assert_nil connection.port
+        assert_equal [
+          "cargo", "run",
+          "-p", "board-vm-cli",
+          "--bin", "board-vm",
+          "--",
+          "pico-uf2",
+          "--image", "/tmp/board-vm-pico-w.uf2"
+        ], runner.calls.first[:argv]
+      end
+
       def test_esp_upload_command_rejects_non_esp_targets
         error = assert_raises(UnsupportedBoardError) do
           BoardVM.esp_upload_command(:raspberry_pi_pico, port: "/dev/cu.usbmodem", image: "fw.bin")
