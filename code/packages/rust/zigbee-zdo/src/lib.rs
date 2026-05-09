@@ -149,6 +149,33 @@ impl NodeDescriptor {
             descriptor_capability_field: cursor.read_u8()?,
         })
     }
+
+    pub fn summary(&self) -> NodeDescriptorSummary {
+        NodeDescriptorSummary {
+            logical_type: self.logical_type,
+            manufacturer_code: self.manufacturer_code,
+            mains_powered: self.mac_capability_flags.mains_powered,
+            receiver_on_when_idle: self.mac_capability_flags.receiver_on_when_idle,
+            security_capable: self.mac_capability_flags.security_capable,
+            maximum_buffer_size: self.maximum_buffer_size,
+            maximum_incoming_transfer_size: self.maximum_incoming_transfer_size,
+            maximum_outgoing_transfer_size: self.maximum_outgoing_transfer_size,
+            server_mask: self.server_mask,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct NodeDescriptorSummary {
+    pub logical_type: LogicalType,
+    pub manufacturer_code: u16,
+    pub mains_powered: bool,
+    pub receiver_on_when_idle: bool,
+    pub security_capable: bool,
+    pub maximum_buffer_size: u8,
+    pub maximum_incoming_transfer_size: u16,
+    pub maximum_outgoing_transfer_size: u16,
+    pub server_mask: u16,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -179,6 +206,33 @@ impl SimpleDescriptor {
             output_clusters,
         })
     }
+
+    pub fn summary(&self) -> SimpleDescriptorSummary {
+        SimpleDescriptorSummary {
+            endpoint: self.endpoint,
+            profile_id: self.profile_id,
+            device_id: self.device_id,
+            device_version: self.device_version,
+            input_cluster_count: self.input_clusters.len(),
+            output_cluster_count: self.output_clusters.len(),
+            has_basic_cluster: self.input_clusters.contains(&ClusterId::BASIC),
+            has_on_off_cluster: self.input_clusters.contains(&ClusterId::ON_OFF),
+            has_level_control_cluster: self.input_clusters.contains(&ClusterId::LEVEL_CONTROL),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SimpleDescriptorSummary {
+    pub endpoint: Endpoint,
+    pub profile_id: ProfileId,
+    pub device_id: u16,
+    pub device_version: u8,
+    pub input_cluster_count: usize,
+    pub output_cluster_count: usize,
+    pub has_basic_cluster: bool,
+    pub has_on_off_cluster: bool,
+    pub has_level_control_cluster: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -248,6 +302,73 @@ pub struct ZigbeeInterviewSummary {
     pub ieee_address: Option<IeeeAddress>,
     pub node_descriptor: Option<NodeDescriptor>,
     pub simple_descriptors: Vec<SimpleDescriptor>,
+}
+
+impl ZigbeeInterviewSummary {
+    pub fn read_summary(&self) -> ZigbeeInterviewReadSummary {
+        let input_cluster_count = self
+            .simple_descriptors
+            .iter()
+            .map(|descriptor| descriptor.input_clusters.len())
+            .sum();
+        let output_cluster_count = self
+            .simple_descriptors
+            .iter()
+            .map(|descriptor| descriptor.output_clusters.len())
+            .sum();
+        ZigbeeInterviewReadSummary {
+            network_address: self.network_address,
+            has_ieee_address: self.ieee_address.is_some(),
+            logical_type: self
+                .node_descriptor
+                .as_ref()
+                .map(|descriptor| descriptor.logical_type),
+            manufacturer_code: self
+                .node_descriptor
+                .as_ref()
+                .map(|descriptor| descriptor.manufacturer_code),
+            endpoint_count: self.simple_descriptors.len(),
+            input_cluster_count,
+            output_cluster_count,
+            has_basic_cluster: self
+                .simple_descriptors
+                .iter()
+                .any(|descriptor| descriptor.input_clusters.contains(&ClusterId::BASIC)),
+            has_on_off_cluster: self
+                .simple_descriptors
+                .iter()
+                .any(|descriptor| descriptor.input_clusters.contains(&ClusterId::ON_OFF)),
+            has_level_control_cluster: self.simple_descriptors.iter().any(|descriptor| {
+                descriptor
+                    .input_clusters
+                    .contains(&ClusterId::LEVEL_CONTROL)
+            }),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ZigbeeInterviewReadSummary {
+    pub network_address: NetworkAddress,
+    pub has_ieee_address: bool,
+    pub logical_type: Option<LogicalType>,
+    pub manufacturer_code: Option<u16>,
+    pub endpoint_count: usize,
+    pub input_cluster_count: usize,
+    pub output_cluster_count: usize,
+    pub has_basic_cluster: bool,
+    pub has_on_off_cluster: bool,
+    pub has_level_control_cluster: bool,
+}
+
+impl ZigbeeInterviewReadSummary {
+    pub fn has_descriptors(&self) -> bool {
+        self.logical_type.is_some() || self.endpoint_count > 0
+    }
+
+    pub fn can_project_device_identity(&self) -> bool {
+        self.logical_type.is_some() || self.has_ieee_address
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -756,6 +877,31 @@ mod tests {
     }
 
     #[test]
+    fn descriptor_summaries_keep_interview_payloads_compact() {
+        let node_summary = NodeDescriptor::parse(&node_descriptor_bytes())
+            .unwrap()
+            .summary();
+        let simple_summary = SimpleDescriptor::parse(&simple_descriptor_bytes())
+            .unwrap()
+            .summary();
+
+        assert_eq!(node_summary.logical_type, LogicalType::Router);
+        assert_eq!(node_summary.manufacturer_code, 0x1234);
+        assert!(node_summary.mains_powered);
+        assert!(node_summary.receiver_on_when_idle);
+        assert_eq!(node_summary.maximum_buffer_size, 82);
+        assert_eq!(node_summary.maximum_incoming_transfer_size, 0x0040);
+        assert_eq!(node_summary.maximum_outgoing_transfer_size, 0x0040);
+        assert_eq!(simple_summary.endpoint, Endpoint(1));
+        assert_eq!(simple_summary.profile_id, ProfileId::HOME_AUTOMATION);
+        assert_eq!(simple_summary.input_cluster_count, 2);
+        assert_eq!(simple_summary.output_cluster_count, 1);
+        assert!(simple_summary.has_basic_cluster);
+        assert!(simple_summary.has_on_off_cluster);
+        assert!(!simple_summary.has_level_control_cluster);
+    }
+
+    #[test]
     fn parses_active_endpoint_response() {
         let response =
             parse_active_endpoints_response(&[0xcc, 0x00, 0x34, 0x12, 2, 1, 11]).unwrap();
@@ -942,6 +1088,51 @@ mod tests {
         assert_eq!(device.serial.as_deref(), Some("0x00124b0024c8abcd"));
         assert_eq!(device.identifiers.len(), 2);
         assert_eq!(device.metadata[1].value, "1");
+    }
+
+    #[test]
+    fn interview_read_summary_counts_identity_and_clusters() {
+        let node_descriptor = NodeDescriptor::parse(&node_descriptor_bytes()).unwrap();
+        let mut simple_descriptor = SimpleDescriptor::parse(&simple_descriptor_bytes()).unwrap();
+        simple_descriptor
+            .input_clusters
+            .push(ClusterId::LEVEL_CONTROL);
+        let summary = ZigbeeInterviewSummary {
+            network_address: NetworkAddress(0x1234),
+            ieee_address: Some(IeeeAddress(0x0012_4b00_24c8_abcd)),
+            node_descriptor: Some(node_descriptor),
+            simple_descriptors: vec![simple_descriptor],
+        }
+        .read_summary();
+
+        assert_eq!(summary.network_address, NetworkAddress(0x1234));
+        assert!(summary.has_ieee_address);
+        assert_eq!(summary.logical_type, Some(LogicalType::Router));
+        assert_eq!(summary.manufacturer_code, Some(0x1234));
+        assert_eq!(summary.endpoint_count, 1);
+        assert_eq!(summary.input_cluster_count, 3);
+        assert_eq!(summary.output_cluster_count, 1);
+        assert!(summary.has_basic_cluster);
+        assert!(summary.has_on_off_cluster);
+        assert!(summary.has_level_control_cluster);
+        assert!(summary.has_descriptors());
+        assert!(summary.can_project_device_identity());
+    }
+
+    #[test]
+    fn interview_read_summary_handles_sparse_discovery() {
+        let summary = ZigbeeInterviewSummary {
+            network_address: NetworkAddress(0xabcd),
+            ieee_address: None,
+            node_descriptor: None,
+            simple_descriptors: Vec::new(),
+        }
+        .read_summary();
+
+        assert_eq!(summary.endpoint_count, 0);
+        assert_eq!(summary.input_cluster_count, 0);
+        assert!(!summary.has_descriptors());
+        assert!(!summary.can_project_device_identity());
     }
 
     #[test]
