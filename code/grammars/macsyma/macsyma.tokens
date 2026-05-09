@@ -15,8 +15,9 @@
 # Lexical conventions in MACSYMA:
 #
 #   - Names are case-sensitive (unlike many 1960s languages).
-#   - Identifiers that begin with `%` are system-defined constants:
-#     %pi, %e, %i, %phi, %gamma. These are lexed as a single NAME.
+#   - Identifiers that begin with `%` are system-defined constants or
+#     session history references: %, %pi, %e, %i, %i1, %o1. These are
+#     lexed as a single NAME.
 #   - Two statement terminators exist: `;` displays the result,
 #     `$` suppresses it. The parser treats them identically; the
 #     distinction is preserved in the token stream for later layers.
@@ -85,15 +86,15 @@ DOLLAR    = "$"
 # minus is the parser's responsibility. This keeps `1-2` lexable as
 # three tokens (NUMBER MINUS NUMBER) rather than two.
 #
-# NAME also covers the %-prefixed system constants (%pi, %e, %i).
-# Listing the percent form as a separate alternative keeps the regex
-# readable.
+# NAME also covers the bare `%` last-output reference and %-prefixed
+# system/history names (%pi, %e, %i, %i1, %o1). Listing the percent forms as
+# separate alternatives keeps the regex readable.
 #
 # STRING matches double-quoted text with simple backslash escapes.
 # ============================================================
 
 NUMBER = /[0-9]+\.?[0-9]*([eE][+-]?[0-9]+)?/
-NAME   = /%?[a-zA-Z_][a-zA-Z0-9_]*/
+NAME   = /%[a-zA-Z_][a-zA-Z0-9_]*|%|[a-zA-Z_][a-zA-Z0-9_]*/
 STRING = /"([^"\\]|\\.)*"/
 
 # ============================================================
