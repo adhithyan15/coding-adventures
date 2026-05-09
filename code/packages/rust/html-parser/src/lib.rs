@@ -1247,7 +1247,7 @@ impl HtmlParser {
         if incoming_name == "p" {
             self.close_open_element_if(|name| name == "p");
         } else if incoming_name == "li" {
-            self.close_open_element_if(|name| name == "li");
+            self.close_open_list_item_if_in_scope();
         } else if incoming_name == "dt" || incoming_name == "dd" {
             self.close_open_element_if(|name| name == "dt" || name == "dd");
         } else if incoming_name == "option" {
@@ -1308,6 +1308,23 @@ impl HtmlParser {
 
     fn close_open_element_silently(&mut self, name: &str) -> bool {
         self.close_open_element_if(|candidate| candidate == name)
+    }
+
+    fn close_open_list_item_if_in_scope(&mut self) -> bool {
+        let Some(index) = self
+            .open_elements
+            .iter()
+            .rposition(|path| element_at_path(&self.document, path).is_some_and(|name| name == "li"))
+        else {
+            return false;
+        };
+        if self.open_elements.iter().skip(index + 1).any(|path| {
+            element_at_path(&self.document, path).is_some_and(is_list_item_scope_boundary)
+        }) {
+            return false;
+        }
+        self.open_elements.truncate(index);
+        true
     }
 
     fn close_open_formatting_element_silently(&mut self, name: &str) -> bool {
@@ -1582,11 +1599,13 @@ fn body_fragment_nodes(mut document: Document) -> Vec<Node> {
 struct DocumentShellBuilder {
     seen_document_element: bool,
     seen_body_content: bool,
+    seen_body_element: bool,
     html_attributes: Vec<Attribute>,
     head_attributes: Vec<Attribute>,
     body_attributes: Vec<Attribute>,
     head_children: Vec<Node>,
     body_children: Vec<Node>,
+    trailing_html_children: Vec<Node>,
 }
 
 impl DocumentShellBuilder {
@@ -1598,8 +1617,12 @@ impl DocumentShellBuilder {
             }
             Node::Element(mut element) if element.name == "body" => {
                 self.seen_body_content = true;
+                self.seen_body_element = true;
                 self.body_attributes.extend(element.attributes);
                 self.body_children.append(&mut element.children);
+            }
+            Node::Comment(_) if self.seen_body_content => {
+                self.trailing_html_children.push(node);
             }
             Node::Element(element)
                 if !self.seen_body_content && is_head_element(element.name.as_str()) =>
@@ -1635,6 +1658,7 @@ impl DocumentShellBuilder {
         };
         html_element.children.push(Node::Element(head));
         html_element.children.push(Node::Element(body));
+        html_element.children.extend(self.trailing_html_children);
         html
     }
 }
@@ -1722,6 +1746,10 @@ fn is_heading_element(name: &str) -> bool {
 
 fn is_ruby_annotation_element(name: &str) -> bool {
     matches!(name, "rb" | "rt" | "rp")
+}
+
+fn is_list_item_scope_boundary(name: &str) -> bool {
+    matches!(name, "ol" | "ul")
 }
 
 fn is_paragraph_boundary_element(name: &str) -> bool {
