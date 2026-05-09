@@ -130,6 +130,65 @@ pub struct HueEventStreamBatch {
     pub events: Vec<HueEventRecord>,
 }
 
+#[derive(Debug, Default)]
+pub struct HueEventStreamDecoder {
+    current: PartialSseEvent,
+    pending_line: String,
+}
+
+impl HueEventStreamDecoder {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn feed(&mut self, chunk: &[u8]) -> Result<Vec<HueEventStreamBatch>, HueClientError> {
+        let text = std::str::from_utf8(chunk).map_err(|error| HueClientError::JsonDecode {
+            message: error.to_string(),
+        })?;
+        self.feed_str(text)
+    }
+
+    pub fn feed_str(&mut self, chunk: &str) -> Result<Vec<HueEventStreamBatch>, HueClientError> {
+        let mut batches = Vec::new();
+        for segment in chunk.split_inclusive('\n') {
+            if let Some(line) = segment.strip_suffix('\n') {
+                self.pending_line
+                    .push_str(line.strip_suffix('\r').unwrap_or(line));
+                self.finish_line(&mut batches)?;
+            } else {
+                self.pending_line.push_str(segment);
+            }
+        }
+        Ok(batches)
+    }
+
+    pub fn finish(&mut self) -> Result<Vec<HueEventStreamBatch>, HueClientError> {
+        let mut batches = Vec::new();
+        if !self.pending_line.is_empty() {
+            self.finish_line(&mut batches)?;
+        }
+        if let Some(batch) = self.current.finish()? {
+            batches.push(batch);
+        }
+        Ok(batches)
+    }
+
+    fn finish_line(
+        &mut self,
+        batches: &mut Vec<HueEventStreamBatch>,
+    ) -> Result<(), HueClientError> {
+        let line = std::mem::take(&mut self.pending_line);
+        if line.is_empty() {
+            if let Some(batch) = self.current.finish()? {
+                batches.push(batch);
+            }
+        } else {
+            self.current.push_line(&line)?;
+        }
+        Ok(())
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct HueHttpRequest {
     pub method: HueMethod,
@@ -781,25 +840,9 @@ pub fn parse_button_state_updates_from_event_batches(
 }
 
 pub fn parse_event_stream(body: &[u8]) -> Result<Vec<HueEventStreamBatch>, HueClientError> {
-    let text = std::str::from_utf8(body).map_err(|error| HueClientError::JsonDecode {
-        message: error.to_string(),
-    })?;
-    let mut batches = Vec::new();
-    let mut current = PartialSseEvent::default();
-
-    for line in text.lines() {
-        if line.is_empty() {
-            if let Some(batch) = current.finish()? {
-                batches.push(batch);
-            }
-            continue;
-        }
-        current.push_line(line)?;
-    }
-    if let Some(batch) = current.finish()? {
-        batches.push(batch);
-    }
-
+    let mut decoder = HueEventStreamDecoder::new();
+    let mut batches = decoder.feed(body)?;
+    batches.extend(decoder.finish()?);
     Ok(batches)
 }
 
@@ -1443,6 +1486,55 @@ mod tests {
             object_string_field(&batches[0].events[0].data[0], "id"),
             Some("light-1")
         );
+    }
+
+    #[test]
+    fn event_stream_decoder_emits_complete_batches_from_split_chunks() {
+        let mut decoder = HueEventStreamDecoder::new();
+        assert!(decoder.feed(b"id: stream-1\n").unwrap().is_empty());
+        assert!(decoder.feed(b"event: update\n").unwrap().is_empty());
+        assert!(decoder
+            .feed(b"data: [{\"id\":\"event-1\",\"type\":\"update\",\"data\":[")
+            .unwrap()
+            .is_empty());
+        assert!(decoder
+            .feed(b"{\"id\":\"light-1\",\"type\":\"light\",\"on\":{\"on\":true}}]}]\n")
+            .unwrap()
+            .is_empty());
+
+        let batches = decoder.feed(b"\n").unwrap();
+
+        assert_eq!(batches.len(), 1);
+        assert_eq!(batches[0].sse_id.as_deref(), Some("stream-1"));
+        assert_eq!(batches[0].sse_event_type.as_deref(), Some("update"));
+        assert_eq!(batches[0].events[0].id.as_deref(), Some("event-1"));
+        assert!(decoder.finish().unwrap().is_empty());
+    }
+
+    #[test]
+    fn event_stream_decoder_flushes_final_frame_without_blank_line() {
+        let mut decoder = HueEventStreamDecoder::new();
+
+        assert!(decoder
+            .feed(b"data: [{\"id\":\"event-1\",\"type\":\"update\",\"data\":[]}]")
+            .unwrap()
+            .is_empty());
+        let batches = decoder.finish().unwrap();
+
+        assert_eq!(batches.len(), 1);
+        assert_eq!(batches[0].events[0].event_type.as_deref(), Some("update"));
+    }
+
+    #[test]
+    fn event_stream_decoder_accepts_crlf_boundaries() {
+        let mut decoder = HueEventStreamDecoder::new();
+        let batches = decoder
+            .feed(b"id: stream-1\r\ndata: [{\"id\":\"event-1\",\"type\":\"update\",\"data\":[]}]\r\n\r\n")
+            .unwrap();
+
+        assert_eq!(batches.len(), 1);
+        assert_eq!(batches[0].sse_id.as_deref(), Some("stream-1"));
+        assert_eq!(batches[0].events.len(), 1);
     }
 
     #[test]
