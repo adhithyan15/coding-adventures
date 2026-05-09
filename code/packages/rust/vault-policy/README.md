@@ -10,6 +10,8 @@ Pluggable **policy engine** for the Vault stack. Authentication
   table with `*` wildcard. Fits a Bitwarden-class app.
 - Composition decorators: **`AllOf`**, **`AnyOf`**,
   **`RequireFactor`**, **`TimeBound`**.
+- **`PolicyDecisionRecord`** + `decide_with_record` for compact,
+  owned audit/telemetry handoff without exposing the full metadata bag.
 
 ## Quick example
 
@@ -46,6 +48,13 @@ assert_eq!(policy.decide(&ctx), Decision::Allow);
 fixed table — the engine never quotes attacker-controlled bytes
 back to the caller, so a malicious principal name in a deny
 message cannot inject content into logs.
+
+`decide_with_record(&engine, &ctx)` evaluates the engine once and
+returns a `PolicyDecisionRecord` containing the engine kind,
+principal/action/resource/time, factor and metadata counts, and
+the inert decision. Chief of Staff callers can persist or audit
+that record without giving the audit path direct access to the
+original request metadata.
 
 ## Where it fits
 

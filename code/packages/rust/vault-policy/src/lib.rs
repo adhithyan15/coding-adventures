@@ -93,6 +93,26 @@ pub enum Decision {
     Deny(Reason),
 }
 
+impl Decision {
+    /// Returns true when the policy allowed the request.
+    pub fn is_allow(&self) -> bool {
+        matches!(self, Self::Allow)
+    }
+
+    /// Returns true when the policy denied the request.
+    pub fn is_deny(&self) -> bool {
+        matches!(self, Self::Deny(_))
+    }
+
+    /// Returns the static denial reason, if this is a denial.
+    pub fn reason(&self) -> Option<Reason> {
+        match self {
+            Self::Allow => None,
+            Self::Deny(reason) => Some(*reason),
+        }
+    }
+}
+
 /// Static-literal reason for a `Deny`. The engine never
 /// constructs these from input bytes; they all come from a fixed
 /// per-rule table so a malicious principal name in logs cannot
@@ -118,6 +138,61 @@ impl Reason {
     pub const ALL_INNER_DENIED: Reason = Reason("every inner engine denied");
 }
 
+/// Owned, audit-friendly view of one policy decision.
+///
+/// The record intentionally copies only identifiers and counts from
+/// [`PolicyContext`]. Callers can hand it to audit or telemetry sinks without
+/// granting those sinks access to the original metadata bag.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PolicyDecisionRecord {
+    /// Stable kind of the policy engine that produced the decision.
+    pub engine_kind: &'static str,
+    /// Principal being evaluated.
+    pub principal: String,
+    /// Requested action.
+    pub action: String,
+    /// Requested resource.
+    pub resource: String,
+    /// Decision time in UNIX seconds.
+    pub time: u64,
+    /// Number of authentication factors present on the request.
+    pub factor_count: usize,
+    /// Number of metadata keys present on the request.
+    pub metadata_count: usize,
+    /// Final policy decision.
+    pub decision: Decision,
+}
+
+impl PolicyDecisionRecord {
+    /// Build a record from a precomputed decision.
+    pub fn from_decision(
+        engine_kind: &'static str,
+        ctx: &PolicyContext,
+        decision: Decision,
+    ) -> Self {
+        Self {
+            engine_kind,
+            principal: ctx.principal.clone(),
+            action: ctx.action.clone(),
+            resource: ctx.resource.clone(),
+            time: ctx.time,
+            factor_count: ctx.factors.len(),
+            metadata_count: ctx.metadata.len(),
+            decision,
+        }
+    }
+
+    /// Returns true when this record captured an allow decision.
+    pub fn is_allowed(&self) -> bool {
+        self.decision.is_allow()
+    }
+
+    /// Returns the static denial reason, if this record captured a denial.
+    pub fn denial_reason(&self) -> Option<Reason> {
+        self.decision.reason()
+    }
+}
+
 // ─────────────────────────────────────────────────────────────────────
 // 2. The trait
 // ─────────────────────────────────────────────────────────────────────
@@ -133,6 +208,15 @@ pub trait PolicyEngine: Send + Sync {
     /// must NOT touch the network, the filesystem, or the wall
     /// clock — `ctx.time` is the time of record.
     fn decide(&self, ctx: &PolicyContext) -> Decision;
+}
+
+/// Decide a request and return a compact owned record of the decision.
+pub fn decide_with_record<E>(engine: &E, ctx: &PolicyContext) -> PolicyDecisionRecord
+where
+    E: PolicyEngine + ?Sized,
+{
+    let decision = engine.decide(ctx);
+    PolicyDecisionRecord::from_decision(engine.kind(), ctx, decision)
 }
 
 // ─────────────────────────────────────────────────────────────────────
@@ -197,9 +281,7 @@ impl PolicyEngine for SimpleRbacEngine {
             None => return Decision::Deny(Reason::ROLE_LACKS_PERMISSION),
         };
         for (action_pat, resource_pat) in perms {
-            if action_pat == &ctx.action
-                && (resource_pat == "*" || resource_pat == &ctx.resource)
-            {
+            if action_pat == &ctx.action && (resource_pat == "*" || resource_pat == &ctx.resource) {
                 return Decision::Allow;
             }
         }
@@ -426,6 +508,57 @@ mod tests {
         }
     }
 
+    #[test]
+    fn decision_helpers_expose_outcome_and_reason() {
+        assert!(Decision::Allow.is_allow());
+        assert!(!Decision::Allow.is_deny());
+        assert_eq!(Decision::Allow.reason(), None);
+
+        let denial = Decision::Deny(Reason::POLICY_DENIES);
+        assert!(denial.is_deny());
+        assert_eq!(denial.reason(), Some(Reason::POLICY_DENIES));
+    }
+
+    #[test]
+    fn decide_with_record_captures_compact_allow_shape() {
+        let e = rbac_alice_admin_bob_member();
+        let mut c = ctx(
+            "alice",
+            "delete",
+            "vault/login/abc",
+            &["password", "webauthn-prf"],
+            1_700,
+        );
+        c.metadata.insert("ip".into(), "127.0.0.1".into());
+
+        let record = decide_with_record(&e, &c);
+
+        assert_eq!(record.engine_kind, "rbac");
+        assert_eq!(record.principal, "alice");
+        assert_eq!(record.action, "delete");
+        assert_eq!(record.resource, "vault/login/abc");
+        assert_eq!(record.time, 1_700);
+        assert_eq!(record.factor_count, 2);
+        assert_eq!(record.metadata_count, 1);
+        assert!(record.is_allowed());
+        assert_eq!(record.denial_reason(), None);
+    }
+
+    #[test]
+    fn decide_with_record_captures_static_denial_reason() {
+        let e = rbac_alice_admin_bob_member();
+        let c = ctx("bob", "delete", "vault/login/abc", &["password"], 1_700);
+
+        let record = decide_with_record(&e, &c);
+
+        assert!(!record.is_allowed());
+        assert_eq!(record.denial_reason(), Some(Reason::ROLE_LACKS_PERMISSION));
+        assert_eq!(
+            record.decision,
+            Decision::Deny(Reason::ROLE_LACKS_PERMISSION)
+        );
+    }
+
     // --- AllOf ---
 
     #[test]
@@ -554,8 +687,14 @@ mod tests {
     fn time_bound_inclusive_endpoints() {
         let inner = Box::new(rbac_alice_admin_bob_member());
         let t = TimeBound::new(inner, 1000, 2000);
-        assert_eq!(t.decide(&ctx("alice", "read", "x", &[], 1000)), Decision::Allow);
-        assert_eq!(t.decide(&ctx("alice", "read", "x", &[], 2000)), Decision::Allow);
+        assert_eq!(
+            t.decide(&ctx("alice", "read", "x", &[], 1000)),
+            Decision::Allow
+        );
+        assert_eq!(
+            t.decide(&ctx("alice", "read", "x", &[], 2000)),
+            Decision::Allow
+        );
     }
 
     // --- Composition: nested decorators ---
@@ -604,7 +743,10 @@ mod tests {
             "required authentication factor missing"
         );
         assert_eq!(Reason::OUTSIDE_TIME_WINDOW.0, "outside time window");
-        assert_eq!(Reason::ANY_INNER_DENIED.0, "at least one inner engine denied");
+        assert_eq!(
+            Reason::ANY_INNER_DENIED.0,
+            "at least one inner engine denied"
+        );
         assert_eq!(Reason::ALL_INNER_DENIED.0, "every inner engine denied");
     }
 }
