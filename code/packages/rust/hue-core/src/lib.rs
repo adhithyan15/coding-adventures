@@ -548,6 +548,62 @@ pub struct HueButtonResource {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueMotionStateUpdate {
+    pub id: HueResourceId,
+    pub owner_device_id: Option<HueResourceId>,
+    pub name: Option<String>,
+    pub motion: Option<bool>,
+    pub motion_valid: Option<bool>,
+}
+
+impl HueMotionStateUpdate {
+    pub fn from_motion_resource(motion: &HueMotionResource) -> Self {
+        Self {
+            id: motion.id.clone(),
+            owner_device_id: Some(motion.owner_device_id.clone()),
+            name: Some(motion.name.clone()),
+            motion: motion.motion,
+            motion_valid: motion.motion_valid,
+        }
+    }
+
+    pub fn has_state(&self) -> bool {
+        self.motion.is_some()
+    }
+
+    pub fn state_deltas(&self) -> Vec<StateDelta> {
+        hue_motion_state_deltas(self)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueButtonStateUpdate {
+    pub id: HueResourceId,
+    pub owner_device_id: Option<HueResourceId>,
+    pub name: Option<String>,
+    pub last_event: Option<String>,
+}
+
+impl HueButtonStateUpdate {
+    pub fn from_button_resource(button: &HueButtonResource) -> Self {
+        Self {
+            id: button.id.clone(),
+            owner_device_id: Some(button.owner_device_id.clone()),
+            name: Some(button.name.clone()),
+            last_event: button.last_event.clone(),
+        }
+    }
+
+    pub fn has_state(&self) -> bool {
+        self.last_event.is_some()
+    }
+
+    pub fn state_deltas(&self) -> Vec<StateDelta> {
+        hue_button_state_deltas(self)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct HueDeviceResource {
     pub id: HueResourceId,
     pub name: String,
@@ -644,6 +700,29 @@ pub fn hue_light_state_deltas(update: &HueLightStateUpdate) -> Vec<StateDelta> {
         });
     }
     deltas
+}
+
+pub fn hue_motion_state_deltas(update: &HueMotionStateUpdate) -> Vec<StateDelta> {
+    update
+        .motion
+        .map(|motion| StateDelta {
+            capability_id: CapabilityId::trusted("sensor.occupancy"),
+            value: Value::Bool(motion),
+        })
+        .into_iter()
+        .collect()
+}
+
+pub fn hue_button_state_deltas(update: &HueButtonStateUpdate) -> Vec<StateDelta> {
+    update
+        .last_event
+        .as_ref()
+        .map(|last_event| StateDelta {
+            capability_id: CapabilityId::trusted("input.button"),
+            value: Value::Text(last_event.clone()),
+        })
+        .into_iter()
+        .collect()
 }
 
 pub fn hue_device_to_core(
@@ -1192,6 +1271,52 @@ mod tests {
                     value: Value::Integer(366),
                 },
             ]
+        );
+    }
+
+    #[test]
+    fn hue_motion_state_update_maps_occupancy_delta() {
+        let motion = HueMotionResource {
+            id: HueResourceId::trusted("motion-1"),
+            owner_device_id: HueResourceId::trusted("device-1"),
+            name: "Hallway motion".to_string(),
+            motion: Some(true),
+            motion_valid: Some(true),
+        };
+        let update = HueMotionStateUpdate::from_motion_resource(&motion);
+
+        assert!(update.has_state());
+        assert_eq!(
+            update.owner_device_id.as_ref().unwrap().as_str(),
+            "device-1"
+        );
+        assert_eq!(
+            update.state_deltas(),
+            vec![StateDelta {
+                capability_id: CapabilityId::trusted("sensor.occupancy"),
+                value: Value::Bool(true),
+            }]
+        );
+    }
+
+    #[test]
+    fn hue_button_state_update_maps_last_event_delta() {
+        let button = HueButtonResource {
+            id: HueResourceId::trusted("button-1"),
+            owner_device_id: HueResourceId::trusted("device-1"),
+            name: "Dimmer button".to_string(),
+            last_event: Some("short_release".to_string()),
+        };
+        let update = HueButtonStateUpdate::from_button_resource(&button);
+
+        assert!(update.has_state());
+        assert_eq!(update.name.as_deref(), Some("Dimmer button"));
+        assert_eq!(
+            update.state_deltas(),
+            vec![StateDelta {
+                capability_id: CapabilityId::trusted("input.button"),
+                value: Value::Text("short_release".to_string()),
+            }]
         );
     }
 
