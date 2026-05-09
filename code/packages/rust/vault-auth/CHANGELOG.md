@@ -36,6 +36,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `MalformedCredential`, `InvalidParameter`, `Crypto`,
   `NoBindFactors`. `Display` strings sourced exclusively from
   this crate's literals.
+- Credential-safe `AuthAssertionSummary` and `AuthAssertionSetSummary`
+  read models for policy/audit layers that need factor coverage without
+  exposing key-contribution bytes.
 - All key material is held in `Zeroizing<…>` and wiped on drop;
   `AuthAssertion::Drop` zeroes the contained key contribution.
 - 16 unit tests covering: password verify success with bind
