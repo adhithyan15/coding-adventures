@@ -8,6 +8,8 @@ All notable changes to this package will be documented in this file.
 
 - Initial Chief of Staff Tool API core package.
 - Canonical tool definition, invocation request, event, result, and metric types.
+- Tool catalog query helpers for filtering by family, side effects, tier,
+  capability, tag, stability, and limit.
 - JSON-schema-like input validation for model-facing tool arguments.
 - First-phase built-in tool catalog definitions for context, artifact, memory,
   and job store/runtime tools.
