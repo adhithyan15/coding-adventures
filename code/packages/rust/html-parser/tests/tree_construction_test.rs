@@ -28,35 +28,47 @@ fn html5lib_tree_construction_smoke_cases_match_dom_dump() {
 }
 
 fn parse_tree_construction_cases(raw: &str) -> Vec<TreeConstructionCase> {
-    raw.split("\n\n")
-        .filter(|chunk| !chunk.trim().is_empty())
-        .map(parse_tree_construction_case)
-        .collect()
-}
+    let mut cases = Vec::new();
+    let mut lines = raw.lines().peekable();
 
-fn parse_tree_construction_case(raw: &str) -> TreeConstructionCase {
-    let mut lines = raw.lines();
-    assert_eq!(lines.next(), Some("#data"));
-
-    let mut data = Vec::new();
-    for line in lines.by_ref() {
-        if line == "#errors" {
-            break;
+    while let Some(line) = lines.next() {
+        if line.is_empty() {
+            continue;
         }
-        data.push(line);
-    }
+        assert_eq!(line, "#data");
 
-    for line in lines.by_ref() {
-        if line == "#document" {
-            break;
+        let mut data = Vec::new();
+        for line in lines.by_ref() {
+            if line == "#errors" {
+                break;
+            }
+            data.push(line);
         }
+
+        for line in lines.by_ref() {
+            if line == "#document" {
+                break;
+            }
+        }
+
+        let mut document = Vec::new();
+        while let Some(line) = lines.peek() {
+            if *line == "#data" {
+                break;
+            }
+            document.push(lines.next().expect("peeked line should exist").to_string());
+        }
+        while document.last().is_some_and(|line| line.is_empty()) {
+            document.pop();
+        }
+
+        cases.push(TreeConstructionCase {
+            data: data.join("\n"),
+            document,
+        });
     }
 
-    let document = lines.map(str::to_string).collect();
-    TreeConstructionCase {
-        data: data.join("\n"),
-        document,
-    }
+    cases
 }
 
 fn dump_document(document: &Document) -> Vec<String> {

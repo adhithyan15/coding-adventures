@@ -866,3 +866,12 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <b>
 |         "C"
 |       "D"
+
+#data
+
+#errors
+(1,0): expected-doctype-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
