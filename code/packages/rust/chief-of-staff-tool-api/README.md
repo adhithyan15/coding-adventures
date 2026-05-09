@@ -10,7 +10,8 @@ The crate intentionally stops at the contract layer:
 - structured tool events and final results
 - JSON-schema-like argument validation
 - first-phase built-in store/job tool definitions from the D18D catalog,
-  including SkillStore read and lifecycle tools
+  including ContextStore, ArtifactStore, SkillStore, MemoryStore, and Job
+  runtime parity definitions
 - a deterministic in-memory registry for runtimes and tests
 - explicit policy decisions for permission, tier, and approval gates
 - a deterministic in-memory runtime that validates, invokes handlers, emits

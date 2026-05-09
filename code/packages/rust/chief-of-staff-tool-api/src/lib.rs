@@ -458,8 +458,17 @@ pub fn builtin_tool_catalog() -> Vec<ToolDefinition> {
     [
         context_open_session_definition(),
         context_append_entry_definition(),
+        context_read_entries_definition(),
+        context_create_snapshot_definition(),
+        context_compact_definition(),
+        context_archive_session_definition(),
         artifact_create_definition(),
+        artifact_write_revision_definition(),
         artifact_read_definition(),
+        artifact_read_revision_definition(),
+        artifact_list_definition(),
+        artifact_tag_definition(),
+        artifact_mark_retention_definition(),
         skill_list_definition(),
         skill_read_manifest_definition(),
         skill_read_asset_definition(),
@@ -469,8 +478,17 @@ pub fn builtin_tool_catalog() -> Vec<ToolDefinition> {
         skill_uninstall_definition(),
         memory_remember_definition(),
         memory_search_definition(),
+        memory_list_by_class_definition(),
+        memory_list_by_tag_definition(),
+        memory_supersede_definition(),
+        memory_expire_definition(),
+        memory_tombstone_definition(),
         job_validate_definition(),
         job_install_definition(),
+        job_uninstall_definition(),
+        job_run_now_definition(),
+        job_list_definition(),
+        job_status_definition(),
     ]
     .into()
 }
@@ -557,6 +575,145 @@ fn context_append_entry_definition() -> ToolDefinition {
     )
 }
 
+fn context_read_entries_definition() -> ToolDefinition {
+    builtin_definition(
+        "context.read_entries",
+        "Read context entries",
+        "Read ordered transcript entries from a durable context session.",
+        object_schema(
+            vec![
+                SchemaProperty::new("session_id", JsonSchema::String),
+                SchemaProperty::new("after_entry_id", JsonSchema::String),
+                SchemaProperty::new("limit", JsonSchema::Integer),
+            ],
+            vec!["session_id"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("session_id", JsonSchema::String),
+                SchemaProperty::new(
+                    "entries",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new("next_after_entry_id", JsonSchema::String),
+            ],
+            vec!["session_id", "entries"],
+            false,
+        )),
+        ToolSideEffects::Read,
+        ToolIdempotency::Always,
+        ToolConcurrency::Safe,
+        ToolStreaming::None,
+        PrivilegeTier::Tier0,
+        vec!["context:read"],
+        None,
+        vec!["context", "store"],
+    )
+}
+
+fn context_create_snapshot_definition() -> ToolDefinition {
+    builtin_definition(
+        "context.create_snapshot",
+        "Create context snapshot",
+        "Create a compact durable snapshot for a context session.",
+        object_schema(
+            vec![
+                SchemaProperty::new("session_id", JsonSchema::String),
+                SchemaProperty::new("basis_entry_id", JsonSchema::String),
+                SchemaProperty::new("included_entry_ids", string_array_schema()),
+                SchemaProperty::new("summary_refs", string_array_schema()),
+                SchemaProperty::new("memory_refs", string_array_schema()),
+                SchemaProperty::new("artifact_refs", string_array_schema()),
+                SchemaProperty::new("token_estimate", JsonSchema::Integer),
+            ],
+            vec!["session_id", "basis_entry_id"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("session_id", JsonSchema::String),
+                SchemaProperty::new("snapshot_id", JsonSchema::String),
+            ],
+            vec!["session_id", "snapshot_id"],
+            false,
+        )),
+        ToolSideEffects::Write,
+        ToolIdempotency::Conditional,
+        ToolConcurrency::Serialized,
+        ToolStreaming::Events,
+        PrivilegeTier::Tier0,
+        vec!["context:write"],
+        Some("context"),
+        vec!["context", "store"],
+    )
+}
+
+fn context_compact_definition() -> ToolDefinition {
+    builtin_definition(
+        "context.compact",
+        "Compact context",
+        "Compact older context entries into a durable summary reference.",
+        object_schema(
+            vec![
+                SchemaProperty::new("session_id", JsonSchema::String),
+                SchemaProperty::new("before_entry_id", JsonSchema::String),
+                SchemaProperty::new("summary_ref", JsonSchema::String),
+            ],
+            vec!["session_id", "before_entry_id", "summary_ref"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("session_id", JsonSchema::String),
+                SchemaProperty::new("compacted_before_entry_id", JsonSchema::String),
+                SchemaProperty::new("summary_ref", JsonSchema::String),
+            ],
+            vec!["session_id", "compacted_before_entry_id", "summary_ref"],
+            false,
+        )),
+        ToolSideEffects::Write,
+        ToolIdempotency::Conditional,
+        ToolConcurrency::Serialized,
+        ToolStreaming::Events,
+        PrivilegeTier::Tier0,
+        vec!["context:write"],
+        Some("context"),
+        vec!["context", "store"],
+    )
+}
+
+fn context_archive_session_definition() -> ToolDefinition {
+    builtin_definition(
+        "context.archive_session",
+        "Archive context session",
+        "Archive a durable context session without deleting its entries.",
+        object_schema(
+            vec![SchemaProperty::new("session_id", JsonSchema::String)],
+            vec!["session_id"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("session_id", JsonSchema::String),
+                SchemaProperty::new("status", JsonSchema::String),
+            ],
+            vec!["session_id", "status"],
+            false,
+        )),
+        ToolSideEffects::Write,
+        ToolIdempotency::Always,
+        ToolConcurrency::Serialized,
+        ToolStreaming::Events,
+        PrivilegeTier::Tier0,
+        vec!["context:write"],
+        Some("context"),
+        vec!["context", "store"],
+    )
+}
+
 fn artifact_create_definition() -> ToolDefinition {
     builtin_definition(
         "artifact.create",
@@ -592,6 +749,41 @@ fn artifact_create_definition() -> ToolDefinition {
     )
 }
 
+fn artifact_write_revision_definition() -> ToolDefinition {
+    builtin_definition(
+        "artifact.write_revision",
+        "Write artifact revision",
+        "Append a new opaque revision to a durable artifact.",
+        object_schema(
+            vec![
+                SchemaProperty::new("artifact_id", JsonSchema::String),
+                SchemaProperty::new("parent_revision_id", JsonSchema::String),
+                SchemaProperty::new("content_type", JsonSchema::String),
+                SchemaProperty::new("body_base64", JsonSchema::String),
+                SchemaProperty::new("metadata", JsonSchema::Any),
+            ],
+            vec!["artifact_id", "content_type", "body_base64"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("artifact_id", JsonSchema::String),
+                SchemaProperty::new("revision_id", JsonSchema::String),
+            ],
+            vec!["artifact_id", "revision_id"],
+            false,
+        )),
+        ToolSideEffects::Write,
+        ToolIdempotency::Conditional,
+        ToolConcurrency::Serialized,
+        ToolStreaming::Events,
+        PrivilegeTier::Tier0,
+        vec!["artifacts:write"],
+        Some("artifact"),
+        vec!["artifact", "store"],
+    )
+}
+
 fn artifact_read_definition() -> ToolDefinition {
     builtin_definition(
         "artifact.read",
@@ -619,6 +811,143 @@ fn artifact_read_definition() -> ToolDefinition {
         PrivilegeTier::Tier0,
         vec!["artifacts:read"],
         None,
+        vec!["artifact", "store"],
+    )
+}
+
+fn artifact_read_revision_definition() -> ToolDefinition {
+    builtin_definition(
+        "artifact.read_revision",
+        "Read artifact revision",
+        "Read one opaque artifact revision by id.",
+        object_schema(
+            vec![
+                SchemaProperty::new("artifact_id", JsonSchema::String),
+                SchemaProperty::new("revision_id", JsonSchema::String),
+            ],
+            vec!["artifact_id", "revision_id"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("artifact_id", JsonSchema::String),
+                SchemaProperty::new("revision_id", JsonSchema::String),
+                SchemaProperty::new("parent_revision_id", JsonSchema::String),
+                SchemaProperty::new("content_type", JsonSchema::String),
+                SchemaProperty::new("body_base64", JsonSchema::String),
+            ],
+            vec!["artifact_id", "revision_id", "content_type", "body_base64"],
+            false,
+        )),
+        ToolSideEffects::Read,
+        ToolIdempotency::Always,
+        ToolConcurrency::Safe,
+        ToolStreaming::None,
+        PrivilegeTier::Tier0,
+        vec!["artifacts:read"],
+        None,
+        vec!["artifact", "store"],
+    )
+}
+
+fn artifact_list_definition() -> ToolDefinition {
+    builtin_definition(
+        "artifact.list",
+        "List artifacts",
+        "List durable artifacts by collection and labels.",
+        object_schema(
+            vec![
+                SchemaProperty::new("collection", JsonSchema::String),
+                SchemaProperty::new("labels", string_array_schema()),
+                SchemaProperty::new("limit", JsonSchema::Integer),
+            ],
+            Vec::new(),
+            false,
+        ),
+        Some(object_schema(
+            vec![SchemaProperty::new(
+                "artifacts",
+                JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                },
+            )],
+            vec!["artifacts"],
+            false,
+        )),
+        ToolSideEffects::Read,
+        ToolIdempotency::Always,
+        ToolConcurrency::Safe,
+        ToolStreaming::None,
+        PrivilegeTier::Tier0,
+        vec!["artifacts:list"],
+        None,
+        vec!["artifact", "store"],
+    )
+}
+
+fn artifact_tag_definition() -> ToolDefinition {
+    builtin_definition(
+        "artifact.tag",
+        "Tag artifact",
+        "Attach labels to a durable artifact manifest.",
+        object_schema(
+            vec![
+                SchemaProperty::new("artifact_id", JsonSchema::String),
+                SchemaProperty::new("labels", string_array_schema()),
+            ],
+            vec!["artifact_id", "labels"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("artifact_id", JsonSchema::String),
+                SchemaProperty::new("labels", string_array_schema()),
+            ],
+            vec!["artifact_id", "labels"],
+            false,
+        )),
+        ToolSideEffects::Write,
+        ToolIdempotency::Always,
+        ToolConcurrency::Serialized,
+        ToolStreaming::Events,
+        PrivilegeTier::Tier0,
+        vec!["artifacts:tag"],
+        Some("artifact"),
+        vec!["artifact", "store"],
+    )
+}
+
+fn artifact_mark_retention_definition() -> ToolDefinition {
+    builtin_definition(
+        "artifact.mark_retention",
+        "Mark artifact retention",
+        "Mark a durable artifact as retained, temporary, or exported.",
+        object_schema(
+            vec![
+                SchemaProperty::new("artifact_id", JsonSchema::String),
+                SchemaProperty::new(
+                    "retention",
+                    string_enum(&["retained", "temporary", "exported"]),
+                ),
+            ],
+            vec!["artifact_id", "retention"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("artifact_id", JsonSchema::String),
+                SchemaProperty::new("retention", JsonSchema::String),
+            ],
+            vec!["artifact_id", "retention"],
+            false,
+        )),
+        ToolSideEffects::Write,
+        ToolIdempotency::Always,
+        ToolConcurrency::Serialized,
+        ToolStreaming::Events,
+        PrivilegeTier::Tier0,
+        vec!["artifacts:retention"],
+        Some("artifact"),
         vec!["artifact", "store"],
     )
 }
@@ -916,6 +1245,154 @@ fn memory_search_definition() -> ToolDefinition {
     )
 }
 
+fn memory_list_by_class_definition() -> ToolDefinition {
+    builtin_definition(
+        "memory.list_by_class",
+        "List memories by class",
+        "List durable memory records by memory class.",
+        object_schema(
+            vec![
+                SchemaProperty::new("class", memory_class_schema()),
+                SchemaProperty::new("limit", JsonSchema::Integer),
+            ],
+            vec!["class"],
+            false,
+        ),
+        Some(memory_matches_output_schema()),
+        ToolSideEffects::Read,
+        ToolIdempotency::Always,
+        ToolConcurrency::Safe,
+        ToolStreaming::None,
+        PrivilegeTier::Tier0,
+        vec!["memory:read"],
+        None,
+        vec!["memory", "store"],
+    )
+}
+
+fn memory_list_by_tag_definition() -> ToolDefinition {
+    builtin_definition(
+        "memory.list_by_tag",
+        "List memories by tag",
+        "List durable memory records by tag.",
+        object_schema(
+            vec![
+                SchemaProperty::new("tag", JsonSchema::String),
+                SchemaProperty::new("limit", JsonSchema::Integer),
+            ],
+            vec!["tag"],
+            false,
+        ),
+        Some(memory_matches_output_schema()),
+        ToolSideEffects::Read,
+        ToolIdempotency::Always,
+        ToolConcurrency::Safe,
+        ToolStreaming::None,
+        PrivilegeTier::Tier0,
+        vec!["memory:read"],
+        None,
+        vec!["memory", "store"],
+    )
+}
+
+fn memory_supersede_definition() -> ToolDefinition {
+    builtin_definition(
+        "memory.supersede",
+        "Supersede memory",
+        "Record that one durable memory supersedes earlier memory records.",
+        object_schema(
+            vec![
+                SchemaProperty::new("memory_id", JsonSchema::String),
+                SchemaProperty::new("supersedes", string_array_schema()),
+                SchemaProperty::new("reason", JsonSchema::String),
+            ],
+            vec!["memory_id", "supersedes"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("memory_id", JsonSchema::String),
+                SchemaProperty::new("supersedes", string_array_schema()),
+            ],
+            vec!["memory_id", "supersedes"],
+            false,
+        )),
+        ToolSideEffects::Write,
+        ToolIdempotency::Always,
+        ToolConcurrency::Serialized,
+        ToolStreaming::Events,
+        PrivilegeTier::Tier0,
+        vec!["memory:write"],
+        Some("memory"),
+        vec!["memory", "store"],
+    )
+}
+
+fn memory_expire_definition() -> ToolDefinition {
+    builtin_definition(
+        "memory.expire",
+        "Expire memory",
+        "Mark a durable memory record as expired.",
+        object_schema(
+            vec![
+                SchemaProperty::new("memory_id", JsonSchema::String),
+                SchemaProperty::new("expires_at_ms", JsonSchema::Integer),
+                SchemaProperty::new("reason", JsonSchema::String),
+            ],
+            vec!["memory_id", "expires_at_ms"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("memory_id", JsonSchema::String),
+                SchemaProperty::new("expired", JsonSchema::Boolean),
+            ],
+            vec!["memory_id", "expired"],
+            false,
+        )),
+        ToolSideEffects::Write,
+        ToolIdempotency::Always,
+        ToolConcurrency::Serialized,
+        ToolStreaming::Events,
+        PrivilegeTier::Tier0,
+        vec!["memory:expire"],
+        Some("memory"),
+        vec!["memory", "store"],
+    )
+}
+
+fn memory_tombstone_definition() -> ToolDefinition {
+    builtin_definition(
+        "memory.tombstone",
+        "Tombstone memory",
+        "Forget a durable memory record by replacing it with a tombstone.",
+        object_schema(
+            vec![
+                SchemaProperty::new("memory_id", JsonSchema::String),
+                SchemaProperty::new("reason", JsonSchema::String),
+            ],
+            vec!["memory_id"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("memory_id", JsonSchema::String),
+                SchemaProperty::new("tombstoned", JsonSchema::Boolean),
+            ],
+            vec!["memory_id", "tombstoned"],
+            false,
+        )),
+        ToolSideEffects::Write,
+        ToolIdempotency::Always,
+        ToolConcurrency::Serialized,
+        ToolStreaming::Events,
+        PrivilegeTier::Tier1,
+        vec!["memory:forget"],
+        Some("memory"),
+        vec!["memory", "store"],
+    )
+}
+
 fn job_validate_definition() -> ToolDefinition {
     builtin_definition(
         "job.validate",
@@ -983,6 +1460,132 @@ fn job_install_definition() -> ToolDefinition {
     )
 }
 
+fn job_uninstall_definition() -> ToolDefinition {
+    builtin_definition(
+        "job.uninstall",
+        "Uninstall job",
+        "Uninstall a portable Chief of Staff job.",
+        object_schema(
+            vec![SchemaProperty::new("job_id", JsonSchema::String)],
+            vec!["job_id"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("job_id", JsonSchema::String),
+                SchemaProperty::new("uninstalled", JsonSchema::Boolean),
+            ],
+            vec!["job_id", "uninstalled"],
+            false,
+        )),
+        ToolSideEffects::Write,
+        ToolIdempotency::Always,
+        ToolConcurrency::Serialized,
+        ToolStreaming::Events,
+        PrivilegeTier::Tier1,
+        vec!["jobs:uninstall"],
+        Some("job"),
+        vec!["job", "scheduler"],
+    )
+}
+
+fn job_run_now_definition() -> ToolDefinition {
+    builtin_definition(
+        "job.run_now",
+        "Run job now",
+        "Request an immediate run for an installed Chief of Staff job.",
+        object_schema(
+            vec![
+                SchemaProperty::new("job_id", JsonSchema::String),
+                SchemaProperty::new("idempotency_key", JsonSchema::String),
+            ],
+            vec!["job_id"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("job_id", JsonSchema::String),
+                SchemaProperty::new("run_id", JsonSchema::String),
+                SchemaProperty::new("queued", JsonSchema::Boolean),
+            ],
+            vec!["job_id", "run_id", "queued"],
+            false,
+        )),
+        ToolSideEffects::Write,
+        ToolIdempotency::Conditional,
+        ToolConcurrency::Serialized,
+        ToolStreaming::Events,
+        PrivilegeTier::Tier1,
+        vec!["jobs:run"],
+        Some("job"),
+        vec!["job", "scheduler"],
+    )
+}
+
+fn job_list_definition() -> ToolDefinition {
+    builtin_definition(
+        "job.list",
+        "List jobs",
+        "List installed Chief of Staff jobs.",
+        object_schema(
+            vec![
+                SchemaProperty::new("status", JsonSchema::String),
+                SchemaProperty::new("limit", JsonSchema::Integer),
+            ],
+            Vec::new(),
+            false,
+        ),
+        Some(object_schema(
+            vec![SchemaProperty::new(
+                "jobs",
+                JsonSchema::Array {
+                    items: Box::new(JsonSchema::Any),
+                },
+            )],
+            vec!["jobs"],
+            false,
+        )),
+        ToolSideEffects::Read,
+        ToolIdempotency::Always,
+        ToolConcurrency::Safe,
+        ToolStreaming::None,
+        PrivilegeTier::Tier0,
+        vec!["jobs:read"],
+        None,
+        vec!["job", "scheduler"],
+    )
+}
+
+fn job_status_definition() -> ToolDefinition {
+    builtin_definition(
+        "job.status",
+        "Read job status",
+        "Read status and recent run metadata for an installed Chief of Staff job.",
+        object_schema(
+            vec![SchemaProperty::new("job_id", JsonSchema::String)],
+            vec!["job_id"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("job_id", JsonSchema::String),
+                SchemaProperty::new("status", JsonSchema::String),
+                SchemaProperty::new("latest_run_id", JsonSchema::String),
+            ],
+            vec!["job_id", "status"],
+            false,
+        )),
+        ToolSideEffects::Read,
+        ToolIdempotency::Always,
+        ToolConcurrency::Safe,
+        ToolStreaming::None,
+        PrivilegeTier::Tier0,
+        vec!["jobs:read"],
+        None,
+        vec!["job", "scheduler"],
+    )
+}
+
 #[allow(clippy::too_many_arguments)]
 fn builtin_definition(
     tool_id: &str,
@@ -1037,6 +1640,32 @@ fn string_array_schema() -> JsonSchema {
     JsonSchema::Array {
         items: Box::new(JsonSchema::String),
     }
+}
+
+fn string_enum(values: &[&str]) -> JsonSchema {
+    JsonSchema::Enum {
+        values: values
+            .iter()
+            .map(|value| JsonValue::String((*value).to_string()))
+            .collect(),
+    }
+}
+
+fn memory_class_schema() -> JsonSchema {
+    string_enum(&["profile", "fact", "episodic", "procedure", "warning"])
+}
+
+fn memory_matches_output_schema() -> JsonSchema {
+    object_schema(
+        vec![SchemaProperty::new(
+            "matches",
+            JsonSchema::Array {
+                items: Box::new(JsonSchema::Any),
+            },
+        )],
+        vec!["matches"],
+        false,
+    )
 }
 
 fn skill_version_input_schema() -> JsonSchema {
@@ -2417,7 +3046,7 @@ mod tests {
         let catalog = builtin_tool_catalog();
         let mut registry = InMemoryToolRegistry::new();
 
-        assert_eq!(catalog.len(), 15);
+        assert_eq!(catalog.len(), 33);
         for definition in catalog {
             assert!(
                 definition.validate().ok,
@@ -2436,13 +3065,31 @@ mod tests {
             ids,
             vec![
                 "artifact.create",
+                "artifact.list",
+                "artifact.mark_retention",
                 "artifact.read",
+                "artifact.read_revision",
+                "artifact.tag",
+                "artifact.write_revision",
                 "context.append_entry",
+                "context.archive_session",
+                "context.compact",
+                "context.create_snapshot",
                 "context.open_session",
+                "context.read_entries",
                 "job.install",
+                "job.list",
+                "job.run_now",
+                "job.status",
+                "job.uninstall",
                 "job.validate",
+                "memory.expire",
+                "memory.list_by_class",
+                "memory.list_by_tag",
                 "memory.remember",
                 "memory.search",
+                "memory.supersede",
+                "memory.tombstone",
                 "skill.activate",
                 "skill.deactivate",
                 "skill.install",
@@ -2467,7 +3114,18 @@ mod tests {
             .map(|definition| definition.tool_id.as_str())
             .collect();
 
-        assert_eq!(memory_ids, vec!["memory.remember", "memory.search"]);
+        assert_eq!(
+            memory_ids,
+            vec![
+                "memory.remember",
+                "memory.search",
+                "memory.list_by_class",
+                "memory.list_by_tag",
+                "memory.supersede",
+                "memory.expire",
+                "memory.tombstone",
+            ]
+        );
         assert_eq!(
             skill_ids,
             vec![
@@ -2485,6 +3143,12 @@ mod tests {
                 .unwrap()
                 .required_capabilities,
             vec!["jobs:install"]
+        );
+        assert_eq!(
+            builtin_tool_definition("job.run_now")
+                .unwrap()
+                .required_capabilities,
+            vec!["jobs:run"]
         );
         assert_eq!(
             builtin_tool_definition("skill.install")
@@ -2597,6 +3261,80 @@ mod tests {
             ),
         ]);
 
+        assert!(registry.validate_call(&valid).ok);
+    }
+
+    #[test]
+    fn expanded_builtin_schemas_enforce_store_specific_enums() {
+        let mut registry = InMemoryToolRegistry::new();
+        registry
+            .register(builtin_tool_definition("artifact.mark_retention").unwrap())
+            .unwrap();
+        registry
+            .register(builtin_tool_definition("memory.list_by_class").unwrap())
+            .unwrap();
+
+        let invalid_retention = ToolInvocationRequest {
+            call_id: "call_artifact_retention".to_string(),
+            tool_id: "artifact.mark_retention".to_string(),
+            arguments: JsonValue::Object(vec![
+                (
+                    "artifact_id".to_string(),
+                    JsonValue::String("artifact_1".to_string()),
+                ),
+                (
+                    "retention".to_string(),
+                    JsonValue::String("forever-ish".to_string()),
+                ),
+            ]),
+            requested_by: RequestedBy::Session,
+            session_id: Some("session_1".to_string()),
+            job_id: None,
+            agent_id: None,
+            user_id: None,
+            requested_at: 1_000,
+            deadline_at: None,
+            idempotency_key: None,
+        };
+        let invalid_class = ToolInvocationRequest {
+            call_id: "call_memory_class".to_string(),
+            tool_id: "memory.list_by_class".to_string(),
+            arguments: JsonValue::Object(vec![(
+                "class".to_string(),
+                JsonValue::String("preference".to_string()),
+            )]),
+            requested_by: RequestedBy::Session,
+            session_id: Some("session_1".to_string()),
+            job_id: None,
+            agent_id: None,
+            user_id: None,
+            requested_at: 1_000,
+            deadline_at: None,
+            idempotency_key: None,
+        };
+
+        assert!(registry
+            .validate_call(&invalid_retention)
+            .errors
+            .iter()
+            .any(|error| error.path == "$.retention" && error.message == "value is not in enum"));
+        assert!(registry
+            .validate_call(&invalid_class)
+            .errors
+            .iter()
+            .any(|error| error.path == "$.class" && error.message == "value is not in enum"));
+
+        let mut valid = invalid_retention;
+        valid.arguments = JsonValue::Object(vec![
+            (
+                "artifact_id".to_string(),
+                JsonValue::String("artifact_1".to_string()),
+            ),
+            (
+                "retention".to_string(),
+                JsonValue::String("retained".to_string()),
+            ),
+        ]);
         assert!(registry.validate_call(&valid).ok);
     }
 
