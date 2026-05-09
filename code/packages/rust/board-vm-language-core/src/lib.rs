@@ -17,7 +17,9 @@ use std::slice;
 use std::str;
 
 use board_vm_bluetooth::{
-    parse_bluetooth_endpoint as parse_board_vm_bluetooth_endpoint, BluetoothEndpoint,
+    board_vm_endpoint_candidates as board_vm_bluetooth_endpoint_candidates,
+    parse_bluetooth_endpoint as parse_board_vm_bluetooth_endpoint, BluetoothDiscoveredDevice,
+    BluetoothEndpoint, BluetoothEndpointCandidate,
 };
 use board_vm_esp_rom::{
     DEFAULT_BAUD_RATE as ESP_DEFAULT_BAUD_RATE,
@@ -323,6 +325,26 @@ pub struct LanguageBluetoothEndpoint {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageBluetoothDiscoveredDevice {
+    pub id: String,
+    pub name: Option<String>,
+    pub address: Option<String>,
+    pub paired: bool,
+    pub service_uuids: Vec<String>,
+    pub characteristic_uuids: Vec<String>,
+    pub board_vm_rfcomm_channels: Vec<u8>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageBluetoothEndpointCandidate {
+    pub endpoint: LanguageBluetoothEndpoint,
+    pub device: String,
+    pub display_name: String,
+    pub paired: bool,
+    pub requires_pairing: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageTargetInfo {
     pub board_id: String,
     pub display_name: String,
@@ -616,7 +638,33 @@ pub fn connection_options_for_target(selector: &str) -> Option<Vec<LanguageConne
 }
 
 pub fn parse_bluetooth_endpoint(endpoint: &str) -> Option<LanguageBluetoothEndpoint> {
-    match parse_board_vm_bluetooth_endpoint(endpoint).ok()? {
+    language_bluetooth_endpoint(parse_board_vm_bluetooth_endpoint(endpoint).ok()?)
+}
+
+pub fn bluetooth_endpoint_candidates_from_devices(
+    devices: &[LanguageBluetoothDiscoveredDevice],
+) -> Vec<LanguageBluetoothEndpointCandidate> {
+    let devices: Vec<_> = devices
+        .iter()
+        .map(|device| BluetoothDiscoveredDevice {
+            id: device.id.clone(),
+            name: device.name.clone(),
+            address: device.address.clone(),
+            paired: device.paired,
+            service_uuids: device.service_uuids.clone(),
+            characteristic_uuids: device.characteristic_uuids.clone(),
+            board_vm_rfcomm_channels: device.board_vm_rfcomm_channels.clone(),
+        })
+        .collect();
+
+    board_vm_bluetooth_endpoint_candidates(&devices)
+        .into_iter()
+        .filter_map(language_bluetooth_endpoint_candidate)
+        .collect()
+}
+
+fn language_bluetooth_endpoint(endpoint: BluetoothEndpoint) -> Option<LanguageBluetoothEndpoint> {
+    match endpoint {
         BluetoothEndpoint::BleGatt(endpoint) => Some(LanguageBluetoothEndpoint {
             endpoint: endpoint.endpoint,
             transport: LanguageConnectionTransport::BluetoothLe,
@@ -640,6 +688,18 @@ pub fn parse_bluetooth_endpoint(endpoint: &str) -> Option<LanguageBluetoothEndpo
             channel: Some(endpoint.channel),
         }),
     }
+}
+
+fn language_bluetooth_endpoint_candidate(
+    candidate: BluetoothEndpointCandidate,
+) -> Option<LanguageBluetoothEndpointCandidate> {
+    Some(LanguageBluetoothEndpointCandidate {
+        endpoint: language_bluetooth_endpoint(candidate.endpoint)?,
+        device: candidate.device,
+        display_name: candidate.display_name,
+        paired: candidate.paired,
+        requires_pairing: candidate.requires_pairing,
+    })
 }
 
 pub fn discover_devices() -> Vec<LanguageHostDevice> {
@@ -2405,6 +2465,63 @@ mod tests {
         assert_eq!(rfcomm.device, "ESP32-BoardVM");
         assert_eq!(rfcomm.channel, Some(3));
         assert!(parse_bluetooth_endpoint("tcp://board-vm.local:4170").is_none());
+    }
+
+    #[test]
+    fn bluetooth_endpoint_candidates_are_planned_by_rust_language_core() {
+        let devices = vec![
+            LanguageBluetoothDiscoveredDevice {
+                id: "esp32-board-vm".to_owned(),
+                name: Some("ESP32 Board VM".to_owned()),
+                address: None,
+                paired: true,
+                service_uuids: vec![],
+                characteristic_uuids: vec![],
+                board_vm_rfcomm_channels: vec![3, 3, 31],
+            },
+            LanguageBluetoothDiscoveredDevice {
+                id: "uno-r4".to_owned(),
+                name: Some("Uno R4 Board VM".to_owned()),
+                address: Some("AA:BB:CC:DD:EE:FF".to_owned()),
+                paired: false,
+                service_uuids: vec!["6E400001-B5A3-F393-E0A9-E50E24DCCA9E".to_owned()],
+                characteristic_uuids: vec![],
+                board_vm_rfcomm_channels: vec![],
+            },
+        ];
+
+        let candidates = bluetooth_endpoint_candidates_from_devices(&devices);
+
+        assert_eq!(candidates.len(), 2);
+        let rfcomm = candidates
+            .iter()
+            .find(|candidate| candidate.endpoint.channel == Some(3))
+            .unwrap();
+        assert_eq!(rfcomm.display_name, "ESP32 Board VM");
+        assert_eq!(
+            rfcomm.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::BluetoothClassicRfcomm
+        );
+        assert_eq!(rfcomm.endpoint.endpoint, "btspp://esp32-board-vm:3");
+        assert!(rfcomm.paired);
+        assert!(!rfcomm.requires_pairing);
+
+        let ble = candidates
+            .iter()
+            .find(|candidate| candidate.endpoint.service_uuid.is_some())
+            .unwrap();
+        assert_eq!(ble.display_name, "Uno R4 Board VM");
+        assert_eq!(
+            ble.endpoint.endpoint_transport,
+            LanguageHostEndpointTransport::BluetoothLeGatt
+        );
+        assert_eq!(ble.device, "AA:BB:CC:DD:EE:FF");
+        assert_eq!(
+            ble.endpoint.service_uuid.as_deref(),
+            Some("6e400001-b5a3-f393-e0a9-e50e24dcca9e")
+        );
+        assert!(!ble.paired);
+        assert!(ble.requires_pairing);
     }
 
     #[test]
