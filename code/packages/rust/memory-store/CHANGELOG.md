@@ -11,4 +11,5 @@ All notable changes to this package will be documented in this file.
 - `MemoryStore` persistence, confidence updates, superseding, expiry, and
   tombstoning operations
 - portable lexical search implemented at the store layer
+- active-at and limit options for portable lexical memory searches
 - Unit tests using `storage-core::InMemoryStorageBackend`

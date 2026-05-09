@@ -66,6 +66,36 @@ pub struct MemoryRecord {
     pub tombstoned: bool,
 }
 
+impl MemoryRecord {
+    pub fn is_active_at(&self, now_ms: u64) -> bool {
+        !self.tombstoned && self.expires_at.is_none_or(|expires_at| now_ms < expires_at)
+    }
+}
+
+/// Portable search knobs used by D18D memory tools before backend-specific
+/// indexes exist.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct MemorySearchOptions {
+    pub active_at: Option<u64>,
+    pub limit: Option<usize>,
+}
+
+impl MemorySearchOptions {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn active_at(mut self, now_ms: u64) -> Self {
+        self.active_at = Some(now_ms);
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
 /// Typed memory store layered on `storage-core`.
 pub struct MemoryStore<S: StorageBackend> {
     backend: S,
@@ -138,20 +168,43 @@ impl<S: StorageBackend> MemoryStore<S> {
     }
 
     pub fn search_lexical(&self, query: &str) -> Result<Vec<MemoryRecord>, StorageError> {
+        self.search_lexical_with_options(query, MemorySearchOptions::default())
+    }
+
+    pub fn search_lexical_with_options(
+        &self,
+        query: &str,
+        options: MemorySearchOptions,
+    ) -> Result<Vec<MemoryRecord>, StorageError> {
         let needle = query.trim().to_ascii_lowercase();
         if needle.is_empty() {
             return Err(validation("query", "must not be empty"));
         }
-        self.list_memories(|memory| {
-            !memory.tombstoned
-                && [
-                    memory.subject.to_ascii_lowercase(),
-                    memory.body.to_ascii_lowercase(),
-                    memory.tags.join(" ").to_ascii_lowercase(),
-                ]
-                .iter()
-                .any(|haystack| haystack.contains(&needle))
-        })
+        let mut matches = self.list_memories(|memory| {
+            memory_matches_search(memory, &needle)
+                && options
+                    .active_at
+                    .is_none_or(|now_ms| memory.is_active_at(now_ms))
+        })?;
+        if let Some(limit) = options.limit {
+            matches.truncate(limit);
+        }
+        Ok(matches)
+    }
+
+    pub fn search_active_lexical_at(
+        &self,
+        query: &str,
+        now_ms: u64,
+        limit: Option<usize>,
+    ) -> Result<Vec<MemoryRecord>, StorageError> {
+        self.search_lexical_with_options(
+            query,
+            MemorySearchOptions {
+                active_at: Some(now_ms),
+                limit,
+            },
+        )
     }
 
     pub fn mark_expired(
@@ -246,6 +299,17 @@ fn memory_record_metadata(memory: &MemoryRecord) -> JsonValue {
         ("tags".to_string(), string_array_json(&memory.tags)),
         ("tombstoned".to_string(), JsonValue::Bool(memory.tombstoned)),
     ])
+}
+
+fn memory_matches_search(memory: &MemoryRecord, needle: &str) -> bool {
+    !memory.tombstoned
+        && [
+            memory.subject.to_ascii_lowercase(),
+            memory.body.to_ascii_lowercase(),
+            memory.tags.join(" ").to_ascii_lowercase(),
+        ]
+        .iter()
+        .any(|haystack| haystack.contains(needle))
 }
 
 fn memory_to_json(memory: &MemoryRecord) -> JsonValue {
@@ -504,6 +568,15 @@ mod tests {
         }
     }
 
+    fn memory_with_id(memory_id: &str, subject: &str, body: &str) -> MemoryRecord {
+        MemoryRecord {
+            memory_id: memory_id.to_string(),
+            subject: subject.to_string(),
+            body: body.to_string(),
+            ..memory()
+        }
+    }
+
     #[test]
     fn remember_and_search_round_trip() {
         let store = MemoryStore::new(InMemoryStorageBackend::new());
@@ -512,6 +585,61 @@ mod tests {
         let matches = store.search_lexical("concise").unwrap();
         assert_eq!(matches.len(), 1);
         assert_eq!(matches[0].memory_id, "pref-tone");
+    }
+
+    #[test]
+    fn active_search_options_filter_expired_memories_and_limit_results() {
+        let store = MemoryStore::new(InMemoryStorageBackend::new());
+        let _ = store
+            .remember(memory_with_id("pref-tone", "Tone", "Prefer concise recaps"))
+            .unwrap();
+        let _ = store
+            .remember(memory_with_id(
+                "pref-format",
+                "Format",
+                "Prefer concise bullet lists",
+            ))
+            .unwrap();
+        let _ = store
+            .remember(memory_with_id(
+                "old-tone",
+                "Old tone",
+                "Prefer concise summaries",
+            ))
+            .unwrap();
+        let _ = store
+            .remember(memory_with_id(
+                "tombstoned-tone",
+                "Tombstoned tone",
+                "Prefer concise drafts",
+            ))
+            .unwrap();
+        let expired = store.mark_expired("old-tone", 50).unwrap();
+        let _ = store.forget_tombstone("tombstoned-tone").unwrap();
+
+        assert!(expired.is_active_at(49));
+        assert!(!expired.is_active_at(50));
+        assert_eq!(store.search_lexical("concise").unwrap().len(), 3);
+
+        let active = store
+            .search_active_lexical_at("concise", 100, None)
+            .unwrap();
+        assert_eq!(
+            active
+                .iter()
+                .map(|memory| memory.memory_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["pref-format", "pref-tone"]
+        );
+
+        let limited = store
+            .search_lexical_with_options(
+                "concise",
+                MemorySearchOptions::new().active_at(100).with_limit(1),
+            )
+            .unwrap();
+        assert_eq!(limited.len(), 1);
+        assert_eq!(limited[0].memory_id, "pref-format");
     }
 
     #[test]
