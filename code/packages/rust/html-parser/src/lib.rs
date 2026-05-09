@@ -1008,7 +1008,10 @@ impl HtmlParser {
         if !starts_inner_formatting_reconstruction_boundary(incoming_name) {
             return Vec::new();
         }
-        if incoming_name == "p" && !self.has_open_element("p") && self.current_element_is("b") {
+        if incoming_name == "p"
+            && !self.has_open_element("p")
+            && (self.current_element_is("b") || self.current_element_is("i"))
+        {
             return Vec::new();
         }
 
@@ -2404,6 +2407,22 @@ mod tests {
         assert_eq!(paragraph.name, "p");
         assert_eq!(element(&paragraph.children[0]).name, "b");
         assert_eq!(paragraph.children[1], Node::text("TEST"));
+    }
+
+    #[test]
+    fn inserts_fresh_paragraph_inside_current_nested_formatting() {
+        let document = parse_html("<div> abc <b> def <i> ghi <p>").unwrap();
+
+        let body = body(&document);
+        let div = element(&body.children[0]);
+        assert_eq!(div.children[0], Node::text(" abc "));
+
+        let bold = element(&div.children[1]);
+        assert_eq!(bold.children[0], Node::text(" def "));
+
+        let italic = element(&bold.children[1]);
+        assert_eq!(italic.children[0], Node::text(" ghi "));
+        assert_eq!(element(&italic.children[1]).name, "p");
     }
 
     #[test]
