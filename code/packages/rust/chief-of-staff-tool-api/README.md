@@ -6,6 +6,7 @@ D18D Chief of Staff Tool API spec.
 The crate intentionally stops at the contract layer:
 
 - tool definitions and metadata
+- provider-neutral JSON-schema-shaped exports for model gateway adapters
 - query helpers for selecting catalog entries by family, side effects, tier,
   capability, tag, stability, and limit
 - read-side query helpers for invocation requests, call records, event streams,

@@ -235,6 +235,39 @@ impl ToolDefinition {
         report.ok = report.errors.is_empty();
         report
     }
+
+    /// Project the input schema into a provider-neutral JSON Schema document.
+    pub fn input_json_schema(&self) -> JsonValue {
+        self.input_schema.to_json_schema_value()
+    }
+
+    /// Project the output schema into a provider-neutral JSON Schema document.
+    pub fn output_json_schema(&self) -> Option<JsonValue> {
+        self.output_schema
+            .as_ref()
+            .map(JsonSchema::to_json_schema_value)
+    }
+
+    /// Return the model-gateway-facing schema document for this tool.
+    pub fn schema_document(&self) -> ToolSchemaDocument {
+        ToolSchemaDocument {
+            tool_id: self.tool_id.clone(),
+            display_name: self.display_name.clone(),
+            description: self.description.clone(),
+            input_schema: self.input_json_schema(),
+            output_schema: self.output_json_schema(),
+        }
+    }
+}
+
+/// Provider-neutral schema export for model gateway adapters.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ToolSchemaDocument {
+    pub tool_id: ToolId,
+    pub display_name: String,
+    pub description: String,
+    pub input_schema: JsonValue,
+    pub output_schema: Option<JsonValue>,
 }
 
 // ============================================================================
@@ -264,6 +297,68 @@ pub enum JsonSchema {
 }
 
 impl JsonSchema {
+    /// Project the repository-owned schema subset into JSON Schema shape.
+    ///
+    /// Provider adapters can translate this neutral document into OpenAI,
+    /// Anthropic, local-model, or other concrete tool formats without reaching
+    /// back into D18D internals.
+    pub fn to_json_schema_value(&self) -> JsonValue {
+        match self {
+            Self::Any => JsonValue::Bool(true),
+            Self::Null => json_schema_type("null"),
+            Self::Boolean => json_schema_type("boolean"),
+            Self::Integer => json_schema_type("integer"),
+            Self::Number => json_schema_type("number"),
+            Self::String => json_schema_type("string"),
+            Self::Array { items } => JsonValue::Object(vec![
+                ("type".to_string(), JsonValue::String("array".to_string())),
+                ("items".to_string(), items.to_json_schema_value()),
+            ]),
+            Self::Object {
+                properties,
+                required,
+                allow_unknown_fields,
+            } => {
+                let mut fields = vec![
+                    ("type".to_string(), JsonValue::String("object".to_string())),
+                    (
+                        "properties".to_string(),
+                        JsonValue::Object(
+                            properties
+                                .iter()
+                                .map(|property| {
+                                    (
+                                        property.name.clone(),
+                                        property.schema.to_json_schema_value(),
+                                    )
+                                })
+                                .collect(),
+                        ),
+                    ),
+                    (
+                        "additionalProperties".to_string(),
+                        JsonValue::Bool(*allow_unknown_fields),
+                    ),
+                ];
+                if !required.is_empty() {
+                    fields.push((
+                        "required".to_string(),
+                        JsonValue::Array(
+                            required
+                                .iter()
+                                .map(|name| JsonValue::String(name.clone()))
+                                .collect(),
+                        ),
+                    ));
+                }
+                JsonValue::Object(fields)
+            }
+            Self::Enum { values } => {
+                JsonValue::Object(vec![("enum".to_string(), JsonValue::Array(values.clone()))])
+            }
+        }
+    }
+
     /// Validate a value against this schema.
     pub fn validate_value(&self, value: &JsonValue) -> ToolValidationReport {
         let mut report = ToolValidationReport::ok(value.clone());
@@ -3847,9 +3942,30 @@ fn json_type_name(value: &JsonValue) -> &'static str {
     }
 }
 
+fn json_schema_type(type_name: &str) -> JsonValue {
+    JsonValue::Object(vec![(
+        "type".to_string(),
+        JsonValue::String(type_name.to_string()),
+    )])
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn json_object_lookup<'a>(value: &'a JsonValue, key: &str) -> Option<&'a JsonValue> {
+        match value {
+            JsonValue::Object(fields) => fields
+                .iter()
+                .find(|(candidate, _)| candidate == key)
+                .map(|(_, value)| value),
+            _ => None,
+        }
+    }
+
+    fn json_string(value: &str) -> JsonValue {
+        JsonValue::String(value.to_string())
+    }
 
     #[test]
     fn dotted_tool_ids_are_lowercase_and_segmented() {
@@ -3899,6 +4015,95 @@ mod tests {
             .iter()
             .any(|error| error.path == "$.surprise"
                 && error.message == "unknown field is not allowed"));
+    }
+
+    #[test]
+    fn json_schema_projection_renders_strict_object_schema() {
+        let schema = object_schema(
+            vec![
+                SchemaProperty::new("session_id", JsonSchema::String),
+                SchemaProperty::new(
+                    "limit",
+                    JsonSchema::Enum {
+                        values: vec![
+                            JsonValue::Number(JsonNumber::Integer(10)),
+                            JsonValue::Number(JsonNumber::Integer(25)),
+                        ],
+                    },
+                ),
+                SchemaProperty::new(
+                    "tags",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::String),
+                    },
+                ),
+            ],
+            vec!["session_id"],
+            false,
+        );
+
+        let projected = schema.to_json_schema_value();
+
+        assert_eq!(
+            json_object_lookup(&projected, "type"),
+            Some(&json_string("object"))
+        );
+        assert_eq!(
+            json_object_lookup(&projected, "additionalProperties"),
+            Some(&JsonValue::Bool(false))
+        );
+        assert_eq!(
+            json_object_lookup(&projected, "required"),
+            Some(&JsonValue::Array(vec![json_string("session_id")]))
+        );
+
+        let properties = json_object_lookup(&projected, "properties")
+            .expect("properties object should be present");
+        let session_id = json_object_lookup(properties, "session_id")
+            .expect("session_id schema should be present");
+        let limit =
+            json_object_lookup(properties, "limit").expect("limit schema should be present");
+        let tags = json_object_lookup(properties, "tags").expect("tags schema should be present");
+
+        assert_eq!(
+            json_object_lookup(session_id, "type"),
+            Some(&json_string("string"))
+        );
+        assert_eq!(
+            json_object_lookup(limit, "enum"),
+            Some(&JsonValue::Array(vec![
+                JsonValue::Number(JsonNumber::Integer(10)),
+                JsonValue::Number(JsonNumber::Integer(25)),
+            ]))
+        );
+        assert_eq!(
+            json_object_lookup(tags, "type"),
+            Some(&json_string("array"))
+        );
+        assert_eq!(
+            json_object_lookup(json_object_lookup(tags, "items").unwrap(), "type"),
+            Some(&json_string("string"))
+        );
+    }
+
+    #[test]
+    fn tool_schema_document_exports_builtin_input_and_output_schemas() {
+        let definition =
+            builtin_tool_definition("context.read_entries").expect("builtin should exist");
+
+        let document = definition.schema_document();
+
+        assert_eq!(document.tool_id, "context.read_entries");
+        assert_eq!(document.display_name, "Read context entries");
+        assert!(document.description.contains("durable context session"));
+        assert_eq!(
+            json_object_lookup(&document.input_schema, "type"),
+            Some(&json_string("object"))
+        );
+        assert!(json_object_lookup(&document.input_schema, "properties").is_some());
+        assert!(document.output_schema.is_some());
+        assert_eq!(definition.input_json_schema(), document.input_schema);
+        assert_eq!(definition.output_json_schema(), document.output_schema);
     }
 
     #[test]
