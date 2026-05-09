@@ -99,6 +99,8 @@ documented in this file.
 - Omitted-shell `</head>`, `</body>`, and `</html>` boundaries now recover
   without noisy unmatched-end diagnostics by closing the current lightweight
   body-content stack before subsequent text or element siblings are appended.
+- Body-fragment parsing APIs now return DOM nodes without the implied document
+  shell while preserving lexer/parser diagnostics and parser options.
 - Implied end-tag recovery is now scope-aware for paragraphs, list items,
   definition items, select options, headings, ruby annotations, and table
   caption/column/row/cell contexts, so omitted-end boundaries close correctly

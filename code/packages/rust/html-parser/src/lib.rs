@@ -568,6 +568,14 @@ pub struct ParseOutput {
     pub parser_diagnostics: Vec<ParserDiagnostic>,
 }
 
+/// Parser result for body-fragment parsing.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FragmentOutput {
+    pub nodes: Vec<Node>,
+    pub lexer_diagnostics: Vec<Diagnostic>,
+    pub parser_diagnostics: Vec<ParserDiagnostic>,
+}
+
 /// Tree-construction diagnostic emitted by this parser layer.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ParserDiagnostic {
@@ -616,12 +624,30 @@ pub fn parse_html_with_diagnostics(source: &str) -> Result<ParseOutput, ParseErr
     parse_html_with_diagnostics_and_options(source, HtmlParseOptions::default())
 }
 
+/// Parse an HTML body fragment into DOM nodes without returning the implied shell.
+pub fn parse_html_fragment(source: &str) -> Result<Vec<Node>, ParseError> {
+    Ok(parse_html_fragment_with_diagnostics(source)?.nodes)
+}
+
+/// Parse an HTML body fragment into DOM nodes plus lexer/parser diagnostics.
+pub fn parse_html_fragment_with_diagnostics(source: &str) -> Result<FragmentOutput, ParseError> {
+    parse_html_fragment_with_diagnostics_and_options(source, HtmlParseOptions::default())
+}
+
 /// Parse a complete HTML string into a DOM document with explicit parser options.
 pub fn parse_html_with_options(
     source: &str,
     options: HtmlParseOptions,
 ) -> Result<Document, ParseError> {
     Ok(parse_html_with_diagnostics_and_options(source, options)?.document)
+}
+
+/// Parse an HTML body fragment into DOM nodes with explicit parser options.
+pub fn parse_html_fragment_with_options(
+    source: &str,
+    options: HtmlParseOptions,
+) -> Result<Vec<Node>, ParseError> {
+    Ok(parse_html_fragment_with_diagnostics_and_options(source, options)?.nodes)
 }
 
 /// Parse a complete HTML string into a DOM document plus diagnostics with explicit parser options.
@@ -652,11 +678,40 @@ pub fn parse_html_with_diagnostics_and_options(
     })
 }
 
+/// Parse an HTML body fragment into DOM nodes plus diagnostics with explicit parser options.
+pub fn parse_html_fragment_with_diagnostics_and_options(
+    source: &str,
+    options: HtmlParseOptions,
+) -> Result<FragmentOutput, ParseError> {
+    let mut lexer = create_html_lexer()?;
+    apply_html_lex_context(&mut lexer, &options.initial_tokenizer_context.lex_context())?;
+    let mut parser = HtmlParser::with_body_fragment_options(options);
+
+    for ch in source.chars() {
+        let mut buffer = [0; 4];
+        lexer.push(ch.encode_utf8(&mut buffer))?;
+        drain_parser_tokens(&mut lexer, &mut parser)?;
+    }
+
+    lexer.finish()?;
+    drain_parser_tokens(&mut lexer, &mut parser)?;
+
+    let lexer_diagnostics = lexer.diagnostics().to_vec();
+    let document = parser.finish_document();
+
+    Ok(FragmentOutput {
+        nodes: body_fragment_nodes(document),
+        lexer_diagnostics,
+        parser_diagnostics: parser.diagnostics,
+    })
+}
+
 /// Streaming-friendly parser core over already-tokenized HTML.
 #[derive(Debug, Default)]
 pub struct HtmlParser {
     document: Document,
     open_elements: Vec<Vec<usize>>,
+    pending_formatting_reconstruction: Vec<(String, Vec<Attribute>)>,
     diagnostics: Vec<ParserDiagnostic>,
     options: HtmlParseOptions,
     strip_next_leading_lf: bool,
@@ -671,6 +726,31 @@ impl HtmlParser {
         Self {
             options,
             ..Self::default()
+        }
+    }
+
+    fn with_body_fragment_options(options: HtmlParseOptions) -> Self {
+        let mut html = Node::element("html".to_string(), Vec::new());
+        let Node::Element(ref mut html_element) = html else {
+            unreachable!("Node::element must construct an element");
+        };
+        html_element
+            .children
+            .push(Node::element("head".to_string(), Vec::new()));
+        html_element
+            .children
+            .push(Node::element("body".to_string(), Vec::new()));
+
+        let mut document = Document::new();
+        document.push_child(html);
+
+        Self {
+            document,
+            open_elements: vec![vec![0], vec![0, 1]],
+            pending_formatting_reconstruction: Vec::new(),
+            diagnostics: Vec::new(),
+            options,
+            strip_next_leading_lf: false,
         }
     }
 
@@ -732,8 +812,13 @@ impl HtmlParser {
     ) {
         self.apply_document_shell_implied_contexts(&name);
         self.apply_table_implied_contexts(&name);
+        self.clear_pending_formatting_unless_next_reconstructs(&name);
+        let formatting_inside = self.take_formatting_reconstruction_inside_for(&name);
         self.apply_simple_implied_end_tags(&name);
         if self.apply_interactive_implied_contexts(&name) {
+            return;
+        }
+        if self.apply_select_implied_contexts(&name) {
             return;
         }
 
@@ -766,6 +851,8 @@ impl HtmlParser {
             return;
         }
 
+        self.reconstruct_formatting_before_if_needed(&name);
+
         let acknowledges_self_closing = self_closing && is_void_element(&name);
         if self_closing && !acknowledges_self_closing {
             self.diagnostics.push(ParserDiagnostic::new(
@@ -777,6 +864,14 @@ impl HtmlParser {
         let child_index = self.append_node(Node::element(name.clone(), attributes));
 
         if !acknowledges_self_closing && !is_void_element(&name) {
+            let mut path = self.current_parent_path().to_vec();
+            path.push(child_index);
+            self.open_elements.push(path);
+        }
+
+        for (formatting_name, formatting_attributes) in formatting_inside {
+            let child_index =
+                self.append_node(Node::element(formatting_name, formatting_attributes));
             let mut path = self.current_parent_path().to_vec();
             path.push(child_index);
             self.open_elements.push(path);
@@ -866,6 +961,51 @@ impl HtmlParser {
         true
     }
 
+    fn take_formatting_reconstruction_inside_for(
+        &mut self,
+        incoming_name: &str,
+    ) -> Vec<(String, Vec<Attribute>)> {
+        if !starts_inner_formatting_reconstruction_boundary(incoming_name) {
+            return Vec::new();
+        }
+
+        let mut formatting = Vec::new();
+        while let Some(path) = self.open_elements.last() {
+            let Some(element) = element_ref_at_path(&self.document, path) else {
+                break;
+            };
+            if !is_formatting_element(&element.name) {
+                break;
+            }
+            formatting.push((element.name.clone(), element.attributes.clone()));
+            self.open_elements.pop();
+        }
+
+        formatting.reverse();
+        formatting
+    }
+
+    fn reconstruct_formatting_before_if_needed(&mut self, incoming_name: &str) {
+        if !starts_before_formatting_reconstruction_boundary(incoming_name) {
+            return;
+        }
+
+        let formatting = std::mem::take(&mut self.pending_formatting_reconstruction);
+        for (formatting_name, formatting_attributes) in formatting {
+            let child_index =
+                self.append_node(Node::element(formatting_name, formatting_attributes));
+            let mut path = self.current_parent_path().to_vec();
+            path.push(child_index);
+            self.open_elements.push(path);
+        }
+    }
+
+    fn clear_pending_formatting_unless_next_reconstructs(&mut self, incoming_name: &str) {
+        if !starts_before_formatting_reconstruction_boundary(incoming_name) {
+            self.pending_formatting_reconstruction.clear();
+        }
+    }
+
     fn apply_document_shell_implied_contexts(&mut self, incoming_name: &str) {
         if starts_body_after_head(incoming_name) {
             self.pop_current_if(|name| name == "head");
@@ -921,6 +1061,12 @@ impl HtmlParser {
             .iter()
             .rposition(|path| element_at_path(&self.document, path).is_some_and(|n| n == name))
         {
+            if is_formatting_element(name) && self.has_table_context_above(index) {
+                return;
+            }
+            if !is_special_element(name) && self.has_special_element_above(index) {
+                return;
+            }
             self.open_elements.truncate(index);
             return;
         }
@@ -1031,6 +1177,16 @@ impl HtmlParser {
         }
     }
 
+    fn apply_select_implied_contexts(&mut self, incoming_name: &str) -> bool {
+        if incoming_name != "select" || !self.has_open_element("select") {
+            return false;
+        }
+
+        self.close_open_element_if(|name| name == "option");
+        self.close_open_element_if(|name| name == "select");
+        true
+    }
+
     fn close_open_element_silently(&mut self, name: &str) -> bool {
         self.close_open_element_if(|candidate| candidate == name)
     }
@@ -1041,14 +1197,53 @@ impl HtmlParser {
         }) else {
             return false;
         };
+        let should_capture_formatting = self
+            .open_elements
+            .get(index)
+            .and_then(|path| element_at_path(&self.document, path))
+            .is_some_and(|name| matches!(name, "p" | "select"));
+        if should_capture_formatting {
+            self.capture_formatting_above(index);
+        }
         self.open_elements.truncate(index);
         true
+    }
+
+    fn capture_formatting_above(&mut self, element_index: usize) {
+        let formatting = self
+            .open_elements
+            .iter()
+            .skip(element_index + 1)
+            .filter_map(|path| {
+                let element = element_ref_at_path(&self.document, path)?;
+                is_formatting_element(&element.name)
+                    .then(|| (element.name.clone(), element.attributes.clone()))
+            })
+            .collect::<Vec<_>>();
+
+        if !formatting.is_empty() {
+            self.pending_formatting_reconstruction = formatting;
+        }
     }
 
     fn has_open_element(&self, name: &str) -> bool {
         self.open_elements
             .iter()
             .any(|path| element_at_path(&self.document, path).is_some_and(|n| n == name))
+    }
+
+    fn has_table_context_above(&self, element_index: usize) -> bool {
+        self.open_elements
+            .iter()
+            .skip(element_index + 1)
+            .any(|path| element_at_path(&self.document, path).is_some_and(is_table_context_element))
+    }
+
+    fn has_special_element_above(&self, element_index: usize) -> bool {
+        self.open_elements
+            .iter()
+            .skip(element_index + 1)
+            .any(|path| element_at_path(&self.document, path).is_some_and(is_special_element))
     }
 
     fn pop_current_if(&mut self, predicate: impl FnOnce(&str) -> bool) {
@@ -1110,6 +1305,13 @@ fn drain_parser_tokens(lexer: &mut HtmlLexer, parser: &mut HtmlParser) -> Result
 }
 
 fn element_at_path<'a>(document: &'a Document, path: &[usize]) -> Option<&'a str> {
+    element_ref_at_path(document, path).map(|element| element.name.as_str())
+}
+
+fn element_ref_at_path<'a>(
+    document: &'a Document,
+    path: &[usize],
+) -> Option<&'a dom_core::Element> {
     let mut nodes = document.children.as_slice();
     let mut current = None;
 
@@ -1117,7 +1319,7 @@ fn element_at_path<'a>(document: &'a Document, path: &[usize]) -> Option<&'a str
         let node = nodes.get(*index)?;
         match node {
             Node::Element(element) => {
-                current = Some(element.name.as_str());
+                current = Some(element);
                 nodes = element.children.as_slice();
             }
             _ => return None,
@@ -1186,6 +1388,35 @@ fn normalize_document_shell(document: Document) -> Document {
 
     normalized.push_child(builder.finish());
     normalized
+}
+
+fn body_fragment_nodes(mut document: Document) -> Vec<Node> {
+    let mut fragment = Vec::new();
+
+    for node in document.children.drain(..) {
+        match node {
+            Node::DocumentType(_) => {}
+            Node::Comment(_) | Node::Text(_) => fragment.push(node),
+            Node::Element(mut element) if element.name == "html" => {
+                for child in element.children.drain(..) {
+                    match child {
+                        Node::Element(body) if body.name == "body" => {
+                            fragment.extend(
+                                body.children
+                                    .into_iter()
+                                    .filter(|node| !matches!(node, Node::DocumentType(_))),
+                            );
+                        }
+                        Node::Comment(_) | Node::Text(_) => fragment.push(child),
+                        _ => {}
+                    }
+                }
+            }
+            Node::Element(_) => fragment.push(node),
+        }
+    }
+
+    fragment
 }
 
 #[derive(Debug, Default)]
@@ -1279,6 +1510,44 @@ fn is_ignorable_before_body(node: &Node) -> bool {
 
 fn is_table_section(name: &str) -> bool {
     matches!(name, "tbody" | "thead" | "tfoot")
+}
+
+fn is_table_context_element(name: &str) -> bool {
+    matches!(
+        name,
+        "table" | "caption" | "colgroup" | "tbody" | "thead" | "tfoot" | "tr" | "td" | "th"
+    )
+}
+
+fn is_formatting_element(name: &str) -> bool {
+    matches!(
+        name,
+        "a" | "b"
+            | "big"
+            | "code"
+            | "em"
+            | "font"
+            | "i"
+            | "nobr"
+            | "s"
+            | "small"
+            | "strike"
+            | "strong"
+            | "tt"
+            | "u"
+    )
+}
+
+fn starts_inner_formatting_reconstruction_boundary(name: &str) -> bool {
+    matches!(name, "button" | "p")
+}
+
+fn starts_before_formatting_reconstruction_boundary(name: &str) -> bool {
+    matches!(name, "marquee" | "option")
+}
+
+fn is_special_element(name: &str) -> bool {
+    matches!(name, "button" | "marquee") || is_table_context_element(name)
 }
 
 fn is_heading_element(name: &str) -> bool {
@@ -1396,6 +1665,55 @@ mod tests {
     }
 
     #[test]
+    fn parses_body_fragments_without_returning_implied_shell() {
+        let nodes = parse_html_fragment("<p>one<p>two").unwrap();
+
+        assert_eq!(nodes.len(), 2);
+        let first = element(&nodes[0]);
+        assert_eq!(first.name, "p");
+        assert_eq!(first.children, vec![Node::text("one")]);
+        let second = element(&nodes[1]);
+        assert_eq!(second.name, "p");
+        assert_eq!(second.children, vec![Node::text("two")]);
+    }
+
+    #[test]
+    fn fragment_parsing_keeps_comment_text_and_void_body_nodes() {
+        let nodes = parse_html_fragment("<!doctype html><!--note-->before<br>after").unwrap();
+
+        assert_eq!(nodes.len(), 4);
+        assert_eq!(nodes[0], Node::comment("note"));
+        assert_eq!(nodes[1], Node::text("before"));
+        assert_eq!(element(&nodes[2]).name, "br");
+        assert_eq!(nodes[3], Node::text("after"));
+    }
+
+    #[test]
+    fn fragment_parsing_keeps_diagnostics_and_parser_options() {
+        let output = parse_html_fragment_with_diagnostics("text</section>").unwrap();
+        assert_eq!(output.nodes, vec![Node::text("text")]);
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-end-tag",
+                "end tag `</section>` did not match an open element"
+            )]
+        );
+
+        let noscript_nodes = parse_html_fragment_with_options(
+            "<noscript><p>Fallback</p></noscript>",
+            HtmlParseOptions {
+                scripting: HtmlScriptingMode::Disabled,
+                ..HtmlParseOptions::default()
+            },
+        )
+        .unwrap();
+        let noscript = element(&noscript_nodes[0]);
+        assert_eq!(noscript.name, "noscript");
+        assert_eq!(element(&noscript.children[0]).name, "p");
+    }
+
+    #[test]
     fn keeps_doctype_comments_attributes_and_void_elements() {
         let document = parse_html("<!DOCTYPE html><!--note--><img src=cat.png alt=Cat>").unwrap();
 
@@ -1463,7 +1781,10 @@ mod tests {
 
         let second_paragraph = element(&body.children[1]);
         assert_eq!(second_paragraph.name, "p");
-        assert_eq!(second_paragraph.children, vec![Node::text("Two")]);
+        assert_eq!(
+            element(&second_paragraph.children[0]).children,
+            vec![Node::text("Two")]
+        );
 
         let list = element(&body.children[2]);
         assert_eq!(list.name, "ul");
