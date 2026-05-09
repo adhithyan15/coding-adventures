@@ -46,6 +46,10 @@ process(payload.as_bytes());
 | `consume`     | one-shot: returns payload **and** revokes atomically     |
 | `expire_due`  | sweep entries whose expiry is `<= now_ms` or are revoked |
 
+`LeaseInfo` also exposes read-side helpers for status and remaining TTL at a
+caller-supplied timestamp, so supervisors and D18 tools can inspect leases
+without asking for secret payload bytes.
+
 ## Where it fits
 
 ```text
