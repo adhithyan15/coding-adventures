@@ -2,6 +2,13 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- Deterministic retry policies with bounded backoff, transient status matching,
+  request-plan propagation, and query filters for supervised local HTTP calls.
+
 ## [0.1.0] - 2026-05-08
 
 ### Added

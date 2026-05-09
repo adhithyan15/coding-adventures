@@ -99,6 +99,90 @@ impl LocalHttpMethod {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LocalHttpRetryPolicy {
+    pub max_retries: u8,
+    pub initial_backoff_ms: u64,
+    pub max_backoff_ms: u64,
+    pub multiplier: u8,
+    pub retry_statuses: Vec<u16>,
+}
+
+impl Default for LocalHttpRetryPolicy {
+    fn default() -> Self {
+        Self::none()
+    }
+}
+
+impl LocalHttpRetryPolicy {
+    pub fn none() -> Self {
+        Self {
+            max_retries: 0,
+            initial_backoff_ms: 250,
+            max_backoff_ms: 5_000,
+            multiplier: 2,
+            retry_statuses: Vec::new(),
+        }
+    }
+
+    pub fn transient_errors(max_retries: u8) -> Self {
+        Self {
+            max_retries,
+            initial_backoff_ms: 250,
+            max_backoff_ms: 5_000,
+            multiplier: 2,
+            retry_statuses: vec![408, 429, 500, 502, 503, 504],
+        }
+    }
+
+    pub fn with_backoff(
+        mut self,
+        initial_backoff_ms: u64,
+        max_backoff_ms: u64,
+        multiplier: u8,
+    ) -> Self {
+        self.initial_backoff_ms = initial_backoff_ms.max(1);
+        self.max_backoff_ms = max_backoff_ms.max(self.initial_backoff_ms);
+        self.multiplier = multiplier.max(1);
+        self
+    }
+
+    pub fn with_retry_status(mut self, status: u16) -> Self {
+        if !self.retry_statuses.contains(&status) {
+            self.retry_statuses.push(status);
+        }
+        self.retry_statuses.sort_unstable();
+        self
+    }
+
+    pub fn is_enabled(&self) -> bool {
+        self.max_retries > 0
+    }
+
+    pub fn total_attempts(&self) -> u16 {
+        self.max_retries as u16 + 1
+    }
+
+    pub fn should_retry_status(&self, status: u16) -> bool {
+        self.is_enabled() && self.retry_statuses.contains(&status)
+    }
+
+    pub fn delay_for_retry(&self, retry_index: u8) -> Option<u64> {
+        if retry_index >= self.max_retries {
+            return None;
+        }
+
+        let mut delay = self.initial_backoff_ms.max(1);
+        for _ in 0..retry_index {
+            delay = delay.saturating_mul(self.multiplier.max(1) as u64);
+            if delay >= self.max_backoff_ms {
+                return Some(self.max_backoff_ms);
+            }
+        }
+        Some(delay.min(self.max_backoff_ms))
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum LocalHttpAuth {
     None,
     BearerToken {
@@ -380,6 +464,7 @@ pub struct LocalHttpRequestTemplate {
     pub content_type: Option<String>,
     pub timeout_ms: u64,
     pub idempotent: bool,
+    pub retry_policy: LocalHttpRetryPolicy,
     pub auth: LocalHttpAuth,
     pub headers: Vec<Header>,
     pub metadata: Vec<Metadata>,
@@ -396,6 +481,7 @@ impl LocalHttpRequestTemplate {
             content_type: None,
             timeout_ms: 5_000,
             idempotent: method.is_idempotent_by_default(),
+            retry_policy: LocalHttpRetryPolicy::none(),
             auth: LocalHttpAuth::None,
             headers: Vec::new(),
             metadata: Vec::new(),
@@ -419,6 +505,11 @@ impl LocalHttpRequestTemplate {
 
     pub fn with_idempotent(mut self, idempotent: bool) -> Self {
         self.idempotent = idempotent;
+        self
+    }
+
+    pub fn with_retry_policy(mut self, retry_policy: LocalHttpRetryPolicy) -> Self {
+        self.retry_policy = retry_policy;
         self
     }
 
@@ -477,6 +568,7 @@ impl LocalHttpRequestTemplate {
             body,
             timeout_ms: self.timeout_ms,
             idempotent: self.idempotent,
+            retry_policy: self.retry_policy.clone(),
             auth: self.auth.clone(),
             metadata: endpoint
                 .metadata
@@ -498,6 +590,7 @@ pub struct LocalHttpRequestPlan {
     pub body: Vec<u8>,
     pub timeout_ms: u64,
     pub idempotent: bool,
+    pub retry_policy: LocalHttpRetryPolicy,
     pub auth: LocalHttpAuth,
     pub metadata: Vec<Metadata>,
 }
@@ -513,6 +606,10 @@ impl LocalHttpRequestPlan {
 
     pub fn has_body(&self) -> bool {
         !self.body.is_empty()
+    }
+
+    pub fn retries_enabled(&self) -> bool {
+        self.retry_policy.is_enabled()
     }
 }
 
@@ -533,6 +630,8 @@ pub struct LocalHttpRequestPlanQuery {
     pub auth_kinds: Vec<LocalHttpAuthKind>,
     pub idempotent: Option<bool>,
     pub has_body: Option<bool>,
+    pub retries_enabled: Option<bool>,
+    pub retry_statuses: Vec<u16>,
     pub requires_vault_ref: Option<bool>,
     pub timeout_at_or_below_ms: Option<u64>,
     pub sort: LocalHttpRequestPlanSort,
@@ -548,6 +647,8 @@ impl Default for LocalHttpRequestPlanQuery {
             auth_kinds: Vec::new(),
             idempotent: None,
             has_body: None,
+            retries_enabled: None,
+            retry_statuses: Vec::new(),
             requires_vault_ref: None,
             timeout_at_or_below_ms: None,
             sort: LocalHttpRequestPlanSort::IntegrationThenBridge,
@@ -588,6 +689,16 @@ impl LocalHttpRequestPlanQuery {
 
     pub fn has_body(mut self, has_body: bool) -> Self {
         self.has_body = Some(has_body);
+        self
+    }
+
+    pub fn retries_enabled(mut self, retries_enabled: bool) -> Self {
+        self.retries_enabled = Some(retries_enabled);
+        self
+    }
+
+    pub fn with_retry_status(mut self, status: u16) -> Self {
+        self.retry_statuses.push(status);
         self
     }
 
@@ -633,6 +744,19 @@ impl LocalHttpRequestPlanQuery {
             if plan.has_body() != has_body {
                 return false;
             }
+        }
+        if let Some(retries_enabled) = self.retries_enabled {
+            if plan.retries_enabled() != retries_enabled {
+                return false;
+            }
+        }
+        if !self.retry_statuses.is_empty()
+            && !self
+                .retry_statuses
+                .iter()
+                .all(|status| plan.retry_policy.should_retry_status(*status))
+        {
+            return false;
         }
         if let Some(requires_vault_ref) = self.requires_vault_ref {
             if plan.required_vault_ref().is_some() != requires_vault_ref {
@@ -992,6 +1116,42 @@ mod tests {
     }
 
     #[test]
+    fn retry_policy_uses_bounded_backoff_and_status_matching() {
+        let policy = LocalHttpRetryPolicy::transient_errors(4)
+            .with_backoff(100, 250, 2)
+            .with_retry_status(409);
+
+        assert!(policy.is_enabled());
+        assert_eq!(policy.total_attempts(), 5);
+        assert_eq!(policy.delay_for_retry(0), Some(100));
+        assert_eq!(policy.delay_for_retry(1), Some(200));
+        assert_eq!(policy.delay_for_retry(2), Some(250));
+        assert_eq!(policy.delay_for_retry(3), Some(250));
+        assert_eq!(policy.delay_for_retry(4), None);
+        assert!(policy.should_retry_status(503));
+        assert!(policy.should_retry_status(409));
+        assert!(!policy.should_retry_status(404));
+        assert_eq!(LocalHttpRetryPolicy::none().delay_for_retry(0), None);
+    }
+
+    #[test]
+    fn request_templates_preserve_retry_policy_in_plans() {
+        let endpoint = LocalHttpEndpoint::hue_bridge(bridge_id(), "hue.local").unwrap();
+        let policy = LocalHttpRetryPolicy::transient_errors(2).with_backoff(100, 1_000, 3);
+
+        let plan = LocalHttpRequestTemplate::new(LocalHttpMethod::Get, "/clip/v2/resource/light")
+            .unwrap()
+            .with_retry_policy(policy.clone())
+            .plan(&endpoint, Vec::new())
+            .unwrap();
+
+        assert_eq!(plan.retry_policy, policy);
+        assert!(plan.retries_enabled());
+        assert_eq!(plan.retry_policy.delay_for_retry(1), Some(300));
+        assert!(plan.retry_policy.should_retry_status(429));
+    }
+
+    #[test]
     fn tls_name_and_invalid_cert_policy_are_explicit() {
         let endpoint = LocalHttpEndpoint::new(
             IntegrationId::trusted("camera"),
@@ -1077,6 +1237,31 @@ mod tests {
         assert_eq!(results[0].method, LocalHttpMethod::Put);
         assert_eq!(results[0].auth.kind(), LocalHttpAuthKind::HeaderToken);
         assert_eq!(LocalHttpAuthKind::HeaderToken.to_string(), "header_token");
+        assert!(query.matches_plan(results[0]));
+    }
+
+    #[test]
+    fn request_plan_queries_filter_retry_policy_statuses() {
+        let endpoint = LocalHttpEndpoint::hue_bridge(bridge_id(), "hue.local").unwrap();
+        let no_retry =
+            LocalHttpRequestTemplate::new(LocalHttpMethod::Get, "/clip/v2/resource/light")
+                .unwrap()
+                .plan(&endpoint, Vec::new())
+                .unwrap();
+        let retrying =
+            LocalHttpRequestTemplate::new(LocalHttpMethod::Get, "/clip/v2/resource/bridge")
+                .unwrap()
+                .with_retry_policy(LocalHttpRetryPolicy::transient_errors(3))
+                .plan(&endpoint, Vec::new())
+                .unwrap();
+
+        let query = LocalHttpRequestPlanQuery::new()
+            .retries_enabled(true)
+            .with_retry_status(503);
+        let results = query_local_http_request_plans([&no_retry, &retrying], &query);
+
+        assert_eq!(results.len(), 1);
+        assert_eq!(results[0].url, "https://hue.local/clip/v2/resource/bridge");
         assert!(query.matches_plan(results[0]));
     }
 }
