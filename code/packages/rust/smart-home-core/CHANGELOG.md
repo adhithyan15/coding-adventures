@@ -15,3 +15,5 @@ All notable changes to this package will be documented in this file.
   runtime dispatch.
 - Authorization-decision records for capturing allowed or denied tool/command
   checks with matched and missing grants.
+- Canonical capability catalog helpers for light, scene, lock, climate, sensor,
+  and input integration families.

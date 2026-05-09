@@ -29,6 +29,8 @@ Current scope:
 
 - normalized bridge/device/entity records
 - capability and value typing
+- canonical capability catalog entries for light, scene, lock, climate, sensor,
+  and input families
 - immutable device events and command requests
 - command risk tier helpers
 - state freshness helpers

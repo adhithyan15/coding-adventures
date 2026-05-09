@@ -132,6 +132,7 @@ pub enum CapabilityMode {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ValueKind {
+    Null,
     Boolean,
     Integer,
     Number,
@@ -193,6 +194,11 @@ impl Capability {
         self
     }
 
+    pub fn with_unit(mut self, unit: impl Into<String>) -> Self {
+        self.unit = Some(unit.into());
+        self
+    }
+
     pub fn light_on_off() -> Self {
         Self::new(
             CapabilityId::trusted("light.on_off"),
@@ -210,14 +216,46 @@ impl Capability {
         .with_range(0.0, 100.0, Some(1.0))
     }
 
+    pub fn light_color() -> Self {
+        Self::new(
+            CapabilityId::trusted("light.color"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Object,
+        )
+    }
+
     pub fn light_color_temperature() -> Self {
-        let mut capability = Self::new(
+        Self::new(
             CapabilityId::trusted("light.color_temperature"),
             CapabilityMode::ObserveAndCommand,
             ValueKind::Integer,
-        );
-        capability.unit = Some("mirek".to_string());
-        capability
+        )
+        .with_unit("mirek")
+    }
+
+    pub fn scene_recall() -> Self {
+        Self::new(
+            CapabilityId::trusted("scene.recall"),
+            CapabilityMode::Command,
+            ValueKind::Null,
+        )
+    }
+
+    pub fn lock_state() -> Self {
+        Self::new(
+            CapabilityId::trusted("lock.state"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Text,
+        )
+    }
+
+    pub fn climate_setpoint() -> Self {
+        Self::new(
+            CapabilityId::trusted("climate.setpoint"),
+            CapabilityMode::ObserveAndCommand,
+            ValueKind::Number,
+        )
+        .with_unit("temperature")
     }
 
     pub fn sensor_occupancy() -> Self {
@@ -228,6 +266,50 @@ impl Capability {
         )
     }
 
+    pub fn sensor_contact() -> Self {
+        Self::new(
+            CapabilityId::trusted("sensor.contact"),
+            CapabilityMode::Observe,
+            ValueKind::Boolean,
+        )
+    }
+
+    pub fn sensor_temperature() -> Self {
+        Self::new(
+            CapabilityId::trusted("sensor.temperature"),
+            CapabilityMode::Observe,
+            ValueKind::Number,
+        )
+        .with_unit("temperature")
+    }
+
+    pub fn sensor_humidity() -> Self {
+        Self::new(
+            CapabilityId::trusted("sensor.humidity"),
+            CapabilityMode::Observe,
+            ValueKind::Percentage,
+        )
+        .with_range(0.0, 100.0, Some(1.0))
+    }
+
+    pub fn sensor_illuminance() -> Self {
+        Self::new(
+            CapabilityId::trusted("sensor.illuminance"),
+            CapabilityMode::Observe,
+            ValueKind::Number,
+        )
+        .with_unit("lux")
+    }
+
+    pub fn sensor_battery() -> Self {
+        Self::new(
+            CapabilityId::trusted("sensor.battery"),
+            CapabilityMode::Observe,
+            ValueKind::Percentage,
+        )
+        .with_range(0.0, 100.0, Some(1.0))
+    }
+
     pub fn input_button() -> Self {
         Self::new(
             CapabilityId::trusted("input.button"),
@@ -235,6 +317,25 @@ impl Capability {
             ValueKind::Text,
         )
     }
+}
+
+pub fn canonical_capability_catalog() -> Vec<Capability> {
+    vec![
+        Capability::light_on_off(),
+        Capability::light_brightness(),
+        Capability::light_color(),
+        Capability::light_color_temperature(),
+        Capability::scene_recall(),
+        Capability::lock_state(),
+        Capability::climate_setpoint(),
+        Capability::sensor_occupancy(),
+        Capability::sensor_contact(),
+        Capability::sensor_temperature(),
+        Capability::sensor_humidity(),
+        Capability::sensor_illuminance(),
+        Capability::sensor_battery(),
+        Capability::input_button(),
+    ]
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1132,6 +1233,66 @@ mod tests {
 
         assert!(!snapshot.is_stale_at(1_999));
         assert!(snapshot.is_stale_at(2_000));
+    }
+
+    #[test]
+    fn canonical_capability_catalog_covers_first_integration_families() {
+        let catalog = canonical_capability_catalog();
+        let ids = catalog
+            .iter()
+            .map(|capability| capability.capability_id.as_str())
+            .collect::<Vec<_>>();
+
+        assert_eq!(catalog.len(), 14);
+        assert_eq!(ids[0], "light.on_off");
+        assert!(ids.contains(&"light.color"));
+        assert!(ids.contains(&"scene.recall"));
+        assert!(ids.contains(&"lock.state"));
+        assert!(ids.contains(&"climate.setpoint"));
+        assert!(ids.contains(&"sensor.contact"));
+        assert!(ids.contains(&"sensor.temperature"));
+        assert!(ids.contains(&"sensor.humidity"));
+        assert!(ids.contains(&"sensor.illuminance"));
+        assert!(ids.contains(&"sensor.battery"));
+
+        let scene_recall = catalog
+            .iter()
+            .find(|capability| capability.capability_id.as_str() == "scene.recall")
+            .unwrap();
+        assert_eq!(scene_recall.mode, CapabilityMode::Command);
+        assert_eq!(scene_recall.value_kind, ValueKind::Null);
+
+        let illuminance = catalog
+            .iter()
+            .find(|capability| capability.capability_id.as_str() == "sensor.illuminance")
+            .unwrap();
+        assert_eq!(illuminance.unit.as_deref(), Some("lux"));
+    }
+
+    #[test]
+    fn command_capabilities_are_present_in_canonical_capability_catalog() {
+        let catalog_ids = canonical_capability_catalog()
+            .into_iter()
+            .map(|capability| capability.capability_id)
+            .collect::<Vec<_>>();
+        let command_types = [
+            CommandType::TurnOn,
+            CommandType::TurnOff,
+            CommandType::SetBrightness,
+            CommandType::SetColor,
+            CommandType::SetColorTemperature,
+            CommandType::RecallScene,
+            CommandType::SetLock,
+            CommandType::SetThermostatSetpoint,
+        ];
+
+        for command_type in command_types {
+            let capability_id = command_type.canonical_capability_id().unwrap();
+            assert!(
+                catalog_ids.contains(&capability_id),
+                "missing catalog capability for {command_type:?}"
+            );
+        }
     }
 
     #[test]
