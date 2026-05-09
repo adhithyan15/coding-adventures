@@ -13,6 +13,8 @@ use zigbee_nwk::NetworkAddress;
 pub const ZCL_READ_ATTRIBUTES_COMMAND_ID: u8 = 0x00;
 pub const ZCL_REPORT_ATTRIBUTES_COMMAND_ID: u8 = 0x0a;
 pub const ZCL_DEFAULT_RESPONSE_COMMAND_ID: u8 = 0x0b;
+pub const ZCL_LEVEL_MOVE_TO_LEVEL_WITH_ON_OFF_COMMAND_ID: u8 = 0x04;
+pub const ZCL_COLOR_MOVE_TO_COLOR_TEMPERATURE_COMMAND_ID: u8 = 0x0a;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct ZclClusterId(pub u16);
@@ -352,6 +354,36 @@ pub fn on_off_command_frame(transaction_sequence_number: u8, command: OnOffComma
     )
 }
 
+pub fn move_to_level_with_on_off_frame(
+    transaction_sequence_number: u8,
+    percent: u8,
+    transition_time_ds: u16,
+) -> ZclFrame {
+    let mut payload = Vec::with_capacity(3);
+    payload.push(percentage_to_level(percent));
+    payload.extend_from_slice(&transition_time_ds.to_le_bytes());
+    ZclFrame::cluster_command(
+        transaction_sequence_number,
+        ZCL_LEVEL_MOVE_TO_LEVEL_WITH_ON_OFF_COMMAND_ID,
+        payload,
+    )
+}
+
+pub fn move_to_color_temperature_frame(
+    transaction_sequence_number: u8,
+    mirek: u16,
+    transition_time_ds: u16,
+) -> ZclFrame {
+    let mut payload = Vec::with_capacity(4);
+    payload.extend_from_slice(&mirek.to_le_bytes());
+    payload.extend_from_slice(&transition_time_ds.to_le_bytes());
+    ZclFrame::cluster_command(
+        transaction_sequence_number,
+        ZCL_COLOR_MOVE_TO_COLOR_TEMPERATURE_COMMAND_ID,
+        payload,
+    )
+}
+
 pub fn parse_attribute_reports(
     cluster_id: ZclClusterId,
     payload: &[u8],
@@ -430,6 +462,11 @@ pub fn state_delta_for_report(report: &ZclAttributeReport) -> Option<StateDelta>
 
 pub fn level_to_percentage(level: u8) -> u8 {
     ((u16::from(level) * 100 + 127) / 254).min(100) as u8
+}
+
+pub fn percentage_to_level(percent: u8) -> u8 {
+    let percent = percent.min(100);
+    ((u16::from(percent) * 254 + 50) / 100).min(254) as u8
 }
 
 pub fn lock_state_name(value: u8) -> &'static str {
@@ -564,6 +601,29 @@ mod tests {
 
         assert_eq!(frame.command_id, 0x01);
         assert_eq!(frame.encode().unwrap(), vec![0x11, 0x33, 0x01]);
+    }
+
+    #[test]
+    fn light_command_frames_encode_level_and_color_temperature() {
+        let level = move_to_level_with_on_off_frame(0x44, 50, 25);
+        let color_temperature = move_to_color_temperature_frame(0x45, 366, 10);
+
+        assert_eq!(
+            level.command_id,
+            ZCL_LEVEL_MOVE_TO_LEVEL_WITH_ON_OFF_COMMAND_ID
+        );
+        assert_eq!(level.encode().unwrap(), vec![0x11, 0x44, 0x04, 127, 25, 0]);
+        assert_eq!(
+            color_temperature.command_id,
+            ZCL_COLOR_MOVE_TO_COLOR_TEMPERATURE_COMMAND_ID
+        );
+        assert_eq!(
+            color_temperature.encode().unwrap(),
+            vec![0x11, 0x45, 0x0a, 0x6e, 0x01, 10, 0]
+        );
+        assert_eq!(percentage_to_level(0), 0);
+        assert_eq!(percentage_to_level(100), 254);
+        assert_eq!(percentage_to_level(250), 254);
     }
 
     #[test]
