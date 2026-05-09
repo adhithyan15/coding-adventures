@@ -8,13 +8,13 @@
 #![forbid(unsafe_code)]
 
 use smart_home_core::{
-    tier_for_command, AgentId, AuthorizationDecision, Bridge, BridgeId, CapabilityGrant,
-    CapabilityGrantScope, CapabilityId, CapabilityMode, CommandId, CommandResult, CommandStatus,
-    CommandType, CorrelationId, Device, DeviceCommand, DeviceEvent, DeviceEventType, DeviceId,
-    Entity, EntityId, EventId, Health, IntegrationId, Metadata, PrivilegeTier, SmartHomeTool,
-    StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
+    tier_for_command, AgentId, AuthorizationDecision, Bridge, BridgeId, Capability,
+    CapabilityGrant, CapabilityGrantScope, CapabilityId, CapabilityMode, CommandId, CommandResult,
+    CommandStatus, CommandType, CorrelationId, Device, DeviceCommand, DeviceEvent, DeviceEventType,
+    DeviceId, Entity, EntityId, EventId, Health, IntegrationId, Metadata, PrivilegeTier,
+    SmartHomeTool, StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
 };
-use smart_home_registry::{InMemorySmartHomeRegistry, RegistryError};
+use smart_home_registry::{DeviceSelector, InMemorySmartHomeRegistry, RegistryError};
 use std::collections::{BTreeMap, VecDeque};
 use std::fmt;
 
@@ -42,6 +42,11 @@ pub enum RuntimeError {
         command_id: CommandId,
         principal_id: AgentId,
         required_tier: PrivilegeTier,
+        missing_capabilities: Vec<CapabilityId>,
+    },
+    UnauthorizedTool {
+        principal_id: AgentId,
+        tool: SmartHomeTool,
         missing_capabilities: Vec<CapabilityId>,
     },
 }
@@ -84,6 +89,14 @@ impl fmt::Display for RuntimeError {
             } => write!(
                 f,
                 "agent {principal_id} is not authorized for command {command_id} at tier {required_tier:?}; missing grants for {missing_capabilities:?}"
+            ),
+            Self::UnauthorizedTool {
+                principal_id,
+                tool,
+                missing_capabilities,
+            } => write!(
+                f,
+                "agent {principal_id} is not authorized for tool {tool:?}; missing grants for {missing_capabilities:?}"
             ),
         }
     }
@@ -576,6 +589,71 @@ impl SupervisionTickReport {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum RuntimeReadToolRequest {
+    ListBridges,
+    ListDevices {
+        bridge_id: Option<BridgeId>,
+        health: Option<Health>,
+        capability_id: Option<CapabilityId>,
+    },
+    GetState {
+        entity_id: EntityId,
+    },
+    DescribeCapabilities {
+        entity_id: EntityId,
+    },
+    GetHealth {
+        bridge_id: Option<BridgeId>,
+    },
+}
+
+impl RuntimeReadToolRequest {
+    pub fn tool(&self) -> SmartHomeTool {
+        match self {
+            Self::ListBridges => SmartHomeTool::ListBridges,
+            Self::ListDevices { .. } => SmartHomeTool::ListDevices,
+            Self::GetState { .. } => SmartHomeTool::GetState,
+            Self::DescribeCapabilities { .. } => SmartHomeTool::DescribeCapabilities,
+            Self::GetHealth { .. } => SmartHomeTool::GetHealth,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BridgeHealthSnapshot {
+    pub bridge_id: BridgeId,
+    pub integration_id: IntegrationId,
+    pub health: Health,
+    pub last_seen_at_ms: Option<u64>,
+}
+
+impl BridgeHealthSnapshot {
+    pub fn from_bridge(bridge: &Bridge) -> Self {
+        Self {
+            bridge_id: bridge.bridge_id.clone(),
+            integration_id: bridge.integration_id.clone(),
+            health: bridge.health,
+            last_seen_at_ms: bridge.last_seen_at_ms,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum RuntimeReadToolOutput {
+    Bridges(Vec<Bridge>),
+    Devices(Vec<Device>),
+    State {
+        entity_id: EntityId,
+        snapshot: Option<StateSnapshot>,
+    },
+    Capabilities {
+        entity_id: EntityId,
+        capabilities: Vec<Capability>,
+    },
+    Health(Vec<BridgeHealthSnapshot>),
+}
+
 #[derive(Debug, Clone)]
 pub struct SmartHomeRuntime {
     registry: InMemorySmartHomeRegistry,
@@ -726,6 +804,88 @@ impl SmartHomeRuntime {
         self.registry
             .record_authorization_decision(decision.clone());
         decision
+    }
+
+    pub fn execute_read_tool(
+        &mut self,
+        principal_id: AgentId,
+        request: RuntimeReadToolRequest,
+        now_ms: u64,
+    ) -> Result<RuntimeReadToolOutput, RuntimeError> {
+        let tool = request.tool();
+        let decision = self.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
+        if !decision.missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedTool {
+                principal_id,
+                tool,
+                missing_capabilities: decision.missing_capabilities,
+            });
+        }
+
+        match request {
+            RuntimeReadToolRequest::ListBridges => Ok(RuntimeReadToolOutput::Bridges(
+                self.registry.bridges().cloned().collect(),
+            )),
+            RuntimeReadToolRequest::ListDevices {
+                bridge_id,
+                health,
+                capability_id,
+            } => {
+                let mut selector = DeviceSelector::new();
+                if let Some(bridge_id) = bridge_id {
+                    selector = selector.for_bridge(bridge_id);
+                }
+                if let Some(health) = health {
+                    selector = selector.with_health(health);
+                }
+                if let Some(capability_id) = capability_id {
+                    selector = selector.with_capability(capability_id);
+                }
+                Ok(RuntimeReadToolOutput::Devices(
+                    self.registry
+                        .query_devices(&selector)
+                        .into_iter()
+                        .cloned()
+                        .collect(),
+                ))
+            }
+            RuntimeReadToolRequest::GetState { entity_id } => {
+                if self.registry.entity(&entity_id).is_none() {
+                    return Err(RuntimeError::UnknownEntity(entity_id));
+                }
+                Ok(RuntimeReadToolOutput::State {
+                    entity_id: entity_id.clone(),
+                    snapshot: self.registry.state(&entity_id).cloned(),
+                })
+            }
+            RuntimeReadToolRequest::DescribeCapabilities { entity_id } => {
+                let entity = self
+                    .registry
+                    .entity(&entity_id)
+                    .ok_or_else(|| RuntimeError::UnknownEntity(entity_id.clone()))?;
+                Ok(RuntimeReadToolOutput::Capabilities {
+                    entity_id,
+                    capabilities: entity.capabilities.clone(),
+                })
+            }
+            RuntimeReadToolRequest::GetHealth { bridge_id } => match bridge_id {
+                Some(bridge_id) => {
+                    let bridge = self
+                        .registry
+                        .bridge(&bridge_id)
+                        .ok_or_else(|| RuntimeError::UnknownBridge(bridge_id.clone()))?;
+                    Ok(RuntimeReadToolOutput::Health(vec![
+                        BridgeHealthSnapshot::from_bridge(bridge),
+                    ]))
+                }
+                None => Ok(RuntimeReadToolOutput::Health(
+                    self.registry
+                        .bridges()
+                        .map(BridgeHealthSnapshot::from_bridge)
+                        .collect(),
+                )),
+            },
+        }
     }
 
     pub fn submit_command(
@@ -1521,6 +1681,155 @@ mod tests {
             expired.missing_capabilities,
             vec![CapabilityId::trusted("smart_home.read")]
         );
+    }
+
+    #[test]
+    fn read_tools_require_smart_home_read_grants() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        let principal = AgentId::trusted("agent:observer");
+
+        let error = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::ListBridges,
+                1_000,
+            )
+            .unwrap_err();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+
+        assert!(matches!(
+            error,
+            RuntimeError::UnauthorizedTool {
+                tool: SmartHomeTool::ListBridges,
+                missing_capabilities,
+                ..
+            } if missing_capabilities == vec![CapabilityId::trusted("smart_home.read")]
+        ));
+        assert_eq!(decisions.len(), 1);
+        assert_eq!(decisions[0].outcome, AuthorizationOutcome::Denied);
+        assert!(runtime.event_bus().published().is_empty());
+    }
+
+    #[test]
+    fn read_tool_facade_returns_registry_snapshots() {
+        let mut runtime = runtime_with_entity(vec![
+            Capability::light_on_off(),
+            Capability::light_brightness(),
+        ]);
+        let principal = AgentId::trusted("agent:observer");
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-read"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.read"),
+                PrivilegeTier::ReadOnly,
+                "chief-of-staff",
+                1_000,
+            )
+            .with_expiry(2_000),
+        );
+        runtime
+            .registry_mut()
+            .apply_state_snapshot(StateSnapshot {
+                entity_id: EntityId::trusted("entity-1"),
+                value: Value::Object(vec![("light.on_off".to_string(), Value::Bool(true))]),
+                source: StateSource::EventStream,
+                observed_at_ms: 1_100,
+                received_at_ms: 1_101,
+                expires_at_ms: None,
+                confidence: StateConfidence::Confirmed,
+            })
+            .unwrap();
+
+        let bridges = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::ListBridges,
+                1_500,
+            )
+            .unwrap();
+        let devices = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::ListDevices {
+                    bridge_id: Some(BridgeId::trusted("bridge-1")),
+                    health: Some(Health::Online),
+                    capability_id: Some(CapabilityId::trusted("light.on_off")),
+                },
+                1_501,
+            )
+            .unwrap();
+        let state = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::GetState {
+                    entity_id: EntityId::trusted("entity-1"),
+                },
+                1_502,
+            )
+            .unwrap();
+        let capabilities = runtime
+            .execute_read_tool(
+                principal.clone(),
+                RuntimeReadToolRequest::DescribeCapabilities {
+                    entity_id: EntityId::trusted("entity-1"),
+                },
+                1_503,
+            )
+            .unwrap();
+        let health = runtime
+            .execute_read_tool(
+                principal,
+                RuntimeReadToolRequest::GetHealth {
+                    bridge_id: Some(BridgeId::trusted("bridge-1")),
+                },
+                1_504,
+            )
+            .unwrap();
+
+        assert!(matches!(
+            bridges,
+            RuntimeReadToolOutput::Bridges(bridges) if bridges.len() == 1
+                && bridges[0].bridge_id == BridgeId::trusted("bridge-1")
+        ));
+        assert!(matches!(
+            devices,
+            RuntimeReadToolOutput::Devices(devices) if devices.len() == 1
+                && devices[0].device_id == DeviceId::trusted("device-1")
+        ));
+        assert!(matches!(
+            state,
+            RuntimeReadToolOutput::State {
+                entity_id,
+                snapshot: Some(snapshot),
+            } if entity_id == EntityId::trusted("entity-1")
+                && snapshot.confidence == StateConfidence::Confirmed
+        ));
+        assert!(matches!(
+            capabilities,
+            RuntimeReadToolOutput::Capabilities {
+                entity_id,
+                capabilities,
+            } if entity_id == EntityId::trusted("entity-1")
+                && capabilities.len() == 2
+        ));
+        assert!(matches!(
+            health,
+            RuntimeReadToolOutput::Health(health) if health == vec![BridgeHealthSnapshot {
+                bridge_id: BridgeId::trusted("bridge-1"),
+                integration_id: IntegrationId::trusted("hue"),
+                health: Health::Unknown,
+                last_seen_at_ms: None,
+            }]
+        ));
+        assert_eq!(runtime.registry().counts().authorization_decisions, 5);
+        assert!(runtime
+            .registry()
+            .authorization_decisions()
+            .all(|decision| decision.outcome == AuthorizationOutcome::Allowed));
+        assert!(runtime.event_bus().published().is_empty());
     }
 
     #[test]
