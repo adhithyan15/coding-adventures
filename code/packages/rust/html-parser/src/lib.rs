@@ -808,10 +808,18 @@ impl HtmlParser {
 
     fn append_start_tag(
         &mut self,
-        name: String,
+        mut name: String,
         attributes: Vec<LexerAttribute>,
         self_closing: bool,
     ) {
+        if name == "image" {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-start-tag-treated-as",
+                "start tag `<image>` was treated as `<img>`",
+            ));
+            name = "img".to_string();
+        }
+
         self.apply_document_shell_implied_contexts(&name);
         self.close_fostered_formatting_before_table_context(&name);
         self.apply_table_implied_contexts(&name);
@@ -3571,6 +3579,24 @@ mod tests {
                     "end tag `</hr>` for a void element was ignored"
                 ),
             ]
+        );
+    }
+
+    #[test]
+    fn treats_legacy_image_start_tag_as_img() {
+        let output = parse_html_with_diagnostics("<p><image src=hero.png></p>").unwrap();
+
+        let paragraph = element(&body(&output.document).children[0]);
+        assert_eq!(paragraph.name, "p");
+        let image = element(&paragraph.children[0]);
+        assert_eq!(image.name, "img");
+        assert_eq!(image.attribute("src"), Some("hero.png"));
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-start-tag-treated-as",
+                "start tag `<image>` was treated as `<img>`"
+            )]
         );
     }
 
