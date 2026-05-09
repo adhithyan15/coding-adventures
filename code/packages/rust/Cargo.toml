@@ -163,6 +163,7 @@ members = [
     "lisp-vm",
     "macsyma-lexer",
     "macsyma-parser",
+    "macsyma-compiler",
     "logic-gates",
     "loss-functions",
     "markov-chain",
