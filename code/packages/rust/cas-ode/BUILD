@@ -1,5 +1,9 @@
-rust_library(
-    name = "cas-ode",
-    srcs = ["src/lib.rs"],
-    deps = ["//code/packages/rust/symbolic-ir"],
-)
+load("code/packages/starlark/library-rules/rust_library.star", "rust_library")
+
+_targets = [
+    rust_library(
+        name = "cas-ode",
+        srcs = ["src/**/*.rs", "tests/**/*.rs"],
+        deps = ["symbolic-ir"],
+    ),
+]
