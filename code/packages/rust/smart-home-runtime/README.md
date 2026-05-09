@@ -29,6 +29,8 @@ Included surfaces:
   and reissues corrective commands
 - deterministic supervision ticks that run optimistic expiry, desired-state
   reconciliation, and worker restart checks together
+- non-mutating supervision plans that preview due refreshes, desired-state
+  drift, and worker restarts before a tick performs any writes
 - replay of device events into the registry-backed state cache
 - bridge health reports that update health without removing identities
 - supervised bridge-worker heartbeat tracking and restart signals
