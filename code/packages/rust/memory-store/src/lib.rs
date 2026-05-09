@@ -9,6 +9,7 @@
 
 use coding_adventures_json_serializer::serialize;
 use coding_adventures_json_value::{parse as parse_json, JsonNumber, JsonValue};
+use std::cmp::Ordering;
 use storage_core::{now_utc_ms, StorageBackend, StorageError, StorageListOptions, StoragePutInput};
 
 const NAMESPACE: &str = "memory";
@@ -69,6 +70,92 @@ pub struct MemoryRecord {
 impl MemoryRecord {
     pub fn is_active_at(&self, now_ms: u64) -> bool {
         !self.tombstoned && self.expires_at.is_none_or(|expires_at| now_ms < expires_at)
+    }
+}
+
+/// Portable ordering for bounded memory list/read tools.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum MemoryListSort {
+    #[default]
+    MemoryId,
+    CreatedAtAsc,
+    CreatedAtDesc,
+    ConfidenceDesc,
+    Subject,
+}
+
+/// Portable list selectors used by D18A/D18D tools before backend-specific
+/// indexes exist.
+#[derive(Debug, Clone, PartialEq)]
+pub struct MemoryListOptions {
+    pub classes: Vec<MemoryClass>,
+    pub tags: Vec<String>,
+    pub source_refs: Vec<String>,
+    pub active_at: Option<u64>,
+    pub min_confidence: Option<f64>,
+    pub include_tombstoned: bool,
+    pub sort: MemoryListSort,
+    pub limit: Option<usize>,
+}
+
+impl Default for MemoryListOptions {
+    fn default() -> Self {
+        Self {
+            classes: Vec::new(),
+            tags: Vec::new(),
+            source_refs: Vec::new(),
+            active_at: None,
+            min_confidence: None,
+            include_tombstoned: false,
+            sort: MemoryListSort::MemoryId,
+            limit: None,
+        }
+    }
+}
+
+impl MemoryListOptions {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_class(mut self, class: MemoryClass) -> Self {
+        self.classes.push(class);
+        self
+    }
+
+    pub fn with_tag(mut self, tag: impl Into<String>) -> Self {
+        self.tags.push(tag.into());
+        self
+    }
+
+    pub fn with_source_ref(mut self, source_ref: impl Into<String>) -> Self {
+        self.source_refs.push(source_ref.into());
+        self
+    }
+
+    pub fn active_at(mut self, now_ms: u64) -> Self {
+        self.active_at = Some(now_ms);
+        self
+    }
+
+    pub fn min_confidence(mut self, confidence: f64) -> Self {
+        self.min_confidence = Some(confidence);
+        self
+    }
+
+    pub fn include_tombstoned(mut self, include: bool) -> Self {
+        self.include_tombstoned = include;
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: MemoryListSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
     }
 }
 
@@ -165,6 +252,20 @@ impl<S: StorageBackend> MemoryStore<S> {
         self.list_memories(|memory| {
             memory.tags.iter().any(|value| value == tag) && !memory.tombstoned
         })
+    }
+
+    pub fn list_memories_with_options(
+        &self,
+        options: MemoryListOptions,
+    ) -> Result<Vec<MemoryRecord>, StorageError> {
+        validate_memory_list_options(&options)?;
+        let mut memories =
+            self.list_memories(|memory| memory_matches_list_options(memory, &options))?;
+        sort_memories(&mut memories, options.sort);
+        if let Some(limit) = options.limit {
+            memories.truncate(limit);
+        }
+        Ok(memories)
     }
 
     pub fn search_lexical(&self, query: &str) -> Result<Vec<MemoryRecord>, StorageError> {
@@ -310,6 +411,72 @@ fn memory_matches_search(memory: &MemoryRecord, needle: &str) -> bool {
         ]
         .iter()
         .any(|haystack| haystack.contains(needle))
+}
+
+fn memory_matches_list_options(memory: &MemoryRecord, options: &MemoryListOptions) -> bool {
+    if !options.include_tombstoned && memory.tombstoned {
+        return false;
+    }
+    if let Some(now_ms) = options.active_at {
+        if !memory.is_active_at(now_ms) {
+            return false;
+        }
+    }
+    if let Some(min_confidence) = options.min_confidence {
+        if memory.confidence < min_confidence {
+            return false;
+        }
+    }
+    if !options.classes.is_empty() && !options.classes.contains(&memory.class) {
+        return false;
+    }
+    if !options
+        .tags
+        .iter()
+        .all(|tag| memory.tags.iter().any(|candidate| candidate == tag))
+    {
+        return false;
+    }
+    if !options.source_refs.iter().all(|source_ref| {
+        memory
+            .source_refs
+            .iter()
+            .any(|candidate| candidate == source_ref)
+    }) {
+        return false;
+    }
+
+    true
+}
+
+fn sort_memories(memories: &mut [MemoryRecord], sort: MemoryListSort) {
+    match sort {
+        MemoryListSort::MemoryId => {
+            memories.sort_by(|left, right| left.memory_id.cmp(&right.memory_id))
+        }
+        MemoryListSort::CreatedAtAsc => memories.sort_by(compare_by_created_at_asc),
+        MemoryListSort::CreatedAtDesc => {
+            memories.sort_by(|left, right| compare_by_created_at_asc(right, left))
+        }
+        MemoryListSort::ConfidenceDesc => memories.sort_by(|left, right| {
+            right
+                .confidence
+                .partial_cmp(&left.confidence)
+                .unwrap_or(Ordering::Equal)
+                .then_with(|| left.memory_id.cmp(&right.memory_id))
+        }),
+        MemoryListSort::Subject => memories.sort_by(|left, right| {
+            left.subject
+                .cmp(&right.subject)
+                .then_with(|| left.memory_id.cmp(&right.memory_id))
+        }),
+    }
+}
+
+fn compare_by_created_at_asc(left: &MemoryRecord, right: &MemoryRecord) -> Ordering {
+    left.created_at
+        .cmp(&right.created_at)
+        .then_with(|| left.memory_id.cmp(&right.memory_id))
 }
 
 fn memory_to_json(memory: &MemoryRecord) -> JsonValue {
@@ -474,6 +641,15 @@ fn validate_memory(memory: &MemoryRecord) -> Result<(), StorageError> {
     Ok(())
 }
 
+fn validate_memory_list_options(options: &MemoryListOptions) -> Result<(), StorageError> {
+    validate_id_list("tags", &options.tags)?;
+    validate_id_list("source_refs", &options.source_refs)?;
+    if let Some(confidence) = options.min_confidence {
+        validate_confidence(confidence)?;
+    }
+    Ok(())
+}
+
 fn validate_id(field: &str, value: &str) -> Result<(), StorageError> {
     if value.trim().is_empty() {
         return Err(validation(field, "must not be empty"));
@@ -577,6 +753,20 @@ mod tests {
         }
     }
 
+    fn memory_with_created_confidence(
+        memory_id: &str,
+        subject: &str,
+        body: &str,
+        created_at: u64,
+        confidence: f64,
+    ) -> MemoryRecord {
+        MemoryRecord {
+            created_at,
+            confidence,
+            ..memory_with_id(memory_id, subject, body)
+        }
+    }
+
     #[test]
     fn remember_and_search_round_trip() {
         let store = MemoryStore::new(InMemoryStorageBackend::new());
@@ -643,6 +833,100 @@ mod tests {
     }
 
     #[test]
+    fn list_options_compose_filters_sorting_and_limits() {
+        let store = MemoryStore::new(InMemoryStorageBackend::new());
+        let mut profile =
+            memory_with_created_confidence("pref-tone", "Tone", "Prefer concise recaps", 10, 0.8);
+        profile.tags = vec!["writing".to_string(), "tone".to_string()];
+        profile.source_refs = vec!["session-1".to_string()];
+
+        let mut runbook = memory_with_created_confidence(
+            "runbook",
+            "Runbook",
+            "Prefer concise operational steps",
+            30,
+            0.95,
+        );
+        runbook.class = MemoryClass::Procedure;
+        runbook.tags = vec!["writing".to_string(), "ops".to_string()];
+        runbook.source_refs = vec!["session-1".to_string(), "spec-d18".to_string()];
+
+        let mut low_confidence = memory_with_created_confidence(
+            "draft-style",
+            "Draft style",
+            "Prefer concise drafts",
+            40,
+            0.4,
+        );
+        low_confidence.tags = vec!["writing".to_string()];
+        low_confidence.source_refs = vec!["session-1".to_string()];
+
+        let mut expired = memory_with_created_confidence(
+            "old-style",
+            "Old style",
+            "Prefer concise summaries",
+            50,
+            0.9,
+        );
+        expired.tags = vec!["writing".to_string()];
+        expired.source_refs = vec!["session-1".to_string()];
+        expired.expires_at = Some(75);
+
+        let _ = store.remember(profile).unwrap();
+        let _ = store.remember(runbook).unwrap();
+        let _ = store.remember(low_confidence).unwrap();
+        let _ = store.remember(expired).unwrap();
+
+        let matches = store
+            .list_memories_with_options(
+                MemoryListOptions::new()
+                    .with_tag("writing")
+                    .with_source_ref("session-1")
+                    .active_at(100)
+                    .min_confidence(0.75)
+                    .sorted_by(MemoryListSort::CreatedAtDesc)
+                    .with_limit(2),
+            )
+            .unwrap();
+
+        assert_eq!(
+            matches
+                .iter()
+                .map(|memory| memory.memory_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["runbook", "pref-tone"]
+        );
+    }
+
+    #[test]
+    fn list_options_can_include_tombstoned_records_when_requested() {
+        let store = MemoryStore::new(InMemoryStorageBackend::new());
+        let mut warning = memory_with_id("warn-old-token", "Token", "Old token is invalid");
+        warning.class = MemoryClass::Warning;
+        let mut active = memory_with_id("warn-active-token", "Active token", "Token is scoped");
+        active.class = MemoryClass::Warning;
+
+        let _ = store.remember(warning).unwrap();
+        let _ = store.remember(active).unwrap();
+        let _ = store.forget_tombstone("warn-old-token").unwrap();
+
+        let default_matches = store
+            .list_memories_with_options(MemoryListOptions::new().with_class(MemoryClass::Warning))
+            .unwrap();
+        assert_eq!(default_matches.len(), 1);
+        assert_eq!(default_matches[0].memory_id, "warn-active-token");
+
+        let with_tombstones = store
+            .list_memories_with_options(
+                MemoryListOptions::new()
+                    .with_class(MemoryClass::Warning)
+                    .include_tombstoned(true),
+            )
+            .unwrap();
+        assert_eq!(with_tombstones.len(), 2);
+    }
+
+    #[test]
     fn confidence_and_tombstone_updates_work() {
         let store = MemoryStore::new(InMemoryStorageBackend::new());
         let _ = store.remember(memory()).unwrap();
@@ -683,6 +967,9 @@ mod tests {
         assert!(validate_confidence(1.5).is_err());
         assert!(validate_subject("").is_err());
         assert!(validate_body("").is_err());
+        assert!(MemoryStore::new(InMemoryStorageBackend::new())
+            .list_memories_with_options(MemoryListOptions::new().with_tag("bad tag"))
+            .is_err());
         assert!(matches!(
             MemoryStore::new(InMemoryStorageBackend::new()).search_lexical("   "),
             Err(StorageError::Validation { .. })
