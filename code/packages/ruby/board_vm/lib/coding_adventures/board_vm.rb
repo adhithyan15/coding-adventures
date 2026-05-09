@@ -248,6 +248,7 @@ module CodingAdventures
       input: $stdin,
       output: $stdout,
       flash: false,
+      smoke: false,
       cargo_workspace: DEFAULT_RUST_WORKSPACE,
       runner: CommandRunner.new,
       transport: nil,
@@ -275,6 +276,7 @@ module CodingAdventures
         **options
       )
       connection.flash! if flash
+      connection.smoke! if smoke
 
       return connection unless block_given?
 

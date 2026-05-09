@@ -481,6 +481,32 @@ module CodingAdventures
         assert_equal 1, runner.calls.length
       end
 
+      def test_pico_flash_can_immediately_smoke_rediscovered_runtime_port
+        upload = CommandResult.new(["cargo"], "/repo/code/packages/rust", "copied uf2\n", "", 0)
+        runner = FakeRunner.new([upload])
+        transport = FakeWriteTransport.new
+        runtime_devices = BoardVM.devices(paths: [
+          "/dev/serial/by-id/usb-Raspberry_Pi_Pico_Board_VM-if00"
+        ])
+
+        connection = BoardVM.pico(
+          flash: true,
+          smoke: true,
+          firmware_image: "/tmp/board-vm-pico.uf2",
+          cargo_workspace: "/repo/code/packages/rust",
+          pico_uf2_mount: "/Volumes/RPI-RP2",
+          device_discovery: -> { runtime_devices },
+          transport: transport,
+          runner: runner
+        )
+
+        assert_equal :raspberry_pi_pico, connection.board
+        assert_equal "/dev/serial/by-id/usb-Raspberry_Pi_Pico_Board_VM-if00", connection.port
+        assert_equal 1, runner.calls.length
+        assert_equal 2, transport.frames.length
+        assert transport.frames.all? { |frame| frame.is_a?(String) && frame.bytesize.positive? }
+      end
+
       def test_esp_upload_command_rejects_non_esp_targets
         error = assert_raises(UnsupportedBoardError) do
           BoardVM.esp_upload_command(:raspberry_pi_pico, port: "/dev/cu.usbmodem", image: "fw.bin")
@@ -711,6 +737,22 @@ module CodingAdventures
           result = board.session.run_command("stop")
 
           assert_equal [:stop], result.results.map(&:command)
+          assert_equal result.frames, transport.frames
+        end
+      end
+
+      def test_session_run_command_accepts_repl_style_smoke
+        transport = FakeWriteTransport.new
+
+        BoardVM.uno_r4_wifi(
+          port: "/dev/cu.usbmodem2201",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new,
+          transport: transport
+        ) do |board|
+          result = board.session.run_command("smoke")
+
+          assert_equal [:hello, :capabilities], result.results.map(&:command)
           assert_equal result.frames, transport.frames
         end
       end
