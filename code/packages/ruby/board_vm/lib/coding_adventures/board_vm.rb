@@ -132,6 +132,10 @@ module CodingAdventures
       options
     end
 
+    def pico_uf2_mounts(roots: nil)
+      Native.pico_uf2_mounts(roots&.map(&:to_s))
+    end
+
     def pico_uf2_upload_command(
       board = :raspberry_pi_pico,
       image:,

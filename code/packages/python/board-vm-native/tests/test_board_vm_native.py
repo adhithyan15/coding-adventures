@@ -1,4 +1,6 @@
 import io
+import pathlib
+import tempfile
 
 from board_vm_native import (
     BoardDevice,
@@ -16,6 +18,7 @@ from board_vm_native import (
     find_target,
     known_targets,
     pico_uf2_upload_command,
+    pico_uf2_mounts,
     pico_uf2_upload_options,
     pick_device,
     select_device,
@@ -167,6 +170,20 @@ def test_pico_uf2_upload_options_are_exposed_from_rust_language_core():
     assert options.auto_detect_mount is True
     assert pico_uf2_upload_options("pico-w") is not None
     assert pico_uf2_upload_options("esp32") is None
+
+
+def test_pico_uf2_mounts_are_discovered_by_rust_language_core():
+    with tempfile.TemporaryDirectory(prefix="board-vm-pico-uf2") as root:
+        mount = pathlib.Path(root) / "RPI-RP2"
+        mount.mkdir()
+        (mount / "INFO_UF2.TXT").write_text(
+            "UF2 Bootloader\nModel: Raspberry Pi RP2\n",
+            encoding="utf-8",
+        )
+        (mount / "INDEX.HTM").write_text("<html></html>", encoding="utf-8")
+        (pathlib.Path(root) / "NOT-PICO").mkdir()
+
+        assert pico_uf2_mounts([root]) == [str(mount)]
 
 
 def test_esp_upload_command_uses_rust_owned_options():

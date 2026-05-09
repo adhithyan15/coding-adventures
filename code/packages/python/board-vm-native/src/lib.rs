@@ -19,6 +19,8 @@ use board_vm_language_core::{
     capability_bytecode_callable, capability_flag_names, capability_protocol_feature,
     decode_wire_response, detect_target as core_detect_target,
     discover_devices as core_discover_devices, discover_devices_from_paths,
+    discover_pico_bootsel_mounts as core_discover_pico_bootsel_mounts,
+    discover_pico_bootsel_mounts_in_roots,
     esp_upload_options_for_target, known_targets, onboard_led_kind,
     pico_uf2_upload_options_for_target, program_format_name, raw_module_len, run_status_name,
     wireless_transport_name, BoardVmLanguageSession, DecodedLanguageResponse,
@@ -534,6 +536,25 @@ unsafe extern "C" fn py_classify_devices(_module: PyObjectPtr, args: PyObjectPtr
     host_devices_to_py(&discover_devices_from_paths(paths))
 }
 
+unsafe extern "C" fn py_pico_uf2_mounts(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
+    let roots_arg = PyTuple_GetItem(args, 0);
+    if roots_arg.is_null() {
+        PyErr_Clear();
+        return strings_to_py(&core_discover_pico_bootsel_mounts());
+    }
+    let roots = match vec_str_from_py(roots_arg) {
+        Some(value) => value,
+        None => {
+            set_error(
+                type_error_class(),
+                "pico_uf2_mounts() requires a list of mount roots",
+            );
+            return ptr::null_mut();
+        }
+    };
+    strings_to_py(&discover_pico_bootsel_mounts_in_roots(roots))
+}
+
 fn with_session(
     next_request_id: u16,
     operation: impl FnOnce(&mut BoardVmLanguageSession) -> Result<PyObjectPtr, LanguageCoreError>,
@@ -849,6 +870,14 @@ unsafe fn host_devices_to_py(devices: &[LanguageHostDevice]) -> PyObjectPtr {
     list
 }
 
+unsafe fn strings_to_py(strings: &[String]) -> PyObjectPtr {
+    let list = PyList_New(strings.len() as isize);
+    for (index, string) in strings.iter().enumerate() {
+        PyList_SetItem(list, index as isize, str_to_py(string));
+    }
+    list
+}
+
 unsafe fn host_device_to_py(device: &LanguageHostDevice) -> PyObjectPtr {
     let dict = PyDict_New();
     dict_set(dict, "id", str_to_py(&device.id));
@@ -1153,7 +1182,7 @@ unsafe fn raise_core_error(context: &str, error: LanguageCoreError) -> PyObjectP
 
 #[no_mangle]
 pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
-    let methods: &'static mut [PyMethodDef; 27] = Box::leak(Box::new([
+    let methods: &'static mut [PyMethodDef; 28] = Box::leak(Box::new([
         PyMethodDef {
             ml_name: b"hello_wire\0".as_ptr() as *const c_char,
             ml_meth: Some(py_hello_wire),
@@ -1324,6 +1353,13 @@ pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
             ml_meth: Some(py_classify_devices),
             ml_flags: METH_VARARGS,
             ml_doc: b"Classify host Board VM device paths in Rust.\0".as_ptr() as *const c_char,
+        },
+        PyMethodDef {
+            ml_name: b"pico_uf2_mounts\0".as_ptr() as *const c_char,
+            ml_meth: Some(py_pico_uf2_mounts),
+            ml_flags: METH_VARARGS,
+            ml_doc: b"Discover Pico BOOTSEL UF2 mount candidates in Rust.\0".as_ptr()
+                as *const c_char,
         },
         method_def_sentinel(),
     ]));
