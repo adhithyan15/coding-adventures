@@ -19,8 +19,10 @@ use board_vm_language_core::{
     build_store_program_wire_frame, build_time_now_module, build_time_sleep_ms_module,
     capability_board_metadata, capability_bytecode_callable, capability_flag_names,
     capability_protocol_feature, connection_transport_name, decode_wire_response,
-    detect_target as core_detect_target, discover_devices as core_discover_devices,
-    discover_devices_from_paths, discover_pico_bootsel_mounts as core_discover_pico_bootsel_mounts,
+    detect_target as core_detect_target,
+    discover_bluetooth_devices as core_discover_bluetooth_devices,
+    discover_devices as core_discover_devices, discover_devices_from_paths,
+    discover_pico_bootsel_mounts as core_discover_pico_bootsel_mounts,
     discover_pico_bootsel_mounts_in_roots, esp_upload_options_for_target,
     host_endpoint_transport_name, known_targets, onboard_led_kind,
     parse_bluetooth_endpoint as core_parse_bluetooth_endpoint, pico_uf2_upload_options_for_target,
@@ -433,6 +435,10 @@ extern "C" fn native_bluetooth_endpoint(_self_val: VALUE, endpoint_val: VALUE) -
 extern "C" fn native_bluetooth_endpoint_candidates(_self_val: VALUE, devices_val: VALUE) -> VALUE {
     let devices = bluetooth_discovered_devices_from_rb(devices_val);
     bluetooth_endpoint_candidates_to_rb(&bluetooth_endpoint_candidates_from_devices(&devices))
+}
+
+extern "C" fn native_bluetooth_devices(_self_val: VALUE) -> VALUE {
+    bluetooth_discovered_devices_to_rb(&core_discover_bluetooth_devices())
 }
 
 extern "C" fn native_esp_upload_options(_self_val: VALUE, selector_val: VALUE) -> VALUE {
@@ -853,6 +859,46 @@ fn bluetooth_endpoint_candidates_to_rb(candidates: &[LanguageBluetoothEndpointCa
             "requires_pairing",
             ruby_bridge::bool_to_rb(candidate.requires_pairing),
         );
+        ruby_bridge::array_push(array, hash);
+    }
+    array
+}
+
+fn bluetooth_discovered_devices_to_rb(devices: &[LanguageBluetoothDiscoveredDevice]) -> VALUE {
+    let array = ruby_bridge::array_new();
+    for device in devices {
+        let hash = ruby_bridge::hash_new();
+        hash_set(hash, "id", ruby_bridge::str_to_rb(&device.id));
+        hash_set(
+            hash,
+            "name",
+            device
+                .name
+                .as_ref()
+                .map(|value| ruby_bridge::str_to_rb(value))
+                .unwrap_or_else(ruby_bridge::nil_value),
+        );
+        hash_set(
+            hash,
+            "address",
+            device
+                .address
+                .as_ref()
+                .map(|value| ruby_bridge::str_to_rb(value))
+                .unwrap_or_else(ruby_bridge::nil_value),
+        );
+        hash_set(hash, "paired", ruby_bridge::bool_to_rb(device.paired));
+        hash_set(hash, "service_uuids", strings_to_rb(&device.service_uuids));
+        hash_set(
+            hash,
+            "characteristic_uuids",
+            strings_to_rb(&device.characteristic_uuids),
+        );
+        let channels = ruby_bridge::array_new();
+        for channel in &device.board_vm_rfcomm_channels {
+            ruby_bridge::array_push(channels, rb_usize(*channel));
+        }
+        hash_set(hash, "board_vm_rfcomm_channels", channels);
         ruby_bridge::array_push(array, hash);
     }
     array
@@ -1314,6 +1360,12 @@ pub extern "C" fn Init_board_vm_native() {
         "bluetooth_endpoint_candidates",
         native_bluetooth_endpoint_candidates as *const c_void,
         1,
+    );
+    ruby_bridge::define_module_function_raw(
+        native,
+        "bluetooth_devices",
+        native_bluetooth_devices as *const c_void,
+        0,
     );
     ruby_bridge::define_module_function_raw(
         native,

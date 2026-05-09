@@ -11,7 +11,8 @@ use board_vm_language_core::{
     bluetooth_endpoint_candidates_from_devices, board_family_name, build_blink_module,
     build_caps_query_wire_frame, build_hello_wire_frame, build_program_begin_wire_frame,
     build_program_chunk_wire_frame, build_program_end_wire_frame, build_run_wire_frame,
-    connection_options_for_target, connection_transport_name, detect_target, discover_devices,
+    connection_options_for_target, connection_transport_name, detect_target,
+    discover_bluetooth_devices as core_discover_bluetooth_devices, discover_devices,
     discover_devices_from_paths, esp_upload_options_for_target, host_endpoint_transport_name,
     known_targets, onboard_led_kind, parse_bluetooth_endpoint as core_parse_bluetooth_endpoint,
     pico_uf2_upload_options_for_target, wireless_transport_name, BoardVmLanguageSession,
@@ -247,6 +248,14 @@ unsafe fn push_string_array(L: *mut lua_State, values: &[String]) {
     }
 }
 
+unsafe fn push_u8_array(L: *mut lua_State, values: &[u8]) {
+    lua_createtable(L, values.len() as c_int, 0);
+    for (index, value) in values.iter().enumerate() {
+        lua_pushinteger(L, *value as lua_Integer);
+        lua_rawseti(L, -2, (index + 1) as lua_Integer);
+    }
+}
+
 unsafe fn push_onboard_led(L: *mut lua_State, led: Option<LanguageOnboardLed>) {
     match led {
         Some(led) => {
@@ -369,6 +378,40 @@ unsafe fn push_bluetooth_endpoint_candidates(
     lua_createtable(L, candidates.len() as c_int, 0);
     for (index, candidate) in candidates.iter().enumerate() {
         push_bluetooth_endpoint_candidate(L, candidate);
+        lua_rawseti(L, -2, (index + 1) as lua_Integer);
+    }
+}
+
+unsafe fn push_bluetooth_discovered_device(
+    L: *mut lua_State,
+    device: &LanguageBluetoothDiscoveredDevice,
+) {
+    lua_bridge::lua_newtable(L);
+    set_str(L, "id", &device.id);
+    push_optional_str(L, "name", device.name.as_deref());
+    push_optional_str(L, "address", device.address.as_deref());
+    set_bool(L, "paired", device.paired);
+
+    let key = CString::new("service_uuids").unwrap();
+    push_string_array(L, &device.service_uuids);
+    lua_setfield(L, -2, key.as_ptr());
+
+    let key = CString::new("characteristic_uuids").unwrap();
+    push_string_array(L, &device.characteristic_uuids);
+    lua_setfield(L, -2, key.as_ptr());
+
+    let key = CString::new("board_vm_rfcomm_channels").unwrap();
+    push_u8_array(L, &device.board_vm_rfcomm_channels);
+    lua_setfield(L, -2, key.as_ptr());
+}
+
+unsafe fn push_bluetooth_discovered_devices(
+    L: *mut lua_State,
+    devices: &[LanguageBluetoothDiscoveredDevice],
+) {
+    lua_createtable(L, devices.len() as c_int, 0);
+    for (index, device) in devices.iter().enumerate() {
+        push_bluetooth_discovered_device(L, device);
         lua_rawseti(L, -2, (index + 1) as lua_Integer);
     }
 }
@@ -507,6 +550,13 @@ unsafe extern "C" fn lua_bluetooth_endpoint_candidates(L: *mut lua_State) -> c_i
     let devices = read_bluetooth_discovered_devices(L, 1);
     let candidates = bluetooth_endpoint_candidates_from_devices(&devices);
     push_bluetooth_endpoint_candidates(L, &candidates);
+    1
+}
+
+unsafe extern "C" fn lua_bluetooth_devices(L: *mut lua_State) -> c_int {
+    let _ = lua_gettop(L);
+    let devices = core_discover_bluetooth_devices();
+    push_bluetooth_discovered_devices(L, &devices);
     1
 }
 
@@ -655,7 +705,7 @@ unsafe extern "C" fn lua_defaults(L: *mut lua_State) -> c_int {
     1
 }
 
-struct FuncTable([luaL_Reg; 18]);
+struct FuncTable([luaL_Reg; 19]);
 unsafe impl Sync for FuncTable {}
 
 static FUNCS: FuncTable = FuncTable([
@@ -678,6 +728,10 @@ static FUNCS: FuncTable = FuncTable([
     luaL_Reg {
         name: b"bluetooth_endpoint_candidates\0".as_ptr() as *const _,
         func: Some(lua_bluetooth_endpoint_candidates),
+    },
+    luaL_Reg {
+        name: b"bluetooth_devices\0".as_ptr() as *const _,
+        func: Some(lua_bluetooth_devices),
     },
     luaL_Reg {
         name: b"esp_upload_options\0".as_ptr() as *const _,

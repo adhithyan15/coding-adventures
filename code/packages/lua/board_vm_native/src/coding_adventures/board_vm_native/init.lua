@@ -70,7 +70,12 @@ function M.bluetooth_endpoint(endpoint)
     return native().bluetooth_endpoint(endpoint)
 end
 
+function M.bluetooth_devices()
+    return native().bluetooth_devices()
+end
+
 function M.bluetooth_endpoint_candidates(devices)
+    devices = devices or M.bluetooth_devices()
     return native().bluetooth_endpoint_candidates(devices)
 end
 
