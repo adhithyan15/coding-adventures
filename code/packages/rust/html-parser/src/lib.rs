@@ -1508,10 +1508,12 @@ impl HtmlParser {
 
         let mut paragraph = formatting_element.children.remove(paragraph_child_index);
         if let Node::Element(paragraph_element) = &mut paragraph {
-            paragraph_element.children.insert(
-                0,
-                Node::element(formatting_name, formatting_attributes),
-            );
+            let mut reconstructed_formatting =
+                Node::element(formatting_name, formatting_attributes);
+            if let Node::Element(reconstructed_element) = &mut reconstructed_formatting {
+                reconstructed_element.children = std::mem::take(&mut paragraph_element.children);
+            }
+            paragraph_element.children.push(reconstructed_formatting);
         }
         formatting_parent_children.insert(formatting_child_index + 1, paragraph);
 
@@ -2542,6 +2544,33 @@ mod tests {
         let adopted_bold = element(&paragraph.children[0]);
         assert_eq!(adopted_bold.name, "b");
         assert_eq!(adopted_bold.children, vec![Node::text(" jkl ")]);
+    }
+
+    #[test]
+    fn wraps_non_empty_paragraph_when_nested_formatting_end_adopts() {
+        let document = parse_html("<div> abc <b> def <i> ghi <p> jkl </b> mno </i>").unwrap();
+
+        let body = body(&document);
+        let div = element(&body.children[0]);
+        assert_eq!(div.children[0], Node::text(" abc "));
+
+        let original_bold = element(&div.children[1]);
+        assert_eq!(original_bold.children[0], Node::text(" def "));
+        assert_eq!(
+            element(&original_bold.children[1]).children,
+            vec![Node::text(" ghi ")]
+        );
+
+        assert_eq!(element(&div.children[2]).name, "i");
+
+        let paragraph = element(&div.children[3]);
+        assert_eq!(paragraph.name, "p");
+        let adopted_italic = element(&paragraph.children[0]);
+        assert_eq!(adopted_italic.name, "i");
+        let adopted_bold = element(&adopted_italic.children[0]);
+        assert_eq!(adopted_bold.name, "b");
+        assert_eq!(adopted_bold.children, vec![Node::text(" jkl ")]);
+        assert_eq!(adopted_italic.children[1], Node::text(" mno "));
     }
 
     #[test]
