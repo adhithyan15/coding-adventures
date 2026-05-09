@@ -506,6 +506,7 @@ members = [
     "cas-substitution",
     "cas-algebraic",
     "cas-factor",
+    "cas-fourier",
     "cas-solve",
     "cas-list-operations",
     "cas-matrix",
