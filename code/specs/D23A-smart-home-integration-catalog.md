@@ -700,6 +700,17 @@ header conflict checks for Hue, Shelly, WLED, ESPHome, camera, and energy
 gateway workers. It intentionally does not open sockets or resolve secrets; a
 capability-caged runtime worker turns accepted plans into actual network I/O.
 
+### `smart-home-capability-cage`
+
+Pure Rust smart-home worker policy projection.
+
+**Initial Rust implementation:** `code/packages/rust/smart-home-capability-cage`
+now maps integration worker needs for local HTTP, MQTT subscriptions, serial
+radio adapters, cloud APIs, webhook receivers, and sidecar processes into the
+generic `capability-cage` manifest taxonomy. It keeps D23 smart-home read and
+command capability hints separate from OS-level permissions so runtime hosts can
+review both before launching workers.
+
 ### `smart-home-integration-importer`
 
 Later offline tool for importing external catalog metadata.
