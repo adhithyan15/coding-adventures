@@ -62,6 +62,28 @@ impl Default for ExecutorLimits {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ExecutorSnapshot {
+    pub worker_count: usize,
+    pub live_workers: usize,
+    pub in_flight_jobs: usize,
+    pub queued_jobs: usize,
+    pub running_jobs: usize,
+    pub shutting_down: bool,
+    pub max_queue_depth: usize,
+    pub max_payload_bytes: usize,
+}
+
+impl ExecutorSnapshot {
+    pub fn remaining_queue_capacity(&self) -> usize {
+        self.max_queue_depth.saturating_sub(self.in_flight_jobs)
+    }
+
+    pub fn is_saturated(&self) -> bool {
+        self.in_flight_jobs >= self.max_queue_depth
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct StdioWorkerCommand {
     pub program: String,
     pub args: Vec<String>,
@@ -323,6 +345,31 @@ where
             Ok(response) => Ok(Some(response)),
             Err(mpsc::RecvTimeoutError::Timeout) => Ok(None),
             Err(mpsc::RecvTimeoutError::Disconnected) => Ok(None),
+        }
+    }
+
+    pub fn snapshot(&self) -> ExecutorSnapshot {
+        self.expire_timed_out_jobs();
+        let queue = self
+            .inner
+            .queue
+            .lock()
+            .expect("thread pool queue mutex poisoned");
+        let queued_jobs = queue.jobs.len();
+        let pending_jobs = queue.pending.len();
+        ExecutorSnapshot {
+            worker_count: self.inner.worker_count,
+            live_workers: if self.inner.shutting_down.load(Ordering::SeqCst) {
+                0
+            } else {
+                self.inner.worker_count
+            },
+            in_flight_jobs: self.inner.in_flight.load(Ordering::SeqCst),
+            queued_jobs,
+            running_jobs: pending_jobs.saturating_sub(queued_jobs),
+            shutting_down: queue.closed || self.inner.shutting_down.load(Ordering::SeqCst),
+            max_queue_depth: self.inner.limits.max_queue_depth,
+            max_payload_bytes: self.inner.limits.max_payload_bytes,
         }
     }
 
@@ -761,6 +808,31 @@ where
             Ok(response) => Ok(Some(response)),
             Err(mpsc::RecvTimeoutError::Timeout) => Ok(None),
             Err(mpsc::RecvTimeoutError::Disconnected) => Ok(None),
+        }
+    }
+
+    pub fn snapshot(&self) -> ExecutorSnapshot {
+        self.expire_timed_out_jobs();
+        let pending_jobs = self
+            .inner
+            .pending
+            .lock()
+            .expect("pending job table mutex poisoned")
+            .len();
+        ExecutorSnapshot {
+            worker_count: self.inner.workers.len(),
+            live_workers: self
+                .inner
+                .worker_alive
+                .iter()
+                .filter(|alive| alive.load(Ordering::SeqCst))
+                .count(),
+            in_flight_jobs: self.inner.in_flight.load(Ordering::SeqCst),
+            queued_jobs: 0,
+            running_jobs: pending_jobs,
+            shutting_down: self.inner.shutting_down.load(Ordering::SeqCst),
+            max_queue_depth: self.inner.limits.max_queue_depth,
+            max_payload_bytes: self.inner.limits.max_payload_bytes,
         }
     }
 
@@ -1404,6 +1476,97 @@ for line in sys.stdin:
             .expect_err("second job should hit backpressure");
         assert_eq!(err, SubmitError::QueueFull);
         open_gate(&gate);
+    }
+
+    #[test]
+    fn thread_pool_snapshot_reports_capacity_and_lifecycle() {
+        let entered = Arc::new(AtomicUsize::new(0));
+        let gate = Arc::new((Mutex::new(false), Condvar::new()));
+        let handler_entered = Arc::clone(&entered);
+        let handler_gate = Arc::clone(&gate);
+        let pool = RustThreadPool::spawn(
+            RustThreadPoolOptions {
+                worker_count: 1,
+                limits: ExecutorLimits {
+                    max_queue_depth: 2,
+                    max_payload_bytes: 256,
+                    ..ExecutorLimits::default()
+                },
+                default_job_timeout: None,
+            },
+            move |request: JobRequest<EchoJob>| {
+                handler_entered.fetch_add(1, Ordering::SeqCst);
+                wait_for_gate(&handler_gate);
+                JobResult::Ok {
+                    payload: EchoResponse {
+                        stream_id: request.payload.stream_id,
+                        counter: 1,
+                        text: request.payload.text,
+                    },
+                }
+            },
+        );
+
+        pool.try_submit(JobRequest::new(
+            "job-1",
+            EchoJob {
+                stream_id: "stream".to_string(),
+                text: "running".to_string(),
+            },
+        ))
+        .expect("submit running job");
+        wait_until(|| entered.load(Ordering::SeqCst) == 1);
+        pool.try_submit(JobRequest::new(
+            "job-2",
+            EchoJob {
+                stream_id: "stream".to_string(),
+                text: "queued".to_string(),
+            },
+        ))
+        .expect("submit queued job");
+
+        let snapshot = pool.snapshot();
+        assert_eq!(snapshot.worker_count, 1);
+        assert_eq!(snapshot.live_workers, 1);
+        assert_eq!(snapshot.in_flight_jobs, 2);
+        assert_eq!(snapshot.queued_jobs, 1);
+        assert_eq!(snapshot.running_jobs, 1);
+        assert_eq!(snapshot.max_queue_depth, 2);
+        assert_eq!(snapshot.max_payload_bytes, 256);
+        assert_eq!(snapshot.remaining_queue_capacity(), 0);
+        assert!(snapshot.is_saturated());
+        assert!(!snapshot.shutting_down);
+
+        open_gate(&gate);
+        let mut responses = Vec::new();
+        for _ in 0..100 {
+            responses.extend(pool.drain_responses(4));
+            if responses.len() == 2 {
+                break;
+            }
+            thread::sleep(Duration::from_millis(10));
+        }
+        assert_eq!(responses.len(), 2);
+
+        let idle_pool = RustThreadPool::spawn(
+            RustThreadPoolOptions {
+                worker_count: 1,
+                limits: ExecutorLimits::default(),
+                default_job_timeout: None,
+            },
+            |_request: JobRequest<EchoJob>| JobResult::Ok {
+                payload: EchoResponse {
+                    stream_id: "idle".to_string(),
+                    counter: 1,
+                    text: "idle".to_string(),
+                },
+            },
+        );
+        assert!(!idle_pool.snapshot().shutting_down);
+        idle_pool.shutdown();
+        let shutdown_snapshot = idle_pool.snapshot();
+        assert!(shutdown_snapshot.shutting_down);
+        assert_eq!(shutdown_snapshot.live_workers, 0);
     }
 
     #[test]
