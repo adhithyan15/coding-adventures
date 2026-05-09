@@ -536,6 +536,7 @@ members = [
     "conduit",
     "smart-home-core",
     "smart-home-discovery",
+    "smart-home-event-streams",
     "smart-home-integration-catalog",
     "smart-home-testkit",
     "hue-core",

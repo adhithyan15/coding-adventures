@@ -1,0 +1,9 @@
+[package]
+name = "smart-home-event-streams"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic smart-home event stream cursor and supervision primitives"
+license = "MIT"
+
+[dependencies]
+smart-home-core = { path = "../smart-home-core" }

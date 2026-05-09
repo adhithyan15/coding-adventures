@@ -679,6 +679,16 @@ Responsibilities:
 - worker-kind descriptors
 - testkit traits for fake brokers, bridges, streams, cloud APIs, and radios
 
+### `smart-home-event-streams`
+
+Pure Rust event-stream cursor and supervision primitives.
+
+**Initial Rust implementation:** `code/packages/rust/smart-home-event-streams`
+now provides deterministic stream specs, transports, cursors, checkpoints,
+heartbeat freshness checks, disconnect tracking, event-gap detection, and
+bounded reconnect plans for Hue SSE, WebSocket, MQTT subscription, cloud push,
+serial, and radio-report workers.
+
 ### `smart-home-integration-importer`
 
 Later offline tool for importing external catalog metadata.
