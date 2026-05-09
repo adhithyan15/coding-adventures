@@ -326,6 +326,75 @@ impl WorkerRestartInstruction {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct WorkerHeartbeatDeadline {
+    pub bridge_id: BridgeId,
+    pub integration_id: IntegrationId,
+    pub status: WorkerStatus,
+    pub last_heartbeat_at_ms: u64,
+    pub heartbeat_timeout_ms: u64,
+    pub due_at_ms: u64,
+}
+
+impl WorkerHeartbeatDeadline {
+    pub fn from_worker(worker: &SupervisedBridgeWorker) -> Option<Self> {
+        let due_at_ms = worker.heartbeat_due_at_ms()?;
+        Some(Self {
+            bridge_id: worker.bridge_id.clone(),
+            integration_id: worker.integration_id.clone(),
+            status: worker.status,
+            last_heartbeat_at_ms: worker.last_heartbeat_at_ms,
+            heartbeat_timeout_ms: worker.heartbeat_timeout_ms,
+            due_at_ms,
+        })
+    }
+
+    pub fn overdue_by_ms_at(&self, now_ms: u64) -> u64 {
+        now_ms.saturating_sub(self.due_at_ms)
+    }
+
+    pub fn is_due_at(&self, now_ms: u64) -> bool {
+        now_ms >= self.due_at_ms
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct WorkerHeartbeatSchedule {
+    pub generated_at_ms: u64,
+    pub deadlines: Vec<WorkerHeartbeatDeadline>,
+}
+
+impl WorkerHeartbeatSchedule {
+    pub fn is_empty(&self) -> bool {
+        self.deadlines.is_empty()
+    }
+
+    pub fn len(&self) -> usize {
+        self.deadlines.len()
+    }
+
+    pub fn next_due_at_ms(&self) -> Option<u64> {
+        self.deadlines
+            .iter()
+            .map(|deadline| deadline.due_at_ms)
+            .min()
+    }
+
+    pub fn due_at(&self, now_ms: u64) -> Vec<&WorkerHeartbeatDeadline> {
+        self.deadlines
+            .iter()
+            .filter(|deadline| deadline.is_due_at(now_ms))
+            .collect()
+    }
+
+    pub fn deadlines_for_bridge(&self, bridge_id: &BridgeId) -> Vec<&WorkerHeartbeatDeadline> {
+        self.deadlines
+            .iter()
+            .filter(|deadline| &deadline.bridge_id == bridge_id)
+            .collect()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct WorkerRestartPlan {
     pub generated_at_ms: u64,
     pub instructions: Vec<WorkerRestartInstruction>,
@@ -422,14 +491,23 @@ impl SupervisedBridgeWorker {
         self.last_heartbeat_at_ms = now_ms;
     }
 
-    pub fn is_overdue_at(&self, now_ms: u64) -> bool {
-        matches!(
+    pub fn heartbeat_due_at_ms(&self) -> Option<u64> {
+        if matches!(
             self.status,
             WorkerStatus::Starting | WorkerStatus::Running | WorkerStatus::Unhealthy
-        ) && now_ms
-            >= self
-                .last_heartbeat_at_ms
-                .saturating_add(self.heartbeat_timeout_ms)
+        ) {
+            Some(
+                self.last_heartbeat_at_ms
+                    .saturating_add(self.heartbeat_timeout_ms),
+            )
+        } else {
+            None
+        }
+    }
+
+    pub fn is_overdue_at(&self, now_ms: u64) -> bool {
+        self.heartbeat_due_at_ms()
+            .is_some_and(|due_at_ms| now_ms >= due_at_ms)
     }
 
     pub fn restart_instruction_at(&self, now_ms: u64) -> Option<WorkerRestartInstruction> {
@@ -437,8 +515,8 @@ impl SupervisedBridgeWorker {
             return None;
         }
         let due_at_ms = self
-            .last_heartbeat_at_ms
-            .saturating_add(self.heartbeat_timeout_ms);
+            .heartbeat_due_at_ms()
+            .expect("overdue workers always have a heartbeat deadline");
         Some(WorkerRestartInstruction {
             bridge_id: self.bridge_id.clone(),
             integration_id: self.integration_id.clone(),
@@ -492,6 +570,23 @@ impl RuntimeSupervisor {
             .values()
             .filter(|worker| worker.is_overdue_at(now_ms))
             .collect()
+    }
+
+    pub fn heartbeat_schedule_at(&self, now_ms: u64) -> WorkerHeartbeatSchedule {
+        let mut deadlines: Vec<_> = self
+            .workers
+            .values()
+            .filter_map(WorkerHeartbeatDeadline::from_worker)
+            .collect();
+        deadlines.sort_by(|left, right| {
+            left.due_at_ms
+                .cmp(&right.due_at_ms)
+                .then_with(|| left.bridge_id.cmp(&right.bridge_id))
+        });
+        WorkerHeartbeatSchedule {
+            generated_at_ms: now_ms,
+            deadlines,
+        }
     }
 
     pub fn restart_plan_at(&self, now_ms: u64) -> WorkerRestartPlan {
@@ -1165,6 +1260,10 @@ impl SmartHomeRuntime {
 
     pub fn worker_restart_plan_at(&self, now_ms: u64) -> WorkerRestartPlan {
         self.supervisor.restart_plan_at(now_ms)
+    }
+
+    pub fn worker_heartbeat_schedule_at(&self, now_ms: u64) -> WorkerHeartbeatSchedule {
+        self.supervisor.heartbeat_schedule_at(now_ms)
     }
 
     pub fn run_supervision_tick(
@@ -2384,6 +2483,79 @@ mod tests {
         assert_eq!(plan.instructions_for_bridge(&bridge_id).len(), 1);
         assert_eq!(worker.status, WorkerStatus::Starting);
         assert_eq!(worker.restart_count, 0);
+    }
+
+    #[test]
+    fn supervisor_builds_heartbeat_schedule_without_mutating_workers() {
+        let mut supervisor = RuntimeSupervisor::new();
+        let bridge_early = BridgeId::trusted("bridge-early");
+        let bridge_late = BridgeId::trusted("bridge-late");
+        let bridge_stopped = BridgeId::trusted("bridge-stopped");
+        supervisor.register_worker(SupervisedBridgeWorker::new(
+            bridge_late.clone(),
+            IntegrationId::trusted("thread"),
+            1_200,
+            600,
+        ));
+        supervisor.register_worker(SupervisedBridgeWorker::new(
+            bridge_early.clone(),
+            IntegrationId::trusted("hue"),
+            1_000,
+            500,
+        ));
+        supervisor.register_worker(SupervisedBridgeWorker {
+            bridge_id: bridge_stopped.clone(),
+            integration_id: IntegrationId::trusted("zwave"),
+            status: WorkerStatus::Stopped,
+            restart_count: 0,
+            last_heartbeat_at_ms: 1_000,
+            heartbeat_timeout_ms: 10,
+        });
+
+        let schedule = supervisor.heartbeat_schedule_at(1_400);
+
+        assert_eq!(schedule.generated_at_ms, 1_400);
+        assert_eq!(schedule.len(), 2);
+        assert!(!schedule.is_empty());
+        assert_eq!(schedule.next_due_at_ms(), Some(1_500));
+        assert!(schedule.due_at(1_499).is_empty());
+        assert_eq!(schedule.due_at(1_500).len(), 1);
+        assert_eq!(schedule.deadlines[0].bridge_id, bridge_early);
+        assert_eq!(schedule.deadlines[0].due_at_ms, 1_500);
+        assert_eq!(schedule.deadlines[0].overdue_by_ms_at(1_525), 25);
+        assert_eq!(schedule.deadlines[1].bridge_id, bridge_late);
+        assert_eq!(schedule.deadlines_for_bridge(&bridge_stopped).len(), 0);
+        assert_eq!(
+            supervisor
+                .worker(&BridgeId::trusted("bridge-early"))
+                .unwrap()
+                .status,
+            WorkerStatus::Starting
+        );
+    }
+
+    #[test]
+    fn runtime_exposes_worker_heartbeat_schedule() {
+        let mut runtime = SmartHomeRuntime::new();
+        let bridge_id = BridgeId::trusted("bridge-1");
+        runtime
+            .supervisor_mut()
+            .register_worker(SupervisedBridgeWorker::new(
+                bridge_id.clone(),
+                IntegrationId::trusted("hue"),
+                1_000,
+                100,
+            ));
+        runtime
+            .supervisor_mut()
+            .mark_heartbeat(&bridge_id, 1_025)
+            .unwrap();
+
+        let schedule = runtime.worker_heartbeat_schedule_at(1_050);
+
+        assert_eq!(schedule.next_due_at_ms(), Some(1_125));
+        assert!(schedule.due_at(1_124).is_empty());
+        assert_eq!(schedule.due_at(1_125).len(), 1);
     }
 
     #[test]

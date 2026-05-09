@@ -27,6 +27,7 @@ All notable changes to this package will be documented in this file.
   deterministic runtime command/correlation ids.
 - Supervisor primitives for bridge-worker heartbeat tracking and restart
   signaling.
+- Worker heartbeat deadline schedules for deterministic supervisor wakeups.
 - Desired-state reconciliation for missing, stale, or drifted entity state,
   producing deterministic corrective commands and supervision events.
 - Deterministic supervision ticks that combine optimistic-state expiry,
