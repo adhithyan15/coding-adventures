@@ -19,6 +19,8 @@ The crate intentionally stops at the contract layer:
 - a deterministic in-memory runtime that validates, invokes handlers, emits
   ordered events, applies policy before handler execution, and returns canonical
   `ToolResult` records
+- handler output validation against advertised tool output schemas before a
+  completed result is emitted
 
 Runtime adapters, sandboxing, approval gates, and built-in tool handlers can all
 depend on this package without inventing their own wire vocabulary.

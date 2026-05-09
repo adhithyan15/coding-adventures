@@ -25,3 +25,5 @@ All notable changes to this package will be documented in this file.
 - Explicit `ToolApprovalGrant` support so approval-required calls can be replayed
   through the same validated runtime path while stale or mismatched grants are
   rejected before handler execution.
+- Handler output validation against advertised tool output schemas before the
+  runtime emits completed results.

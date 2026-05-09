@@ -2671,13 +2671,31 @@ impl InMemoryToolRuntime {
                 trace_with_terminal(record, request, started_event(request), result)
             }
             Ok(output) => {
+                let mut events = started_event(request);
+                events.extend(handler_events(request, output.events, events.len() as u64));
+
+                if let Some(output_schema) = &definition.output_schema {
+                    let output_validation = output_schema.validate_value(&output.output);
+                    if !output_validation.ok {
+                        let result = ToolResult::failed(
+                            request.call_id.clone(),
+                            ToolCallError {
+                                kind: ToolErrorKind::ToolValidationError,
+                                message: "tool handler output failed validation".to_string(),
+                                details: validation_errors_to_json(&output_validation.errors),
+                            },
+                        );
+                        record.status = ToolCallStatus::Failed;
+                        record.completed_at = Some(request.requested_at);
+                        return trace_with_terminal(record, request, events, result);
+                    }
+                }
+
                 let mut result = ToolResult::completed(request.call_id.clone(), output.output);
                 result.artifact_refs = output.artifact_refs;
                 result.memory_refs = output.memory_refs;
                 record.status = ToolCallStatus::Completed;
                 record.completed_at = Some(request.requested_at);
-                let mut events = started_event(request);
-                events.extend(handler_events(request, output.events, events.len() as u64));
                 trace_with_terminal(record, request, events, result)
             }
             Err(error) => {
@@ -3561,6 +3579,52 @@ mod tests {
                 ToolEventKind::Started,
                 ToolEventKind::Progress,
                 ToolEventKind::Completed,
+            ]
+        );
+        assert!(trace
+            .events
+            .last()
+            .unwrap()
+            .terminal_matches_result(&trace.result));
+    }
+
+    #[test]
+    fn runtime_rejects_invalid_handler_output_before_completed_result() {
+        let mut runtime = InMemoryToolRuntime::new();
+        runtime
+            .register_handler(artifact_create_definition(), |_, _| {
+                Ok(ToolHandlerOutput::new(JsonValue::Object(vec![(
+                    "wrong_field".to_string(),
+                    JsonValue::String("artifact_1/rev_1".to_string()),
+                )]))
+                .with_artifact_ref("artifact_1/rev_1")
+                .with_event(
+                    ToolEventKind::Progress,
+                    JsonValue::String("writing revision".to_string()),
+                ))
+            })
+            .unwrap();
+
+        let trace = runtime.invoke_with_events(&artifact_create_request());
+
+        assert!(!trace.result.ok);
+        assert!(trace.result.output.is_none());
+        assert!(trace.result.artifact_refs.is_empty());
+        assert_eq!(trace.record.status, ToolCallStatus::Failed);
+        let error = trace.result.error.as_ref().unwrap();
+        assert_eq!(error.kind, ToolErrorKind::ToolValidationError);
+        assert_eq!(error.message, "tool handler output failed validation");
+        assert!(format!("{:?}", error.details).contains("$.artifact_ref"));
+        assert_eq!(
+            trace
+                .events
+                .iter()
+                .map(|event| event.kind)
+                .collect::<Vec<_>>(),
+            vec![
+                ToolEventKind::Started,
+                ToolEventKind::Progress,
+                ToolEventKind::Failed,
             ]
         );
         assert!(trace
