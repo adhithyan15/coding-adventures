@@ -453,6 +453,59 @@ impl Display for BuiltinToolFamily {
     }
 }
 
+/// Query options for selecting model-facing tool definitions.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct ToolCatalogQuery {
+    pub family: Option<BuiltinToolFamily>,
+    pub side_effects: Option<ToolSideEffects>,
+    pub max_tier: Option<PrivilegeTier>,
+    pub required_capabilities: Vec<String>,
+    pub tags: Vec<String>,
+    pub stability: Option<ToolStability>,
+    pub limit: Option<usize>,
+}
+
+impl ToolCatalogQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_family(mut self, family: BuiltinToolFamily) -> Self {
+        self.family = Some(family);
+        self
+    }
+
+    pub fn with_side_effects(mut self, side_effects: ToolSideEffects) -> Self {
+        self.side_effects = Some(side_effects);
+        self
+    }
+
+    pub fn with_max_tier(mut self, max_tier: PrivilegeTier) -> Self {
+        self.max_tier = Some(max_tier);
+        self
+    }
+
+    pub fn requiring_capability(mut self, capability: impl Into<String>) -> Self {
+        self.required_capabilities.push(capability.into());
+        self
+    }
+
+    pub fn with_tag(mut self, tag: impl Into<String>) -> Self {
+        self.tags.push(tag.into());
+        self
+    }
+
+    pub fn with_stability(mut self, stability: ToolStability) -> Self {
+        self.stability = Some(stability);
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
 /// Return the first-phase built-in store/job tool definitions from D18D.
 pub fn builtin_tool_catalog() -> Vec<ToolDefinition> {
     [
@@ -495,11 +548,28 @@ pub fn builtin_tool_catalog() -> Vec<ToolDefinition> {
 
 /// Return first-phase built-ins for one family.
 pub fn builtin_tools_for_family(family: BuiltinToolFamily) -> Vec<ToolDefinition> {
-    let family_prefix = format!("{}.", family.as_str());
-    builtin_tool_catalog()
-        .into_iter()
-        .filter(|definition| definition.tool_id.starts_with(&family_prefix))
-        .collect()
+    builtin_tools_matching(ToolCatalogQuery::new().for_family(family))
+}
+
+/// Query first-phase built-in definitions by catalog metadata.
+pub fn builtin_tools_matching(query: ToolCatalogQuery) -> Vec<ToolDefinition> {
+    if query.limit == Some(0) {
+        return Vec::new();
+    }
+
+    let mut definitions = Vec::new();
+    for definition in builtin_tool_catalog() {
+        if !definition_matches_catalog_query(&definition, &query) {
+            continue;
+        }
+        definitions.push(definition);
+        if let Some(limit) = query.limit {
+            if definitions.len() >= limit {
+                break;
+            }
+        }
+    }
+    definitions
 }
 
 /// Look up one first-phase built-in definition by id.
@@ -507,6 +577,39 @@ pub fn builtin_tool_definition(tool_id: &str) -> Option<ToolDefinition> {
     builtin_tool_catalog()
         .into_iter()
         .find(|definition| definition.tool_id == tool_id)
+}
+
+fn definition_matches_catalog_query(definition: &ToolDefinition, query: &ToolCatalogQuery) -> bool {
+    if let Some(family) = query.family {
+        let family_prefix = format!("{}.", family.as_str());
+        if !definition.tool_id.starts_with(&family_prefix) {
+            return false;
+        }
+    }
+    if let Some(side_effects) = query.side_effects {
+        if definition.side_effects != side_effects {
+            return false;
+        }
+    }
+    if let Some(max_tier) = query.max_tier {
+        if definition.required_tier > max_tier {
+            return false;
+        }
+    }
+    if let Some(stability) = query.stability {
+        if definition.stability != stability {
+            return false;
+        }
+    }
+    query.required_capabilities.iter().all(|capability| {
+        definition
+            .required_capabilities
+            .iter()
+            .any(|candidate| candidate == capability)
+    }) && query
+        .tags
+        .iter()
+        .all(|tag| definition.tags.iter().any(|candidate| candidate == tag))
 }
 
 fn context_open_session_definition() -> ToolDefinition {
@@ -1983,6 +2086,27 @@ impl InMemoryToolRegistry {
         self.definitions.values().collect()
     }
 
+    /// Query definitions sorted by `tool_id`.
+    pub fn query(&self, query: &ToolCatalogQuery) -> Vec<&ToolDefinition> {
+        if query.limit == Some(0) {
+            return Vec::new();
+        }
+
+        let mut definitions = Vec::new();
+        for definition in self.definitions.values() {
+            if !definition_matches_catalog_query(definition, query) {
+                continue;
+            }
+            definitions.push(definition);
+            if let Some(limit) = query.limit {
+                if definitions.len() >= limit {
+                    break;
+                }
+            }
+        }
+        definitions
+    }
+
     /// Validate request metadata and arguments against the registered schema.
     pub fn validate_call(&self, request: &ToolInvocationRequest) -> ToolValidationReport {
         let mut report = request.validate_metadata();
@@ -2511,6 +2635,11 @@ impl InMemoryToolRuntime {
     /// List registered definitions sorted by tool id.
     pub fn list(&self) -> Vec<&ToolDefinition> {
         self.registry.list()
+    }
+
+    /// Query registered definitions sorted by tool id.
+    pub fn query(&self, query: &ToolCatalogQuery) -> Vec<&ToolDefinition> {
+        self.registry.query(query)
     }
 
     /// Validate request metadata and arguments without invoking the handler.
@@ -3216,6 +3345,38 @@ mod tests {
     }
 
     #[test]
+    fn registry_queries_definitions_by_catalog_metadata() {
+        let mut registry = InMemoryToolRegistry::new();
+        for definition in [
+            memory_search_definition(),
+            memory_remember_definition(),
+            artifact_create_definition(),
+        ] {
+            registry.register(definition).unwrap();
+        }
+
+        let read_memory = registry.query(
+            &ToolCatalogQuery::new()
+                .for_family(BuiltinToolFamily::Memory)
+                .with_side_effects(ToolSideEffects::Read)
+                .with_max_tier(PrivilegeTier::Tier0)
+                .requiring_capability("memory:read")
+                .with_tag("store"),
+        );
+        assert_eq!(
+            read_memory
+                .iter()
+                .map(|definition| definition.tool_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["memory.search"]
+        );
+
+        assert!(registry
+            .query(&ToolCatalogQuery::new().with_limit(0))
+            .is_empty());
+    }
+
+    #[test]
     fn builtin_catalog_definitions_are_valid_and_registerable() {
         let catalog = builtin_tool_catalog();
         let mut registry = InMemoryToolRegistry::new();
@@ -3331,6 +3492,34 @@ mod tests {
             vec!["skills:install"]
         );
         assert!(builtin_tool_definition("vault.request_lease").is_none());
+    }
+
+    #[test]
+    fn builtin_catalog_can_query_by_capability_tag_and_limit() {
+        let read_memory = builtin_tools_matching(
+            ToolCatalogQuery::new()
+                .for_family(BuiltinToolFamily::Memory)
+                .with_side_effects(ToolSideEffects::Read)
+                .requiring_capability("memory:read")
+                .with_tag("store")
+                .with_limit(2),
+        );
+        let read_memory_ids: Vec<_> = read_memory
+            .iter()
+            .map(|definition| definition.tool_id.as_str())
+            .collect();
+
+        assert_eq!(
+            read_memory_ids,
+            vec!["memory.search", "memory.list_by_class"]
+        );
+        assert!(read_memory
+            .iter()
+            .all(|definition| definition.required_tier <= PrivilegeTier::Tier0));
+        assert!(builtin_tools_matching(
+            ToolCatalogQuery::new().with_stability(ToolStability::Stable)
+        )
+        .is_empty());
     }
 
     #[test]
