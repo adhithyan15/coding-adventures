@@ -69,6 +69,17 @@ pub struct SkillAssetRecord {
     pub body: Vec<u8>,
 }
 
+/// Metadata-only view for asset catalog reads.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SkillAssetSummary {
+    pub skill_id: String,
+    pub version: String,
+    pub asset_path: String,
+    pub content_type: String,
+    pub checksum: [u8; 32],
+    pub body_len: usize,
+}
+
 /// Query options for listing installed skill manifests.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct SkillListOptions {
@@ -112,6 +123,35 @@ impl SkillListOptions {
 
     pub fn requiring_capability(mut self, capability_id: impl Into<String>) -> Self {
         self.required_capabilities.push(capability_id.into());
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
+/// Query options for listing skill assets without returning asset bodies.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct SkillAssetListOptions {
+    pub path_prefix: Option<String>,
+    pub content_type: Option<String>,
+    pub limit: Option<usize>,
+}
+
+impl SkillAssetListOptions {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_path_prefix(mut self, path_prefix: impl Into<String>) -> Self {
+        self.path_prefix = Some(path_prefix.into());
+        self
+    }
+
+    pub fn with_content_type(mut self, content_type: impl Into<String>) -> Self {
+        self.content_type = Some(content_type.into());
         self
     }
 
@@ -285,6 +325,45 @@ impl<S: StorageBackend> SkillStore<S> {
         decode_asset_record(&record.metadata, &record.body).map(Some)
     }
 
+    pub fn list_asset_summaries(
+        &self,
+        skill_id: &str,
+        version: &str,
+        options: SkillAssetListOptions,
+    ) -> Result<Vec<SkillAssetSummary>, StorageError> {
+        validate_id("skill_id", skill_id)?;
+        validate_id("version", version)?;
+        validate_skill_asset_list_options(&options)?;
+        if options.limit == Some(0) {
+            return Ok(Vec::new());
+        }
+
+        self.backend.initialize()?;
+        let page = self.backend.list(
+            NAMESPACE,
+            StorageListOptions {
+                prefix: Some(format!("assets/{skill_id}/{version}/")),
+                recursive: true,
+                page_size: None,
+                cursor: None,
+            },
+        )?;
+
+        let mut summaries = Vec::new();
+        for record in &page.records {
+            let summary = decode_asset_summary(&record.metadata, record.body.len())?;
+            if !asset_matches_list_options(&summary, &options) {
+                continue;
+            }
+            summaries.push(summary);
+        }
+        summaries.sort_by(|left, right| left.asset_path.cmp(&right.asset_path));
+        if let Some(limit) = options.limit {
+            summaries.truncate(limit);
+        }
+        Ok(summaries)
+    }
+
     pub fn activate_version(
         &self,
         skill_id: &str,
@@ -406,6 +485,16 @@ fn validate_skill_list_options(options: &SkillListOptions) -> Result<(), Storage
     validate_id_list("required_capabilities", &options.required_capabilities)
 }
 
+fn validate_skill_asset_list_options(options: &SkillAssetListOptions) -> Result<(), StorageError> {
+    if let Some(path_prefix) = options.path_prefix.as_deref() {
+        validate_asset_path(path_prefix)?;
+    }
+    if let Some(content_type) = options.content_type.as_deref() {
+        validate_content_type(content_type)?;
+    }
+    Ok(())
+}
+
 fn apply_skill_list_limit(
     mut manifests: Vec<SkillManifest>,
     limit: Option<usize>,
@@ -441,6 +530,30 @@ fn skill_matches_list_options(manifest: &SkillManifest, options: &SkillListOptio
                 .iter()
                 .any(|value| value == capability_id)
         })
+}
+
+fn asset_matches_list_options(
+    summary: &SkillAssetSummary,
+    options: &SkillAssetListOptions,
+) -> bool {
+    if let Some(path_prefix) = options.path_prefix.as_deref() {
+        if !asset_path_matches_prefix(&summary.asset_path, path_prefix) {
+            return false;
+        }
+    }
+    if let Some(content_type) = options.content_type.as_deref() {
+        if summary.content_type != content_type {
+            return false;
+        }
+    }
+    true
+}
+
+fn asset_path_matches_prefix(asset_path: &str, path_prefix: &str) -> bool {
+    asset_path == path_prefix
+        || asset_path
+            .strip_prefix(path_prefix)
+            .is_some_and(|rest| rest.starts_with('/'))
 }
 
 fn manifest_record_metadata(manifest: &SkillManifest) -> JsonValue {
@@ -542,15 +655,30 @@ fn decode_asset_record(
     metadata: &JsonValue,
     body: &[u8],
 ) -> Result<SkillAssetRecord, StorageError> {
+    let summary = decode_asset_summary(metadata, body.len())?;
+    Ok(SkillAssetRecord {
+        skill_id: summary.skill_id,
+        version: summary.version,
+        asset_path: summary.asset_path,
+        content_type: summary.content_type,
+        checksum: summary.checksum,
+        body: body.to_vec(),
+    })
+}
+
+fn decode_asset_summary(
+    metadata: &JsonValue,
+    body_len: usize,
+) -> Result<SkillAssetSummary, StorageError> {
     let object = expect_object("asset_metadata", metadata)?;
     let checksum_hex = required_string(object, "checksum_hex")?;
-    Ok(SkillAssetRecord {
+    Ok(SkillAssetSummary {
         skill_id: required_string(object, "skill_id")?,
         version: required_string(object, "version")?,
         asset_path: required_string(object, "asset_path")?,
         content_type: required_string(object, "content_type")?,
         checksum: hex_decode_32(&checksum_hex)?,
-        body: body.to_vec(),
+        body_len,
     })
 }
 
@@ -759,6 +887,70 @@ mod tests {
             .unwrap()
             .unwrap();
         assert_eq!(asset.body, b"# hi".to_vec());
+    }
+
+    #[test]
+    fn list_asset_summaries_filters_without_returning_bodies() {
+        let store = SkillStore::new(InMemoryStorageBackend::new());
+        let mut manifest = manifest(true);
+        manifest.assets = vec![
+            "SKILL.md".to_string(),
+            "examples/brief.md".to_string(),
+            "examples/run.md".to_string(),
+        ];
+        let _ = store
+            .install_skill(
+                manifest,
+                vec![
+                    InstallSkillAssetInput {
+                        asset_path: "SKILL.md".to_string(),
+                        content_type: "text/markdown".to_string(),
+                        body: b"# planner".to_vec(),
+                    },
+                    InstallSkillAssetInput {
+                        asset_path: "examples/brief.md".to_string(),
+                        content_type: "text/markdown".to_string(),
+                        body: b"brief".to_vec(),
+                    },
+                    InstallSkillAssetInput {
+                        asset_path: "examples/run.md".to_string(),
+                        content_type: "text/markdown".to_string(),
+                        body: b"run".to_vec(),
+                    },
+                ],
+            )
+            .unwrap();
+
+        let summaries = store
+            .list_asset_summaries(
+                "planner",
+                "v1",
+                SkillAssetListOptions::new()
+                    .with_path_prefix("examples")
+                    .with_content_type("text/markdown")
+                    .with_limit(1),
+            )
+            .unwrap();
+
+        assert_eq!(summaries.len(), 1);
+        assert_eq!(summaries[0].asset_path, "examples/brief.md");
+        assert_eq!(summaries[0].content_type, "text/markdown");
+        assert_eq!(summaries[0].body_len, 5);
+        assert_eq!(summaries[0].checksum, sha256(b"brief"));
+
+        assert!(store
+            .list_asset_summaries("planner", "v1", SkillAssetListOptions::new().with_limit(0),)
+            .unwrap()
+            .is_empty());
+
+        let invalid_prefix = store
+            .list_asset_summaries(
+                "planner",
+                "v1",
+                SkillAssetListOptions::new().with_path_prefix("/bad"),
+            )
+            .unwrap_err();
+        assert!(matches!(invalid_prefix, StorageError::Validation { .. }));
     }
 
     #[test]
