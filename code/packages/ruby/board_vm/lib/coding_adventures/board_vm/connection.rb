@@ -6,7 +6,7 @@ module CodingAdventures
     class DeviceSelectionError < ArgumentError; end
 
     class Connection
-      attr_reader :board, :cargo_workspace, :runner, :transport, :connection_option, :baud_rate, :timeout_ms
+      attr_reader :board, :cargo_workspace, :runner, :transport, :connection_option, :baud_rate, :timeout_ms, :endpoint
       attr_accessor :port
 
       def initialize(
@@ -16,6 +16,7 @@ module CodingAdventures
         runner:,
         transport:,
         connection_option:,
+        endpoint:,
         baud_rate:,
         timeout_ms:,
         arduino_core: nil,
@@ -50,6 +51,7 @@ module CodingAdventures
         @runner = runner
         @transport = transport
         @connection_option = connection_option
+        @endpoint = endpoint
         @baud_rate = baud_rate
         @timeout_ms = timeout_ms
         @arduino_core = arduino_core
@@ -511,6 +513,15 @@ module CodingAdventures
       def active_transport
         return @transport if @transport
 
+        if tcp_endpoint_connection?
+          unless endpoint && !endpoint.to_s.empty?
+            raise TransportError,
+              "#{connection_display_name} requires a Board VM TCP endpoint; pass endpoint: \"tcp://host:port\" or choose via: :serial"
+          end
+
+          return @transport = TcpTransport.new(endpoint: endpoint, timeout_ms: timeout_ms)
+        end
+
         unless serial_connection?
           raise TransportError,
             "#{connection_display_name} requires an injected Board VM transport endpoint; pass transport: or choose via: :serial"
@@ -520,6 +531,12 @@ module CodingAdventures
         end
 
         @transport = SerialTransport.new(port: port, baud_rate: baud_rate, timeout_ms: timeout_ms)
+      end
+
+      def tcp_endpoint_connection?
+        connection_option &&
+          (connection_option["endpoint_transport"] == "tcp_socket" ||
+            connection_option["endpoint_scheme"] == "tcp")
       end
 
       def connection_display_name

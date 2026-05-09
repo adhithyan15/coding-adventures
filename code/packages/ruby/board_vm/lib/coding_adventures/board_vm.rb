@@ -312,6 +312,7 @@ module CodingAdventures
       cargo_workspace: DEFAULT_RUST_WORKSPACE,
       runner: CommandRunner.new,
       transport: nil,
+      endpoint: nil,
       via: nil,
       connection_option: nil,
       pick_connection: false,
@@ -337,6 +338,7 @@ module CodingAdventures
         runner: runner,
         transport: transport,
         connection_option: selection.fetch(:connection_option),
+        endpoint: endpoint,
         baud_rate: options.delete(:baud_rate) || options.delete(:baud) || DEFAULT_BAUD_RATE,
         timeout_ms: options.delete(:timeout_ms) || DEFAULT_TIMEOUT_MS,
         **options
