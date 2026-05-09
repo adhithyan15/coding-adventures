@@ -422,6 +422,397 @@ impl SchemaProperty {
 }
 
 // ============================================================================
+// Built-in tool catalog
+// ============================================================================
+
+/// Built-in D18D tool families backed by repository services.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum BuiltinToolFamily {
+    Context,
+    Artifact,
+    Memory,
+    Job,
+}
+
+impl BuiltinToolFamily {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Context => "context",
+            Self::Artifact => "artifact",
+            Self::Memory => "memory",
+            Self::Job => "job",
+        }
+    }
+}
+
+impl Display for BuiltinToolFamily {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+/// Return the first-phase built-in store/job tool definitions from D18D.
+pub fn builtin_tool_catalog() -> Vec<ToolDefinition> {
+    [
+        context_open_session_definition(),
+        context_append_entry_definition(),
+        artifact_create_definition(),
+        artifact_read_definition(),
+        memory_remember_definition(),
+        memory_search_definition(),
+        job_validate_definition(),
+        job_install_definition(),
+    ]
+    .into()
+}
+
+/// Return first-phase built-ins for one family.
+pub fn builtin_tools_for_family(family: BuiltinToolFamily) -> Vec<ToolDefinition> {
+    let family_prefix = format!("{}.", family.as_str());
+    builtin_tool_catalog()
+        .into_iter()
+        .filter(|definition| definition.tool_id.starts_with(&family_prefix))
+        .collect()
+}
+
+/// Look up one first-phase built-in definition by id.
+pub fn builtin_tool_definition(tool_id: &str) -> Option<ToolDefinition> {
+    builtin_tool_catalog()
+        .into_iter()
+        .find(|definition| definition.tool_id == tool_id)
+}
+
+fn context_open_session_definition() -> ToolDefinition {
+    builtin_definition(
+        "context.open_session",
+        "Open context session",
+        "Open a durable Chief of Staff context session by id.",
+        object_schema(
+            vec![
+                SchemaProperty::new("session_id", JsonSchema::String),
+                SchemaProperty::new("create_if_missing", JsonSchema::Boolean),
+            ],
+            vec!["session_id"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("session_id", JsonSchema::String),
+                SchemaProperty::new("status", JsonSchema::String),
+            ],
+            vec!["session_id", "status"],
+            false,
+        )),
+        ToolSideEffects::Read,
+        ToolIdempotency::Always,
+        ToolConcurrency::Safe,
+        ToolStreaming::None,
+        PrivilegeTier::Tier0,
+        vec!["context:read"],
+        None,
+        vec!["context", "store"],
+    )
+}
+
+fn context_append_entry_definition() -> ToolDefinition {
+    builtin_definition(
+        "context.append_entry",
+        "Append context entry",
+        "Append one ordered transcript entry to a context session.",
+        object_schema(
+            vec![
+                SchemaProperty::new("session_id", JsonSchema::String),
+                SchemaProperty::new("role", JsonSchema::String),
+                SchemaProperty::new("content", JsonSchema::String),
+                SchemaProperty::new("metadata", JsonSchema::Any),
+            ],
+            vec!["session_id", "role", "content"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("session_id", JsonSchema::String),
+                SchemaProperty::new("entry_id", JsonSchema::String),
+            ],
+            vec!["session_id", "entry_id"],
+            false,
+        )),
+        ToolSideEffects::Write,
+        ToolIdempotency::Conditional,
+        ToolConcurrency::Serialized,
+        ToolStreaming::Events,
+        PrivilegeTier::Tier0,
+        vec!["context:write"],
+        Some("context"),
+        vec!["context", "store"],
+    )
+}
+
+fn artifact_create_definition() -> ToolDefinition {
+    builtin_definition(
+        "artifact.create",
+        "Create artifact",
+        "Create a durable artifact manifest and first revision.",
+        object_schema(
+            vec![
+                SchemaProperty::new("collection", JsonSchema::String),
+                SchemaProperty::new("name", JsonSchema::String),
+                SchemaProperty::new("content_type", JsonSchema::String),
+                SchemaProperty::new("body_base64", JsonSchema::String),
+                SchemaProperty::new("labels", string_array_schema()),
+            ],
+            vec!["collection", "name", "content_type", "body_base64"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("artifact_id", JsonSchema::String),
+                SchemaProperty::new("revision_id", JsonSchema::String),
+            ],
+            vec!["artifact_id", "revision_id"],
+            false,
+        )),
+        ToolSideEffects::Write,
+        ToolIdempotency::Conditional,
+        ToolConcurrency::Safe,
+        ToolStreaming::None,
+        PrivilegeTier::Tier0,
+        vec!["artifacts:create"],
+        None,
+        vec!["artifact", "store"],
+    )
+}
+
+fn artifact_read_definition() -> ToolDefinition {
+    builtin_definition(
+        "artifact.read",
+        "Read artifact",
+        "Read a durable artifact manifest and latest revision reference.",
+        object_schema(
+            vec![SchemaProperty::new("artifact_id", JsonSchema::String)],
+            vec!["artifact_id"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("artifact_id", JsonSchema::String),
+                SchemaProperty::new("latest_revision_id", JsonSchema::String),
+                SchemaProperty::new("content_type", JsonSchema::String),
+                SchemaProperty::new("body_base64", JsonSchema::String),
+            ],
+            vec!["artifact_id"],
+            false,
+        )),
+        ToolSideEffects::Read,
+        ToolIdempotency::Always,
+        ToolConcurrency::Safe,
+        ToolStreaming::None,
+        PrivilegeTier::Tier0,
+        vec!["artifacts:read"],
+        None,
+        vec!["artifact", "store"],
+    )
+}
+
+fn memory_remember_definition() -> ToolDefinition {
+    builtin_definition(
+        "memory.remember",
+        "Remember",
+        "Write one durable memory record.",
+        object_schema(
+            vec![
+                SchemaProperty::new("class", JsonSchema::String),
+                SchemaProperty::new("subject", JsonSchema::String),
+                SchemaProperty::new("body", JsonSchema::String),
+                SchemaProperty::new("tags", string_array_schema()),
+                SchemaProperty::new("confidence", JsonSchema::Number),
+            ],
+            vec!["class", "body"],
+            false,
+        ),
+        Some(object_schema(
+            vec![SchemaProperty::new("memory_id", JsonSchema::String)],
+            vec!["memory_id"],
+            false,
+        )),
+        ToolSideEffects::Write,
+        ToolIdempotency::Conditional,
+        ToolConcurrency::Serialized,
+        ToolStreaming::None,
+        PrivilegeTier::Tier0,
+        vec!["memory:write"],
+        Some("memory"),
+        vec!["memory", "store"],
+    )
+}
+
+fn memory_search_definition() -> ToolDefinition {
+    builtin_definition(
+        "memory.search",
+        "Search memory",
+        "Search durable memory records.",
+        object_schema(
+            vec![
+                SchemaProperty::new("query", JsonSchema::String),
+                SchemaProperty::new("classes", string_array_schema()),
+                SchemaProperty::new("tags", string_array_schema()),
+                SchemaProperty::new("limit", JsonSchema::Integer),
+            ],
+            vec!["query"],
+            false,
+        ),
+        Some(object_schema(
+            vec![SchemaProperty::new(
+                "matches",
+                JsonSchema::Array {
+                    items: Box::new(object_schema(
+                        vec![
+                            SchemaProperty::new("memory_id", JsonSchema::String),
+                            SchemaProperty::new("score", JsonSchema::Number),
+                        ],
+                        vec!["memory_id"],
+                        false,
+                    )),
+                },
+            )],
+            vec!["matches"],
+            false,
+        )),
+        ToolSideEffects::Read,
+        ToolIdempotency::Always,
+        ToolConcurrency::Safe,
+        ToolStreaming::None,
+        PrivilegeTier::Tier0,
+        vec!["memory:read"],
+        None,
+        vec!["memory", "store"],
+    )
+}
+
+fn job_validate_definition() -> ToolDefinition {
+    builtin_definition(
+        "job.validate",
+        "Validate job",
+        "Validate a Chief of Staff portable job specification.",
+        object_schema(
+            vec![SchemaProperty::new("spec", JsonSchema::Any)],
+            vec!["spec"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("valid", JsonSchema::Boolean),
+                SchemaProperty::new("portable", JsonSchema::Boolean),
+                SchemaProperty::new(
+                    "issues",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+            ],
+            vec!["valid", "portable", "issues"],
+            false,
+        )),
+        ToolSideEffects::None,
+        ToolIdempotency::Always,
+        ToolConcurrency::Safe,
+        ToolStreaming::None,
+        PrivilegeTier::Tier0,
+        vec!["jobs:validate"],
+        None,
+        vec!["job", "scheduler"],
+    )
+}
+
+fn job_install_definition() -> ToolDefinition {
+    builtin_definition(
+        "job.install",
+        "Install job",
+        "Validate and install a portable Chief of Staff job.",
+        object_schema(
+            vec![
+                SchemaProperty::new("spec", JsonSchema::Any),
+                SchemaProperty::new("idempotency_key", JsonSchema::String),
+            ],
+            vec!["spec"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("job_id", JsonSchema::String),
+                SchemaProperty::new("installed", JsonSchema::Boolean),
+            ],
+            vec!["job_id", "installed"],
+            false,
+        )),
+        ToolSideEffects::Write,
+        ToolIdempotency::Conditional,
+        ToolConcurrency::Serialized,
+        ToolStreaming::Events,
+        PrivilegeTier::Tier1,
+        vec!["jobs:install"],
+        Some("job"),
+        vec!["job", "scheduler"],
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+fn builtin_definition(
+    tool_id: &str,
+    display_name: &str,
+    description: &str,
+    input_schema: JsonSchema,
+    output_schema: Option<JsonSchema>,
+    side_effects: ToolSideEffects,
+    idempotency: ToolIdempotency,
+    concurrency: ToolConcurrency,
+    streaming: ToolStreaming,
+    required_tier: PrivilegeTier,
+    required_capabilities: Vec<&str>,
+    preferred_lock_scope: Option<&str>,
+    tags: Vec<&str>,
+) -> ToolDefinition {
+    ToolDefinition {
+        tool_id: tool_id.to_string(),
+        display_name: display_name.to_string(),
+        description: description.to_string(),
+        input_schema,
+        output_schema,
+        side_effects,
+        idempotency,
+        concurrency,
+        streaming,
+        required_tier,
+        required_capabilities: required_capabilities
+            .into_iter()
+            .map(str::to_string)
+            .collect(),
+        preferred_lock_scope: preferred_lock_scope.map(str::to_string),
+        timeout_seconds: Some(30),
+        tags: tags.into_iter().map(str::to_string).collect(),
+        stability: ToolStability::Experimental,
+    }
+}
+
+fn object_schema(
+    properties: Vec<SchemaProperty>,
+    required: Vec<&str>,
+    allow_unknown_fields: bool,
+) -> JsonSchema {
+    JsonSchema::Object {
+        properties,
+        required: required.into_iter().map(str::to_string).collect(),
+        allow_unknown_fields,
+    }
+}
+
+fn string_array_schema() -> JsonSchema {
+    JsonSchema::Array {
+        items: Box::new(JsonSchema::String),
+    }
+}
+
+// ============================================================================
 // Invocation, events, and results
 // ============================================================================
 
@@ -1769,6 +2160,106 @@ mod tests {
             .map(|definition| definition.tool_id.as_str())
             .collect();
         assert_eq!(ids, vec!["artifact.create", "memory.remember"]);
+    }
+
+    #[test]
+    fn builtin_catalog_definitions_are_valid_and_registerable() {
+        let catalog = builtin_tool_catalog();
+        let mut registry = InMemoryToolRegistry::new();
+
+        assert_eq!(catalog.len(), 8);
+        for definition in catalog {
+            assert!(
+                definition.validate().ok,
+                "builtin definition {} should validate",
+                definition.tool_id
+            );
+            registry.register(definition).unwrap();
+        }
+
+        let ids: Vec<_> = registry
+            .list()
+            .into_iter()
+            .map(|definition| definition.tool_id.as_str())
+            .collect();
+        assert_eq!(
+            ids,
+            vec![
+                "artifact.create",
+                "artifact.read",
+                "context.append_entry",
+                "context.open_session",
+                "job.install",
+                "job.validate",
+                "memory.remember",
+                "memory.search",
+            ]
+        );
+    }
+
+    #[test]
+    fn builtin_catalog_can_filter_by_family_and_lookup_by_id() {
+        let memory_tools = builtin_tools_for_family(BuiltinToolFamily::Memory);
+        let memory_ids: Vec<_> = memory_tools
+            .iter()
+            .map(|definition| definition.tool_id.as_str())
+            .collect();
+
+        assert_eq!(memory_ids, vec!["memory.remember", "memory.search"]);
+        assert_eq!(
+            builtin_tool_definition("job.install")
+                .unwrap()
+                .required_capabilities,
+            vec!["jobs:install"]
+        );
+        assert!(builtin_tool_definition("vault.request_lease").is_none());
+    }
+
+    #[test]
+    fn builtin_catalog_schemas_reject_malformed_calls_before_handlers() {
+        let mut registry = InMemoryToolRegistry::new();
+        registry
+            .register(builtin_tool_definition("memory.search").unwrap())
+            .unwrap();
+
+        let missing_query = ToolInvocationRequest {
+            call_id: "call_memory_search".to_string(),
+            tool_id: "memory.search".to_string(),
+            arguments: JsonValue::Object(vec![(
+                "limit".to_string(),
+                JsonValue::Number(JsonNumber::Integer(10)),
+            )]),
+            requested_by: RequestedBy::Session,
+            session_id: Some("session_1".to_string()),
+            job_id: None,
+            agent_id: None,
+            user_id: None,
+            requested_at: 1_000,
+            deadline_at: None,
+            idempotency_key: None,
+        };
+
+        let report = registry.validate_call(&missing_query);
+
+        assert!(!report.ok);
+        assert!(report
+            .errors
+            .iter()
+            .any(|error| error.path == "$.query" && error.message == "required field is missing"));
+
+        let mut valid = missing_query;
+        valid.arguments = JsonValue::Object(vec![
+            (
+                "query".to_string(),
+                JsonValue::String("weekly briefing preferences".to_string()),
+            ),
+            (
+                "limit".to_string(),
+                JsonValue::Number(JsonNumber::Integer(10)),
+            ),
+        ]);
+
+        assert!(registry.validate_call(&valid).ok);
     }
 
     #[test]
