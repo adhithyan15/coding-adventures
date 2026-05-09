@@ -39,6 +39,8 @@ Current scope:
   loops
 - agent capability grants for checking tool access before dispatch
 - authorization decisions that can be logged by runtimes and agents
+- MQTT topic names, topic filters, QoS levels, topic roles, and topic bindings
+  for MQTT-backed integrations
 
 Out of scope:
 

@@ -11,9 +11,20 @@ use std::fmt;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum SmartHomeError {
-    EmptyIdentifier { kind: &'static str },
-    InvalidPercentage { value: u16 },
-    MissingCapability { command_type: CommandType },
+    EmptyIdentifier {
+        kind: &'static str,
+    },
+    InvalidPercentage {
+        value: u16,
+    },
+    InvalidMqttTopic {
+        kind: &'static str,
+        value: String,
+        reason: &'static str,
+    },
+    MissingCapability {
+        command_type: CommandType,
+    },
 }
 
 impl fmt::Display for SmartHomeError {
@@ -23,6 +34,11 @@ impl fmt::Display for SmartHomeError {
             Self::InvalidPercentage { value } => {
                 write!(f, "percentage value {value} is outside 0..=100")
             }
+            Self::InvalidMqttTopic {
+                kind,
+                value,
+                reason,
+            } => write!(f, "{kind} `{value}` is invalid: {reason}"),
             Self::MissingCapability { command_type } => {
                 write!(
                     f,
@@ -349,6 +365,20 @@ pub enum ProtocolFamily {
     Vendor(String),
 }
 
+impl ProtocolFamily {
+    pub fn as_str(&self) -> &str {
+        match self {
+            Self::Hue => "hue",
+            Self::Zigbee => "zigbee",
+            Self::ZWave => "zwave",
+            Self::Thread => "thread",
+            Self::Matter => "matter",
+            Self::Mqtt => "mqtt",
+            Self::Vendor(name) => name.as_str(),
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ProtocolIdentifier {
     pub family: ProtocolFamily,
@@ -379,6 +409,135 @@ impl ProtocolIdentifier {
             kind,
             value,
         })
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct MqttTopicName(String);
+
+impl MqttTopicName {
+    pub fn new(value: impl Into<String>) -> Result<Self, SmartHomeError> {
+        let value = value.into();
+        validate_mqtt_topic_name(&value)?;
+        Ok(Self(value))
+    }
+
+    pub fn trusted(value: impl Into<String>) -> Self {
+        Self(value.into())
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+
+    pub fn as_protocol_identifier(&self, kind: impl Into<String>) -> ProtocolIdentifier {
+        ProtocolIdentifier {
+            family: ProtocolFamily::Mqtt,
+            kind: kind.into(),
+            value: self.0.clone(),
+        }
+    }
+}
+
+impl fmt::Display for MqttTopicName {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.0)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct MqttTopicFilter(String);
+
+impl MqttTopicFilter {
+    pub fn new(value: impl Into<String>) -> Result<Self, SmartHomeError> {
+        let value = value.into();
+        validate_mqtt_topic_filter(&value)?;
+        Ok(Self(value))
+    }
+
+    pub fn trusted(value: impl Into<String>) -> Self {
+        Self(value.into())
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+
+    pub fn matches(&self, topic: &MqttTopicName) -> bool {
+        mqtt_filter_matches_topic(&self.0, topic.as_str())
+    }
+}
+
+impl fmt::Display for MqttTopicFilter {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.0)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum MqttQualityOfService {
+    AtMostOnce,
+    AtLeastOnce,
+    ExactlyOnce,
+}
+
+impl MqttQualityOfService {
+    pub fn level(self) -> u8 {
+        match self {
+            Self::AtMostOnce => 0,
+            Self::AtLeastOnce => 1,
+            Self::ExactlyOnce => 2,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum MqttTopicRole {
+    Discovery,
+    Availability,
+    State,
+    Command,
+    Event,
+}
+
+impl MqttTopicRole {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Discovery => "discovery",
+            Self::Availability => "availability",
+            Self::State => "state",
+            Self::Command => "command",
+            Self::Event => "event",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MqttTopicBinding {
+    pub role: MqttTopicRole,
+    pub topic: MqttTopicName,
+    pub qos: MqttQualityOfService,
+    pub retain: bool,
+}
+
+impl MqttTopicBinding {
+    pub fn new(role: MqttTopicRole, topic: MqttTopicName) -> Self {
+        Self {
+            role,
+            topic,
+            qos: MqttQualityOfService::AtLeastOnce,
+            retain: false,
+        }
+    }
+
+    pub fn with_qos(mut self, qos: MqttQualityOfService) -> Self {
+        self.qos = qos;
+        self
+    }
+
+    pub fn with_retain(mut self, retain: bool) -> Self {
+        self.retain = retain;
+        self
     }
 }
 
@@ -1149,6 +1308,108 @@ fn push_unique_grant_id(values: &mut Vec<CapabilityGrantId>, value: CapabilityGr
     }
 }
 
+fn validate_mqtt_topic_name(value: &str) -> Result<(), SmartHomeError> {
+    if value.is_empty() {
+        return Err(invalid_mqtt_topic(
+            "mqtt topic name",
+            value,
+            "must not be empty",
+        ));
+    }
+    if value.contains('\0') {
+        return Err(invalid_mqtt_topic(
+            "mqtt topic name",
+            value,
+            "must not contain null bytes",
+        ));
+    }
+    if value.contains('+') || value.contains('#') {
+        return Err(invalid_mqtt_topic(
+            "mqtt topic name",
+            value,
+            "wildcards are only valid in topic filters",
+        ));
+    }
+    Ok(())
+}
+
+fn validate_mqtt_topic_filter(value: &str) -> Result<(), SmartHomeError> {
+    if value.is_empty() {
+        return Err(invalid_mqtt_topic(
+            "mqtt topic filter",
+            value,
+            "must not be empty",
+        ));
+    }
+    if value.contains('\0') {
+        return Err(invalid_mqtt_topic(
+            "mqtt topic filter",
+            value,
+            "must not contain null bytes",
+        ));
+    }
+
+    let levels = value.split('/').collect::<Vec<_>>();
+    for (index, level) in levels.iter().enumerate() {
+        if level.contains('#') && *level != "#" {
+            return Err(invalid_mqtt_topic(
+                "mqtt topic filter",
+                value,
+                "`#` must occupy an entire topic level",
+            ));
+        }
+        if *level == "#" && index + 1 != levels.len() {
+            return Err(invalid_mqtt_topic(
+                "mqtt topic filter",
+                value,
+                "`#` must be the final topic level",
+            ));
+        }
+        if level.contains('+') && *level != "+" {
+            return Err(invalid_mqtt_topic(
+                "mqtt topic filter",
+                value,
+                "`+` must occupy an entire topic level",
+            ));
+        }
+    }
+    Ok(())
+}
+
+fn invalid_mqtt_topic(kind: &'static str, value: &str, reason: &'static str) -> SmartHomeError {
+    SmartHomeError::InvalidMqttTopic {
+        kind,
+        value: value.to_string(),
+        reason,
+    }
+}
+
+fn mqtt_filter_matches_topic(filter: &str, topic: &str) -> bool {
+    let filter_levels = filter.split('/').collect::<Vec<_>>();
+    let topic_levels = topic.split('/').collect::<Vec<_>>();
+    let mut topic_index = 0usize;
+
+    for filter_level in &filter_levels {
+        match *filter_level {
+            "#" => return true,
+            "+" => {
+                if topic_index >= topic_levels.len() {
+                    return false;
+                }
+                topic_index += 1;
+            }
+            literal => {
+                if topic_levels.get(topic_index) != Some(&literal) {
+                    return false;
+                }
+                topic_index += 1;
+            }
+        }
+    }
+
+    topic_index == topic_levels.len()
+}
+
 fn read_tool(tool_id: &'static str) -> ToolDescriptor {
     ToolDescriptor {
         tool_id,
@@ -1189,6 +1450,70 @@ mod tests {
         assert_ne!(hue.family, zigbee.family);
         assert_eq!(hue.kind, "light");
         assert_eq!(zigbee.kind, "ieee_address");
+    }
+
+    #[test]
+    fn mqtt_topic_names_reject_filter_wildcards() {
+        assert_eq!(
+            MqttTopicName::new("home/+/state"),
+            Err(SmartHomeError::InvalidMqttTopic {
+                kind: "mqtt topic name",
+                value: "home/+/state".to_string(),
+                reason: "wildcards are only valid in topic filters",
+            })
+        );
+        assert_eq!(
+            MqttTopicName::new("home/kitchen/light/state")
+                .unwrap()
+                .as_str(),
+            "home/kitchen/light/state"
+        );
+    }
+
+    #[test]
+    fn mqtt_topic_filters_validate_wildcard_shape() {
+        assert!(MqttTopicFilter::new("home/+/state").is_ok());
+        assert!(MqttTopicFilter::new("home/#").is_ok());
+        assert!(MqttTopicFilter::new("home/#/state").is_err());
+        assert!(MqttTopicFilter::new("home/te+st/state").is_err());
+    }
+
+    #[test]
+    fn mqtt_topic_filters_match_topic_names() {
+        let kitchen_state = MqttTopicName::new("home/kitchen/light/state").unwrap();
+        let kitchen_command = MqttTopicName::new("home/kitchen/light/set").unwrap();
+
+        assert!(MqttTopicFilter::new("home/+/light/state")
+            .unwrap()
+            .matches(&kitchen_state));
+        assert!(MqttTopicFilter::new("home/#")
+            .unwrap()
+            .matches(&kitchen_state));
+        assert!(!MqttTopicFilter::new("home/+/light/state")
+            .unwrap()
+            .matches(&kitchen_command));
+    }
+
+    #[test]
+    fn mqtt_topic_bindings_capture_role_qos_and_retain_policy() {
+        let binding = MqttTopicBinding::new(
+            MqttTopicRole::State,
+            MqttTopicName::new("home/kitchen/light/state").unwrap(),
+        )
+        .with_qos(MqttQualityOfService::AtLeastOnce)
+        .with_retain(true);
+
+        assert_eq!(binding.role.as_str(), "state");
+        assert_eq!(binding.qos.level(), 1);
+        assert!(binding.retain);
+        assert_eq!(
+            binding
+                .topic
+                .as_protocol_identifier("state_topic")
+                .family
+                .as_str(),
+            "mqtt"
+        );
     }
 
     #[test]

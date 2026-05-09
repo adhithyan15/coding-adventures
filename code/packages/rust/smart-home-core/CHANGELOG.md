@@ -18,3 +18,5 @@ All notable changes to this package will be documented in this file.
   checks with matched and missing grants.
 - Canonical capability catalog helpers for light, scene, lock, climate, sensor,
   and input integration families.
+- MQTT topic names, filters, QoS levels, roles, and bindings for MQTT-backed
+  device integrations.
