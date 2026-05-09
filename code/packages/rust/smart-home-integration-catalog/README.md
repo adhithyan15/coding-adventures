@@ -22,6 +22,8 @@ runtime and Chief of Staff tools a typed catalog for:
   Pro, SmartThings, openHAB, Homebridge, ioBroker, Domoticz, Jeedom, HomeSeer,
   Apple Home, Google Home, Alexa, Z-Wave Alliance, and Thread Group references
   to reusable primitive-family hints
+- ecosystem primitive coverage reports that connect those survey sources to
+  rollout backlog primitives
 - primitive backlog planning for prioritizing the shared families needed by a
   rollout wave
 - activation plans that resolve direct integrations, virtual aliases, and

@@ -22,6 +22,8 @@ All notable changes to this package will be documented in this file.
   plan primitive families across Home Assistant, Hubitat, Homey Pro,
   SmartThings, openHAB, Homebridge, ioBroker, Domoticz, Jeedom, HomeSeer, Apple
   Home, Google Home, Alexa, Z-Wave Alliance, and Thread Group.
+- Ecosystem primitive coverage reports that map surveyed platforms onto rollout
+  backlog primitive families.
 - Query helpers for integration id, category, connectivity, capability,
   primitive family, implementation status, and rollout priority.
 - Primitive backlog planning helpers for ranking the shared primitive families

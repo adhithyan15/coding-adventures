@@ -10,7 +10,10 @@ use smart_home_core::{
     CapabilityId, EntityKind, IntegrationId, PrivilegeTier, ProtocolFamily, RuntimeKind,
     ToolDescriptor, ToolSideEffects,
 };
-use std::{cmp::Ordering, collections::BTreeMap};
+use std::{
+    cmp::Ordering,
+    collections::{BTreeMap, BTreeSet},
+};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationCategory {
@@ -325,6 +328,27 @@ impl EcosystemSurveySource {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EcosystemPrimitiveCoverage {
+    pub primitive: PrimitiveFamily,
+    pub platforms: Vec<EcosystemSurveyPlatform>,
+    pub source_count: usize,
+}
+
+impl EcosystemPrimitiveCoverage {
+    pub fn platform_count(&self) -> usize {
+        self.platforms.len()
+    }
+
+    pub fn is_gap(&self) -> bool {
+        self.source_count == 0
+    }
+
+    pub fn covers_platform(&self, platform: EcosystemSurveyPlatform) -> bool {
+        self.platforms.contains(&platform)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationCatalogEntry {
     pub integration_id: IntegrationId,
     pub display_name: String,
@@ -567,6 +591,32 @@ pub struct PrimitiveBacklogItem {
 }
 
 impl PrimitiveBacklogItem {
+    pub fn includes_integration(&self, integration_id: &IntegrationId) -> bool {
+        self.integration_ids
+            .iter()
+            .any(|candidate| candidate == integration_id)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PrimitiveBacklogCoverageItem {
+    pub primitive: PrimitiveFamily,
+    pub highest_priority: u8,
+    pub entry_count: usize,
+    pub integration_ids: Vec<IntegrationId>,
+    pub source_count: usize,
+    pub platforms: Vec<EcosystemSurveyPlatform>,
+}
+
+impl PrimitiveBacklogCoverageItem {
+    pub fn platform_count(&self) -> usize {
+        self.platforms.len()
+    }
+
+    pub fn covers_platform(&self, platform: EcosystemSurveyPlatform) -> bool {
+        self.platforms.contains(&platform)
+    }
+
     pub fn includes_integration(&self, integration_id: &IntegrationId) -> bool {
         self.integration_ids
             .iter()
@@ -976,6 +1026,36 @@ pub fn survey_sources_requiring_primitive(
     sources
         .iter()
         .filter(|source| source.requires_primitive(primitive))
+        .collect()
+}
+
+pub fn ecosystem_platforms_requiring_primitive(
+    sources: &[EcosystemSurveySource],
+    primitive: PrimitiveFamily,
+) -> Vec<EcosystemSurveyPlatform> {
+    sources
+        .iter()
+        .filter(|source| source.requires_primitive(primitive))
+        .map(|source| source.platform)
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect()
+}
+
+pub fn ecosystem_primitive_coverage(
+    sources: &[EcosystemSurveySource],
+) -> Vec<EcosystemPrimitiveCoverage> {
+    all_primitive_families()
+        .iter()
+        .copied()
+        .map(|primitive| {
+            let platforms = ecosystem_platforms_requiring_primitive(sources, primitive);
+            EcosystemPrimitiveCoverage {
+                primitive,
+                source_count: survey_sources_requiring_primitive(sources, primitive).len(),
+                platforms,
+            }
+        })
         .collect()
 }
 
@@ -1628,6 +1708,27 @@ pub fn primitive_backlog_at_or_before_priority(
             .then_with(|| left.primitive.cmp(&right.primitive))
     });
     backlog
+}
+
+pub fn primitive_backlog_with_ecosystem_coverage(
+    catalog: &[IntegrationCatalogEntry],
+    sources: &[EcosystemSurveySource],
+    priority: u8,
+) -> Vec<PrimitiveBacklogCoverageItem> {
+    primitive_backlog_at_or_before_priority(catalog, priority)
+        .into_iter()
+        .map(|item| {
+            let platforms = ecosystem_platforms_requiring_primitive(sources, item.primitive);
+            PrimitiveBacklogCoverageItem {
+                primitive: item.primitive,
+                highest_priority: item.highest_priority,
+                entry_count: item.entry_count,
+                integration_ids: item.integration_ids,
+                source_count: survey_sources_requiring_primitive(sources, item.primitive).len(),
+                platforms,
+            }
+        })
+        .collect()
 }
 
 pub fn activation_plan_for_integration(
@@ -2689,6 +2790,50 @@ mod tests {
         assert!(mqtt_sources
             .iter()
             .any(|source| source.platform == EcosystemSurveyPlatform::HomeAssistant));
+    }
+
+    #[test]
+    fn ecosystem_coverage_reports_platforms_for_primitives() {
+        let sources = ecosystem_survey_sources();
+        let coverage = ecosystem_primitive_coverage(&sources);
+        let matter = coverage
+            .iter()
+            .find(|item| item.primitive == PrimitiveFamily::MatterCommissioning)
+            .unwrap();
+        let vault = coverage
+            .iter()
+            .find(|item| item.primitive == PrimitiveFamily::VaultLease)
+            .unwrap();
+
+        assert_eq!(coverage.len(), all_primitive_families().len());
+        assert!(matter.covers_platform(EcosystemSurveyPlatform::AppleHome));
+        assert!(matter.covers_platform(EcosystemSurveyPlatform::GoogleHome));
+        assert!(matter.platform_count() >= 5);
+        assert!(vault.is_gap());
+    }
+
+    #[test]
+    fn primitive_backlog_coverage_connects_rollout_primitives_to_survey_sources() {
+        let catalog = first_party_catalog();
+        let sources = ecosystem_survey_sources();
+        let coverage = primitive_backlog_with_ecosystem_coverage(&catalog, &sources, 1);
+        let mqtt = coverage
+            .iter()
+            .find(|item| item.primitive == PrimitiveFamily::Mqtt)
+            .unwrap();
+        let matter = coverage
+            .iter()
+            .find(|item| item.primitive == PrimitiveFamily::MatterCommissioning)
+            .unwrap();
+
+        assert!(mqtt.includes_integration(&IntegrationId::trusted("mqtt")));
+        assert!(mqtt.includes_integration(&IntegrationId::trusted("tasmota")));
+        assert!(mqtt.covers_platform(EcosystemSurveyPlatform::HomeAssistant));
+        assert!(matter.includes_integration(&IntegrationId::trusted("matter")));
+        assert!(matter.covers_platform(EcosystemSurveyPlatform::ThreadGroup));
+        assert!(coverage
+            .iter()
+            .all(|item| item.source_count == item.platform_count()));
     }
 
     #[test]
