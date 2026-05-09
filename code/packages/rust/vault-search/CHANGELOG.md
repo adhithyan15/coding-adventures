@@ -21,10 +21,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `SearchHit` — `(DocumentId, score: f32)`. Scores ordered
   descending; ties broken by id ascending so order is
   deterministic across replicas.
+- `SearchIndexSummary` — count-only read model for document count,
+  posting cardinality, term-frequency entry count, indexed byte
+  totals, and remaining document capacity.
 - `SearchError` — `InvalidParameter` / `TooLarge` / `Decode`.
 - `SearchIndex` — `Send + Sync`, threadsafe via `Mutex`. Public
   API: `new` / `index` / `remove` / `len` / `is_empty` /
-  `search` / `clear` / `to_bytes` / `from_bytes`.
+  `summary` / `search` / `clear` / `to_bytes` / `from_bytes`.
 - Trigram extractor — lowercases ASCII; treats other bytes
   passthrough; total, allocates once.
 - BM25 ranker — standard `k1=1.2, b=0.75` over the candidate

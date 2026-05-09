@@ -140,8 +140,7 @@ pub const MAX_TF_ENTRIES_PER_DOC: usize = 65_536;
 /// (`MAX_INDEXED_FIELD_LEN * MAX_FIELDS_PER_DOC`) so a crafted
 /// persisted index cannot manipulate BM25 ranking via an
 /// implausible length.
-pub const MAX_TOTAL_LEN: u64 =
-    (MAX_INDEXED_FIELD_LEN as u64) * (MAX_FIELDS_PER_DOC as u64);
+pub const MAX_TOTAL_LEN: u64 = (MAX_INDEXED_FIELD_LEN as u64) * (MAX_FIELDS_PER_DOC as u64);
 /// On-disk per-tf-entry size (3 bytes trigram + 4 bytes f32).
 const ON_DISK_TF_ENTRY_BYTES: usize = 7;
 
@@ -158,7 +157,9 @@ impl DocumentId {
     pub fn new(id: impl Into<String>) -> Result<Self, SearchError> {
         let s = id.into();
         if s.is_empty() {
-            return Err(SearchError::InvalidParameter("document id must not be empty"));
+            return Err(SearchError::InvalidParameter(
+                "document id must not be empty",
+            ));
         }
         if s.len() > MAX_DOC_ID_LEN {
             return Err(SearchError::InvalidParameter(
@@ -247,6 +248,42 @@ pub struct SearchHit {
     /// BM25 score. Higher = better match. Order across hits
     /// is meaningful; absolute magnitude is not.
     pub score: f32,
+}
+
+/// Credential-safe read model for index size and coverage.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct SearchIndexSummary {
+    /// Number of indexed documents.
+    pub document_count: usize,
+    /// Number of distinct trigrams with at least one posting.
+    pub distinct_trigram_count: usize,
+    /// Total document references stored across all posting lists.
+    pub posting_reference_count: usize,
+    /// Total per-document term-frequency entries.
+    pub term_frequency_entry_count: usize,
+    /// Total indexed field bytes across all documents.
+    pub total_indexed_bytes: u64,
+    /// Integer average indexed bytes per document, or zero when empty.
+    pub average_indexed_bytes_per_document: u64,
+    /// Remaining document slots before [`MAX_INDEXED_DOCS`] is reached.
+    pub remaining_document_capacity: usize,
+}
+
+impl SearchIndexSummary {
+    /// `true` iff no documents are indexed.
+    pub fn is_empty(&self) -> bool {
+        self.document_count == 0
+    }
+
+    /// `true` iff the index has at least one posting.
+    pub fn has_postings(&self) -> bool {
+        self.posting_reference_count > 0 && self.distinct_trigram_count > 0
+    }
+
+    /// `true` iff the index cannot accept another distinct document id.
+    pub fn is_at_document_capacity(&self) -> bool {
+        self.remaining_document_capacity == 0
+    }
 }
 
 // === Section 3. Trigram extractor =========================================
@@ -430,10 +467,7 @@ impl SearchIndex {
         }
         // Insert the new postings.
         for (tg, _) in tf.iter() {
-            g.postings
-                .entry(*tg)
-                .or_default()
-                .insert(id.clone(), ());
+            g.postings.entry(*tg).or_default().insert(id.clone(), ());
         }
         let doc = Doc {
             id: id.clone(),
@@ -472,14 +506,40 @@ impl SearchIndex {
         self.len() == 0
     }
 
+    /// Return a count-only snapshot of index size and posting coverage.
+    ///
+    /// This deliberately omits document ids, trigrams, field names, and field
+    /// values so policy, audit, and status tools can inspect index health
+    /// without reading searchable plaintext.
+    pub fn summary(&self) -> SearchIndexSummary {
+        let g = lock_recover(&self.inner);
+        let document_count = g.docs.len();
+        let total_indexed_bytes = g
+            .docs
+            .values()
+            .map(|doc| doc.total_len)
+            .fold(0u64, u64::saturating_add);
+        SearchIndexSummary {
+            document_count,
+            distinct_trigram_count: g.postings.len(),
+            posting_reference_count: g.postings.values().map(BTreeMap::len).sum(),
+            term_frequency_entry_count: g.docs.values().map(|doc| doc.tf.len()).sum(),
+            total_indexed_bytes,
+            average_indexed_bytes_per_document: if document_count == 0 {
+                0
+            } else {
+                total_indexed_bytes / document_count as u64
+            },
+            remaining_document_capacity: MAX_INDEXED_DOCS.saturating_sub(document_count),
+        }
+    }
+
     /// Search the index. Returns the top `top_n` hits sorted
     /// by score descending. Ties broken by document id
     /// ascending (so order is deterministic across replicas).
     pub fn search(&self, query: &str, top_n: usize) -> Result<Vec<SearchHit>, SearchError> {
         if query.len() > MAX_QUERY_LEN {
-            return Err(SearchError::InvalidParameter(
-                "query exceeds MAX_QUERY_LEN",
-            ));
+            return Err(SearchError::InvalidParameter("query exceeds MAX_QUERY_LEN"));
         }
         let q_trigrams = query_trigrams(query);
         if q_trigrams.is_empty() {
@@ -569,7 +629,7 @@ impl SearchIndex {
         let mut out = Vec::with_capacity(64);
         out.extend_from_slice(b"VSI1");
         out.push(1u8); // version
-        // u32 doc count
+                       // u32 doc count
         out.extend_from_slice(&(g.docs.len() as u32).to_be_bytes());
         for (_, doc) in g.docs.iter() {
             // doc id (length-prefixed string)
@@ -628,9 +688,8 @@ impl SearchIndex {
             let id_bytes = p.take(id_len)?;
             let id_str = std::str::from_utf8(id_bytes)
                 .map_err(|_| SearchError::Decode("doc id is not UTF-8"))?;
-            let id = DocumentId::new(id_str.to_owned()).map_err(|_| {
-                SearchError::Decode("doc id failed validation")
-            })?;
+            let id = DocumentId::new(id_str.to_owned())
+                .map_err(|_| SearchError::Decode("doc id failed validation"))?;
             let total_len = p.take_u64()?;
             // Reject crafted indices that claim a `total_len`
             // larger than the live indexer would ever produce.
@@ -639,9 +698,7 @@ impl SearchIndex {
             // higher score) and, in `search`, can overflow the
             // u64 sum used for `avg_dl`.
             if total_len > MAX_TOTAL_LEN {
-                return Err(SearchError::Decode(
-                    "total_len exceeds MAX_TOTAL_LEN bound",
-                ));
+                return Err(SearchError::Decode("total_len exceeds MAX_TOTAL_LEN bound"));
             }
             let tf_count = p.take_u32()? as usize;
             // Two layers of bound:
@@ -676,7 +733,9 @@ impl SearchIndex {
                 let bits = p.take_u32()?;
                 let count = f32::from_bits(bits);
                 if !count.is_finite() || count < 0.0 {
-                    return Err(SearchError::Decode("tf weight not a finite non-negative f32"));
+                    return Err(SearchError::Decode(
+                        "tf weight not a finite non-negative f32",
+                    ));
                 }
                 tf.insert(tg, count);
             }
@@ -818,9 +877,7 @@ mod tests {
     }
 
     fn searchable_title_and_url() -> SearchableFields {
-        SearchableFields::new()
-            .with("title", 2.0)
-            .with("url", 1.0)
+        SearchableFields::new().with("title", 2.0).with("url", 1.0)
     }
 
     fn fields_pair(title: &str, url: &str) -> BTreeMap<String, String> {
@@ -861,12 +918,24 @@ mod tests {
     fn index_then_search_finds_match() {
         let idx = SearchIndex::new();
         let s = searchable_title_and_url();
-        idx.index(doc_id("d1"), &fields_pair("github", "https://github.com"), &s)
-            .unwrap();
-        idx.index(doc_id("d2"), &fields_pair("gitlab", "https://gitlab.com"), &s)
-            .unwrap();
-        idx.index(doc_id("d3"), &fields_pair("notion", "https://notion.so"), &s)
-            .unwrap();
+        idx.index(
+            doc_id("d1"),
+            &fields_pair("github", "https://github.com"),
+            &s,
+        )
+        .unwrap();
+        idx.index(
+            doc_id("d2"),
+            &fields_pair("gitlab", "https://gitlab.com"),
+            &s,
+        )
+        .unwrap();
+        idx.index(
+            doc_id("d3"),
+            &fields_pair("notion", "https://notion.so"),
+            &s,
+        )
+        .unwrap();
         let hits = idx.search("git", 10).unwrap();
         assert_eq!(hits.len(), 2);
         let ids: Vec<&str> = hits.iter().map(|h| h.id.as_str()).collect();
@@ -882,10 +951,18 @@ mod tests {
         // only mention is in url.
         let idx = SearchIndex::new();
         let s = searchable_title_and_url();
-        idx.index(doc_id("title-match"), &fields_pair("git stuff", "https://example.com"), &s)
-            .unwrap();
-        idx.index(doc_id("url-match"), &fields_pair("things", "https://git.example.com"), &s)
-            .unwrap();
+        idx.index(
+            doc_id("title-match"),
+            &fields_pair("git stuff", "https://example.com"),
+            &s,
+        )
+        .unwrap();
+        idx.index(
+            doc_id("url-match"),
+            &fields_pair("things", "https://git.example.com"),
+            &s,
+        )
+        .unwrap();
         let hits = idx.search("git", 10).unwrap();
         assert!(hits.len() >= 2);
         // The first hit should be title-match.
@@ -912,11 +989,19 @@ mod tests {
     fn re_indexing_replaces_prior_postings() {
         let idx = SearchIndex::new();
         let s = searchable_title_and_url();
-        idx.index(doc_id("d1"), &fields_pair("github", "https://github.com"), &s)
-            .unwrap();
+        idx.index(
+            doc_id("d1"),
+            &fields_pair("github", "https://github.com"),
+            &s,
+        )
+        .unwrap();
         // Re-index with completely different content.
-        idx.index(doc_id("d1"), &fields_pair("notion", "https://notion.so"), &s)
-            .unwrap();
+        idx.index(
+            doc_id("d1"),
+            &fields_pair("notion", "https://notion.so"),
+            &s,
+        )
+        .unwrap();
         // Old trigrams must no longer match.
         assert!(idx.search("git", 10).unwrap().is_empty());
         // New ones do.
@@ -929,8 +1014,12 @@ mod tests {
     fn remove_purges_postings() {
         let idx = SearchIndex::new();
         let s = searchable_title_and_url();
-        idx.index(doc_id("d1"), &fields_pair("github", "https://github.com"), &s)
-            .unwrap();
+        idx.index(
+            doc_id("d1"),
+            &fields_pair("github", "https://github.com"),
+            &s,
+        )
+        .unwrap();
         idx.remove(&doc_id("d1")).unwrap();
         assert_eq!(idx.len(), 0);
         assert!(idx.search("git", 10).unwrap().is_empty());
@@ -981,7 +1070,11 @@ mod tests {
         }
         let hits = idx.search("git", 5).unwrap();
         for w in hits.windows(2) {
-            assert!(w[0].score >= w[1].score, "scores not descending: {:?}", hits);
+            assert!(
+                w[0].score >= w[1].score,
+                "scores not descending: {:?}",
+                hits
+            );
         }
     }
 
@@ -989,6 +1082,61 @@ mod tests {
     fn search_empty_index_returns_empty() {
         let idx = SearchIndex::new();
         assert!(idx.search("git", 10).unwrap().is_empty());
+    }
+
+    #[test]
+    fn index_summary_counts_documents_and_postings_without_payloads() {
+        let idx = SearchIndex::new();
+        let s = searchable_title_and_url();
+        idx.index(
+            doc_id("d1"),
+            &fields_pair("github", "https://github.com"),
+            &s,
+        )
+        .unwrap();
+        idx.index(
+            doc_id("d2"),
+            &fields_pair("gitlab", "https://gitlab.com"),
+            &s,
+        )
+        .unwrap();
+
+        let summary = idx.summary();
+
+        assert_eq!(summary.document_count, 2);
+        assert!(!summary.is_empty());
+        assert!(summary.distinct_trigram_count > 0);
+        assert!(summary.posting_reference_count >= summary.distinct_trigram_count);
+        assert_eq!(
+            summary.posting_reference_count,
+            summary.term_frequency_entry_count
+        );
+        assert!(summary.total_indexed_bytes > 0);
+        assert!(summary.average_indexed_bytes_per_document > 0);
+        assert_eq!(
+            summary.remaining_document_capacity,
+            MAX_INDEXED_DOCS - summary.document_count
+        );
+        assert!(summary.has_postings());
+        assert!(!summary.is_at_document_capacity());
+    }
+
+    #[test]
+    fn empty_index_summary_reports_no_plaintext_coverage() {
+        let idx = SearchIndex::new();
+
+        let summary = idx.summary();
+
+        assert_eq!(summary.document_count, 0);
+        assert_eq!(summary.distinct_trigram_count, 0);
+        assert_eq!(summary.posting_reference_count, 0);
+        assert_eq!(summary.term_frequency_entry_count, 0);
+        assert_eq!(summary.total_indexed_bytes, 0);
+        assert_eq!(summary.average_indexed_bytes_per_document, 0);
+        assert_eq!(summary.remaining_document_capacity, MAX_INDEXED_DOCS);
+        assert!(summary.is_empty());
+        assert!(!summary.has_postings());
+        assert!(!summary.is_at_document_capacity());
     }
 
     // --- Validation ---
@@ -1062,10 +1210,18 @@ mod tests {
     fn roundtrip_via_bytes_preserves_search_results() {
         let idx = SearchIndex::new();
         let s = searchable_title_and_url();
-        idx.index(doc_id("d1"), &fields_pair("github", "https://github.com"), &s)
-            .unwrap();
-        idx.index(doc_id("d2"), &fields_pair("notion", "https://notion.so"), &s)
-            .unwrap();
+        idx.index(
+            doc_id("d1"),
+            &fields_pair("github", "https://github.com"),
+            &s,
+        )
+        .unwrap();
+        idx.index(
+            doc_id("d2"),
+            &fields_pair("notion", "https://notion.so"),
+            &s,
+        )
+        .unwrap();
         let bytes = idx.to_bytes();
         let restored = SearchIndex::from_bytes(&bytes).unwrap();
         // Both indices give the same hits for the same query.
@@ -1152,8 +1308,8 @@ mod tests {
         bytes.extend_from_slice(&(id.len() as u32).to_be_bytes());
         bytes.extend_from_slice(id.as_bytes());
         bytes.extend_from_slice(&0u64.to_be_bytes()); // total_len
-        // Claim 60_000 tf entries — under MAX_TF_ENTRIES_PER_DOC
-        // but the input ends here so they cannot be read.
+                                                      // Claim 60_000 tf entries — under MAX_TF_ENTRIES_PER_DOC
+                                                      // but the input ends here so they cannot be read.
         bytes.extend_from_slice(&60_000u32.to_be_bytes());
         let r = SearchIndex::from_bytes(&bytes);
         assert!(matches!(r, Err(SearchError::Decode(_))));
@@ -1210,8 +1366,12 @@ mod tests {
     fn clear_drops_documents() {
         let idx = SearchIndex::new();
         let s = searchable_title_and_url();
-        idx.index(doc_id("d1"), &fields_pair("github", "https://github.com"), &s)
-            .unwrap();
+        idx.index(
+            doc_id("d1"),
+            &fields_pair("github", "https://github.com"),
+            &s,
+        )
+        .unwrap();
         idx.clear();
         assert!(idx.is_empty());
         assert!(idx.search("git", 10).unwrap().is_empty());
@@ -1274,8 +1434,12 @@ mod tests {
     fn bm25_score_is_finite_and_non_negative() {
         let idx = SearchIndex::new();
         let s = searchable_title_and_url();
-        idx.index(doc_id("d1"), &fields_pair("github", "https://github.com"), &s)
-            .unwrap();
+        idx.index(
+            doc_id("d1"),
+            &fields_pair("github", "https://github.com"),
+            &s,
+        )
+        .unwrap();
         let hits = idx.search("git", 10).unwrap();
         for h in hits.iter() {
             assert!(h.score.is_finite() && h.score >= 0.0);
