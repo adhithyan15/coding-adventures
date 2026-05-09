@@ -18,6 +18,10 @@ All notable changes to this package will be documented in this file.
   standard.
 - Read-only D18D tool descriptors for listing/describing integrations and
   primitive families.
+- Typed ecosystem-survey source rows for the cross-platform references used to
+  plan primitive families across Home Assistant, Hubitat, Homey Pro,
+  SmartThings, openHAB, Homebridge, ioBroker, Domoticz, Jeedom, HomeSeer, Apple
+  Home, Google Home, Alexa, Z-Wave Alliance, and Thread Group.
 - Query helpers for integration id, category, connectivity, capability,
   primitive family, implementation status, and rollout priority.
 - Computed policy-surface helpers so Chief of Staff tools can identify camera,

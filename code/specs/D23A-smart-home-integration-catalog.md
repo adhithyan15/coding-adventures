@@ -657,6 +657,8 @@ Responsibilities:
 
 - integration catalog entry structs/enums
 - primitive-family metadata
+- ecosystem-survey source rows that map external platform references to
+  primitive-family hints
 - connectivity and supervision hints
 - first-party rollout seed entries
 - alias entries for virtual/product integrations

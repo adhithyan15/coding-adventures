@@ -18,6 +18,10 @@ runtime and Chief of Staff tools a typed catalog for:
   local actuation, entry access, radio networks, and infrastructure control
 - read-only D18D tool descriptors for listing/describing integrations and
   primitive families
+- typed ecosystem-survey source rows that map Home Assistant, Hubitat, Homey
+  Pro, SmartThings, openHAB, Homebridge, ioBroker, Domoticz, Jeedom, HomeSeer,
+  Apple Home, Google Home, Alexa, Z-Wave Alliance, and Thread Group references
+  to reusable primitive-family hints
 - first-party rollout seed entries
 - virtual product aliases that point to real implementations or standards
 
