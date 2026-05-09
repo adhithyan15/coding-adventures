@@ -8,13 +8,20 @@ use board_vm_host::{
     DEFAULT_RUN_FLAGS,
 };
 use board_vm_language_core::{
-    build_blink_module, build_caps_query_wire_frame, build_hello_wire_frame,
+    board_family_name, build_blink_module, build_caps_query_wire_frame, build_hello_wire_frame,
     build_program_begin_wire_frame, build_program_chunk_wire_frame, build_program_end_wire_frame,
-    build_run_wire_frame, BoardVmLanguageSession, BuiltWireFrame, LanguageCoreError,
+    build_run_wire_frame, connection_options_for_target, connection_transport_name, detect_target,
+    discover_devices, discover_devices_from_paths, esp_upload_options_for_target, known_targets,
+    onboard_led_kind, pico_uf2_upload_options_for_target, wireless_transport_name,
+    BoardVmLanguageSession, BuiltWireFrame, LanguageConnectionOption, LanguageCoreError,
+    LanguageEspUploadOptions, LanguageHostDevice, LanguageOnboardLed, LanguagePicoUf2UploadOptions,
+    LanguageTargetInfo, LanguageWirelessInterface,
 };
 use lua_bridge::{
-    get_str, luaL_Reg, luaL_checkinteger, lua_Integer, lua_State, lua_gettop, lua_pushinteger,
-    lua_pushlstring, lua_setfield, lua_tolstring, raise_error, register_lib,
+    get_str, luaL_Reg, luaL_checkinteger, lua_Integer, lua_State, lua_createtable, lua_gettop,
+    lua_pop, lua_pushboolean, lua_pushinteger, lua_pushlstring, lua_pushnil, lua_rawgeti,
+    lua_rawlen, lua_rawseti, lua_setfield, lua_tolstring, lua_type, push_str, raise_error,
+    register_lib, LUA_TTABLE,
 };
 
 unsafe fn check_u8(L: *mut lua_State, index: c_int, name: &str) -> u8 {
@@ -60,10 +67,44 @@ unsafe fn set_int(L: *mut lua_State, key: &str, value: u64) {
     lua_setfield(L, -2, key.as_ptr());
 }
 
+unsafe fn set_str(L: *mut lua_State, key: &str, value: &str) {
+    let key = CString::new(key).unwrap();
+    push_str(L, value);
+    lua_setfield(L, -2, key.as_ptr());
+}
+
+unsafe fn set_bool(L: *mut lua_State, key: &str, value: bool) {
+    let key = CString::new(key).unwrap();
+    lua_pushboolean(L, i32::from(value));
+    lua_setfield(L, -2, key.as_ptr());
+}
+
 unsafe fn set_bytes(L: *mut lua_State, key: &str, value: &[u8]) {
     let key = CString::new(key).unwrap();
     push_bytes(L, value);
     lua_setfield(L, -2, key.as_ptr());
+}
+
+unsafe fn set_nil(L: *mut lua_State, key: &str) {
+    let key = CString::new(key).unwrap();
+    lua_pushnil(L);
+    lua_setfield(L, -2, key.as_ptr());
+}
+
+unsafe fn read_string_table(L: *mut lua_State, index: c_int, name: &str) -> Vec<String> {
+    if lua_type(L, index) != LUA_TTABLE {
+        raise_error(L, &format!("{name} must be a table of strings"));
+    }
+    let len = lua_rawlen(L, index);
+    let mut values = Vec::with_capacity(len as usize);
+    for i in 1..=len {
+        lua_rawgeti(L, index, i);
+        let value = get_str(L, -1)
+            .unwrap_or_else(|| raise_error(L, &format!("{name}[{i}] must be a string")));
+        values.push(value);
+        lua_pop(L, 1);
+    }
+    values
 }
 
 fn core_result<T>(L: *mut lua_State, result: Result<T, LanguageCoreError>) -> T {
@@ -85,6 +126,214 @@ unsafe fn push_wire_result(
     set_bytes(L, "frame", &wire[..built.len]);
     set_int(L, "request_id", built.request_id as u64);
     set_int(L, "next_request_id", session.next_request_id() as u64);
+    1
+}
+
+unsafe fn push_string_array(L: *mut lua_State, values: &[String]) {
+    lua_createtable(L, values.len() as c_int, 0);
+    for (index, value) in values.iter().enumerate() {
+        push_str(L, value);
+        lua_rawseti(L, -2, (index + 1) as lua_Integer);
+    }
+}
+
+unsafe fn push_onboard_led(L: *mut lua_State, led: Option<LanguageOnboardLed>) {
+    match led {
+        Some(led) => {
+            lua_bridge::lua_newtable(L);
+            set_str(L, "kind", onboard_led_kind(led));
+            let pin = match led {
+                LanguageOnboardLed::Gpio(pin) | LanguageOnboardLed::WirelessChipGpio(pin) => pin,
+            };
+            set_int(L, "pin", pin as u64);
+        }
+        None => lua_pushnil(L),
+    }
+}
+
+unsafe fn push_wireless_interface(L: *mut lua_State, interface: &LanguageWirelessInterface) {
+    lua_bridge::lua_newtable(L);
+    set_str(L, "transport", wireless_transport_name(interface.transport));
+    set_str(L, "chip", &interface.chip);
+    set_bool(L, "command_transport", interface.command_transport);
+    set_bool(L, "ota_update", interface.ota_update);
+}
+
+unsafe fn push_wireless_interfaces(L: *mut lua_State, interfaces: &[LanguageWirelessInterface]) {
+    lua_createtable(L, interfaces.len() as c_int, 0);
+    for (index, interface) in interfaces.iter().enumerate() {
+        push_wireless_interface(L, interface);
+        lua_rawseti(L, -2, (index + 1) as lua_Integer);
+    }
+}
+
+unsafe fn push_connection_option(L: *mut lua_State, option: &LanguageConnectionOption) {
+    lua_bridge::lua_newtable(L);
+    set_str(L, "transport", connection_transport_name(option.transport));
+    set_str(L, "display_name", &option.display_name);
+    set_bool(L, "command_transport", option.command_transport);
+    set_bool(L, "ota_update", option.ota_update);
+    set_str(L, "requires", &option.requires);
+}
+
+unsafe fn push_connection_options(L: *mut lua_State, options: &[LanguageConnectionOption]) {
+    lua_createtable(L, options.len() as c_int, 0);
+    for (index, option) in options.iter().enumerate() {
+        push_connection_option(L, option);
+        lua_rawseti(L, -2, (index + 1) as lua_Integer);
+    }
+}
+
+unsafe fn push_target(L: *mut lua_State, target: &LanguageTargetInfo) {
+    lua_bridge::lua_newtable(L);
+    set_str(L, "board_id", &target.board_id);
+    set_str(L, "display_name", &target.display_name);
+    set_str(L, "family", board_family_name(target.family));
+    set_str(L, "runtime_id", &target.runtime_id);
+    set_str(L, "mcu", &target.mcu);
+    set_str(L, "core", &target.core);
+    set_str(L, "rust_target", &target.rust_target);
+    set_int(L, "clock_hz", target.clock_hz as u64);
+    set_int(
+        L,
+        "operating_voltage_mv",
+        target.operating_voltage_mv as u64,
+    );
+    set_int(L, "digital_pin_count", target.digital_pin_count as u64);
+
+    let key = CString::new("onboard_led").unwrap();
+    push_onboard_led(L, target.onboard_led);
+    lua_setfield(L, -2, key.as_ptr());
+
+    let key = CString::new("wireless").unwrap();
+    push_wireless_interfaces(L, &target.wireless);
+    lua_setfield(L, -2, key.as_ptr());
+
+    let key = CString::new("connection_options").unwrap();
+    push_connection_options(L, &target.connection_options);
+    lua_setfield(L, -2, key.as_ptr());
+
+    let key = CString::new("capabilities").unwrap();
+    push_string_array(L, &target.capabilities);
+    lua_setfield(L, -2, key.as_ptr());
+}
+
+unsafe fn push_targets(L: *mut lua_State, targets: &[LanguageTargetInfo]) {
+    lua_createtable(L, targets.len() as c_int, 0);
+    for (index, target) in targets.iter().enumerate() {
+        push_target(L, target);
+        lua_rawseti(L, -2, (index + 1) as lua_Integer);
+    }
+}
+
+unsafe fn push_esp_upload_options(L: *mut lua_State, options: &LanguageEspUploadOptions) {
+    lua_bridge::lua_newtable(L);
+    set_str(L, "board_id", &options.board_id);
+    set_int(L, "baud_rate", options.baud_rate as u64);
+    set_int(L, "timeout_ms", options.timeout_ms);
+    set_bool(L, "reset_into_bootloader", options.reset_into_bootloader);
+    set_int(L, "offset", options.offset as u64);
+    set_int(L, "block_size", options.block_size as u64);
+    match options.flash_size {
+        Some(size) => set_int(L, "flash_size", size as u64),
+        None => set_nil(L, "flash_size"),
+    }
+    set_bool(L, "verify_md5", options.verify_md5);
+    set_bool(L, "stay_in_bootloader", options.stay_in_bootloader);
+}
+
+unsafe fn push_pico_uf2_upload_options(L: *mut lua_State, options: &LanguagePicoUf2UploadOptions) {
+    lua_bridge::lua_newtable(L);
+    set_str(L, "board_id", &options.board_id);
+    set_str(L, "command", &options.command);
+    set_str(L, "volume_label", &options.volume_label);
+    set_str(L, "image_extension", &options.image_extension);
+    set_bool(L, "auto_detect_mount", options.auto_detect_mount);
+}
+
+unsafe fn push_device(L: *mut lua_State, device: &LanguageHostDevice) {
+    lua_bridge::lua_newtable(L);
+    set_str(L, "id", &device.id);
+    set_str(L, "port", &device.port);
+    set_str(L, "transport", &device.transport);
+    set_str(L, "display_name", &device.display_name);
+    set_int(L, "target_confidence", device.target_confidence as u64);
+    set_bool(L, "bootloader", device.bootloader);
+
+    let key = CString::new("target").unwrap();
+    if let Some(target) = &device.target {
+        push_target(L, target);
+    } else {
+        lua_pushnil(L);
+    }
+    lua_setfield(L, -2, key.as_ptr());
+
+    let key = CString::new("tags").unwrap();
+    push_string_array(L, &device.tags);
+    lua_setfield(L, -2, key.as_ptr());
+}
+
+unsafe fn push_devices(L: *mut lua_State, devices: &[LanguageHostDevice]) {
+    lua_createtable(L, devices.len() as c_int, 0);
+    for (index, device) in devices.iter().enumerate() {
+        push_device(L, device);
+        lua_rawseti(L, -2, (index + 1) as lua_Integer);
+    }
+}
+
+unsafe extern "C" fn lua_known_targets(L: *mut lua_State) -> c_int {
+    let targets = known_targets();
+    push_targets(L, &targets);
+    1
+}
+
+unsafe extern "C" fn lua_detect_target(L: *mut lua_State) -> c_int {
+    let selector = get_str(L, 1).unwrap_or_else(|| raise_error(L, "selector must be a string"));
+    match detect_target(&selector) {
+        Some(target) => push_target(L, &target),
+        None => lua_pushnil(L),
+    }
+    1
+}
+
+unsafe extern "C" fn lua_connection_options(L: *mut lua_State) -> c_int {
+    let selector = get_str(L, 1).unwrap_or_else(|| raise_error(L, "selector must be a string"));
+    match connection_options_for_target(&selector) {
+        Some(options) => push_connection_options(L, &options),
+        None => raise_error(L, &format!("unsupported board: {selector}")),
+    }
+    1
+}
+
+unsafe extern "C" fn lua_esp_upload_options(L: *mut lua_State) -> c_int {
+    let selector = get_str(L, 1).unwrap_or_else(|| raise_error(L, "selector must be a string"));
+    match esp_upload_options_for_target(&selector) {
+        Some(options) => push_esp_upload_options(L, &options),
+        None => lua_pushnil(L),
+    }
+    1
+}
+
+unsafe extern "C" fn lua_pico_uf2_upload_options(L: *mut lua_State) -> c_int {
+    let selector = get_str(L, 1).unwrap_or_else(|| raise_error(L, "selector must be a string"));
+    match pico_uf2_upload_options_for_target(&selector) {
+        Some(options) => push_pico_uf2_upload_options(L, &options),
+        None => lua_pushnil(L),
+    }
+    1
+}
+
+unsafe extern "C" fn lua_devices(L: *mut lua_State) -> c_int {
+    let _ = lua_gettop(L);
+    let devices = discover_devices();
+    push_devices(L, &devices);
+    1
+}
+
+unsafe extern "C" fn lua_classify_devices(L: *mut lua_State) -> c_int {
+    let paths = read_string_table(L, 1, "paths");
+    let devices = discover_devices_from_paths(paths);
+    push_devices(L, &devices);
     1
 }
 
@@ -201,10 +450,38 @@ unsafe extern "C" fn lua_defaults(L: *mut lua_State) -> c_int {
     1
 }
 
-struct FuncTable([luaL_Reg; 9]);
+struct FuncTable([luaL_Reg; 16]);
 unsafe impl Sync for FuncTable {}
 
 static FUNCS: FuncTable = FuncTable([
+    luaL_Reg {
+        name: b"known_targets\0".as_ptr() as *const _,
+        func: Some(lua_known_targets),
+    },
+    luaL_Reg {
+        name: b"detect_target\0".as_ptr() as *const _,
+        func: Some(lua_detect_target),
+    },
+    luaL_Reg {
+        name: b"connection_options\0".as_ptr() as *const _,
+        func: Some(lua_connection_options),
+    },
+    luaL_Reg {
+        name: b"esp_upload_options\0".as_ptr() as *const _,
+        func: Some(lua_esp_upload_options),
+    },
+    luaL_Reg {
+        name: b"pico_uf2_upload_options\0".as_ptr() as *const _,
+        func: Some(lua_pico_uf2_upload_options),
+    },
+    luaL_Reg {
+        name: b"devices\0".as_ptr() as *const _,
+        func: Some(lua_devices),
+    },
+    luaL_Reg {
+        name: b"classify_devices\0".as_ptr() as *const _,
+        func: Some(lua_classify_devices),
+    },
     luaL_Reg {
         name: b"hello_wire\0".as_ptr() as *const _,
         func: Some(lua_hello_wire),
