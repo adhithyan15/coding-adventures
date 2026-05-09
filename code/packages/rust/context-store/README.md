@@ -23,6 +23,7 @@ Chief of Staff runtime needs.
 - `create_session()`
 - `open_session()`
 - `append_entry()`
+- `fetch_entries()`
 - `fetch_ordered_entries()`
 - `create_snapshot()`
 - `fetch_latest_snapshot()`

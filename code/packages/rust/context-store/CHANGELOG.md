@@ -10,5 +10,7 @@ All notable changes to this package will be documented in this file.
 - `ContextSession`, `ContextEntry`, and `ContextSnapshot` record models
 - `ContextStore` with session creation, transcript append/list, snapshot
   creation, compaction checkpoints, and archive support
+- Bounded transcript window reads with optional `after_entry_id` cursor and
+  positive limit validation for D18D `context.read_entries` callers
 - JSON encoding/decoding on top of `storage-core`
 - Unit tests using `storage-core::InMemoryStorageBackend`
