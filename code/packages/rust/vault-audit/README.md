@@ -75,6 +75,9 @@ without breaking the wire format:
   queries belong in a higher tier.
 - Not a clock: `record(event, timestamp_ms)` takes time as a
   parameter so the crate stays deterministic and capability-free.
+- Not an indexed query engine, but it does provide payload-free
+  `AuditEntrySummary` and `AuditChainSummary` read models for
+  supervisor dashboards and higher-tier indexes.
 
 ## Where it fits
 

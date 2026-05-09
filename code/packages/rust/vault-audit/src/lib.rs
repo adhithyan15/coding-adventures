@@ -131,7 +131,7 @@
 
 use coding_adventures_blake2b::{blake2b, Blake2bOptions};
 use coding_adventures_zeroize::Zeroizing;
-use std::collections::VecDeque;
+use std::collections::{BTreeSet, VecDeque};
 use std::sync::{Mutex, MutexGuard, PoisonError};
 
 /// Best-effort mutex lock: if the mutex was poisoned by a panic
@@ -267,6 +267,103 @@ pub struct SignedAuditEntry {
     pub signature: [u8; ED25519_SIG_LEN],
 }
 
+/// Payload-free read model for a signed audit entry.
+///
+/// This is intended for dashboards, supervisor checks, and indexed
+/// read models that need to inspect the audit trail without copying
+/// arbitrary `detail` payload bytes through every read path.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct AuditEntrySummary {
+    /// Monotonic sequence number of the entry.
+    pub seq: u64,
+    /// Wall-clock timestamp of the entry, ms since UNIX epoch.
+    pub timestamp_ms: u64,
+    /// Principal recorded by the event.
+    pub principal: String,
+    /// Stable action label such as `auth_succeed` or `engine_mint`.
+    pub action_label: String,
+    /// Whether the original event carried a resource reference.
+    pub has_resource: bool,
+    /// Length of the resource string when present.
+    pub resource_len: usize,
+    /// Whether the original event carried detail bytes.
+    pub has_detail: bool,
+    /// Length of detail bytes when present.
+    pub detail_len: usize,
+    /// Public key of the signer embedded in the signed entry.
+    pub signer_pub: [u8; ED25519_PUB_LEN],
+    /// Chain-link hash stored on this entry.
+    pub prev_hash: [u8; AUDIT_HASH_LEN],
+}
+
+impl SignedAuditEntry {
+    /// Return a payload-free summary of this signed entry.
+    pub fn summary(&self) -> AuditEntrySummary {
+        AuditEntrySummary {
+            seq: self.entry.seq,
+            timestamp_ms: self.entry.timestamp_ms,
+            principal: self.entry.event.principal.clone(),
+            action_label: action_label(&self.entry.event.action).to_string(),
+            has_resource: self.entry.event.resource.is_some(),
+            resource_len: self.entry.event.resource.as_ref().map_or(0, String::len),
+            has_detail: self.entry.event.detail.is_some(),
+            detail_len: self.entry.event.detail.as_ref().map_or(0, Vec::len),
+            signer_pub: self.signer_pub,
+            prev_hash: self.entry.prev_hash,
+        }
+    }
+}
+
+/// Aggregate, payload-free read model for a full audit chain.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct AuditChainSummary {
+    /// Number of signed entries observed.
+    pub entry_count: usize,
+    /// First sequence number, if the chain is non-empty.
+    pub first_seq: Option<u64>,
+    /// Last sequence number, if the chain is non-empty.
+    pub last_seq: Option<u64>,
+    /// First timestamp, if the chain is non-empty.
+    pub first_timestamp_ms: Option<u64>,
+    /// Last timestamp, if the chain is non-empty.
+    pub last_timestamp_ms: Option<u64>,
+    /// Number of distinct principals in the entries.
+    pub unique_principal_count: usize,
+    /// Number of distinct signer public keys in the entries.
+    pub unique_signer_count: usize,
+    /// Number of auth success/failure events.
+    pub auth_event_count: usize,
+    /// Number of policy allow/deny events.
+    pub policy_decision_count: usize,
+    /// Number of engine mint/revoke/rotate-root events.
+    pub engine_event_count: usize,
+    /// Number of lease consume/revoke events.
+    pub lease_event_count: usize,
+    /// Number of sealed read/write events.
+    pub sealed_record_event_count: usize,
+    /// Number of caller-defined `Other` events.
+    pub other_event_count: usize,
+    /// Total detail byte length across all entries.
+    pub total_detail_len: usize,
+}
+
+impl AuditChainSummary {
+    /// Return whether this summary contains at least one entry.
+    pub fn has_entries(&self) -> bool {
+        self.entry_count > 0
+    }
+
+    /// Return whether all observed entries were signed by one key.
+    pub fn is_single_signer(&self) -> bool {
+        self.unique_signer_count <= 1
+    }
+
+    /// Return whether the chain contains entries from multiple signers.
+    pub fn signer_changed(&self) -> bool {
+        self.unique_signer_count > 1
+    }
+}
+
 /// Length in bytes of an audit hash (blake2b-256).
 pub const AUDIT_HASH_LEN: usize = 32;
 /// Ed25519 public-key length.
@@ -388,6 +485,23 @@ fn action_tag(a: &AuditAction) -> (u8, &str) {
     }
 }
 
+fn action_label(a: &AuditAction) -> &str {
+    match a {
+        AuditAction::AuthSucceed => "auth_succeed",
+        AuditAction::AuthFail => "auth_fail",
+        AuditAction::PolicyAllow => "policy_allow",
+        AuditAction::PolicyDeny => "policy_deny",
+        AuditAction::EngineMint => "engine_mint",
+        AuditAction::EngineRevoke => "engine_revoke",
+        AuditAction::EngineRotateRoot => "engine_rotate_root",
+        AuditAction::LeaseConsume => "lease_consume",
+        AuditAction::LeaseRevoke => "lease_revoke",
+        AuditAction::SealedWrite => "sealed_write",
+        AuditAction::SealedRead => "sealed_read",
+        AuditAction::Other(label) => label.as_str(),
+    }
+}
+
 impl AuditEntry {
     /// Canonical byte form of this entry. The signature is over
     /// these bytes; the chain hash binds to them. Two equal
@@ -447,8 +561,8 @@ fn chain_hash(prev_canonical: &[u8], next_body: &[u8]) -> [u8; AUDIT_HASH_LEN] {
     let mut buf = Vec::with_capacity(prev_canonical.len() + next_body.len());
     buf.extend_from_slice(prev_canonical);
     buf.extend_from_slice(next_body);
-    let h =
-        blake2b(&buf, &Blake2bOptions::new().digest_size(AUDIT_HASH_LEN)).expect("blake2b cannot fail with valid options");
+    let h = blake2b(&buf, &Blake2bOptions::new().digest_size(AUDIT_HASH_LEN))
+        .expect("blake2b cannot fail with valid options");
     let mut out = [0u8; AUDIT_HASH_LEN];
     out.copy_from_slice(&h);
     out
@@ -527,6 +641,20 @@ pub trait AuditSink: Send + Sync {
     /// stores should override this to stream — but for the
     /// reference implementation we materialize.
     fn entries(&self) -> Result<Vec<SignedAuditEntry>, AuditError>;
+
+    /// All entries projected into payload-free summaries.
+    fn entry_summaries(&self) -> Result<Vec<AuditEntrySummary>, AuditError> {
+        Ok(self
+            .entries()?
+            .iter()
+            .map(SignedAuditEntry::summary)
+            .collect())
+    }
+
+    /// Payload-free aggregate summary for the full chain.
+    fn chain_summary(&self) -> Result<AuditChainSummary, AuditError> {
+        Ok(summarize_entries(&self.entries()?))
+    }
 
     /// Read the most recent entry (if any). Default: pull all
     /// entries and return the last; sinks with cheap tail
@@ -784,11 +912,15 @@ fn validate_event(ev: &AuditEvent) -> Result<(), AuditError> {
         return Err(AuditError::InvalidEvent("principal must not be empty"));
     }
     if ev.principal.len() > MAX_PRINCIPAL_LEN {
-        return Err(AuditError::InvalidEvent("principal exceeds MAX_PRINCIPAL_LEN"));
+        return Err(AuditError::InvalidEvent(
+            "principal exceeds MAX_PRINCIPAL_LEN",
+        ));
     }
     if let Some(r) = &ev.resource {
         if r.len() > MAX_RESOURCE_LEN {
-            return Err(AuditError::InvalidEvent("resource exceeds MAX_RESOURCE_LEN"));
+            return Err(AuditError::InvalidEvent(
+                "resource exceeds MAX_RESOURCE_LEN",
+            ));
         }
     }
     if let Some(d) = &ev.detail {
@@ -860,11 +992,8 @@ pub fn verify_chain(
         }
         // Signature check.
         let canonical = signed.entry.canonical_bytes();
-        let ok = coding_adventures_ed25519::verify(
-            &canonical,
-            &signed.signature,
-            &signed.signer_pub,
-        );
+        let ok =
+            coding_adventures_ed25519::verify(&canonical, &signed.signature, &signed.signer_pub);
         if !ok {
             return Err(AuditError::VerificationFailed(
                 "Ed25519 signature did not verify",
@@ -873,6 +1002,55 @@ pub fn verify_chain(
         prev_canonical = canonical;
     }
     Ok(())
+}
+
+/// Build a payload-free aggregate summary for a slice of entries.
+///
+/// This function does not verify the chain; callers that need integrity
+/// should run [`verify_chain`] first or use a sink that is already trusted.
+pub fn summarize_entries(entries: &[SignedAuditEntry]) -> AuditChainSummary {
+    let mut principals = BTreeSet::new();
+    let mut signers = BTreeSet::new();
+    let mut summary = AuditChainSummary {
+        entry_count: entries.len(),
+        first_seq: entries.first().map(|entry| entry.entry.seq),
+        last_seq: entries.last().map(|entry| entry.entry.seq),
+        first_timestamp_ms: entries.first().map(|entry| entry.entry.timestamp_ms),
+        last_timestamp_ms: entries.last().map(|entry| entry.entry.timestamp_ms),
+        unique_principal_count: 0,
+        unique_signer_count: 0,
+        auth_event_count: 0,
+        policy_decision_count: 0,
+        engine_event_count: 0,
+        lease_event_count: 0,
+        sealed_record_event_count: 0,
+        other_event_count: 0,
+        total_detail_len: 0,
+    };
+
+    for signed in entries {
+        principals.insert(signed.entry.event.principal.as_str());
+        signers.insert(signed.signer_pub);
+        summary.total_detail_len += signed.entry.event.detail.as_ref().map_or(0, Vec::len);
+        match &signed.entry.event.action {
+            AuditAction::AuthSucceed | AuditAction::AuthFail => summary.auth_event_count += 1,
+            AuditAction::PolicyAllow | AuditAction::PolicyDeny => {
+                summary.policy_decision_count += 1;
+            }
+            AuditAction::EngineMint | AuditAction::EngineRevoke | AuditAction::EngineRotateRoot => {
+                summary.engine_event_count += 1
+            }
+            AuditAction::LeaseConsume | AuditAction::LeaseRevoke => summary.lease_event_count += 1,
+            AuditAction::SealedWrite | AuditAction::SealedRead => {
+                summary.sealed_record_event_count += 1;
+            }
+            AuditAction::Other(_) => summary.other_event_count += 1,
+        }
+    }
+
+    summary.unique_principal_count = principals.len();
+    summary.unique_signer_count = signers.len();
+    summary
 }
 
 // === Section 9. Tests =======================================================
@@ -884,10 +1062,9 @@ mod tests {
     fn fixed_seed() -> [u8; 32] {
         // Deterministic test seed — never a production key.
         [
-            0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42,
-            0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42,
-            0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42,
-            0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42,
+            0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42,
+            0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42, 0x42,
+            0x42, 0x42, 0x42, 0x42,
         ]
     }
 
@@ -1105,7 +1282,9 @@ mod tests {
         }
 
         let chain1 = AuditChain::attach(key1, ArcSink(sink_arc.clone())).unwrap();
-        chain1.record(ev(AuditAction::AuthSucceed, None), 1).unwrap();
+        chain1
+            .record(ev(AuditAction::AuthSucceed, None), 1)
+            .unwrap();
         chain1.record(ev(AuditAction::EngineMint, None), 2).unwrap();
         drop(chain1);
 
@@ -1145,7 +1324,9 @@ mod tests {
         let sink_arc = std::sync::Arc::new(InMemoryAuditSink::new());
         let key1 = AuditSigningKey::from_seed(&fixed_seed());
         let chain1 = AuditChain::attach(key1, ArcSink(sink_arc.clone())).unwrap();
-        chain1.record(ev(AuditAction::AuthSucceed, None), 1).unwrap();
+        chain1
+            .record(ev(AuditAction::AuthSucceed, None), 1)
+            .unwrap();
         chain1.record(ev(AuditAction::EngineMint, None), 2).unwrap();
         drop(chain1);
 
@@ -1220,7 +1401,9 @@ mod tests {
         let sink_arc = std::sync::Arc::new(InMemoryAuditSink::new());
         let key1 = AuditSigningKey::from_seed(&fixed_seed());
         let chain1 = AuditChain::attach_unverified(key1, ArcSink(sink_arc.clone())).unwrap();
-        chain1.record(ev(AuditAction::AuthSucceed, None), 1).unwrap();
+        chain1
+            .record(ev(AuditAction::AuthSucceed, None), 1)
+            .unwrap();
         {
             let mut g = sink_arc.inner.lock().unwrap();
             g.back_mut().unwrap().entry.event.principal = "mallory".into();
@@ -1279,10 +1462,7 @@ mod tests {
             let chain = chain.clone();
             handles.push(thread::spawn(move || {
                 chain
-                    .record(
-                        ev(AuditAction::EngineMint, Some("kv/")),
-                        1_000 + i as u64,
-                    )
+                    .record(ev(AuditAction::EngineMint, Some("kv/")), 1_000 + i as u64)
                     .unwrap();
             }));
         }
@@ -1312,5 +1492,97 @@ mod tests {
         let chain = fresh();
         let s = chain.record(ev(AuditAction::AuthSucceed, None), 1).unwrap();
         assert_eq!(s.signer_pub, chain.signer_public());
+    }
+
+    #[test]
+    fn signed_entry_summary_omits_detail_bytes() {
+        let chain = fresh();
+        let signed = chain
+            .record(
+                AuditEvent {
+                    principal: "svc".into(),
+                    action: AuditAction::PolicyDeny,
+                    resource: Some("secret/data/demo".into()),
+                    detail: Some(b"request-id-123".to_vec()),
+                },
+                42,
+            )
+            .unwrap();
+
+        let summary = signed.summary();
+
+        assert_eq!(summary.seq, 0);
+        assert_eq!(summary.timestamp_ms, 42);
+        assert_eq!(summary.principal, "svc");
+        assert_eq!(summary.action_label, "policy_deny");
+        assert!(summary.has_resource);
+        assert_eq!(summary.resource_len, "secret/data/demo".len());
+        assert!(summary.has_detail);
+        assert_eq!(summary.detail_len, b"request-id-123".len());
+        assert_eq!(summary.signer_pub, chain.signer_public());
+        assert_eq!(summary.prev_hash, [0u8; AUDIT_HASH_LEN]);
+    }
+
+    #[test]
+    fn chain_summary_counts_security_event_families() {
+        let chain = fresh();
+        chain
+            .record(ev(AuditAction::AuthSucceed, None), 10)
+            .unwrap();
+        chain
+            .record(
+                AuditEvent {
+                    principal: "bob".into(),
+                    action: AuditAction::EngineMint,
+                    resource: Some("database/creds".into()),
+                    detail: Some(vec![1, 2, 3, 4]),
+                },
+                20,
+            )
+            .unwrap();
+        chain
+            .record(
+                ev(AuditAction::Other("custom".into()), Some("custom/resource")),
+                30,
+            )
+            .unwrap();
+
+        let entries = chain.sink().entries().unwrap();
+        let summary = summarize_entries(&entries);
+
+        assert_eq!(summary.entry_count, 3);
+        assert_eq!(summary.first_seq, Some(0));
+        assert_eq!(summary.last_seq, Some(2));
+        assert_eq!(summary.first_timestamp_ms, Some(10));
+        assert_eq!(summary.last_timestamp_ms, Some(30));
+        assert_eq!(summary.unique_principal_count, 2);
+        assert_eq!(summary.unique_signer_count, 1);
+        assert_eq!(summary.auth_event_count, 1);
+        assert_eq!(summary.engine_event_count, 1);
+        assert_eq!(summary.other_event_count, 1);
+        assert_eq!(summary.total_detail_len, 4);
+        assert!(summary.has_entries());
+        assert!(summary.is_single_signer());
+        assert!(!summary.signer_changed());
+    }
+
+    #[test]
+    fn audit_sink_default_summary_helpers_scan_entries() {
+        let chain = fresh();
+        chain
+            .record(ev(AuditAction::SealedWrite, Some("vault/item")), 10)
+            .unwrap();
+        chain
+            .record(ev(AuditAction::LeaseRevoke, Some("lease/1")), 20)
+            .unwrap();
+
+        let summaries = chain.sink().entry_summaries().unwrap();
+        assert_eq!(summaries.len(), 2);
+        assert_eq!(summaries[0].action_label, "sealed_write");
+        assert_eq!(summaries[1].action_label, "lease_revoke");
+
+        let summary = chain.sink().chain_summary().unwrap();
+        assert_eq!(summary.sealed_record_event_count, 1);
+        assert_eq!(summary.lease_event_count, 1);
     }
 }
