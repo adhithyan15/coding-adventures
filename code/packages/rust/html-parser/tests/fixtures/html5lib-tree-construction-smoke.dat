@@ -1271,3 +1271,15 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <code>
 |       <code>
 |         <strike>
+
+#data
+<!DOCTYPE html><spacer>foo
+#errors
+(1,26): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <spacer>
+|       "foo"
