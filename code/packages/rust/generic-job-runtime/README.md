@@ -28,6 +28,8 @@ targets.
   live workers, in-flight jobs, queued jobs, running jobs, and saturation.
 - Snapshot health classification for D18C supervisors to distinguish idle,
   busy, saturated, draining, and offline executors.
+- Snapshot supervision recommendations for backpressure, worker restart, and
+  graceful draining decisions.
 
 The crate does not know about TCP, RESP, Redis, IRC, or sockets. Those adapters
 submit typed job payloads and decide how to apply responses.

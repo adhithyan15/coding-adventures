@@ -82,6 +82,14 @@ pub enum ExecutorHealth {
     Offline,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ExecutorSupervisionAction {
+    None,
+    ObserveDraining,
+    ApplyBackpressure,
+    RestartWorkers,
+}
+
 impl ExecutorSnapshot {
     pub fn remaining_queue_capacity(&self) -> usize {
         self.max_queue_depth.saturating_sub(self.in_flight_jobs)
@@ -120,6 +128,23 @@ impl ExecutorSnapshot {
             self.health(),
             ExecutorHealth::Offline | ExecutorHealth::Saturated
         )
+    }
+
+    pub fn queue_pressure_percent(&self) -> u8 {
+        if self.max_queue_depth == 0 {
+            return 100;
+        }
+        let percent = self.in_flight_jobs.saturating_mul(100) / self.max_queue_depth;
+        percent.min(100) as u8
+    }
+
+    pub fn recommended_supervision_action(&self) -> ExecutorSupervisionAction {
+        match self.health() {
+            ExecutorHealth::Idle | ExecutorHealth::Busy => ExecutorSupervisionAction::None,
+            ExecutorHealth::Draining => ExecutorSupervisionAction::ObserveDraining,
+            ExecutorHealth::Saturated => ExecutorSupervisionAction::ApplyBackpressure,
+            ExecutorHealth::Offline => ExecutorSupervisionAction::RestartWorkers,
+        }
     }
 }
 
@@ -1628,6 +1653,11 @@ for line in sys.stdin:
             max_payload_bytes: 1024,
         };
         assert_eq!(idle.health(), ExecutorHealth::Idle);
+        assert_eq!(idle.queue_pressure_percent(), 0);
+        assert_eq!(
+            idle.recommended_supervision_action(),
+            ExecutorSupervisionAction::None
+        );
         assert!(idle.has_live_capacity());
         assert!(!idle.needs_supervisor_attention());
 
@@ -1638,13 +1668,35 @@ for line in sys.stdin:
         };
         assert_eq!(busy.health(), ExecutorHealth::Busy);
         assert_eq!(busy.pending_jobs(), 1);
+        assert_eq!(busy.queue_pressure_percent(), 25);
+        assert_eq!(
+            busy.recommended_supervision_action(),
+            ExecutorSupervisionAction::None
+        );
         assert!(busy.has_live_capacity());
+
+        let saturated = ExecutorSnapshot {
+            in_flight_jobs: 4,
+            queued_jobs: 3,
+            running_jobs: 1,
+            ..idle.clone()
+        };
+        assert_eq!(saturated.health(), ExecutorHealth::Saturated);
+        assert_eq!(saturated.queue_pressure_percent(), 100);
+        assert_eq!(
+            saturated.recommended_supervision_action(),
+            ExecutorSupervisionAction::ApplyBackpressure
+        );
 
         let offline = ExecutorSnapshot {
             live_workers: 0,
             ..idle.clone()
         };
         assert_eq!(offline.health(), ExecutorHealth::Offline);
+        assert_eq!(
+            offline.recommended_supervision_action(),
+            ExecutorSupervisionAction::RestartWorkers
+        );
         assert!(offline.needs_supervisor_attention());
 
         let draining = ExecutorSnapshot {
@@ -1653,6 +1705,10 @@ for line in sys.stdin:
             ..idle
         };
         assert_eq!(draining.health(), ExecutorHealth::Draining);
+        assert_eq!(
+            draining.recommended_supervision_action(),
+            ExecutorSupervisionAction::ObserveDraining
+        );
         assert!(!draining.has_live_capacity());
         assert!(!draining.needs_supervisor_attention());
     }
