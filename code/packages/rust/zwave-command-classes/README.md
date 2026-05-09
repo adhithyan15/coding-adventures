@@ -9,12 +9,12 @@ correlation, inclusion, or S2 security.
 Included surfaces:
 
 - command-class command parse/encode helpers
-- binary switch, multilevel switch, and door lock get/set builders, plus a
-  battery get builder
+- binary switch, multilevel switch, and door lock get/set builders, plus
+  battery and meter get builders
 - command-class interview descriptors for state-query commands and D23
   capability projection
 - value-report parsing for Basic, Switch Binary, Switch Multilevel, Sensor
-  Binary, Sensor Multilevel, Door Lock, Battery, and Notification
+  Binary, Sensor Multilevel, Door Lock, Battery, Meter, and Notification
 - Z-Wave level/boolean/door-lock normalization helpers
 - D23 capability projection for common command classes
 - D23 `StateDelta` projection for common value reports
