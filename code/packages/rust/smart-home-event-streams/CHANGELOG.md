@@ -9,6 +9,8 @@ All notable changes to this package will be documented in this file.
 - Event stream transport, status, cursor, and checkpoint primitives.
 - Deterministic stream specifications for Hue-style SSE, WebSocket, MQTT,
   cloud push, serial, and radio report workers.
+- MQTT topic filter, subscription, QoS, retain-policy, and publication cursor
+  primitives.
 - Bounded reconnect policy with deterministic exponential backoff.
 - Event stream runtime state helpers for connection, heartbeat, event, gap,
   disconnect, stale-state, and restart-plan decisions.
