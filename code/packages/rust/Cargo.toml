@@ -511,6 +511,7 @@ members = [
     "cas-limit-series",
     "cas-mnewton",
     "cas-ode-numeric",
+    "cas-summation",
     "cas-pretty-printer",
     "cas-number-theory",
     "cas-complex",
