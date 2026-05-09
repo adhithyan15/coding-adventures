@@ -26,6 +26,71 @@ impl FunctionId {
     pub const REQUEST_NODE_INFO: Self = Self(0x60);
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum SerialApiBootstrapStep {
+    GetVersion,
+    MemoryGetId,
+    GetControllerCapabilities,
+    SerialApiGetInitData,
+}
+
+impl SerialApiBootstrapStep {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::GetVersion => "get_version",
+            Self::MemoryGetId => "memory_get_id",
+            Self::GetControllerCapabilities => "get_controller_capabilities",
+            Self::SerialApiGetInitData => "serial_api_get_init_data",
+        }
+    }
+
+    pub fn function_id(self) -> FunctionId {
+        match self {
+            Self::GetVersion => FunctionId::GET_VERSION,
+            Self::MemoryGetId => FunctionId::MEMORY_GET_ID,
+            Self::GetControllerCapabilities => FunctionId::GET_CONTROLLER_CAPABILITIES,
+            Self::SerialApiGetInitData => FunctionId::SERIAL_API_GET_INIT_DATA,
+        }
+    }
+
+    pub fn request(self) -> SerialMessage {
+        match self {
+            Self::GetVersion => get_version_request(),
+            Self::MemoryGetId => memory_get_id_request(),
+            Self::GetControllerCapabilities => get_controller_capabilities_request(),
+            Self::SerialApiGetInitData => serial_api_get_init_data_request(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SerialApiBootstrapRequest {
+    pub step: SerialApiBootstrapStep,
+    pub message: SerialMessage,
+}
+
+pub const DEFAULT_BOOTSTRAP_STEPS: [SerialApiBootstrapStep; 4] = [
+    SerialApiBootstrapStep::GetVersion,
+    SerialApiBootstrapStep::MemoryGetId,
+    SerialApiBootstrapStep::GetControllerCapabilities,
+    SerialApiBootstrapStep::SerialApiGetInitData,
+];
+
+pub fn default_bootstrap_steps() -> &'static [SerialApiBootstrapStep] {
+    &DEFAULT_BOOTSTRAP_STEPS
+}
+
+pub fn serial_api_bootstrap_requests() -> Vec<SerialApiBootstrapRequest> {
+    default_bootstrap_steps()
+        .iter()
+        .copied()
+        .map(|step| SerialApiBootstrapRequest {
+            step,
+            message: step.request(),
+        })
+        .collect()
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SerialMessageKind {
     Request,
@@ -842,6 +907,42 @@ mod tests {
             assert_eq!(request.callback_id, None);
             assert!(request.payload.is_empty());
         }
+    }
+
+    #[test]
+    fn bootstrap_plan_orders_controller_startup_requests() {
+        let steps = default_bootstrap_steps();
+        let requests = serial_api_bootstrap_requests();
+
+        assert_eq!(
+            steps,
+            &[
+                SerialApiBootstrapStep::GetVersion,
+                SerialApiBootstrapStep::MemoryGetId,
+                SerialApiBootstrapStep::GetControllerCapabilities,
+                SerialApiBootstrapStep::SerialApiGetInitData,
+            ]
+        );
+        assert_eq!(requests.len(), steps.len());
+        assert_eq!(requests[0].step.as_str(), "get_version");
+        assert!(requests.iter().all(|request| {
+            request.message.kind == SerialMessageKind::Request
+                && request.message.callback_id.is_none()
+                && request.message.payload.is_empty()
+                && request.message.function_id == request.step.function_id()
+        }));
+        assert_eq!(
+            requests
+                .iter()
+                .map(|request| request.message.function_id)
+                .collect::<Vec<_>>(),
+            vec![
+                FunctionId::GET_VERSION,
+                FunctionId::MEMORY_GET_ID,
+                FunctionId::GET_CONTROLLER_CAPABILITIES,
+                FunctionId::SERIAL_API_GET_INIT_DATA,
+            ]
+        );
     }
 
     #[test]

@@ -17,3 +17,5 @@ All notable changes to this package will be documented in this file.
   request, response, callback, and transmit-option primitives.
 - SendData transaction state machine for accepted responses, terminal callback
   outcomes, callback-id mismatches, and timeout expiry.
+- Deterministic bootstrap request plan for controller startup using version,
+  Memory Get ID, controller capabilities, and init-data requests.
