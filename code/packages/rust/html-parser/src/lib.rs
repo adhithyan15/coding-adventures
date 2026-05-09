@@ -711,6 +711,7 @@ pub fn parse_html_fragment_with_diagnostics_and_options(
 pub struct HtmlParser {
     document: Document,
     open_elements: Vec<Vec<usize>>,
+    pending_formatting_reconstruction: Vec<(String, Vec<Attribute>)>,
     diagnostics: Vec<ParserDiagnostic>,
     options: HtmlParseOptions,
     strip_next_leading_lf: bool,
@@ -746,6 +747,7 @@ impl HtmlParser {
         Self {
             document,
             open_elements: vec![vec![0], vec![0, 1]],
+            pending_formatting_reconstruction: Vec::new(),
             diagnostics: Vec::new(),
             options,
             strip_next_leading_lf: false,
@@ -810,6 +812,7 @@ impl HtmlParser {
     ) {
         self.apply_document_shell_implied_contexts(&name);
         self.apply_table_implied_contexts(&name);
+        let formatting_inside = self.take_formatting_reconstruction_inside_for(&name);
         self.apply_simple_implied_end_tags(&name);
         if self.apply_interactive_implied_contexts(&name) {
             return;
@@ -844,7 +847,7 @@ impl HtmlParser {
             return;
         }
 
-        let formatting_reconstruction = self.take_formatting_reconstruction_for(&name);
+        self.reconstruct_formatting_before_if_needed(&name);
 
         let acknowledges_self_closing = self_closing && is_void_element(&name);
         if self_closing && !acknowledges_self_closing {
@@ -862,7 +865,7 @@ impl HtmlParser {
             self.open_elements.push(path);
         }
 
-        if let Some((formatting_name, formatting_attributes)) = formatting_reconstruction {
+        for (formatting_name, formatting_attributes) in formatting_inside {
             let child_index =
                 self.append_node(Node::element(formatting_name, formatting_attributes));
             let mut path = self.current_parent_path().to_vec();
@@ -954,23 +957,43 @@ impl HtmlParser {
         true
     }
 
-    fn take_formatting_reconstruction_for(
+    fn take_formatting_reconstruction_inside_for(
         &mut self,
         incoming_name: &str,
-    ) -> Option<(String, Vec<Attribute>)> {
-        if !starts_formatting_reconstruction_boundary(incoming_name) {
-            return None;
+    ) -> Vec<(String, Vec<Attribute>)> {
+        if !starts_inner_formatting_reconstruction_boundary(incoming_name) {
+            return Vec::new();
         }
 
-        let path = self.open_elements.last()?.clone();
-        let element = element_ref_at_path(&self.document, &path)?;
-        if !is_formatting_element(&element.name) {
-            return None;
+        let mut formatting = Vec::new();
+        while let Some(path) = self.open_elements.last() {
+            let Some(element) = element_ref_at_path(&self.document, path) else {
+                break;
+            };
+            if !is_formatting_element(&element.name) {
+                break;
+            }
+            formatting.push((element.name.clone(), element.attributes.clone()));
+            self.open_elements.pop();
         }
 
-        let formatting = (element.name.clone(), element.attributes.clone());
-        self.open_elements.pop();
-        Some(formatting)
+        formatting.reverse();
+        formatting
+    }
+
+    fn reconstruct_formatting_before_if_needed(&mut self, incoming_name: &str) {
+        if !starts_before_formatting_reconstruction_boundary(incoming_name) {
+            return;
+        }
+
+        let formatting = std::mem::take(&mut self.pending_formatting_reconstruction);
+        for (formatting_name, formatting_attributes) in formatting {
+            let child_index =
+                self.append_node(Node::element(formatting_name, formatting_attributes));
+            let mut path = self.current_parent_path().to_vec();
+            path.push(child_index);
+            self.open_elements.push(path);
+        }
     }
 
     fn apply_document_shell_implied_contexts(&mut self, incoming_name: &str) {
@@ -1154,8 +1177,26 @@ impl HtmlParser {
         }) else {
             return false;
         };
+        self.capture_formatting_above(index);
         self.open_elements.truncate(index);
         true
+    }
+
+    fn capture_formatting_above(&mut self, element_index: usize) {
+        let formatting = self
+            .open_elements
+            .iter()
+            .skip(element_index + 1)
+            .filter_map(|path| {
+                let element = element_ref_at_path(&self.document, path)?;
+                is_formatting_element(&element.name)
+                    .then(|| (element.name.clone(), element.attributes.clone()))
+            })
+            .collect::<Vec<_>>();
+
+        if !formatting.is_empty() {
+            self.pending_formatting_reconstruction = formatting;
+        }
     }
 
     fn has_open_element(&self, name: &str) -> bool {
@@ -1470,12 +1511,16 @@ fn is_formatting_element(name: &str) -> bool {
     )
 }
 
-fn starts_formatting_reconstruction_boundary(name: &str) -> bool {
+fn starts_inner_formatting_reconstruction_boundary(name: &str) -> bool {
     matches!(name, "button" | "p")
 }
 
+fn starts_before_formatting_reconstruction_boundary(name: &str) -> bool {
+    matches!(name, "marquee")
+}
+
 fn is_special_element(name: &str) -> bool {
-    matches!(name, "button") || is_table_context_element(name)
+    matches!(name, "button" | "marquee") || is_table_context_element(name)
 }
 
 fn is_heading_element(name: &str) -> bool {
@@ -1709,7 +1754,10 @@ mod tests {
 
         let second_paragraph = element(&body.children[1]);
         assert_eq!(second_paragraph.name, "p");
-        assert_eq!(second_paragraph.children, vec![Node::text("Two")]);
+        assert_eq!(
+            element(&second_paragraph.children[0]).children,
+            vec![Node::text("Two")]
+        );
 
         let list = element(&body.children[2]);
         assert_eq!(list.name, "ul");
