@@ -16,4 +16,12 @@ local frames = session:blink_upload_run_frames({
     high_ms = 250,
     low_ms = 250,
 })
+
+local uno = board_vm.detect_target("uno-r4-wifi")
+print(uno.connection_options[1].display_name) -- USB/serial
+
+local devices = board_vm.devices({
+    "/dev/tty.usbserial-CP2102-esp32",
+})
+print(devices[1].target.board_id) -- esp32-devkit-v1
 ```

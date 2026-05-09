@@ -54,6 +54,33 @@ function M.defaults()
     return native().defaults()
 end
 
+function M.known_targets()
+    return native().known_targets()
+end
+
+function M.detect_target(selector)
+    return native().detect_target(selector)
+end
+
+function M.connection_options(selector)
+    return native().connection_options(selector)
+end
+
+function M.esp_upload_options(selector)
+    return native().esp_upload_options(selector or "esp32")
+end
+
+function M.pico_uf2_upload_options(selector)
+    return native().pico_uf2_upload_options(selector or "pico")
+end
+
+function M.devices(paths)
+    if paths then
+        return native().classify_devices(paths)
+    end
+    return native().devices()
+end
+
 local Session = {}
 Session.__index = Session
 
