@@ -286,7 +286,41 @@ pub struct AppendEntryInput {
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct FetchEntriesOptions {
     pub after_entry_id: Option<String>,
+    pub kinds: Vec<ContextEntryKind>,
+    pub since_timestamp: Option<TimestampMs>,
+    pub until_timestamp: Option<TimestampMs>,
     pub limit: Option<usize>,
+}
+
+impl FetchEntriesOptions {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn after_entry(mut self, entry_id: impl Into<String>) -> Self {
+        self.after_entry_id = Some(entry_id.into());
+        self
+    }
+
+    pub fn with_kind(mut self, kind: ContextEntryKind) -> Self {
+        self.kinds.push(kind);
+        self
+    }
+
+    pub fn since(mut self, timestamp: TimestampMs) -> Self {
+        self.since_timestamp = Some(timestamp);
+        self
+    }
+
+    pub fn until(mut self, timestamp: TimestampMs) -> Self {
+        self.until_timestamp = Some(timestamp);
+        self
+    }
+
+    pub fn limited_to(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
 }
 
 /// Input used when creating a snapshot.
@@ -445,12 +479,7 @@ impl<S: StorageBackend> ContextStore<S> {
         options: FetchEntriesOptions,
     ) -> Result<Vec<ContextEntry>, StorageError> {
         validate_id("session_id", session_id)?;
-        if let Some(after_entry_id) = options.after_entry_id.as_deref() {
-            validate_id("after_entry_id", after_entry_id)?;
-        }
-        if options.limit == Some(0) {
-            return Err(validation("limit", "must be greater than zero"));
-        }
+        validate_fetch_entries_options(&options)?;
 
         self.backend.initialize()?;
         let page = self.backend.list(
@@ -1002,6 +1031,24 @@ fn validate_snapshot_list_options(options: &SnapshotListOptions) -> Result<(), S
     Ok(())
 }
 
+fn validate_fetch_entries_options(options: &FetchEntriesOptions) -> Result<(), StorageError> {
+    if let Some(after_entry_id) = options.after_entry_id.as_deref() {
+        validate_id("after_entry_id", after_entry_id)?;
+    }
+    if options.limit == Some(0) {
+        return Err(validation("limit", "must be greater than zero"));
+    }
+    if let (Some(since), Some(until)) = (options.since_timestamp, options.until_timestamp) {
+        if since > until {
+            return Err(validation(
+                "timestamp_range",
+                "since_timestamp must be less than or equal to until_timestamp",
+            ));
+        }
+    }
+    Ok(())
+}
+
 fn session_matches_list_options(session: &ContextSession, options: &SessionListOptions) -> bool {
     if let Some(owner_id) = options.owner_id.as_deref() {
         if session.owner_id != owner_id {
@@ -1138,7 +1185,29 @@ fn window_entries(
     };
     let limit = options.limit.unwrap_or(usize::MAX);
 
-    Ok(entries.into_iter().skip(start).take(limit).collect())
+    Ok(entries
+        .into_iter()
+        .skip(start)
+        .filter(|entry| entry_matches_fetch_options(entry, &options))
+        .take(limit)
+        .collect())
+}
+
+fn entry_matches_fetch_options(entry: &ContextEntry, options: &FetchEntriesOptions) -> bool {
+    if !options.kinds.is_empty() && !options.kinds.contains(&entry.kind) {
+        return false;
+    }
+    if let Some(since) = options.since_timestamp {
+        if entry.timestamp < since {
+            return false;
+        }
+    }
+    if let Some(until) = options.until_timestamp {
+        if entry.timestamp > until {
+            return false;
+        }
+    }
+    true
 }
 
 fn validation(field: &str, message: impl Into<String>) -> StorageError {
@@ -1280,10 +1349,9 @@ mod tests {
         let entries = store
             .fetch_entries(
                 "demo",
-                FetchEntriesOptions {
-                    after_entry_id: Some("entry-1".to_string()),
-                    limit: Some(1),
-                },
+                FetchEntriesOptions::new()
+                    .after_entry("entry-1")
+                    .limited_to(1),
             )
             .unwrap();
         assert_eq!(
@@ -1295,13 +1363,7 @@ mod tests {
         );
 
         let entries = store
-            .fetch_entries(
-                "demo",
-                FetchEntriesOptions {
-                    after_entry_id: Some("entry-2".to_string()),
-                    limit: None,
-                },
-            )
+            .fetch_entries("demo", FetchEntriesOptions::new().after_entry("entry-2"))
             .unwrap();
         assert_eq!(
             entries
@@ -1309,6 +1371,78 @@ mod tests {
                 .map(|entry| entry.entry_id.as_str())
                 .collect::<Vec<_>>(),
             vec!["entry-3"]
+        );
+    }
+
+    #[test]
+    fn fetch_entries_supports_kind_and_timestamp_filters() {
+        let store = ContextStore::new(InMemoryStorageBackend::new());
+        let _ = store
+            .create_session(CreateSessionInput {
+                session_id: "demo".to_string(),
+                owner_id: "chief".to_string(),
+                title: "Planning".to_string(),
+            })
+            .unwrap();
+
+        for (entry_id, kind, timestamp) in [
+            ("entry-1", ContextEntryKind::User, 10),
+            ("entry-2", ContextEntryKind::ToolCall, 20),
+            ("entry-3", ContextEntryKind::ToolResult, 30),
+            ("entry-4", ContextEntryKind::Note, 40),
+            ("entry-5", ContextEntryKind::Assistant, 50),
+        ] {
+            let _ = store
+                .append_entry(
+                    "demo",
+                    AppendEntryInput {
+                        entry_id: entry_id.to_string(),
+                        kind,
+                        timestamp: Some(timestamp),
+                        metadata: object(&[]),
+                        body: JsonValue::String(entry_id.to_string()),
+                    },
+                )
+                .unwrap();
+        }
+
+        let tool_entries = store
+            .fetch_entries(
+                "demo",
+                FetchEntriesOptions::new()
+                    .with_kind(ContextEntryKind::ToolCall)
+                    .with_kind(ContextEntryKind::ToolResult)
+                    .since(15)
+                    .until(35)
+                    .limited_to(4),
+            )
+            .unwrap();
+        assert_eq!(
+            tool_entries
+                .iter()
+                .map(|entry| (entry.entry_id.as_str(), entry.kind))
+                .collect::<Vec<_>>(),
+            vec![
+                ("entry-2", ContextEntryKind::ToolCall),
+                ("entry-3", ContextEntryKind::ToolResult)
+            ]
+        );
+
+        let notes_after_cursor = store
+            .fetch_entries(
+                "demo",
+                FetchEntriesOptions::new()
+                    .after_entry("entry-1")
+                    .with_kind(ContextEntryKind::Note)
+                    .since(20),
+            )
+            .unwrap();
+        assert_eq!(
+            notes_after_cursor
+                .iter()
+                .map(|entry| entry.entry_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["entry-4"]
         );
     }
 
@@ -1336,26 +1470,18 @@ mod tests {
             .unwrap();
 
         let missing = store
-            .fetch_entries(
-                "demo",
-                FetchEntriesOptions {
-                    after_entry_id: Some("entry-2".to_string()),
-                    limit: None,
-                },
-            )
+            .fetch_entries("demo", FetchEntriesOptions::new().after_entry("entry-2"))
             .unwrap_err();
         let zero_limit = store
-            .fetch_entries(
-                "demo",
-                FetchEntriesOptions {
-                    after_entry_id: None,
-                    limit: Some(0),
-                },
-            )
+            .fetch_entries("demo", FetchEntriesOptions::new().limited_to(0))
+            .unwrap_err();
+        let bad_range = store
+            .fetch_entries("demo", FetchEntriesOptions::new().since(20).until(10))
             .unwrap_err();
 
         assert!(matches!(missing, StorageError::Validation { .. }));
         assert!(matches!(zero_limit, StorageError::Validation { .. }));
+        assert!(matches!(bad_range, StorageError::Validation { .. }));
     }
 
     #[test]

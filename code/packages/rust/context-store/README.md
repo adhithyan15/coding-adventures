@@ -11,6 +11,7 @@ Chief of Staff runtime needs.
 - ordered `ContextEntry` transcripts
 - `ContextSnapshot` checkpoints for compaction/resume
 - compare-and-swap session updates on top of `storage-core`
+- bounded transcript reads by cursor, entry kind, timestamp range, and limit
 - bounded session header listing by owner, status, sort, and limit
 - bounded snapshot listing by basis entry, refs, sort, and limit
 
