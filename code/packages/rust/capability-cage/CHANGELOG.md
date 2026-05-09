@@ -8,6 +8,8 @@
   `Manifest::load_from_str` / `Manifest::load_from_file`.
 - Manifest loading now rejects mixed untrusted ingestion and external
   actuation, plus same-resource read/write overlap.
+- Added audit envelope primitives: `Operation<T>`, `OperationRecord`,
+  `OperationDecision`, `AuditSink`, `NoopAuditSink`, and `VecAuditSink`.
 
 ## 0.1.0 — 2026-05-08
 
@@ -40,7 +42,6 @@ Initial release. V1 scope per `code/specs/capability-cage-rust.md`:
 
 Out of scope for v1 (will land in subsequent PRs):
 
-- Operation/audit envelope (`Operation<T>`, `AuditSink`).
 - Other secure-wrapper categories (`secure_net`, `secure_proc`,
   `secure_env`, `secure_time`, `secure_stdio`).
 - `build.rs`-driven package_manifest() codegen.
