@@ -7,3 +7,4 @@ description = "Rust port of the capability-cage runtime — manifests, secure wr
 [dependencies]
 coding-adventures-json-parser = { path = "../json-parser" }
 coding-adventures-json-value  = { path = "../json-value" }
+read-write-separation = { path = "../read-write-separation" }

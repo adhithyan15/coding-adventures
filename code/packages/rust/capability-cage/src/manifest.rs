@@ -12,6 +12,7 @@
 use std::path::Path;
 
 use coding_adventures_json_value::{parse, JsonNumber, JsonValue};
+use read_write_separation::{CapabilityFlavor, CapabilityTrust};
 
 use crate::capability::Capability;
 use crate::category::{Action, Category};
@@ -33,6 +34,16 @@ impl Manifest {
     /// [`Capability::new`]; this constructor does not re-check.
     pub fn new(capabilities: Vec<Capability>) -> Self {
         Self { capabilities }
+    }
+
+    /// Construct a manifest and validate read/write separation.
+    ///
+    /// This is the constructor to use for manifests assembled from
+    /// package metadata. [`Manifest::new`] remains available for
+    /// tests and already-gated in-memory manifests.
+    pub fn try_new(capabilities: Vec<Capability>) -> Result<Self, ManifestError> {
+        validate_read_write_separation(&capabilities)?;
+        Ok(Self::new(capabilities))
     }
 
     /// The pre-built zero-capability manifest. Equivalent to
@@ -121,6 +132,8 @@ impl Manifest {
                 .and_then(json_as_str)
                 .map(|s| s.to_string())
                 .unwrap_or_default();
+            let flavor = parse_optional_flavor(entry_obj, idx)?;
+            let trust = parse_optional_trust(entry_obj, idx)?;
 
             let category: Category = category_str.parse().map_err(|()| ManifestError::Schema {
                 reason: format!(
@@ -130,11 +143,17 @@ impl Manifest {
             let action: Action = action_str.parse().map_err(|()| ManifestError::Schema {
                 reason: format!("capabilities[{idx}].action '{action_str}' is not a known action"),
             })?;
-            let cap = Capability::new(category, action, target, justification)?;
+            let mut cap = Capability::new(category, action, target, justification)?;
+            if let Some(flavor) = flavor {
+                cap = cap.with_flavor(flavor);
+            }
+            if let Some(trust) = trust {
+                cap = cap.with_trust(trust);
+            }
             caps.push(cap);
         }
 
-        Ok(Manifest::new(caps))
+        Manifest::try_new(caps)
     }
 
     /// Returns true if the manifest declares a capability that covers
@@ -173,6 +192,11 @@ impl Manifest {
     pub fn capabilities(&self) -> &[Capability] {
         &self.capabilities
     }
+
+    /// Re-run read/write separation validation for this manifest.
+    pub fn validate_read_write_separation(&self) -> Result<(), ManifestError> {
+        validate_read_write_separation(&self.capabilities)
+    }
 }
 
 impl Default for Manifest {
@@ -197,6 +221,58 @@ fn json_as_i64(v: &JsonValue) -> Option<i64> {
         JsonValue::Number(JsonNumber::Integer(n)) => Some(*n),
         _ => None,
     }
+}
+
+fn parse_optional_flavor(
+    obj: &[(String, JsonValue)],
+    idx: usize,
+) -> Result<Option<CapabilityFlavor>, ManifestError> {
+    parse_optional_enum(obj, "flavor", idx, |value| match value {
+        "ingestion" => Some(CapabilityFlavor::Ingestion),
+        "actuation" => Some(CapabilityFlavor::Actuation),
+        "internal" => Some(CapabilityFlavor::Internal),
+        _ => None,
+    })
+}
+
+fn parse_optional_trust(
+    obj: &[(String, JsonValue)],
+    idx: usize,
+) -> Result<Option<CapabilityTrust>, ManifestError> {
+    parse_optional_enum(obj, "trust", idx, |value| match value {
+        "trusted" => Some(CapabilityTrust::Trusted),
+        "untrusted" => Some(CapabilityTrust::Untrusted),
+        _ => None,
+    })
+}
+
+fn parse_optional_enum<T>(
+    obj: &[(String, JsonValue)],
+    field: &str,
+    idx: usize,
+    parse_value: impl FnOnce(&str) -> Option<T>,
+) -> Result<Option<T>, ManifestError> {
+    match lookup(obj, field) {
+        None => Ok(None),
+        Some(value) => {
+            let raw = json_as_str(value).ok_or_else(|| ManifestError::Schema {
+                reason: format!("capabilities[{idx}].{field} must be a string"),
+            })?;
+            parse_value(raw)
+                .map(Some)
+                .ok_or_else(|| ManifestError::Schema {
+                    reason: format!("capabilities[{idx}].{field} '{raw}' is not supported"),
+                })
+        }
+    }
+}
+
+fn validate_read_write_separation(capabilities: &[Capability]) -> Result<(), ManifestError> {
+    let rws_capabilities: Vec<_> = capabilities
+        .iter()
+        .map(Capability::to_read_write_capability)
+        .collect();
+    read_write_separation::validate_manifest(&rws_capabilities).map_err(ManifestError::from)
 }
 
 #[cfg(test)]
@@ -275,6 +351,135 @@ mod tests {
         let m = Manifest::load_from_str(json).unwrap();
         assert_eq!(m.capabilities().len(), 1);
         assert!(m.has(Category::Fs, Action::Read, "./grammars/json.tokens"));
+    }
+
+    #[test]
+    fn load_manifest_preserves_read_write_annotations() {
+        let json = r#"{
+            "version": 1,
+            "package": "rust/mail-ingest",
+            "capabilities": [
+                {
+                    "category": "net",
+                    "action": "connect",
+                    "target": "imap.example.test:993",
+                    "flavor": "ingestion",
+                    "trust": "untrusted",
+                    "justification": "read mail"
+                }
+            ]
+        }"#;
+
+        let m = Manifest::load_from_str(json).unwrap();
+        let cap = &m.capabilities()[0];
+
+        assert_eq!(cap.flavor, Some(CapabilityFlavor::Ingestion));
+        assert_eq!(cap.trust, Some(CapabilityTrust::Untrusted));
+        assert!(m.validate_read_write_separation().is_ok());
+    }
+
+    #[test]
+    fn load_manifest_rejects_unknown_read_write_annotations() {
+        let json = r#"{
+            "version": 1,
+            "capabilities": [
+                {
+                    "category": "net",
+                    "action": "connect",
+                    "target": "imap.example.test:993",
+                    "flavor": "read"
+                }
+            ]
+        }"#;
+
+        let err = Manifest::load_from_str(json).unwrap_err();
+        match err {
+            ManifestError::Schema { reason } => assert!(reason.contains("flavor")),
+            other => panic!("expected Schema error, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn load_manifest_rejects_mixed_untrusted_input_and_actuation() {
+        let json = r#"{
+            "version": 1,
+            "package": "rust/mail-agent",
+            "capabilities": [
+                {
+                    "category": "net",
+                    "action": "connect",
+                    "target": "imap.example.test:993",
+                    "flavor": "ingestion",
+                    "trust": "untrusted",
+                    "justification": "read mail"
+                },
+                {
+                    "category": "fs",
+                    "action": "write",
+                    "target": "package:/state/outbox.json",
+                    "justification": "write outbox"
+                }
+            ]
+        }"#;
+
+        let err = Manifest::load_from_str(json).unwrap_err();
+        match err {
+            ManifestError::RwsViolation {
+                untrusted_inputs,
+                actuations,
+                message,
+            } => {
+                assert_eq!(untrusted_inputs.len(), 1);
+                assert_eq!(actuations.len(), 1);
+                assert!(message.contains("untrusted inputs"));
+            }
+            other => panic!("expected RwsViolation error, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn load_manifest_rejects_same_path_read_write_overlap() {
+        let json = r#"{
+            "version": 1,
+            "package": "rust/cache-agent",
+            "capabilities": [
+                {
+                    "category": "fs",
+                    "action": "read",
+                    "target": "package:/state/cache.json",
+                    "trust": "trusted"
+                },
+                {
+                    "category": "fs",
+                    "action": "write",
+                    "target": "package:/state/cache.json"
+                }
+            ]
+        }"#;
+
+        let err = Manifest::load_from_str(json).unwrap_err();
+        match err {
+            ManifestError::RwsViolation { message, .. } => assert!(message.contains("overlap")),
+            other => panic!("expected RwsViolation error, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn load_manifest_accepts_pure_actuation_default_net_connect() {
+        let json = r#"{
+            "version": 1,
+            "package": "rust/mail-send",
+            "capabilities": [
+                {
+                    "category": "net",
+                    "action": "connect",
+                    "target": "smtp.example.test:465"
+                }
+            ]
+        }"#;
+
+        let m = Manifest::load_from_str(json).unwrap();
+        assert_eq!(m.capabilities().len(), 1);
     }
 
     #[test]
@@ -367,5 +572,28 @@ mod tests {
     fn load_manifest_rejects_unparseable_json() {
         let err = Manifest::load_from_str("not json").unwrap_err();
         assert!(matches!(err, ManifestError::Parse(_)));
+    }
+
+    #[test]
+    fn try_new_rejects_programmatic_rws_violations() {
+        let input = Capability::new(
+            Category::Net,
+            Action::Connect,
+            "imap.example.test:993",
+            "read mail",
+        )
+        .unwrap()
+        .with_flavor(CapabilityFlavor::Ingestion)
+        .with_trust(CapabilityTrust::Untrusted);
+        let actuation = Capability::new(
+            Category::Fs,
+            Action::Write,
+            "package:/state/outbox.json",
+            "write",
+        )
+        .unwrap();
+
+        let err = Manifest::try_new(vec![input, actuation]).unwrap_err();
+        assert!(matches!(err, ManifestError::RwsViolation { .. }));
     }
 }

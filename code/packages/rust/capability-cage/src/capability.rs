@@ -2,6 +2,7 @@
 
 use crate::category::{is_valid_combination, Action, Category};
 use crate::errors::InvalidCombination;
+use read_write_separation::{Capability as ReadWriteCapability, CapabilityFlavor, CapabilityTrust};
 
 /// A single OS-level permission declaration.
 ///
@@ -14,6 +15,8 @@ pub struct Capability {
     pub action: Action,
     pub target: String,
     pub justification: String,
+    pub flavor: Option<CapabilityFlavor>,
+    pub trust: Option<CapabilityTrust>,
 }
 
 impl Capability {
@@ -41,7 +44,39 @@ impl Capability {
             action,
             target,
             justification: justification.into(),
+            flavor: None,
+            trust: None,
         })
+    }
+
+    /// Annotate the capability for read/write separation checks.
+    pub fn with_flavor(mut self, flavor: CapabilityFlavor) -> Self {
+        self.flavor = Some(flavor);
+        self
+    }
+
+    /// Annotate the capability trust boundary for read/write separation checks.
+    pub fn with_trust(mut self, trust: CapabilityTrust) -> Self {
+        self.trust = Some(trust);
+        self
+    }
+
+    pub(crate) fn to_read_write_capability(&self) -> ReadWriteCapability {
+        let mut capability = ReadWriteCapability::new(
+            self.category.as_str(),
+            self.action.as_str(),
+            self.target.clone(),
+        )
+        .with_justification(self.justification.clone());
+
+        if let Some(flavor) = self.flavor {
+            capability = capability.with_flavor(flavor);
+        }
+        if let Some(trust) = self.trust {
+            capability = capability.with_trust(trust);
+        }
+
+        capability
     }
 }
 
@@ -62,6 +97,28 @@ mod tests {
         assert_eq!(cap.action, Action::Read);
         assert_eq!(cap.target, "./grammars/json.tokens");
         assert_eq!(cap.justification, "load lexer DFA");
+        assert_eq!(cap.flavor, None);
+        assert_eq!(cap.trust, None);
+    }
+
+    #[test]
+    fn read_write_annotations_are_preserved() {
+        let cap = Capability::new(
+            Category::Net,
+            Action::Connect,
+            "imap.example.test:993",
+            "mail",
+        )
+        .unwrap()
+        .with_flavor(CapabilityFlavor::Ingestion)
+        .with_trust(CapabilityTrust::Untrusted);
+        let rws = cap.to_read_write_capability();
+
+        assert_eq!(cap.flavor, Some(CapabilityFlavor::Ingestion));
+        assert_eq!(cap.trust, Some(CapabilityTrust::Untrusted));
+        assert_eq!(rws.flavor, Some(CapabilityFlavor::Ingestion));
+        assert_eq!(rws.trust, Some(CapabilityTrust::Untrusted));
+        assert_eq!(rws.justification.as_deref(), Some("mail"));
     }
 
     #[test]
