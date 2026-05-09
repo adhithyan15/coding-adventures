@@ -33,3 +33,5 @@ All notable changes to this package will be documented in this file.
   lifecycle records, event streams, and terminal results.
 - Provider-neutral JSON-schema-shaped projection for tool input/output schemas
   and `ToolSchemaDocument` exports for future model-gateway adapters.
+- Catalog export snapshots with schema documents, validation state, and summary
+  counts for model gateway adapters and portability checks.
