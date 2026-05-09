@@ -60,14 +60,20 @@ module CodingAdventures
           "display_name" => "USB/serial",
           "command_transport" => true,
           "ota_update" => false,
-          "requires" => "serial_port"
+          "requires" => "serial_port",
+          "endpoint_transport" => "serial_port",
+          "endpoint_scheme" => "serial",
+          "wire_protocol" => "board_vm_cobs_crc"
         }, options.first)
         assert_includes options, {
           "transport" => "wifi",
           "display_name" => "Wi-Fi",
           "command_transport" => true,
           "ota_update" => true,
-          "requires" => "network_endpoint"
+          "requires" => "network_endpoint",
+          "endpoint_transport" => "tcp_socket",
+          "endpoint_scheme" => "tcp",
+          "wire_protocol" => "board_vm_cobs_crc"
         }
       end
 

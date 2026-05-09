@@ -159,6 +159,9 @@ def test_connection_options_are_exposed_from_rust_registry():
         "command_transport": True,
         "ota_update": False,
         "requires": "serial_port",
+        "endpoint_transport": "serial_port",
+        "endpoint_scheme": "serial",
+        "wire_protocol": "board_vm_cobs_crc",
     }
     assert {
         "transport": "wifi",
@@ -166,6 +169,9 @@ def test_connection_options_are_exposed_from_rust_registry():
         "command_transport": True,
         "ota_update": True,
         "requires": "network_endpoint",
+        "endpoint_transport": "tcp_socket",
+        "endpoint_scheme": "tcp",
+        "wire_protocol": "board_vm_cobs_crc",
     } in options
     assert "Wi-Fi [commands, OTA]" in connection_option_list("uno-r4-wifi")
 
