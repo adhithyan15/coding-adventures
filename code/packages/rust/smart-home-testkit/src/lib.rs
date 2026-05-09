@@ -332,6 +332,81 @@ impl ScriptedMqttPublication {
     }
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum MqttPublicationSort {
+    #[default]
+    OriginalOrder,
+    Topic,
+    ObservedAtAsc,
+    ObservedAtDesc,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MqttPublicationQuery {
+    pub topic: Option<String>,
+    pub topic_prefix: Option<String>,
+    pub retained: Option<bool>,
+    pub observed_after_ms: Option<u64>,
+    pub metadata: Vec<Metadata>,
+    pub sort: MqttPublicationSort,
+    pub limit: Option<usize>,
+}
+
+impl Default for MqttPublicationQuery {
+    fn default() -> Self {
+        Self {
+            topic: None,
+            topic_prefix: None,
+            retained: None,
+            observed_after_ms: None,
+            metadata: Vec::new(),
+            sort: MqttPublicationSort::OriginalOrder,
+            limit: None,
+        }
+    }
+}
+
+impl MqttPublicationQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_topic(mut self, topic: impl Into<String>) -> Self {
+        self.topic = Some(topic.into());
+        self
+    }
+
+    pub fn with_topic_prefix(mut self, topic_prefix: impl Into<String>) -> Self {
+        self.topic_prefix = Some(topic_prefix.into());
+        self
+    }
+
+    pub fn retained(mut self, retained: bool) -> Self {
+        self.retained = Some(retained);
+        self
+    }
+
+    pub fn observed_after(mut self, observed_after_ms: u64) -> Self {
+        self.observed_after_ms = Some(observed_after_ms);
+        self
+    }
+
+    pub fn with_metadata(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
+        self.metadata.push(Metadata::new(key, value));
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: MqttPublicationSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn limited_to(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct FakeMqttBroker {
     publications: VecDeque<ScriptedMqttPublication>,
@@ -353,6 +428,22 @@ impl FakeMqttBroker {
 
     pub fn next_publication(&mut self) -> Option<ScriptedMqttPublication> {
         self.publications.pop_front()
+    }
+
+    pub fn query_publications(
+        &self,
+        query: &MqttPublicationQuery,
+    ) -> Vec<&ScriptedMqttPublication> {
+        let mut publications = self
+            .publications
+            .iter()
+            .filter(|publication| mqtt_publication_matches(publication, query))
+            .collect::<Vec<_>>();
+        sort_mqtt_publications(&mut publications, query.sort);
+        if let Some(limit) = query.limit {
+            publications.truncate(limit);
+        }
+        publications
     }
 
     pub fn len(&self) -> usize {
@@ -645,6 +736,63 @@ fn scripted_event_observed_at_ms(step: &ScriptedEvent) -> u64 {
     }
 }
 
+fn mqtt_publication_matches(
+    publication: &ScriptedMqttPublication,
+    query: &MqttPublicationQuery,
+) -> bool {
+    if let Some(topic) = query.topic.as_deref() {
+        if publication.topic != topic {
+            return false;
+        }
+    }
+    if let Some(topic_prefix) = query.topic_prefix.as_deref() {
+        if !publication.topic.starts_with(topic_prefix) {
+            return false;
+        }
+    }
+    if let Some(retained) = query.retained {
+        if publication.retained != retained {
+            return false;
+        }
+    }
+    if let Some(observed_after_ms) = query.observed_after_ms {
+        if publication.observed_at_ms <= observed_after_ms {
+            return false;
+        }
+    }
+    query.metadata.iter().all(|required| {
+        publication
+            .metadata
+            .iter()
+            .any(|metadata| metadata.key == required.key && metadata.value == required.value)
+    })
+}
+
+fn sort_mqtt_publications(
+    publications: &mut Vec<&ScriptedMqttPublication>,
+    sort: MqttPublicationSort,
+) {
+    match sort {
+        MqttPublicationSort::OriginalOrder => {}
+        MqttPublicationSort::Topic => publications.sort_by(|left, right| {
+            left.topic
+                .cmp(&right.topic)
+                .then_with(|| left.observed_at_ms.cmp(&right.observed_at_ms))
+        }),
+        MqttPublicationSort::ObservedAtAsc => publications.sort_by(|left, right| {
+            left.observed_at_ms
+                .cmp(&right.observed_at_ms)
+                .then_with(|| left.topic.cmp(&right.topic))
+        }),
+        MqttPublicationSort::ObservedAtDesc => publications.sort_by(|left, right| {
+            right
+                .observed_at_ms
+                .cmp(&left.observed_at_ms)
+                .then_with(|| left.topic.cmp(&right.topic))
+        }),
+    }
+}
+
 fn protocol_id(
     family: ProtocolFamily,
     kind: &'static str,
@@ -903,6 +1051,62 @@ mod tests {
         assert_eq!(first.payload_utf8(), Some(r#"{"state":"ON"}"#));
         assert_eq!(broker.next_publication(), Some(second));
         assert!(broker.is_empty());
+    }
+
+    #[test]
+    fn fake_mqtt_broker_queries_publications_without_consuming_queue() {
+        let retained_state = ScriptedMqttPublication::new(
+            "home/kitchen/light/state",
+            br#"{"state":"ON"}"#.to_vec(),
+            1_000,
+        )
+        .retained()
+        .with_metadata("fixture", "mqtt")
+        .with_metadata("entity", "kitchen");
+        let live_state = ScriptedMqttPublication::new(
+            "home/office/light/state",
+            br#"{"state":"OFF"}"#.to_vec(),
+            1_200,
+        )
+        .with_metadata("fixture", "mqtt");
+        let command = ScriptedMqttPublication::new(
+            "home/kitchen/light/set",
+            br#"{"state":"OFF"}"#.to_vec(),
+            1_100,
+        )
+        .with_metadata("fixture", "mqtt");
+        let mut broker = FakeMqttBroker::new()
+            .publish(retained_state.clone())
+            .publish(command.clone())
+            .publish(live_state.clone());
+
+        let state_publications = broker.query_publications(
+            &MqttPublicationQuery::new()
+                .with_topic_prefix("home/")
+                .observed_after(1_050)
+                .sorted_by(MqttPublicationSort::ObservedAtDesc)
+                .limited_to(2),
+        );
+
+        assert_eq!(
+            state_publications
+                .iter()
+                .map(|publication| publication.topic.as_str())
+                .collect::<Vec<_>>(),
+            vec!["home/office/light/state", "home/kitchen/light/set"]
+        );
+
+        let retained = broker.query_publications(
+            &MqttPublicationQuery::new()
+                .retained(true)
+                .with_metadata("entity", "kitchen"),
+        );
+
+        assert_eq!(retained, vec![&retained_state]);
+        assert_eq!(broker.len(), 3);
+        assert_eq!(broker.next_publication(), Some(retained_state));
+        assert_eq!(broker.next_publication(), Some(command));
+        assert_eq!(broker.next_publication(), Some(live_state));
     }
 
     #[test]
