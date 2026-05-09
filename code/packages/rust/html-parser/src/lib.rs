@@ -811,6 +811,7 @@ impl HtmlParser {
         self_closing: bool,
     ) {
         self.apply_document_shell_implied_contexts(&name);
+        self.close_fostered_formatting_before_table_context(&name);
         self.apply_table_implied_contexts(&name);
         self.clear_pending_formatting_unless_next_reconstructs(&name);
         let formatting_inside = self.take_formatting_reconstruction_inside_for(&name);
@@ -904,6 +905,12 @@ impl HtmlParser {
 
         if !text.chars().all(char::is_whitespace) {
             self.pop_current_if(|name| name == "head");
+        }
+
+        if self.current_element_is_table_structure()
+            && self.foster_text_before_open_table(text.clone())
+        {
+            return;
         }
 
         if let Some(children) = self.current_children_mut() {
@@ -1016,33 +1023,96 @@ impl HtmlParser {
         incoming_name: &str,
         attributes: &[Attribute],
     ) -> bool {
-        if incoming_name != "a" || !self.current_element_is_table_structure() {
+        if !self.current_element_is_table_structure() {
             return false;
         }
 
-        let Some(table_path) = self
-            .open_elements
-            .iter()
-            .rfind(|path| element_at_path(&self.document, path).is_some_and(|name| name == "table"))
-            .cloned()
-        else {
+        if incoming_name == "a" {
+            let Some(_) = self.insert_node_before_open_table(Node::element(
+                incoming_name.to_string(),
+                attributes.to_vec(),
+            )) else {
+                return false;
+            };
+            self.pending_formatting_reconstruction =
+                vec![(incoming_name.to_string(), attributes.to_vec())];
+            return true;
+        }
+
+        if !is_formatting_element(incoming_name) {
             return false;
-        };
-        let Some((&table_index, parent_path)) = table_path.split_last() else {
-            return false;
-        };
-        let Some(children) = children_at_path_mut(&mut self.document.children, parent_path) else {
+        }
+
+        let Some(path) = self.insert_node_before_open_table(Node::element(
+            incoming_name.to_string(),
+            attributes.to_vec(),
+        )) else {
             return false;
         };
 
-        children.insert(
-            table_index,
-            Node::element(incoming_name.to_string(), attributes.to_vec()),
-        );
-        increment_open_element_paths_after_insert(&mut self.open_elements, parent_path, table_index);
-        self.pending_formatting_reconstruction =
-            vec![(incoming_name.to_string(), attributes.to_vec())];
+        self.open_elements.push(path);
         true
+    }
+
+    fn foster_text_before_open_table(&mut self, text: String) -> bool {
+        self.insert_node_before_open_table(Node::text(text)).is_some()
+    }
+
+    fn insert_node_before_open_table(&mut self, node: Node) -> Option<Vec<usize>> {
+        let table_path = self
+            .open_elements
+            .iter()
+            .rfind(|path| element_at_path(&self.document, path).is_some_and(|name| name == "table"))
+            .cloned()?;
+        let (&table_index, parent_path) = table_path.split_last()?;
+        let children = children_at_path_mut(&mut self.document.children, parent_path)?;
+
+        if let Node::Text(text) = node {
+            if let Some(Node::Text(existing)) = table_index
+                .checked_sub(1)
+                .and_then(|index| children.get_mut(index))
+            {
+                existing.data.push_str(&text.data);
+                return Some(parent_path.to_vec());
+            }
+            children.insert(table_index, Node::Text(text));
+        } else {
+            children.insert(table_index, node);
+        }
+
+        increment_open_element_paths_after_insert(&mut self.open_elements, parent_path, table_index);
+        let mut inserted_path = parent_path.to_vec();
+        inserted_path.push(table_index);
+        Some(inserted_path)
+    }
+
+    fn close_fostered_formatting_before_table_context(&mut self, incoming_name: &str) {
+        if !starts_table_context(incoming_name) {
+            return;
+        }
+        let Some(table_stack_index) = self
+            .open_elements
+            .iter()
+            .rposition(|path| element_at_path(&self.document, path).is_some_and(|name| name == "table"))
+        else {
+            return;
+        };
+        let Some(table_path) = self.open_elements.get(table_stack_index).cloned() else {
+            return;
+        };
+
+        while self.open_elements.len() > table_stack_index + 1 {
+            let Some(path) = self.open_elements.last() else {
+                break;
+            };
+            let is_fostered_formatting = element_at_path(&self.document, path)
+                .is_some_and(is_formatting_element)
+                && !path.starts_with(&table_path);
+            if !is_fostered_formatting {
+                break;
+            }
+            self.open_elements.pop();
+        }
     }
 
     fn apply_document_shell_implied_contexts(&mut self, incoming_name: &str) {
@@ -1332,7 +1402,7 @@ impl HtmlParser {
         self.current_element_name().is_some_and(|current| {
             matches!(
                 current,
-                "table" | "tbody" | "thead" | "tfoot" | "tr" | "caption" | "colgroup"
+                "table" | "tbody" | "thead" | "tfoot" | "tr"
             )
         })
     }
@@ -1605,6 +1675,13 @@ fn is_table_context_element(name: &str) -> bool {
     matches!(
         name,
         "table" | "caption" | "colgroup" | "tbody" | "thead" | "tfoot" | "tr" | "td" | "th"
+    )
+}
+
+fn starts_table_context(name: &str) -> bool {
+    matches!(
+        name,
+        "caption" | "colgroup" | "col" | "tbody" | "thead" | "tfoot" | "tr" | "td" | "th"
     )
 }
 
@@ -3027,8 +3104,8 @@ mod tests {
             (
                 HtmlInitialTokenizerContext::CommentStart,
                 "body --><p>x</p>",
-                "-body --",
-                vec!["incorrectly-opened-comment"],
+                "body ",
+                Vec::<&str>::new(),
             ),
             (
                 HtmlInitialTokenizerContext::CommentStartDash,

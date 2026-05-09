@@ -1768,6 +1768,21 @@ fn default_html_lexer_closes_dash_prefixed_empty_html_comment() {
 }
 
 #[test]
+fn default_html_lexer_preserves_extra_dash_before_comment_close() {
+    let tokens = lex_html("Before<!----->After").unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("Before".to_string()),
+            Token::Comment("-".to_string()),
+            Token::Text("After".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_reports_nested_comment_opener() {
     let mut lexer = create_html_lexer().unwrap();
 

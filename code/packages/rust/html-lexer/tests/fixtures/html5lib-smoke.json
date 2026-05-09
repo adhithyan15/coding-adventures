@@ -445,7 +445,9 @@
         "Text(data=After)",
         "EOF"
       ],
-      "diagnostics": []
+      "diagnostics": [
+        "abrupt-closing-of-empty-comment"
+      ]
     },
     {
       "id": "html5lib-smoke-30",

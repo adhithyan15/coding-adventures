@@ -491,6 +491,9 @@ id = "self_closing_start_tag"
 id = "markup_declaration_open"
 
 [[states]]
+id = "markup_declaration_open_dash"
+
+[[states]]
 id = "cdata_open_bracket"
 
 [[states]]
@@ -5230,8 +5233,37 @@ actions = [
 [[transitions]]
 from = "markup_declaration_open"
 matcher = { literal = "-" }
+to = "markup_declaration_open_dash"
+
+[[transitions]]
+from = "markup_declaration_open_dash"
+matcher = { literal = "-" }
 to = "comment_start"
 actions = ["create_comment"]
+
+[[transitions]]
+from = "markup_declaration_open_dash"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "parse_error(incorrectly-opened-comment)",
+  "create_comment",
+  "append_comment(-)",
+  "emit_current_token",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "markup_declaration_open_dash"
+matcher = { anything = true }
+to = "bogus_comment"
+consume = false
+actions = [
+  "parse_error(incorrectly-opened-comment)",
+  "create_comment",
+  "append_comment(-)",
+]
 
 [[transitions]]
 from = "markup_declaration_open"
@@ -5506,8 +5538,7 @@ from = "comment_start"
 matcher = { literal = ">" }
 to = "data"
 actions = [
-  "parse_error(incorrectly-opened-comment)",
-  "append_comment(-)",
+  "parse_error(abrupt-closing-of-empty-comment)",
   "emit_current_token",
 ]
 
@@ -5517,8 +5548,7 @@ matcher = { eof = true }
 to = "done"
 consume = false
 actions = [
-  "parse_error(incorrectly-opened-comment)",
-  "append_comment(-)",
+  "parse_error(eof-in-comment)",
   "emit_current_token",
   "emit(EOF)",
 ]
@@ -5526,23 +5556,17 @@ actions = [
 [[transitions]]
 from = "comment_start"
 matcher = { literal = "\u0000" }
-to = "bogus_comment"
+to = "comment"
 actions = [
-  "parse_error(incorrectly-opened-comment)",
   "parse_error(unexpected-null-character)",
-  "append_comment(-)",
   "append_comment_replacement",
 ]
 
 [[transitions]]
 from = "comment_start"
 matcher = { anything = true }
-to = "bogus_comment"
-actions = [
-  "parse_error(incorrectly-opened-comment)",
-  "append_comment(-)",
-  "append_comment(current)",
-]
+to = "comment"
+consume = false
 
 [[transitions]]
 from = "comment_start_dash"
