@@ -96,6 +96,9 @@ directly.
   caller cannot cheat the ranker via an unbounded weight.
 - **Query bounds**: `MAX_QUERY_LEN` rejects oversized queries
   before they hit the trigram extractor.
+- **Read-side summaries**: `SearchIndex::summary()` reports only
+  counts and byte totals, not document ids, trigrams, field names,
+  or field values.
 
 ## What this crate is NOT
 
