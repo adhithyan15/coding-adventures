@@ -1283,3 +1283,17 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <spacer>
 |       "foo"
+
+#data
+<title><meta></title><link><title><meta></title>
+#errors
+(1,7): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <title>
+|       "<meta>"
+|     <link>
+|     <title>
+|       "<meta>"
+|   <body>
