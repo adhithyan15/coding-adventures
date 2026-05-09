@@ -14,6 +14,9 @@ without shelling out to `esptool` or `espflash`:
   builders.
 - ESP boot image header, segment table, padding, and checksum builders for
   Board VM firmware artifacts.
+- high-level image upload that erases, writes padded ROM blocks, verifies the
+  ROM MD5 against the repo's Rust MD5 implementation, and only then exits the
+  bootloader.
 
 The immediate use is target auto-detection: a host can query the ESP ROM loader,
 identify the exact chip family, and select the right Board VM runtime/backend and
@@ -21,7 +24,8 @@ compiler target.
 
 Backlog:
 
-1. Replace temporary `esptool`/`espflash` compatibility calls in smoke helpers.
+1. Replace temporary `esptool`/`espflash` compatibility calls in smoke helpers
+   with the native upload path.
 2. Share target detection through Ruby, Python, Lua, and future language sugar
    via the Rust bridge packages.
 3. Add end-to-end ESP upload helpers once the Board VM firmware image producer is

@@ -2,6 +2,8 @@ use std::fmt;
 use std::io::{Read, Write};
 use std::time::Duration;
 
+use coding_adventures_md5::sum_md5;
+
 pub const DEFAULT_BAUD_RATE: u32 = 115_200;
 pub const DEFAULT_TIMEOUT_MS: u64 = 1_000;
 pub const ESP_CHECKSUM_SEED: u8 = 0xEF;
@@ -28,17 +30,30 @@ const RESPONSE_DIRECTION: u8 = 0x01;
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum EspRomError {
     PayloadTooLarge(usize),
-    OutputTooSmall { needed: usize, available: usize },
+    OutputTooSmall {
+        needed: usize,
+        available: usize,
+    },
     TruncatedPacket,
     InvalidDirection(u8),
     InvalidSlipEscape(u8),
     MissingSlipEnd,
-    UnexpectedCommand { expected: u8, actual: u8 },
-    RomStatus { status: u8, error: u8 },
+    UnexpectedCommand {
+        expected: u8,
+        actual: u8,
+    },
+    RomStatus {
+        status: u8,
+        error: u8,
+    },
     UnsupportedChipId(u32),
     UnsupportedMagicValue(u32),
     InvalidFlashBlockSize(u32),
     InvalidMd5Digest(usize),
+    Md5Mismatch {
+        expected: [u8; 16],
+        actual: [u8; 16],
+    },
     TooManyImageSegments(usize),
     Io(String),
     Serial(String),
@@ -82,6 +97,7 @@ impl fmt::Display for EspRomError {
             Self::InvalidMd5Digest(len) => {
                 write!(f, "invalid ESP flash MD5 digest payload length: {len}")
             }
+            Self::Md5Mismatch { .. } => write!(f, "ESP flash MD5 verification failed"),
             Self::TooManyImageSegments(count) => {
                 write!(f, "ESP image has too many segments: {count}")
             }
@@ -595,6 +611,71 @@ pub fn flash_begin_params_for_image(
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct EspFlashImageUploadOptions {
+    pub offset: u32,
+    pub block_size: u32,
+    pub spi_connection: Option<u32>,
+    pub flash_params: Option<SpiFlashParams>,
+    pub stay_in_bootloader: bool,
+    pub verify_md5: bool,
+    pub pad_byte: u8,
+}
+
+impl EspFlashImageUploadOptions {
+    pub const fn new(offset: u32) -> Self {
+        Self {
+            offset,
+            block_size: DEFAULT_FLASH_BLOCK_SIZE,
+            spi_connection: Some(0),
+            flash_params: None,
+            stay_in_bootloader: false,
+            verify_md5: true,
+            pad_byte: 0xFF,
+        }
+    }
+
+    pub const fn block_size(mut self, block_size: u32) -> Self {
+        self.block_size = block_size;
+        self
+    }
+
+    pub const fn spi_connection(mut self, spi_connection: Option<u32>) -> Self {
+        self.spi_connection = spi_connection;
+        self
+    }
+
+    pub const fn flash_params(mut self, flash_params: Option<SpiFlashParams>) -> Self {
+        self.flash_params = flash_params;
+        self
+    }
+
+    pub const fn stay_in_bootloader(mut self, stay_in_bootloader: bool) -> Self {
+        self.stay_in_bootloader = stay_in_bootloader;
+        self
+    }
+
+    pub const fn verify_md5(mut self, verify_md5: bool) -> Self {
+        self.verify_md5 = verify_md5;
+        self
+    }
+
+    pub const fn pad_byte(mut self, pad_byte: u8) -> Self {
+        self.pad_byte = pad_byte;
+        self
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EspFlashImageUploadReport {
+    pub offset: u32,
+    pub image_size: u32,
+    pub block_size: u32,
+    pub block_count: u32,
+    pub written_size: u64,
+    pub md5_digest: Option<[u8; 16]>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct SpiFlashParams {
     pub flash_id: u32,
     pub total_size: u32,
@@ -924,6 +1005,59 @@ where
         let response = self.exchange(EspRomCommand::SpiFlashMd5, &payload, 0)?;
         response.check_status()?;
         parse_spi_flash_md5_payload(response.payload_without_status())
+    }
+
+    pub fn upload_flash_image(
+        &mut self,
+        image: &[u8],
+        options: EspFlashImageUploadOptions,
+    ) -> Result<EspFlashImageUploadReport, EspRomError> {
+        if let Some(spi_connection) = options.spi_connection {
+            self.spi_attach(spi_connection)?;
+        }
+        if let Some(flash_params) = options.flash_params {
+            self.spi_set_params(flash_params)?;
+        }
+
+        let begin = flash_begin_params_for_image(options.offset, image, options.block_size)?;
+        self.flash_begin(begin)?;
+
+        let block_size = options.block_size as usize;
+        let mut padded_block = Vec::new();
+        for sequence in 0..begin.block_count {
+            let start = sequence as usize * block_size;
+            let end = image.len().min(start + block_size);
+            let chunk = &image[start..end];
+            if chunk.len() == block_size {
+                self.flash_data(sequence, chunk)?;
+            } else {
+                padded_block.clear();
+                padded_block.extend_from_slice(chunk);
+                padded_block.resize(block_size, options.pad_byte);
+                self.flash_data(sequence, &padded_block)?;
+            }
+        }
+
+        let md5_digest = if options.verify_md5 {
+            let actual = self.spi_flash_md5(options.offset, image.len() as u32)?;
+            let expected = sum_md5(image);
+            if actual != expected {
+                return Err(EspRomError::Md5Mismatch { expected, actual });
+            }
+            Some(actual)
+        } else {
+            None
+        };
+
+        self.flash_end(options.stay_in_bootloader)?;
+        Ok(EspFlashImageUploadReport {
+            offset: options.offset,
+            image_size: image.len() as u32,
+            block_size: options.block_size,
+            block_count: begin.block_count,
+            written_size: begin.block_count as u64 * options.block_size as u64,
+            md5_digest,
+        })
     }
 
     fn exchange(
@@ -1458,5 +1592,111 @@ mod tests {
             &[4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         );
         assert_eq!(&flash_data[24..28], &data);
+    }
+
+    #[test]
+    fn session_uploads_flash_image_with_padding_and_md5_verify() {
+        let image: Vec<u8> = (0..1500).map(|index| (index % 251) as u8).collect();
+        let md5 = sum_md5(&image);
+        let mut md5_response = md5.to_vec();
+        md5_response.extend_from_slice(&[0, 0]);
+        let mut read = Vec::new();
+        for command in [
+            EspRomCommand::SpiAttach,
+            EspRomCommand::SpiSetParams,
+            EspRomCommand::FlashBegin,
+            EspRomCommand::FlashData,
+            EspRomCommand::FlashData,
+        ] {
+            read.extend_from_slice(&rom_response(command, 0, &[0, 0]));
+        }
+        read.extend_from_slice(&rom_response(EspRomCommand::SpiFlashMd5, 0, &md5_response));
+        read.extend_from_slice(&rom_response(EspRomCommand::FlashEnd, 0, &[0, 0]));
+        let stream = ScriptedStream::with_read(&read);
+
+        let options = EspFlashImageUploadOptions::new(0x1000)
+            .block_size(1024)
+            .flash_params(Some(SpiFlashParams::default_for_size(4 * 1024 * 1024)));
+        let mut session = EspRomSession::new(stream);
+        let report = session.upload_flash_image(&image, options).unwrap();
+
+        assert_eq!(
+            report,
+            EspFlashImageUploadReport {
+                offset: 0x1000,
+                image_size: 1500,
+                block_size: 1024,
+                block_count: 2,
+                written_size: 2048,
+                md5_digest: Some(md5),
+            }
+        );
+
+        let frames = decode_written_frames(&session.into_inner().written);
+        let commands: Vec<u8> = frames.iter().map(|frame| frame[1]).collect();
+        assert_eq!(commands, vec![0x0D, 0x0B, 0x02, 0x03, 0x03, 0x13, 0x04]);
+
+        let begin = &frames[2];
+        assert_eq!(
+            &begin[8..24],
+            &[0xDC, 0x05, 0, 0, 2, 0, 0, 0, 0, 4, 0, 0, 0, 0x10, 0, 0]
+        );
+
+        let first_data = &frames[3];
+        assert_eq!(&first_data[8..12], &[0, 4, 0, 0]);
+        assert_eq!(&first_data[12..16], &[0, 0, 0, 0]);
+        assert_eq!(&first_data[24..24 + 1024], &image[..1024]);
+
+        let second_data = &frames[4];
+        assert_eq!(&second_data[8..12], &[0, 4, 0, 0]);
+        assert_eq!(&second_data[12..16], &[1, 0, 0, 0]);
+        assert_eq!(&second_data[24..24 + 476], &image[1024..]);
+        assert!(second_data[24 + 476..24 + 1024]
+            .iter()
+            .all(|byte| *byte == 0xFF));
+
+        let md5_frame = &frames[5];
+        assert_eq!(
+            &md5_frame[8..24],
+            &[0, 0x10, 0, 0, 0xDC, 0x05, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        );
+        let end = &frames[6];
+        assert_eq!(&end[8..12], &[0, 0, 0, 0]);
+    }
+
+    #[test]
+    fn session_upload_flash_image_rejects_md5_mismatch_before_boot() {
+        let image = [1, 2, 3, 4];
+        let mut read = Vec::new();
+        for command in [
+            EspRomCommand::SpiAttach,
+            EspRomCommand::FlashBegin,
+            EspRomCommand::FlashData,
+        ] {
+            read.extend_from_slice(&rom_response(command, 0, &[0, 0]));
+        }
+        let mut wrong_md5 = [0u8; 18];
+        wrong_md5[16..18].copy_from_slice(&[0, 0]);
+        read.extend_from_slice(&rom_response(EspRomCommand::SpiFlashMd5, 0, &wrong_md5));
+        let stream = ScriptedStream::with_read(&read);
+
+        let mut session = EspRomSession::new(stream);
+        let error = session
+            .upload_flash_image(
+                &image,
+                EspFlashImageUploadOptions::new(0x1000).block_size(1024),
+            )
+            .unwrap_err();
+
+        assert_eq!(
+            error,
+            EspRomError::Md5Mismatch {
+                expected: sum_md5(&image),
+                actual: [0; 16],
+            }
+        );
+        let frames = decode_written_frames(&session.into_inner().written);
+        let commands: Vec<u8> = frames.iter().map(|frame| frame[1]).collect();
+        assert_eq!(commands, vec![0x0D, 0x02, 0x03, 0x13]);
     }
 }
