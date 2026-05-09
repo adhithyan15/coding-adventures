@@ -4,6 +4,6 @@ _targets = [
     rust_library(
         name = "board-vm-esp-rom",
         srcs = ["src/**/*.rs", "Cargo.toml", "README.md"],
-        deps = [],
+        deps = ["md5"],
     ),
 ]
