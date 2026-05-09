@@ -11,6 +11,7 @@ energy-gateway workers a shared deterministic shape for:
 - request method, timeout, idempotency, and media-type hints
 - vault-backed auth placeholders without exposing secret values
 - header conflict checks before a runtime worker receives the plan
+- bounded read-side queries for endpoint inventories and planned requests
 
 Protocol-specific clients and runtime executors live in integration crates. This
 crate owns the portable request vocabulary that should stay the same across
