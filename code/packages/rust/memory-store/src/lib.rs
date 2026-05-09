@@ -73,6 +73,107 @@ impl MemoryRecord {
     }
 }
 
+/// Why a memory should be surfaced for human, agent, or scheduled review.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum MemoryReviewReason {
+    LowConfidence,
+    NeverReviewed,
+    StaleReview,
+    ExpiringSoon,
+    Expired,
+}
+
+/// One memory plus the deterministic reasons it matched a review policy.
+#[derive(Debug, Clone, PartialEq)]
+pub struct MemoryReviewCandidate {
+    pub memory: MemoryRecord,
+    pub reasons: Vec<MemoryReviewReason>,
+}
+
+/// Portable ordering for memory review queues.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum MemoryReviewSort {
+    #[default]
+    Urgency,
+    MemoryId,
+    CreatedAtAsc,
+    ConfidenceAsc,
+    ExpiresAtAsc,
+}
+
+/// Portable policy used by agents, tools, and jobs to surface memories that
+/// need review without relying on backend-specific queries.
+#[derive(Debug, Clone, PartialEq)]
+pub struct MemoryReviewOptions {
+    pub now_ms: u64,
+    pub max_confidence: Option<f64>,
+    pub stale_after_ms: Option<u64>,
+    pub expiring_within_ms: Option<u64>,
+    pub include_expired: bool,
+    pub include_tombstoned: bool,
+    pub sort: MemoryReviewSort,
+    pub limit: Option<usize>,
+}
+
+impl Default for MemoryReviewOptions {
+    fn default() -> Self {
+        Self {
+            now_ms: 0,
+            max_confidence: None,
+            stale_after_ms: None,
+            expiring_within_ms: None,
+            include_expired: false,
+            include_tombstoned: false,
+            sort: MemoryReviewSort::Urgency,
+            limit: None,
+        }
+    }
+}
+
+impl MemoryReviewOptions {
+    pub fn at(now_ms: u64) -> Self {
+        Self {
+            now_ms,
+            ..Self::default()
+        }
+    }
+
+    pub fn max_confidence(mut self, confidence: f64) -> Self {
+        self.max_confidence = Some(confidence);
+        self
+    }
+
+    pub fn stale_after_ms(mut self, duration_ms: u64) -> Self {
+        self.stale_after_ms = Some(duration_ms);
+        self
+    }
+
+    pub fn expiring_within_ms(mut self, duration_ms: u64) -> Self {
+        self.expiring_within_ms = Some(duration_ms);
+        self
+    }
+
+    pub fn include_expired(mut self, include: bool) -> Self {
+        self.include_expired = include;
+        self
+    }
+
+    pub fn include_tombstoned(mut self, include: bool) -> Self {
+        self.include_tombstoned = include;
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: MemoryReviewSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
 /// Portable ordering for bounded memory list/read tools.
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum MemoryListSort {
@@ -308,6 +409,37 @@ impl<S: StorageBackend> MemoryStore<S> {
         )
     }
 
+    pub fn review_candidates(
+        &self,
+        options: MemoryReviewOptions,
+    ) -> Result<Vec<MemoryReviewCandidate>, StorageError> {
+        validate_memory_review_options(&options)?;
+        let mut candidates = self
+            .list_memories(|memory| options.include_tombstoned || !memory.tombstoned)?
+            .into_iter()
+            .filter_map(|memory| {
+                if !options.include_expired
+                    && memory
+                        .expires_at
+                        .is_some_and(|expires_at| expires_at <= options.now_ms)
+                {
+                    return None;
+                }
+                let reasons = memory_review_reasons(&memory, &options);
+                if reasons.is_empty() {
+                    None
+                } else {
+                    Some(MemoryReviewCandidate { memory, reasons })
+                }
+            })
+            .collect::<Vec<_>>();
+        sort_review_candidates(&mut candidates, options.sort);
+        if let Some(limit) = options.limit {
+            candidates.truncate(limit);
+        }
+        Ok(candidates)
+    }
+
     pub fn mark_expired(
         &self,
         memory_id: &str,
@@ -447,6 +579,107 @@ fn memory_matches_list_options(memory: &MemoryRecord, options: &MemoryListOption
     }
 
     true
+}
+
+fn memory_review_reasons(
+    memory: &MemoryRecord,
+    options: &MemoryReviewOptions,
+) -> Vec<MemoryReviewReason> {
+    let mut reasons = Vec::new();
+    if let Some(max_confidence) = options.max_confidence {
+        if memory.confidence <= max_confidence {
+            reasons.push(MemoryReviewReason::LowConfidence);
+        }
+    }
+    if let Some(stale_after_ms) = options.stale_after_ms {
+        match memory.reviewed_at {
+            Some(reviewed_at) if reviewed_at.saturating_add(stale_after_ms) <= options.now_ms => {
+                reasons.push(MemoryReviewReason::StaleReview);
+            }
+            None => reasons.push(MemoryReviewReason::NeverReviewed),
+            _ => {}
+        }
+    }
+    if let Some(expires_at) = memory.expires_at {
+        if expires_at <= options.now_ms {
+            reasons.push(MemoryReviewReason::Expired);
+        } else if options
+            .expiring_within_ms
+            .is_some_and(|window| expires_at <= options.now_ms.saturating_add(window))
+        {
+            reasons.push(MemoryReviewReason::ExpiringSoon);
+        }
+    }
+    reasons
+}
+
+fn sort_review_candidates(candidates: &mut [MemoryReviewCandidate], sort: MemoryReviewSort) {
+    match sort {
+        MemoryReviewSort::Urgency => candidates.sort_by(compare_review_urgency),
+        MemoryReviewSort::MemoryId => {
+            candidates.sort_by(|left, right| left.memory.memory_id.cmp(&right.memory.memory_id))
+        }
+        MemoryReviewSort::CreatedAtAsc => {
+            candidates.sort_by(|left, right| compare_by_created_at_asc(&left.memory, &right.memory))
+        }
+        MemoryReviewSort::ConfidenceAsc => candidates.sort_by(|left, right| {
+            left.memory
+                .confidence
+                .partial_cmp(&right.memory.confidence)
+                .unwrap_or(Ordering::Equal)
+                .then_with(|| left.memory.memory_id.cmp(&right.memory.memory_id))
+        }),
+        MemoryReviewSort::ExpiresAtAsc => candidates.sort_by(|left, right| {
+            left.memory
+                .expires_at
+                .unwrap_or(u64::MAX)
+                .cmp(&right.memory.expires_at.unwrap_or(u64::MAX))
+                .then_with(|| left.memory.memory_id.cmp(&right.memory.memory_id))
+        }),
+    }
+}
+
+fn compare_review_urgency(left: &MemoryReviewCandidate, right: &MemoryReviewCandidate) -> Ordering {
+    review_urgency_rank(left)
+        .cmp(&review_urgency_rank(right))
+        .then_with(|| right.reasons.len().cmp(&left.reasons.len()))
+        .then_with(|| {
+            left.memory
+                .confidence
+                .partial_cmp(&right.memory.confidence)
+                .unwrap_or(Ordering::Equal)
+        })
+        .then_with(|| {
+            left.memory
+                .expires_at
+                .unwrap_or(u64::MAX)
+                .cmp(&right.memory.expires_at.unwrap_or(u64::MAX))
+        })
+        .then_with(|| left.memory.created_at.cmp(&right.memory.created_at))
+        .then_with(|| left.memory.memory_id.cmp(&right.memory.memory_id))
+}
+
+fn review_urgency_rank(candidate: &MemoryReviewCandidate) -> u8 {
+    if candidate.reasons.contains(&MemoryReviewReason::Expired) {
+        0
+    } else if candidate
+        .reasons
+        .contains(&MemoryReviewReason::ExpiringSoon)
+    {
+        1
+    } else if candidate
+        .reasons
+        .contains(&MemoryReviewReason::LowConfidence)
+    {
+        2
+    } else if candidate
+        .reasons
+        .contains(&MemoryReviewReason::NeverReviewed)
+    {
+        3
+    } else {
+        4
+    }
 }
 
 fn sort_memories(memories: &mut [MemoryRecord], sort: MemoryListSort) {
@@ -645,6 +878,13 @@ fn validate_memory_list_options(options: &MemoryListOptions) -> Result<(), Stora
     validate_id_list("tags", &options.tags)?;
     validate_id_list("source_refs", &options.source_refs)?;
     if let Some(confidence) = options.min_confidence {
+        validate_confidence(confidence)?;
+    }
+    Ok(())
+}
+
+fn validate_memory_review_options(options: &MemoryReviewOptions) -> Result<(), StorageError> {
+    if let Some(confidence) = options.max_confidence {
         validate_confidence(confidence)?;
     }
     Ok(())
@@ -927,6 +1167,87 @@ mod tests {
     }
 
     #[test]
+    fn review_candidates_explain_low_confidence_stale_and_expiring_memories() {
+        let store = MemoryStore::new(InMemoryStorageBackend::new());
+        let mut low_confidence =
+            memory_with_created_confidence("low-confidence", "Maybe", "Tentative fact", 10, 0.35);
+        low_confidence.reviewed_at = Some(90);
+        let mut stale =
+            memory_with_created_confidence("stale", "Old preference", "Needs recheck", 20, 0.9);
+        stale.reviewed_at = Some(40);
+        let mut expiring =
+            memory_with_created_confidence("expiring", "Lease", "Credential note", 30, 0.95);
+        expiring.reviewed_at = Some(95);
+        expiring.expires_at = Some(125);
+        let mut expired =
+            memory_with_created_confidence("expired", "Expired", "Past note", 40, 0.95);
+        expired.reviewed_at = Some(95);
+        expired.expires_at = Some(99);
+
+        let _ = store.remember(low_confidence).unwrap();
+        let _ = store.remember(stale).unwrap();
+        let _ = store.remember(expiring).unwrap();
+        let _ = store.remember(expired).unwrap();
+
+        let candidates = store
+            .review_candidates(
+                MemoryReviewOptions::at(100)
+                    .max_confidence(0.5)
+                    .stale_after_ms(50)
+                    .expiring_within_ms(30)
+                    .include_expired(true),
+            )
+            .unwrap();
+
+        assert_eq!(
+            candidates
+                .iter()
+                .map(|candidate| candidate.memory.memory_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["expired", "expiring", "low-confidence", "stale"]
+        );
+        assert_eq!(candidates[0].reasons, vec![MemoryReviewReason::Expired]);
+        assert_eq!(
+            candidates[1].reasons,
+            vec![MemoryReviewReason::ExpiringSoon]
+        );
+        assert_eq!(
+            candidates[2].reasons,
+            vec![MemoryReviewReason::LowConfidence]
+        );
+        assert_eq!(candidates[3].reasons, vec![MemoryReviewReason::StaleReview]);
+    }
+
+    #[test]
+    fn review_candidates_can_skip_expired_records_and_limit_by_sort() {
+        let store = MemoryStore::new(InMemoryStorageBackend::new());
+        let mut expired = memory_with_created_confidence("expired", "Expired", "Past", 10, 0.2);
+        expired.expires_at = Some(90);
+        let low = memory_with_created_confidence("low", "Low", "Maybe", 20, 0.4);
+        let lower = memory_with_created_confidence("lower", "Lower", "Maybe", 30, 0.1);
+
+        let _ = store.remember(expired).unwrap();
+        let _ = store.remember(low).unwrap();
+        let _ = store.remember(lower).unwrap();
+
+        let candidates = store
+            .review_candidates(
+                MemoryReviewOptions::at(100)
+                    .max_confidence(0.5)
+                    .sorted_by(MemoryReviewSort::ConfidenceAsc)
+                    .with_limit(1),
+            )
+            .unwrap();
+
+        assert_eq!(candidates.len(), 1);
+        assert_eq!(candidates[0].memory.memory_id, "lower");
+        assert_eq!(
+            candidates[0].reasons,
+            vec![MemoryReviewReason::LowConfidence]
+        );
+    }
+
+    #[test]
     fn confidence_and_tombstone_updates_work() {
         let store = MemoryStore::new(InMemoryStorageBackend::new());
         let _ = store.remember(memory()).unwrap();
@@ -967,6 +1288,10 @@ mod tests {
         assert!(validate_confidence(1.5).is_err());
         assert!(validate_subject("").is_err());
         assert!(validate_body("").is_err());
+        assert!(
+            validate_memory_review_options(&MemoryReviewOptions::at(100).max_confidence(1.5))
+                .is_err()
+        );
         assert!(MemoryStore::new(InMemoryStorageBackend::new())
             .list_memories_with_options(MemoryListOptions::new().with_tag("bad tag"))
             .is_err());
