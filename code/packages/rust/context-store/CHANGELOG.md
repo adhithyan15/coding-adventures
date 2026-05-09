@@ -12,6 +12,8 @@ All notable changes to this package will be documented in this file.
   creation, compaction checkpoints, and archive support
 - Bounded transcript window reads with optional `after_entry_id` cursor and
   positive limit validation for D18D `context.read_entries` callers
+- Entry kind and inclusive timestamp range filters for bounded transcript
+  reads used by read-side session replay and tool-result inspection
 - Bounded session header listing by owner, lifecycle status, sort order, and
   positive limit for D18D `context.list_sessions` callers
 - Bounded snapshot listing by basis entry, linked summary/memory/artifact refs,
