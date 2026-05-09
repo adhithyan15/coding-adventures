@@ -81,6 +81,32 @@ module CodingAdventures
         assert_equal false, overridden["verify_md5"]
       end
 
+      def test_pico_uf2_upload_options_are_exposed_from_rust_language_core
+        options = BoardVM.pico_uf2_upload_options(:pico)
+
+        assert_equal "raspberry-pi-pico", options["board_id"]
+        assert_equal "pico-uf2", options["command"]
+        assert_equal "RPI-RP2", options["volume_label"]
+        assert_equal ".uf2", options["image_extension"]
+        assert_equal true, options["auto_detect_mount"]
+        refute_nil BoardVM.pico_uf2_upload_options(:pico_w)
+        assert_nil BoardVM.pico_uf2_upload_options(:esp32)
+      end
+
+      def test_pico_uf2_upload_command_uses_rust_owned_options
+        command = BoardVM.pico_uf2_upload_command(
+          :pico,
+          image: "/tmp/board-vm-pico.uf2",
+          mount: "/Volumes/RPI-RP2"
+        )
+
+        assert_equal [
+          "pico-uf2",
+          "--image", "/tmp/board-vm-pico.uf2",
+          "--mount", "/Volumes/RPI-RP2"
+        ], command
+      end
+
       def test_devices_are_discovered_and_classified_by_rust_language_core
         devices = BoardVM.devices(paths: [
           "/dev/cu.usbmodem1101",

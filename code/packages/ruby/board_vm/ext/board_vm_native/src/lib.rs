@@ -20,11 +20,12 @@ use board_vm_language_core::{
     capability_bytecode_callable, capability_flag_names, capability_protocol_feature,
     decode_wire_response, detect_target as core_detect_target,
     discover_devices as core_discover_devices, discover_devices_from_paths,
-    esp_upload_options_for_target, known_targets, onboard_led_kind, program_format_name,
-    raw_module_len, run_status_name, wireless_transport_name, BoardVmLanguageSession,
-    DecodedLanguageResponse, DecodedLanguageResponseBody, LanguageCoreError,
-    LanguageEspUploadOptions, LanguageHostDevice, LanguageOnboardLed, LanguageTargetInfo,
-    LanguageValue, LanguageWirelessInterface,
+    esp_upload_options_for_target, known_targets, onboard_led_kind,
+    pico_uf2_upload_options_for_target, program_format_name, raw_module_len, run_status_name,
+    wireless_transport_name, BoardVmLanguageSession, DecodedLanguageResponse,
+    DecodedLanguageResponseBody, LanguageCoreError, LanguageEspUploadOptions, LanguageHostDevice,
+    LanguageOnboardLed, LanguagePicoUf2UploadOptions, LanguageTargetInfo, LanguageValue,
+    LanguageWirelessInterface,
 };
 use ruby_bridge::VALUE;
 
@@ -425,6 +426,15 @@ extern "C" fn native_esp_upload_options(_self_val: VALUE, selector_val: VALUE) -
     }
 }
 
+extern "C" fn native_pico_uf2_upload_options(_self_val: VALUE, selector_val: VALUE) -> VALUE {
+    let selector = ruby_bridge::str_from_rb(selector_val)
+        .unwrap_or_else(|| ruby_bridge::raise_arg_error("selector must be a Ruby String"));
+    match pico_uf2_upload_options_for_target(&selector) {
+        Some(options) => pico_uf2_upload_options_to_rb(&options),
+        None => ruby_bridge::nil_value(),
+    }
+}
+
 extern "C" fn native_discover_devices(_self_val: VALUE) -> VALUE {
     host_devices_to_rb(&core_discover_devices())
 }
@@ -717,6 +727,28 @@ fn esp_upload_options_to_rb(options: &LanguageEspUploadOptions) -> VALUE {
         hash,
         "stay_in_bootloader",
         ruby_bridge::bool_to_rb(options.stay_in_bootloader),
+    );
+    hash
+}
+
+fn pico_uf2_upload_options_to_rb(options: &LanguagePicoUf2UploadOptions) -> VALUE {
+    let hash = ruby_bridge::hash_new();
+    hash_set(hash, "board_id", ruby_bridge::str_to_rb(&options.board_id));
+    hash_set(hash, "command", ruby_bridge::str_to_rb(&options.command));
+    hash_set(
+        hash,
+        "volume_label",
+        ruby_bridge::str_to_rb(&options.volume_label),
+    );
+    hash_set(
+        hash,
+        "image_extension",
+        ruby_bridge::str_to_rb(&options.image_extension),
+    );
+    hash_set(
+        hash,
+        "auto_detect_mount",
+        ruby_bridge::bool_to_rb(options.auto_detect_mount),
     );
     hash
 }
@@ -1042,6 +1074,12 @@ pub extern "C" fn Init_board_vm_native() {
         native,
         "esp_upload_options",
         native_esp_upload_options as *const c_void,
+        1,
+    );
+    ruby_bridge::define_module_function_raw(
+        native,
+        "pico_uf2_upload_options",
+        native_pico_uf2_upload_options as *const c_void,
         1,
     );
     ruby_bridge::define_module_function_raw(

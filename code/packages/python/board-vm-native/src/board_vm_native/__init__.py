@@ -271,6 +271,31 @@ class EspUploadOptions:
 
 
 @dataclass(frozen=True)
+class PicoUf2UploadOptions:
+    raw: dict[str, Any]
+
+    @property
+    def board_id(self) -> str:
+        return str(self.raw["board_id"])
+
+    @property
+    def command(self) -> str:
+        return str(self.raw["command"])
+
+    @property
+    def volume_label(self) -> str:
+        return str(self.raw["volume_label"])
+
+    @property
+    def image_extension(self) -> str:
+        return str(self.raw["image_extension"])
+
+    @property
+    def auto_detect_mount(self) -> bool:
+        return bool(self.raw["auto_detect_mount"])
+
+
+@dataclass(frozen=True)
 class BoardDevice:
     raw: dict[str, Any]
 
@@ -1176,6 +1201,18 @@ def esp_upload_options(
     return EspUploadOptions(merged)
 
 
+def pico_uf2_upload_options(
+    selector: str = "raspberry-pi-pico",
+    **overrides: Any,
+) -> PicoUf2UploadOptions | None:
+    raw = _native.pico_uf2_upload_options(str(selector))
+    if raw is None:
+        return None
+    merged = dict(raw)
+    merged.update(overrides)
+    return PicoUf2UploadOptions(merged)
+
+
 DeviceReference = BoardDevice | dict[str, Any] | str | int
 
 
@@ -1325,6 +1362,27 @@ def esp_upload_command(
     return command
 
 
+def pico_uf2_upload_command(
+    selector: str = "raspberry-pi-pico",
+    *,
+    image: str,
+    mount: str | None = None,
+    **overrides: Any,
+) -> list[str]:
+    options = pico_uf2_upload_options(selector, **overrides)
+    if options is None:
+        raise ValueError(f"Pico UF2 upload is not supported for {selector!r}")
+
+    command = [
+        options.command,
+        "--image",
+        str(image),
+    ]
+    if mount is not None:
+        command.extend(["--mount", str(mount)])
+    return command
+
+
 def devices(paths: Iterable[str] | None = None) -> list[BoardDevice]:
     raw_devices = (
         _native.discover_devices()
@@ -1360,6 +1418,7 @@ __all__ = [
     "EspUploadOptions",
     "GPIO_MODES",
     "GPIO_READ_MODES",
+    "PicoUf2UploadOptions",
     "ProtocolResult",
     "RUN_FLAG_BACKGROUND_RUN",
     "RUN_FLAG_KEEP_HANDLES_AFTER_RUN",
@@ -1374,6 +1433,8 @@ __all__ = [
     "esp_upload_options",
     "find_target",
     "known_targets",
+    "pico_uf2_upload_command",
+    "pico_uf2_upload_options",
     "pick_device",
     "select_device",
 ]
