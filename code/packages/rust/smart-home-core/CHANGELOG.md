@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- `IntegrationDescriptor` builder/query helpers plus a canonical integration
+  descriptor catalog for Hue, Zigbee, Z-Wave, Thread, Matter, and MQTT
+  bootstrap families.
+
 ## [0.1.0] - 2026-05-06
 
 ### Added

@@ -31,6 +31,8 @@ Current scope:
 - capability and value typing
 - canonical capability catalog entries for light, scene, lock, climate, sensor,
   and input families
+- canonical integration descriptors for Hue, Zigbee, Z-Wave, Thread, Matter,
+  and MQTT bootstrap families
 - immutable device events and command requests
 - command risk tier helpers
 - state freshness helpers
