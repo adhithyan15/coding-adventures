@@ -236,7 +236,19 @@ id = "rawtext_end_tag_attributes"
 id = "script_data_end_tag_attributes"
 
 [[states]]
+id = "script_data_end_tag_attribute_double_quoted"
+
+[[states]]
+id = "script_data_end_tag_attribute_single_quoted"
+
+[[states]]
 id = "script_data_escaped_end_tag_attributes"
+
+[[states]]
+id = "script_data_escaped_end_tag_attribute_double_quoted"
+
+[[states]]
+id = "script_data_escaped_end_tag_attribute_single_quoted"
 
 [[states]]
 id = "rcdata_self_closing_end_tag"
@@ -1979,6 +1991,18 @@ actions = ["emit_rcdata_end_tag_with_attributes_or_text"]
 
 [[transitions]]
 from = "script_data_end_tag_attributes"
+matcher = { literal = "\"" }
+to = "script_data_end_tag_attribute_double_quoted"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_attributes"
+matcher = { literal = "'" }
+to = "script_data_end_tag_attribute_single_quoted"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_attributes"
 matcher = { eof = true }
 to = "done"
 consume = false
@@ -1997,10 +2021,72 @@ to = "script_data_end_tag_attributes"
 actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
+from = "script_data_end_tag_attribute_double_quoted"
+matcher = { literal = "\"" }
+to = "script_data_end_tag_attributes"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_attribute_double_quoted"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "script_data_end_tag_attribute_double_quoted"
+matcher = { anything = true }
+to = "script_data_end_tag_attribute_double_quoted"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_attribute_single_quoted"
+matcher = { literal = "'" }
+to = "script_data_end_tag_attributes"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_end_tag_attribute_single_quoted"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "script_data_end_tag_attribute_single_quoted"
+matcher = { anything = true }
+to = "script_data_end_tag_attribute_single_quoted"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
 from = "script_data_escaped_end_tag_attributes"
 matcher = { literal = ">" }
 to = "script_data_escaped"
 actions = ["emit_rcdata_end_tag_with_attributes_or_text"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_attributes"
+matcher = { literal = "\"" }
+to = "script_data_escaped_end_tag_attribute_double_quoted"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_attributes"
+matcher = { literal = "'" }
+to = "script_data_escaped_end_tag_attribute_single_quoted"
+actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
 from = "script_data_escaped_end_tag_attributes"
@@ -2019,6 +2105,56 @@ actions = [
 from = "script_data_escaped_end_tag_attributes"
 matcher = { anything = true }
 to = "script_data_escaped_end_tag_attributes"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_attribute_double_quoted"
+matcher = { literal = "\"" }
+to = "script_data_escaped_end_tag_attributes"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_attribute_double_quoted"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_attribute_double_quoted"
+matcher = { anything = true }
+to = "script_data_escaped_end_tag_attribute_double_quoted"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_attribute_single_quoted"
+matcher = { literal = "'" }
+to = "script_data_escaped_end_tag_attributes"
+actions = ["append_temporary_buffer(current)"]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_attribute_single_quoted"
+matcher = { eof = true }
+to = "done"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
+  "flush_text",
+  "emit(EOF)",
+]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_attribute_single_quoted"
+matcher = { anything = true }
+to = "script_data_escaped_end_tag_attribute_single_quoted"
 actions = ["append_temporary_buffer(current)"]
 
 [[transitions]]
@@ -5572,7 +5708,13 @@ actions = [
 [[transitions]]
 from = "cdata_open_cdata"
 matcher = { literal = "[" }
-to = "cdata_section"
+to = "bogus_comment"
+consume = false
+actions = [
+  "parse_error(cdata-in-html-content)",
+  "create_comment",
+  "append_comment([CDATA)",
+]
 
 [[transitions]]
 from = "cdata_open_cdata"

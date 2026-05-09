@@ -1676,16 +1676,19 @@
     },
     {
       "id": "html5lib-smoke-132",
-      "description": "markup declaration CDATA opener enters CDATA section",
+      "description": "markup declaration CDATA opener is a bogus comment in HTML content",
       "input": "<![CDATA[<not-markup> &amp; ]]><p>After</p>",
       "tokens": [
-        "Text(data=<not-markup> &amp; )",
+        "Comment(data=[CDATA[<not-markup)",
+        "Text(data= & ]]>)",
         "StartTag(name=p, attributes=[], self_closing=false)",
         "Text(data=After)",
         "EndTag(name=p)",
         "EOF"
       ],
-      "diagnostics": []
+      "diagnostics": [
+        "cdata-in-html-content"
+      ]
     },
     {
       "id": "html5lib-smoke-133",

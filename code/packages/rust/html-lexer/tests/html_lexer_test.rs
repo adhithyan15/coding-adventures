@@ -1925,10 +1925,7 @@ fn default_html_lexer_reports_recoverable_comment_eof_diagnostic() {
 fn default_html_lexer_does_not_include_comment_end_dashes_at_eof() {
     let tokens = lex_html("<!--x--").unwrap();
 
-    assert_eq!(
-        tokens,
-        vec![Token::Comment("x".to_string()), Token::Eof]
-    );
+    assert_eq!(tokens, vec![Token::Comment("x".to_string()), Token::Eof]);
 }
 
 #[test]
@@ -2617,7 +2614,8 @@ fn default_html_lexer_supports_markup_cdata_section_flow() {
         lexer.drain_tokens(),
         vec![
             Token::Text("Before".to_string()),
-            Token::Text("<not-markup> &amp; After".to_string()),
+            Token::Comment("[CDATA[<not-markup".to_string()),
+            Token::Text(" & ]]>After".to_string()),
             Token::Eof,
         ]
     );
@@ -4468,7 +4466,7 @@ fn default_html_lexer_preserves_ambiguous_ampersands_in_attributes() {
     let mut lexer = create_html_lexer().unwrap();
 
     lexer
-        .push("<a title=\"&notit; &copycat &copy\" rel=&notin data=&notin;>")
+        .push("<a title=\"&notit; &copycat &copy\" rel=&notin data=&notin; gt=\"&gt=\">")
         .unwrap();
     lexer.finish().unwrap();
 
@@ -4489,6 +4487,10 @@ fn default_html_lexer_preserves_ambiguous_ampersands_in_attributes() {
                     Attribute {
                         name: "data".to_string(),
                         value: "\u{2209}".to_string(),
+                    },
+                    Attribute {
+                        name: "gt".to_string(),
+                        value: "&gt=".to_string(),
                     },
                 ],
                 self_closing: false,
