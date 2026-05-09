@@ -421,6 +421,35 @@ impl HueGroupedLightResource {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HueGroupedLightStateUpdate {
+    pub id: HueResourceId,
+    pub owner: Option<HueResourceRef>,
+    pub name: Option<String>,
+    pub on: Option<bool>,
+    pub brightness: Option<u8>,
+}
+
+impl HueGroupedLightStateUpdate {
+    pub fn from_grouped_light_resource(grouped_light: &HueGroupedLightResource) -> Self {
+        Self {
+            id: grouped_light.id.clone(),
+            owner: Some(grouped_light.owner.clone()),
+            name: Some(grouped_light.name.clone()),
+            on: grouped_light.on,
+            brightness: grouped_light.brightness,
+        }
+    }
+
+    pub fn has_state(&self) -> bool {
+        self.on.is_some() || self.brightness.is_some()
+    }
+
+    pub fn state_deltas(&self) -> Vec<StateDelta> {
+        hue_grouped_light_state_deltas(self)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct HueRoomResource {
     pub id: HueResourceId,
     pub name: String,
@@ -697,6 +726,23 @@ pub fn hue_light_state_deltas(update: &HueLightStateUpdate) -> Vec<StateDelta> {
         deltas.push(StateDelta {
             capability_id: CapabilityId::trusted("light.color_temperature"),
             value: Value::Integer(i64::from(mirek)),
+        });
+    }
+    deltas
+}
+
+pub fn hue_grouped_light_state_deltas(update: &HueGroupedLightStateUpdate) -> Vec<StateDelta> {
+    let mut deltas = Vec::new();
+    if let Some(on) = update.on {
+        deltas.push(StateDelta {
+            capability_id: CapabilityId::trusted("light.on_off"),
+            value: Value::Bool(on),
+        });
+    }
+    if let Some(brightness) = update.brightness {
+        deltas.push(StateDelta {
+            capability_id: CapabilityId::trusted("light.brightness"),
+            value: Value::Percentage(brightness),
         });
     }
     deltas
@@ -1049,6 +1095,17 @@ mod tests {
             Some(HueRequestBody::SetBrightness { brightness: 55 })
         );
         assert_eq!(grouped.owner.resource_type, HueResourceType::Room);
+
+        let update = HueGroupedLightStateUpdate::from_grouped_light_resource(&grouped);
+        assert!(update.has_state());
+        assert_eq!(
+            update.owner.as_ref().unwrap().resource_type,
+            HueResourceType::Room
+        );
+        let deltas = update.state_deltas();
+        assert_eq!(deltas.len(), 2);
+        assert_eq!(deltas[0].capability_id.as_str(), "light.on_off");
+        assert_eq!(deltas[1].capability_id.as_str(), "light.brightness");
     }
 
     #[test]

@@ -22,3 +22,5 @@ All notable changes to this package will be documented in this file.
 - Incremental Hue event-stream decoder for split Server-Sent Events chunks.
 - Hue light, motion, and button state update extraction from resource snapshots
   and event-stream batches for normalized runtime state deltas.
+- Hue grouped-light state update extraction from resource snapshots and
+  event-stream batches for room/zone aggregate state.

@@ -11,10 +11,11 @@ use coding_adventures_json_value::{parse as parse_json, JsonNumber, JsonValue};
 use http_core::{find_header, Header};
 use hue_core::{
     validate_brightness, HueBridgeResource, HueButtonResource, HueButtonStateUpdate, HueCommand,
-    HueDeviceResource, HueGroupedLightResource, HueLightResource, HueLightStateUpdate, HueMethod,
-    HueMotionResource, HueMotionStateUpdate, HueRequest, HueRequestBody, HueResourceId,
-    HueResourceRef, HueResourceType, HueRoomResource, HueSceneAction, HueSceneResource,
-    HueZoneResource, CLIP_V2_EVENT_STREAM_PATH, CLIP_V2_RESOURCE_ROOT, HUE_APPLICATION_KEY_HEADER,
+    HueDeviceResource, HueGroupedLightResource, HueGroupedLightStateUpdate, HueLightResource,
+    HueLightStateUpdate, HueMethod, HueMotionResource, HueMotionStateUpdate, HueRequest,
+    HueRequestBody, HueResourceId, HueResourceRef, HueResourceType, HueRoomResource,
+    HueSceneAction, HueSceneResource, HueZoneResource, CLIP_V2_EVENT_STREAM_PATH,
+    CLIP_V2_RESOURCE_ROOT, HUE_APPLICATION_KEY_HEADER,
 };
 use std::fmt;
 
@@ -761,6 +762,20 @@ pub fn parse_light_state_updates_from_envelope(
     Ok(updates)
 }
 
+pub fn parse_grouped_light_state_updates_from_envelope(
+    envelope: &HueEnvelope,
+) -> Result<Vec<HueGroupedLightStateUpdate>, HueClientError> {
+    let mut updates = Vec::new();
+    for resource in &envelope.data {
+        if object_string_field(resource, "type")
+            == Some(HueResourceType::GroupedLight.as_hue_type())
+        {
+            updates.push(parse_grouped_light_state_update(resource)?);
+        }
+    }
+    Ok(updates)
+}
+
 pub fn parse_motion_state_updates_from_envelope(
     envelope: &HueEnvelope,
 ) -> Result<Vec<HueMotionStateUpdate>, HueClientError> {
@@ -796,6 +811,24 @@ pub fn parse_light_state_updates_from_event_batches(
                     == Some(HueResourceType::Light.as_hue_type())
                 {
                     updates.push(parse_light_state_update(resource)?);
+                }
+            }
+        }
+    }
+    Ok(updates)
+}
+
+pub fn parse_grouped_light_state_updates_from_event_batches(
+    batches: &[HueEventStreamBatch],
+) -> Result<Vec<HueGroupedLightStateUpdate>, HueClientError> {
+    let mut updates = Vec::new();
+    for batch in batches {
+        for event in &batch.events {
+            for resource in &event.data {
+                if object_string_field(resource, "type")
+                    == Some(HueResourceType::GroupedLight.as_hue_type())
+                {
+                    updates.push(parse_grouped_light_state_update(resource)?);
                 }
             }
         }
@@ -993,6 +1026,33 @@ fn parse_light_state_update(resource: &JsonValue) -> Result<HueLightStateUpdate,
     })
 }
 
+fn parse_grouped_light_state_update(
+    resource: &JsonValue,
+) -> Result<HueGroupedLightStateUpdate, HueClientError> {
+    let id = object_string_field(resource, "id").ok_or_else(|| {
+        HueClientError::unexpected_json("Hue grouped_light resource is missing id")
+    })?;
+    let owner = object_field(resource, "owner")
+        .map(parse_resource_ref)
+        .transpose()?;
+    let name = object_field(resource, "metadata")
+        .and_then(|metadata| object_string_field(metadata, "name"))
+        .map(str::to_string);
+    let on = object_field(resource, "on").and_then(|on| object_bool_field(on, "on"));
+    let brightness = object_field(resource, "dimming")
+        .and_then(|dimming| object_field(dimming, "brightness"))
+        .map(json_number_to_percent)
+        .transpose()?;
+
+    Ok(HueGroupedLightStateUpdate {
+        id: HueResourceId::trusted(id),
+        owner,
+        name,
+        on,
+        brightness,
+    })
+}
+
 fn parse_bridge_resource(resource: &JsonValue) -> Result<HueBridgeResource, HueClientError> {
     let id = object_string_field(resource, "id")
         .ok_or_else(|| HueClientError::unexpected_json("Hue bridge resource is missing id"))?;
@@ -1014,27 +1074,21 @@ fn parse_bridge_resource(resource: &JsonValue) -> Result<HueBridgeResource, HueC
 fn parse_grouped_light_resource(
     resource: &JsonValue,
 ) -> Result<HueGroupedLightResource, HueClientError> {
-    let id = object_string_field(resource, "id").ok_or_else(|| {
-        HueClientError::unexpected_json("Hue grouped_light resource is missing id")
-    })?;
-    let owner = object_field(resource, "owner")
+    let update = parse_grouped_light_state_update(resource)?;
+    let owner = update
+        .owner
         .ok_or_else(|| HueClientError::unexpected_json("Hue grouped_light is missing owner"))?;
-    let name = object_field(resource, "metadata")
-        .and_then(|metadata| object_string_field(metadata, "name"))
-        .unwrap_or(id)
-        .to_string();
-    let on = object_field(resource, "on").and_then(|on| object_bool_field(on, "on"));
-    let brightness = object_field(resource, "dimming")
-        .and_then(|dimming| object_field(dimming, "brightness"))
-        .map(json_number_to_percent)
-        .transpose()?;
+    let name = update
+        .name
+        .clone()
+        .unwrap_or_else(|| update.id.as_str().to_string());
 
     Ok(HueGroupedLightResource {
-        id: HueResourceId::trusted(id),
-        owner: parse_resource_ref(owner)?,
+        id: update.id,
+        owner,
         name,
-        on,
-        brightness,
+        on: update.on,
+        brightness: update.brightness,
     })
 }
 
@@ -1562,6 +1616,28 @@ mod tests {
     }
 
     #[test]
+    fn parses_grouped_light_state_updates_from_event_stream_batches() {
+        let batches = parse_event_stream(
+            b"data: [{\"id\":\"event-1\",\"type\":\"update\",\"data\":[{\"id\":\"grouped-light-1\",\"type\":\"grouped_light\",\"on\":{\"on\":true},\"dimming\":{\"brightness\":67}}]}]\n\n",
+        )
+        .unwrap();
+
+        let updates = parse_grouped_light_state_updates_from_event_batches(&batches).unwrap();
+
+        assert_eq!(updates.len(), 1);
+        assert_eq!(updates[0].id.as_str(), "grouped-light-1");
+        assert_eq!(updates[0].owner, None);
+        assert_eq!(updates[0].name, None);
+        assert_eq!(updates[0].on, Some(true));
+        assert_eq!(updates[0].brightness, Some(67));
+
+        let deltas = updates[0].state_deltas();
+        assert_eq!(deltas.len(), 2);
+        assert_eq!(deltas[0].capability_id.as_str(), "light.on_off");
+        assert_eq!(deltas[1].capability_id.as_str(), "light.brightness");
+    }
+
+    #[test]
     fn parses_motion_and_button_state_updates_from_event_stream_batches() {
         let batches = parse_event_stream(
             b"data: [{\"id\":\"event-1\",\"type\":\"update\",\"data\":[{\"id\":\"motion-1\",\"type\":\"motion\",\"motion\":{\"motion\":true,\"motion_valid\":true}},{\"id\":\"button-1\",\"type\":\"button\",\"button\":{\"last_event\":\"short_release\"}}]}]\n\n",
@@ -1827,6 +1903,17 @@ mod tests {
         assert_eq!(grouped_lights[0].owner.id.as_str(), "room-1");
         assert_eq!(grouped_lights[0].on, Some(true));
         assert_eq!(grouped_lights[0].brightness, Some(84));
+
+        let updates = parse_grouped_light_state_updates_from_envelope(&envelope).unwrap();
+        assert_eq!(updates.len(), 1);
+        assert_eq!(updates[0].id.as_str(), "grouped-light-1");
+        assert_eq!(
+            updates[0].owner.as_ref().unwrap().resource_type,
+            HueResourceType::Room
+        );
+        assert_eq!(updates[0].name.as_deref(), Some("Kitchen"));
+        assert_eq!(updates[0].on, Some(true));
+        assert_eq!(updates[0].brightness, Some(84));
     }
 
     #[test]

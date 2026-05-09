@@ -23,8 +23,8 @@ Included surfaces:
 - Hue room, zone, and scene resource decoding
 - Hue motion and button resource decoding for sensor/input entities
 - Hue light resource decoding
-- Hue light, motion, and button state update extraction from snapshots and
-  event-stream batches
+- Hue light, grouped-light, motion, and button state update extraction from
+  snapshots and event-stream batches
 
 ## Dependencies
 

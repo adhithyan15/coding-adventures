@@ -20,6 +20,7 @@ All notable changes to this package will be documented in this file.
   `smart-home-core`.
 - Hue light, motion, and button state update helpers that project partial Hue
   changes into normalized `StateDelta` records.
+- Hue grouped-light state update helpers for room/zone aggregate light state.
 - Hue light snapshots and scene desired states now use canonical D23 capability
   ids as object keys, matching smart-home runtime reconciliation.
 - Direct Hue light brightness and color-temperature command helpers.
