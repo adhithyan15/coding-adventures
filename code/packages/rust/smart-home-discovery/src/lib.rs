@@ -12,8 +12,7 @@ use smart_home_core::{
     ProtocolIdentifier,
 };
 use smart_home_integration_catalog::{AuthMode, DiscoveryMechanism, IntegrationCatalogEntry};
-use std::collections::BTreeMap;
-use std::fmt;
+use std::{cmp::Ordering, collections::BTreeMap, fmt};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum DiscoveryError {
@@ -413,6 +412,145 @@ pub struct DiscoveryPairingTarget {
     pub discovered_at_ms: u64,
 }
 
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum DiscoveryPairingPlanSort {
+    #[default]
+    PlanRank,
+    NewestFirst,
+    IntegrationThenBridge,
+    SourcePreference,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DiscoveryPairingPlanOptions {
+    pub integration_ids: Vec<IntegrationId>,
+    pub sources: Vec<DiscoverySource>,
+    pub signal_statuses: Vec<DiscoverySignalStatus>,
+    pub pairing_requirements: Vec<PairingRequirement>,
+    pub actions: Vec<DiscoveryPairingAction>,
+    pub priority_at_or_before: Option<u8>,
+    pub requires_human_action: Option<bool>,
+    pub actionable_only: bool,
+    pub sort: DiscoveryPairingPlanSort,
+    pub limit: Option<usize>,
+}
+
+impl Default for DiscoveryPairingPlanOptions {
+    fn default() -> Self {
+        Self {
+            integration_ids: Vec::new(),
+            sources: Vec::new(),
+            signal_statuses: Vec::new(),
+            pairing_requirements: Vec::new(),
+            actions: Vec::new(),
+            priority_at_or_before: None,
+            requires_human_action: None,
+            actionable_only: false,
+            sort: DiscoveryPairingPlanSort::PlanRank,
+            limit: None,
+        }
+    }
+}
+
+impl DiscoveryPairingPlanOptions {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_integration(mut self, integration_id: IntegrationId) -> Self {
+        self.integration_ids.push(integration_id);
+        self
+    }
+
+    pub fn with_source(mut self, source: DiscoverySource) -> Self {
+        self.sources.push(source);
+        self
+    }
+
+    pub fn with_signal_status(mut self, status: DiscoverySignalStatus) -> Self {
+        self.signal_statuses.push(status);
+        self
+    }
+
+    pub fn with_pairing_requirement(mut self, requirement: PairingRequirement) -> Self {
+        self.pairing_requirements.push(requirement);
+        self
+    }
+
+    pub fn with_action(mut self, action: DiscoveryPairingAction) -> Self {
+        self.actions.push(action);
+        self
+    }
+
+    pub fn at_or_before_priority(mut self, priority: u8) -> Self {
+        self.priority_at_or_before = Some(priority);
+        self
+    }
+
+    pub fn requiring_human_action(mut self, requires_human_action: bool) -> Self {
+        self.requires_human_action = Some(requires_human_action);
+        self
+    }
+
+    pub fn actionable_only(mut self, actionable_only: bool) -> Self {
+        self.actionable_only = actionable_only;
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: DiscoveryPairingPlanSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn limited_to(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    pub fn matches_target(&self, target: &DiscoveryPairingTarget) -> bool {
+        if self.actionable_only && !target.is_actionable() {
+            return false;
+        }
+        if let Some(priority) = self.priority_at_or_before {
+            if target.priority > priority {
+                return false;
+            }
+        }
+        if let Some(requires_human_action) = self.requires_human_action {
+            if target.requires_human_action() != requires_human_action {
+                return false;
+            }
+        }
+        if !self.integration_ids.is_empty()
+            && !self
+                .integration_ids
+                .iter()
+                .any(|integration_id| integration_id == &target.integration_id)
+        {
+            return false;
+        }
+        if !self.sources.is_empty() && !self.sources.contains(&target.source) {
+            return false;
+        }
+        if !self.signal_statuses.is_empty() && !self.signal_statuses.contains(&target.signal_status)
+        {
+            return false;
+        }
+        if !self.pairing_requirements.is_empty()
+            && !self
+                .pairing_requirements
+                .contains(&target.pairing_requirement)
+        {
+            return false;
+        }
+        if !self.actions.is_empty() && !self.actions.contains(&target.action) {
+            return false;
+        }
+
+        true
+    }
+}
+
 impl DiscoveryPairingTarget {
     pub fn requires_human_action(&self) -> bool {
         self.action.requires_human_action()
@@ -454,6 +592,23 @@ impl DiscoveryPairingPlan {
             .iter()
             .filter(|target| &target.integration_id == integration_id)
             .collect()
+    }
+
+    pub fn query(&self, options: &DiscoveryPairingPlanOptions) -> DiscoveryPairingPlan {
+        let mut targets = self
+            .targets
+            .iter()
+            .filter(|target| options.matches_target(target))
+            .cloned()
+            .collect::<Vec<_>>();
+        sort_pairing_targets(&mut targets, options.sort);
+        if let Some(limit) = options.limit {
+            targets.truncate(limit);
+        }
+        DiscoveryPairingPlan {
+            generated_at_ms: self.generated_at_ms,
+            targets,
+        }
     }
 }
 
@@ -924,33 +1079,21 @@ impl DiscoveryCatalog {
             .records()
             .filter_map(|record| pairing_target_for_record(record, catalog, now_ms, ttl_ms))
             .collect::<Vec<_>>();
-        targets.sort_by(|left, right| {
-            left.priority
-                .cmp(&right.priority)
-                .then_with(|| {
-                    signal_status_rank(left.signal_status)
-                        .cmp(&signal_status_rank(right.signal_status))
-                })
-                .then_with(|| {
-                    right
-                        .confidence
-                        .preference_rank()
-                        .cmp(&left.confidence.preference_rank())
-                })
-                .then_with(|| {
-                    right
-                        .source
-                        .preference_rank()
-                        .cmp(&left.source.preference_rank())
-                })
-                .then_with(|| right.discovered_at_ms.cmp(&left.discovered_at_ms))
-                .then_with(|| left.integration_id.cmp(&right.integration_id))
-                .then_with(|| left.native_bridge_id.cmp(&right.native_bridge_id))
-        });
+        sort_pairing_targets(&mut targets, DiscoveryPairingPlanSort::PlanRank);
         DiscoveryPairingPlan {
             generated_at_ms: now_ms,
             targets,
         }
+    }
+
+    pub fn pairing_plan_with_options_at(
+        &self,
+        catalog: &[IntegrationCatalogEntry],
+        now_ms: u64,
+        ttl_ms: u64,
+        options: &DiscoveryPairingPlanOptions,
+    ) -> DiscoveryPairingPlan {
+        self.pairing_plan_at(catalog, now_ms, ttl_ms).query(options)
     }
 }
 
@@ -1007,6 +1150,56 @@ fn signal_status_rank(status: DiscoverySignalStatus) -> u8 {
         DiscoverySignalStatus::Stale => 1,
         DiscoverySignalStatus::Expired => 2,
     }
+}
+
+fn sort_pairing_targets(targets: &mut [DiscoveryPairingTarget], sort: DiscoveryPairingPlanSort) {
+    match sort {
+        DiscoveryPairingPlanSort::PlanRank => targets.sort_by(compare_pairing_targets_by_rank),
+        DiscoveryPairingPlanSort::NewestFirst => targets.sort_by(|left, right| {
+            right
+                .discovered_at_ms
+                .cmp(&left.discovered_at_ms)
+                .then_with(|| compare_pairing_targets_by_rank(left, right))
+        }),
+        DiscoveryPairingPlanSort::IntegrationThenBridge => targets.sort_by(|left, right| {
+            left.integration_id
+                .cmp(&right.integration_id)
+                .then_with(|| left.native_bridge_id.cmp(&right.native_bridge_id))
+        }),
+        DiscoveryPairingPlanSort::SourcePreference => targets.sort_by(|left, right| {
+            right
+                .source
+                .preference_rank()
+                .cmp(&left.source.preference_rank())
+                .then_with(|| compare_pairing_targets_by_rank(left, right))
+        }),
+    }
+}
+
+fn compare_pairing_targets_by_rank(
+    left: &DiscoveryPairingTarget,
+    right: &DiscoveryPairingTarget,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| {
+            signal_status_rank(left.signal_status).cmp(&signal_status_rank(right.signal_status))
+        })
+        .then_with(|| {
+            right
+                .confidence
+                .preference_rank()
+                .cmp(&left.confidence.preference_rank())
+        })
+        .then_with(|| {
+            right
+                .source
+                .preference_rank()
+                .cmp(&left.source.preference_rank())
+        })
+        .then_with(|| right.discovered_at_ms.cmp(&left.discovered_at_ms))
+        .then_with(|| left.integration_id.cmp(&right.integration_id))
+        .then_with(|| left.native_bridge_id.cmp(&right.native_bridge_id))
 }
 
 fn primary_protocol_for_entry(entry: &IntegrationCatalogEntry) -> ProtocolFamily {
@@ -1229,6 +1422,93 @@ mod tests {
                     && mqtt_target.action == DiscoveryPairingAction::ConfigureMqttCredentials
                     && mqtt_target.signal_status == DiscoverySignalStatus::Stale
         ));
+    }
+
+    #[test]
+    fn pairing_plan_options_filter_human_action_queue() {
+        let catalog = first_party_catalog();
+        let hue_hint = discovery_hints_for_integration(&catalog, &IntegrationId::trusted("hue"))
+            .into_iter()
+            .find(|hint| hint.discovery_mechanism == DiscoveryMechanism::Mdns)
+            .unwrap();
+        let mqtt_hint = discovery_hints_for_integration(&catalog, &IntegrationId::trusted("mqtt"))
+            .into_iter()
+            .find(|hint| hint.discovery_mechanism == DiscoveryMechanism::Mqtt)
+            .unwrap();
+        let hue = hue_hint
+            .to_record("001788fffeabcdef", 1_500)
+            .unwrap()
+            .with_confidence(DiscoveryConfidence::Verified);
+        let mqtt = mqtt_hint
+            .to_record("broker-1", 1_900)
+            .unwrap()
+            .with_confidence(DiscoveryConfidence::Candidate);
+        let mut discoveries = DiscoveryCatalog::new();
+        discoveries.record(hue);
+        discoveries.record(mqtt);
+
+        let human_mqtt = discoveries.pairing_plan_with_options_at(
+            &catalog,
+            2_000,
+            1_000,
+            &DiscoveryPairingPlanOptions::new()
+                .actionable_only(true)
+                .requiring_human_action(true)
+                .with_action(DiscoveryPairingAction::ConfigureMqttCredentials)
+                .sorted_by(DiscoveryPairingPlanSort::NewestFirst),
+        );
+
+        assert_eq!(human_mqtt.len(), 1);
+        assert_eq!(
+            human_mqtt.targets[0].integration_id,
+            IntegrationId::trusted("mqtt")
+        );
+        assert_eq!(
+            human_mqtt.targets[0].action,
+            DiscoveryPairingAction::ConfigureMqttCredentials
+        );
+    }
+
+    #[test]
+    fn pairing_plan_options_bound_priority_and_source_views() {
+        let catalog = first_party_catalog();
+        let hue_hint = discovery_hints_for_integration(&catalog, &IntegrationId::trusted("hue"))
+            .into_iter()
+            .find(|hint| hint.discovery_mechanism == DiscoveryMechanism::Mdns)
+            .unwrap();
+        let zwave_hint =
+            discovery_hints_for_integration(&catalog, &IntegrationId::trusted("zwave"))
+                .into_iter()
+                .find(|hint| hint.discovery_mechanism == DiscoveryMechanism::Usb)
+                .unwrap();
+        let tasmota_hint =
+            discovery_hints_for_integration(&catalog, &IntegrationId::trusted("tasmota"))
+                .into_iter()
+                .find(|hint| hint.discovery_mechanism == DiscoveryMechanism::Mqtt)
+                .unwrap();
+        let mut discoveries = DiscoveryCatalog::new();
+        discoveries.record(hue_hint.to_record("001788fffeabcdef", 1_000).unwrap());
+        discoveries.record(zwave_hint.to_record("zwave-stick-1", 1_500).unwrap());
+        discoveries.record(tasmota_hint.to_record("plug-1", 1_800).unwrap());
+
+        let source_view = discoveries.pairing_plan_with_options_at(
+            &catalog,
+            2_000,
+            2_000,
+            &DiscoveryPairingPlanOptions::new()
+                .at_or_before_priority(0)
+                .with_source(DiscoverySource::Usb)
+                .with_pairing_requirement(PairingRequirement::RadioInclusion)
+                .limited_to(1),
+        );
+
+        assert_eq!(source_view.len(), 1);
+        assert_eq!(
+            source_view.targets[0].integration_id,
+            IntegrationId::trusted("zwave")
+        );
+        assert_eq!(source_view.targets[0].source, DiscoverySource::Usb);
+        assert!(source_view.targets[0].requires_human_action());
     }
 
     #[test]
