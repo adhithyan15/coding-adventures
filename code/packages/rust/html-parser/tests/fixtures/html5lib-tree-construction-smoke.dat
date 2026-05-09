@@ -12,6 +12,7 @@
 |     <p>
 |       <a>
 
+
 #source adoption01.dat:2
 #data
 <a>1<p>2</a>3</p>
@@ -28,6 +29,7 @@
 |       <a>
 |         "2"
 |       "3"
+
 
 #source adoption01.dat:3
 #data
@@ -46,6 +48,7 @@
 |         "2"
 |       "3"
 
+
 #source adoption01.dat:4
 #data
 <a>1<b>2</a>3</b>
@@ -62,6 +65,7 @@
 |         "2"
 |     <b>
 |       "3"
+
 
 #source adoption01.dat:5
 #data
@@ -84,6 +88,7 @@
 |           "3"
 |         "4"
 |       "5"
+
 
 #source adoption01.dat:6
 #data
@@ -111,6 +116,7 @@
 |       "3"
 |     <table>
 
+
 #source adoption01.dat:7
 #data
 <b><b><a><p></a>
@@ -127,6 +133,7 @@
 |         <a>
 |         <p>
 |           <a>
+
 
 #source adoption01.dat:8
 #data
@@ -146,6 +153,7 @@
 |         <p>
 |           <a>
 
+
 #source adoption01.dat:9
 #data
 <a><b><b><p></a>
@@ -164,6 +172,7 @@
 |       <b>
 |         <p>
 |           <a>
+
 
 #source adoption01.dat:10
 #data
@@ -193,6 +202,7 @@
 |       id="B"
 |       "5"
 
+
 #source adoption01.dat:11
 #data
 <table><a>1<td>2</td>3</table>
@@ -216,6 +226,7 @@
 |           <td>
 |             "2"
 
+
 #source adoption01.dat:12
 #data
 <table>A<td>B</td>C</table>
@@ -235,6 +246,7 @@
 |           <td>
 |             "B"
 
+
 #source adoption01.dat:13
 #data
 <a><svg><tr><input></a>
@@ -250,6 +262,7 @@
 |       <svg svg>
 |         <svg tr>
 |           <svg input>
+
 
 #source adoption01.dat:14
 #data
@@ -292,6 +305,7 @@
 |                           <div>
 |                             <div>
 
+
 #source adoption01.dat:15
 #data
 <div><a><b><u><i><code><div></a>
@@ -315,6 +329,7 @@
 |             <div>
 |               <a>
 
+
 #source adoption01.dat:16
 #data
 <b><b><b><b>x</b></b></b></b>y
@@ -330,6 +345,7 @@
 |           <b>
 |             "x"
 |     "y"
+
 
 #source adoption01.dat:17
 #data
@@ -353,6 +369,7 @@
 |           <b>
 |             "x"
 
+
 #source adoption02.dat:18
 #data
 <b>1<i>2<p>3</b>4
@@ -373,6 +390,7 @@
 |         <b>
 |           "3"
 |         "4"
+
 
 #source adoption02.dat:19
 #data
@@ -412,6 +430,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:21
 #data
 <!doctype html><address><p>foo</address>bar
@@ -425,6 +444,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:22
 #data
@@ -443,6 +463,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:23
 #data
 <!doctype html><article><p>foo</article>bar
@@ -456,6 +477,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:24
 #data
@@ -474,6 +496,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:25
 #data
 <!doctype html><aside><p>foo</aside>bar
@@ -487,6 +510,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:26
 #data
@@ -505,6 +529,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:27
 #data
 <!doctype html><blockquote><p>foo</blockquote>bar
@@ -518,6 +543,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:28
 #data
@@ -536,6 +562,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:29
 #data
 <!doctype html><center><p>foo</center>bar
@@ -549,6 +576,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:30
 #data
@@ -567,6 +595,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:31
 #data
 <!doctype html><details><p>foo</details>bar
@@ -580,6 +609,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:32
 #data
@@ -598,6 +628,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:33
 #data
 <!doctype html><dialog><p>foo</dialog>bar
@@ -611,6 +642,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:34
 #data
@@ -629,6 +661,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:35
 #data
 <!doctype html><dir><p>foo</dir>bar
@@ -642,6 +675,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:36
 #data
@@ -660,6 +694,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:37
 #data
 <!doctype html><div><p>foo</div>bar
@@ -673,6 +708,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:38
 #data
@@ -691,6 +727,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:39
 #data
 <!doctype html><dl><p>foo</dl>bar
@@ -704,6 +741,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:40
 #data
@@ -722,6 +760,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:41
 #data
 <!doctype html><fieldset><p>foo</fieldset>bar
@@ -735,6 +774,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:42
 #data
@@ -753,6 +793,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:43
 #data
 <!doctype html><figcaption><p>foo</figcaption>bar
@@ -766,6 +807,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:44
 #data
@@ -784,6 +826,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:45
 #data
 <!doctype html><figure><p>foo</figure>bar
@@ -797,6 +840,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:46
 #data
@@ -815,6 +859,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:47
 #data
 <!doctype html><footer><p>foo</footer>bar
@@ -828,6 +873,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:48
 #data
@@ -846,6 +892,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:49
 #data
 <!doctype html><header><p>foo</header>bar
@@ -859,6 +906,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:50
 #data
@@ -877,6 +925,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:51
 #data
 <!doctype html><hgroup><p>foo</hgroup>bar
@@ -890,6 +939,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:52
 #data
@@ -908,6 +958,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:53
 #data
 <!doctype html><listing><p>foo</listing>bar
@@ -921,6 +972,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:54
 #data
@@ -939,6 +991,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:55
 #data
 <!doctype html><menu><p>foo</menu>bar
@@ -952,6 +1005,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:56
 #data
@@ -970,6 +1024,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:57
 #data
 <!doctype html><nav><p>foo</nav>bar
@@ -983,6 +1038,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:58
 #data
@@ -1001,6 +1057,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:59
 #data
 <!doctype html><ol><p>foo</ol>bar
@@ -1014,6 +1071,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:60
 #data
@@ -1032,6 +1090,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:61
 #data
 <!doctype html><pre><p>foo</pre>bar
@@ -1045,6 +1104,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:62
 #data
@@ -1063,6 +1123,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:63
 #data
 <!doctype html><section><p>foo</section>bar
@@ -1076,6 +1137,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:64
 #data
@@ -1094,6 +1156,7 @@
 |       <p>
 |         "baz"
 
+
 #source blocks.dat:65
 #data
 <!doctype html><summary><p>foo</summary>bar
@@ -1107,6 +1170,7 @@
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source blocks.dat:66
 #data
@@ -1124,6 +1188,7 @@
 |       "bar"
 |       <p>
 |         "baz"
+
 
 #source blocks.dat:67
 #data
@@ -1152,6 +1217,7 @@ FOO<!-- BAR -->BAZ
 |     <!--  BAR  -->
 |     "BAZ"
 
+
 #source comments01.dat:69
 #data
 FOO<!-- BAR --!>BAZ
@@ -1168,6 +1234,7 @@ FOO<!-- BAR --!>BAZ
 |     <!--  BAR  -->
 |     "BAZ"
 
+
 #source comments01.dat:70
 #data
 FOO<!-- BAR --! >BAZ
@@ -1182,6 +1249,7 @@ FOO<!-- BAR --! >BAZ
 |   <body>
 |     "FOO"
 |     <!--  BAR --! >BAZ -->
+
 
 #source comments01.dat:71
 #data
@@ -1200,6 +1268,7 @@ FOO<!-- BAR --!
 |     <!--  BAR --!
 >BAZ -->
 
+
 #source comments01.dat:72
 #data
 FOO<!-- BAR --   >BAZ
@@ -1215,6 +1284,7 @@ FOO<!-- BAR --   >BAZ
 |     "FOO"
 |     <!--  BAR --   >BAZ -->
 
+
 #source comments01.dat:73
 #data
 FOO<!-- BAR -- <QUX> -- MUX -->BAZ
@@ -1227,6 +1297,7 @@ FOO<!-- BAR -- <QUX> -- MUX -->BAZ
 |     "FOO"
 |     <!--  BAR -- <QUX> -- MUX  -->
 |     "BAZ"
+
 
 #source comments01.dat:74
 #data
@@ -1244,6 +1315,7 @@ FOO<!-- BAR -- <QUX> -- MUX --!>BAZ
 |     <!--  BAR -- <QUX> -- MUX  -->
 |     "BAZ"
 
+
 #source comments01.dat:75
 #data
 FOO<!-- BAR -- <QUX> -- MUX -- >BAZ
@@ -1259,6 +1331,7 @@ FOO<!-- BAR -- <QUX> -- MUX -- >BAZ
 |     "FOO"
 |     <!--  BAR -- <QUX> -- MUX -- >BAZ -->
 
+
 #source comments01.dat:76
 #data
 FOO<!---->BAZ
@@ -1271,6 +1344,7 @@ FOO<!---->BAZ
 |     "FOO"
 |     <!--  -->
 |     "BAZ"
+
 
 #source comments01.dat:77
 #data
@@ -1288,6 +1362,7 @@ FOO<!--->BAZ
 |     <!--  -->
 |     "BAZ"
 
+
 #source comments01.dat:78
 #data
 FOO<!-->BAZ
@@ -1304,6 +1379,7 @@ FOO<!-->BAZ
 |     <!--  -->
 |     "BAZ"
 
+
 #source comments01.dat:79
 #data
 <?xml version="1.0">Hi
@@ -1319,6 +1395,7 @@ FOO<!-->BAZ
 |   <body>
 |     "Hi"
 
+
 #source comments01.dat:80
 #data
 <?xml version="1.0">
@@ -1332,6 +1409,7 @@ FOO<!-->BAZ
 | <html>
 |   <head>
 |   <body>
+
 
 #source comments01.dat:81
 #data
@@ -1347,6 +1425,7 @@ FOO<!-->BAZ
 |   <head>
 |   <body>
 
+
 #source comments01.dat:82
 #data
 FOO<!----->BAZ
@@ -1359,6 +1438,7 @@ FOO<!----->BAZ
 |     "FOO"
 |     <!-- - -->
 |     "BAZ"
+
 
 #source comments01.dat:83
 #data
@@ -1384,6 +1464,7 @@ FOO<!----->BAZ
 |   <body>
 |     "Hello"
 
+
 #source doctype01.dat:85
 #data
 <!dOctYpE HtMl>Hello
@@ -1394,6 +1475,7 @@ FOO<!----->BAZ
 |   <head>
 |   <body>
 |     "Hello"
+
 
 #source doctype01.dat:86
 #data
@@ -1408,6 +1490,7 @@ FOO<!----->BAZ
 |   <head>
 |   <body>
 |     "Hello"
+
 
 #source doctype01.dat:87
 #data
@@ -1424,6 +1507,7 @@ FOO<!----->BAZ
 |   <body>
 |     "Hello"
 
+
 #source doctype01.dat:88
 #data
 <!DOCTYPE >Hello
@@ -1439,6 +1523,7 @@ FOO<!----->BAZ
 |   <body>
 |     "Hello"
 
+
 #source doctype01.dat:89
 #data
 <!DOCTYPE potato>Hello
@@ -1451,6 +1536,7 @@ FOO<!----->BAZ
 |   <body>
 |     "Hello"
 
+
 #source doctype01.dat:90
 #data
 <!DOCTYPE potato >Hello
@@ -1462,6 +1548,7 @@ FOO<!----->BAZ
 |   <head>
 |   <body>
 |     "Hello"
+
 
 #source doctype01.dat:91
 #data
@@ -1478,6 +1565,7 @@ FOO<!----->BAZ
 |   <body>
 |     "Hello"
 
+
 #source doctype01.dat:92
 #data
 <!DOCTYPE potato taco "ddd>Hello
@@ -1492,6 +1580,7 @@ FOO<!----->BAZ
 |   <head>
 |   <body>
 |     "Hello"
+
 
 #source doctype01.dat:93
 #data
@@ -1508,6 +1597,7 @@ FOO<!----->BAZ
 |   <body>
 |     "Hello"
 
+
 #source doctype01.dat:94
 #data
 <!DOCTYPE potato sYstEM    >Hello
@@ -1522,6 +1612,7 @@ FOO<!----->BAZ
 |   <head>
 |   <body>
 |     "Hello"
+
 
 #source doctype01.dat:95
 #data
@@ -1538,6 +1629,7 @@ FOO<!----->BAZ
 |   <body>
 |     "Hello"
 
+
 #source doctype01.dat:96
 #data
 <!DOCTYPE potato SYSTEM taco  >Hello
@@ -1553,6 +1645,7 @@ FOO<!----->BAZ
 |   <body>
 |     "Hello"
 
+
 #source doctype01.dat:97
 #data
 <!DOCTYPE potato SYSTEM 'taco"'>Hello
@@ -1564,6 +1657,7 @@ FOO<!----->BAZ
 |   <head>
 |   <body>
 |     "Hello"
+
 
 #source doctype01.dat:98
 #data
@@ -1577,6 +1671,7 @@ FOO<!----->BAZ
 |   <body>
 |     "Hello"
 
+
 #source doctype01.dat:99
 #data
 <!DOCTYPE potato SYSTEM "tai'co">Hello
@@ -1588,6 +1683,7 @@ FOO<!----->BAZ
 |   <head>
 |   <body>
 |     "Hello"
+
 
 #source doctype01.dat:100
 #data
@@ -1604,6 +1700,7 @@ FOO<!----->BAZ
 |   <body>
 |     "Hello"
 
+
 #source doctype01.dat:101
 #data
 <!DOCTYPE potato grass SYSTEM taco>Hello
@@ -1618,6 +1715,7 @@ FOO<!----->BAZ
 |   <head>
 |   <body>
 |     "Hello"
+
 
 #source doctype01.dat:102
 #data
@@ -1634,6 +1732,7 @@ FOO<!----->BAZ
 |   <body>
 |     "Hello"
 
+
 #source doctype01.dat:103
 #data
 <!DOCTYPE potato pUbLIc >Hello
@@ -1648,6 +1747,7 @@ FOO<!----->BAZ
 |   <head>
 |   <body>
 |     "Hello"
+
 
 #source doctype01.dat:104
 #data
@@ -1664,6 +1764,7 @@ FOO<!----->BAZ
 |   <body>
 |     "Hello"
 
+
 #source doctype01.dat:105
 #data
 <!DOCTYPE potato PUBLIC goof>Hello
@@ -1679,6 +1780,7 @@ FOO<!----->BAZ
 |   <body>
 |     "Hello"
 
+
 #source doctype01.dat:106
 #data
 <!DOCTYPE potato PUBLIC "go'of">Hello
@@ -1690,6 +1792,7 @@ FOO<!----->BAZ
 |   <head>
 |   <body>
 |     "Hello"
+
 
 #source doctype01.dat:107
 #data
@@ -1706,6 +1809,7 @@ FOO<!----->BAZ
 |   <body>
 |     "Hello"
 
+
 #source doctype01.dat:108
 #data
 <!DOCTYPE potato PUBLIC 'go:hh   of' >Hello
@@ -1717,6 +1821,7 @@ FOO<!----->BAZ
 |   <head>
 |   <body>
 |     "Hello"
+
 
 #source doctype01.dat:109
 #data
@@ -1733,6 +1838,7 @@ FOO<!----->BAZ
 |   <body>
 |     "Hello"
 
+
 #source doctype01.dat:110
 #data
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -1746,6 +1852,7 @@ FOO<!----->BAZ
 |   <body>
 |     "Hello"
 
+
 #source doctype01.dat:111
 #data
 <!DOCTYPE ...>Hello
@@ -1757,6 +1864,7 @@ FOO<!----->BAZ
 |   <head>
 |   <body>
 |     "Hello"
+
 
 #source doctype01.dat:112
 #data
@@ -1770,6 +1878,7 @@ FOO<!----->BAZ
 |   <head>
 |   <body>
 
+
 #source doctype01.dat:113
 #data
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"
@@ -1782,9 +1891,10 @@ FOO<!----->BAZ
 |   <head>
 |   <body>
 
+
 #source doctype01.dat:114
 #data
-<!DOCTYPE root-element [SYSTEM OR PUBLIC FPI] "uri" [
+<!DOCTYPE root-element [SYSTEM OR PUBLIC FPI] "uri" [ 
 <!-- internal declarations -->
 ]>
 #errors
@@ -1799,6 +1909,7 @@ FOO<!----->BAZ
 |   <body>
 |     "]>"
 
+
 #source doctype01.dat:115
 #data
 <!DOCTYPE html PUBLIC
@@ -1812,6 +1923,7 @@ FOO<!----->BAZ
 |   <head>
 |   <body>
 
+
 #source doctype01.dat:116
 #data
 <!DOCTYPE HTML SYSTEM "http://www.w3.org/DTD/HTML4-strict.dtd"><body><b>Mine!</b></body>
@@ -1824,6 +1936,7 @@ FOO<!----->BAZ
 |   <body>
 |     <b>
 |       "Mine!"
+
 
 #source doctype01.dat:117
 #data
@@ -1839,6 +1952,7 @@ FOO<!----->BAZ
 |   <head>
 |   <body>
 
+
 #source doctype01.dat:118
 #data
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"'http://www.w3.org/TR/html4/strict.dtd'>
@@ -1852,6 +1966,7 @@ FOO<!----->BAZ
 | <html>
 |   <head>
 |   <body>
+
 
 #source doctype01.dat:119
 #data
@@ -1868,6 +1983,7 @@ FOO<!----->BAZ
 | <html>
 |   <head>
 |   <body>
+
 
 #source doctype01.dat:120
 #data
@@ -1900,6 +2016,7 @@ bar]]>
 |       "foo
 bar"
 
+
 #source domjs-unsafe.dat:122
 #data
 <svg><![CDATA[foo
@@ -1914,6 +2031,7 @@ bar]]>
 |     <svg svg>
 |       "foo
 bar"
+
 
 #source domjs-unsafe.dat:123
 #data
@@ -1930,6 +2048,7 @@ bar]]>
 |       "foo
 bar"
 
+
 #source domjs-unsafe.dat:124
 #data
 <script>a=' '</script>
@@ -1944,6 +2063,7 @@ bar"
 |     <script>
 |       "a='�'"
 |   <body>
+
 
 #source domjs-unsafe.dat:125
 #data
@@ -1961,6 +2081,7 @@ bar"
 |       "<!--�"
 |   <body>
 
+
 #source domjs-unsafe.dat:126
 #data
 <script type="data"><!--foo </script>
@@ -1976,6 +2097,7 @@ bar"
 |       type="data"
 |       "<!--foo�"
 |   <body>
+
 
 #source domjs-unsafe.dat:127
 #data
@@ -1993,6 +2115,7 @@ bar"
 |       "<!-- foo-�"
 |   <body>
 
+
 #source domjs-unsafe.dat:128
 #data
 <script type="data"><!-- foo-- </script>
@@ -2008,6 +2131,7 @@ bar"
 |       type="data"
 |       "<!-- foo--�"
 |   <body>
+
 
 #source domjs-unsafe.dat:129
 #data
@@ -2026,6 +2150,7 @@ bar"
 |       "<!-- foo-"
 |   <body>
 
+
 #source domjs-unsafe.dat:130
 #data
 <script type="data"><!-- foo-<</script>
@@ -2038,6 +2163,7 @@ bar"
 |       type="data"
 |       "<!-- foo-<"
 |   <body>
+
 
 #source domjs-unsafe.dat:131
 #data
@@ -2056,6 +2182,7 @@ bar"
 |       "<!-- foo-<S"
 |   <body>
 
+
 #source domjs-unsafe.dat:132
 #data
 <script type="data"><!-- foo-</SCRIPT>
@@ -2068,6 +2195,7 @@ bar"
 |       type="data"
 |       "<!-- foo-"
 |   <body>
+
 
 #source domjs-unsafe.dat:133
 #data
@@ -2082,6 +2210,7 @@ bar"
 |       "<!--<p>"
 |   <body>
 
+
 #source domjs-unsafe.dat:134
 #data
 <script type="data"><!--<script></script></script>
@@ -2094,6 +2223,7 @@ bar"
 |       type="data"
 |       "<!--<script></script>"
 |   <body>
+
 
 #source domjs-unsafe.dat:135
 #data
@@ -2111,6 +2241,7 @@ bar"
 |       "<!--<script>�</script>"
 |   <body>
 
+
 #source domjs-unsafe.dat:136
 #data
 <script type="data"><!--<script>- </script></script>
@@ -2126,6 +2257,7 @@ bar"
 |       type="data"
 |       "<!--<script>-�</script>"
 |   <body>
+
 
 #source domjs-unsafe.dat:137
 #data
@@ -2143,6 +2275,7 @@ bar"
 |       "<!--<script>--�</script>"
 |   <body>
 
+
 #source domjs-unsafe.dat:138
 #data
 <script type="data"><!--<script>---</script></script>
@@ -2155,6 +2288,7 @@ bar"
 |       type="data"
 |       "<!--<script>---</script>"
 |   <body>
+
 
 #source domjs-unsafe.dat:139
 #data
@@ -2169,6 +2303,7 @@ bar"
 |       "<!--<script></scrip></SCRIPT>"
 |   <body>
 
+
 #source domjs-unsafe.dat:140
 #data
 <script type="data"><!--<script></scrip </SCRIPT></script>
@@ -2181,6 +2316,7 @@ bar"
 |       type="data"
 |       "<!--<script></scrip </SCRIPT>"
 |   <body>
+
 
 #source domjs-unsafe.dat:141
 #data
@@ -2195,6 +2331,7 @@ bar"
 |       "<!--<script></scrip/</SCRIPT>"
 |   <body>
 
+
 #source domjs-unsafe.dat:142
 #data
 <script type="data"></scrip/></script>
@@ -2207,6 +2344,7 @@ bar"
 |       type="data"
 |       "</scrip/>"
 |   <body>
+
 
 #source domjs-unsafe.dat:143
 #data
@@ -2221,6 +2359,7 @@ bar"
 |       "</scrip >"
 |   <body>
 
+
 #source domjs-unsafe.dat:144
 #data
 <script type="data"><!--</scrip></script>
@@ -2233,6 +2372,7 @@ bar"
 |       type="data"
 |       "<!--</scrip>"
 |   <body>
+
 
 #source domjs-unsafe.dat:145
 #data
@@ -2247,6 +2387,7 @@ bar"
 |       "<!--</scrip "
 |   <body>
 
+
 #source domjs-unsafe.dat:146
 #data
 <script type="data"><!--</scrip/</script>
@@ -2260,6 +2401,7 @@ bar"
 |       "<!--</scrip/"
 |   <body>
 
+
 #source domjs-unsafe.dat:147
 #data
 <!DOCTYPE html><!DOCTYPE html>
@@ -2270,6 +2412,7 @@ bar"
 | <html>
 |   <head>
 |   <body>
+
 
 #source domjs-unsafe.dat:148
 #data
@@ -2282,6 +2425,7 @@ bar"
 |   <head>
 |   <body>
 
+
 #source domjs-unsafe.dat:149
 #data
 <html><head><!DOCTYPE html></head>
@@ -2292,6 +2436,7 @@ bar"
 | <html>
 |   <head>
 |   <body>
+
 
 #source domjs-unsafe.dat:150
 #data
@@ -2304,6 +2449,7 @@ bar"
 |   <head>
 |   <body>
 
+
 #source domjs-unsafe.dat:151
 #data
 <body></body><!DOCTYPE html>
@@ -2314,6 +2460,7 @@ bar"
 | <html>
 |   <head>
 |   <body>
+
 
 #source domjs-unsafe.dat:152
 #data
@@ -2327,6 +2474,7 @@ bar"
 |   <body>
 |     <table>
 
+
 #source domjs-unsafe.dat:153
 #data
 <select><!DOCTYPE html></select>
@@ -2338,6 +2486,7 @@ bar"
 |   <head>
 |   <body>
 |     <select>
+
 
 #source domjs-unsafe.dat:154
 #data
@@ -2352,6 +2501,7 @@ bar"
 |     <table>
 |       <colgroup>
 
+
 #source domjs-unsafe.dat:155
 #data
 <table><colgroup><!--test--></colgroup></table>
@@ -2365,6 +2515,7 @@ bar"
 |       <colgroup>
 |         <!-- test -->
 
+
 #source domjs-unsafe.dat:156
 #data
 <table><colgroup><html></colgroup></table>
@@ -2377,6 +2528,7 @@ bar"
 |   <body>
 |     <table>
 |       <colgroup>
+
 
 #source domjs-unsafe.dat:157
 #data
@@ -2396,6 +2548,7 @@ bar"
 |       <colgroup>
 |         " "
 
+
 #source domjs-unsafe.dat:158
 #data
 <select><!--test--></select>
@@ -2407,6 +2560,7 @@ bar"
 |   <body>
 |     <select>
 |       <!-- test -->
+
 
 #source domjs-unsafe.dat:159
 #data
@@ -2420,6 +2574,7 @@ bar"
 |   <body>
 |     <select>
 
+
 #source domjs-unsafe.dat:160
 #data
 <frameset><html></frameset>
@@ -2430,6 +2585,7 @@ bar"
 | <html>
 |   <head>
 |   <frameset>
+
 
 #source domjs-unsafe.dat:161
 #data
@@ -2442,6 +2598,7 @@ bar"
 |   <head>
 |   <frameset>
 
+
 #source domjs-unsafe.dat:162
 #data
 <frameset></frameset><!DOCTYPE html>
@@ -2453,6 +2610,7 @@ bar"
 |   <head>
 |   <frameset>
 
+
 #source domjs-unsafe.dat:163
 #data
 <html><body></body></html><!DOCTYPE html>
@@ -2463,6 +2621,7 @@ bar"
 | <html>
 |   <head>
 |   <body>
+
 
 #source domjs-unsafe.dat:164
 #data
@@ -2476,6 +2635,7 @@ bar"
 |   <body>
 |     <svg svg>
 
+
 #source domjs-unsafe.dat:165
 #data
 <svg><font></font></svg>
@@ -2487,6 +2647,7 @@ bar"
 |   <body>
 |     <svg svg>
 |       <svg font>
+
 
 #source domjs-unsafe.dat:166
 #data
@@ -2500,6 +2661,7 @@ bar"
 |     <svg svg>
 |       <svg font>
 |         id="foo"
+
 
 #source domjs-unsafe.dat:167
 #data
@@ -2516,6 +2678,7 @@ bar"
 |     <font>
 |       size="4"
 
+
 #source domjs-unsafe.dat:168
 #data
 <svg><font color=red></font></svg>
@@ -2530,6 +2693,7 @@ bar"
 |     <svg svg>
 |     <font>
 |       color="red"
+
 
 #source domjs-unsafe.dat:169
 #data
@@ -2555,6 +2719,7 @@ FOO&gt;BAR
 |   <body>
 |     "FOO>BAR"
 
+
 #source entities01.dat:171
 #data
 FOO&gtBAR
@@ -2568,6 +2733,7 @@ FOO&gtBAR
 |   <head>
 |   <body>
 |     "FOO>BAR"
+
 
 #source entities01.dat:172
 #data
@@ -2583,6 +2749,7 @@ FOO&gt BAR
 |   <body>
 |     "FOO> BAR"
 
+
 #source entities01.dat:173
 #data
 FOO&gt;;;BAR
@@ -2593,6 +2760,7 @@ FOO&gt;;;BAR
 |   <head>
 |   <body>
 |     "FOO>;;BAR"
+
 
 #source entities01.dat:174
 #data
@@ -2608,6 +2776,7 @@ I'm &notit; I tell you
 |   <body>
 |     "I'm ¬it; I tell you"
 
+
 #source entities01.dat:175
 #data
 I'm &notin; I tell you
@@ -2618,6 +2787,7 @@ I'm &notin; I tell you
 |   <head>
 |   <body>
 |     "I'm ∉ I tell you"
+
 
 #source entities01.dat:176
 #data
@@ -2633,6 +2803,7 @@ I'm &notin; I tell you
 |   <body>
 |     "&ammmp;"
 
+
 #source entities01.dat:177
 #data
 &ammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmp;
@@ -2647,6 +2818,7 @@ I'm &notin; I tell you
 |   <body>
 |     "&ammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmp;"
 
+
 #source entities01.dat:178
 #data
 FOO& BAR
@@ -2657,6 +2829,7 @@ FOO& BAR
 |   <head>
 |   <body>
 |     "FOO& BAR"
+
 
 #source entities01.dat:179
 #data
@@ -2671,6 +2844,7 @@ FOO&<BAR>
 |     "FOO&"
 |     <bar>
 
+
 #source entities01.dat:180
 #data
 FOO&&&&gt;BAR
@@ -2681,6 +2855,7 @@ FOO&&&&gt;BAR
 |   <head>
 |   <body>
 |     "FOO&&&>BAR"
+
 
 #source entities01.dat:181
 #data
@@ -2693,6 +2868,7 @@ FOO&#41;BAR
 |   <body>
 |     "FOO)BAR"
 
+
 #source entities01.dat:182
 #data
 FOO&#x41;BAR
@@ -2704,6 +2880,7 @@ FOO&#x41;BAR
 |   <body>
 |     "FOOABAR"
 
+
 #source entities01.dat:183
 #data
 FOO&#X41;BAR
@@ -2714,6 +2891,7 @@ FOO&#X41;BAR
 |   <head>
 |   <body>
 |     "FOOABAR"
+
 
 #source entities01.dat:184
 #data
@@ -2729,6 +2907,7 @@ FOO&#BAR
 |   <body>
 |     "FOO&#BAR"
 
+
 #source entities01.dat:185
 #data
 FOO&#ZOO
@@ -2742,6 +2921,7 @@ FOO&#ZOO
 |   <head>
 |   <body>
 |     "FOO&#ZOO"
+
 
 #source entities01.dat:186
 #data
@@ -2757,6 +2937,7 @@ FOO&#xBAR
 |   <body>
 |     "FOOºR"
 
+
 #source entities01.dat:187
 #data
 FOO&#xZOO
@@ -2770,6 +2951,7 @@ FOO&#xZOO
 |   <head>
 |   <body>
 |     "FOO&#xZOO"
+
 
 #source entities01.dat:188
 #data
@@ -2785,6 +2967,7 @@ FOO&#XZOO
 |   <body>
 |     "FOO&#XZOO"
 
+
 #source entities01.dat:189
 #data
 FOO&#41BAR
@@ -2798,6 +2981,7 @@ FOO&#41BAR
 |   <head>
 |   <body>
 |     "FOO)BAR"
+
 
 #source entities01.dat:190
 #data
@@ -2813,6 +2997,7 @@ FOO&#x41BAR
 |   <body>
 |     "FOO䆺R"
 
+
 #source entities01.dat:191
 #data
 FOO&#x41ZOO
@@ -2826,6 +3011,7 @@ FOO&#x41ZOO
 |   <head>
 |   <body>
 |     "FOOAZOO"
+
 
 #source entities01.dat:192
 #data
@@ -2841,6 +3027,7 @@ FOO&#x0000;ZOO
 |   <body>
 |     "FOO�ZOO"
 
+
 #source entities01.dat:193
 #data
 FOO&#x0078;ZOO
@@ -2852,6 +3039,7 @@ FOO&#x0078;ZOO
 |   <body>
 |     "FOOxZOO"
 
+
 #source entities01.dat:194
 #data
 FOO&#x0079;ZOO
@@ -2862,6 +3050,7 @@ FOO&#x0079;ZOO
 |   <head>
 |   <body>
 |     "FOOyZOO"
+
 
 #source entities01.dat:195
 #data
@@ -2877,6 +3066,7 @@ FOO&#x0080;ZOO
 |   <body>
 |     "FOO€ZOO"
 
+
 #source entities01.dat:196
 #data
 FOO&#x0081;ZOO
@@ -2890,6 +3080,7 @@ FOO&#x0081;ZOO
 |   <head>
 |   <body>
 |     "FOOZOO"
+
 
 #source entities01.dat:197
 #data
@@ -2905,6 +3096,7 @@ FOO&#x0082;ZOO
 |   <body>
 |     "FOO‚ZOO"
 
+
 #source entities01.dat:198
 #data
 FOO&#x0083;ZOO
@@ -2918,6 +3110,7 @@ FOO&#x0083;ZOO
 |   <head>
 |   <body>
 |     "FOOƒZOO"
+
 
 #source entities01.dat:199
 #data
@@ -2933,6 +3126,7 @@ FOO&#x0084;ZOO
 |   <body>
 |     "FOO„ZOO"
 
+
 #source entities01.dat:200
 #data
 FOO&#x0085;ZOO
@@ -2946,6 +3140,7 @@ FOO&#x0085;ZOO
 |   <head>
 |   <body>
 |     "FOO…ZOO"
+
 
 #source entities01.dat:201
 #data
@@ -2961,6 +3156,7 @@ FOO&#x0086;ZOO
 |   <body>
 |     "FOO†ZOO"
 
+
 #source entities01.dat:202
 #data
 FOO&#x0087;ZOO
@@ -2974,6 +3170,7 @@ FOO&#x0087;ZOO
 |   <head>
 |   <body>
 |     "FOO‡ZOO"
+
 
 #source entities01.dat:203
 #data
@@ -2989,6 +3186,7 @@ FOO&#x0088;ZOO
 |   <body>
 |     "FOOˆZOO"
 
+
 #source entities01.dat:204
 #data
 FOO&#x0089;ZOO
@@ -3002,6 +3200,7 @@ FOO&#x0089;ZOO
 |   <head>
 |   <body>
 |     "FOO‰ZOO"
+
 
 #source entities01.dat:205
 #data
@@ -3017,6 +3216,7 @@ FOO&#x008A;ZOO
 |   <body>
 |     "FOOŠZOO"
 
+
 #source entities01.dat:206
 #data
 FOO&#x008B;ZOO
@@ -3030,6 +3230,7 @@ FOO&#x008B;ZOO
 |   <head>
 |   <body>
 |     "FOO‹ZOO"
+
 
 #source entities01.dat:207
 #data
@@ -3045,6 +3246,7 @@ FOO&#x008C;ZOO
 |   <body>
 |     "FOOŒZOO"
 
+
 #source entities01.dat:208
 #data
 FOO&#x008D;ZOO
@@ -3058,6 +3260,7 @@ FOO&#x008D;ZOO
 |   <head>
 |   <body>
 |     "FOOZOO"
+
 
 #source entities01.dat:209
 #data
@@ -3073,6 +3276,7 @@ FOO&#x008E;ZOO
 |   <body>
 |     "FOOŽZOO"
 
+
 #source entities01.dat:210
 #data
 FOO&#x008F;ZOO
@@ -3086,6 +3290,7 @@ FOO&#x008F;ZOO
 |   <head>
 |   <body>
 |     "FOOZOO"
+
 
 #source entities01.dat:211
 #data
@@ -3101,6 +3306,7 @@ FOO&#x0090;ZOO
 |   <body>
 |     "FOOZOO"
 
+
 #source entities01.dat:212
 #data
 FOO&#x0091;ZOO
@@ -3114,6 +3320,7 @@ FOO&#x0091;ZOO
 |   <head>
 |   <body>
 |     "FOO‘ZOO"
+
 
 #source entities01.dat:213
 #data
@@ -3129,6 +3336,7 @@ FOO&#x0092;ZOO
 |   <body>
 |     "FOO’ZOO"
 
+
 #source entities01.dat:214
 #data
 FOO&#x0093;ZOO
@@ -3142,6 +3350,7 @@ FOO&#x0093;ZOO
 |   <head>
 |   <body>
 |     "FOO“ZOO"
+
 
 #source entities01.dat:215
 #data
@@ -3157,6 +3366,7 @@ FOO&#x0094;ZOO
 |   <body>
 |     "FOO”ZOO"
 
+
 #source entities01.dat:216
 #data
 FOO&#x0095;ZOO
@@ -3170,6 +3380,7 @@ FOO&#x0095;ZOO
 |   <head>
 |   <body>
 |     "FOO•ZOO"
+
 
 #source entities01.dat:217
 #data
@@ -3185,6 +3396,7 @@ FOO&#x0096;ZOO
 |   <body>
 |     "FOO–ZOO"
 
+
 #source entities01.dat:218
 #data
 FOO&#x0097;ZOO
@@ -3198,6 +3410,7 @@ FOO&#x0097;ZOO
 |   <head>
 |   <body>
 |     "FOO—ZOO"
+
 
 #source entities01.dat:219
 #data
@@ -3213,6 +3426,7 @@ FOO&#x0098;ZOO
 |   <body>
 |     "FOO˜ZOO"
 
+
 #source entities01.dat:220
 #data
 FOO&#x0099;ZOO
@@ -3226,6 +3440,7 @@ FOO&#x0099;ZOO
 |   <head>
 |   <body>
 |     "FOO™ZOO"
+
 
 #source entities01.dat:221
 #data
@@ -3241,6 +3456,7 @@ FOO&#x009A;ZOO
 |   <body>
 |     "FOOšZOO"
 
+
 #source entities01.dat:222
 #data
 FOO&#x009B;ZOO
@@ -3254,6 +3470,7 @@ FOO&#x009B;ZOO
 |   <head>
 |   <body>
 |     "FOO›ZOO"
+
 
 #source entities01.dat:223
 #data
@@ -3269,6 +3486,7 @@ FOO&#x009C;ZOO
 |   <body>
 |     "FOOœZOO"
 
+
 #source entities01.dat:224
 #data
 FOO&#x009D;ZOO
@@ -3282,6 +3500,7 @@ FOO&#x009D;ZOO
 |   <head>
 |   <body>
 |     "FOOZOO"
+
 
 #source entities01.dat:225
 #data
@@ -3297,6 +3516,7 @@ FOO&#x009E;ZOO
 |   <body>
 |     "FOOžZOO"
 
+
 #source entities01.dat:226
 #data
 FOO&#x009F;ZOO
@@ -3311,6 +3531,7 @@ FOO&#x009F;ZOO
 |   <body>
 |     "FOOŸZOO"
 
+
 #source entities01.dat:227
 #data
 FOO&#x00A0;ZOO
@@ -3322,6 +3543,7 @@ FOO&#x00A0;ZOO
 |   <body>
 |     "FOO ZOO"
 
+
 #source entities01.dat:228
 #data
 FOO&#xD7FF;ZOO
@@ -3332,6 +3554,7 @@ FOO&#xD7FF;ZOO
 |   <head>
 |   <body>
 |     "FOO퟿ZOO"
+
 
 #source entities01.dat:229
 #data
@@ -3347,6 +3570,7 @@ FOO&#xD800;ZOO
 |   <body>
 |     "FOO�ZOO"
 
+
 #source entities01.dat:230
 #data
 FOO&#xD801;ZOO
@@ -3360,6 +3584,7 @@ FOO&#xD801;ZOO
 |   <head>
 |   <body>
 |     "FOO�ZOO"
+
 
 #source entities01.dat:231
 #data
@@ -3375,6 +3600,7 @@ FOO&#xDFFE;ZOO
 |   <body>
 |     "FOO�ZOO"
 
+
 #source entities01.dat:232
 #data
 FOO&#xDFFF;ZOO
@@ -3389,6 +3615,7 @@ FOO&#xDFFF;ZOO
 |   <body>
 |     "FOO�ZOO"
 
+
 #source entities01.dat:233
 #data
 FOO&#xE000;ZOO
@@ -3399,6 +3626,7 @@ FOO&#xE000;ZOO
 |   <head>
 |   <body>
 |     "FOOZOO"
+
 
 #source entities01.dat:234
 #data
@@ -3414,6 +3642,7 @@ FOO&#x10FFFE;ZOO
 |   <body>
 |     "FOO􏿾ZOO"
 
+
 #source entities01.dat:235
 #data
 FOO&#x1087D4;ZOO
@@ -3424,6 +3653,7 @@ FOO&#x1087D4;ZOO
 |   <head>
 |   <body>
 |     "FOO􈟔ZOO"
+
 
 #source entities01.dat:236
 #data
@@ -3439,6 +3669,7 @@ FOO&#x10FFFF;ZOO
 |   <body>
 |     "FOO􏿿ZOO"
 
+
 #source entities01.dat:237
 #data
 FOO&#x110000;ZOO
@@ -3453,6 +3684,7 @@ FOO&#x110000;ZOO
 |   <body>
 |     "FOO�ZOO"
 
+
 #source entities01.dat:238
 #data
 FOO&#xFFFFFF;ZOO
@@ -3466,6 +3698,7 @@ FOO&#xFFFFFF;ZOO
 |   <head>
 |   <body>
 |     "FOO�ZOO"
+
 
 #source entities01.dat:239
 #data
@@ -3483,6 +3716,7 @@ FOO&#11111111111
 |   <body>
 |     "FOO�"
 
+
 #source entities01.dat:240
 #data
 FOO&#1111111111
@@ -3498,6 +3732,7 @@ FOO&#1111111111
 |   <head>
 |   <body>
 |     "FOO�"
+
 
 #source entities01.dat:241
 #data
@@ -3515,6 +3750,7 @@ FOO&#111111111111
 |   <body>
 |     "FOO�"
 
+
 #source entities01.dat:242
 #data
 FOO&#11111111111ZOO
@@ -3531,6 +3767,7 @@ FOO&#11111111111ZOO
 |   <body>
 |     "FOO�ZOO"
 
+
 #source entities01.dat:243
 #data
 FOO&#1111111111ZOO
@@ -3546,6 +3783,7 @@ FOO&#1111111111ZOO
 |   <head>
 |   <body>
 |     "FOO�ZOO"
+
 
 #source entities01.dat:244
 #data
@@ -3575,6 +3813,7 @@ FOO&#111111111111ZOO
 |     <div>
 |       bar="ZZ>YY"
 
+
 #source entities02.dat:246
 #data
 <div bar="ZZ&"></div>
@@ -3586,6 +3825,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <div>
 |       bar="ZZ&"
+
 
 #source entities02.dat:247
 #data
@@ -3599,6 +3839,7 @@ FOO&#111111111111ZOO
 |     <div>
 |       bar="ZZ&"
 
+
 #source entities02.dat:248
 #data
 <div bar=ZZ&></div>
@@ -3610,6 +3851,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <div>
 |       bar="ZZ&"
+
 
 #source entities02.dat:249
 #data
@@ -3623,6 +3865,7 @@ FOO&#111111111111ZOO
 |     <div>
 |       bar="ZZ&gt=YY"
 
+
 #source entities02.dat:250
 #data
 <div bar="ZZ&gt0YY"></div>
@@ -3634,6 +3877,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <div>
 |       bar="ZZ&gt0YY"
+
 
 #source entities02.dat:251
 #data
@@ -3647,6 +3891,7 @@ FOO&#111111111111ZOO
 |     <div>
 |       bar="ZZ&gt9YY"
 
+
 #source entities02.dat:252
 #data
 <div bar="ZZ&gtaYY"></div>
@@ -3659,6 +3904,7 @@ FOO&#111111111111ZOO
 |     <div>
 |       bar="ZZ&gtaYY"
 
+
 #source entities02.dat:253
 #data
 <div bar="ZZ&gtZYY"></div>
@@ -3670,6 +3916,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <div>
 |       bar="ZZ&gtZYY"
+
 
 #source entities02.dat:254
 #data
@@ -3686,6 +3933,7 @@ FOO&#111111111111ZOO
 |     <div>
 |       bar="ZZ> YY"
 
+
 #source entities02.dat:255
 #data
 <div bar="ZZ&gt"></div>
@@ -3700,6 +3948,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <div>
 |       bar="ZZ>"
+
 
 #source entities02.dat:256
 #data
@@ -3716,6 +3965,7 @@ FOO&#111111111111ZOO
 |     <div>
 |       bar="ZZ>"
 
+
 #source entities02.dat:257
 #data
 <div bar=ZZ&gt></div>
@@ -3730,6 +3980,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <div>
 |       bar="ZZ>"
+
 
 #source entities02.dat:258
 #data
@@ -3746,6 +3997,7 @@ FOO&#111111111111ZOO
 |     <div>
 |       bar="ZZ£_id=23"
 
+
 #source entities02.dat:259
 #data
 <div bar="ZZ&prod_id=23"></div>
@@ -3757,6 +4009,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <div>
 |       bar="ZZ&prod_id=23"
+
 
 #source entities02.dat:260
 #data
@@ -3770,6 +4023,7 @@ FOO&#111111111111ZOO
 |     <div>
 |       bar="ZZ£_id=23"
 
+
 #source entities02.dat:261
 #data
 <div bar="ZZ&prod;_id=23"></div>
@@ -3781,6 +4035,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <div>
 |       bar="ZZ∏_id=23"
+
 
 #source entities02.dat:262
 #data
@@ -3794,6 +4049,7 @@ FOO&#111111111111ZOO
 |     <div>
 |       bar="ZZ&pound=23"
 
+
 #source entities02.dat:263
 #data
 <div bar="ZZ&prod=23"></div>
@@ -3805,6 +4061,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <div>
 |       bar="ZZ&prod=23"
+
 
 #source entities02.dat:264
 #data
@@ -3821,6 +4078,7 @@ FOO&#111111111111ZOO
 |     <div>
 |       "ZZ£_id=23"
 
+
 #source entities02.dat:265
 #data
 <div>ZZ&prod_id=23</div>
@@ -3832,6 +4090,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <div>
 |       "ZZ&prod_id=23"
+
 
 #source entities02.dat:266
 #data
@@ -3845,6 +4104,7 @@ FOO&#111111111111ZOO
 |     <div>
 |       "ZZ£_id=23"
 
+
 #source entities02.dat:267
 #data
 <div>ZZ&prod;_id=23</div>
@@ -3856,6 +4116,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <div>
 |       "ZZ∏_id=23"
+
 
 #source entities02.dat:268
 #data
@@ -3872,6 +4133,7 @@ FOO&#111111111111ZOO
 |     <div>
 |       "ZZ£=23"
 
+
 #source entities02.dat:269
 #data
 <div>ZZ&prod=23</div>
@@ -3883,6 +4145,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <div>
 |       "ZZ&prod=23"
+
 
 #source entities02.dat:270
 #data
@@ -3911,6 +4174,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <div<div>
 
+
 #source html5test-com.dat:272
 #data
 <div foo<bar=''>
@@ -3926,6 +4190,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <div>
 |       foo<bar=""
+
 
 #source html5test-com.dat:273
 #data
@@ -3945,6 +4210,7 @@ FOO&#111111111111ZOO
 |     <div>
 |       foo="`bar`"
 
+
 #source html5test-com.dat:274
 #data
 <div \"foo=''>
@@ -3961,6 +4227,7 @@ FOO&#111111111111ZOO
 |     <div>
 |       \"foo=""
 
+
 #source html5test-com.dat:275
 #data
 <a href='\nbar'></a>
@@ -3973,6 +4240,7 @@ FOO&#111111111111ZOO
 |     <a>
 |       href="\nbar"
 
+
 #source html5test-com.dat:276
 #data
 <!DOCTYPE html>
@@ -3982,6 +4250,7 @@ FOO&#111111111111ZOO
 | <html>
 |   <head>
 |   <body>
+
 
 #source html5test-com.dat:277
 #data
@@ -3994,6 +4263,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     "⟨⟩"
 
+
 #source html5test-com.dat:278
 #data
 &apos;
@@ -4004,6 +4274,7 @@ FOO&#111111111111ZOO
 |   <head>
 |   <body>
 |     "'"
+
 
 #source html5test-com.dat:279
 #data
@@ -4016,6 +4287,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     "ⅈ"
 
+
 #source html5test-com.dat:280
 #data
 &Kopf;
@@ -4027,6 +4299,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     "𝕂"
 
+
 #source html5test-com.dat:281
 #data
 &notinva;
@@ -4037,6 +4310,7 @@ FOO&#111111111111ZOO
 |   <head>
 |   <body>
 |     "∉"
+
 
 #source html5test-com.dat:282
 #data
@@ -4052,6 +4326,7 @@ FOO&#111111111111ZOO
 |   <head>
 |   <body>
 
+
 #source html5test-com.dat:283
 #data
 <!--foo--bar-->
@@ -4062,6 +4337,7 @@ FOO&#111111111111ZOO
 | <html>
 |   <head>
 |   <body>
+
 
 #source html5test-com.dat:284
 #data
@@ -4077,6 +4353,7 @@ FOO&#111111111111ZOO
 |   <head>
 |   <body>
 
+
 #source html5test-com.dat:285
 #data
 <textarea><!--</textarea>--></textarea>
@@ -4091,6 +4368,7 @@ FOO&#111111111111ZOO
 |       "<!--"
 |     "-->"
 
+
 #source html5test-com.dat:286
 #data
 <textarea><!--</textarea>-->
@@ -4103,6 +4381,7 @@ FOO&#111111111111ZOO
 |     <textarea>
 |       "<!--"
 |     "-->"
+
 
 #source html5test-com.dat:287
 #data
@@ -4118,6 +4397,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     "-->"
 
+
 #source html5test-com.dat:288
 #data
 <style><!--</style>-->
@@ -4130,6 +4410,7 @@ FOO&#111111111111ZOO
 |       "<!--"
 |   <body>
 |     "-->"
+
 
 #source html5test-com.dat:289
 #data
@@ -4146,6 +4427,7 @@ FOO&#111111111111ZOO
 |       " "
 |       <li>
 |         "B"
+
 
 #source html5test-com.dat:290
 #data
@@ -4170,6 +4452,7 @@ FOO&#111111111111ZOO
 |       <input>
 |         type="hidden"
 
+
 #source html5test-com.dat:291
 #data
 <i>A<b>B<p></i>C</b>D
@@ -4192,6 +4475,7 @@ FOO&#111111111111ZOO
 |         "C"
 |       "D"
 
+
 #source html5test-com.dat:292
 #data
 <div></div>
@@ -4203,6 +4487,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <div>
 
+
 #source html5test-com.dat:293
 #data
 <svg></svg>
@@ -4213,6 +4498,7 @@ FOO&#111111111111ZOO
 |   <head>
 |   <body>
 |     <svg svg>
+
 
 #source html5test-com.dat:294
 #data
@@ -4239,6 +4525,7 @@ FOO&#111111111111ZOO
 |     <button>
 |       "1"
 
+
 #source inbody01.dat:296
 #data
 <foo>1<p>2</foo>
@@ -4255,6 +4542,7 @@ FOO&#111111111111ZOO
 |       <p>
 |         "2"
 
+
 #source inbody01.dat:297
 #data
 <dd>1</foo>
@@ -4267,6 +4555,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <dd>
 |       "1"
+
 
 #source inbody01.dat:298
 #data
@@ -4296,6 +4585,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <isindex>
 
+
 #source isindex.dat:300
 #data
 <isindex name="A" action="B" prompt="C" foo="D">
@@ -4312,6 +4602,7 @@ FOO&#111111111111ZOO
 |       name="A"
 |       prompt="C"
 
+
 #source isindex.dat:301
 #data
 <form><isindex>
@@ -4324,6 +4615,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <form>
 |       <isindex>
+
 
 #source isindex.dat:302
 #data
@@ -4355,6 +4647,7 @@ FOO&#111111111111ZOO
 |       <p>
 |         "baz"
 
+
 #source main-element.dat:304
 #data
 <!doctype html><main><p>foo</main>bar
@@ -4368,6 +4661,7 @@ FOO&#111111111111ZOO
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source main-element.dat:305
 #data
@@ -4400,6 +4694,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <menuitem>
 
+
 #source menuitem-element.dat:307
 #data
 </menuitem>
@@ -4410,6 +4705,7 @@ FOO&#111111111111ZOO
 | <html>
 |   <head>
 |   <body>
+
 
 #source menuitem-element.dat:308
 #data
@@ -4423,6 +4719,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <menuitem>
 |       "A"
+
 
 #source menuitem-element.dat:309
 #data
@@ -4439,6 +4736,7 @@ FOO&#111111111111ZOO
 |       <menuitem>
 |         "B"
 
+
 #source menuitem-element.dat:310
 #data
 <!DOCTYPE html><body><menuitem>A<menu>B</menu>
@@ -4453,6 +4751,7 @@ FOO&#111111111111ZOO
 |       "A"
 |       <menu>
 |         "B"
+
 
 #source menuitem-element.dat:311
 #data
@@ -4469,6 +4768,7 @@ FOO&#111111111111ZOO
 |       <hr>
 |       "B"
 
+
 #source menuitem-element.dat:312
 #data
 <!DOCTYPE html><li><menuitem><li>
@@ -4482,6 +4782,7 @@ FOO&#111111111111ZOO
 |     <li>
 |       <menuitem>
 |     <li>
+
 
 #source menuitem-element.dat:313
 #data
@@ -4497,6 +4798,7 @@ FOO&#111111111111ZOO
 |     <menuitem>
 |       <p>
 |         "x"
+
 
 #source menuitem-element.dat:314
 #data
@@ -4514,6 +4816,7 @@ FOO&#111111111111ZOO
 |     <b>
 |       <menuitem>
 
+
 #source menuitem-element.dat:315
 #data
 <!DOCTYPE html><menuitem><asdf></menuitem>x
@@ -4528,6 +4831,7 @@ FOO&#111111111111ZOO
 |       <asdf>
 |     "x"
 
+
 #source menuitem-element.dat:316
 #data
 <!DOCTYPE html></menuitem>
@@ -4538,6 +4842,7 @@ FOO&#111111111111ZOO
 | <html>
 |   <head>
 |   <body>
+
 
 #source menuitem-element.dat:317
 #data
@@ -4550,6 +4855,7 @@ FOO&#111111111111ZOO
 |   <head>
 |   <body>
 
+
 #source menuitem-element.dat:318
 #data
 <!DOCTYPE html><head></menuitem>
@@ -4560,6 +4866,7 @@ FOO&#111111111111ZOO
 | <html>
 |   <head>
 |   <body>
+
 
 #source menuitem-element.dat:319
 #data
@@ -4574,6 +4881,7 @@ FOO&#111111111111ZOO
 |     <select>
 |       <menuitem>
 
+
 #source menuitem-element.dat:320
 #data
 <!DOCTYPE html><option><menuitem>
@@ -4586,6 +4894,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <option>
 |       <menuitem>
+
 
 #source menuitem-element.dat:321
 #data
@@ -4600,6 +4909,7 @@ FOO&#111111111111ZOO
 |     <menuitem>
 |       <option>
 
+
 #source menuitem-element.dat:322
 #data
 <!DOCTYPE html><menuitem></body>
@@ -4611,6 +4921,7 @@ FOO&#111111111111ZOO
 |   <head>
 |   <body>
 |     <menuitem>
+
 
 #source menuitem-element.dat:323
 #data
@@ -4624,6 +4935,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <menuitem>
 
+
 #source menuitem-element.dat:324
 #data
 <!DOCTYPE html><menuitem><p>
@@ -4636,6 +4948,7 @@ FOO&#111111111111ZOO
 |   <body>
 |     <menuitem>
 |       <p>
+
 
 #source menuitem-element.dat:325
 #data
@@ -4688,6 +5001,7 @@ Line: 1 Col: 31 Unexpected DOCTYPE. Ignored.
 |       <!-- foo -->
 |   <body>
 
+
 #source noscript01.dat:328
 #data
 <head><noscript><html class="foo"><!--foo--></noscript>
@@ -4703,6 +5017,7 @@ Line: 1 Col: 34 html needs to be the first start tag.
 |       <!-- foo -->
 |   <body>
 
+
 #source noscript01.dat:329
 #data
 <head><noscript></noscript>
@@ -4714,6 +5029,7 @@ Line: 1 Col: 34 html needs to be the first start tag.
 |   <head>
 |     <noscript>
 |   <body>
+
 
 #source noscript01.dat:330
 #data
@@ -4728,6 +5044,7 @@ Line: 1 Col: 6 Unexpected start tag (head). Expected DOCTYPE.
 |       "   "
 |   <body>
 
+
 #source noscript01.dat:331
 #data
 <head><noscript><!--foo--></noscript>
@@ -4740,6 +5057,7 @@ Line: 1 Col: 6 Unexpected start tag (head). Expected DOCTYPE.
 |     <noscript>
 |       <!-- foo -->
 |   <body>
+
 
 #source noscript01.dat:332
 #data
@@ -4755,6 +5073,7 @@ Line: 1 Col: 6 Unexpected start tag (head). Expected DOCTYPE.
 |       <!-- foo -->
 |   <body>
 
+
 #source noscript01.dat:333
 #data
 <head><noscript><bgsound><!--foo--></noscript>
@@ -4768,6 +5087,7 @@ Line: 1 Col: 6 Unexpected start tag (head). Expected DOCTYPE.
 |       <bgsound>
 |       <!-- foo -->
 |   <body>
+
 
 #source noscript01.dat:334
 #data
@@ -4783,6 +5103,7 @@ Line: 1 Col: 6 Unexpected start tag (head). Expected DOCTYPE.
 |       <!-- foo -->
 |   <body>
 
+
 #source noscript01.dat:335
 #data
 <head><noscript><meta><!--foo--></noscript>
@@ -4796,6 +5117,7 @@ Line: 1 Col: 6 Unexpected start tag (head). Expected DOCTYPE.
 |       <meta>
 |       <!-- foo -->
 |   <body>
+
 
 #source noscript01.dat:336
 #data
@@ -4811,6 +5133,7 @@ Line: 1 Col: 6 Unexpected start tag (head). Expected DOCTYPE.
 |         "XXX</noscript>"
 |   <body>
 
+
 #source noscript01.dat:337
 #data
 <head><noscript><style>XXX</style></noscript>
@@ -4824,6 +5147,7 @@ Line: 1 Col: 6 Unexpected start tag (head). Expected DOCTYPE.
 |       <style>
 |         "XXX"
 |   <body>
+
 
 #source noscript01.dat:338
 #data
@@ -4842,6 +5166,7 @@ Line: 1 Col: 42 Unexpected end tag (noscript). Ignored.
 |     <br>
 |     <!-- foo -->
 
+
 #source noscript01.dat:339
 #data
 <head><noscript><head class="foo"><!--foo--></noscript>
@@ -4855,6 +5180,7 @@ Line: 1 Col: 34 Unexpected start tag (head).
 |     <noscript>
 |       <!-- foo -->
 |   <body>
+
 
 #source noscript01.dat:340
 #data
@@ -4870,6 +5196,7 @@ Line: 1 Col: 34 Unexpected start tag (noscript).
 |       <!-- foo -->
 |   <body>
 
+
 #source noscript01.dat:341
 #data
 <head><noscript></p><!--foo--></noscript>
@@ -4883,6 +5210,7 @@ Line: 1 Col: 20 Unexpected end tag (p). Ignored.
 |     <noscript>
 |       <!-- foo -->
 |   <body>
+
 
 #source noscript01.dat:342
 #data
@@ -4900,6 +5228,7 @@ Line: 1 Col: 40 Unexpected end tag (noscript). Ignored.
 |     <p>
 |       <!-- foo -->
 
+
 #source noscript01.dat:343
 #data
 <head><noscript>XXX<!--foo--></noscript></head>
@@ -4916,6 +5245,7 @@ Line: 1 Col: 37 Unexpected end tag (head). Ignored.
 |   <body>
 |     "XXX"
 |     <!-- foo -->
+
 
 #source noscript01.dat:344
 #data
@@ -4975,6 +5305,7 @@ Line: 1 Col: 37 Unexpected end tag (head). Ignored.
 |   <head>
 |   <frameset>
 
+
 #source pending-spec-changes.dat:347
 #data
 <!DOCTYPE html><table><caption><svg>foo</table>bar
@@ -4991,6 +5322,7 @@ Line: 1 Col: 37 Unexpected end tag (head). Ignored.
 |         <svg svg>
 |           "foo"
 |     "bar"
+
 
 #source pending-spec-changes.dat:348
 #data
@@ -5028,6 +5360,7 @@ FOO&#x000D;ZOO
 |     "FOO
 ZOO"
 
+
 #source plain-text-unsafe.dat:350
 #data
 <html> <frameset></frameset>
@@ -5043,6 +5376,7 @@ ZOO"
 |   <head>
 |   <frameset>
 
+
 #source plain-text-unsafe.dat:351
 #data
 <html>   <frameset></frameset>
@@ -5057,6 +5391,7 @@ ZOO"
 | <html>
 |   <head>
 |   <frameset>
+
 
 #source plain-text-unsafe.dat:352
 #data
@@ -5074,6 +5409,7 @@ ZOO"
 |   <head>
 |   <body>
 |     "aa"
+
 
 #source plain-text-unsafe.dat:353
 #data
@@ -5093,6 +5429,7 @@ ZOO"
 |   <head>
 |   <frameset>
 
+
 #source plain-text-unsafe.dat:354
 #data
 <html> 
@@ -5108,6 +5445,7 @@ ZOO"
 | <html>
 |   <head>
 |   <frameset>
+
 
 #source plain-text-unsafe.dat:355
 #data
@@ -5125,6 +5463,7 @@ ZOO"
 |   <body>
 |     <select>
 
+
 #source plain-text-unsafe.dat:356
 #data
  
@@ -5139,6 +5478,7 @@ ZOO"
 |   <head>
 |   <body>
 
+
 #source plain-text-unsafe.dat:357
 #data
 <body> 
@@ -5152,6 +5492,7 @@ ZOO"
 | <html>
 |   <head>
 |   <body>
+
 
 #source plain-text-unsafe.dat:358
 #data
@@ -5173,6 +5514,7 @@ ZOO"
 |     <plaintext>
 |       "�filler�text�"
 
+
 #source plain-text-unsafe.dat:359
 #data
 <svg><![CDATA[ filler text ]]>
@@ -5189,6 +5531,7 @@ ZOO"
 |     <svg svg>
 |       "�filler�text�"
 
+
 #source plain-text-unsafe.dat:360
 #data
 <body><! >
@@ -5204,6 +5547,7 @@ ZOO"
 |   <head>
 |   <body>
 |     <!-- � -->
+
 
 #source plain-text-unsafe.dat:361
 #data
@@ -5222,6 +5566,7 @@ ZOO"
 |   <head>
 |   <body>
 |     <!-- �filler�text -->
+
 
 #source plain-text-unsafe.dat:362
 #data
@@ -5244,6 +5589,7 @@ ZOO"
 |       <svg foreignObject>
 |         "fillertext"
 
+
 #source plain-text-unsafe.dat:363
 #data
 <svg> filler text
@@ -5264,6 +5610,7 @@ ZOO"
 |     <svg svg>
 |       "�filler�text"
 
+
 #source plain-text-unsafe.dat:364
 #data
 <svg> <frameset>
@@ -5281,6 +5628,7 @@ ZOO"
 |     <svg svg>
 |       "�"
 |       <svg frameset>
+
 
 #source plain-text-unsafe.dat:365
 #data
@@ -5300,6 +5648,7 @@ ZOO"
 |       "� "
 |       <svg frameset>
 
+
 #source plain-text-unsafe.dat:366
 #data
 <svg> a<frameset>
@@ -5318,6 +5667,7 @@ ZOO"
 |       "�a"
 |       <svg frameset>
 
+
 #source plain-text-unsafe.dat:367
 #data
 <svg> </svg><frameset>
@@ -5334,6 +5684,7 @@ ZOO"
 |   <head>
 |   <frameset>
 
+
 #source plain-text-unsafe.dat:368
 #data
 <svg>  </svg><frameset>
@@ -5349,6 +5700,7 @@ ZOO"
 | <html>
 |   <head>
 |   <frameset>
+
 
 #source plain-text-unsafe.dat:369
 #data
@@ -5367,6 +5719,7 @@ ZOO"
 |     <svg svg>
 |       "�a"
 
+
 #source plain-text-unsafe.dat:370
 #data
 <svg><path></path></svg><frameset>
@@ -5378,6 +5731,7 @@ ZOO"
 | <html>
 |   <head>
 |   <frameset>
+
 
 #source plain-text-unsafe.dat:371
 #data
@@ -5391,6 +5745,7 @@ ZOO"
 | <html>
 |   <head>
 |   <frameset>
+
 
 #source plain-text-unsafe.dat:372
 #data
@@ -5407,6 +5762,7 @@ A</pre>
 |       "
 A"
 
+
 #source plain-text-unsafe.dat:373
 #data
 <!DOCTYPE html><pre>
@@ -5422,6 +5778,7 @@ A</pre>
 |       "
 A"
 
+
 #source plain-text-unsafe.dat:374
 #data
 <!DOCTYPE html><pre>
@@ -5434,6 +5791,7 @@ A</pre>
 |   <body>
 |     <pre>
 |       "A"
+
 
 #source plain-text-unsafe.dat:375
 #data
@@ -5457,6 +5815,7 @@ A</pre>
 |               <math mtext>
 |                 "a"
 
+
 #source plain-text-unsafe.dat:376
 #data
 <!DOCTYPE html><table><tr><td><svg><foreignObject> a
@@ -5479,6 +5838,7 @@ A</pre>
 |               <svg foreignObject>
 |                 "a"
 
+
 #source plain-text-unsafe.dat:377
 #data
 <!DOCTYPE html><math><mi>a b
@@ -5496,6 +5856,7 @@ A</pre>
 |     <math math>
 |       <math mi>
 |         "ab"
+
 
 #source plain-text-unsafe.dat:378
 #data
@@ -5515,6 +5876,7 @@ A</pre>
 |       <math mo>
 |         "ab"
 
+
 #source plain-text-unsafe.dat:379
 #data
 <!DOCTYPE html><math><mn>a b
@@ -5533,6 +5895,7 @@ A</pre>
 |       <math mn>
 |         "ab"
 
+
 #source plain-text-unsafe.dat:380
 #data
 <!DOCTYPE html><math><ms>a b
@@ -5550,6 +5913,7 @@ A</pre>
 |     <math math>
 |       <math ms>
 |         "ab"
+
 
 #source plain-text-unsafe.dat:381
 #data
@@ -5584,6 +5948,7 @@ A</pre>
 |     <p>
 |     <table>
 
+
 #source quirks01.dat:383
 #data
 <!DOCTYPE html SYSTEM "http://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd"><p><table>
@@ -5598,6 +5963,7 @@ A</pre>
 |     <p>
 |       <table>
 
+
 #source quirks01.dat:384
 #data
 <!DOCTYPE html PUBLIC "html"><p><table>
@@ -5611,6 +5977,7 @@ A</pre>
 |   <body>
 |     <p>
 |       <table>
+
 
 #source quirks01.dat:385
 #data
@@ -5642,6 +6009,7 @@ A</pre>
 |         "b"
 |       <rb>
 
+
 #source ruby.dat:387
 #data
 <html><ruby>a<rb>b<rt></ruby></html>
@@ -5656,6 +6024,7 @@ A</pre>
 |       <rb>
 |         "b"
 |       <rt>
+
 
 #source ruby.dat:388
 #data
@@ -5672,6 +6041,7 @@ A</pre>
 |         "b"
 |       <rtc>
 
+
 #source ruby.dat:389
 #data
 <html><ruby>a<rb>b<rp></ruby></html>
@@ -5686,6 +6056,7 @@ A</pre>
 |       <rb>
 |         "b"
 |       <rp>
+
 
 #source ruby.dat:390
 #data
@@ -5703,6 +6074,7 @@ A</pre>
 |         "b"
 |         <span>
 
+
 #source ruby.dat:391
 #data
 <html><ruby>a<rt>b<rb></ruby></html>
@@ -5717,6 +6089,7 @@ A</pre>
 |       <rt>
 |         "b"
 |       <rb>
+
 
 #source ruby.dat:392
 #data
@@ -5733,6 +6106,7 @@ A</pre>
 |         "b"
 |       <rt>
 
+
 #source ruby.dat:393
 #data
 <html><ruby>a<rt>b<rtc></ruby></html>
@@ -5748,6 +6122,7 @@ A</pre>
 |         "b"
 |       <rtc>
 
+
 #source ruby.dat:394
 #data
 <html><ruby>a<rt>b<rp></ruby></html>
@@ -5762,6 +6137,7 @@ A</pre>
 |       <rt>
 |         "b"
 |       <rp>
+
 
 #source ruby.dat:395
 #data
@@ -5779,6 +6155,7 @@ A</pre>
 |         "b"
 |         <span>
 
+
 #source ruby.dat:396
 #data
 <html><ruby>a<rtc>b<rb></ruby></html>
@@ -5793,6 +6170,7 @@ A</pre>
 |       <rtc>
 |         "b"
 |       <rb>
+
 
 #source ruby.dat:397
 #data
@@ -5812,6 +6190,7 @@ A</pre>
 |         <rt>
 |           "d"
 
+
 #source ruby.dat:398
 #data
 <html><ruby>a<rtc>b<rtc></ruby></html>
@@ -5827,6 +6206,7 @@ A</pre>
 |         "b"
 |       <rtc>
 
+
 #source ruby.dat:399
 #data
 <html><ruby>a<rtc>b<rp></ruby></html>
@@ -5841,6 +6221,7 @@ A</pre>
 |       <rtc>
 |         "b"
 |         <rp>
+
 
 #source ruby.dat:400
 #data
@@ -5858,6 +6239,7 @@ A</pre>
 |         "b"
 |         <span>
 
+
 #source ruby.dat:401
 #data
 <html><ruby>a<rp>b<rb></ruby></html>
@@ -5872,6 +6254,7 @@ A</pre>
 |       <rp>
 |         "b"
 |       <rb>
+
 
 #source ruby.dat:402
 #data
@@ -5888,6 +6271,7 @@ A</pre>
 |         "b"
 |       <rt>
 
+
 #source ruby.dat:403
 #data
 <html><ruby>a<rp>b<rtc></ruby></html>
@@ -5902,6 +6286,7 @@ A</pre>
 |       <rp>
 |         "b"
 |       <rtc>
+
 
 #source ruby.dat:404
 #data
@@ -5918,6 +6303,7 @@ A</pre>
 |         "b"
 |       <rp>
 
+
 #source ruby.dat:405
 #data
 <html><ruby>a<rp>b<span></ruby></html>
@@ -5933,6 +6319,7 @@ A</pre>
 |       <rp>
 |         "b"
 |         <span>
+
 
 #source ruby.dat:406
 #data
@@ -5965,6 +6352,7 @@ FOO<script>'Hello'</script>BAR
 |       "'Hello'"
 |     "BAR"
 
+
 #source scriptdata01.dat:408
 #data
 FOO<script></script>BAR
@@ -5978,6 +6366,7 @@ FOO<script></script>BAR
 |     <script>
 |     "BAR"
 
+
 #source scriptdata01.dat:409
 #data
 FOO<script></script >BAR
@@ -5990,6 +6379,7 @@ FOO<script></script >BAR
 |     "FOO"
 |     <script>
 |     "BAR"
+
 
 #source scriptdata01.dat:410
 #data
@@ -6007,6 +6397,7 @@ FOO<script></script/>BAR
 |     <script>
 |     "BAR"
 
+
 #source scriptdata01.dat:411
 #data
 FOO<script></script/ >BAR
@@ -6023,6 +6414,7 @@ FOO<script></script/ >BAR
 |     <script>
 |     "BAR"
 
+
 #source scriptdata01.dat:412
 #data
 FOO<script type="text/plain"></scriptx>BAR
@@ -6037,6 +6429,7 @@ FOO<script type="text/plain"></scriptx>BAR
 |     <script>
 |       type="text/plain"
 |       "</scriptx>BAR"
+
 
 #source scriptdata01.dat:413
 #data
@@ -6054,6 +6447,7 @@ FOO<script></script foo=">" dd>BAR
 |     <script>
 |     "BAR"
 
+
 #source scriptdata01.dat:414
 #data
 FOO<script>'<'</script>BAR
@@ -6067,6 +6461,7 @@ FOO<script>'<'</script>BAR
 |     <script>
 |       "'<'"
 |     "BAR"
+
 
 #source scriptdata01.dat:415
 #data
@@ -6082,6 +6477,7 @@ FOO<script>'<!'</script>BAR
 |       "'<!'"
 |     "BAR"
 
+
 #source scriptdata01.dat:416
 #data
 FOO<script>'<!-'</script>BAR
@@ -6095,6 +6491,7 @@ FOO<script>'<!-'</script>BAR
 |     <script>
 |       "'<!-'"
 |     "BAR"
+
 
 #source scriptdata01.dat:417
 #data
@@ -6110,6 +6507,7 @@ FOO<script>'<!--'</script>BAR
 |       "'<!--'"
 |     "BAR"
 
+
 #source scriptdata01.dat:418
 #data
 FOO<script>'<!---'</script>BAR
@@ -6123,6 +6521,7 @@ FOO<script>'<!---'</script>BAR
 |     <script>
 |       "'<!---'"
 |     "BAR"
+
 
 #source scriptdata01.dat:419
 #data
@@ -6138,6 +6537,7 @@ FOO<script>'<!-->'</script>BAR
 |       "'<!-->'"
 |     "BAR"
 
+
 #source scriptdata01.dat:420
 #data
 FOO<script>'<!-- potato'</script>BAR
@@ -6152,6 +6552,7 @@ FOO<script>'<!-- potato'</script>BAR
 |       "'<!-- potato'"
 |     "BAR"
 
+
 #source scriptdata01.dat:421
 #data
 FOO<script>'<!-- <sCrIpt'</script>BAR
@@ -6165,6 +6566,7 @@ FOO<script>'<!-- <sCrIpt'</script>BAR
 |     <script>
 |       "'<!-- <sCrIpt'"
 |     "BAR"
+
 
 #source scriptdata01.dat:422
 #data
@@ -6184,6 +6586,7 @@ FOO<script type="text/plain">'<!-- <sCrIpt>'</script>BAR
 |       type="text/plain"
 |       "'<!-- <sCrIpt>'</script>BAR"
 
+
 #source scriptdata01.dat:423
 #data
 FOO<script type="text/plain">'<!-- <sCrIpt> -'</script>BAR
@@ -6201,6 +6604,7 @@ FOO<script type="text/plain">'<!-- <sCrIpt> -'</script>BAR
 |     <script>
 |       type="text/plain"
 |       "'<!-- <sCrIpt> -'</script>BAR"
+
 
 #source scriptdata01.dat:424
 #data
@@ -6220,6 +6624,7 @@ FOO<script type="text/plain">'<!-- <sCrIpt> --'</script>BAR
 |       type="text/plain"
 |       "'<!-- <sCrIpt> --'</script>BAR"
 
+
 #source scriptdata01.dat:425
 #data
 FOO<script>'<!-- <sCrIpt> -->'</script>BAR
@@ -6233,6 +6638,7 @@ FOO<script>'<!-- <sCrIpt> -->'</script>BAR
 |     <script>
 |       "'<!-- <sCrIpt> -->'"
 |     "BAR"
+
 
 #source scriptdata01.dat:426
 #data
@@ -6252,6 +6658,7 @@ FOO<script type="text/plain">'<!-- <sCrIpt> --!>'</script>BAR
 |       type="text/plain"
 |       "'<!-- <sCrIpt> --!>'</script>BAR"
 
+
 #source scriptdata01.dat:427
 #data
 FOO<script type="text/plain">'<!-- <sCrIpt> -- >'</script>BAR
@@ -6269,6 +6676,7 @@ FOO<script type="text/plain">'<!-- <sCrIpt> -- >'</script>BAR
 |     <script>
 |       type="text/plain"
 |       "'<!-- <sCrIpt> -- >'</script>BAR"
+
 
 #source scriptdata01.dat:428
 #data
@@ -6288,6 +6696,7 @@ FOO<script type="text/plain">'<!-- <sCrIpt '</script>BAR
 |       type="text/plain"
 |       "'<!-- <sCrIpt '</script>BAR"
 
+
 #source scriptdata01.dat:429
 #data
 FOO<script type="text/plain">'<!-- <sCrIpt/'</script>BAR
@@ -6306,6 +6715,7 @@ FOO<script type="text/plain">'<!-- <sCrIpt/'</script>BAR
 |       type="text/plain"
 |       "'<!-- <sCrIpt/'</script>BAR"
 
+
 #source scriptdata01.dat:430
 #data
 FOO<script type="text/plain">'<!-- <sCrIpt\'</script>BAR
@@ -6321,6 +6731,7 @@ FOO<script type="text/plain">'<!-- <sCrIpt\'</script>BAR
 |       "'<!-- <sCrIpt\'"
 |     "BAR"
 
+
 #source scriptdata01.dat:431
 #data
 FOO<script type="text/plain">'<!-- <sCrIpt/'</script>BAR</script>QUX
@@ -6335,6 +6746,7 @@ FOO<script type="text/plain">'<!-- <sCrIpt/'</script>BAR</script>QUX
 |       type="text/plain"
 |       "'<!-- <sCrIpt/'</script>BAR"
 |     "QUX"
+
 
 #source scriptdata01.dat:432
 #data
@@ -6367,6 +6779,7 @@ FOO<script><!--<script>-></script>--></script>QUX
 |       <p>
 |         "baz"
 
+
 #source search-element.dat:434
 #data
 <!doctype html><search><p>foo</search>bar
@@ -6380,6 +6793,7 @@ FOO<script><!--<script>-></script>--></script>QUX
 |       <p>
 |         "foo"
 |     "bar"
+
 
 #source search-element.dat:435
 #data
@@ -6416,6 +6830,7 @@ FOO<script><!--<script>-></script>--></script>QUX
 |         <tr>
 |           <th>
 
+
 #source tables01.dat:437
 #data
 <table><td>
@@ -6432,6 +6847,7 @@ FOO<script><!--<script>-></script>--></script>QUX
 |         <tr>
 |           <td>
 
+
 #source tables01.dat:438
 #data
 <table><col foo='bar'>
@@ -6446,6 +6862,7 @@ FOO<script><!--<script>-></script>--></script>QUX
 |       <colgroup>
 |         <col>
 |           foo="bar"
+
 
 #source tables01.dat:439
 #data
@@ -6465,6 +6882,7 @@ FOO<script><!--<script>-></script>--></script>QUX
 |     <table>
 |       <colgroup>
 
+
 #source tables01.dat:440
 #data
 <table></table><p>foo
@@ -6477,6 +6895,7 @@ FOO<script><!--<script>-></script>--></script>QUX
 |     <table>
 |     <p>
 |       "foo"
+
 
 #source tables01.dat:441
 #data
@@ -6505,6 +6924,7 @@ FOO<script><!--<script>-></script>--></script>QUX
 |         <tr>
 |           <td>
 
+
 #source tables01.dat:442
 #data
 <table><select><option>3</select></table>
@@ -6523,6 +6943,7 @@ FOO<script><!--<script>-></script>--></script>QUX
 |         "3"
 |     <table>
 
+
 #source tables01.dat:443
 #data
 <table><select><table></table></select></table>
@@ -6540,6 +6961,7 @@ FOO<script><!--<script>-></script>--></script>QUX
 |     <table>
 |     <table>
 
+
 #source tables01.dat:444
 #data
 <table><select></table>
@@ -6552,6 +6974,7 @@ FOO<script><!--<script>-></script>--></script>QUX
 |   <body>
 |     <select>
 |     <table>
+
 
 #source tables01.dat:445
 #data
@@ -6573,6 +6996,7 @@ FOO<script><!--<script>-></script>--></script>QUX
 |         <tr>
 |           <td>
 |             "B"
+
 
 #source tables01.dat:446
 #data
@@ -6596,6 +7020,7 @@ FOO<script><!--<script>-></script>--></script>QUX
 |           <td>
 |             "foo"
 
+
 #source tables01.dat:447
 #data
 <table><td>A</table>B
@@ -6613,6 +7038,7 @@ FOO<script><!--<script>-></script>--></script>QUX
 |             "A"
 |     "B"
 
+
 #source tables01.dat:448
 #data
 <table><tr><caption>
@@ -6627,6 +7053,7 @@ FOO<script><!--<script>-></script>--></script>QUX
 |       <tbody>
 |         <tr>
 |       <caption>
+
 
 #source tables01.dat:449
 #data
@@ -6651,6 +7078,7 @@ FOO<script><!--<script>-></script>--></script>QUX
 |           <td>
 |             "foo"
 
+
 #source tables01.dat:450
 #data
 <table><td><tr>
@@ -6667,6 +7095,7 @@ FOO<script><!--<script>-></script>--></script>QUX
 |         <tr>
 |           <td>
 |         <tr>
+
 
 #source tables01.dat:451
 #data
@@ -6687,6 +7116,7 @@ FOO<script><!--<script>-></script>--></script>QUX
 |             <button>
 |           <td>
 
+
 #source tables01.dat:452
 #data
 <table><tr><td><svg><desc><td>
@@ -6705,6 +7135,7 @@ FOO<script><!--<script>-></script>--></script>QUX
 |             <svg svg>
 |               <svg desc>
 |           <td>
+
 
 #source tables01.dat:453
 #data
@@ -6727,6 +7158,7 @@ FOO<script><!--<script>-></script>--></script>QUX
 |       <table>
 |       <s>
 |       <table>
+
 
 #source tables01.dat:454
 #data
@@ -6756,6 +7188,7 @@ no doctype
 |       content
 |         "Hello"
 
+
 #source template.dat:456
 #data
 <template>Hello</template>
@@ -6768,6 +7201,7 @@ no doctype
 |       content
 |         "Hello"
 |   <body>
+
 
 #source template.dat:457
 #data
@@ -6782,6 +7216,7 @@ no doctype
 |   <body>
 |     <div>
 
+
 #source template.dat:458
 #data
 <html><template>Hello</template>
@@ -6795,6 +7230,7 @@ no doctype
 |         "Hello"
 |   <body>
 
+
 #source template.dat:459
 #data
 <head><template><div></div></template></head>
@@ -6807,6 +7243,7 @@ no doctype
 |       content
 |         <div>
 |   <body>
+
 
 #source template.dat:460
 #data
@@ -6826,6 +7263,7 @@ no doctype
 |             <span>
 |       <b>
 
+
 #source template.dat:461
 #data
 <div><template></div>Hello
@@ -6843,6 +7281,7 @@ no doctype
 |         content
 |           "Hello"
 
+
 #source template.dat:462
 #data
 <div></template></div>
@@ -6854,6 +7293,7 @@ no doctype
 |   <head>
 |   <body>
 |     <div>
+
 
 #source template.dat:463
 #data
@@ -6867,6 +7307,7 @@ no doctype
 |     <table>
 |       <template>
 |         content
+
 
 #source template.dat:464
 #data
@@ -6883,6 +7324,7 @@ no doctype
 |     <table>
 |       <template>
 |         content
+
 
 #source template.dat:465
 #data
@@ -6901,6 +7343,7 @@ no doctype
 |         content
 |     <table>
 
+
 #source template.dat:466
 #data
 <table><template></template><div></div>
@@ -6918,6 +7361,7 @@ eof in table
 |       <template>
 |         content
 
+
 #source template.dat:467
 #data
 <table>   <template></template></table>
@@ -6931,6 +7375,7 @@ no doctype
 |       "   "
 |       <template>
 |         content
+
 
 #source template.dat:468
 #data
@@ -6946,6 +7391,7 @@ eof in table
 |       <tbody>
 |         <template>
 |           content
+
 
 #source template.dat:469
 #data
@@ -6963,6 +7409,7 @@ eof in table
 |         <template>
 |           content
 
+
 #source template.dat:470
 #data
 <table><tbody><template></template></tbody></table>
@@ -6976,6 +7423,7 @@ no doctype
 |       <tbody>
 |         <template>
 |           content
+
 
 #source template.dat:471
 #data
@@ -6992,6 +7440,7 @@ eof in table
 |         <template>
 |           content
 
+
 #source template.dat:472
 #data
 <table><tfoot><template></template></tfoot>
@@ -7007,6 +7456,7 @@ eof in table
 |         <template>
 |           content
 
+
 #source template.dat:473
 #data
 <select><template></template></select>
@@ -7019,6 +7469,7 @@ no doctype
 |     <select>
 |       <template>
 |         content
+
 
 #source template.dat:474
 #data
@@ -7033,6 +7484,7 @@ no doctype
 |       <template>
 |         content
 |           <option>
+
 
 #source template.dat:475
 #data
@@ -7049,6 +7501,7 @@ bad /select
 |         <option>
 |   <body>
 
+
 #source template.dat:476
 #data
 <select><template></template><option></select>
@@ -7063,6 +7516,7 @@ no doctype
 |         content
 |       <option>
 
+
 #source template.dat:477
 #data
 <select><option><template></template></select>
@@ -7076,6 +7530,7 @@ no doctype
 |       <option>
 |         <template>
 |           content
+
 
 #source template.dat:478
 #data
@@ -7092,6 +7547,7 @@ eof in select
 |       <template>
 |         content
 
+
 #source template.dat:479
 #data
 <select><option></option><template>
@@ -7107,6 +7563,7 @@ eof in select
 |       <option>
 |       <template>
 |         content
+
 
 #source template.dat:480
 #data
@@ -7125,6 +7582,7 @@ eof in select
 |         content
 |           <option>
 
+
 #source template.dat:481
 #data
 <table><thead><template><td></template></table>
@@ -7140,6 +7598,7 @@ eof in select
 |           content
 |             <td>
 
+
 #source template.dat:482
 #data
 <table><template><thead></template></table>
@@ -7153,6 +7612,7 @@ no doctype
 |       <template>
 |         content
 |           <thead>
+
 
 #source template.dat:483
 #data
@@ -7171,6 +7631,7 @@ missing </div>
 |           <td>
 |             <div>
 
+
 #source template.dat:484
 #data
 <table><template><thead></template></thead></table>
@@ -7185,6 +7646,7 @@ bad /thead after /template
 |       <template>
 |         content
 |           <thead>
+
 
 #source template.dat:485
 #data
@@ -7201,6 +7663,7 @@ no doctype
 |           content
 |             <tr>
 
+
 #source template.dat:486
 #data
 <table><template><tr></template></table>
@@ -7214,6 +7677,7 @@ no doctype
 |       <template>
 |         content
 |           <tr>
+
 
 #source template.dat:487
 #data
@@ -7233,6 +7697,7 @@ eof in table
 |             content
 |               <td>
 
+
 #source template.dat:488
 #data
 <table><template><tr><template><td></template></tr></template></table>
@@ -7249,6 +7714,7 @@ no doctype
 |             <template>
 |               content
 |                 <td>
+
 
 #source template.dat:489
 #data
@@ -7267,6 +7733,7 @@ no doctype
 |               content
 |                 <td>
 
+
 #source template.dat:490
 #data
 <table><template><td></template>
@@ -7282,6 +7749,7 @@ eof in table
 |         content
 |           <td>
 
+
 #source template.dat:491
 #data
 <body><template><td></td></template>
@@ -7294,6 +7762,7 @@ no doctype
 |     <template>
 |       content
 |         <td>
+
 
 #source template.dat:492
 #data
@@ -7310,6 +7779,7 @@ no doctype
 |           content
 |             <tr>
 |         <td>
+
 
 #source template.dat:493
 #data
@@ -7328,6 +7798,7 @@ eof in table
 |           content
 |             <col>
 
+
 #source template.dat:494
 #data
 <frameset><template><frame></frame></template></frameset>
@@ -7341,6 +7812,7 @@ eof in table
 |   <head>
 |   <frameset>
 |     <frame>
+
 
 #source template.dat:495
 #data
@@ -7359,6 +7831,7 @@ eof in table
 |       content
 |   <body>
 
+
 #source template.dat:496
 #data
 <template><div><frameset><span></span></div><span></span></template>
@@ -7374,6 +7847,7 @@ bad frameset
 |           <span>
 |         <span>
 |   <body>
+
 
 #source template.dat:497
 #data
@@ -7391,6 +7865,7 @@ bad frameset
 |           <span>
 |         <span>
 
+
 #source template.dat:498
 #data
 <body><template><script>var i = 1;</script><td></td></template>
@@ -7405,6 +7880,7 @@ no doctype
 |         <script>
 |           "var i = 1;"
 |         <td>
+
 
 #source template.dat:499
 #data
@@ -7422,6 +7898,7 @@ foster-parented /div
 |         <tr>
 |         <div>
 
+
 #source template.dat:500
 #data
 <body><template><tr></tr><td></td></template>
@@ -7438,6 +7915,7 @@ unexpected <td>
 |         <tr>
 |           <td>
 
+
 #source template.dat:501
 #data
 <body><template><td></td></tr><td></td></template>
@@ -7453,6 +7931,7 @@ bad </tr>
 |         <td>
 |         <td>
 
+
 #source template.dat:502
 #data
 <body><template><td></td><tbody><td></td></template>
@@ -7467,6 +7946,7 @@ bad <tbody>
 |       content
 |         <td>
 |         <td>
+
 
 #source template.dat:503
 #data
@@ -7484,6 +7964,7 @@ bad <tbody>
 |         <td>
 |         <td>
 
+
 #source template.dat:504
 #data
 <body><template><td></td><colgroup></caption><td></td></template>
@@ -7500,6 +7981,7 @@ bad <tbody>
 |         <td>
 |         <td>
 
+
 #source template.dat:505
 #data
 <body><template><td></td></table><td></td></template>
@@ -7514,6 +7996,7 @@ bad </table>
 |       content
 |         <td>
 |         <td>
+
 
 #source template.dat:506
 #data
@@ -7530,6 +8013,7 @@ bad <tbody>
 |         <tr>
 |         <tr>
 
+
 #source template.dat:507
 #data
 <body><template><tr></tr><caption><tr></tr></template>
@@ -7544,6 +8028,7 @@ bad <caption>
 |       content
 |         <tr>
 |         <tr>
+
 
 #source template.dat:508
 #data
@@ -7560,6 +8045,7 @@ bad </table>
 |         <tr>
 |         <tr>
 
+
 #source template.dat:509
 #data
 <body><template><thead></thead><caption></caption><tbody></tbody></template>
@@ -7574,6 +8060,7 @@ no doctype
 |         <thead>
 |         <caption>
 |         <tbody>
+
 
 #source template.dat:510
 #data
@@ -7590,6 +8077,7 @@ bad </table>
 |         <thead>
 |         <tbody>
 
+
 #source template.dat:511
 #data
 <body><template><div><tr></tr></div></template>
@@ -7605,6 +8093,7 @@ bad /tr
 |       content
 |         <div>
 
+
 #source template.dat:512
 #data
 <body><template><em>Hello</em></template>
@@ -7619,6 +8108,7 @@ no doctype
 |         <em>
 |           "Hello"
 
+
 #source template.dat:513
 #data
 <body><template><!--comment--></template>
@@ -7631,6 +8121,7 @@ no doctype
 |     <template>
 |       content
 |         <!-- comment -->
+
 
 #source template.dat:514
 #data
@@ -7646,6 +8137,7 @@ no doctype
 |         <style>
 |         <td>
 
+
 #source template.dat:515
 #data
 <body><template><meta><td></td></template>
@@ -7660,6 +8152,7 @@ no doctype
 |         <meta>
 |         <td>
 
+
 #source template.dat:516
 #data
 <body><template><link><td></td></template>
@@ -7673,6 +8166,7 @@ no doctype
 |       content
 |         <link>
 |         <td>
+
 
 #source template.dat:517
 #data
@@ -7689,6 +8183,7 @@ bad /col
 |         <template>
 |           content
 |             <col>
+
 
 #source template.dat:518
 #data
@@ -7707,6 +8202,7 @@ bad </body>
 |         <div>
 |         <div>
 
+
 #source template.dat:519
 #data
 <html a=b><template><div><html b=c><span></template>
@@ -7723,6 +8219,7 @@ missing end tags in template
 |         <div>
 |           <span>
 |   <body>
+
 
 #source template.dat:520
 #data
@@ -7742,6 +8239,7 @@ bad /col
 |         <col>
 |   <body>
 
+
 #source template.dat:521
 #data
 <html a=b><template><frame></frame><html b=c><frame></frame></template>
@@ -7760,6 +8258,7 @@ bad /frame
 |       content
 |   <body>
 
+
 #source template.dat:522
 #data
 <body><template><tr></tr><template></template><td></td></template>
@@ -7777,6 +8276,7 @@ unexpected <td>
 |           content
 |         <tr>
 |           <td>
+
 
 #source template.dat:523
 #data
@@ -7797,6 +8297,7 @@ no doctype
 |           <tr>
 |         <tfoot>
 
+
 #source template.dat:524
 #data
 <body><template><template><b><template></template></template>text</template>
@@ -7816,6 +8317,7 @@ missing </b>
 |                 content
 |         "text"
 
+
 #source template.dat:525
 #data
 <body><template><col><colgroup>
@@ -7830,6 +8332,7 @@ eof in template
 |     <template>
 |       content
 |         <col>
+
 
 #source template.dat:526
 #data
@@ -7846,6 +8349,7 @@ eof in template
 |       content
 |         <col>
 
+
 #source template.dat:527
 #data
 <body><template><col><colgroup></template></body>
@@ -7859,6 +8363,7 @@ bad colgroup
 |     <template>
 |       content
 |         <col>
+
 
 #source template.dat:528
 #data
@@ -7875,6 +8380,7 @@ bad colgroup
 |       content
 |         <col>
 
+
 #source template.dat:529
 #data
 <body><template><col></div>
@@ -7889,6 +8395,7 @@ eof in template
 |     <template>
 |       content
 |         <col>
+
 
 #source template.dat:530
 #data
@@ -7909,6 +8416,7 @@ eof in template
 |       content
 |         <col>
 
+
 #source template.dat:531
 #data
 <body><template><i><menu>Foo</i>
@@ -7926,6 +8434,7 @@ eof in template
 |         <menu>
 |           <i>
 |             "Foo"
+
 
 #source template.dat:532
 #data
@@ -7947,6 +8456,7 @@ eof in template
 |         <template>
 |           content
 
+
 #source template.dat:533
 #data
 <body><div><template></div><tr><td>Foo</td></tr></template>
@@ -7965,6 +8475,7 @@ eof in template
 |             <td>
 |               "Foo"
 
+
 #source template.dat:534
 #data
 <template></figcaption><sub><table></table>
@@ -7980,6 +8491,7 @@ eof in template
 |         <sub>
 |           <table>
 |   <body>
+
 
 #source template.dat:535
 #data
@@ -7997,6 +8509,7 @@ eof in template
 |           content
 |   <body>
 
+
 #source template.dat:536
 #data
 <template><div>
@@ -8010,6 +8523,7 @@ eof in template
 |       content
 |         <div>
 |   <body>
+
 
 #source template.dat:537
 #data
@@ -8028,6 +8542,7 @@ eof in template
 |             <div>
 |   <body>
 
+
 #source template.dat:538
 #data
 <template><template><table>
@@ -8044,6 +8559,7 @@ eof in template
 |           content
 |             <table>
 |   <body>
+
 
 #source template.dat:539
 #data
@@ -8062,6 +8578,7 @@ eof in template
 |             <tbody>
 |   <body>
 
+
 #source template.dat:540
 #data
 <template><template><tr>
@@ -8078,6 +8595,7 @@ eof in template
 |           content
 |             <tr>
 |   <body>
+
 
 #source template.dat:541
 #data
@@ -8096,6 +8614,7 @@ eof in template
 |             <td>
 |   <body>
 
+
 #source template.dat:542
 #data
 <template><template><caption>
@@ -8112,6 +8631,7 @@ eof in template
 |           content
 |             <caption>
 |   <body>
+
 
 #source template.dat:543
 #data
@@ -8130,6 +8650,7 @@ eof in template
 |             <colgroup>
 |   <body>
 
+
 #source template.dat:544
 #data
 <template><template><col>
@@ -8146,6 +8667,7 @@ eof in template
 |           content
 |             <col>
 |   <body>
+
 
 #source template.dat:545
 #data
@@ -8165,6 +8687,7 @@ eof in template
 |             <tbody>
 |             <select>
 |   <body>
+
 
 #source template.dat:546
 #data
@@ -8187,6 +8710,7 @@ eof
 |             <table>
 |   <body>
 
+
 #source template.dat:547
 #data
 <template><template><frame>
@@ -8203,6 +8727,7 @@ eof
 |         <template>
 |           content
 |   <body>
+
 
 #source template.dat:548
 #data
@@ -8223,6 +8748,7 @@ eof in template
 |               "var i"
 |   <body>
 
+
 #source template.dat:549
 #data
 <template><template><style>var i
@@ -8242,6 +8768,7 @@ eof in template
 |               "var i"
 |   <body>
 
+
 #source template.dat:550
 #data
 <template><table></template><body><span>Foo
@@ -8259,6 +8786,7 @@ bad eof
 |     <span>
 |       "Foo"
 
+
 #source template.dat:551
 #data
 <template><td></template><body><span>Foo
@@ -8274,6 +8802,7 @@ bad eof
 |   <body>
 |     <span>
 |       "Foo"
+
 
 #source template.dat:552
 #data
@@ -8292,6 +8821,7 @@ bad eof
 |     <span>
 |       "Foo"
 
+
 #source template.dat:553
 #data
 <template><svg><template>
@@ -8306,6 +8836,7 @@ eof in template
 |         <svg svg>
 |           <svg template>
 |   <body>
+
 
 #source template.dat:554
 #data
@@ -8327,6 +8858,7 @@ bad eof
 |   <body>
 |     <div>
 
+
 #source template.dat:555
 #data
 <dummy><template><span></dummy>
@@ -8343,6 +8875,7 @@ eof in dummy
 |       <template>
 |         content
 |           <span>
+
 
 #source template.dat:556
 #data
@@ -8365,6 +8898,7 @@ no doctype
 |       <caption>
 |         "A"
 
+
 #source template.dat:557
 #data
 <body></body><template>
@@ -8378,6 +8912,7 @@ no doctype
 |   <body>
 |     <template>
 |       content
+
 
 #source template.dat:558
 #data
@@ -8393,6 +8928,7 @@ no doctype
 |       content
 |   <body>
 
+
 #source template.dat:559
 #data
 <head></head><template>Foo</template>
@@ -8407,6 +8943,7 @@ no doctype
 |         "Foo"
 |   <body>
 
+
 #source template.dat:560
 #data
 <html><head></head><template></template><head>
@@ -8420,6 +8957,7 @@ head-after-head
 |     <template>
 |       content
 |   <body>
+
 
 #source template.dat:561
 #data
@@ -8444,6 +8982,7 @@ eof table
 |                   <table>
 |                     <script>
 
+
 #source template.dat:562
 #data
 <template><a><table><a>
@@ -8463,6 +9002,7 @@ eof table
 |           <table>
 |   <body>
 
+
 #source template.dat:563
 #data
 <!DOCTYPE HTML><template><tr><td>cell</td></tr></template>
@@ -8477,6 +9017,7 @@ eof table
 |           <td>
 |             "cell"
 |   <body>
+
 
 #source template.dat:564
 #data
@@ -8496,6 +9037,7 @@ eof table
 |           " "
 |         " "
 |   <body>
+
 
 #source template.dat:565
 #data
@@ -8525,6 +9067,7 @@ Test
 |   <body>
 |     "Test"
 
+
 #source tests1.dat:567
 #data
 <p>One<p>Two
@@ -8538,6 +9081,7 @@ Test
 |       "One"
 |     <p>
 |       "Two"
+
 
 #source tests1.dat:568
 #data
@@ -8556,6 +9100,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <br>
 |     "Line4"
 
+
 #source tests1.dat:569
 #data
 <html>
@@ -8565,6 +9110,7 @@ Line1<br>Line2<br>Line3<br>Line4
 | <html>
 |   <head>
 |   <body>
+
 
 #source tests1.dat:570
 #data
@@ -8576,6 +9122,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <body>
 
+
 #source tests1.dat:571
 #data
 <body>
@@ -8585,6 +9132,7 @@ Line1<br>Line2<br>Line3<br>Line4
 | <html>
 |   <head>
 |   <body>
+
 
 #source tests1.dat:572
 #data
@@ -8596,6 +9144,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <body>
 
+
 #source tests1.dat:573
 #data
 <html><head></head>
@@ -8605,6 +9154,7 @@ Line1<br>Line2<br>Line3<br>Line4
 | <html>
 |   <head>
 |   <body>
+
 
 #source tests1.dat:574
 #data
@@ -8616,6 +9166,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <body>
 
+
 #source tests1.dat:575
 #data
 <html><head></head><body></body>
@@ -8625,6 +9176,7 @@ Line1<br>Line2<br>Line3<br>Line4
 | <html>
 |   <head>
 |   <body>
+
 
 #source tests1.dat:576
 #data
@@ -8636,6 +9188,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <body>
 
+
 #source tests1.dat:577
 #data
 <html><head></body></html>
@@ -8645,6 +9198,7 @@ Line1<br>Line2<br>Line3<br>Line4
 | <html>
 |   <head>
 |   <body>
+
 
 #source tests1.dat:578
 #data
@@ -8656,6 +9210,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <body>
 
+
 #source tests1.dat:579
 #data
 <html><body></html>
@@ -8665,6 +9220,7 @@ Line1<br>Line2<br>Line3<br>Line4
 | <html>
 |   <head>
 |   <body>
+
 
 #source tests1.dat:580
 #data
@@ -8676,6 +9232,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <body>
 
+
 #source tests1.dat:581
 #data
 <head></html>
@@ -8685,6 +9242,7 @@ Line1<br>Line2<br>Line3<br>Line4
 | <html>
 |   <head>
 |   <body>
+
 
 #source tests1.dat:582
 #data
@@ -8696,6 +9254,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <body>
 
+
 #source tests1.dat:583
 #data
 </body>
@@ -8706,6 +9265,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <body>
 
+
 #source tests1.dat:584
 #data
 </html>
@@ -8715,6 +9275,7 @@ Line1<br>Line2<br>Line3<br>Line4
 | <html>
 |   <head>
 |   <body>
+
 
 #source tests1.dat:585
 #data
@@ -8734,6 +9295,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |           <tr>
 |             <td>
 |               <i>
+
 
 #source tests1.dat:586
 #data
@@ -8756,6 +9318,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |               <i>
 |       "X"
 
+
 #source tests1.dat:587
 #data
 <h1>Hello<h2>World
@@ -8771,6 +9334,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       "Hello"
 |     <h2>
 |       "World"
+
 
 #source tests1.dat:588
 #data
@@ -8792,6 +9356,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |         "Y"
 |       "Z"
 
+
 #source tests1.dat:589
 #data
 <b><button>foo</b>bar
@@ -8809,6 +9374,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |         "foo"
 |       "bar"
 
+
 #source tests1.dat:590
 #data
 <!DOCTYPE html><span><button>foo</span>bar
@@ -8823,6 +9389,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <span>
 |       <button>
 |         "foobar"
+
 
 #source tests1.dat:591
 #data
@@ -8846,6 +9413,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |           <p>
 |           "X"
 
+
 #source tests1.dat:592
 #data
 <script><div></script></div><title><p></title><p><p>
@@ -8862,6 +9430,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <p>
 |     <p>
+
 
 #source tests1.dat:593
 #data
@@ -8883,6 +9452,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       "--"
 |       <!--  -->
 
+
 #source tests1.dat:594
 #data
 <p><hr></p>
@@ -8896,6 +9466,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <p>
 |     <hr>
 |     <p>
+
 
 #source tests1.dat:595
 #data
@@ -8915,6 +9486,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <b>
 |       <option>
 |     "X"
+
 
 #source tests1.dat:596
 #data
@@ -8949,6 +9521,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <a>
 |       "Y"
 
+
 #source tests1.dat:597
 #data
 <a X>0<b>1<a Y>2
@@ -8970,6 +9543,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <a>
 |         y=""
 |         "2"
+
 
 #source tests1.dat:598
 #data
@@ -9008,6 +9582,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |                   "please!"
 |             <!-- X -->
 
+
 #source tests1.dat:599
 #data
 <!DOCTYPE html><li>hello<li>world<ul>how<li>do</ul>you</body><!--do-->
@@ -9028,6 +9603,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       "you"
 |   <!-- do -->
 
+
 #source tests1.dat:600
 #data
 <!DOCTYPE html>A<option>B<optgroup>C<select>D</option>E
@@ -9047,6 +9623,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <select>
 |         "DE"
 
+
 #source tests1.dat:601
 #data
 <
@@ -9060,6 +9637,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <body>
 |     "<"
+
 
 #source tests1.dat:602
 #data
@@ -9075,6 +9653,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     "<#"
 
+
 #source tests1.dat:603
 #data
 </
@@ -9088,6 +9667,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <body>
 |     "</"
+
 
 #source tests1.dat:604
 #data
@@ -9103,6 +9683,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <body>
 
+
 #source tests1.dat:605
 #data
 <?
@@ -9116,6 +9697,7 @@ Line1<br>Line2<br>Line3<br>Line4
 | <html>
 |   <head>
 |   <body>
+
 
 #source tests1.dat:606
 #data
@@ -9131,6 +9713,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <body>
 
+
 #source tests1.dat:607
 #data
 <!
@@ -9144,6 +9727,7 @@ Line1<br>Line2<br>Line3<br>Line4
 | <html>
 |   <head>
 |   <body>
+
 
 #source tests1.dat:608
 #data
@@ -9159,6 +9743,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <body>
 
+
 #source tests1.dat:609
 #data
 <?COMMENT?>
@@ -9172,6 +9757,7 @@ Line1<br>Line2<br>Line3<br>Line4
 | <html>
 |   <head>
 |   <body>
+
 
 #source tests1.dat:610
 #data
@@ -9187,6 +9773,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <body>
 
+
 #source tests1.dat:611
 #data
 </ COMMENT >
@@ -9200,6 +9787,7 @@ Line1<br>Line2<br>Line3<br>Line4
 | <html>
 |   <head>
 |   <body>
+
 
 #source tests1.dat:612
 #data
@@ -9215,6 +9803,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <body>
 
+
 #source tests1.dat:613
 #data
 <!COM--MENT>
@@ -9228,6 +9817,7 @@ Line1<br>Line2<br>Line3<br>Line4
 | <html>
 |   <head>
 |   <body>
+
 
 #source tests1.dat:614
 #data
@@ -9243,6 +9833,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <body>
 
+
 #source tests1.dat:615
 #data
 <!DOCTYPE html><style> EOF
@@ -9255,6 +9846,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <style>
 |       " EOF"
 |   <body>
+
 
 #source tests1.dat:616
 #data
@@ -9271,6 +9863,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     "-->  EOF"
 
+
 #source tests1.dat:617
 #data
 <b><p></b>TEST
@@ -9285,6 +9878,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <p>
 |       <b>
 |       "TEST"
+
 
 #source tests1.dat:618
 #data
@@ -9303,6 +9897,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <p>
 |       id="b"
 |       "TEST"
+
 
 #source tests1.dat:619
 #data
@@ -9323,6 +9918,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |           id="b"
 |       "TEST"
 
+
 #source tests1.dat:620
 #data
 <!DOCTYPE html><title>U-test</title><body><div><p>Test<u></p></div></body>
@@ -9340,6 +9936,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |         "Test"
 |         <u>
 
+
 #source tests1.dat:621
 #data
 <!DOCTYPE html><font><table></font></table></font>
@@ -9353,6 +9950,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <font>
 |       <table>
+
 
 #source tests1.dat:622
 #data
@@ -9375,6 +9973,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <b>
 |         "world"
 
+
 #source tests1.dat:623
 #data
 <b>Test</i>Test
@@ -9388,6 +9987,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <b>
 |       "TestTest"
+
 
 #source tests1.dat:624
 #data
@@ -9406,6 +10006,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |         <div>
 |           "C"
 
+
 #source tests1.dat:625
 #data
 <b>A<cite>B<div>C</cite>D
@@ -9423,6 +10024,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |         "B"
 |         <div>
 |           "CD"
+
 
 #source tests1.dat:626
 #data
@@ -9444,14 +10046,17 @@ Line1<br>Line2<br>Line3<br>Line4
 |         "C"
 |       "D"
 
+
 #source tests1.dat:627
 #data
+
 #errors
 (1,0): expected-doctype-but-got-eof
 #document
 | <html>
 |   <head>
 |   <body>
+
 
 #source tests1.dat:628
 #data
@@ -9465,6 +10070,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <div>
 
+
 #source tests1.dat:629
 #data
 <DIV> abc
@@ -9477,6 +10083,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <div>
 |       " abc"
+
 
 #source tests1.dat:630
 #data
@@ -9492,6 +10099,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       " abc "
 |       <b>
 
+
 #source tests1.dat:631
 #data
 <DIV> abc <B> def
@@ -9506,6 +10114,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       " abc "
 |       <b>
 |         " def"
+
 
 #source tests1.dat:632
 #data
@@ -9523,6 +10132,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |         " def "
 |         <i>
 
+
 #source tests1.dat:633
 #data
 <DIV> abc <B> def <I> ghi
@@ -9539,6 +10149,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |         " def "
 |         <i>
 |           " ghi"
+
 
 #source tests1.dat:634
 #data
@@ -9558,6 +10169,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |           " ghi "
 |           <p>
 
+
 #source tests1.dat:635
 #data
 <DIV> abc <B> def <I> ghi <P> jkl
@@ -9576,6 +10188,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |           " ghi "
 |           <p>
 |             " jkl"
+
 
 #source tests1.dat:636
 #data
@@ -9599,6 +10212,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |           <b>
 |             " jkl "
 
+
 #source tests1.dat:637
 #data
 <DIV> abc <B> def <I> ghi <P> jkl </B> mno
@@ -9621,6 +10235,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |           <b>
 |             " jkl "
 |           " mno"
+
 
 #source tests1.dat:638
 #data
@@ -9646,6 +10261,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |           <b>
 |             " jkl "
 |           " mno "
+
 
 #source tests1.dat:639
 #data
@@ -9673,6 +10289,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |           " mno "
 |         " pqr"
 
+
 #source tests1.dat:640
 #data
 <DIV> abc <B> def <I> ghi <P> jkl </B> mno </I> pqr </P>
@@ -9698,6 +10315,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |             " jkl "
 |           " mno "
 |         " pqr "
+
 
 #source tests1.dat:641
 #data
@@ -9726,6 +10344,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |         " pqr "
 |       " stu"
 
+
 #source tests1.dat:642
 #data
 <test attribute---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
@@ -9738,6 +10357,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <test>
 |       attribute----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------=""
+
 
 #source tests1.dat:643
 #data
@@ -9772,6 +10392,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       href="foo"
 |       "aoe"
 
+
 #source tests1.dat:644
 #data
 <a href="blah">aba<table><tr><td><a href="foo">br</td></tr>x</table>aoe
@@ -9795,6 +10416,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |                 href="foo"
 |                 "br"
 |       "aoe"
+
 
 #source tests1.dat:645
 #data
@@ -9829,6 +10451,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       href="blah"
 |       "aoe"
 
+
 #source tests1.dat:646
 #data
 <a href=a>aa<marquee>aa<a href=b>bb</marquee>aa
@@ -9850,6 +10473,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |           "bb"
 |       "aa"
 
+
 #source tests1.dat:647
 #data
 <wbr><strike><code></strike><code><strike></code>
@@ -9869,6 +10493,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <code>
 |         <strike>
 
+
 #source tests1.dat:648
 #data
 <!DOCTYPE html><spacer>foo
@@ -9881,6 +10506,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <spacer>
 |       "foo"
+
 
 #source tests1.dat:649
 #data
@@ -9897,6 +10523,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       "<meta>"
 |   <body>
 
+
 #source tests1.dat:650
 #data
 <style><!--</style><meta><script>--><link></script>
@@ -9912,6 +10539,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       "--><link>"
 |   <body>
 
+
 #source tests1.dat:651
 #data
 <head><meta></head><link>
@@ -9924,6 +10552,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <meta>
 |     <link>
 |   <body>
+
 
 #source tests1.dat:652
 #data
@@ -9947,6 +10576,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |             <span>
 |               "X"
 
+
 #source tests1.dat:653
 #data
 <body><body><base><link><meta><title><p></title><body><p></body>
@@ -9965,6 +10595,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       "<p>"
 |     <p>
 
+
 #source tests1.dat:654
 #data
 <textarea><p></textarea>
@@ -9976,6 +10607,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <textarea>
 |       "<p>"
+
 
 #source tests1.dat:655
 #data
@@ -9989,6 +10621,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <p>
 |       <img>
+
 
 #source tests1.dat:656
 #data
@@ -10016,6 +10649,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <div>
 |       <a>
 
+
 #source tests1.dat:657
 #data
 <head></p><meta><p>
@@ -10029,6 +10663,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <p>
 
+
 #source tests1.dat:658
 #data
 <head></html><meta><p>
@@ -10041,6 +10676,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <meta>
 |     <p>
+
 
 #source tests1.dat:659
 #data
@@ -10062,6 +10698,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |             <td>
 |               <i>
 
+
 #source tests1.dat:660
 #data
 <h1><h2>
@@ -10075,6 +10712,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <h1>
 |     <h2>
+
 
 #source tests1.dat:661
 #data
@@ -10093,6 +10731,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <a>
 |       <a>
 
+
 #source tests1.dat:662
 #data
 <b><button></b></button></b>
@@ -10107,6 +10746,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <b>
 |     <button>
 |       <b>
+
 
 #source tests1.dat:663
 #data
@@ -10129,6 +10769,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |         <marquee>
 |           <p>
 
+
 #source tests1.dat:664
 #data
 <script></script></div><title></title><p><p>
@@ -10143,6 +10784,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <p>
 |     <p>
+
 
 #source tests1.dat:665
 #data
@@ -10162,6 +10804,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <b>
 |       <option>
 
+
 #source tests1.dat:666
 #data
 <html><head><title></title><body></body></html>
@@ -10172,6 +10815,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |     <title>
 |   <body>
+
 
 #source tests1.dat:667
 #data
@@ -10202,6 +10846,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |               <a>
 |     <a>
 
+
 #source tests1.dat:668
 #data
 <ul><li></li><div><li></div><li><li><div><li><address><li><b><em></b><li></ul>
@@ -10228,6 +10873,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |           <em>
 |       <li>
 
+
 #source tests1.dat:669
 #data
 <ul><li><ul></li><li>a</li></ul></li></ul>
@@ -10244,6 +10890,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |           <li>
 |             "a"
 
+
 #source tests1.dat:670
 #data
 <frameset><frame><frameset><frame></frameset><noframes></noframes></frameset>
@@ -10257,6 +10904,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <frameset>
 |       <frame>
 |     <noframes>
+
 
 #source tests1.dat:671
 #data
@@ -10278,6 +10926,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |             <td>
 |               <h3>
 |     <h3>
+
 
 #source tests1.dat:672
 #data
@@ -10301,6 +10950,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <thead>
 |         <tr>
 |           <td>
+
 
 #source tests1.dat:673
 #data
@@ -10329,6 +10979,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <colgroup>
 |         <col>
 
+
 #source tests1.dat:674
 #data
 <table><colgroup><tbody><colgroup><tr><colgroup><td><colgroup></table><colgroup>
@@ -10351,6 +11002,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |         <tr>
 |           <td>
 |       <colgroup>
+
 
 #source tests1.dat:675
 #data
@@ -10447,6 +11099,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <br>
 |     <p>
+
 
 #source tests1.dat:676
 #data
@@ -10573,6 +11226,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |         <tr>
 |     <p>
 
+
 #source tests1.dat:677
 #data
 <frameset>
@@ -10595,6 +11249,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <svg svg>
 
+
 #source tests10.dat:679
 #data
 <!DOCTYPE html><svg></svg><![CDATA[a]]>
@@ -10610,6 +11265,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <svg svg>
 |     <!-- [CDATA[a]] -->
 
+
 #source tests10.dat:680
 #data
 <!DOCTYPE html><body><svg></svg>
@@ -10620,6 +11276,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <body>
 |     <svg svg>
+
 
 #source tests10.dat:681
 #data
@@ -10632,6 +11289,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <select>
 |       <svg svg>
+
 
 #source tests10.dat:682
 #data
@@ -10646,6 +11304,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <option>
 |         <svg svg>
 
+
 #source tests10.dat:683
 #data
 <!DOCTYPE html><body><table><svg></svg></table>
@@ -10658,6 +11317,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <svg svg>
 |     <table>
+
 
 #source tests10.dat:684
 #data
@@ -10673,6 +11333,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <svg g>
 |         "foo"
 |     <table>
+
 
 #source tests10.dat:685
 #data
@@ -10691,6 +11352,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |         "bar"
 |     <table>
 
+
 #source tests10.dat:686
 #data
 <!DOCTYPE html><body><table><tbody><svg><g>foo</g><g>bar</g></svg></tbody></table>
@@ -10708,6 +11370,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |         "bar"
 |     <table>
 |       <tbody>
+
 
 #source tests10.dat:687
 #data
@@ -10728,6 +11391,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <tbody>
 |         <tr>
 
+
 #source tests10.dat:688
 #data
 <!DOCTYPE html><body><table><tbody><tr><td><svg><g>foo</g><g>bar</g></svg></td></tr></tbody></table>
@@ -10746,6 +11410,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |                 "foo"
 |               <svg g>
 |                 "bar"
+
 
 #source tests10.dat:689
 #data
@@ -10768,6 +11433,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |             <p>
 |               "baz"
 
+
 #source tests10.dat:690
 #data
 <!DOCTYPE html><body><table><caption><svg><g>foo</g><g>bar</g></svg><p>baz</caption></table>
@@ -10786,6 +11452,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |             "bar"
 |         <p>
 |           "baz"
+
 
 #source tests10.dat:691
 #data
@@ -10809,6 +11476,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <p>
 |       "quux"
 
+
 #source tests10.dat:692
 #data
 <!DOCTYPE html><body><table><caption><svg><g>foo</g><g>bar</g>baz</table><p>quux
@@ -10830,6 +11498,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |           "baz"
 |     <p>
 |       "quux"
+
 
 #source tests10.dat:693
 #data
@@ -10858,6 +11527,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <p>
 |       "quux"
 
+
 #source tests10.dat:694
 #data
 <!DOCTYPE html><body><table><tr><td><select><svg><g>foo</g><g>bar</g><p>baz</table><p>quux
@@ -10883,6 +11553,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |                 "baz"
 |     <p>
 |       "quux"
+
 
 #source tests10.dat:695
 #data
@@ -10912,6 +11583,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <p>
 |       "quux"
 
+
 #source tests10.dat:696
 #data
 <!DOCTYPE html><body></body></html><svg><g>foo</g><g>bar</g><p>baz
@@ -10930,6 +11602,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |         "bar"
 |     <p>
 |       "baz"
+
 
 #source tests10.dat:697
 #data
@@ -10950,6 +11623,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <p>
 |       "baz"
 
+
 #source tests10.dat:698
 #data
 <!DOCTYPE html><frameset><svg><g></g><g></g><p><span>
@@ -10968,6 +11642,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <frameset>
 
+
 #source tests10.dat:699
 #data
 <!DOCTYPE html><frameset></frameset><svg><g></g><g></g><p><span>
@@ -10985,6 +11660,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <frameset>
 
+
 #source tests10.dat:700
 #data
 <!DOCTYPE html><body xlink:href=foo><svg xlink:href=foo></svg>
@@ -10997,6 +11673,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     xlink:href="foo"
 |     <svg svg>
 |       xlink href="foo"
+
 
 #source tests10.dat:701
 #data
@@ -11014,6 +11691,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |         xlink href="foo"
 |         xml lang="en"
 
+
 #source tests10.dat:702
 #data
 <!DOCTYPE html><body xlink:href=foo xml:lang=en><svg><g xml:lang=en xlink:href=foo /></svg>
@@ -11029,6 +11707,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <svg g>
 |         xlink href="foo"
 |         xml lang="en"
+
 
 #source tests10.dat:703
 #data
@@ -11047,6 +11726,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |         xml lang="en"
 |       "bar"
 
+
 #source tests10.dat:704
 #data
 <svg></path>
@@ -11060,6 +11740,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <body>
 |     <svg svg>
+
 
 #source tests10.dat:705
 #data
@@ -11075,6 +11756,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <div>
 |       <svg svg>
 |     "a"
+
 
 #source tests10.dat:706
 #data
@@ -11092,6 +11774,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |         <svg path>
 |     "a"
 
+
 #source tests10.dat:707
 #data
 <div><svg><path></svg><path>
@@ -11107,6 +11790,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <svg svg>
 |         <svg path>
 |       <path>
+
 
 #source tests10.dat:708
 #data
@@ -11127,6 +11811,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |             <math math>
 |               "a"
 
+
 #source tests10.dat:709
 #data
 <div><svg><path><foreignObject><p></div>a
@@ -11144,6 +11829,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |           <svg foreignObject>
 |             <p>
 |               "a"
+
 
 #source tests10.dat:710
 #data
@@ -11163,6 +11849,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |           <ul>
 |             "a"
 
+
 #source tests10.dat:711
 #data
 <!DOCTYPE html><svg><desc><svg><ul>a
@@ -11180,6 +11867,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |         <ul>
 |           "a"
 
+
 #source tests10.dat:712
 #data
 <!DOCTYPE html><p><svg><desc><p>
@@ -11195,6 +11883,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |         <svg desc>
 |           <p>
 
+
 #source tests10.dat:713
 #data
 <!DOCTYPE html><p><svg><title><p>
@@ -11209,6 +11898,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <svg svg>
 |         <svg title>
 |           <p>
+
 
 #source tests10.dat:714
 #data
@@ -11228,6 +11918,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |             <p>
 |             <p>
 
+
 #source tests10.dat:715
 #data
 <math><mi><div><object><div><span></span></div></object></div></mi><mi>
@@ -11245,6 +11936,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |             <div>
 |               <span>
 |       <math mi>
+
 
 #source tests10.dat:716
 #data
@@ -11264,6 +11956,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |               <div>
 |       <math mi>
 
+
 #source tests10.dat:717
 #data
 <svg><script></script><path>
@@ -11277,6 +11970,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <svg svg>
 |       <svg script>
 |       <svg path>
+
 
 #source tests10.dat:718
 #data
@@ -11294,6 +11988,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <tbody>
 |         <tr>
 
+
 #source tests10.dat:719
 #data
 <math><mi><mglyph>
@@ -11307,6 +12002,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <math math>
 |       <math mi>
 |         <math mglyph>
+
 
 #source tests10.dat:720
 #data
@@ -11322,6 +12018,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <math mi>
 |         <math malignmark>
 
+
 #source tests10.dat:721
 #data
 <math><mo><mglyph>
@@ -11335,6 +12032,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <math math>
 |       <math mo>
 |         <math mglyph>
+
 
 #source tests10.dat:722
 #data
@@ -11350,6 +12048,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <math mo>
 |         <math malignmark>
 
+
 #source tests10.dat:723
 #data
 <math><mn><mglyph>
@@ -11363,6 +12062,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <math math>
 |       <math mn>
 |         <math mglyph>
+
 
 #source tests10.dat:724
 #data
@@ -11378,6 +12078,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <math mn>
 |         <math malignmark>
 
+
 #source tests10.dat:725
 #data
 <math><ms><mglyph>
@@ -11391,6 +12092,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <math math>
 |       <math ms>
 |         <math mglyph>
+
 
 #source tests10.dat:726
 #data
@@ -11406,6 +12108,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <math ms>
 |         <math malignmark>
 
+
 #source tests10.dat:727
 #data
 <math><mtext><mglyph>
@@ -11419,6 +12122,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <math math>
 |       <math mtext>
 |         <math mglyph>
+
 
 #source tests10.dat:728
 #data
@@ -11434,6 +12138,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <math mtext>
 |         <math malignmark>
 
+
 #source tests10.dat:729
 #data
 <math><annotation-xml><svg></svg></annotation-xml><mi>
@@ -11448,6 +12153,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <math annotation-xml>
 |         <svg svg>
 |       <math mi>
+
 
 #source tests10.dat:730
 #data
@@ -11469,6 +12175,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |               <span>
 |           <svg path>
 |       <math mi>
+
 
 #source tests10.dat:731
 #data
@@ -11561,6 +12268,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       yChannelSelector=""
 |       zoomAndPan=""
 
+
 #source tests11.dat:733
 #data
 <!DOCTYPE html><BODY><SVG ATTRIBUTENAME='' ATTRIBUTETYPE='' BASEFREQUENCY='' BASEPROFILE='' CALCMODE='' CLIPPATHUNITS='' DIFFUSECONSTANT='' EDGEMODE='' FILTERUNITS='' GLYPHREF='' GRADIENTTRANSFORM='' GRADIENTUNITS='' KERNELMATRIX='' KERNELUNITLENGTH='' KEYPOINTS='' KEYSPLINES='' KEYTIMES='' LENGTHADJUST='' LIMITINGCONEANGLE='' MARKERHEIGHT='' MARKERUNITS='' MARKERWIDTH='' MASKCONTENTUNITS='' MASKUNITS='' NUMOCTAVES='' PATHLENGTH='' PATTERNCONTENTUNITS='' PATTERNTRANSFORM='' PATTERNUNITS='' POINTSATX='' POINTSATY='' POINTSATZ='' PRESERVEALPHA='' PRESERVEASPECTRATIO='' PRIMITIVEUNITS='' REFX='' REFY='' REPEATCOUNT='' REPEATDUR='' REQUIREDEXTENSIONS='' REQUIREDFEATURES='' SPECULARCONSTANT='' SPECULAREXPONENT='' SPREADMETHOD='' STARTOFFSET='' STDDEVIATION='' STITCHTILES='' SURFACESCALE='' SYSTEMLANGUAGE='' TABLEVALUES='' TARGETX='' TARGETY='' TEXTLENGTH='' VIEWBOX='' VIEWTARGET='' XCHANNELSELECTOR='' YCHANNELSELECTOR='' ZOOMANDPAN=''></SVG>
@@ -11629,6 +12337,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       xChannelSelector=""
 |       yChannelSelector=""
 |       zoomAndPan=""
+
 
 #source tests11.dat:734
 #data
@@ -11700,6 +12409,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       yChannelSelector=""
 |       zoomAndPan=""
 
+
 #source tests11.dat:735
 #data
 <!DOCTYPE html><body><math attributeName='' attributeType='' baseFrequency='' baseProfile='' calcMode='' clipPathUnits='' diffuseConstant='' edgeMode='' filterUnits='' glyphRef='' gradientTransform='' gradientUnits='' kernelMatrix='' kernelUnitLength='' keyPoints='' keySplines='' keyTimes='' lengthAdjust='' limitingConeAngle='' markerHeight='' markerUnits='' markerWidth='' maskContentUnits='' maskUnits='' numOctaves='' pathLength='' patternContentUnits='' patternTransform='' patternUnits='' pointsAtX='' pointsAtY='' pointsAtZ='' preserveAlpha='' preserveAspectRatio='' primitiveUnits='' refX='' refY='' repeatCount='' repeatDur='' requiredExtensions='' requiredFeatures='' specularConstant='' specularExponent='' spreadMethod='' startOffset='' stdDeviation='' stitchTiles='' surfaceScale='' systemLanguage='' tableValues='' targetX='' targetY='' textLength='' viewBox='' viewTarget='' xChannelSelector='' yChannelSelector='' zoomAndPan=''></math>
@@ -11769,6 +12479,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       ychannelselector=""
 |       zoomandpan=""
 
+
 #source tests11.dat:736
 #data
 <!DOCTYPE html><body><svg contentScriptType='' contentStyleType='' externalResourcesRequired='' filterRes=''></svg>
@@ -11783,6 +12494,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       contentstyletype=""
 |       externalresourcesrequired=""
 |       filterres=""
+
 
 #source tests11.dat:737
 #data
@@ -11799,6 +12511,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       externalresourcesrequired=""
 |       filterres=""
 
+
 #source tests11.dat:738
 #data
 <!DOCTYPE html><body><svg contentscripttype='' contentstyletype='' externalresourcesrequired='' filterres=''></svg>
@@ -11814,6 +12527,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       externalresourcesrequired=""
 |       filterres=""
 
+
 #source tests11.dat:739
 #data
 <!DOCTYPE html><body><math contentScriptType='' contentStyleType='' externalResourcesRequired='' filterRes=''></math>
@@ -11828,6 +12542,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       contentstyletype=""
 |       externalresourcesrequired=""
 |       filterres=""
+
 
 #source tests11.dat:740
 #data
@@ -11876,6 +12591,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <svg radialGradient>
 |       <svg textPath>
 
+
 #source tests11.dat:741
 #data
 <!DOCTYPE html><body><svg><altglyph /><altglyphdef /><altglyphitem /><animatecolor /><animatemotion /><animatetransform /><clippath /><feblend /><fecolormatrix /><fecomponenttransfer /><fecomposite /><feconvolvematrix /><fediffuselighting /><fedisplacementmap /><fedistantlight /><feflood /><fefunca /><fefuncb /><fefuncg /><fefuncr /><fegaussianblur /><feimage /><femerge /><femergenode /><femorphology /><feoffset /><fepointlight /><fespecularlighting /><fespotlight /><fetile /><feturbulence /><foreignobject /><glyphref /><lineargradient /><radialgradient /><textpath /></svg>
@@ -11922,6 +12638,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <svg linearGradient>
 |       <svg radialGradient>
 |       <svg textPath>
+
 
 #source tests11.dat:742
 #data
@@ -11970,6 +12687,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <svg radialGradient>
 |       <svg textPath>
 
+
 #source tests11.dat:743
 #data
 <!DOCTYPE html><body><math><altGlyph /><altGlyphDef /><altGlyphItem /><animateColor /><animateMotion /><animateTransform /><clipPath /><feBlend /><feColorMatrix /><feComponentTransfer /><feComposite /><feConvolveMatrix /><feDiffuseLighting /><feDisplacementMap /><feDistantLight /><feFlood /><feFuncA /><feFuncB /><feFuncG /><feFuncR /><feGaussianBlur /><feImage /><feMerge /><feMergeNode /><feMorphology /><feOffset /><fePointLight /><feSpecularLighting /><feSpotLight /><feTile /><feTurbulence /><foreignObject /><glyphRef /><linearGradient /><radialGradient /><textPath /></math>
@@ -12017,6 +12735,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <math radialgradient>
 |       <math textpath>
 
+
 #source tests11.dat:744
 #data
 <!DOCTYPE html><body><svg><solidColor /></svg>
@@ -12062,6 +12781,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |               "quux"
 |       "bar"
 
+
 #source tests12.dat:746
 #data
 <!DOCTYPE html><body>foo<math><mtext><i>baz</i></mtext><annotation-xml><svg><desc><b>eggs</b></desc><g><foreignObject><P>spam<TABLE><tr><td><img></td></table></foreignObject></g><g>quux</g></svg></annotation-xml></math>bar
@@ -12105,6 +12825,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <xyz:abc>
 
+
 #source tests14.dat:748
 #data
 <!DOCTYPE html><html><body><xyz:abc></xyz:abc><span></span>
@@ -12116,6 +12837,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <xyz:abc>
 |     <span>
+
 
 #source tests14.dat:749
 #data
@@ -12130,6 +12852,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <xyz:abc>
 
+
 #source tests14.dat:750
 #data
 <!DOCTYPE html><html xml:lang=bar><html xml:lang=foo>
@@ -12142,6 +12865,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <body>
 
+
 #source tests14.dat:751
 #data
 <!DOCTYPE html><html 123=456>
@@ -12152,6 +12876,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   123="456"
 |   <head>
 |   <body>
+
 
 #source tests14.dat:752
 #data
@@ -12165,6 +12890,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   789="012"
 |   <head>
 |   <body>
+
 
 #source tests14.dat:753
 #data
@@ -12199,6 +12925,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |           <p>
 |             "X"
 
+
 #source tests15.dat:755
 #data
 <p><b><i><u></p>
@@ -12223,6 +12950,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |           <p>
 |             "X"
 
+
 #source tests15.dat:756
 #data
 <!doctype html></html> <head>
@@ -12236,6 +12964,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     " "
 
+
 #source tests15.dat:757
 #data
 <!doctype html></body><meta>
@@ -12248,6 +12977,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <meta>
 
+
 #source tests15.dat:758
 #data
 <html></html><!-- foo -->
@@ -12258,6 +12988,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <body>
 | <!--  foo  -->
+
 
 #source tests15.dat:759
 #data
@@ -12271,6 +13002,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <title>
 |       "X"
+
 
 #source tests15.dat:760
 #data
@@ -12288,6 +13020,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <meta>
 |     <table>
 
+
 #source tests15.dat:761
 #data
 <!doctype html><table> x</table>
@@ -12301,6 +13034,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     " x"
 |     <table>
+
 
 #source tests15.dat:762
 #data
@@ -12316,6 +13050,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     " x "
 |     <table>
+
 
 #source tests15.dat:763
 #data
@@ -12333,6 +13068,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <tbody>
 |         <tr>
 
+
 #source tests15.dat:764
 #data
 <!doctype html><table>X<style> <tr>x </style> </table>
@@ -12348,6 +13084,7 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <style>
 |         " <tr>x "
 |       " "
+
 
 #source tests15.dat:765
 #data
@@ -12373,3 +13110,4663 @@ Line1<br>Line2<br>Line3<br>Line4
 |             <td>
 |               "bar"
 |             " "
+
+
+#source tests15.dat:766
+#data
+<frame></frame></frame><frameset><frame><frameset><frame></frameset><noframes></frameset><noframes>
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,7): unexpected-start-tag-ignored
+(1,15): unexpected-end-tag
+(1,23): unexpected-end-tag
+(1,33): unexpected-start-tag
+(1,99): expected-named-closing-tag-but-got-eof
+(1,99): eof-in-frameset
+#document
+| <html>
+|   <head>
+|   <frameset>
+|     <frame>
+|     <frameset>
+|       <frame>
+|     <noframes>
+|       "</frameset><noframes>"
+
+
+#source tests15.dat:767
+#data
+<!DOCTYPE html><object></html>
+#errors
+(1,30): expected-body-in-scope
+(1,30): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <object>
+
+#source tests16.dat:768
+#data
+<!doctype html><script>
+#errors
+(1,23): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|   <body>
+
+
+#source tests16.dat:769
+#data
+<!doctype html><script>a
+#errors
+(1,24): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "a"
+|   <body>
+
+
+#source tests16.dat:770
+#data
+<!doctype html><script><
+#errors
+(1,24): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<"
+|   <body>
+
+
+#source tests16.dat:771
+#data
+<!doctype html><script></
+#errors
+(1,25): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "</"
+|   <body>
+
+
+#source tests16.dat:772
+#data
+<!doctype html><script></S
+#errors
+(1,26): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "</S"
+|   <body>
+
+
+#source tests16.dat:773
+#data
+<!doctype html><script></SC
+#errors
+(1,27): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "</SC"
+|   <body>
+
+
+#source tests16.dat:774
+#data
+<!doctype html><script></SCR
+#errors
+(1,28): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "</SCR"
+|   <body>
+
+
+#source tests16.dat:775
+#data
+<!doctype html><script></SCRI
+#errors
+(1,29): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "</SCRI"
+|   <body>
+
+
+#source tests16.dat:776
+#data
+<!doctype html><script></SCRIP
+#errors
+(1,30): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "</SCRIP"
+|   <body>
+
+
+#source tests16.dat:777
+#data
+<!doctype html><script></SCRIPT
+#errors
+(1,31): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "</SCRIPT"
+|   <body>
+
+
+#source tests16.dat:778
+#data
+<!doctype html><script></SCRIPT 
+#errors
+(1,32): expected-attribute-name-but-got-eof
+(1,32): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:33) eof-in-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|   <body>
+
+
+#source tests16.dat:779
+#data
+<!doctype html><script></s
+#errors
+(1,26): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "</s"
+|   <body>
+
+
+#source tests16.dat:780
+#data
+<!doctype html><script></sc
+#errors
+(1,27): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "</sc"
+|   <body>
+
+
+#source tests16.dat:781
+#data
+<!doctype html><script></scr
+#errors
+(1,28): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "</scr"
+|   <body>
+
+
+#source tests16.dat:782
+#data
+<!doctype html><script></scri
+#errors
+(1,29): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "</scri"
+|   <body>
+
+
+#source tests16.dat:783
+#data
+<!doctype html><script></scrip
+#errors
+(1,30): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "</scrip"
+|   <body>
+
+
+#source tests16.dat:784
+#data
+<!doctype html><script></script
+#errors
+(1,31): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "</script"
+|   <body>
+
+
+#source tests16.dat:785
+#data
+<!doctype html><script></script 
+#errors
+(1,32): expected-attribute-name-but-got-eof
+(1,32): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:33) eof-in-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|   <body>
+
+
+#source tests16.dat:786
+#data
+<!doctype html><script><!
+#errors
+(1,25): expected-script-data-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!"
+|   <body>
+
+
+#source tests16.dat:787
+#data
+<!doctype html><script><!a
+#errors
+(1,26): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!a"
+|   <body>
+
+
+#source tests16.dat:788
+#data
+<!doctype html><script><!-
+#errors
+(1,26): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!-"
+|   <body>
+
+
+#source tests16.dat:789
+#data
+<!doctype html><script><!-a
+#errors
+(1,27): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!-a"
+|   <body>
+
+
+#source tests16.dat:790
+#data
+<!doctype html><script><!--
+#errors
+(1,27): expected-named-closing-tag-but-got-eof
+(1,27): unexpected-eof-in-text-mode
+#new-errors
+(1:28) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--"
+|   <body>
+
+
+#source tests16.dat:791
+#data
+<!doctype html><script><!--a
+#errors
+(1,28): expected-named-closing-tag-but-got-eof
+(1,28): unexpected-eof-in-text-mode
+#new-errors
+(1:29) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--a"
+|   <body>
+
+
+#source tests16.dat:792
+#data
+<!doctype html><script><!--<
+#errors
+(1,28): expected-named-closing-tag-but-got-eof
+(1,28): unexpected-eof-in-text-mode
+#new-errors
+(1:29) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<"
+|   <body>
+
+
+#source tests16.dat:793
+#data
+<!doctype html><script><!--<a
+#errors
+(1,29): expected-named-closing-tag-but-got-eof
+(1,29): unexpected-eof-in-text-mode
+#new-errors
+(1:30) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<a"
+|   <body>
+
+
+#source tests16.dat:794
+#data
+<!doctype html><script><!--</
+#errors
+(1,29): expected-named-closing-tag-but-got-eof
+(1,29): unexpected-eof-in-text-mode
+#new-errors
+(1:30) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--</"
+|   <body>
+
+
+#source tests16.dat:795
+#data
+<!doctype html><script><!--</script
+#errors
+(1,35): expected-named-closing-tag-but-got-eof
+(1,35): unexpected-eof-in-text-mode
+#new-errors
+(1:36) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--</script"
+|   <body>
+
+
+#source tests16.dat:796
+#data
+<!doctype html><script><!--</script 
+#errors
+(1,36): expected-attribute-name-but-got-eof
+(1,36): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:37) eof-in-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--"
+|   <body>
+
+
+#source tests16.dat:797
+#data
+<!doctype html><script><!--<s
+#errors
+(1,29): expected-named-closing-tag-but-got-eof
+(1,29): unexpected-eof-in-text-mode
+#new-errors
+(1:30) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<s"
+|   <body>
+
+
+#source tests16.dat:798
+#data
+<!doctype html><script><!--<script
+#errors
+(1,34): expected-named-closing-tag-but-got-eof
+(1,34): unexpected-eof-in-text-mode
+#new-errors
+(1:35) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script"
+|   <body>
+
+
+#source tests16.dat:799
+#data
+<!doctype html><script><!--<script 
+#errors
+(1,35): eof-in-script-in-script
+(1,35): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:36) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script "
+|   <body>
+
+
+#source tests16.dat:800
+#data
+<!doctype html><script><!--<script <
+#errors
+(1,36): eof-in-script-in-script
+(1,36): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:37) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script <"
+|   <body>
+
+
+#source tests16.dat:801
+#data
+<!doctype html><script><!--<script <a
+#errors
+(1,37): eof-in-script-in-script
+(1,37): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:38) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script <a"
+|   <body>
+
+
+#source tests16.dat:802
+#data
+<!doctype html><script><!--<script </
+#errors
+(1,37): eof-in-script-in-script
+(1,37): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:38) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </"
+|   <body>
+
+
+#source tests16.dat:803
+#data
+<!doctype html><script><!--<script </s
+#errors
+(1,38): eof-in-script-in-script
+(1,38): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:39) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </s"
+|   <body>
+
+
+#source tests16.dat:804
+#data
+<!doctype html><script><!--<script </script
+#errors
+(1,43): eof-in-script-in-script
+(1,43): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:44) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </script"
+|   <body>
+
+
+#source tests16.dat:805
+#data
+<!doctype html><script><!--<script </scripta
+#errors
+(1,44): eof-in-script-in-script
+(1,44): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:45) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </scripta"
+|   <body>
+
+
+#source tests16.dat:806
+#data
+<!doctype html><script><!--<script </script 
+#errors
+(1,44): expected-named-closing-tag-but-got-eof
+(1,44): unexpected-eof-in-text-mode
+#new-errors
+(1:45) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </script "
+|   <body>
+
+
+#source tests16.dat:807
+#data
+<!doctype html><script><!--<script </script>
+#errors
+(1,44): expected-named-closing-tag-but-got-eof
+(1,44): unexpected-eof-in-text-mode
+#new-errors
+(1:45) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </script>"
+|   <body>
+
+
+#source tests16.dat:808
+#data
+<!doctype html><script><!--<script </script/
+#errors
+(1,44): expected-named-closing-tag-but-got-eof
+(1,44): unexpected-eof-in-text-mode
+#new-errors
+(1:45) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </script/"
+|   <body>
+
+
+#source tests16.dat:809
+#data
+<!doctype html><script><!--<script </script <
+#errors
+(1,45): expected-named-closing-tag-but-got-eof
+(1,45): unexpected-eof-in-text-mode
+#new-errors
+(1:46) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </script <"
+|   <body>
+
+
+#source tests16.dat:810
+#data
+<!doctype html><script><!--<script </script <a
+#errors
+(1,46): expected-named-closing-tag-but-got-eof
+(1,46): unexpected-eof-in-text-mode
+#new-errors
+(1:47) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </script <a"
+|   <body>
+
+
+#source tests16.dat:811
+#data
+<!doctype html><script><!--<script </script </
+#errors
+(1,46): expected-named-closing-tag-but-got-eof
+(1,46): unexpected-eof-in-text-mode
+#new-errors
+(1:47) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </script </"
+|   <body>
+
+
+#source tests16.dat:812
+#data
+<!doctype html><script><!--<script </script </script
+#errors
+(1,52): expected-named-closing-tag-but-got-eof
+(1,52): unexpected-eof-in-text-mode
+#new-errors
+(1:53) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </script </script"
+|   <body>
+
+
+#source tests16.dat:813
+#data
+<!doctype html><script><!--<script </script </script 
+#errors
+(1,53): expected-attribute-name-but-got-eof
+(1,53): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:54) eof-in-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </script "
+|   <body>
+
+
+#source tests16.dat:814
+#data
+<!doctype html><script><!--<script </script </script/
+#errors
+(1,53): unexpected-EOF-after-solidus-in-tag
+(1,53): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:54) eof-in-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </script "
+|   <body>
+
+
+#source tests16.dat:815
+#data
+<!doctype html><script><!--<script </script </script>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </script "
+|   <body>
+
+
+#source tests16.dat:816
+#data
+<!doctype html><script><!--<script -
+#errors
+(1,36): eof-in-script-in-script
+(1,36): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:37) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script -"
+|   <body>
+
+
+#source tests16.dat:817
+#data
+<!doctype html><script><!--<script -a
+#errors
+(1,37): eof-in-script-in-script
+(1,37): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:38) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script -a"
+|   <body>
+
+
+#source tests16.dat:818
+#data
+<!doctype html><script><!--<script -<
+#errors
+(1,37): eof-in-script-in-script
+(1,37): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:38) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script -<"
+|   <body>
+
+
+#source tests16.dat:819
+#data
+<!doctype html><script><!--<script --
+#errors
+(1,37): eof-in-script-in-script
+(1,37): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:38) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script --"
+|   <body>
+
+
+#source tests16.dat:820
+#data
+<!doctype html><script><!--<script --a
+#errors
+(1,38): eof-in-script-in-script
+(1,38): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:39) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script --a"
+|   <body>
+
+
+#source tests16.dat:821
+#data
+<!doctype html><script><!--<script --<
+#errors
+(1,38): eof-in-script-in-script
+(1,38): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:39) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script --<"
+|   <body>
+
+
+#source tests16.dat:822
+#data
+<!doctype html><script><!--<script -->
+#errors
+(1,38): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script -->"
+|   <body>
+
+
+#source tests16.dat:823
+#data
+<!doctype html><script><!--<script --><
+#errors
+(1,39): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script --><"
+|   <body>
+
+
+#source tests16.dat:824
+#data
+<!doctype html><script><!--<script --></
+#errors
+(1,40): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script --></"
+|   <body>
+
+
+#source tests16.dat:825
+#data
+<!doctype html><script><!--<script --></script
+#errors
+(1,46): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script --></script"
+|   <body>
+
+
+#source tests16.dat:826
+#data
+<!doctype html><script><!--<script --></script 
+#errors
+(1,47): expected-attribute-name-but-got-eof
+(1,47): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:48) eof-in-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script -->"
+|   <body>
+
+
+#source tests16.dat:827
+#data
+<!doctype html><script><!--<script --></script/
+#errors
+(1,47): unexpected-EOF-after-solidus-in-tag
+(1,47): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:48) eof-in-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script -->"
+|   <body>
+
+
+#source tests16.dat:828
+#data
+<!doctype html><script><!--<script --></script>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script -->"
+|   <body>
+
+
+#source tests16.dat:829
+#data
+<!doctype html><script><!--<script><\/script>--></script>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script><\/script>-->"
+|   <body>
+
+
+#source tests16.dat:830
+#data
+<!doctype html><script><!--<script></scr'+'ipt>--></script>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script></scr'+'ipt>-->"
+|   <body>
+
+
+#source tests16.dat:831
+#data
+<!doctype html><script><!--<script></script><script></script></script>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script></script><script></script>"
+|   <body>
+
+
+#source tests16.dat:832
+#data
+<!doctype html><script><!--<script></script><script></script>--><!--</script>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script></script><script></script>--><!--"
+|   <body>
+
+
+#source tests16.dat:833
+#data
+<!doctype html><script><!--<script></script><script></script>-- ></script>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script></script><script></script>-- >"
+|   <body>
+
+
+#source tests16.dat:834
+#data
+<!doctype html><script><!--<script></script><script></script>- -></script>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script></script><script></script>- ->"
+|   <body>
+
+
+#source tests16.dat:835
+#data
+<!doctype html><script><!--<script></script><script></script>- - ></script>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script></script><script></script>- - >"
+|   <body>
+
+
+#source tests16.dat:836
+#data
+<!doctype html><script><!--<script></script><script></script>-></script>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script></script><script></script>->"
+|   <body>
+
+
+#source tests16.dat:837
+#data
+<!doctype html><script><!--<script>--!></script>X
+#errors
+(1,49): expected-named-closing-tag-but-got-eof
+(1,49): unexpected-EOF-in-text-mode
+#new-errors
+(1:50) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script>--!></script>X"
+|   <body>
+
+
+#source tests16.dat:838
+#data
+<!doctype html><script><!--<scr'+'ipt></script>--></script>
+#errors
+(1,59): unexpected-end-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<scr'+'ipt>"
+|   <body>
+|     "-->"
+
+
+#source tests16.dat:839
+#data
+<!doctype html><script><!--<script></scr'+'ipt></script>X
+#errors
+(1,57): expected-named-closing-tag-but-got-eof
+(1,57): unexpected-eof-in-text-mode
+#new-errors
+(1:58) eof-in-script-html-comment-like-text
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script></scr'+'ipt></script>X"
+|   <body>
+
+
+#source tests16.dat:840
+#data
+<!doctype html><style><!--<style></style>--></style>
+#errors
+(1,52): unexpected-end-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <style>
+|       "<!--<style>"
+|   <body>
+|     "-->"
+
+
+#source tests16.dat:841
+#data
+<!doctype html><style><!--</style>X
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <style>
+|       "<!--"
+|   <body>
+|     "X"
+
+
+#source tests16.dat:842
+#data
+<!doctype html><style><!--...</style>...--></style>
+#errors
+(1,51): unexpected-end-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <style>
+|       "<!--..."
+|   <body>
+|     "...-->"
+
+
+#source tests16.dat:843
+#data
+<!doctype html><style><!--<br><html xmlns:v="urn:schemas-microsoft-com:vml"><!--[if !mso]><style></style>X
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <style>
+|       "<!--<br><html xmlns:v="urn:schemas-microsoft-com:vml"><!--[if !mso]><style>"
+|   <body>
+|     "X"
+
+
+#source tests16.dat:844
+#data
+<!doctype html><style><!--...<style><!--...--!></style>--></style>
+#errors
+(1,66): unexpected-end-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <style>
+|       "<!--...<style><!--...--!>"
+|   <body>
+|     "-->"
+
+
+#source tests16.dat:845
+#data
+<!doctype html><style><!--...</style><!-- --><style>@import ...</style>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <style>
+|       "<!--..."
+|     <!--   -->
+|     <style>
+|       "@import ..."
+|   <body>
+
+
+#source tests16.dat:846
+#data
+<!doctype html><style>...<style><!--...</style><!-- --></style>
+#errors
+(1,63): unexpected-end-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <style>
+|       "...<style><!--..."
+|     <!--   -->
+|   <body>
+
+
+#source tests16.dat:847
+#data
+<!doctype html><style>...<!--[if IE]><style>...</style>X
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <style>
+|       "...<!--[if IE]><style>..."
+|   <body>
+|     "X"
+
+
+#source tests16.dat:848
+#data
+<!doctype html><title><!--<title></title>--></title>
+#errors
+(1,52): unexpected-end-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <title>
+|       "<!--<title>"
+|   <body>
+|     "-->"
+
+
+#source tests16.dat:849
+#data
+<!doctype html><title>&lt;/title></title>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <title>
+|       "</title>"
+|   <body>
+
+
+#source tests16.dat:850
+#data
+<!doctype html><title>foo/title><link></head><body>X
+#errors
+(1,52): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <title>
+|       "foo/title><link></head><body>X"
+|   <body>
+
+
+#source tests16.dat:851
+#data
+<!doctype html><noscript><!--<noscript></noscript>--></noscript>
+#errors
+(1,64): unexpected-end-tag
+#script-on
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <noscript>
+|       "<!--<noscript>"
+|   <body>
+|     "-->"
+
+
+#source tests16.dat:852
+#data
+<!doctype html><noscript><!--<noscript></noscript>--></noscript>
+#errors
+#script-off
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <noscript>
+|       <!-- <noscript></noscript> -->
+|   <body>
+
+
+#source tests16.dat:853
+#data
+<!doctype html><noscript><!--</noscript>X<noscript>--></noscript>
+#errors
+#script-on
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <noscript>
+|       "<!--"
+|   <body>
+|     "X"
+|     <noscript>
+|       "-->"
+
+
+#source tests16.dat:854
+#data
+<!doctype html><noscript><!--</noscript>X<noscript>--></noscript>
+#errors
+#script-off
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <noscript>
+|       <!-- </noscript>X<noscript> -->
+|   <body>
+
+
+#source tests16.dat:855
+#data
+<!doctype html><noscript><iframe></noscript>X
+#errors
+#script-on
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <noscript>
+|       "<iframe>"
+|   <body>
+|     "X"
+
+
+#source tests16.dat:856
+#data
+<!doctype html><noscript><iframe></noscript>X
+#errors
+ * (1,34) unexpected token in head noscript
+ * (1,46) unexpected EOF
+#script-off
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <noscript>
+|   <body>
+|     <iframe>
+|       "</noscript>X"
+
+
+#source tests16.dat:857
+#data
+<!doctype html><noframes><!--<noframes></noframes>--></noframes>
+#errors
+(1,64): unexpected-end-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <noframes>
+|       "<!--<noframes>"
+|   <body>
+|     "-->"
+
+
+#source tests16.dat:858
+#data
+<!doctype html><noframes><body><script><!--...</script></body></noframes></html>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <noframes>
+|       "<body><script><!--...</script></body>"
+|   <body>
+
+
+#source tests16.dat:859
+#data
+<!doctype html><textarea><!--<textarea></textarea>--></textarea>
+#errors
+(1,64): unexpected-end-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <textarea>
+|       "<!--<textarea>"
+|     "-->"
+
+
+#source tests16.dat:860
+#data
+<!doctype html><textarea>&lt;/textarea></textarea>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <textarea>
+|       "</textarea>"
+
+
+#source tests16.dat:861
+#data
+<!doctype html><textarea>&lt;</textarea>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <textarea>
+|       "<"
+
+
+#source tests16.dat:862
+#data
+<!doctype html><textarea>a&lt;b</textarea>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <textarea>
+|       "a<b"
+
+
+#source tests16.dat:863
+#data
+<!doctype html><iframe><!--<iframe></iframe>--></iframe>
+#errors
+(1,56): unexpected-end-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <iframe>
+|       "<!--<iframe>"
+|     "-->"
+
+
+#source tests16.dat:864
+#data
+<!doctype html><iframe>...<!--X->...<!--/X->...</iframe>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <iframe>
+|       "...<!--X->...<!--/X->..."
+
+
+#source tests16.dat:865
+#data
+<!doctype html><xmp><!--<xmp></xmp>--></xmp>
+#errors
+(1,44): unexpected-end-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <xmp>
+|       "<!--<xmp>"
+|     "-->"
+
+
+#source tests16.dat:866
+#data
+<!doctype html><noembed><!--<noembed></noembed>--></noembed>
+#errors
+(1,60): unexpected-end-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <noembed>
+|       "<!--<noembed>"
+|     "-->"
+
+
+#source tests16.dat:867
+#data
+<script>
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,8): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|   <body>
+
+
+#source tests16.dat:868
+#data
+<script>a
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,9): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "a"
+|   <body>
+
+
+#source tests16.dat:869
+#data
+<script><
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,9): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<"
+|   <body>
+
+
+#source tests16.dat:870
+#data
+<script></
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,10): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "</"
+|   <body>
+
+
+#source tests16.dat:871
+#data
+<script></S
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,11): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "</S"
+|   <body>
+
+
+#source tests16.dat:872
+#data
+<script></SC
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,12): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "</SC"
+|   <body>
+
+
+#source tests16.dat:873
+#data
+<script></SCR
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,13): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "</SCR"
+|   <body>
+
+
+#source tests16.dat:874
+#data
+<script></SCRI
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,14): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "</SCRI"
+|   <body>
+
+
+#source tests16.dat:875
+#data
+<script></SCRIP
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,15): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "</SCRIP"
+|   <body>
+
+
+#source tests16.dat:876
+#data
+<script></SCRIPT
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,16): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "</SCRIPT"
+|   <body>
+
+
+#source tests16.dat:877
+#data
+<script></SCRIPT 
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,17): expected-attribute-name-but-got-eof
+(1,17): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:18) eof-in-tag
+#document
+| <html>
+|   <head>
+|     <script>
+|   <body>
+
+
+#source tests16.dat:878
+#data
+<script></s
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,11): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "</s"
+|   <body>
+
+
+#source tests16.dat:879
+#data
+<script></sc
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,12): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "</sc"
+|   <body>
+
+
+#source tests16.dat:880
+#data
+<script></scr
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,13): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "</scr"
+|   <body>
+
+
+#source tests16.dat:881
+#data
+<script></scri
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,14): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "</scri"
+|   <body>
+
+
+#source tests16.dat:882
+#data
+<script></scrip
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,15): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "</scrip"
+|   <body>
+
+
+#source tests16.dat:883
+#data
+<script></script
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,16): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "</script"
+|   <body>
+
+
+#source tests16.dat:884
+#data
+<script></script 
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,17): expected-attribute-name-but-got-eof
+(1,17): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:18) eof-in-tag
+#document
+| <html>
+|   <head>
+|     <script>
+|   <body>
+
+
+#source tests16.dat:885
+#data
+<script><!
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,10): expected-script-data-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!"
+|   <body>
+
+
+#source tests16.dat:886
+#data
+<script><!a
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,11): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!a"
+|   <body>
+
+
+#source tests16.dat:887
+#data
+<script><!-
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,11): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!-"
+|   <body>
+
+
+#source tests16.dat:888
+#data
+<script><!-a
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,12): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!-a"
+|   <body>
+
+
+#source tests16.dat:889
+#data
+<script><!--
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,12): expected-named-closing-tag-but-got-eof
+(1,12): unexpected-eof-in-text-mode
+#new-errors
+(1:13) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--"
+|   <body>
+
+
+#source tests16.dat:890
+#data
+<script><!--a
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,13): expected-named-closing-tag-but-got-eof
+(1,13): unexpected-eof-in-text-mode
+#new-errors
+(1:14) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--a"
+|   <body>
+
+
+#source tests16.dat:891
+#data
+<script><!--<
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,13): expected-named-closing-tag-but-got-eof
+(1,13): unexpected-eof-in-text-mode
+#new-errors
+(1:14) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<"
+|   <body>
+
+
+#source tests16.dat:892
+#data
+<script><!--<a
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,14): expected-named-closing-tag-but-got-eof
+(1,14): unexpected-eof-in-text-mode
+#new-errors
+(1:15) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<a"
+|   <body>
+
+
+#source tests16.dat:893
+#data
+<script><!--</
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,14): expected-named-closing-tag-but-got-eof
+(1,14): unexpected-eof-in-text-mode
+#new-errors
+(1:15) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--</"
+|   <body>
+
+
+#source tests16.dat:894
+#data
+<script><!--</script
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,20): expected-named-closing-tag-but-got-eof
+(1,20): unexpected-eof-in-text-mode
+#new-errors
+(1:21) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--</script"
+|   <body>
+
+
+#source tests16.dat:895
+#data
+<script><!--</script 
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,21): expected-attribute-name-but-got-eof
+(1,21): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:22) eof-in-tag
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--"
+|   <body>
+
+
+#source tests16.dat:896
+#data
+<script><!--<s
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,14): expected-named-closing-tag-but-got-eof
+(1,14): unexpected-eof-in-text-mode
+#new-errors
+(1:15) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<s"
+|   <body>
+
+
+#source tests16.dat:897
+#data
+<script><!--<script
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,19): expected-named-closing-tag-but-got-eof
+(1,19): unexpected-eof-in-text-mode
+#new-errors
+(1:20) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script"
+|   <body>
+
+
+#source tests16.dat:898
+#data
+<script><!--<script 
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,20): eof-in-script-in-script
+(1,20): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:21) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script "
+|   <body>
+
+
+#source tests16.dat:899
+#data
+<script><!--<script <
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,21): eof-in-script-in-script
+(1,21): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:22) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script <"
+|   <body>
+
+
+#source tests16.dat:900
+#data
+<script><!--<script <a
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,22): eof-in-script-in-script
+(1,22): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:23) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script <a"
+|   <body>
+
+
+#source tests16.dat:901
+#data
+<script><!--<script </
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,22): eof-in-script-in-script
+(1,22): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:23) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </"
+|   <body>
+
+
+#source tests16.dat:902
+#data
+<script><!--<script </s
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,23): eof-in-script-in-script
+(1,23): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:24) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </s"
+|   <body>
+
+
+#source tests16.dat:903
+#data
+<script><!--<script </script
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,28): eof-in-script-in-script
+(1,28): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:29) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </script"
+|   <body>
+
+
+#source tests16.dat:904
+#data
+<script><!--<script </scripta
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,29): eof-in-script-in-script
+(1,29): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:30) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </scripta"
+|   <body>
+
+
+#source tests16.dat:905
+#data
+<script><!--<script </script 
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,29): expected-named-closing-tag-but-got-eof
+(1,29): unexpected-eof-in-text-mode
+#new-errors
+(1:30) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </script "
+|   <body>
+
+
+#source tests16.dat:906
+#data
+<script><!--<script </script>
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,29): expected-named-closing-tag-but-got-eof
+(1,29): unexpected-eof-in-text-mode
+#new-errors
+(1:30) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </script>"
+|   <body>
+
+
+#source tests16.dat:907
+#data
+<script><!--<script </script/
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,29): expected-named-closing-tag-but-got-eof
+(1,29): unexpected-eof-in-text-mode
+#new-errors
+(1:30) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </script/"
+|   <body>
+
+
+#source tests16.dat:908
+#data
+<script><!--<script </script <
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,30): expected-named-closing-tag-but-got-eof
+(1,30): unexpected-eof-in-text-mode
+#new-errors
+(1:31) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </script <"
+|   <body>
+
+
+#source tests16.dat:909
+#data
+<script><!--<script </script <a
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,31): expected-named-closing-tag-but-got-eof
+(1,31): unexpected-eof-in-text-mode
+#new-errors
+(1:32) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </script <a"
+|   <body>
+
+
+#source tests16.dat:910
+#data
+<script><!--<script </script </
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,31): expected-named-closing-tag-but-got-eof
+(1,31): unexpected-eof-in-text-mode
+#new-errors
+(1:32) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </script </"
+|   <body>
+
+
+#source tests16.dat:911
+#data
+<script><!--<script </script </script
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,37): expected-named-closing-tag-but-got-eof
+(1,37): unexpected-eof-in-text-mode
+#new-errors
+(1:38) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </script </script"
+|   <body>
+
+
+#source tests16.dat:912
+#data
+<script><!--<script </script </script 
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,38): expected-attribute-name-but-got-eof
+(1,38): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:39) eof-in-tag
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </script "
+|   <body>
+
+
+#source tests16.dat:913
+#data
+<script><!--<script </script </script/
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,38): unexpected-EOF-after-solidus-in-tag
+(1,38): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:39) eof-in-tag
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </script "
+|   <body>
+
+
+#source tests16.dat:914
+#data
+<script><!--<script </script </script>
+#errors
+(1,8): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script </script "
+|   <body>
+
+
+#source tests16.dat:915
+#data
+<script><!--<script -
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,21): eof-in-script-in-script
+(1,21): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:22) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script -"
+|   <body>
+
+
+#source tests16.dat:916
+#data
+<script><!--<script -a
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,22): eof-in-script-in-script
+(1,22): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:23) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script -a"
+|   <body>
+
+
+#source tests16.dat:917
+#data
+<script><!--<script --
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,22): eof-in-script-in-script
+(1,22): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:23) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script --"
+|   <body>
+
+
+#source tests16.dat:918
+#data
+<script><!--<script --a
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,23): eof-in-script-in-script
+(1,23): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:24) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script --a"
+|   <body>
+
+
+#source tests16.dat:919
+#data
+<script><!--<script -->
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,23): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script -->"
+|   <body>
+
+
+#source tests16.dat:920
+#data
+<script><!--<script --><
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,24): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script --><"
+|   <body>
+
+
+#source tests16.dat:921
+#data
+<script><!--<script --></
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,25): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script --></"
+|   <body>
+
+
+#source tests16.dat:922
+#data
+<script><!--<script --></script
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,31): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script --></script"
+|   <body>
+
+
+#source tests16.dat:923
+#data
+<script><!--<script --></script 
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,32): expected-attribute-name-but-got-eof
+(1,32): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:33) eof-in-tag
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script -->"
+|   <body>
+
+
+#source tests16.dat:924
+#data
+<script><!--<script --></script/
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,32): unexpected-EOF-after-solidus-in-tag
+(1,32): expected-named-closing-tag-but-got-eof
+#new-errors
+(1:33) eof-in-tag
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script -->"
+|   <body>
+
+
+#source tests16.dat:925
+#data
+<script><!--<script --></script>
+#errors
+(1,8): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script -->"
+|   <body>
+
+
+#source tests16.dat:926
+#data
+<script><!--<script><\/script>--></script>
+#errors
+(1,8): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script><\/script>-->"
+|   <body>
+
+
+#source tests16.dat:927
+#data
+<script><!--<script></scr'+'ipt>--></script>
+#errors
+(1,8): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script></scr'+'ipt>-->"
+|   <body>
+
+
+#source tests16.dat:928
+#data
+<script><!--<script></script><script></script></script>
+#errors
+(1,8): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script></script><script></script>"
+|   <body>
+
+
+#source tests16.dat:929
+#data
+<script><!--<script></script><script></script>--><!--</script>
+#errors
+(1,8): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script></script><script></script>--><!--"
+|   <body>
+
+
+#source tests16.dat:930
+#data
+<script><!--<script></script><script></script>-- ></script>
+#errors
+(1,8): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script></script><script></script>-- >"
+|   <body>
+
+
+#source tests16.dat:931
+#data
+<script><!--<script></script><script></script>- -></script>
+#errors
+(1,8): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script></script><script></script>- ->"
+|   <body>
+
+
+#source tests16.dat:932
+#data
+<script><!--<script></script><script></script>- - ></script>
+#errors
+(1,8): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script></script><script></script>- - >"
+|   <body>
+
+
+#source tests16.dat:933
+#data
+<script><!--<script></script><script></script>-></script>
+#errors
+(1,8): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script></script><script></script>->"
+|   <body>
+
+
+#source tests16.dat:934
+#data
+<script><!--<script>--!></script>X
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,34): expected-named-closing-tag-but-got-eof
+(1,34): unexpected-eof-in-text-mode
+#new-errors
+(1:35) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script>--!></script>X"
+|   <body>
+
+
+#source tests16.dat:935
+#data
+<script><!--<scr'+'ipt></script>--></script>
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,44): unexpected-end-tag
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<scr'+'ipt>"
+|   <body>
+|     "-->"
+
+
+#source tests16.dat:936
+#data
+<script><!--<script></scr'+'ipt></script>X
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,42): expected-named-closing-tag-but-got-eof
+(1,42): unexpected-eof-in-text-mode
+#new-errors
+(1:43) eof-in-script-html-comment-like-text
+#document
+| <html>
+|   <head>
+|     <script>
+|       "<!--<script></scr'+'ipt></script>X"
+|   <body>
+
+
+#source tests16.dat:937
+#data
+<style><!--<style></style>--></style>
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,37): unexpected-end-tag
+#document
+| <html>
+|   <head>
+|     <style>
+|       "<!--<style>"
+|   <body>
+|     "-->"
+
+
+#source tests16.dat:938
+#data
+<style><!--</style>X
+#errors
+(1,7): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <style>
+|       "<!--"
+|   <body>
+|     "X"
+
+
+#source tests16.dat:939
+#data
+<style><!--...</style>...--></style>
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,36): unexpected-end-tag
+#document
+| <html>
+|   <head>
+|     <style>
+|       "<!--..."
+|   <body>
+|     "...-->"
+
+
+#source tests16.dat:940
+#data
+<style><!--<br><html xmlns:v="urn:schemas-microsoft-com:vml"><!--[if !mso]><style></style>X
+#errors
+(1,7): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <style>
+|       "<!--<br><html xmlns:v="urn:schemas-microsoft-com:vml"><!--[if !mso]><style>"
+|   <body>
+|     "X"
+
+
+#source tests16.dat:941
+#data
+<style><!--...<style><!--...--!></style>--></style>
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,51): unexpected-end-tag
+#document
+| <html>
+|   <head>
+|     <style>
+|       "<!--...<style><!--...--!>"
+|   <body>
+|     "-->"
+
+
+#source tests16.dat:942
+#data
+<style><!--...</style><!-- --><style>@import ...</style>
+#errors
+(1,7): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <style>
+|       "<!--..."
+|     <!--   -->
+|     <style>
+|       "@import ..."
+|   <body>
+
+
+#source tests16.dat:943
+#data
+<style>...<style><!--...</style><!-- --></style>
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,48): unexpected-end-tag
+#document
+| <html>
+|   <head>
+|     <style>
+|       "...<style><!--..."
+|     <!--   -->
+|   <body>
+
+
+#source tests16.dat:944
+#data
+<style>...<!--[if IE]><style>...</style>X
+#errors
+(1,7): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <style>
+|       "...<!--[if IE]><style>..."
+|   <body>
+|     "X"
+
+
+#source tests16.dat:945
+#data
+<title><!--<title></title>--></title>
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,37): unexpected-end-tag
+#document
+| <html>
+|   <head>
+|     <title>
+|       "<!--<title>"
+|   <body>
+|     "-->"
+
+
+#source tests16.dat:946
+#data
+<title>&lt;/title></title>
+#errors
+(1,7): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <title>
+|       "</title>"
+|   <body>
+
+
+#source tests16.dat:947
+#data
+<title>foo/title><link></head><body>X
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,37): expected-named-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|     <title>
+|       "foo/title><link></head><body>X"
+|   <body>
+
+
+#source tests16.dat:948
+#data
+<noscript><!--<noscript></noscript>--></noscript>
+#errors
+(1,10): expected-doctype-but-got-start-tag
+(1,49): unexpected-end-tag
+#script-on
+#document
+| <html>
+|   <head>
+|     <noscript>
+|       "<!--<noscript>"
+|   <body>
+|     "-->"
+
+
+#source tests16.dat:949
+#data
+<noscript><!--<noscript></noscript>--></noscript>
+#errors
+ * (1,11) missing DOCTYPE
+#script-off
+#document
+| <html>
+|   <head>
+|     <noscript>
+|       <!-- <noscript></noscript> -->
+|   <body>
+
+
+#source tests16.dat:950
+#data
+<noscript><!--</noscript>X<noscript>--></noscript>
+#errors
+(1,10): expected-doctype-but-got-start-tag
+#script-on
+#document
+| <html>
+|   <head>
+|     <noscript>
+|       "<!--"
+|   <body>
+|     "X"
+|     <noscript>
+|       "-->"
+
+
+#source tests16.dat:951
+#data
+<noscript><!--</noscript>X<noscript>--></noscript>
+#errors
+(1,10): expected-doctype-but-got-start-tag
+#script-off
+#document
+| <html>
+|   <head>
+|     <noscript>
+|       <!-- </noscript>X<noscript> -->
+|   <body>
+
+
+#source tests16.dat:952
+#data
+<noscript><iframe></noscript>X
+#errors
+(1,10): expected-doctype-but-got-start-tag
+#script-on
+#document
+| <html>
+|   <head>
+|     <noscript>
+|       "<iframe>"
+|   <body>
+|     "X"
+
+
+#source tests16.dat:953
+#data
+<noscript><iframe></noscript>X
+#errors
+ * (1,11) missing DOCTYPE
+ * (1,19) unexpected token in head noscript
+ * (1,31) unexpected EOF
+#script-off
+#document
+| <html>
+|   <head>
+|     <noscript>
+|   <body>
+|     <iframe>
+|       "</noscript>X"
+
+
+#source tests16.dat:954
+#data
+<noframes><!--<noframes></noframes>--></noframes>
+#errors
+(1,10): expected-doctype-but-got-start-tag
+(1,49): unexpected-end-tag
+#document
+| <html>
+|   <head>
+|     <noframes>
+|       "<!--<noframes>"
+|   <body>
+|     "-->"
+
+
+#source tests16.dat:955
+#data
+<noframes><body><script><!--...</script></body></noframes></html>
+#errors
+(1,10): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <noframes>
+|       "<body><script><!--...</script></body>"
+|   <body>
+
+
+#source tests16.dat:956
+#data
+<textarea><!--<textarea></textarea>--></textarea>
+#errors
+(1,10): expected-doctype-but-got-start-tag
+(1,49): unexpected-end-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <textarea>
+|       "<!--<textarea>"
+|     "-->"
+
+
+#source tests16.dat:957
+#data
+<textarea>&lt;/textarea></textarea>
+#errors
+(1,10): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <textarea>
+|       "</textarea>"
+
+
+#source tests16.dat:958
+#data
+<iframe><!--<iframe></iframe>--></iframe>
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,41): unexpected-end-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <iframe>
+|       "<!--<iframe>"
+|     "-->"
+
+
+#source tests16.dat:959
+#data
+<iframe>...<!--X->...<!--/X->...</iframe>
+#errors
+(1,8): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <iframe>
+|       "...<!--X->...<!--/X->..."
+
+
+#source tests16.dat:960
+#data
+<xmp><!--<xmp></xmp>--></xmp>
+#errors
+(1,5): expected-doctype-but-got-start-tag
+(1,29): unexpected-end-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <xmp>
+|       "<!--<xmp>"
+|     "-->"
+
+
+#source tests16.dat:961
+#data
+<noembed><!--<noembed></noembed>--></noembed>
+#errors
+(1,9): expected-doctype-but-got-start-tag
+(1,45): unexpected-end-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <noembed>
+|       "<!--<noembed>"
+|     "-->"
+
+
+#source tests16.dat:962
+#data
+<!doctype html><table>
+
+#errors
+(2,0): eof-in-table
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       "
+"
+
+
+#source tests16.dat:963
+#data
+<!doctype html><table><td><span><font></span><span>
+#errors
+(1,26): unexpected-cell-in-table-body
+(1,45): unexpected-end-tag
+(1,51): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             <span>
+|               <font>
+|             <font>
+|               <span>
+
+
+#source tests16.dat:964
+#data
+<!doctype html><form><table></form><form></table></form>
+#errors
+(1,35): unexpected-end-tag-implies-table-voodoo
+(1,35): unexpected-end-tag
+(1,41): unexpected-form-in-table
+(1,56): unexpected-end-tag
+(1,56): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <form>
+|       <table>
+|         <form>
+
+#source tests17.dat:965
+#data
+<!doctype html><table><tbody><select><tr>
+#errors
+(1,30): unexpected-start-tag
+(1,42): premature-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|     <table>
+|       <tbody>
+|         <tr>
+
+
+#source tests17.dat:966
+#data
+<!doctype html><table><tr><select><td>
+#errors
+(1,27): unexpected-start-tag
+(1,39): premature-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+
+
+#source tests17.dat:967
+#data
+<!doctype html><table><tr><td><select><td>
+#errors
+(1,42): unexpected-table-element-start-tag-in-select-in-table
+(1,42): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             <select>
+|           <td>
+
+
+#source tests17.dat:968
+#data
+<!doctype html><table><tr><th><select><td>
+#errors
+(1,42): unexpected-table-element-start-tag-in-select-in-table
+(1,42): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <th>
+|             <select>
+|           <td>
+
+
+#source tests17.dat:969
+#data
+<!doctype html><table><caption><select><tr>
+#errors
+(1,43): unexpected-table-element-start-tag-in-select-in-table
+(1,43): eof-in-table
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <caption>
+|         <select>
+|       <tbody>
+|         <tr>
+
+
+#source tests17.dat:970
+#data
+<!doctype html><select><tr>
+#errors
+(1,27): unexpected-start-tag-in-select
+(1,27): eof-in-select
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+
+
+#source tests17.dat:971
+#data
+<!doctype html><select><td>
+#errors
+(1,27): unexpected-start-tag-in-select
+(1,27): eof-in-select
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+
+
+#source tests17.dat:972
+#data
+<!doctype html><select><th>
+#errors
+(1,27): unexpected-start-tag-in-select
+(1,27): eof-in-select
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+
+
+#source tests17.dat:973
+#data
+<!doctype html><select><tbody>
+#errors
+(1,30): unexpected-start-tag-in-select
+(1,30): eof-in-select
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+
+
+#source tests17.dat:974
+#data
+<!doctype html><select><thead>
+#errors
+(1,30): unexpected-start-tag-in-select
+(1,30): eof-in-select
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+
+
+#source tests17.dat:975
+#data
+<!doctype html><select><tfoot>
+#errors
+(1,30): unexpected-start-tag-in-select
+(1,30): eof-in-select
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+
+
+#source tests17.dat:976
+#data
+<!doctype html><select><caption>
+#errors
+(1,32): unexpected-start-tag-in-select
+(1,32): eof-in-select
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+
+
+#source tests17.dat:977
+#data
+<!doctype html><table><tr></table>a
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|     "a"
+
+#source tests18.dat:978
+#data
+<plaintext></plaintext>
+#errors
+11: Start tag seen without seeing a doctype first. Expected “<!DOCTYPE html>”.
+23: End of file seen and there were open elements.
+#document
+| <html>
+|   <head>
+|   <body>
+|     <plaintext>
+|       "</plaintext>"
+
+
+#source tests18.dat:979
+#data
+<!doctype html><plaintext></plaintext>
+#errors
+(1,38): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <plaintext>
+|       "</plaintext>"
+
+
+#source tests18.dat:980
+#data
+<!doctype html><html><plaintext></plaintext>
+#errors
+44: End of file seen and there were open elements.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <plaintext>
+|       "</plaintext>"
+
+
+#source tests18.dat:981
+#data
+<!doctype html><head><plaintext></plaintext>
+#errors
+44: End of file seen and there were open elements.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <plaintext>
+|       "</plaintext>"
+
+
+#source tests18.dat:982
+#data
+<!doctype html><html><noscript><plaintext></plaintext>
+#errors
+42: Bad start tag in “plaintext” in “head”.
+54: End of file seen and there were open elements.
+#script-off
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <noscript>
+|   <body>
+|     <plaintext>
+|       "</plaintext>"
+
+
+#source tests18.dat:983
+#data
+<!doctype html></head><plaintext></plaintext>
+#errors
+45: End of file seen and there were open elements.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <plaintext>
+|       "</plaintext>"
+
+
+#source tests18.dat:984
+#data
+<!doctype html><body><plaintext></plaintext>
+#errors
+44: End of file seen and there were open elements.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <plaintext>
+|       "</plaintext>"
+
+
+#source tests18.dat:985
+#data
+<!doctype html><table><plaintext></plaintext>
+#errors
+(1,33): foster-parenting-start-tag
+(1,46): foster-parenting-character
+(1,46): foster-parenting-character
+(1,46): foster-parenting-character
+(1,46): foster-parenting-character
+(1,46): foster-parenting-character
+(1,46): foster-parenting-character
+(1,46): foster-parenting-character
+(1,46): foster-parenting-character
+(1,46): foster-parenting-character
+(1,46): foster-parenting-character
+(1,46): foster-parenting-character
+(1,46): foster-parenting-character
+(1,46): eof-in-table
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <plaintext>
+|       "</plaintext>"
+|     <table>
+
+
+#source tests18.dat:986
+#data
+<!doctype html><table><tbody><plaintext></plaintext>
+#errors
+(1,40): foster-parenting-start-tag
+(1,53): foster-parenting-character
+(1,53): foster-parenting-character
+(1,53): foster-parenting-character
+(1,53): foster-parenting-character
+(1,53): foster-parenting-character
+(1,53): foster-parenting-character
+(1,53): foster-parenting-character
+(1,53): foster-parenting-character
+(1,53): foster-parenting-character
+(1,53): foster-parenting-character
+(1,53): foster-parenting-character
+(1,53): foster-parenting-character
+(1,53): eof-in-table
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <plaintext>
+|       "</plaintext>"
+|     <table>
+|       <tbody>
+
+
+#source tests18.dat:987
+#data
+<!doctype html><table><tbody><tr><plaintext></plaintext>
+#errors
+(1,44): foster-parenting-start-tag
+(1,57): foster-parenting-character
+(1,57): foster-parenting-character
+(1,57): foster-parenting-character
+(1,57): foster-parenting-character
+(1,57): foster-parenting-character
+(1,57): foster-parenting-character
+(1,57): foster-parenting-character
+(1,57): foster-parenting-character
+(1,57): foster-parenting-character
+(1,57): foster-parenting-character
+(1,57): foster-parenting-character
+(1,57): foster-parenting-character
+(1,57): eof-in-table
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <plaintext>
+|       "</plaintext>"
+|     <table>
+|       <tbody>
+|         <tr>
+
+
+#source tests18.dat:988
+#data
+<!doctype html><table><td><plaintext></plaintext>
+#errors
+(1,26): unexpected-cell-in-table-body
+(1,49): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             <plaintext>
+|               "</plaintext>"
+
+
+#source tests18.dat:989
+#data
+<!doctype html><table><caption><plaintext></plaintext>
+#errors
+(1,54): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <caption>
+|         <plaintext>
+|           "</plaintext>"
+
+
+#source tests18.dat:990
+#data
+<!doctype html><table><colgroup><plaintext></plaintext>
+#errors
+(1,43): foster-parenting-start-tag
+(1,56): foster-parenting-character
+(1,56): foster-parenting-character
+(1,56): foster-parenting-character
+(1,56): foster-parenting-character
+(1,56): foster-parenting-character
+(1,56): foster-parenting-character
+(1,56): foster-parenting-character
+(1,56): foster-parenting-character
+(1,56): foster-parenting-character
+(1,56): foster-parenting-character
+(1,56): foster-parenting-character
+(1,56): foster-parenting-character
+55: End of file seen and there were open elements.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <plaintext>
+|       "</plaintext>"
+|     <table>
+|       <colgroup>
+
+
+#source tests18.dat:991
+#data
+<!doctype html><select><plaintext></plaintext>X
+#errors
+1:48: ERROR: Premature end of file. Currently open tags: html, body, select, plaintext.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <plaintext>
+|         "</plaintext>X"
+
+
+#source tests18.dat:992
+#data
+<!doctype html><table><select><plaintext>a<caption>b
+#errors
+1:23: ERROR: Start tag 'select' isn't allowed here. Currently open tags: html, body, table.
+1:31: ERROR: Start tag 'plaintext' isn't allowed here. Currently open tags: html, body, table, select.
+1:42: ERROR: Character tokens aren't legal here
+1:43: ERROR: Character tokens aren't legal here
+1:44: ERROR: Character tokens aren't legal here
+1:45: ERROR: Character tokens aren't legal here
+1:46: ERROR: Character tokens aren't legal here
+1:47: ERROR: Character tokens aren't legal here
+1:48: ERROR: Character tokens aren't legal here
+1:49: ERROR: Character tokens aren't legal here
+1:50: ERROR: Character tokens aren't legal here
+1:51: ERROR: Character tokens aren't legal here
+1:52: ERROR: Character tokens aren't legal here
+1:53: ERROR: Premature end of file. Currently open tags: html, body, table, select, plaintext.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <plaintext>
+|         "a<caption>b"
+|     <table>
+
+
+#source tests18.dat:993
+#data
+<!doctype html><template><plaintext>a</template>b
+#errors
+49: End of file seen and there were open elements.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <template>
+|       content
+|         <plaintext>
+|           "a</template>b"
+|   <body>
+
+
+#source tests18.dat:994
+#data
+<!doctype html><body></body><plaintext></plaintext>
+#errors
+39: Stray start tag “plaintext”.
+51: End of file seen and there were open elements.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <plaintext>
+|       "</plaintext>"
+
+
+#source tests18.dat:995
+#data
+<!doctype html><frameset><plaintext></plaintext>
+#errors
+36: Stray start tag “plaintext”.
+48: Stray end tag “plaintext”.
+48: End of file seen and there were open elements.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <frameset>
+
+
+#source tests18.dat:996
+#data
+<!doctype html><frameset></frameset><plaintext></plaintext>
+#errors
+47: Stray start tag “plaintext”.
+59: Stray end tag “plaintext”.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <frameset>
+
+
+#source tests18.dat:997
+#data
+<!doctype html><body></body></html><plaintext></plaintext>
+#errors
+46: Stray start tag “plaintext”.
+58: End of file seen and there were open elements.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <plaintext>
+|       "</plaintext>"
+
+
+#source tests18.dat:998
+#data
+<!doctype html><frameset></frameset></html><plaintext></plaintext>
+#errors
+54: Stray start tag “plaintext”.
+66: Stray end tag “plaintext”.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <frameset>
+
+
+#source tests18.dat:999
+#data
+<!doctype html><svg><plaintext>a</plaintext>b
+#errors
+45: End of file seen and there were open elements.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg plaintext>
+|         "a"
+|       "b"
+
+
+#source tests18.dat:1000
+#data
+<!doctype html><svg><title><plaintext>a</plaintext>b
+#errors
+52: End of file seen and there were open elements.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg title>
+|         <plaintext>
+|           "a</plaintext>b"
+
+
+#source tests18.dat:1001
+#data
+<!doctype html><table><tr><style></script></style>abc
+#errors
+(1,51): foster-parenting-character
+(1,52): foster-parenting-character
+(1,53): foster-parenting-character
+(1,53): eof-in-table
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     "abc"
+|     <table>
+|       <tbody>
+|         <tr>
+|           <style>
+|             "</script>"
+
+
+#source tests18.dat:1002
+#data
+<!doctype html><table><tr><script></style></script>abc
+#errors
+(1,52): foster-parenting-character
+(1,53): foster-parenting-character
+(1,54): foster-parenting-character
+(1,54): eof-in-table
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     "abc"
+|     <table>
+|       <tbody>
+|         <tr>
+|           <script>
+|             "</style>"
+
+
+#source tests18.dat:1003
+#data
+<!doctype html><table><caption><style></script></style>abc
+#errors
+(1,58): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <caption>
+|         <style>
+|           "</script>"
+|         "abc"
+
+
+#source tests18.dat:1004
+#data
+<!doctype html><table><td><style></script></style>abc
+#errors
+(1,26): unexpected-cell-in-table-body
+(1,53): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             <style>
+|               "</script>"
+|             "abc"
+
+
+#source tests18.dat:1005
+#data
+<!doctype html><select><script></style></script>abc
+#errors
+(1,51): eof-in-select
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <script>
+|         "</style>"
+|       "abc"
+
+
+#source tests18.dat:1006
+#data
+<!doctype html><table><select><script></style></script>abc
+#errors
+1:23: ERROR: Start tag 'select' isn't allowed here. Currently open tags: html, body, table.
+1:56: ERROR: Character tokens aren't legal here
+1:57: ERROR: Character tokens aren't legal here
+1:58: ERROR: Character tokens aren't legal here
+1:59: ERROR: Premature end of file. Currently open tags: html, body, table, select.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <script>
+|         "</style>"
+|       "abc"
+|     <table>
+
+
+#source tests18.dat:1007
+#data
+<!doctype html><table><tr><select><script></style></script>abc
+#errors
+1:27: ERROR: Start tag 'select' isn't allowed here. Currently open tags: html, body, table, tbody, tr.
+1:60: ERROR: Character tokens aren't legal here
+1:61: ERROR: Character tokens aren't legal here
+1:62: ERROR: Character tokens aren't legal here
+1:63: ERROR: Premature end of file. Currently open tags: html, body, table, tbody, tr, select.
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <script>
+|         "</style>"
+|       "abc"
+|     <table>
+|       <tbody>
+|         <tr>
+
+
+#source tests18.dat:1008
+#data
+<!doctype html><frameset></frameset><noframes>abc
+#errors
+(1,49): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <frameset>
+|   <noframes>
+|     "abc"
+
+
+#source tests18.dat:1009
+#data
+<!doctype html><frameset></frameset><noframes>abc</noframes><!--abc-->
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <frameset>
+|   <noframes>
+|     "abc"
+|   <!-- abc -->
+
+
+#source tests18.dat:1010
+#data
+<!doctype html><frameset></frameset></html><noframes>abc
+#errors
+(1,56): expected-named-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <frameset>
+|   <noframes>
+|     "abc"
+
+
+#source tests18.dat:1011
+#data
+<!doctype html><frameset></frameset></html><noframes>abc</noframes><!--abc-->
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <frameset>
+|   <noframes>
+|     "abc"
+| <!-- abc -->
+
+
+#source tests18.dat:1012
+#data
+<!doctype html><table><tr></tbody><tfoot>
+#errors
+(1,41): eof-in-table
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|       <tfoot>
+
+
+#source tests18.dat:1013
+#data
+<!doctype html><table><td><svg></svg>abc<td>
+#errors
+(1,26): unexpected-cell-in-table-body
+(1,44): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             <svg svg>
+|             "abc"
+|           <td>
+
+#source tests19.dat:1014
+#data
+<!doctype html><math><mn DefinitionUrl="foo">
+#errors
+(1,45): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math mn>
+|         definitionURL="foo"
+
+
+#source tests19.dat:1015
+#data
+<!doctype html><html></p><!--foo-->
+#errors
+(1,25): end-tag-after-implied-root
+#document
+| <!DOCTYPE html>
+| <html>
+|   <!-- foo -->
+|   <head>
+|   <body>
+
+
+#source tests19.dat:1016
+#data
+<!doctype html><head></head></p><!--foo-->
+#errors
+(1,32): unexpected-end-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <!-- foo -->
+|   <body>
+
+
+#source tests19.dat:1017
+#data
+<!doctype html><body><p><pre>
+#errors
+(1,29): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|     <pre>
+
+
+#source tests19.dat:1018
+#data
+<!doctype html><body><p><listing>
+#errors
+(1,33): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|     <listing>
+
+
+#source tests19.dat:1019
+#data
+<!doctype html><p><plaintext>
+#errors
+(1,29): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|     <plaintext>
+
+
+#source tests19.dat:1020
+#data
+<!doctype html><p><h1>
+#errors
+(1,22): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|     <h1>
+
+
+#source tests19.dat:1021
+#data
+<!doctype html><isindex type="hidden">
+#errors
+(1,38): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <isindex>
+|       type="hidden"
+
+
+#source tests19.dat:1022
+#data
+<!doctype html><ruby><p><rp>
+#errors
+(1,28): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <ruby>
+|       <p>
+|       <rp>
+
+
+#source tests19.dat:1023
+#data
+<!doctype html><ruby><div><span><rp>
+#errors
+(1,36): XXX-undefined-error
+(1,36): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <ruby>
+|       <div>
+|         <span>
+|           <rp>
+
+
+#source tests19.dat:1024
+#data
+<!doctype html><ruby><div><p><rp>
+#errors
+(1,33): XXX-undefined-error
+(1,33): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <ruby>
+|       <div>
+|         <p>
+|         <rp>
+
+
+#source tests19.dat:1025
+#data
+<!doctype html><ruby><p><rt>
+#errors
+(1,28): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <ruby>
+|       <p>
+|       <rt>
+
+
+#source tests19.dat:1026
+#data
+<!doctype html><ruby><div><span><rt>
+#errors
+(1,36): XXX-undefined-error
+(1,36): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <ruby>
+|       <div>
+|         <span>
+|           <rt>
+
+
+#source tests19.dat:1027
+#data
+<!doctype html><ruby><div><p><rt>
+#errors
+(1,33): XXX-undefined-error
+(1,33): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <ruby>
+|       <div>
+|         <p>
+|         <rt>
+
+
+#source tests19.dat:1028
+#data
+<html><ruby>a<rb>b<rt></ruby></html>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <ruby>
+|       "a"
+|       <rb>
+|         "b"
+|       <rt>
+
+
+#source tests19.dat:1029
+#data
+<html><ruby>a<rp>b<rt></ruby></html>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <ruby>
+|       "a"
+|       <rp>
+|         "b"
+|       <rt>
+
+
+#source tests19.dat:1030
+#data
+<html><ruby>a<rt>b<rt></ruby></html>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <ruby>
+|       "a"
+|       <rt>
+|         "b"
+|       <rt>
+
+
+#source tests19.dat:1031
+#data
+<html><ruby>a<rtc>b<rt>c<rb>d</ruby></html>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <ruby>
+|       "a"
+|       <rtc>
+|         "b"
+|         <rt>
+|           "c"
+|       <rb>
+|         "d"
+
+
+#source tests19.dat:1032
+#data
+<!doctype html><math/><foo>
+#errors
+(1,27): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|     <foo>
+
+
+#source tests19.dat:1033
+#data
+<!doctype html><svg/><foo>
+#errors
+(1,26): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|     <foo>
+
+
+#source tests19.dat:1034
+#data
+<!doctype html><div></body><!--foo-->
+#errors
+(1,27): expected-one-end-tag-but-got-another
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|   <!-- foo -->
+
+
+#source tests19.dat:1035
+#data
+<!doctype html><h1><div><h3><span></h1>foo
+#errors
+(1,39): end-tag-too-early
+(1,42): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <h1>
+|       <div>
+|         <h3>
+|           <span>
+|         "foo"
+
+
+#source tests19.dat:1036
+#data
+<!doctype html><p></h3>foo
+#errors
+(1,23): end-tag-too-early
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       "foo"
+
+
+#source tests19.dat:1037
+#data
+<!doctype html><h3><li>abc</h2>foo
+#errors
+(1,31): end-tag-too-early
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <h3>
+|       <li>
+|         "abc"
+|     "foo"
+
+
+#source tests19.dat:1038
+#data
+<!doctype html><table>abc<!--foo-->
+#errors
+(1,23): foster-parenting-character
+(1,24): foster-parenting-character
+(1,25): foster-parenting-character
+(1,35): eof-in-table
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     "abc"
+|     <table>
+|       <!-- foo -->
+
+
+#source tests19.dat:1039
+#data
+<!doctype html><table>  <!--foo-->
+#errors
+(1,34): eof-in-table
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       "  "
+|       <!-- foo -->
+
+
+#source tests19.dat:1040
+#data
+<!doctype html><table> b <!--foo-->
+#errors
+(1,23): foster-parenting-character
+(1,24): foster-parenting-character
+(1,25): foster-parenting-character
+(1,35): eof-in-table
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     " b "
+|     <table>
+|       <!-- foo -->
+
+
+#source tests19.dat:1041
+#data
+<!doctype html><select><option><option>
+#errors
+(1,39): eof-in-select
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <option>
+|       <option>
+
+
+#source tests19.dat:1042
+#data
+<!doctype html><select><option></optgroup>
+#errors
+(1,42): unexpected-end-tag-in-select
+(1,42): eof-in-select
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <select>
+|       <option>
+
+
+#source tests19.dat:1043
+#data
+<!doctype html><dd><optgroup><dd>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <dd>
+|       <optgroup>
+|     <dd>
+
+
+#source tests19.dat:1044
+#data
+<!doctype html><p><math><mi><p><h1>
+#errors
+(1,35): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <math math>
+|         <math mi>
+|           <p>
+|           <h1>
+
+
+#source tests19.dat:1045
+#data
+<!doctype html><p><math><mo><p><h1>
+#errors
+(1,35): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <math math>
+|         <math mo>
+|           <p>
+|           <h1>
+
+
+#source tests19.dat:1046
+#data
+<!doctype html><p><math><mn><p><h1>
+#errors
+(1,35): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <math math>
+|         <math mn>
+|           <p>
+|           <h1>
+
+
+#source tests19.dat:1047
+#data
+<!doctype html><p><math><ms><p><h1>
+#errors
+(1,35): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <math math>
+|         <math ms>
+|           <p>
+|           <h1>
+
+
+#source tests19.dat:1048
+#data
+<!doctype html><p><math><mtext><p><h1>
+#errors
+(1,38): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <math math>
+|         <math mtext>
+|           <p>
+|           <h1>
+
+
+#source tests19.dat:1049
+#data
+<!doctype html><frameset></noframes>
+#errors
+(1,36): unexpected-end-tag-in-frameset
+(1,36): eof-in-frameset
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <frameset>
+
+
+#source tests19.dat:1050
+#data
+<!doctype html><html c=d><body></html><html a=b>
+#errors
+(1,48): non-html-root
+#document
+| <!DOCTYPE html>
+| <html>
+|   a="b"
+|   c="d"
+|   <head>
+|   <body>
+
+
+#source tests19.dat:1051
+#data
+<!doctype html><html c=d><frameset></frameset></html><html a=b>
+#errors
+(1,63): non-html-root
+#document
+| <!DOCTYPE html>
+| <html>
+|   a="b"
+|   c="d"
+|   <head>
+|   <frameset>
+
+
+#source tests19.dat:1052
+#data
+<!doctype html><html><frameset></frameset></html><!--foo-->
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <frameset>
+| <!-- foo -->
+
+
+#source tests19.dat:1053
+#data
+<!doctype html><html><frameset></frameset></html>  
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <frameset>
+|   "  "
+
+
+#source tests19.dat:1054
+#data
+<!doctype html><html><frameset></frameset></html>abc
+#errors
+(1,50): expected-eof-but-got-char
+(1,51): expected-eof-but-got-char
+(1,52): expected-eof-but-got-char
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <frameset>
+
+
+#source tests19.dat:1055
+#data
+<!doctype html><html><frameset></frameset></html><p>
+#errors
+(1,52): expected-eof-but-got-start-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <frameset>
+
+
+#source tests19.dat:1056
+#data
+<!doctype html><html><frameset></frameset></html></p>
+#errors
+(1,53): expected-eof-but-got-end-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <frameset>
+
+
+#source tests19.dat:1057
+#data
+<html><frameset></frameset></html><!doctype html>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,49): unexpected-doctype
+#document
+| <html>
+|   <head>
+|   <frameset>
+
+
+#source tests19.dat:1058
+#data
+<!doctype html><body><frameset>
+#errors
+(1,31): unexpected-start-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+
+
+#source tests19.dat:1059
+#data
+<!doctype html><p><frameset><frame>
+#errors
+(1,28): unexpected-start-tag
+(1,35): eof-in-frameset
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <frameset>
+|     <frame>
+
+
+#source tests19.dat:1060
+#data
+<!doctype html><p>a<frameset>
+#errors
+(1,29): unexpected-start-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       "a"
+
+
+#source tests19.dat:1061
+#data
+<!doctype html><p> <frameset><frame>
+#errors
+(1,29): unexpected-start-tag
+(1,36): eof-in-frameset
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <frameset>
+|     <frame>
+
+
+#source tests19.dat:1062
+#data
+<!doctype html><pre><frameset>
+#errors
+(1,30): unexpected-start-tag
+(1,30): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <pre>
+
+
+#source tests19.dat:1063
+#data
+<!doctype html><listing><frameset>
+#errors
+(1,34): unexpected-start-tag
+(1,34): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <listing>
+
+
+#source tests19.dat:1064
+#data
+<!doctype html><li><frameset>
+#errors
+(1,29): unexpected-start-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <li>
+
+
+#source tests19.dat:1065
+#data
+<!doctype html><dd><frameset>
+#errors
+(1,29): unexpected-start-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <dd>
+
+
+#source tests19.dat:1066
+#data
+<!doctype html><dt><frameset>
+#errors
+(1,29): unexpected-start-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <dt>

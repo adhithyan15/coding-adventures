@@ -1137,6 +1137,7 @@ impl HtmlParser {
 
         if !in_foreign_content
             && name == "frameset"
+            && !self.current_element_is("frameset")
             && (self.explicit_body_start_seen
                 || self.document_has_non_frameset_compatible_body_content())
             && self.has_open_element("body")
@@ -1155,6 +1156,14 @@ impl HtmlParser {
                 value: attribute.value,
             })
             .collect();
+
+        if !in_foreign_content && name == "frameset" && self.current_element_is("frameset") {
+            let child_index = self.append_node(Node::element(name.clone(), attributes));
+            let mut path = self.current_parent_path().to_vec();
+            path.push(child_index);
+            self.open_elements.push(path);
+            return;
+        }
 
         if !in_foreign_content
             && matches!(name.as_str(), "svg" | "math")
@@ -2155,7 +2164,7 @@ impl HtmlParser {
                 self.remove_pending_formatting_reconstruction(name);
             }
             name if is_heading_element(name) => {
-                self.close_open_heading_if_in_scope();
+                self.close_open_heading_if_in_scope(None);
             }
             _ => self.close_element(name),
         }
@@ -2308,7 +2317,7 @@ impl HtmlParser {
             self.close_open_ruby_element_if(|name| name == "rtc");
         } else if is_heading_element(incoming_name) {
             self.close_open_element_if(|name| name == "p");
-            self.close_open_heading_if_in_scope();
+            self.close_open_heading_if_in_scope(None);
         } else if is_paragraph_boundary_element(incoming_name) {
             if incoming_name == "table" && self.quirks_mode {
                 return;
@@ -2420,13 +2429,22 @@ impl HtmlParser {
         true
     }
 
-    fn close_open_heading_if_in_scope(&mut self) -> bool {
+    fn close_open_heading_if_in_scope(&mut self, expected_name: Option<&str>) -> bool {
         let Some(index) = self.open_elements.iter().rposition(|path| {
-            element_at_path(&self.document, path).is_some_and(is_heading_element)
+            element_at_path(&self.document, path).is_some_and(|name| {
+                is_heading_element(name) && expected_name.map_or(true, |expected| name == expected)
+            })
         }) else {
             return false;
         };
-        if self.has_table_context_above(index) {
+        if self.has_special_element_above(index) {
+            while self
+                .current_element_name()
+                .is_some_and(is_formatting_element)
+            {
+                self.open_elements.pop();
+            }
+            self.pop_current_if(is_heading_element);
             return false;
         }
         self.open_elements.truncate(index);
