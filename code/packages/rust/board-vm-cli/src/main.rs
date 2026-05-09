@@ -2,7 +2,7 @@ use std::env;
 
 use board_vm_cli::{
     format_onboard_led, list_ports, list_targets, parse_args, run_eject_blink, run_esp_detect,
-    run_repl, run_smoke, usage, CliCommand,
+    run_esp_upload, run_repl, run_smoke, usage, CliCommand,
 };
 
 fn main() {
@@ -48,6 +48,20 @@ fn run_command(command: CliCommand) -> Result<(), board_vm_cli::CliError> {
                 format_optional_u32(detection.chip_id),
                 format_optional_hex(detection.magic_value),
                 format_optional_u32(detection.api_version)
+            );
+            Ok(())
+        }
+        CliCommand::EspUpload(options) => {
+            let report = run_esp_upload(&options)?;
+            println!(
+                "esp-upload image={} offset=0x{:08X} bytes={} block_size={} blocks={} written={} md5={}",
+                report.image,
+                report.offset,
+                report.image_size,
+                report.block_size,
+                report.block_count,
+                report.written_size,
+                format_optional_md5(report.md5_digest)
             );
             Ok(())
         }
@@ -115,4 +129,15 @@ fn format_optional_hex(value: Option<u32>) -> String {
     value
         .map(|value| format!("0x{value:08X}"))
         .unwrap_or_else(|| "n/a".to_owned())
+}
+
+fn format_optional_md5(value: Option<[u8; 16]>) -> String {
+    value
+        .map(|digest| {
+            digest
+                .iter()
+                .map(|byte| format!("{byte:02x}"))
+                .collect::<String>()
+        })
+        .unwrap_or_else(|| "skipped".to_owned())
 }

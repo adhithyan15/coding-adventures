@@ -11,7 +11,10 @@ use board_vm_eject::{
     build_blink_eject_artifact, write_embedded_rust_constants,
     EjectOptions as ArtifactEjectOptions, RustConstNames, DEFAULT_BOOT_POLICY, DEFAULT_EJECT_SLOT,
 };
-use board_vm_esp_rom::{detect_esp_rom, EspDetection, EspRomError, EspRomSerialOptions};
+use board_vm_esp_rom::{
+    detect_esp_rom, upload_esp_rom_image, EspDetection, EspFlashImageUploadOptions,
+    EspFlashImageUploadReport, EspRomError, EspRomSerialOptions, SpiFlashParams,
+};
 use board_vm_host::{
     write_blink_module, write_gpio_read_module, write_time_now_module, BlinkProgram,
     GpioReadProgram, TimeNowProgram, BLINK_MODULE_LEN, GPIO_READ_MODULE_LEN, TIME_NOW_MODULE_LEN,
@@ -34,6 +37,7 @@ pub enum CliCommand {
     ListPorts,
     ListTargets,
     EspDetect(EspDetectOptions),
+    EspUpload(EspUploadOptions),
     Smoke(SmokeOptions),
     Repl(ReplOptions),
     EjectBlink(EjectBlinkOptions),
@@ -75,6 +79,38 @@ impl EspDetectOptions {
             .baud_rate(self.baud_rate)
             .timeout(Duration::from_millis(self.timeout_ms))
             .reset_into_bootloader(self.reset_into_bootloader)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EspUploadOptions {
+    pub port: String,
+    pub image: String,
+    pub baud_rate: u32,
+    pub timeout_ms: u64,
+    pub reset_into_bootloader: bool,
+    pub offset: u32,
+    pub block_size: u32,
+    pub flash_size: Option<u32>,
+    pub verify_md5: bool,
+    pub stay_in_bootloader: bool,
+}
+
+impl EspUploadOptions {
+    pub fn serial_options(&self) -> EspRomSerialOptions {
+        EspRomSerialOptions::new(&self.port)
+            .baud_rate(self.baud_rate)
+            .timeout(Duration::from_millis(self.timeout_ms))
+            .reset_into_bootloader(self.reset_into_bootloader)
+    }
+
+    pub fn upload_options(&self) -> EspFlashImageUploadOptions {
+        let flash_params = self.flash_size.map(SpiFlashParams::default_for_size);
+        EspFlashImageUploadOptions::new(self.offset)
+            .block_size(self.block_size)
+            .flash_params(flash_params)
+            .verify_md5(self.verify_md5)
+            .stay_in_bootloader(self.stay_in_bootloader)
     }
 }
 
@@ -239,6 +275,7 @@ where
         "list-ports" => Ok(CliCommand::ListPorts),
         "list-targets" | "targets" => Ok(CliCommand::ListTargets),
         "esp-detect" | "detect-esp" => parse_esp_detect_args(args),
+        "esp-upload" | "upload-esp" => parse_esp_upload_args(args),
         "smoke" => parse_smoke_args(args),
         "repl" => parse_repl_args(args),
         "eject" => parse_eject_args(args),
@@ -276,6 +313,67 @@ where
         baud_rate,
         timeout_ms,
         reset_into_bootloader,
+    }))
+}
+
+fn parse_esp_upload_args<I>(mut args: I) -> Result<CliCommand, CliError>
+where
+    I: Iterator<Item = String>,
+{
+    let mut port = None;
+    let mut image = None;
+    let mut baud_rate = board_vm_esp_rom::DEFAULT_BAUD_RATE;
+    let mut timeout_ms = board_vm_esp_rom::DEFAULT_TIMEOUT_MS;
+    let mut reset_into_bootloader = true;
+    let mut offset = 0x1000;
+    let mut block_size = board_vm_esp_rom::DEFAULT_FLASH_BLOCK_SIZE;
+    let mut flash_size = None;
+    let mut verify_md5 = true;
+    let mut stay_in_bootloader = false;
+
+    while let Some(option) = args.next() {
+        match option.as_str() {
+            "--port" | "-p" => port = Some(next_value(&mut args, "--port")?),
+            "--image" | "--input" | "-i" => image = Some(next_value(&mut args, "--image")?),
+            "--baud" | "-b" => {
+                baud_rate = parse_number(next_value(&mut args, "--baud")?, "--baud")?
+            }
+            "--timeout-ms" => {
+                timeout_ms = parse_number(next_value(&mut args, "--timeout-ms")?, "--timeout-ms")?
+            }
+            "--offset" => {
+                offset = parse_u32_number(next_value(&mut args, "--offset")?, "--offset")?
+            }
+            "--block-size" => {
+                block_size =
+                    parse_u32_number(next_value(&mut args, "--block-size")?, "--block-size")?
+            }
+            "--flash-size" => {
+                flash_size = Some(parse_u32_number(
+                    next_value(&mut args, "--flash-size")?,
+                    "--flash-size",
+                )?)
+            }
+            "--no-reset" => reset_into_bootloader = false,
+            "--no-verify" => verify_md5 = false,
+            "--stay-in-bootloader" => stay_in_bootloader = true,
+            other => return Err(CliError::UnknownOption(other.to_owned())),
+        }
+    }
+
+    let port = port.ok_or(CliError::MissingRequired("--port"))?;
+    let image = image.ok_or(CliError::MissingRequired("--image"))?;
+    Ok(CliCommand::EspUpload(EspUploadOptions {
+        port,
+        image,
+        baud_rate,
+        timeout_ms,
+        reset_into_bootloader,
+        offset,
+        block_size,
+        flash_size,
+        verify_md5,
+        stay_in_bootloader,
     }))
 }
 
@@ -532,6 +630,15 @@ where
         .map_err(|_| CliError::InvalidNumber { option, value })
 }
 
+fn parse_u32_number(value: String, option: &'static str) -> Result<u32, CliError> {
+    let parsed = value
+        .strip_prefix("0x")
+        .or_else(|| value.strip_prefix("0X"))
+        .map(|hex| u32::from_str_radix(hex, 16))
+        .unwrap_or_else(|| value.parse::<u32>());
+    parsed.map_err(|_| CliError::InvalidNumber { option, value })
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SmokeReport {
     pub hello: HelloAckInfo,
@@ -566,6 +673,17 @@ pub struct EjectReport {
     pub boot_policy: u8,
     pub module_len: usize,
     pub module_crc32: u32,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EspUploadReport {
+    pub image: String,
+    pub offset: u32,
+    pub image_size: u32,
+    pub block_size: u32,
+    pub block_count: u32,
+    pub written_size: u64,
+    pub md5_digest: Option<[u8; 16]>,
 }
 
 pub fn run_smoke(options: &SmokeOptions) -> Result<SmokeReport, CliError> {
@@ -612,10 +730,28 @@ pub fn run_esp_detect(options: &EspDetectOptions) -> Result<EspDetection, CliErr
     detect_esp_rom(&options.serial_options()).map_err(CliError::from)
 }
 
+pub fn run_esp_upload(options: &EspUploadOptions) -> Result<EspUploadReport, CliError> {
+    let image = fs::read(&options.image)?;
+    let report = upload_esp_rom_image(&options.serial_options(), &image, options.upload_options())?;
+    Ok(esp_upload_report(&options.image, report))
+}
+
 pub fn run_eject_blink(options: &EjectBlinkOptions) -> Result<EjectReport, CliError> {
     let (source, report) = render_blink_eject(options)?;
     fs::write(&options.output, source)?;
     Ok(report)
+}
+
+fn esp_upload_report(image: &str, report: EspFlashImageUploadReport) -> EspUploadReport {
+    EspUploadReport {
+        image: image.to_owned(),
+        offset: report.offset,
+        image_size: report.image_size,
+        block_size: report.block_size,
+        block_count: report.block_count,
+        written_size: report.written_size,
+        md5_digest: report.md5_digest,
+    }
 }
 
 pub fn render_blink_eject(options: &EjectBlinkOptions) -> Result<(String, EjectReport), CliError> {
@@ -969,7 +1105,7 @@ pub fn format_onboard_led(led: Option<OnboardLed>) -> String {
 }
 
 pub fn usage() -> &'static str {
-    "usage:\n  board-vm list-ports\n  board-vm list-targets\n  board-vm esp-detect --port <path> [--baud <rate>] [--timeout-ms <ms>] [--no-reset]\n  board-vm smoke --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm repl --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm eject blink --out <path> [--program-id <id>] [--slot <slot>] [--boot-policy store-only|run-at-boot|run-if-no-host|<u8>]"
+    "usage:\n  board-vm list-ports\n  board-vm list-targets\n  board-vm esp-detect --port <path> [--baud <rate>] [--timeout-ms <ms>] [--no-reset]\n  board-vm esp-upload --port <path> --image <path> [--offset <addr>] [--block-size <bytes>] [--flash-size <bytes>] [--baud <rate>] [--timeout-ms <ms>] [--no-reset] [--no-verify] [--stay-in-bootloader]\n  board-vm smoke --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm repl --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm eject blink --out <path> [--program-id <id>] [--slot <slot>] [--boot-policy store-only|run-at-boot|run-if-no-host|<u8>]"
 }
 
 #[cfg(test)]
@@ -1043,6 +1179,110 @@ mod tests {
                 timeout_ms: 750,
                 reset_into_bootloader: false,
             })
+        );
+    }
+
+    #[test]
+    fn parses_esp_upload_defaults() {
+        let command = parse_args([
+            "esp-upload",
+            "--port",
+            "/dev/cu.usbserial-test",
+            "--image",
+            "firmware.bin",
+        ])
+        .unwrap();
+
+        assert_eq!(
+            command,
+            CliCommand::EspUpload(EspUploadOptions {
+                port: "/dev/cu.usbserial-test".to_owned(),
+                image: "firmware.bin".to_owned(),
+                baud_rate: board_vm_esp_rom::DEFAULT_BAUD_RATE,
+                timeout_ms: board_vm_esp_rom::DEFAULT_TIMEOUT_MS,
+                reset_into_bootloader: true,
+                offset: 0x1000,
+                block_size: board_vm_esp_rom::DEFAULT_FLASH_BLOCK_SIZE,
+                flash_size: None,
+                verify_md5: true,
+                stay_in_bootloader: false,
+            })
+        );
+    }
+
+    #[test]
+    fn parses_esp_upload_overrides() {
+        let command = parse_args([
+            "upload-esp",
+            "--port",
+            "COM4",
+            "--image",
+            "board-vm.bin",
+            "--baud",
+            "460800",
+            "--timeout-ms",
+            "2000",
+            "--offset",
+            "0x10000",
+            "--block-size",
+            "2048",
+            "--flash-size",
+            "0x400000",
+            "--no-reset",
+            "--no-verify",
+            "--stay-in-bootloader",
+        ])
+        .unwrap();
+
+        let options = EspUploadOptions {
+            port: "COM4".to_owned(),
+            image: "board-vm.bin".to_owned(),
+            baud_rate: 460_800,
+            timeout_ms: 2_000,
+            reset_into_bootloader: false,
+            offset: 0x10000,
+            block_size: 2_048,
+            flash_size: Some(0x400000),
+            verify_md5: false,
+            stay_in_bootloader: true,
+        };
+        assert_eq!(command, CliCommand::EspUpload(options.clone()));
+        let upload = options.upload_options();
+        assert_eq!(upload.offset, 0x10000);
+        assert_eq!(upload.block_size, 2_048);
+        assert_eq!(
+            upload.flash_params,
+            Some(SpiFlashParams::default_for_size(0x400000))
+        );
+        assert!(!upload.verify_md5);
+        assert!(upload.stay_in_bootloader);
+    }
+
+    #[test]
+    fn esp_upload_report_preserves_native_upload_fields() {
+        let report = esp_upload_report(
+            "firmware.bin",
+            EspFlashImageUploadReport {
+                offset: 0x1000,
+                image_size: 64,
+                block_size: 1024,
+                block_count: 1,
+                written_size: 1024,
+                md5_digest: Some([0xAB; 16]),
+            },
+        );
+
+        assert_eq!(
+            report,
+            EspUploadReport {
+                image: "firmware.bin".to_owned(),
+                offset: 0x1000,
+                image_size: 64,
+                block_size: 1024,
+                block_count: 1,
+                written_size: 1024,
+                md5_digest: Some([0xAB; 16]),
+            }
         );
     }
 
@@ -1409,6 +1649,10 @@ mod tests {
         );
         assert_eq!(
             parse_args(["eject", "blink", "--out", "blink.rs", "--wat"]).unwrap_err(),
+            CliError::UnknownOption("--wat".to_owned())
+        );
+        assert_eq!(
+            parse_args(["esp-upload", "--port", "COM9", "--image", "fw.bin", "--wat"]).unwrap_err(),
             CliError::UnknownOption("--wat".to_owned())
         );
     }
