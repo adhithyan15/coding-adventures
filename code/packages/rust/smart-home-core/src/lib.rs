@@ -567,6 +567,206 @@ pub struct IntegrationDescriptor {
     pub pairing_roles: Vec<String>,
 }
 
+impl IntegrationDescriptor {
+    pub fn new(
+        integration_id: IntegrationId,
+        display_name: impl Into<String>,
+        version: impl Into<String>,
+        runtime_kind: RuntimeKind,
+    ) -> Self {
+        Self {
+            integration_id,
+            display_name: display_name.into(),
+            version: version.into(),
+            runtime_kind,
+            capabilities: Vec::new(),
+            discovery_roles: Vec::new(),
+            pairing_roles: Vec::new(),
+        }
+    }
+
+    pub fn with_capabilities<I>(mut self, capabilities: I) -> Self
+    where
+        I: IntoIterator<Item = CapabilityId>,
+    {
+        self.capabilities = capabilities.into_iter().collect();
+        self
+    }
+
+    pub fn with_discovery_roles<I, S>(mut self, discovery_roles: I) -> Self
+    where
+        I: IntoIterator<Item = S>,
+        S: Into<String>,
+    {
+        self.discovery_roles = discovery_roles.into_iter().map(Into::into).collect();
+        self
+    }
+
+    pub fn with_pairing_roles<I, S>(mut self, pairing_roles: I) -> Self
+    where
+        I: IntoIterator<Item = S>,
+        S: Into<String>,
+    {
+        self.pairing_roles = pairing_roles.into_iter().map(Into::into).collect();
+        self
+    }
+
+    pub fn supports_capability(&self, capability_id: &CapabilityId) -> bool {
+        self.capabilities.contains(capability_id)
+    }
+
+    pub fn supports_discovery_role(&self, role: &str) -> bool {
+        self.discovery_roles
+            .iter()
+            .any(|candidate| candidate == role)
+    }
+
+    pub fn supports_pairing_role(&self, role: &str) -> bool {
+        self.pairing_roles.iter().any(|candidate| candidate == role)
+    }
+}
+
+pub fn canonical_integration_catalog() -> Vec<IntegrationDescriptor> {
+    vec![
+        IntegrationDescriptor::new(
+            IntegrationId::trusted("hue"),
+            "Philips Hue Bridge",
+            "0.1.0",
+            RuntimeKind::RustWorkerProcess,
+        )
+        .with_capabilities(capability_ids([
+            "light.on_off",
+            "light.brightness",
+            "light.color",
+            "light.color_temperature",
+            "scene.recall",
+            "sensor.battery",
+        ]))
+        .with_discovery_roles(["mdns", "lan-http", "hue-bridge"])
+        .with_pairing_roles(["link-button", "vault-token"]),
+        IntegrationDescriptor::new(
+            IntegrationId::trusted("zigbee"),
+            "Zigbee Coordinator",
+            "0.1.0",
+            RuntimeKind::RustWorkerProcess,
+        )
+        .with_capabilities(capability_ids([
+            "light.on_off",
+            "light.brightness",
+            "light.color",
+            "light.color_temperature",
+            "lock.state",
+            "climate.setpoint",
+            "sensor.occupancy",
+            "sensor.contact",
+            "sensor.temperature",
+            "sensor.humidity",
+            "sensor.illuminance",
+            "sensor.battery",
+            "input.button",
+        ]))
+        .with_discovery_roles(["serial-adapter", "network-steering", "permit-join"])
+        .with_pairing_roles(["install-code", "touchlink", "permit-join"]),
+        IntegrationDescriptor::new(
+            IntegrationId::trusted("zwave"),
+            "Z-Wave Controller",
+            "0.1.0",
+            RuntimeKind::RustWorkerProcess,
+        )
+        .with_capabilities(capability_ids([
+            "light.on_off",
+            "light.brightness",
+            "lock.state",
+            "climate.setpoint",
+            "sensor.contact",
+            "sensor.temperature",
+            "sensor.humidity",
+            "sensor.battery",
+        ]))
+        .with_discovery_roles(["serial-controller", "node-interview"])
+        .with_pairing_roles(["inclusion", "smart-start"]),
+        IntegrationDescriptor::new(
+            IntegrationId::trusted("thread"),
+            "Thread Border Router",
+            "0.1.0",
+            RuntimeKind::RustWorkerProcess,
+        )
+        .with_capabilities(capability_ids([
+            "sensor.occupancy",
+            "sensor.contact",
+            "sensor.temperature",
+            "sensor.humidity",
+            "sensor.battery",
+        ]))
+        .with_discovery_roles(["border-router", "mesh-diagnostic"])
+        .with_pairing_roles(["commissioning-dataset", "joiner"]),
+        IntegrationDescriptor::new(
+            IntegrationId::trusted("matter"),
+            "Matter Controller",
+            "0.1.0",
+            RuntimeKind::RustWorkerProcess,
+        )
+        .with_capabilities(capability_ids([
+            "light.on_off",
+            "light.brightness",
+            "light.color",
+            "light.color_temperature",
+            "lock.state",
+            "climate.setpoint",
+            "sensor.occupancy",
+            "sensor.contact",
+            "sensor.temperature",
+            "sensor.humidity",
+            "sensor.illuminance",
+            "sensor.battery",
+            "input.button",
+        ]))
+        .with_discovery_roles(["mdns", "fabric", "commissionable-node"])
+        .with_pairing_roles(["commissioning-code", "fabric-join"]),
+        IntegrationDescriptor::new(
+            IntegrationId::trusted("mqtt"),
+            "MQTT Bridge",
+            "0.1.0",
+            RuntimeKind::RustWorkerProcess,
+        )
+        .with_capabilities(capability_ids([
+            "light.on_off",
+            "light.brightness",
+            "light.color",
+            "light.color_temperature",
+            "scene.recall",
+            "lock.state",
+            "climate.setpoint",
+            "sensor.occupancy",
+            "sensor.contact",
+            "sensor.temperature",
+            "sensor.humidity",
+            "sensor.illuminance",
+            "sensor.battery",
+            "input.button",
+        ]))
+        .with_discovery_roles(["broker-subscribe", "home-assistant-discovery"])
+        .with_pairing_roles(["broker-credentials", "topic-namespace"]),
+    ]
+}
+
+pub fn canonical_integration_descriptor(
+    integration_id: &IntegrationId,
+) -> Option<IntegrationDescriptor> {
+    canonical_integration_catalog()
+        .into_iter()
+        .find(|descriptor| &descriptor.integration_id == integration_id)
+}
+
+pub fn canonical_integrations_for_capability(
+    capability_id: &CapabilityId,
+) -> Vec<IntegrationDescriptor> {
+    canonical_integration_catalog()
+        .into_iter()
+        .filter(|descriptor| descriptor.supports_capability(capability_id))
+        .collect()
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Bridge {
     pub bridge_id: BridgeId,
@@ -1308,6 +1508,10 @@ fn push_unique_grant_id(values: &mut Vec<CapabilityGrantId>, value: CapabilityGr
     }
 }
 
+fn capability_ids<const N: usize>(values: [&str; N]) -> Vec<CapabilityId> {
+    values.into_iter().map(CapabilityId::trusted).collect()
+}
+
 fn validate_mqtt_topic_name(value: &str) -> Result<(), SmartHomeError> {
     if value.is_empty() {
         return Err(invalid_mqtt_topic(
@@ -1621,6 +1825,57 @@ mod tests {
                 "missing catalog capability for {command_type:?}"
             );
         }
+    }
+
+    #[test]
+    fn canonical_integration_catalog_covers_initial_protocol_families() {
+        let catalog = canonical_integration_catalog();
+        let ids = catalog
+            .iter()
+            .map(|descriptor| descriptor.integration_id.as_str())
+            .collect::<Vec<_>>();
+
+        assert_eq!(
+            ids,
+            vec!["hue", "zigbee", "zwave", "thread", "matter", "mqtt"]
+        );
+        assert!(catalog
+            .iter()
+            .all(|descriptor| !descriptor.capabilities.is_empty()));
+        assert!(catalog
+            .iter()
+            .all(|descriptor| !descriptor.discovery_roles.is_empty()));
+        assert!(catalog
+            .iter()
+            .all(|descriptor| !descriptor.pairing_roles.is_empty()));
+
+        let hue = canonical_integration_descriptor(&IntegrationId::trusted("hue")).unwrap();
+        assert_eq!(hue.display_name, "Philips Hue Bridge");
+        assert!(hue.supports_discovery_role("mdns"));
+        assert!(hue.supports_pairing_role("link-button"));
+        assert!(hue.supports_capability(&CapabilityId::trusted("light.color_temperature")));
+
+        let zwave = canonical_integration_descriptor(&IntegrationId::trusted("zwave")).unwrap();
+        assert!(zwave.supports_capability(&CapabilityId::trusted("lock.state")));
+        assert!(zwave.supports_pairing_role("smart-start"));
+        assert!(canonical_integration_descriptor(&IntegrationId::trusted("missing")).is_none());
+    }
+
+    #[test]
+    fn canonical_integrations_can_be_filtered_by_capability() {
+        let lock_integrations =
+            canonical_integrations_for_capability(&CapabilityId::trusted("lock.state"))
+                .into_iter()
+                .map(|descriptor| descriptor.integration_id.as_str().to_string())
+                .collect::<Vec<_>>();
+        let scene_integrations =
+            canonical_integrations_for_capability(&CapabilityId::trusted("scene.recall"))
+                .into_iter()
+                .map(|descriptor| descriptor.integration_id.as_str().to_string())
+                .collect::<Vec<_>>();
+
+        assert_eq!(lock_integrations, vec!["zigbee", "zwave", "matter", "mqtt"]);
+        assert_eq!(scene_integrations, vec!["hue", "mqtt"]);
     }
 
     #[test]
