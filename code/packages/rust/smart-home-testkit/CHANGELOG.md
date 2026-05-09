@@ -19,5 +19,7 @@ All notable changes to this package will be documented in this file.
 - Fake local HTTP response helpers for request-plan matching and read-only
   response queries.
 - Fake MQTT broker publication helpers for retained-message and payload tests.
+- Scripted MQTT subscription helpers for deterministic topic-filter delivery
+  matching and QoS assertions.
 - Read-only fake MQTT broker publication queries by topic, prefix, retained flag,
   metadata, observation time, sort, and limit.

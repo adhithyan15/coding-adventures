@@ -15,7 +15,7 @@ use smart_home_core::{
 };
 use smart_home_event_streams::{
     EventStreamCheckpoint, EventStreamRestartReason, EventStreamSpec, EventStreamState,
-    EventStreamStatus,
+    EventStreamStatus, MqttQos, MqttTopicError, MqttTopicFilter,
 };
 use smart_home_local_http::{LocalHttpMethod, LocalHttpRequestPlan};
 use smart_home_registry::{InMemorySmartHomeRegistry, RegistryError};
@@ -333,6 +333,62 @@ impl ScriptedMqttPublication {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ScriptedMqttSubscription {
+    pub subscription_id: String,
+    pub topic_filter: MqttTopicFilter,
+    pub qos: MqttQos,
+    pub metadata: Vec<Metadata>,
+}
+
+impl ScriptedMqttSubscription {
+    pub fn new(subscription_id: impl Into<String>, topic_filter: MqttTopicFilter) -> Self {
+        Self {
+            subscription_id: subscription_id.into(),
+            topic_filter,
+            qos: MqttQos::AtLeastOnce,
+            metadata: Vec::new(),
+        }
+    }
+
+    pub fn with_qos(mut self, qos: MqttQos) -> Self {
+        self.qos = qos;
+        self
+    }
+
+    pub fn with_metadata(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
+        self.metadata.push(Metadata::new(key, value));
+        self
+    }
+
+    pub fn matches_publication(
+        &self,
+        publication: &ScriptedMqttPublication,
+    ) -> Result<bool, MqttTopicError> {
+        self.topic_filter.matches_topic(&publication.topic)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ScriptedMqttDelivery<'a> {
+    pub subscription: &'a ScriptedMqttSubscription,
+    pub publication: &'a ScriptedMqttPublication,
+}
+
+impl ScriptedMqttDelivery<'_> {
+    pub fn topic(&self) -> &str {
+        &self.publication.topic
+    }
+
+    pub fn qos(&self) -> MqttQos {
+        self.subscription.qos
+    }
+
+    pub fn retained(&self) -> bool {
+        self.publication.retained
+    }
+}
+
 #[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
 pub enum MqttPublicationSort {
     #[default]
@@ -445,6 +501,22 @@ impl FakeMqttBroker {
             publications.truncate(limit);
         }
         publications
+    }
+
+    pub fn deliveries_for_subscription<'a>(
+        &'a self,
+        subscription: &'a ScriptedMqttSubscription,
+    ) -> Result<Vec<ScriptedMqttDelivery<'a>>, MqttTopicError> {
+        let mut deliveries = Vec::new();
+        for publication in &self.publications {
+            if subscription.matches_publication(publication)? {
+                deliveries.push(ScriptedMqttDelivery {
+                    subscription,
+                    publication,
+                });
+            }
+        }
+        Ok(deliveries)
     }
 
     pub fn len(&self) -> usize {
@@ -1381,6 +1453,75 @@ mod tests {
         assert_eq!(broker.next_publication(), Some(retained_state));
         assert_eq!(broker.next_publication(), Some(command));
         assert_eq!(broker.next_publication(), Some(live_state));
+    }
+
+    #[test]
+    fn fake_mqtt_subscriptions_deliver_matching_publications_without_consuming_queue() {
+        let retained_kitchen_state = ScriptedMqttPublication::new(
+            "home/kitchen/light/state",
+            br#"{"state":"ON"}"#.to_vec(),
+            1_000,
+        )
+        .retained();
+        let command = ScriptedMqttPublication::new(
+            "home/kitchen/light/set",
+            br#"{"state":"OFF"}"#.to_vec(),
+            1_050,
+        );
+        let office_state = ScriptedMqttPublication::new(
+            "home/office/light/state",
+            br#"{"state":"OFF"}"#.to_vec(),
+            1_100,
+        );
+        let broker = FakeMqttBroker::new()
+            .publish(retained_kitchen_state.clone())
+            .publish(command)
+            .publish(office_state.clone());
+        let subscription = ScriptedMqttSubscription::new(
+            "sub-light-states",
+            MqttTopicFilter::new("home/+/light/state").unwrap(),
+        )
+        .with_qos(MqttQos::ExactlyOnce)
+        .with_metadata("fixture", "subscription");
+
+        let deliveries = broker.deliveries_for_subscription(&subscription).unwrap();
+
+        assert_eq!(
+            deliveries
+                .iter()
+                .map(|delivery| delivery.topic())
+                .collect::<Vec<_>>(),
+            vec!["home/kitchen/light/state", "home/office/light/state"]
+        );
+        assert_eq!(deliveries[0].qos(), MqttQos::ExactlyOnce);
+        assert!(deliveries[0].retained());
+        assert!(!deliveries[1].retained());
+        assert_eq!(
+            deliveries[0].subscription.subscription_id,
+            "sub-light-states"
+        );
+        assert_eq!(deliveries[0].subscription.metadata.len(), 1);
+        assert_eq!(broker.len(), 3);
+        assert_eq!(deliveries[0].publication, &retained_kitchen_state);
+        assert_eq!(deliveries[1].publication, &office_state);
+    }
+
+    #[test]
+    fn fake_mqtt_subscription_delivery_surfaces_invalid_publication_topics() {
+        let broker = FakeMqttBroker::new().publish(ScriptedMqttPublication::new(
+            "home/+/light/state",
+            br#"{"state":"ON"}"#.to_vec(),
+            1_000,
+        ));
+        let subscription =
+            ScriptedMqttSubscription::new("sub-all", MqttTopicFilter::new("home/#").unwrap());
+
+        assert_eq!(
+            broker
+                .deliveries_for_subscription(&subscription)
+                .unwrap_err(),
+            MqttTopicError::TopicNameContainsWildcard
+        );
     }
 
     #[test]
