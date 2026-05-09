@@ -933,7 +933,7 @@ impl HtmlParser {
             return;
         }
 
-        if !text.chars().all(char::is_whitespace) {
+        if !text.chars().all(char::is_whitespace) && !self.has_open_table_context() {
             self.reconstruct_pending_formatting();
         }
 
@@ -1033,6 +1033,9 @@ impl HtmlParser {
 
     fn reconstruct_formatting_before_if_needed(&mut self, incoming_name: &str) {
         if !starts_before_formatting_reconstruction_boundary(incoming_name) {
+            return;
+        }
+        if self.has_open_table_context() {
             return;
         }
 
@@ -1758,6 +1761,12 @@ impl HtmlParser {
         self.open_elements
             .iter()
             .skip(element_index + 1)
+            .any(|path| element_at_path(&self.document, path).is_some_and(is_table_context_element))
+    }
+
+    fn has_open_table_context(&self) -> bool {
+        self.open_elements
+            .iter()
             .any(|path| element_at_path(&self.document, path).is_some_and(is_table_context_element))
     }
 
@@ -3266,6 +3275,39 @@ mod tests {
         assert_eq!(reconstructed_anchor.name, "a");
         assert_eq!(reconstructed_anchor.attribute("href"), Some("foo"));
         assert_eq!(reconstructed_anchor.children, vec![Node::text("aoe")]);
+    }
+
+    #[test]
+    fn skips_fostered_anchor_reconstruction_inside_table_cells() {
+        let document =
+            parse_html("<table><a href=\"blah\">aba<tr><td><a href=\"foo\">br</td></tr>x</table>aoe")
+                .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 4);
+
+        let first_anchor = element(&body.children[0]);
+        assert_eq!(first_anchor.name, "a");
+        assert_eq!(first_anchor.attribute("href"), Some("blah"));
+        assert_eq!(first_anchor.children, vec![Node::text("aba")]);
+
+        let second_anchor = element(&body.children[1]);
+        assert_eq!(second_anchor.name, "a");
+        assert_eq!(second_anchor.attribute("href"), Some("blah"));
+        assert_eq!(second_anchor.children, vec![Node::text("x")]);
+
+        let table = element(&body.children[2]);
+        assert_eq!(table.name, "table");
+        let cell = element(&element(&element(&table.children[0]).children[0]).children[0]);
+        let cell_anchor = element(&cell.children[0]);
+        assert_eq!(cell_anchor.name, "a");
+        assert_eq!(cell_anchor.attribute("href"), Some("foo"));
+        assert_eq!(cell_anchor.children, vec![Node::text("br")]);
+
+        let trailing_anchor = element(&body.children[3]);
+        assert_eq!(trailing_anchor.name, "a");
+        assert_eq!(trailing_anchor.attribute("href"), Some("blah"));
+        assert_eq!(trailing_anchor.children, vec![Node::text("aoe")]);
     }
 
     #[test]
