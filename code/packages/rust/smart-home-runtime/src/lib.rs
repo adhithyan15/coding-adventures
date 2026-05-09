@@ -14,7 +14,9 @@ use smart_home_core::{
     DeviceId, Entity, EntityId, EventId, Health, IntegrationId, Metadata, PrivilegeTier,
     SmartHomeError, SmartHomeTool, StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
 };
-use smart_home_registry::{DeviceSelector, InMemorySmartHomeRegistry, RegistryError};
+use smart_home_registry::{
+    DeviceSelector, InMemorySmartHomeRegistry, RegistryError, StateRefreshPlan,
+};
 use std::collections::{BTreeMap, VecDeque};
 use std::fmt;
 
@@ -662,6 +664,15 @@ pub enum DesiredStateAction {
     },
 }
 
+#[derive(Debug, Clone, PartialEq)]
+pub struct DesiredStateDriftPlan {
+    pub bridge_id: BridgeId,
+    pub entity_id: EntityId,
+    pub capability_id: CapabilityId,
+    pub desired_value: Value,
+    pub reason: ReconciliationReason,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BridgeHealthReport {
     pub event_id: EventId,
@@ -670,6 +681,35 @@ pub struct BridgeHealthReport {
     pub observed_at_ms: u64,
     pub received_at_ms: u64,
     pub metadata: Vec<Metadata>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct RuntimeSupervisionPlan {
+    pub generated_at_ms: u64,
+    pub state_refresh_plan: StateRefreshPlan,
+    pub desired_state_drifts: Vec<DesiredStateDriftPlan>,
+    pub worker_restart_plan: WorkerRestartPlan,
+}
+
+impl RuntimeSupervisionPlan {
+    pub fn is_empty(&self) -> bool {
+        self.state_refresh_plan.is_empty()
+            && self.desired_state_drifts.is_empty()
+            && self.worker_restart_plan.is_empty()
+    }
+
+    pub fn action_count(&self) -> usize {
+        self.state_refresh_plan.len()
+            + self.desired_state_drifts.len()
+            + self.worker_restart_plan.len()
+    }
+
+    pub fn drifts_for_entity(&self, entity_id: &EntityId) -> Vec<&DesiredStateDriftPlan> {
+        self.desired_state_drifts
+            .iter()
+            .filter(|drift| &drift.entity_id == entity_id)
+            .collect()
+    }
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -1232,6 +1272,52 @@ impl SmartHomeRuntime {
         Ok(actions)
     }
 
+    pub fn desired_state_drift_plan_at(
+        &self,
+        now_ms: u64,
+    ) -> Result<Vec<DesiredStateDriftPlan>, RuntimeError> {
+        let mut drifts = Vec::new();
+
+        for desired_state in self.desired_states.values() {
+            let entity = self
+                .registry
+                .entity(&desired_state.entity_id)
+                .cloned()
+                .ok_or_else(|| RuntimeError::UnknownEntity(desired_state.entity_id.clone()))?;
+            validate_desired_state(&entity, desired_state)?;
+            let device = self
+                .registry
+                .device(&entity.device_id)
+                .cloned()
+                .ok_or_else(|| RuntimeError::UnknownDevice(entity.device_id.clone()))?;
+            let snapshot = self.registry.state(&desired_state.entity_id).cloned();
+
+            for desired in &desired_state.desired {
+                let Some(reason) = desired_state_reason(snapshot.as_ref(), desired, now_ms) else {
+                    continue;
+                };
+                drifts.push(DesiredStateDriftPlan {
+                    bridge_id: device.bridge_id.clone(),
+                    entity_id: desired_state.entity_id.clone(),
+                    capability_id: desired.capability_id.clone(),
+                    desired_value: desired.value.clone(),
+                    reason,
+                });
+            }
+        }
+
+        Ok(drifts)
+    }
+
+    pub fn supervision_plan_at(&self, now_ms: u64) -> Result<RuntimeSupervisionPlan, RuntimeError> {
+        Ok(RuntimeSupervisionPlan {
+            generated_at_ms: now_ms,
+            state_refresh_plan: self.registry.state_refresh_plan_at(now_ms),
+            desired_state_drifts: self.desired_state_drift_plan_at(now_ms)?,
+            worker_restart_plan: self.supervisor.restart_plan_at(now_ms),
+        })
+    }
+
     pub fn reconcile_supervision(&mut self, now_ms: u64) -> Vec<RuntimeEvent> {
         let plan = self.supervisor.restart_plan_at(now_ms);
 
@@ -1596,6 +1682,7 @@ mod tests {
         AuthorizationOutcome, BridgeTransport, Capability, CapabilityGrantId, CommandId,
         CorrelationId, EntityKind, IntegrationId, ProtocolFamily, ProtocolIdentifier, StateDelta,
     };
+    use smart_home_registry::StateRefreshReason;
 
     fn bridge(id: &str) -> Bridge {
         let mut bridge = Bridge::new(
@@ -2414,6 +2501,75 @@ mod tests {
                 ..
             }]
         ));
+    }
+
+    #[test]
+    fn runtime_supervision_plan_previews_due_work_without_mutating() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        let bridge_id = BridgeId::trusted("bridge-1");
+        let entity_id = EntityId::trusted("entity-1");
+        runtime
+            .supervisor_mut()
+            .register_worker(SupervisedBridgeWorker::new(
+                bridge_id.clone(),
+                IntegrationId::trusted("hue"),
+                1_000,
+                100,
+            ));
+        runtime
+            .registry_mut()
+            .apply_state_snapshot(StateSnapshot {
+                entity_id: entity_id.clone(),
+                value: Value::Object(vec![("light.on_off".to_string(), Value::Bool(false))]),
+                source: StateSource::EventStream,
+                observed_at_ms: 1_000,
+                received_at_ms: 1_001,
+                expires_at_ms: Some(1_100),
+                confidence: StateConfidence::Confirmed,
+            })
+            .unwrap();
+        runtime
+            .upsert_desired_state(DesiredEntityState::new(
+                entity_id.clone(),
+                vec![StateDelta {
+                    capability_id: CapabilityId::trusted("light.on_off"),
+                    value: Value::Bool(true),
+                }],
+            ))
+            .unwrap();
+
+        let plan = runtime.supervision_plan_at(1_125).unwrap();
+        let worker = runtime.supervisor().worker(&bridge_id).unwrap();
+        let snapshot = runtime.registry().state(&entity_id).unwrap();
+
+        assert_eq!(plan.generated_at_ms, 1_125);
+        assert_eq!(plan.action_count(), 3);
+        assert!(!plan.is_empty());
+        assert!(matches!(
+            plan.state_refresh_plan.targets.as_slice(),
+            [target] if target.entity_id == entity_id
+                && target.bridge_id == bridge_id
+                && target.reason == StateRefreshReason::Stale
+        ));
+        assert!(matches!(
+            plan.desired_state_drifts.as_slice(),
+            [DesiredStateDriftPlan {
+                bridge_id: drift_bridge_id,
+                entity_id: drift_entity_id,
+                capability_id,
+                desired_value,
+                reason: ReconciliationReason::StaleState,
+            }] if drift_bridge_id == &bridge_id
+                && drift_entity_id == &entity_id
+                && capability_id == &CapabilityId::trusted("light.on_off")
+                && desired_value == &Value::Bool(true)
+        ));
+        assert_eq!(plan.drifts_for_entity(&entity_id).len(), 1);
+        assert_eq!(plan.worker_restart_plan.len(), 1);
+        assert_eq!(worker.status, WorkerStatus::Starting);
+        assert_eq!(worker.restart_count, 0);
+        assert_eq!(snapshot.confidence, StateConfidence::Confirmed);
+        assert!(runtime.event_bus().published().is_empty());
     }
 
     #[test]

@@ -30,6 +30,8 @@ All notable changes to this package will be documented in this file.
 - Worker heartbeat deadline schedules for deterministic supervisor wakeups.
 - Desired-state reconciliation for missing, stale, or drifted entity state,
   producing deterministic corrective commands and supervision events.
+- Non-mutating supervision plans that preview state refresh targets,
+  desired-state drift, and overdue worker restarts before a tick writes.
 - Deterministic supervision ticks that combine optimistic-state expiry,
   desired-state reconciliation, and worker restart checks into one report.
 - Deterministic worker restart plans for inspecting overdue bridge workers
