@@ -13,6 +13,7 @@ use smart_home_core::{
     CommandStatus, CommandType, CorrelationId, Device, DeviceCommand, DeviceEvent, DeviceEventType,
     DeviceId, Entity, EntityId, EventId, Health, IntegrationId, Metadata, PrivilegeTier,
     SmartHomeError, SmartHomeTool, StateConfidence, StateDelta, StateSnapshot, StateSource, Value,
+    VaultRef,
 };
 use smart_home_registry::{
     DeviceSelector, InMemorySmartHomeRegistry, RegistryError, StateRefreshPlan,
@@ -27,8 +28,19 @@ pub enum RuntimeError {
     UnknownBridge(BridgeId),
     UnknownDevice(DeviceId),
     UnknownEntity(EntityId),
+    UnknownPairingSession(RuntimePairingSessionId),
     UnknownSubscription(RuntimeSubscriptionId),
+    DuplicatePairingSession(RuntimePairingSessionId),
     DuplicateSubscription(RuntimeSubscriptionId),
+    PairingSessionExpired {
+        session_id: RuntimePairingSessionId,
+        expired_at_ms: u64,
+        now_ms: u64,
+    },
+    PairingSessionNotPending {
+        session_id: RuntimePairingSessionId,
+        status: PairingSessionStatus,
+    },
     UnsupportedCapability {
         entity_id: EntityId,
         capability_id: CapabilityId,
@@ -62,8 +74,22 @@ impl fmt::Display for RuntimeError {
             Self::UnknownBridge(id) => write!(f, "unknown runtime bridge {id}"),
             Self::UnknownDevice(id) => write!(f, "unknown runtime device {id}"),
             Self::UnknownEntity(id) => write!(f, "unknown runtime entity {id}"),
+            Self::UnknownPairingSession(id) => write!(f, "unknown runtime pairing session {id}"),
             Self::UnknownSubscription(id) => write!(f, "unknown runtime subscription {id}"),
+            Self::DuplicatePairingSession(id) => write!(f, "duplicate runtime pairing session {id}"),
             Self::DuplicateSubscription(id) => write!(f, "duplicate runtime subscription {id}"),
+            Self::PairingSessionExpired {
+                session_id,
+                expired_at_ms,
+                now_ms,
+            } => write!(
+                f,
+                "pairing session {session_id} expired at {expired_at_ms} before {now_ms}"
+            ),
+            Self::PairingSessionNotPending { session_id, status } => write!(
+                f,
+                "pairing session {session_id} cannot complete while {status:?}"
+            ),
             Self::UnsupportedCapability {
                 entity_id,
                 capability_id,
@@ -134,6 +160,25 @@ impl RuntimeSubscriptionId {
 }
 
 impl fmt::Display for RuntimeSubscriptionId {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.0)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct RuntimePairingSessionId(String);
+
+impl RuntimePairingSessionId {
+    pub fn trusted(value: impl Into<String>) -> Self {
+        Self(value.into())
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+}
+
+impl fmt::Display for RuntimePairingSessionId {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.write_str(&self.0)
     }
@@ -683,9 +728,58 @@ pub struct BridgeHealthReport {
     pub metadata: Vec<Metadata>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum PairingSessionStatus {
+    PendingUserPresence,
+    Completed,
+    Expired,
+    Cancelled,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimePairingSession {
+    pub session_id: RuntimePairingSessionId,
+    pub bridge_id: BridgeId,
+    pub integration_id: IntegrationId,
+    pub requested_by: AgentId,
+    pub started_at_ms: u64,
+    pub expires_at_ms: u64,
+    pub status: PairingSessionStatus,
+    pub vault_ref: Option<VaultRef>,
+    pub metadata: Vec<Metadata>,
+}
+
+impl RuntimePairingSession {
+    pub fn pending(
+        session_id: RuntimePairingSessionId,
+        bridge: &Bridge,
+        requested_by: AgentId,
+        started_at_ms: u64,
+        expires_at_ms: u64,
+        metadata: Vec<Metadata>,
+    ) -> Self {
+        Self {
+            session_id,
+            bridge_id: bridge.bridge_id.clone(),
+            integration_id: bridge.integration_id.clone(),
+            requested_by,
+            started_at_ms,
+            expires_at_ms,
+            status: PairingSessionStatus::PendingUserPresence,
+            vault_ref: None,
+            metadata,
+        }
+    }
+
+    pub fn is_expired_at(&self, now_ms: u64) -> bool {
+        self.status == PairingSessionStatus::PendingUserPresence && now_ms >= self.expires_at_ms
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct RuntimeSupervisionPlan {
     pub generated_at_ms: u64,
+    pub pairing_sessions_expiring: Vec<RuntimePairingSessionId>,
     pub state_refresh_plan: StateRefreshPlan,
     pub desired_state_drifts: Vec<DesiredStateDriftPlan>,
     pub worker_restart_plan: WorkerRestartPlan,
@@ -693,13 +787,15 @@ pub struct RuntimeSupervisionPlan {
 
 impl RuntimeSupervisionPlan {
     pub fn is_empty(&self) -> bool {
-        self.state_refresh_plan.is_empty()
+        self.pairing_sessions_expiring.is_empty()
+            && self.state_refresh_plan.is_empty()
             && self.desired_state_drifts.is_empty()
             && self.worker_restart_plan.is_empty()
     }
 
     pub fn action_count(&self) -> usize {
-        self.state_refresh_plan.len()
+        self.pairing_sessions_expiring.len()
+            + self.state_refresh_plan.len()
             + self.desired_state_drifts.len()
             + self.worker_restart_plan.len()
     }
@@ -715,6 +811,7 @@ impl RuntimeSupervisionPlan {
 #[derive(Debug, Clone, PartialEq)]
 pub struct SupervisionTickReport {
     pub ticked_at_ms: u64,
+    pub expired_pairing_sessions: Vec<RuntimePairingSessionId>,
     pub expired_entities: Vec<EntityId>,
     pub desired_state_actions: Vec<DesiredStateAction>,
     pub worker_events: Vec<RuntimeEvent>,
@@ -722,13 +819,17 @@ pub struct SupervisionTickReport {
 
 impl SupervisionTickReport {
     pub fn is_idle(&self) -> bool {
-        self.expired_entities.is_empty()
+        self.expired_pairing_sessions.is_empty()
+            && self.expired_entities.is_empty()
             && self.desired_state_actions.is_empty()
             && self.worker_events.is_empty()
     }
 
     pub fn action_count(&self) -> usize {
-        self.expired_entities.len() + self.desired_state_actions.len() + self.worker_events.len()
+        self.expired_pairing_sessions.len()
+            + self.expired_entities.len()
+            + self.desired_state_actions.len()
+            + self.worker_events.len()
     }
 }
 
@@ -781,6 +882,34 @@ impl RuntimeSubscribeToolRequest {
 
     pub fn with_checkpoint(mut self, checkpoint: RuntimeEventCheckpoint) -> Self {
         self.from_checkpoint = Some(checkpoint);
+        self
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimePairBridgeToolRequest {
+    pub session_id: RuntimePairingSessionId,
+    pub bridge_id: BridgeId,
+    pub expires_at_ms: u64,
+    pub metadata: Vec<Metadata>,
+}
+
+impl RuntimePairBridgeToolRequest {
+    pub fn new(
+        session_id: RuntimePairingSessionId,
+        bridge_id: BridgeId,
+        expires_at_ms: u64,
+    ) -> Self {
+        Self {
+            session_id,
+            bridge_id,
+            expires_at_ms,
+            metadata: Vec::new(),
+        }
+    }
+
+    pub fn with_metadata(mut self, metadata: Vec<Metadata>) -> Self {
+        self.metadata = metadata;
         self
     }
 }
@@ -879,11 +1008,17 @@ pub struct RuntimeSubscribeToolOutput {
     pub queued_events: usize,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimePairBridgeToolOutput {
+    pub session: RuntimePairingSession,
+}
+
 #[derive(Debug, Clone)]
 pub struct SmartHomeRuntime {
     registry: InMemorySmartHomeRegistry,
     event_bus: RuntimeEventBus,
     supervisor: RuntimeSupervisor,
+    pairing_sessions: BTreeMap<RuntimePairingSessionId, RuntimePairingSession>,
     optimistic_states: BTreeMap<EntityId, StateSnapshot>,
     desired_states: BTreeMap<EntityId, DesiredEntityState>,
 }
@@ -894,6 +1029,7 @@ impl SmartHomeRuntime {
             registry: InMemorySmartHomeRegistry::new(),
             event_bus: RuntimeEventBus::new(),
             supervisor: RuntimeSupervisor::new(),
+            pairing_sessions: BTreeMap::new(),
             optimistic_states: BTreeMap::new(),
             desired_states: BTreeMap::new(),
         }
@@ -929,6 +1065,17 @@ impl SmartHomeRuntime {
 
     pub fn desired_state_count(&self) -> usize {
         self.desired_states.len()
+    }
+
+    pub fn pairing_session_count(&self) -> usize {
+        self.pairing_sessions.len()
+    }
+
+    pub fn pairing_session(
+        &self,
+        session_id: &RuntimePairingSessionId,
+    ) -> Option<&RuntimePairingSession> {
+        self.pairing_sessions.get(session_id)
     }
 
     pub fn desired_state(&self, entity_id: &EntityId) -> Option<&DesiredEntityState> {
@@ -1016,6 +1163,142 @@ impl SmartHomeRuntime {
             received_at_ms: report.received_at_ms,
         });
         Ok(())
+    }
+
+    pub fn start_pairing_session(
+        &mut self,
+        session: RuntimePairingSession,
+    ) -> Result<RuntimePairingSession, RuntimeError> {
+        if self.pairing_sessions.contains_key(&session.session_id) {
+            return Err(RuntimeError::DuplicatePairingSession(session.session_id));
+        }
+        if session.started_at_ms >= session.expires_at_ms {
+            return Err(RuntimeError::PairingSessionExpired {
+                session_id: session.session_id,
+                expired_at_ms: session.expires_at_ms,
+                now_ms: session.started_at_ms,
+            });
+        }
+        self.registry
+            .bridge(&session.bridge_id)
+            .ok_or_else(|| RuntimeError::UnknownBridge(session.bridge_id.clone()))?;
+
+        self.pairing_sessions
+            .insert(session.session_id.clone(), session.clone());
+        Ok(session)
+    }
+
+    pub fn execute_pair_bridge_tool(
+        &mut self,
+        principal_id: AgentId,
+        request: RuntimePairBridgeToolRequest,
+        now_ms: u64,
+    ) -> Result<RuntimePairBridgeToolOutput, RuntimeError> {
+        let tool = SmartHomeTool::PairBridge;
+        let decision = self.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
+        if !decision.missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedTool {
+                principal_id,
+                tool,
+                missing_capabilities: decision.missing_capabilities,
+            });
+        }
+
+        let bridge = self
+            .registry
+            .bridge(&request.bridge_id)
+            .cloned()
+            .ok_or_else(|| RuntimeError::UnknownBridge(request.bridge_id.clone()))?;
+        let session = RuntimePairingSession::pending(
+            request.session_id,
+            &bridge,
+            principal_id,
+            now_ms,
+            request.expires_at_ms,
+            request.metadata,
+        );
+        Ok(RuntimePairBridgeToolOutput {
+            session: self.start_pairing_session(session)?,
+        })
+    }
+
+    pub fn complete_pairing_session(
+        &mut self,
+        session_id: &RuntimePairingSessionId,
+        vault_ref: VaultRef,
+        completed_at_ms: u64,
+    ) -> Result<RuntimePairingSession, RuntimeError> {
+        let session = self
+            .pairing_sessions
+            .get(session_id)
+            .cloned()
+            .ok_or_else(|| RuntimeError::UnknownPairingSession(session_id.clone()))?;
+        if session.status != PairingSessionStatus::PendingUserPresence {
+            return Err(RuntimeError::PairingSessionNotPending {
+                session_id: session_id.clone(),
+                status: session.status,
+            });
+        }
+        if completed_at_ms >= session.expires_at_ms {
+            let mut expired = session.clone();
+            expired.status = PairingSessionStatus::Expired;
+            self.pairing_sessions
+                .insert(session_id.clone(), expired.clone());
+            return Err(RuntimeError::PairingSessionExpired {
+                session_id: session_id.clone(),
+                expired_at_ms: session.expires_at_ms,
+                now_ms: completed_at_ms,
+            });
+        }
+
+        let mut completed = session;
+        completed.status = PairingSessionStatus::Completed;
+        completed.vault_ref = Some(vault_ref.clone());
+        self.pairing_sessions
+            .insert(session_id.clone(), completed.clone());
+
+        let mut bridge = self
+            .registry
+            .bridge(&completed.bridge_id)
+            .cloned()
+            .ok_or_else(|| RuntimeError::UnknownBridge(completed.bridge_id.clone()))?;
+        bridge.auth_ref = Some(vault_ref);
+        bridge.health = Health::Online;
+        bridge.last_seen_at_ms = Some(completed_at_ms);
+        self.registry.upsert_bridge(bridge)?;
+        self.apply_bridge_health(BridgeHealthReport {
+            event_id: EventId::trusted(format!(
+                "pairing.completed.health:{}:{completed_at_ms}",
+                completed.bridge_id.as_str()
+            )),
+            bridge_id: completed.bridge_id.clone(),
+            health: Health::Online,
+            observed_at_ms: completed_at_ms,
+            received_at_ms: completed_at_ms,
+            metadata: vec![Metadata::new(
+                "smart_home.pairing_session",
+                completed.session_id.as_str(),
+            )],
+        })?;
+
+        Ok(completed)
+    }
+
+    pub fn expire_pairing_sessions(&mut self, now_ms: u64) -> Vec<RuntimePairingSessionId> {
+        let expired_ids: Vec<_> = self
+            .pairing_sessions
+            .iter()
+            .filter(|(_, session)| session.is_expired_at(now_ms))
+            .map(|(session_id, _)| session_id.clone())
+            .collect();
+
+        for session_id in &expired_ids {
+            if let Some(session) = self.pairing_sessions.get_mut(session_id) {
+                session.status = PairingSessionStatus::Expired;
+            }
+        }
+
+        expired_ids
     }
 
     pub fn authorize_tool_for_principal(
@@ -1379,10 +1662,19 @@ impl SmartHomeRuntime {
     pub fn supervision_plan_at(&self, now_ms: u64) -> Result<RuntimeSupervisionPlan, RuntimeError> {
         Ok(RuntimeSupervisionPlan {
             generated_at_ms: now_ms,
+            pairing_sessions_expiring: self.pairing_sessions_expiring_at(now_ms),
             state_refresh_plan: self.registry.state_refresh_plan_at(now_ms),
             desired_state_drifts: self.desired_state_drift_plan_at(now_ms)?,
             worker_restart_plan: self.supervisor.restart_plan_at(now_ms),
         })
+    }
+
+    pub fn pairing_sessions_expiring_at(&self, now_ms: u64) -> Vec<RuntimePairingSessionId> {
+        self.pairing_sessions
+            .iter()
+            .filter(|(_, session)| session.is_expired_at(now_ms))
+            .map(|(session_id, _)| session_id.clone())
+            .collect()
     }
 
     pub fn reconcile_supervision(&mut self, now_ms: u64) -> Vec<RuntimeEvent> {
@@ -1423,12 +1715,14 @@ impl SmartHomeRuntime {
         &mut self,
         now_ms: u64,
     ) -> Result<SupervisionTickReport, RuntimeError> {
+        let expired_pairing_sessions = self.expire_pairing_sessions(now_ms);
         let expired_entities = self.expire_optimistic_states(now_ms)?;
         let desired_state_actions = self.reconcile_desired_states(now_ms)?;
         let worker_events = self.reconcile_supervision(now_ms);
 
         Ok(SupervisionTickReport {
             ticked_at_ms: now_ms,
+            expired_pairing_sessions,
             expired_entities,
             desired_state_actions,
             worker_events,
@@ -2161,6 +2455,189 @@ mod tests {
         ));
         assert_eq!(decisions.len(), 1);
         assert_eq!(decisions[0].outcome, AuthorizationOutcome::Allowed);
+    }
+
+    #[test]
+    fn pair_bridge_tool_requires_pair_grants_before_starting_session() {
+        let mut runtime = SmartHomeRuntime::new();
+        runtime.upsert_bridge(bridge("bridge-1")).unwrap();
+        let principal = AgentId::trusted("agent:installer");
+        let session = RuntimePairingSessionId::trusted("pairing-1");
+
+        let error = runtime
+            .execute_pair_bridge_tool(
+                principal.clone(),
+                RuntimePairBridgeToolRequest::new(
+                    session.clone(),
+                    BridgeId::trusted("bridge-1"),
+                    1_500,
+                ),
+                1_000,
+            )
+            .unwrap_err();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+
+        assert!(matches!(
+            error,
+            RuntimeError::UnauthorizedTool {
+                tool: SmartHomeTool::PairBridge,
+                missing_capabilities,
+                ..
+            } if missing_capabilities == vec![CapabilityId::trusted("smart_home.pair")]
+        ));
+        assert_eq!(decisions.len(), 1);
+        assert_eq!(decisions[0].outcome, AuthorizationOutcome::Denied);
+        assert!(runtime.pairing_session(&session).is_none());
+    }
+
+    #[test]
+    fn pair_bridge_tool_starts_sessions_and_completion_records_vault_refs_only() {
+        let mut runtime = SmartHomeRuntime::new();
+        let mut unpaired_bridge = bridge("bridge-1");
+        unpaired_bridge.health = Health::Unpaired;
+        runtime.upsert_bridge(unpaired_bridge).unwrap();
+        let principal = AgentId::trusted("agent:installer");
+        let session_id = RuntimePairingSessionId::trusted("pairing-1");
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-pair"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.pair"),
+                PrivilegeTier::HumanApproval,
+                "chief-of-staff",
+                900,
+            )
+            .with_expiry(2_000),
+        );
+
+        let output = runtime
+            .execute_pair_bridge_tool(
+                principal.clone(),
+                RuntimePairBridgeToolRequest::new(
+                    session_id.clone(),
+                    BridgeId::trusted("bridge-1"),
+                    1_500,
+                )
+                .with_metadata(vec![Metadata::new("pairing_kind", "hue_link_button")]),
+                1_000,
+            )
+            .unwrap();
+
+        assert_eq!(output.session.session_id, session_id);
+        assert_eq!(output.session.requested_by, principal);
+        assert_eq!(
+            output.session.status,
+            PairingSessionStatus::PendingUserPresence
+        );
+        assert_eq!(output.session.vault_ref, None);
+        assert_eq!(runtime.pairing_session_count(), 1);
+        assert_eq!(
+            runtime
+                .registry()
+                .bridge(&BridgeId::trusted("bridge-1"))
+                .unwrap()
+                .auth_ref,
+            None
+        );
+
+        let completed = runtime
+            .complete_pairing_session(
+                &session_id,
+                VaultRef::trusted("vault://smart-home/hue/bridge-1/app-key"),
+                1_200,
+            )
+            .unwrap();
+        let bridge = runtime
+            .registry()
+            .bridge(&BridgeId::trusted("bridge-1"))
+            .unwrap();
+
+        assert_eq!(completed.status, PairingSessionStatus::Completed);
+        assert_eq!(
+            completed.vault_ref,
+            Some(VaultRef::trusted("vault://smart-home/hue/bridge-1/app-key"))
+        );
+        assert_eq!(
+            bridge.auth_ref,
+            Some(VaultRef::trusted("vault://smart-home/hue/bridge-1/app-key"))
+        );
+        assert_eq!(bridge.health, Health::Online);
+        assert_eq!(bridge.last_seen_at_ms, Some(1_200));
+        assert!(matches!(
+            runtime.event_bus().published(),
+            [RuntimeEvent::Device(event), RuntimeEvent::BridgeHealth { event_id, bridge_id, health, .. }]
+                if event.event_type == DeviceEventType::Health
+                    && event.metadata.iter().any(|metadata| {
+                        metadata.key == "smart_home.pairing_session"
+                            && metadata.value == "pairing-1"
+                    })
+                    && event.metadata.iter().all(|metadata| {
+                        !metadata.value.contains("app-key")
+                    })
+                    && event_id == &EventId::trusted("pairing.completed.health:bridge-1:1200")
+                    && bridge_id == &BridgeId::trusted("bridge-1")
+                    && *health == Health::Online
+        ));
+
+        let repeat_error = runtime
+            .complete_pairing_session(
+                &session_id,
+                VaultRef::trusted("vault://smart-home/hue/bridge-1/rotated-app-key"),
+                1_700,
+            )
+            .unwrap_err();
+        assert!(matches!(
+            repeat_error,
+            RuntimeError::PairingSessionNotPending {
+                status: PairingSessionStatus::Completed,
+                ..
+            }
+        ));
+        assert_eq!(
+            runtime.pairing_session(&session_id).unwrap().vault_ref,
+            Some(VaultRef::trusted("vault://smart-home/hue/bridge-1/app-key"))
+        );
+    }
+
+    #[test]
+    fn supervision_tick_expires_stale_pairing_sessions_without_credentials() {
+        let mut runtime = SmartHomeRuntime::new();
+        let mut unpaired_bridge = bridge("bridge-1");
+        unpaired_bridge.health = Health::Unpaired;
+        runtime.upsert_bridge(unpaired_bridge).unwrap();
+        let session_id = RuntimePairingSessionId::trusted("pairing-1");
+        let session = RuntimePairingSession::pending(
+            session_id.clone(),
+            runtime
+                .registry()
+                .bridge(&BridgeId::trusted("bridge-1"))
+                .unwrap(),
+            AgentId::trusted("agent:installer"),
+            1_000,
+            1_100,
+            Vec::new(),
+        );
+        runtime.start_pairing_session(session).unwrap();
+
+        let plan = runtime.supervision_plan_at(1_100).unwrap();
+        let report = runtime.run_supervision_tick(1_100).unwrap();
+        let session = runtime.pairing_session(&session_id).unwrap();
+        let bridge = runtime
+            .registry()
+            .bridge(&BridgeId::trusted("bridge-1"))
+            .unwrap();
+
+        assert_eq!(plan.pairing_sessions_expiring, vec![session_id.clone()]);
+        assert_eq!(plan.action_count(), 1);
+        assert_eq!(report.expired_pairing_sessions, vec![session_id]);
+        assert_eq!(report.action_count(), 1);
+        assert!(!report.is_idle());
+        assert_eq!(session.status, PairingSessionStatus::Expired);
+        assert_eq!(session.vault_ref, None);
+        assert_eq!(bridge.health, Health::Unpaired);
+        assert_eq!(bridge.auth_ref, None);
     }
 
     #[test]

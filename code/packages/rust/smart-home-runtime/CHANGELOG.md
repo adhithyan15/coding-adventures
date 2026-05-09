@@ -24,6 +24,8 @@ All notable changes to this package will be documented in this file.
   the registry without dispatching integration work.
 - D18D-style subscribe tool execution for authorized, filtered event-stream
   subscriptions with checkpointed replay metadata.
+- D18D-style pair-bridge execution with short-lived pairing sessions, VaultRef
+  completion, and credential-free bridge registry updates.
 - D18D-style command tool execution for authorized `smart_home.command` calls,
   including tool-level audit decisions, command-level audit decisions, and
   deterministic runtime command/correlation ids.
@@ -33,7 +35,8 @@ All notable changes to this package will be documented in this file.
 - Desired-state reconciliation for missing, stale, or drifted entity state,
   producing deterministic corrective commands and supervision events.
 - Non-mutating supervision plans that preview state refresh targets,
-  desired-state drift, and overdue worker restarts before a tick writes.
+  pairing expiry, desired-state drift, and overdue worker restarts before a tick
+  writes.
 - Deterministic supervision ticks that combine optimistic-state expiry,
   desired-state reconciliation, and worker restart checks into one report.
 - Deterministic worker restart plans for inspecting overdue bridge workers

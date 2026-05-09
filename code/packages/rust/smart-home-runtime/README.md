@@ -23,6 +23,8 @@ Included surfaces:
   integrations
 - D18D-facing subscribe tool facade that authorizes event-stream access and
   registers filtered replay subscriptions with checkpoints
+- D18D-facing pair-bridge facade with short-lived pairing sessions that complete
+  only to Vault references, never raw credentials
 - D18D-facing command tool facade for authorized `smart_home.command` calls that
   validate tool grants, command grants, optimistic state, and audit decisions
 - accepted command results that remain separate from confirmed device state
@@ -32,7 +34,7 @@ Included surfaces:
 - deterministic supervision ticks that run optimistic expiry, desired-state
   reconciliation, and worker restart checks together
 - non-mutating supervision plans that preview due refreshes, desired-state
-  drift, and worker restarts before a tick performs any writes
+  drift, pairing expiry, and worker restarts before a tick performs any writes
 - replay of device events into the registry-backed state cache
 - bridge health reports that update health without removing identities
 - supervised bridge-worker heartbeat tracking and restart signals
