@@ -450,6 +450,9 @@
         "Comment(data=)",
         "Text(data=After)",
         "EOF"
+      ],
+      "diagnostics": [
+        "abrupt-closing-of-empty-comment"
       ]
     },
     {

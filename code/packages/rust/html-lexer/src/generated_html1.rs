@@ -4,11 +4,7 @@
 //! Do not edit by hand.
 
 #[allow(unused_imports)]
-use state_machine::{
-    EffectfulStateMachine, FixtureDefinition, GuardDefinition, InputDefinition, MachineKind,
-    MatcherDefinition, RegisterDefinition, StateDefinition, StateMachineDefinition,
-    TokenDefinition, TransitionDefinition,
-};
+use state_machine::{EffectfulStateMachine, FixtureDefinition, GuardDefinition, InputDefinition, MachineKind, MatcherDefinition, RegisterDefinition, StateDefinition, StateMachineDefinition, TokenDefinition, TransitionDefinition};
 
 pub fn html1_lexer_definition() -> StateMachineDefinition {
     let mut definition = StateMachineDefinition::new("html1-lexer", MachineKind::Transducer);
@@ -81,7 +77,9 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
     definition.tokens = vec![
         TokenDefinition {
             name: "Text".to_string(),
-            fields: vec!["data".to_string()],
+            fields: vec![
+                "data".to_string(),
+            ],
         },
         TokenDefinition {
             name: "StartTag".to_string(),
@@ -93,11 +91,15 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         },
         TokenDefinition {
             name: "EndTag".to_string(),
-            fields: vec!["name".to_string()],
+            fields: vec![
+                "name".to_string(),
+            ],
         },
         TokenDefinition {
             name: "Comment".to_string(),
-            fields: vec!["data".to_string()],
+            fields: vec![
+                "data".to_string(),
+            ],
         },
         TokenDefinition {
             name: "Doctype".to_string(),
@@ -914,6 +916,13 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         },
         StateDefinition {
             id: "markup_declaration_open".to_string(),
+            initial: false,
+            accepting: false,
+            final_state: false,
+            external_entry: false,
+        },
+        StateDefinition {
+            id: "markup_declaration_open_dash".to_string(),
             initial: false,
             accepting: false,
             final_state: false,
@@ -11110,6 +11119,19 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             on: None,
             matcher: Some(MatcherDefinition::Literal("-".to_string())),
             to: vec![
+                "markup_declaration_open_dash".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: Vec::new(),
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "markup_declaration_open_dash".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Literal("-".to_string())),
+            to: vec![
                 "comment_start".to_string(),
             ],
             guard: None,
@@ -11119,6 +11141,42 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
                 "create_comment".to_string(),
             ],
             consume: true,
+        },
+        TransitionDefinition {
+            from: "markup_declaration_open_dash".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Eof),
+            to: vec![
+                "done".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(incorrectly-opened-comment)".to_string(),
+                "create_comment".to_string(),
+                "append_comment(-)".to_string(),
+                "emit_current_token".to_string(),
+                "emit(EOF)".to_string(),
+            ],
+            consume: false,
+        },
+        TransitionDefinition {
+            from: "markup_declaration_open_dash".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Anything),
+            to: vec![
+                "bogus_comment".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "parse_error(incorrectly-opened-comment)".to_string(),
+                "create_comment".to_string(),
+                "append_comment(-)".to_string(),
+            ],
+            consume: false,
         },
         TransitionDefinition {
             from: "markup_declaration_open".to_string(),
@@ -11621,8 +11679,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "parse_error(incorrectly-opened-comment)".to_string(),
-                "append_comment(-)".to_string(),
+                "parse_error(abrupt-closing-of-empty-comment)".to_string(),
                 "emit_current_token".to_string(),
             ],
             consume: true,
@@ -11638,8 +11695,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "parse_error(incorrectly-opened-comment)".to_string(),
-                "append_comment(-)".to_string(),
+                "parse_error(eof-in-comment)".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
@@ -11650,15 +11706,13 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             on: None,
             matcher: Some(MatcherDefinition::Literal("\0".to_string())),
             to: vec![
-                "bogus_comment".to_string(),
+                "comment".to_string(),
             ],
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
             actions: vec![
-                "parse_error(incorrectly-opened-comment)".to_string(),
                 "parse_error(unexpected-null-character)".to_string(),
-                "append_comment(-)".to_string(),
                 "append_comment_replacement".to_string(),
             ],
             consume: true,
@@ -11668,17 +11722,13 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             on: None,
             matcher: Some(MatcherDefinition::Anything),
             to: vec![
-                "bogus_comment".to_string(),
+                "comment".to_string(),
             ],
             guard: None,
             stack_pop: None,
             stack_push: Vec::new(),
-            actions: vec![
-                "parse_error(incorrectly-opened-comment)".to_string(),
-                "append_comment(-)".to_string(),
-                "append_comment(current)".to_string(),
-            ],
-            consume: true,
+            actions: Vec::new(),
+            consume: false,
         },
         TransitionDefinition {
             from: "comment_start_dash".to_string(),

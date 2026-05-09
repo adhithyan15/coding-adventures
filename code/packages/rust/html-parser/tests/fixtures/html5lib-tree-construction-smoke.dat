@@ -422,3 +422,39 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <a>
 |         y=""
 |         "2"
+
+#data
+<!-----><font><div>hello<table>excite!<b>me!<th><i>please!</tr><!--X-->
+#errors
+(1,14): expected-doctype-but-got-start-tag
+(1,41): unexpected-start-tag-implies-table-voodoo
+(1,48): foster-parenting-character-in-table
+(1,48): foster-parenting-character-in-table
+(1,48): foster-parenting-character-in-table
+(1,48): foster-parenting-character-in-table
+(1,48): foster-parenting-character-in-table
+(1,48): foster-parenting-character-in-table
+(1,48): foster-parenting-character-in-table
+(1,48): foster-parenting-character-in-table
+(1,48): foster-parenting-character-in-table
+(1,48): foster-parenting-character-in-table
+(1,48): unexpected-cell-in-table-body
+(1,63): unexpected-cell-end-tag
+(1,71): eof-in-table
+#document
+| <!-- - -->
+| <html>
+|   <head>
+|   <body>
+|     <font>
+|       <div>
+|         "helloexcite!"
+|         <b>
+|           "me!"
+|         <table>
+|           <tbody>
+|             <tr>
+|               <th>
+|                 <i>
+|                   "please!"
+|             <!-- X -->
