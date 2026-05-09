@@ -201,6 +201,45 @@ pub struct ToolDefinition {
     pub stability: ToolStability,
 }
 
+/// Schema-light catalog row for list/read tools that need to inspect tool
+/// policy shape before fetching full schemas.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ToolDefinitionSummary {
+    pub tool_id: ToolId,
+    pub display_name: String,
+    pub side_effects: ToolSideEffects,
+    pub idempotency: ToolIdempotency,
+    pub concurrency: ToolConcurrency,
+    pub streaming: ToolStreaming,
+    pub required_tier: PrivilegeTier,
+    pub required_capabilities: Vec<String>,
+    pub preferred_lock_scope: Option<String>,
+    pub timeout_seconds: Option<u32>,
+    pub tags: Vec<String>,
+    pub stability: ToolStability,
+    pub has_output_schema: bool,
+}
+
+impl ToolDefinitionSummary {
+    pub fn from_definition(definition: &ToolDefinition) -> Self {
+        Self {
+            tool_id: definition.tool_id.clone(),
+            display_name: definition.display_name.clone(),
+            side_effects: definition.side_effects,
+            idempotency: definition.idempotency,
+            concurrency: definition.concurrency,
+            streaming: definition.streaming,
+            required_tier: definition.required_tier,
+            required_capabilities: definition.required_capabilities.clone(),
+            preferred_lock_scope: definition.preferred_lock_scope.clone(),
+            timeout_seconds: definition.timeout_seconds,
+            tags: definition.tags.clone(),
+            stability: definition.stability,
+            has_output_schema: definition.output_schema.is_some(),
+        }
+    }
+}
+
 impl ToolDefinition {
     /// Validate definition metadata and both schemas.
     pub fn validate(&self) -> ToolValidationReport {
@@ -771,6 +810,14 @@ pub fn builtin_tool_catalog_export(query: ToolCatalogQuery) -> ToolCatalogExport
 /// Export built-in schema documents for a model gateway adapter.
 pub fn builtin_tool_schema_documents(query: ToolCatalogQuery) -> Vec<ToolSchemaDocument> {
     builtin_tool_catalog_export(query).schema_documents
+}
+
+/// Export schema-light built-in catalog summaries for read-side tools.
+pub fn builtin_tool_definition_summaries(query: ToolCatalogQuery) -> Vec<ToolDefinitionSummary> {
+    builtin_tools_matching(query)
+        .iter()
+        .map(ToolDefinitionSummary::from_definition)
+        .collect()
 }
 
 /// Look up one first-phase built-in definition by id.
@@ -3019,6 +3066,14 @@ impl InMemoryToolRegistry {
         self.export(query).schema_documents
     }
 
+    /// Export schema-light registered catalog summaries.
+    pub fn definition_summaries(&self, query: &ToolCatalogQuery) -> Vec<ToolDefinitionSummary> {
+        self.query(query)
+            .iter()
+            .map(|definition| ToolDefinitionSummary::from_definition(definition))
+            .collect()
+    }
+
     /// Summarize all registered definitions.
     pub fn summary(&self) -> ToolCatalogSummary {
         ToolCatalogSummary::from_definitions(self.definitions.values())
@@ -4594,6 +4649,33 @@ mod tests {
     }
 
     #[test]
+    fn builtin_catalog_exports_schema_light_definition_summaries() {
+        let summaries = builtin_tool_definition_summaries(
+            ToolCatalogQuery::new()
+                .for_family(BuiltinToolFamily::Skill)
+                .with_side_effects(ToolSideEffects::Read)
+                .with_limit(2),
+        );
+
+        assert_eq!(
+            summaries
+                .iter()
+                .map(|summary| summary.tool_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["skill.list", "skill.read_manifest"]
+        );
+        assert_eq!(summaries[0].display_name, "List skills");
+        assert_eq!(summaries[0].side_effects, ToolSideEffects::Read);
+        assert_eq!(summaries[0].idempotency, ToolIdempotency::Always);
+        assert_eq!(summaries[0].concurrency, ToolConcurrency::Safe);
+        assert_eq!(summaries[0].streaming, ToolStreaming::None);
+        assert_eq!(summaries[0].required_tier, PrivilegeTier::Tier0);
+        assert_eq!(summaries[0].required_capabilities, vec!["skills:read"]);
+        assert_eq!(summaries[0].tags, vec!["skill", "store"]);
+        assert!(summaries[0].has_output_schema);
+    }
+
+    #[test]
     fn catalog_validation_rejects_duplicate_tool_ids() {
         let definitions = vec![artifact_create_definition(), artifact_create_definition()];
 
@@ -4634,6 +4716,19 @@ mod tests {
                 .map(|document| document.tool_id)
                 .collect::<Vec<_>>(),
             vec!["artifact.create"]
+        );
+        assert_eq!(
+            registry
+                .definition_summaries(
+                    &ToolCatalogQuery::new().for_family(BuiltinToolFamily::Memory)
+                )
+                .into_iter()
+                .map(|summary| (summary.tool_id, summary.has_output_schema))
+                .collect::<Vec<_>>(),
+            vec![
+                ("memory.remember".to_string(), true),
+                ("memory.search".to_string(), true)
+            ]
         );
     }
 
