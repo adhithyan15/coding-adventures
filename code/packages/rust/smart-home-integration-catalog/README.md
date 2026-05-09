@@ -26,6 +26,8 @@ runtime and Chief of Staff tools a typed catalog for:
   rollout wave
 - activation plans that resolve direct integrations, virtual aliases, and
   standard-backed products into primitive/capability/auth/policy requirements
+- readiness reports that compare activation plans against available primitives,
+  allowed capabilities, and already-enabled dependency integrations
 - first-party rollout seed entries
 - virtual product aliases that point to real implementations or standards
 

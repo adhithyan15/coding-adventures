@@ -29,6 +29,8 @@ All notable changes to this package will be documented in this file.
 - Integration activation planning helpers for resolving virtual aliases,
   standard-backed products, required primitives, capabilities, auth modes,
   dependencies, and review tiers before enabling an integration.
+- Integration readiness reports that expose missing primitive families, missing
+  capability grants, and missing delegated integrations before activation.
 - Computed policy-surface helpers so Chief of Staff tools can identify camera,
   entry-access, climate, energy, cloud, credential, radio-network, and local
   actuation review boundaries before activating integrations.

@@ -389,6 +389,56 @@ pub struct IntegrationActivationPlan {
     pub cloud_required: bool,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationReadinessReport {
+    pub requested_integration_id: IntegrationId,
+    pub display_name: String,
+    pub activation_target: IntegrationActivationTarget,
+    pub priority: u8,
+    pub missing_primitives: Vec<PrimitiveFamily>,
+    pub missing_capabilities: Vec<CapabilityId>,
+    pub missing_dependencies: Vec<IntegrationId>,
+    pub requires_human_review: bool,
+    pub highest_policy_tier: PrivilegeTier,
+    pub local_only: bool,
+    pub cloud_required: bool,
+}
+
+impl IntegrationReadinessReport {
+    pub fn activation_ready(&self) -> bool {
+        self.missing_primitives.is_empty()
+            && self.missing_capabilities.is_empty()
+            && self.missing_dependencies.is_empty()
+    }
+
+    pub fn is_blocked(&self) -> bool {
+        !self.activation_ready()
+    }
+
+    pub fn missing_primitive(&self, primitive: PrimitiveFamily) -> bool {
+        self.missing_primitives.contains(&primitive)
+    }
+
+    pub fn missing_capability(&self, capability_id: &CapabilityId) -> bool {
+        self.missing_capabilities
+            .iter()
+            .any(|candidate| candidate == capability_id)
+    }
+
+    pub fn missing_dependency(&self, integration_id: &IntegrationId) -> bool {
+        self.missing_dependencies
+            .iter()
+            .any(|candidate| candidate == integration_id)
+    }
+
+    pub fn delegates_to_integration(&self, integration_id: &IntegrationId) -> bool {
+        matches!(
+            &self.activation_target,
+            IntegrationActivationTarget::DelegatedIntegration(target) if target == integration_id
+        )
+    }
+}
+
 impl IntegrationActivationPlan {
     pub fn requires_human_review(&self) -> bool {
         self.highest_policy_tier >= PrivilegeTier::HumanApproval
@@ -1369,6 +1419,67 @@ pub fn activation_plans_at_or_before_priority(
         .collect()
 }
 
+pub fn readiness_report_for_integration(
+    catalog: &[IntegrationCatalogEntry],
+    integration_id: &IntegrationId,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Option<IntegrationReadinessReport> {
+    activation_plan_for_integration(catalog, integration_id).map(|plan| {
+        readiness_report_for_plan(
+            &plan,
+            available_primitives,
+            allowed_capabilities,
+            enabled_integrations,
+        )
+    })
+}
+
+pub fn readiness_reports_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationReadinessReport> {
+    activation_plans_at_or_before_priority(catalog, priority)
+        .into_iter()
+        .map(|plan| {
+            readiness_report_for_plan(
+                &plan,
+                available_primitives,
+                allowed_capabilities,
+                enabled_integrations,
+            )
+        })
+        .collect()
+}
+
+pub fn readiness_report_for_plan(
+    plan: &IntegrationActivationPlan,
+    available_primitives: &[PrimitiveFamily],
+    allowed_capabilities: &[CapabilityId],
+    enabled_integrations: &[IntegrationId],
+) -> IntegrationReadinessReport {
+    IntegrationReadinessReport {
+        requested_integration_id: plan.requested_integration_id.clone(),
+        display_name: plan.display_name.clone(),
+        activation_target: plan.activation_target.clone(),
+        priority: plan.priority,
+        missing_primitives: missing_primitives(&plan.required_primitives, available_primitives),
+        missing_capabilities: missing_capabilities(
+            &plan.required_capabilities,
+            allowed_capabilities,
+        ),
+        missing_dependencies: missing_dependencies_for_plan(plan, enabled_integrations),
+        requires_human_review: plan.requires_human_review(),
+        highest_policy_tier: plan.highest_policy_tier,
+        local_only: plan.local_only,
+        cloud_required: plan.cloud_required,
+    }
+}
+
 pub fn activation_plan_for_entry(entry: &IntegrationCatalogEntry) -> IntegrationActivationPlan {
     let activation_target = if let Some(target) = &entry.virtual_target {
         IntegrationActivationTarget::DelegatedIntegration(target.clone())
@@ -2126,6 +2237,46 @@ fn dedupe_capabilities(capabilities: &[&'static str]) -> Vec<CapabilityId> {
     result
 }
 
+fn missing_primitives(
+    required: &[PrimitiveFamily],
+    available: &[PrimitiveFamily],
+) -> Vec<PrimitiveFamily> {
+    required
+        .iter()
+        .copied()
+        .filter(|primitive| !available.contains(primitive))
+        .collect()
+}
+
+fn missing_capabilities(required: &[CapabilityId], allowed: &[CapabilityId]) -> Vec<CapabilityId> {
+    required
+        .iter()
+        .filter(|capability_id| !allowed.iter().any(|allowed| allowed == *capability_id))
+        .cloned()
+        .collect()
+}
+
+fn missing_dependencies_for_plan(
+    plan: &IntegrationActivationPlan,
+    enabled_integrations: &[IntegrationId],
+) -> Vec<IntegrationId> {
+    let mut dependencies = plan.depends_on_integrations.clone();
+    if let IntegrationActivationTarget::DelegatedIntegration(target) = &plan.activation_target {
+        if !dependencies.contains(target) {
+            dependencies.push(target.clone());
+        }
+    }
+
+    dependencies
+        .into_iter()
+        .filter(|integration_id| {
+            !enabled_integrations
+                .iter()
+                .any(|enabled| enabled == integration_id)
+        })
+        .collect()
+}
+
 fn dedupe_policy_surfaces(
     surfaces: Vec<IntegrationPolicySurface>,
 ) -> Vec<IntegrationPolicySurface> {
@@ -2410,6 +2561,119 @@ mod tests {
         assert!(early.iter().any(|plan| plan
             .depends_on_integrations
             .contains(&IntegrationId::trusted("mqtt"))));
+    }
+
+    #[test]
+    fn readiness_reports_identify_missing_primitives_and_capabilities() {
+        let catalog = first_party_catalog();
+        let report = readiness_report_for_integration(
+            &catalog,
+            &IntegrationId::trusted("hue"),
+            &[PrimitiveFamily::Mdns],
+            &[CapabilityId::trusted("smart_home.read")],
+            &[],
+        )
+        .unwrap();
+
+        assert!(report.is_blocked());
+        assert!(report.missing_primitive(PrimitiveFamily::LocalHttp));
+        assert!(report.missing_primitive(PrimitiveFamily::ServerSentEvents));
+        assert!(report.missing_primitive(PrimitiveFamily::LocalPairing));
+        assert!(report.missing_capability(&CapabilityId::trusted("smart_home.command.light")));
+        assert!(report.missing_capability(&CapabilityId::trusted("smart_home.pair")));
+        assert!(!report.missing_dependency(&IntegrationId::trusted("mqtt")));
+        assert!(report.requires_human_review);
+    }
+
+    #[test]
+    fn readiness_reports_mark_complete_direct_integrations_ready() {
+        let catalog = first_party_catalog();
+        let hue = find_entry(&catalog, &IntegrationId::trusted("hue")).unwrap();
+        let report = readiness_report_for_integration(
+            &catalog,
+            &hue.integration_id,
+            &hue.required_primitives,
+            &hue.required_capabilities,
+            &[],
+        )
+        .unwrap();
+
+        assert!(report.activation_ready());
+        assert_eq!(
+            report.requested_integration_id,
+            IntegrationId::trusted("hue")
+        );
+        assert_eq!(
+            report.activation_target,
+            IntegrationActivationTarget::Direct
+        );
+        assert!(report.local_only);
+        assert!(!report.cloud_required);
+        assert_eq!(report.highest_policy_tier, PrivilegeTier::HumanApproval);
+    }
+
+    #[test]
+    fn readiness_reports_include_delegated_integration_dependencies() {
+        let catalog = first_party_catalog();
+        let all_primitives = all_primitive_families().to_vec();
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let blocked = readiness_report_for_integration(
+            &catalog,
+            &IntegrationId::trusted("tplink_tapo"),
+            &all_primitives,
+            &allowed_capabilities,
+            &[],
+        )
+        .unwrap();
+
+        assert!(blocked.is_blocked());
+        assert!(blocked.missing_dependency(&IntegrationId::trusted("tplink")));
+        assert!(blocked.delegates_to_integration(&IntegrationId::trusted("tplink")));
+
+        let ready = readiness_report_for_integration(
+            &catalog,
+            &IntegrationId::trusted("tplink_tapo"),
+            &all_primitives,
+            &allowed_capabilities,
+            &[IntegrationId::trusted("tplink")],
+        )
+        .unwrap();
+
+        assert!(ready.activation_ready());
+        assert!(ready.missing_dependencies.is_empty());
+    }
+
+    #[test]
+    fn priority_readiness_reports_track_rollout_wave_blockers() {
+        let catalog = first_party_catalog();
+        let available_primitives = vec![
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+        ];
+        let allowed_capabilities = vec![CapabilityId::trusted("smart_home.read")];
+        let reports = readiness_reports_at_or_before_priority(
+            &catalog,
+            1,
+            &available_primitives,
+            &allowed_capabilities,
+            &[],
+        );
+        let hue = reports
+            .iter()
+            .find(|report| report.requested_integration_id == IntegrationId::trusted("hue"))
+            .unwrap();
+        let tasmota = reports
+            .iter()
+            .find(|report| report.requested_integration_id == IntegrationId::trusted("tasmota"))
+            .unwrap();
+
+        assert!(hue.missing_primitive(PrimitiveFamily::LocalPairing));
+        assert!(hue.missing_capability(&CapabilityId::trusted("smart_home.command.light")));
+        assert!(tasmota.missing_primitive(PrimitiveFamily::Mqtt));
+        assert!(tasmota.missing_dependency(&IntegrationId::trusted("mqtt")));
     }
 
     #[test]
