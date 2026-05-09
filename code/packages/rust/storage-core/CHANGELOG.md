@@ -2,6 +2,17 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- `StorageRecordSummary` and `StorageSummaryPage` for body-free read-side
+  projections.
+- Default `StorageBackend::get_summary` and `StorageBackend::list_summaries`
+  helpers so higher-level stores can build list/read models without depending
+  on full record bodies.
+- Conformance coverage for summary reads matching stat/list semantics.
+
 ## [0.1.0] - 2026-04-18
 
 ### Added
