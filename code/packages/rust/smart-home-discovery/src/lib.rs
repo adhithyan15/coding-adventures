@@ -357,6 +357,106 @@ impl CatalogDiscoveryHint {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub enum DiscoveryPairingAction {
+    Ready,
+    PressPhysicalButton,
+    EnterLocalCode,
+    ProvideCredentials,
+    CompleteOAuth2,
+    InstallCertificate,
+    StartRadioInclusion,
+    ConfigureMqttCredentials,
+    InvestigateUnknownRequirement,
+}
+
+impl DiscoveryPairingAction {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Ready => "ready",
+            Self::PressPhysicalButton => "press_physical_button",
+            Self::EnterLocalCode => "enter_local_code",
+            Self::ProvideCredentials => "provide_credentials",
+            Self::CompleteOAuth2 => "complete_oauth2",
+            Self::InstallCertificate => "install_certificate",
+            Self::StartRadioInclusion => "start_radio_inclusion",
+            Self::ConfigureMqttCredentials => "configure_mqtt_credentials",
+            Self::InvestigateUnknownRequirement => "investigate_unknown_requirement",
+        }
+    }
+
+    pub fn requires_human_action(self) -> bool {
+        !matches!(self, Self::Ready)
+    }
+}
+
+impl fmt::Display for DiscoveryPairingAction {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DiscoveryPairingTarget {
+    pub fingerprint: DiscoveryFingerprint,
+    pub bridge_id: BridgeId,
+    pub integration_id: IntegrationId,
+    pub native_bridge_id: String,
+    pub display_name: Option<String>,
+    pub priority: u8,
+    pub source: DiscoverySource,
+    pub confidence: DiscoveryConfidence,
+    pub signal_status: DiscoverySignalStatus,
+    pub pairing_requirement: PairingRequirement,
+    pub action: DiscoveryPairingAction,
+    pub address: Option<String>,
+    pub discovered_at_ms: u64,
+}
+
+impl DiscoveryPairingTarget {
+    pub fn requires_human_action(&self) -> bool {
+        self.action.requires_human_action()
+    }
+
+    pub fn is_actionable(&self) -> bool {
+        self.signal_status != DiscoverySignalStatus::Expired
+            && self.action != DiscoveryPairingAction::InvestigateUnknownRequirement
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DiscoveryPairingPlan {
+    pub generated_at_ms: u64,
+    pub targets: Vec<DiscoveryPairingTarget>,
+}
+
+impl DiscoveryPairingPlan {
+    pub fn is_empty(&self) -> bool {
+        self.targets.is_empty()
+    }
+
+    pub fn len(&self) -> usize {
+        self.targets.len()
+    }
+
+    pub fn actionable_targets(&self) -> Vec<&DiscoveryPairingTarget> {
+        self.targets
+            .iter()
+            .filter(|target| target.is_actionable())
+            .collect()
+    }
+
+    pub fn targets_for_integration(
+        &self,
+        integration_id: &IntegrationId,
+    ) -> Vec<&DiscoveryPairingTarget> {
+        self.targets
+            .iter()
+            .filter(|target| &target.integration_id == integration_id)
+            .collect()
+    }
+}
+
 pub fn catalog_discovery_hints(catalog: &[IntegrationCatalogEntry]) -> Vec<CatalogDiscoveryHint> {
     catalog
         .iter()
@@ -813,6 +913,100 @@ impl DiscoveryCatalog {
             .map(DiscoveryRecord::to_bridge_candidate)
             .collect()
     }
+
+    pub fn pairing_plan_at(
+        &self,
+        catalog: &[IntegrationCatalogEntry],
+        now_ms: u64,
+        ttl_ms: u64,
+    ) -> DiscoveryPairingPlan {
+        let mut targets = self
+            .records()
+            .filter_map(|record| pairing_target_for_record(record, catalog, now_ms, ttl_ms))
+            .collect::<Vec<_>>();
+        targets.sort_by(|left, right| {
+            left.priority
+                .cmp(&right.priority)
+                .then_with(|| {
+                    signal_status_rank(left.signal_status)
+                        .cmp(&signal_status_rank(right.signal_status))
+                })
+                .then_with(|| {
+                    right
+                        .confidence
+                        .preference_rank()
+                        .cmp(&left.confidence.preference_rank())
+                })
+                .then_with(|| {
+                    right
+                        .source
+                        .preference_rank()
+                        .cmp(&left.source.preference_rank())
+                })
+                .then_with(|| right.discovered_at_ms.cmp(&left.discovered_at_ms))
+                .then_with(|| left.integration_id.cmp(&right.integration_id))
+                .then_with(|| left.native_bridge_id.cmp(&right.native_bridge_id))
+        });
+        DiscoveryPairingPlan {
+            generated_at_ms: now_ms,
+            targets,
+        }
+    }
+}
+
+fn pairing_target_for_record(
+    record: &DiscoveryRecord,
+    catalog: &[IntegrationCatalogEntry],
+    now_ms: u64,
+    ttl_ms: u64,
+) -> Option<DiscoveryPairingTarget> {
+    let signal_status = record.signal(ttl_ms).status_at(now_ms);
+    if signal_status == DiscoverySignalStatus::Expired {
+        return None;
+    }
+    let catalog_entry = catalog
+        .iter()
+        .find(|entry| entry.integration_id == record.integration_id);
+    Some(DiscoveryPairingTarget {
+        fingerprint: record.fingerprint(),
+        bridge_id: record.bridge_id(),
+        integration_id: record.integration_id.clone(),
+        native_bridge_id: record.native_bridge_id.clone(),
+        display_name: record
+            .display_name
+            .clone()
+            .or_else(|| catalog_entry.map(|entry| entry.display_name.clone())),
+        priority: catalog_entry.map_or(u8::MAX, |entry| entry.priority),
+        source: record.source,
+        confidence: record.confidence,
+        signal_status,
+        pairing_requirement: record.pairing_requirement,
+        action: pairing_action_for_requirement(record.pairing_requirement),
+        address: record.address.clone(),
+        discovered_at_ms: record.discovered_at_ms,
+    })
+}
+
+fn pairing_action_for_requirement(requirement: PairingRequirement) -> DiscoveryPairingAction {
+    match requirement {
+        PairingRequirement::Unknown => DiscoveryPairingAction::InvestigateUnknownRequirement,
+        PairingRequirement::None => DiscoveryPairingAction::Ready,
+        PairingRequirement::PhysicalPresence => DiscoveryPairingAction::PressPhysicalButton,
+        PairingRequirement::LocalCode => DiscoveryPairingAction::EnterLocalCode,
+        PairingRequirement::Credentials => DiscoveryPairingAction::ProvideCredentials,
+        PairingRequirement::OAuth2 => DiscoveryPairingAction::CompleteOAuth2,
+        PairingRequirement::Certificate => DiscoveryPairingAction::InstallCertificate,
+        PairingRequirement::RadioInclusion => DiscoveryPairingAction::StartRadioInclusion,
+        PairingRequirement::MqttCredentials => DiscoveryPairingAction::ConfigureMqttCredentials,
+    }
+}
+
+fn signal_status_rank(status: DiscoverySignalStatus) -> u8 {
+    match status {
+        DiscoverySignalStatus::Fresh => 0,
+        DiscoverySignalStatus::Stale => 1,
+        DiscoverySignalStatus::Expired => 2,
+    }
 }
 
 fn primary_protocol_for_entry(entry: &IntegrationCatalogEntry) -> ProtocolFamily {
@@ -977,6 +1171,64 @@ mod tests {
         assert!(tuya
             .iter()
             .all(|hint| hint.pairing_requirement == PairingRequirement::OAuth2));
+    }
+
+    #[test]
+    fn pairing_plan_orders_actionable_discoveries_by_catalog_priority() {
+        let catalog = first_party_catalog();
+        let hue_hint = discovery_hints_for_integration(&catalog, &IntegrationId::trusted("hue"))
+            .into_iter()
+            .find(|hint| hint.discovery_mechanism == DiscoveryMechanism::Mdns)
+            .unwrap();
+        let mqtt_hint = discovery_hints_for_integration(&catalog, &IntegrationId::trusted("mqtt"))
+            .into_iter()
+            .find(|hint| hint.discovery_mechanism == DiscoveryMechanism::Mqtt)
+            .unwrap();
+        let hue = hue_hint
+            .to_record("001788fffeabcdef", 1_900)
+            .unwrap()
+            .with_address("https://192.0.2.10")
+            .with_confidence(DiscoveryConfidence::Verified);
+        let mqtt = mqtt_hint
+            .to_record("broker-1", 1_000)
+            .unwrap()
+            .with_confidence(DiscoveryConfidence::Candidate);
+        let expired_matter = DiscoveryRecord::new(
+            IntegrationId::trusted("matter"),
+            ProtocolFamily::Matter,
+            "fabric-expired",
+            DiscoverySource::Mdns,
+            BridgeTransport::Mdns,
+            1_000,
+        )
+        .unwrap()
+        .with_pairing_requirement(PairingRequirement::Certificate)
+        .with_expires_at_ms(1_500);
+        let mut discoveries = DiscoveryCatalog::new();
+        discoveries.record(hue);
+        discoveries.record(mqtt);
+        discoveries.record(expired_matter);
+
+        let plan = discoveries.pairing_plan_at(&catalog, 2_000, 500);
+
+        assert_eq!(plan.generated_at_ms, 2_000);
+        assert_eq!(plan.len(), 2);
+        assert_eq!(plan.actionable_targets().len(), 2);
+        assert!(plan
+            .targets_for_integration(&IntegrationId::trusted("matter"))
+            .is_empty());
+        assert!(matches!(
+            plan.targets.as_slice(),
+            [hue_target, mqtt_target]
+                if hue_target.integration_id == IntegrationId::trusted("hue")
+                    && hue_target.display_name.as_deref() == Some("Philips Hue")
+                    && hue_target.action == DiscoveryPairingAction::PressPhysicalButton
+                    && hue_target.requires_human_action()
+                    && hue_target.signal_status == DiscoverySignalStatus::Fresh
+                    && mqtt_target.integration_id == IntegrationId::trusted("mqtt")
+                    && mqtt_target.action == DiscoveryPairingAction::ConfigureMqttCredentials
+                    && mqtt_target.signal_status == DiscoverySignalStatus::Stale
+        ));
     }
 
     #[test]

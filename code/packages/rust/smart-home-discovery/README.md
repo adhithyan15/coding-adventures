@@ -15,6 +15,8 @@ write credentials. It gives discovery workers a shared shape for:
 - deterministic candidate catalogs
 - catalog-backed scan and pairing hints derived from first-party integration
   metadata
+- pairing plans that rank discovered bridges and identify the next pairing
+  action before any worker opens a credential flow
 - source/address/time preference scoring for duplicate bridge candidates
 - catalog-level fresh/stale/expired signal summaries with next transition time
 - freshness filtering for supervisor/discovery loops
