@@ -30,8 +30,11 @@ pub const DOOR_LOCK_OPERATION_REPORT: u8 = 0x03;
 pub const BATTERY_GET: u8 = 0x02;
 pub const BATTERY_REPORT: u8 = 0x03;
 pub const BATTERY_LOW_WARNING: u8 = 0xff;
+pub const METER_GET: u8 = 0x01;
+pub const METER_REPORT: u8 = 0x02;
 pub const NOTIFICATION_GET: u8 = 0x04;
 pub const NOTIFICATION_REPORT: u8 = 0x05;
+pub const COMMAND_CLASS_METER: CommandClassId = CommandClassId(0x32);
 pub const COMMAND_CLASS_NOTIFICATION: CommandClassId = CommandClassId(0x71);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -139,6 +142,12 @@ pub enum ZWaveValueReport {
     },
     Battery {
         level: BatteryLevel,
+    },
+    Meter {
+        meter_type: u8,
+        scale: u8,
+        precision: u8,
+        raw_value: i32,
     },
     Notification(NotificationReport),
 }
@@ -258,6 +267,7 @@ pub enum CommandClassError {
     },
     InvalidExtendedCommandClassId(u16),
     InvalidSensorValueSize(u8),
+    InvalidMeterValueSize(u8),
 }
 
 impl fmt::Display for CommandClassError {
@@ -280,6 +290,9 @@ impl fmt::Display for CommandClassError {
             }
             Self::InvalidSensorValueSize(size) => {
                 write!(f, "invalid Z-Wave multilevel sensor value size {size}")
+            }
+            Self::InvalidMeterValueSize(size) => {
+                write!(f, "invalid Z-Wave meter value size {size}")
             }
         }
     }
@@ -351,6 +364,10 @@ pub fn battery_get() -> ZWaveCommand {
     ZWaveCommand::new(CommandClassId::BATTERY, BATTERY_GET, Vec::new())
 }
 
+pub fn meter_get() -> ZWaveCommand {
+    ZWaveCommand::new(COMMAND_CLASS_METER, METER_GET, Vec::new())
+}
+
 pub fn interview_commands_for_command_class(command_class: CommandClassId) -> Vec<ZWaveCommand> {
     match command_class {
         CommandClassId::BASIC => vec![basic_get()],
@@ -360,6 +377,7 @@ pub fn interview_commands_for_command_class(command_class: CommandClassId) -> Ve
         CommandClassId::SENSOR_MULTILEVEL => vec![multilevel_sensor_get()],
         CommandClassId::DOOR_LOCK => vec![door_lock_operation_get()],
         CommandClassId::BATTERY => vec![battery_get()],
+        COMMAND_CLASS_METER => vec![meter_get()],
         _ => Vec::new(),
     }
 }
@@ -434,6 +452,7 @@ pub fn parse_value_report(command: &ZWaveCommand) -> Result<ZWaveValueReport, Co
                 level: BatteryLevel::parse(command.payload[0]),
             })
         }
+        (COMMAND_CLASS_METER, METER_REPORT) => parse_meter_report(&command.payload),
         (COMMAND_CLASS_NOTIFICATION, NOTIFICATION_REPORT) => Ok(ZWaveValueReport::Notification(
             parse_notification_report(&command.payload)?,
         )),
@@ -462,6 +481,20 @@ pub fn capabilities_for_command_class(command_class: CommandClassId) -> Vec<Capa
             ValueKind::Text,
         )],
         CommandClassId::BATTERY => vec![Capability::sensor_battery()],
+        COMMAND_CLASS_METER => vec![
+            Capability::new(
+                CapabilityId::trusted("sensor.energy"),
+                CapabilityMode::Observe,
+                ValueKind::Number,
+            )
+            .with_unit("kWh"),
+            Capability::new(
+                CapabilityId::trusted("sensor.power"),
+                CapabilityMode::Observe,
+                ValueKind::Number,
+            )
+            .with_unit("W"),
+        ],
         COMMAND_CLASS_NOTIFICATION => vec![
             Capability::sensor_occupancy(),
             Capability::new(
@@ -514,6 +547,15 @@ pub fn state_delta_for_report(report: &ZWaveValueReport) -> StateDelta {
             capability_id: CapabilityId::trusted("sensor.battery"),
             value: Value::Percentage(level.normalized_percentage()),
         },
+        ZWaveValueReport::Meter {
+            meter_type,
+            scale,
+            precision,
+            raw_value,
+        } => StateDelta {
+            capability_id: meter_capability_id(*meter_type, *scale),
+            value: Value::Number(scaled_sensor_value(*raw_value, *precision)),
+        },
         ZWaveValueReport::Notification(report) => state_delta_for_notification(report),
     }
 }
@@ -565,6 +607,19 @@ pub fn multilevel_sensor_capability_id(sensor_type: u8) -> CapabilityId {
         0x03 => CapabilityId::trusted("sensor.illuminance"),
         0x05 => CapabilityId::trusted("sensor.humidity"),
         _ => CapabilityId::trusted("sensor.value"),
+    }
+}
+
+pub fn meter_capability_id(meter_type: u8, scale: u8) -> CapabilityId {
+    match (meter_type, scale) {
+        (0x01, 0x00 | 0x01) => CapabilityId::trusted("sensor.energy"),
+        (0x01, 0x02) => CapabilityId::trusted("sensor.power"),
+        (0x01, 0x04) => CapabilityId::trusted("sensor.voltage"),
+        (0x01, 0x05) => CapabilityId::trusted("sensor.current"),
+        (0x01, 0x06) => CapabilityId::trusted("sensor.power_factor"),
+        (0x02, 0x00 | 0x01) => CapabilityId::trusted("sensor.gas"),
+        (0x03, 0x00 | 0x01 | 0x02) => CapabilityId::trusted("sensor.water"),
+        _ => CapabilityId::trusted("sensor.meter"),
     }
 }
 
@@ -682,6 +737,26 @@ fn parse_multilevel_sensor_report(payload: &[u8]) -> Result<ZWaveValueReport, Co
     })
 }
 
+fn parse_meter_report(payload: &[u8]) -> Result<ZWaveValueReport, CommandClassError> {
+    require_len(payload, 2)?;
+    let meter_type = payload[0] & 0b0001_1111;
+    let properties = payload[1];
+    let precision = (properties >> 5) & 0b111;
+    let scale = (properties >> 3) & 0b11;
+    let size = properties & 0b111;
+    if !matches!(size, 1 | 2 | 4) {
+        return Err(CommandClassError::InvalidMeterValueSize(size));
+    }
+    require_len(payload, 2 + usize::from(size))?;
+    let raw_value = signed_be_value(&payload[2..2 + usize::from(size)], size);
+    Ok(ZWaveValueReport::Meter {
+        meter_type,
+        scale,
+        precision,
+        raw_value,
+    })
+}
+
 fn signed_be_value(bytes: &[u8], size: u8) -> i32 {
     match size {
         1 => i8::from_be_bytes([bytes[0]]) as i32,
@@ -746,6 +821,10 @@ mod tests {
             battery_get().encode().unwrap(),
             vec![CommandClassId::BATTERY.0 as u8, BATTERY_GET]
         );
+        assert_eq!(
+            meter_get().encode().unwrap(),
+            vec![COMMAND_CLASS_METER.0 as u8, METER_GET]
+        );
     }
 
     #[test]
@@ -754,6 +833,7 @@ mod tests {
             CommandClassId::BATTERY,
             CommandClassId::SWITCH_BINARY,
             CommandClassId::BATTERY,
+            COMMAND_CLASS_METER,
             COMMAND_CLASS_NOTIFICATION,
             CommandClassId(0xfe),
         ]);
@@ -765,6 +845,7 @@ mod tests {
                 .collect::<Vec<_>>(),
             vec![
                 CommandClassId::SWITCH_BINARY,
+                COMMAND_CLASS_METER,
                 COMMAND_CLASS_NOTIFICATION,
                 CommandClassId::BATTERY,
             ]
@@ -789,6 +870,15 @@ mod tests {
         assert!(notification.commands.is_empty());
         assert!(!notification.can_query_state());
         assert!(notification.projects_capabilities());
+
+        let meter = descriptors
+            .iter()
+            .find(|descriptor| descriptor.command_class == COMMAND_CLASS_METER)
+            .unwrap();
+        assert_eq!(meter.commands, vec![meter_get()]);
+        assert!(meter.capabilities.iter().any(|capability| {
+            capability.capability_id == CapabilityId::trusted("sensor.energy")
+        }));
     }
 
     #[test]
@@ -864,6 +954,47 @@ mod tests {
         assert!(BatteryLevel::LowWarning.is_low_warning());
         assert_eq!(BatteryLevel::LowWarning.normalized_percentage(), 0);
         assert_eq!(BatteryLevel::Reserved(200).normalized_percentage(), 100);
+    }
+
+    #[test]
+    fn parses_meter_reports_and_projects_energy_or_power() {
+        let energy = ZWaveCommand::new(
+            COMMAND_CLASS_METER,
+            METER_REPORT,
+            vec![0x01, 0b0100_0010, 0x04, 0xd2],
+        );
+        let power = ZWaveCommand::new(
+            COMMAND_CLASS_METER,
+            METER_REPORT,
+            vec![0x01, 0b0001_0010, 0x01, 0xc2],
+        );
+
+        assert_eq!(
+            parse_value_report(&energy).unwrap(),
+            ZWaveValueReport::Meter {
+                meter_type: 0x01,
+                scale: 0,
+                precision: 2,
+                raw_value: 1234,
+            }
+        );
+
+        let energy_delta = state_delta_for_report(&parse_value_report(&energy).unwrap());
+        assert_eq!(
+            energy_delta.capability_id,
+            CapabilityId::trusted("sensor.energy")
+        );
+        match energy_delta.value {
+            Value::Number(value) => assert!((value - 12.34).abs() < f64::EPSILON),
+            other => panic!("expected numeric energy value, got {other:?}"),
+        }
+
+        let power_delta = state_delta_for_report(&parse_value_report(&power).unwrap());
+        assert_eq!(
+            power_delta.capability_id,
+            CapabilityId::trusted("sensor.power")
+        );
+        assert_eq!(power_delta.value, Value::Number(450.0));
     }
 
     #[test]
@@ -982,6 +1113,9 @@ mod tests {
             capabilities_for_command_class(CommandClassId::BATTERY)[0].capability_id,
             CapabilityId::trusted("sensor.battery")
         );
+        assert!(capabilities_for_command_class(COMMAND_CLASS_METER)
+            .iter()
+            .any(|capability| capability.capability_id == CapabilityId::trusted("sensor.power")));
         assert!(capabilities_for_command_class(COMMAND_CLASS_NOTIFICATION)
             .iter()
             .any(|capability| capability.capability_id == CapabilityId::trusted("sensor.alarm")));
@@ -999,6 +1133,16 @@ mod tests {
         assert_eq!(
             parse_value_report(&report),
             Err(CommandClassError::InvalidSensorValueSize(3))
+        );
+    }
+
+    #[test]
+    fn meter_report_rejects_invalid_value_size() {
+        let report = ZWaveCommand::new(COMMAND_CLASS_METER, METER_REPORT, vec![0x01, 0x03]);
+
+        assert_eq!(
+            parse_value_report(&report),
+            Err(CommandClassError::InvalidMeterValueSize(3))
         );
     }
 
