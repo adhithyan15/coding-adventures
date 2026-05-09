@@ -11,11 +11,12 @@ use board_vm_language_core::{
     board_family_name, build_blink_module, build_caps_query_wire_frame, build_hello_wire_frame,
     build_program_begin_wire_frame, build_program_chunk_wire_frame, build_program_end_wire_frame,
     build_run_wire_frame, connection_options_for_target, connection_transport_name, detect_target,
-    discover_devices, discover_devices_from_paths, esp_upload_options_for_target, known_targets,
-    onboard_led_kind, pico_uf2_upload_options_for_target, wireless_transport_name,
-    BoardVmLanguageSession, BuiltWireFrame, LanguageConnectionOption, LanguageCoreError,
-    LanguageEspUploadOptions, LanguageHostDevice, LanguageOnboardLed, LanguagePicoUf2UploadOptions,
-    LanguageTargetInfo, LanguageWirelessInterface,
+    discover_devices, discover_devices_from_paths, esp_upload_options_for_target,
+    host_endpoint_transport_name, known_targets, onboard_led_kind,
+    pico_uf2_upload_options_for_target, wireless_transport_name, BoardVmLanguageSession,
+    BuiltWireFrame, LanguageConnectionOption, LanguageCoreError, LanguageEspUploadOptions,
+    LanguageHostDevice, LanguageOnboardLed, LanguagePicoUf2UploadOptions, LanguageTargetInfo,
+    LanguageWirelessInterface,
 };
 use lua_bridge::{
     get_str, luaL_Reg, luaL_checkinteger, lua_Integer, lua_State, lua_createtable, lua_gettop,
@@ -174,6 +175,13 @@ unsafe fn push_connection_option(L: *mut lua_State, option: &LanguageConnectionO
     set_bool(L, "command_transport", option.command_transport);
     set_bool(L, "ota_update", option.ota_update);
     set_str(L, "requires", &option.requires);
+    set_str(
+        L,
+        "endpoint_transport",
+        host_endpoint_transport_name(option.endpoint_transport),
+    );
+    set_str(L, "endpoint_scheme", &option.endpoint_scheme);
+    set_str(L, "wire_protocol", &option.wire_protocol);
 }
 
 unsafe fn push_connection_options(L: *mut lua_State, options: &[LanguageConnectionOption]) {
