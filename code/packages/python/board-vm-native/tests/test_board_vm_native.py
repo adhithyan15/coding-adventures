@@ -4,6 +4,7 @@ import socket
 import tempfile
 import threading
 
+import board_vm_native as board_vm_native_module
 from board_vm_native import (
     BoardDevice,
     BoardDescriptor,
@@ -14,6 +15,7 @@ from board_vm_native import (
     ProtocolResult,
     Session,
     TcpTransport,
+    bluetooth_devices,
     bluetooth_endpoint,
     bluetooth_endpoint_candidates,
     connect,
@@ -246,6 +248,27 @@ def test_bluetooth_endpoint_candidates_are_planned_by_rust_language_core():
     assert ble["endpoint"]["service_uuid"] == "6e400001-b5a3-f393-e0a9-e50e24dcca9e"
     assert ble["paired"] is False
     assert ble["requires_pairing"] is True
+
+
+def test_bluetooth_endpoint_candidates_default_to_host_discovery(monkeypatch):
+    monkeypatch.setattr(
+        board_vm_native_module._native,
+        "bluetooth_devices",
+        lambda: [
+            {
+                "id": "esp32-board-vm",
+                "name": "ESP32 Board VM",
+                "paired": True,
+                "board_vm_rfcomm_channels": [3],
+            }
+        ],
+    )
+
+    candidates = bluetooth_endpoint_candidates()
+
+    assert bluetooth_devices()[0]["id"] == "esp32-board-vm"
+    assert len(candidates) == 1
+    assert candidates[0]["endpoint"]["endpoint"] == "btspp://esp32-board-vm:3"
 
 
 def test_connection_options_can_be_selected_without_exposing_ports():

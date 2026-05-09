@@ -124,6 +124,11 @@ describe("coding_adventures.board_vm_native", function()
         assert.is_true(ble.requires_pairing)
     end)
 
+    it("can discover Bluetooth metadata through the Rust adapter", function()
+        assert.are.equal("table", type(board_vm.bluetooth_devices()))
+        assert.are.equal("table", type(board_vm.bluetooth_endpoint_candidates()))
+    end)
+
     it("classifies host devices through Rust-owned discovery rules", function()
         local devices = board_vm.devices({
             "/dev/cu.usbmodem1101",

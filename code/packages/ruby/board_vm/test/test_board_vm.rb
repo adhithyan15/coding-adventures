@@ -137,6 +137,21 @@ module CodingAdventures
         assert ble.fetch("requires_pairing")
       end
 
+      def test_bluetooth_endpoint_candidates_default_to_host_discovery
+        discovered = [{
+          "id" => "esp32-board-vm",
+          "name" => "ESP32 Board VM",
+          "paired" => true,
+          "board_vm_rfcomm_channels" => [3]
+        }]
+
+        BoardVM::Native.stub(:bluetooth_devices, discovered) do
+          candidates = BoardVM.bluetooth_endpoint_candidates
+          assert_equal 1, candidates.length
+          assert_equal "btspp://esp32-board-vm:3", candidates.first.fetch("endpoint").fetch("endpoint")
+        end
+      end
+
       def test_connection_options_can_be_selected_without_exposing_ports
         default = BoardVM.select_connection_option(:uno_r4_wifi)
         wifi = BoardVM.select_connection_option(:uno_r4_wifi, transport: :wifi)

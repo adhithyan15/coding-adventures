@@ -150,7 +150,12 @@ module CodingAdventures
       Native.bluetooth_endpoint(endpoint.to_s)
     end
 
-    def bluetooth_endpoint_candidates(devices)
+    def bluetooth_devices
+      Native.bluetooth_devices
+    end
+
+    def bluetooth_endpoint_candidates(devices = nil)
+      devices ||= bluetooth_devices
       normalized = Array(devices).map do |device|
         id = bluetooth_device_field(device, "id")
         raise ArgumentError, "Bluetooth discovered device id is required" if id.nil?

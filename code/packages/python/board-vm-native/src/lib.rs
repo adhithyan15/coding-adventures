@@ -18,8 +18,10 @@ use board_vm_language_core::{
     build_store_program_wire_frame, build_time_now_module, build_time_sleep_ms_module,
     capability_board_metadata, capability_bytecode_callable, capability_flag_names,
     capability_protocol_feature, connection_transport_name, decode_wire_response,
-    detect_target as core_detect_target, discover_devices as core_discover_devices,
-    discover_devices_from_paths, discover_pico_bootsel_mounts as core_discover_pico_bootsel_mounts,
+    detect_target as core_detect_target,
+    discover_bluetooth_devices as core_discover_bluetooth_devices,
+    discover_devices as core_discover_devices, discover_devices_from_paths,
+    discover_pico_bootsel_mounts as core_discover_pico_bootsel_mounts,
     discover_pico_bootsel_mounts_in_roots, esp_upload_options_for_target,
     host_endpoint_transport_name, known_targets, onboard_led_kind,
     parse_bluetooth_endpoint as core_parse_bluetooth_endpoint, pico_uf2_upload_options_for_target,
@@ -499,11 +501,10 @@ unsafe extern "C" fn py_bluetooth_endpoint_candidates(
     let devices_arg = PyTuple_GetItem(args, 0);
     if devices_arg.is_null() {
         PyErr_Clear();
-        set_error(
-            type_error_class(),
-            "bluetooth_endpoint_candidates() requires devices as list",
+        let devices = core_discover_bluetooth_devices();
+        return language_bluetooth_endpoint_candidates_to_py(
+            &bluetooth_endpoint_candidates_from_devices(&devices),
         );
-        return ptr::null_mut();
     }
 
     let devices = match language_bluetooth_devices_from_py(devices_arg) {
@@ -514,6 +515,10 @@ unsafe extern "C" fn py_bluetooth_endpoint_candidates(
     language_bluetooth_endpoint_candidates_to_py(&bluetooth_endpoint_candidates_from_devices(
         &devices,
     ))
+}
+
+unsafe extern "C" fn py_bluetooth_devices(_module: PyObjectPtr, _args: PyObjectPtr) -> PyObjectPtr {
+    language_bluetooth_devices_to_py(&core_discover_bluetooth_devices())
 }
 
 unsafe extern "C" fn py_esp_upload_options(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
@@ -975,6 +980,52 @@ unsafe fn language_bluetooth_endpoint_candidates_to_py(
             "requires_pairing",
             bool_to_py(candidate.requires_pairing),
         );
+        PyList_SetItem(list, index as isize, dict);
+    }
+    list
+}
+
+unsafe fn language_bluetooth_devices_to_py(
+    devices: &[LanguageBluetoothDiscoveredDevice],
+) -> PyObjectPtr {
+    let list = PyList_New(devices.len() as isize);
+    for (index, device) in devices.iter().enumerate() {
+        let dict = PyDict_New();
+        dict_set(dict, "id", str_to_py(&device.id));
+        dict_set(
+            dict,
+            "name",
+            device
+                .name
+                .as_ref()
+                .map(|value| str_to_py(value))
+                .unwrap_or_else(|| py_none()),
+        );
+        dict_set(
+            dict,
+            "address",
+            device
+                .address
+                .as_ref()
+                .map(|value| str_to_py(value))
+                .unwrap_or_else(|| py_none()),
+        );
+        dict_set(dict, "paired", bool_to_py(device.paired));
+        dict_set(dict, "service_uuids", strings_to_py(&device.service_uuids));
+        dict_set(
+            dict,
+            "characteristic_uuids",
+            strings_to_py(&device.characteristic_uuids),
+        );
+        let channels = PyList_New(device.board_vm_rfcomm_channels.len() as isize);
+        for (channel_index, channel) in device.board_vm_rfcomm_channels.iter().enumerate() {
+            PyList_SetItem(
+                channels,
+                channel_index as isize,
+                usize_to_py(*channel as usize),
+            );
+        }
+        dict_set(dict, "board_vm_rfcomm_channels", channels);
         PyList_SetItem(list, index as isize, dict);
     }
     list
@@ -1464,7 +1515,7 @@ unsafe fn raise_core_error(context: &str, error: LanguageCoreError) -> PyObjectP
 
 #[no_mangle]
 pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
-    let methods: &'static mut [PyMethodDef; 30] = Box::leak(Box::new([
+    let methods: &'static mut [PyMethodDef; 31] = Box::leak(Box::new([
         PyMethodDef {
             ml_name: b"hello_wire\0".as_ptr() as *const c_char,
             ml_meth: Some(py_hello_wire),
@@ -1620,6 +1671,13 @@ pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
             ml_meth: Some(py_bluetooth_endpoint_candidates),
             ml_flags: METH_VARARGS,
             ml_doc: b"Plan Board VM Bluetooth endpoint candidates in Rust.\0".as_ptr()
+                as *const c_char,
+        },
+        PyMethodDef {
+            ml_name: b"bluetooth_devices\0".as_ptr() as *const c_char,
+            ml_meth: Some(py_bluetooth_devices),
+            ml_flags: METH_VARARGS,
+            ml_doc: b"Discover host Bluetooth Board VM device metadata in Rust.\0".as_ptr()
                 as *const c_char,
         },
         PyMethodDef {

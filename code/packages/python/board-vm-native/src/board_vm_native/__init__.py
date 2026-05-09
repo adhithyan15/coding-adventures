@@ -1458,9 +1458,16 @@ def bluetooth_endpoint(endpoint: str) -> dict[str, Any] | None:
     return None if parsed is None else dict(parsed)
 
 
-def bluetooth_endpoint_candidates(devices: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
+def bluetooth_devices() -> list[dict[str, Any]]:
+    return [dict(device) for device in _native.bluetooth_devices()]
+
+
+def bluetooth_endpoint_candidates(
+    devices: Iterable[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
     normalized = []
-    for device in devices:
+    source_devices = bluetooth_devices() if devices is None else devices
+    for device in source_devices:
         device_id = _bluetooth_device_field(device, "id")
         if device_id is None:
             raise ValueError("Bluetooth discovered device id is required")
@@ -2124,6 +2131,7 @@ __all__ = [
     "Session",
     "SessionResult",
     "TcpTransport",
+    "bluetooth_devices",
     "bluetooth_endpoint",
     "bluetooth_endpoint_candidates",
     "connection_option_list",

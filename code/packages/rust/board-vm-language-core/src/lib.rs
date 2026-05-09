@@ -18,6 +18,7 @@ use std::str;
 
 use board_vm_bluetooth::{
     board_vm_endpoint_candidates as board_vm_bluetooth_endpoint_candidates,
+    discover_bluetooth_devices as discover_board_vm_bluetooth_devices,
     parse_bluetooth_endpoint as parse_board_vm_bluetooth_endpoint, BluetoothDiscoveredDevice,
     BluetoothEndpoint, BluetoothEndpointCandidate,
 };
@@ -661,6 +662,33 @@ pub fn bluetooth_endpoint_candidates_from_devices(
         .into_iter()
         .filter_map(language_bluetooth_endpoint_candidate)
         .collect()
+}
+
+pub fn discover_bluetooth_devices() -> Vec<LanguageBluetoothDiscoveredDevice> {
+    discover_board_vm_bluetooth_devices()
+        .unwrap_or_default()
+        .into_iter()
+        .map(language_bluetooth_discovered_device)
+        .collect()
+}
+
+pub fn discover_bluetooth_endpoint_candidates() -> Vec<LanguageBluetoothEndpointCandidate> {
+    let devices = discover_bluetooth_devices();
+    bluetooth_endpoint_candidates_from_devices(&devices)
+}
+
+fn language_bluetooth_discovered_device(
+    device: BluetoothDiscoveredDevice,
+) -> LanguageBluetoothDiscoveredDevice {
+    LanguageBluetoothDiscoveredDevice {
+        id: device.id,
+        name: device.name,
+        address: device.address,
+        paired: device.paired,
+        service_uuids: device.service_uuids,
+        characteristic_uuids: device.characteristic_uuids,
+        board_vm_rfcomm_channels: device.board_vm_rfcomm_channels,
+    }
 }
 
 fn language_bluetooth_endpoint(endpoint: BluetoothEndpoint) -> Option<LanguageBluetoothEndpoint> {
@@ -2522,6 +2550,19 @@ mod tests {
         );
         assert!(!ble.paired);
         assert!(ble.requires_pairing);
+    }
+
+    #[test]
+    fn bluetooth_discovery_adapter_is_safe_for_language_frontends() {
+        let devices = discover_bluetooth_devices();
+        let candidates = discover_bluetooth_endpoint_candidates();
+
+        for device in &devices {
+            assert!(!device.id.trim().is_empty());
+        }
+        for candidate in &candidates {
+            assert!(!candidate.endpoint.endpoint.trim().is_empty());
+        }
     }
 
     #[test]
