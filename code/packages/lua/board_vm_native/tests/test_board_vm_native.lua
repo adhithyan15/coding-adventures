@@ -78,6 +78,52 @@ describe("coding_adventures.board_vm_native", function()
         assert.is_nil(board_vm.bluetooth_endpoint("tcp://board-vm.local:4170"))
     end)
 
+    it("plans Bluetooth endpoint candidates through Rust-owned metadata", function()
+        local candidates = board_vm.bluetooth_endpoint_candidates({
+            {
+                id = "ignore-me",
+                service_uuids = { "180f" },
+            },
+            {
+                id = "esp32-board-vm",
+                name = "ESP32 Board VM",
+                paired = true,
+                board_vm_rfcomm_channels = { 3, 3, 31 },
+            },
+            {
+                id = "uno-r4",
+                name = "Uno R4 Board VM",
+                address = "AA:BB:CC:DD:EE:FF",
+                service_uuids = { "6E400001-B5A3-F393-E0A9-E50E24DCCA9E" },
+            },
+        })
+
+        local rfcomm = nil
+        local ble = nil
+        for _, candidate in ipairs(candidates) do
+            if candidate.endpoint.channel == 3 then
+                rfcomm = candidate
+            end
+            if candidate.endpoint.service_uuid ~= nil then
+                ble = candidate
+            end
+        end
+
+        assert.are.equal(2, #candidates)
+        assert.are.equal("ESP32 Board VM", rfcomm.display_name)
+        assert.are.equal("bluetooth_classic_rfcomm", rfcomm.endpoint.endpoint_transport)
+        assert.are.equal("btspp://esp32-board-vm:3", rfcomm.endpoint.endpoint)
+        assert.is_true(rfcomm.paired)
+        assert.is_false(rfcomm.requires_pairing)
+
+        assert.are.equal("Uno R4 Board VM", ble.display_name)
+        assert.are.equal("bluetooth_le_gatt", ble.endpoint.endpoint_transport)
+        assert.are.equal("AA:BB:CC:DD:EE:FF", ble.device)
+        assert.are.equal("6e400001-b5a3-f393-e0a9-e50e24dcca9e", ble.endpoint.service_uuid)
+        assert.is_false(ble.paired)
+        assert.is_true(ble.requires_pairing)
+    end)
+
     it("classifies host devices through Rust-owned discovery rules", function()
         local devices = board_vm.devices({
             "/dev/cu.usbmodem1101",

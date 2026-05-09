@@ -15,6 +15,7 @@ from board_vm_native import (
     Session,
     TcpTransport,
     bluetooth_endpoint,
+    bluetooth_endpoint_candidates,
     connect,
     connection_option_list,
     connection_options,
@@ -201,6 +202,50 @@ def test_bluetooth_endpoints_are_parsed_by_rust_language_core():
     assert rfcomm["device"] == "ESP32-BoardVM"
     assert rfcomm["channel"] == 3
     assert bluetooth_endpoint("tcp://board-vm.local:4170") is None
+
+
+def test_bluetooth_endpoint_candidates_are_planned_by_rust_language_core():
+    candidates = bluetooth_endpoint_candidates(
+        [
+            {
+                "id": "ignore-me",
+                "service_uuids": ["180f"],
+            },
+            {
+                "id": "esp32-board-vm",
+                "name": "ESP32 Board VM",
+                "paired": True,
+                "board_vm_rfcomm_channels": [3, 3, 31],
+            },
+            {
+                "id": "uno-r4",
+                "name": "Uno R4 Board VM",
+                "address": "AA:BB:CC:DD:EE:FF",
+                "service_uuids": ["6E400001-B5A3-F393-E0A9-E50E24DCCA9E"],
+            },
+        ]
+    )
+
+    assert len(candidates) == 2
+    rfcomm = next(
+        candidate for candidate in candidates if candidate["endpoint"]["channel"] == 3
+    )
+    ble = next(
+        candidate for candidate in candidates if candidate["endpoint"]["service_uuid"]
+    )
+
+    assert rfcomm["display_name"] == "ESP32 Board VM"
+    assert rfcomm["endpoint"]["endpoint_transport"] == "bluetooth_classic_rfcomm"
+    assert rfcomm["endpoint"]["endpoint"] == "btspp://esp32-board-vm:3"
+    assert rfcomm["paired"] is True
+    assert rfcomm["requires_pairing"] is False
+
+    assert ble["display_name"] == "Uno R4 Board VM"
+    assert ble["endpoint"]["endpoint_transport"] == "bluetooth_le_gatt"
+    assert ble["device"] == "AA:BB:CC:DD:EE:FF"
+    assert ble["endpoint"]["service_uuid"] == "6e400001-b5a3-f393-e0a9-e50e24dcca9e"
+    assert ble["paired"] is False
+    assert ble["requires_pairing"] is True
 
 
 def test_connection_options_can_be_selected_without_exposing_ports():

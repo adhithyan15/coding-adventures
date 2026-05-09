@@ -70,6 +70,10 @@ function M.bluetooth_endpoint(endpoint)
     return native().bluetooth_endpoint(endpoint)
 end
 
+function M.bluetooth_endpoint_candidates(devices)
+    return native().bluetooth_endpoint_candidates(devices)
+end
+
 function M.esp_upload_options(selector)
     return native().esp_upload_options(selector or "esp32")
 end

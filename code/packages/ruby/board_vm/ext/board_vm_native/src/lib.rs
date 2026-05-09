@@ -10,23 +10,24 @@ use board_vm_host::{
     GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_language_core::{
-    board_family_name, build_blink_module, build_caps_query_wire_frame,
-    build_gpio_handle_close_module, build_gpio_handle_read_module, build_gpio_handle_write_module,
-    build_gpio_open_module, build_gpio_read_module, build_gpio_write_module,
-    build_hello_wire_frame, build_program_begin_wire_frame, build_program_chunk_wire_frame,
-    build_program_end_wire_frame, build_raw_module, build_run_background_wire_frame,
-    build_run_wire_frame, build_stop_wire_frame, build_store_program_wire_frame,
-    build_time_now_module, build_time_sleep_ms_module, capability_board_metadata,
-    capability_bytecode_callable, capability_flag_names, capability_protocol_feature,
-    connection_transport_name, decode_wire_response, detect_target as core_detect_target,
-    discover_devices as core_discover_devices, discover_devices_from_paths,
-    discover_pico_bootsel_mounts as core_discover_pico_bootsel_mounts,
+    bluetooth_endpoint_candidates_from_devices, board_family_name, build_blink_module,
+    build_caps_query_wire_frame, build_gpio_handle_close_module, build_gpio_handle_read_module,
+    build_gpio_handle_write_module, build_gpio_open_module, build_gpio_read_module,
+    build_gpio_write_module, build_hello_wire_frame, build_program_begin_wire_frame,
+    build_program_chunk_wire_frame, build_program_end_wire_frame, build_raw_module,
+    build_run_background_wire_frame, build_run_wire_frame, build_stop_wire_frame,
+    build_store_program_wire_frame, build_time_now_module, build_time_sleep_ms_module,
+    capability_board_metadata, capability_bytecode_callable, capability_flag_names,
+    capability_protocol_feature, connection_transport_name, decode_wire_response,
+    detect_target as core_detect_target, discover_devices as core_discover_devices,
+    discover_devices_from_paths, discover_pico_bootsel_mounts as core_discover_pico_bootsel_mounts,
     discover_pico_bootsel_mounts_in_roots, esp_upload_options_for_target,
     host_endpoint_transport_name, known_targets, onboard_led_kind,
     parse_bluetooth_endpoint as core_parse_bluetooth_endpoint, pico_uf2_upload_options_for_target,
     program_format_name, raw_module_len, run_status_name, wireless_transport_name,
     BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
-    LanguageBluetoothEndpoint, LanguageConnectionOption, LanguageCoreError,
+    LanguageBluetoothDiscoveredDevice, LanguageBluetoothEndpoint,
+    LanguageBluetoothEndpointCandidate, LanguageConnectionOption, LanguageCoreError,
     LanguageEspUploadOptions, LanguageHostDevice, LanguageOnboardLed, LanguagePicoUf2UploadOptions,
     LanguageTargetInfo, LanguageValue, LanguageWirelessInterface,
 };
@@ -429,6 +430,11 @@ extern "C" fn native_bluetooth_endpoint(_self_val: VALUE, endpoint_val: VALUE) -
     }
 }
 
+extern "C" fn native_bluetooth_endpoint_candidates(_self_val: VALUE, devices_val: VALUE) -> VALUE {
+    let devices = bluetooth_discovered_devices_from_rb(devices_val);
+    bluetooth_endpoint_candidates_to_rb(&bluetooth_endpoint_candidates_from_devices(&devices))
+}
+
 extern "C" fn native_esp_upload_options(_self_val: VALUE, selector_val: VALUE) -> VALUE {
     let selector = ruby_bridge::str_from_rb(selector_val)
         .unwrap_or_else(|| ruby_bridge::raise_arg_error("selector must be a Ruby String"));
@@ -826,6 +832,97 @@ fn bluetooth_endpoint_to_rb(endpoint: &LanguageBluetoothEndpoint) -> VALUE {
     hash
 }
 
+fn bluetooth_endpoint_candidates_to_rb(candidates: &[LanguageBluetoothEndpointCandidate]) -> VALUE {
+    let array = ruby_bridge::array_new();
+    for candidate in candidates {
+        let hash = ruby_bridge::hash_new();
+        hash_set(
+            hash,
+            "endpoint",
+            bluetooth_endpoint_to_rb(&candidate.endpoint),
+        );
+        hash_set(hash, "device", ruby_bridge::str_to_rb(&candidate.device));
+        hash_set(
+            hash,
+            "display_name",
+            ruby_bridge::str_to_rb(&candidate.display_name),
+        );
+        hash_set(hash, "paired", ruby_bridge::bool_to_rb(candidate.paired));
+        hash_set(
+            hash,
+            "requires_pairing",
+            ruby_bridge::bool_to_rb(candidate.requires_pairing),
+        );
+        ruby_bridge::array_push(array, hash);
+    }
+    array
+}
+
+fn bluetooth_discovered_devices_from_rb(
+    devices_val: VALUE,
+) -> Vec<LanguageBluetoothDiscoveredDevice> {
+    let len = ruby_bridge::array_len(devices_val);
+    let mut devices = Vec::with_capacity(len);
+    for index in 0..len {
+        let device = ruby_bridge::array_entry(devices_val, index);
+        let id = rb_hash_optional_str(device, "id").unwrap_or_else(|| {
+            ruby_bridge::raise_arg_error("Bluetooth discovered device id must be a String")
+        });
+        devices.push(LanguageBluetoothDiscoveredDevice {
+            id,
+            name: rb_hash_optional_str(device, "name"),
+            address: rb_hash_optional_str(device, "address"),
+            paired: rb_hash_bool(device, "paired"),
+            service_uuids: rb_hash_vec_str(device, "service_uuids"),
+            characteristic_uuids: rb_hash_vec_str(device, "characteristic_uuids"),
+            board_vm_rfcomm_channels: rb_hash_vec_u8(device, "board_vm_rfcomm_channels"),
+        });
+    }
+    devices
+}
+
+fn rb_hash_value(hash: VALUE, key: &str) -> VALUE {
+    let key = ruby_bridge::str_to_rb(key);
+    unsafe {
+        let mid = ruby_bridge::rb_intern(b"[]\0".as_ptr() as *const c_char);
+        ruby_bridge::rb_funcallv(hash, mid, 1, &key)
+    }
+}
+
+fn rb_hash_optional_str(hash: VALUE, key: &str) -> Option<String> {
+    let value = rb_hash_value(hash, key);
+    (value != ruby_bridge::nil_value())
+        .then(|| ruby_bridge::str_from_rb(value))
+        .flatten()
+}
+
+fn rb_hash_bool(hash: VALUE, key: &str) -> bool {
+    let value = rb_hash_value(hash, key);
+    value != ruby_bridge::nil_value() && value != ruby_bridge::QFALSE
+}
+
+fn rb_hash_vec_str(hash: VALUE, key: &str) -> Vec<String> {
+    let value = rb_hash_value(hash, key);
+    if value == ruby_bridge::nil_value() {
+        Vec::new()
+    } else {
+        ruby_bridge::vec_str_from_rb(value)
+    }
+}
+
+fn rb_hash_vec_u8(hash: VALUE, key: &str) -> Vec<u8> {
+    let value = rb_hash_value(hash, key);
+    if value == ruby_bridge::nil_value() {
+        return Vec::new();
+    }
+    let len = ruby_bridge::array_len(value);
+    let mut values = Vec::with_capacity(len);
+    for index in 0..len {
+        values.push(rb_u8(ruby_bridge::array_entry(value, index), key));
+    }
+    values
+}
+
 fn esp_upload_options_to_rb(options: &LanguageEspUploadOptions) -> VALUE {
     let hash = ruby_bridge::hash_new();
     hash_set(hash, "board_id", ruby_bridge::str_to_rb(&options.board_id));
@@ -1210,6 +1307,12 @@ pub extern "C" fn Init_board_vm_native() {
         native,
         "bluetooth_endpoint",
         native_bluetooth_endpoint as *const c_void,
+        1,
+    );
+    ruby_bridge::define_module_function_raw(
+        native,
+        "bluetooth_endpoint_candidates",
+        native_bluetooth_endpoint_candidates as *const c_void,
         1,
     );
     ruby_bridge::define_module_function_raw(

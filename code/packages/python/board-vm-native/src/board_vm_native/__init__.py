@@ -1458,6 +1458,61 @@ def bluetooth_endpoint(endpoint: str) -> dict[str, Any] | None:
     return None if parsed is None else dict(parsed)
 
 
+def bluetooth_endpoint_candidates(devices: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
+    normalized = []
+    for device in devices:
+        device_id = _bluetooth_device_field(device, "id")
+        if device_id is None:
+            raise ValueError("Bluetooth discovered device id is required")
+
+        normalized.append(
+            {
+                "id": str(device_id),
+                "name": _optional_str(_bluetooth_device_field(device, "name")),
+                "address": _optional_str(_bluetooth_device_field(device, "address")),
+                "paired": bool(_bluetooth_device_field(device, "paired")),
+                "service_uuids": [
+                    str(value)
+                    for value in _bluetooth_device_sequence(device, "service_uuids")
+                ],
+                "characteristic_uuids": [
+                    str(value)
+                    for value in _bluetooth_device_sequence(device, "characteristic_uuids")
+                ],
+                "board_vm_rfcomm_channels": [
+                    int(value)
+                    for value in _bluetooth_device_sequence(
+                        device, "board_vm_rfcomm_channels"
+                    )
+                ],
+            }
+        )
+
+    candidates = []
+    for candidate in _native.bluetooth_endpoint_candidates(normalized):
+        value = dict(candidate)
+        value["endpoint"] = dict(value["endpoint"])
+        candidates.append(value)
+    return candidates
+
+
+def _bluetooth_device_field(device: Any, key: str) -> Any:
+    if isinstance(device, dict):
+        return device.get(key)
+    return getattr(device, key, None)
+
+
+def _optional_str(value: Any) -> str | None:
+    return None if value is None else str(value)
+
+
+def _bluetooth_device_sequence(device: Any, key: str) -> list[Any]:
+    value = _bluetooth_device_field(device, key)
+    if value is None:
+        return []
+    return list(value)
+
+
 def connection_options(selector: str) -> list[dict[str, Any]]:
     target = detect_target(selector)
     if target is None:
@@ -2069,6 +2124,8 @@ __all__ = [
     "Session",
     "SessionResult",
     "TcpTransport",
+    "bluetooth_endpoint",
+    "bluetooth_endpoint_candidates",
     "connection_option_list",
     "connect",
     "connection_options",

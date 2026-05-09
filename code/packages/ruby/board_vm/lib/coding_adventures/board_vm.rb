@@ -150,6 +150,25 @@ module CodingAdventures
       Native.bluetooth_endpoint(endpoint.to_s)
     end
 
+    def bluetooth_endpoint_candidates(devices)
+      normalized = Array(devices).map do |device|
+        id = bluetooth_device_field(device, "id")
+        raise ArgumentError, "Bluetooth discovered device id is required" if id.nil?
+
+        {
+          "id" => id.to_s,
+          "name" => bluetooth_optional_device_field(device, "name"),
+          "address" => bluetooth_optional_device_field(device, "address"),
+          "paired" => !!bluetooth_device_field(device, "paired"),
+          "service_uuids" => bluetooth_device_array_field(device, "service_uuids").map(&:to_s),
+          "characteristic_uuids" => bluetooth_device_array_field(device, "characteristic_uuids").map(&:to_s),
+          "board_vm_rfcomm_channels" => bluetooth_device_array_field(device, "board_vm_rfcomm_channels").map { |channel| Integer(channel) }
+        }
+      end
+
+      Native.bluetooth_endpoint_candidates(normalized)
+    end
+
     def connection_options(board)
       target = detect_target(board)
       unless target
@@ -497,6 +516,24 @@ module CodingAdventures
       end
 
       selected
+    end
+
+    def bluetooth_device_field(device, key)
+      return device[key] if device.respond_to?(:key?) && device.key?(key)
+
+      symbol_key = key.to_sym
+      return device[symbol_key] if device.respond_to?(:key?) && device.key?(symbol_key)
+
+      nil
+    end
+
+    def bluetooth_optional_device_field(device, key)
+      value = bluetooth_device_field(device, key)
+      value.nil? ? nil : value.to_s
+    end
+
+    def bluetooth_device_array_field(device, key)
+      Array(bluetooth_device_field(device, key))
     end
 
     def device_target_board(device, minimum_confidence: 0)

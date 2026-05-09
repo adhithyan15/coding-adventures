@@ -1,4 +1,4 @@
-use std::ffi::{c_char, c_long};
+use std::ffi::{c_char, c_int, c_long, CString};
 use std::ptr;
 
 use board_vm_host::{
@@ -9,23 +9,24 @@ use board_vm_host::{
     GPIO_WRITE_MODULE_LEN, TIME_NOW_MODULE_LEN, TIME_SLEEP_MS_MODULE_LEN,
 };
 use board_vm_language_core::{
-    board_family_name, build_blink_module, build_caps_query_wire_frame,
-    build_gpio_handle_close_module, build_gpio_handle_read_module, build_gpio_handle_write_module,
-    build_gpio_open_module, build_gpio_read_module, build_gpio_write_module,
-    build_hello_wire_frame, build_program_begin_wire_frame, build_program_chunk_wire_frame,
-    build_program_end_wire_frame, build_raw_module, build_run_background_wire_frame,
-    build_run_wire_frame, build_stop_wire_frame, build_store_program_wire_frame,
-    build_time_now_module, build_time_sleep_ms_module, capability_board_metadata,
-    capability_bytecode_callable, capability_flag_names, capability_protocol_feature,
-    connection_transport_name, decode_wire_response, detect_target as core_detect_target,
-    discover_devices as core_discover_devices, discover_devices_from_paths,
-    discover_pico_bootsel_mounts as core_discover_pico_bootsel_mounts,
+    bluetooth_endpoint_candidates_from_devices, board_family_name, build_blink_module,
+    build_caps_query_wire_frame, build_gpio_handle_close_module, build_gpio_handle_read_module,
+    build_gpio_handle_write_module, build_gpio_open_module, build_gpio_read_module,
+    build_gpio_write_module, build_hello_wire_frame, build_program_begin_wire_frame,
+    build_program_chunk_wire_frame, build_program_end_wire_frame, build_raw_module,
+    build_run_background_wire_frame, build_run_wire_frame, build_stop_wire_frame,
+    build_store_program_wire_frame, build_time_now_module, build_time_sleep_ms_module,
+    capability_board_metadata, capability_bytecode_callable, capability_flag_names,
+    capability_protocol_feature, connection_transport_name, decode_wire_response,
+    detect_target as core_detect_target, discover_devices as core_discover_devices,
+    discover_devices_from_paths, discover_pico_bootsel_mounts as core_discover_pico_bootsel_mounts,
     discover_pico_bootsel_mounts_in_roots, esp_upload_options_for_target,
     host_endpoint_transport_name, known_targets, onboard_led_kind,
     parse_bluetooth_endpoint as core_parse_bluetooth_endpoint, pico_uf2_upload_options_for_target,
     program_format_name, raw_module_len, run_status_name, wireless_transport_name,
     BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
-    LanguageBluetoothEndpoint, LanguageConnectionOption, LanguageCoreError,
+    LanguageBluetoothDiscoveredDevice, LanguageBluetoothEndpoint,
+    LanguageBluetoothEndpointCandidate, LanguageConnectionOption, LanguageCoreError,
     LanguageEspUploadOptions, LanguageHostDevice, LanguageOnboardLed, LanguagePicoUf2UploadOptions,
     LanguageTargetInfo, LanguageValue, LanguageWirelessInterface,
 };
@@ -35,6 +36,8 @@ use python_bridge::*;
 extern "C" {
     fn PyLong_AsLong(obj: PyObjectPtr) -> c_long;
     fn PyErr_Occurred() -> PyObjectPtr;
+    fn PyDict_GetItemString(p: PyObjectPtr, key: *const c_char) -> PyObjectPtr;
+    fn PyObject_IsTrue(o: PyObjectPtr) -> c_int;
 }
 
 unsafe extern "C" fn py_hello_wire(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
@@ -489,6 +492,30 @@ unsafe extern "C" fn py_bluetooth_endpoint(_module: PyObjectPtr, args: PyObjectP
     }
 }
 
+unsafe extern "C" fn py_bluetooth_endpoint_candidates(
+    _module: PyObjectPtr,
+    args: PyObjectPtr,
+) -> PyObjectPtr {
+    let devices_arg = PyTuple_GetItem(args, 0);
+    if devices_arg.is_null() {
+        PyErr_Clear();
+        set_error(
+            type_error_class(),
+            "bluetooth_endpoint_candidates() requires devices as list",
+        );
+        return ptr::null_mut();
+    }
+
+    let devices = match language_bluetooth_devices_from_py(devices_arg) {
+        Some(devices) => devices,
+        None => return ptr::null_mut(),
+    };
+
+    language_bluetooth_endpoint_candidates_to_py(&bluetooth_endpoint_candidates_from_devices(
+        &devices,
+    ))
+}
+
 unsafe extern "C" fn py_esp_upload_options(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
     let selector = match parse_arg_str(args, 0) {
         Some(value) => value,
@@ -929,6 +956,151 @@ unsafe fn language_bluetooth_endpoint_to_py(endpoint: &LanguageBluetoothEndpoint
     dict
 }
 
+unsafe fn language_bluetooth_endpoint_candidates_to_py(
+    candidates: &[LanguageBluetoothEndpointCandidate],
+) -> PyObjectPtr {
+    let list = PyList_New(candidates.len() as isize);
+    for (index, candidate) in candidates.iter().enumerate() {
+        let dict = PyDict_New();
+        dict_set(
+            dict,
+            "endpoint",
+            language_bluetooth_endpoint_to_py(&candidate.endpoint),
+        );
+        dict_set(dict, "device", str_to_py(&candidate.device));
+        dict_set(dict, "display_name", str_to_py(&candidate.display_name));
+        dict_set(dict, "paired", bool_to_py(candidate.paired));
+        dict_set(
+            dict,
+            "requires_pairing",
+            bool_to_py(candidate.requires_pairing),
+        );
+        PyList_SetItem(list, index as isize, dict);
+    }
+    list
+}
+
+unsafe fn language_bluetooth_devices_from_py(
+    devices: PyObjectPtr,
+) -> Option<Vec<LanguageBluetoothDiscoveredDevice>> {
+    let len = PyList_Size(devices);
+    if len < 0 {
+        PyErr_Clear();
+        set_error(
+            type_error_class(),
+            "bluetooth_endpoint_candidates() requires devices as list",
+        );
+        return None;
+    }
+
+    let mut parsed = Vec::with_capacity(len as usize);
+    for index in 0..len {
+        let device = PyList_GetItem(devices, index);
+        let Some(id) = py_dict_optional_str(device, "id") else {
+            set_error(
+                type_error_class(),
+                "Bluetooth discovered device id must be a str",
+            );
+            return None;
+        };
+
+        parsed.push(LanguageBluetoothDiscoveredDevice {
+            id,
+            name: py_dict_optional_str(device, "name"),
+            address: py_dict_optional_str(device, "address"),
+            paired: py_dict_bool(device, "paired"),
+            service_uuids: py_dict_vec_str(device, "service_uuids")?,
+            characteristic_uuids: py_dict_vec_str(device, "characteristic_uuids")?,
+            board_vm_rfcomm_channels: py_dict_vec_u8(device, "board_vm_rfcomm_channels")?,
+        });
+    }
+    Some(parsed)
+}
+
+unsafe fn py_dict_get(dict: PyObjectPtr, key: &str) -> PyObjectPtr {
+    let key = CString::new(key).unwrap();
+    PyDict_GetItemString(dict, key.as_ptr())
+}
+
+unsafe fn py_dict_optional_str(dict: PyObjectPtr, key: &str) -> Option<String> {
+    let value = py_dict_get(dict, key);
+    if value.is_null() {
+        None
+    } else {
+        str_from_py(value)
+    }
+}
+
+unsafe fn py_dict_bool(dict: PyObjectPtr, key: &str) -> bool {
+    let value = py_dict_get(dict, key);
+    if value.is_null() {
+        return false;
+    }
+    let truthy = PyObject_IsTrue(value);
+    if truthy < 0 {
+        PyErr_Clear();
+        false
+    } else {
+        truthy != 0
+    }
+}
+
+unsafe fn py_dict_vec_str(dict: PyObjectPtr, key: &str) -> Option<Vec<String>> {
+    let value = py_dict_get(dict, key);
+    if value.is_null() {
+        Some(Vec::new())
+    } else {
+        vec_str_from_py(value).or_else(|| {
+            set_error(
+                type_error_class(),
+                &format!("Bluetooth discovered device {key} must be a list of str"),
+            );
+            None
+        })
+    }
+}
+
+unsafe fn py_dict_vec_u8(dict: PyObjectPtr, key: &str) -> Option<Vec<u8>> {
+    let value = py_dict_get(dict, key);
+    if value.is_null() {
+        return Some(Vec::new());
+    }
+
+    let len = PyList_Size(value);
+    if len < 0 {
+        PyErr_Clear();
+        set_error(
+            type_error_class(),
+            &format!("Bluetooth discovered device {key} must be a list of int"),
+        );
+        return None;
+    }
+
+    let mut values = Vec::with_capacity(len as usize);
+    for index in 0..len {
+        let item = PyList_GetItem(value, index);
+        PyErr_Clear();
+        let channel = PyLong_AsLong(item);
+        if channel == -1 && !PyErr_Occurred().is_null() {
+            PyErr_Clear();
+            set_error(
+                type_error_class(),
+                &format!("Bluetooth discovered device {key}[{index}] must be an int"),
+            );
+            return None;
+        }
+        if !(0..=u8::MAX as c_long).contains(&channel) {
+            set_error(
+                value_error_class(),
+                &format!("Bluetooth discovered device {key}[{index}] must fit in u8"),
+            );
+            return None;
+        }
+        values.push(channel as u8);
+    }
+    Some(values)
+}
+
 unsafe fn esp_upload_options_to_py(options: &LanguageEspUploadOptions) -> PyObjectPtr {
     let dict = PyDict_New();
     dict_set(dict, "board_id", str_to_py(&options.board_id));
@@ -1292,7 +1464,7 @@ unsafe fn raise_core_error(context: &str, error: LanguageCoreError) -> PyObjectP
 
 #[no_mangle]
 pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
-    let methods: &'static mut [PyMethodDef; 29] = Box::leak(Box::new([
+    let methods: &'static mut [PyMethodDef; 30] = Box::leak(Box::new([
         PyMethodDef {
             ml_name: b"hello_wire\0".as_ptr() as *const c_char,
             ml_meth: Some(py_hello_wire),
@@ -1442,6 +1614,13 @@ pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
             ml_meth: Some(py_bluetooth_endpoint),
             ml_flags: METH_VARARGS,
             ml_doc: b"Parse a Board VM Bluetooth endpoint in Rust.\0".as_ptr() as *const c_char,
+        },
+        PyMethodDef {
+            ml_name: b"bluetooth_endpoint_candidates\0".as_ptr() as *const c_char,
+            ml_meth: Some(py_bluetooth_endpoint_candidates),
+            ml_flags: METH_VARARGS,
+            ml_doc: b"Plan Board VM Bluetooth endpoint candidates in Rust.\0".as_ptr()
+                as *const c_char,
         },
         PyMethodDef {
             ml_name: b"esp_upload_options\0".as_ptr() as *const c_char,
