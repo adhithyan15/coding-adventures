@@ -67,6 +67,49 @@ surfaces.
 | Jeedom | smart-home solution and market pages | local-first, plugin-driven, multi-protocol market framing |
 | HomeSeer | plugin documentation and hub/software pages | local hub plus commercial plugin ecosystem, Zigbee/Z-Wave/Matter/Hue/ONVIF examples |
 
+### Reference Links
+
+These links are intentionally source links rather than marketing paraphrases.
+They give future implementation work stable places to re-check categories,
+protocol claims, and ecosystem framing before turning a catalog row into a
+worker.
+
+| Source | Reference | D23A reading |
+|--------|-----------|--------------|
+| Home Assistant | [Integrations](https://www.home-assistant.io/integrations/) | Public integration index spans device classes, service connectors, helpers, system integrations, and virtual/product aliases. |
+| Hubitat | [Hubitat products](https://hubitat.com/products/) and [compatible devices](https://docs2.hubitat.com/en/devices/list-of-compatible-devices) | Local hub first: Matter, Z-Wave, Zigbee, Bluetooth, Ring, LAN, drivers, integration apps, and Thread border-router requirements for Matter over Thread. |
+| Homey Pro | [Homey apps](https://homey.app/en-us/apps/homey-pro/) and [installing Homey apps](https://support.homey.app/hc/en-us/articles/360012079034-Installing-Homey-apps) | Apps are the user-visible integration unit; official and community apps cover radios, local hubs, cloud services, flows, scripts, energy, media, security, and even Home Assistant bridging. |
+| SmartThings | [Devices in SmartThings](https://support.smartthings.com/hc/en-us/articles/360052390111-Devices-in-SmartThings) and [Matter for SmartThings](https://partners.smartthings.com/matter) | Hub-mediated devices, partner devices, regional support, Works with SmartThings certification, Matter, Zigbee, Z-Wave, LAN, and cloud linked services. |
+| openHAB | [Add-ons](https://www.openhab.org/addons/) and [Add-on Store](https://www.openhab.org/docs/mainui/addons) | Add-ons split into bindings, automation, system integrations, persistence, transformations, voice, and UI; bindings are the hardware/service adapter analogue. |
+| Apple Home | [Apple Home developer page](https://developer.apple.com/apple-home/) | HomeKit, Matter, ThreadNetwork, EnergyKit, MFi, Works with Apple Home, and Matter certification are separate primitives, not one adapter. |
+| Google Home | [Matter supported device types](https://developers.home.google.com/matter/supported-devices) | Matter support is device-type and control-surface specific; Matter clusters need a capability projection layer and cannot be assumed uniformly supported. |
+| Amazon Alexa | [Matter device categories](https://developer.amazon.com/en-US/docs/alexa/smarthome/supported-matter-device-categories.html) | Alexa is both a cloud/voice ecosystem and a Matter controller surface; device categories and security restrictions must be explicit in capability policy. |
+| Z-Wave Alliance | [Command Classes](https://z-wavealliance.org/development-resources-overview/z-wave-command-classes/) | Command classes are the core application primitive for Z-Wave capability mapping, interviews, reports, and command routing. |
+| Thread Group | [Thread with Matter](https://threadgroup.org/Newsroom/Blog/thread-with-matter-better-connections-smarter-homes) | Thread is the IP mesh/network primitive; Matter is the application layer. Border-router health and network diagnostics are first-class runtime facts. |
+
+### Survey Takeaways
+
+The platforms disagree on packaging but converge on the same underlying
+primitive families:
+
+- Home Assistant and openHAB expose very broad adapter catalogs. They prove the
+  catalog must separate devices, hubs, services, helpers, system integrations,
+  virtual aliases, and automation add-ons.
+- Hubitat and Homey Pro highlight a consumer hub shape: local radios,
+  installable apps/drivers, community extensions, and guided setup. D23 should
+  support app-like catalog entries without adopting app-local authority.
+- SmartThings, Apple Home, Google Home, Alexa, and Matter ecosystems are both
+  integration targets and bridge surfaces. D23 needs product aliases and bridge
+  entries that route to Matter, HomeKit, cloud account, or standard-protocol
+  workers.
+- Thread, Zigbee, Z-Wave, MQTT, Matter, HomeKit, and BLE are durable protocol
+  primitives. Vendor integrations should consume these rather than reimplement
+  their own discovery, credential, command, and supervision machinery.
+- Camera/media, energy, climate, safety, locks, alarms, covers, valves, and
+  irrigation require stronger privacy and side-effect policy than ordinary
+  lighting. The catalog must preserve that risk gradient for Chief of Staff
+  agents.
+
 Machine-readable checks performed:
 
 ```text
