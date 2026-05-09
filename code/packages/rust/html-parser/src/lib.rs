@@ -1251,6 +1251,7 @@ impl HtmlParser {
         if self.has_table_context_above(index) {
             return false;
         }
+        self.capture_formatting_above(index);
         self.open_elements.truncate(index);
         true
     }
@@ -1631,7 +1632,7 @@ fn starts_inner_formatting_reconstruction_boundary(name: &str) -> bool {
 }
 
 fn starts_before_formatting_reconstruction_boundary(name: &str) -> bool {
-    matches!(name, "b" | "marquee" | "option")
+    matches!(name, "a" | "b" | "marquee" | "option")
 }
 
 fn is_special_element(name: &str) -> bool {
