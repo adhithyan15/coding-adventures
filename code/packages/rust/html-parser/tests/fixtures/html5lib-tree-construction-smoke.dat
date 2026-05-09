@@ -875,3 +875,14 @@ Line1<br>Line2<br>Line3<br>Line4
 | <html>
 |   <head>
 |   <body>
+
+#data
+<DIV>
+#errors
+(1,5): expected-doctype-but-got-start-tag
+(1,5): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <div>
