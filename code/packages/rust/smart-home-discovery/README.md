@@ -12,6 +12,8 @@ write credentials. It gives discovery workers a shared shape for:
 - manual bridge address normalization
 - mDNS advertisement endpoint helpers
 - deterministic candidate catalogs
+- catalog-backed scan and pairing hints derived from first-party integration
+  metadata
 - source/address/time preference scoring for duplicate bridge candidates
 - freshness filtering for supervisor/discovery loops
 - projection into unpaired `smart-home-core::Bridge` records
@@ -22,6 +24,7 @@ supervision live in later integration/runtime crates.
 ## Dependencies
 
 - smart-home-core
+- smart-home-integration-catalog
 
 ## Development
 

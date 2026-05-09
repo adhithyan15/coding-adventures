@@ -11,6 +11,7 @@ use smart_home_core::{
     Bridge, BridgeId, BridgeTransport, Health, IntegrationId, Metadata, ProtocolFamily,
     ProtocolIdentifier,
 };
+use smart_home_integration_catalog::{AuthMode, DiscoveryMechanism, IntegrationCatalogEntry};
 use std::collections::BTreeMap;
 use std::fmt;
 
@@ -152,6 +153,94 @@ impl fmt::Display for PairingRequirement {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.write_str(self.as_str())
     }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct CatalogDiscoveryHint {
+    pub integration_id: IntegrationId,
+    pub display_name: String,
+    pub priority: u8,
+    pub protocol_family: ProtocolFamily,
+    pub discovery_mechanism: DiscoveryMechanism,
+    pub source: DiscoverySource,
+    pub transport: BridgeTransport,
+    pub pairing_requirement: PairingRequirement,
+}
+
+impl CatalogDiscoveryHint {
+    pub fn from_entry(entry: &IntegrationCatalogEntry) -> Vec<Self> {
+        let protocol_family = primary_protocol_for_entry(entry);
+        let pairing_requirement = pairing_requirement_for_auth_modes(&entry.auth_modes);
+
+        entry
+            .discovery_mechanisms
+            .iter()
+            .copied()
+            .map(|discovery_mechanism| Self {
+                integration_id: entry.integration_id.clone(),
+                display_name: entry.display_name.clone(),
+                priority: entry.priority,
+                protocol_family: protocol_family.clone(),
+                discovery_mechanism,
+                source: source_for_discovery_mechanism(discovery_mechanism),
+                transport: transport_for_discovery_mechanism(discovery_mechanism),
+                pairing_requirement,
+            })
+            .collect()
+    }
+
+    pub fn to_record(
+        &self,
+        native_bridge_id: impl Into<String>,
+        discovered_at_ms: u64,
+    ) -> Result<DiscoveryRecord, DiscoveryError> {
+        DiscoveryRecord::new(
+            self.integration_id.clone(),
+            self.protocol_family.clone(),
+            native_bridge_id,
+            self.source,
+            self.transport,
+            discovered_at_ms,
+        )
+        .map(|record| {
+            record
+                .with_display_name(self.display_name.clone())
+                .with_pairing_requirement(self.pairing_requirement)
+                .with_metadata("smart_home.discovery.catalog_hint", "true")
+                .with_metadata(
+                    "smart_home.discovery.mechanism",
+                    discovery_mechanism_name(self.discovery_mechanism),
+                )
+        })
+    }
+}
+
+pub fn catalog_discovery_hints(catalog: &[IntegrationCatalogEntry]) -> Vec<CatalogDiscoveryHint> {
+    catalog
+        .iter()
+        .flat_map(CatalogDiscoveryHint::from_entry)
+        .collect()
+}
+
+pub fn discovery_hints_for_integration(
+    catalog: &[IntegrationCatalogEntry],
+    integration_id: &IntegrationId,
+) -> Vec<CatalogDiscoveryHint> {
+    catalog
+        .iter()
+        .filter(|entry| &entry.integration_id == integration_id)
+        .flat_map(CatalogDiscoveryHint::from_entry)
+        .collect()
+}
+
+pub fn discovery_hints_for_source(
+    catalog: &[IntegrationCatalogEntry],
+    source: DiscoverySource,
+) -> Vec<CatalogDiscoveryHint> {
+    catalog_discovery_hints(catalog)
+        .into_iter()
+        .filter(|hint| hint.source == source)
+        .collect()
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -568,6 +657,81 @@ impl DiscoveryCatalog {
     }
 }
 
+fn primary_protocol_for_entry(entry: &IntegrationCatalogEntry) -> ProtocolFamily {
+    entry
+        .supported_protocols
+        .first()
+        .cloned()
+        .unwrap_or_else(|| ProtocolFamily::Vendor(entry.integration_id.as_str().to_string()))
+}
+
+fn source_for_discovery_mechanism(mechanism: DiscoveryMechanism) -> DiscoverySource {
+    match mechanism {
+        DiscoveryMechanism::Mdns => DiscoverySource::Mdns,
+        DiscoveryMechanism::Ssdp => DiscoverySource::Ssdp,
+        DiscoveryMechanism::Bluetooth => DiscoverySource::Bluetooth,
+        DiscoveryMechanism::Usb => DiscoverySource::Usb,
+        DiscoveryMechanism::Dhcp => DiscoverySource::Dhcp,
+        DiscoveryMechanism::Mqtt => DiscoverySource::Mqtt,
+        DiscoveryMechanism::Manual | DiscoveryMechanism::FileConfig => DiscoverySource::Manual,
+        DiscoveryMechanism::CloudAccount => DiscoverySource::CloudFallback,
+        DiscoveryMechanism::Webhook => DiscoverySource::Webhook,
+    }
+}
+
+fn transport_for_discovery_mechanism(mechanism: DiscoveryMechanism) -> BridgeTransport {
+    match mechanism {
+        DiscoveryMechanism::Mdns => BridgeTransport::Mdns,
+        DiscoveryMechanism::Bluetooth => BridgeTransport::Ble,
+        DiscoveryMechanism::Usb => BridgeTransport::Serial,
+        DiscoveryMechanism::Mqtt | DiscoveryMechanism::FileConfig => BridgeTransport::LocalProcess,
+        DiscoveryMechanism::CloudAccount | DiscoveryMechanism::Webhook => BridgeTransport::Cloud,
+        DiscoveryMechanism::Ssdp | DiscoveryMechanism::Dhcp | DiscoveryMechanism::Manual => {
+            BridgeTransport::LanHttp
+        }
+    }
+}
+
+fn pairing_requirement_for_auth_modes(auth_modes: &[AuthMode]) -> PairingRequirement {
+    if auth_modes.contains(&AuthMode::OAuth2) {
+        PairingRequirement::OAuth2
+    } else if auth_modes.contains(&AuthMode::RadioNetworkKey) {
+        PairingRequirement::RadioInclusion
+    } else if auth_modes.contains(&AuthMode::Certificate) {
+        PairingRequirement::Certificate
+    } else if auth_modes.contains(&AuthMode::MqttCredentials) {
+        PairingRequirement::MqttCredentials
+    } else if auth_modes.contains(&AuthMode::LocalPairing) {
+        PairingRequirement::PhysicalPresence
+    } else if auth_modes.iter().any(|auth_mode| {
+        matches!(
+            auth_mode,
+            AuthMode::LocalToken | AuthMode::UsernamePassword | AuthMode::ApiKey
+        )
+    }) {
+        PairingRequirement::Credentials
+    } else if auth_modes.contains(&AuthMode::None) {
+        PairingRequirement::None
+    } else {
+        PairingRequirement::Unknown
+    }
+}
+
+fn discovery_mechanism_name(mechanism: DiscoveryMechanism) -> &'static str {
+    match mechanism {
+        DiscoveryMechanism::Mdns => "mdns",
+        DiscoveryMechanism::Ssdp => "ssdp",
+        DiscoveryMechanism::Bluetooth => "bluetooth",
+        DiscoveryMechanism::Usb => "usb",
+        DiscoveryMechanism::Dhcp => "dhcp",
+        DiscoveryMechanism::Mqtt => "mqtt",
+        DiscoveryMechanism::Manual => "manual",
+        DiscoveryMechanism::CloudAccount => "cloud_account",
+        DiscoveryMechanism::Webhook => "webhook",
+        DiscoveryMechanism::FileConfig => "file_config",
+    }
+}
+
 fn non_empty(field: &'static str, value: impl Into<String>) -> Result<String, DiscoveryError> {
     let value = value.into();
     if value.trim().is_empty() {
@@ -579,6 +743,83 @@ fn non_empty(field: &'static str, value: impl Into<String>) -> Result<String, Di
 #[cfg(test)]
 mod tests {
     use super::*;
+    use smart_home_integration_catalog::first_party_catalog;
+
+    #[test]
+    fn catalog_hints_project_hue_discovery_and_pairing_shape() {
+        let catalog = first_party_catalog();
+        let hints = discovery_hints_for_integration(&catalog, &IntegrationId::trusted("hue"));
+        let mdns_hint = hints
+            .iter()
+            .find(|hint| hint.discovery_mechanism == DiscoveryMechanism::Mdns)
+            .unwrap();
+
+        assert!(hints
+            .iter()
+            .any(|hint| hint.discovery_mechanism == DiscoveryMechanism::Manual));
+        assert_eq!(mdns_hint.source, DiscoverySource::Mdns);
+        assert_eq!(mdns_hint.transport, BridgeTransport::Mdns);
+        assert_eq!(mdns_hint.protocol_family, ProtocolFamily::Hue);
+        assert_eq!(
+            mdns_hint.pairing_requirement,
+            PairingRequirement::PhysicalPresence
+        );
+
+        let record = mdns_hint
+            .to_record("001788fffeabcdef", 1_000)
+            .unwrap()
+            .with_address("https://192.0.2.10");
+        let bridge = record.to_bridge_candidate();
+
+        assert_eq!(bridge.integration_id, IntegrationId::trusted("hue"));
+        assert_eq!(bridge.health, Health::Unpaired);
+        assert!(bridge.metadata.iter().any(|metadata| metadata.key
+            == "smart_home.discovery.catalog_hint"
+            && metadata.value == "true"));
+        assert!(bridge
+            .metadata
+            .iter()
+            .any(|metadata| metadata.key == "smart_home.discovery.mechanism"
+                && metadata.value == "mdns"));
+    }
+
+    #[test]
+    fn catalog_hints_group_scan_work_by_source() {
+        let catalog = first_party_catalog();
+        let mqtt_hints = discovery_hints_for_source(&catalog, DiscoverySource::Mqtt);
+        let usb_hints = discovery_hints_for_source(&catalog, DiscoverySource::Usb);
+
+        assert!(mqtt_hints
+            .iter()
+            .any(|hint| hint.integration_id == IntegrationId::trusted("mqtt")));
+        assert!(mqtt_hints
+            .iter()
+            .any(|hint| hint.integration_id == IntegrationId::trusted("tasmota")));
+        assert!(usb_hints
+            .iter()
+            .any(|hint| hint.integration_id == IntegrationId::trusted("zigbee")));
+        assert!(usb_hints
+            .iter()
+            .any(|hint| hint.integration_id == IntegrationId::trusted("zwave")));
+    }
+
+    #[test]
+    fn catalog_hints_preserve_pairing_requirements_from_auth_modes() {
+        let catalog = first_party_catalog();
+        let zwave = discovery_hints_for_integration(&catalog, &IntegrationId::trusted("zwave"));
+        let matter = discovery_hints_for_integration(&catalog, &IntegrationId::trusted("matter"));
+        let tuya = discovery_hints_for_integration(&catalog, &IntegrationId::trusted("tuya"));
+
+        assert!(zwave
+            .iter()
+            .all(|hint| hint.pairing_requirement == PairingRequirement::RadioInclusion));
+        assert!(matter
+            .iter()
+            .all(|hint| hint.pairing_requirement == PairingRequirement::Certificate));
+        assert!(tuya
+            .iter()
+            .all(|hint| hint.pairing_requirement == PairingRequirement::OAuth2));
+    }
 
     #[test]
     fn manual_bridge_input_projects_to_unpaired_bridge_candidate() {

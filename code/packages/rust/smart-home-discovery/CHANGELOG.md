@@ -20,3 +20,5 @@ All notable changes to this package will be documented in this file.
   loops.
 - Projection from discovery candidates into unpaired `smart-home-core::Bridge`
   records.
+- Catalog-backed discovery hints that translate first-party integration entries
+  into source, transport, protocol, priority, and pairing requirements.
