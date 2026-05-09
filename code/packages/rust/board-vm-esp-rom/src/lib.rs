@@ -11,6 +11,11 @@ pub const DEFAULT_SPI_FLASH_BLOCK_SIZE: u32 = 0x1_0000;
 pub const DEFAULT_SPI_FLASH_SECTOR_SIZE: u32 = 0x1000;
 pub const DEFAULT_SPI_FLASH_PAGE_SIZE: u32 = 0x100;
 pub const DEFAULT_SPI_FLASH_STATUS_MASK: u32 = 0xFFFF;
+pub const ESP_IMAGE_MAGIC: u8 = 0xE9;
+pub const ESP_IMAGE_HEADER_LEN: usize = 24;
+pub const ESP_IMAGE_SEGMENT_HEADER_LEN: usize = 8;
+pub const ESP_IMAGE_CHECKSUM_ALIGN: usize = 16;
+pub const ESP_IMAGE_DEFAULT_WP_PIN: u8 = 0xEE;
 
 pub const SLIP_END: u8 = 0xC0;
 pub const SLIP_ESC: u8 = 0xDB;
@@ -34,6 +39,7 @@ pub enum EspRomError {
     UnsupportedMagicValue(u32),
     InvalidFlashBlockSize(u32),
     InvalidMd5Digest(usize),
+    TooManyImageSegments(usize),
     Io(String),
     Serial(String),
 }
@@ -75,6 +81,9 @@ impl fmt::Display for EspRomError {
             }
             Self::InvalidMd5Digest(len) => {
                 write!(f, "invalid ESP flash MD5 digest payload length: {len}")
+            }
+            Self::TooManyImageSegments(count) => {
+                write!(f, "ESP image has too many segments: {count}")
             }
             Self::Io(error) => write!(f, "io error: {error}"),
             Self::Serial(error) => write!(f, "serial error: {error}"),
@@ -401,6 +410,188 @@ pub fn sync_payload() -> [u8; 36] {
 
 pub fn read_reg_payload(address: u32) -> [u8; 4] {
     address.to_le_bytes()
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(u8)]
+pub enum EspImageSpiMode {
+    Qio = 0x00,
+    Qout = 0x01,
+    Dio = 0x02,
+    Dout = 0x03,
+}
+
+impl EspImageSpiMode {
+    pub const fn code(self) -> u8 {
+        self as u8
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(u8)]
+pub enum EspImageFlashFrequency {
+    Mhz40 = 0x00,
+    Mhz26 = 0x01,
+    Mhz20 = 0x02,
+    Mhz80 = 0x0F,
+}
+
+impl EspImageFlashFrequency {
+    pub const fn code(self) -> u8 {
+        self as u8
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[repr(u8)]
+pub enum EspImageFlashSize {
+    Mb1 = 0x00,
+    Mb2 = 0x01,
+    Mb4 = 0x02,
+    Mb8 = 0x03,
+    Mb16 = 0x04,
+    Mb32 = 0x05,
+    Mb64 = 0x06,
+    Mb128 = 0x07,
+}
+
+impl EspImageFlashSize {
+    pub const fn code(self) -> u8 {
+        self as u8
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct EspImageFlashConfig {
+    pub mode: EspImageSpiMode,
+    pub frequency: EspImageFlashFrequency,
+    pub size: EspImageFlashSize,
+}
+
+impl EspImageFlashConfig {
+    pub const fn dio_40mhz_4mb() -> Self {
+        Self {
+            mode: EspImageSpiMode::Dio,
+            frequency: EspImageFlashFrequency::Mhz40,
+            size: EspImageFlashSize::Mb4,
+        }
+    }
+
+    pub const fn size_frequency(self) -> u8 {
+        (self.size.code() << 4) | self.frequency.code()
+    }
+}
+
+impl Default for EspImageFlashConfig {
+    fn default() -> Self {
+        Self::dio_40mhz_4mb()
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct EspImageBuildOptions {
+    pub chip: EspChip,
+    pub entry_addr: u32,
+    pub flash_config: EspImageFlashConfig,
+    pub wp_pin: u8,
+    pub spi_pin_drives: [u8; 3],
+    pub min_chip_revision: u16,
+    pub max_chip_revision: u16,
+    pub hash_appended: bool,
+}
+
+impl EspImageBuildOptions {
+    pub const fn new(chip: EspChip, entry_addr: u32) -> Self {
+        Self {
+            chip,
+            entry_addr,
+            flash_config: EspImageFlashConfig::dio_40mhz_4mb(),
+            wp_pin: ESP_IMAGE_DEFAULT_WP_PIN,
+            spi_pin_drives: [0; 3],
+            min_chip_revision: 0,
+            max_chip_revision: u16::MAX,
+            hash_appended: false,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct EspImageSegment<'a> {
+    pub load_addr: u32,
+    pub data: &'a [u8],
+}
+
+impl<'a> EspImageSegment<'a> {
+    pub const fn new(load_addr: u32, data: &'a [u8]) -> Self {
+        Self { load_addr, data }
+    }
+}
+
+pub fn esp_image_checksum(segments: &[EspImageSegment<'_>]) -> u8 {
+    segments.iter().fold(ESP_CHECKSUM_SEED, |state, segment| {
+        segment.data.iter().fold(state, |state, byte| state ^ byte)
+    })
+}
+
+pub fn esp_image_len(segments: &[EspImageSegment<'_>]) -> Result<usize, EspRomError> {
+    validate_image_segments(segments)?;
+    let mut raw_len = ESP_IMAGE_HEADER_LEN;
+    for segment in segments {
+        raw_len = checked_len_add(raw_len, ESP_IMAGE_SEGMENT_HEADER_LEN)?;
+        raw_len = checked_len_add(raw_len, segment.data.len())?;
+    }
+    Ok(raw_len + esp_image_checksum_padding(raw_len) + 1)
+}
+
+pub fn build_esp_image(
+    options: EspImageBuildOptions,
+    segments: &[EspImageSegment<'_>],
+    out: &mut [u8],
+) -> Result<usize, EspRomError> {
+    let needed = esp_image_len(segments)?;
+    if out.len() < needed {
+        return Err(EspRomError::OutputTooSmall {
+            needed,
+            available: out.len(),
+        });
+    }
+
+    out[..needed].fill(0);
+    out[0] = ESP_IMAGE_MAGIC;
+    out[1] = segments.len() as u8;
+    out[2] = options.flash_config.mode.code();
+    out[3] = options.flash_config.size_frequency();
+    write_u32_le(out, 4, options.entry_addr);
+    out[8] = options.wp_pin;
+    out[9..12].copy_from_slice(&options.spi_pin_drives);
+    out[12..14].copy_from_slice(&(options.chip.image_chip_id() as u16).to_le_bytes());
+    out[14] = options.min_chip_revision.min(u8::MAX as u16) as u8;
+    out[15..17].copy_from_slice(&options.min_chip_revision.to_le_bytes());
+    out[17..19].copy_from_slice(&options.max_chip_revision.to_le_bytes());
+    out[23] = u8::from(options.hash_appended);
+
+    let mut index = ESP_IMAGE_HEADER_LEN;
+    for segment in segments {
+        write_u32_le(out, index, segment.load_addr);
+        write_u32_le(out, index + 4, segment.data.len() as u32);
+        index += ESP_IMAGE_SEGMENT_HEADER_LEN;
+        out[index..index + segment.data.len()].copy_from_slice(segment.data);
+        index += segment.data.len();
+    }
+    index += esp_image_checksum_padding(index);
+    out[index] = esp_image_checksum(segments);
+    Ok(needed)
+}
+
+pub fn flash_begin_params_for_image(
+    offset: u32,
+    image: &[u8],
+    block_size: u32,
+) -> Result<FlashBeginParams, EspRomError> {
+    if image.len() > u32::MAX as usize {
+        return Err(EspRomError::PayloadTooLarge(image.len()));
+    }
+    FlashBeginParams::for_region(offset, image.len() as u32, block_size)
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -875,6 +1066,27 @@ fn ceil_div_u32(value: u32, divisor: u32) -> u32 {
     value / divisor + u32::from(value % divisor != 0)
 }
 
+fn validate_image_segments(segments: &[EspImageSegment<'_>]) -> Result<(), EspRomError> {
+    if segments.len() > u8::MAX as usize {
+        return Err(EspRomError::TooManyImageSegments(segments.len()));
+    }
+    for segment in segments {
+        if segment.data.len() > u32::MAX as usize {
+            return Err(EspRomError::PayloadTooLarge(segment.data.len()));
+        }
+    }
+    Ok(())
+}
+
+fn checked_len_add(lhs: usize, rhs: usize) -> Result<usize, EspRomError> {
+    lhs.checked_add(rhs)
+        .ok_or(EspRomError::PayloadTooLarge(lhs))
+}
+
+fn esp_image_checksum_padding(raw_len: usize) -> usize {
+    (ESP_IMAGE_CHECKSUM_ALIGN - 1 - (raw_len % ESP_IMAGE_CHECKSUM_ALIGN)) % ESP_IMAGE_CHECKSUM_ALIGN
+}
+
 fn hex_nibble(byte: u8) -> Option<u8> {
     match byte {
         b'0'..=b'9' => Some(byte - b'0'),
@@ -1025,6 +1237,98 @@ mod tests {
                 0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xAA, 0xBB, 0xCC, 0xDD,
                 0xEE, 0xFF,
             ]
+        );
+    }
+
+    #[test]
+    fn esp_image_builder_writes_header_segments_padding_and_checksum() {
+        let code = [0xC0, 0xDB, 0x34];
+        let rodata = [0xAA];
+        let segments = [
+            EspImageSegment::new(0x4038_0000, &code),
+            EspImageSegment::new(0x3FC8_0000, &rodata),
+        ];
+        let options = EspImageBuildOptions::new(EspChip::Esp32C3, 0x4038_0000);
+        let mut image = [0xFF; 64];
+
+        let len = build_esp_image(options, &segments, &mut image).unwrap();
+
+        assert_eq!(len, 48);
+        assert_eq!(esp_image_len(&segments).unwrap(), len);
+        assert_eq!(len % ESP_IMAGE_CHECKSUM_ALIGN, 0);
+        assert_eq!(
+            &image[..ESP_IMAGE_HEADER_LEN],
+            &[
+                ESP_IMAGE_MAGIC,
+                2,
+                EspImageSpiMode::Dio.code(),
+                EspImageFlashConfig::dio_40mhz_4mb().size_frequency(),
+                0x00,
+                0x00,
+                0x38,
+                0x40,
+                ESP_IMAGE_DEFAULT_WP_PIN,
+                0,
+                0,
+                0,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0xFF,
+                0xFF,
+                0,
+                0,
+                0,
+                0,
+                0,
+            ]
+        );
+        assert_eq!(
+            &image[ESP_IMAGE_HEADER_LEN..ESP_IMAGE_HEADER_LEN + ESP_IMAGE_SEGMENT_HEADER_LEN],
+            &[0x00, 0x00, 0x38, 0x40, 3, 0, 0, 0]
+        );
+        assert_eq!(&image[32..35], &code);
+        assert_eq!(&image[35..43], &[0x00, 0x00, 0xC8, 0x3F, 1, 0, 0, 0]);
+        assert_eq!(&image[43..44], &rodata);
+        assert_eq!(&image[44..47], &[0, 0, 0]);
+        assert_eq!(image[47], ESP_CHECKSUM_SEED ^ 0xC0 ^ 0xDB ^ 0x34 ^ 0xAA);
+
+        let flash =
+            flash_begin_params_for_image(0x1000, &image[..len], DEFAULT_SPI_FLASH_BLOCK_SIZE)
+                .unwrap();
+        assert_eq!(flash.erase_size, len as u32);
+        assert_eq!(flash.block_count, 1);
+        assert_eq!(flash.offset, 0x1000);
+    }
+
+    #[test]
+    fn esp_image_builder_reports_buffer_and_segment_limits() {
+        let data = [1, 2, 3, 4];
+        let segments = [EspImageSegment::new(0x4008_0000, &data)];
+        let mut image = [0u8; 16];
+
+        assert_eq!(
+            build_esp_image(
+                EspImageBuildOptions::new(EspChip::Esp32, 0x4008_0000),
+                &segments,
+                &mut image,
+            ),
+            Err(EspRomError::OutputTooSmall {
+                needed: 48,
+                available: 16,
+            })
+        );
+
+        let many_data = [0u8; 256];
+        let many: Vec<_> = many_data
+            .iter()
+            .map(|byte| EspImageSegment::new(0, std::slice::from_ref(byte)))
+            .collect();
+        assert_eq!(
+            esp_image_len(&many),
+            Err(EspRomError::TooManyImageSegments(256))
         );
     }
 
