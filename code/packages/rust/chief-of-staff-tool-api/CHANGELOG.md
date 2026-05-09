@@ -29,3 +29,5 @@ All notable changes to this package will be documented in this file.
   rejected before handler execution.
 - Handler output validation against advertised tool output schemas before the
   runtime emits completed results.
+- Storage-neutral read-side query helpers for tool invocation requests, call
+  lifecycle records, event streams, and terminal results.

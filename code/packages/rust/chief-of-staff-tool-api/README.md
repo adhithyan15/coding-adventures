@@ -8,6 +8,9 @@ The crate intentionally stops at the contract layer:
 - tool definitions and metadata
 - query helpers for selecting catalog entries by family, side effects, tier,
   capability, tag, stability, and limit
+- read-side query helpers for invocation requests, call records, event streams,
+  and terminal results by scope, time window, status, approval state, outcome,
+  references, metrics, sort order, and limit
 - invocation requests
 - structured tool events and final results
 - JSON-schema-like argument validation
