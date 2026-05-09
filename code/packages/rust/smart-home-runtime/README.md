@@ -14,6 +14,7 @@ Included surfaces:
   position before receiving live updates
 - read-side event-log and subscription backlog queries for dashboards, tools,
   and tests that need bounded runtime inspection
+- bounded event-bus delivery peeking and draining for subscription polling
 - command validation against entity capabilities and command modes
 - grant-backed command authorization for Chief of Staff agents and sandboxed
   tools
