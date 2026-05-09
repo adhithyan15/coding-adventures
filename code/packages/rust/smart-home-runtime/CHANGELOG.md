@@ -37,6 +37,8 @@ All notable changes to this package will be documented in this file.
 - Non-mutating supervision plans that preview state refresh targets,
   pairing expiry, desired-state drift, and overdue worker restarts before a tick
   writes.
+- Read-only supervision observations that combine due supervision work with
+  worker heartbeat schedules for status tools.
 - Deterministic supervision ticks that combine optimistic-state expiry,
   desired-state reconciliation, and worker restart checks into one report.
 - Deterministic worker restart plans for inspecting overdue bridge workers
