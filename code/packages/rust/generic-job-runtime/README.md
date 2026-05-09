@@ -26,6 +26,8 @@ targets.
 - Capability and limit metadata that adapters can inspect.
 - Non-consuming executor snapshots for supervisor/read-side tools, including
   live workers, in-flight jobs, queued jobs, running jobs, and saturation.
+- Snapshot health classification for D18C supervisors to distinguish idle,
+  busy, saturated, draining, and offline executors.
 
 The crate does not know about TCP, RESP, Redis, IRC, or sockets. Those adapters
 submit typed job payloads and decide how to apply responses.
