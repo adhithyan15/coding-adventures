@@ -141,6 +141,63 @@ describe("coding_adventures.board_vm_native", function()
         assert.are.equal(4170, session.transport.port)
     end)
 
+    it("transacts over LuaSocket-compatible TCP endpoints", function()
+        local sent = {}
+        local response_index = 0
+        local fake_client = {
+            settimeout = function(self, timeout)
+                self.timeout = timeout
+            end,
+            connect = function(self, host, port)
+                self.host = host
+                self.port = port
+                return true
+            end,
+            setoption = function(self, option, value)
+                self[option] = value
+                return true
+            end,
+            send = function(_, frame)
+                table.insert(sent, frame)
+                return #frame
+            end,
+            receive = function(_, size)
+                assert.are.equal(1, size)
+                response_index = response_index + 1
+                return ({ "\3", "\4", "\0" })[response_index]
+            end,
+            close = function(self)
+                self.closed = true
+            end,
+        }
+        local previous_socket = package.loaded.socket
+        package.loaded.socket = {
+            tcp = function()
+                return fake_client
+            end,
+        }
+
+        local ok, err = pcall(function()
+            local transport = board_vm.TcpTransport.new({
+                endpoint = "tcp://board-vm.local:4170",
+                timeout_ms = 500,
+            })
+            local response = transport:transact("\1\2\0", { timeout_ms = 250 })
+
+            assert.are.equal("\3\4\0", response)
+            assert.are.equal("\1\2\0", sent[1])
+            assert.are.equal("board-vm.local", fake_client.host)
+            assert.are.equal(4170, fake_client.port)
+            assert.is_true(fake_client["tcp-nodelay"])
+            transport:close()
+            assert.is_true(fake_client.closed)
+        end)
+        package.loaded.socket = previous_socket
+        if not ok then
+            error(err)
+        end
+    end)
+
     it("rejects dispatch when no Lua transport endpoint is available", function()
         local connection = board_vm.connect("uno-r4-wifi", { via = "Wi-Fi" })
 

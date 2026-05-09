@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "socket"
 require "test_helper"
 
 module CodingAdventures
@@ -158,6 +159,38 @@ module CodingAdventures
         transport = connection.send(:active_transport)
         assert_instance_of TcpTransport, transport
         assert_equal "tcp://board-vm.local:4170", transport.endpoint
+      end
+
+      def test_tcp_transport_transacts_with_a_local_endpoint
+        server = TCPServer.new("127.0.0.1", 0)
+        endpoint = "tcp://127.0.0.1:#{server.addr[1]}"
+        request = "\x01\x02\x00".b
+        response = "\x03\x04\x00".b
+
+        thread = Thread.new do
+          socket = server.accept
+          frame = +"".b
+          begin
+            loop do
+              byte = socket.readpartial(1)
+              frame << byte
+              break if byte == "\x00".b
+            end
+            socket.write(response)
+            frame
+          ensure
+            socket.close
+          end
+        end
+
+        transport = TcpTransport.new(endpoint: endpoint, timeout_ms: 500)
+
+        assert_equal response, transport.transact(request, timeout_ms: 500)
+        assert_equal request, thread.value
+      ensure
+        transport&.close
+        server&.close
+        thread&.kill if thread&.alive?
       end
 
       def test_connect_can_prompt_for_the_connection_option_after_the_board
