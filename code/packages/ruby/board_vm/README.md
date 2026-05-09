@@ -64,6 +64,29 @@ session result for debugging.
 Tests and alternate runtimes can inject any transport object that responds to
 `transact(frame, timeout_ms:)` or `write(frame)`.
 
+Scripts can avoid hard-coded serial paths when the board is discoverable:
+
+```ruby
+CodingAdventures::BoardVM.esp32(flash: true, firmware_image: "board-vm-esp32.bin") do |board|
+  board.led.blink
+end
+```
+
+`connect` resolves the board/device through the Rust-owned discovery metadata.
+Connection options are also selected from the Rust target registry:
+
+```ruby
+CodingAdventures::BoardVM.uno_r4_wifi(via: :wifi, transport: wifi_endpoint) do |board|
+  board.session { |vm| vm.hello }
+end
+```
+
+`via:` accepts friendly names such as `:serial`, `"Wi-Fi"`, and `"BLE"`.
+`pick_connection: true` prints the board's available transports and lets a REPL
+user choose one. Until the host Wi-Fi/Bluetooth endpoint layers land, wireless
+choices require an injected transport object; they never silently fall back to a
+serial port.
+
 `time.now_ms` follows the same path and returns through Rust-decoded run-report
 values:
 
