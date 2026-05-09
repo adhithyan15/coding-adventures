@@ -18,6 +18,7 @@ a shared way to build:
 - fake command buses with queued command/result pairs
 - fake local HTTP responses that can match planned requests without sockets
 - fake MQTT broker publications with retained-message and metadata markers
+- scripted MQTT subscriptions with delivery matching by topic filter and QoS
 - read-only fake local HTTP response queries by method, URL, status, metadata,
   observation time, sort, and limit
 - read-only fake MQTT broker queries by topic, prefix, retained flag, metadata,
