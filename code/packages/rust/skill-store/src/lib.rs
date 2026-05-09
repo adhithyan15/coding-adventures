@@ -39,6 +39,58 @@ pub struct SkillAssetRecord {
     pub body: Vec<u8>,
 }
 
+/// Query options for listing installed skill manifests.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct SkillListOptions {
+    pub skill_id: Option<String>,
+    pub active: Option<bool>,
+    pub entrypoints: Vec<String>,
+    pub required_tools: Vec<String>,
+    pub required_capabilities: Vec<String>,
+    pub limit: Option<usize>,
+}
+
+impl SkillListOptions {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_skill(mut self, skill_id: impl Into<String>) -> Self {
+        self.skill_id = Some(skill_id.into());
+        self
+    }
+
+    pub fn active_only(mut self) -> Self {
+        self.active = Some(true);
+        self
+    }
+
+    pub fn inactive_only(mut self) -> Self {
+        self.active = Some(false);
+        self
+    }
+
+    pub fn with_entrypoint(mut self, entrypoint: impl Into<String>) -> Self {
+        self.entrypoints.push(entrypoint.into());
+        self
+    }
+
+    pub fn requiring_tool(mut self, tool_id: impl Into<String>) -> Self {
+        self.required_tools.push(tool_id.into());
+        self
+    }
+
+    pub fn requiring_capability(mut self, capability_id: impl Into<String>) -> Self {
+        self.required_capabilities.push(capability_id.into());
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
 /// Input used when installing one asset.
 #[derive(Debug, Clone, PartialEq)]
 pub struct InstallSkillAssetInput {
@@ -111,6 +163,23 @@ impl<S: StorageBackend> SkillStore<S> {
     }
 
     pub fn list_installed_skills(&self) -> Result<Vec<SkillManifest>, StorageError> {
+        self.list_skills(SkillListOptions::new())
+    }
+
+    pub fn list_skills(
+        &self,
+        options: SkillListOptions,
+    ) -> Result<Vec<SkillManifest>, StorageError> {
+        if let Some(skill_id) = options.skill_id.as_deref() {
+            validate_id("skill_id", skill_id)?;
+        }
+        validate_id_list("entrypoints", &options.entrypoints)?;
+        validate_id_list("required_tools", &options.required_tools)?;
+        validate_id_list("required_capabilities", &options.required_capabilities)?;
+        if options.limit == Some(0) {
+            return Ok(Vec::new());
+        }
+
         self.backend.initialize()?;
         let page = self.backend.list(
             NAMESPACE,
@@ -122,10 +191,20 @@ impl<S: StorageBackend> SkillStore<S> {
             },
         )?;
 
-        page.records
-            .iter()
-            .map(|record| decode_manifest(&record.body))
-            .collect()
+        let mut manifests = Vec::new();
+        for record in &page.records {
+            let manifest = decode_manifest(&record.body)?;
+            if !skill_matches_list_options(&manifest, &options) {
+                continue;
+            }
+            manifests.push(manifest);
+            if let Some(limit) = options.limit {
+                if manifests.len() >= limit {
+                    break;
+                }
+            }
+        }
+        Ok(manifests)
     }
 
     pub fn read_asset(
@@ -258,6 +337,33 @@ fn manifest_key(skill_id: &str, version: &str) -> String {
 
 fn asset_key(skill_id: &str, version: &str, asset_path: &str) -> String {
     format!("assets/{skill_id}/{version}/{asset_path}")
+}
+
+fn skill_matches_list_options(manifest: &SkillManifest, options: &SkillListOptions) -> bool {
+    if let Some(skill_id) = options.skill_id.as_deref() {
+        if manifest.skill_id != skill_id {
+            return false;
+        }
+    }
+    if let Some(active) = options.active {
+        if manifest.active != active {
+            return false;
+        }
+    }
+    options
+        .entrypoints
+        .iter()
+        .all(|entrypoint| manifest.entrypoints.iter().any(|value| value == entrypoint))
+        && options
+            .required_tools
+            .iter()
+            .all(|tool_id| manifest.required_tools.iter().any(|value| value == tool_id))
+        && options.required_capabilities.iter().all(|capability_id| {
+            manifest
+                .required_capabilities
+                .iter()
+                .any(|value| value == capability_id)
+        })
 }
 
 fn manifest_record_metadata(manifest: &SkillManifest) -> JsonValue {
@@ -611,6 +717,88 @@ mod tests {
                 .unwrap()
                 .active
         );
+    }
+
+    #[test]
+    fn list_skills_filters_by_active_entrypoints_tools_capabilities_and_limit() {
+        let store = SkillStore::new(InMemoryStorageBackend::new());
+        for manifest in [
+            SkillManifest {
+                skill_id: "planner".to_string(),
+                version: "v1".to_string(),
+                name: "Planner".to_string(),
+                description: "Plans work".to_string(),
+                entrypoints: vec!["main".to_string()],
+                required_tools: vec!["shell".to_string()],
+                required_capabilities: vec!["write".to_string()],
+                assets: Vec::new(),
+                source: JsonValue::Object(vec![]),
+                active: true,
+            },
+            SkillManifest {
+                skill_id: "observer".to_string(),
+                version: "v1".to_string(),
+                name: "Observer".to_string(),
+                description: "Reads state".to_string(),
+                entrypoints: vec!["observe".to_string()],
+                required_tools: vec!["smart_home.get_state".to_string()],
+                required_capabilities: vec!["smart_home.read".to_string()],
+                assets: Vec::new(),
+                source: JsonValue::Object(vec![]),
+                active: false,
+            },
+            SkillManifest {
+                skill_id: "runner".to_string(),
+                version: "v1".to_string(),
+                name: "Runner".to_string(),
+                description: "Runs work".to_string(),
+                entrypoints: vec!["main".to_string()],
+                required_tools: vec!["shell".to_string()],
+                required_capabilities: vec!["execute".to_string()],
+                assets: Vec::new(),
+                source: JsonValue::Object(vec![]),
+                active: true,
+            },
+        ] {
+            let _ = store.install_skill(manifest, Vec::new()).unwrap();
+        }
+
+        let active_shell = store
+            .list_skills(
+                SkillListOptions::new()
+                    .active_only()
+                    .with_entrypoint("main")
+                    .requiring_tool("shell")
+                    .with_limit(1),
+            )
+            .unwrap();
+        assert_eq!(active_shell.len(), 1);
+        assert!(active_shell[0].active);
+        assert!(active_shell[0]
+            .required_tools
+            .iter()
+            .any(|tool| tool == "shell"));
+
+        let observer = store
+            .list_skills(
+                SkillListOptions::new()
+                    .for_skill("observer")
+                    .inactive_only()
+                    .requiring_capability("smart_home.read"),
+            )
+            .unwrap();
+        assert_eq!(
+            observer
+                .iter()
+                .map(|manifest| manifest.skill_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["observer"]
+        );
+
+        let missing = store
+            .list_skills(SkillListOptions::new().requiring_tool("calendar.write"))
+            .unwrap();
+        assert!(missing.is_empty());
     }
 
     #[test]
