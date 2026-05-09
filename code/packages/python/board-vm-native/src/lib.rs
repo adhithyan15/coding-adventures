@@ -20,9 +20,10 @@ use board_vm_language_core::{
     decode_wire_response, detect_target as core_detect_target,
     discover_devices as core_discover_devices, discover_devices_from_paths,
     esp_upload_options_for_target, known_targets, onboard_led_kind, program_format_name,
-    raw_module_len, run_status_name, BoardVmLanguageSession, DecodedLanguageResponse,
-    DecodedLanguageResponseBody, LanguageCoreError, LanguageEspUploadOptions, LanguageHostDevice,
-    LanguageOnboardLed, LanguageTargetInfo, LanguageValue,
+    raw_module_len, run_status_name, wireless_transport_name, BoardVmLanguageSession,
+    DecodedLanguageResponse, DecodedLanguageResponseBody, LanguageCoreError,
+    LanguageEspUploadOptions, LanguageHostDevice, LanguageOnboardLed, LanguageTargetInfo,
+    LanguageValue, LanguageWirelessInterface,
 };
 use python_bridge::*;
 
@@ -745,12 +746,34 @@ unsafe fn language_target_to_py(target: &LanguageTargetInfo) -> PyObjectPtr {
         "digital_pin_count",
         usize_to_py(target.digital_pin_count),
     );
+    dict_set(dict, "wireless", language_wireless_to_py(&target.wireless));
     let capabilities = PyList_New(target.capabilities.len() as isize);
     for (index, capability) in target.capabilities.iter().enumerate() {
         PyList_SetItem(capabilities, index as isize, str_to_py(capability));
     }
     dict_set(dict, "capabilities", capabilities);
     dict
+}
+
+unsafe fn language_wireless_to_py(interfaces: &[LanguageWirelessInterface]) -> PyObjectPtr {
+    let list = PyList_New(interfaces.len() as isize);
+    for (index, interface) in interfaces.iter().enumerate() {
+        let dict = PyDict_New();
+        dict_set(
+            dict,
+            "transport",
+            str_to_py(wireless_transport_name(interface.transport)),
+        );
+        dict_set(dict, "chip", str_to_py(&interface.chip));
+        dict_set(
+            dict,
+            "command_transport",
+            bool_to_py(interface.command_transport),
+        );
+        dict_set(dict, "ota_update", bool_to_py(interface.ota_update));
+        PyList_SetItem(list, index as isize, dict);
+    }
+    list
 }
 
 unsafe fn esp_upload_options_to_py(options: &LanguageEspUploadOptions) -> PyObjectPtr {

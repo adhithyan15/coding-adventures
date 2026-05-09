@@ -21,9 +21,10 @@ use board_vm_language_core::{
     decode_wire_response, detect_target as core_detect_target,
     discover_devices as core_discover_devices, discover_devices_from_paths,
     esp_upload_options_for_target, known_targets, onboard_led_kind, program_format_name,
-    raw_module_len, run_status_name, BoardVmLanguageSession, DecodedLanguageResponse,
-    DecodedLanguageResponseBody, LanguageCoreError, LanguageEspUploadOptions, LanguageHostDevice,
-    LanguageOnboardLed, LanguageTargetInfo, LanguageValue,
+    raw_module_len, run_status_name, wireless_transport_name, BoardVmLanguageSession,
+    DecodedLanguageResponse, DecodedLanguageResponseBody, LanguageCoreError,
+    LanguageEspUploadOptions, LanguageHostDevice, LanguageOnboardLed, LanguageTargetInfo,
+    LanguageValue, LanguageWirelessInterface,
 };
 use ruby_bridge::VALUE;
 
@@ -653,12 +654,38 @@ fn language_target_to_rb(target: &LanguageTargetInfo) -> VALUE {
         "digital_pin_count",
         rb_usize(target.digital_pin_count),
     );
+    hash_set(hash, "wireless", language_wireless_to_rb(&target.wireless));
     let capabilities = ruby_bridge::array_new();
     for capability in &target.capabilities {
         ruby_bridge::array_push(capabilities, ruby_bridge::str_to_rb(capability));
     }
     hash_set(hash, "capabilities", capabilities);
     hash
+}
+
+fn language_wireless_to_rb(interfaces: &[LanguageWirelessInterface]) -> VALUE {
+    let array = ruby_bridge::array_new();
+    for interface in interfaces {
+        let hash = ruby_bridge::hash_new();
+        hash_set(
+            hash,
+            "transport",
+            ruby_bridge::str_to_rb(wireless_transport_name(interface.transport)),
+        );
+        hash_set(hash, "chip", ruby_bridge::str_to_rb(&interface.chip));
+        hash_set(
+            hash,
+            "command_transport",
+            ruby_bridge::bool_to_rb(interface.command_transport),
+        );
+        hash_set(
+            hash,
+            "ota_update",
+            ruby_bridge::bool_to_rb(interface.ota_update),
+        );
+        ruby_bridge::array_push(array, hash);
+    }
+    array
 }
 
 fn esp_upload_options_to_rb(options: &LanguageEspUploadOptions) -> VALUE {
