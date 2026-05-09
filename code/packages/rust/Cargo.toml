@@ -535,6 +535,7 @@ members = [
     "twig-dap",
     "conduit",
     "smart-home-core",
+    "smart-home-capability-cage",
     "smart-home-discovery",
     "smart-home-event-streams",
     "smart-home-local-http",
