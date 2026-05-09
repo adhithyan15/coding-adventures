@@ -20,6 +20,8 @@ use board_vm_language_core::{
     capability_bytecode_callable, capability_flag_names, capability_protocol_feature,
     decode_wire_response, detect_target as core_detect_target,
     discover_devices as core_discover_devices, discover_devices_from_paths,
+    discover_pico_bootsel_mounts as core_discover_pico_bootsel_mounts,
+    discover_pico_bootsel_mounts_in_roots,
     esp_upload_options_for_target, known_targets, onboard_led_kind,
     pico_uf2_upload_options_for_target, program_format_name, raw_module_len, run_status_name,
     wireless_transport_name, BoardVmLanguageSession, DecodedLanguageResponse,
@@ -444,6 +446,15 @@ extern "C" fn native_classify_devices(_self_val: VALUE, paths_val: VALUE) -> VAL
     host_devices_to_rb(&discover_devices_from_paths(paths))
 }
 
+extern "C" fn native_pico_uf2_mounts(_self_val: VALUE, roots_val: VALUE) -> VALUE {
+    if roots_val == ruby_bridge::nil_value() {
+        strings_to_rb(&core_discover_pico_bootsel_mounts())
+    } else {
+        let roots = ruby_bridge::vec_str_from_rb(roots_val);
+        strings_to_rb(&discover_pico_bootsel_mounts_in_roots(roots))
+    }
+}
+
 fn with_session_mut(
     self_val: VALUE,
     operation: impl FnOnce(&mut RubyBoardVmSession) -> Result<VALUE, LanguageCoreError>,
@@ -757,6 +768,14 @@ fn host_devices_to_rb(devices: &[LanguageHostDevice]) -> VALUE {
     let array = ruby_bridge::array_new();
     for device in devices {
         ruby_bridge::array_push(array, host_device_to_rb(device));
+    }
+    array
+}
+
+fn strings_to_rb(strings: &[String]) -> VALUE {
+    let array = ruby_bridge::array_new();
+    for string in strings {
+        ruby_bridge::array_push(array, ruby_bridge::str_to_rb(string));
     }
     array
 }
@@ -1092,6 +1111,12 @@ pub extern "C" fn Init_board_vm_native() {
         native,
         "classify_devices",
         native_classify_devices as *const c_void,
+        1,
+    );
+    ruby_bridge::define_module_function_raw(
+        native,
+        "pico_uf2_mounts",
+        native_pico_uf2_mounts as *const c_void,
         1,
     );
 

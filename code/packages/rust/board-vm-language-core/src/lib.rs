@@ -573,6 +573,32 @@ where
     devices.into_values().collect()
 }
 
+pub fn discover_pico_bootsel_mounts() -> Vec<String> {
+    discover_pico_bootsel_mounts_in_roots(default_pico_mount_roots())
+}
+
+pub fn discover_pico_bootsel_mounts_in_roots<I, P>(roots: I) -> Vec<String>
+where
+    I: IntoIterator<Item = P>,
+    P: AsRef<Path>,
+{
+    let mut mounts = Vec::new();
+    for root in roots {
+        let Ok(entries) = fs::read_dir(root.as_ref()) else {
+            continue;
+        };
+        for entry in entries.flatten() {
+            let path = entry.path();
+            if is_pico_bootsel_mount(&path) {
+                mounts.push(path.to_string_lossy().into_owned());
+            }
+        }
+    }
+    mounts.sort();
+    mounts.dedup();
+    mounts
+}
+
 pub fn normalize_target_selector(selector: &str) -> String {
     let mut normalized = String::new();
     let mut last_was_separator = false;
@@ -697,6 +723,55 @@ fn collect_matching_dir_paths(dir: &str, paths: &mut Vec<String>, matches: impl 
             paths.push(entry.path().to_string_lossy().into_owned());
         }
     }
+}
+
+fn default_pico_mount_roots() -> Vec<PathBuf> {
+    let mut roots = Vec::new();
+    #[cfg(unix)]
+    {
+        roots.push(PathBuf::from("/Volumes"));
+        roots.push(PathBuf::from("/mnt"));
+        if let Some(home) = env::var_os("HOME") {
+            if let Some(user) = Path::new(&home).file_name() {
+                roots.push(PathBuf::from("/media").join(user));
+                roots.push(PathBuf::from("/run/media").join(user));
+            }
+        }
+        if let Some(user) = env::var_os("USER") {
+            roots.push(PathBuf::from("/media").join(&user));
+            roots.push(PathBuf::from("/run/media").join(&user));
+        }
+    }
+    #[cfg(windows)]
+    {
+        for drive in b'A'..=b'Z' {
+            roots.push(PathBuf::from(format!("{}:\\", drive as char)));
+        }
+    }
+    roots
+}
+
+fn is_pico_bootsel_mount(path: &Path) -> bool {
+    if !path.is_dir() {
+        return false;
+    }
+
+    let info = path.join("INFO_UF2.TXT");
+    if !info.is_file() {
+        return false;
+    }
+
+    let has_index = path.join("INDEX.HTM").is_file() || path.join("INDEX.HTML").is_file();
+    if !has_index {
+        return false;
+    }
+
+    let Ok(contents) = fs::read_to_string(info) else {
+        return false;
+    };
+    let lower = contents.to_ascii_lowercase();
+    lower.contains("uf2 bootloader")
+        && (lower.contains("rp2") || lower.contains("rp2040") || lower.contains("raspberry pi"))
 }
 
 fn is_serial_candidate(path: &str) -> bool {
@@ -2109,6 +2184,25 @@ mod tests {
     }
 
     #[test]
+    fn pico_bootsel_mount_discovery_is_owned_by_rust_language_core() {
+        let root = unique_temp_dir("language-core-pico-uf2");
+        let mount = root.join("RPI-RP2");
+        fs::create_dir_all(&mount).unwrap();
+        fs::write(
+            mount.join("INFO_UF2.TXT"),
+            "UF2 Bootloader v3.0\nModel: Raspberry Pi RP2\n",
+        )
+        .unwrap();
+        fs::write(mount.join("INDEX.HTM"), "<html></html>").unwrap();
+        fs::create_dir_all(root.join("NOT-PICO")).unwrap();
+
+        let mounts = discover_pico_bootsel_mounts_in_roots([&root]);
+
+        assert_eq!(mounts, vec![mount.to_string_lossy().into_owned()]);
+        fs::remove_dir_all(root).ok();
+    }
+
+    #[test]
     fn host_device_discovery_classifies_serial_candidates() {
         let devices = discover_devices_from_paths([
             "/dev/cu.usbmodem1101",
@@ -2136,6 +2230,14 @@ mod tests {
             .unwrap();
         assert_eq!(esp.target.as_ref().unwrap().board_id, "esp32-devkit-v1");
         assert!(esp.tags.contains(&"uart".to_owned()));
+    }
+
+    fn unique_temp_dir(name: &str) -> PathBuf {
+        let nonce = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        std::env::temp_dir().join(format!("{name}-{}-{nonce}", std::process::id()))
     }
 
     #[test]

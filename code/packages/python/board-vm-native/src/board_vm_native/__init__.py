@@ -1213,6 +1213,12 @@ def pico_uf2_upload_options(
     return PicoUf2UploadOptions(merged)
 
 
+def pico_uf2_mounts(roots: Iterable[str] | None = None) -> list[str]:
+    if roots is None:
+        return [str(mount) for mount in _native.pico_uf2_mounts()]
+    return [str(mount) for mount in _native.pico_uf2_mounts([str(root) for root in roots])]
+
+
 DeviceReference = BoardDevice | dict[str, Any] | str | int
 
 
@@ -1434,6 +1440,7 @@ __all__ = [
     "find_target",
     "known_targets",
     "pico_uf2_upload_command",
+    "pico_uf2_mounts",
     "pico_uf2_upload_options",
     "pick_device",
     "select_device",

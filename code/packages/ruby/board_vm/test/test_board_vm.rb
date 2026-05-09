@@ -93,6 +93,18 @@ module CodingAdventures
         assert_nil BoardVM.pico_uf2_upload_options(:esp32)
       end
 
+      def test_pico_uf2_mounts_are_discovered_by_rust_language_core
+        Dir.mktmpdir("board-vm-pico-uf2") do |root|
+          mount = File.join(root, "RPI-RP2")
+          Dir.mkdir(mount)
+          File.write(File.join(mount, "INFO_UF2.TXT"), "UF2 Bootloader\nModel: Raspberry Pi RP2\n")
+          File.write(File.join(mount, "INDEX.HTM"), "<html></html>")
+          Dir.mkdir(File.join(root, "NOT-PICO"))
+
+          assert_equal [mount], BoardVM.pico_uf2_mounts(roots: [root])
+        end
+      end
+
       def test_pico_uf2_upload_command_uses_rust_owned_options
         command = BoardVM.pico_uf2_upload_command(
           :pico,
