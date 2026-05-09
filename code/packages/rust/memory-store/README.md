@@ -17,6 +17,8 @@ than a backend-specific index.
   bounded result sets for tool calls
 - bounded read selectors for class, tag, source, active-at, confidence,
   tombstone inclusion, sorting, and limits
+- deterministic review candidates for low-confidence, stale, expiring, and
+  expired memories
 
 ## Key layout
 
@@ -34,6 +36,7 @@ than a backend-specific index.
 - `search_lexical()`
 - `search_lexical_with_options()`
 - `search_active_lexical_at()`
+- `review_candidates()`
 - `mark_expired()`
 - `forget_tombstone()`
 
