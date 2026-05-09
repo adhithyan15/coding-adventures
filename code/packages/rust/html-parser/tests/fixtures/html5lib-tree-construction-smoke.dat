@@ -752,3 +752,19 @@ Line1<br>Line2<br>Line3<br>Line4
 |         <b>
 |           id="b"
 |       "TEST"
+
+#data
+<!DOCTYPE html><title>U-test</title><body><div><p>Test<u></p></div></body>
+#errors
+(1,61): unexpected-end-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <title>
+|       "U-test"
+|   <body>
+|     <div>
+|       <p>
+|         "Test"
+|         <u>
