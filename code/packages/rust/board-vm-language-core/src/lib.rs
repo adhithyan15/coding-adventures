@@ -6,8 +6,12 @@
 //! already share the same implementation.
 
 use std::cell::{Cell, RefCell};
+use std::collections::BTreeMap;
+use std::env;
 use std::ffi::CString;
+use std::fs;
 use std::panic::{self, AssertUnwindSafe};
+use std::path::{Path, PathBuf};
 use std::ptr;
 use std::slice;
 use std::str;
@@ -285,6 +289,18 @@ pub struct LanguageEspUploadOptions {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageHostDevice {
+    pub id: String,
+    pub port: String,
+    pub transport: String,
+    pub display_name: String,
+    pub target: Option<LanguageTargetInfo>,
+    pub target_confidence: u8,
+    pub bootloader: bool,
+    pub tags: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageProgramBegin {
     pub program_id: u16,
     pub format: ProgramFormat,
@@ -477,6 +493,35 @@ pub fn esp_upload_options_for_target(selector: &str) -> Option<LanguageEspUpload
     })
 }
 
+pub fn discover_devices() -> Vec<LanguageHostDevice> {
+    let mut paths = env_device_paths();
+
+    #[cfg(unix)]
+    paths.extend(unix_device_paths());
+
+    #[cfg(windows)]
+    paths.extend(windows_device_paths());
+
+    discover_devices_from_paths(paths)
+}
+
+pub fn discover_devices_from_paths<I, S>(paths: I) -> Vec<LanguageHostDevice>
+where
+    I: IntoIterator<Item = S>,
+    S: AsRef<str>,
+{
+    let mut devices = BTreeMap::new();
+    for path in paths {
+        let path = path.as_ref().trim();
+        if path.is_empty() || !is_serial_candidate(path) {
+            continue;
+        }
+        let device = classify_host_device(path);
+        devices.entry(device_dedupe_key(path)).or_insert(device);
+    }
+    devices.into_values().collect()
+}
+
 pub fn normalize_target_selector(selector: &str) -> String {
     let mut normalized = String::new();
     let mut last_was_separator = false;
@@ -530,6 +575,167 @@ fn language_onboard_led(led: TargetOnboardLed) -> LanguageOnboardLed {
     match led {
         TargetOnboardLed::Gpio(pin) => LanguageOnboardLed::Gpio(pin),
         TargetOnboardLed::WirelessChipGpio(pin) => LanguageOnboardLed::WirelessChipGpio(pin),
+    }
+}
+
+fn env_device_paths() -> Vec<String> {
+    env::var_os("BOARD_VM_DEVICE_PATHS")
+        .map(|paths| {
+            env::split_paths(&paths)
+                .map(|path| path.to_string_lossy().into_owned())
+                .collect()
+        })
+        .unwrap_or_default()
+}
+
+#[cfg(unix)]
+fn unix_device_paths() -> Vec<String> {
+    let mut paths = Vec::new();
+    collect_matching_dir_paths("/dev", &mut paths, |name| {
+        let lower = name.to_ascii_lowercase();
+        lower.starts_with("cu.usbmodem")
+            || lower.starts_with("tty.usbmodem")
+            || lower.starts_with("cu.usbserial")
+            || lower.starts_with("tty.usbserial")
+            || lower.starts_with("cu.wchusbserial")
+            || lower.starts_with("tty.wchusbserial")
+            || lower.starts_with("cu.slab_usbtouart")
+            || lower.starts_with("tty.slab_usbtouart")
+            || lower.starts_with("ttyacm")
+            || lower.starts_with("ttyusb")
+    });
+    collect_matching_dir_paths("/dev/serial/by-id", &mut paths, |_| true);
+    paths
+}
+
+#[cfg(windows)]
+fn windows_device_paths() -> Vec<String> {
+    Vec::new()
+}
+
+fn collect_matching_dir_paths(dir: &str, paths: &mut Vec<String>, matches: impl Fn(&str) -> bool) {
+    let Ok(entries) = fs::read_dir(dir) else {
+        return;
+    };
+    for entry in entries.flatten() {
+        let name = entry.file_name();
+        let name = name.to_string_lossy();
+        if matches(&name) {
+            paths.push(entry.path().to_string_lossy().into_owned());
+        }
+    }
+}
+
+fn is_serial_candidate(path: &str) -> bool {
+    let lower = path.to_ascii_lowercase();
+    lower.contains("usbmodem")
+        || lower.contains("usbserial")
+        || lower.contains("wchusbserial")
+        || lower.contains("slab_usbtouart")
+        || lower.contains("ttyacm")
+        || lower.contains("ttyusb")
+        || lower.contains("cp210")
+        || lower.contains("ch340")
+        || lower.contains("ftdi")
+        || lower.contains("arduino")
+        || lower.contains("espressif")
+        || lower.contains("esp32")
+        || lower.contains("pico")
+        || lower.contains("rp2040")
+        || lower.starts_with("com")
+        || lower.starts_with(r"\\.\com")
+}
+
+fn classify_host_device(path: &str) -> LanguageHostDevice {
+    let lower = path.to_ascii_lowercase();
+    let normalized = normalize_target_selector(path);
+    let mut tags = Vec::new();
+    push_unique_tag(&mut tags, "serial");
+
+    let (board_id, confidence) = if normalized.contains("pico_w")
+        || normalized.contains("picow")
+        || normalized.contains("raspberry_pi_pico_w")
+    {
+        push_unique_tag(&mut tags, "pico");
+        push_unique_tag(&mut tags, "rp2040");
+        (Some("raspberry-pi-pico-w"), 95)
+    } else if normalized.contains("pico") || normalized.contains("rp2040") {
+        push_unique_tag(&mut tags, "pico");
+        push_unique_tag(&mut tags, "rp2040");
+        (Some("raspberry-pi-pico"), 95)
+    } else if normalized.contains("esp32")
+        || normalized.contains("espressif")
+        || normalized.contains("silicon_labs")
+        || normalized.contains("cp210")
+        || normalized.contains("ch340")
+        || normalized.contains("wchusbserial")
+        || normalized.contains("slab_usbtouart")
+        || normalized.contains("usbserial")
+    {
+        push_unique_tag(&mut tags, "esp");
+        push_unique_tag(&mut tags, "uart");
+        (Some("esp32-devkit-v1"), 70)
+    } else if normalized.contains("arduino")
+        || normalized.contains("uno_r4")
+        || normalized.contains("renesas")
+    {
+        push_unique_tag(&mut tags, "arduino");
+        push_unique_tag(&mut tags, "usb_cdc");
+        (Some("arduino-uno-r4-wifi"), 85)
+    } else {
+        if lower.contains("usbmodem") || lower.contains("ttyacm") {
+            push_unique_tag(&mut tags, "usb_cdc");
+        }
+        (None, 0)
+    };
+
+    let bootloader = normalized.contains("boot")
+        || normalized.contains("bootloader")
+        || normalized.contains("cmsis_dap")
+        || normalized.contains("daplink")
+        || normalized.contains("uf2");
+    if bootloader {
+        push_unique_tag(&mut tags, "bootloader");
+    } else {
+        push_unique_tag(&mut tags, "runtime_or_upload");
+    }
+
+    let target = board_id.and_then(known_target);
+    let target_name = target
+        .as_ref()
+        .map(|target| target.display_name.as_str())
+        .unwrap_or("Board VM serial device");
+
+    LanguageHostDevice {
+        id: device_id(path),
+        port: path.to_owned(),
+        transport: "serial".to_owned(),
+        display_name: format!("{target_name} on {path}"),
+        target,
+        target_confidence: confidence,
+        bootloader,
+        tags,
+    }
+}
+
+fn device_dedupe_key(path: &str) -> String {
+    fs::canonicalize(path)
+        .unwrap_or_else(|_| PathBuf::from(path))
+        .to_string_lossy()
+        .into_owned()
+}
+
+fn device_id(path: &str) -> String {
+    let name = Path::new(path)
+        .file_name()
+        .map(|name| name.to_string_lossy())
+        .unwrap_or_else(|| path.into());
+    normalize_target_selector(&name).replace('_', "-")
+}
+
+fn push_unique_tag(tags: &mut Vec<String>, tag: &str) {
+    if !tags.iter().any(|existing| existing == tag) {
+        tags.push(tag.to_owned());
     }
 }
 
@@ -1802,6 +2008,36 @@ mod tests {
         assert!(options.verify_md5);
         assert!(!options.stay_in_bootloader);
         assert!(esp_upload_options_for_target("pico").is_none());
+    }
+
+    #[test]
+    fn host_device_discovery_classifies_serial_candidates() {
+        let devices = discover_devices_from_paths([
+            "/dev/cu.usbmodem1101",
+            "/dev/tty.usbserial-CP2102-esp32",
+            "/dev/serial/by-id/usb-Raspberry_Pi_Pico_E660-DAPLINK-if00",
+            "/tmp/not-a-board",
+        ]);
+
+        assert_eq!(devices.len(), 3);
+        assert_eq!(devices[0].port, "/dev/cu.usbmodem1101");
+        assert_eq!(devices[0].target, None);
+        assert!(devices[0].tags.contains(&"usb_cdc".to_owned()));
+
+        let pico = devices
+            .iter()
+            .find(|device| device.port.contains("Raspberry_Pi_Pico"))
+            .unwrap();
+        assert_eq!(pico.target.as_ref().unwrap().board_id, "raspberry-pi-pico");
+        assert!(pico.bootloader);
+        assert!(pico.target_confidence >= 90);
+
+        let esp = devices
+            .iter()
+            .find(|device| device.port.contains("usbserial"))
+            .unwrap();
+        assert_eq!(esp.target.as_ref().unwrap().board_id, "esp32-devkit-v1");
+        assert!(esp.tags.contains(&"uart".to_owned()));
     }
 
     #[test]

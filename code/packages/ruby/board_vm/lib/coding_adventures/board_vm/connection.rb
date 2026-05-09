@@ -3,6 +3,7 @@
 module CodingAdventures
   module BoardVM
     class UnsupportedBoardError < ArgumentError; end
+    class DeviceSelectionError < ArgumentError; end
 
     class Connection
       attr_reader :board, :cargo_workspace, :runner, :transport, :baud_rate, :timeout_ms

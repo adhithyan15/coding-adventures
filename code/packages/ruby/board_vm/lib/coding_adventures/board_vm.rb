@@ -21,6 +21,58 @@ module CodingAdventures
 
     module_function
 
+    def devices(paths: nil)
+      return Native.discover_devices if paths.nil?
+
+      Native.classify_devices(paths.map(&:to_s))
+    end
+
+    def device_list(device_candidates = nil)
+      device_candidates ||= devices
+      return "No Board VM devices found." if device_candidates.empty?
+
+      device_candidates.each_with_index.map do |device, index|
+        target = device["target"]
+        target_name = target ? target.fetch("display_name") : "Unknown board"
+        confidence = device.fetch("target_confidence", 0)
+        confidence_label = confidence.positive? ? ", #{confidence}% match" : ""
+        tags = Array(device["tags"])
+        status = tags.empty? ? "" : " [#{tags.join(", ")}]"
+
+        "#{index + 1}. #{target_name} - #{device.fetch("port")}#{confidence_label}#{status}"
+      end.join("\n")
+    end
+
+    def select_device(board: :auto, devices: nil)
+      candidates = devices || self.devices
+      normalized_board = board == :auto ? :auto : normalize_board(board)
+      matches = if normalized_board == :auto
+        candidates.select { |device| device_target_board(device) }
+      else
+        candidates.select do |device|
+          target_board = device_target_board(device)
+          target_board.nil? || target_board == normalized_board
+        end
+      end
+
+      matches = candidates if normalized_board == :auto && matches.empty? && candidates.length == 1
+      return matches.first if matches.length == 1
+
+      if candidates.empty?
+        raise DeviceSelectionError,
+          "No Board VM devices found. Plug in a board or pass an explicit device."
+      end
+
+      reason = if matches.empty? && normalized_board == :auto
+        "Multiple Board VM devices found; choose one"
+      elsif matches.empty?
+        "No matching Board VM device found"
+      else
+        "Multiple Board VM devices match"
+      end
+      raise DeviceSelectionError, "#{reason}.\n#{device_list(candidates)}"
+    end
+
     def known_targets
       Native.known_targets
     end
@@ -67,17 +119,20 @@ module CodingAdventures
     end
 
     def connect(
-      board: :uno_r4_wifi,
-      port:,
+      board: :auto,
+      port: nil,
+      device: nil,
+      devices: nil,
       flash: false,
       cargo_workspace: DEFAULT_RUST_WORKSPACE,
       runner: CommandRunner.new,
       transport: nil,
       **options
     )
+      selection = connection_selection(board: board, port: port, device: device, devices: devices)
       connection = Connection.new(
-        board: normalize_board(board),
-        port: port,
+        board: selection.fetch(:board),
+        port: selection.fetch(:port),
         cargo_workspace: cargo_workspace,
         runner: runner,
         transport: transport,
@@ -95,6 +150,62 @@ module CodingAdventures
 
     def uno_r4_wifi(**options, &block)
       connect(board: :uno_r4_wifi, **options, &block)
+    end
+
+    def connection_selection(board:, port:, device:, devices:)
+      explicit_port = !port.nil?
+      selected_device = resolve_device_reference(device, devices: devices) if device
+      selected_device ||= select_device(board: board, devices: devices) if port.nil?
+      port ||= selected_device && selected_device.fetch("port")
+
+      normalized_board = if board == :auto
+        inferred_board = selected_device && device_target_board(
+          selected_device,
+          minimum_confidence: 60
+        )
+        inferred_board ||= :uno_r4_wifi if explicit_port
+        unless inferred_board
+          raise DeviceSelectionError,
+            "Could not infer the board for #{port || "the selected device"}.\n#{device_list(devices || self.devices)}"
+        end
+        inferred_board
+      else
+        normalize_board(board)
+      end
+
+      { board: normalized_board, port: port }
+    end
+
+    def resolve_device_reference(device, devices: nil)
+      return device if device.is_a?(Hash)
+
+      candidates = devices || self.devices
+      if device.is_a?(Integer)
+        selected = candidates[device]
+        raise DeviceSelectionError, "No Board VM device at index #{device}." unless selected
+
+        return selected
+      end
+
+      needle = device.to_s
+      selected = candidates.find do |candidate|
+        candidate["id"] == needle || candidate["port"] == needle
+      end
+      unless selected
+        raise DeviceSelectionError,
+          "No Board VM device named #{needle.inspect}.\n#{device_list(candidates)}"
+      end
+
+      selected
+    end
+
+    def device_target_board(device, minimum_confidence: 0)
+      return nil if device.fetch("target_confidence", 0).to_i < minimum_confidence
+
+      target = device["target"]
+      return nil unless target
+
+      board_symbol(target.fetch("board_id"))
     end
 
     def normalize_board(board)

@@ -18,11 +18,12 @@ use board_vm_language_core::{
     build_run_wire_frame, build_stop_wire_frame, build_store_program_wire_frame,
     build_time_now_module, build_time_sleep_ms_module, capability_board_metadata,
     capability_bytecode_callable, capability_flag_names, capability_protocol_feature,
-    decode_wire_response, detect_target as core_detect_target, esp_upload_options_for_target,
-    known_targets, onboard_led_kind, program_format_name, raw_module_len, run_status_name,
-    BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
-    LanguageCoreError, LanguageEspUploadOptions, LanguageOnboardLed, LanguageTargetInfo,
-    LanguageValue,
+    decode_wire_response, detect_target as core_detect_target,
+    discover_devices as core_discover_devices, discover_devices_from_paths,
+    esp_upload_options_for_target, known_targets, onboard_led_kind, program_format_name,
+    raw_module_len, run_status_name, BoardVmLanguageSession, DecodedLanguageResponse,
+    DecodedLanguageResponseBody, LanguageCoreError, LanguageEspUploadOptions, LanguageHostDevice,
+    LanguageOnboardLed, LanguageTargetInfo, LanguageValue,
 };
 use ruby_bridge::VALUE;
 
@@ -423,6 +424,15 @@ extern "C" fn native_esp_upload_options(_self_val: VALUE, selector_val: VALUE) -
     }
 }
 
+extern "C" fn native_discover_devices(_self_val: VALUE) -> VALUE {
+    host_devices_to_rb(&core_discover_devices())
+}
+
+extern "C" fn native_classify_devices(_self_val: VALUE, paths_val: VALUE) -> VALUE {
+    let paths = ruby_bridge::vec_str_from_rb(paths_val);
+    host_devices_to_rb(&discover_devices_from_paths(paths))
+}
+
 fn with_session_mut(
     self_val: VALUE,
     operation: impl FnOnce(&mut RubyBoardVmSession) -> Result<VALUE, LanguageCoreError>,
@@ -681,6 +691,51 @@ fn esp_upload_options_to_rb(options: &LanguageEspUploadOptions) -> VALUE {
         "stay_in_bootloader",
         ruby_bridge::bool_to_rb(options.stay_in_bootloader),
     );
+    hash
+}
+
+fn host_devices_to_rb(devices: &[LanguageHostDevice]) -> VALUE {
+    let array = ruby_bridge::array_new();
+    for device in devices {
+        ruby_bridge::array_push(array, host_device_to_rb(device));
+    }
+    array
+}
+
+fn host_device_to_rb(device: &LanguageHostDevice) -> VALUE {
+    let hash = ruby_bridge::hash_new();
+    hash_set(hash, "id", ruby_bridge::str_to_rb(&device.id));
+    hash_set(hash, "port", ruby_bridge::str_to_rb(&device.port));
+    hash_set(hash, "transport", ruby_bridge::str_to_rb(&device.transport));
+    hash_set(
+        hash,
+        "display_name",
+        ruby_bridge::str_to_rb(&device.display_name),
+    );
+    hash_set(
+        hash,
+        "target",
+        device
+            .target
+            .as_ref()
+            .map(language_target_to_rb)
+            .unwrap_or_else(ruby_bridge::nil_value),
+    );
+    hash_set(
+        hash,
+        "target_confidence",
+        rb_usize(device.target_confidence),
+    );
+    hash_set(
+        hash,
+        "bootloader",
+        ruby_bridge::bool_to_rb(device.bootloader),
+    );
+    let tags = ruby_bridge::array_new();
+    for tag in &device.tags {
+        ruby_bridge::array_push(tags, ruby_bridge::str_to_rb(tag));
+    }
+    hash_set(hash, "tags", tags);
     hash
 }
 
@@ -960,6 +1015,18 @@ pub extern "C" fn Init_board_vm_native() {
         native,
         "esp_upload_options",
         native_esp_upload_options as *const c_void,
+        1,
+    );
+    ruby_bridge::define_module_function_raw(
+        native,
+        "discover_devices",
+        native_discover_devices as *const c_void,
+        0,
+    );
+    ruby_bridge::define_module_function_raw(
+        native,
+        "classify_devices",
+        native_classify_devices as *const c_void,
         1,
     );
 
