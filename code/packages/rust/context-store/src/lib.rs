@@ -114,6 +114,62 @@ pub struct ContextSession {
     pub head_pointer: Option<String>,
 }
 
+/// Portable ordering for bounded session list/read tools.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum SessionListSort {
+    #[default]
+    SessionId,
+    OwnerThenTitle,
+    StatusThenTitle,
+    Title,
+}
+
+/// Options for listing session headers without reading transcript bodies.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SessionListOptions {
+    pub owner_id: Option<String>,
+    pub statuses: Vec<SessionStatus>,
+    pub sort: SessionListSort,
+    pub limit: Option<usize>,
+}
+
+impl Default for SessionListOptions {
+    fn default() -> Self {
+        Self {
+            owner_id: None,
+            statuses: Vec::new(),
+            sort: SessionListSort::SessionId,
+            limit: None,
+        }
+    }
+}
+
+impl SessionListOptions {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_owner(mut self, owner_id: impl Into<String>) -> Self {
+        self.owner_id = Some(owner_id.into());
+        self
+    }
+
+    pub fn with_status(mut self, status: SessionStatus) -> Self {
+        self.statuses.push(status);
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: SessionListSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn limited_to(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
 /// One ordered event in a session transcript.
 #[derive(Debug, Clone, PartialEq)]
 pub struct ContextEntry {
@@ -220,6 +276,41 @@ impl<S: StorageBackend> ContextStore<S> {
             return Ok(None);
         };
         decode_session_record(&record.body, Some(record.revision.to_string())).map(Some)
+    }
+
+    /// List session headers with portable owner/status/sort/limit filters.
+    pub fn list_sessions(
+        &self,
+        options: SessionListOptions,
+    ) -> Result<Vec<ContextSession>, StorageError> {
+        validate_session_list_options(&options)?;
+        self.backend.initialize()?;
+        let page = self.backend.list(
+            NAMESPACE,
+            StorageListOptions {
+                prefix: Some("sessions/".to_string()),
+                recursive: true,
+                page_size: None,
+                cursor: None,
+            },
+        )?;
+
+        let mut sessions = page
+            .records
+            .iter()
+            .map(|record| decode_session_record(&record.body, Some(record.revision.to_string())))
+            .filter(|result| {
+                result
+                    .as_ref()
+                    .map(|session| session_matches_list_options(session, &options))
+                    .unwrap_or(true)
+            })
+            .collect::<Result<Vec<_>, _>>()?;
+        sort_sessions(&mut sessions, options.sort);
+        if let Some(limit) = options.limit {
+            sessions.truncate(limit);
+        }
+        Ok(sessions)
     }
 
     /// Append one entry to a session transcript.
@@ -780,6 +871,61 @@ fn validate_json_object(field: &str, value: &JsonValue) -> Result<(), StorageErr
     }
 }
 
+fn validate_session_list_options(options: &SessionListOptions) -> Result<(), StorageError> {
+    if let Some(owner_id) = options.owner_id.as_deref() {
+        validate_id("owner_id", owner_id)?;
+    }
+    if options.limit == Some(0) {
+        return Err(validation("limit", "must be greater than zero"));
+    }
+    Ok(())
+}
+
+fn session_matches_list_options(session: &ContextSession, options: &SessionListOptions) -> bool {
+    if let Some(owner_id) = options.owner_id.as_deref() {
+        if session.owner_id != owner_id {
+            return false;
+        }
+    }
+    if !options.statuses.is_empty() && !options.statuses.contains(&session.status) {
+        return false;
+    }
+    true
+}
+
+fn sort_sessions(sessions: &mut [ContextSession], sort: SessionListSort) {
+    match sort {
+        SessionListSort::SessionId => {
+            sessions.sort_by(|left, right| left.session_id.cmp(&right.session_id))
+        }
+        SessionListSort::OwnerThenTitle => sessions.sort_by(|left, right| {
+            left.owner_id
+                .cmp(&right.owner_id)
+                .then_with(|| left.title.cmp(&right.title))
+                .then_with(|| left.session_id.cmp(&right.session_id))
+        }),
+        SessionListSort::StatusThenTitle => sessions.sort_by(|left, right| {
+            session_status_rank(left.status)
+                .cmp(&session_status_rank(right.status))
+                .then_with(|| left.title.cmp(&right.title))
+                .then_with(|| left.session_id.cmp(&right.session_id))
+        }),
+        SessionListSort::Title => sessions.sort_by(|left, right| {
+            left.title
+                .cmp(&right.title)
+                .then_with(|| left.session_id.cmp(&right.session_id))
+        }),
+    }
+}
+
+fn session_status_rank(status: SessionStatus) -> u8 {
+    match status {
+        SessionStatus::Active => 0,
+        SessionStatus::Paused => 1,
+        SessionStatus::Archived => 2,
+    }
+}
+
 fn optional_string_json(value: Option<&str>) -> JsonValue {
     value
         .map(|value| JsonValue::String(value.to_string()))
@@ -869,6 +1015,62 @@ mod tests {
         assert_eq!(entries.len(), 1);
         assert_eq!(entries[0].entry_id, "entry-1");
         assert_eq!(entries[0].kind, ContextEntryKind::User);
+    }
+
+    #[test]
+    fn list_sessions_supports_owner_status_sort_and_limit() {
+        let store = ContextStore::new(InMemoryStorageBackend::new());
+        for (session_id, owner_id, title) in [
+            ("alpha", "chief", "Alpha planning"),
+            ("beta", "chief", "Beta archive"),
+            ("other", "guest", "Guest notes"),
+        ] {
+            let _ = store
+                .create_session(CreateSessionInput {
+                    session_id: session_id.to_string(),
+                    owner_id: owner_id.to_string(),
+                    title: title.to_string(),
+                })
+                .unwrap();
+        }
+        let _ = store.archive_session("beta").unwrap();
+
+        let active = store
+            .list_sessions(
+                SessionListOptions::new()
+                    .for_owner("chief")
+                    .with_status(SessionStatus::Active)
+                    .sorted_by(SessionListSort::Title)
+                    .limited_to(1),
+            )
+            .unwrap();
+        assert_eq!(
+            active
+                .iter()
+                .map(|session| session.session_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["alpha"]
+        );
+
+        let all_chief = store
+            .list_sessions(
+                SessionListOptions::new()
+                    .for_owner("chief")
+                    .with_status(SessionStatus::Archived)
+                    .with_status(SessionStatus::Active)
+                    .sorted_by(SessionListSort::StatusThenTitle),
+            )
+            .unwrap();
+        assert_eq!(
+            all_chief
+                .iter()
+                .map(|session| (session.session_id.as_str(), session.status))
+                .collect::<Vec<_>>(),
+            vec![
+                ("alpha", SessionStatus::Active),
+                ("beta", SessionStatus::Archived)
+            ]
+        );
     }
 
     #[test]
@@ -1119,6 +1321,11 @@ mod tests {
         assert!(ContextEntryKind::from_str("unknown").is_err());
         assert!(validate_title("bad\ntitle").is_err());
         assert!(validate_json_object("metadata", &JsonValue::String("bad".to_string())).is_err());
+        assert!(
+            validate_session_list_options(&SessionListOptions::new().for_owner("bad owner"))
+                .is_err()
+        );
+        assert!(validate_session_list_options(&SessionListOptions::new().limited_to(0)).is_err());
         assert!(decode_json(&[0xff, 0xfe]).is_err());
         assert!(expect_object("entry", &JsonValue::String("bad".to_string())).is_err());
     }
