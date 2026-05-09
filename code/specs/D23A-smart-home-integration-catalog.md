@@ -689,6 +689,17 @@ heartbeat freshness checks, disconnect tracking, event-gap detection, and
 bounded reconnect plans for Hue SSE, WebSocket, MQTT subscription, cloud push,
 serial, and radio-report workers.
 
+### `smart-home-local-http`
+
+Pure Rust local HTTP request planning primitives.
+
+**Initial Rust implementation:** `code/packages/rust/smart-home-local-http`
+now provides deterministic endpoint descriptors, URL normalization, request
+templates, vault-backed auth placeholders, idempotency and timeout hints, and
+header conflict checks for Hue, Shelly, WLED, ESPHome, camera, and energy
+gateway workers. It intentionally does not open sockets or resolve secrets; a
+capability-caged runtime worker turns accepted plans into actual network I/O.
+
 ### `smart-home-integration-importer`
 
 Later offline tool for importing external catalog metadata.
