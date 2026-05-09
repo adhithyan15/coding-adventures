@@ -891,6 +891,7 @@ pub enum RuntimeReadToolRequest {
     GetHealth {
         bridge_id: Option<BridgeId>,
     },
+    ObserveSupervision,
 }
 
 impl RuntimeReadToolRequest {
@@ -901,6 +902,7 @@ impl RuntimeReadToolRequest {
             Self::GetState { .. } => SmartHomeTool::GetState,
             Self::DescribeCapabilities { .. } => SmartHomeTool::DescribeCapabilities,
             Self::GetHealth { .. } => SmartHomeTool::GetHealth,
+            Self::ObserveSupervision => SmartHomeTool::ObserveSupervision,
         }
     }
 }
@@ -1039,6 +1041,7 @@ pub enum RuntimeReadToolOutput {
         capabilities: Vec<Capability>,
     },
     Health(Vec<BridgeHealthSnapshot>),
+    SupervisionObservation(RuntimeSupervisionObservation),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1434,6 +1437,9 @@ impl SmartHomeRuntime {
                         .collect(),
                 )),
             },
+            RuntimeReadToolRequest::ObserveSupervision => Ok(
+                RuntimeReadToolOutput::SupervisionObservation(self.observe_supervision_at(now_ms)?),
+            ),
         }
     }
 
@@ -2870,6 +2876,14 @@ mod tests {
             .with_expiry(2_000),
         );
         runtime
+            .supervisor_mut()
+            .register_worker(SupervisedBridgeWorker::new(
+                BridgeId::trusted("bridge-1"),
+                IntegrationId::trusted("hue"),
+                1_000,
+                100,
+            ));
+        runtime
             .registry_mut()
             .apply_state_snapshot(StateSnapshot {
                 entity_id: EntityId::trusted("entity-1"),
@@ -2920,12 +2934,15 @@ mod tests {
             .unwrap();
         let health = runtime
             .execute_read_tool(
-                principal,
+                principal.clone(),
                 RuntimeReadToolRequest::GetHealth {
                     bridge_id: Some(BridgeId::trusted("bridge-1")),
                 },
                 1_504,
             )
+            .unwrap();
+        let observation = runtime
+            .execute_read_tool(principal, RuntimeReadToolRequest::ObserveSupervision, 1_505)
             .unwrap();
 
         assert!(matches!(
@@ -2963,7 +2980,15 @@ mod tests {
                 last_seen_at_ms: None,
             }]
         ));
-        assert_eq!(runtime.registry().counts().authorization_decisions, 5);
+        assert!(matches!(
+            observation,
+            RuntimeReadToolOutput::SupervisionObservation(observation)
+                if observation.generated_at_ms == 1_505
+                    && observation.worker_restart_count() == 1
+                    && observation.due_worker_deadline_count() == 1
+                    && observation.next_worker_heartbeat_due_at_ms() == Some(1_100)
+        ));
+        assert_eq!(runtime.registry().counts().authorization_decisions, 6);
         assert!(runtime
             .registry()
             .authorization_decisions()

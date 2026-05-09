@@ -19,8 +19,8 @@ Included surfaces:
   authorized commands
 - registry-backed tool authorization decisions for Chief of Staff tool calls
 - D18D-facing read tool facade for listing bridges/devices, reading entity
-  state, describing capabilities, and inspecting bridge health without invoking
-  integrations
+  state, describing capabilities, inspecting bridge health, and observing
+  supervision status without invoking integrations
 - D18D-facing subscribe tool facade that authorizes event-stream access and
   registers filtered replay subscriptions with checkpoints
 - D18D-facing pair-bridge facade with short-lived pairing sessions that complete
