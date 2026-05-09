@@ -37,6 +37,27 @@ impl fmt::Display for EventStreamId {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum EventStreamError {
+    CheckpointStreamMismatch {
+        expected: EventStreamId,
+        actual: EventStreamId,
+    },
+}
+
+impl fmt::Display for EventStreamError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::CheckpointStreamMismatch { expected, actual } => write!(
+                f,
+                "checkpoint stream {actual} does not match expected stream {expected}"
+            ),
+        }
+    }
+}
+
+impl std::error::Error for EventStreamError {}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum EventStreamTransport {
     ServerSentEvents,
@@ -503,6 +524,29 @@ impl EventStreamState {
         }
     }
 
+    pub fn resume_from_checkpoint(
+        spec: EventStreamSpec,
+        checkpoint: EventStreamCheckpoint,
+    ) -> Result<Self, EventStreamError> {
+        if checkpoint.stream_id != spec.stream_id {
+            return Err(EventStreamError::CheckpointStreamMismatch {
+                expected: spec.stream_id,
+                actual: checkpoint.stream_id,
+            });
+        }
+
+        Ok(Self {
+            spec,
+            status: EventStreamStatus::Idle,
+            cursor: checkpoint.cursor,
+            connected_at_ms: None,
+            last_heartbeat_at_ms: None,
+            last_disconnect_at_ms: None,
+            reconnect_attempt: 0,
+            pending_gap_count: 0,
+        })
+    }
+
     pub fn checkpoint(&self) -> EventStreamCheckpoint {
         EventStreamCheckpoint::new(self.spec.stream_id.clone(), self.cursor.clone())
     }
@@ -912,6 +956,53 @@ mod tests {
             Some(EventId::trusted("event-1"))
         );
         assert_eq!(state.last_heartbeat_at_ms, Some(1_300));
+    }
+
+    #[test]
+    fn state_resumes_from_matching_checkpoints_without_replaying_zero() {
+        let spec = EventStreamSpec::hue_sse(bridge_id(), "https://bridge/eventstream");
+        let checkpoint = EventStreamCheckpoint::new(
+            spec.stream_id.clone(),
+            EventStreamCursor::start(1_000).advance(
+                EventId::trusted("event-42"),
+                Some("sse:last-event-id:42".to_string()),
+                1_500,
+            ),
+        );
+
+        let resumed = EventStreamState::resume_from_checkpoint(spec, checkpoint).unwrap();
+
+        assert_eq!(resumed.status, EventStreamStatus::Idle);
+        assert_eq!(resumed.cursor.sequence, 1);
+        assert_eq!(
+            resumed.cursor.native_cursor,
+            Some("sse:last-event-id:42".to_string())
+        );
+        assert_eq!(
+            resumed.cursor.last_event_id,
+            Some(EventId::trusted("event-42"))
+        );
+        assert_eq!(resumed.cursor.observed_at_ms, 1_500);
+        assert_eq!(resumed.reconnect_attempt, 0);
+    }
+
+    #[test]
+    fn state_rejects_mismatched_checkpoints() {
+        let spec = EventStreamSpec::hue_sse(bridge_id(), "https://bridge/eventstream");
+        let checkpoint = EventStreamCheckpoint::new(
+            EventStreamId::trusted("mqtt:broker-1"),
+            EventStreamCursor::start(1_000),
+        );
+
+        let error = EventStreamState::resume_from_checkpoint(spec.clone(), checkpoint).unwrap_err();
+
+        assert_eq!(
+            error,
+            EventStreamError::CheckpointStreamMismatch {
+                expected: spec.stream_id,
+                actual: EventStreamId::trusted("mqtt:broker-1")
+            }
+        );
     }
 
     #[test]

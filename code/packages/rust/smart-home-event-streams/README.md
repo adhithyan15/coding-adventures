@@ -10,6 +10,7 @@ radio workers a shared deterministic shape for:
 - stream identity and transport classification
 - MQTT topic filter validation, matching, and subscription descriptors
 - stream cursors and replay checkpoints
+- checkpoint-based state resume after supervised worker restarts
 - heartbeat freshness and stale-event deadlines
 - heartbeat deadline schedules for supervisor wakeups across many streams
 - disconnect tracking without losing the last cursor

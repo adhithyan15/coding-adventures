@@ -14,5 +14,7 @@ All notable changes to this package will be documented in this file.
 - Bounded reconnect policy with deterministic exponential backoff.
 - Event stream runtime state helpers for connection, heartbeat, event, gap,
   disconnect, stale-state, and restart-plan decisions.
+- Checkpoint resume helpers that rebuild stream state from durable cursors while
+  rejecting mismatched stream ids.
 - Heartbeat deadline and restart schedules for batching supervisor wakeups
   across multiple stream workers.
