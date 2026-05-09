@@ -28,3 +28,5 @@ All notable changes to this package will be documented in this file.
   into source, transport, protocol, priority, and pairing requirements.
 - Deterministic pairing plans that rank discovered bridge candidates and map
   pairing requirements into next actions without opening credential flows.
+- Bounded pairing-plan query options for integration, source, freshness,
+  requirement, action, priority, human-action, sorting, and limits.
