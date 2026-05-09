@@ -12,4 +12,6 @@ All notable changes to this package will be documented in this file.
   tombstoning operations
 - portable lexical search implemented at the store layer
 - active-at and limit options for portable lexical memory searches
+- bounded `MemoryListOptions` selectors for class, tag, source reference,
+  active-at, minimum confidence, tombstone inclusion, sorting, and limits
 - Unit tests using `storage-core::InMemoryStorageBackend`

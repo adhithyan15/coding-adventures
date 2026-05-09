@@ -14,5 +14,9 @@ All notable changes to this package will be documented in this file.
   supported native scheduler families plus the in-process fallback
 - Strict portability validation that rejects jobs outside the current
   macOS/Linux/Windows portable subset before backend planning
+- Read-side portability issue queries and backend/field summaries for bounded
+  D18E inspection tools
+- Backend-level portability status rows for D18E/tool surfaces that need one
+  supported-or-blocked result per scheduler family
 - Renamed the package to `os-job-runtime` to make the OS scheduling layer easier
   to discover

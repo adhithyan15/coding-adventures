@@ -20,6 +20,8 @@ All notable changes to this package will be documented in this file.
   modes for reviving dead stdio worker slots.
 - Added tests proving restarted workers can accept new jobs and bounded restart
   policies stop crash loops.
+- Added non-consuming executor snapshots for supervisor/read-side tools to
+  inspect worker liveness, queue saturation, and in-flight job counts.
 
 ## [0.1.0] - 2026-04-21
 

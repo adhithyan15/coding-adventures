@@ -13,6 +13,8 @@ use zigbee_nwk::NetworkAddress;
 pub const ZCL_READ_ATTRIBUTES_COMMAND_ID: u8 = 0x00;
 pub const ZCL_REPORT_ATTRIBUTES_COMMAND_ID: u8 = 0x0a;
 pub const ZCL_DEFAULT_RESPONSE_COMMAND_ID: u8 = 0x0b;
+pub const ZCL_LEVEL_MOVE_TO_LEVEL_WITH_ON_OFF_COMMAND_ID: u8 = 0x04;
+pub const ZCL_COLOR_MOVE_TO_COLOR_TEMPERATURE_COMMAND_ID: u8 = 0x0a;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct ZclClusterId(pub u16);
@@ -58,6 +60,7 @@ impl ZclAttributeId {
     pub const CURRENT_LEVEL: Self = Self(0x0000);
     pub const LOCK_STATE: Self = Self(0x0000);
     pub const LOCAL_TEMPERATURE: Self = Self(0x0000);
+    pub const MEASURED_VALUE: Self = Self(0x0000);
     pub const OCCUPANCY: Self = Self(0x0000);
     pub const COLOR_TEMPERATURE_MIREK: Self = Self(0x0007);
     pub const MANUFACTURER_NAME: Self = Self(0x0004);
@@ -352,6 +355,36 @@ pub fn on_off_command_frame(transaction_sequence_number: u8, command: OnOffComma
     )
 }
 
+pub fn move_to_level_with_on_off_frame(
+    transaction_sequence_number: u8,
+    percent: u8,
+    transition_time_ds: u16,
+) -> ZclFrame {
+    let mut payload = Vec::with_capacity(3);
+    payload.push(percentage_to_level(percent));
+    payload.extend_from_slice(&transition_time_ds.to_le_bytes());
+    ZclFrame::cluster_command(
+        transaction_sequence_number,
+        ZCL_LEVEL_MOVE_TO_LEVEL_WITH_ON_OFF_COMMAND_ID,
+        payload,
+    )
+}
+
+pub fn move_to_color_temperature_frame(
+    transaction_sequence_number: u8,
+    mirek: u16,
+    transition_time_ds: u16,
+) -> ZclFrame {
+    let mut payload = Vec::with_capacity(4);
+    payload.extend_from_slice(&mirek.to_le_bytes());
+    payload.extend_from_slice(&transition_time_ds.to_le_bytes());
+    ZclFrame::cluster_command(
+        transaction_sequence_number,
+        ZCL_COLOR_MOVE_TO_COLOR_TEMPERATURE_COMMAND_ID,
+        payload,
+    )
+}
+
 pub fn parse_attribute_reports(
     cluster_id: ZclClusterId,
     payload: &[u8],
@@ -378,6 +411,8 @@ pub fn capabilities_for_cluster(cluster_id: ZclClusterId) -> Vec<Capability> {
         ZclClusterId::LEVEL_CONTROL => vec![Capability::light_brightness()],
         ZclClusterId::COLOR_CONTROL => vec![Capability::light_color_temperature()],
         ZclClusterId::OCCUPANCY_SENSING => vec![Capability::sensor_occupancy()],
+        ZclClusterId::TEMPERATURE_MEASUREMENT => vec![Capability::sensor_temperature()],
+        ZclClusterId::ILLUMINANCE_MEASUREMENT => vec![Capability::sensor_illuminance()],
         ZclClusterId::DOOR_LOCK => vec![Capability::new(
             CapabilityId::trusted("lock.state"),
             CapabilityMode::ObserveAndCommand,
@@ -424,6 +459,22 @@ pub fn state_delta_for_report(report: &ZclAttributeReport) -> Option<StateDelta>
                 value: Value::Text(lock_state_name(*state).to_string()),
             })
         }
+        (
+            ZclClusterId::TEMPERATURE_MEASUREMENT,
+            ZclAttributeId::MEASURED_VALUE,
+            ZclValue::I16(centi_celsius),
+        ) => Some(StateDelta {
+            capability_id: CapabilityId::trusted("sensor.temperature"),
+            value: Value::Number(centi_celsius_to_celsius(*centi_celsius)),
+        }),
+        (
+            ZclClusterId::ILLUMINANCE_MEASUREMENT,
+            ZclAttributeId::MEASURED_VALUE,
+            ZclValue::U16(measured_value),
+        ) => illuminance_measured_value_to_lux(*measured_value).map(|lux| StateDelta {
+            capability_id: CapabilityId::trusted("sensor.illuminance"),
+            value: Value::Number(lux),
+        }),
         _ => None,
     }
 }
@@ -432,12 +483,29 @@ pub fn level_to_percentage(level: u8) -> u8 {
     ((u16::from(level) * 100 + 127) / 254).min(100) as u8
 }
 
+pub fn percentage_to_level(percent: u8) -> u8 {
+    let percent = percent.min(100);
+    ((u16::from(percent) * 254 + 50) / 100).min(254) as u8
+}
+
 pub fn lock_state_name(value: u8) -> &'static str {
     match value {
         0x00 => "not_fully_locked",
         0x01 => "locked",
         0x02 => "unlocked",
         _ => "unknown",
+    }
+}
+
+pub fn centi_celsius_to_celsius(value: i16) -> f64 {
+    f64::from(value) / 100.0
+}
+
+pub fn illuminance_measured_value_to_lux(value: u16) -> Option<f64> {
+    match value {
+        0xffff => None,
+        0 => Some(0.0),
+        measured_value => Some(10_f64.powf((f64::from(measured_value) - 1.0) / 10_000.0)),
     }
 }
 
@@ -567,6 +635,29 @@ mod tests {
     }
 
     #[test]
+    fn light_command_frames_encode_level_and_color_temperature() {
+        let level = move_to_level_with_on_off_frame(0x44, 50, 25);
+        let color_temperature = move_to_color_temperature_frame(0x45, 366, 10);
+
+        assert_eq!(
+            level.command_id,
+            ZCL_LEVEL_MOVE_TO_LEVEL_WITH_ON_OFF_COMMAND_ID
+        );
+        assert_eq!(level.encode().unwrap(), vec![0x11, 0x44, 0x04, 127, 25, 0]);
+        assert_eq!(
+            color_temperature.command_id,
+            ZCL_COLOR_MOVE_TO_COLOR_TEMPERATURE_COMMAND_ID
+        );
+        assert_eq!(
+            color_temperature.encode().unwrap(),
+            vec![0x11, 0x45, 0x0a, 0x6e, 0x01, 10, 0]
+        );
+        assert_eq!(percentage_to_level(0), 0);
+        assert_eq!(percentage_to_level(100), 254);
+        assert_eq!(percentage_to_level(250), 254);
+    }
+
+    #[test]
     fn parses_on_off_attribute_report_and_maps_to_state_delta() {
         let reports = parse_attribute_reports(
             ZclClusterId::ON_OFF,
@@ -637,6 +728,45 @@ mod tests {
     }
 
     #[test]
+    fn maps_environment_measurement_reports_to_d23_deltas() {
+        let temperature = ZclAttributeReport {
+            cluster_id: ZclClusterId::TEMPERATURE_MEASUREMENT,
+            attribute_id: ZclAttributeId::MEASURED_VALUE,
+            data_type: ZclDataType::I16,
+            value: ZclValue::I16(2312),
+        };
+        let illuminance = ZclAttributeReport {
+            cluster_id: ZclClusterId::ILLUMINANCE_MEASUREMENT,
+            attribute_id: ZclAttributeId::MEASURED_VALUE,
+            data_type: ZclDataType::U16,
+            value: ZclValue::U16(10001),
+        };
+        let invalid_illuminance = ZclAttributeReport {
+            value: ZclValue::U16(0xffff),
+            ..illuminance.clone()
+        };
+
+        assert_eq!(
+            state_delta_for_report(&temperature).unwrap(),
+            StateDelta {
+                capability_id: CapabilityId::trusted("sensor.temperature"),
+                value: Value::Number(23.12),
+            }
+        );
+        assert_eq!(
+            state_delta_for_report(&illuminance).unwrap(),
+            StateDelta {
+                capability_id: CapabilityId::trusted("sensor.illuminance"),
+                value: Value::Number(10.0),
+            }
+        );
+        assert!(state_delta_for_report(&invalid_illuminance).is_none());
+        assert_eq!(centi_celsius_to_celsius(-550), -5.5);
+        assert_eq!(illuminance_measured_value_to_lux(0), Some(0.0));
+        assert_eq!(illuminance_measured_value_to_lux(0xffff), None);
+    }
+
+    #[test]
     fn common_clusters_project_capabilities() {
         assert_eq!(
             capabilities_for_cluster(ZclClusterId::ON_OFF)[0].capability_id,
@@ -645,6 +775,14 @@ mod tests {
         assert_eq!(
             capabilities_for_cluster(ZclClusterId::DOOR_LOCK)[0].capability_id,
             CapabilityId::trusted("lock.state")
+        );
+        assert_eq!(
+            capabilities_for_cluster(ZclClusterId::TEMPERATURE_MEASUREMENT)[0].capability_id,
+            CapabilityId::trusted("sensor.temperature")
+        );
+        assert_eq!(
+            capabilities_for_cluster(ZclClusterId::ILLUMINANCE_MEASUREMENT)[0].capability_id,
+            CapabilityId::trusted("sensor.illuminance")
         );
         assert!(capabilities_for_cluster(ZclClusterId::BASIC).is_empty());
     }

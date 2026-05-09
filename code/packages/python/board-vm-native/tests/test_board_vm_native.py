@@ -1,6 +1,8 @@
 import io
 import pathlib
+import socket
 import tempfile
+import threading
 
 from board_vm_native import (
     BoardDevice,
@@ -11,6 +13,7 @@ from board_vm_native import (
     PicoUf2UploadOptions,
     ProtocolResult,
     Session,
+    TcpTransport,
     connect,
     connection_option_list,
     connection_options,
@@ -159,6 +162,9 @@ def test_connection_options_are_exposed_from_rust_registry():
         "command_transport": True,
         "ota_update": False,
         "requires": "serial_port",
+        "endpoint_transport": "serial_port",
+        "endpoint_scheme": "serial",
+        "wire_protocol": "board_vm_cobs_crc",
     }
     assert {
         "transport": "wifi",
@@ -166,6 +172,9 @@ def test_connection_options_are_exposed_from_rust_registry():
         "command_transport": True,
         "ota_update": True,
         "requires": "network_endpoint",
+        "endpoint_transport": "tcp_socket",
+        "endpoint_scheme": "tcp",
+        "wire_protocol": "board_vm_cobs_crc",
     } in options
     assert "Wi-Fi [commands, OTA]" in connection_option_list("uno-r4-wifi")
 
@@ -235,6 +244,77 @@ def test_connect_can_use_a_wireless_connection_option_with_an_injected_endpoint(
     assert connection.wireless_connection is True
     assert connection.ota_connection is True
     assert len(transport.frames) == 2
+
+
+def test_connect_builds_a_tcp_transport_for_wifi_endpoints():
+    connection = connect(
+        "uno-r4-wifi",
+        via="Wi-Fi",
+        endpoint="tcp://board-vm.local:4170",
+    )
+
+    assert connection.port is None
+    assert connection.endpoint == "tcp://board-vm.local:4170"
+    assert connection.connection_transport == "wifi"
+    transport = connection._active_transport()
+    assert isinstance(transport, TcpTransport)
+    assert transport.endpoint == "tcp://board-vm.local:4170"
+    assert transport.host == "board-vm.local"
+    assert transport.port == 4170
+
+
+def test_tcp_transport_transacts_with_a_local_endpoint():
+    request = b"\x01\x02\x00"
+    response = b"\x03\x04\x00"
+    listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    listener.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    listener.bind(("127.0.0.1", 0))
+    listener.listen(1)
+    received = []
+    errors = []
+
+    def serve():
+        try:
+            conn, _addr = listener.accept()
+            with conn:
+                frame = bytearray()
+                while not frame.endswith(b"\x00"):
+                    chunk = conn.recv(1)
+                    if not chunk:
+                        break
+                    frame.extend(chunk)
+                received.append(bytes(frame))
+                conn.sendall(response)
+        except OSError as error:
+            errors.append(error)
+
+    thread = threading.Thread(target=serve)
+    thread.start()
+    endpoint = f"tcp://127.0.0.1:{listener.getsockname()[1]}"
+    transport = TcpTransport(endpoint, timeout_ms=500)
+
+    try:
+        assert transport.transact(request, timeout_ms=500) == response
+        thread.join(timeout=1)
+        assert not thread.is_alive()
+        assert errors == []
+        assert received == [request]
+    finally:
+        transport.close()
+        listener.close()
+
+
+def test_wifi_endpoint_dispatch_requires_endpoint_when_not_injected():
+    connection = connect("uno-r4-wifi", via="Wi-Fi")
+
+    try:
+        connection.smoke()
+    except ValueError as error:
+        message = str(error)
+    else:
+        raise AssertionError("expected missing TCP endpoint to fail")
+
+    assert "requires a Board VM TCP endpoint" in message
 
 
 def test_connect_can_prompt_for_the_connection_option_after_the_board():

@@ -11,9 +11,12 @@ All notable changes to this package will be documented in this file.
 - Protocol identifier records for Hue, Zigbee, Z-Wave, Thread, Matter, MQTT,
   and vendor adapters.
 - D18D-style smart-home tool descriptors and command risk-tier helpers.
+- Read-only `smart_home.observe_supervision` tool descriptor for status loops.
 - Agent capability grant primitives for checking smart-home tool access before
   runtime dispatch.
 - Authorization-decision records for capturing allowed or denied tool/command
   checks with matched and missing grants.
 - Canonical capability catalog helpers for light, scene, lock, climate, sensor,
   and input integration families.
+- MQTT topic names, filters, QoS levels, roles, and bindings for MQTT-backed
+  device integrations.

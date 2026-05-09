@@ -453,6 +453,59 @@ impl Display for BuiltinToolFamily {
     }
 }
 
+/// Query options for selecting model-facing tool definitions.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct ToolCatalogQuery {
+    pub family: Option<BuiltinToolFamily>,
+    pub side_effects: Option<ToolSideEffects>,
+    pub max_tier: Option<PrivilegeTier>,
+    pub required_capabilities: Vec<String>,
+    pub tags: Vec<String>,
+    pub stability: Option<ToolStability>,
+    pub limit: Option<usize>,
+}
+
+impl ToolCatalogQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_family(mut self, family: BuiltinToolFamily) -> Self {
+        self.family = Some(family);
+        self
+    }
+
+    pub fn with_side_effects(mut self, side_effects: ToolSideEffects) -> Self {
+        self.side_effects = Some(side_effects);
+        self
+    }
+
+    pub fn with_max_tier(mut self, max_tier: PrivilegeTier) -> Self {
+        self.max_tier = Some(max_tier);
+        self
+    }
+
+    pub fn requiring_capability(mut self, capability: impl Into<String>) -> Self {
+        self.required_capabilities.push(capability.into());
+        self
+    }
+
+    pub fn with_tag(mut self, tag: impl Into<String>) -> Self {
+        self.tags.push(tag.into());
+        self
+    }
+
+    pub fn with_stability(mut self, stability: ToolStability) -> Self {
+        self.stability = Some(stability);
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
 /// Return the first-phase built-in store/job tool definitions from D18D.
 pub fn builtin_tool_catalog() -> Vec<ToolDefinition> {
     [
@@ -495,11 +548,28 @@ pub fn builtin_tool_catalog() -> Vec<ToolDefinition> {
 
 /// Return first-phase built-ins for one family.
 pub fn builtin_tools_for_family(family: BuiltinToolFamily) -> Vec<ToolDefinition> {
-    let family_prefix = format!("{}.", family.as_str());
-    builtin_tool_catalog()
-        .into_iter()
-        .filter(|definition| definition.tool_id.starts_with(&family_prefix))
-        .collect()
+    builtin_tools_matching(ToolCatalogQuery::new().for_family(family))
+}
+
+/// Query first-phase built-in definitions by catalog metadata.
+pub fn builtin_tools_matching(query: ToolCatalogQuery) -> Vec<ToolDefinition> {
+    if query.limit == Some(0) {
+        return Vec::new();
+    }
+
+    let mut definitions = Vec::new();
+    for definition in builtin_tool_catalog() {
+        if !definition_matches_catalog_query(&definition, &query) {
+            continue;
+        }
+        definitions.push(definition);
+        if let Some(limit) = query.limit {
+            if definitions.len() >= limit {
+                break;
+            }
+        }
+    }
+    definitions
 }
 
 /// Look up one first-phase built-in definition by id.
@@ -507,6 +577,39 @@ pub fn builtin_tool_definition(tool_id: &str) -> Option<ToolDefinition> {
     builtin_tool_catalog()
         .into_iter()
         .find(|definition| definition.tool_id == tool_id)
+}
+
+fn definition_matches_catalog_query(definition: &ToolDefinition, query: &ToolCatalogQuery) -> bool {
+    if let Some(family) = query.family {
+        let family_prefix = format!("{}.", family.as_str());
+        if !definition.tool_id.starts_with(&family_prefix) {
+            return false;
+        }
+    }
+    if let Some(side_effects) = query.side_effects {
+        if definition.side_effects != side_effects {
+            return false;
+        }
+    }
+    if let Some(max_tier) = query.max_tier {
+        if definition.required_tier > max_tier {
+            return false;
+        }
+    }
+    if let Some(stability) = query.stability {
+        if definition.stability != stability {
+            return false;
+        }
+    }
+    query.required_capabilities.iter().all(|capability| {
+        definition
+            .required_capabilities
+            .iter()
+            .any(|candidate| candidate == capability)
+    }) && query
+        .tags
+        .iter()
+        .all(|tag| definition.tags.iter().any(|candidate| candidate == tag))
 }
 
 fn context_open_session_definition() -> ToolDefinition {
@@ -1945,6 +2048,665 @@ impl ToolResult {
 }
 
 // ============================================================================
+// Read-side queries
+// ============================================================================
+
+/// Sort order for tool invocation request queries.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolInvocationSort {
+    RequestedAtAsc,
+    RequestedAtDesc,
+    ToolIdThenRequestedAt,
+    CallId,
+}
+
+impl Default for ToolInvocationSort {
+    fn default() -> Self {
+        Self::RequestedAtAsc
+    }
+}
+
+/// Query options for selecting pending or persisted invocation requests.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct ToolInvocationQuery {
+    pub tool_id: Option<ToolId>,
+    pub requested_by: Option<RequestedBy>,
+    pub session_id: Option<String>,
+    pub job_id: Option<String>,
+    pub agent_id: Option<String>,
+    pub user_id: Option<String>,
+    pub requested_since: Option<TimestampMs>,
+    pub requested_until: Option<TimestampMs>,
+    pub deadline_before: Option<TimestampMs>,
+    pub sort: ToolInvocationSort,
+    pub limit: Option<usize>,
+}
+
+impl ToolInvocationQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_tool(mut self, tool_id: impl Into<String>) -> Self {
+        self.tool_id = Some(tool_id.into());
+        self
+    }
+
+    pub fn requested_by(mut self, requested_by: RequestedBy) -> Self {
+        self.requested_by = Some(requested_by);
+        self
+    }
+
+    pub fn in_session(mut self, session_id: impl Into<String>) -> Self {
+        self.session_id = Some(session_id.into());
+        self
+    }
+
+    pub fn for_job(mut self, job_id: impl Into<String>) -> Self {
+        self.job_id = Some(job_id.into());
+        self
+    }
+
+    pub fn for_agent(mut self, agent_id: impl Into<String>) -> Self {
+        self.agent_id = Some(agent_id.into());
+        self
+    }
+
+    pub fn for_user(mut self, user_id: impl Into<String>) -> Self {
+        self.user_id = Some(user_id.into());
+        self
+    }
+
+    pub fn requested_since(mut self, requested_since: TimestampMs) -> Self {
+        self.requested_since = Some(requested_since);
+        self
+    }
+
+    pub fn requested_until(mut self, requested_until: TimestampMs) -> Self {
+        self.requested_until = Some(requested_until);
+        self
+    }
+
+    pub fn deadline_before(mut self, deadline_before: TimestampMs) -> Self {
+        self.deadline_before = Some(deadline_before);
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: ToolInvocationSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
+/// Query invocation requests without binding the contract to a storage backend.
+pub fn query_tool_invocation_requests<'a, I>(
+    requests: I,
+    query: &ToolInvocationQuery,
+) -> Vec<&'a ToolInvocationRequest>
+where
+    I: IntoIterator<Item = &'a ToolInvocationRequest>,
+{
+    if query.limit == Some(0) {
+        return Vec::new();
+    }
+
+    let mut requests = requests
+        .into_iter()
+        .filter(|request| tool_invocation_matches_query(request, query))
+        .collect::<Vec<_>>();
+    sort_tool_invocation_requests(&mut requests, query.sort);
+    apply_limit(&mut requests, query.limit);
+    requests
+}
+
+/// Sort order for durable tool call record queries.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolCallRecordSort {
+    StartedAtAsc,
+    StartedAtDesc,
+    CompletedAtDesc,
+    StatusThenToolId,
+    CallId,
+}
+
+impl Default for ToolCallRecordSort {
+    fn default() -> Self {
+        Self::StartedAtAsc
+    }
+}
+
+/// Query options for selecting durable tool call lifecycle records.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct ToolCallRecordQuery {
+    pub tool_id: Option<ToolId>,
+    pub statuses: Vec<ToolCallStatus>,
+    pub approval_states: Vec<ApprovalState>,
+    pub lock_scope: Option<String>,
+    pub started_since: Option<TimestampMs>,
+    pub started_until: Option<TimestampMs>,
+    pub completed_since: Option<TimestampMs>,
+    pub completed_until: Option<TimestampMs>,
+    pub active_only: bool,
+    pub sort: ToolCallRecordSort,
+    pub limit: Option<usize>,
+}
+
+impl ToolCallRecordQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_tool(mut self, tool_id: impl Into<String>) -> Self {
+        self.tool_id = Some(tool_id.into());
+        self
+    }
+
+    pub fn with_status(mut self, status: ToolCallStatus) -> Self {
+        self.statuses.push(status);
+        self
+    }
+
+    pub fn with_approval_state(mut self, approval_state: ApprovalState) -> Self {
+        self.approval_states.push(approval_state);
+        self
+    }
+
+    pub fn with_lock_scope(mut self, lock_scope: impl Into<String>) -> Self {
+        self.lock_scope = Some(lock_scope.into());
+        self
+    }
+
+    pub fn started_since(mut self, started_since: TimestampMs) -> Self {
+        self.started_since = Some(started_since);
+        self
+    }
+
+    pub fn started_until(mut self, started_until: TimestampMs) -> Self {
+        self.started_until = Some(started_until);
+        self
+    }
+
+    pub fn completed_since(mut self, completed_since: TimestampMs) -> Self {
+        self.completed_since = Some(completed_since);
+        self
+    }
+
+    pub fn completed_until(mut self, completed_until: TimestampMs) -> Self {
+        self.completed_until = Some(completed_until);
+        self
+    }
+
+    pub fn active_only(mut self) -> Self {
+        self.active_only = true;
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: ToolCallRecordSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
+/// Query durable call records without binding the contract to a storage backend.
+pub fn query_tool_call_records<'a, I>(
+    records: I,
+    query: &ToolCallRecordQuery,
+) -> Vec<&'a ToolCallRecord>
+where
+    I: IntoIterator<Item = &'a ToolCallRecord>,
+{
+    if query.limit == Some(0) {
+        return Vec::new();
+    }
+
+    let mut records = records
+        .into_iter()
+        .filter(|record| tool_call_record_matches_query(record, query))
+        .collect::<Vec<_>>();
+    sort_tool_call_records(&mut records, query.sort);
+    apply_limit(&mut records, query.limit);
+    records
+}
+
+/// Sort order for tool event stream queries.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolEventSort {
+    TimeAsc,
+    TimeDesc,
+    SequenceAsc,
+    SequenceDesc,
+}
+
+impl Default for ToolEventSort {
+    fn default() -> Self {
+        Self::TimeAsc
+    }
+}
+
+/// Query options for selecting events from a tool execution stream.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct ToolEventQuery {
+    pub call_id: Option<String>,
+    pub kinds: Vec<ToolEventKind>,
+    pub terminal_only: bool,
+    pub since: Option<TimestampMs>,
+    pub until: Option<TimestampMs>,
+    pub sequence_min: Option<u64>,
+    pub sequence_max: Option<u64>,
+    pub sort: ToolEventSort,
+    pub limit: Option<usize>,
+}
+
+impl ToolEventQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_call(mut self, call_id: impl Into<String>) -> Self {
+        self.call_id = Some(call_id.into());
+        self
+    }
+
+    pub fn with_kind(mut self, kind: ToolEventKind) -> Self {
+        self.kinds.push(kind);
+        self
+    }
+
+    pub fn terminal_only(mut self) -> Self {
+        self.terminal_only = true;
+        self
+    }
+
+    pub fn since(mut self, since: TimestampMs) -> Self {
+        self.since = Some(since);
+        self
+    }
+
+    pub fn until(mut self, until: TimestampMs) -> Self {
+        self.until = Some(until);
+        self
+    }
+
+    pub fn sequence_min(mut self, sequence_min: u64) -> Self {
+        self.sequence_min = Some(sequence_min);
+        self
+    }
+
+    pub fn sequence_max(mut self, sequence_max: u64) -> Self {
+        self.sequence_max = Some(sequence_max);
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: ToolEventSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
+/// Query tool events without binding the contract to an event-store backend.
+pub fn query_tool_events<'a, I>(events: I, query: &ToolEventQuery) -> Vec<&'a ToolEvent>
+where
+    I: IntoIterator<Item = &'a ToolEvent>,
+{
+    if query.limit == Some(0) {
+        return Vec::new();
+    }
+
+    let mut events = events
+        .into_iter()
+        .filter(|event| tool_event_matches_query(event, query))
+        .collect::<Vec<_>>();
+    sort_tool_events(&mut events, query.sort);
+    apply_limit(&mut events, query.limit);
+    events
+}
+
+/// Sort order for terminal tool result queries.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ToolResultSort {
+    CallId,
+    RunMsAsc,
+    RunMsDesc,
+}
+
+impl Default for ToolResultSort {
+    fn default() -> Self {
+        Self::CallId
+    }
+}
+
+/// Query options for selecting terminal tool results.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct ToolResultQuery {
+    pub call_id: Option<String>,
+    pub ok: Option<bool>,
+    pub error_kind: Option<ToolErrorKind>,
+    pub has_artifact_refs: Option<bool>,
+    pub has_memory_refs: Option<bool>,
+    pub min_run_ms: Option<u64>,
+    pub max_run_ms: Option<u64>,
+    pub sort: ToolResultSort,
+    pub limit: Option<usize>,
+}
+
+impl ToolResultQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_call(mut self, call_id: impl Into<String>) -> Self {
+        self.call_id = Some(call_id.into());
+        self
+    }
+
+    pub fn with_success(mut self, ok: bool) -> Self {
+        self.ok = Some(ok);
+        self
+    }
+
+    pub fn with_error_kind(mut self, error_kind: ToolErrorKind) -> Self {
+        self.error_kind = Some(error_kind);
+        self
+    }
+
+    pub fn with_artifact_refs(mut self, has_artifact_refs: bool) -> Self {
+        self.has_artifact_refs = Some(has_artifact_refs);
+        self
+    }
+
+    pub fn with_memory_refs(mut self, has_memory_refs: bool) -> Self {
+        self.has_memory_refs = Some(has_memory_refs);
+        self
+    }
+
+    pub fn min_run_ms(mut self, min_run_ms: u64) -> Self {
+        self.min_run_ms = Some(min_run_ms);
+        self
+    }
+
+    pub fn max_run_ms(mut self, max_run_ms: u64) -> Self {
+        self.max_run_ms = Some(max_run_ms);
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: ToolResultSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
+/// Query terminal results without binding the contract to a result-store backend.
+pub fn query_tool_results<'a, I>(results: I, query: &ToolResultQuery) -> Vec<&'a ToolResult>
+where
+    I: IntoIterator<Item = &'a ToolResult>,
+{
+    if query.limit == Some(0) {
+        return Vec::new();
+    }
+
+    let mut results = results
+        .into_iter()
+        .filter(|result| tool_result_matches_query(result, query))
+        .collect::<Vec<_>>();
+    sort_tool_results(&mut results, query.sort);
+    apply_limit(&mut results, query.limit);
+    results
+}
+
+fn tool_invocation_matches_query(
+    request: &ToolInvocationRequest,
+    query: &ToolInvocationQuery,
+) -> bool {
+    query
+        .tool_id
+        .as_ref()
+        .is_none_or(|tool_id| request.tool_id == *tool_id)
+        && query
+            .requested_by
+            .is_none_or(|requested_by| request.requested_by == requested_by)
+        && optional_string_matches(&request.session_id, &query.session_id)
+        && optional_string_matches(&request.job_id, &query.job_id)
+        && optional_string_matches(&request.agent_id, &query.agent_id)
+        && optional_string_matches(&request.user_id, &query.user_id)
+        && timestamp_matches_range(
+            request.requested_at,
+            query.requested_since,
+            query.requested_until,
+        )
+        && query.deadline_before.is_none_or(|deadline_before| {
+            request
+                .deadline_at
+                .is_some_and(|deadline_at| deadline_at <= deadline_before)
+        })
+}
+
+fn sort_tool_invocation_requests(
+    requests: &mut Vec<&ToolInvocationRequest>,
+    sort: ToolInvocationSort,
+) {
+    match sort {
+        ToolInvocationSort::RequestedAtAsc => requests.sort_by(|left, right| {
+            left.requested_at
+                .cmp(&right.requested_at)
+                .then_with(|| left.call_id.cmp(&right.call_id))
+        }),
+        ToolInvocationSort::RequestedAtDesc => requests.sort_by(|left, right| {
+            right
+                .requested_at
+                .cmp(&left.requested_at)
+                .then_with(|| left.call_id.cmp(&right.call_id))
+        }),
+        ToolInvocationSort::ToolIdThenRequestedAt => requests.sort_by(|left, right| {
+            left.tool_id
+                .cmp(&right.tool_id)
+                .then_with(|| left.requested_at.cmp(&right.requested_at))
+                .then_with(|| left.call_id.cmp(&right.call_id))
+        }),
+        ToolInvocationSort::CallId => {
+            requests.sort_by(|left, right| left.call_id.cmp(&right.call_id))
+        }
+    }
+}
+
+fn tool_call_record_matches_query(record: &ToolCallRecord, query: &ToolCallRecordQuery) -> bool {
+    query
+        .tool_id
+        .as_ref()
+        .is_none_or(|tool_id| record.tool_id == *tool_id)
+        && (query.statuses.is_empty() || query.statuses.contains(&record.status))
+        && (query.approval_states.is_empty()
+            || query.approval_states.contains(&record.approval_state))
+        && optional_string_matches(&record.lock_scope, &query.lock_scope)
+        && optional_timestamp_matches_range(
+            record.started_at,
+            query.started_since,
+            query.started_until,
+        )
+        && optional_timestamp_matches_range(
+            record.completed_at,
+            query.completed_since,
+            query.completed_until,
+        )
+        && (!query.active_only || record.status.is_active())
+}
+
+fn sort_tool_call_records(records: &mut Vec<&ToolCallRecord>, sort: ToolCallRecordSort) {
+    match sort {
+        ToolCallRecordSort::StartedAtAsc => records.sort_by(|left, right| {
+            left.started_at
+                .unwrap_or(u64::MAX)
+                .cmp(&right.started_at.unwrap_or(u64::MAX))
+                .then_with(|| left.call_id.cmp(&right.call_id))
+        }),
+        ToolCallRecordSort::StartedAtDesc => records.sort_by(|left, right| {
+            right
+                .started_at
+                .unwrap_or(0)
+                .cmp(&left.started_at.unwrap_or(0))
+                .then_with(|| left.call_id.cmp(&right.call_id))
+        }),
+        ToolCallRecordSort::CompletedAtDesc => records.sort_by(|left, right| {
+            right
+                .completed_at
+                .unwrap_or(0)
+                .cmp(&left.completed_at.unwrap_or(0))
+                .then_with(|| left.call_id.cmp(&right.call_id))
+        }),
+        ToolCallRecordSort::StatusThenToolId => records.sort_by(|left, right| {
+            left.status
+                .as_str()
+                .cmp(right.status.as_str())
+                .then_with(|| left.tool_id.cmp(&right.tool_id))
+                .then_with(|| left.call_id.cmp(&right.call_id))
+        }),
+        ToolCallRecordSort::CallId => {
+            records.sort_by(|left, right| left.call_id.cmp(&right.call_id))
+        }
+    }
+}
+
+fn tool_event_matches_query(event: &ToolEvent, query: &ToolEventQuery) -> bool {
+    query
+        .call_id
+        .as_ref()
+        .is_none_or(|call_id| event.call_id == *call_id)
+        && (query.kinds.is_empty() || query.kinds.contains(&event.kind))
+        && (!query.terminal_only || event.kind.is_terminal())
+        && timestamp_matches_range(event.at, query.since, query.until)
+        && query
+            .sequence_min
+            .is_none_or(|sequence_min| event.sequence >= sequence_min)
+        && query
+            .sequence_max
+            .is_none_or(|sequence_max| event.sequence <= sequence_max)
+}
+
+fn sort_tool_events(events: &mut Vec<&ToolEvent>, sort: ToolEventSort) {
+    match sort {
+        ToolEventSort::TimeAsc => events.sort_by(|left, right| {
+            left.at
+                .cmp(&right.at)
+                .then_with(|| left.call_id.cmp(&right.call_id))
+                .then_with(|| left.sequence.cmp(&right.sequence))
+        }),
+        ToolEventSort::TimeDesc => events.sort_by(|left, right| {
+            right
+                .at
+                .cmp(&left.at)
+                .then_with(|| left.call_id.cmp(&right.call_id))
+                .then_with(|| left.sequence.cmp(&right.sequence))
+        }),
+        ToolEventSort::SequenceAsc => events.sort_by(|left, right| {
+            left.call_id
+                .cmp(&right.call_id)
+                .then_with(|| left.sequence.cmp(&right.sequence))
+        }),
+        ToolEventSort::SequenceDesc => events.sort_by(|left, right| {
+            left.call_id
+                .cmp(&right.call_id)
+                .then_with(|| right.sequence.cmp(&left.sequence))
+        }),
+    }
+}
+
+fn tool_result_matches_query(result: &ToolResult, query: &ToolResultQuery) -> bool {
+    query
+        .call_id
+        .as_ref()
+        .is_none_or(|call_id| result.call_id == *call_id)
+        && query.ok.is_none_or(|ok| result.ok == ok)
+        && query.error_kind.is_none_or(|error_kind| {
+            result
+                .error
+                .as_ref()
+                .is_some_and(|error| error.kind == error_kind)
+        })
+        && query
+            .has_artifact_refs
+            .is_none_or(|has_refs| result.artifact_refs.is_empty() != has_refs)
+        && query
+            .has_memory_refs
+            .is_none_or(|has_refs| result.memory_refs.is_empty() != has_refs)
+        && query
+            .min_run_ms
+            .is_none_or(|min_run_ms| result.metrics.run_ms >= min_run_ms)
+        && query
+            .max_run_ms
+            .is_none_or(|max_run_ms| result.metrics.run_ms <= max_run_ms)
+}
+
+fn sort_tool_results(results: &mut Vec<&ToolResult>, sort: ToolResultSort) {
+    match sort {
+        ToolResultSort::CallId => results.sort_by(|left, right| left.call_id.cmp(&right.call_id)),
+        ToolResultSort::RunMsAsc => results.sort_by(|left, right| {
+            left.metrics
+                .run_ms
+                .cmp(&right.metrics.run_ms)
+                .then_with(|| left.call_id.cmp(&right.call_id))
+        }),
+        ToolResultSort::RunMsDesc => results.sort_by(|left, right| {
+            right
+                .metrics
+                .run_ms
+                .cmp(&left.metrics.run_ms)
+                .then_with(|| left.call_id.cmp(&right.call_id))
+        }),
+    }
+}
+
+fn optional_string_matches(candidate: &Option<String>, expected: &Option<String>) -> bool {
+    expected
+        .as_ref()
+        .is_none_or(|expected| candidate.as_deref() == Some(expected.as_str()))
+}
+
+fn timestamp_matches_range(
+    value: TimestampMs,
+    since: Option<TimestampMs>,
+    until: Option<TimestampMs>,
+) -> bool {
+    since.is_none_or(|since| value >= since) && until.is_none_or(|until| value <= until)
+}
+
+fn optional_timestamp_matches_range(
+    value: Option<TimestampMs>,
+    since: Option<TimestampMs>,
+    until: Option<TimestampMs>,
+) -> bool {
+    if since.is_none() && until.is_none() {
+        return true;
+    }
+
+    value.is_some_and(|value| timestamp_matches_range(value, since, until))
+}
+
+fn apply_limit<T>(items: &mut Vec<T>, limit: Option<usize>) {
+    if let Some(limit) = limit {
+        items.truncate(limit);
+    }
+}
+
+// ============================================================================
 // Registry
 // ============================================================================
 
@@ -1981,6 +2743,27 @@ impl InMemoryToolRegistry {
     /// List definitions sorted by `tool_id`.
     pub fn list(&self) -> Vec<&ToolDefinition> {
         self.definitions.values().collect()
+    }
+
+    /// Query definitions sorted by `tool_id`.
+    pub fn query(&self, query: &ToolCatalogQuery) -> Vec<&ToolDefinition> {
+        if query.limit == Some(0) {
+            return Vec::new();
+        }
+
+        let mut definitions = Vec::new();
+        for definition in self.definitions.values() {
+            if !definition_matches_catalog_query(definition, query) {
+                continue;
+            }
+            definitions.push(definition);
+            if let Some(limit) = query.limit {
+                if definitions.len() >= limit {
+                    break;
+                }
+            }
+        }
+        definitions
     }
 
     /// Validate request metadata and arguments against the registered schema.
@@ -2030,6 +2813,13 @@ impl ToolCallStatus {
             Self::Failed => "failed",
             Self::Cancelled => "cancelled",
         }
+    }
+
+    pub fn is_active(self) -> bool {
+        matches!(
+            self,
+            Self::Queued | Self::Validating | Self::AwaitingApproval | Self::Running
+        )
     }
 }
 
@@ -2511,6 +3301,11 @@ impl InMemoryToolRuntime {
     /// List registered definitions sorted by tool id.
     pub fn list(&self) -> Vec<&ToolDefinition> {
         self.registry.list()
+    }
+
+    /// Query registered definitions sorted by tool id.
+    pub fn query(&self, query: &ToolCatalogQuery) -> Vec<&ToolDefinition> {
+        self.registry.query(query)
     }
 
     /// Validate request metadata and arguments without invoking the handler.
@@ -3216,6 +4011,38 @@ mod tests {
     }
 
     #[test]
+    fn registry_queries_definitions_by_catalog_metadata() {
+        let mut registry = InMemoryToolRegistry::new();
+        for definition in [
+            memory_search_definition(),
+            memory_remember_definition(),
+            artifact_create_definition(),
+        ] {
+            registry.register(definition).unwrap();
+        }
+
+        let read_memory = registry.query(
+            &ToolCatalogQuery::new()
+                .for_family(BuiltinToolFamily::Memory)
+                .with_side_effects(ToolSideEffects::Read)
+                .with_max_tier(PrivilegeTier::Tier0)
+                .requiring_capability("memory:read")
+                .with_tag("store"),
+        );
+        assert_eq!(
+            read_memory
+                .iter()
+                .map(|definition| definition.tool_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["memory.search"]
+        );
+
+        assert!(registry
+            .query(&ToolCatalogQuery::new().with_limit(0))
+            .is_empty());
+    }
+
+    #[test]
     fn builtin_catalog_definitions_are_valid_and_registerable() {
         let catalog = builtin_tool_catalog();
         let mut registry = InMemoryToolRegistry::new();
@@ -3331,6 +4158,34 @@ mod tests {
             vec!["skills:install"]
         );
         assert!(builtin_tool_definition("vault.request_lease").is_none());
+    }
+
+    #[test]
+    fn builtin_catalog_can_query_by_capability_tag_and_limit() {
+        let read_memory = builtin_tools_matching(
+            ToolCatalogQuery::new()
+                .for_family(BuiltinToolFamily::Memory)
+                .with_side_effects(ToolSideEffects::Read)
+                .requiring_capability("memory:read")
+                .with_tag("store")
+                .with_limit(2),
+        );
+        let read_memory_ids: Vec<_> = read_memory
+            .iter()
+            .map(|definition| definition.tool_id.as_str())
+            .collect();
+
+        assert_eq!(
+            read_memory_ids,
+            vec!["memory.search", "memory.list_by_class"]
+        );
+        assert!(read_memory
+            .iter()
+            .all(|definition| definition.required_tier <= PrivilegeTier::Tier0));
+        assert!(builtin_tools_matching(
+            ToolCatalogQuery::new().with_stability(ToolStability::Stable)
+        )
+        .is_empty());
     }
 
     #[test]
@@ -3510,6 +4365,206 @@ mod tests {
             ),
         ]);
         assert!(registry.validate_call(&valid).ok);
+    }
+
+    #[test]
+    fn invocation_queries_filter_scope_time_and_sort_results() {
+        let mut first = artifact_create_request();
+        first.call_id = "call_1".to_string();
+        first.session_id = Some("session_a".to_string());
+        first.requested_at = 100;
+        first.deadline_at = Some(250);
+
+        let mut second = first.clone();
+        second.call_id = "call_2".to_string();
+        second.tool_id = "memory.search".to_string();
+        second.requested_by = RequestedBy::Job;
+        second.job_id = Some("job_1".to_string());
+        second.requested_at = 200;
+        second.deadline_at = Some(225);
+
+        let mut third = first.clone();
+        third.call_id = "call_3".to_string();
+        third.session_id = Some("session_b".to_string());
+        third.requested_at = 300;
+
+        let query = ToolInvocationQuery::new()
+            .in_session("session_a")
+            .requested_since(150)
+            .deadline_before(240)
+            .sorted_by(ToolInvocationSort::RequestedAtDesc)
+            .with_limit(1);
+        let matches = query_tool_invocation_requests([&first, &second, &third], &query);
+
+        assert_eq!(
+            matches
+                .iter()
+                .map(|request| request.call_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["call_2"]
+        );
+
+        let by_tool = query_tool_invocation_requests(
+            [&first, &second, &third],
+            &ToolInvocationQuery::new().sorted_by(ToolInvocationSort::ToolIdThenRequestedAt),
+        );
+        assert_eq!(
+            by_tool
+                .iter()
+                .map(|request| request.tool_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["artifact.create", "artifact.create", "memory.search"]
+        );
+    }
+
+    #[test]
+    fn call_record_queries_find_active_approval_work() {
+        let queued = ToolCallRecord {
+            call_id: "call_1".to_string(),
+            tool_id: "artifact.create".to_string(),
+            status: ToolCallStatus::Queued,
+            started_at: None,
+            completed_at: None,
+            lock_scope: Some("artifact".to_string()),
+            approval_state: ApprovalState::NotRequired,
+            metrics: ToolMetrics::default(),
+        };
+        let awaiting_approval = ToolCallRecord {
+            call_id: "call_2".to_string(),
+            status: ToolCallStatus::AwaitingApproval,
+            started_at: Some(220),
+            approval_state: ApprovalState::Pending,
+            ..queued.clone()
+        };
+        let completed = ToolCallRecord {
+            call_id: "call_3".to_string(),
+            status: ToolCallStatus::Completed,
+            started_at: Some(120),
+            completed_at: Some(180),
+            approval_state: ApprovalState::Granted,
+            ..queued.clone()
+        };
+
+        assert!(ToolCallStatus::Running.is_active());
+        assert!(!ToolCallStatus::Completed.is_active());
+
+        let records = vec![queued, awaiting_approval, completed];
+        let matches = query_tool_call_records(
+            records.iter(),
+            &ToolCallRecordQuery::new()
+                .active_only()
+                .with_approval_state(ApprovalState::Pending)
+                .with_lock_scope("artifact")
+                .started_since(200)
+                .sorted_by(ToolCallRecordSort::StartedAtDesc),
+        );
+
+        assert_eq!(
+            matches
+                .iter()
+                .map(|record| record.call_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["call_2"]
+        );
+    }
+
+    #[test]
+    fn event_queries_filter_terminal_events_and_sequences() {
+        let events = vec![
+            ToolEvent {
+                call_id: "call_1".to_string(),
+                sequence: 0,
+                at: 100,
+                kind: ToolEventKind::Started,
+                payload: JsonValue::Null,
+            },
+            ToolEvent {
+                call_id: "call_1".to_string(),
+                sequence: 1,
+                at: 110,
+                kind: ToolEventKind::Progress,
+                payload: JsonValue::String("half way".to_string()),
+            },
+            ToolEvent {
+                call_id: "call_1".to_string(),
+                sequence: 2,
+                at: 120,
+                kind: ToolEventKind::Failed,
+                payload: JsonValue::Null,
+            },
+            ToolEvent {
+                call_id: "call_2".to_string(),
+                sequence: 0,
+                at: 115,
+                kind: ToolEventKind::Completed,
+                payload: JsonValue::Null,
+            },
+        ];
+
+        let terminal = query_tool_events(
+            events.iter(),
+            &ToolEventQuery::new()
+                .for_call("call_1")
+                .terminal_only()
+                .sequence_min(1)
+                .sorted_by(ToolEventSort::SequenceDesc),
+        );
+        assert_eq!(
+            terminal.iter().map(|event| event.kind).collect::<Vec<_>>(),
+            vec![ToolEventKind::Failed]
+        );
+
+        let progress = query_tool_events(
+            events.iter(),
+            &ToolEventQuery::new()
+                .with_kind(ToolEventKind::Progress)
+                .since(100)
+                .until(115),
+        );
+        assert_eq!(progress[0].sequence, 1);
+    }
+
+    #[test]
+    fn result_queries_filter_failures_refs_and_metrics() {
+        let mut completed =
+            ToolResult::completed("call_1", JsonValue::String("artifact written".to_string()));
+        completed.artifact_refs.push("artifact_1/rev_1".to_string());
+        completed.metrics.run_ms = 10;
+
+        let mut denied = ToolResult::failed(
+            "call_2",
+            ToolCallError::new(ToolErrorKind::ToolPermissionDenied, "policy denied"),
+        );
+        denied.metrics.run_ms = 40;
+
+        let mut failed = ToolResult::failed(
+            "call_3",
+            ToolCallError::new(ToolErrorKind::ToolExecutionError, "handler failed"),
+        );
+        failed.metrics.run_ms = 20;
+
+        let results = vec![completed, denied, failed];
+        let permission_failures = query_tool_results(
+            results.iter(),
+            &ToolResultQuery::new()
+                .with_success(false)
+                .with_error_kind(ToolErrorKind::ToolPermissionDenied)
+                .min_run_ms(30)
+                .sorted_by(ToolResultSort::RunMsDesc),
+        );
+        assert_eq!(permission_failures[0].call_id, "call_2");
+
+        let artifact_results = query_tool_results(
+            results.iter(),
+            &ToolResultQuery::new().with_artifact_refs(true),
+        );
+        assert_eq!(
+            artifact_results
+                .iter()
+                .map(|result| result.call_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["call_1"]
+        );
     }
 
     #[test]

@@ -32,12 +32,24 @@ describe("coding_adventures.board_vm_native", function()
 
     it("exposes Rust-owned connection and upload options", function()
         local options = board_vm.connection_options("uno-r4-wifi")
+        local default = board_vm.select_connection_option("uno-r4-wifi")
+        local wifi = board_vm.select_connection_option("uno-r4-wifi", { via = "Wi-Fi" })
+        local ble = board_vm.select_connection_option("uno-r4-wifi", { via = "BLE" })
         local esp_upload = board_vm.esp_upload_options("esp32")
         local pico_upload = board_vm.pico_uf2_upload_options("pico-w")
 
         assert.are.equal("USB/serial", options[1].display_name)
+        assert.are.equal("serial_port", options[1].endpoint_transport)
+        assert.are.equal("serial", options[1].endpoint_scheme)
+        assert.are.equal("board_vm_cobs_crc", options[1].wire_protocol)
         assert.are.equal("network_endpoint", options[2].requires)
+        assert.are.equal("tcp_socket", options[2].endpoint_transport)
+        assert.are.equal("tcp", options[2].endpoint_scheme)
         assert.is_true(options[2].ota_update)
+        assert.are.equal("serial", default.transport)
+        assert.are.equal("wifi", wifi.transport)
+        assert.are.equal("bluetooth_le", ble.transport)
+        assert.is_true(board_vm.connection_option_list("uno-r4-wifi"):find("Wi%-Fi") ~= nil)
         assert.are.equal(0x1000, esp_upload.offset)
         assert.are.equal(115200, esp_upload.baud_rate)
         assert.are.equal("pico-uf2", pico_upload.command)
@@ -73,6 +85,128 @@ describe("coding_adventures.board_vm_native", function()
         assert.is_not_nil(pico)
         assert.are.equal("raspberry-pi-pico", pico.target.board_id)
         assert.is_true(pico.bootloader)
+    end)
+
+    it("selects devices and connects without exposing serial details to callers", function()
+        local devices = board_vm.devices({
+            "/dev/cu.usbmodem1101",
+            "/dev/tty.usbserial-CP2102-esp32",
+        })
+        local selected = board_vm.select_device("esp32", { devices = devices })
+        local connection = board_vm.connect("esp32", { devices = devices })
+
+        assert.are.equal("/dev/tty.usbserial-CP2102-esp32", selected.port)
+        assert.are.equal("esp32-devkit-v1", connection:board_id())
+        assert.are.equal("/dev/tty.usbserial-CP2102-esp32", connection.port)
+        assert.are.equal("serial", connection:connection_transport())
+        assert.is_true(connection:serial_connection())
+        assert.is_false(connection:wireless_connection())
+    end)
+
+    it("connects to wireless transports through injected endpoints", function()
+        local transport = {
+            frames = {},
+            write = function(self, frame)
+                table.insert(self.frames, frame)
+            end,
+        }
+        local connection = board_vm.connect("uno-r4-wifi", {
+            via = "Wi-Fi",
+            transport = transport,
+        })
+        local results = connection:smoke({ host_name = "lua-test", host_nonce = 0x1234 })
+
+        assert.is_nil(connection.port)
+        assert.are.equal("wifi", connection:connection_transport())
+        assert.is_true(connection:wireless_connection())
+        assert.is_true(connection:ota_connection())
+        assert.are.equal(2, #results)
+        assert.are.equal(2, #transport.frames)
+        assert.is_string(transport.frames[1])
+        assert.are.equal(0, transport.frames[1]:byte(#transport.frames[1]))
+    end)
+
+    it("builds TCP transports for Wi-Fi endpoints", function()
+        local connection = board_vm.connect("uno-r4-wifi", {
+            via = "Wi-Fi",
+            endpoint = "tcp://board-vm.local:4170",
+        })
+        local session = connection:session()
+
+        assert.is_nil(connection.port)
+        assert.are.equal("wifi", connection:connection_transport())
+        assert.are.equal("tcp://board-vm.local:4170", connection.endpoint)
+        assert.are.equal("tcp://board-vm.local:4170", session.transport.endpoint)
+        assert.are.equal("board-vm.local", session.transport.host)
+        assert.are.equal(4170, session.transport.port)
+    end)
+
+    it("transacts over LuaSocket-compatible TCP endpoints", function()
+        local sent = {}
+        local response_index = 0
+        local fake_client = {
+            settimeout = function(self, timeout)
+                self.timeout = timeout
+            end,
+            connect = function(self, host, port)
+                self.host = host
+                self.port = port
+                return true
+            end,
+            setoption = function(self, option, value)
+                self[option] = value
+                return true
+            end,
+            send = function(_, frame)
+                table.insert(sent, frame)
+                return #frame
+            end,
+            receive = function(_, size)
+                assert.are.equal(1, size)
+                response_index = response_index + 1
+                return ({ "\3", "\4", "\0" })[response_index]
+            end,
+            close = function(self)
+                self.closed = true
+            end,
+        }
+        local previous_socket = package.loaded.socket
+        package.loaded.socket = {
+            tcp = function()
+                return fake_client
+            end,
+        }
+
+        local ok, err = pcall(function()
+            local transport = board_vm.TcpTransport.new({
+                endpoint = "tcp://board-vm.local:4170",
+                timeout_ms = 500,
+            })
+            local response = transport:transact("\1\2\0", { timeout_ms = 250 })
+
+            assert.are.equal("\3\4\0", response)
+            assert.are.equal("\1\2\0", sent[1])
+            assert.are.equal("board-vm.local", fake_client.host)
+            assert.are.equal(4170, fake_client.port)
+            assert.is_true(fake_client["tcp-nodelay"])
+            transport:close()
+            assert.is_true(fake_client.closed)
+        end)
+        package.loaded.socket = previous_socket
+        if not ok then
+            error(err)
+        end
+    end)
+
+    it("rejects dispatch when no Lua transport endpoint is available", function()
+        local connection = board_vm.connect("uno-r4-wifi", { via = "Wi-Fi" })
+
+        local ok, err = pcall(function()
+            connection:smoke()
+        end)
+
+        assert.is_false(ok)
+        assert.is_true(tostring(err):find("requires a Board VM TCP endpoint") ~= nil)
     end)
 
     it("builds blink upload/run frames through Rust-owned protocol builders", function()

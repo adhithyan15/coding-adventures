@@ -15,6 +15,8 @@ than a backend-specific index.
 - supersede, expiry, and tombstone transitions
 - lexical search across subject/body/tags, including active-at filtering and
   bounded result sets for tool calls
+- bounded read selectors for class, tag, source, active-at, confidence,
+  tombstone inclusion, sorting, and limits
 
 ## Key layout
 
@@ -26,6 +28,7 @@ than a backend-specific index.
 - `fetch_memory()`
 - `update_confidence()`
 - `supersede_old_memory()`
+- `list_memories_with_options()`
 - `list_by_class()`
 - `list_by_tag()`
 - `search_lexical()`

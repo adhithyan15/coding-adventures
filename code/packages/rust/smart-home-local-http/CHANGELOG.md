@@ -13,3 +13,6 @@ All notable changes to this package will be documented in this file.
   descriptors.
 - Header conflict detection and content-type validation for body-bearing
   requests.
+- Endpoint and request-plan query options for filtering by integration, bridge,
+  scheme, TLS policy, host, method, auth kind, idempotency, body presence,
+  vault requirements, timeout, sort order, and bounded result count.

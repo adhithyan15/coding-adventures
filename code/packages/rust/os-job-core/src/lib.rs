@@ -40,6 +40,7 @@
 //!
 //! `os-job-core` owns the first three nouns in that sentence.
 
+use std::cmp::Ordering;
 use std::error::Error;
 use std::fmt::{self, Display, Formatter};
 
@@ -159,14 +160,42 @@ pub enum JobAction {
     },
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum JobActionKind {
+    Command,
+    AgentRun,
+    Function,
+}
+
+impl JobActionKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Command => "command",
+            Self::AgentRun => "agent_run",
+            Self::Function => "function",
+        }
+    }
+}
+
+impl Display for JobActionKind {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
 impl JobAction {
+    /// Return the typed action kind.
+    pub fn kind(&self) -> JobActionKind {
+        match self {
+            JobAction::Command { .. } => JobActionKind::Command,
+            JobAction::AgentRun { .. } => JobActionKind::AgentRun,
+            JobAction::Function { .. } => JobActionKind::Function,
+        }
+    }
+
     /// Return the repository-owned action kind string.
     pub fn kind_name(&self) -> &'static str {
-        match self {
-            JobAction::Command { .. } => "command",
-            JobAction::AgentRun { .. } => "agent_run",
-            JobAction::Function { .. } => "function",
-        }
+        self.kind().as_str()
     }
 
     /// Return whether the action requests stdin input.
@@ -250,18 +279,54 @@ pub enum JobTrigger {
     AtBoot,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum JobTriggerKind {
+    Once,
+    Interval,
+    Daily,
+    Weekly,
+    Monthly,
+    AtLogin,
+    AtBoot,
+}
+
+impl JobTriggerKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Once => "once",
+            Self::Interval => "interval",
+            Self::Daily => "daily",
+            Self::Weekly => "weekly",
+            Self::Monthly => "monthly",
+            Self::AtLogin => "at_login",
+            Self::AtBoot => "at_boot",
+        }
+    }
+}
+
+impl Display for JobTriggerKind {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
 impl JobTrigger {
+    /// Return the typed trigger kind.
+    pub fn kind(&self) -> JobTriggerKind {
+        match self {
+            JobTrigger::Once { .. } => JobTriggerKind::Once,
+            JobTrigger::Interval { .. } => JobTriggerKind::Interval,
+            JobTrigger::Daily { .. } => JobTriggerKind::Daily,
+            JobTrigger::Weekly { .. } => JobTriggerKind::Weekly,
+            JobTrigger::Monthly { .. } => JobTriggerKind::Monthly,
+            JobTrigger::AtLogin => JobTriggerKind::AtLogin,
+            JobTrigger::AtBoot => JobTriggerKind::AtBoot,
+        }
+    }
+
     /// Return the repository-owned trigger kind string.
     pub fn kind_name(&self) -> &'static str {
-        match self {
-            JobTrigger::Once { .. } => "once",
-            JobTrigger::Interval { .. } => "interval",
-            JobTrigger::Daily { .. } => "daily",
-            JobTrigger::Weekly { .. } => "weekly",
-            JobTrigger::Monthly { .. } => "monthly",
-            JobTrigger::AtLogin => "at_login",
-            JobTrigger::AtBoot => "at_boot",
-        }
+        self.kind().as_str()
     }
 }
 
@@ -510,6 +575,288 @@ impl JobStatus {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum InstalledJobSort {
+    JobId,
+    Name,
+    BackendThenJobId,
+    InstalledAtAsc,
+    InstalledAtDesc,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct InstalledJobQuery {
+    pub job_ids: Vec<String>,
+    pub backends: Vec<BackendKind>,
+    pub action_kinds: Vec<JobActionKind>,
+    pub trigger_kinds: Vec<JobTriggerKind>,
+    pub enabled: Option<bool>,
+    pub installed_at_or_after: Option<TimestampMs>,
+    pub installed_at_or_before: Option<TimestampMs>,
+    pub sort: InstalledJobSort,
+    pub limit: Option<usize>,
+}
+
+impl Default for InstalledJobQuery {
+    fn default() -> Self {
+        Self {
+            job_ids: Vec::new(),
+            backends: Vec::new(),
+            action_kinds: Vec::new(),
+            trigger_kinds: Vec::new(),
+            enabled: None,
+            installed_at_or_after: None,
+            installed_at_or_before: None,
+            sort: InstalledJobSort::JobId,
+            limit: None,
+        }
+    }
+}
+
+impl InstalledJobQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_job_id(mut self, job_id: impl Into<String>) -> Self {
+        self.job_ids.push(job_id.into());
+        self
+    }
+
+    pub fn with_backend(mut self, backend: BackendKind) -> Self {
+        self.backends.push(backend);
+        self
+    }
+
+    pub fn with_action_kind(mut self, action_kind: JobActionKind) -> Self {
+        self.action_kinds.push(action_kind);
+        self
+    }
+
+    pub fn with_trigger_kind(mut self, trigger_kind: JobTriggerKind) -> Self {
+        self.trigger_kinds.push(trigger_kind);
+        self
+    }
+
+    pub fn enabled(mut self, enabled: bool) -> Self {
+        self.enabled = Some(enabled);
+        self
+    }
+
+    pub fn installed_at_or_after(mut self, timestamp_ms: TimestampMs) -> Self {
+        self.installed_at_or_after = Some(timestamp_ms);
+        self
+    }
+
+    pub fn installed_at_or_before(mut self, timestamp_ms: TimestampMs) -> Self {
+        self.installed_at_or_before = Some(timestamp_ms);
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: InstalledJobSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn limited_to(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    pub fn matches_job(&self, job: &InstalledJob) -> bool {
+        if !matches_any(&self.job_ids, &job.job_id) {
+            return false;
+        }
+        if !matches_any(&self.backends, &job.backend) {
+            return false;
+        }
+        if !matches_any(&self.action_kinds, &job.spec.action.kind()) {
+            return false;
+        }
+        if !matches_any(&self.trigger_kinds, &job.spec.trigger.kind()) {
+            return false;
+        }
+        if let Some(enabled) = self.enabled {
+            if job.enabled != enabled {
+                return false;
+            }
+        }
+        if let Some(installed_at_or_after) = self.installed_at_or_after {
+            if job.installed_at < installed_at_or_after {
+                return false;
+            }
+        }
+        if let Some(installed_at_or_before) = self.installed_at_or_before {
+            if job.installed_at > installed_at_or_before {
+                return false;
+            }
+        }
+        true
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum JobStatusSort {
+    JobId,
+    BackendThenJobId,
+    StatusThenJobId,
+    LastRunFinishedDesc,
+    NextRunThenJobId,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct JobStatusQuery {
+    pub job_ids: Vec<String>,
+    pub backends: Vec<BackendKind>,
+    pub statuses: Vec<JobStatusKind>,
+    pub enabled: Option<bool>,
+    pub has_last_run: Option<bool>,
+    pub last_run_outcomes: Vec<JobRunOutcome>,
+    pub next_run_at_or_before: Option<DateTimeParts>,
+    pub sort: JobStatusSort,
+    pub limit: Option<usize>,
+}
+
+impl Default for JobStatusQuery {
+    fn default() -> Self {
+        Self {
+            job_ids: Vec::new(),
+            backends: Vec::new(),
+            statuses: Vec::new(),
+            enabled: None,
+            has_last_run: None,
+            last_run_outcomes: Vec::new(),
+            next_run_at_or_before: None,
+            sort: JobStatusSort::JobId,
+            limit: None,
+        }
+    }
+}
+
+impl JobStatusQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_job_id(mut self, job_id: impl Into<String>) -> Self {
+        self.job_ids.push(job_id.into());
+        self
+    }
+
+    pub fn with_backend(mut self, backend: BackendKind) -> Self {
+        self.backends.push(backend);
+        self
+    }
+
+    pub fn with_status(mut self, status: JobStatusKind) -> Self {
+        self.statuses.push(status);
+        self
+    }
+
+    pub fn enabled(mut self, enabled: bool) -> Self {
+        self.enabled = Some(enabled);
+        self
+    }
+
+    pub fn has_last_run(mut self, has_last_run: bool) -> Self {
+        self.has_last_run = Some(has_last_run);
+        self
+    }
+
+    pub fn with_last_run_outcome(mut self, outcome: JobRunOutcome) -> Self {
+        self.last_run_outcomes.push(outcome);
+        self
+    }
+
+    pub fn next_run_at_or_before(mut self, datetime: DateTimeParts) -> Self {
+        self.next_run_at_or_before = Some(datetime);
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: JobStatusSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn limited_to(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    pub fn matches_status(&self, status: &JobStatus) -> bool {
+        if !matches_any(&self.job_ids, &status.job_id) {
+            return false;
+        }
+        if !matches_any(&self.backends, &status.backend) {
+            return false;
+        }
+        if !matches_any(&self.statuses, &status.status) {
+            return false;
+        }
+        if let Some(enabled) = self.enabled {
+            if status.enabled != enabled {
+                return false;
+            }
+        }
+        if let Some(has_last_run) = self.has_last_run {
+            if status.last_run.is_some() != has_last_run {
+                return false;
+            }
+        }
+        if !self.last_run_outcomes.is_empty()
+            && !status.last_run.as_ref().is_some_and(|receipt| {
+                self.last_run_outcomes
+                    .contains(&receipt.exit_status.outcome)
+            })
+        {
+            return false;
+        }
+        if let Some(cutoff) = self.next_run_at_or_before {
+            if !status
+                .next_run_hint
+                .is_some_and(|next_run| datetime_le(next_run, cutoff))
+            {
+                return false;
+            }
+        }
+        true
+    }
+}
+
+pub fn query_installed_jobs<'a, I>(jobs: I, query: &InstalledJobQuery) -> Vec<&'a InstalledJob>
+where
+    I: IntoIterator<Item = &'a InstalledJob>,
+{
+    let mut results = jobs
+        .into_iter()
+        .filter(|job| query.matches_job(job))
+        .collect::<Vec<_>>();
+
+    sort_installed_job_results(&mut results, query.sort);
+    if let Some(limit) = query.limit {
+        results.truncate(limit);
+    }
+
+    results
+}
+
+pub fn query_job_statuses<'a, I>(statuses: I, query: &JobStatusQuery) -> Vec<&'a JobStatus>
+where
+    I: IntoIterator<Item = &'a JobStatus>,
+{
+    let mut results = statuses
+        .into_iter()
+        .filter(|status| query.matches_status(status))
+        .collect::<Vec<_>>();
+
+    sort_job_status_results(&mut results, query.sort);
+    if let Some(limit) = query.limit {
+        results.truncate(limit);
+    }
+
+    results
+}
+
 /// Coarse outcome of one job run.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum JobRunOutcome {
@@ -661,6 +1008,123 @@ impl JobRunReceipt {
         }
         result
     }
+}
+
+fn sort_installed_job_results(jobs: &mut Vec<&InstalledJob>, sort: InstalledJobSort) {
+    match sort {
+        InstalledJobSort::JobId => jobs.sort_by(|left, right| left.job_id.cmp(&right.job_id)),
+        InstalledJobSort::Name => jobs.sort_by(|left, right| {
+            left.spec
+                .name
+                .cmp(&right.spec.name)
+                .then_with(|| left.job_id.cmp(&right.job_id))
+        }),
+        InstalledJobSort::BackendThenJobId => jobs.sort_by(|left, right| {
+            backend_rank(left.backend)
+                .cmp(&backend_rank(right.backend))
+                .then_with(|| left.job_id.cmp(&right.job_id))
+        }),
+        InstalledJobSort::InstalledAtAsc => jobs.sort_by(|left, right| {
+            left.installed_at
+                .cmp(&right.installed_at)
+                .then_with(|| left.job_id.cmp(&right.job_id))
+        }),
+        InstalledJobSort::InstalledAtDesc => jobs.sort_by(|left, right| {
+            right
+                .installed_at
+                .cmp(&left.installed_at)
+                .then_with(|| left.job_id.cmp(&right.job_id))
+        }),
+    }
+}
+
+fn sort_job_status_results(statuses: &mut Vec<&JobStatus>, sort: JobStatusSort) {
+    match sort {
+        JobStatusSort::JobId => statuses.sort_by(|left, right| left.job_id.cmp(&right.job_id)),
+        JobStatusSort::BackendThenJobId => statuses.sort_by(|left, right| {
+            backend_rank(left.backend)
+                .cmp(&backend_rank(right.backend))
+                .then_with(|| left.job_id.cmp(&right.job_id))
+        }),
+        JobStatusSort::StatusThenJobId => statuses.sort_by(|left, right| {
+            status_rank(left.status)
+                .cmp(&status_rank(right.status))
+                .then_with(|| left.job_id.cmp(&right.job_id))
+        }),
+        JobStatusSort::LastRunFinishedDesc => statuses.sort_by(|left, right| {
+            right
+                .last_run
+                .as_ref()
+                .map(|receipt| receipt.finished_at)
+                .unwrap_or(0)
+                .cmp(
+                    &left
+                        .last_run
+                        .as_ref()
+                        .map(|receipt| receipt.finished_at)
+                        .unwrap_or(0),
+                )
+                .then_with(|| left.job_id.cmp(&right.job_id))
+        }),
+        JobStatusSort::NextRunThenJobId => statuses.sort_by(|left, right| {
+            compare_optional_datetime(left.next_run_hint, right.next_run_hint)
+                .then_with(|| left.job_id.cmp(&right.job_id))
+        }),
+    }
+}
+
+fn matches_any<T: PartialEq>(needles: &[T], value: &T) -> bool {
+    needles.is_empty() || needles.iter().any(|needle| needle == value)
+}
+
+fn backend_rank(backend: BackendKind) -> u8 {
+    match backend {
+        BackendKind::Launchd => 0,
+        BackendKind::SystemdUser => 1,
+        BackendKind::WindowsTaskScheduler => 2,
+        BackendKind::InProcess => 3,
+    }
+}
+
+fn status_rank(status: JobStatusKind) -> u8 {
+    match status {
+        JobStatusKind::Missing => 0,
+        JobStatusKind::Installed => 1,
+        JobStatusKind::Running => 2,
+        JobStatusKind::Disabled => 3,
+        JobStatusKind::Failed => 4,
+    }
+}
+
+fn datetime_le(left: DateTimeParts, right: DateTimeParts) -> bool {
+    compare_datetime(left, right) != Ordering::Greater
+}
+
+fn compare_optional_datetime(
+    left: Option<DateTimeParts>,
+    right: Option<DateTimeParts>,
+) -> Ordering {
+    match (left, right) {
+        (Some(left), Some(right)) => compare_datetime(left, right),
+        (Some(_), None) => Ordering::Less,
+        (None, Some(_)) => Ordering::Greater,
+        (None, None) => Ordering::Equal,
+    }
+}
+
+fn compare_datetime(left: DateTimeParts, right: DateTimeParts) -> Ordering {
+    datetime_key(left).cmp(&datetime_key(right))
+}
+
+fn datetime_key(datetime: DateTimeParts) -> (u16, u8, u8, u8, u8, u8) {
+    (
+        datetime.year,
+        datetime.month,
+        datetime.day,
+        datetime.hour,
+        datetime.minute,
+        datetime.second,
+    )
 }
 
 // ============================================================================
@@ -1356,6 +1820,53 @@ mod tests {
     }
 
     #[test]
+    fn installed_job_queries_compose_backend_action_trigger_enabled_and_limit_filters() {
+        let mut memory = example_job(JobTrigger::Daily {
+            hour: 3,
+            minute: 15,
+        });
+        memory.job_id = "memory-extract".to_string();
+        memory.name = "Memory Extract".to_string();
+        let mut digest = example_job(JobTrigger::Interval {
+            every_seconds: 3_600,
+            anchor: None,
+        });
+        digest.job_id = "digest-email".to_string();
+        digest.name = "Digest Email".to_string();
+        digest.action = JobAction::Command {
+            program: "chief-of-staff".to_string(),
+            args: vec!["digest-email".to_string()],
+            input: None,
+        };
+        let mut disabled = example_job(JobTrigger::Daily { hour: 5, minute: 0 });
+        disabled.job_id = "artifact-gc".to_string();
+        disabled.name = "Artifact GC".to_string();
+        disabled.enabled = false;
+
+        let jobs = vec![
+            InstalledJob::new(BackendKind::SystemdUser, memory, 200, None),
+            InstalledJob::new(BackendKind::Launchd, digest, 300, None),
+            InstalledJob::new(BackendKind::SystemdUser, disabled, 100, None),
+        ];
+        let query = InstalledJobQuery::new()
+            .with_backend(BackendKind::SystemdUser)
+            .with_action_kind(JobActionKind::AgentRun)
+            .with_trigger_kind(JobTriggerKind::Daily)
+            .enabled(true)
+            .installed_at_or_after(150)
+            .sorted_by(InstalledJobSort::InstalledAtDesc)
+            .limited_to(1);
+
+        let results = query_installed_jobs(&jobs, &query);
+
+        assert_eq!(results.len(), 1);
+        assert_eq!(results[0].job_id, "memory-extract");
+        assert!(query.matches_job(results[0]));
+        assert_eq!(JobActionKind::AgentRun.to_string(), "agent_run");
+        assert_eq!(JobTriggerKind::Daily.to_string(), "daily");
+    }
+
+    #[test]
     fn successful_run_receipts_validate_and_report_duration() {
         let receipt = JobRunReceipt::succeeded(
             "run-1",
@@ -1432,5 +1943,86 @@ mod tests {
 
         assert!(status.validate().is_valid());
         assert_eq!(status.status.to_string(), "installed");
+    }
+
+    #[test]
+    fn job_status_queries_filter_outcomes_next_runs_and_sort_by_recent_activity() {
+        let succeeded =
+            JobRunReceipt::succeeded("run-1", "memory-extract", 1_000, 1_100, Vec::new());
+        let failed = JobRunReceipt::failed(
+            "run-2",
+            "digest-email",
+            2_000,
+            2_200,
+            JobExitStatus::failed(Some(1)),
+            "agent runner exited with status 1",
+        );
+        let statuses = vec![
+            JobStatus {
+                job_id: "memory-extract".to_string(),
+                backend: BackendKind::Launchd,
+                status: JobStatusKind::Installed,
+                enabled: true,
+                last_run: Some(succeeded),
+                next_run_hint: Some(DateTimeParts {
+                    year: 2026,
+                    month: 5,
+                    day: 8,
+                    hour: 3,
+                    minute: 15,
+                    second: 0,
+                }),
+            },
+            JobStatus {
+                job_id: "digest-email".to_string(),
+                backend: BackendKind::SystemdUser,
+                status: JobStatusKind::Failed,
+                enabled: true,
+                last_run: Some(failed),
+                next_run_hint: Some(DateTimeParts {
+                    year: 2026,
+                    month: 5,
+                    day: 8,
+                    hour: 1,
+                    minute: 0,
+                    second: 0,
+                }),
+            },
+            JobStatus {
+                job_id: "artifact-gc".to_string(),
+                backend: BackendKind::WindowsTaskScheduler,
+                status: JobStatusKind::Disabled,
+                enabled: false,
+                last_run: None,
+                next_run_hint: None,
+            },
+        ];
+        let failed_query = JobStatusQuery::new()
+            .enabled(true)
+            .has_last_run(true)
+            .with_last_run_outcome(JobRunOutcome::Failed)
+            .sorted_by(JobStatusSort::LastRunFinishedDesc);
+
+        let failed_results = query_job_statuses(&statuses, &failed_query);
+
+        assert_eq!(failed_results.len(), 1);
+        assert_eq!(failed_results[0].job_id, "digest-email");
+
+        let due_query = JobStatusQuery::new()
+            .next_run_at_or_before(DateTimeParts {
+                year: 2026,
+                month: 5,
+                day: 8,
+                hour: 2,
+                minute: 0,
+                second: 0,
+            })
+            .sorted_by(JobStatusSort::NextRunThenJobId)
+            .limited_to(1);
+        let due_results = query_job_statuses(&statuses, &due_query);
+
+        assert_eq!(due_results.len(), 1);
+        assert_eq!(due_results[0].job_id, "digest-email");
+        assert!(due_query.matches_status(due_results[0]));
     }
 }

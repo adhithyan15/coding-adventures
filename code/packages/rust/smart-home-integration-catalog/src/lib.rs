@@ -10,7 +10,7 @@ use smart_home_core::{
     CapabilityId, EntityKind, IntegrationId, PrivilegeTier, ProtocolFamily, RuntimeKind,
     ToolDescriptor, ToolSideEffects,
 };
-use std::collections::BTreeMap;
+use std::{cmp::Ordering, collections::BTreeMap};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationCategory {
@@ -345,6 +345,217 @@ pub struct IntegrationCatalogEntry {
     pub required_primitives: Vec<PrimitiveFamily>,
     pub source_refs: Vec<SourceReference>,
     pub notes: Vec<String>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum IntegrationCatalogSort {
+    PriorityThenName,
+    Name,
+    CategoryThenPriority,
+    StatusThenPriority,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationCatalogQuery {
+    pub categories: Vec<IntegrationCategory>,
+    pub connectivity: Vec<ConnectivityClass>,
+    pub implementation_statuses: Vec<ImplementationStatus>,
+    pub required_primitives: Vec<PrimitiveFamily>,
+    pub required_capabilities: Vec<CapabilityId>,
+    pub policy_surfaces: Vec<IntegrationPolicySurface>,
+    pub discovery_mechanisms: Vec<DiscoveryMechanism>,
+    pub auth_modes: Vec<AuthMode>,
+    pub protocol_families: Vec<ProtocolFamily>,
+    pub priority_at_or_before: Option<u8>,
+    pub include_virtual_aliases: bool,
+    pub local_only: Option<bool>,
+    pub cloud_required: Option<bool>,
+    pub sort: IntegrationCatalogSort,
+    pub limit: Option<usize>,
+}
+
+impl Default for IntegrationCatalogQuery {
+    fn default() -> Self {
+        Self {
+            categories: Vec::new(),
+            connectivity: Vec::new(),
+            implementation_statuses: Vec::new(),
+            required_primitives: Vec::new(),
+            required_capabilities: Vec::new(),
+            policy_surfaces: Vec::new(),
+            discovery_mechanisms: Vec::new(),
+            auth_modes: Vec::new(),
+            protocol_families: Vec::new(),
+            priority_at_or_before: None,
+            include_virtual_aliases: true,
+            local_only: None,
+            cloud_required: None,
+            sort: IntegrationCatalogSort::PriorityThenName,
+            limit: None,
+        }
+    }
+}
+
+impl IntegrationCatalogQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_category(mut self, category: IntegrationCategory) -> Self {
+        self.categories.push(category);
+        self
+    }
+
+    pub fn with_connectivity(mut self, connectivity: ConnectivityClass) -> Self {
+        self.connectivity.push(connectivity);
+        self
+    }
+
+    pub fn with_status(mut self, status: ImplementationStatus) -> Self {
+        self.implementation_statuses.push(status);
+        self
+    }
+
+    pub fn requiring_primitive(mut self, primitive: PrimitiveFamily) -> Self {
+        self.required_primitives.push(primitive);
+        self
+    }
+
+    pub fn requiring_capability(mut self, capability_id: CapabilityId) -> Self {
+        self.required_capabilities.push(capability_id);
+        self
+    }
+
+    pub fn with_policy_surface(mut self, surface: IntegrationPolicySurface) -> Self {
+        self.policy_surfaces.push(surface);
+        self
+    }
+
+    pub fn with_discovery_mechanism(mut self, mechanism: DiscoveryMechanism) -> Self {
+        self.discovery_mechanisms.push(mechanism);
+        self
+    }
+
+    pub fn with_auth_mode(mut self, mode: AuthMode) -> Self {
+        self.auth_modes.push(mode);
+        self
+    }
+
+    pub fn with_protocol_family(mut self, protocol: ProtocolFamily) -> Self {
+        self.protocol_families.push(protocol);
+        self
+    }
+
+    pub fn at_or_before_priority(mut self, priority: u8) -> Self {
+        self.priority_at_or_before = Some(priority);
+        self
+    }
+
+    pub fn include_virtual_aliases(mut self, include: bool) -> Self {
+        self.include_virtual_aliases = include;
+        self
+    }
+
+    pub fn local_only(mut self, local_only: bool) -> Self {
+        self.local_only = Some(local_only);
+        self
+    }
+
+    pub fn cloud_required(mut self, cloud_required: bool) -> Self {
+        self.cloud_required = Some(cloud_required);
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: IntegrationCatalogSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn limited_to(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    pub fn matches_entry(&self, entry: &IntegrationCatalogEntry) -> bool {
+        if !self.include_virtual_aliases && entry.is_virtual() {
+            return false;
+        }
+        if let Some(priority) = self.priority_at_or_before {
+            if entry.priority > priority {
+                return false;
+            }
+        }
+        if let Some(local_only) = self.local_only {
+            if entry_local_only(entry) != local_only {
+                return false;
+            }
+        }
+        if let Some(cloud_required) = self.cloud_required {
+            if entry_cloud_required(entry) != cloud_required {
+                return false;
+            }
+        }
+        if !matches_any(&self.categories, &entry.category) {
+            return false;
+        }
+        if !matches_any(&self.connectivity, &entry.connectivity) {
+            return false;
+        }
+        if !matches_any(&self.implementation_statuses, &entry.implementation_status) {
+            return false;
+        }
+        if !self
+            .required_primitives
+            .iter()
+            .all(|primitive| entry.requires_primitive(*primitive))
+        {
+            return false;
+        }
+        if !self
+            .required_capabilities
+            .iter()
+            .all(|capability_id| entry.supports_capability(capability_id))
+        {
+            return false;
+        }
+        if !self
+            .policy_surfaces
+            .iter()
+            .all(|surface| entry.has_policy_surface(*surface))
+        {
+            return false;
+        }
+        if !self
+            .discovery_mechanisms
+            .iter()
+            .all(|mechanism| entry.uses_discovery(*mechanism))
+        {
+            return false;
+        }
+        if !self
+            .auth_modes
+            .iter()
+            .all(|mode| entry.auth_modes.contains(mode))
+        {
+            return false;
+        }
+        if !self.protocol_families.is_empty()
+            && !self.protocol_families.iter().any(|protocol| {
+                entry
+                    .supported_protocols
+                    .iter()
+                    .any(|candidate| candidate == protocol)
+                    || entry
+                        .virtual_iot_standards
+                        .iter()
+                        .any(|candidate| candidate == protocol)
+            })
+        {
+            return false;
+        }
+
+        true
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1360,6 +1571,23 @@ pub fn entries_at_or_before_priority(
         .collect()
 }
 
+pub fn query_integrations<'a>(
+    catalog: &'a [IntegrationCatalogEntry],
+    query: &IntegrationCatalogQuery,
+) -> Vec<&'a IntegrationCatalogEntry> {
+    let mut entries = catalog
+        .iter()
+        .filter(|entry| query.matches_entry(entry))
+        .collect::<Vec<_>>();
+
+    sort_query_results(&mut entries, query.sort);
+    if let Some(limit) = query.limit {
+        entries.truncate(limit);
+    }
+
+    entries
+}
+
 pub fn primitive_backlog(catalog: &[IntegrationCatalogEntry]) -> Vec<PrimitiveBacklogItem> {
     primitive_backlog_at_or_before_priority(catalog, u8::MAX)
 }
@@ -2289,6 +2517,55 @@ fn dedupe_policy_surfaces(
     result
 }
 
+fn matches_any<T: PartialEq>(filters: &[T], value: &T) -> bool {
+    filters.is_empty() || filters.iter().any(|filter| filter == value)
+}
+
+fn entry_local_only(entry: &IntegrationCatalogEntry) -> bool {
+    entry.is_local() && !entry.requires_cloud()
+}
+
+fn entry_cloud_required(entry: &IntegrationCatalogEntry) -> bool {
+    entry.requires_cloud()
+        || entry
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::CloudAccount)
+}
+
+fn sort_query_results(entries: &mut Vec<&IntegrationCatalogEntry>, sort: IntegrationCatalogSort) {
+    match sort {
+        IntegrationCatalogSort::PriorityThenName => {
+            entries.sort_by(|left, right| compare_by_priority_then_name(left, right))
+        }
+        IntegrationCatalogSort::Name => entries.sort_by(|left, right| compare_by_name(left, right)),
+        IntegrationCatalogSort::CategoryThenPriority => entries.sort_by(|left, right| {
+            left.category
+                .cmp(&right.category)
+                .then_with(|| compare_by_priority_then_name(left, right))
+        }),
+        IntegrationCatalogSort::StatusThenPriority => entries.sort_by(|left, right| {
+            left.implementation_status
+                .cmp(&right.implementation_status)
+                .then_with(|| compare_by_priority_then_name(left, right))
+        }),
+    }
+}
+
+fn compare_by_priority_then_name(
+    left: &IntegrationCatalogEntry,
+    right: &IntegrationCatalogEntry,
+) -> Ordering {
+    left.priority
+        .cmp(&right.priority)
+        .then_with(|| compare_by_name(left, right))
+}
+
+fn compare_by_name(left: &IntegrationCatalogEntry, right: &IntegrationCatalogEntry) -> Ordering {
+    left.display_name
+        .cmp(&right.display_name)
+        .then_with(|| left.integration_id.cmp(&right.integration_id))
+}
+
 fn capability(value: &'static str) -> CapabilityId {
     CapabilityId::trusted(value)
 }
@@ -2769,5 +3046,67 @@ mod tests {
         assert!(local_actuators
             .iter()
             .any(|entry| entry.integration_id == IntegrationId::trusted("mqtt")));
+    }
+
+    #[test]
+    fn catalog_query_composes_local_priority_and_primitive_filters() {
+        let catalog = first_party_catalog();
+        let query = IntegrationCatalogQuery::new()
+            .include_virtual_aliases(false)
+            .local_only(true)
+            .at_or_before_priority(1)
+            .requiring_primitive(PrimitiveFamily::Mqtt)
+            .sorted_by(IntegrationCatalogSort::PriorityThenName);
+        let results = query_integrations(&catalog, &query);
+
+        assert!(results
+            .iter()
+            .any(|entry| entry.integration_id == IntegrationId::trusted("mqtt")));
+        assert!(results
+            .iter()
+            .any(|entry| entry.integration_id == IntegrationId::trusted("tasmota")));
+        assert!(!results
+            .iter()
+            .any(|entry| entry.integration_id == IntegrationId::trusted("hue")));
+        assert!(results.iter().all(|entry| {
+            !entry.is_virtual()
+                && entry_local_only(entry)
+                && entry.priority <= 1
+                && entry.requires_primitive(PrimitiveFamily::Mqtt)
+        }));
+    }
+
+    #[test]
+    fn catalog_query_can_bound_cloud_policy_results() {
+        let catalog = first_party_catalog();
+        let query = IntegrationCatalogQuery::new()
+            .cloud_required(true)
+            .with_policy_surface(IntegrationPolicySurface::CredentialedCloud)
+            .sorted_by(IntegrationCatalogSort::Name)
+            .limited_to(2);
+        let results = query_integrations(&catalog, &query);
+
+        assert_eq!(results.len(), 2);
+        assert!(results
+            .windows(2)
+            .all(|window| window[0].display_name <= window[1].display_name));
+        assert!(results.iter().all(|entry| {
+            entry_cloud_required(entry)
+                && entry.has_policy_surface(IntegrationPolicySurface::CredentialedCloud)
+        }));
+    }
+
+    #[test]
+    fn catalog_query_protocol_filters_include_standard_aliases() {
+        let catalog = first_party_catalog();
+        let query = IntegrationCatalogQuery::new()
+            .with_category(IntegrationCategory::VirtualAlias)
+            .with_protocol_family(ProtocolFamily::ZWave);
+        let results = query_integrations(&catalog, &query);
+
+        assert!(results.iter().all(|entry| entry.is_virtual()));
+        assert!(results
+            .iter()
+            .any(|entry| entry.integration_id == IntegrationId::trusted("ultraloq")));
     }
 }

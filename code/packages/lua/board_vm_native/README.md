@@ -25,3 +25,24 @@ local devices = board_vm.devices({
 })
 print(devices[1].target.board_id) -- esp32-devkit-v1
 ```
+
+The higher-level connection helpers are still just Lua sugar over Rust-owned
+metadata. Lua asks the native bridge for known targets, discovered devices, and
+connection options, then keeps the chosen values on a small `Connection` object:
+
+```lua
+local board = board_vm.connect("esp32")
+print(board:board_id())              -- esp32-devkit-v1
+print(board:connection_transport())  -- serial
+
+local wifi_board = board_vm.connect("uno-r4-wifi", {
+    via = "Wi-Fi",
+    transport = wifi_endpoint,
+})
+wifi_board:smoke()
+```
+
+`via` accepts friendly names such as `serial`, `Wi-Fi`, and `BLE`. Wireless
+choices require an injected Lua transport object with `write(frame)` or
+`transact(frame, options)` until repo-native Wi-Fi/Bluetooth host endpoints are
+implemented; the module will not silently fall back to serial for those paths.
