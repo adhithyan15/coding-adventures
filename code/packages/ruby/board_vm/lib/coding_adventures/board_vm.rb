@@ -155,6 +155,57 @@ module CodingAdventures
       target.fetch("connection_options")
     end
 
+    def connection_option_list(board)
+      options = connection_options(board)
+      return "No Board VM connection options found for #{board}." if options.empty?
+
+      options.each_with_index.map do |option, index|
+        badges = []
+        badges << "commands" if option["command_transport"]
+        badges << "OTA" if option["ota_update"]
+        badge_label = badges.empty? ? "" : " [#{badges.join(", ")}]"
+
+        "#{index + 1}. #{option.fetch("display_name")}#{badge_label} - requires #{option.fetch("requires")}"
+      end.join("\n")
+    end
+
+    def select_connection_option(board, transport: nil, ota: false)
+      options = connection_options(board)
+      matches = options.select { |option| option["command_transport"] }
+      matches = matches.select { |option| option["ota_update"] } if ota
+
+      if transport
+        normalized_transport = normalize_connection_transport(transport)
+        selected = options.find { |option| option["transport"] == normalized_transport }
+        return selected if selected && (!ota || selected["ota_update"])
+
+        raise DeviceSelectionError,
+          "No #{normalized_transport} connection option for #{board.inspect}.\n#{connection_option_list(board)}"
+      end
+
+      serial = matches.find { |option| option["transport"] == "serial" }
+      return serial if serial && !ota
+      return matches.first if matches.length == 1
+
+      reason = matches.empty? ? "No matching connection option" : "Multiple connection options match"
+      raise DeviceSelectionError, "#{reason} for #{board.inspect}.\n#{connection_option_list(board)}"
+    end
+
+    def pick_connection_option(board, input: $stdin, output: $stdout)
+      options = connection_options(board)
+      raise DeviceSelectionError, "No Board VM connection options found for #{board.inspect}." if options.empty?
+
+      output.puts connection_option_list(board)
+      output.print "Select connection [1-#{options.length}]: "
+      choice = input.gets
+      index = Integer(choice.to_s.strip, exception: false)
+      unless index && index.between?(1, options.length)
+        raise DeviceSelectionError, "Invalid Board VM connection selection: #{choice.inspect}"
+      end
+
+      options.fetch(index - 1)
+    end
+
     def esp_upload_options(board = :esp32_devkit_v1, **overrides)
       options = Native.esp_upload_options(board.to_s)
       return nil unless options
@@ -410,6 +461,20 @@ module CodingAdventures
         :raspberry_pi_pico_w
       else
         board_id.to_s.tr("-", "_").to_sym
+      end
+    end
+
+    def normalize_connection_transport(transport)
+      normalized = transport.to_s.strip.downcase.tr("-", "_").tr(" /", "__")
+      case normalized
+      when "usb", "usb_serial", "serial_port"
+        "serial"
+      when "wi_fi", "wireless"
+        "wifi"
+      when "ble", "bluetooth", "bluetooth_low_energy"
+        "bluetooth_le"
+      else
+        normalized
       end
     end
   end

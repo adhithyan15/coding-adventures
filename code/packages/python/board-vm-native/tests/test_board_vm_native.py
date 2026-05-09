@@ -12,6 +12,7 @@ from board_vm_native import (
     ProtocolResult,
     Session,
     connect,
+    connection_option_list,
     connection_options,
     device_list,
     devices,
@@ -24,9 +25,11 @@ from board_vm_native import (
     pico_uf2_upload_command,
     pico_uf2_mounts,
     pico_uf2_upload_options,
+    pick_connection_option,
     pick_device,
     pico,
     runtime_devices,
+    select_connection_option,
     select_device,
     select_runtime_device,
 )
@@ -164,6 +167,46 @@ def test_connection_options_are_exposed_from_rust_registry():
         "ota_update": True,
         "requires": "network_endpoint",
     } in options
+    assert "Wi-Fi [commands, OTA]" in connection_option_list("uno-r4-wifi")
+
+
+def test_connection_options_can_be_selected_without_exposing_ports():
+    default = select_connection_option("uno-r4-wifi")
+    wifi = select_connection_option("uno-r4-wifi", transport="wifi")
+    friendly_wifi = select_connection_option("uno-r4-wifi", transport="Wi-Fi")
+    friendly_serial = select_connection_option("uno-r4-wifi", transport="USB serial")
+    ota = select_connection_option("uno-r4-wifi", ota=True)
+
+    assert default["transport"] == "serial"
+    assert wifi["transport"] == "wifi"
+    assert friendly_wifi["transport"] == "wifi"
+    assert friendly_serial["transport"] == "serial"
+    assert ota["transport"] == "wifi"
+
+    try:
+        select_connection_option("raspberry-pi-pico", transport="wifi")
+    except ValueError as error:
+        message = str(error)
+    else:
+        raise AssertionError("expected wifi selection to fail for non-wireless Pico")
+    assert "No wifi connection option" in message
+    assert "USB/serial" in message
+
+
+def test_connection_option_picker_prompts_for_repl_use():
+    output = io.StringIO()
+
+    option = pick_connection_option(
+        "uno-r4-wifi",
+        input_func=lambda _prompt: "2",
+        output=output,
+    )
+
+    assert option["transport"] == "wifi"
+    rendered = output.getvalue()
+    assert "1. USB/serial [commands] - requires serial_port" in rendered
+    assert "2. Wi-Fi [commands, OTA] - requires network_endpoint" in rendered
+    assert "Select connection [1-3]: " in rendered
 
 
 def test_targets_are_detected_from_rust_owned_aliases():

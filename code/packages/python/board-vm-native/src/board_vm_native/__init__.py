@@ -1355,6 +1355,98 @@ def connection_options(selector: str) -> list[dict[str, Any]]:
     return target.connection_options
 
 
+def connection_option_list(selector: str) -> str:
+    options = connection_options(selector)
+    if not options:
+        return f"No Board VM connection options found for {selector}."
+
+    lines = []
+    for index, option in enumerate(options, start=1):
+        badges = []
+        if option.get("command_transport"):
+            badges.append("commands")
+        if option.get("ota_update"):
+            badges.append("OTA")
+        badge_label = f" [{', '.join(badges)}]" if badges else ""
+        lines.append(
+            f"{index}. {option['display_name']}{badge_label} - requires {option['requires']}"
+        )
+    return "\n".join(lines)
+
+
+def select_connection_option(
+    selector: str,
+    *,
+    transport: str | None = None,
+    ota: bool = False,
+) -> dict[str, Any]:
+    options = connection_options(selector)
+    matches = [option for option in options if option.get("command_transport")]
+    if ota:
+        matches = [option for option in matches if option.get("ota_update")]
+
+    if transport is not None:
+        normalized_transport = _normalize_connection_transport(transport)
+        selected = next(
+            (option for option in options if option["transport"] == normalized_transport),
+            None,
+        )
+        if selected is not None and (not ota or selected.get("ota_update")):
+            return dict(selected)
+        raise ValueError(
+            f"No {normalized_transport} connection option for {selector!r}.\n"
+            f"{connection_option_list(selector)}"
+        )
+
+    serial = next((option for option in matches if option["transport"] == "serial"), None)
+    if serial is not None and not ota:
+        return dict(serial)
+    if len(matches) == 1:
+        return dict(matches[0])
+
+    reason = "No matching connection option" if not matches else "Multiple connection options match"
+    raise ValueError(f"{reason} for {selector!r}.\n{connection_option_list(selector)}")
+
+
+def _normalize_connection_transport(transport: str) -> str:
+    normalized = str(transport).strip().lower().replace("-", "_").replace(" ", "_").replace("/", "_")
+    aliases = {
+        "usb": "serial",
+        "usb_serial": "serial",
+        "serial_port": "serial",
+        "wi_fi": "wifi",
+        "wireless": "wifi",
+        "ble": "bluetooth_le",
+        "bluetooth": "bluetooth_le",
+        "bluetooth_low_energy": "bluetooth_le",
+    }
+    return aliases.get(normalized, normalized)
+
+
+def pick_connection_option(
+    selector: str,
+    *,
+    input_func: Any = input,
+    output: Any = None,
+) -> dict[str, Any]:
+    options = connection_options(selector)
+    if not options:
+        raise ValueError(f"No Board VM connection options found for {selector!r}.")
+
+    output = sys.stdout if output is None else output
+    output.write(connection_option_list(selector))
+    output.write("\n")
+    output.write(f"Select connection [1-{len(options)}]: ")
+    choice = input_func("")
+    try:
+        index = int(str(choice).strip())
+    except ValueError as error:
+        raise ValueError(f"Invalid Board VM connection selection: {choice!r}") from error
+    if not 1 <= index <= len(options):
+        raise ValueError(f"Invalid Board VM connection selection: {choice!r}")
+    return dict(options[index - 1])
+
+
 def esp_upload_options(
     selector: str = "esp32-devkit-v1",
     **overrides: Any,
@@ -1805,6 +1897,7 @@ __all__ = [
     "RUN_FLAGS",
     "Session",
     "SessionResult",
+    "connection_option_list",
     "connect",
     "connection_options",
     "device_list",
@@ -1818,6 +1911,7 @@ __all__ = [
     "known_targets",
     "pico",
     "pico_w",
+    "pick_connection_option",
     "pico_uf2_mount",
     "pico_uf2_upload_command",
     "pico_uf2_mounts",
@@ -1826,6 +1920,7 @@ __all__ = [
     "raspberry_pi_pico",
     "raspberry_pi_pico_w",
     "runtime_devices",
+    "select_connection_option",
     "select_device",
     "select_runtime_device",
     "uno_r4_wifi",

@@ -71,6 +71,38 @@ module CodingAdventures
         }
       end
 
+      def test_connection_options_can_be_selected_without_exposing_ports
+        default = BoardVM.select_connection_option(:uno_r4_wifi)
+        wifi = BoardVM.select_connection_option(:uno_r4_wifi, transport: :wifi)
+        friendly_wifi = BoardVM.select_connection_option(:uno_r4_wifi, transport: "Wi-Fi")
+        friendly_serial = BoardVM.select_connection_option(:uno_r4_wifi, transport: "USB serial")
+        ota = BoardVM.select_connection_option(:uno_r4_wifi, ota: true)
+
+        assert_equal "serial", default.fetch("transport")
+        assert_equal "wifi", wifi.fetch("transport")
+        assert_equal "wifi", friendly_wifi.fetch("transport")
+        assert_equal "serial", friendly_serial.fetch("transport")
+        assert_equal "wifi", ota.fetch("transport")
+
+        error = assert_raises(DeviceSelectionError) do
+          BoardVM.select_connection_option(:raspberry_pi_pico, transport: :wifi)
+        end
+        assert_match(/No wifi connection option/, error.message)
+        assert_includes error.message, "USB/serial"
+      end
+
+      def test_connection_option_picker_prompts_for_repl_use
+        input = StringIO.new("2\n")
+        output = StringIO.new
+
+        option = BoardVM.pick_connection_option(:uno_r4_wifi, input: input, output: output)
+
+        assert_equal "wifi", option.fetch("transport")
+        assert_includes output.string, "1. USB/serial [commands] - requires serial_port"
+        assert_includes output.string, "2. Wi-Fi [commands, OTA] - requires network_endpoint"
+        assert_includes output.string, "Select connection [1-3]: "
+      end
+
       def test_targets_are_detected_from_rust_owned_aliases
         esp32 = BoardVM.detect_target("esp32")
         pico = BoardVM.detect_target("Raspberry Pi Pico")
