@@ -2049,7 +2049,9 @@ impl HtmlParser {
         if self.current_namespace().is_some()
             && !self.current_element_is(name)
             && self.has_open_element(name)
-            && (is_table_context_element(name) || self.current_namespace() == Some("svg"))
+            && (is_table_context_element(name)
+                || self.current_namespace() == Some("svg")
+                || (self.current_namespace() == Some("math") && name == "p"))
         {
             self.pop_foreign_elements();
         } else if self.current_namespace().is_some() && !self.current_element_is(name) {
@@ -2107,6 +2109,15 @@ impl HtmlParser {
             "p" if !self.has_open_element("body")
                 && !self.document_has_body_element()
                 && !self.body_has_non_whitespace_child() => {}
+            "p" if self.has_open_element("p")
+                && !self.has_open_element_before_namespace_boundary("p") =>
+            {
+                self.diagnostics.push(ParserDiagnostic::new(
+                    "unexpected-p-end-tag",
+                    "end tag `</p>` created and closed an implied `p` element",
+                ));
+                self.append_node(Node::element("p".to_string(), Vec::new()));
+            }
             "p" if !self.has_open_element("p") => {
                 self.diagnostics.push(ParserDiagnostic::new(
                     "unexpected-p-end-tag",
@@ -2809,6 +2820,17 @@ impl HtmlParser {
         };
         let formatting_name = formatting_element.name.clone();
         let formatting_attributes = formatting_element.attributes.clone();
+        let pending_anchor_reconstruction = if formatting_name == "a" {
+            None
+        } else {
+            self.open_elements
+                .iter()
+                .skip(formatting_index + 1)
+                .rev()
+                .filter_map(|path| element_ref_at_path(&self.document, path))
+                .find(|element| element.name == "a")
+                .map(|element| (element.name.clone(), element.attributes.clone()))
+        };
 
         let Some(first_div_path) = self
             .open_elements
@@ -2936,6 +2958,9 @@ impl HtmlParser {
         for index in &relative_div_path[..adoption_path_len] {
             moved_div_path.push(*index);
             self.open_elements.push(moved_div_path.clone());
+        }
+        if let Some(anchor) = pending_anchor_reconstruction {
+            self.pending_formatting_reconstruction = vec![anchor];
         }
         true
     }
@@ -3117,6 +3142,21 @@ impl HtmlParser {
     fn current_element_is(&self, name: &str) -> bool {
         self.current_element_name()
             .is_some_and(|current| current.eq_ignore_ascii_case(name))
+    }
+
+    fn has_open_element_before_namespace_boundary(&self, name: &str) -> bool {
+        for path in self.open_elements.iter().rev() {
+            let Some(element) = element_ref_at_path(&self.document, path) else {
+                continue;
+            };
+            if element.namespace.is_some() {
+                return false;
+            }
+            if element.name.eq_ignore_ascii_case(name) {
+                return true;
+            }
+        }
+        false
     }
 
     fn current_empty_element_is(&self, name: &str) -> bool {
@@ -3980,7 +4020,7 @@ fn body_or_frameset_nodes(mut body: Element) -> Vec<Node> {
         }
         if let Some(nodes) = first_non_hidden
             .and_then(|index| body.children.get(index))
-            .and_then(frameset_nodes_from_paragraph_child)
+            .and_then(frameset_nodes_from_compatible_wrapper)
         {
             return nodes;
         }
@@ -3993,11 +4033,11 @@ fn body_or_frameset_nodes(mut body: Element) -> Vec<Node> {
     vec![Node::Element(body)]
 }
 
-fn frameset_nodes_from_paragraph_child(node: &Node) -> Option<Vec<Node>> {
+fn frameset_nodes_from_compatible_wrapper(node: &Node) -> Option<Vec<Node>> {
     let Node::Element(element) = node else {
         return None;
     };
-    if element.name != "p" || !element.attributes.is_empty() {
+    if !is_frameset_compatible_wrapper(element) {
         return None;
     }
     let first_non_ignorable = element
@@ -4008,7 +4048,10 @@ fn frameset_nodes_from_paragraph_child(node: &Node) -> Option<Vec<Node>> {
         element.children.get(first_non_ignorable),
         Some(Node::Element(child)) if child.name == "frameset"
     ) {
-        return None;
+        return element
+            .children
+            .get(first_non_ignorable)
+            .and_then(frameset_nodes_from_compatible_wrapper);
     }
     Some(
         element
@@ -4018,6 +4061,12 @@ fn frameset_nodes_from_paragraph_child(node: &Node) -> Option<Vec<Node>> {
             .cloned()
             .collect(),
     )
+}
+
+fn is_frameset_compatible_wrapper(element: &Element) -> bool {
+    element.namespace.is_some()
+        || matches!(element.name.as_str(), "html" | "body")
+        || (matches!(element.name.as_str(), "p" | "div") && element.attributes.is_empty())
 }
 
 fn strip_replacement_characters_from_direct_text(nodes: &mut [Node]) {
@@ -4053,6 +4102,13 @@ fn is_ignorable_before_frameset_node(node: &Node) -> bool {
             node,
             Node::Element(element)
                 if matches!(element.name.as_str(), "html" | "body" | "p")
+                    && element.children.iter().all(is_ignorable_before_frameset_node)
+        )
+        || matches!(
+            node,
+            Node::Element(element)
+                if element.name == "div"
+                    && element.attributes.is_empty()
                     && element.children.iter().all(is_ignorable_before_frameset_node)
         )
         || matches!(
