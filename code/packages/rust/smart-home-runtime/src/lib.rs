@@ -763,6 +763,28 @@ impl RuntimeReadToolRequest {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeSubscribeToolRequest {
+    pub subscription_id: RuntimeSubscriptionId,
+    pub filter: RuntimeEventFilter,
+    pub from_checkpoint: Option<RuntimeEventCheckpoint>,
+}
+
+impl RuntimeSubscribeToolRequest {
+    pub fn new(subscription_id: RuntimeSubscriptionId, filter: RuntimeEventFilter) -> Self {
+        Self {
+            subscription_id,
+            filter,
+            from_checkpoint: None,
+        }
+    }
+
+    pub fn with_checkpoint(mut self, checkpoint: RuntimeEventCheckpoint) -> Self {
+        self.from_checkpoint = Some(checkpoint);
+        self
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct RuntimeCommandToolRequest {
     pub entity_id: EntityId,
@@ -847,6 +869,14 @@ pub enum RuntimeReadToolOutput {
         capabilities: Vec<Capability>,
     },
     Health(Vec<BridgeHealthSnapshot>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeSubscribeToolOutput {
+    pub subscription_id: RuntimeSubscriptionId,
+    pub replay_from_checkpoint: RuntimeEventCheckpoint,
+    pub subscribed_at_checkpoint: RuntimeEventCheckpoint,
+    pub queued_events: usize,
 }
 
 #[derive(Debug, Clone)]
@@ -1081,6 +1111,43 @@ impl SmartHomeRuntime {
                 )),
             },
         }
+    }
+
+    pub fn execute_subscribe_tool(
+        &mut self,
+        principal_id: AgentId,
+        request: RuntimeSubscribeToolRequest,
+        now_ms: u64,
+    ) -> Result<RuntimeSubscribeToolOutput, RuntimeError> {
+        let tool = SmartHomeTool::Subscribe;
+        let decision = self.authorize_tool_for_principal(principal_id.clone(), tool, now_ms);
+        if !decision.missing_capabilities.is_empty() {
+            return Err(RuntimeError::UnauthorizedTool {
+                principal_id,
+                tool,
+                missing_capabilities: decision.missing_capabilities,
+            });
+        }
+
+        let subscribed_at_checkpoint = self.event_bus.checkpoint();
+        let replay_from_checkpoint = request.from_checkpoint.unwrap_or(subscribed_at_checkpoint);
+        let queued_events = self
+            .event_bus
+            .replay_from(replay_from_checkpoint, &request.filter)
+            .len();
+        let subscription_id = request.subscription_id;
+        self.event_bus.subscribe_from_checkpoint(
+            subscription_id.clone(),
+            request.filter,
+            replay_from_checkpoint,
+        )?;
+
+        Ok(RuntimeSubscribeToolOutput {
+            subscription_id,
+            replay_from_checkpoint,
+            subscribed_at_checkpoint,
+            queued_events,
+        })
     }
 
     pub fn execute_command_tool(
@@ -1995,6 +2062,105 @@ mod tests {
         assert_eq!(decisions.len(), 1);
         assert_eq!(decisions[0].outcome, AuthorizationOutcome::Denied);
         assert!(runtime.event_bus().published().is_empty());
+    }
+
+    #[test]
+    fn subscribe_tool_requires_smart_home_read_grants() {
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:observer");
+        let subscription = RuntimeSubscriptionId::trusted("state-stream");
+
+        let error = runtime
+            .execute_subscribe_tool(
+                principal.clone(),
+                RuntimeSubscribeToolRequest::new(subscription.clone(), RuntimeEventFilter::All),
+                1_000,
+            )
+            .unwrap_err();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+
+        assert!(matches!(
+            error,
+            RuntimeError::UnauthorizedTool {
+                tool: SmartHomeTool::Subscribe,
+                missing_capabilities,
+                ..
+            } if missing_capabilities == vec![CapabilityId::trusted("smart_home.read")]
+        ));
+        assert_eq!(decisions.len(), 1);
+        assert_eq!(decisions[0].outcome, AuthorizationOutcome::Denied);
+        assert!(matches!(
+            runtime.event_bus_mut().drain(&subscription),
+            Err(RuntimeError::UnknownSubscription(_))
+        ));
+    }
+
+    #[test]
+    fn subscribe_tool_registers_checkpointed_runtime_subscriptions() {
+        let mut runtime = SmartHomeRuntime::new();
+        let principal = AgentId::trusted("agent:observer");
+        let subscription = RuntimeSubscriptionId::trusted("bridge-1-stream");
+        runtime.registry_mut().upsert_capability_grant(
+            CapabilityGrant::for_capability(
+                CapabilityGrantId::trusted("grant-read"),
+                principal.clone(),
+                CapabilityId::trusted("smart_home.read"),
+                PrivilegeTier::ReadOnly,
+                "chief-of-staff",
+                1_000,
+            )
+            .with_expiry(2_000),
+        );
+        runtime
+            .event_bus_mut()
+            .publish(bridge_health_runtime_event("health-1", "bridge-1", 1_000));
+        runtime
+            .event_bus_mut()
+            .publish(bridge_health_runtime_event("health-2", "bridge-2", 1_001));
+
+        let output = runtime
+            .execute_subscribe_tool(
+                principal.clone(),
+                RuntimeSubscribeToolRequest::new(
+                    subscription.clone(),
+                    RuntimeEventFilter::Bridge(BridgeId::trusted("bridge-1")),
+                )
+                .with_checkpoint(RuntimeEventCheckpoint::start()),
+                1_500,
+            )
+            .unwrap();
+        let replay = runtime.event_bus_mut().drain(&subscription).unwrap();
+        runtime
+            .event_bus_mut()
+            .publish(bridge_health_runtime_event("health-3", "bridge-1", 1_600));
+        let live = runtime.event_bus_mut().drain(&subscription).unwrap();
+        let decisions = runtime
+            .registry()
+            .authorization_decisions_for_principal(&principal);
+
+        assert_eq!(output.subscription_id, subscription);
+        assert_eq!(
+            output.replay_from_checkpoint,
+            RuntimeEventCheckpoint::start()
+        );
+        assert_eq!(output.subscribed_at_checkpoint.next_sequence(), 2);
+        assert_eq!(output.queued_events, 1);
+        assert!(matches!(
+            replay.as_slice(),
+            [RuntimeEvent::BridgeHealth { event_id, bridge_id, .. }]
+                if event_id == &EventId::trusted("health-1")
+                    && bridge_id == &BridgeId::trusted("bridge-1")
+        ));
+        assert!(matches!(
+            live.as_slice(),
+            [RuntimeEvent::BridgeHealth { event_id, bridge_id, .. }]
+                if event_id == &EventId::trusted("health-3")
+                    && bridge_id == &BridgeId::trusted("bridge-1")
+        ));
+        assert_eq!(decisions.len(), 1);
+        assert_eq!(decisions[0].outcome, AuthorizationOutcome::Allowed);
     }
 
     #[test]
