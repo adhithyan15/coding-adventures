@@ -37,6 +37,10 @@ job runtime:
 - `summarize_portability_by_backend` groups blocked fields by scheduler family
 - `summarize_portability_by_field` groups unsupported scheduler families by job
   spec field
+- `summarize_portability_backend_statuses` returns one supported/blocked row per
+  backend for tool status surfaces
+- `NativeJobRuntime::portability_backend_statuses` applies the runtime's active
+  portability target to those backend rows
 
 ## Example
 

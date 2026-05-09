@@ -100,6 +100,21 @@ impl NativeJobRuntime {
         validate_portability(spec, self.portability_target)
     }
 
+    /// Return one support row per backend covered by this runtime's portability
+    /// target.
+    pub fn portability_backend_statuses(
+        &self,
+        spec: &JobSpec,
+    ) -> Result<Vec<PortabilityBackendStatus>, JobError> {
+        let report = self.validate_portability(spec);
+        let backends = match self.portability_target {
+            PortabilityTarget::AllNativeOses => native_backends().to_vec(),
+            PortabilityTarget::SelectedBackendOnly => vec![resolve_backend_kind(self.selection)?],
+        };
+
+        Ok(summarize_portability_backend_statuses(&report, &backends))
+    }
+
     /// Compile a job spec into the install plan for the selected backend.
     pub fn install_plan(&self, spec: &JobSpec) -> Result<InstallPlan, JobError> {
         self.validate_portability(spec).into_result()?;
@@ -130,6 +145,15 @@ pub fn supported_backends() -> [BackendKind; 4] {
         BackendKind::SystemdUser,
         BackendKind::WindowsTaskScheduler,
         BackendKind::InProcess,
+    ]
+}
+
+/// Return native scheduler backends, excluding the pure in-process fallback.
+pub fn native_backends() -> [BackendKind; 3] {
+    [
+        BackendKind::Launchd,
+        BackendKind::SystemdUser,
+        BackendKind::WindowsTaskScheduler,
     ]
 }
 
@@ -216,6 +240,15 @@ pub struct PortabilityFieldSummary {
     pub field: String,
     pub issue_count: usize,
     pub unsupported_backends: Vec<BackendKind>,
+}
+
+/// Backend-level support row derived from a portability report.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PortabilityBackendStatus {
+    pub backend: BackendKind,
+    pub is_supported: bool,
+    pub issue_count: usize,
+    pub blocked_fields: Vec<String>,
 }
 
 /// Return portability issues matching a bounded read selector.
@@ -308,6 +341,47 @@ pub fn summarize_portability_by_field(report: &PortabilityReport) -> Vec<Portabi
             .sort_by_key(|backend| backend_sort_key(*backend));
     }
     summaries
+}
+
+/// Summarize backend support for a caller-selected backend set.
+pub fn summarize_portability_backend_statuses(
+    report: &PortabilityReport,
+    backends: &[BackendKind],
+) -> Vec<PortabilityBackendStatus> {
+    let mut statuses: Vec<PortabilityBackendStatus> = backends
+        .iter()
+        .copied()
+        .map(|backend| PortabilityBackendStatus {
+            backend,
+            is_supported: true,
+            issue_count: 0,
+            blocked_fields: Vec::new(),
+        })
+        .collect();
+
+    for issue in &report.issues {
+        if issue.unsupported_backends.is_empty() {
+            for status in &mut statuses {
+                apply_issue_to_backend_status(status, &issue.field);
+            }
+            continue;
+        }
+
+        for backend in &issue.unsupported_backends {
+            if let Some(status) = statuses
+                .iter_mut()
+                .find(|status| status.backend == *backend)
+            {
+                apply_issue_to_backend_status(status, &issue.field);
+            }
+        }
+    }
+
+    statuses.sort_by_key(|status| backend_sort_key(status.backend));
+    for status in &mut statuses {
+        status.blocked_fields.sort();
+    }
+    statuses
 }
 
 /// Pure fallback backend for tests, development sandboxes, and constrained hosts.
@@ -512,6 +586,12 @@ fn push_unique_backend(values: &mut Vec<BackendKind>, value: BackendKind) {
     }
 }
 
+fn apply_issue_to_backend_status(status: &mut PortabilityBackendStatus, field: &str) {
+    status.is_supported = false;
+    status.issue_count += 1;
+    push_unique_string(&mut status.blocked_fields, field);
+}
+
 fn resolve_backend_kind(selection: BackendSelection) -> Result<BackendKind, JobError> {
     match selection {
         BackendSelection::Launchd => Ok(BackendKind::Launchd),
@@ -671,6 +751,14 @@ mod tests {
     #[test]
     fn supported_backends_include_in_process_fallback() {
         assert!(supported_backends().contains(&BackendKind::InProcess));
+        assert_eq!(
+            native_backends(),
+            [
+                BackendKind::Launchd,
+                BackendKind::SystemdUser,
+                BackendKind::WindowsTaskScheduler
+            ]
+        );
     }
 
     #[test]
@@ -798,6 +886,96 @@ mod tests {
         assert_eq!(
             anchored_interval.unsupported_backends,
             vec![BackendKind::Launchd, BackendKind::SystemdUser]
+        );
+    }
+
+    #[test]
+    fn portability_backend_statuses_show_supported_and_blocked_backends() {
+        let report = non_portable_report();
+        let statuses = summarize_portability_backend_statuses(&report, &native_backends());
+
+        let launchd = statuses
+            .iter()
+            .find(|status| status.backend == BackendKind::Launchd)
+            .expect("launchd status should exist");
+        let systemd = statuses
+            .iter()
+            .find(|status| status.backend == BackendKind::SystemdUser)
+            .expect("systemd status should exist");
+        let windows = statuses
+            .iter()
+            .find(|status| status.backend == BackendKind::WindowsTaskScheduler)
+            .expect("windows status should exist");
+
+        assert!(!launchd.is_supported);
+        assert_eq!(launchd.issue_count, 2);
+        assert_eq!(
+            launchd.blocked_fields,
+            vec![
+                "timeout_seconds".to_string(),
+                "trigger.interval.anchor".to_string()
+            ]
+        );
+        assert!(!systemd.is_supported);
+        assert_eq!(
+            systemd.blocked_fields,
+            vec!["trigger.interval.anchor".to_string()]
+        );
+        assert!(!windows.is_supported);
+        assert_eq!(
+            windows.blocked_fields,
+            vec![
+                "env".to_string(),
+                "trigger.interval.every_seconds".to_string()
+            ]
+        );
+
+        let portable = summarize_portability_backend_statuses(
+            &NativeJobRuntime::default().validate_portability(&sample_job()),
+            &native_backends(),
+        );
+
+        assert!(portable.iter().all(|status| status.is_supported));
+        assert!(portable
+            .iter()
+            .all(|status| status.issue_count == 0 && status.blocked_fields.is_empty()));
+    }
+
+    #[test]
+    fn runtime_backend_statuses_follow_portability_target() {
+        let mut job = sample_job();
+        job.trigger = JobTrigger::Once {
+            at: os_job_core::DateTimeParts {
+                year: 2026,
+                month: 4,
+                day: 18,
+                hour: 10,
+                minute: 0,
+                second: 0,
+            },
+        };
+
+        let native_statuses = NativeJobRuntime::for_backend(BackendSelection::Launchd)
+            .portability_backend_statuses(&job)
+            .expect("native statuses should be available");
+
+        assert_eq!(native_statuses.len(), 3);
+        assert!(native_statuses
+            .iter()
+            .any(|status| status.backend == BackendKind::Launchd && !status.is_supported));
+
+        let fallback_statuses = NativeJobRuntime::for_in_process()
+            .portability_backend_statuses(&job)
+            .expect("fallback statuses should be available");
+
+        assert_eq!(
+            fallback_statuses,
+            vec![PortabilityBackendStatus {
+                backend: BackendKind::InProcess,
+                is_supported: true,
+                issue_count: 0,
+                blocked_fields: Vec::new(),
+            }]
         );
     }
 }
