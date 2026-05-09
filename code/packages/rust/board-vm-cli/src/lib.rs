@@ -1,6 +1,7 @@
 use core::fmt;
 use std::fs;
 use std::io::{BufRead, Write};
+use std::net::TcpStream;
 use std::path::{Path, PathBuf};
 use std::time::Duration;
 
@@ -23,10 +24,11 @@ use board_vm_host::{
 use board_vm_language_core::{detect_target, discover_devices, LanguageHostDevice};
 use board_vm_protocol::{BOOT_RUN_AT_BOOT, BOOT_RUN_IF_NO_HOST, BOOT_STORE_ONLY};
 use board_vm_serial::{
-    available_ports, BoardSerialTransport, SerialConfig, SerialPortInfo, SerialTransportError,
-    DEFAULT_BAUD_RATE, DEFAULT_TIMEOUT_MS,
+    available_ports, BoardSerialTransport, SerialConfig, SerialPort, SerialPortInfo,
+    SerialTransportError, DEFAULT_BAUD_RATE, DEFAULT_TIMEOUT_MS,
 };
 use board_vm_targets::{all_targets, BoardTargetInfo, OnboardLed};
+use board_vm_tcp::{BoardTcpTransport, TcpConfig, TcpTransportError};
 
 pub const DEFAULT_PROGRAM_ID: u16 = 1;
 pub const DEFAULT_INSTRUCTION_BUDGET: u32 = 12;
@@ -51,6 +53,7 @@ pub enum CliCommand {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SmokeOptions {
     pub port: Option<String>,
+    pub endpoint: Option<String>,
     pub board: String,
     pub baud_rate: u32,
     pub timeout_ms: u64,
@@ -67,6 +70,12 @@ impl SmokeOptions {
             .dtr_on_open(true)
             .clear_on_open(true)
             .settle_on_open(Duration::from_millis(DEFAULT_OPEN_SETTLE_MS))
+    }
+
+    pub fn tcp_config(&self, endpoint: &str) -> TcpConfig {
+        TcpConfig::new(endpoint)
+            .connect_timeout(Duration::from_millis(self.timeout_ms))
+            .io_timeout(Duration::from_millis(self.timeout_ms))
     }
 }
 
@@ -136,6 +145,7 @@ impl EspUploadOptions {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ReplOptions {
     pub port: Option<String>,
+    pub endpoint: Option<String>,
     pub board: String,
     pub baud_rate: u32,
     pub timeout_ms: u64,
@@ -152,6 +162,30 @@ impl ReplOptions {
             .dtr_on_open(true)
             .clear_on_open(true)
             .settle_on_open(Duration::from_millis(DEFAULT_OPEN_SETTLE_MS))
+    }
+
+    pub fn tcp_config(&self, endpoint: &str) -> TcpConfig {
+        TcpConfig::new(endpoint)
+            .connect_timeout(Duration::from_millis(self.timeout_ms))
+            .io_timeout(Duration::from_millis(self.timeout_ms))
+    }
+}
+
+enum SessionTransport {
+    Serial(BoardSerialTransport<Box<dyn SerialPort>, 1024>),
+    Tcp(BoardTcpTransport<TcpStream, 1024>),
+}
+
+impl RawFrameTransport for SessionTransport {
+    fn exchange_raw_frame(
+        &mut self,
+        request: &[u8],
+        response_out: &mut [u8],
+    ) -> Result<usize, board_vm_client::TransportError> {
+        match self {
+            Self::Serial(transport) => transport.exchange_raw_frame(request, response_out),
+            Self::Tcp(transport) => transport.exchange_raw_frame(request, response_out),
+        }
     }
 }
 
@@ -270,6 +304,12 @@ impl From<ClientError> for CliError {
 impl From<SerialTransportError> for CliError {
     fn from(value: SerialTransportError) -> Self {
         Self::Serial(format!("{value:?}"))
+    }
+}
+
+impl From<TcpTransportError> for CliError {
+    fn from(value: TcpTransportError) -> Self {
+        Self::Io(format!("tcp transport error: {value:?}"))
     }
 }
 
@@ -428,6 +468,7 @@ where
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct SessionOptions {
     port: Option<String>,
+    endpoint: Option<String>,
     board: String,
     baud_rate: u32,
     timeout_ms: u64,
@@ -443,6 +484,7 @@ where
     let options = parse_session_options(&mut args)?;
     Ok(CliCommand::Smoke(SmokeOptions {
         port: options.port,
+        endpoint: options.endpoint,
         board: options.board,
         baud_rate: options.baud_rate,
         timeout_ms: options.timeout_ms,
@@ -459,6 +501,7 @@ where
     let options = parse_session_options(&mut args)?;
     Ok(CliCommand::Repl(ReplOptions {
         port: options.port,
+        endpoint: options.endpoint,
         board: options.board,
         baud_rate: options.baud_rate,
         timeout_ms: options.timeout_ms,
@@ -518,6 +561,7 @@ where
     I: Iterator<Item = String>,
 {
     let mut port = None;
+    let mut endpoint = None;
     let mut board = "auto".to_owned();
     let mut baud_rate = DEFAULT_BAUD_RATE;
     let mut timeout_ms = DEFAULT_TIMEOUT_MS;
@@ -528,6 +572,7 @@ where
     while let Some(option) = args.next() {
         match option.as_str() {
             "--port" | "-p" => port = Some(next_value(args, "--port")?),
+            "--endpoint" | "--tcp-endpoint" => endpoint = Some(next_value(args, "--endpoint")?),
             "--board" | "--target" => board = next_value(args, "--board")?,
             "--baud" | "-b" => baud_rate = parse_number(next_value(args, "--baud")?, "--baud")?,
             "--timeout-ms" => {
@@ -548,6 +593,7 @@ where
 
     Ok(SessionOptions {
         port,
+        endpoint,
         board,
         baud_rate,
         timeout_ms,
@@ -860,8 +906,7 @@ pub fn format_device_list(devices: &[LanguageHostDevice]) -> String {
 }
 
 pub fn run_smoke(options: &SmokeOptions) -> Result<SmokeReport, CliError> {
-    let port = resolve_session_port(options.port.as_deref(), &options.board)?;
-    let transport = BoardSerialTransport::<_, 1024>::open(&options.serial_config(&port))?;
+    let transport = open_smoke_transport(options)?;
     let mut client: BoardVmClient<_, 512, 768, 768> = BoardVmClient::new(transport);
     let hello = client
         .hello_with_name(DEFAULT_HOST_NAME, options.host_nonce)
@@ -1094,8 +1139,7 @@ where
     R: BufRead,
     W: Write,
 {
-    let port = resolve_session_port(options.port.as_deref(), &options.board)?;
-    let transport = BoardSerialTransport::<_, 1024>::open(&options.serial_config(&port))?;
+    let (connection_label, transport) = open_repl_transport(options)?;
     let mut client: BoardVmClient<_, 512, 768, 768> = BoardVmClient::new(transport);
     let mut state = ReplState {
         program_id: options.program_id,
@@ -1105,14 +1149,55 @@ where
 
     writeln!(
         output,
-        "connected port={} baud={} timeout_ms={}",
-        port, options.baud_rate, options.timeout_ms
+        "connected {} timeout_ms={}",
+        connection_label, options.timeout_ms
     )?;
     let hello = client.hello_with_name(DEFAULT_HOST_NAME, state.host_nonce)?;
     write_hello(&mut output, &hello)?;
     write_repl_help(&mut output)?;
 
     run_repl_loop(&mut client, &mut state, input, output)
+}
+
+fn open_smoke_transport(options: &SmokeOptions) -> Result<SessionTransport, CliError> {
+    if let Some(endpoint) = options.endpoint.as_deref() {
+        ensure_endpoint_not_mixed_with_port(options.port.as_deref())?;
+        return Ok(SessionTransport::Tcp(
+            BoardTcpTransport::<_, 1024>::connect(&options.tcp_config(endpoint))?,
+        ));
+    }
+
+    let port = resolve_session_port(options.port.as_deref(), &options.board)?;
+    Ok(SessionTransport::Serial(
+        BoardSerialTransport::<_, 1024>::open(&options.serial_config(&port))?,
+    ))
+}
+
+fn open_repl_transport(options: &ReplOptions) -> Result<(String, SessionTransport), CliError> {
+    if let Some(endpoint) = options.endpoint.as_deref() {
+        ensure_endpoint_not_mixed_with_port(options.port.as_deref())?;
+        let transport = BoardTcpTransport::<_, 1024>::connect(&options.tcp_config(endpoint))?;
+        return Ok((
+            format!("endpoint={endpoint}"),
+            SessionTransport::Tcp(transport),
+        ));
+    }
+
+    let port = resolve_session_port(options.port.as_deref(), &options.board)?;
+    let transport = BoardSerialTransport::<_, 1024>::open(&options.serial_config(&port))?;
+    Ok((
+        format!("port={} baud={}", port, options.baud_rate),
+        SessionTransport::Serial(transport),
+    ))
+}
+
+fn ensure_endpoint_not_mixed_with_port(port: Option<&str>) -> Result<(), CliError> {
+    if port.is_some() {
+        return Err(CliError::UnexpectedArgument(
+            "--endpoint cannot be combined with --port".to_owned(),
+        ));
+    }
+    Ok(())
 }
 
 fn run_repl_loop<T, R, W>(
@@ -1413,7 +1498,7 @@ pub fn format_onboard_led(led: Option<OnboardLed>) -> String {
 }
 
 pub fn usage() -> &'static str {
-    "usage:\n  board-vm list-ports\n  board-vm list-targets\n  board-vm esp-detect --port <path> [--baud <rate>] [--timeout-ms <ms>] [--no-reset]\n  board-vm esp-upload --port <path> --image <path> [--offset <addr>] [--block-size <bytes>] [--flash-size <bytes>] [--baud <rate>] [--timeout-ms <ms>] [--no-reset] [--no-verify] [--stay-in-bootloader]\n  board-vm pico-uf2 --image <path.uf2> [--mount <RPI-RP2 mount>]\n  board-vm pico-uf2 --list\n  board-vm smoke [--port <path>] [--board <selector>] [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm repl [--port <path>] [--board <selector>] [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm eject blink --out <path> [--program-id <id>] [--slot <slot>] [--boot-policy store-only|run-at-boot|run-if-no-host|<u8>]"
+    "usage:\n  board-vm list-ports\n  board-vm list-targets\n  board-vm esp-detect --port <path> [--baud <rate>] [--timeout-ms <ms>] [--no-reset]\n  board-vm esp-upload --port <path> --image <path> [--offset <addr>] [--block-size <bytes>] [--flash-size <bytes>] [--baud <rate>] [--timeout-ms <ms>] [--no-reset] [--no-verify] [--stay-in-bootloader]\n  board-vm pico-uf2 --image <path.uf2> [--mount <RPI-RP2 mount>]\n  board-vm pico-uf2 --list\n  board-vm smoke [--port <path>|--endpoint tcp://host:port] [--board <selector>] [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm repl [--port <path>|--endpoint tcp://host:port] [--board <selector>] [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm eject blink --out <path> [--program-id <id>] [--slot <slot>] [--boot-policy store-only|run-at-boot|run-if-no-host|<u8>]"
 }
 
 #[cfg(test)]
@@ -1703,6 +1788,7 @@ mod tests {
             command,
             CliCommand::Smoke(SmokeOptions {
                 port: Some("/dev/cu.usbmodem-test".to_owned()),
+                endpoint: None,
                 board: "auto".to_owned(),
                 baud_rate: DEFAULT_BAUD_RATE,
                 timeout_ms: DEFAULT_TIMEOUT_MS,
@@ -1738,6 +1824,7 @@ mod tests {
             command,
             CliCommand::Smoke(SmokeOptions {
                 port: Some("COM9".to_owned()),
+                endpoint: None,
                 board: "pico".to_owned(),
                 baud_rate: 57_600,
                 timeout_ms: 250,
@@ -1756,6 +1843,7 @@ mod tests {
             command,
             CliCommand::Repl(ReplOptions {
                 port: Some("/dev/cu.usbmodem-test".to_owned()),
+                endpoint: None,
                 board: "auto".to_owned(),
                 baud_rate: DEFAULT_BAUD_RATE,
                 timeout_ms: DEFAULT_TIMEOUT_MS,
@@ -1789,12 +1877,58 @@ mod tests {
             command,
             CliCommand::Repl(ReplOptions {
                 port: Some("COM9".to_owned()),
+                endpoint: None,
                 board: "auto".to_owned(),
                 baud_rate: 57_600,
                 timeout_ms: 250,
                 program_id: 7,
                 instruction_budget: 200,
                 host_nonce: 1234,
+            })
+        );
+    }
+
+    #[test]
+    fn parses_smoke_tcp_endpoint() {
+        let command = parse_args([
+            "smoke",
+            "--endpoint",
+            "tcp://board-vm.local:4170",
+            "--timeout-ms",
+            "250",
+        ])
+        .unwrap();
+
+        assert_eq!(
+            command,
+            CliCommand::Smoke(SmokeOptions {
+                port: None,
+                endpoint: Some("tcp://board-vm.local:4170".to_owned()),
+                board: "auto".to_owned(),
+                baud_rate: DEFAULT_BAUD_RATE,
+                timeout_ms: 250,
+                program_id: DEFAULT_PROGRAM_ID,
+                instruction_budget: DEFAULT_INSTRUCTION_BUDGET,
+                host_nonce: DEFAULT_HOST_NONCE,
+            })
+        );
+    }
+
+    #[test]
+    fn parses_repl_tcp_endpoint_alias() {
+        let command = parse_args(["repl", "--tcp-endpoint", "127.0.0.1:4170"]).unwrap();
+
+        assert_eq!(
+            command,
+            CliCommand::Repl(ReplOptions {
+                port: None,
+                endpoint: Some("127.0.0.1:4170".to_owned()),
+                board: "auto".to_owned(),
+                baud_rate: DEFAULT_BAUD_RATE,
+                timeout_ms: DEFAULT_TIMEOUT_MS,
+                program_id: DEFAULT_PROGRAM_ID,
+                instruction_budget: DEFAULT_INSTRUCTION_BUDGET,
+                host_nonce: DEFAULT_HOST_NONCE,
             })
         );
     }
@@ -1909,6 +2043,7 @@ mod tests {
     fn repl_serial_config_asserts_dtr_and_clears_stale_bytes() {
         let options = ReplOptions {
             port: Some("/dev/cu.usbmodem-test".to_owned()),
+            endpoint: None,
             board: "auto".to_owned(),
             baud_rate: 57_600,
             timeout_ms: 250,
@@ -2001,6 +2136,7 @@ mod tests {
     fn smoke_serial_config_asserts_dtr_and_clears_stale_bytes() {
         let options = SmokeOptions {
             port: Some("/dev/cu.usbmodem-test".to_owned()),
+            endpoint: None,
             board: "auto".to_owned(),
             baud_rate: 57_600,
             timeout_ms: 250,
@@ -2028,6 +2164,7 @@ mod tests {
             parse_args(["smoke"]).unwrap(),
             CliCommand::Smoke(SmokeOptions {
                 port: None,
+                endpoint: None,
                 board: "auto".to_owned(),
                 baud_rate: DEFAULT_BAUD_RATE,
                 timeout_ms: DEFAULT_TIMEOUT_MS,
@@ -2040,6 +2177,7 @@ mod tests {
             parse_args(["repl", "--board", "esp32"]).unwrap(),
             CliCommand::Repl(ReplOptions {
                 port: None,
+                endpoint: None,
                 board: "esp32".to_owned(),
                 baud_rate: DEFAULT_BAUD_RATE,
                 timeout_ms: DEFAULT_TIMEOUT_MS,

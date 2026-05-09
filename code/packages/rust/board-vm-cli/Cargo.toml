@@ -12,6 +12,7 @@ board-vm-host = { path = "../board-vm-host" }
 board-vm-language-core = { path = "../board-vm-language-core" }
 board-vm-protocol = { path = "../board-vm-protocol" }
 board-vm-serial = { path = "../board-vm-serial" }
+board-vm-tcp = { path = "../board-vm-tcp" }
 board-vm-targets = { path = "../board-vm-targets" }
 
 [lib]
