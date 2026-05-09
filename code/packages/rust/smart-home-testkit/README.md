@@ -8,6 +8,8 @@ It gives future Hue, MQTT, Zigbee, Z-Wave, Thread, Matter, and runtime packages
 a shared way to build:
 
 - normalized bridge/device/entity fixtures
+- registry seeding helpers for installing fixture records into
+  `smart-home-registry`
 - confirmed, stale, and optimistic state snapshots
 - deterministic device events
 - scripted fake event streams with disconnect and gap markers
@@ -16,6 +18,7 @@ a shared way to build:
 ## Dependencies
 
 - `smart-home-core`
+- `smart-home-registry`
 
 ## Development
 
