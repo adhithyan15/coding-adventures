@@ -106,6 +106,58 @@ module CodingAdventures
         ], runner.calls.first[:argv]
       end
 
+      def test_connect_flash_uploads_esp32_image_with_rust_owned_upload_options
+        upload = CommandResult.new(
+          ["cargo"],
+          "/repo/code/packages/rust",
+          "uploaded 4096 bytes\n",
+          "",
+          0
+        )
+        runner = FakeRunner.new([upload])
+
+        connection = BoardVM.connect(
+          board: :esp32,
+          port: "/dev/cu.usbserial-110",
+          flash: true,
+          firmware_image: "/tmp/board-vm-esp32.bin",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner,
+          esp_upload_options: {
+            offset: 0x2000,
+            verify_md5: false,
+            stay_in_bootloader: true
+          }
+        )
+
+        assert_equal :esp32_devkit_v1, connection.board
+        assert_equal "/repo/code/packages/rust", runner.calls.first[:chdir]
+        assert_equal [
+          "cargo", "run",
+          "-p", "board-vm-cli",
+          "--bin", "board-vm",
+          "--",
+          "esp-upload",
+          "--port", "/dev/cu.usbserial-110",
+          "--image", "/tmp/board-vm-esp32.bin",
+          "--baud", "115200",
+          "--timeout-ms", "1000",
+          "--offset", "8192",
+          "--block-size", "1024",
+          "--flash-size", "4194304",
+          "--no-verify",
+          "--stay-in-bootloader"
+        ], runner.calls.first[:argv]
+      end
+
+      def test_esp_upload_command_rejects_non_esp_targets
+        error = assert_raises(UnsupportedBoardError) do
+          BoardVM.esp_upload_command(:raspberry_pi_pico, port: "/dev/cu.usbmodem", image: "fw.bin")
+        end
+
+        assert_match(/ESP upload is not supported/, error.message)
+      end
+
       def test_led_blink_dispatches_native_protocol_frames_through_transport
         runner = FakeRunner.new
         transport = FakeWriteTransport.new

@@ -1111,6 +1111,43 @@ def esp_upload_options(
     return EspUploadOptions(merged)
 
 
+def esp_upload_command(
+    selector: str = "esp32-devkit-v1",
+    *,
+    port: str,
+    image: str,
+    **overrides: Any,
+) -> list[str]:
+    options = esp_upload_options(selector, **overrides)
+    if options is None:
+        raise ValueError(f"ESP upload is not supported for {selector!r}")
+
+    command = [
+        "esp-upload",
+        "--port",
+        str(port),
+        "--image",
+        str(image),
+        "--baud",
+        str(options.baud_rate),
+        "--timeout-ms",
+        str(options.timeout_ms),
+        "--offset",
+        str(options.offset),
+        "--block-size",
+        str(options.block_size),
+    ]
+    if options.flash_size is not None:
+        command.extend(["--flash-size", str(options.flash_size)])
+    if not options.reset_into_bootloader:
+        command.append("--no-reset")
+    if not options.verify_md5:
+        command.append("--no-verify")
+    if options.stay_in_bootloader:
+        command.append("--stay-in-bootloader")
+    return command
+
+
 __all__ = [
     "BoardDescriptor",
     "BoardTarget",
@@ -1128,6 +1165,7 @@ __all__ = [
     "Session",
     "SessionResult",
     "detect_target",
+    "esp_upload_command",
     "esp_upload_options",
     "find_target",
     "known_targets",
