@@ -12,6 +12,11 @@ use std::ptr;
 use std::slice;
 use std::str;
 
+use board_vm_esp_rom::{
+    DEFAULT_BAUD_RATE as ESP_DEFAULT_BAUD_RATE,
+    DEFAULT_FLASH_BLOCK_SIZE as ESP_DEFAULT_FLASH_BLOCK_SIZE,
+    DEFAULT_TIMEOUT_MS as ESP_DEFAULT_TIMEOUT_MS,
+};
 use board_vm_host::{
     write_blink_module, write_gpio_handle_close_module, write_gpio_handle_read_module,
     write_gpio_handle_write_module, write_gpio_open_module, write_gpio_read_module,
@@ -41,6 +46,8 @@ pub const LANGUAGE_RUN_FLAG_RESET_VM_BEFORE_RUN: u8 =
 pub const LANGUAGE_RUN_FLAG_KEEP_HANDLES_AFTER_RUN: u8 =
     board_vm_protocol::RUN_FLAG_KEEP_HANDLES_AFTER_RUN;
 pub const LANGUAGE_RUN_FLAG_BACKGROUND_RUN: u8 = board_vm_protocol::RUN_FLAG_BACKGROUND_RUN;
+pub const LANGUAGE_ESP_DEFAULT_FLASH_OFFSET: u32 = 0x1000;
+pub const LANGUAGE_ESP_DEFAULT_FLASH_SIZE: u32 = 4 * 1024 * 1024;
 
 #[repr(u32)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -265,6 +272,19 @@ pub struct LanguageTargetInfo {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageEspUploadOptions {
+    pub board_id: String,
+    pub baud_rate: u32,
+    pub timeout_ms: u64,
+    pub reset_into_bootloader: bool,
+    pub offset: u32,
+    pub block_size: u32,
+    pub flash_size: Option<u32>,
+    pub verify_md5: bool,
+    pub stay_in_bootloader: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageProgramBegin {
     pub program_id: u16,
     pub format: ProgramFormat,
@@ -436,6 +456,25 @@ pub fn detect_target(selector: &str) -> Option<LanguageTargetInfo> {
         _ => return None,
     };
     known_target(board_id)
+}
+
+pub fn esp_upload_options_for_target(selector: &str) -> Option<LanguageEspUploadOptions> {
+    let target = detect_target(selector)?;
+    if target.family != LanguageBoardFamily::Esp32 {
+        return None;
+    }
+
+    Some(LanguageEspUploadOptions {
+        board_id: target.board_id,
+        baud_rate: ESP_DEFAULT_BAUD_RATE,
+        timeout_ms: ESP_DEFAULT_TIMEOUT_MS,
+        reset_into_bootloader: true,
+        offset: LANGUAGE_ESP_DEFAULT_FLASH_OFFSET,
+        block_size: ESP_DEFAULT_FLASH_BLOCK_SIZE,
+        flash_size: Some(LANGUAGE_ESP_DEFAULT_FLASH_SIZE),
+        verify_md5: true,
+        stay_in_bootloader: false,
+    })
 }
 
 pub fn normalize_target_selector(selector: &str) -> String {
@@ -1441,6 +1480,31 @@ pub extern "C" fn board_vm_language_default_run_flags() -> u8 {
 }
 
 #[no_mangle]
+pub extern "C" fn board_vm_language_esp_default_baud_rate() -> u32 {
+    ESP_DEFAULT_BAUD_RATE
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_esp_default_timeout_ms() -> u64 {
+    ESP_DEFAULT_TIMEOUT_MS
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_esp_default_flash_offset() -> u32 {
+    LANGUAGE_ESP_DEFAULT_FLASH_OFFSET
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_esp_default_flash_block_size() -> u32 {
+    ESP_DEFAULT_FLASH_BLOCK_SIZE
+}
+
+#[no_mangle]
+pub extern "C" fn board_vm_language_esp_default_flash_size() -> u32 {
+    LANGUAGE_ESP_DEFAULT_FLASH_SIZE
+}
+
+#[no_mangle]
 pub extern "C" fn board_vm_language_run_flag_reset_vm_before_run() -> u8 {
     LANGUAGE_RUN_FLAG_RESET_VM_BEFORE_RUN
 }
@@ -1722,6 +1786,22 @@ mod tests {
             "esp32_devkit_v1"
         );
         assert!(detect_target("definitely-not-a-board").is_none());
+    }
+
+    #[test]
+    fn esp_upload_options_are_owned_by_rust_language_core() {
+        let options = esp_upload_options_for_target("esp32").unwrap();
+
+        assert_eq!(options.board_id, "esp32-devkit-v1");
+        assert_eq!(options.baud_rate, ESP_DEFAULT_BAUD_RATE);
+        assert_eq!(options.timeout_ms, ESP_DEFAULT_TIMEOUT_MS);
+        assert!(options.reset_into_bootloader);
+        assert_eq!(options.offset, LANGUAGE_ESP_DEFAULT_FLASH_OFFSET);
+        assert_eq!(options.block_size, ESP_DEFAULT_FLASH_BLOCK_SIZE);
+        assert_eq!(options.flash_size, Some(LANGUAGE_ESP_DEFAULT_FLASH_SIZE));
+        assert!(options.verify_md5);
+        assert!(!options.stay_in_bootloader);
+        assert!(esp_upload_options_for_target("pico").is_none());
     }
 
     #[test]

@@ -33,6 +33,16 @@ module CodingAdventures
       detect_target(board_id)
     end
 
+    def esp_upload_options(board = :esp32_devkit_v1, **overrides)
+      options = Native.esp_upload_options(board.to_s)
+      return nil unless options
+
+      overrides.each do |key, value|
+        options[key.to_s] = value
+      end
+      options
+    end
+
     def connect(
       board: :uno_r4_wifi,
       port:,

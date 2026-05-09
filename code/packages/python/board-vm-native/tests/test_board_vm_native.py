@@ -1,9 +1,11 @@
 from board_vm_native import (
     BoardDescriptor,
     BoardTarget,
+    EspUploadOptions,
     ProtocolResult,
     Session,
     detect_target,
+    esp_upload_options,
     find_target,
     known_targets,
 )
@@ -104,6 +106,27 @@ def test_targets_are_detected_from_rust_owned_aliases():
     assert pico_w is not None
     assert pico_w.board_id == "raspberry-pi-pico-w"
     assert detect_target("not-a-board") is None
+
+
+def test_esp_upload_options_are_exposed_from_rust_language_core():
+    options = esp_upload_options("esp32")
+
+    assert isinstance(options, EspUploadOptions)
+    assert options.board_id == "esp32-devkit-v1"
+    assert options.baud_rate == 115_200
+    assert options.timeout_ms == 1_000
+    assert options.reset_into_bootloader is True
+    assert options.offset == 0x1000
+    assert options.block_size == 0x400
+    assert options.flash_size == 4 * 1024 * 1024
+    assert options.verify_md5 is True
+    assert options.stay_in_bootloader is False
+    assert esp_upload_options("pico") is None
+
+    overridden = esp_upload_options("esp32", offset=0x2000, verify_md5=False)
+    assert overridden is not None
+    assert overridden.offset == 0x2000
+    assert overridden.verify_md5 is False
 
 
 def test_session_dispatches_frames_through_write_transport():

@@ -202,6 +202,48 @@ class BoardTarget:
 
 
 @dataclass(frozen=True)
+class EspUploadOptions:
+    raw: dict[str, Any]
+
+    @property
+    def board_id(self) -> str:
+        return str(self.raw["board_id"])
+
+    @property
+    def baud_rate(self) -> int:
+        return int(self.raw["baud_rate"])
+
+    @property
+    def timeout_ms(self) -> int:
+        return int(self.raw["timeout_ms"])
+
+    @property
+    def reset_into_bootloader(self) -> bool:
+        return bool(self.raw["reset_into_bootloader"])
+
+    @property
+    def offset(self) -> int:
+        return int(self.raw["offset"])
+
+    @property
+    def block_size(self) -> int:
+        return int(self.raw["block_size"])
+
+    @property
+    def flash_size(self) -> int | None:
+        value = self.raw.get("flash_size")
+        return None if value is None else int(value)
+
+    @property
+    def verify_md5(self) -> bool:
+        return bool(self.raw["verify_md5"])
+
+    @property
+    def stay_in_bootloader(self) -> bool:
+        return bool(self.raw["stay_in_bootloader"])
+
+
+@dataclass(frozen=True)
 class ProtocolResult:
     command: str
     frame: bytes
@@ -1057,12 +1099,25 @@ def find_target(board_id: str) -> BoardTarget | None:
     return detect_target(board_id)
 
 
+def esp_upload_options(
+    selector: str = "esp32-devkit-v1",
+    **overrides: Any,
+) -> EspUploadOptions | None:
+    raw = _native.esp_upload_options(str(selector))
+    if raw is None:
+        return None
+    merged = dict(raw)
+    merged.update(overrides)
+    return EspUploadOptions(merged)
+
+
 __all__ = [
     "BoardDescriptor",
     "BoardTarget",
     "BOOT_POLICIES",
     "Capability",
     "DEFAULT_RUN_FLAGS",
+    "EspUploadOptions",
     "GPIO_MODES",
     "GPIO_READ_MODES",
     "ProtocolResult",
@@ -1073,6 +1128,7 @@ __all__ = [
     "Session",
     "SessionResult",
     "detect_target",
+    "esp_upload_options",
     "find_target",
     "known_targets",
 ]
