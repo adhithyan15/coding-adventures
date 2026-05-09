@@ -93,6 +93,7 @@ impl CommandClassId {
     pub const SENSOR_BINARY: Self = Self(0x30);
     pub const SENSOR_MULTILEVEL: Self = Self(0x31);
     pub const DOOR_LOCK: Self = Self(0x62);
+    pub const BATTERY: Self = Self(0x80);
     pub const SECURITY_2: Self = Self(0x9f);
 
     pub fn encoded_len(self) -> usize {
@@ -384,6 +385,7 @@ mod tests {
     #[test]
     fn common_command_class_ids_are_stable() {
         assert_eq!(CommandClassId::SWITCH_BINARY.0, 0x25);
+        assert_eq!(CommandClassId::BATTERY.0, 0x80);
         assert_eq!(CommandClassId::SECURITY_2.0, 0x9f);
     }
 

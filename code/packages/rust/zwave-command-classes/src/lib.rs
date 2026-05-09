@@ -25,6 +25,9 @@ pub const SENSOR_MULTILEVEL_REPORT: u8 = 0x05;
 pub const DOOR_LOCK_OPERATION_SET: u8 = 0x01;
 pub const DOOR_LOCK_OPERATION_GET: u8 = 0x02;
 pub const DOOR_LOCK_OPERATION_REPORT: u8 = 0x03;
+pub const BATTERY_GET: u8 = 0x02;
+pub const BATTERY_REPORT: u8 = 0x03;
+pub const BATTERY_LOW_WARNING: u8 = 0xff;
 pub const NOTIFICATION_GET: u8 = 0x04;
 pub const NOTIFICATION_REPORT: u8 = 0x05;
 pub const COMMAND_CLASS_NOTIFICATION: CommandClassId = CommandClassId(0x71);
@@ -115,6 +118,9 @@ pub enum ZWaveValueReport {
     DoorLock {
         mode: DoorLockMode,
     },
+    Battery {
+        level: BatteryLevel,
+    },
     Notification(NotificationReport),
 }
 
@@ -123,6 +129,35 @@ pub enum DoorLockMode {
     Unsecured,
     Secured,
     Unknown(u8),
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BatteryLevel {
+    Percentage(u8),
+    LowWarning,
+    Reserved(u8),
+}
+
+impl BatteryLevel {
+    pub fn parse(value: u8) -> Self {
+        match value {
+            0..=100 => Self::Percentage(value),
+            BATTERY_LOW_WARNING => Self::LowWarning,
+            reserved => Self::Reserved(reserved),
+        }
+    }
+
+    pub fn normalized_percentage(self) -> u8 {
+        match self {
+            Self::Percentage(value) => value,
+            Self::LowWarning => 0,
+            Self::Reserved(value) => value.min(100),
+        }
+    }
+
+    pub fn is_low_warning(self) -> bool {
+        matches!(self, Self::LowWarning)
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -277,6 +312,10 @@ pub fn door_lock_operation_set(secured: bool) -> ZWaveCommand {
     )
 }
 
+pub fn battery_get() -> ZWaveCommand {
+    ZWaveCommand::new(CommandClassId::BATTERY, BATTERY_GET, Vec::new())
+}
+
 pub fn parse_value_report(command: &ZWaveCommand) -> Result<ZWaveValueReport, CommandClassError> {
     match (command.command_class, command.command_id) {
         (CommandClassId::BASIC, BASIC_REPORT) => {
@@ -315,6 +354,12 @@ pub fn parse_value_report(command: &ZWaveCommand) -> Result<ZWaveValueReport, Co
                 mode: door_lock_mode(command.payload[0]),
             })
         }
+        (CommandClassId::BATTERY, BATTERY_REPORT) => {
+            require_len(&command.payload, 1)?;
+            Ok(ZWaveValueReport::Battery {
+                level: BatteryLevel::parse(command.payload[0]),
+            })
+        }
         (COMMAND_CLASS_NOTIFICATION, NOTIFICATION_REPORT) => Ok(ZWaveValueReport::Notification(
             parse_notification_report(&command.payload)?,
         )),
@@ -342,6 +387,7 @@ pub fn capabilities_for_command_class(command_class: CommandClassId) -> Vec<Capa
             CapabilityMode::ObserveAndCommand,
             ValueKind::Text,
         )],
+        CommandClassId::BATTERY => vec![Capability::sensor_battery()],
         COMMAND_CLASS_NOTIFICATION => vec![
             Capability::sensor_occupancy(),
             Capability::new(
@@ -389,6 +435,10 @@ pub fn state_delta_for_report(report: &ZWaveValueReport) -> StateDelta {
         ZWaveValueReport::DoorLock { mode } => StateDelta {
             capability_id: CapabilityId::trusted("lock.state"),
             value: Value::Text(door_lock_state_name(*mode).to_string()),
+        },
+        ZWaveValueReport::Battery { level } => StateDelta {
+            capability_id: CapabilityId::trusted("sensor.battery"),
+            value: Value::Percentage(level.normalized_percentage()),
         },
         ZWaveValueReport::Notification(report) => state_delta_for_notification(report),
     }
@@ -603,6 +653,10 @@ mod tests {
         assert_eq!(binary_switch_set(false).payload, vec![0x00]);
         assert_eq!(multilevel_switch_set(100).payload, vec![99]);
         assert_eq!(door_lock_operation_set(true).payload, vec![0xff]);
+        assert_eq!(
+            battery_get().encode().unwrap(),
+            vec![CommandClassId::BATTERY.0 as u8, BATTERY_GET]
+        );
     }
 
     #[test]
@@ -655,6 +709,32 @@ mod tests {
     }
 
     #[test]
+    fn parses_battery_reports_and_low_warning() {
+        let percentage = ZWaveCommand::new(CommandClassId::BATTERY, BATTERY_REPORT, vec![87]);
+        let low_warning = ZWaveCommand::new(
+            CommandClassId::BATTERY,
+            BATTERY_REPORT,
+            vec![BATTERY_LOW_WARNING],
+        );
+
+        assert_eq!(
+            parse_value_report(&percentage).unwrap(),
+            ZWaveValueReport::Battery {
+                level: BatteryLevel::Percentage(87),
+            }
+        );
+        assert_eq!(
+            parse_value_report(&low_warning).unwrap(),
+            ZWaveValueReport::Battery {
+                level: BatteryLevel::LowWarning,
+            }
+        );
+        assert!(BatteryLevel::LowWarning.is_low_warning());
+        assert_eq!(BatteryLevel::LowWarning.normalized_percentage(), 0);
+        assert_eq!(BatteryLevel::Reserved(200).normalized_percentage(), 100);
+    }
+
+    #[test]
     fn maps_reports_to_d23_state_deltas() {
         let lock = ZWaveValueReport::DoorLock {
             mode: DoorLockMode::Secured,
@@ -663,6 +743,9 @@ mod tests {
             current_level: 99,
             target_level: None,
             duration: None,
+        };
+        let battery = ZWaveValueReport::Battery {
+            level: BatteryLevel::Percentage(72),
         };
 
         assert_eq!(
@@ -677,6 +760,13 @@ mod tests {
             StateDelta {
                 capability_id: CapabilityId::trusted("light.brightness"),
                 value: Value::Percentage(100),
+            }
+        );
+        assert_eq!(
+            state_delta_for_report(&battery),
+            StateDelta {
+                capability_id: CapabilityId::trusted("sensor.battery"),
+                value: Value::Percentage(72),
             }
         );
     }
@@ -755,6 +845,10 @@ mod tests {
         assert_eq!(
             capabilities_for_command_class(CommandClassId::DOOR_LOCK)[0].capability_id,
             CapabilityId::trusted("lock.state")
+        );
+        assert_eq!(
+            capabilities_for_command_class(CommandClassId::BATTERY)[0].capability_id,
+            CapabilityId::trusted("sensor.battery")
         );
         assert!(capabilities_for_command_class(COMMAND_CLASS_NOTIFICATION)
             .iter()
