@@ -898,3 +898,16 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <div>
 |       " abc"
+
+#data
+<DIV> abc <B>
+#errors
+(1,5): expected-doctype-but-got-start-tag
+(1,13): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       " abc "
+|       <b>
