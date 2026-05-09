@@ -13,6 +13,8 @@ This crate starts D25 at the NWK byte boundary:
 - optional source-route relay subframes
 - neighbor table primitives for router/end-device relationships and freshness
 - route table primitives for destination-to-next-hop lookups
+- topology summaries for neighbor freshness, router candidates, and route
+  health supervision
 - typed NWK route-discovery command payloads:
   - route request
   - route reply

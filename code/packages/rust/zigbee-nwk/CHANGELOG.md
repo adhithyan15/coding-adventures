@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- `NeighborTableSummary`, `RouteTableSummary`, and `NwkTopologySummary` read
+  models for supervising neighbor freshness, router candidates, and route
+  health.
+
 ## [0.1.0] - 2026-05-06
 
 ### Added
