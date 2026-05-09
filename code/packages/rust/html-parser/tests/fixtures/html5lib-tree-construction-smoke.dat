@@ -768,3 +768,16 @@ Line1<br>Line2<br>Line3<br>Line4
 |       <p>
 |         "Test"
 |         <u>
+
+#data
+<!DOCTYPE html><font><table></font></table></font>
+#errors
+(1,35): unexpected-end-tag-implies-table-voodoo
+(1,35): unexpected-end-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <font>
+|       <table>
