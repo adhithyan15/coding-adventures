@@ -509,6 +509,7 @@ members = [
     "cas-list-operations",
     "cas-matrix",
     "cas-limit-series",
+    "cas-mnewton",
     "cas-pretty-printer",
     "cas-number-theory",
     "cas-complex",
