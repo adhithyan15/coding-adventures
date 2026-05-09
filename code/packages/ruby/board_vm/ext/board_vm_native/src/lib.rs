@@ -409,7 +409,7 @@ extern "C" fn native_detect_target(_self_val: VALUE, selector_val: VALUE) -> VAL
         .unwrap_or_else(|| ruby_bridge::raise_arg_error("selector must be a Ruby String"));
     match core_detect_target(&selector) {
         Some(target) => language_target_to_rb(&target),
-        None => ruby_bridge::QNIL,
+        None => ruby_bridge::nil_value(),
     }
 }
 
@@ -643,7 +643,7 @@ fn language_target_to_rb(target: &LanguageTargetInfo) -> VALUE {
 
 fn language_onboard_led_to_rb(led: Option<LanguageOnboardLed>) -> VALUE {
     let Some(led) = led else {
-        return ruby_bridge::QNIL;
+        return ruby_bridge::nil_value();
     };
     let hash = ruby_bridge::hash_new();
     hash_set(hash, "kind", ruby_bridge::str_to_rb(onboard_led_kind(led)));
@@ -666,7 +666,7 @@ fn language_value_to_rb(value: &LanguageValue) -> VALUE {
     let hash = ruby_bridge::hash_new();
     hash_set(hash, "kind", ruby_bridge::str_to_rb(value.kind()));
     let value_rb = match value {
-        LanguageValue::Unit => ruby_bridge::QNIL,
+        LanguageValue::Unit => ruby_bridge::nil_value(),
         LanguageValue::Bool(value) => ruby_bridge::bool_to_rb(*value),
         LanguageValue::U8(value) => rb_usize(*value),
         LanguageValue::U16(value) => rb_usize(*value),

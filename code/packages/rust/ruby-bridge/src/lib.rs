@@ -23,6 +23,7 @@
 
 use std::ffi::{c_char, c_int, c_long, c_void, CString};
 use std::slice;
+use std::sync::OnceLock;
 
 // ---------------------------------------------------------------------------
 // The VALUE type
@@ -45,15 +46,14 @@ pub type ID = usize;
 
 /// Ruby `false` (VALUE = 0)
 pub const QFALSE: VALUE = 0;
-/// Ruby `true` — 0x14 on all 64-bit Ruby builds with USE_FLONUM (the default).
-pub const QTRUE: VALUE = 0x14;
-/// Ruby `nil` — 0x08 on all 64-bit Ruby builds with USE_FLONUM (the default).
+/// Ruby `true` on common 64-bit Ruby builds.
 ///
-/// USE_FLONUM is enabled on every 64-bit Ruby (x86_64 and aarch64) since
-/// Ruby 2.x. The special-constant layout with USE_FLONUM is:
-///   Qfalse = 0x00, Qnil = 0x08, Qtrue = 0x14, Qundef = 0x34
-/// Without USE_FLONUM (32-bit or unusual builds) Qnil = 0x02, but those
-/// builds are not supported by this crate.
+/// Prefer [`true_value`] or [`bool_to_rb`] for cross-runtime extension returns.
+pub const QTRUE: VALUE = 0x14;
+/// Legacy Ruby `nil` constant for runtimes that use this layout.
+///
+/// Ruby special VALUE layouts vary across runtimes/toolchains. Prefer
+/// [`nil_value`] when returning `nil` from native code.
 pub const QNIL: VALUE = 0x08;
 
 // ---------------------------------------------------------------------------
@@ -187,6 +187,9 @@ extern "C" {
 
     // -- String length (for str_from_rb) -----------------------------------
     fn rb_str_strlen(str: VALUE) -> c_long;
+
+    // -- Runtime literals ---------------------------------------------------
+    pub fn rb_eval_string(str: *const c_char) -> VALUE;
 }
 
 // ---------------------------------------------------------------------------
@@ -434,7 +437,23 @@ pub fn vec_tuple3_str_f64_to_rb(items: &[(String, String, f64)]) -> VALUE {
 // ---------------------------------------------------------------------------
 
 pub fn bool_to_rb(b: bool) -> VALUE {
-    if b { QTRUE } else { QFALSE }
+    if b { true_value() } else { QFALSE }
+}
+
+/// Return the actual Ruby `nil` VALUE for the currently loaded interpreter.
+///
+/// Hard-coded special constants are fragile across Ruby/toolchain
+/// combinations. Evaluating the literal once keeps native extensions portable
+/// while still avoiding any external bridge dependency.
+pub fn nil_value() -> VALUE {
+    static RUBY_NIL: OnceLock<VALUE> = OnceLock::new();
+    *RUBY_NIL.get_or_init(|| unsafe { rb_eval_string(b"nil\0".as_ptr() as *const c_char) })
+}
+
+/// Return the actual Ruby `true` VALUE for the currently loaded interpreter.
+pub fn true_value() -> VALUE {
+    static RUBY_TRUE: OnceLock<VALUE> = OnceLock::new();
+    *RUBY_TRUE.get_or_init(|| unsafe { rb_eval_string(b"true\0".as_ptr() as *const c_char) })
 }
 
 pub fn usize_to_rb(n: usize) -> VALUE {
