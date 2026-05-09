@@ -146,6 +146,15 @@ module CodingAdventures
       detect_target(board_id)
     end
 
+    def connection_options(board)
+      target = detect_target(board)
+      unless target
+        raise UnsupportedBoardError, "unsupported board: #{board.inspect}"
+      end
+
+      target.fetch("connection_options")
+    end
+
     def esp_upload_options(board = :esp32_devkit_v1, **overrides)
       options = Native.esp_upload_options(board.to_s)
       return nil unless options

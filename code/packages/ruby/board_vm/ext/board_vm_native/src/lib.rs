@@ -18,16 +18,16 @@ use board_vm_language_core::{
     build_run_wire_frame, build_stop_wire_frame, build_store_program_wire_frame,
     build_time_now_module, build_time_sleep_ms_module, capability_board_metadata,
     capability_bytecode_callable, capability_flag_names, capability_protocol_feature,
-    decode_wire_response, detect_target as core_detect_target,
+    connection_transport_name, decode_wire_response, detect_target as core_detect_target,
     discover_devices as core_discover_devices, discover_devices_from_paths,
     discover_pico_bootsel_mounts as core_discover_pico_bootsel_mounts,
     discover_pico_bootsel_mounts_in_roots,
     esp_upload_options_for_target, known_targets, onboard_led_kind,
     pico_uf2_upload_options_for_target, program_format_name, raw_module_len, run_status_name,
     wireless_transport_name, BoardVmLanguageSession, DecodedLanguageResponse,
-    DecodedLanguageResponseBody, LanguageCoreError, LanguageEspUploadOptions, LanguageHostDevice,
-    LanguageOnboardLed, LanguagePicoUf2UploadOptions, LanguageTargetInfo, LanguageValue,
-    LanguageWirelessInterface,
+    DecodedLanguageResponseBody, LanguageConnectionOption, LanguageCoreError,
+    LanguageEspUploadOptions, LanguageHostDevice, LanguageOnboardLed, LanguagePicoUf2UploadOptions,
+    LanguageTargetInfo, LanguageValue, LanguageWirelessInterface,
 };
 use ruby_bridge::VALUE;
 
@@ -676,6 +676,11 @@ fn language_target_to_rb(target: &LanguageTargetInfo) -> VALUE {
         rb_usize(target.digital_pin_count),
     );
     hash_set(hash, "wireless", language_wireless_to_rb(&target.wireless));
+    hash_set(
+        hash,
+        "connection_options",
+        language_connection_options_to_rb(&target.connection_options),
+    );
     let capabilities = ruby_bridge::array_new();
     for capability in &target.capabilities {
         ruby_bridge::array_push(capabilities, ruby_bridge::str_to_rb(capability));
@@ -704,6 +709,36 @@ fn language_wireless_to_rb(interfaces: &[LanguageWirelessInterface]) -> VALUE {
             "ota_update",
             ruby_bridge::bool_to_rb(interface.ota_update),
         );
+        ruby_bridge::array_push(array, hash);
+    }
+    array
+}
+
+fn language_connection_options_to_rb(options: &[LanguageConnectionOption]) -> VALUE {
+    let array = ruby_bridge::array_new();
+    for option in options {
+        let hash = ruby_bridge::hash_new();
+        hash_set(
+            hash,
+            "transport",
+            ruby_bridge::str_to_rb(connection_transport_name(option.transport)),
+        );
+        hash_set(
+            hash,
+            "display_name",
+            ruby_bridge::str_to_rb(&option.display_name),
+        );
+        hash_set(
+            hash,
+            "command_transport",
+            ruby_bridge::bool_to_rb(option.command_transport),
+        );
+        hash_set(
+            hash,
+            "ota_update",
+            ruby_bridge::bool_to_rb(option.ota_update),
+        );
+        hash_set(hash, "requires", ruby_bridge::str_to_rb(&option.requires));
         ruby_bridge::array_push(array, hash);
     }
     array

@@ -35,17 +35,40 @@ module CodingAdventures
         assert_includes uno_r4_wifi["capabilities"], "transport.bluetooth_le"
         assert_equal ["wifi", "bluetooth_le"], uno_r4_wifi["wireless"].map { |item| item["transport"] }
         assert uno_r4_wifi["wireless"].find { |item| item["transport"] == "wifi" }["ota_update"]
+        assert_equal ["serial", "wifi", "bluetooth_le"], uno_r4_wifi["connection_options"].map { |item| item["transport"] }
+        assert_equal ["wifi"], uno_r4_wifi["connection_options"].select { |item| item["ota_update"] }.map { |item| item["transport"] }
         assert_equal "esp32", esp32["family"]
         assert_equal "board-vm-esp32", esp32["runtime_id"]
         assert_equal({ "kind" => "gpio", "pin" => 2 }, esp32["onboard_led"])
         assert_includes esp32["capabilities"], "gpio.open"
         assert_includes esp32["capabilities"], "transport.bluetooth_classic"
         assert esp32["wireless"].all? { |item| item["command_transport"] }
+        assert esp32["connection_options"].any? { |item| item["transport"] == "bluetooth_classic" && item["requires"] == "paired_device" }
         assert_equal [], pico["wireless"]
+        assert_equal ["serial"], pico["connection_options"].map { |item| item["transport"] }
         refute_includes pico["capabilities"], "transport.wifi"
         assert_equal({ "kind" => "wireless_chip_gpio", "pin" => 0 }, pico_w["onboard_led"])
         assert_includes pico_w["capabilities"], "transport.wifi"
         assert_includes pico_w["capabilities"], "ota.wifi"
+      end
+
+      def test_connection_options_are_exposed_from_rust_registry
+        options = BoardVM.connection_options(:uno_r4_wifi)
+
+        assert_equal({
+          "transport" => "serial",
+          "display_name" => "USB/serial",
+          "command_transport" => true,
+          "ota_update" => false,
+          "requires" => "serial_port"
+        }, options.first)
+        assert_includes options, {
+          "transport" => "wifi",
+          "display_name" => "Wi-Fi",
+          "command_transport" => true,
+          "ota_update" => true,
+          "requires" => "network_endpoint"
+        }
       end
 
       def test_targets_are_detected_from_rust_owned_aliases

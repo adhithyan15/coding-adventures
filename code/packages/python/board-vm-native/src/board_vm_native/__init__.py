@@ -211,6 +211,29 @@ class BoardTarget:
     def wireless_transports(self) -> list[str]:
         return [str(item["transport"]) for item in self.wireless]
 
+    @property
+    def connection_options(self) -> list[dict[str, Any]]:
+        return [dict(item) for item in self.raw.get("connection_options", [])]
+
+    @property
+    def command_transports(self) -> list[str]:
+        return [
+            str(item["transport"])
+            for item in self.connection_options
+            if item.get("command_transport")
+        ]
+
+    @property
+    def ota_transports(self) -> list[str]:
+        return [
+            str(item["transport"])
+            for item in self.connection_options
+            if item.get("ota_update")
+        ]
+
+    def supports_command_transport(self, transport: str) -> bool:
+        return str(transport) in self.command_transports
+
     def supports_wireless_transport(self, transport: str) -> bool:
         return str(transport) in self.wireless_transports
 
@@ -227,7 +250,7 @@ class BoardTarget:
 
     @property
     def supports_ota_update(self) -> bool:
-        return any(bool(item.get("ota_update")) for item in self.wireless)
+        return bool(self.ota_transports)
 
     @property
     def capabilities(self) -> list[str]:
@@ -1312,6 +1335,13 @@ def find_target(board_id: str) -> BoardTarget | None:
     return detect_target(board_id)
 
 
+def connection_options(selector: str) -> list[dict[str, Any]]:
+    target = detect_target(selector)
+    if target is None:
+        raise ValueError(f"unsupported board: {selector!r}")
+    return target.connection_options
+
+
 def esp_upload_options(
     selector: str = "esp32-devkit-v1",
     **overrides: Any,
@@ -1760,6 +1790,7 @@ __all__ = [
     "Session",
     "SessionResult",
     "connect",
+    "connection_options",
     "device_list",
     "devices",
     "detect_target",

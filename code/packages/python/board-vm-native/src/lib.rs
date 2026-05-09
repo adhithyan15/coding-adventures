@@ -17,16 +17,16 @@ use board_vm_language_core::{
     build_run_wire_frame, build_stop_wire_frame, build_store_program_wire_frame,
     build_time_now_module, build_time_sleep_ms_module, capability_board_metadata,
     capability_bytecode_callable, capability_flag_names, capability_protocol_feature,
-    decode_wire_response, detect_target as core_detect_target,
+    connection_transport_name, decode_wire_response, detect_target as core_detect_target,
     discover_devices as core_discover_devices, discover_devices_from_paths,
     discover_pico_bootsel_mounts as core_discover_pico_bootsel_mounts,
     discover_pico_bootsel_mounts_in_roots,
     esp_upload_options_for_target, known_targets, onboard_led_kind,
     pico_uf2_upload_options_for_target, program_format_name, raw_module_len, run_status_name,
     wireless_transport_name, BoardVmLanguageSession, DecodedLanguageResponse,
-    DecodedLanguageResponseBody, LanguageCoreError, LanguageEspUploadOptions, LanguageHostDevice,
-    LanguageOnboardLed, LanguagePicoUf2UploadOptions, LanguageTargetInfo, LanguageValue,
-    LanguageWirelessInterface,
+    DecodedLanguageResponseBody, LanguageConnectionOption, LanguageCoreError,
+    LanguageEspUploadOptions, LanguageHostDevice, LanguageOnboardLed, LanguagePicoUf2UploadOptions,
+    LanguageTargetInfo, LanguageValue, LanguageWirelessInterface,
 };
 use python_bridge::*;
 
@@ -790,6 +790,11 @@ unsafe fn language_target_to_py(target: &LanguageTargetInfo) -> PyObjectPtr {
         usize_to_py(target.digital_pin_count),
     );
     dict_set(dict, "wireless", language_wireless_to_py(&target.wireless));
+    dict_set(
+        dict,
+        "connection_options",
+        language_connection_options_to_py(&target.connection_options),
+    );
     let capabilities = PyList_New(target.capabilities.len() as isize);
     for (index, capability) in target.capabilities.iter().enumerate() {
         PyList_SetItem(capabilities, index as isize, str_to_py(capability));
@@ -814,6 +819,30 @@ unsafe fn language_wireless_to_py(interfaces: &[LanguageWirelessInterface]) -> P
             bool_to_py(interface.command_transport),
         );
         dict_set(dict, "ota_update", bool_to_py(interface.ota_update));
+        PyList_SetItem(list, index as isize, dict);
+    }
+    list
+}
+
+unsafe fn language_connection_options_to_py(
+    options: &[LanguageConnectionOption],
+) -> PyObjectPtr {
+    let list = PyList_New(options.len() as isize);
+    for (index, option) in options.iter().enumerate() {
+        let dict = PyDict_New();
+        dict_set(
+            dict,
+            "transport",
+            str_to_py(connection_transport_name(option.transport)),
+        );
+        dict_set(dict, "display_name", str_to_py(&option.display_name));
+        dict_set(
+            dict,
+            "command_transport",
+            bool_to_py(option.command_transport),
+        );
+        dict_set(dict, "ota_update", bool_to_py(option.ota_update));
+        dict_set(dict, "requires", str_to_py(&option.requires));
         PyList_SetItem(list, index as isize, dict);
     }
     list
