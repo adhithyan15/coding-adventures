@@ -413,19 +413,100 @@ impl RuntimeEventBus {
         snapshots
     }
 
-    pub fn drain(
+    pub fn queued_events(
+        &self,
+        subscription_id: &RuntimeSubscriptionId,
+    ) -> Result<usize, RuntimeError> {
+        self.deliveries
+            .get(subscription_id)
+            .map(VecDeque::len)
+            .ok_or_else(|| RuntimeError::UnknownSubscription(subscription_id.clone()))
+    }
+
+    pub fn peek_deliveries(
+        &self,
+        subscription_id: &RuntimeSubscriptionId,
+        options: RuntimeEventDeliveryOptions,
+    ) -> Result<RuntimeEventDeliveryBatch, RuntimeError> {
+        let queue = self
+            .deliveries
+            .get(subscription_id)
+            .ok_or_else(|| RuntimeError::UnknownSubscription(subscription_id.clone()))?;
+        let count = delivery_count(queue.len(), options.limit);
+        let events = queue.iter().take(count).cloned().collect::<Vec<_>>();
+        Ok(RuntimeEventDeliveryBatch {
+            subscription_id: subscription_id.clone(),
+            remaining_events: queue.len().saturating_sub(events.len()),
+            events,
+        })
+    }
+
+    pub fn drain_deliveries(
         &mut self,
         subscription_id: &RuntimeSubscriptionId,
-    ) -> Result<Vec<RuntimeEvent>, RuntimeError> {
+        options: RuntimeEventDeliveryOptions,
+    ) -> Result<RuntimeEventDeliveryBatch, RuntimeError> {
         let queue = self
             .deliveries
             .get_mut(subscription_id)
             .ok_or_else(|| RuntimeError::UnknownSubscription(subscription_id.clone()))?;
-        Ok(queue.drain(..).collect())
+        let count = delivery_count(queue.len(), options.limit);
+        let events = queue.drain(..count).collect::<Vec<_>>();
+        Ok(RuntimeEventDeliveryBatch {
+            subscription_id: subscription_id.clone(),
+            remaining_events: queue.len(),
+            events,
+        })
+    }
+
+    pub fn drain(
+        &mut self,
+        subscription_id: &RuntimeSubscriptionId,
+    ) -> Result<Vec<RuntimeEvent>, RuntimeError> {
+        Ok(self
+            .drain_deliveries(subscription_id, RuntimeEventDeliveryOptions::new())?
+            .events)
     }
 
     pub fn published(&self) -> &[RuntimeEvent] {
         &self.published
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct RuntimeEventDeliveryOptions {
+    pub limit: Option<usize>,
+}
+
+impl RuntimeEventDeliveryOptions {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct RuntimeEventDeliveryBatch {
+    pub subscription_id: RuntimeSubscriptionId,
+    pub events: Vec<RuntimeEvent>,
+    pub remaining_events: usize,
+}
+
+impl RuntimeEventDeliveryBatch {
+    pub fn is_empty(&self) -> bool {
+        self.events.is_empty()
+    }
+
+    pub fn len(&self) -> usize {
+        self.events.len()
+    }
+
+    pub fn has_more(&self) -> bool {
+        self.remaining_events > 0
     }
 }
 
@@ -2723,6 +2804,10 @@ fn apply_limit<T>(items: &mut Vec<T>, limit: Option<usize>) {
     }
 }
 
+fn delivery_count(queue_len: usize, limit: Option<usize>) -> usize {
+    limit.unwrap_or(queue_len).min(queue_len)
+}
+
 fn event_bridge_id(event: &RuntimeEvent) -> Option<&BridgeId> {
     match event {
         RuntimeEvent::Device(event) => Some(&event.bridge_id),
@@ -2919,6 +3004,47 @@ mod tests {
             RuntimeSubscriptionId::trusted("bridge-1-stream")
         );
         assert_eq!(backlogs[0].queued_events, 2);
+    }
+
+    #[test]
+    fn event_bus_peeks_and_drains_subscription_deliveries_in_batches() {
+        let mut bus = RuntimeEventBus::new();
+        let subscription = RuntimeSubscriptionId::trusted("all-events");
+        bus.subscribe(subscription.clone(), RuntimeEventFilter::All)
+            .unwrap();
+        bus.publish(bridge_health_runtime_event("health-1", "bridge-1", 1_000));
+        bus.publish(bridge_health_runtime_event("health-2", "bridge-1", 1_001));
+        bus.publish(bridge_health_runtime_event("health-3", "bridge-1", 1_002));
+
+        assert_eq!(bus.queued_events(&subscription).unwrap(), 3);
+        let peeked = bus
+            .peek_deliveries(
+                &subscription,
+                RuntimeEventDeliveryOptions::new().with_limit(2),
+            )
+            .unwrap();
+        assert_eq!(peeked.subscription_id, subscription);
+        assert_eq!(peeked.len(), 2);
+        assert_eq!(peeked.remaining_events, 1);
+        assert!(peeked.has_more());
+        assert_eq!(bus.queued_events(&subscription).unwrap(), 3);
+
+        let drained = bus
+            .drain_deliveries(
+                &subscription,
+                RuntimeEventDeliveryOptions::new().with_limit(2),
+            )
+            .unwrap();
+        assert_eq!(drained.len(), 2);
+        assert_eq!(drained.remaining_events, 1);
+        assert_eq!(bus.queued_events(&subscription).unwrap(), 1);
+
+        let tail = bus.drain(&subscription).unwrap();
+        assert_eq!(tail.len(), 1);
+        assert_eq!(bus.queued_events(&subscription).unwrap(), 0);
+        assert!(bus
+            .queued_events(&RuntimeSubscriptionId::trusted("missing"))
+            .is_err());
     }
 
     #[test]

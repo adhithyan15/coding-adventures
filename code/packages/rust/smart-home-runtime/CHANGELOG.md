@@ -47,3 +47,4 @@ All notable changes to this package will be documented in this file.
   deterministic health events.
 - Read-side queries for event-log entries, subscription backlogs, pairing
   sessions, desired-state targets, and supervised bridge workers.
+- Bounded event-bus delivery peeking and draining for subscription polling.
