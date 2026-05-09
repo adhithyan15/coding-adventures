@@ -11,6 +11,8 @@ Included surfaces:
 - command-class command parse/encode helpers
 - binary switch, multilevel switch, and door lock get/set builders, plus a
   battery get builder
+- command-class interview descriptors for state-query commands and D23
+  capability projection
 - value-report parsing for Basic, Switch Binary, Switch Multilevel, Sensor
   Binary, Sensor Multilevel, Door Lock, Battery, and Notification
 - Z-Wave level/boolean/door-lock normalization helpers
