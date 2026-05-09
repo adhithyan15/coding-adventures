@@ -515,6 +515,58 @@ impl<'a> SmartHomeRegistryWriteView<'a> {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct EventSelector {
+    pub bridge_id: Option<BridgeId>,
+    pub device_id: Option<DeviceId>,
+    pub entity_id: Option<EntityId>,
+    pub event_type: Option<DeviceEventType>,
+    pub observed_at_or_after_ms: Option<u64>,
+    pub received_at_or_after_ms: Option<u64>,
+    pub limit: Option<usize>,
+}
+
+impl EventSelector {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_bridge(mut self, bridge_id: BridgeId) -> Self {
+        self.bridge_id = Some(bridge_id);
+        self
+    }
+
+    pub fn for_device(mut self, device_id: DeviceId) -> Self {
+        self.device_id = Some(device_id);
+        self
+    }
+
+    pub fn for_entity(mut self, entity_id: EntityId) -> Self {
+        self.entity_id = Some(entity_id);
+        self
+    }
+
+    pub fn with_event_type(mut self, event_type: DeviceEventType) -> Self {
+        self.event_type = Some(event_type);
+        self
+    }
+
+    pub fn observed_at_or_after(mut self, observed_at_ms: u64) -> Self {
+        self.observed_at_or_after_ms = Some(observed_at_ms);
+        self
+    }
+
+    pub fn received_at_or_after(mut self, received_at_ms: u64) -> Self {
+        self.received_at_or_after_ms = Some(received_at_ms);
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
 #[derive(Debug, Clone, Default)]
 pub struct InMemorySmartHomeRegistry {
     bridges: BTreeMap<BridgeId, Bridge>,
@@ -789,6 +841,17 @@ impl InMemorySmartHomeRegistry {
 
     pub fn events(&self) -> impl Iterator<Item = &DeviceEvent> {
         self.event_order.iter().filter_map(|id| self.events.get(id))
+    }
+
+    pub fn query_events(&self, selector: &EventSelector) -> Vec<&DeviceEvent> {
+        let mut events = self
+            .events()
+            .filter(|event| event_matches_selector(event, selector))
+            .collect::<Vec<_>>();
+        if let Some(limit) = selector.limit {
+            events.truncate(limit);
+        }
+        events
     }
 
     pub fn upsert_capability_grant(&mut self, grant: CapabilityGrant) -> Option<CapabilityGrant> {
@@ -1188,6 +1251,49 @@ fn authorization_decision_matches_selector(
     true
 }
 
+fn event_matches_selector(event: &DeviceEvent, selector: &EventSelector) -> bool {
+    if selector
+        .bridge_id
+        .as_ref()
+        .is_some_and(|bridge_id| &event.bridge_id != bridge_id)
+    {
+        return false;
+    }
+    if selector
+        .device_id
+        .as_ref()
+        .is_some_and(|device_id| event.device_id.as_ref() != Some(device_id))
+    {
+        return false;
+    }
+    if selector
+        .entity_id
+        .as_ref()
+        .is_some_and(|entity_id| event.entity_id.as_ref() != Some(entity_id))
+    {
+        return false;
+    }
+    if selector
+        .event_type
+        .is_some_and(|event_type| event.event_type != event_type)
+    {
+        return false;
+    }
+    if selector
+        .observed_at_or_after_ms
+        .is_some_and(|observed_at_ms| event.observed_at_ms < observed_at_ms)
+    {
+        return false;
+    }
+    if selector
+        .received_at_or_after_ms
+        .is_some_and(|received_at_ms| event.received_at_ms < received_at_ms)
+    {
+        return false;
+    }
+    true
+}
+
 fn state_matches_freshness(snapshot: Option<&StateSnapshot>, freshness: StateFreshness) -> bool {
     match freshness {
         StateFreshness::Any => true,
@@ -1280,6 +1386,25 @@ mod tests {
         entity.name = "Kitchen Motion".to_string();
         entity.capabilities = vec![Capability::sensor_occupancy()];
         entity
+    }
+
+    fn update_event(id: &str, entity_id: &str, observed_at_ms: u64) -> DeviceEvent {
+        DeviceEvent {
+            event_id: EventId::trusted(id),
+            bridge_id: BridgeId::trusted("bridge-1"),
+            device_id: Some(DeviceId::trusted("device-1")),
+            entity_id: Some(EntityId::trusted(entity_id)),
+            observed_at_ms,
+            received_at_ms: observed_at_ms + 1,
+            event_type: DeviceEventType::Updated,
+            state_delta: Some(StateDelta {
+                capability_id: CapabilityId::trusted("light.on_off"),
+                value: Value::Bool(true),
+            }),
+            raw_ref: None,
+            correlation_id: None,
+            metadata: Vec::new(),
+        }
     }
 
     #[test]
@@ -1475,6 +1600,71 @@ mod tests {
                 .value,
             Value::Object(vec![("light.on_off".to_string(), Value::Bool(true))])
         );
+    }
+
+    #[test]
+    fn query_events_filters_arrival_log_for_replay_windows() {
+        let mut registry = InMemorySmartHomeRegistry::new();
+        registry.upsert_bridge(bridge("bridge-1")).unwrap();
+        registry
+            .upsert_device(device("device-1", "bridge-1"))
+            .unwrap();
+        registry
+            .upsert_entity(entity("entity-1", "device-1"))
+            .unwrap();
+        registry
+            .upsert_entity(entity("entity-2", "device-1"))
+            .unwrap();
+
+        registry
+            .record_event(update_event("event-1", "entity-1", 100))
+            .unwrap();
+        registry
+            .record_event(update_event("event-2", "entity-2", 110))
+            .unwrap();
+        registry
+            .record_event(DeviceEvent {
+                event_id: EventId::trusted("event-3"),
+                event_type: DeviceEventType::Health,
+                state_delta: None,
+                ..update_event("event-3", "entity-1", 120)
+            })
+            .unwrap();
+        registry
+            .record_event(update_event("event-4", "entity-1", 130))
+            .unwrap();
+
+        let replay = registry.query_events(
+            &EventSelector::new()
+                .for_bridge(BridgeId::trusted("bridge-1"))
+                .for_entity(EntityId::trusted("entity-1"))
+                .with_event_type(DeviceEventType::Updated)
+                .received_at_or_after(101)
+                .with_limit(2),
+        );
+        assert_eq!(
+            replay
+                .iter()
+                .map(|event| event.event_id.clone())
+                .collect::<Vec<_>>(),
+            vec![EventId::trusted("event-1"), EventId::trusted("event-4")]
+        );
+
+        let after_observed = registry.query_events(
+            &EventSelector::new()
+                .for_device(DeviceId::trusted("device-1"))
+                .observed_at_or_after(115),
+        );
+        assert_eq!(
+            after_observed
+                .iter()
+                .map(|event| event.event_id.clone())
+                .collect::<Vec<_>>(),
+            vec![EventId::trusted("event-3"), EventId::trusted("event-4")]
+        );
+        assert!(registry
+            .query_events(&EventSelector::new().with_limit(0))
+            .is_empty());
     }
 
     #[test]
