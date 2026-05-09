@@ -16,7 +16,7 @@ use smart_home_core::{
     VaultRef,
 };
 use smart_home_registry::{
-    DeviceSelector, InMemorySmartHomeRegistry, RegistryError, StateRefreshPlan,
+    DeviceSelector, InMemorySmartHomeRegistry, RegistryCounts, RegistryError, StateRefreshPlan,
 };
 use std::collections::{BTreeMap, VecDeque};
 use std::fmt;
@@ -470,6 +470,35 @@ impl RuntimeEventBus {
 
     pub fn published(&self) -> &[RuntimeEvent] {
         &self.published
+    }
+
+    pub fn subscription_count(&self) -> usize {
+        self.subscriptions.len()
+    }
+
+    pub fn pending_delivery_count(&self) -> usize {
+        self.deliveries.values().map(VecDeque::len).sum()
+    }
+
+    pub fn snapshot(&self) -> RuntimeEventBusSnapshot {
+        RuntimeEventBusSnapshot {
+            subscription_count: self.subscription_count(),
+            pending_delivery_count: self.pending_delivery_count(),
+            published_event_count: self.published.len(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RuntimeEventBusSnapshot {
+    pub subscription_count: usize,
+    pub pending_delivery_count: usize,
+    pub published_event_count: usize,
+}
+
+impl RuntimeEventBusSnapshot {
+    pub fn is_idle(&self) -> bool {
+        self.pending_delivery_count == 0
     }
 }
 
@@ -1001,6 +1030,27 @@ impl RuntimeSupervisor {
             .collect()
     }
 
+    pub fn snapshot_at(&self, now_ms: u64) -> RuntimeSupervisorSnapshot {
+        let mut snapshot = RuntimeSupervisorSnapshot {
+            generated_at_ms: now_ms,
+            ..RuntimeSupervisorSnapshot::default()
+        };
+        for worker in self.workers.values() {
+            snapshot.worker_count += 1;
+            if worker.is_overdue_at(now_ms) {
+                snapshot.restart_due_count += 1;
+            }
+            match worker.status {
+                WorkerStatus::Starting => snapshot.starting_count += 1,
+                WorkerStatus::Running => snapshot.running_count += 1,
+                WorkerStatus::Unhealthy => snapshot.unhealthy_count += 1,
+                WorkerStatus::Restarting => snapshot.restarting_count += 1,
+                WorkerStatus::Stopped => snapshot.stopped_count += 1,
+            }
+        }
+        snapshot
+    }
+
     pub fn query_workers(&self, query: &SupervisedWorkerQuery) -> Vec<&SupervisedBridgeWorker> {
         if query.limit == Some(0) {
             return Vec::new();
@@ -1078,6 +1128,24 @@ impl RuntimeSupervisor {
         worker.status = WorkerStatus::Restarting;
         worker.restart_count = worker.restart_count.saturating_add(1);
         Ok(worker.clone())
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub struct RuntimeSupervisorSnapshot {
+    pub generated_at_ms: u64,
+    pub worker_count: usize,
+    pub starting_count: usize,
+    pub running_count: usize,
+    pub unhealthy_count: usize,
+    pub restarting_count: usize,
+    pub stopped_count: usize,
+    pub restart_due_count: usize,
+}
+
+impl RuntimeSupervisorSnapshot {
+    pub fn has_restart_pressure(&self) -> bool {
+        self.restart_due_count > 0 || self.unhealthy_count > 0
     }
 }
 
@@ -1449,6 +1517,31 @@ impl SupervisionTickReport {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct RuntimeReadSnapshot {
+    pub generated_at_ms: u64,
+    pub registry_counts: RegistryCounts,
+    pub event_bus: RuntimeEventBusSnapshot,
+    pub supervisor: RuntimeSupervisorSnapshot,
+    pub pairing_session_count: usize,
+    pub expiring_pairing_session_count: usize,
+    pub optimistic_state_count: usize,
+    pub stale_optimistic_state_count: usize,
+    pub desired_state_count: usize,
+    pub desired_capability_count: usize,
+    pub state_refresh_target_count: usize,
+}
+
+impl RuntimeReadSnapshot {
+    pub fn has_pending_work(&self) -> bool {
+        !self.event_bus.is_idle()
+            || self.supervisor.has_restart_pressure()
+            || self.expiring_pairing_session_count > 0
+            || self.stale_optimistic_state_count > 0
+            || self.state_refresh_target_count > 0
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RuntimeReadToolRequest {
     ListBridges,
@@ -1688,6 +1781,30 @@ impl SmartHomeRuntime {
 
     pub fn pairing_session_count(&self) -> usize {
         self.pairing_sessions.len()
+    }
+
+    pub fn read_snapshot_at(&self, now_ms: u64) -> RuntimeReadSnapshot {
+        RuntimeReadSnapshot {
+            generated_at_ms: now_ms,
+            registry_counts: self.registry.counts(),
+            event_bus: self.event_bus.snapshot(),
+            supervisor: self.supervisor.snapshot_at(now_ms),
+            pairing_session_count: self.pairing_sessions.len(),
+            expiring_pairing_session_count: self.pairing_sessions_expiring_at(now_ms).len(),
+            optimistic_state_count: self.optimistic_states.len(),
+            stale_optimistic_state_count: self
+                .optimistic_states
+                .values()
+                .filter(|snapshot| snapshot.is_stale_at(now_ms))
+                .count(),
+            desired_state_count: self.desired_states.len(),
+            desired_capability_count: self
+                .desired_states
+                .values()
+                .map(|desired_state| desired_state.desired.len())
+                .sum(),
+            state_refresh_target_count: self.registry.state_refresh_plan_at(now_ms).len(),
+        }
     }
 
     pub fn pairing_session(
@@ -3048,6 +3165,34 @@ mod tests {
     }
 
     #[test]
+    fn event_bus_snapshot_counts_log_subscriptions_and_backlog() {
+        let mut bus = RuntimeEventBus::new();
+        bus.subscribe(
+            RuntimeSubscriptionId::trusted("all-events"),
+            RuntimeEventFilter::All,
+        )
+        .unwrap();
+        bus.subscribe(
+            RuntimeSubscriptionId::trusted("bridge-events"),
+            RuntimeEventFilter::Bridge(BridgeId::trusted("bridge-1")),
+        )
+        .unwrap();
+
+        let idle = bus.snapshot();
+        bus.publish(bridge_health_runtime_event("health-1", "bridge-1", 1_000));
+        bus.publish(bridge_health_runtime_event("health-2", "bridge-2", 1_001));
+        let active = bus.snapshot();
+
+        assert_eq!(idle.subscription_count, 2);
+        assert_eq!(idle.pending_delivery_count, 0);
+        assert!(idle.is_idle());
+        assert_eq!(active.subscription_count, 2);
+        assert_eq!(active.published_event_count, 2);
+        assert_eq!(active.pending_delivery_count, 3);
+        assert!(!active.is_idle());
+    }
+
+    #[test]
     fn unknown_entities_are_rejected_before_dispatch() {
         let mut runtime = SmartHomeRuntime::new();
         let error = runtime
@@ -4291,6 +4436,87 @@ mod tests {
         assert_eq!(worker.status, WorkerStatus::Starting);
         assert_eq!(worker.restart_count, 0);
         assert!(runtime.event_bus().published().is_empty());
+    }
+
+    #[test]
+    fn runtime_read_snapshot_summarizes_non_mutating_work_pressure() {
+        let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
+        let subscription = RuntimeSubscriptionId::trusted("all-events");
+        runtime
+            .event_bus_mut()
+            .subscribe(subscription, RuntimeEventFilter::All)
+            .unwrap();
+        runtime
+            .supervisor_mut()
+            .register_worker(SupervisedBridgeWorker::new(
+                BridgeId::trusted("bridge-1"),
+                IntegrationId::trusted("hue"),
+                1_000,
+                100,
+            ));
+        let bridge = runtime
+            .registry()
+            .bridge(&BridgeId::trusted("bridge-1"))
+            .unwrap()
+            .clone();
+        runtime
+            .start_pairing_session(RuntimePairingSession::pending(
+                RuntimePairingSessionId::trusted("pairing-1"),
+                &bridge,
+                AgentId::trusted("agent:installer"),
+                1_000,
+                6_000,
+                Vec::new(),
+            ))
+            .unwrap();
+        runtime
+            .upsert_desired_state(DesiredEntityState::new(
+                EntityId::trusted("entity-1"),
+                vec![StateDelta {
+                    capability_id: CapabilityId::trusted("light.on_off"),
+                    value: Value::Bool(true),
+                }],
+            ))
+            .unwrap();
+        runtime
+            .submit_command(command(CommandType::TurnOn, Value::Null), 1_000)
+            .unwrap();
+
+        let snapshot = runtime.read_snapshot_at(6_000);
+        let worker = runtime
+            .supervisor()
+            .worker(&BridgeId::trusted("bridge-1"))
+            .unwrap();
+
+        assert_eq!(snapshot.generated_at_ms, 6_000);
+        assert_eq!(snapshot.registry_counts.bridges, 1);
+        assert_eq!(snapshot.registry_counts.devices, 1);
+        assert_eq!(snapshot.registry_counts.entities, 1);
+        assert_eq!(snapshot.registry_counts.states, 1);
+        assert_eq!(snapshot.event_bus.subscription_count, 1);
+        assert_eq!(snapshot.event_bus.published_event_count, 1);
+        assert_eq!(snapshot.event_bus.pending_delivery_count, 1);
+        assert_eq!(snapshot.supervisor.worker_count, 1);
+        assert_eq!(snapshot.supervisor.starting_count, 1);
+        assert_eq!(snapshot.supervisor.restart_due_count, 1);
+        assert!(snapshot.supervisor.has_restart_pressure());
+        assert_eq!(snapshot.pairing_session_count, 1);
+        assert_eq!(snapshot.expiring_pairing_session_count, 1);
+        assert_eq!(snapshot.optimistic_state_count, 1);
+        assert_eq!(snapshot.stale_optimistic_state_count, 1);
+        assert_eq!(snapshot.desired_state_count, 1);
+        assert_eq!(snapshot.desired_capability_count, 1);
+        assert_eq!(snapshot.state_refresh_target_count, 1);
+        assert!(snapshot.has_pending_work());
+        assert_eq!(worker.status, WorkerStatus::Starting);
+        assert_eq!(worker.restart_count, 0);
+        assert_eq!(
+            runtime
+                .pairing_session(&RuntimePairingSessionId::trusted("pairing-1"))
+                .unwrap()
+                .status,
+            PairingSessionStatus::PendingUserPresence
+        );
     }
 
     #[test]
