@@ -7,7 +7,7 @@
 
 #![forbid(unsafe_code)]
 
-use smart_home_core::{BridgeId, EventId, IntegrationId, Metadata};
+use smart_home_core::{BridgeId, CommandId, CorrelationId, EventId, IntegrationId, Metadata};
 use std::{cmp::Ordering, fmt};
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -192,6 +192,25 @@ pub enum MqttRetainPolicy {
     IgnoreRetained,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum MqttPayloadFormat {
+    RawBytes,
+    Utf8Text,
+    Json,
+    HomeAssistantDiscoveryJson,
+}
+
+impl MqttPayloadFormat {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::RawBytes => "raw_bytes",
+            Self::Utf8Text => "utf8_text",
+            Self::Json => "json",
+            Self::HomeAssistantDiscoveryJson => "home_assistant_discovery_json",
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MqttSubscriptionSpec {
     pub integration_id: IntegrationId,
@@ -278,6 +297,136 @@ impl MqttSubscriptionSpec {
 
         spec.stream_id = self.stream_id.clone();
         spec
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MqttPublicationSpec {
+    pub integration_id: IntegrationId,
+    pub broker_id: BridgeId,
+    pub topic_name: String,
+    pub qos: MqttQos,
+    pub retain: bool,
+    pub payload_format: MqttPayloadFormat,
+    pub command_id: Option<CommandId>,
+    pub correlation_id: Option<CorrelationId>,
+    pub metadata: Vec<Metadata>,
+}
+
+impl MqttPublicationSpec {
+    pub fn new(
+        integration_id: IntegrationId,
+        broker_id: BridgeId,
+        topic_name: impl Into<String>,
+    ) -> Result<Self, MqttTopicError> {
+        let topic_name = topic_name.into();
+        validate_mqtt_topic_name(&topic_name)?;
+        Ok(Self {
+            integration_id,
+            broker_id,
+            topic_name,
+            qos: MqttQos::AtLeastOnce,
+            retain: false,
+            payload_format: MqttPayloadFormat::Json,
+            command_id: None,
+            correlation_id: None,
+            metadata: Vec::new(),
+        })
+    }
+
+    pub fn for_command(
+        integration_id: IntegrationId,
+        broker_id: BridgeId,
+        topic_name: impl Into<String>,
+        command_id: CommandId,
+        correlation_id: CorrelationId,
+    ) -> Result<Self, MqttTopicError> {
+        Self::new(integration_id, broker_id, topic_name)
+            .map(|spec| spec.with_command_context(command_id, correlation_id))
+    }
+
+    pub fn with_qos(mut self, qos: MqttQos) -> Self {
+        self.qos = qos;
+        self
+    }
+
+    pub fn with_retain(mut self, retain: bool) -> Self {
+        self.retain = retain;
+        self
+    }
+
+    pub fn with_payload_format(mut self, payload_format: MqttPayloadFormat) -> Self {
+        self.payload_format = payload_format;
+        self
+    }
+
+    pub fn with_command_context(
+        mut self,
+        command_id: CommandId,
+        correlation_id: CorrelationId,
+    ) -> Self {
+        self.command_id = Some(command_id);
+        self.correlation_id = Some(correlation_id);
+        self
+    }
+
+    pub fn with_metadata(mut self, metadata: Metadata) -> Self {
+        self.metadata.push(metadata);
+        self
+    }
+
+    pub fn to_publication_ref(&self) -> MqttPublicationRef {
+        MqttPublicationRef {
+            topic_name: self.topic_name.clone(),
+            qos: self.qos,
+            packet_id: None,
+            retained: self.retain,
+            duplicate: false,
+        }
+    }
+
+    pub fn audit_metadata(&self) -> Vec<Metadata> {
+        let mut metadata = vec![
+            Metadata::new("mqtt.integration_id", self.integration_id.as_str()),
+            Metadata::new("mqtt.broker_id", self.broker_id.as_str()),
+            Metadata::new("mqtt.topic_name", &self.topic_name),
+            Metadata::new("mqtt.qos", self.qos.level().to_string()),
+            Metadata::new("mqtt.retain", self.retain.to_string()),
+            Metadata::new("mqtt.payload_format", self.payload_format.as_str()),
+        ];
+
+        if let Some(command_id) = &self.command_id {
+            metadata.push(Metadata::new("smart_home.command_id", command_id.as_str()));
+        }
+        if let Some(correlation_id) = &self.correlation_id {
+            metadata.push(Metadata::new(
+                "smart_home.correlation_id",
+                correlation_id.as_str(),
+            ));
+        }
+
+        metadata.extend(self.metadata.iter().cloned());
+        metadata
+    }
+
+    pub fn publication_key(&self) -> String {
+        format!(
+            "mqtt:{}:{}:{}:qos{}:retain:{}:payload:{}:command:{}:correlation:{}",
+            self.integration_id.as_str(),
+            self.broker_id.as_str(),
+            self.topic_name,
+            self.qos.level(),
+            self.retain,
+            self.payload_format.as_str(),
+            self.command_id
+                .as_ref()
+                .map(|command_id| command_id.as_str())
+                .unwrap_or("-"),
+            self.correlation_id
+                .as_ref()
+                .map(|correlation_id| correlation_id.as_str())
+                .unwrap_or("-")
+        )
     }
 }
 
@@ -1601,6 +1750,71 @@ mod tests {
         assert!(spec
             .metadata
             .contains(&Metadata::new("mqtt.shared_group", "chief-of-staff")));
+    }
+
+    #[test]
+    fn mqtt_publication_specs_capture_command_context_and_audit_metadata() {
+        let publication = MqttPublicationSpec::for_command(
+            IntegrationId::trusted("zigbee2mqtt"),
+            BridgeId::trusted("broker-1"),
+            "zigbee2mqtt/kitchen_light/set",
+            CommandId::trusted("cmd-1"),
+            CorrelationId::trusted("corr-1"),
+        )
+        .unwrap()
+        .with_qos(MqttQos::ExactlyOnce)
+        .with_payload_format(MqttPayloadFormat::Json)
+        .with_metadata(Metadata::new("mqtt.intent", "set_brightness"));
+
+        let reference = publication.to_publication_ref();
+        let metadata = publication.audit_metadata();
+
+        assert_eq!(reference.topic_name, "zigbee2mqtt/kitchen_light/set");
+        assert_eq!(reference.qos, MqttQos::ExactlyOnce);
+        assert!(!reference.retained);
+        assert!(metadata.contains(&Metadata::new(
+            "mqtt.topic_name",
+            "zigbee2mqtt/kitchen_light/set"
+        )));
+        assert!(metadata.contains(&Metadata::new("mqtt.payload_format", "json")));
+        assert!(metadata.contains(&Metadata::new("smart_home.command_id", "cmd-1")));
+        assert!(metadata.contains(&Metadata::new("smart_home.correlation_id", "corr-1")));
+        assert!(metadata.contains(&Metadata::new("mqtt.intent", "set_brightness")));
+    }
+
+    #[test]
+    fn mqtt_publication_specs_reject_wildcard_topics() {
+        let err = MqttPublicationSpec::new(
+            IntegrationId::trusted("tasmota"),
+            BridgeId::trusted("broker-1"),
+            "cmnd/+/POWER",
+        )
+        .unwrap_err();
+
+        assert_eq!(err, MqttTopicError::TopicNameContainsWildcard);
+    }
+
+    #[test]
+    fn mqtt_publication_keys_are_stable_for_command_deduplication() {
+        let key = MqttPublicationSpec::new(
+            IntegrationId::trusted("tasmota"),
+            BridgeId::trusted("broker-1"),
+            "cmnd/kitchen/POWER",
+        )
+        .unwrap()
+        .with_qos(MqttQos::AtMostOnce)
+        .with_retain(true)
+        .with_command_context(
+            CommandId::trusted("cmd-power"),
+            CorrelationId::trusted("corr-1"),
+        )
+        .with_payload_format(MqttPayloadFormat::Utf8Text)
+        .publication_key();
+
+        assert_eq!(
+            key,
+            "mqtt:tasmota:broker-1:cmnd/kitchen/POWER:qos0:retain:true:payload:utf8_text:command:cmd-power:correlation:corr-1"
+        );
     }
 
     #[test]
