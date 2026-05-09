@@ -28,6 +28,36 @@ pub struct SkillManifest {
     pub active: bool,
 }
 
+/// Metadata-only view for catalog and `skill.list` reads.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SkillManifestSummary {
+    pub skill_id: String,
+    pub version: String,
+    pub name: String,
+    pub description: String,
+    pub entrypoints: Vec<String>,
+    pub required_tools: Vec<String>,
+    pub required_capabilities: Vec<String>,
+    pub asset_count: usize,
+    pub active: bool,
+}
+
+impl SkillManifestSummary {
+    pub fn from_manifest(manifest: &SkillManifest) -> Self {
+        Self {
+            skill_id: manifest.skill_id.clone(),
+            version: manifest.version.clone(),
+            name: manifest.name.clone(),
+            description: manifest.description.clone(),
+            entrypoints: manifest.entrypoints.clone(),
+            required_tools: manifest.required_tools.clone(),
+            required_capabilities: manifest.required_capabilities.clone(),
+            asset_count: manifest.assets.len(),
+            active: manifest.active,
+        }
+    }
+}
+
 /// Descriptor and bytes for one stored asset.
 #[derive(Debug, Clone, PartialEq)]
 pub struct SkillAssetRecord {
@@ -170,16 +200,44 @@ impl<S: StorageBackend> SkillStore<S> {
         &self,
         options: SkillListOptions,
     ) -> Result<Vec<SkillManifest>, StorageError> {
-        if let Some(skill_id) = options.skill_id.as_deref() {
-            validate_id("skill_id", skill_id)?;
-        }
-        validate_id_list("entrypoints", &options.entrypoints)?;
-        validate_id_list("required_tools", &options.required_tools)?;
-        validate_id_list("required_capabilities", &options.required_capabilities)?;
+        validate_skill_list_options(&options)?;
         if options.limit == Some(0) {
             return Ok(Vec::new());
         }
 
+        let manifests = self.filtered_manifests(&options)?;
+        Ok(apply_skill_list_limit(manifests, options.limit))
+    }
+
+    pub fn list_skill_summaries(
+        &self,
+        options: SkillListOptions,
+    ) -> Result<Vec<SkillManifestSummary>, StorageError> {
+        validate_skill_list_options(&options)?;
+        if options.limit == Some(0) {
+            return Ok(Vec::new());
+        }
+
+        let manifests = self.filtered_manifests(&options)?;
+        Ok(apply_skill_list_limit(manifests, options.limit)
+            .iter()
+            .map(SkillManifestSummary::from_manifest)
+            .collect())
+    }
+
+    pub fn load_manifest_summary(
+        &self,
+        skill_id: &str,
+        version: &str,
+    ) -> Result<Option<SkillManifestSummary>, StorageError> {
+        self.load_manifest(skill_id, version)
+            .map(|manifest| manifest.as_ref().map(SkillManifestSummary::from_manifest))
+    }
+
+    fn filtered_manifests(
+        &self,
+        options: &SkillListOptions,
+    ) -> Result<Vec<SkillManifest>, StorageError> {
         self.backend.initialize()?;
         let page = self.backend.list(
             NAMESPACE,
@@ -194,7 +252,7 @@ impl<S: StorageBackend> SkillStore<S> {
         let mut manifests = Vec::new();
         for record in &page.records {
             let manifest = decode_manifest(&record.body)?;
-            if !skill_matches_list_options(&manifest, &options) {
+            if !skill_matches_list_options(&manifest, options) {
                 continue;
             }
             manifests.push(manifest);
@@ -337,6 +395,25 @@ fn manifest_key(skill_id: &str, version: &str) -> String {
 
 fn asset_key(skill_id: &str, version: &str, asset_path: &str) -> String {
     format!("assets/{skill_id}/{version}/{asset_path}")
+}
+
+fn validate_skill_list_options(options: &SkillListOptions) -> Result<(), StorageError> {
+    if let Some(skill_id) = options.skill_id.as_deref() {
+        validate_id("skill_id", skill_id)?;
+    }
+    validate_id_list("entrypoints", &options.entrypoints)?;
+    validate_id_list("required_tools", &options.required_tools)?;
+    validate_id_list("required_capabilities", &options.required_capabilities)
+}
+
+fn apply_skill_list_limit(
+    mut manifests: Vec<SkillManifest>,
+    limit: Option<usize>,
+) -> Vec<SkillManifest> {
+    if let Some(limit) = limit {
+        manifests.truncate(limit);
+    }
+    manifests
 }
 
 fn skill_matches_list_options(manifest: &SkillManifest, options: &SkillListOptions) -> bool {
@@ -799,6 +876,57 @@ mod tests {
             .list_skills(SkillListOptions::new().requiring_tool("calendar.write"))
             .unwrap();
         assert!(missing.is_empty());
+    }
+
+    #[test]
+    fn skill_summaries_project_catalog_metadata_without_manifest_source() {
+        let store = SkillStore::new(InMemoryStorageBackend::new());
+        let _ = store
+            .install_skill(
+                SkillManifest {
+                    skill_id: "planner".to_string(),
+                    version: "v1".to_string(),
+                    name: "Planner".to_string(),
+                    description: "Plans work".to_string(),
+                    entrypoints: vec!["main".to_string(), "review".to_string()],
+                    required_tools: vec!["shell".to_string(), "artifact.read".to_string()],
+                    required_capabilities: vec!["artifact.read".to_string()],
+                    assets: vec!["SKILL.md".to_string(), "examples/brief.md".to_string()],
+                    source: JsonValue::Object(vec![(
+                        "raw".to_string(),
+                        JsonValue::String("kept out of summaries".to_string()),
+                    )]),
+                    active: true,
+                },
+                Vec::new(),
+            )
+            .unwrap();
+
+        let summaries = store
+            .list_skill_summaries(
+                SkillListOptions::new()
+                    .active_only()
+                    .requiring_tool("artifact.read"),
+            )
+            .unwrap();
+        let loaded = store
+            .load_manifest_summary("planner", "v1")
+            .unwrap()
+            .unwrap();
+
+        assert_eq!(summaries, vec![loaded.clone()]);
+        assert_eq!(loaded.skill_id, "planner");
+        assert_eq!(loaded.version, "v1");
+        assert_eq!(
+            loaded.entrypoints,
+            vec!["main".to_string(), "review".to_string()]
+        );
+        assert_eq!(
+            loaded.required_tools,
+            vec!["shell".to_string(), "artifact.read".to_string()]
+        );
+        assert_eq!(loaded.asset_count, 2);
+        assert!(loaded.active);
     }
 
     #[test]
