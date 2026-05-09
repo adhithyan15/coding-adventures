@@ -1,0 +1,10 @@
+[package]
+name = "smart-home-local-http"
+version = "0.1.0"
+edition = "2021"
+description = "Pure local HTTP request planning primitives for smart-home integrations"
+license = "MIT"
+
+[dependencies]
+http-core = { path = "../http-core" }
+smart-home-core = { path = "../smart-home-core" }
