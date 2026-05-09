@@ -734,3 +734,21 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <p>
 |       id="b"
 |       "TEST"
+
+#data
+<b id=a><p><b id=b></p></b>TEST
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,23): unexpected-end-tag
+(1,27): adoption-agency-1.2
+(1,31): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <b>
+|       id="a"
+|       <p>
+|         <b>
+|           id="b"
+|       "TEST"

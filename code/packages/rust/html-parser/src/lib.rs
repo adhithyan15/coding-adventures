@@ -1004,6 +1004,9 @@ impl HtmlParser {
         if !starts_inner_formatting_reconstruction_boundary(incoming_name) {
             return Vec::new();
         }
+        if incoming_name == "p" && !self.has_open_element("p") && self.current_element_is("b") {
+            return Vec::new();
+        }
 
         let mut formatting = Vec::new();
         while let Some(path) = self.open_elements.last() {
@@ -1194,6 +1197,10 @@ impl HtmlParser {
                     self.close_open_formatting_element_silently("a");
                 }
             }
+            name
+                if is_formatting_element(name)
+                    && self.current_element_is(name)
+                    && self.current_formatting_contains_closed_paragraph(name) => {}
             _ => self.close_element(name),
         }
     }
@@ -1205,6 +1212,10 @@ impl HtmlParser {
             .rposition(|path| element_at_path(&self.document, path).is_some_and(|n| n == name))
         {
             if is_formatting_element(name) && self.has_table_context_above(index) {
+                return;
+            }
+            if is_formatting_element(name) && self.adopt_formatting_end_tag_across_paragraph(index)
+            {
                 return;
             }
             if !is_special_element(name) && self.has_special_element_above(index) {
@@ -1425,6 +1436,82 @@ impl HtmlParser {
         remove_node_at_path(&mut self.document.children, path);
         self.prunable_empty_reconstructed_formatting_paths
             .retain(|candidate| candidate.as_slice() != path);
+    }
+
+    fn adopt_formatting_end_tag_across_paragraph(&mut self, formatting_index: usize) -> bool {
+        let Some(formatting_path) = self.open_elements.get(formatting_index).cloned() else {
+            return false;
+        };
+        let Some(formatting_element) = element_ref_at_path(&self.document, &formatting_path) else {
+            return false;
+        };
+        let formatting_name = formatting_element.name.clone();
+        let formatting_attributes = formatting_element.attributes.clone();
+
+        let Some(paragraph_path) = self
+            .open_elements
+            .iter()
+            .skip(formatting_index + 1)
+            .find(|path| element_at_path(&self.document, path).is_some_and(|name| name == "p"))
+            .cloned()
+        else {
+            return false;
+        };
+        if paragraph_path.len() != formatting_path.len() + 1
+            || !paragraph_path.starts_with(&formatting_path)
+        {
+            return false;
+        }
+
+        let Some((&formatting_child_index, formatting_parent_path)) = formatting_path.split_last()
+        else {
+            return false;
+        };
+        let Some(&paragraph_child_index) = paragraph_path.last() else {
+            return false;
+        };
+        let Some(formatting_parent_children) =
+            children_at_path_mut(&mut self.document.children, formatting_parent_path)
+        else {
+            return false;
+        };
+        let Some(Node::Element(formatting_element)) =
+            formatting_parent_children.get_mut(formatting_child_index)
+        else {
+            return false;
+        };
+        if paragraph_child_index >= formatting_element.children.len() {
+            return false;
+        }
+
+        let mut paragraph = formatting_element.children.remove(paragraph_child_index);
+        if let Node::Element(paragraph_element) = &mut paragraph {
+            paragraph_element.children.insert(
+                0,
+                Node::element(formatting_name, formatting_attributes),
+            );
+        }
+        formatting_parent_children.insert(formatting_child_index + 1, paragraph);
+
+        self.open_elements.truncate(formatting_index);
+        let mut moved_paragraph_path = formatting_parent_path.to_vec();
+        moved_paragraph_path.push(formatting_child_index + 1);
+        self.open_elements.push(moved_paragraph_path);
+        true
+    }
+
+    fn current_formatting_contains_closed_paragraph(&self, name: &str) -> bool {
+        let Some(path) = self.open_elements.last() else {
+            return false;
+        };
+        let Some(element) = element_ref_at_path(&self.document, path) else {
+            return false;
+        };
+        element.name == name
+            && element
+                .children
+                .iter()
+                .any(|child| matches!(child, Node::Element(child) if child.name == "p"))
     }
 
     fn has_open_element(&self, name: &str) -> bool {
@@ -2234,6 +2321,26 @@ mod tests {
         assert_eq!(paragraph.name, "p");
         assert_eq!(element(&paragraph.children[0]).name, "b");
         assert_eq!(paragraph.children[1], Node::text("TEST"));
+    }
+
+    #[test]
+    fn keeps_outer_formatting_around_paragraph_closed_before_end_tag() {
+        let document = parse_html("<b id=a><p><b id=b></p></b>TEST").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 1);
+
+        let outer_bold = element(&body.children[0]);
+        assert_eq!(outer_bold.name, "b");
+        assert_eq!(outer_bold.attribute("id"), Some("a"));
+        assert_eq!(outer_bold.children.len(), 2);
+
+        let paragraph = element(&outer_bold.children[0]);
+        assert_eq!(paragraph.name, "p");
+        let inner_bold = element(&paragraph.children[0]);
+        assert_eq!(inner_bold.name, "b");
+        assert_eq!(inner_bold.attribute("id"), Some("b"));
+        assert_eq!(outer_bold.children[1], Node::text("TEST"));
     }
 
     #[test]
