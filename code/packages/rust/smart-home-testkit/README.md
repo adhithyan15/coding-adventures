@@ -16,7 +16,10 @@ a shared way to build:
 - Hue SSE event-stream specs, connected stream states, and drivers that apply
   scripts to both event-stream supervision state and `smart-home-runtime`
 - fake command buses with queued command/result pairs
+- fake local HTTP responses that can match planned requests without sockets
 - fake MQTT broker publications with retained-message and metadata markers
+- read-only fake local HTTP response queries by method, URL, status, metadata,
+  observation time, sort, and limit
 - read-only fake MQTT broker queries by topic, prefix, retained flag, metadata,
   observation time, sort, and limit
 - simple logical clocks for freshness and supervision tests
@@ -25,6 +28,7 @@ a shared way to build:
 
 - `smart-home-core`
 - `smart-home-event-streams`
+- `smart-home-local-http`
 - `smart-home-registry`
 - `smart-home-runtime`
 
