@@ -105,6 +105,38 @@ module CodingAdventures
         end
       end
 
+      def test_pico_uf2_mount_selects_single_discovered_mount
+        Dir.mktmpdir("board-vm-pico-uf2") do |root|
+          mount = File.join(root, "RPI-RP2")
+          Dir.mkdir(mount)
+          File.write(File.join(mount, "INFO_UF2.TXT"), "UF2 Bootloader\nModel: Raspberry Pi RP2\n")
+          File.write(File.join(mount, "INDEX.HTM"), "<html></html>")
+
+          assert_equal mount, BoardVM.pico_uf2_mount(roots: [root])
+        end
+      end
+
+      def test_pico_uf2_mount_reports_multiple_discovered_mounts
+        Dir.mktmpdir("board-vm-pico-uf2-a") do |root_a|
+          Dir.mktmpdir("board-vm-pico-uf2-b") do |root_b|
+            mount_a = File.join(root_a, "RPI-RP2")
+            mount_b = File.join(root_b, "RPI-RP2")
+            [mount_a, mount_b].each do |mount|
+              Dir.mkdir(mount)
+              File.write(File.join(mount, "INFO_UF2.TXT"), "UF2 Bootloader\nModel: Raspberry Pi RP2\n")
+              File.write(File.join(mount, "INDEX.HTM"), "<html></html>")
+            end
+
+            error = assert_raises(DeviceSelectionError) do
+              BoardVM.pico_uf2_mount(roots: [root_a, root_b])
+            end
+            assert_match(/Multiple Pico BOOTSEL UF2 mounts/, error.message)
+            assert_includes error.message, mount_a
+            assert_includes error.message, mount_b
+          end
+        end
+      end
+
       def test_pico_uf2_upload_command_uses_rust_owned_options
         command = BoardVM.pico_uf2_upload_command(
           :pico,
@@ -381,23 +413,32 @@ module CodingAdventures
         upload = CommandResult.new(["cargo"], "/repo/code/packages/rust", "copied uf2\n", "", 0)
         runner = FakeRunner.new([upload])
 
-        connection = BoardVM.pico_w(
-          flash: true,
-          firmware_image: "/tmp/board-vm-pico-w.uf2",
-          cargo_workspace: "/repo/code/packages/rust",
-          runner: runner
-        )
+        Dir.mktmpdir("board-vm-pico-uf2") do |root|
+          mount = File.join(root, "RPI-RP2")
+          Dir.mkdir(mount)
+          File.write(File.join(mount, "INFO_UF2.TXT"), "UF2 Bootloader\nModel: Raspberry Pi RP2\n")
+          File.write(File.join(mount, "INDEX.HTM"), "<html></html>")
 
-        assert_equal :raspberry_pi_pico_w, connection.board
-        assert_nil connection.port
-        assert_equal [
-          "cargo", "run",
-          "-p", "board-vm-cli",
-          "--bin", "board-vm",
-          "--",
-          "pico-uf2",
-          "--image", "/tmp/board-vm-pico-w.uf2"
-        ], runner.calls.first[:argv]
+          connection = BoardVM.pico_w(
+            flash: true,
+            firmware_image: "/tmp/board-vm-pico-w.uf2",
+            cargo_workspace: "/repo/code/packages/rust",
+            pico_uf2_mount_roots: [root],
+            runner: runner
+          )
+
+          assert_equal :raspberry_pi_pico_w, connection.board
+          assert_nil connection.port
+          assert_equal [
+            "cargo", "run",
+            "-p", "board-vm-cli",
+            "--bin", "board-vm",
+            "--",
+            "pico-uf2",
+            "--image", "/tmp/board-vm-pico-w.uf2",
+            "--mount", mount
+          ], runner.calls.first[:argv]
+        end
       end
 
       def test_esp_upload_command_rejects_non_esp_targets

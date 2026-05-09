@@ -1219,6 +1219,25 @@ def pico_uf2_mounts(roots: Iterable[str] | None = None) -> list[str]:
     return [str(mount) for mount in _native.pico_uf2_mounts([str(root) for root in roots])]
 
 
+def _pico_uf2_mount_list(mounts: Iterable[str]) -> str:
+    return "\n".join(f"{index}. {mount}" for index, mount in enumerate(mounts, start=1))
+
+
+def pico_uf2_mount(roots: Iterable[str] | None = None) -> str:
+    mounts = pico_uf2_mounts(roots)
+    if len(mounts) == 1:
+        return mounts[0]
+    if not mounts:
+        raise ValueError(
+            "No Pico BOOTSEL UF2 mount found. "
+            "Hold BOOTSEL while plugging in the Pico/Pico W."
+        )
+    raise ValueError(
+        "Multiple Pico BOOTSEL UF2 mounts found; choose one.\n"
+        f"{_pico_uf2_mount_list(mounts)}"
+    )
+
+
 DeviceReference = BoardDevice | dict[str, Any] | str | int
 
 
@@ -1373,19 +1392,25 @@ def pico_uf2_upload_command(
     *,
     image: str,
     mount: str | None = None,
+    roots: Iterable[str] | None = None,
+    auto_mount: bool = True,
     **overrides: Any,
 ) -> list[str]:
     options = pico_uf2_upload_options(selector, **overrides)
     if options is None:
         raise ValueError(f"Pico UF2 upload is not supported for {selector!r}")
 
+    selected_mount = mount
+    if selected_mount is None and auto_mount:
+        selected_mount = pico_uf2_mount(roots)
+
     command = [
         options.command,
         "--image",
         str(image),
     ]
-    if mount is not None:
-        command.extend(["--mount", str(mount)])
+    if selected_mount is not None:
+        command.extend(["--mount", str(selected_mount)])
     return command
 
 
@@ -1439,6 +1464,7 @@ __all__ = [
     "esp_upload_options",
     "find_target",
     "known_targets",
+    "pico_uf2_mount",
     "pico_uf2_upload_command",
     "pico_uf2_mounts",
     "pico_uf2_upload_options",

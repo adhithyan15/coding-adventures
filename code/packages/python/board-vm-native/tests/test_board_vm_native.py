@@ -17,6 +17,7 @@ from board_vm_native import (
     esp_upload_options,
     find_target,
     known_targets,
+    pico_uf2_mount,
     pico_uf2_upload_command,
     pico_uf2_mounts,
     pico_uf2_upload_options,
@@ -186,6 +187,46 @@ def test_pico_uf2_mounts_are_discovered_by_rust_language_core():
         assert pico_uf2_mounts([root]) == [str(mount)]
 
 
+def test_pico_uf2_mount_selects_single_discovered_mount():
+    with tempfile.TemporaryDirectory(prefix="board-vm-pico-uf2") as root:
+        mount = pathlib.Path(root) / "RPI-RP2"
+        mount.mkdir()
+        (mount / "INFO_UF2.TXT").write_text(
+            "UF2 Bootloader\nModel: Raspberry Pi RP2\n",
+            encoding="utf-8",
+        )
+        (mount / "INDEX.HTM").write_text("<html></html>", encoding="utf-8")
+
+        assert pico_uf2_mount([root]) == str(mount)
+
+
+def test_pico_uf2_mount_reports_multiple_discovered_mounts():
+    with (
+        tempfile.TemporaryDirectory(prefix="board-vm-pico-uf2-a") as root_a,
+        tempfile.TemporaryDirectory(prefix="board-vm-pico-uf2-b") as root_b,
+    ):
+        mount_a = pathlib.Path(root_a) / "RPI-RP2"
+        mount_b = pathlib.Path(root_b) / "RPI-RP2"
+        for mount in (mount_a, mount_b):
+            mount.mkdir()
+            (mount / "INFO_UF2.TXT").write_text(
+                "UF2 Bootloader\nModel: Raspberry Pi RP2\n",
+                encoding="utf-8",
+            )
+            (mount / "INDEX.HTM").write_text("<html></html>", encoding="utf-8")
+
+        try:
+            pico_uf2_mount([root_a, root_b])
+        except ValueError as error:
+            message = str(error)
+        else:
+            raise AssertionError("expected ambiguous Pico BOOTSEL mount selection to fail")
+
+        assert "Multiple Pico BOOTSEL UF2 mounts" in message
+        assert str(mount_a) in message
+        assert str(mount_b) in message
+
+
 def test_esp_upload_command_uses_rust_owned_options():
     command = esp_upload_command(
         "esp32",
@@ -230,6 +271,31 @@ def test_pico_uf2_upload_command_uses_rust_owned_options():
         "/tmp/board-vm-pico.uf2",
         "--mount",
         "/Volumes/RPI-RP2",
+    ]
+
+
+def test_pico_uf2_upload_command_auto_selects_single_mount():
+    with tempfile.TemporaryDirectory(prefix="board-vm-pico-uf2") as root:
+        mount = pathlib.Path(root) / "RPI-RP2"
+        mount.mkdir()
+        (mount / "INFO_UF2.TXT").write_text(
+            "UF2 Bootloader\nModel: Raspberry Pi RP2\n",
+            encoding="utf-8",
+        )
+        (mount / "INDEX.HTM").write_text("<html></html>", encoding="utf-8")
+
+        command = pico_uf2_upload_command(
+            "pico-w",
+            image="/tmp/board-vm-pico-w.uf2",
+            roots=[root],
+        )
+
+    assert command == [
+        "pico-uf2",
+        "--image",
+        "/tmp/board-vm-pico-w.uf2",
+        "--mount",
+        str(mount),
     ]
 
 
