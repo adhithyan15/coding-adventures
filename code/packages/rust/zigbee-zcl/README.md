@@ -11,7 +11,7 @@ coordinator policy. It provides:
 - typed attribute report parsing
 - D23 capability projection for common clusters
 - D23 `StateDelta` projection for on/off, level, color-temperature, occupancy,
-  lock-state, temperature, and illuminance reports
+  lock-state, temperature, humidity, and illuminance reports
 - endpoint references grounded in `zigbee-nwk` network addresses
 
 ## Dependencies

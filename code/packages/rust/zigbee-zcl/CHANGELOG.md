@@ -13,3 +13,5 @@ All notable changes to this package will be documented in this file.
 - D23 capability and state-delta mapping for common smart-home clusters.
 - Temperature and illuminance measurement cluster projections into normalized
   D23 sensor state deltas.
+- Relative Humidity Measurement cluster projection into normalized D23 sensor
+  state deltas.

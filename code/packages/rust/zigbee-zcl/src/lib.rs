@@ -30,6 +30,7 @@ impl ZclClusterId {
     pub const THERMOSTAT: Self = Self(0x0201);
     pub const COLOR_CONTROL: Self = Self(0x0300);
     pub const TEMPERATURE_MEASUREMENT: Self = Self(0x0402);
+    pub const RELATIVE_HUMIDITY_MEASUREMENT: Self = Self(0x0405);
     pub const ILLUMINANCE_MEASUREMENT: Self = Self(0x0400);
     pub const OCCUPANCY_SENSING: Self = Self(0x0406);
 
@@ -45,6 +46,7 @@ impl ZclClusterId {
             Self::THERMOSTAT => "thermostat",
             Self::COLOR_CONTROL => "color_control",
             Self::TEMPERATURE_MEASUREMENT => "temperature_measurement",
+            Self::RELATIVE_HUMIDITY_MEASUREMENT => "relative_humidity_measurement",
             Self::ILLUMINANCE_MEASUREMENT => "illuminance_measurement",
             Self::OCCUPANCY_SENSING => "occupancy_sensing",
             _ => "unknown",
@@ -412,6 +414,7 @@ pub fn capabilities_for_cluster(cluster_id: ZclClusterId) -> Vec<Capability> {
         ZclClusterId::COLOR_CONTROL => vec![Capability::light_color_temperature()],
         ZclClusterId::OCCUPANCY_SENSING => vec![Capability::sensor_occupancy()],
         ZclClusterId::TEMPERATURE_MEASUREMENT => vec![Capability::sensor_temperature()],
+        ZclClusterId::RELATIVE_HUMIDITY_MEASUREMENT => vec![Capability::sensor_humidity()],
         ZclClusterId::ILLUMINANCE_MEASUREMENT => vec![Capability::sensor_illuminance()],
         ZclClusterId::DOOR_LOCK => vec![Capability::new(
             CapabilityId::trusted("lock.state"),
@@ -468,6 +471,14 @@ pub fn state_delta_for_report(report: &ZclAttributeReport) -> Option<StateDelta>
             value: Value::Number(centi_celsius_to_celsius(*centi_celsius)),
         }),
         (
+            ZclClusterId::RELATIVE_HUMIDITY_MEASUREMENT,
+            ZclAttributeId::MEASURED_VALUE,
+            ZclValue::U16(centi_percent),
+        ) => Some(StateDelta {
+            capability_id: CapabilityId::trusted("sensor.humidity"),
+            value: Value::Number(centi_percent_to_percent(*centi_percent)),
+        }),
+        (
             ZclClusterId::ILLUMINANCE_MEASUREMENT,
             ZclAttributeId::MEASURED_VALUE,
             ZclValue::U16(measured_value),
@@ -498,6 +509,10 @@ pub fn lock_state_name(value: u8) -> &'static str {
 }
 
 pub fn centi_celsius_to_celsius(value: i16) -> f64 {
+    f64::from(value) / 100.0
+}
+
+pub fn centi_percent_to_percent(value: u16) -> f64 {
     f64::from(value) / 100.0
 }
 
@@ -741,6 +756,12 @@ mod tests {
             data_type: ZclDataType::U16,
             value: ZclValue::U16(10001),
         };
+        let humidity = ZclAttributeReport {
+            cluster_id: ZclClusterId::RELATIVE_HUMIDITY_MEASUREMENT,
+            attribute_id: ZclAttributeId::MEASURED_VALUE,
+            data_type: ZclDataType::U16,
+            value: ZclValue::U16(4532),
+        };
         let invalid_illuminance = ZclAttributeReport {
             value: ZclValue::U16(0xffff),
             ..illuminance.clone()
@@ -760,8 +781,16 @@ mod tests {
                 value: Value::Number(10.0),
             }
         );
+        assert_eq!(
+            state_delta_for_report(&humidity).unwrap(),
+            StateDelta {
+                capability_id: CapabilityId::trusted("sensor.humidity"),
+                value: Value::Number(45.32),
+            }
+        );
         assert!(state_delta_for_report(&invalid_illuminance).is_none());
         assert_eq!(centi_celsius_to_celsius(-550), -5.5);
+        assert_eq!(centi_percent_to_percent(4532), 45.32);
         assert_eq!(illuminance_measured_value_to_lux(0), Some(0.0));
         assert_eq!(illuminance_measured_value_to_lux(0xffff), None);
     }
@@ -783,6 +812,10 @@ mod tests {
         assert_eq!(
             capabilities_for_cluster(ZclClusterId::ILLUMINANCE_MEASUREMENT)[0].capability_id,
             CapabilityId::trusted("sensor.illuminance")
+        );
+        assert_eq!(
+            capabilities_for_cluster(ZclClusterId::RELATIVE_HUMIDITY_MEASUREMENT)[0].capability_id,
+            CapabilityId::trusted("sensor.humidity")
         );
         assert!(capabilities_for_cluster(ZclClusterId::BASIC).is_empty());
     }
