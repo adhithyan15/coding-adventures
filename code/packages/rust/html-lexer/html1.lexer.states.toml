@@ -1295,7 +1295,7 @@ to = "rcdata_end_tag_name"
 actions = [
   "create_end_tag",
   "append_tag_name(current_lowercase)",
-  "append_temporary_buffer(current_lowercase)",
+  "append_temporary_buffer(current)",
 ]
 
 [[transitions]]
@@ -1312,7 +1312,7 @@ to = "rawtext_end_tag_name"
 actions = [
   "create_end_tag",
   "append_tag_name(current_lowercase)",
-  "append_temporary_buffer(current_lowercase)",
+  "append_temporary_buffer(current)",
 ]
 
 [[transitions]]
@@ -1329,7 +1329,7 @@ to = "script_data_end_tag_name"
 actions = [
   "create_end_tag",
   "append_tag_name(current_lowercase)",
-  "append_temporary_buffer(current_lowercase)",
+  "append_temporary_buffer(current)",
 ]
 
 [[transitions]]
@@ -1346,7 +1346,7 @@ to = "script_data_escaped_end_tag_name"
 actions = [
   "create_end_tag",
   "append_tag_name(current_lowercase)",
-  "append_temporary_buffer(current_lowercase)",
+  "append_temporary_buffer(current)",
 ]
 
 [[transitions]]
@@ -1405,11 +1405,31 @@ actions = [
 
 [[transitions]]
 from = "rcdata_end_tag_name"
-matcher = { anything = true }
+matcher = { range = ["A", "Z"] }
 to = "rcdata_end_tag_name"
 actions = [
   "append_tag_name(current_lowercase)",
-  "append_temporary_buffer(current_lowercase)",
+  "append_temporary_buffer(current)",
+]
+
+[[transitions]]
+from = "rcdata_end_tag_name"
+matcher = { range = ["a", "z"] }
+to = "rcdata_end_tag_name"
+actions = [
+  "append_tag_name(current_lowercase)",
+  "append_temporary_buffer(current)",
+]
+
+[[transitions]]
+from = "rcdata_end_tag_name"
+matcher = { anything = true }
+to = "rcdata"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
 ]
 
 [[transitions]]
@@ -1468,11 +1488,31 @@ actions = [
 
 [[transitions]]
 from = "rawtext_end_tag_name"
-matcher = { anything = true }
+matcher = { range = ["A", "Z"] }
 to = "rawtext_end_tag_name"
 actions = [
   "append_tag_name(current_lowercase)",
-  "append_temporary_buffer(current_lowercase)",
+  "append_temporary_buffer(current)",
+]
+
+[[transitions]]
+from = "rawtext_end_tag_name"
+matcher = { range = ["a", "z"] }
+to = "rawtext_end_tag_name"
+actions = [
+  "append_tag_name(current_lowercase)",
+  "append_temporary_buffer(current)",
+]
+
+[[transitions]]
+from = "rawtext_end_tag_name"
+matcher = { anything = true }
+to = "rawtext"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
 ]
 
 [[transitions]]
@@ -1531,11 +1571,31 @@ actions = [
 
 [[transitions]]
 from = "script_data_end_tag_name"
-matcher = { anything = true }
+matcher = { range = ["A", "Z"] }
 to = "script_data_end_tag_name"
 actions = [
   "append_tag_name(current_lowercase)",
-  "append_temporary_buffer(current_lowercase)",
+  "append_temporary_buffer(current)",
+]
+
+[[transitions]]
+from = "script_data_end_tag_name"
+matcher = { range = ["a", "z"] }
+to = "script_data_end_tag_name"
+actions = [
+  "append_tag_name(current_lowercase)",
+  "append_temporary_buffer(current)",
+]
+
+[[transitions]]
+from = "script_data_end_tag_name"
+matcher = { anything = true }
+to = "script_data"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
 ]
 
 [[transitions]]
@@ -1594,11 +1654,31 @@ actions = [
 
 [[transitions]]
 from = "script_data_escaped_end_tag_name"
-matcher = { anything = true }
+matcher = { range = ["A", "Z"] }
 to = "script_data_escaped_end_tag_name"
 actions = [
   "append_tag_name(current_lowercase)",
-  "append_temporary_buffer(current_lowercase)",
+  "append_temporary_buffer(current)",
+]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_name"
+matcher = { range = ["a", "z"] }
+to = "script_data_escaped_end_tag_name"
+actions = [
+  "append_tag_name(current_lowercase)",
+  "append_temporary_buffer(current)",
+]
+
+[[transitions]]
+from = "script_data_escaped_end_tag_name"
+matcher = { anything = true }
+to = "script_data_escaped"
+consume = false
+actions = [
+  "discard_current_token",
+  "append_text(</)",
+  "append_temporary_buffer_to_text",
 ]
 
 [[transitions]]
@@ -5773,7 +5853,6 @@ to = "done"
 consume = false
 actions = [
   "parse_error(eof-in-comment)",
-  "append_comment(--)",
   "emit_current_token",
   "emit(EOF)",
 ]

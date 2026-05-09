@@ -1922,6 +1922,16 @@ fn default_html_lexer_reports_recoverable_comment_eof_diagnostic() {
 }
 
 #[test]
+fn default_html_lexer_does_not_include_comment_end_dashes_at_eof() {
+    let tokens = lex_html("<!--x--").unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![Token::Comment("x".to_string()), Token::Eof]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_seeded_rcdata_end_tags() {
     let mut lexer = create_html_lexer().unwrap();
     lexer.set_initial_state("rcdata").unwrap();
@@ -4871,6 +4881,10 @@ fn parser_facing_context_maps_script_and_plaintext_elements() {
             },
             Token::Eof
         ]
+    );
+    assert_eq!(
+        lex_html_fragment("X</SCRipt", &script).unwrap(),
+        vec![Token::Text("X</SCRipt".to_string()), Token::Eof]
     );
 
     let plaintext = HtmlLexContext::for_element_text("plaintext").unwrap();

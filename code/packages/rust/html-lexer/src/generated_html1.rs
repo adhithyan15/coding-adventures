@@ -2997,7 +2997,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "create_end_tag".to_string(),
                 "append_tag_name(current_lowercase)".to_string(),
-                "append_temporary_buffer(current_lowercase)".to_string(),
+                "append_temporary_buffer(current)".to_string(),
             ],
             consume: true,
         },
@@ -3031,7 +3031,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "create_end_tag".to_string(),
                 "append_tag_name(current_lowercase)".to_string(),
-                "append_temporary_buffer(current_lowercase)".to_string(),
+                "append_temporary_buffer(current)".to_string(),
             ],
             consume: true,
         },
@@ -3065,7 +3065,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "create_end_tag".to_string(),
                 "append_tag_name(current_lowercase)".to_string(),
-                "append_temporary_buffer(current_lowercase)".to_string(),
+                "append_temporary_buffer(current)".to_string(),
             ],
             consume: true,
         },
@@ -3099,7 +3099,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             actions: vec![
                 "create_end_tag".to_string(),
                 "append_tag_name(current_lowercase)".to_string(),
-                "append_temporary_buffer(current_lowercase)".to_string(),
+                "append_temporary_buffer(current)".to_string(),
             ],
             consume: true,
         },
@@ -3228,7 +3228,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "rcdata_end_tag_name".to_string(),
             on: None,
-            matcher: Some(MatcherDefinition::Anything),
+            matcher: Some(MatcherDefinition::Range { start: "A".to_string(), end: "Z".to_string() }),
             to: vec![
                 "rcdata_end_tag_name".to_string(),
             ],
@@ -3237,9 +3237,42 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "append_tag_name(current_lowercase)".to_string(),
-                "append_temporary_buffer(current_lowercase)".to_string(),
+                "append_temporary_buffer(current)".to_string(),
             ],
             consume: true,
+        },
+        TransitionDefinition {
+            from: "rcdata_end_tag_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Range { start: "a".to_string(), end: "z".to_string() }),
+            to: vec![
+                "rcdata_end_tag_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_tag_name(current_lowercase)".to_string(),
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "rcdata_end_tag_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Anything),
+            to: vec![
+                "rcdata".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "discard_current_token".to_string(),
+                "append_text(</)".to_string(),
+                "append_temporary_buffer_to_text".to_string(),
+            ],
+            consume: false,
         },
         TransitionDefinition {
             from: "rawtext_end_tag_name".to_string(),
@@ -3366,7 +3399,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "rawtext_end_tag_name".to_string(),
             on: None,
-            matcher: Some(MatcherDefinition::Anything),
+            matcher: Some(MatcherDefinition::Range { start: "A".to_string(), end: "Z".to_string() }),
             to: vec![
                 "rawtext_end_tag_name".to_string(),
             ],
@@ -3375,9 +3408,42 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "append_tag_name(current_lowercase)".to_string(),
-                "append_temporary_buffer(current_lowercase)".to_string(),
+                "append_temporary_buffer(current)".to_string(),
             ],
             consume: true,
+        },
+        TransitionDefinition {
+            from: "rawtext_end_tag_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Range { start: "a".to_string(), end: "z".to_string() }),
+            to: vec![
+                "rawtext_end_tag_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_tag_name(current_lowercase)".to_string(),
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "rawtext_end_tag_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Anything),
+            to: vec![
+                "rawtext".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "discard_current_token".to_string(),
+                "append_text(</)".to_string(),
+                "append_temporary_buffer_to_text".to_string(),
+            ],
+            consume: false,
         },
         TransitionDefinition {
             from: "script_data_end_tag_name".to_string(),
@@ -3504,7 +3570,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "script_data_end_tag_name".to_string(),
             on: None,
-            matcher: Some(MatcherDefinition::Anything),
+            matcher: Some(MatcherDefinition::Range { start: "A".to_string(), end: "Z".to_string() }),
             to: vec![
                 "script_data_end_tag_name".to_string(),
             ],
@@ -3513,9 +3579,42 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "append_tag_name(current_lowercase)".to_string(),
-                "append_temporary_buffer(current_lowercase)".to_string(),
+                "append_temporary_buffer(current)".to_string(),
             ],
             consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_end_tag_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Range { start: "a".to_string(), end: "z".to_string() }),
+            to: vec![
+                "script_data_end_tag_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_tag_name(current_lowercase)".to_string(),
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_end_tag_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Anything),
+            to: vec![
+                "script_data".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "discard_current_token".to_string(),
+                "append_text(</)".to_string(),
+                "append_temporary_buffer_to_text".to_string(),
+            ],
+            consume: false,
         },
         TransitionDefinition {
             from: "script_data_escaped_end_tag_name".to_string(),
@@ -3642,7 +3741,7 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
         TransitionDefinition {
             from: "script_data_escaped_end_tag_name".to_string(),
             on: None,
-            matcher: Some(MatcherDefinition::Anything),
+            matcher: Some(MatcherDefinition::Range { start: "A".to_string(), end: "Z".to_string() }),
             to: vec![
                 "script_data_escaped_end_tag_name".to_string(),
             ],
@@ -3651,9 +3750,42 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "append_tag_name(current_lowercase)".to_string(),
-                "append_temporary_buffer(current_lowercase)".to_string(),
+                "append_temporary_buffer(current)".to_string(),
             ],
             consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_escaped_end_tag_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Range { start: "a".to_string(), end: "z".to_string() }),
+            to: vec![
+                "script_data_escaped_end_tag_name".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "append_tag_name(current_lowercase)".to_string(),
+                "append_temporary_buffer(current)".to_string(),
+            ],
+            consume: true,
+        },
+        TransitionDefinition {
+            from: "script_data_escaped_end_tag_name".to_string(),
+            on: None,
+            matcher: Some(MatcherDefinition::Anything),
+            to: vec![
+                "script_data_escaped".to_string(),
+            ],
+            guard: None,
+            stack_pop: None,
+            stack_push: Vec::new(),
+            actions: vec![
+                "discard_current_token".to_string(),
+                "append_text(</)".to_string(),
+                "append_temporary_buffer_to_text".to_string(),
+            ],
+            consume: false,
         },
         TransitionDefinition {
             from: "rcdata_end_tag_whitespace".to_string(),
@@ -12190,7 +12322,6 @@ pub fn html1_lexer_definition() -> StateMachineDefinition {
             stack_push: Vec::new(),
             actions: vec![
                 "parse_error(eof-in-comment)".to_string(),
-                "append_comment(--)".to_string(),
                 "emit_current_token".to_string(),
                 "emit(EOF)".to_string(),
             ],
