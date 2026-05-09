@@ -1465,6 +1465,9 @@ impl HtmlParser {
         if self.has_table_context_above(index) {
             return false;
         }
+        if self.has_special_element_above(index) {
+            return false;
+        }
         self.capture_formatting_above(index);
         self.open_elements.truncate(index);
         true
@@ -3308,6 +3311,30 @@ mod tests {
         assert_eq!(trailing_anchor.name, "a");
         assert_eq!(trailing_anchor.attribute("href"), Some("blah"));
         assert_eq!(trailing_anchor.children, vec![Node::text("aoe")]);
+    }
+
+    #[test]
+    fn preserves_outer_anchor_across_marquee_when_nested_anchor_starts() {
+        let document = parse_html("<a href=a>aa<marquee>aa<a href=b>bb</marquee>aa").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 1);
+
+        let outer_anchor = element(&body.children[0]);
+        assert_eq!(outer_anchor.name, "a");
+        assert_eq!(outer_anchor.attribute("href"), Some("a"));
+        assert_eq!(outer_anchor.children[0], Node::text("aa"));
+
+        let marquee = element(&outer_anchor.children[1]);
+        assert_eq!(marquee.name, "marquee");
+        assert_eq!(marquee.children[0], Node::text("aa"));
+
+        let inner_anchor = element(&marquee.children[1]);
+        assert_eq!(inner_anchor.name, "a");
+        assert_eq!(inner_anchor.attribute("href"), Some("b"));
+        assert_eq!(inner_anchor.children, vec![Node::text("bb")]);
+
+        assert_eq!(outer_anchor.children[2], Node::text("aa"));
     }
 
     #[test]

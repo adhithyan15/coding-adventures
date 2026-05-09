@@ -1233,3 +1233,23 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <a>
 |       href="blah"
 |       "aoe"
+
+#data
+<a href=a>aa<marquee>aa<a href=b>bb</marquee>aa
+#errors
+(1,10): expected-doctype-but-got-start-tag
+(1,45): end-tag-too-early
+(1,47): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <a>
+|       href="a"
+|       "aa"
+|       <marquee>
+|         "aa"
+|         <a>
+|           href="b"
+|           "bb"
+|       "aa"
