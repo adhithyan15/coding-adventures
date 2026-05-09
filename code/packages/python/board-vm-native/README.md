@@ -34,6 +34,21 @@ Each frame is a Rust-produced Board VM wire frame ready for a transport to
 write to a board. A `Session` can also dispatch through any object that exposes
 `transact(frame, timeout_ms=...)` or `write(frame)`.
 
+The high-level `connect()` helpers resolve devices and connection choices
+through the Rust-owned target/discovery metadata too:
+
+```python
+from board_vm_native import connect
+
+board = connect("esp32", flash=True, firmware_image="board-vm-esp32.bin")
+wifi_board = connect("uno-r4-wifi", via="Wi-Fi", transport=wifi_endpoint)
+```
+
+`via=` accepts friendly names such as `"serial"`, `"Wi-Fi"`, and `"BLE"`.
+`pick_connection=True` prints the board's available transports for REPL flows.
+Until the host Wi-Fi/Bluetooth endpoint layers land, wireless choices require
+an injected transport object instead of falling back to a serial port.
+
 `run()` is configurable sugar over Rust-owned RUN wire-frame construction:
 Python can request reset/background/keep-handle behavior or pass a raw flag
 mask, but `board-vm-language-core` owns the actual payload encoding.

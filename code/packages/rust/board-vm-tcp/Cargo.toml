@@ -1,0 +1,15 @@
+[package]
+name = "board-vm-tcp"
+version = "0.1.0"
+edition = "2021"
+description = "TCP socket transport for Board VM host clients"
+
+[dependencies]
+board-vm-client = { path = "../board-vm-client" }
+board-vm-stream = { path = "../board-vm-stream" }
+
+[dev-dependencies]
+board-vm-loopback = { path = "../board-vm-loopback" }
+
+[lib]
+path = "src/lib.rs"

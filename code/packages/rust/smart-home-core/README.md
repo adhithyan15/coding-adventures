@@ -29,12 +29,18 @@ Current scope:
 
 - normalized bridge/device/entity records
 - capability and value typing
+- canonical capability catalog entries for light, scene, lock, climate, sensor,
+  and input families
 - immutable device events and command requests
 - command risk tier helpers
 - state freshness helpers
 - D18D-style smart-home tool descriptors
+- read-only supervision observation tool descriptor for Chief of Staff status
+  loops
 - agent capability grants for checking tool access before dispatch
 - authorization decisions that can be logged by runtimes and agents
+- MQTT topic names, topic filters, QoS levels, topic roles, and topic bindings
+  for MQTT-backed integrations
 
 Out of scope:
 

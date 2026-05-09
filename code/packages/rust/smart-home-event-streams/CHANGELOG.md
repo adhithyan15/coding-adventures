@@ -18,3 +18,6 @@ All notable changes to this package will be documented in this file.
   rejecting mismatched stream ids.
 - Heartbeat deadline and restart schedules for batching supervisor wakeups
   across multiple stream workers.
+- Event stream state query options for filtering by integration, bridge,
+  status, transport, cursor needs, heartbeat deadlines, stale state, reconnect
+  readiness, restart plans, pending gaps, sort order, and bounded result count.

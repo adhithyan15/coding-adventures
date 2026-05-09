@@ -8,7 +8,7 @@
 #![forbid(unsafe_code)]
 
 use smart_home_core::{BridgeId, EventId, IntegrationId, Metadata};
-use std::fmt;
+use std::{cmp::Ordering, fmt};
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct EventStreamId(String);
@@ -332,7 +332,7 @@ impl MqttPublicationRef {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum EventStreamStatus {
     Idle,
     Connecting,
@@ -340,6 +340,177 @@ pub enum EventStreamStatus {
     Degraded,
     Disconnected,
     BackingOff,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum EventStreamStateSort {
+    StreamId,
+    IntegrationThenBridge,
+    StatusThenStreamId,
+    LastObservedDesc,
+    HeartbeatDueThenStreamId,
+    RetryDueThenStreamId,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EventStreamStateQuery {
+    pub integration_ids: Vec<IntegrationId>,
+    pub bridge_ids: Vec<BridgeId>,
+    pub statuses: Vec<EventStreamStatus>,
+    pub transports: Vec<EventStreamTransport>,
+    pub local_only: Option<bool>,
+    pub needs_cursor: Option<bool>,
+    pub heartbeat_due_at_ms: Option<u64>,
+    pub stale_at_ms: Option<u64>,
+    pub ready_to_reconnect_at_ms: Option<u64>,
+    pub with_pending_gaps: Option<bool>,
+    pub with_restart_plan_at_ms: Option<u64>,
+    pub sort: EventStreamStateSort,
+    pub limit: Option<usize>,
+}
+
+impl Default for EventStreamStateQuery {
+    fn default() -> Self {
+        Self {
+            integration_ids: Vec::new(),
+            bridge_ids: Vec::new(),
+            statuses: Vec::new(),
+            transports: Vec::new(),
+            local_only: None,
+            needs_cursor: None,
+            heartbeat_due_at_ms: None,
+            stale_at_ms: None,
+            ready_to_reconnect_at_ms: None,
+            with_pending_gaps: None,
+            with_restart_plan_at_ms: None,
+            sort: EventStreamStateSort::StreamId,
+            limit: None,
+        }
+    }
+}
+
+impl EventStreamStateQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_integration(mut self, integration_id: IntegrationId) -> Self {
+        self.integration_ids.push(integration_id);
+        self
+    }
+
+    pub fn with_bridge(mut self, bridge_id: BridgeId) -> Self {
+        self.bridge_ids.push(bridge_id);
+        self
+    }
+
+    pub fn with_status(mut self, status: EventStreamStatus) -> Self {
+        self.statuses.push(status);
+        self
+    }
+
+    pub fn with_transport(mut self, transport: EventStreamTransport) -> Self {
+        self.transports.push(transport);
+        self
+    }
+
+    pub fn local_only(mut self, local_only: bool) -> Self {
+        self.local_only = Some(local_only);
+        self
+    }
+
+    pub fn needs_cursor(mut self, needs_cursor: bool) -> Self {
+        self.needs_cursor = Some(needs_cursor);
+        self
+    }
+
+    pub fn heartbeat_due_at(mut self, now_ms: u64) -> Self {
+        self.heartbeat_due_at_ms = Some(now_ms);
+        self
+    }
+
+    pub fn stale_at(mut self, now_ms: u64) -> Self {
+        self.stale_at_ms = Some(now_ms);
+        self
+    }
+
+    pub fn ready_to_reconnect_at(mut self, now_ms: u64) -> Self {
+        self.ready_to_reconnect_at_ms = Some(now_ms);
+        self
+    }
+
+    pub fn with_pending_gaps(mut self, has_pending_gaps: bool) -> Self {
+        self.with_pending_gaps = Some(has_pending_gaps);
+        self
+    }
+
+    pub fn with_restart_plan_at(mut self, now_ms: u64) -> Self {
+        self.with_restart_plan_at_ms = Some(now_ms);
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: EventStreamStateSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn limited_to(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    pub fn matches_state(&self, state: &EventStreamState) -> bool {
+        if !matches_any(&self.integration_ids, &state.spec.integration_id) {
+            return false;
+        }
+        if !matches_any(&self.bridge_ids, &state.spec.bridge_id) {
+            return false;
+        }
+        if !matches_any(&self.statuses, &state.status) {
+            return false;
+        }
+        if !matches_any(&self.transports, &state.spec.transport) {
+            return false;
+        }
+        if let Some(local_only) = self.local_only {
+            if state.spec.transport.is_local() != local_only {
+                return false;
+            }
+        }
+        if let Some(needs_cursor) = self.needs_cursor {
+            if state.spec.transport.needs_cursor() != needs_cursor {
+                return false;
+            }
+        }
+        if let Some(now_ms) = self.heartbeat_due_at_ms {
+            if !EventStreamHeartbeatDeadline::from_state(state)
+                .is_some_and(|deadline| deadline.is_due_at(now_ms))
+            {
+                return false;
+            }
+        }
+        if let Some(now_ms) = self.stale_at_ms {
+            if !state.stale_at(now_ms) {
+                return false;
+            }
+        }
+        if let Some(now_ms) = self.ready_to_reconnect_at_ms {
+            if !state.ready_to_reconnect_at(now_ms) {
+                return false;
+            }
+        }
+        if let Some(has_pending_gaps) = self.with_pending_gaps {
+            if (state.pending_gap_count > 0) != has_pending_gaps {
+                return false;
+            }
+        }
+        if let Some(now_ms) = self.with_restart_plan_at_ms {
+            if state.restart_plan_at(now_ms).is_none() {
+                return false;
+            }
+        }
+        true
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -854,6 +1025,26 @@ where
     }
 }
 
+pub fn query_event_stream_states<'a, I>(
+    states: I,
+    query: &EventStreamStateQuery,
+) -> Vec<&'a EventStreamState>
+where
+    I: IntoIterator<Item = &'a EventStreamState>,
+{
+    let mut results = states
+        .into_iter()
+        .filter(|state| query.matches_state(state))
+        .collect::<Vec<_>>();
+
+    sort_event_stream_state_results(&mut results, query.sort);
+    if let Some(limit) = query.limit {
+        results.truncate(limit);
+    }
+
+    results
+}
+
 fn restart_reason_rank(reason: EventStreamRestartReason) -> u8 {
     match reason {
         EventStreamRestartReason::EventGap => 0,
@@ -861,6 +1052,64 @@ fn restart_reason_rank(reason: EventStreamRestartReason) -> u8 {
         EventStreamRestartReason::ExplicitDisconnect => 2,
         EventStreamRestartReason::StaleEvents => 3,
     }
+}
+
+fn sort_event_stream_state_results(
+    states: &mut Vec<&EventStreamState>,
+    sort: EventStreamStateSort,
+) {
+    match sort {
+        EventStreamStateSort::StreamId => {
+            states.sort_by(|left, right| compare_by_stream_id(left, right))
+        }
+        EventStreamStateSort::IntegrationThenBridge => states.sort_by(|left, right| {
+            left.spec
+                .integration_id
+                .cmp(&right.spec.integration_id)
+                .then_with(|| left.spec.bridge_id.cmp(&right.spec.bridge_id))
+                .then_with(|| compare_by_stream_id(left, right))
+        }),
+        EventStreamStateSort::StatusThenStreamId => states.sort_by(|left, right| {
+            left.status
+                .cmp(&right.status)
+                .then_with(|| compare_by_stream_id(left, right))
+        }),
+        EventStreamStateSort::LastObservedDesc => states.sort_by(|left, right| {
+            right
+                .cursor
+                .observed_at_ms
+                .cmp(&left.cursor.observed_at_ms)
+                .then_with(|| compare_by_stream_id(left, right))
+        }),
+        EventStreamStateSort::HeartbeatDueThenStreamId => states.sort_by(|left, right| {
+            heartbeat_due_sort_key(left)
+                .cmp(&heartbeat_due_sort_key(right))
+                .then_with(|| compare_by_stream_id(left, right))
+        }),
+        EventStreamStateSort::RetryDueThenStreamId => states.sort_by(|left, right| {
+            retry_due_sort_key(left)
+                .cmp(&retry_due_sort_key(right))
+                .then_with(|| compare_by_stream_id(left, right))
+        }),
+    }
+}
+
+fn compare_by_stream_id(left: &EventStreamState, right: &EventStreamState) -> Ordering {
+    left.spec.stream_id.cmp(&right.spec.stream_id)
+}
+
+fn heartbeat_due_sort_key(state: &EventStreamState) -> u64 {
+    EventStreamHeartbeatDeadline::from_state(state)
+        .map(|deadline| deadline.due_at_ms)
+        .unwrap_or(u64::MAX)
+}
+
+fn retry_due_sort_key(state: &EventStreamState) -> u64 {
+    state.next_retry_at_ms().unwrap_or(u64::MAX)
+}
+
+fn matches_any<T: PartialEq>(needles: &[T], value: &T) -> bool {
+    needles.is_empty() || needles.iter().any(|needle| needle == value)
 }
 
 fn validate_mqtt_topic_filter(value: &str) -> Result<(), MqttTopicError> {
@@ -1175,6 +1424,114 @@ mod tests {
             1
         );
         assert!(!schedule.is_empty());
+    }
+
+    #[test]
+    fn state_queries_compose_transport_status_deadline_and_limit_filters() {
+        let mut hue = EventStreamState::new(
+            EventStreamSpec::hue_sse(bridge_id(), "https://bridge/eventstream")
+                .with_heartbeat_timeout(500),
+            1_000,
+        );
+        hue.mark_connected(1_000);
+        hue.record_event(EventId::trusted("event-1"), None, 1_100);
+        let mut mqtt = EventStreamState::new(
+            EventStreamSpec::new(
+                IntegrationId::trusted("mqtt"),
+                BridgeId::trusted("broker-1"),
+                EventStreamTransport::MqttSubscription,
+            ),
+            1_000,
+        );
+        mqtt.mark_connected(1_000);
+        mqtt.record_gap(2, 1_050);
+        let mut cloud = EventStreamState::new(
+            EventStreamSpec::new(
+                IntegrationId::trusted("cloud-hub"),
+                BridgeId::trusted("account-1"),
+                EventStreamTransport::CloudWebhook,
+            ),
+            1_000,
+        );
+        cloud.mark_connected(1_000);
+
+        let query = EventStreamStateQuery::new()
+            .local_only(true)
+            .needs_cursor(true)
+            .with_status(EventStreamStatus::Healthy)
+            .with_status(EventStreamStatus::Degraded)
+            .heartbeat_due_at(1_600)
+            .sorted_by(EventStreamStateSort::HeartbeatDueThenStreamId)
+            .limited_to(1);
+        let results = query_event_stream_states([&hue, &mqtt, &cloud], &query);
+
+        assert_eq!(results.len(), 1);
+        assert_eq!(
+            results[0].spec.integration_id,
+            IntegrationId::trusted("hue")
+        );
+        assert!(query.matches_state(&hue));
+        assert!(!query.matches_state(&mqtt));
+        assert!(!query.matches_state(&cloud));
+    }
+
+    #[test]
+    fn state_queries_find_supervision_work_and_reconnect_ready_streams() {
+        let mut gap = EventStreamState::new(
+            EventStreamSpec::new(
+                IntegrationId::trusted("mqtt"),
+                BridgeId::trusted("broker-1"),
+                EventStreamTransport::MqttSubscription,
+            )
+            .with_reconnect_policy(ReconnectPolicy::new(50, 500, 2)),
+            1_000,
+        );
+        gap.mark_connected(1_000);
+        gap.record_gap(2, 1_050);
+        let mut disconnected = EventStreamState::new(
+            EventStreamSpec::new(
+                IntegrationId::trusted("esphome"),
+                BridgeId::trusted("esp-1"),
+                EventStreamTransport::WebSocket,
+            )
+            .with_reconnect_policy(ReconnectPolicy::new(500, 5_000, 2)),
+            1_000,
+        );
+        disconnected.mark_connected(1_000);
+        disconnected.mark_disconnected(1_200);
+        let idle = EventStreamState::new(
+            EventStreamSpec::new(
+                IntegrationId::trusted("thread"),
+                BridgeId::trusted("border-router-1"),
+                EventStreamTransport::RadioReports,
+            ),
+            1_000,
+        );
+
+        let supervision = EventStreamStateQuery::new()
+            .with_pending_gaps(true)
+            .with_restart_plan_at(1_150)
+            .sorted_by(EventStreamStateSort::StatusThenStreamId);
+        let supervision_results =
+            query_event_stream_states([&gap, &disconnected, &idle], &supervision);
+
+        assert_eq!(supervision_results.len(), 1);
+        assert_eq!(
+            supervision_results[0].spec.bridge_id,
+            BridgeId::trusted("broker-1")
+        );
+
+        let reconnect = EventStreamStateQuery::new()
+            .with_integration(IntegrationId::trusted("esphome"))
+            .ready_to_reconnect_at(1_700)
+            .sorted_by(EventStreamStateSort::RetryDueThenStreamId);
+        let reconnect_results = query_event_stream_states([&gap, &disconnected, &idle], &reconnect);
+
+        assert_eq!(reconnect_results.len(), 1);
+        assert_eq!(
+            reconnect_results[0].spec.bridge_id,
+            BridgeId::trusted("esp-1")
+        );
     }
 
     #[test]

@@ -20,8 +20,8 @@ All notable changes to this package will be documented in this file.
   authorized commands.
 - Registry-backed tool authorization decisions for Chief of Staff tool calls.
 - D18D-style read tool execution for listing bridges/devices, reading entity
-  state, describing entity capabilities, and inspecting bridge health through
-  the registry without dispatching integration work.
+  state, describing entity capabilities, inspecting bridge health, and observing
+  supervision status through the registry without dispatching integration work.
 - D18D-style subscribe tool execution for authorized, filtered event-stream
   subscriptions with checkpointed replay metadata.
 - D18D-style pair-bridge execution with short-lived pairing sessions, VaultRef
@@ -37,9 +37,13 @@ All notable changes to this package will be documented in this file.
 - Non-mutating supervision plans that preview state refresh targets,
   pairing expiry, desired-state drift, and overdue worker restarts before a tick
   writes.
+- Read-only supervision observations that combine due supervision work with
+  worker heartbeat schedules for status tools.
 - Deterministic supervision ticks that combine optimistic-state expiry,
   desired-state reconciliation, and worker restart checks into one report.
 - Deterministic worker restart plans for inspecting overdue bridge workers
   before mutating supervisor state.
 - Worker restart reconciliation marks registered bridges degraded and emits
   deterministic health events.
+- Read-side queries for event-log entries, subscription backlogs, pairing
+  sessions, desired-state targets, and supervised bridge workers.

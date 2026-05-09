@@ -17,6 +17,7 @@ radio workers a shared deterministic shape for:
 - reconnect attempts with bounded exponential backoff
 - restart schedules that group due reconnect plans across stream workers
 - restart plans that a runtime supervisor can inspect before spawning workers
+- deterministic state queries for dashboards, supervisors, and read-only tools
 
 Protocol-specific transport clients, payload parsers, and adapter actors live in
 integration crates. This crate owns the boring rules that should stay the same

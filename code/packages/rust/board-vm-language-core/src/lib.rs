@@ -55,6 +55,7 @@ pub const LANGUAGE_RUN_FLAG_KEEP_HANDLES_AFTER_RUN: u8 =
 pub const LANGUAGE_RUN_FLAG_BACKGROUND_RUN: u8 = board_vm_protocol::RUN_FLAG_BACKGROUND_RUN;
 pub const LANGUAGE_ESP_DEFAULT_FLASH_OFFSET: u32 = 0x1000;
 pub const LANGUAGE_ESP_DEFAULT_FLASH_SIZE: u32 = 4 * 1024 * 1024;
+pub const LANGUAGE_BOARD_VM_WIRE_PROTOCOL: &str = "board_vm_cobs_crc";
 
 #[repr(u32)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -277,6 +278,14 @@ pub enum LanguageConnectionTransport {
     BluetoothClassic,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageHostEndpointTransport {
+    SerialPort,
+    TcpSocket,
+    BluetoothLeGatt,
+    BluetoothClassicRfcomm,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageWirelessInterface {
     pub transport: LanguageWirelessTransport,
@@ -292,6 +301,9 @@ pub struct LanguageConnectionOption {
     pub command_transport: bool,
     pub ota_update: bool,
     pub requires: String,
+    pub endpoint_transport: LanguageHostEndpointTransport,
+    pub endpoint_scheme: String,
+    pub wire_protocol: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -473,6 +485,17 @@ pub const fn connection_transport_name(transport: LanguageConnectionTransport) -
         LanguageConnectionTransport::Wifi => "wifi",
         LanguageConnectionTransport::BluetoothLe => "bluetooth_le",
         LanguageConnectionTransport::BluetoothClassic => "bluetooth_classic",
+    }
+}
+
+pub const fn host_endpoint_transport_name(
+    transport: LanguageHostEndpointTransport,
+) -> &'static str {
+    match transport {
+        LanguageHostEndpointTransport::SerialPort => "serial_port",
+        LanguageHostEndpointTransport::TcpSocket => "tcp_socket",
+        LanguageHostEndpointTransport::BluetoothLeGatt => "bluetooth_le_gatt",
+        LanguageHostEndpointTransport::BluetoothClassicRfcomm => "bluetooth_classic_rfcomm",
     }
 }
 
@@ -704,6 +727,9 @@ fn language_connection_options(target: &BoardTargetInfo) -> Vec<LanguageConnecti
             command_transport: true,
             ota_update: false,
             requires: "serial_port".to_owned(),
+            endpoint_transport: LanguageHostEndpointTransport::SerialPort,
+            endpoint_scheme: "serial".to_owned(),
+            wire_protocol: LANGUAGE_BOARD_VM_WIRE_PROTOCOL.to_owned(),
         });
     }
 
@@ -715,6 +741,9 @@ fn language_connection_options(target: &BoardTargetInfo) -> Vec<LanguageConnecti
             command_transport: interface.command_transport,
             ota_update: interface.ota_update,
             requires: connection_transport_requires(transport).to_owned(),
+            endpoint_transport: connection_endpoint_transport(transport),
+            endpoint_scheme: connection_endpoint_scheme(transport).to_owned(),
+            wire_protocol: LANGUAGE_BOARD_VM_WIRE_PROTOCOL.to_owned(),
         });
     }
 
@@ -746,6 +775,28 @@ const fn connection_transport_requires(transport: LanguageConnectionTransport) -
         LanguageConnectionTransport::Wifi => "network_endpoint",
         LanguageConnectionTransport::BluetoothLe
         | LanguageConnectionTransport::BluetoothClassic => "paired_device",
+    }
+}
+
+const fn connection_endpoint_transport(
+    transport: LanguageConnectionTransport,
+) -> LanguageHostEndpointTransport {
+    match transport {
+        LanguageConnectionTransport::Serial => LanguageHostEndpointTransport::SerialPort,
+        LanguageConnectionTransport::Wifi => LanguageHostEndpointTransport::TcpSocket,
+        LanguageConnectionTransport::BluetoothLe => LanguageHostEndpointTransport::BluetoothLeGatt,
+        LanguageConnectionTransport::BluetoothClassic => {
+            LanguageHostEndpointTransport::BluetoothClassicRfcomm
+        }
+    }
+}
+
+const fn connection_endpoint_scheme(transport: LanguageConnectionTransport) -> &'static str {
+    match transport {
+        LanguageConnectionTransport::Serial => "serial",
+        LanguageConnectionTransport::Wifi => "tcp",
+        LanguageConnectionTransport::BluetoothLe => "ble",
+        LanguageConnectionTransport::BluetoothClassic => "btspp",
     }
 }
 
@@ -2239,18 +2290,25 @@ mod tests {
                 && option.command_transport
                 && !option.ota_update
                 && option.requires == "serial_port"
+                && option.endpoint_transport == LanguageHostEndpointTransport::SerialPort
+                && option.endpoint_scheme == "serial"
+                && option.wire_protocol == LANGUAGE_BOARD_VM_WIRE_PROTOCOL
         ));
         assert!(uno.iter().any(
             |option| option.transport == LanguageConnectionTransport::Wifi
                 && option.command_transport
                 && option.ota_update
                 && option.requires == "network_endpoint"
+                && option.endpoint_transport == LanguageHostEndpointTransport::TcpSocket
+                && option.endpoint_scheme == "tcp"
         ));
         assert!(uno.iter().any(|option| option.transport
             == LanguageConnectionTransport::BluetoothLe
             && option.command_transport
             && !option.ota_update
-            && option.requires == "paired_device"));
+            && option.requires == "paired_device"
+            && option.endpoint_transport == LanguageHostEndpointTransport::BluetoothLeGatt
+            && option.endpoint_scheme == "ble"));
         assert_eq!(
             pico.iter()
                 .map(|option| option.transport)
@@ -2260,6 +2318,10 @@ mod tests {
         assert_eq!(
             connection_transport_name(LanguageConnectionTransport::BluetoothLe),
             "bluetooth_le"
+        );
+        assert_eq!(
+            host_endpoint_transport_name(LanguageHostEndpointTransport::BluetoothClassicRfcomm),
+            "bluetooth_classic_rfcomm"
         );
         assert!(connection_options_for_target("not-a-board").is_none());
     }

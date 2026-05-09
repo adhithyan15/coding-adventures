@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "socket"
 require "test_helper"
 
 module CodingAdventures
@@ -60,14 +61,20 @@ module CodingAdventures
           "display_name" => "USB/serial",
           "command_transport" => true,
           "ota_update" => false,
-          "requires" => "serial_port"
+          "requires" => "serial_port",
+          "endpoint_transport" => "serial_port",
+          "endpoint_scheme" => "serial",
+          "wire_protocol" => "board_vm_cobs_crc"
         }, options.first)
         assert_includes options, {
           "transport" => "wifi",
           "display_name" => "Wi-Fi",
           "command_transport" => true,
           "ota_update" => true,
-          "requires" => "network_endpoint"
+          "requires" => "network_endpoint",
+          "endpoint_transport" => "tcp_socket",
+          "endpoint_scheme" => "tcp",
+          "wire_protocol" => "board_vm_cobs_crc"
         }
       end
 
@@ -101,6 +108,119 @@ module CodingAdventures
         assert_includes output.string, "1. USB/serial [commands] - requires serial_port"
         assert_includes output.string, "2. Wi-Fi [commands, OTA] - requires network_endpoint"
         assert_includes output.string, "Select connection [1-3]: "
+      end
+
+      def test_connect_records_the_rust_selected_serial_connection_option
+        devices = BoardVM.devices(paths: ["/dev/tty.usbserial-CP2102-esp32"])
+
+        connection = BoardVM.connect(
+          board: :esp32,
+          devices: devices,
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new
+        )
+
+        assert_equal "serial", connection.connection_transport
+        assert_equal "USB/serial", connection.connection_option.fetch("display_name")
+        assert connection.serial_connection?
+        refute connection.wireless_connection?
+      end
+
+      def test_connect_can_use_a_wireless_connection_option_with_an_injected_endpoint
+        transport = FakeWriteTransport.new
+
+        connection = BoardVM.uno_r4_wifi(
+          via: "Wi-Fi",
+          smoke: true,
+          transport: transport,
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new
+        )
+
+        assert_nil connection.port
+        assert_equal "wifi", connection.connection_transport
+        assert connection.wireless_connection?
+        assert connection.ota_connection?
+        assert_equal 2, transport.frames.length
+      end
+
+      def test_connect_builds_a_tcp_transport_for_wifi_endpoints
+        connection = BoardVM.uno_r4_wifi(
+          via: "Wi-Fi",
+          endpoint: "tcp://board-vm.local:4170",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new
+        )
+
+        assert_nil connection.port
+        assert_equal "wifi", connection.connection_transport
+        assert_equal "tcp://board-vm.local:4170", connection.endpoint
+
+        transport = connection.send(:active_transport)
+        assert_instance_of TcpTransport, transport
+        assert_equal "tcp://board-vm.local:4170", transport.endpoint
+      end
+
+      def test_tcp_transport_transacts_with_a_local_endpoint
+        server = TCPServer.new("127.0.0.1", 0)
+        endpoint = "tcp://127.0.0.1:#{server.addr[1]}"
+        request = "\x01\x02\x00".b
+        response = "\x03\x04\x00".b
+
+        thread = Thread.new do
+          socket = server.accept
+          frame = +"".b
+          begin
+            loop do
+              byte = socket.readpartial(1)
+              frame << byte
+              break if byte == "\x00".b
+            end
+            socket.write(response)
+            frame
+          ensure
+            socket.close
+          end
+        end
+
+        transport = TcpTransport.new(endpoint: endpoint, timeout_ms: 500)
+
+        assert_equal response, transport.transact(request, timeout_ms: 500)
+        assert_equal request, thread.value
+      ensure
+        transport&.close
+        server&.close
+        thread&.kill if thread&.alive?
+      end
+
+      def test_connect_can_prompt_for_the_connection_option_after_the_board
+        output = StringIO.new
+
+        connection = BoardVM.uno_r4_wifi(
+          pick_connection: true,
+          input: StringIO.new("2\n"),
+          output: output,
+          transport: FakeWriteTransport.new,
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new
+        )
+
+        assert_equal "wifi", connection.connection_transport
+        assert_nil connection.port
+        assert_includes output.string, "Select connection [1-3]: "
+      end
+
+      def test_wireless_connection_requires_an_endpoint_before_dispatch
+        connection = BoardVM.uno_r4_wifi(
+          via: :wifi,
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new
+        )
+
+        error = assert_raises(TransportError) do
+          connection.smoke!
+        end
+        assert_match(/requires a Board VM TCP endpoint/, error.message)
       end
 
       def test_targets_are_detected_from_rust_owned_aliases

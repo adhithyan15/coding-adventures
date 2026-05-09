@@ -312,18 +312,24 @@ module CodingAdventures
       cargo_workspace: DEFAULT_RUST_WORKSPACE,
       runner: CommandRunner.new,
       transport: nil,
+      endpoint: nil,
+      via: nil,
+      connection_option: nil,
+      pick_connection: false,
       **options
     )
-      if pick && port.nil? && device.nil?
-        device = pick_device(board: board, devices: devices, input: input, output: output)
-      end
-
       selection = connection_selection(
         board: board,
         port: port,
         device: device,
         devices: devices,
-        flash: flash
+        flash: flash,
+        via: via,
+        connection_option: connection_option,
+        pick_connection: pick_connection,
+        pick: pick,
+        input: input,
+        output: output
       )
       connection = Connection.new(
         board: selection.fetch(:board),
@@ -331,6 +337,8 @@ module CodingAdventures
         cargo_workspace: cargo_workspace,
         runner: runner,
         transport: transport,
+        connection_option: selection.fetch(:connection_option),
+        endpoint: endpoint,
         baud_rate: options.delete(:baud_rate) || options.delete(:baud) || DEFAULT_BAUD_RATE,
         timeout_ms: options.delete(:timeout_ms) || DEFAULT_TIMEOUT_MS,
         **options
@@ -372,13 +380,45 @@ module CodingAdventures
       raspberry_pi_pico_w(**options, &block)
     end
 
-    def connection_selection(board:, port:, device:, devices:, flash: false)
+    def connection_selection(
+      board:,
+      port:,
+      device:,
+      devices:,
+      flash: false,
+      via: nil,
+      connection_option: nil,
+      pick_connection: false,
+      pick: false,
+      input: $stdin,
+      output: $stdout
+    )
       explicit_port = !port.nil?
+      normalized_board = board == :auto ? nil : normalize_board(board)
+      selected_connection_option = if normalized_board
+        resolve_connection_option(
+          normalized_board,
+          via: via,
+          connection_option: connection_option,
+          pick_connection: pick_connection,
+          input: input,
+          output: output
+        )
+      end
+      needs_device_for_board = normalized_board.nil? && port.nil?
+      needs_serial_port = connection_uses_serial_port?(selected_connection_option) &&
+        !flash_without_port?(normalized_board || board, flash)
       selected_device = resolve_device_reference(device, devices: devices) if device
-      selected_device ||= select_device(board: board, devices: devices) if port.nil? && !flash_without_port?(board, flash)
+
+      if selected_device.nil? && port.nil? && pick && (needs_device_for_board || needs_serial_port)
+        selected_device = pick_device(board: board, devices: devices, input: input, output: output)
+      end
+      if selected_device.nil? && port.nil? && (needs_device_for_board || needs_serial_port)
+        selected_device = select_device(board: board, devices: devices)
+      end
       port ||= selected_device && selected_device.fetch("port")
 
-      normalized_board = if board == :auto
+      normalized_board ||= if board == :auto
         inferred_board = selected_device && device_target_board(
           selected_device,
           minimum_confidence: 60
@@ -393,7 +433,33 @@ module CodingAdventures
         normalize_board(board)
       end
 
-      { board: normalized_board, port: port }
+      selected_connection_option ||= resolve_connection_option(
+        normalized_board,
+        via: via,
+        connection_option: connection_option,
+        pick_connection: pick_connection,
+        input: input,
+        output: output
+      )
+
+      { board: normalized_board, port: port, connection_option: selected_connection_option }
+    end
+
+    def resolve_connection_option(board, via:, connection_option:, pick_connection:, input:, output:)
+      return normalize_connection_option_hash(connection_option) if connection_option
+      return pick_connection_option(board, input: input, output: output) if pick_connection
+
+      select_connection_option(board, transport: via)
+    end
+
+    def normalize_connection_option_hash(connection_option)
+      connection_option.each_with_object({}) do |(key, value), normalized|
+        normalized[key.to_s] = value
+      end
+    end
+
+    def connection_uses_serial_port?(connection_option)
+      connection_option.nil? || connection_option.fetch("transport") == "serial"
     end
 
     def flash_without_port?(board, flash)

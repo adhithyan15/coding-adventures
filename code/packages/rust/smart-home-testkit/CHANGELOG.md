@@ -17,3 +17,5 @@ All notable changes to this package will be documented in this file.
   event-stream supervision state and seeded `smart-home-runtime` instances.
 - Fake command bus helpers for deterministic command/result assertions.
 - Fake MQTT broker publication helpers for retained-message and payload tests.
+- Read-only fake MQTT broker publication queries by topic, prefix, retained flag,
+  metadata, observation time, sort, and limit.

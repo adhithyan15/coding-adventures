@@ -20,8 +20,8 @@ use board_vm_language_core::{
     connection_transport_name, decode_wire_response, detect_target as core_detect_target,
     discover_devices as core_discover_devices, discover_devices_from_paths,
     discover_pico_bootsel_mounts as core_discover_pico_bootsel_mounts,
-    discover_pico_bootsel_mounts_in_roots,
-    esp_upload_options_for_target, known_targets, onboard_led_kind,
+    discover_pico_bootsel_mounts_in_roots, esp_upload_options_for_target,
+    host_endpoint_transport_name, known_targets, onboard_led_kind,
     pico_uf2_upload_options_for_target, program_format_name, raw_module_len, run_status_name,
     wireless_transport_name, BoardVmLanguageSession, DecodedLanguageResponse,
     DecodedLanguageResponseBody, LanguageConnectionOption, LanguageCoreError,
@@ -824,9 +824,7 @@ unsafe fn language_wireless_to_py(interfaces: &[LanguageWirelessInterface]) -> P
     list
 }
 
-unsafe fn language_connection_options_to_py(
-    options: &[LanguageConnectionOption],
-) -> PyObjectPtr {
+unsafe fn language_connection_options_to_py(options: &[LanguageConnectionOption]) -> PyObjectPtr {
     let list = PyList_New(options.len() as isize);
     for (index, option) in options.iter().enumerate() {
         let dict = PyDict_New();
@@ -843,6 +841,13 @@ unsafe fn language_connection_options_to_py(
         );
         dict_set(dict, "ota_update", bool_to_py(option.ota_update));
         dict_set(dict, "requires", str_to_py(&option.requires));
+        dict_set(
+            dict,
+            "endpoint_transport",
+            str_to_py(host_endpoint_transport_name(option.endpoint_transport)),
+        );
+        dict_set(dict, "endpoint_scheme", str_to_py(&option.endpoint_scheme));
+        dict_set(dict, "wire_protocol", str_to_py(&option.wire_protocol));
         PyList_SetItem(list, index as isize, dict);
     }
     list

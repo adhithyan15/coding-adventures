@@ -712,6 +712,7 @@ pub struct HtmlParser {
     document: Document,
     open_elements: Vec<Vec<usize>>,
     pending_formatting_reconstruction: Vec<(String, Vec<Attribute>)>,
+    prunable_empty_reconstructed_formatting_paths: Vec<Vec<usize>>,
     diagnostics: Vec<ParserDiagnostic>,
     options: HtmlParseOptions,
     strip_next_leading_lf: bool,
@@ -748,6 +749,7 @@ impl HtmlParser {
             document,
             open_elements: vec![vec![0], vec![0, 1]],
             pending_formatting_reconstruction: Vec::new(),
+            prunable_empty_reconstructed_formatting_paths: Vec::new(),
             diagnostics: Vec::new(),
             options,
             strip_next_leading_lf: false,
@@ -806,14 +808,23 @@ impl HtmlParser {
 
     fn append_start_tag(
         &mut self,
-        name: String,
+        mut name: String,
         attributes: Vec<LexerAttribute>,
         self_closing: bool,
     ) {
+        if name == "image" {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "unexpected-start-tag-treated-as",
+                "start tag `<image>` was treated as `<img>`",
+            ));
+            name = "img".to_string();
+        }
+
         self.apply_document_shell_implied_contexts(&name);
         self.close_fostered_formatting_before_table_context(&name);
         self.apply_table_implied_contexts(&name);
         self.clear_pending_formatting_unless_next_reconstructs(&name);
+        let prunes_empty_formatting_inside = name == "p" && self.has_open_element("p");
         let formatting_inside = self.take_formatting_reconstruction_inside_for(&name);
         self.apply_simple_implied_end_tags(&name);
 
@@ -880,6 +891,10 @@ impl HtmlParser {
                 self.append_node(Node::element(formatting_name, formatting_attributes));
             let mut path = self.current_parent_path().to_vec();
             path.push(child_index);
+            if prunes_empty_formatting_inside {
+                self.prunable_empty_reconstructed_formatting_paths
+                    .push(path.clone());
+            }
             self.open_elements.push(path);
         }
 
@@ -903,6 +918,19 @@ impl HtmlParser {
             return;
         }
 
+        let text = if self.current_element_is("head") {
+            match text.char_indices().find(|(_, character)| !character.is_whitespace()) {
+                Some((0, _)) => text,
+                Some((leading_end, _)) => {
+                    self.append_text_to_current(text[..leading_end].to_string());
+                    text[leading_end..].to_string()
+                }
+                None => text,
+            }
+        } else {
+            text
+        };
+
         if !text.chars().all(char::is_whitespace) {
             self.pop_current_if(|name| name == "head");
         }
@@ -913,6 +941,14 @@ impl HtmlParser {
             return;
         }
 
+        if !text.chars().all(char::is_whitespace) && !self.has_open_table_context() {
+            self.reconstruct_pending_formatting();
+        }
+
+        self.append_text_to_current(text);
+    }
+
+    fn append_text_to_current(&mut self, text: String) {
         if let Some(children) = self.current_children_mut() {
             if let Some(Node::Text(existing)) = children.last_mut() {
                 existing.data.push_str(&text);
@@ -980,6 +1016,12 @@ impl HtmlParser {
         if !starts_inner_formatting_reconstruction_boundary(incoming_name) {
             return Vec::new();
         }
+        if incoming_name == "p"
+            && !self.has_open_element("p")
+            && (self.current_element_is("b") || self.current_element_is("i"))
+        {
+            return Vec::new();
+        }
 
         let mut formatting = Vec::new();
         while let Some(path) = self.open_elements.last() {
@@ -1001,7 +1043,14 @@ impl HtmlParser {
         if !starts_before_formatting_reconstruction_boundary(incoming_name) {
             return;
         }
+        if self.has_open_table_context() {
+            return;
+        }
 
+        self.reconstruct_pending_formatting();
+    }
+
+    fn reconstruct_pending_formatting(&mut self) {
         let formatting = std::mem::take(&mut self.pending_formatting_reconstruction);
         for (formatting_name, formatting_attributes) in formatting {
             let child_index =
@@ -1013,6 +1062,9 @@ impl HtmlParser {
     }
 
     fn clear_pending_formatting_unless_next_reconstructs(&mut self, incoming_name: &str) {
+        if starts_table_context(incoming_name) && self.current_element_is_table_structure() {
+            return;
+        }
         if !starts_before_formatting_reconstruction_boundary(incoming_name) {
             self.pending_formatting_reconstruction.clear();
         }
@@ -1055,7 +1107,65 @@ impl HtmlParser {
     }
 
     fn foster_text_before_open_table(&mut self, text: String) -> bool {
-        self.insert_node_before_open_table(Node::text(text)).is_some()
+        if self.pending_formatting_reconstruction.is_empty()
+            || text.chars().all(char::is_whitespace)
+        {
+            return self.insert_node_before_open_table(Node::text(text)).is_some();
+        }
+
+        self.remove_empty_pending_formatting_before_open_table();
+
+        let mut subtree = Node::text(text);
+        for (name, attributes) in self.pending_formatting_reconstruction.iter().rev() {
+            let mut wrapper = Node::element(name.clone(), attributes.clone());
+            if let Some(children) = wrapper.children_mut() {
+                children.push(subtree);
+            }
+            subtree = wrapper;
+        }
+
+        self.insert_node_before_open_table(subtree).is_some()
+    }
+
+    fn remove_empty_pending_formatting_before_open_table(&mut self) {
+        let Some((pending_name, pending_attributes)) =
+            self.pending_formatting_reconstruction.first().cloned()
+        else {
+            return;
+        };
+        let Some(table_path) = self
+            .open_elements
+            .iter()
+            .rfind(|path| element_at_path(&self.document, path).is_some_and(|name| name == "table"))
+            .cloned()
+        else {
+            return;
+        };
+        let Some((&table_index, parent_path)) = table_path.split_last() else {
+            return;
+        };
+        let Some(remove_index) = table_index.checked_sub(1) else {
+            return;
+        };
+        let Some(children) = children_at_path_mut(&mut self.document.children, parent_path) else {
+            return;
+        };
+
+        let should_remove = matches!(
+            children.get(remove_index),
+            Some(Node::Element(element))
+                if element.name == pending_name
+                    && element.attributes == pending_attributes
+                    && element.children.is_empty()
+        );
+        if should_remove {
+            children.remove(remove_index);
+            decrement_open_element_paths_after_remove(
+                &mut self.open_elements,
+                parent_path,
+                remove_index,
+            );
+        }
     }
 
     fn insert_node_before_open_table(&mut self, node: Node) -> Option<Vec<usize>> {
@@ -1170,6 +1280,10 @@ impl HtmlParser {
                     self.close_open_formatting_element_silently("a");
                 }
             }
+            name
+                if is_formatting_element(name)
+                    && self.current_element_is(name)
+                    && self.current_formatting_contains_closed_paragraph(name) => {}
             _ => self.close_element(name),
         }
     }
@@ -1183,10 +1297,31 @@ impl HtmlParser {
             if is_formatting_element(name) && self.has_table_context_above(index) {
                 return;
             }
-            if !is_special_element(name) && self.has_special_element_above(index) {
+            if is_formatting_element(name) && self.adopt_formatting_end_tag_across_paragraph(index)
+            {
                 return;
             }
+            if is_formatting_element(name)
+                && self.adopt_formatting_end_tag_across_nested_paragraph(index)
+            {
+                return;
+            }
+            if is_formatting_element(name) && self.adopt_formatting_end_tag_across_div(index) {
+                return;
+            }
+            if special_scope_blocks_end_tag(name) && self.has_special_element_above(index) {
+                return;
+            }
+            let path = self.open_elements[index].clone();
+            let remove_empty_reconstructed_formatting =
+                self.is_empty_reconstructed_formatting_element(&path);
+            if is_formatting_element(name) {
+                self.capture_formatting_above(index);
+            }
             self.open_elements.truncate(index);
+            if remove_empty_reconstructed_formatting {
+                self.remove_reconstructed_formatting_node(&path);
+            }
             return;
         }
 
@@ -1338,6 +1473,9 @@ impl HtmlParser {
         if self.has_table_context_above(index) {
             return false;
         }
+        if self.has_special_element_above(index) {
+            return false;
+        }
         self.capture_formatting_above(index);
         self.open_elements.truncate(index);
         true
@@ -1378,6 +1516,252 @@ impl HtmlParser {
         }
     }
 
+    fn is_empty_reconstructed_formatting_element(&self, path: &[usize]) -> bool {
+        if !self
+            .prunable_empty_reconstructed_formatting_paths
+            .iter()
+            .any(|candidate| candidate.as_slice() == path)
+        {
+            return false;
+        }
+
+        element_ref_at_path(&self.document, path)
+            .is_some_and(|element| element.children.is_empty())
+    }
+
+    fn remove_reconstructed_formatting_node(&mut self, path: &[usize]) {
+        remove_node_at_path(&mut self.document.children, path);
+        self.prunable_empty_reconstructed_formatting_paths
+            .retain(|candidate| candidate.as_slice() != path);
+    }
+
+    fn adopt_formatting_end_tag_across_paragraph(&mut self, formatting_index: usize) -> bool {
+        let Some(formatting_path) = self.open_elements.get(formatting_index).cloned() else {
+            return false;
+        };
+        let Some(formatting_element) = element_ref_at_path(&self.document, &formatting_path) else {
+            return false;
+        };
+        let formatting_name = formatting_element.name.clone();
+        let formatting_attributes = formatting_element.attributes.clone();
+
+        let Some(paragraph_path) = self
+            .open_elements
+            .iter()
+            .skip(formatting_index + 1)
+            .find(|path| element_at_path(&self.document, path).is_some_and(|name| name == "p"))
+            .cloned()
+        else {
+            return false;
+        };
+        if paragraph_path.len() != formatting_path.len() + 1
+            || !paragraph_path.starts_with(&formatting_path)
+        {
+            return false;
+        }
+
+        let Some((&formatting_child_index, formatting_parent_path)) = formatting_path.split_last()
+        else {
+            return false;
+        };
+        let Some(&paragraph_child_index) = paragraph_path.last() else {
+            return false;
+        };
+        let Some(formatting_parent_children) =
+            children_at_path_mut(&mut self.document.children, formatting_parent_path)
+        else {
+            return false;
+        };
+        let Some(Node::Element(formatting_element)) =
+            formatting_parent_children.get_mut(formatting_child_index)
+        else {
+            return false;
+        };
+        if paragraph_child_index >= formatting_element.children.len() {
+            return false;
+        }
+
+        let mut paragraph = formatting_element.children.remove(paragraph_child_index);
+        if let Node::Element(paragraph_element) = &mut paragraph {
+            let mut reconstructed_formatting =
+                Node::element(formatting_name, formatting_attributes);
+            if let Node::Element(reconstructed_element) = &mut reconstructed_formatting {
+                reconstructed_element.children = std::mem::take(&mut paragraph_element.children);
+            }
+            paragraph_element.children.push(reconstructed_formatting);
+        }
+        formatting_parent_children.insert(formatting_child_index + 1, paragraph);
+
+        self.open_elements.truncate(formatting_index);
+        let mut moved_paragraph_path = formatting_parent_path.to_vec();
+        moved_paragraph_path.push(formatting_child_index + 1);
+        self.open_elements.push(moved_paragraph_path);
+        true
+    }
+
+    fn adopt_formatting_end_tag_across_nested_paragraph(
+        &mut self,
+        formatting_index: usize,
+    ) -> bool {
+        let Some(formatting_path) = self.open_elements.get(formatting_index).cloned() else {
+            return false;
+        };
+        let Some(formatting_element) = element_ref_at_path(&self.document, &formatting_path) else {
+            return false;
+        };
+        let formatting_name = formatting_element.name.clone();
+        let formatting_attributes = formatting_element.attributes.clone();
+
+        let Some(paragraph_path) = self
+            .open_elements
+            .iter()
+            .skip(formatting_index + 1)
+            .find(|path| element_at_path(&self.document, path).is_some_and(|name| name == "p"))
+            .cloned()
+        else {
+            return false;
+        };
+        if !paragraph_path.starts_with(&formatting_path)
+            || paragraph_path.len() <= formatting_path.len() + 1
+        {
+            return false;
+        }
+
+        let mut wrapper_elements = Vec::new();
+        for depth in formatting_path.len() + 1..paragraph_path.len() {
+            let ancestor_path = &paragraph_path[..depth];
+            let Some(element) = element_ref_at_path(&self.document, ancestor_path) else {
+                return false;
+            };
+            if !is_formatting_element(&element.name) {
+                return false;
+            }
+            wrapper_elements.push((element.name.clone(), element.attributes.clone()));
+        }
+
+        let Some((&formatting_child_index, formatting_parent_path)) = formatting_path.split_last()
+        else {
+            return false;
+        };
+        let Some(mut paragraph) = remove_node_at_path(&mut self.document.children, &paragraph_path)
+        else {
+            return false;
+        };
+        let Node::Element(paragraph_element) = &mut paragraph else {
+            return false;
+        };
+
+        let mut reconstructed_formatting =
+            Node::element(formatting_name, formatting_attributes);
+        if let Node::Element(reconstructed_element) = &mut reconstructed_formatting {
+            reconstructed_element.children = std::mem::take(&mut paragraph_element.children);
+        }
+        paragraph_element.children.push(reconstructed_formatting);
+
+        let mut adopted_subtree = paragraph;
+        for (wrapper_name, wrapper_attributes) in wrapper_elements.iter().rev() {
+            let mut wrapper = Node::element(wrapper_name.clone(), wrapper_attributes.clone());
+            if let Node::Element(wrapper_element) = &mut wrapper {
+                wrapper_element.children.push(adopted_subtree);
+            }
+            adopted_subtree = wrapper;
+        }
+
+        let Some(formatting_parent_children) =
+            children_at_path_mut(&mut self.document.children, formatting_parent_path)
+        else {
+            return false;
+        };
+        let insert_index = formatting_child_index + 1;
+        if insert_index > formatting_parent_children.len() {
+            return false;
+        }
+        formatting_parent_children.insert(insert_index, adopted_subtree);
+
+        self.open_elements.truncate(formatting_index);
+        let mut adopted_path = formatting_parent_path.to_vec();
+        adopted_path.push(insert_index);
+        for _ in &wrapper_elements {
+            self.open_elements.push(adopted_path.clone());
+            adopted_path.push(0);
+        }
+        self.open_elements.push(adopted_path);
+        true
+    }
+
+    fn adopt_formatting_end_tag_across_div(&mut self, formatting_index: usize) -> bool {
+        let Some(formatting_path) = self.open_elements.get(formatting_index).cloned() else {
+            return false;
+        };
+        let Some(formatting_element) = element_ref_at_path(&self.document, &formatting_path) else {
+            return false;
+        };
+        let formatting_name = formatting_element.name.clone();
+        let formatting_attributes = formatting_element.attributes.clone();
+
+        let Some(div_path) = self
+            .open_elements
+            .iter()
+            .skip(formatting_index + 1)
+            .find(|path| element_at_path(&self.document, path).is_some_and(|name| name == "div"))
+            .cloned()
+        else {
+            return false;
+        };
+        if !div_path.starts_with(&formatting_path) || div_path.len() <= formatting_path.len() {
+            return false;
+        }
+
+        let Some((&formatting_child_index, formatting_parent_path)) = formatting_path.split_last()
+        else {
+            return false;
+        };
+        let Some(mut div) = remove_node_at_path(&mut self.document.children, &div_path) else {
+            return false;
+        };
+        let Node::Element(div_element) = &mut div else {
+            return false;
+        };
+
+        let mut reconstructed_formatting =
+            Node::element(formatting_name, formatting_attributes);
+        if let Node::Element(reconstructed_element) = &mut reconstructed_formatting {
+            reconstructed_element.children = std::mem::take(&mut div_element.children);
+        }
+        div_element.children.push(reconstructed_formatting);
+
+        let Some(formatting_parent_children) =
+            children_at_path_mut(&mut self.document.children, formatting_parent_path)
+        else {
+            return false;
+        };
+        let insert_index = formatting_child_index + 1;
+        if insert_index > formatting_parent_children.len() {
+            return false;
+        }
+        formatting_parent_children.insert(insert_index, div);
+
+        self.open_elements.truncate(formatting_index);
+        let mut moved_div_path = formatting_parent_path.to_vec();
+        moved_div_path.push(insert_index);
+        self.open_elements.push(moved_div_path);
+        true
+    }
+
+    fn current_formatting_contains_closed_paragraph(&self, name: &str) -> bool {
+        let Some(path) = self.open_elements.last() else {
+            return false;
+        };
+        let Some(element) = element_ref_at_path(&self.document, path) else {
+            return false;
+        };
+        element.name == name
+            && element
+                .children
+                .iter()
+                .any(|child| matches!(child, Node::Element(child) if child.name == "p"))
+    }
+
     fn has_open_element(&self, name: &str) -> bool {
         self.open_elements
             .iter()
@@ -1391,11 +1775,19 @@ impl HtmlParser {
             .any(|path| element_at_path(&self.document, path).is_some_and(is_table_context_element))
     }
 
+    fn has_open_table_context(&self) -> bool {
+        self.open_elements
+            .iter()
+            .any(|path| element_at_path(&self.document, path).is_some_and(is_table_context_element))
+    }
+
     fn has_special_element_above(&self, element_index: usize) -> bool {
         self.open_elements
             .iter()
             .skip(element_index + 1)
-            .any(|path| element_at_path(&self.document, path).is_some_and(is_special_element))
+            .any(|path| {
+                element_at_path(&self.document, path).is_some_and(is_special_scope_boundary_element)
+            })
     }
 
     fn pop_current_if(&mut self, predicate: impl FnOnce(&str) -> bool) {
@@ -1525,6 +1917,15 @@ fn children_at_path_mut<'a>(nodes: &'a mut Vec<Node>, path: &[usize]) -> Option<
     }
 }
 
+fn remove_node_at_path(nodes: &mut Vec<Node>, path: &[usize]) -> Option<Node> {
+    let (&remove_index, parent_path) = path.split_last()?;
+    let parent_children = children_at_path_mut(nodes, parent_path)?;
+    if remove_index >= parent_children.len() {
+        return None;
+    }
+    Some(parent_children.remove(remove_index))
+}
+
 fn increment_open_element_paths_after_insert(
     open_elements: &mut [Vec<usize>],
     parent_path: &[usize],
@@ -1536,6 +1937,21 @@ fn increment_open_element_paths_after_insert(
         }
         if path[parent_path.len()] >= insert_index {
             path[parent_path.len()] += 1;
+        }
+    }
+}
+
+fn decrement_open_element_paths_after_remove(
+    open_elements: &mut [Vec<usize>],
+    parent_path: &[usize],
+    remove_index: usize,
+) {
+    for path in open_elements {
+        if path.len() <= parent_path.len() || !path.starts_with(parent_path) {
+            continue;
+        }
+        if path[parent_path.len()] > remove_index {
+            path[parent_path.len()] -= 1;
         }
     }
 }
@@ -1629,12 +2045,41 @@ impl DocumentShellBuilder {
             {
                 self.head_children.push(Node::Element(element));
             }
+            Node::Text(mut text)
+                if !self.seen_body_content && !self.head_children.is_empty() =>
+            {
+                match text
+                    .data
+                    .char_indices()
+                    .find(|(_, character)| !character.is_whitespace())
+                {
+                    Some((0, _)) => {
+                        self.seen_body_content = true;
+                        self.body_children.push(Node::Text(text));
+                    }
+                    Some((body_start, _)) => {
+                        let body_text = text.data.split_off(body_start);
+                        self.push_head_text(text.data);
+                        self.seen_body_content = true;
+                        self.body_children.push(Node::text(body_text));
+                    }
+                    None => self.push_head_text(text.data),
+                }
+            }
             node => {
                 if !is_ignorable_before_body(&node) {
                     self.seen_body_content = true;
                 }
                 self.body_children.push(node);
             }
+        }
+    }
+
+    fn push_head_text(&mut self, text: String) {
+        if let Some(Node::Text(existing)) = self.head_children.last_mut() {
+            existing.data.push_str(&text);
+        } else {
+            self.head_children.push(Node::text(text));
         }
     }
 
@@ -1733,11 +2178,19 @@ fn starts_inner_formatting_reconstruction_boundary(name: &str) -> bool {
 }
 
 fn starts_before_formatting_reconstruction_boundary(name: &str) -> bool {
-    matches!(name, "a" | "b" | "marquee" | "option")
+    matches!(name, "a" | "b" | "code" | "marquee" | "option")
 }
 
 fn is_special_element(name: &str) -> bool {
     matches!(name, "button" | "marquee") || is_table_context_element(name)
+}
+
+fn is_special_scope_boundary_element(name: &str) -> bool {
+    matches!(name, "div") || is_special_element(name)
+}
+
+fn special_scope_blocks_end_tag(name: &str) -> bool {
+    !matches!(name, "form") && !is_special_element(name)
 }
 
 fn is_heading_element(name: &str) -> bool {
@@ -2115,6 +2568,162 @@ mod tests {
         let second_nobr = element(&second_paragraph.children[2]);
         assert_eq!(second_nobr.name, "nobr");
         assert_eq!(second_nobr.children, vec![Node::text("B")]);
+    }
+
+    #[test]
+    fn drops_empty_reconstructed_formatting_after_paragraph_boundary() {
+        let document = parse_html("<p id=a><b><p id=b></b>TEST").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let first_paragraph = element(&body.children[0]);
+        assert_eq!(first_paragraph.name, "p");
+        assert_eq!(first_paragraph.attribute("id"), Some("a"));
+        assert_eq!(element(&first_paragraph.children[0]).name, "b");
+
+        let second_paragraph = element(&body.children[1]);
+        assert_eq!(second_paragraph.name, "p");
+        assert_eq!(second_paragraph.attribute("id"), Some("b"));
+        assert_eq!(second_paragraph.children, vec![Node::text("TEST")]);
+    }
+
+    #[test]
+    fn keeps_empty_reconstructed_formatting_without_prior_paragraph() {
+        let document = parse_html("<b><p></b>TEST").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+        assert_eq!(element(&body.children[0]).name, "b");
+
+        let paragraph = element(&body.children[1]);
+        assert_eq!(paragraph.name, "p");
+        assert_eq!(element(&paragraph.children[0]).name, "b");
+        assert_eq!(paragraph.children[1], Node::text("TEST"));
+    }
+
+    #[test]
+    fn inserts_fresh_paragraph_inside_current_nested_formatting() {
+        let document = parse_html("<div> abc <b> def <i> ghi <p>").unwrap();
+
+        let body = body(&document);
+        let div = element(&body.children[0]);
+        assert_eq!(div.children[0], Node::text(" abc "));
+
+        let bold = element(&div.children[1]);
+        assert_eq!(bold.children[0], Node::text(" def "));
+
+        let italic = element(&bold.children[1]);
+        assert_eq!(italic.children[0], Node::text(" ghi "));
+        assert_eq!(element(&italic.children[1]).name, "p");
+    }
+
+    #[test]
+    fn adopts_nested_formatting_paragraph_when_outer_formatting_ends() {
+        let document = parse_html("<div> abc <b> def <i> ghi <p> jkl </b>").unwrap();
+
+        let body = body(&document);
+        let div = element(&body.children[0]);
+        assert_eq!(div.children[0], Node::text(" abc "));
+
+        let original_bold = element(&div.children[1]);
+        assert_eq!(original_bold.children[0], Node::text(" def "));
+        assert_eq!(
+            element(&original_bold.children[1]).children,
+            vec![Node::text(" ghi ")]
+        );
+
+        let adopted_italic = element(&div.children[2]);
+        assert_eq!(adopted_italic.name, "i");
+        let paragraph = element(&adopted_italic.children[0]);
+        assert_eq!(paragraph.name, "p");
+        let adopted_bold = element(&paragraph.children[0]);
+        assert_eq!(adopted_bold.name, "b");
+        assert_eq!(adopted_bold.children, vec![Node::text(" jkl ")]);
+    }
+
+    #[test]
+    fn wraps_non_empty_paragraph_when_nested_formatting_end_adopts() {
+        let document = parse_html("<div> abc <b> def <i> ghi <p> jkl </b> mno </i>").unwrap();
+
+        let body = body(&document);
+        let div = element(&body.children[0]);
+        assert_eq!(div.children[0], Node::text(" abc "));
+
+        let original_bold = element(&div.children[1]);
+        assert_eq!(original_bold.children[0], Node::text(" def "));
+        assert_eq!(
+            element(&original_bold.children[1]).children,
+            vec![Node::text(" ghi ")]
+        );
+
+        assert_eq!(element(&div.children[2]).name, "i");
+
+        let paragraph = element(&div.children[3]);
+        assert_eq!(paragraph.name, "p");
+        let adopted_italic = element(&paragraph.children[0]);
+        assert_eq!(adopted_italic.name, "i");
+        let adopted_bold = element(&adopted_italic.children[0]);
+        assert_eq!(adopted_bold.name, "b");
+        assert_eq!(adopted_bold.children, vec![Node::text(" jkl ")]);
+        assert_eq!(adopted_italic.children[1], Node::text(" mno "));
+    }
+
+    #[test]
+    fn keeps_outer_formatting_around_paragraph_closed_before_end_tag() {
+        let document = parse_html("<b id=a><p><b id=b></p></b>TEST").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 1);
+
+        let outer_bold = element(&body.children[0]);
+        assert_eq!(outer_bold.name, "b");
+        assert_eq!(outer_bold.attribute("id"), Some("a"));
+        assert_eq!(outer_bold.children.len(), 2);
+
+        let paragraph = element(&outer_bold.children[0]);
+        assert_eq!(paragraph.name, "p");
+        let inner_bold = element(&paragraph.children[0]);
+        assert_eq!(inner_bold.name, "b");
+        assert_eq!(inner_bold.attribute("id"), Some("b"));
+        assert_eq!(outer_bold.children[1], Node::text("TEST"));
+    }
+
+    #[test]
+    fn reconstructs_formatting_before_text_after_formatting_end_tag() {
+        let document = parse_html("<font><p>hello<b>cruel</font>world").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+        assert_eq!(element(&body.children[0]).name, "font");
+
+        let paragraph = element(&body.children[1]);
+        assert_eq!(paragraph.name, "p");
+
+        let font = element(&paragraph.children[0]);
+        assert_eq!(font.name, "font");
+        assert_eq!(font.children[0], Node::text("hello"));
+        let first_bold = element(&font.children[1]);
+        assert_eq!(first_bold.name, "b");
+        assert_eq!(first_bold.children, vec![Node::text("cruel")]);
+
+        let second_bold = element(&paragraph.children[1]);
+        assert_eq!(second_bold.name, "b");
+        assert_eq!(second_bold.children, vec![Node::text("world")]);
+    }
+
+    #[test]
+    fn preserves_explicit_empty_formatting_elements() {
+        let document = parse_html("<p><b></b>tail").unwrap();
+
+        let body = body(&document);
+        let paragraph = element(&body.children[0]);
+        assert_eq!(paragraph.children.len(), 2);
+
+        let bold = element(&paragraph.children[0]);
+        assert_eq!(bold.name, "b");
+        assert!(bold.children.is_empty());
+        assert_eq!(paragraph.children[1], Node::text("tail"));
     }
 
     #[test]
@@ -2648,6 +3257,114 @@ mod tests {
     }
 
     #[test]
+    fn fosters_reconstructed_anchor_text_around_table_content() {
+        let document =
+            parse_html("<a href=\"blah\">aba<table><a href=\"foo\">br<tr><td></td></tr>x</table>aoe")
+                .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let outer_anchor = element(&body.children[0]);
+        assert_eq!(outer_anchor.name, "a");
+        assert_eq!(outer_anchor.attribute("href"), Some("blah"));
+        assert_eq!(outer_anchor.children[0], Node::text("aba"));
+
+        let first_fostered_anchor = element(&outer_anchor.children[1]);
+        assert_eq!(first_fostered_anchor.name, "a");
+        assert_eq!(first_fostered_anchor.attribute("href"), Some("foo"));
+        assert_eq!(first_fostered_anchor.children, vec![Node::text("br")]);
+
+        let second_fostered_anchor = element(&outer_anchor.children[2]);
+        assert_eq!(second_fostered_anchor.name, "a");
+        assert_eq!(second_fostered_anchor.attribute("href"), Some("foo"));
+        assert_eq!(second_fostered_anchor.children, vec![Node::text("x")]);
+
+        assert_eq!(element(&outer_anchor.children[3]).name, "table");
+
+        let reconstructed_anchor = element(&body.children[1]);
+        assert_eq!(reconstructed_anchor.name, "a");
+        assert_eq!(reconstructed_anchor.attribute("href"), Some("foo"));
+        assert_eq!(reconstructed_anchor.children, vec![Node::text("aoe")]);
+    }
+
+    #[test]
+    fn skips_fostered_anchor_reconstruction_inside_table_cells() {
+        let document =
+            parse_html("<table><a href=\"blah\">aba<tr><td><a href=\"foo\">br</td></tr>x</table>aoe")
+                .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 4);
+
+        let first_anchor = element(&body.children[0]);
+        assert_eq!(first_anchor.name, "a");
+        assert_eq!(first_anchor.attribute("href"), Some("blah"));
+        assert_eq!(first_anchor.children, vec![Node::text("aba")]);
+
+        let second_anchor = element(&body.children[1]);
+        assert_eq!(second_anchor.name, "a");
+        assert_eq!(second_anchor.attribute("href"), Some("blah"));
+        assert_eq!(second_anchor.children, vec![Node::text("x")]);
+
+        let table = element(&body.children[2]);
+        assert_eq!(table.name, "table");
+        let cell = element(&element(&element(&table.children[0]).children[0]).children[0]);
+        let cell_anchor = element(&cell.children[0]);
+        assert_eq!(cell_anchor.name, "a");
+        assert_eq!(cell_anchor.attribute("href"), Some("foo"));
+        assert_eq!(cell_anchor.children, vec![Node::text("br")]);
+
+        let trailing_anchor = element(&body.children[3]);
+        assert_eq!(trailing_anchor.name, "a");
+        assert_eq!(trailing_anchor.attribute("href"), Some("blah"));
+        assert_eq!(trailing_anchor.children, vec![Node::text("aoe")]);
+    }
+
+    #[test]
+    fn preserves_outer_anchor_across_marquee_when_nested_anchor_starts() {
+        let document = parse_html("<a href=a>aa<marquee>aa<a href=b>bb</marquee>aa").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 1);
+
+        let outer_anchor = element(&body.children[0]);
+        assert_eq!(outer_anchor.name, "a");
+        assert_eq!(outer_anchor.attribute("href"), Some("a"));
+        assert_eq!(outer_anchor.children[0], Node::text("aa"));
+
+        let marquee = element(&outer_anchor.children[1]);
+        assert_eq!(marquee.name, "marquee");
+        assert_eq!(marquee.children[0], Node::text("aa"));
+
+        let inner_anchor = element(&marquee.children[1]);
+        assert_eq!(inner_anchor.name, "a");
+        assert_eq!(inner_anchor.attribute("href"), Some("b"));
+        assert_eq!(inner_anchor.children, vec![Node::text("bb")]);
+
+        assert_eq!(outer_anchor.children[2], Node::text("aa"));
+    }
+
+    #[test]
+    fn reconstructs_code_formatting_before_code_start_tag() {
+        let document = parse_html("<wbr><strike><code></strike><code><strike></code>").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 3);
+        assert_eq!(element(&body.children[0]).name, "wbr");
+
+        let first_strike = element(&body.children[1]);
+        assert_eq!(first_strike.name, "strike");
+        assert_eq!(element(&first_strike.children[0]).name, "code");
+
+        let reconstructed_code = element(&body.children[2]);
+        assert_eq!(reconstructed_code.name, "code");
+        let nested_code = element(&reconstructed_code.children[0]);
+        assert_eq!(nested_code.name, "code");
+        assert_eq!(element(&nested_code.children[0]).name, "strike");
+    }
+
+    #[test]
     fn parser_drives_rcdata_tokenization_for_title_and_textarea() {
         let document =
             parse_html("<title>Tom &amp; Jerry</title><textarea>A &lt; B</textarea>").unwrap();
@@ -2862,6 +3579,24 @@ mod tests {
                     "end tag `</hr>` for a void element was ignored"
                 ),
             ]
+        );
+    }
+
+    #[test]
+    fn treats_legacy_image_start_tag_as_img() {
+        let output = parse_html_with_diagnostics("<p><image src=hero.png></p>").unwrap();
+
+        let paragraph = element(&body(&output.document).children[0]);
+        assert_eq!(paragraph.name, "p");
+        let image = element(&paragraph.children[0]);
+        assert_eq!(image.name, "img");
+        assert_eq!(image.attribute("src"), Some("hero.png"));
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![ParserDiagnostic::new(
+                "unexpected-start-tag-treated-as",
+                "start tag `<image>` was treated as `<img>`"
+            )]
         );
     }
 

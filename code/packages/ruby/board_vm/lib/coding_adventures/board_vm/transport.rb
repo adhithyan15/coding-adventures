@@ -2,6 +2,8 @@
 
 require "io/wait"
 require "rbconfig"
+require "socket"
+require "uri"
 
 module CodingAdventures
   module BoardVM
@@ -130,6 +132,86 @@ module CodingAdventures
         end
       rescue SystemCallError, IOError => e
         raise TransportError, "failed to read Board VM response from #{@port}: #{e.message}"
+      end
+
+      def monotonic_now
+        Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      end
+    end
+
+    class TcpTransport
+      FRAME_DELIMITER = "\x00".b
+
+      attr_reader :endpoint
+
+      def initialize(endpoint:, timeout_ms:)
+        @endpoint = endpoint.to_s
+        @timeout_ms = timeout_ms
+        @host, @port = parse_endpoint(@endpoint)
+        @io = nil
+      end
+
+      def transact(frame, timeout_ms: @timeout_ms)
+        write(frame)
+        read_frame(timeout_ms: timeout_ms)
+      end
+
+      def write(frame)
+        io.write(frame.b)
+        io.flush
+      rescue SystemCallError, IOError => e
+        raise TransportError, "failed to write Board VM frame to #{@endpoint}: #{e.message}"
+      end
+
+      def close
+        @io&.close
+      ensure
+        @io = nil
+      end
+
+      private
+
+      def io
+        @io ||= begin
+          socket = TCPSocket.new(@host, @port)
+          socket.setsockopt(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1)
+          socket
+        rescue SystemCallError => e
+          raise TransportError, "failed to open Board VM TCP endpoint #{@endpoint}: #{e.message}"
+        end
+      end
+
+      def parse_endpoint(endpoint)
+        uri = URI.parse(endpoint.include?("://") ? endpoint : "tcp://#{endpoint}")
+        unless uri.scheme == "tcp" && uri.host && uri.port
+          raise TransportError, "Board VM TCP endpoint must look like tcp://host:port"
+        end
+
+        [uri.host, uri.port]
+      rescue URI::InvalidURIError => e
+        raise TransportError, "invalid Board VM TCP endpoint #{endpoint.inspect}: #{e.message}"
+      end
+
+      def read_frame(timeout_ms:)
+        deadline = monotonic_now + (timeout_ms.to_f / 1000.0)
+        response = +"".b
+
+        loop do
+          remaining = deadline - monotonic_now
+          raise TransportError, "timed out waiting for Board VM response on #{@endpoint}" if remaining <= 0
+
+          readable = IO.select([io], nil, nil, remaining)
+          next if readable.nil?
+
+          byte = io.read_nonblock(1, exception: false)
+          next if byte == :wait_readable
+          raise TransportError, "Board VM TCP endpoint #{@endpoint} closed" if byte.nil? || byte.empty?
+
+          response << byte
+          return response if byte == FRAME_DELIMITER
+        end
+      rescue SystemCallError, IOError => e
+        raise TransportError, "failed to read Board VM response from #{@endpoint}: #{e.message}"
       end
 
       def monotonic_now

@@ -323,6 +323,96 @@ impl RuntimeEventBus {
             .collect()
     }
 
+    pub fn query_events(&self, query: &RuntimeEventQuery) -> Vec<RuntimeEventLogEntry<'_>> {
+        if query.limit == Some(0) {
+            return Vec::new();
+        }
+
+        let start = query
+            .from_checkpoint
+            .next_sequence
+            .min(self.published.len() as u64) as usize;
+        let mut entries = self
+            .published
+            .iter()
+            .enumerate()
+            .skip(start)
+            .filter(|(_, event)| {
+                query
+                    .filter
+                    .as_ref()
+                    .is_none_or(|filter| filter.matches(event))
+            })
+            .map(|(index, event)| RuntimeEventLogEntry {
+                sequence: index as u64,
+                next_checkpoint: RuntimeEventCheckpoint::from_next_sequence(index as u64 + 1),
+                event,
+            })
+            .collect::<Vec<_>>();
+        if query.sort == RuntimeEventSort::SequenceDesc {
+            entries.reverse();
+        }
+        apply_limit(&mut entries, query.limit);
+        entries
+    }
+
+    pub fn subscription_snapshots(&self) -> Vec<RuntimeSubscriptionSnapshot> {
+        self.query_subscriptions(&RuntimeSubscriptionQuery::new())
+    }
+
+    pub fn query_subscriptions(
+        &self,
+        query: &RuntimeSubscriptionQuery,
+    ) -> Vec<RuntimeSubscriptionSnapshot> {
+        if query.limit == Some(0) {
+            return Vec::new();
+        }
+
+        let mut snapshots = self
+            .subscriptions
+            .iter()
+            .filter(|(subscription_id, filter)| {
+                query
+                    .subscription_id
+                    .as_ref()
+                    .is_none_or(|expected| subscription_id == &expected)
+                    && query
+                        .filter
+                        .as_ref()
+                        .is_none_or(|expected| filter == &expected)
+            })
+            .map(|(subscription_id, filter)| RuntimeSubscriptionSnapshot {
+                subscription_id: subscription_id.clone(),
+                filter: filter.clone(),
+                queued_events: self
+                    .deliveries
+                    .get(subscription_id)
+                    .map_or(0, VecDeque::len),
+            })
+            .filter(|snapshot| {
+                query
+                    .min_queued_events
+                    .is_none_or(|minimum| snapshot.queued_events >= minimum)
+            })
+            .collect::<Vec<_>>();
+        match query.sort {
+            RuntimeSubscriptionSort::SubscriptionId => snapshots.sort_by(|left, right| {
+                left.subscription_id
+                    .as_str()
+                    .cmp(right.subscription_id.as_str())
+            }),
+            RuntimeSubscriptionSort::QueuedEventsDesc => snapshots.sort_by(|left, right| {
+                right.queued_events.cmp(&left.queued_events).then_with(|| {
+                    left.subscription_id
+                        .as_str()
+                        .cmp(right.subscription_id.as_str())
+                })
+            }),
+        }
+        apply_limit(&mut snapshots, query.limit);
+        snapshots
+    }
+
     pub fn drain(
         &mut self,
         subscription_id: &RuntimeSubscriptionId,
@@ -340,12 +430,150 @@ impl RuntimeEventBus {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RuntimeEventSort {
+    SequenceAsc,
+    SequenceDesc,
+}
+
+impl Default for RuntimeEventSort {
+    fn default() -> Self {
+        Self::SequenceAsc
+    }
+}
+
+/// Borrowed view of one runtime event and its replay cursor position.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct RuntimeEventLogEntry<'a> {
+    pub sequence: u64,
+    pub next_checkpoint: RuntimeEventCheckpoint,
+    pub event: &'a RuntimeEvent,
+}
+
+/// Read-side query for the runtime event log.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeEventQuery {
+    pub filter: Option<RuntimeEventFilter>,
+    pub from_checkpoint: RuntimeEventCheckpoint,
+    pub sort: RuntimeEventSort,
+    pub limit: Option<usize>,
+}
+
+impl RuntimeEventQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn matching(mut self, filter: RuntimeEventFilter) -> Self {
+        self.filter = Some(filter);
+        self
+    }
+
+    pub fn from_checkpoint(mut self, checkpoint: RuntimeEventCheckpoint) -> Self {
+        self.from_checkpoint = checkpoint;
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: RuntimeEventSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
+impl Default for RuntimeEventQuery {
+    fn default() -> Self {
+        Self {
+            filter: None,
+            from_checkpoint: RuntimeEventCheckpoint::start(),
+            sort: RuntimeEventSort::default(),
+            limit: None,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct RuntimeSubscriptionSnapshot {
+    pub subscription_id: RuntimeSubscriptionId,
+    pub filter: RuntimeEventFilter,
+    pub queued_events: usize,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RuntimeSubscriptionSort {
+    SubscriptionId,
+    QueuedEventsDesc,
+}
+
+impl Default for RuntimeSubscriptionSort {
+    fn default() -> Self {
+        Self::SubscriptionId
+    }
+}
+
+/// Read-side query for active event-bus subscriptions.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct RuntimeSubscriptionQuery {
+    pub subscription_id: Option<RuntimeSubscriptionId>,
+    pub filter: Option<RuntimeEventFilter>,
+    pub min_queued_events: Option<usize>,
+    pub sort: RuntimeSubscriptionSort,
+    pub limit: Option<usize>,
+}
+
+impl RuntimeSubscriptionQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_subscription(mut self, subscription_id: RuntimeSubscriptionId) -> Self {
+        self.subscription_id = Some(subscription_id);
+        self
+    }
+
+    pub fn matching(mut self, filter: RuntimeEventFilter) -> Self {
+        self.filter = Some(filter);
+        self
+    }
+
+    pub fn with_min_queued_events(mut self, min_queued_events: usize) -> Self {
+        self.min_queued_events = Some(min_queued_events);
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: RuntimeSubscriptionSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum WorkerStatus {
     Starting,
     Running,
     Unhealthy,
     Restarting,
     Stopped,
+}
+
+impl WorkerStatus {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Starting => "starting",
+            Self::Running => "running",
+            Self::Unhealthy => "unhealthy",
+            Self::Restarting => "restarting",
+            Self::Stopped => "stopped",
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -461,6 +689,79 @@ impl WorkerRestartPlan {
             .iter()
             .filter(|instruction| &instruction.bridge_id == bridge_id)
             .collect()
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum SupervisedWorkerSort {
+    BridgeId,
+    HeartbeatDueAt,
+    RestartCountDesc,
+    StatusThenBridgeId,
+}
+
+impl Default for SupervisedWorkerSort {
+    fn default() -> Self {
+        Self::BridgeId
+    }
+}
+
+/// Read-side query for supervised integration workers.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct SupervisedWorkerQuery {
+    pub bridge_id: Option<BridgeId>,
+    pub integration_id: Option<IntegrationId>,
+    pub statuses: Vec<WorkerStatus>,
+    pub heartbeat_due_before_ms: Option<u64>,
+    pub overdue_at_ms: Option<u64>,
+    pub min_restart_count: Option<u32>,
+    pub sort: SupervisedWorkerSort,
+    pub limit: Option<usize>,
+}
+
+impl SupervisedWorkerQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_bridge(mut self, bridge_id: BridgeId) -> Self {
+        self.bridge_id = Some(bridge_id);
+        self
+    }
+
+    pub fn for_integration(mut self, integration_id: IntegrationId) -> Self {
+        self.integration_id = Some(integration_id);
+        self
+    }
+
+    pub fn with_status(mut self, status: WorkerStatus) -> Self {
+        self.statuses.push(status);
+        self
+    }
+
+    pub fn heartbeat_due_before(mut self, heartbeat_due_before_ms: u64) -> Self {
+        self.heartbeat_due_before_ms = Some(heartbeat_due_before_ms);
+        self
+    }
+
+    pub fn overdue_at(mut self, overdue_at_ms: u64) -> Self {
+        self.overdue_at_ms = Some(overdue_at_ms);
+        self
+    }
+
+    pub fn min_restart_count(mut self, min_restart_count: u32) -> Self {
+        self.min_restart_count = Some(min_restart_count);
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: SupervisedWorkerSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
     }
 }
 
@@ -619,6 +920,43 @@ impl RuntimeSupervisor {
             .collect()
     }
 
+    pub fn query_workers(&self, query: &SupervisedWorkerQuery) -> Vec<&SupervisedBridgeWorker> {
+        if query.limit == Some(0) {
+            return Vec::new();
+        }
+
+        let mut workers = self
+            .workers
+            .values()
+            .filter(|worker| supervised_worker_matches_query(worker, query))
+            .collect::<Vec<_>>();
+        match query.sort {
+            SupervisedWorkerSort::BridgeId => {
+                workers.sort_by(|left, right| left.bridge_id.cmp(&right.bridge_id));
+            }
+            SupervisedWorkerSort::HeartbeatDueAt => workers.sort_by(|left, right| {
+                left.heartbeat_due_at_ms()
+                    .unwrap_or(u64::MAX)
+                    .cmp(&right.heartbeat_due_at_ms().unwrap_or(u64::MAX))
+                    .then_with(|| left.bridge_id.cmp(&right.bridge_id))
+            }),
+            SupervisedWorkerSort::RestartCountDesc => workers.sort_by(|left, right| {
+                right
+                    .restart_count
+                    .cmp(&left.restart_count)
+                    .then_with(|| left.bridge_id.cmp(&right.bridge_id))
+            }),
+            SupervisedWorkerSort::StatusThenBridgeId => workers.sort_by(|left, right| {
+                left.status
+                    .as_str()
+                    .cmp(right.status.as_str())
+                    .then_with(|| left.bridge_id.cmp(&right.bridge_id))
+            }),
+        }
+        apply_limit(&mut workers, query.limit);
+        workers
+    }
+
     pub fn heartbeat_schedule_at(&self, now_ms: u64) -> WorkerHeartbeatSchedule {
         let mut deadlines: Vec<_> = self
             .workers
@@ -698,6 +1036,72 @@ impl DesiredEntityState {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DesiredStateSort {
+    EntityId,
+    RequestedByThenEntityId,
+    CommandTimeoutDesc,
+}
+
+impl Default for DesiredStateSort {
+    fn default() -> Self {
+        Self::EntityId
+    }
+}
+
+/// Read-side query for desired-state supervision targets.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct DesiredStateQuery {
+    pub entity_id: Option<EntityId>,
+    pub requested_by: Option<String>,
+    pub capability_id: Option<CapabilityId>,
+    pub min_command_timeout_ms: Option<u64>,
+    pub max_command_timeout_ms: Option<u64>,
+    pub sort: DesiredStateSort,
+    pub limit: Option<usize>,
+}
+
+impl DesiredStateQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_entity(mut self, entity_id: EntityId) -> Self {
+        self.entity_id = Some(entity_id);
+        self
+    }
+
+    pub fn requested_by(mut self, requested_by: impl Into<String>) -> Self {
+        self.requested_by = Some(requested_by.into());
+        self
+    }
+
+    pub fn with_capability(mut self, capability_id: CapabilityId) -> Self {
+        self.capability_id = Some(capability_id);
+        self
+    }
+
+    pub fn min_command_timeout(mut self, min_command_timeout_ms: u64) -> Self {
+        self.min_command_timeout_ms = Some(min_command_timeout_ms);
+        self
+    }
+
+    pub fn max_command_timeout(mut self, max_command_timeout_ms: u64) -> Self {
+        self.max_command_timeout_ms = Some(max_command_timeout_ms);
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: DesiredStateSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum DesiredStateAction {
     CommandIssued {
@@ -734,6 +1138,17 @@ pub enum PairingSessionStatus {
     Completed,
     Expired,
     Cancelled,
+}
+
+impl PairingSessionStatus {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::PendingUserPresence => "pending_user_presence",
+            Self::Completed => "completed",
+            Self::Expired => "expired",
+            Self::Cancelled => "cancelled",
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -776,6 +1191,85 @@ impl RuntimePairingSession {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RuntimePairingSessionSort {
+    SessionId,
+    ExpiresAt,
+    StartedAtDesc,
+    StatusThenExpiresAt,
+}
+
+impl Default for RuntimePairingSessionSort {
+    fn default() -> Self {
+        Self::SessionId
+    }
+}
+
+/// Read-side query for bridge pairing ceremonies.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct RuntimePairingSessionQuery {
+    pub session_id: Option<RuntimePairingSessionId>,
+    pub bridge_id: Option<BridgeId>,
+    pub integration_id: Option<IntegrationId>,
+    pub requested_by: Option<AgentId>,
+    pub statuses: Vec<PairingSessionStatus>,
+    pub expires_before_ms: Option<u64>,
+    pub expiring_at_ms: Option<u64>,
+    pub sort: RuntimePairingSessionSort,
+    pub limit: Option<usize>,
+}
+
+impl RuntimePairingSessionQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_session(mut self, session_id: RuntimePairingSessionId) -> Self {
+        self.session_id = Some(session_id);
+        self
+    }
+
+    pub fn for_bridge(mut self, bridge_id: BridgeId) -> Self {
+        self.bridge_id = Some(bridge_id);
+        self
+    }
+
+    pub fn for_integration(mut self, integration_id: IntegrationId) -> Self {
+        self.integration_id = Some(integration_id);
+        self
+    }
+
+    pub fn requested_by(mut self, requested_by: AgentId) -> Self {
+        self.requested_by = Some(requested_by);
+        self
+    }
+
+    pub fn with_status(mut self, status: PairingSessionStatus) -> Self {
+        self.statuses.push(status);
+        self
+    }
+
+    pub fn expires_before(mut self, expires_before_ms: u64) -> Self {
+        self.expires_before_ms = Some(expires_before_ms);
+        self
+    }
+
+    pub fn expiring_at(mut self, expiring_at_ms: u64) -> Self {
+        self.expiring_at_ms = Some(expiring_at_ms);
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: RuntimePairingSessionSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct RuntimeSupervisionPlan {
     pub generated_at_ms: u64,
@@ -805,6 +1299,47 @@ impl RuntimeSupervisionPlan {
             .iter()
             .filter(|drift| &drift.entity_id == entity_id)
             .collect()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct RuntimeSupervisionObservation {
+    pub generated_at_ms: u64,
+    pub plan: RuntimeSupervisionPlan,
+    pub heartbeat_schedule: WorkerHeartbeatSchedule,
+}
+
+impl RuntimeSupervisionObservation {
+    pub fn is_idle(&self) -> bool {
+        self.plan.is_empty()
+    }
+
+    pub fn action_count(&self) -> usize {
+        self.plan.action_count()
+    }
+
+    pub fn pairing_expiry_count(&self) -> usize {
+        self.plan.pairing_sessions_expiring.len()
+    }
+
+    pub fn state_refresh_count(&self) -> usize {
+        self.plan.state_refresh_plan.len()
+    }
+
+    pub fn desired_state_drift_count(&self) -> usize {
+        self.plan.desired_state_drifts.len()
+    }
+
+    pub fn worker_restart_count(&self) -> usize {
+        self.plan.worker_restart_plan.len()
+    }
+
+    pub fn due_worker_deadline_count(&self) -> usize {
+        self.heartbeat_schedule.due_at(self.generated_at_ms).len()
+    }
+
+    pub fn next_worker_heartbeat_due_at_ms(&self) -> Option<u64> {
+        self.heartbeat_schedule.next_due_at_ms()
     }
 }
 
@@ -850,6 +1385,7 @@ pub enum RuntimeReadToolRequest {
     GetHealth {
         bridge_id: Option<BridgeId>,
     },
+    ObserveSupervision,
 }
 
 impl RuntimeReadToolRequest {
@@ -860,6 +1396,7 @@ impl RuntimeReadToolRequest {
             Self::GetState { .. } => SmartHomeTool::GetState,
             Self::DescribeCapabilities { .. } => SmartHomeTool::DescribeCapabilities,
             Self::GetHealth { .. } => SmartHomeTool::GetHealth,
+            Self::ObserveSupervision => SmartHomeTool::ObserveSupervision,
         }
     }
 }
@@ -998,6 +1535,7 @@ pub enum RuntimeReadToolOutput {
         capabilities: Vec<Capability>,
     },
     Health(Vec<BridgeHealthSnapshot>),
+    SupervisionObservation(RuntimeSupervisionObservation),
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -1078,8 +1616,78 @@ impl SmartHomeRuntime {
         self.pairing_sessions.get(session_id)
     }
 
+    pub fn query_pairing_sessions(
+        &self,
+        query: &RuntimePairingSessionQuery,
+    ) -> Vec<&RuntimePairingSession> {
+        if query.limit == Some(0) {
+            return Vec::new();
+        }
+
+        let mut sessions = self
+            .pairing_sessions
+            .values()
+            .filter(|session| pairing_session_matches_query(session, query))
+            .collect::<Vec<_>>();
+        match query.sort {
+            RuntimePairingSessionSort::SessionId => {
+                sessions.sort_by(|left, right| left.session_id.cmp(&right.session_id));
+            }
+            RuntimePairingSessionSort::ExpiresAt => sessions.sort_by(|left, right| {
+                left.expires_at_ms
+                    .cmp(&right.expires_at_ms)
+                    .then_with(|| left.session_id.cmp(&right.session_id))
+            }),
+            RuntimePairingSessionSort::StartedAtDesc => sessions.sort_by(|left, right| {
+                right
+                    .started_at_ms
+                    .cmp(&left.started_at_ms)
+                    .then_with(|| left.session_id.cmp(&right.session_id))
+            }),
+            RuntimePairingSessionSort::StatusThenExpiresAt => sessions.sort_by(|left, right| {
+                left.status
+                    .as_str()
+                    .cmp(right.status.as_str())
+                    .then_with(|| left.expires_at_ms.cmp(&right.expires_at_ms))
+                    .then_with(|| left.session_id.cmp(&right.session_id))
+            }),
+        }
+        apply_limit(&mut sessions, query.limit);
+        sessions
+    }
+
     pub fn desired_state(&self, entity_id: &EntityId) -> Option<&DesiredEntityState> {
         self.desired_states.get(entity_id)
+    }
+
+    pub fn query_desired_states(&self, query: &DesiredStateQuery) -> Vec<&DesiredEntityState> {
+        if query.limit == Some(0) {
+            return Vec::new();
+        }
+
+        let mut desired_states = self
+            .desired_states
+            .values()
+            .filter(|desired_state| desired_state_matches_query(desired_state, query))
+            .collect::<Vec<_>>();
+        match query.sort {
+            DesiredStateSort::EntityId => {
+                desired_states.sort_by(|left, right| left.entity_id.cmp(&right.entity_id));
+            }
+            DesiredStateSort::RequestedByThenEntityId => desired_states.sort_by(|left, right| {
+                left.requested_by
+                    .cmp(&right.requested_by)
+                    .then_with(|| left.entity_id.cmp(&right.entity_id))
+            }),
+            DesiredStateSort::CommandTimeoutDesc => desired_states.sort_by(|left, right| {
+                right
+                    .command_timeout_ms
+                    .cmp(&left.command_timeout_ms)
+                    .then_with(|| left.entity_id.cmp(&right.entity_id))
+            }),
+        }
+        apply_limit(&mut desired_states, query.limit);
+        desired_states
     }
 
     pub fn upsert_desired_state(
@@ -1393,6 +2001,9 @@ impl SmartHomeRuntime {
                         .collect(),
                 )),
             },
+            RuntimeReadToolRequest::ObserveSupervision => Ok(
+                RuntimeReadToolOutput::SupervisionObservation(self.observe_supervision_at(now_ms)?),
+            ),
         }
     }
 
@@ -1666,6 +2277,17 @@ impl SmartHomeRuntime {
             state_refresh_plan: self.registry.state_refresh_plan_at(now_ms),
             desired_state_drifts: self.desired_state_drift_plan_at(now_ms)?,
             worker_restart_plan: self.supervisor.restart_plan_at(now_ms),
+        })
+    }
+
+    pub fn observe_supervision_at(
+        &self,
+        now_ms: u64,
+    ) -> Result<RuntimeSupervisionObservation, RuntimeError> {
+        Ok(RuntimeSupervisionObservation {
+            generated_at_ms: now_ms,
+            plan: self.supervision_plan_at(now_ms)?,
+            heartbeat_schedule: self.supervisor.heartbeat_schedule_at(now_ms),
         })
     }
 
@@ -2014,6 +2636,93 @@ fn optimistic_snapshot_for_command(command: &DeviceCommand, now_ms: u64) -> Opti
     })
 }
 
+fn supervised_worker_matches_query(
+    worker: &SupervisedBridgeWorker,
+    query: &SupervisedWorkerQuery,
+) -> bool {
+    query
+        .bridge_id
+        .as_ref()
+        .is_none_or(|bridge_id| &worker.bridge_id == bridge_id)
+        && query
+            .integration_id
+            .as_ref()
+            .is_none_or(|integration_id| &worker.integration_id == integration_id)
+        && (query.statuses.is_empty() || query.statuses.contains(&worker.status))
+        && query.heartbeat_due_before_ms.is_none_or(|deadline| {
+            worker
+                .heartbeat_due_at_ms()
+                .is_some_and(|due| due <= deadline)
+        })
+        && query
+            .overdue_at_ms
+            .is_none_or(|now_ms| worker.is_overdue_at(now_ms))
+        && query
+            .min_restart_count
+            .is_none_or(|minimum| worker.restart_count >= minimum)
+}
+
+fn desired_state_matches_query(
+    desired_state: &DesiredEntityState,
+    query: &DesiredStateQuery,
+) -> bool {
+    query
+        .entity_id
+        .as_ref()
+        .is_none_or(|entity_id| &desired_state.entity_id == entity_id)
+        && query
+            .requested_by
+            .as_ref()
+            .is_none_or(|requested_by| &desired_state.requested_by == requested_by)
+        && query.capability_id.as_ref().is_none_or(|capability_id| {
+            desired_state
+                .desired
+                .iter()
+                .any(|delta| &delta.capability_id == capability_id)
+        })
+        && query
+            .min_command_timeout_ms
+            .is_none_or(|minimum| desired_state.command_timeout_ms >= minimum)
+        && query
+            .max_command_timeout_ms
+            .is_none_or(|maximum| desired_state.command_timeout_ms <= maximum)
+}
+
+fn pairing_session_matches_query(
+    session: &RuntimePairingSession,
+    query: &RuntimePairingSessionQuery,
+) -> bool {
+    query
+        .session_id
+        .as_ref()
+        .is_none_or(|session_id| &session.session_id == session_id)
+        && query
+            .bridge_id
+            .as_ref()
+            .is_none_or(|bridge_id| &session.bridge_id == bridge_id)
+        && query
+            .integration_id
+            .as_ref()
+            .is_none_or(|integration_id| &session.integration_id == integration_id)
+        && query
+            .requested_by
+            .as_ref()
+            .is_none_or(|requested_by| &session.requested_by == requested_by)
+        && (query.statuses.is_empty() || query.statuses.contains(&session.status))
+        && query
+            .expires_before_ms
+            .is_none_or(|deadline| session.expires_at_ms <= deadline)
+        && query
+            .expiring_at_ms
+            .is_none_or(|now_ms| session.is_expired_at(now_ms))
+}
+
+fn apply_limit<T>(items: &mut Vec<T>, limit: Option<usize>) {
+    if let Some(limit) = limit {
+        items.truncate(limit);
+    }
+}
+
 fn event_bridge_id(event: &RuntimeEvent) -> Option<&BridgeId> {
     match event {
         RuntimeEvent::Device(event) => Some(&event.bridge_id),
@@ -2165,6 +2874,51 @@ mod tests {
         )
         .unwrap();
         assert!(bus.drain(&current_subscription).unwrap().is_empty());
+    }
+
+    #[test]
+    fn event_bus_queries_log_entries_and_subscription_backlogs() {
+        let mut bus = RuntimeEventBus::new();
+        let bridge_one = RuntimeEventFilter::Bridge(BridgeId::trusted("bridge-1"));
+        bus.publish(bridge_health_runtime_event("health-1", "bridge-1", 1_000));
+        let after_first = bus.checkpoint();
+        bus.publish(bridge_health_runtime_event("health-2", "bridge-2", 1_001));
+        bus.publish(bridge_health_runtime_event("health-3", "bridge-1", 1_002));
+        bus.subscribe_from_checkpoint(
+            RuntimeSubscriptionId::trusted("bridge-1-stream"),
+            bridge_one.clone(),
+            RuntimeEventCheckpoint::start(),
+        )
+        .unwrap();
+        bus.subscribe(
+            RuntimeSubscriptionId::trusted("all-current"),
+            RuntimeEventFilter::All,
+        )
+        .unwrap();
+
+        let newest_bridge_events = bus.query_events(
+            &RuntimeEventQuery::new()
+                .from_checkpoint(after_first)
+                .matching(bridge_one.clone())
+                .sorted_by(RuntimeEventSort::SequenceDesc)
+                .with_limit(1),
+        );
+        assert_eq!(newest_bridge_events.len(), 1);
+        assert_eq!(newest_bridge_events[0].sequence, 2);
+        assert_eq!(newest_bridge_events[0].next_checkpoint.next_sequence(), 3);
+
+        let backlogs = bus.query_subscriptions(
+            &RuntimeSubscriptionQuery::new()
+                .matching(bridge_one)
+                .with_min_queued_events(1)
+                .sorted_by(RuntimeSubscriptionSort::QueuedEventsDesc),
+        );
+        assert_eq!(backlogs.len(), 1);
+        assert_eq!(
+            backlogs[0].subscription_id,
+            RuntimeSubscriptionId::trusted("bridge-1-stream")
+        );
+        assert_eq!(backlogs[0].queued_events, 2);
     }
 
     #[test]
@@ -2641,6 +3395,76 @@ mod tests {
     }
 
     #[test]
+    fn pairing_session_queries_filter_status_and_expiry() {
+        let mut runtime = SmartHomeRuntime::new();
+        runtime.upsert_bridge(bridge("bridge-1")).unwrap();
+        let mut second_bridge = bridge("bridge-2");
+        second_bridge.identifiers =
+            vec![
+                ProtocolIdentifier::new(ProtocolFamily::Hue, "bridge", "bridge-native-2").unwrap(),
+            ];
+        runtime.upsert_bridge(second_bridge).unwrap();
+        let installer = AgentId::trusted("agent:installer");
+        let bridge_one = runtime
+            .registry()
+            .bridge(&BridgeId::trusted("bridge-1"))
+            .unwrap()
+            .clone();
+        let bridge_two = runtime
+            .registry()
+            .bridge(&BridgeId::trusted("bridge-2"))
+            .unwrap()
+            .clone();
+
+        runtime
+            .start_pairing_session(RuntimePairingSession::pending(
+                RuntimePairingSessionId::trusted("pairing-1"),
+                &bridge_one,
+                installer.clone(),
+                1_000,
+                1_200,
+                Vec::new(),
+            ))
+            .unwrap();
+        runtime
+            .start_pairing_session(RuntimePairingSession::pending(
+                RuntimePairingSessionId::trusted("pairing-2"),
+                &bridge_two,
+                installer.clone(),
+                1_100,
+                1_500,
+                Vec::new(),
+            ))
+            .unwrap();
+
+        let expiring = runtime.query_pairing_sessions(
+            &RuntimePairingSessionQuery::new()
+                .requested_by(installer)
+                .with_status(PairingSessionStatus::PendingUserPresence)
+                .expiring_at(1_250)
+                .sorted_by(RuntimePairingSessionSort::ExpiresAt),
+        );
+
+        assert_eq!(
+            expiring
+                .iter()
+                .map(|session| session.session_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["pairing-1"]
+        );
+        assert_eq!(
+            runtime
+                .query_pairing_sessions(
+                    &RuntimePairingSessionQuery::new()
+                        .for_bridge(BridgeId::trusted("bridge-2"))
+                        .expires_before(1_600),
+                )
+                .len(),
+            1
+        );
+    }
+
+    #[test]
     fn command_tool_requires_command_tool_grant_before_dispatch() {
         let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
         let principal = AgentId::trusted("agent:lighting-planner");
@@ -2818,6 +3642,14 @@ mod tests {
             .with_expiry(2_000),
         );
         runtime
+            .supervisor_mut()
+            .register_worker(SupervisedBridgeWorker::new(
+                BridgeId::trusted("bridge-1"),
+                IntegrationId::trusted("hue"),
+                1_000,
+                100,
+            ));
+        runtime
             .registry_mut()
             .apply_state_snapshot(StateSnapshot {
                 entity_id: EntityId::trusted("entity-1"),
@@ -2868,12 +3700,15 @@ mod tests {
             .unwrap();
         let health = runtime
             .execute_read_tool(
-                principal,
+                principal.clone(),
                 RuntimeReadToolRequest::GetHealth {
                     bridge_id: Some(BridgeId::trusted("bridge-1")),
                 },
                 1_504,
             )
+            .unwrap();
+        let observation = runtime
+            .execute_read_tool(principal, RuntimeReadToolRequest::ObserveSupervision, 1_505)
             .unwrap();
 
         assert!(matches!(
@@ -2911,7 +3746,15 @@ mod tests {
                 last_seen_at_ms: None,
             }]
         ));
-        assert_eq!(runtime.registry().counts().authorization_decisions, 5);
+        assert!(matches!(
+            observation,
+            RuntimeReadToolOutput::SupervisionObservation(observation)
+                if observation.generated_at_ms == 1_505
+                    && observation.worker_restart_count() == 1
+                    && observation.due_worker_deadline_count() == 1
+                    && observation.next_worker_heartbeat_due_at_ms() == Some(1_100)
+        ));
+        assert_eq!(runtime.registry().counts().authorization_decisions, 6);
         assert!(runtime
             .registry()
             .authorization_decisions()
@@ -3147,6 +3990,75 @@ mod tests {
     }
 
     #[test]
+    fn desired_state_queries_filter_capability_owner_and_timeout() {
+        let mut runtime = runtime_with_entity(vec![
+            Capability::light_on_off(),
+            Capability::light_brightness(),
+        ]);
+        runtime
+            .upsert_entity(light_entity(
+                "entity-2",
+                "device-1",
+                vec![Capability::light_on_off()],
+            ))
+            .unwrap();
+        runtime
+            .upsert_desired_state(
+                DesiredEntityState::new(
+                    EntityId::trusted("entity-1"),
+                    vec![StateDelta {
+                        capability_id: CapabilityId::trusted("light.brightness"),
+                        value: Value::Percentage(42),
+                    }],
+                )
+                .requested_by("agent:scene")
+                .with_command_timeout(750),
+            )
+            .unwrap();
+        runtime
+            .upsert_desired_state(
+                DesiredEntityState::new(
+                    EntityId::trusted("entity-2"),
+                    vec![StateDelta {
+                        capability_id: CapabilityId::trusted("light.on_off"),
+                        value: Value::Bool(true),
+                    }],
+                )
+                .requested_by("agent:guard")
+                .with_command_timeout(250),
+            )
+            .unwrap();
+
+        let matches = runtime.query_desired_states(
+            &DesiredStateQuery::new()
+                .requested_by("agent:scene")
+                .with_capability(CapabilityId::trusted("light.brightness"))
+                .min_command_timeout(500)
+                .sorted_by(DesiredStateSort::CommandTimeoutDesc),
+        );
+
+        assert_eq!(
+            matches
+                .iter()
+                .map(|desired| desired.entity_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["entity-1"]
+        );
+        assert_eq!(
+            runtime
+                .query_desired_states(
+                    &DesiredStateQuery::new()
+                        .max_command_timeout(500)
+                        .sorted_by(DesiredStateSort::RequestedByThenEntityId),
+                )
+                .iter()
+                .map(|desired| desired.requested_by.as_str())
+                .collect::<Vec<_>>(),
+            vec!["agent:guard"]
+        );
+    }
+
+    #[test]
     fn runtime_supervision_plan_previews_due_work_without_mutating() {
         let mut runtime = runtime_with_entity(vec![Capability::light_on_off()]);
         let bridge_id = BridgeId::trusted("bridge-1");
@@ -3212,6 +4124,46 @@ mod tests {
         assert_eq!(worker.status, WorkerStatus::Starting);
         assert_eq!(worker.restart_count, 0);
         assert_eq!(snapshot.confidence, StateConfidence::Confirmed);
+        assert!(runtime.event_bus().published().is_empty());
+    }
+
+    #[test]
+    fn runtime_supervision_observation_combines_plan_and_heartbeat_schedule() {
+        let mut runtime = SmartHomeRuntime::new();
+        let early_bridge = BridgeId::trusted("bridge-early");
+        let late_bridge = BridgeId::trusted("bridge-late");
+        runtime
+            .supervisor_mut()
+            .register_worker(SupervisedBridgeWorker::new(
+                early_bridge.clone(),
+                IntegrationId::trusted("hue"),
+                1_000,
+                100,
+            ));
+        runtime
+            .supervisor_mut()
+            .register_worker(SupervisedBridgeWorker::new(
+                late_bridge.clone(),
+                IntegrationId::trusted("thread"),
+                1_000,
+                500,
+            ));
+
+        let observation = runtime.observe_supervision_at(1_125).unwrap();
+        let worker = runtime.supervisor().worker(&early_bridge).unwrap();
+
+        assert_eq!(observation.generated_at_ms, 1_125);
+        assert_eq!(observation.action_count(), 1);
+        assert_eq!(observation.pairing_expiry_count(), 0);
+        assert_eq!(observation.state_refresh_count(), 0);
+        assert_eq!(observation.desired_state_drift_count(), 0);
+        assert_eq!(observation.worker_restart_count(), 1);
+        assert_eq!(observation.due_worker_deadline_count(), 1);
+        assert_eq!(observation.next_worker_heartbeat_due_at_ms(), Some(1_100));
+        assert_eq!(observation.heartbeat_schedule.len(), 2);
+        assert!(!observation.is_idle());
+        assert_eq!(worker.status, WorkerStatus::Starting);
+        assert_eq!(worker.restart_count, 0);
         assert!(runtime.event_bus().published().is_empty());
     }
 
@@ -3330,6 +4282,61 @@ mod tests {
                 .unwrap()
                 .status,
             WorkerStatus::Starting
+        );
+    }
+
+    #[test]
+    fn supervisor_queries_workers_by_status_deadline_and_restart_count() {
+        let mut supervisor = RuntimeSupervisor::new();
+        supervisor.register_worker(SupervisedBridgeWorker::new(
+            BridgeId::trusted("bridge-1"),
+            IntegrationId::trusted("hue"),
+            1_000,
+            100,
+        ));
+        supervisor.register_worker(SupervisedBridgeWorker {
+            bridge_id: BridgeId::trusted("bridge-2"),
+            integration_id: IntegrationId::trusted("zwave"),
+            status: WorkerStatus::Restarting,
+            restart_count: 2,
+            last_heartbeat_at_ms: 900,
+            heartbeat_timeout_ms: 500,
+        });
+        supervisor.register_worker(SupervisedBridgeWorker {
+            bridge_id: BridgeId::trusted("bridge-3"),
+            integration_id: IntegrationId::trusted("hue"),
+            status: WorkerStatus::Running,
+            restart_count: 1,
+            last_heartbeat_at_ms: 1_100,
+            heartbeat_timeout_ms: 500,
+        });
+
+        let overdue = supervisor.query_workers(
+            &SupervisedWorkerQuery::new()
+                .for_integration(IntegrationId::trusted("hue"))
+                .overdue_at(1_125)
+                .heartbeat_due_before(1_200)
+                .sorted_by(SupervisedWorkerSort::HeartbeatDueAt),
+        );
+        assert_eq!(
+            overdue
+                .iter()
+                .map(|worker| worker.bridge_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["bridge-1"]
+        );
+
+        let restarted = supervisor.query_workers(
+            &SupervisedWorkerQuery::new()
+                .min_restart_count(1)
+                .sorted_by(SupervisedWorkerSort::RestartCountDesc),
+        );
+        assert_eq!(
+            restarted
+                .iter()
+                .map(|worker| worker.bridge_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["bridge-2", "bridge-3"]
         );
     }
 
