@@ -973,3 +973,21 @@ Line1<br>Line2<br>Line3<br>Line4
 |         <i>
 |           " ghi "
 |           <p>
+
+#data
+<DIV> abc <B> def <I> ghi <P> jkl
+#errors
+(1,5): expected-doctype-but-got-start-tag
+(1,33): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       " abc "
+|       <b>
+|         " def "
+|         <i>
+|           " ghi "
+|           <p>
+|             " jkl"
