@@ -269,12 +269,29 @@ pub enum LanguageWirelessTransport {
     BluetoothClassic,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageConnectionTransport {
+    Serial,
+    Wifi,
+    BluetoothLe,
+    BluetoothClassic,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageWirelessInterface {
     pub transport: LanguageWirelessTransport,
     pub chip: String,
     pub command_transport: bool,
     pub ota_update: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageConnectionOption {
+    pub transport: LanguageConnectionTransport,
+    pub display_name: String,
+    pub command_transport: bool,
+    pub ota_update: bool,
+    pub requires: String,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -291,6 +308,7 @@ pub struct LanguageTargetInfo {
     pub onboard_led: Option<LanguageOnboardLed>,
     pub digital_pin_count: usize,
     pub wireless: Vec<LanguageWirelessInterface>,
+    pub connection_options: Vec<LanguageConnectionOption>,
     pub capabilities: Vec<String>,
 }
 
@@ -449,6 +467,15 @@ pub const fn wireless_transport_name(transport: LanguageWirelessTransport) -> &'
     }
 }
 
+pub const fn connection_transport_name(transport: LanguageConnectionTransport) -> &'static str {
+    match transport {
+        LanguageConnectionTransport::Serial => "serial",
+        LanguageConnectionTransport::Wifi => "wifi",
+        LanguageConnectionTransport::BluetoothLe => "bluetooth_le",
+        LanguageConnectionTransport::BluetoothClassic => "bluetooth_classic",
+    }
+}
+
 pub fn capability_flag_names(flags: u16, out: &mut [&'static str]) -> usize {
     let mut count = 0;
     if capability_bytecode_callable(flags) {
@@ -544,6 +571,11 @@ pub fn pico_uf2_upload_options_for_target(selector: &str) -> Option<LanguagePico
     })
 }
 
+pub fn connection_options_for_target(selector: &str) -> Option<Vec<LanguageConnectionOption>> {
+    let target = detect_target(selector)?;
+    Some(target.connection_options)
+}
+
 pub fn discover_devices() -> Vec<LanguageHostDevice> {
     let mut paths = env_device_paths();
 
@@ -637,6 +669,7 @@ fn language_target_info(target: &BoardTargetInfo) -> LanguageTargetInfo {
             .iter()
             .map(language_wireless_interface)
             .collect(),
+        connection_options: language_connection_options(target),
         capabilities: target
             .capabilities
             .iter()
@@ -659,6 +692,60 @@ fn language_wireless_transport(transport: TargetWirelessTransport) -> LanguageWi
         TargetWirelessTransport::Wifi => LanguageWirelessTransport::Wifi,
         TargetWirelessTransport::BluetoothLe => LanguageWirelessTransport::BluetoothLe,
         TargetWirelessTransport::BluetoothClassic => LanguageWirelessTransport::BluetoothClassic,
+    }
+}
+
+fn language_connection_options(target: &BoardTargetInfo) -> Vec<LanguageConnectionOption> {
+    let mut options = Vec::new();
+    if target.capabilities.contains(&"transport.serial") {
+        options.push(LanguageConnectionOption {
+            transport: LanguageConnectionTransport::Serial,
+            display_name: "USB/serial".to_owned(),
+            command_transport: true,
+            ota_update: false,
+            requires: "serial_port".to_owned(),
+        });
+    }
+
+    for interface in target.wireless {
+        let transport = language_connection_transport(interface.transport);
+        options.push(LanguageConnectionOption {
+            transport,
+            display_name: connection_transport_display_name(transport).to_owned(),
+            command_transport: interface.command_transport,
+            ota_update: interface.ota_update,
+            requires: connection_transport_requires(transport).to_owned(),
+        });
+    }
+
+    options
+}
+
+fn language_connection_transport(
+    transport: TargetWirelessTransport,
+) -> LanguageConnectionTransport {
+    match transport {
+        TargetWirelessTransport::Wifi => LanguageConnectionTransport::Wifi,
+        TargetWirelessTransport::BluetoothLe => LanguageConnectionTransport::BluetoothLe,
+        TargetWirelessTransport::BluetoothClassic => LanguageConnectionTransport::BluetoothClassic,
+    }
+}
+
+const fn connection_transport_display_name(transport: LanguageConnectionTransport) -> &'static str {
+    match transport {
+        LanguageConnectionTransport::Serial => "USB/serial",
+        LanguageConnectionTransport::Wifi => "Wi-Fi",
+        LanguageConnectionTransport::BluetoothLe => "Bluetooth LE",
+        LanguageConnectionTransport::BluetoothClassic => "Bluetooth Classic",
+    }
+}
+
+const fn connection_transport_requires(transport: LanguageConnectionTransport) -> &'static str {
+    match transport {
+        LanguageConnectionTransport::Serial => "serial_port",
+        LanguageConnectionTransport::Wifi => "network_endpoint",
+        LanguageConnectionTransport::BluetoothLe
+        | LanguageConnectionTransport::BluetoothClassic => "paired_device",
     }
 }
 
@@ -2121,6 +2208,15 @@ mod tests {
             == LanguageWirelessTransport::Wifi
             && interface.command_transport
             && interface.ota_update));
+        assert!(esp32
+            .connection_options
+            .iter()
+            .any(
+                |option| option.transport == LanguageConnectionTransport::BluetoothClassic
+                    && option.command_transport
+                    && !option.ota_update
+                    && option.requires == "paired_device"
+            ));
         assert_eq!(
             pico_w.onboard_led,
             Some(LanguageOnboardLed::WirelessChipGpio(0))
@@ -2130,6 +2226,42 @@ mod tests {
             .unwrap()
             .wireless
             .is_empty());
+    }
+
+    #[test]
+    fn connection_options_are_owned_by_rust_language_core() {
+        let uno = connection_options_for_target("uno-r4-wifi").unwrap();
+        let pico = connection_options_for_target("pico").unwrap();
+
+        assert!(uno.iter().any(
+            |option| option.transport == LanguageConnectionTransport::Serial
+                && option.display_name == "USB/serial"
+                && option.command_transport
+                && !option.ota_update
+                && option.requires == "serial_port"
+        ));
+        assert!(uno.iter().any(
+            |option| option.transport == LanguageConnectionTransport::Wifi
+                && option.command_transport
+                && option.ota_update
+                && option.requires == "network_endpoint"
+        ));
+        assert!(uno.iter().any(|option| option.transport
+            == LanguageConnectionTransport::BluetoothLe
+            && option.command_transport
+            && !option.ota_update
+            && option.requires == "paired_device"));
+        assert_eq!(
+            pico.iter()
+                .map(|option| option.transport)
+                .collect::<Vec<_>>(),
+            vec![LanguageConnectionTransport::Serial]
+        );
+        assert_eq!(
+            connection_transport_name(LanguageConnectionTransport::BluetoothLe),
+            "bluetooth_le"
+        );
+        assert!(connection_options_for_target("not-a-board").is_none());
     }
 
     #[test]

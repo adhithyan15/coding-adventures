@@ -12,6 +12,7 @@ from board_vm_native import (
     ProtocolResult,
     Session,
     connect,
+    connection_options,
     device_list,
     devices,
     detect_target,
@@ -122,6 +123,9 @@ def test_known_targets_are_exposed_from_rust_registry():
     assert uno_r4_wifi.supports_wifi is True
     assert uno_r4_wifi.supports_bluetooth is True
     assert uno_r4_wifi.supports_ota_update is True
+    assert uno_r4_wifi.command_transports == ["serial", "wifi", "bluetooth_le"]
+    assert uno_r4_wifi.ota_transports == ["wifi"]
+    assert uno_r4_wifi.supports_command_transport("serial") is True
     assert esp32 is not None
     assert esp32.family == "esp32"
     assert esp32.runtime_id == "board-vm-esp32"
@@ -129,13 +133,37 @@ def test_known_targets_are_exposed_from_rust_registry():
     assert "gpio.open" in esp32.capabilities
     assert "transport.bluetooth_classic" in esp32.capabilities
     assert all(item["command_transport"] for item in esp32.wireless)
+    assert any(
+        item["transport"] == "bluetooth_classic" and item["requires"] == "paired_device"
+        for item in esp32.connection_options
+    )
     assert pico is not None
     assert pico.wireless == []
+    assert [item["transport"] for item in pico.connection_options] == ["serial"]
     assert "transport.wifi" not in pico.capabilities
     assert pico_w is not None
     assert pico_w.onboard_led == {"kind": "wireless_chip_gpio", "pin": 0}
     assert "transport.wifi" in pico_w.capabilities
     assert "ota.wifi" in pico_w.capabilities
+
+
+def test_connection_options_are_exposed_from_rust_registry():
+    options = connection_options("uno-r4-wifi")
+
+    assert options[0] == {
+        "transport": "serial",
+        "display_name": "USB/serial",
+        "command_transport": True,
+        "ota_update": False,
+        "requires": "serial_port",
+    }
+    assert {
+        "transport": "wifi",
+        "display_name": "Wi-Fi",
+        "command_transport": True,
+        "ota_update": True,
+        "requires": "network_endpoint",
+    } in options
 
 
 def test_targets_are_detected_from_rust_owned_aliases():
