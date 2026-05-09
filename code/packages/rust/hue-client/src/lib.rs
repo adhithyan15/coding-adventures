@@ -10,11 +10,11 @@ use coding_adventures_json_serializer::serialize;
 use coding_adventures_json_value::{parse as parse_json, JsonNumber, JsonValue};
 use http_core::{find_header, Header};
 use hue_core::{
-    validate_brightness, HueBridgeResource, HueButtonResource, HueCommand, HueDeviceResource,
-    HueGroupedLightResource, HueLightResource, HueLightStateUpdate, HueMethod, HueMotionResource,
-    HueRequest, HueRequestBody, HueResourceId, HueResourceRef, HueResourceType, HueRoomResource,
-    HueSceneAction, HueSceneResource, HueZoneResource, CLIP_V2_EVENT_STREAM_PATH,
-    CLIP_V2_RESOURCE_ROOT, HUE_APPLICATION_KEY_HEADER,
+    validate_brightness, HueBridgeResource, HueButtonResource, HueButtonStateUpdate, HueCommand,
+    HueDeviceResource, HueGroupedLightResource, HueLightResource, HueLightStateUpdate, HueMethod,
+    HueMotionResource, HueMotionStateUpdate, HueRequest, HueRequestBody, HueResourceId,
+    HueResourceRef, HueResourceType, HueRoomResource, HueSceneAction, HueSceneResource,
+    HueZoneResource, CLIP_V2_EVENT_STREAM_PATH, CLIP_V2_RESOURCE_ROOT, HUE_APPLICATION_KEY_HEADER,
 };
 use std::fmt;
 
@@ -286,6 +286,20 @@ impl<T: HueTransport> HueClient<T> {
     pub fn get_light_state_updates(&mut self) -> Result<Vec<HueLightStateUpdate>, HueClientError> {
         let envelope = self.get_collection(HueResourceType::Light)?;
         parse_light_state_updates_from_envelope(&envelope)
+    }
+
+    pub fn get_motion_state_updates(
+        &mut self,
+    ) -> Result<Vec<HueMotionStateUpdate>, HueClientError> {
+        let envelope = self.get_collection(HueResourceType::Motion)?;
+        parse_motion_state_updates_from_envelope(&envelope)
+    }
+
+    pub fn get_button_state_updates(
+        &mut self,
+    ) -> Result<Vec<HueButtonStateUpdate>, HueClientError> {
+        let envelope = self.get_collection(HueResourceType::Button)?;
+        parse_button_state_updates_from_envelope(&envelope)
     }
 
     pub fn send_command(&mut self, command: HueCommand) -> Result<HueEnvelope, HueClientError> {
@@ -688,6 +702,30 @@ pub fn parse_light_state_updates_from_envelope(
     Ok(updates)
 }
 
+pub fn parse_motion_state_updates_from_envelope(
+    envelope: &HueEnvelope,
+) -> Result<Vec<HueMotionStateUpdate>, HueClientError> {
+    let mut updates = Vec::new();
+    for resource in &envelope.data {
+        if object_string_field(resource, "type") == Some(HueResourceType::Motion.as_hue_type()) {
+            updates.push(parse_motion_state_update(resource)?);
+        }
+    }
+    Ok(updates)
+}
+
+pub fn parse_button_state_updates_from_envelope(
+    envelope: &HueEnvelope,
+) -> Result<Vec<HueButtonStateUpdate>, HueClientError> {
+    let mut updates = Vec::new();
+    for resource in &envelope.data {
+        if object_string_field(resource, "type") == Some(HueResourceType::Button.as_hue_type()) {
+            updates.push(parse_button_state_update(resource)?);
+        }
+    }
+    Ok(updates)
+}
+
 pub fn parse_light_state_updates_from_event_batches(
     batches: &[HueEventStreamBatch],
 ) -> Result<Vec<HueLightStateUpdate>, HueClientError> {
@@ -699,6 +737,42 @@ pub fn parse_light_state_updates_from_event_batches(
                     == Some(HueResourceType::Light.as_hue_type())
                 {
                     updates.push(parse_light_state_update(resource)?);
+                }
+            }
+        }
+    }
+    Ok(updates)
+}
+
+pub fn parse_motion_state_updates_from_event_batches(
+    batches: &[HueEventStreamBatch],
+) -> Result<Vec<HueMotionStateUpdate>, HueClientError> {
+    let mut updates = Vec::new();
+    for batch in batches {
+        for event in &batch.events {
+            for resource in &event.data {
+                if object_string_field(resource, "type")
+                    == Some(HueResourceType::Motion.as_hue_type())
+                {
+                    updates.push(parse_motion_state_update(resource)?);
+                }
+            }
+        }
+    }
+    Ok(updates)
+}
+
+pub fn parse_button_state_updates_from_event_batches(
+    batches: &[HueEventStreamBatch],
+) -> Result<Vec<HueButtonStateUpdate>, HueClientError> {
+    let mut updates = Vec::new();
+    for batch in batches {
+        for event in &batch.events {
+            for resource in &event.data {
+                if object_string_field(resource, "type")
+                    == Some(HueResourceType::Button.as_hue_type())
+                {
+                    updates.push(parse_button_state_update(resource)?);
                 }
             }
         }
@@ -1012,17 +1086,21 @@ fn parse_scene_action(value: &JsonValue) -> Result<HueSceneAction, HueClientErro
     })
 }
 
-fn parse_motion_resource(resource: &JsonValue) -> Result<HueMotionResource, HueClientError> {
+fn parse_motion_state_update(resource: &JsonValue) -> Result<HueMotionStateUpdate, HueClientError> {
     let id = object_string_field(resource, "id")
         .ok_or_else(|| HueClientError::unexpected_json("Hue motion resource is missing id"))?;
-    let owner_device_id = parse_owner_device_id(resource, "Hue motion resource")?;
-    let name = parse_resource_name(resource, id);
+    let owner_device_id = object_field(resource, "owner")
+        .and_then(|owner| object_string_field(owner, "rid"))
+        .map(HueResourceId::trusted);
+    let name = object_field(resource, "metadata")
+        .and_then(|metadata| object_string_field(metadata, "name"))
+        .map(str::to_string);
     let motion =
         object_field(resource, "motion").and_then(|motion| object_bool_field(motion, "motion"));
     let motion_valid = object_field(resource, "motion")
         .and_then(|motion| object_bool_field(motion, "motion_valid"));
 
-    Ok(HueMotionResource {
+    Ok(HueMotionStateUpdate {
         id: HueResourceId::trusted(id),
         owner_device_id,
         name,
@@ -1031,16 +1109,42 @@ fn parse_motion_resource(resource: &JsonValue) -> Result<HueMotionResource, HueC
     })
 }
 
-fn parse_button_resource(resource: &JsonValue) -> Result<HueButtonResource, HueClientError> {
+fn parse_motion_resource(resource: &JsonValue) -> Result<HueMotionResource, HueClientError> {
+    let HueMotionStateUpdate {
+        id,
+        owner_device_id,
+        name,
+        motion,
+        motion_valid,
+    } = parse_motion_state_update(resource)?;
+    let owner_device_id = owner_device_id.ok_or_else(|| {
+        HueClientError::unexpected_json("Hue motion resource is missing owner.rid")
+    })?;
+    let name = name.unwrap_or_else(|| id.as_str().to_string());
+
+    Ok(HueMotionResource {
+        id,
+        owner_device_id,
+        name,
+        motion,
+        motion_valid,
+    })
+}
+
+fn parse_button_state_update(resource: &JsonValue) -> Result<HueButtonStateUpdate, HueClientError> {
     let id = object_string_field(resource, "id")
         .ok_or_else(|| HueClientError::unexpected_json("Hue button resource is missing id"))?;
-    let owner_device_id = parse_owner_device_id(resource, "Hue button resource")?;
-    let name = parse_resource_name(resource, id);
+    let owner_device_id = object_field(resource, "owner")
+        .and_then(|owner| object_string_field(owner, "rid"))
+        .map(HueResourceId::trusted);
+    let name = object_field(resource, "metadata")
+        .and_then(|metadata| object_string_field(metadata, "name"))
+        .map(str::to_string);
     let last_event = object_field(resource, "button")
         .and_then(|button| object_string_field(button, "last_event"))
         .map(str::to_string);
 
-    Ok(HueButtonResource {
+    Ok(HueButtonStateUpdate {
         id: HueResourceId::trusted(id),
         owner_device_id,
         name,
@@ -1048,16 +1152,24 @@ fn parse_button_resource(resource: &JsonValue) -> Result<HueButtonResource, HueC
     })
 }
 
-fn parse_owner_device_id(
-    resource: &JsonValue,
-    resource_label: &str,
-) -> Result<HueResourceId, HueClientError> {
-    object_field(resource, "owner")
-        .and_then(|owner| object_string_field(owner, "rid"))
-        .map(HueResourceId::trusted)
-        .ok_or_else(|| {
-            HueClientError::unexpected_json(format!("{resource_label} is missing owner.rid"))
-        })
+fn parse_button_resource(resource: &JsonValue) -> Result<HueButtonResource, HueClientError> {
+    let HueButtonStateUpdate {
+        id,
+        owner_device_id,
+        name,
+        last_event,
+    } = parse_button_state_update(resource)?;
+    let owner_device_id = owner_device_id.ok_or_else(|| {
+        HueClientError::unexpected_json("Hue button resource is missing owner.rid")
+    })?;
+    let name = name.unwrap_or_else(|| id.as_str().to_string());
+
+    Ok(HueButtonResource {
+        id,
+        owner_device_id,
+        name,
+        last_event,
+    })
 }
 
 fn parse_resource_name(resource: &JsonValue, fallback_name: &str) -> String {
@@ -1355,6 +1467,34 @@ mod tests {
         assert_eq!(deltas[0].capability_id.as_str(), "light.on_off");
         assert_eq!(deltas[1].capability_id.as_str(), "light.brightness");
         assert_eq!(deltas[2].capability_id.as_str(), "light.color_temperature");
+    }
+
+    #[test]
+    fn parses_motion_and_button_state_updates_from_event_stream_batches() {
+        let batches = parse_event_stream(
+            b"data: [{\"id\":\"event-1\",\"type\":\"update\",\"data\":[{\"id\":\"motion-1\",\"type\":\"motion\",\"motion\":{\"motion\":true,\"motion_valid\":true}},{\"id\":\"button-1\",\"type\":\"button\",\"button\":{\"last_event\":\"short_release\"}}]}]\n\n",
+        )
+        .unwrap();
+
+        let motions = parse_motion_state_updates_from_event_batches(&batches).unwrap();
+        let buttons = parse_button_state_updates_from_event_batches(&batches).unwrap();
+
+        assert_eq!(motions.len(), 1);
+        assert_eq!(motions[0].id.as_str(), "motion-1");
+        assert_eq!(motions[0].owner_device_id, None);
+        assert_eq!(motions[0].motion, Some(true));
+        assert_eq!(motions[0].motion_valid, Some(true));
+        let motion_deltas = motions[0].state_deltas();
+        assert_eq!(motion_deltas.len(), 1);
+        assert_eq!(motion_deltas[0].capability_id.as_str(), "sensor.occupancy");
+
+        assert_eq!(buttons.len(), 1);
+        assert_eq!(buttons[0].id.as_str(), "button-1");
+        assert_eq!(buttons[0].owner_device_id, None);
+        assert_eq!(buttons[0].last_event.as_deref(), Some("short_release"));
+        let button_deltas = buttons[0].state_deltas();
+        assert_eq!(button_deltas.len(), 1);
+        assert_eq!(button_deltas[0].capability_id.as_str(), "input.button");
     }
 
     #[test]

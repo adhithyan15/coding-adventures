@@ -19,5 +19,5 @@ All notable changes to this package will be documented in this file.
 - Hue motion and button resource decoding for normalized sensor/input support.
 - Hue event-stream Server-Sent Events parsing into batches and raw resource
   records.
-- Hue light state update extraction from resource snapshots and event-stream
-  batches for normalized runtime state deltas.
+- Hue light, motion, and button state update extraction from resource snapshots
+  and event-stream batches for normalized runtime state deltas.

@@ -18,8 +18,8 @@ All notable changes to this package will be documented in this file.
   projection helpers.
 - Mapping helpers from discovered Hue bridge/device/light records into
   `smart-home-core`.
-- Hue light state update helpers that project partial Hue light changes into
-  normalized `StateDelta` records.
+- Hue light, motion, and button state update helpers that project partial Hue
+  changes into normalized `StateDelta` records.
 - Hue light snapshots and scene desired states now use canonical D23 capability
   ids as object keys, matching smart-home runtime reconciliation.
 - Direct Hue light brightness and color-temperature command helpers.
