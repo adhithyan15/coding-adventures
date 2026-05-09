@@ -117,6 +117,16 @@ pub enum LocalHttpAuth {
 }
 
 impl LocalHttpAuth {
+    pub fn kind(&self) -> LocalHttpAuthKind {
+        match self {
+            Self::None => LocalHttpAuthKind::None,
+            Self::BearerToken { .. } => LocalHttpAuthKind::BearerToken,
+            Self::Basic { .. } => LocalHttpAuthKind::Basic,
+            Self::HeaderToken { .. } => LocalHttpAuthKind::HeaderToken,
+            Self::ClientCertificate { .. } => LocalHttpAuthKind::ClientCertificate,
+        }
+    }
+
     pub fn required_vault_ref(&self) -> Option<&VaultRef> {
         match self {
             Self::None => None,
@@ -125,6 +135,33 @@ impl LocalHttpAuth {
             | Self::HeaderToken { vault_ref, .. }
             | Self::ClientCertificate { vault_ref } => Some(vault_ref),
         }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LocalHttpAuthKind {
+    None,
+    BearerToken,
+    Basic,
+    HeaderToken,
+    ClientCertificate,
+}
+
+impl LocalHttpAuthKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::None => "none",
+            Self::BearerToken => "bearer_token",
+            Self::Basic => "basic",
+            Self::HeaderToken => "header_token",
+            Self::ClientCertificate => "client_certificate",
+        }
+    }
+}
+
+impl fmt::Display for LocalHttpAuthKind {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
     }
 }
 
@@ -225,6 +262,113 @@ impl LocalHttpEndpoint {
     pub fn url_for_path(&self, path: &str) -> Result<String, LocalHttpError> {
         validate_relative_path(path)?;
         Ok(join_url_path(&self.base_url(), path))
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LocalHttpEndpointSort {
+    IntegrationThenBridge,
+    BridgeId,
+    Host,
+    SchemeThenHost,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LocalHttpEndpointQuery {
+    pub integration_ids: Vec<IntegrationId>,
+    pub bridge_ids: Vec<BridgeId>,
+    pub schemes: Vec<LocalHttpScheme>,
+    pub hosts: Vec<String>,
+    pub has_tls_name: Option<bool>,
+    pub accept_invalid_certs: Option<bool>,
+    pub sort: LocalHttpEndpointSort,
+    pub limit: Option<usize>,
+}
+
+impl Default for LocalHttpEndpointQuery {
+    fn default() -> Self {
+        Self {
+            integration_ids: Vec::new(),
+            bridge_ids: Vec::new(),
+            schemes: Vec::new(),
+            hosts: Vec::new(),
+            has_tls_name: None,
+            accept_invalid_certs: None,
+            sort: LocalHttpEndpointSort::IntegrationThenBridge,
+            limit: None,
+        }
+    }
+}
+
+impl LocalHttpEndpointQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_integration(mut self, integration_id: IntegrationId) -> Self {
+        self.integration_ids.push(integration_id);
+        self
+    }
+
+    pub fn with_bridge(mut self, bridge_id: BridgeId) -> Self {
+        self.bridge_ids.push(bridge_id);
+        self
+    }
+
+    pub fn with_scheme(mut self, scheme: LocalHttpScheme) -> Self {
+        self.schemes.push(scheme);
+        self
+    }
+
+    pub fn with_host(mut self, host: impl Into<String>) -> Self {
+        self.hosts.push(host.into());
+        self
+    }
+
+    pub fn has_tls_name(mut self, has_tls_name: bool) -> Self {
+        self.has_tls_name = Some(has_tls_name);
+        self
+    }
+
+    pub fn accept_invalid_certs(mut self, accept_invalid_certs: bool) -> Self {
+        self.accept_invalid_certs = Some(accept_invalid_certs);
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: LocalHttpEndpointSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn limited_to(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    pub fn matches_endpoint(&self, endpoint: &LocalHttpEndpoint) -> bool {
+        if !matches_any(&self.integration_ids, &endpoint.integration_id) {
+            return false;
+        }
+        if !matches_any(&self.bridge_ids, &endpoint.bridge_id) {
+            return false;
+        }
+        if !matches_any(&self.schemes, &endpoint.scheme) {
+            return false;
+        }
+        if !self.hosts.is_empty() && !self.hosts.iter().any(|host| host == &endpoint.host) {
+            return false;
+        }
+        if let Some(has_tls_name) = self.has_tls_name {
+            if endpoint.tls_name.is_some() != has_tls_name {
+                return false;
+            }
+        }
+        if let Some(accept_invalid_certs) = self.accept_invalid_certs {
+            if endpoint.accept_invalid_certs != accept_invalid_certs {
+                return false;
+            }
+        }
+        true
     }
 }
 
@@ -369,6 +513,259 @@ impl LocalHttpRequestPlan {
 
     pub fn has_body(&self) -> bool {
         !self.body.is_empty()
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LocalHttpRequestPlanSort {
+    IntegrationThenBridge,
+    MethodThenUrl,
+    Url,
+    TimeoutDesc,
+    BodySizeDesc,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LocalHttpRequestPlanQuery {
+    pub integration_ids: Vec<IntegrationId>,
+    pub bridge_ids: Vec<BridgeId>,
+    pub methods: Vec<LocalHttpMethod>,
+    pub auth_kinds: Vec<LocalHttpAuthKind>,
+    pub idempotent: Option<bool>,
+    pub has_body: Option<bool>,
+    pub requires_vault_ref: Option<bool>,
+    pub timeout_at_or_below_ms: Option<u64>,
+    pub sort: LocalHttpRequestPlanSort,
+    pub limit: Option<usize>,
+}
+
+impl Default for LocalHttpRequestPlanQuery {
+    fn default() -> Self {
+        Self {
+            integration_ids: Vec::new(),
+            bridge_ids: Vec::new(),
+            methods: Vec::new(),
+            auth_kinds: Vec::new(),
+            idempotent: None,
+            has_body: None,
+            requires_vault_ref: None,
+            timeout_at_or_below_ms: None,
+            sort: LocalHttpRequestPlanSort::IntegrationThenBridge,
+            limit: None,
+        }
+    }
+}
+
+impl LocalHttpRequestPlanQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_integration(mut self, integration_id: IntegrationId) -> Self {
+        self.integration_ids.push(integration_id);
+        self
+    }
+
+    pub fn with_bridge(mut self, bridge_id: BridgeId) -> Self {
+        self.bridge_ids.push(bridge_id);
+        self
+    }
+
+    pub fn with_method(mut self, method: LocalHttpMethod) -> Self {
+        self.methods.push(method);
+        self
+    }
+
+    pub fn with_auth_kind(mut self, auth_kind: LocalHttpAuthKind) -> Self {
+        self.auth_kinds.push(auth_kind);
+        self
+    }
+
+    pub fn idempotent(mut self, idempotent: bool) -> Self {
+        self.idempotent = Some(idempotent);
+        self
+    }
+
+    pub fn has_body(mut self, has_body: bool) -> Self {
+        self.has_body = Some(has_body);
+        self
+    }
+
+    pub fn requires_vault_ref(mut self, requires_vault_ref: bool) -> Self {
+        self.requires_vault_ref = Some(requires_vault_ref);
+        self
+    }
+
+    pub fn timeout_at_or_below(mut self, timeout_ms: u64) -> Self {
+        self.timeout_at_or_below_ms = Some(timeout_ms);
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: LocalHttpRequestPlanSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn limited_to(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+
+    pub fn matches_plan(&self, plan: &LocalHttpRequestPlan) -> bool {
+        if !matches_any(&self.integration_ids, &plan.integration_id) {
+            return false;
+        }
+        if !matches_any(&self.bridge_ids, &plan.bridge_id) {
+            return false;
+        }
+        if !matches_any(&self.methods, &plan.method) {
+            return false;
+        }
+        if !matches_any(&self.auth_kinds, &plan.auth.kind()) {
+            return false;
+        }
+        if let Some(idempotent) = self.idempotent {
+            if plan.idempotent != idempotent {
+                return false;
+            }
+        }
+        if let Some(has_body) = self.has_body {
+            if plan.has_body() != has_body {
+                return false;
+            }
+        }
+        if let Some(requires_vault_ref) = self.requires_vault_ref {
+            if plan.required_vault_ref().is_some() != requires_vault_ref {
+                return false;
+            }
+        }
+        if let Some(timeout_at_or_below_ms) = self.timeout_at_or_below_ms {
+            if plan.timeout_ms > timeout_at_or_below_ms {
+                return false;
+            }
+        }
+        true
+    }
+}
+
+pub fn query_local_http_endpoints<'a, I>(
+    endpoints: I,
+    query: &LocalHttpEndpointQuery,
+) -> Vec<&'a LocalHttpEndpoint>
+where
+    I: IntoIterator<Item = &'a LocalHttpEndpoint>,
+{
+    let mut results = endpoints
+        .into_iter()
+        .filter(|endpoint| query.matches_endpoint(endpoint))
+        .collect::<Vec<_>>();
+
+    sort_local_http_endpoint_results(&mut results, query.sort);
+    if let Some(limit) = query.limit {
+        results.truncate(limit);
+    }
+
+    results
+}
+
+pub fn query_local_http_request_plans<'a, I>(
+    plans: I,
+    query: &LocalHttpRequestPlanQuery,
+) -> Vec<&'a LocalHttpRequestPlan>
+where
+    I: IntoIterator<Item = &'a LocalHttpRequestPlan>,
+{
+    let mut results = plans
+        .into_iter()
+        .filter(|plan| query.matches_plan(plan))
+        .collect::<Vec<_>>();
+
+    sort_local_http_request_plan_results(&mut results, query.sort);
+    if let Some(limit) = query.limit {
+        results.truncate(limit);
+    }
+
+    results
+}
+
+fn sort_local_http_endpoint_results(
+    endpoints: &mut Vec<&LocalHttpEndpoint>,
+    sort: LocalHttpEndpointSort,
+) {
+    match sort {
+        LocalHttpEndpointSort::IntegrationThenBridge => endpoints.sort_by(|left, right| {
+            left.integration_id
+                .cmp(&right.integration_id)
+                .then_with(|| left.bridge_id.cmp(&right.bridge_id))
+        }),
+        LocalHttpEndpointSort::BridgeId => {
+            endpoints.sort_by(|left, right| left.bridge_id.cmp(&right.bridge_id))
+        }
+        LocalHttpEndpointSort::Host => endpoints.sort_by(|left, right| {
+            left.host
+                .cmp(&right.host)
+                .then_with(|| left.bridge_id.cmp(&right.bridge_id))
+        }),
+        LocalHttpEndpointSort::SchemeThenHost => endpoints.sort_by(|left, right| {
+            scheme_rank(left.scheme)
+                .cmp(&scheme_rank(right.scheme))
+                .then_with(|| left.host.cmp(&right.host))
+                .then_with(|| left.bridge_id.cmp(&right.bridge_id))
+        }),
+    }
+}
+
+fn sort_local_http_request_plan_results(
+    plans: &mut Vec<&LocalHttpRequestPlan>,
+    sort: LocalHttpRequestPlanSort,
+) {
+    match sort {
+        LocalHttpRequestPlanSort::IntegrationThenBridge => plans.sort_by(|left, right| {
+            left.integration_id
+                .cmp(&right.integration_id)
+                .then_with(|| left.bridge_id.cmp(&right.bridge_id))
+                .then_with(|| left.url.cmp(&right.url))
+        }),
+        LocalHttpRequestPlanSort::MethodThenUrl => plans.sort_by(|left, right| {
+            method_rank(left.method)
+                .cmp(&method_rank(right.method))
+                .then_with(|| left.url.cmp(&right.url))
+        }),
+        LocalHttpRequestPlanSort::Url => plans.sort_by(|left, right| left.url.cmp(&right.url)),
+        LocalHttpRequestPlanSort::TimeoutDesc => plans.sort_by(|left, right| {
+            right
+                .timeout_ms
+                .cmp(&left.timeout_ms)
+                .then_with(|| left.url.cmp(&right.url))
+        }),
+        LocalHttpRequestPlanSort::BodySizeDesc => plans.sort_by(|left, right| {
+            right
+                .body
+                .len()
+                .cmp(&left.body.len())
+                .then_with(|| left.url.cmp(&right.url))
+        }),
+    }
+}
+
+fn matches_any<T: PartialEq>(needles: &[T], value: &T) -> bool {
+    needles.is_empty() || needles.iter().any(|needle| needle == value)
+}
+
+fn scheme_rank(scheme: LocalHttpScheme) -> u8 {
+    match scheme {
+        LocalHttpScheme::Http => 0,
+        LocalHttpScheme::Https => 1,
+    }
+}
+
+fn method_rank(method: LocalHttpMethod) -> u8 {
+    match method {
+        LocalHttpMethod::Get => 0,
+        LocalHttpMethod::Post => 1,
+        LocalHttpMethod::Put => 2,
+        LocalHttpMethod::Patch => 3,
+        LocalHttpMethod::Delete => 4,
     }
 }
 
@@ -608,5 +1005,78 @@ mod tests {
 
         assert_eq!(endpoint.tls_name.as_deref(), Some("camera.local"));
         assert!(endpoint.accept_invalid_certs);
+    }
+
+    #[test]
+    fn endpoint_queries_compose_bridge_tls_and_sort_filters() {
+        let hue = LocalHttpEndpoint::hue_bridge(bridge_id(), "hue.local").unwrap();
+        let camera = LocalHttpEndpoint::new(
+            IntegrationId::trusted("camera"),
+            BridgeId::trusted("camera-1"),
+            LocalHttpScheme::Https,
+            "192.168.1.40",
+        )
+        .unwrap()
+        .with_tls_name("camera.local")
+        .accept_invalid_certs(true);
+        let wled = LocalHttpEndpoint::new(
+            IntegrationId::trusted("wled"),
+            BridgeId::trusted("wled-1"),
+            LocalHttpScheme::Http,
+            "wled.local",
+        )
+        .unwrap();
+
+        let query = LocalHttpEndpointQuery::new()
+            .with_scheme(LocalHttpScheme::Https)
+            .has_tls_name(true)
+            .accept_invalid_certs(true)
+            .sorted_by(LocalHttpEndpointSort::Host)
+            .limited_to(1);
+        let results = query_local_http_endpoints([&hue, &camera, &wled], &query);
+
+        assert_eq!(results.len(), 1);
+        assert_eq!(results[0].bridge_id, BridgeId::trusted("camera-1"));
+        assert!(query.matches_endpoint(results[0]));
+    }
+
+    #[test]
+    fn request_plan_queries_filter_auth_body_timeout_and_sort() {
+        let endpoint = LocalHttpEndpoint::hue_bridge(bridge_id(), "hue.local").unwrap();
+        let get = LocalHttpRequestTemplate::new(LocalHttpMethod::Get, "/clip/v2/resource/light")
+            .unwrap()
+            .with_timeout_ms(1_000)
+            .plan(&endpoint, Vec::new())
+            .unwrap();
+        let put = LocalHttpRequestTemplate::new(LocalHttpMethod::Put, "/clip/v2/resource/light/1")
+            .unwrap()
+            .with_content_type("application/json")
+            .with_auth(LocalHttpAuth::HeaderToken {
+                header_name: "hue-application-key".into(),
+                vault_ref: VaultRef::trusted("vault://hue/app-key"),
+            })
+            .with_timeout_ms(2_000)
+            .plan(&endpoint, br#"{"on":{"on":true}}"#.to_vec())
+            .unwrap();
+        let post = LocalHttpRequestTemplate::new(LocalHttpMethod::Post, "/clip/v2/resource/scene")
+            .unwrap()
+            .with_content_type("application/json")
+            .with_timeout_ms(8_000)
+            .plan(&endpoint, br#"{"recall":{"action":"active"}}"#.to_vec())
+            .unwrap();
+
+        let query = LocalHttpRequestPlanQuery::new()
+            .with_auth_kind(LocalHttpAuthKind::HeaderToken)
+            .has_body(true)
+            .requires_vault_ref(true)
+            .timeout_at_or_below(2_000)
+            .sorted_by(LocalHttpRequestPlanSort::BodySizeDesc);
+        let results = query_local_http_request_plans([&get, &put, &post], &query);
+
+        assert_eq!(results.len(), 1);
+        assert_eq!(results[0].method, LocalHttpMethod::Put);
+        assert_eq!(results[0].auth.kind(), LocalHttpAuthKind::HeaderToken);
+        assert_eq!(LocalHttpAuthKind::HeaderToken.to_string(), "header_token");
+        assert!(query.matches_plan(results[0]));
     }
 }
