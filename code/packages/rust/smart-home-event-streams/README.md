@@ -11,8 +11,10 @@ radio workers a shared deterministic shape for:
 - MQTT topic filter validation, matching, and subscription descriptors
 - stream cursors and replay checkpoints
 - heartbeat freshness and stale-event deadlines
+- heartbeat deadline schedules for supervisor wakeups across many streams
 - disconnect tracking without losing the last cursor
 - reconnect attempts with bounded exponential backoff
+- restart schedules that group due reconnect plans across stream workers
 - restart plans that a runtime supervisor can inspect before spawning workers
 
 Protocol-specific transport clients, payload parsers, and adapter actors live in
