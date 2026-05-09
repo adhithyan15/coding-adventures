@@ -10,6 +10,7 @@ This crate starts the D25 device-interview layer above APS. It provides:
 - active endpoint response parsing
 - APS request builders for node/simple descriptor and active endpoint requests
 - APS request builders and status parsers for bind/unbind requests
+- deterministic interview planning for the next ZDO descriptor request
 - interview-summary projection into a normalized D23 `Device` skeleton
 
 ## Dependencies
