@@ -629,6 +629,110 @@ impl EventStreamState {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EventStreamHeartbeatDeadline {
+    pub stream_id: EventStreamId,
+    pub integration_id: IntegrationId,
+    pub bridge_id: BridgeId,
+    pub status: EventStreamStatus,
+    pub last_heartbeat_at_ms: Option<u64>,
+    pub heartbeat_timeout_ms: u64,
+    pub due_at_ms: u64,
+}
+
+impl EventStreamHeartbeatDeadline {
+    pub fn from_state(state: &EventStreamState) -> Option<Self> {
+        if !matches!(
+            state.status,
+            EventStreamStatus::Connecting
+                | EventStreamStatus::Healthy
+                | EventStreamStatus::Degraded
+        ) {
+            return None;
+        }
+        let baseline_ms = state
+            .last_heartbeat_at_ms
+            .or(state.connected_at_ms)
+            .unwrap_or(state.cursor.observed_at_ms);
+        Some(Self {
+            stream_id: state.spec.stream_id.clone(),
+            integration_id: state.spec.integration_id.clone(),
+            bridge_id: state.spec.bridge_id.clone(),
+            status: state.status,
+            last_heartbeat_at_ms: state.last_heartbeat_at_ms,
+            heartbeat_timeout_ms: state.spec.heartbeat_timeout_ms,
+            due_at_ms: baseline_ms.saturating_add(state.spec.heartbeat_timeout_ms),
+        })
+    }
+
+    pub fn is_due_at(&self, now_ms: u64) -> bool {
+        now_ms >= self.due_at_ms
+    }
+
+    pub fn overdue_by_ms_at(&self, now_ms: u64) -> u64 {
+        now_ms.saturating_sub(self.due_at_ms)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EventStreamHeartbeatSchedule {
+    pub generated_at_ms: u64,
+    pub deadlines: Vec<EventStreamHeartbeatDeadline>,
+}
+
+impl EventStreamHeartbeatSchedule {
+    pub fn is_empty(&self) -> bool {
+        self.deadlines.is_empty()
+    }
+
+    pub fn len(&self) -> usize {
+        self.deadlines.len()
+    }
+
+    pub fn next_due_at_ms(&self) -> Option<u64> {
+        self.deadlines
+            .iter()
+            .map(|deadline| deadline.due_at_ms)
+            .min()
+    }
+
+    pub fn due_at(&self, now_ms: u64) -> Vec<&EventStreamHeartbeatDeadline> {
+        self.deadlines
+            .iter()
+            .filter(|deadline| deadline.is_due_at(now_ms))
+            .collect()
+    }
+
+    pub fn deadlines_for_bridge(&self, bridge_id: &BridgeId) -> Vec<&EventStreamHeartbeatDeadline> {
+        self.deadlines
+            .iter()
+            .filter(|deadline| &deadline.bridge_id == bridge_id)
+            .collect()
+    }
+}
+
+pub fn event_stream_heartbeat_schedule_at<'a, I>(
+    states: I,
+    now_ms: u64,
+) -> EventStreamHeartbeatSchedule
+where
+    I: IntoIterator<Item = &'a EventStreamState>,
+{
+    let mut deadlines = states
+        .into_iter()
+        .filter_map(EventStreamHeartbeatDeadline::from_state)
+        .collect::<Vec<_>>();
+    deadlines.sort_by(|left, right| {
+        left.due_at_ms
+            .cmp(&right.due_at_ms)
+            .then_with(|| left.stream_id.cmp(&right.stream_id))
+    });
+    EventStreamHeartbeatSchedule {
+        generated_at_ms: now_ms,
+        deadlines,
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct EventStreamRestartPlan {
     pub stream_id: EventStreamId,
     pub integration_id: IntegrationId,
@@ -640,6 +744,79 @@ pub struct EventStreamRestartPlan {
     pub reconnect_attempt: u32,
     pub backoff_ms: u64,
     pub retry_at_ms: u64,
+}
+
+impl EventStreamRestartPlan {
+    pub fn retry_due_at(&self, now_ms: u64) -> bool {
+        now_ms >= self.retry_at_ms
+    }
+
+    pub fn wait_ms_at(&self, now_ms: u64) -> u64 {
+        self.retry_at_ms.saturating_sub(now_ms)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EventStreamRestartSchedule {
+    pub generated_at_ms: u64,
+    pub plans: Vec<EventStreamRestartPlan>,
+}
+
+impl EventStreamRestartSchedule {
+    pub fn is_empty(&self) -> bool {
+        self.plans.is_empty()
+    }
+
+    pub fn len(&self) -> usize {
+        self.plans.len()
+    }
+
+    pub fn next_retry_at_ms(&self) -> Option<u64> {
+        self.plans.iter().map(|plan| plan.retry_at_ms).min()
+    }
+
+    pub fn plans_ready_at(&self, now_ms: u64) -> Vec<&EventStreamRestartPlan> {
+        self.plans
+            .iter()
+            .filter(|plan| plan.retry_due_at(now_ms))
+            .collect()
+    }
+
+    pub fn plans_for_bridge(&self, bridge_id: &BridgeId) -> Vec<&EventStreamRestartPlan> {
+        self.plans
+            .iter()
+            .filter(|plan| &plan.bridge_id == bridge_id)
+            .collect()
+    }
+}
+
+pub fn event_stream_restart_schedule_at<'a, I>(states: I, now_ms: u64) -> EventStreamRestartSchedule
+where
+    I: IntoIterator<Item = &'a EventStreamState>,
+{
+    let mut plans = states
+        .into_iter()
+        .filter_map(|state| state.restart_plan_at(now_ms))
+        .collect::<Vec<_>>();
+    plans.sort_by(|left, right| {
+        left.retry_at_ms
+            .cmp(&right.retry_at_ms)
+            .then_with(|| restart_reason_rank(left.reason).cmp(&restart_reason_rank(right.reason)))
+            .then_with(|| left.stream_id.cmp(&right.stream_id))
+    });
+    EventStreamRestartSchedule {
+        generated_at_ms: now_ms,
+        plans,
+    }
+}
+
+fn restart_reason_rank(reason: EventStreamRestartReason) -> u8 {
+    match reason {
+        EventStreamRestartReason::EventGap => 0,
+        EventStreamRestartReason::HeartbeatOverdue => 1,
+        EventStreamRestartReason::ExplicitDisconnect => 2,
+        EventStreamRestartReason::StaleEvents => 3,
+    }
 }
 
 fn validate_mqtt_topic_filter(value: &str) -> Result<(), MqttTopicError> {
@@ -806,6 +983,107 @@ mod tests {
         assert_eq!(plan.reason, EventStreamRestartReason::EventGap);
         assert_eq!(plan.bridge_id, BridgeId::trusted("broker-1"));
         assert_eq!(plan.reconnect_attempt, 1);
+    }
+
+    #[test]
+    fn heartbeat_schedule_orders_stream_deadlines_without_mutating() {
+        let mut hue = EventStreamState::new(
+            EventStreamSpec::hue_sse(bridge_id(), "https://bridge/eventstream")
+                .with_heartbeat_timeout(500),
+            1_000,
+        );
+        hue.mark_connected(1_000);
+        hue.record_event(EventId::trusted("event-1"), None, 1_100);
+        let mut mqtt = EventStreamState::new(
+            EventStreamSpec::new(
+                IntegrationId::trusted("mqtt"),
+                BridgeId::trusted("broker-1"),
+                EventStreamTransport::MqttSubscription,
+            )
+            .with_heartbeat_timeout(100),
+            900,
+        );
+        mqtt.mark_connecting();
+        let mut disconnected = EventStreamState::new(
+            EventStreamSpec::new(
+                IntegrationId::trusted("esphome"),
+                BridgeId::trusted("esp-1"),
+                EventStreamTransport::WebSocket,
+            ),
+            1_000,
+        );
+        disconnected.mark_disconnected(1_050);
+
+        let schedule = event_stream_heartbeat_schedule_at([&hue, &mqtt, &disconnected], 1_200);
+
+        assert_eq!(schedule.generated_at_ms, 1_200);
+        assert_eq!(schedule.len(), 2);
+        assert!(!schedule.is_empty());
+        assert_eq!(schedule.next_due_at_ms(), Some(1_000));
+        assert_eq!(schedule.due_at(1_200).len(), 1);
+        assert_eq!(
+            schedule.due_at(1_200)[0].stream_id,
+            EventStreamId::for_bridge(
+                &IntegrationId::trusted("mqtt"),
+                &BridgeId::trusted("broker-1")
+            )
+        );
+        assert_eq!(schedule.deadlines_for_bridge(&bridge_id()).len(), 1);
+        assert_eq!(hue.status, EventStreamStatus::Healthy);
+        assert_eq!(mqtt.status, EventStreamStatus::Connecting);
+    }
+
+    #[test]
+    fn restart_schedule_groups_due_stream_plans() {
+        let mut gap = EventStreamState::new(
+            EventStreamSpec::new(
+                IntegrationId::trusted("mqtt"),
+                BridgeId::trusted("broker-1"),
+                EventStreamTransport::MqttSubscription,
+            )
+            .with_reconnect_policy(ReconnectPolicy::new(50, 500, 2)),
+            1_000,
+        );
+        gap.mark_connected(1_000);
+        gap.record_gap(2, 1_050);
+        let mut overdue = EventStreamState::new(
+            EventStreamSpec::hue_sse(bridge_id(), "https://bridge/eventstream")
+                .with_heartbeat_timeout(100)
+                .with_reconnect_policy(ReconnectPolicy::new(100, 1_000, 2)),
+            1_000,
+        );
+        overdue.mark_connected(1_000);
+        let healthy = EventStreamState::new(
+            EventStreamSpec::new(
+                IntegrationId::trusted("thread"),
+                BridgeId::trusted("border-router-1"),
+                EventStreamTransport::RadioReports,
+            ),
+            1_000,
+        );
+
+        let schedule = event_stream_restart_schedule_at([&gap, &overdue, &healthy], 1_150);
+
+        assert_eq!(schedule.generated_at_ms, 1_150);
+        assert_eq!(schedule.len(), 2);
+        assert_eq!(schedule.next_retry_at_ms(), Some(1_200));
+        assert!(matches!(
+            schedule.plans.as_slice(),
+            [first, second]
+                if first.reason == EventStreamRestartReason::EventGap
+                    && first.bridge_id == BridgeId::trusted("broker-1")
+                    && first.wait_ms_at(1_175) == 25
+                    && second.reason == EventStreamRestartReason::HeartbeatOverdue
+                    && second.bridge_id == bridge_id()
+        ));
+        assert_eq!(schedule.plans_ready_at(1_200).len(), 1);
+        assert_eq!(
+            schedule
+                .plans_for_bridge(&BridgeId::trusted("broker-1"))
+                .len(),
+            1
+        );
+        assert!(!schedule.is_empty());
     }
 
     #[test]
