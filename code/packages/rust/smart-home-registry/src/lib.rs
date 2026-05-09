@@ -48,8 +48,8 @@ pub enum RegistryError {
         family: String,
         kind: String,
         value: String,
-        existing: RegistryTarget,
-        attempted: RegistryTarget,
+        existing: Box<RegistryTarget>,
+        attempted: Box<RegistryTarget>,
     },
     DuplicateRefreshSnapshot(EntityId),
     UnexpectedRefreshSnapshot(EntityId),
@@ -122,20 +122,15 @@ pub struct RegistryCounts {
     pub authorization_decisions: usize,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum StateFreshness {
+    #[default]
     Any,
     Present,
     Missing,
     FreshAt(u64),
     StaleAt(u64),
     NeedsRefreshAt(u64),
-}
-
-impl Default for StateFreshness {
-    fn default() -> Self {
-        Self::Any
-    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -295,6 +290,231 @@ impl AuthorizationDecisionSelector {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum RegistryAccessMode {
+    ReadOnly,
+    ReadWrite,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct SmartHomeRegistryReadView<'a> {
+    registry: &'a InMemorySmartHomeRegistry,
+}
+
+impl<'a> SmartHomeRegistryReadView<'a> {
+    pub fn access_mode(&self) -> RegistryAccessMode {
+        RegistryAccessMode::ReadOnly
+    }
+
+    pub fn counts(&self) -> RegistryCounts {
+        self.registry.counts()
+    }
+
+    pub fn bridge(&self, bridge_id: &BridgeId) -> Option<&'a Bridge> {
+        self.registry.bridge(bridge_id)
+    }
+
+    pub fn bridges(&self) -> impl Iterator<Item = &'a Bridge> {
+        self.registry.bridges()
+    }
+
+    pub fn device(&self, device_id: &DeviceId) -> Option<&'a Device> {
+        self.registry.device(device_id)
+    }
+
+    pub fn devices(&self) -> impl Iterator<Item = &'a Device> {
+        self.registry.devices()
+    }
+
+    pub fn devices_for_bridge(&self, bridge_id: &BridgeId) -> impl Iterator<Item = &'a Device> {
+        self.registry.devices_for_bridge(bridge_id)
+    }
+
+    pub fn entity(&self, entity_id: &EntityId) -> Option<&'a Entity> {
+        self.registry.entity(entity_id)
+    }
+
+    pub fn entities(&self) -> impl Iterator<Item = &'a Entity> {
+        self.registry.entities()
+    }
+
+    pub fn entities_for_device(&self, device_id: &DeviceId) -> impl Iterator<Item = &'a Entity> {
+        self.registry.entities_for_device(device_id)
+    }
+
+    pub fn scene(&self, scene_id: &SceneId) -> Option<&'a Scene> {
+        self.registry.scene(scene_id)
+    }
+
+    pub fn scenes(&self) -> impl Iterator<Item = &'a Scene> {
+        self.registry.scenes()
+    }
+
+    pub fn state(&self, entity_id: &EntityId) -> Option<&'a StateSnapshot> {
+        self.registry.state(entity_id)
+    }
+
+    pub fn states(&self) -> impl Iterator<Item = &'a StateSnapshot> {
+        self.registry.states()
+    }
+
+    pub fn event(&self, event_id: &EventId) -> Option<&'a DeviceEvent> {
+        self.registry.event(event_id)
+    }
+
+    pub fn events(&self) -> impl Iterator<Item = &'a DeviceEvent> {
+        self.registry.events()
+    }
+
+    pub fn capability_grant(&self, grant_id: &CapabilityGrantId) -> Option<&'a CapabilityGrant> {
+        self.registry.capability_grant(grant_id)
+    }
+
+    pub fn capability_grants(&self) -> impl Iterator<Item = &'a CapabilityGrant> {
+        self.registry.capability_grants()
+    }
+
+    pub fn capability_grants_for_principal(
+        &self,
+        principal_id: &AgentId,
+    ) -> Vec<&'a CapabilityGrant> {
+        self.registry.capability_grants_for_principal(principal_id)
+    }
+
+    pub fn active_capability_grants_for_principal_at(
+        &self,
+        principal_id: &AgentId,
+        now_ms: u64,
+    ) -> Vec<&'a CapabilityGrant> {
+        self.registry
+            .active_capability_grants_for_principal_at(principal_id, now_ms)
+    }
+
+    pub fn authorization_decisions(&self) -> impl Iterator<Item = &'a AuthorizationDecision> {
+        self.registry.authorization_decisions()
+    }
+
+    pub fn authorization_decisions_for_principal(
+        &self,
+        principal_id: &AgentId,
+    ) -> Vec<&'a AuthorizationDecision> {
+        self.registry
+            .authorization_decisions_for_principal(principal_id)
+    }
+
+    pub fn query_authorization_decisions(
+        &self,
+        selector: &AuthorizationDecisionSelector,
+    ) -> Vec<&'a AuthorizationDecision> {
+        self.registry.query_authorization_decisions(selector)
+    }
+
+    pub fn query_devices(&self, selector: &DeviceSelector) -> Vec<&'a Device> {
+        self.registry.query_devices(selector)
+    }
+
+    pub fn query_entities(&self, selector: &EntitySelector) -> Vec<&'a Entity> {
+        self.registry.query_entities(selector)
+    }
+
+    pub fn stale_states_at(&self, now_ms: u64) -> Vec<&'a StateSnapshot> {
+        self.registry.stale_states_at(now_ms)
+    }
+
+    pub fn state_refresh_plan_at(&self, now_ms: u64) -> StateRefreshPlan {
+        self.registry.state_refresh_plan_at(now_ms)
+    }
+
+    pub fn lookup_protocol(&self, identifier: &ProtocolIdentifier) -> Option<&'a RegistryTarget> {
+        self.registry.lookup_protocol(identifier)
+    }
+
+    pub fn bridge_by_protocol(&self, identifier: &ProtocolIdentifier) -> Option<&'a Bridge> {
+        self.registry.bridge_by_protocol(identifier)
+    }
+
+    pub fn device_by_protocol(&self, identifier: &ProtocolIdentifier) -> Option<&'a Device> {
+        self.registry.device_by_protocol(identifier)
+    }
+
+    pub fn scene_by_protocol(&self, identifier: &ProtocolIdentifier) -> Option<&'a Scene> {
+        self.registry.scene_by_protocol(identifier)
+    }
+}
+
+pub struct SmartHomeRegistryWriteView<'a> {
+    registry: &'a mut InMemorySmartHomeRegistry,
+}
+
+impl<'a> SmartHomeRegistryWriteView<'a> {
+    pub fn access_mode(&self) -> RegistryAccessMode {
+        RegistryAccessMode::ReadWrite
+    }
+
+    pub fn as_read(&self) -> SmartHomeRegistryReadView<'_> {
+        SmartHomeRegistryReadView {
+            registry: self.registry,
+        }
+    }
+
+    pub fn upsert_bridge(&mut self, bridge: Bridge) -> Result<Option<Bridge>, RegistryError> {
+        self.registry.upsert_bridge(bridge)
+    }
+
+    pub fn upsert_device(&mut self, device: Device) -> Result<Option<Device>, RegistryError> {
+        self.registry.upsert_device(device)
+    }
+
+    pub fn upsert_entity(&mut self, entity: Entity) -> Result<Option<Entity>, RegistryError> {
+        self.registry.upsert_entity(entity)
+    }
+
+    pub fn upsert_scene(&mut self, scene: Scene) -> Result<Option<Scene>, RegistryError> {
+        self.registry.upsert_scene(scene)
+    }
+
+    pub fn apply_state_snapshot(
+        &mut self,
+        snapshot: StateSnapshot,
+    ) -> Result<Option<StateSnapshot>, RegistryError> {
+        self.registry.apply_state_snapshot(snapshot)
+    }
+
+    pub fn record_event(&mut self, event: DeviceEvent) -> Result<(), RegistryError> {
+        self.registry.record_event(event)
+    }
+
+    pub fn upsert_capability_grant(&mut self, grant: CapabilityGrant) -> Option<CapabilityGrant> {
+        self.registry.upsert_capability_grant(grant)
+    }
+
+    pub fn update_capability_grant_status(
+        &mut self,
+        grant_id: &CapabilityGrantId,
+        status: CapabilityGrantStatus,
+    ) -> Result<CapabilityGrant, RegistryError> {
+        self.registry
+            .update_capability_grant_status(grant_id, status)
+    }
+
+    pub fn record_authorization_decision(&mut self, decision: AuthorizationDecision) -> usize {
+        self.registry.record_authorization_decision(decision)
+    }
+
+    pub fn apply_state_refresh_results<I>(
+        &mut self,
+        plan: &StateRefreshPlan,
+        snapshots: I,
+        completed_at_ms: u64,
+    ) -> Result<StateRefreshReport, RegistryError>
+    where
+        I: IntoIterator<Item = StateSnapshot>,
+    {
+        self.registry
+            .apply_state_refresh_results(plan, snapshots, completed_at_ms)
+    }
+}
+
 #[derive(Debug, Clone, Default)]
 pub struct InMemorySmartHomeRegistry {
     bridges: BTreeMap<BridgeId, Bridge>,
@@ -316,6 +536,14 @@ pub struct InMemorySmartHomeRegistry {
 impl InMemorySmartHomeRegistry {
     pub fn new() -> Self {
         Self::default()
+    }
+
+    pub fn read_view(&self) -> SmartHomeRegistryReadView<'_> {
+        SmartHomeRegistryReadView { registry: self }
+    }
+
+    pub fn write_view(&mut self) -> SmartHomeRegistryWriteView<'_> {
+        SmartHomeRegistryWriteView { registry: self }
     }
 
     pub fn counts(&self) -> RegistryCounts {
@@ -864,8 +1092,8 @@ impl InMemorySmartHomeRegistry {
                         family: key.family,
                         kind: key.kind,
                         value: key.value,
-                        existing: existing.clone(),
-                        attempted: target.clone(),
+                        existing: Box::new(existing.clone()),
+                        attempted: Box::new(target.clone()),
                     });
                 }
             }
@@ -972,7 +1200,7 @@ fn state_matches_freshness(snapshot: Option<&StateSnapshot>, freshness: StateFre
             snapshot.is_some_and(|snapshot| snapshot.is_stale_at(now_ms))
         }
         StateFreshness::NeedsRefreshAt(now_ms) => {
-            snapshot.map_or(true, |snapshot| snapshot.is_stale_at(now_ms))
+            snapshot.is_none_or(|snapshot| snapshot.is_stale_at(now_ms))
         }
     }
 }
@@ -1082,6 +1310,52 @@ mod tests {
             vec![EntityId::trusted("entity-1")]
         );
         assert_eq!(registry.counts().entities, 1);
+    }
+
+    #[test]
+    fn read_view_exposes_query_surface_without_write_access() {
+        let mut registry = InMemorySmartHomeRegistry::new();
+        registry.upsert_bridge(bridge("bridge-1")).unwrap();
+        registry
+            .upsert_device(device("device-1", "bridge-1"))
+            .unwrap();
+        registry
+            .upsert_entity(entity("entity-1", "device-1"))
+            .unwrap();
+
+        let read = registry.read_view();
+        let devices: Vec<_> = read
+            .devices_for_bridge(&BridgeId::trusted("bridge-1"))
+            .map(|device| device.device_id.clone())
+            .collect();
+        let lights = read.query_entities(&EntitySelector::new().with_kind(EntityKind::Light));
+
+        assert_eq!(read.access_mode(), RegistryAccessMode::ReadOnly);
+        assert_eq!(read.counts().entities, 1);
+        assert_eq!(devices, vec![DeviceId::trusted("device-1")]);
+        assert_eq!(lights[0].entity_id, EntityId::trusted("entity-1"));
+    }
+
+    #[test]
+    fn write_view_owns_mutations_and_can_be_read_back() {
+        let mut registry = InMemorySmartHomeRegistry::new();
+        {
+            let mut write = registry.write_view();
+            assert_eq!(write.access_mode(), RegistryAccessMode::ReadWrite);
+            write.upsert_bridge(bridge("bridge-1")).unwrap();
+            write.upsert_device(device("device-1", "bridge-1")).unwrap();
+            assert_eq!(write.as_read().counts().devices, 1);
+        }
+
+        let read = registry.read_view();
+
+        assert_eq!(read.counts().bridges, 1);
+        assert_eq!(
+            read.device(&DeviceId::trusted("device-1"))
+                .unwrap()
+                .bridge_id,
+            BridgeId::trusted("bridge-1")
+        );
     }
 
     #[test]
