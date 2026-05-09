@@ -469,6 +469,7 @@ members = [
     "artifact-store",
     "skill-store",
     "memory-store",
+    "read-write-separation",
     "mini-sqlite",
     "window-core",
     "window-appkit",
