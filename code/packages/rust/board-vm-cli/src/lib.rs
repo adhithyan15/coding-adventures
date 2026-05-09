@@ -1,6 +1,7 @@
 use core::fmt;
 use std::fs;
 use std::io::{BufRead, Write};
+use std::path::{Path, PathBuf};
 use std::time::Duration;
 
 use board_vm_client::{
@@ -38,6 +39,7 @@ pub enum CliCommand {
     ListTargets,
     EspDetect(EspDetectOptions),
     EspUpload(EspUploadOptions),
+    PicoUf2Upload(PicoUf2Options),
     Smoke(SmokeOptions),
     Repl(ReplOptions),
     EjectBlink(EjectBlinkOptions),
@@ -94,6 +96,20 @@ pub struct EspUploadOptions {
     pub flash_size: Option<u32>,
     pub verify_md5: bool,
     pub stay_in_bootloader: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PicoUf2Options {
+    pub image: String,
+    pub mount: Option<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PicoUf2Report {
+    pub image: String,
+    pub mount: String,
+    pub output: String,
+    pub bytes: u64,
 }
 
 impl EspUploadOptions {
@@ -207,6 +223,7 @@ pub enum CliError {
     Client(ClientError),
     Eject(String),
     EspRom(String),
+    PicoUf2(String),
     Smoke {
         stage: SmokeStage,
         source: ClientError,
@@ -230,6 +247,7 @@ impl fmt::Display for CliError {
             Self::Client(error) => write!(f, "client error: {error:?}"),
             Self::Eject(error) => write!(f, "eject error: {error}"),
             Self::EspRom(error) => write!(f, "esp rom error: {error}"),
+            Self::PicoUf2(error) => write!(f, "pico uf2 error: {error}"),
             Self::Smoke { stage, source } => write!(f, "smoke failed during {stage}: {source:?}"),
         }
     }
@@ -276,6 +294,7 @@ where
         "list-targets" | "targets" => Ok(CliCommand::ListTargets),
         "esp-detect" | "detect-esp" => parse_esp_detect_args(args),
         "esp-upload" | "upload-esp" => parse_esp_upload_args(args),
+        "pico-uf2" | "pico-upload" | "upload-pico" => parse_pico_uf2_args(args),
         "smoke" => parse_smoke_args(args),
         "repl" => parse_repl_args(args),
         "eject" => parse_eject_args(args),
@@ -374,6 +393,27 @@ where
         flash_size,
         verify_md5,
         stay_in_bootloader,
+    }))
+}
+
+fn parse_pico_uf2_args<I>(mut args: I) -> Result<CliCommand, CliError>
+where
+    I: Iterator<Item = String>,
+{
+    let mut image = None;
+    let mut mount = None;
+
+    while let Some(option) = args.next() {
+        match option.as_str() {
+            "--image" | "--input" | "-i" => image = Some(next_value(&mut args, "--image")?),
+            "--mount" | "--volume" | "-m" => mount = Some(next_value(&mut args, "--mount")?),
+            other => return Err(CliError::UnknownOption(other.to_owned())),
+        }
+    }
+
+    Ok(CliCommand::PicoUf2Upload(PicoUf2Options {
+        image: image.ok_or(CliError::MissingRequired("--image"))?,
+        mount,
     }))
 }
 
@@ -734,6 +774,135 @@ pub fn run_esp_upload(options: &EspUploadOptions) -> Result<EspUploadReport, Cli
     let image = fs::read(&options.image)?;
     let report = upload_esp_rom_image(&options.serial_options(), &image, options.upload_options())?;
     Ok(esp_upload_report(&options.image, report))
+}
+
+pub fn run_pico_uf2_upload(options: &PicoUf2Options) -> Result<PicoUf2Report, CliError> {
+    let image_path = Path::new(&options.image);
+    let image_metadata = fs::metadata(image_path)?;
+    if !image_metadata.is_file() {
+        return Err(CliError::PicoUf2(format!(
+            "image is not a file: {}",
+            options.image
+        )));
+    }
+
+    let mount = match &options.mount {
+        Some(mount) => {
+            let mount_path = PathBuf::from(mount);
+            if !is_pico_bootsel_mount(&mount_path) {
+                return Err(CliError::PicoUf2(format!(
+                    "not a Pico BOOTSEL UF2 mount: {mount}"
+                )));
+            }
+            mount_path
+        }
+        None => select_single_pico_bootsel_mount()?,
+    };
+
+    let file_name = image_path
+        .file_name()
+        .and_then(|name| name.to_str())
+        .filter(|name| !name.is_empty())
+        .unwrap_or("firmware.uf2");
+    let output = mount.join(file_name);
+    fs::copy(image_path, &output)?;
+
+    Ok(PicoUf2Report {
+        image: options.image.clone(),
+        mount: mount.to_string_lossy().into_owned(),
+        output: output.to_string_lossy().into_owned(),
+        bytes: image_metadata.len(),
+    })
+}
+
+pub fn detect_pico_bootsel_mounts() -> Vec<String> {
+    detect_pico_bootsel_mounts_in_roots(default_pico_mount_roots())
+}
+
+pub fn detect_pico_bootsel_mounts_in_roots<I, P>(roots: I) -> Vec<String>
+where
+    I: IntoIterator<Item = P>,
+    P: AsRef<Path>,
+{
+    let mut mounts = Vec::new();
+    for root in roots {
+        let Ok(entries) = fs::read_dir(root.as_ref()) else {
+            continue;
+        };
+        for entry in entries.flatten() {
+            let path = entry.path();
+            if is_pico_bootsel_mount(&path) {
+                mounts.push(path.to_string_lossy().into_owned());
+            }
+        }
+    }
+    mounts.sort();
+    mounts.dedup();
+    mounts
+}
+
+fn select_single_pico_bootsel_mount() -> Result<PathBuf, CliError> {
+    let mounts = detect_pico_bootsel_mounts();
+    match mounts.as_slice() {
+        [] => Err(CliError::PicoUf2(
+            "no Pico BOOTSEL UF2 mount found; hold BOOTSEL while plugging in or pass --mount"
+                .to_owned(),
+        )),
+        [mount] => Ok(PathBuf::from(mount)),
+        _ => Err(CliError::PicoUf2(format!(
+            "multiple Pico BOOTSEL UF2 mounts found: {}; pass --mount",
+            mounts.join(", ")
+        ))),
+    }
+}
+
+fn default_pico_mount_roots() -> Vec<PathBuf> {
+    let mut roots = Vec::new();
+    #[cfg(unix)]
+    {
+        roots.push(PathBuf::from("/Volumes"));
+        roots.push(PathBuf::from("/mnt"));
+        if let Some(home) = std::env::var_os("HOME") {
+            if let Some(user) = Path::new(&home).file_name() {
+                roots.push(PathBuf::from("/media").join(user));
+                roots.push(PathBuf::from("/run/media").join(user));
+            }
+        }
+        if let Some(user) = std::env::var_os("USER") {
+            roots.push(PathBuf::from("/media").join(&user));
+            roots.push(PathBuf::from("/run/media").join(&user));
+        }
+    }
+    #[cfg(windows)]
+    {
+        for drive in b'A'..=b'Z' {
+            roots.push(PathBuf::from(format!("{}:\\", drive as char)));
+        }
+    }
+    roots
+}
+
+fn is_pico_bootsel_mount(path: &Path) -> bool {
+    if !path.is_dir() {
+        return false;
+    }
+
+    let info = path.join("INFO_UF2.TXT");
+    if !info.is_file() {
+        return false;
+    }
+
+    let has_index = path.join("INDEX.HTM").is_file() || path.join("INDEX.HTML").is_file();
+    if !has_index {
+        return false;
+    }
+
+    let Ok(contents) = fs::read_to_string(info) else {
+        return false;
+    };
+    let lower = contents.to_ascii_lowercase();
+    lower.contains("uf2 bootloader")
+        && (lower.contains("rp2") || lower.contains("rp2040") || lower.contains("raspberry pi"))
 }
 
 pub fn run_eject_blink(options: &EjectBlinkOptions) -> Result<EjectReport, CliError> {
@@ -1105,12 +1274,23 @@ pub fn format_onboard_led(led: Option<OnboardLed>) -> String {
 }
 
 pub fn usage() -> &'static str {
-    "usage:\n  board-vm list-ports\n  board-vm list-targets\n  board-vm esp-detect --port <path> [--baud <rate>] [--timeout-ms <ms>] [--no-reset]\n  board-vm esp-upload --port <path> --image <path> [--offset <addr>] [--block-size <bytes>] [--flash-size <bytes>] [--baud <rate>] [--timeout-ms <ms>] [--no-reset] [--no-verify] [--stay-in-bootloader]\n  board-vm smoke --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm repl --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm eject blink --out <path> [--program-id <id>] [--slot <slot>] [--boot-policy store-only|run-at-boot|run-if-no-host|<u8>]"
+    "usage:\n  board-vm list-ports\n  board-vm list-targets\n  board-vm esp-detect --port <path> [--baud <rate>] [--timeout-ms <ms>] [--no-reset]\n  board-vm esp-upload --port <path> --image <path> [--offset <addr>] [--block-size <bytes>] [--flash-size <bytes>] [--baud <rate>] [--timeout-ms <ms>] [--no-reset] [--no-verify] [--stay-in-bootloader]\n  board-vm pico-uf2 --image <path.uf2> [--mount <RPI-RP2 mount>]\n  board-vm smoke --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm repl --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm eject blink --out <path> [--program-id <id>] [--slot <slot>] [--boot-policy store-only|run-at-boot|run-if-no-host|<u8>]"
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn unique_temp_dir(name: &str) -> PathBuf {
+        let nonce = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        std::env::temp_dir().join(format!(
+            "board-vm-cli-{name}-{}-{nonce}",
+            std::process::id(),
+        ))
+    }
 
     #[test]
     fn parses_list_ports_command() {
@@ -1284,6 +1464,83 @@ mod tests {
                 md5_digest: Some([0xAB; 16]),
             }
         );
+    }
+
+    #[test]
+    fn parses_pico_uf2_upload_defaults() {
+        let command = parse_args(["pico-uf2", "--image", "board-vm-pico.uf2"]).unwrap();
+
+        assert_eq!(
+            command,
+            CliCommand::PicoUf2Upload(PicoUf2Options {
+                image: "board-vm-pico.uf2".to_owned(),
+                mount: None,
+            })
+        );
+    }
+
+    #[test]
+    fn parses_pico_uf2_upload_mount_override() {
+        let command = parse_args([
+            "upload-pico",
+            "--input",
+            "board-vm-pico.uf2",
+            "--mount",
+            "/Volumes/RPI-RP2",
+        ])
+        .unwrap();
+
+        assert_eq!(
+            command,
+            CliCommand::PicoUf2Upload(PicoUf2Options {
+                image: "board-vm-pico.uf2".to_owned(),
+                mount: Some("/Volumes/RPI-RP2".to_owned()),
+            })
+        );
+    }
+
+    #[test]
+    fn detects_pico_bootsel_mounts_from_roots() {
+        let root = unique_temp_dir("detect-pico-uf2");
+        let mount = root.join("RPI-RP2");
+        fs::create_dir_all(&mount).unwrap();
+        fs::write(
+            mount.join("INFO_UF2.TXT"),
+            "UF2 Bootloader v3.0\nModel: Raspberry Pi RP2\n",
+        )
+        .unwrap();
+        fs::write(mount.join("INDEX.HTM"), "<html></html>").unwrap();
+        fs::create_dir_all(root.join("NOT-PICO")).unwrap();
+
+        let mounts = detect_pico_bootsel_mounts_in_roots([&root]);
+
+        assert_eq!(mounts, vec![mount.to_string_lossy().into_owned()]);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn pico_uf2_upload_copies_image_to_mount() {
+        let root = unique_temp_dir("upload-pico-uf2");
+        let mount = root.join("RPI-RP2");
+        fs::create_dir_all(&mount).unwrap();
+        fs::write(
+            mount.join("INFO_UF2.TXT"),
+            "UF2 Bootloader v3.0\nModel: Raspberry Pi RP2\n",
+        )
+        .unwrap();
+        fs::write(mount.join("INDEX.HTM"), "<html></html>").unwrap();
+        let image = root.join("board-vm-pico.uf2");
+        fs::write(&image, [0x55, 0x46, 0x32, 0x0A]).unwrap();
+
+        let report = run_pico_uf2_upload(&PicoUf2Options {
+            image: image.to_string_lossy().into_owned(),
+            mount: Some(mount.to_string_lossy().into_owned()),
+        })
+        .unwrap();
+
+        assert_eq!(report.bytes, 4);
+        assert_eq!(fs::read(mount.join("board-vm-pico.uf2")).unwrap(), b"UF2\n");
+        fs::remove_dir_all(root).unwrap();
     }
 
     #[test]
