@@ -11,6 +11,8 @@ other backends without changing the skill API.
 - `SkillManifest`
 - `SkillAssetRecord`
 - installation of manifests plus asset bundles
+- bounded manifest listing by active status, entrypoint, required tool, and
+  required capability
 - active-version switching and uninstall semantics
 
 ## Key layout
@@ -22,11 +24,17 @@ other backends without changing the skill API.
 
 - `install_skill()`
 - `load_manifest()`
+- `list_skills()`
 - `list_installed_skills()`
 - `read_asset()`
 - `activate_version()`
 - `deactivate_version()`
 - `uninstall_skill()`
+
+`SkillListOptions` gives D18/D18D hosts and tool catalogs a narrow read model
+over installed manifests. Callers can list active skills, find skills that
+require a specific tool or capability, restrict to an entrypoint, or cap the
+number of results without loading asset bodies.
 
 ## Development
 
