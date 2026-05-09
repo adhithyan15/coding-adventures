@@ -2,17 +2,23 @@
 
 from __future__ import annotations
 
+import pathlib
+import subprocess
 import sys
+import time
 from dataclasses import dataclass
 from typing import Any, Iterable
 
 from . import board_vm_native as _native
 
 
+DEFAULT_RUST_WORKSPACE = pathlib.Path(__file__).resolve().parents[4] / "rust"
 DEFAULT_HOST_NAME = "python-board-vm"
 DEFAULT_HOST_NONCE = 0xB0A2D001
 DEFAULT_PROGRAM_ID = 1
 DEFAULT_INSTRUCTION_BUDGET = 12
+DEFAULT_PICO_RUNTIME_PORT_WAIT_MS = 5_000
+DEFAULT_PICO_RUNTIME_PORT_POLL_MS = 250
 BOOT_POLICIES = {
     "store_only": 0,
     "store-only": 0,
@@ -1186,6 +1192,111 @@ class Session:
         raise ValueError(f"unsupported GPIO write value: {value!r}")
 
 
+class Connection:
+    def __init__(
+        self,
+        *,
+        target: BoardTarget,
+        port: str | None,
+        transport: Any = None,
+        runner: Any = None,
+        cargo_workspace: str | pathlib.Path | None = None,
+        firmware_image: str | pathlib.Path | None = None,
+        device_discovery: Any = None,
+        pico_uf2_mount: str | pathlib.Path | None = None,
+        pico_uf2_roots: Iterable[str | pathlib.Path] | None = None,
+        pico_runtime_port: bool = True,
+        pico_runtime_port_wait_ms: int = DEFAULT_PICO_RUNTIME_PORT_WAIT_MS,
+        pico_runtime_port_poll_ms: int = DEFAULT_PICO_RUNTIME_PORT_POLL_MS,
+        esp_upload_options: dict[str, Any] | None = None,
+        pico_uf2_upload_options: dict[str, Any] | None = None,
+    ):
+        self.target = target
+        self.port = None if port is None else str(port)
+        self.transport = transport
+        self.runner = _default_runner if runner is None else runner
+        self.cargo_workspace = pathlib.Path(cargo_workspace or DEFAULT_RUST_WORKSPACE)
+        self.firmware_image = None if firmware_image is None else str(firmware_image)
+        self.device_discovery = devices if device_discovery is None else device_discovery
+        self.pico_uf2_mount = None if pico_uf2_mount is None else str(pico_uf2_mount)
+        self.pico_uf2_roots = None if pico_uf2_roots is None else [str(root) for root in pico_uf2_roots]
+        self.pico_runtime_port = pico_runtime_port
+        self.pico_runtime_port_wait_ms = int(pico_runtime_port_wait_ms)
+        self.pico_runtime_port_poll_ms = int(pico_runtime_port_poll_ms)
+        self.esp_upload_options = dict(esp_upload_options or {})
+        self.pico_uf2_upload_options = dict(pico_uf2_upload_options or {})
+
+    @property
+    def board_id(self) -> str:
+        return self.target.board_id
+
+    @property
+    def family(self) -> str:
+        return self.target.family
+
+    def session(self, **options: Any) -> Session:
+        options.setdefault("transport", self.transport)
+        return Session(**options)
+
+    def flash(self) -> Any:
+        if self.firmware_image is None:
+            raise ValueError("Board VM flash requires firmware_image")
+        if self.family == "esp32":
+            command = esp_upload_command(
+                self.board_id,
+                port=self.port,
+                image=self.firmware_image,
+                **self.esp_upload_options,
+            )
+            return self._run_board_vm(command)
+        if self.family == "raspberry_pi_pico":
+            command = pico_uf2_upload_command(
+                self.board_id,
+                image=self.firmware_image,
+                mount=self.pico_uf2_mount,
+                roots=self.pico_uf2_roots,
+                **self.pico_uf2_upload_options,
+            )
+            result = self._run_board_vm(command)
+            if self.pico_runtime_port:
+                self.rediscover_runtime_port()
+            return result
+        raise ValueError(f"Python flash sugar does not support {self.board_id!r}")
+
+    def rediscover_runtime_port(self) -> BoardDevice:
+        deadline = time.monotonic() + (self.pico_runtime_port_wait_ms / 1000)
+        last_error: ValueError | None = None
+        while True:
+            try:
+                selected = select_runtime_device(
+                    self.board_id,
+                    device_candidates=self.device_discovery(),
+                )
+                self.port = selected.port
+                return selected
+            except ValueError as error:
+                last_error = error
+
+            if self.pico_runtime_port_wait_ms <= 0 or time.monotonic() >= deadline:
+                break
+            remaining = max(0, deadline - time.monotonic())
+            poll_seconds = max(self.pico_runtime_port_poll_ms / 1000, 0.01)
+            time.sleep(min(poll_seconds, remaining))
+
+        detail = "" if last_error is None else f"\n{last_error}"
+        raise ValueError(
+            f"Pico UF2 upload finished, but no runtime serial device was found for {self.board_id!r}.{detail}"
+        )
+
+    def _run_board_vm(self, args: list[str]) -> Any:
+        command = ["cargo", "run", "-p", "board-vm-cli", "--bin", "board-vm", "--", *args]
+        return self.runner(command, cwd=str(self.cargo_workspace))
+
+
+def _default_runner(command: list[str], *, cwd: str | None = None) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(command, cwd=cwd, check=True, capture_output=True, text=True)
+
+
 def known_targets() -> list[BoardTarget]:
     return [BoardTarget(raw) for raw in _native.known_targets()]
 
@@ -1483,6 +1594,124 @@ def pico_uf2_upload_command(
     return command
 
 
+def connect(
+    selector: str = "auto",
+    *,
+    port: str | None = None,
+    device: DeviceReference | None = None,
+    device_candidates: Iterable[BoardDevice | dict[str, Any]] | None = None,
+    pick: bool = False,
+    input_func: Any = input,
+    output: Any = None,
+    flash: bool = False,
+    transport: Any = None,
+    runner: Any = None,
+    cargo_workspace: str | pathlib.Path | None = None,
+    firmware_image: str | pathlib.Path | None = None,
+    esp_image: str | pathlib.Path | None = None,
+    device_discovery: Any = None,
+    pico_uf2_mount: str | pathlib.Path | None = None,
+    pico_uf2_roots: Iterable[str | pathlib.Path] | None = None,
+    pico_runtime_port: bool = True,
+    pico_runtime_port_wait_ms: int = DEFAULT_PICO_RUNTIME_PORT_WAIT_MS,
+    pico_runtime_port_poll_ms: int = DEFAULT_PICO_RUNTIME_PORT_POLL_MS,
+    esp_upload_options: dict[str, Any] | None = None,
+    pico_uf2_upload_options: dict[str, Any] | None = None,
+) -> Connection:
+    selected_device = None
+    if pick and port is None and device is None:
+        selected_device = pick_device(
+            selector,
+            device_candidates=device_candidates,
+            input_func=input_func,
+            output=output,
+        )
+    elif device is not None:
+        selected_device = select_device(
+            selector,
+            device=device,
+            device_candidates=device_candidates,
+        )
+    elif port is None and not _flash_without_port(selector, flash):
+        selected_device = select_device(selector, device_candidates=device_candidates)
+
+    selected_port = port or (selected_device.port if selected_device is not None else None)
+    target = _connection_target(selector, selected_device, selected_port)
+    connection = Connection(
+        target=target,
+        port=selected_port,
+        transport=transport,
+        runner=runner,
+        cargo_workspace=cargo_workspace,
+        firmware_image=firmware_image or esp_image,
+        device_discovery=device_discovery,
+        pico_uf2_mount=pico_uf2_mount,
+        pico_uf2_roots=pico_uf2_roots,
+        pico_runtime_port=pico_runtime_port,
+        pico_runtime_port_wait_ms=pico_runtime_port_wait_ms,
+        pico_runtime_port_poll_ms=pico_runtime_port_poll_ms,
+        esp_upload_options=esp_upload_options,
+        pico_uf2_upload_options=pico_uf2_upload_options,
+    )
+    if flash:
+        connection.flash()
+    return connection
+
+
+def uno_r4_wifi(**options: Any) -> Connection:
+    return connect("arduino-uno-r4-wifi", **options)
+
+
+def esp32_devkit_v1(**options: Any) -> Connection:
+    return connect("esp32-devkit-v1", **options)
+
+
+def esp32(**options: Any) -> Connection:
+    return esp32_devkit_v1(**options)
+
+
+def raspberry_pi_pico(**options: Any) -> Connection:
+    return connect("raspberry-pi-pico", **options)
+
+
+def pico(**options: Any) -> Connection:
+    return raspberry_pi_pico(**options)
+
+
+def raspberry_pi_pico_w(**options: Any) -> Connection:
+    return connect("raspberry-pi-pico-w", **options)
+
+
+def pico_w(**options: Any) -> Connection:
+    return raspberry_pi_pico_w(**options)
+
+
+def _connection_target(
+    selector: str,
+    selected_device: BoardDevice | None,
+    selected_port: str | None,
+) -> BoardTarget:
+    if selector != "auto":
+        target = detect_target(selector)
+        if target is None:
+            raise ValueError(f"unsupported board: {selector!r}")
+        return target
+    if selected_device is not None and selected_device.target is not None:
+        return selected_device.target
+    if selected_port is not None:
+        target = detect_target("arduino-uno-r4-wifi")
+        if target is not None:
+            return target
+    raise ValueError(f"Could not infer the board for {selected_port or 'the selected device'}.\n{device_list()}")
+
+
+def _flash_without_port(selector: str, flash: bool) -> bool:
+    if not flash:
+        return False
+    target = detect_target(selector)
+    return target is not None and target.family == "raspberry_pi_pico"
+
+
 def devices(paths: Iterable[str] | None = None) -> list[BoardDevice]:
     raw_devices = (
         _native.discover_devices()
@@ -1514,7 +1743,11 @@ __all__ = [
     "BoardTarget",
     "BOOT_POLICIES",
     "Capability",
+    "Connection",
+    "DEFAULT_PICO_RUNTIME_PORT_POLL_MS",
+    "DEFAULT_PICO_RUNTIME_PORT_WAIT_MS",
     "DEFAULT_RUN_FLAGS",
+    "DEFAULT_RUST_WORKSPACE",
     "EspUploadOptions",
     "GPIO_MODES",
     "GPIO_READ_MODES",
@@ -1526,19 +1759,27 @@ __all__ = [
     "RUN_FLAGS",
     "Session",
     "SessionResult",
+    "connect",
     "device_list",
     "devices",
     "detect_target",
+    "esp32",
+    "esp32_devkit_v1",
     "esp_upload_command",
     "esp_upload_options",
     "find_target",
     "known_targets",
+    "pico",
+    "pico_w",
     "pico_uf2_mount",
     "pico_uf2_upload_command",
     "pico_uf2_mounts",
     "pico_uf2_upload_options",
     "pick_device",
+    "raspberry_pi_pico",
+    "raspberry_pi_pico_w",
     "runtime_devices",
     "select_device",
     "select_runtime_device",
+    "uno_r4_wifi",
 ]

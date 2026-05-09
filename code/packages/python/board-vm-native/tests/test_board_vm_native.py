@@ -6,10 +6,12 @@ from board_vm_native import (
     BoardDevice,
     BoardDescriptor,
     BoardTarget,
+    Connection,
     EspUploadOptions,
     PicoUf2UploadOptions,
     ProtocolResult,
     Session,
+    connect,
     device_list,
     devices,
     detect_target,
@@ -22,6 +24,7 @@ from board_vm_native import (
     pico_uf2_mounts,
     pico_uf2_upload_options,
     pick_device,
+    pico,
     runtime_devices,
     select_device,
     select_runtime_device,
@@ -34,6 +37,15 @@ class FakeWriteTransport:
 
     def write(self, frame):
         self.frames.append(frame)
+
+
+class FakeRunner:
+    def __init__(self):
+        self.calls = []
+
+    def __call__(self, command, *, cwd=None):
+        self.calls.append((command, cwd))
+        return {"command": command, "cwd": cwd}
 
 
 def test_native_session_builds_protocol_bytes_in_rust():
@@ -406,6 +418,113 @@ def test_pick_device_prompts_for_ambiguous_devices():
     assert "1. Unknown board" in output.getvalue()
     assert "2. Unknown board" in output.getvalue()
     assert "Select board [1-2]: " in output.getvalue()
+
+
+def test_python_connect_auto_selects_device_and_dispatches_native_session():
+    found = devices(["/dev/tty.usbserial-CP2102-esp32"])
+    transport = FakeWriteTransport()
+
+    connection = connect(
+        "esp32",
+        device_candidates=found,
+        transport=transport,
+    )
+    result = connection.session().run_command("blink 42", program_id=7)
+
+    assert isinstance(connection, Connection)
+    assert connection.board_id == "esp32-devkit-v1"
+    assert connection.port == "/dev/tty.usbserial-CP2102-esp32"
+    assert [item.command for item in result.results] == [
+        "program_begin",
+        "program_chunk",
+        "program_end",
+        "run",
+    ]
+    assert result.frames == transport.frames
+
+
+def test_python_esp_connect_flash_uses_rust_owned_upload_command():
+    found = devices(["/dev/tty.usbserial-CP2102-esp32"])
+    runner = FakeRunner()
+
+    connection = connect(
+        "esp32",
+        flash=True,
+        firmware_image="/tmp/board-vm-esp32.bin",
+        device_candidates=found,
+        cargo_workspace="/repo/code/packages/rust",
+        runner=runner,
+        esp_upload_options={"offset": 0x2000, "verify_md5": False},
+    )
+
+    assert connection.port == "/dev/tty.usbserial-CP2102-esp32"
+    assert runner.calls == [
+        (
+            [
+                "cargo",
+                "run",
+                "-p",
+                "board-vm-cli",
+                "--bin",
+                "board-vm",
+                "--",
+                "esp-upload",
+                "--port",
+                "/dev/tty.usbserial-CP2102-esp32",
+                "--image",
+                "/tmp/board-vm-esp32.bin",
+                "--baud",
+                "115200",
+                "--timeout-ms",
+                "1000",
+                "--offset",
+                "8192",
+                "--block-size",
+                "1024",
+                "--flash-size",
+                "4194304",
+                "--no-verify",
+            ],
+            "/repo/code/packages/rust",
+        )
+    ]
+
+
+def test_python_pico_flash_rediscover_runtime_port():
+    runner = FakeRunner()
+    runtime_devices = devices(["/dev/serial/by-id/usb-Raspberry_Pi_Pico_Board_VM-if00"])
+
+    connection = pico(
+        flash=True,
+        firmware_image="/tmp/board-vm-pico.uf2",
+        pico_uf2_mount="/Volumes/RPI-RP2",
+        pico_runtime_port_wait_ms=0,
+        device_discovery=lambda: runtime_devices,
+        cargo_workspace="/repo/code/packages/rust",
+        runner=runner,
+    )
+
+    assert connection.board_id == "raspberry-pi-pico"
+    assert connection.port == "/dev/serial/by-id/usb-Raspberry_Pi_Pico_Board_VM-if00"
+    assert runner.calls == [
+        (
+            [
+                "cargo",
+                "run",
+                "-p",
+                "board-vm-cli",
+                "--bin",
+                "board-vm",
+                "--",
+                "pico-uf2",
+                "--image",
+                "/tmp/board-vm-pico.uf2",
+                "--mount",
+                "/Volumes/RPI-RP2",
+            ],
+            "/repo/code/packages/rust",
+        )
+    ]
 
 
 def test_session_dispatches_frames_through_write_transport():
