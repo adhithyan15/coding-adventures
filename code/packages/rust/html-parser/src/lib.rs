@@ -1226,6 +1226,9 @@ impl HtmlParser {
             {
                 return;
             }
+            if is_formatting_element(name) && self.adopt_formatting_end_tag_across_div(index) {
+                return;
+            }
             if special_scope_blocks_end_tag(name) && self.has_special_element_above(index) {
                 return;
             }
@@ -1508,6 +1511,65 @@ impl HtmlParser {
         let mut moved_paragraph_path = formatting_parent_path.to_vec();
         moved_paragraph_path.push(formatting_child_index + 1);
         self.open_elements.push(moved_paragraph_path);
+        true
+    }
+
+    fn adopt_formatting_end_tag_across_div(&mut self, formatting_index: usize) -> bool {
+        let Some(formatting_path) = self.open_elements.get(formatting_index).cloned() else {
+            return false;
+        };
+        let Some(formatting_element) = element_ref_at_path(&self.document, &formatting_path) else {
+            return false;
+        };
+        let formatting_name = formatting_element.name.clone();
+        let formatting_attributes = formatting_element.attributes.clone();
+
+        let Some(div_path) = self
+            .open_elements
+            .iter()
+            .skip(formatting_index + 1)
+            .find(|path| element_at_path(&self.document, path).is_some_and(|name| name == "div"))
+            .cloned()
+        else {
+            return false;
+        };
+        if !div_path.starts_with(&formatting_path) || div_path.len() <= formatting_path.len() {
+            return false;
+        }
+
+        let Some((&formatting_child_index, formatting_parent_path)) = formatting_path.split_last()
+        else {
+            return false;
+        };
+        let Some(mut div) = remove_node_at_path(&mut self.document.children, &div_path) else {
+            return false;
+        };
+        let Node::Element(div_element) = &mut div else {
+            return false;
+        };
+
+        let mut reconstructed_formatting =
+            Node::element(formatting_name, formatting_attributes);
+        if let Node::Element(reconstructed_element) = &mut reconstructed_formatting {
+            reconstructed_element.children = std::mem::take(&mut div_element.children);
+        }
+        div_element.children.push(reconstructed_formatting);
+
+        let Some(formatting_parent_children) =
+            children_at_path_mut(&mut self.document.children, formatting_parent_path)
+        else {
+            return false;
+        };
+        let insert_index = formatting_child_index + 1;
+        if insert_index > formatting_parent_children.len() {
+            return false;
+        }
+        formatting_parent_children.insert(insert_index, div);
+
+        self.open_elements.truncate(formatting_index);
+        let mut moved_div_path = formatting_parent_path.to_vec();
+        moved_div_path.push(insert_index);
+        self.open_elements.push(moved_div_path);
         true
     }
 
