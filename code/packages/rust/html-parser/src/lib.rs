@@ -1229,6 +1229,11 @@ impl HtmlParser {
             {
                 return;
             }
+            if is_formatting_element(name)
+                && self.adopt_formatting_end_tag_across_nested_paragraph(index)
+            {
+                return;
+            }
             if is_formatting_element(name) && self.adopt_formatting_end_tag_across_div(index) {
                 return;
             }
@@ -1514,6 +1519,96 @@ impl HtmlParser {
         let mut moved_paragraph_path = formatting_parent_path.to_vec();
         moved_paragraph_path.push(formatting_child_index + 1);
         self.open_elements.push(moved_paragraph_path);
+        true
+    }
+
+    fn adopt_formatting_end_tag_across_nested_paragraph(
+        &mut self,
+        formatting_index: usize,
+    ) -> bool {
+        let Some(formatting_path) = self.open_elements.get(formatting_index).cloned() else {
+            return false;
+        };
+        let Some(formatting_element) = element_ref_at_path(&self.document, &formatting_path) else {
+            return false;
+        };
+        let formatting_name = formatting_element.name.clone();
+        let formatting_attributes = formatting_element.attributes.clone();
+
+        let Some(paragraph_path) = self
+            .open_elements
+            .iter()
+            .skip(formatting_index + 1)
+            .find(|path| element_at_path(&self.document, path).is_some_and(|name| name == "p"))
+            .cloned()
+        else {
+            return false;
+        };
+        if !paragraph_path.starts_with(&formatting_path)
+            || paragraph_path.len() <= formatting_path.len() + 1
+        {
+            return false;
+        }
+
+        let mut wrapper_elements = Vec::new();
+        for depth in formatting_path.len() + 1..paragraph_path.len() {
+            let ancestor_path = &paragraph_path[..depth];
+            let Some(element) = element_ref_at_path(&self.document, ancestor_path) else {
+                return false;
+            };
+            if !is_formatting_element(&element.name) {
+                return false;
+            }
+            wrapper_elements.push((element.name.clone(), element.attributes.clone()));
+        }
+
+        let Some((&formatting_child_index, formatting_parent_path)) = formatting_path.split_last()
+        else {
+            return false;
+        };
+        let Some(mut paragraph) = remove_node_at_path(&mut self.document.children, &paragraph_path)
+        else {
+            return false;
+        };
+        let Node::Element(paragraph_element) = &mut paragraph else {
+            return false;
+        };
+
+        let mut reconstructed_formatting =
+            Node::element(formatting_name, formatting_attributes);
+        if let Node::Element(reconstructed_element) = &mut reconstructed_formatting {
+            reconstructed_element.children = std::mem::take(&mut paragraph_element.children);
+        }
+        paragraph_element.children.push(reconstructed_formatting);
+
+        let mut adopted_subtree = paragraph;
+        for (wrapper_name, wrapper_attributes) in wrapper_elements.iter().rev() {
+            let mut wrapper = Node::element(wrapper_name.clone(), wrapper_attributes.clone());
+            if let Node::Element(wrapper_element) = &mut wrapper {
+                wrapper_element.children.push(adopted_subtree);
+            }
+            adopted_subtree = wrapper;
+        }
+
+        let Some(formatting_parent_children) =
+            children_at_path_mut(&mut self.document.children, formatting_parent_path)
+        else {
+            return false;
+        };
+        let insert_index = formatting_child_index + 1;
+        if insert_index > formatting_parent_children.len() {
+            return false;
+        }
+        formatting_parent_children.insert(insert_index, adopted_subtree);
+
+        self.open_elements.truncate(formatting_index);
+        let mut adopted_path = formatting_parent_path.to_vec();
+        adopted_path.push(insert_index);
+        for _ in &wrapper_elements {
+            self.open_elements.push(adopted_path.clone());
+            adopted_path.push(0);
+        }
+        self.open_elements.push(adopted_path);
         true
     }
 
@@ -2423,6 +2518,30 @@ mod tests {
         let italic = element(&bold.children[1]);
         assert_eq!(italic.children[0], Node::text(" ghi "));
         assert_eq!(element(&italic.children[1]).name, "p");
+    }
+
+    #[test]
+    fn adopts_nested_formatting_paragraph_when_outer_formatting_ends() {
+        let document = parse_html("<div> abc <b> def <i> ghi <p> jkl </b>").unwrap();
+
+        let body = body(&document);
+        let div = element(&body.children[0]);
+        assert_eq!(div.children[0], Node::text(" abc "));
+
+        let original_bold = element(&div.children[1]);
+        assert_eq!(original_bold.children[0], Node::text(" def "));
+        assert_eq!(
+            element(&original_bold.children[1]).children,
+            vec![Node::text(" ghi ")]
+        );
+
+        let adopted_italic = element(&div.children[2]);
+        assert_eq!(adopted_italic.name, "i");
+        let paragraph = element(&adopted_italic.children[0]);
+        assert_eq!(paragraph.name, "p");
+        let adopted_bold = element(&paragraph.children[0]);
+        assert_eq!(adopted_bold.name, "b");
+        assert_eq!(adopted_bold.children, vec![Node::text(" jkl ")]);
     }
 
     #[test]

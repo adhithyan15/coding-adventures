@@ -991,3 +991,24 @@ Line1<br>Line2<br>Line3<br>Line4
 |           " ghi "
 |           <p>
 |             " jkl"
+
+#data
+<DIV> abc <B> def <I> ghi <P> jkl </B>
+#errors
+(1,5): expected-doctype-but-got-start-tag
+(1,38): adoption-agency-1.3
+(1,38): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <div>
+|       " abc "
+|       <b>
+|         " def "
+|         <i>
+|           " ghi "
+|       <i>
+|         <p>
+|           <b>
+|             " jkl "
