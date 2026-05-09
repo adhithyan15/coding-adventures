@@ -7,10 +7,11 @@
 #![forbid(unsafe_code)]
 
 use smart_home_core::{
-    Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CorrelationId, Device,
-    DeviceEvent, DeviceEventType, DeviceId, Entity, EntityId, EntityKind, EventId, Health,
-    IntegrationId, Metadata, ProtocolFamily, ProtocolIdentifier, StateConfidence, StateDelta,
-    StateSnapshot, StateSource, Value,
+    Bridge, BridgeId, BridgeTransport, Capability, CapabilityId, CommandId, CommandResult,
+    CommandStatus, CommandType, CorrelationId, Device, DeviceCommand, DeviceEvent, DeviceEventType,
+    DeviceId, Entity, EntityId, EntityKind, EventId, Health, IntegrationId, Metadata,
+    ProtocolFamily, ProtocolIdentifier, StateConfidence, StateDelta, StateSnapshot, StateSource,
+    Value,
 };
 use smart_home_registry::{InMemorySmartHomeRegistry, RegistryError};
 use std::collections::VecDeque;
@@ -131,6 +132,123 @@ impl FakeEventStream {
     }
 }
 
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct FakeCommandBus {
+    commands: VecDeque<DeviceCommand>,
+    results: VecDeque<CommandResult>,
+}
+
+impl FakeCommandBus {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn push_command(mut self, command: DeviceCommand) -> Self {
+        self.commands.push_back(command);
+        self
+    }
+
+    pub fn push_result(mut self, result: CommandResult) -> Self {
+        self.results.push_back(result);
+        self
+    }
+
+    pub fn record_command(&mut self, command: DeviceCommand) {
+        self.commands.push_back(command);
+    }
+
+    pub fn record_result(&mut self, result: CommandResult) {
+        self.results.push_back(result);
+    }
+
+    pub fn next_command(&mut self) -> Option<DeviceCommand> {
+        self.commands.pop_front()
+    }
+
+    pub fn next_result(&mut self) -> Option<CommandResult> {
+        self.results.pop_front()
+    }
+
+    pub fn pending_command_count(&self) -> usize {
+        self.commands.len()
+    }
+
+    pub fn pending_result_count(&self) -> usize {
+        self.results.len()
+    }
+
+    pub fn is_idle(&self) -> bool {
+        self.commands.is_empty() && self.results.is_empty()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ScriptedMqttPublication {
+    pub topic: String,
+    pub payload: Vec<u8>,
+    pub retained: bool,
+    pub observed_at_ms: u64,
+    pub metadata: Vec<Metadata>,
+}
+
+impl ScriptedMqttPublication {
+    pub fn new(topic: impl Into<String>, payload: impl Into<Vec<u8>>, observed_at_ms: u64) -> Self {
+        Self {
+            topic: topic.into(),
+            payload: payload.into(),
+            retained: false,
+            observed_at_ms,
+            metadata: Vec::new(),
+        }
+    }
+
+    pub fn retained(mut self) -> Self {
+        self.retained = true;
+        self
+    }
+
+    pub fn with_metadata(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
+        self.metadata.push(Metadata::new(key, value));
+        self
+    }
+
+    pub fn payload_utf8(&self) -> Option<&str> {
+        std::str::from_utf8(&self.payload).ok()
+    }
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct FakeMqttBroker {
+    publications: VecDeque<ScriptedMqttPublication>,
+}
+
+impl FakeMqttBroker {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn publish(mut self, publication: ScriptedMqttPublication) -> Self {
+        self.publications.push_back(publication);
+        self
+    }
+
+    pub fn record_publication(&mut self, publication: ScriptedMqttPublication) {
+        self.publications.push_back(publication);
+    }
+
+    pub fn next_publication(&mut self) -> Option<ScriptedMqttPublication> {
+        self.publications.pop_front()
+    }
+
+    pub fn len(&self) -> usize {
+        self.publications.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.publications.is_empty()
+    }
+}
+
 pub fn hue_bridge(id: &'static str, native_id: &'static str) -> Bridge {
     let mut bridge = Bridge::new(
         BridgeId::trusted(id),
@@ -191,6 +309,33 @@ pub fn occupancy_sensor_entity(id: &'static str, device_id: &DeviceId) -> Entity
         capabilities: vec![Capability::sensor_occupancy()],
         state: None,
         metadata: vec![Metadata::new("fixture", "occupancy_sensor")],
+    }
+}
+
+pub fn turn_on_command(
+    command_id: &'static str,
+    entity_id: &EntityId,
+    requested_by: &'static str,
+    correlation_id: &'static str,
+) -> DeviceCommand {
+    DeviceCommand::new(
+        CommandId::trusted(command_id),
+        entity_id.clone(),
+        CommandType::TurnOn,
+        Value::Null,
+        requested_by,
+        CorrelationId::trusted(correlation_id),
+    )
+    .expect("fixture turn-on commands use a canonical capability")
+}
+
+pub fn accepted_command_result(command: &DeviceCommand, bridge_id: &BridgeId) -> CommandResult {
+    CommandResult {
+        command_id: command.command_id.clone(),
+        status: CommandStatus::Accepted,
+        bridge_id: bridge_id.clone(),
+        correlation_id: command.correlation_id.clone(),
+        message: Some("fixture accepted command".to_string()),
     }
 }
 
@@ -473,6 +618,52 @@ mod tests {
             registry.entity(&fixture.sensor.entity_id).unwrap().kind,
             EntityKind::Sensor
         );
+    }
+
+    #[test]
+    fn fake_command_bus_preserves_command_result_order() {
+        let fixture = SmartHomeFixture::hue_lighting();
+        let command = turn_on_command(
+            "command-1",
+            &fixture.light.entity_id,
+            "agent:test",
+            "corr-1",
+        );
+        let result = accepted_command_result(&command, &fixture.bridge.bridge_id);
+        let mut bus = FakeCommandBus::new()
+            .push_command(command.clone())
+            .push_result(result.clone());
+
+        assert_eq!(bus.pending_command_count(), 1);
+        assert_eq!(bus.pending_result_count(), 1);
+        assert_eq!(bus.next_command(), Some(command));
+        assert_eq!(bus.next_result(), Some(result));
+        assert!(bus.is_idle());
+    }
+
+    #[test]
+    fn fake_mqtt_broker_preserves_publication_order() {
+        let first = ScriptedMqttPublication::new(
+            "home/kitchen/light/state",
+            br#"{"state":"ON"}"#.to_vec(),
+            1_000,
+        )
+        .retained()
+        .with_metadata("fixture", "mqtt");
+        let second = ScriptedMqttPublication::new(
+            "home/kitchen/light/brightness",
+            br#"{"brightness":42}"#.to_vec(),
+            1_100,
+        );
+        let mut broker = FakeMqttBroker::new()
+            .publish(first.clone())
+            .publish(second.clone());
+
+        assert_eq!(broker.len(), 2);
+        assert_eq!(broker.next_publication(), Some(first.clone()));
+        assert_eq!(first.payload_utf8(), Some(r#"{"state":"ON"}"#));
+        assert_eq!(broker.next_publication(), Some(second));
+        assert!(broker.is_empty());
     }
 
     #[test]
