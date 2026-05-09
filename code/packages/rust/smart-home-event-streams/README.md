@@ -8,6 +8,7 @@ parse vendor payloads. It gives Hue SSE, WebSocket, MQTT, cloud-push, serial, an
 radio workers a shared deterministic shape for:
 
 - stream identity and transport classification
+- MQTT topic filter validation, matching, and subscription descriptors
 - stream cursors and replay checkpoints
 - heartbeat freshness and stale-event deadlines
 - disconnect tracking without losing the last cursor

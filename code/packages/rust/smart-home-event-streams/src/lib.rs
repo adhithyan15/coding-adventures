@@ -68,6 +68,249 @@ impl EventStreamTransport {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum MqttTopicError {
+    EmptyFilter,
+    HashWildcardMustBeFinal,
+    PlusWildcardMustOccupyLevel,
+    TopicNameContainsWildcard,
+}
+
+impl fmt::Display for MqttTopicError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::EmptyFilter => write!(f, "MQTT topic filter must not be empty"),
+            Self::HashWildcardMustBeFinal => {
+                write!(f, "MQTT # wildcard must occupy the final topic level")
+            }
+            Self::PlusWildcardMustOccupyLevel => {
+                write!(f, "MQTT + wildcard must occupy an entire topic level")
+            }
+            Self::TopicNameContainsWildcard => write!(f, "MQTT topic names must not use wildcards"),
+        }
+    }
+}
+
+impl std::error::Error for MqttTopicError {}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum MqttQos {
+    AtMostOnce,
+    AtLeastOnce,
+    ExactlyOnce,
+}
+
+impl MqttQos {
+    pub fn level(self) -> u8 {
+        match self {
+            Self::AtMostOnce => 0,
+            Self::AtLeastOnce => 1,
+            Self::ExactlyOnce => 2,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct MqttTopicFilter(String);
+
+impl MqttTopicFilter {
+    pub fn new(value: impl Into<String>) -> Result<Self, MqttTopicError> {
+        let value = value.into();
+        validate_mqtt_topic_filter(&value)?;
+        Ok(Self(value))
+    }
+
+    pub fn trusted(value: impl Into<String>) -> Self {
+        Self(value.into())
+    }
+
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+
+    pub fn has_wildcards(&self) -> bool {
+        self.0.split('/').any(|level| level == "+" || level == "#")
+    }
+
+    pub fn matches_topic(&self, topic_name: &str) -> Result<bool, MqttTopicError> {
+        validate_mqtt_topic_name(topic_name)?;
+
+        let filter_levels: Vec<&str> = self.0.split('/').collect();
+        let topic_levels: Vec<&str> = topic_name.split('/').collect();
+        let mut topic_index = 0;
+
+        for filter_level in filter_levels {
+            if filter_level == "#" {
+                return Ok(true);
+            }
+
+            let Some(topic_level) = topic_levels.get(topic_index) else {
+                return Ok(false);
+            };
+
+            if filter_level != "+" && filter_level != *topic_level {
+                return Ok(false);
+            }
+
+            topic_index += 1;
+        }
+
+        Ok(topic_index == topic_levels.len())
+    }
+}
+
+impl fmt::Display for MqttTopicFilter {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(&self.0)
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum MqttRetainPolicy {
+    DeliverRetained,
+    IgnoreRetained,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MqttSubscriptionSpec {
+    pub integration_id: IntegrationId,
+    pub broker_id: BridgeId,
+    pub stream_id: EventStreamId,
+    pub topic_filter: MqttTopicFilter,
+    pub qos: MqttQos,
+    pub retain_policy: MqttRetainPolicy,
+    pub shared_group: Option<String>,
+    pub metadata: Vec<Metadata>,
+}
+
+impl MqttSubscriptionSpec {
+    pub fn new(
+        integration_id: IntegrationId,
+        broker_id: BridgeId,
+        topic_filter: MqttTopicFilter,
+    ) -> Self {
+        let stream_id = EventStreamId::trusted(format!(
+            "{}:{}:{}",
+            integration_id.as_str(),
+            broker_id.as_str(),
+            topic_filter.as_str()
+        ));
+        Self {
+            integration_id,
+            broker_id,
+            stream_id,
+            topic_filter,
+            qos: MqttQos::AtLeastOnce,
+            retain_policy: MqttRetainPolicy::DeliverRetained,
+            shared_group: None,
+            metadata: Vec::new(),
+        }
+    }
+
+    pub fn with_qos(mut self, qos: MqttQos) -> Self {
+        self.qos = qos;
+        self
+    }
+
+    pub fn with_retain_policy(mut self, retain_policy: MqttRetainPolicy) -> Self {
+        self.retain_policy = retain_policy;
+        self
+    }
+
+    pub fn with_shared_group(mut self, shared_group: impl Into<String>) -> Self {
+        self.shared_group = Some(shared_group.into());
+        self
+    }
+
+    pub fn with_metadata(mut self, metadata: Metadata) -> Self {
+        self.metadata.push(metadata);
+        self
+    }
+
+    pub fn to_event_stream_spec(&self) -> EventStreamSpec {
+        let mut spec = EventStreamSpec::new(
+            self.integration_id.clone(),
+            self.broker_id.clone(),
+            EventStreamTransport::MqttSubscription,
+        )
+        .with_endpoint(format!("mqtt:{}", self.topic_filter.as_str()))
+        .with_metadata(Metadata::new(
+            "mqtt.topic_filter",
+            self.topic_filter.as_str(),
+        ))
+        .with_metadata(Metadata::new("mqtt.qos", self.qos.level().to_string()))
+        .with_metadata(Metadata::new(
+            "mqtt.retain_policy",
+            match self.retain_policy {
+                MqttRetainPolicy::DeliverRetained => "deliver",
+                MqttRetainPolicy::IgnoreRetained => "ignore",
+            },
+        ));
+
+        if let Some(shared_group) = &self.shared_group {
+            spec = spec.with_metadata(Metadata::new("mqtt.shared_group", shared_group));
+        }
+
+        for metadata in &self.metadata {
+            spec = spec.with_metadata(metadata.clone());
+        }
+
+        spec.stream_id = self.stream_id.clone();
+        spec
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MqttPublicationRef {
+    pub topic_name: String,
+    pub qos: MqttQos,
+    pub packet_id: Option<u16>,
+    pub retained: bool,
+    pub duplicate: bool,
+}
+
+impl MqttPublicationRef {
+    pub fn new(topic_name: impl Into<String>, qos: MqttQos) -> Result<Self, MqttTopicError> {
+        let topic_name = topic_name.into();
+        validate_mqtt_topic_name(&topic_name)?;
+        Ok(Self {
+            topic_name,
+            qos,
+            packet_id: None,
+            retained: false,
+            duplicate: false,
+        })
+    }
+
+    pub fn with_packet_id(mut self, packet_id: u16) -> Self {
+        self.packet_id = Some(packet_id);
+        self
+    }
+
+    pub fn retained(mut self, retained: bool) -> Self {
+        self.retained = retained;
+        self
+    }
+
+    pub fn duplicate(mut self, duplicate: bool) -> Self {
+        self.duplicate = duplicate;
+        self
+    }
+
+    pub fn native_cursor(&self) -> String {
+        format!(
+            "mqtt:{}:qos{}:packet:{}:retained:{}:duplicate:{}",
+            self.topic_name,
+            self.qos.level(),
+            self.packet_id
+                .map(|packet_id| packet_id.to_string())
+                .unwrap_or_else(|| "-".to_string()),
+            self.retained,
+            self.duplicate
+        )
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum EventStreamStatus {
     Idle,
@@ -399,6 +642,40 @@ pub struct EventStreamRestartPlan {
     pub retry_at_ms: u64,
 }
 
+fn validate_mqtt_topic_filter(value: &str) -> Result<(), MqttTopicError> {
+    if value.is_empty() {
+        return Err(MqttTopicError::EmptyFilter);
+    }
+
+    for level in value.split('/') {
+        if level.contains('#') && level != "#" {
+            return Err(MqttTopicError::HashWildcardMustBeFinal);
+        }
+        if level.contains('+') && level != "+" {
+            return Err(MqttTopicError::PlusWildcardMustOccupyLevel);
+        }
+    }
+
+    if let Some(hash_index) = value.split('/').position(|level| level == "#") {
+        let level_count = value.split('/').count();
+        if hash_index + 1 != level_count {
+            return Err(MqttTopicError::HashWildcardMustBeFinal);
+        }
+    }
+
+    Ok(())
+}
+
+fn validate_mqtt_topic_name(value: &str) -> Result<(), MqttTopicError> {
+    if value.is_empty() {
+        return Err(MqttTopicError::EmptyFilter);
+    }
+    if value.contains('#') || value.contains('+') {
+        return Err(MqttTopicError::TopicNameContainsWildcard);
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -529,5 +806,88 @@ mod tests {
         assert_eq!(plan.reason, EventStreamRestartReason::EventGap);
         assert_eq!(plan.bridge_id, BridgeId::trusted("broker-1"));
         assert_eq!(plan.reconnect_attempt, 1);
+    }
+
+    #[test]
+    fn mqtt_topic_filters_validate_wildcard_placement() {
+        assert_eq!(MqttTopicFilter::new("home/#").unwrap().as_str(), "home/#");
+        assert!(MqttTopicFilter::new("home/+/state")
+            .unwrap()
+            .has_wildcards());
+        assert_eq!(
+            MqttTopicFilter::new("home/#/state").unwrap_err(),
+            MqttTopicError::HashWildcardMustBeFinal
+        );
+        assert_eq!(
+            MqttTopicFilter::new("home/room+1/state").unwrap_err(),
+            MqttTopicError::PlusWildcardMustOccupyLevel
+        );
+    }
+
+    #[test]
+    fn mqtt_topic_filters_match_topic_names() {
+        let exact = MqttTopicFilter::new("zigbee2mqtt/kitchen_light").unwrap();
+        let room_states = MqttTopicFilter::new("home/+/state").unwrap();
+        let subtree = MqttTopicFilter::new("home/#").unwrap();
+
+        assert!(exact.matches_topic("zigbee2mqtt/kitchen_light").unwrap());
+        assert!(!exact.matches_topic("zigbee2mqtt/hall_light").unwrap());
+        assert!(room_states.matches_topic("home/kitchen/state").unwrap());
+        assert!(!room_states
+            .matches_topic("home/kitchen/light/state")
+            .unwrap());
+        assert!(subtree.matches_topic("home").unwrap());
+        assert!(subtree.matches_topic("home/kitchen/light/state").unwrap());
+        assert_eq!(
+            subtree.matches_topic("home/+/state").unwrap_err(),
+            MqttTopicError::TopicNameContainsWildcard
+        );
+    }
+
+    #[test]
+    fn mqtt_subscription_specs_project_to_event_stream_specs() {
+        let subscription = MqttSubscriptionSpec::new(
+            IntegrationId::trusted("zigbee2mqtt"),
+            BridgeId::trusted("broker-1"),
+            MqttTopicFilter::new("zigbee2mqtt/+/availability").unwrap(),
+        )
+        .with_qos(MqttQos::AtMostOnce)
+        .with_retain_policy(MqttRetainPolicy::IgnoreRetained)
+        .with_shared_group("chief-of-staff")
+        .with_metadata(Metadata::new("mqtt.discovery_family", "availability"));
+
+        let spec = subscription.to_event_stream_spec();
+
+        assert_eq!(spec.stream_id, subscription.stream_id);
+        assert_eq!(spec.transport, EventStreamTransport::MqttSubscription);
+        assert_eq!(
+            spec.endpoint.as_deref(),
+            Some("mqtt:zigbee2mqtt/+/availability")
+        );
+        assert!(spec.metadata.contains(&Metadata::new(
+            "mqtt.topic_filter",
+            "zigbee2mqtt/+/availability"
+        )));
+        assert!(spec.metadata.contains(&Metadata::new("mqtt.qos", "0")));
+        assert!(spec
+            .metadata
+            .contains(&Metadata::new("mqtt.retain_policy", "ignore")));
+        assert!(spec
+            .metadata
+            .contains(&Metadata::new("mqtt.shared_group", "chief-of-staff")));
+    }
+
+    #[test]
+    fn mqtt_publication_refs_build_deterministic_native_cursors() {
+        let publication = MqttPublicationRef::new("home/kitchen/temperature", MqttQos::AtLeastOnce)
+            .unwrap()
+            .with_packet_id(42)
+            .retained(true)
+            .duplicate(false);
+
+        assert_eq!(
+            publication.native_cursor(),
+            "mqtt:home/kitchen/temperature:qos1:packet:42:retained:true:duplicate:false"
+        );
     }
 }
