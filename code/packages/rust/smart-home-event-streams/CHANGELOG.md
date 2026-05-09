@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Added
+
+- MQTT publication specs for outbound command topics, including QoS, retain,
+  payload format, command/correlation context, deterministic publication keys,
+  and audit metadata projection.
+
 ## [0.1.0] - 2026-05-08
 
 ### Added
