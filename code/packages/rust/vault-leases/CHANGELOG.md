@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `expires_at_ms`, `read_count`, `revoked`). Deliberately does
   *not* carry the payload — callers opt explicitly into
   `read()` / `consume()` to obtain it.
+- `LeaseStatus` and `LeaseInfo` read-side helpers for status and
+  remaining-TTL classification at a caller-supplied timestamp.
 - `LeaseError` — narrow variants:
   `NotFound` / `Expired` / `Revoked` / `InvalidParameter` /
   `Crypto`. `NotFound` is uniform for never-issued and

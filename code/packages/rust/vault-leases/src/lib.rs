@@ -243,6 +243,63 @@ pub struct LeaseInfo {
     pub revoked: bool,
 }
 
+/// Read-side lifecycle state for a lease at a particular clock instant.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum LeaseStatus {
+    /// Lease exists, has not been revoked, and has not reached expiry.
+    Active,
+    /// Lease exists but has been explicitly revoked or consumed.
+    Revoked,
+    /// Lease exists but its TTL has elapsed.
+    Expired,
+}
+
+impl LeaseStatus {
+    /// Stable lower-case wire label for logs, tools, and test fixtures.
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Active => "active",
+            Self::Revoked => "revoked",
+            Self::Expired => "expired",
+        }
+    }
+
+    /// True when the lease may still be read or consumed.
+    pub fn is_usable(self) -> bool {
+        self == Self::Active
+    }
+}
+
+impl LeaseInfo {
+    /// Classify this metadata snapshot at `now_ms`.
+    ///
+    /// Revocation wins over expiry because a consumed one-shot lease
+    /// should remain visibly revoked until the next sweep reaps it.
+    pub fn status_at(&self, now_ms: u64) -> LeaseStatus {
+        if self.revoked {
+            LeaseStatus::Revoked
+        } else if self.expires_at_ms <= now_ms {
+            LeaseStatus::Expired
+        } else {
+            LeaseStatus::Active
+        }
+    }
+
+    /// True when the lease exists and is not revoked or expired at `now_ms`.
+    pub fn is_active_at(&self, now_ms: u64) -> bool {
+        self.status_at(now_ms).is_usable()
+    }
+
+    /// Remaining TTL at `now_ms`, or zero for revoked/expired leases.
+    pub fn remaining_ttl_ms_at(&self, now_ms: u64) -> u64 {
+        if self.is_active_at(now_ms) {
+            self.expires_at_ms.saturating_sub(now_ms)
+        } else {
+            0
+        }
+    }
+}
+
 /// All errors the lease manager can produce.
 ///
 /// The variants are intentionally narrow: callers usually want to
@@ -632,6 +689,12 @@ mod tests {
         assert_eq!(info.read_count, 0);
         assert!(!info.revoked);
         assert!(info.expires_at_ms >= info.issued_at_ms);
+        assert!(info.is_active_at(info.issued_at_ms));
+        assert_eq!(
+            info.remaining_ttl_ms_at(info.issued_at_ms),
+            info.expires_at_ms - info.issued_at_ms
+        );
+        assert_eq!(LeaseStatus::Active.as_str(), "active");
     }
 
     #[test]
@@ -700,6 +763,35 @@ mod tests {
         let info = mgr.lookup(&id).unwrap();
         assert!(info.revoked);
         assert_eq!(info.read_count, 1);
+        assert_eq!(info.status_at(info.issued_at_ms), LeaseStatus::Revoked);
+        assert_eq!(info.remaining_ttl_ms_at(info.issued_at_ms), 0);
+    }
+
+    #[test]
+    fn lease_info_status_helpers_classify_active_expired_and_revoked() {
+        let id = LeaseId::from_hex("00112233445566778899aabbccddeeff").unwrap();
+        let active = LeaseInfo {
+            id: id.clone(),
+            issued_at_ms: 100,
+            expires_at_ms: 200,
+            read_count: 0,
+            revoked: false,
+        };
+        let revoked = LeaseInfo {
+            revoked: true,
+            ..active.clone()
+        };
+
+        assert_eq!(active.status_at(199), LeaseStatus::Active);
+        assert!(active.is_active_at(199));
+        assert_eq!(active.remaining_ttl_ms_at(150), 50);
+        assert_eq!(active.status_at(200), LeaseStatus::Expired);
+        assert_eq!(active.remaining_ttl_ms_at(200), 0);
+        assert_eq!(LeaseStatus::Expired.as_str(), "expired");
+
+        assert_eq!(revoked.status_at(150), LeaseStatus::Revoked);
+        assert_eq!(revoked.status_at(250), LeaseStatus::Revoked);
+        assert!(!revoked.status_at(150).is_usable());
     }
 
     #[test]
@@ -832,10 +924,7 @@ mod tests {
         let mgr = InMemoryLeaseManager::new();
         let id = mgr.issue(mk_payload("x"), 1).unwrap();
         std::thread::sleep(std::time::Duration::from_millis(10));
-        assert!(matches!(
-            mgr.renew(&id, 60_000),
-            Err(LeaseError::Expired)
-        ));
+        assert!(matches!(mgr.renew(&id, 60_000), Err(LeaseError::Expired)));
     }
 
     #[test]
