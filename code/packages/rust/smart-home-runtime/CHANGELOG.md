@@ -22,6 +22,9 @@ All notable changes to this package will be documented in this file.
 - D18D-style read tool execution for listing bridges/devices, reading entity
   state, describing entity capabilities, and inspecting bridge health through
   the registry without dispatching integration work.
+- D18D-style command tool execution for authorized `smart_home.command` calls,
+  including tool-level audit decisions, command-level audit decisions, and
+  deterministic runtime command/correlation ids.
 - Supervisor primitives for bridge-worker heartbeat tracking and restart
   signaling.
 - Desired-state reconciliation for missing, stale, or drifted entity state,
