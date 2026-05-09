@@ -1301,6 +1301,63 @@ def select_device(
     raise ValueError(f"{reason}.\n{device_list(candidates)}")
 
 
+def runtime_devices(
+    selector: str = "auto",
+    *,
+    device_candidates: Iterable[BoardDevice | dict[str, Any]] | None = None,
+) -> list[BoardDevice]:
+    candidates = [
+        item if isinstance(item, BoardDevice) else BoardDevice(item)
+        for item in (devices() if device_candidates is None else device_candidates)
+        if not (item.bootloader if isinstance(item, BoardDevice) else item.get("bootloader", False))
+    ]
+    target = None if selector == "auto" else detect_target(selector)
+    if selector != "auto" and target is None:
+        raise ValueError(f"unsupported board: {selector!r}")
+
+    if target is None:
+        matches = [candidate for candidate in candidates if candidate.target is not None]
+        if not matches and len(candidates) == 1:
+            return candidates
+        return matches
+
+    exact_matches = [
+        candidate
+        for candidate in candidates
+        if candidate.target is not None and candidate.target.board_id == target.board_id
+    ]
+    if exact_matches:
+        return exact_matches
+    return [candidate for candidate in candidates if candidate.target is None]
+
+
+def select_runtime_device(
+    selector: str = "auto",
+    *,
+    device_candidates: Iterable[BoardDevice | dict[str, Any]] | None = None,
+) -> BoardDevice:
+    candidates = [
+        item if isinstance(item, BoardDevice) else BoardDevice(item)
+        for item in (devices() if device_candidates is None else device_candidates)
+    ]
+    matches = runtime_devices(selector, device_candidates=candidates)
+    if len(matches) == 1:
+        return matches[0]
+
+    if not candidates:
+        raise ValueError(
+            "No Board VM runtime serial devices found. "
+            "Plug in a board or pass an explicit port."
+        )
+
+    reason = (
+        "No matching runtime serial device found"
+        if not matches
+        else "Multiple runtime serial devices match"
+    )
+    raise ValueError(f"{reason}.\n{device_list(candidates)}")
+
+
 def pick_device(
     selector: str = "auto",
     *,
@@ -1469,5 +1526,7 @@ __all__ = [
     "pico_uf2_mounts",
     "pico_uf2_upload_options",
     "pick_device",
+    "runtime_devices",
     "select_device",
+    "select_runtime_device",
 ]
