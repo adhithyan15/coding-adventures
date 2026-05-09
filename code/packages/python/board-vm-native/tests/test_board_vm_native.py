@@ -85,17 +85,33 @@ def test_native_session_builds_protocol_bytes_in_rust():
 
 def test_known_targets_are_exposed_from_rust_registry():
     targets = known_targets()
+    uno_r4_wifi = find_target("arduino-uno-r4-wifi")
     esp32 = find_target("esp32-devkit-v1")
+    pico = find_target("raspberry-pi-pico")
     pico_w = find_target("raspberry-pi-pico-w")
 
     assert all(isinstance(target, BoardTarget) for target in targets)
+    assert uno_r4_wifi is not None
+    assert "transport.wifi" in uno_r4_wifi.capabilities
+    assert "transport.bluetooth_le" in uno_r4_wifi.capabilities
+    assert uno_r4_wifi.wireless_transports == ["wifi", "bluetooth_le"]
+    assert uno_r4_wifi.supports_wifi is True
+    assert uno_r4_wifi.supports_bluetooth is True
+    assert uno_r4_wifi.supports_ota_update is True
     assert esp32 is not None
     assert esp32.family == "esp32"
     assert esp32.runtime_id == "board-vm-esp32"
     assert esp32.onboard_led_pin == 2
     assert "gpio.open" in esp32.capabilities
+    assert "transport.bluetooth_classic" in esp32.capabilities
+    assert all(item["command_transport"] for item in esp32.wireless)
+    assert pico is not None
+    assert pico.wireless == []
+    assert "transport.wifi" not in pico.capabilities
     assert pico_w is not None
     assert pico_w.onboard_led == {"kind": "wireless_chip_gpio", "pin": 0}
+    assert "transport.wifi" in pico_w.capabilities
+    assert "ota.wifi" in pico_w.capabilities
 
 
 def test_targets_are_detected_from_rust_owned_aliases():

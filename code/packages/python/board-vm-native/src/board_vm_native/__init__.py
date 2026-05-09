@@ -197,6 +197,32 @@ class BoardTarget:
         return int(self.raw["digital_pin_count"])
 
     @property
+    def wireless(self) -> list[dict[str, Any]]:
+        return [dict(item) for item in self.raw.get("wireless", [])]
+
+    @property
+    def wireless_transports(self) -> list[str]:
+        return [str(item["transport"]) for item in self.wireless]
+
+    def supports_wireless_transport(self, transport: str) -> bool:
+        return str(transport) in self.wireless_transports
+
+    @property
+    def supports_wifi(self) -> bool:
+        return self.supports_wireless_transport("wifi")
+
+    @property
+    def supports_bluetooth(self) -> bool:
+        return any(
+            transport.startswith("bluetooth")
+            for transport in self.wireless_transports
+        )
+
+    @property
+    def supports_ota_update(self) -> bool:
+        return any(bool(item.get("ota_update")) for item in self.wireless)
+
+    @property
     def capabilities(self) -> list[str]:
         return [str(capability) for capability in self.raw.get("capabilities", [])]
 

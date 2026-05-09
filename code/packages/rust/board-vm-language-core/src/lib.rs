@@ -39,7 +39,10 @@ use board_vm_protocol::{
     RunStatus, Value as ProtocolValue, CAP_FLAG_BOARD_METADATA, CAP_FLAG_BYTECODE_CALLABLE,
     CAP_FLAG_PROTOCOL_FEATURE, FLAG_IS_ERROR_RESPONSE, FLAG_IS_RESPONSE,
 };
-use board_vm_targets::{all_targets, BoardFamily, BoardTargetInfo, OnboardLed as TargetOnboardLed};
+use board_vm_targets::{
+    all_targets, BoardFamily, BoardTargetInfo, OnboardLed as TargetOnboardLed,
+    WirelessInterfaceInfo as TargetWirelessInterface, WirelessTransport as TargetWirelessTransport,
+};
 
 pub const LANGUAGE_CORE_VERSION_MAJOR: u16 = 0;
 pub const LANGUAGE_CORE_VERSION_MINOR: u16 = 1;
@@ -259,6 +262,21 @@ pub enum LanguageOnboardLed {
     WirelessChipGpio(u8),
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum LanguageWirelessTransport {
+    Wifi,
+    BluetoothLe,
+    BluetoothClassic,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguageWirelessInterface {
+    pub transport: LanguageWirelessTransport,
+    pub chip: String,
+    pub command_transport: bool,
+    pub ota_update: bool,
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageTargetInfo {
     pub board_id: String,
@@ -272,6 +290,7 @@ pub struct LanguageTargetInfo {
     pub operating_voltage_mv: u16,
     pub onboard_led: Option<LanguageOnboardLed>,
     pub digital_pin_count: usize,
+    pub wireless: Vec<LanguageWirelessInterface>,
     pub capabilities: Vec<String>,
 }
 
@@ -410,6 +429,14 @@ pub const fn onboard_led_kind(led: LanguageOnboardLed) -> &'static str {
     match led {
         LanguageOnboardLed::Gpio(_) => "gpio",
         LanguageOnboardLed::WirelessChipGpio(_) => "wireless_chip_gpio",
+    }
+}
+
+pub const fn wireless_transport_name(transport: LanguageWirelessTransport) -> &'static str {
+    match transport {
+        LanguageWirelessTransport::Wifi => "wifi",
+        LanguageWirelessTransport::BluetoothLe => "bluetooth_le",
+        LanguageWirelessTransport::BluetoothClassic => "bluetooth_classic",
     }
 }
 
@@ -555,11 +582,33 @@ fn language_target_info(target: &BoardTargetInfo) -> LanguageTargetInfo {
         operating_voltage_mv: target.operating_voltage_mv,
         onboard_led: target.onboard_led.map(language_onboard_led),
         digital_pin_count: target.digital_pin_count,
+        wireless: target
+            .wireless
+            .iter()
+            .map(language_wireless_interface)
+            .collect(),
         capabilities: target
             .capabilities
             .iter()
             .map(|capability| (*capability).to_owned())
             .collect(),
+    }
+}
+
+fn language_wireless_interface(interface: &TargetWirelessInterface) -> LanguageWirelessInterface {
+    LanguageWirelessInterface {
+        transport: language_wireless_transport(interface.transport),
+        chip: interface.chip.to_owned(),
+        command_transport: interface.command_transport,
+        ota_update: interface.ota_update,
+    }
+}
+
+fn language_wireless_transport(transport: TargetWirelessTransport) -> LanguageWirelessTransport {
+    match transport {
+        TargetWirelessTransport::Wifi => LanguageWirelessTransport::Wifi,
+        TargetWirelessTransport::BluetoothLe => LanguageWirelessTransport::BluetoothLe,
+        TargetWirelessTransport::BluetoothClassic => LanguageWirelessTransport::BluetoothClassic,
     }
 }
 
@@ -1966,10 +2015,22 @@ mod tests {
         assert_eq!(esp32.runtime_id, "board-vm-esp32");
         assert_eq!(esp32.onboard_led, Some(LanguageOnboardLed::Gpio(2)));
         assert!(esp32.capabilities.contains(&"gpio.open".to_owned()));
+        assert!(esp32
+            .capabilities
+            .contains(&"transport.bluetooth_classic".to_owned()));
+        assert!(esp32.wireless.iter().any(|interface| interface.transport
+            == LanguageWirelessTransport::Wifi
+            && interface.command_transport
+            && interface.ota_update));
         assert_eq!(
             pico_w.onboard_led,
             Some(LanguageOnboardLed::WirelessChipGpio(0))
         );
+        assert!(pico_w.capabilities.contains(&"transport.wifi".to_owned()));
+        assert!(known_target("raspberry-pi-pico")
+            .unwrap()
+            .wireless
+            .is_empty());
     }
 
     #[test]
