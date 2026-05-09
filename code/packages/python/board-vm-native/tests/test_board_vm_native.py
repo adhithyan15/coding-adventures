@@ -12,6 +12,7 @@ from board_vm_native import (
     esp_upload_options,
     find_target,
     known_targets,
+    select_device,
 )
 
 
@@ -161,6 +162,42 @@ def test_esp_upload_command_uses_rust_owned_options():
         "4194304",
         "--no-verify",
         "--stay-in-bootloader",
+    ]
+
+
+def test_esp_upload_command_can_select_a_discovered_esp_device():
+    found = devices([
+        "/dev/cu.usbmodem1101",
+        "/dev/tty.usbserial-CP2102-esp32",
+    ])
+
+    selected = select_device("esp32", device_candidates=found)
+    command = esp_upload_command(
+        "esp32",
+        device_candidates=found,
+        image="/tmp/board-vm-esp32.bin",
+        offset=0x2000,
+        verify_md5=False,
+    )
+
+    assert selected.port == "/dev/tty.usbserial-CP2102-esp32"
+    assert command == [
+        "esp-upload",
+        "--port",
+        "/dev/tty.usbserial-CP2102-esp32",
+        "--image",
+        "/tmp/board-vm-esp32.bin",
+        "--baud",
+        "115200",
+        "--timeout-ms",
+        "1000",
+        "--offset",
+        "8192",
+        "--block-size",
+        "1024",
+        "--flash-size",
+        "4194304",
+        "--no-verify",
     ]
 
 
