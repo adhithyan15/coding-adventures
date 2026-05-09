@@ -5,8 +5,10 @@ Pure discovery-record primitives for the D23 smart-home runtime.
 This crate does not open sockets, send mDNS packets, call vendor cloud APIs, or
 write credentials. It gives discovery workers a shared shape for:
 
-- mDNS/SSDP/cloud/manual discovery sources
+- mDNS/SSDP/BLE/USB/DHCP/MQTT/webhook/cloud/manual discovery sources
 - bridge candidate records with stable integration/native identifiers
+- confidence, pairing requirement, interface, and expiry metadata for repeated
+  observations
 - manual bridge address normalization
 - mDNS advertisement endpoint helpers
 - deterministic candidate catalogs
