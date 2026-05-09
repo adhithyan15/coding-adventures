@@ -17,10 +17,11 @@ use board_vm_language_core::{
     build_run_wire_frame, build_stop_wire_frame, build_store_program_wire_frame,
     build_time_now_module, build_time_sleep_ms_module, capability_board_metadata,
     capability_bytecode_callable, capability_flag_names, capability_protocol_feature,
-    decode_wire_response, detect_target as core_detect_target, known_targets, onboard_led_kind,
-    program_format_name, raw_module_len, run_status_name, BoardVmLanguageSession,
-    DecodedLanguageResponse, DecodedLanguageResponseBody, LanguageCoreError, LanguageOnboardLed,
-    LanguageTargetInfo, LanguageValue,
+    decode_wire_response, detect_target as core_detect_target, esp_upload_options_for_target,
+    known_targets, onboard_led_kind, program_format_name, raw_module_len, run_status_name,
+    BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
+    LanguageCoreError, LanguageEspUploadOptions, LanguageOnboardLed, LanguageTargetInfo,
+    LanguageValue,
 };
 use python_bridge::*;
 
@@ -464,6 +465,24 @@ unsafe extern "C" fn py_detect_target(_module: PyObjectPtr, args: PyObjectPtr) -
     }
 }
 
+unsafe extern "C" fn py_esp_upload_options(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
+    let selector = match parse_arg_str(args, 0) {
+        Some(value) => value,
+        None => {
+            set_error(
+                type_error_class(),
+                "esp_upload_options() requires selector as str",
+            );
+            return ptr::null_mut();
+        }
+    };
+
+    match esp_upload_options_for_target(&selector) {
+        Some(options) => esp_upload_options_to_py(&options),
+        None => py_none(),
+    }
+}
+
 fn with_session(
     next_request_id: u16,
     operation: impl FnOnce(&mut BoardVmLanguageSession) -> Result<PyObjectPtr, LanguageCoreError>,
@@ -703,6 +722,35 @@ unsafe fn language_target_to_py(target: &LanguageTargetInfo) -> PyObjectPtr {
         PyList_SetItem(capabilities, index as isize, str_to_py(capability));
     }
     dict_set(dict, "capabilities", capabilities);
+    dict
+}
+
+unsafe fn esp_upload_options_to_py(options: &LanguageEspUploadOptions) -> PyObjectPtr {
+    let dict = PyDict_New();
+    dict_set(dict, "board_id", str_to_py(&options.board_id));
+    dict_set(dict, "baud_rate", usize_to_py(options.baud_rate as usize));
+    dict_set(dict, "timeout_ms", usize_to_py(options.timeout_ms as usize));
+    dict_set(
+        dict,
+        "reset_into_bootloader",
+        bool_to_py(options.reset_into_bootloader),
+    );
+    dict_set(dict, "offset", usize_to_py(options.offset as usize));
+    dict_set(dict, "block_size", usize_to_py(options.block_size as usize));
+    dict_set(
+        dict,
+        "flash_size",
+        options
+            .flash_size
+            .map(|value| usize_to_py(value as usize))
+            .unwrap_or_else(|| py_none()),
+    );
+    dict_set(dict, "verify_md5", bool_to_py(options.verify_md5));
+    dict_set(
+        dict,
+        "stay_in_bootloader",
+        bool_to_py(options.stay_in_bootloader),
+    );
     dict
 }
 
@@ -981,7 +1029,7 @@ unsafe fn raise_core_error(context: &str, error: LanguageCoreError) -> PyObjectP
 
 #[no_mangle]
 pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
-    let methods: &'static mut [PyMethodDef; 23] = Box::leak(Box::new([
+    let methods: &'static mut [PyMethodDef; 24] = Box::leak(Box::new([
         PyMethodDef {
             ml_name: b"hello_wire\0".as_ptr() as *const c_char,
             ml_meth: Some(py_hello_wire),
@@ -1124,6 +1172,13 @@ pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
             ml_meth: Some(py_detect_target),
             ml_flags: METH_VARARGS,
             ml_doc: b"Resolve a Board VM target selector using Rust-owned aliases.\0".as_ptr()
+                as *const c_char,
+        },
+        PyMethodDef {
+            ml_name: b"esp_upload_options\0".as_ptr() as *const c_char,
+            ml_meth: Some(py_esp_upload_options),
+            ml_flags: METH_VARARGS,
+            ml_doc: b"Return Rust-owned ESP ROM upload defaults for a target.\0".as_ptr()
                 as *const c_char,
         },
         method_def_sentinel(),

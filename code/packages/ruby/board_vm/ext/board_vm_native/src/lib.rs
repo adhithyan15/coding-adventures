@@ -18,10 +18,11 @@ use board_vm_language_core::{
     build_run_wire_frame, build_stop_wire_frame, build_store_program_wire_frame,
     build_time_now_module, build_time_sleep_ms_module, capability_board_metadata,
     capability_bytecode_callable, capability_flag_names, capability_protocol_feature,
-    decode_wire_response, detect_target as core_detect_target, known_targets, onboard_led_kind,
-    program_format_name, raw_module_len, run_status_name, BoardVmLanguageSession,
-    DecodedLanguageResponse, DecodedLanguageResponseBody, LanguageCoreError, LanguageOnboardLed,
-    LanguageTargetInfo, LanguageValue,
+    decode_wire_response, detect_target as core_detect_target, esp_upload_options_for_target,
+    known_targets, onboard_led_kind, program_format_name, raw_module_len, run_status_name,
+    BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
+    LanguageCoreError, LanguageEspUploadOptions, LanguageOnboardLed, LanguageTargetInfo,
+    LanguageValue,
 };
 use ruby_bridge::VALUE;
 
@@ -413,6 +414,15 @@ extern "C" fn native_detect_target(_self_val: VALUE, selector_val: VALUE) -> VAL
     }
 }
 
+extern "C" fn native_esp_upload_options(_self_val: VALUE, selector_val: VALUE) -> VALUE {
+    let selector = ruby_bridge::str_from_rb(selector_val)
+        .unwrap_or_else(|| ruby_bridge::raise_arg_error("selector must be a Ruby String"));
+    match esp_upload_options_for_target(&selector) {
+        Some(options) => esp_upload_options_to_rb(&options),
+        None => ruby_bridge::nil_value(),
+    }
+}
+
 fn with_session_mut(
     self_val: VALUE,
     operation: impl FnOnce(&mut RubyBoardVmSession) -> Result<VALUE, LanguageCoreError>,
@@ -638,6 +648,39 @@ fn language_target_to_rb(target: &LanguageTargetInfo) -> VALUE {
         ruby_bridge::array_push(capabilities, ruby_bridge::str_to_rb(capability));
     }
     hash_set(hash, "capabilities", capabilities);
+    hash
+}
+
+fn esp_upload_options_to_rb(options: &LanguageEspUploadOptions) -> VALUE {
+    let hash = ruby_bridge::hash_new();
+    hash_set(hash, "board_id", ruby_bridge::str_to_rb(&options.board_id));
+    hash_set(hash, "baud_rate", rb_usize(options.baud_rate));
+    hash_set(hash, "timeout_ms", rb_usize(options.timeout_ms));
+    hash_set(
+        hash,
+        "reset_into_bootloader",
+        ruby_bridge::bool_to_rb(options.reset_into_bootloader),
+    );
+    hash_set(hash, "offset", rb_usize(options.offset));
+    hash_set(hash, "block_size", rb_usize(options.block_size));
+    hash_set(
+        hash,
+        "flash_size",
+        options
+            .flash_size
+            .map(rb_usize)
+            .unwrap_or_else(ruby_bridge::nil_value),
+    );
+    hash_set(
+        hash,
+        "verify_md5",
+        ruby_bridge::bool_to_rb(options.verify_md5),
+    );
+    hash_set(
+        hash,
+        "stay_in_bootloader",
+        ruby_bridge::bool_to_rb(options.stay_in_bootloader),
+    );
     hash
 }
 
@@ -911,6 +954,12 @@ pub extern "C" fn Init_board_vm_native() {
         native,
         "detect_target",
         native_detect_target as *const c_void,
+        1,
+    );
+    ruby_bridge::define_module_function_raw(
+        native,
+        "esp_upload_options",
+        native_esp_upload_options as *const c_void,
         1,
     );
 

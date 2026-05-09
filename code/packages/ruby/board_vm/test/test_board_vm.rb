@@ -50,6 +50,25 @@ module CodingAdventures
         assert_equal :raspberry_pi_pico_w, BoardVM.normalize_board("pico-w")
       end
 
+      def test_esp_upload_options_are_exposed_from_rust_language_core
+        options = BoardVM.esp_upload_options(:esp32)
+
+        assert_equal "esp32-devkit-v1", options["board_id"]
+        assert_equal 115_200, options["baud_rate"]
+        assert_equal 1_000, options["timeout_ms"]
+        assert_equal true, options["reset_into_bootloader"]
+        assert_equal 0x1000, options["offset"]
+        assert_equal 0x400, options["block_size"]
+        assert_equal 4 * 1024 * 1024, options["flash_size"]
+        assert_equal true, options["verify_md5"]
+        assert_equal false, options["stay_in_bootloader"]
+        assert_nil BoardVM.esp_upload_options(:raspberry_pi_pico)
+
+        overridden = BoardVM.esp_upload_options(:esp32, offset: 0x2000, verify_md5: false)
+        assert_equal 0x2000, overridden["offset"]
+        assert_equal false, overridden["verify_md5"]
+      end
+
       def test_connect_flash_uploads_the_uno_r4_serialusb_vm_and_tracks_runtime_port
         upload = CommandResult.new(
           ["cargo"],
