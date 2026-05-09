@@ -812,9 +812,13 @@ impl HtmlParser {
     ) {
         self.apply_document_shell_implied_contexts(&name);
         self.apply_table_implied_contexts(&name);
+        self.clear_pending_formatting_unless_next_reconstructs(&name);
         let formatting_inside = self.take_formatting_reconstruction_inside_for(&name);
         self.apply_simple_implied_end_tags(&name);
         if self.apply_interactive_implied_contexts(&name) {
+            return;
+        }
+        if self.apply_select_implied_contexts(&name) {
             return;
         }
 
@@ -996,6 +1000,12 @@ impl HtmlParser {
         }
     }
 
+    fn clear_pending_formatting_unless_next_reconstructs(&mut self, incoming_name: &str) {
+        if !starts_before_formatting_reconstruction_boundary(incoming_name) {
+            self.pending_formatting_reconstruction.clear();
+        }
+    }
+
     fn apply_document_shell_implied_contexts(&mut self, incoming_name: &str) {
         if starts_body_after_head(incoming_name) {
             self.pop_current_if(|name| name == "head");
@@ -1167,6 +1177,16 @@ impl HtmlParser {
         }
     }
 
+    fn apply_select_implied_contexts(&mut self, incoming_name: &str) -> bool {
+        if incoming_name != "select" || !self.has_open_element("select") {
+            return false;
+        }
+
+        self.close_open_element_if(|name| name == "option");
+        self.close_open_element_if(|name| name == "select");
+        true
+    }
+
     fn close_open_element_silently(&mut self, name: &str) -> bool {
         self.close_open_element_if(|candidate| candidate == name)
     }
@@ -1177,7 +1197,14 @@ impl HtmlParser {
         }) else {
             return false;
         };
-        self.capture_formatting_above(index);
+        let should_capture_formatting = self
+            .open_elements
+            .get(index)
+            .and_then(|path| element_at_path(&self.document, path))
+            .is_some_and(|name| matches!(name, "p" | "select"));
+        if should_capture_formatting {
+            self.capture_formatting_above(index);
+        }
         self.open_elements.truncate(index);
         true
     }
@@ -1516,7 +1543,7 @@ fn starts_inner_formatting_reconstruction_boundary(name: &str) -> bool {
 }
 
 fn starts_before_formatting_reconstruction_boundary(name: &str) -> bool {
-    matches!(name, "marquee")
+    matches!(name, "marquee" | "option")
 }
 
 fn is_special_element(name: &str) -> bool {
