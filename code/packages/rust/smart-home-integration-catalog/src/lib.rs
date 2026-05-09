@@ -266,6 +266,63 @@ impl SourceReference {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum EcosystemSurveyPlatform {
+    HomeAssistant,
+    Hubitat,
+    HomeyPro,
+    SmartThings,
+    OpenHab,
+    Homebridge,
+    IoBroker,
+    Domoticz,
+    Jeedom,
+    HomeSeer,
+    AppleHome,
+    GoogleHome,
+    AmazonAlexa,
+    ZWaveAlliance,
+    ThreadGroup,
+}
+
+impl EcosystemSurveyPlatform {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::HomeAssistant => "home_assistant",
+            Self::Hubitat => "hubitat",
+            Self::HomeyPro => "homey_pro",
+            Self::SmartThings => "smartthings",
+            Self::OpenHab => "openhab",
+            Self::Homebridge => "homebridge",
+            Self::IoBroker => "iobroker",
+            Self::Domoticz => "domoticz",
+            Self::Jeedom => "jeedom",
+            Self::HomeSeer => "homeseer",
+            Self::AppleHome => "apple_home",
+            Self::GoogleHome => "google_home",
+            Self::AmazonAlexa => "amazon_alexa",
+            Self::ZWaveAlliance => "zwave_alliance",
+            Self::ThreadGroup => "thread_group",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EcosystemSurveySource {
+    pub platform: EcosystemSurveyPlatform,
+    pub display_name: &'static str,
+    pub source_url: &'static str,
+    pub source_surface: &'static str,
+    pub contributes: &'static str,
+    pub primitive_hints: Vec<PrimitiveFamily>,
+}
+
+impl EcosystemSurveySource {
+    pub fn requires_primitive(&self, primitive: PrimitiveFamily) -> bool {
+        self.primitive_hints.contains(&primitive)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IntegrationCatalogEntry {
     pub integration_id: IntegrationId,
@@ -350,6 +407,240 @@ pub fn primitive_family_descriptors() -> Vec<PrimitiveFamilyDescriptor> {
         .iter()
         .copied()
         .map(describe_primitive_family)
+        .collect()
+}
+
+pub fn ecosystem_survey_sources() -> Vec<EcosystemSurveySource> {
+    vec![
+        ecosystem_source(
+            EcosystemSurveyPlatform::HomeAssistant,
+            "Home Assistant",
+            "https://www.home-assistant.io/integrations/",
+            "public integration index and Core manifests",
+            "Broad integration taxonomy, IoT classes, integration types, virtual aliases, and source references.",
+            &[
+                PrimitiveFamily::DiscoveryIndex,
+                PrimitiveFamily::LocalHttp,
+                PrimitiveFamily::WebSocket,
+                PrimitiveFamily::Mqtt,
+                PrimitiveFamily::CloudApi,
+                PrimitiveFamily::Webhook,
+                PrimitiveFamily::CalculatedState,
+            ],
+        ),
+        ecosystem_source(
+            EcosystemSurveyPlatform::Hubitat,
+            "Hubitat",
+            "https://docs2.hubitat.com/en/devices/list-of-compatible-devices",
+            "compatible-device and driver documentation",
+            "Local hub, Zigbee, Z-Wave, LAN, cloud app, Groovy driver, and Matter-over-Thread lessons.",
+            &[
+                PrimitiveFamily::Radio802154,
+                PrimitiveFamily::ZWaveSerialApi,
+                PrimitiveFamily::MatterCommissioning,
+                PrimitiveFamily::LocalHttp,
+                PrimitiveFamily::CloudApi,
+                PrimitiveFamily::Supervision,
+            ],
+        ),
+        ecosystem_source(
+            EcosystemSurveyPlatform::HomeyPro,
+            "Homey Pro",
+            "https://homey.app/en-us/apps/homey-pro/",
+            "app store and protocol-rich hub model",
+            "App-style integration packaging, guided pairing, local radios, cloud apps, flows, energy, media, and security categories.",
+            &[
+                PrimitiveFamily::BluetoothLowEnergy,
+                PrimitiveFamily::Radio802154,
+                PrimitiveFamily::ZWaveSerialApi,
+                PrimitiveFamily::CloudApi,
+                PrimitiveFamily::LocalPairing,
+                PrimitiveFamily::Supervision,
+            ],
+        ),
+        ecosystem_source(
+            EcosystemSurveyPlatform::SmartThings,
+            "SmartThings",
+            "https://support.smartthings.com/hc/en-us/articles/360052390111-Devices-in-SmartThings",
+            "device, hub, Edge driver, and Matter documentation",
+            "Hub-mediated devices, local Edge drivers, partner devices, Matter, Zigbee, Z-Wave, LAN, and cloud linked services.",
+            &[
+                PrimitiveFamily::MatterCommissioning,
+                PrimitiveFamily::Radio802154,
+                PrimitiveFamily::ZWaveSerialApi,
+                PrimitiveFamily::LocalHttp,
+                PrimitiveFamily::CloudApi,
+                PrimitiveFamily::CapabilityPolicy,
+            ],
+        ),
+        ecosystem_source(
+            EcosystemSurveyPlatform::OpenHab,
+            "openHAB",
+            "https://www.openhab.org/addons/",
+            "add-ons and bindings reference",
+            "Protocol-first bindings, automation add-ons, persistence, transformations, voice, UI, and service adapters.",
+            &[
+                PrimitiveFamily::LocalHttp,
+                PrimitiveFamily::Mqtt,
+                PrimitiveFamily::SerialController,
+                PrimitiveFamily::CloudApi,
+                PrimitiveFamily::CalculatedState,
+                PrimitiveFamily::Supervision,
+            ],
+        ),
+        ecosystem_source(
+            EcosystemSurveyPlatform::Homebridge,
+            "Homebridge",
+            "https://homebridge.io/plugins",
+            "plugin directory and verified plugin program",
+            "HomeKit bridge semantics, plugin quality gates, and Node sidecar packaging lessons.",
+            &[
+                PrimitiveFamily::HomeKitPairing,
+                PrimitiveFamily::CloudApi,
+                PrimitiveFamily::LocalHttp,
+                PrimitiveFamily::CapabilityPolicy,
+                PrimitiveFamily::Supervision,
+            ],
+        ),
+        ecosystem_source(
+            EcosystemSurveyPlatform::IoBroker,
+            "ioBroker",
+            "https://download.iobroker.net/sources-dist.json",
+            "adapter catalog JSON",
+            "Large admin-installable adapter ecosystem and source-catalog metadata shape.",
+            &[
+                PrimitiveFamily::DiscoveryIndex,
+                PrimitiveFamily::CloudApi,
+                PrimitiveFamily::Mqtt,
+                PrimitiveFamily::LocalHttp,
+                PrimitiveFamily::CalculatedState,
+            ],
+        ),
+        ecosystem_source(
+            EcosystemSurveyPlatform::Domoticz,
+            "Domoticz",
+            "https://www.domoticz.com/wiki/Hardware",
+            "hardware and protocol wiki",
+            "Hardware-gateway framing across 433/868/915 MHz, Z-Wave, Zigbee, cameras, Modbus, MQTT, and serial devices.",
+            &[
+                PrimitiveFamily::SerialController,
+                PrimitiveFamily::Radio802154,
+                PrimitiveFamily::ZWaveSerialApi,
+                PrimitiveFamily::Mqtt,
+                PrimitiveFamily::CameraMedia,
+            ],
+        ),
+        ecosystem_source(
+            EcosystemSurveyPlatform::Jeedom,
+            "Jeedom",
+            "https://market.jeedom.com/",
+            "plugin market and smart-home solution pages",
+            "Local-first plugin marketplace, multi-protocol setup, and commercial/community plugin separation.",
+            &[
+                PrimitiveFamily::DiscoveryIndex,
+                PrimitiveFamily::LocalHttp,
+                PrimitiveFamily::SerialController,
+                PrimitiveFamily::CloudApi,
+                PrimitiveFamily::Supervision,
+            ],
+        ),
+        ecosystem_source(
+            EcosystemSurveyPlatform::HomeSeer,
+            "HomeSeer",
+            "https://shop.homeseer.com/pages/software-plugins",
+            "plugin documentation and hub/software pages",
+            "Commercial local hub/software plugin ecosystem with Zigbee, Z-Wave, Matter, Hue, ONVIF, and cloud examples.",
+            &[
+                PrimitiveFamily::ZWaveSerialApi,
+                PrimitiveFamily::Radio802154,
+                PrimitiveFamily::MatterCommissioning,
+                PrimitiveFamily::LocalHttp,
+                PrimitiveFamily::CameraMedia,
+            ],
+        ),
+        ecosystem_source(
+            EcosystemSurveyPlatform::AppleHome,
+            "Apple Home",
+            "https://developer.apple.com/apple-home/",
+            "Apple Home developer page",
+            "HomeKit, Matter, ThreadNetwork, EnergyKit, MFi, Works with Apple Home, and certification boundaries.",
+            &[
+                PrimitiveFamily::HomeKitPairing,
+                PrimitiveFamily::MatterCommissioning,
+                PrimitiveFamily::Radio802154,
+                PrimitiveFamily::CertificatePairing,
+                PrimitiveFamily::EnergyTelemetry,
+            ],
+        ),
+        ecosystem_source(
+            EcosystemSurveyPlatform::GoogleHome,
+            "Google Home",
+            "https://developers.home.google.com/matter/supported-devices",
+            "Matter supported device types",
+            "Matter controller surface and device-type-specific support that must map through capability policy.",
+            &[
+                PrimitiveFamily::MatterCommissioning,
+                PrimitiveFamily::CertificatePairing,
+                PrimitiveFamily::CapabilityPolicy,
+                PrimitiveFamily::CloudApi,
+            ],
+        ),
+        ecosystem_source(
+            EcosystemSurveyPlatform::AmazonAlexa,
+            "Amazon Alexa",
+            "https://developer.amazon.com/en-US/docs/alexa/smarthome/supported-matter-device-categories.html",
+            "Matter device categories and smart-home API docs",
+            "Voice/cloud ecosystem plus Matter controller surface with explicit category and security restrictions.",
+            &[
+                PrimitiveFamily::MatterCommissioning,
+                PrimitiveFamily::CloudApi,
+                PrimitiveFamily::CapabilityPolicy,
+                PrimitiveFamily::Webhook,
+            ],
+        ),
+        ecosystem_source(
+            EcosystemSurveyPlatform::ZWaveAlliance,
+            "Z-Wave Alliance",
+            "https://z-wavealliance.org/development-resources-overview/z-wave-command-classes/",
+            "command-class development resources",
+            "Command classes are the application primitive for Z-Wave capability mapping, reports, interviews, and routing.",
+            &[
+                PrimitiveFamily::ZWaveSerialApi,
+                PrimitiveFamily::SerialController,
+                PrimitiveFamily::RadioNetworkKey,
+                PrimitiveFamily::CommandMapping,
+            ],
+        ),
+        ecosystem_source(
+            EcosystemSurveyPlatform::ThreadGroup,
+            "Thread Group",
+            "https://threadgroup.org/Newsroom/Blog/thread-with-matter-better-connections-smarter-homes",
+            "Thread with Matter technical framing",
+            "Thread is the IP mesh/network primitive while Matter is the application layer; border-router health is runtime state.",
+            &[
+                PrimitiveFamily::Radio802154,
+                PrimitiveFamily::MatterCommissioning,
+                PrimitiveFamily::RadioNetworkKey,
+                PrimitiveFamily::Supervision,
+            ],
+        ),
+    ]
+}
+
+pub fn survey_source_for_platform(
+    sources: &[EcosystemSurveySource],
+    platform: EcosystemSurveyPlatform,
+) -> Option<&EcosystemSurveySource> {
+    sources.iter().find(|source| source.platform == platform)
+}
+
+pub fn survey_sources_requiring_primitive(
+    sources: &[EcosystemSurveySource],
+    primitive: PrimitiveFamily,
+) -> Vec<&EcosystemSurveySource> {
+    sources
+        .iter()
+        .filter(|source| source.requires_primitive(primitive))
         .collect()
 }
 
@@ -1676,6 +1967,24 @@ fn capability(value: &'static str) -> CapabilityId {
     CapabilityId::trusted(value)
 }
 
+fn ecosystem_source(
+    platform: EcosystemSurveyPlatform,
+    display_name: &'static str,
+    source_url: &'static str,
+    source_surface: &'static str,
+    contributes: &'static str,
+    primitive_hints: &[PrimitiveFamily],
+) -> EcosystemSurveySource {
+    EcosystemSurveySource {
+        platform,
+        display_name,
+        source_url,
+        source_surface,
+        contributes,
+        primitive_hints: primitive_hints.to_vec(),
+    }
+}
+
 fn read_catalog_tool(tool_id: &'static str) -> ToolDescriptor {
     ToolDescriptor {
         tool_id,
@@ -1731,6 +2040,52 @@ mod tests {
         assert!(descriptors.iter().any(|descriptor| descriptor.primitive
             == PrimitiveFamily::Supervision
             && descriptor.summary.contains("restart")));
+    }
+
+    #[test]
+    fn ecosystem_survey_sources_cover_reference_platforms() {
+        let sources = ecosystem_survey_sources();
+
+        assert_eq!(sources.len(), 15);
+        assert_eq!(
+            EcosystemSurveyPlatform::HomeAssistant.as_str(),
+            "home_assistant"
+        );
+        assert!(
+            survey_source_for_platform(&sources, EcosystemSurveyPlatform::HomeAssistant)
+                .unwrap()
+                .source_url
+                .contains("home-assistant.io/integrations")
+        );
+        assert!(survey_source_for_platform(&sources, EcosystemSurveyPlatform::Hubitat).is_some());
+        assert!(survey_source_for_platform(&sources, EcosystemSurveyPlatform::HomeyPro).is_some());
+        assert!(survey_source_for_platform(&sources, EcosystemSurveyPlatform::OpenHab).is_some());
+        assert!(sources
+            .iter()
+            .all(|source| !source.primitive_hints.is_empty()));
+    }
+
+    #[test]
+    fn ecosystem_survey_sources_group_protocol_primitives() {
+        let sources = ecosystem_survey_sources();
+        let matter_sources =
+            survey_sources_requiring_primitive(&sources, PrimitiveFamily::MatterCommissioning);
+        let zwave_sources =
+            survey_sources_requiring_primitive(&sources, PrimitiveFamily::ZWaveSerialApi);
+        let mqtt_sources = survey_sources_requiring_primitive(&sources, PrimitiveFamily::Mqtt);
+
+        assert!(matter_sources
+            .iter()
+            .any(|source| source.platform == EcosystemSurveyPlatform::AppleHome));
+        assert!(matter_sources
+            .iter()
+            .any(|source| source.platform == EcosystemSurveyPlatform::GoogleHome));
+        assert!(zwave_sources
+            .iter()
+            .any(|source| source.platform == EcosystemSurveyPlatform::ZWaveAlliance));
+        assert!(mqtt_sources
+            .iter()
+            .any(|source| source.platform == EcosystemSurveyPlatform::HomeAssistant));
     }
 
     #[test]
