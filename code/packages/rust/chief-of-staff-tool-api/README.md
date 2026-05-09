@@ -9,7 +9,8 @@ The crate intentionally stops at the contract layer:
 - invocation requests
 - structured tool events and final results
 - JSON-schema-like argument validation
-- first-phase built-in store/job tool definitions from the D18D catalog
+- first-phase built-in store/job tool definitions from the D18D catalog,
+  including SkillStore read and lifecycle tools
 - a deterministic in-memory registry for runtimes and tests
 - explicit policy decisions for permission, tier, and approval gates
 - a deterministic in-memory runtime that validates, invokes handlers, emits

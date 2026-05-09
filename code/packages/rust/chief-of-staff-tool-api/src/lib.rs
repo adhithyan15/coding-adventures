@@ -430,6 +430,7 @@ impl SchemaProperty {
 pub enum BuiltinToolFamily {
     Context,
     Artifact,
+    Skill,
     Memory,
     Job,
 }
@@ -439,6 +440,7 @@ impl BuiltinToolFamily {
         match self {
             Self::Context => "context",
             Self::Artifact => "artifact",
+            Self::Skill => "skill",
             Self::Memory => "memory",
             Self::Job => "job",
         }
@@ -458,6 +460,13 @@ pub fn builtin_tool_catalog() -> Vec<ToolDefinition> {
         context_append_entry_definition(),
         artifact_create_definition(),
         artifact_read_definition(),
+        skill_list_definition(),
+        skill_read_manifest_definition(),
+        skill_read_asset_definition(),
+        skill_install_definition(),
+        skill_activate_definition(),
+        skill_deactivate_definition(),
+        skill_uninstall_definition(),
         memory_remember_definition(),
         memory_search_definition(),
         job_validate_definition(),
@@ -611,6 +620,224 @@ fn artifact_read_definition() -> ToolDefinition {
         vec!["artifacts:read"],
         None,
         vec!["artifact", "store"],
+    )
+}
+
+fn skill_list_definition() -> ToolDefinition {
+    builtin_definition(
+        "skill.list",
+        "List skills",
+        "List installed Chief of Staff skills.",
+        object_schema(
+            vec![SchemaProperty::new("active_only", JsonSchema::Boolean)],
+            Vec::new(),
+            false,
+        ),
+        Some(object_schema(
+            vec![SchemaProperty::new(
+                "skills",
+                JsonSchema::Array {
+                    items: Box::new(object_schema(
+                        vec![
+                            SchemaProperty::new("skill_id", JsonSchema::String),
+                            SchemaProperty::new("version", JsonSchema::String),
+                            SchemaProperty::new("name", JsonSchema::String),
+                            SchemaProperty::new("active", JsonSchema::Boolean),
+                        ],
+                        vec!["skill_id", "version", "name", "active"],
+                        false,
+                    )),
+                },
+            )],
+            vec!["skills"],
+            false,
+        )),
+        ToolSideEffects::Read,
+        ToolIdempotency::Always,
+        ToolConcurrency::Safe,
+        ToolStreaming::None,
+        PrivilegeTier::Tier0,
+        vec!["skills:read"],
+        None,
+        vec!["skill", "store"],
+    )
+}
+
+fn skill_read_manifest_definition() -> ToolDefinition {
+    builtin_definition(
+        "skill.read_manifest",
+        "Read skill manifest",
+        "Read one installed Chief of Staff skill manifest.",
+        object_schema(
+            vec![
+                SchemaProperty::new("skill_id", JsonSchema::String),
+                SchemaProperty::new("version", JsonSchema::String),
+            ],
+            vec!["skill_id", "version"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("skill_id", JsonSchema::String),
+                SchemaProperty::new("version", JsonSchema::String),
+                SchemaProperty::new("manifest", JsonSchema::Any),
+            ],
+            vec!["skill_id", "version", "manifest"],
+            false,
+        )),
+        ToolSideEffects::Read,
+        ToolIdempotency::Always,
+        ToolConcurrency::Safe,
+        ToolStreaming::None,
+        PrivilegeTier::Tier0,
+        vec!["skills:read"],
+        None,
+        vec!["skill", "store"],
+    )
+}
+
+fn skill_read_asset_definition() -> ToolDefinition {
+    builtin_definition(
+        "skill.read_asset",
+        "Read skill asset",
+        "Read one opaque skill asset by logical path.",
+        object_schema(
+            vec![
+                SchemaProperty::new("skill_id", JsonSchema::String),
+                SchemaProperty::new("version", JsonSchema::String),
+                SchemaProperty::new("asset_path", JsonSchema::String),
+            ],
+            vec!["skill_id", "version", "asset_path"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("skill_id", JsonSchema::String),
+                SchemaProperty::new("version", JsonSchema::String),
+                SchemaProperty::new("asset_path", JsonSchema::String),
+                SchemaProperty::new("content_type", JsonSchema::String),
+                SchemaProperty::new("checksum_hex", JsonSchema::String),
+                SchemaProperty::new("body_base64", JsonSchema::String),
+            ],
+            vec![
+                "skill_id",
+                "version",
+                "asset_path",
+                "content_type",
+                "checksum_hex",
+                "body_base64",
+            ],
+            false,
+        )),
+        ToolSideEffects::Read,
+        ToolIdempotency::Always,
+        ToolConcurrency::Safe,
+        ToolStreaming::None,
+        PrivilegeTier::Tier0,
+        vec!["skills:read"],
+        None,
+        vec!["skill", "store"],
+    )
+}
+
+fn skill_install_definition() -> ToolDefinition {
+    builtin_definition(
+        "skill.install",
+        "Install skill",
+        "Install a Chief of Staff skill manifest and bundled assets.",
+        object_schema(
+            vec![
+                SchemaProperty::new("manifest", JsonSchema::Any),
+                SchemaProperty::new(
+                    "assets",
+                    JsonSchema::Array {
+                        items: Box::new(JsonSchema::Any),
+                    },
+                ),
+                SchemaProperty::new("idempotency_key", JsonSchema::String),
+            ],
+            vec!["manifest", "assets"],
+            false,
+        ),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("skill_id", JsonSchema::String),
+                SchemaProperty::new("version", JsonSchema::String),
+                SchemaProperty::new("installed", JsonSchema::Boolean),
+            ],
+            vec!["skill_id", "version", "installed"],
+            false,
+        )),
+        ToolSideEffects::Write,
+        ToolIdempotency::Conditional,
+        ToolConcurrency::Serialized,
+        ToolStreaming::Events,
+        PrivilegeTier::Tier1,
+        vec!["skills:install"],
+        Some("skill"),
+        vec!["skill", "store"],
+    )
+}
+
+fn skill_activate_definition() -> ToolDefinition {
+    builtin_definition(
+        "skill.activate",
+        "Activate skill",
+        "Make one installed Chief of Staff skill version active.",
+        skill_version_input_schema(),
+        Some(skill_activation_output_schema()),
+        ToolSideEffects::Write,
+        ToolIdempotency::Conditional,
+        ToolConcurrency::Serialized,
+        ToolStreaming::Events,
+        PrivilegeTier::Tier1,
+        vec!["skills:activate"],
+        Some("skill"),
+        vec!["skill", "store"],
+    )
+}
+
+fn skill_deactivate_definition() -> ToolDefinition {
+    builtin_definition(
+        "skill.deactivate",
+        "Deactivate skill",
+        "Deactivate one installed Chief of Staff skill version.",
+        skill_version_input_schema(),
+        Some(skill_activation_output_schema()),
+        ToolSideEffects::Write,
+        ToolIdempotency::Conditional,
+        ToolConcurrency::Serialized,
+        ToolStreaming::Events,
+        PrivilegeTier::Tier1,
+        vec!["skills:deactivate"],
+        Some("skill"),
+        vec!["skill", "store"],
+    )
+}
+
+fn skill_uninstall_definition() -> ToolDefinition {
+    builtin_definition(
+        "skill.uninstall",
+        "Uninstall skill",
+        "Remove one installed Chief of Staff skill version and its assets.",
+        skill_version_input_schema(),
+        Some(object_schema(
+            vec![
+                SchemaProperty::new("skill_id", JsonSchema::String),
+                SchemaProperty::new("version", JsonSchema::String),
+                SchemaProperty::new("uninstalled", JsonSchema::Boolean),
+            ],
+            vec!["skill_id", "version", "uninstalled"],
+            false,
+        )),
+        ToolSideEffects::Write,
+        ToolIdempotency::Conditional,
+        ToolConcurrency::Serialized,
+        ToolStreaming::Events,
+        PrivilegeTier::Tier1,
+        vec!["skills:uninstall"],
+        Some("skill"),
+        vec!["skill", "store"],
     )
 }
 
@@ -810,6 +1037,29 @@ fn string_array_schema() -> JsonSchema {
     JsonSchema::Array {
         items: Box::new(JsonSchema::String),
     }
+}
+
+fn skill_version_input_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("skill_id", JsonSchema::String),
+            SchemaProperty::new("version", JsonSchema::String),
+        ],
+        vec!["skill_id", "version"],
+        false,
+    )
+}
+
+fn skill_activation_output_schema() -> JsonSchema {
+    object_schema(
+        vec![
+            SchemaProperty::new("skill_id", JsonSchema::String),
+            SchemaProperty::new("version", JsonSchema::String),
+            SchemaProperty::new("active", JsonSchema::Boolean),
+        ],
+        vec!["skill_id", "version", "active"],
+        false,
+    )
 }
 
 // ============================================================================
@@ -2167,7 +2417,7 @@ mod tests {
         let catalog = builtin_tool_catalog();
         let mut registry = InMemoryToolRegistry::new();
 
-        assert_eq!(catalog.len(), 8);
+        assert_eq!(catalog.len(), 15);
         for definition in catalog {
             assert!(
                 definition.validate().ok,
@@ -2193,6 +2443,13 @@ mod tests {
                 "job.validate",
                 "memory.remember",
                 "memory.search",
+                "skill.activate",
+                "skill.deactivate",
+                "skill.install",
+                "skill.list",
+                "skill.read_asset",
+                "skill.read_manifest",
+                "skill.uninstall",
             ]
         );
     }
@@ -2204,13 +2461,36 @@ mod tests {
             .iter()
             .map(|definition| definition.tool_id.as_str())
             .collect();
+        let skill_tools = builtin_tools_for_family(BuiltinToolFamily::Skill);
+        let skill_ids: Vec<_> = skill_tools
+            .iter()
+            .map(|definition| definition.tool_id.as_str())
+            .collect();
 
         assert_eq!(memory_ids, vec!["memory.remember", "memory.search"]);
+        assert_eq!(
+            skill_ids,
+            vec![
+                "skill.list",
+                "skill.read_manifest",
+                "skill.read_asset",
+                "skill.install",
+                "skill.activate",
+                "skill.deactivate",
+                "skill.uninstall",
+            ]
+        );
         assert_eq!(
             builtin_tool_definition("job.install")
                 .unwrap()
                 .required_capabilities,
             vec!["jobs:install"]
+        );
+        assert_eq!(
+            builtin_tool_definition("skill.install")
+                .unwrap()
+                .required_capabilities,
+            vec!["skills:install"]
         );
         assert!(builtin_tool_definition("vault.request_lease").is_none());
     }
@@ -2256,6 +2536,64 @@ mod tests {
             (
                 "limit".to_string(),
                 JsonValue::Number(JsonNumber::Integer(10)),
+            ),
+        ]);
+
+        assert!(registry.validate_call(&valid).ok);
+    }
+
+    #[test]
+    fn builtin_skill_schemas_reject_malformed_asset_reads() {
+        let mut registry = InMemoryToolRegistry::new();
+        registry
+            .register(builtin_tool_definition("skill.read_asset").unwrap())
+            .unwrap();
+
+        let missing_asset_path = ToolInvocationRequest {
+            call_id: "call_skill_read_asset".to_string(),
+            tool_id: "skill.read_asset".to_string(),
+            arguments: JsonValue::Object(vec![
+                (
+                    "skill_id".to_string(),
+                    JsonValue::String("daily_brief".to_string()),
+                ),
+                (
+                    "version".to_string(),
+                    JsonValue::String("1.0.0".to_string()),
+                ),
+            ]),
+            requested_by: RequestedBy::Session,
+            session_id: Some("session_1".to_string()),
+            job_id: None,
+            agent_id: None,
+            user_id: None,
+            requested_at: 1_000,
+            deadline_at: None,
+            idempotency_key: None,
+        };
+
+        let report = registry.validate_call(&missing_asset_path);
+
+        assert!(!report.ok);
+        assert!(report
+            .errors
+            .iter()
+            .any(|error| error.path == "$.asset_path"
+                && error.message == "required field is missing"));
+
+        let mut valid = missing_asset_path;
+        valid.arguments = JsonValue::Object(vec![
+            (
+                "skill_id".to_string(),
+                JsonValue::String("daily_brief".to_string()),
+            ),
+            (
+                "version".to_string(),
+                JsonValue::String("1.0.0".to_string()),
+            ),
+            (
+                "asset_path".to_string(),
+                JsonValue::String("prompts/brief.md".to_string()),
             ),
         ]);
 
