@@ -903,6 +903,19 @@ impl HtmlParser {
             return;
         }
 
+        let text = if self.current_element_is("head") {
+            match text.char_indices().find(|(_, character)| !character.is_whitespace()) {
+                Some((0, _)) => text,
+                Some((leading_end, _)) => {
+                    self.append_text_to_current(text[..leading_end].to_string());
+                    text[leading_end..].to_string()
+                }
+                None => text,
+            }
+        } else {
+            text
+        };
+
         if !text.chars().all(char::is_whitespace) {
             self.pop_current_if(|name| name == "head");
         }
@@ -913,6 +926,10 @@ impl HtmlParser {
             return;
         }
 
+        self.append_text_to_current(text);
+    }
+
+    fn append_text_to_current(&mut self, text: String) {
         if let Some(children) = self.current_children_mut() {
             if let Some(Node::Text(existing)) = children.last_mut() {
                 existing.data.push_str(&text);
@@ -1629,12 +1646,41 @@ impl DocumentShellBuilder {
             {
                 self.head_children.push(Node::Element(element));
             }
+            Node::Text(mut text)
+                if !self.seen_body_content && !self.head_children.is_empty() =>
+            {
+                match text
+                    .data
+                    .char_indices()
+                    .find(|(_, character)| !character.is_whitespace())
+                {
+                    Some((0, _)) => {
+                        self.seen_body_content = true;
+                        self.body_children.push(Node::Text(text));
+                    }
+                    Some((body_start, _)) => {
+                        let body_text = text.data.split_off(body_start);
+                        self.push_head_text(text.data);
+                        self.seen_body_content = true;
+                        self.body_children.push(Node::text(body_text));
+                    }
+                    None => self.push_head_text(text.data),
+                }
+            }
             node => {
                 if !is_ignorable_before_body(&node) {
                     self.seen_body_content = true;
                 }
                 self.body_children.push(node);
             }
+        }
+    }
+
+    fn push_head_text(&mut self, text: String) {
+        if let Some(Node::Text(existing)) = self.head_children.last_mut() {
+            existing.data.push_str(&text);
+        } else {
+            self.head_children.push(Node::text(text));
         }
     }
 

@@ -689,3 +689,17 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <style>
 |       " EOF"
 |   <body>
+
+#data
+<!DOCTYPE html><script> <!-- </script> --> </script> EOF
+#errors
+(1,52): unexpected-end-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <script>
+|       " <!-- "
+|     " "
+|   <body>
+|     "-->  EOF"
