@@ -503,6 +503,7 @@ members = [
     "cas-pattern-matching",
     "cas-simplify",
     "cas-substitution",
+    "cas-algebraic",
     "cas-factor",
     "cas-solve",
     "cas-list-operations",
