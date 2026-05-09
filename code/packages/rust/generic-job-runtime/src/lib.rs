@@ -73,6 +73,15 @@ pub struct ExecutorSnapshot {
     pub max_payload_bytes: usize,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ExecutorHealth {
+    Idle,
+    Busy,
+    Saturated,
+    Draining,
+    Offline,
+}
+
 impl ExecutorSnapshot {
     pub fn remaining_queue_capacity(&self) -> usize {
         self.max_queue_depth.saturating_sub(self.in_flight_jobs)
@@ -80,6 +89,37 @@ impl ExecutorSnapshot {
 
     pub fn is_saturated(&self) -> bool {
         self.in_flight_jobs >= self.max_queue_depth
+    }
+
+    pub fn pending_jobs(&self) -> usize {
+        self.queued_jobs.saturating_add(self.running_jobs)
+    }
+
+    pub fn has_live_capacity(&self) -> bool {
+        !self.shutting_down && self.live_workers > 0 && self.remaining_queue_capacity() > 0
+    }
+
+    pub fn health(&self) -> ExecutorHealth {
+        if self.shutting_down {
+            return ExecutorHealth::Draining;
+        }
+        if self.live_workers == 0 {
+            return ExecutorHealth::Offline;
+        }
+        if self.is_saturated() {
+            return ExecutorHealth::Saturated;
+        }
+        if self.pending_jobs() > 0 {
+            return ExecutorHealth::Busy;
+        }
+        ExecutorHealth::Idle
+    }
+
+    pub fn needs_supervisor_attention(&self) -> bool {
+        matches!(
+            self.health(),
+            ExecutorHealth::Offline | ExecutorHealth::Saturated
+        )
     }
 }
 
@@ -1535,6 +1575,10 @@ for line in sys.stdin:
         assert_eq!(snapshot.max_payload_bytes, 256);
         assert_eq!(snapshot.remaining_queue_capacity(), 0);
         assert!(snapshot.is_saturated());
+        assert_eq!(snapshot.pending_jobs(), 2);
+        assert_eq!(snapshot.health(), ExecutorHealth::Saturated);
+        assert!(!snapshot.has_live_capacity());
+        assert!(snapshot.needs_supervisor_attention());
         assert!(!snapshot.shutting_down);
 
         open_gate(&gate);
@@ -1567,6 +1611,50 @@ for line in sys.stdin:
         let shutdown_snapshot = idle_pool.snapshot();
         assert!(shutdown_snapshot.shutting_down);
         assert_eq!(shutdown_snapshot.live_workers, 0);
+        assert_eq!(shutdown_snapshot.health(), ExecutorHealth::Draining);
+        assert!(!shutdown_snapshot.needs_supervisor_attention());
+    }
+
+    #[test]
+    fn executor_snapshot_health_classifies_supervisor_states() {
+        let idle = ExecutorSnapshot {
+            worker_count: 2,
+            live_workers: 2,
+            in_flight_jobs: 0,
+            queued_jobs: 0,
+            running_jobs: 0,
+            shutting_down: false,
+            max_queue_depth: 4,
+            max_payload_bytes: 1024,
+        };
+        assert_eq!(idle.health(), ExecutorHealth::Idle);
+        assert!(idle.has_live_capacity());
+        assert!(!idle.needs_supervisor_attention());
+
+        let busy = ExecutorSnapshot {
+            in_flight_jobs: 1,
+            running_jobs: 1,
+            ..idle.clone()
+        };
+        assert_eq!(busy.health(), ExecutorHealth::Busy);
+        assert_eq!(busy.pending_jobs(), 1);
+        assert!(busy.has_live_capacity());
+
+        let offline = ExecutorSnapshot {
+            live_workers: 0,
+            ..idle.clone()
+        };
+        assert_eq!(offline.health(), ExecutorHealth::Offline);
+        assert!(offline.needs_supervisor_attention());
+
+        let draining = ExecutorSnapshot {
+            live_workers: 0,
+            shutting_down: true,
+            ..idle
+        };
+        assert_eq!(draining.health(), ExecutorHealth::Draining);
+        assert!(!draining.has_live_capacity());
+        assert!(!draining.needs_supervisor_attention());
     }
 
     #[test]

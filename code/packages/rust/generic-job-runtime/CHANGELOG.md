@@ -22,6 +22,8 @@ All notable changes to this package will be documented in this file.
   policies stop crash loops.
 - Added non-consuming executor snapshots for supervisor/read-side tools to
   inspect worker liveness, queue saturation, and in-flight job counts.
+- Added executor snapshot health classification for supervisor/read-side tools
+  to identify idle, busy, saturated, draining, and offline executors.
 
 ## [0.1.0] - 2026-04-21
 
