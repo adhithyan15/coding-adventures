@@ -99,6 +99,44 @@ module CodingAdventures
         assert_nil BoardVM.bluetooth_endpoint("tcp://board-vm.local:4170")
       end
 
+      def test_bluetooth_endpoint_candidates_are_planned_by_rust_language_core
+        candidates = BoardVM.bluetooth_endpoint_candidates([
+          {
+            id: "ignore-me",
+            service_uuids: ["180f"]
+          },
+          {
+            id: "esp32-board-vm",
+            name: "ESP32 Board VM",
+            paired: true,
+            board_vm_rfcomm_channels: [3, 3, 31]
+          },
+          {
+            "id" => "uno-r4",
+            "name" => "Uno R4 Board VM",
+            "address" => "AA:BB:CC:DD:EE:FF",
+            "service_uuids" => ["6E400001-B5A3-F393-E0A9-E50E24DCCA9E"]
+          }
+        ])
+
+        assert_equal 2, candidates.length
+        rfcomm = candidates.find { |candidate| candidate.fetch("endpoint").fetch("channel") == 3 }
+        ble = candidates.find { |candidate| candidate.fetch("endpoint").fetch("service_uuid") }
+
+        assert_equal "ESP32 Board VM", rfcomm.fetch("display_name")
+        assert_equal "bluetooth_classic_rfcomm", rfcomm.fetch("endpoint").fetch("endpoint_transport")
+        assert_equal "btspp://esp32-board-vm:3", rfcomm.fetch("endpoint").fetch("endpoint")
+        assert rfcomm.fetch("paired")
+        refute rfcomm.fetch("requires_pairing")
+
+        assert_equal "Uno R4 Board VM", ble.fetch("display_name")
+        assert_equal "bluetooth_le_gatt", ble.fetch("endpoint").fetch("endpoint_transport")
+        assert_equal "AA:BB:CC:DD:EE:FF", ble.fetch("device")
+        assert_equal "6e400001-b5a3-f393-e0a9-e50e24dcca9e", ble.fetch("endpoint").fetch("service_uuid")
+        refute ble.fetch("paired")
+        assert ble.fetch("requires_pairing")
+      end
+
       def test_connection_options_can_be_selected_without_exposing_ports
         default = BoardVM.select_connection_option(:uno_r4_wifi)
         wifi = BoardVM.select_connection_option(:uno_r4_wifi, transport: :wifi)
