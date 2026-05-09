@@ -8,6 +8,7 @@ control-plane layer:
 
 - function id constants
 - request/response/callback classification
+- deterministic bootstrap request plan for controller startup
 - request callback ids
 - bootstrap request builders for version, init-data, controller capabilities,
   and Memory Get ID
