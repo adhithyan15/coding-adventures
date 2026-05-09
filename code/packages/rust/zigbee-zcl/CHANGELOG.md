@@ -11,3 +11,5 @@ All notable changes to this package will be documented in this file.
 - Level and color-temperature command frame builders for light actuation.
 - Typed attribute report parsing for common scalar/string data types.
 - D23 capability and state-delta mapping for common smart-home clusters.
+- Temperature and illuminance measurement cluster projections into normalized
+  D23 sensor state deltas.
