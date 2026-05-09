@@ -693,6 +693,7 @@ pub enum SmartHomeTool {
     Subscribe,
     DescribeCapabilities,
     GetHealth,
+    ObserveSupervision,
 }
 
 impl SmartHomeTool {
@@ -722,6 +723,7 @@ impl SmartHomeTool {
             Self::Subscribe => read_tool("smart_home.subscribe"),
             Self::DescribeCapabilities => read_tool("smart_home.describe_capabilities"),
             Self::GetHealth => read_tool("smart_home.get_health"),
+            Self::ObserveSupervision => read_tool("smart_home.observe_supervision"),
         }
     }
 }
@@ -1029,6 +1031,7 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
         SmartHomeTool::Subscribe,
         SmartHomeTool::DescribeCapabilities,
         SmartHomeTool::GetHealth,
+        SmartHomeTool::ObserveSupervision,
     ]
     .into_iter()
     .map(SmartHomeTool::descriptor)
@@ -1303,12 +1306,17 @@ mod tests {
             .find(|tool| tool.tool_id == "smart_home.command")
             .unwrap();
 
-        assert_eq!(catalog.len(), 9);
+        assert_eq!(catalog.len(), 10);
         assert_eq!(command.side_effects, ToolSideEffects::External);
         assert_eq!(
             command.required_capabilities,
             vec![CapabilityId::trusted("smart_home.command.light")]
         );
+        assert!(catalog
+            .iter()
+            .any(|tool| tool.tool_id == "smart_home.observe_supervision"
+                && tool.side_effects == ToolSideEffects::Read
+                && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
     }
 
     #[test]
