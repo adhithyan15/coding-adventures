@@ -11,6 +11,7 @@ from board_vm_native import (
     PicoUf2UploadOptions,
     ProtocolResult,
     Session,
+    TcpTransport,
     connect,
     connection_option_list,
     connection_options,
@@ -241,6 +242,36 @@ def test_connect_can_use_a_wireless_connection_option_with_an_injected_endpoint(
     assert connection.wireless_connection is True
     assert connection.ota_connection is True
     assert len(transport.frames) == 2
+
+
+def test_connect_builds_a_tcp_transport_for_wifi_endpoints():
+    connection = connect(
+        "uno-r4-wifi",
+        via="Wi-Fi",
+        endpoint="tcp://board-vm.local:4170",
+    )
+
+    assert connection.port is None
+    assert connection.endpoint == "tcp://board-vm.local:4170"
+    assert connection.connection_transport == "wifi"
+    transport = connection._active_transport()
+    assert isinstance(transport, TcpTransport)
+    assert transport.endpoint == "tcp://board-vm.local:4170"
+    assert transport.host == "board-vm.local"
+    assert transport.port == 4170
+
+
+def test_wifi_endpoint_dispatch_requires_endpoint_when_not_injected():
+    connection = connect("uno-r4-wifi", via="Wi-Fi")
+
+    try:
+        connection.smoke()
+    except ValueError as error:
+        message = str(error)
+    else:
+        raise AssertionError("expected missing TCP endpoint to fail")
+
+    assert "requires a Board VM TCP endpoint" in message
 
 
 def test_connect_can_prompt_for_the_connection_option_after_the_board():

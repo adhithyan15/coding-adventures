@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import pathlib
+import socket
 import subprocess
 import sys
 import time
 from dataclasses import dataclass
 from typing import Any, Iterable
+from urllib.parse import urlparse
 
 from . import board_vm_native as _native
 
@@ -17,6 +19,7 @@ DEFAULT_HOST_NAME = "python-board-vm"
 DEFAULT_HOST_NONCE = 0xB0A2D001
 DEFAULT_PROGRAM_ID = 1
 DEFAULT_INSTRUCTION_BUDGET = 12
+DEFAULT_TIMEOUT_MS = 1_000
 DEFAULT_PICO_RUNTIME_PORT_WAIT_MS = 5_000
 DEFAULT_PICO_RUNTIME_PORT_POLL_MS = 250
 BOOT_POLICIES = {
@@ -411,6 +414,61 @@ class SessionResult:
             if descriptor is not None:
                 return descriptor
         return None
+
+
+class TcpTransport:
+    FRAME_DELIMITER = b"\x00"
+
+    def __init__(self, endpoint: str, *, timeout_ms: int = DEFAULT_TIMEOUT_MS):
+        self.endpoint = str(endpoint)
+        self.timeout_ms = int(timeout_ms)
+        self.host, self.port = _parse_tcp_endpoint(self.endpoint)
+        self._socket: socket.socket | None = None
+
+    def transact(self, frame: bytes, timeout_ms: int | None = None) -> bytes:
+        self.write(frame)
+        return self._read_frame(timeout_ms=self.timeout_ms if timeout_ms is None else int(timeout_ms))
+
+    def write(self, frame: bytes) -> None:
+        try:
+            self._io().sendall(bytes(frame))
+        except OSError as error:
+            raise OSError(f"failed to write Board VM frame to {self.endpoint}: {error}") from error
+
+    def close(self) -> None:
+        if self._socket is not None:
+            self._socket.close()
+            self._socket = None
+
+    def _io(self) -> socket.socket:
+        if self._socket is None:
+            try:
+                self._socket = socket.create_connection(
+                    (self.host, self.port),
+                    timeout=self.timeout_ms / 1000.0,
+                )
+                self._socket.settimeout(self.timeout_ms / 1000.0)
+                self._socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+            except OSError as error:
+                raise OSError(f"failed to open Board VM TCP endpoint {self.endpoint}: {error}") from error
+        return self._socket
+
+    def _read_frame(self, *, timeout_ms: int) -> bytes:
+        stream = self._io()
+        stream.settimeout(timeout_ms / 1000.0)
+        response = bytearray()
+        try:
+            while True:
+                byte = stream.recv(1)
+                if not byte:
+                    raise OSError(f"Board VM TCP endpoint {self.endpoint} closed")
+                response.extend(byte)
+                if byte == self.FRAME_DELIMITER:
+                    return bytes(response)
+        except socket.timeout as error:
+            raise TimeoutError(f"timed out waiting for Board VM response on {self.endpoint}") from error
+        except OSError as error:
+            raise OSError(f"failed to read Board VM response from {self.endpoint}: {error}") from error
 
 
 class Session:
@@ -1222,6 +1280,7 @@ class Connection:
         target: BoardTarget,
         port: str | None,
         transport: Any = None,
+        endpoint: str | None = None,
         connection_option: dict[str, Any] | None = None,
         runner: Any = None,
         cargo_workspace: str | pathlib.Path | None = None,
@@ -1238,6 +1297,7 @@ class Connection:
         self.target = target
         self.port = None if port is None else str(port)
         self.transport = transport
+        self.endpoint = None if endpoint is None else str(endpoint)
         self.connection_option = dict(connection_option or select_connection_option(target.board_id))
         self.runner = _default_runner if runner is None else runner
         self.cargo_workspace = pathlib.Path(cargo_workspace or DEFAULT_RUST_WORKSPACE)
@@ -1277,7 +1337,7 @@ class Connection:
         return bool(self.connection_option.get("ota_update"))
 
     def session(self, **options: Any) -> Session:
-        options.setdefault("transport", self.transport)
+        options.setdefault("transport", self._active_transport())
         return Session(**options)
 
     def smoke(
@@ -1323,6 +1383,26 @@ class Connection:
                 self.rediscover_runtime_port()
             return result
         raise ValueError(f"Python flash sugar does not support {self.board_id!r}")
+
+    def _active_transport(self) -> Any:
+        if self.transport is not None:
+            return self.transport
+        if self._tcp_endpoint_connection():
+            if self.endpoint is None or not self.endpoint:
+                display_name = self.connection_option.get("display_name", self.connection_transport)
+                raise ValueError(
+                    f"{display_name} requires a Board VM TCP endpoint; "
+                    "pass endpoint='tcp://host:port' or choose via='serial'"
+                )
+            self.transport = TcpTransport(self.endpoint, timeout_ms=DEFAULT_TIMEOUT_MS)
+            return self.transport
+        return None
+
+    def _tcp_endpoint_connection(self) -> bool:
+        return (
+            self.connection_option.get("endpoint_transport") == "tcp_socket"
+            or self.connection_option.get("endpoint_scheme") == "tcp"
+        )
 
     def rediscover_runtime_port(self) -> BoardDevice:
         deadline = time.monotonic() + (self.pico_runtime_port_wait_ms / 1000)
@@ -1769,6 +1849,7 @@ def connect(
     flash: bool = False,
     smoke: bool = False,
     transport: Any = None,
+    endpoint: str | None = None,
     runner: Any = None,
     cargo_workspace: str | pathlib.Path | None = None,
     firmware_image: str | pathlib.Path | None = None,
@@ -1833,6 +1914,7 @@ def connect(
         target=target,
         port=selected_port,
         transport=transport,
+        endpoint=endpoint,
         connection_option=selected_connection_option,
         runner=runner,
         cargo_workspace=cargo_workspace,
@@ -1871,6 +1953,13 @@ def _resolve_connection_option(
 
 def _connection_uses_serial_port(connection_option: dict[str, Any] | None) -> bool:
     return connection_option is None or connection_option.get("transport") == "serial"
+
+
+def _parse_tcp_endpoint(endpoint: str) -> tuple[str, int]:
+    parsed = urlparse(endpoint if "://" in endpoint else f"tcp://{endpoint}")
+    if parsed.scheme != "tcp" or parsed.hostname is None or parsed.port is None:
+        raise ValueError("Board VM TCP endpoint must look like tcp://host:port")
+    return parsed.hostname, int(parsed.port)
 
 
 def uno_r4_wifi(**options: Any) -> Connection:
@@ -1974,6 +2063,7 @@ __all__ = [
     "RUN_FLAGS",
     "Session",
     "SessionResult",
+    "TcpTransport",
     "connection_option_list",
     "connect",
     "connection_options",

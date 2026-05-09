@@ -126,6 +126,21 @@ describe("coding_adventures.board_vm_native", function()
         assert.are.equal(0, transport.frames[1]:byte(#transport.frames[1]))
     end)
 
+    it("builds TCP transports for Wi-Fi endpoints", function()
+        local connection = board_vm.connect("uno-r4-wifi", {
+            via = "Wi-Fi",
+            endpoint = "tcp://board-vm.local:4170",
+        })
+        local session = connection:session()
+
+        assert.is_nil(connection.port)
+        assert.are.equal("wifi", connection:connection_transport())
+        assert.are.equal("tcp://board-vm.local:4170", connection.endpoint)
+        assert.are.equal("tcp://board-vm.local:4170", session.transport.endpoint)
+        assert.are.equal("board-vm.local", session.transport.host)
+        assert.are.equal(4170, session.transport.port)
+    end)
+
     it("rejects dispatch when no Lua transport endpoint is available", function()
         local connection = board_vm.connect("uno-r4-wifi", { via = "Wi-Fi" })
 
@@ -134,7 +149,7 @@ describe("coding_adventures.board_vm_native", function()
         end)
 
         assert.is_false(ok)
-        assert.is_true(tostring(err):find("requires a transport endpoint") ~= nil)
+        assert.is_true(tostring(err):find("requires a Board VM TCP endpoint") ~= nil)
     end)
 
     it("builds blink upload/run frames through Rust-owned protocol builders", function()

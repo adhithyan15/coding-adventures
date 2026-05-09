@@ -100,6 +100,94 @@ local function connection_uses_serial_port(connection_option)
     return connection_option == nil or connection_option.transport == "serial"
 end
 
+local function connection_uses_tcp_endpoint(connection_option)
+    return connection_option ~= nil and (
+        connection_option.endpoint_transport == "tcp_socket" or
+        connection_option.endpoint_scheme == "tcp"
+    )
+end
+
+local function parse_tcp_endpoint(endpoint)
+    local authority = tostring(endpoint or ""):gsub("^tcp://", "")
+    local host, port = authority:match("^%[([^%]]+)%]:(%d+)$")
+    if host == nil then
+        host, port = authority:match("^([^:]+):(%d+)$")
+    end
+    if host == nil or port == nil then
+        error("Board VM TCP endpoint must look like tcp://host:port")
+    end
+    return host, tonumber(port)
+end
+
+local TcpTransport = {}
+TcpTransport.__index = TcpTransport
+
+function TcpTransport.new(options)
+    options = options or {}
+    local endpoint = options.endpoint
+    local host, port = parse_tcp_endpoint(endpoint)
+    return setmetatable({
+        endpoint = tostring(endpoint),
+        host = host,
+        port = port,
+        timeout_ms = options.timeout_ms or 1000,
+        socket = nil,
+    }, TcpTransport)
+end
+
+function TcpTransport:_socket_module()
+    local ok, socket = pcall(require, "socket")
+    if not ok then
+        error("Board VM Lua TCP transport requires LuaSocket or an injected transport endpoint")
+    end
+    return socket
+end
+
+function TcpTransport:_io()
+    if self.socket then
+        return self.socket
+    end
+    local socket = self:_socket_module()
+    local client = assert(socket.tcp())
+    client:settimeout(self.timeout_ms / 1000)
+    assert(client:connect(self.host, self.port))
+    if client.setoption then
+        pcall(function()
+            client:setoption("tcp-nodelay", true)
+        end)
+    end
+    self.socket = client
+    return self.socket
+end
+
+function TcpTransport:write(frame)
+    assert(self:_io():send(frame))
+end
+
+function TcpTransport:transact(frame, options)
+    options = options or {}
+    self:write(frame)
+    local client = self:_io()
+    client:settimeout((options.timeout_ms or self.timeout_ms) / 1000)
+    local chunks = {}
+    while true do
+        local byte = assert(client:receive(1))
+        table.insert(chunks, byte)
+        if byte:byte(1) == 0 then
+            return table.concat(chunks)
+        end
+    end
+end
+
+function TcpTransport:close()
+    if self.socket then
+        self.socket:close()
+        self.socket = nil
+    end
+end
+
+M.TcpTransport = TcpTransport
+
 local function clone_table(value)
     if type(value) ~= "table" then
         return value
@@ -419,6 +507,7 @@ function Connection.new(options)
         device = options.device,
         connection_option = options.connection_option,
         transport = options.transport,
+        endpoint = options.endpoint,
         timeout_ms = options.timeout_ms or 1000,
     }, Connection)
 end
@@ -449,13 +538,31 @@ end
 
 function Connection:session(options)
     options = options or {}
-    options.transport = options.transport or self.transport
+    options.transport = options.transport or self:active_transport()
     options.timeout_ms = options.timeout_ms or self.timeout_ms
     return Session.new(options)
 end
 
 function Connection:smoke(options)
     return self:session():smoke(options)
+end
+
+function Connection:active_transport()
+    if self.transport then
+        return self.transport
+    end
+    if connection_uses_tcp_endpoint(self.connection_option) then
+        if self.endpoint == nil or tostring(self.endpoint) == "" then
+            error((self.connection_option.display_name or "Board VM TCP connection") ..
+                " requires a Board VM TCP endpoint; pass endpoint = \"tcp://host:port\" or choose via = \"serial\"")
+        end
+        self.transport = TcpTransport.new({
+            endpoint = self.endpoint,
+            timeout_ms = self.timeout_ms,
+        })
+        return self.transport
+    end
+    return nil
 end
 
 M.Connection = Connection
@@ -520,6 +627,7 @@ function M.connect(selector, options)
         device = device,
         connection_option = connection_option,
         transport = options.transport,
+        endpoint = options.endpoint,
         timeout_ms = options.timeout_ms,
     })
 end

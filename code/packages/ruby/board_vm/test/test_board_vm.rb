@@ -143,6 +143,23 @@ module CodingAdventures
         assert_equal 2, transport.frames.length
       end
 
+      def test_connect_builds_a_tcp_transport_for_wifi_endpoints
+        connection = BoardVM.uno_r4_wifi(
+          via: "Wi-Fi",
+          endpoint: "tcp://board-vm.local:4170",
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new
+        )
+
+        assert_nil connection.port
+        assert_equal "wifi", connection.connection_transport
+        assert_equal "tcp://board-vm.local:4170", connection.endpoint
+
+        transport = connection.send(:active_transport)
+        assert_instance_of TcpTransport, transport
+        assert_equal "tcp://board-vm.local:4170", transport.endpoint
+      end
+
       def test_connect_can_prompt_for_the_connection_option_after_the_board
         output = StringIO.new
 
@@ -170,7 +187,7 @@ module CodingAdventures
         error = assert_raises(TransportError) do
           connection.smoke!
         end
-        assert_match(/requires an injected Board VM transport endpoint/, error.message)
+        assert_match(/requires a Board VM TCP endpoint/, error.message)
       end
 
       def test_targets_are_detected_from_rust_owned_aliases
