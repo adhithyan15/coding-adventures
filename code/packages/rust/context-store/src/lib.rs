@@ -181,6 +181,28 @@ pub struct ContextEntry {
     pub body: JsonValue,
 }
 
+/// Body-free projection of one context entry for read-side transcript indexes.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ContextEntrySummary {
+    pub entry_id: String,
+    pub session_id: String,
+    pub kind: ContextEntryKind,
+    pub timestamp: TimestampMs,
+    pub metadata: JsonValue,
+}
+
+impl ContextEntrySummary {
+    pub fn from_entry(entry: &ContextEntry) -> Self {
+        Self {
+            entry_id: entry.entry_id.clone(),
+            session_id: entry.session_id.clone(),
+            kind: entry.kind,
+            timestamp: entry.timestamp,
+            metadata: entry.metadata.clone(),
+        }
+    }
+}
+
 /// One compaction/checkpoint snapshot.
 #[derive(Debug, Clone, PartialEq)]
 pub struct ContextSnapshot {
@@ -498,6 +520,19 @@ impl<S: StorageBackend> ContextStore<S> {
             .map(|record| decode_entry_record(&record.body))
             .collect::<Result<Vec<_>, _>>()?;
         window_entries(entries, options)
+    }
+
+    /// Fetch body-free ordered entry summaries for one session.
+    pub fn fetch_entry_summaries(
+        &self,
+        session_id: &str,
+        options: FetchEntriesOptions,
+    ) -> Result<Vec<ContextEntrySummary>, StorageError> {
+        Ok(self
+            .fetch_entries(session_id, options)?
+            .iter()
+            .map(ContextEntrySummary::from_entry)
+            .collect())
     }
 
     /// Create a new snapshot and advance the session head pointer to it.
@@ -1443,6 +1478,64 @@ mod tests {
                 .map(|entry| entry.entry_id.as_str())
                 .collect::<Vec<_>>(),
             vec!["entry-4"]
+        );
+    }
+
+    #[test]
+    fn fetch_entry_summaries_project_metadata_without_bodies() {
+        let store = ContextStore::new(InMemoryStorageBackend::new());
+        let _ = store
+            .create_session(CreateSessionInput {
+                session_id: "demo".to_string(),
+                owner_id: "chief".to_string(),
+                title: "Planning".to_string(),
+            })
+            .unwrap();
+
+        let _ = store
+            .append_entry(
+                "demo",
+                AppendEntryInput {
+                    entry_id: "entry-1".to_string(),
+                    kind: ContextEntryKind::User,
+                    timestamp: Some(10),
+                    metadata: object(&[("channel", JsonValue::String("ui".to_string()))]),
+                    body: JsonValue::String("full user message".to_string()),
+                },
+            )
+            .unwrap();
+        let _ = store
+            .append_entry(
+                "demo",
+                AppendEntryInput {
+                    entry_id: "entry-2".to_string(),
+                    kind: ContextEntryKind::ToolResult,
+                    timestamp: Some(20),
+                    metadata: object(&[("tool", JsonValue::String("smart_home".to_string()))]),
+                    body: object(&[("secret_result", JsonValue::String("body".to_string()))]),
+                },
+            )
+            .unwrap();
+
+        let summaries = store
+            .fetch_entry_summaries(
+                "demo",
+                FetchEntriesOptions::new()
+                    .after_entry("entry-1")
+                    .with_kind(ContextEntryKind::ToolResult)
+                    .limited_to(1),
+            )
+            .unwrap();
+
+        assert_eq!(
+            summaries,
+            vec![ContextEntrySummary {
+                entry_id: "entry-2".to_string(),
+                session_id: "demo".to_string(),
+                kind: ContextEntryKind::ToolResult,
+                timestamp: 20,
+                metadata: object(&[("tool", JsonValue::String("smart_home".to_string()))]),
+            }]
         );
     }
 

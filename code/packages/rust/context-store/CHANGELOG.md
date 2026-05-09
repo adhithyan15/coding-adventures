@@ -14,6 +14,8 @@ All notable changes to this package will be documented in this file.
   positive limit validation for D18D `context.read_entries` callers
 - Entry kind and inclusive timestamp range filters for bounded transcript
   reads used by read-side session replay and tool-result inspection
+- `ContextEntrySummary` plus `fetch_entry_summaries()` for body-free
+  transcript indexes that preserve cursor/kind/timestamp filters
 - Bounded session header listing by owner, lifecycle status, sort order, and
   positive limit for D18D `context.list_sessions` callers
 - Bounded snapshot listing by basis entry, linked summary/memory/artifact refs,

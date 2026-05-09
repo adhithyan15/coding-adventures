@@ -9,6 +9,7 @@ Chief of Staff runtime needs.
 
 - `ContextSession` headers
 - ordered `ContextEntry` transcripts
+- body-free `ContextEntrySummary` projections for read-side transcript indexes
 - `ContextSnapshot` checkpoints for compaction/resume
 - compare-and-swap session updates on top of `storage-core`
 - bounded transcript reads by cursor, entry kind, timestamp range, and limit
@@ -28,6 +29,7 @@ Chief of Staff runtime needs.
 - `list_sessions()`
 - `append_entry()`
 - `fetch_entries()`
+- `fetch_entry_summaries()`
 - `fetch_ordered_entries()`
 - `create_snapshot()`
 - `list_snapshots()`
