@@ -17,6 +17,8 @@ a shared way to build:
   scripts to both event-stream supervision state and `smart-home-runtime`
 - fake command buses with queued command/result pairs
 - fake MQTT broker publications with retained-message and metadata markers
+- read-only fake MQTT broker queries by topic, prefix, retained flag, metadata,
+  observation time, sort, and limit
 - simple logical clocks for freshness and supervision tests
 
 ## Dependencies
