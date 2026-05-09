@@ -16,7 +16,7 @@ use linux_job_backend_systemd_files::SystemdUserFileBackend;
 use macos_job_backend_launchd_files::LaunchdFileBackend;
 use os_job_core::{
     BackendKind, InstallPlan, JobBackend, JobError, JobSpec, JobTrigger, OutputPolicy,
-    PermissionRequirement, PortabilityReport, RetryPolicy,
+    PermissionRequirement, PortabilityIssue, PortabilityReport, RetryPolicy,
 };
 use windows_job_backend_task_xml::WindowsTaskSchedulerXmlBackend;
 
@@ -139,6 +139,175 @@ pub fn validate_portability(spec: &JobSpec, target: PortabilityTarget) -> Portab
         PortabilityTarget::AllNativeOses => validate_all_native_oses(spec),
         PortabilityTarget::SelectedBackendOnly => PortabilityReport::new(),
     }
+}
+
+/// Stable sort modes for portability issue read APIs.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum PortabilityIssueSort {
+    /// Preserve validator emission order.
+    OriginalOrder,
+    /// Sort by issue field and then message.
+    Field,
+    /// Sort by affected backend family and then issue field.
+    BackendThenField,
+}
+
+impl Default for PortabilityIssueSort {
+    fn default() -> Self {
+        Self::OriginalOrder
+    }
+}
+
+/// Bounded selector for portability issue read tools.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct PortabilityIssueQuery {
+    /// Restrict results to an exact `PortabilityIssue.field` value.
+    pub field: Option<String>,
+    /// Restrict results to issues that affect a backend.
+    pub backend: Option<BackendKind>,
+    /// Stable result ordering.
+    pub sort: PortabilityIssueSort,
+    /// Maximum number of issues to return.
+    pub limit: Option<usize>,
+}
+
+impl PortabilityIssueQuery {
+    /// Construct an unfiltered query in validator emission order.
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Restrict results to an exact `PortabilityIssue.field` value.
+    pub fn with_field(mut self, field: impl Into<String>) -> Self {
+        self.field = Some(field.into());
+        self
+    }
+
+    /// Restrict results to issues that affect a backend.
+    pub fn with_backend(mut self, backend: BackendKind) -> Self {
+        self.backend = Some(backend);
+        self
+    }
+
+    /// Select a stable result ordering.
+    pub fn with_sort(mut self, sort: PortabilityIssueSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    /// Bound the result set.
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
+/// Summary of all portability issues that block one backend family.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PortabilityBackendSummary {
+    pub backend: BackendKind,
+    pub issue_count: usize,
+    pub blocked_fields: Vec<String>,
+}
+
+/// Summary of all portability issues attached to one spec field.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PortabilityFieldSummary {
+    pub field: String,
+    pub issue_count: usize,
+    pub unsupported_backends: Vec<BackendKind>,
+}
+
+/// Return portability issues matching a bounded read selector.
+pub fn query_portability_issues<'a>(
+    report: &'a PortabilityReport,
+    query: &PortabilityIssueQuery,
+) -> Vec<&'a PortabilityIssue> {
+    let mut issues: Vec<&PortabilityIssue> = report
+        .issues
+        .iter()
+        .filter(|issue| portability_issue_matches(issue, query))
+        .collect();
+
+    sort_portability_issues(&mut issues, query.sort);
+    if let Some(limit) = query.limit {
+        issues.truncate(limit);
+    }
+    issues
+}
+
+/// Summarize a portability report by affected backend family.
+pub fn summarize_portability_by_backend(
+    report: &PortabilityReport,
+) -> Vec<PortabilityBackendSummary> {
+    let mut summaries: Vec<PortabilityBackendSummary> = Vec::new();
+
+    for issue in &report.issues {
+        for backend in &issue.unsupported_backends {
+            let summary = match summaries
+                .iter_mut()
+                .find(|summary| summary.backend == *backend)
+            {
+                Some(summary) => summary,
+                None => {
+                    summaries.push(PortabilityBackendSummary {
+                        backend: *backend,
+                        issue_count: 0,
+                        blocked_fields: Vec::new(),
+                    });
+                    summaries
+                        .last_mut()
+                        .expect("summary was just pushed and must exist")
+                }
+            };
+
+            summary.issue_count += 1;
+            push_unique_string(&mut summary.blocked_fields, &issue.field);
+        }
+    }
+
+    summaries.sort_by_key(|summary| backend_sort_key(summary.backend));
+    for summary in &mut summaries {
+        summary.blocked_fields.sort();
+    }
+    summaries
+}
+
+/// Summarize a portability report by spec field.
+pub fn summarize_portability_by_field(report: &PortabilityReport) -> Vec<PortabilityFieldSummary> {
+    let mut summaries: Vec<PortabilityFieldSummary> = Vec::new();
+
+    for issue in &report.issues {
+        let summary = match summaries
+            .iter_mut()
+            .find(|summary| summary.field == issue.field)
+        {
+            Some(summary) => summary,
+            None => {
+                summaries.push(PortabilityFieldSummary {
+                    field: issue.field.clone(),
+                    issue_count: 0,
+                    unsupported_backends: Vec::new(),
+                });
+                summaries
+                    .last_mut()
+                    .expect("summary was just pushed and must exist")
+            }
+        };
+
+        summary.issue_count += 1;
+        for backend in &issue.unsupported_backends {
+            push_unique_backend(&mut summary.unsupported_backends, *backend);
+        }
+    }
+
+    summaries.sort_by(|left, right| left.field.cmp(&right.field));
+    for summary in &mut summaries {
+        summary
+            .unsupported_backends
+            .sort_by_key(|backend| backend_sort_key(*backend));
+    }
+    summaries
 }
 
 /// Pure fallback backend for tests, development sandboxes, and constrained hosts.
@@ -276,6 +445,73 @@ fn validate_all_native_oses(spec: &JobSpec) -> PortabilityReport {
     report
 }
 
+fn portability_issue_matches(issue: &PortabilityIssue, query: &PortabilityIssueQuery) -> bool {
+    if let Some(field) = &query.field {
+        if issue.field != *field {
+            return false;
+        }
+    }
+
+    if let Some(backend) = query.backend {
+        if !issue.unsupported_backends.contains(&backend) {
+            return false;
+        }
+    }
+
+    true
+}
+
+fn sort_portability_issues(issues: &mut Vec<&PortabilityIssue>, sort: PortabilityIssueSort) {
+    match sort {
+        PortabilityIssueSort::OriginalOrder => {}
+        PortabilityIssueSort::Field => {
+            issues.sort_by(|left, right| {
+                left.field
+                    .cmp(&right.field)
+                    .then_with(|| left.message.cmp(&right.message))
+            });
+        }
+        PortabilityIssueSort::BackendThenField => {
+            issues.sort_by(|left, right| {
+                first_unsupported_backend_sort_key(left)
+                    .cmp(&first_unsupported_backend_sort_key(right))
+                    .then_with(|| left.field.cmp(&right.field))
+                    .then_with(|| left.message.cmp(&right.message))
+            });
+        }
+    }
+}
+
+fn first_unsupported_backend_sort_key(issue: &PortabilityIssue) -> usize {
+    issue
+        .unsupported_backends
+        .iter()
+        .map(|backend| backend_sort_key(*backend))
+        .min()
+        .unwrap_or(usize::MAX)
+}
+
+fn backend_sort_key(backend: BackendKind) -> usize {
+    match backend {
+        BackendKind::Launchd => 0,
+        BackendKind::SystemdUser => 1,
+        BackendKind::WindowsTaskScheduler => 2,
+        BackendKind::InProcess => 3,
+    }
+}
+
+fn push_unique_string(values: &mut Vec<String>, value: &str) {
+    if !values.iter().any(|existing| existing == value) {
+        values.push(value.to_string());
+    }
+}
+
+fn push_unique_backend(values: &mut Vec<BackendKind>, value: BackendKind) {
+    if !values.contains(&value) {
+        values.push(value);
+    }
+}
+
 fn resolve_backend_kind(selection: BackendSelection) -> Result<BackendKind, JobError> {
     match selection {
         BackendSelection::Launchd => Ok(BackendKind::Launchd),
@@ -338,6 +574,28 @@ mod tests {
             output_policy: OutputPolicy::default(),
             enabled: true,
         }
+    }
+
+    fn non_portable_report() -> PortabilityReport {
+        let mut job = sample_job();
+        job.env = vec![EnvironmentEntry {
+            key: "COS_PROFILE".to_string(),
+            value: "prod".to_string(),
+        }];
+        job.timeout_seconds = Some(60);
+        job.trigger = JobTrigger::Interval {
+            every_seconds: 30,
+            anchor: Some(os_job_core::DateTimeParts {
+                year: 2026,
+                month: 5,
+                day: 9,
+                hour: 8,
+                minute: 30,
+                second: 0,
+            }),
+        };
+
+        NativeJobRuntime::default().validate_portability(&job)
     }
 
     #[test]
@@ -468,5 +726,78 @@ mod tests {
             .expect_err("non-portable jobs should be rejected before backend planning");
 
         assert!(matches!(error, JobError::PortabilityValidationFailed(_)));
+    }
+
+    #[test]
+    fn portability_issue_query_filters_sorts_and_limits() {
+        let report = non_portable_report();
+
+        let windows_issues = query_portability_issues(
+            &report,
+            &PortabilityIssueQuery::new()
+                .with_backend(BackendKind::WindowsTaskScheduler)
+                .with_sort(PortabilityIssueSort::Field),
+        );
+
+        assert_eq!(windows_issues.len(), 2);
+        assert_eq!(windows_issues[0].field, "env");
+        assert_eq!(windows_issues[1].field, "trigger.interval.every_seconds");
+
+        let timeout_issues = query_portability_issues(
+            &report,
+            &PortabilityIssueQuery::new()
+                .with_field("timeout_seconds")
+                .with_limit(1),
+        );
+
+        assert_eq!(timeout_issues.len(), 1);
+        assert_eq!(
+            timeout_issues[0].unsupported_backends,
+            vec![BackendKind::Launchd]
+        );
+    }
+
+    #[test]
+    fn portability_summaries_group_by_backend_and_field() {
+        let report = non_portable_report();
+
+        let backend_summaries = summarize_portability_by_backend(&report);
+        let launchd_summary = backend_summaries
+            .iter()
+            .find(|summary| summary.backend == BackendKind::Launchd)
+            .expect("launchd should have blocked fields");
+        let windows_summary = backend_summaries
+            .iter()
+            .find(|summary| summary.backend == BackendKind::WindowsTaskScheduler)
+            .expect("windows should have blocked fields");
+
+        assert_eq!(launchd_summary.issue_count, 2);
+        assert_eq!(
+            launchd_summary.blocked_fields,
+            vec![
+                "timeout_seconds".to_string(),
+                "trigger.interval.anchor".to_string()
+            ]
+        );
+        assert_eq!(windows_summary.issue_count, 2);
+        assert_eq!(
+            windows_summary.blocked_fields,
+            vec![
+                "env".to_string(),
+                "trigger.interval.every_seconds".to_string()
+            ]
+        );
+
+        let field_summaries = summarize_portability_by_field(&report);
+        let anchored_interval = field_summaries
+            .iter()
+            .find(|summary| summary.field == "trigger.interval.anchor")
+            .expect("anchor field should be summarized");
+
+        assert_eq!(anchored_interval.issue_count, 1);
+        assert_eq!(
+            anchored_interval.unsupported_backends,
+            vec![BackendKind::Launchd, BackendKind::SystemdUser]
+        );
     }
 }

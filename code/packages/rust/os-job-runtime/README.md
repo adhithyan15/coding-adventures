@@ -26,13 +26,27 @@ select the in-process fallback backend with `NativeJobRuntime::for_in_process()`
 That path lets the selected backend own its support boundary instead of applying
 the all-native portability target.
 
+## Read-side helpers
+
+Portability reports can be queried without giving API layers write access to the
+job runtime:
+
+- `PortabilityIssueQuery` filters issues by field, backend, stable sort order,
+  and limit
+- `query_portability_issues` returns a bounded set of matching issues
+- `summarize_portability_by_backend` groups blocked fields by scheduler family
+- `summarize_portability_by_field` groups unsupported scheduler families by job
+  spec field
+
 ## Example
 
 ```rust
 use os_job_core::{
     ConcurrencyPolicy, JobAction, JobSpec, JobTrigger, OutputPolicy, RetryPolicy,
 };
-use os_job_runtime::NativeJobRuntime;
+use os_job_runtime::{
+    query_portability_issues, NativeJobRuntime, PortabilityIssueQuery, PortabilityIssueSort,
+};
 
 let spec = JobSpec {
     job_id: "artifact-gc".to_string(),
@@ -62,6 +76,15 @@ assert!(runtime.validate_portability(&spec).is_portable());
 let plan = runtime.install_plan(&spec).unwrap();
 
 assert!(!plan.files_to_write.is_empty());
+
+let report = runtime.validate_portability(&spec);
+let issues = query_portability_issues(
+    &report,
+    &PortabilityIssueQuery::new()
+        .with_sort(PortabilityIssueSort::Field)
+        .with_limit(10),
+);
+assert!(issues.is_empty());
 ```
 
 ## Dependencies
