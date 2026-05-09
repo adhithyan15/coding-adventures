@@ -1226,7 +1226,7 @@ impl HtmlParser {
             {
                 return;
             }
-            if !is_special_element(name) && self.has_special_element_above(index) {
+            if special_scope_blocks_end_tag(name) && self.has_special_element_above(index) {
                 return;
             }
             let path = self.open_elements[index].clone();
@@ -1542,7 +1542,9 @@ impl HtmlParser {
         self.open_elements
             .iter()
             .skip(element_index + 1)
-            .any(|path| element_at_path(&self.document, path).is_some_and(is_special_element))
+            .any(|path| {
+                element_at_path(&self.document, path).is_some_and(is_special_scope_boundary_element)
+            })
     }
 
     fn pop_current_if(&mut self, predicate: impl FnOnce(&str) -> bool) {
@@ -1923,6 +1925,14 @@ fn starts_before_formatting_reconstruction_boundary(name: &str) -> bool {
 
 fn is_special_element(name: &str) -> bool {
     matches!(name, "button" | "marquee") || is_table_context_element(name)
+}
+
+fn is_special_scope_boundary_element(name: &str) -> bool {
+    matches!(name, "div") || is_special_element(name)
+}
+
+fn special_scope_blocks_end_tag(name: &str) -> bool {
+    !matches!(name, "form") && !is_special_element(name)
 }
 
 fn is_heading_element(name: &str) -> bool {

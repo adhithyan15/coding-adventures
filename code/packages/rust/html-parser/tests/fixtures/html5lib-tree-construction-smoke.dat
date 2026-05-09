@@ -830,3 +830,20 @@ Line1<br>Line2<br>Line3<br>Line4
 |         "B"
 |         <div>
 |           "C"
+
+#data
+<b>A<cite>B<div>C</cite>D
+#errors
+(1,3): expected-doctype-but-got-start-tag
+(1,24): unexpected-end-tag
+(1,25): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <b>
+|       "A"
+|       <cite>
+|         "B"
+|         <div>
+|           "CD"
