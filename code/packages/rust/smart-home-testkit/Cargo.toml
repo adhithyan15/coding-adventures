@@ -7,4 +7,6 @@ license = "MIT"
 
 [dependencies]
 smart-home-core = { path = "../smart-home-core" }
+smart-home-event-streams = { path = "../smart-home-event-streams" }
 smart-home-registry = { path = "../smart-home-registry" }
+smart-home-runtime = { path = "../smart-home-runtime" }
