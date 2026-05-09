@@ -10,7 +10,7 @@ bodies so plans, exports, screenshots, and reports can be referenced by ID.
 - `Artifact` manifests
 - `ArtifactRevision` bodies and metadata
 - label and retention updates
-- collection, label, retention, and bounded manifest listing
+- collection, label, retention, provenance, and bounded manifest listing
 - bounded revision-history listing without returning opaque bodies
 
 ## Key layout
@@ -33,8 +33,9 @@ bodies so plans, exports, screenshots, and reports can be referenced by ID.
 
 `ArtifactListOptions` lets D18/D18D tool handlers compose a bounded read model
 over artifact manifests without fetching revision bodies. Callers can filter by
-collection, require one or more labels, select a retention state, and cap the
-number of returned manifests with `limit`.
+collection, require one or more labels, select a retention state, require
+session/tool/job/agent provenance, and cap the number of returned manifests
+with `limit`.
 
 `ArtifactRevisionListOptions` gives read-side tools a bounded revision history
 view with oldest-first or latest-first ordering, an optional revision cursor,
