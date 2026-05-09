@@ -2170,7 +2170,7 @@ fn starts_inner_formatting_reconstruction_boundary(name: &str) -> bool {
 }
 
 fn starts_before_formatting_reconstruction_boundary(name: &str) -> bool {
-    matches!(name, "a" | "b" | "marquee" | "option")
+    matches!(name, "a" | "b" | "code" | "marquee" | "option")
 }
 
 fn is_special_element(name: &str) -> bool {
@@ -3335,6 +3335,25 @@ mod tests {
         assert_eq!(inner_anchor.children, vec![Node::text("bb")]);
 
         assert_eq!(outer_anchor.children[2], Node::text("aa"));
+    }
+
+    #[test]
+    fn reconstructs_code_formatting_before_code_start_tag() {
+        let document = parse_html("<wbr><strike><code></strike><code><strike></code>").unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 3);
+        assert_eq!(element(&body.children[0]).name, "wbr");
+
+        let first_strike = element(&body.children[1]);
+        assert_eq!(first_strike.name, "strike");
+        assert_eq!(element(&first_strike.children[0]).name, "code");
+
+        let reconstructed_code = element(&body.children[2]);
+        assert_eq!(reconstructed_code.name, "code");
+        let nested_code = element(&reconstructed_code.children[0]);
+        assert_eq!(nested_code.name, "code");
+        assert_eq!(element(&nested_code.children[0]).name, "strike");
     }
 
     #[test]
