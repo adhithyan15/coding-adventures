@@ -7,6 +7,7 @@
 #![forbid(unsafe_code)]
 
 use smart_home_core::{Capability, CapabilityId, CapabilityMode, StateDelta, Value, ValueKind};
+use std::collections::BTreeSet;
 use std::fmt;
 use zwave_core::CommandClassId;
 
@@ -19,6 +20,7 @@ pub const SWITCH_BINARY_REPORT: u8 = 0x03;
 pub const SWITCH_MULTILEVEL_SET: u8 = 0x01;
 pub const SWITCH_MULTILEVEL_GET: u8 = 0x02;
 pub const SWITCH_MULTILEVEL_REPORT: u8 = 0x03;
+pub const SENSOR_BINARY_GET: u8 = 0x02;
 pub const SENSOR_BINARY_REPORT: u8 = 0x03;
 pub const SENSOR_MULTILEVEL_GET: u8 = 0x04;
 pub const SENSOR_MULTILEVEL_REPORT: u8 = 0x05;
@@ -89,6 +91,23 @@ impl ZWaveCommand {
         out.push(self.command_id);
         out.extend_from_slice(&self.payload);
         Ok(out)
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct CommandClassInterviewDescriptor {
+    pub command_class: CommandClassId,
+    pub commands: Vec<ZWaveCommand>,
+    pub capabilities: Vec<Capability>,
+}
+
+impl CommandClassInterviewDescriptor {
+    pub fn can_query_state(&self) -> bool {
+        !self.commands.is_empty()
+    }
+
+    pub fn projects_capabilities(&self) -> bool {
+        !self.capabilities.is_empty()
     }
 }
 
@@ -268,6 +287,10 @@ impl fmt::Display for CommandClassError {
 
 impl std::error::Error for CommandClassError {}
 
+pub fn basic_get() -> ZWaveCommand {
+    ZWaveCommand::new(CommandClassId::BASIC, BASIC_GET, Vec::new())
+}
+
 pub fn binary_switch_get() -> ZWaveCommand {
     ZWaveCommand::new(CommandClassId::SWITCH_BINARY, SWITCH_BINARY_GET, Vec::new())
 }
@@ -312,8 +335,59 @@ pub fn door_lock_operation_set(secured: bool) -> ZWaveCommand {
     )
 }
 
+pub fn binary_sensor_get() -> ZWaveCommand {
+    ZWaveCommand::new(CommandClassId::SENSOR_BINARY, SENSOR_BINARY_GET, Vec::new())
+}
+
+pub fn multilevel_sensor_get() -> ZWaveCommand {
+    ZWaveCommand::new(
+        CommandClassId::SENSOR_MULTILEVEL,
+        SENSOR_MULTILEVEL_GET,
+        Vec::new(),
+    )
+}
+
 pub fn battery_get() -> ZWaveCommand {
     ZWaveCommand::new(CommandClassId::BATTERY, BATTERY_GET, Vec::new())
+}
+
+pub fn interview_commands_for_command_class(command_class: CommandClassId) -> Vec<ZWaveCommand> {
+    match command_class {
+        CommandClassId::BASIC => vec![basic_get()],
+        CommandClassId::SWITCH_BINARY => vec![binary_switch_get()],
+        CommandClassId::SWITCH_MULTILEVEL => vec![multilevel_switch_get()],
+        CommandClassId::SENSOR_BINARY => vec![binary_sensor_get()],
+        CommandClassId::SENSOR_MULTILEVEL => vec![multilevel_sensor_get()],
+        CommandClassId::DOOR_LOCK => vec![door_lock_operation_get()],
+        CommandClassId::BATTERY => vec![battery_get()],
+        _ => Vec::new(),
+    }
+}
+
+pub fn interview_descriptor_for_command_class(
+    command_class: CommandClassId,
+) -> Option<CommandClassInterviewDescriptor> {
+    let commands = interview_commands_for_command_class(command_class);
+    let capabilities = capabilities_for_command_class(command_class);
+    if commands.is_empty() && capabilities.is_empty() {
+        return None;
+    }
+    Some(CommandClassInterviewDescriptor {
+        command_class,
+        commands,
+        capabilities,
+    })
+}
+
+pub fn interview_descriptors_for_command_classes(
+    command_classes: impl IntoIterator<Item = CommandClassId>,
+) -> Vec<CommandClassInterviewDescriptor> {
+    command_classes
+        .into_iter()
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .filter_map(interview_descriptor_for_command_class)
+        .collect()
 }
 
 pub fn parse_value_report(command: &ZWaveCommand) -> Result<ZWaveValueReport, CommandClassError> {
@@ -650,13 +724,71 @@ mod tests {
 
     #[test]
     fn set_builders_normalize_values() {
+        assert_eq!(
+            basic_get().encode().unwrap(),
+            vec![CommandClassId::BASIC.0 as u8, BASIC_GET]
+        );
         assert_eq!(binary_switch_set(false).payload, vec![0x00]);
         assert_eq!(multilevel_switch_set(100).payload, vec![99]);
         assert_eq!(door_lock_operation_set(true).payload, vec![0xff]);
         assert_eq!(
+            binary_sensor_get().encode().unwrap(),
+            vec![CommandClassId::SENSOR_BINARY.0 as u8, SENSOR_BINARY_GET]
+        );
+        assert_eq!(
+            multilevel_sensor_get().encode().unwrap(),
+            vec![
+                CommandClassId::SENSOR_MULTILEVEL.0 as u8,
+                SENSOR_MULTILEVEL_GET
+            ]
+        );
+        assert_eq!(
             battery_get().encode().unwrap(),
             vec![CommandClassId::BATTERY.0 as u8, BATTERY_GET]
         );
+    }
+
+    #[test]
+    fn command_class_interview_descriptors_project_queries_and_capabilities() {
+        let descriptors = interview_descriptors_for_command_classes([
+            CommandClassId::BATTERY,
+            CommandClassId::SWITCH_BINARY,
+            CommandClassId::BATTERY,
+            COMMAND_CLASS_NOTIFICATION,
+            CommandClassId(0xfe),
+        ]);
+
+        assert_eq!(
+            descriptors
+                .iter()
+                .map(|descriptor| descriptor.command_class)
+                .collect::<Vec<_>>(),
+            vec![
+                CommandClassId::SWITCH_BINARY,
+                COMMAND_CLASS_NOTIFICATION,
+                CommandClassId::BATTERY,
+            ]
+        );
+
+        let switch = descriptors
+            .iter()
+            .find(|descriptor| descriptor.command_class == CommandClassId::SWITCH_BINARY)
+            .unwrap();
+        assert_eq!(switch.commands, vec![binary_switch_get()]);
+        assert_eq!(
+            switch.capabilities[0].capability_id,
+            CapabilityId::trusted("light.on_off")
+        );
+        assert!(switch.can_query_state());
+        assert!(switch.projects_capabilities());
+
+        let notification = descriptors
+            .iter()
+            .find(|descriptor| descriptor.command_class == COMMAND_CLASS_NOTIFICATION)
+            .unwrap();
+        assert!(notification.commands.is_empty());
+        assert!(!notification.can_query_state());
+        assert!(notification.projects_capabilities());
     }
 
     #[test]
