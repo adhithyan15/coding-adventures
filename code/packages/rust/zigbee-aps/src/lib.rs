@@ -6,7 +6,7 @@
 
 #![forbid(unsafe_code)]
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
 use zigbee_nwk::{IeeeAddress, NetworkAddress};
 
@@ -220,6 +220,35 @@ pub struct ApsFrame {
     pub payload: Vec<u8>,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ApsFrameSummary {
+    pub frame_type: ApsFrameType,
+    pub delivery_mode: DeliveryMode,
+    pub profile_kind: ProfileKind,
+    pub cluster_kind: ClusterKind,
+    pub source_endpoint: Endpoint,
+    pub destination_endpoint: Option<Endpoint>,
+    pub group: Option<GroupAddress>,
+    pub counter: u8,
+    pub payload_len: usize,
+    pub ack_request: bool,
+    pub security: bool,
+}
+
+impl ApsFrameSummary {
+    pub fn is_home_automation(self) -> bool {
+        self.profile_kind == ProfileKind::HomeAutomation
+    }
+
+    pub fn is_group_delivery(self) -> bool {
+        self.delivery_mode == DeliveryMode::Group
+    }
+
+    pub fn requires_ack(self) -> bool {
+        self.ack_request
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct EndpointAddress {
     pub network_address: NetworkAddress,
@@ -394,6 +423,57 @@ impl BindingTable {
             })
             .collect()
     }
+
+    pub fn summary(&self) -> BindingTableSummary {
+        let mut unique_sources = BTreeSet::new();
+        let mut unique_groups = BTreeSet::new();
+        let mut unique_device_destinations = BTreeSet::new();
+        let mut summary = BindingTableSummary {
+            total_bindings: self.entries.len(),
+            group_bindings: 0,
+            device_bindings: 0,
+            general_cluster_bindings: 0,
+            measurement_and_sensing_bindings: 0,
+            manufacturer_specific_cluster_bindings: 0,
+            unknown_cluster_bindings: 0,
+            unique_sources: 0,
+            unique_groups: 0,
+            unique_device_destinations: 0,
+        };
+
+        for entry in self.entries.values() {
+            unique_sources.insert(entry.source);
+            match entry.destination {
+                BindingDestination::Group(group) => {
+                    summary.group_bindings += 1;
+                    unique_groups.insert(group);
+                }
+                BindingDestination::Device {
+                    ieee_address,
+                    endpoint,
+                } => {
+                    summary.device_bindings += 1;
+                    unique_device_destinations.insert((ieee_address, endpoint));
+                }
+            }
+
+            match entry.cluster_id.kind() {
+                ClusterKind::General => summary.general_cluster_bindings += 1,
+                ClusterKind::MeasurementAndSensing => {
+                    summary.measurement_and_sensing_bindings += 1;
+                }
+                ClusterKind::ManufacturerSpecific => {
+                    summary.manufacturer_specific_cluster_bindings += 1;
+                }
+                ClusterKind::Unknown => summary.unknown_cluster_bindings += 1,
+            }
+        }
+
+        summary.unique_sources = unique_sources.len();
+        summary.unique_groups = unique_groups.len();
+        summary.unique_device_destinations = unique_device_destinations.len();
+        summary
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -410,6 +490,38 @@ impl From<&BindingEntry> for BindingKey {
             cluster_id: entry.cluster_id,
             destination: entry.destination,
         }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct BindingTableSummary {
+    pub total_bindings: usize,
+    pub group_bindings: usize,
+    pub device_bindings: usize,
+    pub general_cluster_bindings: usize,
+    pub measurement_and_sensing_bindings: usize,
+    pub manufacturer_specific_cluster_bindings: usize,
+    pub unknown_cluster_bindings: usize,
+    pub unique_sources: usize,
+    pub unique_groups: usize,
+    pub unique_device_destinations: usize,
+}
+
+impl BindingTableSummary {
+    pub fn has_bindings(self) -> bool {
+        self.total_bindings > 0
+    }
+
+    pub fn has_group_bindings(self) -> bool {
+        self.group_bindings > 0
+    }
+
+    pub fn has_device_bindings(self) -> bool {
+        self.device_bindings > 0
+    }
+
+    pub fn has_manufacturer_specific_clusters(self) -> bool {
+        self.manufacturer_specific_cluster_bindings > 0
     }
 }
 
@@ -517,6 +629,35 @@ impl ApsFrame {
         out.push(self.counter);
         out.extend_from_slice(&self.payload);
         Ok(out)
+    }
+
+    pub fn summary(&self) -> ApsFrameSummary {
+        let (destination_endpoint, group) = match self.addressing {
+            ApsAddressing::Unicast {
+                destination_endpoint,
+                ..
+            }
+            | ApsAddressing::Broadcast {
+                destination_endpoint,
+                ..
+            } => (Some(destination_endpoint), None),
+            ApsAddressing::Group { group, .. } => (None, Some(group)),
+            ApsAddressing::Indirect { .. } => (None, None),
+        };
+
+        ApsFrameSummary {
+            frame_type: self.frame_control.frame_type,
+            delivery_mode: self.frame_control.delivery_mode,
+            profile_kind: self.profile_id.kind(),
+            cluster_kind: self.cluster_id.kind(),
+            source_endpoint: source_endpoint(&self.addressing),
+            destination_endpoint,
+            group,
+            counter: self.counter,
+            payload_len: self.payload.len(),
+            ack_request: self.frame_control.ack_request,
+            security: self.frame_control.security,
+        }
     }
 }
 
@@ -769,5 +910,78 @@ mod tests {
             .unwrap();
         assert_eq!(removed.destination, device_destination);
         assert_eq!(table.len(), 1);
+    }
+
+    #[test]
+    fn aps_frame_summary_omits_payload_but_keeps_routing_fields() {
+        let mut control = ApsFrameControl::data_unicast();
+        control.delivery_mode = DeliveryMode::Group;
+        control.ack_request = true;
+        control.security = true;
+        let frame = ApsFrame {
+            frame_control: control,
+            addressing: ApsAddressing::Group {
+                group: GroupAddress(0x1234),
+                source_endpoint: Endpoint(1),
+            },
+            cluster_id: ClusterId::LEVEL_CONTROL,
+            profile_id: ProfileId::HOME_AUTOMATION,
+            counter: 9,
+            payload: vec![0x05, 0x06],
+        };
+
+        let summary = frame.summary();
+
+        assert_eq!(summary.frame_type, ApsFrameType::Data);
+        assert_eq!(summary.delivery_mode, DeliveryMode::Group);
+        assert_eq!(summary.profile_kind, ProfileKind::HomeAutomation);
+        assert_eq!(summary.cluster_kind, ClusterKind::General);
+        assert_eq!(summary.source_endpoint, Endpoint(1));
+        assert_eq!(summary.destination_endpoint, None);
+        assert_eq!(summary.group, Some(GroupAddress(0x1234)));
+        assert_eq!(summary.counter, 9);
+        assert_eq!(summary.payload_len, 2);
+        assert!(summary.is_home_automation());
+        assert!(summary.is_group_delivery());
+        assert!(summary.requires_ack());
+        assert!(summary.security);
+    }
+
+    #[test]
+    fn binding_table_summary_counts_destinations_and_cluster_kinds() {
+        let source = BindingSource::new(IeeeAddress(0x0012_4b00_0000_0001), Endpoint(1));
+        let mut table = BindingTable::new();
+        table.upsert(BindingEntry::new(
+            source,
+            ClusterId::ON_OFF,
+            BindingDestination::group(GroupAddress(0x1234)),
+        ));
+        table.upsert(BindingEntry::new(
+            source,
+            ClusterId::TEMPERATURE_MEASUREMENT,
+            BindingDestination::device(IeeeAddress(0x0012_4b00_0000_0002), Endpoint(2)),
+        ));
+        table.upsert(BindingEntry::new(
+            BindingSource::new(IeeeAddress(0x0012_4b00_0000_0003), Endpoint(3)),
+            ClusterId(0xfc00),
+            BindingDestination::group(GroupAddress(0x2345)),
+        ));
+
+        let summary = table.summary();
+
+        assert_eq!(summary.total_bindings, 3);
+        assert_eq!(summary.group_bindings, 2);
+        assert_eq!(summary.device_bindings, 1);
+        assert_eq!(summary.general_cluster_bindings, 1);
+        assert_eq!(summary.measurement_and_sensing_bindings, 1);
+        assert_eq!(summary.manufacturer_specific_cluster_bindings, 1);
+        assert_eq!(summary.unknown_cluster_bindings, 0);
+        assert_eq!(summary.unique_sources, 2);
+        assert_eq!(summary.unique_groups, 2);
+        assert_eq!(summary.unique_device_destinations, 1);
+        assert!(summary.has_bindings());
+        assert!(summary.has_group_bindings());
+        assert!(summary.has_device_bindings());
+        assert!(summary.has_manufacturer_specific_clusters());
     }
 }
