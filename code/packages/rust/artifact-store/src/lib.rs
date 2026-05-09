@@ -110,6 +110,10 @@ pub struct ArtifactListOptions {
     pub collection: Option<String>,
     pub labels: Vec<String>,
     pub retention: Option<ArtifactRetention>,
+    pub session_id: Option<String>,
+    pub tool_id: Option<String>,
+    pub job_id: Option<String>,
+    pub agent_id: Option<String>,
     pub limit: Option<usize>,
 }
 
@@ -139,6 +143,26 @@ impl ArtifactListOptions {
 
     pub fn with_retention(mut self, retention: ArtifactRetention) -> Self {
         self.retention = Some(retention);
+        self
+    }
+
+    pub fn for_session(mut self, session_id: impl Into<String>) -> Self {
+        self.session_id = Some(session_id.into());
+        self
+    }
+
+    pub fn for_tool(mut self, tool_id: impl Into<String>) -> Self {
+        self.tool_id = Some(tool_id.into());
+        self
+    }
+
+    pub fn for_job(mut self, job_id: impl Into<String>) -> Self {
+        self.job_id = Some(job_id.into());
+        self
+    }
+
+    pub fn for_agent(mut self, agent_id: impl Into<String>) -> Self {
+        self.agent_id = Some(agent_id.into());
         self
     }
 
@@ -357,6 +381,10 @@ impl<S: StorageBackend> ArtifactStore<S> {
             validate_id("collection", collection)?;
         }
         validate_id_list("labels", &options.labels)?;
+        validate_optional_id("session_id", options.session_id.as_deref())?;
+        validate_optional_id("tool_id", options.tool_id.as_deref())?;
+        validate_optional_id("job_id", options.job_id.as_deref())?;
+        validate_optional_id("agent_id", options.agent_id.as_deref())?;
         if options.limit == Some(0) {
             return Ok(Vec::new());
         }
@@ -487,10 +515,41 @@ fn artifact_matches_list_options(artifact: &Artifact, options: &ArtifactListOpti
             return false;
         }
     }
+    if !provenance_filter_matches(
+        options.session_id.as_deref(),
+        artifact.provenance.session_id.as_deref(),
+    ) {
+        return false;
+    }
+    if !provenance_filter_matches(
+        options.tool_id.as_deref(),
+        artifact.provenance.tool_id.as_deref(),
+    ) {
+        return false;
+    }
+    if !provenance_filter_matches(
+        options.job_id.as_deref(),
+        artifact.provenance.job_id.as_deref(),
+    ) {
+        return false;
+    }
+    if !provenance_filter_matches(
+        options.agent_id.as_deref(),
+        artifact.provenance.agent_id.as_deref(),
+    ) {
+        return false;
+    }
     options
         .labels
         .iter()
         .all(|label| artifact.labels.iter().any(|candidate| candidate == label))
+}
+
+fn provenance_filter_matches(expected: Option<&str>, actual: Option<&str>) -> bool {
+    match expected {
+        Some(expected) => actual == Some(expected),
+        None => true,
+    }
 }
 
 fn validate_revision_list_options(
@@ -766,6 +825,13 @@ fn validate_id_list(field: &str, values: &[String]) -> Result<(), StorageError> 
     Ok(())
 }
 
+fn validate_optional_id(field: &str, value: Option<&str>) -> Result<(), StorageError> {
+    if let Some(value) = value {
+        validate_id(field, value)?;
+    }
+    Ok(())
+}
+
 fn validate_name(value: &str) -> Result<(), StorageError> {
     if value.trim().is_empty() {
         return Err(validation("name", "must not be empty"));
@@ -976,6 +1042,89 @@ mod tests {
             .list_artifacts(ArtifactListOptions::new().with_label("missing"))
             .unwrap();
         assert!(none.is_empty());
+    }
+
+    #[test]
+    fn artifact_listing_filters_by_provenance() {
+        let store = ArtifactStore::new(InMemoryStorageBackend::new());
+        for (artifact_id, session_id, tool_id, job_id, agent_id) in [
+            (
+                "plan-a",
+                Some("session-a"),
+                Some("artifact.write"),
+                Some("job-a"),
+                Some("chief"),
+            ),
+            (
+                "plan-b",
+                Some("session-a"),
+                Some("artifact.write"),
+                Some("job-b"),
+                Some("chief"),
+            ),
+            (
+                "report-a",
+                Some("session-b"),
+                Some("report.export"),
+                Some("job-a"),
+                Some("analyst"),
+            ),
+            ("loose", None, None, None, None),
+        ] {
+            let _ = store
+                .create_artifact(CreateArtifactInput {
+                    artifact_id: artifact_id.to_string(),
+                    collection: "outputs".to_string(),
+                    name: artifact_id.to_string(),
+                    content_type: "text/plain".to_string(),
+                    labels: Vec::new(),
+                    provenance: ArtifactProvenance {
+                        session_id: session_id.map(str::to_string),
+                        tool_id: tool_id.map(str::to_string),
+                        job_id: job_id.map(str::to_string),
+                        agent_id: agent_id.map(str::to_string),
+                    },
+                })
+                .unwrap();
+        }
+
+        let mut by_job = store
+            .list_artifacts(ArtifactListOptions::new().for_job("job-a"))
+            .unwrap()
+            .into_iter()
+            .map(|artifact| artifact.artifact_id)
+            .collect::<Vec<_>>();
+        by_job.sort();
+        assert_eq!(by_job, vec!["plan-a", "report-a"]);
+
+        let mut by_session_agent = store
+            .list_artifacts(
+                ArtifactListOptions::new()
+                    .for_session("session-a")
+                    .for_agent("chief"),
+            )
+            .unwrap()
+            .into_iter()
+            .map(|artifact| artifact.artifact_id)
+            .collect::<Vec<_>>();
+        by_session_agent.sort();
+        assert_eq!(by_session_agent, vec!["plan-a", "plan-b"]);
+
+        let by_tool = store
+            .list_artifacts(ArtifactListOptions::new().for_tool("report.export"))
+            .unwrap();
+        assert_eq!(by_tool.len(), 1);
+        assert_eq!(by_tool[0].artifact_id, "report-a");
+
+        let none = store
+            .list_artifacts(ArtifactListOptions::new().for_session("missing-session"))
+            .unwrap();
+        assert!(none.is_empty());
+
+        let invalid_filter = store
+            .list_artifacts(ArtifactListOptions::new().for_tool("bad tool"))
+            .unwrap_err();
+        assert!(matches!(invalid_filter, StorageError::Validation { .. }));
     }
 
     #[test]
