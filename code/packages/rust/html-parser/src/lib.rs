@@ -1051,6 +1051,9 @@ impl HtmlParser {
     }
 
     fn clear_pending_formatting_unless_next_reconstructs(&mut self, incoming_name: &str) {
+        if starts_table_context(incoming_name) && self.current_element_is_table_structure() {
+            return;
+        }
         if !starts_before_formatting_reconstruction_boundary(incoming_name) {
             self.pending_formatting_reconstruction.clear();
         }
@@ -1093,7 +1096,65 @@ impl HtmlParser {
     }
 
     fn foster_text_before_open_table(&mut self, text: String) -> bool {
-        self.insert_node_before_open_table(Node::text(text)).is_some()
+        if self.pending_formatting_reconstruction.is_empty()
+            || text.chars().all(char::is_whitespace)
+        {
+            return self.insert_node_before_open_table(Node::text(text)).is_some();
+        }
+
+        self.remove_empty_pending_formatting_before_open_table();
+
+        let mut subtree = Node::text(text);
+        for (name, attributes) in self.pending_formatting_reconstruction.iter().rev() {
+            let mut wrapper = Node::element(name.clone(), attributes.clone());
+            if let Some(children) = wrapper.children_mut() {
+                children.push(subtree);
+            }
+            subtree = wrapper;
+        }
+
+        self.insert_node_before_open_table(subtree).is_some()
+    }
+
+    fn remove_empty_pending_formatting_before_open_table(&mut self) {
+        let Some((pending_name, pending_attributes)) =
+            self.pending_formatting_reconstruction.first().cloned()
+        else {
+            return;
+        };
+        let Some(table_path) = self
+            .open_elements
+            .iter()
+            .rfind(|path| element_at_path(&self.document, path).is_some_and(|name| name == "table"))
+            .cloned()
+        else {
+            return;
+        };
+        let Some((&table_index, parent_path)) = table_path.split_last() else {
+            return;
+        };
+        let Some(remove_index) = table_index.checked_sub(1) else {
+            return;
+        };
+        let Some(children) = children_at_path_mut(&mut self.document.children, parent_path) else {
+            return;
+        };
+
+        let should_remove = matches!(
+            children.get(remove_index),
+            Some(Node::Element(element))
+                if element.name == pending_name
+                    && element.attributes == pending_attributes
+                    && element.children.is_empty()
+        );
+        if should_remove {
+            children.remove(remove_index);
+            decrement_open_element_paths_after_remove(
+                &mut self.open_elements,
+                parent_path,
+                remove_index,
+            );
+        }
     }
 
     fn insert_node_before_open_table(&mut self, node: Node) -> Option<Vec<usize>> {
@@ -1856,6 +1917,21 @@ fn increment_open_element_paths_after_insert(
         }
         if path[parent_path.len()] >= insert_index {
             path[parent_path.len()] += 1;
+        }
+    }
+}
+
+fn decrement_open_element_paths_after_remove(
+    open_elements: &mut [Vec<usize>],
+    parent_path: &[usize],
+    remove_index: usize,
+) {
+    for path in open_elements {
+        if path.len() <= parent_path.len() || !path.starts_with(parent_path) {
+            continue;
+        }
+        if path[parent_path.len()] > remove_index {
+            path[parent_path.len()] -= 1;
         }
     }
 }
@@ -3158,6 +3234,38 @@ mod tests {
             element(&element(&foot.children[0]).children[0]).children,
             vec![Node::text("F")]
         );
+    }
+
+    #[test]
+    fn fosters_reconstructed_anchor_text_around_table_content() {
+        let document =
+            parse_html("<a href=\"blah\">aba<table><a href=\"foo\">br<tr><td></td></tr>x</table>aoe")
+                .unwrap();
+
+        let body = body(&document);
+        assert_eq!(body.children.len(), 2);
+
+        let outer_anchor = element(&body.children[0]);
+        assert_eq!(outer_anchor.name, "a");
+        assert_eq!(outer_anchor.attribute("href"), Some("blah"));
+        assert_eq!(outer_anchor.children[0], Node::text("aba"));
+
+        let first_fostered_anchor = element(&outer_anchor.children[1]);
+        assert_eq!(first_fostered_anchor.name, "a");
+        assert_eq!(first_fostered_anchor.attribute("href"), Some("foo"));
+        assert_eq!(first_fostered_anchor.children, vec![Node::text("br")]);
+
+        let second_fostered_anchor = element(&outer_anchor.children[2]);
+        assert_eq!(second_fostered_anchor.name, "a");
+        assert_eq!(second_fostered_anchor.attribute("href"), Some("foo"));
+        assert_eq!(second_fostered_anchor.children, vec![Node::text("x")]);
+
+        assert_eq!(element(&outer_anchor.children[3]).name, "table");
+
+        let reconstructed_anchor = element(&body.children[1]);
+        assert_eq!(reconstructed_anchor.name, "a");
+        assert_eq!(reconstructed_anchor.attribute("href"), Some("foo"));
+        assert_eq!(reconstructed_anchor.children, vec![Node::text("aoe")]);
     }
 
     #[test]
