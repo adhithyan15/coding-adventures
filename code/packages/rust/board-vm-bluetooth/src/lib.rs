@@ -1,3 +1,9 @@
+use std::io::{Read, Write};
+
+use board_vm_client::{RawFrameTransport, TransportError};
+use board_vm_protocol::{decode_wire_frame, encode_wire_frame, ProtocolError};
+use board_vm_stream::{StreamTransport, StreamTransportError};
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum BluetoothEndpoint {
     BleGatt(BleGattEndpoint),
@@ -52,6 +58,232 @@ pub enum BluetoothEndpointError {
     MissingChannel,
     InvalidChannel(String),
     InvalidUuid { field: &'static str, value: String },
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum BluetoothTransportError {
+    Link,
+    FrameTooLarge,
+    Protocol(ProtocolError),
+    Stream(StreamTransportError),
+}
+
+impl BluetoothTransportError {
+    pub const fn as_transport_error(self) -> TransportError {
+        match self {
+            Self::Link => TransportError::Io,
+            Self::FrameTooLarge => TransportError::ResponseTooLarge,
+            Self::Protocol(_) => TransportError::Io,
+            Self::Stream(error) => error.as_transport_error(),
+        }
+    }
+}
+
+impl From<StreamTransportError> for BluetoothTransportError {
+    fn from(value: StreamTransportError) -> Self {
+        Self::Stream(value)
+    }
+}
+
+pub trait BleGattIo {
+    fn write_characteristic(
+        &mut self,
+        characteristic_uuid: &str,
+        bytes: &[u8],
+    ) -> Result<(), BluetoothTransportError>;
+
+    fn read_notification(
+        &mut self,
+        characteristic_uuid: &str,
+        out: &mut [u8],
+    ) -> Result<usize, BluetoothTransportError>;
+}
+
+pub struct BoardBleGattTransport<L, const WIRE_BYTES: usize = 1024> {
+    endpoint: BleGattEndpoint,
+    link: L,
+    wire: [u8; WIRE_BYTES],
+}
+
+impl<L, const WIRE_BYTES: usize> BoardBleGattTransport<L, WIRE_BYTES> {
+    pub fn new(endpoint: BleGattEndpoint, link: L) -> Self {
+        Self {
+            endpoint,
+            link,
+            wire: [0; WIRE_BYTES],
+        }
+    }
+
+    pub fn endpoint(&self) -> &BleGattEndpoint {
+        &self.endpoint
+    }
+
+    pub fn link(&self) -> &L {
+        &self.link
+    }
+
+    pub fn link_mut(&mut self) -> &mut L {
+        &mut self.link
+    }
+
+    pub fn into_inner(self) -> L {
+        self.link
+    }
+
+    pub fn send_raw_frame(&mut self, raw_frame: &[u8]) -> Result<usize, BluetoothTransportError>
+    where
+        L: BleGattIo,
+    {
+        let wire_len = encode_wire_frame(raw_frame, &mut self.wire).map_err(map_protocol_error)?;
+        self.link.write_characteristic(
+            &self.endpoint.write_characteristic_uuid,
+            &self.wire[..wire_len],
+        )?;
+        Ok(wire_len)
+    }
+
+    pub fn receive_raw_frame(
+        &mut self,
+        raw_out: &mut [u8],
+    ) -> Result<usize, BluetoothTransportError>
+    where
+        L: BleGattIo,
+    {
+        let wire_len = self.read_wire_frame()?;
+        decode_wire_frame(&self.wire[..wire_len], raw_out).map_err(map_protocol_error)
+    }
+
+    pub fn exchange_raw_frame_checked(
+        &mut self,
+        raw_request: &[u8],
+        raw_response_out: &mut [u8],
+    ) -> Result<usize, BluetoothTransportError>
+    where
+        L: BleGattIo,
+    {
+        self.send_raw_frame(raw_request)?;
+        self.receive_raw_frame(raw_response_out)
+    }
+
+    fn read_wire_frame(&mut self) -> Result<usize, BluetoothTransportError>
+    where
+        L: BleGattIo,
+    {
+        let mut len = 0;
+        loop {
+            if len >= self.wire.len() {
+                return Err(BluetoothTransportError::FrameTooLarge);
+            }
+
+            let count = self.link.read_notification(
+                &self.endpoint.notify_characteristic_uuid,
+                &mut self.wire[len..],
+            )?;
+            if count == 0 {
+                return Err(BluetoothTransportError::Link);
+            }
+            if count > self.wire.len() - len {
+                return Err(BluetoothTransportError::FrameTooLarge);
+            }
+
+            let chunk_start = len;
+            let chunk_end = len + count;
+            let chunk = &self.wire[chunk_start..chunk_end];
+            len = chunk_end;
+            if let Some(terminator_offset) = chunk.iter().position(|byte| *byte == 0) {
+                len = chunk_start + terminator_offset + 1;
+                return Ok(len);
+            }
+        }
+    }
+}
+
+impl<L, const WIRE_BYTES: usize> RawFrameTransport for BoardBleGattTransport<L, WIRE_BYTES>
+where
+    L: BleGattIo,
+{
+    fn exchange_raw_frame(
+        &mut self,
+        request: &[u8],
+        response_out: &mut [u8],
+    ) -> Result<usize, TransportError> {
+        self.exchange_raw_frame_checked(request, response_out)
+            .map_err(BluetoothTransportError::as_transport_error)
+    }
+}
+
+pub struct BoardRfcommTransport<S, const WIRE_BYTES: usize = 1024> {
+    endpoint: RfcommEndpoint,
+    inner: StreamTransport<S, WIRE_BYTES>,
+}
+
+impl<S, const WIRE_BYTES: usize> BoardRfcommTransport<S, WIRE_BYTES> {
+    pub fn from_stream(endpoint: RfcommEndpoint, stream: S) -> Self {
+        Self {
+            endpoint,
+            inner: StreamTransport::new(stream),
+        }
+    }
+
+    pub fn endpoint(&self) -> &RfcommEndpoint {
+        &self.endpoint
+    }
+
+    pub fn stream_transport(&self) -> &StreamTransport<S, WIRE_BYTES> {
+        &self.inner
+    }
+
+    pub fn stream_transport_mut(&mut self) -> &mut StreamTransport<S, WIRE_BYTES> {
+        &mut self.inner
+    }
+
+    pub fn into_inner(self) -> S {
+        self.inner.into_inner()
+    }
+
+    pub fn send_raw_frame(&mut self, raw_frame: &[u8]) -> Result<usize, BluetoothTransportError>
+    where
+        S: Write,
+    {
+        Ok(self.inner.send_raw_frame(raw_frame)?)
+    }
+
+    pub fn receive_raw_frame(
+        &mut self,
+        raw_out: &mut [u8],
+    ) -> Result<usize, BluetoothTransportError>
+    where
+        S: Read,
+    {
+        Ok(self.inner.receive_raw_frame(raw_out)?)
+    }
+
+    pub fn exchange_raw_frame_checked(
+        &mut self,
+        raw_request: &[u8],
+        raw_response_out: &mut [u8],
+    ) -> Result<usize, BluetoothTransportError>
+    where
+        S: Read + Write,
+    {
+        Ok(self
+            .inner
+            .exchange_raw_frame_checked(raw_request, raw_response_out)?)
+    }
+}
+
+impl<S, const WIRE_BYTES: usize> RawFrameTransport for BoardRfcommTransport<S, WIRE_BYTES>
+where
+    S: Read + Write,
+{
+    fn exchange_raw_frame(
+        &mut self,
+        request: &[u8],
+        response_out: &mut [u8],
+    ) -> Result<usize, TransportError> {
+        self.exchange_raw_frame_checked(request, response_out)
+            .map_err(BluetoothTransportError::as_transport_error)
+    }
 }
 
 pub fn parse_bluetooth_endpoint(
@@ -138,6 +370,15 @@ pub fn parse_rfcomm_endpoint(endpoint: &str) -> Result<RfcommEndpoint, Bluetooth
     })
 }
 
+fn map_protocol_error(error: ProtocolError) -> BluetoothTransportError {
+    match error {
+        ProtocolError::OutputTooSmall | ProtocolError::PayloadTooLarge => {
+            BluetoothTransportError::FrameTooLarge
+        }
+        other => BluetoothTransportError::Protocol(other),
+    }
+}
+
 fn endpoint_scheme(endpoint: &str) -> &str {
     endpoint
         .split_once("://")
@@ -180,10 +421,76 @@ fn is_canonical_uuid(value: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::collections::VecDeque;
+    use std::io::{self, Cursor};
 
     const SERVICE_UUID: &str = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
     const WRITE_UUID: &str = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
     const NOTIFY_UUID: &str = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+
+    #[derive(Default)]
+    struct FakeBleGattLink {
+        writes: Vec<(String, Vec<u8>)>,
+        notifications: VecDeque<Vec<u8>>,
+    }
+
+    impl BleGattIo for FakeBleGattLink {
+        fn write_characteristic(
+            &mut self,
+            characteristic_uuid: &str,
+            bytes: &[u8],
+        ) -> Result<(), BluetoothTransportError> {
+            self.writes
+                .push((characteristic_uuid.to_owned(), bytes.to_vec()));
+            Ok(())
+        }
+
+        fn read_notification(
+            &mut self,
+            characteristic_uuid: &str,
+            out: &mut [u8],
+        ) -> Result<usize, BluetoothTransportError> {
+            assert_eq!(characteristic_uuid, NOTIFY_UUID);
+            let notification = self
+                .notifications
+                .pop_front()
+                .ok_or(BluetoothTransportError::Link)?;
+            let count = notification.len();
+            out[..count].copy_from_slice(&notification);
+            Ok(count)
+        }
+    }
+
+    struct FakeRfcommStream {
+        read: Cursor<Vec<u8>>,
+        written: Vec<u8>,
+    }
+
+    impl FakeRfcommStream {
+        fn new(read: Vec<u8>) -> Self {
+            Self {
+                read: Cursor::new(read),
+                written: Vec::new(),
+            }
+        }
+    }
+
+    impl Read for FakeRfcommStream {
+        fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
+            self.read.read(buf)
+        }
+    }
+
+    impl Write for FakeRfcommStream {
+        fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
+            self.written.extend_from_slice(buf);
+            Ok(buf.len())
+        }
+
+        fn flush(&mut self) -> io::Result<()> {
+            Ok(())
+        }
+    }
 
     #[test]
     fn parses_ble_gatt_query_endpoint() {
@@ -279,5 +586,60 @@ mod tests {
             parse_bluetooth_endpoint("tcp://board-vm.local:4170").unwrap_err(),
             BluetoothEndpointError::UnsupportedScheme("tcp".to_owned())
         );
+    }
+
+    #[test]
+    fn ble_gatt_transport_exchanges_board_vm_wire_frames() {
+        let endpoint = parse_ble_gatt_endpoint(&format!(
+            "ble://esp32?service={SERVICE_UUID}&write={WRITE_UUID}&notify={NOTIFY_UUID}"
+        ))
+        .unwrap();
+        let request = [0x01, 0x02, 0x03];
+        let response = [0x04, 0x05];
+        let mut response_wire = [0u8; 16];
+        let response_wire_len = encode_wire_frame(&response, &mut response_wire).unwrap();
+        let mut link = FakeBleGattLink::default();
+        link.notifications.push_back(response_wire[..1].to_vec());
+        let mut final_notification = response_wire[1..response_wire_len].to_vec();
+        final_notification.push(0xFF);
+        link.notifications.push_back(final_notification);
+
+        let mut transport = BoardBleGattTransport::<_, 32>::new(endpoint, link);
+        let mut raw_out = [0u8; 16];
+        let response_len = transport
+            .exchange_raw_frame_checked(&request, &mut raw_out)
+            .unwrap();
+        let link = transport.into_inner();
+        let (written_uuid, written_wire) = link.writes.first().unwrap();
+        let mut decoded_request = [0u8; 16];
+        let request_len = decode_wire_frame(written_wire, &mut decoded_request).unwrap();
+
+        assert_eq!(response_len, response.len());
+        assert_eq!(&raw_out[..response_len], response);
+        assert_eq!(written_uuid, WRITE_UUID);
+        assert_eq!(&decoded_request[..request_len], request);
+    }
+
+    #[test]
+    fn rfcomm_transport_exchanges_board_vm_wire_frames() {
+        let endpoint = parse_rfcomm_endpoint("btspp://ESP32-BoardVM:3").unwrap();
+        let request = [0x10, 0x11];
+        let response = [0x12, 0x13, 0x14];
+        let mut response_wire = [0u8; 16];
+        let response_wire_len = encode_wire_frame(&response, &mut response_wire).unwrap();
+        let stream = FakeRfcommStream::new(response_wire[..response_wire_len].to_vec());
+        let mut transport = BoardRfcommTransport::<_, 32>::from_stream(endpoint, stream);
+        let mut raw_out = [0u8; 16];
+
+        let response_len = transport
+            .exchange_raw_frame_checked(&request, &mut raw_out)
+            .unwrap();
+        let stream = transport.into_inner();
+        let mut decoded_request = [0u8; 16];
+        let request_len = decode_wire_frame(&stream.written, &mut decoded_request).unwrap();
+
+        assert_eq!(response_len, response.len());
+        assert_eq!(&raw_out[..response_len], response);
+        assert_eq!(&decoded_request[..request_len], request);
     }
 }
