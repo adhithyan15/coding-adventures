@@ -81,6 +81,18 @@ pub struct ArtifactRevision {
     pub created_at: u64,
 }
 
+/// Metadata-only view of one revision for bounded history reads.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ArtifactRevisionSummary {
+    pub revision_id: String,
+    pub artifact_id: String,
+    pub parent_revision_id: Option<String>,
+    pub metadata: JsonValue,
+    pub created_at: u64,
+    pub body_len: usize,
+    pub content_hash: [u8; 32],
+}
+
 /// Input used when first creating an artifact manifest.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CreateArtifactInput {
@@ -127,6 +139,40 @@ impl ArtifactListOptions {
 
     pub fn with_retention(mut self, retention: ArtifactRetention) -> Self {
         self.retention = Some(retention);
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
+/// Query options for listing revision history without returning opaque bodies.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct ArtifactRevisionListOptions {
+    pub after_revision_id: Option<String>,
+    pub latest_first: bool,
+    pub limit: Option<usize>,
+}
+
+impl ArtifactRevisionListOptions {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn after_revision(mut self, revision_id: impl Into<String>) -> Self {
+        self.after_revision_id = Some(revision_id.into());
+        self
+    }
+
+    pub fn latest_first(mut self) -> Self {
+        self.latest_first = true;
+        self
+    }
+
+    pub fn oldest_first(mut self) -> Self {
+        self.latest_first = false;
         self
     }
 
@@ -255,6 +301,50 @@ impl<S: StorageBackend> ArtifactStore<S> {
             .map(Some)
     }
 
+    pub fn list_revisions(
+        &self,
+        artifact_id: &str,
+        options: ArtifactRevisionListOptions,
+    ) -> Result<Vec<ArtifactRevisionSummary>, StorageError> {
+        validate_id("artifact_id", artifact_id)?;
+        validate_revision_list_options(&options)?;
+        if options.limit == Some(0) {
+            return Ok(Vec::new());
+        }
+        if self.fetch_artifact(artifact_id)?.is_none() {
+            return Err(StorageError::NotFound {
+                namespace: NAMESPACE.to_string(),
+                key: artifact_key(artifact_id),
+            });
+        }
+
+        self.backend.initialize()?;
+        let page = self.backend.list(
+            NAMESPACE,
+            StorageListOptions {
+                prefix: Some(format!("revisions/{artifact_id}/")),
+                recursive: true,
+                page_size: None,
+                cursor: None,
+            },
+        )?;
+        let mut revisions = page
+            .records
+            .iter()
+            .map(|record| decode_revision_summary_from_record(artifact_id, record))
+            .collect::<Result<Vec<_>, _>>()?;
+        revisions.sort_by(|left, right| {
+            left.created_at
+                .cmp(&right.created_at)
+                .then_with(|| left.revision_id.cmp(&right.revision_id))
+        });
+        if options.latest_first {
+            revisions.reverse();
+        }
+        let revisions = window_revision_summaries(revisions, &options)?;
+        Ok(revisions)
+    }
+
     pub fn list_by_collection(&self, collection: &str) -> Result<Vec<Artifact>, StorageError> {
         self.list_artifacts(ArtifactListOptions::new().for_collection(collection))
     }
@@ -368,6 +458,24 @@ fn revision_key(artifact_id: &str, revision_id: &str) -> String {
     format!("revisions/{artifact_id}/{revision_id}.bin")
 }
 
+fn revision_id_from_key(artifact_id: &str, key: &str) -> Result<String, StorageError> {
+    let prefix = format!("revisions/{artifact_id}/");
+    let Some(rest) = key.strip_prefix(&prefix) else {
+        return Err(validation(
+            "revision_key",
+            "revision key had unexpected prefix",
+        ));
+    };
+    let Some(revision_id) = rest.strip_suffix(".bin") else {
+        return Err(validation(
+            "revision_key",
+            "revision key had unexpected suffix",
+        ));
+    };
+    validate_id("revision_id", revision_id)?;
+    Ok(revision_id.to_string())
+}
+
 fn artifact_matches_list_options(artifact: &Artifact, options: &ArtifactListOptions) -> bool {
     if let Some(collection) = options.collection.as_deref() {
         if artifact.collection != collection {
@@ -383,6 +491,15 @@ fn artifact_matches_list_options(artifact: &Artifact, options: &ArtifactListOpti
         .labels
         .iter()
         .all(|label| artifact.labels.iter().any(|candidate| candidate == label))
+}
+
+fn validate_revision_list_options(
+    options: &ArtifactRevisionListOptions,
+) -> Result<(), StorageError> {
+    if let Some(after_revision_id) = options.after_revision_id.as_deref() {
+        validate_id("after_revision_id", after_revision_id)?;
+    }
+    Ok(())
 }
 
 fn artifact_record_metadata(artifact: &Artifact) -> JsonValue {
@@ -513,6 +630,44 @@ fn decode_revision_from_record(
         body: body.to_vec(),
         created_at: required_u64(object, "created_at")?,
     })
+}
+
+fn decode_revision_summary_from_record(
+    artifact_id: &str,
+    record: &storage_core::StorageRecord,
+) -> Result<ArtifactRevisionSummary, StorageError> {
+    let revision_id = revision_id_from_key(artifact_id, &record.key)?;
+    let object = expect_object("revision_metadata", &record.metadata)?;
+    Ok(ArtifactRevisionSummary {
+        revision_id,
+        artifact_id: artifact_id.to_string(),
+        parent_revision_id: optional_string(object, "parent_revision_id")?,
+        metadata: required_value(object, "metadata")?.clone(),
+        created_at: required_u64(object, "created_at")?,
+        body_len: record.body.len(),
+        content_hash: record.content_hash,
+    })
+}
+
+fn window_revision_summaries(
+    revisions: Vec<ArtifactRevisionSummary>,
+    options: &ArtifactRevisionListOptions,
+) -> Result<Vec<ArtifactRevisionSummary>, StorageError> {
+    let start = match options.after_revision_id.as_deref() {
+        Some(after_revision_id) => revisions
+            .iter()
+            .position(|revision| revision.revision_id == after_revision_id)
+            .map(|index| index + 1)
+            .ok_or_else(|| {
+                validation(
+                    "after_revision_id",
+                    format!("revision '{after_revision_id}' was not found"),
+                )
+            })?,
+        None => 0,
+    };
+    let limit = options.limit.unwrap_or(usize::MAX);
+    Ok(revisions.into_iter().skip(start).take(limit).collect())
 }
 
 fn encode_json(value: &JsonValue) -> Result<Vec<u8>, StorageError> {
@@ -821,5 +976,126 @@ mod tests {
             .list_artifacts(ArtifactListOptions::new().with_label("missing"))
             .unwrap();
         assert!(none.is_empty());
+    }
+
+    #[test]
+    fn revision_listing_returns_bounded_metadata_without_bodies() {
+        let store = ArtifactStore::new(InMemoryStorageBackend::new());
+        let _ = store
+            .create_artifact(CreateArtifactInput {
+                artifact_id: "plan".to_string(),
+                collection: "plans".to_string(),
+                name: "Quarterly plan".to_string(),
+                content_type: "text/plain".to_string(),
+                labels: vec!["roadmap".to_string()],
+                provenance: ArtifactProvenance {
+                    session_id: Some("demo".to_string()),
+                    tool_id: Some("artifact.write_revision".to_string()),
+                    job_id: None,
+                    agent_id: Some("chief".to_string()),
+                },
+            })
+            .unwrap();
+
+        for revision_id in ["rev-1", "rev-2", "rev-3"] {
+            let _ = store
+                .append_revision(
+                    "plan",
+                    AppendRevisionInput {
+                        revision_id: revision_id.to_string(),
+                        metadata: JsonValue::Object(vec![(
+                            "label".to_string(),
+                            JsonValue::String(revision_id.to_string()),
+                        )]),
+                        body: revision_id.as_bytes().to_vec(),
+                    },
+                )
+                .unwrap();
+        }
+
+        let all = store
+            .list_revisions("plan", ArtifactRevisionListOptions::new())
+            .unwrap();
+        assert_eq!(
+            all.iter()
+                .map(|revision| {
+                    (
+                        revision.revision_id.as_str(),
+                        revision.parent_revision_id.as_deref(),
+                        revision.body_len,
+                    )
+                })
+                .collect::<Vec<_>>(),
+            vec![
+                ("rev-1", None, 5),
+                ("rev-2", Some("rev-1"), 5),
+                ("rev-3", Some("rev-2"), 5)
+            ]
+        );
+        assert_ne!(all[0].content_hash, all[1].content_hash);
+
+        let latest_window = store
+            .list_revisions(
+                "plan",
+                ArtifactRevisionListOptions::new()
+                    .latest_first()
+                    .after_revision("rev-3")
+                    .with_limit(1),
+            )
+            .unwrap();
+        assert_eq!(
+            latest_window
+                .iter()
+                .map(|revision| revision.revision_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["rev-2"]
+        );
+    }
+
+    #[test]
+    fn revision_listing_rejects_missing_artifacts_and_bad_cursors() {
+        let store = ArtifactStore::new(InMemoryStorageBackend::new());
+        let missing_artifact = store
+            .list_revisions("missing", ArtifactRevisionListOptions::new())
+            .unwrap_err();
+        assert!(matches!(missing_artifact, StorageError::NotFound { .. }));
+
+        let _ = store
+            .create_artifact(CreateArtifactInput {
+                artifact_id: "plan".to_string(),
+                collection: "plans".to_string(),
+                name: "Quarterly plan".to_string(),
+                content_type: "text/plain".to_string(),
+                labels: Vec::new(),
+                provenance: ArtifactProvenance {
+                    session_id: None,
+                    tool_id: None,
+                    job_id: None,
+                    agent_id: None,
+                },
+            })
+            .unwrap();
+        let _ = store
+            .append_revision(
+                "plan",
+                AppendRevisionInput {
+                    revision_id: "rev-1".to_string(),
+                    metadata: JsonValue::Object(vec![]),
+                    body: b"v1".to_vec(),
+                },
+            )
+            .unwrap();
+
+        let missing_cursor = store
+            .list_revisions(
+                "plan",
+                ArtifactRevisionListOptions::new().after_revision("rev-2"),
+            )
+            .unwrap_err();
+        assert!(matches!(missing_cursor, StorageError::Validation { .. }));
+        assert!(store
+            .list_revisions("plan", ArtifactRevisionListOptions::new().with_limit(0))
+            .unwrap()
+            .is_empty());
     }
 }

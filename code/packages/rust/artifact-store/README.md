@@ -11,6 +11,7 @@ bodies so plans, exports, screenshots, and reports can be referenced by ID.
 - `ArtifactRevision` bodies and metadata
 - label and retention updates
 - collection, label, retention, and bounded manifest listing
+- bounded revision-history listing without returning opaque bodies
 
 ## Key layout
 
@@ -24,6 +25,7 @@ bodies so plans, exports, screenshots, and reports can be referenced by ID.
 - `append_revision()`
 - `fetch_latest_revision()`
 - `fetch_revision_by_id()`
+- `list_revisions()`
 - `list_artifacts()`
 - `list_by_collection()`
 - `attach_labels()`
@@ -33,6 +35,11 @@ bodies so plans, exports, screenshots, and reports can be referenced by ID.
 over artifact manifests without fetching revision bodies. Callers can filter by
 collection, require one or more labels, select a retention state, and cap the
 number of returned manifests with `limit`.
+
+`ArtifactRevisionListOptions` gives read-side tools a bounded revision history
+view with oldest-first or latest-first ordering, an optional revision cursor,
+and an optional limit. It returns revision metadata, body length, and content
+hashes without returning the opaque revision bodies.
 
 ## Development
 
