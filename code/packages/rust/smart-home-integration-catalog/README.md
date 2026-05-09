@@ -24,6 +24,8 @@ runtime and Chief of Staff tools a typed catalog for:
   to reusable primitive-family hints
 - primitive backlog planning for prioritizing the shared families needed by a
   rollout wave
+- activation plans that resolve direct integrations, virtual aliases, and
+  standard-backed products into primitive/capability/auth/policy requirements
 - first-party rollout seed entries
 - virtual product aliases that point to real implementations or standards
 

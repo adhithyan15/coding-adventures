@@ -363,6 +363,63 @@ impl PrimitiveBacklogItem {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum IntegrationActivationTarget {
+    Direct,
+    DelegatedIntegration(IntegrationId),
+    DelegatedStandards(Vec<ProtocolFamily>),
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct IntegrationActivationPlan {
+    pub requested_integration_id: IntegrationId,
+    pub display_name: String,
+    pub activation_target: IntegrationActivationTarget,
+    pub implementation_status: ImplementationStatus,
+    pub priority: u8,
+    pub runtime_kind: RuntimeKind,
+    pub required_primitives: Vec<PrimitiveFamily>,
+    pub required_capabilities: Vec<CapabilityId>,
+    pub auth_modes: Vec<AuthMode>,
+    pub discovery_mechanisms: Vec<DiscoveryMechanism>,
+    pub depends_on_integrations: Vec<IntegrationId>,
+    pub policy_surfaces: Vec<IntegrationPolicySurface>,
+    pub highest_policy_tier: PrivilegeTier,
+    pub local_only: bool,
+    pub cloud_required: bool,
+}
+
+impl IntegrationActivationPlan {
+    pub fn requires_human_review(&self) -> bool {
+        self.highest_policy_tier >= PrivilegeTier::HumanApproval
+    }
+
+    pub fn requires_primitive(&self, primitive: PrimitiveFamily) -> bool {
+        self.required_primitives.contains(&primitive)
+    }
+
+    pub fn requires_capability(&self, capability_id: &CapabilityId) -> bool {
+        self.required_capabilities
+            .iter()
+            .any(|candidate| candidate == capability_id)
+    }
+
+    pub fn delegates_to_integration(&self, integration_id: &IntegrationId) -> bool {
+        matches!(
+            &self.activation_target,
+            IntegrationActivationTarget::DelegatedIntegration(target) if target == integration_id
+        )
+    }
+
+    pub fn delegates_to_standard(&self, protocol: &ProtocolFamily) -> bool {
+        matches!(
+            &self.activation_target,
+            IntegrationActivationTarget::DelegatedStandards(standards)
+                if standards.iter().any(|candidate| candidate == protocol)
+        )
+    }
+}
+
 impl IntegrationCatalogEntry {
     pub fn is_virtual(&self) -> bool {
         self.category == IntegrationCategory::VirtualAlias
@@ -1293,6 +1350,60 @@ pub fn primitive_backlog_at_or_before_priority(
             .then_with(|| left.primitive.cmp(&right.primitive))
     });
     backlog
+}
+
+pub fn activation_plan_for_integration(
+    catalog: &[IntegrationCatalogEntry],
+    integration_id: &IntegrationId,
+) -> Option<IntegrationActivationPlan> {
+    find_entry(catalog, integration_id).map(activation_plan_for_entry)
+}
+
+pub fn activation_plans_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+) -> Vec<IntegrationActivationPlan> {
+    entries_at_or_before_priority(catalog, priority)
+        .into_iter()
+        .map(activation_plan_for_entry)
+        .collect()
+}
+
+pub fn activation_plan_for_entry(entry: &IntegrationCatalogEntry) -> IntegrationActivationPlan {
+    let activation_target = if let Some(target) = &entry.virtual_target {
+        IntegrationActivationTarget::DelegatedIntegration(target.clone())
+    } else if !entry.virtual_iot_standards.is_empty() {
+        IntegrationActivationTarget::DelegatedStandards(entry.virtual_iot_standards.clone())
+    } else {
+        IntegrationActivationTarget::Direct
+    };
+    let policy_surfaces = entry.policy_surfaces();
+    let highest_policy_tier = policy_surfaces
+        .iter()
+        .map(|surface| surface.required_tier())
+        .max()
+        .unwrap_or(PrivilegeTier::ReadOnly);
+
+    IntegrationActivationPlan {
+        requested_integration_id: entry.integration_id.clone(),
+        display_name: entry.display_name.clone(),
+        activation_target,
+        implementation_status: entry.implementation_status,
+        priority: entry.priority,
+        runtime_kind: entry.runtime_kind,
+        required_primitives: entry.required_primitives.clone(),
+        required_capabilities: entry.required_capabilities.clone(),
+        auth_modes: entry.auth_modes.clone(),
+        discovery_mechanisms: entry.discovery_mechanisms.clone(),
+        depends_on_integrations: entry.depends_on_integrations.clone(),
+        policy_surfaces,
+        highest_policy_tier,
+        local_only: entry.is_local() && !entry.requires_cloud(),
+        cloud_required: entry.requires_cloud()
+            || entry
+                .discovery_mechanisms
+                .contains(&DiscoveryMechanism::CloudAccount),
+    }
 }
 
 pub fn policy_surfaces_for_entry(entry: &IntegrationCatalogEntry) -> Vec<IntegrationPolicySurface> {
@@ -2235,6 +2346,70 @@ mod tests {
         assert!(radio.includes_integration(&IntegrationId::trusted("thread")));
         assert!(mqtt.includes_integration(&IntegrationId::trusted("mqtt")));
         assert!(mqtt.includes_integration(&IntegrationId::trusted("tasmota")));
+    }
+
+    #[test]
+    fn activation_plans_resolve_direct_virtual_and_standard_targets() {
+        let catalog = first_party_catalog();
+        let hue =
+            activation_plan_for_integration(&catalog, &IntegrationId::trusted("hue")).unwrap();
+        let tapo =
+            activation_plan_for_integration(&catalog, &IntegrationId::trusted("tplink_tapo"))
+                .unwrap();
+        let ultraloq =
+            activation_plan_for_integration(&catalog, &IntegrationId::trusted("ultraloq")).unwrap();
+
+        assert_eq!(hue.activation_target, IntegrationActivationTarget::Direct);
+        assert!(hue.local_only);
+        assert!(hue.requires_primitive(PrimitiveFamily::LocalPairing));
+
+        assert!(tapo.delegates_to_integration(&IntegrationId::trusted("tplink")));
+        assert_eq!(tapo.runtime_kind, RuntimeKind::InProcessRust);
+
+        assert!(ultraloq.delegates_to_standard(&ProtocolFamily::ZWave));
+        assert!(ultraloq.requires_primitive(PrimitiveFamily::CalculatedState));
+    }
+
+    #[test]
+    fn activation_plans_capture_review_and_cloud_boundaries() {
+        let catalog = first_party_catalog();
+        let zwave =
+            activation_plan_for_integration(&catalog, &IntegrationId::trusted("zwave")).unwrap();
+        let ring =
+            activation_plan_for_integration(&catalog, &IntegrationId::trusted("ring")).unwrap();
+
+        assert!(zwave.requires_human_review());
+        assert_eq!(zwave.highest_policy_tier, PrivilegeTier::HighRisk);
+        assert!(zwave
+            .policy_surfaces
+            .contains(&IntegrationPolicySurface::EntryAccess));
+        assert!(zwave.requires_primitive(PrimitiveFamily::RadioNetworkKey));
+        assert!(zwave.requires_capability(&CapabilityId::trusted("smart_home.command.lock")));
+
+        assert!(ring.cloud_required);
+        assert!(ring.requires_human_review());
+        assert!(ring
+            .policy_surfaces
+            .contains(&IntegrationPolicySurface::CredentialedCloud));
+    }
+
+    #[test]
+    fn activation_plans_follow_rollout_priority_waves() {
+        let catalog = first_party_catalog();
+        let early = activation_plans_at_or_before_priority(&catalog, 1);
+
+        assert!(early
+            .iter()
+            .any(|plan| plan.requested_integration_id == IntegrationId::trusted("hue")));
+        assert!(early
+            .iter()
+            .any(|plan| plan.requested_integration_id == IntegrationId::trusted("mqtt")));
+        assert!(!early
+            .iter()
+            .any(|plan| plan.requested_integration_id == IntegrationId::trusted("tuya")));
+        assert!(early.iter().any(|plan| plan
+            .depends_on_integrations
+            .contains(&IntegrationId::trusted("mqtt"))));
     }
 
     #[test]
