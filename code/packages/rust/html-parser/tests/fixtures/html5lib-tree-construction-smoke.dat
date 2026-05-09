@@ -508,3 +508,16 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <head>
 |   <body>
 |     "<"
+
+#data
+<#
+#errors
+(1,1): expected-tag-name
+(1,1): expected-doctype-but-got-chars
+#new-errors
+(1:2) invalid-first-character-of-tag-name
+#document
+| <html>
+|   <head>
+|   <body>
+|     "<#"
