@@ -458,3 +458,22 @@ Line1<br>Line2<br>Line3<br>Line4
 |                 <i>
 |                   "please!"
 |             <!-- X -->
+
+#data
+<!DOCTYPE html><li>hello<li>world<ul>how<li>do</ul>you</body><!--do-->
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <li>
+|       "hello"
+|     <li>
+|       "world"
+|       <ul>
+|         "how"
+|         <li>
+|           "do"
+|       "you"
+|   <!-- do -->
