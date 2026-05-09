@@ -10,6 +10,7 @@ use smart_home_core::{
     CapabilityId, EntityKind, IntegrationId, PrivilegeTier, ProtocolFamily, RuntimeKind,
     ToolDescriptor, ToolSideEffects,
 };
+use std::collections::BTreeMap;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationCategory {
@@ -344,6 +345,22 @@ pub struct IntegrationCatalogEntry {
     pub required_primitives: Vec<PrimitiveFamily>,
     pub source_refs: Vec<SourceReference>,
     pub notes: Vec<String>,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PrimitiveBacklogItem {
+    pub primitive: PrimitiveFamily,
+    pub highest_priority: u8,
+    pub entry_count: usize,
+    pub integration_ids: Vec<IntegrationId>,
+}
+
+impl PrimitiveBacklogItem {
+    pub fn includes_integration(&self, integration_id: &IntegrationId) -> bool {
+        self.integration_ids
+            .iter()
+            .any(|candidate| candidate == integration_id)
+    }
 }
 
 impl IntegrationCatalogEntry {
@@ -1236,6 +1253,48 @@ pub fn entries_at_or_before_priority(
         .collect()
 }
 
+pub fn primitive_backlog(catalog: &[IntegrationCatalogEntry]) -> Vec<PrimitiveBacklogItem> {
+    primitive_backlog_at_or_before_priority(catalog, u8::MAX)
+}
+
+pub fn primitive_backlog_at_or_before_priority(
+    catalog: &[IntegrationCatalogEntry],
+    priority: u8,
+) -> Vec<PrimitiveBacklogItem> {
+    let mut by_primitive: BTreeMap<PrimitiveFamily, (u8, Vec<IntegrationId>)> = BTreeMap::new();
+
+    for entry in catalog.iter().filter(|entry| entry.priority <= priority) {
+        for primitive in &entry.required_primitives {
+            let (highest_priority, integration_ids) = by_primitive
+                .entry(*primitive)
+                .or_insert((entry.priority, Vec::new()));
+            *highest_priority = (*highest_priority).min(entry.priority);
+            if !integration_ids.contains(&entry.integration_id) {
+                integration_ids.push(entry.integration_id.clone());
+            }
+        }
+    }
+
+    let mut backlog = by_primitive
+        .into_iter()
+        .map(
+            |(primitive, (highest_priority, integration_ids))| PrimitiveBacklogItem {
+                primitive,
+                highest_priority,
+                entry_count: integration_ids.len(),
+                integration_ids,
+            },
+        )
+        .collect::<Vec<_>>();
+    backlog.sort_by(|left, right| {
+        left.highest_priority
+            .cmp(&right.highest_priority)
+            .then_with(|| right.entry_count.cmp(&left.entry_count))
+            .then_with(|| left.primitive.cmp(&right.primitive))
+    });
+    backlog
+}
+
 pub fn policy_surfaces_for_entry(entry: &IntegrationCatalogEntry) -> Vec<IntegrationPolicySurface> {
     let mut surfaces = Vec::new();
 
@@ -1838,12 +1897,14 @@ fn protocol_primitives(protocol: &ProtocolFamily) -> &'static [PrimitiveFamily] 
             PrimitiveFamily::SerialController,
             PrimitiveFamily::Radio802154,
             PrimitiveFamily::RadioNetworkKey,
+            PrimitiveFamily::Supervision,
         ],
         ProtocolFamily::ZWave => &[
             PrimitiveFamily::Usb,
             PrimitiveFamily::SerialController,
             PrimitiveFamily::ZWaveSerialApi,
             PrimitiveFamily::RadioNetworkKey,
+            PrimitiveFamily::Supervision,
         ],
         ProtocolFamily::Thread => &[
             PrimitiveFamily::Usb,
@@ -1851,17 +1912,20 @@ fn protocol_primitives(protocol: &ProtocolFamily) -> &'static [PrimitiveFamily] 
             PrimitiveFamily::Radio802154,
             PrimitiveFamily::Mdns,
             PrimitiveFamily::RadioNetworkKey,
+            PrimitiveFamily::Supervision,
         ],
         ProtocolFamily::Matter => &[
             PrimitiveFamily::Mdns,
             PrimitiveFamily::MatterCommissioning,
             PrimitiveFamily::CertificatePairing,
             PrimitiveFamily::LocalPairing,
+            PrimitiveFamily::Supervision,
         ],
         ProtocolFamily::Mqtt => &[
             PrimitiveFamily::Mqtt,
             PrimitiveFamily::MqttCredentials,
             PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::Supervision,
         ],
         ProtocolFamily::Vendor(_) => &[PrimitiveFamily::LocalHttp, PrimitiveFamily::CommandMapping],
     }
@@ -2141,6 +2205,36 @@ mod tests {
         assert!(!early
             .iter()
             .any(|entry| entry.integration_id == IntegrationId::trusted("tuya")));
+    }
+
+    #[test]
+    fn primitive_backlog_ranks_rollout_wave_foundations() {
+        let catalog = first_party_catalog();
+        let backlog = primitive_backlog_at_or_before_priority(&catalog, 1);
+        let supervision = backlog
+            .iter()
+            .find(|item| item.primitive == PrimitiveFamily::Supervision)
+            .unwrap();
+        let radio = backlog
+            .iter()
+            .find(|item| item.primitive == PrimitiveFamily::Radio802154)
+            .unwrap();
+        let mqtt = backlog
+            .iter()
+            .find(|item| item.primitive == PrimitiveFamily::Mqtt)
+            .unwrap();
+
+        assert_eq!(backlog[0].highest_priority, 0);
+        assert_eq!(supervision.highest_priority, 0);
+        assert!(supervision.entry_count >= 8);
+        assert!(supervision.includes_integration(&IntegrationId::trusted("hue")));
+        assert!(supervision.includes_integration(&IntegrationId::trusted("zigbee")));
+        assert!(supervision.includes_integration(&IntegrationId::trusted("zwave")));
+        assert!(supervision.includes_integration(&IntegrationId::trusted("thread")));
+        assert!(radio.includes_integration(&IntegrationId::trusted("zigbee")));
+        assert!(radio.includes_integration(&IntegrationId::trusted("thread")));
+        assert!(mqtt.includes_integration(&IntegrationId::trusted("mqtt")));
+        assert!(mqtt.includes_integration(&IntegrationId::trusted("tasmota")));
     }
 
     #[test]
