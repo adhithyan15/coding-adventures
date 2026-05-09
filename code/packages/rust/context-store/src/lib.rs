@@ -194,6 +194,76 @@ pub struct ContextSnapshot {
     pub artifact_refs: Vec<String>,
 }
 
+/// Portable ordering for bounded snapshot list/read tools.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum SnapshotListSort {
+    #[default]
+    SnapshotId,
+    BasisEntryId,
+    TokenEstimateAsc,
+    TokenEstimateDesc,
+}
+
+/// Options for listing compaction snapshots without reading transcript bodies.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SnapshotListOptions {
+    pub basis_entry_id: Option<String>,
+    pub summary_refs: Vec<String>,
+    pub memory_refs: Vec<String>,
+    pub artifact_refs: Vec<String>,
+    pub sort: SnapshotListSort,
+    pub limit: Option<usize>,
+}
+
+impl Default for SnapshotListOptions {
+    fn default() -> Self {
+        Self {
+            basis_entry_id: None,
+            summary_refs: Vec::new(),
+            memory_refs: Vec::new(),
+            artifact_refs: Vec::new(),
+            sort: SnapshotListSort::SnapshotId,
+            limit: None,
+        }
+    }
+}
+
+impl SnapshotListOptions {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_basis_entry(mut self, basis_entry_id: impl Into<String>) -> Self {
+        self.basis_entry_id = Some(basis_entry_id.into());
+        self
+    }
+
+    pub fn with_summary_ref(mut self, summary_ref: impl Into<String>) -> Self {
+        self.summary_refs.push(summary_ref.into());
+        self
+    }
+
+    pub fn with_memory_ref(mut self, memory_ref: impl Into<String>) -> Self {
+        self.memory_refs.push(memory_ref.into());
+        self
+    }
+
+    pub fn with_artifact_ref(mut self, artifact_ref: impl Into<String>) -> Self {
+        self.artifact_refs.push(artifact_ref.into());
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: SnapshotListSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn limited_to(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
 /// Input used when creating a new session.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CreateSessionInput {
@@ -466,6 +536,44 @@ impl<S: StorageBackend> ContextStore<S> {
             return Ok(None);
         };
         decode_snapshot_record(&record.body).map(Some)
+    }
+
+    /// List compaction snapshots for one session with portable filters.
+    pub fn list_snapshots(
+        &self,
+        session_id: &str,
+        options: SnapshotListOptions,
+    ) -> Result<Vec<ContextSnapshot>, StorageError> {
+        validate_id("session_id", session_id)?;
+        validate_snapshot_list_options(&options)?;
+
+        self.backend.initialize()?;
+        let page = self.backend.list(
+            NAMESPACE,
+            StorageListOptions {
+                prefix: Some(format!("snapshots/{session_id}/")),
+                recursive: true,
+                page_size: None,
+                cursor: None,
+            },
+        )?;
+
+        let mut snapshots = page
+            .records
+            .iter()
+            .map(|record| decode_snapshot_record(&record.body))
+            .filter(|result| {
+                result
+                    .as_ref()
+                    .map(|snapshot| snapshot_matches_list_options(snapshot, &options))
+                    .unwrap_or(true)
+            })
+            .collect::<Result<Vec<_>, _>>()?;
+        sort_snapshots(&mut snapshots, options.sort);
+        if let Some(limit) = options.limit {
+            snapshots.truncate(limit);
+        }
+        Ok(snapshots)
     }
 
     /// Create a compaction snapshot that covers all entries up to and including
@@ -881,6 +989,19 @@ fn validate_session_list_options(options: &SessionListOptions) -> Result<(), Sto
     Ok(())
 }
 
+fn validate_snapshot_list_options(options: &SnapshotListOptions) -> Result<(), StorageError> {
+    if let Some(basis_entry_id) = options.basis_entry_id.as_deref() {
+        validate_id("basis_entry_id", basis_entry_id)?;
+    }
+    validate_id_list("summary_refs", &options.summary_refs)?;
+    validate_id_list("memory_refs", &options.memory_refs)?;
+    validate_id_list("artifact_refs", &options.artifact_refs)?;
+    if options.limit == Some(0) {
+        return Err(validation("limit", "must be greater than zero"));
+    }
+    Ok(())
+}
+
 fn session_matches_list_options(session: &ContextSession, options: &SessionListOptions) -> bool {
     if let Some(owner_id) = options.owner_id.as_deref() {
         if session.owner_id != owner_id {
@@ -888,6 +1009,39 @@ fn session_matches_list_options(session: &ContextSession, options: &SessionListO
         }
     }
     if !options.statuses.is_empty() && !options.statuses.contains(&session.status) {
+        return false;
+    }
+    true
+}
+
+fn snapshot_matches_list_options(
+    snapshot: &ContextSnapshot,
+    options: &SnapshotListOptions,
+) -> bool {
+    if let Some(basis_entry_id) = options.basis_entry_id.as_deref() {
+        if snapshot.basis_entry_id != basis_entry_id {
+            return false;
+        }
+    }
+    if !options
+        .summary_refs
+        .iter()
+        .all(|required| snapshot.summary_refs.contains(required))
+    {
+        return false;
+    }
+    if !options
+        .memory_refs
+        .iter()
+        .all(|required| snapshot.memory_refs.contains(required))
+    {
+        return false;
+    }
+    if !options
+        .artifact_refs
+        .iter()
+        .all(|required| snapshot.artifact_refs.contains(required))
+    {
         return false;
     }
     true
@@ -914,6 +1068,30 @@ fn sort_sessions(sessions: &mut [ContextSession], sort: SessionListSort) {
             left.title
                 .cmp(&right.title)
                 .then_with(|| left.session_id.cmp(&right.session_id))
+        }),
+    }
+}
+
+fn sort_snapshots(snapshots: &mut [ContextSnapshot], sort: SnapshotListSort) {
+    match sort {
+        SnapshotListSort::SnapshotId => {
+            snapshots.sort_by(|left, right| left.snapshot_id.cmp(&right.snapshot_id))
+        }
+        SnapshotListSort::BasisEntryId => snapshots.sort_by(|left, right| {
+            left.basis_entry_id
+                .cmp(&right.basis_entry_id)
+                .then_with(|| left.snapshot_id.cmp(&right.snapshot_id))
+        }),
+        SnapshotListSort::TokenEstimateAsc => snapshots.sort_by(|left, right| {
+            left.token_estimate
+                .cmp(&right.token_estimate)
+                .then_with(|| left.snapshot_id.cmp(&right.snapshot_id))
+        }),
+        SnapshotListSort::TokenEstimateDesc => snapshots.sort_by(|left, right| {
+            right
+                .token_estimate
+                .cmp(&left.token_estimate)
+                .then_with(|| left.snapshot_id.cmp(&right.snapshot_id))
         }),
     }
 }
@@ -1225,6 +1403,124 @@ mod tests {
 
         let session = store.open_session("demo").unwrap().unwrap();
         assert_eq!(session.head_pointer, Some("snap-1".to_string()));
+    }
+
+    #[test]
+    fn list_snapshots_supports_refs_sort_and_limit() {
+        let store = ContextStore::new(InMemoryStorageBackend::new());
+        let _ = store
+            .create_session(CreateSessionInput {
+                session_id: "demo".to_string(),
+                owner_id: "chief".to_string(),
+                title: "Planning".to_string(),
+            })
+            .unwrap();
+
+        for (index, entry_id) in ["entry-1", "entry-2", "entry-3"].iter().enumerate() {
+            let _ = store
+                .append_entry(
+                    "demo",
+                    AppendEntryInput {
+                        entry_id: (*entry_id).to_string(),
+                        kind: ContextEntryKind::Summary,
+                        timestamp: Some((index as u64 + 1) * 10),
+                        metadata: object(&[]),
+                        body: JsonValue::String((*entry_id).to_string()),
+                    },
+                )
+                .unwrap();
+        }
+
+        let _ = store
+            .create_snapshot(
+                "demo",
+                CreateSnapshotInput {
+                    snapshot_id: "snap-small".to_string(),
+                    basis_entry_id: "entry-1".to_string(),
+                    token_estimate: 10,
+                    included_entry_ids: vec!["entry-1".to_string()],
+                    summary_refs: vec!["summary-1".to_string()],
+                    memory_refs: vec!["memory-shared".to_string()],
+                    artifact_refs: vec![],
+                },
+            )
+            .unwrap();
+        let _ = store
+            .create_snapshot(
+                "demo",
+                CreateSnapshotInput {
+                    snapshot_id: "snap-large".to_string(),
+                    basis_entry_id: "entry-3".to_string(),
+                    token_estimate: 30,
+                    included_entry_ids: vec![
+                        "entry-1".to_string(),
+                        "entry-2".to_string(),
+                        "entry-3".to_string(),
+                    ],
+                    summary_refs: vec!["summary-2".to_string()],
+                    memory_refs: vec!["memory-shared".to_string(), "memory-new".to_string()],
+                    artifact_refs: vec!["artifact-plan".to_string()],
+                },
+            )
+            .unwrap();
+
+        let shared_memory = store
+            .list_snapshots(
+                "demo",
+                SnapshotListOptions::new()
+                    .with_memory_ref("memory-shared")
+                    .sorted_by(SnapshotListSort::TokenEstimateDesc)
+                    .limited_to(1),
+            )
+            .unwrap();
+        assert_eq!(
+            shared_memory
+                .iter()
+                .map(|snapshot| snapshot.snapshot_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["snap-large"]
+        );
+
+        let artifact_snapshots = store
+            .list_snapshots(
+                "demo",
+                SnapshotListOptions::new()
+                    .with_summary_ref("summary-2")
+                    .with_artifact_ref("artifact-plan"),
+            )
+            .unwrap();
+        assert_eq!(
+            artifact_snapshots
+                .iter()
+                .map(|snapshot| snapshot.basis_entry_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["entry-3"]
+        );
+    }
+
+    #[test]
+    fn list_snapshots_rejects_bad_filters() {
+        let store = ContextStore::new(InMemoryStorageBackend::new());
+        let _ = store
+            .create_session(CreateSessionInput {
+                session_id: "demo".to_string(),
+                owner_id: "chief".to_string(),
+                title: "Planning".to_string(),
+            })
+            .unwrap();
+
+        let bad_ref = store
+            .list_snapshots(
+                "demo",
+                SnapshotListOptions::new().with_summary_ref("bad ref"),
+            )
+            .unwrap_err();
+        let zero_limit = store
+            .list_snapshots("demo", SnapshotListOptions::new().limited_to(0))
+            .unwrap_err();
+
+        assert!(matches!(bad_ref, StorageError::Validation { .. }));
+        assert!(matches!(zero_limit, StorageError::Validation { .. }));
     }
 
     #[test]

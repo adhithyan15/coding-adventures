@@ -12,6 +12,7 @@ Chief of Staff runtime needs.
 - `ContextSnapshot` checkpoints for compaction/resume
 - compare-and-swap session updates on top of `storage-core`
 - bounded session header listing by owner, status, sort, and limit
+- bounded snapshot listing by basis entry, refs, sort, and limit
 
 ## Key layout
 
@@ -28,6 +29,7 @@ Chief of Staff runtime needs.
 - `fetch_entries()`
 - `fetch_ordered_entries()`
 - `create_snapshot()`
+- `list_snapshots()`
 - `fetch_latest_snapshot()`
 - `compact_before_entry()`
 - `archive_session()`

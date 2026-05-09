@@ -14,5 +14,7 @@ All notable changes to this package will be documented in this file.
   positive limit validation for D18D `context.read_entries` callers
 - Bounded session header listing by owner, lifecycle status, sort order, and
   positive limit for D18D `context.list_sessions` callers
+- Bounded snapshot listing by basis entry, linked summary/memory/artifact refs,
+  sort order, and positive limit for D18A/D18D compaction inspection callers
 - JSON encoding/decoding on top of `storage-core`
 - Unit tests using `storage-core::InMemoryStorageBackend`
