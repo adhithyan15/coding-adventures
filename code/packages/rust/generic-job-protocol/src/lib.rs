@@ -39,6 +39,11 @@ impl<T> JobRequest<T> {
         self.metadata = metadata;
         self
     }
+
+    pub fn validate_envelope(&self) -> Result<(), JobValidationError> {
+        validate_required_token("id", &self.id)?;
+        self.metadata.validate()
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -70,6 +75,11 @@ impl<T> JobResponse<T> {
     pub fn with_metadata(mut self, metadata: JobMetadata) -> Self {
         self.metadata = metadata;
         self
+    }
+
+    pub fn validate_envelope(&self) -> Result<(), JobValidationError> {
+        validate_required_token("id", &self.id)?;
+        self.metadata.validate()
     }
 }
 
@@ -110,6 +120,21 @@ impl Default for JobMetadata {
 }
 
 impl JobMetadata {
+    pub fn with_created_at_ms(mut self, created_at_ms: u64) -> Self {
+        self.created_at_ms = created_at_ms;
+        self
+    }
+
+    pub fn with_deadline_at_ms(mut self, deadline_at_ms: u64) -> Self {
+        self.deadline_at_ms = Some(deadline_at_ms);
+        self
+    }
+
+    pub fn with_priority(mut self, priority: i32) -> Self {
+        self.priority = priority;
+        self
+    }
+
     pub fn with_affinity_key(mut self, affinity_key: impl Into<String>) -> Self {
         self.affinity_key = Some(affinity_key.into());
         self
@@ -119,7 +144,92 @@ impl JobMetadata {
         self.sequence = Some(sequence);
         self
     }
+
+    pub fn with_attempt(mut self, attempt: u32) -> Self {
+        self.attempt = attempt;
+        self
+    }
+
+    pub fn next_attempt(&self) -> Self {
+        let mut next = self.clone();
+        next.attempt = next.attempt.saturating_add(1);
+        next
+    }
+
+    pub fn with_trace_id(mut self, trace_id: impl Into<String>) -> Self {
+        self.trace_id = Some(trace_id.into());
+        self
+    }
+
+    pub fn with_tag(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
+        self.tags.insert(key.into(), value.into());
+        self
+    }
+
+    pub fn is_expired_at(&self, now_ms: u64) -> bool {
+        self.deadline_at_ms
+            .is_some_and(|deadline_at_ms| now_ms >= deadline_at_ms)
+    }
+
+    pub fn remaining_deadline_ms_at(&self, now_ms: u64) -> Option<u64> {
+        self.deadline_at_ms
+            .map(|deadline_at_ms| deadline_at_ms.saturating_sub(now_ms))
+    }
+
+    pub fn validate(&self) -> Result<(), JobValidationError> {
+        if let Some(deadline_at_ms) = self.deadline_at_ms {
+            if deadline_at_ms < self.created_at_ms {
+                return Err(JobValidationError::DeadlineBeforeCreated {
+                    created_at_ms: self.created_at_ms,
+                    deadline_at_ms,
+                });
+            }
+        }
+        if let Some(affinity_key) = self.affinity_key.as_deref() {
+            validate_required_token("affinity_key", affinity_key)?;
+        }
+        if let Some(trace_id) = self.trace_id.as_deref() {
+            validate_required_token("trace_id", trace_id)?;
+        }
+        for (key, value) in &self.tags {
+            validate_required_token("tag_key", key)?;
+            validate_single_line("tag_value", value)?;
+        }
+        Ok(())
+    }
 }
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum JobValidationError {
+    EmptyField {
+        field: &'static str,
+    },
+    MultilineField {
+        field: &'static str,
+    },
+    DeadlineBeforeCreated {
+        created_at_ms: u64,
+        deadline_at_ms: u64,
+    },
+}
+
+impl fmt::Display for JobValidationError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::EmptyField { field } => write!(f, "{field} must not be empty"),
+            Self::MultilineField { field } => write!(f, "{field} must be single-line"),
+            Self::DeadlineBeforeCreated {
+                created_at_ms,
+                deadline_at_ms,
+            } => write!(
+                f,
+                "deadline_at_ms {deadline_at_ms} must be greater than or equal to created_at_ms {created_at_ms}"
+            ),
+        }
+    }
+}
+
+impl std::error::Error for JobValidationError {}
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "status", rename_all = "snake_case", deny_unknown_fields)]
@@ -355,6 +465,21 @@ fn validate_frame_header<T>(
     Ok(())
 }
 
+fn validate_required_token(field: &'static str, value: &str) -> Result<(), JobValidationError> {
+    if value.trim().is_empty() {
+        return Err(JobValidationError::EmptyField { field });
+    }
+    validate_single_line(field, value)
+}
+
+fn validate_single_line(field: &'static str, value: &str) -> Result<(), JobValidationError> {
+    if value.contains('\n') || value.contains('\r') {
+        Err(JobValidationError::MultilineField { field })
+    } else {
+        Ok(())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -384,6 +509,69 @@ mod tests {
             decode_request_json_line(&encoded).expect("decode request");
 
         assert_eq!(decoded, request);
+    }
+
+    #[test]
+    fn metadata_helpers_track_deadlines_attempts_and_tags() {
+        let metadata = JobMetadata::default()
+            .with_created_at_ms(100)
+            .with_deadline_at_ms(250)
+            .with_priority(10)
+            .with_attempt(2)
+            .with_trace_id("trace-1")
+            .with_affinity_key("device-7")
+            .with_sequence(42)
+            .with_tag("runtime", "rust");
+
+        assert_eq!(metadata.priority, 10);
+        assert_eq!(metadata.attempt, 2);
+        assert_eq!(metadata.tags.get("runtime"), Some(&"rust".to_string()));
+        assert!(!metadata.is_expired_at(249));
+        assert!(metadata.is_expired_at(250));
+        assert_eq!(metadata.remaining_deadline_ms_at(240), Some(10));
+        assert_eq!(metadata.remaining_deadline_ms_at(260), Some(0));
+        assert_eq!(metadata.next_attempt().attempt, 3);
+        metadata.validate().unwrap();
+    }
+
+    #[test]
+    fn envelope_validation_rejects_empty_ids_and_bad_metadata() {
+        let request = JobRequest::new(
+            "",
+            EchoPayload {
+                text: "hello".to_string(),
+            },
+        );
+        assert!(matches!(
+            request.validate_envelope(),
+            Err(JobValidationError::EmptyField { field: "id" })
+        ));
+
+        let response = JobResponse::ok(
+            "job-1",
+            EchoPayload {
+                text: "world".to_string(),
+            },
+        )
+        .with_metadata(JobMetadata::default().with_trace_id("trace\nbad"));
+        assert!(matches!(
+            response.validate_envelope(),
+            Err(JobValidationError::MultilineField { field: "trace_id" })
+        ));
+
+        let deadline_before_created = JobMetadata::default()
+            .with_created_at_ms(200)
+            .with_deadline_at_ms(100);
+        assert!(matches!(
+            deadline_before_created.validate(),
+            Err(JobValidationError::DeadlineBeforeCreated { .. })
+        ));
+
+        let bad_tag = JobMetadata::default().with_tag("", "value");
+        assert!(matches!(
+            bad_tag.validate(),
+            Err(JobValidationError::EmptyField { field: "tag_key" })
+        ));
     }
 
     #[test]
