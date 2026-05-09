@@ -575,6 +575,50 @@ impl JobStatus {
     }
 }
 
+/// Aggregate counts for a bounded D18C job-status read.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub struct JobStatusSummary {
+    pub total: usize,
+    pub missing: usize,
+    pub installed: usize,
+    pub running: usize,
+    pub disabled: usize,
+    pub failed: usize,
+    pub enabled: usize,
+    pub with_last_run: usize,
+    pub failed_last_runs: usize,
+    pub next_run_known: usize,
+}
+
+impl JobStatusSummary {
+    pub fn record(&mut self, status: &JobStatus) {
+        self.total += 1;
+        match status.status {
+            JobStatusKind::Missing => self.missing += 1,
+            JobStatusKind::Installed => self.installed += 1,
+            JobStatusKind::Running => self.running += 1,
+            JobStatusKind::Disabled => self.disabled += 1,
+            JobStatusKind::Failed => self.failed += 1,
+        }
+        if status.enabled {
+            self.enabled += 1;
+        }
+        if let Some(last_run) = &status.last_run {
+            self.with_last_run += 1;
+            if !last_run.exit_status.is_success() {
+                self.failed_last_runs += 1;
+            }
+        }
+        if status.next_run_hint.is_some() {
+            self.next_run_known += 1;
+        }
+    }
+
+    pub fn has_runtime_failures(self) -> bool {
+        self.failed > 0 || self.failed_last_runs > 0
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum InstalledJobSort {
     JobId,
@@ -855,6 +899,17 @@ where
     }
 
     results
+}
+
+pub fn summarize_job_statuses<'a, I>(statuses: I) -> JobStatusSummary
+where
+    I: IntoIterator<Item = &'a JobStatus>,
+{
+    let mut summary = JobStatusSummary::default();
+    for status in statuses {
+        summary.record(status);
+    }
+    summary
 }
 
 /// Coarse outcome of one job run.
@@ -1997,6 +2052,24 @@ mod tests {
                 next_run_hint: None,
             },
         ];
+        let summary = summarize_job_statuses(&statuses);
+        assert_eq!(
+            summary,
+            JobStatusSummary {
+                total: 3,
+                missing: 0,
+                installed: 1,
+                running: 0,
+                disabled: 1,
+                failed: 1,
+                enabled: 2,
+                with_last_run: 2,
+                failed_last_runs: 1,
+                next_run_known: 2,
+            }
+        );
+        assert!(summary.has_runtime_failures());
+
         let failed_query = JobStatusQuery::new()
             .enabled(true)
             .has_last_run(true)
