@@ -14,6 +14,8 @@ runtime and Chief of Staff tools a typed catalog for:
 - required primitive-family hints
 - required capability hints
 - target entity kind hints
+- computed D21/D18D policy surfaces for privacy, credentials, cloud accounts,
+  local actuation, entry access, radio networks, and infrastructure control
 - read-only D18D tool descriptors for listing/describing integrations and
   primitive families
 - first-party rollout seed entries

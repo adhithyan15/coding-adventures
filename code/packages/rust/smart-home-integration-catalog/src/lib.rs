@@ -177,6 +177,49 @@ impl PrimitiveFamily {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum IntegrationPolicySurface {
+    LocalActuation,
+    EntryAccess,
+    ClimateControl,
+    CameraMedia,
+    EnergyManagement,
+    CredentialLease,
+    CredentialedCloud,
+    RadioNetworkManagement,
+    NetworkInfrastructure,
+}
+
+impl IntegrationPolicySurface {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::LocalActuation => "local_actuation",
+            Self::EntryAccess => "entry_access",
+            Self::ClimateControl => "climate_control",
+            Self::CameraMedia => "camera_media",
+            Self::EnergyManagement => "energy_management",
+            Self::CredentialLease => "credential_lease",
+            Self::CredentialedCloud => "credentialed_cloud",
+            Self::RadioNetworkManagement => "radio_network_management",
+            Self::NetworkInfrastructure => "network_infrastructure",
+        }
+    }
+
+    pub fn required_tier(self) -> PrivilegeTier {
+        match self {
+            Self::EntryAccess => PrivilegeTier::HighRisk,
+            Self::LocalActuation => PrivilegeTier::LowRisk,
+            Self::ClimateControl
+            | Self::CameraMedia
+            | Self::EnergyManagement
+            | Self::CredentialLease
+            | Self::CredentialedCloud
+            | Self::RadioNetworkManagement
+            | Self::NetworkInfrastructure => PrivilegeTier::HumanApproval,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum IntegrationCatalogTool {
     ListIntegrations,
     DescribeIntegration,
@@ -271,6 +314,22 @@ impl IntegrationCatalogEntry {
 
     pub fn requires_primitive(&self, primitive: PrimitiveFamily) -> bool {
         self.required_primitives.contains(&primitive)
+    }
+
+    pub fn policy_surfaces(&self) -> Vec<IntegrationPolicySurface> {
+        policy_surfaces_for_entry(self)
+    }
+
+    pub fn has_policy_surface(&self, surface: IntegrationPolicySurface) -> bool {
+        self.policy_surfaces().contains(&surface)
+    }
+
+    pub fn highest_policy_tier(&self) -> PrivilegeTier {
+        self.policy_surfaces()
+            .into_iter()
+            .map(IntegrationPolicySurface::required_tier)
+            .max()
+            .unwrap_or(PrivilegeTier::ReadOnly)
     }
 }
 
@@ -866,6 +925,16 @@ pub fn entries_requiring_primitive(
         .collect()
 }
 
+pub fn entries_with_policy_surface(
+    catalog: &[IntegrationCatalogEntry],
+    surface: IntegrationPolicySurface,
+) -> Vec<&IntegrationCatalogEntry> {
+    catalog
+        .iter()
+        .filter(|entry| entry.has_policy_surface(surface))
+        .collect()
+}
+
 pub fn entries_at_or_before_priority(
     catalog: &[IntegrationCatalogEntry],
     priority: u8,
@@ -874,6 +943,76 @@ pub fn entries_at_or_before_priority(
         .iter()
         .filter(|entry| entry.priority <= priority)
         .collect()
+}
+
+pub fn policy_surfaces_for_entry(entry: &IntegrationCatalogEntry) -> Vec<IntegrationPolicySurface> {
+    let mut surfaces = Vec::new();
+
+    if entry.required_capabilities.iter().any(is_local_actuator) {
+        surfaces.push(IntegrationPolicySurface::LocalActuation);
+    }
+    if entry
+        .required_capabilities
+        .contains(&CapabilityId::trusted("smart_home.command.lock"))
+        || entry.target_entity_kinds.contains(&EntityKind::Lock)
+    {
+        surfaces.push(IntegrationPolicySurface::EntryAccess);
+    }
+    if entry
+        .required_capabilities
+        .contains(&CapabilityId::trusted("smart_home.command.climate"))
+        || entry.target_entity_kinds.contains(&EntityKind::Thermostat)
+    {
+        surfaces.push(IntegrationPolicySurface::ClimateControl);
+    }
+    if entry.category == IntegrationCategory::CameraMedia
+        || entry
+            .required_primitives
+            .contains(&PrimitiveFamily::CameraMedia)
+        || entry
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.command.camera"))
+    {
+        surfaces.push(IntegrationPolicySurface::CameraMedia);
+    }
+    if entry.category == IntegrationCategory::EnergyClimate
+        || entry
+            .required_primitives
+            .contains(&PrimitiveFamily::EnergyTelemetry)
+        || entry
+            .required_capabilities
+            .contains(&CapabilityId::trusted("smart_home.command.energy"))
+    {
+        surfaces.push(IntegrationPolicySurface::EnergyManagement);
+    }
+    if entry.auth_modes.iter().any(requires_secret_lease) {
+        surfaces.push(IntegrationPolicySurface::CredentialLease);
+    }
+    if entry.connectivity.requires_cloud()
+        || entry
+            .discovery_mechanisms
+            .contains(&DiscoveryMechanism::CloudAccount)
+    {
+        surfaces.push(IntegrationPolicySurface::CredentialedCloud);
+    }
+    if entry
+        .required_capabilities
+        .contains(&CapabilityId::trusted("smart_home.manage_network"))
+        || entry.auth_modes.contains(&AuthMode::RadioNetworkKey)
+    {
+        surfaces.push(IntegrationPolicySurface::RadioNetworkManagement);
+    }
+    if entry
+        .required_capabilities
+        .contains(&CapabilityId::trusted("smart_home.diagnostics"))
+        || entry
+            .target_entity_kinds
+            .contains(&EntityKind::NetworkDiagnostic)
+    {
+        surfaces.push(IntegrationPolicySurface::NetworkInfrastructure);
+    }
+
+    dedupe_policy_surfaces(surfaces)
 }
 
 fn hue_entry() -> IntegrationCatalogEntry {
@@ -1489,6 +1628,17 @@ fn local_transport_primitives(
     dedupe_primitives(primitives)
 }
 
+fn is_local_actuator(capability_id: &CapabilityId) -> bool {
+    matches!(
+        capability_id.as_str(),
+        "smart_home.command.light" | "smart_home.command.switch" | "smart_home.command.media"
+    )
+}
+
+fn requires_secret_lease(auth_mode: &AuthMode) -> bool {
+    !matches!(auth_mode, AuthMode::None)
+}
+
 fn dedupe_primitives(primitives: Vec<PrimitiveFamily>) -> Vec<PrimitiveFamily> {
     let mut result = Vec::new();
     for primitive in primitives {
@@ -1505,6 +1655,18 @@ fn dedupe_capabilities(capabilities: &[&'static str]) -> Vec<CapabilityId> {
         let capability_id = capability(capability_id);
         if !result.contains(&capability_id) {
             result.push(capability_id);
+        }
+    }
+    result
+}
+
+fn dedupe_policy_surfaces(
+    surfaces: Vec<IntegrationPolicySurface>,
+) -> Vec<IntegrationPolicySurface> {
+    let mut result = Vec::new();
+    for surface in surfaces {
+        if !result.contains(&surface) {
+            result.push(surface);
         }
     }
     result
@@ -1675,5 +1837,49 @@ mod tests {
         assert!(camera_entries.iter().all(|entry| entry
             .required_primitives
             .contains(&PrimitiveFamily::CapabilityPolicy)));
+    }
+
+    #[test]
+    fn policy_surfaces_capture_privacy_and_entry_access() {
+        let catalog = first_party_catalog();
+        let onvif = find_entry(&catalog, &IntegrationId::trusted("onvif")).unwrap();
+        let zwave = find_entry(&catalog, &IntegrationId::trusted("zwave")).unwrap();
+
+        assert!(onvif.has_policy_surface(IntegrationPolicySurface::CameraMedia));
+        assert_eq!(onvif.highest_policy_tier(), PrivilegeTier::HumanApproval);
+
+        assert!(zwave.has_policy_surface(IntegrationPolicySurface::EntryAccess));
+        assert!(zwave.has_policy_surface(IntegrationPolicySurface::RadioNetworkManagement));
+        assert_eq!(zwave.highest_policy_tier(), PrivilegeTier::HighRisk);
+    }
+
+    #[test]
+    fn policy_surfaces_expose_cloud_and_credential_boundaries() {
+        let catalog = first_party_catalog();
+        let ring = find_entry(&catalog, &IntegrationId::trusted("ring")).unwrap();
+        let hue = find_entry(&catalog, &IntegrationId::trusted("hue")).unwrap();
+
+        assert!(ring.has_policy_surface(IntegrationPolicySurface::CredentialedCloud));
+        assert!(ring.has_policy_surface(IntegrationPolicySurface::CredentialLease));
+        assert!(hue.has_policy_surface(IntegrationPolicySurface::CredentialLease));
+        assert!(!hue.has_policy_surface(IntegrationPolicySurface::CredentialedCloud));
+    }
+
+    #[test]
+    fn policy_surface_queries_group_d21_review_targets() {
+        let catalog = first_party_catalog();
+        let cameras = entries_with_policy_surface(&catalog, IntegrationPolicySurface::CameraMedia);
+        let local_actuators =
+            entries_with_policy_surface(&catalog, IntegrationPolicySurface::LocalActuation);
+
+        assert!(cameras
+            .iter()
+            .any(|entry| entry.integration_id == IntegrationId::trusted("reolink")));
+        assert!(local_actuators
+            .iter()
+            .any(|entry| entry.integration_id == IntegrationId::trusted("hue")));
+        assert!(local_actuators
+            .iter()
+            .any(|entry| entry.integration_id == IntegrationId::trusted("mqtt")));
     }
 }
