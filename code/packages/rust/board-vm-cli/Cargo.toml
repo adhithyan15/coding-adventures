@@ -9,6 +9,7 @@ board-vm-client = { path = "../board-vm-client" }
 board-vm-eject = { path = "../board-vm-eject" }
 board-vm-esp-rom = { path = "../board-vm-esp-rom" }
 board-vm-host = { path = "../board-vm-host" }
+board-vm-language-core = { path = "../board-vm-language-core" }
 board-vm-protocol = { path = "../board-vm-protocol" }
 board-vm-serial = { path = "../board-vm-serial" }
 board-vm-targets = { path = "../board-vm-targets" }

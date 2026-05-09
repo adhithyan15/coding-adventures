@@ -20,6 +20,7 @@ use board_vm_host::{
     write_blink_module, write_gpio_read_module, write_time_now_module, BlinkProgram,
     GpioReadProgram, TimeNowProgram, BLINK_MODULE_LEN, GPIO_READ_MODULE_LEN, TIME_NOW_MODULE_LEN,
 };
+use board_vm_language_core::{detect_target, discover_devices, LanguageHostDevice};
 use board_vm_protocol::{BOOT_RUN_AT_BOOT, BOOT_RUN_IF_NO_HOST, BOOT_STORE_ONLY};
 use board_vm_serial::{
     available_ports, BoardSerialTransport, SerialConfig, SerialPortInfo, SerialTransportError,
@@ -49,7 +50,8 @@ pub enum CliCommand {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct SmokeOptions {
-    pub port: String,
+    pub port: Option<String>,
+    pub board: String,
     pub baud_rate: u32,
     pub timeout_ms: u64,
     pub program_id: u16,
@@ -58,8 +60,8 @@ pub struct SmokeOptions {
 }
 
 impl SmokeOptions {
-    pub fn serial_config(&self) -> SerialConfig {
-        SerialConfig::new(&self.port)
+    pub fn serial_config(&self, port: &str) -> SerialConfig {
+        SerialConfig::new(port)
             .baud_rate(self.baud_rate)
             .timeout(Duration::from_millis(self.timeout_ms))
             .dtr_on_open(true)
@@ -133,7 +135,8 @@ impl EspUploadOptions {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ReplOptions {
-    pub port: String,
+    pub port: Option<String>,
+    pub board: String,
     pub baud_rate: u32,
     pub timeout_ms: u64,
     pub program_id: u16,
@@ -142,8 +145,8 @@ pub struct ReplOptions {
 }
 
 impl ReplOptions {
-    pub fn serial_config(&self) -> SerialConfig {
-        SerialConfig::new(&self.port)
+    pub fn serial_config(&self, port: &str) -> SerialConfig {
+        SerialConfig::new(port)
             .baud_rate(self.baud_rate)
             .timeout(Duration::from_millis(self.timeout_ms))
             .dtr_on_open(true)
@@ -225,6 +228,7 @@ pub enum CliError {
     Eject(String),
     EspRom(String),
     PicoUf2(String),
+    DeviceSelection(String),
     Smoke {
         stage: SmokeStage,
         source: ClientError,
@@ -249,6 +253,7 @@ impl fmt::Display for CliError {
             Self::Eject(error) => write!(f, "eject error: {error}"),
             Self::EspRom(error) => write!(f, "esp rom error: {error}"),
             Self::PicoUf2(error) => write!(f, "pico uf2 error: {error}"),
+            Self::DeviceSelection(error) => write!(f, "device selection error: {error}"),
             Self::Smoke { stage, source } => write!(f, "smoke failed during {stage}: {source:?}"),
         }
     }
@@ -422,7 +427,8 @@ where
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct SessionOptions {
-    port: String,
+    port: Option<String>,
+    board: String,
     baud_rate: u32,
     timeout_ms: u64,
     program_id: u16,
@@ -437,6 +443,7 @@ where
     let options = parse_session_options(&mut args)?;
     Ok(CliCommand::Smoke(SmokeOptions {
         port: options.port,
+        board: options.board,
         baud_rate: options.baud_rate,
         timeout_ms: options.timeout_ms,
         program_id: options.program_id,
@@ -452,6 +459,7 @@ where
     let options = parse_session_options(&mut args)?;
     Ok(CliCommand::Repl(ReplOptions {
         port: options.port,
+        board: options.board,
         baud_rate: options.baud_rate,
         timeout_ms: options.timeout_ms,
         program_id: options.program_id,
@@ -510,6 +518,7 @@ where
     I: Iterator<Item = String>,
 {
     let mut port = None;
+    let mut board = "auto".to_owned();
     let mut baud_rate = DEFAULT_BAUD_RATE;
     let mut timeout_ms = DEFAULT_TIMEOUT_MS;
     let mut program_id = DEFAULT_PROGRAM_ID;
@@ -519,6 +528,7 @@ where
     while let Some(option) = args.next() {
         match option.as_str() {
             "--port" | "-p" => port = Some(next_value(args, "--port")?),
+            "--board" | "--target" => board = next_value(args, "--board")?,
             "--baud" | "-b" => baud_rate = parse_number(next_value(args, "--baud")?, "--baud")?,
             "--timeout-ms" => {
                 timeout_ms = parse_number(next_value(args, "--timeout-ms")?, "--timeout-ms")?
@@ -536,9 +546,9 @@ where
         }
     }
 
-    let port = port.ok_or(CliError::MissingRequired("--port"))?;
     Ok(SessionOptions {
         port,
+        board,
         baud_rate,
         timeout_ms,
         program_id,
@@ -729,8 +739,129 @@ pub struct EspUploadReport {
     pub md5_digest: Option<[u8; 16]>,
 }
 
+pub fn resolve_session_port(port: Option<&str>, board: &str) -> Result<String, CliError> {
+    if let Some(port) = port {
+        return Ok(port.to_owned());
+    }
+
+    let devices = discover_devices();
+    select_runtime_device(board, &devices).map(|device| device.port)
+}
+
+pub fn select_runtime_device(
+    board: &str,
+    devices: &[LanguageHostDevice],
+) -> Result<LanguageHostDevice, CliError> {
+    let candidates: Vec<_> = devices
+        .iter()
+        .filter(|device| !device.bootloader)
+        .cloned()
+        .collect();
+    let target = if board == "auto" {
+        None
+    } else {
+        Some(detect_target(board).ok_or_else(|| {
+            CliError::DeviceSelection(format!("unsupported board selector: {board}"))
+        })?)
+    };
+
+    let matches: Vec<_> = match target {
+        Some(ref target) => {
+            let exact: Vec<_> = candidates
+                .iter()
+                .filter(|device| {
+                    device
+                        .target
+                        .as_ref()
+                        .is_some_and(|device_target| device_target.board_id == target.board_id)
+                })
+                .cloned()
+                .collect();
+            if exact.is_empty() {
+                candidates
+                    .iter()
+                    .filter(|device| device.target.is_none())
+                    .cloned()
+                    .collect()
+            } else {
+                exact
+            }
+        }
+        None => {
+            let inferred: Vec<_> = candidates
+                .iter()
+                .filter(|device| device.target.is_some())
+                .cloned()
+                .collect();
+            if inferred.is_empty() && candidates.len() == 1 {
+                candidates.clone()
+            } else {
+                inferred
+            }
+        }
+    };
+
+    if matches.len() == 1 {
+        return Ok(matches[0].clone());
+    }
+
+    if devices.is_empty() {
+        return Err(CliError::DeviceSelection(
+            "no Board VM runtime serial devices found; plug in a board or pass --port".to_owned(),
+        ));
+    }
+
+    let reason = if matches.is_empty() {
+        "no matching runtime serial device found"
+    } else {
+        "multiple runtime serial devices match"
+    };
+    Err(CliError::DeviceSelection(format!(
+        "{reason}; pass --port or unplug extra boards.\n{}",
+        format_device_list(devices)
+    )))
+}
+
+pub fn format_device_list(devices: &[LanguageHostDevice]) -> String {
+    if devices.is_empty() {
+        return "No Board VM devices found.".to_owned();
+    }
+
+    devices
+        .iter()
+        .enumerate()
+        .map(|(index, device)| {
+            let target_name = device
+                .target
+                .as_ref()
+                .map(|target| target.display_name.as_str())
+                .unwrap_or("Unknown board");
+            let confidence = if device.target_confidence > 0 {
+                format!(", {}% match", device.target_confidence)
+            } else {
+                String::new()
+            };
+            let tags = if device.tags.is_empty() {
+                String::new()
+            } else {
+                format!(" [{}]", device.tags.join(", "))
+            };
+            format!(
+                "{}. {} - {}{}{}",
+                index + 1,
+                target_name,
+                device.port,
+                confidence,
+                tags
+            )
+        })
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
 pub fn run_smoke(options: &SmokeOptions) -> Result<SmokeReport, CliError> {
-    let transport = BoardSerialTransport::<_, 1024>::open(&options.serial_config())?;
+    let port = resolve_session_port(options.port.as_deref(), &options.board)?;
+    let transport = BoardSerialTransport::<_, 1024>::open(&options.serial_config(&port))?;
     let mut client: BoardVmClient<_, 512, 768, 768> = BoardVmClient::new(transport);
     let hello = client
         .hello_with_name(DEFAULT_HOST_NAME, options.host_nonce)
@@ -963,7 +1094,8 @@ where
     R: BufRead,
     W: Write,
 {
-    let transport = BoardSerialTransport::<_, 1024>::open(&options.serial_config())?;
+    let port = resolve_session_port(options.port.as_deref(), &options.board)?;
+    let transport = BoardSerialTransport::<_, 1024>::open(&options.serial_config(&port))?;
     let mut client: BoardVmClient<_, 512, 768, 768> = BoardVmClient::new(transport);
     let mut state = ReplState {
         program_id: options.program_id,
@@ -974,7 +1106,7 @@ where
     writeln!(
         output,
         "connected port={} baud={} timeout_ms={}",
-        options.port, options.baud_rate, options.timeout_ms
+        port, options.baud_rate, options.timeout_ms
     )?;
     let hello = client.hello_with_name(DEFAULT_HOST_NAME, state.host_nonce)?;
     write_hello(&mut output, &hello)?;
@@ -1281,7 +1413,7 @@ pub fn format_onboard_led(led: Option<OnboardLed>) -> String {
 }
 
 pub fn usage() -> &'static str {
-    "usage:\n  board-vm list-ports\n  board-vm list-targets\n  board-vm esp-detect --port <path> [--baud <rate>] [--timeout-ms <ms>] [--no-reset]\n  board-vm esp-upload --port <path> --image <path> [--offset <addr>] [--block-size <bytes>] [--flash-size <bytes>] [--baud <rate>] [--timeout-ms <ms>] [--no-reset] [--no-verify] [--stay-in-bootloader]\n  board-vm pico-uf2 --image <path.uf2> [--mount <RPI-RP2 mount>]\n  board-vm pico-uf2 --list\n  board-vm smoke --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm repl --port <path> [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm eject blink --out <path> [--program-id <id>] [--slot <slot>] [--boot-policy store-only|run-at-boot|run-if-no-host|<u8>]"
+    "usage:\n  board-vm list-ports\n  board-vm list-targets\n  board-vm esp-detect --port <path> [--baud <rate>] [--timeout-ms <ms>] [--no-reset]\n  board-vm esp-upload --port <path> --image <path> [--offset <addr>] [--block-size <bytes>] [--flash-size <bytes>] [--baud <rate>] [--timeout-ms <ms>] [--no-reset] [--no-verify] [--stay-in-bootloader]\n  board-vm pico-uf2 --image <path.uf2> [--mount <RPI-RP2 mount>]\n  board-vm pico-uf2 --list\n  board-vm smoke [--port <path>] [--board <selector>] [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm repl [--port <path>] [--board <selector>] [--baud <rate>] [--timeout-ms <ms>] [--program-id <id>] [--budget <instructions>] [--host-nonce <u32>]\n  board-vm eject blink --out <path> [--program-id <id>] [--slot <slot>] [--boot-policy store-only|run-at-boot|run-if-no-host|<u8>]"
 }
 
 #[cfg(test)]
@@ -1570,7 +1702,8 @@ mod tests {
         assert_eq!(
             command,
             CliCommand::Smoke(SmokeOptions {
-                port: "/dev/cu.usbmodem-test".to_owned(),
+                port: Some("/dev/cu.usbmodem-test".to_owned()),
+                board: "auto".to_owned(),
                 baud_rate: DEFAULT_BAUD_RATE,
                 timeout_ms: DEFAULT_TIMEOUT_MS,
                 program_id: DEFAULT_PROGRAM_ID,
@@ -1584,6 +1717,8 @@ mod tests {
     fn parses_smoke_overrides() {
         let command = parse_args([
             "smoke",
+            "--board",
+            "pico",
             "--port",
             "COM9",
             "--baud",
@@ -1602,7 +1737,8 @@ mod tests {
         assert_eq!(
             command,
             CliCommand::Smoke(SmokeOptions {
-                port: "COM9".to_owned(),
+                port: Some("COM9".to_owned()),
+                board: "pico".to_owned(),
                 baud_rate: 57_600,
                 timeout_ms: 250,
                 program_id: 7,
@@ -1619,7 +1755,8 @@ mod tests {
         assert_eq!(
             command,
             CliCommand::Repl(ReplOptions {
-                port: "/dev/cu.usbmodem-test".to_owned(),
+                port: Some("/dev/cu.usbmodem-test".to_owned()),
+                board: "auto".to_owned(),
                 baud_rate: DEFAULT_BAUD_RATE,
                 timeout_ms: DEFAULT_TIMEOUT_MS,
                 program_id: DEFAULT_PROGRAM_ID,
@@ -1651,7 +1788,8 @@ mod tests {
         assert_eq!(
             command,
             CliCommand::Repl(ReplOptions {
-                port: "COM9".to_owned(),
+                port: Some("COM9".to_owned()),
+                board: "auto".to_owned(),
                 baud_rate: 57_600,
                 timeout_ms: 250,
                 program_id: 7,
@@ -1770,7 +1908,8 @@ mod tests {
     #[test]
     fn repl_serial_config_asserts_dtr_and_clears_stale_bytes() {
         let options = ReplOptions {
-            port: "/dev/cu.usbmodem-test".to_owned(),
+            port: Some("/dev/cu.usbmodem-test".to_owned()),
+            board: "auto".to_owned(),
             baud_rate: 57_600,
             timeout_ms: 250,
             program_id: 7,
@@ -1778,7 +1917,7 @@ mod tests {
             host_nonce: 1234,
         };
 
-        let config = options.serial_config();
+        let config = options.serial_config("/dev/cu.usbmodem-test");
 
         assert_eq!(config.path, "/dev/cu.usbmodem-test");
         assert_eq!(config.baud_rate, 57_600);
@@ -1861,7 +2000,8 @@ mod tests {
     #[test]
     fn smoke_serial_config_asserts_dtr_and_clears_stale_bytes() {
         let options = SmokeOptions {
-            port: "/dev/cu.usbmodem-test".to_owned(),
+            port: Some("/dev/cu.usbmodem-test".to_owned()),
+            board: "auto".to_owned(),
             baud_rate: 57_600,
             timeout_ms: 250,
             program_id: 7,
@@ -1869,7 +2009,7 @@ mod tests {
             host_nonce: 1234,
         };
 
-        let config = options.serial_config();
+        let config = options.serial_config("/dev/cu.usbmodem-test");
 
         assert_eq!(config.path, "/dev/cu.usbmodem-test");
         assert_eq!(config.baud_rate, 57_600);
@@ -1883,14 +2023,45 @@ mod tests {
     }
 
     #[test]
-    fn requires_smoke_port() {
+    fn smoke_and_repl_can_auto_select_runtime_device() {
         assert_eq!(
-            parse_args(["smoke"]).unwrap_err(),
-            CliError::MissingRequired("--port")
+            parse_args(["smoke"]).unwrap(),
+            CliCommand::Smoke(SmokeOptions {
+                port: None,
+                board: "auto".to_owned(),
+                baud_rate: DEFAULT_BAUD_RATE,
+                timeout_ms: DEFAULT_TIMEOUT_MS,
+                program_id: DEFAULT_PROGRAM_ID,
+                instruction_budget: DEFAULT_INSTRUCTION_BUDGET,
+                host_nonce: DEFAULT_HOST_NONCE,
+            })
         );
         assert_eq!(
-            parse_args(["repl"]).unwrap_err(),
-            CliError::MissingRequired("--port")
+            parse_args(["repl", "--board", "esp32"]).unwrap(),
+            CliCommand::Repl(ReplOptions {
+                port: None,
+                board: "esp32".to_owned(),
+                baud_rate: DEFAULT_BAUD_RATE,
+                timeout_ms: DEFAULT_TIMEOUT_MS,
+                program_id: DEFAULT_PROGRAM_ID,
+                instruction_budget: DEFAULT_INSTRUCTION_BUDGET,
+                host_nonce: DEFAULT_HOST_NONCE,
+            })
+        );
+
+        let devices = board_vm_language_core::discover_devices_from_paths([
+            "/dev/serial/by-id/usb-Raspberry_Pi_Pico_Board_VM-if00",
+            "/dev/serial/by-id/usb-ESP32_CP2102-if00",
+            "/dev/serial/by-id/usb-Raspberry_Pi_Pico_DAPLINK-if00",
+        ]);
+
+        assert_eq!(
+            select_runtime_device("pico", &devices).unwrap().port,
+            "/dev/serial/by-id/usb-Raspberry_Pi_Pico_Board_VM-if00"
+        );
+        assert_eq!(
+            select_runtime_device("esp32", &devices).unwrap().port,
+            "/dev/serial/by-id/usb-ESP32_CP2102-if00"
         );
         assert_eq!(
             parse_args(["eject"]).unwrap_err(),
