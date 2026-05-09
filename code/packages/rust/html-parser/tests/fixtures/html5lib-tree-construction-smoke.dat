@@ -1323,3 +1323,24 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <meta>
 |     <link>
 |   <body>
+
+#data
+<table><tr><tr><td><td><span><th><span>X</table>
+#errors
+(1,7): expected-doctype-but-got-start-tag
+(1,33): unexpected-cell-end-tag
+(1,48): unexpected-cell-end-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|         <tr>
+|           <td>
+|           <td>
+|             <span>
+|           <th>
+|             <span>
+|               "X"
