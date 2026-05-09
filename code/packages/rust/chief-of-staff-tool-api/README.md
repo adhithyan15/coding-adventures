@@ -6,6 +6,7 @@ D18D Chief of Staff Tool API spec.
 The crate intentionally stops at the contract layer:
 
 - tool definitions and metadata
+- schema-light tool definition summaries for read-side catalog listings
 - provider-neutral JSON-schema-shaped exports for model gateway adapters
 - catalog export snapshots with schema documents, validation state, and summary
   counts for portability checks
