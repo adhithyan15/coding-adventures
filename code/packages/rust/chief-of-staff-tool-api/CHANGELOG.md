@@ -31,3 +31,5 @@ All notable changes to this package will be documented in this file.
   runtime emits completed results.
 - Storage-neutral read-side query helpers for tool invocation requests, call
   lifecycle records, event streams, and terminal results.
+- Provider-neutral JSON-schema-shaped projection for tool input/output schemas
+  and `ToolSchemaDocument` exports for future model-gateway adapters.
