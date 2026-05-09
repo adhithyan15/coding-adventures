@@ -551,6 +551,7 @@ members = [
     "smart-home-integration-catalog",
     "smart-home-testkit",
     "hue-core",
+    "matter-core",
     "zigbee-nwk",
     "zwave-core",
     "sixlowpan",
