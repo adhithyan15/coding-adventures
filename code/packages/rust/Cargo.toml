@@ -515,6 +515,7 @@ members = [
     "cas-limit-series",
     "cas-laplace",
     "cas-mnewton",
+    "cas-ode",
     "cas-ode-numeric",
     "cas-summation",
     "cas-pretty-printer",

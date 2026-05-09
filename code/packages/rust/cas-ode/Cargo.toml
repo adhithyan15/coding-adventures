@@ -1,0 +1,9 @@
+[package]
+name = "cas-ode"
+version = "0.1.0"
+edition = "2021"
+description = "Symbolic ODE2 solver over symbolic IR"
+license = "MIT"
+
+[dependencies]
+symbolic-ir = { path = "../symbolic-ir" }
