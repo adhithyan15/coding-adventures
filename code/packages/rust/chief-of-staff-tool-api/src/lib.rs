@@ -601,6 +601,101 @@ impl ToolCatalogQuery {
     }
 }
 
+/// Summary counts for a catalog export.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ToolCatalogSummary {
+    pub total_tools: usize,
+    pub by_family: BTreeMap<String, usize>,
+    pub by_side_effects: BTreeMap<String, usize>,
+    pub by_required_tier: BTreeMap<String, usize>,
+    pub by_stability: BTreeMap<String, usize>,
+    pub streaming_tools: usize,
+    pub write_or_external_tools: usize,
+}
+
+impl ToolCatalogSummary {
+    pub fn empty() -> Self {
+        Self {
+            total_tools: 0,
+            by_family: BTreeMap::new(),
+            by_side_effects: BTreeMap::new(),
+            by_required_tier: BTreeMap::new(),
+            by_stability: BTreeMap::new(),
+            streaming_tools: 0,
+            write_or_external_tools: 0,
+        }
+    }
+
+    pub fn from_definitions<'a, I>(definitions: I) -> Self
+    where
+        I: IntoIterator<Item = &'a ToolDefinition>,
+    {
+        let mut summary = Self::empty();
+        for definition in definitions {
+            summary.total_tools += 1;
+            increment_count(
+                &mut summary.by_family,
+                tool_family_label(&definition.tool_id),
+            );
+            increment_count(
+                &mut summary.by_side_effects,
+                definition.side_effects.as_str(),
+            );
+            increment_count(
+                &mut summary.by_required_tier,
+                definition.required_tier.as_str(),
+            );
+            increment_count(&mut summary.by_stability, definition.stability.as_str());
+            if definition.streaming == ToolStreaming::Events {
+                summary.streaming_tools += 1;
+            }
+            if matches!(
+                definition.side_effects,
+                ToolSideEffects::Write | ToolSideEffects::External
+            ) {
+                summary.write_or_external_tools += 1;
+            }
+        }
+        summary
+    }
+}
+
+/// Provider-facing catalog export for model gateways and portability checks.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ToolCatalogExport {
+    pub schema_documents: Vec<ToolSchemaDocument>,
+    pub summary: ToolCatalogSummary,
+    pub validation: ToolValidationReport,
+}
+
+impl ToolCatalogExport {
+    pub fn from_definitions<'a, I>(definitions: I) -> Self
+    where
+        I: IntoIterator<Item = &'a ToolDefinition>,
+    {
+        let definitions: Vec<&ToolDefinition> = definitions.into_iter().collect();
+        Self {
+            schema_documents: definitions
+                .iter()
+                .map(|definition| definition.schema_document())
+                .collect(),
+            summary: ToolCatalogSummary::from_definitions(definitions.iter().copied()),
+            validation: validate_tool_catalog(definitions.iter().copied()),
+        }
+    }
+
+    pub fn ok(&self) -> bool {
+        self.validation.ok
+    }
+
+    pub fn tool_ids(&self) -> Vec<&str> {
+        self.schema_documents
+            .iter()
+            .map(|document| document.tool_id.as_str())
+            .collect()
+    }
+}
+
 /// Return the first-phase built-in store/job tool definitions from D18D.
 pub fn builtin_tool_catalog() -> Vec<ToolDefinition> {
     [
@@ -667,11 +762,54 @@ pub fn builtin_tools_matching(query: ToolCatalogQuery) -> Vec<ToolDefinition> {
     definitions
 }
 
+/// Export built-in catalog schemas, summary counts, and validation state.
+pub fn builtin_tool_catalog_export(query: ToolCatalogQuery) -> ToolCatalogExport {
+    let definitions = builtin_tools_matching(query);
+    ToolCatalogExport::from_definitions(definitions.iter())
+}
+
+/// Export built-in schema documents for a model gateway adapter.
+pub fn builtin_tool_schema_documents(query: ToolCatalogQuery) -> Vec<ToolSchemaDocument> {
+    builtin_tool_catalog_export(query).schema_documents
+}
+
 /// Look up one first-phase built-in definition by id.
 pub fn builtin_tool_definition(tool_id: &str) -> Option<ToolDefinition> {
     builtin_tool_catalog()
         .into_iter()
         .find(|definition| definition.tool_id == tool_id)
+}
+
+/// Validate catalog-wide invariants such as duplicate tool ids.
+pub fn validate_tool_catalog<'a, I>(definitions: I) -> ToolValidationReport
+where
+    I: IntoIterator<Item = &'a ToolDefinition>,
+{
+    let mut report = ToolValidationReport::empty();
+    let mut first_index_by_tool_id = BTreeMap::new();
+    for (index, definition) in definitions.into_iter().enumerate() {
+        let definition_report = definition.validate();
+        report
+            .errors
+            .extend(definition_report.errors.into_iter().map(|error| {
+                issue(
+                    format!("tools[{index}].{}", error.path),
+                    format!("{}: {}", definition.tool_id, error.message),
+                )
+            }));
+        if let Some(first_index) = first_index_by_tool_id.insert(definition.tool_id.as_str(), index)
+        {
+            report.errors.push(issue(
+                format!("tools[{index}].tool_id"),
+                format!(
+                    "duplicate tool id '{}' also appears at tools[{first_index}]",
+                    definition.tool_id
+                ),
+            ));
+        }
+    }
+    report.ok = report.errors.is_empty();
+    report
 }
 
 fn definition_matches_catalog_query(definition: &ToolDefinition, query: &ToolCatalogQuery) -> bool {
@@ -705,6 +843,16 @@ fn definition_matches_catalog_query(definition: &ToolDefinition, query: &ToolCat
         .tags
         .iter()
         .all(|tag| definition.tags.iter().any(|candidate| candidate == tag))
+}
+
+fn increment_count(counts: &mut BTreeMap<String, usize>, label: impl Into<String>) {
+    *counts.entry(label.into()).or_insert(0) += 1;
+}
+
+fn tool_family_label(tool_id: &str) -> &str {
+    tool_id
+        .split_once('.')
+        .map_or("unknown", |(family, _)| family)
 }
 
 fn context_open_session_definition() -> ToolDefinition {
@@ -2861,6 +3009,21 @@ impl InMemoryToolRegistry {
         definitions
     }
 
+    /// Export registered tool schemas, summary counts, and validation state.
+    pub fn export(&self, query: &ToolCatalogQuery) -> ToolCatalogExport {
+        ToolCatalogExport::from_definitions(self.query(query))
+    }
+
+    /// Export registered schema documents for a model gateway adapter.
+    pub fn schema_documents(&self, query: &ToolCatalogQuery) -> Vec<ToolSchemaDocument> {
+        self.export(query).schema_documents
+    }
+
+    /// Summarize all registered definitions.
+    pub fn summary(&self) -> ToolCatalogSummary {
+        ToolCatalogSummary::from_definitions(self.definitions.values())
+    }
+
     /// Validate request metadata and arguments against the registered schema.
     pub fn validate_call(&self, request: &ToolInvocationRequest) -> ToolValidationReport {
         let mut report = request.validate_metadata();
@@ -4391,6 +4554,87 @@ mod tests {
             ToolCatalogQuery::new().with_stability(ToolStability::Stable)
         )
         .is_empty());
+    }
+
+    #[test]
+    fn builtin_catalog_export_summarizes_schema_documents_and_validation() {
+        let export = builtin_tool_catalog_export(ToolCatalogQuery::new());
+
+        assert!(export.ok());
+        assert_eq!(export.summary.total_tools, 33);
+        assert_eq!(export.schema_documents.len(), 33);
+        assert_eq!(export.summary.by_family.get("context"), Some(&6));
+        assert_eq!(export.summary.by_family.get("artifact"), Some(&7));
+        assert_eq!(export.summary.by_family.get("skill"), Some(&7));
+        assert_eq!(export.summary.by_family.get("memory"), Some(&7));
+        assert_eq!(export.summary.by_family.get("job"), Some(&6));
+        assert_eq!(export.summary.streaming_tools, 17);
+        assert!(export.summary.write_or_external_tools > 0);
+        assert_eq!(
+            export.tool_ids().first().copied(),
+            Some("context.open_session")
+        );
+
+        let read_export = builtin_tool_catalog_export(
+            ToolCatalogQuery::new()
+                .with_side_effects(ToolSideEffects::Read)
+                .with_max_tier(PrivilegeTier::Tier0),
+        );
+
+        assert!(read_export.ok());
+        assert!(read_export
+            .schema_documents
+            .iter()
+            .any(|document| document.tool_id == "memory.search"));
+        assert!(read_export
+            .summary
+            .by_side_effects
+            .get("read")
+            .is_some_and(|count| *count > 0));
+    }
+
+    #[test]
+    fn catalog_validation_rejects_duplicate_tool_ids() {
+        let definitions = vec![artifact_create_definition(), artifact_create_definition()];
+
+        let report = validate_tool_catalog(definitions.iter());
+
+        assert!(!report.ok);
+        assert!(report.errors.iter().any(|error| {
+            error.path == "tools[1].tool_id" && error.message.contains("duplicate tool id")
+        }));
+    }
+
+    #[test]
+    fn registry_exports_filtered_schema_documents_and_summary() {
+        let mut registry = InMemoryToolRegistry::new();
+        for definition in [
+            memory_search_definition(),
+            memory_remember_definition(),
+            artifact_create_definition(),
+        ] {
+            registry.register(definition).unwrap();
+        }
+
+        let export = registry.export(
+            &ToolCatalogQuery::new()
+                .for_family(BuiltinToolFamily::Memory)
+                .with_side_effects(ToolSideEffects::Read),
+        );
+
+        assert!(export.ok());
+        assert_eq!(export.tool_ids(), vec!["memory.search"]);
+        assert_eq!(export.summary.total_tools, 1);
+        assert_eq!(export.summary.by_family.get("memory"), Some(&1));
+        assert_eq!(registry.summary().total_tools, 3);
+        assert_eq!(
+            registry
+                .schema_documents(&ToolCatalogQuery::new().for_family(BuiltinToolFamily::Artifact))
+                .into_iter()
+                .map(|document| document.tool_id)
+                .collect::<Vec<_>>(),
+            vec!["artifact.create"]
+        );
     }
 
     #[test]
