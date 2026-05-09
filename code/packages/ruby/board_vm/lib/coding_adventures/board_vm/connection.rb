@@ -96,6 +96,10 @@ module CodingAdventures
         session.board_descriptor
       end
 
+      def smoke!(host_name: Session::DEFAULT_HOST_NAME, host_nonce: DEFAULT_HOST_NONCE, query_caps: true)
+        session.smoke(host_name: host_name, host_nonce: host_nonce, query_caps: query_caps)
+      end
+
       def session(**options)
         protocol_session = Session.new(self, **options)
         return protocol_session unless block_given?

@@ -73,6 +73,12 @@ module CodingAdventures
       end
       alias describe board_descriptor
 
+      def smoke(host_name: @host_name, host_nonce: @host_nonce, query_caps: true)
+        results = [hello(host_name: host_name, host_nonce: host_nonce)]
+        results << capabilities if query_caps
+        SessionResult.new(results: results)
+      end
+
       def upload(program_id: @program_id, module_bytes:)
         SessionResult.new(results: [
           dispatch(:program_begin, native_session.program_begin_wire(program_id, module_bytes)),
@@ -497,6 +503,9 @@ module CodingAdventures
         when "hello"
           ensure_no_extra_arguments!(words, command)
           SessionResult.new(results: [hello(**options)])
+        when "smoke"
+          ensure_no_extra_arguments!(words, command)
+          smoke(**options)
         when "caps", "capabilities"
           ensure_no_extra_arguments!(words, command)
           SessionResult.new(results: [capabilities])

@@ -428,6 +428,16 @@ def test_session_dispatches_frames_through_write_transport():
     assert result.decoded_responses == [None] * 6
 
 
+def test_session_smoke_dispatches_hello_and_capabilities():
+    transport = FakeWriteTransport()
+    session = Session(transport=transport)
+
+    result = session.smoke(host_nonce=123)
+
+    assert [item.command for item in result.results] == ["hello", "capabilities"]
+    assert result.frames == transport.frames
+
+
 def test_run_command_accepts_repl_style_blink():
     transport = FakeWriteTransport()
     session = Session(transport=transport)

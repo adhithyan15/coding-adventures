@@ -403,6 +403,18 @@ class Session:
     def board_descriptor(self) -> BoardDescriptor | None:
         return self.capabilities().board_descriptor
 
+    def smoke(
+        self,
+        *,
+        host_name: str = DEFAULT_HOST_NAME,
+        host_nonce: int = DEFAULT_HOST_NONCE,
+        query_caps: bool = True,
+    ) -> SessionResult:
+        results = [self.hello(host_name=host_name, host_nonce=host_nonce)]
+        if query_caps:
+            results.append(self.capabilities())
+        return SessionResult(results)
+
     def blink_module(self, pin: int = 13, high_ms: int = 250, low_ms: int = 250, max_stack: int = 4) -> bytes:
         return _native.blink_module(pin, high_ms, low_ms, max_stack)
 
