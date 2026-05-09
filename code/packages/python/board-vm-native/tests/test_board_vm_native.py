@@ -5,6 +5,7 @@ from board_vm_native import (
     BoardDescriptor,
     BoardTarget,
     EspUploadOptions,
+    PicoUf2UploadOptions,
     ProtocolResult,
     Session,
     device_list,
@@ -14,6 +15,8 @@ from board_vm_native import (
     esp_upload_options,
     find_target,
     known_targets,
+    pico_uf2_upload_command,
+    pico_uf2_upload_options,
     pick_device,
     select_device,
 )
@@ -153,6 +156,19 @@ def test_esp_upload_options_are_exposed_from_rust_language_core():
     assert overridden.verify_md5 is False
 
 
+def test_pico_uf2_upload_options_are_exposed_from_rust_language_core():
+    options = pico_uf2_upload_options("pico")
+
+    assert isinstance(options, PicoUf2UploadOptions)
+    assert options.board_id == "raspberry-pi-pico"
+    assert options.command == "pico-uf2"
+    assert options.volume_label == "RPI-RP2"
+    assert options.image_extension == ".uf2"
+    assert options.auto_detect_mount is True
+    assert pico_uf2_upload_options("pico-w") is not None
+    assert pico_uf2_upload_options("esp32") is None
+
+
 def test_esp_upload_command_uses_rust_owned_options():
     command = esp_upload_command(
         "esp32",
@@ -181,6 +197,22 @@ def test_esp_upload_command_uses_rust_owned_options():
         "4194304",
         "--no-verify",
         "--stay-in-bootloader",
+    ]
+
+
+def test_pico_uf2_upload_command_uses_rust_owned_options():
+    command = pico_uf2_upload_command(
+        "pico",
+        image="/tmp/board-vm-pico.uf2",
+        mount="/Volumes/RPI-RP2",
+    )
+
+    assert command == [
+        "pico-uf2",
+        "--image",
+        "/tmp/board-vm-pico.uf2",
+        "--mount",
+        "/Volumes/RPI-RP2",
     ]
 
 

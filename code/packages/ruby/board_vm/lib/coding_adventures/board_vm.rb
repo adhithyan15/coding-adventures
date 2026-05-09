@@ -122,6 +122,35 @@ module CodingAdventures
       options
     end
 
+    def pico_uf2_upload_options(board = :raspberry_pi_pico, **overrides)
+      options = Native.pico_uf2_upload_options(board.to_s)
+      return nil unless options
+
+      overrides.each do |key, value|
+        options[key.to_s] = value
+      end
+      options
+    end
+
+    def pico_uf2_upload_command(
+      board = :raspberry_pi_pico,
+      image:,
+      mount: nil,
+      **overrides
+    )
+      options = pico_uf2_upload_options(board, **overrides)
+      unless options
+        raise UnsupportedBoardError, "Pico UF2 upload is not supported for #{board.inspect}"
+      end
+
+      command = [
+        options.fetch("command"),
+        "--image", image.to_s
+      ]
+      command << "--mount" << mount.to_s unless mount.nil?
+      command
+    end
+
     def esp_upload_command(
       board = :esp32_devkit_v1,
       port: nil,

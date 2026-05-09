@@ -308,6 +308,15 @@ pub struct LanguageEspUploadOptions {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LanguagePicoUf2UploadOptions {
+    pub board_id: String,
+    pub command: String,
+    pub volume_label: String,
+    pub image_extension: String,
+    pub auto_detect_mount: bool,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct LanguageHostDevice {
     pub id: String,
     pub port: String,
@@ -517,6 +526,21 @@ pub fn esp_upload_options_for_target(selector: &str) -> Option<LanguageEspUpload
         flash_size: Some(LANGUAGE_ESP_DEFAULT_FLASH_SIZE),
         verify_md5: true,
         stay_in_bootloader: false,
+    })
+}
+
+pub fn pico_uf2_upload_options_for_target(selector: &str) -> Option<LanguagePicoUf2UploadOptions> {
+    let target = detect_target(selector)?;
+    if target.family != LanguageBoardFamily::RaspberryPiPico {
+        return None;
+    }
+
+    Some(LanguagePicoUf2UploadOptions {
+        board_id: target.board_id,
+        command: "pico-uf2".to_owned(),
+        volume_label: "RPI-RP2".to_owned(),
+        image_extension: ".uf2".to_owned(),
+        auto_detect_mount: true,
     })
 }
 
@@ -2069,6 +2093,19 @@ mod tests {
         assert!(options.verify_md5);
         assert!(!options.stay_in_bootloader);
         assert!(esp_upload_options_for_target("pico").is_none());
+    }
+
+    #[test]
+    fn pico_uf2_upload_options_are_owned_by_rust_language_core() {
+        let options = pico_uf2_upload_options_for_target("pico").unwrap();
+
+        assert_eq!(options.board_id, "raspberry-pi-pico");
+        assert_eq!(options.command, "pico-uf2");
+        assert_eq!(options.volume_label, "RPI-RP2");
+        assert_eq!(options.image_extension, ".uf2");
+        assert!(options.auto_detect_mount);
+        assert!(pico_uf2_upload_options_for_target("pico-w").is_some());
+        assert!(pico_uf2_upload_options_for_target("esp32").is_none());
     }
 
     #[test]
