@@ -203,7 +203,13 @@ module CodingAdventures
         device = pick_device(board: board, devices: devices, input: input, output: output)
       end
 
-      selection = connection_selection(board: board, port: port, device: device, devices: devices)
+      selection = connection_selection(
+        board: board,
+        port: port,
+        device: device,
+        devices: devices,
+        flash: flash
+      )
       connection = Connection.new(
         board: selection.fetch(:board),
         port: selection.fetch(:port),
@@ -234,10 +240,26 @@ module CodingAdventures
       esp32_devkit_v1(**options, &block)
     end
 
-    def connection_selection(board:, port:, device:, devices:)
+    def raspberry_pi_pico(**options, &block)
+      connect(board: :raspberry_pi_pico, **options, &block)
+    end
+
+    def pico(**options, &block)
+      raspberry_pi_pico(**options, &block)
+    end
+
+    def raspberry_pi_pico_w(**options, &block)
+      connect(board: :raspberry_pi_pico_w, **options, &block)
+    end
+
+    def pico_w(**options, &block)
+      raspberry_pi_pico_w(**options, &block)
+    end
+
+    def connection_selection(board:, port:, device:, devices:, flash: false)
       explicit_port = !port.nil?
       selected_device = resolve_device_reference(device, devices: devices) if device
-      selected_device ||= select_device(board: board, devices: devices) if port.nil?
+      selected_device ||= select_device(board: board, devices: devices) if port.nil? && !flash_without_port?(board, flash)
       port ||= selected_device && selected_device.fetch("port")
 
       normalized_board = if board == :auto
@@ -256,6 +278,16 @@ module CodingAdventures
       end
 
       { board: normalized_board, port: port }
+    end
+
+    def flash_without_port?(board, flash)
+      flash && pico_board_symbol?(board)
+    end
+
+    def pico_board_symbol?(board)
+      %i[raspberry_pi_pico raspberry_pi_pico_w].include?(normalize_board(board))
+    rescue UnsupportedBoardError
+      false
     end
 
     def resolve_device_reference(device, devices: nil)

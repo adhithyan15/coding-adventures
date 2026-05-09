@@ -34,7 +34,9 @@ module CodingAdventures
         bootloader_port_wait_ms: nil,
         firmware_image: nil,
         esp_image: nil,
-        esp_upload_options: nil
+        esp_upload_options: nil,
+        pico_uf2_mount: nil,
+        pico_uf2_upload_options: nil
       )
         @board = board
         @port = port
@@ -60,6 +62,8 @@ module CodingAdventures
         @bootloader_port_wait_ms = bootloader_port_wait_ms
         @firmware_image = firmware_image || esp_image
         @esp_upload_options = esp_upload_options || {}
+        @pico_uf2_mount = pico_uf2_mount
+        @pico_uf2_upload_options = pico_uf2_upload_options || {}
       end
 
       def led
@@ -96,8 +100,10 @@ module CodingAdventures
           flash_uno_r4_wifi!
         when :esp32_devkit_v1
           flash_esp32!
+        when :raspberry_pi_pico, :raspberry_pi_pico_w
+          flash_pico_uf2!
         else
-          raise UnsupportedBoardError, "Ruby DSL flash currently supports :uno_r4_wifi and :esp32_devkit_v1; got #{board.inspect}"
+          raise UnsupportedBoardError, "Ruby DSL flash currently supports :uno_r4_wifi, :esp32_devkit_v1, :raspberry_pi_pico, and :raspberry_pi_pico_w; got #{board.inspect}"
         end
       end
 
@@ -351,6 +357,24 @@ module CodingAdventures
         result
       end
 
+      def flash_pico_uf2!
+        unless @firmware_image
+          raise ArgumentError, "Pico UF2 flash requires firmware_image:"
+        end
+
+        runner.call(
+          board_vm_cli_command(
+            *BoardVM.pico_uf2_upload_command(
+              board,
+              image: @firmware_image,
+              mount: @pico_uf2_mount,
+              **pico_uf2_upload_overrides
+            )
+          ),
+          chdir: cargo_workspace
+        )
+      end
+
       def ensure_uno_r4_wifi!
         return if board == :uno_r4_wifi
 
@@ -397,6 +421,14 @@ module CodingAdventures
         end
         overrides[:baud_rate] = baud_rate unless overrides.key?(:baud_rate)
         overrides[:timeout_ms] = timeout_ms unless overrides.key?(:timeout_ms)
+        overrides
+      end
+
+      def pico_uf2_upload_overrides
+        overrides = {}
+        @pico_uf2_upload_options.each do |key, value|
+          overrides[key.to_sym] = value
+        end
         overrides
       end
 
