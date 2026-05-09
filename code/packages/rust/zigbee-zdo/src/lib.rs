@@ -9,6 +9,7 @@
 use smart_home_core::{
     BridgeId, Device, DeviceId, Health, Metadata, ProtocolFamily, ProtocolIdentifier,
 };
+use std::collections::BTreeSet;
 use std::fmt;
 use zigbee_aps::{ApsFrame, ClusterId, Endpoint, GroupAddress, ProfileId};
 use zigbee_nwk::{IeeeAddress, NetworkAddress};
@@ -247,6 +248,109 @@ pub struct ZigbeeInterviewSummary {
     pub ieee_address: Option<IeeeAddress>,
     pub node_descriptor: Option<NodeDescriptor>,
     pub simple_descriptors: Vec<SimpleDescriptor>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ZigbeeInterviewStep {
+    RequestNodeDescriptor,
+    RequestActiveEndpoints,
+    RequestSimpleDescriptor { endpoint: Endpoint },
+    Complete,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ZigbeeInterviewPlan {
+    pub network_address: NetworkAddress,
+    pub node_descriptor_complete: bool,
+    pub active_endpoints: Option<Vec<Endpoint>>,
+    pub simple_descriptor_endpoints: Vec<Endpoint>,
+}
+
+impl ZigbeeInterviewPlan {
+    pub fn new(network_address: NetworkAddress) -> Self {
+        Self {
+            network_address,
+            node_descriptor_complete: false,
+            active_endpoints: None,
+            simple_descriptor_endpoints: Vec::new(),
+        }
+    }
+
+    pub fn from_summary(
+        summary: &ZigbeeInterviewSummary,
+        active_endpoints: Option<Vec<Endpoint>>,
+    ) -> Self {
+        let simple_descriptor_endpoints = sorted_unique_endpoints(
+            summary
+                .simple_descriptors
+                .iter()
+                .map(|descriptor| descriptor.endpoint),
+        );
+        Self {
+            network_address: summary.network_address,
+            node_descriptor_complete: summary.node_descriptor.is_some(),
+            active_endpoints: active_endpoints.map(|endpoints| sorted_unique_endpoints(endpoints)),
+            simple_descriptor_endpoints,
+        }
+    }
+
+    pub fn missing_simple_descriptor_endpoints(&self) -> Vec<Endpoint> {
+        let Some(active_endpoints) = &self.active_endpoints else {
+            return Vec::new();
+        };
+        let known: BTreeSet<_> = self.simple_descriptor_endpoints.iter().copied().collect();
+        active_endpoints
+            .iter()
+            .copied()
+            .filter(|endpoint| !known.contains(endpoint))
+            .collect()
+    }
+
+    pub fn next_step(&self) -> ZigbeeInterviewStep {
+        if !self.node_descriptor_complete {
+            return ZigbeeInterviewStep::RequestNodeDescriptor;
+        }
+        if self.active_endpoints.is_none() {
+            return ZigbeeInterviewStep::RequestActiveEndpoints;
+        }
+        self.missing_simple_descriptor_endpoints()
+            .first()
+            .copied()
+            .map(|endpoint| ZigbeeInterviewStep::RequestSimpleDescriptor { endpoint })
+            .unwrap_or(ZigbeeInterviewStep::Complete)
+    }
+
+    pub fn is_complete(&self) -> bool {
+        self.next_step() == ZigbeeInterviewStep::Complete
+    }
+
+    pub fn next_request(
+        &self,
+        aps_counter: u8,
+        transaction_sequence_number: u8,
+    ) -> Option<ApsFrame> {
+        match self.next_step() {
+            ZigbeeInterviewStep::RequestNodeDescriptor => Some(node_descriptor_request(
+                aps_counter,
+                transaction_sequence_number,
+                self.network_address,
+            )),
+            ZigbeeInterviewStep::RequestActiveEndpoints => Some(active_endpoints_request(
+                aps_counter,
+                transaction_sequence_number,
+                self.network_address,
+            )),
+            ZigbeeInterviewStep::RequestSimpleDescriptor { endpoint } => {
+                Some(simple_descriptor_request(
+                    aps_counter,
+                    transaction_sequence_number,
+                    self.network_address,
+                    endpoint,
+                ))
+            }
+            ZigbeeInterviewStep::Complete => None,
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -510,6 +614,14 @@ fn parse_binding_response(payload: &[u8]) -> Result<BindingResponse, ZdoError> {
     })
 }
 
+fn sorted_unique_endpoints(endpoints: impl IntoIterator<Item = Endpoint>) -> Vec<Endpoint> {
+    endpoints
+        .into_iter()
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect()
+}
+
 fn zdo_request_frame(
     cluster_id: ZdoClusterId,
     aps_counter: u8,
@@ -726,6 +838,89 @@ mod tests {
         assert_eq!(bind.status, ZdoStatus::Success);
         assert_eq!(unbind.transaction_sequence_number, 0xef);
         assert_eq!(unbind.status, ZdoStatus::NotSupported);
+    }
+
+    #[test]
+    fn interview_plan_requests_descriptors_in_order() {
+        let empty_summary = ZigbeeInterviewSummary {
+            network_address: NetworkAddress(0x1234),
+            ieee_address: None,
+            node_descriptor: None,
+            simple_descriptors: Vec::new(),
+        };
+        let initial = ZigbeeInterviewPlan::from_summary(&empty_summary, None);
+
+        assert_eq!(
+            initial.next_step(),
+            ZigbeeInterviewStep::RequestNodeDescriptor
+        );
+        assert_eq!(
+            initial.next_request(7, 0xaa).unwrap().cluster_id,
+            ClusterId(0x0002)
+        );
+
+        let with_node = ZigbeeInterviewPlan::from_summary(
+            &ZigbeeInterviewSummary {
+                node_descriptor: Some(NodeDescriptor::parse(&node_descriptor_bytes()).unwrap()),
+                ..empty_summary.clone()
+            },
+            None,
+        );
+        assert_eq!(
+            with_node.next_step(),
+            ZigbeeInterviewStep::RequestActiveEndpoints
+        );
+        assert_eq!(
+            with_node.next_request(8, 0xbb).unwrap().cluster_id,
+            ClusterId(0x0005)
+        );
+
+        let with_endpoints = ZigbeeInterviewPlan::from_summary(
+            &empty_summary,
+            Some(vec![Endpoint(11), Endpoint(1)]),
+        );
+        assert_eq!(
+            with_endpoints.next_step(),
+            ZigbeeInterviewStep::RequestNodeDescriptor
+        );
+    }
+
+    #[test]
+    fn interview_plan_tracks_missing_simple_descriptors() {
+        let node_descriptor = NodeDescriptor::parse(&node_descriptor_bytes()).unwrap();
+        let simple_descriptor = SimpleDescriptor::parse(&simple_descriptor_bytes()).unwrap();
+        let summary = ZigbeeInterviewSummary {
+            network_address: NetworkAddress(0x1234),
+            ieee_address: Some(IeeeAddress(0x0012_4b00_24c8_abcd)),
+            node_descriptor: Some(node_descriptor),
+            simple_descriptors: vec![simple_descriptor],
+        };
+
+        let plan = ZigbeeInterviewPlan::from_summary(
+            &summary,
+            Some(vec![Endpoint(11), Endpoint(1), Endpoint(11)]),
+        );
+
+        assert_eq!(plan.active_endpoints, Some(vec![Endpoint(1), Endpoint(11)]));
+        assert_eq!(
+            plan.missing_simple_descriptor_endpoints(),
+            vec![Endpoint(11)]
+        );
+        assert_eq!(
+            plan.next_step(),
+            ZigbeeInterviewStep::RequestSimpleDescriptor {
+                endpoint: Endpoint(11)
+            }
+        );
+        assert_eq!(
+            plan.next_request(9, 0xcc).unwrap().payload,
+            vec![0xcc, 0x34, 0x12, 11]
+        );
+
+        let complete = ZigbeeInterviewPlan::from_summary(&summary, Some(vec![Endpoint(1)]));
+        assert_eq!(complete.next_step(), ZigbeeInterviewStep::Complete);
+        assert!(complete.next_request(1, 2).is_none());
+        assert!(complete.is_complete());
     }
 
     #[test]
