@@ -35,9 +35,13 @@ module CodingAdventures
         firmware_image: nil,
         esp_image: nil,
         esp_upload_options: nil,
+        device_discovery: nil,
         pico_uf2_mount: nil,
         pico_uf2_mount_roots: nil,
-        pico_uf2_upload_options: nil
+        pico_uf2_upload_options: nil,
+        pico_runtime_port: true,
+        pico_runtime_port_wait_ms: DEFAULT_PICO_RUNTIME_PORT_WAIT_MS,
+        pico_runtime_port_poll_ms: DEFAULT_PICO_RUNTIME_PORT_POLL_MS
       )
         @board = board
         @port = port
@@ -63,9 +67,13 @@ module CodingAdventures
         @bootloader_port_wait_ms = bootloader_port_wait_ms
         @firmware_image = firmware_image || esp_image
         @esp_upload_options = esp_upload_options || {}
+        @device_discovery = device_discovery || -> { BoardVM.devices }
         @pico_uf2_mount = pico_uf2_mount
         @pico_uf2_mount_roots = pico_uf2_mount_roots
         @pico_uf2_upload_options = pico_uf2_upload_options || {}
+        @pico_runtime_port = pico_runtime_port
+        @pico_runtime_port_wait_ms = pico_runtime_port_wait_ms
+        @pico_runtime_port_poll_ms = pico_runtime_port_poll_ms
       end
 
       def led
@@ -364,7 +372,7 @@ module CodingAdventures
           raise ArgumentError, "Pico UF2 flash requires firmware_image:"
         end
 
-        runner.call(
+        result = runner.call(
           board_vm_cli_command(
             *BoardVM.pico_uf2_upload_command(
               board,
@@ -376,6 +384,33 @@ module CodingAdventures
           ),
           chdir: cargo_workspace
         )
+        rediscover_pico_runtime_port! if @pico_runtime_port
+        result
+      end
+
+      def rediscover_pico_runtime_port!
+        timeout_seconds = @pico_runtime_port_wait_ms.to_f / 1000.0
+        deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout_seconds
+        last_error = nil
+
+        loop do
+          begin
+            selected = BoardVM.select_runtime_device(board: board, devices: @device_discovery.call)
+            self.port = selected.fetch("port")
+            return selected
+          rescue DeviceSelectionError => error
+            last_error = error
+          end
+
+          break if timeout_seconds <= 0 || Process.clock_gettime(Process::CLOCK_MONOTONIC) >= deadline
+
+          remaining = deadline - Process.clock_gettime(Process::CLOCK_MONOTONIC)
+          poll_seconds = [@pico_runtime_port_poll_ms.to_f / 1000.0, 0.01].max
+          sleep [poll_seconds, remaining].min
+        end
+
+        raise DeviceSelectionError,
+          "Pico UF2 upload finished, but no runtime serial device was found for #{board.inspect}.\n#{last_error.message}"
       end
 
       def ensure_uno_r4_wifi!

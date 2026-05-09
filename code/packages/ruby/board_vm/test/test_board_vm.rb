@@ -175,6 +175,18 @@ module CodingAdventures
         assert_includes rendered, "/dev/cu.usbmodem1101"
       end
 
+      def test_runtime_device_selection_ignores_pico_bootloader_devices
+        devices = BoardVM.devices(paths: [
+          "/dev/serial/by-id/usb-Raspberry_Pi_Pico_E660-DAPLINK-if00",
+          "/dev/serial/by-id/usb-Raspberry_Pi_Pico_Board_VM-if00"
+        ])
+
+        selected = BoardVM.select_runtime_device(board: :pico, devices: devices)
+
+        assert_equal "/dev/serial/by-id/usb-Raspberry_Pi_Pico_Board_VM-if00", selected.fetch("port")
+        refute selected.fetch("bootloader")
+      end
+
       def test_board_specific_connect_can_select_the_only_device_without_a_port
         runner = FakeRunner.new
         devices = BoardVM.devices(paths: ["/dev/cu.usbmodem1101"])
@@ -386,17 +398,21 @@ module CodingAdventures
       def test_pico_helper_flashes_uf2_image_without_requiring_a_serial_port
         upload = CommandResult.new(["cargo"], "/repo/code/packages/rust", "copied uf2\n", "", 0)
         runner = FakeRunner.new([upload])
+        runtime_devices = BoardVM.devices(paths: [
+          "/dev/serial/by-id/usb-Raspberry_Pi_Pico_Board_VM-if00"
+        ])
 
         connection = BoardVM.pico(
           flash: true,
           firmware_image: "/tmp/board-vm-pico.uf2",
           cargo_workspace: "/repo/code/packages/rust",
           pico_uf2_mount: "/Volumes/RPI-RP2",
+          device_discovery: -> { runtime_devices },
           runner: runner
         )
 
         assert_equal :raspberry_pi_pico, connection.board
-        assert_nil connection.port
+        assert_equal "/dev/serial/by-id/usb-Raspberry_Pi_Pico_Board_VM-if00", connection.port
         assert_equal "/repo/code/packages/rust", runner.calls.first[:chdir]
         assert_equal [
           "cargo", "run",
@@ -412,6 +428,9 @@ module CodingAdventures
       def test_pico_flash_uses_auto_detected_bootsel_mount_by_default
         upload = CommandResult.new(["cargo"], "/repo/code/packages/rust", "copied uf2\n", "", 0)
         runner = FakeRunner.new([upload])
+        runtime_devices = BoardVM.devices(paths: [
+          "/dev/serial/by-id/usb-Raspberry_Pi_Pico_W_Board_VM-if00"
+        ])
 
         Dir.mktmpdir("board-vm-pico-uf2") do |root|
           mount = File.join(root, "RPI-RP2")
@@ -424,11 +443,12 @@ module CodingAdventures
             firmware_image: "/tmp/board-vm-pico-w.uf2",
             cargo_workspace: "/repo/code/packages/rust",
             pico_uf2_mount_roots: [root],
+            device_discovery: -> { runtime_devices },
             runner: runner
           )
 
           assert_equal :raspberry_pi_pico_w, connection.board
-          assert_nil connection.port
+          assert_equal "/dev/serial/by-id/usb-Raspberry_Pi_Pico_W_Board_VM-if00", connection.port
           assert_equal [
             "cargo", "run",
             "-p", "board-vm-cli",
@@ -439,6 +459,26 @@ module CodingAdventures
             "--mount", mount
           ], runner.calls.first[:argv]
         end
+      end
+
+      def test_pico_flash_reports_missing_runtime_device_after_upload
+        upload = CommandResult.new(["cargo"], "/repo/code/packages/rust", "copied uf2\n", "", 0)
+        runner = FakeRunner.new([upload])
+
+        error = assert_raises(DeviceSelectionError) do
+          BoardVM.pico(
+            flash: true,
+            firmware_image: "/tmp/board-vm-pico.uf2",
+            cargo_workspace: "/repo/code/packages/rust",
+            pico_uf2_mount: "/Volumes/RPI-RP2",
+            pico_runtime_port_wait_ms: 0,
+            device_discovery: -> { [] },
+            runner: runner
+          )
+        end
+
+        assert_match(/Pico UF2 upload finished/, error.message)
+        assert_equal 1, runner.calls.length
       end
 
       def test_esp_upload_command_rejects_non_esp_targets

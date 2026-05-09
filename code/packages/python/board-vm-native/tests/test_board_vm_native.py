@@ -22,7 +22,9 @@ from board_vm_native import (
     pico_uf2_mounts,
     pico_uf2_upload_options,
     pick_device,
+    runtime_devices,
     select_device,
+    select_runtime_device,
 )
 
 
@@ -369,6 +371,22 @@ def test_devices_are_classified_by_rust_language_core():
     rendered = device_list(found)
     assert "ESP32 DevKit V1" in rendered
     assert "/dev/cu.usbmodem1101" in rendered
+
+
+def test_runtime_device_selection_ignores_pico_bootloader_devices():
+    found = devices(
+        [
+            "/dev/serial/by-id/usb-Raspberry_Pi_Pico_E660-DAPLINK-if00",
+            "/dev/serial/by-id/usb-Raspberry_Pi_Pico_Board_VM-if00",
+        ]
+    )
+
+    selected = select_runtime_device("pico", device_candidates=found)
+    runtime = runtime_devices("pico", device_candidates=found)
+
+    assert selected.port == "/dev/serial/by-id/usb-Raspberry_Pi_Pico_Board_VM-if00"
+    assert selected.bootloader is False
+    assert [device.port for device in runtime] == [selected.port]
 
 
 def test_pick_device_prompts_for_ambiguous_devices():

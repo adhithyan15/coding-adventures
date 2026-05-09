@@ -18,6 +18,8 @@ module CodingAdventures
     DEFAULT_HOST_NONCE = 0xB0A2_D001
     DEFAULT_EJECT_SLOT = 0
     DEFAULT_BOOT_POLICY = :run_if_no_host
+    DEFAULT_PICO_RUNTIME_PORT_WAIT_MS = 5_000
+    DEFAULT_PICO_RUNTIME_PORT_POLL_MS = 250
 
     module_function
 
@@ -67,6 +69,38 @@ module CodingAdventures
         "No matching Board VM device found"
       else
         "Multiple Board VM devices match"
+      end
+      raise DeviceSelectionError, "#{reason}.\n#{device_list(candidates)}"
+    end
+
+    def runtime_devices(board: :auto, devices: nil)
+      candidates = (devices || self.devices).reject { |device| device.fetch("bootloader", false) }
+      normalized_board = board == :auto ? :auto : normalize_board(board)
+      if normalized_board == :auto
+        matches = candidates.select { |device| device_target_board(device) }
+        return candidates if matches.empty? && candidates.length == 1
+
+        return matches
+      end
+
+      exact_matches = candidates.select { |device| device_target_board(device) == normalized_board }
+      exact_matches.empty? ? candidates.select { |device| device_target_board(device).nil? } : exact_matches
+    end
+
+    def select_runtime_device(board: :auto, devices: nil)
+      candidates = devices || self.devices
+      matches = runtime_devices(board: board, devices: candidates)
+      return matches.first if matches.length == 1
+
+      if candidates.empty?
+        raise DeviceSelectionError,
+          "No Board VM runtime serial devices found. Plug in a board or pass an explicit port."
+      end
+
+      reason = if matches.empty?
+        "No matching runtime serial device found"
+      else
+        "Multiple runtime serial devices match"
       end
       raise DeviceSelectionError, "#{reason}.\n#{device_list(candidates)}"
     end
