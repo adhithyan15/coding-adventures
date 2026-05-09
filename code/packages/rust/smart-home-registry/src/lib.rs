@@ -8,10 +8,11 @@
 #![forbid(unsafe_code)]
 
 use smart_home_core::{
-    AgentId, AuthorizationDecision, AuthorizationOutcome, Bridge, BridgeId, CapabilityGrant,
-    CapabilityGrantId, CapabilityGrantStatus, CapabilityId, Device, DeviceEvent, DeviceEventType,
-    DeviceId, Entity, EntityId, EntityKind, EventId, Health, ProtocolFamily, ProtocolIdentifier,
-    Scene, SceneId, StateConfidence, StateSnapshot, StateSource, Value,
+    AgentId, AuthorizationDecision, AuthorizationOutcome, Bridge, BridgeId, BridgeTransport,
+    CapabilityGrant, CapabilityGrantId, CapabilityGrantStatus, CapabilityId, Device, DeviceEvent,
+    DeviceEventType, DeviceId, Entity, EntityId, EntityKind, EventId, Health, IntegrationId,
+    ProtocolFamily, ProtocolIdentifier, Scene, SceneId, SceneScope, StateConfidence, StateSnapshot,
+    StateSource, Value, ValueKind,
 };
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
@@ -120,6 +121,60 @@ pub struct RegistryCounts {
     pub protocol_identifiers: usize,
     pub capability_grants: usize,
     pub authorization_decisions: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BridgeSummary {
+    pub bridge_id: BridgeId,
+    pub integration_id: IntegrationId,
+    pub transport: BridgeTransport,
+    pub health: Health,
+    pub last_seen_at_ms: Option<u64>,
+    pub device_count: usize,
+    pub entity_count: usize,
+    pub protocol_identifier_count: usize,
+    pub metadata_count: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DeviceSummary {
+    pub device_id: DeviceId,
+    pub bridge_id: BridgeId,
+    pub manufacturer: String,
+    pub model: String,
+    pub name: String,
+    pub health: Health,
+    pub entity_count: usize,
+    pub capability_count: usize,
+    pub state_count: usize,
+    pub protocol_identifier_count: usize,
+    pub metadata_count: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct EntitySummary {
+    pub entity_id: EntityId,
+    pub device_id: DeviceId,
+    pub kind: EntityKind,
+    pub name: String,
+    pub capability_ids: Vec<CapabilityId>,
+    pub has_state: bool,
+    pub state_value_kind: Option<ValueKind>,
+    pub state_source: Option<StateSource>,
+    pub state_confidence: Option<StateConfidence>,
+    pub state_observed_at_ms: Option<u64>,
+    pub state_received_at_ms: Option<u64>,
+    pub state_expires_at_ms: Option<u64>,
+    pub metadata_count: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SceneSummary {
+    pub scene_id: SceneId,
+    pub scope: SceneScope,
+    pub action_count: usize,
+    pub has_native_ref: bool,
+    pub metadata_count: usize,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
@@ -318,6 +373,14 @@ impl<'a> SmartHomeRegistryReadView<'a> {
         self.registry.bridges()
     }
 
+    pub fn bridge_summary(&self, bridge_id: &BridgeId) -> Option<BridgeSummary> {
+        self.registry.bridge_summary(bridge_id)
+    }
+
+    pub fn bridge_summaries(&self) -> Vec<BridgeSummary> {
+        self.registry.bridge_summaries()
+    }
+
     pub fn device(&self, device_id: &DeviceId) -> Option<&'a Device> {
         self.registry.device(device_id)
     }
@@ -328,6 +391,14 @@ impl<'a> SmartHomeRegistryReadView<'a> {
 
     pub fn devices_for_bridge(&self, bridge_id: &BridgeId) -> impl Iterator<Item = &'a Device> {
         self.registry.devices_for_bridge(bridge_id)
+    }
+
+    pub fn device_summary(&self, device_id: &DeviceId) -> Option<DeviceSummary> {
+        self.registry.device_summary(device_id)
+    }
+
+    pub fn device_summaries(&self) -> Vec<DeviceSummary> {
+        self.registry.device_summaries()
     }
 
     pub fn entity(&self, entity_id: &EntityId) -> Option<&'a Entity> {
@@ -342,12 +413,28 @@ impl<'a> SmartHomeRegistryReadView<'a> {
         self.registry.entities_for_device(device_id)
     }
 
+    pub fn entity_summary(&self, entity_id: &EntityId) -> Option<EntitySummary> {
+        self.registry.entity_summary(entity_id)
+    }
+
+    pub fn entity_summaries(&self) -> Vec<EntitySummary> {
+        self.registry.entity_summaries()
+    }
+
     pub fn scene(&self, scene_id: &SceneId) -> Option<&'a Scene> {
         self.registry.scene(scene_id)
     }
 
     pub fn scenes(&self) -> impl Iterator<Item = &'a Scene> {
         self.registry.scenes()
+    }
+
+    pub fn scene_summary(&self, scene_id: &SceneId) -> Option<SceneSummary> {
+        self.registry.scene_summary(scene_id)
+    }
+
+    pub fn scene_summaries(&self) -> Vec<SceneSummary> {
+        self.registry.scene_summaries()
     }
 
     pub fn state(&self, entity_id: &EntityId) -> Option<&'a StateSnapshot> {
@@ -413,8 +500,16 @@ impl<'a> SmartHomeRegistryReadView<'a> {
         self.registry.query_devices(selector)
     }
 
+    pub fn query_device_summaries(&self, selector: &DeviceSelector) -> Vec<DeviceSummary> {
+        self.registry.query_device_summaries(selector)
+    }
+
     pub fn query_entities(&self, selector: &EntitySelector) -> Vec<&'a Entity> {
         self.registry.query_entities(selector)
+    }
+
+    pub fn query_entity_summaries(&self, selector: &EntitySelector) -> Vec<EntitySummary> {
+        self.registry.query_entity_summaries(selector)
     }
 
     pub fn stale_states_at(&self, now_ms: u64) -> Vec<&'a StateSnapshot> {
@@ -637,6 +732,17 @@ impl InMemorySmartHomeRegistry {
         self.bridges.values()
     }
 
+    pub fn bridge_summary(&self, bridge_id: &BridgeId) -> Option<BridgeSummary> {
+        self.bridge(bridge_id)
+            .map(|bridge| self.summarize_bridge(bridge))
+    }
+
+    pub fn bridge_summaries(&self) -> Vec<BridgeSummary> {
+        self.bridges()
+            .map(|bridge| self.summarize_bridge(bridge))
+            .collect()
+    }
+
     pub fn upsert_device(&mut self, device: Device) -> Result<Option<Device>, RegistryError> {
         if !self.bridges.contains_key(&device.bridge_id) {
             return Err(RegistryError::UnknownBridge(device.bridge_id));
@@ -680,6 +786,17 @@ impl InMemorySmartHomeRegistry {
             .into_iter()
             .flat_map(|ids| ids.iter())
             .filter_map(|id| self.devices.get(id))
+    }
+
+    pub fn device_summary(&self, device_id: &DeviceId) -> Option<DeviceSummary> {
+        self.device(device_id)
+            .map(|device| self.summarize_device(device))
+    }
+
+    pub fn device_summaries(&self) -> Vec<DeviceSummary> {
+        self.devices()
+            .map(|device| self.summarize_device(device))
+            .collect()
     }
 
     pub fn upsert_entity(&mut self, entity: Entity) -> Result<Option<Entity>, RegistryError> {
@@ -726,6 +843,17 @@ impl InMemorySmartHomeRegistry {
             .filter_map(|id| self.entities.get(id))
     }
 
+    pub fn entity_summary(&self, entity_id: &EntityId) -> Option<EntitySummary> {
+        self.entity(entity_id)
+            .map(|entity| self.summarize_entity(entity))
+    }
+
+    pub fn entity_summaries(&self) -> Vec<EntitySummary> {
+        self.entities()
+            .map(|entity| self.summarize_entity(entity))
+            .collect()
+    }
+
     pub fn upsert_scene(&mut self, scene: Scene) -> Result<Option<Scene>, RegistryError> {
         for action in &scene.actions {
             if !self.entities.contains_key(&action.entity_id) {
@@ -753,6 +881,14 @@ impl InMemorySmartHomeRegistry {
 
     pub fn scenes(&self) -> impl Iterator<Item = &Scene> {
         self.scenes.values()
+    }
+
+    pub fn scene_summary(&self, scene_id: &SceneId) -> Option<SceneSummary> {
+        self.scene(scene_id).map(summarize_scene)
+    }
+
+    pub fn scene_summaries(&self) -> Vec<SceneSummary> {
+        self.scenes().map(summarize_scene).collect()
     }
 
     pub fn apply_state_snapshot(
@@ -954,10 +1090,24 @@ impl InMemorySmartHomeRegistry {
             .collect()
     }
 
+    pub fn query_device_summaries(&self, selector: &DeviceSelector) -> Vec<DeviceSummary> {
+        self.query_devices(selector)
+            .into_iter()
+            .map(|device| self.summarize_device(device))
+            .collect()
+    }
+
     pub fn query_entities(&self, selector: &EntitySelector) -> Vec<&Entity> {
         self.entities
             .values()
             .filter(|entity| self.entity_matches_selector(entity, selector))
+            .collect()
+    }
+
+    pub fn query_entity_summaries(&self, selector: &EntitySelector) -> Vec<EntitySummary> {
+        self.query_entities(selector)
+            .into_iter()
+            .map(|entity| self.summarize_entity(entity))
             .collect()
     }
 
@@ -1071,6 +1221,84 @@ impl InMemorySmartHomeRegistry {
         match self.lookup_protocol(identifier) {
             Some(RegistryTarget::Scene(id)) => self.scenes.get(id),
             _ => None,
+        }
+    }
+
+    fn summarize_bridge(&self, bridge: &Bridge) -> BridgeSummary {
+        let device_count = self
+            .bridge_devices
+            .get(&bridge.bridge_id)
+            .map_or(0, BTreeSet::len);
+        let entity_count = self
+            .devices_for_bridge(&bridge.bridge_id)
+            .map(|device| {
+                self.device_entities
+                    .get(&device.device_id)
+                    .map_or(0, BTreeSet::len)
+            })
+            .sum();
+
+        BridgeSummary {
+            bridge_id: bridge.bridge_id.clone(),
+            integration_id: bridge.integration_id.clone(),
+            transport: bridge.transport,
+            health: bridge.health,
+            last_seen_at_ms: bridge.last_seen_at_ms,
+            device_count,
+            entity_count,
+            protocol_identifier_count: bridge.identifiers.len(),
+            metadata_count: bridge.metadata.len(),
+        }
+    }
+
+    fn summarize_device(&self, device: &Device) -> DeviceSummary {
+        let entities = self
+            .entities_for_device(&device.device_id)
+            .collect::<Vec<_>>();
+        let capability_count = entities
+            .iter()
+            .map(|entity| entity.capabilities.len())
+            .sum();
+        let state_count = entities
+            .iter()
+            .filter(|entity| self.state(&entity.entity_id).is_some())
+            .count();
+
+        DeviceSummary {
+            device_id: device.device_id.clone(),
+            bridge_id: device.bridge_id.clone(),
+            manufacturer: device.manufacturer.clone(),
+            model: device.model.clone(),
+            name: device.name.clone(),
+            health: device.health,
+            entity_count: entities.len(),
+            capability_count,
+            state_count,
+            protocol_identifier_count: device.identifiers.len(),
+            metadata_count: device.metadata.len(),
+        }
+    }
+
+    fn summarize_entity(&self, entity: &Entity) -> EntitySummary {
+        let state = self.state(&entity.entity_id).or(entity.state.as_ref());
+        EntitySummary {
+            entity_id: entity.entity_id.clone(),
+            device_id: entity.device_id.clone(),
+            kind: entity.kind,
+            name: entity.name.clone(),
+            capability_ids: entity
+                .capabilities
+                .iter()
+                .map(|capability| capability.capability_id.clone())
+                .collect(),
+            has_state: state.is_some(),
+            state_value_kind: state.map(|snapshot| value_kind(&snapshot.value)),
+            state_source: state.map(|snapshot| snapshot.source),
+            state_confidence: state.map(|snapshot| snapshot.confidence),
+            state_observed_at_ms: state.map(|snapshot| snapshot.observed_at_ms),
+            state_received_at_ms: state.map(|snapshot| snapshot.received_at_ms),
+            state_expires_at_ms: state.and_then(|snapshot| snapshot.expires_at_ms),
+            metadata_count: entity.metadata.len(),
         }
     }
 
@@ -1229,6 +1457,29 @@ fn entity_has_capability(entity: &Entity, capability_id: &CapabilityId) -> bool 
         .capabilities
         .iter()
         .any(|capability| &capability.capability_id == capability_id)
+}
+
+fn summarize_scene(scene: &Scene) -> SceneSummary {
+    SceneSummary {
+        scene_id: scene.scene_id.clone(),
+        scope: scene.scope,
+        action_count: scene.actions.len(),
+        has_native_ref: scene.native_ref.is_some(),
+        metadata_count: scene.metadata.len(),
+    }
+}
+
+fn value_kind(value: &Value) -> ValueKind {
+    match value {
+        Value::Null => ValueKind::Null,
+        Value::Bool(_) => ValueKind::Boolean,
+        Value::Integer(_) => ValueKind::Integer,
+        Value::Number(_) => ValueKind::Number,
+        Value::Percentage(_) => ValueKind::Percentage,
+        Value::Text(_) => ValueKind::Text,
+        Value::Object(_) => ValueKind::Object,
+        Value::Array(_) => ValueKind::Array,
+    }
 }
 
 fn authorization_decision_matches_selector(
@@ -1459,6 +1710,92 @@ mod tests {
         assert_eq!(read.counts().entities, 1);
         assert_eq!(devices, vec![DeviceId::trusted("device-1")]);
         assert_eq!(lights[0].entity_id, EntityId::trusted("entity-1"));
+    }
+
+    #[test]
+    fn read_summaries_expose_compact_registry_shape() {
+        let mut registry = InMemorySmartHomeRegistry::new();
+        let mut bridge = bridge("bridge-1");
+        bridge.health = Health::Online;
+        bridge.last_seen_at_ms = Some(1_000);
+        bridge.metadata.push(Metadata::new("room", "kitchen"));
+        registry.upsert_bridge(bridge).unwrap();
+
+        let mut device = device("device-1", "bridge-1");
+        device.metadata.push(Metadata::new("fixture", "ceiling"));
+        registry.upsert_device(device).unwrap();
+
+        let mut entity = entity("entity-1", "device-1");
+        entity.capabilities.push(Capability::light_brightness());
+        entity.metadata.push(Metadata::new("surface", "counter"));
+        registry.upsert_entity(entity).unwrap();
+        registry
+            .apply_state_snapshot(StateSnapshot {
+                entity_id: EntityId::trusted("entity-1"),
+                value: Value::Percentage(42),
+                source: StateSource::Poll,
+                observed_at_ms: 1_010,
+                received_at_ms: 1_011,
+                expires_at_ms: Some(2_000),
+                confidence: StateConfidence::Confirmed,
+            })
+            .unwrap();
+        registry
+            .upsert_scene(Scene {
+                scene_id: SceneId::trusted("scene-1"),
+                scope: SceneScope::Room,
+                native_ref: Some(
+                    ProtocolIdentifier::new(ProtocolFamily::Hue, "scene", "scene-native-1")
+                        .unwrap(),
+                ),
+                actions: vec![SceneAction {
+                    entity_id: EntityId::trusted("entity-1"),
+                    desired_state: Value::Bool(true),
+                }],
+                metadata: Vec::new(),
+            })
+            .unwrap();
+
+        let read = registry.read_view();
+        let bridge_summary = read.bridge_summary(&BridgeId::trusted("bridge-1")).unwrap();
+        let device_summary = read
+            .query_device_summaries(
+                &DeviceSelector::new().with_capability(CapabilityId::trusted("light.brightness")),
+            )
+            .pop()
+            .unwrap();
+        let entity_summary = read
+            .query_entity_summaries(
+                &EntitySelector::new().with_state_freshness(StateFreshness::FreshAt(1_500)),
+            )
+            .pop()
+            .unwrap();
+        let scene_summary = read.scene_summary(&SceneId::trusted("scene-1")).unwrap();
+
+        assert_eq!(bridge_summary.health, Health::Online);
+        assert_eq!(bridge_summary.device_count, 1);
+        assert_eq!(bridge_summary.entity_count, 1);
+        assert_eq!(bridge_summary.metadata_count, 1);
+        assert_eq!(device_summary.entity_count, 1);
+        assert_eq!(device_summary.capability_count, 2);
+        assert_eq!(device_summary.state_count, 1);
+        assert_eq!(
+            entity_summary.capability_ids,
+            vec![
+                CapabilityId::trusted("light.on_off"),
+                CapabilityId::trusted("light.brightness")
+            ]
+        );
+        assert!(entity_summary.has_state);
+        assert_eq!(entity_summary.state_value_kind, Some(ValueKind::Percentage));
+        assert_eq!(entity_summary.state_source, Some(StateSource::Poll));
+        assert_eq!(
+            entity_summary.state_confidence,
+            Some(StateConfidence::Confirmed)
+        );
+        assert_eq!(entity_summary.state_expires_at_ms, Some(2_000));
+        assert_eq!(scene_summary.action_count, 1);
+        assert!(scene_summary.has_native_ref);
     }
 
     #[test]
