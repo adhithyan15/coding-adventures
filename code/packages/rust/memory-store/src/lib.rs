@@ -73,6 +73,45 @@ impl MemoryRecord {
     }
 }
 
+/// Metadata-only projection for read tools that need to inspect memories
+/// without returning the durable memory body.
+#[derive(Debug, Clone, PartialEq)]
+pub struct MemoryRecordSummary {
+    pub memory_id: String,
+    pub class: MemoryClass,
+    pub subject: String,
+    pub confidence: f64,
+    pub source_refs: Vec<String>,
+    pub tags: Vec<String>,
+    pub supersedes: Vec<String>,
+    pub created_at: u64,
+    pub reviewed_at: Option<u64>,
+    pub expires_at: Option<u64>,
+    pub tombstoned: bool,
+}
+
+impl MemoryRecordSummary {
+    pub fn from_record(memory: &MemoryRecord) -> Self {
+        Self {
+            memory_id: memory.memory_id.clone(),
+            class: memory.class,
+            subject: memory.subject.clone(),
+            confidence: memory.confidence,
+            source_refs: memory.source_refs.clone(),
+            tags: memory.tags.clone(),
+            supersedes: memory.supersedes.clone(),
+            created_at: memory.created_at,
+            reviewed_at: memory.reviewed_at,
+            expires_at: memory.expires_at,
+            tombstoned: memory.tombstoned,
+        }
+    }
+
+    pub fn is_active_at(&self, now_ms: u64) -> bool {
+        !self.tombstoned && self.expires_at.is_none_or(|expires_at| now_ms < expires_at)
+    }
+}
+
 /// Why a memory should be surfaced for human, agent, or scheduled review.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum MemoryReviewReason {
@@ -367,6 +406,17 @@ impl<S: StorageBackend> MemoryStore<S> {
             memories.truncate(limit);
         }
         Ok(memories)
+    }
+
+    pub fn list_memory_summaries(
+        &self,
+        options: MemoryListOptions,
+    ) -> Result<Vec<MemoryRecordSummary>, StorageError> {
+        Ok(self
+            .list_memories_with_options(options)?
+            .iter()
+            .map(MemoryRecordSummary::from_record)
+            .collect())
     }
 
     pub fn search_lexical(&self, query: &str) -> Result<Vec<MemoryRecord>, StorageError> {
@@ -1164,6 +1214,56 @@ mod tests {
             )
             .unwrap();
         assert_eq!(with_tombstones.len(), 2);
+    }
+
+    #[test]
+    fn list_memory_summaries_project_metadata_without_body() {
+        let store = MemoryStore::new(InMemoryStorageBackend::new());
+        let mut profile =
+            memory_with_created_confidence("pref-tone", "Tone", "Prefer concise recaps", 10, 0.8);
+        profile.tags = vec!["writing".to_string(), "tone".to_string()];
+        profile.source_refs = vec!["session-1".to_string()];
+        profile.supersedes = vec!["old-pref-tone".to_string()];
+        profile.reviewed_at = Some(25);
+
+        let mut procedure = memory_with_created_confidence(
+            "runbook",
+            "Runbook",
+            "Prefer concise operational steps",
+            30,
+            0.95,
+        );
+        procedure.class = MemoryClass::Procedure;
+        procedure.tags = vec!["writing".to_string(), "ops".to_string()];
+        procedure.source_refs = vec!["session-1".to_string(), "spec-d18".to_string()];
+
+        let _ = store.remember(profile).unwrap();
+        let _ = store.remember(procedure).unwrap();
+
+        let summaries = store
+            .list_memory_summaries(
+                MemoryListOptions::new()
+                    .with_tag("writing")
+                    .with_source_ref("session-1")
+                    .sorted_by(MemoryListSort::CreatedAtDesc),
+            )
+            .unwrap();
+
+        assert_eq!(
+            summaries
+                .iter()
+                .map(|summary| summary.memory_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["runbook", "pref-tone"]
+        );
+        assert_eq!(summaries[1].subject, "Tone");
+        assert_eq!(summaries[1].class, MemoryClass::Profile);
+        assert_eq!(summaries[1].confidence, 0.8);
+        assert_eq!(summaries[1].tags, vec!["writing", "tone"]);
+        assert_eq!(summaries[1].source_refs, vec!["session-1"]);
+        assert_eq!(summaries[1].supersedes, vec!["old-pref-tone"]);
+        assert_eq!(summaries[1].reviewed_at, Some(25));
+        assert!(summaries[1].is_active_at(100));
     }
 
     #[test]

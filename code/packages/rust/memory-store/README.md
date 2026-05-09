@@ -10,6 +10,7 @@ than a backend-specific index.
 ## What it owns
 
 - `MemoryRecord`
+- `MemoryRecordSummary`
 - `MemoryClass`
 - confidence/review updates
 - supersede, expiry, and tombstone transitions
@@ -17,6 +18,8 @@ than a backend-specific index.
   bounded result sets for tool calls
 - bounded read selectors for class, tag, source, active-at, confidence,
   tombstone inclusion, sorting, and limits
+- metadata-only memory summaries for read tools that should not return memory
+  body text
 - deterministic review candidates for low-confidence, stale, expiring, and
   expired memories
 
@@ -31,6 +34,7 @@ than a backend-specific index.
 - `update_confidence()`
 - `supersede_old_memory()`
 - `list_memories_with_options()`
+- `list_memory_summaries()`
 - `list_by_class()`
 - `list_by_tag()`
 - `search_lexical()`
