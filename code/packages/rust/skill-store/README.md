@@ -11,10 +11,12 @@ other backends without changing the skill API.
 - `SkillManifest`
 - `SkillManifestSummary`
 - `SkillAssetRecord`
+- `SkillAssetSummary`
 - installation of manifests plus asset bundles
 - bounded manifest listing by active status, entrypoint, required tool, and
   required capability
 - metadata-only summary reads for catalog and `skill.list` surfaces
+- metadata-only asset summary reads for catalog and preload planning surfaces
 - active-version switching and uninstall semantics
 
 ## Key layout
@@ -29,6 +31,7 @@ other backends without changing the skill API.
 - `load_manifest_summary()`
 - `list_skills()`
 - `list_skill_summaries()`
+- `list_asset_summaries()`
 - `list_installed_skills()`
 - `read_asset()`
 - `activate_version()`
@@ -44,6 +47,11 @@ number of results without loading asset bodies.
 selection. It keeps names, descriptions, entrypoints, tool/capability
 requirements, asset counts, version, and active status while leaving raw
 manifest `source` and asset bytes behind the explicit manifest/asset reads.
+
+`SkillAssetListOptions` gives D18D catalog and preload tools a bounded asset
+read model. Callers can list asset metadata for one skill version, narrow by
+logical path prefix or content type, and cap the number of returned summaries
+without materializing asset bodies.
 
 ## Development
 
