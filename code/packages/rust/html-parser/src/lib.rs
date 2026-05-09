@@ -815,12 +815,6 @@ impl HtmlParser {
         self.clear_pending_formatting_unless_next_reconstructs(&name);
         let formatting_inside = self.take_formatting_reconstruction_inside_for(&name);
         self.apply_simple_implied_end_tags(&name);
-        if self.apply_interactive_implied_contexts(&name) {
-            return;
-        }
-        if self.apply_select_implied_contexts(&name) {
-            return;
-        }
 
         let attributes: Vec<Attribute> = attributes
             .into_iter()
@@ -829,6 +823,17 @@ impl HtmlParser {
                 value: attribute.value,
             })
             .collect();
+
+        if self.foster_formatting_start_in_table_context(&name, &attributes) {
+            return;
+        }
+
+        if self.apply_interactive_implied_contexts(&name) {
+            return;
+        }
+        if self.apply_select_implied_contexts(&name) {
+            return;
+        }
 
         if name == "html" && self.merge_attributes_into_open_element("html", &attributes) {
             return;
@@ -1006,6 +1011,40 @@ impl HtmlParser {
         }
     }
 
+    fn foster_formatting_start_in_table_context(
+        &mut self,
+        incoming_name: &str,
+        attributes: &[Attribute],
+    ) -> bool {
+        if incoming_name != "a" || !self.current_element_is_table_structure() {
+            return false;
+        }
+
+        let Some(table_path) = self
+            .open_elements
+            .iter()
+            .rfind(|path| element_at_path(&self.document, path).is_some_and(|name| name == "table"))
+            .cloned()
+        else {
+            return false;
+        };
+        let Some((&table_index, parent_path)) = table_path.split_last() else {
+            return false;
+        };
+        let Some(children) = children_at_path_mut(&mut self.document.children, parent_path) else {
+            return false;
+        };
+
+        children.insert(
+            table_index,
+            Node::element(incoming_name.to_string(), attributes.to_vec()),
+        );
+        increment_open_element_paths_after_insert(&mut self.open_elements, parent_path, table_index);
+        self.pending_formatting_reconstruction =
+            vec![(incoming_name.to_string(), attributes.to_vec())];
+        true
+    }
+
     fn apply_document_shell_implied_contexts(&mut self, incoming_name: &str) {
         if starts_body_after_head(incoming_name) {
             self.pop_current_if(|name| name == "head");
@@ -1049,6 +1088,16 @@ impl HtmlParser {
                     self.open_elements.clear();
                 } else {
                     self.close_element(name);
+                }
+            }
+            "table" => {
+                self.close_element(name);
+                if self
+                    .pending_formatting_reconstruction
+                    .iter()
+                    .any(|(name, _)| name == "a")
+                {
+                    self.close_open_formatting_element_silently("a");
                 }
             }
             _ => self.close_element(name),
@@ -1155,7 +1204,7 @@ impl HtmlParser {
     fn apply_interactive_implied_contexts(&mut self, incoming_name: &str) -> bool {
         match incoming_name {
             "a" => {
-                self.close_open_element_silently("a");
+                self.close_open_formatting_element_silently("a");
                 false
             }
             "button" => {
@@ -1189,6 +1238,21 @@ impl HtmlParser {
 
     fn close_open_element_silently(&mut self, name: &str) -> bool {
         self.close_open_element_if(|candidate| candidate == name)
+    }
+
+    fn close_open_formatting_element_silently(&mut self, name: &str) -> bool {
+        let Some(index) = self
+            .open_elements
+            .iter()
+            .rposition(|path| element_at_path(&self.document, path).is_some_and(|n| n == name))
+        else {
+            return false;
+        };
+        if self.has_table_context_above(index) {
+            return false;
+        }
+        self.open_elements.truncate(index);
+        true
     }
 
     fn close_open_element_if(&mut self, predicate: impl Fn(&str) -> bool) -> bool {
@@ -1261,6 +1325,15 @@ impl HtmlParser {
     fn current_element_is(&self, name: &str) -> bool {
         self.current_element_name()
             .is_some_and(|current| current == name)
+    }
+
+    fn current_element_is_table_structure(&self) -> bool {
+        self.current_element_name().is_some_and(|current| {
+            matches!(
+                current,
+                "table" | "tbody" | "thead" | "tfoot" | "tr" | "caption" | "colgroup"
+            )
+        })
     }
 
     fn current_element_name(&self) -> Option<&str> {
@@ -1361,6 +1434,21 @@ fn children_at_path_mut<'a>(nodes: &'a mut Vec<Node>, path: &[usize]) -> Option<
     match nodes.get_mut(*index)? {
         Node::Element(element) => children_at_path_mut(&mut element.children, rest),
         _ => None,
+    }
+}
+
+fn increment_open_element_paths_after_insert(
+    open_elements: &mut [Vec<usize>],
+    parent_path: &[usize],
+    insert_index: usize,
+) {
+    for path in open_elements {
+        if path.len() <= parent_path.len() || !path.starts_with(parent_path) {
+            continue;
+        }
+        if path[parent_path.len()] >= insert_index {
+            path[parent_path.len()] += 1;
+        }
     }
 }
 
@@ -1543,7 +1631,7 @@ fn starts_inner_formatting_reconstruction_boundary(name: &str) -> bool {
 }
 
 fn starts_before_formatting_reconstruction_boundary(name: &str) -> bool {
-    matches!(name, "marquee" | "option")
+    matches!(name, "b" | "marquee" | "option")
 }
 
 fn is_special_element(name: &str) -> bool {
