@@ -45,3 +45,5 @@ All notable changes to this package will be documented in this file.
   before mutating supervisor state.
 - Worker restart reconciliation marks registered bridges degraded and emits
   deterministic health events.
+- Read-side queries for event-log entries, subscription backlogs, pairing
+  sessions, desired-state targets, and supervised bridge workers.

@@ -12,6 +12,8 @@ Included surfaces:
 - in-process event bus with explicit subscriptions and filters
 - replay checkpoints so subscribers can rebuild state from an earlier event-log
   position before receiving live updates
+- read-side event-log and subscription backlog queries for dashboards, tools,
+  and tests that need bounded runtime inspection
 - command validation against entity capabilities and command modes
 - grant-backed command authorization for Chief of Staff agents and sandboxed
   tools
@@ -25,6 +27,7 @@ Included surfaces:
   registers filtered replay subscriptions with checkpoints
 - D18D-facing pair-bridge facade with short-lived pairing sessions that complete
   only to Vault references, never raw credentials
+- read-side queries for pairing sessions and desired-state supervision targets
 - D18D-facing command tool facade for authorized `smart_home.command` calls that
   validate tool grants, command grants, optimistic state, and audit decisions
 - accepted command results that remain separate from confirmed device state
@@ -40,6 +43,8 @@ Included surfaces:
 - replay of device events into the registry-backed state cache
 - bridge health reports that update health without removing identities
 - supervised bridge-worker heartbeat tracking and restart signals
+- read-side worker queries by bridge, integration, status, restart count, and
+  heartbeat deadline
 - deterministic worker heartbeat deadline schedules for supervisor wakeups
 - worker restart reconciliation that marks registered bridges degraded with
   health events
