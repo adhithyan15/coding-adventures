@@ -156,6 +156,13 @@ pub struct AppendEntryInput {
     pub body: JsonValue,
 }
 
+/// Options for reading a bounded window of ordered entries.
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
+pub struct FetchEntriesOptions {
+    pub after_entry_id: Option<String>,
+    pub limit: Option<usize>,
+}
+
 /// Input used when creating a snapshot.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct CreateSnapshotInput {
@@ -267,7 +274,23 @@ impl<S: StorageBackend> ContextStore<S> {
         &self,
         session_id: &str,
     ) -> Result<Vec<ContextEntry>, StorageError> {
+        self.fetch_entries(session_id, FetchEntriesOptions::default())
+    }
+
+    /// Fetch a bounded ordered entry window for one session.
+    pub fn fetch_entries(
+        &self,
+        session_id: &str,
+        options: FetchEntriesOptions,
+    ) -> Result<Vec<ContextEntry>, StorageError> {
         validate_id("session_id", session_id)?;
+        if let Some(after_entry_id) = options.after_entry_id.as_deref() {
+            validate_id("after_entry_id", after_entry_id)?;
+        }
+        if options.limit == Some(0) {
+            return Err(validation("limit", "must be greater than zero"));
+        }
+
         self.backend.initialize()?;
         let page = self.backend.list(
             NAMESPACE,
@@ -279,10 +302,12 @@ impl<S: StorageBackend> ContextStore<S> {
             },
         )?;
 
-        page.records
+        let entries = page
+            .records
             .iter()
             .map(|record| decode_entry_record(&record.body))
-            .collect()
+            .collect::<Result<Vec<_>, _>>()?;
+        window_entries(entries, options)
     }
 
     /// Create a new snapshot and advance the session head pointer to it.
@@ -770,6 +795,28 @@ fn string_array_json(values: &[String]) -> JsonValue {
     )
 }
 
+fn window_entries(
+    entries: Vec<ContextEntry>,
+    options: FetchEntriesOptions,
+) -> Result<Vec<ContextEntry>, StorageError> {
+    let start = match options.after_entry_id.as_deref() {
+        Some(after_entry_id) => entries
+            .iter()
+            .position(|entry| entry.entry_id == after_entry_id)
+            .map(|index| index + 1)
+            .ok_or_else(|| {
+                validation(
+                    "after_entry_id",
+                    format!("entry '{after_entry_id}' was not found"),
+                )
+            })?,
+        None => 0,
+    };
+    let limit = options.limit.unwrap_or(usize::MAX);
+
+    Ok(entries.into_iter().skip(start).take(limit).collect())
+}
+
 fn validation(field: &str, message: impl Into<String>) -> StorageError {
     StorageError::Validation {
         field: field.to_string(),
@@ -822,6 +869,113 @@ mod tests {
         assert_eq!(entries.len(), 1);
         assert_eq!(entries[0].entry_id, "entry-1");
         assert_eq!(entries[0].kind, ContextEntryKind::User);
+    }
+
+    #[test]
+    fn fetch_entries_supports_after_cursor_and_limit() {
+        let store = ContextStore::new(InMemoryStorageBackend::new());
+        let _ = store
+            .create_session(CreateSessionInput {
+                session_id: "demo".to_string(),
+                owner_id: "chief".to_string(),
+                title: "Planning".to_string(),
+            })
+            .unwrap();
+
+        for (index, entry_id) in ["entry-1", "entry-2", "entry-3"].iter().enumerate() {
+            let _ = store
+                .append_entry(
+                    "demo",
+                    AppendEntryInput {
+                        entry_id: (*entry_id).to_string(),
+                        kind: ContextEntryKind::Note,
+                        timestamp: Some((index as u64 + 1) * 10),
+                        metadata: object(&[]),
+                        body: JsonValue::String((*entry_id).to_string()),
+                    },
+                )
+                .unwrap();
+        }
+
+        let entries = store
+            .fetch_entries(
+                "demo",
+                FetchEntriesOptions {
+                    after_entry_id: Some("entry-1".to_string()),
+                    limit: Some(1),
+                },
+            )
+            .unwrap();
+        assert_eq!(
+            entries
+                .iter()
+                .map(|entry| entry.entry_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["entry-2"]
+        );
+
+        let entries = store
+            .fetch_entries(
+                "demo",
+                FetchEntriesOptions {
+                    after_entry_id: Some("entry-2".to_string()),
+                    limit: None,
+                },
+            )
+            .unwrap();
+        assert_eq!(
+            entries
+                .iter()
+                .map(|entry| entry.entry_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["entry-3"]
+        );
+    }
+
+    #[test]
+    fn fetch_entries_rejects_bad_windows() {
+        let store = ContextStore::new(InMemoryStorageBackend::new());
+        let _ = store
+            .create_session(CreateSessionInput {
+                session_id: "demo".to_string(),
+                owner_id: "chief".to_string(),
+                title: "Planning".to_string(),
+            })
+            .unwrap();
+        let _ = store
+            .append_entry(
+                "demo",
+                AppendEntryInput {
+                    entry_id: "entry-1".to_string(),
+                    kind: ContextEntryKind::Note,
+                    timestamp: Some(10),
+                    metadata: object(&[]),
+                    body: JsonValue::String("entry-1".to_string()),
+                },
+            )
+            .unwrap();
+
+        let missing = store
+            .fetch_entries(
+                "demo",
+                FetchEntriesOptions {
+                    after_entry_id: Some("entry-2".to_string()),
+                    limit: None,
+                },
+            )
+            .unwrap_err();
+        let zero_limit = store
+            .fetch_entries(
+                "demo",
+                FetchEntriesOptions {
+                    after_entry_id: None,
+                    limit: Some(0),
+                },
+            )
+            .unwrap_err();
+
+        assert!(matches!(missing, StorageError::Validation { .. }));
+        assert!(matches!(zero_limit, StorageError::Validation { .. }));
     }
 
     #[test]
