@@ -66,6 +66,7 @@ assert_eq!(err.kind(), std::io::ErrorKind::PermissionDenied);
 | `errors`        | `CapabilityViolationError`, `ManifestError`, `InvalidCombination` |
 | `glob`          | `match_target(pattern, candidate)` for fs / net targets |
 | `manifest`      | `Manifest` with `has`/`check`/`try_new`/`load_from_str`/`load_from_file` |
+| `audit`         | `Operation<T>`, `OperationRecord`, and `AuditSink` envelope types |
 | `backend`       | `Backend` trait + `OpenBackend` / `TestBackend` / `DenyAllBackend`, `with_backend(...)` guard |
 | `secure_file`   | `read_file` / `write_file` / `create_file` / `delete_file` / `list_dir` |
 
@@ -91,7 +92,6 @@ default parallel test scheduler.
 
 Spec-defined but landing in subsequent PRs:
 
-- Audit envelope (`Operation<T>`, `AuditSink`)
 - `secure_net` / `secure_proc` / `secure_env` / `secure_time` /
   `secure_stdio` modules
 - `build.rs` codegen for `package_manifest()`
