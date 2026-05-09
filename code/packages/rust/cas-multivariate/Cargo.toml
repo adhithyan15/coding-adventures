@@ -1,0 +1,8 @@
+[package]
+name = "cas-multivariate"
+version = "0.1.0"
+edition = "2021"
+description = "Multivariate rational polynomials, Groebner bases, reduction, and ideal solving"
+license = "MIT"
+
+[dependencies]

@@ -509,6 +509,7 @@ members = [
     "cas-algebraic",
     "cas-factor",
     "cas-fourier",
+    "cas-multivariate",
     "cas-solve",
     "cas-list-operations",
     "cas-matrix",
