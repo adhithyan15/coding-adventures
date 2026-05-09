@@ -15,6 +15,8 @@ This crate starts the D27 Thread control-plane layer above 6LoWPAN:
 - typed Connectivity TLV helpers for route-cost and active-router diagnostics
 - Thread diagnostic snapshots that combine neighbor health with leader,
   connectivity, partition, and prefix data from MLE messages
+- supervisor action projections that turn diagnostic drift into stable repair
+  intents for runtime supervisors
 - deterministic parent/child attach-state skeleton
 - neighbor table primitives for parent/child/router relationships, link margin,
   timeout freshness, and parent-candidate selection

@@ -887,6 +887,41 @@ pub enum ThreadDiagnosticHealth {
     Healthy,
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ThreadSupervisionAction {
+    Observe,
+    EnableInterface,
+    StartAttach,
+    RefreshParent,
+    RefreshRouterConnectivity,
+}
+
+impl ThreadSupervisionAction {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Observe => "observe",
+            Self::EnableInterface => "enable_interface",
+            Self::StartAttach => "start_attach",
+            Self::RefreshParent => "refresh_parent",
+            Self::RefreshRouterConnectivity => "refresh_router_connectivity",
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ThreadSupervisionPlan {
+    pub health: ThreadDiagnosticHealth,
+    pub action: ThreadSupervisionAction,
+    pub parent: Option<ThreadNeighborId>,
+    pub best_parent_candidate: Option<ThreadNeighborId>,
+}
+
+impl ThreadSupervisionPlan {
+    pub fn needs_intervention(self) -> bool {
+        self.action != ThreadSupervisionAction::Observe
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ThreadDiagnosticSnapshot {
     pub captured_at_ms: u64,
@@ -970,6 +1005,37 @@ impl ThreadDiagnosticSnapshot {
             return ThreadDiagnosticHealth::Degraded;
         }
         ThreadDiagnosticHealth::Healthy
+    }
+
+    pub fn supervision_plan(&self) -> ThreadSupervisionPlan {
+        let action = if self.local_role == DeviceRole::Disabled {
+            ThreadSupervisionAction::EnableInterface
+        } else if !self.local_role.is_attached() {
+            ThreadSupervisionAction::StartAttach
+        } else if self.local_role == DeviceRole::Child && self.parent.is_none() {
+            ThreadSupervisionAction::StartAttach
+        } else if self
+            .parent
+            .is_some_and(|parent| self.stale_neighbors.contains(&parent))
+        {
+            ThreadSupervisionAction::RefreshParent
+        } else if self
+            .connectivity
+            .is_some_and(|connectivity| connectivity.active_router_count == 0)
+            && self.local_role.can_route()
+            && self.local_role != DeviceRole::Leader
+        {
+            ThreadSupervisionAction::RefreshRouterConnectivity
+        } else {
+            ThreadSupervisionAction::Observe
+        };
+
+        ThreadSupervisionPlan {
+            health: self.health(),
+            action,
+            parent: self.parent,
+            best_parent_candidate: self.best_parent_candidate,
+        }
     }
 }
 
@@ -1649,6 +1715,17 @@ mod tests {
         assert_eq!(snapshot.active_router_count(), Some(12));
         assert_eq!(snapshot.prefixes, vec![prefix]);
         assert_eq!(snapshot.health(), ThreadDiagnosticHealth::Healthy);
+        assert_eq!(
+            snapshot.supervision_plan(),
+            ThreadSupervisionPlan {
+                health: ThreadDiagnosticHealth::Healthy,
+                action: ThreadSupervisionAction::Observe,
+                parent: Some(ThreadNeighborId(0x1000)),
+                best_parent_candidate: Some(ThreadNeighborId(0x3000)),
+            }
+        );
+        assert!(!snapshot.supervision_plan().needs_intervention());
+        assert_eq!(ThreadSupervisionAction::Observe.as_str(), "observe");
     }
 
     #[test]
@@ -1674,6 +1751,81 @@ mod tests {
             vec![ThreadNeighborId(0x1000)]
         );
         assert_eq!(stale_snapshot.health(), ThreadDiagnosticHealth::Degraded);
+    }
+
+    #[test]
+    fn supervision_plan_projects_repair_actions_from_diagnostics() {
+        let disabled = NeighborTable::new(DeviceRole::Disabled);
+        let disabled_plan = disabled
+            .diagnostic_snapshot(None, 10_000)
+            .unwrap()
+            .supervision_plan();
+        assert_eq!(disabled_plan.health, ThreadDiagnosticHealth::Offline);
+        assert_eq!(
+            disabled_plan.action,
+            ThreadSupervisionAction::EnableInterface
+        );
+        assert_eq!(
+            ThreadSupervisionAction::EnableInterface.as_str(),
+            "enable_interface"
+        );
+        assert!(disabled_plan.needs_intervention());
+
+        let detached = NeighborTable::new(DeviceRole::Detached);
+        let detached_plan = detached
+            .diagnostic_snapshot(None, 10_000)
+            .unwrap()
+            .supervision_plan();
+        assert_eq!(detached_plan.action, ThreadSupervisionAction::StartAttach);
+
+        let child_without_parent = NeighborTable::new(DeviceRole::Child);
+        let child_plan = child_without_parent
+            .diagnostic_snapshot(None, 10_000)
+            .unwrap()
+            .supervision_plan();
+        assert_eq!(child_plan.action, ThreadSupervisionAction::StartAttach);
+
+        let mut child_with_stale_parent = NeighborTable::new(DeviceRole::Child);
+        child_with_stale_parent.upsert(ThreadNeighbor::new(
+            ThreadNeighborId(0x1000),
+            DeviceRole::Router,
+            NeighborRelationship::Parent,
+            1_000,
+            500,
+        ));
+        let stale_parent_plan = child_with_stale_parent
+            .diagnostic_snapshot(None, 2_000)
+            .unwrap()
+            .supervision_plan();
+        assert_eq!(
+            stale_parent_plan.action,
+            ThreadSupervisionAction::RefreshParent
+        );
+
+        let router = NeighborTable::new(DeviceRole::Router);
+        let message = MleMessage {
+            command: MleCommand::Advertisement,
+            tlvs: vec![Connectivity {
+                parent_priority: 0,
+                link_quality_3: 0,
+                link_quality_2: 0,
+                link_quality_1: 0,
+                leader_cost: 0,
+                id_sequence: 1,
+                active_router_count: 0,
+                sleepy_end_device_buffer_size: None,
+                sleepy_end_device_datagram_count: None,
+            }
+            .to_tlv()],
+        };
+        let router_plan = router
+            .diagnostic_snapshot(Some(&message), 10_000)
+            .unwrap()
+            .supervision_plan();
+        assert_eq!(
+            router_plan.action,
+            ThreadSupervisionAction::RefreshRouterConnectivity
+        );
     }
 
     #[test]
