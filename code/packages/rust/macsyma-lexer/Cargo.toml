@@ -1,0 +1,10 @@
+[package]
+name = "coding-adventures-macsyma-lexer"
+version = "0.1.0"
+edition = "2021"
+description = "MACSYMA lexer backed by statically compiled grammar data"
+license = "MIT"
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
