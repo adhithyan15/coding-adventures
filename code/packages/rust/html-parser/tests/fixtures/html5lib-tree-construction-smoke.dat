@@ -1361,3 +1361,14 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <title>
 |       "<p>"
 |     <p>
+
+#data
+<textarea><p></textarea>
+#errors
+(1,10): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <textarea>
+|       "<p>"
