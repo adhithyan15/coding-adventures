@@ -809,6 +809,47 @@ impl RuntimeSupervisionPlan {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct RuntimeSupervisionObservation {
+    pub generated_at_ms: u64,
+    pub plan: RuntimeSupervisionPlan,
+    pub heartbeat_schedule: WorkerHeartbeatSchedule,
+}
+
+impl RuntimeSupervisionObservation {
+    pub fn is_idle(&self) -> bool {
+        self.plan.is_empty()
+    }
+
+    pub fn action_count(&self) -> usize {
+        self.plan.action_count()
+    }
+
+    pub fn pairing_expiry_count(&self) -> usize {
+        self.plan.pairing_sessions_expiring.len()
+    }
+
+    pub fn state_refresh_count(&self) -> usize {
+        self.plan.state_refresh_plan.len()
+    }
+
+    pub fn desired_state_drift_count(&self) -> usize {
+        self.plan.desired_state_drifts.len()
+    }
+
+    pub fn worker_restart_count(&self) -> usize {
+        self.plan.worker_restart_plan.len()
+    }
+
+    pub fn due_worker_deadline_count(&self) -> usize {
+        self.heartbeat_schedule.due_at(self.generated_at_ms).len()
+    }
+
+    pub fn next_worker_heartbeat_due_at_ms(&self) -> Option<u64> {
+        self.heartbeat_schedule.next_due_at_ms()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct SupervisionTickReport {
     pub ticked_at_ms: u64,
     pub expired_pairing_sessions: Vec<RuntimePairingSessionId>,
@@ -1666,6 +1707,17 @@ impl SmartHomeRuntime {
             state_refresh_plan: self.registry.state_refresh_plan_at(now_ms),
             desired_state_drifts: self.desired_state_drift_plan_at(now_ms)?,
             worker_restart_plan: self.supervisor.restart_plan_at(now_ms),
+        })
+    }
+
+    pub fn observe_supervision_at(
+        &self,
+        now_ms: u64,
+    ) -> Result<RuntimeSupervisionObservation, RuntimeError> {
+        Ok(RuntimeSupervisionObservation {
+            generated_at_ms: now_ms,
+            plan: self.supervision_plan_at(now_ms)?,
+            heartbeat_schedule: self.supervisor.heartbeat_schedule_at(now_ms),
         })
     }
 
@@ -3212,6 +3264,46 @@ mod tests {
         assert_eq!(worker.status, WorkerStatus::Starting);
         assert_eq!(worker.restart_count, 0);
         assert_eq!(snapshot.confidence, StateConfidence::Confirmed);
+        assert!(runtime.event_bus().published().is_empty());
+    }
+
+    #[test]
+    fn runtime_supervision_observation_combines_plan_and_heartbeat_schedule() {
+        let mut runtime = SmartHomeRuntime::new();
+        let early_bridge = BridgeId::trusted("bridge-early");
+        let late_bridge = BridgeId::trusted("bridge-late");
+        runtime
+            .supervisor_mut()
+            .register_worker(SupervisedBridgeWorker::new(
+                early_bridge.clone(),
+                IntegrationId::trusted("hue"),
+                1_000,
+                100,
+            ));
+        runtime
+            .supervisor_mut()
+            .register_worker(SupervisedBridgeWorker::new(
+                late_bridge.clone(),
+                IntegrationId::trusted("thread"),
+                1_000,
+                500,
+            ));
+
+        let observation = runtime.observe_supervision_at(1_125).unwrap();
+        let worker = runtime.supervisor().worker(&early_bridge).unwrap();
+
+        assert_eq!(observation.generated_at_ms, 1_125);
+        assert_eq!(observation.action_count(), 1);
+        assert_eq!(observation.pairing_expiry_count(), 0);
+        assert_eq!(observation.state_refresh_count(), 0);
+        assert_eq!(observation.desired_state_drift_count(), 0);
+        assert_eq!(observation.worker_restart_count(), 1);
+        assert_eq!(observation.due_worker_deadline_count(), 1);
+        assert_eq!(observation.next_worker_heartbeat_due_at_ms(), Some(1_100));
+        assert_eq!(observation.heartbeat_schedule.len(), 2);
+        assert!(!observation.is_idle());
+        assert_eq!(worker.status, WorkerStatus::Starting);
+        assert_eq!(worker.restart_count, 0);
         assert!(runtime.event_bus().published().is_empty());
     }
 
