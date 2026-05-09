@@ -92,15 +92,20 @@ impl EventStreamTransport {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum MqttTopicError {
     EmptyFilter,
+    EmptyDiscoveryPrefix,
     HashWildcardMustBeFinal,
     PlusWildcardMustOccupyLevel,
     TopicNameContainsWildcard,
+    InvalidDiscoveryPathPart { field: &'static str, value: String },
 }
 
 impl fmt::Display for MqttTopicError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::EmptyFilter => write!(f, "MQTT topic filter must not be empty"),
+            Self::EmptyDiscoveryPrefix => {
+                write!(f, "Home Assistant MQTT discovery prefix must not be empty")
+            }
             Self::HashWildcardMustBeFinal => {
                 write!(f, "MQTT # wildcard must occupy the final topic level")
             }
@@ -108,6 +113,10 @@ impl fmt::Display for MqttTopicError {
                 write!(f, "MQTT + wildcard must occupy an entire topic level")
             }
             Self::TopicNameContainsWildcard => write!(f, "MQTT topic names must not use wildcards"),
+            Self::InvalidDiscoveryPathPart { field, value } => write!(
+                f,
+                "Home Assistant MQTT discovery {field} must be a non-empty topic path segment without wildcards or slashes: {value}"
+            ),
         }
     }
 }
@@ -208,6 +217,247 @@ impl MqttPayloadFormat {
             Self::Json => "json",
             Self::HomeAssistantDiscoveryJson => "home_assistant_discovery_json",
         }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub enum HomeAssistantMqttDiscoveryComponent {
+    AlarmControlPanel,
+    BinarySensor,
+    Button,
+    Climate,
+    Cover,
+    Fan,
+    Light,
+    Lock,
+    Number,
+    Scene,
+    Select,
+    Sensor,
+    Switch,
+}
+
+impl HomeAssistantMqttDiscoveryComponent {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::AlarmControlPanel => "alarm_control_panel",
+            Self::BinarySensor => "binary_sensor",
+            Self::Button => "button",
+            Self::Climate => "climate",
+            Self::Cover => "cover",
+            Self::Fan => "fan",
+            Self::Light => "light",
+            Self::Lock => "lock",
+            Self::Number => "number",
+            Self::Scene => "scene",
+            Self::Select => "select",
+            Self::Sensor => "sensor",
+            Self::Switch => "switch",
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HomeAssistantMqttDiscoverySpec {
+    pub integration_id: IntegrationId,
+    pub broker_id: BridgeId,
+    pub discovery_prefix: String,
+    pub component: HomeAssistantMqttDiscoveryComponent,
+    pub object_id: String,
+    pub node_id: Option<String>,
+    pub state_topic_filter: MqttTopicFilter,
+    pub availability_topic_filter: Option<MqttTopicFilter>,
+    pub command_topic_name: Option<String>,
+    pub qos: MqttQos,
+    pub retain_policy: MqttRetainPolicy,
+    pub metadata: Vec<Metadata>,
+}
+
+impl HomeAssistantMqttDiscoverySpec {
+    pub fn new(
+        broker_id: BridgeId,
+        component: HomeAssistantMqttDiscoveryComponent,
+        object_id: impl Into<String>,
+        state_topic_filter: MqttTopicFilter,
+    ) -> Result<Self, MqttTopicError> {
+        let object_id = object_id.into();
+        validate_mqtt_discovery_part("object_id", &object_id)?;
+        Ok(Self {
+            integration_id: IntegrationId::trusted("home_assistant_mqtt"),
+            broker_id,
+            discovery_prefix: "homeassistant".to_string(),
+            component,
+            object_id,
+            node_id: None,
+            state_topic_filter,
+            availability_topic_filter: None,
+            command_topic_name: None,
+            qos: MqttQos::AtLeastOnce,
+            retain_policy: MqttRetainPolicy::DeliverRetained,
+            metadata: Vec::new(),
+        })
+    }
+
+    pub fn with_integration(mut self, integration_id: IntegrationId) -> Self {
+        self.integration_id = integration_id;
+        self
+    }
+
+    pub fn with_discovery_prefix(
+        mut self,
+        discovery_prefix: impl Into<String>,
+    ) -> Result<Self, MqttTopicError> {
+        let discovery_prefix = discovery_prefix.into();
+        validate_mqtt_discovery_prefix(&discovery_prefix)?;
+        self.discovery_prefix = discovery_prefix;
+        Ok(self)
+    }
+
+    pub fn with_node_id(mut self, node_id: impl Into<String>) -> Result<Self, MqttTopicError> {
+        let node_id = node_id.into();
+        validate_mqtt_discovery_part("node_id", &node_id)?;
+        self.node_id = Some(node_id);
+        Ok(self)
+    }
+
+    pub fn with_availability_topic(mut self, topic_filter: MqttTopicFilter) -> Self {
+        self.availability_topic_filter = Some(topic_filter);
+        self
+    }
+
+    pub fn with_command_topic(
+        mut self,
+        topic_name: impl Into<String>,
+    ) -> Result<Self, MqttTopicError> {
+        let topic_name = topic_name.into();
+        validate_mqtt_topic_name(&topic_name)?;
+        self.command_topic_name = Some(topic_name);
+        Ok(self)
+    }
+
+    pub fn with_qos(mut self, qos: MqttQos) -> Self {
+        self.qos = qos;
+        self
+    }
+
+    pub fn with_retain_policy(mut self, retain_policy: MqttRetainPolicy) -> Self {
+        self.retain_policy = retain_policy;
+        self
+    }
+
+    pub fn with_metadata(mut self, metadata: Metadata) -> Self {
+        self.metadata.push(metadata);
+        self
+    }
+
+    pub fn config_topic_name(&self) -> String {
+        match &self.node_id {
+            Some(node_id) => format!(
+                "{}/{}/{}/{}/config",
+                self.discovery_prefix,
+                self.component.as_str(),
+                node_id,
+                self.object_id
+            ),
+            None => format!(
+                "{}/{}/{}/config",
+                self.discovery_prefix,
+                self.component.as_str(),
+                self.object_id
+            ),
+        }
+    }
+
+    pub fn discovery_key(&self) -> String {
+        format!(
+            "home_assistant_mqtt:{}:{}:{}:{}",
+            self.broker_id.as_str(),
+            self.discovery_prefix,
+            self.component.as_str(),
+            self.node_id
+                .as_ref()
+                .map(|node_id| format!("{node_id}:{}", self.object_id))
+                .unwrap_or_else(|| self.object_id.clone())
+        )
+    }
+
+    pub fn to_subscription_specs(&self) -> Vec<MqttSubscriptionSpec> {
+        let mut specs = vec![self.subscription_for(self.state_topic_filter.clone(), "state")];
+        if let Some(topic_filter) = &self.availability_topic_filter {
+            specs.push(self.subscription_for(topic_filter.clone(), "availability"));
+        }
+        specs
+    }
+
+    pub fn to_config_publication_spec(&self) -> Result<MqttPublicationSpec, MqttTopicError> {
+        let mut spec = MqttPublicationSpec::new(
+            self.integration_id.clone(),
+            self.broker_id.clone(),
+            self.config_topic_name(),
+        )?
+        .with_qos(self.qos)
+        .with_retain(true)
+        .with_payload_format(MqttPayloadFormat::HomeAssistantDiscoveryJson);
+        for metadata in self.discovery_metadata("config") {
+            spec = spec.with_metadata(metadata);
+        }
+        Ok(spec)
+    }
+
+    pub fn to_command_publication_spec(
+        &self,
+        command_id: CommandId,
+        correlation_id: CorrelationId,
+    ) -> Result<Option<MqttPublicationSpec>, MqttTopicError> {
+        let Some(topic_name) = &self.command_topic_name else {
+            return Ok(None);
+        };
+        let mut spec = MqttPublicationSpec::for_command(
+            self.integration_id.clone(),
+            self.broker_id.clone(),
+            topic_name.clone(),
+            command_id,
+            correlation_id,
+        )?
+        .with_qos(self.qos)
+        .with_payload_format(MqttPayloadFormat::Json);
+        for metadata in self.discovery_metadata("command") {
+            spec = spec.with_metadata(metadata);
+        }
+        Ok(Some(spec))
+    }
+
+    fn subscription_for(
+        &self,
+        topic_filter: MqttTopicFilter,
+        discovery_role: &'static str,
+    ) -> MqttSubscriptionSpec {
+        let mut spec = MqttSubscriptionSpec::new(
+            self.integration_id.clone(),
+            self.broker_id.clone(),
+            topic_filter,
+        )
+        .with_qos(self.qos)
+        .with_retain_policy(self.retain_policy);
+        for metadata in self.discovery_metadata(discovery_role) {
+            spec = spec.with_metadata(metadata);
+        }
+        spec
+    }
+
+    fn discovery_metadata(&self, discovery_role: &'static str) -> Vec<Metadata> {
+        let mut metadata = vec![
+            Metadata::new("home_assistant.discovery_role", discovery_role),
+            Metadata::new("home_assistant.discovery_prefix", &self.discovery_prefix),
+            Metadata::new("home_assistant.component", self.component.as_str()),
+            Metadata::new("home_assistant.object_id", &self.object_id),
+            Metadata::new("home_assistant.config_topic", self.config_topic_name()),
+        ];
+        if let Some(node_id) = &self.node_id {
+            metadata.push(Metadata::new("home_assistant.node_id", node_id));
+        }
+        metadata.extend(self.metadata.iter().cloned());
+        metadata
     }
 }
 
@@ -1295,6 +1545,23 @@ fn validate_mqtt_topic_name(value: &str) -> Result<(), MqttTopicError> {
     Ok(())
 }
 
+fn validate_mqtt_discovery_prefix(value: &str) -> Result<(), MqttTopicError> {
+    if value.is_empty() {
+        return Err(MqttTopicError::EmptyDiscoveryPrefix);
+    }
+    validate_mqtt_topic_name(value)
+}
+
+fn validate_mqtt_discovery_part(field: &'static str, value: &str) -> Result<(), MqttTopicError> {
+    if value.is_empty() || value.contains('/') || value.contains('#') || value.contains('+') {
+        return Err(MqttTopicError::InvalidDiscoveryPathPart {
+            field,
+            value: value.to_string(),
+        });
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1750,6 +2017,142 @@ mod tests {
         assert!(spec
             .metadata
             .contains(&Metadata::new("mqtt.shared_group", "chief-of-staff")));
+    }
+
+    #[test]
+    fn home_assistant_mqtt_discovery_builds_config_and_subscription_specs() {
+        let discovery = HomeAssistantMqttDiscoverySpec::new(
+            BridgeId::trusted("broker-1"),
+            HomeAssistantMqttDiscoveryComponent::Light,
+            "kitchen_light",
+            MqttTopicFilter::new("zigbee2mqtt/kitchen_light/state").unwrap(),
+        )
+        .unwrap()
+        .with_node_id("zigbee2mqtt")
+        .unwrap()
+        .with_availability_topic(
+            MqttTopicFilter::new("zigbee2mqtt/kitchen_light/availability").unwrap(),
+        )
+        .with_command_topic("zigbee2mqtt/kitchen_light/set")
+        .unwrap()
+        .with_qos(MqttQos::AtMostOnce)
+        .with_retain_policy(MqttRetainPolicy::IgnoreRetained)
+        .with_metadata(Metadata::new("ha.unique_id", "kitchen-light-1"));
+
+        assert_eq!(
+            discovery.config_topic_name(),
+            "homeassistant/light/zigbee2mqtt/kitchen_light/config"
+        );
+        assert_eq!(
+            discovery.discovery_key(),
+            "home_assistant_mqtt:broker-1:homeassistant:light:zigbee2mqtt:kitchen_light"
+        );
+
+        let subscriptions = discovery.to_subscription_specs();
+
+        assert_eq!(subscriptions.len(), 2);
+        assert_eq!(
+            subscriptions[0].topic_filter.as_str(),
+            "zigbee2mqtt/kitchen_light/state"
+        );
+        assert_eq!(subscriptions[0].qos, MqttQos::AtMostOnce);
+        assert_eq!(
+            subscriptions[0].retain_policy,
+            MqttRetainPolicy::IgnoreRetained
+        );
+        assert!(subscriptions[0]
+            .metadata
+            .contains(&Metadata::new("home_assistant.discovery_role", "state")));
+        assert!(subscriptions[1].metadata.contains(&Metadata::new(
+            "home_assistant.discovery_role",
+            "availability"
+        )));
+        assert!(subscriptions[1]
+            .metadata
+            .contains(&Metadata::new("ha.unique_id", "kitchen-light-1")));
+    }
+
+    #[test]
+    fn home_assistant_mqtt_discovery_projects_publication_specs() {
+        let discovery = HomeAssistantMqttDiscoverySpec::new(
+            BridgeId::trusted("broker-1"),
+            HomeAssistantMqttDiscoveryComponent::Switch,
+            "coffee_switch",
+            MqttTopicFilter::new("stat/coffee/POWER").unwrap(),
+        )
+        .unwrap()
+        .with_discovery_prefix("ha")
+        .unwrap()
+        .with_command_topic("cmnd/coffee/POWER")
+        .unwrap();
+
+        let config = discovery.to_config_publication_spec().unwrap();
+
+        assert_eq!(config.topic_name, "ha/switch/coffee_switch/config");
+        assert_eq!(
+            config.payload_format,
+            MqttPayloadFormat::HomeAssistantDiscoveryJson
+        );
+        assert!(config.retain);
+        assert!(config
+            .audit_metadata()
+            .contains(&Metadata::new("home_assistant.discovery_role", "config")));
+
+        let command = discovery
+            .to_command_publication_spec(
+                CommandId::trusted("cmd-1"),
+                CorrelationId::trusted("corr-1"),
+            )
+            .unwrap()
+            .unwrap();
+
+        assert_eq!(command.topic_name, "cmnd/coffee/POWER");
+        assert_eq!(command.payload_format, MqttPayloadFormat::Json);
+        assert!(command
+            .audit_metadata()
+            .contains(&Metadata::new("home_assistant.discovery_role", "command")));
+        assert!(command
+            .audit_metadata()
+            .contains(&Metadata::new("smart_home.command_id", "cmd-1")));
+    }
+
+    #[test]
+    fn home_assistant_mqtt_discovery_validates_path_parts_and_topics() {
+        assert_eq!(
+            HomeAssistantMqttDiscoverySpec::new(
+                BridgeId::trusted("broker-1"),
+                HomeAssistantMqttDiscoveryComponent::Sensor,
+                "bad/object",
+                MqttTopicFilter::new("sensors/temperature").unwrap(),
+            )
+            .unwrap_err(),
+            MqttTopicError::InvalidDiscoveryPathPart {
+                field: "object_id",
+                value: "bad/object".to_string()
+            }
+        );
+
+        assert_eq!(
+            HomeAssistantMqttDiscoverySpec::new(
+                BridgeId::trusted("broker-1"),
+                HomeAssistantMqttDiscoveryComponent::Sensor,
+                "temperature",
+                MqttTopicFilter::new("sensors/temperature").unwrap(),
+            )
+            .unwrap()
+            .with_discovery_prefix("")
+            .unwrap_err(),
+            MqttTopicError::EmptyDiscoveryPrefix
+        );
+        assert!(HomeAssistantMqttDiscoverySpec::new(
+            BridgeId::trusted("broker-1"),
+            HomeAssistantMqttDiscoveryComponent::Sensor,
+            "temperature",
+            MqttTopicFilter::new("sensors/temperature").unwrap(),
+        )
+        .unwrap()
+        .with_command_topic("cmnd/+/POWER")
+        .is_err());
     }
 
     #[test]

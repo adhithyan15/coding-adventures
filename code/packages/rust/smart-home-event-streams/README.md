@@ -10,6 +10,8 @@ radio workers a shared deterministic shape for:
 - stream identity and transport classification
 - MQTT topic filter validation, matching, and subscription descriptors
 - MQTT publication descriptors for outbound command topics and audit metadata
+- Home Assistant MQTT discovery topic planning for config, state,
+  availability, and command surfaces
 - stream cursors and replay checkpoints
 - checkpoint-based state resume after supervised worker restarts
 - heartbeat freshness and stale-event deadlines
