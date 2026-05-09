@@ -510,6 +510,7 @@ members = [
     "cas-list-operations",
     "cas-matrix",
     "cas-limit-series",
+    "cas-laplace",
     "cas-mnewton",
     "cas-ode-numeric",
     "cas-summation",
