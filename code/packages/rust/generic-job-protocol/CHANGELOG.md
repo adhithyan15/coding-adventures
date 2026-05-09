@@ -8,6 +8,8 @@ All notable changes to this package will be documented in this file.
 
 - Added portable job metadata builders, envelope validation, deadline helpers,
   and attempt increment helpers for cross-language workers.
+- Added portable retry policy primitives for retryable errors, capped
+  exponential backoff, and exhausted-attempt decisions.
 
 ## [0.1.0] - 2026-04-20
 
