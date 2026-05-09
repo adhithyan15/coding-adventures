@@ -1261,6 +1261,19 @@ class Connection:
         options.setdefault("transport", self.transport)
         return Session(**options)
 
+    def smoke(
+        self,
+        *,
+        host_name: str = DEFAULT_HOST_NAME,
+        host_nonce: int = DEFAULT_HOST_NONCE,
+        query_caps: bool = True,
+    ) -> SessionResult:
+        return self.session().smoke(
+            host_name=host_name,
+            host_nonce=host_nonce,
+            query_caps=query_caps,
+        )
+
     def flash(self) -> Any:
         if self.firmware_image is None:
             raise ValueError("Board VM flash requires firmware_image")
@@ -1634,6 +1647,7 @@ def connect(
     input_func: Any = input,
     output: Any = None,
     flash: bool = False,
+    smoke: bool = False,
     transport: Any = None,
     runner: Any = None,
     cargo_workspace: str | pathlib.Path | None = None,
@@ -1685,6 +1699,8 @@ def connect(
     )
     if flash:
         connection.flash()
+    if smoke:
+        connection.smoke()
     return connection
 
 

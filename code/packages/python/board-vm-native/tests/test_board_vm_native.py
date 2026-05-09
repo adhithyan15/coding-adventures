@@ -471,6 +471,22 @@ def test_python_connect_auto_selects_device_and_dispatches_native_session():
     assert result.frames == transport.frames
 
 
+def test_python_connect_can_smoke_auto_selected_device():
+    found = devices(["/dev/tty.usbserial-CP2102-esp32"])
+    transport = FakeWriteTransport()
+
+    connection = connect(
+        "esp32",
+        smoke=True,
+        device_candidates=found,
+        transport=transport,
+    )
+
+    assert connection.port == "/dev/tty.usbserial-CP2102-esp32"
+    assert len(transport.frames) == 2
+    assert all(isinstance(frame, bytes) and frame for frame in transport.frames)
+
+
 def test_python_esp_connect_flash_uses_rust_owned_upload_command():
     found = devices(["/dev/tty.usbserial-CP2102-esp32"])
     runner = FakeRunner()
@@ -553,6 +569,38 @@ def test_python_pico_flash_rediscover_runtime_port():
             "/repo/code/packages/rust",
         )
     ]
+
+
+def test_python_pico_flash_can_smoke_rediscovered_runtime_port():
+    runner = FakeRunner()
+    transport = FakeWriteTransport()
+    runtime_devices = devices(["/dev/serial/by-id/usb-Raspberry_Pi_Pico_Board_VM-if00"])
+
+    connection = pico(
+        flash=True,
+        smoke=True,
+        firmware_image="/tmp/board-vm-pico.uf2",
+        pico_uf2_mount="/Volumes/RPI-RP2",
+        pico_runtime_port_wait_ms=0,
+        device_discovery=lambda: runtime_devices,
+        cargo_workspace="/repo/code/packages/rust",
+        runner=runner,
+        transport=transport,
+    )
+
+    assert connection.port == "/dev/serial/by-id/usb-Raspberry_Pi_Pico_Board_VM-if00"
+    assert len(runner.calls) == 1
+    assert len(transport.frames) == 2
+
+
+def test_session_smoke_dispatches_hello_and_capabilities():
+    transport = FakeWriteTransport()
+    session = Session(transport=transport)
+
+    result = session.smoke(host_nonce=123)
+
+    assert [item.command for item in result.results] == ["hello", "capabilities"]
+    assert result.frames == transport.frames
 
 
 def test_session_dispatches_frames_through_write_transport():
