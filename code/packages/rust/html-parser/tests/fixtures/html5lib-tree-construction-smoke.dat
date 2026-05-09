@@ -1297,3 +1297,17 @@ Line1<br>Line2<br>Line3<br>Line4
 |     <title>
 |       "<meta>"
 |   <body>
+
+#data
+<style><!--</style><meta><script>--><link></script>
+#errors
+(1,7): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|     <style>
+|       "<!--"
+|     <meta>
+|     <script>
+|       "--><link>"
+|   <body>
