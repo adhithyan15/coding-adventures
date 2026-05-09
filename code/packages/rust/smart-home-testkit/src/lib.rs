@@ -17,6 +17,7 @@ use smart_home_event_streams::{
     EventStreamCheckpoint, EventStreamRestartReason, EventStreamSpec, EventStreamState,
     EventStreamStatus,
 };
+use smart_home_local_http::{LocalHttpMethod, LocalHttpRequestPlan};
 use smart_home_registry::{InMemorySmartHomeRegistry, RegistryError};
 use smart_home_runtime::{BridgeHealthReport, RuntimeError, SmartHomeRuntime};
 use std::collections::VecDeque;
@@ -455,6 +456,207 @@ impl FakeMqttBroker {
     }
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ScriptedLocalHttpResponse {
+    pub method: LocalHttpMethod,
+    pub url: String,
+    pub status: u16,
+    pub body: Vec<u8>,
+    pub observed_at_ms: u64,
+    pub metadata: Vec<Metadata>,
+}
+
+impl ScriptedLocalHttpResponse {
+    pub fn new(
+        method: LocalHttpMethod,
+        url: impl Into<String>,
+        status: u16,
+        body: impl Into<Vec<u8>>,
+        observed_at_ms: u64,
+    ) -> Self {
+        Self {
+            method,
+            url: url.into(),
+            status,
+            body: body.into(),
+            observed_at_ms,
+            metadata: Vec::new(),
+        }
+    }
+
+    pub fn ok_json(
+        method: LocalHttpMethod,
+        url: impl Into<String>,
+        body: impl Into<Vec<u8>>,
+        observed_at_ms: u64,
+    ) -> Self {
+        Self::new(method, url, 200, body, observed_at_ms)
+            .with_metadata("content_type", "application/json")
+    }
+
+    pub fn with_metadata(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
+        self.metadata.push(Metadata::new(key, value));
+        self
+    }
+
+    pub fn body_utf8(&self) -> Option<&str> {
+        std::str::from_utf8(&self.body).ok()
+    }
+
+    pub fn matches_plan(&self, plan: &LocalHttpRequestPlan) -> bool {
+        self.method == plan.method && self.url == plan.url
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub enum LocalHttpResponseSort {
+    #[default]
+    OriginalOrder,
+    Url,
+    Status,
+    ObservedAtAsc,
+    ObservedAtDesc,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct LocalHttpResponseQuery {
+    pub method: Option<LocalHttpMethod>,
+    pub url: Option<String>,
+    pub url_prefix: Option<String>,
+    pub status: Option<u16>,
+    pub status_class: Option<u16>,
+    pub observed_after_ms: Option<u64>,
+    pub metadata: Vec<Metadata>,
+    pub sort: LocalHttpResponseSort,
+    pub limit: Option<usize>,
+}
+
+impl Default for LocalHttpResponseQuery {
+    fn default() -> Self {
+        Self {
+            method: None,
+            url: None,
+            url_prefix: None,
+            status: None,
+            status_class: None,
+            observed_after_ms: None,
+            metadata: Vec::new(),
+            sort: LocalHttpResponseSort::OriginalOrder,
+            limit: None,
+        }
+    }
+}
+
+impl LocalHttpResponseQuery {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn with_method(mut self, method: LocalHttpMethod) -> Self {
+        self.method = Some(method);
+        self
+    }
+
+    pub fn with_url(mut self, url: impl Into<String>) -> Self {
+        self.url = Some(url.into());
+        self
+    }
+
+    pub fn with_url_prefix(mut self, url_prefix: impl Into<String>) -> Self {
+        self.url_prefix = Some(url_prefix.into());
+        self
+    }
+
+    pub fn with_status(mut self, status: u16) -> Self {
+        self.status = Some(status);
+        self
+    }
+
+    pub fn with_status_class(mut self, status_class: u16) -> Self {
+        self.status_class = Some(status_class);
+        self
+    }
+
+    pub fn observed_after(mut self, observed_after_ms: u64) -> Self {
+        self.observed_after_ms = Some(observed_after_ms);
+        self
+    }
+
+    pub fn with_metadata(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
+        self.metadata.push(Metadata::new(key, value));
+        self
+    }
+
+    pub fn sorted_by(mut self, sort: LocalHttpResponseSort) -> Self {
+        self.sort = sort;
+        self
+    }
+
+    pub fn limited_to(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct FakeLocalHttpServer {
+    responses: VecDeque<ScriptedLocalHttpResponse>,
+}
+
+impl FakeLocalHttpServer {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn push_response(mut self, response: ScriptedLocalHttpResponse) -> Self {
+        self.responses.push_back(response);
+        self
+    }
+
+    pub fn record_response(&mut self, response: ScriptedLocalHttpResponse) {
+        self.responses.push_back(response);
+    }
+
+    pub fn next_response(&mut self) -> Option<ScriptedLocalHttpResponse> {
+        self.responses.pop_front()
+    }
+
+    pub fn respond_to_plan(
+        &mut self,
+        plan: &LocalHttpRequestPlan,
+    ) -> Option<ScriptedLocalHttpResponse> {
+        let index = self
+            .responses
+            .iter()
+            .position(|response| response.matches_plan(plan))?;
+        self.responses.remove(index)
+    }
+
+    pub fn query_responses(
+        &self,
+        query: &LocalHttpResponseQuery,
+    ) -> Vec<&ScriptedLocalHttpResponse> {
+        let mut responses = self
+            .responses
+            .iter()
+            .filter(|response| local_http_response_matches(response, query))
+            .collect::<Vec<_>>();
+        sort_local_http_responses(&mut responses, query.sort);
+        if let Some(limit) = query.limit {
+            responses.truncate(limit);
+        }
+        responses
+    }
+
+    pub fn len(&self) -> usize {
+        self.responses.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.responses.is_empty()
+    }
+}
+
 pub fn hue_bridge(id: &'static str, native_id: &'static str) -> Bridge {
     let mut bridge = Bridge::new(
         BridgeId::trusted(id),
@@ -793,6 +995,78 @@ fn sort_mqtt_publications(
     }
 }
 
+fn local_http_response_matches(
+    response: &ScriptedLocalHttpResponse,
+    query: &LocalHttpResponseQuery,
+) -> bool {
+    if let Some(method) = query.method {
+        if response.method != method {
+            return false;
+        }
+    }
+    if let Some(url) = query.url.as_deref() {
+        if response.url != url {
+            return false;
+        }
+    }
+    if let Some(url_prefix) = query.url_prefix.as_deref() {
+        if !response.url.starts_with(url_prefix) {
+            return false;
+        }
+    }
+    if let Some(status) = query.status {
+        if response.status != status {
+            return false;
+        }
+    }
+    if let Some(status_class) = query.status_class {
+        if response.status / 100 != status_class {
+            return false;
+        }
+    }
+    if let Some(observed_after_ms) = query.observed_after_ms {
+        if response.observed_at_ms <= observed_after_ms {
+            return false;
+        }
+    }
+    query.metadata.iter().all(|required| {
+        response
+            .metadata
+            .iter()
+            .any(|metadata| metadata.key == required.key && metadata.value == required.value)
+    })
+}
+
+fn sort_local_http_responses(
+    responses: &mut Vec<&ScriptedLocalHttpResponse>,
+    sort: LocalHttpResponseSort,
+) {
+    match sort {
+        LocalHttpResponseSort::OriginalOrder => {}
+        LocalHttpResponseSort::Url => responses.sort_by(|left, right| {
+            left.url
+                .cmp(&right.url)
+                .then_with(|| left.observed_at_ms.cmp(&right.observed_at_ms))
+        }),
+        LocalHttpResponseSort::Status => responses.sort_by(|left, right| {
+            left.status
+                .cmp(&right.status)
+                .then_with(|| left.url.cmp(&right.url))
+        }),
+        LocalHttpResponseSort::ObservedAtAsc => responses.sort_by(|left, right| {
+            left.observed_at_ms
+                .cmp(&right.observed_at_ms)
+                .then_with(|| left.url.cmp(&right.url))
+        }),
+        LocalHttpResponseSort::ObservedAtDesc => responses.sort_by(|left, right| {
+            right
+                .observed_at_ms
+                .cmp(&left.observed_at_ms)
+                .then_with(|| left.url.cmp(&right.url))
+        }),
+    }
+}
+
 fn protocol_id(
     family: ProtocolFamily,
     kind: &'static str,
@@ -1107,6 +1381,94 @@ mod tests {
         assert_eq!(broker.next_publication(), Some(retained_state));
         assert_eq!(broker.next_publication(), Some(command));
         assert_eq!(broker.next_publication(), Some(live_state));
+    }
+
+    #[test]
+    fn fake_local_http_server_matches_planned_requests_without_sockets() {
+        let fixture = SmartHomeFixture::hue_lighting();
+        let endpoint = smart_home_local_http::LocalHttpEndpoint::hue_bridge(
+            fixture.bridge.bridge_id.clone(),
+            "192.0.2.10",
+        )
+        .unwrap();
+        let plan = smart_home_local_http::LocalHttpRequestTemplate::new(
+            LocalHttpMethod::Get,
+            "/clip/v2/resource/light",
+        )
+        .unwrap()
+        .plan(&endpoint, Vec::new())
+        .unwrap();
+        let response = ScriptedLocalHttpResponse::ok_json(
+            LocalHttpMethod::Get,
+            plan.url.clone(),
+            br#"{"data":[]}"#.to_vec(),
+            1_000,
+        )
+        .with_metadata("fixture", "hue_clip");
+        let mut server = FakeLocalHttpServer::new().push_response(response.clone());
+
+        let matched = server.respond_to_plan(&plan).unwrap();
+
+        assert_eq!(matched, response);
+        assert_eq!(matched.body_utf8(), Some(r#"{"data":[]}"#));
+        assert!(server.is_empty());
+    }
+
+    #[test]
+    fn fake_local_http_server_queries_responses_without_consuming_queue() {
+        let light_state = ScriptedLocalHttpResponse::ok_json(
+            LocalHttpMethod::Get,
+            "https://192.0.2.10/clip/v2/resource/light",
+            br#"{"data":[{"id":"light-1"}]}"#.to_vec(),
+            1_000,
+        )
+        .with_metadata("fixture", "hue_clip");
+        let command_accept = ScriptedLocalHttpResponse::new(
+            LocalHttpMethod::Put,
+            "https://192.0.2.10/clip/v2/resource/light/light-1",
+            202,
+            br#"{"errors":[]}"#.to_vec(),
+            1_100,
+        )
+        .with_metadata("fixture", "hue_clip");
+        let bridge_busy = ScriptedLocalHttpResponse::new(
+            LocalHttpMethod::Get,
+            "https://192.0.2.10/clip/v2/resource/bridge",
+            503,
+            br#"{"errors":[{"description":"busy"}]}"#.to_vec(),
+            1_200,
+        )
+        .with_metadata("fixture", "hue_clip")
+        .with_metadata("failure", "bridge_busy");
+        let mut server = FakeLocalHttpServer::new()
+            .push_response(light_state.clone())
+            .push_response(command_accept.clone())
+            .push_response(bridge_busy.clone());
+
+        let recent_successes = server.query_responses(
+            &LocalHttpResponseQuery::new()
+                .with_url_prefix("https://192.0.2.10/clip/v2")
+                .with_status_class(2)
+                .observed_after(1_050)
+                .sorted_by(LocalHttpResponseSort::ObservedAtDesc),
+        );
+
+        assert_eq!(recent_successes, vec![&command_accept]);
+
+        let failures = server.query_responses(
+            &LocalHttpResponseQuery::new()
+                .with_method(LocalHttpMethod::Get)
+                .with_status(503)
+                .with_metadata("failure", "bridge_busy")
+                .limited_to(1),
+        );
+
+        assert_eq!(failures, vec![&bridge_busy]);
+        assert_eq!(server.len(), 3);
+        assert_eq!(server.next_response(), Some(light_state));
+        assert_eq!(server.next_response(), Some(command_accept));
+        assert_eq!(server.next_response(), Some(bridge_busy));
+        assert!(server.is_empty());
     }
 
     #[test]

@@ -16,6 +16,8 @@ All notable changes to this package will be documented in this file.
 - Hue SSE event-stream spec/state helpers and a driver that advances both
   event-stream supervision state and seeded `smart-home-runtime` instances.
 - Fake command bus helpers for deterministic command/result assertions.
+- Fake local HTTP response helpers for request-plan matching and read-only
+  response queries.
 - Fake MQTT broker publication helpers for retained-message and payload tests.
 - Read-only fake MQTT broker publication queries by topic, prefix, retained flag,
   metadata, observation time, sort, and limit.
