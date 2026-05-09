@@ -10,4 +10,5 @@ All notable changes to this package will be documented in this file.
 - `Artifact`, `ArtifactRevision`, and `ArtifactProvenance` models
 - `ArtifactStore` manifest/revision workflow on top of `storage-core`
 - collection listing, label updates, and retention marking
+- bounded artifact listing with collection, label, and retention filters
 - Unit tests using `storage-core::InMemoryStorageBackend`

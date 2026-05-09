@@ -92,6 +92,50 @@ pub struct CreateArtifactInput {
     pub provenance: ArtifactProvenance,
 }
 
+/// Query options for listing artifact manifests.
+#[derive(Debug, Clone, Default, PartialEq, Eq)]
+pub struct ArtifactListOptions {
+    pub collection: Option<String>,
+    pub labels: Vec<String>,
+    pub retention: Option<ArtifactRetention>,
+    pub limit: Option<usize>,
+}
+
+impl ArtifactListOptions {
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    pub fn for_collection(mut self, collection: impl Into<String>) -> Self {
+        self.collection = Some(collection.into());
+        self
+    }
+
+    pub fn with_label(mut self, label: impl Into<String>) -> Self {
+        self.labels.push(label.into());
+        self
+    }
+
+    pub fn with_labels<I, S>(mut self, labels: I) -> Self
+    where
+        I: IntoIterator<Item = S>,
+        S: Into<String>,
+    {
+        self.labels.extend(labels.into_iter().map(Into::into));
+        self
+    }
+
+    pub fn with_retention(mut self, retention: ArtifactRetention) -> Self {
+        self.retention = Some(retention);
+        self
+    }
+
+    pub fn with_limit(mut self, limit: usize) -> Self {
+        self.limit = Some(limit);
+        self
+    }
+}
+
 /// Input used when appending one revision.
 #[derive(Debug, Clone, PartialEq)]
 pub struct AppendRevisionInput {
@@ -212,7 +256,21 @@ impl<S: StorageBackend> ArtifactStore<S> {
     }
 
     pub fn list_by_collection(&self, collection: &str) -> Result<Vec<Artifact>, StorageError> {
-        validate_id("collection", collection)?;
+        self.list_artifacts(ArtifactListOptions::new().for_collection(collection))
+    }
+
+    pub fn list_artifacts(
+        &self,
+        options: ArtifactListOptions,
+    ) -> Result<Vec<Artifact>, StorageError> {
+        if let Some(collection) = options.collection.as_deref() {
+            validate_id("collection", collection)?;
+        }
+        validate_id_list("labels", &options.labels)?;
+        if options.limit == Some(0) {
+            return Ok(Vec::new());
+        }
+
         self.backend.initialize()?;
         let page = self.backend.list(
             NAMESPACE,
@@ -224,16 +282,20 @@ impl<S: StorageBackend> ArtifactStore<S> {
             },
         )?;
 
-        page.records
-            .iter()
-            .map(|record| decode_artifact(&record.body))
-            .filter(|result| {
-                result
-                    .as_ref()
-                    .map(|artifact| artifact.collection == collection)
-                    .unwrap_or(true)
-            })
-            .collect()
+        let mut artifacts = Vec::new();
+        for record in &page.records {
+            let artifact = decode_artifact(&record.body)?;
+            if !artifact_matches_list_options(&artifact, &options) {
+                continue;
+            }
+            artifacts.push(artifact);
+            if let Some(limit) = options.limit {
+                if artifacts.len() >= limit {
+                    break;
+                }
+            }
+        }
+        Ok(artifacts)
     }
 
     pub fn attach_labels(
@@ -304,6 +366,23 @@ fn artifact_key(artifact_id: &str) -> String {
 
 fn revision_key(artifact_id: &str, revision_id: &str) -> String {
     format!("revisions/{artifact_id}/{revision_id}.bin")
+}
+
+fn artifact_matches_list_options(artifact: &Artifact, options: &ArtifactListOptions) -> bool {
+    if let Some(collection) = options.collection.as_deref() {
+        if artifact.collection != collection {
+            return false;
+        }
+    }
+    if let Some(retention) = options.retention {
+        if artifact.retention != retention {
+            return false;
+        }
+    }
+    options
+        .labels
+        .iter()
+        .all(|label| artifact.labels.iter().any(|candidate| candidate == label))
 }
 
 fn artifact_record_metadata(artifact: &Artifact) -> JsonValue {
@@ -683,5 +762,64 @@ mod tests {
             .attach_labels("plan", vec!["roadmap".to_string(), "approved".to_string()])
             .unwrap();
         assert_eq!(updated.labels.len(), 2);
+    }
+
+    #[test]
+    fn artifact_listing_filters_by_collection_labels_retention_and_limit() {
+        let store = ArtifactStore::new(InMemoryStorageBackend::new());
+        for (artifact_id, collection, labels) in [
+            ("plan-a", "plans", vec!["approved", "roadmap"]),
+            ("plan-b", "plans", vec!["draft", "roadmap"]),
+            ("report-a", "reports", vec!["approved"]),
+        ] {
+            let _ = store
+                .create_artifact(CreateArtifactInput {
+                    artifact_id: artifact_id.to_string(),
+                    collection: collection.to_string(),
+                    name: artifact_id.to_string(),
+                    content_type: "text/plain".to_string(),
+                    labels: labels.into_iter().map(str::to_string).collect(),
+                    provenance: ArtifactProvenance {
+                        session_id: None,
+                        tool_id: Some("artifact-list".to_string()),
+                        job_id: None,
+                        agent_id: None,
+                    },
+                })
+                .unwrap();
+        }
+        let _ = store
+            .mark_retention("plan-a", ArtifactRetention::Retained)
+            .unwrap();
+        let _ = store
+            .mark_retention("report-a", ArtifactRetention::Retained)
+            .unwrap();
+
+        let filtered = store
+            .list_artifacts(
+                ArtifactListOptions::new()
+                    .for_collection("plans")
+                    .with_label("approved")
+                    .with_retention(ArtifactRetention::Retained)
+                    .with_limit(1),
+            )
+            .unwrap();
+        assert_eq!(
+            filtered
+                .iter()
+                .map(|artifact| artifact.artifact_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["plan-a"]
+        );
+
+        let retained = store
+            .list_artifacts(ArtifactListOptions::new().with_retention(ArtifactRetention::Retained))
+            .unwrap();
+        assert_eq!(retained.len(), 2);
+
+        let none = store
+            .list_artifacts(ArtifactListOptions::new().with_label("missing"))
+            .unwrap();
+        assert!(none.is_empty());
     }
 }

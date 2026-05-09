@@ -10,7 +10,7 @@ bodies so plans, exports, screenshots, and reports can be referenced by ID.
 - `Artifact` manifests
 - `ArtifactRevision` bodies and metadata
 - label and retention updates
-- collection-oriented listing
+- collection, label, retention, and bounded manifest listing
 
 ## Key layout
 
@@ -24,9 +24,15 @@ bodies so plans, exports, screenshots, and reports can be referenced by ID.
 - `append_revision()`
 - `fetch_latest_revision()`
 - `fetch_revision_by_id()`
+- `list_artifacts()`
 - `list_by_collection()`
 - `attach_labels()`
 - `mark_retention()`
+
+`ArtifactListOptions` lets D18/D18D tool handlers compose a bounded read model
+over artifact manifests without fetching revision bodies. Callers can filter by
+collection, require one or more labels, select a retention state, and cap the
+number of returned manifests with `limit`.
 
 ## Development
 
