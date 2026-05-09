@@ -13,3 +13,5 @@ All notable changes to this package will be documented in this file.
 - Deterministic in-memory runtime that pairs definitions with handlers, validates
   invocations before execution, emits canonical events, and returns `ToolResult`
   records.
+- Policy decision hooks and deterministic policy profiles for permission, tier,
+  side-effect, and approval gates before handler execution.

@@ -576,6 +576,7 @@ pub enum ToolErrorKind {
     ToolValidationError,
     ToolPermissionDenied,
     ToolTierDenied,
+    ToolApprovalRequired,
     ToolApprovalDenied,
     ToolConflict,
     ToolTimeout,
@@ -590,6 +591,7 @@ impl ToolErrorKind {
             Self::ToolValidationError => "ToolValidationError",
             Self::ToolPermissionDenied => "ToolPermissionDenied",
             Self::ToolTierDenied => "ToolTierDenied",
+            Self::ToolApprovalRequired => "ToolApprovalRequired",
             Self::ToolApprovalDenied => "ToolApprovalDenied",
             Self::ToolConflict => "ToolConflict",
             Self::ToolTimeout => "ToolTimeout",
@@ -875,6 +877,198 @@ impl ToolExecutionContext {
     }
 }
 
+// ============================================================================
+// Policy
+// ============================================================================
+
+/// Policy outcome for one validated tool call.
+#[derive(Debug, Clone, PartialEq)]
+pub enum ToolPolicyOutcome {
+    Allowed,
+    Denied { error_kind: ToolErrorKind },
+    RequiresApproval,
+}
+
+/// Decision made by the policy layer before handler execution.
+#[derive(Debug, Clone, PartialEq)]
+pub struct ToolPolicyDecision {
+    pub outcome: ToolPolicyOutcome,
+    pub message: String,
+    pub details: JsonValue,
+}
+
+impl ToolPolicyDecision {
+    pub fn allow() -> Self {
+        Self {
+            outcome: ToolPolicyOutcome::Allowed,
+            message: "allowed".to_string(),
+            details: JsonValue::Null,
+        }
+    }
+
+    pub fn deny(error_kind: ToolErrorKind, message: impl Into<String>) -> Self {
+        Self {
+            outcome: ToolPolicyOutcome::Denied { error_kind },
+            message: message.into(),
+            details: JsonValue::Null,
+        }
+    }
+
+    pub fn require_approval(message: impl Into<String>) -> Self {
+        Self {
+            outcome: ToolPolicyOutcome::RequiresApproval,
+            message: message.into(),
+            details: JsonValue::Null,
+        }
+    }
+
+    pub fn with_details(mut self, details: JsonValue) -> Self {
+        self.details = details;
+        self
+    }
+
+    pub fn is_allowed(&self) -> bool {
+        matches!(self.outcome, ToolPolicyOutcome::Allowed)
+    }
+}
+
+/// Object-safe policy hook used by tool runtimes.
+pub trait ToolPolicyEngine {
+    fn decide(
+        &self,
+        definition: &ToolDefinition,
+        request: &ToolInvocationRequest,
+    ) -> ToolPolicyDecision;
+}
+
+impl<F> ToolPolicyEngine for F
+where
+    F: Fn(&ToolDefinition, &ToolInvocationRequest) -> ToolPolicyDecision,
+{
+    fn decide(
+        &self,
+        definition: &ToolDefinition,
+        request: &ToolInvocationRequest,
+    ) -> ToolPolicyDecision {
+        self(definition, request)
+    }
+}
+
+/// Default policy for local tests and runtimes that enforce policy elsewhere.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct AllowAllToolPolicy;
+
+impl ToolPolicyEngine for AllowAllToolPolicy {
+    fn decide(
+        &self,
+        _definition: &ToolDefinition,
+        _request: &ToolInvocationRequest,
+    ) -> ToolPolicyDecision {
+        ToolPolicyDecision::allow()
+    }
+}
+
+/// Small deterministic policy profile for repository runtimes and tests.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ToolPolicyProfile {
+    pub max_tier: PrivilegeTier,
+    pub allowed_capabilities: Vec<String>,
+    pub allowed_side_effects: Vec<ToolSideEffects>,
+    pub approval_required_side_effects: Vec<ToolSideEffects>,
+}
+
+impl ToolPolicyProfile {
+    pub fn allow_all() -> Self {
+        Self {
+            max_tier: PrivilegeTier::Tier3,
+            allowed_capabilities: vec!["*".to_string()],
+            allowed_side_effects: vec![
+                ToolSideEffects::None,
+                ToolSideEffects::Read,
+                ToolSideEffects::Write,
+                ToolSideEffects::External,
+            ],
+            approval_required_side_effects: Vec::new(),
+        }
+    }
+
+    pub fn read_only(max_tier: PrivilegeTier) -> Self {
+        Self {
+            max_tier,
+            allowed_capabilities: vec!["*".to_string()],
+            allowed_side_effects: vec![ToolSideEffects::None, ToolSideEffects::Read],
+            approval_required_side_effects: Vec::new(),
+        }
+    }
+
+    pub fn with_allowed_capabilities(mut self, capabilities: Vec<String>) -> Self {
+        self.allowed_capabilities = capabilities;
+        self
+    }
+
+    pub fn with_approval_required_for(mut self, side_effects: Vec<ToolSideEffects>) -> Self {
+        self.approval_required_side_effects = side_effects;
+        self
+    }
+
+    fn capability_allowed(&self, capability: &str) -> bool {
+        self.allowed_capabilities
+            .iter()
+            .any(|allowed| allowed == "*" || allowed == capability)
+    }
+}
+
+impl ToolPolicyEngine for ToolPolicyProfile {
+    fn decide(
+        &self,
+        definition: &ToolDefinition,
+        _request: &ToolInvocationRequest,
+    ) -> ToolPolicyDecision {
+        if definition.required_tier > self.max_tier {
+            return ToolPolicyDecision::deny(
+                ToolErrorKind::ToolTierDenied,
+                format!(
+                    "tool requires {}, but policy allows up to {}",
+                    definition.required_tier, self.max_tier
+                ),
+            );
+        }
+
+        if let Some(capability) = definition
+            .required_capabilities
+            .iter()
+            .find(|capability| !self.capability_allowed(capability))
+        {
+            return ToolPolicyDecision::deny(
+                ToolErrorKind::ToolPermissionDenied,
+                format!("required capability '{capability}' is not allowed by policy"),
+            );
+        }
+
+        if !self.allowed_side_effects.contains(&definition.side_effects) {
+            return ToolPolicyDecision::deny(
+                ToolErrorKind::ToolPermissionDenied,
+                format!(
+                    "tool side effect '{}' is not allowed by policy",
+                    definition.side_effects
+                ),
+            );
+        }
+
+        if self
+            .approval_required_side_effects
+            .contains(&definition.side_effects)
+        {
+            return ToolPolicyDecision::require_approval(format!(
+                "tool side effect '{}' requires approval",
+                definition.side_effects
+            ));
+        }
+
+        ToolPolicyDecision::allow()
+    }
+}
+
 /// One non-terminal event requested by a handler.
 #[derive(Debug, Clone, PartialEq)]
 pub struct ToolHandlerEvent {
@@ -948,15 +1142,43 @@ pub struct ToolExecutionTrace {
 }
 
 /// Deterministic in-memory runtime for tests, built-ins, and small hosts.
-#[derive(Default)]
 pub struct InMemoryToolRuntime {
     registry: InMemoryToolRegistry,
     handlers: BTreeMap<ToolId, Box<dyn ToolHandler>>,
+    policy: Box<dyn ToolPolicyEngine>,
+}
+
+impl Default for InMemoryToolRuntime {
+    fn default() -> Self {
+        Self {
+            registry: InMemoryToolRegistry::new(),
+            handlers: BTreeMap::new(),
+            policy: Box::new(AllowAllToolPolicy),
+        }
+    }
 }
 
 impl InMemoryToolRuntime {
     pub fn new() -> Self {
         Self::default()
+    }
+
+    pub fn with_policy<P>(policy: P) -> Self
+    where
+        P: ToolPolicyEngine + 'static,
+    {
+        Self {
+            registry: InMemoryToolRegistry::new(),
+            handlers: BTreeMap::new(),
+            policy: Box::new(policy),
+        }
+    }
+
+    pub fn set_policy<P>(&mut self, policy: P)
+    where
+        P: ToolPolicyEngine + 'static,
+    {
+        self.policy = Box::new(policy);
     }
 
     /// Register one definition and its in-process handler.
@@ -1013,6 +1235,51 @@ impl InMemoryToolRuntime {
             record.status = ToolCallStatus::Failed;
             record.completed_at = Some(request.requested_at);
             return trace_with_terminal(record, request, Vec::new(), result);
+        }
+
+        let Some(definition) = self.registry.get(&request.tool_id) else {
+            let result = ToolResult::failed(
+                request.call_id.clone(),
+                ToolCallError::new(ToolErrorKind::ToolNotFound, "tool is not registered"),
+            );
+            record.status = ToolCallStatus::Failed;
+            record.completed_at = Some(request.requested_at);
+            return trace_with_terminal(record, request, Vec::new(), result);
+        };
+
+        let policy_decision = self.policy.decide(definition, request);
+        match policy_decision.outcome {
+            ToolPolicyOutcome::Allowed => {
+                record.approval_state = ApprovalState::NotRequired;
+            }
+            ToolPolicyOutcome::Denied { error_kind } => {
+                let result = ToolResult::failed(
+                    request.call_id.clone(),
+                    ToolCallError {
+                        kind: error_kind,
+                        message: policy_decision.message,
+                        details: policy_decision.details,
+                    },
+                );
+                record.status = ToolCallStatus::Failed;
+                record.approval_state = ApprovalState::Denied;
+                record.completed_at = Some(request.requested_at);
+                return trace_with_terminal(record, request, Vec::new(), result);
+            }
+            ToolPolicyOutcome::RequiresApproval => {
+                let result = ToolResult::failed(
+                    request.call_id.clone(),
+                    ToolCallError {
+                        kind: ToolErrorKind::ToolApprovalRequired,
+                        message: policy_decision.message,
+                        details: policy_decision.details,
+                    },
+                );
+                record.status = ToolCallStatus::AwaitingApproval;
+                record.approval_state = ApprovalState::Pending;
+                record.completed_at = Some(request.requested_at);
+                return trace_with_terminal(record, request, Vec::new(), result);
+            }
         }
 
         let Some(handler) = self.handlers.get(&request.tool_id) else {
@@ -1611,6 +1878,107 @@ mod tests {
         assert_eq!(trace.events.len(), 1);
         assert_eq!(trace.events[0].kind, ToolEventKind::Failed);
         assert!(!*called.lock().unwrap());
+    }
+
+    #[test]
+    fn runtime_denies_calls_before_handler_execution_when_policy_rejects() {
+        use std::sync::{Arc, Mutex};
+
+        let called = Arc::new(Mutex::new(false));
+        let called_by_handler = Arc::clone(&called);
+        let mut runtime =
+            InMemoryToolRuntime::with_policy(ToolPolicyProfile::read_only(PrivilegeTier::Tier3));
+        runtime
+            .register_handler(artifact_create_definition(), move |_, _| {
+                *called_by_handler.lock().unwrap() = true;
+                Ok(ToolHandlerOutput::new(JsonValue::Null))
+            })
+            .unwrap();
+
+        let trace = runtime.invoke_with_events(&artifact_create_request());
+
+        assert!(!trace.result.ok);
+        assert_eq!(trace.record.status, ToolCallStatus::Failed);
+        assert_eq!(trace.record.approval_state, ApprovalState::Denied);
+        assert_eq!(
+            trace.result.error.as_ref().unwrap().kind,
+            ToolErrorKind::ToolPermissionDenied
+        );
+        assert_eq!(trace.events.len(), 1);
+        assert_eq!(trace.events[0].kind, ToolEventKind::Failed);
+        assert!(!*called.lock().unwrap());
+    }
+
+    #[test]
+    fn runtime_marks_calls_awaiting_approval_before_handler_execution() {
+        use std::sync::{Arc, Mutex};
+
+        let called = Arc::new(Mutex::new(false));
+        let called_by_handler = Arc::clone(&called);
+        let policy =
+            ToolPolicyProfile::allow_all().with_approval_required_for(vec![ToolSideEffects::Write]);
+        let mut runtime = InMemoryToolRuntime::with_policy(policy);
+        runtime
+            .register_handler(artifact_create_definition(), move |_, _| {
+                *called_by_handler.lock().unwrap() = true;
+                Ok(ToolHandlerOutput::new(JsonValue::Null))
+            })
+            .unwrap();
+
+        let trace = runtime.invoke_with_events(&artifact_create_request());
+
+        assert!(!trace.result.ok);
+        assert_eq!(trace.record.status, ToolCallStatus::AwaitingApproval);
+        assert_eq!(trace.record.approval_state, ApprovalState::Pending);
+        assert_eq!(
+            trace.result.error.as_ref().unwrap().kind,
+            ToolErrorKind::ToolApprovalRequired
+        );
+        assert!(trace
+            .result
+            .error
+            .as_ref()
+            .unwrap()
+            .message
+            .contains("requires approval"));
+        assert_eq!(trace.events.len(), 1);
+        assert_eq!(trace.events[0].kind, ToolEventKind::Failed);
+        assert!(!*called.lock().unwrap());
+    }
+
+    #[test]
+    fn policy_profile_denies_missing_capabilities_and_tiers() {
+        let definition = ToolDefinition {
+            required_tier: PrivilegeTier::Tier2,
+            required_capabilities: vec!["vault.lease".to_string()],
+            ..artifact_create_definition()
+        };
+        let request = artifact_create_request();
+        let tier_limited = ToolPolicyProfile::allow_all();
+        let decision = ToolPolicyProfile {
+            max_tier: PrivilegeTier::Tier1,
+            ..tier_limited
+        }
+        .decide(&definition, &request);
+
+        assert_eq!(
+            decision.outcome,
+            ToolPolicyOutcome::Denied {
+                error_kind: ToolErrorKind::ToolTierDenied
+            }
+        );
+
+        let capability_limited = ToolPolicyProfile::allow_all()
+            .with_allowed_capabilities(vec!["artifact.write".to_string()]);
+        let decision = capability_limited.decide(&definition, &request);
+
+        assert_eq!(
+            decision.outcome,
+            ToolPolicyOutcome::Denied {
+                error_kind: ToolErrorKind::ToolPermissionDenied
+            }
+        );
+        assert!(decision.message.contains("vault.lease"));
     }
 
     #[test]
