@@ -21,6 +21,8 @@ Included surfaces:
 - D18D-facing read tool facade for listing bridges/devices, reading entity
   state, describing capabilities, and inspecting bridge health without invoking
   integrations
+- D18D-facing subscribe tool facade that authorizes event-stream access and
+  registers filtered replay subscriptions with checkpoints
 - D18D-facing command tool facade for authorized `smart_home.command` calls that
   validate tool grants, command grants, optimistic state, and audit decisions
 - accepted command results that remain separate from confirmed device state
