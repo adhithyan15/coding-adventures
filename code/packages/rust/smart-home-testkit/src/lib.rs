@@ -12,6 +12,7 @@ use smart_home_core::{
     IntegrationId, Metadata, ProtocolFamily, ProtocolIdentifier, StateConfidence, StateDelta,
     StateSnapshot, StateSource, Value,
 };
+use smart_home_registry::{InMemorySmartHomeRegistry, RegistryError};
 use std::collections::VecDeque;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -65,6 +66,17 @@ impl SmartHomeFixture {
 
     pub fn entities(&self) -> [&Entity; 2] {
         [&self.light, &self.sensor]
+    }
+
+    pub fn install_in_registry(
+        &self,
+        registry: &mut InMemorySmartHomeRegistry,
+    ) -> Result<(), RegistryError> {
+        install_fixture_in_registry(registry, self)
+    }
+
+    pub fn to_registry(&self) -> Result<InMemorySmartHomeRegistry, RegistryError> {
+        registry_with_fixture(self)
     }
 }
 
@@ -302,6 +314,32 @@ pub fn error_event(
     }
 }
 
+pub fn install_fixture_in_registry(
+    registry: &mut InMemorySmartHomeRegistry,
+    fixture: &SmartHomeFixture,
+) -> Result<(), RegistryError> {
+    registry.upsert_bridge(fixture.bridge.clone())?;
+    registry.upsert_device(fixture.device.clone())?;
+    for entity in fixture.entities() {
+        registry.upsert_entity(entity.clone())?;
+    }
+    Ok(())
+}
+
+pub fn registry_with_fixture(
+    fixture: &SmartHomeFixture,
+) -> Result<InMemorySmartHomeRegistry, RegistryError> {
+    let mut registry = InMemorySmartHomeRegistry::new();
+    install_fixture_in_registry(&mut registry, fixture)?;
+    Ok(registry)
+}
+
+pub fn hue_lighting_registry() -> InMemorySmartHomeRegistry {
+    SmartHomeFixture::hue_lighting()
+        .to_registry()
+        .expect("hue lighting fixture records are internally consistent")
+}
+
 fn protocol_id(
     family: ProtocolFamily,
     kind: &'static str,
@@ -399,5 +437,64 @@ mod tests {
         assert_eq!(unavailable.event_type, DeviceEventType::Unavailable);
         assert_eq!(error.event_type, DeviceEventType::Error);
         assert_eq!(error.raw_ref.as_deref(), Some("boom"));
+    }
+
+    #[test]
+    fn fixture_installs_normalized_records_into_registry() {
+        let fixture = SmartHomeFixture::hue_lighting();
+        let registry = fixture.to_registry().unwrap();
+
+        assert_eq!(registry.counts().bridges, 1);
+        assert_eq!(registry.counts().devices, 1);
+        assert_eq!(registry.counts().entities, 2);
+        assert_eq!(registry.counts().protocol_identifiers, 2);
+        assert_eq!(
+            registry
+                .bridge(&fixture.bridge.bridge_id)
+                .unwrap()
+                .bridge_id,
+            fixture.bridge.bridge_id
+        );
+        assert_eq!(
+            registry
+                .device(&fixture.device.device_id)
+                .unwrap()
+                .entity_ids,
+            vec![
+                fixture.light.entity_id.clone(),
+                fixture.sensor.entity_id.clone()
+            ]
+        );
+        assert_eq!(
+            registry.entity(&fixture.light.entity_id).unwrap().kind,
+            EntityKind::Light
+        );
+        assert_eq!(
+            registry.entity(&fixture.sensor.entity_id).unwrap().kind,
+            EntityKind::Sensor
+        );
+    }
+
+    #[test]
+    fn hue_lighting_registry_is_ready_for_event_replay() {
+        let fixture = SmartHomeFixture::hue_lighting();
+        let mut registry = hue_lighting_registry();
+        let event = light_on_event(
+            "event-1",
+            &fixture.bridge.bridge_id,
+            &fixture.device.device_id,
+            &fixture.light.entity_id,
+            2_000,
+        );
+
+        registry.record_event(event).unwrap();
+
+        let state = registry.state(&fixture.light.entity_id).unwrap();
+        assert_eq!(registry.counts().events, 1);
+        assert_eq!(state.confidence, StateConfidence::Confirmed);
+        assert_eq!(
+            state.value,
+            Value::Object(vec![("light.on_off".to_string(), Value::Bool(true))])
+        );
     }
 }
