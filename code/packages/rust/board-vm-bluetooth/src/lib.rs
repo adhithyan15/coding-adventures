@@ -128,6 +128,21 @@ pub enum BluetoothEndpointError {
     InvalidUuid { field: &'static str, value: String },
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum BluetoothDiscoveryError {
+    UnsupportedPlatform {
+        platform: &'static str,
+    },
+    CommandUnavailable {
+        program: String,
+        message: String,
+    },
+    CommandFailed {
+        program: String,
+        status: Option<i32>,
+    },
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum BluetoothTransportError {
     Link,
@@ -427,6 +442,115 @@ pub fn board_vm_endpoint_candidates(
     candidates
 }
 
+pub fn discover_bluetooth_devices(
+) -> Result<Vec<BluetoothDiscoveredDevice>, BluetoothDiscoveryError> {
+    discover_bluetooth_devices_impl()
+}
+
+#[cfg(target_os = "macos")]
+fn discover_bluetooth_devices_impl(
+) -> Result<Vec<BluetoothDiscoveredDevice>, BluetoothDiscoveryError> {
+    let program = "system_profiler";
+    let output = std::process::Command::new(program)
+        .arg("SPBluetoothDataType")
+        .output()
+        .map_err(|error| BluetoothDiscoveryError::CommandUnavailable {
+            program: program.to_owned(),
+            message: error.to_string(),
+        })?;
+
+    if !output.status.success() {
+        return Err(BluetoothDiscoveryError::CommandFailed {
+            program: program.to_owned(),
+            status: output.status.code(),
+        });
+    }
+
+    Ok(bluetooth_devices_from_macos_system_profiler(
+        &String::from_utf8_lossy(&output.stdout),
+    ))
+}
+
+#[cfg(not(target_os = "macos"))]
+fn discover_bluetooth_devices_impl(
+) -> Result<Vec<BluetoothDiscoveredDevice>, BluetoothDiscoveryError> {
+    Err(BluetoothDiscoveryError::UnsupportedPlatform {
+        platform: std::env::consts::OS,
+    })
+}
+
+pub fn bluetooth_devices_from_macos_system_profiler(
+    report: &str,
+) -> Vec<BluetoothDiscoveredDevice> {
+    let mut devices = Vec::new();
+    let mut current = None;
+    let mut in_devices = false;
+    let mut device_indent = None;
+
+    for raw_line in report.lines() {
+        let line = raw_line.trim();
+        if line.is_empty() {
+            continue;
+        }
+
+        let indent = leading_space_count(raw_line);
+        if line.starts_with("Devices") && line.ends_with(':') {
+            push_finished_bluetooth_device(&mut devices, current.take());
+            in_devices = true;
+            device_indent = None;
+            continue;
+        }
+
+        if !in_devices {
+            continue;
+        }
+
+        let Some(first_device_indent) = device_indent else {
+            if let Some(name) = heading_name(line) {
+                device_indent = Some(indent);
+                current = Some(BluetoothDiscoveredDevice::new(name).with_name(name));
+            }
+            continue;
+        };
+
+        if indent < first_device_indent {
+            push_finished_bluetooth_device(&mut devices, current.take());
+            in_devices = false;
+            device_indent = None;
+            continue;
+        }
+
+        if indent == first_device_indent {
+            if let Some(name) = heading_name(line) {
+                push_finished_bluetooth_device(&mut devices, current.take());
+                current = Some(BluetoothDiscoveredDevice::new(name).with_name(name));
+                continue;
+            }
+        }
+
+        let Some(device) = current.as_mut() else {
+            continue;
+        };
+
+        if let Some(address) = field_value(line, "Address") {
+            device.address = Some(normalize_bluetooth_address(address));
+        } else if let Some(paired) = field_value(line, "Paired") {
+            device.paired = yes_no_value(paired);
+        } else if let Some(channel) = field_value(line, "RFCOMM Channel") {
+            if let Ok(channel) = channel.trim().parse::<u8>() {
+                device.board_vm_rfcomm_channels.push(channel);
+            }
+        } else if let Some(uuid) = field_value(line, "Characteristic UUID") {
+            push_unique_uuid(&mut device.characteristic_uuids, uuid);
+        } else if let Some(service) = heading_name(line) {
+            push_unique_uuid(&mut device.service_uuids, service);
+        }
+    }
+
+    push_finished_bluetooth_device(&mut devices, current);
+    devices
+}
+
 pub fn parse_ble_gatt_endpoint(endpoint: &str) -> Result<BleGattEndpoint, BluetoothEndpointError> {
     let body = endpoint.trim().strip_prefix("ble://").ok_or_else(|| {
         BluetoothEndpointError::UnsupportedScheme(endpoint_scheme(endpoint).to_owned())
@@ -539,6 +663,64 @@ fn contains_uuid(values: &[String], needle: &str) -> bool {
     values
         .iter()
         .any(|value| value.trim().eq_ignore_ascii_case(needle))
+}
+
+fn push_finished_bluetooth_device(
+    devices: &mut Vec<BluetoothDiscoveredDevice>,
+    device: Option<BluetoothDiscoveredDevice>,
+) {
+    if let Some(device) = device {
+        if !device.id.trim().is_empty()
+            || device
+                .name
+                .as_deref()
+                .is_some_and(|name| !name.trim().is_empty())
+            || device
+                .address
+                .as_deref()
+                .is_some_and(|address| !address.trim().is_empty())
+        {
+            devices.push(device);
+        }
+    }
+}
+
+fn leading_space_count(line: &str) -> usize {
+    line.bytes().take_while(|byte| *byte == b' ').count()
+}
+
+fn heading_name(line: &str) -> Option<&str> {
+    line.strip_suffix(':')
+        .map(str::trim)
+        .filter(|name| !name.is_empty())
+}
+
+fn field_value<'a>(line: &'a str, field: &str) -> Option<&'a str> {
+    let (name, value) = line.split_once(':')?;
+    (name.trim().eq_ignore_ascii_case(field) && !value.trim().is_empty()).then(|| value.trim())
+}
+
+fn normalize_bluetooth_address(address: &str) -> String {
+    address.trim().replace('-', ":").to_ascii_uppercase()
+}
+
+fn yes_no_value(value: &str) -> bool {
+    matches!(
+        value.trim().to_ascii_lowercase().as_str(),
+        "yes" | "true" | "1"
+    )
+}
+
+fn push_unique_uuid(values: &mut Vec<String>, uuid: &str) {
+    let uuid = uuid.trim();
+    if !is_short_uuid(uuid) && !is_canonical_uuid(uuid) {
+        return;
+    }
+
+    let uuid = uuid.to_ascii_lowercase();
+    if !values.iter().any(|value| value == &uuid) {
+        values.push(uuid);
+    }
 }
 
 fn query_value<'a>(query: &'a str, key: &str) -> Option<&'a str> {
@@ -820,6 +1002,65 @@ mod tests {
             candidates[0].endpoint,
             BluetoothEndpoint::BleGatt(_)
         ));
+    }
+
+    #[test]
+    fn parses_macos_system_profiler_bluetooth_devices() {
+        let report = r#"
+Bluetooth:
+
+      Bluetooth Controller:
+          Address: F8-FF-C2-00-00-00
+
+      Devices (Paired, Configured, etc.):
+          ESP32 Board VM:
+              Address: aa-bb-cc-dd-ee-ff
+              Paired: Yes
+              Services:
+                  Serial Port:
+                      RFCOMM Channel: 3
+                      RFCOMM Channel: 31
+          Uno R4 Board VM:
+              Address: 11-22-33-44-55-66
+              Paired: No
+              Services:
+                  6E400001-B5A3-F393-E0A9-E50E24DCCA9E:
+          Headphones:
+              Address: 00-11-22-33-44-55
+              Paired: Yes
+              Services:
+                  180F:
+
+      Device Cache:
+          Ignored:
+              Address: FF-FF-FF-FF-FF-FF
+"#;
+
+        let devices = bluetooth_devices_from_macos_system_profiler(report);
+
+        assert_eq!(devices.len(), 3);
+        assert_eq!(devices[0].name.as_deref(), Some("ESP32 Board VM"));
+        assert_eq!(devices[0].address.as_deref(), Some("AA:BB:CC:DD:EE:FF"));
+        assert!(devices[0].paired);
+        assert_eq!(devices[0].board_vm_rfcomm_channels, vec![3, 31]);
+        assert_eq!(devices[1].name.as_deref(), Some("Uno R4 Board VM"));
+        assert_eq!(devices[1].address.as_deref(), Some("11:22:33:44:55:66"));
+        assert!(!devices[1].paired);
+        assert_eq!(
+            devices[1].service_uuids,
+            vec![BOARD_VM_BLE_SERVICE_UUID.to_owned()]
+        );
+        assert_eq!(devices[2].service_uuids, vec!["180f".to_owned()]);
+
+        let candidates = board_vm_endpoint_candidates(&devices);
+
+        assert_eq!(candidates.len(), 2);
+        assert!(candidates
+            .iter()
+            .any(|candidate| matches!(candidate.endpoint, BluetoothEndpoint::Rfcomm(_))));
+        assert!(candidates
+            .iter()
+            .any(|candidate| matches!(candidate.endpoint, BluetoothEndpoint::BleGatt(_))));
     }
 
     #[test]
