@@ -12,3 +12,5 @@ All notable changes to this package will be documented in this file.
   climate, scenes, and input devices.
 - Attribute-report mapping helpers for on/off, level, temperature, humidity,
   occupancy, door-lock state, and thermostat setpoints.
+- Canonical `DeviceCommand` projection into Matter on/off, level,
+  color-temperature, and door-lock command invocations.

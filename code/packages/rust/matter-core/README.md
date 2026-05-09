@@ -11,6 +11,7 @@ before they can project Matter nodes into `smart-home-core` records.
 - Matter fabric, node, endpoint, cluster, attribute, and command identifiers
 - canonical cluster ids for the first integration families
 - cluster-to-D23 capability projection
+- canonical `DeviceCommand` projection into Matter command invocations
 - selected Matter attribute reports mapped into `StateDelta`
 - deterministic helpers for level, humidity, temperature, occupancy, lock, and
   thermostat values

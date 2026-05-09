@@ -8,7 +8,9 @@
 
 #![forbid(unsafe_code)]
 
-use smart_home_core::{Capability, CapabilityId, EntityKind, StateDelta, Value};
+use smart_home_core::{
+    Capability, CapabilityId, CommandType, DeviceCommand, EntityKind, StateDelta, Value,
+};
 use std::fmt;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -28,6 +30,13 @@ pub enum MatterError {
     UnsupportedAttribute {
         cluster_id: MatterClusterId,
         attribute_id: MatterAttributeId,
+    },
+    UnsupportedCommand {
+        command_type: CommandType,
+    },
+    UnexpectedCommandArgument {
+        command_type: CommandType,
+        expected: &'static str,
     },
     UnexpectedValueKind {
         cluster_id: MatterClusterId,
@@ -55,6 +64,16 @@ impl fmt::Display for MatterError {
             } => write!(
                 f,
                 "Matter cluster {cluster_id} attribute {attribute_id} does not map to a D23 state delta"
+            ),
+            Self::UnsupportedCommand { command_type } => {
+                write!(f, "smart-home command {command_type:?} does not map to a Matter command")
+            }
+            Self::UnexpectedCommandArgument {
+                command_type,
+                expected,
+            } => write!(
+                f,
+                "smart-home command {command_type:?} expected Matter command argument {expected}"
             ),
             Self::UnexpectedValueKind {
                 cluster_id,
@@ -298,6 +317,145 @@ impl MatterAttributeReport {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum MatterCommand {
+    Off,
+    On,
+    MoveToLevelWithOnOff,
+    MoveToColorTemperature,
+    LockDoor,
+    UnlockDoor,
+}
+
+impl MatterCommand {
+    pub const OFF: MatterCommandId = MatterCommandId::new(0x0000);
+    pub const ON: MatterCommandId = MatterCommandId::new(0x0001);
+    pub const MOVE_TO_LEVEL_WITH_ON_OFF: MatterCommandId = MatterCommandId::new(0x0004);
+    pub const MOVE_TO_COLOR_TEMPERATURE: MatterCommandId = MatterCommandId::new(0x000a);
+    pub const LOCK_DOOR: MatterCommandId = MatterCommandId::new(0x0000);
+    pub const UNLOCK_DOOR: MatterCommandId = MatterCommandId::new(0x0001);
+
+    pub fn cluster_id(self) -> MatterClusterId {
+        match self {
+            Self::Off | Self::On => MatterCluster::ON_OFF,
+            Self::MoveToLevelWithOnOff => MatterCluster::LEVEL_CONTROL,
+            Self::MoveToColorTemperature => MatterCluster::COLOR_CONTROL,
+            Self::LockDoor | Self::UnlockDoor => MatterCluster::DOOR_LOCK,
+        }
+    }
+
+    pub fn command_id(self) -> MatterCommandId {
+        match self {
+            Self::Off => Self::OFF,
+            Self::On => Self::ON,
+            Self::MoveToLevelWithOnOff => Self::MOVE_TO_LEVEL_WITH_ON_OFF,
+            Self::MoveToColorTemperature => Self::MOVE_TO_COLOR_TEMPERATURE,
+            Self::LockDoor => Self::LOCK_DOOR,
+            Self::UnlockDoor => Self::UNLOCK_DOOR,
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub struct MatterCommandInvocation {
+    pub node_id: MatterNodeId,
+    pub endpoint_id: MatterEndpointId,
+    pub cluster_id: MatterClusterId,
+    pub command_id: MatterCommandId,
+    pub arguments: Vec<(String, MatterValue)>,
+}
+
+impl MatterCommandInvocation {
+    pub fn new(
+        node_id: MatterNodeId,
+        endpoint_id: MatterEndpointId,
+        command: MatterCommand,
+        arguments: Vec<(String, MatterValue)>,
+    ) -> Self {
+        Self {
+            node_id,
+            endpoint_id,
+            cluster_id: command.cluster_id(),
+            command_id: command.command_id(),
+            arguments,
+        }
+    }
+
+    pub fn command(
+        node_id: MatterNodeId,
+        endpoint_id: MatterEndpointId,
+        command: MatterCommand,
+    ) -> Self {
+        Self::new(node_id, endpoint_id, command, Vec::new())
+    }
+
+    pub fn argument(&self, name: &str) -> Option<&MatterValue> {
+        self.arguments
+            .iter()
+            .find(|(candidate, _)| candidate == name)
+            .map(|(_, value)| value)
+    }
+}
+
+pub fn matter_command_for_device_command(
+    node_id: MatterNodeId,
+    endpoint_id: MatterEndpointId,
+    command: &DeviceCommand,
+) -> Result<MatterCommandInvocation, MatterError> {
+    match command.command_type {
+        CommandType::TurnOn => Ok(MatterCommandInvocation::command(
+            node_id,
+            endpoint_id,
+            MatterCommand::On,
+        )),
+        CommandType::TurnOff => Ok(MatterCommandInvocation::command(
+            node_id,
+            endpoint_id,
+            MatterCommand::Off,
+        )),
+        CommandType::SetBrightness => Ok(MatterCommandInvocation::new(
+            node_id,
+            endpoint_id,
+            MatterCommand::MoveToLevelWithOnOff,
+            vec![
+                (
+                    "level".to_string(),
+                    MatterValue::U64(u64::from(percentage_to_level(expect_command_percentage(
+                        command,
+                    )?))),
+                ),
+                ("transition_time_ds".to_string(), MatterValue::U64(0)),
+            ],
+        )),
+        CommandType::SetColorTemperature => Ok(MatterCommandInvocation::new(
+            node_id,
+            endpoint_id,
+            MatterCommand::MoveToColorTemperature,
+            vec![
+                (
+                    "color_temperature_mireds".to_string(),
+                    MatterValue::U64(u64::from(expect_command_u16(command)?)),
+                ),
+                ("transition_time_ds".to_string(), MatterValue::U64(0)),
+            ],
+        )),
+        CommandType::SetLock => Ok(MatterCommandInvocation::command(
+            node_id,
+            endpoint_id,
+            expect_lock_command(command)?,
+        )),
+        CommandType::SetColor | CommandType::RecallScene | CommandType::SetThermostatSetpoint => {
+            Err(MatterError::UnsupportedCommand {
+                command_type: command.command_type,
+            })
+        }
+    }
+}
+
+pub fn percentage_to_level(percentage: u8) -> u8 {
+    ((u32::from(percentage) * 254 + 50) / 100) as u8
+}
+
 pub fn capabilities_for_cluster(cluster_id: MatterClusterId) -> Vec<Capability> {
     match MatterCluster::from_id(cluster_id) {
         MatterCluster::OnOff => vec![Capability::light_on_off()],
@@ -468,9 +626,45 @@ fn unexpected(report: &MatterAttributeReport, expected: &'static str) -> MatterE
     }
 }
 
+fn expect_command_percentage(command: &DeviceCommand) -> Result<u8, MatterError> {
+    match &command.arguments {
+        Value::Percentage(value) => Ok(*value),
+        _ => Err(MatterError::UnexpectedCommandArgument {
+            command_type: command.command_type,
+            expected: "percentage",
+        }),
+    }
+}
+
+fn expect_command_u16(command: &DeviceCommand) -> Result<u16, MatterError> {
+    match &command.arguments {
+        Value::Integer(value) if (0..=u16::MAX as i64).contains(value) => Ok(*value as u16),
+        _ => Err(MatterError::UnexpectedCommandArgument {
+            command_type: command.command_type,
+            expected: "u16 integer",
+        }),
+    }
+}
+
+fn expect_lock_command(command: &DeviceCommand) -> Result<MatterCommand, MatterError> {
+    match &command.arguments {
+        Value::Bool(true) => Ok(MatterCommand::LockDoor),
+        Value::Bool(false) => Ok(MatterCommand::UnlockDoor),
+        Value::Text(value) if value == "locked" || value == "lock" => Ok(MatterCommand::LockDoor),
+        Value::Text(value) if value == "unlocked" || value == "unlock" => {
+            Ok(MatterCommand::UnlockDoor)
+        }
+        _ => Err(MatterError::UnexpectedCommandArgument {
+            command_type: command.command_type,
+            expected: "lock state boolean or locked/unlocked text",
+        }),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    use smart_home_core::{CommandId, CorrelationId, EntityId};
 
     fn report(
         cluster_id: MatterClusterId,
@@ -484,6 +678,18 @@ mod tests {
             attribute_id,
             value,
         )
+    }
+
+    fn device_command(command_type: CommandType, arguments: Value) -> DeviceCommand {
+        DeviceCommand::new(
+            CommandId::trusted("cmd-1"),
+            EntityId::trusted("entity-1"),
+            command_type,
+            arguments,
+            "agent-1",
+            CorrelationId::trusted("corr-1"),
+        )
+        .unwrap()
     }
 
     #[test]
@@ -558,6 +764,109 @@ mod tests {
         ))
         .unwrap();
         assert_eq!(occupancy.value, Value::Bool(true));
+    }
+
+    #[test]
+    fn device_commands_project_to_matter_on_off_and_level_commands() {
+        let node_id = MatterNodeId::new(0x1234);
+        let endpoint_id = MatterEndpointId::new(1).unwrap();
+
+        let on = matter_command_for_device_command(
+            node_id,
+            endpoint_id,
+            &device_command(CommandType::TurnOn, Value::Null),
+        )
+        .unwrap();
+        assert_eq!(on.cluster_id, MatterCluster::ON_OFF);
+        assert_eq!(on.command_id, MatterCommand::ON);
+        assert!(on.arguments.is_empty());
+
+        let brightness = matter_command_for_device_command(
+            node_id,
+            endpoint_id,
+            &device_command(CommandType::SetBrightness, Value::Percentage(50)),
+        )
+        .unwrap();
+        assert_eq!(brightness.cluster_id, MatterCluster::LEVEL_CONTROL);
+        assert_eq!(
+            brightness.command_id,
+            MatterCommand::MOVE_TO_LEVEL_WITH_ON_OFF
+        );
+        assert_eq!(brightness.argument("level"), Some(&MatterValue::U64(127)));
+        assert_eq!(
+            brightness.argument("transition_time_ds"),
+            Some(&MatterValue::U64(0))
+        );
+        assert_eq!(percentage_to_level(100), 254);
+    }
+
+    #[test]
+    fn device_commands_project_to_matter_lock_and_color_temperature_commands() {
+        let node_id = MatterNodeId::new(0x1234);
+        let endpoint_id = MatterEndpointId::new(1).unwrap();
+
+        let lock = matter_command_for_device_command(
+            node_id,
+            endpoint_id,
+            &device_command(CommandType::SetLock, Value::Text("locked".to_string())),
+        )
+        .unwrap();
+        assert_eq!(lock.cluster_id, MatterCluster::DOOR_LOCK);
+        assert_eq!(lock.command_id, MatterCommand::LOCK_DOOR);
+
+        let unlock = matter_command_for_device_command(
+            node_id,
+            endpoint_id,
+            &device_command(CommandType::SetLock, Value::Bool(false)),
+        )
+        .unwrap();
+        assert_eq!(unlock.command_id, MatterCommand::UNLOCK_DOOR);
+
+        let color_temp = matter_command_for_device_command(
+            node_id,
+            endpoint_id,
+            &device_command(CommandType::SetColorTemperature, Value::Integer(250)),
+        )
+        .unwrap();
+        assert_eq!(color_temp.cluster_id, MatterCluster::COLOR_CONTROL);
+        assert_eq!(
+            color_temp.command_id,
+            MatterCommand::MOVE_TO_COLOR_TEMPERATURE
+        );
+        assert_eq!(
+            color_temp.argument("color_temperature_mireds"),
+            Some(&MatterValue::U64(250))
+        );
+    }
+
+    #[test]
+    fn device_command_projection_rejects_unsupported_or_malformed_commands() {
+        let node_id = MatterNodeId::new(0x1234);
+        let endpoint_id = MatterEndpointId::new(1).unwrap();
+
+        let bad_brightness = matter_command_for_device_command(
+            node_id,
+            endpoint_id,
+            &device_command(CommandType::SetBrightness, Value::Integer(50)),
+        )
+        .unwrap_err();
+        assert!(matches!(
+            bad_brightness,
+            MatterError::UnexpectedCommandArgument { .. }
+        ));
+
+        let unsupported = matter_command_for_device_command(
+            node_id,
+            endpoint_id,
+            &device_command(CommandType::RecallScene, Value::Null),
+        )
+        .unwrap_err();
+        assert_eq!(
+            unsupported,
+            MatterError::UnsupportedCommand {
+                command_type: CommandType::RecallScene
+            }
+        );
     }
 
     #[test]
