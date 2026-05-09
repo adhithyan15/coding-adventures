@@ -34,3 +34,6 @@ All notable changes to this package will be documented in this file.
 - Computed policy-surface helpers so Chief of Staff tools can identify camera,
   entry-access, climate, energy, cloud, credential, radio-network, and local
   actuation review boundaries before activating integrations.
+- Composable bounded integration catalog queries for combining priority,
+  primitive, capability, policy, protocol, local/cloud, and virtual alias
+  selectors in read-only D18D tools.

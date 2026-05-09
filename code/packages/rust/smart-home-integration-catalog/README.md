@@ -28,6 +28,9 @@ runtime and Chief of Staff tools a typed catalog for:
   standard-backed products into primitive/capability/auth/policy requirements
 - readiness reports that compare activation plans against available primitives,
   allowed capabilities, and already-enabled dependency integrations
+- composable bounded catalog queries for D18D read tools that need to combine
+  priority, primitive, capability, policy, protocol, local/cloud, and virtual
+  alias selectors
 - first-party rollout seed entries
 - virtual product aliases that point to real implementations or standards
 
