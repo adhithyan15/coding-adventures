@@ -32,6 +32,10 @@ pub enum BluetoothEndpointTransport {
     Rfcomm,
 }
 
+pub const BOARD_VM_BLE_SERVICE_UUID: &str = "6e400001-b5a3-f393-e0a9-e50e24dcca9e";
+pub const BOARD_VM_BLE_WRITE_CHARACTERISTIC_UUID: &str = "6e400002-b5a3-f393-e0a9-e50e24dcca9e";
+pub const BOARD_VM_BLE_NOTIFY_CHARACTERISTIC_UUID: &str = "6e400003-b5a3-f393-e0a9-e50e24dcca9e";
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct BleGattEndpoint {
     pub endpoint: String,
@@ -46,6 +50,70 @@ pub struct RfcommEndpoint {
     pub endpoint: String,
     pub device: String,
     pub channel: u8,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BluetoothDiscoveredDevice {
+    pub id: String,
+    pub name: Option<String>,
+    pub address: Option<String>,
+    pub paired: bool,
+    pub service_uuids: Vec<String>,
+    pub characteristic_uuids: Vec<String>,
+    pub board_vm_rfcomm_channels: Vec<u8>,
+}
+
+impl BluetoothDiscoveredDevice {
+    pub fn new(id: impl Into<String>) -> Self {
+        Self {
+            id: id.into(),
+            name: None,
+            address: None,
+            paired: false,
+            service_uuids: Vec::new(),
+            characteristic_uuids: Vec::new(),
+            board_vm_rfcomm_channels: Vec::new(),
+        }
+    }
+
+    pub fn with_name(mut self, name: impl Into<String>) -> Self {
+        self.name = Some(name.into());
+        self
+    }
+
+    pub fn with_address(mut self, address: impl Into<String>) -> Self {
+        self.address = Some(address.into());
+        self
+    }
+
+    pub fn paired(mut self, paired: bool) -> Self {
+        self.paired = paired;
+        self
+    }
+
+    pub fn with_service_uuid(mut self, uuid: impl Into<String>) -> Self {
+        self.service_uuids.push(uuid.into());
+        self
+    }
+
+    pub fn with_characteristic_uuid(mut self, uuid: impl Into<String>) -> Self {
+        self.characteristic_uuids.push(uuid.into());
+        self
+    }
+
+    pub fn with_board_vm_rfcomm_channel(mut self, channel: u8) -> Self {
+        self.board_vm_rfcomm_channels.push(channel);
+        self
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct BluetoothEndpointCandidate {
+    pub endpoint: BluetoothEndpoint,
+    pub device: String,
+    pub display_name: String,
+    pub paired: bool,
+    pub requires_pairing: bool,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -304,6 +372,61 @@ pub fn parse_bluetooth_endpoint(
     Err(BluetoothEndpointError::UnsupportedScheme(scheme.to_owned()))
 }
 
+pub fn board_vm_ble_endpoint_for_device(
+    device: &str,
+) -> Result<BleGattEndpoint, BluetoothEndpointError> {
+    parse_ble_gatt_endpoint(&format!(
+        "ble://{device}?service={BOARD_VM_BLE_SERVICE_UUID}&write={BOARD_VM_BLE_WRITE_CHARACTERISTIC_UUID}&notify={BOARD_VM_BLE_NOTIFY_CHARACTERISTIC_UUID}"
+    ))
+}
+
+pub fn board_vm_rfcomm_endpoint_for_device(
+    device: &str,
+    channel: u8,
+) -> Result<RfcommEndpoint, BluetoothEndpointError> {
+    parse_rfcomm_endpoint(&format!("btspp://{device}:{channel}"))
+}
+
+pub fn board_vm_endpoint_candidates(
+    devices: &[BluetoothDiscoveredDevice],
+) -> Vec<BluetoothEndpointCandidate> {
+    let mut candidates = Vec::new();
+    for device in devices {
+        let Some(selector) = bluetooth_device_selector(device) else {
+            continue;
+        };
+        let display_name = bluetooth_device_display_name(device, &selector);
+
+        if device_supports_board_vm_ble(device) {
+            if let Ok(endpoint) = board_vm_ble_endpoint_for_device(&selector) {
+                candidates.push(BluetoothEndpointCandidate {
+                    endpoint: BluetoothEndpoint::BleGatt(endpoint),
+                    device: selector.clone(),
+                    display_name: display_name.clone(),
+                    paired: device.paired,
+                    requires_pairing: !device.paired,
+                });
+            }
+        }
+
+        let mut channels = device.board_vm_rfcomm_channels.clone();
+        channels.sort_unstable();
+        channels.dedup();
+        for channel in channels {
+            if let Ok(endpoint) = board_vm_rfcomm_endpoint_for_device(&selector, channel) {
+                candidates.push(BluetoothEndpointCandidate {
+                    endpoint: BluetoothEndpoint::Rfcomm(endpoint),
+                    device: selector.clone(),
+                    display_name: display_name.clone(),
+                    paired: device.paired,
+                    requires_pairing: !device.paired,
+                });
+            }
+        }
+    }
+    candidates
+}
+
 pub fn parse_ble_gatt_endpoint(endpoint: &str) -> Result<BleGattEndpoint, BluetoothEndpointError> {
     let body = endpoint.trim().strip_prefix("ble://").ok_or_else(|| {
         BluetoothEndpointError::UnsupportedScheme(endpoint_scheme(endpoint).to_owned())
@@ -384,6 +507,38 @@ fn endpoint_scheme(endpoint: &str) -> &str {
         .split_once("://")
         .map(|(scheme, _)| scheme)
         .unwrap_or("")
+}
+
+fn bluetooth_device_selector(device: &BluetoothDiscoveredDevice) -> Option<String> {
+    non_empty_string(device.address.as_deref())
+        .or_else(|| non_empty_string(Some(&device.id)))
+        .or_else(|| non_empty_string(device.name.as_deref()))
+}
+
+fn bluetooth_device_display_name(device: &BluetoothDiscoveredDevice, fallback: &str) -> String {
+    non_empty_string(device.name.as_deref()).unwrap_or_else(|| fallback.to_owned())
+}
+
+fn non_empty_string(value: Option<&str>) -> Option<String> {
+    let value = value?.trim();
+    (!value.is_empty()).then(|| value.to_owned())
+}
+
+fn device_supports_board_vm_ble(device: &BluetoothDiscoveredDevice) -> bool {
+    contains_uuid(&device.service_uuids, BOARD_VM_BLE_SERVICE_UUID)
+        || contains_uuid(
+            &device.characteristic_uuids,
+            BOARD_VM_BLE_WRITE_CHARACTERISTIC_UUID,
+        ) && contains_uuid(
+            &device.characteristic_uuids,
+            BOARD_VM_BLE_NOTIFY_CHARACTERISTIC_UUID,
+        )
+}
+
+fn contains_uuid(values: &[String], needle: &str) -> bool {
+    values
+        .iter()
+        .any(|value| value.trim().eq_ignore_ascii_case(needle))
 }
 
 fn query_value<'a>(query: &'a str, key: &str) -> Option<&'a str> {
@@ -586,6 +741,85 @@ mod tests {
             parse_bluetooth_endpoint("tcp://board-vm.local:4170").unwrap_err(),
             BluetoothEndpointError::UnsupportedScheme("tcp".to_owned())
         );
+    }
+
+    #[test]
+    fn builds_board_vm_ble_endpoint_from_discovered_service() {
+        let devices = vec![
+            BluetoothDiscoveredDevice::new("ignore-me")
+                .with_name("Headphones")
+                .with_service_uuid("180f"),
+            BluetoothDiscoveredDevice::new("dev-1")
+                .with_name("Uno R4 Board VM")
+                .with_address("AA:BB:CC:DD:EE:FF")
+                .with_service_uuid(BOARD_VM_BLE_SERVICE_UUID.to_ascii_uppercase()),
+        ];
+
+        let candidates = board_vm_endpoint_candidates(&devices);
+
+        assert_eq!(candidates.len(), 1);
+        let candidate = &candidates[0];
+        assert_eq!(candidate.display_name, "Uno R4 Board VM");
+        assert_eq!(candidate.device, "AA:BB:CC:DD:EE:FF");
+        assert!(!candidate.paired);
+        assert!(candidate.requires_pairing);
+        match &candidate.endpoint {
+            BluetoothEndpoint::BleGatt(endpoint) => {
+                assert_eq!(endpoint.device, "AA:BB:CC:DD:EE:FF");
+                assert_eq!(endpoint.service_uuid, BOARD_VM_BLE_SERVICE_UUID);
+                assert_eq!(
+                    endpoint.write_characteristic_uuid,
+                    BOARD_VM_BLE_WRITE_CHARACTERISTIC_UUID
+                );
+                assert_eq!(
+                    endpoint.notify_characteristic_uuid,
+                    BOARD_VM_BLE_NOTIFY_CHARACTERISTIC_UUID
+                );
+            }
+            other => panic!("expected BLE GATT endpoint, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn builds_board_vm_rfcomm_candidates_from_discovered_channels() {
+        let devices = vec![BluetoothDiscoveredDevice::new("esp32-board-vm")
+            .with_name("ESP32 Board VM")
+            .paired(true)
+            .with_board_vm_rfcomm_channel(3)
+            .with_board_vm_rfcomm_channel(3)
+            .with_board_vm_rfcomm_channel(31)];
+
+        let candidates = board_vm_endpoint_candidates(&devices);
+
+        assert_eq!(candidates.len(), 1);
+        let candidate = &candidates[0];
+        assert_eq!(candidate.display_name, "ESP32 Board VM");
+        assert_eq!(candidate.device, "esp32-board-vm");
+        assert!(candidate.paired);
+        assert!(!candidate.requires_pairing);
+        match &candidate.endpoint {
+            BluetoothEndpoint::Rfcomm(endpoint) => {
+                assert_eq!(endpoint.device, "esp32-board-vm");
+                assert_eq!(endpoint.channel, 3);
+                assert_eq!(endpoint.endpoint, "btspp://esp32-board-vm:3");
+            }
+            other => panic!("expected RFCOMM endpoint, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn builds_ble_candidate_when_characteristics_are_discovered_after_service_scan() {
+        let devices = vec![BluetoothDiscoveredDevice::new("ble-device")
+            .with_characteristic_uuid(BOARD_VM_BLE_WRITE_CHARACTERISTIC_UUID)
+            .with_characteristic_uuid(BOARD_VM_BLE_NOTIFY_CHARACTERISTIC_UUID)];
+
+        let candidates = board_vm_endpoint_candidates(&devices);
+
+        assert_eq!(candidates.len(), 1);
+        assert!(matches!(
+            candidates[0].endpoint,
+            BluetoothEndpoint::BleGatt(_)
+        ));
     }
 
     #[test]
