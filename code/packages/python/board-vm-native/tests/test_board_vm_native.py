@@ -209,6 +209,50 @@ def test_connection_option_picker_prompts_for_repl_use():
     assert "Select connection [1-3]: " in rendered
 
 
+def test_connect_records_the_rust_selected_serial_connection_option():
+    found = devices(["/dev/tty.usbserial-CP2102-esp32"])
+
+    connection = connect("esp32", device_candidates=found)
+
+    assert connection.connection_transport == "serial"
+    assert connection.connection_option["display_name"] == "USB/serial"
+    assert connection.serial_connection is True
+    assert connection.wireless_connection is False
+
+
+def test_connect_can_use_a_wireless_connection_option_with_an_injected_endpoint():
+    transport = FakeWriteTransport()
+
+    connection = connect(
+        "uno-r4-wifi",
+        via="Wi-Fi",
+        smoke=True,
+        transport=transport,
+    )
+
+    assert connection.port is None
+    assert connection.connection_transport == "wifi"
+    assert connection.wireless_connection is True
+    assert connection.ota_connection is True
+    assert len(transport.frames) == 2
+
+
+def test_connect_can_prompt_for_the_connection_option_after_the_board():
+    output = io.StringIO()
+
+    connection = connect(
+        "uno-r4-wifi",
+        pick_connection=True,
+        input_func=lambda _prompt: "2",
+        output=output,
+        transport=FakeWriteTransport(),
+    )
+
+    assert connection.connection_transport == "wifi"
+    assert connection.port is None
+    assert "Select connection [1-3]: " in output.getvalue()
+
+
 def test_targets_are_detected_from_rust_owned_aliases():
     esp32 = detect_target("esp32")
     pico = detect_target("Raspberry Pi Pico")

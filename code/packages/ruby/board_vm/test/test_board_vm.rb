@@ -103,6 +103,70 @@ module CodingAdventures
         assert_includes output.string, "Select connection [1-3]: "
       end
 
+      def test_connect_records_the_rust_selected_serial_connection_option
+        devices = BoardVM.devices(paths: ["/dev/tty.usbserial-CP2102-esp32"])
+
+        connection = BoardVM.connect(
+          board: :esp32,
+          devices: devices,
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new
+        )
+
+        assert_equal "serial", connection.connection_transport
+        assert_equal "USB/serial", connection.connection_option.fetch("display_name")
+        assert connection.serial_connection?
+        refute connection.wireless_connection?
+      end
+
+      def test_connect_can_use_a_wireless_connection_option_with_an_injected_endpoint
+        transport = FakeWriteTransport.new
+
+        connection = BoardVM.uno_r4_wifi(
+          via: "Wi-Fi",
+          smoke: true,
+          transport: transport,
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new
+        )
+
+        assert_nil connection.port
+        assert_equal "wifi", connection.connection_transport
+        assert connection.wireless_connection?
+        assert connection.ota_connection?
+        assert_equal 2, transport.frames.length
+      end
+
+      def test_connect_can_prompt_for_the_connection_option_after_the_board
+        output = StringIO.new
+
+        connection = BoardVM.uno_r4_wifi(
+          pick_connection: true,
+          input: StringIO.new("2\n"),
+          output: output,
+          transport: FakeWriteTransport.new,
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new
+        )
+
+        assert_equal "wifi", connection.connection_transport
+        assert_nil connection.port
+        assert_includes output.string, "Select connection [1-3]: "
+      end
+
+      def test_wireless_connection_requires_an_endpoint_before_dispatch
+        connection = BoardVM.uno_r4_wifi(
+          via: :wifi,
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: FakeRunner.new
+        )
+
+        error = assert_raises(TransportError) do
+          connection.smoke!
+        end
+        assert_match(/requires an injected Board VM transport endpoint/, error.message)
+      end
+
       def test_targets_are_detected_from_rust_owned_aliases
         esp32 = BoardVM.detect_target("esp32")
         pico = BoardVM.detect_target("Raspberry Pi Pico")

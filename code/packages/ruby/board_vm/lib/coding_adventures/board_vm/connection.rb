@@ -6,7 +6,7 @@ module CodingAdventures
     class DeviceSelectionError < ArgumentError; end
 
     class Connection
-      attr_reader :board, :cargo_workspace, :runner, :transport, :baud_rate, :timeout_ms
+      attr_reader :board, :cargo_workspace, :runner, :transport, :connection_option, :baud_rate, :timeout_ms
       attr_accessor :port
 
       def initialize(
@@ -15,6 +15,7 @@ module CodingAdventures
         cargo_workspace:,
         runner:,
         transport:,
+        connection_option:,
         baud_rate:,
         timeout_ms:,
         arduino_core: nil,
@@ -48,6 +49,7 @@ module CodingAdventures
         @cargo_workspace = cargo_workspace
         @runner = runner
         @transport = transport
+        @connection_option = connection_option
         @baud_rate = baud_rate
         @timeout_ms = timeout_ms
         @arduino_core = arduino_core
@@ -109,6 +111,11 @@ module CodingAdventures
       end
 
       def flash!
+        if !serial_connection? && !pico_board?
+          raise UnsupportedBoardError,
+            "#{connection_display_name} flashing is known in target metadata, but Ruby host flashing over #{connection_transport} is not wired yet; choose via: :serial"
+        end
+
         case board
         when :uno_r4_wifi
           flash_uno_r4_wifi!
@@ -119,6 +126,22 @@ module CodingAdventures
         else
           raise UnsupportedBoardError, "Ruby DSL flash currently supports :uno_r4_wifi, :esp32_devkit_v1, :raspberry_pi_pico, and :raspberry_pi_pico_w; got #{board.inspect}"
         end
+      end
+
+      def connection_transport
+        connection_option && connection_option["transport"]
+      end
+
+      def serial_connection?
+        connection_transport.nil? || connection_transport == "serial"
+      end
+
+      def wireless_connection?
+        !serial_connection?
+      end
+
+      def ota_connection?
+        !!(connection_option && connection_option["ota_update"])
       end
 
       def blink!(
@@ -486,7 +509,27 @@ module CodingAdventures
       end
 
       def active_transport
-        @transport ||= SerialTransport.new(port: port, baud_rate: baud_rate, timeout_ms: timeout_ms)
+        return @transport if @transport
+
+        unless serial_connection?
+          raise TransportError,
+            "#{connection_display_name} requires an injected Board VM transport endpoint; pass transport: or choose via: :serial"
+        end
+        if port.nil? || port.to_s.empty?
+          raise TransportError, "USB/serial Board VM connection requires a serial port"
+        end
+
+        @transport = SerialTransport.new(port: port, baud_rate: baud_rate, timeout_ms: timeout_ms)
+      end
+
+      def connection_display_name
+        return "Board VM connection" unless connection_option
+
+        connection_option["display_name"] || connection_option["transport"] || "Board VM connection"
+      end
+
+      def pico_board?
+        %i[raspberry_pi_pico raspberry_pi_pico_w].include?(board)
       end
 
       def decode_response(session, response)

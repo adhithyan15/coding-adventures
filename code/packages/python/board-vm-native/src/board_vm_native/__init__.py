@@ -1222,6 +1222,7 @@ class Connection:
         target: BoardTarget,
         port: str | None,
         transport: Any = None,
+        connection_option: dict[str, Any] | None = None,
         runner: Any = None,
         cargo_workspace: str | pathlib.Path | None = None,
         firmware_image: str | pathlib.Path | None = None,
@@ -1237,6 +1238,7 @@ class Connection:
         self.target = target
         self.port = None if port is None else str(port)
         self.transport = transport
+        self.connection_option = dict(connection_option or select_connection_option(target.board_id))
         self.runner = _default_runner if runner is None else runner
         self.cargo_workspace = pathlib.Path(cargo_workspace or DEFAULT_RUST_WORKSPACE)
         self.firmware_image = None if firmware_image is None else str(firmware_image)
@@ -1256,6 +1258,23 @@ class Connection:
     @property
     def family(self) -> str:
         return self.target.family
+
+    @property
+    def connection_transport(self) -> str | None:
+        transport = self.connection_option.get("transport")
+        return None if transport is None else str(transport)
+
+    @property
+    def serial_connection(self) -> bool:
+        return self.connection_transport in {None, "serial"}
+
+    @property
+    def wireless_connection(self) -> bool:
+        return not self.serial_connection
+
+    @property
+    def ota_connection(self) -> bool:
+        return bool(self.connection_option.get("ota_update"))
 
     def session(self, **options: Any) -> Session:
         options.setdefault("transport", self.transport)
@@ -1277,6 +1296,12 @@ class Connection:
     def flash(self) -> Any:
         if self.firmware_image is None:
             raise ValueError("Board VM flash requires firmware_image")
+        if not self.serial_connection and self.family != "raspberry_pi_pico":
+            display_name = self.connection_option.get("display_name", self.connection_transport)
+            raise ValueError(
+                f"{display_name} flashing is known in target metadata, but Python host flashing "
+                f"over {self.connection_transport} is not wired yet; choose via='serial'"
+            )
         if self.family == "esp32":
             command = esp_upload_command(
                 self.board_id,
@@ -1736,6 +1761,9 @@ def connect(
     device: DeviceReference | None = None,
     device_candidates: Iterable[BoardDevice | dict[str, Any]] | None = None,
     pick: bool = False,
+    via: str | None = None,
+    connection_option: dict[str, Any] | None = None,
+    pick_connection: bool = False,
     input_func: Any = input,
     output: Any = None,
     flash: bool = False,
@@ -1755,7 +1783,27 @@ def connect(
     pico_uf2_upload_options: dict[str, Any] | None = None,
 ) -> Connection:
     selected_device = None
-    if pick and port is None and device is None:
+    explicit_target = None if selector == "auto" else detect_target(selector)
+    if selector != "auto" and explicit_target is None:
+        raise ValueError(f"unsupported board: {selector!r}")
+
+    selected_connection_option = None
+    if explicit_target is not None:
+        selected_connection_option = _resolve_connection_option(
+            explicit_target.board_id,
+            via=via,
+            connection_option=connection_option,
+            pick_connection=pick_connection,
+            input_func=input_func,
+            output=output,
+        )
+
+    needs_device_for_target = explicit_target is None and port is None
+    needs_serial_port = _connection_uses_serial_port(selected_connection_option) and not _flash_without_port(
+        explicit_target.board_id if explicit_target is not None else selector,
+        flash,
+    )
+    if pick and port is None and device is None and (needs_device_for_target or needs_serial_port):
         selected_device = pick_device(
             selector,
             device_candidates=device_candidates,
@@ -1768,15 +1816,24 @@ def connect(
             device=device,
             device_candidates=device_candidates,
         )
-    elif port is None and not _flash_without_port(selector, flash):
+    elif port is None and (needs_device_for_target or needs_serial_port):
         selected_device = select_device(selector, device_candidates=device_candidates)
 
     selected_port = port or (selected_device.port if selected_device is not None else None)
     target = _connection_target(selector, selected_device, selected_port)
+    selected_connection_option = selected_connection_option or _resolve_connection_option(
+        target.board_id,
+        via=via,
+        connection_option=connection_option,
+        pick_connection=pick_connection,
+        input_func=input_func,
+        output=output,
+    )
     connection = Connection(
         target=target,
         port=selected_port,
         transport=transport,
+        connection_option=selected_connection_option,
         runner=runner,
         cargo_workspace=cargo_workspace,
         firmware_image=firmware_image or esp_image,
@@ -1794,6 +1851,26 @@ def connect(
     if smoke:
         connection.smoke()
     return connection
+
+
+def _resolve_connection_option(
+    selector: str,
+    *,
+    via: str | None,
+    connection_option: dict[str, Any] | None,
+    pick_connection: bool,
+    input_func: Any,
+    output: Any,
+) -> dict[str, Any]:
+    if connection_option is not None:
+        return dict(connection_option)
+    if pick_connection:
+        return pick_connection_option(selector, input_func=input_func, output=output)
+    return select_connection_option(selector, transport=via)
+
+
+def _connection_uses_serial_port(connection_option: dict[str, Any] | None) -> bool:
+    return connection_option is None or connection_option.get("transport") == "serial"
 
 
 def uno_r4_wifi(**options: Any) -> Connection:
