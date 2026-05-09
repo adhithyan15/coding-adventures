@@ -13,3 +13,5 @@ All notable changes to this package will be documented in this file.
 - Helpers for confirmed, stale, and optimistic state snapshots.
 - Helpers for update, unavailable, and error device events.
 - Scripted fake event stream with event, disconnect, and gap markers.
+- Fake command bus helpers for deterministic command/result assertions.
+- Fake MQTT broker publication helpers for retained-message and payload tests.

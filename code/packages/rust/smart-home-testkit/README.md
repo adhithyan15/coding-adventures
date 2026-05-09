@@ -13,6 +13,8 @@ a shared way to build:
 - confirmed, stale, and optimistic state snapshots
 - deterministic device events
 - scripted fake event streams with disconnect and gap markers
+- fake command buses with queued command/result pairs
+- fake MQTT broker publications with retained-message and metadata markers
 - simple logical clocks for freshness and supervision tests
 
 ## Dependencies
