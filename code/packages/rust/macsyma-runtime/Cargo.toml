@@ -1,0 +1,11 @@
+[package]
+name = "coding-adventures-macsyma-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "MACSYMA runtime session facade over the Rust symbolic VM"
+license = "MIT"
+
+[dependencies]
+coding-adventures-macsyma-compiler = { path = "../macsyma-compiler" }
+symbolic-ir = { path = "../symbolic-ir" }
+symbolic-vm = { path = "../symbolic-vm" }
