@@ -495,3 +495,16 @@ Line1<br>Line2<br>Line3<br>Line4
 |       "C"
 |       <select>
 |         "DE"
+
+#data
+<
+#errors
+(1,1): expected-tag-name
+(1,1): expected-doctype-but-got-chars
+#new-errors
+(1:2) eof-before-tag-name
+#document
+| <html>
+|   <head>
+|   <body>
+|     "<"
