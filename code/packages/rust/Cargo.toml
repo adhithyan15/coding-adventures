@@ -38,6 +38,7 @@ members = [
     "board-vm-cli",
     "board-vm-stream",
     "board-vm-tcp",
+    "board-vm-bluetooth",
     "board-vm-serial",
     "board-vm-uart",
     "board-vm-usb-cdc",
