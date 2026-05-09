@@ -3,6 +3,7 @@
 use std::fmt;
 
 use crate::category::{Action, Category};
+use read_write_separation::Capability as ReadWriteCapability;
 
 /// A capability check denied an OS operation.
 ///
@@ -64,6 +65,12 @@ pub enum ManifestError {
     InvalidCombination(InvalidCombination),
     /// An IO error reading the manifest file.
     Io(std::io::Error),
+    /// The manifest violates read/write separation.
+    RwsViolation {
+        untrusted_inputs: Vec<ReadWriteCapability>,
+        actuations: Vec<ReadWriteCapability>,
+        message: String,
+    },
 }
 
 impl fmt::Display for ManifestError {
@@ -75,6 +82,9 @@ impl fmt::Display for ManifestError {
                 write!(f, "manifest validation error: {inner}")
             }
             ManifestError::Io(err) => write!(f, "manifest I/O error: {err}"),
+            ManifestError::RwsViolation { message, .. } => {
+                write!(f, "manifest read/write separation error: {message}")
+            }
         }
     }
 }
@@ -98,6 +108,16 @@ impl From<InvalidCombination> for ManifestError {
 impl From<std::io::Error> for ManifestError {
     fn from(value: std::io::Error) -> Self {
         ManifestError::Io(value)
+    }
+}
+
+impl From<read_write_separation::RwsViolation> for ManifestError {
+    fn from(value: read_write_separation::RwsViolation) -> Self {
+        ManifestError::RwsViolation {
+            untrusted_inputs: value.untrusted_inputs,
+            actuations: value.actuations,
+            message: value.message,
+        }
     }
 }
 
@@ -145,5 +165,17 @@ mod tests {
         let io = std::io::Error::new(std::io::ErrorKind::NotFound, "not found");
         let err: ManifestError = io.into();
         assert!(matches!(err, ManifestError::Io(_)));
+    }
+
+    #[test]
+    fn rws_violation_displays_message() {
+        let err = ManifestError::RwsViolation {
+            untrusted_inputs: Vec::new(),
+            actuations: Vec::new(),
+            message: "split agent".into(),
+        };
+
+        assert!(format!("{err}").contains("read/write separation"));
+        assert!(format!("{err}").contains("split agent"));
     }
 }

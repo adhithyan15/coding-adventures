@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Added optional `flavor` and `trust` capability annotations for
+  Chief-of-Staff read/write separation.
+- Added `Manifest::try_new` and read/write separation validation for
+  `Manifest::load_from_str` / `Manifest::load_from_file`.
+- Manifest loading now rejects mixed untrusted ingestion and external
+  actuation, plus same-resource read/write overlap.
+
 ## 0.1.0 — 2026-05-08
 
 Initial release. V1 scope per `code/specs/capability-cage-rust.md`:
@@ -37,4 +46,3 @@ Out of scope for v1 (will land in subsequent PRs):
 - `build.rs`-driven package_manifest() codegen.
 - Cross-language conformance suite shared with the Go cage.
 - The lint that rejects raw stdlib usage outside of the backend.
-- RWS Phase 1 enforcement (per `read-write-separation.md`).

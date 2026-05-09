@@ -27,20 +27,25 @@ This crate ships rings 2 and 3's seams. The wrappers and the
 `Backend` trait are stable contracts; anything below them is a
 swappable detail.
 
+Manifest loading also runs the Chief-of-Staff read/write separation
+validator. Optional `flavor` (`ingestion`, `actuation`, `internal`)
+and `trust` (`trusted`, `untrusted`) fields let a manifest override
+the default classifier when a capability crosses an agent boundary.
+
 ## Quick example
 
 ```rust
 use capability_cage::{Capability, Category, Action, Manifest, secure_file};
 use std::path::Path;
 
-let m = Manifest::new(vec![
+let m = Manifest::try_new(vec![
     Capability::new(
         Category::Fs,
         Action::Read,
         "./grammars/*.tokens",
         "load lexer DFA",
     ).unwrap(),
-]);
+])?;
 
 // Reading a file the manifest covers — succeeds (calls OpenBackend).
 let bytes = secure_file::read_file(&m, Path::new("./grammars/json.tokens"))?;
@@ -60,7 +65,7 @@ assert_eq!(err.kind(), std::io::ErrorKind::PermissionDenied);
 | `capability`    | `Capability` struct (immutable, validated)              |
 | `errors`        | `CapabilityViolationError`, `ManifestError`, `InvalidCombination` |
 | `glob`          | `match_target(pattern, candidate)` for fs / net targets |
-| `manifest`      | `Manifest` with `has`/`check`/`load_from_str`/`load_from_file` |
+| `manifest`      | `Manifest` with `has`/`check`/`try_new`/`load_from_str`/`load_from_file` |
 | `backend`       | `Backend` trait + `OpenBackend` / `TestBackend` / `DenyAllBackend`, `with_backend(...)` guard |
 | `secure_file`   | `read_file` / `write_file` / `create_file` / `delete_file` / `list_dir` |
 
@@ -92,12 +97,12 @@ Spec-defined but landing in subsequent PRs:
 - `build.rs` codegen for `package_manifest()`
 - Cross-language conformance suite shared with the Go cage
 - The CI lint that rejects raw stdlib usage
-- RWS Phase 1 enforcement (per `read-write-separation.md`)
 
 ## Dependencies
 
 - `coding-adventures-json-parser` — manifest JSON parsing
 - `coding-adventures-json-value`  — typed JSON values
+- `read-write-separation` — manifest-level RWS classification and validation
 
 No std-OS access from this crate's own code: everything happens
 inside `Backend` implementations (which the consumer chooses).
