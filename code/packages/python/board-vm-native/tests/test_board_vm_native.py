@@ -5,6 +5,7 @@ from board_vm_native import (
     ProtocolResult,
     Session,
     detect_target,
+    esp_upload_command,
     esp_upload_options,
     find_target,
     known_targets,
@@ -127,6 +128,46 @@ def test_esp_upload_options_are_exposed_from_rust_language_core():
     assert overridden is not None
     assert overridden.offset == 0x2000
     assert overridden.verify_md5 is False
+
+
+def test_esp_upload_command_uses_rust_owned_options():
+    command = esp_upload_command(
+        "esp32",
+        port="/dev/cu.usbserial-110",
+        image="/tmp/board-vm-esp32.bin",
+        offset=0x2000,
+        verify_md5=False,
+        stay_in_bootloader=True,
+    )
+
+    assert command == [
+        "esp-upload",
+        "--port",
+        "/dev/cu.usbserial-110",
+        "--image",
+        "/tmp/board-vm-esp32.bin",
+        "--baud",
+        "115200",
+        "--timeout-ms",
+        "1000",
+        "--offset",
+        "8192",
+        "--block-size",
+        "1024",
+        "--flash-size",
+        "4194304",
+        "--no-verify",
+        "--stay-in-bootloader",
+    ]
+
+
+def test_esp_upload_command_rejects_non_esp_targets():
+    try:
+        esp_upload_command("pico", port="/dev/cu.usbmodem", image="fw.bin")
+    except ValueError as error:
+        assert "ESP upload is not supported" in str(error)
+    else:
+        raise AssertionError("expected ValueError")
 
 
 def test_session_dispatches_frames_through_write_transport():

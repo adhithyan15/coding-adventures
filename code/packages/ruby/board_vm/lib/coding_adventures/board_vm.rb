@@ -43,6 +43,29 @@ module CodingAdventures
       options
     end
 
+    def esp_upload_command(board = :esp32_devkit_v1, port:, image:, **overrides)
+      options = esp_upload_options(board, **overrides)
+      unless options
+        raise UnsupportedBoardError, "ESP upload is not supported for #{board.inspect}"
+      end
+
+      command = [
+        "esp-upload",
+        "--port", port.to_s,
+        "--image", image.to_s,
+        "--baud", options.fetch("baud_rate").to_s,
+        "--timeout-ms", options.fetch("timeout_ms").to_s,
+        "--offset", options.fetch("offset").to_s,
+        "--block-size", options.fetch("block_size").to_s
+      ]
+      flash_size = options["flash_size"]
+      command << "--flash-size" << flash_size.to_s unless flash_size.nil?
+      command << "--no-reset" unless options.fetch("reset_into_bootloader")
+      command << "--no-verify" unless options.fetch("verify_md5")
+      command << "--stay-in-bootloader" if options.fetch("stay_in_bootloader")
+      command
+    end
+
     def connect(
       board: :uno_r4_wifi,
       port:,

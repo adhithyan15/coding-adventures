@@ -30,7 +30,10 @@ module CodingAdventures
         bootloader_touch: true,
         bootloader_touch_timeout_ms: nil,
         bootloader_touch_settle_ms: nil,
-        bootloader_port_wait_ms: nil
+        bootloader_port_wait_ms: nil,
+        firmware_image: nil,
+        esp_image: nil,
+        esp_upload_options: nil
       )
         @board = board
         @port = port
@@ -54,6 +57,8 @@ module CodingAdventures
         @bootloader_touch_timeout_ms = bootloader_touch_timeout_ms
         @bootloader_touch_settle_ms = bootloader_touch_settle_ms
         @bootloader_port_wait_ms = bootloader_port_wait_ms
+        @firmware_image = firmware_image || esp_image
+        @esp_upload_options = esp_upload_options || {}
       end
 
       def led
@@ -85,12 +90,14 @@ module CodingAdventures
       end
 
       def flash!
-        ensure_uno_r4_wifi!
-
-        result = runner.call(serial_usb_artifact_command(upload: true), chdir: cargo_workspace)
-        handoff_port = self.class.parse_new_upload_port(result.output)
-        self.port = handoff_port if handoff_port
-        result
+        case board
+        when :uno_r4_wifi
+          flash_uno_r4_wifi!
+        when :esp32_devkit_v1
+          flash_esp32!
+        else
+          raise UnsupportedBoardError, "Ruby DSL flash currently supports :uno_r4_wifi and :esp32_devkit_v1; got #{board.inspect}"
+        end
       end
 
       def blink!(
@@ -317,6 +324,32 @@ module CodingAdventures
 
       private
 
+      def flash_uno_r4_wifi!
+        result = runner.call(serial_usb_artifact_command(upload: true), chdir: cargo_workspace)
+        handoff_port = self.class.parse_new_upload_port(result.output)
+        self.port = handoff_port if handoff_port
+        result
+      end
+
+      def flash_esp32!
+        unless @firmware_image
+          raise ArgumentError, "ESP flash requires firmware_image: or esp_image:"
+        end
+
+        result = runner.call(
+          board_vm_cli_command(
+            *BoardVM.esp_upload_command(
+              board,
+              port: port,
+              image: @firmware_image,
+              **esp_upload_overrides
+            )
+          ),
+          chdir: cargo_workspace
+        )
+        result
+      end
+
       def ensure_uno_r4_wifi!
         return if board == :uno_r4_wifi
 
@@ -354,6 +387,16 @@ module CodingAdventures
 
       def board_vm_cli_command(*args)
         cargo_command("run", "-p", "board-vm-cli", "--bin", "board-vm", "--", *args)
+      end
+
+      def esp_upload_overrides
+        overrides = {}
+        @esp_upload_options.each do |key, value|
+          overrides[key.to_sym] = value
+        end
+        overrides[:baud_rate] = baud_rate unless overrides.key?(:baud_rate)
+        overrides[:timeout_ms] = timeout_ms unless overrides.key?(:timeout_ms)
+        overrides
       end
 
       def dispatch_frame(frame)
