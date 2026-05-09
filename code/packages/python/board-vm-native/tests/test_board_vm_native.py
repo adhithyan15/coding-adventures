@@ -1,9 +1,12 @@
 from board_vm_native import (
+    BoardDevice,
     BoardDescriptor,
     BoardTarget,
     EspUploadOptions,
     ProtocolResult,
     Session,
+    device_list,
+    devices,
     detect_target,
     esp_upload_command,
     esp_upload_options,
@@ -168,6 +171,33 @@ def test_esp_upload_command_rejects_non_esp_targets():
         assert "ESP upload is not supported" in str(error)
     else:
         raise AssertionError("expected ValueError")
+
+
+def test_devices_are_classified_by_rust_language_core():
+    found = devices([
+        "/dev/cu.usbmodem1101",
+        "/dev/tty.usbserial-CP2102-esp32",
+        "/dev/serial/by-id/usb-Raspberry_Pi_Pico_E660-DAPLINK-if00",
+    ])
+
+    assert all(isinstance(device, BoardDevice) for device in found)
+    assert found[0].port == "/dev/cu.usbmodem1101"
+    assert found[0].target is None
+    assert "usb_cdc" in found[0].tags
+
+    esp = next(device for device in found if "usbserial" in device.port)
+    assert esp.target is not None
+    assert esp.target.board_id == "esp32-devkit-v1"
+    assert "uart" in esp.tags
+
+    pico = next(device for device in found if "Raspberry_Pi_Pico" in device.port)
+    assert pico.target is not None
+    assert pico.target.board_id == "raspberry-pi-pico"
+    assert pico.bootloader is True
+
+    rendered = device_list(found)
+    assert "ESP32 DevKit V1" in rendered
+    assert "/dev/cu.usbmodem1101" in rendered
 
 
 def test_session_dispatches_frames_through_write_transport():

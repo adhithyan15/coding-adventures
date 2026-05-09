@@ -69,6 +69,75 @@ module CodingAdventures
         assert_equal false, overridden["verify_md5"]
       end
 
+      def test_devices_are_discovered_and_classified_by_rust_language_core
+        devices = BoardVM.devices(paths: [
+          "/dev/cu.usbmodem1101",
+          "/dev/tty.usbserial-CP2102-esp32",
+          "/dev/serial/by-id/usb-Raspberry_Pi_Pico_E660-DAPLINK-if00"
+        ])
+
+        assert_equal "/dev/cu.usbmodem1101", devices.first["port"]
+        assert_nil devices.first["target"]
+        assert_includes devices.first["tags"], "usb_cdc"
+
+        esp = devices.find { |device| device["port"].include?("usbserial") }
+        assert_equal "esp32-devkit-v1", esp["target"]["board_id"]
+        assert_includes esp["tags"], "uart"
+
+        pico = devices.find { |device| device["port"].include?("Raspberry_Pi_Pico") }
+        assert_equal "raspberry-pi-pico", pico["target"]["board_id"]
+        assert_equal true, pico["bootloader"]
+
+        rendered = BoardVM.device_list(devices)
+        assert_includes rendered, "ESP32 DevKit V1"
+        assert_includes rendered, "/dev/cu.usbmodem1101"
+      end
+
+      def test_board_specific_connect_can_select_the_only_device_without_a_port
+        runner = FakeRunner.new
+        devices = BoardVM.devices(paths: ["/dev/cu.usbmodem1101"])
+
+        connection = BoardVM.uno_r4_wifi(
+          devices: devices,
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner
+        )
+
+        assert_equal :uno_r4_wifi, connection.board
+        assert_equal "/dev/cu.usbmodem1101", connection.port
+        assert_empty runner.calls
+      end
+
+      def test_auto_connect_uses_a_confident_rust_classified_device
+        runner = FakeRunner.new
+        devices = BoardVM.devices(paths: ["/dev/tty.usbserial-CP2102-esp32"])
+
+        connection = BoardVM.connect(
+          devices: devices,
+          cargo_workspace: "/repo/code/packages/rust",
+          runner: runner
+        )
+
+        assert_equal :esp32_devkit_v1, connection.board
+        assert_equal "/dev/tty.usbserial-CP2102-esp32", connection.port
+        assert_empty runner.calls
+      end
+
+      def test_auto_connect_displays_devices_when_board_is_ambiguous
+        devices = BoardVM.devices(paths: [
+          "/dev/cu.usbmodem1101",
+          "/dev/cu.usbmodem2201"
+        ])
+
+        error = assert_raises(DeviceSelectionError) do
+          BoardVM.connect(devices: devices, runner: FakeRunner.new)
+        end
+
+        assert_includes error.message, "Multiple Board VM devices found"
+        assert_includes error.message, "/dev/cu.usbmodem1101"
+        assert_includes error.message, "/dev/cu.usbmodem2201"
+      end
+
       def test_connect_flash_uploads_the_uno_r4_serialusb_vm_and_tracks_runtime_port
         upload = CommandResult.new(
           ["cargo"],

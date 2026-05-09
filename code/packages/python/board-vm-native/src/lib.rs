@@ -17,11 +17,12 @@ use board_vm_language_core::{
     build_run_wire_frame, build_stop_wire_frame, build_store_program_wire_frame,
     build_time_now_module, build_time_sleep_ms_module, capability_board_metadata,
     capability_bytecode_callable, capability_flag_names, capability_protocol_feature,
-    decode_wire_response, detect_target as core_detect_target, esp_upload_options_for_target,
-    known_targets, onboard_led_kind, program_format_name, raw_module_len, run_status_name,
-    BoardVmLanguageSession, DecodedLanguageResponse, DecodedLanguageResponseBody,
-    LanguageCoreError, LanguageEspUploadOptions, LanguageOnboardLed, LanguageTargetInfo,
-    LanguageValue,
+    decode_wire_response, detect_target as core_detect_target,
+    discover_devices as core_discover_devices, discover_devices_from_paths,
+    esp_upload_options_for_target, known_targets, onboard_led_kind, program_format_name,
+    raw_module_len, run_status_name, BoardVmLanguageSession, DecodedLanguageResponse,
+    DecodedLanguageResponseBody, LanguageCoreError, LanguageEspUploadOptions, LanguageHostDevice,
+    LanguageOnboardLed, LanguageTargetInfo, LanguageValue,
 };
 use python_bridge::*;
 
@@ -483,6 +484,33 @@ unsafe extern "C" fn py_esp_upload_options(_module: PyObjectPtr, args: PyObjectP
     }
 }
 
+unsafe extern "C" fn py_discover_devices(_module: PyObjectPtr, _args: PyObjectPtr) -> PyObjectPtr {
+    host_devices_to_py(&core_discover_devices())
+}
+
+unsafe extern "C" fn py_classify_devices(_module: PyObjectPtr, args: PyObjectPtr) -> PyObjectPtr {
+    let paths_arg = PyTuple_GetItem(args, 0);
+    if paths_arg.is_null() {
+        PyErr_Clear();
+        set_error(
+            type_error_class(),
+            "classify_devices() requires a list of device paths",
+        );
+        return ptr::null_mut();
+    }
+    let paths = match vec_str_from_py(paths_arg) {
+        Some(value) => value,
+        None => {
+            set_error(
+                type_error_class(),
+                "classify_devices() requires a list of device paths",
+            );
+            return ptr::null_mut();
+        }
+    };
+    host_devices_to_py(&discover_devices_from_paths(paths))
+}
+
 fn with_session(
     next_request_id: u16,
     operation: impl FnOnce(&mut BoardVmLanguageSession) -> Result<PyObjectPtr, LanguageCoreError>,
@@ -751,6 +779,43 @@ unsafe fn esp_upload_options_to_py(options: &LanguageEspUploadOptions) -> PyObje
         "stay_in_bootloader",
         bool_to_py(options.stay_in_bootloader),
     );
+    dict
+}
+
+unsafe fn host_devices_to_py(devices: &[LanguageHostDevice]) -> PyObjectPtr {
+    let list = PyList_New(devices.len() as isize);
+    for (index, device) in devices.iter().enumerate() {
+        PyList_SetItem(list, index as isize, host_device_to_py(device));
+    }
+    list
+}
+
+unsafe fn host_device_to_py(device: &LanguageHostDevice) -> PyObjectPtr {
+    let dict = PyDict_New();
+    dict_set(dict, "id", str_to_py(&device.id));
+    dict_set(dict, "port", str_to_py(&device.port));
+    dict_set(dict, "transport", str_to_py(&device.transport));
+    dict_set(dict, "display_name", str_to_py(&device.display_name));
+    dict_set(
+        dict,
+        "target",
+        device
+            .target
+            .as_ref()
+            .map(|target| language_target_to_py(target))
+            .unwrap_or_else(|| py_none()),
+    );
+    dict_set(
+        dict,
+        "target_confidence",
+        usize_to_py(device.target_confidence as usize),
+    );
+    dict_set(dict, "bootloader", bool_to_py(device.bootloader));
+    let tags = PyList_New(device.tags.len() as isize);
+    for (index, tag) in device.tags.iter().enumerate() {
+        PyList_SetItem(tags, index as isize, str_to_py(tag));
+    }
+    dict_set(dict, "tags", tags);
     dict
 }
 
@@ -1029,7 +1094,7 @@ unsafe fn raise_core_error(context: &str, error: LanguageCoreError) -> PyObjectP
 
 #[no_mangle]
 pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
-    let methods: &'static mut [PyMethodDef; 24] = Box::leak(Box::new([
+    let methods: &'static mut [PyMethodDef; 26] = Box::leak(Box::new([
         PyMethodDef {
             ml_name: b"hello_wire\0".as_ptr() as *const c_char,
             ml_meth: Some(py_hello_wire),
@@ -1180,6 +1245,19 @@ pub unsafe extern "C" fn PyInit_board_vm_native() -> PyObjectPtr {
             ml_flags: METH_VARARGS,
             ml_doc: b"Return Rust-owned ESP ROM upload defaults for a target.\0".as_ptr()
                 as *const c_char,
+        },
+        PyMethodDef {
+            ml_name: b"discover_devices\0".as_ptr() as *const c_char,
+            ml_meth: Some(py_discover_devices),
+            ml_flags: METH_VARARGS,
+            ml_doc: b"Discover host Board VM device candidates in Rust.\0".as_ptr()
+                as *const c_char,
+        },
+        PyMethodDef {
+            ml_name: b"classify_devices\0".as_ptr() as *const c_char,
+            ml_meth: Some(py_classify_devices),
+            ml_flags: METH_VARARGS,
+            ml_doc: b"Classify host Board VM device paths in Rust.\0".as_ptr() as *const c_char,
         },
         method_def_sentinel(),
     ]));

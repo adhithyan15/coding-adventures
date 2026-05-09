@@ -244,6 +244,44 @@ class EspUploadOptions:
 
 
 @dataclass(frozen=True)
+class BoardDevice:
+    raw: dict[str, Any]
+
+    @property
+    def id(self) -> str:
+        return str(self.raw["id"])
+
+    @property
+    def port(self) -> str:
+        return str(self.raw["port"])
+
+    @property
+    def transport(self) -> str:
+        return str(self.raw["transport"])
+
+    @property
+    def display_name(self) -> str:
+        return str(self.raw["display_name"])
+
+    @property
+    def target(self) -> BoardTarget | None:
+        target = self.raw.get("target")
+        return None if target is None else BoardTarget(target)
+
+    @property
+    def target_confidence(self) -> int:
+        return int(self.raw.get("target_confidence", 0))
+
+    @property
+    def bootloader(self) -> bool:
+        return bool(self.raw.get("bootloader", False))
+
+    @property
+    def tags(self) -> list[str]:
+        return [str(tag) for tag in self.raw.get("tags", [])]
+
+
+@dataclass(frozen=True)
 class ProtocolResult:
     command: str
     frame: bytes
@@ -1148,7 +1186,33 @@ def esp_upload_command(
     return command
 
 
+def devices(paths: Iterable[str] | None = None) -> list[BoardDevice]:
+    raw_devices = (
+        _native.discover_devices()
+        if paths is None
+        else _native.classify_devices([str(path) for path in paths])
+    )
+    return [BoardDevice(raw) for raw in raw_devices]
+
+
+def device_list(device_candidates: Iterable[BoardDevice | dict[str, Any]] | None = None) -> str:
+    items = list(devices() if device_candidates is None else device_candidates)
+    if not items:
+        return "No Board VM devices found."
+
+    lines = []
+    for index, item in enumerate(items, start=1):
+        device = item if isinstance(item, BoardDevice) else BoardDevice(item)
+        target = device.target
+        target_name = target.display_name if target is not None else "Unknown board"
+        confidence = f", {device.target_confidence}% match" if device.target_confidence > 0 else ""
+        tags = f" [{', '.join(device.tags)}]" if device.tags else ""
+        lines.append(f"{index}. {target_name} - {device.port}{confidence}{tags}")
+    return "\n".join(lines)
+
+
 __all__ = [
+    "BoardDevice",
     "BoardDescriptor",
     "BoardTarget",
     "BOOT_POLICIES",
@@ -1164,6 +1228,8 @@ __all__ = [
     "RUN_FLAGS",
     "Session",
     "SessionResult",
+    "device_list",
+    "devices",
     "detect_target",
     "esp_upload_command",
     "esp_upload_options",
