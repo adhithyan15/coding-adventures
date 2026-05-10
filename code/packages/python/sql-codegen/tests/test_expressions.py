@@ -140,3 +140,23 @@ def test_unknown_function_compiles_to_call_scalar() -> None:
     # The VM raises UnsupportedFunction at runtime if the function is missing.
     instrs = compile_expr(FunctionCall(name="unknown_fn", args=()))
     assert instrs[-1] == CallScalar(func="unknown_fn", n_args=0)
+
+
+def test_concat_emits_binary_concat() -> None:
+    # SQL || maps to BinaryOpCode.CONCAT — same post-order stack shape as ADD.
+    # Left push, right push, then the binary operator instruction.
+    expr = BinaryExpr(op=AstOp.CONCAT, left=Literal("hello"), right=Literal("world"))
+    instrs = compile_expr(expr)
+    assert instrs == [
+        LoadConst("hello"),
+        LoadConst("world"),
+        BinaryOp(op=BinaryOpCode.CONCAT),
+    ]
+
+
+def test_concat_column_and_literal() -> None:
+    # Column || literal — checks that non-literal concat still uses CONCAT opcode.
+    expr = BinaryExpr(op=AstOp.CONCAT, left=Column("t", "name"), right=Literal("!"))
+    instrs = compile_expr(expr)
+    assert any(isinstance(i, LoadColumn) for i in instrs)
+    assert instrs[-1] == BinaryOp(op=BinaryOpCode.CONCAT)

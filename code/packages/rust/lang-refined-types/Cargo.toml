@@ -1,0 +1,8 @@
+[package]
+name = "lang-refined-types"
+version = "0.1.0"
+edition = "2021"
+description = "LANG23 PR 23-A — RefinedType/Kind/Predicate data types and predicate algebra for LANG23 refinement types (no solver, pure data)"
+
+[dependencies]
+constraint-core = { path = "../constraint-core" }

@@ -65,6 +65,8 @@
 #![warn(missing_docs)]
 #![warn(rust_2018_idioms)]
 
+pub mod debug;
+pub mod debug_server;
 pub mod dispatch;
 pub mod operand;
 

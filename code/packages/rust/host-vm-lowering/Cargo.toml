@@ -1,0 +1,7 @@
+[package]
+name = "host-vm-lowering"
+version = "0.1.0"
+edition = "2021"
+description = "Shared LANG host VM lowering facts, including ALGOL-derived runtime layouts for JVM, CLR, BEAM, and WASM backends"
+
+[dependencies]

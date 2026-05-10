@@ -1,5 +1,18 @@
 # Changelog — twig-formatter
 
+## [0.1.1] — 2026-05-04
+
+### Fixed (LANG23 PR 23-E compatibility)
+
+- `Define` struct literal in `format_define` updated to include the new
+  `type_annotation` field added by `twig-parser` 0.2.0.  The formatter
+  carries the annotation through unchanged (pretty-printing of annotated
+  defines is a future task — for now annotations are preserved in the
+  AST but not rendered in the formatted output).
+- `Lambda` struct literal in `format_lambda` updated to include
+  `param_annotations` and `return_annotation` fields.  Same policy:
+  annotations preserved, not rendered yet.
+
 ## [0.1.0] — 2026-04-30
 
 Initial release.  Canonical Twig pretty-printer.  The first

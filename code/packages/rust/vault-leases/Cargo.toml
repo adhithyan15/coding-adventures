@@ -1,0 +1,9 @@
+[package]
+name = "coding_adventures_vault_leases"
+version = "0.1.0"
+edition = "2021"
+description = "VLT07 — lease manager for the Vault stack. Issue / renew / revoke / lookup / consume short-lived capability tokens. The basis of HashiCorp Vault-style response wrapping and a prerequisite for VLT08 dynamic-secret engines."
+
+[dependencies]
+coding_adventures_csprng = { path = "../csprng" }
+coding_adventures_zeroize = { path = "../zeroize" }

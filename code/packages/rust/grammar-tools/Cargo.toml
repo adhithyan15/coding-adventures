@@ -6,3 +6,4 @@ description = "Parser and validator for .tokens and .grammar files — the bridg
 
 [dependencies]
 regex = "1"
+serde_json = "1.0"

@@ -212,6 +212,8 @@ impl Compiler {
             call_count: 0,
             feedback_slots: std::collections::HashMap::new(),
             source_map: vec![],
+            param_refinements: Vec::new(),
+            return_refinement: None,
         }
     }
 

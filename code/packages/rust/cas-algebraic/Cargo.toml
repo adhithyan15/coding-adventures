@@ -1,0 +1,10 @@
+[package]
+name = "cas-algebraic"
+version = "0.1.0"
+edition = "2021"
+description = "Quadratic algebraic extension factoring for symbolic CAS polynomials"
+license = "MIT"
+
+[dependencies]
+cas-factor = { path = "../cas-factor" }
+symbolic-ir = { path = "../symbolic-ir" }

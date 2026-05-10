@@ -2,6 +2,53 @@
 
 ## Unreleased
 
+- Run standard stream aliases and richer accepted stream options through
+  structured and bytecode VM paths, including `user_input`, `user_output`,
+  `user_error`, `reposition/1`, `eof_action/1`, `buffer/1`, and
+  `close_on_abort/1`.
+- Run bounded source-level recursive/wildcard filesystem operation predicates
+  through structured and bytecode VM paths, including `expand_file_name/2`,
+  `make_directory_path/1`, `delete_directory_and_contents/1`, and
+  `copy_file/2`.
+- Run bounded source-level filesystem operation predicates through structured
+  and bytecode VM paths, including `directory_files/2`, `make_directory/1`,
+  `delete_file/1`, `delete_directory/1`, `rename_file/2`, and
+  `working_directory/2`.
+- Run bounded source-level read-only filesystem metadata predicates through
+  structured and bytecode VM paths, including `exists_directory/1`,
+  `absolute_file_name/2`, `access_file/2`, `file_directory_name/2`,
+  `file_base_name/2`, `directory_file_path/3`, `file_name_extension/3`,
+  `same_file/2`, `size_file/2`, and `time_file/2`.
+- Run bounded source-level UTF-8 file text I/O predicates through structured
+  and bytecode VM paths, including `exists_file/1`,
+  `read_file_to_string/2`, and `read_file_to_codes/2`.
+- Run bounded source-level UTF-8 file stream predicates through structured and
+  bytecode VM paths, including `open/3`, `close/1`, `read_string/3`,
+  `read_line_to_string/2`, `get_char/2`, `at_end_of_stream/1`, `write/2`,
+  and `nl/1`.
+- Run bounded source-level stream option and metadata predicates through
+  structured and bytecode VM paths, including `open/4`, `current_stream/3`,
+  `stream_property/2`, and `flush_output/1`.
+- Run bounded source-level stream positioning predicates through structured
+  and bytecode VM paths, including `set_stream_position/2` and `seek/4`.
+- Run selected current-stream predicates through structured and bytecode VM
+  paths, including `set_input/1`, `set_output/1`, `current_input/1`,
+  `current_output/1`, current-input reads, and current-output writes.
+- Run parser-backed stream term I/O predicates through structured and bytecode
+  VM paths, including `read/1`, `read/2`, `read_term/2`, `read_term/3`,
+  `write_term/2`, and `write_term/3`.
+- Run term I/O convenience predicates through structured and bytecode VM paths,
+  including `read_term` `singletons/1`, `writeq/1,2`,
+  `write_canonical/1,2`, `writeln/1,2`, and `portray_clause/1,2`.
+- Run bounded character/code stream predicates through structured and bytecode
+  VM paths, including `get_code/1,2`, `peek_char/1,2`, `peek_code/1,2`,
+  `put_char/1,2`, and `put_code/1,2`.
+- Run bounded binary byte stream predicates through structured and bytecode VM
+  paths, including `open/4` `type(binary)`, `get_byte/1,2`, `peek_byte/1,2`,
+  and `put_byte/1,2`.
+- Add a public Prolog VM capability manifest and `prolog-vm --dump-capabilities`
+  so scripts and future planning can distinguish the completed PR00-PR90 track
+  from deferred advanced dialect/runtime work.
 - Add end-to-end stress coverage for recursive search, modules, DCGs,
   arithmetic, collections, dynamic initialization, named answers, and expansion.
 - Add named answer helpers for source-level query results.
@@ -49,6 +96,32 @@
   flag introspection.
 - Run Prolog `set_prolog_flag/2` through the VM path with branch-local
   backtracking semantics.
+- Run Prolog `=@=/2`, `\\=@=/2`, and `subsumes_term/2` through the VM path for
+  source-level term generality checks.
+- Run Prolog text conversion predicates through the VM path, including
+  `atom_chars/2`, `atom_codes/2`, `number_chars/2`, `number_codes/2`,
+  `char_code/2`, `string_chars/2`, and `string_codes/2`.
+- Run Prolog atom composition predicates through the VM path, including
+  `atom_concat/3`, `atomic_list_concat/2`, `atomic_list_concat/3`, and
+  `number_string/2`.
+- Run Prolog text inspection predicates through the VM path, including
+  `atom_length/2`, `string_length/2`, `sub_atom/5`, and `sub_string/5`.
+- Run Prolog term text I/O predicates through the VM path, including
+  `term_to_atom/2` and `atom_to_term/3`.
+- Run Prolog term read/write option predicates through the VM path, including
+  `read_term_from_atom/3` and `write_term_to_atom/3`.
+- Run Prolog `numbervars/3` and `write_term_to_atom/3` `numbervars(true)`
+  rendering through the VM path.
+- Run Prolog `compound_name_arguments/3` and `compound_name_arity/3` through
+  the VM path for compound-only term reflection.
+- Run Prolog `acyclic_term/1` and `cyclic_term/1` through the VM path for
+  source-level term-shape checks.
+- Run Prolog `unifiable/3` and `unify_with_occurs_check/2` through the VM path
+  for explicit finite unification.
+- Run Prolog `term_hash/2` and `term_hash/4` through the VM path for
+  deterministic structural term hashes.
+- Run grouped `bagof/3` and `setof/3` through the VM path, including `^/2`
+  existential scopes inside collection goals.
 
 ## 0.1.0
 

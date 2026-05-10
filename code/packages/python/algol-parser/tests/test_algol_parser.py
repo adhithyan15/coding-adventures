@@ -1,7 +1,7 @@
 """Tests for the ALGOL 60 parser thin wrapper.
 
 These tests verify that the grammar-driven parser, configured with
-``algol.grammar``, correctly parses ALGOL 60 source text into ASTs.
+``algol/algol60.grammar``, correctly parses ALGOL 60 source text into ASTs.
 
 ALGOL 60 Parsing Notes
 -----------------------
@@ -31,11 +31,29 @@ The ALGOL 60 grammar differs from JSON in several important ways:
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
+from grammar_tools.compiler import compile_parser_grammar
+from grammar_tools.parser_grammar import parse_parser_grammar
 from lang_parser import ASTNode, GrammarParseError, GrammarParser
 from lexer import Token
 
-from algol_parser import create_algol_parser, parse_algol
+from algol_parser import (
+    DEFAULT_VERSION,
+    SUPPORTED_VERSIONS,
+    create_algol_parser,
+    parse_algol,
+    resolve_version,
+)
+from algol_parser._grammar import PARSER_GRAMMAR
+
+_REPO_ROOT = Path(__file__).resolve().parents[5]
+_SOURCE_GRAMMAR = _REPO_ROOT / "code/grammars/algol/algol60.grammar"
+_GENERATED_GRAMMAR = (
+    _REPO_ROOT
+    / "code/packages/python/algol-parser/src/algol_parser/_grammar.py"
+)
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -93,6 +111,40 @@ class TestFactory:
         assert isinstance(ast, ASTNode)
         assert ast.rule_name == "program"
 
+    def test_default_version_is_algol60(self) -> None:
+        """The default parser grammar is the compiled ALGOL 60 grammar."""
+        assert DEFAULT_VERSION == "algol60"
+        assert sorted(SUPPORTED_VERSIONS) == ["algol60"]
+        assert resolve_version() == "algol60"
+        assert resolve_version(None) == "algol60"
+
+    def test_factory_uses_compiled_parser_grammar(self) -> None:
+        """The parser imports native grammar data instead of reading files."""
+        parser = create_algol_parser("begin end")
+
+        assert parser._grammar is PARSER_GRAMMAR
+
+    def test_compiled_parser_grammar_is_fresh(self) -> None:
+        """The committed Python parser grammar matches the source grammar."""
+        source = _SOURCE_GRAMMAR.read_text(encoding="utf-8")
+        expected = compile_parser_grammar(
+            parse_parser_grammar(source),
+            "algol/algol60.grammar",
+        )
+
+        assert _GENERATED_GRAMMAR.read_text(encoding="utf-8") == expected
+
+    def test_explicit_algol60_version_produces_ast(self) -> None:
+        """The supported version name can be passed explicitly."""
+        ast = parse_algol("begin end", version="algol60")
+
+        assert ast.rule_name == "program"
+
+    def test_unknown_version_is_rejected(self) -> None:
+        """Unknown ALGOL versions fail before falling back to stale files."""
+        with pytest.raises(ValueError, match="Unknown ALGOL version 'algol68'"):
+            resolve_version("algol68")
+
 
 # ---------------------------------------------------------------------------
 # Minimal program tests
@@ -109,8 +161,8 @@ class TestMinimalProgram:
           <statements>
         end
 
-    At least one statement is required. The empty statement (``empty_stmt``)
-    satisfies this requirement.
+    Empty programs are valid, and ALGOL dummy statements appear as zero-width
+    ``dummy_stmt`` nodes where a statement boundary supplies the no-op.
     """
 
     def test_minimal_program_root(self) -> None:
@@ -128,16 +180,38 @@ class TestMinimalProgram:
         """A block contains BEGIN and END tokens."""
         ast = parse("begin integer x; x := 42 end")
         all_tokens: list[Token] = []
+
         def collect_tokens(node: ASTNode) -> None:
             for child in node.children:
                 if isinstance(child, Token):
                     all_tokens.append(child)
                 else:
                     collect_tokens(child)
+
         collect_tokens(ast)
         token_values = [token.value for token in all_tokens]
         assert "begin" in token_values
         assert "end" in token_values
+
+    def test_keywords_are_case_insensitive(self) -> None:
+        """Uppercase keywords parse through the ALGOL front door."""
+        ast = parse("BEGIN INTEGER x; x := 42 END")
+
+        assert ast.rule_name == "program"
+
+    def test_uppercase_comment_is_ignored(self) -> None:
+        """Uppercase COMMENT follows ALGOL's case-insensitive keyword policy."""
+        ast = parse("begin COMMENT setup; integer x; x := 42 end")
+
+        assert ast.rule_name == "program"
+
+    def test_comment_prefixed_identifier_is_not_ignored(self) -> None:
+        """A variable whose name starts with comment is still a variable."""
+        ast = parse("begin integer commentary; commentary := 42 end")
+        assign_nodes = find_nodes(ast, "assign_stmt")
+
+        assert ast.rule_name == "program"
+        assert assign_nodes
 
 
 # ---------------------------------------------------------------------------
@@ -239,6 +313,11 @@ class TestArithmeticExpression:
         ast = parse("begin real x; x := 2 ^ 10 end")
         assert ast.rule_name == "program"
 
+    def test_uparrow_exponentiation(self) -> None:
+        """Publication uparrow exponentiation parses through CARET."""
+        ast = parse("begin real x; x := 2 ↑ 10 end")
+        assert ast.rule_name == "program"
+
     def test_conditional_expression_assignment(self) -> None:
         """ALGOL conditional expressions can appear as assignment values."""
         ast = parse("begin integer x; x := if true then 1 else 2 end")
@@ -280,6 +359,23 @@ class TestIfStatement:
         cond_nodes = find_nodes(ast, "cond_stmt")
         assert len(cond_nodes) >= 1
 
+    def test_if_with_angle_not_equal(self) -> None:
+        """The common ``<>`` not-equal spelling parses as a relation."""
+        ast = parse("begin integer x; if x <> 0 then x := 1 end")
+        assert ast.rule_name == "program"
+        assert find_nodes(ast, "relation")
+
+    def test_if_with_publication_symbol_relations(self) -> None:
+        """Publication relation symbols parse as normalized relations."""
+        ast = parse(
+            "begin integer x; "
+            "if (2 ↑ 3 = 8) ∧ (3 ≤ 4) ∧ (5 ≥ 5) ∧ (1 ≠ 2) "
+            "then x := 1 else x := 0 "
+            "end"
+        )
+        assert ast.rule_name == "program"
+        assert len(find_nodes(ast, "relation")) >= 4
+
     def test_if_with_boolean_operators(self) -> None:
         """Conditional with AND and NOT in the boolean expression."""
         ast = parse(
@@ -288,6 +384,18 @@ class TestIfStatement:
             "end"
         )
         assert ast.rule_name == "program"
+
+    def test_if_then_dummy_statement(self) -> None:
+        """The then-branch may be ALGOL's zero-width dummy statement."""
+        ast = parse("begin integer x; if true then ; x := 1 end")
+        assert ast.rule_name == "program"
+        assert find_nodes(ast, "dummy_stmt")
+
+    def test_if_else_dummy_statement(self) -> None:
+        """The else-branch may also be a dummy statement."""
+        ast = parse("begin integer x; if false then x := 1 else ; end")
+        assert ast.rule_name == "program"
+        assert find_nodes(ast, "dummy_stmt")
 
 
 # ---------------------------------------------------------------------------
@@ -309,6 +417,44 @@ class TestGotoStatement:
         )
         goto_nodes = find_nodes(ast, "goto_stmt")
         assert len(goto_nodes) == 1
+
+    def test_multiple_labels_on_statement(self) -> None:
+        """A statement may have more than one direct goto label."""
+        ast = parse(
+            "begin integer result; "
+            "first: second: result := 7 "
+            "end"
+        )
+        statement = next(
+            node
+            for node in find_nodes(ast, "statement")
+            if len([child for child in child_nodes(node) if child.rule_name == "label"])
+            == 2
+        )
+
+        assert [child.rule_name for child in child_nodes(statement)][:2] == [
+            "label",
+            "label",
+        ]
+
+    def test_multiple_terminal_labels(self) -> None:
+        """Multiple terminal labels may share the block-end dummy statement."""
+        ast = parse(
+            "begin integer result; "
+            "result := 1; "
+            "done1: done2: "
+            "end"
+        )
+        statement = next(
+            node
+            for node in find_nodes(ast, "statement")
+            if len([child for child in child_nodes(node) if child.rule_name == "label"])
+            == 2
+        )
+
+        nodes = child_nodes(statement)
+        assert [child.rule_name for child in nodes[:2]] == ["label", "label"]
+        assert find_nodes(statement, "dummy_stmt")
 
 
 # ---------------------------------------------------------------------------
@@ -392,6 +538,23 @@ class TestForLoop:
         for_nodes = find_nodes(ast, "for_stmt")
         assert len(for_nodes) >= 1
 
+    def test_array_element_control_variable(self) -> None:
+        """For loops can use a subscripted variable as the control lvalue."""
+        ast = parse(
+            "begin integer result; integer array a[1:1]; "
+            "for a[1] := 1 step 1 until 3 do result := result + a[1] "
+            "end"
+        )
+        for_nodes = find_nodes(ast, "for_stmt")
+        assert len(for_nodes) == 1
+        assert find_nodes(for_nodes[0], "subscripts")
+
+    def test_dummy_statement_body(self) -> None:
+        """For-loop bodies may be empty dummy statements."""
+        ast = parse("begin integer i; for i := 1 do ; i := 2 end")
+        assert ast.rule_name == "program"
+        assert find_nodes(ast, "dummy_stmt")
+
 
 # ---------------------------------------------------------------------------
 # Nested block tests
@@ -456,9 +619,8 @@ class TestBooleanExpression:
         and    (logical conjunction)
         not    (logical negation, unary prefix)
 
-    ALGOL 60 uses words for all boolean operators, not symbols.
-    This makes programs readable by mathematicians and scientists —
-    the original audience for the language.
+    The compiler accepts both word spellings and publication symbols for these
+    boolean operators, normalizing symbols before parsing.
     """
 
     def test_and_expression(self) -> None:
@@ -485,6 +647,18 @@ class TestBooleanExpression:
             "begin boolean b; b := true end"
         )
         assert ast.rule_name == "program"
+
+    def test_boolean_literal_relation(self) -> None:
+        """Boolean literals can be operands in equality relations."""
+        ast = parse(
+            "begin integer x; boolean b; "
+            "b := true; "
+            "if b = true then x := 1 else x := 0 "
+            "end"
+        )
+
+        assert ast.rule_name == "program"
+        assert find_nodes(ast, "relation")
 
     def test_implication_expression(self) -> None:
         """Boolean expression with IMPL."""
@@ -513,6 +687,29 @@ class TestBooleanExpression:
             for node in eqv_nodes
             for token in child_tokens(node)
         )
+
+    def test_publication_symbol_boolean_expression(self) -> None:
+        """Boolean publication symbols normalize to parser keyword values."""
+        ast = parse(
+            "begin integer x; "
+            "if (¬ false) ∧ (true ∨ false) ∧ (true ⊃ true) "
+            "∧ (true ≡ true) "
+            "then x := 1 else x := 0 "
+            "end"
+        )
+
+        assert ast.rule_name == "program"
+        all_token_values: list[str] = []
+
+        def collect_token_values(node: ASTNode) -> None:
+            for child in node.children:
+                if isinstance(child, Token):
+                    all_token_values.append(child.value)
+                else:
+                    collect_token_values(child)
+
+        collect_token_values(ast)
+        assert {"not", "and", "or", "impl", "eqv"} <= set(all_token_values)
 
     def test_or_binds_tighter_than_implication(self) -> None:
         """``or`` should parse inside the left operand of ``impl``."""
@@ -605,6 +802,32 @@ class TestDeclarations:
         own_array_decl_nodes = find_nodes(ast, "own_array_decl")
         assert len(own_array_decl_nodes) >= 1
 
+    def test_report_style_typed_array_parameter_specifier(self) -> None:
+        """Formal parameters accept ``integer array`` as one specifier."""
+        ast = parse(
+            "begin integer result; integer array xs[1:1]; "
+            "procedure first(a); integer array a; begin result := a[1] end; "
+            "first(xs) "
+            "end"
+        )
+
+        assert ast.rule_name == "program"
+        assert find_nodes(ast, "specifier")
+
+    def test_report_style_typed_procedure_parameter_specifier(self) -> None:
+        """Formal parameters accept ``real procedure`` as one specifier."""
+        ast = parse(
+            "begin integer result; "
+            "procedure invoke(f); real procedure f; "
+            "begin if f(2) = 4 then result := 1 else result := 0 end; "
+            "real procedure twice(x); value x; real x; begin twice := x * 2 end; "
+            "invoke(twice) "
+            "end"
+        )
+
+        assert ast.rule_name == "program"
+        assert find_nodes(ast, "specifier")
+
 
 # ---------------------------------------------------------------------------
 # Procedure call tests
@@ -625,10 +848,27 @@ class TestProcedureCall:
 
     def test_procedure_call_no_args(self) -> None:
         """Procedure call with no arguments (no parentheses)."""
-        # In a real ALGOL program, 'halt' would be a declared procedure.
-        # For parser testing, we just verify it parses as proc_stmt.
-        ast = parse("begin integer x; x := 1 end")
+        ast = parse("begin procedure halt; begin end; halt end")
         assert ast.rule_name == "program"
+        assert find_nodes(ast, "proc_stmt")
+
+    def test_procedure_call_explicit_empty_args(self) -> None:
+        """No-argument statement calls also accept explicit empty parens."""
+        ast = parse("begin procedure halt(); begin end; halt() end")
+        proc_nodes = find_nodes(ast, "proc_stmt")
+
+        assert ast.rule_name == "program"
+        assert len(proc_nodes) == 1
+        assert not find_nodes(proc_nodes[0], "actual_params")
+
+    def test_parameterless_procedure_declaration_explicit_empty_params(self) -> None:
+        """Parameterless declarations also accept explicit empty parens."""
+        ast = parse("begin procedure halt(); begin end; halt end")
+
+        assert ast.rule_name == "program"
+        formal_params = find_nodes(ast, "formal_params")
+        assert len(formal_params) == 1
+        assert not find_nodes(formal_params[0], "ident_list")
 
     def test_procedure_call_with_args(self) -> None:
         """Procedure call with arguments in parentheses."""
@@ -639,12 +879,32 @@ class TestProcedureCall:
         proc_nodes = find_nodes(ast, "proc_stmt")
         assert len(proc_nodes) >= 1
 
+    def test_procedure_call_with_double_quoted_string_arg(self) -> None:
+        """Double-quoted string literals parse as actual parameters."""
+        ast = parse('begin output("Hi") end')
+        assert ast.rule_name == "program"
+        assert find_nodes(ast, "proc_stmt")
+
     def test_procedure_call_as_statement(self) -> None:
         """A procedure call appears as a statement."""
         ast = parse(
             "begin integer n; output(n + 1) end"
         )
         assert ast.rule_name == "program"
+
+    def test_no_argument_procedure_call_expression(self) -> None:
+        """Typed procedure calls can use explicit empty parens in expressions."""
+        ast = parse(
+            "begin integer result; "
+            "integer procedure seven(); begin seven := 7 end; "
+            "result := seven() "
+            "end"
+        )
+
+        assert ast.rule_name == "program"
+        proc_calls = find_nodes(ast, "proc_call")
+        assert len(proc_calls) == 1
+        assert not find_nodes(proc_calls[0], "actual_params")
 
     def test_procedure_call_in_relation_left_operand(self) -> None:
         """Procedure calls remain calls inside arithmetic relation operands."""
@@ -734,6 +994,52 @@ class TestMultipleStatements:
         assert len(assign_nodes) >= 1
         cond_nodes = find_nodes(ast, "cond_stmt")
         assert len(cond_nodes) >= 1
+
+
+# ---------------------------------------------------------------------------
+# Nested conditional context tests
+# ---------------------------------------------------------------------------
+
+
+class TestNestedConditionalContexts:
+    """Conditional values can nest in type-specific ALGOL contexts."""
+
+    def test_nested_arithmetic_conditional_in_bounds_and_subscripts(self) -> None:
+        ast = parse(
+            "begin integer result; "
+            "integer array a[1:if true then if false then 2 else 3 else 1]; "
+            "a[if true then if false then 1 else 2 else 3] := 9; "
+            "result := a[2] "
+            "end"
+        )
+
+        assert ast.rule_name == "program"
+        assert len(find_nodes(ast, "arith_expr")) >= 4
+
+    def test_nested_boolean_conditional_in_condition(self) -> None:
+        ast = parse(
+            "begin integer result; "
+            "if if true then if false then false else true else false "
+            "then result := 1 else result := 0 "
+            "end"
+        )
+
+        assert ast.rule_name == "program"
+        assert len(find_nodes(ast, "bool_expr")) >= 3
+
+    def test_nested_designational_conditional_in_goto(self) -> None:
+        ast = parse(
+            "begin integer result; "
+            "goto if true then if false then left else right else fail; "
+            "left: result := 1; goto done; "
+            "right: result := 7; goto done; "
+            "fail: result := 0; "
+            "done: "
+            "end"
+        )
+
+        assert ast.rule_name == "program"
+        assert len(find_nodes(ast, "desig_expr")) >= 3
 
 
 # ---------------------------------------------------------------------------

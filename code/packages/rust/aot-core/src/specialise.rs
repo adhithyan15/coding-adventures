@@ -164,6 +164,22 @@ fn translate(instr: &IIRInstr, env: &HashMap<String, String>) -> Vec<CIRInstr> {
         return vec![translate_ret(instr, env)];
     }
 
+    // --- call_builtin: try to lower operator builtins to typed ops ---
+    //
+    // The IR compiler emits primitive operators (`+`, `-`, `*`, `/`,
+    // `=`, `<`, `<=`, `>`, `>=`, `!=`, `_move`) as `call_builtin`
+    // because the IIR is language-agnostic and treats them as runtime
+    // helpers.  When the AOT pipeline can prove all operands have a
+    // concrete type, lowering these to native typed ops (`add_<ty>`,
+    // `cmp_eq_<ty>`, `mov_<ty>`) eliminates the runtime call and lets
+    // a native backend emit a single CPU instruction.
+    if op == "call_builtin" {
+        if let Some(lowered) = try_specialize_builtin(instr, env) {
+            return vec![lowered];
+        }
+        // Fall through to passthrough for unrecognised builtins.
+    }
+
     // --- passthrough ---
     if is_passthrough_op(op) {
         let sp = spec_type(instr, env);
@@ -344,6 +360,132 @@ pub fn spec_type(instr: &IIRInstr, env: &HashMap<String, String>) -> String {
 /// Lift a slice of `Operand` into `Vec<CIROperand>`.
 fn lift_srcs(srcs: &[Operand]) -> Vec<CIROperand> {
     srcs.iter().map(CIROperand::from).collect()
+}
+
+// ---------------------------------------------------------------------------
+// `call_builtin` operator lowering
+// ---------------------------------------------------------------------------
+//
+// The IIR's `call_builtin "<op>" arg1 arg2 …` is the universal way to
+// invoke runtime helpers, including primitive arithmetic (because the
+// IIR is intentionally language-agnostic).  The AOT specialiser lowers
+// these to typed CIR ops when all operands have concrete types — the
+// native backend then emits a single CPU instruction instead of a
+// runtime call.
+
+/// Map `call_builtin "<name>"` to a typed CIR mnemonic family when both
+/// operands carry the same concrete type.
+///
+/// Returns `Some(cir_instr)` when the lowering succeeded, or `None`
+/// when the builtin is unrecognised or operand types are unknown — in
+/// which case the caller falls back to the passthrough path.
+fn try_specialize_builtin(
+    instr: &IIRInstr,
+    env: &HashMap<String, String>,
+) -> Option<CIRInstr> {
+    // First src is `Var("<op_name>")` — the builtin's name string.
+    let op_name = instr.srcs.first().and_then(|s| match s {
+        Operand::Var(n) => Some(n.as_str()),
+        _ => None,
+    })?;
+
+    // Inspect the *actual* arguments (everything after the name).
+    let arg_srcs = &instr.srcs[1..];
+
+    match op_name {
+        // ---- Binary arithmetic ---------------------------------------
+        "+" | "-" | "*" | "/" => {
+            if arg_srcs.len() != 2 { return None; }
+            let ty = pick_binary_ty(arg_srcs, env)?;
+            let cir_op = match op_name {
+                "+" => "add", "-" => "sub", "*" => "mul", "/" => "div",
+                _ => unreachable!(),
+            };
+            Some(CIRInstr::new(
+                format!("{cir_op}_{ty}"),
+                instr.dest.clone(),
+                lift_srcs(arg_srcs),
+                ty,
+            ))
+        }
+
+        // ---- Binary comparisons (result is `bool`) -------------------
+        "=" | "==" | "!=" | "<" | "<=" | ">" | ">=" => {
+            if arg_srcs.len() != 2 { return None; }
+            let ty = pick_binary_ty(arg_srcs, env)?;
+            let cir_op = match op_name {
+                "=" | "==" => "cmp_eq",
+                "!="       => "cmp_ne",
+                "<"        => "cmp_lt",
+                "<="       => "cmp_le",
+                ">"        => "cmp_gt",
+                ">="       => "cmp_ge",
+                _ => unreachable!(),
+            };
+            Some(CIRInstr::new(
+                format!("{cir_op}_{ty}"),
+                instr.dest.clone(),
+                lift_srcs(arg_srcs),
+                "bool".to_string(),
+            ))
+        }
+
+        // ---- Unary move (`if`'s phi-node implementation) -------------
+        //
+        // The IR compiler emits `call_builtin "_move" src` to assign
+        // `src` to a destination register, typically when both arms of
+        // an `if` need to write to the same `_ifv*` slot.  Lower as a
+        // typed move so the backend just copies the value.
+        "_move" => {
+            if arg_srcs.len() != 1 { return None; }
+            let ty = pick_unary_ty(&arg_srcs[0], env)?;
+            Some(CIRInstr::new(
+                format!("mov_{ty}"),
+                instr.dest.clone(),
+                lift_srcs(arg_srcs),
+                ty,
+            ))
+        }
+
+        _ => None,
+    }
+}
+
+/// Pick a single concrete type for a 2-arg builtin.
+///
+/// Strategy:
+/// 1. Prefer the type of any `Var` operand that resolves in `env` to a
+///    type in `ALLOWED_TYPES` (excluding "any" and "void").
+/// 2. Fall back to the literal type of any `Int`/`Bool` operand.
+/// 3. Returns `None` if no operand has a usable type — the caller
+///    will leave the instruction as `call_builtin`.
+fn pick_binary_ty(args: &[Operand], env: &HashMap<String, String>) -> Option<String> {
+    for a in args {
+        if let Some(t) = operand_concrete_ty(a, env) {
+            return Some(t);
+        }
+    }
+    None
+}
+
+fn pick_unary_ty(arg: &Operand, env: &HashMap<String, String>) -> Option<String> {
+    operand_concrete_ty(arg, env)
+}
+
+fn operand_concrete_ty(op: &Operand, env: &HashMap<String, String>) -> Option<String> {
+    match op {
+        Operand::Var(name) => {
+            let t = env.get(name)?;
+            if t != "any" && t != "void" && ALLOWED_TYPES.contains(&t.as_str()) {
+                Some(t.clone())
+            } else {
+                None
+            }
+        }
+        Operand::Int(_)   => Some("u8".to_string()), // small int default
+        Operand::Bool(_)  => Some("bool".to_string()),
+        Operand::Float(_) => Some("f64".to_string()),
+    }
 }
 
 // ---------------------------------------------------------------------------

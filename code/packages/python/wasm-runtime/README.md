@@ -78,11 +78,18 @@ config = WasiConfig(
     stdin=lambda n: b"input"[:n],
     stdout=print,
     stderr=print,
+    max_fd_write_bytes_per_call=1 << 20,
+    max_fd_write_bytes_total=16 << 20,
     clock=SystemClock(),    # default: real OS clock
     random=SystemRandom(),  # default: OS CSPRNG via secrets module
 )
 host = WasiHost(config)
 ```
+
+`fd_write` validates iovec tables, guest buffer ranges, and the `nwritten`
+pointer before reading guest memory or forwarding output. Writes are capped per
+call and across the host lifetime by `WasiConfig` so untrusted modules cannot
+force unbounded host allocation or stdout/stderr traffic.
 
 #### Injecting a fake clock for testing
 

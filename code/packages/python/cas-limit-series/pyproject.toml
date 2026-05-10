@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-cas-limit-series"
-version = "0.1.0"
-description = "Limit and Taylor series operations on symbolic IR (foundation: heads + polynomial-only Taylor)."
+version = "0.2.0"
+description = "Limit and Taylor series on symbolic IR: direct substitution, L'Hôpital, ±∞, all indeterminate forms, one-sided limits."
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]

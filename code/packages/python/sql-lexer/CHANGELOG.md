@@ -2,6 +2,44 @@
 
 All notable changes to the SQL lexer package will be documented in this file.
 
+## [0.14.0] - 2026-05-04
+
+### Added
+
+- **`REPLACE`, `IGNORE`, `ABORT`, `FAIL` keywords** (`sql.tokens`) — four new
+  SQL conflict-resolution keywords added to the keyword list to support the
+  `INSERT OR REPLACE`, `INSERT OR IGNORE`, `INSERT OR ABORT`, and
+  `INSERT OR FAIL` syntax, as well as `REPLACE INTO` (shorthand for
+  `INSERT OR REPLACE INTO`).
+
+- **Regenerated `_grammar.py`** — the pre-compiled token grammar cache now
+  includes all four new keywords.
+
+## [0.13.0] - 2026-05-04
+
+### Added
+
+- **`CONCAT_OP = "||"` token** (`sql.tokens`) — SQL string-concatenation
+  operator.  Defined before single-character operators so longest-match lexing
+  picks `||` as one token rather than two `|` tokens.  Aliased to `CONCAT_OP`
+  (no alias needed; it is already a distinct token type).
+
+- **`NATURAL` and `USING` keywords** (`sql.tokens`) — added to the keyword
+  list to support `NATURAL JOIN` and `JOIN … USING (col)` syntax.
+
+- **Regenerated `_grammar.py`** — the pre-compiled token grammar cache now
+  includes the `CONCAT_OP` token definition and `NATURAL` / `USING` in the
+  keyword list.
+
+## [0.12.0] - 2026-05-04
+
+### Added
+
+- **`RETURNING` keyword** — added `'RETURNING'` to the `keywords` list in
+  `_grammar.py` and to the `keywords:` section of `sql.tokens`.  The lexer now
+  emits a `KEYWORD` token with value `"RETURNING"` for any `RETURNING`
+  occurrence, enabling the parser to recognise the DML RETURNING clause.
+
 ## [0.11.0] - 2026-04-28
 
 ### Added

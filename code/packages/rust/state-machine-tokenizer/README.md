@@ -114,6 +114,9 @@ Named character reference actions consume the longest matching known entity
 prefix in text-like contexts and preserve ambiguous ampersands in attribute
 contexts when a missing-semicolon reference would be followed by an ASCII
 alphanumeric character or `=`.
+Missing-semicolon recovery is limited to the WHATWG legacy no-semicolon names;
+newer names must include `;` or fall back to a shorter legacy prefix/literal
+text instead of being over-accepted.
 
 `commit_attribute_dedup` commits the current attribute only when the current
 start tag does not already have an attribute with the same interpreted name. If
@@ -122,9 +125,18 @@ and records a `duplicate-attribute` diagnostic. Definitions that want to keep
 duplicates can continue using plain `commit_attribute`.
 
 The runtime also exposes context-seeding helpers such as
-`Tokenizer::set_initial_state` and `Tokenizer::set_last_start_tag` so wrapper
-packages can execute HTML submodes like RCDATA without loading definition files
-at runtime.
+`Tokenizer::set_initial_state`, `Tokenizer::set_last_start_tag`,
+`Tokenizer::set_current_end_tag`, `Tokenizer::set_current_comment`, and
+`Tokenizer::set_current_doctype` with `DoctypeSeed`, plus
+`Tokenizer::set_temporary_buffer` and `Tokenizer::set_return_state`, so wrapper
+packages can execute HTML submodes and continuation states like RCDATA
+end-tag-name, comment end-dash, character-reference recovery, or DOCTYPE public
+identifier continuation without loading definition files at runtime.
+
+Wrapper packages can opt into HTML-style input-stream newline preprocessing
+with `Tokenizer::with_normalized_carriage_returns`. That maps CRLF pairs and
+bare carriage returns to a single LF before transition matching while keeping
+raw byte/scalar offsets moving across skipped LF bytes.
 
 ## Development
 

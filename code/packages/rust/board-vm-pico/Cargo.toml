@@ -1,0 +1,16 @@
+[package]
+name = "board-vm-pico"
+version = "0.1.0"
+edition = "2021"
+description = "Abstract Raspberry Pi Pico target descriptor and HAL adapter for Board VM"
+
+[dependencies]
+board-vm-device = { path = "../board-vm-device" }
+board-vm-ir = { path = "../board-vm-ir" }
+board-vm-runtime = { path = "../board-vm-runtime" }
+
+[dev-dependencies]
+board-vm-host = { path = "../board-vm-host" }
+
+[lib]
+path = "src/lib.rs"

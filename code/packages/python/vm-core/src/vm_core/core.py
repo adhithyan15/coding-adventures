@@ -130,6 +130,60 @@ class VMCore:
         # JIT handlers — registered by jit-core after compilation.
         self._jit_handlers: dict[str, Callable[[list[Any]], Any]] = {}
 
+        # VMCOND00 Phase 3 — handler chain (Layer 3: Dynamic Handlers).
+        #
+        # A list of HandlerNode objects pushed by ``push_handler`` and popped
+        # by ``pop_handler``.  SIGNAL / ERROR / WARN search this list from the
+        # END (most recently pushed) to the BEGINNING (oldest), calling the
+        # first node whose condition_type matches the thrown condition.
+        #
+        # The list is intentionally cleared by reset() between executions so
+        # that handlers from a previous run never leak into the next one.
+        self._handler_chain: list = []  # list[HandlerNode]
+
+        # VMCOND00 Phase 4 — restart chain (Layer 4: Named Restarts).
+        #
+        # A list of RestartNode objects pushed by ``push_restart`` and popped
+        # by ``pop_restart``.  ``find_restart`` searches this list from the END
+        # (innermost / most recently pushed) to find the first node whose name
+        # matches the requested symbol.  ``invoke_restart`` calls the found
+        # node's restart function as a new VM frame (non-unwinding by default).
+        #
+        # Cleared by reset() between executions; also cleaned up by EXIT_TO
+        # (Layer 5) when it unwinds to a target frame depth.
+        self._restart_chain: list = []  # list[RestartNode]
+
+        # VMCOND00 Phase 4 — exit-point chain (Layer 5: Non-Local Exits).
+        #
+        # A list of ExitPointNode objects pushed by ``establish_exit``.  EXIT_TO
+        # searches this list from the END (innermost) for a node whose tag matches
+        # the requested symbol, then:
+        #   1. Pops this node and all more recently pushed nodes.
+        #   2. Unwinds vm._frames, vm._handler_chain, and vm._restart_chain to
+        #      the recorded frame_depth.
+        #   3. Assigns the exit value to the result register in the target frame.
+        #   4. Jumps to resume_ip in the target frame.
+        #
+        # Cleared by reset() between executions; also partially cleaned up by
+        # handle_ret / handle_ret_void when a frame returns normally (removing
+        # exit points established in the popped frame so they do not linger).
+        self._exit_point_chain: list = []  # list[ExitPointNode]
+
+        # VMCOND00 Phase 1 — syscall dispatch table.
+        #
+        # Maps SYSCALL00 canonical syscall number (int) to an implementation
+        # callable ``(arg: int) -> (value: int, error_code: int)``.  The
+        # error_code convention follows SYSCALL00 Section 3: 0 on success,
+        # -1 on EOF, <-1 for negated errno.
+        #
+        # Language frontends and host environments register implementations
+        # via ``register_syscall``.  The dispatch handler falls back to
+        # EINVAL for unknown numbers — matching the C ABI contract.
+        #
+        # Default table is empty; languages must explicitly wire up the
+        # syscalls they use.  This keeps the VM agnostic about I/O strategy.
+        self._syscall_table: dict[int, Callable[[int], tuple[int, int]]] = {}
+
         # Execution state — reset between execute() calls.
         self._frames: list[VMFrame] = []
         self._module: IIRModule | None = None
@@ -409,6 +463,76 @@ class VMCore:
         """
         self._builtins.register(name, fn)
 
+    def register_syscall(
+        self,
+        n: int,
+        impl: Callable[[int], tuple[int, int]],
+    ) -> None:
+        """Register a host implementation for SYSCALL00 syscall number ``n``.
+
+        The implementation receives the single argument register value and
+        returns a ``(value, error_code)`` pair following the SYSCALL00 error
+        convention (Section 3 of SYSCALL00 spec):
+
+        - ``(value, 0)``    — success; ``value`` is the result (bytes written,
+                               byte read, fd, …)
+        - ``(0, -1)``       — EOF (read operations only)
+        - ``(0, -errno)``   — error; errno is the POSIX error number (positive)
+
+        The implementation must NOT raise Python exceptions — wrap I/O in
+        try/except and return an error pair instead.  Any exception that
+        escapes will be caught by the dispatch handler and converted to
+        ``(0, EINVAL)`` with no further information.
+
+        Example — registering write-byte (syscall 1) backed by stdout::
+
+            import sys
+
+            def write_byte_impl(arg: int) -> tuple[int, int]:
+                try:
+                    sys.stdout.buffer.write(bytes([arg & 0xFF]))
+                    sys.stdout.buffer.flush()
+                    return (0, 0)
+                except OSError as e:
+                    return (0, -e.errno)
+
+            vm.register_syscall(1, write_byte_impl)
+
+        Parameters
+        ----------
+        n:
+            SYSCALL00 canonical syscall number (1 = write-byte, 2 = read-byte,
+            10 = exit, …).  Must be in the range [1, 255].
+        impl:
+            Callable ``(arg: int) -> (value: int, error_code: int)``.
+
+        Raises
+        ------
+        ValueError
+            If ``n`` is outside the valid SYSCALL00 range [1, 255].  Syscall 0
+            is reserved by the ABI and numbers above 255 are beyond the
+            canonical table, so both extremes are rejected to catch programming
+            errors early rather than at dispatch time.
+        """
+        if not (1 <= n <= 255):  # noqa: PLR2004 — magic numbers are the spec range
+            raise ValueError(
+                f"syscall number {n!r} is outside the valid range [1, 255]; "
+                "see SYSCALL00 §2 for the canonical table"
+            )
+        self._syscall_table[n] = impl
+
+    def unregister_syscall(self, n: int) -> None:
+        """Remove the registered implementation for syscall number ``n``.
+
+        No-op if the syscall is not registered.
+
+        Parameters
+        ----------
+        n:
+            SYSCALL00 canonical syscall number to remove.
+        """
+        self._syscall_table.pop(n, None)
+
     def register_jit_handler(
         self, fn_name: str, handler: Callable[[list[Any]], Any]
     ) -> None:
@@ -452,6 +576,9 @@ class VMCore:
         self._interrupted = False
         self._memory = {}
         self._io_ports = {}
+        self._handler_chain = []   # VMCOND00 Phase 3 — clear per execution
+        self._restart_chain = []   # VMCOND00 Phase 4 — clear per execution
+        self._exit_point_chain = []  # VMCOND00 Phase 4 — clear per execution
 
     # ------------------------------------------------------------------
     # LANG06 debug API

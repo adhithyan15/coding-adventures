@@ -31,26 +31,16 @@ from __future__ import annotations
 import textwrap
 from typing import Any
 
-import pytest
-
 from grammar_tools.compiler import compile_parser_grammar, compile_token_grammar
 from grammar_tools.parser_grammar import (
     Alternation,
-    GrammarRule,
     Literal,
-    Optional,
     ParserGrammar,
     Repetition,
-    RuleReference,
     Sequence,
     parse_parser_grammar,
 )
-from grammar_tools.token_grammar import (
-    PatternGroup,
-    TokenDefinition,
-    TokenGrammar,
-    parse_token_grammar,
-)
+from grammar_tools.token_grammar import TokenGrammar, parse_token_grammar
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -84,6 +74,7 @@ class TestCompileTokenGrammarOutput:
         grammar = TokenGrammar()
         code = compile_token_grammar(grammar)
         assert "DO NOT EDIT" in code
+        assert "# ruff: noqa: E501, F401" in code
 
     def test_header_contains_source_when_given(self) -> None:
         """Source filename appears in header when provided."""
@@ -296,6 +287,7 @@ class TestCompileParserGrammarOutput:
         grammar = ParserGrammar()
         code = compile_parser_grammar(grammar)
         assert "DO NOT EDIT" in code
+        assert "# ruff: noqa: E501, F401" in code
 
     def test_imports_parser_grammar_types(self) -> None:
         """Generated code imports the necessary types."""

@@ -10,6 +10,64 @@ plugs into the existing generic language pipeline (LANG00…LANG17).
 This document does not duplicate `ST01-stats.md`; it places ST01 in the
 larger map and identifies the further specs that need to be written.
 
+## Update — Rust Foundation Shift
+
+The roadmap below was originally drafted with per-host-language
+implementations (Python ST01 shipped, Ruby ST01 shipped, etc.). After
+the VisiCalc reconstruction work began, the *real implementation* of
+the statistics stack consolidated into Rust. The new layered home:
+
+- **Substrate (Layer 0)**: `numeric-tower`, `na-semantics`, `r-vector`,
+  `vectorization-rules` — see `numeric-tower.md`, `na-semantics.md`,
+  `r-vector.md`, `vectorization-rules.md`.
+- **Domain core (Layer 1)**: `statistics-core` — see
+  `statistics-core.md`. Comprehensive: every statistical function across
+  VisiCalc, Lotus 1-2-3, Symphony, Multiplan, Excel, R, and S, with
+  cross-cutting contracts for error/NA propagation, RNG state,
+  distribution trait, numerical accuracy.
+- **Spreadsheet engine (Layer 3)**: `spreadsheet-core` — see
+  `spreadsheet-core.md`. Owns the formula language, dependency DAG,
+  recalc, and the dispatch table that maps Excel/Lotus/VisiCalc names
+  to Layer 1 function pointers.
+- **Frontends (Layer 4)**: `visicalc-modern` (Rust on Mosaic) and
+  `visicalc-faithful` (Python on the existing 6502 simulator) — see
+  `visicalc-modern.md` and `visicalc-faithful.md`. The future R and S
+  runtimes plug into the same Layer 1 cores via their own dispatch.
+
+What this means for the roadmap below:
+
+- **ST01 (descriptive stats)** in Python, Ruby, TS, etc. **stays as
+  shipped**. It serves the per-language ecosystems (the Ruby tooling
+  in this repo, the Python notebooks, the TS web demos). It is no
+  longer the canonical implementation; that is the Rust
+  `statistics-core` crate. Cross-language parity tests verify the two
+  agree.
+- **ST02-ST09 (distributions, inference, regression, multivariate,
+  time-series, smoothing, resampling, clustering)** are subsumed into
+  `statistics-core.md` as families within the catalog. The individual
+  ST0N specs may still be written for didactic depth, but the
+  implementation home is the Rust crate, not per-host-language ports.
+- **ST10-ST12 (vector semantics, data frames, formulas)** are
+  redirected to `r-vector` (and a future `data-frame` crate). ST10's
+  Rust home is `r-vector`; ST11 becomes a follow-up `data-frame.md`;
+  ST12 becomes a follow-up `r-formulas.md` once the R runtime needs it.
+- **R00-R05 (the R language frontend)** now sits on top of the Rust
+  Layer 1 cores. The R runtime's dispatcher maps R names (`mean`,
+  `lm`, `dnorm`) to the same Rust function pointers that
+  `spreadsheet-core` dispatches `AVERAGE`, `LINEST`, `NORMDIST` to.
+
+The architectural rule, locked in: **the statistical core is named for
+what it *is* (statistics math), not how it's *consumed* (formulas in a
+spreadsheet).** "Formula" is a presentation concern at the spreadsheet
+layer; the core is agnostic. Every consumer (spreadsheet,
+R runtime, S runtime) gets its own dispatch layer; the cores have no
+frontend awareness.
+
+The original roadmap below remains accurate as a *taxonomy* of the
+statistical surface area. Read it for the breadth of what an R/S
+environment requires; treat the implementation guidance as
+superseded by the Rust specs.
+
 ## Purpose
 
 The eventual goal is a self-hosted, educational R implementation that:

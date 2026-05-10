@@ -1,5 +1,76 @@
 # Changelog
 
+## [0.8.0] - 2026-05-05
+
+### Fixed
+
+- **`ConstantFolding` now preserves `upsert` on `Insert` nodes**
+  (`constant_folding.py`) — the pattern match for `Insert` was extended to capture
+  `upsert=up`, call `_fold_upsert(up)` on it, and pass `upsert=new_up` to the
+  rebuilt node.  Without this fix the optimizer silently stripped the `UpsertAction`
+  from every `Insert` that passed through constant folding, causing the VM to
+  execute a plain INSERT instead of the intended upsert.
+
+### Added
+
+- **`_fold_upsert(up: UpsertAction | None) -> UpsertAction | None`** — helper
+  that applies constant folding to each assignment's `value` expression inside a
+  `UpsertAction`.  Returns `None` unchanged, forwards DO-NOTHING actions unchanged,
+  and rebuilds `UpsertAction` with folded assignments for DO-UPDATE actions.
+
+## [0.7.0] - 2026-05-04
+
+### Fixed
+
+- **`ConstantFolding` silently dropped `on_conflict` from `Insert` nodes**
+  (`constant_folding.py`) — the pattern match `case Insert(table=t, columns=cols,
+  source=src, returning=ret)` did not capture `on_conflict`, so when rebuilding
+  the node as `Insert(table=t, columns=cols, source=new_src, returning=new_ret)`
+  it defaulted back to `None`.  This caused `INSERT OR REPLACE` and
+  `INSERT OR IGNORE` to silently behave as plain `INSERT` after optimization,
+  raising `IntegrityError` instead of replacing or ignoring conflicting rows.
+  Fix: the pattern now captures `on_conflict=oc` and passes it through.
+
+## [0.6.0] - 2026-05-04
+
+### Fixed
+
+- **`ConstantFolding` silent NULL for `||`** (`constant_folding.py`) — the
+  `_apply_binary` function's `match` statement did not have a case for
+  `BinaryOp.CONCAT`.  Python's structural pattern matching silently falls
+  through unmatched cases and returns `None`, so `'hello' || 'world'` was
+  constant-folded to `Literal(value=None)` instead of `Literal(value='helloworld')`.
+  Added `case BinaryOp.CONCAT: return str(lv) + str(rv)` to fix this.
+
+## [0.5.0] - 2026-05-04
+
+### Fixed
+
+- **`PredicatePushdown` outer-join correctness** — predicates on the
+  null-padded side of an outer join were incorrectly being pushed inside
+  the join's sub-scan, converting an outer join into a de-facto inner
+  join. Fix: `_distribute_conjuncts` now consults the join `kind` before
+  pushing to each side.
+  - `LEFT JOIN` → only left-side predicates may be pushed into the left
+    scan; right-side predicates remain above the join.
+  - `RIGHT JOIN` → only right-side predicates may be pushed.
+  - `FULL JOIN` → no single-side push at all.
+  - `INNER` / `CROSS` → unchanged (both sides OK).
+
+### Added
+
+- `JoinKind` imported from `sql_planner` in `predicate_pushdown.py` to
+  support the outer-join guard.
+
+### Fixed (RETURNING)
+
+- **`ConstantFolding` preserves `returning` on DML nodes** (`constant_folding.py`)
+  — the `Insert`, `Update`, and `Delete` match arms in `_fold_plan` were
+  rebuilding the nodes without passing the `returning` field, silently stripping
+  the RETURNING clause before codegen.  All three cases now capture `returning=ret`
+  and emit `returning=tuple(_fold_expr(r) for r in ret)` so that RETURNING
+  expressions are folded rather than dropped.
+
 ## [0.4.0] - 2026-04-23
 
 ### Changed — Phase 9.7: Composite (multi-column) automatic index support (IX-8)

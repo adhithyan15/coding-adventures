@@ -1,5 +1,273 @@
 # Changelog
 
+## 1.16.0 — 2026-05-05
+
+### Added
+
+- **`UPSERT` execution — `ON CONFLICT DO UPDATE` and `ON CONFLICT DO NOTHING`**
+  (`vm.py`) — full upsert semantics for both VALUES-based and SELECT-based INSERTs.
+
+  Key additions:
+
+  - **`excluded_row: dict[str, SqlValue]`** on `_VmState` — stores the
+    *would-be-inserted* row during upsert SET expression evaluation so that
+    `LoadExcludedColumn` instructions can read from it.
+
+  - **`LoadExcludedColumn` dispatch** — pushes `st.excluded_row.get(ins.col)` onto
+    the operand stack.  This instruction is only executed inside `_upsert_apply`.
+
+  - **`_do_upsert(table, row, upsert, st) -> bool`** — the main upsert decision
+    function called from `_do_insert` and `_do_insert_from_result` when the backend
+    raises `ConstraintViolation`.  Returns `True` if the conflict was handled (skip
+    or update), `False` if no match was found (re-raises the original exception).
+    - **DO NOTHING fast path**: immediately returns `True`, silently dropping the
+      conflicting row.
+    - **DO UPDATE**: opens a positioned cursor (`_open_cursor` if available, else
+      `scan`), scans for the conflicting row using `conflict_target` columns (or
+      schema-discovered PRIMARY KEY columns when `conflict_target` is empty), then
+      calls `_upsert_apply`.
+
+  - **`_upsert_apply(table, excluded, existing, upsert, cur, st)`** — evaluates
+    each `UpsertAssignment.instructions` sequence via `_dispatch`, collecting the
+    resulting value for each column, then calls `backend.update()` on the positioned
+    cursor.  Before evaluation it temporarily parks `existing` in
+    `st.current_row[0]` so that bare column references (e.g. `n + 1` where `n`
+    refers to the existing row) resolve correctly via `LoadColumn(cursor_id=0, …)`.
+    After evaluation it restores the previous `current_row[0]` entry.
+
+  - **`_do_insert` and `_do_insert_from_result` updated** — catch
+    `ConstraintViolation` and call `_do_upsert`.  If the upsert handler returns
+    `False` (no match found), the original `ConstraintViolation` is re-translated
+    and re-raised.
+
+- **`test_upsert.py`** — 12 focused VM-level upsert tests covering DO NOTHING,
+  DO UPDATE with EXCLUDED.col, bare column refs, arithmetic, multiple assignments,
+  empty conflict_target, counter accumulation, and plain inserts with no conflict.
+
+## 1.15.0 — 2026-05-05
+
+### Added
+
+- **DEFAULT column value passthrough in `_do_create_table`** (`vm.py`) —
+  `CreateTable` now reads `c.default` from each `ColumnDef` in the instruction
+  and passes it to `BackendColumnDef(default=...)`.  When `c.default` is the
+  IR sentinel `NO_COLUMN_DEFAULT` the VM converts it to the backend sentinel
+  `NO_DEFAULT`, preserving the existing "no default declared" semantics.  Any
+  other value (integer, float, string, or `None` for DEFAULT NULL) is passed
+  through verbatim so `InMemoryBackend._apply_defaults()` can fill the column
+  on INSERT when it is omitted by the caller.
+
+  This closes the final gap in the DEFAULT pipeline:
+  `sql-parser → adapter → sql-backend ColumnDef → IR ColumnDef → VM → InMemoryBackend`.
+
+## 1.14.0 — 2026-05-04
+
+### Added
+
+- **`INSERT OR REPLACE` / `REPLACE INTO`** — when `InsertRow.on_conflict ==
+  "REPLACE"`, `_do_insert()` calls the new `_replace_delete_conflicts()`
+  helper before inserting.  That helper scans the target table using a
+  positioned cursor (`_open_cursor` where available, `scan` as fallback) and
+  deletes every existing row that shares a value on any UNIQUE or PRIMARY KEY
+  column with the incoming row.  The scan-delete is single-pass because the
+  backend guarantees the cursor stays live after deletion and advances to the
+  next row automatically.  The same logic applies to `_do_insert_from_result`
+  for `INSERT OR REPLACE … SELECT`.
+
+- **`INSERT OR IGNORE`** — when `InsertRow.on_conflict == "IGNORE"` or
+  `InsertFromResult.on_conflict == "IGNORE"`, `ConstraintViolation` from the
+  backend is caught silently and the row is skipped.  Other exceptions are
+  still re-raised as `IntegrityError`.
+
+- **`_replace_delete_conflicts` helper** — pre-scans a table and deletes all
+  rows conflicting with a new row on any UNIQUE/PRIMARY KEY column.  Uses
+  `getattr(backend, "_open_cursor", None)` to prefer positioned cursors
+  (required by `InMemoryBackend.delete()`) over read-only `scan()` iterators.
+  Only non-NULL column values are checked (NULL never conflicts in SQL).
+
+### Fixed
+
+- **`_do_create_table` now passes `unique=c.unique` to `BackendColumnDef`**
+  — the VM handler for the `CreateTable` IR instruction was building
+  `BackendColumnDef` without the `unique` keyword, causing every UNIQUE column
+  constraint to be silently ignored by the backend.  Non-PK UNIQUE columns
+  would accept duplicate values without raising `ConstraintViolation`, making
+  `INSERT OR IGNORE` unable to detect non-PK UNIQUE conflicts.
+
+## 1.13.0 — 2026-05-04
+
+### Added
+
+- **`glob(pattern, string)` scalar function** (`scalar_functions.py`) —
+  registers the built-in `glob` function used by the `GLOB` operator.
+  Case-sensitive Unix-style pattern matching via `fnmatch.fnmatchcase`.
+  Returns a Python `bool` (coerced to `1`/`0` on output) so that
+  `UnaryOp.NOT` and WHERE-clause `JumpIfFalse` both work correctly with it.
+  NULL arguments propagate to NULL.
+
+### Fixed
+
+- **`JumpIfFalse` / `JumpIfTrue` now use proper SQL truthiness** (`vm.py`) —
+  previously only Python `False` (identity) was treated as falsy; now any
+  value for which `not v` is true (including integer `0`, float `0.0`) is
+  treated as falsy. This fixes GLOB and any other scalar predicate that
+  returns an integer rather than a Python bool, and correctly handles
+  `WHERE 0` / `WHERE 1` literals.
+
+- **`like_match` is now case-insensitive for ASCII** (`operators.py`) —
+  ANSI SQL and SQLite both define LIKE as case-insensitive by default for
+  ASCII characters. The DP table now normalises both value and pattern to
+  lowercase before comparison, preserving `%` / `_` wildcard semantics.
+
+## 1.12.0 — 2026-05-04
+
+### Added
+
+- **`GROUP_CONCAT` aggregate execution** (`vm.py`) — `_do_update_agg` and
+  `_do_finalize_agg` now handle `AggFunc.GROUP_CONCAT`:
+  - Per-row accumulation into `_AggState.items` (a `list[str]`); NULLs are
+    silently ignored; integers and whole-number floats are rendered without a
+    trailing `.0` to match SQLite output.
+  - Finalisation joins the list with `agg.separator`; an empty list returns
+    `None` (matching SQLite's NULL-for-empty-group behaviour).
+- **`items` and `separator` fields on `_AggState`** (`vm.py`) — `items`
+  accumulates strings for GROUP_CONCAT; `separator` is baked in at
+  `InitAgg` time and carried through to `FinalizeAgg`.
+- **Implicit-single-group synthesis in `AdvanceGroupKey` handler** (`vm.py`)
+  — when `has_group_by=False` and the scan produced no rows (`group_order`
+  is empty), the VM synthesises the implicit `()` group so that no-GROUP-BY
+  aggregates over empty tables return exactly one row of NULL/zero values,
+  matching the SQL standard.
+- **Lazy slot initialisation in `_do_finalize_agg`** (`vm.py`) — if the
+  slot list for the current group is shorter than the requested slot index
+  (because `InitAgg` was never called on an empty table), the handler
+  auto-grows the list with default `_AggState` entries using the `func` and
+  `separator` baked into the `FinalizeAgg` instruction.  This eliminates
+  the previous `InternalError` and produces the correct zero-state result.
+
+### Security
+
+- **NTILE DoS prevention** (`vm.py`) — `n_buckets` is clamped to
+  `max(1, min(n_raw, total_rows))` before the modulo-distribution loop,
+  preventing divide-by-zero and pathological O(N²) behaviour from
+  caller-supplied values ≤ 0.
+- **Defense-in-depth guards** (`vm.py`) — `LAG`, `LEAD`, `NTILE`, and
+  `NTH_VALUE` handlers raise `RuntimeError` on non-integer extra-arg
+  values, catching any `WinFuncSpec` objects that bypass codegen validation.
+
+## 1.11.0 — 2026-05-04
+
+### Added
+
+- **LAG window function** (`vm.py`) — `_do_compute_window` now handles
+  `WinFunc.LAG`: returns the value of `arg_col` from the row `offset`
+  positions before the current row in the sorted partition.  Returns
+  `default_val` (from `extra_args[1]`) when no prior row exists at that
+  distance.  Offset and default are taken from `spec.extra_args = (offset,
+  default)`, normalised to `(1, None)` by the codegen if omitted.
+- **LEAD window function** (`vm.py`) — mirror of LAG, looks ahead by
+  `offset` positions instead of behind.
+- **NTILE window function** (`vm.py`) — `WinFunc.NTILE` divides the
+  partition into `n` approximately equal numbered buckets (1..n).
+  Distribution matches SQLite and PostgreSQL: `q, r = divmod(len, n)`;
+  the first `r` buckets get `q+1` rows, the remaining `n-r` get `q` rows.
+  `n` is taken from `spec.extra_args[0]`.
+- **PERCENT_RANK window function** (`vm.py`) — `WinFunc.PERCENT_RANK`
+  computes `(rank − 1) / (N − 1)` where rank is the SQL RANK() value and
+  N is the partition size.  Returns `0.0` when `N == 1` (avoids division
+  by zero).
+- **CUME_DIST window function** (`vm.py`) — `WinFunc.CUME_DIST` computes
+  the cumulative distribution as `(end-of-peer-group index + 1) / N`.
+  Tied rows share the same peer-group endpoint so they all receive the
+  same value.
+- **NTH_VALUE window function** (`vm.py`) — `WinFunc.NTH_VALUE` returns
+  the value of `arg_col` at the n-th row (1-indexed) of the partition.
+  Rows beyond the partition size return `NULL`.  `n` is taken from
+  `spec.extra_args[0]`.
+
+## 1.10.0 — 2026-05-04
+
+### Added
+
+- **`last_inserted_row` field on `_VmState`** (`vm.py`) — a
+  `dict[str, SqlValue]` that is overwritten with the full row dict every time
+  `_do_insert` executes an `InsertRow`.  Provides the data source for
+  `LoadLastInsertedColumn`.
+- **`LoadLastInsertedColumn(col)` dispatch** (`vm.py`) — `_dispatch` now
+  handles `LoadLastInsertedColumn` by pushing
+  `st.last_inserted_row.get(ins.col)` onto the value stack, returning `None`
+  (NULL) when the column is not present.  Powers INSERT … RETURNING without
+  requiring an open cursor after the insert.
+
+## 1.9.0 — 2026-05-04
+
+### Added
+
+- **`outer_current_row` parameter on `execute()`** (`vm.py`) — optional
+  `dict[int, dict[str, SqlValue]]` mapping outer cursor IDs to their current
+  row snapshots.  Defaults to `{}` (empty).  Stored in `_VmState` for use
+  by the `LoadOuterColumn` handler.
+- **`_VmState.outer_current_row` field** (`vm.py`) — the outer row snapshot
+  from the enclosing query; populated at construction time from `execute()`'s
+  parameter.
+- **`LoadOuterColumn` dispatch** (`vm.py`) — `_dispatch` routes
+  `LoadOuterColumn(cursor_id, col)` to the new `_load_outer_column()` helper,
+  which reads `col` from `outer_current_row[cursor_id]` and pushes the value
+  (or `None` if the cursor or column is absent).
+- **Correlated outer-row threading** (`vm.py`) — `_do_run_exists_subquery`,
+  `_do_run_scalar_subquery`, and `_do_run_in_subquery` now call
+  `execute(sub_program, backend, outer_current_row=st.current_row)` so that
+  inner programs can resolve `LoadOuterColumn` against the outer scan's
+  snapshot.  Each outer row gets a fresh inner execution — no caching.
+- **11 new VM tests** in `tests/test_correlated_subquery.py`:
+  `LoadOuterColumn` unit tests (basic, missing cursor, missing column, no
+  `outer_current_row`), and end-to-end planner→codegen→VM tests for
+  correlated IN, NOT IN, EXISTS, NOT EXISTS, scalar subquery, and per-row
+  re-execution.
+
+## 1.8.0 — 2026-05-04
+
+### Added
+
+- **`RunInSubquery` handler** (`vm.py`) — executes the embedded
+  `sub_program` via a recursive `execute()` call, materializes the
+  first column of all result rows into a `set`, and pushes a `bool` or
+  `None` onto the value stack.  SQL three-valued NULL logic:
+  - test value is `NULL` → push `None`
+  - test value in non-null set → push `True` (or `False` when `negate=True`)
+  - set contains `NULL` and value not found → push `None` (UNKNOWN)
+  - value not found, no NULLs in set → push `False` (or `True` when `negate=True`)
+
+## 1.7.0 — 2026-05-04
+
+### Added
+
+- **FULL OUTER JOIN execution** — no new VM instructions needed.  FULL JOIN
+  is compiled to two passes by `sql-codegen`: Pass 1 emits left rows via
+  the existing LEFT JOIN machinery; Pass 2 is a right-anti-join that emits
+  only unmatched right rows.  The null-padding mechanism is identical to
+  LEFT/RIGHT JOIN: a closed inner cursor returns `None` from `_load_column`.
+- **4 new outer-join VM tests** in `tests/test_outer_join.py`:
+  `test_full_join_all_rows_appear`, `test_full_join_left_empty`,
+  `test_full_join_right_empty`, `test_full_join_no_overlap`.
+
+## 1.6.0 — 2026-05-04
+
+### Added
+
+- **`join_match_stack: list[bool]`** added to `_VmState` — a stack that
+  tracks, per active left row, whether any right row satisfied the JOIN
+  ON condition. Supports arbitrarily nested LEFT OUTER JOINs.
+- **`JoinBeginRow` handler** — appends `False` to `join_match_stack`.
+- **`JoinSetMatched` handler** — sets `join_match_stack[-1] = True`.
+- **`JoinIfMatched(label)` handler** — pops the stack; conditionally
+  jumps to *label* if the popped value is `True`. When the stack is
+  empty (defensive), pops as `False` and falls through.
+- **LEFT OUTER JOIN null-padding** — no new instruction required; when
+  the right scan's `CloseScan` removes the cursor from `current_row`,
+  any subsequent `LoadColumn` for right-side columns returns `None`
+  automatically (existing `_load_column` semantics).
+
 ## 1.5.0 — 2026-04-28
 
 ### Added

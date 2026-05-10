@@ -1,0 +1,11 @@
+[package]
+name = "board-vm-fixed-stream"
+version = "0.1.0"
+edition = "2021"
+description = "Reusable fixed-buffer Board VM device byte stream for tests and firmware probes"
+
+[dependencies]
+board-vm-device = { path = "../board-vm-device" }
+
+[lib]
+path = "src/lib.rs"

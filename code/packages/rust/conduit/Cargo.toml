@@ -1,0 +1,15 @@
+[package]
+name = "conduit"
+version = "0.1.0"
+edition = "2021"
+description = "Rust-native Conduit web framework facade over web-core"
+license = "MIT"
+
+[dependencies]
+embeddable-http-server = { path = "../embeddable-http-server" }
+tcp-runtime = { path = "../tcp-runtime" }
+transport-platform = { path = "../transport-platform" }
+web-core = { path = "../web-core" }
+
+[dev-dependencies]
+http-core = { path = "../http-core" }

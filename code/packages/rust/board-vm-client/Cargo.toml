@@ -1,0 +1,16 @@
+[package]
+name = "board-vm-client"
+version = "0.1.0"
+edition = "2021"
+description = "Transport-independent host client for Board VM sessions"
+
+[dependencies]
+board-vm-host = { path = "../board-vm-host" }
+board-vm-protocol = { path = "../board-vm-protocol" }
+
+[dev-dependencies]
+board-vm-loopback = { path = "../board-vm-loopback" }
+board-vm-runtime = { path = "../board-vm-runtime" }
+
+[lib]
+path = "src/lib.rs"

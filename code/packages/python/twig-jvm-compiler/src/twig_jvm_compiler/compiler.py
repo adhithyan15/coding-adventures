@@ -59,9 +59,11 @@ from compiler_ir import (
 )
 from ir_optimizer import IrOptimizer, OptimizationResult
 from ir_to_jvm_class_file import (
+    TWIG_RUNTIME_BINARY_NAME,
     JvmBackendConfig,
     JVMClassArtifact,
     JVMMultiClassArtifact,
+    build_runtime_class_artifact,
     lower_ir_to_jvm_class_file,
     lower_ir_to_jvm_classes,
     write_class_file,
@@ -88,6 +90,7 @@ from twig.ast_nodes import (
     VarRef,
 )
 from twig.free_vars import free_vars
+from twig.module_resolver import HOST_MODULE_NAME, ResolvedModule
 
 # ---------------------------------------------------------------------------
 # Result types
@@ -141,6 +144,86 @@ class PackageError(TwigError):
         self.cause = cause
 
 
+# TW04 Phase 4d — multi-module result types
+# -----------------------------------------
+#
+# ``compile_modules`` accepts a topologically ordered list of
+# ``ResolvedModule`` objects (as produced by ``twig.resolve_modules``)
+# and compiles every non-``host`` module to a JVM class.  All module
+# classes share one ``TwigRuntime`` register file so that cross-module
+# function calls see a consistent register state.
+
+
+@dataclass(frozen=True)
+class ModuleCompileResult:
+    """Compilation result for one module in a multi-module build.
+
+    Attributes
+    ----------
+    module_name:
+        The Twig module name (e.g. ``"a/math"``).
+    jvm_class_name:
+        The JVM internal class name (e.g. ``"a/math"``).  For Phase 4d
+        this is the identity of ``module_name`` — forward slashes already
+        serve as JVM package separators.
+    ir_program:
+        The optimised ``IrProgram`` that was lowered to ``artifact``.
+    artifact:
+        The main JVM class artifact for this module.  If the module
+        uses closures or heap primitives the full set of supporting
+        classes lives in ``multi_class_artifact``.
+    is_entry:
+        ``True`` only for the entry module.  The entry module's artifact
+        includes a ``main([Ljava/lang/String;)V`` wrapper.  All other
+        modules have ``emit_main_wrapper=False``.
+    multi_class_artifact:
+        Populated when the module's IR requires closure or heap-primitive
+        support classes (Closure interface, per-lambda subclasses, Cons,
+        Symbol, Nil).  ``None`` for modules that emit a single plain class.
+    """
+
+    module_name: str
+    jvm_class_name: str
+    ir_program: IrProgram
+    artifact: JVMClassArtifact
+    is_entry: bool
+    multi_class_artifact: JVMMultiClassArtifact | None = None
+
+
+@dataclass(frozen=True)
+class MultiModuleResult:
+    """Aggregate result of compiling a set of Twig modules together.
+
+    Attributes
+    ----------
+    runtime_artifact:
+        The shared ``TwigRuntime`` class that owns ``int[] __ca_regs``
+        and ``Object[] __ca_objregs``.  Must be included in the JAR so
+        every generated module class can ``getstatic`` its register file.
+    modules:
+        One ``ModuleCompileResult`` per compiled module (excluding
+        ``host``), in topological order — dependencies before importers.
+    entry_class_name:
+        The JVM class name of the entry module, suitable for use as
+        ``Main-Class`` in a JAR manifest.
+    """
+
+    runtime_artifact: JVMClassArtifact
+    modules: list[ModuleCompileResult]
+    entry_class_name: str
+
+
+@dataclass(frozen=True)
+class MultiModuleExecutionResult:
+    """Compilation result + real-``java`` invocation output for a multi-module
+    program."""
+
+    multi: MultiModuleResult
+    stdout: bytes
+    stderr: bytes
+    exit_code: int
+
+
 # ---------------------------------------------------------------------------
 # Builtins recognised in v1
 # ---------------------------------------------------------------------------
@@ -184,15 +267,27 @@ _HEAP_BUILTINS: dict[str, tuple[IrOp, int]] = {
 }
 
 # Convention shared with the JVM backend's helper register array:
-#   register 0  — scratch zero (also the SYSCALL-arg slot for SYSCALL 1)
+#   register 0  — scratch (also the SYSCALL-arg slot for host syscalls)
 #   register 1  — HALT result / function return value
 #   register 2..N — function parameter slots (param i → register 2 + i)
 #   register 10..  — compiler-allocated holding registers for intermediate
 #                    values; using a high base keeps them clear of
 #                    parameter slots, so nested calls don't clobber.
+_REG_SCRATCH = 0
 _REG_HALT_RESULT = 1
 _REG_PARAM_BASE = 2
 _REG_HOLDING_BASE = 10
+
+# Platform-independent syscall numbers shared by all backends.
+# These numbers are the de-facto convention established by the CLR
+# backend; the JVM backend's ``__ca_syscall`` helper now also handles
+# them.  When a new host export is added, a new entry goes here AND
+# in the backend's syscall handler, AND in ``twig/compiler.py``.
+_HOST_SYSCALLS: dict[str, int] = {
+    "host/write-byte": 1,  # write one byte to stdout
+    "host/read-byte":  2,  # read one byte from stdin; return -1 on EOF
+    "host/exit":       10, # exit the process with the given code
+}
 
 
 # ---------------------------------------------------------------------------
@@ -529,6 +624,10 @@ class _Compiler:
     def _compile_apply(self, expr: Apply, ctx: _FnCtx) -> IrRegister:
         """Function application, dispatched at compile time:
 
+        * ``(host/write-byte b)`` etc. → move arg into scratch reg 0,
+          emit ``IrOp.SYSCALL IrImmediate(num) IrRegister(0)``.
+          The JVM backend's ``__ca_syscall`` helper dispatches on
+          the platform-independent syscall number.
         * ``(+ a b)`` and other binary builtins → emit the
           corresponding ``IrOp`` directly (one IR instruction).
         * ``(f a b)`` where ``f`` is a top-level function → emit
@@ -539,6 +638,54 @@ class _Compiler:
         """
         if isinstance(expr.fn, VarRef):
             name = expr.fn.name
+
+            # Module-qualified call: any name containing an interior ``/``
+            # (not at position 0 or the last position) is module-scoped.
+            # Two sub-categories:
+            #
+            # 1. ``host/*`` — the synthetic host module whose exports
+            #    lower to platform-independent syscall numbers.  Handled
+            #    by ``_HOST_SYSCALLS`` lookup.
+            #
+            # 2. ``user/module/fn`` (TW04 Phase 4d) — a call to a
+            #    function exported by another Twig module in the same
+            #    build.  The compiler cannot see that module's parameter
+            #    list here (multi-module compilation doesn't share a
+            #    global function table across modules), so we trust the
+            #    programmer's call site arity and emit a ``IrOp.CALL``
+            #    with the qualified label.  The JVM backend decomposes
+            #    ``"a/math/add"`` → ``invokestatic a/math.add()I``.
+            _slash = name.find("/")
+            if _slash > 0 and _slash < len(name) - 1:
+                # Module-qualified host call (``host/write-byte`` etc.)
+                num = _HOST_SYSCALLS.get(name)
+                if num is not None:
+                    # Host syscall path (unchanged from Phase 4c).
+                    if num == 2:  # read-byte — no user arg, result into fresh reg
+                        dest = self._fresh_holding(ctx)
+                        self._emit(IrOp.SYSCALL, IrImmediate(num), dest)
+                        return dest
+                    # write-byte (1) or exit (10) — one user arg
+                    arg_regs = [self._compile_expr(a, ctx) for a in expr.args]
+                    self._emit_move(IrRegister(_REG_SCRATCH), arg_regs[0])
+                    self._emit(IrOp.SYSCALL, IrImmediate(num), IrRegister(_REG_SCRATCH))
+                    # Return the scratch reg; callers treat host calls as
+                    # returning NIL/0, and the value there is irrelevant.
+                    return IrRegister(_REG_SCRATCH)
+
+                # TW04 Phase 4d: user-module cross-module call.
+                # Emit each arg into a holding reg, move to param slots,
+                # then IrOp.CALL with the fully-qualified label.  The JVM
+                # backend lowers this to ``invokestatic`` on the foreign
+                # class (see ``_discover_callable_regions`` + CALL emission
+                # in ``ir-to-jvm-class-file``).
+                arg_regs_xm = [self._compile_expr(a, ctx) for a in expr.args]
+                for i, src in enumerate(arg_regs_xm):
+                    self._emit_move(IrRegister(_REG_PARAM_BASE + i), src)
+                self._emit(IrOp.CALL, IrLabel(name))
+                dest = self._fresh_holding(ctx)
+                self._emit_move(dest, IrRegister(_REG_HALT_RESULT))
+                return dest
 
             if name in _V1_REJECTED_BUILTINS:
                 raise TwigCompileError(
@@ -931,4 +1078,277 @@ def run_source(
         stdout=proc.stdout,
         stderr=proc.stderr,
         returncode=proc.returncode,
+    )
+
+
+# ---------------------------------------------------------------------------
+# TW04 Phase 4d — multi-module compilation
+# ---------------------------------------------------------------------------
+
+
+def module_name_to_jvm_class(name: str) -> str:
+    """Map a Twig module name to its JVM internal class name.
+
+    JVM internal class names already use ``/`` as the package separator,
+    so the mapping is the identity transformation for Phase 4d.
+
+    Examples
+    --------
+    >>> module_name_to_jvm_class("user/hello")
+    'user/hello'
+    >>> module_name_to_jvm_class("stdlib/io")
+    'stdlib/io'
+    >>> module_name_to_jvm_class("a/math")
+    'a/math'
+
+    The synthetic ``host`` module has no JVM class — callers should
+    filter it out before calling this function.
+    """
+    # Identity: forward slashes are the JVM package separator already.
+    return name
+
+
+def _compile_one_module(
+    module: ResolvedModule,
+    *,
+    is_entry: bool,
+    optimize: bool,
+) -> ModuleCompileResult:
+    """Compile one ``ResolvedModule`` to a ``JVMClassArtifact``.
+
+    Every module class in a multi-module build uses the shared
+    ``TwigRuntime`` register file (``external_runtime_class`` set to
+    ``TWIG_RUNTIME_BINARY_NAME``).  The entry module gets a ``main()``
+    wrapper; all other modules do not.
+
+    Raises :class:`PackageError` on any compilation failure, tagging it
+    with the module name and the stage that failed.
+    """
+    jvm_class_name = module_name_to_jvm_class(module.name)
+    stage_prefix = f"module:{module.name}"
+
+    try:
+        compiler = _Compiler()
+        raw_ir = compiler.compile(module.program)
+    except TwigCompileError:
+        raise
+    except Exception as exc:  # pragma: no cover
+        raise PackageError(f"{stage_prefix}:ir-emit", str(exc), exc) from exc
+
+    if optimize:
+        optimization = IrOptimizer.default_passes().optimize(raw_ir)
+        optimized_ir = optimization.program
+    else:
+        optimized_ir = raw_ir
+
+    # Build closure_free_var_counts and closure_explicit_arities from the
+    # lifted-lambda table (mirrors compile_source).
+    closure_free_var_counts: dict[str, int] = {}
+    closure_explicit_arities: dict[str, int] = {}
+    for lifted_name, captures, lam in compiler._lifted_lambdas:  # noqa: SLF001
+        closure_free_var_counts[lifted_name] = len(captures)
+        closure_explicit_arities[lifted_name] = len(lam.params)
+
+    # TW04 Phase 4d: exported functions are only called from OTHER modules
+    # via cross-module invokestatic, so _discover_callable_regions would
+    # not include them (no local CALL targets them).  Pass exports as
+    # extra_callable_labels so the backend emits them as public methods.
+    module_decl = module.program.module
+    extra_callable = tuple(module_decl.exports) if module_decl else ()
+
+    config = JvmBackendConfig(
+        class_name=jvm_class_name,
+        emit_main_wrapper=is_entry,
+        closure_free_var_counts=closure_free_var_counts,
+        closure_explicit_arities=closure_explicit_arities,
+        # TW04 Phase 4d: all module classes share one register file via
+        # TwigRuntime.  Each module's class accesses __ca_regs and
+        # __ca_objregs there rather than defining its own static fields.
+        external_runtime_class=TWIG_RUNTIME_BINARY_NAME,
+        extra_callable_labels=extra_callable,
+    )
+
+    _HEAP_IR_OPS = frozenset({
+        IrOp.MAKE_CONS, IrOp.CAR, IrOp.CDR, IrOp.IS_NULL, IrOp.IS_PAIR,
+        IrOp.MAKE_SYMBOL, IrOp.IS_SYMBOL, IrOp.LOAD_NIL,
+    })
+    uses_heap_ir = any(
+        i.opcode in _HEAP_IR_OPS for i in optimized_ir.instructions
+    )
+
+    try:
+        if closure_free_var_counts or uses_heap_ir:
+            multi = lower_ir_to_jvm_classes(optimized_ir, config)
+            artifact = multi.main
+        else:
+            multi = None
+            artifact = lower_ir_to_jvm_class_file(optimized_ir, config)
+    except Exception as exc:
+        raise PackageError(f"{stage_prefix}:lower-jvm", str(exc), exc) from exc
+
+    return ModuleCompileResult(
+        module_name=module.name,
+        jvm_class_name=jvm_class_name,
+        ir_program=optimized_ir,
+        artifact=artifact,
+        is_entry=is_entry,
+        multi_class_artifact=multi,
+    )
+
+
+def compile_modules(
+    modules: list[ResolvedModule],
+    *,
+    entry_module: str,
+    optimize: bool = True,
+) -> MultiModuleResult:
+    """Compile a set of Twig modules to JVM class files.
+
+    ``modules`` must be in topological order (deps before importers),
+    as returned by :func:`twig.resolve_modules`.  The ``host``
+    synthetic module is automatically skipped — its exports lower to
+    ``IrOp.SYSCALL`` instructions in each module's IR, not to a
+    separate ``.class`` file.
+
+    Parameters
+    ----------
+    modules:
+        Topologically ordered list of resolved modules.  The entry
+        module must appear last (or at least once) in the list.
+    entry_module:
+        The name of the module whose ``_start`` region gets a
+        ``main([Ljava/lang/String;)V`` wrapper, making it the JVM
+        program's entry point.
+    optimize:
+        Pass ``True`` (the default) to run the IR optimizer before
+        lowering.
+
+    Returns
+    -------
+    MultiModuleResult
+        Contains the shared ``TwigRuntime`` artifact and one
+        ``ModuleCompileResult`` per non-``host`` module.
+
+    Raises
+    ------
+    PackageError
+        If any module fails to compile.
+    ValueError
+        If ``entry_module`` does not appear in ``modules``.
+    """
+    entry_names = {m.name for m in modules}
+    if entry_module not in entry_names:
+        raise ValueError(
+            f"entry_module {entry_module!r} not found in the provided "
+            f"module list.  Available: {sorted(entry_names)}"
+        )
+
+    runtime_artifact = build_runtime_class_artifact()
+
+    results: list[ModuleCompileResult] = []
+    for module in modules:
+        if module.name == HOST_MODULE_NAME:
+            # host is synthetic — no .class emitted; its exports become
+            # SYSCALL instructions in the IR of importing modules.
+            continue
+        is_entry = (module.name == entry_module)
+        result = _compile_one_module(module, is_entry=is_entry, optimize=optimize)
+        results.append(result)
+
+    return MultiModuleResult(
+        runtime_artifact=runtime_artifact,
+        modules=results,
+        entry_class_name=module_name_to_jvm_class(entry_module),
+    )
+
+
+def run_modules(
+    modules: list[ResolvedModule],
+    *,
+    entry_module: str,
+    optimize: bool = True,
+    timeout_seconds: int = 30,
+) -> MultiModuleExecutionResult:
+    """Compile a multi-module Twig program and execute it on real ``java``.
+
+    Bundles the compiled classes (TwigRuntime + all module classes +
+    closure/heap runtime helpers) into a JAR and invokes
+    ``java -jar <jar>`` as a subprocess.  The JAR manifest sets
+    ``Main-Class`` to the entry module's JVM class name.
+
+    Classes are deduplicated by ``class_filename`` when multiple modules
+    request the same runtime helper (e.g. the ``Closure`` interface or
+    the ``Nil`` singleton).
+
+    Parameters
+    ----------
+    modules, entry_module, optimize:
+        Forwarded to :func:`compile_modules`.
+    timeout_seconds:
+        Maximum wall-clock time for the ``java`` invocation.
+
+    Returns
+    -------
+    MultiModuleExecutionResult
+        The compile result plus the subprocess stdout/stderr/exit code.
+
+    Raises
+    ------
+    PackageError
+        If any module fails to compile.
+    RuntimeError
+        If no ``java`` binary is on PATH.
+    """
+    if not java_available():
+        raise RuntimeError(
+            "No java binary found on PATH.  "
+            "Install a JRE/JDK (e.g. `brew install openjdk`) to run "
+            "multi-module Twig programs on the JVM."
+        )
+
+    multi = compile_modules(modules, entry_module=entry_module, optimize=optimize)
+
+    from jvm_jar_writer import JarManifest, write_jar
+
+    # Collect all class bytes, deduplicating by class_filename.
+    # Ordering: TwigRuntime first, then module classes in topological
+    # order, then shared runtime helpers (Closure, Cons, Symbol, Nil)
+    # deduplicated across all modules.
+    seen: dict[str, bytes] = {}
+
+    def _add_artifact(art: JVMClassArtifact) -> None:
+        key = art.class_filename
+        if key not in seen:
+            seen[key] = art.class_bytes
+
+    _add_artifact(multi.runtime_artifact)
+
+    for m in multi.modules:
+        if m.multi_class_artifact is not None:
+            for cls_artifact in m.multi_class_artifact.classes:
+                _add_artifact(cls_artifact)
+        else:
+            _add_artifact(m.artifact)
+
+    jar_classes = tuple(seen.items())
+    jar_bytes = write_jar(
+        jar_classes,
+        JarManifest(main_class=multi.entry_class_name),
+    )
+
+    with tempfile.TemporaryDirectory() as tmp:
+        jar_path = Path(tmp) / "program.jar"
+        jar_path.write_bytes(jar_bytes)
+        proc = subprocess.run(
+            ["java", "-jar", str(jar_path)],
+            capture_output=True,
+            timeout=timeout_seconds,
+            check=False,
+        )
+
+    return MultiModuleExecutionResult(
+        multi=multi,
+        stdout=proc.stdout,
+        stderr=proc.stderr,
+        exit_code=proc.returncode,
     )

@@ -4,6 +4,8 @@
 
 - Parse natural SWI CLP(FD) infix syntax such as `X in 1..4`,
   `[X,Y] ins 1..4`, and `Z #= X + Y`.
+- Expose `parse_swi_term(...)` for single-term parsing with named variable
+  bindings.
 
 ## 0.1.0
 

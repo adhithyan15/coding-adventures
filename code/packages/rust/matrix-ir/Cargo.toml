@@ -1,0 +1,10 @@
+[package]
+name = "matrix-ir"
+version = "0.1.0"
+edition = "2021"
+description = "MX01 — pure tensor algebra IR. The upper IR that domain libraries (image processing, neural networks, signal processing) emit when they want computation done. Static-shape, SSA over tensors, zero external dependencies."
+license = "MIT"
+
+[dependencies]
+# No dependencies.  This crate is core/alloc/std only.
+# See specs/MX00 for the zero-dependency mandate.

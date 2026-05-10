@@ -1,0 +1,13 @@
+[package]
+name = "board-vm-bluetooth"
+version = "0.1.0"
+edition = "2021"
+description = "Bluetooth endpoint parsing for Board VM host clients"
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+board-vm-client = { path = "../board-vm-client" }
+board-vm-protocol = { path = "../board-vm-protocol" }
+board-vm-stream = { path = "../board-vm-stream" }

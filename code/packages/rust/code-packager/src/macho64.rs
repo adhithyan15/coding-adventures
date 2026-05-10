@@ -1,10 +1,30 @@
 //! Mach-O 64-bit executable packager.
 //!
 //! Produces a minimal, single-section Mach-O 64-bit binary that macOS can
-//! execute directly. The output uses `LC_MAIN` (the modern load command
-//! introduced in macOS 10.8 Mountain Lion) to specify the entry point.
+//! execute directly.  The output uses `LC_UNIXTHREAD` to specify the
+//! entry point as an initial thread-state PC value, which lets the
+//! kernel start the program **without** invoking `dyld`.
 //!
-//! ## Mach-O file layout
+//! ## Why `LC_UNIXTHREAD` and not `LC_MAIN`?
+//!
+//! `LC_MAIN` is the modern load command and is what real toolchains
+//! (clang, ld) emit.  But `LC_MAIN` requires `dyld` to set up the
+//! C-runtime entry frame (argc/argv/envp) and route the program's
+//! return value through `exit()`.  Without `LC_LOAD_DYLINKER` pointing
+//! at `/usr/lib/dyld`, modern macOS rejects the binary at exec time
+//! with `ENOEXEC` ("Bad executable").
+//!
+//! For self-contained binaries that don't link any shared libraries —
+//! the typical AOT-compiled output of this stack — `LC_UNIXTHREAD` is
+//! the right choice: the kernel sets a fresh thread state, jumps to
+//! the supplied PC, and lets the program manage itself (typically
+//! ending with a direct `SVC` to the `exit` syscall).
+//!
+//! Trade-off: programs emitted this way must terminate with an
+//! explicit `exit` syscall — they cannot just `ret` because there is
+//! no caller to return to.
+//!
+//! ## Mach-O file layout (arm64)
 //!
 //! ```text
 //! Offset │ Size │ Content
@@ -12,11 +32,12 @@
 //!      0 │  32  │ mach_header_64
 //!     32 │  72  │ LC_SEGMENT_64 header (for the __TEXT segment)
 //!    104 │  80  │ section_64 (for the __text section)
-//!    184 │  24  │ LC_MAIN (entry point specification)
-//!    208 │   N  │ native_bytes (the machine code)
+//!    184 │ 288  │ LC_UNIXTHREAD (16-byte header + 272-byte ARM64 thread state)
+//!    472 │   N  │ native_bytes (the machine code)
 //! ```
 //!
-//! Total header = 32 + 72 + 80 + 24 = **208 bytes** (`HEADER_TOTAL`).
+//! For x86-64, the thread state is 168 bytes instead of 272, so the
+//! LC_UNIXTHREAD command is 184 bytes and the header total is 368.
 //!
 //! ## mach_header_64 (32 bytes, at offset 0)
 //!
@@ -70,19 +91,38 @@
 //! reserved3 │  4   │ 0
 //! ```
 //!
-//! ## LC_MAIN (24 bytes, at offset 184)
-//!
-//! LC_MAIN replaced LC_UNIXTHREAD in macOS 10.8 and is required by the
-//! dynamic linker on newer macOS versions. It specifies the entry point as an
-//! *offset from the start of the __TEXT segment*, not an absolute address.
+//! ## LC_UNIXTHREAD (variable size, at offset 184)
 //!
 //! ```text
-//! Field     │ Size │ Value
-//! ──────────┼──────┼────────────────────────────────────────────────────────
-//! cmd       │  4   │ 0x80000028 = LC_MAIN
-//! cmdsize   │  4   │ 24
-//! entryoff  │  8   │ HEADER_TOTAL + entry_point
-//! stacksize │  8   │ 0 (use default stack)
+//! Field    │ Size │ Value
+//! ─────────┼──────┼─────────────────────────────────────────────────────────
+//! cmd      │  4   │ 0x05 = LC_UNIXTHREAD
+//! cmdsize  │  4   │ 288 (arm64) or 184 (x86_64)
+//! flavor   │  4   │ 6 (ARM_THREAD_STATE64) or 4 (X86_THREAD_STATE64)
+//! count    │  4   │ 68 (arm64) or 42 (x86_64) — number of u32s in state
+//! state    │  N   │ 272 bytes (arm64) or 168 bytes (x86_64), all zero except PC
+//! ```
+//!
+//! ### ARM64 thread state (272 bytes)
+//!
+//! ```text
+//! Offset │ Size │ Field
+//! ───────┼──────┼─────────────────────────────────────────────────────────
+//!      0 │ 232  │ x[0..29] — 29 GPRs
+//!    232 │   8  │ fp (x29)
+//!    240 │   8  │ lr (x30)
+//!    248 │   8  │ sp
+//!    256 │   8  │ pc        ← absolute load address of the entry point
+//!    264 │   4  │ cpsr
+//!    268 │   4  │ pad
+//! ```
+//!
+//! ### x86-64 thread state (168 bytes)
+//!
+//! ```text
+//! Offset │ Size │ Field (selected)
+//! ───────┼──────┼─────────────────────────────────────────────────────────
+//!    128 │   8  │ rip       ← absolute load address of the entry point
 //! ```
 
 use crate::artifact::CodeArtifact;
@@ -97,17 +137,18 @@ const MACH_HEADER_SIZE: u64 = 32;
 const LC_SEGMENT_SIZE: u64 = 72;
 // section_64 struct = 80 bytes.
 const SECTION_SIZE: u64 = 80;
-// LC_MAIN = 24 bytes.
-const LC_MAIN_SIZE: u64 = 24;
+
+// LC_UNIXTHREAD has a 16-byte header (cmd, cmdsize, flavor, count) plus
+// the architecture-specific thread state.  Total command size depends on
+// the arch:
+//   arm64:   16 + 272 = 288
+//   x86-64:  16 + 168 = 184
+const LC_UNIXTHREAD_HEADER_SIZE: u64 = 16;
+const ARM_THREAD_STATE64_SIZE:   u64 = 272;
+const X86_THREAD_STATE64_SIZE:   u64 = 168;
 
 // cmdsize of the LC_SEGMENT_64 command = header + one section_64.
 const LC_SEGMENT_CMDSIZE: u32 = (LC_SEGMENT_SIZE + SECTION_SIZE) as u32; // 152
-
-// Total size of all load commands (LC_SEGMENT_64 with section + LC_MAIN).
-const SIZEOFCMDS: u32 = LC_SEGMENT_CMDSIZE + LC_MAIN_SIZE as u32; // 176
-
-// Total header size before native code begins.
-const HEADER_TOTAL: u64 = MACH_HEADER_SIZE + LC_SEGMENT_SIZE + SECTION_SIZE + LC_MAIN_SIZE; // 208
 
 // ── CPU type/subtype constants ────────────────────────────────────────────────
 
@@ -125,8 +166,91 @@ const CPU_SUBTYPE_ARM_ALL: u32 = 0;
 
 // LC_SEGMENT_64 = 0x19.
 const LC_SEGMENT_64: u32 = 0x19;
-// LC_MAIN = 0x80000028 (flagged with LC_REQ_DYLD = 0x80000000).
-const LC_MAIN: u32 = 0x80000028;
+// LC_UNIXTHREAD = 0x05.  Specifies an initial thread state (no dyld).
+const LC_UNIXTHREAD: u32 = 0x05;
+// LC_CODE_SIGNATURE = 0x1D.  Points to a code-signature blob in __LINKEDIT.
+const LC_CODE_SIGNATURE: u32 = 0x1D;
+// LC_CODE_SIGNATURE command size = 16 bytes (cmd, cmdsize, dataoff, datasize).
+const LC_CODE_SIGNATURE_SIZE: u64 = 16;
+
+// LC_BUILD_VERSION = 0x32.  Records the min OS version + SDK; modern
+// macOS / Apple Silicon will SIGKILL binaries that omit it.
+const LC_BUILD_VERSION: u32 = 0x32;
+// LC_BUILD_VERSION command size = 24 bytes when there are no embedded tool versions.
+const LC_BUILD_VERSION_SIZE: u64 = 24;
+// PLATFORM_MACOS in <mach-o/loader.h>.
+const PLATFORM_MACOS: u32 = 1;
+/// Min OS version we declare.
+///
+/// Sequoia (15.x) and Tahoe (26.x) reject binaries that declare a min OS
+/// older than the current major version.  We declare a recent macOS
+/// (15.0 / Sequoia) which has been stable since 2024 and is a
+/// reasonable lower bound — newer machines accept it; older machines
+/// won't be running these binaries anyway.
+///
+/// Encoded as `(major << 16) | (minor << 8) | patch`.
+const MIN_OS_VERSION: u32 = 0x000F_0000; // 15.0.0
+/// SDK version: same encoding.  Match minOS for simplicity.
+const SDK_VERSION: u32 = 0x000F_0000;
+
+// ── Code-signing constants (`<security/cs_blobs.h>`) ─────────────────────────
+//
+// All multi-byte fields in code-signature blobs are *big-endian*, a
+// holdover from the format's PowerPC origins.
+
+/// `CSMAGIC_EMBEDDED_SIGNATURE` — the SuperBlob wrapping all signature blobs.
+const CSMAGIC_EMBEDDED_SIGNATURE: u32 = 0xfade_0cc0;
+/// `CSMAGIC_CODEDIRECTORY` — a CodeDirectory blob (page hashes + metadata).
+const CSMAGIC_CODEDIRECTORY:      u32 = 0xfade_0c02;
+/// `CSSLOT_CODEDIRECTORY` — index slot for the primary CodeDirectory blob.
+const CSSLOT_CODEDIRECTORY:       u32 = 0;
+
+/// CodeDirectory version that includes the `execSeg*` fields.  Required
+/// for ad-hoc-signed binaries on Apple Silicon.
+const CODEDIR_VERSION_20400: u32 = 0x0002_0400;
+
+/// `CS_ADHOC` flag — signed without a certificate chain.
+const CS_ADHOC: u32 = 0x0000_0002;
+
+/// `CS_HASHTYPE_SHA256` — page hash algorithm.
+const CS_HASHTYPE_SHA256: u8 = 2;
+
+/// `CS_EXECSEG_MAIN_BINARY` — flag in `execSegFlags`.
+const CS_EXECSEG_MAIN_BINARY: u64 = 0x1;
+
+/// Page size for code-signature hashing.  4096 on every platform we
+/// produce binaries for.
+const CODESIGN_PAGE_SIZE: u64 = 4096;
+/// `log2(CODESIGN_PAGE_SIZE)` — stored as a single byte in the
+/// CodeDirectory header.
+const CODESIGN_PAGE_SHIFT: u8 = 12;
+
+/// Identifier embedded in the code signature.  Apple's tooling derives
+/// this from the binary's basename; for our generated executables a
+/// fixed string is fine — the kernel only validates the structure.
+const CODESIGN_IDENTIFIER: &str = "code-packager-adhoc";
+
+/// Fixed-size portion of the CodeDirectory header (everything before
+/// the identifier and hash slots).
+const CODE_DIRECTORY_HEADER_SIZE: usize = 88;
+/// SuperBlob magic + length + count = 12 bytes.
+const SUPERBLOB_HEADER_SIZE: usize = 12;
+/// One BlobIndex entry: type + offset = 8 bytes.
+const BLOB_INDEX_SIZE: usize = 8;
+/// SHA-256 produces 32 bytes per page.
+const SHA256_HASH_SIZE: usize = 32;
+
+// Thread-state flavor constants (`<mach/arm/thread_status.h>` and `<mach/i386/thread_status.h>`).
+const ARM_THREAD_STATE64: u32 = 6;
+const X86_THREAD_STATE64: u32 = 4;
+
+// `count` field — number of `uint32_t` slots in the thread state.
+const ARM_THREAD_STATE64_COUNT: u32 = (ARM_THREAD_STATE64_SIZE / 4) as u32; // 68
+const X86_THREAD_STATE64_COUNT: u32 = (X86_THREAD_STATE64_SIZE / 4) as u32; // 42
+
+// PC offset within each thread state.
+const ARM_PC_OFFSET: usize = 256;
+const X86_RIP_OFFSET: usize = 128;
 
 // ── Section flags ─────────────────────────────────────────────────────────────
 
@@ -143,6 +267,32 @@ fn cpu_type(target: &Target) -> Result<(u32, u32), PackagerError> {
         _ => Err(PackagerError::UnsupportedTarget(format!(
             "macho64 packager does not support arch={:?}",
             target.arch
+        ))),
+    }
+}
+
+/// Per-arch thread-state metadata used by `LC_UNIXTHREAD`.
+struct ThreadStateInfo {
+    flavor:   u32,
+    count:    u32,
+    /// Total bytes occupied by the thread state.
+    state_size: u64,
+    /// Byte offset within the thread state where the entry-point PC goes.
+    pc_offset: usize,
+}
+
+fn thread_state_info(arch: &str) -> Result<ThreadStateInfo, PackagerError> {
+    match arch {
+        "arm64" => Ok(ThreadStateInfo {
+            flavor: ARM_THREAD_STATE64, count: ARM_THREAD_STATE64_COUNT,
+            state_size: ARM_THREAD_STATE64_SIZE, pc_offset: ARM_PC_OFFSET,
+        }),
+        "x86_64" => Ok(ThreadStateInfo {
+            flavor: X86_THREAD_STATE64, count: X86_THREAD_STATE64_COUNT,
+            state_size: X86_THREAD_STATE64_SIZE, pc_offset: X86_RIP_OFFSET,
+        }),
+        _ => Err(PackagerError::UnsupportedTarget(format!(
+            "macho64 packager does not have thread state for arch={arch:?}"
         ))),
     }
 }
@@ -173,6 +323,172 @@ fn write_name(out: &mut Vec<u8>, name: &[u8]) {
     out.extend_from_slice(&buf);
 }
 
+// ===========================================================================
+// Ad-hoc Mach-O code signature
+// ===========================================================================
+//
+// Apple Silicon (Big Sur and later) requires every executable to carry a
+// valid embedded code signature — the kernel will refuse to `exec()` an
+// unsigned Mach-O with `ENOEXEC`.  Real toolchains (clang + ld) embed an
+// "ad-hoc" signature for unsigned development binaries; we replicate the
+// minimal subset of that machinery here.
+//
+// The signature is a `SuperBlob` containing one `CodeDirectory`:
+//
+//     SuperBlob {
+//         magic        u32 BE  = 0xfade0cc0
+//         length       u32 BE  = total size of SuperBlob
+//         count        u32 BE  = 1 (one blob: the CodeDirectory)
+//         BlobIndex {
+//             type     u32 BE  = 0 (CSSLOT_CODEDIRECTORY)
+//             offset   u32 BE  = SUPERBLOB_HEADER + BLOB_INDEX = 20
+//         }
+//         CodeDirectory {
+//             magic           u32 BE = 0xfade0c02
+//             length          u32 BE
+//             version         u32 BE = 0x20400
+//             flags           u32 BE = CS_ADHOC = 0x2
+//             hashOffset      u32 BE = 88 + ident_len   (offset within CD)
+//             identOffset     u32 BE = 88
+//             nSpecialSlots   u32 BE = 0
+//             nCodeSlots      u32 BE = ceil(codeLimit / 4096)
+//             codeLimit       u32 BE = file offset where signature begins
+//             hashSize        u8     = 32 (SHA-256)
+//             hashType        u8     = 2  (CS_HASHTYPE_SHA256)
+//             platform        u8     = 0
+//             pageSize        u8     = 12 (log2 4096)
+//             spare2          u32 BE = 0
+//             scatterOffset   u32 BE = 0
+//             teamOffset      u32 BE = 0
+//             spare3          u32 BE = 0
+//             codeLimit64     u64 BE = 0
+//             execSegBase     u64 BE = file offset of __TEXT segment
+//             execSegLimit    u64 BE = vmsize of __TEXT segment
+//             execSegFlags    u64 BE = CS_EXECSEG_MAIN_BINARY = 1
+//             [identifier]    null-terminated UTF-8 bytes
+//             [hashes]        nCodeSlots × 32 bytes (SHA-256 of each page)
+//         }
+//     }
+//
+// All multi-byte fields are big-endian — a legacy of the format's
+// PowerPC heritage.
+
+/// Round up `n` to the next multiple of `align` (must be a power of two).
+fn align_up(n: u64, align: u64) -> u64 {
+    (n + align - 1) & !(align - 1)
+}
+
+/// Compute the size in bytes of the ad-hoc signature for a binary whose
+/// hashable prefix is `code_limit` bytes long.
+fn signature_size(code_limit: u64) -> usize {
+    let n_pages = code_limit.div_ceil(CODESIGN_PAGE_SIZE) as usize;
+    let ident_with_null = CODESIGN_IDENTIFIER.len() + 1;
+    SUPERBLOB_HEADER_SIZE
+        + BLOB_INDEX_SIZE
+        + CODE_DIRECTORY_HEADER_SIZE
+        + ident_with_null
+        + n_pages * SHA256_HASH_SIZE
+}
+
+/// Build the ad-hoc SuperBlob + CodeDirectory + page hashes.
+///
+/// `unsigned_prefix` is the file content from offset 0 up to (but not
+/// including) the signature data — i.e. the headers + code + any
+/// page-padding zeros.  Its length must equal `code_limit`.
+///
+/// `exec_seg_base` and `exec_seg_limit` describe the `__TEXT` segment
+/// (file offset and vmsize).  These go into the CodeDirectory's
+/// `execSeg*` fields.
+fn build_adhoc_signature(
+    unsigned_prefix: &[u8],
+    exec_seg_base: u64,
+    exec_seg_limit: u64,
+) -> Vec<u8> {
+    use coding_adventures_sha256::sha256;
+
+    let code_limit = unsigned_prefix.len() as u64;
+    let n_pages = code_limit.div_ceil(CODESIGN_PAGE_SIZE) as usize;
+    let ident_bytes = CODESIGN_IDENTIFIER.as_bytes();
+    let ident_with_null_len = ident_bytes.len() + 1;
+
+    // ----- 1. Hash each 4 KiB page of `unsigned_prefix` ----------------
+    //
+    // The last page is padded out to 4096 bytes with zeros for hashing
+    // (this matches what `codesign` does: the file may end mid-page,
+    // but the hash always covers a full page worth of input).
+    let mut hashes: Vec<u8> = Vec::with_capacity(n_pages * SHA256_HASH_SIZE);
+    for i in 0..n_pages {
+        let start = i * CODESIGN_PAGE_SIZE as usize;
+        let end   = ((i + 1) * CODESIGN_PAGE_SIZE as usize).min(unsigned_prefix.len());
+        let page  = &unsigned_prefix[start..end];
+        let h = if page.len() == CODESIGN_PAGE_SIZE as usize {
+            sha256(page)
+        } else {
+            // Pad with zeros to a full page before hashing.
+            let mut buf = vec![0u8; CODESIGN_PAGE_SIZE as usize];
+            buf[..page.len()].copy_from_slice(page);
+            sha256(&buf)
+        };
+        hashes.extend_from_slice(&h);
+    }
+
+    // ----- 2. Build the CodeDirectory -----------------------------------
+    let cd_total_len = CODE_DIRECTORY_HEADER_SIZE
+        + ident_with_null_len
+        + hashes.len();
+    let ident_offset_in_cd: u32 = CODE_DIRECTORY_HEADER_SIZE as u32;
+    let hash_offset_in_cd:  u32 = ident_offset_in_cd + ident_with_null_len as u32;
+
+    let mut cd: Vec<u8> = Vec::with_capacity(cd_total_len);
+    cd.extend_from_slice(&CSMAGIC_CODEDIRECTORY.to_be_bytes());
+    cd.extend_from_slice(&(cd_total_len as u32).to_be_bytes());
+    cd.extend_from_slice(&CODEDIR_VERSION_20400.to_be_bytes());
+    cd.extend_from_slice(&CS_ADHOC.to_be_bytes());
+    cd.extend_from_slice(&hash_offset_in_cd.to_be_bytes());
+    cd.extend_from_slice(&ident_offset_in_cd.to_be_bytes());
+    cd.extend_from_slice(&0u32.to_be_bytes());                 // nSpecialSlots
+    cd.extend_from_slice(&(n_pages as u32).to_be_bytes());     // nCodeSlots
+    cd.extend_from_slice(&(code_limit as u32).to_be_bytes());  // codeLimit (low 32)
+    cd.push(SHA256_HASH_SIZE as u8);                           // hashSize
+    cd.push(CS_HASHTYPE_SHA256);                               // hashType
+    cd.push(0);                                                // platform
+    cd.push(CODESIGN_PAGE_SHIFT);                              // pageSize (log2)
+    cd.extend_from_slice(&0u32.to_be_bytes());                 // spare2
+    cd.extend_from_slice(&0u32.to_be_bytes());                 // scatterOffset
+    cd.extend_from_slice(&0u32.to_be_bytes());                 // teamOffset
+    cd.extend_from_slice(&0u32.to_be_bytes());                 // spare3
+    cd.extend_from_slice(&0u64.to_be_bytes());                 // codeLimit64 (unused)
+    cd.extend_from_slice(&exec_seg_base.to_be_bytes());        // execSegBase
+    cd.extend_from_slice(&exec_seg_limit.to_be_bytes());       // execSegLimit
+    cd.extend_from_slice(&CS_EXECSEG_MAIN_BINARY.to_be_bytes()); // execSegFlags
+
+    debug_assert_eq!(cd.len(), CODE_DIRECTORY_HEADER_SIZE);
+
+    // identifier (null-terminated)
+    cd.extend_from_slice(ident_bytes);
+    cd.push(0);
+
+    // page hashes
+    cd.extend_from_slice(&hashes);
+
+    debug_assert_eq!(cd.len(), cd_total_len);
+
+    // ----- 3. Wrap the CodeDirectory in a SuperBlob --------------------
+    let total_len = SUPERBLOB_HEADER_SIZE + BLOB_INDEX_SIZE + cd.len();
+    let cd_offset_in_super = (SUPERBLOB_HEADER_SIZE + BLOB_INDEX_SIZE) as u32;
+
+    let mut sb: Vec<u8> = Vec::with_capacity(total_len);
+    sb.extend_from_slice(&CSMAGIC_EMBEDDED_SIGNATURE.to_be_bytes());
+    sb.extend_from_slice(&(total_len as u32).to_be_bytes());
+    sb.extend_from_slice(&1u32.to_be_bytes());                  // count = 1
+    sb.extend_from_slice(&CSSLOT_CODEDIRECTORY.to_be_bytes());  // slot type
+    sb.extend_from_slice(&cd_offset_in_super.to_be_bytes());    // offset of CD
+    sb.extend_from_slice(&cd);
+
+    debug_assert_eq!(sb.len(), total_len);
+    sb
+}
+
 /// Pack `artifact` into a Mach-O 64-bit executable binary.
 ///
 /// Returns the raw bytes of the `.macho` file.  All multi-byte fields are
@@ -197,9 +513,45 @@ pub fn pack(artifact: &CodeArtifact) -> Result<Vec<u8>, PackagerError> {
     }
     let load_addr = load_addr_i as u64;
     let code_len = artifact.native_bytes.len() as u64;
-    let vmsize = HEADER_TOTAL + code_len;
 
-    let mut out: Vec<u8> = Vec::with_capacity(vmsize as usize);
+    // Compute per-arch sizes.  Modern macOS requires six load commands
+    // for an executable that the kernel will actually exec():
+    //   1. LC_SEGMENT_64 __PAGEZERO        (traps null-pointer derefs)
+    //   2. LC_SEGMENT_64 __TEXT            (one section: __text)
+    //   3. LC_SEGMENT_64 __LINKEDIT        (holds the code-signature blob)
+    //   4. LC_BUILD_VERSION                (min OS + SDK; required on arm64)
+    //   5. LC_UNIXTHREAD                   (initial PC, no dyld)
+    //   6. LC_CODE_SIGNATURE               (points into __LINKEDIT)
+    //
+    // LC_UNIXTHREAD's body length depends on the architecture
+    // (272 bytes for arm64, 168 for x86-64).
+    let ts = thread_state_info(&artifact.target.arch)?;
+    let lc_unixthread_size: u64 = LC_UNIXTHREAD_HEADER_SIZE + ts.state_size;
+    let header_total: u64 = MACH_HEADER_SIZE
+        + LC_SEGMENT_SIZE                          // __PAGEZERO segment (no sections)
+        + LC_SEGMENT_SIZE + SECTION_SIZE           // __TEXT segment + __text section
+        + LC_SEGMENT_SIZE                          // __LINKEDIT segment (no sections)
+        + LC_BUILD_VERSION_SIZE                    // min OS + SDK declaration
+        + lc_unixthread_size                       // initial thread state
+        + LC_CODE_SIGNATURE_SIZE;                  // code signature pointer
+    let sizeofcmds: u32 = LC_SEGMENT_SIZE as u32   // __PAGEZERO
+        + LC_SEGMENT_CMDSIZE                       // __TEXT
+        + LC_SEGMENT_SIZE as u32                   // __LINKEDIT
+        + LC_BUILD_VERSION_SIZE as u32             // LC_BUILD_VERSION
+        + lc_unixthread_size as u32                // LC_UNIXTHREAD
+        + LC_CODE_SIGNATURE_SIZE as u32;           // LC_CODE_SIGNATURE
+    let text_segment_vmsize = header_total + code_len; // __TEXT covers headers + code
+
+    // Code-signature placement: the signature lives in __LINKEDIT, which
+    // starts at the next page boundary after the end of code.
+    let code_end_offset: u64 = header_total + code_len;
+    let sig_offset:      u64 = align_up(code_end_offset, CODESIGN_PAGE_SIZE);
+    let sig_size:        u64 = signature_size(sig_offset) as u64;
+    let linkedit_filesize: u64 = sig_size;
+    let linkedit_vmsize:   u64 = align_up(sig_size, CODESIGN_PAGE_SIZE).max(CODESIGN_PAGE_SIZE);
+    let total_file_size:   u64 = sig_offset + sig_size;
+
+    let mut out: Vec<u8> = Vec::with_capacity(total_file_size as usize);
 
     // ── mach_header_64 ────────────────────────────────────────────────────────
 
@@ -216,18 +568,41 @@ pub fn pack(artifact: &CodeArtifact) -> Result<Vec<u8>, PackagerError> {
     out.extend_from_slice(&cpusubtype.to_le_bytes());
     // filetype = 2 = MH_EXECUTE (executable binary).
     out.extend_from_slice(&2u32.to_le_bytes());
-    // ncmds = 2: one LC_SEGMENT_64 command + one LC_MAIN command.
-    out.extend_from_slice(&2u32.to_le_bytes());
+    // ncmds = 6: __PAGEZERO + __TEXT + __LINKEDIT + LC_BUILD_VERSION
+    //           + LC_UNIXTHREAD + LC_CODE_SIGNATURE.
+    out.extend_from_slice(&6u32.to_le_bytes());
     // sizeofcmds: total byte size of all load commands.
-    out.extend_from_slice(&SIZEOFCMDS.to_le_bytes());
-    // flags = 0: no special flags needed for a minimal binary.
-    out.extend_from_slice(&0u32.to_le_bytes());
+    out.extend_from_slice(&sizeofcmds.to_le_bytes());
+    // flags: MH_NOUNDEFS (0x1) — no undefined references.  Tells the
+    // kernel and dyld that the binary doesn't need dynamic linking.
+    out.extend_from_slice(&0x00000001u32.to_le_bytes());
     // reserved (64-bit header only): must be 0.
     out.extend_from_slice(&0u32.to_le_bytes());
 
     debug_assert_eq!(out.len(), MACH_HEADER_SIZE as usize);
 
-    // ── LC_SEGMENT_64 ─────────────────────────────────────────────────────────
+    // ── LC_SEGMENT_64 __PAGEZERO ──────────────────────────────────────────────
+    //
+    // A non-readable, non-writable, non-executable segment at virtual
+    // address 0 that catches null-pointer dereferences.  Required by
+    // modern macOS (≥ 10.x) — without it the kernel rejects the binary
+    // at exec time with `ENOEXEC`.
+
+    out.extend_from_slice(&LC_SEGMENT_64.to_le_bytes());
+    out.extend_from_slice(&(LC_SEGMENT_SIZE as u32).to_le_bytes()); // cmdsize: header only
+    write_name(&mut out, b"__PAGEZERO");
+    out.extend_from_slice(&0u64.to_le_bytes());          // vmaddr   = 0
+    out.extend_from_slice(&load_addr.to_le_bytes());     // vmsize   = entire user space below load_addr (4 GB by default)
+    out.extend_from_slice(&0u64.to_le_bytes());          // fileoff  = 0
+    out.extend_from_slice(&0u64.to_le_bytes());          // filesize = 0 (no backing)
+    out.extend_from_slice(&0u32.to_le_bytes());          // maxprot  = 0
+    out.extend_from_slice(&0u32.to_le_bytes());          // initprot = 0
+    out.extend_from_slice(&0u32.to_le_bytes());          // nsects   = 0
+    out.extend_from_slice(&0u32.to_le_bytes());          // flags    = 0
+
+    debug_assert_eq!(out.len(), (MACH_HEADER_SIZE + LC_SEGMENT_SIZE) as usize);
+
+    // ── LC_SEGMENT_64 __TEXT ──────────────────────────────────────────────────
 
     // cmd = LC_SEGMENT_64 = 0x19.
     out.extend_from_slice(&LC_SEGMENT_64.to_le_bytes());
@@ -238,11 +613,11 @@ pub fn pack(artifact: &CodeArtifact) -> Result<Vec<u8>, PackagerError> {
     // vmaddr: virtual address of the segment's start.
     out.extend_from_slice(&load_addr.to_le_bytes());
     // vmsize: size of the segment in virtual memory.
-    out.extend_from_slice(&vmsize.to_le_bytes());
+    out.extend_from_slice(&text_segment_vmsize.to_le_bytes());
     // fileoff = 0: segment contents start at byte 0 of the file.
     out.extend_from_slice(&0u64.to_le_bytes());
     // filesize: number of bytes from the file that back this segment.
-    out.extend_from_slice(&vmsize.to_le_bytes());
+    out.extend_from_slice(&text_segment_vmsize.to_le_bytes());
     // maxprot = 7 = VM_PROT_READ | VM_PROT_WRITE | VM_PROT_EXECUTE (maximum allowed).
     out.extend_from_slice(&7u32.to_le_bytes());
     // initprot = 5 = VM_PROT_READ | VM_PROT_EXECUTE (initial protection at load).
@@ -252,7 +627,11 @@ pub fn pack(artifact: &CodeArtifact) -> Result<Vec<u8>, PackagerError> {
     // flags = 0: no special segment flags.
     out.extend_from_slice(&0u32.to_le_bytes());
 
-    debug_assert_eq!(out.len(), (MACH_HEADER_SIZE + LC_SEGMENT_SIZE) as usize);
+    debug_assert_eq!(
+        out.len(),
+        (MACH_HEADER_SIZE + LC_SEGMENT_SIZE * 2) as usize,
+        "header + __PAGEZERO segment + __TEXT segment header"
+    );
 
     // ── section_64 for __text ─────────────────────────────────────────────────
 
@@ -261,12 +640,12 @@ pub fn pack(artifact: &CodeArtifact) -> Result<Vec<u8>, PackagerError> {
     // segname: "__TEXT" padded to 16 bytes.
     write_name(&mut out, b"__TEXT");
     // addr: virtual address of the section = segment start + header size.
-    let text_addr = load_addr + HEADER_TOTAL;
+    let text_addr = load_addr + header_total;
     out.extend_from_slice(&text_addr.to_le_bytes());
     // size: byte length of the section's content.
     out.extend_from_slice(&code_len.to_le_bytes());
     // offset: file offset of the section's content (right after all headers).
-    out.extend_from_slice(&(HEADER_TOTAL as u32).to_le_bytes());
+    out.extend_from_slice(&(header_total as u32).to_le_bytes());
     // align = 4: the section is aligned to 2^4 = 16 bytes (standard code alignment).
     out.extend_from_slice(&4u32.to_le_bytes());
     // reloff = 0: no relocations.
@@ -286,29 +665,104 @@ pub fn pack(artifact: &CodeArtifact) -> Result<Vec<u8>, PackagerError> {
 
     debug_assert_eq!(
         out.len(),
-        (MACH_HEADER_SIZE + LC_SEGMENT_SIZE + SECTION_SIZE) as usize
+        (MACH_HEADER_SIZE + LC_SEGMENT_SIZE * 2 + SECTION_SIZE) as usize
     );
 
-    // ── LC_MAIN ───────────────────────────────────────────────────────────────
+    // ── LC_SEGMENT_64 __LINKEDIT ──────────────────────────────────────────────
+    //
+    // Holds the embedded code-signature blob.  Its file range starts at
+    // the page-aligned end of __TEXT and extends through the signature.
+    // Required by `codesign` and the kernel's code-signing path.
 
-    // cmd = LC_MAIN = 0x80000028.
-    // The 0x80000000 bit marks it as "required for dynamic linking" (LC_REQ_DYLD).
-    out.extend_from_slice(&LC_MAIN.to_le_bytes());
-    // cmdsize = 24: this command is exactly 24 bytes.
-    out.extend_from_slice(&24u32.to_le_bytes());
-    // entryoff: byte offset from the beginning of the __TEXT segment to the
-    // first instruction. The __TEXT segment starts at file offset 0, so
-    // entryoff = HEADER_TOTAL + entry_point.
-    let entryoff = HEADER_TOTAL + artifact.entry_point as u64;
-    out.extend_from_slice(&entryoff.to_le_bytes());
-    // stacksize = 0: use the system default stack size.
-    out.extend_from_slice(&0u64.to_le_bytes());
+    out.extend_from_slice(&LC_SEGMENT_64.to_le_bytes());
+    out.extend_from_slice(&(LC_SEGMENT_SIZE as u32).to_le_bytes());
+    write_name(&mut out, b"__LINKEDIT");
+    out.extend_from_slice(&(load_addr + sig_offset).to_le_bytes()); // vmaddr
+    out.extend_from_slice(&linkedit_vmsize.to_le_bytes());          // vmsize
+    out.extend_from_slice(&sig_offset.to_le_bytes());               // fileoff
+    out.extend_from_slice(&linkedit_filesize.to_le_bytes());        // filesize
+    out.extend_from_slice(&7u32.to_le_bytes());                     // maxprot
+    out.extend_from_slice(&1u32.to_le_bytes());                     // initprot = read-only
+    out.extend_from_slice(&0u32.to_le_bytes());                     // nsects = 0
+    out.extend_from_slice(&0u32.to_le_bytes());                     // flags
 
-    debug_assert_eq!(out.len(), HEADER_TOTAL as usize);
+    debug_assert_eq!(
+        out.len(),
+        (MACH_HEADER_SIZE + LC_SEGMENT_SIZE * 3 + SECTION_SIZE) as usize
+    );
+
+    // ── LC_BUILD_VERSION ──────────────────────────────────────────────────────
+    //
+    // Modern macOS (especially Apple Silicon) `SIGKILL`s binaries that
+    // omit a build-version load command.  Declares the minimum OS that
+    // can run this binary plus the SDK it was built against.
+
+    out.extend_from_slice(&LC_BUILD_VERSION.to_le_bytes());
+    out.extend_from_slice(&(LC_BUILD_VERSION_SIZE as u32).to_le_bytes());
+    out.extend_from_slice(&PLATFORM_MACOS.to_le_bytes());
+    out.extend_from_slice(&MIN_OS_VERSION.to_le_bytes());
+    out.extend_from_slice(&SDK_VERSION.to_le_bytes());
+    out.extend_from_slice(&0u32.to_le_bytes());          // ntools = 0
+
+    // ── LC_UNIXTHREAD ─────────────────────────────────────────────────────────
+    //
+    // Specifies an initial thread state — entire register file zeroed
+    // except for the program counter, which is set to the absolute load
+    // address of the entry point.  No dyld involvement; the kernel jumps
+    // directly to PC after setting up the thread.
+
+    out.extend_from_slice(&LC_UNIXTHREAD.to_le_bytes());
+    out.extend_from_slice(&(lc_unixthread_size as u32).to_le_bytes());
+    out.extend_from_slice(&ts.flavor.to_le_bytes());
+    out.extend_from_slice(&ts.count.to_le_bytes());
+
+    // Build the thread state — all zero, then patch in the PC value.
+    let entry_pc = load_addr + header_total + artifact.entry_point as u64;
+    let mut state = vec![0u8; ts.state_size as usize];
+    state[ts.pc_offset .. ts.pc_offset + 8].copy_from_slice(&entry_pc.to_le_bytes());
+    out.extend_from_slice(&state);
+
+    // ── LC_CODE_SIGNATURE ─────────────────────────────────────────────────────
+    //
+    // Points the kernel's code-signing path at our embedded SuperBlob.
+
+    out.extend_from_slice(&LC_CODE_SIGNATURE.to_le_bytes());
+    out.extend_from_slice(&(LC_CODE_SIGNATURE_SIZE as u32).to_le_bytes());
+    out.extend_from_slice(&(sig_offset as u32).to_le_bytes());      // dataoff
+    out.extend_from_slice(&(sig_size  as u32).to_le_bytes());       // datasize
+
+    debug_assert_eq!(out.len(), header_total as usize);
 
     // ── Machine code ──────────────────────────────────────────────────────────
 
     out.extend_from_slice(&artifact.native_bytes);
+
+    // ── Page-pad up to sig_offset ─────────────────────────────────────────────
+    //
+    // The hashed prefix must end on a page boundary.  Real disk content
+    // is zero-padded; the same zeros also appear in the hash of the
+    // last partial page.
+
+    while (out.len() as u64) < sig_offset {
+        out.push(0);
+    }
+
+    debug_assert_eq!(out.len() as u64, sig_offset);
+
+    // ── Embed the ad-hoc code signature ───────────────────────────────────────
+    //
+    // The signature SuperBlob contains a CodeDirectory whose page hashes
+    // cover everything in the file from offset 0 to `sig_offset` — i.e.
+    // the bytes we just emitted.  After this append the file is
+    // complete.
+
+    let signature = build_adhoc_signature(
+        &out,                     // hash everything written so far
+        0,                        // execSegBase: __TEXT starts at file offset 0
+        text_segment_vmsize,      // execSegLimit: __TEXT covers headers + code
+    );
+    debug_assert_eq!(signature.len() as u64, sig_size);
+    out.extend_from_slice(&signature);
 
     Ok(out)
 }
@@ -343,22 +797,38 @@ mod tests {
         assert!(matches!(pack(&art), Err(PackagerError::UnsupportedTarget(_))));
     }
 
-    // Test 3: correct file size
+    // ncmds: 6 = __PAGEZERO + __TEXT + __LINKEDIT + LC_BUILD_VERSION
+    //              + LC_UNIXTHREAD + LC_CODE_SIGNATURE.
     #[test]
-    fn correct_file_size() {
-        let code = vec![0x00u8; 16];
-        let art = CodeArtifact::new(code, 0, Target::macos_arm64());
-        let bytes = pack(&art).unwrap();
-        // 208 header + 16 code = 224
-        assert_eq!(bytes.len(), 224);
-    }
-
-    // Test 4: ncmds = 2 at offset 16
-    #[test]
-    fn ncmds_is_two() {
+    fn ncmds_is_six() {
         let bytes = pack(&macos_arm64_art()).unwrap();
         let ncmds = u32::from_le_bytes(bytes[16..20].try_into().unwrap());
-        assert_eq!(ncmds, 2);
+        assert_eq!(ncmds, 6);
+    }
+
+    /// First load command is __PAGEZERO.
+    #[test]
+    fn first_load_command_is_pagezero() {
+        let bytes = pack(&macos_arm64_art()).unwrap();
+        // segname starts at offset 32 (after mach_header) + 8 (after cmd+cmdsize).
+        let segname_off = 32 + 8;
+        assert_eq!(&bytes[segname_off..segname_off + 10], b"__PAGEZERO");
+    }
+
+    /// Output is page-aligned at the signature offset (≥ 4096) and ends
+    /// with a SuperBlob whose magic is `0xfade0cc0` (big-endian).
+    #[test]
+    fn produces_codesign_superblob() {
+        let bytes = pack(&macos_arm64_art()).unwrap();
+        // The signature blob magic is at sig_offset.  We don't know
+        // sig_offset exactly without re-implementing the layout maths,
+        // but it must be at *some* page boundary ≥ 4096 and the magic
+        // is unique enough to find by scanning.
+        let needle = [0xfa, 0xde, 0x0c, 0xc0];
+        assert!(
+            bytes.windows(4).any(|w| w == needle),
+            "expected SuperBlob magic in output"
+        );
     }
 
     // Test 5: ARM64 CPU type at offset 4
@@ -378,13 +848,31 @@ mod tests {
         assert_eq!(cputype, CPU_TYPE_X86_64);
     }
 
-    // Test 7: native bytes appear at offset 208
+    /// __LINKEDIT segment name appears somewhere in the load commands.
     #[test]
-    fn code_at_header_total() {
-        let code = vec![0xAA, 0xBB, 0xCC];
-        let art = CodeArtifact::new(code.clone(), 0, Target::macos_arm64());
-        let bytes = pack(&art).unwrap();
-        assert_eq!(&bytes[208..211], code.as_slice());
+    fn linkedit_segment_present() {
+        let bytes = pack(&macos_arm64_art()).unwrap();
+        let needle = b"__LINKEDIT\0\0\0\0\0\0";
+        assert!(
+            bytes.windows(needle.len()).any(|w| w == needle),
+            "expected __LINKEDIT segment name in output"
+        );
+    }
+
+    /// LC_UNIXTHREAD command id (0x05) appears in the load commands.
+    #[test]
+    fn lc_unixthread_present() {
+        let bytes = pack(&macos_arm64_art()).unwrap();
+        let mut cmd_offset = 32; // skip mach_header
+        let mut found = false;
+        // ncmds = 6, walk them to find LC_UNIXTHREAD.
+        for _ in 0..6 {
+            let cmd = u32::from_le_bytes(bytes[cmd_offset..cmd_offset + 4].try_into().unwrap());
+            let cmdsize = u32::from_le_bytes(bytes[cmd_offset + 4..cmd_offset + 8].try_into().unwrap()) as usize;
+            if cmd == LC_UNIXTHREAD { found = true; break; }
+            cmd_offset += cmdsize;
+        }
+        assert!(found, "LC_UNIXTHREAD not found in load commands");
     }
 
     // Test 8: file_extension

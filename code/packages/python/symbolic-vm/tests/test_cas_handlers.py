@@ -13,7 +13,6 @@ from __future__ import annotations
 
 import math
 
-import pytest
 from symbolic_ir import (
     ADD,
     MUL,
@@ -1216,7 +1215,7 @@ _APART = IRSymbol("Apart")
 _DIV = IRSymbol("Div")
 
 
-def _subst_at(vm: "VM", expr: IRApply, val: int) -> IRNode:
+def _subst_at(vm: VM, expr: IRApply, val: int) -> IRNode:
     """Evaluate ``expr`` with ``x = val`` by calling the Subst handler."""
     return vm.eval(IRApply(_SUBST, (IRInteger(val), x, expr)))
 
@@ -1268,8 +1267,8 @@ def test_expand_rational_function() -> None:
     assert result is not None
 
 
-def test_expand_wrong_arity_passthrough() -> None:
-    """Expand() or Expand(a, b) with wrong arity → unevaluated."""
+def test_expand_wrong_arity_passthrough_two_args() -> None:
+    """Expand(a, b) with two args → unevaluated."""
     vm, _ = make_vm()
     expr = IRApply(_EXPAND, ())
     assert vm.eval(expr) == expr

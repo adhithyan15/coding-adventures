@@ -6,6 +6,38 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- standard `user_input`, `user_output`, and `user_error` stream aliases plus
+  richer accepted `open_optionso/4` metadata for `reposition`, `eof_action`,
+  `buffer`, and `close_on_abort`.
+- `expand_file_nameo/2`, `make_directory_patho/1`,
+  `delete_directory_and_contentso/1`, and `copy_fileo/2` for bounded
+  recursive/wildcard filesystem operations over bound atom/string paths.
+- `directory_fileso/2`, `make_directoryo/1`, `delete_fileo/1`,
+  `delete_directoryo/1`, `rename_fileo/2`, and `working_directoryo/2` for
+  bounded explicit filesystem operations over bound atom/string paths.
+- `exists_directoryo/1`, `absolute_file_nameo/2`, `access_fileo/2`,
+  `file_directory_nameo/2`, `file_base_nameo/2`, `directory_file_patho/3`,
+  `file_name_extensiono/3`, `same_fileo/2`, `size_fileo/2`, and
+  `time_fileo/2` for bounded read-only filesystem/path metadata over bound
+  atom/string paths.
+- `exists_fileo(path)`, `read_file_to_stringo(path, contents)`, and
+  `read_file_to_codeso(path, codes)` for bounded UTF-8 file text I/O from
+  bound atom/string paths.
+- `openo(path, mode, stream)`, `closeo(stream)`, `read_stringo/3`,
+  `read_line_to_stringo/2`, `get_charo/2`, `at_end_of_streamo/1`,
+  `writeo/2`, and `nlo/1` for bounded UTF-8 file stream handles.
+- `open_optionso/4`, `current_streamo/3`, `stream_propertyo/2`, and
+  `flush_outputo/1` for bounded stream aliases, option validation, and
+  metadata.
+- `set_stream_positiono/2` and `seeko/4` for bounded read-stream cursor
+  repositioning.
+- `set_inputo/1`, `set_outputo/1`, `current_inputo/1`, `current_outputo/1`,
+  and current-stream read/write forms for selected bounded streams.
+- `get_codeo/2`, `peek_charo/2`, `peek_codeo/2`, `put_charo/2`,
+  `put_codeo/2`, and current-stream variants for bounded UTF-8
+  character/code stream I/O.
+- `get_byteo/2`, `peek_byteo/2`, `put_byteo/2`, and current-stream variants
+  for bounded binary file stream I/O opened with `type(binary)`.
 - `betweeno(low, high, value)` for finite inclusive integer generation and
   validation, matching the common Prolog `between/3` use case.
 - `integero(term)` for non-bool integer type checks and `succo(predecessor,
@@ -34,13 +66,38 @@ All notable changes to this package will be documented in this file.
   exception control, including catchable structured runtime errors.
 - `term_variableso(term, variables)` for collecting unique reified variables
   in first occurrence order.
+- `numbervarso(term, start, end)` for binding open variables to `'$VAR'(N)`
+  placeholders in first occurrence order.
+- `compound_name_argumentso(term, name, arguments)` and
+  `compound_name_arityo(term, name, arity)` for compound-only term reflection
+  and construction.
+- `acyclic_termo(term)` and `cyclic_termo(term)` for standard finite-term and
+  rational-tree shape checks.
+- `unify_with_occurs_checko(left, right)` and
+  `unifiableo(left, right, unifier)` for explicit finite unification and
+  non-binding unifier inspection.
+- `term_hasho(term, hash)` and `term_hash_boundedo(term, depth, range, hash)`
+  for deterministic structural term hashes.
 - `current_prolog_flago(name, value)` for enumerating read-only runtime flags
   exposed by the Prolog compatibility layer.
 - `set_prolog_flago(name, value)` for branch-local updates to supported
   Prolog runtime flags.
+- `variant_termo(left, right)`, `not_variant_termo(left, right)`, and
+  `subsumes_termo(general, specific)` for non-binding term generality checks.
+- `atom_charso/2`, `atom_codeso/2`, `number_charso/2`, `number_codeso/2`,
+  `char_codeo/2`, `string_charso/2`, and `string_codeso/2` for finite text
+  conversion relations.
+- `atom_concato/3`, `atomic_list_concato/2`,
+  `atomic_list_concato_with_separator/3`, and `number_stringo/2` for finite
+  atom composition and number/string conversion modes.
+- `atom_lengtho/2`, `string_lengtho/2`, `sub_atomo/5`, and `sub_stringo/5`
+  for finite atom/string length and slicing relations.
 
 ### Fixed
 
+- `bagofo(...)` and `setofo(...)` now implement Prolog-style free-variable
+  grouping and `^/2` existential scopes when their goal scope is representable
+  as a callable term.
 - `iftheno(...)` and `ifthenelseo(...)` now preserve rule-local variable
   freshening when their condition and branches can be represented as callable
   terms.

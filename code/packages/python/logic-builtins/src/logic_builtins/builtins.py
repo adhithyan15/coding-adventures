@@ -14,22 +14,38 @@ keeps the user-facing predicates in a separate library layer.
 
 from __future__ import annotations
 
+import glob
+import os
+import shutil
+import sys
 from collections.abc import Callable, Iterable, Iterator
 from dataclasses import dataclass
-from itertools import product
+from hashlib import blake2b
+from itertools import count, product
+from pathlib import Path
 
 from logic_engine import (
     Atom,
     Clause,
     Compound,
+    ConjExpr,
+    CutExpr,
+    DeferredExpr,
+    DisjExpr,
+    EqExpr,
+    FailExpr,
+    FreshExpr,
     GoalExpr,
     LogicVar,
+    NativeGoalExpr,
+    NeqExpr,
     Number,
     Program,
     Relation,
     RelationCall,
     State,
     String,
+    SucceedExpr,
     Term,
     atom,
     clause_body,
@@ -67,25 +83,56 @@ from logic_engine import (
 
 __all__ = [
     "add",
+    "absolute_file_nameo",
+    "acyclic_termo",
+    "access_fileo",
     "all_differento",
     "argo",
+    "atom_concato",
+    "atom_codeso",
+    "atom_charso",
+    "atom_lengtho",
+    "atom_numbero",
     "atomico",
     "atomo",
+    "at_end_of_current_streamo",
+    "at_end_of_streamo",
+    "atomic_list_concato",
+    "atomic_list_concato_with_separator",
     "betweeno",
     "callo",
     "callableo",
+    "call_cleanupo",
     "calltermo",
     "catcho",
+    "closeo",
+    "compound_name_argumentso",
+    "compound_name_arityo",
     "compoundo",
     "compare_termo",
+    "copy_fileo",
     "copytermo",
     "convlisto",
+    "current_atomo",
+    "current_functoro",
     "current_prolog_flago",
     "current_predicateo",
+    "current_inputo",
+    "current_outputo",
+    "current_streamo",
     "cuto",
+    "cyclic_termo",
+    "delete_directory_and_contentso",
+    "delete_directoryo",
+    "delete_fileo",
     "difo",
+    "directory_fileso",
+    "directory_file_patho",
     "dynamico",
     "div",
+    "expand_file_nameo",
+    "exists_fileo",
+    "exists_directoryo",
     "fd_eqo",
     "fd_elemento",
     "fd_geqo",
@@ -108,25 +155,40 @@ __all__ = [
     "fd_sumo",
     "fd_sum_relationo",
     "failo",
+    "falseo",
     "excludeo",
     "FiniteDomainConstraint",
     "FiniteDomainStore",
     "findallo",
+    "file_base_nameo",
+    "file_directory_nameo",
+    "file_name_extensiono",
     "floordiv",
     "foldlo",
     "forallo",
+    "flush_outputo",
+    "flush_current_outputo",
     "functoro",
     "geqo",
+    "get_byteo",
+    "get_charo",
+    "get_codeo",
+    "get_current_byteo",
+    "get_current_charo",
+    "get_current_codeo",
     "gto",
     "groundo",
     "ifthenelseo",
     "iftheno",
+    "ignoreo",
     "integero",
     "includeo",
     "iso",
     "leqo",
     "labelingo",
     "lto",
+    "make_directory_patho",
+    "make_directoryo",
     "maplisto",
     "mod",
     "mul",
@@ -134,13 +196,41 @@ __all__ = [
     "nonvaro",
     "not_same_termo",
     "noto",
+    "numbervarso",
     "numeqo",
     "numneqo",
+    "number_codeso",
+    "number_charso",
+    "number_stringo",
     "numbero",
+    "nlo",
+    "nl_currento",
     "onceo",
+    "openo",
+    "open_optionso",
     "bagofo",
     "partitiono",
+    "peek_byteo",
+    "peek_charo",
+    "peek_codeo",
+    "peek_current_byteo",
+    "peek_current_charo",
+    "peek_current_codeo",
     "predicate_propertyo",
+    "put_byteo",
+    "put_charo",
+    "put_codeo",
+    "put_current_byteo",
+    "put_current_charo",
+    "put_current_codeo",
+    "read_file_to_codeso",
+    "read_file_to_stringo",
+    "read_line_to_stringo",
+    "read_stringo",
+    "read_current_line_to_stringo",
+    "read_current_stringo",
+    "rename_fileo",
+    "repeato",
     "PrologEvaluationError",
     "PrologFlagStore",
     "PrologInstantiationError",
@@ -160,11 +250,25 @@ __all__ = [
     "retractallo",
     "retracto",
     "same_termo",
+    "same_fileo",
     "scanlo",
+    "seeko",
+    "set_inputo",
+    "set_outputo",
     "setofo",
     "set_prolog_flago",
+    "set_stream_positiono",
+    "size_fileo",
+    "setup_call_cleanupo",
+    "char_codeo",
     "clauseo",
+    "string_codeso",
+    "string_charso",
+    "string_lengtho",
     "stringo",
+    "stream_propertyo",
+    "sub_atomo",
+    "sub_stringo",
     "sub",
     "succo",
     "termo_geqo",
@@ -172,10 +276,21 @@ __all__ = [
     "termo_leqo",
     "termo_lto",
     "term_variableso",
+    "term_hash_boundedo",
+    "term_hasho",
     "throwo",
+    "time_fileo",
     "trueo",
     "univo",
+    "unifiableo",
+    "unify_with_occurs_checko",
     "varo",
+    "write_currento",
+    "writeo",
+    "working_directoryo",
+    "not_variant_termo",
+    "subsumes_termo",
+    "variant_termo",
 ]
 
 
@@ -183,10 +298,64 @@ type NativeArgs = tuple[Term, ...]
 type NativeRunner = Callable[[Program, State, NativeArgs], Iterator[State]]
 type NumericValue = int | float
 type TermSortKey = tuple[object, ...]
+type TermHashKey = tuple[object, ...]
 type FdOperator = str
 
 
 _MAX_FD_DOMAIN_SIZE = 10_000
+_DEFAULT_TERM_HASH_RANGE = 2_147_483_647
+
+
+@dataclass(slots=True)
+class _TextStream:
+    """Host-side stream used by the bounded Prolog facade."""
+
+    mode: str
+    path: Path
+    stream_type: str = "text"
+    contents: str = ""
+    binary_contents: bytes = b""
+    cursor: int = 0
+    alias: str | None = None
+    display_name: str | None = None
+    standard_stream: str | None = None
+    option_properties: tuple[Term, ...] = ()
+
+
+_STREAM_IDS = count(1)
+_STANDARD_INPUT_HANDLE = "$stream_user_input"
+_STANDARD_OUTPUT_HANDLE = "$stream_user_output"
+_STANDARD_ERROR_HANDLE = "$stream_user_error"
+_STREAMS: dict[str, _TextStream] = {
+    _STANDARD_INPUT_HANDLE: _TextStream(
+        mode="read",
+        path=Path("<user_input>"),
+        alias="user_input",
+        display_name="user_input",
+        standard_stream="user_input",
+    ),
+    _STANDARD_OUTPUT_HANDLE: _TextStream(
+        mode="append",
+        path=Path("<user_output>"),
+        alias="user_output",
+        display_name="user_output",
+        standard_stream="user_output",
+    ),
+    _STANDARD_ERROR_HANDLE: _TextStream(
+        mode="append",
+        path=Path("<user_error>"),
+        alias="user_error",
+        display_name="user_error",
+        standard_stream="user_error",
+    ),
+}
+_STREAM_ALIASES: dict[str, str] = {
+    "user_input": _STANDARD_INPUT_HANDLE,
+    "user_output": _STANDARD_OUTPUT_HANDLE,
+    "user_error": _STANDARD_ERROR_HANDLE,
+}
+_CURRENT_INPUT_HANDLE: str | None = _STANDARD_INPUT_HANDLE
+_CURRENT_OUTPUT_HANDLE: str | None = _STANDARD_OUTPUT_HANDLE
 
 
 @dataclass(frozen=True, slots=True)
@@ -294,16 +463,25 @@ _DEFAULT_LABELING_OPTIONS = LabelingOptions()
 
 _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("abolisho", 2),
+    ("acyclic_termo", 1),
     ("all_differento", 1),
     ("argo", 3),
     ("assertao", 1),
     ("assertzo", 1),
+    ("atom_concato", 3),
+    ("atom_codeso", 2),
+    ("atom_charso", 2),
+    ("atom_lengtho", 2),
+    ("atom_numbero", 2),
     ("atomico", 1),
     ("atomo", 1),
+    ("atomic_list_concato", 2),
+    ("atomic_list_concato_with_separator", 3),
     ("bagofo", 3),
     ("betweeno", 3),
     ("callableo", 1),
     ("callo", 1),
+    ("call_cleanupo", 2),
     ("calltermo", 1),
     ("calltermo", 2),
     ("calltermo", 3),
@@ -315,12 +493,17 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("catcho", 3),
     ("clauseo", 2),
     ("compare_termo", 3),
+    ("compound_name_argumentso", 3),
+    ("compound_name_arityo", 3),
     ("compoundo", 1),
     ("copytermo", 2),
     ("convlisto", 3),
+    ("current_atomo", 1),
+    ("current_functoro", 2),
     ("current_prolog_flago", 2),
     ("current_predicateo", 2),
     ("cuto", 0),
+    ("cyclic_termo", 1),
     ("difo", 2),
     ("dynamico", 2),
     ("fd_eqo", 2),
@@ -345,6 +528,7 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("fd_sumo", 2),
     ("fd_sum_relationo", 3),
     ("failo", 0),
+    ("falseo", 0),
     ("excludeo", 3),
     ("findallo", 3),
     ("foldlo", 4),
@@ -354,10 +538,15 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("forallo", 2),
     ("functoro", 3),
     ("geqo", 2),
+    ("get_charo", 2),
+    ("get_codeo", 2),
+    ("get_current_charo", 1),
+    ("get_current_codeo", 1),
     ("groundo", 1),
     ("gto", 2),
     ("ifthenelseo", 3),
     ("iftheno", 2),
+    ("ignoreo", 1),
     ("integero", 1),
     ("includeo", 3),
     ("iso", 2),
@@ -374,10 +563,22 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("noto", 1),
     ("numeqo", 2),
     ("numneqo", 2),
+    ("number_codeso", 2),
+    ("number_charso", 2),
+    ("number_stringo", 2),
     ("numbero", 1),
     ("onceo", 1),
     ("partitiono", 4),
+    ("peek_charo", 2),
+    ("peek_codeo", 2),
+    ("peek_current_charo", 1),
+    ("peek_current_codeo", 1),
     ("predicate_propertyo", 3),
+    ("put_charo", 2),
+    ("put_codeo", 2),
+    ("put_current_charo", 1),
+    ("put_current_codeo", 1),
+    ("repeato", 0),
     ("retractallo", 1),
     ("retracto", 1),
     ("same_termo", 2),
@@ -387,8 +588,17 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("scanlo", 7),
     ("setofo", 3),
     ("set_prolog_flago", 2),
+    ("setup_call_cleanupo", 3),
+    ("char_codeo", 2),
+    ("string_codeso", 2),
+    ("string_charso", 2),
+    ("string_lengtho", 2),
     ("stringo", 1),
+    ("sub_atomo", 5),
+    ("sub_stringo", 5),
     ("succo", 2),
+    ("term_hash_boundedo", 4),
+    ("term_hasho", 2),
     ("termo_geqo", 2),
     ("termo_gto", 2),
     ("termo_leqo", 2),
@@ -397,7 +607,12 @@ _BUILTIN_PREDICATES: tuple[tuple[str, int], ...] = (
     ("throwo", 1),
     ("trueo", 0),
     ("univo", 2),
+    ("unifiableo", 3),
+    ("unify_with_occurs_checko", 2),
     ("varo", 1),
+    ("not_variant_termo", 2),
+    ("subsumes_termo", 2),
+    ("variant_termo", 2),
 )
 
 
@@ -453,6 +668,24 @@ def _is_ground(term_value: Term) -> bool:
     if isinstance(term_value, Compound):
         return all(_is_ground(argument) for argument in term_value.args)
     return True
+
+
+def _is_acyclic_term(term_value: Term, visiting: set[int] | None = None) -> bool:
+    """Return True when a term graph contains no recursive compound path."""
+
+    if not isinstance(term_value, Compound):
+        return True
+
+    active = visiting if visiting is not None else set()
+    identity = id(term_value)
+    if identity in active:
+        return False
+
+    active.add(identity)
+    try:
+        return all(_is_acyclic_term(argument, active) for argument in term_value.args)
+    finally:
+        active.remove(identity)
 
 
 def _is_empty_list(term_value: Term) -> bool:
@@ -1588,6 +1821,73 @@ def _collect_template_values(
     ]
 
 
+def _strip_existential_quantifiers(scope: Term) -> tuple[tuple[LogicVar, ...], Term]:
+    """Return variables marked existential by Prolog ``^/2`` collection syntax."""
+
+    variables: list[LogicVar] = []
+    seen: set[LogicVar] = set()
+    current = scope
+    while (
+        isinstance(current, Compound)
+        and current.functor.namespace is None
+        and current.functor.name == "^"
+        and len(current.args) == 2
+    ):
+        quantified, current = current.args
+        for variable in _term_variables_in_order(quantified):
+            if variable not in seen:
+                seen.add(variable)
+                variables.append(variable)
+    return tuple(variables), current
+
+
+def _collection_free_variables(
+    template: Term,
+    scope: Term,
+    state: State,
+) -> tuple[LogicVar, ...]:
+    """Return unquantified goal variables that group ``bagof``/``setof``."""
+
+    reified_template = _reified(template, state)
+    reified_scope = _reified(scope, state)
+    existential_vars, scoped_goal = _strip_existential_quantifiers(reified_scope)
+    template_vars = set(_term_variables_in_order(reified_template))
+    existential_set = set(existential_vars)
+    return tuple(
+        variable
+        for variable in _term_variables_in_order(scoped_goal)
+        if variable not in template_vars and variable not in existential_set
+    )
+
+
+def _group_sort_key(key: tuple[Term, ...]) -> tuple[object, ...]:
+    """Return a deterministic standard-term-order-ish key for one group."""
+
+    return tuple(_term_sort_key(item) for item in key)
+
+
+def _collect_template_groups(
+    program_value: Program,
+    state: State,
+    template: Term,
+    goal: GoalExpr,
+    scope: Term | None,
+) -> list[tuple[tuple[Term, ...], list[Term]]]:
+    """Collect template values, grouped by free variables when a scope exists."""
+
+    if scope is None:
+        values = _collect_template_values(program_value, state, template, goal)
+        return [((), values)] if values else []
+
+    free_vars = _collection_free_variables(template, scope, state)
+    groups: dict[tuple[Term, ...], list[Term]] = {}
+    for inner_state in solve_from(program_value, goal, state):
+        key = tuple(reify(variable, inner_state.substitution) for variable in free_vars)
+        value = reify(template, inner_state.substitution)
+        groups.setdefault(key, []).append(value)
+    return sorted(groups.items(), key=lambda item: _group_sort_key(item[0]))
+
+
 def _unify_collection(
     program_value: Program,
     state: State,
@@ -1599,7 +1899,65 @@ def _unify_collection(
     yield from solve_from(program_value, eq(results, logic_list(values)), state)
 
 
-def findallo(template: object, goal: object, results: object) -> GoalExpr:
+def _unify_collection_group(
+    program_value: Program,
+    state: State,
+    results: Term,
+    values: list[Term],
+    free_vars: tuple[LogicVar, ...],
+    key: tuple[Term, ...],
+) -> Iterator[State]:
+    """Unify one grouped bag/set answer from the outer collection state."""
+
+    bindings = [
+        eq(variable, value)
+        for variable, value in zip(free_vars, key, strict=True)
+    ]
+    yield from solve_from(
+        program_value,
+        conj(*bindings, eq(results, logic_list(values))),
+        state,
+    )
+
+
+def _unify_grouped_collection(
+    program_value: Program,
+    state: State,
+    template: Term,
+    results: Term,
+    groups: list[tuple[tuple[Term, ...], list[Term]]],
+    scope: Term | None,
+    *,
+    unique: bool,
+) -> Iterator[State]:
+    """Unify bag/set groups, binding grouping variables per outer answer."""
+
+    if not groups:
+        return
+    free_vars = (
+        ()
+        if scope is None
+        else _collection_free_variables(template, scope, state)
+    )
+    for key, values in groups:
+        group_values = _unique_sorted_terms(values) if unique else values
+        yield from _unify_collection_group(
+            program_value,
+            state,
+            results,
+            group_values,
+            free_vars,
+            key,
+        )
+
+
+def findallo(
+    template: object,
+    goal: object,
+    results: object,
+    *,
+    scope: Term | None = None,
+) -> GoalExpr:
     """Collect every solution of `goal` into `results`, preserving proof order."""
 
     called_goal = _as_goal(goal)
@@ -1614,7 +1972,10 @@ def findallo(template: object, goal: object, results: object) -> GoalExpr:
         ) -> Iterator[State]:
             template_term, called_goal_term, results_term = args
             try:
-                reified_goal = goal_from_term(_reified(called_goal_term, state))
+                _, scoped_goal = _strip_existential_quantifiers(
+                    _reified(called_goal_term, state),
+                )
+                reified_goal = goal_from_term(scoped_goal)
             except TypeError:
                 return
             values = _collect_template_values(
@@ -1640,11 +2001,18 @@ def findallo(template: object, goal: object, results: object) -> GoalExpr:
     return native_goal(run, template, results)
 
 
-def bagofo(template: object, goal: object, results: object) -> GoalExpr:
-    """Collect a non-empty proof-order bag of solutions."""
+def bagofo(
+    template: object,
+    goal: object,
+    results: object,
+    *,
+    scope: Term | None = None,
+) -> GoalExpr:
+    """Collect a non-empty proof-order bag, grouped by free variables."""
 
     called_goal = _as_goal(goal)
     goal_term = _goal_term_or_none(called_goal)
+    goal_scope = goal_term if scope is None else scope
 
     if goal_term is not None:
 
@@ -1655,86 +2023,117 @@ def bagofo(template: object, goal: object, results: object) -> GoalExpr:
         ) -> Iterator[State]:
             template_term, called_goal_term, results_term = args
             try:
-                reified_goal = goal_from_term(_reified(called_goal_term, state))
+                _, scoped_goal = _strip_existential_quantifiers(
+                    _reified(called_goal_term, state),
+                )
+                reified_goal = goal_from_term(scoped_goal)
             except TypeError:
                 return
-            values = _collect_template_values(
+            groups = _collect_template_groups(
                 program_value,
                 state,
                 template_term,
                 reified_goal,
+                goal_scope,
             )
-            if not values:
-                return
-            yield from _unify_collection(program_value, state, results_term, values)
-
-        return native_goal(run_terms, template, goal_term, results)
-
-    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
-        template_term, results_term = args
-        values = _collect_template_values(
-            program_value,
-            state,
-            template_term,
-            called_goal,
-        )
-        if not values:
-            return
-        yield from _unify_collection(program_value, state, results_term, values)
-
-    return native_goal(run, template, results)
-
-
-def setofo(template: object, goal: object, results: object) -> GoalExpr:
-    """Collect a non-empty sorted set of solutions."""
-
-    called_goal = _as_goal(goal)
-    goal_term = _goal_term_or_none(called_goal)
-
-    if goal_term is not None:
-
-        def run_terms(
-            program_value: Program,
-            state: State,
-            args: NativeArgs,
-        ) -> Iterator[State]:
-            template_term, called_goal_term, results_term = args
-            try:
-                reified_goal = goal_from_term(_reified(called_goal_term, state))
-            except TypeError:
-                return
-            values = _collect_template_values(
+            yield from _unify_grouped_collection(
                 program_value,
                 state,
                 template_term,
-                reified_goal,
-            )
-            if not values:
-                return
-            yield from _unify_collection(
-                program_value,
-                state,
                 results_term,
-                _unique_sorted_terms(values),
+                groups,
+                goal_scope,
+                unique=False,
             )
 
         return native_goal(run_terms, template, goal_term, results)
 
     def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
         template_term, results_term = args
-        values = _collect_template_values(
+        groups = _collect_template_groups(
             program_value,
             state,
             template_term,
             called_goal,
+            goal_scope,
         )
-        if not values:
-            return
-        yield from _unify_collection(
+        yield from _unify_grouped_collection(
             program_value,
             state,
+            template_term,
             results_term,
-            _unique_sorted_terms(values),
+            groups,
+            goal_scope,
+            unique=False,
+        )
+
+    return native_goal(run, template, results)
+
+
+def setofo(
+    template: object,
+    goal: object,
+    results: object,
+    *,
+    scope: Term | None = None,
+) -> GoalExpr:
+    """Collect a non-empty sorted set, grouped by free variables."""
+
+    called_goal = _as_goal(goal)
+    goal_term = _goal_term_or_none(called_goal)
+    goal_scope = goal_term if scope is None else scope
+
+    if goal_term is not None:
+
+        def run_terms(
+            program_value: Program,
+            state: State,
+            args: NativeArgs,
+        ) -> Iterator[State]:
+            template_term, called_goal_term, results_term = args
+            try:
+                _, scoped_goal = _strip_existential_quantifiers(
+                    _reified(called_goal_term, state),
+                )
+                reified_goal = goal_from_term(scoped_goal)
+            except TypeError:
+                return
+            groups = _collect_template_groups(
+                program_value,
+                state,
+                template_term,
+                reified_goal,
+                goal_scope,
+            )
+            yield from _unify_grouped_collection(
+                program_value,
+                state,
+                template_term,
+                results_term,
+                groups,
+                goal_scope,
+                unique=True,
+            )
+
+        return native_goal(run_terms, template, goal_term, results)
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        template_term, results_term = args
+        groups = _collect_template_groups(
+            program_value,
+            state,
+            template_term,
+            called_goal,
+            goal_scope,
+        )
+        yield from _unify_grouped_collection(
+            program_value,
+            state,
+            template_term,
+            results_term,
+            groups,
+            goal_scope,
+            unique=True,
         )
 
     return native_goal(run, template, results)
@@ -1752,10 +2151,26 @@ def failo() -> GoalExpr:
     return engine_fail()
 
 
+def falseo() -> GoalExpr:
+    """Alias for logical failure, matching Prolog's standard `false/0`."""
+
+    return failo()
+
+
 def cuto() -> GoalExpr:
     """Commit to choices made so far in the current search-control frame."""
 
     return cut()
+
+
+def repeato() -> GoalExpr:
+    """Succeed repeatedly, leaving callers to bound search with cut or limits."""
+
+    def run(_program: Program, state: State, _args: NativeArgs) -> Iterator[State]:
+        while True:
+            yield state
+
+    return native_goal(run)
 
 
 def fd_ino(target: object, domain: object) -> GoalExpr:
@@ -3117,6 +3532,83 @@ def calltermo(term_goal: object, *extra_args: object) -> GoalExpr:
     return native_goal(run, _as_callable_term(term_goal), *extra_args)
 
 
+def _runtime_goal(goal_term: Term, state: State) -> GoalExpr | None:
+    """Convert a possibly-bound callable term into an executable goal."""
+
+    try:
+        return goal_from_term(_reified(goal_term, state))
+    except TypeError:
+        return None
+
+
+def _run_cleanup_once(
+    program_value: Program,
+    state: State,
+    cleanup_goal: GoalExpr,
+) -> State:
+    """Run cleanup for its first effectful proof, ignoring ordinary failure."""
+
+    return next(solve_from(program_value, cleanup_goal, state), state)
+
+
+def call_cleanupo(goal: object, cleanup: object) -> GoalExpr:
+    """Run ``cleanup`` after each deterministic ``goal`` proof."""
+
+    called_goal = _as_goal(goal)
+    cleanup_goal = _as_goal(cleanup)
+    goal_term = _goal_term_or_none(called_goal)
+    cleanup_term = _goal_term_or_none(cleanup_goal)
+
+    if goal_term is not None and cleanup_term is not None:
+
+        def run_terms(
+            program_value: Program,
+            state: State,
+            args: NativeArgs,
+        ) -> Iterator[State]:
+            called_goal_term, cleanup_goal_term = args
+            reified_goal = _runtime_goal(called_goal_term, state)
+            reified_cleanup = _runtime_goal(cleanup_goal_term, state)
+            if reified_goal is None or reified_cleanup is None:
+                return
+            try:
+                for goal_state in solve_from(program_value, reified_goal, state):
+                    yield _run_cleanup_once(
+                        program_value,
+                        goal_state,
+                        reified_cleanup,
+                    )
+            except PrologThrown as thrown:
+                cleanup_state = _run_cleanup_once(
+                    program_value,
+                    thrown.state,
+                    reified_cleanup,
+                )
+                raise PrologThrown(thrown.term, cleanup_state) from thrown
+
+        return native_goal(run_terms, goal_term, cleanup_term)
+
+    def run(program_value: Program, state: State, _args: NativeArgs) -> Iterator[State]:
+        try:
+            for goal_state in solve_from(program_value, called_goal, state):
+                yield _run_cleanup_once(program_value, goal_state, cleanup_goal)
+        except PrologThrown as thrown:
+            cleanup_state = _run_cleanup_once(
+                program_value,
+                thrown.state,
+                cleanup_goal,
+            )
+            raise PrologThrown(thrown.term, cleanup_state) from thrown
+
+    return native_goal(run)
+
+
+def setup_call_cleanupo(setup: object, goal: object, cleanup: object) -> GoalExpr:
+    """Run setup once, then run a goal with cleanup semantics."""
+
+    return conj(setup, call_cleanupo(goal, cleanup))
+
+
 def _fresh_logic_vars(
     count: int,
     next_var_id: int,
@@ -3521,6 +4013,37 @@ def onceo(goal: object) -> GoalExpr:
     return native_goal(run)
 
 
+def ignoreo(goal: object) -> GoalExpr:
+    """Run `goal` once, or succeed unchanged when `goal` cannot be proven."""
+
+    called_goal = _as_goal(goal)
+    goal_term = _goal_term_or_none(called_goal)
+
+    if goal_term is not None:
+
+        def run_terms(
+            program_value: Program,
+            state: State,
+            args: NativeArgs,
+        ) -> Iterator[State]:
+            (called_goal_term,) = args
+            try:
+                reified_goal = goal_from_term(_reified(called_goal_term, state))
+            except TypeError:
+                yield state
+                return
+            iterator = solve_from(program_value, reified_goal, state)
+            yield next(iterator, state)
+
+        return native_goal(run_terms, goal_term)
+
+    def run(program_value: Program, state: State, _args: NativeArgs) -> Iterator[State]:
+        iterator = solve_from(program_value, called_goal, state)
+        yield next(iterator, state)
+
+    return native_goal(run)
+
+
 def noto(goal: object) -> GoalExpr:
     """Negation as failure.
 
@@ -3564,6 +4087,26 @@ def groundo(term_value: object) -> GoalExpr:
     def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
         (target,) = args
         yield from _succeed_if(_is_ground(_reified(target, state)), state)
+
+    return native_goal(run, term_value)
+
+
+def acyclic_termo(term_value: object) -> GoalExpr:
+    """Succeed when the current value of ``term_value`` has no cycles."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        (target,) = args
+        yield from _succeed_if(_is_acyclic_term(_reified(target, state)), state)
+
+    return native_goal(run, term_value)
+
+
+def cyclic_termo(term_value: object) -> GoalExpr:
+    """Succeed when the current value of ``term_value`` contains a cycle."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        (target,) = args
+        yield from _succeed_if(not _is_acyclic_term(_reified(target, state)), state)
 
     return native_goal(run, term_value)
 
@@ -3625,6 +4168,2422 @@ def stringo(term_value: object) -> GoalExpr:
     """Succeed when the current value is a string term."""
 
     return _type_checko(term_value, String)
+
+
+def _one_char_atoms_from_text(text: str) -> list[Atom]:
+    """Return a Prolog char list representation for text."""
+
+    return [atom(character) for character in text]
+
+
+def _code_numbers_from_text(text: str) -> list[Number]:
+    """Return a Prolog code list representation for text."""
+
+    return [num(ord(character)) for character in text]
+
+
+def _text_from_char_items(items: list[Term]) -> str | None:
+    characters: list[str] = []
+    for item in items:
+        if (
+            not isinstance(item, Atom)
+            or item.symbol.namespace is not None
+            or len(item.symbol.name) != 1
+        ):
+            return None
+        characters.append(item.symbol.name)
+    return "".join(characters)
+
+
+def _text_from_code_items(items: list[Term]) -> str | None:
+    characters: list[str] = []
+    for item in items:
+        if not isinstance(item, Number):
+            return None
+        value = item.value
+        if not isinstance(value, int):
+            return None
+        try:
+            characters.append(chr(value))
+        except ValueError:
+            return None
+    return "".join(characters)
+
+
+def _number_text(number_value: Number) -> str:
+    """Render a number in a syntax that can be parsed back by Python."""
+
+    return str(number_value.value)
+
+
+def _parse_number_text(text: str) -> Number | None:
+    if text == "":
+        return None
+    try:
+        if any(marker in text for marker in (".", "e", "E")):
+            return num(float(text))
+        return num(int(text))
+    except ValueError:
+        return None
+
+
+def _texto(
+    scalar: object,
+    pieces: object,
+    *,
+    scalar_type: type[Atom] | type[String],
+    from_text: Callable[[str], list[Term]],
+    to_text: Callable[[list[Term]], str | None],
+) -> GoalExpr:
+    """Relate a text-like scalar to either chars or character codes."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        scalar_term, pieces_term = args
+        reified_scalar = _reified(scalar_term, state)
+        if isinstance(reified_scalar, scalar_type):
+            text = (
+                reified_scalar.symbol.name
+                if isinstance(reified_scalar, Atom)
+                else reified_scalar.value
+            )
+            yield from solve_from(
+                program_value,
+                eq(pieces_term, logic_list(from_text(text))),
+                state,
+            )
+            return
+
+        if not isinstance(reified_scalar, LogicVar):
+            return
+
+        items = _proper_list_items(_reified(pieces_term, state))
+        if items is None:
+            return
+        text = to_text(items)
+        if text is None:
+            return
+        constructed = atom(text) if scalar_type is Atom else String(text)
+        yield from solve_from(program_value, eq(scalar_term, constructed), state)
+
+    return native_goal(run, scalar, pieces)
+
+
+def atom_charso(atom_value: object, chars: object) -> GoalExpr:
+    """Relate an atom to a proper list of one-character atoms."""
+
+    return _texto(
+        atom_value,
+        chars,
+        scalar_type=Atom,
+        from_text=_one_char_atoms_from_text,
+        to_text=_text_from_char_items,
+    )
+
+
+def atom_codeso(atom_value: object, codes: object) -> GoalExpr:
+    """Relate an atom to a proper list of Unicode code numbers."""
+
+    return _texto(
+        atom_value,
+        codes,
+        scalar_type=Atom,
+        from_text=_code_numbers_from_text,
+        to_text=_text_from_code_items,
+    )
+
+
+def string_charso(string_value: object, chars: object) -> GoalExpr:
+    """Relate a string term to a proper list of one-character atoms."""
+
+    return _texto(
+        string_value,
+        chars,
+        scalar_type=String,
+        from_text=_one_char_atoms_from_text,
+        to_text=_text_from_char_items,
+    )
+
+
+def string_codeso(string_value: object, codes: object) -> GoalExpr:
+    """Relate a string term to a proper list of Unicode code numbers."""
+
+    return _texto(
+        string_value,
+        codes,
+        scalar_type=String,
+        from_text=_code_numbers_from_text,
+        to_text=_text_from_code_items,
+    )
+
+
+def _number_texto(
+    number_value: object,
+    pieces: object,
+    *,
+    from_text: Callable[[str], list[Term]],
+    to_text: Callable[[list[Term]], str | None],
+) -> GoalExpr:
+    """Relate a number to chars or codes using finite, non-enumerating modes."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        number_term, pieces_term = args
+        reified_number = _reified(number_term, state)
+        if isinstance(reified_number, Number):
+            yield from solve_from(
+                program_value,
+                eq(pieces_term, logic_list(from_text(_number_text(reified_number)))),
+                state,
+            )
+            return
+
+        if not isinstance(reified_number, LogicVar):
+            return
+
+        items = _proper_list_items(_reified(pieces_term, state))
+        if items is None:
+            return
+        text = to_text(items)
+        if text is None:
+            return
+        parsed = _parse_number_text(text)
+        if parsed is None:
+            return
+        yield from solve_from(program_value, eq(number_term, parsed), state)
+
+    return native_goal(run, number_value, pieces)
+
+
+def number_charso(number_value: object, chars: object) -> GoalExpr:
+    """Relate a number to a proper list of one-character atoms."""
+
+    return _number_texto(
+        number_value,
+        chars,
+        from_text=_one_char_atoms_from_text,
+        to_text=_text_from_char_items,
+    )
+
+
+def number_codeso(number_value: object, codes: object) -> GoalExpr:
+    """Relate a number to a proper list of Unicode code numbers."""
+
+    return _number_texto(
+        number_value,
+        codes,
+        from_text=_code_numbers_from_text,
+        to_text=_text_from_code_items,
+    )
+
+
+def atom_numbero(atom_value: object, number_value: object) -> GoalExpr:
+    """Relate an atom to a number parsed from or rendered as text."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        atom_term, number_term = args
+        reified_atom = _reified(atom_term, state)
+        reified_number = _reified(number_term, state)
+
+        if isinstance(reified_number, Number):
+            yield from solve_from(
+                program_value,
+                eq(atom_term, atom(_number_text(reified_number))),
+                state,
+            )
+            return
+
+        if not isinstance(reified_number, LogicVar):
+            return
+        text = _plain_atom_text(reified_atom)
+        if text is None:
+            return
+        parsed = _parse_number_text(text)
+        if parsed is None:
+            return
+        yield from solve_from(program_value, eq(number_term, parsed), state)
+
+    return native_goal(run, atom_value, number_value)
+
+
+def char_codeo(char_value: object, code_value: object) -> GoalExpr:
+    """Relate a one-character atom to its Unicode code number."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        char_term, code_term = args
+        reified_char = _reified(char_term, state)
+        reified_code = _reified(code_term, state)
+
+        if isinstance(reified_char, Atom):
+            if reified_char.symbol.namespace is not None:
+                return
+            text = reified_char.symbol.name
+            if len(text) != 1:
+                return
+            yield from solve_from(program_value, eq(code_term, num(ord(text))), state)
+            return
+
+        if not isinstance(reified_char, LogicVar):
+            return
+        if not isinstance(reified_code, Number):
+            return
+        raw_code = reified_code.value
+        if not isinstance(raw_code, int):
+            return
+        try:
+            character = chr(raw_code)
+        except ValueError:
+            return
+        yield from solve_from(program_value, eq(char_term, atom(character)), state)
+
+    return native_goal(run, char_value, code_value)
+
+
+def _plain_atom_text(term_value: Term) -> str | None:
+    if not isinstance(term_value, Atom) or term_value.symbol.namespace is not None:
+        return None
+    return term_value.symbol.name
+
+
+def _atom_from_text(text: str) -> Atom | None:
+    """Construct an atom unless the prototype cannot represent that text yet."""
+
+    if text == "":
+        return None
+    return atom(text)
+
+
+def _atomic_text(term_value: Term) -> str | None:
+    if isinstance(term_value, Atom):
+        return _plain_atom_text(term_value)
+    if isinstance(term_value, String):
+        return term_value.value
+    if isinstance(term_value, Number):
+        return _number_text(term_value)
+    return None
+
+
+def _non_negative_integer_term(term_value: Term, state: State) -> int | None:
+    value = _reified_integer(term_value, state)
+    if value is None or value < 0:
+        return None
+    return value
+
+
+def _text_lengtho(
+    scalar: object,
+    length: object,
+    *,
+    scalar_type: type[Atom] | type[String],
+) -> GoalExpr:
+    """Relate a text-like scalar to its character length."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        scalar_term, length_term = args
+        reified_scalar = _reified(scalar_term, state)
+        if not isinstance(reified_scalar, scalar_type):
+            return
+        text = (
+            reified_scalar.symbol.name
+            if isinstance(reified_scalar, Atom)
+            else reified_scalar.value
+        )
+        yield from solve_from(program_value, eq(length_term, num(len(text))), state)
+
+    return native_goal(run, scalar, length)
+
+
+def atom_lengtho(atom_value: object, length: object) -> GoalExpr:
+    """Relate an atom to its character length."""
+
+    return _text_lengtho(atom_value, length, scalar_type=Atom)
+
+
+def string_lengtho(string_value: object, length: object) -> GoalExpr:
+    """Relate a string term to its character length."""
+
+    return _text_lengtho(string_value, length, scalar_type=String)
+
+
+def _text_sliceo(
+    text_value: object,
+    before: object,
+    length: object,
+    after: object,
+    sub_text: object,
+    *,
+    scalar_type: type[Atom] | type[String],
+) -> GoalExpr:
+    """Finite relation backing ``sub_atom/5`` and ``sub_string/5``."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        text_term, before_term, length_term, after_term, sub_text_term = args
+        reified_text = _reified(text_term, state)
+        reified_sub_text = _reified(sub_text_term, state)
+
+        if isinstance(reified_text, scalar_type):
+            text = (
+                reified_text.symbol.name
+                if isinstance(reified_text, Atom)
+                else reified_text.value
+            )
+            yield from _run_bound_text_slices(
+                program_value,
+                state,
+                text,
+                before_term,
+                length_term,
+                after_term,
+                sub_text_term,
+                reified_sub_text,
+                scalar_type=scalar_type,
+            )
+            return
+
+        if not isinstance(reified_text, LogicVar):
+            return
+        if (
+            _non_negative_integer_term(before_term, state) != 0
+            or _non_negative_integer_term(after_term, state) != 0
+            or not isinstance(reified_sub_text, scalar_type)
+        ):
+            return
+        text = (
+            reified_sub_text.symbol.name
+            if isinstance(reified_sub_text, Atom)
+            else reified_sub_text.value
+        )
+        constructed = _text_scalar_from_text(text, scalar_type)
+        if constructed is None:
+            return
+        yield from solve_from(
+            program_value,
+            conj(eq(length_term, num(len(text))), eq(text_term, constructed)),
+            state,
+        )
+
+    return native_goal(run, text_value, before, length, after, sub_text)
+
+
+def _run_bound_text_slices(
+    program_value: Program,
+    state: State,
+    text: str,
+    before_term: Term,
+    length_term: Term,
+    after_term: Term,
+    sub_text_term: Term,
+    reified_sub_text: Term,
+    *,
+    scalar_type: type[Atom] | type[String],
+) -> Iterator[State]:
+    before_filter = _bound_non_negative_filter(before_term, state)
+    length_filter = _bound_non_negative_filter(length_term, state)
+    after_filter = _bound_non_negative_filter(after_term, state)
+    sub_text_filter = _bound_text_filter(reified_sub_text, scalar_type)
+    if (
+        before_filter is False
+        or length_filter is False
+        or after_filter is False
+        or sub_text_filter is False
+    ):
+        return
+
+    text_length = len(text)
+    for before_value in range(text_length + 1):
+        for length_value in range(text_length - before_value + 1):
+            after_value = text_length - before_value - length_value
+            substring = text[before_value : before_value + length_value]
+            if before_filter is not None and before_filter != before_value:
+                continue
+            if length_filter is not None and length_filter != length_value:
+                continue
+            if after_filter is not None and after_filter != after_value:
+                continue
+            if sub_text_filter is not None and sub_text_filter != substring:
+                continue
+            constructed_sub_text = _text_scalar_from_text(substring, scalar_type)
+            if constructed_sub_text is None:
+                continue
+            yield from solve_from(
+                program_value,
+                conj(
+                    eq(before_term, num(before_value)),
+                    eq(length_term, num(length_value)),
+                    eq(after_term, num(after_value)),
+                    eq(sub_text_term, constructed_sub_text),
+                ),
+                state,
+            )
+
+
+def _bound_non_negative_filter(term_value: Term, state: State) -> int | bool | None:
+    reified_value = _reified(term_value, state)
+    if isinstance(reified_value, LogicVar):
+        return None
+    value = _integer_value(reified_value)
+    if value is None or value < 0:
+        return False
+    return value
+
+
+def _bound_text_filter(
+    term_value: Term,
+    scalar_type: type[Atom] | type[String],
+) -> str | bool | None:
+    if isinstance(term_value, LogicVar):
+        return None
+    if not isinstance(term_value, scalar_type):
+        return False
+    return term_value.symbol.name if isinstance(term_value, Atom) else term_value.value
+
+
+def _text_scalar_from_text(
+    text: str,
+    scalar_type: type[Atom] | type[String],
+) -> Atom | String | None:
+    if scalar_type is Atom:
+        return _atom_from_text(text)
+    return String(text)
+
+
+def sub_atomo(
+    atom_value: object,
+    before: object,
+    length: object,
+    after: object,
+    sub_atom: object,
+) -> GoalExpr:
+    """Relate an atom to finite substring positions and a sub-atom."""
+
+    return _text_sliceo(
+        atom_value,
+        before,
+        length,
+        after,
+        sub_atom,
+        scalar_type=Atom,
+    )
+
+
+def sub_stringo(
+    string_value: object,
+    before: object,
+    length: object,
+    after: object,
+    sub_string: object,
+) -> GoalExpr:
+    """Relate a string term to finite substring positions and a substring."""
+
+    return _text_sliceo(
+        string_value,
+        before,
+        length,
+        after,
+        sub_string,
+        scalar_type=String,
+    )
+
+
+def atom_concato(left: object, right: object, combined: object) -> GoalExpr:
+    """Relate two atoms to their concatenation using finite modes."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        left_term, right_term, combined_term = args
+        reified_left = _reified(left_term, state)
+        reified_right = _reified(right_term, state)
+        reified_combined = _reified(combined_term, state)
+
+        left_text = _plain_atom_text(reified_left)
+        right_text = _plain_atom_text(reified_right)
+        combined_text = _plain_atom_text(reified_combined)
+
+        if left_text is not None and right_text is not None:
+            joined = _atom_from_text(left_text + right_text)
+            if joined is None:
+                return
+            yield from solve_from(
+                program_value,
+                eq(combined_term, joined),
+                state,
+            )
+            return
+
+        if combined_text is None:
+            return
+
+        if left_text is not None:
+            if combined_text.startswith(left_text):
+                suffix = _atom_from_text(combined_text[len(left_text) :])
+                if suffix is None:
+                    return
+                yield from solve_from(
+                    program_value,
+                    eq(right_term, suffix),
+                    state,
+                )
+            return
+
+        if right_text is not None:
+            if combined_text.endswith(right_text):
+                prefix = _atom_from_text(combined_text[: -len(right_text) or None])
+                if prefix is None:
+                    return
+                yield from solve_from(
+                    program_value,
+                    eq(left_term, prefix),
+                    state,
+                )
+            return
+
+        if not isinstance(reified_left, LogicVar) or not isinstance(
+            reified_right,
+            LogicVar,
+        ):
+            return
+
+        for index in range(len(combined_text) + 1):
+            left_atom = _atom_from_text(combined_text[:index])
+            right_atom = _atom_from_text(combined_text[index:])
+            if left_atom is None or right_atom is None:
+                continue
+            yield from solve_from(
+                program_value,
+                conj(
+                    eq(left_term, left_atom),
+                    eq(right_term, right_atom),
+                ),
+                state,
+            )
+
+    return native_goal(run, left, right, combined)
+
+
+def atomic_list_concato(items: object, combined: object) -> GoalExpr:
+    """Relate a proper list of atomic terms to their concatenated atom."""
+
+    return _atomic_list_concato(items, "", combined)
+
+
+def atomic_list_concato_with_separator(
+    items: object,
+    separator: object,
+    combined: object,
+) -> GoalExpr:
+    """Relate atomic list items, a separator, and their concatenated atom."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        items_term, separator_term, combined_term = args
+        reified_separator = _reified(separator_term, state)
+        separator_text = _atomic_text(reified_separator)
+        if separator_text is None:
+            return
+        yield from _run_atomic_list_concat(
+            program_value,
+            state,
+            items_term,
+            separator_text,
+            combined_term,
+            allow_split=True,
+        )
+
+    return native_goal(run, items, separator, combined)
+
+
+def _atomic_list_concato(
+    items: object,
+    separator_text: str,
+    combined: object,
+) -> GoalExpr:
+    """Build an atomic-list concatenation goal with a fixed separator."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        items_term, combined_term = args
+        yield from _run_atomic_list_concat(
+            program_value,
+            state,
+            items_term,
+            separator_text,
+            combined_term,
+            allow_split=False,
+        )
+
+    return native_goal(run, items, combined)
+
+
+def _run_atomic_list_concat(
+    program_value: Program,
+    state: State,
+    items_term: Term,
+    separator_text: str,
+    combined_term: Term,
+    *,
+    allow_split: bool,
+) -> Iterator[State]:
+    reified_items = _reified(items_term, state)
+    reified_combined = _reified(combined_term, state)
+
+    list_items = _proper_list_items(reified_items)
+    if list_items is not None:
+        texts: list[str] = []
+        for item in list_items:
+            text = _atomic_text(item)
+            if text is None:
+                return
+            texts.append(text)
+        joined = _atom_from_text(separator_text.join(texts))
+        if joined is None:
+            return
+        yield from solve_from(program_value, eq(combined_term, joined), state)
+        return
+
+    if not allow_split or not isinstance(reified_items, LogicVar):
+        return
+
+    combined_text = _plain_atom_text(reified_combined)
+    if combined_text is None or separator_text == "":
+        return
+
+    parts: list[Atom] = []
+    for text in combined_text.split(separator_text):
+        part = _atom_from_text(text)
+        if part is None:
+            return
+        parts.append(part)
+    yield from solve_from(program_value, eq(items_term, logic_list(parts)), state)
+
+
+def number_stringo(number_value: object, string_value: object) -> GoalExpr:
+    """Relate a number to a string term containing its textual representation."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        number_term, string_term = args
+        reified_number = _reified(number_term, state)
+        reified_string = _reified(string_term, state)
+
+        if isinstance(reified_number, Number):
+            yield from solve_from(
+                program_value,
+                eq(string_term, String(_number_text(reified_number))),
+                state,
+            )
+            return
+
+        if not isinstance(reified_number, LogicVar):
+            return
+        if not isinstance(reified_string, String):
+            return
+
+        parsed = _parse_number_text(reified_string.value)
+        if parsed is None:
+            return
+        yield from solve_from(program_value, eq(number_term, parsed), state)
+
+    return native_goal(run, number_value, string_value)
+
+
+def _path_text(term_value: Term) -> str | None:
+    if isinstance(term_value, String):
+        return term_value.value
+    if isinstance(term_value, Atom) and term_value.symbol.namespace is None:
+        return term_value.symbol.name
+    return None
+
+
+def _read_utf8_file(path_text: str) -> str | None:
+    try:
+        return Path(path_text).read_text(encoding="utf-8")
+    except OSError:
+        return None
+    except UnicodeDecodeError:
+        return None
+
+
+def exists_fileo(path_value: object) -> GoalExpr:
+    """Succeed when a bound atom/string path names an existing regular file."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [path_term] = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        if Path(path_text).is_file():
+            yield state
+
+    return native_goal(run, path_value)
+
+
+def exists_directoryo(path_value: object) -> GoalExpr:
+    """Succeed when a bound atom/string path names an existing directory."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [path_term] = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        if Path(path_text).is_dir():
+            yield state
+
+    return native_goal(run, path_value)
+
+
+def absolute_file_nameo(path_value: object, absolute_value: object) -> GoalExpr:
+    """Relate a bound path to a deterministic absolute pathname atom."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, absolute_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            absolute_text = str(Path(path_text).expanduser().resolve(strict=False))
+        except OSError:
+            return
+        yield from solve_from(program_value, eq(absolute_term, atom(absolute_text)), state)
+
+    return native_goal(run, path_value, absolute_value)
+
+
+def _access_mode(term_value: Term) -> int | None:
+    mode_text = _plain_atom_text(term_value)
+    if mode_text == "read":
+        return os.R_OK
+    if mode_text == "write":
+        return os.W_OK
+    if mode_text == "execute":
+        return os.X_OK
+    if mode_text == "exist":
+        return os.F_OK
+    return None
+
+
+def access_fileo(path_value: object, mode_value: object) -> GoalExpr:
+    """Succeed when a bound path has the requested bounded access mode."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, mode_term = args
+        path_text = _path_text(_reified(path_term, state))
+        access_mode = _access_mode(_reified(mode_term, state))
+        if path_text is None or access_mode is None:
+            return
+        if os.access(path_text, access_mode):
+            yield state
+
+    return native_goal(run, path_value, mode_value)
+
+
+def file_directory_nameo(path_value: object, directory_value: object) -> GoalExpr:
+    """Relate a bound path to its directory component as an atom."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, directory_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        directory_text = os.path.dirname(path_text) or "."
+        yield from solve_from(program_value, eq(directory_term, atom(directory_text)), state)
+
+    return native_goal(run, path_value, directory_value)
+
+
+def file_base_nameo(path_value: object, base_value: object) -> GoalExpr:
+    """Relate a bound path to its final path component as an atom."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, base_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        yield from solve_from(
+            program_value,
+            eq(base_term, atom(os.path.basename(path_text))),
+            state,
+        )
+
+    return native_goal(run, path_value, base_value)
+
+
+def directory_file_patho(
+    directory_value: object,
+    file_value: object,
+    path_value: object,
+) -> GoalExpr:
+    """Relate directory/file components to a pathname atom in finite modes."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        directory_term, file_term, path_term = args
+        directory_text = _path_text(_reified(directory_term, state))
+        file_text = _path_text(_reified(file_term, state))
+        path_text = _path_text(_reified(path_term, state))
+
+        goals: list[GoalExpr] = []
+        if directory_text is not None and file_text is not None:
+            goals.append(eq(path_term, atom(str(Path(directory_text) / file_text))))
+        elif path_text is not None:
+            goals.append(eq(directory_term, atom(os.path.dirname(path_text) or ".")))
+            goals.append(eq(file_term, atom(os.path.basename(path_text))))
+        else:
+            return
+
+        yield from solve_from(program_value, conj(*goals), state)
+
+    return native_goal(run, directory_value, file_value, path_value)
+
+
+def _file_name_extension_parts(name_text: str) -> tuple[str, str]:
+    base_text, extension_text = os.path.splitext(name_text)
+    if extension_text.startswith("."):
+        extension_text = extension_text[1:]
+    return base_text, extension_text
+
+
+def _join_file_name_extension(base_text: str, extension_text: str) -> str:
+    if extension_text == "":
+        return base_text
+    return f"{base_text}.{extension_text}"
+
+
+def file_name_extensiono(
+    base_value: object,
+    extension_value: object,
+    name_value: object,
+) -> GoalExpr:
+    """Relate a file base, extension, and name in finite modes."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        base_term, extension_term, name_term = args
+        base_text = _path_text(_reified(base_term, state))
+        extension_text = _plain_atom_text(_reified(extension_term, state))
+        name_text = _path_text(_reified(name_term, state))
+
+        goals: list[GoalExpr] = []
+        if name_text is not None:
+            parsed_base, parsed_extension = _file_name_extension_parts(name_text)
+            goals.append(eq(base_term, atom(parsed_base)))
+            goals.append(eq(extension_term, atom(parsed_extension)))
+        elif base_text is not None and extension_text is not None:
+            goals.append(
+                eq(name_term, atom(_join_file_name_extension(base_text, extension_text))),
+            )
+        else:
+            return
+
+        yield from solve_from(program_value, conj(*goals), state)
+
+    return native_goal(run, base_value, extension_value, name_value)
+
+
+def same_fileo(left_value: object, right_value: object) -> GoalExpr:
+    """Succeed when two bound paths refer to the same existing file."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        left_term, right_term = args
+        left_text = _path_text(_reified(left_term, state))
+        right_text = _path_text(_reified(right_term, state))
+        if left_text is None or right_text is None:
+            return
+        try:
+            if Path(left_text).samefile(right_text):
+                yield state
+        except OSError:
+            return
+
+    return native_goal(run, left_value, right_value)
+
+
+def size_fileo(path_value: object, size_value: object) -> GoalExpr:
+    """Relate a bound regular file path to its byte size."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, size_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            stat_result = Path(path_text).stat()
+        except OSError:
+            return
+        if not Path(path_text).is_file():
+            return
+        yield from solve_from(program_value, eq(size_term, num(stat_result.st_size)), state)
+
+    return native_goal(run, path_value, size_value)
+
+
+def time_fileo(path_value: object, time_value: object) -> GoalExpr:
+    """Relate a bound existing path to its modification timestamp."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, time_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            modified_at = Path(path_text).stat().st_mtime
+        except OSError:
+            return
+        yield from solve_from(program_value, eq(time_term, num(modified_at)), state)
+
+    return native_goal(run, path_value, time_value)
+
+
+def directory_fileso(path_value: object, entries_value: object) -> GoalExpr:
+    """Relate a bound directory path to a sorted list of entry-name atoms."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, entries_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            entries = sorted(path.name for path in Path(path_text).iterdir())
+        except OSError:
+            return
+        yield from solve_from(
+            program_value,
+            eq(entries_term, logic_list([atom(entry) for entry in entries])),
+            state,
+        )
+
+    return native_goal(run, path_value, entries_value)
+
+
+def make_directoryo(path_value: object) -> GoalExpr:
+    """Create one bound directory path if the immediate parent exists."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [path_term] = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            Path(path_text).mkdir()
+        except OSError:
+            return
+        yield state
+
+    return native_goal(run, path_value)
+
+
+def delete_fileo(path_value: object) -> GoalExpr:
+    """Delete one bound regular file path."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [path_term] = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            Path(path_text).unlink()
+        except OSError:
+            return
+        yield state
+
+    return native_goal(run, path_value)
+
+
+def delete_directoryo(path_value: object) -> GoalExpr:
+    """Delete one bound empty directory path."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [path_term] = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            Path(path_text).rmdir()
+        except OSError:
+            return
+        yield state
+
+    return native_goal(run, path_value)
+
+
+def rename_fileo(old_path_value: object, new_path_value: object) -> GoalExpr:
+    """Rename one bound filesystem path to another bound path."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        old_path_term, new_path_term = args
+        old_path_text = _path_text(_reified(old_path_term, state))
+        new_path_text = _path_text(_reified(new_path_term, state))
+        if old_path_text is None or new_path_text is None:
+            return
+        try:
+            Path(old_path_text).rename(new_path_text)
+        except OSError:
+            return
+        yield state
+
+    return native_goal(run, old_path_value, new_path_value)
+
+
+def working_directoryo(old_value: object, new_value: object) -> GoalExpr:
+    """Relate the current working directory and change to a bound directory."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        old_term, new_term = args
+        new_text = _path_text(_reified(new_term, state))
+        if new_text is None:
+            return
+        old_text = os.getcwd()
+        try:
+            os.chdir(new_text)
+        except OSError:
+            return
+        yield from solve_from(program_value, eq(old_term, atom(old_text)), state)
+
+    return native_goal(run, old_value, new_value)
+
+
+def expand_file_nameo(pattern_value: object, matches_value: object) -> GoalExpr:
+    """Relate a bound wildcard path pattern to sorted matching path atoms."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        pattern_term, matches_term = args
+        pattern_text = _path_text(_reified(pattern_term, state))
+        if pattern_text is None:
+            return
+        try:
+            expanded_pattern = os.path.expanduser(pattern_text)
+            matches = sorted(glob.glob(expanded_pattern, recursive=True))
+        except OSError:
+            return
+        yield from solve_from(
+            program_value,
+            eq(matches_term, logic_list([atom(match) for match in matches])),
+            state,
+        )
+
+    return native_goal(run, pattern_value, matches_value)
+
+
+def make_directory_patho(path_value: object) -> GoalExpr:
+    """Create a bound directory path and any missing parents."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [path_term] = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        try:
+            Path(path_text).mkdir(parents=True, exist_ok=True)
+        except OSError:
+            return
+        if Path(path_text).is_dir():
+            yield state
+
+    return native_goal(run, path_value)
+
+
+def delete_directory_and_contentso(path_value: object) -> GoalExpr:
+    """Delete a bound directory path and its contents recursively."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [path_term] = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        path = Path(path_text)
+        if not path.is_dir():
+            return
+        try:
+            shutil.rmtree(path)
+        except OSError:
+            return
+        if not path.exists():
+            yield state
+
+    return native_goal(run, path_value)
+
+
+def copy_fileo(source_value: object, target_value: object) -> GoalExpr:
+    """Copy one bound regular file path to another bound path."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        source_term, target_term = args
+        source_text = _path_text(_reified(source_term, state))
+        target_text = _path_text(_reified(target_term, state))
+        if source_text is None or target_text is None:
+            return
+        if not Path(source_text).is_file():
+            return
+        try:
+            shutil.copyfile(source_text, target_text)
+        except OSError:
+            return
+        if Path(target_text).is_file():
+            yield state
+
+    return native_goal(run, source_value, target_value)
+
+
+def read_file_to_stringo(path_value: object, contents: object) -> GoalExpr:
+    """Relate a bound atom/string path to the file's UTF-8 contents as a string."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, contents_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        text = _read_utf8_file(path_text)
+        if text is None:
+            return
+        yield from solve_from(program_value, eq(contents_term, String(text)), state)
+
+    return native_goal(run, path_value, contents)
+
+
+def read_file_to_codeso(path_value: object, codes: object) -> GoalExpr:
+    """Relate a bound atom/string path to the file's UTF-8 code-point list."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, codes_term = args
+        path_text = _path_text(_reified(path_term, state))
+        if path_text is None:
+            return
+        text = _read_utf8_file(path_text)
+        if text is None:
+            return
+        yield from solve_from(
+            program_value,
+            eq(codes_term, logic_list([num(ord(character)) for character in text])),
+            state,
+        )
+
+    return native_goal(run, path_value, codes)
+
+
+def _mode_text(term_value: Term) -> str | None:
+    text = _plain_atom_text(term_value)
+    if text in {"read", "write", "append"}:
+        return text
+    return None
+
+
+def _stream_handle_text(term_value: Term) -> str | None:
+    text = _plain_atom_text(term_value)
+    if text is None or not text.startswith("$stream_"):
+        return None
+    return text
+
+
+def _stream_alias_text(term_value: Term) -> str | None:
+    text = _plain_atom_text(term_value)
+    if text is None or text.startswith("$stream_"):
+        return None
+    return text
+
+
+def _stream_key(term_value: Term) -> str | None:
+    handle_text = _stream_handle_text(term_value)
+    if handle_text is not None and handle_text in _STREAMS:
+        return handle_text
+    alias_text = _stream_alias_text(term_value)
+    if alias_text is not None:
+        return _STREAM_ALIASES.get(alias_text)
+    return None
+
+
+def _stream_handle() -> Atom:
+    return atom(f"$stream_{next(_STREAM_IDS)}")
+
+
+def _open_text_stream(
+    path_text: str,
+    mode_text: str,
+    *,
+    alias_text: str | None = None,
+    stream_type: str = "text",
+    option_properties: tuple[Term, ...] = (),
+) -> _TextStream | None:
+    path = Path(path_text)
+    try:
+        if stream_type == "text":
+            if mode_text == "read":
+                if not path.is_file():
+                    return None
+                return _TextStream(
+                    mode=mode_text,
+                    path=path,
+                    stream_type=stream_type,
+                    contents=path.read_text(encoding="utf-8"),
+                    alias=alias_text,
+                    option_properties=option_properties,
+                )
+            if mode_text == "write":
+                path.write_text("", encoding="utf-8")
+                return _TextStream(
+                    mode=mode_text,
+                    path=path,
+                    stream_type=stream_type,
+                    alias=alias_text,
+                    option_properties=option_properties,
+                )
+            if mode_text == "append":
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.open("a", encoding="utf-8").close()
+                return _TextStream(
+                    mode=mode_text,
+                    path=path,
+                    stream_type=stream_type,
+                    alias=alias_text,
+                    option_properties=option_properties,
+                )
+        if stream_type == "binary":
+            if mode_text == "read":
+                if not path.is_file():
+                    return None
+                return _TextStream(
+                    mode=mode_text,
+                    path=path,
+                    stream_type=stream_type,
+                    binary_contents=path.read_bytes(),
+                    alias=alias_text,
+                    option_properties=option_properties,
+                )
+            if mode_text == "write":
+                path.write_bytes(b"")
+                return _TextStream(
+                    mode=mode_text,
+                    path=path,
+                    stream_type=stream_type,
+                    alias=alias_text,
+                    option_properties=option_properties,
+                )
+            if mode_text == "append":
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.open("ab").close()
+                return _TextStream(
+                    mode=mode_text,
+                    path=path,
+                    stream_type=stream_type,
+                    alias=alias_text,
+                    option_properties=option_properties,
+                )
+    except OSError:
+        return None
+    except UnicodeDecodeError:
+        return None
+    return None
+
+
+def _boolean_option_value(term_value: Term) -> str | None:
+    value_text = _plain_atom_text(term_value)
+    if value_text in {"true", "false"}:
+        return value_text
+    return None
+
+
+def _open_options(term_value: Term) -> tuple[str | None, str, tuple[Term, ...]] | None:
+    items = _proper_list_items(term_value)
+    if items is None:
+        return None
+
+    alias_text: str | None = None
+    stream_type = "text"
+    has_encoding = False
+    option_properties: list[Term] = []
+    for item in items:
+        if not isinstance(item, Compound) or len(item.args) != 1:
+            return None
+        option_name = item.functor.name if item.functor.namespace is None else None
+        option_arg = item.args[0]
+
+        if option_name == "alias":
+            parsed_alias = _stream_alias_text(option_arg)
+            if parsed_alias is None:
+                return None
+            alias_text = parsed_alias
+            continue
+
+        if option_name == "encoding":
+            encoding_text = _plain_atom_text(option_arg)
+            if encoding_text not in {"utf8", "utf-8"}:
+                return None
+            has_encoding = True
+            option_properties.append(term("encoding", atom("utf8")))
+            continue
+
+        if option_name == "type":
+            parsed_type = _plain_atom_text(option_arg)
+            if parsed_type not in {"text", "binary"}:
+                return None
+            stream_type = parsed_type
+            continue
+
+        if option_name == "reposition":
+            reposition_text = _boolean_option_value(option_arg)
+            if reposition_text is None:
+                return None
+            option_properties.append(term("reposition", atom(reposition_text)))
+            continue
+
+        if option_name == "eof_action":
+            eof_action_text = _plain_atom_text(option_arg)
+            if eof_action_text not in {"eof_code", "error", "reset"}:
+                return None
+            option_properties.append(term("eof_action", atom(eof_action_text)))
+            continue
+
+        if option_name == "buffer":
+            buffer_text = _plain_atom_text(option_arg)
+            if buffer_text not in {"full", "line", "false"}:
+                return None
+            option_properties.append(term("buffer", atom(buffer_text)))
+            continue
+
+        if option_name == "close_on_abort":
+            close_on_abort_text = _boolean_option_value(option_arg)
+            if close_on_abort_text is None:
+                return None
+            option_properties.append(term("close_on_abort", atom(close_on_abort_text)))
+            continue
+
+        return None
+
+    if stream_type == "binary" and has_encoding:
+        return None
+    return (alias_text, stream_type, tuple(option_properties))
+
+
+def _register_stream(handle: Atom, stream: _TextStream) -> bool:
+    handle_text = handle.symbol.name
+    if stream.alias is not None:
+        existing = _STREAM_ALIASES.get(stream.alias)
+        if existing is not None and existing in _STREAMS:
+            return False
+        _STREAM_ALIASES[stream.alias] = handle_text
+    _STREAMS[handle_text] = stream
+    return True
+
+
+def openo(path_value: object, mode_value: object, stream_value: object) -> GoalExpr:
+    """Open a bounded UTF-8 file stream in read, write, or append mode."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, mode_term, stream_term = args
+        path_text = _path_text(_reified(path_term, state))
+        mode_text = _mode_text(_reified(mode_term, state))
+        if path_text is None or mode_text is None:
+            return
+
+        stream = _open_text_stream(path_text, mode_text)
+        if stream is None:
+            return
+
+        handle = _stream_handle()
+        _register_stream(handle, stream)
+        yield from solve_from(program_value, eq(stream_term, handle), state)
+
+    return native_goal(run, path_value, mode_value, stream_value)
+
+
+def open_optionso(
+    path_value: object,
+    mode_value: object,
+    stream_value: object,
+    options_value: object,
+) -> GoalExpr:
+    """Open a bounded UTF-8 file stream with a finite option-list subset."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, mode_term, stream_term, options_term = args
+        path_text = _path_text(_reified(path_term, state))
+        mode_text = _mode_text(_reified(mode_term, state))
+        parsed_options = _open_options(_reified(options_term, state))
+        if path_text is None or mode_text is None or parsed_options is None:
+            return
+
+        alias_text, stream_type, option_properties = parsed_options
+        stream = _open_text_stream(
+            path_text,
+            mode_text,
+            alias_text=alias_text,
+            stream_type=stream_type,
+            option_properties=option_properties,
+        )
+        if stream is None:
+            return
+
+        handle = _stream_handle()
+        if not _register_stream(handle, stream):
+            return
+        yield from solve_from(program_value, eq(stream_term, handle), state)
+
+    return native_goal(run, path_value, mode_value, stream_value, options_value)
+
+
+def closeo(stream_value: object) -> GoalExpr:
+    """Close a bounded stream handle created by ``openo/3``."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        global _CURRENT_INPUT_HANDLE, _CURRENT_OUTPUT_HANDLE
+
+        [stream_term] = args
+        handle_text = _stream_key(_reified(stream_term, state))
+        if handle_text is None or handle_text not in _STREAMS:
+            return
+        if handle_text in {
+            _STANDARD_INPUT_HANDLE,
+            _STANDARD_OUTPUT_HANDLE,
+            _STANDARD_ERROR_HANDLE,
+        }:
+            return
+        stream = _STREAMS.pop(handle_text)
+        if stream.alias is not None:
+            _STREAM_ALIASES.pop(stream.alias, None)
+        if handle_text == _CURRENT_INPUT_HANDLE:
+            _CURRENT_INPUT_HANDLE = None
+        if handle_text == _CURRENT_OUTPUT_HANDLE:
+            _CURRENT_OUTPUT_HANDLE = None
+        yield state
+
+    return native_goal(run, stream_value)
+
+
+def _stream_for_mode(
+    term_value: Term,
+    modes: set[str],
+) -> tuple[str, _TextStream] | None:
+    handle_text = _stream_key(term_value)
+    if handle_text is None:
+        return None
+    stream = _STREAMS.get(handle_text)
+    if stream is None or stream.mode not in modes:
+        return None
+    return handle_text, stream
+
+
+def _read_stream(term_value: Term) -> _TextStream | None:
+    resolved = _stream_for_mode(term_value, {"read"})
+    return None if resolved is None else resolved[1]
+
+
+def _read_text_stream(term_value: Term) -> _TextStream | None:
+    stream = _read_stream(term_value)
+    if stream is None or stream.stream_type != "text":
+        return None
+    return stream
+
+
+def _read_binary_stream(term_value: Term) -> _TextStream | None:
+    stream = _read_stream(term_value)
+    if stream is None or stream.stream_type != "binary":
+        return None
+    return stream
+
+
+def _current_input_stream() -> _TextStream | None:
+    if _CURRENT_INPUT_HANDLE is None:
+        return None
+    stream = _STREAMS.get(_CURRENT_INPUT_HANDLE)
+    if stream is None or stream.mode != "read":
+        return None
+    return stream
+
+
+def _current_input_text_stream() -> _TextStream | None:
+    stream = _current_input_stream()
+    if stream is None or stream.stream_type != "text":
+        return None
+    return stream
+
+
+def _current_input_binary_stream() -> _TextStream | None:
+    stream = _current_input_stream()
+    if stream is None or stream.stream_type != "binary":
+        return None
+    return stream
+
+
+def _current_output_stream_term() -> Atom | None:
+    if _CURRENT_OUTPUT_HANDLE is None:
+        return None
+    stream = _STREAMS.get(_CURRENT_OUTPUT_HANDLE)
+    if stream is None or stream.mode not in {"write", "append"}:
+        return None
+    return atom(_CURRENT_OUTPUT_HANDLE)
+
+
+def _stream_length(stream: _TextStream) -> int:
+    if stream.stream_type == "binary":
+        return len(stream.binary_contents)
+    return len(stream.contents)
+
+
+def current_inputo(stream_value: object) -> GoalExpr:
+    """Unify with the currently selected bounded input stream handle."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [stream_term] = args
+        if _current_input_stream() is None or _CURRENT_INPUT_HANDLE is None:
+            return
+        yield from solve_from(
+            program_value,
+            eq(stream_term, atom(_CURRENT_INPUT_HANDLE)),
+            state,
+        )
+
+    return native_goal(run, stream_value)
+
+
+def current_outputo(stream_value: object) -> GoalExpr:
+    """Unify with the currently selected bounded output stream handle."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [stream_term] = args
+        output_stream = _current_output_stream_term()
+        if output_stream is None:
+            return
+        yield from solve_from(program_value, eq(stream_term, output_stream), state)
+
+    return native_goal(run, stream_value)
+
+
+def set_inputo(stream_value: object) -> GoalExpr:
+    """Select an open bounded read stream as the current input stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        global _CURRENT_INPUT_HANDLE
+
+        [stream_term] = args
+        resolved = _stream_for_mode(_reified(stream_term, state), {"read"})
+        if resolved is None:
+            return
+        _CURRENT_INPUT_HANDLE = resolved[0]
+        yield state
+
+    return native_goal(run, stream_value)
+
+
+def set_outputo(stream_value: object) -> GoalExpr:
+    """Select an open bounded write/append stream as the current output stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        global _CURRENT_OUTPUT_HANDLE
+
+        [stream_term] = args
+        resolved = _stream_for_mode(_reified(stream_term, state), {"write", "append"})
+        if resolved is None:
+            return
+        _CURRENT_OUTPUT_HANDLE = resolved[0]
+        yield state
+
+    return native_goal(run, stream_value)
+
+
+def at_end_of_streamo(stream_value: object) -> GoalExpr:
+    """Succeed when a bounded read stream has consumed all available data."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [stream_term] = args
+        stream = _read_stream(_reified(stream_term, state))
+        if stream is not None and stream.cursor >= _stream_length(stream):
+            yield state
+
+    return native_goal(run, stream_value)
+
+
+def at_end_of_current_streamo() -> GoalExpr:
+    """Succeed when the selected bounded input stream is exhausted."""
+
+    def run(_program: Program, state: State, _args: NativeArgs) -> Iterator[State]:
+        stream = _current_input_stream()
+        if stream is not None and stream.cursor >= _stream_length(stream):
+            yield state
+
+    return native_goal(run)
+
+
+def _stream_position(term_value: object) -> int | None:
+    position = _integer_value(term_value)
+    if position is None or position < 0:
+        return None
+    return position
+
+
+def _set_read_stream_position(stream: _TextStream, position: int) -> bool:
+    if position < 0 or position > _stream_length(stream):
+        return False
+    stream.cursor = position
+    return True
+
+
+def set_stream_positiono(stream_value: object, position_value: object) -> GoalExpr:
+    """Restore a bounded read stream to a captured integer cursor position."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, position_term = args
+        stream = _read_stream(_reified(stream_term, state))
+        position = _stream_position(_reified(position_term, state))
+        if (
+            stream is not None
+            and position is not None
+            and _set_read_stream_position(stream, position)
+        ):
+            yield state
+
+    return native_goal(run, stream_value, position_value)
+
+
+def _seek_target(stream: _TextStream, offset: int, method: str) -> int | None:
+    if method == "bof":
+        return offset
+    if method == "current":
+        return stream.cursor + offset
+    if method == "eof":
+        return _stream_length(stream) + offset
+    return None
+
+
+def _seek_offset(term_value: object) -> int | None:
+    offset = _integer_value(term_value)
+    if offset is not None:
+        return offset
+    if (
+        isinstance(term_value, Compound)
+        and term_value.functor.namespace is None
+        and term_value.functor.name == "-"
+        and len(term_value.args) == 1
+    ):
+        positive_offset = _integer_value(term_value.args[0])
+        if positive_offset is not None:
+            return -positive_offset
+    return None
+
+
+def seeko(
+    stream_value: object,
+    offset_value: object,
+    method_value: object,
+    new_location_value: object,
+) -> GoalExpr:
+    """Move a bounded read stream relative to bof/current/eof."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, offset_term, method_term, new_location_term = args
+        stream = _read_text_stream(_reified(stream_term, state))
+        offset = _seek_offset(_reified(offset_term, state))
+        method = _plain_atom_text(_reified(method_term, state))
+        if stream is None or offset is None or method is None:
+            return
+        target = _seek_target(stream, offset, method)
+        if target is None or not _set_read_stream_position(stream, target):
+            return
+        yield from solve_from(program_value, eq(new_location_term, num(target)), state)
+
+    return native_goal(
+        run,
+        stream_value,
+        offset_value,
+        method_value,
+        new_location_value,
+    )
+
+
+def read_stringo(
+    stream_value: object,
+    length_value: object,
+    string_value: object,
+) -> GoalExpr:
+    """Read up to ``Length`` UTF-8 code points from a bounded read stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, length_term, string_term = args
+        stream = _read_text_stream(_reified(stream_term, state))
+        length = _reified_integer(length_term, state)
+        if stream is None or length is None or length < 0:
+            return
+        start = stream.cursor
+        end = min(start + length, len(stream.contents))
+        stream.cursor = end
+        yield from solve_from(
+            program_value,
+            eq(string_term, String(stream.contents[start:end])),
+            state,
+        )
+
+    return native_goal(run, stream_value, length_value, string_value)
+
+
+def read_current_stringo(length_value: object, string_value: object) -> GoalExpr:
+    """Read up to ``Length`` code points from the selected input stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        length_term, string_term = args
+        stream = _current_input_text_stream()
+        length = _reified_integer(length_term, state)
+        if stream is None or length is None or length < 0:
+            return
+        start = stream.cursor
+        end = min(start + length, len(stream.contents))
+        stream.cursor = end
+        yield from solve_from(
+            program_value,
+            eq(string_term, String(stream.contents[start:end])),
+            state,
+        )
+
+    return native_goal(run, length_value, string_value)
+
+
+def read_line_to_stringo(stream_value: object, string_value: object) -> GoalExpr:
+    """Read one line from a bounded read stream as a string or ``end_of_file``."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, string_term = args
+        stream = _read_text_stream(_reified(stream_term, state))
+        if stream is None:
+            return
+
+        if stream.cursor >= len(stream.contents):
+            yield from solve_from(
+                program_value,
+                eq(string_term, atom("end_of_file")),
+                state,
+            )
+            return
+
+        newline_index = stream.contents.find("\n", stream.cursor)
+        if newline_index == -1:
+            line = stream.contents[stream.cursor :]
+            stream.cursor = len(stream.contents)
+        else:
+            line = stream.contents[stream.cursor : newline_index]
+            stream.cursor = newline_index + 1
+        yield from solve_from(program_value, eq(string_term, String(line)), state)
+
+    return native_goal(run, stream_value, string_value)
+
+
+def read_current_line_to_stringo(string_value: object) -> GoalExpr:
+    """Read one line from the selected input stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [string_term] = args
+        stream = _current_input_text_stream()
+        if stream is None:
+            return
+
+        if stream.cursor >= len(stream.contents):
+            yield from solve_from(
+                program_value,
+                eq(string_term, atom("end_of_file")),
+                state,
+            )
+            return
+
+        newline_index = stream.contents.find("\n", stream.cursor)
+        if newline_index == -1:
+            line = stream.contents[stream.cursor :]
+            stream.cursor = len(stream.contents)
+        else:
+            line = stream.contents[stream.cursor : newline_index]
+            stream.cursor = newline_index + 1
+        yield from solve_from(program_value, eq(string_term, String(line)), state)
+
+    return native_goal(run, string_value)
+
+
+def get_charo(stream_value: object, char_value: object) -> GoalExpr:
+    """Read one character atom from a bounded read stream or ``end_of_file``."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, char_term = args
+        stream = _read_text_stream(_reified(stream_term, state))
+        if stream is None:
+            return
+
+        if stream.cursor >= len(stream.contents):
+            yield from solve_from(
+                program_value,
+                eq(char_term, atom("end_of_file")),
+                state,
+            )
+            return
+
+        character = stream.contents[stream.cursor]
+        stream.cursor += 1
+        yield from solve_from(program_value, eq(char_term, atom(character)), state)
+
+    return native_goal(run, stream_value, char_value)
+
+
+def get_current_charo(char_value: object) -> GoalExpr:
+    """Read one character atom from the selected input stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [char_term] = args
+        stream = _current_input_text_stream()
+        if stream is None:
+            return
+
+        if stream.cursor >= len(stream.contents):
+            yield from solve_from(
+                program_value,
+                eq(char_term, atom("end_of_file")),
+                state,
+            )
+            return
+
+        character = stream.contents[stream.cursor]
+        stream.cursor += 1
+        yield from solve_from(program_value, eq(char_term, atom(character)), state)
+
+    return native_goal(run, char_value)
+
+
+def _peek_stream_character(stream: _TextStream) -> str | None:
+    if stream.cursor >= len(stream.contents):
+        return None
+    return stream.contents[stream.cursor]
+
+
+def _read_stream_character(stream: _TextStream) -> str | None:
+    character = _peek_stream_character(stream)
+    if character is not None:
+        stream.cursor += 1
+    return character
+
+
+def _character_atom_term(character: str | None) -> Atom:
+    return atom("end_of_file") if character is None else atom(character)
+
+
+def _character_code_term(character: str | None) -> Number:
+    return num(-1 if character is None else ord(character))
+
+
+def _peek_stream_byte(stream: _TextStream) -> int | None:
+    if stream.cursor >= len(stream.binary_contents):
+        return None
+    return stream.binary_contents[stream.cursor]
+
+
+def _read_stream_byte(stream: _TextStream) -> int | None:
+    byte = _peek_stream_byte(stream)
+    if byte is not None:
+        stream.cursor += 1
+    return byte
+
+
+def _byte_term(byte_value: int | None) -> Number:
+    return num(-1 if byte_value is None else byte_value)
+
+
+def _write_character_text(term_value: Term) -> str | None:
+    text = _plain_atom_text(term_value)
+    if text is None or len(text) != 1:
+        return None
+    return text
+
+
+def _write_code_text(term_value: Term) -> str | None:
+    code = _integer_value(term_value)
+    if code is None or code < 0:
+        return None
+    try:
+        return chr(code)
+    except ValueError:
+        return None
+
+
+def _write_byte_value(term_value: Term) -> int | None:
+    byte_value = _integer_value(term_value)
+    if byte_value is None or byte_value < 0 or byte_value > 255:
+        return None
+    return byte_value
+
+
+def get_codeo(stream_value: object, code_value: object) -> GoalExpr:
+    """Read one Unicode code point from a bounded read stream or ``-1`` at EOF."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, code_term = args
+        stream = _read_text_stream(_reified(stream_term, state))
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(code_term, _character_code_term(_read_stream_character(stream))),
+            state,
+        )
+
+    return native_goal(run, stream_value, code_value)
+
+
+def get_current_codeo(code_value: object) -> GoalExpr:
+    """Read one Unicode code point from the selected input stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [code_term] = args
+        stream = _current_input_text_stream()
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(code_term, _character_code_term(_read_stream_character(stream))),
+            state,
+        )
+
+    return native_goal(run, code_value)
+
+
+def get_byteo(stream_value: object, byte_value: object) -> GoalExpr:
+    """Read one byte from a bounded binary stream or ``-1`` at EOF."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, byte_term = args
+        stream = _read_binary_stream(_reified(stream_term, state))
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(byte_term, _byte_term(_read_stream_byte(stream))),
+            state,
+        )
+
+    return native_goal(run, stream_value, byte_value)
+
+
+def get_current_byteo(byte_value: object) -> GoalExpr:
+    """Read one byte from the selected binary input stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [byte_term] = args
+        stream = _current_input_binary_stream()
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(byte_term, _byte_term(_read_stream_byte(stream))),
+            state,
+        )
+
+    return native_goal(run, byte_value)
+
+
+def peek_charo(stream_value: object, char_value: object) -> GoalExpr:
+    """Peek one character atom from a bounded read stream without advancing."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, char_term = args
+        stream = _read_stream(_reified(stream_term, state))
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(char_term, _character_atom_term(_peek_stream_character(stream))),
+            state,
+        )
+
+    return native_goal(run, stream_value, char_value)
+
+
+def peek_current_charo(char_value: object) -> GoalExpr:
+    """Peek one character atom from the selected input stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [char_term] = args
+        stream = _current_input_text_stream()
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(char_term, _character_atom_term(_peek_stream_character(stream))),
+            state,
+        )
+
+    return native_goal(run, char_value)
+
+
+def peek_codeo(stream_value: object, code_value: object) -> GoalExpr:
+    """Peek one Unicode code point from a bounded read stream without advancing."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, code_term = args
+        stream = _read_text_stream(_reified(stream_term, state))
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(code_term, _character_code_term(_peek_stream_character(stream))),
+            state,
+        )
+
+    return native_goal(run, stream_value, code_value)
+
+
+def peek_current_codeo(code_value: object) -> GoalExpr:
+    """Peek one Unicode code point from the selected input stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [code_term] = args
+        stream = _current_input_text_stream()
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(code_term, _character_code_term(_peek_stream_character(stream))),
+            state,
+        )
+
+    return native_goal(run, code_value)
+
+
+def peek_byteo(stream_value: object, byte_value: object) -> GoalExpr:
+    """Peek one byte from a bounded binary stream without advancing."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, byte_term = args
+        stream = _read_binary_stream(_reified(stream_term, state))
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(byte_term, _byte_term(_peek_stream_byte(stream))),
+            state,
+        )
+
+    return native_goal(run, stream_value, byte_value)
+
+
+def peek_current_byteo(byte_value: object) -> GoalExpr:
+    """Peek one byte from the selected binary input stream."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [byte_term] = args
+        stream = _current_input_binary_stream()
+        if stream is None:
+            return
+
+        yield from solve_from(
+            program_value,
+            eq(byte_term, _byte_term(_peek_stream_byte(stream))),
+            state,
+        )
+
+    return native_goal(run, byte_value)
+
+
+def put_charo(stream_value: object, char_value: object) -> GoalExpr:
+    """Write one character atom to a bounded write/append stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, char_term = args
+        text = _write_character_text(_reified(char_term, state))
+        if text is not None and _write_stream(_reified(stream_term, state), text):
+            yield state
+
+    return native_goal(run, stream_value, char_value)
+
+
+def put_current_charo(char_value: object) -> GoalExpr:
+    """Write one character atom to the selected output stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [char_term] = args
+        text = _write_character_text(_reified(char_term, state))
+        if text is not None and _write_current_stream(text):
+            yield state
+
+    return native_goal(run, char_value)
+
+
+def put_codeo(stream_value: object, code_value: object) -> GoalExpr:
+    """Write one Unicode code point to a bounded write/append stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, code_term = args
+        text = _write_code_text(_reified(code_term, state))
+        if text is not None and _write_stream(_reified(stream_term, state), text):
+            yield state
+
+    return native_goal(run, stream_value, code_value)
+
+
+def put_current_codeo(code_value: object) -> GoalExpr:
+    """Write one Unicode code point to the selected output stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [code_term] = args
+        text = _write_code_text(_reified(code_term, state))
+        if text is not None and _write_current_stream(text):
+            yield state
+
+    return native_goal(run, code_value)
+
+
+def put_byteo(stream_value: object, byte_value: object) -> GoalExpr:
+    """Write one byte to a bounded binary write/append stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, byte_term = args
+        byte = _write_byte_value(_reified(byte_term, state))
+        if byte is not None and _write_byte_stream(_reified(stream_term, state), byte):
+            yield state
+
+    return native_goal(run, stream_value, byte_value)
+
+
+def put_current_byteo(byte_value: object) -> GoalExpr:
+    """Write one byte to the selected binary output stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [byte_term] = args
+        byte = _write_byte_value(_reified(byte_term, state))
+        if byte is not None and _write_current_byte_stream(byte):
+            yield state
+
+    return native_goal(run, byte_value)
+
+
+def _stream_write_text(term_value: Term) -> str | None:
+    if isinstance(term_value, String):
+        return term_value.value
+    if isinstance(term_value, Atom):
+        return _plain_atom_text(term_value)
+    if isinstance(term_value, Number):
+        return _number_text(term_value)
+    if isinstance(term_value, Compound):
+        return str(term_value)
+    return None
+
+
+def _write_stream(term_value: Term, text: str) -> bool:
+    handle_text = _stream_key(term_value)
+    if handle_text is None:
+        return False
+    stream = _STREAMS.get(handle_text)
+    if (
+        stream is None
+        or stream.mode not in {"write", "append"}
+        or stream.stream_type != "text"
+    ):
+        return False
+    if stream.standard_stream == "user_output":
+        sys.stdout.write(text)
+        stream.contents += text
+        stream.cursor += len(text)
+        return True
+    if stream.standard_stream == "user_error":
+        sys.stderr.write(text)
+        stream.contents += text
+        stream.cursor += len(text)
+        return True
+    try:
+        with stream.path.open("a", encoding="utf-8") as file:
+            file.write(text)
+    except OSError:
+        return False
+    return True
+
+
+def _write_byte_stream(term_value: Term, byte_value: int) -> bool:
+    handle_text = _stream_key(term_value)
+    if handle_text is None:
+        return False
+    stream = _STREAMS.get(handle_text)
+    if (
+        stream is None
+        or stream.mode not in {"write", "append"}
+        or stream.stream_type != "binary"
+    ):
+        return False
+    try:
+        with stream.path.open("ab") as file:
+            file.write(bytes([byte_value]))
+    except OSError:
+        return False
+    return True
+
+
+def _write_current_stream(text: str) -> bool:
+    output_stream = _current_output_stream_term()
+    if output_stream is None:
+        return False
+    return _write_stream(output_stream, text)
+
+
+def _write_current_byte_stream(byte_value: int) -> bool:
+    output_stream = _current_output_stream_term()
+    if output_stream is None:
+        return False
+    return _write_byte_stream(output_stream, byte_value)
+
+
+def writeo(stream_value: object, term_value: object) -> GoalExpr:
+    """Write a bounded textual representation to a write/append stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, term_term = args
+        text = _stream_write_text(_reified(term_term, state))
+        if text is None or not _write_stream(_reified(stream_term, state), text):
+            return
+        yield state
+
+    return native_goal(run, stream_value, term_value)
+
+
+def write_currento(term_value: object) -> GoalExpr:
+    """Write a bounded textual representation to the selected output stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [term_term] = args
+        text = _stream_write_text(_reified(term_term, state))
+        if text is None or not _write_current_stream(text):
+            return
+        yield state
+
+    return native_goal(run, term_value)
+
+
+def nlo(stream_value: object) -> GoalExpr:
+    """Write a newline to a write/append stream."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [stream_term] = args
+        if _write_stream(_reified(stream_term, state), "\n"):
+            yield state
+
+    return native_goal(run, stream_value)
+
+
+def nl_currento() -> GoalExpr:
+    """Write a newline to the selected output stream."""
+
+    def run(_program: Program, state: State, _args: NativeArgs) -> Iterator[State]:
+        if _write_current_stream("\n"):
+            yield state
+
+    return native_goal(run)
+
+
+def flush_outputo(stream_value: object) -> GoalExpr:
+    """Validate a write/append stream handle; writes are already flushed."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        [stream_term] = args
+        handle_text = _stream_key(_reified(stream_term, state))
+        stream = _STREAMS.get(handle_text) if handle_text is not None else None
+        if stream is not None and stream.mode in {"write", "append"}:
+            if stream.standard_stream == "user_output":
+                sys.stdout.flush()
+            if stream.standard_stream == "user_error":
+                sys.stderr.flush()
+            yield state
+
+    return native_goal(run, stream_value)
+
+
+def flush_current_outputo() -> GoalExpr:
+    """Validate the selected output stream; writes are already flushed."""
+
+    def run(_program: Program, state: State, _args: NativeArgs) -> Iterator[State]:
+        output_stream = _current_output_stream_term()
+        if output_stream is not None:
+            stream = _STREAMS.get(output_stream.symbol.name)
+            if stream is not None and stream.standard_stream == "user_output":
+                sys.stdout.flush()
+            if stream is not None and stream.standard_stream == "user_error":
+                sys.stderr.flush()
+            yield state
+
+    return native_goal(run)
+
+
+def current_streamo(
+    path_value: object,
+    mode_value: object,
+    stream_value: object,
+) -> GoalExpr:
+    """Enumerate currently open bounded streams as path, mode, and handle."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        path_term, mode_term, stream_term = args
+        for handle_text, stream in tuple(_STREAMS.items()):
+            yield from solve_from(
+                program_value,
+                conj(
+                    eq(path_term, atom(_stream_display_name(stream))),
+                    eq(mode_term, atom(stream.mode)),
+                    eq(stream_term, atom(handle_text)),
+                ),
+                state,
+            )
+
+    return native_goal(run, path_value, mode_value, stream_value)
+
+
+def _stream_display_name(stream: _TextStream) -> str:
+    return stream.display_name if stream.display_name is not None else str(stream.path)
+
+
+def _stream_properties(handle_text: str, stream: _TextStream) -> tuple[Term, ...]:
+    properties: list[Term] = [
+        term("file_name", atom(_stream_display_name(stream))),
+        term("mode", atom(stream.mode)),
+        term("type", atom(stream.stream_type)),
+        term("position", num(stream.cursor)),
+    ]
+    if stream.mode == "read":
+        properties.append(atom("input"))
+        if handle_text == _CURRENT_INPUT_HANDLE:
+            properties.append(atom("current_input"))
+        eof_state = "at" if stream.cursor >= _stream_length(stream) else "not"
+        properties.append(term("end_of_stream", atom(eof_state)))
+    else:
+        properties.append(atom("output"))
+        if handle_text == _CURRENT_OUTPUT_HANDLE:
+            properties.append(atom("current_output"))
+    if stream.alias is not None:
+        properties.append(term("alias", atom(stream.alias)))
+    properties.extend(stream.option_properties)
+    properties.append(term("handle", atom(handle_text)))
+    return tuple(properties)
+
+
+def stream_propertyo(stream_value: object, property_value: object) -> GoalExpr:
+    """Relate an open bounded stream handle or alias to finite metadata."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        stream_term, property_term = args
+        reified_stream = _reified(stream_term, state)
+        handle_text = _stream_key(reified_stream)
+
+        streams: tuple[tuple[str, _TextStream], ...]
+        if handle_text is not None:
+            stream = _STREAMS.get(handle_text)
+            streams = () if stream is None else ((handle_text, stream),)
+        elif isinstance(reified_stream, LogicVar):
+            streams = tuple(_STREAMS.items())
+        else:
+            return
+
+        for candidate_handle, stream in streams:
+            for property_candidate in _stream_properties(candidate_handle, stream):
+                stream_goal = (
+                    eq(stream_term, atom(candidate_handle))
+                    if isinstance(reified_stream, LogicVar)
+                    else succeed()
+                )
+                yield from solve_from(
+                    program_value,
+                    conj(
+                        stream_goal,
+                        eq(property_term, property_candidate),
+                    ),
+                    state,
+                )
+
+    return native_goal(run, stream_value, property_value)
 
 
 def compoundo(term_value: object) -> GoalExpr:
@@ -3710,6 +6669,75 @@ def functoro(term_value: object, name: object, arity: object) -> GoalExpr:
             state,
             state.next_var_id + raw_arity,
         )
+        yield from solve_from(
+            program_value,
+            eq(target, constructed),
+            construction_state,
+        )
+
+    return native_goal(run, term_value, name, arity)
+
+
+def compound_name_argumentso(
+    term_value: object,
+    name: object,
+    arguments: object,
+) -> GoalExpr:
+    """Inspect or construct a compound from its functor name and arguments."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        target, name_target, arguments_target = args
+        reified_target = _reified(target, state)
+
+        if isinstance(reified_target, Compound):
+            goal = conj(
+                eq(name_target, atom(reified_target.functor)),
+                eq(arguments_target, logic_list(list(reified_target.args))),
+            )
+            yield from solve_from(program_value, goal, state)
+            return
+
+        if not isinstance(reified_target, LogicVar):
+            return
+
+        reified_name = _reified(name_target, state)
+        reified_arguments = _reified(arguments_target, state)
+        items = _proper_list_items(reified_arguments)
+        if not isinstance(reified_name, Atom) or not items:
+            return
+
+        constructed = Compound(functor=reified_name.symbol, args=tuple(items))
+        yield from solve_from(program_value, eq(target, constructed), state)
+
+    return native_goal(run, term_value, name, arguments)
+
+
+def compound_name_arityo(term_value: object, name: object, arity: object) -> GoalExpr:
+    """Inspect or construct a compound from its functor name and arity."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        target, name_target, arity_target = args
+        reified_target = _reified(target, state)
+
+        if isinstance(reified_target, Compound):
+            goal = conj(
+                eq(name_target, atom(reified_target.functor)),
+                eq(arity_target, num(len(reified_target.args))),
+            )
+            yield from solve_from(program_value, goal, state)
+            return
+
+        if not isinstance(reified_target, LogicVar):
+            return
+
+        reified_name = _reified(name_target, state)
+        raw_arity = _reified_integer(arity_target, state)
+        if not isinstance(reified_name, Atom) or raw_arity is None or raw_arity <= 0:
+            return
+
+        arguments, next_var_id = _fresh_logic_vars(raw_arity, state.next_var_id)
+        constructed = Compound(functor=reified_name.symbol, args=arguments)
+        construction_state = _state_with_next_var_id(state, next_var_id)
         yield from solve_from(
             program_value,
             eq(target, constructed),
@@ -3838,6 +6866,162 @@ def term_variableso(term_value: object, variables: object) -> GoalExpr:
     return native_goal(run, term_value, variables)
 
 
+def unify_with_occurs_checko(left: object, right: object) -> GoalExpr:
+    """Unify two terms using the engine's finite-term occurs check."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        left_term, right_term = args
+        yield from solve_from(program_value, eq(left_term, right_term), state)
+
+    return native_goal(run, left, right)
+
+
+def _unifier_equations(
+    left: Term,
+    right: Term,
+    before: State,
+    after: State,
+) -> list[Term]:
+    """Return first-occurrence equations added by a non-binding unifiability check."""
+
+    equations: list[Term] = []
+    for variable in _term_variables_in_order(term("$unifiable", left, right)):
+        if before.substitution.walk(variable) != variable:
+            continue
+        value = reify(variable, after.substitution)
+        if value != variable:
+            equations.append(term("=", variable, value))
+    return equations
+
+
+def unifiableo(left: object, right: object, unifier: object) -> GoalExpr:
+    """Describe how two terms can unify without binding the source terms."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        left_term, right_term, unifier_target = args
+        unified_state = next(
+            solve_from(program_value, eq(left_term, right_term), state),
+            None,
+        )
+        if unified_state is None:
+            return
+
+        equations = _unifier_equations(
+            _reified(left_term, state),
+            _reified(right_term, state),
+            state,
+            unified_state,
+        )
+        yield from solve_from(
+            program_value,
+            eq(unifier_target, logic_list(equations)),
+            state,
+        )
+
+    return native_goal(run, left, right, unifier)
+
+
+def numbervarso(term_value: object, start: object, end: object) -> GoalExpr:
+    """Bind variables in ``term_value`` to ``'$VAR'(N)`` placeholders."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        source_term, start_term, end_target = args
+        start_index = _reified_integer(start_term, state)
+        if start_index is None or start_index < 0:
+            return
+
+        variables = _term_variables_in_order(_reified(source_term, state))
+        goals = [
+            eq(variable, term("$VAR", start_index + offset))
+            for offset, variable in enumerate(variables)
+        ]
+        goals.append(eq(end_target, start_index + len(variables)))
+        yield from solve_from(program_value, conj(*goals), state)
+
+    return native_goal(run, term_value, start, end)
+
+
+def _term_hash_key(
+    term_value: Term,
+    depth_limit: int | None,
+    variables: dict[LogicVar, int],
+    depth: int,
+) -> TermHashKey:
+    """Return a deterministic, variant-aware structural key for a term."""
+
+    if depth_limit is not None and depth >= depth_limit:
+        return ("depth",)
+    if isinstance(term_value, LogicVar):
+        index = variables.setdefault(term_value, len(variables))
+        return ("var", index)
+    if isinstance(term_value, Number):
+        return ("number", type(term_value.value).__name__, term_value.value)
+    if isinstance(term_value, Atom):
+        return ("atom", term_value.symbol.namespace or "", term_value.symbol.name)
+    if isinstance(term_value, String):
+        return ("string", term_value.value)
+    return (
+        "compound",
+        term_value.functor.namespace or "",
+        term_value.functor.name,
+        len(term_value.args),
+        tuple(
+            _term_hash_key(argument, depth_limit, variables, depth + 1)
+            for argument in term_value.args
+        ),
+    )
+
+
+def _term_hash_value(term_value: Term, depth_limit: int | None, range_size: int) -> int:
+    """Hash a term key to a stable non-negative integer within ``range_size``."""
+
+    key = _term_hash_key(term_value, depth_limit, {}, 0)
+    digest = blake2b(repr(key).encode("utf-8"), digest_size=8).digest()
+    return int.from_bytes(digest, "big") % range_size
+
+
+def term_hash_boundedo(
+    term_value: object,
+    depth: object,
+    range_value: object,
+    hash_value: object,
+) -> GoalExpr:
+    """Unify ``hash_value`` with a depth/range-bounded structural term hash."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        source_term, depth_term, range_term, hash_target = args
+        depth_limit = _reified_integer(depth_term, state)
+        range_size = _reified_integer(range_term, state)
+        if depth_limit is None or range_size is None:
+            return
+        if depth_limit < 0 or range_size <= 0:
+            return
+
+        hashed = _term_hash_value(
+            _reified(source_term, state),
+            depth_limit,
+            range_size,
+        )
+        yield from solve_from(program_value, eq(hash_target, hashed), state)
+
+    return native_goal(run, term_value, depth, range_value, hash_value)
+
+
+def term_hasho(term_value: object, hash_value: object) -> GoalExpr:
+    """Unify ``hash_value`` with a deterministic structural term hash."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        source_term, hash_target = args
+        hashed = _term_hash_value(
+            _reified(source_term, state),
+            None,
+            _DEFAULT_TERM_HASH_RANGE,
+        )
+        yield from solve_from(program_value, eq(hash_target, hashed), state)
+
+    return native_goal(run, term_value, hash_value)
+
+
 def same_termo(left: object, right: object) -> GoalExpr:
     """Succeed when two reified terms are strictly identical without binding."""
 
@@ -3862,6 +7046,126 @@ def not_same_termo(left: object, right: object) -> GoalExpr:
         )
 
     return native_goal(run, left, right)
+
+
+def _variant_terms(
+    left: Term,
+    right: Term,
+    left_to_right: dict[LogicVar, LogicVar],
+    right_to_left: dict[LogicVar, LogicVar],
+) -> bool:
+    """Return True when two terms differ only by variable renaming."""
+
+    if isinstance(left, LogicVar) and isinstance(right, LogicVar):
+        mapped_right = left_to_right.get(left)
+        mapped_left = right_to_left.get(right)
+        if mapped_right is None and mapped_left is None:
+            left_to_right[left] = right
+            right_to_left[right] = left
+            return True
+        return mapped_right == right and mapped_left == left
+
+    if isinstance(left, LogicVar) or isinstance(right, LogicVar):
+        return False
+    if isinstance(left, Compound) and isinstance(right, Compound):
+        return (
+            left.functor == right.functor
+            and len(left.args) == len(right.args)
+            and all(
+                _variant_terms(
+                    left_arg,
+                    right_arg,
+                    left_to_right,
+                    right_to_left,
+                )
+                for left_arg, right_arg in zip(left.args, right.args, strict=True)
+            )
+        )
+    return left == right
+
+
+def _subsumes_term(
+    general: Term,
+    specific: Term,
+    bindings: dict[LogicVar, Term],
+) -> bool:
+    """Return True when ``specific`` is an instance of ``general``."""
+
+    if isinstance(general, LogicVar):
+        previous = bindings.get(general)
+        if previous is None:
+            bindings[general] = specific
+            return True
+        return previous == specific
+
+    if isinstance(general, Compound):
+        return (
+            isinstance(specific, Compound)
+            and general.functor == specific.functor
+            and len(general.args) == len(specific.args)
+            and all(
+                _subsumes_term(general_arg, specific_arg, bindings)
+                for general_arg, specific_arg in zip(
+                    general.args,
+                    specific.args,
+                    strict=True,
+                )
+            )
+        )
+    return general == specific
+
+
+def variant_termo(left: object, right: object) -> GoalExpr:
+    """Succeed when two reified terms are variants of each other."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        left_term, right_term = args
+        yield from _succeed_if(
+            _variant_terms(
+                _reified(left_term, state),
+                _reified(right_term, state),
+                {},
+                {},
+            ),
+            state,
+        )
+
+    return native_goal(run, left, right)
+
+
+def not_variant_termo(left: object, right: object) -> GoalExpr:
+    """Succeed when two reified terms are not variants of each other."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        left_term, right_term = args
+        yield from _succeed_if(
+            not _variant_terms(
+                _reified(left_term, state),
+                _reified(right_term, state),
+                {},
+                {},
+            ),
+            state,
+        )
+
+    return native_goal(run, left, right)
+
+
+def subsumes_termo(general: object, specific: object) -> GoalExpr:
+    """Succeed when ``specific`` is an instance of ``general``."""
+
+    def run(_program: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        general_term, specific_term = args
+        yield from _succeed_if(
+            _subsumes_term(
+                _reified(general_term, state),
+                _reified(specific_term, state),
+                {},
+            ),
+            state,
+        )
+
+    return native_goal(run, general, specific)
 
 
 def difo(left: object, right: object) -> GoalExpr:
@@ -4104,6 +7408,188 @@ def _predicate_properties(
         properties.append(atom("built_in"))
     properties.append(term("number_of_clauses", num(clause_count)))
     return tuple(properties)
+
+
+def _remember_atom(ordered: dict[Atom, None], atom_value: Atom) -> None:
+    ordered.setdefault(atom_value, None)
+
+
+def _remember_functor(
+    ordered: dict[tuple[Atom, int], None],
+    name: Atom,
+    arity: int,
+) -> None:
+    ordered.setdefault((name, arity), None)
+
+
+def _remember_term_atoms(ordered: dict[Atom, None], term_value: Term) -> None:
+    if isinstance(term_value, Atom):
+        _remember_atom(ordered, term_value)
+        return
+    if isinstance(term_value, Compound):
+        _remember_atom(ordered, atom(term_value.functor))
+        for argument in term_value.args:
+            _remember_term_atoms(ordered, argument)
+
+
+def _remember_goal_atoms(ordered: dict[Atom, None], goal_value: GoalExpr) -> None:
+    if isinstance(goal_value, RelationCall):
+        _remember_atom(ordered, atom(goal_value.relation.symbol))
+        for argument in goal_value.args:
+            _remember_term_atoms(ordered, argument)
+        return
+    if isinstance(goal_value, EqExpr | NeqExpr):
+        _remember_term_atoms(ordered, goal_value.left)
+        _remember_term_atoms(ordered, goal_value.right)
+        return
+    if isinstance(goal_value, ConjExpr | DisjExpr):
+        for child in goal_value.goals:
+            _remember_goal_atoms(ordered, child)
+        return
+    if isinstance(goal_value, FreshExpr):
+        _remember_goal_atoms(ordered, goal_value.body)
+        return
+    if isinstance(goal_value, NativeGoalExpr | DeferredExpr):
+        for argument in goal_value.args:
+            _remember_term_atoms(ordered, argument)
+        return
+    if isinstance(goal_value, SucceedExpr | FailExpr | CutExpr):
+        return
+
+
+def _remember_term_functors(
+    ordered: dict[tuple[Atom, int], None],
+    term_value: Term,
+) -> None:
+    if isinstance(term_value, Atom):
+        _remember_functor(ordered, term_value, 0)
+        return
+    if isinstance(term_value, Compound):
+        _remember_functor(ordered, atom(term_value.functor), len(term_value.args))
+        for argument in term_value.args:
+            _remember_term_functors(ordered, argument)
+
+
+def _remember_goal_functors(
+    ordered: dict[tuple[Atom, int], None],
+    goal_value: GoalExpr,
+) -> None:
+    if isinstance(goal_value, RelationCall):
+        _remember_functor(
+            ordered,
+            atom(goal_value.relation.symbol),
+            goal_value.relation.arity,
+        )
+        for argument in goal_value.args:
+            _remember_term_functors(ordered, argument)
+        return
+    if isinstance(goal_value, EqExpr):
+        _remember_functor(ordered, atom("="), 2)
+        _remember_term_functors(ordered, goal_value.left)
+        _remember_term_functors(ordered, goal_value.right)
+        return
+    if isinstance(goal_value, NeqExpr):
+        _remember_functor(ordered, atom("\\="), 2)
+        _remember_term_functors(ordered, goal_value.left)
+        _remember_term_functors(ordered, goal_value.right)
+        return
+    if isinstance(goal_value, ConjExpr | DisjExpr):
+        for child in goal_value.goals:
+            _remember_goal_functors(ordered, child)
+        return
+    if isinstance(goal_value, FreshExpr):
+        _remember_goal_functors(ordered, goal_value.body)
+        return
+    if isinstance(goal_value, NativeGoalExpr | DeferredExpr):
+        for argument in goal_value.args:
+            _remember_term_functors(ordered, argument)
+        return
+    if isinstance(goal_value, SucceedExpr | FailExpr | CutExpr):
+        return
+
+
+def _visible_atoms(program_value: Program, state: State) -> tuple[Atom, ...]:
+    """Enumerate atoms observable from source, dynamic state, and builtins."""
+
+    ordered: dict[Atom, None] = {}
+    for key in visible_predicate_keys(program_value, state):
+        _remember_atom(ordered, atom(key[0]))
+    for source_clause in visible_clauses(program_value, state):
+        _remember_goal_atoms(ordered, source_clause.head)
+        if source_clause.body is not None:
+            _remember_goal_atoms(ordered, source_clause.body)
+    for name, _arity in _BUILTIN_PREDICATES:
+        _remember_atom(ordered, atom(name))
+    for flag_name, flag_value in _PROLOG_FLAGS:
+        _remember_atom(ordered, flag_name)
+        _remember_term_atoms(ordered, flag_value)
+    for writable_flag, allowed_values in _PROLOG_WRITABLE_FLAG_VALUES.items():
+        _remember_atom(ordered, writable_flag)
+        for allowed_value in allowed_values:
+            _remember_term_atoms(ordered, allowed_value)
+    for property_atom in (
+        atom("defined"),
+        atom("dynamic"),
+        atom("static"),
+        atom("built_in"),
+        atom("number_of_clauses"),
+    ):
+        _remember_atom(ordered, property_atom)
+    return tuple(ordered)
+
+
+def _visible_functors(
+    program_value: Program,
+    state: State,
+) -> tuple[tuple[Atom, int], ...]:
+    """Enumerate functor indicators visible in source, dynamic, and builtins."""
+
+    ordered: dict[tuple[Atom, int], None] = {}
+    for key in visible_predicate_keys(program_value, state):
+        _remember_functor(ordered, atom(key[0]), key[1])
+    for source_clause in visible_clauses(program_value, state):
+        _remember_goal_functors(ordered, source_clause.head)
+        if source_clause.body is not None:
+            _remember_goal_functors(ordered, source_clause.body)
+    for name, arity in _BUILTIN_PREDICATES:
+        _remember_functor(ordered, atom(name), arity)
+    for flag_name, flag_value in _PROLOG_FLAGS:
+        _remember_functor(ordered, flag_name, 0)
+        _remember_term_functors(ordered, flag_value)
+    for writable_flag, allowed_values in _PROLOG_WRITABLE_FLAG_VALUES.items():
+        _remember_functor(ordered, writable_flag, 0)
+        for allowed_value in allowed_values:
+            _remember_term_functors(ordered, allowed_value)
+    _remember_functor(ordered, atom("number_of_clauses"), 1)
+    for property_atom in (atom("defined"), atom("dynamic"), atom("static")):
+        _remember_functor(ordered, property_atom, 0)
+    return tuple(ordered)
+
+
+def current_atomo(name: object) -> GoalExpr:
+    """Enumerate atoms visible in the current source and builtin environment."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        (name_target,) = args
+        for name_atom in _visible_atoms(program_value, state):
+            yield from solve_from(program_value, eq(name_target, name_atom), state)
+
+    return native_goal(run, name)
+
+
+def current_functoro(name: object, arity: object) -> GoalExpr:
+    """Enumerate functor indicators visible in the current environment."""
+
+    def run(program_value: Program, state: State, args: NativeArgs) -> Iterator[State]:
+        name_target, arity_target = args
+        for name_atom, raw_arity in _visible_functors(program_value, state):
+            yield from solve_from(
+                program_value,
+                conj(eq(name_target, name_atom), eq(arity_target, num(raw_arity))),
+                state,
+            )
+
+    return native_goal(run, name, arity)
 
 
 def current_prolog_flago(name: object, value: object) -> GoalExpr:

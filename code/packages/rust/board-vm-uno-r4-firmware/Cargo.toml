@@ -1,0 +1,63 @@
+[package]
+name = "board-vm-uno-r4-firmware"
+version = "0.1.0"
+edition = "2021"
+description = "Uno R4 firmware smoke test for the Board VM runtime"
+
+[dependencies]
+board-vm-device = { path = "../board-vm-device" }
+board-vm-ir = { path = "../board-vm-ir" }
+board-vm-protocol = { path = "../board-vm-protocol" }
+board-vm-runtime = { path = "../board-vm-runtime" }
+board-vm-uno-r4 = { path = "../board-vm-uno-r4" }
+board-vm-usb-cdc = { path = "../board-vm-usb-cdc" }
+
+[target.'cfg(target_arch = "arm")'.dependencies]
+arduino-uno-r4-hal = "0.1.0"
+board-vm-uart = { path = "../board-vm-uart" }
+board-vm-uno-r4-usb-cdc = { path = "../board-vm-uno-r4-usb-cdc" }
+board-vm-uno-r4-uart = { path = "../board-vm-uno-r4-uart" }
+cortex-m-rt = "0.7"
+embedded-hal = "1.0"
+panic-halt = "0.2"
+
+[target.'cfg(not(target_arch = "arm"))'.dependencies]
+board-vm-serial = { path = "../board-vm-serial" }
+
+[dev-dependencies]
+board-vm-host = { path = "../board-vm-host" }
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "uno-r4-vm-blink-smoke"
+path = "src/bin/uno_r4_vm_blink_smoke.rs"
+
+[[bin]]
+name = "uno-r4-wifi-ejected-blink"
+path = "src/bin/uno_r4_wifi_ejected_blink.rs"
+
+[[bin]]
+name = "uno-r4-wifi-raw-blink-probe"
+path = "src/bin/uno_r4_wifi_raw_blink_probe.rs"
+
+[[bin]]
+name = "uno-r4-wifi-stream-handshake-probe"
+path = "src/bin/uno_r4_wifi_stream_handshake_probe.rs"
+
+[[bin]]
+name = "uno-r4-wifi-stream-session-probe"
+path = "src/bin/uno_r4_wifi_stream_session_probe.rs"
+
+[[bin]]
+name = "uno-r4-wifi-uart-server"
+path = "src/bin/uno_r4_wifi_uart_server.rs"
+
+[[bin]]
+name = "uno-r4-wifi-serialusb-server"
+path = "src/bin/uno_r4_wifi_serialusb_server.rs"
+
+[[bin]]
+name = "uno-r4-wifi-serialusb-artifact"
+path = "src/bin/uno_r4_wifi_serialusb_artifact.rs"

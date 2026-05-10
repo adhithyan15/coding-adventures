@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ACTIVATIONS, activationByKind, activate, type ActivationKind } from "./activation.js";
 import { HiddenLayerWorkbench } from "./HiddenLayerWorkbench.js";
 import { LAB_CATEGORIES, LABS, type LabDefinition } from "./labs.js";
+import { LinearNetworkDiagram } from "./NetworkDiagram.js";
 import {
   loss,
   meanAbsoluteError,
@@ -102,10 +103,11 @@ function yScale(value: number, chart: ChartFrame): number {
 function linePath(state: ModelState, chart: ChartFrame): string {
   const x1 = chart.xMin;
   const x2 = chart.xMax;
-  return `M ${xScale(x1, chart)} ${yScale(state.weight * x1 + state.bias, chart)} L ${xScale(
+  const [y1, y2] = predictions([{ x: x1, y: 0 }, { x: x2, y: 0 }], state);
+  return `M ${xScale(x1, chart)} ${yScale(y1 ?? 0, chart)} L ${xScale(
     x2,
     chart,
-  )} ${yScale(state.weight * x2 + state.bias, chart)}`;
+  )} ${yScale(y2 ?? 0, chart)}`;
 }
 
 function historyPath(history: HistoryPoint[]): string {
@@ -383,6 +385,15 @@ export function App() {
               <span><i className="legend-line legend-line--ideal" />Best fit</span>
             </div>
           </section>
+
+          <LinearNetworkDiagram
+            model={model}
+            lastStep={lastStep}
+            learningRate={learningRate}
+            lossKind={lossKind}
+            samplePoint={selectedLab.points[0]!}
+            pointCount={selectedLab.points.length}
+          />
         </section>
 
         <aside className="controls metrics" aria-label="Training controls and metrics">

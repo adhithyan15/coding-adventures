@@ -26,23 +26,52 @@ class CILBackendError(ValueError):
 
 
 class CILHelper(StrEnum):
-    """Runtime helper calls required by lowered CIL bytecode."""
+    """Runtime helper calls required by lowered CIL bytecode.
+
+    The first five members (``MEM_LOAD_BYTE`` through ``SYSCALL``) are the
+    original brainfuck-VM helpers that live in the external
+    ``CodingAdventures.Runtime.Helpers`` type (TypeRef row 1).
+
+    The three members added in TW04 Phase 4c are Twig-specific **inline**
+    host-call helpers that map directly to standard .NET APIs:
+
+    * ``CONSOLE_WRITE_CHAR`` → ``System.Console.Write(char)``  (TypeRef 4)
+    * ``CONSOLE_READ``       → ``System.Console.Read()``        (TypeRef 4)
+    * ``ENVIRONMENT_EXIT``   → ``System.Environment.Exit(int)`` (TypeRef 5)
+
+    These are only used when ``CILBackendConfig.inline_host_syscalls=True``.
+    They are still included in ``HELPER_SPECS`` (so the MemberRef rows always
+    exist in the assembly), but the bodies are never reached unless Twig's
+    CLR compiler opts in.
+    """
 
     MEM_LOAD_BYTE = "mem_load_byte"
     MEM_STORE_BYTE = "mem_store_byte"
     LOAD_WORD = "load_word"
     STORE_WORD = "store_word"
     SYSCALL = "syscall"
+    # TW04 Phase 4c: inline host-call helpers — static .NET API wrappers.
+    CONSOLE_WRITE_CHAR = "console_write_char"  # System.Console.Write(char) → void
+    CONSOLE_READ = "console_read"              # System.Console.Read() → int32
+    ENVIRONMENT_EXIT = "environment_exit"      # System.Environment.Exit(int32) → void
 
 
 @dataclass(frozen=True)
 class CILHelperSpec:
-    """A helper method dependency requested by the lowered bytecode."""
+    """A helper method dependency requested by the lowered bytecode.
+
+    ``class_typeref_row`` selects which TypeRef row the generated MemberRef
+    row points at.  The default (``1``) is the legacy
+    ``CodingAdventures.Runtime.Helpers`` row.  Phase 4c host-call helpers
+    use rows 4 (``System.Console``) and 5 (``System.Environment``).
+    """
 
     helper: CILHelper
     name: str
     parameter_types: tuple[str, ...]
     return_type: str
+    # 1-based TypeRef row that owns this method (default: row 1 = legacy helper).
+    class_typeref_row: int = 1
 
 
 @dataclass(frozen=True)
@@ -75,6 +104,37 @@ class CILBackendConfig:
     # Defaults to 1 for back-compat; the Twig CLR frontend
     # populates it from each lambda's source-level param count.
     closure_explicit_arities: dict[str, int] = field(default_factory=dict)
+    # TW04 Phase 4e — multi-module CLR support.
+    #
+    # ``extra_callable_labels`` force-includes exported dep-module
+    # functions even when no local ``CALL`` instruction targets them.
+    # Mirrors the identically named field in ``JvmBackendConfig``.
+    extra_callable_labels: tuple[str, ...] = ()
+    # ``external_method_tokens`` maps cross-module CALL label strings
+    # (e.g. ``"a/math/add"``) to their pre-assigned ``MethodDef``
+    # token (``0x06xxxxxx``) in the combined multi-module assembly.
+    # Populated by ``twig-clr-compiler.compile_modules`` from a
+    # two-pass analysis of all module IR programs before bytecode
+    # emission begins.  An empty dict (the default) means no
+    # cross-module calls are expected — any CALL with ``/`` in its
+    # label will raise ``CILBackendError`` at lowering time.
+    external_method_tokens: dict[str, int] = field(default_factory=dict)
+    # TW04 Phase 4c — inline host-call lowering.
+    #
+    # When ``True``, ``IrOp.SYSCALL`` instructions with numbers 1
+    # (write-byte), 2 (read-byte), and 10 (exit) are lowered to
+    # **inline** .NET API calls:
+    #
+    #   SYSCALL 1  → ``System.Console.Write(char)``
+    #   SYSCALL 2  → ``System.Console.Read()``
+    #   SYSCALL 10 → ``System.Environment.Exit(int32)``
+    #
+    # When ``False`` (the default), the legacy brainfuck-VM path is
+    # used: push (number, arg) and call ``__ca_syscall`` via the
+    # external ``CodingAdventures.Runtime.Helpers`` MemberRef.  The
+    # Twig CLR compiler sets this flag to ``True`` so that host calls
+    # work on the real dotnet runtime without a bespoke helper library.
+    inline_host_syscalls: bool = False
 
 
 @dataclass(frozen=True)
@@ -286,12 +346,20 @@ class SequentialCILTokenProvider:
         self,
         method_names: tuple[str, ...],
         *,
+        method_token_offset: int = 0,
         closure_names: tuple[str, ...] = (),
         closure_free_var_counts: dict[str, int] | None = None,
         include_heap_types: bool = False,
     ) -> None:
+        # TW04 Phase 4e: ``method_token_offset`` shifts the base
+        # MethodDef token so that dep-module providers don't start
+        # at row 1.  The entry module uses offset=0 (the default);
+        # dep module k uses offset = sum of all preceding modules'
+        # method counts.  Closure and heap tokens are relative to
+        # this module's own base.
         self._method_tokens = {
-            name: 0x06000001 + index for index, name in enumerate(method_names)
+            name: 0x06000001 + method_token_offset + index
+            for index, name in enumerate(method_names)
         }
         self._helper_tokens = {
             helper: 0x0A000001 + index for index, helper in enumerate(CILHelper)
@@ -303,12 +371,14 @@ class SequentialCILTokenProvider:
         self._closure_names = closure_names
         self._free_counts = closure_free_var_counts or {}
         m = len(method_names)
-        self._iclosure_apply = 0x06000001 + m if closure_names else 0
+        # Closure tokens are relative to this module's method base.
+        _base = 0x06000001 + method_token_offset
+        self._iclosure_apply = _base + m if closure_names else 0
         self._closure_ctors: dict[str, int] = {}
         self._closure_applies: dict[str, int] = {}
         for k, name in enumerate(closure_names):
-            self._closure_ctors[name] = 0x06000001 + m + 1 + 2 * k
-            self._closure_applies[name] = 0x06000001 + m + 2 + 2 * k
+            self._closure_ctors[name] = _base + m + 1 + 2 * k
+            self._closure_applies[name] = _base + m + 2 + 2 * k
 
         # Field tokens.  One per capture, walking closures in
         # declaration order.
@@ -778,6 +848,9 @@ def lower_ir_to_cil_bytecode(
 
 
 HELPER_SPECS: tuple[CILHelperSpec, ...] = (
+    # ── Legacy brainfuck-VM helpers (TypeRef row 1 = CodingAdventures.Runtime.Helpers) ──
+    # These five entries have been here since CLR01.  Their MemberRef tokens
+    # are stable (0x0A000001 through 0x0A000005) and must not be reordered.
     CILHelperSpec(CILHelper.MEM_LOAD_BYTE, "__ca_mem_load_byte", ("int32",), "int32"),
     CILHelperSpec(
         CILHelper.MEM_STORE_BYTE,
@@ -793,6 +866,34 @@ HELPER_SPECS: tuple[CILHelperSpec, ...] = (
         "void",
     ),
     CILHelperSpec(CILHelper.SYSCALL, "__ca_syscall", ("int32", "int32"), "int32"),
+    # ── TW04 Phase 4c: Twig inline host-call helpers ─────────────────────────
+    # Used when ``CILBackendConfig.inline_host_syscalls=True``.  These MemberRef
+    # rows point at TypeRef rows 4 (System.Console) and 5 (System.Environment)
+    # rather than the legacy external type (row 1).  Both live in System.Runtime.
+    #
+    # The ``class_typeref_row`` field controls which TypeRef row the
+    # cli-assembly-writer uses for the MemberRefParent coded index.
+    CILHelperSpec(
+        CILHelper.CONSOLE_WRITE_CHAR,
+        "Write",
+        ("char",),
+        "void",
+        class_typeref_row=4,  # System.Console
+    ),
+    CILHelperSpec(
+        CILHelper.CONSOLE_READ,
+        "Read",
+        (),
+        "int32",
+        class_typeref_row=4,  # System.Console
+    ),
+    CILHelperSpec(
+        CILHelper.ENVIRONMENT_EXIT,
+        "Exit",
+        ("int32",),
+        "void",
+        class_typeref_row=5,  # System.Environment
+    ),
 )
 
 
@@ -804,9 +905,18 @@ def _analyze_program(
 ) -> CILLoweringPlan:
     _validate_config(config)
     label_positions = _collect_labels(program)
-    regions = tuple(_discover_callable_regions(program, label_positions))
+    regions = tuple(_discover_callable_regions(program, label_positions, config))
     data_offsets, data_size = _assign_data_offsets(program, config)
     local_count = max(_max_register_index(program) + 1, config.syscall_arg_reg + 1, 2)
+    # TW04 Phase 4e: when a fixed ``call_register_count`` is given, every
+    # method in this module must declare AT LEAST that many locals so the
+    # cross-module CALL sequence can push exactly that many arguments.
+    # Without this floor, a simple entry module (few registers) compiled
+    # with a higher global call_register_count would have fewer locals than
+    # the count it must push, leading to out-of-range ``ldloc`` instructions
+    # and a ``System.InvalidProgramException`` at runtime.
+    if config.call_register_count is not None and config.call_register_count > local_count:
+        local_count = config.call_register_count
 
     # Split regions into "main" and "closure" buckets.  Closure
     # regions become Apply methods on auto-generated Closure_<name>
@@ -1314,12 +1424,19 @@ def _collect_labels(program: IrProgram) -> dict[str, int]:
 def _discover_callable_regions(
     program: IrProgram,
     label_positions: dict[str, int],
+    config: CILBackendConfig | None = None,
 ) -> list[_CallableRegion]:
     callable_names = {program.entry_label}
     for instruction in program.instructions:
         if instruction.opcode == IrOp.CALL:
             target = _as_label(instruction.operands[0], "CALL target")
-            callable_names.add(target.name)
+            # TW04 Phase 4e: cross-module call labels contain ``/``
+            # (e.g. ``"a/math/add"``).  They are not present in
+            # ``label_positions`` of THIS module's IR; their tokens
+            # come from ``config.external_method_tokens`` at lowering
+            # time.  Skip them here.
+            if "/" not in target.name:
+                callable_names.add(target.name)
         elif instruction.opcode == IrOp.MAKE_CLOSURE:
             # MAKE_CLOSURE dst, fn_label, num_captured, capt0, ...
             # The lambda body is a callable region too, even though
@@ -1329,6 +1446,12 @@ def _discover_callable_regions(
                 instruction.operands[1], "MAKE_CLOSURE fn_label",
             )
             callable_names.add(target.name)
+
+    # TW04 Phase 4e: exported dep-module functions have no local CALL
+    # callers (they're only called from OTHER modules).  Force-include
+    # them so they appear in the TypeDef's method list.
+    if config is not None:
+        callable_names.update(config.extra_callable_labels)
 
     if program.entry_label not in label_positions:
         msg = f"Entry label not found: {program.entry_label}"
@@ -1376,6 +1499,11 @@ def _discover_callable_regions(
                     raise CILBackendError(msg)
             elif instruction.opcode == IrOp.CALL:
                 label = _as_label(instruction.operands[0], "CALL target")
+                # TW04 Phase 4e: cross-module targets are not in the
+                # local callable_lookup — they resolve at the
+                # external_method_tokens level.  Skip validation for them.
+                if "/" in label.name:
+                    continue
                 if label.name not in callable_lookup:
                     msg = f"CALL target {label.name!r} is not a callable label"
                     raise CILBackendError(msg)
@@ -2070,6 +2198,33 @@ def _emit_instruction(
 
     if instruction.opcode == IrOp.CALL:
         label = _as_label(instruction.operands[0], "CALL target")
+
+        # TW04 Phase 4e: cross-module call — label contains ``/``
+        # (e.g. ``"a/math/add"``).  The callee lives in a different
+        # TypeDef in the combined multi-module assembly.  Its
+        # MethodDef token was pre-computed in ``compile_modules``
+        # and stored in ``config.external_method_tokens``.  The
+        # calling convention is identical to a same-TypeDef call:
+        # push all call-register-count locals, ``call <token>``,
+        # store the int32 result into local 1 (the return slot).
+        # Object-typed parameter marshalling is not needed for
+        # cross-module calls in Phase 4e (dep modules contain only
+        # plain int functions — no closures, no heap types).
+        if "/" in label.name:
+            token = config.external_method_tokens.get(label.name)
+            if token is None:
+                msg = (
+                    f"No pre-assigned token for cross-module CALL target "
+                    f"{label.name!r}.  Populate "
+                    "CILBackendConfig.external_method_tokens."
+                )
+                raise CILBackendError(msg)
+            for index in range(_call_register_count(config, plan)):
+                builder.emit_ldloc(index)
+            builder.emit_call(token)
+            builder.emit_stloc(1)
+            return
+
         # TW03 Phase 3 follow-up: per-arg ldloc picks int32 vs object
         # slot based on the CALLEE's parameter typing.  Without this,
         # cons / symbol / nil refs marshalled into a param slot via
@@ -2458,13 +2613,7 @@ def _emit_instruction(
 
     if instruction.opcode == IrOp.SYSCALL:
         number = _as_immediate(instruction.operands[0], "SYSCALL number")
-        builder.emit_ldc_i4(number.value)
-        builder.emit_ldloc(config.syscall_arg_reg)
-        builder.emit_call(plan.token_provider.helper_token(CILHelper.SYSCALL))
-        # Store the syscall return value into the register given by operands[1],
-        # if present and a register (e.g. SYSCALL 2 / read stores its result into
-        # a scratch register rather than the write-arg register).
-        # Fall back to syscall_arg_reg when no result operand is present.
+        # Determine result register: operands[1] if present, else syscall_arg_reg.
         result_reg: int
         if (
             len(instruction.operands) >= 2
@@ -2473,6 +2622,54 @@ def _emit_instruction(
             result_reg = instruction.operands[1].index
         else:
             result_reg = config.syscall_arg_reg
+
+        if config.inline_host_syscalls and number.value in (1, 2, 10):
+            # ── Twig inline host-call path ────────────────────────────────────
+            # Emit direct .NET API calls instead of the brainfuck-style
+            # ``__ca_syscall(num, arg)`` MemberRef.  The tokens for
+            # ``Console.Write``, ``Console.Read``, and ``Environment.Exit``
+            # are stable: they live at MemberRef indices 6, 7, 8 (after the
+            # five legacy helpers), per ``HELPER_SPECS`` and
+            # ``SequentialCILTokenProvider``.
+            #
+            #   SYSCALL 1  (write-byte) → Console.Write((char)arg)
+            #   SYSCALL 2  (read-byte)  → Console.Read()
+            #   SYSCALL 10 (exit)       → Environment.Exit(arg)  [unreachable after]
+            if number.value == 1:  # write-byte
+                # Push the byte value as a char (uint16) then call Write(char).
+                # Console.Write(char) writes the character to stdout and returns
+                # void; we push 0 as the Twig syscall "return value".
+                builder.emit_ldloc(config.syscall_arg_reg)
+                builder.emit_conv_u2()  # int32 → char (uint16)
+                builder.emit_call(
+                    plan.token_provider.helper_token(CILHelper.CONSOLE_WRITE_CHAR),
+                )
+                builder.emit_ldc_i4(0)  # void call → push 0 as result
+            elif number.value == 2:  # read-byte
+                # Console.Read() returns the next char as int32 (or -1 on EOF).
+                # No input argument.
+                builder.emit_call(
+                    plan.token_provider.helper_token(CILHelper.CONSOLE_READ),
+                )
+                # int32 result is already on the stack — fall through to stloc.
+            else:  # number.value == 10 — exit
+                # Environment.Exit(int32) terminates the process and never returns.
+                # Push 0 after the call so the stack stays balanced for the JIT;
+                # the stloc below is unreachable but harmless.
+                builder.emit_ldloc(config.syscall_arg_reg)
+                builder.emit_call(
+                    plan.token_provider.helper_token(CILHelper.ENVIRONMENT_EXIT),
+                )
+                builder.emit_ldc_i4(0)  # unreachable — process already exited
+        else:
+            # ── Legacy brainfuck-VM path ──────────────────────────────────────
+            # Call the external ``__ca_syscall(int32 num, int32 arg)`` helper.
+            # The brainfuck and Oct CLR VMs provide this method at runtime;
+            # Twig uses ``inline_host_syscalls=True`` instead.
+            builder.emit_ldc_i4(number.value)
+            builder.emit_ldloc(config.syscall_arg_reg)
+            builder.emit_call(plan.token_provider.helper_token(CILHelper.SYSCALL))
+        # Store the syscall return value into result_reg.
         builder.emit_stloc(result_reg)
         return
 

@@ -1,0 +1,11 @@
+[package]
+name = "board-vm-runtime"
+version = "0.1.0"
+edition = "2021"
+description = "No-heap Rust interpreter runtime for Board VM bytecode"
+
+[dependencies]
+board-vm-ir = { path = "../board-vm-ir" }
+
+[lib]
+path = "src/lib.rs"

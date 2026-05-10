@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/vault-audit",
+  "capabilities": [],
+  "justification": "Pure cryptography (blake2b + Ed25519) over caller-supplied audit events. No filesystem, network, process, environment, csprng, or wallclock access — `timestamp_ms` is caller-supplied so the chain itself never reads the system clock. Persistent sinks (vault-audit-fs, vault-audit-s3, vault-audit-trillian) are sibling crates that declare their own capabilities."
+}

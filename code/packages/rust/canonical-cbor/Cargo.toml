@@ -1,0 +1,7 @@
+[package]
+name = "coding_adventures_canonical_cbor"
+version = "0.1.0"
+edition = "2021"
+description = "Canonical (deterministic) CBOR encoder + decoder per RFC 8949 §4.2.3 — length-first map ordering, smallest-int forms, definite-length only. Used by VLT02 vault-records for stable record bytes and by COSE-Key elsewhere."
+
+[dependencies]

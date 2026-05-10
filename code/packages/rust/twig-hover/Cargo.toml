@@ -1,0 +1,9 @@
+[package]
+name = "twig-hover"
+version = "0.1.0"
+edition = "2021"
+description = "LSP hover-info extraction for Twig — the editor 'what's this?' tooltip feed.  Given a parsed Program and a (line, column) cursor position, returns the symbol under the cursor and any signature / documentation the parser exposes."
+
+[dependencies]
+twig-document-symbols = { path = "../twig-document-symbols" }
+twig-parser = { path = "../twig-parser" }

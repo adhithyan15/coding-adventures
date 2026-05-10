@@ -1,0 +1,13 @@
+[package]
+name = "coding_adventures_vault_auth"
+version = "0.1.0"
+edition = "2021"
+description = "VLT05 — pluggable authentication for the Vault stack. Authenticator trait with two operating modes: 'gate' (does this principal pass?) and 'bind' (does this factor also contribute key material to unlock derivation?). Ships PasswordAuthenticator (Argon2id, bind-mode) and TotpAuthenticator (RFC 6238, gate-mode). Other factors — WebAuthn, FIDO2-PRF, OPAQUE, SMS, Duo, OIDC, mTLS, AppRole, AWS-STS, Kubernetes-SA — slot in via the same trait in follow-up PRs."
+
+[dependencies]
+coding_adventures_argon2id = { path = "../argon2id" }
+coding_adventures_hkdf = { path = "../hkdf" }
+coding_adventures_hmac = { path = "../hmac" }
+coding_adventures_csprng = { path = "../csprng" }
+coding_adventures_zeroize = { path = "../zeroize" }
+coding_adventures_ct_compare = { path = "../ct-compare" }

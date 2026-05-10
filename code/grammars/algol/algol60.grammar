@@ -6,7 +6,7 @@
 # grammar derives directly from the ALGOL 60 report.
 #
 # Notation (repo standard):
-#   UPPERCASE    token kinds from algol.tokens (custom operators, literals)
+#   UPPERCASE    token kinds from algol/algol60.tokens (custom operators, literals)
 #   "keyword"    quoted keyword literals (match token.value for keyword tokens)
 #   lowercase    grammar rules (non-terminals, defined below)
 #   |            alternation (or)
@@ -113,17 +113,29 @@ switch_list  = desig_expr { COMMA desig_expr } ;
 procedure_decl = [ type ] "procedure" NAME [ formal_params ] SEMICOLON
                  [ value_part ] { spec_part } proc_body ;
 
-formal_params = LPAREN ident_list RPAREN ;
+# Empty parentheses are accepted as a compatibility spelling for parameterless
+# procedures; the report-style spelling omits formal_params entirely.
+formal_params = LPAREN [ ident_list ] RPAREN ;
 
 # The VALUE declaration opts specific parameters into call-by-value semantics.
 # All parameters not listed here are call-by-name: the argument expression is
 # re-evaluated every time the parameter is used inside the procedure body.
 value_part   = "value" ident_list SEMICOLON ;
 
-# spec_part declares what kind each parameter is (integer, real, array, etc.)
+# spec_part declares what kind each parameter is (integer, real, array, etc.).
+# Typed array/procedure specs accept report-style combined forms such as
+# `integer array a;` and `real procedure f;`. The older split spelling
+# `integer a; array a;` remains valid because repeated spec parts are merged by
+# the semantic checker.
 spec_part    = specifier ident_list SEMICOLON ;
 
-specifier    = "integer" | "real" | "boolean" | "string" | "array" | "label" | "switch" | "procedure" ;
+specifier    = type "array"
+             | type "procedure"
+             | "array"
+             | "label"
+             | "switch"
+             | "procedure"
+             | type ;
 
 proc_body    = block | statement ;
 
@@ -131,18 +143,14 @@ proc_body    = block | statement ;
 # Statements
 # ---------------------------------------------------------------------------
 
-# Any statement may carry a label. Labels can be identifiers or integer literals.
-# Labels are the targets of goto statements.
+# Any statement may carry one or more labels. Labels can be identifiers or
+# integer literals. Labels are the targets of goto statements.
 #
-# The third alternative (label COLON alone) supports a standalone label at the
-# end of a block, e.g. `done:` immediately before `end`. This is equivalent to
-# a label on an empty/dummy statement — a common ALGOL 60 idiom for goto targets
-# at the end of a block. Strictly, ALGOL 60 requires a statement after a label,
-# but most implementations accept a terminal label because the block's `end`
-# acts as the associated statement.
-statement    = [ label COLON ] unlabeled_stmt
-             | [ label COLON ] cond_stmt
-             | label COLON ;
+# `dummy_stmt` covers ALGOL 60's empty statement. The lookahead keeps it
+# zero-width, which lets semicolons remain statement separators while still
+# allowing empty bodies after `then`, `else`, `do`, or labels before `end`.
+statement    = { label COLON } unlabeled_stmt
+             | { label COLON } cond_stmt ;
 
 label        = NAME | INTEGER_LIT ;
 
@@ -155,11 +163,18 @@ label        = NAME | INTEGER_LIT ;
 # In C and Java, the else binds to the nearest if by convention (not grammar).
 # ALGOL requires explicit begin/end to make nesting unambiguous.
 unlabeled_stmt = assign_stmt
+               | dummy_stmt
                | goto_stmt
                | proc_stmt
                | compound_stmt
                | block
                | for_stmt ;
+
+# Dummy statement: consumes no tokens. It succeeds only when a statement
+# boundary follows, so invalid syntax does not disappear into a no-op.
+dummy_stmt   = &SEMICOLON
+             | &"end"
+             | &"else" ;
 
 # Conditional statement. The then-branch is unlabeled_stmt (excludes conditionals).
 # The else-branch is statement (includes conditionals, enabling if/then/else if chains).
@@ -183,18 +198,18 @@ goto_stmt    = "goto" desig_expr
              | "go" "to" desig_expr ;
 
 # Procedure call as a statement (return value, if any, is discarded).
-# Calls with no arguments omit the parentheses entirely.
-proc_stmt    = NAME [ LPAREN actual_params RPAREN ] ;
+# No-argument calls may use report-style bare names or explicit empty parens.
+proc_stmt    = NAME [ LPAREN [ actual_params ] RPAREN ] ;
 
 actual_params = expression { COMMA expression } ;
 
 # For loop with a list of for-elements. Elements are separated by commas.
 # Three element forms:
-#   step/until: for i := 1 step 1 until 10 do   (classic range loop)
-#   while:      for i := x while x > 0 do       (conditional advance)
-#   simple:     for i := 5 do                   (single value, executes once)
-# Multiple forms can be combined: for i := 1 step 1 until 5, 10, 20 do
-for_stmt     = "for" NAME ASSIGN for_list "do" statement ;
+#   step/until: for i := 1 step 1 until 10 do      (classic range loop)
+#   while:      for a[i] := x while x > 0 do       (conditional advance)
+#   simple:     for i := 5 do                      (single value, executes once)
+# Multiple forms can be combined: for a[1] := 1 step 1 until 5, 10, 20 do
+for_stmt     = "for" variable ASSIGN for_list "do" statement ;
 
 for_list     = for_elem { COMMA for_elem } ;
 
@@ -228,10 +243,10 @@ for_elem     = arith_expr "step" arith_expr "until" arith_expr
 #     exponentiation (left-associative per ALGOL 60 report)
 #     primary (literal, call, variable, parenthesised expression)
 #
-# Only the `expression` rule (used in assignments and actual parameters)
-# needs the full unified hierarchy.  Rules used in type-specific contexts
-# (arith_expr for bounds/subscripts, bool_expr for conditionals) are
-# kept as-is.
+# The `expression` rule is the fully unified hierarchy used in assignments and
+# actual parameters.  Type-specific contexts still use arith_expr, bool_expr,
+# or desig_expr, but their conditional forms also recurse on the then branch so
+# nested conditionals work anywhere ALGOL accepts that value kind.
 expression   = "if" bool_expr "then" expression "else" expression
              | expr_eqv ;
 
@@ -256,7 +271,7 @@ expr_atom    = INTEGER_LIT
 # Arithmetic expression.
 # The conditional form (if b then x else y) produces a numeric value.
 # This is ALGOL's "conditional expression" — cleaner than C's ternary ?: operator.
-arith_expr   = "if" bool_expr "then" simple_arith "else" arith_expr
+arith_expr   = "if" bool_expr "then" arith_expr "else" arith_expr
              | simple_arith ;
 
 # Addition and subtraction. Optional leading sign handles unary + and -.
@@ -276,6 +291,8 @@ factor       = primary { ( CARET | POWER ) primary } ;
 primary      = INTEGER_LIT
              | REAL_LIT
              | STRING_LIT
+             | "true"
+             | "false"
              | proc_call
              | variable
              | LPAREN arith_expr RPAREN ;
@@ -289,7 +306,7 @@ primary      = INTEGER_LIT
 #   and    — logical conjunction
 #   not    — logical negation (unary, highest precedence)
 # Then: relation (< = > etc.) and boolean primaries.
-bool_expr    = "if" bool_expr "then" simple_bool "else" bool_expr
+bool_expr    = "if" bool_expr "then" bool_expr "else" bool_expr
              | simple_bool ;
 
 simple_bool  = implication { "eqv" implication } ;
@@ -302,14 +319,14 @@ bool_factor  = bool_secondary { "and" bool_secondary } ;
 
 bool_secondary = "not" bool_secondary | bool_primary ;
 
-bool_primary = "true"
+bool_primary = relation
+             | "true"
              | "false"
-             | relation
              | proc_call
              | variable
              | LPAREN bool_expr RPAREN ;
 
-# A relation compares two arithmetic expressions.
+# A relation compares two scalar expressions.
 # Note: the operands are simple_arith (not full arith_expr) to avoid ambiguity
 # with the conditional expression form.
 relation     = simple_arith ( EQ | NEQ | LT | LEQ | GT | GEQ ) simple_arith ;
@@ -317,7 +334,7 @@ relation     = simple_arith ( EQ | NEQ | LT | LEQ | GT | GEQ ) simple_arith ;
 # Designational expression: used as the target of goto statements.
 # Resolves to a label — either a direct label, a switch subscript, or
 # a conditional jump (if b then label1 else label2).
-desig_expr   = "if" bool_expr "then" simple_desig "else" desig_expr
+desig_expr   = "if" bool_expr "then" desig_expr "else" desig_expr
              | simple_desig ;
 
 simple_desig = NAME LBRACKET arith_expr RBRACKET
@@ -336,7 +353,7 @@ variable     = NAME [ LBRACKET subscripts RBRACKET ] ;
 
 subscripts   = arith_expr { COMMA arith_expr } ;
 
-# A procedure call with arguments. The no-argument form (proc_stmt with no parens)
-# is handled in the statement rules. Here we require parentheses — this form
-# is used when a procedure call appears inside an expression.
-proc_call    = NAME LPAREN actual_params RPAREN ;
+# A procedure call expression. No-argument calls may be written with empty
+# parentheses; bare no-argument typed procedure expressions are handled by
+# semantic analysis when a NAME resolves to a typed procedure.
+proc_call    = NAME LPAREN [ actual_params ] RPAREN ;

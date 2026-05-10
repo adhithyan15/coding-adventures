@@ -35,5 +35,6 @@
 
 pub mod compiler;
 pub mod cross_validator;
+pub mod dump_spec;
 pub mod parser_grammar;
 pub mod token_grammar;

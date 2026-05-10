@@ -2,6 +2,135 @@
 
 ## [Unreleased]
 
+### Added — VMCOND00 Phase 4: PUSH_RESTART, POP_RESTART, FIND_RESTART, INVOKE_RESTART, COMPUTE_RESTARTS, ESTABLISH_EXIT, EXIT_TO opcodes
+
+Adds seven new `IrOp` enum values implementing VMCOND00 Layers 4 and 5 —
+named restarts and non-local exits — in the compiler IR opcode set shared by
+the JVM, CLR, and BEAM backends.
+
+**Layer 4 — Named restarts:**
+
+- **`IrOp.PUSH_RESTART` (72)** — push a named restart onto the restart chain.
+  Operands: `name: IrLabel` (restart's symbolic name) and `fn: IrRegister`.
+- **`IrOp.POP_RESTART` (73)** — pop the most recently pushed restart.  No
+  operands.
+- **`IrOp.FIND_RESTART` (74)** — search the restart chain for a named restart.
+  Operands: `name: IrLabel`; result register receives the `RestartNode` or nil.
+- **`IrOp.INVOKE_RESTART` (75)** — invoke a restart by its handle.  Operands:
+  `handle: IrRegister`, `arg: IrRegister`.
+- **`IrOp.COMPUTE_RESTARTS` (76)** — collect all active restart handles into a
+  list.  Operand: `dest: IrRegister`.
+
+**Layer 5 — Non-local exits:**
+
+- **`IrOp.ESTABLISH_EXIT` (77)** — push an exit point onto the exit-point chain.
+  Operands: `tag: IrLabel`, `result_reg: IrRegister`, `after_label: IrLabel`.
+- **`IrOp.EXIT_TO` (78)** — perform a non-local exit.  Operands: `tag: IrLabel`,
+  `val: IrRegister`.
+
+All seven opcodes are print/parse roundtrip-compatible via the generic
+`print_ir` / `parse_ir` machinery.  Total opcode count: **79** (was 72).
+
+Phase 4 scope is the interpreter / vm-core path only.  JVM, CLR, and BEAM
+backends that encounter these opcodes should reject the program with an
+appropriate "not yet implemented" diagnostic; lowering is deferred to a later
+phase.
+
+---
+
+### Added — VMCOND00 Phase 3: PUSH_HANDLER, POP_HANDLER, SIGNAL, ERROR, WARN opcodes
+
+Adds five new `IrOp` enum values implementing VMCOND00 Layer 3 — dynamic
+handlers — in the compiler IR opcode set shared by the JVM, CLR, and BEAM
+backends.
+
+- **`IrOp.PUSH_HANDLER` (67)** — push a condition handler onto the dynamic
+  handler chain.  Operands: `type_id: IrLabel` (``"*"`` or type name) and
+  `fn: IrRegister` (the handler callable).
+- **`IrOp.POP_HANDLER` (68)** — pop the most recently pushed handler.  No
+  operands.
+- **`IrOp.SIGNAL` (69)** — signal a condition non-unwinding; no-op if
+  unhandled.  Operand: `condition: IrRegister`.
+- **`IrOp.ERROR` (70)** — raise a condition; aborts (UncaughtConditionError)
+  if unhandled.  Checks Layer 2 exception table first.  Operand: `condition`.
+- **`IrOp.WARN` (71)** — warn about a condition; emits to stderr if unhandled,
+  then continues.  Operand: `condition: IrRegister`.
+
+All five opcodes are print/parse roundtrip-compatible via the generic
+`print_ir` / `parse_ir` machinery.  Total opcode count: **72** (was 67).
+
+Phase 3 scope is the interpreter / vm-core path only.  JVM, CLR, and BEAM
+backends that encounter these opcodes should reject the program with an
+appropriate "not yet implemented" diagnostic; lowering is deferred to a later
+phase.
+
+---
+
+### Added — VMCOND00 Phase 2: THROW opcode
+
+Adds `IrOp.THROW` (66) implementing VMCOND00 Layer 2 — unwind exceptions — in
+the compiler IR opcode set shared by the JVM, CLR, and BEAM backends.
+
+- **`IrOp.THROW` (66)** — raise a condition value and unwind the call stack
+  until a matching handler is found.  Operand layout:
+  `THROW condition_reg`
+  where `condition_reg` is a register holding the condition object (or tagged
+  integer sentinel).  The opcode does not have a destination register — control
+  exits the current instruction stream entirely.
+
+  Backend lowering strategies (for reference):
+
+  - **vm-core**: `handle_throw` walks the static `IIRFunction.exception_table`
+    from innermost to outermost frame, matching `[from_ip, to_ip)` and
+    `type_id`; jumps to `handler_ip` and writes the condition into `val_reg`.
+  - **JVM**: lower to `athrow` after boxing the condition into a synthetic
+    `LangCondition` class that extends `Throwable`; handler entries become
+    JVM exception table rows.
+  - **CLR**: lower to `throw` after boxing into a synthetic
+    `LangCondition : Exception` type; handler entries become CIL `.try / catch`
+    regions.
+
+The total opcode count grows from 66 → 67.  All existing opcode IDs (0–65)
+remain stable; serialized IR text files round-trip unchanged.
+
+The corresponding interpreter-IR mnemonic (`"throw"` added to `THROW_OPS`) and
+vm-core dispatch handler ship in the same PR.
+
+**Spec reference:** VMCOND00 §3 Layer 2 — unwind exceptions.
+
+---
+
+### Added — VMCOND00 Phase 1: SYSCALL_CHECKED and BRANCH_ERR opcodes
+
+Two new opcodes implementing the VMCOND00 Layer 1 result-value error protocol.
+Languages that opt in to this layer can invoke host syscalls without trapping
+and inspect the error code with a dedicated conditional branch.  The rest of
+the IR is unchanged — programs that don't use these opcodes are unaffected.
+
+- **`IrOp.SYSCALL_CHECKED` (64)** — Invoke a SYSCALL00-numbered host syscall
+  without trapping on errors.  Operand layout:
+  `SYSCALL_CHECKED n, arg_reg, val_dst, err_dst`
+  - `n`       — SYSCALL00 canonical syscall number (immediate)
+  - `arg_reg` — register holding the single argument
+  - `val_dst` — register to receive the success value (0 on error)
+  - `err_dst` — register to receive the error code: 0 ok, -1 EOF, <-1 negated errno
+
+- **`IrOp.BRANCH_ERR` (65)** — Branch to a label when an error register is
+  non-zero.  Operand layout: `BRANCH_ERR err_reg, label`.  Falls through when
+  `err_reg == 0` (success); jumps when `err_reg != 0` (syscall failed).
+
+The total opcode count grows from 64 → 66.  All existing opcode IDs (0–63)
+remain stable; serialized IR text files round-trip unchanged.
+
+These opcodes map to the **compiler IR** world (AOT compilation via
+`ir-to-jvm-class-file`, `ir-to-cil-bytecode`, `ir-to-beam`).  The
+interpreter IR (``interpreter-ir``) gets the corresponding ``syscall_checked``
+and ``branch_err`` string mnemonics in the same PR.
+
+**Spec reference:** VMCOND00 §3 Layer 1 — result values; SYSCALL00 §2.
+
+---
+
 ### Added — TW03 Phase 3a heap-primitive ops
 
 Eight new opcodes (55–62) introducing the cross-backend Lisp

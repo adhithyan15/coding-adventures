@@ -32,16 +32,49 @@ slot neatly into the same dispatch flow as built-ins.
 
 from __future__ import annotations
 
+from cas_pattern_matching.defrule_engine import RuleStore
+from cas_pattern_matching.matchdeclare import MatchDeclareContext
+from cas_pattern_matching.rewriter import apply_rule as _pm_apply_rule
+from cas_simplify import AssumptionContext
 from symbolic_ir import DEFINE, LIST, IRApply, IRNode, IRSymbol
 
 from symbolic_vm.backend import Backend
 
 
 class VM:
-    """Evaluates symbolic IR trees under a policy supplied by a Backend."""
+    """Evaluates symbolic IR trees under a policy supplied by a Backend.
+
+    Attributes
+    ----------
+    backend:
+        The evaluation policy (symbolic, strict-numeric, etc.).
+    assumptions:
+        Per-session :class:`~cas_simplify.assumptions.AssumptionContext`
+        that records facts declared via ``assume(...)`` and removed via
+        ``forget(...)``.  Handlers read from it via ``vm.assumptions``.
+    match_declarations:
+        Per-session :class:`~cas_pattern_matching.matchdeclare.MatchDeclareContext`
+        that records which symbols are pattern variables and their type
+        predicates.  Populated by ``matchdeclare(...)`` calls.
+    named_rules:
+        Per-session :class:`~cas_pattern_matching.defrule_engine.RuleStore`
+        that maps rule names to compiled ``Rule(lhs, rhs)`` IR nodes.
+        Populated by ``defrule(...)`` calls; consumed by ``apply1``/``apply2``.
+    tellsimp_rules:
+        Ordered list of compiled ``Rule(lhs, rhs)`` nodes added via
+        ``tellsimp(...)``.  Tried automatically at step 2b of every
+        ``_eval_apply`` call, just after the backend's built-in rules.
+    """
 
     def __init__(self, backend: Backend) -> None:
         self.backend = backend
+        # Assumption context lives on the VM so every handler in the same
+        # session shares the same declared facts.
+        self.assumptions: AssumptionContext = AssumptionContext()
+        # Pattern-matching state (Phase 22).
+        self.match_declarations: MatchDeclareContext = MatchDeclareContext()
+        self.named_rules: RuleStore = RuleStore()
+        self.tellsimp_rules: list[IRApply] = []
 
     # ------------------------------------------------------------------
     # Public entry points
@@ -99,6 +132,12 @@ class VM:
         for predicate, transform in self.backend.rules():
             if predicate(expr):
                 return self.eval(transform(expr))
+
+        # 2b. Try user-declared tellsimp rules (Phase 22).
+        for rule in self.tellsimp_rules:
+            result = _pm_apply_rule(rule, expr)
+            if result is not None:
+                return self.eval(result)
 
         # 3. Dispatch to a head-specific handler.
         handler = self.backend.handlers().get(head_name)

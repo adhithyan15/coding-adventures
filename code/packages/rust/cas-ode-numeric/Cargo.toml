@@ -1,0 +1,9 @@
+[package]
+name = "cas-ode-numeric"
+version = "0.1.0"
+edition = "2021"
+description = "Fixed-step RK4 numeric ODE integrator over symbolic IR"
+license = "MIT"
+
+[dependencies]
+symbolic-ir = { path = "../symbolic-ir" }

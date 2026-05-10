@@ -1,5 +1,98 @@
 # Changelog
 
+## 0.13.0 — 2026-05-05
+
+**Add 2 transcendental-solving head symbols — Phase 26.**
+
+New `IRSymbol` singletons in `nodes.py`, exported from `__init__.py`:
+
+- `FREE_INTEGER = IRSymbol("FreeInteger")` — the free-integer constant `%k` that
+  appears in periodic solutions of trig equations.  `solve(sin(x)=c,x)` returns
+  solutions containing `FreeInteger` to represent "for all integers k".
+- `LAMBERT_W = IRSymbol("LambertW")` — the principal branch W₀ of the Lambert W
+  function (inverse of `w·exp(w)`).  `solve(x·exp(x)=c,x)` returns `LambertW(c)`.
+  Numerically evaluated by the VM when the argument is a concrete number.
+
+---
+
+## 0.12.0 — 2026-05-04
+
+**Add 2 summation head symbols — Phase 25 symbolic sum/product.**
+
+New `IRSymbol` singletons in `nodes.py`, exported from `__init__.py`:
+
+- `SUM = IRSymbol("Sum")` — symbolic summation `Σ_{k=a}^{b} f(k)` (4-arg)
+- `PRODUCT = IRSymbol("Product")` — symbolic product `Π_{k=a}^{b} f(k)` (4-arg)
+
+Both take 4 arguments: `(f, k, lo, hi)` matching the MACSYMA `sum`/`product`
+calling convention. The VM evaluates them to closed forms (Faulhaber
+polynomial, geometric series, classic constants) or returns the unevaluated
+node when no pattern matches.
+
+---
+
+## 0.11.0 — 2026-05-04
+
+**Add 12 special-function head symbols — Phase 23 erf/Si/Li₂/Gamma/Fresnel.**
+
+New `IRSymbol` singletons in `nodes.py`, exported from `__init__.py`:
+
+**Error functions (23a)**
+- `ERF = IRSymbol("Erf")` — Gaussian error function erf(x)
+- `ERFC = IRSymbol("Erfc")` — complementary error function 1−erf(x)
+- `ERFI = IRSymbol("Erfi")` — imaginary error function erfi(x)
+
+**Trigonometric integrals (23b)**
+- `SI = IRSymbol("Si")` — sine integral Si(x) = ∫₀^x sin(t)/t dt
+- `CI = IRSymbol("Ci")` — cosine integral Ci(x)
+- `SHI = IRSymbol("Shi")` — hyperbolic sine integral Shi(x)
+- `CHI = IRSymbol("Chi")` — hyperbolic cosine integral Chi(x)
+
+**Dilogarithm (23c)**
+- `LI2 = IRSymbol("Li2")` — Spence's dilogarithm Li₂(z)
+
+**Gamma / Beta (23d)**
+- `GAMMA_FUNC = IRSymbol("GammaFunc")` — Euler's Gamma function Γ(z)
+- `BETA_FUNC = IRSymbol("BetaFunc")` — Beta function B(a,b)
+
+**Fresnel integrals (23e)**
+- `FRESNEL_S = IRSymbol("FresnelS")` — FresnelS(x) = ∫₀^x sin(πt²/2) dt
+- `FRESNEL_C = IRSymbol("FresnelC")` — FresnelC(x) = ∫₀^x cos(πt²/2) dt
+
+---
+
+## 0.10.0 — 2026-05-04
+
+**Add 5 pattern-matching head symbols — Phase 22 matchdeclare/defrule/apply1/apply2/tellsimp.**
+
+New `IRSymbol` singletons in `nodes.py`, exported from `__init__.py`:
+
+- `MATCHDECLARE = IRSymbol("MatchDeclare")` — declare a pattern variable
+- `DEFRULE = IRSymbol("Defrule")` — compile and store a named rewrite rule
+- `APPLY1 = IRSymbol("Apply1")` — apply a named rule once at the root
+- `APPLY2 = IRSymbol("Apply2")` — apply a named rule recursively (fixed-point)
+- `TELLSIMP = IRSymbol("TellSimp")` — add a rule to the VM's auto-simplifier
+
+---
+
+## 0.9.0 — 2026-05-04
+
+**Add 9 simplification head symbols — Phase 21 assumption + radical/log/exp suite.**
+
+New `IRSymbol` singletons in `nodes.py`, exported from `__init__.py`:
+
+- `ASSUME = IRSymbol("Assume")` — record a symbol assumption
+- `FORGET = IRSymbol("Forget")` — remove assumption(s)
+- `IS = IRSymbol("Is")` — query an assumption
+- `SIGN = IRSymbol("Sign")` — sign function (+1 / 0 / −1)
+- `RADCAN = IRSymbol("Radcan")` — radical canonicalization
+- `LOGCONTRACT = IRSymbol("LogContract")` — combine log sums
+- `LOGEXPAND = IRSymbol("LogExpand")` — expand log over products/powers
+- `EXPONENTIALIZE = IRSymbol("Exponentialize")` — trig/hyp → exp form
+- `DEMOIVRE = IRSymbol("DeMoivre")` — exp(a+bi) → exp(a)·(cos b + i·sin b)
+
+---
+
 ## 0.8.0 — 2026-04-28
 
 **Add `Coth`, `Sech`, `Csch` head symbols — reciprocal hyperbolic functions (Phase 15).**

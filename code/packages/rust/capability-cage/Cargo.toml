@@ -1,0 +1,10 @@
+[package]
+name = "capability-cage"
+version = "0.1.0"
+edition = "2021"
+description = "Rust port of the capability-cage runtime — manifests, secure wrappers, audit envelope"
+
+[dependencies]
+coding-adventures-json-parser = { path = "../json-parser" }
+coding-adventures-json-value  = { path = "../json-value" }
+read-write-separation = { path = "../read-write-separation" }

@@ -22,6 +22,8 @@
 //! On 64-bit systems, VALUE is `u64`. On 32-bit, it's `u32`.
 
 use std::ffi::{c_char, c_int, c_long, c_void, CString};
+use std::slice;
+use std::sync::OnceLock;
 
 // ---------------------------------------------------------------------------
 // The VALUE type
@@ -44,16 +46,15 @@ pub type ID = usize;
 
 /// Ruby `false` (VALUE = 0)
 pub const QFALSE: VALUE = 0;
-/// Ruby `true` — 0x14 on all 64-bit Ruby builds with USE_FLONUM (the default).
-pub const QTRUE: VALUE = 0x14;
-/// Ruby `nil` — 0x04 on all 64-bit Ruby builds with USE_FLONUM (the default).
+/// Ruby `true` on common 64-bit Ruby builds.
 ///
-/// USE_FLONUM is enabled on every 64-bit Ruby (x86_64 and aarch64) since
-/// Ruby 2.x. The special-constant layout with USE_FLONUM is:
-///   Qfalse = 0x00, Qnil = 0x04, Qtrue = 0x14, Qundef = 0x24
-/// Without USE_FLONUM (32-bit or unusual builds) Qnil = 0x02, but those
-/// builds are not supported by this crate.
-pub const QNIL: VALUE = 0x04;
+/// Prefer [`true_value`] or [`bool_to_rb`] for cross-runtime extension returns.
+pub const QTRUE: VALUE = 0x14;
+/// Legacy Ruby `nil` constant for runtimes that use this layout.
+///
+/// Ruby special VALUE layouts vary across runtimes/toolchains. Prefer
+/// [`nil_value`] when returning `nil` from native code.
+pub const QNIL: VALUE = 0x08;
 
 // ---------------------------------------------------------------------------
 // Ruby's C API — extern "C" declarations
@@ -121,7 +122,9 @@ extern "C" {
     pub static rb_eRuntimeError: VALUE;
 
     // -- String operations -------------------------------------------------
+    pub fn rb_str_new(ptr: *const c_char, len: c_long) -> VALUE;
     pub fn rb_utf8_str_new(ptr: *const c_char, len: c_long) -> VALUE;
+    fn rb_string_value_ptr(ptr: *mut VALUE) -> *const c_char;
     fn rb_string_value_cstr(ptr: *mut VALUE) -> *const c_char;
 
     // -- Array operations --------------------------------------------------
@@ -184,6 +187,9 @@ extern "C" {
 
     // -- String length (for str_from_rb) -----------------------------------
     fn rb_str_strlen(str: VALUE) -> c_long;
+
+    // -- Runtime literals ---------------------------------------------------
+    pub fn rb_eval_string(str: *const c_char) -> VALUE;
 }
 
 // ---------------------------------------------------------------------------
@@ -288,6 +294,40 @@ pub fn str_from_rb(val: VALUE) -> Option<String> {
         }
         let c_str = std::ffi::CStr::from_ptr(ptr);
         c_str.to_str().ok().map(|s| s.to_string())
+    }
+}
+
+/// Convert a Rust byte slice to a Ruby String without interpreting it as
+/// UTF-8. This is the right helper for compact binary protocols, COBS frames,
+/// checksummed payloads, and buffers that may contain NUL bytes.
+pub fn bytes_to_rb(bytes: &[u8]) -> VALUE {
+    unsafe { rb_str_new(bytes.as_ptr() as *const c_char, bytes.len() as c_long) }
+}
+
+/// Convert a Ruby String VALUE to an owned Rust byte buffer.
+///
+/// Unlike `str_from_rb`, this preserves embedded NUL bytes and invalid UTF-8.
+pub fn bytes_from_rb(val: VALUE) -> Option<Vec<u8>> {
+    unsafe {
+        let mut v = val;
+        let ptr = rb_string_value_ptr(&mut v);
+        if ptr.is_null() {
+            return None;
+        }
+
+        let mid = rb_intern(b"bytesize\0".as_ptr() as *const c_char);
+        let len_val = rb_funcallv(v, mid, 0, std::ptr::null());
+        let len = rb_num2long(len_val);
+        if len < 0 {
+            return None;
+        }
+
+        let ptr = rb_string_value_ptr(&mut v);
+        if ptr.is_null() {
+            return None;
+        }
+
+        Some(slice::from_raw_parts(ptr as *const u8, len as usize).to_vec())
     }
 }
 
@@ -397,7 +437,23 @@ pub fn vec_tuple3_str_f64_to_rb(items: &[(String, String, f64)]) -> VALUE {
 // ---------------------------------------------------------------------------
 
 pub fn bool_to_rb(b: bool) -> VALUE {
-    if b { QTRUE } else { QFALSE }
+    if b { true_value() } else { QFALSE }
+}
+
+/// Return the actual Ruby `nil` VALUE for the currently loaded interpreter.
+///
+/// Hard-coded special constants are fragile across Ruby/toolchain
+/// combinations. Evaluating the literal once keeps native extensions portable
+/// while still avoiding any external bridge dependency.
+pub fn nil_value() -> VALUE {
+    static RUBY_NIL: OnceLock<VALUE> = OnceLock::new();
+    *RUBY_NIL.get_or_init(|| unsafe { rb_eval_string(b"nil\0".as_ptr() as *const c_char) })
+}
+
+/// Return the actual Ruby `true` VALUE for the currently loaded interpreter.
+pub fn true_value() -> VALUE {
+    static RUBY_TRUE: OnceLock<VALUE> = OnceLock::new();
+    *RUBY_TRUE.get_or_init(|| unsafe { rb_eval_string(b"true\0".as_ptr() as *const c_char) })
 }
 
 pub fn usize_to_rb(n: usize) -> VALUE {

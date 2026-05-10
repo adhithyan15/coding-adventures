@@ -294,15 +294,68 @@ cleanly to anything.
    without consulting the search path.  Cycle errors include
    the full path (`a -> b -> c -> a`) for diagnosability.
 
-3. **Phase 4c — `host` module + cross-module IR ops.**  Two
-   new IR ops (`HOST_CALL`, `MODULE_CALL`) — or, simpler, extend
-   the existing `CALL` op's label to be a module-qualified
-   string like `"host/write-byte"` and `"stdlib/io/println"`,
-   resolved per-backend.
+3. **Phase 4c — `host` module + cross-module IR ops.**
+   **Status: shipped — `twig` v0.4.0.**
 
-4. **Phase 4d — JVM module lowering.**  Each module → one
-   `.class`.  Cross-module CALL → `invokestatic`.  Bundle the
-   stdlib classes alongside the user JAR.
+   **Platform-independent syscall convention** rather than
+   module-qualified CALL labels.  Every call to a `host/*`
+   export in user code lowers to a `SYSCALL` IR op with a
+   small fixed numeric code shared across all backends:
+
+   | Num | Host export | Interpreter IIR | Compiler IR (JVM/CLR) |
+   |-----|-------------|-----------------|------------------------|
+   | 1 | `host/write-byte` | `call_builtin "syscall" 1 arg` | `IrOp.SYSCALL IrImmediate(1) IrRegister(0)` |
+   | 2 | `host/read-byte` | `call_builtin "syscall" 2` | `IrOp.SYSCALL IrImmediate(2) IrRegister(dest)` |
+   | 10 | `host/exit` | `call_builtin "syscall" 10 arg` | `IrOp.SYSCALL IrImmediate(10) IrRegister(0)` |
+
+   The simpler "extend CALL's label" approach was considered but
+   rejected — `IrOp.SYSCALL` was already wired end-to-end in the
+   JVM and CLR backends (and Brainfuck uses it with the same
+   numbers) so emitting SYSCALL directly avoids introducing a
+   new naming convention that each backend would need to decode.
+
+   **`twig.compiler`** — `_compile_apply` detects module-qualified
+   names (slash with non-empty prefix and suffix) and looks up the
+   syscall number in `_HOST_SYSCALLS`.  Unknown `host/*` names
+   raise `TwigCompileError`.
+
+   **`TwigVM`** — single `"syscall"` builtin dispatcher replaces
+   the three individual `host/write-byte` / `host/read-byte` /
+   `host/exit` builtins.
+
+   **`twig.free_vars`** — module-qualified names are never
+   captured as closure free-variables.
+
+   **Module resolver** — refactored from a hand-rolled DFS to
+   `topological_sort` + `strongly_connected_components` from the
+   `coding-adventures-directed-graph` package.  Public API
+   unchanged.
+
+4. **Phase 4d — JVM module lowering.**  **Status: shipped —
+   `ir-to-jvm-class-file` v0.17.0, `twig-jvm-compiler` v0.7.0.**
+   Each module → one `.class`.  Cross-module CALL → `invokestatic`.
+
+   **Design:**
+   - A shared `TwigRuntime` class (`coding_adventures/twig/runtime/TwigRuntime`)
+     owns `public static int[] __ca_regs` and `public static Object[] __ca_objregs`,
+     initialised in `<clinit>`.  All module classes `getstatic` / `putstatic`
+     to this external owner instead of declaring their own fields.
+   - `JvmBackendConfig.external_runtime_class` — when set to
+     `TWIG_RUNTIME_BINARY_NAME`, the backend omits field declarations and
+     redirects all register-array accesses to the named class.
+   - `JvmBackendConfig.extra_callable_labels` — exported functions have no
+     local `CALL` callers so `_discover_callable_regions` would silently drop
+     them.  This hint forces them to be emitted as `ACC_PUBLIC | ACC_STATIC`
+     JVM methods.
+   - Cross-module `IrOp.CALL` labels (containing `/`) are decomposed at the
+     last `/` to yield a foreign class name and method name; the backend emits
+     `invokestatic <class>.<method>()I`.
+   - `compile_modules(modules, *, entry_module)` in `twig-jvm-compiler`
+     compiles every non-host `ResolvedModule` and returns a `MultiModuleResult`.
+   - `run_modules(modules, *, entry_module)` bundles all classes into a JAR
+     and invokes `java -jar`.
+   - **Acceptance criterion** (from spec): `(a/math/add 17 25)` → exit 0,
+     stdout `b'\x2a'` (42) on real `java`.  ✓
 
 5. **Phase 4e — CLR module lowering.**  Each module → one
    `TypeDef` in a multi-type assembly.

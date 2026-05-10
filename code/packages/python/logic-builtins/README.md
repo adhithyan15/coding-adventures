@@ -26,16 +26,62 @@ ordinary logic goal expressions.
 - `trueo()` and `failo()`
 - `iftheno(condition, then_goal)` and `ifthenelseo(condition, then_goal, else_goal)`
 - `forallo(generator, test)`
-- `groundo(term)`
+- `groundo(term)`, `acyclic_termo(term)`, and `cyclic_termo(term)` for
+  term-shape checks
 - `varo(term)` and `nonvaro(term)`
 - `atomo(term)`, `integero(term)`, `numbero(term)`, `stringo(term)`, and
   `compoundo(term)`
 - `atomico(term)` and `callableo(term)`
 - `functoro(term, name, arity)` for inspection and construction
+- `compound_name_argumentso(term, name, arguments)` and
+  `compound_name_arityo(term, name, arity)` for compound-only reflection and
+  construction
 - `argo(index, term, value)`
 - `univo(term, parts)` for Prolog-style `=../2` term decomposition/construction
+- `unify_with_occurs_checko(left, right)` and `unifiableo(left, right, unifier)`
+  for finite unification and non-binding unifiability inspection
 - `copytermo(source, copy)`, `same_termo(left, right)`, and
   `not_same_termo(left, right)`
+- `term_variableso(term, variables)` and `numbervarso(term, start, end)` for
+  source-level term variable inspection and `'$VAR'(N)` numbering
+- `term_hasho(term, hash)` and `term_hash_boundedo(term, depth, range, hash)`
+  for stable structural term hashes
+- `variant_termo(left, right)`, `not_variant_termo(left, right)`, and
+  `subsumes_termo(general, specific)` for non-binding term generality checks
+- `atom_charso/2`, `atom_codeso/2`, `number_charso/2`, `number_codeso/2`,
+  `char_codeo/2`, `string_charso/2`, and `string_codeso/2` for finite text
+  conversion relations
+- `atom_concato/3`, `atomic_list_concato/2`,
+  `atomic_list_concato_with_separator/3`, and `number_stringo/2` for finite
+  atom composition and number/string conversion modes
+- `atom_lengtho/2`, `string_lengtho/2`, `sub_atomo/5`, and `sub_stringo/5` for
+  finite text inspection and slicing modes
+- `exists_fileo/1`, `exists_directoryo/1`, `absolute_file_nameo/2`,
+  `access_fileo/2`, `file_directory_nameo/2`, `file_base_nameo/2`,
+  `directory_file_patho/3`, `file_name_extensiono/3`, `same_fileo/2`,
+  `size_fileo/2`, `time_fileo/2`, `directory_fileso/2`,
+  `make_directoryo/1`, `delete_fileo/1`, `delete_directoryo/1`,
+  `rename_fileo/2`, `working_directoryo/2`, `expand_file_nameo/2`,
+  `make_directory_patho/1`, `delete_directory_and_contentso/1`,
+  `copy_fileo/2`, `read_file_to_stringo/2`, and `read_file_to_codeso/2` for
+  bounded file metadata, explicit filesystem operations, recursive/wildcard
+  filesystem helpers, and UTF-8 file text reads
+- `openo/3`, `closeo/1`, `read_stringo/3`, `read_line_to_stringo/2`,
+  `get_charo/2`, `at_end_of_streamo/1`, `writeo/2`, and `nlo/1` for bounded
+  UTF-8 file stream handles
+- `open_optionso/4`, `current_streamo/3`, `stream_propertyo/2`, and
+  `flush_outputo/1` for bounded stream aliases, option validation, metadata,
+  standard `user_input`/`user_output`/`user_error` streams, and accepted
+  `reposition`, `eof_action`, `buffer`, and `close_on_abort` options
+- `set_stream_positiono/2` and `seeko/4` for bounded read-stream cursor
+  repositioning
+- `set_inputo/1`, `set_outputo/1`, `current_inputo/1`, `current_outputo/1`,
+  and current-stream read/write forms for selected bounded streams
+- `get_codeo/2`, `peek_charo/2`, `peek_codeo/2`, `put_charo/2`,
+  `put_codeo/2`, and current-stream variants for bounded UTF-8
+  character/code stream I/O
+- `get_byteo/2`, `peek_byteo/2`, `put_byteo/2`, and current-stream variants
+  for bounded binary file stream I/O opened with `type(binary)`
 - `difo(left, right)` for delayed disequality constraints
 - `clauseo(head, body)` for Prolog-style clause introspection
 - `compare_termo(order, left, right)`, `termo_lto(left, right)`,
@@ -96,15 +142,31 @@ from logic_builtins import (
     foldlo,
     forallo,
     functoro,
+    compound_name_argumentso,
+    compound_name_arityo,
     geqo,
     groundo,
+    acyclic_termo,
+    cyclic_termo,
+    unifiableo,
+    unify_with_occurs_checko,
     ifthenelseo,
     includeo,
     integero,
     iso,
     labelingo,
     maplisto,
+    atom_concato,
+    atom_charso,
+    atom_codeso,
+    atom_lengtho,
+    atomic_list_concato_with_separator,
+    number_charso,
+    number_stringo,
+    char_codeo,
     not_same_termo,
+    numbervarso,
+    subsumes_termo,
     noto,
     onceo,
     partitiono,
@@ -112,8 +174,13 @@ from logic_builtins import (
     same_termo,
     succo,
     set_prolog_flago,
+    sub_atomo,
+    sub_stringo,
+    term_hash_boundedo,
+    term_hasho,
     termo_lto,
     univo,
+    variant_termo,
 )
 from logic_engine import (
     atom,
@@ -128,6 +195,7 @@ from logic_engine import (
     relation,
     rule,
     solve_all,
+    string,
     term,
     var,
 )
@@ -206,9 +274,43 @@ assert solve_all(
 assert solve_all(
     program(),
     X,
+    compound_name_argumentso(X, "box", logic_list(["tea", "cake"])),
+) == [term("box", "tea", "cake")]
+assert solve_all(
+    program(),
+    (Name, Arity),
+    compound_name_arityo(term("box", "tea"), Name, Arity),
+) == [(atom("box"), num(1))]
+assert solve_all(
+    program(),
+    X,
     univo(X, logic_list(["box", "tea", "cake"])),
 ) == [term("box", "tea", "cake")]
 assert solve_all(program(), X, same_termo(X, X)) == [X]
+assert solve_all(
+    program(),
+    (X, Score),
+    conj(eq(X, term("pair", Y, Y)), numbervarso(X, 0, Score)),
+) == [(term("pair", term("$VAR", 0), term("$VAR", 0)), num(1))]
+assert solve_all(program(), Score, term_hash_boundedo(term("box", "tea"), 2, 1000, Score))
+assert solve_all(program(), X, variant_termo(term("box", X), term("box", Y))) == [X]
+assert solve_all(program(), X, subsumes_termo(term("box", X), term("box", "tea"))) == [X]
+assert solve_all(program(), X, atom_charso(X, logic_list(["t", "e", "a"]))) == [atom("tea")]
+assert solve_all(program(), X, atom_codeso("tea", X)) == [logic_list([116, 101, 97])]
+assert solve_all(program(), X, number_charso(X, logic_list(["4", "2"]))) == [num(42)]
+assert solve_all(program(), X, char_codeo(X, 90)) == [atom("Z")]
+assert solve_all(program(), X, atom_concato("tea", "cup", X)) == [atom("teacup")]
+assert solve_all(
+    program(),
+    X,
+    atomic_list_concato_with_separator(logic_list(["tea", 2, "go"]), "-", X),
+) == [atom("tea-2-go")]
+assert solve_all(program(), X, number_stringo(X, string("3.5"))) == [num(3.5)]
+assert solve_all(program(), X, atom_lengtho("teacup", X)) == [num(6)]
+assert solve_all(program(), X, sub_atomo("teacup", 3, 3, 0, X)) == [atom("cup")]
+assert solve_all(program(), X, sub_stringo(string("logic"), 2, 2, 1, X)) == [
+    string("gi"),
+]
 assert solve_all(family, Body, clauseo(child("bart", "homer"), Body)) == [
     term("parent", "homer", "bart"),
 ]
@@ -348,7 +450,10 @@ enumerate concrete assignments.
 
 Collections are observations over a nested proof search. `findallo` succeeds
 with an empty list when the inner goal fails, while `bagofo` and `setofo` fail
-for empty collections.
+for empty collections. `bagofo` and `setofo` also group answers by free
+variables in the collection goal, matching the core Prolog behavior behind
+queries such as `bagof(Child, parent(Parent, Child), Children)`. Variables
+marked by `^/2` are treated as existential and do not create separate groups.
 
 Advanced control is intentionally honest about the solver. `cuto()` is real
 solver-level cut, not `onceo` in disguise: it prunes choicepoints made before it
@@ -360,9 +465,16 @@ generated proof without leaking generator bindings to the outer query.
 Term metaprogramming treats terms as ordinary data. `univo` decomposes
 `box(tea, cake)` into `[box, tea, cake]` and can construct the term back from
 that list. `functoro` now constructs atoms and compounds when supplied a name
-and arity. `copytermo` refreshes variables in a copied term, while
-`term_variableso` extracts the unique variables still present after reification
-and `same_termo` checks strict identity without binding variables.
+and arity, while `compound_name_argumentso` and `compound_name_arityo` provide
+compound-only name/arguments and name/arity reflection. `acyclic_termo` and
+`cyclic_termo` expose standard finite-vs-rational-tree checks; today all
+ordinary engine terms are acyclic because the core term model is immutable.
+`unify_with_occurs_checko` exposes finite unification explicitly, while
+`unifiableo` reports a unifier list without binding the source terms.
+`copytermo` refreshes variables in a copied term, while `term_variableso`
+extracts the unique variables still present after reification, `term_hasho`
+gives variant-aware structural hashes for indexing and memoization, and
+`same_termo` checks strict identity without binding variables.
 
 Clause introspection treats source clauses as ordinary data. `clauseo(Head,
 Body)` enumerates facts with body `true` and rules with a term-encoded body,

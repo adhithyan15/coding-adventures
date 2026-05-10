@@ -2,6 +2,23 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Changed
+
+- Routed linear and hidden-layer visualizer predictions through the shared
+  neural-network graph and neural-graph-vm matrix plan path.
+- Added Paint VM SVG neural graph panels that show weights, bias edges,
+  activations, and gradient updates while training runs advance.
+- Expanded the neural graph panels into a full learning-flow trace covering
+  forward prediction, error/loss calculation, gradients, and parameter updates.
+- Corrected the learning-flow arrows so forward edges point into each node and
+  loss feedback folds into a lower update loop instead of crossing the graph.
+- Fixed hidden-layer example switching so each selected example resets the
+  model state before the neural graph VM sees the new input shape.
+- Added a hidden-layer depth slider for the neural examples so the same
+  dataset can be retrained with deeper feed-forward networks.
+
 ## [0.1.0] - 2026-03-25
 
 ### Added

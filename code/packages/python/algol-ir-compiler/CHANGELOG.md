@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Changed
 
+- Lowered ALGOL dummy statements as no-op IR in `then`, `else`, `do`, and
+  terminal-label statement positions.
 - Lowered ALGOL scalar locals through planned activation-frame slots instead
   of source-variable virtual registers.
 - Added frame-memory metadata, frame header setup/teardown, static-link
@@ -28,6 +30,21 @@ All notable changes to this package will be documented in this file.
   re-evaluates against the caller frame on every formal read.
 - Covered read-only boolean and string expression actuals through the same word
   eval-thunk path used by integer expressions.
+- Lowered multiple builtin `print`/`output` arguments in source order through
+  the existing guarded integer, boolean, real, and string output paths.
+- Lowered direct calls to sibling procedures declared later in the same block,
+  including mutually recursive typed procedures now resolved by the checker.
+- Lowered switch entries that select later sibling switch declarations now
+  that the checker resolves switch designational lists after declaration
+  registration.
+- Lowered array bounds whose expressions call later sibling typed procedures
+  now that the checker defers bound analysis until declaration registration
+  completes.
+- Preserved array declaration-order semantics by relying on checker diagnostics
+  for bounds that read later array descriptors.
+- Preserved indirect array declaration-order semantics by relying on checker
+  diagnostics for bounds that call procedures which may touch later array
+  descriptors.
 - Lowered integer array-element by-name actuals to tagged descriptors with
   generated eval/store helpers that re-compute the element address on every
   formal read or assignment.
@@ -49,6 +66,8 @@ All notable changes to this package will be documented in this file.
 - Lowered chained assignments, branch-selected conditional expressions, and
   ALGOL-left-associative exponentiation for numeric bases with integer or real
   exponents.
+- Lowered nested conditional expressions in type-specific arithmetic, Boolean,
+  and designational contexts, including nested conditional `goto` targets.
 - Lowered boolean `and`, `or`, and `impl` through short-circuiting control
   flow while keeping `eqv` strict.
 - Lowered bare no-argument typed procedure names as expression calls, including
@@ -79,14 +98,31 @@ All notable changes to this package will be documented in this file.
   to read or assign through the original argument.
 - Lowered whole-array arguments through formal procedure dispatchers by passing
   descriptor pointers to actual procedures that declare matching array formals.
+- Lowered subscripted integer and real array elements as writable `for`
+  statement control variables.
 - Lowered label, switch, and procedure arguments through formal procedure
   dispatchers by forwarding label ids and descriptor pointers.
+- Lowered report-style typed formal specifiers such as `integer array a;` and
+  `real procedure f;` through the existing array/procedure formal paths.
+- Lowered conditional switch designator actuals by selecting and forwarding the
+  chosen switch descriptor through concrete and formal procedure calls.
 - Preserved concrete procedure ids in formal procedure call-shape metadata so
   nested procedure-parameter contracts are checked before IR lowering.
+- Lowered formal procedure parameters passed as procedure arguments to another
+  formal procedure call, preserving the forwarded procedure descriptor instead
+  of treating the bare formal name as a scalar expression.
+- Lowered by-name label formals as lazy label descriptors, so conditional
+  label actuals are re-evaluated when the formal is used by `goto`, while
+  `value label` formals retain call-time snapshot behavior.
+- Lowered by-name switch formals as lazy switch descriptors, so conditional
+  switch actuals are re-evaluated when the formal is selected, while
+  `value switch` formals resolve the selected descriptor at call time.
 - Lowered recursive switch self-selection through runtime switch-eval descriptor
   dispatch rather than compile-time descriptor expansion.
 - Lowered `go to` statements through the same direct and designational goto
   paths as the compact `goto` spelling.
+- Lowered normalized ALGOL publication symbols for relations, exponentiation,
+  and boolean operators through the existing ASCII/keyword operator paths.
 - Lowered standard numeric builtin functions `abs`, `sign`, and `entier` using
   existing integer/f64 IR operations.
 - Lowered standard real builtin function `sqrt` to integer-to-real promotion,
@@ -97,6 +133,9 @@ All notable changes to this package will be documented in this file.
 - Lowered real exponentiation to integer-to-real promotion and the imported
   `F64_POW` IR opcode, with NaN results routed through the runtime-failure
   path.
+- Guarded real-to-integer truncation before emitting `I32_TRUNC_FROM_F64`, so
+  oversized, infinite, or NaN real values return through ALGOL's runtime
+  failure path instead of leaking WASM traps or host exceptions.
 - Added configurable generated-state limits for eval thunks, conditional label
   sets, loop label sets, switch dispatch states, and output helper label sets,
   with targeted `CompileError` diagnostics when lowering would exceed them.
@@ -104,6 +143,8 @@ All notable changes to this package will be documented in this file.
   switch-formal evaluation helper, so multi-entry switch parameters now return
   the label selected by the runtime index instead of depending on the last
   compiled entry register.
+- Lowered `<>` as the same not-equal comparison as `!=` for numeric, boolean,
+  and string operands.
 
 ## [0.1.0] - 2026-04-20
 

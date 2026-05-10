@@ -35,11 +35,14 @@
 //!     feedback_slots: std::collections::HashMap::new(),
 //!     // No source positions known for hand-built fixtures — leave empty.
 //!     source_map: Vec::new(),
+//!     param_refinements: Vec::new(),
+//!     return_refinement: None,
 //! };
 //! assert_eq!(fn_.param_names(), vec!["a", "b"]);
 //! ```
 
 use std::collections::HashMap;
+use lang_refined_types::RefinedType;
 use crate::instr::IIRInstr;
 use crate::opcodes::is_concrete_type;
 use crate::source_loc::SourceLoc;
@@ -136,10 +139,47 @@ pub struct IIRFunction {
     /// genuinely unknown (legacy callers, hand-built test fixtures).
     /// Frontends that lower from a real AST should always populate it.
     pub source_map: Vec<SourceLoc>,
+
+    // -----------------------------------------------------------------------
+    // LANG23 PR 23-E — refinement type annotations (additive, opt-in)
+    // -----------------------------------------------------------------------
+    //
+    // These two fields carry the LANG23 refinement type annotations that
+    // frontends parse from source (e.g. `(define (f (x : (Int 0 128)) ...) ...)`).
+    // They are **additive and opt-in**: all existing callers leave them at
+    // their default `None`/empty values and see no behaviour change.
+    //
+    // The refinement checker (`lang-refinement-checker`) reads these fields to
+    // discharge proof obligations for annotated functions without any changes to
+    // the instruction stream or the existing `type_hint` string mechanism (which
+    // continues to carry unrefined kind information for the JIT/profiler).
+
+    /// Per-parameter refinement type annotations, in **lockstep** with [`Self::params`].
+    ///
+    /// `param_refinements[i] = Some(rt)` when parameter `i` carries a LANG23
+    /// annotation; `None` means the parameter is unannotated (i.e. behaves as
+    /// if its type is `RefinedType::unrefined(Kind::Any)`, the default).
+    ///
+    /// Frontends must keep this vec in lockstep with `params` — same length,
+    /// same order.  Callers that never set annotations leave this as an empty
+    /// `Vec` (not a `Vec` of `None`s) so the absence of annotations is
+    /// distinguishable from "every param annotated as Any".
+    pub param_refinements: Vec<Option<RefinedType>>,
+
+    /// Optional refinement type annotation for the function's return value.
+    ///
+    /// `Some(rt)` when the function signature carries a `-> TypeAnnotation`
+    /// return type (e.g. `(define (clamp-byte (x : int) -> (Int 0 256)) ...)`).
+    /// `None` means the return type is unannotated.
+    pub return_refinement: Option<RefinedType>,
 }
 
 impl IIRFunction {
     /// Create a new function with default profiling fields.
+    ///
+    /// The LANG23 annotation fields (`param_refinements`, `return_refinement`)
+    /// default to empty / `None`; frontends that lower refinement annotations
+    /// set them on the returned struct after calling `new`.
     pub fn new(
         name: impl Into<String>,
         params: Vec<(String, String)>,
@@ -156,6 +196,8 @@ impl IIRFunction {
             call_count: 0,
             feedback_slots: HashMap::new(),
             source_map: Vec::new(),
+            param_refinements: Vec::new(),
+            return_refinement: None,
         };
         fn_.type_status = fn_.infer_type_status();
         fn_
@@ -206,6 +248,30 @@ impl IIRFunction {
             instr.op == "label"
                 && instr.srcs.first().and_then(|s| s.as_var()) == Some(label_name)
         })
+    }
+}
+
+impl Default for IIRFunction {
+    /// Constructs an `IIRFunction` with empty/sensible defaults for all fields.
+    ///
+    /// Useful with struct-update syntax (`IIRFunction { name: "f".into(), ..Default::default() }`)
+    /// in tests and in code that builds functions incrementally.  Existing code that
+    /// constructs `IIRFunction` with a full struct literal can alternatively just append
+    /// `param_refinements: Vec::new(), return_refinement: None,` for the LANG23 fields.
+    fn default() -> Self {
+        IIRFunction {
+            name: String::new(),
+            params: Vec::new(),
+            return_type: "any".into(),
+            instructions: Vec::new(),
+            register_count: 8,
+            type_status: FunctionTypeStatus::Untyped,
+            call_count: 0,
+            feedback_slots: HashMap::new(),
+            source_map: Vec::new(),
+            param_refinements: Vec::new(),
+            return_refinement: None,
+        }
     }
 }
 

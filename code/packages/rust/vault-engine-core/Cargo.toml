@@ -1,0 +1,9 @@
+[package]
+name = "coding_adventures_vault_engine_core"
+version = "0.1.0"
+edition = "2021"
+description = "VLT08 — SecretEngine trait + vocabulary types (Role / MintContext / MintedSecret / SecretRef / EngineError) for the Vault stack's dynamic-secret tier. Concrete engines (KV-v2 / Database / PKI / AWS / Transit / SSH / TOTP / K8s) live in sibling crates and all implement this one trait."
+
+[dependencies]
+coding_adventures_vault_leases = { path = "../vault-leases" }
+coding_adventures_zeroize = { path = "../zeroize" }

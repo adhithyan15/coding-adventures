@@ -1,6 +1,9 @@
 use coding_adventures_html_lexer::{
-    create_html_lexer, html1_definition, html1_machine, html_skeleton_definition,
-    html_skeleton_machine, lex_html, Attribute, Token,
+    apply_html_lex_context, create_html_lexer, create_html_lexer_with_context, html1_definition,
+    html1_machine, html_skeleton_definition, html_skeleton_machine, lex_html, lex_html_fragment,
+    Attribute, DoctypeSeed, HtmlLexContext, HtmlScriptingMode, HtmlTokenizerState, Token,
+    HTML_DOCTYPE_TOKENIZER_STATES, HTML_FRAGMENT_TOKENIZER_STATES, HTML_SCRIPT_TOKENIZER_STATES,
+    HTML_TOKENIZER_STATES,
 };
 use state_machine::END_INPUT;
 
@@ -26,9 +29,77 @@ fn default_html_lexer_still_lexes_basic_text_tags_and_eof() {
 }
 
 #[test]
+fn default_html_lexer_drops_partial_start_tag_at_eof() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("<div class=\"open").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(lexer.drain_tokens(), vec![Token::Eof]);
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "eof-in-tag"));
+}
+
+#[test]
+fn default_html_lexer_drops_partial_end_tag_at_eof() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("</section class=x").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(lexer.drain_tokens(), vec![Token::Eof]);
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "eof-in-end-tag-name-state"));
+}
+
+#[test]
+fn default_html_lexer_drops_partial_attribute_references_at_eof() {
+    let cases = [
+        (
+            "<a href=&copy",
+            vec!["missing-semicolon-after-character-reference", "eof-in-tag"],
+        ),
+        (
+            "<a href=&#x41",
+            vec!["missing-semicolon-after-character-reference", "eof-in-tag"],
+        ),
+        (
+            "<a href=&#x",
+            vec![
+                "absence-of-digits-in-numeric-character-reference",
+                "eof-in-tag",
+            ],
+        ),
+        ("<a href=&madeup", vec!["eof-in-tag"]),
+    ];
+
+    for (input, expected_diagnostics) in cases {
+        let mut lexer = create_html_lexer().unwrap();
+
+        lexer.push(input).unwrap();
+        lexer.finish().unwrap();
+
+        assert_eq!(lexer.drain_tokens(), vec![Token::Eof], "input {input:?}");
+        assert_eq!(
+            lexer
+                .diagnostics()
+                .iter()
+                .map(|diagnostic| diagnostic.code.as_str())
+                .collect::<Vec<_>>(),
+            expected_diagnostics,
+            "input {input:?}"
+        );
+    }
+}
+
+#[test]
 fn default_html_lexer_supports_html1_attributes_comments_and_doctypes() {
     let tokens = lex_html(
-        "<!DOCTYPE HTML><IMG SRC=\"mosaic.gif\" ALT='Splash' hidden=1/>Before<!--note-->After",
+        "<!DOCTYPE HTML><IMG SRC=\"mosaic.gif\" ALT='Splash' hidden=1 />Before<!--note-->After",
     )
     .unwrap();
 
@@ -88,6 +159,82 @@ fn default_html_lexer_treats_form_feed_as_tag_whitespace() {
                 ],
                 self_closing: true,
             },
+            Token::EndTag {
+                name: "p".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_reconsumes_unexpected_solidus_before_attributes() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("<img/ src=one><br//><hr/\0=x>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::StartTag {
+                name: "img".to_string(),
+                attributes: vec![Attribute {
+                    name: "src".to_string(),
+                    value: "one".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "br".to_string(),
+                attributes: Vec::new(),
+                self_closing: true,
+            },
+            Token::StartTag {
+                name: "hr".to_string(),
+                attributes: vec![Attribute {
+                    name: "\u{FFFD}".to_string(),
+                    value: "x".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-solidus-in-tag")
+            .count(),
+        3
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-null-character")
+            .count(),
+        1
+    );
+}
+
+#[test]
+fn default_html_lexer_normalizes_carriage_return_newlines() {
+    let tokens = lex_html("<p\r\nclass=x>one\rtwo\r\nthree</p>").unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "p".to_string(),
+                attributes: vec![Attribute {
+                    name: "class".to_string(),
+                    value: "x".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Text("one\ntwo\nthree".to_string()),
             Token::EndTag {
                 name: "p".to_string()
             },
@@ -187,6 +334,212 @@ fn default_html_lexer_reports_unexpected_chars_in_unquoted_attribute_values() {
             })
             .count(),
         6
+    );
+}
+
+#[test]
+fn default_html_lexer_reports_first_unquoted_attribute_value_characters() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("<a lt=<x eq==x tick=`x ok=value>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "lt".to_string(),
+                        value: "<x".to_string(),
+                    },
+                    Attribute {
+                        name: "eq".to_string(),
+                        value: "=x".to_string(),
+                    },
+                    Attribute {
+                        name: "tick".to_string(),
+                        value: "`x".to_string(),
+                    },
+                    Attribute {
+                        name: "ok".to_string(),
+                        value: "value".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "unexpected-character-in-unquoted-attribute-value"
+            })
+            .count(),
+        3
+    );
+}
+
+#[test]
+fn default_html_lexer_keeps_solidus_in_unquoted_attribute_values() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("<a href=http://example.test/path data=a/b><img src=cat/>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "href".to_string(),
+                        value: "http://example.test/path".to_string(),
+                    },
+                    Attribute {
+                        name: "data".to_string(),
+                        value: "a/b".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "img".to_string(),
+                attributes: vec![Attribute {
+                    name: "src".to_string(),
+                    value: "cat/".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert!(!lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "unexpected-solidus-in-tag"));
+}
+
+#[test]
+fn default_html_lexer_reports_unexpected_attribute_name_characters() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("<a \"pre=1 mid'dle=2 done <tail=3>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "\"pre".to_string(),
+                        value: "1".to_string(),
+                    },
+                    Attribute {
+                        name: "mid'dle".to_string(),
+                        value: "2".to_string(),
+                    },
+                    Attribute {
+                        name: "done".to_string(),
+                        value: String::new(),
+                    },
+                    Attribute {
+                        name: "<tail".to_string(),
+                        value: "3".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-character-in-attribute-name")
+            .count(),
+        3
+    );
+}
+
+#[test]
+fn default_html_lexer_reconsumes_missing_space_after_quoted_attributes() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("<a first=\"1\"second=2 eq=\"x\"==y null=\"z\"\0=w>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "first".to_string(),
+                        value: "1".to_string(),
+                    },
+                    Attribute {
+                        name: "second".to_string(),
+                        value: "2".to_string(),
+                    },
+                    Attribute {
+                        name: "eq".to_string(),
+                        value: "x".to_string(),
+                    },
+                    Attribute {
+                        name: "=".to_string(),
+                        value: "y".to_string(),
+                    },
+                    Attribute {
+                        name: "null".to_string(),
+                        value: "z".to_string(),
+                    },
+                    Attribute {
+                        name: "\u{FFFD}".to_string(),
+                        value: "w".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "missing-whitespace-between-attributes")
+            .count(),
+        3
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-equals-before-attribute-name")
+            .count(),
+        1
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-null-character")
+            .count(),
+        1
     );
 }
 
@@ -501,6 +854,39 @@ fn default_html_lexer_supports_public_and_system_doctype_identifiers() {
 }
 
 #[test]
+fn default_html_lexer_supports_doctype_identifier_quote_variants() {
+    let tokens = lex_html(
+        "<!DOCTYPE html PUBLIC 'pub'><!DOCTYPE html SYSTEM 'sys'><!DOCTYPE html PUBLIC \"pub\" 'sys'>",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: Some("pub".to_string()),
+                system_identifier: None,
+                force_quirks: false,
+            },
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: Some("sys".to_string()),
+                force_quirks: false,
+            },
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: Some("pub".to_string()),
+                system_identifier: Some("sys".to_string()),
+                force_quirks: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_reports_missing_whitespace_after_doctype_public_keyword() {
     let mut lexer = create_html_lexer().unwrap();
 
@@ -551,6 +937,70 @@ fn default_html_lexer_reports_missing_whitespace_between_doctype_identifiers() {
     assert!(lexer.diagnostics().iter().any(|diagnostic| {
         diagnostic.code == "missing-whitespace-between-doctype-public-and-system-identifiers"
     }));
+}
+
+#[test]
+fn default_html_lexer_marks_public_identifier_boundary_eof_force_quirks() {
+    let cases = [
+        (
+            "<!DOCTYPE html PUBLIC",
+            None,
+            None,
+            "eof after PUBLIC keyword",
+        ),
+        (
+            "<!DOCTYPE html PUBLIC ",
+            None,
+            None,
+            "eof before public identifier",
+        ),
+        (
+            "<!DOCTYPE html PUBLIC \"pub",
+            Some("pub"),
+            None,
+            "eof inside public identifier",
+        ),
+        (
+            "<!DOCTYPE html PUBLIC \"pub\"",
+            Some("pub"),
+            None,
+            "eof after public identifier",
+        ),
+        (
+            "<!DOCTYPE html PUBLIC \"pub\" ",
+            Some("pub"),
+            None,
+            "eof between public and system identifiers",
+        ),
+    ];
+
+    for (input, expected_public, expected_system, label) in cases {
+        let mut lexer = create_html_lexer().unwrap();
+
+        lexer.push(input).unwrap();
+        lexer.finish().unwrap();
+
+        assert_eq!(
+            lexer.drain_tokens(),
+            vec![
+                Token::Doctype {
+                    name: Some("html".to_string()),
+                    public_identifier: expected_public.map(str::to_string),
+                    system_identifier: expected_system.map(str::to_string),
+                    force_quirks: true,
+                },
+                Token::Eof,
+            ],
+            "{label}"
+        );
+        assert!(
+            lexer
+                .diagnostics()
+                .iter()
+                .any(|diagnostic| diagnostic.code == "eof-in-doctype"),
+            "{label}"
+        );
+    }
 }
 
 #[test]
@@ -625,6 +1075,48 @@ fn default_html_lexer_treats_form_feed_as_doctype_whitespace() {
 }
 
 #[test]
+fn default_html_lexer_treats_form_feed_as_legacy_reference_boundary() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("A&copy\u{000C}B&nbsp\u{000C}<a copy=&copy\u{000C}reg=&reg\u{000C}>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("A\u{00A9}\u{000C}B\u{00A0}\u{000C}".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "copy".to_string(),
+                        value: "\u{00A9}".to_string(),
+                    },
+                    Attribute {
+                        name: "reg".to_string(),
+                        value: "\u{00AE}".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "missing-semicolon-after-character-reference"
+            })
+            .count(),
+        4
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_standalone_system_doctype_identifier() {
     let tokens = lex_html("<!DOCTYPE html SYSTEM \"about:legacy-compat\">").unwrap();
 
@@ -692,6 +1184,61 @@ fn default_html_lexer_reports_missing_quote_before_doctype_system_identifier() {
         .diagnostics()
         .iter()
         .any(|diagnostic| diagnostic.code == "missing-quote-before-doctype-system-identifier"));
+}
+
+#[test]
+fn default_html_lexer_marks_system_identifier_boundary_eof_force_quirks() {
+    let cases = [
+        ("<!DOCTYPE html SYSTEM", None, "eof after SYSTEM keyword"),
+        (
+            "<!DOCTYPE html SYSTEM ",
+            None,
+            "eof before system identifier",
+        ),
+        (
+            "<!DOCTYPE html SYSTEM \"sys",
+            Some("sys"),
+            "eof inside system identifier",
+        ),
+        (
+            "<!DOCTYPE html SYSTEM \"sys\"",
+            Some("sys"),
+            "eof after system identifier",
+        ),
+        (
+            "<!DOCTYPE html SYSTEM \"sys\" ",
+            Some("sys"),
+            "eof after system identifier whitespace",
+        ),
+    ];
+
+    for (input, expected_system, label) in cases {
+        let mut lexer = create_html_lexer().unwrap();
+
+        lexer.push(input).unwrap();
+        lexer.finish().unwrap();
+
+        assert_eq!(
+            lexer.drain_tokens(),
+            vec![
+                Token::Doctype {
+                    name: Some("html".to_string()),
+                    public_identifier: None,
+                    system_identifier: expected_system.map(str::to_string),
+                    force_quirks: true,
+                },
+                Token::Eof,
+            ],
+            "{label}"
+        );
+        assert!(
+            lexer
+                .diagnostics()
+                .iter()
+                .any(|diagnostic| diagnostic.code == "eof-in-doctype"),
+            "{label}"
+        );
+    }
 }
 
 #[test]
@@ -772,7 +1319,7 @@ fn default_html_lexer_marks_missing_system_identifier_force_quirks() {
 }
 
 #[test]
-fn default_html_lexer_marks_trailing_junk_after_system_identifier_force_quirks() {
+fn default_html_lexer_reports_trailing_junk_after_system_identifier() {
     let mut lexer = create_html_lexer().unwrap();
 
     lexer
@@ -787,7 +1334,7 @@ fn default_html_lexer_marks_trailing_junk_after_system_identifier_force_quirks()
                 name: Some("html".to_string()),
                 public_identifier: None,
                 system_identifier: Some("about:legacy-compat".to_string()),
-                force_quirks: true,
+                force_quirks: false,
             },
             Token::Eof,
         ]
@@ -795,6 +1342,51 @@ fn default_html_lexer_marks_trailing_junk_after_system_identifier_force_quirks()
     assert!(lexer.diagnostics().iter().any(
         |diagnostic| diagnostic.code == "unexpected-character-after-doctype-system-identifier"
     ));
+}
+
+#[test]
+fn default_html_lexer_ignores_nulls_inside_bogus_doctype_recovery() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("<!DOCTYPE html PUBLIC\0bad><!DOCTYPE html SYSTEM\0bad>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: true,
+            },
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: true,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-null-character")
+            .count(),
+        2
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "missing-quote-before-doctype-public-identifier"));
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "missing-quote-before-doctype-system-identifier"));
 }
 
 #[test]
@@ -969,6 +1561,31 @@ fn default_html_lexer_recovers_invalid_tag_open_as_text() {
         .diagnostics()
         .iter()
         .any(|diagnostic| diagnostic.code == "invalid-first-character-of-tag-name"));
+}
+
+#[test]
+fn default_html_lexer_reconsumes_null_tag_open_as_text() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("Before <\0 after").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("Before ".to_string()),
+            Token::Text("<\u{FFFD} after".to_string()),
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "invalid-first-character-of-tag-name"));
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "unexpected-null-character"));
 }
 
 #[test]
@@ -1151,6 +1768,21 @@ fn default_html_lexer_closes_dash_prefixed_empty_html_comment() {
 }
 
 #[test]
+fn default_html_lexer_preserves_extra_dash_before_comment_close() {
+    let tokens = lex_html("Before<!----->After").unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("Before".to_string()),
+            Token::Comment("-".to_string()),
+            Token::Text("After".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_reports_nested_comment_opener() {
     let mut lexer = create_html_lexer().unwrap();
 
@@ -1287,6 +1919,13 @@ fn default_html_lexer_reports_recoverable_comment_eof_diagnostic() {
         .diagnostics()
         .iter()
         .any(|diagnostic| diagnostic.code == "eof-in-comment"));
+}
+
+#[test]
+fn default_html_lexer_does_not_include_comment_end_dashes_at_eof() {
+    let tokens = lex_html("<!--x--").unwrap();
+
+    assert_eq!(tokens, vec![Token::Comment("x".to_string()), Token::Eof]);
 }
 
 #[test]
@@ -1874,6 +2513,29 @@ fn default_html_lexer_supports_script_data_double_escaped_text() {
 }
 
 #[test]
+fn default_html_lexer_treats_form_feed_as_script_double_escape_delimiter() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("script_data").unwrap();
+    lexer.set_last_start_tag("script");
+
+    lexer
+        .push("<!-- <script\u{000C}x </script\u{000C} y --></script>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("<!-- <script\u{000C}x </script\u{000C} y -->".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_seeded_script_data_double_escaped_state() {
     let mut lexer = create_html_lexer().unwrap();
     lexer
@@ -1952,7 +2614,8 @@ fn default_html_lexer_supports_markup_cdata_section_flow() {
         lexer.drain_tokens(),
         vec![
             Token::Text("Before".to_string()),
-            Token::Text("<not-markup> &amp; After".to_string()),
+            Token::Comment("[CDATA[<not-markup".to_string()),
+            Token::Text(" & ]]>After".to_string()),
             Token::Eof,
         ]
     );
@@ -1973,6 +2636,28 @@ fn default_html_lexer_recovers_malformed_cdata_open_as_bogus_comment() {
             Token::Eof,
         ]
     );
+}
+
+#[test]
+fn default_html_lexer_replaces_null_in_malformed_cdata_openers() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer.push("a<![CD\0>after").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("a".to_string()),
+            Token::Comment("[CD\u{FFFD}".to_string()),
+            Token::Text("after".to_string()),
+            Token::Eof,
+        ]
+    );
+    assert!(lexer
+        .diagnostics()
+        .iter()
+        .any(|diagnostic| diagnostic.code == "unexpected-null-character"));
 }
 
 #[test]
@@ -2234,7 +2919,7 @@ fn default_html_lexer_supports_remaining_html4_math_named_character_references()
     assert_eq!(
         tokens,
         vec![
-            Token::Text("Math symbols: \u{2135}\u{203E} \u{2135}tail \u{203E}bar".to_string(),),
+            Token::Text("Math symbols: \u{2135}\u{203E} &alefsymtail &olinebar".to_string(),),
             Token::Eof,
         ]
     );
@@ -2404,6 +3089,77 @@ fn default_html_lexer_supports_whatwg_equality_and_tilde_named_character_referen
 }
 
 #[test]
+fn default_html_lexer_supports_whatwg_congruence_named_character_references() {
+    let tokens = lex_html(
+        "Congruence:&Bumpeq;&Congruent;&DotEqual;&HumpDownHump;&HumpEqual;&NotVerticalBar;&VerticalLine;&bcong;&bsim;&bsime;&bump;&bumpE;&bumpe;&bumpeq;&circeq;&coloneq;&congdot;&doteq;&doteqdot;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("Congruence:≎≡≐≎≏∤|≌∽⋍≎⪮≏≏≗≔⩭≐≑".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_equality_and_parallel_named_character_references_in_attributes(
+) {
+    let tokens = lex_html(
+        "<math eq=\"&eqcirc;&eqcolon;&eqsim;&eqslantgtr;&eqslantless;&equals;&equest;&equivDD;&eqvparsl;\" parallel=\"&mid;&midast;&midcir;&npar;&nparallel;&nparsl;&npart;&par;&parallel;&parsim;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "math".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "eq".to_string(),
+                        value: "≖≕≂⪖⪕=≟⩸⧥".to_string(),
+                    },
+                    Attribute {
+                        name: "parallel".to_string(),
+                        value: "∣*⫰∦∦⫽\u{20E5}∂\u{0338}∥∥⫳".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_similarity_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push(
+            "&parsl;&shortmid;&shortparallel;&simdot;&sime;&simeq;&simg;&simgE;&siml;&simlE;&simne;&simplus;&simrarr;</title>",
+        )
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("⫽∣∥⩪≃≃⪞⪠⪝⪟≆⨤⥲".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_whatwg_greater_less_named_character_references_in_attributes() {
     let tokens = lex_html(
         "<math cmp=\"&GreaterEqual;&GreaterFullEqual;&GreaterGreater;&GreaterLess;&GreaterSlantEqual;&GreaterTilde;\" inv=\"&LessEqualGreater;&LessFullEqual;&LessGreater;&LessLess;&LessSlantEqual;&LessTilde;\">",
@@ -2426,6 +3182,70 @@ fn default_html_lexer_supports_whatwg_greater_less_named_character_references_in
                     },
                 ],
                 self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_greater_less_comparison_named_character_references() {
+    let tokens = lex_html(
+        "GreaterLess:&GreaterEqualLess;&gl;&glE;&gla;&glj;&gnE;&gnap;&gnapprox;&gne;&gneq;&gneqq;&gnsim;&gtrapprox;&gtrarr;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("GreaterLess:⋛≷⪒⪥⪤≩⪊⪊⪈⪈≩⋧⪆⥸".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_greater_less_comparison_named_character_references_in_attributes(
+) {
+    let tokens = lex_html(
+        "<math cmp=\"&gtrdot;&gtreqless;&gtreqqless;&gtrless;&gtrsim;&lessapprox;&lessdot;&lesseqgtr;&lesseqqgtr;&lessgtr;&lesssim;&lg;&lgE;&lnE;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "math".to_string(),
+                attributes: vec![Attribute {
+                    name: "cmp".to_string(),
+                    value: "⋗⋛⪌≷≳⪅⋖⋚⪋≶≲≶⪑≨".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_negated_greater_less_named_character_references(
+) {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push("&lnap;&lnapprox;&lne;&lneq;&lneqq;&lnsim;&nGg;&nGt;&nGtv;&nLl;&nLt;&nLtv;</title>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("⪉⪉⪇⪇≨⋦⋙\u{0338}≫\u{20D2}≫\u{0338}⋘\u{0338}≪\u{20D2}≪\u{0338}".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
             },
             Token::Eof,
         ]
@@ -2462,6 +3282,72 @@ fn default_html_lexer_supports_seeded_rcdata_whatwg_negated_relational_named_cha
 }
 
 #[test]
+fn default_html_lexer_supports_whatwg_precedence_named_character_references() {
+    let tokens = lex_html(
+        "Precedence:&NotPrecedes;&NotPrecedesEqual;&NotPrecedesSlantEqual;&NotSucceeds;&NotSucceedsEqual;&NotSucceedsSlantEqual;&NotSucceedsTilde;&Precedes;&PrecedesEqual;&PrecedesSlantEqual;&PrecedesTilde;&Succeeds;&SucceedsEqual;&SucceedsSlantEqual;&SucceedsTilde;&curlyeqprec;&curlyeqsucc;&nprec;&npreceq;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text(
+                "Precedence:⊀⪯\u{0338}⋠⊁⪰\u{0338}⋡≿\u{0338}≺⪯≼≾≻⪰≽≿⋞⋟⊀⪯\u{0338}".to_string()
+            ),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_precedence_named_character_references_in_attributes() {
+    let tokens = lex_html(
+        "<math prec=\"&nsucc;&nsucceq;&pr;&prE;&prap;&prcue;&pre;&prec;&precapprox;&preccurlyeq;&preceq;&precnapprox;&precneqq;&precnsim;&precsim;&prnE;&prnap;&prnsim;&prsim;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "math".to_string(),
+                attributes: vec![Attribute {
+                    name: "prec".to_string(),
+                    value: "⊁⪰\u{0338}≺⪳⪷≼⪯≺⪷≼⪯⪹⪵⋨≾⪵⪹⋨≾".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_successor_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push(
+            "&sc;&scE;&scap;&sccue;&sce;&scnE;&scnap;&scnsim;&scsim;&succ;&succapprox;&succcurlyeq;&succeq;&succnapprox;&succneqq;&succnsim;&succsim;</title>",
+        )
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("≻⪴⪸≽⪰⪶⪺⋩≿≻⪸≽⪰⪺⪶⋩≿".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_whatwg_basic_arrow_named_character_references() {
     let tokens = lex_html(
         "Arrows:&LeftArrow;&RightArrow;&UpArrow;&DownArrow;&LeftRightArrow;&UpDownArrow;&DoubleLeftArrow;&DoubleRightArrow;&DoubleUpArrow;&DoubleDownArrow;&DoubleLeftRightArrow;&DoubleUpDownArrow;",
@@ -2471,6 +3357,22 @@ fn default_html_lexer_supports_whatwg_basic_arrow_named_character_references() {
     assert_eq!(
         tokens,
         vec![Token::Text("Arrows:←→↑↓↔↕⇐⇒⇑⇓⇔⇕".to_string()), Token::Eof,]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_extended_arrow_aliases() {
+    let tokens = lex_html(
+        "More arrows:&Darr;&Downarrow;&Larr;&Leftarrow;&Leftrightarrow;&Rarr;&Rightarrow;&Uarr;&Uparrow;&Updownarrow;&ShortDownArrow;&ShortLeftArrow;&ShortRightArrow;&ShortUpArrow;&LowerLeftArrow;&LowerRightArrow;&UpperLeftArrow;&UpperRightArrow;&DoubleLongLeftArrow;&DoubleLongLeftRightArrow;&DoubleLongRightArrow;&DownTeeArrow;&UpTeeArrow;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("More arrows:↡⇓↞⇐⇔↠⇒↟⇑⇕↓←→↑↙↘↖↗⟸⟺⟹↧↥".to_string()),
+            Token::Eof,
+        ]
     );
 }
 
@@ -2505,6 +3407,39 @@ fn default_html_lexer_supports_whatwg_long_and_bar_arrow_named_character_referen
 }
 
 #[test]
+fn default_html_lexer_supports_whatwg_hook_tail_and_loop_arrow_aliases_in_attributes() {
+    let tokens = lex_html(
+        "<a plain=\"&downarrow;&leftarrow;&leftrightarrow;&longleftarrow;&longleftrightarrow;&longrightarrow;\" hooks=\"&hookleftarrow;&hookrightarrow;&leftarrowtail;&rightarrowtail;&twoheadleftarrow;&twoheadrightarrow;\" loops=\"&curvearrowleft;&curvearrowright;&circlearrowleft;&circlearrowright;&looparrowleft;&looparrowright;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "plain".to_string(),
+                        value: "↓←↔⟵⟷⟶".to_string(),
+                    },
+                    Attribute {
+                        name: "hooks".to_string(),
+                        value: "↩↪↢↣↞↠".to_string(),
+                    },
+                    Attribute {
+                        name: "loops".to_string(),
+                        value: "↶↷↺↻↫↬".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_seeded_rcdata_whatwg_vector_arrow_named_character_references() {
     let mut lexer = create_html_lexer().unwrap();
     lexer.set_initial_state("rcdata").unwrap();
@@ -2521,6 +3456,31 @@ fn default_html_lexer_supports_seeded_rcdata_whatwg_vector_arrow_named_character
         lexer.drain_tokens(),
         vec![
             Token::Text("↼⇀↿↾⇃⇂↽⇁⥒⥓⥘⥔⥙⥕⥖⥗".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_harpoon_negated_and_mapsto_arrows() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push(
+            "&leftharpoonup;&leftharpoondown;&rightharpoonup;&rightharpoondown;&upharpoonleft;&upharpoonright;&downharpoonleft;&downharpoonright;&leftleftarrows;&rightrightarrows;&downdownarrows;&upuparrows;&leftrightarrows;&rightleftarrows;&leftrightharpoons;&rightleftharpoons;&rightsquigarrow;&leftrightsquigarrow;&nleftarrow;&nrightarrow;&nleftrightarrow;&nLeftarrow;&nRightarrow;&nLeftrightarrow;&mapsto;&longmapsto;&mapstoleft;&mapstoup;&mapstodown;&nearrow;&searrow;&swarrow;&nwarrow;</title>",
+        )
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("↼↽⇀⇁↿↾⇃⇂⇇⇉⇊⇈⇆⇄⇋⇌↝↭↚↛↮⇍⇏⇎↦⟼↤↥↧↗↘↙↖".to_string()),
             Token::EndTag {
                 name: "title".to_string()
             },
@@ -2736,6 +3696,595 @@ fn default_html_lexer_supports_seeded_rcdata_whatwg_shape_named_character_refere
 }
 
 #[test]
+fn default_html_lexer_supports_whatwg_box_drawing_named_character_references() {
+    let tokens = lex_html(
+        "Boxes:&boxDL;&boxDR;&boxDl;&boxDr;&boxH;&boxHD;&boxHU;&boxHd;&boxHu;&boxUL;&boxUR;&boxUl;&boxUr;&boxV;&boxVH;&boxVL;&boxVR;&boxVh;&boxVl;&boxVr;&boxbox;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("Boxes:╗╔╖╓═╦╩╤╧╝╚╜╙║╬╣╠╫╢╟⧉".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_box_drawing_named_character_references_in_attributes() {
+    let tokens = lex_html(
+        "<box double=\"&boxDL;&boxDR;&boxDl;&boxDr;&boxH;&boxHD;&boxHU;&boxHd;&boxHu;&boxUL;&boxUR;&boxUl;&boxUr;\" mixed=\"&boxV;&boxVH;&boxVL;&boxVR;&boxVh;&boxVl;&boxVr;&boxbox;&boxdL;&boxdR;&boxdl;&boxdr;&boxh;&boxhD;&boxhU;\" light=\"&boxhd;&boxhu;&boxuL;&boxuR;&boxul;&boxur;&boxv;&boxvH;&boxvL;&boxvR;&boxvh;&boxvl;&boxvr;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "box".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "double".to_string(),
+                        value: "╗╔╖╓═╦╩╤╧╝╚╜╙".to_string(),
+                    },
+                    Attribute {
+                        name: "mixed".to_string(),
+                        value: "║╬╣╠╫╢╟⧉╕╒┐┌─╥╨".to_string(),
+                    },
+                    Attribute {
+                        name: "light".to_string(),
+                        value: "┬┴╛╘┘└│╪╡╞┼┤├".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_box_drawing_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push(
+            "&boxdL;&boxdR;&boxdl;&boxdr;&boxh;&boxhD;&boxhU;&boxhd;&boxhu;&boxuL;&boxuR;&boxul;&boxur;&boxv;&boxvH;&boxvL;&boxvR;&boxvh;&boxvl;&boxvr;</title>",
+        )
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("╕╒┐┌─╥╨┬┴╛╘┘└│╪╡╞┼┤├".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_angle_named_character_references() {
+    let tokens = lex_html(
+        "Angles:&angle;&angmsd;&angsph;&angrt;&angrtvb;&angrtvbd;&angst;&angzarr;&measuredangle;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![Token::Text("Angles:∠∡∢∟⊾⦝Å⍼∡".to_string()), Token::Eof,]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_fence_named_character_references_in_attributes() {
+    let tokens = lex_html(
+        "<f angles=\"&lang;&rang;&langle;&rangle;&LeftAngleBracket;&RightAngleBracket;\" fences=\"&LeftCeiling;&RightCeiling;&LeftFloor;&RightFloor;&LeftDoubleBracket;&RightDoubleBracket;&lobrk;&robrk;&lbrack;&rbrack;&lbrace;&rbrace;&lpar;&rpar;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "f".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "angles".to_string(),
+                        value: "⟨⟩⟨⟩⟨⟩".to_string(),
+                    },
+                    Attribute {
+                        name: "fences".to_string(),
+                        value: "⌈⌉⌊⌋⟦⟧⟦⟧[]{}()".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_triangle_and_corner_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push(
+            "&LeftTriangle;&RightTriangle;&triangleleft;&triangleright;&blacktriangleleft;&blacktriangleright;&ulcorner;&urcorner;&llcorner;&lrcorner;&OverBrace;&UnderBrace;&OverBracket;&UnderBracket;&OverParenthesis;&UnderParenthesis;&OverBar;&UnderBar;&bbrk;&bbrktbrk;</title>",
+        )
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("⊲⊳◃▹◂▸⌜⌝⌞⌟⏞⏟⎴⎵⏜⏝‾_⎵⎶".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_latin_extended_named_character_references() {
+    let tokens = lex_html(
+        "Latin extended:&Amacr;&abreve;&Aogon;&aogon;&Cacute;&ccaron;&Dcaron;&dcaron;&Emacr;&eogon;&Gbreve;&gcirc;&Idot;&inodot;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("Latin extended:ĀăĄąĆčĎďĒęĞĝİı".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_latin_extended_named_character_references_in_attributes() {
+    let tokens = lex_html(
+        "<p upper=\"&Hcirc;&Itilde;&Jcirc;&Kcedil;&Lacute;&Lcaron;&Lcedil;&Lmidot;&Nacute;&Ncaron;&Ncedil;\" lower=\"&hcirc;&itilde;&jcirc;&kcedil;&lacute;&lcaron;&lcedil;&lmidot;&nacute;&ncaron;&ncedil;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "p".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "upper".to_string(),
+                        value: "ĤĨĴĶĹĽĻĿŃŇŅ".to_string(),
+                    },
+                    Attribute {
+                        name: "lower".to_string(),
+                        value: "ĥĩĵķĺľļŀńňņ".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_latin_extended_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push(
+            "&Omacr;&omacr;&Racute;&rcaron;&Sacute;&scedil;&Scirc;&scirc;&Tcaron;&tcedil;&Ubreve;&umacr;&Uogon;&uring;&Utilde;&wcirc;&Ycirc;&ycirc;&Zacute;&zcaron;&Zdot;&zdot;</title>",
+        )
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("ŌōŔřŚşŜŝŤţŬūŲůŨŵŶŷŹžŻż".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_open_face_named_character_references() {
+    let tokens = lex_html(
+        "Open face:&Aopf;&Bopf;&Copf;&Dopf;&Eopf;&Fopf;&Gopf;&Hopf;&Iopf;&Jopf;&Kopf;&Lopf;&Mopf;&Nopf;&Oopf;&Popf;&Qopf;&Ropf;&Sopf;&Topf;&Uopf;&Vopf;&Wopf;&Xopf;&Yopf;&Zopf;&aopf;&bopf;&copf;&dopf;&eopf;&fopf;&gopf;&hopf;&iopf;&jopf;&kopf;&lopf;&mopf;&nopf;&oopf;&popf;&qopf;&ropf;&sopf;&topf;&uopf;&vopf;&wopf;&xopf;&yopf;&zopf;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text(
+                "Open face:𝔸𝔹ℂ𝔻𝔼𝔽𝔾ℍ𝕀𝕁𝕂𝕃𝕄ℕ𝕆ℙℚℝ𝕊𝕋𝕌𝕍𝕎𝕏𝕐ℤ𝕒𝕓𝕔𝕕𝕖𝕗𝕘𝕙𝕚𝕛𝕜𝕝𝕞𝕟𝕠𝕡𝕢𝕣𝕤𝕥𝕦𝕧𝕨𝕩𝕪𝕫".to_string()
+            ),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_script_named_character_references_in_attributes() {
+    let tokens = lex_html(
+        "<math upper=\"&Ascr;&Bscr;&Cscr;&Dscr;&Escr;&Fscr;&Gscr;&Hscr;&Iscr;&Jscr;&Kscr;&Lscr;&Mscr;&Nscr;&Oscr;&Pscr;&Qscr;&Rscr;&Sscr;&Tscr;&Uscr;&Vscr;&Wscr;&Xscr;&Yscr;&Zscr;\" lower=\"&ascr;&bscr;&cscr;&dscr;&escr;&fscr;&gscr;&hscr;&iscr;&jscr;&kscr;&lscr;&mscr;&nscr;&oscr;&pscr;&qscr;&rscr;&sscr;&tscr;&uscr;&vscr;&wscr;&xscr;&yscr;&zscr;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "math".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "upper".to_string(),
+                        value: "𝒜ℬ𝒞𝒟ℰℱ𝒢ℋℐ𝒥𝒦ℒℳ𝒩𝒪𝒫𝒬ℛ𝒮𝒯𝒰𝒱𝒲𝒳𝒴𝒵".to_string(),
+                    },
+                    Attribute {
+                        name: "lower".to_string(),
+                        value: "𝒶𝒷𝒸𝒹ℯ𝒻ℊ𝒽𝒾𝒿𝓀𝓁𝓂𝓃ℴ𝓅𝓆𝓇𝓈𝓉𝓊𝓋𝓌𝓍𝓎𝓏".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_fraktur_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push(
+            "&Afr;&Bfr;&Cfr;&Dfr;&Efr;&Ffr;&Gfr;&Hfr;&Ifr;&Jfr;&Kfr;&Lfr;&Mfr;&Nfr;&Ofr;&Pfr;&Qfr;&Rfr;&Sfr;&Tfr;&Ufr;&Vfr;&Wfr;&Xfr;&Yfr;&Zfr;&afr;&bfr;&cfr;&dfr;&efr;&ffr;&gfr;&hfr;&ifr;&jfr;&kfr;&lfr;&mfr;&nfr;&ofr;&pfr;&qfr;&rfr;&sfr;&tfr;&ufr;&vfr;&wfr;&xfr;&yfr;&zfr;</title>",
+        )
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("𝔄𝔅ℭ𝔇𝔈𝔉𝔊ℌℑ𝔍𝔎𝔏𝔐𝔑𝔒𝔓𝔔ℜ𝔖𝔗𝔘𝔙𝔚𝔛𝔜ℨ𝔞𝔟𝔠𝔡𝔢𝔣𝔤𝔥𝔦𝔧𝔨𝔩𝔪𝔫𝔬𝔭𝔮𝔯𝔰𝔱𝔲𝔳𝔴𝔵𝔶𝔷".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_core_cyrillic_named_character_references() {
+    let tokens = lex_html(
+        "Cyrillic:&Acy;&Bcy;&Vcy;&Gcy;&Dcy;&IEcy;&IOcy;&ZHcy;&Zcy;&Icy;&Jcy;&Kcy;&Lcy;&Mcy;&Ncy;&Ocy;&Pcy;&Rcy;&Scy;&Tcy;&Ucy;&Fcy;&KHcy;&TScy;&CHcy;&SHcy;&SHCHcy;&HARDcy;&Ycy;&SOFTcy;&Ecy;&YUcy;&YAcy;&acy;&bcy;&vcy;&gcy;&dcy;&iecy;&iocy;&zhcy;&zcy;&icy;&jcy;&kcy;&lcy;&mcy;&ncy;&ocy;&pcy;&rcy;&scy;&tcy;&ucy;&fcy;&khcy;&tscy;&chcy;&shcy;&shchcy;&hardcy;&ycy;&softcy;&ecy;&yucy;&yacy;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text(
+                "Cyrillic:АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя"
+                    .to_string()
+            ),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_extended_cyrillic_named_character_references_in_attributes() {
+    let tokens = lex_html(
+        "<span upper=\"&DJcy;&DScy;&DZcy;&GJcy;&Iukcy;&Jsercy;&Jukcy;&KJcy;&LJcy;&NJcy;&TSHcy;&Ubrcy;&YIcy;\" lower=\"&djcy;&dscy;&dzcy;&gjcy;&iukcy;&jsercy;&jukcy;&kjcy;&ljcy;&njcy;&tshcy;&ubrcy;&yicy;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "span".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "upper".to_string(),
+                        value: "ЂЅЏЃІЈЄЌЉЊЋЎЇ".to_string(),
+                    },
+                    Attribute {
+                        name: "lower".to_string(),
+                        value: "ђѕџѓіјєќљњћўї".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_cyrillic_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push(
+            "&Acy;&IEcy;&ZHcy;&SHCHcy;&SOFTcy;&YAcy;&acy;&iecy;&zhcy;&shchcy;&softcy;&yacy;&DJcy;&TSHcy;&Ubrcy;&YIcy;&djcy;&tshcy;&ubrcy;&yicy;</title>",
+        )
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("АЕЖЩЬЯаежщьяЂЋЎЇђћўї".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_remaining_vector_named_character_references() {
+    let tokens = lex_html(
+        "Vectors:&DownLeftRightVector;&DownLeftTeeVector;&DownRightTeeVector;&LeftDownTeeVector;&LeftRightVector;&LeftTeeVector;&LeftUpDownVector;&LeftUpTeeVector;&RightDownTeeVector;&RightTeeVector;&RightUpDownVector;&RightUpTeeVector;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![Token::Text("Vectors:⥐⥞⥟⥡⥎⥚⥑⥠⥝⥛⥏⥜".to_string()), Token::Eof]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_remaining_arrow_named_character_references_in_attributes() {
+    let tokens = lex_html(
+        "<nav upper=\"&Lleftarrow;&Rrightarrow;&RBarr;&Rarrtl;&Uarrocir;&neArr;&nwArr;&seArr;&swArr;&xhArr;&xlArr;&xrArr;\" lower=\"&lAarr;&rAarr;&lbarr;&rbarr;&bkarow;&dbkarow;&drbkarow;&nearr;&nwarr;&searr;&swarr;&zigrarr;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "nav".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "upper".to_string(),
+                        value: "⇚⇛⤐⤖⥉⇗⇖⇘⇙⟺⟸⟹".to_string(),
+                    },
+                    Attribute {
+                        name: "lower".to_string(),
+                        value: "⇚⇛⤌⤍⤍⤏⤐↗↖↘↙⇝".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_remaining_harpoon_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push(
+            "&dHar;&lHar;&rHar;&uHar;&duhar;&lrhar;&rlhar;&lharu;&lhard;&rharu;&rhard;&uharl;&uharr;&dharl;&dharr;&nrarrc;&nrarrw;</title>",
+        )
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("⥥⥢⥤⥣⥯⇋⇌↼↽⇀⇁↿↾⇃⇂⤳̸↝̸".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_remaining_cap_cup_named_character_references() {
+    let tokens = lex_html(
+        "Sets:&bigcap;&bigcup;&bigsqcup;&UnionPlus;&capand;&capbrcup;&capcap;&capcup;&capdot;&caps;&ccaps;&ccups;&ccupssm;&cupbrcap;&cupcap;&cupcup;&cupdot;&cupor;&cups;&ncap;&ncup;&xsqcup;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("Sets:⋂⋃⨆⊎⩄⩉⩋⩇⩀∩︀⩍⩌⩐⩈⩆⩊⊍⩅∪︀⩃⩂⨆".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_remaining_subset_superset_named_character_references_in_attributes(
+) {
+    let tokens = lex_html(
+        "<set sub=\"&Sub;&csub;&csube;&subdot;&subedot;&submult;&subplus;&subset;&subseteq;&subseteqq;&subsetneq;&subsetneqq;&subsim;&subsub;&subsup;\" sup=\"&Sup;&Superset;&SupersetEqual;&csup;&csupe;&supdot;&supdsub;&supedot;&suphsol;&suphsub;&supmult;&supplus;&supset;&supseteq;&supseteqq;&supsetneq;&supsetneqq;&supsim;&supsub;&supsup;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "set".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "sub".to_string(),
+                        value: "⋐⫏⫑⪽⫃⫁⪿⊂⊆⫅⊊⫋⫇⫕⫓".to_string(),
+                    },
+                    Attribute {
+                        name: "sup".to_string(),
+                        value: "⋑⊃⊇⫐⫒⪾⫘⫄⟉⫗⫂⫀⊃⊇⫆⊋⫌⫈⫔⫖".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_remaining_negated_set_named_character_references(
+) {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push(
+            "&NotSquareSubset;&NotSquareSubsetEqual;&NotSquareSuperset;&NotSquareSupersetEqual;&NotSuperset;&NotSupersetEqual;&nsubset;&nsubseteq;&nsubseteqq;&nsupset;&nsupseteq;&nsupseteqq;&varsubsetneq;&varsubsetneqq;&varsupsetneq;&varsupsetneqq;&vnsub;&vnsup;&vsubnE;&vsubne;&vsupnE;&vsupne;</title>",
+        )
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("⊏̸⋢⊐̸⋣⊃⃒⊉⊂⃒⊈⫅̸⊃⃒⊉⫆̸⊊︀⫋︀⊋︀⫌︀⊂⃒⊃⃒⫋︀⊊︀⫌︀⊋︀".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_remaining_square_set_named_character_references() {
+    let tokens = lex_html(
+        "Squares:&sqcaps;&sqcups;&sqsubset;&sqsubseteq;&sqsupset;&sqsupseteq;&nsqsube;&nsqsupe;&setmn;&ssetmn;&bsolhsub;&suphsol;&lsqb;&rsqb;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("Squares:⊓︀⊔︀⊏⊑⊐⊒⋢⋣∖∖⟈⟉[]".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_remaining_integral_named_character_references() {
+    let tokens = lex_html(
+        "Integrals:&Conint;&Cconint;&ClockwiseContourIntegral;&CounterClockwiseContourIntegral;&Int;&awconint;&awint;&cirfnint;&conint;&cwconint;&cwint;&fpartint;&iiiint;&iiint;&intlarhk;&npolint;&oint;&pointint;&qint;&quatint;&rppolint;&scpolint;&tint;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::Text("Integrals:∯∰∲∳∬∳⨑⨐∮∲∱⨍⨌∭⨗⨔∮⨕⨌⨖⨒⨓∭".to_string()),
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_remaining_operator_named_character_references_in_attributes()
+{
+    let tokens = lex_html(
+        "<ops value=\"&MinusPlus;&Otimes;&PlusMinus;&bigcirc;&bigodot;&bigoplus;&bigotimes;&biguplus;&circledast;&circledcirc;&circleddash;&coprod;&divideontimes;&dotminus;&dotplus;&eplus;&loplus;&lotimes;&ltimes;&minusd;&minusdu;&mnplus;&otimesas;&plus;&plusacir;&plusb;&plusdo;&plusdu;&pluse;&plussim;&plustwo;&roplus;&rotimes;&rtimes;&timesbar;&timesd;&triminus;&triplus;&uplus;&xcirc;&xodot;&xoplus;&xuplus;\">",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![
+            Token::StartTag {
+                name: "ops".to_string(),
+                attributes: vec![Attribute {
+                    name: "value".to_string(),
+                    value: "∓⨷±◯⨀⨁⨂⨄⊛⊚⊝∐⋇∸∔⩱⨭⨴⋉∸⨪∓⨶+⨣⊞∔⨥⩲⨦⨧⨮⨵⋊⨱⨰⨺⨹⊎◯⨀⨁⨄".to_string(),
+                }],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_seeded_rcdata_whatwg_remaining_dot_named_character_references() {
+    let mut lexer = create_html_lexer().unwrap();
+    lexer.set_initial_state("rcdata").unwrap();
+    lexer.set_last_start_tag("title");
+
+    lexer
+        .push(
+            "&DDotrahd;&Dot;&DotDot;&DoubleDot;&TripleDot;&centerdot;&ctdot;&ddotseq;&dot;&dtdot;&eDDot;&eDot;&efDot;&egsdot;&elsdot;&erDot;&esdot;&fallingdotseq;&gesdot;&gesdoto;&gesdotol;&gtdot;&isindot;&lesdot;&lesdoto;&lesdotor;&ltdot;&mDDot;&ncongdot;&nedot;&notindot;&risingdotseq;&sdote;&tdot;&tridot;&utdot;</title>",
+        )
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("⤑¨⃜¨⃛·⋯⩷˙⋱⩷≑≒⪘⪗≓≐≒⪀⪂⪄⋗⋵⩿⪁⪃⋖∺⩭̸≐̸⋵̸≓⩦⃛◬⋰".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof,
+        ]
+    );
+}
+
+#[test]
+fn default_html_lexer_supports_whatwg_remaining_operator_misc_named_character_references() {
+    let tokens = lex_html(
+        "Misc:&Mellintrf;&infintie;&intcal;&integers;&intercal;&intprod;&iprod;&leftthreetimes;&rightthreetimes;&elinters;",
+    )
+    .unwrap();
+
+    assert_eq!(
+        tokens,
+        vec![Token::Text("Misc:ℳ⧝⊺ℤ⊺⨼⨼⋋⋌⏧".to_string()), Token::Eof]
+    );
+}
+
+#[test]
 fn default_html_lexer_supports_semicolonless_legacy_named_character_references() {
     let mut lexer = create_html_lexer().unwrap();
 
@@ -2813,6 +4362,52 @@ fn default_html_lexer_supports_seeded_rcdata_semicolonless_legacy_named_characte
 }
 
 #[test]
+fn default_html_lexer_restricts_semicolonless_named_references_to_legacy_names() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    lexer
+        .push("Text &notin &trade <a value=&notin legacy=&Agrave data=&copy/>")
+        .unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("Text \u{00AC}in &trade ".to_string()),
+            Token::StartTag {
+                name: "a".to_string(),
+                attributes: vec![
+                    Attribute {
+                        name: "value".to_string(),
+                        value: "&notin".to_string(),
+                    },
+                    Attribute {
+                        name: "legacy".to_string(),
+                        value: "\u{00C0}".to_string(),
+                    },
+                    Attribute {
+                        name: "data".to_string(),
+                        value: "\u{00A9}/".to_string(),
+                    },
+                ],
+                self_closing: false,
+            },
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .filter(|diagnostic| {
+                diagnostic.code == "missing-semicolon-after-character-reference"
+            })
+            .count(),
+        3
+    );
+}
+
+#[test]
 fn default_html_lexer_falls_back_for_unknown_named_character_references() {
     let tokens =
         lex_html("Known &AMP; unknown &madeup; <a title=\"&copy;\" bogus=&madeup;>").unwrap();
@@ -2850,7 +4445,7 @@ fn default_html_lexer_uses_longest_named_character_reference_prefix_in_text() {
     assert_eq!(
         lexer.drain_tokens(),
         vec![
-            Token::Text("Text \u{00AC}it; \u{00A9}cat \u{2211}total".to_string()),
+            Token::Text("Text \u{00AC}it; \u{00A9}cat &sumtotal".to_string()),
             Token::Eof,
         ]
     );
@@ -2862,7 +4457,7 @@ fn default_html_lexer_uses_longest_named_character_reference_prefix_in_text() {
                 diagnostic.code == "missing-semicolon-after-character-reference"
             })
             .count(),
-        3
+        2
     );
 }
 
@@ -2871,7 +4466,7 @@ fn default_html_lexer_preserves_ambiguous_ampersands_in_attributes() {
     let mut lexer = create_html_lexer().unwrap();
 
     lexer
-        .push("<a title=\"&notit; &copycat &copy\" rel=&notin data=&notin;>")
+        .push("<a title=\"&notit; &copycat &copy\" rel=&notin data=&notin; gt=\"&gt=\">")
         .unwrap();
     lexer.finish().unwrap();
 
@@ -2887,11 +4482,15 @@ fn default_html_lexer_preserves_ambiguous_ampersands_in_attributes() {
                     },
                     Attribute {
                         name: "rel".to_string(),
-                        value: "\u{2209}".to_string(),
+                        value: "&notin".to_string(),
                     },
                     Attribute {
                         name: "data".to_string(),
                         value: "\u{2209}".to_string(),
+                    },
+                    Attribute {
+                        name: "gt".to_string(),
+                        value: "&gt=".to_string(),
                     },
                 ],
                 self_closing: false,
@@ -2907,7 +4506,7 @@ fn default_html_lexer_preserves_ambiguous_ampersands_in_attributes() {
                 diagnostic.code == "missing-semicolon-after-character-reference"
             })
             .count(),
-        2
+        1
     );
 }
 
@@ -3205,6 +4804,1354 @@ fn html_skeleton_helpers_remain_available_for_bootstrap_comparisons() {
                 .iter()
                 .any(|action| action == "emit(EOF)")
     }));
+}
+
+#[test]
+fn parser_facing_context_maps_rcdata_elements() {
+    let context = HtmlLexContext::for_element_text("TITLE").unwrap();
+
+    assert_eq!(context.initial_state, HtmlTokenizerState::Rcdata);
+    assert_eq!(context.last_start_tag.as_deref(), Some("title"));
+    assert_eq!(
+        lex_html_fragment("Tom &amp; Jerry</title>", &context).unwrap(),
+        vec![
+            Token::Text("Tom & Jerry".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof
+        ]
+    );
+}
+
+#[test]
+fn parser_facing_context_maps_rawtext_elements() {
+    let context = HtmlLexContext::for_element_text("style").unwrap();
+
+    assert_eq!(context.initial_state, HtmlTokenizerState::Rawtext);
+    assert_eq!(context.last_start_tag.as_deref(), Some("style"));
+    assert_eq!(
+        lex_html_fragment("a < b &amp; c</style>", &context).unwrap(),
+        vec![
+            Token::Text("a ".to_string()),
+            Token::Text("< b &amp; c".to_string()),
+            Token::EndTag {
+                name: "style".to_string()
+            },
+            Token::Eof
+        ]
+    );
+}
+
+#[test]
+fn parser_facing_context_maps_noscript_based_on_scripting_mode() {
+    let enabled =
+        HtmlLexContext::for_element_text_with_scripting("noscript", HtmlScriptingMode::Enabled)
+            .unwrap();
+
+    assert_eq!(enabled.initial_state, HtmlTokenizerState::Rawtext);
+    assert_eq!(enabled.last_start_tag.as_deref(), Some("noscript"));
+    assert_eq!(
+        lex_html_fragment("<p>&amp;</p></noscript>", &enabled).unwrap(),
+        vec![
+            Token::Text("<p>&amp;".to_string()),
+            Token::Text("</p>".to_string()),
+            Token::EndTag {
+                name: "noscript".to_string()
+            },
+            Token::Eof
+        ]
+    );
+
+    assert_eq!(
+        HtmlLexContext::for_element_text_with_scripting("noscript", HtmlScriptingMode::Disabled),
+        None
+    );
+}
+
+#[test]
+fn parser_facing_context_maps_script_and_plaintext_elements() {
+    let script = HtmlLexContext::for_element_text("script").unwrap();
+    assert_eq!(script.initial_state, HtmlTokenizerState::ScriptData);
+    assert_eq!(script.last_start_tag.as_deref(), Some("script"));
+    assert_eq!(
+        lex_html_fragment("if (a < b) alert('&amp;');</script>", &script).unwrap(),
+        vec![
+            Token::Text("if (a < b) alert('&amp;');".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof
+        ]
+    );
+    assert_eq!(
+        lex_html_fragment("X</SCRipt", &script).unwrap(),
+        vec![Token::Text("X</SCRipt".to_string()), Token::Eof]
+    );
+
+    let plaintext = HtmlLexContext::for_element_text("plaintext").unwrap();
+    assert_eq!(plaintext.initial_state, HtmlTokenizerState::Plaintext);
+    assert_eq!(plaintext.last_start_tag, None);
+    assert_eq!(
+        lex_html_fragment("<b>&amp;</b>", &plaintext).unwrap(),
+        vec![Token::Text("<b>&amp;</b>".to_string()), Token::Eof]
+    );
+}
+
+#[test]
+fn parser_facing_context_maps_script_substates() {
+    let expected_script_substates = [
+        (HtmlTokenizerState::ScriptData, "script_data"),
+        (
+            HtmlTokenizerState::ScriptDataLessThanSign,
+            "script_data_less_than_sign",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEndTagOpen,
+            "script_data_end_tag_open",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEndTagName,
+            "script_data_end_tag_name",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEndTagWhitespace,
+            "script_data_end_tag_whitespace",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEndTagAttributes,
+            "script_data_end_tag_attributes",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataSelfClosingEndTag,
+            "script_data_self_closing_end_tag",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapeStart,
+            "script_data_escape_start",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapeStartDash,
+            "script_data_escape_start_dash",
+        ),
+        (HtmlTokenizerState::ScriptDataEscaped, "script_data_escaped"),
+        (
+            HtmlTokenizerState::ScriptDataEscapedDash,
+            "script_data_escaped_dash",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapedDashDash,
+            "script_data_escaped_dash_dash",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapedLessThanSign,
+            "script_data_escaped_less_than_sign",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapedEndTagOpen,
+            "script_data_escaped_end_tag_open",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapedEndTagName,
+            "script_data_escaped_end_tag_name",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapedEndTagWhitespace,
+            "script_data_escaped_end_tag_whitespace",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapedEndTagAttributes,
+            "script_data_escaped_end_tag_attributes",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapedSelfClosingEndTag,
+            "script_data_escaped_self_closing_end_tag",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataDoubleEscapeStart,
+            "script_data_double_escape_start",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataDoubleEscaped,
+            "script_data_double_escaped",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataDoubleEscapedDash,
+            "script_data_double_escaped_dash",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataDoubleEscapedDashDash,
+            "script_data_double_escaped_dash_dash",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign,
+            "script_data_double_escaped_less_than_sign",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataDoubleEscapeEnd,
+            "script_data_double_escape_end",
+        ),
+    ];
+    assert_eq!(
+        HTML_SCRIPT_TOKENIZER_STATES,
+        expected_script_substates.map(|(state, _)| state)
+    );
+
+    for (state, machine_state) in expected_script_substates {
+        assert!(state.is_script_substate());
+        assert_eq!(state.as_machine_state(), machine_state);
+
+        let context = HtmlLexContext::script_substate(state).unwrap();
+        assert_eq!(context.initial_state, state);
+        assert_eq!(context.last_start_tag.as_deref(), Some("script"));
+
+        let mut lexer = create_html_lexer().unwrap();
+        apply_html_lex_context(&mut lexer, &context).unwrap();
+        assert_eq!(lexer.current_state(), machine_state);
+    }
+
+    let escaped =
+        HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEscapedDashDash).unwrap();
+    assert_eq!(
+        escaped.initial_state,
+        HtmlTokenizerState::ScriptDataEscapedDashDash
+    );
+    assert_eq!(escaped.last_start_tag.as_deref(), Some("script"));
+    assert_eq!(
+        lex_html_fragment("x</script>", &escaped).unwrap(),
+        vec![
+            Token::Text("x".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof
+        ]
+    );
+
+    let double_escaped =
+        HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign)
+            .unwrap();
+    assert_eq!(
+        double_escaped.initial_state,
+        HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign
+    );
+    assert_eq!(double_escaped.last_start_tag.as_deref(), Some("script"));
+    assert_eq!(
+        lex_html_fragment("/script>tail</script>", &double_escaped).unwrap(),
+        vec![
+            Token::Text("/script>tail".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof
+        ]
+    );
+
+    assert_eq!(
+        HtmlLexContext::script_substate(HtmlTokenizerState::Rawtext),
+        None
+    );
+    assert!(!HtmlTokenizerState::Rawtext.is_script_substate());
+}
+
+#[test]
+fn parser_facing_context_exposes_tokenizer_state_sets() {
+    assert_eq!(
+        HTML_TOKENIZER_STATES.map(HtmlTokenizerState::as_machine_state),
+        [
+            "data",
+            "rcdata",
+            "rcdata_less_than_sign",
+            "rcdata_end_tag_open",
+            "rcdata_end_tag_name",
+            "rcdata_end_tag_whitespace",
+            "rcdata_end_tag_attributes",
+            "rcdata_self_closing_end_tag",
+            "rawtext",
+            "rawtext_less_than_sign",
+            "rawtext_end_tag_open",
+            "rawtext_end_tag_name",
+            "rawtext_end_tag_whitespace",
+            "rawtext_end_tag_attributes",
+            "rawtext_self_closing_end_tag",
+            "plaintext",
+            "cdata_section",
+            "cdata_section_bracket",
+            "cdata_section_end",
+            "comment_start",
+            "comment_start_dash",
+            "comment",
+            "comment_less_than_sign",
+            "comment_less_than_sign_bang",
+            "comment_less_than_sign_bang_dash",
+            "comment_less_than_sign_bang_dash_dash",
+            "comment_end_dash",
+            "comment_end",
+            "comment_end_bang",
+            "bogus_comment",
+            "doctype_keyword_o",
+            "doctype_keyword_c",
+            "doctype_keyword_t",
+            "doctype_keyword_y",
+            "doctype_keyword_p",
+            "doctype_keyword_e",
+            "doctype_after_keyword",
+            "before_doctype_name",
+            "doctype_name",
+            "after_doctype_name",
+            "doctype_public_keyword_u",
+            "doctype_public_keyword_b",
+            "doctype_public_keyword_l",
+            "doctype_public_keyword_i",
+            "doctype_public_keyword_c",
+            "after_doctype_public_keyword",
+            "before_doctype_public_identifier",
+            "doctype_public_identifier_double_quoted",
+            "doctype_public_identifier_single_quoted",
+            "after_doctype_public_identifier",
+            "between_doctype_public_and_system_identifiers",
+            "doctype_system_keyword_y",
+            "doctype_system_keyword_s",
+            "doctype_system_keyword_t",
+            "doctype_system_keyword_e",
+            "doctype_system_keyword_m",
+            "after_doctype_system_keyword",
+            "before_doctype_system_identifier",
+            "doctype_system_identifier_double_quoted",
+            "doctype_system_identifier_single_quoted",
+            "after_doctype_system_identifier",
+            "bogus_doctype",
+            "text_character_reference",
+            "text_named_character_reference",
+            "text_numeric_character_reference",
+            "text_numeric_hex_character_reference_start",
+            "text_numeric_hex_character_reference",
+            "text_numeric_decimal_character_reference",
+            "script_data",
+            "script_data_less_than_sign",
+            "script_data_end_tag_open",
+            "script_data_end_tag_name",
+            "script_data_end_tag_whitespace",
+            "script_data_end_tag_attributes",
+            "script_data_self_closing_end_tag",
+            "script_data_escape_start",
+            "script_data_escape_start_dash",
+            "script_data_escaped",
+            "script_data_escaped_dash",
+            "script_data_escaped_dash_dash",
+            "script_data_escaped_less_than_sign",
+            "script_data_escaped_end_tag_open",
+            "script_data_escaped_end_tag_name",
+            "script_data_escaped_end_tag_whitespace",
+            "script_data_escaped_end_tag_attributes",
+            "script_data_escaped_self_closing_end_tag",
+            "script_data_double_escape_start",
+            "script_data_double_escaped",
+            "script_data_double_escaped_dash",
+            "script_data_double_escaped_dash_dash",
+            "script_data_double_escaped_less_than_sign",
+            "script_data_double_escape_end",
+        ]
+    );
+    assert!(!HtmlTokenizerState::Data.is_fragment_state());
+
+    for state in HTML_TOKENIZER_STATES {
+        assert_eq!(
+            HtmlTokenizerState::from_machine_state(state.as_machine_state()),
+            Some(state)
+        );
+    }
+    assert_eq!(
+        HtmlTokenizerState::from_machine_state("script data state"),
+        None
+    );
+    assert_eq!(HtmlTokenizerState::from_machine_state("bogus"), None);
+    assert_eq!(
+        HtmlTokenizerState::from_fragment_machine_state("data"),
+        None
+    );
+    assert_eq!(
+        HtmlTokenizerState::from_fragment_machine_state("rcdata"),
+        Some(HtmlTokenizerState::Rcdata)
+    );
+    assert_eq!(
+        HtmlTokenizerState::from_fragment_machine_state("script_data_escaped_dash_dash"),
+        Some(HtmlTokenizerState::ScriptDataEscapedDashDash)
+    );
+
+    assert_eq!(&HTML_FRAGMENT_TOKENIZER_STATES, &HTML_TOKENIZER_STATES[1..]);
+    for state in HTML_FRAGMENT_TOKENIZER_STATES {
+        assert!(state.is_fragment_state());
+    }
+
+    for state in HTML_TOKENIZER_STATES {
+        assert_eq!(
+            HtmlTokenizerState::from_html5lib_state(state.as_html5lib_state()),
+            Some(state)
+        );
+    }
+    assert_eq!(
+        HtmlTokenizerState::from_html5lib_state("Script data double escape start state"),
+        Some(HtmlTokenizerState::ScriptDataDoubleEscapeStart)
+    );
+    assert_eq!(
+        HtmlTokenizerState::from_html5lib_state("RCDATA end tag open state"),
+        Some(HtmlTokenizerState::RcdataEndTagOpen)
+    );
+    assert_eq!(HtmlTokenizerState::from_html5lib_state("Bogus state"), None);
+
+    assert!(HtmlTokenizerState::RcdataLessThanSign.requires_last_start_tag());
+    assert!(HtmlTokenizerState::RcdataEndTagOpen.requires_last_start_tag());
+    assert!(HtmlTokenizerState::RcdataEndTagName.requires_last_start_tag());
+    assert!(HtmlTokenizerState::RcdataEndTagName.requires_end_tag_seed());
+    assert!(HtmlTokenizerState::RawtextLessThanSign.requires_last_start_tag());
+    assert!(HtmlTokenizerState::RawtextEndTagOpen.requires_last_start_tag());
+    assert!(HtmlTokenizerState::RawtextEndTagAttributes.requires_last_start_tag());
+    assert!(HtmlTokenizerState::RawtextEndTagAttributes.requires_end_tag_seed());
+    assert!(HtmlTokenizerState::ScriptDataEndTagOpen.requires_last_start_tag());
+    assert!(HtmlTokenizerState::ScriptDataSelfClosingEndTag.requires_last_start_tag());
+    assert!(HtmlTokenizerState::ScriptDataSelfClosingEndTag.requires_end_tag_seed());
+    assert!(HtmlTokenizerState::ScriptDataEscapeStart.requires_last_start_tag());
+    assert!(HtmlTokenizerState::ScriptDataEscapedEndTagOpen.requires_last_start_tag());
+    assert!(HtmlTokenizerState::ScriptDataEscapedEndTagWhitespace.requires_last_start_tag());
+    assert!(HtmlTokenizerState::ScriptDataEscapedEndTagWhitespace.requires_end_tag_seed());
+    assert!(HtmlTokenizerState::Comment.requires_comment_seed());
+    assert!(HtmlTokenizerState::CommentEndDash.requires_comment_seed());
+    assert!(HtmlTokenizerState::BogusComment.requires_comment_seed());
+    assert!(HtmlTokenizerState::DoctypeName.requires_doctype_seed());
+    assert!(HtmlTokenizerState::AfterDoctypePublicIdentifier.requires_doctype_seed());
+    assert!(HtmlTokenizerState::BogusDoctype.requires_doctype_seed());
+    assert!(HtmlTokenizerState::TextCharacterReference.requires_character_reference_seed());
+    assert!(HtmlTokenizerState::TextNamedCharacterReference.requires_character_reference_seed());
+    assert!(
+        HtmlTokenizerState::TextNumericHexCharacterReference.requires_character_reference_seed()
+    );
+    assert!(HtmlTokenizerState::Data.is_character_reference_return_state());
+    assert!(HtmlTokenizerState::Rcdata.is_character_reference_return_state());
+    assert!(!HtmlTokenizerState::RcdataEndTagOpen.requires_end_tag_seed());
+    assert!(!HtmlTokenizerState::CdataSectionEnd.requires_last_start_tag());
+    assert!(!HtmlTokenizerState::Data.requires_comment_seed());
+    assert!(!HtmlTokenizerState::Data.requires_doctype_seed());
+    assert!(!HtmlTokenizerState::Rawtext.is_character_reference_return_state());
+
+    assert_eq!(
+        HTML_DOCTYPE_TOKENIZER_STATES.map(HtmlTokenizerState::as_machine_state),
+        [
+            "doctype_keyword_o",
+            "doctype_keyword_c",
+            "doctype_keyword_t",
+            "doctype_keyword_y",
+            "doctype_keyword_p",
+            "doctype_keyword_e",
+            "doctype_after_keyword",
+            "before_doctype_name",
+            "doctype_name",
+            "after_doctype_name",
+            "doctype_public_keyword_u",
+            "doctype_public_keyword_b",
+            "doctype_public_keyword_l",
+            "doctype_public_keyword_i",
+            "doctype_public_keyword_c",
+            "after_doctype_public_keyword",
+            "before_doctype_public_identifier",
+            "doctype_public_identifier_double_quoted",
+            "doctype_public_identifier_single_quoted",
+            "after_doctype_public_identifier",
+            "between_doctype_public_and_system_identifiers",
+            "doctype_system_keyword_y",
+            "doctype_system_keyword_s",
+            "doctype_system_keyword_t",
+            "doctype_system_keyword_e",
+            "doctype_system_keyword_m",
+            "after_doctype_system_keyword",
+            "before_doctype_system_identifier",
+            "doctype_system_identifier_double_quoted",
+            "doctype_system_identifier_single_quoted",
+            "after_doctype_system_identifier",
+            "bogus_doctype",
+        ]
+    );
+}
+
+#[test]
+fn parser_facing_context_seeds_intermediate_text_states() {
+    let cdata_bracket = HtmlLexContext::new(HtmlTokenizerState::CdataSectionBracket);
+    assert_eq!(
+        lex_html_fragment("", &cdata_bracket).unwrap(),
+        vec![Token::Text("]".to_string()), Token::Eof]
+    );
+
+    let cdata_end = HtmlLexContext::new(HtmlTokenizerState::CdataSectionEnd);
+    assert_eq!(
+        lex_html_fragment(">after", &cdata_end).unwrap(),
+        vec![Token::Text("after".to_string()), Token::Eof]
+    );
+
+    let rcdata_less_than =
+        HtmlLexContext::new(HtmlTokenizerState::RcdataLessThanSign).with_last_start_tag("title");
+    assert_eq!(
+        lex_html_fragment("b &amp;</title>", &rcdata_less_than).unwrap(),
+        vec![
+            Token::Text("<b &".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof
+        ]
+    );
+
+    let rcdata_end_tag_open =
+        HtmlLexContext::new(HtmlTokenizerState::RcdataEndTagOpen).with_last_start_tag("title");
+    assert_eq!(
+        lex_html_fragment("title>after", &rcdata_end_tag_open).unwrap(),
+        vec![
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Text("after".to_string()),
+            Token::Eof
+        ]
+    );
+
+    let rawtext_less_than =
+        HtmlLexContext::new(HtmlTokenizerState::RawtextLessThanSign).with_last_start_tag("style");
+    assert_eq!(
+        lex_html_fragment("b &amp;</style>", &rawtext_less_than).unwrap(),
+        vec![
+            Token::Text("<b &amp;".to_string()),
+            Token::EndTag {
+                name: "style".to_string()
+            },
+            Token::Eof
+        ]
+    );
+
+    let rawtext_end_tag_open =
+        HtmlLexContext::new(HtmlTokenizerState::RawtextEndTagOpen).with_last_start_tag("style");
+    assert_eq!(
+        lex_html_fragment("style>tail", &rawtext_end_tag_open).unwrap(),
+        vec![
+            Token::EndTag {
+                name: "style".to_string()
+            },
+            Token::Text("tail".to_string()),
+            Token::Eof
+        ]
+    );
+
+    let script_less_than =
+        HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataLessThanSign).unwrap();
+    assert_eq!(
+        lex_html_fragment("!-->tail</script>", &script_less_than).unwrap(),
+        vec![
+            Token::Text("<!-->tail".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof
+        ]
+    );
+
+    let script_end_tag_open =
+        HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEndTagOpen).unwrap();
+    assert_eq!(
+        lex_html_fragment("script>tail", &script_end_tag_open).unwrap(),
+        vec![
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Text("tail".to_string()),
+            Token::Eof
+        ]
+    );
+
+    let escaped_script_end_tag_open =
+        HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEscapedEndTagOpen).unwrap();
+    assert_eq!(
+        lex_html_fragment("script>tail", &escaped_script_end_tag_open).unwrap(),
+        vec![
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Text("tail".to_string()),
+            Token::Eof
+        ]
+    );
+
+    let double_escape_start =
+        HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataDoubleEscapeStart).unwrap();
+    assert_eq!(
+        lex_html_fragment("script>inside</script>after</script>", &double_escape_start).unwrap(),
+        vec![
+            Token::Text("script>inside</script>after".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof
+        ]
+    );
+
+    let double_escape_end =
+        HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataDoubleEscapeEnd).unwrap();
+    assert_eq!(
+        lex_html_fragment("script>after</script>", &double_escape_end).unwrap(),
+        vec![
+            Token::Text("script>after".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            },
+            Token::Eof
+        ]
+    );
+}
+
+#[test]
+fn parser_facing_context_seeds_comment_continuation_states() {
+    let comment =
+        HtmlLexContext::comment_continuation(HtmlTokenizerState::Comment, "seed").unwrap();
+    assert_eq!(
+        lex_html_fragment(" body -->tail", &comment).unwrap(),
+        vec![
+            Token::Comment("seed body ".to_string()),
+            Token::Text("tail".to_string()),
+            Token::Eof,
+        ]
+    );
+
+    let comment_end_dash =
+        HtmlLexContext::comment_continuation(HtmlTokenizerState::CommentEndDash, "seed").unwrap();
+    assert_eq!(
+        lex_html_fragment("x-->tail", &comment_end_dash).unwrap(),
+        vec![
+            Token::Comment("seed-x".to_string()),
+            Token::Text("tail".to_string()),
+            Token::Eof,
+        ]
+    );
+
+    let comment_end =
+        HtmlLexContext::comment_continuation(HtmlTokenizerState::CommentEnd, "seed").unwrap();
+    let mut lexer = create_html_lexer_with_context(&comment_end).unwrap();
+    lexer.push("!>tail").unwrap();
+    lexer.finish().unwrap();
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Comment("seed".to_string()),
+            Token::Text("tail".to_string()),
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .map(|diagnostic| diagnostic.code.as_str())
+            .collect::<Vec<_>>(),
+        vec!["incorrectly-closed-comment"]
+    );
+
+    let comment_end_bang =
+        HtmlLexContext::comment_continuation(HtmlTokenizerState::CommentEndBang, "seed").unwrap();
+    assert_eq!(
+        lex_html_fragment("y-->tail", &comment_end_bang).unwrap(),
+        vec![
+            Token::Comment("seed--!y".to_string()),
+            Token::Text("tail".to_string()),
+            Token::Eof,
+        ]
+    );
+
+    let less_than =
+        HtmlLexContext::comment_continuation(HtmlTokenizerState::CommentLessThanSign, "seed<")
+            .unwrap();
+    assert_eq!(
+        lex_html_fragment("x-->tail", &less_than).unwrap(),
+        vec![
+            Token::Comment("seed<x".to_string()),
+            Token::Text("tail".to_string()),
+            Token::Eof,
+        ]
+    );
+
+    let start_dash =
+        HtmlLexContext::comment_continuation(HtmlTokenizerState::CommentStartDash, "").unwrap();
+    let mut lexer = create_html_lexer_with_context(&start_dash).unwrap();
+    lexer.push(">tail").unwrap();
+    lexer.finish().unwrap();
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Comment(String::new()),
+            Token::Text("tail".to_string()),
+            Token::Eof,
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .map(|diagnostic| diagnostic.code.as_str())
+            .collect::<Vec<_>>(),
+        vec!["abrupt-closing-of-empty-comment"]
+    );
+
+    let bogus =
+        HtmlLexContext::comment_continuation(HtmlTokenizerState::BogusComment, "bogus-").unwrap();
+    assert_eq!(
+        lex_html_fragment("tail>after", &bogus).unwrap(),
+        vec![
+            Token::Comment("bogus-tail".to_string()),
+            Token::Text("after".to_string()),
+            Token::Eof,
+        ]
+    );
+
+    assert_eq!(
+        HtmlLexContext::comment_continuation(HtmlTokenizerState::Rcdata, "nope"),
+        None
+    );
+}
+
+#[test]
+fn parser_facing_context_seeds_doctype_continuation_states() {
+    let keyword = HtmlLexContext::doctype_continuation(
+        HtmlTokenizerState::DoctypeKeywordO,
+        DoctypeSeed::new(),
+    )
+    .unwrap();
+    assert_eq!(
+        lex_html_fragment("OCTYPE html>tail", &keyword).unwrap(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: false
+            },
+            Token::Text("tail".to_string()),
+            Token::Eof
+        ]
+    );
+
+    let name = HtmlLexContext::doctype_continuation(
+        HtmlTokenizerState::DoctypeName,
+        DoctypeSeed::with_name("ht"),
+    )
+    .unwrap();
+    assert_eq!(
+        lex_html_fragment("ml>", &name).unwrap(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: false
+            },
+            Token::Eof
+        ]
+    );
+
+    let after_name = HtmlLexContext::doctype_continuation(
+        HtmlTokenizerState::AfterDoctypeName,
+        DoctypeSeed::with_name("html"),
+    )
+    .unwrap();
+    assert_eq!(
+        lex_html_fragment("PUBLIC \"pub\" \"sys\">", &after_name).unwrap(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: Some("pub".to_string()),
+                system_identifier: Some("sys".to_string()),
+                force_quirks: false
+            },
+            Token::Eof
+        ]
+    );
+
+    let public_identifier = HtmlLexContext::doctype_continuation(
+        HtmlTokenizerState::DoctypePublicIdentifierDoubleQuoted,
+        DoctypeSeed {
+            name: Some("html".to_string()),
+            public_identifier: Some("pu".to_string()),
+            system_identifier: None,
+            force_quirks: false,
+        },
+    )
+    .unwrap();
+    assert_eq!(
+        lex_html_fragment("b\" \"sys\">", &public_identifier).unwrap(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: Some("pub".to_string()),
+                system_identifier: Some("sys".to_string()),
+                force_quirks: false
+            },
+            Token::Eof
+        ]
+    );
+
+    let mut lexer = create_html_lexer_with_context(
+        &HtmlLexContext::doctype_continuation(
+            HtmlTokenizerState::AfterDoctypePublicIdentifier,
+            DoctypeSeed {
+                name: Some("html".to_string()),
+                public_identifier: Some("pub".to_string()),
+                system_identifier: None,
+                force_quirks: false,
+            },
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    lexer.push("\"sys\">").unwrap();
+    lexer.finish().unwrap();
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: Some("pub".to_string()),
+                system_identifier: Some("sys".to_string()),
+                force_quirks: false
+            },
+            Token::Eof
+        ]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .map(|diagnostic| diagnostic.code.as_str())
+            .collect::<Vec<_>>(),
+        vec!["missing-whitespace-between-doctype-public-and-system-identifiers"]
+    );
+
+    let bogus = HtmlLexContext::doctype_continuation(
+        HtmlTokenizerState::BogusDoctype,
+        DoctypeSeed {
+            name: Some("html".to_string()),
+            public_identifier: None,
+            system_identifier: None,
+            force_quirks: true,
+        },
+    )
+    .unwrap();
+    assert_eq!(
+        lex_html_fragment("ignored>tail", &bogus).unwrap(),
+        vec![
+            Token::Doctype {
+                name: Some("html".to_string()),
+                public_identifier: None,
+                system_identifier: None,
+                force_quirks: true
+            },
+            Token::Text("tail".to_string()),
+            Token::Eof
+        ]
+    );
+
+    assert_eq!(
+        HtmlLexContext::doctype_continuation(HtmlTokenizerState::Rcdata, DoctypeSeed::new()),
+        None
+    );
+}
+
+#[test]
+fn parser_facing_context_seeds_character_reference_continuation_states() {
+    let named = HtmlLexContext::character_reference_continuation(
+        HtmlTokenizerState::TextNamedCharacterReference,
+        HtmlTokenizerState::Data,
+        "&co",
+    )
+    .unwrap();
+    assert_eq!(
+        lex_html_fragment("py;!", &named).unwrap(),
+        vec![Token::Text("©!".to_string()), Token::Eof]
+    );
+
+    let rcdata = HtmlLexContext::character_reference_continuation(
+        HtmlTokenizerState::TextNamedCharacterReference,
+        HtmlTokenizerState::Rcdata,
+        "&a",
+    )
+    .unwrap()
+    .with_last_start_tag("title");
+    assert_eq!(
+        lex_html_fragment("mp; &amp;</title>", &rcdata).unwrap(),
+        vec![
+            Token::Text("& &".to_string()),
+            Token::EndTag {
+                name: "title".to_string()
+            },
+            Token::Eof
+        ]
+    );
+
+    let decimal = HtmlLexContext::character_reference_continuation(
+        HtmlTokenizerState::TextNumericDecimalCharacterReference,
+        HtmlTokenizerState::Data,
+        "&#6",
+    )
+    .unwrap();
+    assert_eq!(
+        lex_html_fragment("5;!", &decimal).unwrap(),
+        vec![Token::Text("A!".to_string()), Token::Eof]
+    );
+
+    let mut lexer = create_html_lexer_with_context(
+        &HtmlLexContext::character_reference_continuation(
+            HtmlTokenizerState::TextNumericHexCharacterReference,
+            HtmlTokenizerState::Data,
+            "&#x4",
+        )
+        .unwrap(),
+    )
+    .unwrap();
+    lexer.push("1!").unwrap();
+    lexer.finish().unwrap();
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![Token::Text("A!".to_string()), Token::Eof]
+    );
+    assert_eq!(
+        lexer
+            .diagnostics()
+            .iter()
+            .map(|diagnostic| diagnostic.code.as_str())
+            .collect::<Vec<_>>(),
+        vec!["missing-semicolon-after-character-reference"]
+    );
+
+    assert_eq!(
+        HtmlLexContext::character_reference_continuation(
+            HtmlTokenizerState::TextNamedCharacterReference,
+            HtmlTokenizerState::Rawtext,
+            "&amp",
+        ),
+        None
+    );
+    assert_eq!(
+        HtmlLexContext::character_reference_continuation(
+            HtmlTokenizerState::Rcdata,
+            HtmlTokenizerState::Data,
+            "&",
+        ),
+        None
+    );
+}
+
+#[test]
+fn parser_facing_end_tag_open_contexts_recover_literal_boundaries() {
+    for (context, input, expected_text) in [
+        (
+            HtmlLexContext::new(HtmlTokenizerState::RcdataEndTagOpen).with_last_start_tag("title"),
+            "",
+            "</",
+        ),
+        (
+            HtmlLexContext::new(HtmlTokenizerState::RawtextEndTagOpen).with_last_start_tag("style"),
+            "",
+            "</",
+        ),
+        (
+            HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEndTagOpen).unwrap(),
+            "",
+            "</",
+        ),
+        (
+            HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEscapedEndTagOpen)
+                .unwrap(),
+            "",
+            "</",
+        ),
+    ] {
+        assert_eq!(
+            lex_html_fragment(input, &context).unwrap(),
+            vec![Token::Text(expected_text.to_string()), Token::Eof],
+            "context {:?}",
+            context.initial_state
+        );
+    }
+
+    for (context, input, expected_text, expected_end_tag) in [
+        (
+            HtmlLexContext::new(HtmlTokenizerState::RcdataEndTagOpen).with_last_start_tag("title"),
+            "style>text</title>",
+            "</style>text",
+            "title",
+        ),
+        (
+            HtmlLexContext::new(HtmlTokenizerState::RawtextEndTagOpen).with_last_start_tag("style"),
+            "title>tail</style>",
+            "</title>tail",
+            "style",
+        ),
+        (
+            HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEndTagOpen).unwrap(),
+            "style>tail</script>",
+            "</style>tail",
+            "script",
+        ),
+        (
+            HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEscapedEndTagOpen)
+                .unwrap(),
+            "style>tail</script>",
+            "</style>tail",
+            "script",
+        ),
+    ] {
+        assert_eq!(
+            lex_html_fragment(input, &context).unwrap(),
+            vec![
+                Token::Text(expected_text.to_string()),
+                Token::EndTag {
+                    name: expected_end_tag.to_string()
+                },
+                Token::Eof,
+            ],
+            "context {:?}",
+            context.initial_state
+        );
+    }
+}
+
+#[test]
+fn parser_facing_end_tag_open_contexts_report_matching_recovery_diagnostics() {
+    for (context, input, expected_end_tag, expected_text, expected_diagnostic) in [
+        (
+            HtmlLexContext::new(HtmlTokenizerState::RcdataEndTagOpen).with_last_start_tag("title"),
+            "title class=x>after",
+            "title",
+            "after",
+            "end-tag-with-attributes",
+        ),
+        (
+            HtmlLexContext::new(HtmlTokenizerState::RawtextEndTagOpen).with_last_start_tag("style"),
+            "style >tail",
+            "style",
+            "tail",
+            "unexpected-whitespace-after-end-tag-name",
+        ),
+        (
+            HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEndTagOpen).unwrap(),
+            "script/>tail",
+            "script",
+            "tail",
+            "end-tag-with-trailing-solidus",
+        ),
+        (
+            HtmlLexContext::script_substate(HtmlTokenizerState::ScriptDataEscapedEndTagOpen)
+                .unwrap(),
+            "script class=x>tail",
+            "script",
+            "tail",
+            "end-tag-with-attributes",
+        ),
+    ] {
+        let mut lexer = create_html_lexer().unwrap();
+        apply_html_lex_context(&mut lexer, &context).unwrap();
+
+        lexer.push(input).unwrap();
+        lexer.finish().unwrap();
+
+        assert_eq!(
+            lexer.drain_tokens(),
+            vec![
+                Token::EndTag {
+                    name: expected_end_tag.to_string()
+                },
+                Token::Text(expected_text.to_string()),
+                Token::Eof,
+            ],
+            "context {:?}",
+            context.initial_state
+        );
+        assert_eq!(
+            lexer
+                .diagnostics()
+                .iter()
+                .map(|diagnostic| diagnostic.code.as_str())
+                .collect::<Vec<_>>(),
+            vec![expected_diagnostic],
+            "context {:?}",
+            context.initial_state
+        );
+    }
+}
+
+#[test]
+fn parser_facing_end_tag_continuation_contexts_resume_seeded_tokens() {
+    for (state, last_start_tag, current_end_tag, temporary_buffer, input, expected_text) in [
+        (
+            HtmlTokenizerState::RcdataEndTagName,
+            "title",
+            "title",
+            "title",
+            ">after",
+            "after",
+        ),
+        (
+            HtmlTokenizerState::RawtextEndTagName,
+            "style",
+            "style",
+            "style",
+            ">tail",
+            "tail",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEndTagName,
+            "script",
+            "script",
+            "script",
+            ">tail",
+            "tail",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapedEndTagName,
+            "script",
+            "script",
+            "script",
+            ">tail",
+            "tail",
+        ),
+    ] {
+        let context = HtmlLexContext::new(state)
+            .with_last_start_tag(last_start_tag)
+            .with_current_end_tag(current_end_tag)
+            .with_temporary_buffer(temporary_buffer);
+
+        assert_eq!(
+            lex_html_fragment(input, &context).unwrap(),
+            vec![
+                Token::EndTag {
+                    name: last_start_tag.to_string()
+                },
+                Token::Text(expected_text.to_string()),
+                Token::Eof,
+            ],
+            "context {state:?}"
+        );
+    }
+}
+
+#[test]
+fn parser_facing_end_tag_continuation_contexts_recover_seeded_text_and_diagnostics() {
+    for (state, temporary_buffer, input, expected_diagnostic) in [
+        (
+            HtmlTokenizerState::RcdataEndTagWhitespace,
+            "title ",
+            ">after",
+            "unexpected-whitespace-after-end-tag-name",
+        ),
+        (
+            HtmlTokenizerState::RawtextEndTagAttributes,
+            "style class=x",
+            ">tail",
+            "end-tag-with-attributes",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataSelfClosingEndTag,
+            "script",
+            ">tail",
+            "end-tag-with-trailing-solidus",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapedEndTagWhitespace,
+            "script ",
+            ">tail",
+            "unexpected-whitespace-after-end-tag-name",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapedEndTagAttributes,
+            "script class=x",
+            ">tail",
+            "end-tag-with-attributes",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapedSelfClosingEndTag,
+            "script",
+            ">tail",
+            "end-tag-with-trailing-solidus",
+        ),
+    ] {
+        let last_start_tag = if state.as_machine_state().starts_with("script") {
+            "script"
+        } else if state.as_machine_state().starts_with("rawtext") {
+            "style"
+        } else {
+            "title"
+        };
+        let context = HtmlLexContext::new(state)
+            .with_last_start_tag(last_start_tag)
+            .with_current_end_tag(last_start_tag)
+            .with_temporary_buffer(temporary_buffer);
+        let mut lexer = create_html_lexer().unwrap();
+        apply_html_lex_context(&mut lexer, &context).unwrap();
+
+        lexer.push(input).unwrap();
+        lexer.finish().unwrap();
+
+        assert_eq!(
+            lexer.drain_tokens(),
+            vec![
+                Token::EndTag {
+                    name: last_start_tag.to_string()
+                },
+                Token::Text(input.trim_start_matches('>').to_string()),
+                Token::Eof,
+            ],
+            "context {state:?}"
+        );
+        assert_eq!(
+            lexer
+                .diagnostics()
+                .iter()
+                .map(|diagnostic| diagnostic.code.as_str())
+                .collect::<Vec<_>>(),
+            vec![expected_diagnostic],
+            "context {state:?}"
+        );
+    }
+}
+
+#[test]
+fn parser_facing_end_tag_continuation_contexts_keep_mismatches_literal() {
+    for (state, last_start_tag, current_end_tag, temporary_buffer, input, expected_text) in [
+        (
+            HtmlTokenizerState::RcdataEndTagName,
+            "title",
+            "style",
+            "style",
+            ">text</title>",
+            "</style>text",
+        ),
+        (
+            HtmlTokenizerState::RawtextEndTagWhitespace,
+            "style",
+            "title",
+            "title ",
+            ">tail</style>",
+            "</title >tail",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEndTagAttributes,
+            "script",
+            "style",
+            "style class=x",
+            ">tail</script>",
+            "</style class=x>tail",
+        ),
+        (
+            HtmlTokenizerState::ScriptDataEscapedSelfClosingEndTag,
+            "script",
+            "style",
+            "style",
+            ">tail</script>",
+            "</style/>tail",
+        ),
+    ] {
+        let context = HtmlLexContext::new(state)
+            .with_last_start_tag(last_start_tag)
+            .with_current_end_tag(current_end_tag)
+            .with_temporary_buffer(temporary_buffer);
+
+        assert_eq!(
+            lex_html_fragment(input, &context).unwrap(),
+            vec![
+                Token::Text(expected_text.to_string()),
+                Token::EndTag {
+                    name: last_start_tag.to_string()
+                },
+                Token::Eof,
+            ],
+            "context {state:?}"
+        );
+    }
+}
+
+#[test]
+fn parser_facing_context_leaves_normal_elements_in_data_state() {
+    assert_eq!(HtmlLexContext::for_element_text("p"), None);
+    assert!(HtmlLexContext::data().is_data());
+    assert_eq!(
+        HtmlLexContext::data().initial_state.as_machine_state(),
+        "data"
+    );
+    let cdata = HtmlLexContext::cdata_section();
+    assert_eq!(cdata.initial_state, HtmlTokenizerState::CdataSection);
+    assert_eq!(cdata.last_start_tag, None);
+    assert_eq!(
+        lex_html_fragment("<svg:title>&amp;</svg:title>]]><p>x</p>", &cdata).unwrap(),
+        vec![
+            Token::Text("<svg:title>&amp;</svg:title>".to_string()),
+            Token::StartTag {
+                name: "p".to_string(),
+                attributes: Vec::new(),
+                self_closing: false
+            },
+            Token::Text("x".to_string()),
+            Token::EndTag {
+                name: "p".to_string()
+            },
+            Token::Eof
+        ]
+    );
+    assert_eq!(
+        HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign.as_machine_state(),
+        "script_data_double_escaped_less_than_sign"
+    );
+}
+
+#[test]
+fn parser_facing_context_can_reconfigure_an_existing_lexer() {
+    let mut lexer = create_html_lexer().unwrap();
+
+    apply_html_lex_context(
+        &mut lexer,
+        &HtmlLexContext::for_element_text("script").unwrap(),
+    )
+    .unwrap();
+    lexer.push("if (a < b)</script>").unwrap();
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::Text("if (a < b)".to_string()),
+            Token::EndTag {
+                name: "script".to_string()
+            }
+        ]
+    );
+
+    apply_html_lex_context(&mut lexer, &HtmlLexContext::data()).unwrap();
+    assert_eq!(lexer.current_state(), "data");
+    lexer.push("<p>after</p>").unwrap();
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![
+            Token::StartTag {
+                name: "p".to_string(),
+                attributes: Vec::new(),
+                self_closing: false
+            },
+            Token::Text("after".to_string()),
+            Token::EndTag {
+                name: "p".to_string()
+            }
+        ]
+    );
+
+    apply_html_lex_context(&mut lexer, &HtmlLexContext::cdata_section()).unwrap();
+    assert_eq!(lexer.current_state(), "cdata_section");
+    lexer.push("<literal>&amp;]]>").unwrap();
+    lexer.finish().unwrap();
+
+    assert_eq!(
+        lexer.drain_tokens(),
+        vec![Token::Text("<literal>&amp;".to_string()), Token::Eof]
+    );
 }
 
 fn token_summary(token: Token) -> String {

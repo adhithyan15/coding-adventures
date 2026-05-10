@@ -38,12 +38,14 @@ from typing import cast
 
 from lang_parser import ASTNode
 from lexer import Token
+from sql_backend.schema import NO_DEFAULT
 from sql_backend.schema import ColumnDef as BackendColumnDef
 from sql_planner import (
     AggFunc,
     AggregateExpr,
     AlterTableStmt,
     Assignment,
+    AstUpsertAssignment,
     BeginStmt,
     Between,
     BinaryExpr,
@@ -62,12 +64,14 @@ from sql_planner import (
     DropTriggerStmt,
     DropViewStmt,
     ExceptStmt,
+    ExcludedColumn,
     ExistsSubquery,
     FuncArg,
     FunctionCall,
     In,
     InsertSelectStmt,
     InsertValuesStmt,
+    InSubquery,
     IntersectStmt,
     IsNotNull,
     IsNull,
@@ -77,6 +81,7 @@ from sql_planner import (
     Limit,
     Literal,
     NotIn,
+    NotInSubquery,
     NotLike,
     RecursiveCTERef,
     ReleaseSavepointStmt,
@@ -93,6 +98,7 @@ from sql_planner import (
     UnaryOp,
     UnionStmt,
     UpdateStmt,
+    UpsertClause,
     Wildcard,
     WindowFuncExpr,
 )
@@ -165,6 +171,9 @@ def _stmt_dispatch(
             return _select(inner, view_defs=view_defs)
         case "insert_stmt":
             return _insert(inner)
+        case "replace_stmt":
+            # REPLACE INTO t ... is syntactic sugar for INSERT OR REPLACE INTO t ...
+            return _insert(inner, default_conflict="REPLACE")
         case "update_stmt":
             return _update(inner)
         case "delete_stmt":
@@ -329,13 +338,22 @@ def _select(
     distinct = _has_keyword_child(node, "DISTINCT")
     items = _select_list(_child_node(node, "select_list"), state)
 
-    # FROM + JOINs.
-    from_node = _child_node(node, "table_ref")
-    from_ref = _table_ref(from_node, ctes=ctes, view_defs=view_defs)
-    joins = tuple(
-        _join_clause(c, state, ctes=ctes, view_defs=view_defs)
-        for c in _child_nodes(node, "join_clause")
-    )
+    # FROM + JOINs — FROM is optional (SELECT 1, SELECT UPPER('x'), etc.).
+    #
+    # USING desugaring is now deferred to the planner (see JoinClause.using),
+    # so we no longer need to track a "current left alias" here.  Each
+    # join_clause node is translated independently; the planner's
+    # _build_from_tree resolves USING columns from the accumulated scope.
+    from_node = _maybe_child(node, "table_ref")
+    if from_node is not None:
+        from_ref = _table_ref(from_node, ctes=ctes, view_defs=view_defs)
+        joins = tuple(
+            _join_clause(c, state, ctes=ctes, view_defs=view_defs)
+            for c in _child_nodes(node, "join_clause")
+        )
+    else:
+        from_ref = None
+        joins = ()
 
     # WHERE / GROUP BY / HAVING / ORDER BY / LIMIT — all optional.
     where = _maybe_expr(node, "where_clause", state, skip=1)
@@ -418,16 +436,30 @@ def _table_ref(
             raise ProgrammingError("derived table requires an alias (AS <name>)")
         return DerivedTableRef(select=inner_stmt, alias=alias)
 
-    # Plain table form: table_name [ "AS" NAME ]
+    # Plain table form: table_name [ "AS" NAME | NAME ]
+    #
+    # The alias is optional.  Two syntactic forms are accepted:
+    #   FROM employees AS e   — classic form with AS
+    #   FROM employees e      — shorthand form without AS
+    # NAME tokens never match SQL keywords (WHERE, JOIN, ON, etc.), so a bare
+    # NAME token following the table_name ASTNode is unambiguously an alias.
     tn = _child_node(node, "table_name")
     parts = [c.value for c in tn.children if isinstance(c, Token) and _token_type(c) == "NAME"]
     table = parts[-1]  # schema.table → we ignore the schema qualifier
     alias = None
+    saw_table_name = False
     for i, c in enumerate(node.children):
-        if _is_keyword(c, "AS") and i + 1 < len(node.children):
+        if isinstance(c, ASTNode) and c.rule_name == "table_name":
+            saw_table_name = True
+        elif saw_table_name and _is_keyword(c, "AS") and i + 1 < len(node.children):
             nxt = node.children[i + 1]
-            if isinstance(nxt, Token):
+            if isinstance(nxt, Token) and _token_type(nxt) == "NAME":
                 alias = nxt.value
+            break
+        elif saw_table_name and isinstance(c, Token) and _token_type(c) == "NAME":
+            # Alias written without AS (e.g. FROM employees e)
+            alias = c.value
+            break
 
     # CTE substitution: if the table name matches a known CTE, replace it.
     if ctes and table in ctes:
@@ -461,18 +493,54 @@ def _join_clause(
     ctes: dict[str, SelectStmt | RecursiveCTERef] | None = None,
     view_defs: dict[str, SelectStmt] | None = None,
 ) -> JoinClause:
-    # join_clause = join_type "JOIN" table_ref [ "ON" expr ]
-    jt = _child_node(node, "join_type")
-    kind = _join_kind(jt)
+    # join_clause = [ join_type ] "JOIN" table_ref
+    #               [ "ON" expr | "USING" "(" NAME { "," NAME } ")" ]
+    #
+    # USING desugaring is deferred to the planner (see JoinClause.using and
+    # _build_from_tree).  NATURAL JOIN is forwarded as JoinKind.NATURAL for
+    # the same reason — schema access is needed and only available in the
+    # planner.
+    jt = _maybe_child(node, "join_type")
+    kind = _join_kind(jt) if jt is not None else JoinKind.INNER
     right = _table_ref(_child_node(node, "table_ref"), ctes=ctes, view_defs=view_defs)
-    # The grammar makes ON optional (required only for non-CROSS joins).
+
+    # USING (col1, col2, ...) — deferred resolution.
+    #
+    # We collect the column names and pass them as ``using=`` on JoinClause.
+    # The planner expands them into the proper ON expression during
+    # ``_build_from_tree``, where both the accumulated join scope and the
+    # backend schema are available.
+    #
+    # We intentionally do NOT try to build the ON expression here in the
+    # adapter, because in a chained join like:
+    #
+    #     a JOIN b USING (x) JOIN c USING (y)
+    #
+    # when the second USING is parsed, the adapter only knows that the
+    # "current left table" is ``b`` (the most recently joined table).  But
+    # ``y`` may live in ``a``, not ``b``.  The planner, which has already
+    # added both ``a`` and ``b`` to the scope by the time it processes the
+    # second join clause, can find the right table.
+    if _has_keyword_child(node, "USING"):
+        using_started = False
+        col_names: list[str] = []
+        for c in node.children:
+            if _is_keyword(c, "USING"):
+                using_started = True
+                continue
+            if using_started and isinstance(c, Token) and _token_type(c) == "NAME":
+                col_names.append(c.value)
+        return JoinClause(kind=kind, right=right, using=tuple(col_names))
+
+    # Plain "ON expr" — or no condition at all (CROSS / NATURAL).
     expr_node = _maybe_child(node, "expr")
     on = _expr(expr_node, state) if expr_node is not None else None
     return JoinClause(kind=kind, right=right, on=on)
 
 
 def _join_kind(node: ASTNode) -> str:
-    # join_type = "CROSS" | "INNER" | ... — look at the first keyword token.
+    # join_type = "CROSS" | "INNER" | "NATURAL" | "LEFT" ... | "RIGHT" ... | "FULL" ...
+    # Look at the first keyword token to identify the join kind.
     for c in node.children:
         if isinstance(c, Token) and _token_type(c) == "KEYWORD":
             kw = c.value.upper()
@@ -480,6 +548,8 @@ def _join_kind(node: ASTNode) -> str:
                 return JoinKind.CROSS
             if kw == "INNER":
                 return JoinKind.INNER
+            if kw == "NATURAL":
+                return JoinKind.NATURAL
             if kw == "LEFT":
                 return JoinKind.LEFT
             if kw == "RIGHT":
@@ -543,12 +613,165 @@ def _limit_clause(node: ASTNode | None) -> Limit | None:
 # --------------------------------------------------------------------------
 
 
-def _insert(node: ASTNode) -> InsertValuesStmt | InsertSelectStmt:
+def _returning_exprs(
+    node: ASTNode, state: _PlaceholderCounter
+) -> tuple[Expr, ...]:
+    """Parse a returning_clause child of a DML statement node.
+
+    ``returning_clause = 'RETURNING' expr { ',' expr }``
+
+    Returns an empty tuple when no returning_clause child is present.
+    """
+    ret_node = _maybe_child(node, "returning_clause")
+    if ret_node is None:
+        return ()
+    return tuple(
+        _expr(c, state)
+        for c in ret_node.children
+        if isinstance(c, ASTNode) and c.rule_name == "expr"
+    )
+
+
+def _conflict_action(node: ASTNode) -> str | None:
+    """Extract the conflict resolution action from an optional ``conflict_clause`` child.
+
+    ``conflict_clause = "OR" ( "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK" )``
+
+    Returns the action string in uppercase (e.g. ``"REPLACE"``) or ``None``
+    when no ``conflict_clause`` is present.
+    """
+    cc = _maybe_child(node, "conflict_clause")
+    if cc is None:
+        return None
+    # The second token in the conflict_clause is the action keyword.
+    for child in cc.children:
+        if isinstance(child, Token) and _token_type(child) == "KEYWORD":
+            kw = child.value.upper()
+            if kw in {"REPLACE", "IGNORE", "ABORT", "FAIL", "ROLLBACK"}:
+                return kw
+    return None
+
+
+def _upsert_clause(node: ASTNode, state: _PlaceholderCounter) -> UpsertClause | None:
+    """Parse an optional ``upsert_clause`` child from an insert statement node.
+
+    Grammar (from sql.grammar)::
+
+        upsert_clause = "ON" "CONFLICT"
+                        [ "(" NAME { "," NAME } ")" ]
+                        ( "DO" "NOTHING"
+                        | "DO" "UPDATE" "SET" upsert_assignment { "," upsert_assignment } ) ;
+
+        upsert_assignment = NAME "=" expr ;
+
+    Returns ``None`` when no ``upsert_clause`` child is present.
+
+    EXCLUDED pseudo-table rewriting
+    ---------------------------------
+    The grammar parses ``EXCLUDED.col`` as a normal ``column_ref`` (two-part
+    NAME.NAME), which the ``_expr`` helper turns into ``Column(table="EXCLUDED",
+    col=col)``.  This function detects that sentinel and rewrites it to the
+    dedicated ``ExcludedColumn(col=col)`` node so that the planner and codegen
+    can pattern-match on it cleanly without string comparisons.
+    """
+    uc = _maybe_child(node, "upsert_clause")
+    if uc is None:
+        return None
+
+    # Collect conflict target column names from optional "(NAME, ...)" part.
+    conflict_target: list[str] = []
+    in_target = False
+    for child in uc.children:
+        if _is_token(child, type_="LPAREN"):
+            in_target = True
+        elif _is_token(child, type_="RPAREN"):
+            in_target = False
+        elif in_target and isinstance(child, Token) and _token_type(child) == "NAME":
+            conflict_target.append(child.value)
+
+    # Determine action: DO NOTHING or DO UPDATE SET ...
+    do_nothing = False
+    assignments: list[AstUpsertAssignment] = []
+
+    # Scan for NOTHING keyword (DO NOTHING branch)
+    for child in uc.children:
+        is_nothing_kw = (
+            isinstance(child, Token)
+            and _token_type(child) == "KEYWORD"
+            and child.value.upper() == "NOTHING"
+        )
+        if is_nothing_kw:
+            do_nothing = True
+            break
+
+    if not do_nothing:
+        # DO UPDATE SET upsert_assignment { "," upsert_assignment }
+        for child in uc.children:
+            if isinstance(child, ASTNode) and child.rule_name == "upsert_assignment":
+                # upsert_assignment = NAME "=" expr
+                col_tok = _first_token(child, kind="NAME")
+                assert col_tok is not None, "upsert_assignment missing column name"
+                expr_node = _maybe_child(child, "expr")
+                assert expr_node is not None, "upsert_assignment missing expr"
+                raw_val = _expr(expr_node, state)
+                # Rewrite Column(table="EXCLUDED", col=c) \u2192 ExcludedColumn(col=c)
+                val = _rewrite_excluded(raw_val)
+                assignments.append(AstUpsertAssignment(column=col_tok.value, value=val))
+
+    return UpsertClause(
+        conflict_target=tuple(conflict_target),
+        do_nothing=do_nothing,
+        assignments=tuple(assignments),
+    )
+
+
+def _rewrite_excluded(expr: Expr) -> Expr:
+    """Rewrite ``Column(table="EXCLUDED", col=c)`` to ``ExcludedColumn(col=c)``.
+
+    The grammar's ``column_ref = NAME [ "." NAME ]`` rule parses ``EXCLUDED.col``
+    as a two-part column reference.  The adapter turns that into a plain
+    ``Column`` node; this helper post-processes the expression tree so that the
+    ``EXCLUDED`` pseudo-table becomes the dedicated ``ExcludedColumn`` IR node.
+
+    All other expression types are returned unchanged.  We only need to descend
+    into the top-level and binary/unary positions where EXCLUDED.col might
+    appear inside a upsert assignment value.
+    """
+    match expr:
+        case Column(table="EXCLUDED", col=c):
+            return ExcludedColumn(col=c)
+        case BinaryExpr(op=op, left=left, right=right):
+            return BinaryExpr(op=op, left=_rewrite_excluded(left), right=_rewrite_excluded(right))
+        case _:
+            # For the upsert use-case, only literal values and EXCLUDED column
+            # refs are expected; a full recursive walk is overkill here.
+            return expr
+
+
+def _insert(
+    node: ASTNode, default_conflict: str | None = None
+) -> InsertValuesStmt | InsertSelectStmt:
+    """Parse an ``insert_stmt`` or ``replace_stmt`` AST node.
+
+    ``default_conflict`` is pre-set to ``"REPLACE"`` when called from the
+    ``replace_stmt`` dispatch path (``REPLACE INTO \u2026`` shorthand).  For a
+    regular ``insert_stmt`` the optional ``conflict_clause`` child is
+    inspected instead and overrides ``default_conflict``.
+
+    Grammar::
+
+        insert_stmt  = "INSERT" [ conflict_clause ] "INTO" NAME
+                       [ "(" NAME { "," NAME } ")" ]
+                       insert_body [ upsert_clause ] [ returning_clause ] ;
+        replace_stmt = "REPLACE" "INTO" NAME
+                       [ "(" NAME { "," NAME } ")" ]
+                       insert_body [ returning_clause ] ;
+        insert_body  = "VALUES" row_value { "," row_value } | query_stmt ;
+        conflict_clause = "OR" ( "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK" ) ;
+    """
     state = _PlaceholderCounter()
-    # insert_stmt =
-    #   "INSERT" "INTO" NAME [ "(" NAME { "," NAME } ")" ]
-    #   insert_body
-    # insert_body = "VALUES" row_value { "," row_value } | query_stmt
+    # Conflict action: explicit clause overrides the default supplied by caller.
+    on_conflict: str | None = _conflict_action(node) or default_conflict
     table_tok = _first_token(node, kind="NAME")
     assert table_tok is not None
     table = table_tok.value
@@ -574,8 +797,12 @@ def _insert(node: ASTNode) -> InsertValuesStmt | InsertSelectStmt:
             break
         i += 1
 
+    # Parse optional ON CONFLICT upsert clause.
+    upsert = _upsert_clause(node, state)
+
     # Check if we have an insert_body child (new grammar).
     insert_body_node = _maybe_child(node, "insert_body")
+    returning = _returning_exprs(node, state)
     if insert_body_node is not None:
         # New grammar: insert_body = "VALUES" row_value ... | query_stmt
         q = _maybe_child(insert_body_node, "query_stmt")
@@ -585,13 +812,25 @@ def _insert(node: ASTNode) -> InsertValuesStmt | InsertSelectStmt:
                 raise ProgrammingError(
                     "INSERT \u2026 SELECT requires a plain SELECT, not a set operation"
                 )
-            return InsertSelectStmt(table=table, columns=columns, select=inner_stmt)
+            return InsertSelectStmt(
+                table=table, columns=columns, select=inner_stmt,
+                on_conflict=on_conflict, returning=returning,
+                upsert_clause=upsert,
+            )
         rows = tuple(_row_value(rv, state) for rv in _child_nodes(insert_body_node, "row_value"))
-        return InsertValuesStmt(table=table, columns=columns, rows=rows)
+        return InsertValuesStmt(
+            table=table, columns=columns, rows=rows,
+            on_conflict=on_conflict, returning=returning,
+            upsert_clause=upsert,
+        )
 
     # Old grammar fallback: row_value nodes directly under insert_stmt.
     rows = tuple(_row_value(rv, state) for rv in _child_nodes(node, "row_value"))
-    return InsertValuesStmt(table=table, columns=columns, rows=rows)
+    return InsertValuesStmt(
+        table=table, columns=columns, rows=rows,
+        on_conflict=on_conflict, returning=returning,
+        upsert_clause=upsert,
+    )
 
 
 def _row_value(node: ASTNode, state: _PlaceholderCounter) -> tuple[Expr, ...]:
@@ -602,7 +841,7 @@ def _row_value(node: ASTNode, state: _PlaceholderCounter) -> tuple[Expr, ...]:
 
 def _update(node: ASTNode) -> UpdateStmt:
     state = _PlaceholderCounter()
-    # update_stmt = "UPDATE" NAME "SET" assignment { "," assignment } [where]
+    # update_stmt = "UPDATE" NAME "SET" assignment { "," assignment } [where] [returning]
     table_tok = _first_token(node, kind="NAME")
     assert table_tok is not None
     table = table_tok.value
@@ -613,7 +852,8 @@ def _update(node: ASTNode) -> UpdateStmt:
         if isinstance(c, ASTNode) and c.rule_name == "assignment"
     )
     where = _maybe_expr(node, "where_clause", state, skip=1)
-    return UpdateStmt(table=table, assignments=assignments, where=where)
+    returning = _returning_exprs(node, state)
+    return UpdateStmt(table=table, assignments=assignments, where=where, returning=returning)
 
 
 def _assignment(node: ASTNode, state: _PlaceholderCounter) -> Assignment:
@@ -625,11 +865,12 @@ def _assignment(node: ASTNode, state: _PlaceholderCounter) -> Assignment:
 
 def _delete(node: ASTNode) -> DeleteStmt:
     state = _PlaceholderCounter()
-    # delete_stmt = "DELETE" "FROM" NAME [where]
+    # delete_stmt = "DELETE" "FROM" NAME [where] [returning]
     table_tok = _first_token(node, kind="NAME")
     assert table_tok is not None
     where = _maybe_expr(node, "where_clause", state, skip=1)
-    return DeleteStmt(table=table_tok.value, where=where)
+    returning = _returning_exprs(node, state)
+    return DeleteStmt(table=table_tok.value, where=where, returning=returning)
 
 
 # --------------------------------------------------------------------------
@@ -675,6 +916,7 @@ def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> Backend
     unique = False
     check_expression = None
     foreign_key: tuple[str, str | None] | None = None
+    col_default = NO_DEFAULT   # "no DEFAULT clause" sentinel
     _state = state or _PlaceholderCounter()
     for c in _child_nodes(node, "col_constraint"):
         kw_seq = tuple(
@@ -703,13 +945,32 @@ def _col_def(node: ASTNode, state: _PlaceholderCounter | None = None) -> Backend
             ref_table = ref_names[0] if ref_names else ""
             ref_col: str | None = ref_names[1] if len(ref_names) > 1 else None
             foreign_key = (ref_table, ref_col)
-        # DEFAULT and NULL left alone; the backend's default is already NULL-OK.
+        elif kw_seq[0:1] == ("DEFAULT",):
+            # col_constraint grammar: "DEFAULT" primary
+            #
+            # We evaluate scalar literal defaults at parse time.  The grammar's
+            # ``primary`` production covers NUMBER, STRING, NULL, TRUE, FALSE, and
+            # parenthesised expressions.  We parse the ``primary`` node via _primary
+            # and, if the result is a plain Literal, store the Python value as the
+            # column's default.  Non-literal expressions (e.g. DEFAULT (CURRENT_TIMESTAMP),
+            # DEFAULT (1+1)) are left as NO_DEFAULT and evaluated at INSERT time in
+            # a future increment — this covers the overwhelming majority of real-world
+            # column defaults.
+            primary_node = _maybe_child(c, "primary")
+            if primary_node is not None:
+                try:
+                    default_expr = _primary(primary_node, _state)
+                    if isinstance(default_expr, Literal):
+                        col_default = default_expr.value  # Python int|float|str|bool|None
+                except Exception:  # noqa: BLE001 — malformed node; leave as NO_DEFAULT
+                    pass
     return BackendColumnDef(
         name=col_name,
         type_name=type_name,
         not_null=not_null,
         primary_key=primary_key,
         unique=unique,
+        default=col_default,
         check_expr=check_expression,
         foreign_key=foreign_key,
     )
@@ -1012,7 +1273,8 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
     if len(additives) == 1 and not any(
         isinstance(c, ASTNode) and c.rule_name == "cmp_op" for c in node.children
     ) and not _has_keyword_child(node, "BETWEEN") and not _has_keyword_child(node, "IN") \
-       and not _has_keyword_child(node, "LIKE") and not _has_keyword_child(node, "IS"):
+       and not _has_keyword_child(node, "LIKE") and not _has_keyword_child(node, "GLOB") \
+       and not _has_keyword_child(node, "IS"):
         return left
 
     # cmp_op form.
@@ -1038,8 +1300,13 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
         if in_expr_node is not None:
             q = _maybe_child(in_expr_node, "query_stmt")
             if q is not None:
-                # Subquery in IN clause — not yet supported; raise a clear error.
-                raise ProgrammingError("subquery in IN clause is not yet supported")
+                # Subquery form: expr IN (SELECT ...)
+                inner_stmt = _query_stmt(q)
+                if not isinstance(inner_stmt, SelectStmt):
+                    raise ProgrammingError("IN subquery must be a plain SELECT statement")
+                if negated:
+                    return NotInSubquery(operand=left, query=inner_stmt)
+                return InSubquery(operand=left, query=inner_stmt)
             vl = _child_node(in_expr_node, "value_list")
         else:
             # Old grammar fallback: value_list directly under comparison.
@@ -1061,6 +1328,27 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
             return NotLike(operand=left, pattern=pat_expr.value)
         return Like(operand=left, pattern=pat_expr.value)
 
+    # GLOB / NOT GLOB — case-sensitive pattern match using Unix glob syntax.
+    #
+    # SQL:  string GLOB pattern
+    # Internal: glob(pattern, string)  — same argument order as SQLite's C API.
+    #
+    # GLOB differs from LIKE in two ways:
+    #   1. Case-sensitive (* matches any sequence, ? matches one character).
+    #   2. The pattern argument is passed dynamically (not restricted to string
+    #      literals), so GLOB can be used with column references or expressions
+    #      as the pattern.  This is consistent with SQLite's behaviour.
+    if _has_keyword_child(node, "GLOB"):
+        negated = _has_keyword_child(node, "NOT")
+        pat_expr = _additive(additives[1], state)
+        glob_call: Expr = FunctionCall(
+            name="glob",
+            args=(FuncArg(value=pat_expr), FuncArg(value=left)),
+        )
+        if negated:
+            return UnaryExpr(op=UnaryOp.NOT, operand=glob_call)
+        return glob_call
+
     # IS NULL / IS NOT NULL.
     if _has_keyword_child(node, "IS"):
         if _has_keyword_child(node, "NOT"):
@@ -1071,12 +1359,17 @@ def _comparison(node: ASTNode, state: _PlaceholderCounter) -> Expr:
 
 
 def _additive(node: ASTNode, state: _PlaceholderCounter) -> Expr:
-    # additive = multiplicative { ("+"|"-") multiplicative }
+    # additive = multiplicative { ("+"|"-"|"||") multiplicative }
+    #
+    # "||" is SQL string concatenation (same as Python's str + str but for any
+    # type — the VM coerces both sides to str before joining them).  It has the
+    # same precedence as arithmetic + and - because it is in the same grammar
+    # level.  This matches SQLite, PostgreSQL, and the SQL standard.
     return _left_assoc_punct(
         node,
         "multiplicative",
         _multiplicative,
-        {"PLUS": BinaryOp.ADD, "MINUS": BinaryOp.SUB},
+        {"PLUS": BinaryOp.ADD, "MINUS": BinaryOp.SUB, "CONCAT_OP": BinaryOp.CONCAT},
         state,
     )
 
@@ -1135,6 +1428,8 @@ def _primary(node: ASTNode, state: _PlaceholderCounter) -> Expr:
                         raise ProgrammingError("EXISTS subquery must be a SELECT statement")
                     return ExistsSubquery(query=inner_stmt)
         elif isinstance(c, ASTNode):
+            if c.rule_name == "cast_expr":
+                return _cast_expr(c, state)
             if c.rule_name == "window_func_call":
                 return _window_func_call(c, state)
             if c.rule_name == "function_call":
@@ -1181,7 +1476,72 @@ def _function_call(node: ASTNode, state: _PlaceholderCounter) -> Expr:
         if len(args) != 1:
             raise ProgrammingError(f"{upper}: expected 1 argument, got {len(args)}")
         return AggregateExpr(func=agg_map[upper], arg=args[0])
+
+    if upper == "GROUP_CONCAT":
+        # GROUP_CONCAT(col)          — SQLite default separator ','
+        # GROUP_CONCAT(col, sep)     — explicit string literal separator
+        #
+        # SQL:2003 §10.9 requires the separator to be a character-string
+        # literal; we enforce that at parse time so the codegen can bake the
+        # separator into the instruction stream rather than evaluating it
+        # dynamically each time.
+        if len(args) == 0 or len(args) > 2:
+            raise ProgrammingError(
+                "GROUP_CONCAT: expected 1 or 2 arguments "
+                "(column [, separator_literal])"
+            )
+        separator: str | None = None
+        if len(args) == 2:
+            sep_expr = args[1].value
+            if not isinstance(sep_expr, Literal) or not isinstance(sep_expr.value, str):
+                raise ProgrammingError(
+                    "GROUP_CONCAT: separator must be a string literal, "
+                    f"got {type(sep_expr).__name__}"
+                )
+            separator = sep_expr.value
+        return AggregateExpr(
+            func=AggFunc.GROUP_CONCAT,
+            arg=args[0],
+            separator=separator,
+        )
+
     return FunctionCall(name=name, args=tuple(args))
+
+
+def _cast_expr(node: ASTNode, state: _PlaceholderCounter) -> Expr:
+    """Translate a ``cast_expr`` node into a :class:`FunctionCall`.
+
+    Grammar::
+
+        cast_expr = "CAST" "(" expr "AS" NAME ")"
+
+    ``CAST(expr AS type_name)`` is semantically equivalent to calling the
+    scalar function ``cast(expr, 'type_name')`` — which is exactly how the
+    built-in ``cast`` function is registered in :mod:`sql_vm.scalar_functions`.
+
+    The type name (INTEGER, TEXT, REAL, BLOB, NUMERIC) is passed as a string
+    literal so the VM receives a concrete type indicator at dispatch time.
+
+    Example::
+
+        CAST(price AS INTEGER)   →  FunctionCall("cast", (FuncArg(price), FuncArg("INTEGER")))
+    """
+    inner_expr = _expr(_child_node(node, "expr"), state)
+    # Find the NAME token that follows the AS keyword inside this cast_expr node.
+    type_name: str | None = None
+    found_as = False
+    for c in node.children:
+        if _is_keyword(c, "AS"):
+            found_as = True
+        elif found_as and isinstance(c, Token) and _token_type(c) == "NAME":
+            type_name = c.value.upper()
+            break
+    if type_name is None:
+        raise ProgrammingError("CAST: missing type name after AS")
+    return FunctionCall(
+        name="cast",
+        args=(FuncArg(value=inner_expr), FuncArg(value=Literal(value=type_name))),
+    )
 
 
 def _window_func_call(node: ASTNode, state: _PlaceholderCounter) -> WindowFuncExpr:
@@ -1197,9 +1557,13 @@ def _window_func_call(node: ASTNode, state: _PlaceholderCounter) -> WindowFuncEx
 
     Supported functions and their arg requirements:
 
-    - Arg-free (no argument):   ROW_NUMBER, RANK, DENSE_RANK
+    - Arg-free (no argument):   ROW_NUMBER, RANK, DENSE_RANK, PERCENT_RANK, CUME_DIST
     - COUNT(*) (star arg):      COUNT — maps to "count_star"
     - Single-arg:               SUM, COUNT(col), AVG, MIN, MAX, FIRST_VALUE, LAST_VALUE
+    - Literal-arg:              NTILE(n) — n is an integer constant
+    - Multi-arg:                LAG(col [, offset [, default]]),
+                                LEAD(col [, offset [, default]]),
+                                NTH_VALUE(col, n)
 
     All function names are normalised to lower-case.
     """
@@ -1211,6 +1575,7 @@ def _window_func_call(node: ASTNode, state: _PlaceholderCounter) -> WindowFuncEx
     star = any(_is_token(c, type_="STAR") for c in node.children)
     vl = _maybe_child(node, "value_list")
     arg: Expr | None = None
+    extra_args_tuple: tuple[Expr, ...] = ()
 
     if star:
         # COUNT(*) OVER (...) → func="count_star", arg=None
@@ -1219,6 +1584,12 @@ def _window_func_call(node: ASTNode, state: _PlaceholderCounter) -> WindowFuncEx
         exprs = [c for c in vl.children if isinstance(c, ASTNode) and c.rule_name == "expr"]
         if exprs:
             arg = _expr(exprs[0], state)
+            # Multi-argument functions (LAG, LEAD, NTH_VALUE) carry extra args
+            # beyond the first column reference.  We thread them through as a
+            # tuple so the planner and codegen can normalise them into the
+            # proper (offset, default) / (n,) shapes.
+            if len(exprs) > 1:
+                extra_args_tuple = tuple(_expr(e, state) for e in exprs[1:])
     # Arg-free ranking functions keep func_name as-is (row_number, rank, dense_rank).
 
     # Extract the window_spec node.
@@ -1261,6 +1632,7 @@ def _window_func_call(node: ASTNode, state: _PlaceholderCounter) -> WindowFuncEx
         arg=arg,
         partition_by=tuple(partition_exprs),
         order_by=tuple(order_keys),
+        extra_args=extra_args_tuple,
     )
 
 

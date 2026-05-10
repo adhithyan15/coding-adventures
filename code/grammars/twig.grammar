@@ -56,15 +56,48 @@ import_clause  = LPAREN "import" { NAME } RPAREN ;
 # function whose value is the value of the final expression.
 form = define | expr ;
 
-# (define name expr)              — value binding
-# (define (name args*) expr+)     — function-definition sugar
+# (define name expr)                                        — value binding
+# (define name : type_annotation expr)                       — annotated value binding
+# (define (name params*) expr+)                              — function-definition sugar
+# (define (name typed_param*) -> type_annotation expr+)      — annotated function (with return type)
 #
 # The two shapes share the leading "define" keyword.  The parser
 # distinguishes them by what follows: a NAME token starts the value
 # form, an LPAREN starts the function-sugar form.
+#
+# LANG23 PR 23-E — type annotation extensions:
+#   - A value binding may carry `: type_annotation` between the name and value.
+#   - Each function parameter may be a bare NAME or a parenthesised
+#     `(NAME : type_annotation)` typed parameter.
+#   - A function signature may carry `-> type_annotation` for the return type,
+#     given as a NAME (value `"->"`) followed by the annotation, INSIDE the
+#     signature parentheses after all parameters.
+#
+# ``->`` lexes as an ARROW token (defined in ``twig.tokens`` as an exact
+# literal that takes priority over the NAME pattern, since both ``-`` and
+# ``>`` appear in the NAME character class).  Using a dedicated ARROW token
+# rather than a NAME-with-special-value means the ``{ typed_param }``
+# repetition stops cleanly at ARROW without needing look-ahead into values.
 define = LPAREN "define" name_or_signature expr { expr } RPAREN ;
 
-name_or_signature = NAME | LPAREN NAME { NAME } RPAREN ;
+name_or_signature = NAME [ COLON type_annotation ]
+                  | LPAREN NAME { typed_param } [ ARROW type_annotation ] RPAREN ;
+
+# A typed_param is either a bare NAME (unannotated) or a parenthesised
+# `(NAME : type_annotation)` pair (LANG23-annotated).
+typed_param = LPAREN NAME COLON type_annotation RPAREN | NAME ;
+
+# type_annotation covers the LANG23 v1 predicate vocabulary:
+#   NAME                              — unrefined kind: ``int``, ``any``, ``bool``, etc.
+#   (Int lo hi)                       — Range: (Int lo hi) ≡ lo ≤ x < hi (exclusive upper)
+#   (Member int (v0 v1 ...))          — Membership: value must be one of the listed integers
+#
+# ``Name`` matches any NAME token; ``INTEGER`` matches the existing signed-integer
+# literal token.  The grammar-parser tries alternatives left-to-right; the two-integer
+# form must come before the bare-name fallback to prevent premature commitment.
+type_annotation = LPAREN NAME LPAREN { INTEGER } RPAREN RPAREN
+                | LPAREN NAME INTEGER INTEGER RPAREN
+                | NAME ;
 
 # An expression is one of:
 #   - an atom (literal or bare name reference)

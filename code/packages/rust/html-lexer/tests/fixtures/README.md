@@ -29,6 +29,10 @@ Each file is a JSON object with this shape:
       ],
       "initial_state": "optional tokenizer state context",
       "last_start_tag": "optional tokenizer tag context",
+      "current_end_tag": "optional in-progress end-tag token context",
+      "current_doctype": "optional in-progress doctype token context",
+      "temporary_buffer": "optional tokenizer temporary-buffer context",
+      "return_state": "optional tokenizer return-state context",
       "diagnostics": ["optional-diagnostic-code"]
     }
   ]
@@ -62,6 +66,18 @@ letting us mirror broader living-standard cases.
 uses the tokenizer JSON structure documented by the html5lib tokenizer tests:
 top-level `tests`, with each test carrying `description`, `input`, `output`,
 optional `initialStates`, optional `lastStartTag`, and optional `errors`.
+For seeded continuation states that upstream fixtures cannot fully describe,
+this smoke file also accepts `currentEndTag` and `temporaryBuffer` extension
+fields; the normalizer lowers them to `current_end_tag` and `temporary_buffer`.
+Comment continuation fixtures likewise accept a `currentComment` extension
+field, lowered to `current_comment`, so html5lib-style comment substates can
+resume with an already-created comment token.
+DOCTYPE continuation fixtures accept a `currentDoctype` extension object,
+lowered to `current_doctype`, with optional `name`, `public_identifier`,
+`system_identifier`, and `force_quirks` fields for the partial doctype token.
+Character-reference continuation fixtures accept `temporaryBuffer` plus
+`returnState`, lowered to `temporary_buffer` and `return_state`, so seeded
+named/numeric reference substates can recover back into data or RCDATA.
 
 `normalize_html5lib_fixtures.py` is the checked-in importer for this shape. It
 currently supports:
@@ -70,6 +86,34 @@ currently supports:
 - explicit `initialStates: ["Data state"]`
 - `initialStates: ["RCDATA state"]` together with `lastStartTag`
 - `initialStates: ["RAWTEXT state"]` together with `lastStartTag`
+- `initialStates: ["PLAINTEXT state"]`
+- `initialStates: ["CDATA section state"]`
+- CDATA section `bracket` and `end` substates
+- character-reference, named-reference, numeric-reference, decimal-reference,
+  and hexadecimal-reference substates together with `temporaryBuffer` and
+  `returnState`
+- comment `start`, `start dash`, body, less-than-sign, less-than-sign bang,
+  less-than-sign bang dash, less-than-sign bang dash dash, end-dash, end,
+  end-bang, and bogus-comment substates together with `currentComment`
+- DOCTYPE keyword/name, public/system keyword, public/system identifier,
+  after-identifier, and bogus-doctype substates together with `currentDoctype`
+- `initialStates: ["Script data state"]` together with `lastStartTag`
+- script `less-than sign`, `escape start`, and `escape start dash` substates
+  together with `lastStartTag`
+- `initialStates: ["Script data escaped state"]` together with `lastStartTag`
+- script escaped `dash`, `dash dash`, and `less-than sign` substates together
+  with `lastStartTag`
+- script double-escape `start` and `end` substates together with
+  `lastStartTag`
+- `initialStates: ["Script data double escaped state"]` together with
+  `lastStartTag`
+- script double-escaped `dash`, `dash dash`, and `less-than sign` substates
+  together with `lastStartTag`
+- RCDATA, RAWTEXT, script-data, and script-data-escaped end-tag `name`,
+  `whitespace`, `attributes`, and `self-closing` continuation substates
+  together with `lastStartTag`, `currentEndTag`, and `temporaryBuffer`
+- multi-state html5lib fixture entries for supported states, expanded into
+  stable per-state Venture fixture cases
 - `StartTag`, `EndTag`, `Character`, `Comment`, and `DOCTYPE` output tokens
 - html5lib start-tag self-closing booleans
 - named character references in data, RCDATA, and attribute values for the
@@ -82,16 +126,54 @@ currently supports:
   punctuation aliases, and math constants
 - WHATWG relation/operator named character references, including negated
   aliases with combining-overlay replacements
+- WHATWG extended greater-than and less-than comparison named character
+  references, including `gl*`, `gn*`, `gtr*`, `less*`, `ln*`, and nested
+  negated aliases
+- WHATWG equality, congruence, similarity, vertical-bar, and parallel named
+  character references, including `eq*`, `sim*`, `mid*`, and `par*` aliases
+- WHATWG precedence and successor relation named character references, including
+  uppercase, `pr*`, `prec*`, `sc*`, and `succ*` aliases
 - WHATWG arrow and vector named character references, including long, bar, tee,
   map, and vector-bar aliases
+- extended WHATWG arrow aliases, including short/capital arrows, lowercase long
+  arrows, hooks, tails, loops, harpoons, negated arrows, diagonals, and mapsto
+  forms
 - WHATWG Greek variant and letter-like named character references, including
   epsilon, kappa, phi, rho, sigma, theta, digamma, beth, gimel, and daleth
 - WHATWG set, membership, subset/superset, square-set, and n-ary logic named
   character references
 - WHATWG operator, square, lozenge, star, suit, and symbol named character
   references
+- WHATWG box-drawing named character references, including double-line,
+  mixed-line, light-line, crossing, and corner aliases
+- WHATWG angle, bracket, floor/ceiling, triangle, corner, and over/under fence
+  named character references
+- WHATWG Latin Extended and diacritic named character references, including
+  macron, breve, ogonek, caron, cedilla, circumflex, dot, ring, and tilde forms
+- WHATWG mathematical alphabet named character references, including open-face,
+  script, and fraktur uppercase/lowercase aliases
+- WHATWG Cyrillic named character references, including core and extended
+  uppercase/lowercase aliases
+- remaining WHATWG arrow, vector, harpoon, fish-tail, and negated arrow named
+  character references
+- remaining WHATWG set-algebra named character references, including cap/cup,
+  square-set, subset/superset, and negated aliases
+- remaining WHATWG operator, integral, dot, plus/times, and circled operator
+  named character references
+- final generated coverage for all remaining semicolon-terminated WHATWG named
+  character references
 - missing-semicolon recovery for legacy named character references `nbsp`,
   `copy`, and `reg` before delimiters and EOF
+- missing-semicolon named-reference recovery limited to WHATWG legacy
+  no-semicolon aliases, including fallback from longer modern names to shorter
+  legacy prefixes such as `not`
+- form-feed handling as an HTML ASCII-whitespace delimiter for script double
+  escape and semicolonless legacy named character references
+- CRLF and bare-CR input-stream newline preprocessing before tokenization
+- EOF recovery for unfinished ordinary start and end tags, ensuring partial
+  tokens are dropped before the parser sees them
+- EOF recovery for unfinished attribute character references, including named
+  and numeric forms
 - generic named-character-reference scanning with literal fallback for unknown
   names
 - PUBLIC/SYSTEM DOCTYPE recovery diagnostics for missing whitespace, missing
@@ -107,11 +189,19 @@ currently supports:
 Unsupported raw cases are skipped into metadata in the generated file rather
 than silently disappearing. Rust conformance tests execute the generated
 `html5lib-smoke.json` corpus and separately parse the raw upstream-style file to
-keep the intake path visible. Tokenizer-context cases such as RCDATA and
-RAWTEXT stay in the generated corpus with `initial_state` / `last_start_tag`
-metadata and are seeded into the Rust wrapper at test time, while still
+keep the intake path visible. Tokenizer-context cases such as RCDATA, RAWTEXT,
+script submodes, CDATA bracket/end states, resumable end-tag-open states, and
+seeded end-tag, comment, and DOCTYPE continuation states stay in the generated
+corpus with context metadata and are seeded into the Rust wrapper at test time, while still
 unsupported upstream states remain recorded under `skipped` instead of being
-discarded.
+discarded. End-tag continuation coverage intentionally exercises matching,
+mismatched, EOF, and diagnostic recovery paths so parser/tokenizer handoff
+regressions show up in the shared fixture corpus instead of only in narrow unit
+tests. Comment continuation coverage does the same for pending dash/bang and
+bogus-comment recovery paths. Character-reference continuation coverage
+exercises seeded named/numeric reference recovery returning to data and RCDATA.
+DOCTYPE continuation coverage exercises partial keyword/name, identifier,
+diagnostic, and bogus-doctype recovery paths.
 
 To regenerate the normalized corpus:
 

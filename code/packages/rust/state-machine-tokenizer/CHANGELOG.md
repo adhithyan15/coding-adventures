@@ -38,3 +38,15 @@ All notable changes to the `state-machine-tokenizer` crate will be documented in
   out-of-range, noncharacter, and Windows-1252 control references.
 - Expanded the built-in HTML named-character-reference table with the remaining
   HTML4-era `alefsym` and `oline` math references.
+- Added opt-in CRLF/bare-CR newline normalization for wrapper packages that
+  need HTML input-stream preprocessing before transition matching.
+- Restricted missing-semicolon named-character-reference recovery to the
+  WHATWG legacy no-semicolon aliases instead of accepting every known name
+  without `;`.
+- Added current-comment seeding helpers so wrapper packages can resume
+  comment-token continuation states without loading tokenizer definition files.
+- Added `DoctypeSeed` and current-DOCTYPE seeding helpers so wrapper packages
+  can resume DOCTYPE continuation states while preserving partial name,
+  identifier, and force-quirks data.
+- Added public return-state seeding helpers so wrapper packages can resume
+  continuation states such as HTML character-reference recovery.

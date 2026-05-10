@@ -7,12 +7,895 @@
 use state_machine::{EffectfulStateMachine, StateMachineDefinition};
 
 pub use state_machine_tokenizer::{
-    Attribute, Diagnostic, Result, SourcePosition, Token, Tokenizer as HtmlLexer, TokenizerError,
-    TokenizerTraceEntry,
+    Attribute, Diagnostic, DoctypeSeed, Result, SourcePosition, Token, Tokenizer as HtmlLexer,
+    TokenizerError, TokenizerTraceEntry,
 };
 
 mod generated_html1;
 mod generated_html_skeleton;
+
+/// Parser-facing scripting flag for tokenizer text-mode decisions.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum HtmlScriptingMode {
+    Enabled,
+    Disabled,
+}
+
+/// Parser-facing HTML tokenizer entry state.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum HtmlTokenizerState {
+    Data,
+    Rcdata,
+    RcdataLessThanSign,
+    RcdataEndTagOpen,
+    RcdataEndTagName,
+    RcdataEndTagWhitespace,
+    RcdataEndTagAttributes,
+    RcdataSelfClosingEndTag,
+    Rawtext,
+    RawtextLessThanSign,
+    RawtextEndTagOpen,
+    RawtextEndTagName,
+    RawtextEndTagWhitespace,
+    RawtextEndTagAttributes,
+    RawtextSelfClosingEndTag,
+    Plaintext,
+    CdataSection,
+    CdataSectionBracket,
+    CdataSectionEnd,
+    CommentStart,
+    CommentStartDash,
+    Comment,
+    CommentLessThanSign,
+    CommentLessThanSignBang,
+    CommentLessThanSignBangDash,
+    CommentLessThanSignBangDashDash,
+    CommentEndDash,
+    CommentEnd,
+    CommentEndBang,
+    BogusComment,
+    DoctypeKeywordO,
+    DoctypeKeywordC,
+    DoctypeKeywordT,
+    DoctypeKeywordY,
+    DoctypeKeywordP,
+    DoctypeKeywordE,
+    DoctypeAfterKeyword,
+    BeforeDoctypeName,
+    DoctypeName,
+    AfterDoctypeName,
+    DoctypePublicKeywordU,
+    DoctypePublicKeywordB,
+    DoctypePublicKeywordL,
+    DoctypePublicKeywordI,
+    DoctypePublicKeywordC,
+    AfterDoctypePublicKeyword,
+    BeforeDoctypePublicIdentifier,
+    DoctypePublicIdentifierDoubleQuoted,
+    DoctypePublicIdentifierSingleQuoted,
+    AfterDoctypePublicIdentifier,
+    BetweenDoctypePublicAndSystemIdentifiers,
+    DoctypeSystemKeywordY,
+    DoctypeSystemKeywordS,
+    DoctypeSystemKeywordT,
+    DoctypeSystemKeywordE,
+    DoctypeSystemKeywordM,
+    AfterDoctypeSystemKeyword,
+    BeforeDoctypeSystemIdentifier,
+    DoctypeSystemIdentifierDoubleQuoted,
+    DoctypeSystemIdentifierSingleQuoted,
+    AfterDoctypeSystemIdentifier,
+    BogusDoctype,
+    TextCharacterReference,
+    TextNamedCharacterReference,
+    TextNumericCharacterReference,
+    TextNumericHexCharacterReferenceStart,
+    TextNumericHexCharacterReference,
+    TextNumericDecimalCharacterReference,
+    ScriptData,
+    ScriptDataLessThanSign,
+    ScriptDataEndTagOpen,
+    ScriptDataEndTagName,
+    ScriptDataEndTagWhitespace,
+    ScriptDataEndTagAttributes,
+    ScriptDataSelfClosingEndTag,
+    ScriptDataEscapeStart,
+    ScriptDataEscapeStartDash,
+    ScriptDataEscaped,
+    ScriptDataEscapedDash,
+    ScriptDataEscapedDashDash,
+    ScriptDataEscapedLessThanSign,
+    ScriptDataEscapedEndTagOpen,
+    ScriptDataEscapedEndTagName,
+    ScriptDataEscapedEndTagWhitespace,
+    ScriptDataEscapedEndTagAttributes,
+    ScriptDataEscapedSelfClosingEndTag,
+    ScriptDataDoubleEscapeStart,
+    ScriptDataDoubleEscaped,
+    ScriptDataDoubleEscapedDash,
+    ScriptDataDoubleEscapedDashDash,
+    ScriptDataDoubleEscapedLessThanSign,
+    ScriptDataDoubleEscapeEnd,
+}
+
+/// Tokenizer states that are valid parser-facing entry points.
+pub const HTML_TOKENIZER_STATES: [HtmlTokenizerState; 92] = [
+    HtmlTokenizerState::Data,
+    HtmlTokenizerState::Rcdata,
+    HtmlTokenizerState::RcdataLessThanSign,
+    HtmlTokenizerState::RcdataEndTagOpen,
+    HtmlTokenizerState::RcdataEndTagName,
+    HtmlTokenizerState::RcdataEndTagWhitespace,
+    HtmlTokenizerState::RcdataEndTagAttributes,
+    HtmlTokenizerState::RcdataSelfClosingEndTag,
+    HtmlTokenizerState::Rawtext,
+    HtmlTokenizerState::RawtextLessThanSign,
+    HtmlTokenizerState::RawtextEndTagOpen,
+    HtmlTokenizerState::RawtextEndTagName,
+    HtmlTokenizerState::RawtextEndTagWhitespace,
+    HtmlTokenizerState::RawtextEndTagAttributes,
+    HtmlTokenizerState::RawtextSelfClosingEndTag,
+    HtmlTokenizerState::Plaintext,
+    HtmlTokenizerState::CdataSection,
+    HtmlTokenizerState::CdataSectionBracket,
+    HtmlTokenizerState::CdataSectionEnd,
+    HtmlTokenizerState::CommentStart,
+    HtmlTokenizerState::CommentStartDash,
+    HtmlTokenizerState::Comment,
+    HtmlTokenizerState::CommentLessThanSign,
+    HtmlTokenizerState::CommentLessThanSignBang,
+    HtmlTokenizerState::CommentLessThanSignBangDash,
+    HtmlTokenizerState::CommentLessThanSignBangDashDash,
+    HtmlTokenizerState::CommentEndDash,
+    HtmlTokenizerState::CommentEnd,
+    HtmlTokenizerState::CommentEndBang,
+    HtmlTokenizerState::BogusComment,
+    HtmlTokenizerState::DoctypeKeywordO,
+    HtmlTokenizerState::DoctypeKeywordC,
+    HtmlTokenizerState::DoctypeKeywordT,
+    HtmlTokenizerState::DoctypeKeywordY,
+    HtmlTokenizerState::DoctypeKeywordP,
+    HtmlTokenizerState::DoctypeKeywordE,
+    HtmlTokenizerState::DoctypeAfterKeyword,
+    HtmlTokenizerState::BeforeDoctypeName,
+    HtmlTokenizerState::DoctypeName,
+    HtmlTokenizerState::AfterDoctypeName,
+    HtmlTokenizerState::DoctypePublicKeywordU,
+    HtmlTokenizerState::DoctypePublicKeywordB,
+    HtmlTokenizerState::DoctypePublicKeywordL,
+    HtmlTokenizerState::DoctypePublicKeywordI,
+    HtmlTokenizerState::DoctypePublicKeywordC,
+    HtmlTokenizerState::AfterDoctypePublicKeyword,
+    HtmlTokenizerState::BeforeDoctypePublicIdentifier,
+    HtmlTokenizerState::DoctypePublicIdentifierDoubleQuoted,
+    HtmlTokenizerState::DoctypePublicIdentifierSingleQuoted,
+    HtmlTokenizerState::AfterDoctypePublicIdentifier,
+    HtmlTokenizerState::BetweenDoctypePublicAndSystemIdentifiers,
+    HtmlTokenizerState::DoctypeSystemKeywordY,
+    HtmlTokenizerState::DoctypeSystemKeywordS,
+    HtmlTokenizerState::DoctypeSystemKeywordT,
+    HtmlTokenizerState::DoctypeSystemKeywordE,
+    HtmlTokenizerState::DoctypeSystemKeywordM,
+    HtmlTokenizerState::AfterDoctypeSystemKeyword,
+    HtmlTokenizerState::BeforeDoctypeSystemIdentifier,
+    HtmlTokenizerState::DoctypeSystemIdentifierDoubleQuoted,
+    HtmlTokenizerState::DoctypeSystemIdentifierSingleQuoted,
+    HtmlTokenizerState::AfterDoctypeSystemIdentifier,
+    HtmlTokenizerState::BogusDoctype,
+    HtmlTokenizerState::TextCharacterReference,
+    HtmlTokenizerState::TextNamedCharacterReference,
+    HtmlTokenizerState::TextNumericCharacterReference,
+    HtmlTokenizerState::TextNumericHexCharacterReferenceStart,
+    HtmlTokenizerState::TextNumericHexCharacterReference,
+    HtmlTokenizerState::TextNumericDecimalCharacterReference,
+    HtmlTokenizerState::ScriptData,
+    HtmlTokenizerState::ScriptDataLessThanSign,
+    HtmlTokenizerState::ScriptDataEndTagOpen,
+    HtmlTokenizerState::ScriptDataEndTagName,
+    HtmlTokenizerState::ScriptDataEndTagWhitespace,
+    HtmlTokenizerState::ScriptDataEndTagAttributes,
+    HtmlTokenizerState::ScriptDataSelfClosingEndTag,
+    HtmlTokenizerState::ScriptDataEscapeStart,
+    HtmlTokenizerState::ScriptDataEscapeStartDash,
+    HtmlTokenizerState::ScriptDataEscaped,
+    HtmlTokenizerState::ScriptDataEscapedDash,
+    HtmlTokenizerState::ScriptDataEscapedDashDash,
+    HtmlTokenizerState::ScriptDataEscapedLessThanSign,
+    HtmlTokenizerState::ScriptDataEscapedEndTagOpen,
+    HtmlTokenizerState::ScriptDataEscapedEndTagName,
+    HtmlTokenizerState::ScriptDataEscapedEndTagWhitespace,
+    HtmlTokenizerState::ScriptDataEscapedEndTagAttributes,
+    HtmlTokenizerState::ScriptDataEscapedSelfClosingEndTag,
+    HtmlTokenizerState::ScriptDataDoubleEscapeStart,
+    HtmlTokenizerState::ScriptDataDoubleEscaped,
+    HtmlTokenizerState::ScriptDataDoubleEscapedDash,
+    HtmlTokenizerState::ScriptDataDoubleEscapedDashDash,
+    HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign,
+    HtmlTokenizerState::ScriptDataDoubleEscapeEnd,
+];
+
+/// Tokenizer states used for parser-controlled text or foreign-content fragments.
+pub const HTML_FRAGMENT_TOKENIZER_STATES: [HtmlTokenizerState; 91] = [
+    HtmlTokenizerState::Rcdata,
+    HtmlTokenizerState::RcdataLessThanSign,
+    HtmlTokenizerState::RcdataEndTagOpen,
+    HtmlTokenizerState::RcdataEndTagName,
+    HtmlTokenizerState::RcdataEndTagWhitespace,
+    HtmlTokenizerState::RcdataEndTagAttributes,
+    HtmlTokenizerState::RcdataSelfClosingEndTag,
+    HtmlTokenizerState::Rawtext,
+    HtmlTokenizerState::RawtextLessThanSign,
+    HtmlTokenizerState::RawtextEndTagOpen,
+    HtmlTokenizerState::RawtextEndTagName,
+    HtmlTokenizerState::RawtextEndTagWhitespace,
+    HtmlTokenizerState::RawtextEndTagAttributes,
+    HtmlTokenizerState::RawtextSelfClosingEndTag,
+    HtmlTokenizerState::Plaintext,
+    HtmlTokenizerState::CdataSection,
+    HtmlTokenizerState::CdataSectionBracket,
+    HtmlTokenizerState::CdataSectionEnd,
+    HtmlTokenizerState::CommentStart,
+    HtmlTokenizerState::CommentStartDash,
+    HtmlTokenizerState::Comment,
+    HtmlTokenizerState::CommentLessThanSign,
+    HtmlTokenizerState::CommentLessThanSignBang,
+    HtmlTokenizerState::CommentLessThanSignBangDash,
+    HtmlTokenizerState::CommentLessThanSignBangDashDash,
+    HtmlTokenizerState::CommentEndDash,
+    HtmlTokenizerState::CommentEnd,
+    HtmlTokenizerState::CommentEndBang,
+    HtmlTokenizerState::BogusComment,
+    HtmlTokenizerState::DoctypeKeywordO,
+    HtmlTokenizerState::DoctypeKeywordC,
+    HtmlTokenizerState::DoctypeKeywordT,
+    HtmlTokenizerState::DoctypeKeywordY,
+    HtmlTokenizerState::DoctypeKeywordP,
+    HtmlTokenizerState::DoctypeKeywordE,
+    HtmlTokenizerState::DoctypeAfterKeyword,
+    HtmlTokenizerState::BeforeDoctypeName,
+    HtmlTokenizerState::DoctypeName,
+    HtmlTokenizerState::AfterDoctypeName,
+    HtmlTokenizerState::DoctypePublicKeywordU,
+    HtmlTokenizerState::DoctypePublicKeywordB,
+    HtmlTokenizerState::DoctypePublicKeywordL,
+    HtmlTokenizerState::DoctypePublicKeywordI,
+    HtmlTokenizerState::DoctypePublicKeywordC,
+    HtmlTokenizerState::AfterDoctypePublicKeyword,
+    HtmlTokenizerState::BeforeDoctypePublicIdentifier,
+    HtmlTokenizerState::DoctypePublicIdentifierDoubleQuoted,
+    HtmlTokenizerState::DoctypePublicIdentifierSingleQuoted,
+    HtmlTokenizerState::AfterDoctypePublicIdentifier,
+    HtmlTokenizerState::BetweenDoctypePublicAndSystemIdentifiers,
+    HtmlTokenizerState::DoctypeSystemKeywordY,
+    HtmlTokenizerState::DoctypeSystemKeywordS,
+    HtmlTokenizerState::DoctypeSystemKeywordT,
+    HtmlTokenizerState::DoctypeSystemKeywordE,
+    HtmlTokenizerState::DoctypeSystemKeywordM,
+    HtmlTokenizerState::AfterDoctypeSystemKeyword,
+    HtmlTokenizerState::BeforeDoctypeSystemIdentifier,
+    HtmlTokenizerState::DoctypeSystemIdentifierDoubleQuoted,
+    HtmlTokenizerState::DoctypeSystemIdentifierSingleQuoted,
+    HtmlTokenizerState::AfterDoctypeSystemIdentifier,
+    HtmlTokenizerState::BogusDoctype,
+    HtmlTokenizerState::TextCharacterReference,
+    HtmlTokenizerState::TextNamedCharacterReference,
+    HtmlTokenizerState::TextNumericCharacterReference,
+    HtmlTokenizerState::TextNumericHexCharacterReferenceStart,
+    HtmlTokenizerState::TextNumericHexCharacterReference,
+    HtmlTokenizerState::TextNumericDecimalCharacterReference,
+    HtmlTokenizerState::ScriptData,
+    HtmlTokenizerState::ScriptDataLessThanSign,
+    HtmlTokenizerState::ScriptDataEndTagOpen,
+    HtmlTokenizerState::ScriptDataEndTagName,
+    HtmlTokenizerState::ScriptDataEndTagWhitespace,
+    HtmlTokenizerState::ScriptDataEndTagAttributes,
+    HtmlTokenizerState::ScriptDataSelfClosingEndTag,
+    HtmlTokenizerState::ScriptDataEscapeStart,
+    HtmlTokenizerState::ScriptDataEscapeStartDash,
+    HtmlTokenizerState::ScriptDataEscaped,
+    HtmlTokenizerState::ScriptDataEscapedDash,
+    HtmlTokenizerState::ScriptDataEscapedDashDash,
+    HtmlTokenizerState::ScriptDataEscapedLessThanSign,
+    HtmlTokenizerState::ScriptDataEscapedEndTagOpen,
+    HtmlTokenizerState::ScriptDataEscapedEndTagName,
+    HtmlTokenizerState::ScriptDataEscapedEndTagWhitespace,
+    HtmlTokenizerState::ScriptDataEscapedEndTagAttributes,
+    HtmlTokenizerState::ScriptDataEscapedSelfClosingEndTag,
+    HtmlTokenizerState::ScriptDataDoubleEscapeStart,
+    HtmlTokenizerState::ScriptDataDoubleEscaped,
+    HtmlTokenizerState::ScriptDataDoubleEscapedDash,
+    HtmlTokenizerState::ScriptDataDoubleEscapedDashDash,
+    HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign,
+    HtmlTokenizerState::ScriptDataDoubleEscapeEnd,
+];
+
+/// Tokenizer states that are valid script-substate entry points.
+pub const HTML_SCRIPT_TOKENIZER_STATES: [HtmlTokenizerState; 24] = [
+    HtmlTokenizerState::ScriptData,
+    HtmlTokenizerState::ScriptDataLessThanSign,
+    HtmlTokenizerState::ScriptDataEndTagOpen,
+    HtmlTokenizerState::ScriptDataEndTagName,
+    HtmlTokenizerState::ScriptDataEndTagWhitespace,
+    HtmlTokenizerState::ScriptDataEndTagAttributes,
+    HtmlTokenizerState::ScriptDataSelfClosingEndTag,
+    HtmlTokenizerState::ScriptDataEscapeStart,
+    HtmlTokenizerState::ScriptDataEscapeStartDash,
+    HtmlTokenizerState::ScriptDataEscaped,
+    HtmlTokenizerState::ScriptDataEscapedDash,
+    HtmlTokenizerState::ScriptDataEscapedDashDash,
+    HtmlTokenizerState::ScriptDataEscapedLessThanSign,
+    HtmlTokenizerState::ScriptDataEscapedEndTagOpen,
+    HtmlTokenizerState::ScriptDataEscapedEndTagName,
+    HtmlTokenizerState::ScriptDataEscapedEndTagWhitespace,
+    HtmlTokenizerState::ScriptDataEscapedEndTagAttributes,
+    HtmlTokenizerState::ScriptDataEscapedSelfClosingEndTag,
+    HtmlTokenizerState::ScriptDataDoubleEscapeStart,
+    HtmlTokenizerState::ScriptDataDoubleEscaped,
+    HtmlTokenizerState::ScriptDataDoubleEscapedDash,
+    HtmlTokenizerState::ScriptDataDoubleEscapedDashDash,
+    HtmlTokenizerState::ScriptDataDoubleEscapedLessThanSign,
+    HtmlTokenizerState::ScriptDataDoubleEscapeEnd,
+];
+
+/// Tokenizer states that resume an already-created DOCTYPE token.
+pub const HTML_DOCTYPE_TOKENIZER_STATES: [HtmlTokenizerState; 32] = [
+    HtmlTokenizerState::DoctypeKeywordO,
+    HtmlTokenizerState::DoctypeKeywordC,
+    HtmlTokenizerState::DoctypeKeywordT,
+    HtmlTokenizerState::DoctypeKeywordY,
+    HtmlTokenizerState::DoctypeKeywordP,
+    HtmlTokenizerState::DoctypeKeywordE,
+    HtmlTokenizerState::DoctypeAfterKeyword,
+    HtmlTokenizerState::BeforeDoctypeName,
+    HtmlTokenizerState::DoctypeName,
+    HtmlTokenizerState::AfterDoctypeName,
+    HtmlTokenizerState::DoctypePublicKeywordU,
+    HtmlTokenizerState::DoctypePublicKeywordB,
+    HtmlTokenizerState::DoctypePublicKeywordL,
+    HtmlTokenizerState::DoctypePublicKeywordI,
+    HtmlTokenizerState::DoctypePublicKeywordC,
+    HtmlTokenizerState::AfterDoctypePublicKeyword,
+    HtmlTokenizerState::BeforeDoctypePublicIdentifier,
+    HtmlTokenizerState::DoctypePublicIdentifierDoubleQuoted,
+    HtmlTokenizerState::DoctypePublicIdentifierSingleQuoted,
+    HtmlTokenizerState::AfterDoctypePublicIdentifier,
+    HtmlTokenizerState::BetweenDoctypePublicAndSystemIdentifiers,
+    HtmlTokenizerState::DoctypeSystemKeywordY,
+    HtmlTokenizerState::DoctypeSystemKeywordS,
+    HtmlTokenizerState::DoctypeSystemKeywordT,
+    HtmlTokenizerState::DoctypeSystemKeywordE,
+    HtmlTokenizerState::DoctypeSystemKeywordM,
+    HtmlTokenizerState::AfterDoctypeSystemKeyword,
+    HtmlTokenizerState::BeforeDoctypeSystemIdentifier,
+    HtmlTokenizerState::DoctypeSystemIdentifierDoubleQuoted,
+    HtmlTokenizerState::DoctypeSystemIdentifierSingleQuoted,
+    HtmlTokenizerState::AfterDoctypeSystemIdentifier,
+    HtmlTokenizerState::BogusDoctype,
+];
+
+impl HtmlTokenizerState {
+    /// Machine-state identifier used by the generated static lexer.
+    pub fn as_machine_state(self) -> &'static str {
+        match self {
+            Self::Data => "data",
+            Self::Rcdata => "rcdata",
+            Self::RcdataLessThanSign => "rcdata_less_than_sign",
+            Self::RcdataEndTagOpen => "rcdata_end_tag_open",
+            Self::RcdataEndTagName => "rcdata_end_tag_name",
+            Self::RcdataEndTagWhitespace => "rcdata_end_tag_whitespace",
+            Self::RcdataEndTagAttributes => "rcdata_end_tag_attributes",
+            Self::RcdataSelfClosingEndTag => "rcdata_self_closing_end_tag",
+            Self::Rawtext => "rawtext",
+            Self::RawtextLessThanSign => "rawtext_less_than_sign",
+            Self::RawtextEndTagOpen => "rawtext_end_tag_open",
+            Self::RawtextEndTagName => "rawtext_end_tag_name",
+            Self::RawtextEndTagWhitespace => "rawtext_end_tag_whitespace",
+            Self::RawtextEndTagAttributes => "rawtext_end_tag_attributes",
+            Self::RawtextSelfClosingEndTag => "rawtext_self_closing_end_tag",
+            Self::Plaintext => "plaintext",
+            Self::CdataSection => "cdata_section",
+            Self::CdataSectionBracket => "cdata_section_bracket",
+            Self::CdataSectionEnd => "cdata_section_end",
+            Self::CommentStart => "comment_start",
+            Self::CommentStartDash => "comment_start_dash",
+            Self::Comment => "comment",
+            Self::CommentLessThanSign => "comment_less_than_sign",
+            Self::CommentLessThanSignBang => "comment_less_than_sign_bang",
+            Self::CommentLessThanSignBangDash => "comment_less_than_sign_bang_dash",
+            Self::CommentLessThanSignBangDashDash => "comment_less_than_sign_bang_dash_dash",
+            Self::CommentEndDash => "comment_end_dash",
+            Self::CommentEnd => "comment_end",
+            Self::CommentEndBang => "comment_end_bang",
+            Self::BogusComment => "bogus_comment",
+            Self::DoctypeKeywordO => "doctype_keyword_o",
+            Self::DoctypeKeywordC => "doctype_keyword_c",
+            Self::DoctypeKeywordT => "doctype_keyword_t",
+            Self::DoctypeKeywordY => "doctype_keyword_y",
+            Self::DoctypeKeywordP => "doctype_keyword_p",
+            Self::DoctypeKeywordE => "doctype_keyword_e",
+            Self::DoctypeAfterKeyword => "doctype_after_keyword",
+            Self::BeforeDoctypeName => "before_doctype_name",
+            Self::DoctypeName => "doctype_name",
+            Self::AfterDoctypeName => "after_doctype_name",
+            Self::DoctypePublicKeywordU => "doctype_public_keyword_u",
+            Self::DoctypePublicKeywordB => "doctype_public_keyword_b",
+            Self::DoctypePublicKeywordL => "doctype_public_keyword_l",
+            Self::DoctypePublicKeywordI => "doctype_public_keyword_i",
+            Self::DoctypePublicKeywordC => "doctype_public_keyword_c",
+            Self::AfterDoctypePublicKeyword => "after_doctype_public_keyword",
+            Self::BeforeDoctypePublicIdentifier => "before_doctype_public_identifier",
+            Self::DoctypePublicIdentifierDoubleQuoted => "doctype_public_identifier_double_quoted",
+            Self::DoctypePublicIdentifierSingleQuoted => "doctype_public_identifier_single_quoted",
+            Self::AfterDoctypePublicIdentifier => "after_doctype_public_identifier",
+            Self::BetweenDoctypePublicAndSystemIdentifiers => {
+                "between_doctype_public_and_system_identifiers"
+            }
+            Self::DoctypeSystemKeywordY => "doctype_system_keyword_y",
+            Self::DoctypeSystemKeywordS => "doctype_system_keyword_s",
+            Self::DoctypeSystemKeywordT => "doctype_system_keyword_t",
+            Self::DoctypeSystemKeywordE => "doctype_system_keyword_e",
+            Self::DoctypeSystemKeywordM => "doctype_system_keyword_m",
+            Self::AfterDoctypeSystemKeyword => "after_doctype_system_keyword",
+            Self::BeforeDoctypeSystemIdentifier => "before_doctype_system_identifier",
+            Self::DoctypeSystemIdentifierDoubleQuoted => "doctype_system_identifier_double_quoted",
+            Self::DoctypeSystemIdentifierSingleQuoted => "doctype_system_identifier_single_quoted",
+            Self::AfterDoctypeSystemIdentifier => "after_doctype_system_identifier",
+            Self::BogusDoctype => "bogus_doctype",
+            Self::TextCharacterReference => "text_character_reference",
+            Self::TextNamedCharacterReference => "text_named_character_reference",
+            Self::TextNumericCharacterReference => "text_numeric_character_reference",
+            Self::TextNumericHexCharacterReferenceStart => {
+                "text_numeric_hex_character_reference_start"
+            }
+            Self::TextNumericHexCharacterReference => "text_numeric_hex_character_reference",
+            Self::TextNumericDecimalCharacterReference => {
+                "text_numeric_decimal_character_reference"
+            }
+            Self::ScriptData => "script_data",
+            Self::ScriptDataLessThanSign => "script_data_less_than_sign",
+            Self::ScriptDataEndTagOpen => "script_data_end_tag_open",
+            Self::ScriptDataEndTagName => "script_data_end_tag_name",
+            Self::ScriptDataEndTagWhitespace => "script_data_end_tag_whitespace",
+            Self::ScriptDataEndTagAttributes => "script_data_end_tag_attributes",
+            Self::ScriptDataSelfClosingEndTag => "script_data_self_closing_end_tag",
+            Self::ScriptDataEscapeStart => "script_data_escape_start",
+            Self::ScriptDataEscapeStartDash => "script_data_escape_start_dash",
+            Self::ScriptDataEscaped => "script_data_escaped",
+            Self::ScriptDataEscapedDash => "script_data_escaped_dash",
+            Self::ScriptDataEscapedDashDash => "script_data_escaped_dash_dash",
+            Self::ScriptDataEscapedLessThanSign => "script_data_escaped_less_than_sign",
+            Self::ScriptDataEscapedEndTagOpen => "script_data_escaped_end_tag_open",
+            Self::ScriptDataEscapedEndTagName => "script_data_escaped_end_tag_name",
+            Self::ScriptDataEscapedEndTagWhitespace => "script_data_escaped_end_tag_whitespace",
+            Self::ScriptDataEscapedEndTagAttributes => "script_data_escaped_end_tag_attributes",
+            Self::ScriptDataEscapedSelfClosingEndTag => "script_data_escaped_self_closing_end_tag",
+            Self::ScriptDataDoubleEscapeStart => "script_data_double_escape_start",
+            Self::ScriptDataDoubleEscaped => "script_data_double_escaped",
+            Self::ScriptDataDoubleEscapedDash => "script_data_double_escaped_dash",
+            Self::ScriptDataDoubleEscapedDashDash => "script_data_double_escaped_dash_dash",
+            Self::ScriptDataDoubleEscapedLessThanSign => {
+                "script_data_double_escaped_less_than_sign"
+            }
+            Self::ScriptDataDoubleEscapeEnd => "script_data_double_escape_end",
+        }
+    }
+
+    /// html5lib tokenizer fixture state label for this parser-facing state.
+    pub fn as_html5lib_state(self) -> &'static str {
+        match self {
+            Self::Data => "Data state",
+            Self::Rcdata => "RCDATA state",
+            Self::RcdataLessThanSign => "RCDATA less-than sign state",
+            Self::RcdataEndTagOpen => "RCDATA end tag open state",
+            Self::RcdataEndTagName => "RCDATA end tag name state",
+            Self::RcdataEndTagWhitespace => "RCDATA end tag whitespace state",
+            Self::RcdataEndTagAttributes => "RCDATA end tag attributes state",
+            Self::RcdataSelfClosingEndTag => "RCDATA self-closing end tag state",
+            Self::Rawtext => "RAWTEXT state",
+            Self::RawtextLessThanSign => "RAWTEXT less-than sign state",
+            Self::RawtextEndTagOpen => "RAWTEXT end tag open state",
+            Self::RawtextEndTagName => "RAWTEXT end tag name state",
+            Self::RawtextEndTagWhitespace => "RAWTEXT end tag whitespace state",
+            Self::RawtextEndTagAttributes => "RAWTEXT end tag attributes state",
+            Self::RawtextSelfClosingEndTag => "RAWTEXT self-closing end tag state",
+            Self::Plaintext => "PLAINTEXT state",
+            Self::CdataSection => "CDATA section state",
+            Self::CdataSectionBracket => "CDATA section bracket state",
+            Self::CdataSectionEnd => "CDATA section end state",
+            Self::CommentStart => "Comment start state",
+            Self::CommentStartDash => "Comment start dash state",
+            Self::Comment => "Comment state",
+            Self::CommentLessThanSign => "Comment less-than sign state",
+            Self::CommentLessThanSignBang => "Comment less-than sign bang state",
+            Self::CommentLessThanSignBangDash => "Comment less-than sign bang dash state",
+            Self::CommentLessThanSignBangDashDash => "Comment less-than sign bang dash dash state",
+            Self::CommentEndDash => "Comment end dash state",
+            Self::CommentEnd => "Comment end state",
+            Self::CommentEndBang => "Comment end bang state",
+            Self::BogusComment => "Bogus comment state",
+            Self::DoctypeKeywordO => "DOCTYPE keyword O state",
+            Self::DoctypeKeywordC => "DOCTYPE keyword C state",
+            Self::DoctypeKeywordT => "DOCTYPE keyword T state",
+            Self::DoctypeKeywordY => "DOCTYPE keyword Y state",
+            Self::DoctypeKeywordP => "DOCTYPE keyword P state",
+            Self::DoctypeKeywordE => "DOCTYPE keyword E state",
+            Self::DoctypeAfterKeyword => "DOCTYPE after keyword state",
+            Self::BeforeDoctypeName => "Before DOCTYPE name state",
+            Self::DoctypeName => "DOCTYPE name state",
+            Self::AfterDoctypeName => "After DOCTYPE name state",
+            Self::DoctypePublicKeywordU => "DOCTYPE public keyword U state",
+            Self::DoctypePublicKeywordB => "DOCTYPE public keyword B state",
+            Self::DoctypePublicKeywordL => "DOCTYPE public keyword L state",
+            Self::DoctypePublicKeywordI => "DOCTYPE public keyword I state",
+            Self::DoctypePublicKeywordC => "DOCTYPE public keyword C state",
+            Self::AfterDoctypePublicKeyword => "After DOCTYPE public keyword state",
+            Self::BeforeDoctypePublicIdentifier => "Before DOCTYPE public identifier state",
+            Self::DoctypePublicIdentifierDoubleQuoted => {
+                "DOCTYPE public identifier double quoted state"
+            }
+            Self::DoctypePublicIdentifierSingleQuoted => {
+                "DOCTYPE public identifier single quoted state"
+            }
+            Self::AfterDoctypePublicIdentifier => "After DOCTYPE public identifier state",
+            Self::BetweenDoctypePublicAndSystemIdentifiers => {
+                "Between DOCTYPE public and system identifiers state"
+            }
+            Self::DoctypeSystemKeywordY => "DOCTYPE system keyword Y state",
+            Self::DoctypeSystemKeywordS => "DOCTYPE system keyword S state",
+            Self::DoctypeSystemKeywordT => "DOCTYPE system keyword T state",
+            Self::DoctypeSystemKeywordE => "DOCTYPE system keyword E state",
+            Self::DoctypeSystemKeywordM => "DOCTYPE system keyword M state",
+            Self::AfterDoctypeSystemKeyword => "After DOCTYPE system keyword state",
+            Self::BeforeDoctypeSystemIdentifier => "Before DOCTYPE system identifier state",
+            Self::DoctypeSystemIdentifierDoubleQuoted => {
+                "DOCTYPE system identifier double quoted state"
+            }
+            Self::DoctypeSystemIdentifierSingleQuoted => {
+                "DOCTYPE system identifier single quoted state"
+            }
+            Self::AfterDoctypeSystemIdentifier => "After DOCTYPE system identifier state",
+            Self::BogusDoctype => "Bogus DOCTYPE state",
+            Self::TextCharacterReference => "Character reference state",
+            Self::TextNamedCharacterReference => "Named character reference state",
+            Self::TextNumericCharacterReference => "Numeric character reference state",
+            Self::TextNumericHexCharacterReferenceStart => {
+                "Hexadecimal character reference start state"
+            }
+            Self::TextNumericHexCharacterReference => "Hexadecimal character reference state",
+            Self::TextNumericDecimalCharacterReference => "Decimal character reference state",
+            Self::ScriptData => "Script data state",
+            Self::ScriptDataLessThanSign => "Script data less-than sign state",
+            Self::ScriptDataEndTagOpen => "Script data end tag open state",
+            Self::ScriptDataEndTagName => "Script data end tag name state",
+            Self::ScriptDataEndTagWhitespace => "Script data end tag whitespace state",
+            Self::ScriptDataEndTagAttributes => "Script data end tag attributes state",
+            Self::ScriptDataSelfClosingEndTag => "Script data self-closing end tag state",
+            Self::ScriptDataEscapeStart => "Script data escape start state",
+            Self::ScriptDataEscapeStartDash => "Script data escape start dash state",
+            Self::ScriptDataEscaped => "Script data escaped state",
+            Self::ScriptDataEscapedDash => "Script data escaped dash state",
+            Self::ScriptDataEscapedDashDash => "Script data escaped dash dash state",
+            Self::ScriptDataEscapedLessThanSign => "Script data escaped less-than sign state",
+            Self::ScriptDataEscapedEndTagOpen => "Script data escaped end tag open state",
+            Self::ScriptDataEscapedEndTagName => "Script data escaped end tag name state",
+            Self::ScriptDataEscapedEndTagWhitespace => {
+                "Script data escaped end tag whitespace state"
+            }
+            Self::ScriptDataEscapedEndTagAttributes => {
+                "Script data escaped end tag attributes state"
+            }
+            Self::ScriptDataEscapedSelfClosingEndTag => {
+                "Script data escaped self-closing end tag state"
+            }
+            Self::ScriptDataDoubleEscapeStart => "Script data double escape start state",
+            Self::ScriptDataDoubleEscaped => "Script data double escaped state",
+            Self::ScriptDataDoubleEscapedDash => "Script data double escaped dash state",
+            Self::ScriptDataDoubleEscapedDashDash => "Script data double escaped dash dash state",
+            Self::ScriptDataDoubleEscapedLessThanSign => {
+                "Script data double escaped less-than sign state"
+            }
+            Self::ScriptDataDoubleEscapeEnd => "Script data double escape end state",
+        }
+    }
+
+    /// Return the typed tokenizer state for a generated machine-state identifier.
+    pub fn from_machine_state(machine_state: &str) -> Option<Self> {
+        HTML_TOKENIZER_STATES
+            .iter()
+            .copied()
+            .find(|state| state.as_machine_state() == machine_state)
+    }
+
+    /// Return the typed tokenizer state for a standard html5lib fixture label.
+    pub fn from_html5lib_state(html5lib_state: &str) -> Option<Self> {
+        HTML_TOKENIZER_STATES
+            .iter()
+            .copied()
+            .find(|state| state.as_html5lib_state() == html5lib_state)
+    }
+
+    /// Return the typed fragment state for a generated machine-state identifier.
+    pub fn from_fragment_machine_state(machine_state: &str) -> Option<Self> {
+        Self::from_machine_state(machine_state).filter(|state| state.is_fragment_state())
+    }
+
+    /// Return whether this state is a parser-approved script tokenizer substate.
+    pub fn is_script_substate(self) -> bool {
+        HTML_SCRIPT_TOKENIZER_STATES.contains(&self)
+    }
+
+    /// Return whether this state resumes an already-started DOCTYPE token.
+    pub fn requires_doctype_seed(self) -> bool {
+        HTML_DOCTYPE_TOKENIZER_STATES.contains(&self)
+    }
+
+    /// Return whether this state resumes an in-progress text character reference.
+    pub fn requires_character_reference_seed(self) -> bool {
+        matches!(
+            self,
+            Self::TextCharacterReference
+                | Self::TextNamedCharacterReference
+                | Self::TextNumericCharacterReference
+                | Self::TextNumericHexCharacterReferenceStart
+                | Self::TextNumericHexCharacterReference
+                | Self::TextNumericDecimalCharacterReference
+        )
+    }
+
+    /// Return whether this state can receive recovered character-reference text.
+    pub fn is_character_reference_return_state(self) -> bool {
+        matches!(self, Self::Data | Self::Rcdata)
+    }
+
+    /// Return whether this state is a parser-approved fragment entry point.
+    pub fn is_fragment_state(self) -> bool {
+        HTML_FRAGMENT_TOKENIZER_STATES.contains(&self)
+    }
+
+    /// Return whether this state resumes an already-started end tag.
+    pub fn requires_end_tag_seed(self) -> bool {
+        matches!(
+            self,
+            Self::RcdataEndTagName
+                | Self::RcdataEndTagWhitespace
+                | Self::RcdataEndTagAttributes
+                | Self::RcdataSelfClosingEndTag
+                | Self::RawtextEndTagName
+                | Self::RawtextEndTagWhitespace
+                | Self::RawtextEndTagAttributes
+                | Self::RawtextSelfClosingEndTag
+                | Self::ScriptDataEndTagName
+                | Self::ScriptDataEndTagWhitespace
+                | Self::ScriptDataEndTagAttributes
+                | Self::ScriptDataSelfClosingEndTag
+                | Self::ScriptDataEscapedEndTagName
+                | Self::ScriptDataEscapedEndTagWhitespace
+                | Self::ScriptDataEscapedEndTagAttributes
+                | Self::ScriptDataEscapedSelfClosingEndTag
+        )
+    }
+
+    /// Return whether this state resumes an already-started comment token.
+    pub fn requires_comment_seed(self) -> bool {
+        matches!(
+            self,
+            Self::CommentStart
+                | Self::CommentStartDash
+                | Self::Comment
+                | Self::CommentLessThanSign
+                | Self::CommentLessThanSignBang
+                | Self::CommentLessThanSignBangDash
+                | Self::CommentLessThanSignBangDashDash
+                | Self::CommentEndDash
+                | Self::CommentEnd
+                | Self::CommentEndBang
+                | Self::BogusComment
+        )
+    }
+
+    /// Return whether a seeded state needs the parser's last-start-tag context.
+    pub fn requires_last_start_tag(self) -> bool {
+        matches!(
+            self,
+            Self::Rcdata
+                | Self::RcdataLessThanSign
+                | Self::RcdataEndTagOpen
+                | Self::RcdataEndTagName
+                | Self::RcdataEndTagWhitespace
+                | Self::RcdataEndTagAttributes
+                | Self::RcdataSelfClosingEndTag
+                | Self::Rawtext
+                | Self::RawtextLessThanSign
+                | Self::RawtextEndTagOpen
+                | Self::RawtextEndTagName
+                | Self::RawtextEndTagWhitespace
+                | Self::RawtextEndTagAttributes
+                | Self::RawtextSelfClosingEndTag
+        ) || self.is_script_substate()
+    }
+}
+
+/// Initial tokenizer context for fragment or parser-controlled lexing.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct HtmlLexContext {
+    pub initial_state: HtmlTokenizerState,
+    pub last_start_tag: Option<String>,
+    pub current_end_tag: Option<String>,
+    pub current_comment: Option<String>,
+    pub current_doctype: Option<DoctypeSeed>,
+    pub temporary_buffer: Option<String>,
+    pub return_state: Option<HtmlTokenizerState>,
+}
+
+impl HtmlLexContext {
+    pub fn new(initial_state: HtmlTokenizerState) -> Self {
+        Self {
+            initial_state,
+            last_start_tag: None,
+            current_end_tag: None,
+            current_comment: None,
+            current_doctype: None,
+            temporary_buffer: None,
+            return_state: None,
+        }
+    }
+
+    pub fn data() -> Self {
+        Self::new(HtmlTokenizerState::Data)
+    }
+
+    /// Return the tokenizer context for parser-approved foreign-content CDATA.
+    ///
+    /// HTML data-state markup only treats `<![CDATA[` specially when the parser
+    /// has entered a foreign-content integration point such as SVG or MathML.
+    /// Keeping this as an explicit context prevents element-name mapping from
+    /// pretending CDATA is valid in ordinary HTML content.
+    pub fn cdata_section() -> Self {
+        Self::new(HtmlTokenizerState::CdataSection)
+    }
+
+    /// Return a script tokenizer substate context for parser-approved fragments.
+    ///
+    /// These substates are useful for html5lib/WPT-style fixtures and for
+    /// future parser flows that need to resume script tokenization after
+    /// already recognizing an escaped or double-escaped script section.
+    pub fn script_substate(initial_state: HtmlTokenizerState) -> Option<Self> {
+        if initial_state.is_script_substate() {
+            Some(Self::new(initial_state).with_last_start_tag("script"))
+        } else {
+            None
+        }
+    }
+
+    pub fn with_last_start_tag(mut self, tag: impl Into<String>) -> Self {
+        self.last_start_tag = Some(tag.into());
+        self
+    }
+
+    pub fn with_current_end_tag(mut self, tag: impl Into<String>) -> Self {
+        self.current_end_tag = Some(tag.into());
+        self
+    }
+
+    pub fn with_current_comment(mut self, data: impl Into<String>) -> Self {
+        self.current_comment = Some(data.into());
+        self
+    }
+
+    pub fn with_current_doctype(mut self, doctype: DoctypeSeed) -> Self {
+        self.current_doctype = Some(doctype);
+        self
+    }
+
+    pub fn with_temporary_buffer(mut self, value: impl Into<String>) -> Self {
+        self.temporary_buffer = Some(value.into());
+        self
+    }
+
+    pub fn with_return_state(mut self, state: HtmlTokenizerState) -> Self {
+        self.return_state = Some(state);
+        self
+    }
+
+    pub fn is_data(&self) -> bool {
+        self.initial_state == HtmlTokenizerState::Data
+            && self.last_start_tag.is_none()
+            && self.current_end_tag.is_none()
+            && self.current_comment.is_none()
+            && self.current_doctype.is_none()
+            && self.temporary_buffer.is_none()
+            && self.return_state.is_none()
+    }
+
+    /// Return a comment tokenizer continuation context for importer/parser tests.
+    ///
+    /// These states resume with an already-created comment token. States such as
+    /// `comment_end_dash` and `comment_end` encode pending dash delimiters in
+    /// the tokenizer state itself, so the seed only contains already-committed
+    /// comment data.
+    pub fn comment_continuation(
+        initial_state: HtmlTokenizerState,
+        data: impl Into<String>,
+    ) -> Option<Self> {
+        if initial_state.requires_comment_seed() {
+            Some(Self::new(initial_state).with_current_comment(data))
+        } else {
+            None
+        }
+    }
+
+    /// Return a DOCTYPE tokenizer continuation context for importer/parser tests.
+    ///
+    /// These states resume after markup-declaration logic has already created
+    /// the current DOCTYPE token. The seed carries whatever name/identifier and
+    /// force-quirks data the chosen state has already accumulated.
+    pub fn doctype_continuation(
+        initial_state: HtmlTokenizerState,
+        seed: DoctypeSeed,
+    ) -> Option<Self> {
+        if initial_state.requires_doctype_seed() {
+            Some(Self::new(initial_state).with_current_doctype(seed))
+        } else {
+            None
+        }
+    }
+
+    /// Return a text/RCDATA character-reference continuation context.
+    ///
+    /// These states resume after the caller has already consumed `&` and
+    /// accumulated any partial reference text in the temporary buffer. The
+    /// return state records whether recovery should resume in data or RCDATA.
+    pub fn character_reference_continuation(
+        initial_state: HtmlTokenizerState,
+        return_state: HtmlTokenizerState,
+        temporary_buffer: impl Into<String>,
+    ) -> Option<Self> {
+        if initial_state.requires_character_reference_seed()
+            && return_state.is_character_reference_return_state()
+        {
+            Some(
+                Self::new(initial_state)
+                    .with_return_state(return_state)
+                    .with_temporary_buffer(temporary_buffer),
+            )
+        } else {
+            None
+        }
+    }
+
+    /// Return the tokenizer context used for text following a start tag.
+    ///
+    /// This is the parser-facing map from element names to HTML tokenizer
+    /// submodes. It deliberately keeps foreign-content CDATA decisions out of
+    /// the element map because those depend on tree-construction context.
+    pub fn for_element_text(element_name: &str) -> Option<Self> {
+        Self::for_element_text_with_scripting(element_name, HtmlScriptingMode::Enabled)
+    }
+
+    /// Return the tokenizer context used for text after a start tag, including
+    /// scripting-sensitive `noscript` handling.
+    pub fn for_element_text_with_scripting(
+        element_name: &str,
+        scripting: HtmlScriptingMode,
+    ) -> Option<Self> {
+        let name = element_name.to_ascii_lowercase();
+        let state = match name.as_str() {
+            "title" | "textarea" => HtmlTokenizerState::Rcdata,
+            "iframe" | "noembed" | "noframes" | "style" | "xmp" => HtmlTokenizerState::Rawtext,
+            "noscript" if scripting == HtmlScriptingMode::Enabled => HtmlTokenizerState::Rawtext,
+            "script" => HtmlTokenizerState::ScriptData,
+            "plaintext" => HtmlTokenizerState::Plaintext,
+            _ => return None,
+        };
+
+        let context = Self::new(state);
+        if state == HtmlTokenizerState::Plaintext {
+            Some(context)
+        } else {
+            Some(context.with_last_start_tag(name))
+        }
+    }
+}
 
 /// Return the generated typed definition for the HTML 1.x compatibility-floor lexer.
 pub fn html1_definition() -> StateMachineDefinition {
@@ -37,13 +920,58 @@ pub fn html_skeleton_machine() -> std::result::Result<EffectfulStateMachine, Str
 /// Build a Rust HTML lexer over the statically linked HTML 1.x compatibility floor.
 pub fn create_html_lexer() -> Result<HtmlLexer> {
     html1_machine()
-        .map(HtmlLexer::new)
+        .map(|machine| HtmlLexer::new(machine).with_normalized_carriage_returns())
         .map_err(TokenizerError::Machine)
+}
+
+/// Build a lexer seeded with a parser-controlled HTML tokenizer context.
+pub fn create_html_lexer_with_context(context: &HtmlLexContext) -> Result<HtmlLexer> {
+    let mut lexer = create_html_lexer()?;
+    apply_html_lex_context(&mut lexer, context)?;
+    Ok(lexer)
+}
+
+/// Move an existing lexer into a parser-controlled HTML tokenizer context.
+pub fn apply_html_lex_context(lexer: &mut HtmlLexer, context: &HtmlLexContext) -> Result<()> {
+    lexer.set_initial_state(context.initial_state.as_machine_state())?;
+    if let Some(last_start_tag) = context.last_start_tag.as_deref() {
+        lexer.set_last_start_tag(last_start_tag);
+    } else {
+        lexer.clear_last_start_tag();
+    }
+    if let Some(current_end_tag) = context.current_end_tag.as_deref() {
+        lexer.set_current_end_tag(current_end_tag);
+    } else if let Some(current_comment) = context.current_comment.as_deref() {
+        lexer.set_current_comment(current_comment);
+    } else if let Some(current_doctype) = context.current_doctype.as_ref() {
+        lexer.set_current_doctype(current_doctype.clone());
+    } else {
+        lexer.clear_current_token();
+    }
+    if let Some(temporary_buffer) = context.temporary_buffer.as_deref() {
+        lexer.set_temporary_buffer(temporary_buffer);
+    } else {
+        lexer.clear_temporary_buffer();
+    }
+    if let Some(return_state) = context.return_state {
+        lexer.set_return_state(return_state.as_machine_state())?;
+    } else {
+        lexer.clear_return_state();
+    }
+    Ok(())
 }
 
 /// Lex one complete HTML string with the current compatibility-floor machine.
 pub fn lex_html(source: &str) -> Result<Vec<Token>> {
     let mut lexer = create_html_lexer()?;
+    lexer.push(source)?;
+    lexer.finish()?;
+    Ok(lexer.drain_tokens())
+}
+
+/// Lex a parser-controlled HTML fragment with an explicit tokenizer context.
+pub fn lex_html_fragment(source: &str, context: &HtmlLexContext) -> Result<Vec<Token>> {
+    let mut lexer = create_html_lexer_with_context(context)?;
     lexer.push(source)?;
     lexer.finish()?;
     Ok(lexer.drain_tokens())

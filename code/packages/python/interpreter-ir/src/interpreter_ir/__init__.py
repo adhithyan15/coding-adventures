@@ -39,6 +39,7 @@ Quick start::
 
 from __future__ import annotations
 
+from interpreter_ir.exception_table import CATCH_ALL, ExceptionTableEntry
 from interpreter_ir.function import FunctionTypeStatus, IIRFunction
 from interpreter_ir.instr import IIRInstr
 from interpreter_ir.module import IIRModule
@@ -54,13 +55,18 @@ from interpreter_ir.opcodes import (
     CONCRETE_TYPES,
     CONTROL_OPS,
     DYNAMIC_TYPE,
+    EXIT_OPS,
+    HANDLER_OPS,
     HEAP_OPS,
     IO_OPS,
     MEMORY_OPS,
     POLYMORPHIC_TYPE,
     REF_PREFIX,
     REF_SUFFIX,
+    RESTART_OPS,
     SIDE_EFFECT_OPS,
+    SYSCALL_CHECKED_OPS,
+    THROW_OPS,
     VALUE_OPS,
     is_ref_type,
     make_ref_type,
@@ -79,6 +85,9 @@ __all__ = [
     "IIRFunction",
     "IIRModule",
     "FunctionTypeStatus",
+    # VMCOND00 Phase 2 — exception table
+    "ExceptionTableEntry",
+    "CATCH_ALL",
     # Feedback slot state machine (LANG17)
     "SlotKind",
     "SlotState",
@@ -100,6 +109,11 @@ __all__ = [
     "IO_OPS",
     "MEMORY_OPS",
     "SIDE_EFFECT_OPS",
+    "HANDLER_OPS",
+    "RESTART_OPS",
+    "EXIT_OPS",
+    "SYSCALL_CHECKED_OPS",
+    "THROW_OPS",
     "VALUE_OPS",
     # Type constants and helpers
     "CONCRETE_TYPES",

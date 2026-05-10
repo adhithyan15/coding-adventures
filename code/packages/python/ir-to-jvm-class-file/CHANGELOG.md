@@ -1,5 +1,125 @@
 # ir-to-jvm-class-file
 
+## 0.17.0 — 2026-05-04 — TW04 Phase 4d — cross-module invokestatic + TwigRuntime
+
+### Added — `JvmBackendConfig.external_runtime_class`
+
+New optional field (`str | None`, default `None`) that redirects all
+`getstatic` / `putstatic` for `__ca_regs` and `__ca_objregs` to the named
+external class rather than the module's own class.  When set to
+`TWIG_RUNTIME_BINARY_NAME` every module class delegates register-array
+access to a shared `TwigRuntime` class, keeping one consistent register
+file across the entire multi-module program.
+
+### Added — `JvmBackendConfig.extra_callable_labels`
+
+New optional field (`tuple[str, ...]`, default `()`).  Exported functions
+in a dependency module are only invoked from other modules; no local `CALL`
+instruction targets them, so `_discover_callable_regions` would silently
+omit them.  This hint forces the named labels to be emitted as proper JVM
+methods even when they have no local callers.
+
+### Added — `TWIG_RUNTIME_BINARY_NAME` constant
+
+Module-level constant holding the JVM internal class name of the shared
+runtime class (`"coding_adventures/twig/runtime/TwigRuntime"`).
+
+### Added — `build_runtime_class_artifact(reg_count=256)`
+
+Standalone factory that generates the `TwigRuntime` class file.  The class
+owns `public static int[] __ca_regs` and `public static Object[] __ca_objregs`,
+both initialised in `<clinit>` to arrays of length `reg_count`.  Returns a
+`JVMClassArtifact` ready to include in any multi-module JAR.
+
+### Added — cross-module `CALL` lowering to `invokestatic`
+
+`IrOp.CALL` with a label whose name contains `/` is now recognised as a
+cross-module call.  The label is decomposed at its **last** `/` to extract
+the foreign class name and method name; the backend emits:
+
+```
+invokestatic <class>.<method>()I
+```
+
+### Added — multi-module method visibility
+
+In single-module builds callable methods remain `ACC_PRIVATE | ACC_STATIC`.
+When `external_runtime_class` is set (multi-module mode), **all** callable
+methods are upgraded to `ACC_PUBLIC | ACC_STATIC` so that other module
+classes can invoke them via cross-class `invokestatic`.
+
+### Fixed — `_discover_callable_regions` skips cross-module targets
+
+Previously any `CALL` label containing `/` was added to `callable_names`
+and the subsequent consistency check raised `MissingCallableLabels`.  The
+function now skips labels with `/` in both the discovery pass and the
+second-pass branch-target check.
+
+### Fixed — `__ca_syscall` now uses `_reg_owner` for register access
+
+Two `getstatic` instructions inside `_build_syscall_method` (SYSCALL 1 and
+SYSCALL 10) were hard-coding `self.config.class_name` for the `__ca_regs`
+field reference.  In multi-module mode this caused `NoSuchFieldError`
+because the module class no longer owns the field.  Both now use
+`self._reg_field_ref(...)` which correctly targets `TwigRuntime` when
+`external_runtime_class` is set.
+
+### Added — slash-form class names accepted by the validator
+
+`_JAVA_BINARY_NAME_RE` updated to permit `/` as a segment separator
+alongside `.`, enabling module names like `"user/hello"` or `"a/math"` to
+pass validation.
+
+## 0.16.0 — 2026-05-04 — SYSCALL 10 (exit) + validator correction
+
+### Added — `SYSCALL 10` (process exit) in `__ca_syscall`
+
+`_build_syscall_method` now handles a third dispatch arm for syscall
+number 10 (exit process), completing the platform-independent syscall
+convention shared across all language backends:
+
+| Number | Primitive | JVM implementation |
+|--------|-----------|---------------------|
+| 1 | write byte to stdout | `System.out.write(b & 0xFF); flush()` |
+| 2 | read byte from stdin  | `System.in.read()` → `__ca_regs[arg_reg]` |
+| 10 | exit process         | `System.exit(__ca_regs[arg_reg])` |
+
+The new arm reads `__ca_regs[arg_reg_index]` as the exit code and calls
+`java/lang/System.exit(I)V`.  A trailing `return` opcode after the
+`invokestatic` satisfies the JVM verifier — `System.exit` never returns
+at runtime but the verifier still requires every bytecode path to end
+with a control-transfer instruction.
+
+Unknown syscall numbers fall through to a `label_done: return` (silent
+no-op), consistent with the existing convention for syscalls the current
+backend has not wired up yet.
+
+### Fixed — validator `_SUPPORTED_SYSCALLS` corrected from `{1, 4}` to `{1, 2, 10}`
+
+The pre-flight validator (`validate_for_jvm`) was carrying an incorrect
+set `{1, 4}` — SYSCALL 4 was a copy-paste artifact; the actual
+implementation has dispatched on **SYSCALL 2** (not 4) for stdin reads
+since the original implementation.  The set is now `{1, 2, 10}`.
+
+The old SYSCALL 4 entry never fired at runtime (no backend emitted it);
+Brainfuck uses SYSCALL 1 and 2, the CLR validator already documented
+1/2/10, and the Twig frontends (Phase 4c) emit 1/2/10.  Two test cases
+that asserted the wrong behaviour (`test_syscall_4_accepted`,
+`test_syscall_10_rejected`) are replaced with correct assertions:
+
+* `test_syscall_2_accepted` — SYSCALL 2 is now accepted (was silently
+  passing before the validator was added, then incorrectly rejected when
+  the validator listed 4 instead of 2).
+* `test_syscall_10_accepted` — SYSCALL 10 is now accepted.
+* `test_syscall_4_rejected` — SYSCALL 4 is now correctly rejected.
+
+### Tests
+
+- Updated `test_syscall_4_accepted` → `test_syscall_2_accepted`.
+- Updated `test_syscall_10_rejected` → `test_syscall_10_accepted`.
+- Added `test_syscall_4_rejected` (documents the correction).
+- All 99 tests pass; 92.26% coverage (≥ 80% required).
+
 ## 0.15.0 — 2026-04-29 — multi-arity closures (per-region explicit_arity)
 
 The lifted-lambda emission and per-closure subclass `apply([I)I`

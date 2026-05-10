@@ -1,6 +1,6 @@
 [package]
 name = "twig-formatter"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "Canonical Twig pretty-printer.  AST -> format-doc Doc -> canonical source.  The prettier/rustfmt equivalent for the Twig authoring experience."
 

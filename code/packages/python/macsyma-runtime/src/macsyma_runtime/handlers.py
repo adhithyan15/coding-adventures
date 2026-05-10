@@ -20,13 +20,75 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from symbolic_ir import IRApply, IRNode, IRSymbol
+from symbolic_ir import IRApply, IRFloat, IRInteger, IRNode, IRRational, IRSymbol
 from symbolic_vm.backend import Handler
 
 if TYPE_CHECKING:
     from symbolic_vm import VM
 
     from macsyma_runtime.backend import MacsymaBackend
+
+
+# ---------------------------------------------------------------------------
+# Numer fold — recursive exact-to-float conversion
+# ---------------------------------------------------------------------------
+
+
+def _numer_fold(node: IRNode) -> IRNode:
+    """Recursively convert exact numerics to :class:`~symbolic_ir.IRFloat`.
+
+    In MACSYMA, ``ev(expr, numer)`` forces every exact rational or integer
+    sub-expression to a floating-point value.  Constants such as ``%pi`` and
+    ``%e`` are pre-bound as ``IRFloat`` by the backend, so they are already
+    handled.  The only cases that need explicit conversion are:
+
+    - ``IRInteger`` — exact integer (e.g. ``3``)   → ``IRFloat(3.0)``
+    - ``IRRational`` — exact fraction (e.g. ``1/2``) → ``IRFloat(0.5)``
+    - ``IRApply`` — recurse into args; special-case ``Pow`` to preserve
+      integer exponents so that ``x^2`` is not changed to ``x^2.0``
+      (the underlying numeric routines expect integer exponents in Pow).
+    - Everything else (``IRSymbol``, ``IRFloat``) — returned unchanged.
+
+    This function is *pure* — it never mutates nodes.  If nothing changes
+    the original node is returned by identity so callers can do a fast
+    ``is``-check.
+    """
+    # --- leaf: exact integer → float ----------------------------------------
+    if isinstance(node, IRInteger):
+        return IRFloat(float(node.value))
+
+    # --- leaf: exact rational → float ----------------------------------------
+    if isinstance(node, IRRational):
+        return IRFloat(node.numer / node.denom)
+
+    # --- leaf: already float or symbol → no-op --------------------------------
+    if isinstance(node, (IRFloat, IRSymbol)):
+        return node
+
+    # --- compound: recurse with Pow-exponent guard ----------------------------
+    if isinstance(node, IRApply):
+        head = node.head
+        # For Pow(base, exp) keep the exponent exact so that ``x^2`` stays
+        # ``x^2`` (not ``x^2.0``).  Only fold the base.
+        if (
+            isinstance(head, IRSymbol)
+            and head.name == "Pow"
+            and len(node.args) == 2
+        ):
+            new_base = _numer_fold(node.args[0])
+            exp = node.args[1]          # keep exponent as-is
+            if new_base is node.args[0]:
+                return node             # nothing changed — return original
+            return IRApply(head, (new_base, exp))
+
+        # General case — fold every argument.
+        new_args = tuple(_numer_fold(a) for a in node.args)
+        if new_args == node.args:
+            return node
+        return IRApply(head, new_args)
+
+    # --- fallback (e.g. future IR node types) ---------------------------------
+    return node
 
 
 def display_handler(_vm: VM, expr: IRApply) -> IRNode:
@@ -118,6 +180,10 @@ def make_ev_handler() -> Handler:
                 flags.add(arg.name)
 
         # ---- numer / float ------------------------------------------------
+        # Evaluate the expression, then fold every exact rational/integer
+        # leaf to IRFloat.  ``with_numer`` is used when available so that
+        # any *downstream* ev() calls also stay in float mode; the fold
+        # at the end guarantees the returned value is fully numeric.
         if "numer" in flags or "float" in flags:
             backend = vm.backend
             if hasattr(backend, "with_numer"):
@@ -125,7 +191,7 @@ def make_ev_handler() -> Handler:
                     result: IRNode = vm.eval(inner)
             else:
                 result = vm.eval(inner)
-            return result
+            return _numer_fold(result)
 
         # ---- plain evaluation first, then post-process --------------------
         result = vm.eval(inner)

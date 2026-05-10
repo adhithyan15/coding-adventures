@@ -1,8 +1,8 @@
 """ALGOL 60 Lexer — tokenizes ALGOL 60 source text using the grammar-driven approach.
 
-This module is a thin wrapper around the generic ``GrammarLexer``. It loads
-the ``algol.tokens`` file from the ``code/grammars/`` directory and creates a
-lexer configured for ALGOL 60 tokenization.
+This module is a thin wrapper around the generic ``GrammarLexer``. It imports
+the compiled ``algol/algol60.tokens`` grammar as native Python data and creates
+a lexer configured for ALGOL 60 tokenization without runtime grammar-file I/O.
 
 A Short History of ALGOL 60
 -----------------------------
@@ -56,23 +56,25 @@ Two convenience functions:
 Token Types
 -----------
 
-The lexer produces the following token kinds (defined in ``algol.tokens``):
+The lexer produces the following token kinds (defined in
+``algol/algol60.tokens``):
 
 Value tokens:
 - ``REAL_LIT``    — floating-point literals: ``3.14``, ``1.5E3``, ``1.5E-3``
 - ``INTEGER_LIT`` — integer literals: ``42``, ``0``, ``1000``
-- ``STRING_LIT``  — single-quoted strings: ``'hello world'``
+- ``STRING_LIT``  — quoted strings: ``'hello world'`` or ``"hello world"``
 - ``IDENT``       — identifiers (reclassified as keywords when applicable)
 
 Multi-character operators (must match before their single-char prefixes):
 - ``ASSIGN``  — ``:=``  (ALGOL separates assignment from equality — no C-style bugs)
 - ``POWER``   — ``**``  (exponentiation, Fortran convention)
-- ``LEQ``     — ``<=``
-- ``GEQ``     — ``>=``
-- ``NEQ``     — ``!=``
+- ``LEQ``     — ``<=`` or ``≤``
+- ``GEQ``     — ``>=`` or ``≥``
+- ``NEQ``     — ``!=``, ``<>``, or ``≠``
 
 Single-character operators:
-- ``PLUS``, ``MINUS``, ``STAR``, ``SLASH``, ``CARET``, ``EQ``, ``LT``, ``GT``
+- ``PLUS``, ``MINUS``, ``STAR``, ``SLASH``, ``CARET`` (``^`` or ``↑``),
+  ``EQ``, ``LT``, ``GT``
 
 Delimiters:
 - ``LPAREN``, ``RPAREN``, ``LBRACKET``, ``RBRACKET``
@@ -99,14 +101,17 @@ ALGOL 60 uses a distinctive comment syntax::
 
     comment this is the comment text;
 
-The word ``comment`` triggers comment-skip mode: everything from that word up
-to (and including) the next ``;`` is consumed silently. This means a ``comment``
-appearing after a statement-terminating semicolon skips the rest of the line::
+The word ``comment`` is matched case-insensitively and triggers comment-skip
+mode: everything from that word up to (and including) the next ``;`` is consumed
+silently. This means a ``comment`` appearing after a statement-terminating
+semicolon skips the rest of the line::
 
     x := 42; comment set x to 42;
     y := x + 1
 
 The second semicolon ends both the comment and serves as the logical separator.
+Identifiers that merely start with those letters, such as ``commentary``, stay
+ordinary identifiers.
 
 Why ALGOL Uses := for Assignment
 -----------------------------------
@@ -122,59 +127,115 @@ Every language since has had to choose: Python, Go, and Rust follow ALGOL
 impossible or a compile warning). C chose differently and generations of
 programmers wrote ``==`` when they meant ``=``.
 
-Locating the Grammar File
---------------------------
+Compiled Token Grammar
+----------------------
 
-The ``algol.tokens`` file lives in the ``code/grammars/`` directory at the
-root of the coding-adventures repository. We locate it relative to this
-module's file path using ``pathlib.Path``::
-
-    tokenizer.py
-    └── algol_lexer/       (parent)
-        └── src/           (parent)
-            └── algol-lexer/ (parent)
-                └── python/    (parent)
-                    └── packages/ (parent)
-                        └── code/     (parent)
-                            └── grammars/
-                                └── algol.tokens
+The source token grammar lives at ``code/grammars/algol/algol60.tokens`` for
+authoring and regeneration. Runtime code imports ``TOKEN_GRAMMAR`` from
+``algol_lexer._grammar`` so installed packages do not need repository-relative
+grammar files.
 """
 
 from __future__ import annotations
 
-from pathlib import Path
+from lexer import GrammarLexer, Token, TokenType
 
-from grammar_tools import parse_token_grammar
-from lexer import GrammarLexer, Token
+from algol_lexer._grammar import TOKEN_GRAMMAR
 
 # ---------------------------------------------------------------------------
-# Grammar File Location
-# ---------------------------------------------------------------------------
-#
-# Navigate from this file's location up to the repository root's grammars/
-# directory. The path is:
-#   src/algol_lexer/tokenizer.py -> src/algol_lexer -> src -> algol-lexer
-#   -> python -> packages -> code -> code/grammars
+# Grammar Selection
 # ---------------------------------------------------------------------------
 
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-VALID_VERSIONS = {"algol60"}
+DEFAULT_VERSION = "algol60"
+SUPPORTED_VERSIONS = frozenset({DEFAULT_VERSION})
+_TOKEN_GRAMMARS = {DEFAULT_VERSION: TOKEN_GRAMMAR}
+
+_SYMBOLIC_KEYWORDS = {
+    "NOT_SYM": "not",
+    "AND_SYM": "and",
+    "OR_SYM": "or",
+    "IMPL_SYM": "impl",
+    "EQV_SYM": "eqv",
+}
+
+_SYMBOLIC_OPERATOR_VALUES = {
+    "LEQ": {"≤": "<="},
+    "GEQ": {"≥": ">="},
+    "NEQ": {"≠": "!="},
+    "CARET": {"↑": "^"},
+    "STAR": {"×": "*"},
+    "SLASH": {"÷": "/"},
+}
 
 
-def resolve_tokens_path(version: str = "algol60") -> Path:
-    """Resolve a supported ALGOL token grammar path."""
-    if version not in VALID_VERSIONS:
-        valid = ", ".join(sorted(VALID_VERSIONS))
-        raise ValueError(f"Unknown ALGOL version {version!r}. Valid versions: {valid}")
-    return GRAMMAR_DIR / "algol" / f"{version}.tokens"
+def resolve_version(version: str | None = None) -> str:
+    """Normalize an ALGOL grammar version and reject unknown values."""
+    resolved = version if version else DEFAULT_VERSION
+    if resolved not in SUPPORTED_VERSIONS:
+        valid = ", ".join(sorted(SUPPORTED_VERSIONS))
+        raise ValueError(f"Unknown ALGOL version {resolved!r}. Valid versions: {valid}")
+    return resolved
 
 
-def create_algol_lexer(source: str, version: str = "algol60") -> GrammarLexer:
+def _replace_token(token: Token, *, type_: TokenType | str, value: str) -> Token:
+    return Token(
+        type=type_,
+        value=value,
+        line=token.line,
+        column=token.column,
+        flags=token.flags,
+    )
+
+
+def _normalize_algol_tokens(
+    tokens: list[Token],
+    keywords: set[str],
+) -> list[Token]:
+    """Normalize ALGOL keywords and publication symbols after tokenization."""
+    normalized: list[Token] = []
+    for token in tokens:
+        symbolic_keyword = _SYMBOLIC_KEYWORDS.get(token.type_name)
+        if symbolic_keyword is not None:
+            normalized.append(
+                _replace_token(
+                    token,
+                    type_=TokenType.KEYWORD,
+                    value=symbolic_keyword,
+                )
+            )
+            continue
+
+        symbolic_operator = _SYMBOLIC_OPERATOR_VALUES.get(token.type_name, {}).get(
+            token.value
+        )
+        if symbolic_operator is not None:
+            normalized.append(
+                _replace_token(token, type_=token.type, value=symbolic_operator)
+            )
+            continue
+
+        value = token.value.lower()
+        if token.type in (TokenType.NAME, "NAME") and value in keywords:
+            normalized.append(
+                _replace_token(token, type_=TokenType.KEYWORD, value=value)
+            )
+        elif token.type in (TokenType.KEYWORD, "KEYWORD") and value in keywords:
+            normalized.append(
+                _replace_token(token, type_=token.type, value=value)
+            )
+        else:
+            normalized.append(token)
+    return normalized
+
+
+def create_algol_lexer(
+    source: str,
+    version: str | None = DEFAULT_VERSION,
+) -> GrammarLexer:
     """Create a ``GrammarLexer`` configured for ALGOL 60 text.
 
-    This function reads the ``algol.tokens`` file, parses it into a
-    ``TokenGrammar``, and creates a ``GrammarLexer`` ready to tokenize
-    the given source text.
+    This function selects the compiled ``algol/algol60.tokens`` grammar and
+    creates a ``GrammarLexer`` ready to tokenize the given source text.
 
     The lexer handles the following ALGOL-specific behaviors automatically:
 
@@ -184,8 +245,11 @@ def create_algol_lexer(source: str, version: str = "algol60") -> GrammarLexer:
       token ``beginning`` does not match the keyword ``begin``.
     - **Case insensitivity**: ``BEGIN``, ``Begin``, and ``begin`` all produce
       the same token kind. The grammar normalizes to lowercase.
+    - **Publication symbols**: ``≤``, ``≥``, ``≠``, ``↑``, ``×``, ``÷``,
+      ``∧``, ``∨``, ``¬``, ``⊃``, and ``≡`` normalize to the same token
+      stream as their ASCII or word spellings.
     - **Comment skipping**: ``comment text;`` is consumed without emitting
-      any token.
+      any token, and the keyword is matched case-insensitively.
     - **Operator ordering**: ``:=`` is matched before ``:``, ``**`` before
       ``*``, ``<=`` before ``<``, ``>=`` before ``>``.
 
@@ -196,20 +260,22 @@ def create_algol_lexer(source: str, version: str = "algol60") -> GrammarLexer:
         A ``GrammarLexer`` instance configured with ALGOL 60 token definitions.
         Call ``.tokenize()`` on it to get the token list.
 
-    Raises:
-        FileNotFoundError: If the ``algol.tokens`` file cannot be found.
-        TokenGrammarError: If the ``.tokens`` file has syntax errors.
-
     Example::
 
         lexer = create_algol_lexer('begin integer x; x := 42 end')
         tokens = lexer.tokenize()
     """
-    grammar = parse_token_grammar(resolve_tokens_path(version).read_text())
-    return GrammarLexer(source, grammar)
+    grammar = _TOKEN_GRAMMARS[resolve_version(version)]
+    lexer = GrammarLexer(source, grammar)
+    keyword_set = {keyword.lower() for keyword in grammar.keywords}
+    lexer.add_post_tokenize(lambda tokens: _normalize_algol_tokens(tokens, keyword_set))
+    return lexer
 
 
-def tokenize_algol(source: str, version: str = "algol60") -> list[Token]:
+def tokenize_algol(
+    source: str,
+    version: str | None = DEFAULT_VERSION,
+) -> list[Token]:
     """Tokenize ALGOL 60 text and return a list of tokens.
 
     This is the main entry point for the ALGOL 60 lexer. Pass in a string of
@@ -221,13 +287,15 @@ def tokenize_algol(source: str, version: str = "algol60") -> list[Token]:
     Value tokens:
     - **REAL_LIT**    — floating-point: ``3.14``, ``1.5E3``, ``100E2``
     - **INTEGER_LIT** — integer: ``42``, ``0``, ``1000``
-    - **STRING_LIT**  — single-quoted: ``'hello world'``
+    - **STRING_LIT**  — quoted: ``'hello world'`` or ``"hello world"``
     - **IDENT**       — identifiers not matching any keyword
 
     Operators:
-    - **ASSIGN** (``:=``), **POWER** (``**``), **CARET** (``^``)
-    - **LEQ** (``<=``), **GEQ** (``>=``), **NEQ** (``!=``)
-    - **PLUS**, **MINUS**, **STAR**, **SLASH**, **EQ**, **LT**, **GT**
+    - **ASSIGN** (``:=``), **POWER** (``**``), **CARET** (``^`` or ``↑``)
+    - **LEQ** (``<=`` or ``≤``), **GEQ** (``>=`` or ``≥``),
+      **NEQ** (``!=``, ``<>``, or ``≠``)
+    - **PLUS**, **MINUS**, **STAR** (``*`` or ``×``), **SLASH** (``/`` or
+      ``÷``), **EQ**, **LT**, **GT**
 
     Delimiters:
     - **LPAREN**, **RPAREN**, **LBRACKET**, **RBRACKET**
@@ -253,7 +321,6 @@ def tokenize_algol(source: str, version: str = "algol60") -> list[Token]:
         A list of ``Token`` objects. The last token is always EOF.
 
     Raises:
-        FileNotFoundError: If the ``algol.tokens`` file cannot be found.
         LexerError: If the source contains characters that don't match
             any token pattern in the ALGOL 60 grammar.
 

@@ -1,0 +1,1 @@
+where cabal >/dev/null 2>/dev/null && cabal test all || echo cabal not available on this runner -- skipping

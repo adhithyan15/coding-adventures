@@ -1,0 +1,26 @@
+{
+  "name": "@coding-adventures/cas-factor",
+  "version": "0.1.0",
+  "description": "Pure TypeScript integer polynomial factoring for CAS packages",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "keywords": [
+    "cas",
+    "factor",
+    "polynomial",
+    "browser"
+  ],
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.19.18",
+    "@vitest/coverage-v8": "^3.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.0.0"
+  }
+}

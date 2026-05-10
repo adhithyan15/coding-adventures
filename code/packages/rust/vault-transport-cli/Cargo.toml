@@ -1,0 +1,7 @@
+[package]
+name = "coding_adventures_vault_transport_cli"
+version = "0.1.0"
+edition = "2021"
+description = "VLT11 — terminal interface for the Vault stack. `vault put / get / list / share / sync / unseal / login` style command surface. Library crate: parsing + structured command enum + dispatch trait + text/JSON output formatting. The host binary in `code/programs/rust/` wires in the underlying layers (auth, policy, engines, leases, audit, sync) behind the trait."
+
+[dependencies]

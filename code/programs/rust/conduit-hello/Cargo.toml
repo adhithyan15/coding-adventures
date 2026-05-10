@@ -1,0 +1,13 @@
+[package]
+name = "conduit-hello"
+version = "0.1.0"
+edition = "2021"
+description = "Rust Conduit hello-world demo"
+license = "MIT"
+
+[[bin]]
+name = "conduit-hello"
+path = "src/main.rs"
+
+[dependencies]
+conduit = { path = "../../../packages/rust/conduit" }

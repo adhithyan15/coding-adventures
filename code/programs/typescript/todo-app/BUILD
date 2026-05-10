@@ -2,6 +2,7 @@ cd ../../../packages/typescript/md5 && npm install --quiet
 cd ../../../packages/typescript/sha1 && npm install --quiet
 cd ../../../packages/typescript/uuid && npm install --quiet
 cd ../../../packages/typescript/directed-graph && npm install --quiet
+cd ../../../packages/typescript/cli-builder && npm install --quiet
 cd ../../../packages/typescript/grammar-tools && npm install --quiet
 cd ../../../packages/typescript/lexer && npm install --quiet
 cd ../../../packages/typescript/state-machine && npm install --quiet

@@ -69,6 +69,7 @@ class JoinKind:
     RIGHT = "RIGHT"
     FULL = "FULL"
     CROSS = "CROSS"
+    NATURAL = "NATURAL"  # resolved to INNER by planner using schema column intersection
 
 
 @dataclass(frozen=True, slots=True)
@@ -134,11 +135,24 @@ class JoinClause:
     The FROM clause is represented as a base :class:`TableRef` plus a list
     of join clauses, each describing how a new table attaches. This mirrors
     how most SQL grammars structure multi-table FROMs.
+
+    ``using`` carries the column names from a ``JOIN … USING (col1, col2)``
+    clause.  The planner expands it into a proper ``ON left.col = right.col
+    AND …`` expression during ``_build_from_tree``, where both the accumulated
+    scope and the backend schema are available to resolve which left-side table
+    owns each column.  When ``using`` is non-empty ``on`` must be ``None`` —
+    the two are mutually exclusive.
+
+    This deferred resolution is necessary for chained multi-table USING joins:
+    in ``a JOIN b USING (x) JOIN c USING (y)``, when the second USING is
+    parsed the adapter does not yet know whether ``y`` lives in ``a`` or ``b``.
+    The planner does, because it has already built the scope for both tables.
     """
 
     kind: str  # one of JoinKind.*
     right: TableRef | DerivedTableRef | RecursiveCTERef
-    on: Expr | None = None  # None for CROSS JOIN
+    on: Expr | None = None  # None for CROSS JOIN / NATURAL / USING (see using field)
+    using: tuple[str, ...] = ()  # column names from USING (...); planner resolves to ON
 
 
 @dataclass(frozen=True, slots=True)
@@ -160,10 +174,22 @@ class Limit:
 
 @dataclass(frozen=True, slots=True)
 class SelectStmt:
-    """A structured SELECT statement — the usual shape from a compiler textbook."""
+    """A structured SELECT statement — the usual shape from a compiler textbook.
 
-    from_: TableRef | DerivedTableRef | RecursiveCTERef
+    ``from_`` is ``None`` when the SELECT has no FROM clause — e.g.
+    ``SELECT 1 + 1``, ``SELECT UPPER('hello')``, ``SELECT CAST(3 AS TEXT)``.
+    The planner maps a ``None`` from_ to a :class:`~sql_planner.plan.SingleRow`
+    leaf that yields exactly one empty row, so the SELECT list is evaluated
+    exactly once.
+
+    Fields are ordered with ``items`` first (required) and ``from_`` second
+    (optional, default ``None``) so Python's dataclass machinery accepts the
+    common ``SelectStmt(items=..., from_=...)`` keyword-argument style while
+    also allowing ``SelectStmt(items=...)`` for from-less queries.
+    """
+
     items: tuple[SelectItem, ...]
+    from_: TableRef | DerivedTableRef | RecursiveCTERef | None = None
     joins: tuple[JoinClause, ...] = field(default_factory=tuple)
     where: Expr | None = None
     group_by: tuple[Expr, ...] = field(default_factory=tuple)
@@ -177,12 +203,86 @@ class SelectStmt:
 
 
 @dataclass(frozen=True, slots=True)
+class UpsertAssignment:
+    """One ``col = expr`` in an ``ON CONFLICT DO UPDATE SET`` clause."""
+
+    column: str
+    value: Expr
+
+
+@dataclass(frozen=True, slots=True)
+class UpsertClause:
+    """``ON CONFLICT [(conflict_target)] DO NOTHING | DO UPDATE SET assignments``.
+
+    SQL UPSERT (insert-or-update) semantics
+    ----------------------------------------
+    When an INSERT would violate a unique constraint:
+
+    - ``do_nothing=True``   → silently skip the row (like ``INSERT OR IGNORE``
+                              but scoped to a specific constraint via the target)
+    - ``do_nothing=False``  → run the ``assignments`` in-place on the existing
+                              row, using ``EXCLUDED.*`` to access the values from
+                              the rejected would-be-inserted row.
+
+    The difference from ``INSERT OR REPLACE`` is important:
+
+    - ``REPLACE`` (= delete + re-insert): loses the existing row's primary key
+      value and fires DELETE triggers; not an in-place update.
+    - ``DO UPDATE SET``: in-place mutation; the row keeps its rowid and
+      triggers are not fired for DELETE.
+
+    conflict_target
+    ---------------
+    An optional list of column names identifying *which* unique constraint must
+    be violated for the upsert action to fire.  When empty, any constraint
+    violation triggers the action (same behaviour as SQLite when no target is
+    given).  Most real-world inserts specify a single column target (the primary
+    key or a UNIQUE column).
+
+    assignments
+    -----------
+    Used only when ``do_nothing=False``.  Each assignment uses the resolved
+    ``Expr`` tree; ``EXCLUDED.col`` is represented as ``ExcludedColumn(col=c)``
+    after the adapter rewrites ``Column(table="EXCLUDED", col=c)``.
+    """
+
+    conflict_target: tuple[str, ...] = ()  # column names; empty = any constraint
+    do_nothing: bool = False
+    assignments: tuple[UpsertAssignment, ...] = ()  # non-empty when do_nothing=False
+
+
+@dataclass(frozen=True, slots=True)
 class InsertValuesStmt:
-    """INSERT INTO t (cols) VALUES (v1, v2, ...), (w1, w2, ...)."""
+    """INSERT INTO t (cols) VALUES (v1, v2, ...), (w1, w2, ...) [RETURNING ...].
+
+    ``on_conflict`` carries the conflict resolution action from an optional
+    ``INSERT OR <action>`` clause or the ``REPLACE INTO`` shorthand:
+
+    - ``None``        — default behaviour: raise an ``IntegrityError``
+    - ``"REPLACE"``   — delete every conflicting row, then insert (also the
+                        semantics of the ``REPLACE INTO`` shorthand)
+    - ``"IGNORE"``    — silently discard the new row on any constraint
+                        violation; subsequent rows in the same statement are
+                        unaffected
+    - ``"ABORT"``     — raise an error and roll back any rows inserted earlier
+                        in this statement (same observable effect as ``None``
+                        for a single-row insert; kept for round-trip fidelity)
+    - ``"FAIL"``      — raise an error but keep rows inserted earlier in this
+                        statement (not fully emulated — treated as ``ABORT``)
+    - ``"ROLLBACK"``  — raise an error and roll back the entire transaction
+                        (not fully emulated — treated as ``ABORT``)
+
+    ``upsert_clause`` holds the optional ``ON CONFLICT … DO …`` clause.
+    When present it takes precedence over ``on_conflict`` for constraint
+    handling; both can coexist but the combination is unusual.
+    """
 
     table: str
     columns: tuple[str, ...] | None  # None = implicit column list (all columns in order)
     rows: tuple[tuple[Expr, ...], ...]
+    on_conflict: str | None = None   # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
+    returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
+    upsert_clause: UpsertClause | None = None  # ON CONFLICT … DO …
 
 
 @dataclass(frozen=True, slots=True)
@@ -195,19 +295,21 @@ class Assignment:
 
 @dataclass(frozen=True, slots=True)
 class UpdateStmt:
-    """UPDATE t SET col = expr, ... WHERE predicate."""
+    """UPDATE t SET col = expr, ... WHERE predicate [RETURNING ...]."""
 
     table: str
     assignments: tuple[Assignment, ...]
     where: Expr | None = None
+    returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
 
 
 @dataclass(frozen=True, slots=True)
 class DeleteStmt:
-    """DELETE FROM t WHERE predicate."""
+    """DELETE FROM t WHERE predicate [RETURNING ...]."""
 
     table: str
     where: Expr | None = None
+    returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
 
 
 # ---- Set-operation statements -----------------------------------------------
@@ -268,16 +370,22 @@ class ExceptStmt:
 
 @dataclass(frozen=True, slots=True)
 class InsertSelectStmt:
-    """INSERT INTO t (cols) SELECT …
+    """INSERT INTO t (cols) SELECT … [RETURNING …]
 
     The ``select`` field is the sub-query whose result rows are inserted.
     ``columns`` is the explicit target column list; ``None`` means the
     table's natural column order is used (same semantics as VALUES INSERT).
+
+    ``on_conflict`` has the same semantics as :class:`InsertValuesStmt`.
+    ``upsert_clause`` holds the optional ``ON CONFLICT … DO …`` clause.
     """
 
     table: str
     columns: tuple[str, ...] | None
     select: SelectStmt
+    on_conflict: str | None = None   # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
+    returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
+    upsert_clause: UpsertClause | None = None  # ON CONFLICT … DO …
 
 
 # ---- Transaction-control statements ----------------------------------------

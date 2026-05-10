@@ -97,8 +97,17 @@ _HELD_HEADS = frozenset({
     FOR_RANGE.name,
     FOR_EACH.name,
     BLOCK.name,
-    "ODE2",      # D(y, x) in args must not be pre-evaluated to 0.
-    "AlgFactor", # Sqrt(d) in second arg must not be pre-evaluated to a float.
+    "ODE2",         # D(y, x) in args must not be pre-evaluated to 0.
+    "AlgFactor",    # Sqrt(d) in second arg must not be pre-evaluated to a float.
+    # Phase 22 — pattern-matching heads.  These heads receive raw IR so
+    # that pattern variables (e.g. ``x`` in ``defrule(r, sin(x)^2, …)``)
+    # are not looked up in the environment before the handler sees them.
+    # apply1/apply2 handlers manually evaluate the target argument.
+    "MatchDeclare",
+    "Defrule",
+    "Apply1",
+    "Apply2",
+    "TellSimp",
 })
 
 

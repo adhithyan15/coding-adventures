@@ -1,0 +1,8 @@
+[package]
+name = "board-vm-protocol"
+version = "0.1.0"
+edition = "2021"
+description = "Binary protocol framing and payload codecs for Board VM"
+
+[lib]
+path = "src/lib.rs"

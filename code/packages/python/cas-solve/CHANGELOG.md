@@ -1,5 +1,67 @@
 # Changelog
 
+## 0.8.0 — 2026-05-05
+
+**Phase 27 — Polynomial inequality solving.**
+
+New module `cas_solve/inequality.py` with one public function:
+
+- ``try_solve_inequality(ineq_ir, var)`` — solves polynomial inequalities
+  ``p(x) op 0`` (op ∈ {<, >, ≤, ≥}) for degrees 1–4 with rational
+  coefficients.
+
+**Algorithm**: normalise to ``f = lhs − rhs``, extract polynomial coefficients
+via `symbolic_vm.polynomial_bridge.to_rational` (deferred import), find real
+roots numerically (Durand-Kerner) with exact rational roots for degrees 1–2,
+perform sign analysis in each interval between roots, and build the solution as
+a list of IR comparison conditions.
+
+**Output IR format**:
+
+| Solution | IR form |
+|----------|---------|
+| ``(−∞, a)`` | ``Less(x, a)`` |
+| ``[a, +∞)`` | ``GreaterEqual(x, a)`` |
+| ``(a, b)`` | ``And(Greater(x,a), Less(x,b))`` |
+| ``[a, b]`` | ``And(GreaterEqual(x,a), LessEqual(x,b))`` |
+| all reals | ``GreaterEqual(IRInteger(0), IRInteger(0))`` |
+| no solution | ``[]`` (empty list) |
+
+**New export**: `try_solve_inequality` added to `cas_solve/__init__.py`.
+
+---
+
+## 0.7.0 — 2026-05-05
+
+**Phase 26 — Transcendental equation solving.**
+
+New module `cas_solve/transcendental.py` with a single public function:
+
+- ``try_solve_transcendental(eq_ir, var)`` — dispatches across all recognised
+  transcendental equation families and returns a list of IR solution nodes,
+  or ``None`` if no pattern matches.
+
+Families supported:
+
+- **Trigonometric** (26a): `sin(ax+b) = c` → two periodic families with the
+  free-integer constant ``FreeInteger`` (%k); `cos`, `tan` analogously.
+- **Exponential/Logarithmic** (26b): `exp(ax+b) = c` → `x = (log(c)−b)/a`;
+  `log(ax+b) = c` → `x = (exp(c)−b)/a`.
+- **Lambert W** (26c): `f(x)·exp(f(x)) = c` with `f` linear → `f(x) = W(c)`.
+  Uses the new ``LambertW`` IR head from `symbolic-ir` 0.13.0.
+- **Hyperbolic** (26d): `sinh`, `cosh` (two branches), `tanh` with linear
+  argument; inverted via `asinh`, `acosh`, `atanh`.
+- **Compound substitution** (26e): detects when the equation is a polynomial
+  in exactly one transcendental function of the variable (e.g.
+  `sin(x)^2 + sin(x) = 0`) and solves by first solving the polynomial for the
+  intermediate variable `u`, then inverting `f(x) = u` for each root.
+
+The function is also exported from the package's `__init__.py`.
+
+Dependency bump: `symbolic-ir` ≥ 0.13.0 (for `FREE_INTEGER`, `LAMBERT_W`).
+
+---
+
 ## 0.6.0 — 2026-04-27
 
 Phase 3 — Numeric root-finding and linear-system solver.

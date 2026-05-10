@@ -1,0 +1,1 @@
+dotnet test tests/CodingAdventures.MicroQR.Tests/CodingAdventures.MicroQR.Tests.csproj --disable-build-servers /p:CollectCoverage=true /p:Threshold=90 /p:ThresholdType=line "/p:Include=[CodingAdventures.MicroQR]*"

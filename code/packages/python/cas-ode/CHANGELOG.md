@@ -2,6 +2,222 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] — 2026-05-08
+
+### Added
+
+- **Variation of parameters (VoP) ODE solver** — Phase 20
+  - Handles `a·y'' + b·y' + c·y = f(x)` for any forcing function whose
+    primitives the integration engine can evaluate.
+  - Fires as a fallback after undetermined coefficients (Phase 18), so EPT-family
+    forcing (const, poly ≤ 2, exp, sin/cos, exp×sin/cos) is still handled by
+    the cleaner undetermined-coefficient solver first.
+  - VoP runs *before* the homogeneous solver so that a non-EPT forcing is not
+    misrouted to the homogeneous solver (which silently ignores the RHS).
+  - **Wronskian closed forms** — hard-coded analytically for each root case to
+    avoid symbolic Wronskian computation at runtime:
+    - **Distinct real roots** `r₁ ≠ r₂` (disc > 0, rational √disc):
+      `u₁' = f·e^{−r₁x}/(r₁−r₂)`, `u₂' = f·e^{−r₂x}/(r₂−r₁)`.
+      Negative coefficient is placed at the *outer* level as `Neg(...)` so
+      the integration engine's Neg-distribution rule fires before the
+      exp-product recogniser — this prevents the buried `Mul(Neg(1), Exp(…))`
+      structure that blocked integration.
+    - **Repeated root** `r` (disc = 0):
+      `u₁' = −f·x·e^{−rx}`, `u₂' = f·e^{−rx}`.
+    - **Complex roots** `α ± βi` (disc < 0, rational β):
+      `u₁' = −f·sin(βx)·e^{−αx}/β`, `u₂' = f·cos(βx)·e^{−αx}/β`.
+  - Irrational discriminants and irrational β return `None` — the integrands
+    would contain symbolic √ expressions the VM cannot integrate in general.
+  - Integration falls through gracefully: if either `∫u₁' dx` or `∫u₂' dx` is
+    unevaluated, `_try_vop` returns `None` and the ODE remains unevaluated.
+  - **Trig resonance handled** — `y'' + y = sin(x)` was previously unevaluated
+    (undetermined-coeff det = 0); VoP now returns the correct general solution
+    with particular solution `y_p = −x·cos(x)/2`.
+  - Entry point `_try_vop(expr, y, x, vm)` returns `Equal(y, y_h + y_p)` or
+    `None` on pattern mismatch or integration failure.
+
+- **`_signed_frac_to_ir`** — new module-level helper (replaces duplicate local
+  `_ir_from_frac` closures in `solve_second_order_const_coeff` and
+  `solve_euler_cauchy`).
+  - Lifts a signed `Fraction` to the canonical IR literal, wrapping negative
+    values with `Neg(...)` for clean printing.
+  - `_signed_frac_to_ir(Fraction(-3, 2))` → `Neg(Rational(3, 2))`.
+
+- **`_exp_r`** — new helper that builds `exp(r·x)` with trivial-case collapsing:
+  - `r = 0` → `IRInteger(1)` (e⁰ = 1)
+  - `r = 1` → `Exp(x)`
+  - `r = -1` → `Exp(Neg(x))`
+  - Other rational `r` → `Exp(Mul(r_ir, x))`
+  - Avoids `Mul(0, x)` inside Exp for zero exponents.
+
+- **`_vop_integrand_pair`** — Wronskian-derived VoP integrands for each root
+  case (distinct real, repeated, complex).  Returns `(u1_prime, u2_prime, y1, y2)`
+  or `None` for irrational roots.
+
+### Changed
+
+- `solve_ode` dispatcher — VoP step 2 added between undetermined coefficients
+  and the homogeneous solver:
+  1. `_try_second_order_nonhom` (undetermined coefficients)
+  2. **`_try_vop`** ← new (Phase 20)
+  3. `_collect_second_order_coeffs` / `solve_second_order_const_coeff`
+  4. `_try_euler_cauchy`
+  5. `_try_bernoulli`
+  6. `_collect_linear_first_order` / `solve_linear_first_order`
+  7. `_try_separable`
+  8. `_try_homogeneous_type`
+  9. `_try_exact`
+
+- Module docstring updated: "eight" → "nine" ODE classes; Phase 20 description
+  added.
+- Literate reading guide: entries 21–25 added for `_signed_frac_to_ir`,
+  `_exp_r`, `_vop_integrand_pair`, `_try_vop`, and `solve_ode`.
+- `pyproject.toml` description updated to include variation-of-parameters.
+- `tests/test_phase18.py` — `test_trig_resonance_unevaluated` renamed to
+  `test_trig_resonance_solved_by_vop` and updated to assert that VoP *does*
+  return a solution for `y'' + y = sin(x)` (previously expected unevaluated
+  fall-through; VoP now handles this resonance case correctly).
+
+### Tests
+
+- **32 new tests** in `tests/test_ode.py` across five new classes:
+  - `TestSignedFracToIr` — 5 tests: positive integer, zero, positive rational,
+    negative integer, negative rational.
+  - `TestExpR` — 5 tests: r=0, r=1, r=-1, positive fraction, negative fraction.
+  - `TestVopIntegrandPair` — 11 tests: distinct/repeated/complex root tuples,
+    y1/y2 structure, alpha=0 no-exp check, irrational disc/beta None, sign checks.
+  - `TestTryVop` — 7 tests: homogeneous None, irrational-disc None, distinct-roots
+    poly-3 success, C1/C2 present, complex-roots poly-3 success, C1/C2, EPT success.
+  - `TestSolveOdeVopDispatch` — 4 tests: dispatch to VoP, distinct-roots dispatch,
+    EPT not routed through VoP, homogeneous not routed.
+- Combined coverage: **85.54%** (237 tests total).
+
+---
+
+## [0.4.0] — 2026-05-08
+
+### Added
+
+- **Euler-Cauchy equidimensional ODE solver** — Phase 19
+  - Recognises `a·x²·y'' + b·x·y' + c·y = 0` via `_collect_euler_cauchy_coeffs`.
+  - Each term must have the same *weight* (power of x equals derivative order);
+    the recogniser rejects bare constants, plain `y'`, or any 3-factor products.
+  - Extracts rational coefficients `(a, b, c)` using `_flatten_product`, the Mul-tree
+    analogue of the existing `_flatten_add` helper.
+  - Solves via the **indicial equation** `a·r² + (b−a)·r + c = 0` (derived by
+    the ansatz `y = x^r`):
+    - **Distinct real roots** `r₁ ≠ r₂` → `y = C₁·x^{r₁} + C₂·x^{r₂}`
+    - **Repeated root** `r` → `y = (C₁ + C₂·ln x)·x^r`
+    - **Complex conjugate roots** `α ± βi` → `y = x^α·(C₁·cos(β ln x) + C₂·sin(β ln x))`
+  - Irrational discriminants are represented as symbolic `Pow(disc, 1/2)` nodes
+    (exact arithmetic throughout — no floats).
+  - Entry point `_try_euler_cauchy(expr, y, x)` returns `Equal(y, solution)` or
+    `None` on pattern mismatch.
+
+- **`_flatten_product`** — new helper in Section 2b
+  - Recursively decomposes a `Mul` tree into `(total_rational_coefficient, [non_rational_factors])`.
+  - Handles `Neg(...)` (flips sign), `IRInteger`, `IRRational`, and any other
+    node (treated as a single factor with coefficient 1).
+  - Mirrors `_flatten_add` in spirit: enables the Euler-Cauchy recogniser to
+    extract coefficients without knowing the nesting depth of the `Mul` tree.
+
+### Changed
+
+- `solve_ode` dispatcher — new step 3 added:
+  1. `_try_second_order_nonhom`
+  2. `_collect_second_order_coeffs` / `solve_second_order_const_coeff`
+  3. **`_try_euler_cauchy`** ← new (Phase 19)
+  4. `_try_bernoulli`
+  5. `_collect_linear_first_order` / `solve_linear_first_order`
+  6. `_try_separable`
+  7. `_try_homogeneous_type`
+  8. `_try_exact`
+
+- Module docstring updated to list Euler-Cauchy as the 8th ODE class.
+- Literate reading guide entries 13–16 added for the four new helpers/functions;
+  former entries 13–17 renumbered to 17–21.
+
+### Tests
+
+- **47 new tests** in `tests/test_ode.py` across four new classes:
+  - `TestFlattenProduct` — 9 tests: integer, rational, symbol, Neg, Mul(int, sym),
+    triple product, etc.
+  - `TestCollectEulerCauchyCoeffs` — 8 tests: full 3-term, two-term, scaled leading
+    coefficient, missing-x² returns None, const-coeff returns None, single term,
+    bare-x term.
+  - `TestSolveEulerCauchy` — 12 tests: all three root cases (distinct real ×2,
+    repeated ×3, complex ×3), solution head/structure, C1/C2 presence.
+  - `TestEulerCauchyViaDispatcher` — 6 tests: full `solve_ode` pipeline for each
+    root type, const-coeff not consumed by EC, `eval_ode` dispatch, scaled coeffs.
+- Combined coverage: **84.54%** (205 tests total).
+
+---
+
+## [0.3.0] — 2026-05-06
+
+### Added
+
+- **Homogeneous-type ODE solver** (`_try_homogeneous_type`) — Phase 18c
+  - Recognises `dy/dx = f(y/x)`, where the right-hand side depends only
+    on the ratio `y/x`.
+  - Uses structural pattern matching (`_subst_ratio_ir`) to replace every
+    `Div(y, x)` node with the temporary symbol `_hom_v`, yielding `f(v)`.
+    Returns `None` immediately if any bare `y` appears outside `Div(y, x)`.
+  - Builds the separable equation `dv/(f(v)−v) = dx/x`, then delegates
+    both integrations to the existing VM `Integrate` handler (including
+    the Hermite partial-fraction path for rational `1/(f(v)−v)`).
+  - **Degenerate case** `f(v) = v` (i.e. `y' = y/x`): denominator is zero,
+    so `v = const`, and the solution is returned directly as
+    `Equal(y, Mul(%c, x))`.
+  - **Implicit solution** for the general case:
+    `Equal(H(y/x), Add(Log(x), %c))` where `H(v) = ∫ dv/(f(v)−v)`.
+  - Falls through to `None` if the RHS integrand has no closed-form
+    antiderivative (e.g. `f(v) = exp(v)`).
+  - Runs in the dispatcher after separable and before exact, ensuring
+    that linear/separable ODEs that happen to be expressible as `f(y/x)`
+    are handled by the simpler (explicit) routes first.
+
+- **IR tree substitution helper** (`_subst_ir`)
+  - Pure structural tree walk replacing every occurrence of a given
+    `IRSymbol` with a replacement IR node.  Used for back-substitution
+    `v → y/x` after computing `H(v)`.
+
+- **Structural ratio substitution helper** (`_subst_ratio_ir`)
+  - Replaces exactly the pattern `Div(y, x)` with a symbol `v`, without
+    needing algebraic simplification.  Returns `None` if `y` appears in
+    any form other than `Div(y, x)`, ensuring correctness for the VM
+    that cannot simplify `(v·x)/x → v`.
+
+### Changed
+
+- `solve_ode` dispatcher — updated order (step 6 added):
+  1. `_try_second_order_nonhom`
+  2. `_collect_second_order_coeffs` / `solve_second_order_const_coeff`
+  3. `_try_bernoulli`
+  4. `_collect_linear_first_order` / `solve_linear_first_order`
+  5. `_try_separable`
+  6. **`_try_homogeneous_type`** ← new (Phase 18c)
+  7. `_try_exact`
+
+- Module docstring updated to list homogeneous-type as the 7th ODE class.
+- Literate reading guide updated: entries 10–12 added for new helpers;
+  former entries 10–14 renumbered to 13–17.
+
+### Tests
+
+- **26 new tests** in `tests/test_ode.py` across three new classes:
+  - `TestSubstIr` — 7 tests: symbol replaced, no-op, integer, rational,
+    nested Add, Pow back-sub, absent symbol unchanged.
+  - `TestSubstRatioIr` — 9 tests: Div(y,x)→v, bare y→None, Pow,
+    integer/symbol passthrough, Add of two ratios, y-in-Add-numerator→None,
+    unrelated symbol, Mul(y,x)→None.
+  - `TestHomogeneousTypeODE` — 15 tests: degenerate case, ratio², ratio²+ratio,
+    2·(y/x), transcendental fall-through, const/linear/y·x fall-through,
+    no-y'-term, full `solve_ode` degenerate, ODE2 VM dispatch ×2,
+    linear ODE captured by separable not homogeneous.
+
+---
+
 ## [0.2.0] — 2026-04-29
 
 ### Added

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "ruby/board_vm",
+  "capabilities": [
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "cargo",
+      "justification": "Runs the Rust Board VM flash, smoke, and eject tools that own the hardware-specific implementation."
+    }
+  ],
+  "justification": "The Ruby DSL is a high-level frontend over existing Rust Board VM tools, so it must spawn cargo commands to flash firmware and drive protocol sessions."
+}

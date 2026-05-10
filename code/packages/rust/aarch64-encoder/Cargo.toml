@@ -1,0 +1,7 @@
+[package]
+name = "aarch64-encoder"
+version = "0.1.0"
+edition = "2021"
+description = "Pure-Rust ARM64 (AArch64) instruction encoder — covers the subset needed by jit-core / aot-core to lower CIR to native machine code."
+
+[dependencies]

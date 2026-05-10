@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/vault-leases",
+  "capabilities": [
+    "csprng",
+    "wallclock"
+  ],
+  "justification": "Lease IDs are drawn from the OS CSPRNG (transitively via coding_adventures_csprng) and TTL bookkeeping reads SystemTime::now (UNIX_EPOCH ms). No filesystem, network, process, or environment access. The `expire_due(now_ms)` method takes time as a parameter so callers can sweep deterministically."
+}

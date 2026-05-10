@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.9.0 — 2026-05-04
+
+**Phase 25 — Symbolic summation compiler mappings: `sum`, `product`.**
+
+Two entries added to `_STANDARD_FUNCTIONS` in `compiler.py`:
+
+```python
+"sum": SUM,
+"product": PRODUCT,
+```
+
+`SUM` and `PRODUCT` are imported from `symbolic_ir` 0.12.0.
+These 4-argument forms `sum(f, k, a, b)` and `product(f, k, a, b)` map to
+`IRApply(SUM, (f, k, a, b))` and `IRApply(PRODUCT, (f, k, a, b))` respectively.
+
+Depends on `symbolic-ir >= 0.12.0`.
+
 ## 0.8.0 — 2026-04-28
 
 **Phase 15 — Reciprocal hyperbolic compiler mappings: `coth`, `sech`, `csch`.**

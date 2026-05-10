@@ -15,6 +15,7 @@ dependencies = [
     "coding-adventures-directed-graph",
     "coding-adventures-state-machine",
     "coding-adventures-grammar-tools",
+    "coding-adventures-cli-builder",
     "coding-adventures-lexer",
     "coding-adventures-parser",
     "coding-adventures-algol-lexer",
@@ -34,6 +35,9 @@ dependencies = [
     "coding-adventures-ir-to-wasm-compiler",
     "coding-adventures-ir-to-wasm-validator",
 ]
+
+[project.scripts]
+algol60-wasm = "algol_wasm_compiler.cli:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]

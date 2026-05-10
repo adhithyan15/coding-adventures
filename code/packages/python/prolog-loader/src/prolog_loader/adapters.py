@@ -2,33 +2,68 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
+import re
+from collections.abc import Callable, Iterator
+from typing import Protocol
 
 from logic_builtins import (
     abolisho,
+    absolute_file_nameo,
+    acyclic_termo,
+    access_fileo,
     all_differento,
     argo,
     assertao,
     assertzo,
+    at_end_of_current_streamo,
+    at_end_of_streamo,
+    atom_charso,
+    atom_codeso,
+    atom_concato,
+    atom_lengtho,
+    atom_numbero,
+    atomic_list_concato,
+    atomic_list_concato_with_separator,
     atomico,
     atomo,
     bagofo,
     betweeno,
+    call_cleanupo,
     callableo,
     calltermo,
     catcho,
+    char_codeo,
     clauseo,
+    closeo,
     compare_termo,
+    compound_name_argumentso,
+    compound_name_arityo,
     compoundo,
     convlisto,
     copytermo,
+    current_atomo,
+    current_functoro,
+    current_inputo,
+    current_outputo,
     current_predicateo,
     current_prolog_flago,
+    current_streamo,
     cuto,
+    cyclic_termo,
+    copy_fileo,
+    delete_directory_and_contentso,
+    delete_directoryo,
+    delete_fileo,
     difo,
+    directory_fileso,
+    directory_file_patho,
     dynamico,
     excludeo,
+    expand_file_nameo,
+    exists_directoryo,
+    exists_fileo,
     failo,
+    falseo,
     fd_addo,
     fd_bool_ando,
     fd_bool_equivo,
@@ -50,23 +85,52 @@ from logic_builtins import (
     fd_sum_relationo,
     fd_sumo,
     findallo,
+    flush_current_outputo,
+    flush_outputo,
     foldlo,
     forallo,
     functoro,
+    file_base_nameo,
+    file_directory_nameo,
+    file_name_extensiono,
+    get_byteo,
+    get_charo,
+    get_codeo,
+    get_current_byteo,
+    get_current_charo,
+    get_current_codeo,
     groundo,
     ifthenelseo,
     iftheno,
+    ignoreo,
     includeo,
     integero,
     labeling_optionso,
     labelingo,
     maplisto,
+    make_directory_patho,
+    make_directoryo,
+    nl_currento,
+    nlo,
     nonvaro,
     not_same_termo,
+    not_variant_termo,
     noto,
+    number_charso,
+    number_codeso,
+    number_stringo,
     numbero,
+    numbervarso,
     onceo,
+    open_optionso,
+    openo,
     partitiono,
+    peek_byteo,
+    peek_charo,
+    peek_codeo,
+    peek_current_byteo,
+    peek_current_charo,
+    peek_current_codeo,
     predicate_propertyo,
     prolog_geqo,
     prolog_gto,
@@ -75,23 +139,66 @@ from logic_builtins import (
     prolog_lto,
     prolog_numeqo,
     prolog_numneqo,
+    put_byteo,
+    put_charo,
+    put_codeo,
+    put_current_byteo,
+    put_current_charo,
+    put_current_codeo,
+    read_current_line_to_stringo,
+    read_current_stringo,
+    read_file_to_codeso,
+    read_file_to_stringo,
+    read_line_to_stringo,
+    read_stringo,
+    rename_fileo,
+    repeato,
     retractallo,
     retracto,
+    same_fileo,
     same_termo,
     scanlo,
+    seeko,
+    set_inputo,
+    set_outputo,
     set_prolog_flago,
+    set_stream_positiono,
     setofo,
+    setup_call_cleanupo,
+    size_fileo,
+    stream_propertyo,
+    string_charso,
+    string_codeso,
+    string_lengtho,
     stringo,
+    sub_atomo,
+    sub_stringo,
+    subsumes_termo,
     succo,
+    term_hash_boundedo,
+    term_hasho,
     term_variableso,
     termo_geqo,
     termo_gto,
     termo_leqo,
     termo_lto,
     throwo,
+    time_fileo,
     trueo,
+    unifiableo,
+    unify_with_occurs_checko,
     univo,
+    variant_termo,
     varo,
+    write_currento,
+    writeo,
+    working_directoryo,
+)
+from logic_builtins.builtins import (
+    _current_input_stream,
+    _read_stream,
+    _write_current_stream,
+    _write_stream,
 )
 from logic_engine import (
     Atom,
@@ -102,7 +209,11 @@ from logic_engine import (
     GoalExpr,
     LogicVar,
     NeqExpr,
+    Number,
+    Program,
     RelationCall,
+    State,
+    String,
     Term,
     atom,
     conj,
@@ -110,7 +221,12 @@ from logic_engine import (
     eq,
     fresh,
     goal_from_term,
+    logic_list,
+    native_goal,
+    num,
+    reify,
     relation,
+    solve_from,
     term,
 )
 from logic_stdlib import (
@@ -129,15 +245,29 @@ from logic_stdlib import (
     selecto,
     sorto,
 )
-from prolog_core import expand_dcg_phrase
+from prolog_core import OperatorTable, expand_dcg_phrase
+from prolog_operator_parser import ParsedOperatorTerm
+from prolog_parser import PrologParseError
+from swi_prolog_parser import parse_swi_term
 
 _PREDICATE_INDICATOR = relation("/", 2)
 _IF_THEN = "->"
 _FD_REIFIABLE_RELATIONS = frozenset({"#=", "#\\=", "#<", "#=<", "#>", "#>="})
+_PLAIN_ATOM_RE = re.compile(r"^[a-z][A-Za-z0-9_]*$")
+_VARIABLE_RE = re.compile(r"^(?:[A-Z_][A-Za-z0-9_]*)$")
 type IndicatorBuilder = Callable[[Term, Term], GoalExpr]
 
 
-def adapt_prolog_goal(goal: GoalExpr) -> GoalExpr:
+class _StreamTermReader(Protocol):
+    contents: str
+    cursor: int
+
+
+def adapt_prolog_goal(
+    goal: GoalExpr,
+    *,
+    operator_table: OperatorTable | None = None,
+) -> GoalExpr:
     """Adapt parsed Prolog builtin calls into executable runtime goals.
 
     Goals with no builtin mapping are returned unchanged, so ordinary predicate
@@ -145,14 +275,24 @@ def adapt_prolog_goal(goal: GoalExpr) -> GoalExpr:
     """
 
     if isinstance(goal, RelationCall):
-        return _adapt_relation_call(goal)
+        return _adapt_relation_call(goal, operator_table=operator_table)
     if isinstance(goal, ConjExpr):
-        return conj(*(adapt_prolog_goal(child) for child in goal.goals))
+        return conj(
+            *(
+                adapt_prolog_goal(child, operator_table=operator_table)
+                for child in goal.goals
+            ),
+        )
     if isinstance(goal, DisjExpr):
-        if_then_else = _adapt_if_then_else(goal)
+        if_then_else = _adapt_if_then_else(goal, operator_table=operator_table)
         if if_then_else is not None:
             return if_then_else
-        return disj(*(adapt_prolog_goal(child) for child in goal.goals))
+        return disj(
+            *(
+                adapt_prolog_goal(child, operator_table=operator_table)
+                for child in goal.goals
+            ),
+        )
     if isinstance(goal, NeqExpr):
         # Prolog \=/2 is immediate non-unifiability, unlike the engine's
         # delayed disequality constraint.
@@ -160,18 +300,23 @@ def adapt_prolog_goal(goal: GoalExpr) -> GoalExpr:
     if isinstance(goal, FreshExpr):
         return FreshExpr(
             template_vars=goal.template_vars,
-            body=adapt_prolog_goal(goal.body),
+            body=adapt_prolog_goal(goal.body, operator_table=operator_table),
         )
     return goal
 
 
-def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
+def _adapt_relation_call(
+    goal: RelationCall,
+    *,
+    operator_table: OperatorTable | None,
+) -> GoalExpr:
     name = goal.relation.symbol.name
     args = goal.args
 
     nullary_builtins: dict[str, Callable[[], GoalExpr]] = {
         "true": trueo,
         "fail": failo,
+        "false": falseo,
         "!": cuto,
     }
     if goal.relation.arity == 0 and name in nullary_builtins:
@@ -181,6 +326,8 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         "var": varo,
         "nonvar": nonvaro,
         "ground": groundo,
+        "acyclic_term": acyclic_termo,
+        "cyclic_term": cyclic_termo,
         "atom": atomo,
         "atomic": atomico,
         "integer": integero,
@@ -199,6 +346,16 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
     }
     if goal.relation.arity == 1 and name in unary_list_builtins:
         return unary_list_builtins[name](args[0])
+    if goal.relation.arity == 1 and name == "exists_file":
+        return exists_fileo(args[0])
+    if goal.relation.arity == 1 and name == "close":
+        return closeo(args[0])
+    if goal.relation.arity == 1 and name == "at_end_of_stream":
+        return at_end_of_streamo(args[0])
+    if goal.relation.arity == 1 and name == "nl":
+        return nlo(args[0])
+    if goal.relation.arity == 1 and name == "flush_output":
+        return flush_outputo(args[0])
 
     binary_arithmetic_builtins: dict[str, Callable[[object, object], GoalExpr]] = {
         "is": prolog_iso,
@@ -302,8 +459,8 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
             extended_call = _extend_callable_term(args[0], args[1:])
             if extended_call is None:
                 return calltermo(args[0], *args[1:])
-            return _adapt_callable_goal(extended_call)
-        return _adapt_callable_goal(args[0])
+            return _adapt_callable_goal(extended_call, operator_table=operator_table)
+        return _adapt_callable_goal(args[0], operator_table=operator_table)
     if name == "phrase" and goal.relation.arity == 2:
         try:
             return calltermo(expand_dcg_phrase(args[0], args[1]))
@@ -315,41 +472,285 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         except TypeError:
             return goal
     if name == "once" and goal.relation.arity == 1:
-        return onceo(_adapt_callable_goal(args[0]))
+        return onceo(_adapt_callable_goal(args[0], operator_table=operator_table))
+    if name == "repeat" and goal.relation.arity == 0:
+        return repeato()
+    if name == "ignore" and goal.relation.arity == 1:
+        return ignoreo(_adapt_callable_goal(args[0], operator_table=operator_table))
     if name == "throw" and goal.relation.arity == 1:
         return throwo(args[0])
     if name == "catch" and goal.relation.arity == 3:
         return catcho(
-            _adapt_callable_goal(args[0]),
+            _adapt_callable_goal(args[0], operator_table=operator_table),
             args[1],
-            _adapt_callable_goal(args[2]),
+            _adapt_callable_goal(args[2], operator_table=operator_table),
+        )
+    if name == "call_cleanup" and goal.relation.arity == 2:
+        return call_cleanupo(
+            _adapt_callable_goal(args[0], operator_table=operator_table),
+            _adapt_callable_goal(args[1], operator_table=operator_table),
+        )
+    if name == "setup_call_cleanup" and goal.relation.arity == 3:
+        return setup_call_cleanupo(
+            _adapt_callable_goal(args[0], operator_table=operator_table),
+            _adapt_callable_goal(args[1], operator_table=operator_table),
+            _adapt_callable_goal(args[2], operator_table=operator_table),
         )
     if name == _IF_THEN and goal.relation.arity == 2:
-        return iftheno(_adapt_callable_goal(args[0]), _adapt_callable_goal(args[1]))
+        return iftheno(
+            _adapt_callable_goal(args[0], operator_table=operator_table),
+            _adapt_callable_goal(args[1], operator_table=operator_table),
+        )
     if name in {"not", "\\+"} and goal.relation.arity == 1:
-        return noto(_adapt_callable_goal(args[0]))
+        return noto(_adapt_callable_goal(args[0], operator_table=operator_table))
     if name == "findall" and goal.relation.arity == 3:
-        return findallo(args[0], _adapt_callable_goal(args[1]), args[2])
+        return findallo(
+            args[0],
+            _adapt_collection_goal(args[1], operator_table=operator_table),
+            args[2],
+            scope=args[1],
+        )
     if name == "bagof" and goal.relation.arity == 3:
-        return bagofo(args[0], _adapt_callable_goal(args[1]), args[2])
+        return bagofo(
+            args[0],
+            _adapt_collection_goal(args[1], operator_table=operator_table),
+            args[2],
+            scope=args[1],
+        )
     if name == "setof" and goal.relation.arity == 3:
-        return setofo(args[0], _adapt_callable_goal(args[1]), args[2])
+        return setofo(
+            args[0],
+            _adapt_collection_goal(args[1], operator_table=operator_table),
+            args[2],
+            scope=args[1],
+        )
     if name == "forall" and goal.relation.arity == 2:
-        return forallo(_adapt_callable_goal(args[0]), _adapt_callable_goal(args[1]))
+        return forallo(
+            _adapt_callable_goal(args[0], operator_table=operator_table),
+            _adapt_callable_goal(args[1], operator_table=operator_table),
+        )
+    if name == "current_op" and goal.relation.arity == 3:
+        if operator_table is None:
+            return goal
+        return _current_op_goal(operator_table, *args)
     if name == "labeling" and goal.relation.arity == 2:
         return labeling_optionso(args[0], args[1])
     if name == "label" and goal.relation.arity == 1:
         return labelingo(args[0])
     if name == "functor" and goal.relation.arity == 3:
         return functoro(*args)
+    if name == "compound_name_arguments" and goal.relation.arity == 3:
+        return compound_name_argumentso(*args)
+    if name == "compound_name_arity" and goal.relation.arity == 3:
+        return compound_name_arityo(*args)
     if name == "arg" and goal.relation.arity == 3:
         return argo(*args)
     if name == "=.." and goal.relation.arity == 2:
         return univo(*args)
+    if name == "unifiable" and goal.relation.arity == 3:
+        return unifiableo(*args)
+    if name == "unify_with_occurs_check" and goal.relation.arity == 2:
+        return unify_with_occurs_checko(*args)
     if name == "copy_term" and goal.relation.arity == 2:
         return copytermo(*args)
     if name == "term_variables" and goal.relation.arity == 2:
         return term_variableso(*args)
+    if name == "numbervars" and goal.relation.arity == 3:
+        return numbervarso(*args)
+    if name == "term_hash" and goal.relation.arity == 2:
+        return term_hasho(*args)
+    if name == "term_hash" and goal.relation.arity == 4:
+        return term_hash_boundedo(*args)
+    if name == "term_to_atom" and goal.relation.arity == 2:
+        return _term_to_atom_goal(*args)
+    if name == "atom_to_term" and goal.relation.arity == 3:
+        return _atom_to_term_goal(*args)
+    if name == "read_term_from_atom" and goal.relation.arity == 3:
+        return _read_term_from_atom_goal(*args)
+    if name == "write_term_to_atom" and goal.relation.arity == 3:
+        return _write_term_to_atom_goal(*args)
+    if name == "read" and goal.relation.arity == 1:
+        return _read_current_term_goal(args[0], logic_list([]))
+    if name == "read" and goal.relation.arity == 2:
+        return _read_stream_term_goal(args[0], args[1], logic_list([]))
+    if name == "read_term" and goal.relation.arity == 2:
+        return _read_current_term_goal(*args)
+    if name == "read_term" and goal.relation.arity == 3:
+        return _read_stream_term_goal(*args)
+    if name == "write_term" and goal.relation.arity == 2:
+        return _write_current_term_goal(*args)
+    if name == "write_term" and goal.relation.arity == 3:
+        return _write_stream_term_goal(*args)
+    if name == "writeq" and goal.relation.arity == 1:
+        return _write_current_term_goal(args[0], _quoted_write_options())
+    if name == "writeq" and goal.relation.arity == 2:
+        return _write_stream_term_goal(args[0], args[1], _quoted_write_options())
+    if name == "write_canonical" and goal.relation.arity == 1:
+        return _write_current_term_goal(args[0], _canonical_write_options())
+    if name == "write_canonical" and goal.relation.arity == 2:
+        return _write_stream_term_goal(args[0], args[1], _canonical_write_options())
+    if name == "writeln" and goal.relation.arity == 1:
+        return _writeln_current_term_goal(args[0])
+    if name == "writeln" and goal.relation.arity == 2:
+        return _writeln_stream_term_goal(*args)
+    if name == "portray_clause" and goal.relation.arity == 1:
+        return _portray_current_clause_goal(args[0])
+    if name == "portray_clause" and goal.relation.arity == 2:
+        return _portray_stream_clause_goal(*args)
+    if name == "atom_concat" and goal.relation.arity == 3:
+        return atom_concato(*args)
+    if name == "atom_length" and goal.relation.arity == 2:
+        return atom_lengtho(*args)
+    if name == "atomic_list_concat" and goal.relation.arity == 2:
+        return atomic_list_concato(*args)
+    if name == "atomic_list_concat" and goal.relation.arity == 3:
+        return atomic_list_concato_with_separator(*args)
+    if name == "atom_chars" and goal.relation.arity == 2:
+        return atom_charso(*args)
+    if name == "atom_codes" and goal.relation.arity == 2:
+        return atom_codeso(*args)
+    if name == "number_chars" and goal.relation.arity == 2:
+        return number_charso(*args)
+    if name == "number_codes" and goal.relation.arity == 2:
+        return number_codeso(*args)
+    if name == "number_string" and goal.relation.arity == 2:
+        return number_stringo(*args)
+    if name == "read_file_to_string" and goal.relation.arity == 2:
+        return read_file_to_stringo(*args)
+    if name == "read_file_to_codes" and goal.relation.arity == 2:
+        return read_file_to_codeso(*args)
+    if name == "exists_directory" and goal.relation.arity == 1:
+        return exists_directoryo(*args)
+    if name == "absolute_file_name" and goal.relation.arity == 2:
+        return absolute_file_nameo(*args)
+    if name == "access_file" and goal.relation.arity == 2:
+        return access_fileo(*args)
+    if name == "file_directory_name" and goal.relation.arity == 2:
+        return file_directory_nameo(*args)
+    if name == "file_base_name" and goal.relation.arity == 2:
+        return file_base_nameo(*args)
+    if name == "directory_file_path" and goal.relation.arity == 3:
+        return directory_file_patho(*args)
+    if name == "file_name_extension" and goal.relation.arity == 3:
+        return file_name_extensiono(*args)
+    if name == "same_file" and goal.relation.arity == 2:
+        return same_fileo(*args)
+    if name == "size_file" and goal.relation.arity == 2:
+        return size_fileo(*args)
+    if name == "time_file" and goal.relation.arity == 2:
+        return time_fileo(*args)
+    if name == "directory_files" and goal.relation.arity == 2:
+        return directory_fileso(*args)
+    if name == "make_directory" and goal.relation.arity == 1:
+        return make_directoryo(*args)
+    if name == "delete_file" and goal.relation.arity == 1:
+        return delete_fileo(*args)
+    if name == "delete_directory" and goal.relation.arity == 1:
+        return delete_directoryo(*args)
+    if name == "rename_file" and goal.relation.arity == 2:
+        return rename_fileo(*args)
+    if name == "working_directory" and goal.relation.arity == 2:
+        return working_directoryo(*args)
+    if name == "expand_file_name" and goal.relation.arity == 2:
+        return expand_file_nameo(*args)
+    if name == "make_directory_path" and goal.relation.arity == 1:
+        return make_directory_patho(*args)
+    if name == "delete_directory_and_contents" and goal.relation.arity == 1:
+        return delete_directory_and_contentso(*args)
+    if name == "copy_file" and goal.relation.arity == 2:
+        return copy_fileo(*args)
+    if name == "open" and goal.relation.arity == 3:
+        return openo(*args)
+    if name == "open" and goal.relation.arity == 4:
+        return open_optionso(*args)
+    if name == "current_stream" and goal.relation.arity == 3:
+        return current_streamo(*args)
+    if name == "current_input" and goal.relation.arity == 1:
+        return current_inputo(*args)
+    if name == "current_output" and goal.relation.arity == 1:
+        return current_outputo(*args)
+    if name == "set_input" and goal.relation.arity == 1:
+        return set_inputo(*args)
+    if name == "set_output" and goal.relation.arity == 1:
+        return set_outputo(*args)
+    if name == "stream_property" and goal.relation.arity == 2:
+        return stream_propertyo(*args)
+    if name == "set_stream_position" and goal.relation.arity == 2:
+        return set_stream_positiono(*args)
+    if name == "seek" and goal.relation.arity == 4:
+        return seeko(*args)
+    if name == "at_end_of_stream" and goal.relation.arity == 0:
+        return at_end_of_current_streamo()
+    if name == "read_string" and goal.relation.arity == 3:
+        return read_stringo(*args)
+    if name == "read_string" and goal.relation.arity == 2:
+        return read_current_stringo(*args)
+    if name == "read_line_to_string" and goal.relation.arity == 2:
+        return read_line_to_stringo(*args)
+    if name == "read_line_to_string" and goal.relation.arity == 1:
+        return read_current_line_to_stringo(*args)
+    if name == "get_char" and goal.relation.arity == 2:
+        return get_charo(*args)
+    if name == "get_char" and goal.relation.arity == 1:
+        return get_current_charo(*args)
+    if name == "get_code" and goal.relation.arity == 2:
+        return get_codeo(*args)
+    if name == "get_code" and goal.relation.arity == 1:
+        return get_current_codeo(*args)
+    if name == "get_byte" and goal.relation.arity == 2:
+        return get_byteo(*args)
+    if name == "get_byte" and goal.relation.arity == 1:
+        return get_current_byteo(*args)
+    if name == "peek_char" and goal.relation.arity == 2:
+        return peek_charo(*args)
+    if name == "peek_char" and goal.relation.arity == 1:
+        return peek_current_charo(*args)
+    if name == "peek_code" and goal.relation.arity == 2:
+        return peek_codeo(*args)
+    if name == "peek_code" and goal.relation.arity == 1:
+        return peek_current_codeo(*args)
+    if name == "peek_byte" and goal.relation.arity == 2:
+        return peek_byteo(*args)
+    if name == "peek_byte" and goal.relation.arity == 1:
+        return peek_current_byteo(*args)
+    if name == "put_char" and goal.relation.arity == 2:
+        return put_charo(*args)
+    if name == "put_char" and goal.relation.arity == 1:
+        return put_current_charo(*args)
+    if name == "put_code" and goal.relation.arity == 2:
+        return put_codeo(*args)
+    if name == "put_code" and goal.relation.arity == 1:
+        return put_current_codeo(*args)
+    if name == "put_byte" and goal.relation.arity == 2:
+        return put_byteo(*args)
+    if name == "put_byte" and goal.relation.arity == 1:
+        return put_current_byteo(*args)
+    if name == "write" and goal.relation.arity == 2:
+        return writeo(*args)
+    if name == "write" and goal.relation.arity == 1:
+        return write_currento(*args)
+    if name == "nl" and goal.relation.arity == 0:
+        return nl_currento()
+    if name == "flush_output" and goal.relation.arity == 0:
+        return flush_current_outputo()
+    if name == "atom_number" and goal.relation.arity == 2:
+        return atom_numbero(*args)
+    if name == "char_code" and goal.relation.arity == 2:
+        return char_codeo(*args)
+    if name == "string_chars" and goal.relation.arity == 2:
+        return string_charso(*args)
+    if name == "string_codes" and goal.relation.arity == 2:
+        return string_codeso(*args)
+    if name == "string_length" and goal.relation.arity == 2:
+        return string_lengtho(*args)
+    if name == "sub_atom" and goal.relation.arity == 5:
+        return sub_atomo(*args)
+    if name == "sub_string" and goal.relation.arity == 5:
+        return sub_stringo(*args)
+    if name == "current_atom" and goal.relation.arity == 1:
+        return current_atomo(*args)
+    if name == "current_functor" and goal.relation.arity == 2:
+        return current_functoro(*args)
     if name == "current_prolog_flag" and goal.relation.arity == 2:
         return current_prolog_flago(*args)
     if name == "set_prolog_flag" and goal.relation.arity == 2:
@@ -364,6 +765,12 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return same_termo(*args)
     if name == "\\==" and goal.relation.arity == 2:
         return not_same_termo(*args)
+    if name == "=@=" and goal.relation.arity == 2:
+        return variant_termo(*args)
+    if name == "\\=@=" and goal.relation.arity == 2:
+        return not_variant_termo(*args)
+    if name == "subsumes_term" and goal.relation.arity == 2:
+        return subsumes_termo(*args)
     if name == "compare" and goal.relation.arity == 3:
         return compare_termo(*args)
     if name == "@<" and goal.relation.arity == 2:
@@ -398,6 +805,595 @@ def _adapt_relation_call(goal: RelationCall) -> GoalExpr:
         return goal if property_goal is None else property_goal
 
     return goal
+
+
+def _current_op_goal(
+    operator_table: OperatorTable,
+    precedence: object,
+    associativity: object,
+    name: object,
+) -> GoalExpr:
+    def run(
+        program_value: Program,
+        state: State,
+        args: tuple[Term, ...],
+    ) -> Iterator[State]:
+        precedence_target, associativity_target, name_target = args
+        for spec in operator_table.operators:
+            yield from solve_from(
+                program_value,
+                conj(
+                    eq(precedence_target, num(spec.precedence)),
+                    eq(associativity_target, atom(spec.associativity)),
+                    eq(name_target, atom(spec.symbol)),
+                ),
+                state,
+            )
+
+    return native_goal(run, precedence, associativity, name)
+
+
+def _term_to_atom_goal(term_value: object, atom_value: object) -> GoalExpr:
+    def run(
+        program_value: Program,
+        state: State,
+        args: tuple[Term, ...],
+    ) -> Iterator[State]:
+        term_arg, atom_arg = args
+        reified_term = reify(term_arg, state.substitution)
+        reified_atom = reify(atom_arg, state.substitution)
+
+        if not isinstance(reified_term, LogicVar):
+            rendered = _render_prolog_term(reified_term)
+            yield from solve_from(program_value, eq(atom_arg, atom(rendered)), state)
+            return
+
+        if not isinstance(reified_atom, Atom):
+            return
+        parsed = _parse_atom_text(reified_atom)
+        if parsed is None:
+            return
+        yield from solve_from(program_value, eq(term_arg, parsed.term), state)
+
+    return native_goal(run, term_value, atom_value)
+
+
+def _atom_to_term_goal(
+    atom_value: object,
+    term_value: object,
+    bindings: object,
+) -> GoalExpr:
+    def run(
+        program_value: Program,
+        state: State,
+        args: tuple[Term, ...],
+    ) -> Iterator[State]:
+        atom_arg, term_arg, bindings_arg = args
+        reified_atom = reify(atom_arg, state.substitution)
+        if not isinstance(reified_atom, Atom):
+            return
+
+        parsed = _parse_atom_text(reified_atom)
+        if parsed is None:
+            return
+        yield from solve_from(
+            program_value,
+            conj(
+                eq(term_arg, parsed.term),
+                eq(bindings_arg, _variable_bindings(parsed.variables)),
+            ),
+            state,
+        )
+
+    return native_goal(run, atom_value, term_value, bindings)
+
+
+def _read_term_from_atom_goal(
+    atom_value: object,
+    term_value: object,
+    options: object,
+) -> GoalExpr:
+    def run(
+        program_value: Program,
+        state: State,
+        args: tuple[Term, ...],
+    ) -> Iterator[State]:
+        atom_arg, term_arg, options_arg = args
+        reified_atom = reify(atom_arg, state.substitution)
+        if not isinstance(reified_atom, Atom):
+            return
+
+        parsed = _parse_atom_text(reified_atom)
+        if parsed is None:
+            return
+        options_goal = _read_term_options_goal(
+            options_arg,
+            parsed.term,
+            parsed.variables,
+        )
+        if options_goal is None:
+            return
+        yield from solve_from(
+            program_value,
+            conj(eq(term_arg, parsed.term), options_goal),
+            state,
+        )
+
+    return native_goal(run, atom_value, term_value, options)
+
+
+def _read_current_term_goal(term_value: object, options: object) -> GoalExpr:
+    def run(
+        program_value: Program,
+        state: State,
+        args: tuple[Term, ...],
+    ) -> Iterator[State]:
+        term_arg, options_arg = args
+        stream = _current_input_stream()
+        if stream is None:
+            return
+        parsed = _read_next_stream_term(stream)
+        if parsed is None:
+            return
+        parsed_term, variables = parsed
+        options_goal = _read_term_options_goal(options_arg, parsed_term, variables)
+        if options_goal is None:
+            return
+        yield from solve_from(
+            program_value,
+            conj(eq(term_arg, parsed_term), options_goal),
+            state,
+        )
+
+    return native_goal(run, term_value, options)
+
+
+def _read_stream_term_goal(
+    stream_value: object,
+    term_value: object,
+    options: object,
+) -> GoalExpr:
+    def run(
+        program_value: Program,
+        state: State,
+        args: tuple[Term, ...],
+    ) -> Iterator[State]:
+        stream_arg, term_arg, options_arg = args
+        stream = _read_stream(reify(stream_arg, state.substitution))
+        if stream is None:
+            return
+        parsed = _read_next_stream_term(stream)
+        if parsed is None:
+            return
+        parsed_term, variables = parsed
+        options_goal = _read_term_options_goal(options_arg, parsed_term, variables)
+        if options_goal is None:
+            return
+        yield from solve_from(
+            program_value,
+            conj(eq(term_arg, parsed_term), options_goal),
+            state,
+        )
+
+    return native_goal(run, stream_value, term_value, options)
+
+
+def _write_term_to_atom_goal(
+    term_value: object,
+    atom_value: object,
+    options: object,
+) -> GoalExpr:
+    def run(
+        program_value: Program,
+        state: State,
+        args: tuple[Term, ...],
+    ) -> Iterator[State]:
+        term_arg, atom_arg, options_arg = args
+        reified_term = reify(term_arg, state.substitution)
+        if isinstance(reified_term, LogicVar):
+            return
+        write_options = _write_term_options(reify(options_arg, state.substitution))
+        if write_options is None:
+            return
+        rendered = _render_prolog_term(
+            reified_term,
+            numbervars=write_options["numbervars"],
+        )
+        yield from solve_from(program_value, eq(atom_arg, atom(rendered)), state)
+
+    return native_goal(run, term_value, atom_value, options)
+
+
+def _write_current_term_goal(term_value: object, options: object) -> GoalExpr:
+    def run(_program: Program, state: State, args: tuple[Term, ...]) -> Iterator[State]:
+        term_arg, options_arg = args
+        reified_term = reify(term_arg, state.substitution)
+        if isinstance(reified_term, LogicVar):
+            return
+        write_options = _write_term_options(reify(options_arg, state.substitution))
+        if write_options is None:
+            return
+        rendered = _render_prolog_term(
+            reified_term,
+            numbervars=write_options["numbervars"],
+        )
+        if _write_current_stream(rendered):
+            yield state
+
+    return native_goal(run, term_value, options)
+
+
+def _write_stream_term_goal(
+    stream_value: object,
+    term_value: object,
+    options: object,
+) -> GoalExpr:
+    def run(_program: Program, state: State, args: tuple[Term, ...]) -> Iterator[State]:
+        stream_arg, term_arg, options_arg = args
+        reified_term = reify(term_arg, state.substitution)
+        if isinstance(reified_term, LogicVar):
+            return
+        write_options = _write_term_options(reify(options_arg, state.substitution))
+        if write_options is None:
+            return
+        rendered = _render_prolog_term(
+            reified_term,
+            numbervars=write_options["numbervars"],
+        )
+        if _write_stream(reify(stream_arg, state.substitution), rendered):
+            yield state
+
+    return native_goal(run, stream_value, term_value, options)
+
+
+def _writeln_current_term_goal(term_value: object) -> GoalExpr:
+    def run(_program: Program, state: State, args: tuple[Term, ...]) -> Iterator[State]:
+        [term_arg] = args
+        rendered = _render_bound_term(reify(term_arg, state.substitution))
+        if rendered is not None and _write_current_stream(f"{rendered}\n"):
+            yield state
+
+    return native_goal(run, term_value)
+
+
+def _writeln_stream_term_goal(stream_value: object, term_value: object) -> GoalExpr:
+    def run(_program: Program, state: State, args: tuple[Term, ...]) -> Iterator[State]:
+        stream_arg, term_arg = args
+        rendered = _render_bound_term(reify(term_arg, state.substitution))
+        if rendered is not None and _write_stream(
+            reify(stream_arg, state.substitution),
+            f"{rendered}\n",
+        ):
+            yield state
+
+    return native_goal(run, stream_value, term_value)
+
+
+def _portray_current_clause_goal(term_value: object) -> GoalExpr:
+    def run(_program: Program, state: State, args: tuple[Term, ...]) -> Iterator[State]:
+        [term_arg] = args
+        rendered = _render_bound_term(
+            reify(term_arg, state.substitution),
+            numbervars=True,
+        )
+        if rendered is not None and _write_current_stream(f"{rendered}.\n"):
+            yield state
+
+    return native_goal(run, term_value)
+
+
+def _portray_stream_clause_goal(stream_value: object, term_value: object) -> GoalExpr:
+    def run(_program: Program, state: State, args: tuple[Term, ...]) -> Iterator[State]:
+        stream_arg, term_arg = args
+        rendered = _render_bound_term(
+            reify(term_arg, state.substitution),
+            numbervars=True,
+        )
+        if rendered is not None and _write_stream(
+            reify(stream_arg, state.substitution),
+            f"{rendered}.\n",
+        ):
+            yield state
+
+    return native_goal(run, stream_value, term_value)
+
+
+def _render_bound_term(term_value: Term, *, numbervars: bool = False) -> str | None:
+    if isinstance(term_value, LogicVar):
+        return None
+    return _render_prolog_term(term_value, numbervars=numbervars)
+
+
+def _quoted_write_options() -> Term:
+    return logic_list([term("quoted", atom("true"))])
+
+
+def _canonical_write_options() -> Term:
+    return logic_list(
+        [
+            term("quoted", atom("true")),
+            term("ignore_ops", atom("true")),
+            term("numbervars", atom("true")),
+        ],
+    )
+
+
+def _parse_atom_text(atom_value: Atom) -> ParsedOperatorTerm | None:
+    return _parse_term_text(atom_value.symbol.name)
+
+
+def _parse_term_text(text: str) -> ParsedOperatorTerm | None:
+    try:
+        return parse_swi_term(text)
+    except PrologParseError:
+        return None
+
+
+def _read_next_stream_term(
+    stream: _StreamTermReader,
+) -> tuple[Term, dict[str, LogicVar]] | None:
+    text = stream.contents
+    start = _skip_stream_layout(text, stream.cursor)
+    if start >= len(text):
+        stream.cursor = len(text)
+        return atom("end_of_file"), {}
+
+    terminator = _stream_term_terminator(text, start)
+    if terminator is None:
+        return None
+
+    term_text = text[start:terminator].strip()
+    if not term_text:
+        return None
+    parsed = _parse_term_text(term_text)
+    if parsed is None:
+        return None
+
+    stream.cursor = _skip_stream_layout(text, terminator + 1)
+    return parsed.term, parsed.variables
+
+
+def _skip_stream_layout(text: str, index: int) -> int:
+    while index < len(text):
+        while index < len(text) and text[index].isspace():
+            index += 1
+        if text.startswith("%", index):
+            newline_index = text.find("\n", index)
+            if newline_index == -1:
+                return len(text)
+            index = newline_index + 1
+            continue
+        if text.startswith("/*", index):
+            comment_end = text.find("*/", index + 2)
+            if comment_end == -1:
+                return len(text)
+            index = comment_end + 2
+            continue
+        return index
+    return index
+
+
+def _stream_term_terminator(text: str, start: int) -> int | None:
+    index = start
+    depth = 0
+    quote: str | None = None
+    escaped = False
+
+    while index < len(text):
+        character = text[index]
+        if quote is not None:
+            if escaped:
+                escaped = False
+            elif character == "\\":
+                escaped = True
+            elif character == quote:
+                quote = None
+            index += 1
+            continue
+
+        if character in {"'", '"', "`"}:
+            quote = character
+            index += 1
+            continue
+        if text.startswith("%", index):
+            newline_index = text.find("\n", index)
+            index = len(text) if newline_index == -1 else newline_index + 1
+            continue
+        if text.startswith("/*", index):
+            comment_end = text.find("*/", index + 2)
+            if comment_end == -1:
+                return None
+            index = comment_end + 2
+            continue
+        if character in "([{":
+            depth += 1
+        elif character in ")]}":
+            depth = max(0, depth - 1)
+        elif character == "." and depth == 0 and _dot_ends_stream_term(text, index):
+            return index
+        index += 1
+    return None
+
+
+def _dot_ends_stream_term(text: str, dot_index: int) -> bool:
+    next_index = dot_index + 1
+    return (
+        next_index >= len(text)
+        or text[next_index].isspace()
+        or text.startswith("%", next_index)
+        or text.startswith("/*", next_index)
+    )
+
+
+def _variable_bindings(variables: dict[str, LogicVar]) -> Term:
+    return logic_list(
+        [term("=", atom(name), variable) for name, variable in variables.items()],
+    )
+
+
+def _variable_values(variables: dict[str, LogicVar]) -> Term:
+    return logic_list(list(variables.values()))
+
+
+def _variable_singletons(
+    parsed_term: Term,
+    variables: dict[str, LogicVar],
+) -> Term:
+    counts: dict[LogicVar, int] = {}
+    _count_term_variables(parsed_term, counts)
+    return logic_list(
+        [
+            term("=", atom(name), variable)
+            for name, variable in variables.items()
+            if counts.get(variable, 0) == 1
+        ],
+    )
+
+
+def _count_term_variables(term_value: Term, counts: dict[LogicVar, int]) -> None:
+    if isinstance(term_value, LogicVar):
+        counts[term_value] = counts.get(term_value, 0) + 1
+        return
+    if isinstance(term_value, Compound):
+        for argument in term_value.args:
+            _count_term_variables(argument, counts)
+
+
+def _read_term_options_goal(
+    options: Term,
+    parsed_term: Term,
+    variables: dict[str, LogicVar],
+) -> GoalExpr | None:
+    items = _logic_list_items(options)
+    if items is None:
+        return None
+
+    goals: list[GoalExpr] = []
+    for item in items:
+        if not isinstance(item, Compound) or len(item.args) != 1:
+            return None
+        if item.functor.name == "variable_names":
+            goals.append(eq(item.args[0], _variable_bindings(variables)))
+        elif item.functor.name == "variables":
+            goals.append(eq(item.args[0], _variable_values(variables)))
+        elif item.functor.name == "singletons":
+            goals.append(eq(item.args[0], _variable_singletons(parsed_term, variables)))
+        else:
+            return None
+    return conj(*goals)
+
+
+def _write_term_options(options: Term) -> dict[str, bool] | None:
+    items = _logic_list_items(options)
+    if items is None:
+        return None
+    parsed = {
+        "quoted": False,
+        "ignore_ops": False,
+        "numbervars": False,
+    }
+    for item in items:
+        if not isinstance(item, Compound) or len(item.args) != 1:
+            return None
+        option_name = item.functor.name
+        value = item.args[0]
+        if option_name in {"quoted", "ignore_ops", "numbervars"}:
+            if (
+                not isinstance(value, Atom)
+                or value.symbol.name not in {"true", "false"}
+            ):
+                return None
+            parsed[option_name] = value.symbol.name == "true"
+            continue
+        return None
+    return parsed
+
+
+def _render_prolog_term(term_value: Term, *, numbervars: bool = False) -> str:
+    if numbervars:
+        numbered_name = _render_numbered_variable(term_value)
+        if numbered_name is not None:
+            return numbered_name
+    list_text = _render_list(term_value, numbervars=numbervars)
+    if list_text is not None:
+        return list_text
+    if isinstance(term_value, Atom):
+        return _render_atom(term_value.symbol.name)
+    if isinstance(term_value, Number):
+        return str(term_value.value)
+    if isinstance(term_value, String):
+        return '"' + _escape_string(term_value.value) + '"'
+    if isinstance(term_value, LogicVar):
+        return _render_variable(term_value)
+    if isinstance(term_value, Compound):
+        args = ", ".join(
+            _render_prolog_term(argument, numbervars=numbervars)
+            for argument in term_value.args
+        )
+        return f"{_render_functor(term_value.functor.name)}({args})"
+    raise TypeError(f"cannot render {type(term_value).__name__} as Prolog term")
+
+
+def _render_list(term_value: Term, *, numbervars: bool = False) -> str | None:
+    items: list[str] = []
+    current = term_value
+    while (
+        isinstance(current, Compound)
+        and current.functor.name == "."
+        and len(current.args) == 2
+    ):
+        items.append(_render_prolog_term(current.args[0], numbervars=numbervars))
+        current = current.args[1]
+    if isinstance(current, Atom) and current.symbol.name == "[]":
+        return "[" + ", ".join(items) + "]"
+    if items:
+        tail = _render_prolog_term(current, numbervars=numbervars)
+        return "[" + ", ".join(items) + " | " + tail + "]"
+    return None
+
+
+def _render_numbered_variable(term_value: Term) -> str | None:
+    if (
+        not isinstance(term_value, Compound)
+        or term_value.functor.name != "$VAR"
+        or len(term_value.args) != 1
+    ):
+        return None
+    [index_term] = term_value.args
+    if not isinstance(index_term, Number):
+        return None
+    index = index_term.value
+    if isinstance(index, bool) or not isinstance(index, int) or index < 0:
+        return None
+    suffix = "" if index < 26 else str(index // 26)
+    return chr(ord("A") + (index % 26)) + suffix
+
+
+def _render_functor(name: str) -> str:
+    if _PLAIN_ATOM_RE.fullmatch(name) or name in {"!", "[]"}:
+        return name
+    return "'" + _escape_atom(name) + "'"
+
+
+def _render_atom(name: str) -> str:
+    if _PLAIN_ATOM_RE.fullmatch(name) or name in {"!", "[]"}:
+        return name
+    return "'" + _escape_atom(name) + "'"
+
+
+def _render_variable(variable: LogicVar) -> str:
+    name = None if variable.display_name is None else variable.display_name.name
+    if name is not None and _VARIABLE_RE.fullmatch(name):
+        return name
+    return f"_G{abs(variable.id)}"
+
+
+def _escape_atom(value: str) -> str:
+    return value.replace("\\", "\\\\").replace("'", "\\'")
+
+
+def _escape_string(value: str) -> str:
+    return value.replace("\\", "\\\\").replace('"', '\\"')
 
 
 def _adapt_fd_equality(left: Term, right: Term) -> GoalExpr:
@@ -584,7 +1580,11 @@ def _adapt_fd_ins(targets: Term, domain: Term) -> GoalExpr | None:
     return conj(*(fd_ino(item, domain) for item in items))
 
 
-def _adapt_if_then_else(goal: DisjExpr) -> GoalExpr | None:
+def _adapt_if_then_else(
+    goal: DisjExpr,
+    *,
+    operator_table: OperatorTable | None,
+) -> GoalExpr | None:
     if len(goal.goals) != 2:
         return None
     condition_then, else_goal = goal.goals
@@ -596,17 +1596,49 @@ def _adapt_if_then_else(goal: DisjExpr) -> GoalExpr | None:
         return None
     condition, then_goal = condition_then.args
     return ifthenelseo(
-        _adapt_callable_goal(condition),
-        _adapt_callable_goal(then_goal),
-        adapt_prolog_goal(else_goal),
+        _adapt_callable_goal(condition, operator_table=operator_table),
+        _adapt_callable_goal(then_goal, operator_table=operator_table),
+        adapt_prolog_goal(else_goal, operator_table=operator_table),
     )
 
 
-def _adapt_callable_goal(term_value: Term) -> GoalExpr:
+def _adapt_callable_goal(
+    term_value: Term,
+    *,
+    operator_table: OperatorTable | None = None,
+) -> GoalExpr:
     try:
-        return adapt_prolog_goal(goal_from_term(term_value))
+        return adapt_prolog_goal(
+            goal_from_term(term_value),
+            operator_table=operator_table,
+        )
     except TypeError:
         return calltermo(term_value)
+
+
+def _adapt_collection_goal(
+    term_value: Term,
+    *,
+    operator_table: OperatorTable | None = None,
+) -> GoalExpr:
+    """Adapt the executable side of a collector goal, stripping ``^/2`` scopes."""
+
+    return _adapt_callable_goal(
+        _strip_collection_existentials(term_value),
+        operator_table=operator_table,
+    )
+
+
+def _strip_collection_existentials(term_value: Term) -> Term:
+    current = term_value
+    while (
+        isinstance(current, Compound)
+        and current.functor.namespace is None
+        and current.functor.name == "^"
+        and len(current.args) == 2
+    ):
+        current = current.args[1]
+    return current
 
 
 def _extend_callable_term(

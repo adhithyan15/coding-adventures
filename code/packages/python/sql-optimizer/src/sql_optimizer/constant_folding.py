@@ -80,7 +80,7 @@ from sql_planner import (
     Update,
 )
 from sql_planner.plan import Assignment as PlanAssignment
-from sql_planner.plan import Limit, SortKey
+from sql_planner.plan import Limit, SortKey, UpsertAction, UpsertAssignment as PlanUpsertAssignment
 
 
 class ConstantFolding:
@@ -142,10 +142,15 @@ def _fold_plan(p: LogicalPlan) -> LogicalPlan:
             return DerivedTable(query=_fold_plan(q), alias=alias, columns=cols)
         case Begin() | Commit() | Rollback():
             return p  # transaction control — nothing to fold
-        case Insert(table=t, columns=cols, source=src):
+        case Insert(table=t, columns=cols, source=src, on_conflict=oc, returning=ret, upsert=up):
             new_src = _fold_insert_source(src)
-            return Insert(table=t, columns=cols, source=new_src)
-        case Update(table=t, assignments=asgs, predicate=pred):
+            new_ret = tuple(_fold_expr(r) for r in ret)
+            new_up = _fold_upsert(up)
+            return Insert(
+                table=t, columns=cols, source=new_src, on_conflict=oc,
+                returning=new_ret, upsert=new_up,
+            )
+        case Update(table=t, assignments=asgs, predicate=pred, returning=ret):
             return Update(
                 table=t,
                 assignments=tuple(
@@ -153,11 +158,13 @@ def _fold_plan(p: LogicalPlan) -> LogicalPlan:
                     for a in asgs
                 ),
                 predicate=_fold_expr(pred) if pred is not None else None,
+                returning=tuple(_fold_expr(r) for r in ret),
             )
-        case Delete(table=t, predicate=pred):
+        case Delete(table=t, predicate=pred, returning=ret):
             return Delete(
                 table=t,
                 predicate=_fold_expr(pred) if pred is not None else None,
+                returning=tuple(_fold_expr(r) for r in ret),
             )
         case IndexScan(
             table=t, alias=a, index_name=iname, columns=cols,
@@ -175,6 +182,29 @@ def _fold_plan(p: LogicalPlan) -> LogicalPlan:
             )
         case _:
             return p  # CreateTable, DropTable, CreateIndex, DropIndex — nothing to fold
+
+
+def _fold_upsert(up: UpsertAction | None) -> UpsertAction | None:
+    """Constant-fold expressions inside an upsert action's SET assignments.
+
+    When ``up`` is ``None`` (no upsert clause) or ``do_nothing=True`` (no
+    assignments to fold), the node is returned unchanged.  Otherwise, each
+    assignment value is folded in place.
+    """
+    if up is None or up.do_nothing:
+        return up
+    new_assignments = tuple(
+        PlanUpsertAssignment(column=a.column, value=_fold_expr(a.value))
+        for a in up.assignments
+    )
+    # If nothing changed, return the original node to preserve identity.
+    if new_assignments == up.assignments:
+        return up
+    return UpsertAction(
+        conflict_target=up.conflict_target,
+        do_nothing=False,
+        assignments=new_assignments,
+    )
 
 
 def _fold_insert_source(src: InsertSource) -> InsertSource:
@@ -296,6 +326,11 @@ def _apply_binary(op: BinaryOp, lv: object, rv: object) -> object:
             return lv / rv  # type: ignore[operator]
         case BinaryOp.MOD:
             return lv % rv  # type: ignore[operator]
+        case BinaryOp.CONCAT:
+            # SQL || string concatenation. Both sides are strings (the SQL type
+            # system guarantees this; if they aren't, fall through to TypeError
+            # and let the VM raise a proper TypeMismatch at runtime).
+            return str(lv) + str(rv)  # type: ignore[operator]
         case BinaryOp.AND | BinaryOp.OR:
             # Unreachable — handled by _simplify_and / _simplify_or above.
             raise AssertionError("unreachable")

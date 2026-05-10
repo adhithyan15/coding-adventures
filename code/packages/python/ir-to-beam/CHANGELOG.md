@@ -1,5 +1,66 @@
 # Changelog — ir-to-beam
 
+## 0.5.0 — 2026-05-04 — TW04 Phase 4f (multi-module BEAM lowering)
+
+Extends the BEAM backend to support cross-module calls and correct
+GC-safe y-register initialisation.
+
+### Added — multi-module support (`BEAMBackendConfig` extensions)
+
+Three new fields on `BEAMBackendConfig`:
+
+| Field | Purpose |
+|---|---|
+| `extra_callable_labels: tuple[str, ...]` | Force-include exported functions as callable regions even when no local `CALL` targets them (dep-module exports called only from other modules). |
+| `call_register_count: int \| None` | API symmetry with CLR/JVM backends; ignored for BEAM (functions have per-declaration arities, not a fixed-width frame). |
+| `external_function_arities: dict[str, int]` | Maps cross-module call labels (e.g. `"a/math/add"`) to the actual remote arity (e.g. `2`). Required because BEAM's `call_ext N Mfa` encodes the arity in the MFA triple; a mismatch causes a loader or runtime crash. |
+
+### Added — cross-module CALL lowering (`_emit_call`)
+
+`IrOp.CALL IrLabel("a/math/add")` labels containing `/` are now
+lowered to `call_ext N import_idx` where `N` is the exact remote
+arity from `external_function_arities` and `import_idx` is the 0-based
+index into the module's `ImpT` table for the remote MFA
+`{a_math, add, N}`.
+
+`_discover_callable_names` now skips cross-module labels (they have
+no local `LABEL` instruction) and accepts `extra_callable_labels` to
+force-include dep-module exports.
+
+### Fixed — GC-safe y-register initialisation
+
+BEAM's garbage collector traces ALL allocated y-register slots as
+potential heap pointers.  Our compiler allocates a single flat frame
+of `max_reg_index + 1` y-slots per function but only writes a fraction
+of them (param slots and holding registers) before body code runs.
+Unwritten slots contain stack-word garbage; if any garbage value
+resembles a valid BEAM tagged heap pointer the GC follows it and
+corrupts the heap, causing non-deterministic SIGSEGV at recursion
+depth ≥ 4 when the first GC cycle fires inside a nested call stack.
+
+The fix: emit `move {atom,0}, y(i)` for every y-register slot
+immediately after `allocate`, before copying args and executing body
+code.  Atom 0 is nil (`[]`), a tagged immediate that is NOT a heap
+pointer — the GC can safely trace it.
+
+`erlc` (OTP 24+) uses `init_yregs` (opcode 172, Z-tagged list
+operand) for selective initialisation; we use the simpler `move`
+opcode which is available in all supported OTP versions and already
+handled by our encoder.
+
+Note: the abstract `allocate_zero` opcode (14 in `.S` format, 14 in
+`beam_opcodes:opname/1`) is NOT a valid binary BEAM opcode — the
+loader rejects it.  The old `init y_reg` opcode (17) with a Y-register
+operand is also rejected by the OTP 28 loader ("please re-compile with
+OTP 28 compiler").  Both were tested and discarded in favour of the
+`move` approach.
+
+### Added — new BEAM opcode constants
+
+`_OP_ALLOCATE_ZERO` (kept as documentation), `_OP_INIT` (17, kept as
+documentation), and the `BEAMTag` import already present in the
+encoder.
+
 ## 0.4.0 — 2026-04-30 — TW03 Phase 3d (BEAM heap primitives)
 
 Implements the BEAM-side lowering for the eight TW03 Phase 3a heap

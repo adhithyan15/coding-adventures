@@ -55,7 +55,6 @@ from symbolic_ir import IRApply, IRInteger, IRNode, IRRational
 
 from cas_matrix.matrix import MatrixError, _rows_of, matrix
 
-
 # ---------------------------------------------------------------------------
 # Internal helpers
 # ---------------------------------------------------------------------------

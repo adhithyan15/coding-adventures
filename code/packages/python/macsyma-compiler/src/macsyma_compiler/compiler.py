@@ -65,12 +65,14 @@ from symbolic_ir import (
     NOT,
     NOT_EQUAL,
     POW,
+    PRODUCT,
     RETURN,
     SECH,
     SIN,
     SINH,
     SQRT,
     SUB,
+    SUM,
     TAN,
     TANH,
     WHILE,
@@ -154,6 +156,8 @@ _STANDARD_FUNCTIONS: dict[str, IRSymbol] = {
     "log": LOG,
     "exp": EXP,
     "sqrt": SQRT,
+    "sum": SUM,
+    "product": PRODUCT,
 }
 
 

@@ -1,5 +1,34 @@
 # Changelog — interpreter-ir
 
+## [0.2.0] — 2026-05-04
+
+### Added (LANG23 PR 23-E — refinement annotation fields, additive/opt-in)
+
+- `param_refinements: Vec<Option<RefinedType>>` field on `IIRFunction`.  In
+  lockstep with `params` — `param_refinements[i]` is `Some(rt)` when param `i`
+  carries a LANG23 annotation, `None` otherwise.  Empty `Vec` (not a `Vec` of
+  `None`s) from callers that never set annotations, distinguishing "no LANG23"
+  from "every param annotated as Any".
+- `return_refinement: Option<RefinedType>` field on `IIRFunction`.  `Some(rt)`
+  when the function carries a `-> TypeAnnotation` return type, `None` when
+  unannotated.
+- `IIRFunction::new()` updated to include both new fields (default empty/`None`).
+- `Default` impl for `IIRFunction` — enables `IIRFunction { name: "f".into(), ..Default::default() }`
+  struct-update syntax in tests and incremental builders; eliminates the need
+  to list every field at every construction site when adding new optional fields.
+- `lang-refined-types` added as a dependency.
+- Doc-test in `function.rs` updated to include both new fields.
+- Serialisation (`serialise.rs`) struct literal updated.
+
+### Design note
+
+These fields are **additive and opt-in**: all existing callers leave them at
+their default empty/`None` values and see no behaviour change.  The refinement
+checker (`lang-refinement-checker`) reads these fields to discharge proof
+obligations without any changes to the instruction stream or the existing
+`type_hint` string mechanism (which continues to carry unrefined kind
+information for the JIT/profiler).
+
 ## [0.1.0] — 2026-04-27
 
 Initial Rust port of the Python `interpreter-ir` package (LANG01).

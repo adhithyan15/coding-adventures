@@ -2,8 +2,9 @@
 
 ## Unreleased
 
-- Add ISO/Core operator defaults for strict term equality and standard term
-  ordering (`==/2`, `\\==/2`, `@</2`, `@=</2`, `@>/2`, and `@>=/2`).
+- Add ISO/Core operator defaults for strict term equality, variant equality,
+  and standard term ordering (`==/2`, `\\==/2`, `=@=/2`, `\\=@=/2`, `@</2`,
+  `@=</2`, `@>/2`, and `@>=/2`).
 - Add SWI CLP(FD) operator defaults for `#=/2`, `#\=/2`, `#</2`, `#=</2`,
   `#>/2`, `#>=/2`, `in/2`, `ins/2`, and `../2`.
 

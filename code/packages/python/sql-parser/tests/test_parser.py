@@ -34,12 +34,11 @@ Test organisation
 from __future__ import annotations
 
 import pytest
+from lang_parser import ASTNode, GrammarParseError, GrammarParser
+from lexer import Token
 
 import sql_parser.parser as _parser_module
-from lang_parser import ASTNode, GrammarParser, GrammarParseError
-from lexer import Token
 from sql_parser import create_sql_parser, parse_sql
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -700,9 +699,15 @@ class TestErrors:
     """Invalid SQL should raise GrammarParseError."""
 
     def test_missing_from(self) -> None:
-        """SELECT without FROM should fail (not a valid statement)."""
-        with pytest.raises((GrammarParseError, Exception)):
-            parse_sql("SELECT id")
+        """SELECT without FROM is now valid — the grammar makes FROM optional.
+
+        ``SELECT expr`` executes once and returns the expression value, just
+        like ``SELECT 1`` or ``SELECT UPPER('hello')`` in SQLite.  This test
+        verifies the parse *succeeds* and produces a ``select_stmt`` node.
+        """
+        tree = parse_sql("SELECT id")
+        # Root is program → statement → query_stmt → select_stmt
+        assert tree.rule_name == "program"
 
     def test_incomplete_select(self) -> None:
         """Just 'SELECT' with nothing else is invalid."""

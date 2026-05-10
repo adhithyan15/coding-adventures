@@ -63,6 +63,9 @@ from .ir import (
     IntersectResult,
     IsNotNull,
     IsNull,
+    JoinBeginRow,
+    JoinIfMatched,
+    JoinSetMatched,
     Jump,
     JumpIfFalse,
     JumpIfTrue,
@@ -71,7 +74,10 @@ from .ir import (
     LimitResult,
     LoadColumn,
     LoadConst,
+    LoadExcludedColumn,
     LoadGroupKey,
+    LoadLastInsertedColumn,
+    LoadOuterColumn,
     NullsOrder,
     OpenIndexScan,
     OpenScan,
@@ -80,6 +86,7 @@ from .ir import (
     Program,
     RollbackTransaction,
     RunExistsSubquery,
+    RunInSubquery,
     RunRecursiveCTE,
     RunScalarSubquery,
     RunSubquery,
@@ -93,6 +100,7 @@ from .ir import (
     UnaryOpCode,
     UpdateAgg,
     UpdateRows,
+    UpsertSpec,
     WinFunc,
     WinFuncSpec,
 )
@@ -101,6 +109,9 @@ from .ir import (
 )
 from .ir import (
     ColumnDef as IrColumnDef,
+)
+from .ir import (
+    UpsertAssignment as IrUpsertAssignment,
 )
 
 __all__ = [
@@ -140,6 +151,9 @@ __all__ = [
     "IntersectResult",
     "InternalError",
     "CHECK_CURSOR_ID",
+    "JoinBeginRow",
+    "JoinIfMatched",
+    "JoinSetMatched",
     "IrAggFunc",
     "IrColumnDef",
     "IsNotNull",
@@ -152,7 +166,10 @@ __all__ = [
     "LimitResult",
     "LoadColumn",
     "LoadConst",
+    "LoadExcludedColumn",
     "LoadGroupKey",
+    "LoadLastInsertedColumn",
+    "LoadOuterColumn",
     "NullsOrder",
     "OpenIndexScan",
     "OpenScan",
@@ -161,6 +178,7 @@ __all__ = [
     "Program",
     "RollbackTransaction",
     "RunExistsSubquery",
+    "RunInSubquery",
     "RunRecursiveCTE",
     "RunScalarSubquery",
     "RunSubquery",
@@ -175,6 +193,8 @@ __all__ = [
     "UnsupportedNode",
     "UpdateAgg",
     "UpdateRows",
+    "UpsertSpec",
+    "IrUpsertAssignment",
     "WinFunc",
     "WinFuncSpec",
     "ComputeWindowFunctions",

@@ -9,20 +9,32 @@ from __future__ import annotations
 
 from twig_jvm_compiler.compiler import (
     ExecutionResult,
+    ModuleCompileResult,
+    MultiModuleExecutionResult,
+    MultiModuleResult,
     PackageError,
     PackageResult,
+    compile_modules,
     compile_source,
     compile_to_ir,
     java_available,
+    module_name_to_jvm_class,
+    run_modules,
     run_source,
 )
 
 __all__ = [
     "ExecutionResult",
+    "ModuleCompileResult",
+    "MultiModuleExecutionResult",
+    "MultiModuleResult",
     "PackageError",
     "PackageResult",
+    "compile_modules",
     "compile_source",
     "compile_to_ir",
     "java_available",
+    "module_name_to_jvm_class",
+    "run_modules",
     "run_source",
 ]

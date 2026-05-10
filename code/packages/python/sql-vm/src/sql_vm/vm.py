@@ -28,6 +28,7 @@ out into helpers so that this file reads like pseudocode.
 
 from __future__ import annotations
 
+import math
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
@@ -75,6 +76,9 @@ from sql_codegen import (
     IntersectResult,
     IsNotNull,
     IsNull,
+    JoinBeginRow,
+    JoinIfMatched,
+    JoinSetMatched,
     Jump,
     JumpIfFalse,
     JumpIfTrue,
@@ -83,7 +87,10 @@ from sql_codegen import (
     LimitResult,
     LoadColumn,
     LoadConst,
+    LoadExcludedColumn,
     LoadGroupKey,
+    LoadLastInsertedColumn,
+    LoadOuterColumn,
     NullsOrder,
     OpenIndexScan,
     OpenScan,
@@ -92,6 +99,7 @@ from sql_codegen import (
     Program,
     RollbackTransaction,
     RunExistsSubquery,
+    RunInSubquery,
     RunRecursiveCTE,
     RunScalarSubquery,
     RunSubquery,
@@ -102,6 +110,7 @@ from sql_codegen import (
     UnaryOp,
     UpdateAgg,
     UpdateRows,
+    UpsertSpec,
     WinFunc,
 )
 from sql_codegen import IrAggFunc as AggFunc
@@ -177,11 +186,20 @@ class _AggState:
     - SUM               — sum (Null until first non-null input)
     - AVG               — sum + count
     - MIN / MAX         — extremum
+    - GROUP_CONCAT      — items (list of non-null string representations) + separator
+
+    ``items`` and ``separator`` are only populated for GROUP_CONCAT.  They are
+    left as empty list / "," respectively for all other functions to keep the
+    class lightweight; accessing them on non-GROUP_CONCAT slots is a logic
+    error that will produce incorrect output rather than a crash, so keep it
+    that way intentionally — the codegen guarantees correct dispatch.
     """
 
     func: AggFunc
     count: int = 0
-    acc: SqlValue = None  # sum / min / max carrier
+    acc: SqlValue = None       # sum / min / max carrier
+    items: list = field(default_factory=list)   # GROUP_CONCAT accumulator
+    separator: str = ","       # GROUP_CONCAT separator (baked in at InitAgg time)
 
 
 # --------------------------------------------------------------------------
@@ -282,6 +300,26 @@ class _VmState:
     # nargs=-1 means variadic.  Checked before the built-in registry so users
     # can override built-ins (e.g. to shim behaviour in tests).
     user_functions: dict[str, tuple[int, Callable]] | None = None
+    # Outer-join match tracking.  Each JoinBeginRow pushes False; JoinSetMatched
+    # sets the top to True; JoinIfMatched pops and conditionally jumps.
+    # The stack depth equals the number of currently-open outer-join levels.
+    join_match_stack: list[bool] = field(default_factory=list)
+    # INSERT … RETURNING support — the most recently inserted row is saved here
+    # by ``_do_insert`` so that ``LoadLastInsertedColumn`` can read it back.
+    # Keyed by column name; empty dict when no INSERT has been executed yet.
+    last_inserted_row: dict[str, SqlValue] = field(default_factory=dict)
+    # UPSERT support — when an ON CONFLICT DO UPDATE SET fires, the VM stores
+    # the would-be-inserted row here before executing each assignment's
+    # instruction sequence.  ``LoadExcludedColumn`` reads from this dict.
+    # Between upsert evaluations it may hold stale data; consumers must reset
+    # it before compiling each assignment.
+    excluded_row: dict[str, SqlValue] = field(default_factory=dict)
+    # Correlated subquery support — a snapshot of the enclosing query's
+    # ``current_row`` at the time the sub-program was launched.  Used by
+    # ``LoadOuterColumn`` to read values from the outer scan without sharing
+    # any mutable state with the inner execution.  ``None`` (the default)
+    # means this program is the top-level query (not a correlated sub-program).
+    outer_current_row: dict[int, dict[str, SqlValue]] = field(default_factory=dict)
     # Scan telemetry — populated during execution; used to build QueryEvent.
     # Only the *first* scan per execute() call is recorded (one event per call).
     scan_table: str = ""
@@ -323,6 +361,7 @@ def execute(
     trigger_executor: Callable | None = None,
     trigger_depth: int = 0,
     user_functions: dict[str, tuple[int, Callable]] | None = None,
+    outer_current_row: dict[int, dict[str, SqlValue]] | None = None,
 ) -> QueryResult:
     """Execute ``program`` against ``backend`` and return the result.
 
@@ -344,6 +383,12 @@ def execute(
         ``(nargs, callable)`` pairs registered via
         :meth:`~mini_sqlite.Connection.create_function`.  Checked before the
         built-in scalar registry so users can shadow built-in functions.
+
+    ``outer_current_row``:
+        Optional snapshot of the enclosing query's ``current_row`` table —
+        ``{cursor_id: {col: value, …}, …}``.  Provided only when this program
+        is a correlated sub-program; ``LoadOuterColumn`` reads from it.
+        ``None`` for top-level programs (the default).
     """
     import time
 
@@ -364,6 +409,7 @@ def execute(
         trigger_executor=trigger_executor,
         trigger_depth=trigger_depth,
         user_functions=user_functions,
+        outer_current_row=outer_current_row if outer_current_row is not None else {},
     )
     instructions = program.instructions
     n = len(instructions)
@@ -404,6 +450,19 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
         return
     if isinstance(ins, LoadColumn):
         _load_column(ins, st)
+        return
+    if isinstance(ins, LoadOuterColumn):
+        _load_outer_column(ins, st)
+        return
+    if isinstance(ins, LoadLastInsertedColumn):
+        st.push(st.last_inserted_row.get(ins.col))
+        return
+    if isinstance(ins, LoadExcludedColumn):
+        # Push the value of ``col`` from the EXCLUDED pseudo-row.  This
+        # instruction is only ever executed inside a UpsertSpec assignment
+        # evaluation loop inside _do_upsert; ``excluded_row`` must be set
+        # before the loop runs.
+        st.push(st.excluded_row.get(ins.col))
         return
     if isinstance(ins, Pop):
         st.pop()
@@ -496,6 +555,16 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
         return
     if isinstance(ins, AdvanceGroupKey):
         st.group_iter += 1
+        # SQL standard: a global aggregate (no GROUP BY) over an empty table
+        # must return exactly one row of NULL / zero values.  When the body
+        # scan produced no rows, ``group_order`` is empty and we would skip
+        # straight to ``on_exhausted``.  Detect this case via ``has_group_by``
+        # and synthesise the implicit ``()`` group so the emit loop runs once.
+        # GROUP BY queries on empty tables correctly return 0 rows — only the
+        # implicit-single-group case needs this treatment.
+        if not ins.has_group_by and st.group_iter == 0 and not st.group_order:
+            st.group_order.append(())
+            st.agg_table[()] = []   # empty slot list; FinalizeAgg auto-grows it
         if st.group_iter >= len(st.group_order):
             st.pc = _resolve(st, ins.on_exhausted)
         else:
@@ -575,6 +644,9 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
     if isinstance(ins, RunScalarSubquery):
         _do_run_scalar_subquery(ins, st)
         return
+    if isinstance(ins, RunInSubquery):
+        _do_run_in_subquery(ins, st)
+        return
     if isinstance(ins, RunRecursiveCTE):
         _do_run_recursive_cte(ins, st)
         return
@@ -593,6 +665,20 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
         _do_rollback_transaction(st)
         return
 
+    # Outer-join match tracking -------------------------------------------
+    if isinstance(ins, JoinBeginRow):
+        st.join_match_stack.append(False)
+        return
+    if isinstance(ins, JoinSetMatched):
+        if st.join_match_stack:
+            st.join_match_stack[-1] = True
+        return
+    if isinstance(ins, JoinIfMatched):
+        matched = st.join_match_stack.pop() if st.join_match_stack else False
+        if matched:
+            st.pc = _resolve(st, ins.label)
+        return
+
     # Control flow --------------------------------------------------------
     if isinstance(ins, Label):
         return  # runtime no-op
@@ -601,12 +687,22 @@ def _dispatch(ins: Instruction, st: _VmState) -> None:  # noqa: PLR0912, C901
         return
     if isinstance(ins, JumpIfFalse):
         v = st.pop()
-        if v is False or v is None:
+        # SQL truthiness: NULL, False, 0, and 0.0 are all falsy.
+        # Note: bool is a subclass of int in Python, so ``isinstance(v, bool)``
+        # must be checked before the generic ``int`` branch or ``False`` (= 0)
+        # would also satisfy the numeric-zero check.  Using ``not v`` handles
+        # all three cases uniformly: ``not None`` → True, ``not False`` → True,
+        # ``not 0`` → True, ``not 0.0`` → True.
+        # Scalar functions (e.g. glob()) return integers (0/1) rather than
+        # Python booleans, so we must handle integer-falsy here rather than
+        # only Python-bool-False.
+        if not v:
             st.pc = _resolve(st, ins.label)
         return
     if isinstance(ins, JumpIfTrue):
         v = st.pop()
-        if v is True:
+        # Symmetric with JumpIfFalse: any truthy SQL value triggers the jump.
+        if v:
             st.pc = _resolve(st, ins.label)
         return
 
@@ -632,6 +728,23 @@ def _load_column(ins: LoadColumn, st: _VmState) -> None:
         st.push(None)
         return
     st.push(row.get(ins.column))
+
+
+def _load_outer_column(ins: LoadOuterColumn, st: _VmState) -> None:
+    """Push a column value from the outer query's current row snapshot.
+
+    ``st.outer_current_row`` is a frozen copy of the enclosing scan's
+    ``current_row`` at the time the inner sub-program was invoked.
+
+    If the outer cursor ID is not present (e.g. the subquery was invoked
+    from an uncorrelated context — which should not happen if the planner and
+    codegen are correct), we push ``None`` as a safe fallback.
+    """
+    row = st.outer_current_row.get(ins.cursor_id)
+    if row is None:
+        st.push(None)
+        return
+    st.push(row.get(ins.col))
 
 
 def _do_between(st: _VmState) -> None:
@@ -784,8 +897,17 @@ def _do_run_exists_subquery(ins: RunExistsSubquery, st: _VmState) -> None:
 
     ``NOT EXISTS`` is handled by the caller: a :class:`~sql_codegen.UnaryOp`
     ``NOT`` instruction follows this one and inverts the boolean.
+
+    Correlated subqueries
+    ---------------------
+    If the inner program contains ``LoadOuterColumn`` instructions, it needs
+    the outer scan's current row.  We pass ``st.current_row`` as the inner
+    program's ``outer_current_row`` snapshot so those reads resolve correctly.
+    The inner execution gets its own isolated ``_VmState``; sharing
+    ``current_row`` as a **dict reference** (not a deep copy) is safe because
+    the inner program does not modify outer cursor rows.
     """
-    sub_result = execute(ins.sub_program, st.backend)
+    sub_result = execute(ins.sub_program, st.backend, outer_current_row=st.current_row)
     st.push(len(sub_result.rows) > 0)
 
 
@@ -800,8 +922,11 @@ def _do_run_scalar_subquery(ins: RunScalarSubquery, st: _VmState) -> None:
 
     The inner program always returns exactly one column — the optimizer
     and codegen ensure this at compile time.
+
+    Correlated subqueries: passes ``st.current_row`` as ``outer_current_row``
+    so ``LoadOuterColumn`` instructions in the inner program resolve correctly.
     """
-    sub_result = execute(ins.sub_program, st.backend)
+    sub_result = execute(ins.sub_program, st.backend, outer_current_row=st.current_row)
     rows = sub_result.rows
     if len(rows) == 0:
         st.push(None)
@@ -809,6 +934,48 @@ def _do_run_scalar_subquery(ins: RunScalarSubquery, st: _VmState) -> None:
         raise CardinalityError()
     else:
         st.push(rows[0][0] if rows[0] else None)
+
+
+def _do_run_in_subquery(ins: RunInSubquery, st: _VmState) -> None:
+    """Execute the IN-subquery and push a boolean (or NULL).
+
+    Pops the test value from the top of the stack, executes the sub-program
+    to materialise the result set, then tests membership.
+
+    NULL semantics (SQL three-valued logic):
+    - test_value is None  → push None (NULL IN ... = NULL)
+    - test_value found in non-NULL members → push True (or False if negate)
+    - test_value not found, result set contains NULL → push None (unknown)
+    - test_value not found, no NULL in set → push False (or True if negate)
+
+    Correlated subqueries: passes ``st.current_row`` as ``outer_current_row``
+    so ``LoadOuterColumn`` instructions in the inner program resolve correctly.
+    The inner program is re-executed once per outer row; each time it reads
+    the correlated column values from the outer cursor's current row.
+    """
+    test_value = st.pop()
+    if test_value is None:
+        st.push(None)
+        return
+    sub_result = execute(ins.sub_program, st.backend, outer_current_row=st.current_row)
+    # Build two sets: one of non-NULL first-column values, and a flag for NULL presence.
+    non_null_values: set[object] = set()
+    has_null = False
+    for row in sub_result.rows:
+        val = row[0] if row else None
+        if val is None:
+            has_null = True
+        else:
+            non_null_values.add(val)
+    if test_value in non_null_values:
+        # Definite match.
+        st.push(ins.negate is False)
+    elif has_null:
+        # No match found, but NULL is in the set — result is UNKNOWN (NULL).
+        st.push(None)
+    else:
+        # Definite non-match.
+        st.push(ins.negate is True)
 
 
 def _execute_with_cursors(
@@ -979,10 +1146,11 @@ def _do_init_agg(ins: InitAgg, st: _VmState) -> None:
     # semantic meaning is "ensure this slot exists for this group". Only
     # allocate on first encounter; on subsequent calls the existing
     # accumulator is preserved. MIN/MAX/SUM start at NULL; AVG tracks
-    # sum and count.
+    # sum and count; GROUP_CONCAT accumulates a list.
     slots = _ensure_group(st)
     while len(slots) <= ins.slot:
-        slots.append(_AggState(func=ins.func))
+        state = _AggState(func=ins.func, separator=ins.separator)
+        slots.append(state)
 
 
 def _do_update_agg(ins: UpdateAgg, st: _VmState) -> None:
@@ -1014,12 +1182,32 @@ def _do_update_agg(ins: UpdateAgg, st: _VmState) -> None:
         if agg.acc is None or value > agg.acc:  # type: ignore[operator]
             agg.acc = value
         return
+    if agg.func is AggFunc.GROUP_CONCAT:
+        # NULL inputs are silently ignored — only non-NULL values join the list.
+        # Convert the value to a string representation matching SQLite: integers
+        # and whole-number finite floats render without a trailing '.0' (SQLite
+        # omits the fraction for integer-valued reals).
+        # Special-case: math.inf and math.nan must be checked with math.isfinite
+        # first because ``inf == int(inf)`` raises OverflowError and
+        # ``nan == int(nan)`` raises ValueError in Python.
+        if value is None:
+            return
+        if isinstance(value, float) and math.isfinite(value) and value == int(value):
+            agg.items.append(str(int(value)))
+        else:
+            agg.items.append(str(value))
+        return
 
 
 def _do_finalize_agg(ins: FinalizeAgg, st: _VmState) -> None:
     slots = _ensure_group(st)
-    if ins.slot >= len(slots):
-        raise InternalError(message=f"finalize_agg: slot {ins.slot} not initialized")
+    # Auto-grow: if InitAgg was never called for this group (the empty-table /
+    # implicit-single-group case), slots will be shorter than expected.  We
+    # lazily create default _AggState entries from the func and separator baked
+    # into the FinalizeAgg instruction.  The resulting zero-state produces the
+    # correct SQL result: NULL for SUM/MIN/MAX/AVG/GROUP_CONCAT, 0 for COUNT.
+    while len(slots) <= ins.slot:
+        slots.append(_AggState(func=ins.func, separator=ins.separator))
     agg = slots[ins.slot]
     if agg.func in (AggFunc.COUNT, AggFunc.COUNT_STAR):
         st.push(agg.count)
@@ -1029,6 +1217,13 @@ def _do_finalize_agg(ins: FinalizeAgg, st: _VmState) -> None:
             st.push(None)
             return
         st.push(agg.acc / agg.count)  # type: ignore[operator]
+        return
+    if agg.func is AggFunc.GROUP_CONCAT:
+        # Return NULL for an empty group (no non-NULL inputs), matching SQLite.
+        if not agg.items:
+            st.push(None)
+        else:
+            st.push(agg.separator.join(agg.items))
         return
     # SUM / MIN / MAX — the accumulator *is* the result (may be NULL for empty).
     st.push(agg.acc)
@@ -1288,6 +1483,156 @@ def _do_compute_window(ins: ComputeWindowFunctions, st: _VmState) -> None:
                 for row in partition:
                     row[result_col] = last
 
+            elif func == WinFunc.LAG:
+                # LAG(col, offset=1, default=None): return the value of ``col``
+                # from the row that is ``offset`` positions *before* the current
+                # row within the partition (ordered by order_cols).  Rows with
+                # no preceding peer at that distance return ``default``.
+                #
+                # extra_args = (offset: int, default: SqlValue)
+                # These are normalised to exactly two elements by the codegen
+                # compiler, so we can unpack directly.
+                offset_val, default_val = spec.extra_args if spec.extra_args else (1, None)
+                # Defense-in-depth: codegen already rejects non-integer offsets,
+                # but guard here too so a hand-crafted WinFuncSpec can't cause a
+                # leaky ValueError deep in the VM.
+                if not isinstance(offset_val, int) or isinstance(offset_val, bool):
+                    raise RuntimeError(
+                        f"LAG offset must be an integer, got {type(offset_val).__name__!r}"
+                    )
+                offset_int = offset_val
+                for i, row in enumerate(partition):
+                    src_idx = i - offset_int
+                    if 0 <= src_idx < len(partition) and arg_col:
+                        row[result_col] = partition[src_idx].get(arg_col)
+                    else:
+                        row[result_col] = default_val
+
+            elif func == WinFunc.LEAD:
+                # LEAD(col, offset=1, default=None): mirror of LAG, but looks
+                # *ahead* instead of behind.  Row i fetches from row i+offset.
+                offset_val, default_val = spec.extra_args if spec.extra_args else (1, None)
+                if not isinstance(offset_val, int) or isinstance(offset_val, bool):
+                    raise RuntimeError(
+                        f"LEAD offset must be an integer, got {type(offset_val).__name__!r}"
+                    )
+                offset_int = offset_val
+                for i, row in enumerate(partition):
+                    src_idx = i + offset_int
+                    if 0 <= src_idx < len(partition) and arg_col:
+                        row[result_col] = partition[src_idx].get(arg_col)
+                    else:
+                        row[result_col] = default_val
+
+            elif func == WinFunc.NTILE:
+                # NTILE(n): divide the partition into n approximately equal
+                # buckets and assign each row a bucket number 1..n.
+                #
+                # Distribution rule (matches SQLite and PostgreSQL):
+                #   q, r = divmod(len(partition), n)
+                # The first r buckets have q+1 rows; the remaining n-r buckets
+                # have q rows.  Rows are numbered from 1.
+                #
+                # extra_args = (n: int,) set by codegen.
+                (n_buckets_raw,) = spec.extra_args if spec.extra_args else (1,)
+                total = len(partition)
+                # Defense-in-depth type guard (codegen already enforces int).
+                if not isinstance(n_buckets_raw, int) or isinstance(n_buckets_raw, bool):
+                    raise RuntimeError(
+                        f"NTILE n must be an integer, got {type(n_buckets_raw).__name__!r}"
+                    )
+                # Cap n_buckets to the partition size to prevent a DoS where a
+                # caller specifies NTILE(1_000_000_000) on a tiny partition,
+                # forcing the outer loop to run billions of iterations for no
+                # useful work.  SQL semantics are unaffected: if n > N then
+                # every row gets its own bucket (1..N) and empty buckets are
+                # simply never emitted, which is exactly what capping achieves.
+                raw_n = max(1, n_buckets_raw)
+                n_buckets = min(raw_n, total) if total > 0 else 1
+                q, r = divmod(total, n_buckets)
+                # Build a bucket boundary list: bucket k (1-indexed) ends at
+                # the index computed below.
+                row_idx = 0
+                for bucket in range(1, n_buckets + 1):
+                    bucket_size = q + (1 if bucket <= r else 0)
+                    for _ in range(bucket_size):
+                        if row_idx < total:
+                            partition[row_idx][result_col] = bucket
+                            row_idx += 1
+
+            elif func == WinFunc.PERCENT_RANK:
+                # PERCENT_RANK: (rank − 1) / (N − 1) where rank is the RANK()
+                # value and N is the partition size.
+                # Special case: if N == 1, every row gets 0.0 (division by zero
+                # is avoided; the only row is trivially first).
+                n = len(partition)
+                if n <= 1:
+                    for row in partition:
+                        row[result_col] = 0.0
+                else:
+                    # Reuse the RANK computation — two consecutive rows share a
+                    # rank when their order-key values are identical.
+                    rank = 1
+                    for i, row in enumerate(partition):
+                        if i == 0:
+                            rank = 1
+                        else:
+                            prev = partition[i - 1]
+                            prev_key = _order_vals(prev, spec.order_cols)
+                            cur_key = _order_vals(row, spec.order_cols)
+                            if prev_key != cur_key:
+                                rank = i + 1
+                        row[result_col] = (rank - 1) / (n - 1)
+
+            elif func == WinFunc.CUME_DIST:
+                # CUME_DIST: (number of rows whose order key ≤ current row's
+                # order key) / N.  Two rows with the same order key get the
+                # same CUME_DIST value (the *last* position in the tie group).
+                #
+                # Equivalently: for each row find the *last* row with an equal
+                # order key (i.e. the end of the peer group) and compute
+                # (end_index + 1) / N.
+                n = len(partition)
+                i = 0
+                while i < n:
+                    # Find the end of the current peer group (all rows with
+                    # the same order-key values).
+                    j = i
+                    while j + 1 < n and (
+                        _order_vals(partition[j], spec.order_cols)
+                        == _order_vals(partition[j + 1], spec.order_cols)
+                    ):
+                        j += 1
+                    # Rows i..j all belong to the same peer group.
+                    cd = (j + 1) / n
+                    for k in range(i, j + 1):
+                        partition[k][result_col] = cd
+                    i = j + 1
+
+            elif func == WinFunc.NTH_VALUE:
+                # NTH_VALUE(col, n): return the value of ``col`` at the n-th
+                # row (1-indexed) of the partition.  Rows before the n-th row
+                # also receive that value (the window frame logically grows as
+                # each row is processed, but in our materialised model we simply
+                # broadcast the n-th value to all rows).  If the partition has
+                # fewer than n rows, return NULL.
+                #
+                # extra_args = (n: int,) — 1-indexed.
+                (n_raw,) = spec.extra_args if spec.extra_args else (1,)
+                # Defense-in-depth: codegen already rejects non-integer n, but
+                # guard here too so a hand-crafted WinFuncSpec fails cleanly.
+                if not isinstance(n_raw, int) or isinstance(n_raw, bool):
+                    raise RuntimeError(
+                        f"NTH_VALUE n must be an integer, got {type(n_raw).__name__!r}"
+                    )
+                n_idx = n_raw - 1  # convert to 0-indexed
+                if 0 <= n_idx < len(partition) and arg_col:
+                    nth_val: SqlValue = partition[n_idx].get(arg_col)
+                else:
+                    nth_val = None
+                for row in partition:
+                    row[result_col] = nth_val
+
     # Project rows to output_cols and rebuild tuples.
     out_cols = ins.output_cols
     st.result.rows = [
@@ -1390,9 +1735,262 @@ def _fire_trigger(
     st.trigger_executor(defn, new_row, old_row, next_depth)
 
 
+def _replace_delete_conflicts(
+    table: str, new_row: dict[str, SqlValue], st: _VmState
+) -> None:
+    """Pre-scan ``table`` and delete all rows that would conflict with ``new_row``.
+
+    Implements the ``REPLACE`` conflict resolution strategy: every existing row
+    that shares a value on any UNIQUE or PRIMARY KEY column with ``new_row`` is
+    silently removed before the new row is inserted.  This mirrors SQLite's
+    ``INSERT OR REPLACE`` semantics.
+
+    Conflict rules:
+    - Only non-NULL values are considered — ``NULL`` never triggers uniqueness
+      conflicts in standard SQL (``NULL != NULL``).
+    - All UNIQUE-constrained columns are checked, not just the primary key.
+
+    Scan-delete safety:
+    Both the storage-sqlite and in-memory backends guarantee that after
+    ``backend.delete(table, cursor)`` the cursor remains live and
+    ``cursor.next()`` advances to the row that immediately followed the deleted
+    one.  A single forward pass is therefore sufficient — no intermediate
+    materialisation is required.
+
+    Cursor selection:
+    Backends that support positioned DML (UPDATE/DELETE by cursor position)
+    expose a private ``_open_cursor`` method — the same duck-typing probe the
+    ``OpenScan`` handler uses.  We prefer that over ``scan()`` because
+    ``backend.delete()`` requires a positioned cursor on backends like
+    InMemoryBackend (which rejects a plain ``ListRowIterator``).  If
+    ``_open_cursor`` is absent we fall back to ``scan()``; backends that don't
+    offer positioned cursors also can't implement ``delete()``, so they will
+    either not have UNIQUE constraints or will handle conflicts differently.
+
+    Limitations:
+    This helper does NOT fire DELETE triggers or check FK parent constraints for
+    the pre-deleted rows.  Full trigger + FK semantics for REPLACE are deferred
+    to a future iteration.
+    """
+    # We use backend.columns() to discover which columns are UNIQUE- or
+    # PRIMARY-KEY-constrained.  If the backend does not support schema
+    # introspection we skip the conflict scan rather than aborting — a backend
+    # without UNIQUE enforcement would raise its own error from insert() anyway.
+    # We intentionally do NOT swallow real errors (e.g. TableNotFound): only
+    # the specific case of "no schema support" (NotImplementedError/
+    # AttributeError) is silenced.  Any other exception propagates normally.
+    try:
+        col_defs = st.backend.columns(table)
+    except (NotImplementedError, AttributeError):
+        # Backend does not expose schema introspection — skip conflict scan.
+        return
+    # Identify the unique-constrained columns whose new values are non-NULL.
+    # NULL values can never cause a UNIQUE conflict in SQL.
+    unique_cols: list[str] = [
+        cd.name
+        for cd in col_defs
+        if (cd.primary_key or cd.unique) and new_row.get(cd.name) is not None
+    ]
+    if not unique_cols:
+        return
+    # Prefer a positioned cursor — required by InMemoryBackend.delete() and
+    # analogous backends that reject plain read-only RowIterators.  Mirror the
+    # same duck-typing probe used by the OpenScan instruction handler so this
+    # helper stays decoupled from any specific Backend subclass.
+    opener = getattr(st.backend, "_open_cursor", None)
+    cur = opener(table) if opener is not None else st.backend.scan(table)
+    try:
+        while True:
+            existing = cur.next()
+            if existing is None:
+                break
+            # If any unique column matches, delete this row in place.  After
+            # deletion the cursor remains live and the next ``cur.next()`` call
+            # returns the row that used to follow the deleted one, so no rows
+            # are skipped and no rows are double-visited.
+            for col in unique_cols:
+                if existing.get(col) == new_row[col]:
+                    st.backend.delete(table, cur)
+                    break  # one conflict per row; advance outer loop
+    finally:
+        cur.close()
+
+
+_VALID_ON_CONFLICT: frozenset[str] = frozenset(
+    {"REPLACE", "IGNORE", "ABORT", "FAIL", "ROLLBACK"}
+)
+
+
+def _do_upsert(table: str, row: dict[str, SqlValue], upsert: UpsertSpec, st: _VmState) -> bool:
+    """Execute the upsert action when an insert would conflict.
+
+    Returns ``True`` if the conflict was handled (caller should not re-raise),
+    ``False`` if the conflict was not handled (caller should re-raise the
+    original :class:`~sql_backend.backend.ConstraintViolation`).
+
+    Strategy
+    --------
+    DO NOTHING
+        We already know a conflict occurred (the backend raised it).  Simply
+        return ``True`` to tell the caller to swallow the exception.  We do
+        NOT need to locate the conflicting row — the existing row is untouched.
+
+    DO UPDATE SET
+        We must find the conflicting row so we can call ``backend.update()``
+        on it (positioned DML).  We open a positioned cursor, scan for a row
+        that matches on the ``conflict_target`` columns (or on the UNIQUE /
+        PRIMARY KEY columns when no target is given), and call
+        ``_upsert_apply`` while the cursor is still positioned.
+
+    ``conflict_target`` columns
+        When non-empty, the conflict_target columns from the grammar are used
+        as the match key.  When empty (``ON CONFLICT DO …`` with no target),
+        we discover the table's unique-constrained columns at runtime by
+        inspecting the backend schema, mirroring ``_replace_delete_conflicts``.
+        This avoids the false-no-match bug that occurs when matching on ALL
+        new-row columns (which differ for the non-key columns).
+    """
+    if upsert.do_nothing:
+        # Fast path: a conflict occurred and we must silently skip the row.
+        # No need to scan the table — the existing row is unchanged.
+        return True
+
+    # DO UPDATE: find the conflicting row using an appropriate match key.
+    match_cols: tuple[str, ...]
+    if upsert.conflict_target:
+        match_cols = upsert.conflict_target
+    else:
+        # No explicit target → discover unique-constrained columns from schema.
+        try:
+            col_defs = st.backend.columns(table)
+        except (NotImplementedError, AttributeError):
+            return False  # Backend lacks schema introspection; bail out.
+        match_cols = tuple(
+            cd.name
+            for cd in col_defs
+            if (cd.primary_key or cd.unique) and row.get(cd.name) is not None
+        )
+        if not match_cols:
+            return False  # No unique columns with non-NULL values; can't locate row.
+
+    # Open a positioned cursor (required by InMemoryBackend.update()).
+    opener = getattr(st.backend, "_open_cursor", None)
+    try:
+        cur = opener(table) if opener is not None else st.backend.scan(table)
+    except be.BackendError as e:
+        raise _translate_backend_error(e) from e
+
+    try:
+        while True:
+            candidate = cur.next()
+            if candidate is None:
+                # No matching row found — the violation is from a different
+                # constraint (e.g. NOT NULL).  Caller handles it.
+                return False
+            if all(candidate.get(col) == row.get(col) for col in match_cols):
+                # Found the conflicting row; cursor is positioned on it.
+                existing_row = dict(candidate)
+                break
+
+        # Evaluate SET assignments and apply via the positioned cursor.
+        _upsert_apply(table, row, existing_row, upsert, cur, st)
+        return True
+    finally:
+        cur.close()
+
+
+def _upsert_apply(
+    table: str,
+    excluded: dict[str, SqlValue],
+    existing: dict[str, SqlValue],
+    upsert: UpsertSpec,
+    cur: object,  # the positioned cursor; type widened to avoid import cycle
+    st: _VmState,
+) -> None:
+    """Evaluate DO UPDATE SET assignments and apply them via a positioned cursor.
+
+    ``excluded`` is the would-be-inserted row (EXCLUDED pseudo-table values).
+    ``existing`` is the current row in the table at the cursor's current position.
+    ``cur`` is already positioned at ``existing``; ``backend.update()`` will act on it.
+
+    Each assignment's pre-compiled instruction sequence is executed as a
+    mini-VM program.  ``LoadExcludedColumn`` reads from ``st.excluded_row``
+    (set to ``excluded`` before the loop).  The result is a single value per
+    assignment on the operand stack, which is popped and stored in
+    ``new_values``.
+    """
+    st.excluded_row = excluded  # bind EXCLUDED pseudo-table for LoadExcludedColumn
+
+    # Make the existing row accessible via cursor_id 0.
+    #
+    # In a VALUES-based INSERT the compiler has no open cursor, so bare column
+    # references in the SET clause (e.g. ``qty + EXCLUDED.qty`` where ``qty``
+    # refers to the current row) compile as ``LoadColumn(cursor_id=0, col=…)``.
+    # We temporarily park the existing row under cursor_id 0 so those reads
+    # return the right value, then restore whatever was there before.
+    _saved_row_0 = st.current_row.get(0)
+    st.current_row[0] = existing
+
+    # Evaluate each assignment's instruction sequence.
+    new_values: dict[str, SqlValue] = {}
+    for assignment in upsert.assignments:
+        depth_before = len(st.stack)
+        for instr in assignment.instructions:
+            _dispatch(instr, st)
+        # Pop the single result value.
+        if len(st.stack) <= depth_before:
+            raise InternalError(
+                message=f"upsert assignment for {assignment.column!r} produced no value"
+            )
+        new_values[assignment.column] = st.stack.pop()
+        # Trim any excess stack entries (shouldn't happen with well-formed IR).
+        del st.stack[depth_before:]
+
+    # Restore cursor_id 0 to whatever it was before we borrowed it.
+    if _saved_row_0 is None:
+        st.current_row.pop(0, None)
+    else:
+        st.current_row[0] = _saved_row_0
+
+    # Validate constraints against the fully-merged post-update row.
+    merged = {**existing, **new_values}
+    _check_constraints(table, merged, st)
+    _check_fk_child(table, merged, st)
+
+    # Apply the update via the positioned cursor.
+    try:
+        st.backend.update(table, cur, new_values)  # type: ignore[arg-type]
+    except be.BackendError as e:
+        raise _translate_backend_error(e) from e
+    st.result.rows_affected = (st.result.rows_affected or 0) + 1
+
+
 def _do_insert(ins: InsertRow, st: _VmState) -> None:
+    # Defence-in-depth: validate on_conflict at the VM boundary so a
+    # hand-crafted or programmatically built InsertRow with a bogus action
+    # fails loudly rather than silently skipping both REPLACE and IGNORE
+    # branches and then raising an opaque backend error.
+    if ins.on_conflict is not None and ins.on_conflict not in _VALID_ON_CONFLICT:
+        raise InternalError(
+            message=f"invalid on_conflict action {ins.on_conflict!r}; "
+            f"expected one of {sorted(_VALID_ON_CONFLICT)}"
+        )
     values = st.pop_n(len(ins.columns))
     row = dict(zip(ins.columns, values, strict=True))
+    # REPLACE: pre-delete every existing row that conflicts on a unique-
+    # constrained column.  The subsequent insert then succeeds unconditionally
+    # (barring NOT NULL violations, which REPLACE does not suppress).
+    #
+    # Concurrency note: the pre-delete and the subsequent insert are two
+    # separate backend operations with no transaction held between them.  In a
+    # multi-writer scenario a second writer could insert a conflicting row in
+    # the window between our delete and our insert, causing the insert to fail.
+    # For the current single-process, GIL-protected in-memory backend this is
+    # not a practical concern.  Backends that support concurrent writes (e.g.
+    # a future networked backend) should implement REPLACE atomically inside
+    # their own `insert()` method rather than relying on this two-step helper.
+    if ins.on_conflict == "REPLACE":
+        _replace_delete_conflicts(ins.table, row, st)
     _check_constraints(ins.table, row, st)
     _check_fk_child(ins.table, row, st)
     # Fire BEFORE INSERT triggers.
@@ -1404,6 +2002,17 @@ def _do_insert(ins: InsertRow, st: _VmState) -> None:
         _fire_trigger(defn, row, None, st)
     try:
         st.backend.insert(ins.table, row)
+    except be.ConstraintViolation as e:
+        # Upsert (ON CONFLICT DO …) takes precedence over on_conflict.
+        if ins.upsert is not None and _do_upsert(ins.table, row, ins.upsert, st):
+            return  # conflict handled
+        # IGNORE: silently discard this row on any constraint violation and
+        # continue processing subsequent rows in the same statement.  The
+        # ``rows_affected`` counter and ``last_inserted_row`` are left unchanged
+        # so callers / RETURNING clauses see the pre-IGNORE state.
+        if ins.on_conflict == "IGNORE":
+            return
+        raise _translate_backend_error(e) from e
     except be.BackendError as e:
         raise _translate_backend_error(e) from e
     # Fire AFTER INSERT triggers.
@@ -1413,6 +2022,11 @@ def _do_insert(ins: InsertRow, st: _VmState) -> None:
     ]
     for defn in after_triggers:
         _fire_trigger(defn, row, None, st)
+    # Save the inserted row so that RETURNING … can read it back via
+    # ``LoadLastInsertedColumn``.  We save it after the successful insert so
+    # constraint violations leave the previous value intact (and RETURNING
+    # would not be reached anyway because an exception is raised).
+    st.last_inserted_row = row
     st.result.rows_affected = (st.result.rows_affected or 0) + 1
 
 
@@ -1484,7 +2098,9 @@ def _do_delete(ins: DeleteRows, st: _VmState) -> None:
 
 
 def _do_create_table(ins: CreateTable, st: _VmState) -> None:
+    from sql_backend.schema import NO_DEFAULT as _BE_NO_DEFAULT
     from sql_backend.schema import ColumnDef as BackendColumnDef
+    from sql_codegen.ir import NO_COLUMN_DEFAULT as _IR_NO_DEFAULT
 
     col_defs = [
         BackendColumnDef(
@@ -1492,6 +2108,11 @@ def _do_create_table(ins: CreateTable, st: _VmState) -> None:
             type_name=c.type,
             not_null=not c.nullable,
             primary_key=c.primary_key,
+            unique=c.unique,
+            # Convert the IR-layer sentinel back to the backend-layer sentinel.
+            # Any other value (including None = SQL NULL) is a literal default
+            # that passes through unchanged.
+            default=_BE_NO_DEFAULT if c.default is _IR_NO_DEFAULT else c.default,
         )
         for c in ins.columns
     ]
@@ -1774,13 +2395,29 @@ def _do_insert_from_result(ins: InsertFromResult, st: _VmState) -> None:
     After draining, the result buffer is cleared and ``rows_affected`` is
     set to the count of inserted rows.
     """
+    if ins.on_conflict is not None and ins.on_conflict not in _VALID_ON_CONFLICT:
+        raise InternalError(
+            message=f"invalid on_conflict action {ins.on_conflict!r}; "
+            f"expected one of {sorted(_VALID_ON_CONFLICT)}"
+        )
     schema = st.result.columns
     target_cols = ins.columns if ins.columns else schema
     affected = 0
     for row in st.result.rows:
         row_dict = dict(zip(target_cols, row, strict=False))
+        # REPLACE: pre-delete conflicting rows before each insert.
+        if ins.on_conflict == "REPLACE":
+            _replace_delete_conflicts(ins.table, row_dict, st)
         try:
             st.backend.insert(ins.table, row_dict)
+        except be.ConstraintViolation as e:
+            # Upsert (ON CONFLICT DO …) takes precedence over on_conflict.
+            if ins.upsert is not None and _do_upsert(ins.table, row_dict, ins.upsert, st):
+                continue  # conflict handled; rows_affected updated by _do_upsert
+            # IGNORE: skip this row silently and continue with the next one.
+            if ins.on_conflict == "IGNORE":
+                continue
+            raise _translate_backend_error(e) from e
         except be.BackendError as e:
             raise _translate_backend_error(e) from e
         affected += 1

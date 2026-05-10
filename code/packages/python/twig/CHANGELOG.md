@@ -3,6 +3,137 @@
 All notable changes to this package will be documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.5.0] — 2026-05-04 (TW04 Phase 4g — bundled Twig standard library)
+
+### Added — bundled stdlib (`stdlib/io`, `stdlib/list`, `stdlib/print`)
+
+Three source-level Twig modules are shipped alongside the package in
+`src/twig/stdlib_twig/stdlib/`:
+
+| Module | Exports |
+|--------|---------|
+| `stdlib/io` | `print-int`, `println`, `newline`, `print-bool` |
+| `stdlib/list` | `length`, `reverse`, `map`, `filter`, `fold` |
+| `stdlib/print` | `print` (type-dispatching: nil, pair, integer) |
+
+All three modules are pure Twig source — no Python glue, no backend
+special-casing.  `stdlib/io` uses only arithmetic and `host/write-byte`,
+so it compiles on JVM, CLR, and BEAM without closures or heap.
+`stdlib/list` uses cons cells and higher-order functions (closures).
+`stdlib/print` depends on both `host` and `stdlib/io`.
+
+### Added — `stdlib_path()` in `twig.__init__`
+
+```python
+from twig import stdlib_path
+path = stdlib_path()  # Path to stdlib_twig/ directory
+```
+
+Returns the `Path` to the root of the bundled stdlib so callers can
+pass it explicitly as a search path when `include_stdlib=False`.
+
+### Added — `include_stdlib: bool = True` on `resolve_modules`
+
+```python
+modules = resolve_modules("user/hello", search_paths=[my_src])
+# stdlib is automatically appended; (import stdlib/io) works
+```
+
+When `True` (the default), the bundled stdlib search root is appended
+to `search_paths` before the resolution pass.  Pass `False` to opt out
+(e.g. during stdlib development where you supply the path manually).
+The auto-inclusion is a no-op when the stdlib directory is not present
+on disk (guard: `if _stdlib.exists()`).
+
+### Fixed — `_extract_define` handles typed_param grammar nodes
+
+The Phase 4g grammar uses `typed_param` ASTNode children for function
+parameters even when unannotated, nesting the bare NAME one level deeper
+than the old `name_or_signature` layout assumed.  `_extract_define` in
+`ast_extract.py` now collects parameter names from `typed_param` children
+(any child `ASTNode` with `rule_name == "typed_param"`) in addition to
+direct NAME tokens, keeping the extractor forward-compatible with both
+annotated and unannotated parameter forms.
+
+### Tests
+
+- `tests/test_stdlib.py` — 42 new tests covering `stdlib_path()`, auto-
+  include resolution, topological ordering, export surface of all three
+  modules, and parse+extract (no runtime needed).
+
+## [0.4.0] — 2026-05-04 (TW04 Phase 4c — host module + cross-module IR ops)
+
+### Added
+
+- **Platform-independent syscall convention** — host-module calls
+  (`host/write-byte`, `host/read-byte`, `host/exit`) are now lowered
+  uniformly to `call_builtin "syscall" <num> arg` in the interpreter
+  IR and to `IrOp.SYSCALL IrImmediate(num) IrRegister(arg)` in the
+  compiler IR.  Syscall numbers match the CLR and JVM backend
+  conventions established by the Brainfuck compiler:
+
+  | Export          | Syscall num |
+  |-----------------|-------------|
+  | `host/write-byte` | 1         |
+  | `host/read-byte`  | 2         |
+  | `host/exit`       | 10        |
+
+- **`_is_module_qualified(name)`** helper in `twig.compiler` —
+  detects `module/export` patterns while correctly excluding the
+  bare `/` division operator.
+
+- **`"syscall"` builtin in `TwigVM`** — single dispatcher replacing
+  the old per-name `host/write-byte` / `host/read-byte` / `host/exit`
+  builtins.  Dispatches by syscall number and implements all three
+  host operations.
+
+- **`free_vars.py` guard updated** — module-qualified names (slash
+  with non-empty prefix and suffix) are never treated as free
+  variables, and the check now correctly excludes the bare `/`
+  arithmetic operator.
+
+- **Module-resolver refactored to use `directed-graph`** — the
+  hand-rolled DFS topological sort is replaced by
+  `topological_sort` from the `coding-adventures-directed-graph`
+  package.  Cycle detection uses `strongly_connected_components`
+  for accurate path reconstruction; `_cycle_path` reconstructs the
+  exact `a -> b -> c -> a` string.
+  `coding-adventures-directed-graph` is now a formal dependency in
+  `pyproject.toml`.
+
+### Changed
+
+- `twig/compiler.py` — `_compile_apply` now emits
+  `IIRInstr("call_builtin", dest, ["syscall", num, *arg_regs])`
+  for module-qualified calls, replacing the former
+  `IIRInstr("call", dest, [qualified_name, ...])` approach.
+- `twig/vm.py` — removed `_inject_host_stubs` (the function that
+  patched synthetic IIR stubs for `call "host/…"` targets) and the
+  individual `host/write-byte` / `host/read-byte` / `host/exit`
+  builtins; replaced by the single `"syscall"` builtin.
+- `pyproject.toml` — added `coding-adventures-directed-graph` as an
+  explicit runtime dependency.
+
+### Tests
+
+- `tests/test_host_calls.py` (new, 26 tests):
+  - `TestIsModuleQualified` — 9 cases covering the slash helper.
+  - `TestHostSyscallNumbers` — asserts the exact syscall mapping.
+  - `TestCompilerSyscallEmission` — IR-level checks that the
+    interpreter compiler emits `call_builtin "syscall" <num> …`.
+  - `TestVMSyscall` — execution-level checks:
+    - `write-byte` writes the correct byte to stdout.
+    - `write-byte` masks values > 255.
+    - `read-byte` returns the byte from stdin.
+    - `read-byte` returns −1 on EOF.
+    - Unknown syscall number raises `TwigRuntimeError`.
+  - `TestFreeVarsHostCalls` — ensures host names are not captured
+    as free variables and the `/` division operator is unaffected.
+
+### Test metrics
+
+  169 tests, 95.63% coverage (≥ 95% required).
+
 ## [0.3.0] — 2026-04-29 (TW04 Phase 4b — module resolver)
 
 ### Added

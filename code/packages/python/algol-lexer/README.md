@@ -28,13 +28,16 @@ Go, Swift, Kotlin.
 ## How It Fits the Stack
 
 ```
-algol.tokens (grammar definition)
+algol/algol60.tokens (token grammar)
       │
       ▼
-grammar_tools.parse_token_grammar()
+grammar_tools.compile_token_grammar()
       │
       ▼
-GrammarLexer  ←── algol-lexer (this package, thin wrapper)
+algol_lexer._grammar.TOKEN_GRAMMAR
+      │
+      ▼
+GrammarLexer  ←── algol-lexer (this package, no runtime file I/O)
       │
       ▼
 list[Token]   ──► algol-parser
@@ -42,8 +45,8 @@ list[Token]   ──► algol-parser
 
 This package is a thin wrapper. The real work is done by:
 
-- **`coding-adventures-grammar-tools`**: Parses `algol.tokens` into a
-  `TokenGrammar` data structure.
+- **`coding-adventures-grammar-tools`**: Compiles `algol/algol60.tokens` into
+  a native `TokenGrammar` module.
 - **`coding-adventures-lexer`**: The `GrammarLexer` engine that runs the
   token grammar against source text.
 
@@ -84,8 +87,8 @@ tokens = lexer.tokenize()
 | Arithmetic | `DIV`, `MOD` |
 | Values | `INTEGER_LIT`, `REAL_LIT`, `STRING_LIT`, `IDENT` |
 | Assignment | `ASSIGN` (`:=`) |
-| Exponentiation | `POWER` (`**`), `CARET` (`^`) |
-| Relational | `EQ` (`=`), `NEQ` (`!=`), `LT` (`<`), `GT` (`>`), `LEQ` (`<=`), `GEQ` (`>=`) |
+| Exponentiation | `POWER` (`**`), `CARET` (`^`, `↑`) |
+| Relational | `EQ` (`=`), `NEQ` (`!=`, `<>`, `≠`), `LT` (`<`), `GT` (`>`), `LEQ` (`<=`, `≤`), `GEQ` (`>=`, `≥`) |
 | Arithmetic | `PLUS` (`+`), `MINUS` (`-`), `STAR` (`*`), `SLASH` (`/`) |
 | Delimiters | `LPAREN`, `RPAREN`, `LBRACKET`, `RBRACKET`, `SEMICOLON`, `COMMA`, `COLON` |
 
@@ -103,19 +106,36 @@ if x = 42 then ...  (* equality test: is x equal to 42? *)
 
 ### Comments
 
-ALGOL comments use the keyword `comment` followed by text up to the next `;`:
+ALGOL comments use the case-insensitive keyword `comment` followed by text up
+to the next `;`:
 
 ```algol
 comment this is a comment;
+COMMENT this is also a comment;
 x := 1; comment set x to one;
 ```
 
 The comment (including its terminating semicolon) is consumed silently.
+Identifiers that merely start with those letters, such as `commentary`, remain
+identifiers.
 
 ### Keywords Are Case-Insensitive
 
 `BEGIN`, `Begin`, and `begin` all produce the same `BEGIN` token. Keyword
 matching is done after normalizing to lowercase.
+
+### Publication Symbols
+
+ALGOL 60 publication symbols normalize to the same token values as the ASCII or
+word spellings used by the parser and compiler: `≤` to `<=`, `≥` to `>=`, `≠`
+to `!=`, `↑` to `^`, `×` to `*`, `÷` to `/`, and `¬`, `∧`, `∨`, `⊃`, `≡`
+to `not`, `and`, `or`, `impl`, `eqv`.
+
+### String Literals
+
+String literals may use single or double quotes. The delimiter cannot appear
+inside the literal because the grammar intentionally does not define escape
+sequences.
 
 ### Real Literals
 

@@ -2,6 +2,36 @@
 
 All notable changes to this crate will be documented here.
 
+## [0.2.0] — 2026-05-05
+
+### Added
+
+- **`macho_object` module** — produces Mach-O 64-bit relocatable
+  **object files** (`MH_OBJECT`) suitable for feeding to Apple's
+  system linker `ld`.  Used by `twig-aot` so the final executable is
+  written by `ld` itself, granting it the trusted provenance modern
+  macOS requires for `exec()`.
+
+### Changed (`macho64` executable writer)
+
+- Added `__PAGEZERO` segment (required by modern macOS).
+- Switched the entry-point command from `LC_MAIN` to `LC_UNIXTHREAD`
+  (no dyld required).
+- Added `__LINKEDIT` segment + `LC_CODE_SIGNATURE` with an embedded
+  ad-hoc SuperBlob / CodeDirectory signed via SHA-256 page hashes.
+  Verified by `codesign --verify`.
+- Added `LC_BUILD_VERSION` declaring macOS 15 minOS / SDK.
+- Reworked tests to validate structural properties rather than fixed
+  byte offsets (which now shift with the signature payload).
+
+### Note
+
+`code_packager::macho64::pack` produces a self-signed, structurally
+valid Mach-O.  However, on macOS 15+ the kernel rejects executables
+whose **last writer** is not a trusted system tool (provenance
+sandbox), so the *direct* output is not always launchable.  Use
+`macho_object::pack_object` + `ld` for that path.
+
 ## [0.1.0] — 2026-04-28
 
 ### Added

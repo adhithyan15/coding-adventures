@@ -8,13 +8,21 @@ Twig source --> [twig-lexer] --> tokens --> [twig-parser] --> AST --> [twig-ir-c
 
 Same pattern as every other Rust language frontend (`brainfuck`, `dartmouth-basic`, …) and as the Python [`twig` package](../../python/twig)'s `parser.py` + `ast_extract.py` pair.
 
-## Grammar (one screen, lives in `code/grammars/twig.grammar`)
+## Grammar (lives in `code/grammars/twig.grammar`)
 
 ```text
 program     = { form } ;
 form        = define | expr ;
 define      = LPAREN "define" name_or_signature expr { expr } RPAREN ;
-name_or_signature = NAME | LPAREN NAME { NAME } RPAREN ;
+
+; LANG23 PR 23-E: typed params + return annotation
+name_or_signature = NAME [ COLON type_annotation ]
+                  | LPAREN NAME { typed_param } [ ARROW type_annotation ] RPAREN ;
+typed_param = LPAREN NAME COLON type_annotation RPAREN | NAME ;
+type_annotation = LPAREN NAME LPAREN { INTEGER } RPAREN RPAREN  ; membership
+                | LPAREN NAME INTEGER INTEGER RPAREN             ; range
+                | NAME ;                                         ; bare kind
+
 expr        = atom | quoted | compound ;
 atom        = INTEGER | BOOL_TRUE | BOOL_FALSE | "nil" | NAME ;
 quoted      = QUOTE NAME ;
@@ -28,23 +36,44 @@ quote_form  = LPAREN "quote"  NAME RPAREN ;
 apply       = LPAREN expr { expr } RPAREN ;
 ```
 
+### LANG23 PR 23-E annotation syntax
+
+```scheme
+; Ranged int parameter: x must be in [0, 128)
+(define (clamp (x : (Int 0 128))) x)
+
+; Annotated parameter + annotated return type
+(define (clamp-byte (x : int) -> (Int 0 256)) x)
+
+; Mixed: first param annotated, second plain
+(define (in-range (lo : (Int 0 100)) hi) (+ lo hi))
+
+; Annotated value binding
+(define count : (Int 0 1000) 42)
+```
+
+`->` lexes as the dedicated `ARROW` token (not a `NAME`), so `{ typed_param }`
+stops cleanly at the arrow.  `COLON` (`:`) is likewise a dedicated token.
+Both take priority over `NAME` in the lexer via longest-match ordering.
+
 ## Typed AST
 
 The crate's `ast_extract` module walks the generic `GrammarASTNode` tree and lifts each meaningful subtree into one of these typed variants:
 
-| Type      | Used for                         |
-|-----------|----------------------------------|
-| `IntLit`  | `42`, `-7`                       |
-| `BoolLit` | `#t`, `#f`                       |
-| `NilLit`  | `nil`                            |
-| `SymLit`  | `'foo`, `(quote foo)`            |
-| `VarRef`  | `x`, `+`, `null?`                |
-| `If`      | `(if c t e)`                     |
-| `Let`     | `(let ((x 1)) body+)`            |
-| `Begin`   | `(begin e1 e2 ...)`              |
-| `Lambda`  | `(lambda (params) body+)`        |
-| `Apply`   | `(fn arg0 arg1 ...)`             |
-| `Define`  | `(define name expr)` (top-level) |
+| Type             | Used for                                        |
+|------------------|-------------------------------------------------|
+| `IntLit`         | `42`, `-7`                                      |
+| `BoolLit`        | `#t`, `#f`                                      |
+| `NilLit`         | `nil`                                           |
+| `SymLit`         | `'foo`, `(quote foo)`                           |
+| `VarRef`         | `x`, `+`, `null?`                               |
+| `If`             | `(if c t e)`                                    |
+| `Let`            | `(let ((x 1)) body+)`                           |
+| `Begin`          | `(begin e1 e2 ...)`                             |
+| `Lambda`         | `(lambda (params) body+)`                       |
+| `Apply`          | `(fn arg0 arg1 ...)`                            |
+| `Define`         | `(define name expr)` (top-level)                |
+| `TypeAnnotation` | LANG23: `int`, `(Int lo hi)`, `(Member int …)` |
 
 The function-sugar form `(define (f x) body+)` lowers to `Define { name: "f", expr: Lambda { params: ["x"], body } }` during extraction — downstream code only ever sees the lambda shape.  Both quote forms (`'foo` and `(quote foo)`) collapse to a single `SymLit`.
 
@@ -81,4 +110,4 @@ The `GrammarParser` is recursive (one stack frame per matched rule).  Pathologic
 cargo test -p twig-parser
 ```
 
-31 unit tests covering every form, the function-sugar lowering, multi-expression bodies, position tracking, and error/depth-cap paths.
+33 unit tests covering every form, the function-sugar lowering, multi-expression bodies, position tracking, error/depth-cap paths, and LANG23 annotation parsing.

@@ -6,6 +6,290 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Added — VMCOND00 Phase 4: Restart chain (Layer 4) + Exit-point chain (Layer 5)
+
+Implements VMCOND00 Layers 4 and 5 — named restarts and non-local exits — in
+the vm-core interpreter.  Seven new IIR opcodes complete the full VMCOND00
+condition system.
+
+**New module: `vm_core.restart_chain`**
+
+- **`RestartNode`** — dataclass representing one entry on the restart chain:
+  - `name: str` — the symbolic restart name (e.g. `"use-value"`).
+  - `restart_fn: object` — a string (IIR function name) in Phase 4.
+  - `stack_depth: int` — frame-stack depth at push time, used by `EXIT_TO`
+    to remove stale nodes during unwinding.
+
+**New module: `vm_core.exit_chain`**
+
+- **`ExitPointNode`** — dataclass representing one entry on the exit-point chain:
+  - `tag: str` — the exit-point tag (e.g. `"done"`).
+  - `result_reg: str | None` — name of the register to receive the exit value
+    in the target frame; `None` means discard.
+  - `resume_ip: int` — pre-resolved instruction index to jump to in the target
+    frame when `EXIT_TO` fires.
+  - `frame_depth: int` — frame-stack depth at push time; the target frame is
+    `vm._frames[frame_depth - 1]` after unwinding.
+
+**New error classes** (subclasses of `VMError`):
+
+- **`RestartChainError`** — raised by `pop_restart` on underflow, and by
+  `invoke_restart` when the handle is `None`, is not a `RestartNode`, has a
+  non-string `restart_fn`, or names an unknown IIR function.
+- **`UnboundExitTagError`** — raised by `exit_to` when no matching exit point
+  exists on the chain.  Carries `.tag: str` for inspection by the host.
+
+**New `VMCore` state**
+
+- `_restart_chain: list[RestartNode]` — Layer 4 named-restart stack.
+- `_exit_point_chain: list[ExitPointNode]` — Layer 5 non-local-exit stack.
+  Both are cleared by `VMCore.reset()`.
+
+**New dispatch handlers in `vm_core.dispatch`**
+
+- `handle_push_restart` — reads name from `srcs[0]` and the function name from
+  `frame.resolve(srcs[1])`; wraps them in a `RestartNode` and appends to
+  `vm._restart_chain`.
+- `handle_pop_restart` — pops the most recently pushed restart; raises
+  `RestartChainError` on underflow.
+- `handle_find_restart` — walks `vm._restart_chain` newest-first; writes the
+  first matching `RestartNode` into dest, or `None` if no match.
+- `handle_invoke_restart` — validates the handle (must be a `RestartNode` with
+  a string `restart_fn`), resolves the function from the module, and pushes it
+  as a new call frame (non-unwinding by default).  Mirrors `handle_call`'s
+  `return_dest` integer-index allocation so `handle_ret` can write the return
+  value back to the caller.
+- `handle_compute_restarts` — returns a copy of `vm._restart_chain` as a plain
+  Python list (outermost first); useful for debuggers presenting restart choices.
+- `handle_establish_exit` — resolves the after-label to a resume IP, pre-
+  initialises the result register to `0` in the current frame (so normal
+  fallthrough can still execute `ret result`), and appends an `ExitPointNode`.
+- `handle_exit_to` — searches `vm._exit_point_chain` newest-first for the
+  matching tag; truncates the chain to remove the matched node and all more
+  recently pushed nodes; calls `_unwind_to_depth` to pop frames and chain nodes;
+  assigns the exit value to the result register; jumps to `resume_ip`.
+
+**Helper: `_unwind_to_depth(vm, target_depth)`** — pops `vm._frames`,
+`vm._handler_chain` nodes with `stack_depth > target_depth`, and
+`vm._restart_chain` nodes with `stack_depth > target_depth` until
+`len(vm._frames) == target_depth`.  Used by `EXIT_TO`.
+
+**`_pop_frame` cleanup** — `_pop_frame` now strips restart-chain nodes with
+`stack_depth >= current_depth` and exit-point chain nodes with
+`frame_depth >= current_depth` before the frame is popped.  This handles
+the normal-return path; `_unwind_to_depth` handles the `EXIT_TO` path.
+
+**Tests** — 43 new tests in `tests/test_vmcond00_phase4.py` covering:
+`RestartNode` and `ExitPointNode` dataclass construction, `RestartChainError`
+and `UnboundExitTagError` hierarchy, push/pop/underflow mechanics,
+`find_restart` shadowing, `compute_restarts` ordering, `invoke_restart` return
+value and error paths, `establish_exit` / `exit_to` value delivery, normal
+fallthrough, unknown tag, innermost-tag selection, cross-frame unwinding,
+handler-chain and restart-chain cleanup during unwinding, and the full spec
+acceptance criterion (restart + `exit_to` round-trip).
+
+---
+
+### Added — VMCOND00 Phase 3: Dynamic handler chain (Layer 3)
+
+Implements VMCOND00 Layer 3 — non-unwinding condition handlers — in the vm-core
+interpreter.  Five new IIR opcodes (`push_handler`, `pop_handler`, `signal`,
+`error`, `warn`) are now fully dispatched by the VM.
+
+**New module: `vm_core.handler_chain`**
+
+- **`HandlerNode`** — dataclass representing one entry on the dynamic handler
+  chain:
+  - `condition_type: str` — `"*"` (catch-all) or a Python type name.
+  - `handler_fn: object` — a string (IIR function name) in Phase 3; Phase 4
+    will extend this to closures and native callables.
+  - `stack_depth: int` — frame-stack depth at push time (reserved for Phase 5
+    `EXIT_TO` unwinding).
+
+**New error: `HandlerChainError`** (subclass of `VMError`) — raised by
+`pop_handler` when the handler chain is empty (push/pop imbalance detected at
+runtime).
+
+**New `VMCore` state: `_handler_chain: list[HandlerNode]`** — mutable stack
+cleared on `VMCore.reset()`.
+
+**New dispatch handlers in `vm_core.dispatch`**
+
+- `handle_push_handler` — reads `type_id` from `srcs[0]` and the handler
+  function name from `frame.resolve(srcs[1])`, wraps them in a `HandlerNode`,
+  and appends to `vm._handler_chain`.
+- `handle_pop_handler` — pops the most recently pushed node; raises
+  `HandlerChainError` on underflow.
+- `handle_signal` — walks the chain most-recent → oldest via
+  `_handler_type_matches`; on the first match calls the handler
+  non-unwinding via `_invoke_handler_nonunwinding`; if no match, continues
+  silently (no-op).
+- `handle_error` — two-phase dispatch:
+  1. Layer 2 static exception table checked first (same logic as `handle_throw`
+     but without full unwind — just redirects `frame.ip` if in range).
+  2. Layer 3 handler chain walked exactly as `handle_signal`.
+  3. If neither matches, raises `UncaughtConditionError`.
+- `handle_warn` — walks the chain exactly as `handle_signal`; if no match,
+  emits `[vm-core WARN] <repr>` to `sys.stderr` using the same hardened
+  repr strategy as `UncaughtConditionError`, then continues.
+
+**Non-unwinding invocation protocol** — `_invoke_handler_nonunwinding` pushes
+a fresh `VMFrame` for the handler function with `return_dest=None` (discarding
+the return value), copies the condition into register 0 (the handler's first
+parameter), and appends the frame to `vm._frames`.  The dispatch loop runs
+inside the handler; when the handler executes `ret`, `handle_ret` pops it and
+the original frame resumes at the instruction *after* the signaling opcode.
+
+**Security** — `handle_warn`'s stderr output uses the same nested
+`try/except` defence as `UncaughtConditionError.__init__` to guard against
+guest objects whose `__repr__` raises or returns an unbounded string.
+
+**Tests** — 33 new tests in `tests/test_vmcond00_phase3.py` covering:
+`HandlerNode` construction, `HandlerChainError` hierarchy,
+push/pop/underflow mechanics, `signal` no-op and match paths,
+`error` Layer 2 priority and Layer 3 fallback, `warn` stderr emission,
+cross-frame handler visibility, and LIFO handler ordering.
+
+---
+
+### Added — VMCOND00 Phase 2: throw dispatch + UncaughtConditionError
+
+Implements VMCOND00 Layer 2 — unwind exceptions — in the vm-core interpreter.
+A `throw` instruction now walks the per-function static exception tables of
+every active frame from innermost to outermost, transferring control to the
+first matching handler or aborting execution with `UncaughtConditionError`.
+
+**New exception class: `UncaughtConditionError(VMError)`** (`errors.py`)
+
+Raised when a `throw` propagates to the top of the call stack with no matching
+handler anywhere.  Wraps the original condition object for inspection by the
+host environment:
+
+```python
+from vm_core.errors import UncaughtConditionError
+try:
+    vm.execute(module)
+except UncaughtConditionError as e:
+    print(f"VM aborted: {e.condition!r}")
+```
+
+`UncaughtConditionError` is re-exported from the package root (`vm_core`).
+
+**New dispatch handler: `handle_throw`** (`dispatch.py`)
+
+Implements the full Layer 2 unwind algorithm:
+
+1. Read the condition value from the source register.
+2. Walk `vm._frames` from innermost (top) to outermost (bottom).
+3. For each frame, compute `throw_ip = frame.ip - 1` (the dispatch loop
+   increments `ip` **before** calling the handler, so the instruction that
+   raised is always at `ip - 1`).
+4. Scan the frame's `fn.exception_table` for an `ExceptionTableEntry` where
+   `entry.from_ip <= throw_ip < entry.to_ip` (half-open range, matching JVM /
+   CPython convention).
+5. If the entry also matches `entry.type_id` (see below), redirect the frame:
+   set `frame.ip = entry.handler_ip`, store the condition into `entry.val_reg`,
+   and return normally.
+6. If no entry matches in this frame, pop the frame and continue to the caller.
+7. If all frames are exhausted, raise `UncaughtConditionError(condition)`.
+
+The handler is registered in `STANDARD_OPCODES` under `"throw"`.
+
+**New helper: `_throw_type_matches(condition, type_id) -> bool`** (`dispatch.py`)
+
+Encapsulates Phase 2 type-matching logic:
+
+- `type_id == "*"` (i.e. `CATCH_ALL`) — always matches; write a catch-all
+  handler by setting `type_id="*"` in the `ExceptionTableEntry`.
+- Any other string — exact match against `type(condition).__name__`.
+  Example: `type_id="ValueError"` catches only `ValueError` instances, not
+  subclasses.  Subtype hierarchy is deferred to Phase 3 (`is_subtype` lookup).
+
+**Test additions (`tests/test_vmcond00_phase2.py` — 34 new tests):**
+
+- `TestExceptionTableEntry` (6): construction, frozen immutability, equality,
+  CATCH_ALL constant, typed entry, `compare=False` contract.
+- `TestThrowSameFrame` (7): catch-all catches int/str/None, typed match, typed
+  mismatch raises, val_reg assigned correctly, instructions after throw are
+  unreachable.
+- `TestThrowRangeBoundaries` (3): `from_ip` is inclusive (catches at boundary),
+  `to_ip` is exclusive (does not catch), instruction before range not caught.
+- `TestThrowAcrossFrames` (5): callee throw caught in caller, frames popped on
+  propagation, three-level propagation, no handler raises
+  `UncaughtConditionError`, innermost handler wins over outer.
+- `TestUncaughtConditionError` (4): condition attribute preserved, string repr,
+  `VMError` subclass, root-frame uncaught raises.
+- `TestThrowTypeMatching` (9): catch-all matches int/str/list/None, exact type
+  name matches int/str, type name mismatch, custom class name match/mismatch.
+
+Coverage: 97.84% (267 tests pass; was 233 + 26 phase-1 tests).
+
+**Spec reference:** VMCOND00 §3 Layer 2 — unwind exceptions.
+
+---
+
+### Added — VMCOND00 Phase 1: syscall_checked and branch_err dispatch + register_syscall API
+
+Implements VMCOND00 Layer 1 — the result-value error protocol — in the vm-core
+interpreter.  Languages that opt in can invoke numbered host syscalls without
+trapping and route control flow based on the error code, all without touching
+the condition system or allocating any handler objects.
+
+**New opcode handlers (in `dispatch.py`):**
+
+- **`handle_syscall_checked`** — Executes a SYSCALL00 canonical syscall by
+  number.  Looks up the implementation in `VMCore._syscall_table[n]`, calls it
+  with the resolved argument, and writes `(value, error_code)` into two named
+  registers.  Error convention: 0 = success, -1 = EOF, <-1 = negated errno.
+  The handler never raises Python exceptions: unknown syscall numbers return
+  `(0, -EINVAL)`; implementations that raise are caught and also return
+  `(0, -EINVAL)`.
+
+- **`handle_branch_err`** — Reads the error-code register and jumps to the
+  target label when it is non-zero.  Falls through when it is zero (success).
+  Does not record branch statistics (the check is a typed error test, not an
+  algorithmic conditional).
+
+Both handlers are registered in `STANDARD_OPCODES` under the string mnemonics
+`"syscall_checked"` and `"branch_err"`.
+
+**New public API on `VMCore`:**
+
+- **`register_syscall(n, impl)`** — Register a host implementation for
+  SYSCALL00 syscall number `n`.  `impl` must have signature
+  `(arg: int) -> (value: int, error_code: int)`.  `n` must be in `[1, 255]`
+  (the SYSCALL00 canonical range); a `ValueError` is raised for out-of-range
+  numbers.  See the docstring for the error-code convention and a complete
+  write-byte example.
+- **`unregister_syscall(n)`** — Remove a previously registered implementation.
+  No-op if `n` is not registered.
+- **`_syscall_table`** — Internal dict `{int: Callable}`.  Empty by default;
+  languages wire it up by calling `register_syscall`.  The VM is agnostic about
+  I/O strategy.
+
+**Security hardening:**
+
+- `register_syscall` validates that `n` is in `[1, 255]` before writing to
+  the table.  Syscall 0 is reserved by the ABI; numbers above 255 are outside
+  the canonical table.  Eager rejection surfaces programming errors at
+  registration time rather than silently diverging at dispatch time.
+
+**Test additions (`tests/test_vmcond00_phase1.py` — 26 new tests):**
+
+- `TestRegisterSyscall` — 11 tests: populate, overwrite, remove, no-op, empty
+  default, reject 0, reject >255, reject negative, accept boundary 1, accept
+  boundary 255.
+- `TestSyscallChecked` — 7 tests: success value, return value, EOF, errno, unknown
+  number → EINVAL, impl raises → EINVAL, arg forwarding.
+- `TestBranchErr` — 4 tests: branch on -1, branch on negated errno, branch on
+  positive non-zero, fall-through on 0.
+- `TestSyscallCheckedWithBranchErr` — 4 integration tests: full round-trip through
+  mock read-byte (success and EOF), unknown syscall → error path, two-syscall program.
+
+Coverage: 97.79% (233 tests pass).
+
+---
+
 ### Added — LANG18: Lightweight VM coverage mode
 
 - **`VMCore._coverage_mode` / `VMCore._coverage`** — two new internal fields that

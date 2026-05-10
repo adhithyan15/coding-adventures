@@ -1,5 +1,29 @@
 # Changelog — twig-ir-compiler
 
+## [0.2.0] — 2026-05-04
+
+### Added (LANG23 PR 23-E — emit RefinedType annotations into IIR)
+
+- `type_annotation_to_refined_type(ann: &TypeAnnotation) -> RefinedType`:
+  conversion function that bridges the parser's `TypeAnnotation` enum to
+  `lang-refined-types::RefinedType`.  Matches all five `TypeAnnotation` variants:
+  - `UnrefinedInt` → `RefinedType::unrefined(Kind::Int)`
+  - `UnrefinedBool` → `RefinedType::unrefined(Kind::Bool)`
+  - `Any` → `RefinedType::unrefined(Kind::Any)`
+  - `RangeInt { lo, hi }` → `RefinedType::refined(Kind::Int, Predicate::Range { lo, hi, inclusive_hi: false })`
+  - `MembershipInt { values }` → `RefinedType::refined(Kind::Int, Predicate::Membership { values })`
+- `compile_top_level_lambda` now populates `IIRFunction::param_refinements` and
+  `IIRFunction::return_refinement` from the `Lambda` node's annotation fields.
+- `lang-refined-types` added as a dependency.
+- Round-trip tests in `lib.rs` (PR 23-E section, 7 new tests):
+  - `ranged_int_param_annotation_round_trips_to_iir`
+  - `unrefined_int_param_annotation_round_trips`
+  - `return_annotation_round_trips_to_iir`
+  - `multiple_annotated_params_lockstep`
+  - `unannotated_function_has_no_refinement_fields`
+  - `annotation_does_not_change_existing_type_hints`
+  - `source_map_lockstep_holds_for_annotated_functions`
+
 ## [0.1.0] — 2026-04-29
 
 ### Added

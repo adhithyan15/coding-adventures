@@ -1,0 +1,10 @@
+[package]
+name = "aarch64-backend"
+version = "0.1.0"
+edition = "2021"
+description = "ARM64 (AArch64) backend for jit-core / aot-core — lowers CIR to native machine code via aarch64-encoder."
+
+[dependencies]
+aarch64-encoder = { path = "../aarch64-encoder" }
+jit-core        = { path = "../jit-core" }
+vm-core         = { path = "../vm-core" }

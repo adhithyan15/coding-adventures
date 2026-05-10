@@ -1,0 +1,10 @@
+[package]
+name = "zigbee-zcl"
+version = "0.1.0"
+edition = "2021"
+description = "Zigbee Cluster Library frame, attribute, and D23 mapping primitives"
+license = "MIT"
+
+[dependencies]
+smart-home-core = { path = "../smart-home-core" }
+zigbee-nwk = { path = "../zigbee-nwk" }

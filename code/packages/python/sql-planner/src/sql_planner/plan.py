@@ -78,6 +78,29 @@ class EmptyResult:
     columns: tuple[str, ...] = ()
 
 
+@dataclass(frozen=True, slots=True)
+class SingleRow:
+    """Leaf node: yields exactly one empty row. Used for SELECT without FROM.
+
+    This is the semantic equivalent of SQLite's internal "dual" table — a
+    conceptual source of exactly one row with no columns. Any SELECT items
+    above it are evaluated exactly once, making it the correct scan base for
+    queries like::
+
+        SELECT 1 + 1
+        SELECT UPPER('hello')
+        SELECT CAST(3.14 AS INTEGER)
+        SELECT DATE('now')
+
+    The codegen executes the body function once with no cursor loop. No
+    AdvanceCursor, CloseScan, or jump instructions are emitted. This means
+    expressions in the SELECT list that reference columns will raise at
+    runtime (there are no columns on a rowless source), but the planner has
+    already validated that no unqualified column references appear in a
+    from-less SELECT during column resolution.
+    """
+
+
 # ---- Transform nodes ------------------------------------------------------
 
 
@@ -140,12 +163,16 @@ class AggregateItem:
     ``alias`` is the output column name. If the user wrote
     ``COUNT(*) AS n`` the alias is ``n``; otherwise the planner derives
     a default alias (``count``, ``sum_salary``) using standard SQL rules.
+
+    ``separator`` is only meaningful for ``GROUP_CONCAT``.  When ``None``
+    the VM uses the SQLite default of ``","`` .
     """
 
     func: AggFunc
     arg: FuncArg
     alias: str
     distinct: bool = False
+    separator: str | None = None  # GROUP_CONCAT only
 
 
 @dataclass(frozen=True, slots=True)
@@ -380,12 +407,75 @@ class InsertSource:
 
 
 @dataclass(frozen=True, slots=True)
+class UpsertAssignment:
+    """One column assignment in an ``ON CONFLICT DO UPDATE SET`` clause.
+
+    ``value`` may reference :class:`~sql_planner.expr.ExcludedColumn` to
+    access the would-be-inserted row's value for that column.
+    """
+
+    column: str
+    value: Expr
+
+
+@dataclass(frozen=True, slots=True)
+class UpsertAction:
+    """The resolved ``ON CONFLICT … DO …`` clause from an INSERT statement.
+
+    UPSERT semantics
+    ----------------
+    When an INSERT would violate a UNIQUE or PRIMARY KEY constraint:
+
+    - ``do_nothing=True``   → silently skip the conflicting row (like
+                              ``INSERT OR IGNORE`` but scoped to the specific
+                              constraint named by ``conflict_target``)
+    - ``do_nothing=False``  → apply ``assignments`` in-place on the existing
+                              conflicting row.  ``ExcludedColumn(col=c)``
+                              expressions inside ``assignments`` resolve to the
+                              would-be-inserted value for column ``c``.
+
+    conflict_target
+    ---------------
+    Column names naming the unique constraint to watch.  When empty, any
+    constraint violation fires the action.  The VM uses this to look up the
+    rowid of the conflicting existing row via ``backend.find_conflicting_row``.
+
+    Codegen uses this node to emit a ``UpsertSpec`` IR value that the VM
+    carries alongside each ``InsertRow`` / ``InsertFromResult`` instruction.
+    """
+
+    conflict_target: tuple[str, ...]  # empty = any unique constraint
+    do_nothing: bool = False
+    assignments: tuple[UpsertAssignment, ...] = ()  # populated when do_nothing=False
+
+
+@dataclass(frozen=True, slots=True)
 class Insert:
-    """INSERT INTO t (cols) VALUES (...) or INSERT INTO t SELECT ...."""
+    """INSERT INTO t (cols) VALUES (...) or INSERT INTO t SELECT ... [RETURNING ...].
+
+    ``on_conflict`` mirrors the SQL ``INSERT OR <action>`` clause and the
+    ``REPLACE INTO`` shorthand.  The VM uses it to decide what to do when a
+    constraint violation occurs:
+
+    - ``None``        — raise :class:`IntegrityError` (default)
+    - ``"REPLACE"``   — delete every conflicting row, then insert
+    - ``"IGNORE"``    — silently discard the new row and continue
+    - ``"ABORT"`` / ``"FAIL"`` / ``"ROLLBACK"`` — raise an error
+                        (full FAIL/ROLLBACK transaction semantics are left
+                        to the connection layer; the VM raises IntegrityError)
+
+    ``upsert`` holds the resolved ``ON CONFLICT … DO …`` plan node.  When
+    present it takes precedence over ``on_conflict`` for constraint handling.
+    The two may coexist in theory (``INSERT OR ABORT … ON CONFLICT DO NOTHING``
+    is syntactically valid) but in practice only one is used per statement.
+    """
 
     table: str
     columns: tuple[str, ...] | None  # None = implicit column list
     source: InsertSource
+    on_conflict: str | None = None   # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
+    returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
+    upsert: UpsertAction | None = None  # ON CONFLICT … DO …
 
 
 @dataclass(frozen=True, slots=True)
@@ -398,19 +488,21 @@ class Assignment:
 
 @dataclass(frozen=True, slots=True)
 class Update:
-    """UPDATE t SET col = expr, ... WHERE predicate."""
+    """UPDATE t SET col = expr, ... WHERE predicate [RETURNING ...]."""
 
     table: str
     assignments: tuple[Assignment, ...]
     predicate: Expr | None = None  # None = update every row
+    returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
 
 
 @dataclass(frozen=True, slots=True)
 class Delete:
-    """DELETE FROM t WHERE predicate."""
+    """DELETE FROM t WHERE predicate [RETURNING ...]."""
 
     table: str
     predicate: Expr | None = None
+    returning: tuple[Expr, ...] = ()  # empty = no RETURNING clause
 
 
 # ---- DDL nodes ------------------------------------------------------------
@@ -572,6 +664,7 @@ class WindowFuncSpec:
     partition_by: tuple[Expr, ...]
     order_by: tuple[tuple[Expr, bool], ...]
     alias: str
+    extra_args: tuple[Expr, ...] = ()   # LAG/LEAD offset+default; NTH_VALUE n
 
 
 @dataclass(frozen=True, slots=True)
@@ -602,6 +695,7 @@ LogicalPlan = (
     Scan
     | IndexScan
     | EmptyResult
+    | SingleRow
     | DerivedTable
     | WorkingSetScan
     | RecursiveCTE
@@ -649,7 +743,7 @@ def children(node: LogicalPlan) -> tuple[LogicalPlan, ...]:
     plan nodes.
     """
     match node:
-        case Scan() | IndexScan() | EmptyResult() | CreateTable() | DropTable():
+        case Scan() | IndexScan() | EmptyResult() | SingleRow() | CreateTable() | DropTable():
             return ()
         case CreateIndex() | DropIndex():
             return ()

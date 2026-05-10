@@ -1,0 +1,10 @@
+[package]
+name = "coding_adventures_vault_audit"
+version = "0.1.0"
+edition = "2021"
+description = "VLT09 — append-only, tamper-evident, hash-chained audit log for the Vault stack. Each entry contains prev_hash = blake2b(prev_entry || entry_body), signed by the issuer's device key (Ed25519). Pluggable AuditSink trait + InMemoryAuditSink reference. Sealed-at-rest sinks layer VLT01 underneath."
+
+[dependencies]
+coding_adventures_blake2b = { path = "../blake2b" }
+coding_adventures_ed25519 = { path = "../ed25519" }
+coding_adventures_zeroize = { path = "../zeroize" }

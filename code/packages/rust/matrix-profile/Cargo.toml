@@ -1,0 +1,10 @@
+[package]
+name = "matrix-profile"
+version = "0.1.0"
+edition = "2021"
+description = "MX05 — profile-guided specialisation runtime for the matrix execution layer.  Owns invocation counters, tensor-byte sampling, the SpecKey + Specialiser + SpecCache types, the SpecialisationPolicy trait, and the SpecRouter glue.  Promoted from matrix-runtime in MX05 Phase 3 V5; matrix-runtime re-exports for back-compat."
+license = "MIT"
+
+[dependencies]
+matrix-ir         = { path = "../matrix-ir" }
+compute-ir        = { path = "../compute-ir" }

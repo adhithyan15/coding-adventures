@@ -1,0 +1,11 @@
+[package]
+name = "compute-ir"
+version = "0.1.0"
+edition = "2021"
+description = "MX02 — placed compute graph. The lower IR of the matrix execution layer: same dataflow as matrix-ir, plus explicit device placement, residency, and Transfer ops. Pure data, no execution."
+license = "MIT"
+
+[dependencies]
+# Only the upstream IR.  No external dependencies — see specs/MX00 for
+# the zero-dependency mandate.
+matrix-ir = { path = "../matrix-ir" }

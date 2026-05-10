@@ -1,0 +1,81 @@
+; stdlib/io — Twig standard I/O library
+;
+; Provides integer and boolean printing primitives built entirely from
+; host/write-byte, so the same source compiles identically on JVM, CLR,
+; and BEAM.  No closures, no heap — just arithmetic and host calls —
+; which keeps this module usable even on backends that haven't landed
+; full closure/heap support yet.
+;
+; Exports
+; -------
+;   print-int  n        — write the decimal digits of n to stdout
+;                         (handles negatives via a leading '-')
+;   print-bool b        — write "true" or "false" to stdout
+;   println    n        — print-int then a newline (ASCII 10)
+;   newline             — write a single newline (ASCII 10)
+;
+; Implementation notes
+; --------------------
+; print-digits is the recursive work-horse.  For a single digit d it
+; writes the ASCII code 48+d ('0'..'9').  For larger numbers it recurses
+; on the quotient to print the higher-order digits first, then writes the
+; last digit.
+;
+;   print-digits(123)
+;     → print-digits(12), write-byte('3')
+;     → print-digits(1),  write-byte('2'), write-byte('3')
+;     → write-byte('1'),  write-byte('2'), write-byte('3')
+;
+; No stdlib/list dependency: these are pure arithmetic + host syscalls.
+
+(module stdlib/io
+  (export print-int print-bool println newline)
+  (import host))
+
+; print-digits — internal helper.
+; Recursively writes the decimal digits of n (n must be >= 0).
+(define (print-digits n)
+  (if (< n 10)
+      ; Base case: single digit.  ASCII '0' == 48, so '0'..'9' == 48..57.
+      (host/write-byte (+ n 48))
+      ; Recursive case: write higher digits first, then this digit.
+      (begin
+        (print-digits (/ n 10))
+        (host/write-byte (+ (- n (* 10 (/ n 10))) 48)))))
+
+; print-int — write n's decimal representation to stdout.
+; Handles negative values by writing '-' (ASCII 45) first, then
+; negating n before delegating to print-digits.
+(define (print-int n)
+  (if (< n 0)
+      (begin
+        (host/write-byte 45)          ; '-'
+        (print-digits (- 0 n)))
+      (print-digits n)))
+
+; println — print-int followed by a newline (ASCII 10).
+(define (println n)
+  (print-int n)
+  (host/write-byte 10))
+
+; newline — write a single newline character (ASCII 10).
+(define (newline)
+  (host/write-byte 10))
+
+; print-bool — write "true" or "false" to stdout.
+; ASCII codes used (no string literals in Twig v1):
+;   't'=116  'r'=114  'u'=117  'e'=101
+;   'f'=102  'a'=97   'l'=108  's'=115  'e'=101
+(define (print-bool b)
+  (if b
+      (begin
+        (host/write-byte 116)   ; 't'
+        (host/write-byte 114)   ; 'r'
+        (host/write-byte 117)   ; 'u'
+        (host/write-byte 101))  ; 'e'
+      (begin
+        (host/write-byte 102)   ; 'f'
+        (host/write-byte 97)    ; 'a'
+        (host/write-byte 108)   ; 'l'
+        (host/write-byte 115)   ; 's'
+        (host/write-byte 101)))) ; 'e'

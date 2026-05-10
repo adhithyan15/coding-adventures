@@ -110,3 +110,20 @@ warnings = validate_parser_grammar(parser_grammar, token_grammar.token_names())
 # Cross-validate both together
 issues = cross_validate(token_grammar, parser_grammar)
 ```
+
+## Compile Grammars
+
+The package can also embed parsed grammars into Python modules so runtimes can
+import native data structures instead of opening grammar files at startup.
+
+```bash
+cd code/grammars
+
+grammar-tools compile-tokens algol/algol60.tokens \
+  -o ../packages/python/algol-lexer/src/algol_lexer/_grammar.py
+
+grammar-tools compile-grammar algol/algol60.grammar \
+  -o ../packages/python/algol-parser/src/algol_parser/_grammar.py
+```
+
+Omit `-o` to write the generated module to stdout.

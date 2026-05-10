@@ -741,16 +741,17 @@ describe("PaintGradient handler", () => {
 // ============================================================================
 
 describe("PaintImage handler", () => {
-  it("calls putImageData for RGBA 8-bit PixelContainer src", () => {
+  it("calls putImageData for a PixelContainer src (fixed RGBA8)", () => {
     const vm = createCanvasVM();
     const ctx = makeCtx();
 
+    // PixelContainer is now fixed RGBA8: { width, height, data: Uint8Array }.
+    // The old interface (channels, bit_depth, pixels) was removed when
+    // pixel-container was simplified from a configurable type to a fixed RGBA8 type.
     const pixels: PixelContainer = {
       width: 10,
       height: 10,
-      channels: 4,
-      bit_depth: 8,
-      pixels: new Uint8Array(10 * 10 * 4),
+      data: new Uint8Array(10 * 10 * 4),
     };
     vm.execute(
       paintScene(200, 200, "transparent", [
@@ -759,6 +760,26 @@ describe("PaintImage handler", () => {
       ctx,
     );
     expect(ctx.putImageData).toHaveBeenCalled();
+  });
+
+  it("skips putImageData when data.length does not match width*height*4 (DoS guard)", () => {
+    const vm = createCanvasVM();
+    const ctx = makeCtx();
+    // Declared 10×10 but only provides 16 bytes — dimension/length mismatch.
+    // Without the length check ImageData would throw a DOMException; with it
+    // we skip silently and render nothing.
+    const pixels: PixelContainer = {
+      width: 10,
+      height: 10,
+      data: new Uint8Array(16), // should be 10*10*4=400
+    };
+    vm.execute(
+      paintScene(200, 200, "transparent", [
+        paintImage(0, 0, 10, 10, pixels),
+      ]),
+      ctx,
+    );
+    expect(ctx.putImageData).not.toHaveBeenCalled();
   });
 
   it("draws placeholder rect for URI string src", () => {
@@ -775,37 +796,14 @@ describe("PaintImage handler", () => {
     expect(ctx.fillRect).toHaveBeenCalled();
   });
 
-  it("does not call putImageData for non-RGBA-8 PixelContainer (skips)", () => {
-    const vm = createCanvasVM();
-    const ctx = makeCtx();
-
-    // 16-bit depth — not directly supported by ImageData
-    const pixels: PixelContainer = {
-      width: 4,
-      height: 4,
-      channels: 4,
-      bit_depth: 16,
-      pixels: new Uint16Array(4 * 4 * 4),
-    };
-    vm.execute(
-      paintScene(200, 200, "transparent", [
-        paintImage(0, 0, 4, 4, pixels),
-      ]),
-      ctx,
-    );
-    expect(ctx.putImageData).not.toHaveBeenCalled();
-  });
-
-  it("sets globalAlpha when opacity is specified", () => {
+  it("sets globalAlpha when opacity is specified on a PixelContainer image", () => {
     const vm = createCanvasVM();
     const ctx = makeCtx();
 
     const pixels: PixelContainer = {
       width: 4,
       height: 4,
-      channels: 4,
-      bit_depth: 8,
-      pixels: new Uint8Array(4 * 4 * 4),
+      data: new Uint8Array(4 * 4 * 4),
     };
     vm.execute(
       paintScene(200, 200, "transparent", [

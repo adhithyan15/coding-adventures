@@ -1,0 +1,7 @@
+requires 'perl', '5.016';
+requires 'Exporter';
+requires 'Scalar::Util';
+
+on test => sub {
+    requires 'Test2::V0';
+};

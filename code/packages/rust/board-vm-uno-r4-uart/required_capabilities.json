@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/board-vm-uno-r4-uart",
+  "capabilities": [
+    {
+      "category": "hardware",
+      "action": "read",
+      "target": "Arduino Uno R4 WiFi RA4M1 SCI9 UART registers",
+      "justification": "Firmware must read bytes from the board UART to receive Board VM protocol frames."
+    },
+    {
+      "category": "hardware",
+      "action": "write",
+      "target": "Arduino Uno R4 WiFi RA4M1 SCI9 UART and pin-function registers",
+      "justification": "Firmware must configure the SCI9 UART pins and write Board VM response bytes back to the host."
+    }
+  ],
+  "justification": "Board-specific embedded UART boundary for the Uno R4 WiFi. Generic protocol and VM code remain in reusable crates."
+}

@@ -98,10 +98,12 @@ fn twig_parser_grammar() -> &'static ParserGrammar {
     TWIG_PARSER_GRAMMAR.get_or_init(generated_grammar::parser_grammar)
 }
 
-pub use ast_extract::{extract_program, MAX_AST_DEPTH};
+pub use ast_extract::{
+    check_membership_int_count, extract_program, MAX_AST_DEPTH, MAX_MEMBERSHIP_INT_VALUES,
+};
 pub use ast_nodes::{
     Apply, Begin, BoolLit, Define, Expr, Form, If, IntLit, Lambda, Let, NilLit, Program, SymLit,
-    VarRef,
+    TypeAnnotation, VarRef,
 };
 
 // ---------------------------------------------------------------------------

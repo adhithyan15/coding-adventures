@@ -229,6 +229,97 @@ def test_lower_memory_and_syscall_helpers_use_injected_tokens() -> None:
     )
 
 
+def test_inline_host_syscall_write_byte_emits_conv_u2_and_console_write() -> None:
+    """``inline_host_syscalls=True`` + SYSCALL 1 → ``conv.u2`` + ``Console.Write(char)``.
+
+    The legacy path emits ``ldc.i4 1; ldloc <arg>; call __ca_syscall`` and
+    does NOT include ``conv.u2`` (0xD3).  The inline path must include that
+    opcode so the CLR overload resolves to ``Write(char)`` rather than
+    ``Write(int)``.
+
+    Token layout with the default ``SequentialCILTokenProvider``:
+      MEM_LOAD_BYTE=0x0A000001, …, SYSCALL=0x0A000005,
+      CONSOLE_WRITE_CHAR=0x0A000006.
+    """
+    artifact = lower_ir_to_cil_bytecode(
+        _program(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(4), IrImmediate(65)]),
+            IrInstruction(IrOp.SYSCALL, [IrImmediate(1)]),
+            IrInstruction(IrOp.RET),
+        ),
+        CILBackendConfig(inline_host_syscalls=True),
+    )
+    body = artifact.entry_method.body
+    # 0xD3 = conv.u2 — present only in inline path
+    assert 0xD3 in body, "Expected conv.u2 (0xD3) in inline write-byte path"
+    # Console.Write(char) token bytes: 0x28 0x06 0x00 0x00 0x0A
+    assert bytes([0x28, 0x06, 0x00, 0x00, 0x0A]) in body, (
+        "Expected call to CONSOLE_WRITE_CHAR (0x0A000006)"
+    )
+    # Legacy __ca_syscall should NOT be present
+    assert bytes([0x28, 0x05, 0x00, 0x00, 0x0A]) not in body, (
+        "Legacy __ca_syscall call should be absent in inline path"
+    )
+
+
+def test_inline_host_syscall_read_byte_emits_console_read() -> None:
+    """``inline_host_syscalls=True`` + SYSCALL 2 → ``call Console.Read()``."""
+    artifact = lower_ir_to_cil_bytecode(
+        _program(
+            IrInstruction(IrOp.SYSCALL, [IrImmediate(2)]),
+            IrInstruction(IrOp.RET),
+        ),
+        CILBackendConfig(inline_host_syscalls=True),
+    )
+    body = artifact.entry_method.body
+    # Console.Read() token: 0x0A000007
+    assert bytes([0x28, 0x07, 0x00, 0x00, 0x0A]) in body, (
+        "Expected call to CONSOLE_READ (0x0A000007)"
+    )
+    # No conv.u2 for read path
+    assert 0xD3 not in body, "conv.u2 should not appear in read-byte path"
+    assert bytes([0x28, 0x05, 0x00, 0x00, 0x0A]) not in body, (
+        "Legacy __ca_syscall should be absent"
+    )
+
+
+def test_inline_host_syscall_exit_emits_environment_exit() -> None:
+    """``inline_host_syscalls=True`` + SYSCALL 10 → ``call Environment.Exit(int32)``."""
+    artifact = lower_ir_to_cil_bytecode(
+        _program(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(4), IrImmediate(0)]),
+            IrInstruction(IrOp.SYSCALL, [IrImmediate(10)]),
+            IrInstruction(IrOp.RET),
+        ),
+        CILBackendConfig(inline_host_syscalls=True),
+    )
+    body = artifact.entry_method.body
+    # Environment.Exit(int32) token: 0x0A000008
+    assert bytes([0x28, 0x08, 0x00, 0x00, 0x0A]) in body, (
+        "Expected call to ENVIRONMENT_EXIT (0x0A000008)"
+    )
+    assert bytes([0x28, 0x05, 0x00, 0x00, 0x0A]) not in body, (
+        "Legacy __ca_syscall should be absent"
+    )
+
+
+def test_legacy_syscall_path_uses_ca_syscall_by_default() -> None:
+    """Default ``CILBackendConfig`` uses the legacy ``__ca_syscall`` path."""
+    artifact = lower_ir_to_cil_bytecode(
+        _program(
+            IrInstruction(IrOp.LOAD_IMM, [IrRegister(4), IrImmediate(65)]),
+            IrInstruction(IrOp.SYSCALL, [IrImmediate(1)]),
+            IrInstruction(IrOp.RET),
+        ),
+    )
+    body = artifact.entry_method.body
+    # __ca_syscall token: 0x0A000005
+    assert bytes([0x28, 0x05, 0x00, 0x00, 0x0A]) in body, (
+        "Legacy __ca_syscall call expected in default (brainfuck) path"
+    )
+    assert 0xD3 not in body, "conv.u2 should not appear in legacy syscall path"
+
+
 def test_default_token_provider_is_deterministic() -> None:
     provider = SequentialCILTokenProvider(("_start", "callee"))
 

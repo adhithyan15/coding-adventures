@@ -15,9 +15,23 @@ Quick start::
 
     rewrite(IRApply(POW, (IRSymbol("z"), IRInteger(0))), [rule])
     # IRInteger(1)
+
+Phase 22 additions — MACSYMA matchdeclare / defrule system::
+
+    from cas_pattern_matching import MatchDeclareContext, RuleStore
+
+    ctx = MatchDeclareContext()
+    ctx.declare("x", "any")          # x matches anything
+    ctx.declare("n", "integerp")     # n matches only integers
+
+    pattern = IRApply(ADD, (IRSymbol("x"), IRSymbol("x")))
+    compiled = ctx.compile_pattern(pattern)
+    # → ADD(Pattern("x", Blank()), Pattern("x", Blank()))
 """
 
 from cas_pattern_matching.bindings import Bindings
+from cas_pattern_matching.defrule_engine import RuleStore
+from cas_pattern_matching.matchdeclare import MatchDeclareContext
 from cas_pattern_matching.matcher import match
 from cas_pattern_matching.nodes import (
     BLANK,
@@ -44,6 +58,7 @@ __all__ = [
     "BLANK",
     "Bindings",
     "Blank",
+    "MatchDeclareContext",
     "PATTERN",
     "Pattern",
     "REPLACE",
@@ -54,6 +69,7 @@ __all__ = [
     "RewriteCycleError",
     "Rule",
     "RuleDelayed",
+    "RuleStore",
     "apply_rule",
     "blank_head",
     "is_blank",

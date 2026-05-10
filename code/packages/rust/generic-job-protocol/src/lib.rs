@@ -39,6 +39,11 @@ impl<T> JobRequest<T> {
         self.metadata = metadata;
         self
     }
+
+    pub fn validate_envelope(&self) -> Result<(), JobValidationError> {
+        validate_required_token("id", &self.id)?;
+        self.metadata.validate()
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -70,6 +75,11 @@ impl<T> JobResponse<T> {
     pub fn with_metadata(mut self, metadata: JobMetadata) -> Self {
         self.metadata = metadata;
         self
+    }
+
+    pub fn validate_envelope(&self) -> Result<(), JobValidationError> {
+        validate_required_token("id", &self.id)?;
+        self.metadata.validate()
     }
 }
 
@@ -110,6 +120,21 @@ impl Default for JobMetadata {
 }
 
 impl JobMetadata {
+    pub fn with_created_at_ms(mut self, created_at_ms: u64) -> Self {
+        self.created_at_ms = created_at_ms;
+        self
+    }
+
+    pub fn with_deadline_at_ms(mut self, deadline_at_ms: u64) -> Self {
+        self.deadline_at_ms = Some(deadline_at_ms);
+        self
+    }
+
+    pub fn with_priority(mut self, priority: i32) -> Self {
+        self.priority = priority;
+        self
+    }
+
     pub fn with_affinity_key(mut self, affinity_key: impl Into<String>) -> Self {
         self.affinity_key = Some(affinity_key.into());
         self
@@ -119,7 +144,194 @@ impl JobMetadata {
         self.sequence = Some(sequence);
         self
     }
+
+    pub fn with_attempt(mut self, attempt: u32) -> Self {
+        self.attempt = attempt;
+        self
+    }
+
+    pub fn next_attempt(&self) -> Self {
+        let mut next = self.clone();
+        next.attempt = next.attempt.saturating_add(1);
+        next
+    }
+
+    pub fn with_trace_id(mut self, trace_id: impl Into<String>) -> Self {
+        self.trace_id = Some(trace_id.into());
+        self
+    }
+
+    pub fn with_tag(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
+        self.tags.insert(key.into(), value.into());
+        self
+    }
+
+    pub fn is_expired_at(&self, now_ms: u64) -> bool {
+        self.deadline_at_ms
+            .is_some_and(|deadline_at_ms| now_ms >= deadline_at_ms)
+    }
+
+    pub fn remaining_deadline_ms_at(&self, now_ms: u64) -> Option<u64> {
+        self.deadline_at_ms
+            .map(|deadline_at_ms| deadline_at_ms.saturating_sub(now_ms))
+    }
+
+    pub fn validate(&self) -> Result<(), JobValidationError> {
+        if let Some(deadline_at_ms) = self.deadline_at_ms {
+            if deadline_at_ms < self.created_at_ms {
+                return Err(JobValidationError::DeadlineBeforeCreated {
+                    created_at_ms: self.created_at_ms,
+                    deadline_at_ms,
+                });
+            }
+        }
+        if let Some(affinity_key) = self.affinity_key.as_deref() {
+            validate_required_token("affinity_key", affinity_key)?;
+        }
+        if let Some(trace_id) = self.trace_id.as_deref() {
+            validate_required_token("trace_id", trace_id)?;
+        }
+        for (key, value) in &self.tags {
+            validate_required_token("tag_key", key)?;
+            validate_single_line("tag_value", value)?;
+        }
+        Ok(())
+    }
 }
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct JobRetryPolicy {
+    #[serde(default)]
+    pub max_retries: u32,
+    #[serde(default)]
+    pub initial_backoff_ms: u64,
+    #[serde(default)]
+    pub max_backoff_ms: u64,
+}
+
+impl Default for JobRetryPolicy {
+    fn default() -> Self {
+        Self {
+            max_retries: 3,
+            initial_backoff_ms: 1_000,
+            max_backoff_ms: 30_000,
+        }
+    }
+}
+
+impl JobRetryPolicy {
+    pub fn disabled() -> Self {
+        Self {
+            max_retries: 0,
+            initial_backoff_ms: 0,
+            max_backoff_ms: 0,
+        }
+    }
+
+    pub fn with_max_retries(mut self, max_retries: u32) -> Self {
+        self.max_retries = max_retries;
+        self
+    }
+
+    pub fn with_initial_backoff_ms(mut self, initial_backoff_ms: u64) -> Self {
+        self.initial_backoff_ms = initial_backoff_ms;
+        self
+    }
+
+    pub fn with_max_backoff_ms(mut self, max_backoff_ms: u64) -> Self {
+        self.max_backoff_ms = max_backoff_ms;
+        self
+    }
+
+    pub fn retry_delay_ms_for_attempt(&self, attempt: u32) -> u64 {
+        let shift = attempt.min(63);
+        let multiplier = if shift == 63 {
+            u64::MAX
+        } else {
+            1_u64 << shift
+        };
+        self.initial_backoff_ms
+            .saturating_mul(multiplier)
+            .min(self.max_backoff_ms)
+    }
+
+    pub fn decision_for_error(&self, metadata: &JobMetadata, error: &JobError) -> JobRetryDecision {
+        if !error.retryable {
+            return JobRetryDecision::Stop {
+                reason: JobRetryStopReason::NotRetryable,
+            };
+        }
+        if metadata.attempt >= self.max_retries {
+            return JobRetryDecision::Stop {
+                reason: JobRetryStopReason::AttemptsExhausted,
+            };
+        }
+
+        let next_metadata = metadata.next_attempt();
+        JobRetryDecision::Retry {
+            metadata: next_metadata,
+            delay_ms: self.retry_delay_ms_for_attempt(metadata.attempt),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case", deny_unknown_fields)]
+pub enum JobRetryStopReason {
+    NotRetryable,
+    AttemptsExhausted,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "decision", rename_all = "snake_case", deny_unknown_fields)]
+pub enum JobRetryDecision {
+    Retry {
+        metadata: JobMetadata,
+        delay_ms: u64,
+    },
+    Stop {
+        reason: JobRetryStopReason,
+    },
+}
+
+impl JobRetryDecision {
+    pub fn should_retry(&self) -> bool {
+        matches!(self, Self::Retry { .. })
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum JobValidationError {
+    EmptyField {
+        field: &'static str,
+    },
+    MultilineField {
+        field: &'static str,
+    },
+    DeadlineBeforeCreated {
+        created_at_ms: u64,
+        deadline_at_ms: u64,
+    },
+}
+
+impl fmt::Display for JobValidationError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::EmptyField { field } => write!(f, "{field} must not be empty"),
+            Self::MultilineField { field } => write!(f, "{field} must be single-line"),
+            Self::DeadlineBeforeCreated {
+                created_at_ms,
+                deadline_at_ms,
+            } => write!(
+                f,
+                "deadline_at_ms {deadline_at_ms} must be greater than or equal to created_at_ms {created_at_ms}"
+            ),
+        }
+    }
+}
+
+impl std::error::Error for JobValidationError {}
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "status", rename_all = "snake_case", deny_unknown_fields)]
@@ -155,6 +367,16 @@ impl JobError {
             origin,
             detail: None,
         }
+    }
+
+    pub fn with_retryable(mut self, retryable: bool) -> Self {
+        self.retryable = retryable;
+        self
+    }
+
+    pub fn with_detail(mut self, detail: impl Into<String>) -> Self {
+        self.detail = Some(detail.into());
+        self
     }
 }
 
@@ -355,6 +577,21 @@ fn validate_frame_header<T>(
     Ok(())
 }
 
+fn validate_required_token(field: &'static str, value: &str) -> Result<(), JobValidationError> {
+    if value.trim().is_empty() {
+        return Err(JobValidationError::EmptyField { field });
+    }
+    validate_single_line(field, value)
+}
+
+fn validate_single_line(field: &'static str, value: &str) -> Result<(), JobValidationError> {
+    if value.contains('\n') || value.contains('\r') {
+        Err(JobValidationError::MultilineField { field })
+    } else {
+        Ok(())
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -384,6 +621,125 @@ mod tests {
             decode_request_json_line(&encoded).expect("decode request");
 
         assert_eq!(decoded, request);
+    }
+
+    #[test]
+    fn metadata_helpers_track_deadlines_attempts_and_tags() {
+        let metadata = JobMetadata::default()
+            .with_created_at_ms(100)
+            .with_deadline_at_ms(250)
+            .with_priority(10)
+            .with_attempt(2)
+            .with_trace_id("trace-1")
+            .with_affinity_key("device-7")
+            .with_sequence(42)
+            .with_tag("runtime", "rust");
+
+        assert_eq!(metadata.priority, 10);
+        assert_eq!(metadata.attempt, 2);
+        assert_eq!(metadata.tags.get("runtime"), Some(&"rust".to_string()));
+        assert!(!metadata.is_expired_at(249));
+        assert!(metadata.is_expired_at(250));
+        assert_eq!(metadata.remaining_deadline_ms_at(240), Some(10));
+        assert_eq!(metadata.remaining_deadline_ms_at(260), Some(0));
+        assert_eq!(metadata.next_attempt().attempt, 3);
+        metadata.validate().unwrap();
+    }
+
+    #[test]
+    fn retry_policy_classifies_retryable_errors_with_capped_backoff() {
+        let metadata = JobMetadata::default()
+            .with_created_at_ms(100)
+            .with_deadline_at_ms(1_000)
+            .with_attempt(2)
+            .with_trace_id("trace-7");
+        let policy = JobRetryPolicy::default()
+            .with_initial_backoff_ms(250)
+            .with_max_backoff_ms(750);
+        let error = JobError::new("busy", "worker saturated", JobErrorOrigin::Executor)
+            .with_retryable(true)
+            .with_detail("queue depth exceeded");
+
+        let decision = policy.decision_for_error(&metadata, &error);
+
+        assert!(decision.should_retry());
+        assert_eq!(policy.retry_delay_ms_for_attempt(0), 250);
+        assert_eq!(policy.retry_delay_ms_for_attempt(1), 500);
+        assert_eq!(policy.retry_delay_ms_for_attempt(2), 750);
+        assert_eq!(policy.retry_delay_ms_for_attempt(63), 750);
+        assert_eq!(error.detail.as_deref(), Some("queue depth exceeded"));
+        match decision {
+            JobRetryDecision::Retry { metadata, delay_ms } => {
+                assert_eq!(metadata.attempt, 3);
+                assert_eq!(metadata.trace_id.as_deref(), Some("trace-7"));
+                assert_eq!(delay_ms, 750);
+            }
+            JobRetryDecision::Stop { .. } => panic!("retryable error should retry"),
+        }
+    }
+
+    #[test]
+    fn retry_policy_stops_for_non_retryable_or_exhausted_errors() {
+        let policy = JobRetryPolicy::default().with_max_retries(1);
+        let retryable = JobError::new("busy", "worker saturated", JobErrorOrigin::Executor)
+            .with_retryable(true);
+        let permanent = JobError::new("bad_input", "invalid request", JobErrorOrigin::Producer);
+
+        assert_eq!(
+            policy.decision_for_error(&JobMetadata::default(), &permanent),
+            JobRetryDecision::Stop {
+                reason: JobRetryStopReason::NotRetryable
+            }
+        );
+        assert_eq!(
+            policy.decision_for_error(&JobMetadata::default().with_attempt(1), &retryable),
+            JobRetryDecision::Stop {
+                reason: JobRetryStopReason::AttemptsExhausted
+            }
+        );
+        assert!(!JobRetryPolicy::disabled()
+            .decision_for_error(&JobMetadata::default(), &retryable)
+            .should_retry());
+    }
+
+    #[test]
+    fn envelope_validation_rejects_empty_ids_and_bad_metadata() {
+        let request = JobRequest::new(
+            "",
+            EchoPayload {
+                text: "hello".to_string(),
+            },
+        );
+        assert!(matches!(
+            request.validate_envelope(),
+            Err(JobValidationError::EmptyField { field: "id" })
+        ));
+
+        let response = JobResponse::ok(
+            "job-1",
+            EchoPayload {
+                text: "world".to_string(),
+            },
+        )
+        .with_metadata(JobMetadata::default().with_trace_id("trace\nbad"));
+        assert!(matches!(
+            response.validate_envelope(),
+            Err(JobValidationError::MultilineField { field: "trace_id" })
+        ));
+
+        let deadline_before_created = JobMetadata::default()
+            .with_created_at_ms(200)
+            .with_deadline_at_ms(100);
+        assert!(matches!(
+            deadline_before_created.validate(),
+            Err(JobValidationError::DeadlineBeforeCreated { .. })
+        ));
+
+        let bad_tag = JobMetadata::default().with_tag("", "value");
+        assert!(matches!(
+            bad_tag.validate(),
+            Err(JobValidationError::EmptyField { field: "tag_key" })
+        ));
     }
 
     #[test]

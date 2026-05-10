@@ -14,13 +14,15 @@ function. Switch declarations, switch selections, and conditional designational
 `goto` forms are also supported.
 
 The expression checker also accepts chained assignments, ALGOL conditional
-expressions, tolerant trailing/repeated semicolons from the parser, and
-left-associative exponentiation for numeric bases with integer or real
-exponents.
+expressions, nested conditional forms in type-specific arithmetic, Boolean, and
+designational contexts, zero-width dummy statements in control-flow positions,
+tolerant trailing/repeated semicolons from the parser, and left-associative
+exponentiation for numeric bases with integer or real exponents.
 Mixed integer/real conditional branches resolve to `real`; incompatible branch
 types are still rejected before IR lowering. Standard numeric functions
 `abs`, `sign`, `entier`, `sqrt`, `sin`, `cos`, `arctan`, `ln`, and `exp` are
-resolved as read-only builtins with integer/real argument validation.
+resolved case-insensitively as read-only builtins with integer/real argument
+validation.
 
 The checker also builds the first ALGOL 60 full-runtime semantic model. Each
 source block receives a stable block id, lexical depth, static-parent id, and a
@@ -30,17 +32,29 @@ static links a later WASM lowering pass must walk.
 Procedure declarations receive semantic descriptors with generated function
 labels, parameter slots, value-vs-name parameter modes, conservative by-name
 write metadata, result slots for typed procedures, and resolved call sites
-carrying the static-link delta needed by code generation. Builtin output calls
-and standard numeric functions are treated as read-only by the write analysis,
-so formals that are only printed or inspected can still accept expression
-actuals.
-Bare no-argument typed procedure names used in expressions are resolved as
-procedure calls, matching ALGOL's omitted-parentheses call syntax, while
-procedure result variables inside their own bodies still resolve as storage.
+carrying the static-link delta needed by code generation. A block's procedure
+signatures are registered before any procedure body is checked, so sibling
+procedures can call declarations that appear later in the same block and
+typed procedures can be mutually recursive. Builtin output calls accept one or
+more scalar arguments, and standard numeric functions remain single-argument
+calls. Both are resolved case-insensitively and treated as read-only by the
+write analysis, so formals that are only printed or inspected can still accept
+expression actuals.
+No-argument procedure declarations and typed procedure expressions may use
+either explicit empty parentheses or bare procedure names, matching ALGOL's
+omitted-parentheses call syntax, while procedure result variables inside their
+own bodies still resolve as storage.
 Integer array declarations receive descriptor slots in their declaring frame,
 dimension metadata for lower/upper bound expressions, and resolved read/write
 accesses that preserve the static-link delta and subscript count needed by the
-IR and WASM lowering stages.
+IR and WASM lowering stages. Array bound expressions are checked after the
+block's declaration signatures are registered, so bounds can call later sibling
+typed procedures in the same declaration part; direct array reads in bounds
+are still limited to descriptors already allocated earlier in declaration
+order. Procedure calls from bounds are checked through their reachable bodies
+for the same descriptor-order rule, while arrays local to the called procedures
+remain valid because those frames allocate their own descriptors during the
+call.
 Labels receive stable label descriptors and direct local `goto`/`go to` statements
 resolve to those descriptors. Direct nonlocal block `goto` statements resolve
 to outer active blocks, and procedure-crossing transfers resolve to pending
@@ -48,7 +62,8 @@ label ids that later lowering can propagate through calls. Switch declarations
 receive stable descriptors whose entries point at checked designational
 expressions, including entries that target labels in lexical parent blocks, and
 switch selection use sites resolve to their chosen switch symbol, including
-recursive self-selection inside switch entries.
+later sibling switch declarations and recursive self-selection inside switch
+entries.
 
 Unsupported ALGOL 60 features are reported as diagnostics instead of being
 silently accepted by the compiled pipeline. By-name parameters are accepted in
@@ -56,10 +71,13 @@ the semantic model, while later lowering packages now implement scalar
 call-by-name, typed whole-array formals, label formals, switch formals, and
 no-argument statement procedure formals. `value` whole-array parameters are
 also accepted and lowered as copy formals, while `value` label, switch, and
-procedure formals use copied ids or descriptors. Formal procedure parameters
-accept procedure-valued actuals with scalar `value` or by-name parameters and
-whole-array, label, switch, or procedure parameters, rejecting only call shapes
-that would pass a non-assignable actual to a written by-name parameter.
+procedure formals use copied ids or descriptors. Typed array and procedure
+formals accept both split specs such as `integer a; array a;` and report-style
+combined specs such as `integer array a;` or `real procedure f;`. Formal
+procedure parameters accept procedure-valued actuals with scalar `value` or
+by-name parameters and whole-array, label, switch, or procedure parameters,
+rejecting only call shapes that would pass a non-assignable actual to a written
+by-name parameter.
 Real-valued formal procedure parameters accept integer-returning procedure
 actuals via the same numeric promotion rule used by scalar calls. When a
 formal procedure call forwards a concrete procedure actual into another

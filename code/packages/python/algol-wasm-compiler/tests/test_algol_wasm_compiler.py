@@ -36,6 +36,45 @@ class TestAlgolWasmCompiler:
         result = pack_source("begin integer result; result := 1 + 2 * 3 end")
         assert len(result.binary) > 8
 
+    def test_uppercase_keywords_execute(self) -> None:
+        result = compile_source("BEGIN INTEGER result; result := 7 END")
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_uppercase_comment_is_ignored(self) -> None:
+        result = compile_source("begin COMMENT setup; integer result; result := 7 end")
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_comment_prefixed_identifier_is_not_skipped(self) -> None:
+        result = compile_source(
+            "begin integer result, commentary; commentary := 7; "
+            "result := commentary end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_angle_not_equal_operator_executes(self) -> None:
+        result = compile_source(
+            "begin integer result; if 1 <> 2 then result := 7 else result := 0 end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_publication_symbol_operators_execute(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "if (2 ↑ 3 = 8) ∧ (3 ≤ 4) ∧ (5 ≥ 5) ∧ (1 ≠ 2) "
+            "∧ (¬ false) ∧ (true ⊃ true) ∧ (true ≡ true) "
+            "then result := 7 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_double_quoted_string_literal_writes_stdout(self) -> None:
+        result = compile_source('begin output("Hi") end')
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [0]
+        assert "".join(captured) == "Hi"
+
     def test_write_wasm_file(self, tmp_path: Path) -> None:
         out = tmp_path / "answer.wasm"
         result = write_wasm_file("begin integer result; result := 9 end", out)
@@ -154,6 +193,39 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
 
+    def test_string_and_boolean_conditional_expressions_execute(self) -> None:
+        result = compile_source(
+            "begin integer result; boolean ok; string word; "
+            "ok := if false then false else true; "
+            "word := if ok then 'YES' else 'NO'; "
+            "if ok and (word = 'YES') then result := 7 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_nested_conditionals_execute_in_typed_contexts(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer array a[1:if true then if false then 2 else 3 else 1]; "
+            "a[if true then if false then 1 else 2 else 3] := 11; "
+            "if if true then if false then false else true else false "
+            "then result := a[2] else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [11]
+
+    def test_nested_conditional_designational_goto_executes(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "goto if true then if false then left else right else fail; "
+            "left: result := 1; goto done; "
+            "right: result := 7; goto done; "
+            "fail: result := 0; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
     def test_statement_lists_allow_trailing_and_repeated_semicolons(self) -> None:
         result = compile_source(
             "begin integer result; ; result := 1;; result := 2; end"
@@ -198,6 +270,15 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [3]
 
+    def test_array_element_for_control_variable_runs(self) -> None:
+        result = compile_source(
+            "begin integer result; integer array a[1:1]; "
+            "result := 0; "
+            "for a[1] := 1 step 1 until 4 do result := result + a[1] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [10]
+
     def test_standard_numeric_builtin_functions_execute(self) -> None:
         result = compile_source(
             "begin integer result; real x, y; "
@@ -207,6 +288,23 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [17]
+
+    def test_mixed_case_standard_builtin_functions_execute(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "x := SQRT(9); "
+            "result := ABS(0 - 7) + SIGN(x) + ENTIER(x) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [11]
+
+    def test_publication_multiply_and_divide_execute(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "result := 6 × 7 + entier(8 ÷ 2) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [46]
 
     def test_entier_floors_positive_and_negative_reals(self) -> None:
         result = compile_source(
@@ -257,8 +355,45 @@ class TestAlgolWasmCompiler:
             result.binary, "_start", []
         ) == [0]
 
+    def test_entier_out_of_i32_range_returns_zero_without_trapping(self) -> None:
+        result = compile_source(
+            "begin integer result; result := entier(1.0E100) end"
+        )
+
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_entier_nan_returns_zero_without_trapping(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "x := (1.0E308 * 10.0) * 0.0; "
+            "result := entier(x) "
+            "end"
+        )
+
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_entier_keeps_i32_boundary_floor_semantics(self) -> None:
+        result = compile_source(
+            "begin integer result, floor, top; "
+            "floor := entier(-2147483647.5) + 2147483647; "
+            "top := entier(2147483647.9); "
+            "if (floor = -1) and (top = 2147483647) "
+            "then result := 7 else result := 0 "
+            "end"
+        )
+
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
     def test_builtin_print_string_literal_writes_stdout(self) -> None:
         result = compile_source("begin integer result; print('Hi'); result := 7 end")
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [7]
+        assert "".join(captured) == "Hi"
+
+    def test_mixed_case_builtin_output_writes_stdout(self) -> None:
+        result = compile_source("begin integer result; PRINT('Hi'); result := 7 end")
         captured: list[str] = []
         runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
 
@@ -294,6 +429,63 @@ class TestAlgolWasmCompiler:
 
         assert runtime.load_and_run(result.binary, "_start", []) == [4]
         assert "".join(captured) == "3.500-0.125"
+
+    def test_builtin_print_multiple_arguments_writes_stdout_in_order(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; boolean ok; string msg; "
+            "x := 1.5; ok := true; msg := 'Hi'; "
+            "print(msg, ' ', result + 1, ' ', ok, ' ', x); result := 6 "
+            "end"
+        )
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [6]
+        assert "".join(captured) == "Hi 1 true 1.500"
+
+    def test_builtin_print_infinite_real_returns_zero_without_stdout(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "x := 1.0E308 * 10.0; "
+            "print(x); "
+            "result := 7 "
+            "end"
+        )
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [0]
+        assert "".join(captured) == ""
+
+    def test_builtin_print_negative_infinite_real_writes_no_partial_sign(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "x := 0.0 - (1.0E308 * 10.0); "
+            "print(x); "
+            "result := 7 "
+            "end"
+        )
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [0]
+        assert "".join(captured) == ""
+
+    def test_builtin_print_nan_real_returns_zero_without_stdout(self) -> None:
+        result = compile_source(
+            "begin integer result; real x; "
+            "x := (1.0E308 * 10.0) * 0.0; "
+            "print(x); "
+            "result := 7 "
+            "end"
+        )
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [0]
+        assert "".join(captured) == ""
 
     def test_string_variable_assignment_and_output_write_stdout(self) -> None:
         result = compile_source(
@@ -397,6 +589,65 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [12]
+
+    def test_own_real_boolean_and_string_scalars_persist_across_calls(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure tick; "
+            "begin own real scalar; own boolean seen; own string marker; "
+            "if not seen then "
+            "begin scalar := 1.5; seen := true; marker := 'OK'; result := 1 end "
+            "else "
+            "begin scalar := scalar + 1.0; "
+            "if seen and (marker = 'OK') and (scalar > 2.0) then result := 7 "
+            "else result := 0 "
+            "end "
+            "end; "
+            "tick; tick "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_own_real_boolean_and_string_arrays_persist_across_calls(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure tick; "
+            "begin own real array totals[1:1]; "
+            "own boolean array ready[1:1]; "
+            "own string array labels[1:1]; "
+            "if not ready[1] then "
+            "begin totals[1] := 2.5; ready[1] := true; "
+            "labels[1] := 'ARR'; result := 1 end "
+            "else "
+            "begin totals[1] := totals[1] + 1.0; "
+            "if ready[1] and (labels[1] = 'ARR') and (totals[1] > 3.0) "
+            "then result := 8 else result := 0 "
+            "end "
+            "end; "
+            "tick; tick "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
+    def test_for_control_by_name_writes_caller_storage(self) -> None:
+        result = compile_source(
+            "begin integer result, i; "
+            "procedure run(k); integer k; "
+            "begin for k := 1 step 1 until 3 do result := result + k end; "
+            "i := 0; result := 0; run(i); result := result * 10 + i "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [64]
+
+    def test_for_control_value_parameter_does_not_write_caller_storage(self) -> None:
+        result = compile_source(
+            "begin integer result, i; "
+            "procedure run(k); value k; integer k; "
+            "begin for k := 1 step 1 until 3 do result := result + k end; "
+            "i := 9; result := 0; run(i); result := result * 10 + i "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [69]
 
     def test_boolean_variable_assignment_drives_condition(self) -> None:
         result = compile_source(
@@ -522,6 +773,35 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_forward_goto_targets_second_label_on_statement(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "goto second; "
+            "first: second: result := 7 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_forward_goto_targets_first_label_on_shared_statement(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "goto first; "
+            "first: second: result := 8 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
+    def test_forward_goto_targets_multiple_terminal_labels(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "result := 3; "
+            "goto done2; "
+            "result := 99; "
+            "done1: done2: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [3]
 
     def test_backward_goto_runs_local_loop(self) -> None:
         result = compile_source(
@@ -674,6 +954,20 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
 
+    def test_forward_switch_declaration_entry_dispatches_through_later_switch(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "switch outer := inner[1]; "
+            "switch inner := done; "
+            "goto outer[1]; "
+            "result := 99; "
+            "done: result := 5 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
+
     def test_self_recursive_switch_selection_entry_dispatches_at_runtime(
         self,
     ) -> None:
@@ -774,6 +1068,90 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
 
+    def test_switch_parameter_accepts_conditional_switch_actual(self) -> None:
+        result = compile_source(
+            "begin integer result; boolean flag; "
+            "switch a := left; switch b := right; "
+            "procedure escape(sw); switch sw; begin goto sw[1] end; "
+            "flag := false; escape(if flag then a else b); result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_by_name_switch_parameter_re_evaluates_conditional_actual(self) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "switch a := left; switch b := right; "
+            "procedure escape(sw); switch sw; begin flag := 1; goto sw[1] end; "
+            "flag := 0; escape(if flag = 0 then a else b); result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_value_switch_parameter_snapshots_conditional_actual(self) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "switch a := left; switch b := right; "
+            "procedure escape(sw); value sw; switch sw; "
+            "begin flag := 1; goto sw[1] end; "
+            "flag := 0; escape(if flag = 0 then a else b); result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
+    def test_conditional_switch_actual_forwards_switch_parameters(self) -> None:
+        result = compile_source(
+            "begin integer result; boolean flag; "
+            "procedure escape(sw); switch sw; begin goto sw[1] end; "
+            "procedure select(a, b); switch a, b; "
+            "begin escape(if flag then a else b) end; "
+            "switch leftSwitch := left; switch rightSwitch := right; "
+            "flag := false; select(leftSwitch, rightSwitch); result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_forwarded_by_name_switch_parameter_preserves_lazy_actual(self) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "switch a := left; switch b := right; "
+            "procedure escape(sw); switch sw; begin flag := 1; goto sw[1] end; "
+            "procedure relay(sw); switch sw; begin escape(sw) end; "
+            "flag := 0; relay(if flag = 0 then a else b); result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_forwarded_value_switch_parameter_snapshots_lazy_actual(self) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "switch a := left; switch b := right; "
+            "procedure escape(sw); value sw; switch sw; "
+            "begin flag := 1; goto sw[1] end; "
+            "procedure relay(sw); switch sw; begin escape(sw) end; "
+            "flag := 0; relay(if flag = 0 then a else b); result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
     def test_forwarded_switch_parameter_propagates_descriptor_through_calls(
         self,
     ) -> None:
@@ -817,6 +1195,14 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [11]
+
+    def test_switch_index_out_of_range_returns_zero(self) -> None:
+        result = compile_source(
+            "begin integer result; switch exits := done; "
+            "goto exits[2]; result := 9; done: result := 7 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
 
     def test_procedure_parameter_statement_call_dispatches_actual(self) -> None:
         result = compile_source(
@@ -964,6 +1350,16 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
 
+    def test_report_style_typed_array_parameter_specifier_executes(self) -> None:
+        result = compile_source(
+            "begin integer result; integer array a[1:2]; "
+            "procedure first(xs); integer array xs; "
+            "begin result := xs[1] end; "
+            "a[1] := 9; first(a) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
+
     def test_formal_procedure_array_argument_honors_value_array_copy(self) -> None:
         result = compile_source(
             "begin integer result; integer array a[1:2]; "
@@ -1075,6 +1471,17 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
 
+    def test_report_style_typed_procedure_parameter_specifier_executes(self) -> None:
+        result = compile_source(
+            "begin integer result; real y; "
+            "procedure invoke(f); real procedure f; "
+            "begin y := f(2); if y = 4 then result := 1 else result := 0 end; "
+            "real procedure twice(x); value x; real x; begin twice := x * 2 end; "
+            "invoke(twice) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
     def test_typed_procedure_parameter_expression_call_passes_array_argument(
         self,
     ) -> None:
@@ -1101,6 +1508,132 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
+    def test_formal_procedure_call_accepts_read_only_forwarded_expression(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure id(x); value x; integer x; begin id := x end; "
+            "integer procedure apply(f, x); integer f, x; procedure f; "
+            "begin apply := f(x) end; "
+            "result := apply(id, 3 + 4) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_formal_procedure_call_writes_forwarded_array_element_actual(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result, i; integer array a[1:1]; "
+            "integer procedure inc(x); integer x; "
+            "begin x := x + 1; inc := x end; "
+            "integer procedure apply(f, x); integer f, x; procedure f; "
+            "begin apply := f(x) end; "
+            "a[1] := 3; i := 1; "
+            "result := apply(inc, a[i]) * 10 + a[1] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [44]
+
+    def test_wrapped_formal_procedure_call_accepts_read_only_expression(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure id(x); value x; integer x; begin id := x end; "
+            "integer procedure apply(f, x); integer f, x; procedure f; "
+            "begin apply := f(x) end; "
+            "integer procedure relay(g, y); integer g, y; procedure g; "
+            "begin relay := apply(g, y) end; "
+            "result := relay(id, 3 + 4) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_wrapped_formal_procedure_call_keeps_writable_actual_path(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure inc(x); integer x; "
+            "begin x := x + 1; inc := x end; "
+            "integer procedure apply(f, x); integer f, x; procedure f; "
+            "begin apply := f(x) end; "
+            "integer procedure relay(g, y); integer g, y; procedure g; "
+            "begin relay := apply(g, y) end; "
+            "result := 3; result := relay(inc, result) * 10 + result "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [44]
+
+    def test_formal_procedure_actual_shape_accepts_nested_read_only_actual(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure id(x); value x; integer x; begin id := x end; "
+            "integer procedure relay(g, y); integer g, y; procedure g; "
+            "begin relay := g(y) end; "
+            "procedure invoke(p); integer p; procedure p; "
+            "begin result := p(id, 3 + 4) end; "
+            "invoke(relay) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_formal_procedure_actual_shape_keeps_nested_writable_actual(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure inc(x); integer x; "
+            "begin x := x + 1; inc := x end; "
+            "integer procedure relay(g, y); integer g, y; procedure g; "
+            "begin relay := g(y) end; "
+            "procedure invoke(p); integer p; procedure p; "
+            "begin result := 3; result := p(inc, result) * 10 + result end; "
+            "invoke(relay) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [44]
+
+    def test_formal_procedure_forwards_formal_procedure_actual_read_only(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure id(x); value x; integer x; begin id := x end; "
+            "integer procedure relay1(g, y); integer g, y; procedure g; "
+            "begin relay1 := g(y) end; "
+            "integer procedure relay2(p, h, z); integer p, h, z; "
+            "procedure p, h; begin relay2 := p(h, z) end; "
+            "procedure invoke(q); integer q; procedure q; "
+            "begin result := q(relay1, id, 3 + 4) end; "
+            "invoke(relay2) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_formal_procedure_forwards_formal_procedure_actual_writable(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure inc(x); integer x; "
+            "begin x := x + 1; inc := x end; "
+            "integer procedure relay1(g, y); integer g, y; procedure g; "
+            "begin relay1 := g(y) end; "
+            "integer procedure relay2(p, h, z); integer p, h, z; "
+            "procedure p, h; begin relay2 := p(h, z) end; "
+            "procedure invoke(q); integer q; procedure q; "
+            "begin result := 3; "
+            "result := q(relay1, inc, result) * 10 + result end; "
+            "invoke(relay2) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [44]
 
     def test_real_procedure_parameter_accepts_integer_return_actual(self) -> None:
         result = compile_source(
@@ -1219,6 +1752,26 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
+    def test_explicit_empty_no_argument_typed_procedure_expression_runs(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure seven(); begin seven := 7 end; "
+            "result := seven() "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_explicit_empty_no_argument_statement_call_runs(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure mark(); begin result := 9 end; "
+            "mark() "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
+
     def test_bare_procedure_expression_by_name_re_evaluates_each_read(self) -> None:
         result = compile_source(
             "begin integer result, calls; "
@@ -1284,6 +1837,112 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [6]
+
+    def test_forward_sibling_procedure_call_executes(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure first; begin second end; "
+            "procedure second; begin result := 7 end; "
+            "first "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_forward_read_only_by_name_callee_accepts_expression_actual(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure relay(x); integer x; begin emit(x) end; "
+            "procedure emit(y); integer y; begin result := y end; "
+            "relay(3 + 4) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_forward_procedure_calls_in_array_bounds_execute(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer array a[lower():upper()]; "
+            "integer procedure lower; begin lower := 0 end; "
+            "integer procedure upper; begin upper := 0 end; "
+            "a[0] := 5; result := a[0] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [5]
+
+    def test_prior_array_accesses_in_array_bounds_execute(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer array b[1:1]; integer array a[b[1]:b[1]]; "
+            "a[0] := 9; result := a[0] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
+
+    def test_prior_array_accesses_through_array_bound_procedures_execute(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer array b[0:0]; integer array a[lower():lower()]; "
+            "integer procedure lower; begin lower := b[0] end; "
+            "b[0] := 0; a[0] := 9; result := a[0] "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [9]
+
+    def test_later_array_accesses_in_array_bounds_are_rejected(self) -> None:
+        with pytest.raises(AlgolWasmError) as excinfo:
+            compile_source(
+                "begin integer result; integer array a[b[1]:b[1]]; "
+                "integer array b[1:1]; result := 0 end"
+            )
+
+        assert excinfo.value.stage == "type-check"
+        assert "before its descriptor is allocated" in excinfo.value.message
+
+    def test_later_array_accesses_through_array_bound_procedures_are_rejected(
+        self,
+    ) -> None:
+        with pytest.raises(AlgolWasmError) as excinfo:
+            compile_source(
+                "begin integer result; integer array a[lower():lower()]; "
+                "integer procedure lower; begin lower := b[0] end; "
+                "integer array b[0:0]; result := 0 end"
+            )
+
+        assert excinfo.value.stage == "type-check"
+        assert "cannot call procedure 'lower'" in excinfo.value.message
+        assert "array 'b' before its descriptor is allocated" in excinfo.value.message
+
+    def test_later_array_accesses_through_bound_formal_procedures_are_rejected(
+        self,
+    ) -> None:
+        with pytest.raises(AlgolWasmError) as excinfo:
+            compile_source(
+                "begin integer result; "
+                "integer array a[wrapper(reader):wrapper(reader)]; "
+                "integer procedure wrapper(f); integer procedure f; "
+                "begin wrapper := f end; "
+                "integer procedure reader; begin reader := b[0] end; "
+                "integer array b[0:0]; result := 0 end"
+            )
+
+        assert excinfo.value.stage == "type-check"
+        assert "cannot call procedure 'wrapper'" in excinfo.value.message
+        assert "array 'b' before its descriptor is allocated" in excinfo.value.message
+
+    def test_procedure_body_sees_later_block_declarations(self) -> None:
+        result = compile_source(
+            "begin "
+            "procedure set; begin result := 7 end; "
+            "integer result; "
+            "switch route := done; "
+            "procedure jump; begin goto route[1] end; "
+            "set; jump; "
+            "done: result := result + 1 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
 
     def test_value_parameter_assignment_does_not_write_back(self) -> None:
         result = compile_source(
@@ -1357,6 +2016,26 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
 
+    def test_boolean_and_string_value_array_parameters_copy_without_aliasing(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin boolean array flags[1:1]; string array words[1:1]; "
+            "integer result; "
+            "procedure mutate(flagCopy, wordCopy); "
+            "value flagCopy, wordCopy; "
+            "boolean flagCopy; string wordCopy; array flagCopy, wordCopy; "
+            "begin flagCopy[1] := false; wordCopy[1] := 'copy'; "
+            "if (not flagCopy[1]) and (wordCopy[1] = 'copy') "
+            "then result := 10 else result := 0 "
+            "end; "
+            "flags[1] := true; words[1] := 'orig'; mutate(flags, words); "
+            "if flags[1] and (words[1] = 'orig') then result := result + 1 "
+            "else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [11]
+
     def test_array_parameter_runtime_dimension_mismatch_returns_from_callee(
         self,
     ) -> None:
@@ -1378,6 +2057,52 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
+    def test_label_parameter_accepts_conditional_designational_actual(self) -> None:
+        result = compile_source(
+            "begin integer result; boolean flag; "
+            "procedure jump(target); label target; begin goto target end; "
+            "flag := false; jump(if flag then left else right); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_by_name_label_parameter_re_evaluates_conditional_actual(self) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "procedure jump(target); label target; begin flag := 1; goto target end; "
+            "flag := 0; jump(if flag = 0 then left else right); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_label_parameter_accepts_numeric_label_actual(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "procedure jump(target); label target; begin goto target end; "
+            "jump(10); result := 1; "
+            "10: result := 7 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_label_parameter_accepts_switch_selection_actual(self) -> None:
+        result = compile_source(
+            "begin integer result, i; switch s := left, right; "
+            "procedure jump(target); label target; begin goto target end; "
+            "i := 2; jump(s[i]); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
     def test_value_label_parameter_jumps_to_caller_label(self) -> None:
         result = compile_source(
             "begin integer result; "
@@ -1388,6 +2113,19 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
+    def test_value_label_parameter_snapshots_conditional_actual(self) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "procedure jump(target); value target; label target; "
+            "begin flag := 1; goto target end; "
+            "flag := 0; jump(if flag = 0 then left else right); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
 
     def test_forwarded_label_parameter_propagates_through_intermediate_procedure(
         self,
@@ -1401,6 +2139,128 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
+    def test_forwarded_by_name_label_parameter_preserves_lazy_actual(self) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "procedure jump(target); label target; begin flag := 1; goto target end; "
+            "procedure relay(target); label target; begin jump(target) end; "
+            "flag := 0; relay(if flag = 0 then left else right); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_formal_procedure_call_passes_conditional_label_argument(self) -> None:
+        result = compile_source(
+            "begin integer result; boolean flag; "
+            "procedure invoke(p); procedure p; "
+            "begin p(if flag then left else right) end; "
+            "procedure jump(target); label target; begin goto target end; "
+            "flag := false; invoke(jump); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_formal_procedure_label_argument_remains_lazy_until_goto(self) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "procedure invoke(p); procedure p; "
+            "begin p(if flag = 0 then left else right) end; "
+            "procedure jump(target); label target; "
+            "begin flag := 1; goto target end; "
+            "flag := 0; invoke(jump); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_formal_procedure_value_label_argument_snapshots_before_call(self) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "procedure invoke(p); procedure p; "
+            "begin p(if flag = 0 then left else right) end; "
+            "procedure jump(target); value target; label target; "
+            "begin flag := 1; goto target end; "
+            "flag := 0; invoke(jump); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
+    def test_formal_procedure_call_passes_switch_selection_label_argument(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result, i; switch s := left, right; "
+            "procedure invoke(p); procedure p; begin p(s[i]) end; "
+            "procedure jump(target); label target; begin goto target end; "
+            "i := 2; invoke(jump); "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_formal_procedure_call_passes_conditional_switch_argument(self) -> None:
+        result = compile_source(
+            "begin integer result; boolean flag; "
+            "switch a := left; switch b := right; "
+            "procedure invoke(p); procedure p; "
+            "begin p(if flag then a else b) end; "
+            "procedure escape(sw); switch sw; begin goto sw[1] end; "
+            "flag := false; invoke(escape); result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_formal_procedure_switch_argument_remains_lazy_until_selection(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "switch a := left; switch b := right; "
+            "procedure invoke(p); procedure p; "
+            "begin p(if flag = 0 then a else b) end; "
+            "procedure escape(sw); switch sw; begin flag := 1; goto sw[1] end; "
+            "flag := 0; invoke(escape); result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [2]
+
+    def test_formal_procedure_value_switch_argument_snapshots_before_call(
+        self,
+    ) -> None:
+        result = compile_source(
+            "begin integer result, flag; "
+            "switch a := left; switch b := right; "
+            "procedure invoke(p); procedure p; "
+            "begin p(if flag = 0 then a else b) end; "
+            "procedure escape(sw); value sw; switch sw; "
+            "begin flag := 1; goto sw[1] end; "
+            "flag := 0; invoke(escape); result := 0; "
+            "left: result := 1; goto done; "
+            "right: result := 2; "
+            "done: "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
 
     def test_scalar_by_name_parameter_reads_forwarded_pointer(self) -> None:
         result = compile_source(
@@ -1658,6 +2518,18 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [120]
 
+    def test_mutually_recursive_typed_procedures_execute(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "integer procedure even(n); value n; integer n; "
+            "begin if n = 0 then even := 1 else even := odd(n - 1) end; "
+            "integer procedure odd(n); value n; integer n; "
+            "begin if n = 0 then odd := 0 else odd := even(n - 1) end; "
+            "result := odd(5) "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [1]
+
     def test_runaway_recursion_hits_bounded_frame_stack(self) -> None:
         result = compile_source(
             "begin integer result; "
@@ -1702,6 +2574,15 @@ class TestAlgolWasmCompiler:
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
 
+    def test_boolean_equality_comparison(self) -> None:
+        result = compile_source(
+            "begin integer result; boolean flag; "
+            "flag := true; "
+            "if flag = true then result := 7 else result := 0 "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [7]
+
     def test_string_array_element_store_and_output(self) -> None:
         result = compile_source(
             "begin integer result; string array messages[1:2]; "
@@ -1727,6 +2608,27 @@ class TestAlgolWasmCompiler:
         assert runtime.load_and_run(result.binary, "_start", []) == [9]
         assert "".join(captured) == "Bye"
 
+    def test_string_equality_comparison_uses_descriptor_contents(self) -> None:
+        result = compile_source(
+            "begin integer result; string msg; "
+            "string procedure memo(s); value s; string s; "
+            "begin own string saved; "
+            "if saved = '' then saved := s; "
+            "memo := saved "
+            "end; "
+            "msg := memo('Hi'); "
+            "if msg = 'Hi' then result := 1 else result := 100; "
+            "if memo('Bye') != 'Bye' then result := result + 6 "
+            "else result := result + 100; "
+            "print(msg) "
+            "end"
+        )
+        captured: list[str] = []
+        runtime = WasmRuntime(host=WasiHost(config=WasiConfig(stdout=captured.append)))
+
+        assert runtime.load_and_run(result.binary, "_start", []) == [7]
+        assert "".join(captured) == "Hi"
+
     def test_multidimensional_real_array_uses_row_major_offsets(self) -> None:
         result = compile_source(
             "begin integer result; real array a[1:2, 1:2]; "
@@ -1744,6 +2646,14 @@ class TestAlgolWasmCompiler:
             "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [8]
+
+    def test_terminal_label_can_end_nested_block(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "begin result := 13; goto done; result := 0; done: end "
+            "end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [13]
 
     def test_out_of_bounds_array_access_returns_zero(self) -> None:
         result = compile_source(
@@ -1826,5 +2736,20 @@ class TestAlgolWasmCompiler:
     def test_invalid_array_bounds_return_zero(self) -> None:
         result = compile_source(
             "begin integer result; integer array a[3:1]; result := 1 end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_array_allocation_element_cap_returns_zero(self) -> None:
+        result = compile_source(
+            "begin integer result; integer array a[1:4097]; result := 1 end"
+        )
+        assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]
+
+    def test_heap_exhaustion_returns_zero(self) -> None:
+        result = compile_source(
+            "begin integer result; "
+            "real array a[1:4096], b[1:4096], c[1:4096]; "
+            "result := 1 "
+            "end"
         )
         assert WasmRuntime().load_and_run(result.binary, "_start", []) == [0]

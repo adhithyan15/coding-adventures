@@ -24,6 +24,7 @@ LESS_EQUALS    = "<="
 GREATER_EQUALS = ">="
 NOT_EQUALS     = "!="
 NEQ_ANSI       = "<>" -> NOT_EQUALS
+CONCAT_OP      = "||"
 
 EQUALS        = "="
 LESS_THAN     = "<"
@@ -120,6 +121,18 @@ keywords:
   FOR
   EACH
   ROW
+  RETURNING
+  CAST
+  GLOB
+  NATURAL
+  USING
+  REPLACE
+  IGNORE
+  ABORT
+  FAIL
+  CONFLICT
+  DO
+  NOTHING
 
 skip:
   WHITESPACE    = /[ \t\r\n]+/

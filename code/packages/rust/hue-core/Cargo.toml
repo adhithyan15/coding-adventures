@@ -1,0 +1,9 @@
+[package]
+name = "hue-core"
+version = "0.1.0"
+edition = "2021"
+description = "Philips Hue CLIP v2 resource and mapping primitives for the smart-home runtime"
+license = "MIT"
+
+[dependencies]
+smart-home-core = { path = "../smart-home-core" }

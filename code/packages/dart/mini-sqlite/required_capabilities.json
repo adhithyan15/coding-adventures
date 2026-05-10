@@ -1,0 +1,7 @@
+{
+  "capabilities": [
+    "dart",
+    "filesystem"
+  ],
+  "optional": []
+}

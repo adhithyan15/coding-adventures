@@ -33,6 +33,38 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
+from typing import Final
+
+# --------------------------------------------------------------------------
+# Sentinel for ColumnDef.default
+# --------------------------------------------------------------------------
+
+class _NoColumnDefault:
+    """Sentinel type for :data:`NO_COLUMN_DEFAULT`.
+
+    Distinguishes "no DEFAULT clause was written" from "DEFAULT NULL".
+    We cannot use Python's ``None`` for both meanings, because ``None``
+    is a valid SQL NULL default.
+
+    Immutable, singleton.  Always compare with ``is``, never with ``==``.
+    """
+
+    __slots__ = ()
+
+    def __repr__(self) -> str:
+        return "NO_COLUMN_DEFAULT"
+
+    def __bool__(self) -> bool:
+        # Allows ``if c.default is not NO_COLUMN_DEFAULT:`` to read naturally,
+        # and prevents accidental truthiness tests from yielding True.
+        return False
+
+
+NO_COLUMN_DEFAULT: Final[_NoColumnDefault] = _NoColumnDefault()
+"""Sentinel placed in :attr:`ColumnDef.default` when no DEFAULT clause
+was present in the CREATE TABLE statement.  The VM converts this back to
+the backend-layer ``NO_DEFAULT`` sentinel before storing the column schema.
+"""
 
 # --------------------------------------------------------------------------
 # SQL values — what the stack and result buffer hold at runtime.
@@ -84,6 +116,7 @@ class AggFunc(Enum):
     AVG = "AVG"
     MIN = "MIN"
     MAX = "MAX"
+    GROUP_CONCAT = "GROUP_CONCAT"  # concatenate non-NULL strings with a separator
 
 
 class Direction(Enum):
@@ -113,6 +146,52 @@ class LoadColumn:
     """Push the value of ``column`` from the current row of ``cursor_id``."""
     cursor_id: int
     column: str
+
+
+@dataclass(frozen=True, slots=True)
+class LoadOuterColumn:
+    """Push a column value from the *outer* query's current cursor row.
+
+    Used in correlated sub-programs — the inner program needs to read a
+    value that belongs to the enclosing query's current row.
+
+    At compile time ``cursor_id`` is the cursor ID assigned by the **outer**
+    compilation context to the table aliased as the correlated source.
+    At runtime the VM provides the outer state's ``current_row`` snapshot
+    to the inner execution via ``_VmState.outer_current_row``.
+
+    Example — ``e.dept_id`` in ``WHERE id = e.dept_id`` inside a subquery
+    where the outer scan opened cursor 0 for alias ``e``::
+
+        LoadOuterColumn(cursor_id=0, col="dept_id")
+        →  outer_current_row[0]["dept_id"]
+
+    If the outer cursor has no current row (e.g. NULL padding in a LEFT JOIN),
+    ``None`` is pushed.
+    """
+    cursor_id: int
+    col: str
+
+
+@dataclass(frozen=True, slots=True)
+class LoadLastInsertedColumn:
+    """Push a column value from the most recently inserted row.
+
+    Used exclusively in INSERT … RETURNING to read back the values that were
+    just written.  The VM stores the inserted row in
+    ``_VmState.last_inserted_row`` immediately after each ``InsertRow``.
+
+    The ``col`` field is the column name as it appears in the table schema.
+
+    Example — ``RETURNING id, name`` after ``INSERT INTO employees …``::
+
+        LoadLastInsertedColumn(col="id")    →  last_inserted_row["id"]
+        LoadLastInsertedColumn(col="name")  →  last_inserted_row["name"]
+
+    Reads return ``None`` when the column is absent (e.g. because the INSERT
+    used an implicit column list and omitted that column from the VALUES tuple).
+    """
+    col: str
 
 
 @dataclass(frozen=True, slots=True)
@@ -268,9 +347,16 @@ class ScanAllColumns:
 
 @dataclass(frozen=True, slots=True)
 class InitAgg:
-    """Initialize aggregate slot to its zero state for a new group."""
+    """Initialize aggregate slot to its zero state for a new group.
+
+    ``separator`` is only consulted when ``func == GROUP_CONCAT``.  It bakes
+    the separator string into the instruction at compile time (the separator
+    must be a literal in SQL, so this is always valid).  For all other
+    aggregate functions the field is ignored.
+    """
     slot: int
     func: AggFunc
+    separator: str = ","  # GROUP_CONCAT separator; ignored for other funcs
 
 
 @dataclass(frozen=True, slots=True)
@@ -281,8 +367,19 @@ class UpdateAgg:
 
 @dataclass(frozen=True, slots=True)
 class FinalizeAgg:
-    """Compute the final value of ``slot`` and push it."""
+    """Compute the final value of ``slot`` and push it.
+
+    ``func`` and ``separator`` are the aggregate function kind and (for
+    GROUP_CONCAT) the separator baked in at compile time.  They double as
+    fallback initializers: when a no-GROUP-BY aggregate runs over an empty
+    table the body loop never executes, so ``InitAgg`` is never called and
+    the slot list is empty.  ``_do_finalize_agg`` auto-creates a default
+    ``_AggState`` from these fields so the correct zero-state value is
+    returned (NULL for most functions, 0 for COUNT(*)/COUNT).
+    """
     slot: int
+    func: AggFunc = AggFunc.COUNT_STAR   # fallback for empty-group auto-init
+    separator: str = ","                 # GROUP_CONCAT fallback; ignored otherwise
 
 
 @dataclass(frozen=True, slots=True)
@@ -309,8 +406,15 @@ class AdvanceGroupKey:
 
     This mirrors ``AdvanceCursor`` for scans: the same loop-with-exit-label
     pattern, but iterating over groups instead of rows.
+
+    ``has_group_by`` tells the VM whether the query has an explicit GROUP BY
+    clause.  When False (implicit single-group mode) and the scan produced
+    no rows, the VM synthesises a single empty-group entry so the emit loop
+    still runs once — matching the SQL standard requirement that a global
+    aggregate over an empty table returns exactly one row of NULL/zero values.
     """
     on_exhausted: str
+    has_group_by: bool = True   # False → implicit single-group; synthesise if empty
 
 
 # ---- Result-buffer post-processing -------------------------------------
@@ -346,10 +450,98 @@ class DistinctResult:
 
 
 @dataclass(frozen=True, slots=True)
+class UpsertAssignment:
+    """One ``col = <compiled value instructions>`` in an ``ON CONFLICT DO UPDATE`` clause.
+
+    The assignment value is pre-compiled into a flat list of instructions.
+    The VM executes them as a mini-program to produce a single value on the
+    operand stack, then pops it into the target column slot.
+
+    ``instructions`` is the complete, self-contained instruction sequence for
+    evaluating the RHS expression.  It may reference ``LoadExcludedColumn``
+    (for ``EXCLUDED.col``) and ``LoadColumn`` against the *existing* row's
+    cursor (for bare column references like ``price``).
+    """
+
+    column: str
+    instructions: tuple[Instruction, ...]  # forward ref; resolved at module end
+
+
+@dataclass(frozen=True, slots=True)
+class UpsertSpec:
+    """Compiled representation of an ``ON CONFLICT … DO …`` clause.
+
+    Carried by :class:`InsertRow` and :class:`InsertFromResult` so the VM
+    can act on it when a :class:`~sql_backend.backend.ConstraintViolation`
+    is raised.
+
+    Fields
+    ------
+    conflict_target:
+        The column names identifying which unique constraint to watch.
+        Empty = any constraint violation fires the action.  The VM uses
+        this to locate the conflicting existing row via
+        ``backend.find_conflicting_row(table, conflict_target, row_dict)``.
+    do_nothing:
+        When ``True`` the VM silently drops the rejected row and continues,
+        like ``INSERT OR IGNORE`` but scoped to the named constraint.
+    assignments:
+        Pre-compiled SET assignments for ``DO UPDATE``.  Empty when
+        ``do_nothing=True``.
+
+    Upsert vs. ``on_conflict``
+    --------------------------
+    ``InsertRow.upsert`` takes precedence over ``InsertRow.on_conflict``.
+    When both are present, ``upsert`` handles the conflict.
+    """
+
+    conflict_target: tuple[str, ...]  # empty = any constraint
+    do_nothing: bool = False
+    assignments: tuple[UpsertAssignment, ...] = ()  # non-empty when do_nothing=False
+
+
+@dataclass(frozen=True, slots=True)
+class LoadExcludedColumn:
+    """Push the value of ``col`` from the current EXCLUDED pseudo-row.
+
+    Only valid inside the pre-compiled assignment instruction sequences inside
+    a :class:`UpsertSpec`.  The VM resolves it against ``_VmState.excluded_row``,
+    a ``dict[str, SqlValue]`` that is set to the would-be-inserted row's data
+    before executing each upsert assignment.
+
+    Why not ``LoadConst`` or ``LoadColumn``?
+    ----------------------------------------
+    - ``LoadConst`` is for compile-time literals, not runtime excluded values.
+    - ``LoadColumn`` reads from a cursor, but EXCLUDED is not a real table;
+      there is no cursor for it.
+    - ``LoadExcludedColumn`` is explicit and avoids any magic-string tricks.
+    """
+
+    col: str  # column name in the EXCLUDED pseudo-row
+
+
+@dataclass(frozen=True, slots=True)
 class InsertRow:
-    """Pop one value per column (last first); backend inserts the row."""
+    """Pop one value per column (last first); backend inserts the row.
+
+    ``on_conflict`` carries the optional ``INSERT OR <action>`` strategy.
+    The VM applies it when :class:`~sql_backend.backend.ConstraintViolation`
+    is raised:
+
+    - ``None``        — re-raise as :class:`~sql_vm.errors.IntegrityError`
+    - ``"REPLACE"``   — delete every conflicting row, then retry the insert
+    - ``"IGNORE"``    — silently discard this row; continue the statement
+    - ``"ABORT"`` / ``"FAIL"`` / ``"ROLLBACK"`` — re-raise as IntegrityError
+
+    ``upsert`` carries the optional ``ON CONFLICT … DO …`` spec.  When
+    present, a ``ConstraintViolation`` triggers the upsert action instead
+    of ``on_conflict``.
+    """
+
     table: str
     columns: tuple[str, ...]
+    on_conflict: str | None = None  # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
+    upsert: UpsertSpec | None = None  # ON CONFLICT … DO …
 
 
 @dataclass(frozen=True, slots=True)
@@ -363,10 +555,15 @@ class InsertFromResult:
     the result schema's column order as the target column names. This
     mirrors the INSERT VALUES semantics: explicit column list wins, falling
     back to the table's natural order.
+
+    ``on_conflict`` has the same semantics as :class:`InsertRow`.
+    ``upsert`` has the same semantics as :class:`InsertRow.upsert`.
     """
 
     table: str
     columns: tuple[str, ...]  # empty = use result schema
+    on_conflict: str | None = None  # None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"
+    upsert: UpsertSpec | None = None  # ON CONFLICT … DO …
 
 
 @dataclass(frozen=True, slots=True)
@@ -472,11 +669,31 @@ class ColumnDef:
     leaves a boolean (or NULL) on the stack when executed. The VM evaluates
     these against a new/updated row using the sentinel cursor id
     ``CHECK_CURSOR_ID``.  Empty tuple means no CHECK constraint.
+
+    ``unique`` mirrors the UNIQUE column constraint.  When True, the backend
+    enforces that no two rows share the same non-NULL value in this column
+    (in addition to the implicit uniqueness enforced by ``primary_key``).
+    Without this flag the backend would silently accept duplicate values,
+    making ``INSERT OR IGNORE`` and ``INSERT OR REPLACE`` unable to detect
+    non-PK UNIQUE conflicts.
+
+    ``default`` carries the column's DEFAULT value.  :data:`NO_COLUMN_DEFAULT`
+    means no DEFAULT clause was present.  Any other value — including Python
+    ``None`` which represents SQL NULL — is the literal to supply when an
+    INSERT omits this column.  The VM converts ``NO_COLUMN_DEFAULT`` back to
+    the backend-layer sentinel before registering the column schema.
+
+    Only scalar literals (integers, floats, strings, booleans, NULL) are
+    supported as defaults in this pass.  Expression defaults such as
+    ``DEFAULT (CURRENT_TIMESTAMP)`` or ``DEFAULT (1+1)`` are left as
+    :data:`NO_COLUMN_DEFAULT` and deferred to a future increment.
     """
     name: str
     type: str
     nullable: bool = True
     primary_key: bool = False
+    unique: bool = False
+    default: object = NO_COLUMN_DEFAULT
     check_instrs: tuple[Instruction, ...] = ()
     # (ref_table, ref_col_or_None) where None means "reference the parent PK".
     foreign_key: tuple[str, str | None] | None = None
@@ -651,6 +868,39 @@ class RunScalarSubquery:
 
 
 @dataclass(frozen=True, slots=True)
+class RunInSubquery:
+    """Pop the test value from the stack, execute the sub-program, and push a boolean.
+
+    Used for ``expr IN (SELECT …)`` and ``expr NOT IN (SELECT …)``.
+
+    Sequence
+    --------
+    The caller compiles the outer operand expression first (pushing the test
+    value), then emits this instruction.
+
+    ::
+
+        [compile operand]          # pushes test_value onto the stack
+        RunInSubquery(...)         # pops test_value, runs subquery, pushes bool
+
+    The sub-program is expected to return at least one column; only the first
+    column of each result row participates in the membership test.
+
+    NULL semantics (SQL tri-value logic)
+    ------------------------------------
+    - ``NULL IN (...)``  → ``None`` (NULL)
+    - ``x IN (...)``  → ``True``  if x is in the result set (ignoring NULLs in set)
+    - ``x IN (...)``  → ``None``  if x is NOT in the result set AND the set contains NULL
+    - ``x IN (...)``  → ``False`` otherwise
+
+    For ``NOT IN`` (``negate=True``) booleans are flipped; NULL stays NULL.
+    """
+
+    sub_program: Program
+    negate: bool = False
+
+
+@dataclass(frozen=True, slots=True)
 class RunRecursiveCTE:
     """Execute a WITH RECURSIVE CTE via fixed-point iteration.
 
@@ -695,6 +945,42 @@ class OpenWorkingSetScan:
     """
 
     cursor_id: int
+
+
+# ---- Outer-join match tracking -----------------------------------------
+
+
+@dataclass(frozen=True, slots=True)
+class JoinBeginRow:
+    """Push False onto the join-match stack at the start of each left row.
+
+    One entry per active outer-join nesting level.  Paired with
+    :class:`JoinSetMatched` (marks a hit) and :class:`JoinIfMatched`
+    (tests-and-pops the flag).
+    """
+
+
+@dataclass(frozen=True, slots=True)
+class JoinSetMatched:
+    """Set the top of the join-match stack to True.
+
+    Emitted inside the inner loop body, after the ON condition passes,
+    so the outer loop knows at least one right row matched the current
+    left row.
+    """
+
+
+@dataclass(frozen=True, slots=True)
+class JoinIfMatched:
+    """Pop the join-match stack; jump to ``label`` if the flag is True.
+
+    Used after the inner scan exhausts: if any right row matched, jump
+    over the null-padded row emission.  If no row matched, fall through
+    to emit the left row with NULLs for all right-side columns (which
+    :class:`LoadColumn` supplies automatically when the right cursor has
+    no current row).
+    """
+    label: str
 
 
 # ---- Control flow -------------------------------------------------------
@@ -769,6 +1055,13 @@ class WinFunc(Enum):
     MAX = "MAX"
     FIRST_VALUE = "FIRST_VALUE"
     LAST_VALUE = "LAST_VALUE"
+    # Offset / navigation functions (SQL:2003)
+    LAG = "LAG"           # LAG(col [, offset=1 [, default=NULL]])
+    LEAD = "LEAD"         # LEAD(col [, offset=1 [, default=NULL]])
+    NTH_VALUE = "NTH_VALUE"   # NTH_VALUE(col, n) — value from nth row in window
+    NTILE = "NTILE"       # NTILE(n) — distribute rows into n numbered buckets
+    PERCENT_RANK = "PERCENT_RANK"  # (rank-1)/(rows-1) — relative rank 0..1
+    CUME_DIST = "CUME_DIST"        # cumulative distribution 0..1
 
 
 @dataclass(frozen=True, slots=True)
@@ -805,6 +1098,13 @@ class WinFuncSpec:
     partition_cols: tuple[str, ...]
     order_cols: tuple[tuple[str, bool], ...]
     result_col: str
+    extra_args: tuple[object, ...] = ()
+    # Meaning by function:
+    # LAG / LEAD  → extra_args = (offset: int, default: SqlValue)
+    #               offset defaults to 1, default to None if omitted.
+    # NTH_VALUE   → extra_args = (n: int,)   — 1-indexed row position
+    # NTILE       → extra_args = (n: int,)   — number of buckets
+    # PERCENT_RANK, CUME_DIST, and all others → extra_args = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -841,7 +1141,7 @@ class ComputeWindowFunctions:
 # --------------------------------------------------------------------------
 
 Instruction = (
-    LoadConst | LoadColumn | Pop
+    LoadConst | LoadColumn | LoadOuterColumn | LoadLastInsertedColumn | LoadExcludedColumn | Pop
     | BinaryOp | UnaryOp | IsNull | IsNotNull | Between | InList | Like | Coalesce | CallScalar
     | OpenScan | AdvanceCursor | CloseScan
     | BeginRow | EmitColumn | EmitRow | SetResultSchema | ScanAllColumns
@@ -856,8 +1156,10 @@ Instruction = (
     | RunSubquery
     | RunExistsSubquery
     | RunScalarSubquery
+    | RunInSubquery
     | RunRecursiveCTE
     | OpenWorkingSetScan
+    | JoinBeginRow | JoinSetMatched | JoinIfMatched
     | Label | Jump | JumpIfFalse | JumpIfTrue | Halt
 )
 

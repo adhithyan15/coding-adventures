@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Accepted ALGOL dummy statements as semantic no-ops in `then`, `else`, `do`,
+  and terminal-label statement positions.
 - Added the PL04 phase-one semantic model with explicit semantic blocks,
   static-parent metadata, scalar frame layouts, and resolved variable
   references carrying lexical-depth and slot-offset information.
@@ -30,6 +32,9 @@ All notable changes to this package will be documented in this file.
   designational branches guarded.
 - Added semantic checking for chained assignments, ALGOL conditional
   expressions, and numeric exponentiation with integer or real exponents.
+- Accepted nested ALGOL conditional expressions in type-specific arithmetic,
+  Boolean, and designational contexts such as subscripts, conditions, and
+  `goto` targets.
 - Added semantic resolution for bare no-argument typed procedure names used as
   expressions, while keeping written by-name actuals from treating those calls
   as assignable scalar storage.
@@ -42,6 +47,21 @@ All notable changes to this package will be documented in this file.
 - Treated builtin `print`/`output` calls as read-only during by-name formal
   write analysis, so expression actuals remain valid when a formal is only
   printed.
+- Accepted one or more arguments to builtin `print`/`output` calls while
+  keeping numeric builtins strict about receiving exactly one argument.
+- Registered all procedure signatures in a block before checking procedure
+  bodies, allowing forward sibling procedure calls and mutually recursive
+  typed procedures.
+- Registered switch names before checking switch designational lists, allowing
+  switch entries to target later sibling switch declarations in the same block.
+- Deferred array-bound expression checking until after sibling declaration
+  registration, allowing bounds to call later typed procedures in the same
+  block.
+- Rejected array bound expressions that read an array declared later in the
+  same block, preserving declaration-order descriptor allocation semantics.
+- Rejected array bounds that call procedures whose reachable bodies may access
+  later same-block array descriptors before allocation, while still allowing
+  callee-local arrays and earlier descriptors.
 - Accepted integer-returning procedure actuals for real-valued formal
   procedure parameters, matching scalar integer-to-real promotion.
 - Accepted switch declaration entries that target labels in lexical parent
@@ -53,8 +73,16 @@ All notable changes to this package will be documented in this file.
   procedure parameters, recording array argument call shapes for lowering.
 - Accepted procedure-valued actuals with label, switch, and procedure
   parameters for formal procedure parameters.
+- Accepted report-style typed formal specifiers such as `integer array a;` and
+  `real procedure f;`, merging them into the same semantic parameter metadata
+  as the older split spelling.
 - Validated nested procedure-parameter call-shape contracts when a formal
   procedure call forwards a concrete procedure actual.
+- Validated nested procedure-parameter call-shape contracts when a formal
+  procedure call forwards another formal procedure parameter and resolves the
+  eventual concrete procedure actual through the enclosing call shape.
+- Accepted conditional switch designator actuals for switch formals and formal
+  procedure call-shape recording.
 - Accepted recursive switch self-selection entries so terminating recursive
   designational dispatch can lower through the WASM pipeline.
 - Accepted `go to` as an alternate spelling for direct and designational
@@ -66,9 +94,17 @@ All notable changes to this package will be documented in this file.
 - Accepted standard real builtin functions `sin`, `cos`, `arctan`, `ln`, and
   `exp`, returning `real` for integer or real arguments while preserving
   read-only by-name analysis.
+- Resolved standard numeric and output builtins case-insensitively while
+  preserving normal identifier casing for user declarations.
 - Added configurable type-check resource limits for maximum AST depth, block
   nesting depth, and procedure nesting depth so recursive semantic visitors
   reject hostile inputs with diagnostics before walking too deeply.
+- Accepted shared lexer front-door spellings for uppercase keywords/comments,
+  `<>` not-equal relations, and double-quoted string literals.
+- Accepted shared lexer front-door publication symbols for relations,
+  exponentiation, multiplication, real division, and boolean operators.
+- Accepted subscripted integer and real array elements as `for` statement
+  control variables.
 
 ## [0.1.0] - 2026-04-20
 

@@ -671,26 +671,37 @@ class TestValidateForJvm:
         )
         assert validate_for_jvm(program) == []
 
-    def test_syscall_4_accepted(self) -> None:
-        """SYSCALL 4 (read byte from stdin) is supported in V1 JVM backend."""
+    def test_syscall_2_accepted(self) -> None:
+        """SYSCALL 2 (read byte from stdin) is supported — platform-independent
+        convention shared by the JVM and CLR backends (TW04 Phase 4c)."""
         program = _prog(
-            _instr(IrOp.SYSCALL, _imm(4), _reg(0)),
+            _instr(IrOp.SYSCALL, _imm(2), _reg(0)),
+            _instr(IrOp.HALT),
+        )
+        assert validate_for_jvm(program) == []
+
+    def test_syscall_10_accepted(self) -> None:
+        """SYSCALL 10 (process exit) is supported — platform-independent
+        convention shared by the JVM and CLR backends (TW04 Phase 4c)."""
+        program = _prog(
+            _instr(IrOp.SYSCALL, _imm(10), _reg(0)),
             _instr(IrOp.HALT),
         )
         assert validate_for_jvm(program) == []
 
     def test_syscall_unknown_rejected(self) -> None:
-        """A SYSCALL number other than 1 or 4 is not wired up in the JVM backend."""
+        """A SYSCALL number not in {1, 2, 10} is not wired in the JVM backend."""
         program = _prog(_instr(IrOp.SYSCALL, _imm(99), _reg(0)))
         errors = validate_for_jvm(program)
         assert len(errors) == 1
         assert "unsupported SYSCALL" in errors[0]
         assert "99" in errors[0]
 
-    def test_syscall_10_rejected(self) -> None:
-        """SYSCALL 10 (WASM exit convention) is not wired in the JVM backend;
-        HALT is the correct way to terminate a JVM-targeted program."""
-        program = _prog(_instr(IrOp.SYSCALL, _imm(10), _reg(0)))
+    def test_syscall_4_rejected(self) -> None:
+        """SYSCALL 4 was the old Brainfuck read-byte convention; it is no longer
+        recognised.  Programs must use SYSCALL 2 (the platform-independent
+        number) instead."""
+        program = _prog(_instr(IrOp.SYSCALL, _imm(4), _reg(0)))
         errors = validate_for_jvm(program)
         assert len(errors) == 1
         assert "unsupported SYSCALL" in errors[0]

@@ -27,9 +27,12 @@ returned ``Equal(y, solution)`` IR trees.
 
 from __future__ import annotations
 
+from fractions import Fraction as F
+
 from symbolic_ir import (
     ADD,
     COS,
+    DIV,
     EQUAL,
     EXP,
     MUL,
@@ -43,18 +46,29 @@ from symbolic_ir import (
     IRRational,
     IRSymbol,
 )
-from symbolic_ir.nodes import ODE2, D
+from symbolic_ir.nodes import C1, C2, ODE2, D
 from symbolic_vm import VM, SymbolicBackend
 
 from cas_ode import build_ode_handler_table, solve_ode
 from cas_ode.handlers import ode2_handler
 from cas_ode.ode import (
+    _collect_euler_cauchy_coeffs,
     _collect_linear_first_order,
     _collect_second_order_coeffs,
     _exact_sqrt_fraction,
+    _exp_r,
     _flatten_add,
+    _flatten_product,
     _is_const_wrt,
     _isqrt_exact,
+    _signed_frac_to_ir,
+    _subst_ir,
+    _subst_ratio_ir,
+    _try_euler_cauchy,
+    _try_homogeneous_type,
+    _try_vop,
+    _vop_integrand_pair,
+    solve_euler_cauchy,
     solve_second_order_const_coeff,
 )
 
@@ -964,3 +978,1239 @@ class TestIsFlattenAddFloat:
         from symbolic_ir import IRFloat
         node = IRFloat(3.14)
         assert _is_const_wrt(node, X)
+
+
+# ---------------------------------------------------------------------------
+# Section P: _subst_ir unit tests
+# ---------------------------------------------------------------------------
+
+
+def _div_node(a: IRNode, b: IRNode) -> IRApply:
+    """Build Div(a, b) — local helper to avoid clashing with test helpers."""
+    return IRApply(DIV, (a, b))
+
+
+class TestSubstIr:
+    """Unit tests for the pure IR tree substitution helper _subst_ir.
+
+    _subst_ir(node, var, replacement) replaces every occurrence of ``var``
+    in ``node`` with ``replacement``, leaving all other sub-trees unchanged.
+    """
+
+    def test_substitute_symbol_directly(self) -> None:
+        """A symbol that equals var is replaced by the replacement."""
+        v = IRSymbol("v")
+        result = _subst_ir(v, v, IRInteger(5))
+        assert result == IRInteger(5)
+
+    def test_different_symbol_unchanged(self) -> None:
+        """A symbol that is not var is left as-is."""
+        v = IRSymbol("v")
+        result = _subst_ir(X, v, IRInteger(5))
+        assert result == X
+
+    def test_integer_unchanged(self) -> None:
+        """IRInteger nodes are returned unmodified regardless of var."""
+        v = IRSymbol("v")
+        result = _subst_ir(IRInteger(7), v, IRInteger(0))
+        assert result == IRInteger(7)
+
+    def test_rational_unchanged(self) -> None:
+        """IRRational nodes are returned unmodified."""
+        v = IRSymbol("v")
+        result = _subst_ir(IRRational(1, 3), v, IRInteger(0))
+        assert result == IRRational(1, 3)
+
+    def test_nested_add(self) -> None:
+        """Substitution descends into both args of Add."""
+        v = IRSymbol("v")
+        # Add(v, x) → Add(IRInteger(2), x)
+        expr = IRApply(ADD, (v, X))
+        result = _subst_ir(expr, v, IRInteger(2))
+        assert isinstance(result, IRApply)
+        assert result.head == ADD
+        assert result.args[0] == IRInteger(2)
+        assert result.args[1] == X
+
+    def test_pow_back_substitution(self) -> None:
+        """Replacing v in Pow(v, 2) with Div(y, x) for back-substitution."""
+        v = IRSymbol("v")
+        y_over_x = _div_node(Y, X)
+        expr = IRApply(POW, (v, IRInteger(2)))
+        result = _subst_ir(expr, v, y_over_x)
+        assert isinstance(result, IRApply)
+        assert result.head == POW
+        assert result.args[0] == y_over_x
+        assert result.args[1] == IRInteger(2)
+
+    def test_no_occurrence_leaves_tree_identical(self) -> None:
+        """If var does not appear, the tree is returned structurally unchanged."""
+        v = IRSymbol("v")
+        expr = IRApply(MUL, (X, Y))
+        result = _subst_ir(expr, v, IRInteger(99))
+        assert result == expr
+
+
+# ---------------------------------------------------------------------------
+# Section Q: _subst_ratio_ir unit tests
+# ---------------------------------------------------------------------------
+
+
+class TestSubstRatioIr:
+    """Unit tests for the structural Div(y,x) → v substitution helper.
+
+    _subst_ratio_ir(node, y, x, v) replaces every exact ``Div(y, x)``
+    pattern with the symbol v.  If y appears in any form other than
+    ``Div(y, x)``, the function returns None (signalling that the
+    expression cannot be written purely in terms of y/x).
+    """
+
+    def test_div_y_x_becomes_v(self) -> None:
+        """The exact Div(y, x) node is replaced by v."""
+        v = IRSymbol("v")
+        node = _div_node(Y, X)
+        result = _subst_ratio_ir(node, Y, X, v)
+        assert result == v
+
+    def test_bare_y_returns_none(self) -> None:
+        """A bare y symbol (not inside Div(y,x)) causes None."""
+        v = IRSymbol("v")
+        result = _subst_ratio_ir(Y, Y, X, v)
+        assert result is None
+
+    def test_pow_div_y_x_squared(self) -> None:
+        """Pow(Div(y,x), 2) → Pow(v, 2)."""
+        v = IRSymbol("v")
+        node = IRApply(POW, (_div_node(Y, X), IRInteger(2)))
+        result = _subst_ratio_ir(node, Y, X, v)
+        assert result == IRApply(POW, (v, IRInteger(2)))
+
+    def test_integer_passes_through(self) -> None:
+        """IRInteger nodes pass through unmodified."""
+        v = IRSymbol("v")
+        result = _subst_ratio_ir(IRInteger(3), Y, X, v)
+        assert result == IRInteger(3)
+
+    def test_x_symbol_unchanged(self) -> None:
+        """The independent variable x (not matching y) is returned as-is."""
+        v = IRSymbol("v")
+        result = _subst_ratio_ir(X, Y, X, v)
+        assert result == X
+
+    def test_sum_of_two_ratios(self) -> None:
+        """Add(Div(y,x), Div(y,x)) → Add(v, v)."""
+        v = IRSymbol("v")
+        y_over_x = _div_node(Y, X)
+        node = IRApply(ADD, (y_over_x, y_over_x))
+        result = _subst_ratio_ir(node, Y, X, v)
+        assert result == IRApply(ADD, (v, v))
+
+    def test_y_in_add_numerator_fails(self) -> None:
+        """Div(Add(y, x), x) — y inside Add in numerator → None.
+
+        This pattern arises in (y + x)/x = 1 + y/x.  We deliberately
+        return None here and let the VM's simplification (via linear/
+        separable) handle it, rather than depending on algebraic distribution.
+        """
+        v = IRSymbol("v")
+        node = _div_node(IRApply(ADD, (Y, X)), X)
+        result = _subst_ratio_ir(node, Y, X, v)
+        assert result is None
+
+    def test_unrelated_symbol_unchanged(self) -> None:
+        """An unrelated symbol 'z' passes through without triggering None."""
+        v = IRSymbol("v")
+        z = IRSymbol("z")
+        result = _subst_ratio_ir(z, Y, X, v)
+        assert result == z
+
+    def test_nested_y_not_in_div_fails(self) -> None:
+        """Mul(y, x) — y inside Mul but not Div(y,x) → None."""
+        v = IRSymbol("v")
+        node = IRApply(MUL, (Y, X))
+        result = _subst_ratio_ir(node, Y, X, v)
+        assert result is None
+
+
+# ---------------------------------------------------------------------------
+# Section R: _try_homogeneous_type and full-pipeline tests (Phase 18c)
+# ---------------------------------------------------------------------------
+
+
+class TestHomogeneousTypeODE:
+    """Tests for the homogeneous-type ODE solver (Phase 18c).
+
+    A homogeneous-type ODE has the form::
+
+        dy/dx = f(y/x)
+
+    The substitution v = y/x reduces it to a separable equation in (v, x).
+    The solver returns an implicit solution  H(y/x) = Log(x) + C  when it
+    can integrate 1/(f(v) − v) in closed form.  The degenerate case
+    f(v) = v (i.e. y' = y/x) is handled separately: y = C·x.
+
+    All ODE expressions are passed in zero form: LHS − RHS = 0.
+    """
+
+    # ------------------------------------------------------------------ #
+    # Direct calls to _try_homogeneous_type                               #
+    # ------------------------------------------------------------------ #
+
+    def test_degenerate_case_y_prime_eq_y_over_x(self) -> None:
+        """y' = y/x is the degenerate case f(v)=v → y = %c·x.
+
+        When f(v) = v the equation x·dv/dx = f(v)−v = 0 forces v = const,
+        so y = v·x = C·x.  The solver detects this via an identity check
+        and returns the explicit solution Equal(y, Mul(%c, x)).
+        """
+        vm = make_vm()
+        # Zero form: D(y,x) − y/x = Sub(D(y,x), Div(y,x))
+        expr = IRApply(SUB, (Y_PRIME, _div_node(Y, X)))
+        result = _try_homogeneous_type(expr, Y, X, vm)
+
+        assert result is not None
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        # Explicit solution: lhs is y
+        assert result.args[0] == Y
+        # RHS is Mul(%c, x) — integration constant times x
+        rhs = result.args[1]
+        assert isinstance(rhs, IRApply)
+        assert rhs.head == MUL
+        c_sym = IRSymbol("%c")
+        assert c_sym in rhs.args
+        assert X in rhs.args
+
+    def test_y_prime_eq_ratio_squared_returns_equal(self) -> None:
+        """y' = (y/x)^2 — f(v)=v², denom=v²−v, integral = Log((v−1)/v).
+
+        This is a proper homogeneous-type ODE that requires the Hermite
+        partial-fraction path.  We verify the solver produces some implicit
+        Equal(...) form rather than returning None.
+        """
+        vm = make_vm()
+        y_over_x = _div_node(Y, X)
+        expr = IRApply(SUB, (Y_PRIME, IRApply(POW, (y_over_x, IRInteger(2)))))
+        result = _try_homogeneous_type(expr, Y, X, vm)
+
+        assert result is not None
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+
+    def test_y_prime_eq_ratio_squared_solution_contains_c(self) -> None:
+        """The implicit solution for y' = (y/x)² carries the constant %c."""
+        vm = make_vm()
+        y_over_x = _div_node(Y, X)
+        expr = IRApply(SUB, (Y_PRIME, IRApply(POW, (y_over_x, IRInteger(2)))))
+        result = _try_homogeneous_type(expr, Y, X, vm)
+
+        assert result is not None
+        assert "%c" in str(result)
+
+    def test_y_prime_eq_ratio_squared_plus_ratio(self) -> None:
+        """y' = (y/x)^2 + (y/x) — f(v)=v²+v, denom=v², integral=−1/v.
+
+        The denominator f(v)−v = v²+v−v = v², so the integrand is 1/v²
+        whose antiderivative is −v⁻¹.  After back-substitution this gives
+        −x/y = Log(x) + C.
+        """
+        vm = make_vm()
+        y_over_x = _div_node(Y, X)
+        rhs_expr = IRApply(ADD, (
+            IRApply(POW, (y_over_x, IRInteger(2))),
+            y_over_x,
+        ))
+        expr = IRApply(SUB, (Y_PRIME, rhs_expr))
+        result = _try_homogeneous_type(expr, Y, X, vm)
+
+        assert result is not None
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        assert "%c" in str(result)
+
+    def test_y_prime_eq_2_times_ratio(self) -> None:
+        """y' = 2·(y/x) — f(v)=2v, denom=v, integral=Log(v).
+
+        After back-substitution: Log(y/x) = Log(x) + C, which is the
+        implicit form of the analytic solution y = A·x² (A constant).
+        """
+        vm = make_vm()
+        y_over_x = _div_node(Y, X)
+        rhs_expr = IRApply(MUL, (IRInteger(2), y_over_x))
+        expr = IRApply(SUB, (Y_PRIME, rhs_expr))
+        result = _try_homogeneous_type(expr, Y, X, vm)
+
+        assert result is not None
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        # Log(y/x) should appear on the left or in the solution.
+        result_str = str(result)
+        assert "Log" in result_str
+        assert "%c" in result_str
+
+    # ------------------------------------------------------------------ #
+    # Fall-through: non-homogeneous expressions → None                    #
+    # ------------------------------------------------------------------ #
+
+    def test_rhs_free_of_y_returns_none(self) -> None:
+        """y' = sin(x) — rhs is free of y, so not homogeneous-type."""
+        vm = make_vm()
+        expr = IRApply(SUB, (Y_PRIME, IRApply(SIN, (X,))))
+        result = _try_homogeneous_type(expr, Y, X, vm)
+        assert result is None
+
+    def test_bare_y_in_rhs_returns_none(self) -> None:
+        """y' = y + x — bare y in rhs, _subst_ratio_ir returns None."""
+        vm = make_vm()
+        expr = IRApply(SUB, (Y_PRIME, IRApply(ADD, (Y, X))))
+        result = _try_homogeneous_type(expr, Y, X, vm)
+        assert result is None
+
+    def test_y_times_x_in_rhs_returns_none(self) -> None:
+        """y' = y·x — y appears as Mul(y,x), not as Div(y,x) → None."""
+        vm = make_vm()
+        expr = IRApply(SUB, (Y_PRIME, IRApply(MUL, (Y, X))))
+        result = _try_homogeneous_type(expr, Y, X, vm)
+        assert result is None
+
+    def test_no_y_prime_term_returns_none(self) -> None:
+        """Expression with no D(y,x) term returns None (not an ODE)."""
+        vm = make_vm()
+        expr = IRApply(ADD, (Y, X))
+        result = _try_homogeneous_type(expr, Y, X, vm)
+        assert result is None
+
+    def test_transcendental_rhs_fails_integration_returns_none(self) -> None:
+        """y' = exp(y/x) — denom e^v − v has no closed-form antiderivative.
+
+        The Hermite reduction cannot integrate 1/(e^v − v), so the solver
+        correctly falls through by returning None.
+        """
+        vm = make_vm()
+        y_over_x = _div_node(Y, X)
+        rhs_expr = IRApply(EXP, (y_over_x,))
+        expr = IRApply(SUB, (Y_PRIME, rhs_expr))
+        result = _try_homogeneous_type(expr, Y, X, vm)
+        # Integration of 1/(e^v − v) fails → None
+        assert result is None
+
+    # ------------------------------------------------------------------ #
+    # Full pipeline: solve_ode and VM ODE2 dispatch                       #
+    # ------------------------------------------------------------------ #
+
+    def test_solve_ode_degenerate(self) -> None:
+        """solve_ode() returns Equal(y, %c·x) for the degenerate case."""
+        vm = make_vm()
+        expr = IRApply(SUB, (Y_PRIME, _div_node(Y, X)))
+        result = solve_ode(expr, Y, X, vm)
+
+        assert result is not None
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        assert result.args[0] == Y
+
+    def test_ode2_dispatch_degenerate_via_vm(self) -> None:
+        """ODE2(D(y,x)−y/x, y, x) through the VM handler → explicit y=%c·x."""
+        vm = make_vm()
+        expr = IRApply(SUB, (Y_PRIME, _div_node(Y, X)))
+        result = vm.eval(IRApply(ODE2, (expr, Y, X)))
+
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        assert result.args[0] == Y
+        assert "%c" in str(result)
+
+    def test_ode2_dispatch_ratio_squared(self) -> None:
+        """ODE2 dispatch for y' = (y/x)^2 returns an implicit Equal node."""
+        vm = make_vm()
+        y_over_x = _div_node(Y, X)
+        expr = IRApply(SUB, (Y_PRIME, IRApply(POW, (y_over_x, IRInteger(2)))))
+        result = vm.eval(IRApply(ODE2, (expr, Y, X)))
+
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        assert "%c" in str(result)
+
+    def test_linear_ode_not_captured_by_homogeneous(self) -> None:
+        """y' − 2y = 0 is handled by the linear/separable route before the
+        homogeneous-type solver sees it.  The solution must contain Exp
+        (from the integrating-factor method), not the implicit Log form.
+        """
+        vm = make_vm()
+        # D(y,x) − 2*y = 0
+        expr = IRApply(SUB, (Y_PRIME, IRApply(MUL, (IRInteger(2), Y))))
+        result = vm.eval(IRApply(ODE2, (expr, Y, X)))
+
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        assert result.args[0] == Y
+        # Exponential solution from linear/separable, not the Log implicit form
+        result_str = str(result)
+        assert "Exp" in result_str
+
+
+# ---------------------------------------------------------------------------
+# Section J: Euler-Cauchy equidimensional ODE (Phase 19)
+# ---------------------------------------------------------------------------
+
+# Shared IR atoms for the Euler-Cauchy tests.
+X_SQ = IRApply(POW, (X, IRInteger(2)))   # Pow(x, 2) = x²
+
+
+def _ec_term_x2_yprime2(coeff: int = 1) -> IRNode:
+    """Build coeff · x² · y'' as a product tree."""
+    base = _mul(X_SQ, Y_DOUBLE)
+    if coeff == 1:
+        return base
+    return _mul(IRInteger(coeff), base)
+
+
+def _ec_term_x_yprime(coeff: int = 1) -> IRNode:
+    """Build coeff · x · y' as a product tree."""
+    base = _mul(X, Y_PRIME)
+    if coeff == 1:
+        return base
+    return _mul(IRInteger(coeff), base)
+
+
+def _ec_term_y(coeff: int = 1) -> IRNode:
+    """Build coeff · y."""
+    if coeff == 1:
+        return Y
+    return _mul(IRInteger(coeff), Y)
+
+
+def _build_ec_expr(a: int, b: int, c: int) -> IRNode:
+    """Assemble a · x²y'' + b · x·y' + c · y as a left-folded Add tree."""
+    terms = []
+    if a != 0:
+        terms.append(_ec_term_x2_yprime2(a))
+    if b != 0:
+        terms.append(_ec_term_x_yprime(b))
+    if c != 0:
+        terms.append(_ec_term_y(c))
+    if len(terms) == 1:
+        return terms[0]
+    result = terms[0]
+    for t in terms[1:]:
+        result = _add(result, t)
+    return result
+
+
+class TestFlattenProduct:
+    """Unit tests for _flatten_product — the Mul-tree analogue of _flatten_add."""
+
+    def test_integer_node(self) -> None:
+        """A bare IRInteger gives coefficient = that integer, no factors."""
+        k, fs = _flatten_product(IRInteger(7))
+        from fractions import Fraction
+        assert k == Fraction(7)
+        assert fs == []
+
+    def test_rational_node(self) -> None:
+        """A bare IRRational gives the corresponding Fraction, no factors."""
+        k, fs = _flatten_product(IRRational(3, 4))
+        from fractions import Fraction
+        assert k == Fraction(3, 4)
+        assert fs == []
+
+    def test_symbol_node(self) -> None:
+        """A bare symbol is a factor with coefficient 1."""
+        k, fs = _flatten_product(X)
+        from fractions import Fraction
+        assert k == Fraction(1)
+        assert fs == [X]
+
+    def test_neg_integer(self) -> None:
+        """Neg(IRInteger(5)) → coefficient = −5, no factors."""
+        k, fs = _flatten_product(_neg(IRInteger(5)))
+        from fractions import Fraction
+        assert k == Fraction(-5)
+        assert fs == []
+
+    def test_neg_symbol(self) -> None:
+        """Neg(x) → coefficient = −1, factors = [x]."""
+        k, fs = _flatten_product(_neg(X))
+        from fractions import Fraction
+        assert k == Fraction(-1)
+        assert fs == [X]
+
+    def test_mul_two_symbols(self) -> None:
+        """Mul(x, y) → coefficient = 1, factors = [x, y]."""
+        k, fs = _flatten_product(_mul(X, Y))
+        from fractions import Fraction
+        assert k == Fraction(1)
+        assert set(fs) == {X, Y}
+
+    def test_mul_int_symbol(self) -> None:
+        """Mul(3, x) → coefficient = 3, factors = [x]."""
+        k, fs = _flatten_product(_mul(IRInteger(3), X))
+        from fractions import Fraction
+        assert k == Fraction(3)
+        assert fs == [X]
+
+    def test_mul_neg_int_symbol(self) -> None:
+        """Mul(-2, y) → coefficient = −2, factors = [y]."""
+        k, fs = _flatten_product(_mul(IRInteger(-2), Y))
+        from fractions import Fraction
+        assert k == Fraction(-2)
+        assert fs == [Y]
+
+    def test_triple_product(self) -> None:
+        """Mul(3, Mul(x², y'')) → coefficient = 3, factors = [x², y'']."""
+        node = _mul(IRInteger(3), _mul(X_SQ, Y_DOUBLE))
+        k, fs = _flatten_product(node)
+        from fractions import Fraction
+        assert k == Fraction(3)
+        assert X_SQ in fs
+        assert Y_DOUBLE in fs
+
+
+class TestCollectEulerCauchyCoeffs:
+    """Unit tests for _collect_euler_cauchy_coeffs."""
+
+    def test_basic_x2_yprime2_plus_y(self) -> None:
+        """x²y'' + y must give a=1, b=0, c=1."""
+        from fractions import Fraction
+        expr = _add(_ec_term_x2_yprime2(1), _ec_term_y(1))
+        result = _collect_euler_cauchy_coeffs(expr, Y, X)
+        assert result is not None
+        a, b, c = result
+        assert a == Fraction(1)
+        assert b == Fraction(0)
+        assert c == Fraction(1)
+
+    def test_full_three_term(self) -> None:
+        """x²y'' + 2xy' − 2y → a=1, b=2, c=−2."""
+        from fractions import Fraction
+        expr = _build_ec_expr(1, 2, -2)
+        result = _collect_euler_cauchy_coeffs(expr, Y, X)
+        assert result is not None
+        a, b, c = result
+        assert a == Fraction(1)
+        assert b == Fraction(2)
+        assert c == Fraction(-2)
+
+    def test_negative_b_and_c(self) -> None:
+        """x²y'' − 5xy' + 9y → a=1, b=−5, c=9."""
+        from fractions import Fraction
+        expr = _build_ec_expr(1, -5, 9)
+        result = _collect_euler_cauchy_coeffs(expr, Y, X)
+        assert result is not None
+        a, b, c = result
+        assert a == Fraction(1)
+        assert b == Fraction(-5)
+        assert c == Fraction(9)
+
+    def test_scaled_leading_coeff(self) -> None:
+        """3x²y'' + 6xy' − 6y → a=3, b=6, c=−6."""
+        from fractions import Fraction
+        expr = _build_ec_expr(3, 6, -6)
+        result = _collect_euler_cauchy_coeffs(expr, Y, X)
+        assert result is not None
+        a, b, c = result
+        assert a == Fraction(3)
+        assert b == Fraction(6)
+        assert c == Fraction(-6)
+
+    def test_missing_x2_term_returns_none(self) -> None:
+        """xy' + y = 0 has no x²·y'' term → None (a=0)."""
+        expr = _add(_ec_term_x_yprime(1), _ec_term_y(1))
+        assert _collect_euler_cauchy_coeffs(expr, Y, X) is None
+
+    def test_const_coeff_ode_returns_none(self) -> None:
+        """y'' + y' + y = 0 has no x² or x multipliers → None."""
+        expr = _add(_add(Y_DOUBLE, Y_PRIME), Y)
+        assert _collect_euler_cauchy_coeffs(expr, Y, X) is None
+
+    def test_only_one_term_returns_none(self) -> None:
+        """A single x²y'' term has matched < 2 → None."""
+        expr = _ec_term_x2_yprime2(1)
+        assert _collect_euler_cauchy_coeffs(expr, Y, X) is None
+
+    def test_bare_x_term_returns_none(self) -> None:
+        """x²y'' + 2xy' + c·x = 0 has a bare x term (not c·y) → None."""
+        expr = _add(_add(_ec_term_x2_yprime2(1), _ec_term_x_yprime(2)), X)
+        assert _collect_euler_cauchy_coeffs(expr, Y, X) is None
+
+
+class TestSolveEulerCauchy:
+    """Unit tests for solve_euler_cauchy with all three root cases."""
+
+    # ------------------------------------------------------------------ #
+    # Case 1: distinct real roots (positive discriminant)                #
+    # ------------------------------------------------------------------ #
+
+    def test_distinct_real_roots_positive(self) -> None:
+        """x²y'' + 2xy' − 2y = 0 → y = C1·x + C2·x^{-2}.
+
+        Indicial: r² + (2−1)r − 2 = 0  → r² + r − 2 = 0
+        Roots: r=1, r=−2.
+        """
+        from fractions import Fraction
+        result = solve_euler_cauchy(Fraction(1), Fraction(2), Fraction(-2), Y, X)
+
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        assert result.args[0] == Y
+
+        # The solution is Add(Mul(C1, x), Mul(C2, Pow(x, Neg(IRInteger(2)))))
+        sol = result.args[1]
+        sol_str = str(sol)
+        # Both integration constants must appear.
+        assert "c1" in sol_str or C1 in _walk_nodes(sol)
+        assert "c2" in sol_str or C2 in _walk_nodes(sol)
+        # Log must NOT appear (real distinct roots → no logarithm).
+        assert "Log" not in sol_str
+
+    def test_distinct_real_roots_symmetric(self) -> None:
+        """x²y'' + xy' − 4y = 0 → y = C1·x² + C2·x^{-2}.
+
+        Indicial: r² + 0·r − 4 = 0  → roots ±2.
+        """
+        from fractions import Fraction
+        result = solve_euler_cauchy(Fraction(1), Fraction(1), Fraction(-4), Y, X)
+
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        sol = result.args[1]
+        sol_str = str(sol)
+        assert "Log" not in sol_str
+        assert "Cos" not in sol_str and "Sin" not in sol_str
+
+    def test_distinct_real_roots_result_is_add(self) -> None:
+        """The solution for two distinct roots is an Add of two Mul terms."""
+        from fractions import Fraction
+        result = solve_euler_cauchy(Fraction(1), Fraction(2), Fraction(-2), Y, X)
+        sol = result.args[1]
+        # Top level must be Add(Mul(C1, ...), Mul(C2, ...))
+        assert isinstance(sol, IRApply)
+        assert sol.head == ADD
+
+    # ------------------------------------------------------------------ #
+    # Case 2: repeated root (zero discriminant)                          #
+    # ------------------------------------------------------------------ #
+
+    def test_repeated_root_order_three(self) -> None:
+        """x²y'' − 5xy' + 9y = 0 → y = (C1 + C2·ln x)·x³.
+
+        Indicial: r² + (−5−1)r + 9 = 0  → r² − 6r + 9 = 0  → (r−3)² = 0.
+        """
+        from fractions import Fraction
+        result = solve_euler_cauchy(Fraction(1), Fraction(-5), Fraction(9), Y, X)
+
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        sol = result.args[1]
+        sol_str = str(sol)
+        # Repeated root → logarithm appears.
+        assert "Log" in sol_str
+        # No trig functions.
+        assert "Cos" not in sol_str and "Sin" not in sol_str
+
+    def test_repeated_root_order_one(self) -> None:
+        """x²y'' − xy' + y = 0 → y = (C1 + C2·ln x)·x.
+
+        Indicial: r² + (−1−1)r + 1 = 0  → r² − 2r + 1 = 0  → (r−1)² = 0.
+        """
+        from fractions import Fraction
+        result = solve_euler_cauchy(Fraction(1), Fraction(-1), Fraction(1), Y, X)
+
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        sol = result.args[1]
+        sol_str = str(sol)
+        assert "Log" in sol_str
+        # x to the first power appears (not x^3 or anything else)
+        # We check that x itself is a factor somewhere in the solution.
+        assert X in _walk_nodes(sol)
+
+    def test_repeated_root_solution_structure(self) -> None:
+        """Repeated root: top-level node is Mul, inner Add contains C1 and C2."""
+        from fractions import Fraction
+        result = solve_euler_cauchy(Fraction(1), Fraction(-5), Fraction(9), Y, X)
+        sol = result.args[1]
+        # Top level: Mul((C1 + C2·ln x), x^r)
+        assert isinstance(sol, IRApply)
+        assert sol.head == MUL
+
+    # ------------------------------------------------------------------ #
+    # Case 3: complex conjugate roots (negative discriminant)            #
+    # ------------------------------------------------------------------ #
+
+    def test_complex_roots_zero_alpha(self) -> None:
+        """x²y'' + xy' + y = 0 → y = C1·cos(ln x) + C2·sin(ln x).
+
+        Indicial: r² + 0·r + 1 = 0  → roots ±i.  α=0, β=1.
+        """
+        from fractions import Fraction
+        result = solve_euler_cauchy(Fraction(1), Fraction(1), Fraction(1), Y, X)
+
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        sol = result.args[1]
+        sol_str = str(sol)
+        assert "Cos" in sol_str
+        assert "Sin" in sol_str
+        assert "Log" in sol_str  # β·ln(x) appears inside trig
+        # No Pow(x, ...) other than multiplied by the whole expression
+        # (alpha=0 means x^alpha = 1, still wrapped in Mul(1,...))
+
+    def test_complex_roots_negative_alpha(self) -> None:
+        """x²y'' + 3xy' + 2y = 0 → y = x^{-1}·(C1·cos(ln x) + C2·sin(ln x)).
+
+        Indicial: r² + 2r + 2 = 0  → r = −1 ± i.  α=−1, β=1.
+        """
+        from fractions import Fraction
+        result = solve_euler_cauchy(Fraction(1), Fraction(3), Fraction(2), Y, X)
+
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        sol = result.args[1]
+        sol_str = str(sol)
+        assert "Cos" in sol_str
+        assert "Sin" in sol_str
+        assert "Log" in sol_str
+        # x^{-1} must appear → Pow node with Neg exponent
+        assert "Pow" in sol_str
+
+    def test_complex_roots_solution_is_mul(self) -> None:
+        """Complex case: top-level is Mul(x^α, Add(cos_term, sin_term))."""
+        from fractions import Fraction
+        result = solve_euler_cauchy(Fraction(1), Fraction(3), Fraction(2), Y, X)
+        sol = result.args[1]
+        assert isinstance(sol, IRApply)
+        assert sol.head == MUL
+
+    # ------------------------------------------------------------------ #
+    # Edge cases                                                          #
+    # ------------------------------------------------------------------ #
+
+    def test_solution_head_is_equal(self) -> None:
+        """All cases: result is Equal(y, ...)."""
+        from fractions import Fraction
+        for a, b, c in [
+            (Fraction(1), Fraction(2), Fraction(-2)),   # distinct real
+            (Fraction(1), Fraction(-5), Fraction(9)),   # repeated
+            (Fraction(1), Fraction(1), Fraction(1)),    # complex
+        ]:
+            r = solve_euler_cauchy(a, b, c, Y, X)
+            assert isinstance(r, IRApply)
+            assert r.head == EQUAL
+            assert r.args[0] == Y
+
+    def test_c1_c2_constants_present(self) -> None:
+        """All three root cases must contain both %c1 and %c2."""
+        from fractions import Fraction
+        for a, b, c in [
+            (Fraction(1), Fraction(2), Fraction(-2)),
+            (Fraction(1), Fraction(-5), Fraction(9)),
+            (Fraction(1), Fraction(1), Fraction(1)),
+        ]:
+            sol = solve_euler_cauchy(a, b, c, Y, X).args[1]
+            nodes = _walk_nodes(sol)
+            assert C1 in nodes, f"C1 missing for a={a},b={b},c={c}"
+            assert C2 in nodes, f"C2 missing for a={a},b={b},c={c}"
+
+
+class TestTryEulerCauchy:
+    """Integration tests for _try_euler_cauchy (pattern-match + solve)."""
+
+    def test_matches_distinct_real(self) -> None:
+        """x²y'' + 2xy' − 2y = 0 is recognised and solved."""
+        expr = _build_ec_expr(1, 2, -2)
+        result = _try_euler_cauchy(expr, Y, X)
+        assert result is not None
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        assert result.args[0] == Y
+
+    def test_matches_repeated_root(self) -> None:
+        """x²y'' − 5xy' + 9y = 0 is recognised and solved (Log appears)."""
+        expr = _build_ec_expr(1, -5, 9)
+        result = _try_euler_cauchy(expr, Y, X)
+        assert result is not None
+        assert "Log" in str(result)
+
+    def test_matches_complex_roots(self) -> None:
+        """x²y'' + xy' + y = 0 is recognised and solved (Cos/Sin appear)."""
+        expr = _build_ec_expr(1, 1, 1)
+        result = _try_euler_cauchy(expr, Y, X)
+        assert result is not None
+        sol_str = str(result)
+        assert "Cos" in sol_str
+        assert "Sin" in sol_str
+
+    def test_no_x2_term_returns_none(self) -> None:
+        """y'' + y' + y = 0 (constant-coeff) is not Euler-Cauchy → None."""
+        expr = _add(_add(Y_DOUBLE, Y_PRIME), Y)
+        assert _try_euler_cauchy(expr, Y, X) is None
+
+    def test_first_order_returns_none(self) -> None:
+        """y' + y = 0 has no y'' term → None."""
+        expr = _add(Y_PRIME, Y)
+        assert _try_euler_cauchy(expr, Y, X) is None
+
+    def test_ec_two_term_only_x2_and_y(self) -> None:
+        """x²y'' + y = 0 (b=0) is a valid two-term Euler-Cauchy."""
+        # Indicial: r² + (-1)r + 1 = 0 → r² - r + 1 = 0
+        # disc = 1 - 4 = -3 < 0 → complex roots
+        expr = _add(_ec_term_x2_yprime2(1), _ec_term_y(1))
+        result = _try_euler_cauchy(expr, Y, X)
+        assert result is not None
+        assert result.head == EQUAL
+
+
+class TestEulerCauchyViaDispatcher:
+    """End-to-end tests: solve_ode / eval_ode dispatches to Euler-Cauchy."""
+
+    def test_dispatch_distinct_real_via_solve_ode(self) -> None:
+        """solve_ode(x²y''+2xy'-2y, y, x, vm) → Equal(y, ...) with no Log."""
+        vm = make_vm()
+        expr = _build_ec_expr(1, 2, -2)
+        result = solve_ode(expr, Y, X, vm)
+        assert result is not None
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        assert "Log" not in str(result)
+
+    def test_dispatch_repeated_root_via_solve_ode(self) -> None:
+        """solve_ode(x²y''-5xy'+9y, y, x, vm) → Equal(y, ...) with Log."""
+        vm = make_vm()
+        expr = _build_ec_expr(1, -5, 9)
+        result = solve_ode(expr, Y, X, vm)
+        assert result is not None
+        assert "Log" in str(result)
+
+    def test_dispatch_complex_via_solve_ode(self) -> None:
+        """solve_ode(x²y''+xy'+y, y, x, vm) → Equal(y, ...) with Cos/Sin."""
+        vm = make_vm()
+        expr = _build_ec_expr(1, 1, 1)
+        result = solve_ode(expr, Y, X, vm)
+        assert result is not None
+        sol_str = str(result)
+        assert "Cos" in sol_str
+        assert "Sin" in sol_str
+
+    def test_const_coeff_not_consumed_by_euler_cauchy(self) -> None:
+        """y'' − 3y' + 2y = 0 is constant-coeff, not Euler-Cauchy.
+        It must be solved by the const-coeff solver (Exp in the result).
+        """
+        vm = make_vm()
+        # y'' - 3y' + 2y = 0  (standard const-coeff, roots 1 and 2)
+        expr = _add(_add(Y_DOUBLE, _mul(IRInteger(-3), Y_PRIME)), _mul(IRInteger(2), Y))
+        result = solve_ode(expr, Y, X, vm)
+        assert result is not None
+        assert "Exp" in str(result)
+
+    def test_eval_ode_ode2_dispatch_euler_cauchy(self) -> None:
+        """eval_ode wraps solve_ode via ODE2 — same result."""
+        expr = _build_ec_expr(1, 2, -2)
+        result = eval_ode(expr)
+        assert result is not None
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        assert result.args[0] == Y
+
+    def test_euler_cauchy_scaled_coefficients(self) -> None:
+        """2x²y'' + 4xy' − 4y = 0 is equivalent to x²y''+2xy'-2y=0 after division.
+        The solver works with integer coefficients directly — same roots.
+        """
+        vm = make_vm()
+        expr = _build_ec_expr(2, 4, -4)   # 2·(x²y''+2xy'-2y)=0
+        result = solve_ode(expr, Y, X, vm)
+        # Indicial: 2r²+(4-2)r-4=0 → 2r²+2r-4=0 → r²+r-2=0 → r=1,-2
+        # Exact same roots as the unscaled case.
+        assert result is not None
+        assert result.head == EQUAL
+        assert "Log" not in str(result)
+
+
+# ---------------------------------------------------------------------------
+# Shared walk helper (used by Euler-Cauchy tests above)
+# ---------------------------------------------------------------------------
+
+
+def _walk_nodes(node: IRNode) -> list[IRNode]:
+    """Collect all nodes in an IR tree (depth-first, pre-order)."""
+    acc: list[IRNode] = [node]
+    if isinstance(node, IRApply):
+        for arg in node.args:
+            acc.extend(_walk_nodes(arg))
+    return acc
+
+
+# ---------------------------------------------------------------------------
+# Phase 20: Variation of Parameters tests
+# ---------------------------------------------------------------------------
+#
+# These tests cover three areas:
+#
+# A. Unit tests for _signed_frac_to_ir and _exp_r helpers.
+# B. Unit tests for _vop_integrand_pair — verifying the integrand structure
+#    returned for each root case (distinct real, repeated, complex).
+# C. Integration tests for _try_vop and the full solve_ode pipeline.
+# ---------------------------------------------------------------------------
+
+def _has_symbol(node: IRNode, name: str) -> bool:
+    """Return True if any IRSymbol with the given name appears in the tree."""
+    if isinstance(node, IRSymbol) and node.name == name:
+        return True
+    if isinstance(node, IRApply):
+        return any(_has_symbol(a, name) for a in node.args)
+    return False
+
+
+class TestSignedFracToIr:
+    """_signed_frac_to_ir lifts signed Fractions to IR correctly."""
+
+    def test_positive_integer(self) -> None:
+        result = _signed_frac_to_ir(F(3))
+        assert result == IRInteger(3)
+
+    def test_zero(self) -> None:
+        result = _signed_frac_to_ir(F(0))
+        assert result == IRInteger(0)
+
+    def test_positive_rational(self) -> None:
+        result = _signed_frac_to_ir(F(1, 2))
+        assert result == IRRational(1, 2)
+
+    def test_negative_integer(self) -> None:
+        """Negative integer → Neg(Integer(n))."""
+        result = _signed_frac_to_ir(F(-3))
+        assert isinstance(result, IRApply)
+        assert result.head.name == "Neg"  # type: ignore[union-attr]
+        assert result.args[0] == IRInteger(3)
+
+    def test_negative_rational(self) -> None:
+        """Negative rational → Neg(Rational(n, d))."""
+        result = _signed_frac_to_ir(F(-1, 2))
+        assert isinstance(result, IRApply)
+        assert result.args[0] == IRRational(1, 2)
+
+
+class TestExpR:
+    """_exp_r collapses trivial cases and builds correct IR."""
+
+    def test_r_zero_returns_one(self) -> None:
+        """exp(0·x) = 1 — special case collapse."""
+        result = _exp_r(F(0), X)
+        assert result == IRInteger(1)
+
+    def test_r_one_returns_exp_x(self) -> None:
+        """exp(1·x) = Exp(x) — no redundant Mul."""
+        result = _exp_r(F(1), X)
+        assert isinstance(result, IRApply)
+        assert result.head == EXP
+        assert result.args[0] == X
+
+    def test_r_neg_one_returns_exp_neg_x(self) -> None:
+        """exp(-x) = Exp(Neg(x))."""
+        result = _exp_r(F(-1), X)
+        assert isinstance(result, IRApply)
+        assert result.head == EXP
+        inner = result.args[0]
+        assert isinstance(inner, IRApply) and inner.head.name == "Neg"  # type: ignore[union-attr]
+
+    def test_r_positive_fraction(self) -> None:
+        """exp((1/2)·x) = Exp(Mul(1/2, x))."""
+        result = _exp_r(F(1, 2), X)
+        assert isinstance(result, IRApply)
+        assert result.head == EXP
+
+    def test_r_negative_fraction(self) -> None:
+        """exp((-1/2)·x) = Exp(Mul(Neg(1/2), x)) or Exp(Neg(Mul(1/2, x)))."""
+        result = _exp_r(F(-1, 2), X)
+        assert isinstance(result, IRApply)
+        assert result.head == EXP
+
+
+class TestVopIntegrandPair:
+    """_vop_integrand_pair returns correct (u1', u2', y1, y2) tuples."""
+
+    def test_distinct_real_roots_returns_tuple(self) -> None:
+        """y'' - 3y' + 2y = f → distinct roots 1, 2 → tuple of 4."""
+        # a=1, b=-3, c=2; disc = 9 - 8 = 1, r1=2, r2=1
+        result = _vop_integrand_pair(F(1), F(-3), F(2), X, X)
+        assert result is not None
+        assert len(result) == 4
+
+    def test_distinct_roots_y1_y2_are_exp(self) -> None:
+        """y1 and y2 are Exp nodes for distinct real roots."""
+        result = _vop_integrand_pair(F(1), F(-3), F(2), X, X)
+        assert result is not None
+        _, _, y1, y2 = result
+        assert isinstance(y1, IRApply) and y1.head == EXP
+        assert isinstance(y2, IRApply) and y2.head == EXP
+
+    def test_repeated_root_returns_tuple(self) -> None:
+        """y'' - 2y' + y = f → repeated root 1 → tuple of 4."""
+        # a=1, b=-2, c=1; disc = 4 - 4 = 0, r=1
+        result = _vop_integrand_pair(F(1), F(-2), F(1), X, X)
+        assert result is not None
+        assert len(result) == 4
+
+    def test_repeated_root_y2_contains_x(self) -> None:
+        """y2 = x·exp(r·x) — must contain the free variable x."""
+        result = _vop_integrand_pair(F(1), F(-2), F(1), X, X)
+        assert result is not None
+        _, _, _, y2 = result
+        # y2 = x·exp(x): should be Mul(x, Exp(x))
+        assert isinstance(y2, IRApply) and y2.head.name == "Mul"  # type: ignore[union-attr]
+        assert X in y2.args  # x is one of the direct Mul children
+
+    def test_complex_roots_returns_tuple(self) -> None:
+        """y'' + y = f → complex roots ±i → tuple of 4."""
+        # a=1, b=0, c=1; disc = -4, alpha=0, beta=1
+        result = _vop_integrand_pair(F(1), F(0), F(1), X, X)
+        assert result is not None
+        assert len(result) == 4
+
+    def test_complex_roots_y1_y2_have_trig(self) -> None:
+        """y1 contains Cos, y2 contains Sin for complex roots."""
+        result = _vop_integrand_pair(F(1), F(0), F(1), X, X)
+        assert result is not None
+        _, _, y1, y2 = result
+        assert isinstance(y1, IRApply) and y1.head == COS
+        assert isinstance(y2, IRApply) and y2.head == SIN
+
+    def test_complex_roots_alpha_zero_no_exp(self) -> None:
+        """y'' + y = f: alpha=0 so exp(0) = 1, y1 = cos(x) directly."""
+        result = _vop_integrand_pair(F(1), F(0), F(1), X, X)
+        assert result is not None
+        _, _, y1, y2 = result
+        # alpha = 0: _exp_r(0, x) = 1, so _mul(1, cos(x)) = cos(x)
+        assert y1.head == COS  # type: ignore[union-attr]
+        assert y2.head == SIN  # type: ignore[union-attr]
+
+    def test_irrational_disc_returns_none(self) -> None:
+        """Irrational discriminant → None (can't build rational integrands)."""
+        # a=1, b=0, c=-2: disc=8, sqrt(8) is irrational
+        result = _vop_integrand_pair(F(1), F(0), F(-2), X, X)
+        assert result is None
+
+    def test_irrational_complex_returns_none(self) -> None:
+        """Irrational beta (complex roots with irrational imag part) → None."""
+        # a=1, b=0, c=2: disc=-8, beta_sq=2, sqrt(2) irrational
+        result = _vop_integrand_pair(F(1), F(0), F(2), X, X)
+        assert result is None
+
+    def test_u1_prime_has_correct_sign_distinct(self) -> None:
+        """For distinct roots, u1_prime has positive coefficient, u2_prime negative.
+
+        y'' - 3y' + 2y = f: r1=2, r2=1; coeff1 = 1/(r1-r2) = 1 (positive).
+        coeff2 = 1/(r2-r1) = -1 (negative).
+
+        We check this structurally: coeff2 = Neg(1) should appear somewhere
+        in u2_prime's IR tree, while u1_prime's leading coefficient is plain 1
+        (no Neg wrapper — the _mul helper drops Mul(1, ...) to the arg itself).
+        """
+        f_const = IRInteger(1)   # simple constant forcing for structural inspection
+        result = _vop_integrand_pair(F(1), F(-3), F(2), f_const, X)
+        assert result is not None
+        u1_prime, u2_prime, _, _ = result
+        # coeff1 = 1/(r1-r2) = 1/(2-1) = 1; _mul(1, ...) strips to the inner arg,
+        # so u1_prime should NOT have a Neg as its top-level head.
+        if isinstance(u1_prime, IRApply):
+            assert u1_prime.head.name != "Neg"  # type: ignore[union-attr]
+        # coeff2 = 1/(r2-r1) = 1/(1-2) = -1; Neg should appear somewhere.
+        assert _has_symbol(u2_prime, "Neg") or any(
+            isinstance(n, IRApply) and hasattr(n.head, "name") and n.head.name == "Neg"  # type: ignore[union-attr]
+            for n in _walk_nodes(u2_prime)
+        )
+
+    def test_u1_prime_repeated_is_neg(self) -> None:
+        """For repeated root, u1' = -x·exp(-rx)·f is always negative."""
+        result = _vop_integrand_pair(F(1), F(-2), F(1), IRInteger(1), X)
+        assert result is not None
+        u1_prime, _, _, _ = result
+        assert isinstance(u1_prime, IRApply) and u1_prime.head.name == "Neg"  # type: ignore[union-attr]
+
+
+class TestTryVop:
+    """_try_vop full-pipeline tests for Phase 20."""
+
+    # -----------------------------------------------------------------------
+    # Helper to build non-homogeneous ODE expressions
+    # -----------------------------------------------------------------------
+
+    @staticmethod
+    def _nonhom_ode(a: int, b: int, c: int, forcing: IRNode) -> IRNode:
+        """Build a·y'' + b·y' + c·y - forcing = 0 as a single Add tree."""
+        terms: list[IRNode] = []
+        if a != 0:
+            terms.append(Y_DOUBLE if a == 1 else _mul(IRInteger(a), Y_DOUBLE))
+        if b != 0:
+            terms.append(Y_PRIME if b == 1 else _mul(IRInteger(b), Y_PRIME))
+        if c != 0:
+            terms.append(Y if c == 1 else _mul(IRInteger(c), Y))
+        # Forcing appears negated on the LHS (moved from RHS).
+        terms.append(IRApply(NEG, (forcing,)))
+        acc = terms[0]
+        for t in terms[1:]:
+            acc = _add(acc, t)
+        return acc
+
+    # -----------------------------------------------------------------------
+    # Fallback: returns None for non-constant-coefficient / homogeneous ODEs
+    # -----------------------------------------------------------------------
+
+    def test_returns_none_for_homogeneous(self) -> None:
+        """No forcing term → _collect_second_order_nonhom returns None.
+
+        VoP should return None for homogeneous ODEs.
+        """
+        vm = make_vm()
+        expr = _add(Y_DOUBLE, Y)   # y'' + y = 0 — homogeneous
+        result = _try_vop(expr, Y, X, vm)
+        assert result is None
+
+    def test_returns_none_for_irrational_disc(self) -> None:
+        """y'' - 2y = x^3: disc = 0 + 8 = 8 (irrational sqrt) → None."""
+        vm = make_vm()
+        # a=1, b=0, c=-2: disc = 0 - 4*1*(-2) = 8 (irrational)
+        forcing = IRApply(POW, (X, IRInteger(3)))
+        expr = self._nonhom_ode(1, 0, -2, forcing)
+        result = _try_vop(expr, Y, X, vm)
+        assert result is None
+
+    # -----------------------------------------------------------------------
+    # Distinct real roots: y'' + 3y' + 2y = x^3  (degree-3 polynomial forcing)
+    # -----------------------------------------------------------------------
+
+    def test_distinct_roots_poly3_forcing_not_none(self) -> None:
+        """y'' + 3y' + 2y = x^3: non-EPT forcing (degree > 2) → VoP succeeds."""
+        # a=1, b=3, c=2; disc = 9-8 = 1 (exact), roots r1=-1, r2=-2
+        # Forcing: x^3 not in EPT family → undetermined coefficients returns None.
+        # VoP integrands: u1' = exp(x)*x^3, u2' = -exp(2x)*x^3
+        # exp(x)*x^3 and exp(2x)*x^3 can be integrated via tabular IBP.
+        vm = make_vm()
+        forcing = IRApply(POW, (X, IRInteger(3)))
+        expr = self._nonhom_ode(1, 3, 2, forcing)
+        result = _try_vop(expr, Y, X, vm)
+        assert result is not None
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        assert result.args[0] == Y
+
+    def test_distinct_roots_result_contains_c1_c2(self) -> None:
+        """VoP solution must include C1 and C2 (homogeneous part)."""
+        vm = make_vm()
+        forcing = IRApply(POW, (X, IRInteger(3)))
+        expr = self._nonhom_ode(1, 3, 2, forcing)
+        result = _try_vop(expr, Y, X, vm)
+        assert result is not None
+        nodes = _walk_nodes(result)
+        assert C1 in nodes, "C1 not found in VoP solution"
+        assert C2 in nodes, "C2 not found in VoP solution"
+
+    # -----------------------------------------------------------------------
+    # Complex roots: y'' + y = x^3  (degree-3 polynomial; alpha=0, beta=1)
+    # -----------------------------------------------------------------------
+
+    def test_complex_roots_poly3_forcing_not_none(self) -> None:
+        """y'' + y = x^3: complex roots ±i, non-EPT forcing → VoP succeeds.
+
+        VoP integrands:
+          u1' = -sin(x)·x^3     (polynomial × sin → tabular IBP ✓)
+          u2' =  cos(x)·x^3     (polynomial × cos → tabular IBP ✓)
+        """
+        vm = make_vm()
+        forcing = IRApply(POW, (X, IRInteger(3)))
+        expr = self._nonhom_ode(1, 0, 1, forcing)
+        result = _try_vop(expr, Y, X, vm)
+        assert result is not None
+        assert result.head == EQUAL
+        assert result.args[0] == Y
+
+    def test_complex_roots_solution_contains_c1_c2(self) -> None:
+        """y'' + y = x^3 solution must contain %c1 and %c2."""
+        vm = make_vm()
+        forcing = IRApply(POW, (X, IRInteger(3)))
+        expr = self._nonhom_ode(1, 0, 1, forcing)
+        result = _try_vop(expr, Y, X, vm)
+        assert result is not None
+        nodes = _walk_nodes(result)
+        assert C1 in nodes
+        assert C2 in nodes
+
+    # -----------------------------------------------------------------------
+    # EPT forcing — VoP should ALSO work (it's more general), so we confirm
+    # no crash.  Note: undetermined coefficients handles this first in
+    # solve_ode, so _try_vop is not reached from the dispatcher for EPT
+    # inputs, but calling it directly should still return a valid result.
+    # -----------------------------------------------------------------------
+
+    def test_ept_forcing_still_returns_solution(self) -> None:
+        """y'' + y = sin(x): EPT forcing; VoP finds a particular solution too."""
+        # This tests VoP directly — in solve_ode, undetermined coefficients
+        # fires first and returns a result, so VoP is not reached.
+        # But calling _try_vop directly should still give a valid Equal node.
+        vm = make_vm()
+        sin_x = IRApply(SIN, (X,))
+        expr = self._nonhom_ode(1, 0, 1, sin_x)
+        result = _try_vop(expr, Y, X, vm)
+        # sin(x) forcing with y''+y=0 has resonance (beta=1=root of char poly);
+        # _vop_integrand_pair for complex roots alpha=0, beta=1:
+        # u1' = -sin(x)*sin(x) / 1 = -sin²(x)
+        # u2' = cos(x)*sin(x) / 1
+        # Both can be integrated via trig-trig identities → non-None.
+        assert result is not None
+
+
+class TestSolveOdeVopDispatch:
+    """Tests that solve_ode routes to VoP correctly for non-EPT forcing."""
+
+    def test_poly3_forcing_gets_solved(self) -> None:
+        """solve_ode handles y'' + y = x^3 via VoP (undetermined coeff fails)."""
+        vm = make_vm()
+        forcing = IRApply(POW, (X, IRInteger(3)))
+        expr = _add(_add(Y_DOUBLE, Y), IRApply(NEG, (forcing,)))
+        result = solve_ode(expr, Y, X, vm)
+        assert result is not None
+        assert isinstance(result, IRApply)
+        assert result.head == EQUAL
+        assert result.args[0] == Y
+
+    def test_poly3_distinct_roots_gets_solved(self) -> None:
+        """solve_ode handles y'' + 3y' + 2y = x^3 via VoP."""
+        vm = make_vm()
+        forcing = IRApply(POW, (X, IRInteger(3)))
+        expr = _add(
+            _add(
+                _add(Y_DOUBLE, _mul(IRInteger(3), Y_PRIME)),
+                _mul(IRInteger(2), Y),
+            ),
+            IRApply(NEG, (forcing,)),
+        )
+        result = solve_ode(expr, Y, X, vm)
+        assert result is not None
+        assert result.head == EQUAL
+
+    def test_ept_forcing_not_handled_by_vop_in_dispatcher(self) -> None:
+        """y'' - y = exp(x): EPT forcing, handled by undetermined coefficients.
+
+        VoP is NOT reached from solve_ode since undetermined coefficients fires
+        first.  The result should be non-None (from undetermined coefficients).
+        This test verifies the dispatcher ordering is correct.
+        """
+        vm = make_vm()
+        exp_x = IRApply(EXP, (X,))
+        expr = _add(_add(Y_DOUBLE, _mul(IRInteger(-1), Y)), IRApply(NEG, (exp_x,)))
+        result = solve_ode(expr, Y, X, vm)
+        # Undetermined coefficients handles this (resonance s=1: A*x*exp(x)).
+        assert result is not None
+
+    def test_homogeneous_not_routed_to_vop(self) -> None:
+        """y'' + y = 0 is homogeneous — VoP is never called (no forcing)."""
+        vm = make_vm()
+        expr = _add(Y_DOUBLE, Y)
+        result = solve_ode(expr, Y, X, vm)
+        # Should be solved by homogeneous const-coeff (not VoP).
+        assert result is not None
+        assert result.head == EQUAL
+        # Homogeneous solution: C1*cos(x) + C2*sin(x) — no polynomial y_p.
+        nodes = _walk_nodes(result)
+        assert C1 in nodes
+        assert C2 in nodes

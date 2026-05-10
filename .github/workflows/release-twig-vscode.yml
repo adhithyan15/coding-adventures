@@ -1,0 +1,246 @@
+# Release — Twig VS Code extension + supporting binaries
+#
+# Builds the Twig VS Code extension (.vsix) and the Rust binaries it
+# depends on (twig-lsp-server, twig-dap, twig-vm, twig-spec-dump),
+# then attaches them all to a GitHub Release.
+#
+# Triggered three ways:
+#
+#   1. Push a tag matching `twig-vscode-v*`:
+#        git tag twig-vscode-v0.1.0
+#        git push origin twig-vscode-v0.1.0
+#      → creates a GitHub Release with all assets attached.
+#
+#   2. Manually via the Actions UI (workflow_dispatch).  The .vsix and
+#      binaries land as workflow artifacts on the run, downloadable
+#      for 90 days, but no Release is created.
+#
+#   3. (Optional, future) Push to main when twig-vscode files change.
+#
+# Why three build matrices?
+# - macos-14 (arm64) for Apple Silicon builds — the primary developer
+#   target right now.
+# - macos-13 (x86_64) for Intel Macs.
+# - ubuntu-latest (x86_64) for Linux users.
+# Windows is deliberately omitted until cross-compile recipes for
+# the LANG-runtime are tested there.
+#
+# The extension .vsix is platform-independent (pure JS) so it's only
+# built once on ubuntu-latest.
+#
+# Spec: code/specs/LS04-vscode-extension-generator.md
+
+name: Release Twig VS Code Extension
+
+on:
+  push:
+    tags:
+      - "twig-vscode-v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  # -------------------------------------------------------------------
+  # Build the platform-independent .vsix.  This runs once and produces
+  # the artifact that VS Code installs everywhere.
+  # -------------------------------------------------------------------
+  build-vsix:
+    name: Build .vsix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      # The .vsix consumption flow expects the language-spec JSON to
+      # be regenerated from the lexer/parser sources of truth, so we
+      # build twig-spec-dump first and pipe its output into the
+      # generator.  This keeps the published extension's keyword list
+      # locked to whatever the lexer recognises at this commit.
+      - name: Build twig-spec-dump (for language metadata)
+        working-directory: code/packages/rust
+        run: cargo build --release --bin twig-spec-dump
+
+      - name: Generate twig.spec.json
+        run: |
+          ./code/packages/rust/target/release/twig-spec-dump \
+            > /tmp/twig.spec.json
+          echo "=== generated spec ==="
+          head -30 /tmp/twig.spec.json
+
+      - name: Regenerate twig-vscode from spec
+        run: |
+          rm -rf code/packages/typescript/twig-vscode
+          # cli-builder transitive deps
+          (cd code/packages/typescript/directed-graph && npm install --silent)
+          (cd code/packages/typescript/state-machine && npm install --silent)
+          (cd code/packages/typescript/cli-builder && npm install --silent)
+          (cd code/programs/typescript/vscode-lang-extension-generator && npm install --silent)
+          npx --prefix code/programs/typescript/vscode-lang-extension-generator \
+              tsx code/programs/typescript/vscode-lang-extension-generator/src/index.ts \
+              --language-spec /tmp/twig.spec.json \
+              --lsp-binary twig-lsp-server \
+              --dap-binary twig-dap \
+              --output-dir code/packages/typescript/twig-vscode \
+              --description "Twig language support and debugging for Visual Studio Code"
+
+      - name: Install extension dependencies
+        working-directory: code/packages/typescript/twig-vscode
+        run: npm install --silent
+
+      - name: Compile TypeScript
+        working-directory: code/packages/typescript/twig-vscode
+        run: npx tsc -p .
+
+      - name: Package .vsix
+        working-directory: code/packages/typescript/twig-vscode
+        run: npx --yes @vscode/vsce package --allow-missing-repository
+
+      - name: Upload .vsix as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: twig-vscode
+          path: code/packages/typescript/twig-vscode/*.vsix
+          if-no-files-found: error
+          retention-days: 90
+
+  # -------------------------------------------------------------------
+  # Build the Rust binaries on each supported (os, arch) target.
+  # -------------------------------------------------------------------
+  build-binaries:
+    name: Binaries (${{ matrix.label }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: macos-arm64
+            runs-on: macos-14
+          - label: macos-x86_64
+            runs-on: macos-13
+          - label: linux-x86_64
+            runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo registry + target
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            code/packages/rust/target
+          key: ${{ runner.os }}-${{ matrix.label }}-cargo-${{ hashFiles('code/packages/rust/**/Cargo.toml') }}
+
+      - name: Build release binaries
+        working-directory: code/packages/rust
+        run: |
+          cargo build --release \
+            --bin twig-lsp-server \
+            --bin twig-dap \
+            --bin twig-vm \
+            --bin twig-spec-dump
+
+      - name: Stage + tarball binaries
+        working-directory: code/packages/rust/target/release
+        run: |
+          mkdir -p staging/twig-${{ matrix.label }}
+          cp twig-lsp-server twig-dap twig-vm twig-spec-dump staging/twig-${{ matrix.label }}/
+          (cd staging && tar czf twig-${{ matrix.label }}.tar.gz twig-${{ matrix.label }})
+
+      - name: Upload binaries as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: twig-binaries-${{ matrix.label }}
+          path: code/packages/rust/target/release/staging/twig-${{ matrix.label }}.tar.gz
+          if-no-files-found: error
+          retention-days: 90
+
+  # -------------------------------------------------------------------
+  # Create the GitHub Release on tag pushes.  Pulls in all the
+  # artifacts uploaded by the build-* jobs and attaches them to a
+  # release with install instructions in the body.
+  # -------------------------------------------------------------------
+  release:
+    name: GitHub Release
+    needs: [build-vsix, build-binaries]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/twig-vscode-v')
+    steps:
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Stage assets for release
+        run: |
+          mkdir -p release-assets
+          cp artifacts/twig-vscode/*.vsix release-assets/
+          cp artifacts/twig-binaries-*/*.tar.gz release-assets/
+          ls -la release-assets
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-assets/*
+          body: |
+            ## Twig VS Code Extension ${{ github.ref_name }}
+
+            Twig language support + debugging in Visual Studio Code.
+
+            ### Install
+
+            1. Download `twig-vscode-*.vsix` and the `twig-binaries-*` tarball
+               for your platform from this release.
+            2. Extract the binaries somewhere on your `PATH`:
+               ```sh
+               tar xzf twig-<platform>.tar.gz -C ~/.local/bin --strip-components=1
+               ```
+               (or any directory that's on your `PATH`).
+            3. Install the extension:
+               ```sh
+               code --install-extension twig-vscode-<version>.vsix
+               ```
+               (Or in VS Code: Extensions panel → ⋯ menu → "Install from VSIX…")
+
+            ### Configuration
+
+            If your binaries are off `PATH` (or you want to be explicit),
+            override their paths in VS Code settings:
+
+            ```jsonc
+            {
+              "twig.serverPath":  "/absolute/path/to/twig-lsp-server",
+              "twig.adapterPath": "/absolute/path/to/twig-dap"
+            }
+            ```
+
+            ### Files in this release
+
+            | File | What it is |
+            |------|------------|
+            | `twig-vscode-*.vsix` | The VS Code extension (install via `code --install-extension`) |
+            | `twig-macos-arm64.tar.gz` | LSP, DAP, VM, spec-dump binaries for Apple Silicon |
+            | `twig-macos-x86_64.tar.gz` | Same, for Intel Macs |
+            | `twig-linux-x86_64.tar.gz` | Same, for Linux x86_64 |
+
+            ### Spec
+
+            Generated by `vscode-lang-extension-generator` (LS04).
+            See `code/specs/LS04-vscode-extension-generator.md` for the
+            architecture.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

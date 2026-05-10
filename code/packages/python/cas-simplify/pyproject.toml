@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-cas-simplify"
-version = "0.1.0"
+version = "0.3.0"
 description = "Simplify and canonical-form pass for the symbolic IR — sort, flatten, fold constants, apply identities."
 requires-python = ">=3.12"
 license = "MIT"

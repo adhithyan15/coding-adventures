@@ -21,10 +21,9 @@ Key behaviours under test:
 from __future__ import annotations
 
 import pytest
-
-from sql_lexer import create_sql_lexer, tokenize_sql
 from lexer import GrammarLexer, Token
 
+from sql_lexer import create_sql_lexer, tokenize_sql
 
 # ---------------------------------------------------------------------------
 # Helpers

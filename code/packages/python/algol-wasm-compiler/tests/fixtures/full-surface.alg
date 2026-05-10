@@ -13,7 +13,10 @@ begin
     integer x;
     inc := x + 1;
 
-  procedure bump;
+  integer procedure bonus();
+    begin bonus := 0 end;
+
+  procedure bump();
     begin counter := counter + 1; hits[counter] := counter end;
 
   integer procedure twice(x);
@@ -57,8 +60,8 @@ begin
   m[1, 2] := 6;
   m[2, 1] := 7;
   m[2, 2] := 8;
-  bump;
-  bump;
+  bump();
+  bump();
   total := fold(i, 1, 4, a[i] * i);
   total := total + apply(twice, hits[2]);
   total := total + entier(weights[2] * 10);
@@ -66,6 +69,7 @@ begin
   for i := 1, 3 step 1 until 4, 10 while loops < 3 do
     begin loops := loops + i end;
   total := total + loops;
+  total := total + bonus();
   switches := 0;
   jumpVia(route, fallback);
   switches := 99;

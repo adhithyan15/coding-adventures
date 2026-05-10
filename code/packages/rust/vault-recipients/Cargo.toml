@@ -1,0 +1,14 @@
+[package]
+name = "coding_adventures_vault_recipients"
+version = "0.1.0"
+edition = "2021"
+description = "VLT04 — multi-recipient DEK wrapping. age-style Recipient trait so a single file_key can be wrapped to N recipients (passphrase, X25519 pubkey, KMS, etc). Generalises VLT01's single-KEK to N-recipient: this is the layer that enables sharing, multi-device unlock, and recovery keys."
+
+[dependencies]
+coding_adventures_argon2id = { path = "../argon2id" }
+coding_adventures_chacha20_poly1305 = { path = "../chacha20-poly1305" }
+coding_adventures_csprng = { path = "../csprng" }
+coding_adventures_hkdf = { path = "../hkdf" }
+coding_adventures_x25519 = { path = "../x25519" }
+coding_adventures_zeroize = { path = "../zeroize" }
+coding_adventures_ct_compare = { path = "../ct-compare" }

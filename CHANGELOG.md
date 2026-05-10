@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added — HTML Parser DOCTYPE Fragment Contexts
+- Parser-approved initial tokenizer contexts now include seeded DOCTYPE
+  continuation states for keyword, name, public/system identifier, bogus, and
+  force-quirks recovery paths.
+- DOM parser coverage now exercises parser/lexer handoff for partial DOCTYPE
+  fragments while preserving lexer diagnostics and following body content.
+
 ### Added — SQL Auto-Index: Composite Multi-Column Index (IX-8)
 - **`IndexScan.columns: tuple[str, ...]`** in `sql-planner` — replaces
   `column: str`; single-column scans produce a 1-tuple, composite scans an

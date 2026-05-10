@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-cas-matrix"
-version = "0.2.0"
-description = "First-class symbolic matrices for the symbolic IR — Matrix, Dot, Transpose, Determinant, Inverse, Rank, RowReduce."
+version = "0.3.0"
+description = "First-class symbolic matrices for the symbolic IR — eigenvalues, eigenvectors, char poly, LU decomp, null/col/row spaces, norms, and core matrix ops."
 requires-python = ">=3.12"
 license = "MIT"
 authors = [{ name = "Adhithya Rajasekaran" }]
@@ -13,6 +13,7 @@ readme = "README.md"
 keywords = ["cas", "matrix", "linear-algebra", "symbolic", "ir", "education"]
 dependencies = [
     "coding-adventures-symbolic-ir>=0.5.0",
+    "coding-adventures-cas-solve>=0.6.0",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",

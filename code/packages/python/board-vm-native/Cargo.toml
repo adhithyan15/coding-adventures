@@ -1,0 +1,16 @@
+[package]
+name = "board-vm-native-python"
+version = "0.1.0"
+edition = "2021"
+description = "Python native extension wrapping Board VM language core via python-bridge"
+
+[lib]
+name = "board_vm_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+board-vm-host = { path = "../../rust/board-vm-host" }
+board-vm-language-core = { path = "../../rust/board-vm-language-core" }
+python-bridge = { path = "../../rust/python-bridge" }
+
+[workspace]

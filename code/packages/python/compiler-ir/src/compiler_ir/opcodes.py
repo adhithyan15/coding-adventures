@@ -33,6 +33,11 @@ The opcodes are grouped by category:
   Closures:     MAKE_CLOSURE, APPLY_CLOSURE   (TW03 Phase 2)
   Heap:         MAKE_CONS, CAR, CDR, IS_NULL, IS_PAIR,
                 MAKE_SYMBOL, IS_SYMBOL, LOAD_NIL   (TW03 Phase 3)
+  Error-aware:  SYSCALL_CHECKED, BRANCH_ERR   (VMCOND00 Phase 1)
+  Handlers:     PUSH_HANDLER, POP_HANDLER, SIGNAL, ERROR, WARN (VMCOND00 Phase 3)
+  Restarts:     PUSH_RESTART, POP_RESTART, FIND_RESTART, INVOKE_RESTART,
+                COMPUTE_RESTARTS   (VMCOND00 Phase 4 — Layer 4)
+  Exits:        ESTABLISH_EXIT, EXIT_TO   (VMCOND00 Phase 4 — Layer 5)
 
 Text Names
 ----------
@@ -409,6 +414,220 @@ class IrOp(IntEnum):
     # Appended after TW03 heap opcodes to preserve stable opcode values.
     #   F64_POW v1, v2, v3 → v1 = pow(v2, v3)
     F64_POW = 63
+
+    # ── VMCOND00 Phase 1 — checked syscall + error branch ────────────────
+    #
+    # These two opcodes implement the VMCOND00 Layer 1 result-value protocol:
+    # a syscall that can fail without trapping, and a conditional branch that
+    # detects the failure.  Together they let a language emit code like:
+    #
+    #     SYSCALL_CHECKED 2, arg_reg, val_dst, err_dst   ; read-byte
+    #     BRANCH_ERR err_dst, eof_handler                ; branch if err != 0
+    #     ; happy path here — val_dst holds the byte
+    #     ...
+    #   eof_handler:
+    #     ; error path — err_dst holds negated errno or -1 for EOF
+    #
+    # The protocol: SYSCALL_CHECKED runs the numbered host syscall (n=1..33
+    # from the SYSCALL00 canonical table), stores the success value in
+    # ``val_dst``, and stores a "sticky" error code in ``err_dst``
+    # (0 = success, -1 = EOF, <-1 = negated errno).  BRANCH_ERR reads
+    # ``err_dst`` and branches when it is non-zero — it NEVER branches when
+    # the syscall succeeded.
+    #
+    # Why two separate opcodes rather than one combined branch?
+    #
+    #   - Separation of concerns: the syscall opcode is purely a value-
+    #     producer; the branch is purely a control-flow decision.  This
+    #     mirrors LOAD_IMM / BRANCH_Z decomposition.
+    #   - Allows multiple BRANCH_ERR tests on the same ``err_dst`` (e.g.
+    #     branch on EOF vs. branch on write-error) by reusing the same
+    #     register.
+    #   - Backends that compile SYSCALL_CHECKED to native code can inline
+    #     the error flag into a hardware status register and collapse
+    #     BRANCH_ERR into a conditional jump with zero extra load.
+    #
+    # VMCOND00 SYSCALL01 extends these into SYSCALL_CONDITIONED which
+    # additionally calls back into the condition system; that is Phase 3.
+
+    # SYSCALL_CHECKED — run a numbered host syscall, capturing errors.
+    #
+    # Operand layout:
+    #   SYSCALL_CHECKED  n:imm  arg:reg  val_dst:reg  err_dst:reg
+    #
+    # where:
+    #   - ``n``       — the SYSCALL00 canonical syscall number (immediate)
+    #   - ``arg``     — the single argument register (conventions per syscall)
+    #   - ``val_dst`` — register to receive the success value (byte read,
+    #                   bytes written, etc.)  Set to 0 on error.
+    #   - ``err_dst`` — register to receive the error code: 0 on success,
+    #                   -1 on EOF, <-1 for negated errno.
+    #
+    # SYSCALL_CHECKED never traps — it always stores into both output
+    # registers and returns control to the next instruction.  The caller
+    # decides what to do with the error code.
+    SYSCALL_CHECKED = 64
+
+    # BRANCH_ERR — branch to a label when an error register is non-zero.
+    #
+    # Operand layout:
+    #   BRANCH_ERR  err_reg:reg  label:label
+    #
+    # where:
+    #   - ``err_reg`` — a register previously written by SYSCALL_CHECKED
+    #   - ``label``   — IR label to jump to when ``err_reg != 0``
+    #
+    # BRANCH_ERR is the companion to SYSCALL_CHECKED.  It behaves like
+    # BRANCH_NZ but is semantically typed as "this register holds an error
+    # code, not a general Boolean" — backends can use this typing hint when
+    # lowering to error-code registers or exception paths.
+    #
+    # Execution: if err_reg == 0 (success), fall through; otherwise jump.
+    BRANCH_ERR = 65
+
+    # ── VMCOND00 Phase 2 — unwind exceptions ─────────────────────────────
+    #
+    # ``THROW`` implements the Layer 2 result-value escalation path: instead
+    # of returning an error code the caller must check, the front-end can
+    # raise a condition that unwinds the call stack looking for the innermost
+    # matching handler in the static exception table.
+    #
+    # This opcode corresponds directly to:
+    #   - Python's ``raise`` statement
+    #   - Java's ``throw`` statement
+    #   - CLR's IL ``throw`` instruction
+    #   - JVM's ``athrow`` opcode
+    #
+    # Operand layout:
+    #   THROW  condition:reg
+    #
+    # where:
+    #   - ``condition`` — a register holding the condition object to throw.
+    #     In Phase 2 the condition can be any Python/IIR value; the type_id
+    #     matching uses ``type(condition).__name__`` or the catch-all ``"*"``.
+    #     Phase 3 will replace this with the condition type hierarchy.
+    #
+    # Backend lowering:
+    #   - JVM: emit ``athrow`` after loading the object from the register.
+    #          The JVM's own exception-dispatch mechanism handles the rest.
+    #   - CLR: emit ``throw`` after loading the object from the register.
+    #   - BEAM: emit a ``{'EXIT', Condition}`` message or use try/catch.
+    #   - Interpreter (vm-core): walk the static exception table of each
+    #     frame from innermost to outermost; on match, jump to handler_ip
+    #     and assign the condition to val_reg.  If no match, pop frame and
+    #     continue.  If stack exhausted, raise UncaughtConditionError.
+    THROW = 66
+
+    # ── VMCOND00 Phase 3 — dynamic handlers (Layer 3) ────────────────────
+    #
+    # Five opcodes implementing the Layer 3 non-unwinding condition handler
+    # protocol.  When SIGNAL/ERROR/WARN finds a matching handler the VM pushes
+    # a handler invocation frame on top of the current call stack WITHOUT
+    # disturbing the frames below.  After the handler returns normally,
+    # execution resumes at the instruction after the signaling opcode.
+    #
+    # Operand layouts:
+    #
+    #   PUSH_HANDLER  type_id:imm  fn:reg
+    #     type_id — IrImmediate(string): "*" (catch-all) or type name.
+    #     fn      — IrRegister: the handler callable.
+    #
+    #   POP_HANDLER
+    #     (no operands)
+    #
+    #   SIGNAL  condition:reg
+    #   ERROR   condition:reg
+    #   WARN    condition:reg
+    #     condition — IrRegister: the condition object to signal/raise/warn.
+    #
+    # Behavioural differences between the three signaling opcodes:
+    #   SIGNAL — no-op when unhandled (always safe to signal).
+    #   ERROR  — aborts the thread (UncaughtConditionError) when unhandled.
+    #            Also checks the Layer 2 exception table first; if the
+    #            current IP is in a guarded range that covers this condition,
+    #            the error degrades to THROW so Layer 2 wins.
+    #   WARN   — emits the condition's repr to stderr when unhandled, then
+    #            continues execution.  Never aborts.
+    #
+    # Backend lowering strategy (Phase 3 scope: interpreter / vm-core only):
+    #   JVM / CLR / BEAM lowering is deferred to a later phase.  Backends that
+    #   do not yet support Layer 3 should reject programs via their pre-flight
+    #   validator: "VMCOND00 Layer 3: dynamic handlers not yet implemented for
+    #   this backend."
+    PUSH_HANDLER = 67
+    POP_HANDLER = 68
+    SIGNAL = 69
+    ERROR = 70
+    WARN = 71
+
+    # ── VMCOND00 Phase 4 — restart chain (Layer 4) ───────────────────────
+    #
+    # Five opcodes implementing the Layer 4 named-restart protocol.  Restarts
+    # are callable continuations that a handler (established via Layer 3) can
+    # find by name without holding a direct reference, and invoke with a
+    # substitute value.  The restart may return normally (non-unwinding) or
+    # call EXIT_TO (Layer 5) to perform a non-local transfer.
+    #
+    # Operand layouts:
+    #
+    #   PUSH_RESTART  name_sym:imm  fn:reg
+    #     name_sym — IrLabel: the restart's name (matched by FIND_RESTART).
+    #     fn       — IrRegister: the restart callable.
+    #
+    #   POP_RESTART
+    #     (no operands)
+    #
+    #   FIND_RESTART  name_sym:imm → out:reg
+    #     name_sym — IrLabel: name to search for (newest-first).
+    #     out      — IrRegister: receives RestartNode handle or NIL.
+    #
+    #   INVOKE_RESTART  handle:reg  arg:reg
+    #     handle   — IrRegister: a RestartNode handle from FIND_RESTART.
+    #     arg      — IrRegister: argument to pass to the restart function.
+    #     Result (if restart returns normally) written into the dest register.
+    #
+    #   COMPUTE_RESTARTS → out:reg
+    #     Collect all active restart handles into a list.
+    #     out      — IrRegister: receives the list.
+    #
+    # Backend lowering for Layer 4 is deferred to a later phase.  Backends that
+    # do not yet support Layer 4 should reject programs via their pre-flight
+    # validator: "VMCOND00 Layer 4: restarts not yet implemented for this backend."
+    PUSH_RESTART = 72
+    POP_RESTART = 73
+    FIND_RESTART = 74
+    INVOKE_RESTART = 75
+    COMPUTE_RESTARTS = 76
+
+    # ── VMCOND00 Phase 4 — exit-point chain (Layer 5) ────────────────────
+    #
+    # Two opcodes implementing the Layer 5 non-local exit (exit-point) protocol.
+    # An exit point is a dynamically scoped tag; any code in its dynamic extent
+    # can call EXIT_TO to transfer control non-locally, delivering a value and
+    # unwinding the call stack, handler chain, and restart chain to the depth
+    # recorded at ESTABLISH_EXIT time.
+    #
+    # Operand layouts:
+    #
+    #   ESTABLISH_EXIT  tag_sym:imm  result_out:reg  after:label
+    #     tag_sym    — IrLabel: the exit-point tag.
+    #     result_out — IrRegister: receives the value from EXIT_TO (or stays
+    #                  unchanged if no EXIT_TO fires).
+    #     after      — IrLabel: instruction to resume at when EXIT_TO fires.
+    #                  On normal fallthrough, execution reaches this label
+    #                  naturally.
+    #
+    #   EXIT_TO  tag_sym:imm  val:reg
+    #     tag_sym — IrLabel: exit-point tag to find (innermost-first).
+    #     val     — IrRegister: value to deliver to the exit point.
+    #     Unwinds call stack / handler chain / restart chain to frame_depth,
+    #     assigns val to result_out, jumps to after.
+    #     Raises UnboundExitTagError if no matching exit point exists.
+    #
+    # Backend lowering for Layer 5 is deferred.  Backends should reject with
+    # "VMCOND00 Layer 5: non-local exits not yet implemented for this backend."
+    ESTABLISH_EXIT = 77
+    EXIT_TO = 78
 
 
 # Canonical name → opcode mapping. Built from the enum at module load time.

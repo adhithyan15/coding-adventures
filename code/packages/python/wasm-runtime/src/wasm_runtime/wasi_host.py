@@ -82,6 +82,8 @@ _COMPILER_MATH_UNARY_F64: dict[str, Callable[[float], float]] = {
 _COMPILER_MATH_BINARY_F64: dict[str, Callable[[float, float], float]] = {
     "f64_pow": math.pow,
 }
+_DEFAULT_MAX_FD_WRITE_BYTES_PER_CALL = 1 << 20
+_DEFAULT_MAX_FD_WRITE_BYTES_TOTAL = 16 << 20
 
 
 def _math_result(fn: Callable[..., float], *args: float) -> WasmValue:
@@ -198,6 +200,10 @@ class WasiConfig:
     stdout  — callable that receives each piece of text written to fd 1.
               If None, output is silently discarded.
     stderr  — same but for fd 2.
+    max_fd_write_bytes_per_call
+            — maximum bytes one fd_write call may read from guest memory.
+    max_fd_write_bytes_total
+            — maximum bytes all fd_write calls may write through this host.
     clock   — WasiClock implementation.  Defaults to SystemClock (real time).
     random  — WasiRandom implementation.  Defaults to SystemRandom (OS CSPRNG).
     """
@@ -207,6 +213,8 @@ class WasiConfig:
     stdin: Callable[[int], bytes | bytearray | str | None] | None = None
     stdout: Callable[[str], None] | None = None
     stderr: Callable[[str], None] | None = None
+    max_fd_write_bytes_per_call: int = _DEFAULT_MAX_FD_WRITE_BYTES_PER_CALL
+    max_fd_write_bytes_total: int = _DEFAULT_MAX_FD_WRITE_BYTES_TOTAL
     clock: WasiClock = field(default_factory=SystemClock)
     random: WasiRandom = field(default_factory=SystemRandom)
 
@@ -298,6 +306,9 @@ class WasiHost:
         self._stdin = config.stdin or (lambda _n: b"")
         self._stdout = config.stdout or (lambda _t: None)
         self._stderr = config.stderr or (lambda _t: None)
+        self._max_fd_write_bytes_per_call = config.max_fd_write_bytes_per_call
+        self._max_fd_write_bytes_total = config.max_fd_write_bytes_total
+        self._fd_write_bytes_written = 0
         self._args = config.args
         self._env = config.env
         self._clock = config.clock
@@ -409,34 +420,40 @@ class WasiHost:
 
         def fd_write_impl(args: list[WasmValue]) -> list[WasmValue]:
             fd = args[0].value
-            iovs_ptr = args[1].value
+            iovs_ptr = args[1].value & 0xFFFFFFFF
             iovs_len = args[2].value
-            nwritten_ptr = args[3].value
+            nwritten_ptr = args[3].value & 0xFFFFFFFF
 
             if host._instance_memory is None:
                 return [i32(ENOSYS)]
+            if fd not in {1, 2}:
+                return [i32(EBADF)]
+            if iovs_len < 0:
+                return [i32(EINVAL)]
 
             mem = host._instance_memory
-            total_written = 0
+            plan = host._read_iovec_plan(mem, iovs_ptr, iovs_len)
+            if plan is None or not host._memory_range_is_valid(mem, nwritten_ptr, 4):
+                return [i32(EINVAL)]
 
-            for idx in range(iovs_len):
-                # Each iovec is 8 bytes: 4-byte ptr + 4-byte length.
-                buf_ptr = mem.load_i32(iovs_ptr + idx * 8) & 0xFFFFFFFF
-                buf_len = mem.load_i32(iovs_ptr + idx * 8 + 4) & 0xFFFFFFFF
+            total_written = sum(buf_len for _buf_ptr, buf_len in plan)
+            if total_written > host._max_fd_write_bytes_per_call:
+                return [i32(EINVAL)]
+            if (
+                host._fd_write_bytes_written + total_written
+                > host._max_fd_write_bytes_total
+            ):
+                return [i32(EINVAL)]
 
-                # Read individual bytes and decode as Latin-1 (1 byte → 1 char).
-                chars = []
-                for j in range(buf_len):
-                    chars.append(chr(mem.load_i32_8u(buf_ptr + j)))
-
-                text = "".join(chars)
-                total_written += buf_len
+            for buf_ptr, buf_len in plan:
+                text = host._read_latin1(mem, buf_ptr, buf_len)
 
                 if fd == 1:
                     host._stdout(text)
                 elif fd == 2:
                     host._stderr(text)
 
+            host._fd_write_bytes_written += total_written
             mem.store_i32(nwritten_ptr, total_written)
             return [i32(ESUCCESS)]
 
@@ -503,6 +520,36 @@ class WasiHost:
             ),
             fd_read_impl,
         )
+
+    def _read_iovec_plan(
+        self,
+        mem: LinearMemory,
+        iovs_ptr: int,
+        iovs_len: int,
+    ) -> list[tuple[int, int]] | None:
+        if not self._memory_range_is_valid(mem, iovs_ptr, iovs_len * 8):
+            return None
+        plan: list[tuple[int, int]] = []
+        for idx in range(iovs_len):
+            descriptor_ptr = iovs_ptr + idx * 8
+            buf_ptr = mem.load_i32(descriptor_ptr) & 0xFFFFFFFF
+            buf_len = mem.load_i32(descriptor_ptr + 4) & 0xFFFFFFFF
+            if not self._memory_range_is_valid(mem, buf_ptr, buf_len):
+                return None
+            plan.append((buf_ptr, buf_len))
+        return plan
+
+    def _memory_range_is_valid(
+        self,
+        mem: LinearMemory,
+        ptr: int,
+        length: int,
+    ) -> bool:
+        memory_size = mem.byte_length()
+        return length >= 0 and ptr <= memory_size and ptr + length <= memory_size
+
+    def _read_latin1(self, mem: LinearMemory, ptr: int, length: int) -> str:
+        return "".join(chr(mem.load_i32_8u(ptr + offset)) for offset in range(length))
 
     def _make_proc_exit(self) -> _HostFunc:
         """Build the proc_exit host function.

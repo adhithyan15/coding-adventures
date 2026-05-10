@@ -1,0 +1,25 @@
+{
+  "name": "cowsay-visualizer",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Cowsay visualizer — types a message, renders ASCII cow speech bubbles to a Canvas or SVG element through the PaintVM abstraction. Swapping the backend selector changes the renderer without touching the scene-building logic.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@coding-adventures/paint-instructions": "file:../../../packages/typescript/paint-instructions",
+    "@coding-adventures/paint-vm": "file:../../../packages/typescript/paint-vm",
+    "@coding-adventures/paint-vm-canvas": "file:../../../packages/typescript/paint-vm-canvas",
+    "@coding-adventures/paint-vm-svg": "file:../../../packages/typescript/paint-vm-svg",
+    "@coding-adventures/pixel-container": "file:../../../packages/typescript/pixel-container"
+  },
+  "devDependencies": {
+    "typescript": "~5.7.0",
+    "vite": "^6.0.0"
+  },
+  "author": "Adhithya Rajasekaran",
+  "license": "MIT"
+}

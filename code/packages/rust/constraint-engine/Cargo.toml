@@ -1,0 +1,9 @@
+[package]
+name = "constraint-engine"
+version = "0.1.0"
+edition = "2021"
+description = "LANG24 PR 24-C — pluggable solver tactics (SAT CDCL + LIA Cooper) for the generic Constraint-VM (consumed by constraint-vm and future tactic extensions)"
+
+[dependencies]
+constraint-core = { path = "../constraint-core" }
+constraint-instructions = { path = "../constraint-instructions" }

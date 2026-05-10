@@ -1,0 +1,7 @@
+requires 'perl', '5.026000';
+requires 'Exporter';
+requires 'File::Spec';
+
+on test => sub {
+    requires 'Test2::V0';
+};

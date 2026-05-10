@@ -1,0 +1,24 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "twig-aot",
+  "description": "Compile a Twig source file to a native ARM64 Mach-O executable.",
+  "version": "0.1.0",
+  "flags": [
+    {
+      "id": "output",
+      "short": "o",
+      "long": "output",
+      "description": "Output path for the executable (default: input file with no extension).",
+      "type": "string"
+    }
+  ],
+  "arguments": [
+    {
+      "id": "input",
+      "name": "FILE",
+      "description": "Twig source file to compile.",
+      "type": "string",
+      "required": true
+    }
+  ]
+}

@@ -11,4 +11,11 @@ All notable changes to this package will be documented in this file.
 - `MemoryStore` persistence, confidence updates, superseding, expiry, and
   tombstoning operations
 - portable lexical search implemented at the store layer
+- active-at and limit options for portable lexical memory searches
+- bounded `MemoryListOptions` selectors for class, tag, source reference,
+  active-at, minimum confidence, tombstone inclusion, sorting, and limits
+- `MemoryRecordSummary` plus `list_memory_summaries()` for metadata-only read
+  surfaces that should not return memory bodies
+- deterministic memory review candidates for low-confidence, stale, expiring,
+  and expired records
 - Unit tests using `storage-core::InMemoryStorageBackend`

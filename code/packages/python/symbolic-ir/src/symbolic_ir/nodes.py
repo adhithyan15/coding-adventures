@@ -328,3 +328,167 @@ ALG_FACTOR = IRSymbol("AlgFactor")  # algfactor(poly, sqrt(d)) head
 GROEBNER = IRSymbol("Groebner")      # groebner(polys, vars) head
 POLY_REDUCE = IRSymbol("PolyReduce")  # poly_reduce(f, polys, vars) head
 IDEAL_SOLVE = IRSymbol("IdealSolve")  # ideal_solve(polys, vars) head
+
+# Simplification operations (Phase 21)
+#
+# These nine heads implement the MACSYMA assumption framework and the
+# radical/log/exponentialize simplification family.
+#
+# Assumption framework:
+#   Assume(relation)         — record a fact, e.g. Assume(Greater(x, 0))
+#   Assume(sym, property)    — record a property, e.g. Assume(n, integer)
+#   Forget(relation)         — remove a specific fact
+#   Forget()                 — remove ALL recorded assumptions
+#   Is(relation)             — query: returns "true" / "false" / "unknown"
+#   Sign(x)                  — sign function: 1, -1, 0, or unevaluated
+#
+# Radical / log / exponential simplification:
+#   Radcan(expr)             — canonical form for radical expressions
+#   LogContract(expr)        — combine log sums into a single log
+#   LogExpand(expr)          — expand a log over products / powers
+#   Exponentialize(expr)     — convert trig/hyp functions to exp form
+#   DeMoivre(expr)           — convert exp(a+bi) → exp(a)·(cos b + i·sin b)
+ASSUME = IRSymbol("Assume")
+FORGET = IRSymbol("Forget")
+IS = IRSymbol("Is")
+SIGN = IRSymbol("Sign")
+RADCAN = IRSymbol("Radcan")
+LOGCONTRACT = IRSymbol("LogContract")
+LOGEXPAND = IRSymbol("LogExpand")
+EXPONENTIALIZE = IRSymbol("Exponentialize")
+DEMOIVRE = IRSymbol("DeMoivre")
+
+# Pattern-matching operations (Phase 22)
+#
+# MACSYMA's user-defined rewrite-rule system built on top of the
+# structural pattern matcher in ``cas-pattern-matching``.
+#
+# Pattern variable declaration:
+#   MatchDeclare(sym)            — declare sym as a wildcard variable
+#   MatchDeclare(sym, predicate) — declare sym with a type predicate
+#                                  (integerp, symbolp, floatp, etc.)
+#
+# Named-rule management:
+#   Defrule(name, lhs, rhs)     — compile + store a named rewrite rule
+#   Apply1(name, expr)          — apply named rule once at root
+#   Apply2(name, expr)          — apply named rule recursively (fixed-point)
+#
+# Automatic simplifier integration:
+#   TellSimp(lhs, rhs)          — add a rule to the VM's auto-simplifier;
+#                                  fires on every eval of matching exprs
+MATCHDECLARE = IRSymbol("MatchDeclare")
+DEFRULE = IRSymbol("Defrule")
+APPLY1 = IRSymbol("Apply1")
+APPLY2 = IRSymbol("Apply2")
+TELLSIMP = IRSymbol("TellSimp")
+
+# ── Phase 23 — Special functions ──────────────────────────────────────────
+#
+# Error functions:
+#   Erf(x)  = (2/√π) ∫₀^x exp(-t²) dt   — the standard error function
+#   Erfc(x) = 1 - Erf(x)                 — complementary error function
+#   Erfi(x) = (2/√π) ∫₀^x exp(t²) dt    — imaginary error function
+#             (= -i · erf(i·x))
+ERF = IRSymbol("Erf")
+ERFC = IRSymbol("Erfc")
+ERFI = IRSymbol("Erfi")
+
+# Trigonometric integrals:
+#   Si(x)  = ∫₀^x sin(t)/t dt            — sine integral
+#   Ci(x)  = γ + log(x) + ∫₀^x (cos(t)-1)/t dt  — cosine integral (γ = Euler–Mascheroni)
+#   Shi(x) = ∫₀^x sinh(t)/t dt           — hyperbolic sine integral
+#   Chi(x) = γ + log(x) + ∫₀^x (cosh(t)-1)/t dt  — hyperbolic cosine integral
+SI = IRSymbol("Si")
+CI = IRSymbol("Ci")
+SHI = IRSymbol("Shi")
+CHI = IRSymbol("Chi")
+
+# Dilogarithm (Spence's function):
+#   Li₂(z) = -∫₀^z log(1-t)/t dt = Σ_{k=1}^∞ z^k/k²  for |z| ≤ 1
+#   Li₂(1) = π²/6  (Basel problem)
+LI2 = IRSymbol("Li2")
+
+# Gamma and Beta functions:
+#   GammaFunc(n) = (n-1)!  for positive integers
+#   GammaFunc(1/2) = √π
+#   BetaFunc(a,b) = GammaFunc(a)·GammaFunc(b) / GammaFunc(a+b)
+#
+# Note: we use GammaFunc / BetaFunc rather than Gamma / Beta to avoid
+# shadowing Python's built-in names in handler code.
+GAMMA_FUNC = IRSymbol("GammaFunc")
+BETA_FUNC = IRSymbol("BetaFunc")
+
+# Fresnel integrals:
+#   FresnelS(x) = ∫₀^x sin(π·t²/2) dt
+#   FresnelC(x) = ∫₀^x cos(π·t²/2) dt
+#   Both → 1/2 as x → ∞.
+FRESNEL_S = IRSymbol("FresnelS")
+FRESNEL_C = IRSymbol("FresnelC")
+
+# ── Phase 25 — Symbolic summation and product ─────────────────────────────
+#
+# These two heads represent unevaluated (or partially evaluated) symbolic
+# sums and products over a discrete index variable.  Both take exactly four
+# arguments:
+#
+#   Sum(f, k, a, b)     ≡  Σ_{k=a}^{b} f(k)
+#   Product(f, k, a, b) ≡  Π_{k=a}^{b} f(k)
+#
+# where:
+#   f  — the summand / factor expression (may contain k)
+#   k  — the index variable (must be an IRSymbol)
+#   a  — the lower bound (inclusive; may be symbolic)
+#   b  — the upper bound (inclusive; may be symbolic or %inf)
+#
+# The VM handler attempts a closed-form evaluation in this order:
+#
+#   1. Constant summand (f does not contain k):
+#        Σ c = c · (b − a + 1)
+#
+#   2. Geometric series (f = coeff · base^k, base constant in k):
+#        Σ_{k=a}^{b} r^k = r^a · (r^{b−a+1} − 1) / (r − 1)     [finite]
+#        Σ_{k=a}^{∞}  r^k = r^a / (1 − r)                        [infinite]
+#
+#   3. Power of the index (f = c · k^m, m ∈ {0,…,5}):
+#        Uses Faulhaber's polynomial formula F(n,m) = Σ_{k=1}^n k^m.
+#        General bounds: c · [F(b,m) − F(a−1,m)].
+#
+#   4. Classic infinite series (b = %inf):
+#        Σ_{k=1}^∞ 1/k²  = π²/6   (Basel problem, Euler 1734)
+#        Σ_{k=1}^∞ 1/k⁴  = π⁴/90
+#        Σ_{k=0}^∞ (−1)^k/(2k+1) = π/4  (Leibniz)
+#        Σ_{k=0}^∞ 1/k!  = %e
+#        Σ_{k=0}^∞ x^k/k! = exp(x)
+#
+#   5. Unevaluated: returns Sum/Product unchanged.
+#
+# Product-specific closed forms:
+#   Π_{k=1}^{n} k   = GammaFunc(n+1)      (factorial)
+#   Π_{k=a}^{b} c   = c^(b−a+1)          (constant factor)
+SUM = IRSymbol("Sum")
+PRODUCT = IRSymbol("Product")
+
+# ---------------------------------------------------------------------------
+# Phase 26 — Transcendental equation solving
+# ---------------------------------------------------------------------------
+#
+# FREE_INTEGER — the free-integer constant %k that appears in periodic
+# solutions of trigonometric equations:
+#
+#   solve(sin(x) = c, x)  →  [arcsin(c) + 2·%k·π,  π − arcsin(c) + 2·%k·π]
+#
+# %k represents an arbitrary integer parameter (n ∈ ℤ), analogous to how
+# MACSYMA returned solutions with a trailing "+ 2·%pi·%k" to encode all
+# branches of the inverse trig.
+#
+# LAMBERT_W — the principal branch W₀ of the Lambert W function, defined as
+# the inverse of  f(w) = w·exp(w):
+#
+#   LambertW(x·exp(x)) = x   for x ≥ −1
+#
+# Appears in the solution of  x·exp(x) = c  →  x = W(c), and more generally
+#   (ax+b)·exp(ax+b) = c  →  x = (W(c) − b) / a
+#
+# Numeric evaluation: Newton iteration on  w_{n+1} = w_n − (w_n·e^w_n − c)/(e^w_n·(w_n+1))
+FREE_INTEGER = IRSymbol("FreeInteger")
+LAMBERT_W = IRSymbol("LambertW")

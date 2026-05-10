@@ -66,13 +66,54 @@ use interpreter_ir::{
     module::IIRModule,
     SourceLoc,
 };
+use lang_refined_types::{Kind, Predicate, RefinedType};
 
 use twig_parser::{
-    Apply, Begin, BoolLit, Expr, Form, If, IntLit, Lambda, Let, NilLit, Program, SymLit, VarRef,
+    Apply, Begin, BoolLit, Expr, Form, If, IntLit, Lambda, Let, NilLit, Program, SymLit,
+    TypeAnnotation, VarRef,
 };
 
 use crate::errors::TwigCompileError;
 use crate::free_vars::free_vars;
+
+// ---------------------------------------------------------------------------
+// LANG23 PR 23-E — TypeAnnotation → RefinedType conversion
+// ---------------------------------------------------------------------------
+
+/// Convert a parsed [`TypeAnnotation`] into a [`RefinedType`] that the IIR
+/// carries and the refinement checker reads.
+///
+/// This is the bridge between the syntactic form (what the Twig parser
+/// produces) and the semantic form (what `lang-refinement-checker` understands).
+///
+/// # Mapping
+///
+/// | `TypeAnnotation`          | `RefinedType`                                       |
+/// |---------------------------|-----------------------------------------------------|
+/// | `UnrefinedInt`            | `RefinedType::unrefined(Kind::Int)`                 |
+/// | `Any`                     | `RefinedType::unrefined(Kind::Any)`                 |
+/// | `UnrefinedBool`           | `RefinedType::unrefined(Kind::Bool)`                |
+/// | `RangeInt { lo, hi }`     | `RefinedType::refined(Int, Range{lo,hi,excl_hi})`   |
+/// | `MembershipInt { values }`| `RefinedType::refined(Int, Membership{values})`     |
+fn type_annotation_to_refined_type(ann: &TypeAnnotation) -> RefinedType {
+    match ann {
+        TypeAnnotation::UnrefinedInt => RefinedType::unrefined(Kind::Int),
+        TypeAnnotation::Any => RefinedType::unrefined(Kind::Any),
+        TypeAnnotation::UnrefinedBool => RefinedType::unrefined(Kind::Bool),
+        TypeAnnotation::RangeInt { lo, hi } => RefinedType::refined(
+            Kind::Int,
+            Predicate::Range {
+                lo: Some(*lo),
+                hi: Some(*hi),
+                inclusive_hi: false, // Twig v1 always uses exclusive upper bound
+            },
+        ),
+        TypeAnnotation::MembershipInt { values } => RefinedType::refined(
+            Kind::Int,
+            Predicate::Membership { values: values.clone() },
+        ),
+    }
+}
 
 /// Maximum AST-nesting depth the compiler will descend.
 ///
@@ -297,6 +338,8 @@ impl Compiler {
             call_count: 0,
             feedback_slots: std::collections::HashMap::new(),
             source_map: main_ctx.source_map,
+            param_refinements: Vec::new(),
+            return_refinement: None,
         };
         self.functions.push(main_fn);
 
@@ -339,6 +382,19 @@ impl Compiler {
             .map(|p| (p.clone(), "any".to_string()))
             .collect();
 
+        // LANG23 PR 23-E — lower TypeAnnotation → RefinedType for every param
+        // and for the return type.  Unannotated params stay as `None`.
+        let param_refinements: Vec<Option<RefinedType>> = lam
+            .param_annotations
+            .iter()
+            .map(|ann| ann.as_ref().map(type_annotation_to_refined_type))
+            .collect();
+
+        let return_refinement: Option<RefinedType> = lam
+            .return_annotation
+            .as_ref()
+            .map(type_annotation_to_refined_type);
+
         self.functions.push(IIRFunction {
             name: name.to_string(),
             params,
@@ -349,6 +405,8 @@ impl Compiler {
             call_count: 0,
             feedback_slots: std::collections::HashMap::new(),
             source_map: ctx.source_map,
+            param_refinements,
+            return_refinement,
         });
         Ok(())
     }
@@ -428,6 +486,8 @@ impl Compiler {
             call_count: 0,
             feedback_slots: std::collections::HashMap::new(),
             source_map: inner.source_map,
+            param_refinements: Vec::new(),
+            return_refinement: None,
         });
 
         // 3. Emit `make_closure` at the call site.

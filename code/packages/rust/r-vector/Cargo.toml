@@ -1,0 +1,8 @@
+[package]
+name = "r-vector"
+version = "0.1.0"
+edition = "2021"
+description = "NA-aware R-style vector substrate for statistics and spreadsheet cores"
+
+[dependencies]
+numeric-tower = { path = "../numeric-tower" }

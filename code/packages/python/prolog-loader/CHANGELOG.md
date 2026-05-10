@@ -2,6 +2,43 @@
 
 ## Unreleased
 
+- adapt source-level standard stream aliases and richer stream options,
+  including `user_input`, `user_output`, `user_error`, `reposition/1`,
+  `eof_action/1`, `buffer/1`, and `close_on_abort/1`
+- adapt source-level recursive/wildcard filesystem operation predicates
+  including `expand_file_name/2`, `make_directory_path/1`,
+  `delete_directory_and_contents/1`, and `copy_file/2` into the executable
+  logic builtin layer
+- adapt source-level bounded filesystem operation predicates including
+  `directory_files/2`, `make_directory/1`, `delete_file/1`,
+  `delete_directory/1`, `rename_file/2`, and `working_directory/2` into the
+  executable logic builtin layer
+- adapt source-level read-only filesystem metadata predicates including
+  `exists_directory/1`, `absolute_file_name/2`, `access_file/2`,
+  `file_directory_name/2`, `file_base_name/2`, `directory_file_path/3`,
+  `file_name_extension/3`, `same_file/2`, `size_file/2`, and `time_file/2`
+  into the executable logic builtin layer
+- adapt source-level `exists_file/1`, `read_file_to_string/2`, and
+  `read_file_to_codes/2` into the executable logic builtin layer
+- adapt source-level bounded file stream predicates including `open/3`,
+  `close/1`, `read_string/3`, `read_line_to_string/2`, `get_char/2`,
+  `at_end_of_stream/1`, `write/2`, and `nl/1`
+- adapt source-level bounded stream option and metadata predicates including
+  `open/4`, `current_stream/3`, `stream_property/2`, and `flush_output/1`
+- adapt source-level bounded stream positioning predicates including
+  `set_stream_position/2` and `seek/4`
+- adapt selected current-stream predicates including `set_input/1`,
+  `set_output/1`, `current_input/1`, `current_output/1`, current-input read
+  forms, and current-output write/flush forms
+- adapt bounded character/code stream predicates including `get_code/1,2`,
+  `peek_char/1,2`, `peek_code/1,2`, `put_char/1,2`, and `put_code/1,2`
+- adapt bounded binary byte stream predicates including `open/4`
+  `type(binary)`, `get_byte/1,2`, `peek_byte/1,2`, and `put_byte/1,2`
+- adapt parser-backed stream term I/O predicates including `read/1`,
+  `read/2`, `read_term/2`, `read_term/3`, `write_term/2`, and `write_term/3`
+- adapt term I/O conveniences including `read_term` `singletons/1`,
+  `writeq/1,2`, `write_canonical/1,2`, `writeln/1,2`, and
+  `portray_clause/1,2`
 - preserve source query variables across `goal_expansion/2` rewrites
 - adapt Prolog `call/2..8` into variadic callable-term execution
 - preserve extra arguments while rewriting module-qualified `call/N` meta-goals
@@ -45,6 +82,31 @@
 - adapt Prolog `current_prolog_flag/2` into read-only runtime flag
   introspection
 - adapt Prolog `set_prolog_flag/2` into branch-local runtime flag updates
+- adapt Prolog `=@=/2`, `\\=@=/2`, and `subsumes_term/2` into non-binding
+  term generality checks
+- adapt Prolog text conversion predicates `atom_chars/2`, `atom_codes/2`,
+  `number_chars/2`, `number_codes/2`, `char_code/2`, `string_chars/2`, and
+  `string_codes/2` into finite conversion goals
+- adapt Prolog atom composition predicates `atom_concat/3`,
+  `atomic_list_concat/2`, `atomic_list_concat/3`, and `number_string/2` into
+  finite text goals
+- adapt Prolog text inspection predicates `atom_length/2`, `string_length/2`,
+  `sub_atom/5`, and `sub_string/5` into finite text goals
+- adapt Prolog term text I/O predicates `term_to_atom/2` and `atom_to_term/3`
+  through the parser boundary
+- adapt Prolog term read/write predicates `read_term_from_atom/3` and
+  `write_term_to_atom/3` with finite option-list support
+- adapt Prolog `numbervars/3` and render `'$VAR'(N)` placeholders through
+  `write_term_to_atom/3` when `numbervars(true)` is present
+- adapt Prolog `compound_name_arguments/3` and `compound_name_arity/3` into
+  compound-only term reflection goals
+- adapt Prolog `acyclic_term/1` and `cyclic_term/1` into term-shape goals
+- adapt Prolog `unifiable/3` and `unify_with_occurs_check/2` into explicit
+  finite unification goals
+- adapt Prolog `term_hash/2` and `term_hash/4` into deterministic structural
+  hash goals
+- preserve raw collection goal scopes for `bagof/3` and `setof/3`, enabling
+  source-level free-variable grouping and `^/2` existential quantification
 
 ## 0.1.0
 

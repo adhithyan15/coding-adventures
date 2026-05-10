@@ -1,5 +1,778 @@
 # Changelog
 
+## 1.25.0 — 2026-05-08
+
+**Phase 34 — End-to-end pipeline tests for special functions (Phase 23),
+assumption system (Phase 21), and extended number theory (Phase B3).**
+
+### Why this release
+
+Three families of operations were fully implemented in their respective
+substrate packages but had never been exercised through the complete MACSYMA
+pipeline (`surface syntax → parse → compile → VM → result`):
+
+1. **Special functions (Phase 23)** — `erf`, `erfc`, `erfi`, `gamma`, `beta`,
+   `si`, `ci`, `shi`, `li2`, `fresnel_s`, `fresnel_c`, `lambert_w` all have
+   handlers in `symbolic-vm` and entries in the MACSYMA name table since
+   Phase 23, but the pipeline was never tested end-to-end.
+
+2. **Assumption system (Phase 21)** — `assume(x > 0)`, `is(x > 0)`,
+   `forget()`, and `forget(relation)` are runtime-owned heads wired into
+   `SymbolicBackend`.  Pipeline testing requires a *shared* VM across
+   statements (assumptions persist on the VM), so a new helper
+   `_eval_seq(*sources)` is added to the test module.
+
+3. **Extended number theory (Phase B3)** — `prev_prime`, `moebius`, `jacobi`,
+   `chinese`, and `numdigits` are in the MACSYMA name table (alongside the
+   already-tested `primep`, `next_prime`, `ifactor`, etc.) but Section K of
+   the pipeline tests missed them.
+
+### New pipeline tests
+
+#### Section HH — Special Functions (17 tests)
+
+| Test | Expression | Expected |
+|------|-----------|---------|
+| `test_pipeline_erf_zero` | `erf(0)` | `0` (exact) |
+| `test_pipeline_erf_numeric` | `erf(1.0)` | `IRFloat(≈ 0.8427)` |
+| `test_pipeline_erfc_numeric` | `erfc(1.0)` | `IRFloat(≈ 0.1573)` |
+| `test_pipeline_gamma_positive_integer` | `gamma(5)` | `24` (4! exact) |
+| `test_pipeline_gamma_one` | `gamma(1)` | `1` (0! exact) |
+| `test_pipeline_gamma_half` | `gamma(1/2)` | `Sqrt(%pi)` or `IRFloat(√π)` |
+| `test_pipeline_beta_integers` | `beta(2, 3)` | `IRRational(1, 12)` |
+| `test_pipeline_si_zero` | `si(0)` | `0` (exact) |
+| `test_pipeline_si_numeric` | `si(1.0)` | `IRFloat(≈ 0.9461)` |
+| `test_pipeline_ci_numeric` | `ci(1.0)` | `IRFloat(≈ 0.3374)` |
+| `test_pipeline_shi_zero` | `shi(0)` | `0` (exact) |
+| `test_pipeline_li2_zero` | `li2(0)` | `0` (exact) |
+| `test_pipeline_li2_numeric` | `li2(0.5)` | `IRFloat(≈ 0.5822)` |
+| `test_pipeline_fresnel_s_zero` | `fresnel_s(0)` | `0` (exact) |
+| `test_pipeline_fresnel_c_zero` | `fresnel_c(0)` | `0` (exact) |
+| `test_pipeline_lambert_w_zero` | `lambert_w(0)` | `IRFloat(≈ 0.0)` |
+| `test_pipeline_lambert_w_one` | `lambert_w(1.0)` | `IRFloat(≈ 0.5671)` (Ω) |
+
+#### Section II — Assumption System (5 tests)
+
+A new helper `_eval_seq(*sources)` evaluates multiple MACSYMA expressions on
+a **single VM** so that assumptions set by `assume(...)` persist through
+subsequent `is(...)` calls, exactly as in a REPL session.
+
+| Test | Sequence | Expected |
+|------|---------|---------|
+| `test_pipeline_assume_is_true` | `assume(x>0); is(x>0)` | `"true"` |
+| `test_pipeline_is_without_assumption_unknown` | `is(x>0)` (fresh VM) | `"unknown"` |
+| `test_pipeline_assume_returns_done` | `assume(x>0)` | `"done"` |
+| `test_pipeline_forget_clears_assumption` | `assume(x>0); forget(); is(x>0)` | `"unknown"` |
+| `test_pipeline_assume_is_negative_true` | `assume(y<0); is(y<0)` | `"true"` |
+
+#### Section JJ — Extended Number Theory (10 tests)
+
+| Test | Expression | Expected |
+|------|-----------|---------|
+| `test_pipeline_prev_prime_10` | `prev_prime(10)` | `7` |
+| `test_pipeline_prev_prime_8` | `prev_prime(8)` | `7` |
+| `test_pipeline_moebius_prime` | `moebius(2)` | `−1` |
+| `test_pipeline_moebius_square_factor` | `moebius(12)` | `0` |
+| `test_pipeline_moebius_squarefree_two_factors` | `moebius(6)` | `1` |
+| `test_pipeline_jacobi_symbol` | `jacobi(2, 5)` | `−1` |
+| `test_pipeline_jacobi_one_is_always_one` | `jacobi(1, 7)` | `1` |
+| `test_pipeline_chinese_remainder` | `chinese([2,3],[3,5])` | `8` |
+| `test_pipeline_numdigits_thousand` | `numdigits(1000)` | `4` |
+| `test_pipeline_numdigits_one` | `numdigits(1)` | `1` |
+
+### New helper function
+
+`_eval_seq(*sources)` — evaluates multiple MACSYMA expressions sequentially
+on a single shared VM.  Needed for any test where state (assumptions,
+variable bindings, named rules) must persist across REPL-style statements.
+
+### Changed
+
+- `pyproject.toml` version bumped `1.24.0` → `1.25.0`.
+- Module description updated to reflect Phase 34 additions.
+
+### Stats
+
+- **433 tests** (up from 401), all passing.
+- Coverage maintained above 80% threshold.
+
+---
+
+## 1.24.0 — 2026-05-08
+
+**Phase 33 — End-to-end pipeline tests for Fourier transforms, Newton's method,
+algebraic extension factoring, and Gröbner bases; plus edge-case coverage
+for list handler wrong-arity branches, factor/solve edge cases, and numeric
+handler error paths.**
+
+### Why this release
+
+`symbolic-vm ≥ 0.53.0` ships fully-implemented handlers for `Fourier`,
+`IFourier`, `MNewton`, `AlgFactor`, `Groebner`, and `PolyReduce`, and the
+MACSYMA name table (added in earlier phases) already maps the user-visible
+names to the correct IR heads.  However, the complete pipeline —
+`macsyma surface → compiler → VM → result` — had never been validated for
+these four capabilities.  This release adds the first end-to-end pipeline
+tests for each, making these operations first-class tested members of the
+MACSYMA CAS.
+
+The release also brings `cas_handlers.py` coverage up from **89% → 94%** by
+adding targeted unit tests for every uncovered `return expr` guard path.
+
+### New pipeline tests (Sections DD–GG in `test_cas_pipeline.py`)
+
+#### Section DD — Fourier transforms (`fourier`, `ifourier`)
+
+| Test | Expected result |
+|------|----------------|
+| `fourier(1, t, w)` | `2π · DiracDelta(w)` — Fourier of constant |
+| `ifourier(1, w, t)` | `DiracDelta(t)` — inverse Fourier of 1 |
+| `fourier(delta(t), t, w)` | Result exists and is non-null |
+| `ifourier(delta(w), w, t)` | Result exists and is non-null |
+
+#### Section EE — Newton's method (`mnewton`)
+
+| Test | Expected result |
+|------|----------------|
+| `mnewton(x^2 - 4, x, 1.5)` | `≈ 2.0` (positive root of x²=4) |
+| `mnewton(x^3 - 8, x, 2.0)` | `≈ 2.0` (real cube root of 8) |
+| `mnewton(sin(x), x, 3)` | `≈ π ≈ 3.14159` (nearest root of sin) |
+| `mnewton(exp(x) - 2, x, 0.5)` | `≈ ln(2) ≈ 0.6931` |
+
+#### Section FF — Algebraic extension factoring (`algfactor`)
+
+| Test | Expected result |
+|------|----------------|
+| `algfactor(x^2 - 2, sqrt(2))` | `Mul(…, …)` — 2 linear factors over Q[√2] |
+| `algfactor(x^2 - 3, sqrt(3))` | `Mul(…, …)` — 2 linear factors over Q[√3] |
+| `algfactor(x^2 + 1, sqrt(2))` | unevaluated (irreducible over Q[√2]) |
+
+#### Section GG — Gröbner bases (`groebner`, `poly_reduce`)
+
+| Test | Expected result |
+|------|----------------|
+| `groebner([x^2-1, x-1], [x])` | `[x-1]` — 1-element basis |
+| `groebner([x^2+y^2-1, x-y], [x,y])` | `List(…)` — non-empty basis |
+| `poly_reduce(x^3, [x^2-1], [x])` | `x` — reduction by `x³ = x·(x²-1) + x` |
+| `poly_reduce(x^2-1, [x^2-1], [x])` | `0` — exact divisibility |
+
+### New unit tests (Phase 33 section in `test_cas_handlers.py`)
+
+| Test | What it covers |
+|------|---------------|
+| `test_length_wrong_arity_returns_unevaluated` | `Length(a, b)` — line 519 |
+| `test_first_wrong_arity_returns_unevaluated` | `First(a, b)` — line 529 |
+| `test_rest_wrong_arity_returns_unevaluated` | `Rest(a, b)` — line 539 |
+| `test_last_wrong_arity_returns_unevaluated` | `Last(a, b)` — line 549 |
+| `test_append_single_arg_returns_unevaluated` | `Append(list)` — line 559 |
+| `test_reverse_wrong_arity_returns_unevaluated` | `Reverse(a, b)` — line 569 |
+| `test_expand_multivariate_uses_canonical_fallback` | multi-var expand — line 156 |
+| `test_factor_rational_polynomial_returns_unevaluated` | rational poly — line 207 |
+| `test_factor_multivariate_returns_unevaluated_p33` | two-variable Factor |
+| `test_solve_constant_equation_returns_empty_list` | degree-0 Solve — line 453 |
+| `test_solve_transcendental_returns_unevaluated` | non-polynomial Solve — line 440 |
+| `test_floor_symbolic_returns_unevaluated` | Floor(x) — line 818 |
+| `test_ceiling_wrong_arity_returns_unevaluated` | Ceiling(a,b) — line 825 |
+| `test_mod_symbolic_divisor_returns_unevaluated` | Mod(3,x) — line 835 |
+| `test_gcd_wrong_arity_returns_unevaluated` | Gcd(a) — line 847 |
+| `test_lcm_wrong_arity_returns_unevaluated` | Lcm(a) — line 857 |
+
+### Changed
+
+- `pyproject.toml` version bumped `1.23.0` → `1.24.0`.
+- Module description updated to include Fourier, MNewton, algebraic factoring, Gröbner.
+
+### Stats
+
+- **401 tests** (up from 370), all passing.
+- **94.46% coverage** (up from 92.38%).
+
+---
+
+## 1.23.0 — 2026-05-08
+
+**Phase 32 — MACSYMA name-table extensions: advanced matrix ops, cube root, log/exp transformations.**
+
+All 14 new names were already implemented end-to-end in `symbolic-vm ≥ 0.53.0`
+(via `cas-matrix`, `cas-simplify`, etc.) but were **never added to
+`MACSYMA_NAME_TABLE`** in `name_table.py`.  The MACSYMA compiler therefore
+passed them through as unevaluated function calls with lowercase head names
+(e.g. `IRApply(head=IRSymbol("eigenvalues"), …)`) instead of the canonical
+capitalized heads (`Eigenvalues`) that the VM's dispatch table keys on.
+
+### Added to `MACSYMA_NAME_TABLE`
+
+**Advanced matrix operations** (all backed by `cas-matrix` handlers in `symbolic-vm`):
+
+| MACSYMA name | IR head | Description |
+|---|---|---|
+| `eigenvalues` | `Eigenvalues` | Returns a `List` of eigenvalues (algebraic + numeric for 2×2/3×3) |
+| `eigenvectors` | `Eigenvectors` | Returns a `List` of `[eigenvalue, multiplicity, [vector]]` triples |
+| `charpoly` | `CharPoly` | Characteristic polynomial `det(λI − A)` in a given variable |
+| `nullspace` | `NullSpace` | List of basis vectors spanning the null space (kernel) |
+| `columnspace` | `ColumnSpace` | List of basis vectors spanning the column space (image) |
+| `rowspace` | `RowSpace` | List of basis vectors spanning the row space |
+| `norm` | `Norm` | Euclidean (Frobenius) norm: `√Σ aᵢⱼ²` |
+| `lu` | `LU` | LU decomposition: `[L, U, P]` where `P·A = L·U` |
+
+**Cube root:**
+
+| MACSYMA name | IR head | Description |
+|---|---|---|
+| `cbrt` | `Cbrt` | Exact integer cube root for perfect cubes; `IRFloat` otherwise |
+
+**Log / radical / Euler transformations** (backed by `cas-simplify` in `symbolic-vm`):
+
+| MACSYMA name | IR head | Description |
+|---|---|---|
+| `radcan` | `Radcan` | Radical canonical form: `√(x²)` → `\|x\|`, etc. |
+| `logcontract` | `LogContract` | Contracts a sum of logs: `log(a)+log(b)` → `log(a·b)` |
+| `logexpand` | `LogExpand` | Expands a log of a product: `log(a·b)` → `log(a)+log(b)` |
+| `exponentialize` | `Exponentialize` | Replaces trig/hyperbolic functions with complex exponentials |
+| `demoivre` | `DeMoivre` | Expands `exp(i·x)` as `cos(x) + i·sin(x)` (de Moivre's theorem) |
+
+### Tests added (Sections AA–CC, 12 new tests)
+
+| Section | Tests |
+|---------|-------|
+| AA | Advanced matrix: `eigenvalues`, `charpoly`, `nullspace`, `rowreduce` (already in table, still tested), `norm` (2 tests) |
+| BB | Cube root: `cbrt(8)`, `cbrt(-27)`, `cbrt(2.0)` |
+| CC | Log transformations: `logcontract(log(x)+log(y))`, `logexpand(log(x*y))`, `radcan(sqrt(x^2))` |
+
+### Changed
+
+- `pyproject.toml` version bumped `1.22.0` → `1.23.0`.
+
+---
+
+## 1.22.0 — 2026-05-08
+
+**Phase 31 — End-to-end pipeline tests for Phases 28–33 of `symbolic-vm`.**
+
+This release adds comprehensive MACSYMA-surface pipeline tests — source string
+→ `parse_macsyma` → `compile_macsyma` → `VM(MacsymaBackend).eval` — for the
+advanced CAS capabilities that were wired into `symbolic-vm` in Phases 28–33
+but never validated through the MACSYMA surface syntax.
+
+### Why this matters
+
+The MACSYMA pipeline has two independent concerns: (a) the VM handlers that
+compute answers, and (b) the compiler name-table that maps MACSYMA identifiers
+to the correct IR heads.  The handler-level unit tests in `symbolic-vm/tests/`
+and `test_ode_wiring.py` verify (a); the new Section U–Z tests in
+`test_cas_pipeline.py` verify (b) — that `taylor(…)`, `sum(…)`, `laplace(…)`,
+`ode2(…)`, `log(exp(x))`, `asin(-x)`, and `sin(%pi/6)` compile to the right
+IR heads and produce correct results end-to-end.
+
+### New test sections in `test_cas_pipeline.py`
+
+| Section | Feature | Handler / Phase |
+|---------|---------|-----------------|
+| **U** | Taylor series | `Taylor` handler, `cas-limit-series` Phase 28 |
+| **V** | Symbolic summation | `Sum` handler, `cas-summation` Phase 25 |
+| **W** | Laplace transforms | `Laplace` handler, `cas-laplace` Phase 29 |
+| **X** | ODE solving | `ODE2` handler, `cas-ode` Phase 29 |
+| **Y** | Log/exp cancellation | `log_handler` / `exp_handler`, `symbolic-vm` Phase 30 |
+| **Z** | Inverse trig symmetry + trig special values | `asin_handler`, `sin_handler`, `cos_handler`, `symbolic-vm` Phases 32–33 |
+
+### Section details
+
+#### Section U — Taylor series (3 tests)
+
+- `taylor(x^2, x, 0, 2)` — result is an expanded polynomial, not
+  unevaluated `Taylor(...)`.
+- `taylor(3, x, 0, 1)` → `3` (constant stays constant).
+- `taylor(x + 1, x, 0, 1)` — result is an expanded form, not unevaluated.
+
+#### Section V — Symbolic summation (3 tests)
+
+- `sum(k, k, 1, 4)` → `10` (Faulhaber: 1+2+3+4 = 10).
+- `sum(2, k, 1, 5)` → `10` (constant 2 summed 5 times).
+- `sum(k^2, k, 1, 3)` → `14` (1² + 2² + 3² = 14).
+
+#### Section W — Laplace transforms (2 tests)
+
+- `laplace(1, t, s)` — returns `IRApply` containing `s`  (L{1} = 1/s).
+- `laplace(t, t, s)` — returns `IRApply` containing `s`  (L{t} = 1/s²).
+
+#### Section X — ODE solving (2 tests)
+
+- `ode2(diff(y, x) + y, y, x)` → `Equal(y, C·exp(-x))`.
+- `ode2(diff(y, x) + 2*y, y, x)` → `Equal(y, C·exp(-2x))`.
+
+Both verify `Equal(y, …)` structural form.
+
+#### Section Y — Log/exp cancellation (3 tests)
+
+`symbolic-vm` Phase 30 added algebraic cancellation rules:
+
+- `log(exp(x))` → `x`  (log is left-inverse of exp).
+- `exp(log(x))` → `x`  (exp is left-inverse of log).
+- `log(1)` → `0`  (numeric fold: ln(1) = 0).
+
+#### Section Z — Inverse trig + trig special values (5 tests)
+
+`symbolic-vm` Phase 32 added odd-symmetry rules; Phase 33 added
+π-multiple detection to return exact algebraic values:
+
+- `asin(-x)` — result head is NOT `Asin` (odd-symmetry rule fired).
+- `sin(%pi/6)` → `IRRational(1, 2)`  (π/6 detected from `IRFloat(pi/6)`).
+- `cos(%pi/3)` → `IRRational(1, 2)`.
+- `cos(%pi)` → `-1`.
+- `sin(%pi)` → `0` or `IRFloat(≈0)`.
+
+### Version requirement update
+
+- `pyproject.toml`: `coding-adventures-symbolic-vm` minimum bumped from
+  `>=0.48.0` to `>=0.53.0` to formally declare the dependency on Phases 30–33.
+
+### What changed
+
+| File | Change |
+|------|--------|
+| `tests/test_cas_pipeline.py` | Added Sections U–Z (18 new tests) |
+| `pyproject.toml` | Version `1.21.0` → `1.22.0`; `symbolic-vm` min `>=0.53.0` |
+| `CHANGELOG.md` | This entry |
+
+---
+
+## 1.21.0 — 2026-05-08
+
+**Phase 30 — `float()` function and proper `numer` evaluation mode.**
+
+Makes `ev(expr, numer)`, `ev(expr, float)`, and the surface-syntax
+`float(expr)` actually fold exact numerics to floating-point values — a
+capability that was listed in the `ev` docstring but never implemented.
+
+### New capabilities
+
+#### `_numer_fold(node)` — recursive exact-to-float conversion
+
+New pure helper in `handlers.py`.  Walks an IR tree and converts every
+exact-numeric leaf to `IRFloat`:
+
+| Input node | Output |
+|---|---|
+| `IRInteger(n)` | `IRFloat(float(n))` |
+| `IRRational(p, q)` | `IRFloat(p / q)` |
+| `IRFloat(x)` | `IRFloat(x)` (identity) |
+| `IRSymbol(name)` | `IRSymbol(name)` (identity) |
+| `IRApply(Pow, (base, exp))` | base folded, exponent kept exact |
+| `IRApply(head, args)` | all args folded recursively |
+
+The Pow exponent guard is essential: downstream numeric routines test
+`isinstance(exp, IRInteger)` to distinguish `x^2` from `x^2.0`.
+
+#### `ev(expr, numer)` / `ev(expr, float)` — now actually folds
+
+Previously the `numer`/`float` branch of `ev_handler` evaluated `inner`
+and returned it unchanged (the `with_numer()` context manager toggled a
+backend flag but nothing consumed it).  The handler now calls
+`_numer_fold(result)` before returning:
+
+```macsyma
+ev(1/2, numer);   →  0.5          ← was 1/2 before this release
+ev(42, numer);    →  42.0         ← was 42
+ev(%pi/6, numer); →  0.523598...  ← was %pi/6
+```
+
+`with_numer()` is still called so nested `ev` calls inherit the mode.
+
+#### `float(expr)` — new surface function
+
+`float` is now wired end-to-end:
+
+1. **Name table** — `"float": FLOAT_FUNC` maps the MACSYMA token to
+   `IRSymbol("Float")`.
+2. **Handler** — `float_handler` in `cas_handlers.py` evaluates the
+   argument through the VM then applies `_numer_fold`.  One-argument
+   form only; wrong arity is returned unevaluated.
+3. **Dispatch table** — `build_cas_handler_table()` now includes
+   `"Float": float_handler`.
+
+```macsyma
+float(1/2);    →  0.5
+float(3);      →  3.0
+float(%pi);    →  3.141592653589793
+float(%e);     →  2.718281828459045
+float(1/3);    →  0.3333333333333333
+```
+
+### What changed
+
+| File | Change |
+|------|--------|
+| `src/macsyma_runtime/handlers.py` | Added `_numer_fold`; imports `IRFloat`, `IRInteger`, `IRRational`; `ev_handler` numer branch now calls `_numer_fold(result)` |
+| `src/macsyma_runtime/cas_handlers.py` | Added `float_handler`; imports `_numer_fold` from `handlers`; registered `"Float": float_handler` in `build_cas_handler_table()` |
+| `src/macsyma_runtime/name_table.py` | Added `FLOAT_FUNC = IRSymbol("Float")`; added `"float": FLOAT_FUNC` to `MACSYMA_NAME_TABLE` |
+| `pyproject.toml` | Version 1.20.0 → 1.21.0; description updated |
+| `tests/test_float_numer.py` | **New** — 41 tests (see below) |
+| `tests/test_ev.py` | Updated 2 tests to reflect new float-folding behaviour |
+| `tests/test_ode_wiring.py` | Fixed pre-existing unused-import/variable ruff warnings |
+
+### Tests (41 new in `test_float_numer.py`)
+
+**Section A — `_numer_fold` unit tests** (13 tests):
+`test_integer_becomes_float`, `test_integer_zero_becomes_float`,
+`test_negative_integer_becomes_float`, `test_rational_becomes_float`,
+`test_rational_one_third`, `test_float_passthrough`, `test_symbol_passthrough`,
+`test_apply_no_numerics_unchanged`, `test_apply_folds_integer_arg`,
+`test_apply_folds_rational_arg`, `test_pow_base_folded_exponent_preserved`,
+`test_pow_symbol_base_unchanged`, `test_nested_apply_folds_all_levels`
+
+**Section B — Float handler IR tests** (8 tests):
+`test_float_of_integer`, `test_float_of_rational`, `test_float_of_symbol_stays_symbolic`,
+`test_float_of_pi_constant`, `test_float_of_e_constant`, `test_float_of_zero`,
+`test_float_wrong_arity_returns_unevaluated`, `test_float_of_integer_expression`
+
+**Section C — `ev(expr, numer)` pipeline tests** (7 tests):
+`test_ev_numer_folds_integer`, `test_ev_float_folds_integer`,
+`test_ev_numer_folds_rational`, `test_ev_numer_folds_sum_of_integers`,
+`test_ev_numer_symbol_stays_symbolic`, `test_ev_numer_symbolic_expression_folds_constants`,
+`test_ev_numer_backend_flag_restored`
+
+**Section D — full compiler-pipeline tests** (11 tests):
+`test_float_of_integer_literal`, `test_float_of_fraction`, `test_float_of_one_third`,
+`test_float_of_pi`, `test_float_of_e`, `test_ev_numer_of_fraction`,
+`test_ev_numer_of_integer`, `test_ev_float_of_fraction`,
+`test_float_in_name_table`, `test_float_handler_in_dispatch_table`,
+`test_float_func_symbol_name`
+
+Coverage: **92.23%** (340 tests total).
+
+---
+
+## 1.20.0 — 2026-05-04
+
+**Phase 29 — ODE solving and Laplace transforms wired into MacsymaBackend.**
+
+Connects two fully-implemented CAS substrate packages (`cas-ode` and
+`cas-laplace`) to the MACSYMA backend so that `ode2`, `laplace`, `ilt`,
+`delta`, and `hstep` surface names reach their handlers for the first time.
+
+### New capabilities
+
+#### ODE solving — `ode2(eqn, y, x)`
+
+Seven ODE types are now live through the `ODE2` head:
+
+1. First-order linear: `y' + P(x)·y = Q(x)` (integrating-factor method)
+2. Separable: `y' = f(x)·g(y)` (separation of variables)
+3. Bernoulli: `y' + P·y = Q·yⁿ` (substitution v = y^(1-n))
+4. Exact: `M dx + N dy = 0` when `∂M/∂y = ∂N/∂x` (potential function)
+5. Second-order constant-coefficient homogeneous (characteristic equation)
+6. Second-order constant-coefficient non-homogeneous (undetermined coefficients)
+
+```macsyma
+ode2(y' + 2*y, y, x);          →  Equal(y, %c·exp(-2·x))
+ode2(y'' + y, y, x);            →  Equal(y, exp(0)·(%c1·cos(x) + %c2·sin(x)))
+ode2(y'' - 3*y' + 2*y, y, x);  →  Equal(y, %c1·exp(x) + %c2·exp(2·x))
+```
+
+#### Laplace transforms — `laplace`, `ilt`, `delta`, `hstep`
+
+~15 standard Laplace transform pairs covering the most common circuit analysis
+forms:
+
+```macsyma
+laplace(exp(2*t), t, s);   →  1/(s-2)
+laplace(sin(t), t, s);     →  1/(s^2+1)
+ilt(1/(s-3), s, t);        →  exp(3·t)
+delta(0);                  →  1
+hstep(-3);                 →  0
+hstep(0);                  →  1/2
+hstep(5);                  →  1
+```
+
+### `name_table.py` fix
+
+`ODE2` was previously defined locally as `IRSymbol("ODE2")`.  It is now
+imported from `symbolic_ir.nodes` (the canonical singleton), preventing any
+accidental identity mismatch.
+
+### What changed
+
+- `src/macsyma_runtime/cas_handlers.py` — imports `build_ode_handler_table`
+  and `build_laplace_handler_table`; `build_cas_handler_table()` now calls
+  both and merges their results into the dispatch table.
+- `src/macsyma_runtime/name_table.py` — imports `ODE2` from
+  `symbolic_ir.nodes` instead of re-defining it locally.
+- `pyproject.toml` — version 1.19.0 → 1.20.0; adds
+  `coding-adventures-cas-ode>=0.2.0` and
+  `coding-adventures-cas-laplace>=0.1.0` as runtime dependencies.
+- `tests/test_ode_wiring.py` — new file: 18 integration tests for ODE wiring,
+  Laplace transforms, DiracDelta/UnitStep folding, and SPICE smoke tests.
+
+---
+
+## 1.19.0 — 2026-05-04
+
+**Phase 28 — `sign` surface syntax + assumption-driven `abs` folding.**
+
+Exposes the Phase 21 assumptions infrastructure (already in `symbolic-vm`)
+through the MACSYMA surface name `sign`, and fixes `Abs` handler delegation
+so `abs(x)` folds correctly after `assume(x > 0)`.
+
+### New `sign` function
+
+`sign(x)` → `1`, `-1`, `0` for known-sign inputs (numeric or assumed);
+`Sign(x)` unevaluated when sign is unknown.
+
+### Assumption-driven simplification in `abs`
+
+`abs(x)` now delegates to the full `symbolic_vm.cas_handlers.abs_handler`
+(Phase 28) which consults `vm.assumptions`:
+
+- `assume(x > 0)` or `assume(x >= 0)` → `abs(x)` = `x`
+- `assume(x < 0)` → `abs(x)` = `-x`
+
+Previously the local `abs_handler` only folded numeric inputs.
+
+### Surface syntax examples
+
+```macsyma
+assume(x > 0);         →  done
+is(x > 0);             →  true
+is(x >= 0);            →  true    (inferred)
+abs(x);                →  x       (sign-simplified)
+sign(x);               →  1
+forget(x > 0);         →  done
+is(x > 0);             →  unknown
+assume(x < 0);         →  done
+abs(x);                →  -x
+sign(x);               →  -1
+sign(5);               →  1
+sign(-3);              →  -1
+```
+
+### What changed
+
+- `src/macsyma_runtime/cas_handlers.py` — removes local `abs_handler`; imports
+  and uses `symbolic_vm.cas_handlers.abs_handler` as `_abs_handler_full`.
+- `src/macsyma_runtime/name_table.py` — adds `SIGN` symbol and `"sign": SIGN`
+  mapping (Phase 28).
+- `pyproject.toml` — version 1.18.0 → 1.19.0; bumps `symbolic-vm` dep to ≥ 0.48.0.
+
+---
+
+## 1.18.0 — 2026-05-05
+
+**Phase 27 — Polynomial inequality solving via MACSYMA surface syntax.**
+
+`solve(p(x) op c, x)` (op ∈ {<, >, ≤, ≥}) now returns a list of interval
+conditions via the upgraded `symbolic-vm` 0.47.0.  No changes to the
+runtime layer itself — this is a dependency bump.
+
+```macsyma
+solve(x - 1 > 0, x)           →  [x > 1]
+solve(x^2 - 1 < 0, x)         →  [and(x > -1, x < 1)]
+solve(x^2 + 1 > 0, x)         →  [0 >= 0]
+```
+
+Dependency bump: `symbolic-vm` ≥ 0.47.0 (was ≥ 0.46.0).
+
+---
+
+## 1.17.0 — 2026-05-05
+
+**Phase 26 — Transcendental equation solving via MACSYMA surface syntax.**
+
+Bumps `coding-adventures-symbolic-ir>=0.13.0` and
+`coding-adventures-symbolic-vm>=0.46.0`.
+
+### What changed
+
+- `name_table.py`: imports `LAMBERT_W` from `symbolic_ir>=0.13.0` and adds
+  `"lambert_w": LAMBERT_W` to `MACSYMA_NAME_TABLE`.  MACSYMA users can now
+  call `lambert_w(x)` to invoke the principal Lambert W function W₀(x); the
+  symbolic-vm `lambert_w_handler` evaluates it numerically when `x` is
+  concrete.
+- `solve(eq, var)` now automatically dispatches through the transcendental
+  families (trig, exp/log, Lambert W, hyperbolic, compound substitution) via
+  the updated `symbolic-vm 0.46.0` without any additional runtime changes.
+
+---
+
+## 1.16.0 — 2026-05-04
+
+**Phase 25 — Symbolic summation and product evaluation via MACSYMA surface syntax.**
+
+Bumps `coding-adventures-symbolic-ir>=0.12.0` and
+`coding-adventures-symbolic-vm>=0.45.0`.
+
+### What changed
+
+- `cas_handlers.py`: imports `sum_handler` and `product_handler` from
+  `symbolic_vm.cas_handlers`, registers them as `"Sum"` and `"Product"`.
+
+The MACSYMA compiler (bumped to 0.9.0 separately) maps:
+- `sum(f, k, a, b)` → `Sum(f, k, a, b)` IR node
+- `product(f, k, a, b)` → `Product(f, k, a, b)` IR node
+
+The VM's `sum_handler` and `product_handler` (added in symbolic-vm 0.45.0)
+evaluate these via `cas-summation` 0.1.0.
+
+## 1.15.0 — 2026-05-04
+
+**Phase 24 — Definite integration end-to-end via MACSYMA surface syntax.**
+
+Bumps `coding-adventures-symbolic-vm>=0.44.0`.
+
+### What changed
+
+No new `cas_handlers.py` or `name_table.py` entries are required.  The
+MACSYMA compiler already maps `integrate(f, x, a, b)` → the 4-argument
+`Integrate(f, x, a, b)` IR node, and the VM's `integrate()` handler
+(updated in symbolic-vm 0.44.0) now processes the 4-argument form using
+the Fundamental Theorem of Calculus.
+
+The end-to-end surface form now works:
+
+```
+integrate(exp(-x^2), x, 0, %inf)   →   sqrt(%pi) / 2
+integrate(x^2, x, 0, 1)            →   1/3
+integrate(sin(x), x, 0, %pi)       →   2
+integrate(sin(x)/x, x, 0, %inf)    →   %pi/2
+integrate(log(x), x, 0, 1)         →   -1
+```
+
+Infinite limits `%inf` and `%minf` are recognised by the VM's definite-
+integration machinery.
+
+---
+
+## 1.14.0 — 2026-05-04
+
+**Phase 23 — Wire MACSYMA surface syntax for special functions (erf, Si/Ci,
+Li₂, Gamma/Beta, Fresnel).**
+
+Bumps `symbolic-ir>=0.11.0` and `symbolic-vm>=0.43.0`.
+
+### `name_table.py`
+
+Adds 13 new entries to `MACSYMA_NAME_TABLE`:
+
+| MACSYMA name | IR head |
+|---|---|
+| `erf` | `ERF` |
+| `erfc` | `ERFC` |
+| `erfi` | `ERFI` |
+| `si` | `SI` |
+| `ci` | `CI` |
+| `shi` | `SHI` |
+| `chi` | `CHI` |
+| `li2` | `LI2` |
+| `gamma` | `GAMMA_FUNC` |
+| `beta` | `BETA_FUNC` |
+| `fresnel_s` | `FRESNEL_S` |
+| `fresnel_c` | `FRESNEL_C` |
+
+### `cas_handlers.py`
+
+Delegates all 12 special-function handlers from
+`symbolic_vm.cas_handlers` into the MacsymaBackend handler table.
+
+### Example MACSYMA sessions
+
+```
+(%i1) integrate(exp(-x^2), x);
+(%o1)                   sqrt(%pi)*erf(x)/2
+
+(%i2) integrate(sin(x)/x, x);
+(%o2)                   si(x)
+
+(%i3) gamma(5);
+(%o3)                   24
+
+(%i4) gamma(1/2);
+(%o4)                   sqrt(%pi)
+
+(%i5) beta(1/2, 1/2);
+(%o5)                   %pi
+```
+
+---
+
+## 1.13.0 — 2026-05-04
+
+**Phase 22 — Wire MACSYMA surface syntax for matchdeclare / defrule / apply1 / apply2 / tellsimp.**
+
+### Added
+
+- `name_table.py` — 5 new entries in `MACSYMA_NAME_TABLE` so the compiler
+  maps the lowercase MACSYMA keywords to their IR heads:
+  - `"matchdeclare"` → `MATCHDECLARE`
+  - `"defrule"` → `DEFRULE`
+  - `"apply1"` → `APPLY1`
+  - `"apply2"` → `APPLY2`
+  - `"tellsimp"` → `TELLSIMP`
+
+- `cas_handlers.py` — 5 new handler table entries that delegate directly to
+  the implementations in `symbolic_vm.cas_handlers`:
+  - `"MatchDeclare"` → `matchdeclare_handler`
+  - `"Defrule"` → `defrule_handler`
+  - `"Apply1"` → `apply1_handler`
+  - `"Apply2"` → `apply2_handler`
+  - `"TellSimp"` → `tellsimp_handler`
+
+  The heads are already in `_HELD_HEADS` via `SymbolicBackend` (inherited
+  by `MacsymaBackend`), so pattern arguments reach handlers unevaluated.
+
+### Dependency bumps
+
+- `coding-adventures-symbolic-ir>=0.10.0`
+- `coding-adventures-symbolic-vm>=0.42.0`
+- `coding-adventures-cas-pattern-matching>=0.2.0`
+
+---
+
+## 0.2.0 — 2026-04-27
+
+### Added
+
+- `cas_handlers.py` — VM handler functions for every CAS substrate package:
+  - **Simplify / Expand** — delegate to `cas_simplify.simplify` and
+    `cas_simplify.canonical` respectively.
+  - **Subst** — delegates to `cas_substitution.subst`; re-evaluates the
+    substituted result through the VM so numeric simplification fires.
+  - **Factor** — identifies the single free variable, converts the IR
+    to an integer polynomial via `symbolic_vm.polynomial_bridge.to_rational`,
+    calls `cas_factor.factor_integer_polynomial`, and reassembles the result
+    as `Mul(content, Pow(factor, mult), …)` IR.
+  - **Solve** — converts the polynomial to rational form, dispatches to
+    `cas_solve.solve_linear` (degree 1) or `cas_solve.solve_quadratic`
+    (degree 2), returns `List(solution, …)` IR.  Degree > 2 and non-polynomial
+    expressions return unevaluated.  Handles `Equal(lhs, rhs)` by rewriting
+    to `Sub(lhs, rhs)`.
+  - **List operations** — `Length`, `First`, `Rest`, `Last`, `Append`,
+    `Reverse`, `Range`, `Map`, `Apply`, `Select`, `Sort`, `Part`, `Flatten`,
+    `Join`.  Each is a thin wrapper around the corresponding
+    `cas_list_operations` function; `Map` and `Apply` route through the VM
+    so element-wise evaluation fires.
+  - **Matrix operations** — `Matrix` (shape validation), `Transpose`,
+    `Determinant`, `Inverse`; all delegate to `cas_matrix`.
+  - **Limit** — delegates to `cas_limit_series.limit_direct`; passes the
+    result through `simplify` and the VM so numeric reduction fires.
+  - **Taylor** — delegates to `cas_limit_series.taylor_polynomial`; returns
+    unevaluated for non-polynomial expressions (`PolynomialError`).
+  - **Numeric helpers** — `Abs`, `Floor`, `Ceiling`, `Mod`, `Gcd`, `Lcm`.
+- `MacsymaBackend.__init__` now merges `build_cas_handler_table()` into
+  `self._handlers` so every CAS head is handled automatically.
+- Pre-bound constants: `%pi → IRFloat(π)` and `%e → IRFloat(e)` installed
+  in `self._env` at construction time.
+- 57 new integration tests in `tests/test_cas_handlers.py` covering:
+  handler-table completeness, constant pre-binding, simplify, expand, subst,
+  factor (difference of squares, perfect square, linear, no-variable),
+  solve (linear, quadratic), all list ops, matrix transpose and determinant,
+  limit, taylor, and all numeric helpers; plus edge-case / defensive tests for
+  wrong arity, non-list inputs, multi-variate polynomials, and symbolic args.
+- Added CAS substrate packages to `pyproject.toml` dependencies:
+  `cas-pattern-matching`, `cas-substitution`, `cas-simplify`, `cas-factor`,
+  `cas-solve`, `cas-list-operations`, `cas-matrix`, `cas-limit-series`.
+- Updated `BUILD` to install CAS deps in correct leaf-to-root order.
+
+---
+
 ## 1.12.0 — 2026-04-28
 
 **Phase G (control-flow grammar) — tests and stale-comment cleanup.**

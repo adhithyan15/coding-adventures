@@ -1,0 +1,9 @@
+[package]
+name = "zigbee-aps"
+version = "0.1.0"
+edition = "2021"
+description = "Zigbee Application Support Sublayer frame primitives for endpoints, clusters, groups, and counters"
+license = "MIT"
+
+[dependencies]
+zigbee-nwk = { path = "../zigbee-nwk" }

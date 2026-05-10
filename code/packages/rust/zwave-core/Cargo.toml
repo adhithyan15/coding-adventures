@@ -1,0 +1,8 @@
+[package]
+name = "zwave-core"
+version = "0.1.0"
+edition = "2021"
+description = "Z-Wave identifier, region, and serial-frame primitives for the smart-home runtime"
+license = "MIT"
+
+[dependencies]

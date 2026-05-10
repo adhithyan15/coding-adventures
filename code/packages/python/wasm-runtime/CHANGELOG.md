@@ -34,6 +34,9 @@ All notable changes to this package will be documented in this file.
 
 - `WasiHost.__init__` now accepts an optional `WasiConfig` as its first argument. Keyword-only `stdout`/`stderr` usage remains supported.
 - `WasiConfig` now accepts `stdin`, a byte-reader callable used by `fd_read`.
+- `WasiConfig` now exposes `max_fd_write_bytes_per_call` and
+  `max_fd_write_bytes_total`; `fd_write` validates guest iovec ranges before
+  forwarding output and returns `EINVAL` for invalid or over-budget writes.
 - Added `EINVAL = 28` constant for the invalid-argument errno code.
 
 ## [0.1.0] - 2026-04-05

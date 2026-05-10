@@ -1539,8 +1539,11 @@ checker's configurable AST-depth, block-depth, and procedure-depth checks. The
 runtime lowering already keeps frames, dynamic arrays, output, eval-thunk
 descriptors, and generated control/helper label state bounded. The pure-Python
 WASM runtime now also exposes a configurable instruction budget so embedders
-can cap nonterminating compiled programs at execution time; future convergence
-work should keep closing any remaining host-budget items against this list.
+can cap nonterminating compiled programs at execution time. Its WASI `fd_write`
+host path validates iovec tables, guest buffer ranges, and output budgets before
+forwarding stdout/stderr, so compiled ALGOL output has both guest-side and
+host-side bounds. Future convergence work should keep closing any remaining
+host-budget items against this list.
 
 ## Documentation Requirements
 
@@ -1600,3 +1603,27 @@ Full ALGOL 60 to WASM is complete when:
 The final result should make ALGOL 60 a reference implementation for compiling
 block-scoped, procedure-heavy historical languages onto the repository's WASM
 stack.
+
+## Backend Portability Notes
+
+The same ALGOL semantic model can target managed virtual machines such as the
+JVM or CLR. ALGOL 60 is a statically compiled, lexically scoped language; it
+does not require garbage collection as part of the language definition. Most
+ordinary storage has block/procedure lifetime, and `own` declarations have
+static lifetime.
+
+A JVM or CLR backend would still benefit from the platform garbage collector for
+runtime descriptor objects, but that is an implementation convenience rather
+than an ALGOL semantic requirement. The reusable target-independent pieces are:
+
+- activation frames carrying static links or display entries
+- array descriptors with captured bounds, strides, and checked element access
+- procedure descriptors carrying code identity plus lexical environment
+- by-name thunk descriptors with separate eval/store behavior
+- label and switch descriptors for designational expressions
+- nonlocal `goto` lowering through frame unwind plus target dispatch
+
+For WASM these concepts live in linear memory and helper dispatch functions. For
+JVM or CLR they can become classes/records plus bytecode helpers, with nonlocal
+`goto` represented either as explicit continuation dispatch or as an internal
+exception used only to unwind to the target activation.

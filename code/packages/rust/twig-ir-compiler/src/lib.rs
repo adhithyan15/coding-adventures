@@ -631,4 +631,151 @@ mod tests {
             "expected positions on both lines 1 and 2, got {lines_seen:?}",
         );
     }
+
+    // ---- PR 23-E: refinement type annotation round-trip ----------------
+    //
+    // These tests verify that LANG23 refinement annotations written in Twig
+    // source (`(x : (Int 0 128))`, `-> (Int 0 256)`) are:
+    //   1. Parsed into `TypeAnnotation` variants on the `Lambda`/`Define` nodes.
+    //   2. Lowered by the IR compiler into `param_refinements` / `return_refinement`
+    //      on the resulting `IIRFunction`.
+    //
+    // They do NOT test the refinement checker (that is `lang-refinement-checker`'s
+    // job).  They test only that the annotation survives the
+    // parse → compile → IIRFunction pipeline.
+
+    /// A function defined with a ranged-int parameter annotation should carry
+    /// a `Some(RefinedType)` in `param_refinements[0]` on the IIR function.
+    #[test]
+    fn ranged_int_param_annotation_round_trips_to_iir() {
+        use lang_refined_types::{Kind, Predicate, RefinedType};
+        // `(x : (Int 0 128))` means x ∈ [0, 128).
+        let src = "(define (clamp (x : (Int 0 128))) x)";
+        let m = compile_source(src, "test_23e").unwrap();
+        let f = m.functions.iter().find(|f| f.name == "clamp")
+            .expect("expected function named 'clamp'");
+        // `param_refinements` must be in lockstep with `params`.
+        assert_eq!(
+            f.param_refinements.len(), f.params.len(),
+            "param_refinements must be lockstep with params"
+        );
+        let rt = f.param_refinements[0]
+            .as_ref()
+            .expect("param 0 should have a refinement annotation");
+        let expected = RefinedType::refined(
+            Kind::Int,
+            Predicate::Range { lo: Some(0), hi: Some(128), inclusive_hi: false },
+        );
+        assert_eq!(rt, &expected, "param refinement should be Range(0,128)");
+    }
+
+    /// A function with an unrefined `int` type annotation on a parameter should
+    /// produce `RefinedType::unrefined(Kind::Int)` — not `None`.
+    #[test]
+    fn unrefined_int_param_annotation_round_trips() {
+        use lang_refined_types::{Kind, RefinedType};
+        let src = "(define (double (x : int)) (* x 2))";
+        let m = compile_source(src, "test_23e").unwrap();
+        let f = m.functions.iter().find(|f| f.name == "double").unwrap();
+        let rt = f.param_refinements[0].as_ref()
+            .expect("param 0 should be annotated as int");
+        assert_eq!(rt, &RefinedType::unrefined(Kind::Int));
+    }
+
+    /// A function with a return type annotation `-> (Int 0 256)` should have
+    /// `return_refinement = Some(RefinedType::refined(Kind::Int, Range(0,256)))`.
+    #[test]
+    fn return_annotation_round_trips_to_iir() {
+        use lang_refined_types::{Kind, Predicate, RefinedType};
+        let src = "(define (clamp-byte (x : int) -> (Int 0 256)) x)";
+        let m = compile_source(src, "test_23e").unwrap();
+        let f = m.functions.iter().find(|f| f.name == "clamp-byte").unwrap();
+        let rt = f.return_refinement.as_ref()
+            .expect("clamp-byte should have a return refinement");
+        let expected = RefinedType::refined(
+            Kind::Int,
+            Predicate::Range { lo: Some(0), hi: Some(256), inclusive_hi: false },
+        );
+        assert_eq!(rt, &expected);
+    }
+
+    /// A function with multiple annotated parameters (mixed refined and plain)
+    /// gets a lockstep `param_refinements` vector.
+    #[test]
+    fn multiple_annotated_params_lockstep() {
+        use lang_refined_types::{Kind, Predicate, RefinedType};
+        // lo is annotated; hi is unannotated (plain name without `:`).
+        let src = "(define (in-range (lo : (Int 0 100)) hi) (+ lo hi))";
+        let m = compile_source(src, "test_23e").unwrap();
+        let f = m.functions.iter().find(|f| f.name == "in-range").unwrap();
+        assert_eq!(f.params.len(), 2);
+        assert_eq!(f.param_refinements.len(), 2,
+            "lockstep: 2 params ⇒ 2 entries in param_refinements");
+        // param 0: annotated
+        let rt0 = f.param_refinements[0].as_ref().expect("lo should be annotated");
+        assert_eq!(
+            rt0,
+            &RefinedType::refined(
+                Kind::Int,
+                Predicate::Range { lo: Some(0), hi: Some(100), inclusive_hi: false },
+            )
+        );
+        // param 1: unannotated → None
+        assert!(f.param_refinements[1].is_none(), "hi should be None (unannotated)");
+    }
+
+    /// A function with NO annotations should have empty/None annotation fields.
+    ///
+    /// This is the opt-in contract: callers that don't use LANG23 annotations
+    /// see zero change in the IIR they receive.
+    #[test]
+    fn unannotated_function_has_no_refinement_fields() {
+        let src = "(define (add x y) (+ x y))";
+        let m = compile_source(src, "test_23e").unwrap();
+        let f = m.functions.iter().find(|f| f.name == "add").unwrap();
+        // Either empty (pre-LANG23 path) or all-None.
+        let all_none = f.param_refinements.iter().all(|r| r.is_none());
+        assert!(
+            f.param_refinements.is_empty() || all_none,
+            "unannotated function should have empty or all-None param_refinements"
+        );
+        assert!(f.return_refinement.is_none());
+    }
+
+    /// Parsing an annotated function does not change its `params` tuple —
+    /// the `type_hint` field of each param entry is still `"any"` (dynamic typing
+    /// is unchanged; refinements are carried in the parallel `param_refinements`
+    /// field, not in the existing `type_hint` strings).
+    #[test]
+    fn annotation_does_not_change_existing_type_hints() {
+        let src = "(define (f (x : (Int 0 10)) (y : int)) (+ x y))";
+        let m = compile_source(src, "test_23e").unwrap();
+        let f = m.functions.iter().find(|f| f.name == "f").unwrap();
+        for (_, type_hint) in &f.params {
+            assert_eq!(type_hint, "any",
+                "type_hint must remain 'any'; refinements live in param_refinements");
+        }
+        assert_eq!(f.return_type, "any");
+    }
+
+    /// The `source_map` lockstep invariant still holds for annotated functions —
+    /// adding annotations must not corrupt instruction count vs source_map.
+    #[test]
+    fn source_map_lockstep_holds_for_annotated_functions() {
+        let srcs = [
+            "(define (f (x : (Int 0 128))) x)",
+            "(define (g (x : int) -> (Int 0 256)) x)",
+            "(define (h (a : (Int 0 10)) (b : (Int 0 20)) -> (Int 0 30)) (+ a b))",
+        ];
+        for src in srcs {
+            let m = compile_source(src, "lockstep_23e").unwrap();
+            for f in &m.functions {
+                assert_eq!(
+                    f.source_map.len(), f.instructions.len(),
+                    "lockstep violated in fn {:?} for source {src:?}",
+                    f.name,
+                );
+            }
+        }
+    }
 }

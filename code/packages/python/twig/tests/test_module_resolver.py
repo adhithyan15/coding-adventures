@@ -207,9 +207,13 @@ def test_missing_transitive_import(tmp_path: Path) -> None:
 
 
 def test_no_search_paths_configured() -> None:
-    """A clearer error message when the resolver has nowhere to look."""
+    """A clearer error message when the resolver has nowhere to look.
+
+    ``include_stdlib=False`` opts out of the auto-stdlib injection so
+    the empty search_paths list triggers the guard.
+    """
     with pytest.raises(TwigCompileError, match=r"No module search paths"):
-        resolve_modules("anything", search_paths=[])
+        resolve_modules("anything", search_paths=[], include_stdlib=False)
 
 
 # ── Path / name mismatches ────────────────────────────────────────────────

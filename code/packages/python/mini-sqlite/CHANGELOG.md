@@ -1,5 +1,390 @@
 # Changelog
 
+## [1.24.0] - 2026-05-05
+
+### Added — UPSERT (`ON CONFLICT DO UPDATE / DO NOTHING`)
+
+Full end-to-end support for modern SQLite 3.24+ upsert syntax.
+
+**SQL syntax supported:**
+
+```sql
+-- Silently skip conflicting rows
+INSERT INTO t VALUES (1, 'x') ON CONFLICT DO NOTHING;
+INSERT INTO t (id, val) VALUES (1, 'x') ON CONFLICT (id) DO NOTHING;
+
+-- Update the conflicting row in-place
+INSERT INTO t VALUES (1, 'new')
+  ON CONFLICT (id) DO UPDATE SET val = EXCLUDED.val;
+
+-- Arithmetic accumulation using both existing and excluded values
+INSERT INTO inventory VALUES (1, 5)
+  ON CONFLICT (id) DO UPDATE SET qty = qty + EXCLUDED.qty;
+
+-- Multiple SET assignments
+INSERT INTO t VALUES (1, 'a2', 'b2')
+  ON CONFLICT (id) DO UPDATE SET a = EXCLUDED.a, b = EXCLUDED.b;
+```
+
+**Pipeline changes:**
+
+- **Grammar / tokens** (`sql.grammar`, `sql.tokens`) — new `CONFLICT`, `DO`,
+  `NOTHING` keywords; new `upsert_clause` rule attached to `insert_stmt`.  Parser
+  regenerated (`_grammar.py`).
+
+- **`adapter.py`** (`_upsert_clause`, `_rewrite_excluded`) — parses the
+  `upsert_clause` AST node, rewrites `Column(table="EXCLUDED", col=c)` references
+  to `ExcludedColumn(col=c)`, and returns a `BackendUpsertClause` for the planner.
+  Integrated into `_insert()`.
+
+- **`sql-planner`** — `ExcludedColumn` expression node; `UpsertClause` and
+  `UpsertAssignment` AST nodes; `UpsertAction` and `UpsertAssignment` plan nodes;
+  `_resolve_upsert()` / `_resolve_upsert_expr()` in the planner.
+
+- **`sql-optimizer`** — `_fold_upsert()` helper preserves `UpsertAction` through
+  constant folding.
+
+- **`sql-codegen`** — `UpsertSpec`, `UpsertAssignment`, `LoadExcludedColumn` IR
+  nodes; `_compile_upsert()` + `ExcludedColumn` case in `_compile_expr()`.
+
+- **`sql-vm`** — `excluded_row` state; `LoadExcludedColumn` dispatch; `_do_upsert()`
+  (DO NOTHING fast path + DO UPDATE cursor scan); `_upsert_apply()` (evaluates SET
+  expressions, temporarily parks the existing row for bare column refs, calls
+  `backend.update()`).
+
+**Tests (`tests/test_tier10_upsert.py`)** — 15 oracle-verified tests comparing
+mini-sqlite against real `sqlite3` across DO NOTHING (with/without conflict,
+UNIQUE columns, selective skipping) and DO UPDATE (EXCLUDED.col, arithmetic,
+multiple columns, literal SET, counter accumulation, no-conflict plain inserts).
+
+## [1.23.0] - 2026-05-05
+
+### Added — DEFAULT column values (end-to-end)
+
+Full end-to-end support for `DEFAULT <literal>` column constraints.  When a
+column is declared with `DEFAULT <value>` and an INSERT omits that column,
+the backend fills the row with the declared default instead of `NULL`.
+
+**Pipeline changes:**
+
+- **`mini-sqlite/adapter.py`** (`_col_def`) — after parsing column
+  constraints, detects `DEFAULT primary` and calls `_primary()` to extract
+  the literal value.  `Literal` results (integer, float, string, `None`) are
+  stored directly; any non-literal expression (function call, parenthesised
+  expression, etc.) is silently ignored and falls back to `NO_DEFAULT`.  The
+  resulting `BackendColumnDef` now includes `default=col_default`.
+
+- **`sql-codegen/ir.py`** — added `NO_COLUMN_DEFAULT` sentinel (`Final`
+  singleton) and `default: object = NO_COLUMN_DEFAULT` field on `ColumnDef`.
+  The sentinel is distinct from `sql_backend.schema.NO_DEFAULT` to keep the
+  IR layer free from backend imports.
+
+- **`sql-codegen/compiler.py`** (`_to_ir_col`) — converts the backend
+  `NO_DEFAULT` sentinel to the IR `NO_COLUMN_DEFAULT`, passes all other
+  values through verbatim.
+
+- **`sql-vm/vm.py`** (`_do_create_table`) — converts `NO_COLUMN_DEFAULT` back
+  to `NO_DEFAULT` when building `BackendColumnDef`, passes real default values
+  through.  `InMemoryBackend._apply_defaults()` uses these values to fill
+  omitted columns at INSERT time.
+
+**Supported DEFAULT literal forms:**
+  - Integer: `DEFAULT 0`, `DEFAULT 42`, `DEFAULT 1`
+  - Real: `DEFAULT 3.14`
+  - Text: `DEFAULT 'active'`
+  - Null: `DEFAULT NULL`
+
+**Not yet supported** (planned follow-on): `DEFAULT -1` (bare negative integer
+requires grammar/adapter support for unary-minus signed literals; use
+`DEFAULT (-1)` as a workaround, though this currently also falls back to
+`NO_DEFAULT` since the adapter only materialises `Literal` nodes).
+
+**Tests:** `tests/test_tier9_column_defaults.py` — 27 oracle-verified tests
+across 7 test classes covering integer/null/text defaults, NOT NULL+DEFAULT,
+SELECT *, UNIQUE+DEFAULT, and edge cases.  Coverage remains ≥ 91%.
+
+## [1.22.0] - 2026-05-04
+
+### Added — INSERT OR REPLACE, INSERT OR IGNORE, REPLACE INTO
+
+Full end-to-end support for SQLite's conflict-resolution INSERT syntax.  Every
+layer of the pipeline was extended: grammar → lexer → parser → adapter →
+planner → optimizer → codegen → VM.
+
+- **`INSERT OR REPLACE INTO t VALUES …`** — if the new row conflicts on any
+  UNIQUE or PRIMARY KEY column, all conflicting existing rows are deleted and
+  the new row is inserted.  Exactly matches SQLite's `INSERT OR REPLACE`
+  semantics.
+
+- **`REPLACE INTO t VALUES …`** — syntactic sugar for `INSERT OR REPLACE INTO`.
+  Parsed by the new `replace_stmt` grammar rule; the adapter maps it to
+  `on_conflict="REPLACE"`.
+
+- **`INSERT OR IGNORE INTO t VALUES …`** — if the new row would violate a
+  UNIQUE or PRIMARY KEY constraint, the row is silently skipped.  Rows with no
+  conflict are inserted normally.
+
+- **`INSERT OR ABORT INTO t VALUES …`** — explicit form of the default
+  behaviour: raises `IntegrityError` on constraint violation.
+
+- **`INSERT OR REPLACE / IGNORE … SELECT …`** — conflict resolution also works
+  for `INSERT … SELECT` forms.
+
+- **UNIQUE column constraints now enforced for plain `INSERT`** — a latent bug
+  where `col TEXT UNIQUE` constraints were silently ignored by the in-memory
+  backend (and therefore by `mini_sqlite.connect(":memory:")`) has been fixed.
+  The UNIQUE flag now flows correctly through: `sql_backend.schema.ColumnDef`
+  → IR `ColumnDef` (new `unique` field) → `BackendColumnDef` created by the VM
+  `CreateTable` handler.
+
+### Tests
+
+- 17 oracle-verified tests in `tests/test_tier8_insert_conflict.py` run the
+  same SQL on both mini-sqlite and the real `sqlite3` module and assert the
+  results are identical.  Covers: single-key REPLACE, multi-REPLACE,
+  non-key-column REPLACE, UNIQUE column REPLACE/IGNORE, mixed rows, REPLACE
+  INTO shorthand, `INSERT … SELECT` forms, and ABORT (default) behaviour.
+
+## [1.21.0] - 2026-05-04
+
+### Added — String concatenation, JOIN USING, NATURAL JOIN
+
+- **`||` string concatenation** — SQL's standard string-concat operator is now
+  fully supported end-to-end: grammar (`sql.tokens` / `sql.grammar` via
+  `CONCAT_OP = "||"`) → lexer → parser → adapter (`_additive` maps
+  `CONCAT_OP → BinaryOp.CONCAT`) → planner → optimizer (constant-folds
+  `'hello' || 'world' → 'helloworld'`) → codegen → VM.  NULL propagates:
+  `NULL || 'x'` → NULL.
+
+- **`JOIN … USING (col, …)`** — USING syntax is now parsed and correctly
+  desugared for two-table and chained three-table join cases.  The adapter
+  emits `JoinClause(using=(...))` (instead of a pre-built ON expression), and
+  the planner's `_build_from_tree` resolves each USING column against the full
+  accumulated scope.  This is essential for three-table chains like
+  `a JOIN b USING (x) JOIN c USING (y)` where `y` may live in `a`, not `b`.
+  Supports INNER, LEFT, and all other join kinds.
+
+- **`NATURAL JOIN`** — automatically equates all shared column names between
+  the left scope and the right table.  Resolved in the planner where schema
+  access is available.  Falls back to CROSS JOIN when no shared columns exist
+  (matching SQLite semantics).  Grammar adds `NATURAL` keyword and
+  `join_type` alternative; adapter emits `JoinKind.NATURAL`.
+
+### Fixed
+
+- **`ConstantFolding` silent NULL for `||`** — `constant_folding.py`'s
+  `_apply_binary` had no case for `BinaryOp.CONCAT`, causing Python's pattern
+  matching to silently return `None` and fold `'hello' || 'world'` to
+  `Literal(None)`.  Now fixed.
+
+### Tests
+
+- `tests/test_tier7_string_and_joins.py` — 25 new oracle-verified tests
+  covering `||` (10 cases: literals, columns, NULL, WHERE, alias, constant
+  folding, nullable columns), `JOIN USING` (6 cases: single-column, no
+  matches, multi-column, WHERE filter, LEFT JOIN, three-table chain), and
+  `NATURAL JOIN` (7 cases: single shared column, no unmatched rows, multiple
+  shared columns, empty right table, no shared columns → CROSS, WHERE filter,
+  aliased table), plus 2 cross-feature tests combining `||` with JOIN.
+
+## [1.20.0] - 2026-05-04
+
+### Added — SQLite convergence (parser + runtime)
+
+This release closes four parser-level gaps between mini-sqlite and real SQLite,
+plus two correctness fixes in the shared VM runtime.
+
+**SELECT without FROM** (`sql.grammar`, `sql-planner`, `sql-codegen`, `adapter.py`):
+- The FROM clause is now optional in the grammar (`select_stmt`).
+- The planner emits `SingleRow()` when `from_` is `None`; the codegen runs
+  the body exactly once with no cursor loop, no AdvanceCursor, no CloseScan.
+- `SELECT 1`, `SELECT UPPER('hello')`, `SELECT 1 + 1 WHERE 1 = 1` all work.
+
+**CAST(expr AS type)** (`sql.grammar`, `sql.tokens`, `adapter.py`):
+- `CAST` is now a grammar keyword with its own `cast_expr` rule so the `AS`
+  inside it is never confused with a column alias.
+- Adapter maps `cast_expr` to the existing `cast` scalar function
+  (`FunctionCall(name='cast', args=[expr, Literal(type_name)])`).
+
+**Table alias without AS** (`sql.grammar`, `adapter.py`):
+- `FROM employees e` now accepted in addition to `FROM employees AS e`.
+- Bare-NAME alias detection uses a `saw_table_name` flag to avoid eating
+  SQL keywords (WHERE, JOIN, ON …) as alias names.
+
+**GLOB operator** (`sql.grammar`, `sql.tokens`, `adapter.py`, `sql-vm`):
+- `name GLOB '*.py'` and `name NOT GLOB '*.py'` are now supported.
+- Compiles to `FunctionCall(name='glob', args=[pattern, string])` in the
+  `glob(pattern, string)` argument order matching SQLite's C API.
+- New `glob` scalar function in `sql-vm` using `fnmatch.fnmatchcase` for
+  case-sensitive Unix-style pattern matching.
+
+**Plain JOIN (= INNER JOIN)** (`sql.grammar`, `adapter.py`):
+- `join_type` is now optional in `join_clause`; a bare `JOIN` keyword
+  defaults to `JoinKind.INNER`.
+
+### Fixed
+
+- **LIKE is now case-insensitive** (`sql-vm`) — ANSI SQL and SQLite both
+  treat LIKE as case-insensitive by default for ASCII. `like_match` now
+  folds both value and pattern to lowercase before the DP comparison.
+- **`JumpIfFalse`/`JumpIfTrue` use SQL truthiness** (`sql-vm`) — previously
+  only Python `False` was treated as falsy; now `0`, `0.0`, and `None` are
+  also falsy, fixing GLOB (which returns int 0/1) in WHERE clauses.
+
+## [1.19.0] - 2026-05-04
+
+### Added
+
+- **`GROUP_CONCAT` end-to-end support** (`adapter.py`) — the SQL adapter
+  now recognises `GROUP_CONCAT(col)` and `GROUP_CONCAT(col, separator)`,
+  emitting `AggregateExpr(func=AggFunc.GROUP_CONCAT, separator=…)`.
+  - Zero or 3+ arguments raise `ProgrammingError` at parse time.
+  - The separator must be a string literal; non-literal separators raise
+    `ProgrammingError`.
+- **15 new GROUP_CONCAT tests** (`tests/test_tier5_group_concat.py`) —
+  covering default and custom separators, per-group concatenation, numeric
+  column values, NULL handling (skip / all-NULL → NULL / empty table → NULL),
+  oracle comparison against the real `sqlite3` module, and error cases.
+
+## [1.18.0] - 2026-05-04
+
+### Added
+
+- **LAG / LEAD window functions** — `LAG(col [, offset [, default]])` and
+  `LEAD(col [, offset [, default]])` are now fully supported end-to-end.
+  The adapter (`adapter.py`) extracts `exprs[1:]` from the `value_list`
+  grammar node into `WindowFuncExpr.extra_args`; codegen normalises these
+  to an `(offset, default)` pair; the VM evaluates the offset-lookback or
+  lookahead within each ordered partition.
+- **NTILE(n) window function** — `NTILE(n)` divides each partition into `n`
+  numbered buckets (1..n) using the standard `divmod` distribution rule.
+  The integer literal `n` is parsed as the sole argument to NTILE.
+- **PERCENT_RANK() window function** — `PERCENT_RANK()` computes
+  `(rank − 1) / (N − 1)`.  Argument-free; only `OVER (ORDER BY ...)` is
+  required.  Returns `0.0` for single-row partitions.
+- **CUME_DIST() window function** — `CUME_DIST()` computes the cumulative
+  distribution fraction for each row's peer group.  Also argument-free.
+- **NTH_VALUE(col, n) window function** — `NTH_VALUE(col, n)` returns the
+  value of `col` at the n-th row (1-indexed) of the partition.  Returns
+  `NULL` when the partition has fewer than n rows.
+- **Negated literal folding in window extra args** (codegen) — SQL expressions
+  like `LAG(col, 1, -1)` where `-1` is parsed as `UnaryExpr(NEG, Literal(1))`
+  are now constant-folded to `-1` by the codegen `_literal_val` helper,
+  making negative default values work correctly.
+
+## [1.17.0] - 2026-05-04
+
+### Added
+
+- **RETURNING clause** — `INSERT`, `UPDATE`, and `DELETE` statements now
+  support a trailing `RETURNING col1, col2, ...` clause that returns the
+  affected rows as a result set, exactly like SQLite's `RETURNING` extension.
+  - **INSERT RETURNING** — returns the inserted row(s); `cursor.description`
+    is set, `cursor.fetchall()` / `cursor.fetchone()` work as with SELECT.
+  - **UPDATE RETURNING** — returns the post-update row values for each
+    matched row.
+  - **DELETE RETURNING** — captures row values *before* deletion; the rows
+    are gone from the table by the time the cursor is consumed.
+  - The adapter (`adapter.py`) extracts the `returning_clause` AST child and
+    passes a `returning=(expr, ...)` tuple to the statement constructors.
+  - 17 integration tests in `tests/test_tier4_returning.py` covering single-
+    row, multi-row, single- and multi-column, description header, rowcount,
+    value-persistence, and empty-result cases for all three DML statements.
+
+## [1.16.0] - 2026-05-04
+
+### Added
+
+- **Correlated subquery execution** — end-to-end support for subqueries
+  whose WHERE clause references columns from the enclosing query (correlated
+  subqueries).  The adapter, planner, codegen, and VM cooperate to re-execute
+  the inner program for each outer row with the outer cursor's current snapshot.
+  Supported forms:
+  - `WHERE e.col IN (SELECT ... FROM t WHERE t.x = e.col)` — correlated IN
+  - `WHERE e.col NOT IN (SELECT ... FROM t WHERE t.x = e.col)` — correlated NOT IN
+  - `WHERE EXISTS (SELECT 1 FROM t WHERE t.x = e.col)` — correlated EXISTS
+  - `WHERE NOT EXISTS (SELECT 1 FROM t WHERE t.x = e.col)` — correlated NOT EXISTS
+  - `SELECT (SELECT t.col FROM t WHERE t.x = e.col) ...` — scalar subquery
+    in SELECT list (returns `NULL` when inner query yields no rows)
+- **14 new integration tests** in `tests/test_tier4_correlated_subquery.py`
+  covering: basic correlated IN/NOT IN/EXISTS/NOT EXISTS, no-match /
+  all-match variants, scalar NULL semantics, per-row re-execution
+  verification, and correlated subqueries combined with outer WHERE filters.
+
+## [1.15.0] - 2026-05-04
+
+### Added
+
+- **`IN (subquery)` / `NOT IN (subquery)` execution** — the adapter
+  now converts the subquery form of `IN` / `NOT IN` (previously
+  `ProgrammingError("subquery in IN clause is not yet supported")`)
+  to `InSubquery` / `NotInSubquery` plan-expression nodes, which flow
+  through the planner, codegen, and VM.  Full SQL three-valued NULL
+  logic is preserved end-to-end.
+- **13 new integration tests** in `tests/test_tier3_in_subquery.py`
+  covering: basic `IN` / `NOT IN`, no-match / all-match / partial-match
+  sets, `NULL` test-value exclusion, `NULL` in subquery set making
+  `NOT IN` return `UNKNOWN`, aggregate subqueries (`GROUP BY` / `HAVING`
+  inside the inner query), combined `AND` predicates, and `HAVING`-
+  level `IN` filtering.
+
+## [1.14.0] - 2026-05-04
+
+### Added
+
+- **FULL [OUTER] JOIN end-to-end** — `FULL JOIN` and `FULL OUTER JOIN`
+  now execute correctly through the full mini-sqlite pipeline.  All rows
+  from both tables appear: matched rows carry values from both sides,
+  unmatched left rows carry `NULL` for right columns, and unmatched right
+  rows carry `NULL` for left columns.
+- **7 new integration tests** in `test_outer_join.py`:
+  `test_full_outer_join_basic`, `test_full_join_keyword_alone`,
+  `test_full_outer_join_no_orphans`, `test_full_outer_join_left_empty`,
+  `test_full_outer_join_right_empty`, `test_full_outer_join_where_null_right`,
+  `test_full_outer_join_where_null_left`.
+
+## [1.13.0] - 2026-05-04
+
+### Added
+
+- **RIGHT [OUTER] JOIN end-to-end** — `RIGHT JOIN` and `RIGHT OUTER JOIN`
+  now execute correctly. Unmatched right rows appear with `NULL` for all
+  left-side columns. Implemented by swapping `lft`/`rgt` in the codegen
+  and reusing LEFT JOIN machinery.
+- **4 new integration tests** in `test_outer_join.py`:
+  `test_right_outer_join_basic`, `test_right_join_keyword_alone`,
+  `test_right_outer_join_left_empty`, `test_right_outer_join_where_null_left`
+
+## [1.12.0] - 2026-05-04
+
+### Added
+
+- **LEFT [OUTER] JOIN end-to-end** — `LEFT JOIN` and `LEFT OUTER JOIN`
+  now execute correctly through the full mini-sqlite pipeline. Unmatched
+  left rows appear with `NULL` for all right-side columns.
+- **Three-way chained LEFT JOIN** — `A LEFT JOIN B LEFT JOIN C` works via
+  `join_match_stack` nesting in the VM; each join level tracks its own
+  match state independently.
+- **GROUP BY + COUNT with LEFT JOIN** — `COUNT(right_col)` correctly
+  counts zero for left rows with no right match, since `COUNT` ignores
+  NULLs.
+- **WHERE on join result** — predicates like `WHERE right_col IS NULL`
+  (anti-join pattern) and `WHERE left_col = 'x'` apply correctly after
+  LEFT JOIN.
+
+### Fixed
+
+- **`PredicatePushdown` outer-join safety** — the optimizer no longer
+  pushes right-side WHERE predicates inside a `LEFT OUTER JOIN`. Doing
+  so would filter the right scan *before* the join, destroying the
+  null-padding that makes the outer join semantics correct. The fix adds
+  a `JoinKind`-aware guard in `_distribute_conjuncts`:
+  - `LEFT JOIN`: left-side predicates may be pushed; right-side predicates
+    stay above the join.
+  - `RIGHT JOIN`: right-side predicates may be pushed; left-side stay above.
+  - `FULL JOIN`: no predicates pushed to either side.
+  - `INNER`/`CROSS`: both sides safe to push (unchanged).
+
 ## [1.11.0] - 2026-04-29
 
 ### Added

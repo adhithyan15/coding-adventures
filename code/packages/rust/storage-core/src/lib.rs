@@ -244,6 +244,11 @@ impl StorageRecord {
             content_hash: self.content_hash,
         }
     }
+
+    /// Return a body-free summary of the record for read-side indexes.
+    pub fn summary(&self) -> StorageRecordSummary {
+        self.stat().summary()
+    }
 }
 
 /// Lightweight metadata returned by `stat`.
@@ -258,6 +263,40 @@ pub struct StorageStat {
     pub created_at: TimestampMs,
     pub updated_at: TimestampMs,
     pub content_hash: [u8; 32],
+}
+
+impl StorageStat {
+    /// Return a compact, body-free summary suitable for read listings.
+    pub fn summary(&self) -> StorageRecordSummary {
+        StorageRecordSummary {
+            namespace: self.namespace.clone(),
+            key: self.key.clone(),
+            revision: self.revision.clone(),
+            content_type: self.content_type.clone(),
+            body_len: self.body_len,
+            created_at: self.created_at,
+            updated_at: self.updated_at,
+            content_hash: self.content_hash,
+            metadata_key_count: metadata_object_len(&self.metadata),
+        }
+    }
+}
+
+/// Compact read-side view of one storage record.
+///
+/// Summaries intentionally omit the opaque body bytes while preserving the
+/// fields needed to build indexes, detect drift, and surface list results.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct StorageRecordSummary {
+    pub namespace: String,
+    pub key: String,
+    pub revision: Revision,
+    pub content_type: String,
+    pub body_len: usize,
+    pub created_at: TimestampMs,
+    pub updated_at: TimestampMs,
+    pub content_hash: [u8; 32],
+    pub metadata_key_count: usize,
 }
 
 /// Options used for prefix listing.
@@ -305,6 +344,56 @@ impl StoragePage {
             records: Vec::new(),
             next_cursor: None,
         }
+    }
+
+    /// Return whether this page contains no records.
+    pub fn is_empty(&self) -> bool {
+        self.records.is_empty()
+    }
+
+    /// Return the number of records in this page.
+    pub fn len(&self) -> usize {
+        self.records.len()
+    }
+
+    /// Return compact summaries for the records in this page.
+    pub fn summaries(&self) -> Vec<StorageRecordSummary> {
+        self.records.iter().map(StorageRecord::summary).collect()
+    }
+
+    /// Return this page as a body-free summary page.
+    pub fn summary_page(&self) -> StorageSummaryPage {
+        StorageSummaryPage {
+            records: self.summaries(),
+            next_cursor: self.next_cursor.clone(),
+        }
+    }
+}
+
+/// One page of compact storage record summaries.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct StorageSummaryPage {
+    pub records: Vec<StorageRecordSummary>,
+    pub next_cursor: Option<String>,
+}
+
+impl StorageSummaryPage {
+    /// Construct an empty summary page.
+    pub fn empty() -> Self {
+        Self {
+            records: Vec::new(),
+            next_cursor: None,
+        }
+    }
+
+    /// Return whether this page contains no summaries.
+    pub fn is_empty(&self) -> bool {
+        self.records.is_empty()
+    }
+
+    /// Return the number of summaries in this page.
+    pub fn len(&self) -> usize {
+        self.records.len()
     }
 }
 
@@ -446,6 +535,27 @@ pub trait StorageBackend: Send + Sync {
 
     /// Fetch metadata for `(namespace, key)` without loading the full body.
     fn stat(&self, namespace: &str, key: &str) -> Result<Option<StorageStat>, StorageError>;
+
+    /// Fetch a compact read-side summary for `(namespace, key)`.
+    fn get_summary(
+        &self,
+        namespace: &str,
+        key: &str,
+    ) -> Result<Option<StorageRecordSummary>, StorageError> {
+        Ok(self.stat(namespace, key)?.map(|stat| stat.summary()))
+    }
+
+    /// List compact read-side summaries in stable key order.
+    ///
+    /// Backends can override this to avoid loading bodies. The default keeps
+    /// older backend implementations correct by projecting `list()`.
+    fn list_summaries(
+        &self,
+        namespace: &str,
+        options: StorageListOptions,
+    ) -> Result<StorageSummaryPage, StorageError> {
+        Ok(self.list(namespace, options)?.summary_page())
+    }
 
     /// Attempt to acquire an advisory lease. Returns `Ok(None)` when a still-
     /// active lease already exists.
@@ -801,6 +911,66 @@ pub mod conformance {
         Ok(())
     }
 
+    /// Summary reads must preserve list order and omit body loading concerns.
+    pub fn summary_listing_matches_stats<B: StorageBackend>(
+        backend: &B,
+    ) -> Result<(), StorageError> {
+        backend.initialize()?;
+        let first_metadata = JsonValue::Object(vec![
+            ("kind".to_string(), JsonValue::String("context".to_string())),
+            (
+                "priority".to_string(),
+                JsonValue::Number(JsonNumber::Integer(3)),
+            ),
+        ]);
+        let first = backend.put(StoragePutInput::new(
+            "context",
+            "entries/alpha.json",
+            "application/json",
+            first_metadata,
+            br#"{"title":"alpha"}"#.to_vec(),
+        )?)?;
+        backend.put(StoragePutInput::new(
+            "context",
+            "entries/beta.json",
+            "application/json",
+            JsonValue::Object(vec![]),
+            br#"{"title":"beta"}"#.to_vec(),
+        )?)?;
+
+        let summary = backend
+            .get_summary("context", "entries/alpha.json")?
+            .expect("summary should exist");
+        assert_eq!(summary.revision, first.revision);
+        assert_eq!(summary.body_len, first.body.len());
+        assert_eq!(summary.content_hash, first.content_hash);
+        assert_eq!(summary.metadata_key_count, 2);
+
+        let page = backend.list_summaries(
+            "context",
+            StorageListOptions {
+                prefix: Some("entries/".to_string()),
+                recursive: true,
+                page_size: None,
+                cursor: None,
+            },
+        )?;
+        let keys: Vec<String> = page
+            .records
+            .iter()
+            .map(|summary| summary.key.clone())
+            .collect();
+        assert_eq!(
+            keys,
+            vec![
+                "entries/alpha.json".to_string(),
+                "entries/beta.json".to_string(),
+            ]
+        );
+        assert_eq!(page.next_cursor, None);
+        Ok(())
+    }
+
     /// Advisory leases should eventually expire.
     pub fn advisory_lease_expires<B: StorageBackend>(backend: &B) -> Result<(), StorageError> {
         backend.initialize()?;
@@ -917,6 +1087,13 @@ fn validate_metadata_object(metadata: &StorageMetadata) -> Result<(), StorageErr
     Ok(())
 }
 
+fn metadata_object_len(metadata: &StorageMetadata) -> usize {
+    match metadata {
+        JsonValue::Object(entries) => entries.len(),
+        _ => 0,
+    }
+}
+
 fn validate_lease_name(value: &str) -> Result<(), StorageError> {
     validate_path_like("lease_name", value)
 }
@@ -1003,6 +1180,62 @@ mod tests {
     }
 
     #[test]
+    fn storage_record_summary_counts_metadata_keys_without_body() {
+        let record = StorageRecord::new(
+            "skills",
+            "manifests/demo.json",
+            Revision::new("r1").unwrap(),
+            "application/json",
+            JsonValue::Object(vec![
+                ("source".to_string(), JsonValue::String("test".to_string())),
+                ("version".to_string(), JsonValue::String("1".to_string())),
+            ]),
+            b"{}".to_vec(),
+            10,
+            12,
+        )
+        .expect("record should be valid");
+
+        let summary = record.summary();
+        assert_eq!(summary.namespace, "skills");
+        assert_eq!(summary.key, "manifests/demo.json");
+        assert_eq!(summary.revision, Revision::new("r1").unwrap());
+        assert_eq!(summary.body_len, 2);
+        assert_eq!(summary.content_hash, sha256(b"{}"));
+        assert_eq!(summary.metadata_key_count, 2);
+        assert_eq!(summary, record.stat().summary());
+    }
+
+    #[test]
+    fn storage_page_projects_summary_page() {
+        let page = StoragePage {
+            records: vec![StorageRecord::new(
+                "context",
+                "entries/demo.json",
+                Revision::new("r1").unwrap(),
+                "application/json",
+                metadata(),
+                b"demo".to_vec(),
+                20,
+                30,
+            )
+            .unwrap()],
+            next_cursor: Some("entries/demo.json".to_string()),
+        };
+
+        let summary_page = page.summary_page();
+        assert_eq!(page.len(), 1);
+        assert!(!page.is_empty());
+        assert_eq!(summary_page.len(), 1);
+        assert!(!summary_page.is_empty());
+        assert_eq!(
+            summary_page.next_cursor.as_deref(),
+            Some("entries/demo.json")
+        );
+        assert_eq!(summary_page.records[0].body_len, 4);
+    }
+
+    #[test]
     fn invalid_path_segments_are_rejected() {
         let error = StoragePutInput::new(
             "context",
@@ -1059,6 +1292,12 @@ mod tests {
     fn conformance_prefix_listing_is_stable() {
         let backend = InMemoryStorageBackend::default();
         conformance::prefix_listing_is_stable(&backend).unwrap();
+    }
+
+    #[test]
+    fn conformance_summary_listing_matches_stats() {
+        let backend = InMemoryStorageBackend::default();
+        conformance::summary_listing_matches_stats(&backend).unwrap();
     }
 
     #[test]

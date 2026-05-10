@@ -29,12 +29,18 @@
 //! | `LPAREN`     | `LParen`       | `None`                |
 //! | `RPAREN`     | `RParen`       | `None`                |
 //! | `QUOTE`      | `Name`         | `Some("QUOTE")`       |
+//! | `COLON`      | `Name`         | `Some("COLON")`       |
+//! | `ARROW`      | `Name`         | `Some("ARROW")`       |
 //! | `BOOL_TRUE`  | `Name`         | `Some("BOOL_TRUE")`   |
 //! | `BOOL_FALSE` | `Name`         | `Some("BOOL_FALSE")`  |
 //! | `INTEGER`    | `Number`       | `None`                |
 //! | `KEYWORD`    | `Keyword`      | `Some("KEYWORD")`     |
 //! | `NAME`       | `Name`         | `None`                |
 //! |              | `Eof`          | `None`                |
+//!
+//! `COLON` (`:`) and `ARROW` (`->`) are LANG23 PR 23-E additions that
+//! enable refinement type annotations in function signatures.  Both are
+//! exact-literal tokens that take priority over the `NAME` pattern.
 //!
 //! Whitespace and `;`-to-end-of-line comments are silently skipped — they
 //! never appear in the output.  Position tracking is 1-indexed.
@@ -111,6 +117,29 @@ fn twig_token_grammar() -> &'static TokenGrammar {
     TWIG_TOKEN_GRAMMAR.get_or_init(generated_grammar::token_grammar)
 }
 
+/// Public accessor for the build-time-compiled Twig [`TokenGrammar`].
+///
+/// Used by tooling that needs to introspect Twig's keywords, brackets,
+/// or token list without re-parsing the canonical `twig.tokens` file
+/// (which is a build-time-only artifact and isn't shipped at runtime).
+///
+/// The returned reference points at a process-lifetime `OnceLock` —
+/// callers must not retain it across process boundaries, but within a
+/// single process it's safe to hold for the program's entire lifetime.
+///
+/// ## Why expose this
+///
+/// Downstream tools (LSP servers, VS Code extension generators, code
+/// formatters) need to know the language's keyword list and bracket
+/// pairs.  Before this accessor existed they had to re-parse
+/// `twig.tokens` — duplicating effort and risking drift if the file
+/// format evolved.  Pulling the compiled grammar straight from the
+/// lexer crate guarantees a single source of truth: whatever the
+/// lexer recognises at runtime is what tools see.
+pub fn twig_token_grammar_spec() -> &'static TokenGrammar {
+    twig_token_grammar()
+}
+
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
@@ -137,11 +166,12 @@ pub fn create_twig_lexer(source: &str) -> GrammarLexer<'_> {
 /// # Errors
 ///
 /// Returns a [`LexerError`] if the source contains a character outside
-/// every token's valid set — most often a stray `@`, `~`, `:`, an
-/// ASCII control character, or non-ASCII Unicode.  Callers handling
-/// untrusted input MUST handle this `Err` case; the previous panicking
-/// version was a DoS vector (single-character adversarial inputs would
-/// abort the process).
+/// every token's valid set — most often a stray `@`, `~`, or an
+/// ASCII control character or non-ASCII Unicode.  (`:` is now a valid `COLON`
+/// token for LANG23 refinement annotations; `->` is a dedicated `ARROW` token.)
+/// Callers handling untrusted input MUST handle this `Err` case; the previous
+/// panicking version was a DoS vector (single-character adversarial inputs
+/// would abort the process).
 ///
 /// # Panics
 ///
@@ -318,6 +348,49 @@ mod tests {
         let src = "(eq? 'foo)";
         let kinds = type_names(src);
         assert_eq!(kinds, vec!["LPAREN", "NAME", "QUOTE", "NAME", "RPAREN"]);
+    }
+
+    // -- LANG23 PR 23-E: COLON and ARROW tokens --
+
+    /// `:` must lex as a COLON token (effective_type_name = "COLON"),
+    /// not as a NAME or a LexerError.
+    #[test]
+    fn colon_lexes_as_colon_token() {
+        let kinds = type_names(":");
+        assert_eq!(kinds, vec!["COLON"]);
+        let vals = values(":");
+        assert_eq!(vals, vec![":"]);
+    }
+
+    /// `->` must lex as a single ARROW token (effective_type_name = "ARROW").
+    /// Without the ARROW literal token, `->` would lex as NAME and
+    /// cause ambiguity inside `{ typed_param }` repetitions.
+    #[test]
+    fn arrow_lexes_as_arrow_token() {
+        let kinds = type_names("->");
+        assert_eq!(kinds, vec!["ARROW"]);
+        let vals = values("->");
+        assert_eq!(vals, vec!["->"]);
+    }
+
+    /// In a full annotated signature, all annotation tokens appear correctly.
+    /// Source: `(x : (Int 0 128)) -> (Int 0 256)`
+    /// Expected: LPAREN NAME COLON LPAREN NAME INTEGER INTEGER RPAREN RPAREN
+    ///           ARROW LPAREN NAME INTEGER INTEGER RPAREN
+    #[test]
+    fn annotation_tokens_in_sequence() {
+        let kinds = type_names("(x : (Int 0 128)) -> (Int 0 256)");
+        assert!(kinds.contains(&"COLON".to_string()), "COLON missing: {kinds:?}");
+        assert!(kinds.contains(&"ARROW".to_string()), "ARROW missing: {kinds:?}");
+    }
+
+    /// `-` alone (the subtraction operator) must still lex as NAME,
+    /// not as the ARROW prefix.  Longest-match: `->` is ARROW, `-`
+    /// alone remains NAME.
+    #[test]
+    fn bare_minus_still_name_after_arrow_token_added() {
+        assert_eq!(type_names("-"), vec!["NAME"]);
+        assert_eq!(values("-"), vec!["-"]);
     }
 
     // -- Adversarial input returns Err, not a panic --

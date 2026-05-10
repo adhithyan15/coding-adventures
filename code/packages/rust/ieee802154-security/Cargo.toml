@@ -1,0 +1,11 @@
+[package]
+name = "ieee802154-security"
+version = "0.1.0"
+edition = "2021"
+description = "From-scratch IEEE 802.15.4 security primitives: nonce construction, replay windows, and key lookup scaffolding."
+license = "MIT"
+
+[dependencies]
+coding_adventures_aes = { path = "../aes" }
+coding_adventures_ct_compare = { path = "../ct-compare" }
+ieee802154-core = { path = "../ieee802154-core" }

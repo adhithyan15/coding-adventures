@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import pytest
@@ -12,12 +13,14 @@ from logic_engine import (
     DisjExpr,
     FreshExpr,
     LogicVar,
+    Number,
     RelationCall,
     State,
     atom,
     conj,
     disj,
     eq,
+    fact,
     fresh,
     logic_list,
     num,
@@ -26,6 +29,8 @@ from logic_engine import (
     relation,
     solve_all,
     solve_from,
+    solve_n,
+    string,
     term,
     visible_clauses_for,
 )
@@ -40,6 +45,10 @@ from prolog_loader import (
     adapt_prolog_goal,
     link_loaded_prolog_sources,
     load_iso_prolog_source,
+    load_prolog_file,
+    load_prolog_project,
+    load_prolog_project_from_files,
+    load_prolog_source,
     load_swi_prolog_file,
     load_swi_prolog_project,
     load_swi_prolog_project_from_files,
@@ -76,6 +85,7 @@ class TestPrologLoader:
             {relation("parent", 2).key()},
         )
         assert loaded.predicate_registry.get("parent", 2) is not None
+        assert loaded.dialect_profile.name == "iso"
 
     def test_load_swi_source_collects_initialization_metadata(self) -> None:
         loaded = load_swi_prolog_source(
@@ -87,6 +97,44 @@ class TestPrologLoader:
 
         assert len(loaded.initialization_goals) == 1
         assert str(loaded.initialization_terms[0]) == "main"
+        assert loaded.dialect_profile.name == "swi"
+
+    def test_load_prolog_source_routes_by_dialect_profile(self) -> None:
+        iso_loaded = load_prolog_source(
+            """
+            parent(homer, bart).
+            ?- parent(homer, Who).
+            """,
+            dialect="iso-core",
+        )
+        swi_loaded = load_prolog_source(
+            """
+            :- module(family, [parent/2]).
+            parent(homer, lisa).
+            ?- parent(homer, Who).
+            """,
+            dialect="swipl",
+        )
+
+        assert iso_loaded.dialect_profile.name == "iso"
+        assert swi_loaded.dialect_profile.name == "swi"
+        assert swi_loaded.module_spec is not None
+        assert solve_all(
+            iso_loaded.program,
+            iso_loaded.queries[0].variables["Who"],
+            iso_loaded.queries[0].goal,
+        ) == [atom("bart")]
+        assert solve_all(
+            swi_loaded.program,
+            swi_loaded.queries[0].variables["Who"],
+            swi_loaded.queries[0].goal,
+        ) == [atom("lisa")]
+
+    def test_load_prolog_source_rejects_tracked_but_unimplemented_dialects(
+        self,
+    ) -> None:
+        with pytest.raises(ValueError, match="does not have an implemented loader"):
+            load_prolog_source("parent(homer, bart).\n", dialect="gnu")
 
     def test_load_swi_source_collects_module_metadata(self) -> None:
         loaded = load_swi_prolog_source(
@@ -431,6 +479,33 @@ class TestPrologLoader:
         assert loaded.file_dependencies[1].resolved_path == (
             tmp_path / "facts.pl"
         ).resolve()
+
+    def test_load_prolog_file_and_project_route_by_dialect_profile(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        iso_path = tmp_path / "family.pl"
+        iso_path.write_text(
+            "parent(homer, bart).\n?- parent(homer, Who).\n",
+            encoding="utf-8",
+        )
+
+        loaded = load_prolog_file(iso_path, dialect="iso")
+        project = load_prolog_project(
+            "parent(homer, lisa).\n",
+            "?- parent(homer, Who).\n",
+            dialect="iso",
+        )
+        file_project = load_prolog_project_from_files(iso_path, dialect="iso")
+
+        assert loaded.dialect_profile.name == "iso"
+        assert [profile.name for profile in project.dialect_profiles] == ["iso"]
+        assert [profile.name for profile in file_project.dialect_profiles] == ["iso"]
+        assert solve_all(
+            project.program,
+            project.queries[0].variables["Who"],
+            project.queries[0].goal,
+        ) == [atom("lisa")]
 
     def test_load_swi_prolog_project_from_files_loads_consulted_user_sources(
         self,
@@ -809,6 +884,8 @@ class TestPrologGoalAdapter:
             relation("var", 1)(atom("X")),
             relation("nonvar", 1)(atom("x")),
             relation("ground", 1)(atom("x")),
+            relation("acyclic_term", 1)(term("box", atom("tea"))),
+            relation("cyclic_term", 1)(term("box", atom("tea"))),
             relation("atom", 1)(atom("x")),
             relation("atomic", 1)(atom("x")),
             relation("integer", 1)(1),
@@ -827,6 +904,17 @@ class TestPrologGoalAdapter:
                 atom("[]"),
             ),
             relation("once", 1)(term("memo", atom("ok"))),
+            relation("repeat", 0)(),
+            relation("ignore", 1)(term("memo", atom("ok"))),
+            relation("call_cleanup", 2)(
+                term("memo", atom("ok")),
+                term("memo", atom("cleaned")),
+            ),
+            relation("setup_call_cleanup", 3)(
+                term("memo", atom("setup")),
+                term("memo", atom("ok")),
+                term("memo", atom("cleaned")),
+            ),
             relation("->", 2)(term("memo", atom("ok")), term("memo", atom("then"))),
             relation("not", 1)(term("memo", atom("missing"))),
             relation("\\+", 1)(term("memo", atom("missing"))),
@@ -836,11 +924,67 @@ class TestPrologGoalAdapter:
                 term("memo", atom("ok")),
                 term(".", atom("memo"), term(".", atom("ok"), atom("[]"))),
             ),
+            relation("unifiable", 3)(
+                term("box", LogicVar(id=92)),
+                term("box", atom("tea")),
+                LogicVar(id=93),
+            ),
+            relation("unify_with_occurs_check", 2)(
+                LogicVar(id=94),
+                term("box", atom("tea")),
+            ),
+            relation("atom_chars", 2)(atom("tea"), logic_list(["t", "e", "a"])),
+            relation("atom_codes", 2)(atom("tea"), logic_list([116, 101, 97])),
+            relation("atom_concat", 3)(atom("tea"), atom("cup"), atom("teacup")),
+            relation("atom_length", 2)(atom("teacup"), 6),
+            relation("atomic_list_concat", 2)(
+                logic_list(["tea", "cup"]),
+                atom("teacup"),
+            ),
+            relation("atomic_list_concat", 3)(
+                logic_list(["tea", "cup"]),
+                atom("-"),
+                atom("tea-cup"),
+            ),
+            relation("number_chars", 2)(42, logic_list(["4", "2"])),
+            relation("number_codes", 2)(42, logic_list([52, 50])),
+            relation("number_string", 2)(42, string("42")),
+            relation("atom_number", 2)(atom("42"), 42),
+            relation("char_code", 2)(atom("A"), 65),
+            relation("string_chars", 2)(string("hi"), logic_list(["h", "i"])),
+            relation("string_codes", 2)(string("hi"), logic_list([104, 105])),
+            relation("string_length", 2)(string("hi"), 2),
+            relation("sub_atom", 5)(
+                atom("teacup"),
+                3,
+                3,
+                0,
+                atom("cup"),
+            ),
+            relation("sub_string", 5)(
+                string("logic"),
+                2,
+                2,
+                1,
+                string("gi"),
+            ),
             relation("=", 2)(LogicVar(id=14), atom("a")),
             relation("\\=", 2)(atom("a"), atom("b")),
             relation("dif", 2)(LogicVar(id=15), atom("tea")),
             relation("==", 2)(atom("a"), atom("a")),
             relation("\\==", 2)(atom("a"), atom("b")),
+            relation("=@=", 2)(
+                term("box", LogicVar(id=78)),
+                term("box", LogicVar(id=79)),
+            ),
+            relation("\\=@=", 2)(
+                term("pair", LogicVar(id=80), LogicVar(id=80)),
+                term("pair", LogicVar(id=81), LogicVar(id=82)),
+            ),
+            relation("subsumes_term", 2)(
+                term("box", LogicVar(id=83)),
+                term("box", atom("tea")),
+            ),
             relation("compare", 3)(atom("<"), atom("a"), atom("b")),
             relation("@<", 2)(atom("a"), atom("b")),
             relation("@=<", 2)(atom("a"), atom("b")),
@@ -854,6 +998,8 @@ class TestPrologGoalAdapter:
             relation("dynamic", 1)(term("/", atom("memo"), 1)),
             relation("abolish", 1)(term("/", atom("memo"), 1)),
             relation("current_predicate", 1)(term("/", atom("memo"), 1)),
+            relation("current_atom", 1)(atom("memo")),
+            relation("current_functor", 2)(atom("memo"), 1),
             relation("predicate_property", 2)(
                 term("/", atom("memo"), 1),
                 atom("dynamic"),
@@ -865,6 +1011,7 @@ class TestPrologGoalAdapter:
             ),
             relation("true", 0)(),
             relation("fail", 0)(),
+            relation("false", 0)(),
             relation("!", 0)(),
             relation("is", 2)(LogicVar(id=10), term("+", 1, 2)),
             relation("succ", 2)(1, LogicVar(id=29)),
@@ -906,6 +1053,44 @@ class TestPrologGoalAdapter:
             relation("term_variables", 2)(
                 term("box", LogicVar(id=16)),
                 LogicVar(id=17),
+            ),
+            relation("numbervars", 3)(
+                term("box", LogicVar(id=83)),
+                0,
+                LogicVar(id=89),
+            ),
+            relation("compound_name_arguments", 3)(
+                term("box", atom("tea")),
+                LogicVar(id=92),
+                LogicVar(id=93),
+            ),
+            relation("compound_name_arity", 3)(
+                LogicVar(id=94),
+                atom("box"),
+                1,
+            ),
+            relation("term_hash", 2)(term("box", atom("tea")), LogicVar(id=90)),
+            relation("term_hash", 4)(
+                term("box", atom("tea")),
+                2,
+                1_000,
+                LogicVar(id=91),
+            ),
+            relation("term_to_atom", 2)(term("box", atom("tea")), LogicVar(id=84)),
+            relation("atom_to_term", 3)(
+                atom("box(X)"),
+                LogicVar(id=85),
+                LogicVar(id=86),
+            ),
+            relation("read_term_from_atom", 3)(
+                atom("box(X)"),
+                LogicVar(id=87),
+                logic_list([]),
+            ),
+            relation("write_term_to_atom", 3)(
+                term("box", atom("tea")),
+                LogicVar(id=88),
+                logic_list([]),
             ),
             relation("current_prolog_flag", 2)(
                 atom("unknown"),
@@ -1021,6 +1206,142 @@ class TestPrologGoalAdapter:
         assert isinstance(adapted.goals[1], DisjExpr)
         assert isinstance(adapted.goals[2], FreshExpr)
 
+    def test_adapt_prolog_goal_preserves_collection_grouping_scope(self) -> None:
+        parent = relation("parent", 2)
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+            fact(parent("marge", "maggie")),
+        )
+        grouped = parse_swi_query(
+            "?- bagof(Child, parent(Parent, Child), Children).",
+        )
+        existential = parse_swi_query(
+            "?- bagof(Child, Parent^parent(Parent, Child), Children).",
+        )
+
+        assert solve_all(
+            family,
+            (grouped.variables["Parent"], grouped.variables["Children"]),
+            adapt_prolog_goal(grouped.goal),
+        ) == [
+            (atom("homer"), logic_list(["bart", "lisa"])),
+            (atom("marge"), logic_list(["maggie"])),
+        ]
+        assert solve_all(
+            family,
+            existential.variables["Children"],
+            adapt_prolog_goal(existential.goal),
+        ) == [
+            logic_list(["bart", "lisa", "maggie"]),
+        ]
+
+    def test_adapt_prolog_goal_enumerates_loaded_operator_table(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            :- op(500, yfx, ++).
+            ?- current_op(500, Type, '++').
+            """,
+        )
+        query = loaded.queries[0]
+
+        adapted = adapt_prolog_goal(
+            query.goal,
+            operator_table=loaded.operator_table,
+        )
+
+        assert solve_all(loaded.program, query.variables["Type"], adapted) == [
+            atom("yfx"),
+        ]
+
+    def test_adapt_prolog_goal_enumerates_visible_atoms(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            parent(homer, bart).
+            ?- current_atom(Atom), Atom = bart.
+            """,
+        )
+        query = loaded.queries[0]
+
+        assert solve_all(
+            loaded.program,
+            query.variables["Atom"],
+            adapt_prolog_goal(query.goal),
+        ) == [atom("bart")]
+
+    def test_adapt_prolog_goal_enumerates_visible_functors(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            parent(homer, child(bart)).
+            ?- current_functor(child, Arity).
+            """,
+        )
+        query = loaded.queries[0]
+
+        assert solve_all(
+            loaded.program,
+            query.variables["Arity"],
+            adapt_prolog_goal(query.goal),
+        ) == [num(1)]
+
+    def test_adapt_prolog_goal_rewrites_repeat_control(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            ?- repeat, member(Item, [tea, cake]).
+            """,
+        )
+        query = loaded.queries[0]
+
+        assert solve_n(
+            loaded.program,
+            5,
+            query.variables["Item"],
+            adapt_prolog_goal(query.goal),
+        ) == [
+            atom("tea"),
+            atom("cake"),
+            atom("tea"),
+            atom("cake"),
+            atom("tea"),
+        ]
+
+    def test_adapt_prolog_goal_rewrites_ignore_and_false_control(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            ?- ignore(member(Item, [tea, cake])), ignore(false), \\+ false.
+            """,
+        )
+        query = loaded.queries[0]
+
+        assert solve_all(
+            loaded.program,
+            query.variables["Item"],
+            adapt_prolog_goal(query.goal),
+        ) == [atom("tea")]
+
+    def test_adapt_prolog_goal_rewrites_cleanup_control(self) -> None:
+        loaded = load_swi_prolog_source(
+            """
+            :- dynamic(resource/1).
+            :- dynamic(cleaned/1).
+
+            ?- setup_call_cleanup(
+                   assertz(resource(open)),
+                   resource(Resource),
+                   assertz(cleaned(Resource))),
+               call_cleanup(true, assertz(cleaned(done))),
+               cleaned(Resource),
+               cleaned(done).
+            """,
+        )
+        query = loaded.queries[0]
+
+        assert solve_all(
+            loaded.program,
+            query.variables["Resource"],
+            adapt_prolog_goal(query.goal),
+        ) == [atom("open")]
+
     def test_adapt_prolog_goal_rewrites_if_then_else_control(self) -> None:
         parsed = parse_swi_query(
             "?- ((X = first ; X = second) -> Result = X ; Result = none).",
@@ -1047,6 +1368,878 @@ class TestPrologGoalAdapter:
             (parsed.variables["X"], parsed.variables["Result"]),
             adapted,
         ) == [(term("box", "tea"), atom("ok"))]
+
+    def test_adapt_prolog_goal_rewrites_variant_and_subsumes_predicates(self) -> None:
+        parsed = parse_swi_query(
+            "?- pair(X, X) =@= pair(Y, Y), "
+            "pair(X, X) \\=@= pair(Y, Z), "
+            "subsumes_term(box(A), box(tea)), Result = ok.",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            parsed.variables["Result"],
+            adapted,
+        ) == [atom("ok")]
+
+    def test_adapt_prolog_goal_rewrites_text_conversion_predicates(self) -> None:
+        parsed = parse_swi_query(
+            "?- atom_chars(tea, Chars), "
+            "atom_codes(Atom, [116, 101, 97]), "
+            "number_chars(Number, ['4', '2']), "
+            "number_codes(Float, [51, 46, 53]), "
+            "number_string(Parsed, \"7\"), "
+            "atom_number(AtomNumberText, 8), "
+            "atom_number('9.5', AtomNumber), "
+            "atom_concat(tea, cup, Joined), "
+            "atom_concat(Prefix, cup, teacup), "
+            "atom_length(teacup, AtomLength), "
+            "sub_atom(teacup, 3, 3, 0, SubAtom), "
+            "atomic_list_concat([tea, 2, go], '-', AtomList), "
+            "atomic_list_concat(Split, '-', 'tea-cup'), "
+            "char_code(Char, 90), "
+            "string_chars(String, [h, i]), "
+            "string_length(\"hello\", StringLength), "
+            "sub_string(\"logic\", 2, 2, 1, SubString), "
+            "term_to_atom(pair(tea, [cup, cake]), RenderedTerm), "
+            "atom_to_term('pair(X, tea)', ParsedTerm, Bindings), "
+            'string_codes("ok", Codes).',
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["Chars"],
+                parsed.variables["Atom"],
+                parsed.variables["Number"],
+                parsed.variables["Float"],
+                parsed.variables["Parsed"],
+                parsed.variables["AtomNumberText"],
+                parsed.variables["AtomNumber"],
+                parsed.variables["Joined"],
+                parsed.variables["Prefix"],
+                parsed.variables["AtomLength"],
+                parsed.variables["SubAtom"],
+                parsed.variables["AtomList"],
+                parsed.variables["Split"],
+                parsed.variables["Char"],
+                parsed.variables["String"],
+                parsed.variables["StringLength"],
+                parsed.variables["SubString"],
+                parsed.variables["RenderedTerm"],
+                parsed.variables["ParsedTerm"],
+                parsed.variables["Bindings"],
+                parsed.variables["Codes"],
+            ),
+            adapted,
+        )
+        assert len(answers) == 1
+        answer = answers[0]
+        parsed_term = answer[18]
+        assert isinstance(parsed_term, Compound)
+        assert answer == (
+            logic_list(["t", "e", "a"]),
+            atom("tea"),
+            num(42),
+            num(3.5),
+            num(7),
+            atom("8"),
+            num(9.5),
+            atom("teacup"),
+            atom("tea"),
+            num(6),
+            atom("cup"),
+            atom("tea-2-go"),
+            logic_list(["tea", "cup"]),
+            atom("Z"),
+            string("hi"),
+            num(5),
+            string("gi"),
+            atom("pair(tea, [cup, cake])"),
+            term("pair", parsed_term.args[0], "tea"),
+            logic_list([term("=", "X", parsed_term.args[0])]),
+            logic_list([111, 107]),
+        )
+
+    def test_adapt_prolog_goal_rewrites_file_text_io_predicates(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "story.txt"
+        source_path.write_text("hi\n", encoding="utf-8")
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- exists_file('{path_atom}'), "
+            f"read_file_to_string('{path_atom}', Text), "
+            f"read_file_to_codes('{path_atom}', Codes).",
+        )
+
+        adapted = adapt_prolog_goal(parsed.goal)
+
+        assert solve_all(
+            program(),
+            (parsed.variables["Text"], parsed.variables["Codes"]),
+            adapted,
+        ) == [(string("hi\n"), logic_list([104, 105, 10]))]
+
+    def test_adapt_prolog_goal_rewrites_file_metadata_predicates(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "nested" / "story.data"
+        source_path.parent.mkdir()
+        source_path.write_text("tea\n", encoding="utf-8")
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        dir_atom = str(source_path.parent).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- exists_directory('{dir_atom}'), "
+            f"access_file('{path_atom}', read), "
+            f"absolute_file_name('{path_atom}', Absolute), "
+            f"file_directory_name('{path_atom}', Directory), "
+            f"file_base_name('{path_atom}', Base), "
+            "directory_file_path(Directory, Base, Joined), "
+            "file_name_extension(Name, Extension, Base), "
+            f"same_file('{path_atom}', Joined), "
+            f"size_file('{path_atom}', Size), "
+            f"time_file('{path_atom}', Time).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["Absolute"],
+                parsed.variables["Directory"],
+                parsed.variables["Base"],
+                parsed.variables["Joined"],
+                parsed.variables["Name"],
+                parsed.variables["Extension"],
+                parsed.variables["Size"],
+                parsed.variables["Time"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert len(answers) == 1
+        absolute, directory, base, joined, name, extension, size, timestamp = answers[0]
+        assert absolute == atom(str(source_path.resolve(strict=False)))
+        assert directory == atom(str(source_path.parent))
+        assert base == atom("story.data")
+        assert joined == atom(str(source_path))
+        assert name == atom("story")
+        assert extension == atom("data")
+        assert size == num(len("tea\n"))
+        assert isinstance(timestamp, Number)
+
+    def test_adapt_prolog_goal_rewrites_file_operation_predicates(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "draft.txt"
+        renamed_path = tmp_path / "final.txt"
+        created_directory = tmp_path / "created"
+        source_path.write_text("draft\n", encoding="utf-8")
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        renamed_atom = str(renamed_path).replace("\\", "\\\\").replace("'", "\\'")
+        created_atom = str(created_directory).replace("\\", "\\\\").replace("'", "\\'")
+        root_atom = str(tmp_path).replace("\\", "\\\\").replace("'", "\\'")
+        old_cwd = Path.cwd()
+        parsed = parse_swi_query(
+            f"?- make_directory('{created_atom}'), "
+            f"rename_file('{path_atom}', '{renamed_atom}'), "
+            f"directory_files('{root_atom}', Entries), "
+            f"delete_file('{renamed_atom}'), "
+            f"delete_directory('{created_atom}'), "
+            f"working_directory(OldDirectory, '{root_atom}'), "
+            "directory_files('.', CwdEntries).",
+        )
+
+        try:
+            answers = solve_all(
+                program(),
+                (
+                    parsed.variables["Entries"],
+                    parsed.variables["OldDirectory"],
+                    parsed.variables["CwdEntries"],
+                ),
+                adapt_prolog_goal(parsed.goal),
+            )
+        finally:
+            os.chdir(old_cwd)
+
+        assert answers == [
+            (
+                logic_list(["created", "final.txt"]),
+                atom(str(old_cwd)),
+                logic_list([]),
+            ),
+        ]
+        assert not source_path.exists()
+        assert not renamed_path.exists()
+        assert not created_directory.exists()
+
+    def test_adapt_prolog_goal_rewrites_recursive_file_operation_predicates(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "source.txt"
+        target_directory = tmp_path / "made" / "deep"
+        copied_path = target_directory / "source-copy.txt"
+        source_path.write_text("alpha\n", encoding="utf-8")
+        source_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        target_dir_atom = str(target_directory).replace(
+            "\\",
+            "\\\\",
+        ).replace("'", "\\'")
+        copied_atom = str(copied_path).replace("\\", "\\\\").replace("'", "\\'")
+        root_atom = str(tmp_path).replace("\\", "\\\\").replace("'", "\\'")
+        pattern_atom = str(tmp_path / "**" / "*.txt").replace(
+            "\\",
+            "\\\\",
+        ).replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- make_directory_path('{target_dir_atom}'), "
+            f"copy_file('{source_atom}', '{copied_atom}'), "
+            f"expand_file_name('{pattern_atom}', Matches), "
+            f"read_file_to_string('{copied_atom}', Contents), "
+            f"delete_directory_and_contents('{root_atom}/made').",
+        )
+
+        answers = solve_all(
+            program(),
+            (parsed.variables["Matches"], parsed.variables["Contents"]),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert answers == [
+            (
+                logic_list([str(copied_path), str(source_path)]),
+                string("alpha\n"),
+            ),
+        ]
+        assert source_path.exists()
+        assert not target_directory.exists()
+
+    def test_adapt_prolog_goal_rewrites_file_stream_predicates(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "stream.txt"
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- open('{path_atom}', write, Out), "
+            'write(Out, "tea"), '
+            "nl(Out), "
+            "write(Out, cake), "
+            "close(Out), "
+            f"open('{path_atom}', read, In), "
+            "read_line_to_string(In, Line), "
+            "get_char(In, Char), "
+            "read_string(In, 3, Tail), "
+            "at_end_of_stream(In), "
+            "close(In).",
+        )
+
+        assert solve_all(
+            program(),
+            (
+                parsed.variables["Line"],
+                parsed.variables["Char"],
+                parsed.variables["Tail"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        ) == [(string("tea"), atom("c"), string("ake"))]
+
+    def test_adapt_prolog_goal_rewrites_stream_options_and_properties(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "stream-options.txt"
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- open('{path_atom}', write, Out, "
+            "[alias(report_stream), encoding(utf8), type(text), "
+            "reposition(true), eof_action(eof_code), buffer(line), "
+            "close_on_abort(false)]), "
+            'write(report_stream, "tea"), '
+            "flush_output(report_stream), "
+            "stream_property(report_stream, alias(Alias)), "
+            "stream_property(report_stream, encoding(Encoding)), "
+            "stream_property(report_stream, reposition(Reposition)), "
+            "stream_property(report_stream, eof_action(EofAction)), "
+            "stream_property(report_stream, buffer(Buffer)), "
+            "stream_property(report_stream, close_on_abort(CloseOnAbort)), "
+            "current_stream(Path, Mode, Out), "
+            "close(report_stream).",
+        )
+
+        assert solve_all(
+            program(),
+            (
+                parsed.variables["Alias"],
+                parsed.variables["Encoding"],
+                parsed.variables["Reposition"],
+                parsed.variables["EofAction"],
+                parsed.variables["Buffer"],
+                parsed.variables["CloseOnAbort"],
+                parsed.variables["Path"],
+                parsed.variables["Mode"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        ) == [
+            (
+                atom("report_stream"),
+                atom("utf8"),
+                atom("true"),
+                atom("eof_code"),
+                atom("line"),
+                atom("false"),
+                atom(str(source_path)),
+                atom("write"),
+            ),
+        ]
+        assert source_path.read_text(encoding="utf-8") == "tea"
+
+    def test_adapt_prolog_goal_rewrites_standard_streams(
+        self,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        parsed = parse_swi_query(
+            "?- set_input(user_input), "
+            "set_output(user_output), "
+            "current_input(CurrentIn), "
+            "current_output(CurrentOut), "
+            "at_end_of_stream, "
+            'write("stdout"), '
+            "nl, "
+            'write(user_error, "stderr"), '
+            "flush_output, "
+            "flush_output(user_error), "
+            "stream_property(user_input, alias(user_input)), "
+            "stream_property(user_output, alias(user_output)), "
+            "current_stream(user_error, append, '$stream_user_error').",
+        )
+
+        answers = solve_all(
+            program(),
+            (parsed.variables["CurrentIn"], parsed.variables["CurrentOut"]),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        captured = capsys.readouterr()
+        assert answers == [(atom("$stream_user_input"), atom("$stream_user_output"))]
+        assert captured.out == "stdout\n"
+        assert captured.err == "stderr"
+
+    def test_adapt_prolog_goal_rewrites_stream_positioning(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "stream-position.txt"
+        source_path.write_text("abcdef", encoding="utf-8")
+        path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- open('{path_atom}', read, In, [alias(position_stream)]), "
+            "read_string(In, 2, Prefix), "
+            "stream_property(In, position(Saved)), "
+            "set_stream_position(position_stream, 0), "
+            "read_string(In, 2, Replay), "
+            "seek(In, -1, eof, Seeked), "
+            "stream_property(In, position(Current)), "
+            "read_string(In, 1, Suffix), "
+            "at_end_of_stream(In), "
+            "close(position_stream).",
+        )
+
+        assert solve_all(
+            program(),
+            (
+                parsed.variables["Prefix"],
+                parsed.variables["Saved"],
+                parsed.variables["Replay"],
+                parsed.variables["Seeked"],
+                parsed.variables["Current"],
+                parsed.variables["Suffix"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        ) == [(string("ab"), num(2), string("ab"), num(5), num(5), string("f"))]
+
+    def test_adapt_prolog_goal_rewrites_stream_character_code_io(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        input_path = tmp_path / "char-input.txt"
+        output_path = tmp_path / "char-output.txt"
+        input_path.write_text("Az\n", encoding="utf-8")
+        input_atom = str(input_path).replace("\\", "\\\\").replace("'", "\\'")
+        output_atom = str(output_path).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- open('{input_atom}', read, In, [alias(char_input)]), "
+            "peek_char(In, Peeked), "
+            "get_code(In, FirstCode), "
+            "peek_code(In, PeekedCode), "
+            "get_char(In, SecondChar), "
+            "get_code(In, NewlineCode), "
+            "get_code(In, EofCode), "
+            "set_stream_position(char_input, 0), "
+            "set_input(In), "
+            "get_char(CurrentFirst), "
+            "peek_code(CurrentNextCode), "
+            "get_code(CurrentNextCode), "
+            "close(In), "
+            f"open('{output_atom}', write, Out, [alias(char_output)]), "
+            "put_char(Out, h), "
+            "put_code(Out, 105), "
+            "set_output(char_output), "
+            "put_char('!'), "
+            "put_code(10), "
+            "close(Out).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["Peeked"],
+                parsed.variables["FirstCode"],
+                parsed.variables["PeekedCode"],
+                parsed.variables["SecondChar"],
+                parsed.variables["NewlineCode"],
+                parsed.variables["EofCode"],
+                parsed.variables["CurrentFirst"],
+                parsed.variables["CurrentNextCode"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert answers == [
+            (
+                atom("A"),
+                num(ord("A")),
+                num(ord("z")),
+                atom("z"),
+                num(10),
+                num(-1),
+                atom("A"),
+                num(ord("z")),
+            ),
+        ]
+        assert output_path.read_text(encoding="utf-8") == "hi!\n"
+
+    def test_adapt_prolog_goal_rewrites_binary_byte_stream_io(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        input_path = tmp_path / "byte-input.bin"
+        output_path = tmp_path / "byte-output.bin"
+        input_path.write_bytes(bytes([65, 0, 255]))
+        input_atom = str(input_path).replace("\\", "\\\\").replace("'", "\\'")
+        output_atom = str(output_path).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- open('{input_atom}', read, In, "
+            "[alias(byte_input), type(binary)]), "
+            "stream_property(In, type(binary)), "
+            "peek_byte(In, Peeked), "
+            "get_byte(In, First), "
+            "get_byte(In, Zero), "
+            "stream_property(In, position(Position)), "
+            "peek_byte(In, High), "
+            "get_byte(In, High), "
+            "get_byte(In, Eof), "
+            "at_end_of_stream(In), "
+            "set_stream_position(byte_input, 1), "
+            "set_input(In), "
+            "peek_byte(CurrentPeek), "
+            "get_byte(CurrentFirst), "
+            "close(In), "
+            f"open('{output_atom}', write, Out, "
+            "[alias(byte_output), type(binary)]), "
+            "put_byte(Out, 65), "
+            "put_byte(Out, 0), "
+            "set_output(byte_output), "
+            "put_byte(255), "
+            "close(Out).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["Peeked"],
+                parsed.variables["First"],
+                parsed.variables["Zero"],
+                parsed.variables["Position"],
+                parsed.variables["High"],
+                parsed.variables["Eof"],
+                parsed.variables["CurrentPeek"],
+                parsed.variables["CurrentFirst"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert answers == [
+            (
+                num(65),
+                num(65),
+                num(0),
+                num(2),
+                num(255),
+                num(-1),
+                num(0),
+                num(0),
+            ),
+        ]
+        assert output_path.read_bytes() == bytes([65, 0, 255])
+
+    def test_adapt_prolog_goal_rewrites_current_stream_facade(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        input_path = tmp_path / "current-input.txt"
+        output_path = tmp_path / "current-output.txt"
+        input_path.write_text("abcdef", encoding="utf-8")
+        input_atom = str(input_path).replace("\\", "\\\\").replace("'", "\\'")
+        output_atom = str(output_path).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- open('{input_atom}', read, In, [alias(selected_input)]), "
+            f"open('{output_atom}', write, Out, [alias(selected_output)]), "
+            "set_input(selected_input), "
+            "set_output(selected_output), "
+            "current_input(CurrentIn), "
+            "current_output(CurrentOut), "
+            "get_char(First), "
+            "read_string(2, Chunk), "
+            "read_line_to_string(Line), "
+            "at_end_of_stream, "
+            'write("tea"), '
+            "nl, "
+            "write(cake(slice)), "
+            "flush_output, "
+            "stream_property(In, current_input), "
+            "stream_property(Out, current_output), "
+            "close(In), "
+            "close(Out).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["CurrentIn"],
+                parsed.variables["CurrentOut"],
+                parsed.variables["First"],
+                parsed.variables["Chunk"],
+                parsed.variables["Line"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert len(answers) == 1
+        current_in, current_out, first, chunk, line = answers[0]
+        assert current_in != current_out
+        assert (first, chunk, line) == (atom("a"), string("bc"), string("def"))
+        assert output_path.read_text(encoding="utf-8") == "tea\ncake(slice)"
+
+    def test_adapt_prolog_goal_rewrites_stream_term_io(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        input_path = tmp_path / "terms.pltxt"
+        output_path = tmp_path / "written-terms.pltxt"
+        input_path.write_text(
+            "% leading layout is skipped\n"
+            "box(cake).\n"
+            "/* block comments are layout */\n"
+            "pair(tea, X).\n",
+            encoding="utf-8",
+        )
+        input_atom = str(input_path).replace("\\", "\\\\").replace("'", "\\'")
+        output_atom = str(output_path).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- open('{input_atom}', read, In, [alias(term_input)]), "
+            "read(In, First), "
+            "read_term(In, Second, "
+            "[variable_names(Names), variables(Vars), singletons(Singletons)]), "
+            "read(In, Eof), "
+            "close(In), "
+            f"open('{input_atom}', read, CurrentIn, [alias(current_term_input)]), "
+            f"open('{output_atom}', write, Out, [alias(term_output)]), "
+            "set_input(CurrentIn), "
+            "set_output(Out), "
+            "read(CurrentFirst), "
+            "read_term(CurrentSecond, []), "
+            "write_term(Out, First, []), "
+            "write(Out, '.'), "
+            "nl, "
+            "write_term(CurrentFirst, []), "
+            "write('.'), "
+            "nl, "
+            "write_term(CurrentSecond, []), "
+            "close(CurrentIn), "
+            "close(Out).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["First"],
+                parsed.variables["Second"],
+                parsed.variables["Names"],
+                parsed.variables["Vars"],
+                parsed.variables["Singletons"],
+                parsed.variables["Eof"],
+                parsed.variables["CurrentFirst"],
+                parsed.variables["CurrentSecond"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert len(answers) == 1
+        (
+            first,
+            second,
+            names,
+            vars_value,
+            singletons,
+            eof,
+            current_first,
+            current_second,
+        ) = answers[0]
+        assert first == term("box", "cake")
+        assert isinstance(second, Compound)
+        assert second == term("pair", "tea", second.args[1])
+        assert names == logic_list([term("=", "X", second.args[1])])
+        assert vars_value == logic_list([second.args[1]])
+        assert singletons == logic_list([term("=", "X", second.args[1])])
+        assert eof == atom("end_of_file")
+        assert current_first == first
+        assert current_second == term("pair", "tea", current_second.args[1])
+        assert output_path.read_text(encoding="utf-8") == (
+            "box(cake).\nbox(cake).\npair(tea, X)"
+        )
+
+    def test_adapt_prolog_goal_rewrites_term_writer_conveniences(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        output_path = tmp_path / "writer-conveniences.pltxt"
+        output_atom = str(output_path).replace("\\", "\\\\").replace("'", "\\'")
+        parsed = parse_swi_query(
+            f"?- read_term_from_atom('pair(X, Y, X, Z)', Term, "
+            "[singletons(Singletons)]), "
+            f"open('{output_atom}', write, Out, [alias(writer_output)]), "
+            "writeq(Out, 'two words'), "
+            "nl(Out), "
+            "write_canonical(Out, '$VAR'(0)), "
+            "nl(Out), "
+            "writeln(Out, line(one)), "
+            "set_output(writer_output), "
+            "portray_clause(fact('$VAR'(1))), "
+            "close(Out).",
+        )
+
+        answers = solve_all(
+            program(),
+            (parsed.variables["Term"], parsed.variables["Singletons"]),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert len(answers) == 1
+        parsed_term, singletons = answers[0]
+        assert isinstance(parsed_term, Compound)
+        assert singletons == logic_list(
+            [
+                term("=", "Y", parsed_term.args[1]),
+                term("=", "Z", parsed_term.args[3]),
+            ],
+        )
+        assert output_path.read_text(encoding="utf-8") == (
+            "'two words'\nA\nline(one)\nfact(B).\n"
+        )
+
+    def test_adapt_prolog_goal_rewrites_term_read_write_options(self) -> None:
+        parsed = parse_swi_query(
+            "?- read_term_from_atom('pair(X, Y, X)', Term, "
+            "[variable_names(Names), variables(Vars)]), "
+            "write_term_to_atom(pair(tea, [cup]), Rendered, "
+            "[quoted(true), ignore_ops(false)]).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["Term"],
+                parsed.variables["Names"],
+                parsed.variables["Vars"],
+                parsed.variables["Rendered"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert len(answers) == 1
+        term_value, names, vars_value, rendered = answers[0]
+        assert isinstance(term_value, Compound)
+        assert term_value == term(
+            "pair",
+            term_value.args[0],
+            term_value.args[1],
+            term_value.args[0],
+        )
+        assert names == logic_list(
+            [
+                term("=", "X", term_value.args[0]),
+                term("=", "Y", term_value.args[1]),
+            ],
+        )
+        assert vars_value == logic_list([term_value.args[0], term_value.args[1]])
+        assert rendered == atom("pair(tea, [cup])")
+
+    def test_adapt_prolog_goal_rewrites_numbervars_and_write_numbervars(self) -> None:
+        parsed = parse_swi_query(
+            "?- Term = pair(X, box(Y), X), "
+            "numbervars(Term, 0, End), "
+            "write_term_to_atom(Term, Rendered, [numbervars(true)]), "
+            "write_term_to_atom(Term, Canonical, [numbervars(false)]).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["Term"],
+                parsed.variables["End"],
+                parsed.variables["Rendered"],
+                parsed.variables["Canonical"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert answers == [
+            (
+                term(
+                    "pair",
+                    term("$VAR", 0),
+                    term("box", term("$VAR", 1)),
+                    term("$VAR", 0),
+                ),
+                num(2),
+                atom("pair(A, box(B), A)"),
+                atom("pair('$VAR'(0), box('$VAR'(1)), '$VAR'(0))"),
+            ),
+        ]
+
+    def test_adapt_prolog_goal_rewrites_compound_reflection_predicates(self) -> None:
+        parsed = parse_swi_query(
+            "?- compound_name_arguments(box(tea, cake), Name, Arguments), "
+            "compound_name_arguments(Built, box, [tea, cake]), "
+            "compound_name_arity(pair(left, right), PairName, PairArity), "
+            "compound_name_arity(Template, pair, 2).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["Name"],
+                parsed.variables["Arguments"],
+                parsed.variables["Built"],
+                parsed.variables["PairName"],
+                parsed.variables["PairArity"],
+                parsed.variables["Template"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert len(answers) == 1
+        name, arguments, built, pair_name, pair_arity, template = answers[0]
+        assert name == atom("box")
+        assert arguments == logic_list(["tea", "cake"])
+        assert built == term("box", "tea", "cake")
+        assert pair_name == atom("pair")
+        assert pair_arity == num(2)
+        assert isinstance(template, Compound)
+        assert template.functor == atom("pair").symbol
+        assert len(template.args) == 2
+        assert all(isinstance(argument, LogicVar) for argument in template.args)
+        assert template.args[0] != template.args[1]
+
+    def test_adapt_prolog_goal_rewrites_unifiability_predicates(self) -> None:
+        parsed = parse_swi_query(
+            "?- unifiable(pair(X, X), pair(tea, Y), Unifier), "
+            "unify_with_occurs_check(Z, box(tea)).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["X"],
+                parsed.variables["Y"],
+                parsed.variables["Unifier"],
+                parsed.variables["Z"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert answers == [
+            (
+                parsed.variables["X"],
+                parsed.variables["Y"],
+                logic_list([
+                    term("=", parsed.variables["X"], atom("tea")),
+                    term("=", parsed.variables["Y"], atom("tea")),
+                ]),
+                term("box", "tea"),
+            ),
+        ]
+
+    def test_adapt_prolog_goal_rewrites_term_hash_predicates(self) -> None:
+        parsed = parse_swi_query(
+            "?- term_hash(pair(X, X), FirstHash), "
+            "term_hash(pair(Y, Y), SecondHash), "
+            "term_hash(pair(X, Y), DifferentHash), "
+            "term_hash(box(tea), 2, 1000, BoundedHash).",
+        )
+
+        answers = solve_all(
+            program(),
+            (
+                parsed.variables["FirstHash"],
+                parsed.variables["SecondHash"],
+                parsed.variables["DifferentHash"],
+                parsed.variables["BoundedHash"],
+            ),
+            adapt_prolog_goal(parsed.goal),
+        )
+
+        assert len(answers) == 1
+        first, second, different, bounded = answers[0]
+        assert first == second
+        assert first != different
+        assert isinstance(bounded, Number)
+        assert 0 <= bounded.value < 1000
+
+    def test_adapt_prolog_goal_rejects_unsupported_term_io_options(self) -> None:
+        parsed_read = parse_swi_query(
+            "?- read_term_from_atom('pair(X)', Term, [unknown(true)]).",
+        )
+        parsed_write = parse_swi_query(
+            "?- write_term_to_atom(pair(tea), Atom, [quoted(maybe)]).",
+        )
+
+        assert (
+            solve_all(
+                program(),
+                parsed_read.variables["Term"],
+                adapt_prolog_goal(parsed_read.goal),
+            )
+            == []
+        )
+        assert (
+            solve_all(
+                program(),
+                parsed_write.variables["Atom"],
+                adapt_prolog_goal(parsed_write.goal),
+            )
+            == []
+        )
 
     def test_adapt_prolog_goal_rewrites_term_equality_failures(self) -> None:
         parsed_unifiable = parse_swi_query("?- X \\= box(tea).")

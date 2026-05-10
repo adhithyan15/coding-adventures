@@ -2,10 +2,14 @@
 
 from __future__ import annotations
 
+import os
+from pathlib import Path
+
 import pytest
 from logic_engine import (
     Compound,
     LogicVar,
+    Number,
     atom,
     conj,
     disj,
@@ -32,32 +36,65 @@ from logic_builtins import (
     PrologTypeError,
     __version__,
     abolisho,
+    acyclic_termo,
+    absolute_file_nameo,
+    access_fileo,
     add,
     all_differento,
     argo,
     assertao,
     assertzo,
+    at_end_of_current_streamo,
+    at_end_of_streamo,
+    atom_charso,
+    atom_codeso,
+    atom_concato,
+    atom_lengtho,
+    atom_numbero,
+    atomic_list_concato,
+    atomic_list_concato_with_separator,
     atomico,
     atomo,
     bagofo,
     betweeno,
+    call_cleanupo,
     callableo,
     callo,
     calltermo,
     catcho,
+    char_codeo,
     clauseo,
+    closeo,
     compare_termo,
+    compound_name_argumentso,
+    compound_name_arityo,
     compoundo,
     convlisto,
     copytermo,
+    current_atomo,
+    current_functoro,
+    current_inputo,
+    current_outputo,
     current_predicateo,
     current_prolog_flago,
+    current_streamo,
     cuto,
+    cyclic_termo,
+    copy_fileo,
+    delete_directory_and_contentso,
+    delete_directoryo,
+    delete_fileo,
     difo,
+    directory_fileso,
+    directory_file_patho,
     div,
     dynamico,
     excludeo,
+    expand_file_nameo,
+    exists_directoryo,
+    exists_fileo,
     failo,
+    falseo,
     fd_addo,
     fd_bool_ando,
     fd_bool_implieso,
@@ -79,15 +116,27 @@ from logic_builtins import (
     fd_sum_relationo,
     fd_sumo,
     findallo,
+    file_base_nameo,
+    file_directory_nameo,
+    file_name_extensiono,
     floordiv,
+    flush_current_outputo,
+    flush_outputo,
     foldlo,
     forallo,
     functoro,
     geqo,
+    get_byteo,
+    get_charo,
+    get_codeo,
+    get_current_byteo,
+    get_current_charo,
+    get_current_codeo,
     groundo,
     gto,
     ifthenelseo,
     iftheno,
+    ignoreo,
     includeo,
     integero,
     iso,
@@ -95,40 +144,94 @@ from logic_builtins import (
     labelingo,
     leqo,
     lto,
+    make_directory_patho,
+    make_directoryo,
     maplisto,
     mod,
     mul,
     neg,
+    nl_currento,
+    nlo,
     nonvaro,
     not_same_termo,
+    not_variant_termo,
     noto,
+    number_charso,
+    number_codeso,
+    number_stringo,
     numbero,
+    numbervarso,
     numeqo,
     numneqo,
     onceo,
+    open_optionso,
+    openo,
     partitiono,
+    peek_byteo,
+    peek_charo,
+    peek_codeo,
+    peek_current_byteo,
+    peek_current_charo,
+    peek_current_codeo,
     predicate_propertyo,
     prolog_iso,
     prolog_lto,
     prolog_numeqo,
+    put_byteo,
+    put_charo,
+    put_codeo,
+    put_current_byteo,
+    put_current_charo,
+    put_current_codeo,
+    read_current_line_to_stringo,
+    read_current_stringo,
+    read_file_to_codeso,
+    read_file_to_stringo,
+    read_line_to_stringo,
+    read_stringo,
+    rename_fileo,
+    repeato,
     retractallo,
     retracto,
+    same_fileo,
     same_termo,
     scanlo,
+    seeko,
+    set_inputo,
+    set_outputo,
     set_prolog_flago,
+    set_stream_positiono,
     setofo,
+    setup_call_cleanupo,
+    size_fileo,
+    stream_propertyo,
+    string_charso,
+    string_codeso,
+    string_lengtho,
     stringo,
     sub,
+    sub_atomo,
+    sub_stringo,
+    subsumes_termo,
     succo,
+    term_hash_boundedo,
+    term_hasho,
     term_variableso,
     termo_geqo,
     termo_gto,
     termo_leqo,
     termo_lto,
     throwo,
+    time_fileo,
     trueo,
+    unifiableo,
+    unify_with_occurs_checko,
     univo,
+    variant_termo,
     varo,
+    write_currento,
+    writeo,
+    working_directoryo,
 )
 
 
@@ -137,6 +240,683 @@ class TestVersion:
 
     def test_version_exists(self) -> None:
         assert __version__ == "0.15.0"
+
+
+class TestFileTextBuiltins:
+    """Bounded file-text helpers should stay deterministic and UTF-8 only."""
+
+    def test_exists_fileo_succeeds_for_regular_files(self, tmp_path: Path) -> None:
+        source_path = tmp_path / "data.txt"
+        source_path.write_text("tea", encoding="utf-8")
+
+        assert solve_all(
+            program(),
+            "ok",
+            conj(eq("ok", "ok"), exists_fileo(string(str(source_path)))),
+        ) == [atom("ok")]
+        assert solve_all(
+            program(),
+            "ok",
+            conj(eq("ok", "ok"), exists_fileo(string(str(tmp_path / "missing.txt")))),
+        ) == []
+
+    def test_read_file_to_stringo_reads_utf8_text(self, tmp_path: Path) -> None:
+        source_path = tmp_path / "data.txt"
+        source_path.write_text("tea\ncake", encoding="utf-8")
+        contents = var("Contents")
+
+        assert solve_all(
+            program(),
+            contents,
+            read_file_to_stringo(atom(str(source_path)), contents),
+        ) == [string("tea\ncake")]
+
+    def test_read_file_to_codeso_reads_code_points(self, tmp_path: Path) -> None:
+        source_path = tmp_path / "data.txt"
+        source_path.write_text("A\n", encoding="utf-8")
+        codes = var("Codes")
+
+        assert solve_all(
+            program(),
+            codes,
+            read_file_to_codeso(string(str(source_path)), codes),
+        ) == [logic_list([num(65), num(10)])]
+
+    def test_file_path_metadata_facade(self, tmp_path: Path) -> None:
+        directory = tmp_path / "nested"
+        directory.mkdir()
+        source_path = directory / "story.pl"
+        source_path.write_text("fact(a).\n", encoding="utf-8")
+        symlink_path = tmp_path / "story-link.pl"
+        try:
+            symlink_path.symlink_to(source_path)
+        except OSError:
+            symlink_path = source_path
+
+        directory_answer = var("Directory")
+        base_answer = var("Base")
+        joined_answer = var("Joined")
+        name_answer = var("Name")
+        extension_answer = var("Extension")
+        absolute_answer = var("Absolute")
+        size_answer = var("Size")
+        time_answer = var("Time")
+        result = var("Result")
+
+        answers = solve_all(
+            program(),
+            result,
+            conj(
+                exists_directoryo(atom(str(directory))),
+                access_fileo(atom(str(source_path)), atom("read")),
+                absolute_file_nameo(atom(str(source_path)), absolute_answer),
+                file_directory_nameo(atom(str(source_path)), directory_answer),
+                file_base_nameo(atom(str(source_path)), base_answer),
+                directory_file_patho(directory_answer, base_answer, joined_answer),
+                file_name_extensiono(name_answer, extension_answer, base_answer),
+                same_fileo(atom(str(source_path)), atom(str(symlink_path))),
+                size_fileo(atom(str(source_path)), size_answer),
+                time_fileo(atom(str(source_path)), time_answer),
+                eq(
+                    result,
+                    term(
+                        "file_metadata",
+                        directory_answer,
+                        base_answer,
+                        joined_answer,
+                        name_answer,
+                        extension_answer,
+                        absolute_answer,
+                        size_answer,
+                        time_answer,
+                    ),
+                ),
+            ),
+        )
+
+        assert len(answers) == 1
+        [answer] = answers
+        assert isinstance(answer, Compound)
+        assert answer.functor.name == "file_metadata"
+        (
+            directory_term,
+            base_term,
+            joined_term,
+            name_term,
+            extension_term,
+            absolute_term,
+            size_term,
+            time_term,
+        ) = answer.args
+        assert directory_term == atom(str(directory))
+        assert base_term == atom("story.pl")
+        assert joined_term == atom(str(source_path))
+        assert name_term == atom("story")
+        assert extension_term == atom("pl")
+        assert absolute_term == atom(str(source_path.resolve(strict=False)))
+        assert size_term == num(len("fact(a).\n"))
+        assert isinstance(time_term, Number)
+        assert isinstance(time_term.value, int | float)
+
+    def test_file_operation_facade_mutates_bounded_paths(self, tmp_path: Path) -> None:
+        source_path = tmp_path / "draft.txt"
+        renamed_path = tmp_path / "final.txt"
+        created_directory = tmp_path / "created"
+        source_path.write_text("draft\n", encoding="utf-8")
+        old_cwd = Path.cwd()
+
+        entries = var("Entries")
+        old_directory = var("OldDirectory")
+        cwd_entries = var("CwdEntries")
+        result = var("Result")
+
+        try:
+            answers = solve_all(
+                program(),
+                result,
+                conj(
+                    make_directoryo(atom(str(created_directory))),
+                    rename_fileo(atom(str(source_path)), atom(str(renamed_path))),
+                    directory_fileso(atom(str(tmp_path)), entries),
+                    delete_fileo(atom(str(renamed_path))),
+                    delete_directoryo(atom(str(created_directory))),
+                    working_directoryo(old_directory, atom(str(tmp_path))),
+                    directory_fileso(atom("."), cwd_entries),
+                    eq(
+                        result,
+                        term(
+                            "file_operations",
+                            entries,
+                            old_directory,
+                            cwd_entries,
+                        ),
+                    ),
+                ),
+            )
+        finally:
+            os.chdir(old_cwd)
+
+        assert answers == [
+            term(
+                "file_operations",
+                logic_list(["created", "final.txt"]),
+                atom(str(old_cwd)),
+                logic_list([]),
+            ),
+        ]
+        assert not source_path.exists()
+        assert not renamed_path.exists()
+        assert not created_directory.exists()
+
+    def test_recursive_file_operation_facade_uses_bounded_paths(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        nested_directory = tmp_path / "nested" / "deep"
+        source_path = nested_directory / "alpha.txt"
+        copied_path = nested_directory / "alpha-copy.txt"
+
+        matches = var("Matches")
+        copied_contents = var("CopiedContents")
+        result = var("Result")
+        pattern = str(tmp_path / "**" / "*.txt")
+
+        assert solve_all(
+            program(),
+            atom("ok"),
+            conj(
+                make_directory_patho(atom(str(nested_directory))),
+                eq(atom("ok"), atom("ok")),
+            ),
+        ) == [atom("ok")]
+        source_path.write_text("alpha\n", encoding="utf-8")
+
+        answers = solve_all(
+            program(),
+            result,
+            conj(
+                copy_fileo(atom(str(source_path)), atom(str(copied_path))),
+                expand_file_nameo(atom(pattern), matches),
+                read_file_to_stringo(atom(str(copied_path)), copied_contents),
+                delete_directory_and_contentso(atom(str(tmp_path / "nested"))),
+                eq(result, term("recursive_file_ops", matches, copied_contents)),
+            ),
+        )
+
+        assert answers == [
+            term(
+                "recursive_file_ops",
+                logic_list([str(copied_path), str(source_path)]),
+                string("alpha\n"),
+            ),
+        ]
+        assert not nested_directory.exists()
+
+    def test_file_stream_read_facade_tracks_cursor(self, tmp_path: Path) -> None:
+        source_path = tmp_path / "stream.txt"
+        source_path.write_text("first\nsecond", encoding="utf-8")
+        stream = var("Stream")
+        first_line = var("FirstLine")
+        first_char = var("FirstChar")
+        tail = var("Tail")
+        result = var("Result")
+
+        assert solve_all(
+            program(),
+            result,
+            conj(
+                openo(string(str(source_path)), "read", stream),
+                read_line_to_stringo(stream, first_line),
+                get_charo(stream, first_char),
+                read_stringo(stream, num(5), tail),
+                at_end_of_streamo(stream),
+                closeo(stream),
+                eq(result, term("stream_result", first_line, first_char, tail)),
+            ),
+        ) == [term("stream_result", string("first"), atom("s"), string("econd"))]
+
+    def test_file_stream_write_facade_flushes_text(self, tmp_path: Path) -> None:
+        output_path = tmp_path / "out.txt"
+        stream = var("Stream")
+
+        assert solve_all(
+            program(),
+            "ok",
+            conj(
+                openo(atom(str(output_path)), "write", stream),
+                writeo(stream, string("tea")),
+                nlo(stream),
+                writeo(stream, atom("cake")),
+                closeo(stream),
+                eq("ok", "ok"),
+            ),
+        ) == [atom("ok")]
+        assert output_path.read_text(encoding="utf-8") == "tea\ncake"
+
+    def test_file_stream_alias_options_and_properties(self, tmp_path: Path) -> None:
+        output_path = tmp_path / "aliased.txt"
+        stream = var("Stream")
+        alias_value = var("Alias")
+        current_path = var("CurrentPath")
+        current_mode = var("CurrentMode")
+        result = var("Result")
+
+        answers = solve_all(
+            program(),
+            result,
+            conj(
+                open_optionso(
+                    atom(str(output_path)),
+                    "write",
+                    stream,
+                    logic_list([
+                        term("alias", atom("story_output")),
+                        term("encoding", atom("utf8")),
+                        term("type", atom("text")),
+                    ]),
+                ),
+                writeo(atom("story_output"), string("tea")),
+                flush_outputo(atom("story_output")),
+                stream_propertyo(atom("story_output"), term("alias", alias_value)),
+                current_streamo(current_path, current_mode, stream),
+                closeo(atom("story_output")),
+                eq(result, term("seen", current_path, current_mode, alias_value)),
+            ),
+        )
+
+        assert answers == [term(
+            "seen",
+            atom(str(output_path)),
+            atom("write"),
+            atom("story_output"),
+        )]
+        assert output_path.read_text(encoding="utf-8") == "tea"
+
+    def test_file_stream_positioning_rewinds_and_seeks(self, tmp_path: Path) -> None:
+        source_path = tmp_path / "positioned.txt"
+        source_path.write_text("abcdef", encoding="utf-8")
+        stream = var("Stream")
+        prefix = var("Prefix")
+        saved_position = var("SavedPosition")
+        replay = var("Replay")
+        seek_position = var("SeekPosition")
+        current_position = var("CurrentPosition")
+        suffix = var("Suffix")
+        result = var("Result")
+
+        assert solve_all(
+            program(),
+            result,
+            conj(
+                open_optionso(
+                    atom(str(source_path)),
+                    "read",
+                    stream,
+                    logic_list([term("alias", atom("positioned_stream"))]),
+                ),
+                read_stringo(stream, num(2), prefix),
+                stream_propertyo(stream, term("position", saved_position)),
+                set_stream_positiono(atom("positioned_stream"), num(0)),
+                read_stringo(stream, num(2), replay),
+                seeko(stream, num(-1), atom("eof"), seek_position),
+                stream_propertyo(stream, term("position", current_position)),
+                read_stringo(stream, num(1), suffix),
+                at_end_of_streamo(stream),
+                closeo(stream),
+                eq(
+                    result,
+                    term(
+                        "positions",
+                        prefix,
+                        saved_position,
+                        replay,
+                        seek_position,
+                        current_position,
+                        suffix,
+                    ),
+                ),
+            ),
+        ) == [term(
+            "positions",
+            string("ab"),
+            num(2),
+            string("ab"),
+            num(5),
+            num(5),
+            string("f"),
+        )]
+
+    def test_file_stream_positioning_rejects_out_of_bounds(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        source_path = tmp_path / "positioned.txt"
+        source_path.write_text("abc", encoding="utf-8")
+        stream = var("Stream")
+
+        [opened_stream] = solve_all(
+            program(),
+            stream,
+            openo(atom(str(source_path)), "read", stream),
+        )
+        assert solve_all(
+            program(),
+            "ok",
+            conj(set_stream_positiono(opened_stream, num(4)), eq("ok", "ok")),
+        ) == []
+        assert solve_all(
+            program(),
+            "ok",
+            conj(closeo(opened_stream), eq("ok", "ok")),
+        ) == [atom("ok")]
+
+    def test_file_stream_character_and_code_io(self, tmp_path: Path) -> None:
+        input_path = tmp_path / "chars-input.txt"
+        output_path = tmp_path / "chars-output.txt"
+        input_path.write_text("Az\n", encoding="utf-8")
+        input_stream = var("InputStream")
+        output_stream = var("OutputStream")
+        peeked = var("Peeked")
+        first_code = var("FirstCode")
+        peeked_code = var("PeekedCode")
+        second_char = var("SecondChar")
+        newline_code = var("NewlineCode")
+        eof_code = var("EofCode")
+        current_peek = var("CurrentPeek")
+        current_first = var("CurrentFirst")
+        current_next_code = var("CurrentNextCode")
+        result = var("Result")
+
+        answers = solve_all(
+            program(),
+            result,
+            conj(
+                open_optionso(
+                    atom(str(input_path)),
+                    "read",
+                    input_stream,
+                    logic_list([term("alias", atom("char_input"))]),
+                ),
+                peek_charo(input_stream, peeked),
+                get_codeo(input_stream, first_code),
+                peek_codeo(input_stream, peeked_code),
+                get_charo(input_stream, second_char),
+                get_codeo(input_stream, newline_code),
+                get_codeo(input_stream, eof_code),
+                set_stream_positiono(atom("char_input"), num(0)),
+                set_inputo(input_stream),
+                peek_current_charo(current_peek),
+                get_current_charo(current_first),
+                peek_current_codeo(current_next_code),
+                get_current_codeo(current_next_code),
+                closeo(input_stream),
+                open_optionso(
+                    atom(str(output_path)),
+                    "write",
+                    output_stream,
+                    logic_list([term("alias", atom("char_output"))]),
+                ),
+                put_charo(output_stream, atom("h")),
+                put_codeo(output_stream, num(ord("i"))),
+                set_outputo(atom("char_output")),
+                put_current_charo(atom("!")),
+                put_current_codeo(num(10)),
+                closeo(output_stream),
+                eq(
+                    result,
+                    term(
+                        "chars",
+                        peeked,
+                        first_code,
+                        peeked_code,
+                        second_char,
+                        newline_code,
+                        eof_code,
+                        current_peek,
+                        current_first,
+                        current_next_code,
+                    ),
+                ),
+            ),
+        )
+
+        assert answers == [
+            term(
+                "chars",
+                atom("A"),
+                num(ord("A")),
+                num(ord("z")),
+                atom("z"),
+                num(10),
+                num(-1),
+                atom("A"),
+                atom("A"),
+                num(ord("z")),
+            ),
+        ]
+        assert output_path.read_text(encoding="utf-8") == "hi!\n"
+
+    def test_binary_file_stream_byte_io(self, tmp_path: Path) -> None:
+        input_path = tmp_path / "bytes-input.bin"
+        output_path = tmp_path / "bytes-output.bin"
+        input_path.write_bytes(bytes([65, 0, 255]))
+        input_stream = var("InputStream")
+        output_stream = var("OutputStream")
+        peeked = var("Peeked")
+        first = var("First")
+        zero = var("Zero")
+        high = var("High")
+        eof = var("Eof")
+        current_peek = var("CurrentPeek")
+        current_first = var("CurrentFirst")
+        type_property = var("TypeProperty")
+        position = var("Position")
+        result = var("Result")
+
+        answers = solve_all(
+            program(),
+            result,
+            conj(
+                open_optionso(
+                    atom(str(input_path)),
+                    "read",
+                    input_stream,
+                    logic_list([
+                        term("alias", atom("byte_input")),
+                        term("type", atom("binary")),
+                    ]),
+                ),
+                stream_propertyo(input_stream, type_property),
+                eq(type_property, term("type", atom("binary"))),
+                peek_byteo(input_stream, peeked),
+                get_byteo(input_stream, first),
+                get_byteo(input_stream, zero),
+                stream_propertyo(input_stream, term("position", position)),
+                peek_byteo(input_stream, high),
+                get_byteo(input_stream, high),
+                get_byteo(input_stream, eof),
+                at_end_of_streamo(input_stream),
+                set_stream_positiono(atom("byte_input"), num(1)),
+                set_inputo(input_stream),
+                peek_current_byteo(current_peek),
+                get_current_byteo(current_first),
+                closeo(input_stream),
+                open_optionso(
+                    atom(str(output_path)),
+                    "write",
+                    output_stream,
+                    logic_list([
+                        term("alias", atom("byte_output")),
+                        term("type", atom("binary")),
+                    ]),
+                ),
+                put_byteo(output_stream, num(65)),
+                put_byteo(output_stream, num(0)),
+                set_outputo(atom("byte_output")),
+                put_current_byteo(num(255)),
+                closeo(output_stream),
+                eq(
+                    result,
+                    term(
+                        "bytes",
+                        peeked,
+                        first,
+                        zero,
+                        position,
+                        high,
+                        eof,
+                        current_peek,
+                        current_first,
+                    ),
+                ),
+            ),
+        )
+
+        assert answers == [
+            term(
+                "bytes",
+                num(65),
+                num(65),
+                num(0),
+                num(2),
+                num(255),
+                num(-1),
+                num(0),
+                num(0),
+            ),
+        ]
+        assert output_path.read_bytes() == bytes([65, 0, 255])
+
+    def test_current_stream_facade_reads_and_writes_selected_streams(
+        self,
+        tmp_path: Path,
+    ) -> None:
+        input_path = tmp_path / "current-input.txt"
+        output_path = tmp_path / "current-output.txt"
+        input_path.write_text("abcdef", encoding="utf-8")
+        input_stream = var("InputStream")
+        output_stream = var("OutputStream")
+        current_input = var("CurrentInput")
+        current_output = var("CurrentOutput")
+        first_char = var("FirstChar")
+        chunk = var("Chunk")
+        line = var("Line")
+        input_property = var("InputProperty")
+        output_property = var("OutputProperty")
+        result = var("Result")
+
+        answers = solve_all(
+            program(),
+            result,
+            conj(
+                open_optionso(
+                    atom(str(input_path)),
+                    "read",
+                    input_stream,
+                    logic_list([term("alias", atom("selected_input"))]),
+                ),
+                open_optionso(
+                    atom(str(output_path)),
+                    "write",
+                    output_stream,
+                    logic_list([term("alias", atom("selected_output"))]),
+                ),
+                set_inputo(atom("selected_input")),
+                set_outputo(atom("selected_output")),
+                current_inputo(current_input),
+                current_outputo(current_output),
+                get_current_charo(first_char),
+                read_current_stringo(num(2), chunk),
+                read_current_line_to_stringo(line),
+                at_end_of_current_streamo(),
+                write_currento(string("tea")),
+                nl_currento(),
+                write_currento(term("cake", atom("slice"))),
+                flush_current_outputo(),
+                stream_propertyo(input_stream, input_property),
+                eq(input_property, atom("current_input")),
+                stream_propertyo(output_stream, output_property),
+                eq(output_property, atom("current_output")),
+                closeo(input_stream),
+                closeo(output_stream),
+                eq(
+                    result,
+                    term(
+                        "current_streams",
+                        current_input,
+                        current_output,
+                        first_char,
+                        chunk,
+                        line,
+                    ),
+                ),
+            ),
+        )
+        assert len(answers) == 1
+        [answer] = answers
+        assert isinstance(answer, Compound)
+        assert answer.functor.name == "current_streams"
+        (
+            current_input_answer,
+            current_output_answer,
+            first,
+            chunk_answer,
+            line_answer,
+        ) = answer.args
+        assert current_input_answer != current_output_answer
+        assert first == atom("a")
+        assert chunk_answer == string("bc")
+        assert line_answer == string("def")
+        assert output_path.read_text(encoding="utf-8") == "tea\ncake(slice)"
+
+    def test_standard_streams_are_available_by_default(
+        self,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        current_input = var("CurrentInput")
+        current_output = var("CurrentOutput")
+        path = var("Path")
+        mode = var("Mode")
+        handle = var("Handle")
+        result = var("Result")
+
+        answers = solve_all(
+            program(),
+            result,
+            conj(
+                set_inputo(atom("user_input")),
+                set_outputo(atom("user_output")),
+                current_inputo(current_input),
+                current_outputo(current_output),
+                at_end_of_current_streamo(),
+                write_currento(string("stdout")),
+                nl_currento(),
+                writeo(atom("user_error"), string("stderr")),
+                flush_current_outputo(),
+                flush_outputo(atom("user_error")),
+                stream_propertyo(atom("user_input"), term("alias", atom("user_input"))),
+                stream_propertyo(
+                    atom("user_output"),
+                    term("alias", atom("user_output")),
+                ),
+                current_streamo(path, mode, handle),
+                eq(path, atom("user_error")),
+                eq(mode, atom("append")),
+                eq(handle, atom("$stream_user_error")),
+                eq(result, term("standard_streams", current_input, current_output)),
+            ),
+        )
+
+        captured = capsys.readouterr()
+        assert answers == [
+            term(
+                "standard_streams",
+                atom("$stream_user_input"),
+                atom("$stream_user_output"),
+            ),
+        ]
+        assert captured.out == "stdout\n"
+        assert captured.err == "stderr"
 
 
 class TestAdvancedControlBuiltins:
@@ -381,6 +1161,26 @@ class TestCollectionBuiltins:
         ) == [logic_list(["tea", "tea"])]
         assert solve_all(program(), results, bagofo(item, fail(), results)) == []
 
+    def test_bagofo_groups_by_free_goal_variables(self) -> None:
+        parent = relation("parent", 2)
+        parent_name = var("Parent")
+        child = var("Child")
+        children = var("Children")
+        family = program(
+            fact(parent("homer", "bart")),
+            fact(parent("homer", "lisa")),
+            fact(parent("marge", "maggie")),
+        )
+
+        assert solve_all(
+            family,
+            (parent_name, children),
+            bagofo(child, parent(parent_name, child), children),
+        ) == [
+            (atom("homer"), logic_list(["bart", "lisa"])),
+            (atom("marge"), logic_list(["maggie"])),
+        ]
+
     def test_setofo_removes_duplicates_and_sorts_terms(self) -> None:
         item = var("Item")
         results = var("Results")
@@ -400,6 +1200,27 @@ class TestCollectionBuiltins:
             ),
         ) == [logic_list([2, "apple", "pear"])]
         assert solve_all(program(), results, setofo(item, fail(), results)) == []
+
+    def test_setofo_groups_and_sorts_each_group(self) -> None:
+        score = relation("score", 2)
+        player = var("Player")
+        value = var("Value")
+        scores = var("Scores")
+        scoreboard = program(
+            fact(score("homer", 2)),
+            fact(score("homer", 1)),
+            fact(score("homer", 2)),
+            fact(score("marge", 3)),
+        )
+
+        assert solve_all(
+            scoreboard,
+            (player, scores),
+            setofo(value, score(player, value), scores),
+        ) == [
+            (atom("homer"), logic_list([1, 2])),
+            (atom("marge"), logic_list([3])),
+        ]
 
     def test_collectors_compose_with_arithmetic_predicates(self) -> None:
         raw = var("Raw")
@@ -1389,6 +2210,40 @@ class TestControlBuiltins:
 
         assert answers == [atom("first")]
 
+    def test_falseo_is_failure_alias(self) -> None:
+        assert solve_all(program(), var("Item"), falseo()) == []
+
+    def test_ignoreo_keeps_first_solution_or_succeeds_unchanged(self) -> None:
+        item = var("Item")
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            item,
+            ignoreo(disj(eq(item, "first"), eq(item, "second"))),
+        ) == [atom("first")]
+        assert solve_all(
+            program(),
+            marker,
+            conj(eq(marker, "kept"), ignoreo(falseo())),
+        ) == [atom("kept")]
+
+    def test_repeato_restarts_the_rest_of_the_search(self) -> None:
+        item = var("Item")
+
+        assert solve_n(
+            program(),
+            5,
+            item,
+            conj(repeato(), disj(eq(item, "tea"), eq(item, "cake"))),
+        ) == [
+            atom("tea"),
+            atom("cake"),
+            atom("tea"),
+            atom("cake"),
+            atom("tea"),
+        ]
+
     def test_cuto_commits_surrounding_search(self) -> None:
         item = var("Item")
 
@@ -1415,6 +2270,16 @@ class TestControlBuiltins:
             outer,
             conj(disj(eq(outer, "left"), eq(outer, "right")), cuto()),
         ) == [atom("left")]
+
+    def test_repeato_composes_with_cut_to_stop_search(self) -> None:
+        item = var("Item")
+
+        assert solve_n(
+            program(),
+            5,
+            item,
+            conj(repeato(), disj(eq(item, "tea"), eq(item, "cake")), cuto()),
+        ) == [atom("tea")]
 
     def test_throwo_unwinds_to_matching_catcho(self) -> None:
         result = var("Result")
@@ -1475,6 +2340,60 @@ class TestControlBuiltins:
                 eq(marker, "caught"),
             ),
         ) == [atom("caught")]
+
+    def test_call_cleanupo_runs_cleanup_after_success(self) -> None:
+        cleaned = relation("cleaned", 1)
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                dynamico("cleaned", 1),
+                call_cleanupo(eq("ok", "ok"), assertzo(cleaned("done"))),
+                cleaned(marker),
+            ),
+        ) == [atom("done")]
+
+    def test_call_cleanupo_runs_cleanup_before_rethrowing(self) -> None:
+        cleaned = relation("cleaned", 1)
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                dynamico("cleaned", 1),
+                catcho(
+                    call_cleanupo(
+                        throwo("boom"),
+                        assertzo(cleaned("after_throw")),
+                    ),
+                    "boom",
+                    cleaned(marker),
+                ),
+            ),
+        ) == [atom("after_throw")]
+
+    def test_setup_call_cleanupo_runs_setup_goal_and_cleanup(self) -> None:
+        resource = relation("resource", 1)
+        cleaned = relation("cleaned", 1)
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                dynamico("resource", 1),
+                dynamico("cleaned", 1),
+                setup_call_cleanupo(
+                    assertzo(resource("open")),
+                    resource(marker),
+                    assertzo(cleaned(marker)),
+                ),
+                cleaned(marker),
+            ),
+        ) == [atom("open")]
 
     def test_noto_succeeds_when_goal_fails_and_fails_when_goal_succeeds(self) -> None:
         marker = var("Marker")
@@ -1836,6 +2755,92 @@ class TestTermMetaprogrammingBuiltins:
         assert solve_all(program(), value, functoro(value, "box", 1.5)) == []
         assert solve_all(program(), value, functoro(value, 3, 1)) == []
 
+    def test_compound_name_argumentso_inspects_and_constructs_compounds(self) -> None:
+        name = var("Name")
+        arguments = var("Arguments")
+        constructed = var("Constructed")
+
+        assert solve_all(
+            program(),
+            (name, arguments),
+            compound_name_argumentso(term("box", "tea", "cake"), name, arguments),
+        ) == [(atom("box"), logic_list(["tea", "cake"]))]
+        assert solve_all(
+            program(),
+            constructed,
+            compound_name_argumentso(constructed, "box", logic_list(["tea", "cake"])),
+        ) == [term("box", "tea", "cake")]
+
+    def test_compound_name_argumentso_rejects_non_compound_shapes(self) -> None:
+        value = var("Value")
+        name = var("Name")
+
+        assert (
+            solve_all(
+                program(),
+                name,
+                compound_name_argumentso("tea", name, logic_list([])),
+            )
+            == []
+        )
+        assert (
+            solve_all(
+                program(),
+                value,
+                compound_name_argumentso(value, "box", logic_list([])),
+            )
+            == []
+        )
+        assert (
+            solve_all(program(), value, compound_name_argumentso(value, "box", 3))
+            == []
+        )
+        assert (
+            solve_all(
+                program(),
+                value,
+                compound_name_argumentso(value, 3, logic_list(["tea"])),
+            )
+            == []
+        )
+
+    def test_compound_name_arityo_inspects_and_constructs_compounds(self) -> None:
+        name = var("Name")
+        arity = var("Arity")
+        constructed = var("Constructed")
+
+        assert solve_all(
+            program(),
+            (name, arity),
+            compound_name_arityo(term("box", "tea", "cake"), name, arity),
+        ) == [(atom("box"), num(2))]
+
+        answers = solve_all(
+            program(),
+            constructed,
+            compound_name_arityo(constructed, "pair", 2),
+        )
+        assert len(answers) == 1
+        [pair] = answers
+        assert isinstance(pair, Compound)
+        assert pair.functor == atom("pair").symbol
+        assert len(pair.args) == 2
+        assert all(isinstance(argument, LogicVar) for argument in pair.args)
+        assert pair.args[0] != pair.args[1]
+
+    def test_compound_name_arityo_rejects_atomic_and_invalid_construction(self) -> None:
+        value = var("Value")
+        name = var("Name")
+
+        assert solve_all(program(), name, compound_name_arityo("tea", name, 0)) == []
+        assert solve_all(program(), value, compound_name_arityo(value, "box", 0)) == []
+        assert solve_all(program(), value, compound_name_arityo(value, "box", -1)) == []
+        assert (
+            solve_all(program(), value, compound_name_arityo(value, "box", 1.5))
+            == []
+        )
+        assert solve_all(program(), value, compound_name_arityo(value, 3, 1)) == []
+
     def test_copytermo_copies_ground_terms_and_refreshes_variables(self) -> None:
         copy = var("Copy")
         original = var("Original")
@@ -1907,6 +2912,208 @@ class TestTermMetaprogrammingBuiltins:
             term_variableso(term("box", 1), variables),
         ) == [logic_list([])]
 
+    def test_numbervarso_numbers_open_variables_in_first_occurrence_order(self) -> None:
+        first = var("First")
+        second = var("Second")
+        source = var("Source")
+        end = var("End")
+
+        answers = solve_all(
+            program(),
+            (source, end),
+            conj(
+                eq(source, term("pair", first, term("box", second, first))),
+                numbervarso(source, 3, end),
+            ),
+        )
+
+        assert answers == [
+            (
+                term(
+                    "pair",
+                    term("$VAR", 3),
+                    term("box", term("$VAR", 4), term("$VAR", 3)),
+                ),
+                num(5),
+            ),
+        ]
+
+    def test_numbervarso_skips_ground_terms_and_rejects_bad_indices(self) -> None:
+        end = var("End")
+
+        assert solve_all(program(), end, numbervarso(term("box", "tea"), 2, end)) == [
+            num(2),
+        ]
+        assert (
+            solve_all(program(), end, numbervarso(term("box", var("X")), -1, end))
+            == []
+        )
+        assert (
+            solve_all(program(), end, numbervarso(term("box", var("X")), 1.5, end))
+            == []
+        )
+
+    def test_acyclic_and_cyclic_term_predicates_classify_finite_terms(self) -> None:
+        value = var("Value")
+        result = var("Result")
+
+        assert solve_all(program(), result, acyclic_termo(term("box", value))) == [
+            result,
+        ]
+        assert solve_all(
+            program(),
+            result,
+            conj(eq(value, "tea"), acyclic_termo(term("pair", value, value))),
+        ) == [result]
+        assert solve_all(program(), result, cyclic_termo(term("box", value))) == []
+
+    def test_unify_with_occurs_checko_rejects_self_referential_terms(self) -> None:
+        value = var("Value")
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            value,
+            unify_with_occurs_checko(value, term("box", "tea")),
+        ) == [term("box", "tea")]
+        assert (
+            solve_all(
+                program(),
+                marker,
+                unify_with_occurs_checko(value, term("box", value)),
+            )
+            == []
+        )
+
+    def test_unifiableo_reports_bindings_without_applying_them(self) -> None:
+        left = var("Left")
+        right = var("Right")
+        unifier = var("Unifier")
+
+        answers = solve_all(
+            program(),
+            (left, right, unifier),
+            unifiableo(term("pair", left, left), term("pair", "tea", right), unifier),
+        )
+
+        assert answers == [
+            (
+                left,
+                right,
+                logic_list([
+                    term("=", left, atom("tea")),
+                    term("=", right, atom("tea")),
+                ]),
+            ),
+        ]
+
+    def test_unifiableo_fails_when_terms_cannot_unify(self) -> None:
+        unifier = var("Unifier")
+
+        assert (
+            solve_all(
+                program(),
+                unifier,
+                unifiableo(term("box", "tea"), term("box", "cake"), unifier),
+            )
+            == []
+        )
+
+    def test_term_hasho_hashes_variants_alike_but_preserves_variable_shape(
+        self,
+    ) -> None:
+        first_hash = var("FirstHash")
+        second_hash = var("SecondHash")
+        third_hash = var("ThirdHash")
+        x = var("X")
+        y = var("Y")
+        a = var("A")
+        b = var("B")
+
+        answers = solve_all(
+            program(),
+            (first_hash, second_hash, third_hash),
+            conj(
+                term_hasho(term("pair", x, x), first_hash),
+                term_hasho(term("pair", y, y), second_hash),
+                term_hasho(term("pair", a, b), third_hash),
+            ),
+        )
+
+        assert len(answers) == 1
+        first, second, third = answers[0]
+        assert first == second
+        assert first != third
+        assert isinstance(first, Number)
+        assert 0 <= first.value < 2_147_483_647
+
+    def test_term_hasho_validates_existing_hash_values(self) -> None:
+        hash_target = var("Hash")
+        hash_value = solve_all(
+            program(),
+            hash_target,
+            term_hasho(term("box", "tea"), hash_target),
+        )[0]
+        assert isinstance(hash_value, Number)
+
+        result = var("Result")
+        assert solve_all(
+            program(),
+            result,
+            conj(
+                term_hasho(term("box", "tea"), hash_value),
+                eq(result, "ok"),
+            ),
+        ) == [atom("ok")]
+        assert solve_all(
+            program(),
+            var("Result"),
+            term_hasho(term("box", "tea"), hash_value.value + 1),
+        ) == []
+
+    def test_term_hash_boundedo_honors_depth_and_range(self) -> None:
+        shallow_left = var("ShallowLeft")
+        shallow_right = var("ShallowRight")
+        deep_left = var("DeepLeft")
+        deep_right = var("DeepRight")
+
+        answers = solve_all(
+            program(),
+            (shallow_left, shallow_right, deep_left, deep_right),
+            conj(
+                term_hash_boundedo(term("box", "tea"), 1, 1_000_000, shallow_left),
+                term_hash_boundedo(term("box", "cake"), 1, 1_000_000, shallow_right),
+                term_hash_boundedo(term("box", "tea"), 2, 1_000_000, deep_left),
+                term_hash_boundedo(term("box", "cake"), 2, 1_000_000, deep_right),
+            ),
+        )
+
+        assert len(answers) == 1
+        shallow_tea, shallow_cake, deep_tea, deep_cake = answers[0]
+        assert shallow_tea == shallow_cake
+        assert deep_tea != deep_cake
+        assert isinstance(deep_tea, Number)
+        assert 0 <= deep_tea.value < 1_000_000
+
+    def test_term_hash_boundedo_rejects_invalid_bounds(self) -> None:
+        hash_value = var("Hash")
+
+        assert solve_all(
+            program(),
+            hash_value,
+            term_hash_boundedo(term("box", "tea"), -1, 10, hash_value),
+        ) == []
+        assert solve_all(
+            program(),
+            hash_value,
+            term_hash_boundedo(term("box", "tea"), 1, 0, hash_value),
+        ) == []
+        assert solve_all(
+            program(),
+            hash_value,
+            term_hash_boundedo(term("box", "tea"), 1.5, 10, hash_value),
+        ) == []
+
     def test_same_termo_checks_strict_identity_without_unifying(self) -> None:
         left = var("Left")
         right = var("Right")
@@ -1949,6 +3156,72 @@ class TestTermMetaprogrammingBuiltins:
             not_same_termo(term("box", "tea"), term("box", "cake")),
         ) == [left]
 
+    def test_variant_termo_accepts_alpha_equivalent_terms(self) -> None:
+        left = var("Left")
+        right = var("Right")
+        other = var("Other")
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                variant_termo(
+                    term("pair", left, term("box", left)),
+                    term("pair", right, term("box", right)),
+                ),
+            ),
+        ) == [atom("ok")]
+        assert solve_all(
+            program(),
+            marker,
+            variant_termo(term("pair", left, left), term("pair", right, other)),
+        ) == []
+
+    def test_not_variant_termo_detects_non_variants_without_binding(self) -> None:
+        left = var("Left")
+        right = var("Right")
+        other = var("Other")
+
+        assert solve_all(
+            program(),
+            (left, right),
+            not_variant_termo(term("pair", left, left), term("pair", right, other)),
+        ) == [(left, right)]
+        assert solve_all(
+            program(),
+            left,
+            not_variant_termo(term("box", left), term("box", right)),
+        ) == []
+
+    def test_subsumes_termo_checks_instance_relationship_without_binding(self) -> None:
+        general = var("General")
+        specific = var("Specific")
+        marker = var("Marker")
+
+        assert solve_all(
+            program(),
+            marker,
+            conj(
+                eq(marker, "ok"),
+                subsumes_termo(term("box", general), term("box", "tea")),
+            ),
+        ) == [atom("ok")]
+        assert solve_all(
+            program(),
+            marker,
+            subsumes_termo(term("box", "tea"), term("box", specific)),
+        ) == []
+        assert solve_all(
+            program(),
+            marker,
+            subsumes_termo(
+                term("pair", general, general),
+                term("pair", "tea", "cake"),
+            ),
+        ) == []
+
     def test_difo_delays_disequality_until_later_bindings(self) -> None:
         left = var("Left")
         right = var("Right")
@@ -1968,6 +3241,193 @@ class TestTermMetaprogrammingBuiltins:
             (left, right),
             conj(difo(left, right), eq(left, "tea"), eq(right, "cake")),
         ) == [(atom("tea"), atom("cake"))]
+
+    def test_text_conversion_builtins_relate_atoms_strings_and_lists(self) -> None:
+        value = var("Value")
+        pieces = var("Pieces")
+
+        assert solve_all(program(), pieces, atom_charso("tea", pieces)) == [
+            logic_list(["t", "e", "a"]),
+        ]
+        assert solve_all(program(), value, atom_charso(value, logic_list(["t"]))) == [
+            atom("t"),
+        ]
+        assert solve_all(program(), pieces, atom_codeso("tea", pieces)) == [
+            logic_list([116, 101, 97]),
+        ]
+        assert solve_all(
+            program(),
+            value,
+            atom_codeso(value, logic_list([116, 101, 97])),
+        ) == [atom("tea")]
+        assert solve_all(program(), pieces, string_charso(string("hi"), pieces)) == [
+            logic_list(["h", "i"]),
+        ]
+        assert solve_all(program(), value, string_codeso(value, logic_list([104]))) == [
+            string("h"),
+        ]
+
+    def test_number_conversion_builtins_parse_and_render_finite_modes(self) -> None:
+        value = var("Value")
+        pieces = var("Pieces")
+
+        assert solve_all(program(), pieces, number_charso(42, pieces)) == [
+            logic_list(["4", "2"]),
+        ]
+        assert solve_all(
+            program(),
+            value,
+            number_charso(value, logic_list(["-", "7"])),
+        ) == [num(-7)]
+        assert solve_all(program(), pieces, number_codeso(3.5, pieces)) == [
+            logic_list([51, 46, 53]),
+        ]
+        assert solve_all(
+            program(),
+            value,
+            number_codeso(value, logic_list([51, 46, 50, 53])),
+        ) == [num(3.25)]
+        assert (
+            solve_all(program(), value, number_charso(value, logic_list(["x"])))
+            == []
+        )
+
+    def test_char_codeo_relates_one_character_atoms_to_codes(self) -> None:
+        char = var("Char")
+        code = var("Code")
+
+        assert solve_all(program(), code, char_codeo("A", code)) == [num(65)]
+        assert solve_all(program(), char, char_codeo(char, 90)) == [atom("Z")]
+        assert solve_all(program(), code, char_codeo("tea", code)) == []
+        assert solve_all(program(), char, char_codeo(char, -1)) == []
+
+    def test_atom_composition_builtins_use_finite_concat_modes(self) -> None:
+        left = var("Left")
+        right = var("Right")
+        combined = var("Combined")
+
+        assert solve_all(program(), combined, atom_concato("tea", "cup", combined)) == [
+            atom("teacup"),
+        ]
+        assert solve_all(program(), right, atom_concato("tea", right, "teacup")) == [
+            atom("cup"),
+        ]
+        assert solve_all(program(), left, atom_concato(left, "cup", "teacup")) == [
+            atom("tea"),
+        ]
+        assert solve_all(
+            program(),
+            (left, right),
+            atom_concato(left, right, "ab"),
+        ) == [
+            (atom("a"), atom("b")),
+        ]
+
+    def test_atomic_list_concat_builtins_join_and_split_atoms(self) -> None:
+        value = var("Value")
+        parts = var("Parts")
+
+        assert solve_all(
+            program(),
+            value,
+            atomic_list_concato(logic_list(["tea", "cup"]), value),
+        ) == [atom("teacup")]
+        assert solve_all(
+            program(),
+            value,
+            atomic_list_concato_with_separator(
+                logic_list(["tea", 2, string("go")]),
+                "-",
+                value,
+            ),
+        ) == [atom("tea-2-go")]
+        assert solve_all(
+            program(),
+            parts,
+            atomic_list_concato_with_separator(parts, "-", "tea-cup-pot"),
+        ) == [logic_list(["tea", "cup", "pot"])]
+        assert solve_all(program(), parts, atomic_list_concato(parts, "tea")) == []
+
+    def test_number_stringo_relates_numbers_to_string_terms(self) -> None:
+        value = var("Value")
+        text = var("Text")
+
+        assert solve_all(program(), text, number_stringo(42, text)) == [string("42")]
+        assert solve_all(program(), value, number_stringo(value, string("3.5"))) == [
+            num(3.5),
+        ]
+        assert solve_all(program(), value, number_stringo(value, string("nope"))) == []
+
+    def test_atom_numbero_relates_atoms_to_numbers(self) -> None:
+        value = var("Value")
+        text = var("Text")
+
+        assert solve_all(program(), text, atom_numbero(text, 42)) == [atom("42")]
+        assert solve_all(program(), value, atom_numbero("-3.5", value)) == [
+            num(-3.5),
+        ]
+        assert solve_all(program(), value, atom_numbero("nope", value)) == []
+        assert solve_all(program(), value, atom_numbero(string("3"), value)) == []
+
+    def test_text_inspection_builtins_measure_atoms_and_strings(self) -> None:
+        value = var("Value")
+
+        assert solve_all(program(), value, atom_lengtho("teacup", value)) == [num(6)]
+        assert solve_all(program(), value, string_lengtho(string("hi"), value)) == [
+            num(2),
+        ]
+        assert solve_all(program(), value, atom_lengtho(value, 3)) == []
+
+    def test_sub_atomo_enumerates_and_filters_finite_atom_slices(self) -> None:
+        before = var("Before")
+        length = var("Length")
+        after = var("After")
+        sub_atom = var("SubAtom")
+
+        assert solve_all(
+            program(),
+            (before, length, after),
+            sub_atomo("teacup", before, length, after, "cup"),
+        ) == [(num(3), num(3), num(0))]
+        assert solve_all(
+            program(),
+            sub_atom,
+            sub_atomo("abc", 1, 1, 1, sub_atom),
+        ) == [atom("b")]
+        assert solve_all(
+            program(),
+            sub_atom,
+            sub_atomo("abc", before, length, after, sub_atom),
+        ) == [
+            atom("a"),
+            atom("ab"),
+            atom("abc"),
+            atom("b"),
+            atom("bc"),
+            atom("c"),
+        ]
+
+    def test_sub_stringo_enumerates_and_constructs_finite_string_slices(self) -> None:
+        before = var("Before")
+        length = var("Length")
+        after = var("After")
+        sub_text = var("SubText")
+        text = var("Text")
+
+        assert solve_all(
+            program(),
+            (before, length, after),
+            sub_stringo(string("logic"), before, length, after, string("gi")),
+        ) == [(num(2), num(2), num(1))]
+        assert solve_all(
+            program(),
+            text,
+            sub_stringo(text, 0, length, 0, string("logic")),
+        ) == [string("logic")]
+        assert (
+            solve_all(program(), text, sub_stringo(text, 1, length, 0, sub_text))
+            == []
+        )
 
     def test_atomico_and_callableo_classify_reified_terms(self) -> None:
         value = var("Value")
@@ -2252,6 +3712,79 @@ class TestPredicateMetadataBuiltins:
             num(7),
             num(8),
         ]
+
+    def test_current_atomo_enumerates_source_dynamic_and_builtin_atoms(self) -> None:
+        parent = relation("parent", 2)
+        memo = relation("memo", 1)
+        name = var("Name")
+        family = program(
+            fact(parent("homer", "bart")),
+            rule(parent("marge", "lisa"), eq("family", "family")),
+        )
+
+        source_atoms = set(solve_all(family, name, current_atomo(name)))
+        dynamic_atoms = set(
+            solve_all(
+                program(),
+                name,
+                conj(
+                    dynamico("memo", 1),
+                    assertzo(memo("cached")),
+                    current_atomo(name),
+                ),
+            ),
+        )
+
+        assert atom("parent") in source_atoms
+        assert atom("homer") in source_atoms
+        assert atom("bart") in source_atoms
+        assert atom("family") in source_atoms
+        assert atom("current_atomo") in source_atoms
+        assert atom("double_quotes") in source_atoms
+        assert atom("cached") in dynamic_atoms
+
+    def test_current_functoro_enumerates_source_dynamic_and_builtin_functors(
+        self,
+    ) -> None:
+        parent = relation("parent", 2)
+        memo = relation("memo", 1)
+        arity = var("Arity")
+        family = program(
+            fact(parent("homer", term("child", "bart"))),
+            rule(
+                parent("marge", "lisa"),
+                eq(term("marker", "ok"), term("marker", "ok")),
+            ),
+        )
+
+        assert solve_all(family, arity, current_functoro("parent", arity)) == [
+            num(2),
+        ]
+        assert solve_all(family, arity, current_functoro("child", arity)) == [
+            num(1),
+        ]
+        assert solve_all(family, arity, current_functoro("bart", arity)) == [
+            num(0),
+        ]
+        assert solve_all(program(), arity, current_functoro("calltermo", arity)) == [
+            num(1),
+            num(2),
+            num(3),
+            num(4),
+            num(5),
+            num(6),
+            num(7),
+            num(8),
+        ]
+        assert solve_all(
+            program(),
+            arity,
+            conj(
+                dynamico("memo", 1),
+                assertzo(memo(term("cached", "value"))),
+                current_functoro("cached", arity),
+            ),
+        ) == [num(1)]
 
     def test_predicate_propertyo_reports_source_properties(self) -> None:
         parent = relation("parent", 2)

@@ -5,6 +5,9 @@ the logic engine but below any single dialect frontend.
 
 The first batch includes:
 
+- `DialectProfile`
+- dialect registry helpers such as `dialect_profile(...)`,
+  `known_dialect_profiles(...)`, and `loader_dialect_profiles(...)`
 - `OperatorSpec`
 - `OperatorTable`
 - `PrologDirective`
@@ -18,3 +21,9 @@ The first batch includes:
 
 Dialect parser packages can share these objects even when they keep separate
 lexer and parser packages.
+
+The dialect profile registry deliberately tracks more dialect families than the
+current loader can execute. `iso` and `swi` are marked as loader-supported today;
+GNU Prolog, Scryer, Trealla, XSB, YAP, and Ciao are represented as explicit
+future compatibility targets so later frontend work can converge on one profile
+model instead of scattering dialect switches through parser and VM packages.

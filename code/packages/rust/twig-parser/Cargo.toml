@@ -1,6 +1,6 @@
 [package]
 name = "twig-parser"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Twig (Lisp-precursor) parser — thin wrapper over GrammarParser plus a typed-AST extractor; grammar is build-time-compiled to Rust via grammar_tools::codegen"
 build = "build.rs"
@@ -10,6 +10,18 @@ grammar-tools = { path = "../grammar-tools" }
 lexer         = { path = "../lexer" }
 parser        = { path = "../parser" }
 twig-lexer    = { path = "../twig-lexer" }
+# Required by `bin/twig_spec_dump.rs` to pretty-print the language-spec
+# JSON.  Library code in twig-parser does not depend on serde_json.
+serde_json    = "1.0"
 
 [build-dependencies]
 grammar-tools = { path = "../grammar-tools" }
+
+# `twig-spec-dump` emits the language spec JSON for downstream tools
+# (LSP servers, VS Code extensions, syntax-highlight generators).  It
+# pulls from the build-time-compiled lexer + parser grammars baked into
+# the dependency crates — no runtime file I/O, no shipping of
+# `twig.tokens` / `twig.grammar` files.  See LS04.
+[[bin]]
+name = "twig-spec-dump"
+path = "bin/twig_spec_dump.rs"

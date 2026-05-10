@@ -1,0 +1,10 @@
+[package]
+name = "coding_adventures_vault_engine_kv2"
+version = "0.1.0"
+edition = "2021"
+description = "VLT08 — KV-v2 (versioned static KV) secret engine for the Vault stack. Implements the SecretEngine trait from vault-engine-core. Each (path, version) is immutable once written; revocation marks a version dead but keeps the row for audit."
+
+[dependencies]
+coding_adventures_vault_engine_core = { path = "../vault-engine-core" }
+coding_adventures_vault_leases = { path = "../vault-leases" }
+coding_adventures_zeroize = { path = "../zeroize" }

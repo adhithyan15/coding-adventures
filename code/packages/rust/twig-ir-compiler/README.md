@@ -65,13 +65,34 @@ assert_eq!(module.entry_point.as_deref(), Some("main"));
 
 `interpreter_ir::Operand` has `Var`, `Int`, `Float`, `Bool` — no dedicated `String` variant. Where the IR semantically needs a string literal (e.g. the function name passed to `make_closure`), we materialise it via a `const` instruction whose source operand is `Operand::Var(literal_text)`. The `vm-core` `const` handler stores the literal verbatim. See the module-level comment in `src/compiler.rs` for the full rationale.
 
+## LANG23 PR 23-E: Refinement type annotation emission
+
+When a Twig function carries LANG23 annotation syntax, the compiler lowers it
+into the corresponding `IIRFunction` fields:
+
+```scheme
+; Both params and return type annotated:
+(define (clamp-byte (x : int) -> (Int 0 256)) x)
+```
+
+produces an `IIRFunction` where:
+- `params` = `[("x", "any")]` (unchanged — Twig is still dynamically typed)
+- `param_refinements` = `[Some(RefinedType::unrefined(Kind::Int))]`
+- `return_refinement` = `Some(RefinedType::refined(Kind::Int, Range(0, 256)))`
+
+The refinement checker (`lang-refinement-checker`) reads these fields to
+discharge proof obligations.  Callers that don't use LANG23 syntax see zero
+change — annotation fields default to empty/`None`.
+
 ## Tests
 
 ```bash
 cargo test -p twig-ir-compiler
 ```
 
-Coverage targets the same surface as the Python `tests/test_compiler.py`: every literal, every form, the apply-site dispatch decision, free-variable analysis (via the dedicated `free_vars` module's tests), top-level recursion, mutual recursion, error paths.
+56+ unit tests covering every literal, every form, apply-site dispatch, free-variable
+analysis, top-level recursion, mutual recursion, error paths, and 7 LANG23 round-trip
+tests verifying that annotations survive the parse → compile → IIR pipeline.
 
 ## Where it fits in the stack
 

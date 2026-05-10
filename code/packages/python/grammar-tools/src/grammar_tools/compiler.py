@@ -234,6 +234,7 @@ def compile_token_grammar(grammar: TokenGrammar, source_file: str = "") -> str:
 
     return (
         "# AUTO-GENERATED FILE — DO NOT EDIT\n"
+        "# ruff: noqa: E501, F401\n"
         f"{source_line}"
         "# Regenerate with: grammar-tools compile-tokens <source.tokens>\n"
         "#\n"
@@ -241,7 +242,7 @@ def compile_token_grammar(grammar: TokenGrammar, source_file: str = "") -> str:
         "# Downstream packages import TOKEN_GRAMMAR directly instead of\n"
         "# reading and parsing the .tokens file at runtime.\n"
         "\n"
-        "from grammar_tools.token_grammar import PatternGroup, TokenDefinition, TokenGrammar\n"
+        "from grammar_tools.token_grammar import PatternGroup, TokenDefinition, TokenGrammar\n"  # noqa: E501
         "\n"
         "# fmt: off  # noqa: E501 — generated code may have long lines\n"
         "\n"
@@ -343,7 +344,9 @@ def _compile_element(element: GrammarElement, indent: str) -> str:
                 f"{indent}),",
             ])
 
-        case SeparatedRepetition(element=elem, separator=sep, at_least_one=at_least_one):
+        case SeparatedRepetition(
+            element=elem, separator=sep, at_least_one=at_least_one
+        ):
             elem_src = _compile_element(elem, i1)
             sep_src = _compile_element(sep, i1)
             return "\n".join([
@@ -412,6 +415,7 @@ def compile_parser_grammar(grammar: ParserGrammar, source_file: str = "") -> str
 
     return (
         "# AUTO-GENERATED FILE — DO NOT EDIT\n"
+        "# ruff: noqa: E501, F401\n"
         f"{source_line}"
         "# Regenerate with: grammar-tools compile-grammar <source.grammar>\n"
         "#\n"

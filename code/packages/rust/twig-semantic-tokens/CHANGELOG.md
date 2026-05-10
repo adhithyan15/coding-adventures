@@ -1,5 +1,15 @@
 # Changelog — twig-semantic-tokens
 
+## [0.1.1] — 2026-05-04
+
+### Fixed (LANG23 PR 23-E compatibility)
+
+- Pattern matching on `Lambda` in `semantic_tokens` updated to use `..` (struct
+  update syntax) to avoid exhaustive-field errors after `twig-parser` 0.2.0 added
+  `param_annotations` and `return_annotation` fields to `Lambda`.  No
+  behavioural change — annotation fields are not relevant to semantic-token
+  classification.
+
 ## [0.1.0] — 2026-04-30
 
 Initial release.  Semantic-token extraction for Twig — the second

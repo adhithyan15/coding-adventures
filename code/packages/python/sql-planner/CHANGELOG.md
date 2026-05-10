@@ -1,5 +1,206 @@
 # Changelog
 
+## [0.22.0] - 2026-05-05
+
+### Added
+
+- **`ExcludedColumn` expression node** (`expr.py`) — a new `Expr` variant that
+  represents a reference to the *would-be-inserted* row's column value inside
+  an `ON CONFLICT DO UPDATE SET` clause.  `ExcludedColumn(col="qty")` compiles
+  to `LoadExcludedColumn(col="qty")` in the IR, which the VM resolves against
+  `_VmState.excluded_row` at runtime.  The node is intentionally distinct from
+  `Column` so that the type system enforces that EXCLUDED refs only appear in
+  upsert assignment expressions.
+
+- **`UpsertAssignment` and `UpsertClause` AST nodes** (`ast.py`) — two frozen
+  dataclasses for the parsed ON CONFLICT clause:
+  - `UpsertAssignment(column: str, value: Expr)` — one `col = expr` pair.
+  - `UpsertClause(conflict_target, do_nothing, assignments)` — the full parsed
+    clause.  `InsertValuesStmt.upsert_clause` and `InsertSelectStmt.upsert_clause`
+    are both `UpsertClause | None` (default `None`).
+
+- **`UpsertAssignment` and `UpsertAction` plan nodes** (`plan.py`) — the
+  resolver's counterparts:
+  - `UpsertAssignment(column: str, value: Expr)` — an assignment with the planner's
+    `Expr` type (which includes `ExcludedColumn`).
+  - `UpsertAction(conflict_target, do_nothing, assignments)` — carried on
+    `Insert.upsert: UpsertAction | None`.
+
+- **`_resolve_upsert()` and `_resolve_upsert_expr()` in `planner.py`** — convert
+  `UpsertClause` AST → `UpsertAction` plan, passing `ExcludedColumn` nodes through
+  unchanged and recursively resolving `BinaryExpr` operands.  Integrated into
+  `_plan_insert()` and `_plan_insert_select()`.
+
+- **New exports in `__init__.py`**: `AstUpsertAssignment`, `UpsertClause`,
+  `ExcludedColumn`, `UpsertAction`, `UpsertAssignment`.
+
+## [0.21.0] - 2026-05-04
+
+### Added
+
+- **`on_conflict` field on `InsertValuesStmt` and `InsertSelectStmt`** (`ast.py`)
+  — both INSERT AST nodes now carry `on_conflict: str | None` with values
+  `None | "REPLACE" | "IGNORE" | "ABORT" | "FAIL" | "ROLLBACK"`.  `None`
+  means no conflict clause (default SQLite ABORT behaviour).
+
+- **`on_conflict` field on `Insert` plan node** (`plan.py`) — the logical
+  plan's `Insert` node surfaces the same field so the codegen can emit the
+  correct IR instruction.
+
+- **Planner propagates `on_conflict`** (`planner.py`) — both `_plan_insert()`
+  and `_plan_insert_select()` pass `stmt.on_conflict` through to the `Insert`
+  plan node.
+
+## [0.20.0] - 2026-05-04
+
+### Added
+
+- **`BinaryOp.CONCAT`** (`expr.py`) — SQL `||` string-concatenation operator.
+  Maps to `BinaryOpCode.CONCAT` in codegen and thence to the VM's `_concat`
+  kernel, which enforces string-only operands (NULL propagates).
+
+- **`JoinKind.NATURAL`** (`ast.py`) — string constant for `NATURAL JOIN`,
+  forwarded from the adapter to the planner where schema access is available.
+
+- **`JoinClause.using`** (`ast.py`) — new optional field carrying column names
+  from `JOIN … USING (col1, col2)`.  The adapter sets this field instead of
+  building an ON expression; the planner expands it into a qualified
+  `left.col = right.col AND …` condition once the accumulated join scope is
+  available.  This correctly handles chained three-table USING joins where the
+  USING column may live in an earlier (not immediately preceding) table.
+
+- **NATURAL JOIN resolution** (`planner.py :: _build_from_tree`) — the planner
+  now detects `JoinKind.NATURAL`, collects all shared columns between the left
+  scope and the right table's schema, and builds the equivalent INNER JOIN ON
+  condition.  Falls back to `JoinKind.CROSS` (Cartesian product) when no
+  shared column names exist, matching SQLite behaviour.
+
+- **USING resolution** (`planner.py :: _build_from_tree`) — new `elif j.using`
+  branch that, for each USING column, searches the full accumulated scope for
+  the owning left-side table and emits `Column(table=owner, col=col) = Column(table=right, col=col)`.
+
+### Tests
+
+- `tests/test_planner_join.py` — added `TestJoinUsing` (5 cases: single
+  column, multi-column, three-table chain where USING column lives in an
+  earlier table, unknown column raises, LEFT JOIN USING) and `TestNaturalJoin`
+  (3 cases: shared column → INNER, no shared columns → CROSS, multiple shared
+  columns → AND condition).
+
+## [0.19.0] - 2026-05-04
+
+### Added
+
+- **`SingleRow` plan node** (`plan.py`) — leaf node that yields exactly one
+  empty row; used by `_plan_select` when `SelectStmt.from_` is `None`
+  (SELECT without FROM).  Added to `LogicalPlan` type alias and exported
+  from `__init__.py`.
+
+### Changed
+
+- **`SelectStmt.from_` is now optional** (`ast.py`) — the `from_` field
+  changed from a required `TableRef | DerivedTableRef | RecursiveCTERef` to
+  an optional one that defaults to `None`.  Field ordering was updated so
+  `items` (required) precedes `from_` (optional) to satisfy Python dataclass
+  rules.  Planner now emits `SingleRow()` when `from_` is absent.
+
+## [0.18.0] - 2026-05-04
+
+### Added
+
+- **`GROUP_CONCAT` aggregate function** (`expr.py`, `plan.py`, `planner.py`) —
+  `AggFunc.GROUP_CONCAT` added to the planner-level `AggFunc` enum, matching
+  the SQL `GROUP_CONCAT(col [, separator])` function.
+- **`separator` field on `AggregateExpr`** (`expr.py`) — optional
+  `str | None` carrying the literal separator from `GROUP_CONCAT(col, sep)`.
+  `None` means "use the SQL default `','`".
+- **`separator` field on `AggregateItem`** (`plan.py`) — same semantics;
+  propagated from the expression level through the plan node so the codegen
+  can bake the separator into `InitAgg` at compile time.
+- **`separator` propagation in the planner** (`planner.py`) — both
+  `_resolve` and `_collect_aggregates` now forward the `separator` field
+  when constructing `AggregateItem`.
+
+## [0.17.0] - 2026-05-04
+
+### Added
+
+- **`extra_args` field on `WindowFuncExpr`** (`expr.py`) — carries zero or
+  more additional literal expressions beyond the primary column argument.
+  Used by multi-argument window functions: `LAG(col, offset, default)`,
+  `LEAD(col, offset, default)`, `NTH_VALUE(col, n)`.
+- **`extra_args` field on `WindowFuncSpec`** (`plan.py`) — same semantics
+  as `WindowFuncExpr.extra_args`, carried through the plan representation
+  so the codegen can extract literal constants at compile time.
+- **`extra_args` propagation in the planner** (`planner.py`) — `_resolve`
+  now recursively resolves all `extra_args` expressions, and
+  `WindowFuncSpec` construction in `_plan_select` passes `extra_args`
+  through from the source expression.
+
+## [0.16.0] - 2026-05-04
+
+### Added
+
+- **`returning` field on DML AST nodes** (`ast.py`) — `InsertValuesStmt`,
+  `InsertSelectStmt`, `UpdateStmt`, and `DeleteStmt` each gain a
+  `returning: tuple[Expr, ...] = ()` field that carries the list of
+  expressions from the SQL `RETURNING` clause.
+- **`returning` field on DML plan nodes** (`plan.py`) — `Insert`, `Update`,
+  and `Delete` each gain the same `returning: tuple[Expr, ...] = ()` field.
+- **RETURNING resolution in the planner** (`planner.py`) — `_plan_insert`,
+  `_plan_insert_select`, `_plan_update`, and `_plan_delete` all resolve
+  RETURNING column references against the target table's column scope (the
+  same scope used for WHERE / SET expressions), converting
+  `Column(table=None, col='x')` to `Column(table='tablename', col='x')`.
+
+## [0.15.0] - 2026-05-04
+
+### Added
+
+- **`CorrelatedRef(outer_alias, col)` expression** (`expr.py`) — represents a
+  column reference that resolves only against the *outer* query's scope inside
+  a subquery.  Distinguished from `Column` so that codegen can emit a
+  `LoadOuterColumn` instruction at runtime.  Returns `False` from
+  `contains_aggregate()` and is a no-op in `_collect_columns()`.
+- **`outer_scope` parameter on `_plan_select()` and `_resolve()`** (`planner.py`)
+  — when planning a subquery, the enclosing query's column scope is passed as
+  `outer_scope`.  Column references not found in the inner scope fall back to
+  `outer_scope` and become `CorrelatedRef` nodes rather than raising
+  `UnknownColumn`.
+- **`_resolve_column()` outer-scope fallback** (`planner.py`) — qualified
+  references (`alias.col`) and bare references (`col`) both try `outer_scope`
+  after failing inner-scope resolution.  Qualified references produce
+  `CorrelatedRef(outer_alias=alias, col=col)`; bare references walk all
+  outer-scope aliases looking for a unique owner.
+- **Subquery correlated planning** (`planner.py`) — `_resolve` cases for
+  `ExistsSubquery`, `ScalarSubquery`, `InSubquery`, and `NotInSubquery` now
+  pass the current query's scope as `outer_scope` when recursively planning
+  the inner `SelectStmt`.
+- **`CorrelatedRef`** exported from `sql_planner.__init__`.
+- **8 new planner unit tests** in `tests/test_planner_correlated.py`
+  covering: correlated IN/EXISTS/scalar/NOT IN subqueries, bare-name outer
+  scope resolution, and error cases (unknown alias, column absent from all
+  scopes).
+
+## [0.14.0] - 2026-05-04
+
+### Added
+
+- **`InSubquery(operand, query)` expression** (`expr.py`) — represents
+  `expr IN (SELECT ...)`.  Contains the resolved inner `LogicalPlan`
+  (after planner rewriting from raw `SelectStmt`).  Returns `False`
+  from `contains_aggregate()` and propagates `collect_columns()` on
+  `operand` only.
+- **`NotInSubquery(operand, query)` expression** (`expr.py`) — same
+  structure as `InSubquery` but represents `expr NOT IN (SELECT ...)`.
+  Both added to the `Expr` union type.
+- **Planner dispatch** (`planner.py`) — `_resolve` cases for
+  `InSubquery` and `NotInSubquery`: resolve `operand` in the current
+  scope, then recursively plan the inner `SelectStmt` via
+  `_plan_select`, replacing the raw AST node with a `LogicalPlan`.
+- **`InSubquery` and `NotInSubquery`** exported from
+  `sql_planner.__init__`.
+
 ## [0.13.0] - 2026-04-28
 
 ### Added

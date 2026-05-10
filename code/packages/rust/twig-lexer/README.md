@@ -15,6 +15,8 @@ Mirrors the same wrapper pattern used by every other Rust language frontend in t
 | `LPAREN`     | `LParen`       | `None`                | `"LPAREN"`           |
 | `RPAREN`     | `RParen`       | `None`                | `"RPAREN"`           |
 | `QUOTE`      | `Name`         | `Some("QUOTE")`       | `"QUOTE"`            |
+| `COLON`      | `Name`         | `Some("COLON")`       | `"COLON"`            |
+| `ARROW`      | `Name`         | `Some("ARROW")`       | `"ARROW"`            |
 | `BOOL_TRUE`  | `Name`         | `Some("BOOL_TRUE")`   | `"BOOL_TRUE"`        |
 | `BOOL_FALSE` | `Name`         | `Some("BOOL_FALSE")`  | `"BOOL_FALSE"`       |
 | `INTEGER`    | `Name`         | `Some("INTEGER")`     | `"INTEGER"`          |
@@ -23,6 +25,8 @@ Mirrors the same wrapper pattern used by every other Rust language frontend in t
 | (sentinel)   | `Eof`          | `None`                | `"EOF"`              |
 
 The seven Twig keywords (`define`, `lambda`, `let`, `if`, `begin`, `quote`, `nil`) are promoted from `NAME` to `KEYWORD` at lex time. Whitespace and `;`-to-end-of-line comments are silently skipped.
+
+**LANG23 PR 23-E additions:** `COLON` (`:`) and `ARROW` (`->`) are exact-literal tokens that take priority over the `NAME` pattern, enabling refinement type annotations in function signatures.  `->` is now reserved (it was previously a valid identifier but was never used in that role).
 
 ## Usage
 

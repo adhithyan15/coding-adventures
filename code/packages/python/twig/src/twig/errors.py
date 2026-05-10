@@ -55,3 +55,30 @@ class TwigCompileError(TwigError):
 
 class TwigRuntimeError(TwigError):
     """A Twig program raised an error during execution."""
+
+
+class TwigExitRequest(TwigError):
+    """Raised by ``host/exit`` instead of calling ``sys.exit`` directly.
+
+    Using a domain-specific exception instead of ``sys.exit`` ensures
+    that an embedded ``TwigVM`` (inside a REPL, a language server, a
+    test harness, or a web service) does not kill the host Python
+    process unconditionally.  CLI entry points that want the standard
+    "exit the process" behaviour should catch this and forward:
+
+    .. code-block:: python
+
+        try:
+            vm.run(source)
+        except TwigExitRequest as e:
+            sys.exit(e.code)
+
+    Attributes
+    ----------
+    code:
+        The integer exit code the Twig program requested.
+    """
+
+    def __init__(self, code: int) -> None:
+        super().__init__(f"exit({code})")
+        self.code = code

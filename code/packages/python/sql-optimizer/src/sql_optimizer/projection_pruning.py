@@ -240,7 +240,7 @@ def _contains_wildcard(e: Expr) -> bool:
             return any(a.value is not None and _contains_wildcard(a.value) for a in args)
         case CaseExpr(whens=whens, else_=else_):
             return (
-                any(_contains_wildcard(cond) or _contains_wildcard(result) for cond, result in whens)
+                any(_contains_wildcard(c) or _contains_wildcard(r) for c, r in whens)
                 or (else_ is not None and _contains_wildcard(else_))
             )
         case _:

@@ -6,6 +6,13 @@ All notable changes to this package will be documented in this file.
 
 ### Changed
 
+- Executed ALGOL dummy statements as no-ops in `then`, `else`, `do`, and
+  terminal-label statement positions.
+- Added `algol60-wasm run SOURCE` for shell-level source-to-WASM execution with
+  stdout forwarding, optional `_start` result reporting, and a default WASM
+  instruction budget.
+- Added the `algol60-wasm` command and `python -m algol_wasm_compiler` entry
+  point for compiling ALGOL source files into `.wasm` modules from the shell.
 - Compiled ALGOL programs now execute scalar variables through frame-backed
   WASM memory operations, including nested-block outer writes and shadowing.
 - Compiled value-only integer procedures now run through generated WASM
@@ -43,6 +50,9 @@ All notable changes to this package will be documented in this file.
 - Executed chained assignments, ALGOL-left-associative exponentiation with
   integer or real exponents, and branch-selected conditional expressions
   through the full WASM path.
+- Executed nested conditional expressions in arithmetic bounds/subscripts,
+  Boolean conditions, and designational `goto` targets through the full WASM
+  path.
 - Executed boolean `and`, `or`, and `impl` with short-circuiting RHS
   evaluation through the full WASM path, while keeping `eqv` strict.
 - Executed bare no-argument typed procedure names as expression calls,
@@ -74,12 +84,54 @@ All notable changes to this package will be documented in this file.
   procedures, preserving descriptor aliasing and existing `value` array copies.
 - Executed formal procedure calls that forward label, switch, and procedure
   arguments to actual procedures.
+- Executed report-style typed formal specifiers such as `integer array a;` and
+  `real procedure f;` through the full WASM pipeline.
+- Executed conditional switch actuals through direct calls, forwarded switch
+  formals, and formal procedure dispatch, with a golden end-to-end fixture.
+- Added a golden convergence fixture for real, boolean, and string by-name
+  actuals through scalar storage, array-element storage, expression thunks, and
+  formal-procedure forwarding.
+- Accepted multiple arguments to builtin `print(...)` / `output(...)`, emitting
+  each integer, boolean, real, or string argument in order through the same
+  guarded output path.
+- Executed forward sibling procedure calls and mutually recursive typed
+  procedures by registering a block's procedure signatures before checking any
+  procedure body.
+- Executed switch entries that select later sibling switch declarations,
+  including forward switch lists that use later typed procedure predicates.
+- Executed array bounds that call later sibling typed procedures at block
+  entry.
+- Rejected array bounds that read arrays declared later in the same block while
+  keeping earlier descriptor reads executable.
+- Rejected array bounds that call procedures whose reachable bodies may access
+  later same-block array descriptors before allocation, while keeping earlier
+  and callee-local descriptor reads executable.
+- Executed subscripted integer and real array elements as writable `for`
+  statement control variables.
 - Rejected formal procedure forwarding when a concrete procedure argument does
   not satisfy the nested procedure formal contract expected by the receiver.
+- Executed formal procedure calls that forward another formal procedure
+  parameter as a procedure argument, including read-only expression actuals and
+  writable by-name actuals through the final concrete procedure.
+- Executed by-name label formals through lazy label descriptors, preserving
+  conditional label actual re-evaluation through direct and formal procedure
+  calls while keeping `value label` formals as call-time snapshots.
+- Executed by-name switch formals through lazy switch descriptors, preserving
+  conditional switch actual re-evaluation through direct and formal procedure
+  calls while keeping `value switch` formals as call-time snapshots.
+- Added a golden designator fixture covering lazy versus value label and switch
+  formals across direct, forwarded, and formal procedure calls.
+- Added an executable surface audit matrix that runs representative
+  grammar-backed ALGOL programs through the local WASM runtime.
 - Executed recursive switch self-selection entries by routing recursive
   descriptor lookup through the switch-eval helper at runtime.
 - Executed the report-style `go to` spelling through the full parser,
   type-checker, IR, and WASM pipeline.
+- Executed normalized ALGOL publication symbols for relations, exponentiation,
+  multiplication, real division, and boolean operators through the full WASM
+  pipeline.
+- Executed mixed-case standard numeric and output builtins through the full
+  WASM pipeline.
 - Executed standard numeric builtin functions `abs`, `sign`, and `entier`
   through the full parser, type-checker, IR, and WASM pipeline.
 - Executed standard real builtin function `sqrt` through the full parser,
@@ -91,6 +143,9 @@ All notable changes to this package will be documented in this file.
   `0` through the ALGOL runtime failure path.
 - Executed real exponentiation through the `compiler_math` `f64_pow` import,
   including integer-base promotion and domain failures returning `0`.
+- Returned `0` for out-of-range, infinite, or NaN real values reaching
+  `entier` or fixed-format real output, preventing host/WASM conversion
+  exceptions from escaping end-to-end execution.
 - Added a standard-real-math golden fixture covering imported real math,
   real exponentiation, and output in one end-to-end program.
 - Added a convergence golden fixture that combines conditional expressions,
@@ -108,6 +163,18 @@ All notable changes to this package will be documented in this file.
   procedure calls, label and switch formals, multiple `for` element forms,
   parenthesized conditional designational expressions, numeric labels, boolean
   operators, real arithmetic, and output in one end-to-end WASM program.
+- Added golden convergence fixtures for lexical recursion, procedure-formal
+  closures, nonlocal procedure `goto` unwind, dynamic multidimensional array
+  bounds, mixed writable by-name scalar types, and runtime bounds-guard
+  failure before output.
+- Added storage-semantics convergence coverage for mixed `own` scalars and
+  arrays, boolean/string `value` array copies, and value versus by-name loop
+  control storage updates.
+- Added edge-semantics convergence coverage for boolean/string conditional
+  expressions, conditional subscripts, terminal labels, invalid switch indexes,
+  array element caps, and heap exhaustion guard behavior.
+- Accepted uppercase and mixed-case keywords/comments, `<>` not-equal
+  relations, and double-quoted string literals through the full WASM pipeline.
 
 ## [0.1.0] - 2026-04-20
 

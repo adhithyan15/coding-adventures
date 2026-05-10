@@ -1,0 +1,13 @@
+[package]
+name = "smart-home-testkit"
+version = "0.1.0"
+edition = "2021"
+description = "Deterministic smart-home fixtures and fake streams for runtime and integration tests"
+license = "MIT"
+
+[dependencies]
+smart-home-core = { path = "../smart-home-core" }
+smart-home-event-streams = { path = "../smart-home-event-streams" }
+smart-home-local-http = { path = "../smart-home-local-http" }
+smart-home-registry = { path = "../smart-home-registry" }
+smart-home-runtime = { path = "../smart-home-runtime" }

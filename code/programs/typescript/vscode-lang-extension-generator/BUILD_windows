@@ -1,0 +1,16 @@
+$ErrorActionPreference = 'Stop'
+
+Push-Location ..\..\..\packages\typescript\directed-graph
+npm install --silent
+Pop-Location
+
+Push-Location ..\..\..\packages\typescript\state-machine
+npm install --silent
+Pop-Location
+
+Push-Location ..\..\..\packages\typescript\cli-builder
+npm install --silent
+Pop-Location
+
+npm install --silent
+.\node_modules\.bin\vitest.cmd run --coverage

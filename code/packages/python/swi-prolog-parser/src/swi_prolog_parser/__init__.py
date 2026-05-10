@@ -12,6 +12,7 @@ from swi_prolog_parser.parser import (
     parse_swi_program,
     parse_swi_query,
     parse_swi_source,
+    parse_swi_term,
 )
 
 __all__ = [
@@ -28,6 +29,7 @@ __all__ = [
     "parse_swi_program",
     "parse_swi_query",
     "parse_swi_source",
+    "parse_swi_term",
 ]
 
 __version__ = "0.1.0"
