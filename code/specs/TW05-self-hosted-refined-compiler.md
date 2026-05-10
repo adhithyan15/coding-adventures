@@ -62,6 +62,7 @@ Twig source -> InterpreterIR -> LANG VM / JIT / AOT / JVM / CLR / WASM
 | LANG24 | Defines `constraint-vm`, the solver substrate used by refinement checking. |
 | LANG25 | Defines the native AOT/JIT/debugger completion plan that typed Twig will reuse. |
 | LANG26 | Defines the shared Rust stdlib, including source-span and diagnostic helpers the self-hosted compiler can reuse. |
+| LANG27 | Defines the Rust IIR-to-host-VM path for JVM, CLR, BEAM, WASM, and future VM targets. |
 
 ## Language additions
 

@@ -524,6 +524,7 @@ members = [
     "cas-complex",
     "cas-trig",
     "codegen-core",
+    "host-vm-lowering",
     "cir-to-compiler-ir",
     "aot-core",
     "brainfuck-iir-compiler",
