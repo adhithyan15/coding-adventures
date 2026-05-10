@@ -247,6 +247,23 @@ IIR `call_builtin` or `call_std` lowers to:
 The frontend should only name the language-level builtin.  The host lowering
 unit resolves it to a stable stdlib function id and target import/helper plan.
 
+## Concurrency Integration
+
+LANG28 concurrency is part of the host VM contract.  Host backends may use
+target-native facilities internally, but they must preserve VM task semantics:
+
+- JVM and CLR can use host thread pools as workers, not one host thread per VM
+  task;
+- BEAM can map VM tasks and channels to BEAM processes/mailboxes where the
+  semantics match, and otherwise fall back to the shared runtime scheduler;
+- WASM starts with a single-thread event-loop scheduler and can add worker/WASI
+  thread support later;
+- real OS thread and process APIs still flow through LANG26 `liblang-std`
+  capability checks.
+
+The shared lowering unit should carry concurrency helper requirements just like
+stdlib calls, runtime descriptors, and debug metadata.
+
 ## Debug Path
 
 The source map chain should flow as:
