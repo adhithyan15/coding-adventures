@@ -6,6 +6,7 @@ requires-python = ">=3.9"
 dependencies = [
     "coding-adventures-single-layer-network",
     "coding-adventures-two-layer-network",
+    "coding-adventures-multi-directed-graph",
     "coding-adventures-neural-network",
     "coding-adventures-neural-graph-vm",
 ]
@@ -13,5 +14,6 @@ dependencies = [
 [tool.uv.sources]
 coding-adventures-single-layer-network = { path = "../../../packages/python/single-layer-network" }
 coding-adventures-two-layer-network = { path = "../../../packages/python/two-layer-network" }
+coding-adventures-multi-directed-graph = { path = "../../../packages/python/multi-directed-graph" }
 coding-adventures-neural-network = { path = "../../../packages/python/neural-network" }
 coding-adventures-neural-graph-vm = { path = "../../../packages/python/neural-graph-vm" }

@@ -1,1 +1,3 @@
-PYTHONPATH=src:../neural-network/src python -m pytest tests
+cd ../multi-directed-graph && python -m pytest tests
+cd ../neural-network && set PYTHONPATH=src;../multi-directed-graph/src&& python -m pytest tests
+set PYTHONPATH=src;../neural-network/src;../multi-directed-graph/src&& python -m pytest tests

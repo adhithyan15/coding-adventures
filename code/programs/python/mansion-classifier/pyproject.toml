@@ -8,6 +8,7 @@ dependencies = [
     "coding-adventures-loss-functions",
     "activation-functions",
     "perceptron",
+    "coding-adventures-multi-directed-graph",
     "coding-adventures-neural-network",
     "coding-adventures-neural-graph-vm"
 ]
@@ -17,5 +18,6 @@ coding-adventures-matrix = { path = "../../../packages/python/matrix", editable 
 coding-adventures-loss-functions = { path = "../../../packages/python/loss-functions", editable = true }
 activation-functions = { path = "../../../packages/python/activation-functions", editable = true }
 perceptron = { path = "../../../packages/python/perceptron", editable = true }
+coding-adventures-multi-directed-graph = { path = "../../../packages/python/multi-directed-graph", editable = true }
 coding-adventures-neural-network = { path = "../../../packages/python/neural-network", editable = true }
 coding-adventures-neural-graph-vm = { path = "../../../packages/python/neural-graph-vm", editable = true }
