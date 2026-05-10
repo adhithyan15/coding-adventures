@@ -62,7 +62,7 @@ lang-stdlib-core
     pure Rust implementations: math, strings, bytes, collections, diagnostics
 
 lang-stdlib-host
-    effectful adapters: stdio, filesystem, env, time, random, process
+    effectful adapters: stdio, filesystem, env, time, random, thread, process
 
 lang-stdlib-ffi
     C ABI symbols and static/dynamic library packaging
@@ -145,6 +145,7 @@ Initial modules:
 - `env`
 - `time`
 - `random`
+- `thread`
 - `process`
 
 Every function in this crate has explicit capability metadata.  Tests can
@@ -325,6 +326,7 @@ Each function declares effects:
 - `read_env`
 - `time`
 - `random`
+- `thread`
 - `process`
 - `network`
 
@@ -337,6 +339,8 @@ Capabilities are finer grained and host-policy facing:
 - `env.read`
 - `time.now`
 - `random.secure`
+- `thread.spawn`
+- `process.spawn`
 - `process.exit`
 
 The runtime context passed to `lang_std_call` carries the active capability
@@ -455,7 +459,7 @@ without forcing one language's exception model onto another.
 - in-memory filesystem;
 - deterministic clock;
 - seeded random source;
-- denied-by-default process/network operations.
+- denied-by-default thread/process/network operations.
 
 This lets every language run the same stdlib conformance tests without touching
 the real host system.
@@ -470,8 +474,13 @@ Rules:
 - Pure functions can be inlined.
 - Allocation functions must preserve GC safepoints and write barriers.
 - I/O and filesystem functions must call through the host adapter.
-- Process and network functions are optional and denied by default.
+- Thread, process, and network functions are optional and denied by default.
 - AOT binaries embed the capability manifest they were linked with.
+
+LANG28 defines VM-native lightweight tasks, channels, cancellation, timers, and
+select.  `std/thread` and `std/process` are explicit real-OS escape hatches;
+ordinary language concurrency should lower to LANG28 VM opcodes instead of
+implicitly spawning host threads or child processes.
 
 ## Initial API set
 
