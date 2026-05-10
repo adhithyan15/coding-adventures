@@ -66,7 +66,7 @@ defmodule CodingAdventures.JsonRpc.Server do
   variant can be added without changing the handler API.
   """
 
-  alias CodingAdventures.JsonRpc.{Errors, Message, Reader, Writer}
+  alias CodingAdventures.JsonRpc.{Errors, Reader, Writer}
   alias CodingAdventures.JsonRpc.Message.{Notification, Request, Response}
 
   # ---------------------------------------------------------------------------

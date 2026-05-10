@@ -601,12 +601,24 @@ defmodule CodingAdventures.SqlParserTest do
   end
 
   # ---------------------------------------------------------------------------
+  # parse_sql/1 — SELECT without FROM
+  # ---------------------------------------------------------------------------
+
+  describe "parse_sql/1 — SELECT without FROM" do
+    test "SELECT without FROM parses as an expression query" do
+      {:ok, node} = SqlParser.parse_sql("SELECT *")
+      assert node.rule_name == "program"
+      assert contains_node?(node, "select_stmt")
+    end
+  end
+
+  # ---------------------------------------------------------------------------
   # parse_sql/1 — error cases
   # ---------------------------------------------------------------------------
 
   describe "parse_sql/1 — errors" do
-    test "incomplete SELECT (no FROM) returns error" do
-      {:error, msg} = SqlParser.parse_sql("SELECT *")
+    test "incomplete SELECT with no select list returns error" do
+      {:error, msg} = SqlParser.parse_sql("SELECT")
       assert msg =~ "Parse error" or msg =~ "Unexpected" or msg =~ "Expected"
     end
 
@@ -624,4 +636,12 @@ defmodule CodingAdventures.SqlParserTest do
       {:error, _msg} = SqlParser.parse_sql("")
     end
   end
+
+  defp contains_node?(%ASTNode{rule_name: rule_name}, rule_name), do: true
+
+  defp contains_node?(%ASTNode{children: children}, rule_name) do
+    Enum.any?(children, &contains_node?(&1, rule_name))
+  end
+
+  defp contains_node?(_, _rule_name), do: false
 end
