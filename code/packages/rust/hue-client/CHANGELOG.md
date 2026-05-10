@@ -10,6 +10,8 @@ All notable changes to this package will be documented in this file.
   commands, and event-stream connections.
 - Injectable `HueTransport` trait plus `HueClient` facade for tests and later
   runtime adapters.
+- Typed aggregate `HueSnapshot` parsing from a single CLIP v2 resource snapshot
+  envelope.
 - Hue v2 envelope/error parsing, registration response parsing, and light
   resource decoding.
 - Hue bridge resource decoding for paired bridge identity and time zone data.

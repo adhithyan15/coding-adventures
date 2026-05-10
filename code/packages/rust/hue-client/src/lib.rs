@@ -116,6 +116,51 @@ impl HueEnvelope {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+pub struct HueSnapshot {
+    pub bridges: Vec<HueBridgeResource>,
+    pub devices: Vec<HueDeviceResource>,
+    pub lights: Vec<HueLightResource>,
+    pub grouped_lights: Vec<HueGroupedLightResource>,
+    pub rooms: Vec<HueRoomResource>,
+    pub zones: Vec<HueZoneResource>,
+    pub scenes: Vec<HueSceneResource>,
+    pub motions: Vec<HueMotionResource>,
+    pub buttons: Vec<HueButtonResource>,
+}
+
+impl HueSnapshot {
+    pub fn from_envelope(envelope: &HueEnvelope) -> Result<Self, HueClientError> {
+        Ok(Self {
+            bridges: parse_bridges_from_envelope(envelope)?,
+            devices: parse_devices_from_envelope(envelope)?,
+            lights: parse_lights_from_envelope(envelope)?,
+            grouped_lights: parse_grouped_lights_from_envelope(envelope)?,
+            rooms: parse_rooms_from_envelope(envelope)?,
+            zones: parse_zones_from_envelope(envelope)?,
+            scenes: parse_scenes_from_envelope(envelope)?,
+            motions: parse_motion_resources_from_envelope(envelope)?,
+            buttons: parse_button_resources_from_envelope(envelope)?,
+        })
+    }
+
+    pub fn resource_count(&self) -> usize {
+        self.bridges.len()
+            + self.devices.len()
+            + self.lights.len()
+            + self.grouped_lights.len()
+            + self.rooms.len()
+            + self.zones.len()
+            + self.scenes.len()
+            + self.motions.len()
+            + self.buttons.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.resource_count() == 0
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub struct HueEventRecord {
     pub id: Option<String>,
     pub event_type: Option<String>,
@@ -283,6 +328,11 @@ impl<T: HueTransport> HueClient<T> {
             .transport
             .send(resource_snapshot_request(self.application_key()?)?)?;
         parse_envelope_response(response)
+    }
+
+    pub fn get_snapshot(&mut self) -> Result<HueSnapshot, HueClientError> {
+        let envelope = self.get_resources()?;
+        HueSnapshot::from_envelope(&envelope)
     }
 
     pub fn get_collection(
@@ -1867,6 +1917,57 @@ mod tests {
         assert_eq!(envelope.errors.len(), 1);
         assert_eq!(envelope.errors[0].error_type.as_deref(), Some("7"));
         assert_eq!(envelope.errors[0].description, "denied");
+    }
+
+    #[test]
+    fn builds_typed_snapshot_from_resource_envelope() {
+        let envelope = parse_hue_envelope(
+            br#"{"data":[
+                {"id":"bridge-resource-1","type":"bridge","bridge_id":"001788fffeabcdef","owner":{"rid":"device-bridge","rtype":"device"},"time_zone":{"time_zone":"America/Los_Angeles"}},
+                {"id":"device-1","type":"device","metadata":{"name":"Kitchen lamp"},"product_data":{"manufacturer_name":"Signify Netherlands B.V.","model_id":"LCA001","product_name":"Hue color lamp","software_version":"1.116.3"},"services":[{"rid":"light-1","rtype":"light"},{"rid":"button-1","rtype":"button"}]},
+                {"id":"light-1","type":"light","metadata":{"name":"Kitchen"},"owner":{"rid":"device-1","rtype":"device"},"on":{"on":true},"dimming":{"brightness":42},"color_temperature":{"mirek":366}},
+                {"id":"grouped-light-1","type":"grouped_light","metadata":{"name":"Kitchen group"},"owner":{"rid":"room-1","rtype":"room"},"on":{"on":true},"dimming":{"brightness":84}},
+                {"id":"room-1","type":"room","metadata":{"name":"Kitchen","archetype":"kitchen"},"children":[{"rid":"device-1","rtype":"device"}],"services":[{"rid":"grouped-light-1","rtype":"grouped_light"}]},
+                {"id":"zone-1","type":"zone","metadata":{"name":"Downstairs","archetype":"floor"},"children":[{"rid":"room-1","rtype":"room"}],"services":[{"rid":"grouped-light-1","rtype":"grouped_light"}]},
+                {"id":"scene-1","type":"scene","metadata":{"name":"Dinner"},"group":{"rid":"room-1","rtype":"room"},"actions":[{"target":{"rid":"light-1","rtype":"light"},"action":{"on":{"on":true},"dimming":{"brightness":66},"color_temperature":{"mirek":366}}}]},
+                {"id":"motion-1","type":"motion","metadata":{"name":"Hallway motion"},"owner":{"rid":"device-1","rtype":"device"},"motion":{"motion":false,"motion_valid":true}},
+                {"id":"button-1","type":"button","metadata":{"name":"Dimmer button"},"owner":{"rid":"device-1","rtype":"device"},"button":{"last_event":"initial_press"}}
+            ],"errors":[]}"#,
+        )
+        .unwrap();
+
+        let snapshot = HueSnapshot::from_envelope(&envelope).unwrap();
+
+        assert_eq!(snapshot.resource_count(), 9);
+        assert!(!snapshot.is_empty());
+        assert_eq!(
+            snapshot.bridges[0].bridge_id.as_deref(),
+            Some("001788fffeabcdef")
+        );
+        assert_eq!(snapshot.devices[0].id.as_str(), "device-1");
+        assert_eq!(snapshot.lights[0].id.as_str(), "light-1");
+        assert_eq!(snapshot.grouped_lights[0].id.as_str(), "grouped-light-1");
+        assert_eq!(snapshot.rooms[0].id.as_str(), "room-1");
+        assert_eq!(snapshot.zones[0].id.as_str(), "zone-1");
+        assert_eq!(snapshot.scenes[0].id.as_str(), "scene-1");
+        assert_eq!(snapshot.motions[0].id.as_str(), "motion-1");
+        assert_eq!(snapshot.buttons[0].id.as_str(), "button-1");
+    }
+
+    #[test]
+    fn client_reads_typed_snapshot_through_single_resource_request() {
+        let transport = RecordingTransport::with_response(
+            r#"{"data":[{"id":"light-1","type":"light","metadata":{"name":"Kitchen"},"owner":{"rid":"device-1","rtype":"device"},"on":{"on":true}}],"errors":[]}"#,
+        );
+        let mut client = HueClient::new(HueClientConfig::paired("app-key"), transport);
+
+        let snapshot = client.get_snapshot().unwrap();
+        let transport = client.into_transport();
+
+        assert_eq!(snapshot.resource_count(), 1);
+        assert_eq!(snapshot.lights[0].id.as_str(), "light-1");
+        assert_eq!(transport.requests.len(), 1);
+        assert_eq!(transport.requests[0].path, "/clip/v2/resource");
     }
 
     #[test]
