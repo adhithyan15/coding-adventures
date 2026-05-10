@@ -23,7 +23,7 @@
 //! | `PaintEllipse`    | Implemented - FillEllipse / DrawEllipse             |
 //! | `PaintPath`       | Implemented - ID2D1PathGeometry                     |
 //! | `PaintLayer`      | Implemented - PushLayer / PopLayer with opacity     |
-//! | `PaintGradient`   | Planned — CreateLinearGradientBrush                 |
+//! | `PaintGradient`   | Implemented - linear/radial gradient brushes        |
 //! | `PaintImage`      | Implemented - ID2D1Bitmap from PixelContainer       |
 //!
 //! ## Direct2D pipeline (offscreen, no HWND)
@@ -74,9 +74,9 @@
 pub const VERSION: &str = "0.1.0";
 
 use paint_instructions::{
-    FillRule, ImageSrc, PaintClip, PaintEllipse, PaintGlyphRun, PaintGroup, PaintImage,
-    PaintInstruction, PaintLayer, PaintLine, PaintPath, PaintRect, PaintScene, PaintText,
-    PathCommand, PixelContainer, TextAlign,
+    FillRule, GradientKind, GradientStop, ImageSrc, PaintClip, PaintEllipse, PaintGlyphRun,
+    PaintGradient, PaintGroup, PaintImage, PaintInstruction, PaintLayer, PaintLine, PaintPath,
+    PaintRect, PaintScene, PaintText, PathCommand, PixelContainer, TextAlign,
 };
 #[cfg(target_os = "windows")]
 use paint_vm_runtime::{
@@ -116,19 +116,20 @@ use windows::Win32::Foundation::{BOOL, FALSE, HWND, RECT};
 use windows::Win32::Graphics::Direct2D::Common::{
     D2D1_ALPHA_MODE_PREMULTIPLIED, D2D1_ALPHA_MODE_UNKNOWN, D2D1_BEZIER_SEGMENT, D2D1_COLOR_F,
     D2D1_FIGURE_BEGIN_FILLED, D2D1_FIGURE_END_CLOSED, D2D1_FIGURE_END_OPEN,
-    D2D1_FILL_MODE_ALTERNATE, D2D1_FILL_MODE_WINDING, D2D1_PIXEL_FORMAT, D2D_POINT_2F, D2D_RECT_F,
-    D2D_SIZE_F, D2D_SIZE_U,
+    D2D1_FILL_MODE_ALTERNATE, D2D1_FILL_MODE_WINDING, D2D1_GRADIENT_STOP, D2D1_PIXEL_FORMAT,
+    D2D_POINT_2F, D2D_RECT_F, D2D_SIZE_F, D2D_SIZE_U,
 };
 #[cfg(target_os = "windows")]
 use windows::Win32::Graphics::Direct2D::{
-    D2D1CreateFactory, ID2D1Factory, ID2D1RenderTarget, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
-    D2D1_ARC_SEGMENT, D2D1_ARC_SIZE_LARGE, D2D1_ARC_SIZE_SMALL,
+    D2D1CreateFactory, ID2D1Brush, ID2D1Factory, ID2D1RenderTarget,
+    D2D1_ANTIALIAS_MODE_PER_PRIMITIVE, D2D1_ARC_SEGMENT, D2D1_ARC_SIZE_LARGE, D2D1_ARC_SIZE_SMALL,
     D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, D2D1_BITMAP_PROPERTIES, D2D1_DRAW_TEXT_OPTIONS_NONE,
-    D2D1_ELLIPSE, D2D1_FACTORY_TYPE_SINGLE_THREADED, D2D1_HWND_RENDER_TARGET_PROPERTIES,
-    D2D1_LAYER_OPTIONS_NONE, D2D1_LAYER_PARAMETERS, D2D1_PRESENT_OPTIONS_NONE,
-    D2D1_QUADRATIC_BEZIER_SEGMENT, D2D1_RENDER_TARGET_PROPERTIES, D2D1_RENDER_TARGET_TYPE_DEFAULT,
-    D2D1_RENDER_TARGET_USAGE_NONE, D2D1_ROUNDED_RECT, D2D1_SWEEP_DIRECTION_CLOCKWISE,
-    D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE,
+    D2D1_ELLIPSE, D2D1_EXTEND_MODE_CLAMP, D2D1_FACTORY_TYPE_SINGLE_THREADED, D2D1_GAMMA_2_2,
+    D2D1_HWND_RENDER_TARGET_PROPERTIES, D2D1_LAYER_OPTIONS_NONE, D2D1_LAYER_PARAMETERS,
+    D2D1_LINEAR_GRADIENT_BRUSH_PROPERTIES, D2D1_PRESENT_OPTIONS_NONE,
+    D2D1_QUADRATIC_BEZIER_SEGMENT, D2D1_RADIAL_GRADIENT_BRUSH_PROPERTIES,
+    D2D1_RENDER_TARGET_PROPERTIES, D2D1_RENDER_TARGET_TYPE_DEFAULT, D2D1_RENDER_TARGET_USAGE_NONE,
+    D2D1_ROUNDED_RECT, D2D1_SWEEP_DIRECTION_CLOCKWISE, D2D1_SWEEP_DIRECTION_COUNTER_CLOCKWISE,
 };
 #[cfg(target_os = "windows")]
 use windows::Win32::Graphics::DirectWrite::{
@@ -246,6 +247,61 @@ fn to_d2d_color(r: f64, g: f64, b: f64, a: f64) -> D2D1_COLOR_F {
         b: b as f32,
         a: a as f32,
     }
+}
+
+#[cfg(target_os = "windows")]
+fn collect_gradients(instructions: &[PaintInstruction]) -> HashMap<String, PaintGradient> {
+    let mut gradients = HashMap::new();
+    collect_gradients_into(instructions, &mut gradients);
+    gradients
+}
+
+#[cfg(target_os = "windows")]
+fn collect_gradients_into(
+    instructions: &[PaintInstruction],
+    gradients: &mut HashMap<String, PaintGradient>,
+) {
+    for instruction in instructions {
+        match instruction {
+            PaintInstruction::Gradient(gradient) => {
+                if let Some(id) = gradient.base.id.as_ref() {
+                    gradients.insert(id.clone(), gradient.clone());
+                }
+            }
+            PaintInstruction::Group(group) => collect_gradients_into(&group.children, gradients),
+            PaintInstruction::Layer(layer) => collect_gradients_into(&layer.children, gradients),
+            PaintInstruction::Clip(clip) => collect_gradients_into(&clip.children, gradients),
+            _ => {}
+        }
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn gradient_ref(value: &str) -> Option<&str> {
+    value
+        .trim()
+        .strip_prefix("url(#")
+        .and_then(|value| value.strip_suffix(')'))
+}
+
+#[cfg(target_os = "windows")]
+fn d2d_gradient_stops(stops: &[GradientStop]) -> Vec<D2D1_GRADIENT_STOP> {
+    let mut stops: Vec<D2D1_GRADIENT_STOP> = stops
+        .iter()
+        .map(|stop| {
+            let (r, g, b, a) = parse_css_color(&stop.color);
+            D2D1_GRADIENT_STOP {
+                position: stop.offset.clamp(0.0, 1.0) as f32,
+                color: to_d2d_color(r, g, b, a),
+            }
+        })
+        .collect();
+    stops.sort_by(|a, b| {
+        a.position
+            .partial_cmp(&b.position)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
+    stops
 }
 
 // ---------------------------------------------------------------------------
@@ -372,22 +428,23 @@ unsafe fn render_instructions(
     ctx: &mut RenderContext,
     rt: &ID2D1RenderTarget,
     instructions: &[PaintInstruction],
+    gradients: &HashMap<String, PaintGradient>,
 ) {
     for instr in instructions {
         match instr {
-            PaintInstruction::Rect(rect) => render_rect(rt, rect),
-            PaintInstruction::Line(line) => render_line(rt, line),
+            PaintInstruction::Rect(rect) => render_rect(rt, rect, gradients),
+            PaintInstruction::Line(line) => render_line(rt, line, gradients),
             PaintInstruction::Group(group) => {
                 // PaintGroup: render children directly into the same target.
                 // Transform support (SetTransform) is deferred — for barcodes,
                 // groups are purely logical containers.
-                render_group(ctx, rt, group);
+                render_group(ctx, rt, group, gradients);
             }
-            PaintInstruction::Clip(clip) => render_clip(ctx, rt, clip),
+            PaintInstruction::Clip(clip) => render_clip(ctx, rt, clip, gradients),
             PaintInstruction::GlyphRun(run) => render_glyph_run(ctx, rt, run),
-            PaintInstruction::Ellipse(ellipse) => render_ellipse(rt, ellipse),
-            PaintInstruction::Path(path) => render_path(ctx, rt, path),
-            PaintInstruction::Layer(layer) => render_layer(ctx, rt, layer),
+            PaintInstruction::Ellipse(ellipse) => render_ellipse(rt, ellipse, gradients),
+            PaintInstruction::Path(path) => render_path(ctx, rt, path, gradients),
+            PaintInstruction::Layer(layer) => render_layer(ctx, rt, layer, gradients),
             PaintInstruction::Image(image) => render_image(rt, image),
             PaintInstruction::Text(text) => render_text(ctx, rt, text),
             PaintInstruction::Gradient(_) => {}
@@ -408,7 +465,11 @@ unsafe fn render_instructions(
 /// (left, bottom) ── (right, bottom)
 /// ```
 #[cfg(target_os = "windows")]
-unsafe fn render_rect(rt: &ID2D1RenderTarget, rect: &PaintRect) {
+unsafe fn render_rect(
+    rt: &ID2D1RenderTarget,
+    rect: &PaintRect,
+    gradients: &HashMap<String, PaintGradient>,
+) {
     let d2d_rect = D2D_RECT_F {
         left: rect.x as f32,
         top: rect.y as f32,
@@ -418,7 +479,7 @@ unsafe fn render_rect(rt: &ID2D1RenderTarget, rect: &PaintRect) {
     let radius = rect.corner_radius.unwrap_or(0.0).max(0.0) as f32;
 
     if let Some(fill) = rect.fill.as_deref() {
-        if let Some(brush) = solid_brush(rt, fill) {
+        if let Some(brush) = paint_brush(rt, fill, gradients) {
             if radius > 0.0 {
                 let rounded = D2D1_ROUNDED_RECT {
                     rect: d2d_rect,
@@ -433,7 +494,7 @@ unsafe fn render_rect(rt: &ID2D1RenderTarget, rect: &PaintRect) {
     }
 
     if let Some(stroke) = rect.stroke.as_deref() {
-        if let Some(brush) = solid_brush(rt, stroke) {
+        if let Some(brush) = paint_brush(rt, stroke, gradients) {
             let stroke_width = rect.stroke_width.unwrap_or(1.0).max(0.0) as f32;
             if radius > 0.0 {
                 let rounded = D2D1_ROUNDED_RECT {
@@ -455,8 +516,12 @@ unsafe fn render_rect(rt: &ID2D1RenderTarget, rect: &PaintRect) {
 /// Direct2D handles the perpendicular expansion internally (unlike paint-metal
 /// which manually constructs a thin rectangle from triangle vertices).
 #[cfg(target_os = "windows")]
-unsafe fn render_line(rt: &ID2D1RenderTarget, line: &PaintLine) {
-    if let Some(brush) = solid_brush(rt, &line.stroke) {
+unsafe fn render_line(
+    rt: &ID2D1RenderTarget,
+    line: &PaintLine,
+    gradients: &HashMap<String, PaintGradient>,
+) {
+    if let Some(brush) = paint_brush(rt, &line.stroke, gradients) {
         let p0 = D2D_POINT_2F {
             x: line.x1 as f32,
             y: line.y1 as f32,
@@ -480,7 +545,12 @@ unsafe fn render_line(rt: &ID2D1RenderTarget, line: &PaintLine) {
 ///
 /// Nested clips are intersected automatically by Direct2D.
 #[cfg(target_os = "windows")]
-unsafe fn render_clip(ctx: &mut RenderContext, rt: &ID2D1RenderTarget, clip: &PaintClip) {
+unsafe fn render_clip(
+    ctx: &mut RenderContext,
+    rt: &ID2D1RenderTarget,
+    clip: &PaintClip,
+    gradients: &HashMap<String, PaintGradient>,
+) {
     let clip_rect = D2D_RECT_F {
         left: clip.x as f32,
         top: clip.y as f32,
@@ -489,36 +559,50 @@ unsafe fn render_clip(ctx: &mut RenderContext, rt: &ID2D1RenderTarget, clip: &Pa
     };
 
     rt.PushAxisAlignedClip(&clip_rect, D2D1_ANTIALIAS_MODE_PER_PRIMITIVE);
-    render_instructions(ctx, rt, &clip.children);
+    render_instructions(ctx, rt, &clip.children, gradients);
     rt.PopAxisAlignedClip();
 }
 
 #[cfg(target_os = "windows")]
-unsafe fn render_group(ctx: &mut RenderContext, rt: &ID2D1RenderTarget, group: &PaintGroup) {
+unsafe fn render_group(
+    ctx: &mut RenderContext,
+    rt: &ID2D1RenderTarget,
+    group: &PaintGroup,
+    gradients: &HashMap<String, PaintGradient>,
+) {
     with_transform(rt, group.transform.as_ref(), || {
         let opacity = group.opacity.unwrap_or(1.0).clamp(0.0, 1.0) as f32;
         if opacity < 1.0 {
             with_layer(ctx, rt, opacity, |ctx, rt| {
-                render_instructions(ctx, rt, &group.children);
+                render_instructions(ctx, rt, &group.children, gradients);
             });
         } else {
-            render_instructions(ctx, rt, &group.children);
+            render_instructions(ctx, rt, &group.children, gradients);
         }
     });
 }
 
 #[cfg(target_os = "windows")]
-unsafe fn render_layer(ctx: &mut RenderContext, rt: &ID2D1RenderTarget, layer: &PaintLayer) {
+unsafe fn render_layer(
+    ctx: &mut RenderContext,
+    rt: &ID2D1RenderTarget,
+    layer: &PaintLayer,
+    gradients: &HashMap<String, PaintGradient>,
+) {
     with_transform(rt, layer.transform.as_ref(), || {
         let opacity = layer.opacity.unwrap_or(1.0).clamp(0.0, 1.0) as f32;
         with_layer(ctx, rt, opacity, |ctx, rt| {
-            render_instructions(ctx, rt, &layer.children);
+            render_instructions(ctx, rt, &layer.children, gradients);
         });
     });
 }
 
 #[cfg(target_os = "windows")]
-unsafe fn render_ellipse(rt: &ID2D1RenderTarget, ellipse: &PaintEllipse) {
+unsafe fn render_ellipse(
+    rt: &ID2D1RenderTarget,
+    ellipse: &PaintEllipse,
+    gradients: &HashMap<String, PaintGradient>,
+) {
     let d2d_ellipse = D2D1_ELLIPSE {
         point: D2D_POINT_2F {
             x: ellipse.cx as f32,
@@ -528,12 +612,12 @@ unsafe fn render_ellipse(rt: &ID2D1RenderTarget, ellipse: &PaintEllipse) {
         radiusY: ellipse.ry as f32,
     };
     if let Some(fill) = ellipse.fill.as_deref() {
-        if let Some(brush) = solid_brush(rt, fill) {
+        if let Some(brush) = paint_brush(rt, fill, gradients) {
             rt.FillEllipse(&d2d_ellipse, &brush);
         }
     }
     if let Some(stroke) = ellipse.stroke.as_deref() {
-        if let Some(brush) = solid_brush(rt, stroke) {
+        if let Some(brush) = paint_brush(rt, stroke, gradients) {
             rt.DrawEllipse(
                 &d2d_ellipse,
                 &brush,
@@ -545,7 +629,12 @@ unsafe fn render_ellipse(rt: &ID2D1RenderTarget, ellipse: &PaintEllipse) {
 }
 
 #[cfg(target_os = "windows")]
-unsafe fn render_path(ctx: &RenderContext, rt: &ID2D1RenderTarget, path: &PaintPath) {
+unsafe fn render_path(
+    ctx: &RenderContext,
+    rt: &ID2D1RenderTarget,
+    path: &PaintPath,
+    gradients: &HashMap<String, PaintGradient>,
+) {
     let fill_mode = match path.fill_rule.as_ref().unwrap_or(&FillRule::NonZero) {
         FillRule::NonZero => D2D1_FILL_MODE_WINDING,
         FillRule::EvenOdd => D2D1_FILL_MODE_ALTERNATE,
@@ -644,12 +733,12 @@ unsafe fn render_path(ctx: &RenderContext, rt: &ID2D1RenderTarget, path: &PaintP
     }
 
     if let Some(fill) = path.fill.as_deref() {
-        if let Some(brush) = solid_brush(rt, fill) {
+        if let Some(brush) = paint_brush(rt, fill, gradients) {
             rt.FillGeometry(&geometry, &brush, None);
         }
     }
     if let Some(stroke) = path.stroke.as_deref() {
-        if let Some(brush) = solid_brush(rt, stroke) {
+        if let Some(brush) = paint_brush(rt, stroke, gradients) {
             rt.DrawGeometry(
                 &geometry,
                 &brush,
@@ -861,6 +950,62 @@ unsafe fn solid_brush(
     }
     let color = to_d2d_color(r, g, b, a);
     rt.CreateSolidColorBrush(&color, None).ok()
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn paint_brush(
+    rt: &ID2D1RenderTarget,
+    paint: &str,
+    gradients: &HashMap<String, PaintGradient>,
+) -> Option<ID2D1Brush> {
+    if let Some(id) = gradient_ref(paint) {
+        return gradients
+            .get(id)
+            .and_then(|gradient| gradient_brush(rt, gradient));
+    }
+    solid_brush(rt, paint)?.cast().ok()
+}
+
+#[cfg(target_os = "windows")]
+unsafe fn gradient_brush(rt: &ID2D1RenderTarget, gradient: &PaintGradient) -> Option<ID2D1Brush> {
+    let stops = d2d_gradient_stops(&gradient.stops);
+    match stops.as_slice() {
+        [] => None,
+        [stop] => rt
+            .CreateSolidColorBrush(&stop.color, None)
+            .ok()?
+            .cast()
+            .ok(),
+        _ => {
+            let collection = rt
+                .CreateGradientStopCollection(&stops, D2D1_GAMMA_2_2, D2D1_EXTEND_MODE_CLAMP)
+                .ok()?;
+            match gradient.kind {
+                GradientKind::Linear { x1, y1, x2, y2 } => {
+                    let props = D2D1_LINEAR_GRADIENT_BRUSH_PROPERTIES {
+                        startPoint: point(x1, y1),
+                        endPoint: point(x2, y2),
+                    };
+                    rt.CreateLinearGradientBrush(&props, None, &collection)
+                        .ok()?
+                        .cast()
+                        .ok()
+                }
+                GradientKind::Radial { cx, cy, r } => {
+                    let props = D2D1_RADIAL_GRADIENT_BRUSH_PROPERTIES {
+                        center: point(cx, cy),
+                        gradientOriginOffset: D2D_POINT_2F { x: 0.0, y: 0.0 },
+                        radiusX: r.max(0.0) as f32,
+                        radiusY: r.max(0.0) as f32,
+                    };
+                    rt.CreateRadialGradientBrush(&props, None, &collection)
+                        .ok()?
+                        .cast()
+                        .ok()
+                }
+            }
+        }
+    }
 }
 
 #[cfg(target_os = "windows")]
@@ -1125,8 +1270,8 @@ pub fn descriptor() -> PaintBackendDescriptor {
             layer_opacity: SupportLevel::Supported,
             layer_filters: SupportLevel::Unsupported,
             layer_blend_modes: SupportLevel::Unsupported,
-            linear_gradient: SupportLevel::Unsupported,
-            radial_gradient: SupportLevel::Unsupported,
+            linear_gradient: SupportLevel::Supported,
+            radial_gradient: SupportLevel::Supported,
             antialiasing: SupportLevel::Supported,
             offscreen_pixels: SupportLevel::Supported,
         },
@@ -1185,7 +1330,8 @@ pub unsafe fn render_to_hwnd(hwnd: HWND, scene: &PaintScene) -> windows::core::R
 
     render_target.BeginDraw();
     render_target.Clear(Some(&bg_color));
-    render_instructions(&mut ctx, &render_target, &scene.instructions);
+    let gradients = collect_gradients(&scene.instructions);
+    render_instructions(&mut ctx, &render_target, &scene.instructions, &gradients);
     render_target.EndDraw(None, None)?;
     Ok(())
 }
@@ -1309,10 +1455,11 @@ unsafe fn render_unsafe(scene: &PaintScene, width: u32, height: u32) -> PixelCon
     let (bg_r, bg_g, bg_b, bg_a) = parse_css_color(&scene.background);
     let bg_color = to_d2d_color(bg_r, bg_g, bg_b, bg_a);
     let mut ctx = RenderContext::new(d2d_factory.clone(), width as f32, height as f32);
+    let gradients = collect_gradients(&scene.instructions);
 
     render_target.BeginDraw();
     render_target.Clear(Some(&bg_color as *const _));
-    render_instructions(&mut ctx, &render_target, &scene.instructions);
+    render_instructions(&mut ctx, &render_target, &scene.instructions, &gradients);
     render_target.EndDraw(None, None).expect("EndDraw failed");
 
     // ── Step 6: Read back pixels ─────────────────────────────────────────
@@ -1394,8 +1541,8 @@ unsafe fn render_unsafe(scene: &PaintScene, width: u32, height: u32) -> PixelCon
 mod tests {
     use super::*;
     use paint_instructions::{
-        GlyphPosition, PaintBase, PaintGlyphRun, PaintGroup, PaintInstruction, PaintRect,
-        PaintScene, PaintText, TextAlign,
+        GlyphPosition, GradientKind, GradientStop, PaintBase, PaintGlyphRun, PaintGradient,
+        PaintGroup, PaintInstruction, PaintRect, PaintScene, PaintText, TextAlign,
     };
     #[cfg(target_os = "windows")]
     use paint_vm_runtime::{
@@ -1443,7 +1590,11 @@ mod tests {
         );
         assert_eq!(
             descriptor.capabilities.linear_gradient,
-            SupportLevel::Unsupported
+            SupportLevel::Supported
+        );
+        assert_eq!(
+            descriptor.capabilities.radial_gradient,
+            SupportLevel::Supported
         );
     }
 
@@ -1476,6 +1627,156 @@ mod tests {
     }
 
     // ─── Colour parser tests ────────────────────────────────────────────────
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn render_linear_gradient_fill() {
+        let mut scene = PaintScene::new(20.0, 4.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("fade".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Linear {
+                    x1: 0.0,
+                    y1: 0.0,
+                    x2: 20.0,
+                    y2: 0.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#000000".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#ffffff".to_string(),
+                    },
+                ],
+            }));
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                0.0,
+                0.0,
+                20.0,
+                4.0,
+                "url(#fade)",
+            )));
+
+        let pixels = render(&scene);
+        let (left, _, _, _) = pixels.pixel_at(1, 2);
+        let (right, _, _, _) = pixels.pixel_at(18, 2);
+
+        assert!(left < 80, "expected dark left edge, got {left}");
+        assert!(right > 170, "expected bright right edge, got {right}");
+        assert!(left < right);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn render_radial_gradient_fill() {
+        let mut scene = PaintScene::new(16.0, 16.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("spot".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Radial {
+                    cx: 8.0,
+                    cy: 8.0,
+                    r: 8.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#000000".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#ffffff".to_string(),
+                    },
+                ],
+            }));
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                0.0,
+                0.0,
+                16.0,
+                16.0,
+                "url(#spot)",
+            )));
+
+        let pixels = render(&scene);
+        let (center, _, _, _) = pixels.pixel_at(8, 8);
+        let (corner, _, _, _) = pixels.pixel_at(0, 0);
+
+        assert!(center < 80, "expected dark center, got {center}");
+        assert!(corner > 170, "expected bright corner, got {corner}");
+        assert!(center < corner);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn runtime_registry_accepts_direct2d_gradient_scene() {
+        let backend = renderer();
+        let mut registry = PaintBackendRegistry::new();
+        registry.register(&backend);
+
+        let mut scene = PaintScene::new(8.0, 2.0);
+        scene
+            .instructions
+            .push(PaintInstruction::Gradient(PaintGradient {
+                base: PaintBase {
+                    id: Some("fade".to_string()),
+                    metadata: None,
+                },
+                kind: GradientKind::Linear {
+                    x1: 0.0,
+                    y1: 0.0,
+                    x2: 8.0,
+                    y2: 0.0,
+                },
+                stops: vec![
+                    GradientStop {
+                        offset: 0.0,
+                        color: "#000000".to_string(),
+                    },
+                    GradientStop {
+                        offset: 1.0,
+                        color: "#ffffff".to_string(),
+                    },
+                ],
+            }));
+        scene
+            .instructions
+            .push(PaintInstruction::Rect(PaintRect::filled(
+                0.0,
+                0.0,
+                8.0,
+                2.0,
+                "url(#fade)",
+            )));
+
+        let pixels = registry
+            .render_auto(
+                &scene,
+                PaintRenderOptions {
+                    preference: PaintBackendPreference::Named("paint-vm-direct2d".to_string()),
+                    ..PaintRenderOptions::default()
+                },
+            )
+            .expect("Direct2D should advertise exact gradient support");
+
+        let (left, _, _, _) = pixels.pixel_at(1, 1);
+        let (right, _, _, _) = pixels.pixel_at(6, 1);
+        assert!(left < right);
+    }
 
     #[test]
     fn parse_hex_color_6_digit() {
