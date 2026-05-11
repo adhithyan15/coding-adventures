@@ -35,16 +35,16 @@
 //!
 //! ## Primitives shipped here
 //!
-//! Each of the six LM00b primitives ships as its own module so the
-//! implementations can land in parallel without conflicting on one
-//! giant file:
+//! Each of the six LM00b primitives ships in its own module so they
+//! can land in parallel without conflicting on one giant file:
 //!
 //!   * [`entail`] — bidirectional textual entailment (v0.2.0)
-//!   * `decompose_text` — extractor; not yet implemented
-//!   * `render_node` — renderer; not yet implemented
-//!   * `find_contradicting_reading` — adversary; not yet implemented
-//!   * `judge_plausibility` — plausibility judge; not yet implemented
-//!   * `extract_rules` — rule extractor; not yet implemented
+//!   * [`render_node`] — faithful natural-language rendering of an
+//!     IR node (v0.3.0)
+//!   * `decompose_text` — extractor; not yet here
+//!   * `find_contradicting_reading` — adversary; not yet here
+//!   * `judge_plausibility` — plausibility judge; not yet here
+//!   * `extract_rules` — rule extractor; not yet here
 //!
 //! Until a primitive lands, its `PROMPT_VERSION_*` constant is the
 //! only thing this crate exposes for it.
@@ -65,11 +65,14 @@ use llm_gateway::{
 };
 
 pub mod entail;
-// Re-export the entry points so callers can write
-// `llm_primitives::entail(...)` and `llm_primitives::EntailRequest`.
-// (`entail` the function and `entail` the module share a name, which
-// Rust allows because they live in different namespaces.)
+pub mod render_node;
+
+// Re-exports at the crate root. Each primitive's function and module
+// share a name; Rust allows that since they live in different
+// namespaces, so callers can write `llm_primitives::entail(...)` /
+// `llm_primitives::render_node(...)` directly.
 pub use entail::{entail, EntailRequest, EntailResponse};
+pub use render_node::{render_node, RenderNodeRequest, RenderNodeResponse, RenderStyle};
 
 // ---------------------------------------------------------------------------
 // Roles

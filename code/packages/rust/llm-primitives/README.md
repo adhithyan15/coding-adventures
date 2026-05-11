@@ -58,8 +58,8 @@ This crate defines the building blocks every primitive plugs into.
 | Primitive | Status | Role | Module |
 |---|---|---|---|
 | `entail(req, gateway)` | ✅ v0.2.0 | `Nli` | `entail` |
+| `render_node(req, gateway)` | ✅ v0.3.0 | `Renderer` | `render_node` |
 | `decompose_text` | planned | `Extractor` | — |
-| `render_node` | planned | `Renderer` | — |
 | `find_contradicting_reading` | planned | `Adversary` | — |
 | `judge_plausibility` | planned | `Plausibility` | — |
 | `extract_rules` | planned | `RuleExtractor` | — |
