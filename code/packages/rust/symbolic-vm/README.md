@@ -34,7 +34,7 @@ are included:
 ## Quick start
 
 ```rust
-use symbolic_ir::{apply, int, sym, ADD, D, MUL, POW};
+use symbolic_ir::{apply, int, sym, ADD, D, INTEGRATE, MUL, POW};
 use symbolic_vm::{SymbolicBackend, VM};
 
 let mut vm = VM::new(Box::new(SymbolicBackend::new()));
@@ -52,6 +52,16 @@ assert_eq!(vm.eval(sym("t")), sym("t"));
 // Symbolic differentiation is installed only on SymbolicBackend.
 let dx_x_sq = apply(sym(D), vec![apply(sym(POW), vec![sym("x"), int(2)]), sym("x")]);
 assert_eq!(vm.eval(dx_x_sq), apply(sym(MUL), vec![int(2), sym("x")]));
+
+// Symbolic integration has a small Phase 1 table on SymbolicBackend.
+let int_x_sq = apply(sym(INTEGRATE), vec![apply(sym(POW), vec![sym("x"), int(2)]), sym("x")]);
+assert_eq!(
+    vm.eval(int_x_sq),
+    apply(
+        sym(MUL),
+        vec![symbolic_ir::rat(1, 3), apply(sym(POW), vec![sym("x"), int(3)])],
+    )
+);
 ```
 
 ## Custom backend

@@ -25,8 +25,8 @@ use std::collections::HashMap;
 
 use symbolic_ir::{
     IRApply, IRNode, ACOS, ACOSH, ADD, AND, ASIN, ASINH, ASSIGN, ATAN, ATANH, COS, COSH, D, DEFINE,
-    DIV, EQUAL, EXP, GREATER, GREATER_EQUAL, IF, INV, LESS, LESS_EQUAL, LOG, MUL, NEG, NOT,
-    NOT_EQUAL, OR, POW, SIN, SINH, SQRT, SUB, TAN, TANH,
+    DIV, EQUAL, EXP, GREATER, GREATER_EQUAL, IF, INTEGRATE, INV, LESS, LESS_EQUAL, LOG, MUL, NEG,
+    NOT, NOT_EQUAL, OR, POW, SIN, SINH, SQRT, SUB, TAN, TANH,
 };
 
 use crate::backend::Handler;
@@ -939,6 +939,135 @@ fn derivative_handler() -> Handler {
     })
 }
 
+fn integrate_handler() -> Handler {
+    std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
+        if expr.args.len() != 2 {
+            panic!("Integrate expects 2 arguments, got {}", expr.args.len());
+        }
+
+        let f = expr.args[0].clone();
+        let x = match &expr.args[1] {
+            IRNode::Symbol(s) => s.clone(),
+            _ => return IRNode::Apply(Box::new(expr)),
+        };
+
+        let result = integrate(&f, &x);
+        let original = apply_node(INTEGRATE, vec![f, IRNode::Symbol(x)]);
+        if result == original {
+            result
+        } else {
+            vm.eval(result)
+        }
+    })
+}
+
+fn integrate(f: &IRNode, x: &str) -> IRNode {
+    if !depends_on(f, x) {
+        return apply_node(MUL, vec![f.clone(), IRNode::Symbol(x.to_string())]);
+    }
+
+    if f == &IRNode::Symbol(x.to_string()) {
+        return apply_node(
+            MUL,
+            vec![
+                IRNode::Rational(1, 2),
+                apply_node(POW, vec![IRNode::Symbol(x.to_string()), IRNode::Integer(2)]),
+            ],
+        );
+    }
+
+    let IRNode::Apply(apply) = f else {
+        return apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]);
+    };
+
+    let IRNode::Symbol(head) = &apply.head else {
+        return apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]);
+    };
+
+    match (head.as_str(), apply.args.as_slice()) {
+        (ADD, [a, b]) => apply_node(ADD, vec![integrate(a, x), integrate(b, x)]),
+        (SUB, [a, b]) => apply_node(SUB, vec![integrate(a, x), integrate(b, x)]),
+        (NEG, [a]) => apply_node(NEG, vec![integrate(a, x)]),
+        (MUL, [a, b]) if !depends_on(a, x) => apply_node(MUL, vec![a.clone(), integrate(b, x)]),
+        (MUL, [a, b]) if !depends_on(b, x) => apply_node(MUL, vec![b.clone(), integrate(a, x)]),
+        (DIV, [c, denom]) if denom == &IRNode::Symbol(x.to_string()) && !depends_on(c, x) => {
+            apply_node(MUL, vec![c.clone(), apply_node(LOG, vec![denom.clone()])])
+        }
+        (POW, [base, exponent]) if base == &IRNode::Symbol(x.to_string()) => {
+            integrate_power_of_x(exponent, x)
+        }
+        (POW, [base, exponent]) if exponent == &IRNode::Symbol(x.to_string()) => {
+            if !depends_on(base, x) {
+                apply_node(
+                    DIV,
+                    vec![
+                        apply_node(POW, vec![base.clone(), exponent.clone()]),
+                        apply_node(LOG, vec![base.clone()]),
+                    ],
+                )
+            } else {
+                apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())])
+            }
+        }
+        (SIN, [inner]) if inner == &IRNode::Symbol(x.to_string()) => {
+            apply_node(NEG, vec![apply_node(COS, vec![inner.clone()])])
+        }
+        (COS, [inner]) if inner == &IRNode::Symbol(x.to_string()) => {
+            apply_node(SIN, vec![inner.clone()])
+        }
+        (EXP, [inner]) if inner == &IRNode::Symbol(x.to_string()) => {
+            apply_node(EXP, vec![inner.clone()])
+        }
+        (LOG, [inner]) if inner == &IRNode::Symbol(x.to_string()) => apply_node(
+            SUB,
+            vec![
+                apply_node(
+                    MUL,
+                    vec![inner.clone(), apply_node(LOG, vec![inner.clone()])],
+                ),
+                inner.clone(),
+            ],
+        ),
+        (SQRT, [inner]) if inner == &IRNode::Symbol(x.to_string()) => apply_node(
+            MUL,
+            vec![
+                IRNode::Rational(2, 3),
+                apply_node(POW, vec![inner.clone(), IRNode::Rational(3, 2)]),
+            ],
+        ),
+        _ => apply_node(INTEGRATE, vec![f.clone(), IRNode::Symbol(x.to_string())]),
+    }
+}
+
+fn integrate_power_of_x(exponent: &IRNode, x: &str) -> IRNode {
+    let Some(n) = to_numeric(exponent) else {
+        return apply_node(
+            INTEGRATE,
+            vec![
+                apply_node(POW, vec![IRNode::Symbol(x.to_string()), exponent.clone()]),
+                IRNode::Symbol(x.to_string()),
+            ],
+        );
+    };
+
+    if n == Numeric::Int(-1) {
+        return apply_node(LOG, vec![IRNode::Symbol(x.to_string())]);
+    }
+
+    let next = n + Numeric::Int(1);
+    if next.is_zero() {
+        return apply_node(LOG, vec![IRNode::Symbol(x.to_string())]);
+    }
+
+    apply_node(
+        MUL,
+        vec![
+            from_numeric(Numeric::Int(1) / next),
+            apply_node(POW, vec![IRNode::Symbol(x.to_string()), from_numeric(next)]),
+        ],
+    )
+}
+
 fn diff(f: &IRNode, x: &str) -> IRNode {
     if !depends_on(f, x) {
         return IRNode::Integer(0);
@@ -1229,6 +1358,7 @@ pub fn build_handler_table(simplify: bool) -> HashMap<String, Handler> {
     m.insert("List".to_string(), list_handler(simplify));
     if simplify {
         m.insert(D.to_string(), derivative_handler());
+        m.insert(INTEGRATE.to_string(), integrate_handler());
     }
     m
 }

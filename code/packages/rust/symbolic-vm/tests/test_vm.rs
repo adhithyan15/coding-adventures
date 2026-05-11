@@ -5,7 +5,7 @@
 
 use symbolic_ir::{
     apply, flt, int, rat, sym, ACOSH, ADD, AND, ASINH, ASSIGN, ATANH, COS, COSH, D, DEFINE, DIV,
-    EXP, IF, LIST, LOG, MUL, NEG, NOT, OR, POW, SIN, SINH, SQRT, SUB, TAN, TANH,
+    EXP, IF, INTEGRATE, LIST, LOG, MUL, NEG, NOT, OR, POW, SIN, SINH, SQRT, SUB, TAN, TANH,
 };
 use symbolic_vm::{StrictBackend, SymbolicBackend, VM};
 
@@ -23,6 +23,10 @@ fn symbolic() -> VM {
 
 fn d(f: symbolic_ir::IRNode) -> symbolic_ir::IRNode {
     symbolic().eval(apply(sym(D), vec![f, sym("x")]))
+}
+
+fn integrate(f: symbolic_ir::IRNode) -> symbolic_ir::IRNode {
+    symbolic().eval(apply(sym(INTEGRATE), vec![f, sym("x")]))
 }
 
 // ---------------------------------------------------------------------------
@@ -514,6 +518,156 @@ fn derivative_reciprocal_hyperbolic_chain_rules() {
 fn derivative_unknown_head_stays_unevaluated() {
     let f = apply(sym("F"), vec![sym("x")]);
     let expr = apply(sym(D), vec![f, sym("x")]);
+    assert_eq!(symbolic().eval(expr.clone()), expr);
+}
+
+// ---------------------------------------------------------------------------
+// Symbolic integration handler
+// ---------------------------------------------------------------------------
+
+#[test]
+fn integrate_is_symbolic_backend_only() {
+    assert!(symbolic().backend.handler_for(INTEGRATE).is_some());
+    assert!(strict().backend.handler_for(INTEGRATE).is_none());
+}
+
+#[test]
+fn integrate_constants_and_variables() {
+    assert_eq!(integrate(int(5)), apply(sym(MUL), vec![int(5), sym("x")]));
+    assert_eq!(
+        integrate(sym("y")),
+        apply(sym(MUL), vec![sym("y"), sym("x")])
+    );
+    assert_eq!(
+        integrate(sym("x")),
+        apply(
+            sym(MUL),
+            vec![rat(1, 2), apply(sym(POW), vec![sym("x"), int(2)])],
+        )
+    );
+    assert_eq!(integrate(int(0)), int(0));
+}
+
+#[test]
+fn integrate_power_rules() {
+    assert_eq!(
+        integrate(apply(sym(POW), vec![sym("x"), int(2)])),
+        apply(
+            sym(MUL),
+            vec![rat(1, 3), apply(sym(POW), vec![sym("x"), int(3)])],
+        )
+    );
+    assert_eq!(
+        integrate(apply(sym(POW), vec![sym("x"), rat(1, 2)])),
+        apply(
+            sym(MUL),
+            vec![rat(2, 3), apply(sym(POW), vec![sym("x"), rat(3, 2)])],
+        )
+    );
+    assert_eq!(
+        integrate(apply(sym(POW), vec![sym("x"), int(-1)])),
+        apply(sym(LOG), vec![sym("x")])
+    );
+    assert_eq!(
+        integrate(apply(sym(DIV), vec![int(3), sym("x")])),
+        apply(sym(MUL), vec![int(3), apply(sym(LOG), vec![sym("x")])])
+    );
+}
+
+#[test]
+fn integrate_linearity_and_constant_factor() {
+    let half_x_squared = apply(
+        sym(MUL),
+        vec![rat(1, 2), apply(sym(POW), vec![sym("x"), int(2)])],
+    );
+
+    assert_eq!(
+        integrate(apply(sym(ADD), vec![sym("x"), int(3)])),
+        apply(
+            sym(ADD),
+            vec![
+                half_x_squared.clone(),
+                apply(sym(MUL), vec![int(3), sym("x")])
+            ],
+        )
+    );
+    assert_eq!(
+        integrate(apply(sym(SUB), vec![sym("x"), int(1)])),
+        apply(sym(SUB), vec![half_x_squared.clone(), sym("x")])
+    );
+    assert_eq!(
+        integrate(apply(sym(NEG), vec![sym("x")])),
+        apply(sym(NEG), vec![half_x_squared.clone()])
+    );
+    assert_eq!(
+        integrate(apply(
+            sym(MUL),
+            vec![sym("y"), apply(sym(POW), vec![sym("x"), int(2)])]
+        )),
+        apply(
+            sym(MUL),
+            vec![
+                sym("y"),
+                apply(
+                    sym(MUL),
+                    vec![rat(1, 3), apply(sym(POW), vec![sym("x"), int(3)])],
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
+fn integrate_elementary_direct_forms() {
+    assert_eq!(
+        integrate(apply(sym(SIN), vec![sym("x")])),
+        apply(sym(NEG), vec![apply(sym(COS), vec![sym("x")])])
+    );
+    assert_eq!(
+        integrate(apply(sym(COS), vec![sym("x")])),
+        apply(sym(SIN), vec![sym("x")])
+    );
+    assert_eq!(
+        integrate(apply(sym(EXP), vec![sym("x")])),
+        apply(sym(EXP), vec![sym("x")])
+    );
+    assert_eq!(
+        integrate(apply(sym(LOG), vec![sym("x")])),
+        apply(
+            sym(SUB),
+            vec![
+                apply(sym(MUL), vec![sym("x"), apply(sym(LOG), vec![sym("x")])]),
+                sym("x"),
+            ],
+        )
+    );
+    assert_eq!(
+        integrate(apply(sym(SQRT), vec![sym("x")])),
+        apply(
+            sym(MUL),
+            vec![rat(2, 3), apply(sym(POW), vec![sym("x"), rat(3, 2)])],
+        )
+    );
+}
+
+#[test]
+fn integrate_constant_base_power() {
+    assert_eq!(
+        integrate(apply(sym(POW), vec![sym("a"), sym("x")])),
+        apply(
+            sym(DIV),
+            vec![
+                apply(sym(POW), vec![sym("a"), sym("x")]),
+                apply(sym(LOG), vec![sym("a")]),
+            ],
+        )
+    );
+}
+
+#[test]
+fn integrate_unknown_dependent_form_stays_unevaluated() {
+    let f = apply(sym("F"), vec![sym("x")]);
+    let expr = apply(sym(INTEGRATE), vec![f, sym("x")]);
     assert_eq!(symbolic().eval(expr.clone()), expr);
 }
 
