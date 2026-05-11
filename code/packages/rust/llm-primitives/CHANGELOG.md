@@ -2,6 +2,46 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2026-05-11
+
+### Added
+
+- `judge_plausibility` module — third concrete primitive from LM00b.
+  Binary judge for ADJ05's adversarial verifier. Takes
+  `JudgePlausibilityRequest { source_span_text, ir_rendered,
+  adversary_reading, domain_hint }`; returns
+  `JudgePlausibilityResponse { plausible, reason, call_record }`.
+  Decides whether a competent practitioner in the named domain
+  would actually adopt the adversary's reading. An `IMPLAUSIBLE`
+  verdict logs the adversary's reading in the audit trail but does
+  not fail the adjudication; a `PLAUSIBLE` verdict surfaces as an
+  `AdversarialReading` violation for ADJ06.
+- Re-exported at the crate root: `llm_primitives::judge_plausibility`,
+  `llm_primitives::JudgePlausibilityRequest`,
+  `llm_primitives::JudgePlausibilityResponse`.
+- Routes via `LlmClient::complete_json` with a strict 2-field schema
+  (`plausible: bool`, `reason: string`, `additionalProperties: false`,
+  `reason` `minLength: 1`, `maxLength: 1024`).
+- `LlmCallRecord` populated: `primitive="judge_plausibility"`,
+  `role="plausibility"`, `prompt_version="plausibility-v1"`,
+  content-addressed `prompt_hash`, provider, usage, latency.
+- 10 new tests. Coverage: `NoClientForRole` when plausibility role
+  unregistered; happy path for both `plausible: true` and `false`;
+  user message tags SOURCE / IR-RENDERED / ADVERSARY / DOMAIN
+  separately; gateway `Auth` error propagates; missing `plausible`
+  field → `ValidationExhausted`; wrong-typed `plausible` (string
+  `"maybe"`) → `ValidationExhausted`; empty/whitespace-only `reason`
+  → `ValidationExhausted`; reason is trimmed on success;
+  `prompt_hash` matches an independently-built request.
+
+### Notes
+
+`JudgePlausibilityRequest.domain_hint` is a free-form string at v0.4.
+The LM00b spec defines a `DomainHints` enum (None / Clinical / Legal /
+TsaDeclaration / LicenseCompatibility / Custom); a follow-up will
+swap to the enum once that type lands in a shared crate. Prompt and
+wire shape unchanged across the upgrade.
+
 ## [0.3.0] - 2026-05-11
 
 ### Added
