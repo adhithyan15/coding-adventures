@@ -55,3 +55,5 @@ All notable changes to this package will be documented in this file.
   state, and stale cached state without mutating runtime state.
 - Event-bus backlog status helpers that distinguish absent subscribers,
   caught-up streams, and backlogged streams.
+- Subscription backlog status helpers that identify caught-up versus
+  backlogged event-stream subscribers without draining their delivery queues.
