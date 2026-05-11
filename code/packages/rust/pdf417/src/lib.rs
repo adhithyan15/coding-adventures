@@ -37,7 +37,7 @@
 //! This release implements **byte compaction only**. All inputs are treated as
 //! raw bytes. Text and numeric compaction are planned for v0.2.0.
 
-pub const VERSION: &str = "0.1.0";
+pub const VERSION: &str = "0.2.0";
 
 mod tables;
 use tables::{CLUSTER_TABLES, START_PATTERN, STOP_PATTERN};
@@ -597,6 +597,41 @@ pub fn encode_and_layout(
     Ok(scene)
 }
 
+/// Encode `data` as a PDF417 symbol and render it to PNG bytes.
+///
+/// This is the single-call convenience path from raw bytes to a PNG image.
+/// Internally it:
+///
+/// 1. Calls [`encode_and_layout()`] with default layout config (2-module quiet
+///    zone) to produce a [`PaintScene`].
+/// 2. Delegates pixel rendering to [`barcode_2d::render_scene_png()`], which
+///    dispatches to the platform-default backend (Metal on macOS, Cairo on
+///    Linux, Direct2D on Windows, Skia elsewhere).
+///
+/// # Arguments
+///
+/// - `data` — raw bytes to encode; all inputs are treated as byte compaction.
+/// - `options` — encoding options (ECC level, columns, row height).
+///
+/// # Returns
+///
+/// A `Vec<u8>` containing a valid PNG file, or a `String` error message if
+/// encoding or rendering fails.
+///
+/// # Example
+///
+/// ```rust
+/// # use pdf417::{render_png, PDF417Options};
+/// let png = render_png(b"HELLO", &PDF417Options::default()).unwrap();
+/// // PNG magic bytes: 0x89 'P' 'N' 'G' 0x0D 0x0A 0x1A 0x0A
+/// assert_eq!(&png[..8], &[0x89, b'P', b'N', b'G', 0x0D, 0x0A, 0x1A, 0x0A]);
+/// ```
+pub fn render_png(data: &[u8], options: &PDF417Options) -> Result<Vec<u8>, String> {
+    let scene = encode_and_layout(data, options, None)
+        .map_err(|e| e.to_string())?;
+    barcode_2d::render_scene_png(&scene)
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Tests
 // ─────────────────────────────────────────────────────────────────────────────
@@ -999,5 +1034,35 @@ mod tests {
         let scene = result.unwrap();
         assert!(scene.width > 0.0);
         assert!(scene.height > 0.0);
+    }
+
+    #[test]
+    fn pdf417_render_png_produces_valid_png() {
+        // render_png() must return bytes whose first 8 octets are the PNG
+        // magic signature defined in §5.2 of the PNG specification:
+        //   0x89 0x50 0x4E 0x47 0x0D 0x0A 0x1A 0x0A
+        //         'P'  'N'  'G'  CR   LF  SUB  LF
+        //
+        // The 0x89 high-bit byte detects 7-bit transmission corruption; the
+        // CRLF/LF pair catches line-ending translations; 0x1A (DOS EOF) stops
+        // accidental `type` display; the trailing LF checks UNIX newline
+        // stripping.  Verifying these bytes confirms the rendering backend
+        // produced a structurally valid PNG file.
+        let png = render_png(b"HELLO", &PDF417Options::default())
+            .expect("render_png should succeed for valid input");
+
+        const PNG_MAGIC: [u8; 8] = [0x89, b'P', b'N', b'G', 0x0D, 0x0A, 0x1A, 0x0A];
+        assert!(
+            png.len() >= 8,
+            "PNG output is too short ({} bytes) to contain the magic header",
+            png.len()
+        );
+        assert_eq!(
+            &png[..8],
+            &PNG_MAGIC,
+            "First 8 bytes {:?} do not match PNG magic {:?}",
+            &png[..8],
+            &PNG_MAGIC,
+        );
     }
 }
