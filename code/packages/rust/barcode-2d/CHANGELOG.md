@@ -1,5 +1,57 @@
 # Changelog — barcode-2d (Rust)
 
+## 0.2.0 — 2026-05-11
+
+### Added
+
+- **Native rendering pipeline** — `barcode-2d` is now the shared rendering hub
+  for all 2D barcode formats. Any `PaintScene` produced by `encode_and_layout()`
+  in `qr-code`, `pdf417`, `aztec-code`, `data-matrix`, or `micro-qr` can be
+  passed directly to the render functions below.
+
+- `current_backend() -> &'static str` — reports the platform-default backend
+  name (`"direct2d"`, `"metal"`, `"cairo"`, or `"skia"`).
+
+- `render_scene(scene: &PaintScene) -> Result<PixelContainer, String>` —
+  renders using the platform-default backend. Priority order:
+  Windows → Direct2D, macOS → Metal, Linux/BSD → Cairo, all others → Skia.
+
+- `render_scene_png(scene: &PaintScene) -> Result<Vec<u8>, String>` —
+  convenience wrapper: render → PNG bytes. The standard entry point for
+  per-format wrappers in `qr-code`, `pdf417`, etc.
+
+- `render_scene_with_backend(scene: &PaintScene, backend: &str) -> Result<PixelContainer, String>` —
+  explicit backend selection. Accepts `"skia"`, `"cairo"`, `"metal"`,
+  `"direct2d"`. Returns `Err` for unknown names or unavailable backends.
+
+- `render_scene_png_with_backend(scene: &PaintScene, backend: &str) -> Result<Vec<u8>, String>` —
+  explicit backend + PNG output. Useful for CI tests that pin a backend.
+
+### Changed
+
+- `VERSION` bumped to `"0.2.0"`.
+- Description updated to reflect the crate's dual role as layout hub AND
+  rendering hub.
+
+### Dependencies added
+
+- `paint-codec-png` — PNG encoding.
+- `paint-vm-runtime` — `PaintRenderError` type.
+- `paint-vm-skia` — Skia CPU raster backend (all platforms).
+- `paint-vm-cairo` — Cairo backend (macOS, Linux, BSD; system `cairo` required).
+- `paint-metal` — Metal GPU backend (macOS only).
+- `paint-vm-direct2d` — Direct2D GPU backend (Windows only).
+
+### Tests added (3 unconditional + 1 platform-gated)
+
+- `current_backend_returns_known_name` — backend name is one of the 4 known strings.
+- `skia_renders_tiny_square_to_png` — Skia output is a valid PNG on all platforms.
+- `unknown_backend_returns_error` — descriptive error on bad backend name.
+- `cairo_renders_tiny_square_to_png` — Cairo PNG is valid (macOS/Linux/BSD only).
+- `platform_default_render_produces_png` — default dispatcher produces valid PNG.
+
+**Total tests: 44 (43 unit + 1 doctest).**
+
 ## 0.1.0 — 2026-04-23
 
 Initial release.
