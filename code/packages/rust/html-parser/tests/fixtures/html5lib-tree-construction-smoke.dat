@@ -18398,3 +18398,177 @@ Line1<br>Line2<br>Line3<br>Line4
 |         <i>
 |           "c"
 |     <table>
+
+
+#source tests19.dat:1107
+#data
+<!doctype html><table><i>a<div>b<tr>c<b>d</i>e
+#errors
+(1,25): foster-parenting-start-tag
+(1,26): foster-parenting-character
+(1,31): foster-parenting-start-tag
+(1,32): foster-parenting-character
+(1,37): foster-parenting-character
+(1,40): foster-parenting-start-tag
+(1,41): foster-parenting-character
+(1,45): foster-parenting-end-tag
+(1,45): adoption-agency-1.3
+(1,46): foster-parenting-character
+(1,46): eof-in-table
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <i>
+|       "a"
+|       <div>
+|         "b"
+|     <i>
+|       "c"
+|       <b>
+|         "d"
+|     <b>
+|       "e"
+|     <table>
+|       <tbody>
+|         <tr>
+
+
+#source tests19.dat:1108
+#data
+<!doctype html><table><td><table><i>a<div>b<b>c</i>d
+#errors
+(1,26): unexpected-cell-in-table-body
+(1,36): foster-parenting-start-tag
+(1,37): foster-parenting-character
+(1,42): foster-parenting-start-tag
+(1,43): foster-parenting-character
+(1,46): foster-parenting-start-tag
+(1,47): foster-parenting-character
+(1,51): foster-parenting-end-tag
+(1,51): adoption-agency-1.3
+(1,51): adoption-agency-1.3
+(1,52): foster-parenting-character
+(1,52): eof-in-table
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <tbody>
+|         <tr>
+|           <td>
+|             <i>
+|               "a"
+|             <div>
+|               <i>
+|                 "b"
+|                 <b>
+|                   "c"
+|               <b>
+|                 "d"
+|             <table>
+
+
+#source tests19.dat:1109
+#data
+<!doctype html><body><bgsound>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <bgsound>
+
+
+#source tests19.dat:1110
+#data
+<!doctype html><body><basefont>
+#errors
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <basefont>
+
+
+#source tests19.dat:1111
+#data
+<!doctype html><a><b></a><basefont>
+#errors
+(1,25): adoption-agency-1.3
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <a>
+|       <b>
+|     <basefont>
+
+
+#source tests19.dat:1112
+#data
+<!doctype html><a><b></a><bgsound>
+#errors
+(1,25): adoption-agency-1.3
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <a>
+|       <b>
+|     <bgsound>
+
+
+#source tests19.dat:1113
+#data
+<!doctype html><figcaption><article></figcaption>a
+#errors
+(1,49): end-tag-too-early
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <figcaption>
+|       <article>
+|     "a"
+
+
+#source tests19.dat:1114
+#data
+<!doctype html><summary><article></summary>a
+#errors
+(1,43): end-tag-too-early
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <summary>
+|       <article>
+|     "a"
+
+
+#source tests19.dat:1115
+#data
+<!doctype html><p><a><plaintext>b
+#errors
+(1,32): unexpected-end-tag
+(1,33): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <a>
+|     <plaintext>
+|       <a>
+|         "b"

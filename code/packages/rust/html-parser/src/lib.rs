@@ -1013,6 +1013,7 @@ impl HtmlParser {
             }
             self.apply_document_shell_implied_contexts(&name);
             self.close_fostered_formatting_before_table_context(&name);
+            self.pop_fostered_content_before_table_context(&name);
             if self.has_open_element("select")
                 && self.has_open_table_context()
                 && (name == "table" || starts_table_context(&name))
@@ -1591,7 +1592,13 @@ impl HtmlParser {
 
         if (!text.chars().all(char::is_whitespace)
             || !self.pending_formatting_reconstruction.is_empty())
-            && !self.current_parent_has_table_ancestor()
+            && (!self.current_parent_has_table_ancestor()
+                || !self
+                    .pending_formatting_reconstruction
+                    .iter()
+                    .any(|(name, _)| name == "a")
+                || self.current_parent_is_fostered_before_open_table())
+            && !self.current_parent_is_inside_previous_pending_formatting_before_open_table()
         {
             self.reconstruct_pending_formatting();
         }
@@ -1894,6 +1901,13 @@ impl HtmlParser {
             return false;
         }
 
+        if let Some(path) = self.insert_node_inside_previous_pending_formatting_before_open_table(
+            Node::element(incoming_name.to_string(), attributes.to_vec()),
+        ) {
+            self.open_elements.push(path);
+            return true;
+        }
+
         let Some(path) = self.insert_node_before_open_table(Node::element(
             incoming_name.to_string(),
             attributes.to_vec(),
@@ -1903,6 +1917,60 @@ impl HtmlParser {
 
         self.open_elements.push(path);
         true
+    }
+
+    fn insert_node_inside_previous_pending_formatting_before_open_table(
+        &mut self,
+        node: Node,
+    ) -> Option<Vec<usize>> {
+        let mut parent_path = self.previous_pending_formatting_path_before_open_table()?;
+        let children = children_at_path_mut(&mut self.document.children, &parent_path)?;
+        let child_index = children.len();
+        children.push(node);
+        parent_path.push(child_index);
+        Some(parent_path)
+    }
+
+    fn previous_pending_formatting_path_before_open_table(&self) -> Option<Vec<usize>> {
+        if self.pending_formatting_reconstruction.is_empty() {
+            return None;
+        }
+        let table_path = self
+            .open_elements
+            .iter()
+            .rfind(|path| element_at_path(&self.document, path).is_some_and(|name| name == "table"))
+            .cloned()?;
+        let (&table_index, parent_path) = table_path.split_last()?;
+        let mut path = parent_path.to_vec();
+        path.push(table_index.checked_sub(1)?);
+
+        for (index, (name, attributes)) in self.pending_formatting_reconstruction.iter().enumerate()
+        {
+            let element = element_ref_at_path(&self.document, &path)?;
+            if element.name != *name || element.attributes != *attributes {
+                return None;
+            }
+            if index + 1 < self.pending_formatting_reconstruction.len() {
+                path.push(element.children.len().checked_sub(1)?);
+            }
+        }
+
+        Some(path)
+    }
+
+    fn current_parent_is_inside_previous_pending_formatting_before_open_table(&self) -> bool {
+        let current_parent = self.current_parent_path();
+        self.previous_pending_formatting_path_before_open_table()
+            .is_some_and(|path| current_parent.starts_with(&path))
+    }
+
+    fn current_parent_is_fostered_before_open_table(&self) -> bool {
+        let Some(table_path) = self.open_elements.iter().rfind(|path| {
+            element_at_path(&self.document, path).is_some_and(|name| name == "table")
+        }) else {
+            return false;
+        };
+        !self.current_parent_path().starts_with(table_path)
     }
 
     fn foster_text_before_open_table(&mut self, text: String) -> bool {
@@ -2025,6 +2093,41 @@ impl HtmlParser {
                 break;
             }
             self.open_elements.pop();
+        }
+    }
+
+    fn pop_fostered_content_before_table_context(&mut self, incoming_name: &str) {
+        if !starts_table_context(incoming_name) {
+            return;
+        }
+        let Some(table_stack_index) = self.open_elements.iter().rposition(|path| {
+            element_at_path(&self.document, path).is_some_and(|name| name == "table")
+        }) else {
+            return;
+        };
+        let Some(table_path) = self.open_elements.get(table_stack_index).cloned() else {
+            return;
+        };
+
+        let mut pending_formatting = Vec::new();
+        while self.open_elements.len() > table_stack_index + 1 {
+            let Some(path) = self.open_elements.last() else {
+                break;
+            };
+            if path.starts_with(&table_path) {
+                break;
+            }
+            if let Some(element) = element_ref_at_path(&self.document, path) {
+                if is_formatting_element(&element.name) {
+                    pending_formatting.push((element.name.clone(), element.attributes.clone()));
+                }
+            }
+            self.open_elements.pop();
+        }
+        if !pending_formatting.is_empty() {
+            pending_formatting.reverse();
+            self.pending_formatting_reconstruction =
+                trim_formatting_reconstruction_noah_ark(pending_formatting);
         }
     }
 
@@ -2215,6 +2318,10 @@ impl HtmlParser {
                 return;
             }
             if is_formatting_element(name) && self.has_table_context_above(index) {
+                if self.open_element_is_fostered_before_open_table(index) {
+                    self.capture_formatting_above(index);
+                    self.open_elements.truncate(index);
+                }
                 return;
             }
             if is_formatting_element(name) && self.adopt_formatting_end_tag_across_paragraph(index)
@@ -2239,7 +2346,7 @@ impl HtmlParser {
                 self.capture_formatting_above(index);
                 self.remove_pending_formatting_reconstruction(name);
             }
-            if matches!(name, "p" | "select") {
+            if matches!(name, "div" | "p" | "select") {
                 self.capture_formatting_above(index);
             }
             self.open_elements.truncate(index);
@@ -2249,10 +2356,57 @@ impl HtmlParser {
             return;
         }
 
+        if is_formatting_element(name) && self.close_pending_formatting_in_table_context(name) {
+            return;
+        }
+
         self.diagnostics.push(ParserDiagnostic::new(
             "unexpected-end-tag",
             format!("end tag `</{name}>` did not match an open element"),
         ));
+    }
+
+    fn close_pending_formatting_in_table_context(&mut self, name: &str) -> bool {
+        if !self
+            .pending_formatting_reconstruction
+            .iter()
+            .any(|(candidate, _)| candidate == name)
+        {
+            return false;
+        }
+        let Some(table_stack_index) = self.open_elements.iter().rposition(|path| {
+            element_at_path(&self.document, path).is_some_and(|candidate| candidate == "table")
+        }) else {
+            return false;
+        };
+        let Some(table_path) = self.open_elements.get(table_stack_index).cloned() else {
+            return false;
+        };
+
+        let mut pending_formatting = Vec::new();
+        while self.open_elements.len() > table_stack_index + 1 {
+            let Some(path) = self.open_elements.last() else {
+                break;
+            };
+            if path.starts_with(&table_path) {
+                break;
+            }
+            if let Some(element) = element_ref_at_path(&self.document, path) {
+                if is_formatting_element(&element.name) && element.name != name {
+                    pending_formatting.push((element.name.clone(), element.attributes.clone()));
+                }
+            }
+            self.open_elements.pop();
+        }
+
+        if pending_formatting.is_empty() {
+            self.remove_pending_formatting_reconstruction(name);
+        } else {
+            pending_formatting.reverse();
+            self.pending_formatting_reconstruction =
+                trim_formatting_reconstruction_noah_ark(pending_formatting);
+        }
+        true
     }
 
     fn apply_table_implied_contexts(&mut self, incoming_name: &str) {
@@ -2831,6 +2985,16 @@ impl HtmlParser {
                 .find(|element| element.name == "a")
                 .map(|element| (element.name.clone(), element.attributes.clone()))
         };
+        let pending_formatting_reconstruction = self
+            .open_elements
+            .iter()
+            .skip(formatting_index + 1)
+            .filter_map(|path| {
+                let element = element_ref_at_path(&self.document, path)?;
+                (is_formatting_element(&element.name) && element.name != formatting_name)
+                    .then(|| (element.name.clone(), element.attributes.clone()))
+            })
+            .collect::<Vec<_>>();
 
         let Some(first_div_path) = self
             .open_elements
@@ -2961,6 +3125,9 @@ impl HtmlParser {
         }
         if let Some(anchor) = pending_anchor_reconstruction {
             self.pending_formatting_reconstruction = vec![anchor];
+        } else if !pending_formatting_reconstruction.is_empty() {
+            self.pending_formatting_reconstruction =
+                trim_formatting_reconstruction_noah_ark(pending_formatting_reconstruction);
         }
         true
     }
@@ -3102,6 +3269,21 @@ impl HtmlParser {
             .iter()
             .skip(element_index + 1)
             .any(|path| element_at_path(&self.document, path).is_some_and(is_table_context_element))
+    }
+
+    fn open_element_is_fostered_before_open_table(&self, element_index: usize) -> bool {
+        let Some(path) = self.open_elements.get(element_index) else {
+            return false;
+        };
+        let Some(table_path) = self.open_elements[..element_index]
+            .iter()
+            .rfind(|candidate| {
+                element_at_path(&self.document, candidate).is_some_and(is_table_context_element)
+            })
+        else {
+            return false;
+        };
+        !path.starts_with(table_path)
     }
 
     fn has_open_table_context(&self) -> bool {
