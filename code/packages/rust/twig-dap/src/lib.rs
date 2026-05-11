@@ -33,6 +33,7 @@
 #![warn(missing_docs)]
 #![warn(rust_2018_idioms)]
 
+use std::collections::HashMap;
 use std::path::{Path, PathBuf};
 use std::process::Child;
 
@@ -101,16 +102,50 @@ impl LanguageDebugAdapter for TwigDebugAdapter {
 /// Build a [`debug_sidecar`] byte blob from an [`IIRModule`].
 ///
 /// One source file is registered (the absolute path of `source_path`).
-/// For each function:
-/// - `begin_function(name, start=0, param_count=params.len())`
-/// - For every `(instr_index, source_loc)` pair where `source_loc` is
-///   non-synthetic (line ≠ 0), `record(...)` emits a row.
-/// - `end_function(name, n_instrs)`
+/// For each function in the module:
 ///
-/// Variable declarations are not emitted — Twig's IIR doesn't carry user
-/// variable names through to register IDs in a way that maps cleanly to
-/// the sidecar's `(name, reg_index)` shape.  The DAP `variables` panel
-/// will be empty until that mapping lands as a follow-up.
+/// 1. `begin_function(name, start=0, param_count=params.len())`
+/// 2. **Line table** — for every `(instr_index, source_loc)` pair where the
+///    loc is non-synthetic (line ≠ 0), `record(...)` emits a row.
+/// 3. **Variable declarations** — see below.
+/// 4. `end_function(name, n_instrs)`
+///
+/// ## Variable declarations
+///
+/// The DAP `variables` panel needs both a human name for each register AND
+/// the register's numeric slot index so `vm_conn.get_slot(frame, slot)` can
+/// fetch the live value.  `build_sidecar` derives that mapping statically by
+/// replicating the same two-phase assignment the VM's [`VMFrame`] uses at
+/// runtime:
+///
+/// **Phase 1 — parameters.**
+/// `VMFrame::for_function` maps `params[i]` to register slot `i` before the
+/// first instruction executes.  Parameters are live for the entire function
+/// body (`live_start=0, live_end=n_instrs`).
+///
+/// **Phase 2 — SSA temporaries.**
+/// `VMFrame::assign` allocates the next sequential slot (`name_to_reg.len()`)
+/// whenever a variable name is first written.  Walking instructions in
+/// declaration order (which equals execution order for SSA code where each
+/// name is defined exactly once) produces the same mapping.  Each temporary
+/// is live from the instruction that defines it through to the end of the
+/// function (`live_start=def_instr, live_end=n_instrs`) — a conservative
+/// approximation that shows the variable as soon as it has a value and keeps
+/// it visible until function exit, matching the behaviour of GDB/LLDB for
+/// ordinary local variables.
+///
+/// ### Why declaration order ≈ execution order
+///
+/// IIR is in SSA form: every variable name appears as a `dest` exactly once.
+/// When the VM executes in a straight-line function the first-write order is
+/// identical to the instruction-array order.  For functions with branches the
+/// approximation may assign a reg_index slightly out of sync with one branch
+/// path, but the variable value is still readable at any instruction where the
+/// VM has actually written to that slot — the sidecar just exposes all
+/// declared variables at all breakpoints (conservative / "always visible")
+/// rather than a precise per-path live-range.  This is the standard V1
+/// tradeoff for debuggers; LLDB itself uses the same conservative strategy
+/// for `-O0` builds.
 pub fn build_sidecar(module: &IIRModule, source_path: &Path) -> Vec<u8> {
     let mut w = DebugSidecarWriter::new();
     let path_str = source_path.to_string_lossy().to_string();
@@ -119,6 +154,8 @@ pub fn build_sidecar(module: &IIRModule, source_path: &Path) -> Vec<u8> {
     for func in &module.functions {
         let n_instrs = func.instructions.len();
         w.begin_function(&func.name, 0, func.params.len());
+
+        // ---- Line table -----------------------------------------------
         for (idx, loc) in func.source_map.iter().enumerate() {
             // SourceLoc::SYNTHETIC is line=0, col=0 — skip; the sidecar
             // reader's DWARF-style "previous row" lookup covers
@@ -126,6 +163,56 @@ pub fn build_sidecar(module: &IIRModule, source_path: &Path) -> Vec<u8> {
             if loc.line == 0 { continue; }
             w.record(&func.name, idx, fid, loc.line, loc.column);
         }
+
+        // ---- Variable declarations ------------------------------------
+        //
+        // `name_to_reg` shadows VMFrame::name_to_reg so we can assign the
+        // same slot indices the runtime will use.  Insertion order is
+        // significant — each new name gets slot `name_to_reg.len()` at the
+        // time of first insertion, mirroring `VMFrame::assign`.
+        let mut name_to_reg: HashMap<String, u32> = HashMap::new();
+
+        // Phase 1 — parameters.  `VMFrame::for_function` fills these BEFORE
+        // execution starts, so they always occupy slots 0..params.len()-1.
+        for (i, (param_name, param_type)) in func.params.iter().enumerate() {
+            let reg_idx = i as u32;
+            name_to_reg.insert(param_name.clone(), reg_idx);
+            w.declare_variable(&func.name, reg_idx, param_name, param_type, 0, n_instrs);
+        }
+
+        // Phase 2 — SSA temporaries.  Walk instructions in declaration order
+        // and assign the next sequential slot to each new dest name.
+        for (instr_idx, instr) in func.instructions.iter().enumerate() {
+            let dest_name = match &instr.dest {
+                Some(d) => d,
+                None => continue,       // void instruction — no register produced
+            };
+            if name_to_reg.contains_key(dest_name) {
+                // Already mapped (only possible if the same name appears as a
+                // dest twice, which is a violation of SSA but shouldn't crash
+                // the sidecar builder — just skip the duplicate).
+                continue;
+            }
+            // Slot index = number of variables already registered, matching
+            // VMFrame::assign's `let next_idx = self.name_to_reg.len()`.
+            let reg_idx = name_to_reg.len() as u32;
+            name_to_reg.insert(dest_name.clone(), reg_idx);
+
+            // Conservative live range: the variable is valid from the
+            // instruction that defines it through to the end of the
+            // function.  The debugger will show it as soon as the VM
+            // executes the defining instruction and it stays visible
+            // at every subsequent breakpoint in the same frame.
+            w.declare_variable(
+                &func.name,
+                reg_idx,
+                dest_name,
+                &instr.type_hint,
+                instr_idx,
+                n_instrs,
+            );
+        }
+
         w.end_function(&func.name, n_instrs);
     }
 
@@ -265,5 +352,276 @@ mod tests {
         assert!(find_sibling_binary("a\\b").is_err());
         assert!(find_sibling_binary("").is_err());
         assert!(find_sibling_binary("a\0b").is_err());
+    }
+
+    // -----------------------------------------------------------------------
+    // Variable introspection tests
+    //
+    // These tests verify that `build_sidecar` correctly emits variable
+    // declarations so the DAP `variables` panel can show live register values.
+    // We build `IIRModule` / `IIRFunction` fixtures directly rather than going
+    // through the Twig compiler so the tests remain fast, deterministic, and
+    // independent of the compiler's current codegen.
+    // -----------------------------------------------------------------------
+
+    use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+
+    /// Build a minimal `IIRModule` containing one function with the given
+    /// params and instructions.  No source_map is set (synthetic locs only).
+    fn make_module_with_fn(
+        fn_name: &str,
+        params: Vec<(&str, &str)>,
+        instrs: Vec<IIRInstr>,
+    ) -> IIRModule {
+        let mut m = IIRModule::new("test", "twig");
+        let string_params: Vec<(String, String)> = params
+            .into_iter()
+            .map(|(n, t)| (n.to_string(), t.to_string()))
+            .collect();
+        let mut func = IIRFunction::new(fn_name, string_params, "any", instrs);
+        // No source_map — all locs are synthetic (line=0), which is fine for
+        // variable-only tests.
+        func.source_map.clear();
+        m.add_or_replace(func);
+        m
+    }
+
+    /// Parse the sidecar and return `live_variables(fn_name, at_instr)`.
+    fn live_vars_at(
+        bytes: &[u8],
+        fn_name: &str,
+        at_instr: usize,
+    ) -> Vec<debug_sidecar::Variable> {
+        let idx = SidecarIndex::from_bytes(bytes).expect("valid sidecar");
+        idx.reader().live_variables(fn_name, at_instr)
+    }
+
+    // --- Parameter tests ---
+
+    #[test]
+    fn params_are_declared_as_variables() {
+        // Function `add(a: u8, b: u8)` with two params and one ret instruction.
+        let m = make_module_with_fn(
+            "add",
+            vec![("a", "u8"), ("b", "u8")],
+            vec![IIRInstr::new("ret", None, vec![Operand::Var("a".into())], "u8")],
+        );
+        let bytes = build_sidecar(&m, Path::new("x.twig"));
+        // Both params should be live at instruction 0 (the only instruction).
+        let vars = live_vars_at(&bytes, "add", 0);
+        let names: Vec<&str> = vars.iter().map(|v| v.name.as_str()).collect();
+        assert!(names.contains(&"a"), "param 'a' missing: {names:?}");
+        assert!(names.contains(&"b"), "param 'b' missing: {names:?}");
+    }
+
+    #[test]
+    fn param_register_indices_match_declaration_order() {
+        // Param 0 → reg 0, param 1 → reg 1.
+        let m = make_module_with_fn(
+            "f",
+            vec![("x", "any"), ("y", "any")],
+            vec![IIRInstr::new("ret", None, vec![], "void")],
+        );
+        let bytes = build_sidecar(&m, Path::new("x.twig"));
+        let vars = live_vars_at(&bytes, "f", 0);
+        let reg_of = |n: &str| vars.iter().find(|v| v.name == n).map(|v| v.reg_index);
+        assert_eq!(reg_of("x"), Some(0), "param 'x' should be reg 0");
+        assert_eq!(reg_of("y"), Some(1), "param 'y' should be reg 1");
+    }
+
+    #[test]
+    fn params_are_live_for_entire_function() {
+        // n_instrs = 3; params must be live at instructions 0, 1, 2.
+        let m = make_module_with_fn(
+            "g",
+            vec![("p", "i32")],
+            vec![
+                IIRInstr::new("const_i32", Some("v0".into()), vec![Operand::Int(1)], "i32"),
+                IIRInstr::new("add_i32", Some("v1".into()),
+                    vec![Operand::Var("p".into()), Operand::Var("v0".into())], "i32"),
+                IIRInstr::new("ret", None, vec![Operand::Var("v1".into())], "i32"),
+            ],
+        );
+        let bytes = build_sidecar(&m, Path::new("x.twig"));
+        for i in 0..3 {
+            let vars = live_vars_at(&bytes, "g", i);
+            let has_p = vars.iter().any(|v| v.name == "p");
+            assert!(has_p, "param 'p' must be live at instruction {i}");
+        }
+    }
+
+    // --- SSA temporary tests ---
+
+    #[test]
+    fn ssa_temp_is_declared_as_variable() {
+        // `v0 = const_i32(42)` followed by `ret v0`.
+        // `v0` should appear as a declared variable.
+        let m = make_module_with_fn(
+            "main",
+            vec![],
+            vec![
+                IIRInstr::new("const_i32", Some("v0".into()), vec![Operand::Int(42)], "i32"),
+                IIRInstr::new("ret", None, vec![Operand::Var("v0".into())], "i32"),
+            ],
+        );
+        let bytes = build_sidecar(&m, Path::new("x.twig"));
+        // v0 is defined at instr 0 → live at instr 0.
+        let vars = live_vars_at(&bytes, "main", 0);
+        assert!(vars.iter().any(|v| v.name == "v0"), "temp v0 missing: {vars:?}");
+    }
+
+    #[test]
+    fn ssa_temp_register_comes_after_params() {
+        // `add(a, b)`: params get regs 0 and 1; first temp should get reg 2.
+        let m = make_module_with_fn(
+            "add",
+            vec![("a", "i32"), ("b", "i32")],
+            vec![
+                IIRInstr::new("add_i32", Some("v0".into()),
+                    vec![Operand::Var("a".into()), Operand::Var("b".into())], "i32"),
+                IIRInstr::new("ret", None, vec![Operand::Var("v0".into())], "i32"),
+            ],
+        );
+        let bytes = build_sidecar(&m, Path::new("x.twig"));
+        let vars = live_vars_at(&bytes, "add", 0);
+        let v0_reg = vars.iter().find(|v| v.name == "v0").map(|v| v.reg_index);
+        assert_eq!(v0_reg, Some(2), "first temp 'v0' should be reg 2 (after 2 params)");
+    }
+
+    #[test]
+    fn ssa_temp_not_live_before_defining_instruction() {
+        // `v0` is defined at instruction 1; it must NOT be live at instruction 0.
+        let m = make_module_with_fn(
+            "h",
+            vec![],
+            vec![
+                // instr 0: a no-op (void ret to simulate reaching instr 1)
+                IIRInstr::new("noop", None, vec![], "void"),
+                // instr 1: v0 defined here
+                IIRInstr::new("const_i32", Some("v0".into()), vec![Operand::Int(7)], "i32"),
+                IIRInstr::new("ret", None, vec![Operand::Var("v0".into())], "i32"),
+            ],
+        );
+        let bytes = build_sidecar(&m, Path::new("x.twig"));
+        let vars_at_0 = live_vars_at(&bytes, "h", 0);
+        assert!(
+            !vars_at_0.iter().any(|v| v.name == "v0"),
+            "v0 must not be live before it is defined (instr 0): {vars_at_0:?}",
+        );
+        let vars_at_1 = live_vars_at(&bytes, "h", 1);
+        assert!(
+            vars_at_1.iter().any(|v| v.name == "v0"),
+            "v0 must be live at its defining instruction (instr 1): {vars_at_1:?}",
+        );
+    }
+
+    #[test]
+    fn ssa_temp_live_until_end_of_function() {
+        // v0 defined at instr 0; n_instrs=3; must be live at instrs 0, 1, 2.
+        let m = make_module_with_fn(
+            "k",
+            vec![],
+            vec![
+                IIRInstr::new("const_i32", Some("v0".into()), vec![Operand::Int(1)], "i32"),
+                IIRInstr::new("const_i32", Some("v1".into()), vec![Operand::Int(2)], "i32"),
+                IIRInstr::new("ret", None, vec![Operand::Var("v0".into())], "i32"),
+            ],
+        );
+        let bytes = build_sidecar(&m, Path::new("x.twig"));
+        for i in 0..3 {
+            let vars = live_vars_at(&bytes, "k", i);
+            assert!(
+                vars.iter().any(|v| v.name == "v0"),
+                "v0 must stay live until function end (checking instr {i})",
+            );
+        }
+    }
+
+    #[test]
+    fn type_hint_preserved_for_variable() {
+        // Verify the type_hint we provide for each variable is round-tripped.
+        let m = make_module_with_fn(
+            "typed",
+            vec![("n", "i32")],
+            vec![
+                IIRInstr::new("const_i32", Some("c".into()), vec![Operand::Int(100)], "i32"),
+                IIRInstr::new("ret", None, vec![Operand::Var("c".into())], "i32"),
+            ],
+        );
+        let bytes = build_sidecar(&m, Path::new("x.twig"));
+        let vars = live_vars_at(&bytes, "typed", 0);
+        let n_type = vars.iter().find(|v| v.name == "n").map(|v| v.type_hint.as_str());
+        assert_eq!(n_type, Some("i32"), "param 'n' should have type_hint 'i32'");
+        let c_type = vars.iter().find(|v| v.name == "c").map(|v| v.type_hint.as_str());
+        assert_eq!(c_type, Some("i32"), "temp 'c' should have type_hint 'i32'");
+    }
+
+    #[test]
+    fn multiple_temps_get_sequential_registers() {
+        // Three temps v0, v1, v2 defined at instructions 0, 1, 2 respectively.
+        // No params → they receive reg indices 0, 1, 2 in definition order.
+        //
+        // To see all three live at the same time we query at instruction 3
+        // (the `ret`): by then every temp's live_start has been passed.
+        let m = make_module_with_fn(
+            "seq",
+            vec![],
+            vec![
+                IIRInstr::new("const_i32", Some("v0".into()), vec![Operand::Int(1)], "i32"), // instr 0
+                IIRInstr::new("const_i32", Some("v1".into()), vec![Operand::Int(2)], "i32"), // instr 1
+                IIRInstr::new("const_i32", Some("v2".into()), vec![Operand::Int(3)], "i32"), // instr 2
+                IIRInstr::new("ret", None, vec![], "void"),                                  // instr 3
+            ],
+        );
+        let bytes = build_sidecar(&m, Path::new("x.twig"));
+        // Query at instr 3 — all three temps are live here (live_start ≤ 3 < live_end=4).
+        let vars = live_vars_at(&bytes, "seq", 3);
+        let reg_of = |n: &str| vars.iter().find(|v| v.name == n).map(|v| v.reg_index);
+        assert_eq!(reg_of("v0"), Some(0), "v0 should be reg 0");
+        assert_eq!(reg_of("v1"), Some(1), "v1 should be reg 1");
+        assert_eq!(reg_of("v2"), Some(2), "v2 should be reg 2");
+    }
+
+    #[test]
+    fn void_instructions_do_not_produce_variables() {
+        // `ret` has no `dest` — should not appear in variable list.
+        let m = make_module_with_fn(
+            "v",
+            vec![],
+            vec![IIRInstr::new("ret", None, vec![], "void")],
+        );
+        let bytes = build_sidecar(&m, Path::new("x.twig"));
+        // Only query at instr 0; the void ret itself should not be a variable.
+        let vars = live_vars_at(&bytes, "v", 0);
+        // No variables should be declared (no params, no dests).
+        assert!(vars.is_empty(), "void function should declare no variables: {vars:?}");
+    }
+
+    #[test]
+    fn no_variables_declared_for_function_with_no_params_and_no_dests() {
+        let m = make_module_with_fn("empty_fn", vec![], vec![]);
+        let bytes = build_sidecar(&m, Path::new("x.twig"));
+        let idx = SidecarIndex::from_bytes(&bytes).expect("valid sidecar");
+        // live_variables on empty function should return empty vec at any index.
+        let vars = idx.reader().live_variables("empty_fn", 0);
+        assert!(vars.is_empty());
+    }
+
+    #[test]
+    fn compile_sidecar_includes_param_variables_for_named_function() {
+        // End-to-end: compile a real Twig function with a named parameter and
+        // verify the parameter appears in the sidecar's variable table.
+        let (p, _g) = write_temp_twig("(define (sq x) (* x x))\n(sq 7)\n");
+        let a = TwigDebugAdapter;
+        let (_, bytes) = a.compile(&p, Path::new(".")).expect("compile ok");
+        let idx = SidecarIndex::from_bytes(&bytes).expect("valid sidecar");
+        let r = idx.reader();
+        // Find the "sq" function and confirm "x" appears as a variable.
+        // We check at instruction 0 since params are live from the start.
+        let vars = r.live_variables("sq", 0);
+        assert!(
+            vars.iter().any(|v| v.name == "x"),
+            "parameter 'x' of 'sq' must be declared as a variable; got: {vars:?}",
+        );
     }
 }
