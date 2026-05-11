@@ -23,7 +23,8 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 use generic_job_protocol::{
     decode_response_json_line_with_limit, encode_request_json_line, JobCancellation, JobCodecError,
-    JobError, JobErrorOrigin, JobMetadata, JobRequest, JobResponse, JobResult, JobTimeout,
+    JobError, JobErrorOrigin, JobMetadata, JobRequest, JobResponse, JobResponseSummary, JobResult,
+    JobTimeout,
 };
 use serde::de::DeserializeOwned;
 use serde::Serialize;
@@ -266,6 +267,12 @@ pub trait JobExecutor<Request, Response> {
     fn try_submit(&self, request: JobRequest<Request>) -> Result<(), SubmitError>;
     fn cancel(&self, id: &str) -> CancelResult;
     fn drain_responses(&self, max: usize) -> Vec<JobResponse<Response>>;
+    fn drain_response_summaries(&self, max: usize) -> Vec<JobResponseSummary> {
+        self.drain_responses(max)
+            .into_iter()
+            .map(|response| response.summary())
+            .collect()
+    }
     fn shutdown(&self);
 }
 
@@ -1380,7 +1387,7 @@ fn panic_message(panic: Box<dyn std::any::Any + Send>) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use generic_job_protocol::{JobMetadata, JobResult};
+    use generic_job_protocol::{JobMetadata, JobResult, JobTerminalStatus};
     use serde::{Deserialize, Serialize};
     use std::process::Command;
 
@@ -1490,6 +1497,93 @@ for line in sys.stdin:
             }
             other => panic!("expected thread-pool success, got {other:?}"),
         }
+    }
+
+    #[test]
+    fn executor_drains_compact_response_summaries() {
+        let pool = RustThreadPool::spawn(
+            RustThreadPoolOptions {
+                worker_count: 2,
+                limits: ExecutorLimits {
+                    max_queue_depth: 4,
+                    ..ExecutorLimits::default()
+                },
+                default_job_timeout: None,
+            },
+            |request: JobRequest<EchoJob>| {
+                if request.payload.text == "fail" {
+                    return JobResult::Error {
+                        error: JobError::new(
+                            "worker_busy",
+                            "worker queue saturated",
+                            JobErrorOrigin::Executor,
+                        )
+                        .with_retryable(true),
+                    };
+                }
+
+                JobResult::Ok {
+                    payload: EchoResponse {
+                        stream_id: request.payload.stream_id,
+                        counter: 1,
+                        text: request.payload.text,
+                    },
+                }
+            },
+        );
+
+        pool.try_submit(
+            JobRequest::new(
+                "job-ok",
+                EchoJob {
+                    stream_id: "stream".to_string(),
+                    text: "ok".to_string(),
+                },
+            )
+            .with_metadata(JobMetadata::default().with_trace_id("trace-ok")),
+        )
+        .expect("submit success job");
+        pool.try_submit(
+            JobRequest::new(
+                "job-error",
+                EchoJob {
+                    stream_id: "stream".to_string(),
+                    text: "fail".to_string(),
+                },
+            )
+            .with_metadata(
+                JobMetadata::default()
+                    .with_attempt(2)
+                    .with_trace_id("trace-error"),
+            ),
+        )
+        .expect("submit failing job");
+
+        let mut summaries = Vec::new();
+        for _ in 0..100 {
+            summaries.extend(pool.drain_response_summaries(4));
+            if summaries.len() == 2 {
+                break;
+            }
+            thread::sleep(Duration::from_millis(10));
+        }
+        summaries.sort_by(|left, right| left.id.cmp(&right.id));
+
+        assert_eq!(summaries.len(), 2);
+        assert_eq!(summaries[0].id, "job-error");
+        assert_eq!(summaries[0].status, JobTerminalStatus::Error);
+        assert_eq!(summaries[0].attempt, 2);
+        assert_eq!(summaries[0].trace_id.as_deref(), Some("trace-error"));
+        assert!(summaries[0].retryable_error);
+        assert_eq!(summaries[0].error_code.as_deref(), Some("worker_busy"));
+        assert_eq!(
+            summaries[0].message.as_deref(),
+            Some("worker queue saturated")
+        );
+        assert_eq!(summaries[1].id, "job-ok");
+        assert_eq!(summaries[1].status, JobTerminalStatus::Ok);
+        assert_eq!(summaries[1].trace_id.as_deref(), Some("trace-ok"));
+        assert!(!summaries[1].retryable_error);
     }
 
     #[test]

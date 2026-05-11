@@ -6,6 +6,8 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Added `JobExecutor::drain_response_summaries()` for consuming completed
+  responses as compact protocol summaries for D18C supervisor/read-side tools.
 - Added queue-pressure percentages and recommended supervision actions for
   executor snapshots so D18C supervisors can choose backpressure, worker
   restart, or graceful-drain behavior without reinterpreting raw counters.
