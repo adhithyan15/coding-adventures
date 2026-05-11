@@ -1,5 +1,25 @@
 # Changelog — qr-code (Rust)
 
+## 0.2.0 — 2026-05-11
+
+### Added
+
+- `render_png(data, ecc, config) → Result<Vec<u8>, String>` — one-shot convenience
+  wrapper that encodes a QR Code and renders it to PNG bytes in a single call.
+  Delegates pixel rendering to `barcode_2d::render_scene_png`, which dispatches
+  to the platform-default backend (Metal on macOS, Direct2D on Windows, Cairo on
+  Linux, Skia as fallback).  Pass `None` for `config` to use
+  `Barcode2DLayoutConfig::default()`.
+
+- `qr_code_render_png_produces_valid_png` test — verifies the 8-byte PNG magic
+  signature `[0x89, 'P', 'N', 'G', CR, LF, 0x1A, LF]` is present in the output.
+
+### Changed
+
+- `VERSION` constant bumped to `"0.2.0"`.
+
+---
+
 ## 0.1.0 — 2026-04-23
 
 Initial release.
