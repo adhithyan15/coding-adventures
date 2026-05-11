@@ -6,7 +6,11 @@ import { startLanguageClient, stopLanguageClient } from "./lsp";
 import { registerDebugAdapter } from "./dap";
 
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
-  await startLanguageClient(context);
+  // LSP is optional: if twig-lsp-server isn't on PATH (e.g. not yet built),
+  // log the error and continue.  DAP debugging works without the language server.
+  startLanguageClient(context).catch((err: unknown) => {
+    console.warn(`Twig: language server failed to start: ${err}`);
+  });
   registerDebugAdapter(context);
 }
 
