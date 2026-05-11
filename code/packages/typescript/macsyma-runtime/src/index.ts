@@ -59,6 +59,17 @@ export class History {
     this.inputNodes.length = 0;
     this.outputNodes.length = 0;
   }
+
+  resolveHistorySymbol(name: string): IRNode | undefined {
+    if (name === "%") return this.lastOutput();
+    if (name.startsWith("%i") && /^\d+$/.test(name.slice(2))) {
+      return this.getInput(Number(name.slice(2)));
+    }
+    if (name.startsWith("%o") && /^\d+$/.test(name.slice(2))) {
+      return this.getOutput(Number(name.slice(2)));
+    }
+    return undefined;
+  }
 }
 
 export class MacsymaBackend extends SymbolicBackend {
@@ -70,12 +81,9 @@ export class MacsymaBackend extends SymbolicBackend {
   }
 
   override lookup(name: string): IRNode | undefined {
-    if (name === "%") return this.history.lastOutput();
-    const inputMatch = /^%i([1-9]\d*)$/.exec(name);
-    if (inputMatch !== null) return this.history.getInput(Number(inputMatch[1]));
-    const outputMatch = /^%o([1-9]\d*)$/.exec(name);
-    if (outputMatch !== null) return this.history.getOutput(Number(outputMatch[1]));
-    return super.lookup(name);
+    const envValue = super.lookup(name);
+    if (envValue !== undefined) return envValue;
+    return this.history.resolveHistorySymbol(name);
   }
 }
 
