@@ -18,6 +18,12 @@ import {
   structuralKey,
 } from "@coding-adventures/symbolic-ir";
 
+export { AssumptionContext } from "./assumptions";
+export { IMAGINARY_UNIT, demoivre, exponentialize } from "./exponentialize";
+export * from "./heads";
+export { logcontract, logexpand } from "./logcontract";
+export { radcan } from "./radcan";
+
 export function canonical(node: IRNode): IRNode {
   if (node.kind !== "apply") return node;
   const head = canonical(node.head);
