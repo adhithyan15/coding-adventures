@@ -123,6 +123,16 @@ export function nextPrime(nInput: IntegerLike): bigint {
   return candidate;
 }
 
+export function prevPrime(nInput: IntegerLike): bigint | null {
+  const n = toBigInt(nInput);
+  if (n <= 2n) return null;
+  let candidate = n - 1n;
+  if (candidate === 2n) return 2n;
+  if (candidate % 2n === 0n) candidate -= 1n;
+  while (candidate >= 2n && !isPrime(candidate)) candidate -= 2n;
+  return candidate >= 2n ? candidate : null;
+}
+
 export function nthPrime(kInput: number): bigint {
   if (!Number.isInteger(kInput) || kInput < 1) {
     throw new RangeError("nthPrime: k must be a positive integer");
@@ -167,6 +177,73 @@ export function factorInteger(nInput: IntegerLike): PrimeFactor[] {
 
   if (n > 1n) factors.push([n, 1]);
   return factors;
+}
+
+export function divisors(nInput: IntegerLike): bigint[] {
+  const n = abs(toBigInt(nInput));
+  if (n === 0n) return [];
+
+  const divs = new Set<bigint>();
+  let candidate = 1n;
+  while (candidate * candidate <= n) {
+    if (n % candidate === 0n) {
+      divs.add(candidate);
+      divs.add(n / candidate);
+    }
+    candidate += 1n;
+  }
+
+  return Array.from(divs).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+}
+
+export function moebiusMu(nInput: IntegerLike): number {
+  const n = toBigInt(nInput);
+  if (n <= 0n) throw new RangeError(`moebiusMu requires n > 0, got ${n}`);
+  if (n === 1n) return 1;
+
+  const factors = factorInteger(n);
+  if (factors.some(([, exponent]) => exponent > 1)) return 0;
+  return factors.length % 2 === 0 ? 1 : -1;
+}
+
+export function jacobiSymbol(aInput: IntegerLike, nInput: IntegerLike): number {
+  let a = toBigInt(aInput);
+  let n = toBigInt(nInput);
+  if (n <= 0n || n % 2n === 0n) {
+    throw new RangeError(`jacobiSymbol requires odd positive n, got ${n}`);
+  }
+
+  a = mod(a, n);
+  let result = 1;
+  while (a !== 0n) {
+    while (a % 2n === 0n) {
+      a /= 2n;
+      const nMod8 = n % 8n;
+      if (nMod8 === 3n || nMod8 === 5n) result = -result;
+    }
+
+    const previousA = a;
+    a = n;
+    n = previousA;
+    if (a % 4n === 3n && n % 4n === 3n) result = -result;
+    a %= n;
+  }
+
+  return n === 1n ? result : 0;
+}
+
+export function integerLength(nInput: IntegerLike, baseInput: IntegerLike = 10): number {
+  let n = abs(toBigInt(nInput));
+  const base = toBigInt(baseInput);
+  if (base < 2n) throw new RangeError(`integerLength requires base >= 2, got ${base}`);
+  if (n === 0n) return 1;
+
+  let count = 0;
+  while (n > 0n) {
+    n /= base;
+    count += 1;
+  }
+  return count;
 }
 
 export function factorizeIr(expr: IRNode): IRNode {
