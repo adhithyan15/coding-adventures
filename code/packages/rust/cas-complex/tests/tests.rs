@@ -1,15 +1,26 @@
 // Integration tests for cas-complex.
 
 use cas_complex::{
-    argument, complex_normalize, complex_pow, conjugate, imag_part, modulus, real_part,
-    IMAGINARY_UNIT,
+    argument, complex_normalize, complex_pow, conjugate, imag_part, modulus, polar_form, real_part,
+    rect_form, IMAGINARY_UNIT, POLAR_FORM,
 };
-use symbolic_ir::{apply, int, sym, IRNode, ADD, MUL, NEG, POW, SUB};
 use std::f64::consts::{FRAC_PI_2, PI};
+use symbolic_ir::{apply, int, sym, IRNode, ADD, EXP, MUL, NEG, POW, SQRT, SUB};
 
 // Helper: build 3 + 4*I
 fn z_3_4() -> IRNode {
-    apply(sym(ADD), vec![int(3), apply(sym(MUL), vec![int(4), sym(IMAGINARY_UNIT)])])
+    apply(
+        sym(ADD),
+        vec![int(3), apply(sym(MUL), vec![int(4), sym(IMAGINARY_UNIT)])],
+    )
+}
+
+// Helper: build 1 + 2*I
+fn z_1_2() -> IRNode {
+    apply(
+        sym(ADD),
+        vec![int(1), apply(sym(MUL), vec![int(2), sym(IMAGINARY_UNIT)])],
+    )
 }
 
 // ---------------------------------------------------------------------------
@@ -89,7 +100,10 @@ fn normalize_i_pow_neg1_is_neg_i() {
 fn normalize_mul_two_complex() {
     // (1 + I) * (1 - I) = 1 - I + I - I^2 = 1 + 1 = 2
     let a = apply(sym(ADD), vec![int(1), sym(IMAGINARY_UNIT)]);
-    let b = apply(sym(ADD), vec![int(1), apply(sym(NEG), vec![sym(IMAGINARY_UNIT)])]);
+    let b = apply(
+        sym(ADD),
+        vec![int(1), apply(sym(NEG), vec![sym(IMAGINARY_UNIT)])],
+    );
     let product = apply(sym(MUL), vec![a, b]);
     let r = complex_normalize(&product);
     assert_eq!(real_part(&r), int(2));
@@ -120,7 +134,10 @@ fn normalize_3_4i_times_1_minus_2i() {
     // (3 + 4i)(1 - 2i) = 3 - 6i + 4i - 8i^2 = 3 - 2i + 8 = 11 - 2i
     let a = z_3_4();
     // 1 - 2*I as Sub(1, Mul(2, I))
-    let b = apply(sym(SUB), vec![int(1), apply(sym(MUL), vec![int(2), sym(IMAGINARY_UNIT)])]);
+    let b = apply(
+        sym(SUB),
+        vec![int(1), apply(sym(MUL), vec![int(2), sym(IMAGINARY_UNIT)])],
+    );
     let product = apply(sym(MUL), vec![a, b]);
     let r = complex_normalize(&product);
     assert_eq!(real_part(&r), int(11));
@@ -259,6 +276,54 @@ fn argument_of_i_is_pi_over_2() {
     } else {
         panic!("expected Float");
     }
+}
+
+// ---------------------------------------------------------------------------
+// rect_form / polar_form
+// ---------------------------------------------------------------------------
+
+#[test]
+fn rect_form_normalizes_1_plus_2i() {
+    let result = rect_form(&z_1_2());
+    assert_eq!(real_part(&result), int(1));
+    assert_eq!(imag_part(&result), int(2));
+}
+
+#[test]
+fn polar_form_3_plus_4i_returns_symbolic_radius_and_angle() {
+    let expected = apply(
+        sym(MUL),
+        vec![
+            apply(
+                sym(SQRT),
+                vec![apply(
+                    sym(ADD),
+                    vec![
+                        apply(sym(POW), vec![int(3), int(2)]),
+                        apply(sym(POW), vec![int(4), int(2)]),
+                    ],
+                )],
+            ),
+            apply(
+                sym(EXP),
+                vec![apply(
+                    sym(MUL),
+                    vec![
+                        sym(IMAGINARY_UNIT),
+                        apply(sym("Atan2"), vec![int(4), int(3)]),
+                    ],
+                )],
+            ),
+        ],
+    );
+
+    assert_eq!(polar_form(&z_3_4()), expected);
+}
+
+#[test]
+fn polar_form_symbolic_real_returns_unevaluated_wrapper() {
+    let x = sym("x");
+    assert_eq!(polar_form(&x), apply(sym(POLAR_FORM), vec![x]));
 }
 
 // ---------------------------------------------------------------------------

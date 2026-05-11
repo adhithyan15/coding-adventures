@@ -14,6 +14,8 @@ modulus, argument, and integer powers via De Moivre's theorem.
 | `conjugate(z)` | Complex conjugate: `a + b·I → a − b·I` |
 | `modulus(z)` | Modulus `|z| = √(a² + b²)` → `IRFloat` |
 | `argument(z)` | Argument `arg(z) = atan2(b, a)` in `(−π, π]` → `IRFloat` |
+| `rect_form(z)` | Public RectForm-style normalization to `a + b·I` |
+| `polar_form(z)` | Symbolic `r·Exp(I·θ)` form, or unevaluated `PolarForm(z)` for real/symbolic inputs |
 | `complex_pow(z, n)` | Integer power via De Moivre's theorem |
 
 ## Normalization

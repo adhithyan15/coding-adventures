@@ -28,10 +28,60 @@
 //! | `i`   | `1.0` | `π/2` |
 //! | `-i`  | `1.0` | `-π/2` |
 
-use symbolic_ir::{apply, flt, sym, IRNode};
+use symbolic_ir::{apply, flt, int, sym, IRNode, ADD, EXP, MUL, POW, SQRT};
 
-use crate::constants::{ABS, ARG};
-use crate::normalize::split_complex;
+use crate::constants::{ABS, ARG, ATAN2, IMAGINARY_UNIT, POLAR_FORM};
+use crate::normalize::{complex_normalize, split_complex};
+
+/// Rewrite `expr` as rectangular `a + b·I` form.
+///
+/// This is the public RectForm-style wrapper around [`complex_normalize`].
+/// Purely real expressions are returned unchanged by the normalizer.
+pub fn rect_form(expr: &IRNode) -> IRNode {
+    complex_normalize(expr)
+}
+
+/// Rewrite `expr` as symbolic polar form `r * Exp(I * theta)`.
+///
+/// For expressions containing the imaginary unit, this returns:
+///
+/// ```text
+/// Mul(Sqrt(Add(Pow(real, 2), Pow(imag, 2))),
+///     Exp(Mul(I, Atan2(imag, real))))
+/// ```
+///
+/// Pure real/symbolic inputs mirror the Python reference by returning an
+/// unevaluated `PolarForm(expr)` node.
+pub fn polar_form(expr: &IRNode) -> IRNode {
+    if !contains_imaginary(expr) {
+        return apply(sym(POLAR_FORM), vec![expr.clone()]);
+    }
+
+    let normalized = complex_normalize(expr);
+    let (real, imag) = split_complex(&normalized);
+    let two = int(2);
+    let radius = apply(
+        sym(SQRT),
+        vec![apply(
+            sym(ADD),
+            vec![
+                apply(sym(POW), vec![real.clone(), two.clone()]),
+                apply(sym(POW), vec![imag.clone(), two]),
+            ],
+        )],
+    );
+    let theta = apply(sym(ATAN2), vec![imag, real]);
+    apply(
+        sym(MUL),
+        vec![
+            radius,
+            apply(
+                sym(EXP),
+                vec![apply(sym(MUL), vec![sym(IMAGINARY_UNIT), theta])],
+            ),
+        ],
+    )
+}
 
 // ---------------------------------------------------------------------------
 // Modulus
@@ -112,5 +162,13 @@ fn to_float(n: &IRNode) -> Option<f64> {
         IRNode::Float(v) => Some(*v),
         IRNode::Rational(numer, denom) => Some(*numer as f64 / *denom as f64),
         _ => None,
+    }
+}
+
+fn contains_imaginary(expr: &IRNode) -> bool {
+    match expr {
+        IRNode::Symbol(name) => name == IMAGINARY_UNIT,
+        IRNode::Apply(a) => a.args.iter().any(contains_imaginary),
+        _ => false,
     }
 }

@@ -1,5 +1,16 @@
 # Changelog — cas-complex (Rust)
 
+## Unreleased
+
+### Added
+
+- `rect_form(expr)` public API as the RectForm-style wrapper around
+  `complex_normalize(expr)`.
+- `polar_form(expr)` public API returning symbolic
+  `Mul(r, Exp(Mul(I, theta)))` for complex expressions, with unevaluated
+  `PolarForm(expr)` fallback for real/symbolic expressions.
+- `RECT_FORM`, `POLAR_FORM`, and `ATAN2` head-name constants.
+
 ## [0.1.0] — 2026-04-27
 
 ### Added
