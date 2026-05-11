@@ -461,8 +461,12 @@ impl MosaicRenderer for HtmlRenderer {
             return;
         }
         // Emit a visible placeholder div for node/component slot children.
+        // Security: HTML-escape the slot name before embedding it in an attribute
+        // value and an HTML comment. Slot names are constrained to identifier syntax
+        // by the analyzer, but we escape at the output boundary for defence-in-depth.
+        let escaped_name = html_escape(slot_name);
         let placeholder = format!(
-            "<div class=\"mos-slot\" data-slot=\"{slot_name}\"><!-- slot: {slot_name} --></div>"
+            "<div class=\"mos-slot\" data-slot=\"{escaped_name}\"><!-- slot: {escaped_name} --></div>"
         );
         self.push_line(placeholder);
     }
@@ -517,7 +521,10 @@ impl MosaicRenderer for HtmlRenderer {
     }
 
     fn emit(self) -> EmitResult {
-        let title = Self::to_title(&self.component_name);
+        // Security: HTML-escape the title even though component names are
+        // currently restricted to identifier syntax. Defence-in-depth: always
+        // escape at the output boundary regardless of upstream validation.
+        let title = html_escape(&Self::to_title(&self.component_name));
         let css = self
             .css
             .as_deref()
@@ -562,6 +569,35 @@ pub fn html_escape(s: &str) -> String {
         .replace('<', "&lt;")
         .replace('>', "&gt;")
         .replace('"', "&quot;")
+}
+
+/// Sanitize a CSS string for safe embedding inside a `<style>` tag.
+///
+/// Rejects CSS that contains `</style` (case-insensitive) — the substring that
+/// would close the `<style>` block prematurely, allowing an attacker to inject
+/// arbitrary HTML (including `<script>` tags) after the closing tag.
+///
+/// # Errors
+///
+/// Returns `Err(String)` with a human-readable message if the CSS is rejected.
+///
+/// # Example
+///
+/// ```
+/// use mosaic_emit_html::sanitize_css;
+/// assert!(sanitize_css("body { color: red; }").is_ok());
+/// assert!(sanitize_css("</style><script>alert(1)</script>").is_err());
+/// ```
+pub fn sanitize_css(css: &str) -> Result<String, String> {
+    // Case-insensitive search: `</STYLE` is equally dangerous.
+    if css.to_ascii_lowercase().contains("</style") {
+        return Err(
+            "CSS file contains '</style' which would break out of the <style> block \
+             and allow HTML injection. Remove or escape the offending substring."
+                .into(),
+        );
+    }
+    Ok(css.to_string())
 }
 
 /// Convert a JSON value to a displayable string.

@@ -434,12 +434,18 @@ impl WebComponentRenderer {
                 }
                 HtmlFragment::EachOpen(slot, item) => {
                     let field = Self::to_camel_case(slot);
-                    // Emit: ${this._field.map(item => `
-                    out.push_str(&format!("${{this._{field}.map({item} => `"));
+                    // Emit: ${this._field.map(_rawItem => { const item = this._escape(String(_rawItem)); return `
+                    //
+                    // Security: we shadow the raw loop variable with an escaped copy
+                    // immediately, so every use of `item` inside the template body is
+                    // HTML-safe. This prevents DOM XSS when list items contain `<` or `>`.
+                    out.push_str(&format!(
+                        "${{this._{field}.map(_raw_{item} => {{ const {item} = this._escape(String(_raw_{item})); return `"
+                    ));
                 }
                 HtmlFragment::EachClose => {
-                    // Close the map template string and the map call.
-                    out.push_str("`.join('')}");
+                    // Close the return template string, the arrow-function body, and the map call.
+                    out.push_str("`; }}).join('')}");
                 }
             }
         }
@@ -547,7 +553,11 @@ impl MosaicRenderer for WebComponentRenderer {
 
     fn render_slot_child(&mut self, slot_name: &str, _slot_type: &MosaicType) {
         // Use a standard <slot> element for Shadow DOM content projection.
-        let html = format!("<slot name=\"{slot_name}\"></slot>");
+        // Security: HTML-escape the slot name before embedding it in an attribute
+        // value. Slot names are constrained to identifier syntax by the analyzer,
+        // but we escape at the output boundary for defence-in-depth.
+        let escaped_name = html_escape_str(slot_name);
+        let html = format!("<slot name=\"{escaped_name}\"></slot>");
         self.push_frag(HtmlFragment::Raw(html));
     }
 
@@ -676,12 +686,14 @@ fn resolved_value_to_css(v: &ResolvedValue) -> String {
         }
         ResolvedValue::Bool(b) => b.to_string(),
         ResolvedValue::SlotRef { name, is_loop_var, .. } => {
+            // Security: wrap all slot values with _escape() to prevent CSS injection
+            // (e.g. `; behavior:url(evil)` or `</style>` break-out in style attributes).
             if *is_loop_var {
-                // Loop variables are bare references (no `this._`).
-                format!("${{{name}}}")
+                // Loop variables: already a string from the host, escape for CSS context.
+                format!("${{this._escape(String({name}))}}")
             } else {
                 let camel = to_camel_case_free(name);
-                format!("${{this._{camel}}}")
+                format!("${{this._escape(String(this._{camel}))}}")
             }
         }
         ResolvedValue::Enum { namespace, member } => format!("{namespace}-{member}"),
@@ -689,19 +701,43 @@ fn resolved_value_to_css(v: &ResolvedValue) -> String {
 }
 
 /// Convert a `ResolvedValue` to an HTML text content string (for Text nodes).
+///
+/// # Security
+///
+/// Slot references that resolve to runtime values are wrapped with
+/// `this._escape()` so that any `<`, `>`, or `"` characters in the host-
+/// supplied data are HTML-encoded before landing in `shadowRoot.innerHTML`.
+///
+/// Loop variables do not need an additional `_escape()` call here because
+/// `EachOpen` serialization already shadows each loop variable with an escaped
+/// copy at the start of every `.map()` arrow function.
 fn resolved_value_to_html_content(v: &ResolvedValue) -> String {
     match v {
         ResolvedValue::String(s) => s.clone(),
         ResolvedValue::SlotRef { name, is_loop_var, .. } => {
             if *is_loop_var {
+                // Safe: loop variables are pre-escaped by the EachOpen serializer.
                 format!("${{{name}}}")
             } else {
+                // Non-loop slot reference: wrap with _escape() to prevent DOM XSS.
                 let camel = to_camel_case_free(name);
-                format!("${{this._{camel}}}")
+                format!("${{this._escape(String(this._{camel}))}}")
             }
         }
         other => resolved_value_to_css(other),
     }
+}
+
+/// HTML-escape a string for safe embedding in attribute values or element text.
+///
+/// Converts `&`, `<`, `>`, and `"` to their named HTML entities. Used at
+/// code-generation time for identifiers that appear inside attribute values in
+/// the generated HTML template string.
+fn html_escape_str(s: &str) -> String {
+    s.replace('&', "&amp;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;")
+        .replace('"', "&quot;")
 }
 
 /// Stand-alone kebab-to-camelCase conversion (mirrors the method on the struct).

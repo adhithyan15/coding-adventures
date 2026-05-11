@@ -261,8 +261,14 @@ fn main() {
                 serde_json::Map::new()
             };
 
-            // Load optional CSS.
-            let css = args.css.as_ref().map(|path| read_file_or_die(path));
+            // Load optional CSS, rejecting content that would break out of <style>.
+            let css = args.css.as_ref().map(|path| {
+                let raw = read_file_or_die(path);
+                mosaic_emit_html::sanitize_css(&raw).unwrap_or_else(|e| {
+                    eprintln!("Error: CSS file '{path}' rejected for security reasons: {e}");
+                    process::exit(1);
+                })
+            });
 
             let renderer = HtmlRenderer::new(fixtures, css);
             let result = vm.run(renderer).unwrap_or_else(|e| {
