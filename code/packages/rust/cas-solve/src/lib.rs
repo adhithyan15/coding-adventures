@@ -1,11 +1,11 @@
 //! # cas-solve
 //!
-//! Closed-form equation solving over ℚ (Phase 1: linear and quadratic).
+//! Closed-form equation solving over ℚ (Phase 1: linear, quadratic, and cubic).
 //!
 //! ## Quick start
 //!
 //! ```rust
-//! use cas_solve::{solve_linear, solve_quadratic, SolveResult};
+//! use cas_solve::{solve_cubic, solve_linear, solve_quadratic, SolveResult};
 //! use cas_solve::frac::Frac;
 //! use symbolic_ir::{int, rat};
 //!
@@ -18,6 +18,12 @@
 //!     Frac::from_int(1), Frac::from_int(-5), Frac::from_int(6),
 //! );
 //! assert_eq!(r2, SolveResult::Solutions(vec![int(2), int(3)]));
+//!
+//! // x^3 - 6x^2 + 11x - 6 = 0  →  {1, 2, 3}
+//! let r3 = solve_cubic(
+//!     Frac::from_int(1), Frac::from_int(-6), Frac::from_int(11), Frac::from_int(-6),
+//! );
+//! assert_eq!(r3, SolveResult::Solutions(vec![int(1), int(2), int(3)]));
 //! ```
 //!
 //! ## IR head names
@@ -28,16 +34,19 @@
 //! | [`NSOLVE`] | `"NSolve"` |
 //! | [`ROOTS`] | `"Roots"` |
 
+pub mod cubic;
 pub mod frac;
 pub mod linear;
 pub mod quadratic;
 
+pub use cubic::{solve_cubic, CBRT};
 pub use linear::solve_linear;
 pub use quadratic::{solve_quadratic, I_UNIT};
 
 /// The result of an equation-solve operation.
 ///
-/// - `Solutions(vec)` — zero, one, or two solutions (empty = no solution).
+/// - `Solutions(vec)` — zero or more solutions (empty = no solution or
+///   unevaluated symbolic fallback, depending on the solver).
 /// - `All` — every value of x satisfies the equation.
 #[derive(Debug, Clone, PartialEq)]
 pub enum SolveResult {

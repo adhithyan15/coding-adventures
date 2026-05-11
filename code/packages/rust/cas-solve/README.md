@@ -1,12 +1,12 @@
 # cas-solve (Rust)
 
-Closed-form equation solving over ℚ (Phase 1: linear and quadratic).
+Closed-form equation solving over ℚ (Phase 1: linear, quadratic, and cubic).
 Rust port of the Python `cas-solve` package.
 
 ## Usage
 
 ```rust
-use cas_solve::{solve_linear, solve_quadratic, SolveResult};
+use cas_solve::{solve_cubic, solve_linear, solve_quadratic, SolveResult};
 use cas_solve::frac::Frac;
 use symbolic_ir::{int, rat};
 
@@ -19,13 +19,19 @@ let r2 = solve_quadratic(
     Frac::from_int(1), Frac::from_int(-5), Frac::from_int(6),
 );
 assert_eq!(r2, SolveResult::Solutions(vec![int(2), int(3)]));
+
+// x^3 - 6x^2 + 11x - 6 = 0  →  {1, 2, 3}
+let r3 = solve_cubic(
+    Frac::from_int(1), Frac::from_int(-6), Frac::from_int(11), Frac::from_int(-6),
+);
+assert_eq!(r3, SolveResult::Solutions(vec![int(1), int(2), int(3)]));
 ```
 
 ## SolveResult
 
 ```rust
 pub enum SolveResult {
-    Solutions(Vec<IRNode>),  // empty = no solution
+    Solutions(Vec<IRNode>),  // empty = no solution or unevaluated fallback
     All,                     // 0 = 0: every x satisfies
 }
 ```
@@ -38,6 +44,15 @@ pub enum SolveResult {
 | Positive, not a perfect square | `Div(Add/Sub(-b, Sqrt(disc)), 2a)` |
 | Zero | Single repeated rational root |
 | Negative | Complex roots `r ± k·%i` (Maxima `%i` imaginary unit) |
+
+## Cubic behavior
+
+`solve_cubic(a, b, c, d)` first delegates to `solve_quadratic` when `a = 0`.
+Otherwise it finds exact rational roots, deflates to a quadratic, and
+deduplicates repeated roots. If no rational root exists, it uses Cardano's
+formula with symbolic `Cbrt`, `Sqrt`, and `%i` IR nodes for the one-real /
+two-complex branch. The casus irreducibilis branch returns an empty solution
+list, matching the Python reference's unevaluated fallback behavior.
 
 ## Stack position
 

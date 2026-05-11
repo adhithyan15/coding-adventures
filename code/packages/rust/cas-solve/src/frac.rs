@@ -36,9 +36,16 @@ impl Frac {
             return Self { numer: 0, denom: 1 };
         }
         // Make denom positive.
-        let (n, d) = if denom < 0 { (-numer, -denom) } else { (numer, denom) };
+        let (n, d) = if denom < 0 {
+            (-numer, -denom)
+        } else {
+            (numer, denom)
+        };
         let g = gcd(n.unsigned_abs() as u128, d.unsigned_abs() as u128) as i64;
-        Self { numer: n / g, denom: d / g }
+        Self {
+            numer: n / g,
+            denom: d / g,
+        }
     }
 
     /// Construct from an integer: `n / 1`.
@@ -79,7 +86,10 @@ impl Frac {
 impl Neg for Frac {
     type Output = Self;
     fn neg(self) -> Self {
-        Self { numer: -self.numer, denom: self.denom }
+        Self {
+            numer: -self.numer,
+            denom: self.denom,
+        }
     }
 }
 
@@ -130,7 +140,11 @@ impl Frac {
         if numer == 0 {
             return Self { numer: 0, denom: 1 };
         }
-        let (n, d) = if denom < 0 { (-numer, -denom) } else { (numer, denom) };
+        let (n, d) = if denom < 0 {
+            (-numer, -denom)
+        } else {
+            (numer, denom)
+        };
         let g = gcd(n.unsigned_abs(), d.unsigned_abs()) as i128;
         Self {
             numer: (n / g) as i64,
@@ -140,7 +154,11 @@ impl Frac {
 }
 
 fn gcd(a: u128, b: u128) -> u128 {
-    if b == 0 { a } else { gcd(b, a % b) }
+    if b == 0 {
+        a
+    } else {
+        gcd(b, a % b)
+    }
 }
 
 // ---------------------------------------------------------------------------
