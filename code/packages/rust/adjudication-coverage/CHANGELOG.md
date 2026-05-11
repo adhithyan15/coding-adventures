@@ -2,6 +2,62 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2026-05-11 — ADJ02 v2 structural rewrite
+
+### Replaced
+
+The entire v0.1.0 rule-based coverage check is replaced with a
+**structural tree-tiling check** over the v2 IR (per
+[ADJ02 v2](../../../specs/ADJ02-coverage-checker.md)).
+
+What's gone:
+
+- `Tagger` trait
+- `RuleBasedTagger` default implementation
+- English stopword / filler lists
+- `TokenAnnotation`, `TokenLabel`
+- `NonMeaningfulReason` enum
+- `StrictnessMode` enum (Strict / Permissive / AuditOnly)
+
+What replaces them:
+
+- `check_coverage(doc, ir_doc) -> CoverageResult` — runs
+  `adjudication_ir::validate` (conditions 1, 3, 4 from ADJ02 v2),
+  then adds the root-tiling check (condition 2) and the
+  `Unparseable` discarded check (condition 5).
+- `CoverageViolation` enum with 9 precise variants:
+  `SpanWrongDocument`, `InvalidSpan`, `UnparseableDiscarded`,
+  `RootsDoNotTileDocument` (with `missing_ranges`),
+  `DanglingPartOf`, `ChildSpansExceedParent`,
+  `ChildrenDoNotTileParent` (with `missing_ranges`),
+  `NonTextRunHasChildren`, `PartOfCycle`.
+- `Document { id, normalized_text }` — the check reads only
+  `normalized_text.len()`; it never inspects bytes.
+
+### Algorithm
+
+Pure structural. Runs in `O(N log N)` over IR node count + total
+span count. No LLM call at check time. Language-agnostic by
+construction.
+
+### Why this rewrite
+
+The v0.1.0 path baked English-language assumptions into the
+framework core (stopwords list, default-meaningful direction). The
+v2 IR (ADJ01 v2) introduced the hierarchical decomposition so the
+LLM can encode "what counts as content" in the tree itself; the
+framework's job is to verify the tree's structural completeness,
+not to second-guess what the LLM saw.
+
+### Tests
+
+11 tests cover: empty document, nonempty document with empty IR,
+single-root TextRun tiling, root gap with `missing_ranges`, child
+gap within TextRun with `missing_ranges`, Unparseable always fails,
+Pleasantry-Discarded passes, nested TextRuns, merge_ranges /
+subtract_intervals helpers, dangling part_of surfaces as a coverage
+violation. `cargo build / test / clippy --no-deps` clean.
+
 ## [0.1.0] - 2026-05-11
 
 ### Added
