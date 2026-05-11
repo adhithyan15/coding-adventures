@@ -9,6 +9,7 @@ name = "mosaic-compile"
 path = "src/main.rs"
 
 [dependencies]
+cli-builder = { path = "../cli-builder" }
 mosaic-analyzer = { path = "../mosaic-analyzer" }
 mosaic-vm = { path = "../mosaic-vm" }
 mosaic-emit-webcomponent = { path = "../mosaic-emit-webcomponent" }
