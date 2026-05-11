@@ -293,6 +293,31 @@ impl RuntimeEventBus {
         Ok(())
     }
 
+    pub fn has_subscription(&self, subscription_id: &RuntimeSubscriptionId) -> bool {
+        self.subscriptions.contains_key(subscription_id)
+    }
+
+    pub fn unsubscribe(
+        &mut self,
+        subscription_id: &RuntimeSubscriptionId,
+    ) -> Result<RuntimeEventDeliveryBatch, RuntimeError> {
+        if self.subscriptions.remove(subscription_id).is_none() {
+            return Err(RuntimeError::UnknownSubscription(subscription_id.clone()));
+        }
+
+        let events = self
+            .deliveries
+            .remove(subscription_id)
+            .map(|queue| queue.into_iter().collect::<Vec<_>>())
+            .unwrap_or_default();
+
+        Ok(RuntimeEventDeliveryBatch {
+            subscription_id: subscription_id.clone(),
+            remaining_events: 0,
+            events,
+        })
+    }
+
     pub fn publish(&mut self, event: RuntimeEvent) {
         for (subscription_id, filter) in &self.subscriptions {
             if filter.matches(&event) {
@@ -3162,6 +3187,39 @@ mod tests {
         assert!(bus
             .queued_events(&RuntimeSubscriptionId::trusted("missing"))
             .is_err());
+    }
+
+    #[test]
+    fn event_bus_unsubscribes_and_returns_undelivered_events() {
+        let mut bus = RuntimeEventBus::new();
+        let subscription = RuntimeSubscriptionId::trusted("bridge-events");
+        bus.subscribe(
+            subscription.clone(),
+            RuntimeEventFilter::Bridge(BridgeId::trusted("bridge-1")),
+        )
+        .unwrap();
+        bus.publish(bridge_health_runtime_event("health-1", "bridge-1", 1_000));
+        bus.publish(bridge_health_runtime_event("health-2", "bridge-2", 1_001));
+
+        assert!(bus.has_subscription(&subscription));
+        assert_eq!(bus.subscription_count(), 1);
+        assert_eq!(bus.pending_delivery_count(), 1);
+
+        let undelivered = bus.unsubscribe(&subscription).unwrap();
+
+        assert_eq!(undelivered.subscription_id, subscription);
+        assert_eq!(undelivered.len(), 1);
+        assert_eq!(undelivered.remaining_events, 0);
+        assert!(!undelivered.has_more());
+        assert_eq!(bus.subscription_count(), 0);
+        assert_eq!(bus.pending_delivery_count(), 0);
+        assert!(!bus.has_subscription(&subscription));
+        assert!(bus.queued_events(&subscription).is_err());
+        assert!(bus.unsubscribe(&subscription).is_err());
+
+        bus.publish(bridge_health_runtime_event("health-3", "bridge-1", 1_002));
+        assert_eq!(bus.pending_delivery_count(), 0);
+        assert_eq!(bus.published().len(), 3);
     }
 
     #[test]
