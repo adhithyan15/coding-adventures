@@ -175,6 +175,7 @@ members = [
     "prolog-lexer",
     "prolog-parser",
     "adjudication-connector",
+    "adjudication-polarity-modality",
     "adjudication-coverage",
     "loss-functions",
     "markov-chain",
