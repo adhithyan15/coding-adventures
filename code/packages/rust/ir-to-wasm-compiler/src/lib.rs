@@ -715,6 +715,21 @@ impl<'a> FunctionLowerer<'a> {
                 self.emit_local_set(dst);
             }
             IrOp::Sub => self.emit_binary_numeric("i32.sub", instruction)?,
+            // ── Multiplication ────────────────────────────────────────────
+            //
+            // WASM `i32.mul` is an unchecked 32-bit signed multiplication that
+            // wraps on overflow (two's-complement).  This matches the IrOp
+            // contract ("wrap-around … is the norm") and is consistent with the
+            // Python WASM backend's `emit_mul` helper.
+            IrOp::Mul => self.emit_binary_numeric("i32.mul", instruction)?,
+            // ── Division ──────────────────────────────────────────────────
+            //
+            // `i32.div_s` performs signed integer division truncating toward
+            // zero (C-style).  The WebAssembly spec mandates a trap on
+            // division by zero *and* on the signed overflow case (INT_MIN / -1),
+            // satisfying the IrOp requirement that "silently returning 0 is
+            // explicitly forbidden".
+            IrOp::Div => self.emit_binary_numeric("i32.div_s", instruction)?,
             IrOp::And => self.emit_binary_numeric("i32.and", instruction)?,
             IrOp::AndImm => {
                 let dst = expect_register(instruction.operands.first(), "AND_IMM dst")?;
@@ -977,6 +992,46 @@ impl<'a> FunctionLowerer<'a> {
     }
 }
 
+// ---------------------------------------------------------------------------
+// Public validation helper — mirrors Python's `validate_for_wasm`
+// ---------------------------------------------------------------------------
+
+/// Pre-flight validation for WASM lowering.
+///
+/// Returns an empty `Vec` when the program can be lowered to WASM without
+/// errors, or a list of human-readable error strings when it cannot.
+///
+/// This is a lightweight dry-run compilation — it attempts the full lowering
+/// and maps any [`WasmLoweringError`] to a string rather than propagating it.
+/// The interface mirrors the Python backend's `validate_for_wasm(program)`
+/// function so callers can swap implementations without changing call sites.
+///
+/// ## Examples
+///
+/// ```rust
+/// use compiler_ir::{IrInstruction, IrOp, IrOperand, IrProgram};
+/// use ir_to_wasm_compiler::validate_for_wasm;
+///
+/// let prog = IrProgram {
+///     instructions: vec![
+///         IrInstruction::new(IrOp::Label, vec![IrOperand::Label("_start".into())], -1),
+///         IrInstruction::new(IrOp::LoadImm, vec![IrOperand::Register(0), IrOperand::Immediate(1)], 0),
+///         IrInstruction::new(IrOp::Halt, vec![], 1),
+///     ],
+///     data: vec![],
+///     entry_label: "_start".into(),
+///     version: 1,
+/// };
+///
+/// assert!(validate_for_wasm(&prog).is_empty());
+/// ```
+pub fn validate_for_wasm(program: &IrProgram) -> Vec<String> {
+    match IrToWasmCompiler::default().compile(program, &[]) {
+        Ok(_) => vec![],
+        Err(e) => vec![e.to_string()],
+    }
+}
+
 fn const_expr(value: i64) -> Vec<u8> {
     let mut bytes = vec![get_opcode_by_name("i32.const").unwrap().opcode];
     bytes.extend(encode_signed(value));
@@ -1143,5 +1198,164 @@ mod tests {
             .unwrap_err();
 
         assert!(err.message.contains("unsupported SYSCALL number"));
+    }
+
+    // ── v0.3.0: Mul / Div / validate_for_wasm ────────────────────────────
+
+    /// Build a minimal IrProgram that exercises one arithmetic op:
+    ///
+    /// ```text
+    /// _start:
+    ///   LOAD_IMM r2, <a>
+    ///   LOAD_IMM r3, <b>
+    ///   <op>     r1, r2, r3   ; r1 = r2 op r3 (scratch register)
+    ///   HALT
+    /// ```
+    ///
+    /// The result lands in register `REG_SCRATCH` (1), which `HALT` returns.
+    fn arithmetic_prog(op: IrOp, a: i64, b: i64) -> IrProgram {
+        IrProgram {
+            instructions: vec![
+                IrInstruction::new(IrOp::Label,   vec![IrOperand::Label("_start".into())],    -1),
+                IrInstruction::new(IrOp::LoadImm,  vec![IrOperand::Register(2), IrOperand::Immediate(a)],  0),
+                IrInstruction::new(IrOp::LoadImm,  vec![IrOperand::Register(3), IrOperand::Immediate(b)],  1),
+                IrInstruction::new(op,             vec![IrOperand::Register(REG_SCRATCH), IrOperand::Register(2), IrOperand::Register(3)], 2),
+                IrInstruction::new(IrOp::Halt,     vec![],                                     3),
+            ],
+            data: vec![],
+            entry_label: "_start".into(),
+            version: 1,
+        }
+    }
+
+    /// Run a program through the WASM runtime and return the integer result.
+    ///
+    /// `load_and_run` returns `Vec<i64>` where each element is a return value.
+    /// Our `_start` functions return a single i32 (stored in REG_SCRATCH = 1),
+    /// so we cast `result[0] as i32` to get the expected value.
+    fn run_prog(prog: &IrProgram) -> i32 {
+        use wasm_module_encoder::encode_module;
+        use wasm_runtime::{WasiConfig, WasiEnv, WasmRuntime};
+
+        let module = IrToWasmCompiler::default().compile(prog, &[]).unwrap();
+        let binary = encode_module(&module).unwrap();
+        let wasi = WasiEnv::new(WasiConfig::default());
+        let runtime = WasmRuntime::with_host(Box::new(wasi));
+        let result = runtime.load_and_run(&binary, "_start", &[]).unwrap();
+        // result[0] is the i32 return value of the _start function, widened to i64.
+        result[0] as i32
+    }
+
+    // ── Mul ──────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn lowers_mul_to_i32_mul() {
+        // Verifies that `MUL` is accepted and emits `i32.mul` by checking
+        // the module compiles without error.  The byte-level check is
+        // implicit: if the wrong opcode were emitted the runtime would trap.
+        let prog = arithmetic_prog(IrOp::Mul, 6, 7);
+        let module = IrToWasmCompiler::default().compile(&prog, &[]).unwrap();
+        // At least one function body must contain bytes.
+        assert!(!module.code.is_empty(), "expected non-empty code section");
+    }
+
+    #[test]
+    fn mul_produces_correct_result() {
+        // 6 × 7 = 42
+        let result = run_prog(&arithmetic_prog(IrOp::Mul, 6, 7));
+        assert_eq!(result, 42);
+    }
+
+    #[test]
+    fn mul_wraps_on_overflow() {
+        // i32::MAX * 2 wraps to -2 in two's complement.
+        //   0x7FFFFFFF * 2 = 0xFFFFFFFE = -2 in i32
+        let result = run_prog(&arithmetic_prog(IrOp::Mul, i32::MAX as i64, 2));
+        assert_eq!(result, -2i32);
+    }
+
+    #[test]
+    fn mul_by_zero_produces_zero() {
+        let result = run_prog(&arithmetic_prog(IrOp::Mul, 12345, 0));
+        assert_eq!(result, 0);
+    }
+
+    // ── Div ──────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn lowers_div_to_i32_div_s() {
+        // 20 / 4 = 5 — sanity-compile only; result is checked separately.
+        let prog = arithmetic_prog(IrOp::Div, 20, 4);
+        let module = IrToWasmCompiler::default().compile(&prog, &[]).unwrap();
+        assert!(!module.code.is_empty(), "expected non-empty code section");
+    }
+
+    #[test]
+    fn div_produces_correct_result() {
+        // 20 / 4 = 5
+        let result = run_prog(&arithmetic_prog(IrOp::Div, 20, 4));
+        assert_eq!(result, 5);
+    }
+
+    #[test]
+    fn div_truncates_toward_zero() {
+        // 7 / 2 = 3 (not 4): truncation toward zero, not floor division.
+        let result = run_prog(&arithmetic_prog(IrOp::Div, 7, 2));
+        assert_eq!(result, 3);
+    }
+
+    #[test]
+    fn div_negative_truncates_toward_zero() {
+        // -7 / 2 = -3 in C-style division (matches IrOp contract).
+        let result = run_prog(&arithmetic_prog(IrOp::Div, -7, 2));
+        assert_eq!(result, -3i32);
+    }
+
+    // ── validate_for_wasm ────────────────────────────────────────────────────
+
+    /// Minimal valid IrProgram used by the validation tests.
+    fn minimal_prog() -> IrProgram {
+        IrProgram {
+            instructions: vec![
+                IrInstruction::new(IrOp::Label,   vec![IrOperand::Label("_start".into())],   -1),
+                IrInstruction::new(IrOp::LoadImm,  vec![IrOperand::Register(0), IrOperand::Immediate(0)], 0),
+                IrInstruction::new(IrOp::Halt,     vec![],                                     1),
+            ],
+            data: vec![],
+            entry_label: "_start".into(),
+            version: 1,
+        }
+    }
+
+    #[test]
+    fn validate_for_wasm_returns_empty_on_valid_program() {
+        let errors = validate_for_wasm(&minimal_prog());
+        assert!(errors.is_empty(), "expected no errors, got: {errors:?}");
+    }
+
+    #[test]
+    fn validate_for_wasm_returns_errors_for_bad_syscall() {
+        let prog = IrProgram {
+            instructions: vec![
+                IrInstruction::new(IrOp::Label,   vec![IrOperand::Label("_start".into())], -1),
+                IrInstruction::new(IrOp::Syscall,  vec![IrOperand::Immediate(99)],           0),
+            ],
+            data: vec![],
+            entry_label: "_start".into(),
+            version: 1,
+        };
+        let errors = validate_for_wasm(&prog);
+        assert!(!errors.is_empty(), "expected validation to fail for SYSCALL 99");
+        assert!(errors[0].contains("SYSCALL"), "expected SYSCALL in error: {errors:?}");
+    }
+
+    #[test]
+    fn validate_for_wasm_accepts_mul_and_div() {
+        // Both newly-wired opcodes must pass validation.
+        for op in [IrOp::Mul, IrOp::Div] {
+            let prog = arithmetic_prog(op, 3, 3);
+            let errors = validate_for_wasm(&prog);
+            assert!(errors.is_empty(), "{op:?} should be valid: {errors:?}");
+        }
     }
 }
