@@ -1,378 +1,238 @@
-//! # adjudication-coverage — ADJ02 coverage checker.
+//! # adjudication-coverage — ADJ02 v2 structural tree-coverage check.
 //!
 //! Reference implementation of
-//! [`ADJ02`](../../../specs/ADJ02-coverage-checker.md). Verifies that
-//! every meaningful byte of the input is accounted for by the source
-//! spans of at least one IR node — Fact, Query, Uncertainty, or an
-//! explicit Discarded node citing a reason.
+//! [`ADJ02` v2](../../../specs/ADJ02-coverage-checker.md). The check
+//! is a **structural tree-tiling check** over the hierarchical IR
+//! from ADJ01 v2 — language-agnostic by construction, deterministic,
+//! linear in IR node count, no tagger, no stopword list, no NegEx
+//! triggers.
 //!
-//! ## Pipeline
+//! ## The invariant
 //!
-//! ```text
-//!   Document (bytes + id)
-//!         │
-//!         ▼
-//!     Tagger.classify_tokens(doc)
-//!         │
-//!         ▼
-//!     TokenAnnotation[]            (Meaningful | NonMeaningful)
-//!         │
-//!         ▼
-//!     check_coverage(annotations, ir_doc, strictness)
-//!         │
-//!         ▼
-//!   CoverageResult { Pass | Fail { uncovered } }
-//! ```
+//! > Every byte of the document's normalized text is in the source
+//! > spans of some leaf in the IR's decomposition tree.
 //!
-//! The interval-cover check is linear in the IR's source spans after
-//! sorting and merging.
+//! Equivalent to five structural conditions:
+//!
+//! 1. **Span validity** — every span has `start < end`, both within
+//!    the document's bounds.
+//! 2. **Root coverage** — the union of root nodes' source_spans
+//!    equals the document's full byte range.
+//! 3. **Parent-child containment** — child spans inside parent's.
+//! 4. **TextRun tiling** — each TextRun's children's spans union to
+//!    the parent's spans.
+//! 5. **No `Unparseable`** — any `Discarded` node with reason
+//!    `Unparseable` is a hard coverage failure.
+//!
+//! Conditions 1, 3, 4 are already enforced by
+//! `adjudication_ir::validate`. This crate adds conditions 2 and 5
+//! and packages all five violations into a `CoverageResult` shape
+//! suitable for ADJ06 clarification.
 
-use std::collections::HashSet;
-
-use adjudication_ir::{DiscardReason, DocumentId, IRDocument, IRNode, NodeKind, Span};
+use adjudication_ir::{
+    validate, DiscardReason, DocumentId, IRDocument, NodeId, NodeKind, ValidationError,
+};
 
 // ---------------------------------------------------------------------------
-// Document and tagger
+// Document and result types
 // ---------------------------------------------------------------------------
 
-/// The unit of coverage analysis.
+/// The document under coverage analysis. The check reads only
+/// `normalized_text.len()` — it never inspects the bytes.
 #[derive(Debug, Clone)]
 pub struct Document {
     pub id: DocumentId,
-    /// The normalized text whose byte offsets the IR's
-    /// `source_spans` reference into.
     pub normalized_text: String,
-}
-
-/// Classification of a single byte range in the document.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum TokenLabel {
-    Meaningful,
-    /// Non-meaningful with a reason from the controlled vocabulary.
-    NonMeaningful(NonMeaningfulReason),
-}
-
-/// Reasons a token range may be discarded by the tagger. Mirrors the
-/// controlled vocabulary from `ADJ02 §"What Counts as Meaningful"`.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub enum NonMeaningfulReason {
-    Whitespace,
-    Punctuation,
-    Stopword,
-    SocialPleasantry,
-    DocumentChrome,
-    Boilerplate,
-    Determiner,
-    Filler,
-}
-
-/// Tagger output for a single contiguous byte range.
-#[derive(Debug, Clone, PartialEq)]
-pub struct TokenAnnotation {
-    pub start: usize,
-    pub end: usize,
-    pub label: TokenLabel,
-    pub reason: Option<String>,
-}
-
-/// A tagger classifies a document's bytes into meaningful and
-/// non-meaningful ranges. Implementors choose the strategy:
-/// rule-based (the default), small classifier, or an LLM call with
-/// constrained output.
-pub trait Tagger {
-    fn classify_tokens(&self, doc: &Document) -> Vec<TokenAnnotation>;
-}
-
-// ---------------------------------------------------------------------------
-// Rule-based tagger
-// ---------------------------------------------------------------------------
-
-/// The default tagger: word-boundary splitting plus configurable
-/// stopword / punctuation / filler lists.
-pub struct RuleBasedTagger {
-    /// Words that are non-meaningful by default ("the", "a", ...).
-    pub stopwords: HashSet<String>,
-    /// Words that should always be meaningful, overriding stopwords.
-    pub always_meaningful: HashSet<String>,
-    /// Filler tokens that may be tolerated under permissive strictness.
-    pub fillers: HashSet<String>,
-}
-
-impl Default for RuleBasedTagger {
-    fn default() -> Self {
-        Self {
-            stopwords: english_stopwords(),
-            always_meaningful: HashSet::new(),
-            fillers: filler_words(),
-        }
-    }
-}
-
-impl RuleBasedTagger {
-    /// A minimal English-stopword tagger suitable for narrow domains
-    /// (TSA, license-compatibility prompts). Clinical text will want
-    /// `with_clinical_defaults`.
-    pub fn english() -> Self {
-        Self::default()
-    }
-
-    /// English defaults plus a small list of clinical hedge words and
-    /// header boilerplate. Useful as a starting point for clinical
-    /// notes; deployments should refine.
-    pub fn with_clinical_defaults() -> Self {
-        let mut t = Self::default();
-        t.fillers.extend(["umm".into(), "uh".into(), "you-know".into()]);
-        // "Patient" is meaningful in clinical text even though it's
-        // frequent — register it explicitly to avoid future stopword
-        // expansions hiding it.
-        t.always_meaningful.insert("patient".into());
-        t.always_meaningful.insert("doctor".into());
-        t
-    }
-}
-
-impl Tagger for RuleBasedTagger {
-    fn classify_tokens(&self, doc: &Document) -> Vec<TokenAnnotation> {
-        let mut out = Vec::new();
-        let bytes = doc.normalized_text.as_bytes();
-        let mut i = 0;
-        while i < bytes.len() {
-            // Skip-emit whitespace runs as a single Whitespace token.
-            if is_whitespace(bytes[i]) {
-                let start = i;
-                while i < bytes.len() && is_whitespace(bytes[i]) {
-                    i += 1;
-                }
-                out.push(TokenAnnotation {
-                    start,
-                    end: i,
-                    label: TokenLabel::NonMeaningful(NonMeaningfulReason::Whitespace),
-                    reason: None,
-                });
-                continue;
-            }
-            // Punctuation runs.
-            if is_punct(bytes[i]) {
-                let start = i;
-                while i < bytes.len() && is_punct(bytes[i]) {
-                    i += 1;
-                }
-                out.push(TokenAnnotation {
-                    start,
-                    end: i,
-                    label: TokenLabel::NonMeaningful(NonMeaningfulReason::Punctuation),
-                    reason: None,
-                });
-                continue;
-            }
-            // Word run: ASCII alphanumeric and underscore.
-            if is_word(bytes[i]) {
-                let start = i;
-                while i < bytes.len() && is_word(bytes[i]) {
-                    i += 1;
-                }
-                let word = std::str::from_utf8(&bytes[start..i])
-                    .unwrap_or("")
-                    .to_lowercase();
-                let label = if self.always_meaningful.contains(&word) {
-                    TokenLabel::Meaningful
-                } else if self.stopwords.contains(&word) {
-                    TokenLabel::NonMeaningful(NonMeaningfulReason::Stopword)
-                } else if self.fillers.contains(&word) {
-                    TokenLabel::NonMeaningful(NonMeaningfulReason::Filler)
-                } else {
-                    TokenLabel::Meaningful
-                };
-                out.push(TokenAnnotation {
-                    start,
-                    end: i,
-                    label,
-                    reason: None,
-                });
-                continue;
-            }
-            // Anything else: treat as a one-byte non-meaningful chunk.
-            out.push(TokenAnnotation {
-                start: i,
-                end: i + 1,
-                label: TokenLabel::NonMeaningful(NonMeaningfulReason::Punctuation),
-                reason: None,
-            });
-            i += 1;
-        }
-        out
-    }
-}
-
-fn is_whitespace(b: u8) -> bool {
-    matches!(b, b' ' | b'\t' | b'\r' | b'\n')
-}
-
-fn is_punct(b: u8) -> bool {
-    matches!(
-        b,
-        b'.' | b','
-            | b';'
-            | b':'
-            | b'!'
-            | b'?'
-            | b'('
-            | b')'
-            | b'['
-            | b']'
-            | b'{'
-            | b'}'
-            | b'"'
-            | b'\''
-    )
-}
-
-fn is_word(b: u8) -> bool {
-    b.is_ascii_alphanumeric() || b == b'_' || b == b'-'
-}
-
-fn english_stopwords() -> HashSet<String> {
-    [
-        "a", "an", "the", "and", "or", "of", "to", "in", "on", "for", "with", "by",
-        "is", "are", "was", "were", "be", "been", "being", "have", "has", "had", "do",
-        "does", "did", "will", "would", "should", "could", "may", "might", "must",
-        "this", "that", "these", "those", "i", "you", "he", "she", "it", "we", "they",
-        "i'd", "i'm", "we'd", "we're",
-    ]
-    .iter()
-    .map(|s| s.to_string())
-    .collect()
-}
-
-fn filler_words() -> HashSet<String> {
-    ["umm", "uh", "you-know", "like"]
-        .iter()
-        .map(|s| s.to_string())
-        .collect()
-}
-
-// ---------------------------------------------------------------------------
-// Strictness and result
-// ---------------------------------------------------------------------------
-
-/// How tolerant the check is.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum StrictnessMode {
-    /// Any uncovered meaningful byte fails.
-    Strict,
-    /// Uncovered `Filler` / `Determiner` tokens are tolerated.
-    Permissive,
-    /// Never fails; uncovered ranges are still reported in the
-    /// `Fail`-shaped result for telemetry.
-    AuditOnly,
 }
 
 /// Outcome of a coverage check.
 #[derive(Debug, Clone, PartialEq)]
 pub enum CoverageResult {
     Pass,
-    Fail { uncovered: Vec<Span> },
+    Fail { violations: Vec<CoverageViolation> },
+}
+
+/// One coverage violation. Maps to an ADJ06 clarification question
+/// shape.
+#[derive(Debug, Clone, PartialEq)]
+pub enum CoverageViolation {
+    /// A span cites a different document than the one under check.
+    SpanWrongDocument {
+        node_id: NodeId,
+        expected: DocumentId,
+        found: DocumentId,
+    },
+
+    /// A span's `start >= end` or extends beyond the document's
+    /// byte length.
+    InvalidSpan {
+        node_id: NodeId,
+        start: usize,
+        end: usize,
+        document_len: usize,
+    },
+
+    /// A `Discarded` node has reason `Unparseable`. Always a hard
+    /// coverage failure per ADJ01.
+    UnparseableDiscarded { node_id: NodeId },
+
+    /// The union of root nodes' source_spans does not equal the
+    /// document's full byte range. `missing_ranges` enumerates the
+    /// uncovered byte ranges.
+    RootsDoNotTileDocument { missing_ranges: Vec<(usize, usize)> },
+
+    /// A node's `part_of` references an id that doesn't exist.
+    DanglingPartOf { node_id: NodeId, missing_parent: NodeId },
+
+    /// A child's source spans extend beyond its structural parent's.
+    ChildSpansExceedParent { child_id: NodeId, parent_id: NodeId },
+
+    /// A `TextRun`'s children's spans, taken together, do not tile
+    /// its own spans. `missing_ranges` enumerates the gaps inside
+    /// the parent.
+    ChildrenDoNotTileParent {
+        parent_id: NodeId,
+        missing_ranges: Vec<(usize, usize)>,
+    },
+
+    /// A non-TextRun node has children. Only TextRun may be a
+    /// structural parent.
+    NonTextRunHasChildren {
+        parent_id: NodeId,
+        parent_kind: NodeKind,
+        children: Vec<NodeId>,
+    },
+
+    /// A `part_of` cycle in the decomposition.
+    PartOfCycle { participants: Vec<NodeId> },
 }
 
 // ---------------------------------------------------------------------------
 // Main entry point
 // ---------------------------------------------------------------------------
 
-/// Run the coverage check.
+/// Run the structural coverage check. Returns `Pass` or
+/// `Fail { violations }`.
 ///
-/// 1. Run the tagger.
-/// 2. Filter to meaningful spans (respecting the strictness mode).
-/// 3. Enforce ADJ01's hard rule: any `Discarded` node with reason
-///    `Unparseable` is a coverage failure.
-/// 4. Build the union of IR `source_spans` (sorted + merged).
-/// 5. For each meaningful span, verify it is fully contained in the
-///    union.
-pub fn check_coverage(
-    doc: &Document,
-    ir_doc: &IRDocument,
-    tagger: &dyn Tagger,
-    strictness: StrictnessMode,
-) -> CoverageResult {
-    // 1+2. Build the meaningful-spans list.
-    let annotations = tagger.classify_tokens(doc);
-    let meaningful: Vec<Span> = annotations
-        .into_iter()
-        .filter(|a| match a.label {
-            TokenLabel::Meaningful => true,
-            TokenLabel::NonMeaningful(reason) => {
-                strictness == StrictnessMode::Permissive
-                    && matches!(
-                        reason,
-                        NonMeaningfulReason::Filler | NonMeaningfulReason::Determiner
-                    )
-            }
-        })
-        .filter(|a| matches!(
-            // After the above filter, only Meaningful (and never under
-            // Permissive the tolerated NonMeaningful) entries remain.
-            a.label, TokenLabel::Meaningful
-        ))
-        .map(|a| Span::new(doc.id.clone(), a.start, a.end))
-        .collect();
+/// The check does not call an LLM; it does not consult a tagger;
+/// it does not classify tokens. The LLM-produced decomposition tree
+/// already encoded what counts as content; this check verifies the
+/// tree's structural completeness.
+pub fn check_coverage(doc: &Document, ir_doc: &IRDocument) -> CoverageResult {
+    let mut violations = Vec::new();
 
-    // 3. Enforce the Unparseable hard rule.
-    let unparseable_spans: Vec<Span> = ir_doc
-        .nodes
-        .iter()
-        .filter(|n| {
-            n.kind == NodeKind::Discarded && n.discard_reason == Some(DiscardReason::Unparseable)
-        })
-        .flat_map(|n| n.source_spans.iter().cloned())
-        .collect();
-
-    if !unparseable_spans.is_empty() {
-        return finalize(unparseable_spans, strictness);
+    // 1, 3, 4 — delegated to adjudication_ir::validate, which
+    // enforces ADJ01's well-formedness rules including all the
+    // tree-shape invariants.
+    if let Err(e) = validate(ir_doc) {
+        violations.extend(translate_validation_error(e, doc));
     }
 
-    // 4. Build the union of IR source spans, restricted to this
-    //    document.
-    let mut all_spans: Vec<(usize, usize)> = ir_doc
+    // 2. Root coverage: roots union to (0, doc_len).
+    let doc_len = doc.normalized_text.len();
+    let mut root_spans: Vec<(usize, usize)> = ir_doc
         .nodes
         .iter()
-        .flat_map(|n: &IRNode| n.source_spans.iter())
+        .filter(|n| n.part_of.is_none())
+        .flat_map(|n| n.source_spans.iter())
         .filter(|s| s.document_id == doc.id)
         .map(|s| (s.start, s.end))
         .collect();
-    all_spans.sort_by_key(|(s, _)| *s);
-    let union = merge_intervals(all_spans);
+    root_spans.sort_by_key(|(s, _)| *s);
+    let root_merged = merge_ranges(root_spans);
+    let document_range = if doc_len > 0 {
+        vec![(0, doc_len)]
+    } else {
+        vec![]
+    };
+    let missing = subtract_intervals(document_range.clone(), root_merged.clone());
+    if !missing.is_empty() && !document_range.is_empty() {
+        violations.push(CoverageViolation::RootsDoNotTileDocument {
+            missing_ranges: missing,
+        });
+    }
 
-    // 5. Verify each meaningful span is fully covered.
-    let mut uncovered = Vec::new();
-    for m in meaningful {
-        if !is_covered(m.start, m.end, &union) {
-            uncovered.push(m);
+    // 5. Hard rule: Unparseable Discarded is a coverage failure.
+    for node in &ir_doc.nodes {
+        if node.kind == NodeKind::Discarded
+            && node.discard_reason == Some(DiscardReason::Unparseable)
+        {
+            violations.push(CoverageViolation::UnparseableDiscarded {
+                node_id: node.id.clone(),
+            });
         }
     }
 
-    finalize(uncovered, strictness)
+    if violations.is_empty() {
+        CoverageResult::Pass
+    } else {
+        CoverageResult::Fail { violations }
+    }
 }
 
-fn finalize(uncovered: Vec<Span>, strictness: StrictnessMode) -> CoverageResult {
-    if uncovered.is_empty() {
-        return CoverageResult::Pass;
+fn translate_validation_error(e: ValidationError, doc: &Document) -> Vec<CoverageViolation> {
+    let mut out = Vec::new();
+    match e {
+        ValidationError::InvalidSpan {
+            node_id, start, end,
+        } => out.push(CoverageViolation::InvalidSpan {
+            node_id,
+            start,
+            end,
+            document_len: doc.normalized_text.len(),
+        }),
+        ValidationError::SpanDocumentMismatch {
+            node_id, expected, found,
+        } => out.push(CoverageViolation::SpanWrongDocument {
+            node_id,
+            expected,
+            found,
+        }),
+        ValidationError::DanglingPartOf {
+            node_id, missing_parent,
+        } => out.push(CoverageViolation::DanglingPartOf {
+            node_id,
+            missing_parent,
+        }),
+        ValidationError::ChildSpansExceedParent {
+            child_id, parent_id,
+        } => out.push(CoverageViolation::ChildSpansExceedParent {
+            child_id,
+            parent_id,
+        }),
+        ValidationError::ChildrenDoNotTileParent {
+            parent_id, missing_ranges,
+        } => out.push(CoverageViolation::ChildrenDoNotTileParent {
+            parent_id,
+            missing_ranges,
+        }),
+        ValidationError::NonTextRunHasChildren {
+            parent_id, parent_kind, children,
+        } => out.push(CoverageViolation::NonTextRunHasChildren {
+            parent_id,
+            parent_kind,
+            children,
+        }),
+        ValidationError::PartOfCycle { participants } => {
+            out.push(CoverageViolation::PartOfCycle { participants })
+        }
+        // Other adjudication-ir validation errors (DuplicateNodeId,
+        // FactWithUncertainPolarity, etc.) are not coverage concerns
+        // per ADJ02; they belong to ADJ01 well-formedness.
+        _ => {}
     }
-    if strictness == StrictnessMode::AuditOnly {
-        // Always pass; uncovered ranges are still returned for
-        // telemetry, but the caller doesn't gate on them.
-        // For symmetry with the spec, we return Pass; if telemetry is
-        // needed the caller can run with Strict and ignore the failure.
-        return CoverageResult::Pass;
-    }
-    CoverageResult::Fail { uncovered }
+    out
 }
 
-fn merge_intervals(mut sorted: Vec<(usize, usize)>) -> Vec<(usize, usize)> {
-    if sorted.is_empty() {
-        return sorted;
+/// Merge overlapping / adjacent byte-range intervals.
+fn merge_ranges(mut rs: Vec<(usize, usize)>) -> Vec<(usize, usize)> {
+    if rs.is_empty() {
+        return rs;
     }
-    let mut out = Vec::with_capacity(sorted.len());
-    let mut cur = sorted.remove(0);
-    for (s, e) in sorted {
+    rs.sort_by_key(|(s, _)| *s);
+    let mut out = Vec::with_capacity(rs.len());
+    let mut cur = rs[0];
+    for (s, e) in rs.into_iter().skip(1) {
         if s <= cur.1 {
             cur.1 = cur.1.max(e);
         } else {
@@ -384,11 +244,37 @@ fn merge_intervals(mut sorted: Vec<(usize, usize)>) -> Vec<(usize, usize)> {
     out
 }
 
-fn is_covered(start: usize, end: usize, union: &[(usize, usize)]) -> bool {
-    // The meaningful range [start, end) is covered iff some
-    // contiguous union interval [s, e) satisfies s <= start && end <= e.
-    union.iter().any(|(s, e)| *s <= start && end <= *e)
+/// Bytes in `parent` not covered by any range in `children`.
+fn subtract_intervals(
+    parent: Vec<(usize, usize)>,
+    children: Vec<(usize, usize)>,
+) -> Vec<(usize, usize)> {
+    let parent_merged = merge_ranges(parent);
+    let child_merged = merge_ranges(children);
+    let mut out = Vec::new();
+    for (p_start, p_end) in parent_merged {
+        let mut cursor = p_start;
+        for &(c_start, c_end) in &child_merged {
+            if c_end <= cursor || c_start >= p_end {
+                continue;
+            }
+            if c_start > cursor {
+                out.push((cursor, c_start.min(p_end)));
+            }
+            cursor = cursor.max(c_end);
+            if cursor >= p_end {
+                break;
+            }
+        }
+        if cursor < p_end {
+            out.push((cursor, p_end));
+        }
+    }
+    out
 }
+
+// Re-export Span and NodeId for caller convenience.
+pub use adjudication_ir::{NodeId as IrNodeId, Span as IrSpan};
 
 // ---------------------------------------------------------------------------
 // Tests
@@ -397,7 +283,8 @@ fn is_covered(start: usize, end: usize, union: &[(usize, usize)]) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use adjudication_ir::{Modality, NodeId, Polarity};
+    use adjudication_ir::{IRNode, Modality, Polarity, Span};
+    use logic_core::{atom, compound};
     use std::collections::HashMap;
 
     fn doc_id() -> DocumentId {
@@ -411,267 +298,229 @@ mod tests {
         }
     }
 
-    fn mk_fact(id: &str, span: Span) -> IRNode {
+    fn span_of(start: usize, end: usize) -> Span {
+        Span::new(doc_id(), start, end)
+    }
+
+    fn text_run(id: &str, start: usize, end: usize, part_of: Option<&str>) -> IRNode {
         IRNode {
             id: NodeId::new(id),
-            kind: NodeKind::Fact,
-            term: logic_core_atom("p"),
-            polarity: Polarity::Affirmed,
-            modality: Modality::Present,
-            source_spans: vec![span],
+            kind: NodeKind::TextRun,
+            term: compound("text_run", vec![]),
+            polarity: Polarity::Inherit,
+            modality: Modality::Inherit,
+            source_spans: vec![span_of(start, end)],
             confidence: 1.0,
-            part_of: None,
+            part_of: part_of.map(NodeId::new),
             lowered_from: None,
             discard_reason: None,
             metadata: HashMap::new(),
         }
     }
 
-    use logic_core::Term;
-
-    fn logic_core_atom(name: &str) -> Term {
-        Term::Atom(name.to_string())
-    }
-
-    fn span(start: usize, end: usize) -> Span {
-        Span::new(doc_id(), start, end)
-    }
-
-    fn empty_ir() -> IRDocument {
-        IRDocument {
-            document_id: doc_id(),
-            nodes: vec![],
-        }
-    }
-
-    #[test]
-    fn empty_document_passes_coverage() {
-        let doc = mk_doc("");
-        let ir = empty_ir();
-        let tagger = RuleBasedTagger::english();
-        assert_eq!(
-            check_coverage(&doc, &ir, &tagger, StrictnessMode::Strict),
-            CoverageResult::Pass
-        );
-    }
-
-    #[test]
-    fn document_with_only_stopwords_and_punctuation_passes() {
-        let doc = mk_doc("the a, of.");
-        let ir = empty_ir();
-        let tagger = RuleBasedTagger::english();
-        assert_eq!(
-            check_coverage(&doc, &ir, &tagger, StrictnessMode::Strict),
-            CoverageResult::Pass
-        );
-    }
-
-    #[test]
-    fn single_meaningful_word_uncovered_fails() {
-        // "patient" is meaningful with the clinical defaults; no IR
-        // node covers it.
-        let doc = mk_doc("patient");
-        let ir = empty_ir();
-        let tagger = RuleBasedTagger::with_clinical_defaults();
-        match check_coverage(&doc, &ir, &tagger, StrictnessMode::Strict) {
-            CoverageResult::Fail { uncovered } => {
-                assert_eq!(uncovered.len(), 1);
-                assert_eq!(uncovered[0].start, 0);
-                assert_eq!(uncovered[0].end, 7);
-            }
-            other => panic!("expected Fail, got {:?}", other),
-        }
-    }
-
-    #[test]
-    fn single_meaningful_word_covered_passes() {
-        let doc = mk_doc("patient");
-        let ir = IRDocument {
-            document_id: doc_id(),
-            nodes: vec![mk_fact("F1", span(0, 7))],
-        };
-        let tagger = RuleBasedTagger::with_clinical_defaults();
-        assert_eq!(
-            check_coverage(&doc, &ir, &tagger, StrictnessMode::Strict),
-            CoverageResult::Pass
-        );
-    }
-
-    #[test]
-    fn multiple_ir_nodes_combine_to_cover_one_span() {
-        // "abc def" — 'abc' and 'def' are meaningful (not stopwords).
-        // Two IR nodes, one for each, should pass.
-        let doc = mk_doc("abc def");
-        let ir = IRDocument {
-            document_id: doc_id(),
-            nodes: vec![mk_fact("F1", span(0, 3)), mk_fact("F2", span(4, 7))],
-        };
-        let tagger = RuleBasedTagger::english();
-        assert_eq!(
-            check_coverage(&doc, &ir, &tagger, StrictnessMode::Strict),
-            CoverageResult::Pass
-        );
-    }
-
-    #[test]
-    fn meaningful_span_partially_covered_fails() {
-        // "abc def ghi"; IR covers 0..3 and 8..11, leaving 'def' at
-        // 4..7 uncovered.
-        let doc = mk_doc("abc def ghi");
-        let ir = IRDocument {
-            document_id: doc_id(),
-            nodes: vec![mk_fact("F1", span(0, 3)), mk_fact("F2", span(8, 11))],
-        };
-        let tagger = RuleBasedTagger::english();
-        match check_coverage(&doc, &ir, &tagger, StrictnessMode::Strict) {
-            CoverageResult::Fail { uncovered } => {
-                assert_eq!(uncovered.len(), 1);
-                assert_eq!((uncovered[0].start, uncovered[0].end), (4, 7));
-            }
-            other => panic!("expected Fail, got {:?}", other),
-        }
-    }
-
-    #[test]
-    fn audit_only_mode_returns_pass_regardless() {
-        let doc = mk_doc("patient");
-        let ir = empty_ir();
-        let tagger = RuleBasedTagger::with_clinical_defaults();
-        assert_eq!(
-            check_coverage(&doc, &ir, &tagger, StrictnessMode::AuditOnly),
-            CoverageResult::Pass
-        );
-    }
-
-    #[test]
-    fn unparseable_discarded_node_always_fails_coverage() {
-        // Even if the rest of the document is well-covered, an
-        // Unparseable Discarded node triggers a coverage failure.
-        let doc = mk_doc("patient");
-        let mut ir = IRDocument {
-            document_id: doc_id(),
-            nodes: vec![mk_fact("F1", span(0, 7))],
-        };
-        ir.nodes.push(IRNode {
-            id: NodeId::new("D1"),
-            kind: NodeKind::Discarded,
-            term: logic_core_atom("discarded"),
+    fn fact_leaf(id: &str, start: usize, end: usize, part_of: Option<&str>) -> IRNode {
+        IRNode {
+            id: NodeId::new(id),
+            kind: NodeKind::Fact,
+            term: atom("placeholder"),
             polarity: Polarity::Affirmed,
             modality: Modality::Present,
-            source_spans: vec![span(0, 7)],
+            source_spans: vec![span_of(start, end)],
+            confidence: 0.9,
+            part_of: part_of.map(NodeId::new),
+            lowered_from: None,
+            discard_reason: None,
+            metadata: HashMap::new(),
+        }
+    }
+
+    #[test]
+    fn empty_document_with_empty_ir_passes() {
+        let doc = mk_doc("");
+        let ir = IRDocument {
+            document_id: doc_id(),
+            nodes: vec![],
+        };
+        assert_eq!(check_coverage(&doc, &ir), CoverageResult::Pass);
+    }
+
+    #[test]
+    fn nonempty_document_with_empty_ir_fails_with_full_range() {
+        let doc = mk_doc("hello world");
+        let ir = IRDocument {
+            document_id: doc_id(),
+            nodes: vec![],
+        };
+        match check_coverage(&doc, &ir) {
+            CoverageResult::Fail { violations } => {
+                let has_root_miss = violations.iter().any(|v| matches!(
+                    v,
+                    CoverageViolation::RootsDoNotTileDocument { missing_ranges }
+                        if missing_ranges == &vec![(0, 11)]
+                ));
+                assert!(has_root_miss, "expected RootsDoNotTileDocument: {:?}", violations);
+            }
+            other => panic!("expected Fail, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn single_root_textrun_with_one_child_tiling_full_doc_passes() {
+        let doc = mk_doc("hello world");
+        let parent = text_run("T0", 0, 11, None);
+        let leaf = fact_leaf("F1", 0, 11, Some("T0"));
+        let ir = IRDocument {
+            document_id: doc_id(),
+            nodes: vec![parent, leaf],
+        };
+        assert_eq!(check_coverage(&doc, &ir), CoverageResult::Pass);
+    }
+
+    #[test]
+    fn root_tile_gap_reported_with_missing_range() {
+        // doc 0..50 but only one root TextRun at 0..30
+        let doc = mk_doc(&"x".repeat(50));
+        let parent = text_run("T0", 0, 30, None);
+        let leaf = fact_leaf("F1", 0, 30, Some("T0"));
+        let ir = IRDocument {
+            document_id: doc_id(),
+            nodes: vec![parent, leaf],
+        };
+        match check_coverage(&doc, &ir) {
+            CoverageResult::Fail { violations } => {
+                let has_missing = violations.iter().any(|v| matches!(
+                    v,
+                    CoverageViolation::RootsDoNotTileDocument { missing_ranges }
+                        if missing_ranges == &vec![(30, 50)]
+                ));
+                assert!(has_missing, "expected (30, 50) missing: {:?}", violations);
+            }
+            other => panic!("expected Fail, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn child_gap_within_textrun_reported_with_missing_range() {
+        // Root TextRun 0..50, two children 0..20 and 30..50 — gap 20..30.
+        let doc = mk_doc(&"x".repeat(50));
+        let parent = text_run("T0", 0, 50, None);
+        let leaf1 = fact_leaf("F1", 0, 20, Some("T0"));
+        let leaf2 = fact_leaf("F2", 30, 50, Some("T0"));
+        let ir = IRDocument {
+            document_id: doc_id(),
+            nodes: vec![parent, leaf1, leaf2],
+        };
+        match check_coverage(&doc, &ir) {
+            CoverageResult::Fail { violations } => {
+                let has_gap = violations.iter().any(|v| matches!(
+                    v,
+                    CoverageViolation::ChildrenDoNotTileParent { missing_ranges, .. }
+                        if missing_ranges == &vec![(20, 30)]
+                ));
+                assert!(has_gap, "expected ChildrenDoNotTileParent(20..30): {:?}", violations);
+            }
+            other => panic!("expected Fail, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn unparseable_discarded_always_fails() {
+        let doc = mk_doc(&"x".repeat(20));
+        let parent = text_run("T0", 0, 20, None);
+        let discard = IRNode {
+            id: NodeId::new("D1"),
+            kind: NodeKind::Discarded,
+            term: atom("discarded"),
+            polarity: Polarity::Affirmed,
+            modality: Modality::Present,
+            source_spans: vec![span_of(0, 20)],
             confidence: 1.0,
-            part_of: None,
+            part_of: Some(NodeId::new("T0")),
             lowered_from: None,
             discard_reason: Some(DiscardReason::Unparseable),
             metadata: HashMap::new(),
-        });
-        let tagger = RuleBasedTagger::with_clinical_defaults();
-        assert!(matches!(
-            check_coverage(&doc, &ir, &tagger, StrictnessMode::Strict),
-            CoverageResult::Fail { .. }
-        ));
-    }
-
-    #[test]
-    fn discarded_with_other_reason_does_not_fail_by_itself() {
-        // A Discarded node with reason `Pleasantry` does NOT trigger
-        // a hard failure; it simply contributes its span to the cover.
-        let doc = mk_doc("");
+        };
         let ir = IRDocument {
             document_id: doc_id(),
-            nodes: vec![IRNode {
-                id: NodeId::new("D1"),
-                kind: NodeKind::Discarded,
-                term: logic_core_atom("discarded"),
-                polarity: Polarity::Affirmed,
-                modality: Modality::Present,
-                source_spans: vec![span(0, 0)],
-                confidence: 1.0,
-                part_of: None,
-                lowered_from: None,
-                discard_reason: Some(DiscardReason::Pleasantry),
-                metadata: HashMap::new(),
-            }],
+            nodes: vec![parent, discard],
         };
-        let tagger = RuleBasedTagger::english();
-        assert_eq!(
-            check_coverage(&doc, &ir, &tagger, StrictnessMode::Strict),
-            CoverageResult::Pass
-        );
-    }
-
-    #[test]
-    fn tsa_correct_extraction_passes_coverage() {
-        // Canonical TSA example from ADJ02 §"Worked Example".
-        // "I am not bringing matches" — span 0..26.
-        // Correct extractor cites the whole span; coverage passes.
-        let doc = mk_doc("I am not bringing matches");
-        let ir = IRDocument {
-            document_id: doc_id(),
-            nodes: vec![mk_fact("F6", span(0, 25))],
-        };
-        let tagger = RuleBasedTagger::english();
-        assert_eq!(
-            check_coverage(&doc, &ir, &tagger, StrictnessMode::Strict),
-            CoverageResult::Pass
-        );
-    }
-
-    #[test]
-    fn tsa_only_matches_cited_fails_on_not_bringing_span() {
-        // Counterexample from ADJ02: extractor cites only "matches"
-        // (18..25), leaving "not bringing" (8..17) uncovered.
-        let doc = mk_doc("I am not bringing matches");
-        let ir = IRDocument {
-            document_id: doc_id(),
-            nodes: vec![mk_fact("F6", span(18, 25))],
-        };
-        let tagger = RuleBasedTagger::english();
-        match check_coverage(&doc, &ir, &tagger, StrictnessMode::Strict) {
-            CoverageResult::Fail { uncovered } => {
-                // 'not' (8..11) and 'bringing' (12..20) are both
-                // meaningful and uncovered.
-                let ranges: Vec<(usize, usize)> = uncovered
+        match check_coverage(&doc, &ir) {
+            CoverageResult::Fail { violations } => {
+                let has = violations
                     .iter()
-                    .map(|s| (s.start, s.end))
-                    .collect();
-                // At least one of those words must appear; order may
-                // vary depending on tagger output.
-                assert!(ranges.iter().any(|(s, _)| *s == 7 || *s == 8 || *s == 9));
+                    .any(|v| matches!(v, CoverageViolation::UnparseableDiscarded { .. }));
+                assert!(has, "expected UnparseableDiscarded: {:?}", violations);
             }
             other => panic!("expected Fail, got {:?}", other),
         }
     }
 
     #[test]
-    fn merge_intervals_combines_overlapping_and_adjacent_ranges() {
-        let merged = merge_intervals(vec![(0, 3), (2, 5), (10, 12), (12, 15)]);
-        assert_eq!(merged, vec![(0, 5), (10, 15)]);
-    }
-
-    #[test]
-    fn is_covered_correctly_decides_subset_membership() {
-        let union = vec![(0, 10), (20, 30)];
-        assert!(is_covered(0, 5, &union));
-        assert!(is_covered(20, 30, &union));
-        assert!(!is_covered(5, 15, &union)); // crosses a gap
-        assert!(!is_covered(31, 40, &union)); // outside any range
-    }
-
-    #[test]
-    fn spans_from_a_different_document_do_not_contribute() {
-        let doc = mk_doc("hello");
-        let other_doc = DocumentId::new("other");
-        // IR node cites a span in another document → should not cover
-        // anything in our document.
+    fn discarded_with_pleasantry_reason_is_ok() {
+        let doc = mk_doc(&"x".repeat(20));
+        let parent = text_run("T0", 0, 20, None);
+        let discard = IRNode {
+            id: NodeId::new("D1"),
+            kind: NodeKind::Discarded,
+            term: atom("discarded"),
+            polarity: Polarity::Affirmed,
+            modality: Modality::Present,
+            source_spans: vec![span_of(0, 20)],
+            confidence: 1.0,
+            part_of: Some(NodeId::new("T0")),
+            lowered_from: None,
+            discard_reason: Some(DiscardReason::Pleasantry),
+            metadata: HashMap::new(),
+        };
         let ir = IRDocument {
             document_id: doc_id(),
-            nodes: vec![mk_fact("F1", Span::new(other_doc, 0, 5))],
+            nodes: vec![parent, discard],
         };
-        let tagger = RuleBasedTagger::english();
-        match check_coverage(&doc, &ir, &tagger, StrictnessMode::Strict) {
-            CoverageResult::Fail { uncovered } => {
-                assert!(!uncovered.is_empty());
+        assert_eq!(check_coverage(&doc, &ir), CoverageResult::Pass);
+    }
+
+    #[test]
+    fn nested_textruns_tile_correctly_passes() {
+        let doc = mk_doc(&"x".repeat(50));
+        let outer = text_run("T0", 0, 50, None);
+        let inner = text_run("T1", 0, 50, Some("T0"));
+        let leaf = fact_leaf("F1", 0, 50, Some("T1"));
+        let ir = IRDocument {
+            document_id: doc_id(),
+            nodes: vec![outer, inner, leaf],
+        };
+        assert_eq!(check_coverage(&doc, &ir), CoverageResult::Pass);
+    }
+
+    #[test]
+    fn merge_ranges_combines_adjacent_intervals() {
+        assert_eq!(
+            merge_ranges(vec![(0, 5), (5, 10), (15, 20)]),
+            vec![(0, 10), (15, 20)]
+        );
+    }
+
+    #[test]
+    fn subtract_intervals_finds_gaps() {
+        assert_eq!(
+            subtract_intervals(vec![(0, 50)], vec![(10, 20), (30, 40)]),
+            vec![(0, 10), (20, 30), (40, 50)]
+        );
+    }
+
+    #[test]
+    fn dangling_part_of_surfaces_as_coverage_violation() {
+        let doc = mk_doc(&"x".repeat(20));
+        let leaf = fact_leaf("F1", 0, 20, Some("DOES_NOT_EXIST"));
+        let ir = IRDocument {
+            document_id: doc_id(),
+            nodes: vec![leaf],
+        };
+        match check_coverage(&doc, &ir) {
+            CoverageResult::Fail { violations } => {
+                assert!(violations
+                    .iter()
+                    .any(|v| matches!(v, CoverageViolation::DanglingPartOf { .. })));
             }
             other => panic!("expected Fail, got {:?}", other),
         }
