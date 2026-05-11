@@ -213,6 +213,14 @@ impl HtmlRenderer {
     }
 
     /// Build an inline style string from resolved properties.
+    ///
+    /// # Security
+    ///
+    /// Resolved values (including fixture strings from the host) are
+    /// HTML-escaped before being embedded in the `style="…"` attribute.
+    /// This prevents an attacker-controlled fixture value such as
+    /// `red" onmouseover="alert(1)` from breaking out of the attribute and
+    /// injecting event handlers.
     fn build_style(&self, props: &[ResolvedProperty]) -> String {
         let skip = ["content", "source", "a11y-label", "a11y-role", "a11y-hidden", "style"];
         let entries: Vec<String> = props
@@ -220,7 +228,9 @@ impl HtmlRenderer {
             .filter(|p| !skip.contains(&p.name.as_str()))
             .map(|p| {
                 let css_name = &p.name;
-                let val = self.resolve_value(&p.value);
+                // Escape the resolved value at the output boundary to prevent
+                // HTML attribute break-out (CSS injection / attribute injection).
+                let val = html_escape(&self.resolve_value(&p.value));
                 format!("{css_name}:{val}")
             })
             .collect();
@@ -228,15 +238,24 @@ impl HtmlRenderer {
     }
 
     /// Get the CSS class from a `style: namespace.member` prop.
+    ///
+    /// # Security
+    ///
+    /// The class value is HTML-escaped before use. Although Mosaic's `style`
+    /// properties are typically enum literals (e.g. `heading.large`), any
+    /// `String` value that originated from a slot reference or fixture file
+    /// must be escaped to prevent attribute break-out.
     fn get_class(props: &[ResolvedProperty]) -> String {
         props
             .iter()
             .find(|p| p.name == "style")
             .map(|p| match &p.value {
                 ResolvedValue::Enum { namespace, member } => {
-                    format!("mosaic-{namespace}-{member}")
+                    // Enum variants are compiler-generated identifiers — escape
+                    // for defence-in-depth.
+                    html_escape(&format!("mosaic-{namespace}-{member}"))
                 }
-                ResolvedValue::String(s) => s.clone(),
+                ResolvedValue::String(s) => html_escape(s),
                 _ => String::new(),
             })
             .unwrap_or_default()
@@ -623,6 +642,13 @@ fn combine_styles(base: &str, extra: &str) -> String {
 }
 
 /// Format a `<div>` with optional style, class, and a11y attributes.
+///
+/// # Security
+///
+/// `style` is produced by `build_style`, which already HTML-escapes each
+/// individual value. `class` is produced by `get_class`, which also HTML-escapes.
+/// Both are wrapped in double-quoted attributes here; the escaping at the source
+/// ensures no `"` character can break out of the attribute.
 fn format_div(style: &str, class: &str, props: &[ResolvedProperty]) -> String {
     let mut attrs = Vec::new();
     if !style.is_empty() {
