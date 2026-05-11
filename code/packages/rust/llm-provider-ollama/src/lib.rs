@@ -57,6 +57,13 @@ use llm_gateway::{
 const DEFAULT_ENDPOINT: &str = "http://localhost:11434";
 const CHAT_PATH: &str = "/api/chat";
 
+// Cap on response body size. A misconfigured or malicious endpoint
+// could otherwise stream gigabytes before the timeout elapsed and
+// exhaust process memory. 64 MiB is generous for any reasonable
+// chat completion (typical responses are <100 KB) while keeping the
+// process safe.
+const MAX_RESPONSE_BYTES: u64 = 64 * 1024 * 1024;
+
 /// Ollama HTTP client. Holds the endpoint and the model name; the
 /// neutral `CompletionRequest::model` field can override the
 /// constructor's `model_name` per-call.
@@ -239,9 +246,16 @@ impl OllamaClient {
             .map_err(|e| self.transport_err(model, format!("write body: {e}")))?;
 
         let mut raw = Vec::new();
-        stream
+        (&mut stream)
+            .take(MAX_RESPONSE_BYTES)
             .read_to_end(&mut raw)
             .map_err(|e| self.transport_err(model, format!("read response: {e}")))?;
+        if raw.len() as u64 == MAX_RESPONSE_BYTES {
+            return Err(self.transport_err(
+                model,
+                format!("response exceeded {MAX_RESPONSE_BYTES} byte cap"),
+            ));
+        }
 
         parse_http_response(&raw)
             .map_err(|detail| self.transport_err(model, detail))
@@ -269,6 +283,11 @@ fn flatten_content(c: &MessageContent) -> String {
 
 /// Split an `http://host:port` endpoint into `(host, port)`. Returns
 /// `None` for any other shape (https, missing port). Local-by-design.
+///
+/// Defense-in-depth: rejects hosts containing characters outside the
+/// hostname character set so a misconfigured endpoint cannot smuggle
+/// CRLF (or other control characters) into the outgoing `Host:`
+/// header line. Allowed: ASCII alphanumerics, `.`, `-`, `_`.
 fn parse_endpoint(endpoint: &str) -> Option<(String, u16)> {
     let rest = endpoint.strip_prefix("http://")?;
     let rest = rest.split('/').next()?;
@@ -276,6 +295,12 @@ fn parse_endpoint(endpoint: &str) -> Option<(String, u16)> {
     let host = parts.next()?.to_string();
     let port: u16 = parts.next()?.parse().ok()?;
     if host.is_empty() {
+        return None;
+    }
+    if !host
+        .bytes()
+        .all(|b| b.is_ascii_alphanumeric() || matches!(b, b'.' | b'-' | b'_'))
+    {
         return None;
     }
     Some((host, port))
@@ -487,9 +512,13 @@ pub fn ping(endpoint: &str, timeout: Duration) -> Result<(), String> {
         .write_all(req.as_bytes())
         .map_err(|e| format!("write: {e}"))?;
     let mut raw = Vec::new();
-    stream
+    (&mut stream)
+        .take(MAX_RESPONSE_BYTES)
         .read_to_end(&mut raw)
         .map_err(|e| format!("read: {e}"))?;
+    if raw.len() as u64 == MAX_RESPONSE_BYTES {
+        return Err(format!("response exceeded {MAX_RESPONSE_BYTES} byte cap"));
+    }
     parse_http_response(&raw).map(|_| ())
 }
 
@@ -669,6 +698,17 @@ mod tests {
     #[test]
     fn parse_endpoint_rejects_empty_host() {
         assert!(parse_endpoint("http://:11434").is_none());
+    }
+
+    #[test]
+    fn parse_endpoint_rejects_crlf_in_host() {
+        // Defense-in-depth against header smuggling — even though
+        // `to_socket_addrs` would almost certainly reject this host
+        // before any bytes hit the wire, we refuse to construct the
+        // request in the first place.
+        assert!(parse_endpoint("http://evil.example.com\r\nX-Injected:11434").is_none());
+        assert!(parse_endpoint("http://has space:11434").is_none());
+        assert!(parse_endpoint("http://has\ttab:11434").is_none());
     }
 
     #[test]

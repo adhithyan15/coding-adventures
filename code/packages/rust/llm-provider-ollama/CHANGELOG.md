@@ -32,6 +32,19 @@ All notable changes to this project will be documented in this file.
 - Capability profile per spec: `json_mode_native = true`,
   `tool_use_native = false`, `prompt_caching_native = false`.
 
+### Security hardening
+
+- Response body capped at 64 MiB via `Read::take`. A misconfigured or
+  malicious endpoint could otherwise stream gigabytes before the
+  timeout elapsed and exhaust process memory. Applied identically in
+  `OllamaClient::post` and the `ping()` helper. Exceeding the cap
+  surfaces as `LlmError::Transport`.
+- `parse_endpoint` rejects any host containing characters outside
+  `[A-Za-z0-9._-]`. Defense-in-depth against CRLF / control-byte
+  smuggling into the outgoing `Host:` header from a misconfigured
+  operator endpoint, even though `to_socket_addrs` would already
+  refuse most such hosts before any bytes reached the wire.
+
 ### Tests (19 passing)
 
 In-process `ScriptedServer` (zero-dep `TcpListener`) runs end-to-end
