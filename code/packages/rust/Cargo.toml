@@ -452,6 +452,7 @@ members = [
     "ir-to-intel-8008-compiler",
     "ir-to-cil-bytecode",
     "iir-to-cil-bytecode",
+    "iir-codegen-adapters",
     "intel-4004-assembler",
     "intel-4004-packager",
     "intel-8008-packager",

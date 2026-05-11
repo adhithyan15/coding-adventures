@@ -1,0 +1,27 @@
+[package]
+name = "iir-codegen-adapters"
+version = "0.1.0"
+edition = "2021"
+description = "Unified IIR backend registry: compile an IIRModule to BEAM, WASM, JVM, or CLR by name"
+license = "MIT"
+repository = "https://github.com/adhithyan15/coding-adventures"
+keywords = ["compiler", "iir", "codegen", "wasm", "beam"]
+categories = ["compilers", "wasm"]
+
+[dependencies]
+interpreter-ir        = { path = "../interpreter-ir" }
+codegen-core          = { path = "../codegen-core" }
+iir-to-beam           = { path = "../iir-to-beam" }
+iir-to-wasm           = { path = "../iir-to-wasm" }
+iir-to-jvm-class-file = { path = "../iir-to-jvm-class-file" }
+iir-to-cil-bytecode   = { path = "../iir-to-cil-bytecode" }
+# Underlying artifact types — needed for the IIRBackendArtifact enum fields.
+wasm-types            = { path = "../wasm-types" }
+
+[dev-dependencies]
+interpreter-ir = { path = "../interpreter-ir" }
+codegen-core   = { path = "../codegen-core" }
+iir-to-beam           = { path = "../iir-to-beam" }
+iir-to-wasm           = { path = "../iir-to-wasm" }
+iir-to-jvm-class-file = { path = "../iir-to-jvm-class-file" }
+iir-to-cil-bytecode   = { path = "../iir-to-cil-bytecode" }
