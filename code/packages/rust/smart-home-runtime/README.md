@@ -19,6 +19,8 @@ Included surfaces:
   removes pending delivery state
 - compact read-only snapshots for registry counts, event-bus backlog,
   supervisor pressure, pairing expiry, desired state, and stale cached state
+- event-bus backlog status helpers for distinguishing absent subscribers,
+  caught-up streams, and backlogged streams
 - command validation against entity capabilities and command modes
 - grant-backed command authorization for Chief of Staff agents and sandboxed
   tools
