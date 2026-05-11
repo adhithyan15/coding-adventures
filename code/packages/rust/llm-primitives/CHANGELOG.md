@@ -2,6 +2,58 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.0] - 2026-05-11
+
+### Added
+
+- `find_contradicting_reading` module — fourth concrete primitive from
+  LM00b. ADJ05 **adversary**. Given a source span + the IR's
+  rendering, find the strongest reading of the source that contradicts
+  the IR — or report CONCURS if no plausible alternative exists.
+- `FindContradictingReadingRequest { source_span_text, ir_rendered,
+  domain_hint }` and
+  `FindContradictingReadingResponse::Concurs { call_record } |
+  Reading { text, explanation, call_record }`. Plus
+  `FindContradictingReadingResponse::call_record()` accessor so
+  callers can log without pattern-matching first.
+- Re-exported at the crate root: `llm_primitives::find_contradicting_reading`,
+  `FindContradictingReadingRequest`, `FindContradictingReadingResponse`.
+- **Asymmetric** system prompt: "assume the extraction is wrong, find
+  a reading that contradicts it" — per ADJ05, the asymmetry is the
+  whole point.
+- Routes via `LlmClient::complete_json` with a strict 3-field schema
+  (`concurs: bool`, `text: string<=1024`, `explanation: string<=1024`,
+  `additionalProperties: false`).
+- Self-consistency validation: a model that returns `concurs: false`
+  with empty `text` or empty `explanation` surfaces as
+  `PrimitiveError::ValidationExhausted` rather than being silently
+  treated as Concurs. ADJ06 sees the malformed response.
+- `LlmCallRecord` populated: `primitive = "find_contradicting_reading"`,
+  `role = "adversary"`, `prompt_version = "adversary-v1"`,
+  content-addressed `prompt_hash`, provider, usage, latency.
+- 11 new tests (55 total in crate, all passing). Coverage: missing
+  client → `NoClientForRole`; CONCURS response is recognised; full
+  Reading response with text + explanation; user message tags
+  SOURCE / IR-RENDERED / DOMAIN separately; gateway `Refused`
+  propagates as `Gateway`; missing or wrong-typed `concurs` →
+  `ValidationExhausted`; `concurs: false` with empty `text` or empty
+  `explanation` → `ValidationExhausted`; Reading text and
+  explanation are trimmed on success; `prompt_hash` matches an
+  independently-built request.
+
+### Notes
+
+`domain_hint` is a string at v0.5 — the LM00b spec defines a
+`DomainHints` enum; a follow-up will swap to the enum once that type
+lands. Independence between `Role::Adversary` and `Role::Extractor`
+is enforced at deployment time via `GatewayConfig::check_independence`,
+not by the primitive.
+
+With this primitive, the **ADJ05 adversarial triad is complete**:
+`render_node` (v0.3) + `find_contradicting_reading` (v0.5) +
+`judge_plausibility` (v0.4) — ADJ05's checker crate (a follow-up)
+will compose them.
+
 ## [0.4.0] - 2026-05-11
 
 ### Added
