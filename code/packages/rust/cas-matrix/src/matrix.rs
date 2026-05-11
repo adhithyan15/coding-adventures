@@ -85,10 +85,7 @@ pub fn matrix(rows: Vec<Vec<IRNode>>) -> MatrixResult<IRNode> {
             )));
         }
     }
-    let ir_rows: Vec<IRNode> = rows
-        .into_iter()
-        .map(|row| apply(sym(LIST), row))
-        .collect();
+    let ir_rows: Vec<IRNode> = rows.into_iter().map(|row| apply(sym(LIST), row)).collect();
     Ok(apply(sym(MATRIX), ir_rows))
 }
 

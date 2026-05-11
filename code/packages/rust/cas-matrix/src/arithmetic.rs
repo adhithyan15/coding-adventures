@@ -31,18 +31,12 @@ use crate::matrix::{matrix, rows_of, MatrixError, MatrixResult};
 /// ```
 pub fn identity_matrix(n: usize) -> MatrixResult<IRNode> {
     let rows: Vec<Vec<IRNode>> = (0..n)
-        .map(|i| {
-            (0..n)
-                .map(|j| int(if i == j { 1 } else { 0 }))
-                .collect()
-        })
+        .map(|i| (0..n).map(|j| int(if i == j { 1 } else { 0 })).collect())
         .collect();
     // edge case: 0×0 identity is a valid empty matrix — but our constructor
     // rejects empty vecs, so we special-case it.
     if n == 0 {
-        return Err(MatrixError(
-            "identity_matrix: n must be positive".into(),
-        ));
+        return Err(MatrixError("identity_matrix: n must be positive".into()));
     }
     matrix(rows)
 }
@@ -58,9 +52,7 @@ pub fn identity_matrix(n: usize) -> MatrixResult<IRNode> {
 /// ```
 pub fn zero_matrix(nrows: usize, ncols: usize) -> MatrixResult<IRNode> {
     if nrows == 0 || ncols == 0 {
-        return Err(MatrixError(
-            "zero_matrix: dims must be positive".into(),
-        ));
+        return Err(MatrixError("zero_matrix: dims must be positive".into()));
     }
     let rows: Vec<Vec<IRNode>> = (0..nrows)
         .map(|_| (0..ncols).map(|_| int(0)).collect())
@@ -226,12 +218,7 @@ pub fn dot(a: &IRNode, b: &IRNode) -> MatrixResult<IRNode> {
             (0..b_cols)
                 .map(|j| {
                     let terms: Vec<IRNode> = (0..a_cols)
-                        .map(|k| {
-                            apply(
-                                sym(MUL),
-                                vec![a_rows[i][k].clone(), b_rows[k][j].clone()],
-                            )
-                        })
+                        .map(|k| apply(sym(MUL), vec![a_rows[i][k].clone(), b_rows[k][j].clone()]))
                         .collect();
                     if terms.len() == 1 {
                         terms.into_iter().next().unwrap()
@@ -250,11 +237,7 @@ pub fn dot(a: &IRNode, b: &IRNode) -> MatrixResult<IRNode> {
 // ---------------------------------------------------------------------------
 
 /// Verify that two row-of-rows have the same shape.
-fn check_same_shape(
-    a: &[Vec<IRNode>],
-    b: &[Vec<IRNode>],
-    op: &str,
-) -> MatrixResult<()> {
+fn check_same_shape(a: &[Vec<IRNode>], b: &[Vec<IRNode>], op: &str) -> MatrixResult<()> {
     let (ar, ac) = (a.len(), a.first().map_or(0, |r| r.len()));
     let (br, bc) = (b.len(), b.first().map_or(0, |r| r.len()));
     if ar != br || ac != bc {
@@ -274,11 +257,6 @@ fn elementwise(
     a_rows
         .into_iter()
         .zip(b_rows)
-        .map(|(ra, rb)| {
-            ra.into_iter()
-                .zip(rb)
-                .map(|(x, y)| f(x, y))
-                .collect()
-        })
+        .map(|(ra, rb)| ra.into_iter().zip(rb).map(|(x, y)| f(x, y)).collect())
         .collect()
 }

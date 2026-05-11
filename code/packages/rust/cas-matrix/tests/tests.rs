@@ -5,10 +5,10 @@
 
 use cas_matrix::{
     add_matrices, determinant, dimensions, dot, get_entry, identity_matrix, inverse, is_matrix,
-    matrix, num_cols, num_rows, scalar_multiply, sub_matrices, trace, transpose, zero_matrix,
-    MatrixError, MATRIX,
+    matrix, num_cols, num_rows, rank, row_reduce, scalar_multiply, sub_matrices, trace, transpose,
+    zero_matrix, MatrixError, MATRIX,
 };
-use symbolic_ir::{apply, int, sym, ADD, LIST, SUB};
+use symbolic_ir::{apply, int, rat, sym, ADD, LIST, SUB};
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -17,6 +17,22 @@ use symbolic_ir::{apply, int, sym, ADD, LIST, SUB};
 /// Build a row of IRNode::Integer values.
 fn irow(vals: &[i64]) -> Vec<symbolic_ir::IRNode> {
     vals.iter().map(|&v| int(v)).collect()
+}
+
+fn matrix_entries(m: &symbolic_ir::IRNode) -> Vec<Vec<(i64, i64)>> {
+    cas_matrix::rows_of(m)
+        .unwrap()
+        .into_iter()
+        .map(|row| {
+            row.into_iter()
+                .map(|entry| match entry {
+                    symbolic_ir::IRNode::Integer(value) => (value, 1),
+                    symbolic_ir::IRNode::Rational(numer, denom) => (numer, denom),
+                    other => panic!("expected numeric entry, got {other:?}"),
+                })
+                .collect()
+        })
+        .collect()
 }
 
 // ---------------------------------------------------------------------------
@@ -64,11 +80,7 @@ fn num_rows_cols_2x3() {
 
 #[test]
 fn get_entry_one_based() {
-    let m = matrix(vec![
-        vec![sym("a"), sym("b")],
-        vec![sym("c"), sym("d")],
-    ])
-    .unwrap();
+    let m = matrix(vec![vec![sym("a"), sym("b")], vec![sym("c"), sym("d")]]).unwrap();
     assert_eq!(get_entry(&m, 1, 1).unwrap(), sym("a"));
     assert_eq!(get_entry(&m, 2, 2).unwrap(), sym("d"));
     assert_eq!(get_entry(&m, 1, 2).unwrap(), sym("b"));
@@ -96,12 +108,7 @@ fn is_matrix_rejects_non_matrix() {
 #[test]
 fn identity_3x3() {
     let eye = identity_matrix(3).unwrap();
-    let expected = matrix(vec![
-        irow(&[1, 0, 0]),
-        irow(&[0, 1, 0]),
-        irow(&[0, 0, 1]),
-    ])
-    .unwrap();
+    let expected = matrix(vec![irow(&[1, 0, 0]), irow(&[0, 1, 0]), irow(&[0, 0, 1])]).unwrap();
     assert_eq!(eye, expected);
 }
 
@@ -148,11 +155,7 @@ fn transpose_rectangular() {
 
 #[test]
 fn transpose_double_is_identity() {
-    let m = matrix(vec![
-        vec![sym("a"), sym("b")],
-        vec![sym("c"), sym("d")],
-    ])
-    .unwrap();
+    let m = matrix(vec![vec![sym("a"), sym("b")], vec![sym("c"), sym("d")]]).unwrap();
     let tt = transpose(&transpose(&m).unwrap()).unwrap();
     assert_eq!(tt, m);
 }
@@ -278,11 +281,7 @@ fn det_1x1() {
 
 #[test]
 fn det_2x2_returns_sub_expr() {
-    let m = matrix(vec![
-        vec![sym("a"), sym("b")],
-        vec![sym("c"), sym("d")],
-    ])
-    .unwrap();
+    let m = matrix(vec![vec![sym("a"), sym("b")], vec![sym("c"), sym("d")]]).unwrap();
     let d = determinant(&m).unwrap();
     // Sub(Mul(a, d), Mul(b, c))
     if let symbolic_ir::IRNode::Apply(a) = &d {
@@ -316,11 +315,7 @@ fn det_non_square_raises() {
 
 #[test]
 fn inverse_2x2_shape() {
-    let m = matrix(vec![
-        vec![sym("a"), sym("b")],
-        vec![sym("c"), sym("d")],
-    ])
-    .unwrap();
+    let m = matrix(vec![vec![sym("a"), sym("b")], vec![sym("c"), sym("d")]]).unwrap();
     let inv = inverse(&m).unwrap();
     assert_eq!(num_rows(&inv).unwrap(), 2);
     assert_eq!(num_cols(&inv).unwrap(), 2);
@@ -338,4 +333,103 @@ fn inverse_1x1_shape() {
 fn inverse_non_square_raises() {
     let m = matrix(vec![irow(&[1, 2, 3])]).unwrap();
     assert!(inverse(&m).is_err());
+}
+
+// ---------------------------------------------------------------------------
+// Row reduction and rank
+// ---------------------------------------------------------------------------
+
+#[test]
+fn row_reduce_identity_2x2_unchanged() {
+    let eye = identity_matrix(2).unwrap();
+    let reduced = row_reduce(&eye).unwrap();
+    assert_eq!(
+        matrix_entries(&reduced),
+        vec![vec![(1, 1), (0, 1)], vec![(0, 1), (1, 1)]]
+    );
+}
+
+#[test]
+fn row_reduce_zero_matrix_3x3() {
+    let zero = zero_matrix(3, 3).unwrap();
+    let reduced = row_reduce(&zero).unwrap();
+    assert!(matrix_entries(&reduced)
+        .into_iter()
+        .flatten()
+        .all(|entry| entry == (0, 1)));
+}
+
+#[test]
+fn row_reduce_full_rank_2x2_to_identity() {
+    let m = matrix(vec![irow(&[2, 4]), irow(&[1, 3])]).unwrap();
+    let reduced = row_reduce(&m).unwrap();
+    assert_eq!(
+        matrix_entries(&reduced),
+        vec![vec![(1, 1), (0, 1)], vec![(0, 1), (1, 1)]]
+    );
+}
+
+#[test]
+fn row_reduce_singular_3x3() {
+    let m = matrix(vec![irow(&[1, 2, 3]), irow(&[4, 5, 6]), irow(&[7, 8, 9])]).unwrap();
+    let reduced = row_reduce(&m).unwrap();
+    assert_eq!(
+        matrix_entries(&reduced),
+        vec![
+            vec![(1, 1), (0, 1), (-1, 1)],
+            vec![(0, 1), (1, 1), (2, 1)],
+            vec![(0, 1), (0, 1), (0, 1)]
+        ]
+    );
+}
+
+#[test]
+fn row_reduce_rational_dependent_rows() {
+    let m = matrix(vec![vec![rat(1, 2), int(1)], vec![int(1), int(2)]]).unwrap();
+    let reduced = row_reduce(&m).unwrap();
+    assert_eq!(
+        matrix_entries(&reduced),
+        vec![vec![(1, 1), (2, 1)], vec![(0, 1), (0, 1)]]
+    );
+}
+
+#[test]
+fn rank_identity_and_zero() {
+    assert_eq!(rank(&identity_matrix(3).unwrap()).unwrap(), int(3));
+    assert_eq!(rank(&zero_matrix(3, 3).unwrap()).unwrap(), int(0));
+}
+
+#[test]
+fn rank_full_and_singular_matrices() {
+    let full = matrix(vec![irow(&[1, 2]), irow(&[3, 4])]).unwrap();
+    let singular = matrix(vec![irow(&[1, 2, 3]), irow(&[4, 5, 6]), irow(&[7, 8, 9])]).unwrap();
+    assert_eq!(rank(&full).unwrap(), int(2));
+    assert_eq!(rank(&singular).unwrap(), int(2));
+}
+
+#[test]
+fn rank_rational_dependent_rows() {
+    let m = matrix(vec![vec![int(1), rat(1, 2)], vec![int(2), int(1)]]).unwrap();
+    assert_eq!(rank(&m).unwrap(), int(1));
+}
+
+#[test]
+fn rank_wide_and_tall_matrices() {
+    let wide = matrix(vec![irow(&[1, 0, 2, 1]), irow(&[0, 1, 3, -1])]).unwrap();
+    let tall = matrix(vec![
+        irow(&[1, 0]),
+        irow(&[0, 1]),
+        irow(&[1, 1]),
+        irow(&[2, 3]),
+    ])
+    .unwrap();
+    assert_eq!(rank(&wide).unwrap(), int(2));
+    assert_eq!(rank(&tall).unwrap(), int(2));
+}
+
+#[test]
+fn row_reduce_and_rank_reject_symbolic_entries() {
+    let m = matrix(vec![vec![sym("a"), int(1)], vec![int(0), int(1)]]).unwrap();
+    assert!(row_reduce(&m).is_err());
+    assert!(rank(&m).is_err());
 }

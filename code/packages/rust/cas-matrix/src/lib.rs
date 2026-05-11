@@ -47,6 +47,7 @@
 pub mod arithmetic;
 pub mod determinant;
 pub mod matrix;
+pub mod rowreduce;
 
 pub use arithmetic::{
     add_matrices, dot, identity_matrix, scalar_multiply, sub_matrices, trace, transpose,
@@ -57,3 +58,4 @@ pub use matrix::{
     dimensions, get_entry, is_matrix, matrix, num_cols, num_rows, rows_of, MatrixError,
     MatrixResult, MATRIX,
 };
+pub use rowreduce::{rank, row_reduce};

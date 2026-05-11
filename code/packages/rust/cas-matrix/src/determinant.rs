@@ -97,7 +97,7 @@ pub fn inverse(m: &IRNode) -> MatrixResult<IRNode> {
         )));
     }
     if n == 0 {
-        return matrix(vec![vec![]]);  // 0×0 case — return empty matrix
+        return matrix(vec![vec![]]); // 0×0 case — return empty matrix
     }
     let d = det(&rows);
 
@@ -155,10 +155,7 @@ pub(crate) fn det(rows: &[Vec<IRNode>]) -> IRNode {
             let (c, d) = (rows[1][0].clone(), rows[1][1].clone());
             apply(
                 sym(SUB),
-                vec![
-                    apply(sym(MUL), vec![a, d]),
-                    apply(sym(MUL), vec![b, c]),
-                ],
+                vec![apply(sym(MUL), vec![a, d]), apply(sym(MUL), vec![b, c])],
             )
         }
         _ => {
