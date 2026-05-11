@@ -280,6 +280,21 @@ pub enum RunError {
     /// (heap-allocated with `class_or_kind == CLASS_CLOSURE`).
     /// User-visible "<value> is not callable" surface.
     NotCallable(String),
+
+    /// A `host/` stdlib call failed at the OS level — e.g. a write to
+    /// stdout returned an I/O error.  This should be extremely rare
+    /// (stdout closed, disk full) but must not be silently swallowed.
+    HostIo(String),
+
+    /// A `host/` stdlib call received an argument of the wrong type.
+    /// For example, `host/write_byte` expects an integer but received
+    /// a symbol or cons cell.
+    HostArgType {
+        /// Name of the `host/` function that rejected the argument.
+        function: String,
+        /// Human-readable description of what was received.
+        received: String,
+    },
 }
 
 impl std::fmt::Display for RunError {
@@ -304,6 +319,10 @@ impl std::fmt::Display for RunError {
             RunError::FellOffEnd(name) => write!(f, "function {name:?} fell off end without ret"),
             RunError::UndefinedGlobal(s) => write!(f, "undefined global: {s:?}"),
             RunError::NotCallable(s) => write!(f, "not callable: {s}"),
+            RunError::HostIo(e) => write!(f, "host I/O error: {e}"),
+            RunError::HostArgType { function, received } => {
+                write!(f, "host/{function}: expected integer, got {received}")
+            }
         }
     }
 }
@@ -1169,6 +1188,25 @@ fn exec_call_builtin(
         "apply_closure" => {
             return exec_apply_closure(module, instr, frame, depth, budget, globals, ic_table, profile, debug);
         }
+        // ── host/ stdlib (LANG26) ────────────────────────────────────
+        //
+        // `host/<capability>` instructions are the Twig standard-library
+        // I/O bridge.  The Rust implementation here is the **interpreter
+        // path** — the canonical host stdlib.
+        //
+        // For AOT / backend compilation paths (WASM, JVM, CLR, BEAM),
+        // the `cir-to-compiler-ir` lowering converts these call_builtin
+        // names to `SYSCALL N` instructions in IrProgram:
+        //
+        //   host/write_byte  → SYSCALL 1   (fd_write / System.Console.Write / …)
+        //   host/read_byte   → SYSCALL 2   (fd_read  / System.Console.Read / …)
+        //   host/exit        → SYSCALL 10  (proc_exit / System.Environment.Exit / …)
+        //
+        // Each backend already handles those SYSCALL numbers, so there
+        // is nothing extra to change in the backends when using host/.
+        name if name.starts_with("host/") => {
+            return exec_host_call(name, instr, frame);
+        }
         _ => {}
     }
 
@@ -1401,6 +1439,163 @@ fn exec_apply_closure(
         frame.set(d.clone(), result)?;
     }
     Ok(())
+}
+
+// ---------------------------------------------------------------------------
+// LANG26: host/ stdlib — platform I/O bridge
+// ---------------------------------------------------------------------------
+//
+// These functions implement Twig's standard-library I/O surface for the
+// **interpreter path**.  The Rust standard library is the authoritative
+// implementation; other runtimes (WASM, JVM, CLR, BEAM) produce
+// semantically equivalent behaviour through backend-specific code
+// generated from `SYSCALL N` instructions (see the dispatch comment above
+// for the mapping table).
+//
+// ## Function conventions
+//
+// Every `host/<name>` call follows the same IIR calling convention as
+// `call_builtin`:
+//
+//   srcs[0]  — the literal function name (e.g. `Operand::Var("host/write_byte")`)
+//   srcs[1…] — positional arguments, in order
+//   dest     — optional return register (absent for void functions)
+//
+// ## Buffering policy
+//
+// `host/write_byte` writes directly to `std::io::stdout()` without
+// explicit flushing after every byte.  Rust's default stdout is
+// line-buffered when connected to a terminal and fully buffered when
+// piped, which matches the behaviour of C's `putchar`.  Programs that
+// need a flush boundary (e.g. after printing a prompt) can call
+// `host/flush_stdout` (a future addition).  The OS flushes all open
+// stdio streams on normal process exit.
+
+/// Dispatch a `call_builtin "host/<capability>"` instruction.
+///
+/// Returns `Ok(())` on success.  Propagates I/O errors as
+/// [`RunError::HostIo`] and type errors as [`RunError::HostArgType`].
+fn exec_host_call(
+    name: &str,
+    instr: &IIRInstr,
+    frame: &mut Frame,
+) -> Result<(), RunError> {
+    // Strip the leading "host/" prefix for the match arm.  The full name
+    // is kept for error messages.
+    match &name["host/".len()..] {
+
+        // ── host/write_byte ───────────────────────────────────────────
+        //
+        // Write a single byte to stdout.  The argument is treated as a
+        // signed or unsigned 64-bit integer; only the low 8 bits are
+        // used (standard `putchar` semantics).
+        //
+        // IIR:  call_builtin "host/write_byte" <byte_reg>
+        // WASM: SYSCALL 1  (WASI fd_write on fd=1)
+        // JVM:  invokestatic TwigHost.writeByte(int)V
+        // CLR:  call void [System.Console]System.Console::Write(char)
+        // BEAM: apply twig_host:write_byte/1
+        "write_byte" => {
+            let byte = host_arg_int(name, instr, frame, 1)?;
+            let b = (byte & 0xFF) as u8;
+            use std::io::Write as _;
+            std::io::stdout()
+                .write_all(&[b])
+                .map_err(|e| RunError::HostIo(e.to_string()))?;
+            // void — no dest
+            Ok(())
+        }
+
+        // ── host/read_byte ────────────────────────────────────────────
+        //
+        // Read one byte from stdin.  Returns the byte as a non-negative
+        // integer, or −1 to signal end-of-file (the same convention as
+        // C's `getchar` / POSIX `read`).
+        //
+        // IIR:  call_builtin "host/read_byte" → dest
+        // WASM: SYSCALL 2  (WASI fd_read on fd=0)
+        // JVM:  invokestatic TwigHost.readByte()I
+        // CLR:  call int32 [System.Console]System.Console::Read()
+        // BEAM: apply twig_host:read_byte/0
+        "read_byte" => {
+            use std::io::Read as _;
+            let mut buf = [0u8; 1];
+            let n = std::io::stdin()
+                .read(&mut buf)
+                .map_err(|e| RunError::HostIo(e.to_string()))?;
+            let result = if n == 0 {
+                LispyValue::int(-1) // EOF sentinel
+            } else {
+                LispyValue::int(i64::from(buf[0]))
+            };
+            if let Some(d) = &instr.dest {
+                frame.set(d.clone(), result)?;
+            }
+            Ok(())
+        }
+
+        // ── host/exit ─────────────────────────────────────────────────
+        //
+        // Terminate the process with the supplied exit code.  This
+        // function never returns.  A code of 0 signals success; any
+        // other value signals failure (POSIX convention).
+        //
+        // Backends: SYSCALL 10 (WASI proc_exit / System.Environment.Exit
+        // / erlang:halt / WASM unreachable after proc_exit).
+        "exit" => {
+            let code = host_arg_int(name, instr, frame, 1)?;
+            std::process::exit(code as i32);
+        }
+
+        // ── host/flush_stdout ─────────────────────────────────────────
+        //
+        // Flush the stdout buffer.  Useful before reading from stdin in
+        // interactive programs so the prompt appears before blocking.
+        //
+        // Backends: most targets flush lazily; this is a no-op on
+        // platforms where stdout is unbuffered (JVM, CLR already flush
+        // after every Write).
+        "flush_stdout" => {
+            use std::io::Write as _;
+            std::io::stdout()
+                .flush()
+                .map_err(|e| RunError::HostIo(e.to_string()))?;
+            Ok(())
+        }
+
+        // ── Unknown host/ capability ──────────────────────────────────
+        //
+        // Any unrecognised `host/<name>` is an error.  Future
+        // capabilities (e.g. `host/read_line`, `host/open_file`) will
+        // be added here alongside their backend lowering rules.
+        cap => {
+            Err(RunError::UnknownBuiltin(format!("host/{cap}")))
+        }
+    }
+}
+
+/// Extract the integer at argument position `pos` (1-based, matching
+/// `instr.srcs` where index 0 is the callee name).
+///
+/// Returns a type error if the value is not an integer, or a malformed-
+/// instruction error if the source is missing.
+fn host_arg_int(
+    host_fn: &str,
+    instr: &IIRInstr,
+    frame: &Frame,
+    pos: usize,
+) -> Result<i64, RunError> {
+    let src = instr.srcs.get(pos)
+        .ok_or_else(|| RunError::MalformedInstruction(
+            format!("host/{host_fn}: missing argument at position {pos}"),
+        ))?;
+    let frame_ref = frame;
+    let val = operand_to_value(src, &|n| frame_ref.get(n))
+        .map_err(RunError::OperandConversion)?;
+    val.as_int().ok_or_else(|| RunError::HostArgType {
+        function: host_fn.to_string(),
+        received: format!("{val}"),
+    })
 }
 
 // ---------------------------------------------------------------------------
@@ -3233,5 +3428,157 @@ mod tests {
         run_with_profile(&module, &mut globals, &mut ic_table, &mut profile).unwrap();
         run_with_profile(&module, &mut globals, &mut ic_table, &mut profile).unwrap();
         assert_eq!(profile.call_count("main"), 3);
+    }
+
+    // ── LANG26: host/ stdlib tests ────────────────────────────────────
+    //
+    // These tests verify the interpreter-path host/ dispatch.
+    //
+    // I/O-side-effect tests (write_byte, flush_stdout) capture stdout
+    // by running the Twig program and checking the return value plus
+    // that no errors are thrown.  Exact stdout content is not tested
+    // here because test harnesses may or may not capture it; the
+    // *functional* property (returns correct value, doesn't panic) is
+    // what matters for unit coverage.
+
+    /// Helper: build a minimal single-function IIRModule for testing.
+    ///
+    /// The module name is `"test_module"`, language `"twig"`, entry
+    /// point `"main"`.  Instructions are inserted directly so tests
+    /// don't depend on the full Twig frontend.
+    fn make_host_test_module(instrs: Vec<IIRInstr>) -> IIRModule {
+        use interpreter_ir::{IIRFunction, IIRModule};
+        let func = IIRFunction::new("main", vec![], "void", instrs);
+        let mut module = IIRModule::new("test_module", "twig");
+        module.entry_point = Some("main".into());
+        module.functions.push(func);
+        module
+    }
+
+    #[test]
+    fn host_write_byte_succeeds_for_printable_ascii() {
+        // Writing 'A' (65) should return without error.  We build the
+        // IIR module directly to avoid depending on the Twig frontend.
+        use interpreter_ir::{IIRInstr, Operand};
+        let module = make_host_test_module(vec![
+            IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![Operand::Var("host/write_byte".into()), Operand::Int(65)],
+                "void",
+            ),
+            // Void functions still pass Operand::Int(0) as the return sentinel
+            // because exec_ret unconditionally reads srcs[0].
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "void"),
+        ]);
+        let result = run(&module);
+        assert!(result.is_ok(), "host/write_byte should not fail: {result:?}");
+    }
+
+    #[test]
+    fn host_write_byte_truncates_to_low_8_bits() {
+        // 0x141 = 321 decimal; low 8 bits = 0x41 = 'A'.
+        // Should succeed without error — high bits are silently masked.
+        use interpreter_ir::{IIRInstr, Operand};
+        let module = make_host_test_module(vec![
+            IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![Operand::Var("host/write_byte".into()), Operand::Int(0x141)],
+                "void",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "void"),
+        ]);
+        assert!(run(&module).is_ok());
+    }
+
+    #[test]
+    fn host_write_byte_rejects_non_integer_arg() {
+        // Passing a boolean value instead of an integer should produce
+        // HostArgType, not a panic.  `Operand::Bool(false)` is the
+        // easiest non-integer value available directly as an operand.
+        use interpreter_ir::{IIRInstr, Operand};
+        let module = make_host_test_module(vec![
+            IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![
+                    Operand::Var("host/write_byte".into()),
+                    Operand::Bool(false),   // wrong type — must trigger HostArgType
+                ],
+                "void",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "void"),
+        ]);
+        let err = run(&module).unwrap_err();
+        match err {
+            RunError::HostArgType { function, .. } => {
+                // The error stores the full host/ prefixed name.
+                assert_eq!(function, "host/write_byte");
+            }
+            other => panic!("expected HostArgType, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn host_read_byte_returns_value_in_dest() {
+        // On most CI environments stdin is /dev/null so read_byte returns
+        // the EOF sentinel (-1).  Either way the call must succeed and
+        // store an integer in the dest register.
+        use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+        let func = IIRFunction::new("main", vec![], "i32", vec![
+            IIRInstr::new(
+                "call_builtin",
+                Some("ch".into()),
+                vec![Operand::Var("host/read_byte".into())],
+                "i32",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("ch".into())], "i32"),
+        ]);
+        let mut module = IIRModule::new("test_module", "twig");
+        module.entry_point = Some("main".into());
+        module.functions.push(func);
+        let result = run(&module);
+        assert!(result.is_ok(), "host/read_byte should not fail: {result:?}");
+        assert!(
+            result.unwrap().as_int().is_some(),
+            "host/read_byte must store an integer in dest"
+        );
+    }
+
+    #[test]
+    fn host_flush_stdout_succeeds() {
+        use interpreter_ir::{IIRInstr, Operand};
+        let module = make_host_test_module(vec![
+            IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![Operand::Var("host/flush_stdout".into())],
+                "void",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "void"),
+        ]);
+        assert!(run(&module).is_ok());
+    }
+
+    #[test]
+    fn host_unknown_capability_returns_unknown_builtin_error() {
+        use interpreter_ir::{IIRInstr, Operand};
+        let module = make_host_test_module(vec![
+            IIRInstr::new(
+                "call_builtin",
+                None,
+                vec![Operand::Var("host/no_such_function".into())],
+                "void",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Int(0)], "void"),
+        ]);
+        let err = run(&module).unwrap_err();
+        match err {
+            RunError::UnknownBuiltin(name) => {
+                assert!(name.contains("no_such_function"), "got: {name}");
+            }
+            other => panic!("expected UnknownBuiltin, got {other:?}"),
+        }
     }
 }

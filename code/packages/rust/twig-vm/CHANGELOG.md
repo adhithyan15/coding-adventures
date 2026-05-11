@@ -1,5 +1,46 @@
 # Changelog — twig-vm
 
+## [0.8.0] — 2026-05-11
+
+**LANG26 — `host/` I/O builtins via Rust stdlib.**
+
+Implements the four `host/` primitive operations that form Twig's I/O layer,
+dispatched directly inside the VM interpreter so every Twig program can do
+byte-level I/O without depending on a language-specific runtime library.
+
+### New capabilities
+
+- **`host/write_byte n`** — writes the low 8 bits of integer `n` to stdout.
+  High bits are silently masked, matching the POSIX `write(1, &byte, 1)` model.
+- **`host/read_byte` → dest** — reads one byte from stdin; returns the byte
+  value (0–255) or `-1` on EOF (same sentinel as C's `getchar()`).
+- **`host/exit code`** — terminates the process with the given exit status via
+  `std::process::exit`.  Does not return.
+- **`host/flush_stdout`** — flushes stdout so buffered output reaches the
+  terminal before a prompt or `read_byte` call.
+
+### Two new error variants in `RunError`
+
+- `HostIo(String)` — wraps a `std::io::Error` from any of the four I/O calls.
+- `HostArgType { function, received }` — raised when an argument is not an
+  integer (e.g. a boolean passed to `write_byte`).
+
+### Dispatch
+
+`exec_call_builtin` now tests whether the callee name starts with `"host/"` and
+delegates to a new `exec_host_call` function.  The `host_arg_int` helper
+resolves an operand, asserts it is an integer, and returns the `i64` value.
+
+### Test coverage added (6 new unit tests)
+
+- `host_write_byte_succeeds_for_printable_ascii` — writing `'A'` (65) returns `Ok`.
+- `host_write_byte_truncates_to_low_8_bits` — `0x141` is accepted (masked to `'A'`).
+- `host_write_byte_rejects_non_integer_arg` — `Bool(false)` produces `HostArgType`.
+- `host_read_byte_returns_value_in_dest` — call stores an integer (-1 on `dev/null`).
+- `host_flush_stdout_succeeds` — flushing an empty buffer returns `Ok`.
+- `host_unknown_capability_returns_unknown_builtin_error` — `host/no_such_function`
+  returns `UnknownBuiltin`.
+
 ## [0.7.1] — 2026-05-11
 
 **LANG25 — Stable `get_slot` indices + human-readable variable values.**

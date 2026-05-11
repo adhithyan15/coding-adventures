@@ -1,8 +1,8 @@
 [package]
 name = "twig-vm"
-version = "0.7.1"
+version = "0.8.0"
 edition = "2021"
-description = "LANG20 PRs 3–8 + LS03 PR C — TwigVM with a TCP debug server (--debug-port flag) and DAP-compatible wire protocol"
+description = "LANG26 — host/ I/O builtins (write_byte, read_byte, exit, flush_stdout) via Rust stdlib dispatch"
 
 [dependencies]
 twig-ir-compiler  = { path = "../twig-ir-compiler" }
