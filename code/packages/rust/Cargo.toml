@@ -180,6 +180,7 @@ members = [
     "adjudication-connector",
     "adjudication-polarity-modality",
     "adjudication-coverage",
+    "adjudication-audit-trail",
     "loss-functions",
     "markov-chain",
     "note-frequency",
