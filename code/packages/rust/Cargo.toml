@@ -169,6 +169,7 @@ members = [
     "macsyma-runtime",
     "macsyma-wasm",
     "logic-gates",
+    "logic-core",
     "loss-functions",
     "markov-chain",
     "note-frequency",
