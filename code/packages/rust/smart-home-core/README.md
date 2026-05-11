@@ -37,6 +37,7 @@ Current scope:
 - command risk tier helpers
 - state freshness helpers
 - D18D-style smart-home tool descriptors
+- compact smart-home tool catalog summaries for read-side inspection
 - read-only supervision observation tool descriptor for Chief of Staff status
   loops
 - agent capability grants for checking tool access before dispatch

@@ -1041,6 +1041,67 @@ pub struct ToolDescriptor {
     pub required_tier: PrivilegeTier,
 }
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct SmartHomeToolCatalogSummary {
+    pub total_tools: usize,
+    pub read_tools: usize,
+    pub write_tools: usize,
+    pub external_tools: usize,
+    pub read_only_tier_tools: usize,
+    pub low_risk_tier_tools: usize,
+    pub high_risk_tier_tools: usize,
+    pub human_approval_tier_tools: usize,
+    pub total_required_capabilities: usize,
+}
+
+impl SmartHomeToolCatalogSummary {
+    pub fn empty() -> Self {
+        Self {
+            total_tools: 0,
+            read_tools: 0,
+            write_tools: 0,
+            external_tools: 0,
+            read_only_tier_tools: 0,
+            low_risk_tier_tools: 0,
+            high_risk_tier_tools: 0,
+            human_approval_tier_tools: 0,
+            total_required_capabilities: 0,
+        }
+    }
+
+    pub fn from_descriptors<'a, I>(descriptors: I) -> Self
+    where
+        I: IntoIterator<Item = &'a ToolDescriptor>,
+    {
+        let mut summary = Self::empty();
+        for descriptor in descriptors {
+            summary.total_tools += 1;
+            summary.total_required_capabilities += descriptor.required_capabilities.len();
+            match descriptor.side_effects {
+                ToolSideEffects::None => {}
+                ToolSideEffects::Read => summary.read_tools += 1,
+                ToolSideEffects::Write => summary.write_tools += 1,
+                ToolSideEffects::External => summary.external_tools += 1,
+            }
+            match descriptor.required_tier {
+                PrivilegeTier::ReadOnly => summary.read_only_tier_tools += 1,
+                PrivilegeTier::LowRisk => summary.low_risk_tier_tools += 1,
+                PrivilegeTier::HighRisk => summary.high_risk_tier_tools += 1,
+                PrivilegeTier::HumanApproval => summary.human_approval_tier_tools += 1,
+            }
+        }
+        summary
+    }
+
+    pub fn risky_tool_count(&self) -> usize {
+        self.write_tools + self.external_tools
+    }
+
+    pub fn approval_gated_tool_count(&self) -> usize {
+        self.human_approval_tier_tools
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum SmartHomeTool {
     Discover,
@@ -1280,6 +1341,10 @@ impl ToolDescriptor {
             grant_covers_descriptor_capability(self, principal_id, &grants, required, now_ms)
         })
     }
+
+    pub fn requires_human_approval(&self) -> bool {
+        self.required_tier == PrivilegeTier::HumanApproval
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -1395,6 +1460,11 @@ pub fn smart_home_tool_catalog() -> Vec<ToolDescriptor> {
     .into_iter()
     .map(SmartHomeTool::descriptor)
     .collect()
+}
+
+pub fn smart_home_tool_catalog_summary() -> SmartHomeToolCatalogSummary {
+    let catalog = smart_home_tool_catalog();
+    SmartHomeToolCatalogSummary::from_descriptors(catalog.iter())
 }
 
 fn evaluate_required_capabilities(
@@ -1897,6 +1967,28 @@ mod tests {
             .any(|tool| tool.tool_id == "smart_home.observe_supervision"
                 && tool.side_effects == ToolSideEffects::Read
                 && tool.required_capabilities == vec![CapabilityId::trusted("smart_home.read")]));
+    }
+
+    #[test]
+    fn tool_catalog_summary_counts_risk_tiers_and_capabilities() {
+        let summary = smart_home_tool_catalog_summary();
+        let pair_bridge = SmartHomeTool::PairBridge.descriptor();
+
+        assert_eq!(summary.total_tools, 10);
+        assert_eq!(summary.read_tools, 8);
+        assert_eq!(summary.write_tools, 0);
+        assert_eq!(summary.external_tools, 2);
+        assert_eq!(summary.read_only_tier_tools, 8);
+        assert_eq!(summary.low_risk_tier_tools, 1);
+        assert_eq!(summary.high_risk_tier_tools, 0);
+        assert_eq!(summary.human_approval_tier_tools, 1);
+        assert_eq!(summary.total_required_capabilities, 10);
+        assert_eq!(summary.risky_tool_count(), 2);
+        assert_eq!(summary.approval_gated_tool_count(), 1);
+        assert!(pair_bridge.requires_human_approval());
+        assert!(!SmartHomeTool::Command
+            .descriptor()
+            .requires_human_approval());
     }
 
     #[test]
