@@ -15,191 +15,64 @@
 //!      └── --backend html          →  MyComponent.html (static snapshot)
 //! ```
 //!
-//! ## Usage
-//!
-//! ```text
-//! mosaic-compile --backend webcomponent ProfileCard.mosaic
-//!   Compile ProfileCard.mosaic to ProfileCard.js
-//!
-//! mosaic-compile --backend html --fixtures fixture.json ProfileCard.mosaic
-//!   Compile with slot values from fixture.json, emit ProfileCard.html
-//!
-//! mosaic-compile --backend html --css styles.css -o out.html ProfileCard.mosaic
-//!   Compile with inlined CSS, write to out.html
-//!
-//! mosaic-compile --help
-//!   Show this usage information.
-//!
-//! mosaic-compile --version
-//!   Print the version.
-//! ```
-//!
-//! ## Options
-//!
-//! | Flag                  | Short | Description                                        |
-//! |-----------------------|-------|----------------------------------------------------|
-//! | `--backend <name>`    | `-b`  | Output backend: `webcomponent` or `html` (required) |
-//! | `--output <path>`     | `-o`  | Output file path (default: component name + ext)   |
-//! | `--fixtures <path>`   | `-f`  | JSON fixture file providing slot values (html only) |
-//! | `--css <path>`        | `-c`  | CSS file to inline in HTML output (html only)      |
-//! | `--help`              | `-h`  | Show usage information                             |
-//! | `--version`           | `-V`  | Print version                                      |
+//! The CLI surface is driven by the spec at `code/specs/mosaic-compile.json`
+//! and parsed by the `cli-builder` crate.  All help text, flag validation, and
+//! version output are generated from that spec — there is no hand-rolled help
+//! string in this file.
 
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::process;
 
+use cli_builder::types::ParserOutput;
+use cli_builder::{load_spec_from_file, Parser};
 use mosaic_analyzer::analyze;
 use mosaic_emit_html::HtmlRenderer;
 use mosaic_emit_webcomponent::WebComponentRenderer;
 use mosaic_vm::MosaicVM;
 
 // ===========================================================================
-// Version
+// Repo-root discovery
 // ===========================================================================
 
-const VERSION: &str = "0.1.0";
-
-// ===========================================================================
-// Usage / help text
-// ===========================================================================
-
-/// Print usage information and exit with code 0.
-fn print_help_and_exit() -> ! {
-    println!(
-        r#"mosaic-compile {version}
-Compile a .mosaic component file to a target output format.
-
-Reads the unified .mosaic file format (interface + layout + style in one file)
-and emits to the specified backend.
-
-USAGE:
-    mosaic-compile --backend <BACKEND> [OPTIONS] <SOURCE>
-
-ARGUMENTS:
-    SOURCE    Path to the .mosaic source file to compile
-
-FLAGS:
-    -b, --backend <name>     Output backend: 'webcomponent' (Custom Element JS)
-                             or 'html' (static HTML file) [required]
-    -o, --output <path>      Output file path [default: <ComponentName>.js/.html]
-    -f, --fixtures <path>    JSON fixture file providing slot values (--backend html)
-    -c, --css <path>         CSS file to inline in HTML output (--backend html)
-    -h, --help               Show this help message
-    -V, --version            Print version
-
-EXAMPLES:
-    mosaic-compile --backend webcomponent ProfileCard.mosaic
-    mosaic-compile --backend html --fixtures data.json ProfileCard.mosaic
-    mosaic-compile --backend html --css styles.css -o out.html ProfileCard.mosaic
-"#,
-        version = VERSION
-    );
-    process::exit(0);
-}
-
-/// Print the version string and exit.
-fn print_version_and_exit() -> ! {
-    println!("{VERSION}");
-    process::exit(0);
-}
-
-// ===========================================================================
-// Argument parsing
-// ===========================================================================
-
-/// Parsed and validated CLI arguments.
-struct Args {
-    source: String,
-    backend: String,
-    output: Option<String>,
-    fixtures: Option<String>,
-    css: Option<String>,
-}
-
-/// Parse `argv` (the full argument list including `argv[0]`) into `Args`.
+/// Walk up to find the repo root, identified by the sentinel file
+/// `code/specs/mosaic-compile.json`.
 ///
-/// On error, prints a message to stderr and exits with code 1.
-/// For `--help` or `--version`, prints and exits with code 0.
-fn parse_args(argv: &[String]) -> Args {
-    let mut backend: Option<String> = None;
-    let mut output: Option<String> = None;
-    let mut fixtures: Option<String> = None;
-    let mut css: Option<String> = None;
-    let mut source: Option<String> = None;
+/// Searches from two starting points in order:
+/// 1. The current working directory — works when the user runs the binary from
+///    inside the repo (the most common development workflow).
+/// 2. The directory containing the binary itself — works when the binary is
+///    invoked by an absolute path from an unrelated directory (e.g. `/tmp`),
+///    because `target/debug/mosaic-compile` lives inside the repo tree.
+///
+/// Falls back to cwd if neither search finds the sentinel.
+fn find_root() -> PathBuf {
+    const SENTINEL: &str = "code/specs/mosaic-compile.json";
 
-    let mut i = 1; // Skip argv[0] (the binary name).
-    while i < argv.len() {
-        let arg = &argv[i];
-        match arg.as_str() {
-            "--help" | "-h" => print_help_and_exit(),
-            "--version" | "-V" => print_version_and_exit(),
+    let search_starts: Vec<PathBuf> = [
+        std::env::current_dir().ok(),
+        std::env::current_exe()
+            .ok()
+            .and_then(|p| p.parent().map(|p| p.to_path_buf())),
+    ]
+    .into_iter()
+    .flatten()
+    .collect();
 
-            "--backend" | "-b" => {
-                i += 1;
-                backend = Some(require_value(&argv, i, "--backend"));
+    for start in search_starts {
+        let mut curr = start;
+        for _ in 0..20 {
+            if curr.join(SENTINEL).exists() {
+                return curr;
             }
-            "--output" | "-o" => {
-                i += 1;
-                output = Some(require_value(&argv, i, "--output"));
-            }
-            "--fixtures" | "-f" => {
-                i += 1;
-                fixtures = Some(require_value(&argv, i, "--fixtures"));
-            }
-            "--css" | "-c" => {
-                i += 1;
-                css = Some(require_value(&argv, i, "--css"));
-            }
-            s if s.starts_with('-') => {
-                eprintln!("Unknown flag: {s}");
-                eprintln!("Run 'mosaic-compile --help' for usage.");
-                process::exit(1);
-            }
-            _ => {
-                if source.is_some() {
-                    eprintln!("Unexpected positional argument: {arg}");
-                    eprintln!("Only one SOURCE file is accepted.");
-                    process::exit(1);
-                }
-                source = Some(arg.clone());
+            match curr.parent() {
+                Some(p) => curr = p.to_path_buf(),
+                None => break,
             }
         }
-        i += 1;
     }
 
-    let backend = backend.unwrap_or_else(|| {
-        eprintln!("Error: --backend is required.");
-        eprintln!("Run 'mosaic-compile --help' for usage.");
-        process::exit(1);
-    });
-
-    let source = source.unwrap_or_else(|| {
-        eprintln!("Error: SOURCE file is required.");
-        eprintln!("Run 'mosaic-compile --help' for usage.");
-        process::exit(1);
-    });
-
-    if backend != "webcomponent" && backend != "html" {
-        eprintln!("Error: --backend must be 'webcomponent' or 'html', got '{backend}'.");
-        process::exit(1);
-    }
-
-    Args {
-        source,
-        backend,
-        output,
-        fixtures,
-        css,
-    }
-}
-
-/// Return `argv[i]` or print an error about the missing argument and exit.
-fn require_value(argv: &[String], i: usize, flag: &str) -> String {
-    argv.get(i).cloned().unwrap_or_else(|| {
-        eprintln!("Error: {flag} requires an argument.");
-        process::exit(1);
-    })
+    std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."))
 }
 
 // ===========================================================================
@@ -207,15 +80,89 @@ fn require_value(argv: &[String], i: usize, flag: &str) -> String {
 // ===========================================================================
 
 fn main() {
+    // ---- Locate the CLI spec and parse arguments via cli-builder -------------
+
+    let root = find_root();
+    let spec_path = root.join("code/specs/mosaic-compile.json");
+    let spec = load_spec_from_file(spec_path.to_str().unwrap_or("code/specs/mosaic-compile.json"))
+        .unwrap_or_else(|e| {
+            eprintln!("mosaic-compile: failed to load CLI spec: {e}");
+            process::exit(1);
+        });
+
+    let parser = Parser::new(spec);
     let argv: Vec<String> = std::env::args().collect();
-    let args = parse_args(&argv);
+
+    match parser.parse(&argv) {
+        // --help
+        Ok(ParserOutput::Help(h)) => {
+            print!("{}", h.text);
+        }
+
+        // --version
+        Ok(ParserOutput::Version(v)) => {
+            println!("{}", v.version);
+        }
+
+        // Normal invocation
+        Ok(ParserOutput::Parse(result)) => {
+            run(result);
+        }
+
+        // Bad flags / missing required args — cli-builder formats the error
+        Err(e) => {
+            eprintln!("{e}");
+            eprintln!("Run 'mosaic-compile --help' for usage.");
+            process::exit(1);
+        }
+    }
+}
+
+// ===========================================================================
+// Core logic
+// ===========================================================================
+
+/// Execute the compilation after cli-builder has parsed and validated argv.
+fn run(result: cli_builder::types::ParseResult) {
+    let flags = &result.flags;
+    let args = &result.arguments;
+
+    // Required: --backend
+    let backend = flags
+        .get("backend")
+        .and_then(|v| v.as_str())
+        .unwrap_or_else(|| {
+            eprintln!("mosaic-compile: --backend is required");
+            process::exit(1);
+        });
+
+    if backend != "webcomponent" && backend != "html" {
+        eprintln!(
+            "mosaic-compile: --backend must be 'webcomponent' or 'html', got '{backend}'"
+        );
+        process::exit(1);
+    }
+
+    // Required positional: SOURCE
+    let source_path = args
+        .get("source")
+        .and_then(|v| v.as_str())
+        .unwrap_or_else(|| {
+            eprintln!("mosaic-compile: SOURCE file is required");
+            process::exit(1);
+        });
+
+    // Optional flags
+    let output_path = flags.get("output").and_then(|v| v.as_str());
+    let fixtures_path = flags.get("fixtures").and_then(|v| v.as_str());
+    let css_path = flags.get("css").and_then(|v| v.as_str());
 
     // ---- Read and analyze the source file ------------------------------------
 
-    let source_text = read_file_or_die(&args.source);
+    let source_text = read_file_or_die(source_path);
 
     let mosaic_file = analyze(&source_text).unwrap_or_else(|e| {
-        eprintln!("Error analyzing {}: {e}", args.source);
+        eprintln!("mosaic-compile: error analyzing {source_path}: {e}");
         process::exit(1);
     });
 
@@ -224,36 +171,32 @@ fn main() {
 
     // ---- Dispatch to the selected backend ------------------------------------
 
-    match args.backend.as_str() {
+    match backend {
         "webcomponent" => {
-            // Determine default output file name: <ComponentName>.js
-            let out_path = args
-                .output
-                .clone()
+            let out = output_path
+                .map(str::to_string)
                 .unwrap_or_else(|| format!("{component_name}.js"));
 
             let renderer = WebComponentRenderer::new();
             let result = vm.run(renderer).unwrap_or_else(|e| {
-                eprintln!("Error during webcomponent compilation: {e}");
+                eprintln!("mosaic-compile: webcomponent backend error: {e}");
                 process::exit(1);
             });
 
-            write_file_or_die(&out_path, &result.output);
-            eprintln!("Written: {out_path}");
+            write_file_or_die(&out, &result.output);
+            eprintln!("Written: {out}");
         }
 
         "html" => {
-            // Determine default output file name: <ComponentName>.html
-            let out_path = args
-                .output
-                .clone()
+            let out = output_path
+                .map(str::to_string)
                 .unwrap_or_else(|| format!("{component_name}.html"));
 
             // Load optional fixture JSON.
-            let fixtures = if let Some(path) = &args.fixtures {
+            let fixtures = if let Some(path) = fixtures_path {
                 let raw = read_file_or_die(path);
                 let val: serde_json::Value = serde_json::from_str(&raw).unwrap_or_else(|e| {
-                    eprintln!("Error parsing fixtures file {path}: {e}");
+                    eprintln!("mosaic-compile: error parsing fixtures file {path}: {e}");
                     process::exit(1);
                 });
                 val.as_object().cloned().unwrap_or_default()
@@ -262,27 +205,29 @@ fn main() {
             };
 
             // Load optional CSS, rejecting content that would break out of <style>.
-            let css = args.css.as_ref().map(|path| {
+            let css = css_path.map(|path| {
                 let raw = read_file_or_die(path);
                 mosaic_emit_html::sanitize_css(&raw).unwrap_or_else(|e| {
-                    eprintln!("Error: CSS file '{path}' rejected for security reasons: {e}");
+                    eprintln!(
+                        "mosaic-compile: CSS file '{path}' rejected for security reasons: {e}"
+                    );
                     process::exit(1);
                 })
             });
 
             let renderer = HtmlRenderer::new(fixtures, css);
             let result = vm.run(renderer).unwrap_or_else(|e| {
-                eprintln!("Error during html compilation: {e}");
+                eprintln!("mosaic-compile: html backend error: {e}");
                 process::exit(1);
             });
 
-            write_file_or_die(&out_path, &result.output);
-            eprintln!("Written: {out_path}");
+            write_file_or_die(&out, &result.output);
+            eprintln!("Written: {out}");
         }
 
         other => {
-            // Should not reach here — caught during arg parsing.
-            eprintln!("Unknown backend: {other}");
+            // Should not reach here — caught above.
+            eprintln!("mosaic-compile: unknown backend '{other}'");
             process::exit(1);
         }
     }
@@ -292,10 +237,10 @@ fn main() {
 // File I/O helpers
 // ===========================================================================
 
-/// Read a file to a String, or print an error and exit.
+/// Read a file to a String, or print an error and exit with code 1.
 fn read_file_or_die(path: &str) -> String {
     fs::read_to_string(path).unwrap_or_else(|e| {
-        eprintln!("Cannot read {path}: {e}");
+        eprintln!("mosaic-compile: cannot read {path}: {e}");
         process::exit(1);
     })
 }
@@ -305,13 +250,13 @@ fn write_file_or_die(path: &str, content: &str) {
     if let Some(parent) = Path::new(path).parent() {
         if !parent.as_os_str().is_empty() {
             fs::create_dir_all(parent).unwrap_or_else(|e| {
-                eprintln!("Cannot create directory {}: {e}", parent.display());
+                eprintln!("mosaic-compile: cannot create directory {}: {e}", parent.display());
                 process::exit(1);
             });
         }
     }
     fs::write(path, content).unwrap_or_else(|e| {
-        eprintln!("Cannot write {path}: {e}");
+        eprintln!("mosaic-compile: cannot write {path}: {e}");
         process::exit(1);
     });
 }

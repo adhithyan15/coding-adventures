@@ -90,9 +90,12 @@ pub struct HtmlRenderer {
     /// Optional CSS to inline inside the `<style>` tag in `<head>`.
     css: Option<String>,
     /// Loop variable bindings: (var_name, fixture_value).
-    /// When an `each` block is active, the first fixture array element is
+    /// When an `each` block is active, the current fixture array element is
     /// substituted wherever the loop variable appears as a slot ref.
     loop_bindings: Vec<(String, Option<serde_json::Value>)>,
+    /// Active `each`-recording state; `Some` while recording the body of an
+    /// `each` block that has more than one fixture item.
+    each_recording: Option<EachRecordState>,
 }
 
 /// A single open element frame on the traversal stack.
@@ -101,6 +104,63 @@ struct HtmlFrame {
     close_tag: String,
     /// HTML lines accumulated as children of this element.
     lines: Vec<String>,
+}
+
+// ===========================================================================
+// Each-block event recording
+// ===========================================================================
+
+/// A renderer event recorded during an `each` body traversal.
+///
+/// The VM calls renderer methods exactly once per AST node. To render all
+/// fixture array elements (not just the first), we record every call made
+/// during the body traversal and replay the recording for each subsequent
+/// item.  Only the loop variable binding changes between replays — all layout
+/// structure and literal text stay the same.
+#[derive(Clone, Debug)]
+enum EachEvent {
+    BeginNode {
+        tag: String,
+        is_primitive: bool,
+        props: Vec<ResolvedProperty>,
+    },
+    EndNode {
+        tag: String,
+    },
+    RenderSlotChild {
+        slot_name: String,
+        slot_type: MosaicType,
+    },
+    BeginWhen {
+        slot_name: String,
+    },
+    EndWhen,
+    /// A nested `each` encountered inside an outer `each` body. During replay
+    /// the inner `each` is expanded with the *same* fixture data as the first
+    /// pass (v1 limitation — nested loops use first-item semantics).
+    BeginEach {
+        slot_name: String,
+        item_name: String,
+        element_type: MosaicType,
+    },
+    EndEach,
+}
+
+/// State maintained while recording events for an `each` block.
+///
+/// Created in `begin_each` when the fixture array contains more than one item,
+/// consumed in `end_each` to replay the body for the remaining items.
+struct EachRecordState {
+    /// The loop variable name (e.g. `"task"` in `each @tasks as task`).
+    item_name: String,
+    /// Items beyond the first (indices 1..N) — replayed after the live pass.
+    remaining_items: Vec<serde_json::Value>,
+    /// Events recorded from the body traversal.
+    events: Vec<EachEvent>,
+    /// Nesting depth of `each` blocks encountered *inside* this recording.
+    /// When > 0, inner `begin_each`/`end_each` calls are recorded verbatim
+    /// rather than starting a new outer recording.
+    nesting_depth: usize,
 }
 
 impl HtmlRenderer {
@@ -121,6 +181,7 @@ impl HtmlRenderer {
             suppress: 0,
             css,
             loop_bindings: Vec::new(),
+            each_recording: None,
         }
     }
 
@@ -403,21 +464,15 @@ impl HtmlRenderer {
     fn minimal_reset() -> &'static str {
         "*, *::before, *::after { box-sizing: border-box; }\nbody { margin: 0; font-family: sans-serif; }"
     }
-}
 
-impl MosaicRenderer for HtmlRenderer {
-    fn begin_component(&mut self, name: &str, slots: &[MosaicSlot]) {
-        self.component_name = name.to_string();
-        self.slots = slots.to_vec();
-    }
+    // -----------------------------------------------------------------------
+    // Inner rendering methods (called directly during replay, bypassing recording)
+    // -----------------------------------------------------------------------
 
-    fn end_component(&mut self) {}
-
-    fn begin_node(&mut self, tag: &str, is_primitive: bool, props: &[ResolvedProperty]) {
+    /// Core logic for opening a node — pushes an `HtmlFrame` and emits the
+    /// opening tag.  Called both on the live pass and during each-block replay.
+    fn begin_node_inner(&mut self, tag: &str, is_primitive: bool, props: &[ResolvedProperty]) {
         if self.suppress > 0 {
-            // Inside a false `when` — push a frame to maintain stack balance
-            // but do not emit anything. We still need to balance the stack
-            // because `end_node` will pop without checking suppress.
             self.stack.push(HtmlFrame {
                 close_tag: String::new(),
                 lines: Vec::new(),
@@ -428,7 +483,6 @@ impl MosaicRenderer for HtmlRenderer {
         let (open, close) = if is_primitive {
             self.primitive_open(tag, props)
         } else {
-            // Composite component — use a semantic div with a data-component attr.
             let tag_lower = tag.to_lowercase();
             (
                 format!("<div data-component=\"{tag_lower}\">"),
@@ -436,11 +490,8 @@ impl MosaicRenderer for HtmlRenderer {
             )
         };
 
-        // For self-contained tags (Text, Image, Grid, Divider), open is the full
-        // element and close is empty — push both together.
         if close.is_empty() {
             self.push_line(open);
-            // Push a dummy frame to stay balanced; end_node will pop it.
             self.stack.push(HtmlFrame {
                 close_tag: String::new(),
                 lines: Vec::new(),
@@ -454,14 +505,15 @@ impl MosaicRenderer for HtmlRenderer {
         }
     }
 
-    fn end_node(&mut self, _tag: &str) {
+    /// Core logic for closing a node — pops the top `HtmlFrame` and emits its
+    /// accumulated inner lines followed by the close tag.
+    fn end_node_inner(&mut self, _tag: &str) {
         if let Some(frame) = self.stack.pop() {
             if self.suppress > 0 {
-                return; // Suppressed — discard the frame silently.
+                return;
             }
             let inner = frame.lines.join("\n");
             let close = frame.close_tag;
-            // Only emit inner + close if there's meaningful content.
             if !close.is_empty() {
                 if inner.is_empty() {
                     self.push_line(close);
@@ -475,14 +527,11 @@ impl MosaicRenderer for HtmlRenderer {
         }
     }
 
-    fn render_slot_child(&mut self, slot_name: &str, _slot_type: &MosaicType) {
+    /// Core logic for a slot-child placeholder.
+    fn render_slot_child_inner(&mut self, slot_name: &str, _slot_type: &MosaicType) {
         if self.suppress > 0 {
             return;
         }
-        // Emit a visible placeholder div for node/component slot children.
-        // Security: HTML-escape the slot name before embedding it in an attribute
-        // value and an HTML comment. Slot names are constrained to identifier syntax
-        // by the analyzer, but we escape at the output boundary for defence-in-depth.
         let escaped_name = html_escape(slot_name);
         let placeholder = format!(
             "<div class=\"mos-slot\" data-slot=\"{escaped_name}\"><!-- slot: {escaped_name} --></div>"
@@ -490,45 +539,220 @@ impl MosaicRenderer for HtmlRenderer {
         self.push_line(placeholder);
     }
 
-    fn begin_when(&mut self, slot_name: &str) {
+    /// Core logic for a `when` block open.
+    fn begin_when_inner(&mut self, slot_name: &str) {
         if self.suppress > 0 {
-            // Nested false `when` — increment suppress further.
             self.suppress += 1;
             return;
         }
-        // Evaluate the fixture value as a boolean.
-        // Missing fixtures default to true (show content for design review purposes).
         let is_true = match self.fixtures.get(slot_name) {
-            None => true, // Unknown at snapshot time → show.
+            None => true,
             Some(v) => v.as_bool().unwrap_or(false),
         };
-
         if !is_true {
             self.suppress += 1;
         }
-        // If true, nothing to do — children will be emitted normally.
     }
 
-    fn end_when(&mut self) {
+    /// Core logic for a `when` block close.
+    fn end_when_inner(&mut self) {
         if self.suppress > 0 {
             self.suppress -= 1;
         }
-        // If suppress is 0, the `when` was true; nothing to do.
     }
 
-    fn begin_each(&mut self, slot_name: &str, item_name: &str, _element_type: &MosaicType) {
+    /// Inner `begin_each` used during replay of a nested each.
+    ///
+    /// During replay of an outer `each` body, any inner `each` block
+    /// encountered in the event stream is expanded with the first fixture item
+    /// only (v1 limitation — nested loops are rare and single-level is
+    /// sufficient for the current demo).
+    fn begin_each_inner(&mut self, slot_name: &str, item_name: &str, _element_type: &MosaicType) {
         if self.suppress > 0 {
             return;
         }
-        // Look up the fixture array for this slot. Take the first element for v1.
-        // If absent or empty, use None (renders a placeholder).
         let first_item = self
             .fixtures
             .get(slot_name)
             .and_then(|v| v.as_array())
             .and_then(|arr| arr.first())
             .cloned();
+        self.loop_bindings.push((item_name.to_string(), first_item));
+    }
 
+    /// Inner `end_each` used during replay of a nested each.
+    fn end_each_inner(&mut self) {
+        if self.suppress > 0 {
+            return;
+        }
+        self.loop_bindings.pop();
+    }
+
+    /// Replay a recorded event log under a specific loop variable binding.
+    ///
+    /// Called once per additional fixture item (items[1..N]).  The stack is at
+    /// the same depth as at the start of the `each` body because the live pass
+    /// (item 0) balanced every push with a pop.
+    ///
+    /// # Arguments
+    ///
+    /// - `item_name` — the loop variable name to bind during this pass.
+    /// - `item` — the JSON value for this iteration's fixture item.
+    /// - `events` — the recorded event log (cloned from recording state).
+    fn replay_events(
+        &mut self,
+        item_name: &str,
+        item: serde_json::Value,
+        events: &[EachEvent],
+    ) {
+        self.loop_bindings.push((item_name.to_string(), Some(item)));
+        for event in events {
+            match event {
+                EachEvent::BeginNode { tag, is_primitive, props } => {
+                    self.begin_node_inner(tag, *is_primitive, props);
+                }
+                EachEvent::EndNode { tag } => {
+                    self.end_node_inner(tag);
+                }
+                EachEvent::RenderSlotChild { slot_name, slot_type } => {
+                    self.render_slot_child_inner(slot_name, slot_type);
+                }
+                EachEvent::BeginWhen { slot_name } => {
+                    self.begin_when_inner(slot_name);
+                }
+                EachEvent::EndWhen => {
+                    self.end_when_inner();
+                }
+                EachEvent::BeginEach { slot_name, item_name: nested_name, element_type } => {
+                    // Nested each during replay: expand first item only (v1).
+                    self.begin_each_inner(slot_name, nested_name, element_type);
+                }
+                EachEvent::EndEach => {
+                    self.end_each_inner();
+                }
+            }
+        }
+        self.loop_bindings.pop();
+    }
+}
+
+impl MosaicRenderer for HtmlRenderer {
+    fn begin_component(&mut self, name: &str, slots: &[MosaicSlot]) {
+        self.component_name = name.to_string();
+        self.slots = slots.to_vec();
+    }
+
+    fn end_component(&mut self) {}
+
+    fn begin_node(&mut self, tag: &str, is_primitive: bool, props: &[ResolvedProperty]) {
+        // If we're recording an `each` body (and not inside a nested inner each),
+        // capture this event so it can be replayed for subsequent fixture items.
+        if let Some(rec) = self.each_recording.as_mut() {
+            if rec.nesting_depth == 0 {
+                rec.events.push(EachEvent::BeginNode {
+                    tag: tag.to_string(),
+                    is_primitive,
+                    props: props.to_vec(),
+                });
+            }
+        }
+        self.begin_node_inner(tag, is_primitive, props);
+    }
+
+    fn end_node(&mut self, tag: &str) {
+        if let Some(rec) = self.each_recording.as_mut() {
+            if rec.nesting_depth == 0 {
+                rec.events.push(EachEvent::EndNode {
+                    tag: tag.to_string(),
+                });
+            }
+        }
+        self.end_node_inner(tag);
+    }
+
+    fn render_slot_child(&mut self, slot_name: &str, slot_type: &MosaicType) {
+        // Security: HTML-escape the slot name before embedding it in an attribute
+        // value and an HTML comment. Slot names are constrained to identifier syntax
+        // by the analyzer, but we escape at the output boundary for defence-in-depth.
+        if let Some(rec) = self.each_recording.as_mut() {
+            if rec.nesting_depth == 0 {
+                rec.events.push(EachEvent::RenderSlotChild {
+                    slot_name: slot_name.to_string(),
+                    slot_type: slot_type.clone(),
+                });
+            }
+        }
+        self.render_slot_child_inner(slot_name, slot_type);
+    }
+
+    fn begin_when(&mut self, slot_name: &str) {
+        if let Some(rec) = self.each_recording.as_mut() {
+            if rec.nesting_depth == 0 {
+                rec.events.push(EachEvent::BeginWhen {
+                    slot_name: slot_name.to_string(),
+                });
+            }
+        }
+        self.begin_when_inner(slot_name);
+    }
+
+    fn end_when(&mut self) {
+        if let Some(rec) = self.each_recording.as_mut() {
+            if rec.nesting_depth == 0 {
+                rec.events.push(EachEvent::EndWhen);
+            }
+        }
+        self.end_when_inner();
+    }
+
+    fn begin_each(&mut self, slot_name: &str, item_name: &str, element_type: &MosaicType) {
+        if self.suppress > 0 {
+            return;
+        }
+
+        // If we're already recording an outer `each` body, this is a nested
+        // `each`. Record it verbatim and increment nesting depth so inner events
+        // don't get double-recorded as outer events.
+        if let Some(rec) = self.each_recording.as_mut() {
+            rec.events.push(EachEvent::BeginEach {
+                slot_name: slot_name.to_string(),
+                item_name: item_name.to_string(),
+                element_type: element_type.clone(),
+            });
+            rec.nesting_depth += 1;
+            // Still need a loop binding so resolve_slot doesn't emit placeholders
+            // for the loop variable during the live (item 0) pass.
+            let first_item = self
+                .fixtures
+                .get(slot_name)
+                .and_then(|v| v.as_array())
+                .and_then(|arr| arr.first())
+                .cloned();
+            self.loop_bindings.push((item_name.to_string(), first_item));
+            return;
+        }
+
+        // Top-level `each` — collect all fixture items.
+        let items: Vec<serde_json::Value> = self
+            .fixtures
+            .get(slot_name)
+            .and_then(|v| v.as_array())
+            .cloned()
+            .unwrap_or_default();
+
+        let first_item = items.first().cloned();
+
+        // If there are 2+ items, start recording so we can replay for items[1..].
+        if items.len() > 1 {
+            self.each_recording = Some(EachRecordState {
+                item_name: item_name.to_string(),
+                remaining_items: items[1..].to_vec(),
+                events: Vec::new(),
+                nesting_depth: 0,
+            });
+        }
+
+        // Push the first item (or None placeholder) as the active loop binding.
         self.loop_bindings.push((item_name.to_string(), first_item));
     }
 
@@ -536,7 +760,28 @@ impl MosaicRenderer for HtmlRenderer {
         if self.suppress > 0 {
             return;
         }
+
+        // If we're inside an outer recording and this closes a nested `each`:
+        if let Some(rec) = self.each_recording.as_mut() {
+            if rec.nesting_depth > 0 {
+                rec.events.push(EachEvent::EndEach);
+                rec.nesting_depth -= 1;
+                self.loop_bindings.pop();
+                return;
+            }
+        }
+
+        // Pop the loop binding used for item 0 (the live pass).
         self.loop_bindings.pop();
+
+        // Replay the recorded event log for each remaining item.
+        if let Some(rec) = self.each_recording.take() {
+            let item_name = rec.item_name.clone();
+            let events = rec.events.clone();
+            for item in rec.remaining_items {
+                self.replay_events(&item_name, item, &events);
+            }
+        }
     }
 
     fn emit(self) -> EmitResult {
@@ -859,7 +1104,7 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
-    // Test 11: each block with fixture array renders first item
+    // Test 11: each block with fixture array renders ALL items
     // -----------------------------------------------------------------------
 
     #[test]
@@ -873,11 +1118,12 @@ mod tests {
                 }
               }
             }"#,
-            json!({"items": ["FirstItem", "SecondItem"]}),
+            json!({"items": ["FirstItem", "SecondItem", "ThirdItem"]}),
             None,
         );
-        // v1: renders the first item.
         assert!(out.contains("FirstItem"), "Expected first fixture item: {out}");
+        assert!(out.contains("SecondItem"), "Expected second fixture item: {out}");
+        assert!(out.contains("ThirdItem"), "Expected third fixture item: {out}");
     }
 
     // -----------------------------------------------------------------------

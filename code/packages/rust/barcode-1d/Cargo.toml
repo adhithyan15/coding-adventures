@@ -13,6 +13,8 @@ ean-13 = { path = "../ean-13" }
 itf = { path = "../itf" }
 paint-codec-png = { path = "../paint-codec-png" }
 paint-instructions = { path = "../paint-instructions" }
+paint-vm-runtime = { path = "../paint-vm-runtime" }
+paint-vm-skia = { path = "../paint-vm-skia" }
 upc-a = { path = "../upc-a" }
 
 [target.'cfg(target_vendor = "apple")'.dependencies]
@@ -20,3 +22,6 @@ paint-metal = { path = "../paint-metal" }
 
 [target.'cfg(target_os = "windows")'.dependencies]
 paint-vm-direct2d = { path = "../paint-vm-direct2d" }
+
+[target.'cfg(any(target_os = "linux", target_os = "macos", target_os = "freebsd", target_os = "openbsd", target_os = "netbsd"))'.dependencies]
+paint-vm-cairo = { path = "../paint-vm-cairo" }
