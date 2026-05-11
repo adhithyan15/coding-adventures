@@ -1,0 +1,9 @@
+[package]
+name = "llm-provider-ollama"
+version = "0.1.0"
+edition = "2021"
+description = "LM00a Ollama provider — local-only LLM client over std::net (zero third-party HTTP dep). Implements LlmClient for any Ollama-served model."
+
+[dependencies]
+llm-gateway = { path = "../llm-gateway" }
+serde_json = "1"
