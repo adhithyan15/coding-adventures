@@ -9,6 +9,8 @@ so browser-side CAS paths can normalize complex expressions directly.
 | Function | Description |
 |---|---|
 | `complexNormalize(z)` | Rewrite `z` into canonical `a + b*I` form |
+| `rectForm(z)` | Python-compatible alias for rectangular normalization |
+| `polarForm(z)` | Rewrite complex `z` as symbolic `r*Exp(I*theta)` |
 | `splitComplex(z)` | Return `[real, imag]` parts as real-valued IR nodes |
 | `realPart(z)` | Extract real part `Re(z)` |
 | `imagPart(z)` | Extract imaginary part `Im(z)` |
@@ -25,3 +27,7 @@ treated as opaque real atoms.
 
 Zero parts are suppressed: `0 + 2*I` becomes `Mul(2, I)`, `3 + 0*I` becomes
 `3`, and `0 + 1*I` becomes `I`.
+
+`polarForm` mirrors the Python `PolarForm` structure for expressions containing
+`I`: `Mul(Sqrt(Add(Pow(real, 2), Pow(imag, 2))), Exp(Mul(I, Atan2(imag, real))))`.
+Pure real expressions return unevaluated `PolarForm(z)`.

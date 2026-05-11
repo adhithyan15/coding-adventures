@@ -22,6 +22,11 @@ export const IM = "Im";
 export const CONJUGATE = "Conjugate";
 export const ABS = "Abs";
 export const ARG = "Arg";
+export const RECT_FORM = "RectForm";
+export const POLAR_FORM = "PolarForm";
+export const EXP = "Exp";
+export const SQRT = "Sqrt";
+export const ATAN2 = "Atan2";
 
 export const IMAGINARY_UNIT_NODE = sym(IMAGINARY_UNIT);
 export const RE_HEAD = sym(RE);
@@ -29,12 +34,32 @@ export const IM_HEAD = sym(IM);
 export const CONJUGATE_HEAD = sym(CONJUGATE);
 export const ABS_HEAD = sym(ABS);
 export const ARG_HEAD = sym(ARG);
+export const RECT_FORM_HEAD = sym(RECT_FORM);
+export const POLAR_FORM_HEAD = sym(POLAR_FORM);
+export const EXP_HEAD = sym(EXP);
+export const SQRT_HEAD = sym(SQRT);
+export const ATAN2_HEAD = sym(ATAN2);
 
 export type ComplexParts = readonly [real: IRNode, imag: IRNode];
 
 export function complexNormalize(expr: IRNode): IRNode {
   const [re, im] = splitComplex(expr);
   return assemble(re, im);
+}
+
+export function rectForm(expr: IRNode): IRNode {
+  return complexNormalize(expr);
+}
+
+export function polarForm(expr: IRNode): IRNode {
+  if (!containsImaginary(expr)) return app(POLAR_FORM_HEAD, [expr]);
+
+  const normalized = complexNormalize(expr);
+  const [re, im] = splitComplex(normalized);
+
+  const r = app(SQRT_HEAD, [app(ADD, [app(POW, [re, int(2)]), app(POW, [im, int(2)])])]);
+  const theta = app(ATAN2_HEAD, [im, re]);
+  return app(MUL, [r, app(EXP_HEAD, [app(MUL, [IMAGINARY_UNIT_NODE, theta])])]);
 }
 
 export function splitComplex(expr: IRNode): ComplexParts {
@@ -58,6 +83,11 @@ export function realPart(expr: IRNode): IRNode {
 
 export function imagPart(expr: IRNode): IRNode {
   return splitComplex(expr)[1];
+}
+
+export function containsImaginary(expr: IRNode): boolean {
+  if (equals(expr, IMAGINARY_UNIT_NODE)) return true;
+  return expr.kind === "apply" && expr.args.some((arg) => containsImaginary(arg));
 }
 
 export function conjugate(expr: IRNode): IRNode {
