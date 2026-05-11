@@ -1,5 +1,33 @@
 # Changelog — `twig-dap`
 
+## 0.3.2 — 2026-05-11
+
+**LANG25 follow-up — Hide compiler-internal registers from Variables panel.**
+
+Compiler-generated temporaries (names starting with `_`, e.g. `_r1`, `_n2`)
+were leaking into the VS Code Variables panel alongside user-visible names.
+
+### Root cause
+
+`build_sidecar` called `declare_variable` for every instruction destination,
+including internal temporaries the user never wrote.
+
+### Fix
+
+In the SSA-temporaries loop (Step 4b of `build_sidecar`), skip any dest name
+that starts with `_`.  Slot indices for user-visible variables are unaffected
+because both the sidecar and the VM's debug server derive slot indices from the
+*full* alphabetically-sorted name list (including `_`-prefixed names).
+
+### New tests
+
+- `internal_temporaries_are_not_declared_as_variables` — confirms `_r1` is
+  absent from `live_variables` while user-visible `result` and param `n`
+  remain present.
+- `internal_temp_slot_indices_do_not_displace_params` — confirms that even
+  when `_r1` (alpha-sorted before `n`) occupies slot 0, param `n` is still
+  declared with `reg_index = 1`, matching the VM's `get_slot` index.
+
 ## 0.3.1 — 2026-05-11
 
 **LANG25 follow-up — alphabetical slot ordering + variable introspection e2e test.**

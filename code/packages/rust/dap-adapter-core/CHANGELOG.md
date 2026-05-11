@@ -1,5 +1,28 @@
 # Changelog — `dap-adapter-core`
 
+## 0.4.0 — 2026-05-11
+
+**LANG25 follow-up — Fix breakpoints and `stopOnEntry` via `initialized` event.**
+
+Breakpoints set before a debug session started were silently ignored because
+the adapter never sent the DAP `initialized` event, so VS Code never sent
+`setBreakpoints` while the sidecar was loaded.
+
+### Changes
+
+- **Emit `initialized` event after `launch` response.**  After a successful
+  `launch` (sidecar loaded, VM connected) the adapter now writes an
+  `initialized` event.  VS Code responds by sending `setBreakpoints` while
+  the VM is still blocked in its startup pause — every breakpoint is
+  installed before execution begins.
+
+- **`stopOnEntry` support in `configurationDone`.**  Added `stop_on_entry:
+  bool` field to `DapServer`.  When `launch` includes `"stopOnEntry": true`,
+  `configurationDone` calls `step_instruction` instead of `cont`, so the VM
+  pauses at the first source line rather than running freely.
+
+- **`stop_on_entry` field initialised to `false` in `DapServer::new`.**
+
 ## 0.3.0 — 2026-05-10
 
 **LANG25-25B — Fix `handle_launch` to establish the VM connection.**

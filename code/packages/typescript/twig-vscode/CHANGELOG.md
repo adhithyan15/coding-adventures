@@ -3,6 +3,27 @@
 All notable changes to the Twig VS Code extension are
 documented in this file.
 
+## 0.1.2 - 2026-05-11
+
+**LANG25 follow-up — Bundle deps + fix LSP blocking + enable gutter breakpoints.**
+
+### Changes
+
+- **Bundle all dependencies with esbuild.**  Changed `main` from
+  `./out/extension.js` to `./out/bundle.js` and added an esbuild step to
+  `npm run build`.  Without bundling, `require('vscode-languageclient/node')`
+  failed at runtime because `node_modules` is not included in the VSIX.
+
+- **LSP start is now fire-and-forget.**  `activate()` no longer `await`s
+  `startLanguageClient()`, so a missing `twig-lsp-server` binary no longer
+  blocks DAP registration.  Errors are logged as warnings instead.
+
+- **Add `breakpoints` contribution to `package.json`.**  Without this entry
+  VS Code's editor does not register gutter clicks or `Run → Toggle
+  Breakpoint` as valid breakpoints for `.twig` files.  Adding `"breakpoints":
+  [{"language": "twig"}]` to `contributes` enables the full gutter-click
+  workflow.
+
 ## 0.1.1 - 2026-05-10
 
 **LANG25-25A — Add unit tests; fix empty test suite CI failure.**

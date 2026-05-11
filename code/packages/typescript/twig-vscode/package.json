@@ -4,7 +4,7 @@
   "publisher": "coding-adventures-twig",
   "description": "Twig language support and debugging for Visual Studio Code",
   "version": "0.1.0",
-  "main": "./out/extension.js",
+  "main": "./out/bundle.js",
   "engines": {
     "vscode": "^1.82.0"
   },
@@ -73,6 +73,11 @@
         ]
       }
     ],
+    "breakpoints": [
+      {
+        "language": "twig"
+      }
+    ],
     "configuration": {
       "title": "Twig",
       "properties": {
@@ -100,7 +105,7 @@
     }
   },
   "scripts": {
-    "build": "tsc -p .",
+    "build": "tsc -p . && npx esbuild src/extension.ts --bundle --outfile=out/bundle.js --external:vscode --format=cjs --platform=node",
     "test": "vitest run"
   },
   "dependencies": {
@@ -109,6 +114,7 @@
   "devDependencies": {
     "@types/node": "^22.0.0",
     "@types/vscode": "^1.82.0",
+    "esbuild": "^0.28.0",
     "typescript": "^5.0.0",
     "vitest": "^3.0.0"
   }

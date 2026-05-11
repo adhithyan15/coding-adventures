@@ -130,6 +130,13 @@ impl LanguageDebugAdapter for TwigDebugAdapter {
 /// value and keeps it visible until function exit, matching the behaviour of
 /// GDB/LLDB for ordinary local variables.
 ///
+/// **Internal temporaries are excluded.** The twig compiler prefixes
+/// compiler-generated registers with `_` (e.g. `_r1`, `_n2`).  These are
+/// never declared as sidecar variables so they do not appear in the VS Code
+/// Variables panel.  User-visible slot indices remain correct because both
+/// the sidecar and the VM's debug server use the *full* alphabetically-sorted
+/// name list (including `_`-prefixed names) when mapping `get_slot` indices.
+///
 /// ### Slot-index assignment: alphabetical order
 ///
 /// The twig-vm debug server's `get_slot(N)` returns the Nth variable when
@@ -203,6 +210,14 @@ pub fn build_sidecar(module: &IIRModule, source_path: &Path) -> Vec<u8> {
         }
 
         // Step 4b — emit SSA temporaries (live from defining instruction).
+        //
+        // Internal compiler temporaries are named with a leading `_` (e.g.
+        // `_r1`, `_n2`).  These are implementation details of the code
+        // generator and should not appear in the VS Code Variables panel.
+        // We skip them here so `live_variables` never returns them, while the
+        // slot indices for user-visible names (params and user-named lets)
+        // remain correct because both the sidecar and the VM use the same
+        // full alphabetically-sorted list for slot assignment.
         let param_names: std::collections::HashSet<&str> = func.params.iter()
             .map(|(n, _)| n.as_str())
             .collect();
@@ -211,6 +226,8 @@ pub fn build_sidecar(module: &IIRModule, source_path: &Path) -> Vec<u8> {
                 Some(d) if !param_names.contains(d.as_str()) => d,
                 _ => continue,  // void or param-shadowing instruction
             };
+            // Skip compiler-internal temporaries (leading `_`).
+            if dest_name.starts_with('_') { continue; }
             let slot = match slot_of.get(dest_name) {
                 Some(&s) => s,
                 None => continue,   // defensive: should never happen
@@ -637,5 +654,59 @@ mod tests {
             vars.iter().any(|v| v.name == "x"),
             "parameter 'x' of 'sq' must be declared as a variable; got: {vars:?}",
         );
+    }
+
+    #[test]
+    fn internal_temporaries_are_not_declared_as_variables() {
+        // Compiler-generated registers (names starting with `_`) must never
+        // appear in `live_variables`.  Only user-visible names (here: param
+        // `n` and user-named temp `result`) should be returned.
+        let m = make_module_with_fn(
+            "sq",
+            vec![("n", "i32")],
+            vec![
+                // _r1 and _r2 are compiler-generated; result is user-visible.
+                IIRInstr::new("mul_i32", Some("_r1".into()),
+                    vec![Operand::Var("n".into()), Operand::Var("n".into())], "i32"),
+                IIRInstr::new("mov", Some("result".into()),
+                    vec![Operand::Var("_r1".into())], "i32"),
+                IIRInstr::new("ret", None, vec![Operand::Var("result".into())], "i32"),
+            ],
+        );
+        let bytes = build_sidecar(&m, Path::new("sq.twig"));
+        // At instr 2 both `n` (param) and `result` (user temp) are live.
+        let vars = live_vars_at(&bytes, "sq", 2);
+        let names: Vec<&str> = vars.iter().map(|v| v.name.as_str()).collect();
+        assert!(names.contains(&"n"),      "param 'n' must appear: {names:?}");
+        assert!(names.contains(&"result"), "user temp 'result' must appear: {names:?}");
+        assert!(
+            !names.iter().any(|n| n.starts_with('_')),
+            "internal registers must be hidden from Variables panel: {names:?}",
+        );
+    }
+
+    #[test]
+    fn internal_temp_slot_indices_do_not_displace_params() {
+        // When a function has both a param and an internal `_r*` temp, the
+        // param's slot index must still be correct even though `_r1` occupies
+        // an earlier alphabetical slot (and is excluded from the sidecar).
+        //
+        // Alphabetical order of all names: ["_r1", "n"]
+        // So: slot 0 → _r1 (excluded), slot 1 → n (declared with reg_index 1).
+        let m = make_module_with_fn(
+            "sq",
+            vec![("n", "i32")],
+            vec![
+                IIRInstr::new("mul_i32", Some("_r1".into()),
+                    vec![Operand::Var("n".into()), Operand::Var("n".into())], "i32"),
+                IIRInstr::new("ret", None, vec![Operand::Var("_r1".into())], "i32"),
+            ],
+        );
+        let bytes = build_sidecar(&m, Path::new("sq.twig"));
+        let vars = live_vars_at(&bytes, "sq", 0);
+        let n_reg = vars.iter().find(|v| v.name == "n").map(|v| v.reg_index);
+        // `n` is alphabetically after `_r1`, so its slot index must be 1 —
+        // matching what the VM's `get_slot(frame, 1)` returns.
+        assert_eq!(n_reg, Some(1), "'n' must have reg_index 1 (after _r1 in alpha order): {vars:?}");
     }
 }

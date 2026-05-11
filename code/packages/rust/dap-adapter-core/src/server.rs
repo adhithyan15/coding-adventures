@@ -71,6 +71,11 @@ pub struct DapServer<A: LanguageDebugAdapter> {
     seq: SeqCounter,
     /// Stop signal; set by `disconnect` handler.
     pub(crate) shutdown: bool,
+    /// Whether `launch` requested `stopOnEntry`.
+    ///
+    /// When true, `configurationDone` uses `step_instruction` so the VM
+    /// halts at its first source line rather than running freely.
+    stop_on_entry: bool,
 }
 
 impl<A: LanguageDebugAdapter> DapServer<A> {
@@ -85,6 +90,7 @@ impl<A: LanguageDebugAdapter> DapServer<A> {
             vm_proc: None,
             seq: SeqCounter::new(),
             shutdown: false,
+            stop_on_entry: false,
         }
     }
 
@@ -145,12 +151,25 @@ impl<A: LanguageDebugAdapter> DapServer<A> {
             other => Err(format!("unsupported command: {other}")),
         };
 
+        // Remember whether launch succeeded BEFORE `result` is consumed.
+        let launch_succeeded = req.command == "launch" && result.is_ok();
+
         let resp = match result {
             Ok(body)    => build_response(req.seq, self.seq.next(), &req.command, true,  None, body),
             Err(msg)    => build_response(req.seq, self.seq.next(), &req.command, false, Some(&msg),
                                           json!({})),
         };
         write_message(w, &resp)?;
+
+        // After a successful `launch` the sidecar is loaded and the VM is
+        // running.  Emit `initialized` NOW so VS Code sends `setBreakpoints`
+        // while the sidecar is already available — the VM is blocked in its
+        // initial pause waiting for `configurationDone`, so every
+        // `set_breakpoint` TCP message is processed before execution starts.
+        if launch_succeeded {
+            let ev = build_event(self.seq.next(), "initialized", json!({}));
+            write_message(w, &ev)?;
+        }
 
         // Flush any pending events that the handler may have produced.
         self.drain_vm_events(w)?;
@@ -181,6 +200,11 @@ impl<A: LanguageDebugAdapter> DapServer<A> {
             .ok_or("launch: missing 'program'")?;
         let workspace = req.arguments.get("workspaceFolder").and_then(|v| v.as_str())
             .unwrap_or(".");
+
+        // Remember whether the editor wants to pause at the first source line.
+        self.stop_on_entry = req.arguments.get("stopOnEntry")
+            .and_then(|v| v.as_bool())
+            .unwrap_or(false);
 
         let (bytecode_path, sidecar_bytes) = self.adapter
             .compile(&PathBuf::from(program), &PathBuf::from(workspace))
@@ -270,8 +294,16 @@ impl<A: LanguageDebugAdapter> DapServer<A> {
 
     fn handle_configuration_done(&mut self, _req: &DapRequest) -> Result<Value, String> {
         // After breakpoints are configured, kick the VM off.
+        //
+        // If the editor requested `stopOnEntry`, use `step_instruction` so the
+        // VM pauses at its first source line rather than running freely.
+        // Otherwise just `cont` — the VM will run until a breakpoint or exit.
         if let Some(conn) = self.vm_conn.as_deref_mut() {
-            conn.cont()?;
+            if self.stop_on_entry {
+                conn.step_instruction()?;
+            } else {
+                conn.cont()?;
+            }
         }
         Ok(json!({}))
     }
