@@ -90,8 +90,12 @@ const RESPONSE_SCHEMA: &str = r#"{
 }"#;
 
 /// Build the user message embedding the premise and hypothesis.
-/// Tagged with `PREMISE:` / `HYPOTHESIS:` markers so the LLM cannot
-/// confuse the two even if either contains line breaks.
+/// Tagged with `PREMISE:` / `HYPOTHESIS:` markers so the typical
+/// case (well-formed text without literal `HYPOTHESIS:` lines) parses
+/// unambiguously. The framework treats the LLM as a trust boundary;
+/// adversarial input that *embeds* the markers themselves is an
+/// accepted-risk prompt-injection vector. If a deployment cares,
+/// wrap each field in a nonce-delimited block before calling here.
 fn build_user_text(req: &EntailRequest) -> String {
     format!(
         "PREMISE:\n{premise}\n\nHYPOTHESIS:\n{hypothesis}\n\nReturn the JSON object now.",
