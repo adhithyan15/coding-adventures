@@ -111,6 +111,7 @@
 
 pub mod error;
 pub mod numeric;
+pub mod heap;
 
 // We keep the `lower` module for backward compatibility with any code that
 // already imports from it, but the canonical implementation is now in
@@ -119,6 +120,9 @@ pub mod lower;
 
 // Re-export the public API at the crate root.
 pub use error::BuiltinLoweringError;
+// Re-export the heap lowering entry point for callers that want to invoke
+// Phase 2 directly (e.g. the LANG31 pipeline driver).
+pub use heap::lower_heap_builtins;
 
 use interpreter_ir::IIRModule;
 
@@ -138,10 +142,29 @@ use interpreter_ir::IIRModule;
 /// un-checked module will produce `BuiltinLoweringError::UntypedBuiltin` errors.
 pub fn lower_builtins(module: &mut IIRModule) -> Vec<BuiltinLoweringError> {
     let mut all_errors = Vec::new();
+
+    // ── Phase 1: numeric / comparison builtins ────────────────────────────
+    //
+    // Must run first because the type-checker has already resolved concrete
+    // types onto arithmetic instructions.  Numeric lowering is a pure 1-to-1
+    // replacement (call_builtin "+" → add, etc.) and does not change instruction
+    // counts, so Phase 2 can treat the result as a stable instruction list.
     for fn_ in &mut module.functions {
         let errors = numeric::lower_function(fn_);
         all_errors.extend(errors);
     }
+
+    // ── Phase 2: heap / list builtins ─────────────────────────────────────
+    //
+    // Runs after Phase 1 so that any numeric ops inside cons/car arguments
+    // have already been lowered.  Heap lowering may expand one instruction
+    // into several (cons → alloc + 2 field_stores), so it rebuilds the
+    // instruction list rather than mutating in place.
+    //
+    // This pass is infallible: malformed heap instructions are left unchanged
+    // for the backend's validator to surface with clearer error messages.
+    heap::lower_heap_builtins(module);
+
     all_errors
 }
 

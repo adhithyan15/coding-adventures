@@ -24,7 +24,7 @@
 //! 49–50:  Multiple errors accumulate rather than stopping at first.
 
 use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
-use iir_builtin_lowering::{lower_builtins, lower_builtins_cloned, lower_builtins_checked, BuiltinLoweringError};
+use iir_builtin_lowering::{lower_builtins, lower_builtins_cloned, lower_builtins_checked, lower_heap_builtins, BuiltinLoweringError};
 
 // ===========================================================================
 // Test helpers
@@ -306,8 +306,9 @@ fn test_24_unary_not_one_src_and_dest() {
 // ===========================================================================
 
 #[test]
-fn test_25_cons_left_as_call_builtin() {
-    // "cons" is a heap builtin (Phase 2) and must not be touched.
+fn test_25_cons_lowered_by_phase2() {
+    // "cons" is a heap builtin — Phase 1 ignores it, but Phase 2 lowers it.
+    // lower_builtins() now runs both phases, so cons IS lowered.
     let instr = IIRInstr::new(
         "call_builtin",
         Some("%cell".into()),
@@ -316,15 +317,15 @@ fn test_25_cons_left_as_call_builtin() {
             Operand::Var("%head".into()),
             Operand::Var("%tail".into()),
         ],
-        "any",
+        "ref<LispyPair>",
     );
     let mut m = make_module(vec![instr]);
     let errors = lower_builtins(&mut m);
-    // No error — unknown builtins are silently left unchanged.
+    // No error — heap lowering is infallible.
     assert!(errors.is_empty());
-    let i = first_instr(&m);
-    assert_eq!(i.op, "call_builtin");
-    assert_eq!(i.srcs.len(), 3); // unchanged — still includes the name
+    // Phase 2 expanded cons into alloc + field_store + field_store.
+    assert_eq!(m.functions[0].instructions.len(), 3);
+    assert_eq!(m.functions[0].instructions[0].op, "alloc");
 }
 
 #[test]
@@ -614,8 +615,10 @@ fn test_39_mixed_instrs_only_call_builtin_lowered() {
 }
 
 #[test]
-fn test_40_mixed_known_and_unknown_builtins() {
-    // call_builtin "+" is lowered; call_builtin "cons" is left as-is.
+fn test_40_mixed_known_and_cons_builtins() {
+    // call_builtin "+" is lowered by Phase 1 to "add".
+    // call_builtin "cons" is lowered by Phase 2 to alloc + 2 field_stores.
+    // Together: 1 add + 3 heap ops = 4 instructions.
     let instrs = vec![
         binary_call("+", "i64"),
         IIRInstr::new(
@@ -626,14 +629,18 @@ fn test_40_mixed_known_and_unknown_builtins() {
                 Operand::Var("%h".into()),
                 Operand::Var("%t".into()),
             ],
-            "any",
+            "ref<LispyPair>",
         ),
     ];
     let mut m = make_module(instrs);
     let errors = lower_builtins(&mut m);
     assert!(errors.is_empty());
+    // Instruction 0: add (from Phase 1 lowering of "+")
     assert_eq!(m.functions[0].instructions[0].op, "add");
-    assert_eq!(m.functions[0].instructions[1].op, "call_builtin");
+    // Instruction 1: alloc (from Phase 2 lowering of cons — step 1 of 3)
+    assert_eq!(m.functions[0].instructions[1].op, "alloc");
+    // Total: 4 instructions (1 add + 3 heap ops)
+    assert_eq!(m.functions[0].instructions.len(), 4);
 }
 
 // ===========================================================================
@@ -851,3 +858,419 @@ fn test_50_mixed_errors_across_functions() {
     assert!(has_fn1_err, "expected error for fn1");
     assert!(has_fn2_err, "expected error for fn2");
 }
+
+// ===========================================================================
+// Tests 51–74: Phase 2 — heap builtin lowering
+// ===========================================================================
+//
+// These tests verify that the heap lowering pass (lower_heap_builtins and the
+// heap phase wired into lower_builtins) correctly rewrites cons/car/cdr/null?/
+// make_nil into typed IIR heap ops.
+//
+// Organisation:
+// 51–66: cons lowering details (instruction count, op names, fields).
+// 67–68: car → field_load index 0.
+// 69–70: cdr → field_load index 1.
+// 71–72: null? → is_null.
+// 73–74: make_nil → const Int(0) with ref<LispyPair>.
+// 75–76: unknown heap builtins (pair?, make_closure) left unchanged.
+// 77:    multiple cons in sequence.
+// 78:    cons + car + null? in same function.
+// 79:    cons + arithmetic in same function (numeric lowering already happened).
+// 80:    lower_builtins integrates both phases end-to-end.
+
+// Helpers for heap tests
+
+fn cons_call_instr(dest: &str, head: &str, tail: &str) -> IIRInstr {
+    IIRInstr::new(
+        "call_builtin",
+        Some(dest.into()),
+        vec![
+            Operand::Var("cons".into()),
+            Operand::Var(head.into()),
+            Operand::Var(tail.into()),
+        ],
+        "ref<LispyPair>",
+    )
+}
+
+fn car_call_instr(dest: &str, pair: &str) -> IIRInstr {
+    IIRInstr::new(
+        "call_builtin",
+        Some(dest.into()),
+        vec![Operand::Var("car".into()), Operand::Var(pair.into())],
+        "ref<any>",
+    )
+}
+
+fn cdr_call_instr(dest: &str, pair: &str) -> IIRInstr {
+    IIRInstr::new(
+        "call_builtin",
+        Some(dest.into()),
+        vec![Operand::Var("cdr".into()), Operand::Var(pair.into())],
+        "ref<any>",
+    )
+}
+
+fn null_pred_instr(dest: &str, var: &str) -> IIRInstr {
+    IIRInstr::new(
+        "call_builtin",
+        Some(dest.into()),
+        vec![Operand::Var("null?".into()), Operand::Var(var.into())],
+        "bool",
+    )
+}
+
+fn make_nil_instr(dest: &str) -> IIRInstr {
+    IIRInstr::new(
+        "call_builtin",
+        Some(dest.into()),
+        vec![Operand::Var("make_nil".into())],
+        "ref<LispyPair>",
+    )
+}
+
+// ===========================================================================
+// Tests 51–54: cons produces 3 instructions
+// ===========================================================================
+
+#[test]
+fn test_51_cons_expands_to_three_instructions() {
+    // cons %h %t → alloc + field_store + field_store = 3 instructions.
+    let mut m = make_module(vec![cons_call_instr("%cell", "%h", "%t")]);
+    let errors = lower_builtins(&mut m);
+    assert!(errors.is_empty());
+    assert_eq!(m.functions[0].instructions.len(), 3,
+        "cons must expand to exactly 3 instructions");
+}
+
+#[test]
+fn test_52_cons_first_instr_is_alloc() {
+    let mut m = make_module(vec![cons_call_instr("%cell", "%h", "%t")]);
+    lower_builtins(&mut m);
+    assert_eq!(m.functions[0].instructions[0].op, "alloc");
+}
+
+#[test]
+fn test_53_cons_second_instr_is_field_store() {
+    let mut m = make_module(vec![cons_call_instr("%cell", "%h", "%t")]);
+    lower_builtins(&mut m);
+    assert_eq!(m.functions[0].instructions[1].op, "field_store");
+}
+
+#[test]
+fn test_54_cons_third_instr_is_field_store() {
+    let mut m = make_module(vec![cons_call_instr("%cell", "%h", "%t")]);
+    lower_builtins(&mut m);
+    assert_eq!(m.functions[0].instructions[2].op, "field_store");
+}
+
+// ===========================================================================
+// Tests 55–57: alloc instruction properties
+// ===========================================================================
+
+#[test]
+fn test_55_cons_alloc_gets_original_dest() {
+    // The alloc instruction must inherit the original dest name.
+    let mut m = make_module(vec![cons_call_instr("my_cell", "%h", "%t")]);
+    lower_builtins(&mut m);
+    assert_eq!(
+        m.functions[0].instructions[0].dest.as_deref(),
+        Some("my_cell"),
+        "alloc must inherit the original dest"
+    );
+}
+
+#[test]
+fn test_56_cons_alloc_may_alloc_is_true() {
+    // alloc is a heap allocation point; the GC must track it.
+    let mut m = make_module(vec![cons_call_instr("%cell", "%h", "%t")]);
+    lower_builtins(&mut m);
+    assert!(m.functions[0].instructions[0].may_alloc,
+        "alloc instruction must have may_alloc=true");
+}
+
+#[test]
+fn test_57_cons_alloc_type_hint_is_ref_lispy_pair() {
+    let mut m = make_module(vec![cons_call_instr("%cell", "%h", "%t")]);
+    lower_builtins(&mut m);
+    assert_eq!(m.functions[0].instructions[0].type_hint, "ref<LispyPair>");
+}
+
+// ===========================================================================
+// Tests 58–63: field_store operand layout
+// ===========================================================================
+
+#[test]
+fn test_58_cons_field_store_head_dest_is_none() {
+    // Stores never produce a value.
+    let mut m = make_module(vec![cons_call_instr("%cell", "%h", "%t")]);
+    lower_builtins(&mut m);
+    assert!(m.functions[0].instructions[1].dest.is_none(),
+        "field_store head must have no dest");
+}
+
+#[test]
+fn test_59_cons_field_store_tail_dest_is_none() {
+    let mut m = make_module(vec![cons_call_instr("%cell", "%h", "%t")]);
+    lower_builtins(&mut m);
+    assert!(m.functions[0].instructions[2].dest.is_none(),
+        "field_store tail must have no dest");
+}
+
+#[test]
+fn test_60_cons_field_store_head_srcs_index0_is_cell() {
+    // field_store srcs[0] is the pair pointer.
+    let mut m = make_module(vec![cons_call_instr("%cell", "%h", "%t")]);
+    lower_builtins(&mut m);
+    let store = &m.functions[0].instructions[1];
+    assert_eq!(store.srcs[0], Operand::Var("%cell".into()),
+        "field_store head: srcs[0] must be the cell pointer");
+}
+
+#[test]
+fn test_61_cons_field_store_head_srcs_index1_is_zero() {
+    // field_store srcs[1] is the field index: 0 = car slot.
+    let mut m = make_module(vec![cons_call_instr("%cell", "%h", "%t")]);
+    lower_builtins(&mut m);
+    let store = &m.functions[0].instructions[1];
+    assert_eq!(store.srcs[1], Operand::Int(0),
+        "field_store head: srcs[1] must be Int(0)");
+}
+
+#[test]
+fn test_62_cons_field_store_head_srcs_index2_is_head() {
+    // field_store srcs[2] is the head value.
+    let mut m = make_module(vec![cons_call_instr("%cell", "%h", "%t")]);
+    lower_builtins(&mut m);
+    let store = &m.functions[0].instructions[1];
+    assert_eq!(store.srcs[2], Operand::Var("%h".into()),
+        "field_store head: srcs[2] must be the head variable");
+}
+
+#[test]
+fn test_63_cons_field_store_tail_srcs_index1_is_one() {
+    // field_store tail: srcs[1] is the field index: 1 = cdr slot.
+    let mut m = make_module(vec![cons_call_instr("%cell", "%h", "%t")]);
+    lower_builtins(&mut m);
+    let store = &m.functions[0].instructions[2];
+    assert_eq!(store.srcs[1], Operand::Int(1),
+        "field_store tail: srcs[1] must be Int(1)");
+}
+
+// ===========================================================================
+// Tests 64–65: car lowers to field_load with index 0
+// ===========================================================================
+
+#[test]
+fn test_64_car_produces_field_load_index_zero() {
+    let mut m = make_module(vec![car_call_instr("%head", "%pair")]);
+    let errors = lower_builtins(&mut m);
+    assert!(errors.is_empty());
+    let instr = &m.functions[0].instructions[0];
+    assert_eq!(instr.op, "field_load");
+    assert_eq!(instr.srcs[1], Operand::Int(0),
+        "car must use field index 0");
+}
+
+#[test]
+fn test_65_car_field_load_pair_is_src0() {
+    let mut m = make_module(vec![car_call_instr("%head", "%pair")]);
+    lower_builtins(&mut m);
+    let instr = &m.functions[0].instructions[0];
+    assert_eq!(instr.srcs[0], Operand::Var("%pair".into()));
+}
+
+// ===========================================================================
+// Tests 66–67: cdr lowers to field_load with index 1
+// ===========================================================================
+
+#[test]
+fn test_66_cdr_produces_field_load_index_one() {
+    let mut m = make_module(vec![cdr_call_instr("%tail", "%pair")]);
+    let errors = lower_builtins(&mut m);
+    assert!(errors.is_empty());
+    let instr = &m.functions[0].instructions[0];
+    assert_eq!(instr.op, "field_load");
+    assert_eq!(instr.srcs[1], Operand::Int(1),
+        "cdr must use field index 1");
+}
+
+#[test]
+fn test_67_cdr_field_load_preserves_dest() {
+    let mut m = make_module(vec![cdr_call_instr("my_tail", "%pair")]);
+    lower_builtins(&mut m);
+    let instr = &m.functions[0].instructions[0];
+    assert_eq!(instr.dest.as_deref(), Some("my_tail"));
+}
+
+// ===========================================================================
+// Tests 68–69: null? lowers to is_null
+// ===========================================================================
+
+#[test]
+fn test_68_null_pred_produces_is_null() {
+    let mut m = make_module(vec![null_pred_instr("%r", "%x")]);
+    let errors = lower_builtins(&mut m);
+    assert!(errors.is_empty());
+    assert_eq!(m.functions[0].instructions[0].op, "is_null");
+}
+
+#[test]
+fn test_69_null_pred_type_hint_is_bool() {
+    let mut m = make_module(vec![null_pred_instr("%r", "%x")]);
+    lower_builtins(&mut m);
+    assert_eq!(m.functions[0].instructions[0].type_hint, "bool");
+}
+
+// ===========================================================================
+// Tests 70–71: make_nil lowers to const Int(0) : ref<LispyPair>
+// ===========================================================================
+
+#[test]
+fn test_70_make_nil_produces_const_zero() {
+    let mut m = make_module(vec![make_nil_instr("%nil")]);
+    let errors = lower_builtins(&mut m);
+    assert!(errors.is_empty());
+    let instr = &m.functions[0].instructions[0];
+    assert_eq!(instr.op, "const");
+    assert_eq!(instr.srcs[0], Operand::Int(0));
+}
+
+#[test]
+fn test_71_make_nil_type_hint_is_ref_lispy_pair() {
+    let mut m = make_module(vec![make_nil_instr("%nil")]);
+    lower_builtins(&mut m);
+    assert_eq!(m.functions[0].instructions[0].type_hint, "ref<LispyPair>");
+}
+
+// ===========================================================================
+// Tests 72–73: unknown heap builtins left unchanged
+// ===========================================================================
+
+#[test]
+fn test_72_pair_pred_left_unchanged() {
+    // `pair?` is a type predicate, not a heap operation; it stays as call_builtin.
+    let instr = IIRInstr::new(
+        "call_builtin",
+        Some("%r".into()),
+        vec![Operand::Var("pair?".into()), Operand::Var("%x".into())],
+        "bool",
+    );
+    let mut m = make_module(vec![instr]);
+    let errors = lower_builtins(&mut m);
+    assert!(errors.is_empty());
+    assert_eq!(m.functions[0].instructions[0].op, "call_builtin",
+        "pair? should be left as call_builtin");
+}
+
+#[test]
+fn test_73_make_closure_left_unchanged() {
+    // make_closure is a BEAM02/CLR02 builtin and must survive untouched.
+    let instr = IIRInstr::new(
+        "call_builtin",
+        Some("%clos".into()),
+        vec![Operand::Var("make_closure".into()), Operand::Var("%fn".into())],
+        "any",
+    );
+    let mut m = make_module(vec![instr]);
+    let errors = lower_builtins(&mut m);
+    assert!(errors.is_empty());
+    assert_eq!(m.functions[0].instructions[0].op, "call_builtin");
+}
+
+// ===========================================================================
+// Tests 74–75: sequences and mixed instructions
+// ===========================================================================
+
+#[test]
+fn test_74_multiple_cons_in_sequence() {
+    // Two consecutive cons calls → 2 × 3 = 6 instructions.
+    let instrs = vec![
+        cons_call_instr("%c1", "%h1", "%t1"),
+        cons_call_instr("%c2", "%h2", "%t2"),
+    ];
+    let mut m = make_module(instrs);
+    let errors = lower_builtins(&mut m);
+    assert!(errors.is_empty());
+    assert_eq!(m.functions[0].instructions.len(), 6,
+        "two cons calls should produce 6 instructions");
+}
+
+#[test]
+fn test_75_cons_then_car_then_null_in_same_function() {
+    // Simulate a real list-processing snippet:
+    //   %cell = cons(%head, %tail)
+    //   %h    = car(%cell)
+    //   %nil  = null?(%h)
+    let instrs = vec![
+        cons_call_instr("%cell", "%head", "%tail"),
+        car_call_instr("%h", "%cell"),
+        null_pred_instr("%nil", "%h"),
+    ];
+    let mut m = make_module(instrs);
+    let errors = lower_builtins(&mut m);
+    assert!(errors.is_empty());
+    // cons→3, car→1, null?→1 = 5
+    assert_eq!(m.functions[0].instructions.len(), 5);
+    assert_eq!(m.functions[0].instructions[0].op, "alloc");
+    assert_eq!(m.functions[0].instructions[3].op, "field_load");
+    assert_eq!(m.functions[0].instructions[4].op, "is_null");
+}
+
+// ===========================================================================
+// Test 76: cons + arithmetic in same function (numeric lowering already done)
+// ===========================================================================
+
+#[test]
+fn test_76_cons_with_arithmetic_in_same_function() {
+    // When both phases run, arithmetic ops and heap ops coexist cleanly.
+    let instrs = vec![
+        // Phase 1 (numeric) lowers this
+        IIRInstr::new(
+            "call_builtin",
+            Some("%sum".into()),
+            vec![
+                Operand::Var("+".into()),
+                Operand::Var("%a".into()),
+                Operand::Var("%b".into()),
+            ],
+            "i64",
+        ),
+        // Phase 2 (heap) lowers this
+        cons_call_instr("%pair", "%sum", "%nil"),
+    ];
+    let mut m = make_module(instrs);
+    let errors = lower_builtins(&mut m);
+    assert!(errors.is_empty());
+    // add (1) + alloc + field_store + field_store (3) = 4
+    assert_eq!(m.functions[0].instructions.len(), 4);
+    assert_eq!(m.functions[0].instructions[0].op, "add",
+        "numeric lowering should convert + to add");
+    assert_eq!(m.functions[0].instructions[1].op, "alloc",
+        "heap lowering should convert cons to alloc");
+}
+
+// ===========================================================================
+// Test 77: lower_heap_builtins alone (Phase 2 only, via direct call)
+// ===========================================================================
+
+#[test]
+fn test_77_lower_heap_builtins_direct_call() {
+    // Callers can invoke Phase 2 directly via the re-exported symbol.
+    let fn_ = IIRFunction::new(
+        "f",
+        vec![("p".into(), "ref<LispyPair>".into())],
+        "ref<any>",
+        vec![car_call_instr("%h", "p")],
+    );
+    let mut m = IIRModule {
+        name: "t".into(),
+        functions: vec![fn_],
+        entry_point: Some("f".into()),
+        language: "twig".into(),
+    };
+    lower_heap_builtins(&mut m);
+    assert_eq!(m.functions[0].instructions[0].op, "field_load");
+}
+

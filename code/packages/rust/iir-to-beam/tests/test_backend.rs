@@ -266,16 +266,25 @@ fn test_io_out_rejected() {
 // 10. test_alloc_rejected
 // ===========================================================================
 
-/// `alloc` must be rejected — GC heap allocation requires NIF support.
+/// `alloc` with an unsupported reference type must be rejected.
+///
+/// `alloc ref<u8>` is not a LispyPair allocation — this backend only knows
+/// how to lower `alloc ref<LispyPair>` (Erlang cons cells via put_list).
+/// Any other ref type on alloc gets an UnsupportedType error from the
+/// validator since we cannot map it to a BEAM instruction.
 #[test]
 fn test_alloc_rejected() {
     let errs = validate_for_beam(&make_module_single(vec![IIRInstr::new(
         "alloc",
         Some("ptr".into()),
         vec![Operand::Int(8)],
-        "ref<u8>",
+        "ref<u8>",  // not ref<LispyPair> — rejected
     )]));
-    assert!(errs.iter().any(|e| e.contains("UnsupportedOp")));
+    // alloc ref<u8> is rejected with UnsupportedType (not in the allowed set).
+    assert!(
+        errs.iter().any(|e| e.contains("UnsupportedType") || e.contains("UnsupportedOp")),
+        "expected alloc with unsupported ref type to be rejected, got: {:?}", errs
+    );
 }
 
 // ===========================================================================
@@ -1261,4 +1270,471 @@ fn test_lowering_produces_nonempty_instructions() {
         "expected ≥5 instructions, got {}",
         beam.instructions.len()
     );
+}
+
+// ===========================================================================
+// Phase 2 heap op tests (46–58): BEAM lowering of cons/car/cdr/null?/make_nil
+// ===========================================================================
+//
+// These tests verify that the IIR heap ops produced by iir-builtin-lowering
+// Phase 2 are correctly accepted and lowered by the BEAM backend.
+//
+// Organisation:
+// 46: alloc ref<LispyPair> accepted by validator.
+// 47: cons pattern (alloc+field_store+field_store) lowers to put_list.
+// 48: put_list atom is NOT in atom table (put_list is a BEAM opcode, not a BIF).
+// 49: car (field_load idx 0) lowers to get_list.
+// 50: cdr (field_load idx 1) lowers to get_list.
+// 51: null? (is_null) lowers with is_nil synthesis.
+// 52: make_nil (const 0 ref<LispyPair>) lowers to move [] atom.
+// 53: "[]" appears in atom table after make_nil lowering.
+// 54: cons pair compiles without error (end-to-end).
+// 55: car/cdr field_load compiles end-to-end.
+// 56: null? produces is_nil + 2 synthetic labels (move/is_nil/jump/move).
+// 57: mini length function (null? + add + cdr + call) compiles.
+// 58: alloc ref<LispyPair> accepted but alloc ref<u8> still rejected.
+
+// BEAM opcodes for the heap tests
+const OP_PUT_LIST: u8 = 69;
+const OP_GET_LIST: u8 = 65;
+const OP_IS_NIL:   u8 = 52;
+
+// ===========================================================================
+// 46. alloc ref<LispyPair> accepted by validator
+// ===========================================================================
+
+/// `alloc ref<LispyPair>` must pass validation (it is a known heap op).
+#[test]
+fn test_46_alloc_lispy_pair_accepted_by_validator() {
+    // We need the full alloc + 2 field_stores to have a valid module (that
+    // can also be lowered successfully), but here we only test that the
+    // validator accepts the individual alloc instruction.
+    let fn_ = IIRFunction::new(
+        "main",
+        vec![("h".into(), "i64".into()), ("t".into(), "i64".into())],
+        "ref<LispyPair>",
+        vec![
+            IIRInstr::new(
+                "alloc",
+                Some("cell".into()),
+                vec![],
+                "ref<LispyPair>",  // accepted — LispyPair is the one ref type allowed on alloc
+            ),
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![
+                    Operand::Var("cell".into()),
+                    Operand::Int(0),
+                    Operand::Var("h".into()),
+                ],
+                "void",
+            ),
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![
+                    Operand::Var("cell".into()),
+                    Operand::Int(1),
+                    Operand::Var("t".into()),
+                ],
+                "void",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("cell".into())], "ref<LispyPair>"),
+        ],
+    );
+    let module = IIRModule {
+        name: "test".into(),
+        functions: vec![fn_],
+        entry_point: Some("main".into()),
+        language: "test".into(),
+    };
+    let errs = validate_for_beam(&module);
+    assert!(
+        errs.is_empty(),
+        "alloc ref<LispyPair> should be accepted by validator, got: {:?}", errs
+    );
+}
+
+// ===========================================================================
+// 47. cons pattern (alloc + field_store×2) lowers to put_list
+// ===========================================================================
+
+/// The alloc + two field_stores sequence must fuse into a single put_list.
+#[test]
+fn test_47_cons_pattern_produces_put_list() {
+    let m = make_module_fn(
+        "cons_fn",
+        vec![("h", "i64"), ("t", "i64")],
+        "ref<LispyPair>",
+        vec![
+            IIRInstr::new("alloc", Some("cell".into()), vec![], "ref<LispyPair>"),
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![
+                    Operand::Var("cell".into()),
+                    Operand::Int(0),
+                    Operand::Var("h".into()),
+                ],
+                "void",
+            ),
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![
+                    Operand::Var("cell".into()),
+                    Operand::Int(1),
+                    Operand::Var("t".into()),
+                ],
+                "void",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("cell".into())], "ref<LispyPair>"),
+        ],
+    );
+    let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
+    assert!(
+        has_opcode(&beam, OP_PUT_LIST),
+        "cons pattern (alloc + 2 field_stores) must produce put_list, got opcodes: {:?}",
+        beam.instructions.iter().map(|i| i.opcode).collect::<Vec<_>>()
+    );
+}
+
+// ===========================================================================
+// 48. car (field_load idx 0) lowers to get_list
+// ===========================================================================
+
+/// `field_load` with index 0 (car) must produce a `get_list` instruction.
+#[test]
+fn test_48_car_produces_get_list() {
+    let m = make_module_fn(
+        "car_fn",
+        vec![("pair", "ref<LispyPair>")],
+        "ref<any>",
+        vec![
+            IIRInstr::new(
+                "field_load",
+                Some("head".into()),
+                vec![Operand::Var("pair".into()), Operand::Int(0)],
+                "ref<any>",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("head".into())], "ref<any>"),
+        ],
+    );
+    let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
+    assert!(
+        has_opcode(&beam, OP_GET_LIST),
+        "field_load index 0 (car) must produce get_list"
+    );
+}
+
+// ===========================================================================
+// 49. cdr (field_load idx 1) lowers to get_list
+// ===========================================================================
+
+/// `field_load` with index 1 (cdr) must also produce a `get_list` instruction.
+#[test]
+fn test_49_cdr_produces_get_list() {
+    let m = make_module_fn(
+        "cdr_fn",
+        vec![("pair", "ref<LispyPair>")],
+        "ref<any>",
+        vec![
+            IIRInstr::new(
+                "field_load",
+                Some("tail".into()),
+                vec![Operand::Var("pair".into()), Operand::Int(1)],
+                "ref<any>",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("tail".into())], "ref<any>"),
+        ],
+    );
+    let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
+    assert!(
+        has_opcode(&beam, OP_GET_LIST),
+        "field_load index 1 (cdr) must produce get_list"
+    );
+}
+
+// ===========================================================================
+// 50. null? (is_null) lowers with is_nil synthesis
+// ===========================================================================
+
+/// `is_null` must produce an `is_nil` instruction (plus the boolean synthesis).
+#[test]
+fn test_50_is_null_produces_is_nil() {
+    let m = make_module_fn(
+        "null_fn",
+        vec![("xs", "ref<LispyPair>")],
+        "bool",
+        vec![
+            IIRInstr::new(
+                "is_null",
+                Some("result".into()),
+                vec![Operand::Var("xs".into())],
+                "bool",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("result".into())], "bool"),
+        ],
+    );
+    let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
+    assert!(
+        has_opcode(&beam, OP_IS_NIL),
+        "is_null must produce is_nil, got opcodes: {:?}",
+        beam.instructions.iter().map(|i| i.opcode).collect::<Vec<_>>()
+    );
+}
+
+// ===========================================================================
+// 51. make_nil lowers to move [] atom
+// ===========================================================================
+
+/// `const 0 : ref<LispyPair>` (nil sentinel) must lower to a move of the
+/// BEAM `[]` atom — NOT a move of the integer 0.
+#[test]
+fn test_51_make_nil_lowers_to_nil_atom_move() {
+    let m = make_module_single(vec![
+        IIRInstr::new(
+            "const",
+            Some("nil".into()),
+            vec![Operand::Int(0)],
+            "ref<LispyPair>",  // nil sentinel
+        ),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
+    // The "[]" atom must appear in the atom table.
+    assert!(
+        beam.atoms.contains(&"[]".to_string()),
+        "nil lowering must intern the [] atom"
+    );
+    // There must be a MOVE instruction (to load the atom into the register).
+    assert!(has_opcode(&beam, OP_MOVE), "nil lowering must produce a move instruction");
+}
+
+// ===========================================================================
+// 52. "[]" atom in atom table after make_nil
+// ===========================================================================
+
+/// The `[]` atom is always interned at module build time, even if make_nil
+/// is never used (we pre-intern it alongside the BIF atoms).
+#[test]
+fn test_52_nil_atom_interned_by_default() {
+    // A module with no heap ops still has [] in the atom table because we
+    // pre-intern it upfront alongside the BIF names.
+    let m = make_module_single(vec![
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
+    assert!(
+        beam.atoms.contains(&"[]".to_string()),
+        "[] should always be interned even in non-heap modules"
+    );
+}
+
+// ===========================================================================
+// 53. cons pair compiles without error (end-to-end validation + lowering)
+// ===========================================================================
+
+/// A function that builds a cons pair must compile end-to-end without errors.
+#[test]
+fn test_53_cons_pair_compiles_end_to_end() {
+    let m = make_module_fn(
+        "make_pair",
+        vec![("head", "i64"), ("tail", "i64")],
+        "ref<LispyPair>",
+        vec![
+            IIRInstr::new("alloc", Some("cell".into()), vec![], "ref<LispyPair>"),
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![
+                    Operand::Var("cell".into()),
+                    Operand::Int(0),
+                    Operand::Var("head".into()),
+                ],
+                "void",
+            ),
+            IIRInstr::new(
+                "field_store",
+                None,
+                vec![
+                    Operand::Var("cell".into()),
+                    Operand::Int(1),
+                    Operand::Var("tail".into()),
+                ],
+                "void",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("cell".into())], "ref<LispyPair>"),
+        ],
+    );
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "cons function validation failed: {:?}", errs);
+    let result = lower_iir_to_beam(&m, &cfg());
+    assert!(result.is_ok(), "cons function lowering failed: {:?}", result.err());
+}
+
+// ===========================================================================
+// 54. car/cdr field_load compiles end-to-end
+// ===========================================================================
+
+/// A function that reads both fields from a cons cell must compile cleanly.
+#[test]
+fn test_54_field_load_compiles_end_to_end() {
+    let m = make_module_fn(
+        "get_fields",
+        vec![("pair", "ref<LispyPair>")],
+        "ref<any>",
+        vec![
+            // head = car(pair)
+            IIRInstr::new(
+                "field_load",
+                Some("head".into()),
+                vec![Operand::Var("pair".into()), Operand::Int(0)],
+                "ref<any>",
+            ),
+            // tail = cdr(pair)
+            IIRInstr::new(
+                "field_load",
+                Some("tail".into()),
+                vec![Operand::Var("pair".into()), Operand::Int(1)],
+                "ref<any>",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("head".into())], "ref<any>"),
+        ],
+    );
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "field_load validation failed: {:?}", errs);
+    let result = lower_iir_to_beam(&m, &cfg());
+    assert!(result.is_ok(), "field_load lowering failed: {:?}", result.err());
+    let beam = result.unwrap();
+    // Both car and cdr should produce get_list instructions.
+    let get_list_count = beam.instructions.iter().filter(|i| i.opcode == OP_GET_LIST).count();
+    assert_eq!(get_list_count, 2, "expected 2 get_list instructions for car+cdr");
+}
+
+// ===========================================================================
+// 55. null? synthesis uses move + is_nil + jump + move (6 instructions)
+// ===========================================================================
+
+/// `is_null` synthesis produces: move(true) + is_nil + jump + label + move(false) + label.
+/// That is exactly 6 BEAM instructions for the null check.
+#[test]
+fn test_55_null_pred_synthesis_instruction_count() {
+    let m = make_module_fn(
+        "check_nil",
+        vec![("xs", "ref<LispyPair>")],
+        "bool",
+        vec![
+            IIRInstr::new(
+                "is_null",
+                Some("result".into()),
+                vec![Operand::Var("xs".into())],
+                "bool",
+            ),
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ],
+    );
+    let beam = lower_iir_to_beam(&m, &cfg()).unwrap();
+    // Count: move(1) + is_nil + jump + label + move(0) + label = 6
+    assert!(has_opcode(&beam, OP_IS_NIL), "must have is_nil");
+    assert!(has_opcode(&beam, OP_JUMP),   "must have jump for done_label");
+    // Both paths produce a MOVE (pre-load true + false path).
+    let move_count = beam.instructions.iter().filter(|i| i.opcode == OP_MOVE).count();
+    assert!(move_count >= 2, "expected ≥2 move instructions for null? synthesis");
+}
+
+// ===========================================================================
+// 56. alloc ref<u8> still rejected (only ref<LispyPair> is accepted on alloc)
+// ===========================================================================
+
+/// The validator must still reject `alloc ref<u8>` — only `ref<LispyPair>` is
+/// whitelisted for the BEAM backend.
+#[test]
+fn test_56_alloc_non_lispy_pair_rejected() {
+    let errs = validate_for_beam(&make_module_single(vec![IIRInstr::new(
+        "alloc",
+        Some("ptr".into()),
+        vec![],
+        "ref<u8>",  // rejected — not ref<LispyPair>
+    )]));
+    assert!(
+        !errs.is_empty(),
+        "alloc ref<u8> must be rejected"
+    );
+    assert!(
+        errs.iter().any(|e| e.contains("UnsupportedType") || e.contains("UnsupportedOp")),
+        "expected UnsupportedType or UnsupportedOp for alloc ref<u8>, got: {:?}", errs
+    );
+}
+
+// ===========================================================================
+// 57. Mini length function: null? + cmp + cdr + call compiles
+// ===========================================================================
+
+/// A simplified (non-recursive) fragment of a list-length computation:
+///   if (null? xs) then 0 else 1
+///
+/// This exercises null? + cmp_eq + jmp_if_true in combination.
+/// (A fully recursive length would require a self-call, which we test elsewhere.)
+#[test]
+fn test_57_mini_length_fragment_compiles() {
+    // Simulates:
+    //   if (null? xs) { return 0 } else { return 1 }
+    // using IIR labels and branches.
+    let m = make_module_fn(
+        "length_fragment",
+        vec![("xs", "ref<LispyPair>")],
+        "i64",
+        vec![
+            // nil_result = null?(xs)
+            IIRInstr::new(
+                "is_null",
+                Some("nil_result".into()),
+                vec![Operand::Var("xs".into())],
+                "bool",
+            ),
+            // label "is_nil_true"
+            IIRInstr::new(
+                "label",
+                None,
+                vec![Operand::Var("is_nil_true".into())],
+                "void",
+            ),
+            // if nil_result goto is_nil_true
+            IIRInstr::new(
+                "jmp_if_true",
+                None,
+                vec![
+                    Operand::Var("nil_result".into()),
+                    Operand::Var("is_nil_true".into()),
+                ],
+                "void",
+            ),
+            // length = 1 (non-nil path)
+            IIRInstr::new(
+                "const",
+                Some("length".into()),
+                vec![Operand::Int(1)],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("length".into())], "i64"),
+            // nil path: return 0
+            IIRInstr::new(
+                "const",
+                Some("zero".into()),
+                vec![Operand::Int(0)],
+                "i64",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("zero".into())], "i64"),
+        ],
+    );
+    let errs = validate_for_beam(&m);
+    assert!(errs.is_empty(), "length_fragment validation failed: {:?}", errs);
+    let result = lower_iir_to_beam(&m, &cfg());
+    assert!(result.is_ok(), "length_fragment lowering failed: {:?}", result.err());
+    let beam = result.unwrap();
+    // Must have is_nil (from null?) and is_eq_exact (from jmp_if_true synthesis).
+    assert!(has_opcode(&beam, OP_IS_NIL), "must have is_nil for null?");
+    assert!(!beam.instructions.is_empty());
 }

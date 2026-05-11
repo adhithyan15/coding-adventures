@@ -23,13 +23,33 @@
 //! | `EmptyModule` | Module has zero functions |
 //! | `EmptyFunction` | A function has zero instructions |
 //! | `UntypedInstruction` | `type_hint` is `"any"` or `"polymorphic"` |
-//! | `UnsupportedType` | `type_hint` is `"str"` or starts with `"ref<"` |
+//! | `UnsupportedType` | `type_hint` is `"str"` or starts with `"ref<"` — see exceptions |
 //! | `UnsupportedType` (float const) | `op == "const"` and src is `Operand::Float` |
 //! | `UnsupportedOp` | op is a runtime/memory/IO/GC opcode (list below) |
 //!
 //! Unsupported ops: `call_builtin`, `io_in`, `io_out`, `cast`, `load_mem`,
-//! `store_mem`, `alloc`, `box`, `unbox`, `field_load`, `field_store`,
-//! `is_null`, `safepoint`.
+//! `store_mem`, `box`, `unbox`, `safepoint`.
+//!
+//! **Phase 2 heap ops accepted by this backend:**
+//!
+//! After `iir-builtin-lowering` Phase 2 runs, the following IIR heap opcodes
+//! are emitted and must be accepted (not rejected) by this validator:
+//!
+//! | Op | Accepted when |
+//! |----|--------------|
+//! | `alloc` | `type_hint == "ref<LispyPair>"` |
+//! | `field_load` | any (type_hint is `"ref<any>"` or similar) |
+//! | `field_store` | any (type_hint is `"void"`) |
+//! | `is_null` | `type_hint == "bool"` |
+//!
+//! These ops are lowered to BEAM instructions by `lower.rs`:
+//! - `alloc` + adjacent `field_store`s → `put_list`
+//! - `field_load` → `get_list`
+//! - `is_null` → synthesized `is_nil` + boolean synthesis
+//!
+//! The `ref<LispyPair>` type on `alloc` is also accepted so that `const`
+//! instructions representing nil (`const 0 : ref<LispyPair>`) can pass
+//! through to the lowering pass which converts them to a BEAM `[]` atom move.
 
 use interpreter_ir::{IIRModule, Operand};
 
@@ -38,15 +58,19 @@ use interpreter_ir::{IIRModule, Operand};
 // ---------------------------------------------------------------------------
 //
 // These opcodes all have runtime / OS / memory semantics that cannot be
-// expressed as pure BEAM integer arithmetic:
+// expressed as pure BEAM integer arithmetic or list operations:
 //
-// - `call_builtin`  — host built-in; BEAM has no host bridge in this lowering.
+// - `call_builtin`  — host built-in; should be fully lowered before reaching
+//                     the backend (by iir-builtin-lowering Phases 1 and 2).
 // - `io_in/io_out`  — raw I/O; BEAM does this via Erlang I/O modules, not opcodes.
 // - `cast`          — type reinterpretation; BEAM is dynamically typed at runtime.
 // - `load_mem/store_mem` — raw pointer access; BEAM has no unsafe memory.
-// - `alloc/box/unbox/field_load/field_store/is_null` — GC heap ops; BEAM
-//   manages its own heap; these are lowered separately through NIFs.
+// - `box/unbox`     — explicit boxing; BEAM does not expose box/unbox as instructions.
 // - `safepoint`     — GC coordination; handled by the BEAM runtime itself.
+//
+// Note: `alloc`, `field_load`, `field_store`, and `is_null` are intentionally
+// NOT in this list.  They are produced by iir-builtin-lowering Phase 2 and
+// are lowered to BEAM put_list / get_list / is_nil instructions by lower.rs.
 
 const UNSUPPORTED_OPS: &[&str] = &[
     "call_builtin",
@@ -55,12 +79,12 @@ const UNSUPPORTED_OPS: &[&str] = &[
     "cast",
     "load_mem",
     "store_mem",
-    "alloc",
+    // "alloc"       — accepted: lowered to put_list (via alloc+field_store pattern)
     "box",
     "unbox",
-    "field_load",
-    "field_store",
-    "is_null",
+    // "field_load"  — accepted: lowered to get_list
+    // "field_store" — accepted: lowered as part of the put_list pattern
+    // "is_null"     — accepted: lowered to is_nil synthesis
     "safepoint",
 ];
 
@@ -168,9 +192,17 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
             // integer BIF equivalent for string arithmetic; we do not emit
             // string handling code in v1.
             //
-            // `"ref<…>"` — heap pointer types require GC-managed terms; BEAM
-            // does have tuples, lists, and binaries, but we do not map IIR
-            // heap ops to them here.
+            // `"ref<…>"` — heap pointer types require GC-managed terms.
+            // EXCEPTION: the Phase 2 heap lowering pass produces instructions
+            // with specific reference types that this backend knows how to lower:
+            //
+            //   - `alloc` with `"ref<LispyPair>"` → put_list (with adjacent field_stores)
+            //   - `const` with `"ref<LispyPair>"` → move {a,"[]"} (nil sentinel)
+            //   - `field_load` with `"ref<any>"` → get_list
+            //   - `field_store` with `"void"` → part of put_list pattern
+            //   - `is_null` with `"bool"` → is_nil synthesis
+            //
+            // Any other ref<…> type on any other op is rejected as before.
             if instr.type_hint == "str" {
                 errors.push(format!(
                     "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
@@ -178,11 +210,43 @@ pub fn validate_for_beam(module: &IIRModule) -> Vec<String> {
                     func.name, instr.op
                 ));
             } else if instr.type_hint.starts_with("ref<") {
-                errors.push(format!(
-                    "UnsupportedType: function {:?}, op {:?} has reference type {:?}; \
-                     heap pointer types are not supported in this BEAM backend",
-                    func.name, instr.op, instr.type_hint
-                ));
+                // Allow the specific (op, type_hint) combinations produced by
+                // the Phase 2 heap lowering pass.  Everything else is rejected.
+                let accepted = match instr.op.as_str() {
+                    // alloc ref<LispyPair> — heap-allocate a cons cell.
+                    // Lowered to put_list in combination with the two field_stores.
+                    "alloc" if instr.type_hint == "ref<LispyPair>" => true,
+
+                    // const ref<LispyPair> with Int(0) — nil sentinel.
+                    // Lowered to `move {a,"[]"} {x,rd}`.
+                    "const" if instr.type_hint == "ref<LispyPair>" => true,
+
+                    // field_load ref<any> — read car or cdr from a cons cell.
+                    // Lowered to get_list.
+                    "field_load" => true,
+
+                    // field_store void — write head or tail into a fresh cons cell.
+                    // Consumed by the put_list pattern along with its preceding alloc.
+                    "field_store" if instr.type_hint == "void" => true,
+
+                    _ => false,
+                };
+
+                // Also allow ret and field_load with any ref type — `ret`
+                // returns whatever the function produces, and functions may
+                // return cons cells (ref<LispyPair>) or any-typed values
+                // (ref<any>).  field_load already handled above.
+                let accepted = accepted || matches!(instr.op.as_str(), "ret" | "field_load");
+
+                if !accepted {
+                    errors.push(format!(
+                        "UnsupportedType: function {:?}, op {:?} has reference type {:?}; \
+                         heap pointer types are not supported in this BEAM backend \
+                         (only ref<LispyPair> on alloc/const, ref<any> on field_load, \
+                         and ref<*> on ret are accepted)",
+                        func.name, instr.op, instr.type_hint
+                    ));
+                }
             }
 
             // ── Check 5: float const ─────────────────────────────────────────
