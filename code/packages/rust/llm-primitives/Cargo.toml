@@ -1,8 +1,8 @@
 [package]
 name = "llm-primitives"
-version = "0.3.0"
+version = "0.4.0"
 edition = "2021"
-description = "LM00b — typed LLM primitives layer. v0.1: shared scaffolding (Role, GatewayConfig, LlmCallRecord, PrimitiveError, prompt-version constants). v0.2: `entail` (bidirectional NLI). v0.3: `render_node` (faithful natural-language rendering of an IR node). Remaining primitives ship in follow-up PRs."
+description = "LM00b — typed LLM primitives layer. v0.1: shared scaffolding. v0.2: `entail` (NLI). v0.3: `render_node` (IR→text). v0.4: `judge_plausibility` (ADJ05 binary judge). Remaining primitives ship in follow-up PRs."
 
 [dependencies]
 llm-gateway = { path = "../llm-gateway" }
