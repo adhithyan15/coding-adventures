@@ -173,6 +173,7 @@ members = [
     "logic-engine",
     "adjudication-ir",
     "prolog-lexer",
+    "prolog-parser",
     "adjudication-connector",
     "adjudication-coverage",
     "loss-functions",
