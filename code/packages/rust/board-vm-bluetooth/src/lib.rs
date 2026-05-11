@@ -1,3 +1,4 @@
+use std::fs::{self, File, OpenOptions};
 use std::io::{self, Read, Write};
 
 use board_vm_client::{RawFrameTransport, TransportError};
@@ -201,6 +202,103 @@ pub trait BluetoothBackend {
         &mut self,
         endpoint: &RfcommEndpoint,
     ) -> Result<Self::RfcommStream, BluetoothOpenError>;
+}
+
+pub trait MacosRfcommDeviceResolver {
+    fn rfcomm_device_paths(&mut self) -> Result<Vec<String>, BluetoothOpenError>;
+}
+
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
+pub struct MacosDevRfcommDeviceResolver;
+
+impl MacosRfcommDeviceResolver for MacosDevRfcommDeviceResolver {
+    fn rfcomm_device_paths(&mut self) -> Result<Vec<String>, BluetoothOpenError> {
+        let entries = fs::read_dir("/dev").map_err(|error| BluetoothOpenError::Backend {
+            message: format!("failed to scan /dev for macOS RFCOMM devices: {error}"),
+        })?;
+        let mut paths = Vec::new();
+        for entry in entries {
+            let entry = entry.map_err(|error| BluetoothOpenError::Backend {
+                message: format!("failed to read macOS RFCOMM device entry: {error}"),
+            })?;
+            let name = entry.file_name();
+            let name = name.to_string_lossy();
+            if name.starts_with("cu.") || name.starts_with("tty.") {
+                paths.push(format!("/dev/{name}"));
+            }
+        }
+        Ok(paths)
+    }
+}
+
+pub struct MacosBluetoothBackend<R = MacosDevRfcommDeviceResolver> {
+    resolver: R,
+}
+
+impl MacosBluetoothBackend<MacosDevRfcommDeviceResolver> {
+    pub fn new() -> Self {
+        Self::with_resolver(MacosDevRfcommDeviceResolver)
+    }
+}
+
+impl Default for MacosBluetoothBackend<MacosDevRfcommDeviceResolver> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl<R> MacosBluetoothBackend<R> {
+    pub const fn with_resolver(resolver: R) -> Self {
+        Self { resolver }
+    }
+
+    pub const fn resolver(&self) -> &R {
+        &self.resolver
+    }
+
+    pub fn resolver_mut(&mut self) -> &mut R {
+        &mut self.resolver
+    }
+}
+
+impl<R> BluetoothBackend for MacosBluetoothBackend<R>
+where
+    R: MacosRfcommDeviceResolver,
+{
+    type BleGattLink = UnsupportedBleGattLink;
+    type RfcommStream = File;
+
+    fn open_ble_gatt(
+        &mut self,
+        _endpoint: &BleGattEndpoint,
+    ) -> Result<Self::BleGattLink, BluetoothOpenError> {
+        Err(BluetoothOpenError::Backend {
+            message: "macOS BLE GATT opening is not wired yet".to_owned(),
+        })
+    }
+
+    fn open_rfcomm(
+        &mut self,
+        endpoint: &RfcommEndpoint,
+    ) -> Result<Self::RfcommStream, BluetoothOpenError> {
+        let paths = self.resolver.rfcomm_device_paths()?;
+        let path = macos_rfcomm_device_path(endpoint, paths).ok_or_else(|| {
+            BluetoothOpenError::Backend {
+                message: format!(
+                    "no macOS RFCOMM serial device found for {} channel {}",
+                    endpoint.device, endpoint.channel
+                ),
+            }
+        })?;
+
+        OpenOptions::new()
+            .read(true)
+            .write(true)
+            .open(&path)
+            .map_err(|error| BluetoothOpenError::Backend {
+                message: format!("failed to open macOS RFCOMM device {path}: {error}"),
+            })
+    }
 }
 
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
@@ -517,6 +615,39 @@ where
     }
 }
 
+pub fn macos_rfcomm_device_path<I, P>(endpoint: &RfcommEndpoint, paths: I) -> Option<String>
+where
+    I: IntoIterator<Item = P>,
+    P: AsRef<str>,
+{
+    let device = endpoint.device.trim();
+    if device.starts_with("/dev/") {
+        return Some(device.to_owned());
+    }
+
+    let normalized_device = normalize_macos_rfcomm_token(device);
+    if normalized_device.is_empty() {
+        return None;
+    }
+
+    let mut matches = paths
+        .into_iter()
+        .map(|path| path.as_ref().to_owned())
+        .filter(|path| {
+            let normalized_path = normalize_macos_rfcomm_token(macos_rfcomm_file_name(path));
+            normalized_path.contains(&normalized_device)
+        })
+        .collect::<Vec<_>>();
+    matches.sort_by_key(|path| {
+        (
+            macos_rfcomm_path_rank(path),
+            macos_rfcomm_file_name(path).len(),
+            path.len(),
+        )
+    });
+    matches.into_iter().next()
+}
+
 pub fn parse_bluetooth_endpoint(
     endpoint: &str,
 ) -> Result<BluetoothEndpoint, BluetoothEndpointError> {
@@ -781,6 +912,29 @@ fn unsupported_bluetooth_io_error() -> io::Error {
     )
 }
 
+fn macos_rfcomm_file_name(path: &str) -> &str {
+    path.rsplit('/').next().unwrap_or(path)
+}
+
+fn macos_rfcomm_path_rank(path: &str) -> u8 {
+    let file_name = macos_rfcomm_file_name(path);
+    if file_name.starts_with("cu.") {
+        0
+    } else if file_name.starts_with("tty.") {
+        1
+    } else {
+        2
+    }
+}
+
+fn normalize_macos_rfcomm_token(value: &str) -> String {
+    value
+        .bytes()
+        .filter(|byte| byte.is_ascii_alphanumeric())
+        .map(|byte| byte.to_ascii_lowercase() as char)
+        .collect()
+}
+
 fn endpoint_scheme(endpoint: &str) -> &str {
     endpoint
         .split_once("://")
@@ -1014,6 +1168,17 @@ mod tests {
             self.rfcomm_opened
                 .push((endpoint.device.clone(), endpoint.channel));
             Ok(FakeRfcommStream::new(std::mem::take(&mut self.rfcomm_read)))
+        }
+    }
+
+    #[derive(Default)]
+    struct FixedRfcommPaths {
+        paths: Vec<String>,
+    }
+
+    impl MacosRfcommDeviceResolver for FixedRfcommPaths {
+        fn rfcomm_device_paths(&mut self) -> Result<Vec<String>, BluetoothOpenError> {
+            Ok(self.paths.clone())
         }
     }
 
@@ -1367,6 +1532,64 @@ Bluetooth:
             result.err(),
             Some(BluetoothOpenError::UnsupportedPlatform { platform })
                 if platform == std::env::consts::OS
+        ));
+    }
+
+    #[test]
+    fn resolves_macos_rfcomm_device_paths_for_names_and_addresses() {
+        let named = parse_rfcomm_endpoint("btspp://ESP32-BoardVM:3").unwrap();
+        let addressed = parse_rfcomm_endpoint("btspp://AA:BB:CC:DD:EE:FF:3").unwrap();
+
+        assert_eq!(
+            macos_rfcomm_device_path(
+                &named,
+                [
+                    "/dev/tty.ESP32-BoardVM-SPPDev",
+                    "/dev/cu.ESP32-BoardVM-SPPDev",
+                    "/dev/cu.Unrelated",
+                ],
+            )
+            .as_deref(),
+            Some("/dev/cu.ESP32-BoardVM-SPPDev")
+        );
+        assert_eq!(
+            macos_rfcomm_device_path(
+                &addressed,
+                ["/dev/cu.AA-BB-CC-DD-EE-FF-SPPDev", "/dev/cu.Unrelated"],
+            )
+            .as_deref(),
+            Some("/dev/cu.AA-BB-CC-DD-EE-FF-SPPDev")
+        );
+    }
+
+    #[test]
+    fn macos_backend_opens_resolved_rfcomm_serial_device() {
+        let endpoint = parse_rfcomm_endpoint("btspp://ESP32-BoardVM:3").unwrap();
+        let path =
+            std::env::temp_dir().join(format!("cu.ESP32-BoardVM-SPPDev-{}", std::process::id()));
+        std::fs::File::create(&path).unwrap();
+
+        let mut backend = MacosBluetoothBackend::with_resolver(FixedRfcommPaths {
+            paths: vec![path.to_string_lossy().into_owned()],
+        });
+        let opened = backend.open_rfcomm(&endpoint).unwrap();
+
+        drop(opened);
+        std::fs::remove_file(path).unwrap();
+    }
+
+    #[test]
+    fn macos_backend_keeps_ble_gatt_explicitly_unwired() {
+        let endpoint = parse_ble_gatt_endpoint(&format!(
+            "ble://esp32?service={SERVICE_UUID}&write={WRITE_UUID}&notify={NOTIFY_UUID}"
+        ))
+        .unwrap();
+        let mut backend = MacosBluetoothBackend::with_resolver(FixedRfcommPaths::default());
+
+        assert!(matches!(
+            backend.open_ble_gatt(&endpoint),
+            Err(BluetoothOpenError::Backend { message })
+                if message.contains("BLE GATT")
         ));
     }
 }
