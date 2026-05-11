@@ -243,6 +243,7 @@ members = [
     "debug-sidecar",
     "native-debug-info",
     "virtual-machine",
+    "vm-concurrency",
     "vm-core",
     "vm-runtime",
     "vm-type-suggestions",
