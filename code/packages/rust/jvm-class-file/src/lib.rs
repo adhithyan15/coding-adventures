@@ -26,6 +26,98 @@ pub const ACC_PUBLIC: u16 = 0x0001;
 pub const ACC_STATIC: u16 = 0x0008;
 pub const ACC_SUPER: u16 = 0x0020;
 
+// ---------------------------------------------------------------------------
+// Heap-operation JVM bytecode constants (Phase 2 — Object[] cons cells)
+// ---------------------------------------------------------------------------
+//
+// These opcodes are needed to implement `cons`, `car`, `cdr`, `is_null`, and
+// `nil` using `Object[]` arrays as pair cells.  No class definitions are
+// required — the JVM's native GC manages the array lifetime automatically.
+//
+// Reference: JVMS §6.5 for each opcode.
+
+/// `aconst_null` (0x01) — push `null` reference onto the stack.
+///
+/// Used to represent the Lispy `nil` value: `nil` becomes `null` in the JVM.
+pub const ACONST_NULL: u8 = 0x01;
+
+/// `aload` (0x19) — load a reference-typed local variable onto the stack.
+///
+/// Operand: one-byte local-variable index.  For indices > 255, the `wide`
+/// prefix (0xC4) can be used (not implemented here; IIR variables are few).
+pub const ALOAD: u8 = 0x19;
+
+/// `astore` (0x3A) — store a reference from the stack into a local variable.
+///
+/// Operand: one-byte local-variable index.
+pub const ASTORE: u8 = 0x3A;
+
+/// `dup` (0x59) — duplicate the top-of-stack value (any category-1 type).
+///
+/// Used in the `cons` sequence: after `anewarray` we `dup` the array
+/// reference so we can `aastore` into it twice while keeping the original
+/// reference alive for the final `astore`.
+pub const DUP: u8 = 0x59;
+
+/// `aaload` (0x32) — load a reference-typed element from an array.
+///
+/// Stack before: `arrayref index`
+/// Stack after:  `value`
+///
+/// Used for `car` (index 0) and `cdr` (index 1).
+pub const AALOAD: u8 = 0x32;
+
+/// `aastore` (0x53) — store a reference into a reference-typed array.
+///
+/// Stack before: `arrayref index value`
+/// Stack after:  (empty — side effect only)
+///
+/// Used to write `head` and `tail` into the cons-cell array.
+pub const AASTORE: u8 = 0x53;
+
+/// `anewarray` (0xBD) — allocate a new array of references.
+///
+/// Operand: two-byte constant-pool index of the element class.
+/// Stack before: `count` (int)
+/// Stack after:  `arrayref`
+///
+/// We use `[Ljava/lang/Object;` (Object array) as the element type so that
+/// any Lispy value — integers boxed, nested pairs, nil — can be stored.
+pub const ANEWARRAY: u8 = 0xBD;
+
+/// `ifnull` (0xC6) — branch if the top-of-stack reference is `null`.
+///
+/// Operand: signed 16-bit branch offset measured from the opcode byte.
+/// Stack before: `value`
+/// Stack after:  (empty — consumed)
+///
+/// Used in `is_null` to test whether a cons cell is nil.
+pub const IFNULL: u8 = 0xC6;
+
+/// `ifnonnull` (0xC7) — branch if the top-of-stack reference is NOT `null`.
+///
+/// Operand: signed 16-bit branch offset measured from the opcode byte.
+/// Stack: same as `ifnull`.
+///
+/// Included for completeness; not used in the current lowering patterns but
+/// available for future optimisations (e.g. fast non-nil path in `cdr`).
+pub const IFNONNULL: u8 = 0xC7;
+
+/// `goto` (0xA7) — unconditional branch.
+///
+/// Operand: signed 16-bit branch offset measured from the opcode byte.
+/// This is the same opcode already used in the integer-comparison synthesis
+/// pattern; we re-export it here alongside the other heap-op opcodes for
+/// clarity (the constant in `lower.rs` is `GOTO = 0xA7`).
+pub const GOTO_OPCODE: u8 = 0xA7;
+
+/// `swap` (0x5F) — swap the top two category-1 values on the operand stack.
+///
+/// Used in the `is_null` pattern: after pushing `iconst_1` as the "assume
+/// true" placeholder, `swap` places the reference under examination on top
+/// so `ifnull` can consume it.
+pub const SWAP: u8 = 0x5F;
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ClassFileFormatError {
     message: String,
@@ -693,6 +785,25 @@ impl ConstantPoolBuilder {
         let mut payload = vec![CONSTANT_STRING];
         append_u2(&mut payload, string_index);
         self.add(format!("String:{value}"), payload)
+    }
+
+    /// Add a `Class` constant-pool entry for the JVM Object array descriptor
+    /// `"[Ljava/lang/Object;"`.
+    ///
+    /// `anewarray` requires a `Class` constant-pool index that names the
+    /// element type (not the array type — the JVM spec §6.5 *anewarray* says
+    /// the operand index must refer to the element class, and the runtime
+    /// creates the `[L…;` array type for us).  For `Object[]` the element is
+    /// `"java/lang/Object"`.
+    ///
+    /// However some JVM implementations also accept the array descriptor
+    /// directly.  We expose both so callers can choose.  The lowering pass
+    /// uses the element class form.
+    #[allow(dead_code)]
+    pub fn object_array_class_ref(&mut self) -> Result<u16, ClassFileFormatError> {
+        // `anewarray java/lang/Object` — element type is Object, JVM builds the
+        // Object[] array type.  This is the standard pattern in javac output.
+        self.class_ref("java/lang/Object")
     }
 }
 

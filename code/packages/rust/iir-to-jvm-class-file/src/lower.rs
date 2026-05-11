@@ -190,6 +190,26 @@ const GOTO: u8 = 0xA7;      // unconditional branch (2-byte offset)
 // ── Misc ───────────────────────────────────────────────────────────────────
 const WIDE: u8 = 0xC4; // prefix for wide-index variants of load/store
 
+// ── Heap / reference ops (Phase 2 — Object[] cons cells) ──────────────────
+//
+// These opcodes implement `cons` (alloc + field_store×2), `car`/`cdr`
+// (field_load), `is_null`, and `nil` (const ref<LispyPair>) using plain
+// `Object[]` arrays.  No Java class definitions are required — the JVM GC
+// manages array lifetimes natively.
+//
+// See `jvm_class_file` for the full documentation of each opcode.
+
+const ACONST_NULL: u8 = 0x01; // push null reference
+const ALOAD: u8 = 0x19;        // aload  <index>  — load reference from local
+const ASTORE: u8 = 0x3A;       // astore <index>  — store reference to local
+const AALOAD: u8 = 0x32;       // aaload           — array[index] → reference
+const AASTORE: u8 = 0x53;      // aastore          — array[index] ← reference
+const ANEWARRAY: u8 = 0xBD;    // anewarray <cp>  — allocate reference array
+const IFNULL: u8 = 0xC6;       // ifnull  <off>   — branch if top is null
+const DUP: u8 = 0x59;          // dup              — duplicate TOS (any cat-1)
+#[allow(dead_code)]
+const SWAP: u8 = 0x5F;         // swap             — swap top two cat-1 values (future use)
+
 // ---------------------------------------------------------------------------
 // IIRJvmError
 // ---------------------------------------------------------------------------
@@ -403,6 +423,7 @@ struct Fixup {
 /// - `Long`   — Java `long` (occupies two slots)
 /// - `Float`  — Java `float`
 /// - `Double` — Java `double` (occupies two slots)
+/// - `Ref`    — Java object reference (`Object[]` for LispyPair cons cells)
 ///
 /// We also add `Void` for `ret_void` and `_` (the return type of methods that
 /// return nothing).
@@ -418,6 +439,13 @@ enum JvmType {
     Double,
     /// Maps to JVM `void` (descriptor `"V"`; no slot).
     Void,
+    /// Maps to a JVM reference type (descriptor `"Ljava/lang/Object;"`).
+    ///
+    /// Phase 2 uses this for `ref<LispyPair>` — cons cells stored as
+    /// `Object[]` arrays.  Reference locals use `aload`/`astore` instead of
+    /// `iload`/`istore`, and they occupy exactly one local slot (unlike `long`
+    /// and `double` which take two).
+    Ref,
 }
 
 impl JvmType {
@@ -425,7 +453,7 @@ impl JvmType {
     ///
     /// The JVM allocates one slot per 32-bit value and two slots per 64-bit
     /// value (`long` and `double`).  All other JVM primitive types fit in one
-    /// slot.
+    /// slot, including object references.
     fn slot_width(self) -> u16 {
         match self {
             JvmType::Long | JvmType::Double => 2,
@@ -443,6 +471,7 @@ impl JvmType {
             JvmType::Float => "F",
             JvmType::Double => "D",
             JvmType::Void => "V",
+            JvmType::Ref => "Ljava/lang/Object;",
         }
     }
 }
@@ -469,6 +498,10 @@ fn iir_type_to_jvm(hint: &str) -> Option<JvmType> {
         "f32" => Some(JvmType::Float),
         "f64" => Some(JvmType::Double),
         "void" | "" => Some(JvmType::Void),
+        // Phase 2: LispyPair cons cells are represented as Object[] references.
+        // Any variable holding a pair (or nil) gets a Ref slot, which uses
+        // aload/astore rather than iload/istore.
+        "ref<LispyPair>" => Some(JvmType::Ref),
         // Catch-all: return None, let caller decide
         _ => None,
     }
@@ -508,6 +541,10 @@ fn type_to_jvm_descriptor(hint: &str) -> &str {
         "f32" => "F",
         "f64" => "D",
         "void" | "" => "V",
+        // Phase 2: LispyPair cons cells are Object[] references.
+        // The JVM method descriptor for a reference parameter/return is
+        // "Ljava/lang/Object;" (the erasure of the actual Object[] type).
+        "ref<LispyPair>" => "Ljava/lang/Object;",
         _ => "I", // default for unknown — validator should have caught this
     }
 }
@@ -579,6 +616,25 @@ fn emit_dload(code: &mut Vec<u8>, idx: u16) {
     }
 }
 
+/// Emit an `aload` instruction (load object reference from local slot).
+///
+/// Used for `ref<LispyPair>` variables (cons cells represented as `Object[]`).
+/// Like `iload`, the JVM has short-form `aload_0`..`aload_3` opcodes (0x2A–0x2D),
+/// a 1-byte-index form `aload N` for slots ≤255, and a `wide aload` form for
+/// larger indices.  We emit the 1-byte form for all indices ≤255 (short forms
+/// for 0–3 are a minor optimisation we skip for code simplicity).
+fn emit_aload(code: &mut Vec<u8>, idx: u16) {
+    if idx <= 255 {
+        code.push(ALOAD);
+        code.push(idx as u8);
+    } else {
+        // wide aload for slot indices 256–65535.
+        code.push(WIDE);
+        code.push(ALOAD);
+        code.extend_from_slice(&idx.to_be_bytes());
+    }
+}
+
 /// Emit the appropriate typed load instruction for a slot and JVM type.
 fn emit_typed_load(code: &mut Vec<u8>, idx: u16, jvm_type: JvmType) {
     match jvm_type {
@@ -586,6 +642,7 @@ fn emit_typed_load(code: &mut Vec<u8>, idx: u16, jvm_type: JvmType) {
         JvmType::Long => emit_lload(code, idx),
         JvmType::Float => emit_fload(code, idx),
         JvmType::Double => emit_dload(code, idx),
+        JvmType::Ref => emit_aload(code, idx),
         JvmType::Void => {} // nothing to load for void
     }
 }
@@ -645,6 +702,21 @@ fn emit_dstore(code: &mut Vec<u8>, idx: u16) {
     }
 }
 
+/// Emit an `astore` instruction (store object reference to local slot).
+///
+/// Counterpart to [`emit_aload`] — stores an `Object[]` cons-cell reference
+/// from the operand stack into the named local variable slot.
+fn emit_astore(code: &mut Vec<u8>, idx: u16) {
+    if idx <= 255 {
+        code.push(ASTORE);
+        code.push(idx as u8);
+    } else {
+        code.push(WIDE);
+        code.push(ASTORE);
+        code.extend_from_slice(&idx.to_be_bytes());
+    }
+}
+
 /// Emit the appropriate typed store instruction for a slot and JVM type.
 fn emit_typed_store(code: &mut Vec<u8>, idx: u16, jvm_type: JvmType) {
     match jvm_type {
@@ -652,6 +724,7 @@ fn emit_typed_store(code: &mut Vec<u8>, idx: u16, jvm_type: JvmType) {
         JvmType::Long => emit_lstore(code, idx),
         JvmType::Float => emit_fstore(code, idx),
         JvmType::Double => emit_dstore(code, idx),
+        JvmType::Ref => emit_astore(code, idx),
         JvmType::Void => {} // nothing to store for void
     }
 }
@@ -1081,7 +1154,16 @@ fn lower_function(
         })
     };
 
-    for instr in &func.instructions {
+    // Pre-register java/lang/Object class in the constant pool.
+    // Required for `anewarray` (cons cell allocation).
+    let object_class_idx = cp.add_class("java/lang/Object");
+
+    // Index-based loop so we can look ahead for the `alloc + field_store ×2`
+    // cons-cell pattern (see the `alloc` arm below).
+    let instrs = &func.instructions;
+    let mut i = 0usize;
+    while i < instrs.len() {
+        let instr = &instrs[i];
         // Resolve the instruction's own JVM type (best effort; void is OK).
         let instr_jtype = iir_type_to_jvm(&instr.type_hint).unwrap_or(JvmType::Int);
 
@@ -1101,18 +1183,35 @@ fn lower_function(
             // ── const ────────────────────────────────────────────────────────
             //
             // Load a compile-time constant into a local variable slot.
-            // The operand is an immediate: Int, Float, or Bool.
+            // The operand is an immediate: Int, Float, Bool, or (for nil) any
+            // value when type_hint is `"ref<LispyPair>"`.
+            //
+            // # `nil` constant (`const ref<LispyPair>`)
+            //
+            // The Lispy nil value is represented as `null` on the JVM.
+            // When `type_hint == "ref<LispyPair>"` we emit `aconst_null` + `astore`
+            // regardless of the source operand (the frontend typically passes
+            // Int(0) to signal nil, but we ignore the value).
             "const" => {
                 let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
                     function: fname.clone(),
                     detail: "const instruction has no dest".to_string(),
                 })?;
+
+                let (dest_slot, dest_type) = lookup_var(dest_name)?;
+
+                // Special case: const ref<LispyPair> = nil → aconst_null
+                if dest_type == JvmType::Ref {
+                    code.push(ACONST_NULL);
+                    emit_astore(&mut code, dest_slot);
+                    i += 1;
+                    continue;
+                }
+
                 let src = instr.srcs.first().ok_or_else(|| IIRJvmError::InvalidOperand {
                     function: fname.clone(),
                     detail: "const instruction has no source operand".to_string(),
                 })?;
-
-                let (dest_slot, dest_type) = lookup_var(dest_name)?;
 
                 match src {
                     Operand::Int(v) => {
@@ -1158,6 +1257,7 @@ fn lower_function(
                     Some(n) => n,
                     None => {
                         // store_reg with no dest: nop
+                        i += 1;
                         continue;
                     }
                 };
@@ -1395,6 +1495,9 @@ fn lower_function(
             //
             // Return a value from the function.  Load the result variable onto
             // the stack, then emit the appropriate typed return opcode.
+            //
+            // For `ref<LispyPair>` return types we use `areturn` (0xB0) — the
+            // JVM object-reference return instruction.
             "ret" => {
                 let src = instr.srcs.first().ok_or_else(|| IIRJvmError::InvalidOperand {
                     function: fname.clone(),
@@ -1410,6 +1513,9 @@ fn lower_function(
                             JvmType::Float => FRETURN,
                             JvmType::Double => DRETURN,
                             JvmType::Void => RETURN,
+                            // `areturn` (0xB0) — return an object reference.
+                            // Used when a function returns a LispyPair ref.
+                            JvmType::Ref => 0xB0,
                         };
                         code.push(ret_opcode);
                     }
@@ -1514,6 +1620,346 @@ fn lower_function(
                 }
             }
 
+            // ── alloc ref<LispyPair> — Object[] cons cell allocation ─────────
+            //
+            // A `cons` cell in Lispy is a 2-element `Object[]` array:
+            //   index 0 = head (car)
+            //   index 1 = tail (cdr)
+            //
+            // When we see `alloc ref<LispyPair>` followed immediately by two
+            // `field_store` instructions that write fields 0 and 1, we
+            // pattern-match the whole triple and emit the full cons-cell
+            // construction sequence in one shot, then advance the index past
+            // all three instructions.
+            //
+            // If the two `field_store` instructions are not present (e.g. the
+            // pair is constructed incrementally or only one field is written),
+            // we fall back to emitting *just* the array allocation and storing
+            // the uninitialised reference in the dest slot.
+            //
+            // Pattern: alloc + field_store[0] + field_store[1]
+            //
+            // JVM sequence emitted:
+            //
+            //   iconst_2                  ← array length = 2
+            //   anewarray java/lang/Object ← allocate Object[]
+            //   dup                        ← keep ref for second aastore
+            //   iconst_0                   ← field index 0 (head)
+            //   aload   <head_slot>        ← value to store
+            //   aastore                    ← array[0] = head
+            //   dup                        ← keep ref for astore at end
+            //   iconst_1                   ← field index 1 (tail)
+            //   aload   <tail_slot>        ← value to store
+            //   aastore                    ← array[1] = tail
+            //   astore  <dest_slot>        ← store the pair into local
+            "alloc" if instr.type_hint == "ref<LispyPair>" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "alloc ref<LispyPair> has no dest".to_string(),
+                })?;
+                let (dest_slot, _) = lookup_var(dest_name)?;
+
+                // Look ahead: do the next two instructions form a
+                // field_store[0] + field_store[1] pair?
+                //
+                // Expected layout of field_store:
+                //   op        = "field_store"
+                //   srcs[0]   = Var(dest_name)      ← the array ref
+                //   srcs[1]   = Int(field_index)     ← 0 or 1
+                //   srcs[2]   = Var(value_name)      ← value to store
+                //   type_hint = "ref<LispyPair>"
+                let next1 = instrs.get(i + 1);
+                let next2 = instrs.get(i + 2);
+
+                let cons_pattern = match (next1, next2) {
+                    (Some(fs1), Some(fs2))
+                        if fs1.op == "field_store"
+                            && fs2.op == "field_store"
+                            && fs1.srcs.get(0) == Some(&Operand::Var(dest_name.to_string()))
+                            && fs2.srcs.get(0) == Some(&Operand::Var(dest_name.to_string()))
+                            && fs1.srcs.get(1) == Some(&Operand::Int(0))
+                            && fs2.srcs.get(1) == Some(&Operand::Int(1)) =>
+                    {
+                        // Extract head and tail variable names.
+                        let head = match fs1.srcs.get(2) {
+                            Some(Operand::Var(n)) => n.clone(),
+                            _ => return Err(IIRJvmError::InvalidOperand {
+                                function: fname.clone(),
+                                detail: "field_store[0] value is not a Var".to_string(),
+                            }),
+                        };
+                        let tail = match fs2.srcs.get(2) {
+                            Some(Operand::Var(n)) => n.clone(),
+                            _ => return Err(IIRJvmError::InvalidOperand {
+                                function: fname.clone(),
+                                detail: "field_store[1] value is not a Var".to_string(),
+                            }),
+                        };
+                        Some((head, tail))
+                    }
+                    _ => None,
+                };
+
+                if let Some((head_name, tail_name)) = cons_pattern {
+                    // Full cons cell construction: alloc + field_store[0] + field_store[1]
+                    let (head_slot, _) = lookup_var(&head_name)?;
+                    let (tail_slot, _) = lookup_var(&tail_name)?;
+
+                    // iconst_2 — array length
+                    code.push(ICONST_2);
+                    // anewarray java/lang/Object — element type CP index
+                    code.push(ANEWARRAY);
+                    code.extend_from_slice(&object_class_idx.to_be_bytes());
+                    // dup — keep ref on stack for first aastore
+                    code.push(DUP);
+                    // iconst_0 — field 0 (head)
+                    code.push(ICONST_0);
+                    // aload head
+                    emit_aload(&mut code, head_slot);
+                    // aastore — array[0] = head
+                    code.push(AASTORE);
+                    // dup — keep ref on stack for second aastore
+                    code.push(DUP);
+                    // iconst_1 — field 1 (tail)
+                    code.push(ICONST_1);
+                    // aload tail
+                    emit_aload(&mut code, tail_slot);
+                    // aastore — array[1] = tail
+                    code.push(AASTORE);
+                    // astore dest — save the completed pair
+                    emit_astore(&mut code, dest_slot);
+
+                    // Skip the two field_store instructions we consumed.
+                    i += 3;
+                    continue;
+                } else {
+                    // No immediate field_stores: just allocate an uninitialised
+                    // Object[2] and store the reference.  The caller is expected
+                    // to use separate `field_store` instructions to fill the fields.
+                    code.push(ICONST_2);
+                    code.push(ANEWARRAY);
+                    code.extend_from_slice(&object_class_idx.to_be_bytes());
+                    emit_astore(&mut code, dest_slot);
+                    i += 1;
+                    continue;
+                }
+            }
+
+            // ── alloc (other type) ────────────────────────────────────────────
+            //
+            // Any `alloc` with a type other than `ref<LispyPair>` falls through
+            // to the unsupported-op error.  The validator should have caught
+            // `ref<other>` types already (they fail Check 4), but we guard here
+            // as a belt-and-braces measure.
+            "alloc" => {
+                return Err(IIRJvmError::UnsupportedOp {
+                    function: fname.clone(),
+                    op: format!("alloc (type_hint = {:?})", instr.type_hint),
+                });
+            }
+
+            // ── field_store (bare — not consumed by alloc lookahead) ──────────
+            //
+            // A `field_store` that was NOT immediately preceded by a matching
+            // `alloc ref<LispyPair>` — for example, updating a single field of
+            // a pair that was previously allocated.
+            //
+            // IIR layout:
+            //   srcs[0] = Var(array_ref)   ← the Object[] to write into
+            //   srcs[1] = Int(field_index) ← 0 = car, 1 = cdr
+            //   srcs[2] = Var(value)       ← value to store
+            //
+            // JVM sequence:
+            //   aload  array_ref
+            //   iconst_N                   ← field index
+            //   aload  value
+            //   aastore
+            "field_store" => {
+                let arr_name = match instr.srcs.get(0) {
+                    Some(Operand::Var(n)) => n.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "field_store srcs[0] must be a Var (array ref)".to_string(),
+                    }),
+                };
+                let field_idx = match instr.srcs.get(1) {
+                    Some(Operand::Int(n)) => *n as i32,
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "field_store srcs[1] must be an Int (field index)".to_string(),
+                    }),
+                };
+                let val_name = match instr.srcs.get(2) {
+                    Some(Operand::Var(n)) => n.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "field_store srcs[2] must be a Var (value)".to_string(),
+                    }),
+                };
+
+                let (arr_slot, _) = lookup_var(&arr_name)?;
+                let (val_slot, _) = lookup_var(&val_name)?;
+
+                emit_aload(&mut code, arr_slot);
+                emit_iconst(&mut code, field_idx);
+                emit_aload(&mut code, val_slot);
+                code.push(AASTORE);
+            }
+
+            // ── field_load (car/cdr) ─────────────────────────────────────────
+            //
+            // Load one element from a cons-cell array into a destination slot.
+            //
+            // IIR layout:
+            //   srcs[0] = Var(array_ref)   ← the Object[] to read from
+            //   srcs[1] = Int(field_index) ← 0 = car, 1 = cdr
+            //   dest    = result variable
+            //
+            // JVM sequence:
+            //   aload  array_ref
+            //   iconst_N                   ← field index (0 or 1)
+            //   aaload                     ← push array[index]
+            //   astore dest
+            "field_load" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "field_load has no dest".to_string(),
+                })?;
+                let arr_name = match instr.srcs.get(0) {
+                    Some(Operand::Var(n)) => n.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "field_load srcs[0] must be a Var (array ref)".to_string(),
+                    }),
+                };
+                let field_idx = match instr.srcs.get(1) {
+                    Some(Operand::Int(n)) => *n as i32,
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "field_load srcs[1] must be an Int (field index)".to_string(),
+                    }),
+                };
+
+                let (dest_slot, _) = lookup_var(dest_name)?;
+                let (arr_slot, _) = lookup_var(&arr_name)?;
+
+                emit_aload(&mut code, arr_slot);
+                emit_iconst(&mut code, field_idx);
+                code.push(AALOAD);
+                emit_astore(&mut code, dest_slot);
+            }
+
+            // ── is_null ───────────────────────────────────────────────────────
+            //
+            // Test whether a reference is `null` (i.e. the Lispy `nil`).
+            // Produces an int result: 1 = null/nil, 0 = non-null.
+            //
+            // IIR layout:
+            //   srcs[0] = Var(ref_var)   ← the reference to test
+            //   dest    = result (bool / i32)
+            //
+            // JVM pattern (8 bytes of code):
+            //
+            //   [PC+0]  iconst_1          ← "assume true" default
+            //   [PC+1]  aload  ref_var    ← push the reference (1–3 bytes)
+            //   [PC+?]  ifnull  +3        ← if null: skip iconst_0, fall through with 1
+            //   [PC+?]  iconst_0          ← overwrite: not null → result = 0
+            //   [PC+?]  istore dest
+            //
+            // Because `aload` is variable-width (1 or 3 bytes for wide), we
+            // compute the `ifnull` offset dynamically instead of using a fixed
+            // offset.
+            //
+            // A cleaner alternative uses `swap`:
+            //   iconst_1
+            //   aload ref_var
+            //   ifnull +3       (3 bytes: opcode + 2-byte offset)
+            //   iconst_0        (1 byte)
+            //   istore dest
+            //
+            // With `aload_N` short forms (slot ≤3, 1 byte), the ifnull offset
+            // is +3 (skip `iconst_0`).  But we use the 2-byte `aload N` form
+            // throughout for simplicity, so:
+            //
+            //   iconst_1                  1 byte
+            //   aload  N  (2 bytes)       skip to [PC+3] relative to ifnull
+            //   ifnull +3  (3 bytes)      targets PC+6 (iconst_0 if NOT null)
+            //     — wait, we want: if null → keep iconst_1; if not null → replace
+            //
+            // Let me re-derive.  Goal: push 1 if ref==null, else push 0.
+            //
+            //   Stack snapshot before we start:     [...]
+            //   After iconst_1:                     [..., 1]
+            //   After aload ref:                    [..., 1, ref]
+            //   ifnull +3  → if ref==null branch to PC_after_iconst0
+            //     (else fall through to iconst_0)
+            //   [fall-through] iconst_0:            [..., 0]  (replaces 1 — no! stack now has [...,1,0])
+            //
+            // This doesn't work directly because iconst_0 would ADD to the stack.
+            // We need `swap` or a different shape.
+            //
+            // Correct pattern with swap:
+            //
+            //   aload  ref_var        ← push ref
+            //   iconst_1              ← push 1 (placeholder "true")
+            //   swap                  ← swap: now [ref, 1] → [..., ref, 1] becomes [..., 1, ref]
+            //   ifnull +3             ← consume ref; if null, jump to [PC+3]
+            //   iconst_0              ← NOT null: replace 1 on stack with 0
+            //   istore dest           ← store result
+            //   ← jump target lands here if null (1 already on stack)
+            //   istore dest
+            //
+            // But then we have two istore instructions!  Cleaner:
+            //
+            //   aload  ref_var        ← push ref                   1+1 = 2 bytes
+            //   ifnull +5             ← if null, goto [not-null-end+5]: 3 bytes
+            //   iconst_0              ← not null → result = 0       1 byte
+            //   goto +3               ← jump past iconst_1:         3 bytes
+            //   iconst_1              ← null → result = 1           1 byte
+            //   istore dest           ← store result
+            //
+            // Offset from `ifnull` opcode:
+            //   ifnull is at position P.
+            //   iconst_0 at P+3 (immediately after ifnull's 2-byte operand).
+            //   goto at P+4.
+            //   iconst_1 at P+7.
+            //   istore at P+8.
+            //   `ifnull` offset = target - P = (P+7) - P = 7.  ✓ (lands on iconst_1)
+            //   `goto`  offset  = (P+8) - (P+4) = 4.           ✓ (lands on istore)
+            //
+            // This is 8 bytes of code (before istore), analogous to emit_int_compare.
+            "is_null" => {
+                let dest_name = instr.dest.as_deref().ok_or_else(|| IIRJvmError::InvalidOperand {
+                    function: fname.clone(),
+                    detail: "is_null has no dest".to_string(),
+                })?;
+                let ref_name = match instr.srcs.get(0) {
+                    Some(Operand::Var(n)) => n.clone(),
+                    _ => return Err(IIRJvmError::InvalidOperand {
+                        function: fname.clone(),
+                        detail: "is_null srcs[0] must be a Var".to_string(),
+                    }),
+                };
+
+                let (dest_slot, _) = lookup_var(dest_name)?;
+                let (ref_slot, _) = lookup_var(&ref_name)?;
+
+                // aload ref_var — push the reference to test (2 bytes)
+                emit_aload(&mut code, ref_slot);
+                // ifnull +7 — if null, jump to iconst_1 (3 bytes; offset = 7)
+                code.push(IFNULL);
+                code.extend_from_slice(&7i16.to_be_bytes());
+                // not-null arm: iconst_0 (1 byte)
+                code.push(ICONST_0);
+                // goto +4 — jump past iconst_1 to istore (3 bytes; offset = 4)
+                code.push(GOTO);
+                code.extend_from_slice(&4i16.to_be_bytes());
+                // null arm: iconst_1 (1 byte) — ifnull branch lands here
+                code.push(ICONST_1);
+                // istore dest — store the result
+                emit_istore(&mut code, dest_slot);
+            }
+
             // ── Unknown op ───────────────────────────────────────────────────
             //
             // If we reach here, the validator missed something or an opcode was
@@ -1525,6 +1971,7 @@ fn lower_function(
                 });
             }
         }
+        i += 1;
     }
 
     // ── Apply backpatch fixups ─────────────────────────────────────────────
