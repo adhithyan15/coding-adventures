@@ -40,13 +40,15 @@ use mosaic_parser::parse;
 
 /// The built-in layout/display elements. Any other name is a component type.
 ///
-/// Primitives: Row, Column, Box, Stack, Text, Image, Icon, Spacer, Divider, Scroll.
+/// Primitives: Row, Column, Box, Stack, Text, Image, Icon, Spacer, Divider,
+/// Scroll, Grid.
 fn is_primitive_node(tag: &str) -> bool {
     matches!(
         tag,
         "Row" | "Column" | "Box" | "Stack"
             | "Text" | "Image" | "Icon"
             | "Spacer" | "Divider" | "Scroll"
+            | "Grid"
     )
 }
 
