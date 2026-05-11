@@ -15,6 +15,8 @@ Included surfaces:
 - read-side event-log and subscription backlog queries for dashboards, tools,
   and tests that need bounded runtime inspection
 - bounded event-bus delivery peeking and draining for subscription polling
+- explicit event-bus unsubscribe lifecycle that returns undelivered events and
+  removes pending delivery state
 - compact read-only snapshots for registry counts, event-bus backlog,
   supervisor pressure, pairing expiry, desired state, and stale cached state
 - command validation against entity capabilities and command modes

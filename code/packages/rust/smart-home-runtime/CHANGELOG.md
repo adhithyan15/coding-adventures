@@ -48,6 +48,8 @@ All notable changes to this package will be documented in this file.
 - Read-side queries for event-log entries, subscription backlogs, pairing
   sessions, desired-state targets, and supervised bridge workers.
 - Bounded event-bus delivery peeking and draining for subscription polling.
+- Event-bus unsubscribe lifecycle that returns undelivered events and clears
+  subscription delivery state.
 - Compact read-only runtime snapshots that summarize registry counts,
   event-bus backlog, supervisor restart pressure, pairing expiry, desired
   state, and stale cached state without mutating runtime state.
