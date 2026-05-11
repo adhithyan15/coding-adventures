@@ -1,5 +1,19 @@
 # Changelog — data-matrix (Rust)
 
+## 0.2.0 — 2026-05-11
+
+### Added
+
+- `render_png(data: &[u8], options: DataMatrixOptions) -> Result<Vec<u8>, String>` — single-call
+  convenience wrapper that encodes data into a Data Matrix ECC200 symbol and returns the result as
+  raw PNG bytes.  Internally calls `encode_and_layout()` then delegates rasterisation to
+  `barcode_2d::render_scene_png()`, which dispatches to the platform-default backend (Metal on
+  macOS, Cairo on Linux, Direct2D on Windows, Skia as a universal software fallback).
+
+- Test `data_matrix_render_png_produces_valid_png` — verifies that calling `render_png(b"HELLO",
+  DataMatrixOptions::default())` returns bytes whose first 8 octets match the PNG magic signature
+  `\x89PNG\r\n\x1a\n` (ISO/IEC 15948).
+
 ## 0.1.0 — 2026-04-24
 
 Initial release.
