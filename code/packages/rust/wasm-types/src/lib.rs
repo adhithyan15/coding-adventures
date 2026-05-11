@@ -112,7 +112,10 @@
 /// encodings (unlike the single-byte numeric types), `ValueType` can no
 /// longer use `#[repr(u8)]`.  The encoder calls [`ValueType::encode`] to
 /// emit the correct byte sequence.
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+// All variants are trivially Copy: the only data-bearing variant is
+// StructRef(u32), and u32: Copy.  Adding Copy back lets the wasm-execution
+// interpreter call default_for(*local_type) without a clone().
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum ValueType {
     /// 32-bit integer. Used for booleans, pointers (in linear memory), chars.
     I32,

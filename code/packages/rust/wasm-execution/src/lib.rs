@@ -92,21 +92,24 @@ pub enum WasmValue {
 impl WasmValue {
     /// Convert to a [`TypedVMValue`] for the GenericVM's typed stack.
     pub fn to_typed(self) -> TypedVMValue {
+        // ValueType no longer has #[repr(u8)], so we cannot write
+        // `ValueType::I32 as u8`.  Use the WASM 1.0 single-byte tags directly:
+        //   I32 = 0x7F, I64 = 0x7E, F32 = 0x7D, F64 = 0x7C.
         match self {
             WasmValue::I32(v) => TypedVMValue {
-                value_type: ValueType::I32 as u8,
+                value_type: 0x7F, // I32
                 value: Value::Int(v as i64),
             },
             WasmValue::I64(v) => TypedVMValue {
-                value_type: ValueType::I64 as u8,
+                value_type: 0x7E, // I64
                 value: Value::Int(v),
             },
             WasmValue::F32(v) => TypedVMValue {
-                value_type: ValueType::F32 as u8,
+                value_type: 0x7D, // F32
                 value: Value::Float(v as f64),
             },
             WasmValue::F64(v) => TypedVMValue {
-                value_type: ValueType::F64 as u8,
+                value_type: 0x7C, // F64
                 value: Value::Float(v),
             },
         }
@@ -115,19 +118,19 @@ impl WasmValue {
     /// Convert from a [`TypedVMValue`] back to a [`WasmValue`].
     pub fn from_typed(tv: &TypedVMValue) -> Result<Self, TrapError> {
         match tv.value_type {
-            x if x == ValueType::I32 as u8 => match &tv.value {
+            0x7F => match &tv.value { // I32
                 Value::Int(v) => Ok(WasmValue::I32(*v as i32)),
                 _ => Err(TrapError::new("type mismatch: expected i32")),
             },
-            x if x == ValueType::I64 as u8 => match &tv.value {
+            0x7E => match &tv.value { // I64
                 Value::Int(v) => Ok(WasmValue::I64(*v)),
                 _ => Err(TrapError::new("type mismatch: expected i64")),
             },
-            x if x == ValueType::F32 as u8 => match &tv.value {
+            0x7D => match &tv.value { // F32
                 Value::Float(v) => Ok(WasmValue::F32(*v as f32)),
                 _ => Err(TrapError::new("type mismatch: expected f32")),
             },
-            x if x == ValueType::F64 as u8 => match &tv.value {
+            0x7C => match &tv.value { // F64
                 Value::Float(v) => Ok(WasmValue::F64(*v)),
                 _ => Err(TrapError::new("type mismatch: expected f64")),
             },
@@ -139,12 +142,23 @@ impl WasmValue {
     }
 
     /// Create the zero/default value for a given WASM type.
+    ///
+    /// For WasmGC reference types (`Anyref`, `I31ref`, `StructRef`) the
+    /// execution engine currently has no heap; we return `I32(0)` as a
+    /// null-pointer sentinel so the interpreter can initialise locals without
+    /// panicking.  When full GC execution support lands these arms will be
+    /// replaced with proper null-reference values.
     pub fn default_for(vt: ValueType) -> Self {
         match vt {
             ValueType::I32 => WasmValue::I32(0),
             ValueType::I64 => WasmValue::I64(0),
             ValueType::F32 => WasmValue::F32(0.0),
             ValueType::F64 => WasmValue::F64(0.0),
+            // GC reference types: represent as null (I32 0) until the
+            // wasm-execution engine grows native GC support.
+            ValueType::Anyref | ValueType::I31ref | ValueType::StructRef(_) => {
+                WasmValue::I32(0)
+            }
         }
     }
 
@@ -2948,16 +2962,16 @@ mod tests {
         };
         assert!(WasmValue::from_typed(&tv).is_err());
 
-        // Wrong value variant for i32 type
+        // Wrong value variant for i32 type (0x7F = I32 tag)
         let tv_bad = TypedVMValue {
-            value_type: ValueType::I32 as u8,
+            value_type: 0x7F,
             value: Value::Float(1.0),
         };
         assert!(WasmValue::from_typed(&tv_bad).is_err());
 
-        // Wrong value variant for f64 type
+        // Wrong value variant for f64 type (0x7C = F64 tag)
         let tv_bad2 = TypedVMValue {
-            value_type: ValueType::F64 as u8,
+            value_type: 0x7C,
             value: Value::Int(1),
         };
         assert!(WasmValue::from_typed(&tv_bad2).is_err());
