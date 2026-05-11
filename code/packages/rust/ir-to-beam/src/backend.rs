@@ -17,22 +17,29 @@
 //!
 //! # Supported IR opcodes (v1)
 //!
-//! | IR op      | BEAM instruction        | Notes |
-//! |------------|-------------------------|-------|
-//! | LABEL      | label {u,N}             | N from label map (starts at 3) |
-//! | LOAD_IMM   | move {i,val} {x,r}      | |
-//! | ADD        | gc_bif2 erlang:+/2      | |
-//! | ADD_IMM    | move + gc_bif2          | synthesised via scratch register |
-//! | SUB        | gc_bif2 erlang:-/2      | |
-//! | AND        | gc_bif2 erlang:band/2   | |
-//! | AND_IMM    | move + gc_bif2          | synthesised |
-//! | JUMP       | jump {f,label}          | opcode 36 |
+//! | IR op      | BEAM instruction          | Notes |
+//! |------------|---------------------------|-------|
+//! | LABEL      | label {u,N}               | N from label map (starts at 3) |
+//! | LOAD_IMM   | move {i,val} {x,r}        | |
+//! | ADD        | gc_bif2 erlang:+/2        | |
+//! | ADD_IMM    | move + gc_bif2 erlang:+/2 | synthesised via scratch register |
+//! | SUB        | gc_bif2 erlang:-/2        | |
+//! | MUL        | gc_bif2 erlang:*/2        | |
+//! | DIV        | gc_bif2 erlang:div/2      | truncates toward zero |
+//! | AND        | gc_bif2 erlang:band/2     | |
+//! | AND_IMM    | move + gc_bif2 band       | synthesised |
+//! | OR         | gc_bif2 erlang:bor/2      | |
+//! | OR_IMM     | move + gc_bif2 bor        | synthesised |
+//! | XOR        | gc_bif2 erlang:bxor/2     | |
+//! | XOR_IMM    | move + gc_bif2 bxor       | synthesised |
+//! | NOT        | gc_bif1 erlang:bnot/1     | unary; opcode 124 |
+//! | JUMP       | jump {f,label}            | opcode 36 |
 //! | BRANCH_Z   | is_ne_exact {f,L} r {i,0} | branch to L when reg == 0 |
 //! | BRANCH_NZ  | is_eq_exact {f,L} r {i,0} | branch to L when reg != 0 |
-//! | CALL       | call {u,0} {f,label}    | arity 0 in v1 |
-//! | RET / HALT | return                  | opcode 19 |
-//! | NOP        | (nothing)               | |
-//! | COMMENT    | (nothing)               | |
+//! | CALL       | call {u,0} {f,label}      | arity 0 in v1 |
+//! | RET / HALT | return                    | opcode 19 |
+//! | NOP        | (nothing)                 | |
+//! | COMMENT    | (nothing)                 | |
 //!
 //! # Module structure
 //!
@@ -85,6 +92,8 @@ const OP_IS_EQ_EXACT: u8 = 43;
 const OP_IS_NE_EXACT: u8 = 44;
 /// `{move, Src, Dst}` — copy operand to register.
 const OP_MOVE: u8 = 64;
+/// `{gc_bif1, Fail, Live, Bif, Arg, Dst}` — one-argument BIF call.
+const OP_GC_BIF1: u8 = 124;
 /// `{gc_bif2, Fail, Live, Bif, Arg1, Arg2, Dst}` — two-argument BIF call.
 const OP_GC_BIF2: u8 = 125;
 
@@ -329,6 +338,21 @@ fn imm_val(op: &IrOperand) -> Result<i64, BEAMBackendError> {
     }
 }
 
+/// Build a `gc_bif1` instruction.
+///
+/// Format: `{gc_bif1, {f,0}, {u,live}, {u,import_idx}, {x,arg}, {x,dst}}`
+///
+/// Used for one-argument BIFs such as `erlang:bnot/1` (bitwise NOT).
+fn emit_gc_bif1(import_idx: u32, live: u64, arg: u8, dst: u8) -> BEAMInstruction {
+    BEAMInstruction::new(OP_GC_BIF1, vec![
+        BEAMOperand::f(0),                   // no explicit fail label
+        BEAMOperand::u(live),                // live x-register count for GC
+        BEAMOperand::u(import_idx as u64),   // import table index (0-based)
+        BEAMOperand::x(arg),                 // sole argument
+        BEAMOperand::x(dst),                 // destination
+    ])
+}
+
 /// Build a `gc_bif2` instruction.
 ///
 /// Format: `{gc_bif2, {f,0}, {u,live}, {u,import_idx}, {x,a1}, {x,a2}, {x,dst}}`
@@ -422,6 +446,9 @@ pub fn lower_ir_to_beam(
     let band_idx   = atoms.intern("band");              // 6
     let times_idx  = atoms.intern("*");                 // 7 — for Mul
     let div_idx    = atoms.intern("div");               // 8 — for Div (Erlang integer div)
+    let bor_idx    = atoms.intern("bor");               // 9 — for Or (Erlang bitwise OR)
+    let bxor_idx   = atoms.intern("bxor");              // 10 — for Xor (Erlang bitwise XOR)
+    let bnot_idx   = atoms.intern("bnot");              // 11 — for Not (Erlang bitwise NOT, arity 1)
 
     // ── Import table setup ────────────────────────────────────────────────
     // Pre-register arithmetic BIFs so their indices are stable.
@@ -431,6 +458,9 @@ pub fn lower_ir_to_beam(
     let import_band  = imports.intern(erlang_idx, band_idx, 2);
     let import_times = imports.intern(erlang_idx, times_idx, 2);
     let import_div   = imports.intern(erlang_idx, div_idx, 2);
+    let import_bor   = imports.intern(erlang_idx, bor_idx,  2); // erlang:bor/2
+    let import_bxor  = imports.intern(erlang_idx, bxor_idx, 2); // erlang:bxor/2
+    let import_bnot  = imports.intern(erlang_idx, bnot_idx, 1); // erlang:bnot/1 — unary
 
     // ── Label first-pass ──────────────────────────────────────────────────
     // Assign BEAM label numbers starting at 3 (1 and 2 are reserved for
@@ -559,6 +589,63 @@ pub fn lower_ir_to_beam(
                     BEAMOperand::x(scratch),
                 ]));
                 instrs.push(emit_gc_bif2(import_band, live, src, scratch, dst));
+            }
+
+            // ── Bitwise OR ─────────────────────────────────────────────────
+            // OR v_dst, v_src1, v_src2  →  gc_bif2 erlang:bor/2 src1 src2 dst
+            IrOp::Or => {
+                let dst  = reg_idx(&instr.operands[0])? as u8;
+                let src1 = reg_idx(&instr.operands[1])? as u8;
+                let src2 = reg_idx(&instr.operands[2])? as u8;
+                instrs.push(emit_gc_bif2(import_bor, live, src1, src2, dst));
+            }
+
+            // ── Bitwise OR with immediate ──────────────────────────────────
+            // OR_IMM v_dst, v_src, imm  →  move {i,imm} scratch; gc_bif2 bor src scratch dst
+            IrOp::OrImm => {
+                let dst = reg_idx(&instr.operands[0])? as u8;
+                let src = reg_idx(&instr.operands[1])? as u8;
+                let val = imm_val(&instr.operands[2])?;
+                instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                    BEAMOperand::i(val as u64),
+                    BEAMOperand::x(scratch),
+                ]));
+                instrs.push(emit_gc_bif2(import_bor, live, src, scratch, dst));
+            }
+
+            // ── Bitwise XOR ────────────────────────────────────────────────
+            // XOR v_dst, v_src1, v_src2  →  gc_bif2 erlang:bxor/2 src1 src2 dst
+            IrOp::Xor => {
+                let dst  = reg_idx(&instr.operands[0])? as u8;
+                let src1 = reg_idx(&instr.operands[1])? as u8;
+                let src2 = reg_idx(&instr.operands[2])? as u8;
+                instrs.push(emit_gc_bif2(import_bxor, live, src1, src2, dst));
+            }
+
+            // ── Bitwise XOR with immediate ─────────────────────────────────
+            // XOR_IMM v_dst, v_src, imm  →  move {i,imm} scratch; gc_bif2 bxor src scratch dst
+            IrOp::XorImm => {
+                let dst = reg_idx(&instr.operands[0])? as u8;
+                let src = reg_idx(&instr.operands[1])? as u8;
+                let val = imm_val(&instr.operands[2])?;
+                instrs.push(BEAMInstruction::new(OP_MOVE, vec![
+                    BEAMOperand::i(val as u64),
+                    BEAMOperand::x(scratch),
+                ]));
+                instrs.push(emit_gc_bif2(import_bxor, live, src, scratch, dst));
+            }
+
+            // ── Bitwise NOT ────────────────────────────────────────────────
+            //
+            // `erlang:bnot/1` is the Erlang bitwise NOT (one's complement).
+            // Unlike OR and XOR (which are binary BIFs), bnot is unary, so we
+            // use `gc_bif1` (opcode 124) instead of `gc_bif2` (opcode 125).
+            //
+            // NOT v_dst, v_src  →  gc_bif1 erlang:bnot/1 src dst
+            IrOp::Not => {
+                let dst = reg_idx(&instr.operands[0])? as u8;
+                let src = reg_idx(&instr.operands[1])? as u8;
+                instrs.push(emit_gc_bif1(import_bnot, live, src, dst));
             }
 
             // ── Unconditional jump ─────────────────────────────────────────
@@ -1022,5 +1109,172 @@ mod tests {
         let bytes = encode_beam(&module);
         assert_eq!(&bytes[0..4], b"FOR1");
         assert_eq!(&bytes[8..12], b"BEAM");
+    }
+
+    // ── Bitwise OR, XOR, NOT ──────────────────────────────────────────────────
+
+    #[test]
+    fn or_lowers_to_gc_bif2_bor() {
+        // OR v2, v0, v1  →  gc_bif2 erlang:bor/2
+        let prog = bitwise_binary_prog(IrOp::Or);
+        let module = lower_ir_to_beam(&prog, &default_cfg()).unwrap();
+        // The instruction stream must contain a gc_bif2 (opcode 125) with
+        // erlang:bor/2 in the import table.
+        assert!(module.instructions.iter().any(|i| i.opcode == OP_GC_BIF2),
+            "expected gc_bif2 in: {:?}", module.instructions.iter().map(|i| i.opcode).collect::<Vec<_>>());
+        let has_bor = module.imports.iter().any(|imp| {
+            let m = &module.atoms[(imp.module_atom_index - 1) as usize];
+            let f = &module.atoms[(imp.function_atom_index - 1) as usize];
+            m == "erlang" && f == "bor" && imp.arity == 2
+        });
+        assert!(has_bor, "erlang:bor/2 not in import table");
+    }
+
+    #[test]
+    fn or_imm_lowers_synthesised() {
+        // OR_IMM v1, v0, 5  →  move {i,5} scratch; gc_bif2 bor src scratch dst
+        let prog = bitwise_imm_prog(IrOp::OrImm, 5);
+        let module = lower_ir_to_beam(&prog, &default_cfg()).unwrap();
+        // Must have both a move and a gc_bif2
+        assert!(module.instructions.iter().any(|i| i.opcode == OP_MOVE),
+            "expected move in OrImm output");
+        assert!(module.instructions.iter().any(|i| i.opcode == OP_GC_BIF2),
+            "expected gc_bif2 in OrImm output");
+    }
+
+    #[test]
+    fn xor_lowers_to_gc_bif2_bxor() {
+        // XOR v2, v0, v1  →  gc_bif2 erlang:bxor/2
+        let prog = bitwise_binary_prog(IrOp::Xor);
+        let module = lower_ir_to_beam(&prog, &default_cfg()).unwrap();
+        let has_bxor = module.imports.iter().any(|imp| {
+            let m = &module.atoms[(imp.module_atom_index - 1) as usize];
+            let f = &module.atoms[(imp.function_atom_index - 1) as usize];
+            m == "erlang" && f == "bxor" && imp.arity == 2
+        });
+        assert!(has_bxor, "erlang:bxor/2 not in import table");
+    }
+
+    #[test]
+    fn xor_imm_lowers_synthesised() {
+        // XOR_IMM v1, v0, 0xFF  →  move {i,255} scratch; gc_bif2 bxor ...
+        let prog = bitwise_imm_prog(IrOp::XorImm, 0xFF);
+        let module = lower_ir_to_beam(&prog, &default_cfg()).unwrap();
+        assert!(module.instructions.iter().any(|i| i.opcode == OP_GC_BIF2),
+            "expected gc_bif2 in XorImm output");
+    }
+
+    #[test]
+    fn not_lowers_to_gc_bif1_bnot() {
+        // NOT v1, v0  →  gc_bif1 erlang:bnot/1
+        //
+        // `bnot` is a unary BIF, so it uses gc_bif1 (opcode 124) not gc_bif2.
+        let prog = bitwise_not_prog();
+        let module = lower_ir_to_beam(&prog, &default_cfg()).unwrap();
+        assert!(module.instructions.iter().any(|i| i.opcode == OP_GC_BIF1),
+            "expected gc_bif1 (opcode 124) for NOT; got: {:?}",
+            module.instructions.iter().map(|i| i.opcode).collect::<Vec<_>>());
+        let has_bnot = module.imports.iter().any(|imp| {
+            let m = &module.atoms[(imp.module_atom_index - 1) as usize];
+            let f = &module.atoms[(imp.function_atom_index - 1) as usize];
+            m == "erlang" && f == "bnot" && imp.arity == 1
+        });
+        assert!(has_bnot, "erlang:bnot/1 not in import table");
+    }
+
+    #[test]
+    fn validate_accepts_all_bitwise_ops() {
+        // validate_for_beam must accept all five new bitwise ops.
+        for (name, prog) in [
+            ("Or",     bitwise_binary_prog(IrOp::Or)),
+            ("OrImm",  bitwise_imm_prog(IrOp::OrImm,  0b1010)),
+            ("Xor",    bitwise_binary_prog(IrOp::Xor)),
+            ("XorImm", bitwise_imm_prog(IrOp::XorImm, 0b1111)),
+            ("Not",    bitwise_not_prog()),
+        ] {
+            let errs = validate_for_beam(&prog);
+            assert!(errs.is_empty(), "validate_for_beam returned errors for {name}: {errs:?}");
+        }
+    }
+
+    #[test]
+    fn lower_all_bitwise_ops_succeed() {
+        // All five bitwise ops must lower without error.
+        for (name, prog) in [
+            ("Or",     bitwise_binary_prog(IrOp::Or)),
+            ("OrImm",  bitwise_imm_prog(IrOp::OrImm,  7)),
+            ("Xor",    bitwise_binary_prog(IrOp::Xor)),
+            ("XorImm", bitwise_imm_prog(IrOp::XorImm, 0xFF)),
+            ("Not",    bitwise_not_prog()),
+        ] {
+            let result = lower_ir_to_beam(&prog, &default_cfg());
+            assert!(result.is_ok(), "lowering failed for {name}: {}", result.unwrap_err());
+        }
+    }
+
+    // ── Program-builder helpers ───────────────────────────────────────────────
+
+    /// Build a minimal program: `op v2, v0, v1` (binary register-register op).
+    fn bitwise_binary_prog(op: IrOp) -> IrProgram {
+        let mut prog = IrProgram::new("_start");
+        prog.add_instruction(IrInstruction::new(
+            IrOp::LoadImm,
+            vec![IrOperand::Register(0), IrOperand::Immediate(42)],
+            0,
+        ));
+        prog.add_instruction(IrInstruction::new(
+            IrOp::LoadImm,
+            vec![IrOperand::Register(1), IrOperand::Immediate(15)],
+            1,
+        ));
+        prog.add_instruction(IrInstruction::new(
+            op,
+            vec![
+                IrOperand::Register(2),
+                IrOperand::Register(0),
+                IrOperand::Register(1),
+            ],
+            2,
+        ));
+        prog.add_instruction(IrInstruction::new(IrOp::Halt, vec![], 3));
+        prog
+    }
+
+    /// Build a minimal program: `op v1, v0, imm` (binary register-immediate op).
+    fn bitwise_imm_prog(op: IrOp, imm: i64) -> IrProgram {
+        let mut prog = IrProgram::new("_start");
+        prog.add_instruction(IrInstruction::new(
+            IrOp::LoadImm,
+            vec![IrOperand::Register(0), IrOperand::Immediate(42)],
+            0,
+        ));
+        prog.add_instruction(IrInstruction::new(
+            op,
+            vec![
+                IrOperand::Register(1),
+                IrOperand::Register(0),
+                IrOperand::Immediate(imm),
+            ],
+            1,
+        ));
+        prog.add_instruction(IrInstruction::new(IrOp::Halt, vec![], 2));
+        prog
+    }
+
+    /// Build a minimal program: `NOT v1, v0` (one's complement).
+    fn bitwise_not_prog() -> IrProgram {
+        let mut prog = IrProgram::new("_start");
+        prog.add_instruction(IrInstruction::new(
+            IrOp::LoadImm,
+            vec![IrOperand::Register(0), IrOperand::Immediate(42)],
+            0,
+        ));
+        prog.add_instruction(IrInstruction::new(
+            IrOp::Not,
+            vec![IrOperand::Register(1), IrOperand::Register(0)],
+            1,
+        ));
+        prog.add_instruction(IrInstruction::new(IrOp::Halt, vec![], 2));
+        prog
     }
 }
