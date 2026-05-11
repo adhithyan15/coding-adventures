@@ -162,9 +162,11 @@ impl QueryRun {
 /// machinery. Single-goal queries skip the rewrite and search their
 /// goal directly.
 ///
-/// The synthetic rules accumulate in the KB across queries; they
-/// don't interfere with each other because each has a unique
-/// `__query_N` head.
+/// The synthetic rules accumulate in the KB across queries; each has
+/// a unique `__query_N` head so they don't shadow each other. The
+/// name `__query_N` starts with `_` which the ISO-Prolog grammar
+/// tokenises as a **variable**, not an atom — meaning user source
+/// code cannot define a clashing predicate of the same name.
 pub fn run_all_queries(loaded: &mut LoadedProgram, mode: SearchMode) -> Vec<QueryRun> {
     let mut runs = Vec::with_capacity(loaded.queries.len());
     for (i, goals) in loaded.queries.clone().into_iter().enumerate() {
