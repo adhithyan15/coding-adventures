@@ -1,9 +1,10 @@
-import { ADD, DIV, MUL, SQRT, SUB, app, int, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
+import { ADD, DIV, MUL, NEG, SQRT, SUB, app, equals, int, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
 
 export const SOLVE = "Solve";
 export const NSOLVE = "NSolve";
 export const ROOTS = "Roots";
 export const I_UNIT = "%i";
+export const CBRT = "Cbrt";
 
 export type IntegerLike = bigint | number | string;
 
@@ -131,6 +132,43 @@ export function solveQuadratic(a: Frac, b: Frac, c: Frac): SolveResult {
   ]);
 }
 
+export function solveCubic(a: Frac, b: Frac, c: Frac, d: Frac): SolveResult {
+  if (a.isZero()) return solveQuadratic(b, c, d);
+
+  const rationalRoot = findRationalRoot(a, b, c, d);
+  if (rationalRoot !== null) {
+    const b2 = b.add(a.mul(rationalRoot));
+    const c2 = c.add(b2.mul(rationalRoot));
+    const remainder = d.add(c2.mul(rationalRoot));
+    if (remainder.isZero()) {
+      const remaining = solveQuadratic(a, b2, c2);
+      if (remaining.kind === "all") return solutions([rationalRoot.toIrNode()]);
+      return solutions(dedupRoots([rationalRoot.toIrNode(), ...remaining.roots]));
+    }
+  }
+
+  const one = Frac.one();
+  const two = Frac.fromInt(2);
+  const three = Frac.fromInt(3);
+  const four = Frac.fromInt(4);
+  const twentySeven = Frac.fromInt(27);
+  const aInv = one.div(a);
+  const aInv2 = aInv.mul(aInv);
+  const aInv3 = aInv2.mul(aInv);
+
+  const p = c.mul(aInv).sub(b.mul(b).mul(aInv2).div(three));
+  const q = d.mul(aInv)
+    .sub(b.mul(c).mul(aInv2).div(three))
+    .add(two.mul(b).mul(b).mul(b).mul(aInv3).div(twentySeven));
+  const shift = b.neg().div(three.mul(a));
+  const dCard = q.mul(q).div(four).add(p.mul(p).mul(p).div(twentySeven));
+
+  const cmp = dCard.compare(Frac.zero());
+  if (cmp > 0) return solutions(cardanoOneRealTwoComplex(q, shift, dCard));
+  if (cmp === 0) return solutions(cardanoRepeated(p, q, shift));
+  return solutions([]);
+}
+
 type SqrtResult =
   | { readonly kind: "rational"; readonly value: Frac }
   | { readonly kind: "irrational"; readonly value: IRNode };
@@ -158,6 +196,161 @@ function buildComplexRoot(negB: Frac, twoA: Frac, sqrtAbs: SqrtResult, sign: 1 |
   return app(sign > 0 ? ADD : SUB, [realPart, imagPart]);
 }
 
+function cardanoOneRealTwoComplex(q: Frac, shift: Frac, dCard: Frac): readonly IRNode[] {
+  const negQHalf = q.neg().div(Frac.fromInt(2));
+  const sqrtD = tryExactSqrt(dCard);
+
+  if (sqrtD !== null) {
+    const aTerm = negQHalf.add(sqrtD);
+    const bTerm = negQHalf.sub(sqrtD);
+    const cbrtA = tryExactCbrt(aTerm);
+    const cbrtB = tryExactCbrt(bTerm);
+    if (cbrtA !== null && cbrtB !== null) {
+      const t1 = cbrtA.add(cbrtB);
+      const halfSum = cbrtA.add(cbrtB).neg().div(Frac.fromInt(2));
+      const halfDiff = cbrtA.sub(cbrtB).div(Frac.fromInt(2));
+      const roots: IRNode[] = [t1.add(shift).toIrNode()];
+      if (halfDiff.isZero()) {
+        const repeated = halfSum.add(shift).toIrNode();
+        roots.push(repeated, repeated);
+      } else {
+        const realPart = halfSum.add(shift).toIrNode();
+        const imagPart = imagTerm(halfDiff);
+        roots.push(app(ADD, [realPart, imagPart]), app(SUB, [realPart, imagPart]));
+      }
+      return roots;
+    }
+  }
+
+  const sqrtDNode = sqrtIr(dCard);
+  const negQHalfNode = negQHalf.toIrNode();
+  const cbrtHead = sym(CBRT);
+  const cbrtA = negQHalf.isZero()
+    ? app(cbrtHead, [sqrtDNode])
+    : app(cbrtHead, [app(ADD, [negQHalfNode, sqrtDNode])]);
+  const cbrtB = negQHalf.isZero()
+    ? app(cbrtHead, [app(NEG, [sqrtDNode])])
+    : app(cbrtHead, [app(SUB, [negQHalfNode, sqrtDNode])]);
+
+  const t1 = app(ADD, [cbrtA, cbrtB]);
+  const x1 = addShift(t1, shift);
+  const minusT1Half = app(DIV, [app(NEG, [app(ADD, [cbrtA, cbrtB])]), int(2)]);
+  const diff = app(SUB, [cbrtA, cbrtB]);
+  const imagPart = app(MUL, [
+    app(DIV, [app(MUL, [diff, app(SQRT, [int(3)])]), int(2)]),
+    sym(I_UNIT),
+  ]);
+  const realPart = addShift(minusT1Half, shift);
+  return [x1, app(ADD, [realPart, imagPart]), app(SUB, [realPart, imagPart])];
+}
+
+function cardanoRepeated(p: Frac, q: Frac, shift: Frac): readonly IRNode[] {
+  if (p.isZero() && q.isZero()) return [shift.toIrNode()];
+
+  const negQHalf = q.neg().div(Frac.fromInt(2));
+  const cbrtValue = tryExactCbrt(negQHalf);
+  if (cbrtValue !== null) {
+    const t1 = Frac.fromInt(2).mul(cbrtValue);
+    const t2 = cbrtValue.neg();
+    return dedupRoots([t1.add(shift).toIrNode(), t2.add(shift).toIrNode()]);
+  }
+
+  const cbrtNode = app(sym(CBRT), [negQHalf.toIrNode()]);
+  return [
+    addShift(app(MUL, [int(2), cbrtNode]), shift),
+    addShift(app(NEG, [cbrtNode]), shift),
+  ];
+}
+
+function findRationalRoot(a: Frac, b: Frac, c: Frac, d: Frac): Frac | null {
+  const scale = fractionDenominatorLcm(a, b, c, d);
+  const scaledA = scaleFractionToInteger(a, scale);
+  const scaledD = scaleFractionToInteger(d, scale);
+
+  if (scaledD === 0n) return Frac.zero();
+
+  const pDivs = divisors(abs(scaledD));
+  const qDivs = divisors(abs(scaledA));
+  for (const pValue of pDivs) {
+    for (const qValue of qDivs) {
+      for (const sign of [1n, -1n]) {
+        const candidate = new Frac(sign * pValue, qValue);
+        if (evalCubic(a, b, c, d, candidate).isZero()) return candidate;
+      }
+    }
+  }
+  return null;
+}
+
+function evalCubic(a: Frac, b: Frac, c: Frac, d: Frac, x: Frac): Frac {
+  return a.mul(x).mul(x).mul(x).add(b.mul(x).mul(x)).add(c.mul(x)).add(d);
+}
+
+function fractionDenominatorLcm(...values: readonly Frac[]): bigint {
+  let result = 1n;
+  for (const value of values) {
+    result = lcm(result, value.denom);
+  }
+  return result;
+}
+
+function scaleFractionToInteger(value: Frac, scale: bigint): bigint {
+  return value.numer * (scale / value.denom);
+}
+
+function divisors(value: bigint): readonly bigint[] {
+  if (value === 0n) return [0n];
+  const result: bigint[] = [];
+  for (let i = 1n; i * i <= value; i += 1n) {
+    if (value % i === 0n) {
+      result.push(i);
+      const pair = value / i;
+      if (pair !== i) result.push(pair);
+    }
+  }
+  return result.sort((lhs, rhs) => lhs < rhs ? -1 : lhs > rhs ? 1 : 0);
+}
+
+function tryExactSqrt(value: Frac): Frac | null {
+  if (value.numer < 0n) return null;
+  const numerRoot = perfectSquareRoot(value.numer);
+  const denomRoot = perfectSquareRoot(value.denom);
+  return numerRoot !== null && denomRoot !== null ? new Frac(numerRoot, denomRoot) : null;
+}
+
+function tryExactCbrt(value: Frac): Frac | null {
+  if (value.isZero()) return Frac.zero();
+  const sign = value.numer < 0n ? -1n : 1n;
+  const numerRoot = perfectCubeRoot(abs(value.numer));
+  const denomRoot = perfectCubeRoot(value.denom);
+  return numerRoot !== null && denomRoot !== null ? new Frac(sign * numerRoot, denomRoot) : null;
+}
+
+function sqrtIr(value: Frac): IRNode {
+  const exact = tryExactSqrt(value);
+  return exact !== null ? exact.toIrNode() : app(SQRT, [value.toIrNode()]);
+}
+
+function imagTerm(coef: Frac): IRNode {
+  if (coef.equals(Frac.one())) return sym(I_UNIT);
+  if (coef.equals(Frac.fromInt(-1))) return app(NEG, [sym(I_UNIT)]);
+  return app(MUL, [coef.toIrNode(), sym(I_UNIT)]);
+}
+
+function addShift(node: IRNode, shift: Frac): IRNode {
+  if (shift.isZero()) return node;
+  if (shift.numer < 0n) return app(SUB, [node, shift.neg().toIrNode()]);
+  return app(ADD, [node, shift.toIrNode()]);
+}
+
+function dedupRoots(roots: readonly IRNode[]): readonly IRNode[] {
+  const seen: IRNode[] = [];
+  for (const root of roots) {
+    if (!seen.some((existing) => equals(existing, root))) seen.push(root);
+  }
+  return seen;
+}
+
 function perfectSquareRoot(value: bigint): bigint | null {
   if (value < 0n) return null;
   if (value < 2n) return value;
@@ -168,6 +361,27 @@ function perfectSquareRoot(value: bigint): bigint | null {
     x1 = (x0 + value / x0) / 2n;
   }
   return x0 * x0 === value ? x0 : null;
+}
+
+function perfectCubeRoot(value: bigint): bigint | null {
+  if (value < 0n) return null;
+  if (value < 2n) return value;
+
+  let low = 0n;
+  let high = 1n;
+  while (high * high * high < value) high *= 2n;
+
+  while (low <= high) {
+    const mid = (low + high) / 2n;
+    const cube = mid * mid * mid;
+    if (cube === value) return mid;
+    if (cube < value) {
+      low = mid + 1n;
+    } else {
+      high = mid - 1n;
+    }
+  }
+  return null;
 }
 
 function irNodeCompare(a: IRNode, b: IRNode): number {
@@ -202,6 +416,10 @@ function gcd(aInput: bigint, bInput: bigint): bigint {
     a = t;
   }
   return a === 0n ? 1n : a;
+}
+
+function lcm(a: bigint, b: bigint): bigint {
+  return a / gcd(abs(a), abs(b)) * b;
 }
 
 function abs(value: bigint): bigint {

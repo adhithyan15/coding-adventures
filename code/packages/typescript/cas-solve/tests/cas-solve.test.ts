@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ADD, DIV, MUL, SQRT, app, equals, int, rational, sym, type IRNode } from "@coding-adventures/symbolic-ir";
-import { ALL_SOLUTIONS, Frac, I_UNIT, solveLinear, solveQuadratic, type SolveResult } from "../src/index";
+import { ALL_SOLUTIONS, CBRT, Frac, I_UNIT, solveCubic, solveLinear, solveQuadratic, type SolveResult } from "../src/index";
 
 function frac(n: number, d: number): Frac {
   return new Frac(n, d);
@@ -15,6 +15,14 @@ function expectSolutions(result: SolveResult, expected: readonly IRNode[]): void
   if (result.kind === "solutions") {
     expect(result.roots.length).toBe(expected.length);
     expected.forEach((node, index) => expect(equals(result.roots[index], node)).toBe(true));
+  }
+}
+
+function expectContainsSolutions(result: SolveResult, expected: readonly IRNode[]): void {
+  expect(result.kind).toBe("solutions");
+  if (result.kind === "solutions") {
+    expect(result.roots.length).toBe(expected.length);
+    expected.forEach((node) => expect(result.roots.some((root) => equals(root, node))).toBe(true));
   }
 }
 
@@ -91,5 +99,45 @@ describe("solveQuadratic", () => {
       expect(result.roots.some((root) => containsSymbol(root, I_UNIT))).toBe(true);
       expect(result.roots.some((root) => containsHead(root, "Sqrt"))).toBe(true);
     }
+  });
+});
+
+describe("solveCubic", () => {
+  it("delegates to quadratic when the cubic coefficient is zero", () => {
+    expectSolutions(solveCubic(fi(0), fi(1), fi(-5), fi(6)), [int(2), int(3)]);
+  });
+
+  it("finds three exact rational roots through deflation", () => {
+    expectContainsSolutions(solveCubic(fi(1), fi(-6), fi(11), fi(-6)), [int(1), int(2), int(3)]);
+    expectContainsSolutions(solveCubic(fi(2), fi(-3), fi(-11), fi(6)), [int(-2), rational(1, 2), int(3)]);
+  });
+
+  it("deduplicates repeated rational roots", () => {
+    expectContainsSolutions(solveCubic(fi(1), fi(0), fi(-3), fi(-2)), [int(-1), int(2)]);
+    expectSolutions(solveCubic(fi(1), fi(-6), fi(12), fi(-8)), [int(2)]);
+  });
+
+  it("returns the rational root plus symbolic complex quadratic roots", () => {
+    const result = solveCubic(fi(1), fi(0), fi(0), fi(1));
+    expect(result.kind).toBe("solutions");
+    if (result.kind === "solutions") {
+      expect(result.roots.length).toBe(3);
+      expect(result.roots.some((root) => equals(root, int(-1)))).toBe(true);
+      expect(result.roots.filter((root) => containsSymbol(root, I_UNIT)).length).toBe(2);
+    }
+  });
+
+  it("uses Cardano symbolic roots when there is one real root and a complex pair", () => {
+    const result = solveCubic(fi(1), fi(0), fi(1), fi(1));
+    expect(result.kind).toBe("solutions");
+    if (result.kind === "solutions") {
+      expect(result.roots.length).toBe(3);
+      expect(result.roots.some((root) => containsHead(root, CBRT))).toBe(true);
+      expect(result.roots.some((root) => containsSymbol(root, I_UNIT))).toBe(true);
+    }
+  });
+
+  it("leaves casus irreducibilis unevaluated as an empty solution list", () => {
+    expectSolutions(solveCubic(fi(1), fi(0), fi(-3), fi(1)), []);
   });
 });

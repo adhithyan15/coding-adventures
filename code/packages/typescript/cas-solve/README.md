@@ -11,7 +11,14 @@ bindings.
 | `Frac` | Exact reduced rational helper |
 | `solveLinear(a, b)` | Solve `a*x + b = 0` |
 | `solveQuadratic(a, b, c)` | Solve `a*x^2 + b*x + c = 0` |
+| `solveCubic(a, b, c, d)` | Solve `a*x^3 + b*x^2 + c*x + d = 0` |
 
 `solveQuadratic` returns rational roots when the discriminant is a perfect
 square, symbolic `Sqrt` roots for positive irrational discriminants, and `%i`
 complex roots for negative discriminants.
+
+`solveCubic` first applies the rational-root theorem and deflates to the
+quadratic solver so exact rational and repeated roots stay exact. When no
+rational root exists it follows the Python package's Cardano behavior, returning
+symbolic `Cbrt`/`Sqrt` expressions for the one-real-root case and an empty
+solution list for casus irreducibilis.
