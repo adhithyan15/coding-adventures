@@ -1,5 +1,38 @@
 # Changelog — twig-vm
 
+## [0.7.1] — 2026-05-11
+
+**LANG25 — Stable `get_slot` indices + human-readable variable values.**
+
+Two fixes that make variable introspection via `get_slot` actually work:
+
+### `DebugServer::new_with_module` — stable slot assignment
+
+`get_slot(frame, N)` previously returned the Nth alphabetically-sorted variable
+among the variables **currently in the live frame**.  As execution advances, new
+variables enter the frame, changing the alphabetical rank of earlier names.  This
+made slot indices unstable across breakpoints and incompatible with what the debug
+sidecar declared.
+
+`DebugServer` now accepts the compiled `IIRModule` at construction time and
+pre-builds a per-function sorted variable list (`fn_sorted_vars`).  `get_slot(N)`
+returns the Nth entry from that **fixed** list, looking up the current value (or
+`"<undef>"` if not yet assigned).  This produces slot indices that are:
+
+1. Stable across all breakpoints within the function.
+2. Consistent with what `twig_dap::build_sidecar` emits for `reg_index`.
+
+`bin/twig_vm.rs` updated to use `DebugServer::new_with_module(stream, module)`.
+The old `DebugServer::new(stream)` is retained for backwards compatibility in
+tests that don't have a module to pass; it falls back to the original live-frame
+alphabetical sort.
+
+### `Frame::debug_print` — human-readable output
+
+Changed from `format!("{v:?}")` (raw `LispyValue(56)`) to `format!("{v}")` using
+the `Display` impl, which renders integers as `"7"`, booleans as `"#t"` / `"#f"`,
+and nil as `"nil"`.  The DAP variables panel now shows values the user can read.
+
 ## [0.7.0] — 2026-05-05
 
 **LS03 PR C — TCP debug server + `--debug-port` CLI.**

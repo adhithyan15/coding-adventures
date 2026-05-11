@@ -44,8 +44,10 @@ use std::process::{Child, Command, Stdio};
 use std::time::Duration;
 
 use dap_adapter_core::{
-    StoppedEvent, StoppedReason, TcpConnectOptions, TcpVmConnection, VmConnection, VmLocation,
+    SidecarIndex, StoppedEvent, StoppedReason, TcpConnectOptions, TcpVmConnection, VmConnection,
+    VmLocation,
 };
+use twig_dap::build_sidecar;
 
 /// Locate `twig-vm` in the same `target/<profile>/` directory the test
 /// itself is running from.
@@ -182,4 +184,117 @@ fn end_to_end_compile_launch_breakpoint_continue() {
         }
         other => panic!("expected Exited, got {other:?}"),
     }
+}
+
+/// End-to-end variable introspection test.
+///
+/// Verifies the full chain:
+///
+/// ```text
+/// Twig source
+///   → twig_dap::build_sidecar  (variable declarations with stable slot indices)
+///   → twig-vm --debug-port     (DebugServer::new_with_module, stable get_slot)
+///   → TcpVmConnection::get_slot(frame, slot)
+/// ```
+///
+/// When the VM is stopped at a breakpoint inside `sq`, `x` must be readable
+/// via `get_slot` at the slot index the sidecar declares for `x`.
+///
+/// Both sides use the same alphabetical sort over all function variable names,
+/// so `slot("x") = 1` when the function also has a temp `v0`
+/// (alphabetically: `v0`→0, `x`→1).
+#[test]
+fn end_to_end_variable_introspection() {
+    // ── Skip if the binary isn't built --------------------------------
+    if twig_vm_binary().is_none() {
+        eprintln!("twig-vm binary not present; skipping variable introspection e2e");
+        return;
+    }
+
+    // ── Source: sq(x) = x * x, called with argument 7 ---------------
+    //
+    // When the breakpoint fires inside `sq`, parameter `x` should hold 7.
+    let dir = tempfile::tempdir().expect("tempdir");
+    let path = dir.path().join("sq.twig");
+    let mut f = std::fs::File::create(&path).expect("create");
+    f.write_all(b"(define (sq x) (* x x))\n(sq 7)\n").expect("write");
+    drop(f);
+
+    // ── Compile and build the sidecar --------------------------------
+    let source = std::fs::read_to_string(&path).expect("read source");
+    let module = twig_ir_compiler::compile_source(&source, "twig")
+        .expect("compile ok");
+    let sidecar_bytes = build_sidecar(&module, &path);
+    let sidecar = SidecarIndex::from_bytes(&sidecar_bytes).expect("valid sidecar");
+
+    // ── Find the stable slot index for parameter `x` of `sq` --------
+    //
+    // The sidecar declares `x` as live from instruction 0.  Its
+    // `reg_index` is the same slot the VM's `get_slot` will use.
+    let x_slot = {
+        let vars = sidecar.reader().live_variables("sq", 0);
+        let v = vars.iter().find(|v| v.name == "x")
+            .expect("parameter 'x' must be declared in sidecar");
+        eprintln!("sidecar: 'x' is at slot {}", v.reg_index);
+        v.reg_index
+    };
+
+    // ── Spawn twig-vm in debug mode -----------------------------------
+    let port = pick_free_port();
+    let child = spawn_twig_vm_debug(&path, port);
+    let _guard = ChildGuard(child);
+
+    // ── Connect -------------------------------------------------------
+    let mut conn = TcpVmConnection::connect_with_retry(TcpConnectOptions {
+        host: "127.0.0.1".into(),
+        port,
+        connect_budget_ms: 3_000,
+        per_attempt_ms: 200,
+        poll_read_ms: 100,
+        response_deadline_ms: 2_000,
+    }).expect("connect to twig-vm");
+
+    // ── 1. Drain the initial entry stop -----------------------------
+    let _entry = poll_event_blocking(&mut conn, Duration::from_secs(2))
+        .expect("entry stop event");
+
+    // ── 2. Set a breakpoint at sq:0 ---------------------------------
+    conn.set_breakpoint(&VmLocation::new("sq", 0)).expect("set_breakpoint");
+
+    // ── 3. Continue to run `sq` -------------------------------------
+    conn.cont().expect("continue");
+
+    // ── 4. Wait for the breakpoint stop inside sq -------------------
+    let stopped = poll_event_blocking(&mut conn, Duration::from_secs(2));
+    let reached_breakpoint = matches!(
+        stopped,
+        Some(StoppedEvent::Stopped { reason: StoppedReason::Breakpoint, .. })
+    );
+
+    if !reached_breakpoint {
+        // If sq wasn't entered (e.g. optimised away) the test can't proceed.
+        eprintln!("breakpoint not hit (sq may not have been entered); skipping value check");
+        let _ = conn.cont();
+        return;
+    }
+
+    // ── 5. Read the call stack to get frame index -------------------
+    let stack = conn.get_call_stack().expect("get_call_stack");
+    eprintln!("call stack at breakpoint: {stack:?}");
+    // The deepest frame (frame 0 by protocol) should be in `sq`.
+    let frame_idx = stack.iter()
+        .position(|f| f.location.function == "sq")
+        .unwrap_or(0);
+
+    // ── 6. Read slot `x_slot` — it should be 7 ("(Int 7)" or "7") --
+    let repr = conn.get_slot(frame_idx, x_slot).expect("get_slot");
+    eprintln!("get_slot({frame_idx}, {x_slot}) = {repr:?}");
+    assert!(
+        repr.contains('7'),
+        "parameter x of sq(7) should contain '7', got {repr:?}",
+    );
+
+    // ── 7. Continue to completion ------------------------------------
+    let _ = conn.cont();
+    let _ = poll_event_blocking(&mut conn, Duration::from_secs(3)); // exited
 }

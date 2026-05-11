@@ -376,8 +376,13 @@ impl Frame {
     ///
     /// Returns `None` if the register is not bound.  Used by the debug
     /// hook to honour DAP's `variables` request.
+    /// Return a human-readable string for the named register, or `None`.
+    ///
+    /// Uses `Display` (not `Debug`) so integers render as `"7"` rather than
+    /// `"LispyValue(56)"`.  The DAP `variables` panel shows this string
+    /// directly to the user in the editor's Variables pane.
     pub(crate) fn debug_print(&self, name: &str) -> Option<String> {
-        self.registers.get(name).map(|v| format!("{v:?}"))
+        self.registers.get(name).map(|v| format!("{v}"))
     }
 
     /// Insert or update `name → value`.

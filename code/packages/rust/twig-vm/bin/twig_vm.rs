@@ -117,7 +117,7 @@ fn run_under_debug_server(port: u16, module: &interpreter_ir::IIRModule) -> Exit
     };
     drop(listener); // we only ever serve one adapter
 
-    let mut server = match DebugServer::new(stream) {
+    let mut server = match DebugServer::new_with_module(stream, module) {
         Ok(s) => s,
         Err(e) => { eprintln!("debug server init failed: {e}"); return ExitCode::from(1); }
     };

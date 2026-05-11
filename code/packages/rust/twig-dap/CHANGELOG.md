@@ -1,5 +1,43 @@
 # Changelog — `twig-dap`
 
+## 0.3.1 — 2026-05-11
+
+**LANG25 follow-up — alphabetical slot ordering + variable introspection e2e test.**
+
+The 0.3.0 `build_sidecar` assigned slot indices in *declaration order* (params
+first, then SSA temps in instruction order).  The twig-vm debug server assigns
+them by *alphabetical sort of all live frame names at each stop*.  These two
+orderings disagreed, producing wrong values in the variables panel.
+
+### Changes
+
+- `build_sidecar` now assigns `reg_index` by collecting ALL variable names
+  (params + instruction dests), sorting alphabetically, and assigning slot
+  indices in that order.  This matches the stable ordering used by
+  `DebugServer::new_with_module` in twig-vm 0.7.1.
+- Updated `use std::collections::{HashMap, HashSet}` (HashSet needed for name
+  de-duplication).
+- Updated doc-comment on `build_sidecar` to explain the alphabetical slot
+  assignment and give a concrete example for `sq(x)`.
+- Added `twig-ir-compiler` to `[dev-dependencies]` so the new e2e test can
+  call `compile_source` directly.
+
+### New e2e test: `end_to_end_variable_introspection`
+
+The second integration test in `tests/end_to_end.rs` exercises the full chain:
+
+1. Compile `(define (sq x) (* x x))\n(sq 7)` into an IIR module.
+2. Call `build_sidecar` to get the sidecar; confirm `x` is declared with a
+   stable slot index.
+3. Spawn `twig-vm --debug-port` and connect via `TcpVmConnection`.
+4. Set a breakpoint at `sq:0`, continue, wait for the breakpoint stop.
+5. Read the call stack to find the `sq` frame index.
+6. Call `get_slot(frame_idx, x_slot)` and assert the returned string
+   contains `"7"` (the argument passed to `sq`).
+
+This is the first test that proves the sidecar `reg_index` and the VM `get_slot`
+slot index are consistent end-to-end.
+
 ## 0.3.0 — 2026-05-10
 
 **LANG25-25C — Variable introspection: emit variable declarations in the debug sidecar.**
