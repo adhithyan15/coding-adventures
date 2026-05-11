@@ -1,5 +1,70 @@
 # Changelog — interpreter-ir
 
+## [0.3.0] — 2026-05-11
+
+### Added (LANG28A — cooperative-multitasking opcode taxonomy)
+
+This release adds 27 new opcode mnemonics, 6 new predicate functions, 8 new
+type-string helpers, and `unwrap_option_type` (symmetry gap) to the `opcodes`
+module.  No VM or backend implementation is included; this is the naming and
+classification layer that future `vm-concurrency` (LANG28B) and updated
+backends will build on.
+
+#### New opcode predicates
+
+- `is_task(op)` — 8 task opcodes:
+  `task_spawn`, `task_current`, `task_yield`, `task_sleep`,
+  `task_join`, `task_cancel`, `task_check_cancel`, `task_detach`.
+- `is_task_group(op)` — 5 group opcodes:
+  `group_new`, `group_spawn`, `group_join`, `group_cancel`, `group_close`.
+- `is_channel(op)` — 6 channel opcodes:
+  `chan_new`, `chan_send`, `chan_recv`, `chan_try_send`, `chan_try_recv`, `chan_close`.
+- `is_select(op)` — 8 select opcodes:
+  `select_new`, `select_recv`, `select_send`, `select_join`,
+  `select_timer`, `select_cancel`, `select_wait`, `select_default`.
+- `is_concurrency(op)` — union of all four families (27 total).
+- `is_parking(op)` — 7 ops that may suspend the current task:
+  `task_yield`, `task_sleep`, `task_join`, `chan_send`, `chan_recv`,
+  `group_join`, `select_wait`.
+
+#### Updated predicates
+
+- `is_known_op(op)` — extended with `|| is_concurrency(op)`; all 27 new
+  mnemonics are now accepted by the module validator.
+- `is_value_producing(op)` — extended with 18 concurrency ops that produce a
+  non-`None` dest (task handles, channel handles, arm IDs, received values, …).
+- `has_side_effects(op)` — extended with 9 concurrency ops that mutate
+  observable state without producing a value (yield, sleep, cancel, send, close, …).
+- `is_allocating(op)` — extended with 5 ops that create heap-resident objects:
+  `task_spawn`, `group_new`, `group_spawn`, `chan_new`, `select_new`.
+
+#### New type-string helpers
+
+- `is_task_type(s)`, `is_channel_type(s)`, `is_option_type(s)` — recognise
+  `"task<T>"`, `"channel<T>"`, `"option<T>"`.
+- `is_concurrency_type(s)` — covers all seven concurrency type strings:
+  `task<T>`, `channel<T>`, `option<T>`, `task_group`, `select_set`,
+  `cancel_token`, `deadline`.
+- `make_task_type(T)` / `unwrap_task_type(s)` — construct / decompose `"task<T>"`.
+- `make_channel_type(T)` / `unwrap_channel_type(s)` — construct / decompose `"channel<T>"`.
+- `make_option_type(T)` / `unwrap_option_type(s)` — construct / decompose `"option<T>"`.
+  (`unwrap_option_type` fills a symmetry gap from 0.2.0 where `make_option_type`
+  existed but no inverse was provided.)
+
+#### Tests
+
+- 14 new unit tests covering all new predicates, parking subset, type round-trips,
+  and updated predicate extensions.
+- 6 new doc-tests covering the new type helpers.
+- Total test count: 59 unit tests + 21 doc-tests.
+
+### Design note
+
+All 27 new opcodes are **classification-only** in this release.  Backends that
+encounter them should return an `UnsupportedOp` validation error (consistent
+with how they handle heap opcodes today).  The cooperative-multitasking runtime
+(`vm-concurrency`) and updated backends are the scope of LANG28B and later.
+
 ## [0.2.0] — 2026-05-04
 
 ### Added (LANG23 PR 23-E — refinement annotation fields, additive/opt-in)
