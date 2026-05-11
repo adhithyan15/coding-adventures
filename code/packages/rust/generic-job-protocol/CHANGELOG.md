@@ -10,6 +10,8 @@ All notable changes to this package will be documented in this file.
   and attempt increment helpers for cross-language workers.
 - Added portable retry policy primitives for retryable errors, capped
   exponential backoff, and exhausted-attempt decisions.
+- Added terminal job response status helpers and `JobResponseSummary` for
+  compact runtime read models.
 
 ## [0.1.0] - 2026-04-20
 

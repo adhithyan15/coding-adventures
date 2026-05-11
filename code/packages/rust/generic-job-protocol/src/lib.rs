@@ -81,6 +81,43 @@ impl<T> JobResponse<T> {
         validate_required_token("id", &self.id)?;
         self.metadata.validate()
     }
+
+    pub fn terminal_status(&self) -> JobTerminalStatus {
+        self.result.terminal_status()
+    }
+
+    pub fn is_success(&self) -> bool {
+        self.result.is_success()
+    }
+
+    pub fn is_failure(&self) -> bool {
+        self.result.is_failure()
+    }
+
+    pub fn summary(&self) -> JobResponseSummary {
+        let (retryable_error, error_code, message) = match &self.result {
+            JobResult::Ok { .. } => (false, None, None),
+            JobResult::Error { error } => (
+                error.retryable,
+                Some(error.code.clone()),
+                Some(error.message.clone()),
+            ),
+            JobResult::Cancelled { cancellation } => {
+                (false, None, Some(cancellation.message.clone()))
+            }
+            JobResult::TimedOut { timeout } => (false, None, Some(timeout.message.clone())),
+        };
+
+        JobResponseSummary {
+            id: self.id.clone(),
+            status: self.terminal_status(),
+            attempt: self.metadata.attempt,
+            trace_id: self.metadata.trace_id.clone(),
+            retryable_error,
+            error_code,
+            message,
+        }
+    }
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -340,6 +377,46 @@ pub enum JobResult<T> {
     Error { error: JobError },
     Cancelled { cancellation: JobCancellation },
     TimedOut { timeout: JobTimeout },
+}
+
+impl<T> JobResult<T> {
+    pub fn terminal_status(&self) -> JobTerminalStatus {
+        match self {
+            Self::Ok { .. } => JobTerminalStatus::Ok,
+            Self::Error { .. } => JobTerminalStatus::Error,
+            Self::Cancelled { .. } => JobTerminalStatus::Cancelled,
+            Self::TimedOut { .. } => JobTerminalStatus::TimedOut,
+        }
+    }
+
+    pub fn is_success(&self) -> bool {
+        matches!(self, Self::Ok { .. })
+    }
+
+    pub fn is_failure(&self) -> bool {
+        !self.is_success()
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum JobTerminalStatus {
+    Ok,
+    Error,
+    Cancelled,
+    TimedOut,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct JobResponseSummary {
+    pub id: String,
+    pub status: JobTerminalStatus,
+    pub attempt: u32,
+    pub trace_id: Option<String>,
+    pub retryable_error: bool,
+    pub error_code: Option<String>,
+    pub message: Option<String>,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -700,6 +777,63 @@ mod tests {
         assert!(!JobRetryPolicy::disabled()
             .decision_for_error(&JobMetadata::default(), &retryable)
             .should_retry());
+    }
+
+    #[test]
+    fn response_summary_captures_terminal_status_and_retry_facts() {
+        let response: JobResponse<EchoPayload> = JobResponse::error(
+            "job-1",
+            JobError::new("busy", "worker saturated", JobErrorOrigin::Executor)
+                .with_retryable(true),
+        )
+        .with_metadata(
+            JobMetadata::default()
+                .with_attempt(2)
+                .with_trace_id("trace-9"),
+        );
+
+        let summary = response.summary();
+
+        assert_eq!(response.terminal_status(), JobTerminalStatus::Error);
+        assert!(response.is_failure());
+        assert_eq!(
+            summary,
+            JobResponseSummary {
+                id: "job-1".to_string(),
+                status: JobTerminalStatus::Error,
+                attempt: 2,
+                trace_id: Some("trace-9".to_string()),
+                retryable_error: true,
+                error_code: Some("busy".to_string()),
+                message: Some("worker saturated".to_string()),
+            }
+        );
+    }
+
+    #[test]
+    fn result_status_helpers_distinguish_success_cancel_and_timeout() {
+        let ok = JobResult::Ok {
+            payload: EchoPayload {
+                text: "done".to_string(),
+            },
+        };
+        let cancelled: JobResult<EchoPayload> = JobResult::Cancelled {
+            cancellation: JobCancellation {
+                message: "user stopped job".to_string(),
+            },
+        };
+        let timed_out: JobResult<EchoPayload> = JobResult::TimedOut {
+            timeout: JobTimeout {
+                message: "deadline exceeded".to_string(),
+            },
+        };
+
+        assert_eq!(ok.terminal_status(), JobTerminalStatus::Ok);
+        assert!(ok.is_success());
+        assert_eq!(cancelled.terminal_status(), JobTerminalStatus::Cancelled);
+        assert!(cancelled.is_failure());
+        assert_eq!(timed_out.terminal_status(), JobTerminalStatus::TimedOut);
+        assert!(timed_out.is_failure());
     }
 
     #[test]
