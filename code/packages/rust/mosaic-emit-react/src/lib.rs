@@ -872,4 +872,143 @@ mod tests {
         // The function should have no props parameter or an empty one.
         assert!(out.contains("export function Empty"), "Missing function");
     }
+
+    // -----------------------------------------------------------------------
+    // Test 11: renders_simple_text_slot — component with one text slot renders
+    //          as a valid React component with function, import React, export default.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn renders_simple_text_slot() {
+        let out = emit(r#"component Label { slot title: text; Text { content: @title; } }"#);
+        // Must contain: React import, function keyword, and export keyword.
+        assert!(
+            out.contains("import React"),
+            "Missing React import: {out}"
+        );
+        assert!(
+            out.contains("function Label"),
+            "Missing function declaration: {out}"
+        );
+        // The function must be exported (export function or export default).
+        assert!(
+            out.contains("export"),
+            "Missing export: {out}"
+        );
+        // The slot must appear as a camelCase prop.
+        assert!(
+            out.contains("title"),
+            "Missing slot 'title' in output: {out}"
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 12: renders_column_with_text — Column containing Text renders flex style.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn renders_column_with_text() {
+        let out = emit(r#"component Card { slot label: text; Column { Text { content: @label; } } }"#);
+        assert!(
+            out.contains("flexDirection: 'column'") || out.contains("flexDirection:'column'"),
+            "Expected flex column style: {out}"
+        );
+        assert!(out.contains("<span"), "Expected <span for Text: {out}");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 13: renders_when_block — `when @show { ... }` renders as ternary /
+    //          conditional JSX expression.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn renders_when_block() {
+        let out = emit(r#"
+          component Cond {
+            slot show: bool;
+            Column {
+              when @show {
+                Text { content: "Visible"; }
+              }
+            }
+          }
+        "#);
+        // The when block must produce a JS conditional expression (&&) or ternary.
+        assert!(
+            out.contains("show &&") || out.contains("show ?") || out.contains("show&&"),
+            "Expected conditional expression for when block: {out}"
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 14: renders_each_block — `each @items as item { ... }` renders with .map(
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn renders_each_block() {
+        let out = emit(r#"
+          component List {
+            slot items: list<text>;
+            Column {
+              each @items as item {
+                Text { content: @item; }
+              }
+            }
+          }
+        "#);
+        assert!(out.contains(".map("), "Expected .map() for each block: {out}");
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 15: renders_all_primitive_nodes — Box/Row/Column/Text/Image/Spacer
+    //          all produce non-empty output.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn renders_all_primitive_nodes() {
+        let tests: &[(&str, &str)] = &[
+            (r#"component X { Box { } }"#, "<div"),
+            (r#"component X { Row { } }"#, "<div"),
+            (r#"component X { Column { } }"#, "<div"),
+            (r#"component X { Text { content: "hi"; } }"#, "<span"),
+            (r#"component X { Column { Divider { } } }"#, "<hr"),
+        ];
+        for (src, expected) in tests {
+            let out = emit(src);
+            assert!(
+                !out.is_empty(),
+                "Expected non-empty output for: {src}"
+            );
+            assert!(
+                out.contains(expected),
+                "Expected '{expected}' in output for: {src}\nGot: {out}"
+            );
+        }
+
+        // Image test: check for img element
+        let img_out = emit(r#"component X { Image { source: "img.png"; } }"#);
+        assert!(!img_out.is_empty(), "Image output must be non-empty");
+        assert!(img_out.contains("<img"), "Expected <img for Image: {img_out}");
+
+        // Spacer test: check for flex:1
+        let spacer_out = emit(r#"component X { Column { Spacer { } } }"#);
+        assert!(!spacer_out.is_empty(), "Spacer output must be non-empty");
+        assert!(
+            spacer_out.contains("flex: 1") || spacer_out.contains("flex:1"),
+            "Expected flex: 1 for Spacer: {spacer_out}"
+        );
+    }
+
+    // -----------------------------------------------------------------------
+    // Test 16: version — the crate version is 0.1.0.
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn version_is_0_1_0() {
+        assert_eq!(
+            env!("CARGO_PKG_VERSION"),
+            "0.1.0",
+            "Expected crate version 0.1.0"
+        );
+    }
 }
