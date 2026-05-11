@@ -1,0 +1,125 @@
+# Parser grammar for moslayout — Component Layout Language
+# @version 1
+#
+# A .mll file declares the structural layout of exactly one component.
+# It wires slot and emit names from the .mil interface to a fixed vocabulary
+# of layout primitives (Box, Row, Column, Text, Image, Spacer, Grid).
+#
+# Grammar notation:
+#   |      alternation
+#   { }    repetition (zero or more)
+#   [ ]    optional (zero or one)
+#   ( )    grouping
+# UPPERCASE = token reference, lowercase = rule reference
+#
+# ============================================================================
+# Design decisions
+# ============================================================================
+#
+# 1. The grammar is kept deliberately uniform: every node has the same shape
+#    (NAME, optional part, optional props, optional children).  The semantic
+#    compiler layer validates that Grid nodes have no children, that Text nodes
+#    reference a text-typed slot, etc.
+#
+# 2. Only three keywords are used: `layout`, `slot`, `emit`.  All primitive
+#    names and property-value keywords are NAME tokens so they do not conflict
+#    with user-chosen slot/emit names.
+#
+# 3. The grammar is LL(1).  Each optional section is distinguishable by its
+#    first token: `[` for a part name, `(` for properties, `{` for children.
+#
+# ============================================================================
+# Top-level structure
+# ============================================================================
+# A .mll file is exactly one layout definition.
+
+file = layout_def ;
+
+# ============================================================================
+# Layout definition
+# ============================================================================
+# layout ComponentName { node* }
+#
+# Example:
+#   layout Grid {
+#     Column [ root ] {
+#       Grid [ cell-grid ] (
+#         headers: slot: column-headers ,
+#         rows:    slot: viewport-rows
+#       )
+#     }
+#   }
+
+layout_def = KEYWORD NAME LBRACE { node } RBRACE ;
+
+# ============================================================================
+# Layout nodes
+# ============================================================================
+# Every node has:
+#   - a type name (NAME — may be Column, Row, Box, Grid, Text, Image, Spacer)
+#   - an optional part name in [ … ] (for mosstyle styling)
+#   - optional structural properties in ( … ) (direction, align, slot bindings)
+#   - optional children in { … } (container nodes only; leaves omit this)
+#
+# The semantic layer validates type-specific constraints:
+#   - Grid nodes may have props but no children (it is a self-contained leaf)
+#   - Text / Image nodes require a slot binding prop; they have no children
+#   - Column / Row / Box nodes are containers (props are direction, align, etc.)
+#   - Spacer has no children and only optional grow prop
+
+node = NAME [ part_name ] [ LPAREN prop_list RPAREN ] [ LBRACE { node } RBRACE ] ;
+
+# ============================================================================
+# Part name
+# ============================================================================
+# An optional label used by mosstyle to target this node for styling.
+#
+#   [ cell-grid ]
+#   [ header-row ]
+#   [ root ]
+
+part_name = LBRACKET NAME RBRACKET ;
+
+# ============================================================================
+# Property list
+# ============================================================================
+# Comma-separated property assignments inside ( … ).
+#
+# Every property is: name : value
+#
+# Values come in three forms:
+#   1.  KEYWORD COLON NAME   — a slot or emit binding
+#          slot: column-headers
+#          emit: onNavigate
+#   2.  NAME                  — a keyword value or property name as value
+#          row   (direction: row)
+#          true  (focusable: true)
+#          center (align: center)
+#   3.  NUMBER               — a numeric value
+#          1.5  (grow: 1.5)
+#
+# LL(1) disambiguation:
+#   - If prop_value starts with KEYWORD → slot/emit binding
+#   - If prop_value starts with NAME    → keyword value
+#   - If prop_value starts with NUMBER  → numeric value
+
+prop_list = prop { COMMA prop } ;
+
+# Two forms are supported:
+#   1.  NAME COLON prop_value     — named prop: direction: row, headers: slot: column-headers
+#   2.  KEYWORD COLON NAME        — shorthand slot/emit binding: slot: label, emit: onNavigate
+#
+# The shorthand is syntactic sugar for single-slot leaf nodes (Text, Image)
+# where there is only one meaningful binding and naming it explicitly is noise.
+# Semantically it is equivalent to: content: slot: label (for Text) or
+# source: slot: avatar-url (for Image).
+#
+# LL(1): KEYWORD and NAME are disjoint token types so the two alternatives
+# are unambiguous with a one-token look-ahead.
+
+prop = NAME    COLON prop_value
+     | KEYWORD COLON NAME ;
+
+prop_value = KEYWORD COLON NAME
+           | NAME
+           | NUMBER ;
