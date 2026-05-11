@@ -3,19 +3,19 @@
 ## Overview
 
 `mosstyle` is a strictly compiled language for declaring the **visual
-appearance** of a UI component. A `.mosstyle` file answers exactly one question:
+appearance** of a UI component. A `.msl` file answers exactly one question:
 *what do the parts of this component look like, in each of their possible
 states?*
 
 It does this by assigning visual properties to named **parts** (declared in
-`.moslayout`) across named **states** (normal, hover, pressed, disabled,
+`.mll`) across named **states** (normal, hover, pressed, disabled,
 focused). All values are expressed as design tokens resolved at compile time.
 No token reaches the runtime unresolved.
 
-Three things are explicitly forbidden in `.mosstyle` files:
+Three things are explicitly forbidden in `.msl` files:
 
 1. **Layout properties** — no direction, alignment, flex-grow, or anything
-   structural. Those belong in `.moslayout`.
+   structural. Those belong in `.mll`.
 2. **Slot or emit references** — the style layer has no knowledge of the
    component's interface. It knows part names only.
 3. **Arbitrary logic** — no conditionals, no loops, no expressions beyond
@@ -23,8 +23,8 @@ Three things are explicitly forbidden in `.mosstyle` files:
    references).
 
 This boundary means a designer can retheme an entire component library by
-supplying a single override style file. They never touch `.mosmodel` or
-`.moslayout`. The compiler validates the override is complete and type-correct
+supplying a single override style file. They never touch `.mil` or
+`.mll`. The compiler validates the override is complete and type-correct
 before anything runs.
 
 ---
@@ -32,12 +32,12 @@ before anything runs.
 ## Position in the Stack
 
 ```
-mosmodel (.mosmodel)          ← UI13-mosmodel.md
+mosmodel (.mil)          ← UI13-mosmodel.md
      │
-moslayout (.moslayout)        ← UI14-moslayout.md
+moslayout (.mll)        ← UI14-moslayout.md
      │  exports: part names
      ▼
-mosstyle (.mosstyle)          ← THIS SPEC
+mosstyle (.msl)          ← THIS SPEC
      │  imports: part names, token values
      │  exports: resolved style map per part per state
      ▼
@@ -201,7 +201,7 @@ other properties retain their base values.
 ## §4 Animation and Transition Declarations
 
 Transitions describe how properties animate when their state changes. They live
-in `.mosstyle` because they are a presentational concern — whether a hover
+in `.msl` because they are a presentational concern — whether a hover
 change is instant or animated is the designer's decision, not the engineer's.
 
 ```
@@ -240,7 +240,7 @@ When multiple style files apply to a component, the compiler resolves them in
 priority order from lowest to highest:
 
 ```
-1. Component base styles        (Button.mosstyle — lowest priority)
+1. Component base styles        (Button.msl — lowest priority)
 2. Platform token overrides     (ios-tokens.lattice, desktop-tokens.lattice)
 3. Brand theme                  (acme-brand.lattice)
 4. Color scheme                 (dark.lattice, light.lattice)
@@ -486,7 +486,7 @@ grammar.
 
 ### Inputs
 
-1. A `.mosstyle` file.
+1. A `.msl` file.
 2. The part map JSON exported by the `moslayout` compiler for the same component.
 3. The resolved token map produced by the Lattice transformer (after loading all
    token files in priority order).
@@ -638,7 +638,7 @@ impl ButtonStyle {
 | Error | Condition | Example message |
 |---|---|---|
 | `UnknownPart` | Part name not in layout's part map | `Unknown part 'body' at line 4 — Button layout exports: root, icon, label` |
-| `UnknownProperty` | Property name not in property table | `Unknown style property 'flex-direction' at line 8 — layout properties belong in .moslayout` |
+| `UnknownProperty` | Property name not in property table | `Unknown style property 'flex-direction' at line 8 — layout properties belong in .mll` |
 | `TypeMismatch` | Token type incompatible with property | `Property 'background' expects a color token, but '$font-size-body' resolves to a length at line 12` |
 | `TypographyOnNonText` | Font property on non-Text part | `'font-size' is only valid on Text parts, but 'root' is a Box at line 16` |
 | `UnresolvedToken` | Token reference has no definition | `Token '$color-brand-primary' is not defined in any token file at line 9` |

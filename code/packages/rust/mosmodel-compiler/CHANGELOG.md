@@ -1,11 +1,21 @@
 # Changelog — mosmodel-compiler
 
+## [0.1.1] — 2026-05-10
+
+### Changed
+
+- File extension for mosaic interface source files changed from `.mosmodel` to
+  `.mil` (mosaic interface language) throughout all documentation and specs.
+  Companion extensions `.moslayout` → `.mll` and `.mosstyle` → `.msl` also
+  updated for consistency.  No API or grammar changes; purely a naming
+  simplification.
+
 ## [0.1.0] — 2026-05-07
 
 ### Added
 
 - Initial implementation of the mosmodel component interface language compiler.
-- `tokenize()` — tokenizes `.mosmodel` source text into `Vec<Token>` using the
+- `tokenize()` — tokenizes `.mil` source text into `Vec<Token>` using the
   embedded `mosmodel.tokens` grammar via `GrammarLexer`.
 - `compile()` — full pipeline: tokenize → parse → analyze → validate → emit.
 - `MosmodelComponent` IR — typed representation of a component's slots and emits.

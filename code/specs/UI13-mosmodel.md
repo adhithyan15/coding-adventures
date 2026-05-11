@@ -3,7 +3,7 @@
 ## Overview
 
 `mosmodel` is a small, strictly compiled language for declaring the **external
-interface** of a UI component. A `.mosmodel` file answers exactly one question:
+interface** of a UI component. A `.mil` file answers exactly one question:
 *what does the outside world need to know to use this component?*
 
 It answers that question with two constructs:
@@ -11,7 +11,7 @@ It answers that question with two constructs:
 - **slots** — named, typed values the host pushes *into* the component
 - **emits** — named, typed events the component fires *out* to the host
 
-Nothing else belongs in a `.mosmodel` file. No layout. No style. No behavior.
+Nothing else belongs in a `.mil` file. No layout. No style. No behavior.
 No conditional logic. The compiler rejects everything that is not a slot or emit
 declaration.
 
@@ -25,13 +25,13 @@ self-contained.
 ## Position in the Stack
 
 ```
-mosmodel (.mosmodel)         ← THIS SPEC
+mosmodel (.mil)         ← THIS SPEC
      │  declares interface
      ▼
-moslayout (.moslayout)       ← UI14-moslayout.md
+moslayout (.mll)       ← UI14-moslayout.md
      │  references slot/emit names, arranges primitives
      ▼
-mosstyle (.mosstyle)         ← UI15-mosstyle.md
+mosstyle (.msl)         ← UI15-mosstyle.md
      │  references part names, declares visual appearance
      ▼
 backend emitter
@@ -55,7 +55,7 @@ The separation is authoring-time only.
 Every other file in a component's source tree is an implementation detail.
 `moslayout` can change completely — mobile and desktop layouts may be entirely
 different — without the interface changing. `mosstyle` can be swapped for a
-different theme. Only `.mosmodel` is stable and public.
+different theme. Only `.mil` is stable and public.
 
 ### Principle 2 — One direction per construct
 
@@ -73,9 +73,9 @@ and cannot be overridden by a deadline.
 
 ### Principle 4 — Backend-agnostic by construction
 
-A `.mosmodel` file has no knowledge of any backend. The same file drives code
+A `.mil` file has no knowledge of any backend. The same file drives code
 generation for Rust structs, Swift classes, Qt QObjects, React props, and Web
-Component attributes. Adding a new backend never requires touching `.mosmodel`
+Component attributes. Adding a new backend never requires touching `.mil`
 source files.
 
 ---
@@ -120,7 +120,7 @@ A slot may declare its type as another mosmodel component name:
 slot row-data : CellData ;
 ```
 
-The compiler resolves `CellData` by looking for `CellData.mosmodel` in the same
+The compiler resolves `CellData` by looking for `CellData.mil` in the same
 component library. This enforces that the host passes structurally correct data,
 not an arbitrary object.
 
@@ -269,7 +269,7 @@ component FormulaBar {
 ## §4 Grammar
 
 The mosmodel grammar is intentionally tiny. Any construct that cannot be
-expressed with this grammar does not belong in a `.mosmodel` file.
+expressed with this grammar does not belong in a `.mil` file.
 
 ### Token file (`mosmodel.tokens`)
 
@@ -346,7 +346,7 @@ token is required at any decision point.
 
 ### Input
 
-A single `.mosmodel` file.
+A single `.mil` file.
 
 ### Validation
 
@@ -473,13 +473,13 @@ All errors include file path, line number, and column number.
 
 - **UI14-moslayout.md** — the moslayout compiler imports the interface
   descriptor produced by this compiler. Every slot and emit reference in a
-  `.moslayout` file is validated against the descriptor.
+  `.mll` file is validated against the descriptor.
 - **UI15-mosstyle.md** — the mosstyle compiler does not import the interface
   descriptor directly. It imports the part names that moslayout exports, which
   are derived from the layout's wiring of slot values to named primitives.
 - **UI00-mosaic.md** — the original Mosaic spec conflated interface and layout
   in a single `.mosaic` file. `mosmodel` is the strict interface-only successor.
-  New components use `.mosmodel` + `.moslayout` + `.mosstyle`. The original
+  New components use `.mil` + `.mll` + `.msl`. The original
   `.mosaic` format is supported by a compatibility shim in the mosaic compiler
   that splits the file into the three-file representation before compilation.
 
