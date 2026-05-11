@@ -51,10 +51,7 @@ pub fn find_integer_roots(p: &[i64]) -> Vec<i64> {
     }
     // Candidate set: ±divisors(constant_term).
     let pos_divs = divisors(constant);
-    let mut candidates: Vec<i64> = pos_divs
-        .iter()
-        .flat_map(|&d| [d, -d])
-        .collect();
+    let mut candidates: Vec<i64> = pos_divs.iter().flat_map(|&d| [d, -d]).collect();
     candidates.sort_unstable();
     candidates.dedup();
 

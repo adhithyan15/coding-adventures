@@ -5,7 +5,7 @@
 
 use cas_factor::{
     content, degree, divide_linear, divisors, evaluate, extract_linear_factors,
-    factor_integer_polynomial, find_integer_roots, normalize, primitive_part,
+    factor_integer_polynomial, find_integer_roots, kronecker_factor, normalize, primitive_part,
 };
 
 // ---------------------------------------------------------------------------
@@ -164,6 +164,37 @@ fn extract_mixed_linear_and_irreducible() {
 }
 
 // ---------------------------------------------------------------------------
+// kronecker
+// ---------------------------------------------------------------------------
+
+#[test]
+fn kronecker_splits_sophie_germain() {
+    let split = kronecker_factor(&[4, 0, 0, 0, 1]).expect("x^4 + 4 should split");
+    let mut factors = vec![split.0, split.1];
+    factors.sort();
+    assert_eq!(factors, vec![vec![2, -2, 1], vec![2, 2, 1]]);
+}
+
+#[test]
+fn kronecker_splits_x4_plus_x2_plus_one() {
+    let split = kronecker_factor(&[1, 0, 1, 0, 1]).expect("x^4 + x^2 + 1 should split");
+    let mut factors = vec![split.0, split.1];
+    factors.sort();
+    assert_eq!(factors, vec![vec![1, -1, 1], vec![1, 1, 1]]);
+}
+
+#[test]
+fn kronecker_splits_repeated_quadratic_once() {
+    let split = kronecker_factor(&[1, 0, 2, 0, 1]).expect("(x^2 + 1)^2 should split");
+    assert_eq!(split, (vec![1, 0, 1], vec![1, 0, 1]));
+}
+
+#[test]
+fn kronecker_leaves_irreducible_quadratic() {
+    assert_eq!(kronecker_factor(&[1, 0, 1]), None);
+}
+
+// ---------------------------------------------------------------------------
 // factor_integer_polynomial
 // ---------------------------------------------------------------------------
 
@@ -194,6 +225,29 @@ fn factor_irreducible_quadratic() {
 }
 
 #[test]
+fn factor_sophie_germain_with_kronecker_residual() {
+    let (c, mut factors) = factor_integer_polynomial(&[4, 0, 0, 0, 1]);
+    assert_eq!(c, 1);
+    factors.sort_by_key(|(f, _)| f.clone());
+    assert_eq!(factors, vec![(vec![2, -2, 1], 1), (vec![2, 2, 1], 1)]);
+}
+
+#[test]
+fn factor_x4_plus_x2_plus_one_with_kronecker_residual() {
+    let (c, mut factors) = factor_integer_polynomial(&[1, 0, 1, 0, 1]);
+    assert_eq!(c, 1);
+    factors.sort_by_key(|(f, _)| f.clone());
+    assert_eq!(factors, vec![(vec![1, -1, 1], 1), (vec![1, 1, 1], 1)]);
+}
+
+#[test]
+fn factor_repeated_quadratic_with_kronecker_residual() {
+    let (c, factors) = factor_integer_polynomial(&[1, 0, 2, 0, 1]);
+    assert_eq!(c, 1);
+    assert_eq!(factors, vec![(vec![1, 0, 1], 2)]);
+}
+
+#[test]
 fn factor_cubic() {
     // x^3 - 6x^2 + 11x - 6 = (x-1)(x-2)(x-3)
     let (c, mut factors) = factor_integer_polynomial(&[-6, 11, -6, 1]);
@@ -211,8 +265,7 @@ fn factor_with_zero_root() {
     let (c, mut factors) = factor_integer_polynomial(&[0, -1, 0, 1]);
     assert_eq!(c, 1);
     factors.sort_by_key(|(f, _)| f.clone());
-    let expected: Vec<(Vec<i64>, usize)> =
-        vec![(vec![-1, 1], 1), (vec![0, 1], 1), (vec![1, 1], 1)];
+    let expected: Vec<(Vec<i64>, usize)> = vec![(vec![-1, 1], 1), (vec![0, 1], 1), (vec![1, 1], 1)];
     assert_eq!(factors, expected);
 }
 
