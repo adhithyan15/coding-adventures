@@ -18,6 +18,9 @@ use logic_engine::{search, BodyLiteral, Fact, KnowledgeBase, Rule, SearchMode, S
 use parser::grammar_parser::GrammarParseError;
 use prolog_parser::{collect_clauses_and_queries, ProgramItem};
 
+pub mod problog;
+pub use problog::ProblogProgram;
+
 /// Top-level result of loading a Prolog source string.
 #[derive(Debug)]
 pub struct LoadedProgram {

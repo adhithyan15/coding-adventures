@@ -2,6 +2,47 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-05-11
+
+### Added
+
+- `problog` module — builder API for probabilistic Prolog programs.
+  Bridges the (working) engine half of ProbLog —
+  `Fact::with_probability`, `Rule::with_probability`, the WMC
+  backend in `logic_engine::wmc` — and the (not-yet-built) source
+  half (the ISO-Prolog grammar doesn't recognise `0.7::fact.` yet).
+- `ProblogProgram` builder with chainable
+  `with_fact` / `with_prob_fact(p, term)` /
+  `with_rule(head, body)` / `with_prob_rule(p, head, body)` /
+  `with_query(goals)` methods, plus `build_kb()` (no execute),
+  `execute()` (AutoDetect), and `execute_with_mode(mode)`.
+- Multi-goal queries on the ProbLog path use the same synthetic-head
+  rewrite as the deterministic loader — head atom
+  `__problog_query_N`, unsourcable because `_`-prefixed identifiers
+  tokenise as variables.
+- Re-exported at the crate root: `prolog_loader::ProblogProgram`.
+- 9 new unit tests + 9 new integration tests in
+  `tests/integration_problog_e2e.rs`. Coverage: single probabilistic
+  fact, conjunctive rule over independent probabilistic facts (WMC
+  multiplies), probabilistic rule gating a certain premise, mixed
+  deterministic/probabilistic programs, unprovable queries return
+  0.0, boundary probabilities 0.0 and 1.0, multi-goal queries via
+  the synthetic-head rewrite, deterministic-only program through the
+  ProbLog builder, `build_kb()` without executing.
+
+### Notes
+
+Engine half of the ProbLog E2E story; the source half — accepting
+`0.7::edge(a, b).` syntax — is gated on grammar work. When that
+lands, a future `load_problog_source(src)` will be a thin wrapper
+translating parsed clauses into the same `ProblogProgram` builder
+calls these tests exercise.
+
+### Companion change in logic-engine
+
+`Rule::with_probability(head, body, p)` added to mirror
+`Fact::with_probability`. Purely additive.
+
 ## [0.2.0] - 2026-05-11
 
 ### Added
