@@ -1,0 +1,10 @@
+[package]
+name = "adjudication-connector"
+version = "0.1.0"
+edition = "2021"
+description = "Lowers adjudication IR (ADJ01) to logic-engine clauses per ADJ11; runs end-to-end adjudications."
+
+[dependencies]
+adjudication-ir = { path = "../adjudication-ir" }
+logic-core = { path = "../logic-core" }
+logic-engine = { path = "../logic-engine" }
