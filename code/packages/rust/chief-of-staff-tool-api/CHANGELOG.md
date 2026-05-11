@@ -37,3 +37,5 @@ All notable changes to this package will be documented in this file.
   counts for model gateway adapters and portability checks.
 - Schema-light `ToolDefinitionSummary` rows plus built-in and registry summary
   query helpers for read-side catalog listings.
+- Append-only `ToolExecutionJournal` with count-only summaries and query helpers
+  for recorded invocation requests, call records, events, and terminal results.

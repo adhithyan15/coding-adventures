@@ -28,6 +28,9 @@ The crate intentionally stops at the contract layer:
 - a deterministic in-memory runtime that validates, invokes handlers, emits
   ordered events, applies policy before handler execution, and returns canonical
   `ToolResult` records
+- an append-only execution journal that keeps invocation requests, call records,
+  events, and terminal results queryable through the storage-neutral read-side
+  helpers
 - handler output validation against advertised tool output schemas before a
   completed result is emitted
 

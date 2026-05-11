@@ -3551,6 +3551,139 @@ pub struct ToolExecutionTrace {
     pub result: ToolResult,
 }
 
+/// Append-only read model for D18D tool execution history.
+///
+/// The in-process runtime returns a [`ToolExecutionTrace`] for each invocation.
+/// Durable hosts can persist those pieces in storage-backed logs; tests and
+/// small hosts can use this journal to keep the same request, lifecycle record,
+/// event stream, and terminal result together without inventing a separate
+/// query shape.
+#[derive(Debug, Clone, Default, PartialEq)]
+pub struct ToolExecutionJournal {
+    requests: Vec<ToolInvocationRequest>,
+    records: Vec<ToolCallRecord>,
+    events: Vec<ToolEvent>,
+    results: Vec<ToolResult>,
+}
+
+impl ToolExecutionJournal {
+    /// Create an empty journal.
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    /// Return whether the journal has no recorded invocations.
+    pub fn is_empty(&self) -> bool {
+        self.requests.is_empty()
+            && self.records.is_empty()
+            && self.events.is_empty()
+            && self.results.is_empty()
+    }
+
+    /// Return the number of recorded invocation requests.
+    pub fn len(&self) -> usize {
+        self.requests.len()
+    }
+
+    /// Return immutable recorded invocation requests.
+    pub fn invocation_requests(&self) -> &[ToolInvocationRequest] {
+        &self.requests
+    }
+
+    /// Return immutable call lifecycle records.
+    pub fn call_records(&self) -> &[ToolCallRecord] {
+        &self.records
+    }
+
+    /// Return immutable execution events.
+    pub fn events(&self) -> &[ToolEvent] {
+        &self.events
+    }
+
+    /// Return immutable terminal results.
+    pub fn results(&self) -> &[ToolResult] {
+        &self.results
+    }
+
+    /// Append one invocation request and its canonical execution trace.
+    pub fn record_trace(&mut self, request: ToolInvocationRequest, trace: ToolExecutionTrace) {
+        self.requests.push(request);
+        self.records.push(trace.record);
+        self.events.extend(trace.events);
+        self.results.push(trace.result);
+    }
+
+    /// Query recorded invocation requests using the storage-neutral D18D query.
+    pub fn query_invocation_requests(
+        &self,
+        query: &ToolInvocationQuery,
+    ) -> Vec<&ToolInvocationRequest> {
+        query_tool_invocation_requests(self.requests.iter(), query)
+    }
+
+    /// Query recorded call lifecycle records using the storage-neutral D18D query.
+    pub fn query_call_records(&self, query: &ToolCallRecordQuery) -> Vec<&ToolCallRecord> {
+        query_tool_call_records(self.records.iter(), query)
+    }
+
+    /// Query recorded execution events using the storage-neutral D18D query.
+    pub fn query_events(&self, query: &ToolEventQuery) -> Vec<&ToolEvent> {
+        query_tool_events(self.events.iter(), query)
+    }
+
+    /// Query recorded terminal results using the storage-neutral D18D query.
+    pub fn query_results(&self, query: &ToolResultQuery) -> Vec<&ToolResult> {
+        query_tool_results(self.results.iter(), query)
+    }
+
+    /// Produce count-only read-side coverage for the journal.
+    pub fn summary(&self) -> ToolExecutionJournalSummary {
+        ToolExecutionJournalSummary::from_journal(self)
+    }
+}
+
+/// Count-only summary for a [`ToolExecutionJournal`].
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ToolExecutionJournalSummary {
+    pub invocation_count: usize,
+    pub call_record_count: usize,
+    pub event_count: usize,
+    pub terminal_result_count: usize,
+    pub completed_count: usize,
+    pub failed_count: usize,
+    pub awaiting_approval_count: usize,
+    pub cancelled_count: usize,
+}
+
+impl ToolExecutionJournalSummary {
+    /// Summarize journal contents without exposing arguments, outputs, or event
+    /// payloads.
+    pub fn from_journal(journal: &ToolExecutionJournal) -> Self {
+        let mut summary = Self {
+            invocation_count: journal.requests.len(),
+            call_record_count: journal.records.len(),
+            event_count: journal.events.len(),
+            terminal_result_count: journal.results.len(),
+            completed_count: 0,
+            failed_count: 0,
+            awaiting_approval_count: 0,
+            cancelled_count: 0,
+        };
+
+        for record in &journal.records {
+            match record.status {
+                ToolCallStatus::Completed => summary.completed_count += 1,
+                ToolCallStatus::Failed => summary.failed_count += 1,
+                ToolCallStatus::AwaitingApproval => summary.awaiting_approval_count += 1,
+                ToolCallStatus::Cancelled => summary.cancelled_count += 1,
+                ToolCallStatus::Queued | ToolCallStatus::Validating | ToolCallStatus::Running => {}
+            }
+        }
+
+        summary
+    }
+}
+
 /// Deterministic in-memory runtime for tests, built-ins, and small hosts.
 pub struct InMemoryToolRuntime {
     registry: InMemoryToolRegistry,
@@ -5185,6 +5318,64 @@ mod tests {
             .last()
             .unwrap()
             .terminal_matches_result(&trace.result));
+    }
+
+    #[test]
+    fn execution_journal_records_and_queries_runtime_traces() {
+        let mut runtime = InMemoryToolRuntime::new();
+        runtime
+            .register_handler(artifact_create_definition(), |_, _| {
+                Ok(ToolHandlerOutput::new(JsonValue::Object(vec![(
+                    "artifact_ref".to_string(),
+                    JsonValue::String("artifact_1/rev_1".to_string()),
+                )]))
+                .with_artifact_ref("artifact_1/rev_1")
+                .with_event(
+                    ToolEventKind::Progress,
+                    JsonValue::String("writing revision".to_string()),
+                ))
+            })
+            .unwrap();
+
+        let request = artifact_create_request();
+        let trace = runtime.invoke_with_events(&request);
+        let mut journal = ToolExecutionJournal::new();
+
+        assert!(journal.is_empty());
+        journal.record_trace(request.clone(), trace);
+
+        let summary = journal.summary();
+        assert_eq!(summary.invocation_count, 1);
+        assert_eq!(summary.call_record_count, 1);
+        assert_eq!(summary.event_count, 3);
+        assert_eq!(summary.terminal_result_count, 1);
+        assert_eq!(summary.completed_count, 1);
+        assert_eq!(summary.failed_count, 0);
+        assert_eq!(summary.awaiting_approval_count, 0);
+        assert_eq!(summary.cancelled_count, 0);
+
+        let session_requests = journal.query_invocation_requests(
+            &ToolInvocationQuery::new()
+                .in_session("session_1")
+                .requested_by(RequestedBy::Agent),
+        );
+        assert_eq!(session_requests, vec![&request]);
+
+        let completed_records = journal.query_call_records(
+            &ToolCallRecordQuery::new()
+                .for_tool("artifact.create")
+                .with_status(ToolCallStatus::Completed),
+        );
+        assert_eq!(completed_records[0].call_id, "call_1");
+
+        let terminal_events =
+            journal.query_events(&ToolEventQuery::new().for_call("call_1").terminal_only());
+        assert_eq!(terminal_events.len(), 1);
+        assert_eq!(terminal_events[0].kind, ToolEventKind::Completed);
+
+        let artifact_results =
+            journal.query_results(&ToolResultQuery::new().with_artifact_refs(true));
+        assert_eq!(artifact_results[0].artifact_refs, vec!["artifact_1/rev_1"]);
     }
 
     #[test]
