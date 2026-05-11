@@ -1,9 +1,10 @@
 [package]
 name = "llm-primitives"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
-description = "LM00b — skeleton for the typed LLM primitives layer. Defines Role, GatewayConfig, LlmCallRecord, PrimitiveError, and prompt-version constants. The six concrete primitives (decompose_text, render_node, entail, find_contradicting_reading, judge_plausibility, extract_rules) ship in follow-up crates / modules."
+description = "LM00b — typed LLM primitives layer. v0.1: shared scaffolding (Role, GatewayConfig, LlmCallRecord, PrimitiveError, prompt-version constants). v0.2: adds the `entail` primitive (bidirectional textual entailment). Remaining primitives (decompose_text, render_node, find_contradicting_reading, judge_plausibility, extract_rules) ship in follow-up PRs."
 
 [dependencies]
 llm-gateway = { path = "../llm-gateway" }
 adjudication-ir = { path = "../adjudication-ir" }
+serde_json = "1"

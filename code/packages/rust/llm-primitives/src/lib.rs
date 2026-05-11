@@ -33,16 +33,21 @@
 //!     into the audit trail without each primitive crate hard-coding
 //!     a magic string.
 //!
-//! ## What this crate deliberately does NOT contain
+//! ## Primitives shipped here
 //!
-//! The six primitive functions (`decompose_text`, `render_node`,
-//! `entail`, `find_contradicting_reading`, `judge_plausibility`,
-//! `extract_rules`) are intentionally **not** here. Each ships as its
-//! own module (or its own crate) once this skeleton is merged, so the
-//! six implementations can land in parallel without conflicting on
-//! one giant file. This is the fork-point pattern: a small,
-//! mechanically-reviewable PR that unlocks N concurrent implementation
-//! PRs.
+//! Each of the six LM00b primitives ships as its own module so the
+//! implementations can land in parallel without conflicting on one
+//! giant file:
+//!
+//!   * [`entail`] — bidirectional textual entailment (v0.2.0)
+//!   * `decompose_text` — extractor; not yet implemented
+//!   * `render_node` — renderer; not yet implemented
+//!   * `find_contradicting_reading` — adversary; not yet implemented
+//!   * `judge_plausibility` — plausibility judge; not yet implemented
+//!   * `extract_rules` — rule extractor; not yet implemented
+//!
+//! Until a primitive lands, its `PROMPT_VERSION_*` constant is the
+//! only thing this crate exposes for it.
 //!
 //! ## Why a separate `LlmCallRecord` here
 //!
@@ -58,6 +63,13 @@ use std::collections::HashMap;
 use llm_gateway::{
     CompletionRequest, FinishReason, LlmClient, LlmError, ProviderIdentity, TokenUsage,
 };
+
+pub mod entail;
+// Re-export the entry points so callers can write
+// `llm_primitives::entail(...)` and `llm_primitives::EntailRequest`.
+// (`entail` the function and `entail` the module share a name, which
+// Rust allows because they live in different namespaces.)
+pub use entail::{entail, EntailRequest, EntailResponse};
 
 // ---------------------------------------------------------------------------
 // Roles
