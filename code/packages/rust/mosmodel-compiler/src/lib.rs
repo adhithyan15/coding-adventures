@@ -252,16 +252,15 @@ pub fn create_mosmodel_lexer(source: &str) -> GrammarLexer<'_> {
 ///
 /// The returned vector always ends with an `EOF` token.
 ///
-/// # Panics
-///
-/// Panics on unexpected characters.  Well-formed `.mil` source never
-/// triggers this; callers that handle arbitrary user input should use
-/// `create_mosmodel_lexer` and check the result.
-pub fn tokenize(source: &str) -> Vec<Token> {
+/// Returns `Err(CompileError)` rather than panicking if the lexer encounters
+/// a character it cannot recognise.  Callers such as `compile` propagate
+/// this error upward through the standard `Result` pipeline.
+pub fn tokenize(source: &str) -> Result<Vec<Token>, CompileError> {
     let mut lexer = create_mosmodel_lexer(source);
-    lexer
-        .tokenize()
-        .unwrap_or_else(|e| panic!("mosmodel tokenization failed: {e}"))
+    lexer.tokenize().map_err(|e| CompileError {
+        kind: ErrorKind::UnknownConstruct,
+        message: format!("mosmodel tokenization failed: {e}"),
+    })
 }
 
 // ===========================================================================
@@ -1018,7 +1017,7 @@ fn camel_to_snake(s: &str) -> String {
 /// validation fails.  Multiple errors may be returned from the validation pass.
 pub fn compile(source: &str) -> Result<CompileOutput, Vec<CompileError>> {
     // Tokenize
-    let tokens = tokenize(source);
+    let tokens = tokenize(source).map_err(|e| vec![e])?;
 
     // Parse
     let grammar = _grammar::parser_grammar();
@@ -1063,28 +1062,28 @@ mod tests {
     /// `component` must lex as a keyword.
     #[test]
     fn lex_component_keyword() {
-        let toks = tokenize("component");
+        let toks = tokenize("component").expect("tokenize failed");
         assert_eq!(token_values(&toks), vec!["component"]);
     }
 
     /// `slot` must lex as a keyword.
     #[test]
     fn lex_slot_keyword() {
-        let toks = tokenize("slot");
+        let toks = tokenize("slot").expect("tokenize failed");
         assert_eq!(token_values(&toks), vec!["slot"]);
     }
 
     /// `emit` must lex as a keyword.
     #[test]
     fn lex_emit_keyword() {
-        let toks = tokenize("emit");
+        let toks = tokenize("emit").expect("tokenize failed");
         assert_eq!(token_values(&toks), vec!["emit"]);
     }
 
     /// All eight scalar type keywords are recognized.
     #[test]
     fn lex_scalar_type_keywords() {
-        let vals = token_values(&tokenize("text number bool image color node list"));
+        let vals = token_values(&tokenize("text number bool image color node list").expect("tokenize failed"));
         assert!(vals.contains(&"text".to_string()));
         assert!(vals.contains(&"number".to_string()));
         assert!(vals.contains(&"bool".to_string()));
@@ -1097,28 +1096,28 @@ mod tests {
     /// PascalCase component names lex as NAME tokens.
     #[test]
     fn lex_pascal_name() {
-        let vals = token_values(&tokenize("Button"));
+        let vals = token_values(&tokenize("Button").expect("tokenize failed"));
         assert_eq!(vals, vec!["Button"]);
     }
 
     /// kebab-case slot names lex as a single NAME token.
     #[test]
     fn lex_kebab_name() {
-        let vals = token_values(&tokenize("total-rows"));
+        let vals = token_values(&tokenize("total-rows").expect("tokenize failed"));
         assert_eq!(vals, vec!["total-rows"]);
     }
 
     /// Hyphen-free slot names are still NAME.
     #[test]
     fn lex_simple_name() {
-        let vals = token_values(&tokenize("label"));
+        let vals = token_values(&tokenize("label").expect("tokenize failed"));
         assert_eq!(vals, vec!["label"]);
     }
 
     /// `true` and `false` lex as keywords.
     #[test]
     fn lex_bool_literals() {
-        let vals = token_values(&tokenize("true false"));
+        let vals = token_values(&tokenize("true false").expect("tokenize failed"));
         assert_eq!(vals, vec!["true", "false"]);
     }
 
@@ -1126,21 +1125,21 @@ mod tests {
     /// The GrammarLexer strips the surrounding quotes from string token values.
     #[test]
     fn lex_string_literal() {
-        let vals = token_values(&tokenize("\"hello\""));
+        let vals = token_values(&tokenize("\"hello\"").expect("tokenize failed"));
         assert_eq!(vals, vec!["hello"]);
     }
 
     /// Numbers parse correctly.
     #[test]
     fn lex_number_literal() {
-        let vals = token_values(&tokenize("42 3.14 0"));
+        let vals = token_values(&tokenize("42 3.14 0").expect("tokenize failed"));
         assert_eq!(vals, vec!["42", "3.14", "0"]);
     }
 
     /// All punctuation tokens are recognized.
     #[test]
     fn lex_punctuation() {
-        let vals = token_values(&tokenize("{ } ( ) < > : ; , ="));
+        let vals = token_values(&tokenize("{ } ( ) < > : ; , =").expect("tokenize failed"));
         assert_eq!(
             vals,
             vec!["{", "}", "(", ")", "<", ">", ":", ";", ",", "="]
@@ -1150,22 +1149,22 @@ mod tests {
     /// Line comments are skipped.
     #[test]
     fn lex_line_comment_skipped() {
-        let vals = token_values(&tokenize("// comment\ncomponent"));
+        let vals = token_values(&tokenize("// comment\ncomponent").expect("tokenize failed"));
         assert_eq!(vals, vec!["component"]);
     }
 
     /// Block comments are skipped.
     #[test]
     fn lex_block_comment_skipped() {
-        let vals = token_values(&tokenize("/* block */emit"));
+        let vals = token_values(&tokenize("/* block */emit").expect("tokenize failed"));
         assert_eq!(vals, vec!["emit"]);
     }
 
     /// Whitespace is skipped; compact and spaced source produce identical tokens.
     #[test]
     fn lex_whitespace_skipped() {
-        let compact = token_values(&tokenize("slot x:text;"));
-        let spaced = token_values(&tokenize("slot x : text ;"));
+        let compact = token_values(&tokenize("slot x:text;").expect("tokenize failed"));
+        let spaced = token_values(&tokenize("slot x : text ;").expect("tokenize failed"));
         assert_eq!(compact, spaced);
     }
 
@@ -1173,7 +1172,7 @@ mod tests {
     #[test]
     fn lex_minimal_component() {
         let src = "component Button { slot label : text ; emit onClick ; }";
-        let toks = tokenize(src);
+        let toks = tokenize(src).expect("tokenize failed");
         // Must end with EOF.
         assert_eq!(toks.last().unwrap().type_, TokenType::Eof);
         // More than 5 meaningful tokens.
