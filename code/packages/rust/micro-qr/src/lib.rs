@@ -949,6 +949,61 @@ pub fn encode(
     })
 }
 
+/// Encode a string to a Micro QR Code PNG byte vector.
+///
+/// This is a single-call convenience wrapper that chains [`encode`] →
+/// [`layout_grid`] → `barcode_2d::render_scene_png` into one step.
+///
+/// The PNG is rendered by the platform-default backend dispatched through
+/// `barcode_2d::render_scene_png` (Metal on Apple, Cairo on Linux/macOS,
+/// Direct2D on Windows, Skia everywhere else as the universal fallback).
+///
+/// # Parameters
+///
+/// - `input` — the string to encode (up to 35 numeric / 21 alphanumeric / 15 byte chars).
+/// - `version` — force a specific Micro QR version (M1–M4), or `None` for auto-select.
+/// - `ecc` — force a specific ECC level, or `None` for auto-select.
+/// - `config` — optional layout configuration (quiet zone, module size …);
+///   `None` uses the Micro QR default of a 2-module quiet zone.
+///
+/// # Errors
+///
+/// Returns [`MicroQRError`] if encoding fails (input too long, invalid ECC combo,
+/// unsupported mode) or if the rendering backend returns an error (mapped to
+/// [`MicroQRError::LayoutError`]).
+///
+/// # Example
+///
+/// ```no_run
+/// use micro_qr::render_png;
+///
+/// let png_bytes = render_png("HELLO", None, None, None).unwrap();
+/// // Verify PNG magic bytes
+/// assert_eq!(&png_bytes[..4], &[0x89, b'P', b'N', b'G']);
+/// std::fs::write("hello.png", &png_bytes).unwrap();
+/// ```
+pub fn render_png(
+    input: &str,
+    version: Option<MicroQRVersion>,
+    ecc: Option<MicroQREccLevel>,
+    config: Option<Barcode2DLayoutConfig>,
+) -> Result<Vec<u8>, MicroQRError> {
+    // Step 1 — encode the input string to a module grid
+    let grid = encode(input, version, ecc)?;
+
+    // Step 2 — convert the module grid to a PaintScene (adds quiet zone, scales modules)
+    let scene = layout_grid(&grid, config)?;
+
+    // Step 3 — rasterise the PaintScene to PNG bytes via the barcode-2d rendering hub.
+    //           render_scene_png dispatches to the platform-default backend:
+    //             • Metal   — macOS / iOS / tvOS (GPU-accelerated)
+    //             • Cairo   — Linux / macOS (CPU, libcairo)
+    //             • Direct2D— Windows (GPU)
+    //             • Skia    — universal CPU fallback (always available)
+    barcode_2d::render_scene_png(&scene)
+        .map_err(|e| MicroQRError::LayoutError(format!("render_scene_png failed: {e}")))
+}
+
 /// Convert a [`ModuleGrid`] to a `PaintScene` via `barcode-2d::layout()`.
 ///
 /// Defaults to `quiet_zone_modules: 2` (Micro QR minimum, half of regular QR's 4).
@@ -1288,6 +1343,40 @@ mod tests {
         let count: usize = (1..=8).filter(|&c| m[8][c]).count()
             + (1..=7).filter(|&r| m[r][8]).count();
         assert!(count > 0, "M1 format info should have some dark modules");
+    }
+
+    // ── PNG rendering ─────────────────────────────────────────────────────
+
+    /// Verify that `render_png` produces a valid PNG stream for a simple input.
+    ///
+    /// The PNG specification (ISO 15948) mandates that every conforming PNG file
+    /// begins with the 8-byte magic signature:
+    ///   0x89 P N G \r \n 0x1A \n
+    ///   ─────────────────────────
+    ///   89 50 4E 47 0D 0A 1A 0A
+    ///
+    /// Checking these bytes is sufficient to confirm that:
+    ///   1. `encode()` produced a valid ModuleGrid.
+    ///   2. `layout_grid()` produced a valid PaintScene.
+    ///   3. `barcode_2d::render_scene_png` successfully rasterised and encoded.
+    #[test]
+    fn micro_qr_render_png_produces_valid_png() {
+        let png = render_png("HELLO", None, None, None)
+            .expect("render_png should succeed for 'HELLO'");
+
+        // Must be at least 8 bytes (magic) + 25 (IHDR chunk) + 12 (IEND chunk)
+        assert!(
+            png.len() >= 45,
+            "PNG too short ({} bytes); expected at least 45",
+            png.len()
+        );
+
+        // Verify the 8-byte PNG magic signature (RFC 2083 §3.1)
+        const PNG_MAGIC: [u8; 8] = [0x89, b'P', b'N', b'G', 0x0D, 0x0A, 0x1A, 0x0A];
+        assert_eq!(
+            &png[..8], &PNG_MAGIC,
+            "PNG magic bytes mismatch: got {:02X?}", &png[..8]
+        );
     }
 
     // ── Grid completeness ─────────────────────────────────────────────────
