@@ -184,6 +184,29 @@ pub fn is_heap(op: &str) -> bool {
 }
 
 /// Return `true` if `op` produces a result value (has a non-`None` dest).
+///
+/// # Concurrency ops that produce a value
+///
+/// | Op | Dest type |
+/// |----|-----------|
+/// | `task_spawn` | `task<T>` |
+/// | `task_current` | `task<void>` |
+/// | `task_join` | T (parks) |
+/// | `task_check_cancel` | `bool` |
+/// | `group_new` | `task_group` |
+/// | `group_spawn` | `task<T>` |
+/// | `chan_new` | `channel<T>` |
+/// | `chan_recv` | T (parks) |
+/// | `chan_try_send` | `bool` |
+/// | `chan_try_recv` | `option<T>` |
+/// | `select_new` | `select_set` |
+/// | `select_recv` | arm\_id (`u32`) |
+/// | `select_send` | arm\_id (`u32`) |
+/// | `select_join` | arm\_id (`u32`) |
+/// | `select_timer` | arm\_id (`u32`) |
+/// | `select_cancel` | arm\_id (`u32`) |
+/// | `select_wait` | arm\_id (`u32`) (parks) |
+/// | `select_default` | arm\_id (`u32`) |
 pub fn is_value_producing(op: &str) -> bool {
     is_arithmetic(op)
         || is_bitwise(op)
@@ -202,16 +225,67 @@ pub fn is_value_producing(op: &str) -> bool {
                 | "unbox"
                 | "field_load"
                 | "is_null"
+                // Concurrency ops that produce a dest value (LANG28)
+                | "task_spawn"
+                | "task_current"
+                | "task_join"
+                | "task_check_cancel"
+                | "group_new"
+                | "group_spawn"
+                | "chan_new"
+                | "chan_recv"
+                | "chan_try_send"
+                | "chan_try_recv"
+                | "select_new"
+                | "select_recv"
+                | "select_send"
+                | "select_join"
+                | "select_timer"
+                | "select_cancel"
+                | "select_wait"
+                | "select_default"
         )
 }
 
 /// Return `true` if `op` has side effects beyond producing a value.
+///
+/// An instruction with side effects must not be removed by dead-code
+/// elimination even when its result is unused.
+///
+/// # Concurrency ops with side effects (LANG28)
+///
+/// | Op | Side effect |
+/// |----|-------------|
+/// | `task_yield` | cooperatively yields to the scheduler |
+/// | `task_sleep` | parks until deadline |
+/// | `task_cancel` | signals cancel token on a task |
+/// | `task_detach` | detaches task from parent group |
+/// | `group_join` | parks until all group tasks complete |
+/// | `group_cancel` | cancels every running task in the group |
+/// | `group_close` | prevents further spawns into the group |
+/// | `chan_send` | delivers a value (may park if full) |
+/// | `chan_close` | closes the send side of a channel |
 pub fn has_side_effects(op: &str) -> bool {
     is_branch(op)
         || is_control(op)
         || matches!(
             op,
-            "store_reg" | "store_mem" | "io_out" | "type_assert" | "field_store" | "safepoint"
+            "store_reg"
+                | "store_mem"
+                | "io_out"
+                | "type_assert"
+                | "field_store"
+                | "safepoint"
+                // Concurrency ops with side effects but no dest (LANG28)
+                | "task_yield"
+                | "task_sleep"
+                | "task_cancel"
+                | "task_detach"
+                | "group_join"
+                | "group_cancel"
+                | "group_close"
+                | "chan_send"
+                | "chan_close"
         )
 }
 
@@ -219,8 +293,363 @@ pub fn has_side_effects(op: &str) -> bool {
 ///
 /// Language frontends set `IIRInstr::may_alloc = true` for these opcodes
 /// plus any `call` whose callee transitively allocates.
+///
+/// # Concurrency ops that allocate (LANG28)
+///
+/// Each of these creates a new heap-resident object:
+///
+/// | Op | Object allocated |
+/// |----|-----------------|
+/// | `task_spawn` | task control block |
+/// | `group_new` | task-group descriptor |
+/// | `group_spawn` | task control block (inside a group) |
+/// | `chan_new` | bounded-channel buffer |
+/// | `select_new` | select-set arm array |
 pub fn is_allocating(op: &str) -> bool {
-    matches!(op, "alloc" | "box" | "safepoint")
+    matches!(
+        op,
+        "alloc" | "box" | "safepoint"
+            // Concurrency allocators (LANG28)
+            | "task_spawn"
+            | "group_new"
+            | "group_spawn"
+            | "chan_new"
+            | "select_new"
+    )
+}
+
+// ---------------------------------------------------------------------------
+// Concurrency opcodes (LANG28)
+// ---------------------------------------------------------------------------
+//
+// These 27 opcodes implement the LANG28 cooperative-multitasking model.
+// They are grouped into four families:
+//
+//   • Task    — spawn, join, yield, cancel, detach lightweight tasks
+//   • Group   — task groups for structured concurrency
+//   • Channel — typed message-passing queues (bounded MPSC/MPMC)
+//   • Select  — reactive multi-arm waiting (like Go select / Erlang receive)
+//
+// ### "May park" semantics
+//
+// Many concurrency opcodes are marked `is_parking`.  A "parking" opcode
+// suspends the current task and lets the scheduler run another task.  This
+// has two implications:
+//
+// 1. A GC safepoint is implied — the GC may collect while the task is parked.
+// 2. Any live ref<T> across a parking point must be treated as potentially
+//    relocated by a moving GC (handled at a higher layer; IIR tracks which
+//    instructions may park so that analysis passes can identify these points).
+//
+// ### Implementation note (Phase 28A — this file only)
+//
+// This commit adds the opcode taxonomy to the IIR layer.  No VM or backend
+// implementation exists yet; that is the scope of LANG28B (vm-concurrency crate)
+// and later phases.  Backends that encounter concurrency opcodes should return
+// `UnsupportedOp` from their validator (as they do today for GC opcodes).
+
+/// Return `true` if `op` is a **task** opcode.
+///
+/// Tasks are lightweight coroutines managed by the LANG28 cooperative scheduler.
+///
+/// | Mnemonic | Description |
+/// |----------|-------------|
+/// | `task_spawn` | Spawn a new task; src = callee + args; dest = `task<T>` |
+/// | `task_current` | Get the current task's handle; dest = `task<void>` |
+/// | `task_yield` | Cooperatively yield to the scheduler (**may park**) |
+/// | `task_sleep` | Park until a deadline passes; src = deadline (**may park**) |
+/// | `task_join` | Await a task's result; src = `task<T>`; dest = T (**may park**) |
+/// | `task_cancel` | Request cancellation; src = `task<T>` + cancel\_token |
+/// | `task_check_cancel` | Poll the current task's cancel flag; dest = bool |
+/// | `task_detach` | Detach task from its parent group; src = `task<T>` |
+pub fn is_task(op: &str) -> bool {
+    matches!(
+        op,
+        "task_spawn"
+            | "task_current"
+            | "task_yield"
+            | "task_sleep"
+            | "task_join"
+            | "task_cancel"
+            | "task_check_cancel"
+            | "task_detach"
+    )
+}
+
+/// Return `true` if `op` is a **task-group** opcode.
+///
+/// Task groups implement structured concurrency: all spawned tasks must
+/// complete (or be cancelled) before the group is closed.
+///
+/// | Mnemonic | Description |
+/// |----------|-------------|
+/// | `group_new` | Create an empty task group; dest = `task_group` |
+/// | `group_spawn` | Spawn a task inside a group; src = group + fn + args; dest = `task<T>` |
+/// | `group_join` | Wait for all tasks in the group to finish (**may park**) |
+/// | `group_cancel` | Cancel all running tasks in the group |
+/// | `group_close` | Close group to new spawns (all future spawn calls trap) |
+pub fn is_task_group(op: &str) -> bool {
+    matches!(
+        op,
+        "group_new" | "group_spawn" | "group_join" | "group_cancel" | "group_close"
+    )
+}
+
+/// Return `true` if `op` is a **channel** opcode.
+///
+/// Channels are typed bounded queues for inter-task communication.
+///
+/// | Mnemonic | Description |
+/// |----------|-------------|
+/// | `chan_new` | Create a channel; src = capacity (0 = rendezvous); dest = `channel<T>` |
+/// | `chan_send` | Send a value; src = channel + value (**may park** if full) |
+/// | `chan_recv` | Receive a value; src = channel; dest = T (**may park** if empty) |
+/// | `chan_try_send` | Non-blocking send; dest = bool (true = accepted) |
+/// | `chan_try_recv` | Non-blocking receive; dest = `option<T>` (Some = value) |
+/// | `chan_close` | Close the send side; subsequent recv returns `None` after drain |
+pub fn is_channel(op: &str) -> bool {
+    matches!(
+        op,
+        "chan_new" | "chan_send" | "chan_recv" | "chan_try_send" | "chan_try_recv" | "chan_close"
+    )
+}
+
+/// Return `true` if `op` is a **select** opcode.
+///
+/// Select allows a task to wait on whichever of several events fires first.
+/// This is analogous to Go's `select`, Erlang's `receive`, or Rust's `tokio::select!`.
+///
+/// A typical select sequence:
+/// ```text
+/// s = select_new()
+/// arm0 = select_recv(s, ch_a)
+/// arm1 = select_send(s, ch_b, value)
+/// arm2 = select_timer(s, deadline)
+/// fired = select_wait(s)    ; parks until one arm fires
+/// ; pattern-match on fired == arm0, arm1, arm2 …
+/// ```
+///
+/// | Mnemonic | Description |
+/// |----------|-------------|
+/// | `select_new` | Create an empty select set; dest = `select_set` |
+/// | `select_recv` | Register a recv arm; src = select\_set + channel; dest = arm\_id |
+/// | `select_send` | Register a send arm; src = select\_set + channel + value; dest = arm\_id |
+/// | `select_join` | Register a task-join arm; src = select\_set + task; dest = arm\_id |
+/// | `select_timer` | Register a timer arm; src = select\_set + deadline; dest = arm\_id |
+/// | `select_cancel` | Register a cancel-check arm; src = select\_set + cancel\_token; dest = arm\_id |
+/// | `select_wait` | Block until one arm fires; src = select\_set; dest = arm\_id (**may park**) |
+/// | `select_default` | Add a no-wait arm (fires immediately if nothing else is ready) |
+pub fn is_select(op: &str) -> bool {
+    matches!(
+        op,
+        "select_new"
+            | "select_recv"
+            | "select_send"
+            | "select_join"
+            | "select_timer"
+            | "select_cancel"
+            | "select_wait"
+            | "select_default"
+    )
+}
+
+/// Return `true` if `op` is ANY concurrency opcode (task, group, channel, or select).
+///
+/// Equivalent to `is_task(op) || is_task_group(op) || is_channel(op) || is_select(op)`.
+pub fn is_concurrency(op: &str) -> bool {
+    is_task(op) || is_task_group(op) || is_channel(op) || is_select(op)
+}
+
+/// Return `true` if `op` may **park** the current task.
+///
+/// A parking opcode suspends execution and yields control to the scheduler.
+/// This implies:
+///
+/// - A GC safepoint is active (live refs may be relocated by a moving GC).
+/// - Any `cancel_token` owned by the current task may be signalled.
+/// - The task may resume on a different OS thread (in the M:N scheduler).
+///
+/// Backends and analysis passes must treat any program point where
+/// `is_parking(op)` is true as a potential stack-walk root.
+pub fn is_parking(op: &str) -> bool {
+    matches!(
+        op,
+        "task_yield"
+            | "task_sleep"
+            | "task_join"
+            | "chan_send"
+            | "chan_recv"
+            | "group_join"
+            | "select_wait"
+    )
+}
+
+// ---------------------------------------------------------------------------
+// Concurrency type-string helpers (LANG28)
+// ---------------------------------------------------------------------------
+//
+// Concurrency types are encoded as structured strings, similar to `ref<T>`:
+//
+//   "task<T>"       — handle to a spawned task that produces T
+//   "channel<T>"    — typed bounded queue carrying T
+//   "task_group"    — an opaque task-group handle (no type parameter)
+//   "select_set"    — a collection of select arms waiting to fire
+//   "cancel_token"  — a token that can be passed to task_cancel / select_cancel
+//   "deadline"      — an absolute point in time (used by task_sleep / select_timer)
+//   "option<T>"     — returned by chan_try_recv when no value is available
+//
+// These type strings are recognised by `is_concurrency_type()` so that the
+// IIR type checker and backend validators can reject them cleanly when they
+// are not supported.
+
+const TASK_PREFIX: &str = "task<";
+const CHANNEL_PREFIX: &str = "channel<";
+const OPTION_PREFIX: &str = "option<";
+
+/// Return `true` if `type_hint` is a task type `"task<T>"`.
+///
+/// ```
+/// use interpreter_ir::opcodes::is_task_type;
+/// assert!(is_task_type("task<void>"));
+/// assert!(is_task_type("task<i32>"));
+/// assert!(!is_task_type("task_group"));   // bare group handle, not parameterised
+/// ```
+pub fn is_task_type(type_hint: &str) -> bool {
+    type_hint.starts_with(TASK_PREFIX) && type_hint.ends_with('>')
+}
+
+/// Return `true` if `type_hint` is a channel type `"channel<T>"`.
+///
+/// ```
+/// use interpreter_ir::opcodes::is_channel_type;
+/// assert!(is_channel_type("channel<i32>"));
+/// assert!(is_channel_type("channel<any>"));
+/// assert!(!is_channel_type("chan_new"));
+/// ```
+pub fn is_channel_type(type_hint: &str) -> bool {
+    type_hint.starts_with(CHANNEL_PREFIX) && type_hint.ends_with('>')
+}
+
+/// Return `true` if `type_hint` is an option type `"option<T>"`.
+///
+/// `chan_try_recv` returns `"option<T>"` where T is the channel's element type.
+///
+/// ```
+/// use interpreter_ir::opcodes::is_option_type;
+/// assert!(is_option_type("option<i32>"));
+/// assert!(is_option_type("option<any>"));
+/// ```
+pub fn is_option_type(type_hint: &str) -> bool {
+    type_hint.starts_with(OPTION_PREFIX) && type_hint.ends_with('>')
+}
+
+/// Return `true` if `type_hint` is any concurrency-specific type.
+///
+/// This covers: `task<T>`, `channel<T>`, `option<T>`, `task_group`,
+/// `select_set`, `cancel_token`, `deadline`.
+///
+/// ```
+/// use interpreter_ir::opcodes::is_concurrency_type;
+/// assert!(is_concurrency_type("task<i32>"));
+/// assert!(is_concurrency_type("channel<void>"));
+/// assert!(is_concurrency_type("task_group"));
+/// assert!(is_concurrency_type("select_set"));
+/// assert!(is_concurrency_type("cancel_token"));
+/// assert!(is_concurrency_type("deadline"));
+/// assert!(is_concurrency_type("option<i32>"));
+/// assert!(!is_concurrency_type("i32"));
+/// assert!(!is_concurrency_type("ref<u8>"));
+/// ```
+pub fn is_concurrency_type(type_hint: &str) -> bool {
+    is_task_type(type_hint)
+        || is_channel_type(type_hint)
+        || is_option_type(type_hint)
+        || matches!(
+            type_hint,
+            "task_group" | "select_set" | "cancel_token" | "deadline"
+        )
+}
+
+/// Construct a `"task<T>"` type string.
+///
+/// ```
+/// use interpreter_ir::opcodes::make_task_type;
+/// assert_eq!(make_task_type("i32"),  "task<i32>");
+/// assert_eq!(make_task_type("void"), "task<void>");
+/// ```
+pub fn make_task_type(inner: &str) -> String {
+    format!("{TASK_PREFIX}{inner}>")
+}
+
+/// Extract the element type from a `"task<T>"` string.
+///
+/// Returns `None` if `type_hint` is not a task type.
+///
+/// ```
+/// use interpreter_ir::opcodes::unwrap_task_type;
+/// assert_eq!(unwrap_task_type("task<i32>"),  Some("i32".to_string()));
+/// assert_eq!(unwrap_task_type("task<void>"), Some("void".to_string()));
+/// assert_eq!(unwrap_task_type("i32"),        None);
+/// ```
+pub fn unwrap_task_type(type_hint: &str) -> Option<String> {
+    if !is_task_type(type_hint) {
+        return None;
+    }
+    let inner = &type_hint[TASK_PREFIX.len()..type_hint.len() - 1];
+    Some(inner.to_string())
+}
+
+/// Construct a `"channel<T>"` type string.
+///
+/// ```
+/// use interpreter_ir::opcodes::make_channel_type;
+/// assert_eq!(make_channel_type("i32"), "channel<i32>");
+/// ```
+pub fn make_channel_type(inner: &str) -> String {
+    format!("{CHANNEL_PREFIX}{inner}>")
+}
+
+/// Extract the element type from a `"channel<T>"` string.
+///
+/// ```
+/// use interpreter_ir::opcodes::unwrap_channel_type;
+/// assert_eq!(unwrap_channel_type("channel<i32>"), Some("i32".to_string()));
+/// assert_eq!(unwrap_channel_type("i32"), None);
+/// ```
+pub fn unwrap_channel_type(type_hint: &str) -> Option<String> {
+    if !is_channel_type(type_hint) {
+        return None;
+    }
+    let inner = &type_hint[CHANNEL_PREFIX.len()..type_hint.len() - 1];
+    Some(inner.to_string())
+}
+
+/// Construct an `"option<T>"` type string.
+///
+/// ```
+/// use interpreter_ir::opcodes::make_option_type;
+/// assert_eq!(make_option_type("i32"), "option<i32>");
+/// ```
+pub fn make_option_type(inner: &str) -> String {
+    format!("{OPTION_PREFIX}{inner}>")
+}
+
+/// Extract the element type from an `"option<T>"` string.
+///
+/// Returns `None` if `type_hint` is not an option type.
+///
+/// ```
+/// use interpreter_ir::opcodes::unwrap_option_type;
+/// assert_eq!(unwrap_option_type("option<i32>"),  Some("i32".to_string()));
+/// assert_eq!(unwrap_option_type("option<any>"),  Some("any".to_string()));
+/// assert_eq!(unwrap_option_type("i32"),           None);
+/// ```
+pub fn unwrap_option_type(type_hint: &str) -> Option<String> {
+    if !is_option_type(type_hint) {
+        return None;
+    }
+    let inner = &type_hint[OPTION_PREFIX.len()..type_hint.len() - 1];
+    Some(inner.to_string())
 }
 
 /// Return `true` if `op` is a recognised IIR mnemonic.
@@ -238,6 +667,7 @@ pub fn is_known_op(op: &str) -> bool {
         || is_io(op)
         || is_coercion(op)
         || is_heap(op)
+        || is_concurrency(op)
 }
 
 /// Return `true` if `type_hint` is a concrete (non-dynamic) type.
@@ -297,5 +727,213 @@ mod tests {
             assert!(is_known_op(op), "{op}");
         }
         assert!(!is_known_op("tetrad.move"));
+    }
+
+    // ── LANG28 concurrency predicate tests ────────────────────────────────────
+
+    #[test]
+    fn task_ops_all_recognised() {
+        let task_ops = [
+            "task_spawn", "task_current", "task_yield", "task_sleep",
+            "task_join", "task_cancel", "task_check_cancel", "task_detach",
+        ];
+        for op in &task_ops {
+            assert!(is_task(op), "{op} should be a task op");
+            assert!(is_concurrency(op), "{op} should be a concurrency op");
+            assert!(is_known_op(op), "{op} should be a known op");
+        }
+        // non-task ops should not match
+        assert!(!is_task("chan_new"));
+        assert!(!is_task("group_new"));
+        assert!(!is_task("select_new"));
+        assert!(!is_task("add"));
+    }
+
+    #[test]
+    fn task_group_ops_all_recognised() {
+        let group_ops = ["group_new", "group_spawn", "group_join", "group_cancel", "group_close"];
+        for op in &group_ops {
+            assert!(is_task_group(op), "{op} should be a task-group op");
+            assert!(is_concurrency(op), "{op} should be a concurrency op");
+        }
+        assert!(!is_task_group("task_spawn"));
+        assert!(!is_task_group("chan_new"));
+    }
+
+    #[test]
+    fn channel_ops_all_recognised() {
+        let chan_ops = ["chan_new", "chan_send", "chan_recv", "chan_try_send", "chan_try_recv", "chan_close"];
+        for op in &chan_ops {
+            assert!(is_channel(op), "{op} should be a channel op");
+            assert!(is_concurrency(op), "{op} should be a concurrency op");
+        }
+        assert!(!is_channel("task_spawn"));
+        assert!(!is_channel("select_new"));
+    }
+
+    #[test]
+    fn select_ops_all_recognised() {
+        let sel_ops = [
+            "select_new", "select_recv", "select_send", "select_join",
+            "select_timer", "select_cancel", "select_wait", "select_default",
+        ];
+        for op in &sel_ops {
+            assert!(is_select(op), "{op} should be a select op");
+            assert!(is_concurrency(op), "{op} should be a concurrency op");
+        }
+        assert!(!is_select("chan_recv"));
+        assert!(!is_select("task_join"));
+    }
+
+    #[test]
+    fn parking_ops_are_a_strict_subset_of_concurrency() {
+        let parking_ops = [
+            "task_yield", "task_sleep", "task_join",
+            "chan_send", "chan_recv",
+            "group_join", "select_wait",
+        ];
+        for op in &parking_ops {
+            assert!(is_parking(op), "{op} should be parking");
+            assert!(is_concurrency(op), "{op} should also be concurrency");
+        }
+        // non-parking ops
+        assert!(!is_parking("task_spawn"));
+        assert!(!is_parking("chan_new"));
+        assert!(!is_parking("add"));
+    }
+
+    #[test]
+    fn concurrency_value_producing_ops() {
+        // These ops produce a dest and must be in is_value_producing
+        let vp = [
+            "task_spawn", "task_current", "task_join", "task_check_cancel",
+            "group_new", "group_spawn",
+            "chan_new", "chan_recv", "chan_try_send", "chan_try_recv",
+            "select_new", "select_recv", "select_send", "select_join",
+            "select_timer", "select_cancel", "select_wait", "select_default",
+        ];
+        for op in &vp {
+            assert!(is_value_producing(op), "{op} should be value-producing");
+        }
+        // These ops do NOT produce a value
+        for op in &["task_yield", "task_sleep", "task_cancel", "task_detach",
+                    "group_join", "group_cancel", "group_close",
+                    "chan_send", "chan_close"] {
+            assert!(!is_value_producing(op), "{op} should NOT be value-producing");
+        }
+    }
+
+    #[test]
+    fn concurrency_side_effecting_ops() {
+        let se = [
+            "task_yield", "task_sleep", "task_cancel", "task_detach",
+            "group_join", "group_cancel", "group_close",
+            "chan_send", "chan_close",
+        ];
+        for op in &se {
+            assert!(has_side_effects(op), "{op} should have side effects");
+        }
+        // Value-producing concurrency ops are NOT side-effecting under the IIR model
+        // (they may park but they produce a well-defined value and are not DCE-exempt
+        //  solely for side-effect reasons — they would be removed if the result is dead)
+        assert!(!has_side_effects("task_spawn"));
+        assert!(!has_side_effects("chan_new"));
+        assert!(!has_side_effects("select_new"));
+    }
+
+    #[test]
+    fn concurrency_allocating_ops() {
+        let alloc_ops = ["task_spawn", "group_new", "group_spawn", "chan_new", "select_new"];
+        for op in &alloc_ops {
+            assert!(is_allocating(op), "{op} should be allocating");
+        }
+        // Non-allocating concurrency ops
+        assert!(!is_allocating("task_yield"));
+        assert!(!is_allocating("chan_send"));
+        assert!(!is_allocating("select_wait"));
+    }
+
+    // ── LANG28 concurrency type helpers ───────────────────────────────────────
+
+    #[test]
+    fn task_type_round_trip() {
+        assert!(is_task_type("task<void>"));
+        assert!(is_task_type("task<i32>"));
+        assert!(is_task_type("task<any>"));
+        assert!(!is_task_type("task_group"));   // bare handle, no angle brackets
+        assert!(!is_task_type("i32"));
+        assert!(!is_task_type("task<"));        // malformed (no closing >)
+
+        assert_eq!(make_task_type("i32"),  "task<i32>");
+        assert_eq!(make_task_type("void"), "task<void>");
+
+        assert_eq!(unwrap_task_type("task<i32>"),  Some("i32".to_string()));
+        assert_eq!(unwrap_task_type("task<void>"), Some("void".to_string()));
+        assert_eq!(unwrap_task_type("task<any>"),  Some("any".to_string()));
+        assert_eq!(unwrap_task_type("i32"),         None);
+    }
+
+    #[test]
+    fn channel_type_round_trip() {
+        assert!(is_channel_type("channel<i32>"));
+        assert!(is_channel_type("channel<any>"));
+        assert!(!is_channel_type("chan_new"));
+        assert!(!is_channel_type("i32"));
+
+        assert_eq!(make_channel_type("i32"), "channel<i32>");
+        assert_eq!(make_channel_type("u8"),  "channel<u8>");
+
+        assert_eq!(unwrap_channel_type("channel<i32>"), Some("i32".to_string()));
+        assert_eq!(unwrap_channel_type("channel<any>"), Some("any".to_string()));
+        assert_eq!(unwrap_channel_type("i32"),           None);
+    }
+
+    #[test]
+    fn option_type_round_trip() {
+        assert!(is_option_type("option<i32>"));
+        assert!(is_option_type("option<any>"));
+        assert!(!is_option_type("i32"));
+        assert!(!is_option_type("option"));
+
+        assert_eq!(make_option_type("i32"), "option<i32>");
+        assert_eq!(make_option_type("u8"),  "option<u8>");
+
+        assert_eq!(unwrap_option_type("option<i32>"),  Some("i32".to_string()));
+        assert_eq!(unwrap_option_type("option<any>"),  Some("any".to_string()));
+        assert_eq!(unwrap_option_type("i32"),           None);
+    }
+
+    #[test]
+    fn is_concurrency_type_covers_all_variants() {
+        // Parameterised types
+        assert!(is_concurrency_type("task<i32>"));
+        assert!(is_concurrency_type("task<void>"));
+        assert!(is_concurrency_type("channel<i32>"));
+        assert!(is_concurrency_type("channel<any>"));
+        assert!(is_concurrency_type("option<i32>"));
+        // Bare concurrency types
+        assert!(is_concurrency_type("task_group"));
+        assert!(is_concurrency_type("select_set"));
+        assert!(is_concurrency_type("cancel_token"));
+        assert!(is_concurrency_type("deadline"));
+        // Non-concurrency types
+        assert!(!is_concurrency_type("i32"));
+        assert!(!is_concurrency_type("ref<u8>"));
+        assert!(!is_concurrency_type("any"));
+        assert!(!is_concurrency_type("bool"));
+    }
+
+    #[test]
+    fn is_known_op_includes_concurrency() {
+        for op in &[
+            "task_spawn", "task_current", "task_yield", "task_sleep",
+            "task_join", "task_cancel", "task_check_cancel", "task_detach",
+            "group_new", "group_spawn", "group_join", "group_cancel", "group_close",
+            "chan_new", "chan_send", "chan_recv", "chan_try_send", "chan_try_recv", "chan_close",
+            "select_new", "select_recv", "select_send", "select_join",
+            "select_timer", "select_cancel", "select_wait", "select_default",
+        ] {
+            assert!(is_known_op(op), "{op} must be in is_known_op");
+        }
     }
 }
