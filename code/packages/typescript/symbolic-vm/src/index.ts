@@ -10,6 +10,7 @@ import {
   ATANH,
   COS,
   COSH,
+  D,
   DEFINE,
   DIV,
   EQUAL,
@@ -345,8 +346,148 @@ function buildHandlerTable(simplify: boolean): ReadonlyMap<string, Handler> {
     return name;
   });
   table.set(LIST.name, (_vm, expr) => expr);
+  if (simplify) {
+    table.set(D.name, differentiate());
+  }
 
   return table;
+}
+
+function differentiate(): Handler {
+  return (vm, expr) => {
+    if (expr.args.length !== 2) {
+      throw new ArityError(`D expects 2 arguments, got ${expr.args.length}`);
+    }
+    const [f, x] = expr.args;
+    if (x.kind !== "symbol") {
+      return expr;
+    }
+    const result = diff(f, x);
+    return isDeferredDerivative(result, f, x) ? result : vm.eval(result);
+  };
+}
+
+function diff(f: IRNode, x: IRNode): IRNode {
+  if (!dependsOn(f, x)) {
+    return int(0);
+  }
+  if (equals(f, x)) {
+    return int(1);
+  }
+  if (f.kind !== "apply") {
+    return app(D, [f, x]);
+  }
+
+  if (equals(f.head, ADD)) {
+    return f.args.map((arg) => diff(arg, x)).reduce((left, right) => app(ADD, [left, right]));
+  }
+  if (equals(f.head, SUB)) {
+    const [a, b] = binaryArgs(f);
+    return app(SUB, [diff(a, x), diff(b, x)]);
+  }
+  if (equals(f.head, NEG)) {
+    const [inner] = unaryArgs(f);
+    return app(NEG, [diff(inner, x)]);
+  }
+  if (equals(f.head, MUL)) {
+    const [a, b] = binaryArgs(f);
+    return app(ADD, [
+      app(MUL, [diff(a, x), b]),
+      app(MUL, [a, diff(b, x)]),
+    ]);
+  }
+  if (equals(f.head, DIV)) {
+    const [a, b] = binaryArgs(f);
+    return app(DIV, [
+      app(SUB, [
+        app(MUL, [diff(a, x), b]),
+        app(MUL, [a, diff(b, x)]),
+      ]),
+      app(POW, [b, int(2)]),
+    ]);
+  }
+  if (equals(f.head, POW)) {
+    const [base, exponent] = binaryArgs(f);
+    const baseDepends = dependsOn(base, x);
+    const exponentDepends = dependsOn(exponent, x);
+    if (!exponentDepends) {
+      return app(MUL, [
+        app(MUL, [
+          exponent,
+          app(POW, [base, app(SUB, [exponent, int(1)])]),
+        ]),
+        diff(base, x),
+      ]);
+    }
+    if (!baseDepends) {
+      return app(MUL, [
+        app(MUL, [f, app(LOG, [base])]),
+        diff(exponent, x),
+      ]);
+    }
+    return diff(app(EXP, [app(MUL, [exponent, app(LOG, [base])])]), x);
+  }
+
+  const [inner] = f.args.length === 1 ? [f.args[0]] : [undefined];
+  if (inner !== undefined) {
+    const innerDiff = diff(inner, x);
+    if (equals(f.head, SIN)) {
+      return app(MUL, [app(COS, [inner]), innerDiff]);
+    }
+    if (equals(f.head, COS)) {
+      return app(MUL, [app(NEG, [app(SIN, [inner])]), innerDiff]);
+    }
+    if (equals(f.head, TAN)) {
+      return app(DIV, [innerDiff, app(POW, [app(COS, [inner]), int(2)])]);
+    }
+    if (equals(f.head, EXP)) {
+      return app(MUL, [app(EXP, [inner]), innerDiff]);
+    }
+    if (equals(f.head, LOG)) {
+      return app(DIV, [innerDiff, inner]);
+    }
+    if (equals(f.head, SQRT)) {
+      return app(DIV, [innerDiff, app(MUL, [int(2), app(SQRT, [inner])])]);
+    }
+    if (equals(f.head, SINH)) {
+      return app(MUL, [app(COSH, [inner]), innerDiff]);
+    }
+    if (equals(f.head, COSH)) {
+      return app(MUL, [app(SINH, [inner]), innerDiff]);
+    }
+    if (equals(f.head, TANH)) {
+      return app(DIV, [innerDiff, app(POW, [app(COSH, [inner]), int(2)])]);
+    }
+    if (equals(f.head, ASINH)) {
+      return app(DIV, [innerDiff, app(SQRT, [app(ADD, [app(POW, [inner, int(2)]), int(1)])])]);
+    }
+    if (equals(f.head, ACOSH)) {
+      return app(DIV, [innerDiff, app(SQRT, [app(SUB, [app(POW, [inner, int(2)]), int(1)])])]);
+    }
+    if (equals(f.head, ATANH)) {
+      return app(DIV, [innerDiff, app(SUB, [int(1), app(POW, [inner, int(2)])])]);
+    }
+  }
+
+  return app(D, [f, x]);
+}
+
+function dependsOn(node: IRNode, variable: IRNode): boolean {
+  if (node.kind === "symbol") {
+    return equals(node, variable);
+  }
+  if (node.kind === "apply") {
+    return dependsOn(node.head, variable) || node.args.some((arg) => dependsOn(arg, variable));
+  }
+  return false;
+}
+
+function isDeferredDerivative(node: IRNode, f: IRNode, x: IRNode): boolean {
+  return node.kind === "apply"
+    && equals(node.head, D)
+    && node.args.length === 2
+    && equals(node.args[0], f)
+    && equals(node.args[1], x);
 }
 
 type Numeric =
