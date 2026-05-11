@@ -170,6 +170,7 @@ members = [
     "macsyma-wasm",
     "logic-gates",
     "logic-core",
+    "logic-engine",
     "loss-functions",
     "markov-chain",
     "note-frequency",

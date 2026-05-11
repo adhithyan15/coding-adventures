@@ -1,0 +1,8 @@
+[package]
+name = "logic-engine"
+version = "0.1.0"
+edition = "2021"
+description = "Probability-aware facts, rules, knowledge base, and deterministic find-first search — first slice of LP19."
+
+[dependencies]
+logic-core = { path = "../logic-core" }
