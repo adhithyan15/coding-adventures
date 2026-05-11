@@ -2,6 +2,17 @@
 
 All notable changes to this package are documented here.
 
+## Unreleased
+
+### Bug fixes
+
+- Fixed ALGOL 60 comment skip pattern in `code/grammars/algol/algol60.tokens`.
+  The previous pattern `/(?i:comment)\b[^;]*;/` was silently broken: Lua's
+  `pcre_to_lua` converter drops inline `(?i:...)` flag groups and emits a
+  literal backslash for `\b`, so the skip pattern never matched any comment.
+  Changed to `/comment[^a-zA-Z0-9_][^;]*;/` which is Lua-compatible and still
+  rejects identifiers like "commentary" via the explicit boundary character class.
+
 ## [0.1.0] — 2026-04-06
 
 ### Added
