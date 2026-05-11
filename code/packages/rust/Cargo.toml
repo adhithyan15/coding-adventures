@@ -174,6 +174,7 @@ members = [
     "adjudication-ir",
     "prolog-lexer",
     "prolog-parser",
+    "prolog-loader",
     "loss-functions",
     "markov-chain",
     "note-frequency",
