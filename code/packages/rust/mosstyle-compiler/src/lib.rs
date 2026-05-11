@@ -224,12 +224,17 @@ const VALID_STATES: &[&str] = &[
 // ===========================================================================
 
 /// Tokenize mosstyle source text into a flat `Vec<Token>`.
-pub fn tokenize(source: &str) -> Vec<Token> {
+///
+/// Returns `Err(CompileError)` rather than panicking if the lexer encounters
+/// a character it cannot recognise.  Callers such as `parse_style` propagate
+/// this error upward through the `compile` pipeline.
+pub fn tokenize(source: &str) -> Result<Vec<Token>, CompileError> {
     let grammar = _grammar::token_grammar();
     let mut lexer = GrammarLexer::new(source, &grammar);
-    lexer
-        .tokenize()
-        .unwrap_or_else(|e| panic!("mosstyle tokenization failed: {e}"))
+    lexer.tokenize().map_err(|e| CompileError {
+        kind: ErrorKind::InternalError,
+        message: format!("mosstyle tokenization failed: {e}"),
+    })
 }
 
 // ===========================================================================
@@ -238,7 +243,7 @@ pub fn tokenize(source: &str) -> Vec<Token> {
 
 /// Parse mosstyle source text into a grammar AST.
 pub fn parse_style(source: &str) -> Result<GrammarASTNode, String> {
-    let tokens = tokenize(source);
+    let tokens = tokenize(source).map_err(|e| e.message)?;
     let grammar = _grammar::parser_grammar();
     let mut parser = GrammarParser::new(tokens, grammar);
     parser.parse().map_err(|e| format!("parse error: {e}"))
@@ -421,7 +426,20 @@ fn extract_style_value(sv_ast: &GrammarASTNode) -> Result<String, CompileError> 
                         message: format!("Token '{}' not found in token map", t.value),
                     })
                 }
-                // HASH_COLOR, DIMENSION, NUMBER, STRING, NAME — return raw value.
+                // HASH_COLOR, DIMENSION, NUMBER, NAME — safe by grammar constraints:
+                //   HASH_COLOR: #[0-9a-fA-F]{3,8} — only hex digits
+                //   DIMENSION:  number + unit suffix — alphanumeric
+                //   NUMBER:     [0-9]+(\.[0-9]+)?  — digits only
+                //   NAME:       [a-zA-Z][a-zA-Z0-9-]* — alphanumeric + hyphen
+                // None of these can contain '}' or ';' that would break CSS rule syntax.
+                //
+                // STRING: "([^"\\\n]|\\.)*" — the token value includes the surrounding
+                // double-quote delimiters.  When emitted into CSS as `prop: "..."`, the
+                // `}` or `;` characters inside the string literal are safely contained by
+                // the CSS parser's string tokenisation; they do NOT terminate the rule.
+                // Additionally, the lexer stops at the closing `"`, so characters after
+                // the closing quote are separate tokens and the grammar rejects them.
+                // No CSS injection is possible via the grammar's STRING tokens.
                 _ => Ok(t.value.clone()),
             };
         }
@@ -644,7 +662,7 @@ mod tests {
     #[test]
     fn test_tokenize_keywords() {
         let src = "style Grid { part root { } }";
-        let tokens = tokenize(src);
+        let tokens = tokenize(src).expect("tokenize failed");
         let values: Vec<_> = tokens
             .iter()
             .filter(|t| t.type_ != TokenType::Eof)
@@ -661,7 +679,7 @@ mod tests {
     #[test]
     fn test_tokenize_dimension() {
         let src = "border-width: 4px ;";
-        let tokens = tokenize(src);
+        let tokens = tokenize(src).expect("tokenize failed");
         let non_eof: Vec<_> = tokens
             .iter()
             .filter(|t| t.type_ != TokenType::Eof)
@@ -677,7 +695,7 @@ mod tests {
     #[test]
     fn test_tokenize_hash_color() {
         let src = "background: #1e1e1e ;";
-        let tokens = tokenize(src);
+        let tokens = tokenize(src).expect("tokenize failed");
         let non_eof: Vec<_> = tokens
             .iter()
             .filter(|t| t.type_ != TokenType::Eof)
@@ -691,7 +709,7 @@ mod tests {
     #[test]
     fn test_tokenize_token_ref() {
         let src = "background: $color-surface ;";
-        let tokens = tokenize(src);
+        let tokens = tokenize(src).expect("tokenize failed");
         let non_eof: Vec<_> = tokens
             .iter()
             .filter(|t| t.type_ != TokenType::Eof)
