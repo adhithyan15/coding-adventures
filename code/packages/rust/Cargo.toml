@@ -173,6 +173,7 @@ members = [
     "logic-engine",
     "adjudication-ir",
     "prolog-lexer",
+    "prolog-parser",
     "loss-functions",
     "markov-chain",
     "note-frequency",

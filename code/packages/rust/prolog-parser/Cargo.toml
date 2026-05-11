@@ -1,0 +1,12 @@
+[package]
+name = "prolog-parser"
+version = "0.1.0"
+edition = "2021"
+description = "ISO/Core Prolog parser — grammar-driven via parser::GrammarParser + iso.grammar; lowers AST to logic-core terms."
+
+[dependencies]
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+parser = { path = "../parser" }
+prolog-lexer = { path = "../prolog-lexer" }
+logic-core = { path = "../logic-core" }
