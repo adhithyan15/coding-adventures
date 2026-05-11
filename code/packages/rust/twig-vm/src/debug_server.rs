@@ -37,7 +37,7 @@
 //! send {event: "exited", exit_code}
 //! ```
 
-use std::collections::{HashSet, VecDeque};
+use std::collections::{HashMap, HashSet, VecDeque};
 use std::io::{BufRead, BufReader, Read, Write};
 use std::net::TcpStream;
 
@@ -129,12 +129,28 @@ pub struct DebugServer {
     /// Last frame's register values, for `get_slot` queries.  Cleared on
     /// every `before_instruction` and refilled from the FrameView.
     last_frame_registers: Vec<(String, String)>,
+    /// Stable per-function slot assignment: `fn_name → sorted variable names`.
+    ///
+    /// Built from the IIR module at construction time (via
+    /// [`Self::new_with_module`]).  When this map contains an entry for the
+    /// current function, `snapshot_frame` uses it to assign slot indices in
+    /// alphabetical order over **all** variables of the function — not just
+    /// the ones that have been assigned so far.  This produces stable,
+    /// predictable slot indices that match what [`twig_dap::build_sidecar`]
+    /// emits for `reg_index`.
+    ///
+    /// When empty (plain `new` was used), `snapshot_frame` falls back to the
+    /// original behaviour: sort whatever variable names exist in the live frame.
+    fn_sorted_vars: HashMap<String, Vec<String>>,
 }
 
 impl DebugServer {
     /// Wrap a connected `TcpStream` as a debug server.
     ///
     /// The stream's `try_clone` must succeed (used to split read/write).
+    ///
+    /// Use [`Self::new_with_module`] instead when the IIR module is available
+    /// so that `get_slot` returns stable, sidecar-compatible slot indices.
     pub fn new(stream: TcpStream) -> std::io::Result<Self> {
         let writer = stream.try_clone()?;
         let reader = BufReader::new(stream);
@@ -147,7 +163,43 @@ impl DebugServer {
             call_stack:            Vec::new(),
             started:               false,
             last_frame_registers:  Vec::new(),
+            fn_sorted_vars:        HashMap::new(),
         })
+    }
+
+    /// Wrap a connected `TcpStream` as a debug server, pre-loading stable
+    /// slot indices from the IIR module.
+    ///
+    /// For each function in `module`, collects all variable names (parameters
+    /// and instruction `dest` fields) and sorts them alphabetically.  The
+    /// resulting list is the **stable slot assignment** used by `get_slot`:
+    /// slot `N` always corresponds to the Nth alphabetically-sorted variable
+    /// of the current function, regardless of how many variables have been
+    /// assigned at the current instruction pointer.
+    ///
+    /// This matches the ordering that [`twig_dap::build_sidecar`] emits for
+    /// `reg_index`, so the DAP `variables` panel shows the correct values.
+    pub fn new_with_module(
+        stream: TcpStream,
+        module: &interpreter_ir::IIRModule,
+    ) -> std::io::Result<Self> {
+        let mut srv = Self::new(stream)?;
+        for func in &module.functions {
+            // Collect every variable name this function touches.
+            let mut names: HashSet<String> = HashSet::new();
+            for (param_name, _) in &func.params {
+                names.insert(param_name.clone());
+            }
+            for instr in &func.instructions {
+                if let Some(dest) = &instr.dest {
+                    names.insert(dest.clone());
+                }
+            }
+            let mut sorted: Vec<String> = names.into_iter().collect();
+            sorted.sort();
+            srv.fn_sorted_vars.insert(func.name.clone(), sorted);
+        }
+        Ok(srv)
     }
 
     // -------------------------------------------------------------------
@@ -333,13 +385,37 @@ impl DebugServer {
     }
 
     /// Snapshot the FrameView's registers into `last_frame_registers`.
-    fn snapshot_frame(&mut self, frame: &FrameView<'_>) {
-        let mut names = frame.register_names();
-        names.sort(); // stable order for indexed slot access
+    ///
+    /// ## Slot-index strategy
+    ///
+    /// If a stable variable list was pre-loaded for `fn_name` (via
+    /// [`Self::new_with_module`]), `last_frame_registers[N]` is the Nth
+    /// alphabetically-sorted variable of the function — even if that variable
+    /// hasn't been assigned yet (it gets the string `"<undef>"`).  This
+    /// produces slot indices that are **constant across all breakpoints** in
+    /// the function and match what the debug sidecar declares.
+    ///
+    /// Fallback (no module was loaded): sort the names that happen to be in
+    /// the live frame right now — the original behaviour.
+    fn snapshot_frame(&mut self, fn_name: &str, frame: &FrameView<'_>) {
         self.last_frame_registers.clear();
-        for n in names {
-            let r = frame.read_register(&n).unwrap_or_else(|| "<undef>".to_string());
-            self.last_frame_registers.push((n, r));
+        if let Some(sorted) = self.fn_sorted_vars.get(fn_name) {
+            // Stable assignment: iterate over ALL variables of the function
+            // in alphabetical order, returning <undef> for ones not yet set.
+            for name in sorted {
+                let r = frame.read_register(name)
+                    .unwrap_or_else(|| "<undef>".to_string());
+                self.last_frame_registers.push((name.clone(), r));
+            }
+        } else {
+            // Fallback: use the live-frame names (original behaviour).
+            let mut names = frame.register_names();
+            names.sort();
+            for n in names {
+                let r = frame.read_register(&n)
+                    .unwrap_or_else(|| "<undef>".to_string());
+                self.last_frame_registers.push((n, r));
+            }
         }
     }
 
@@ -386,7 +462,7 @@ impl DebugHooks for DebugServer {
         frame: &FrameView<'_>,
     ) {
         self.track_stack(fn_name, depth, pc);
-        self.snapshot_frame(frame);
+        self.snapshot_frame(fn_name, frame);
 
         // 1. Drain any pending commands (set_breakpoint, etc.) that
         //    arrived while the VM was running.

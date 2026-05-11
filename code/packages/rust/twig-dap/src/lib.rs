@@ -33,7 +33,7 @@
 #![warn(missing_docs)]
 #![warn(rust_2018_idioms)]
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::path::{Path, PathBuf};
 use std::process::Child;
 
@@ -124,28 +124,23 @@ impl LanguageDebugAdapter for TwigDebugAdapter {
 /// body (`live_start=0, live_end=n_instrs`).
 ///
 /// **Phase 2 — SSA temporaries.**
-/// `VMFrame::assign` allocates the next sequential slot (`name_to_reg.len()`)
-/// whenever a variable name is first written.  Walking instructions in
-/// declaration order (which equals execution order for SSA code where each
-/// name is defined exactly once) produces the same mapping.  Each temporary
-/// is live from the instruction that defines it through to the end of the
-/// function (`live_start=def_instr, live_end=n_instrs`) — a conservative
-/// approximation that shows the variable as soon as it has a value and keeps
-/// it visible until function exit, matching the behaviour of GDB/LLDB for
-/// ordinary local variables.
+/// Each temporary is live from the instruction that defines it through to the
+/// end of the function (`live_start=def_instr, live_end=n_instrs`) — a
+/// conservative approximation that shows the variable as soon as it has a
+/// value and keeps it visible until function exit, matching the behaviour of
+/// GDB/LLDB for ordinary local variables.
 ///
-/// ### Why declaration order ≈ execution order
+/// ### Slot-index assignment: alphabetical order
 ///
-/// IIR is in SSA form: every variable name appears as a `dest` exactly once.
-/// When the VM executes in a straight-line function the first-write order is
-/// identical to the instruction-array order.  For functions with branches the
-/// approximation may assign a reg_index slightly out of sync with one branch
-/// path, but the variable value is still readable at any instruction where the
-/// VM has actually written to that slot — the sidecar just exposes all
-/// declared variables at all breakpoints (conservative / "always visible")
-/// rather than a precise per-path live-range.  This is the standard V1
-/// tradeoff for debuggers; LLDB itself uses the same conservative strategy
-/// for `-O0` builds.
+/// The twig-vm debug server's `get_slot(N)` returns the Nth variable when
+/// **all** variable names of the function are sorted alphabetically.  To
+/// ensure the sidecar's `reg_index` values match, `build_sidecar` collects
+/// every variable name (params + instruction dests), sorts them
+/// alphabetically, and assigns slot indices in that sorted order.
+///
+/// Example — `(define (sq x) (* x x))` compiles to params `[x]` and a temp
+/// `v0`.  Alphabetically: `v0`→slot 0, `x`→slot 1.  So `reg_index("x") = 1`
+/// and the DAP adapter calls `get_slot(frame, 1)` to read `x`'s live value.
 pub fn build_sidecar(module: &IIRModule, source_path: &Path) -> Vec<u8> {
     let mut w = DebugSidecarWriter::new();
     let path_str = source_path.to_string_lossy().to_string();
@@ -166,46 +161,65 @@ pub fn build_sidecar(module: &IIRModule, source_path: &Path) -> Vec<u8> {
 
         // ---- Variable declarations ------------------------------------
         //
-        // `name_to_reg` shadows VMFrame::name_to_reg so we can assign the
-        // same slot indices the runtime will use.  Insertion order is
-        // significant — each new name gets slot `name_to_reg.len()` at the
-        // time of first insertion, mirroring `VMFrame::assign`.
-        let mut name_to_reg: HashMap<String, u32> = HashMap::new();
+        // The twig-vm debug server assigns `get_slot` indices by sorting ALL
+        // variable names of the current function alphabetically (see
+        // `DebugServer::new_with_module` / `snapshot_frame`).  We must use
+        // the exact same ordering here so that the slot index in the sidecar
+        // matches what `get_slot(slot)` will return.
+        //
+        // Algorithm:
+        // 1. Collect every variable name (params + instruction dests).
+        // 2. Sort alphabetically — this is the stable slot assignment.
+        // 3. Build name → slot_index map.
+        // 4. Emit each variable with its stable slot index and live range.
+        //    - Parameters: live [0, n_instrs) — present before first instruction.
+        //    - SSA temps:  live [def_instr, n_instrs) — visible once defined.
 
-        // Phase 1 — parameters.  `VMFrame::for_function` fills these BEFORE
-        // execution starts, so they always occupy slots 0..params.len()-1.
-        for (i, (param_name, param_type)) in func.params.iter().enumerate() {
-            let reg_idx = i as u32;
-            name_to_reg.insert(param_name.clone(), reg_idx);
-            w.declare_variable(&func.name, reg_idx, param_name, param_type, 0, n_instrs);
+        // Step 1 — collect unique names.
+        let mut all_names: HashSet<String> = HashSet::new();
+        for (param_name, _) in &func.params {
+            all_names.insert(param_name.clone());
+        }
+        for instr in &func.instructions {
+            if let Some(dest) = &instr.dest {
+                all_names.insert(dest.clone());
+            }
         }
 
-        // Phase 2 — SSA temporaries.  Walk instructions in declaration order
-        // and assign the next sequential slot to each new dest name.
+        // Step 2 — sort alphabetically (same as DebugServer::new_with_module).
+        let mut sorted_names: Vec<String> = all_names.into_iter().collect();
+        sorted_names.sort();
+
+        // Step 3 — name → slot_index.
+        let slot_of: HashMap<String, u32> = sorted_names.iter()
+            .enumerate()
+            .map(|(i, n)| (n.clone(), i as u32))
+            .collect();
+
+        // Step 4a — emit parameters (live for the whole function).
+        for (param_name, param_type) in &func.params {
+            let slot = slot_of[param_name];
+            w.declare_variable(&func.name, slot, param_name, param_type, 0, n_instrs);
+        }
+
+        // Step 4b — emit SSA temporaries (live from defining instruction).
+        let param_names: std::collections::HashSet<&str> = func.params.iter()
+            .map(|(n, _)| n.as_str())
+            .collect();
         for (instr_idx, instr) in func.instructions.iter().enumerate() {
             let dest_name = match &instr.dest {
-                Some(d) => d,
-                None => continue,       // void instruction — no register produced
+                Some(d) if !param_names.contains(d.as_str()) => d,
+                _ => continue,  // void or param-shadowing instruction
             };
-            if name_to_reg.contains_key(dest_name) {
-                // Already mapped (only possible if the same name appears as a
-                // dest twice, which is a violation of SSA but shouldn't crash
-                // the sidecar builder — just skip the duplicate).
-                continue;
-            }
-            // Slot index = number of variables already registered, matching
-            // VMFrame::assign's `let next_idx = self.name_to_reg.len()`.
-            let reg_idx = name_to_reg.len() as u32;
-            name_to_reg.insert(dest_name.clone(), reg_idx);
-
-            // Conservative live range: the variable is valid from the
-            // instruction that defines it through to the end of the
-            // function.  The debugger will show it as soon as the VM
-            // executes the defining instruction and it stays visible
-            // at every subsequent breakpoint in the same frame.
+            let slot = match slot_of.get(dest_name) {
+                Some(&s) => s,
+                None => continue,   // defensive: should never happen
+            };
+            // Conservative live range: visible from the defining instruction
+            // through to the end of the function (same GDB/LLDB -O0 strategy).
             w.declare_variable(
                 &func.name,
-                reg_idx,
+                slot,
                 dest_name,
                 &instr.type_hint,
                 instr_idx,
