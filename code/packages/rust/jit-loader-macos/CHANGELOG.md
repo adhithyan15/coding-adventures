@@ -1,5 +1,19 @@
 # Changelog — `jit-loader-macos`
 
+## 0.1.1 — 2026-05-10
+
+**LANG25-25A — Doctest cfg fix.**
+
+The crate-level `#![cfg(all(target_os = "macos", target_arch = "aarch64"))]`
+hides `CodePage` on non-macOS, but `cargo test --doc` still tried to compile
+the Quick-start doctest (which imports `CodePage`), causing a compile error on
+Linux and Windows CI runners.
+
+The doctest now wraps its body in a `#[cfg(all(target_os = "macos", ...))]`
+block with an explicit `fn main()`.  On non-macOS the function body is empty
+(compiles cleanly via `no_run`); on macOS arm64 the full example is compiled
+(but not executed) to catch API drift.
+
 ## 0.1.0 — 2026-05-05
 
 Initial release.  Installs runtime-generated machine code into

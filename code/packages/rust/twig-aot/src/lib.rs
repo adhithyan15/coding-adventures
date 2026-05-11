@@ -154,6 +154,27 @@ pub fn compile_module_macos_arm64_object(module: &IIRModule) -> Result<Vec<u8>, 
 /// 4. Marking the output `0o755`.
 ///
 /// See [`AotError::Linker`] for `ld` invocation failures.
+///
+/// **Platform note:** this function is a no-op stub on non-Unix platforms
+/// (Windows) — it always returns [`AotError::Linker`] with a helpful
+/// message.  Cross-compiling for macOS from Windows is not yet supported.
+#[cfg(not(unix))]
+pub fn compile_file_macos_arm64(
+    _src_path: &Path,
+    _out_path: &Path,
+) -> Result<(), AotError> {
+    Err(AotError::Linker {
+        status: None,
+        stderr: "twig-aot: native macOS compilation requires a Unix host \
+                 (macOS or Linux with a cross-toolchain)"
+            .to_string(),
+    })
+}
+
+/// Compile a Twig source file to a runnable ARM64 Mach-O executable on
+/// disk (Unix-only implementation).
+///
+/// See the stub above for the non-Unix signature.
 #[cfg(unix)]
 pub fn compile_file_macos_arm64(
     src_path: &Path,

@@ -1,5 +1,40 @@
 # Changelog — `dap-adapter-core`
 
+## 0.3.0 — 2026-05-10
+
+**LANG25-25B — Fix `handle_launch` to establish the VM connection.**
+
+This release fixes the core debugger bug where `handle_launch` compiled the
+source and loaded the sidecar but never established `vm_conn`, causing all
+subsequent DAP requests (stackTrace, variables, continue, etc.) to fail with
+"no VM".
+
+### Changes
+
+- **`handle_launch` now calls `launch_vm` and `TcpVmConnection::connect_with_retry`.**
+  After launching the VM process the server connects to the VM's debug TCP
+  port with exponential-backoff retry (budget controlled by
+  `LanguageDebugAdapter::vm_connect_timeout_ms`) and stores the connection in
+  `self.vm_conn`.
+
+- **Auto port selection.** If the editor does not supply `"debugPort"` in the
+  launch arguments, the server asks the OS for a free ephemeral port (via
+  `TcpListener::bind("127.0.0.1:0")`), passes that port to `launch_vm`, and
+  then connects to it.  This avoids hardcoded-port collisions when multiple
+  debug sessions are running simultaneously.
+
+- **`noDebug` support.** Passing `"noDebug": true` in the launch arguments
+  causes the server to skip VM launch and connection entirely.  This is the
+  standard DAP mechanism for plain-run sessions, and is also how unit tests
+  that only want to test sidecar loading now opt out of real TCP connections.
+
+- **New test `launch_no_debug_skips_vm_conn`** confirms `vm_conn` remains
+  unset when `noDebug: true` regardless of any `debugPort` argument.
+
+- **Updated `launch_loads_sidecar`** test to pass `"noDebug": true` instead
+  of relying on `debugPort` being absent (old behaviour was undefined for
+  the new auto-port flow).
+
 ## 0.2.0 — 2026-05-04
 
 **LS03 PR A — Full generic DAP adapter implementation.**

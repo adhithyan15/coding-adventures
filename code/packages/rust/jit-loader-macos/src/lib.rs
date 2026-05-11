@@ -41,6 +41,10 @@
 //! ## Quick start
 //!
 //! ```rust,no_run
+//! // This example only runs on macOS arm64; the body is cfg-gated so the
+//! // doctest compiles (but is not executed) on other platforms too.
+//! # #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+//! # fn main() -> Result<(), Box<dyn std::error::Error>> {
 //! use jit_loader_macos::CodePage;
 //!
 //! // ARM64 machine code: `mov x0, #42; ret`
@@ -51,6 +55,10 @@
 //! let page = CodePage::new(&bytes).expect("install code");
 //! let f: extern "C" fn() -> u64 = unsafe { page.as_function() };
 //! assert_eq!(f(), 42);
+//! # Ok(())
+//! # }
+//! # #[cfg(not(all(target_os = "macos", target_arch = "aarch64")))]
+//! # fn main() {}
 //! ```
 
 #![warn(missing_docs)]

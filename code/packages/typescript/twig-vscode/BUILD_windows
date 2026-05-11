@@ -1,6 +1,8 @@
 $ErrorActionPreference = 'Stop'
 
 # Build the generated VS Code extension package on Windows.
+# Compiles TypeScript and runs the unit tests.
 
 npm install --silent
 npx tsc -p .
+npm test

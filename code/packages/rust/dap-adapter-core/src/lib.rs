@@ -42,13 +42,19 @@
 //! - Defer the concrete TCP implementation to a later PR once `twig-vm`
 //!   actually grows a debug server.
 //!
-//! ## Status — LS03 PR A complete
+//! ## Status — LS03 PR A + LANG25-25B
 //!
 //! All 13 DAP request handlers, the three stepping algorithms, sidecar
-//! indexing, and a scripted mock VM are implemented.  37+ unit tests plus
+//! indexing, and a scripted mock VM are implemented.  39+ unit tests plus
 //! one end-to-end integration test exercise the full
 //! launch → setBreakpoints → configurationDone → stopped → stackTrace →
 //! variables → continue → terminated flow.
+//!
+//! `handle_launch` now auto-selects a free ephemeral debug port, calls
+//! `launch_vm`, connects via `TcpVmConnection::connect_with_retry`, and
+//! stores the connection in `vm_conn`.  Pass `"noDebug": true` in the
+//! launch request to skip VM connection (used by plain-run editors and
+//! tests that pre-wire the mock VM).
 
 #![warn(missing_docs)]
 #![warn(rust_2018_idioms)]

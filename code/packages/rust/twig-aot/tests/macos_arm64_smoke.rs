@@ -36,6 +36,10 @@
 //! only runs locally on Apple Silicon Macs.  Other CI runners just
 //! verify the byte production.
 
+// `PermissionsExt` is Unix-only; only import it on platforms where it exists.
+// All callers are already gated with `#[cfg(all(target_os = "macos", ...))]`
+// which is a strict subset of unix, so the cfg is safe.
+#[cfg(unix)]
 use std::os::unix::fs::PermissionsExt;
 use std::path::PathBuf;
 use std::process::Command;
