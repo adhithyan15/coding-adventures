@@ -234,12 +234,18 @@ impl std::error::Error for CompileError {}
 /// Tokenize moslayout source text into a flat `Vec<Token>`.
 ///
 /// Whitespace and comments are skipped.  The returned vector ends with EOF.
-pub fn tokenize(source: &str) -> Vec<Token> {
+/// Tokenize moslayout source text into a flat `Vec<Token>`.
+///
+/// Returns `Err(CompileError)` rather than panicking if the lexer encounters
+/// a character it cannot recognise.  Callers such as `parse_layout` propagate
+/// this error upward through the `compile` pipeline.
+pub fn tokenize(source: &str) -> Result<Vec<Token>, CompileError> {
     let grammar = _grammar::token_grammar();
     let mut lexer = GrammarLexer::new(source, &grammar);
-    lexer
-        .tokenize()
-        .unwrap_or_else(|e| panic!("moslayout tokenization failed: {e}"))
+    lexer.tokenize().map_err(|e| CompileError {
+        kind: ErrorKind::InternalError,
+        message: format!("moslayout tokenization failed: {e}"),
+    })
 }
 
 // ===========================================================================
@@ -251,7 +257,7 @@ pub fn tokenize(source: &str) -> Vec<Token> {
 /// The AST mirrors the grammar rules exactly; call `analyze` to convert it
 /// to a strongly-typed `LayoutDef`.
 pub fn parse_layout(source: &str) -> Result<GrammarASTNode, String> {
-    let tokens = tokenize(source);
+    let tokens = tokenize(source).map_err(|e| e.message)?;
     let grammar = _grammar::parser_grammar();
     let mut parser = GrammarParser::new(tokens, grammar);
     parser.parse().map_err(|e| format!("parse error: {e}"))
@@ -475,22 +481,18 @@ pub fn compile(
 /// }
 /// ```
 pub fn emit_part_map_json(component_name: &str, parts: &[PartEntry]) -> String {
-    // Hand-roll the JSON to avoid needing serde_json feature complexity.
-    let parts_json: Vec<String> = parts
-        .iter()
-        .map(|p| {
-            format!(
-                r#"    {{ "name": "{}", "primitive": "{}" }}"#,
-                p.name, p.primitive
-            )
-        })
-        .collect();
-
-    format!(
-        "{{\n  \"component\": \"{}\",\n  \"parts\": [\n{}\n  ]\n}}",
-        component_name,
-        parts_json.join(",\n")
-    )
+    // Use serde_json so that component_name, part names, and primitive names
+    // are always properly escaped — preventing JSON injection if any value
+    // were to contain '"' or '\' (e.g. from a future grammar extension or
+    // direct API call with arbitrary input).
+    //
+    // PartEntry already derives Serialize, so this is zero extra boilerplate.
+    let json = serde_json::json!({
+        "component": component_name,
+        "parts": parts,
+    });
+    serde_json::to_string_pretty(&json)
+        .unwrap_or_else(|e| format!("{{\"error\": \"serialisation failed: {e}\"}}"))
 }
 
 // ===========================================================================
@@ -884,7 +886,7 @@ mod tests {
     #[test]
     fn test_tokenize_keywords() {
         let src = "layout Grid { }";
-        let tokens = tokenize(src);
+        let tokens = tokenize(src).expect("tokenize failed");
         let non_eof: Vec<_> = tokens
             .iter()
             .filter(|t| t.type_ != TokenType::Eof)
@@ -899,7 +901,7 @@ mod tests {
     #[test]
     fn test_tokenize_slot_keyword() {
         let src = "slot column-headers";
-        let tokens = tokenize(src);
+        let tokens = tokenize(src).expect("tokenize failed");
         let non_eof: Vec<_> = tokens
             .iter()
             .filter(|t| t.type_ != TokenType::Eof)
@@ -913,7 +915,7 @@ mod tests {
     #[test]
     fn test_tokenize_brackets() {
         let src = "Column [ root ]";
-        let tokens = tokenize(src);
+        let tokens = tokenize(src).expect("tokenize failed");
         let values: Vec<_> = tokens
             .iter()
             .filter(|t| t.type_ != TokenType::Eof)
@@ -925,7 +927,7 @@ mod tests {
     #[test]
     fn test_tokenize_number() {
         let src = "grow: 1.5";
-        let tokens = tokenize(src);
+        let tokens = tokenize(src).expect("tokenize failed");
         let non_eof: Vec<_> = tokens
             .iter()
             .filter(|t| t.type_ != TokenType::Eof)
