@@ -1,0 +1,17 @@
+[package]
+name = "mosaic-emit-paint"
+version = "0.1.0"
+edition = "2021"
+description = "Paint VM backend for the Mosaic compiler: Mosaic source → PaintScene → PNG"
+
+[dependencies]
+mosaic-analyzer = { path = "../mosaic-analyzer" }
+mosaic-lexer = { path = "../mosaic-lexer" }
+mosaic-parser = { path = "../mosaic-parser" }
+grammar-tools = { path = "../grammar-tools" }
+lexer = { path = "../lexer" }
+directed-graph = { path = "../directed-graph" }
+parser = { path = "../parser" }
+state-machine = { path = "../state-machine" }
+paint-instructions = { path = "../paint-instructions" }
+barcode-2d = { path = "../barcode-2d" }
