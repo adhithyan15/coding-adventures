@@ -2,7 +2,7 @@
 name = "mosaic-compile"
 version = "0.1.0"
 edition = "2021"
-description = "CLI that reads a .mosaic file and compiles to a target backend (webcomponent, html)"
+description = "CLI that reads a .mosaic file and compiles to a target backend (webcomponent, html, react, paint)"
 
 [[bin]]
 name = "mosaic-compile"
@@ -15,4 +15,5 @@ mosaic-vm = { path = "../mosaic-vm" }
 mosaic-emit-webcomponent = { path = "../mosaic-emit-webcomponent" }
 mosaic-emit-html = { path = "../mosaic-emit-html" }
 mosaic-emit-react = { path = "../mosaic-emit-react" }
+mosaic-emit-paint = { path = "../mosaic-emit-paint" }
 serde_json = "1"
