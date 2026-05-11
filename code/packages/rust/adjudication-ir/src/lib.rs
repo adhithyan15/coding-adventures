@@ -105,14 +105,22 @@ impl Span {
 // ---------------------------------------------------------------------------
 
 /// Whether the node asserts, denies, or records uncertainty about its
-/// term. Per `ADJ01` the lattice is flat — no element subsumes another,
-/// and there is no `Unknown` value. The absence of evidence is
-/// represented by the absence of a node (coverage enforces this).
+/// term. The lattice is flat — no element subsumes another, and there
+/// is no `Unknown` value. The absence of evidence is represented by
+/// the absence of a node (coverage enforces this).
+///
+/// **v2**: `Inherit` lets a node defer to its structural ancestor's
+/// polarity (per `ADJ01` v2 propagation). A `Polarity::Inherit` value
+/// on a node means "use the nearest non-`Inherit` ancestor's value";
+/// only the root (or a leaf with no overriding ancestor) needs a
+/// concrete value.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Polarity {
     Affirmed,
     Denied,
     Uncertain,
+    /// Take the parent's effective polarity (v2 propagation).
+    Inherit,
 }
 
 /// The temporal / hypothetical / ownership context of the term. Flat
@@ -120,6 +128,9 @@ pub enum Polarity {
 ///
 /// `RuledOut` and `Denied` (a polarity value) are *not* synonyms. See
 /// `ADJ01 §"Modality"` and `ADJ03 §"RuledOut vs. Denied"`.
+///
+/// **v2**: `Inherit` mirrors `Polarity::Inherit` — defer to the
+/// structural ancestor's modality.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Modality {
     Present,
@@ -129,6 +140,8 @@ pub enum Modality {
     FamilyHistory,
     RuledOut,
     Conditional,
+    /// Take the parent's effective modality (v2 propagation).
+    Inherit,
 }
 
 // ---------------------------------------------------------------------------
@@ -136,8 +149,17 @@ pub enum Modality {
 // ---------------------------------------------------------------------------
 
 /// The role a node plays in the IR.
+///
+/// **v2**: adds `TextRun` — a non-leaf node that exists only to
+/// carry the structural decomposition of the document (per `ADJ01`
+/// v2). `TextRun` nodes group children but do not themselves
+/// represent a domain claim; their `term` is conventionally the
+/// zero-arity compound `text_run/0` and is not consumed by
+/// validators.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum NodeKind {
+    /// Non-leaf decomposition node (v2).
+    TextRun,
     Fact,
     Query,
     Uncertainty,
@@ -168,17 +190,25 @@ pub enum DiscardReason {
 // IRNode and IRDocument
 // ---------------------------------------------------------------------------
 
-/// A single node in the IR. Every field corresponds 1:1 to a field in
-/// `ADJ01 §"IR Nodes"`.
+/// A single node in the IR. Every field corresponds 1:1 to a field
+/// in `ADJ01 §"IR Nodes"` (v2 schema).
 ///
 /// Three properties are non-negotiable (enforced by [`validate`]):
 ///
 /// 1. Every IR node is span-grounded (`source_spans` is non-empty for
 ///    every kind except `Rule` which cites rulebook spans).
-/// 2. `polarity` and `modality` are always set — no defaults.
+/// 2. `polarity` and `modality` are always set (may be `Inherit`).
 /// 3. `Discarded` is an explicit node citing both the span being
 ///    discarded and the reason (`DiscardReason`); silently omitting a
 ///    span is not a valid representation of "irrelevant".
+///
+/// **v2 additions**:
+///
+/// - `part_of: Option<NodeId>` — the structural-tree parent. A node
+///   with `part_of = None` is at a document root.
+/// - `polarity` and `modality` may carry `Inherit` to defer to the
+///   ancestor's effective value (propagation).
+/// - `TextRun` node kind is the non-leaf decomposition node.
 #[derive(Debug, Clone, PartialEq)]
 pub struct IRNode {
     pub id: NodeId,
@@ -190,6 +220,9 @@ pub struct IRNode {
     /// Extractor's self-reported confidence. Informational only; not
     /// used by the type check.
     pub confidence: f64,
+    /// Structural parent in the decomposition tree (v2). A node with
+    /// `part_of = None` is at a document root.
+    pub part_of: Option<NodeId>,
     /// If present, points to the parent node in the lowering DAG.
     pub lowered_from: Option<NodeId>,
     /// Required iff `kind == Discarded`.
@@ -288,6 +321,40 @@ pub enum ValidationError {
 
     /// Two nodes share the same `NodeId`.
     DuplicateNodeId { id: NodeId },
+
+    // ----- v2 structural-decomposition violations -----
+
+    /// A node's `part_of` points to an id that doesn't exist.
+    DanglingPartOf {
+        node_id: NodeId,
+        missing_parent: NodeId,
+    },
+
+    /// `part_of` edges form a cycle.
+    PartOfCycle { participants: Vec<NodeId> },
+
+    /// A non-TextRun node has children that point to it via `part_of`.
+    /// Only TextRun nodes can be structural parents in v2.
+    NonTextRunHasChildren {
+        parent_id: NodeId,
+        parent_kind: NodeKind,
+        children: Vec<NodeId>,
+    },
+
+    /// A child node's source spans are not contained within its
+    /// structural parent's source spans.
+    ChildSpansExceedParent {
+        child_id: NodeId,
+        parent_id: NodeId,
+    },
+
+    /// A TextRun's children's source spans, taken together, do not
+    /// tile its own source spans. `missing_ranges` lists the
+    /// uncovered byte ranges.
+    ChildrenDoNotTileParent {
+        parent_id: NodeId,
+        missing_ranges: Vec<(usize, usize)>,
+    },
 }
 
 /// Validate an IR document. Returns `Ok(())` iff every rule in
@@ -315,6 +382,12 @@ pub fn validate(doc: &IRDocument) -> Result<(), ValidationError> {
     // 2. Lowering DAG rules: no cycles, parent exists, kind compatible,
     //    span subset.
     validate_lowering_dag(doc)?;
+
+    // 3. Structural decomposition tree (v2): part_of edges form a
+    //    forest; only TextRun nodes have children; children's spans
+    //    fit inside parent's; TextRun children's spans tile the
+    //    parent's spans.
+    validate_structural_tree(doc)?;
 
     Ok(())
 }
@@ -347,8 +420,23 @@ fn validate_per_node(n: &IRNode, doc: &IRDocument) -> Result<(), ValidationError
         }
     }
 
-    // Kind-specific rules.
+    // Kind-specific rules. v2 allows Polarity::Inherit on any kind
+    // that takes a declared polarity (the actual value is resolved
+    // via ancestor lookup in propagation_check). The pre-Inherit
+    // value-specific rules only fire on a *declared* (non-Inherit)
+    // value.
     match n.kind {
+        NodeKind::TextRun => {
+            // TextRun nodes have no domain claim; their term is a
+            // placeholder. They may carry polarity/modality (for
+            // propagation) but no other constraints.
+            if n.discard_reason.is_some() {
+                return Err(ValidationError::NonDiscardedWithReason {
+                    node_id: n.id.clone(),
+                    kind: n.kind,
+                });
+            }
+        }
         NodeKind::Fact => {
             if n.polarity == Polarity::Uncertain {
                 return Err(ValidationError::FactWithUncertainPolarity {
@@ -363,7 +451,7 @@ fn validate_per_node(n: &IRNode, doc: &IRDocument) -> Result<(), ValidationError
             }
         }
         NodeKind::Query => {
-            if n.polarity != Polarity::Affirmed {
+            if n.polarity != Polarity::Affirmed && n.polarity != Polarity::Inherit {
                 return Err(ValidationError::QueryWithNonAffirmedPolarity {
                     node_id: n.id.clone(),
                     polarity: n.polarity,
@@ -377,7 +465,7 @@ fn validate_per_node(n: &IRNode, doc: &IRDocument) -> Result<(), ValidationError
             }
         }
         NodeKind::Uncertainty => {
-            if n.polarity != Polarity::Uncertain {
+            if n.polarity != Polarity::Uncertain && n.polarity != Polarity::Inherit {
                 return Err(ValidationError::UncertaintyWithDefinitePolarity {
                     node_id: n.id.clone(),
                     polarity: n.polarity,
@@ -404,7 +492,7 @@ fn validate_per_node(n: &IRNode, doc: &IRDocument) -> Result<(), ValidationError
             }
         }
         NodeKind::Exception => {
-            if n.polarity != Polarity::Affirmed {
+            if n.polarity != Polarity::Affirmed && n.polarity != Polarity::Inherit {
                 return Err(ValidationError::QueryWithNonAffirmedPolarity {
                     node_id: n.id.clone(),
                     polarity: n.polarity,
@@ -523,6 +611,169 @@ fn validate_lowering_dag(doc: &IRDocument) -> Result<(), ValidationError> {
 }
 
 // ---------------------------------------------------------------------------
+// Structural decomposition tree (v2)
+// ---------------------------------------------------------------------------
+
+fn validate_structural_tree(doc: &IRDocument) -> Result<(), ValidationError> {
+    let by_id: HashMap<&NodeId, &IRNode> = doc.nodes.iter().map(|n| (&n.id, n)).collect();
+
+    // 1. Parent existence + parent-must-be-TextRun + parent-child
+    //    span containment.
+    let mut children_of: HashMap<NodeId, Vec<&IRNode>> = HashMap::new();
+    for child in &doc.nodes {
+        let Some(parent_id) = &child.part_of else {
+            continue;
+        };
+        let Some(parent) = by_id.get(parent_id) else {
+            return Err(ValidationError::DanglingPartOf {
+                node_id: child.id.clone(),
+                missing_parent: parent_id.clone(),
+            });
+        };
+        // Spans subset (the per-edge check from ADJ02 v2 / ADJ01 v2).
+        for child_span in &child.source_spans {
+            let contained = parent.source_spans.iter().any(|ps| ps.contains(child_span));
+            if !contained {
+                return Err(ValidationError::ChildSpansExceedParent {
+                    child_id: child.id.clone(),
+                    parent_id: parent.id.clone(),
+                });
+            }
+        }
+        children_of
+            .entry(parent_id.clone())
+            .or_default()
+            .push(child);
+    }
+
+    // 2. Only TextRun nodes may have children.
+    for parent in &doc.nodes {
+        if parent.kind != NodeKind::TextRun {
+            if let Some(kids) = children_of.get(&parent.id) {
+                if !kids.is_empty() {
+                    return Err(ValidationError::NonTextRunHasChildren {
+                        parent_id: parent.id.clone(),
+                        parent_kind: parent.kind,
+                        children: kids.iter().map(|c| c.id.clone()).collect(),
+                    });
+                }
+            }
+        }
+    }
+
+    // 3. Cycle detection in part_of edges (Kahn-style: every node has
+    //    at most one parent, so we can detect a cycle by counting
+    //    nodes reachable from the roots).
+    let roots: Vec<&IRNode> = doc.nodes.iter().filter(|n| n.part_of.is_none()).collect();
+    let mut visited: HashSet<NodeId> = HashSet::new();
+    let mut stack: Vec<&IRNode> = roots.clone();
+    while let Some(node) = stack.pop() {
+        if !visited.insert(node.id.clone()) {
+            // Already visited via a different parent — that's a cycle
+            // (single-parent tree expected).
+            continue;
+        }
+        if let Some(kids) = children_of.get(&node.id) {
+            for k in kids {
+                stack.push(*k);
+            }
+        }
+    }
+    if visited.len() != doc.nodes.len() {
+        let participants: Vec<NodeId> = doc
+            .nodes
+            .iter()
+            .filter(|n| !visited.contains(&n.id))
+            .map(|n| n.id.clone())
+            .collect();
+        return Err(ValidationError::PartOfCycle { participants });
+    }
+
+    // 4. TextRun tiling: children's spans union to parent's spans.
+    //    Empty TextRun (no children) is flagged as "doesn't tile";
+    //    that's the right diagnostic.
+    for parent in &doc.nodes {
+        if parent.kind != NodeKind::TextRun {
+            continue;
+        }
+        let kids = children_of.get(&parent.id).cloned().unwrap_or_default();
+        let child_spans: Vec<(usize, usize)> = kids
+            .iter()
+            .flat_map(|k| k.source_spans.iter())
+            .filter(|s| s.document_id == doc.document_id)
+            .map(|s| (s.start, s.end))
+            .collect();
+        let parent_spans: Vec<(usize, usize)> = parent
+            .source_spans
+            .iter()
+            .filter(|s| s.document_id == doc.document_id)
+            .map(|s| (s.start, s.end))
+            .collect();
+        let missing = subtract_intervals(parent_spans, child_spans);
+        if !missing.is_empty() {
+            return Err(ValidationError::ChildrenDoNotTileParent {
+                parent_id: parent.id.clone(),
+                missing_ranges: missing,
+            });
+        }
+    }
+
+    Ok(())
+}
+
+/// Merge a list of (start, end) byte ranges into sorted, non-
+/// overlapping intervals.
+fn merge_ranges(mut rs: Vec<(usize, usize)>) -> Vec<(usize, usize)> {
+    if rs.is_empty() {
+        return rs;
+    }
+    rs.sort_by_key(|(s, _)| *s);
+    let mut out = Vec::with_capacity(rs.len());
+    let mut cur = rs[0];
+    for (s, e) in rs.into_iter().skip(1) {
+        if s <= cur.1 {
+            cur.1 = cur.1.max(e);
+        } else {
+            out.push(cur);
+            cur = (s, e);
+        }
+    }
+    out.push(cur);
+    out
+}
+
+/// Return the byte ranges in `parent` that are not covered by any
+/// range in `children`. Used to compute `missing_ranges` for
+/// `ChildrenDoNotTileParent`.
+fn subtract_intervals(
+    parent: Vec<(usize, usize)>,
+    children: Vec<(usize, usize)>,
+) -> Vec<(usize, usize)> {
+    let parent_merged = merge_ranges(parent);
+    let child_merged = merge_ranges(children);
+    let mut out = Vec::new();
+    for (p_start, p_end) in parent_merged {
+        let mut cursor = p_start;
+        for &(c_start, c_end) in &child_merged {
+            if c_end <= cursor || c_start >= p_end {
+                continue;
+            }
+            if c_start > cursor {
+                out.push((cursor, c_start.min(p_end)));
+            }
+            cursor = cursor.max(c_end);
+            if cursor >= p_end {
+                break;
+            }
+        }
+        if cursor < p_end {
+            out.push((cursor, p_end));
+        }
+    }
+    out
+}
+
+// ---------------------------------------------------------------------------
 // Inline unit tests
 // ---------------------------------------------------------------------------
 
@@ -544,6 +795,24 @@ mod tests {
             modality: Modality::Present,
             source_spans: vec![span(doc, start, end)],
             confidence: 0.9,
+            part_of: None,
+            lowered_from: None,
+            discard_reason: None,
+            metadata: HashMap::new(),
+        }
+    }
+
+    /// v2 helper: build a TextRun parent node.
+    fn ok_text_run(id: &str, doc: &DocumentId, start: usize, end: usize) -> IRNode {
+        IRNode {
+            id: NodeId::new(id),
+            kind: NodeKind::TextRun,
+            term: compound("text_run", vec![]),
+            polarity: Polarity::Inherit,
+            modality: Modality::Inherit,
+            source_spans: vec![span(doc, start, end)],
+            confidence: 1.0,
+            part_of: None,
             lowered_from: None,
             discard_reason: None,
             metadata: HashMap::new(),
@@ -861,5 +1130,178 @@ mod tests {
         let outer = Span::new(DocumentId::new("d1"), 0, 100);
         let inner = Span::new(DocumentId::new("d2"), 10, 20);
         assert!(!outer.contains(&inner));
+    }
+
+    // ----- v2 hierarchical-decomposition tests -----
+
+    /// A TextRun parent containing one Fact child that tiles its span.
+    #[test]
+    fn textrun_with_one_child_tiling_full_span_passes() {
+        let doc_id = DocumentId::new("doc1");
+        let mut parent = ok_text_run("T0", &doc_id, 0, 30);
+        let mut child = ok_fact("F1", &doc_id, 0, 30);
+        child.part_of = Some(NodeId::new("T0"));
+        // parent's polarity stays Inherit; that's fine for structural check
+        // (propagation is ADJ03's concern, not validate's).
+        let doc = IRDocument {
+            document_id: doc_id,
+            nodes: vec![parent.clone(), child.clone()],
+        };
+        // Avoid unused-mut warnings.
+        let _ = parent;
+        let _ = child;
+        assert_eq!(validate(&doc), Ok(()));
+    }
+
+    /// A TextRun with two adjacent children that together tile the span.
+    #[test]
+    fn textrun_with_children_that_jointly_tile_parent_passes() {
+        let doc_id = DocumentId::new("doc1");
+        let parent = ok_text_run("T0", &doc_id, 0, 50);
+        let mut c1 = ok_fact("F1", &doc_id, 0, 20);
+        let mut c2 = ok_fact("F2", &doc_id, 20, 50);
+        c1.part_of = Some(NodeId::new("T0"));
+        c2.part_of = Some(NodeId::new("T0"));
+        let doc = IRDocument {
+            document_id: doc_id,
+            nodes: vec![parent, c1, c2],
+        };
+        assert_eq!(validate(&doc), Ok(()));
+    }
+
+    /// Children leaving a byte-gap fail with ChildrenDoNotTileParent and
+    /// the missing range is reported.
+    #[test]
+    fn textrun_with_gap_in_children_fails_with_missing_range() {
+        let doc_id = DocumentId::new("doc1");
+        let parent = ok_text_run("T0", &doc_id, 0, 50);
+        let mut c1 = ok_fact("F1", &doc_id, 0, 20);
+        let mut c2 = ok_fact("F2", &doc_id, 30, 50);
+        c1.part_of = Some(NodeId::new("T0"));
+        c2.part_of = Some(NodeId::new("T0"));
+        let doc = IRDocument {
+            document_id: doc_id,
+            nodes: vec![parent, c1, c2],
+        };
+        match validate(&doc) {
+            Err(ValidationError::ChildrenDoNotTileParent { parent_id, missing_ranges }) => {
+                assert_eq!(parent_id, NodeId::new("T0"));
+                assert_eq!(missing_ranges, vec![(20, 30)]);
+            }
+            other => panic!("expected ChildrenDoNotTileParent, got {:?}", other),
+        }
+    }
+
+    /// A TextRun with no children fails the tile check — its entire
+    /// span is reported missing.
+    #[test]
+    fn empty_textrun_fails_with_full_missing_range() {
+        let doc_id = DocumentId::new("doc1");
+        let parent = ok_text_run("T0", &doc_id, 0, 50);
+        let doc = IRDocument {
+            document_id: doc_id,
+            nodes: vec![parent],
+        };
+        match validate(&doc) {
+            Err(ValidationError::ChildrenDoNotTileParent {
+                missing_ranges, ..
+            }) => {
+                assert_eq!(missing_ranges, vec![(0, 50)]);
+            }
+            other => panic!("expected ChildrenDoNotTileParent, got {:?}", other),
+        }
+    }
+
+    /// A non-TextRun cannot have children; if it does, NonTextRunHasChildren
+    /// fires.
+    #[test]
+    fn fact_with_child_via_part_of_rejected() {
+        let doc_id = DocumentId::new("doc1");
+        let parent = ok_fact("F0", &doc_id, 0, 30);
+        let mut child = ok_fact("F1", &doc_id, 0, 30);
+        child.part_of = Some(NodeId::new("F0"));
+        let doc = IRDocument {
+            document_id: doc_id,
+            nodes: vec![parent, child],
+        };
+        match validate(&doc) {
+            Err(ValidationError::NonTextRunHasChildren { parent_kind, .. }) => {
+                assert_eq!(parent_kind, NodeKind::Fact);
+            }
+            other => panic!("expected NonTextRunHasChildren, got {:?}", other),
+        }
+    }
+
+    /// `part_of` pointing to a nonexistent node fires DanglingPartOf.
+    #[test]
+    fn dangling_part_of_rejected() {
+        let doc_id = DocumentId::new("doc1");
+        let mut child = ok_fact("F1", &doc_id, 0, 30);
+        child.part_of = Some(NodeId::new("DOES_NOT_EXIST"));
+        let doc = IRDocument {
+            document_id: doc_id,
+            nodes: vec![child],
+        };
+        assert!(matches!(
+            validate(&doc),
+            Err(ValidationError::DanglingPartOf { .. })
+        ));
+    }
+
+    /// Child spans extending beyond parent fail with ChildSpansExceedParent.
+    #[test]
+    fn child_spans_exceeding_parent_rejected() {
+        let doc_id = DocumentId::new("doc1");
+        let parent = ok_text_run("T0", &doc_id, 10, 30);
+        let mut child = ok_fact("F1", &doc_id, 0, 30); // 0..30 outside 10..30
+        child.part_of = Some(NodeId::new("T0"));
+        let doc = IRDocument {
+            document_id: doc_id,
+            nodes: vec![parent, child],
+        };
+        assert!(matches!(
+            validate(&doc),
+            Err(ValidationError::ChildSpansExceedParent { .. })
+        ));
+    }
+
+    /// Polarity::Inherit on a Fact / Query / Uncertainty is accepted in v2.
+    /// (The v1 strict checks gated on Inherit would have failed.)
+    #[test]
+    fn inherit_polarity_accepted_on_each_kind() {
+        let doc_id = DocumentId::new("doc1");
+        let mut fact = ok_fact("F1", &doc_id, 0, 10);
+        fact.polarity = Polarity::Inherit;
+
+        let mut q = ok_fact("Q1", &doc_id, 10, 20);
+        q.kind = NodeKind::Query;
+        q.polarity = Polarity::Inherit;
+
+        let mut u = ok_fact("U1", &doc_id, 20, 30);
+        u.kind = NodeKind::Uncertainty;
+        u.polarity = Polarity::Inherit;
+
+        let doc = IRDocument {
+            document_id: doc_id,
+            nodes: vec![fact, q, u],
+        };
+        assert_eq!(validate(&doc), Ok(()));
+    }
+
+    /// Nested TextRun decomposition (parent TextRun → child TextRun → leaf)
+    /// validates if all tilings hold.
+    #[test]
+    fn nested_textrun_decomposition_validates() {
+        let doc_id = DocumentId::new("doc1");
+        let outer = ok_text_run("T0", &doc_id, 0, 50);
+        let mut inner = ok_text_run("T1", &doc_id, 0, 50);
+        inner.part_of = Some(NodeId::new("T0"));
+        let mut leaf = ok_fact("F1", &doc_id, 0, 50);
+        leaf.part_of = Some(NodeId::new("T1"));
+        let doc = IRDocument {
+            document_id: doc_id,
+            nodes: vec![outer, inner, leaf],
+        };
+        assert_eq!(validate(&doc), Ok(()));
     }
 }
