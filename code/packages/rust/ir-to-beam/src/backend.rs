@@ -211,7 +211,10 @@ impl _ImportTable {
         if let Some(&idx) = self.index.get(&key) {
             return idx;
         }
-        let idx = self.imports.len() as u32;
+        // Checked cast: apply the same pattern as _AtomTable::intern — make
+        // overflow explicit rather than silently wrapping to a wrong index.
+        let idx = u32::try_from(self.imports.len())
+            .expect("import table exceeded u32::MAX entries");
         self.imports.push(BEAMImport { module_atom_index: module_idx, function_atom_index: fn_idx, arity });
         self.index.insert(key, idx);
         idx
@@ -326,6 +329,19 @@ fn reg_idx(op: &IrOperand) -> Result<usize, BEAMBackendError> {
             format!("expected register operand, got {:?}", other),
         )),
     }
+}
+
+/// Extract a virtual-register index and narrow it to `u8`.
+///
+/// BEAM x-registers are numbered 0–255.  Any register index ≥ 256 would be
+/// silently truncated by a bare `as u8` cast and produce a wrong register
+/// reference.  This helper makes the overflow explicit and returns a typed
+/// error instead of silently miscompiling the program.
+fn reg_u8(op: &IrOperand) -> Result<u8, BEAMBackendError> {
+    let idx = reg_idx(op)?;
+    u8::try_from(idx).map_err(|_| BEAMBackendError::InvalidOperand(
+        format!("register index {} exceeds BEAM x-register limit of 255", idx),
+    ))
 }
 
 /// Extract an integer immediate from an operand, or return an error.
@@ -511,7 +527,7 @@ pub fn lower_ir_to_beam(
             // ── Load immediate ─────────────────────────────────────────────
             // LOAD_IMM v_dst, imm  →  move {i,imm} {x,dst}
             IrOp::LoadImm => {
-                let dst = reg_idx(&instr.operands[0])? as u8;
+                let dst = reg_u8(&instr.operands[0])?;
                 let val = imm_val(&instr.operands[1])?;
                 instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                     BEAMOperand::i(val as u64), // works for non-negative; bit-pattern for negative
@@ -522,17 +538,17 @@ pub fn lower_ir_to_beam(
             // ── Register-register addition ─────────────────────────────────
             // ADD v_dst, v_src1, v_src2  →  gc_bif2 erlang:+/2 src1 src2 dst
             IrOp::Add => {
-                let dst  = reg_idx(&instr.operands[0])? as u8;
-                let src1 = reg_idx(&instr.operands[1])? as u8;
-                let src2 = reg_idx(&instr.operands[2])? as u8;
+                let dst  = reg_u8(&instr.operands[0])?;
+                let src1 = reg_u8(&instr.operands[1])?;
+                let src2 = reg_u8(&instr.operands[2])?;
                 instrs.push(emit_gc_bif2(import_plus, live, src1, src2, dst));
             }
 
             // ── Register-immediate addition ────────────────────────────────
             // ADD_IMM v_dst, v_src, imm  →  move {i,imm} scratch; gc_bif2 src scratch dst
             IrOp::AddImm => {
-                let dst = reg_idx(&instr.operands[0])? as u8;
-                let src = reg_idx(&instr.operands[1])? as u8;
+                let dst = reg_u8(&instr.operands[0])?;
+                let src = reg_u8(&instr.operands[1])?;
                 let val = imm_val(&instr.operands[2])?;
                 instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                     BEAMOperand::i(val as u64),
@@ -544,18 +560,18 @@ pub fn lower_ir_to_beam(
             // ── Subtraction ────────────────────────────────────────────────
             // SUB v_dst, v_src1, v_src2  →  gc_bif2 erlang:-/2 src1 src2 dst
             IrOp::Sub => {
-                let dst  = reg_idx(&instr.operands[0])? as u8;
-                let src1 = reg_idx(&instr.operands[1])? as u8;
-                let src2 = reg_idx(&instr.operands[2])? as u8;
+                let dst  = reg_u8(&instr.operands[0])?;
+                let src1 = reg_u8(&instr.operands[1])?;
+                let src2 = reg_u8(&instr.operands[2])?;
                 instrs.push(emit_gc_bif2(import_minus, live, src1, src2, dst));
             }
 
             // ── Multiplication ─────────────────────────────────────────────
             // MUL v_dst, v_src1, v_src2  →  gc_bif2 erlang:*/2 src1 src2 dst
             IrOp::Mul => {
-                let dst  = reg_idx(&instr.operands[0])? as u8;
-                let src1 = reg_idx(&instr.operands[1])? as u8;
-                let src2 = reg_idx(&instr.operands[2])? as u8;
+                let dst  = reg_u8(&instr.operands[0])?;
+                let src1 = reg_u8(&instr.operands[1])?;
+                let src2 = reg_u8(&instr.operands[2])?;
                 instrs.push(emit_gc_bif2(import_times, live, src1, src2, dst));
             }
 
@@ -563,26 +579,26 @@ pub fn lower_ir_to_beam(
             // DIV v_dst, v_src1, v_src2  →  gc_bif2 erlang:div/2 src1 src2 dst
             // Erlang's `div` operator truncates toward zero, matching IR semantics.
             IrOp::Div => {
-                let dst  = reg_idx(&instr.operands[0])? as u8;
-                let src1 = reg_idx(&instr.operands[1])? as u8;
-                let src2 = reg_idx(&instr.operands[2])? as u8;
+                let dst  = reg_u8(&instr.operands[0])?;
+                let src1 = reg_u8(&instr.operands[1])?;
+                let src2 = reg_u8(&instr.operands[2])?;
                 instrs.push(emit_gc_bif2(import_div, live, src1, src2, dst));
             }
 
             // ── Bitwise AND ────────────────────────────────────────────────
             // AND v_dst, v_src1, v_src2  →  gc_bif2 erlang:band/2 src1 src2 dst
             IrOp::And => {
-                let dst  = reg_idx(&instr.operands[0])? as u8;
-                let src1 = reg_idx(&instr.operands[1])? as u8;
-                let src2 = reg_idx(&instr.operands[2])? as u8;
+                let dst  = reg_u8(&instr.operands[0])?;
+                let src1 = reg_u8(&instr.operands[1])?;
+                let src2 = reg_u8(&instr.operands[2])?;
                 instrs.push(emit_gc_bif2(import_band, live, src1, src2, dst));
             }
 
             // ── Bitwise AND with immediate ─────────────────────────────────
             // AND_IMM v_dst, v_src, imm  →  move {i,imm} scratch; gc_bif2 band src scratch dst
             IrOp::AndImm => {
-                let dst = reg_idx(&instr.operands[0])? as u8;
-                let src = reg_idx(&instr.operands[1])? as u8;
+                let dst = reg_u8(&instr.operands[0])?;
+                let src = reg_u8(&instr.operands[1])?;
                 let val = imm_val(&instr.operands[2])?;
                 instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                     BEAMOperand::i(val as u64),
@@ -594,17 +610,17 @@ pub fn lower_ir_to_beam(
             // ── Bitwise OR ─────────────────────────────────────────────────
             // OR v_dst, v_src1, v_src2  →  gc_bif2 erlang:bor/2 src1 src2 dst
             IrOp::Or => {
-                let dst  = reg_idx(&instr.operands[0])? as u8;
-                let src1 = reg_idx(&instr.operands[1])? as u8;
-                let src2 = reg_idx(&instr.operands[2])? as u8;
+                let dst  = reg_u8(&instr.operands[0])?;
+                let src1 = reg_u8(&instr.operands[1])?;
+                let src2 = reg_u8(&instr.operands[2])?;
                 instrs.push(emit_gc_bif2(import_bor, live, src1, src2, dst));
             }
 
             // ── Bitwise OR with immediate ──────────────────────────────────
             // OR_IMM v_dst, v_src, imm  →  move {i,imm} scratch; gc_bif2 bor src scratch dst
             IrOp::OrImm => {
-                let dst = reg_idx(&instr.operands[0])? as u8;
-                let src = reg_idx(&instr.operands[1])? as u8;
+                let dst = reg_u8(&instr.operands[0])?;
+                let src = reg_u8(&instr.operands[1])?;
                 let val = imm_val(&instr.operands[2])?;
                 instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                     BEAMOperand::i(val as u64),
@@ -616,17 +632,17 @@ pub fn lower_ir_to_beam(
             // ── Bitwise XOR ────────────────────────────────────────────────
             // XOR v_dst, v_src1, v_src2  →  gc_bif2 erlang:bxor/2 src1 src2 dst
             IrOp::Xor => {
-                let dst  = reg_idx(&instr.operands[0])? as u8;
-                let src1 = reg_idx(&instr.operands[1])? as u8;
-                let src2 = reg_idx(&instr.operands[2])? as u8;
+                let dst  = reg_u8(&instr.operands[0])?;
+                let src1 = reg_u8(&instr.operands[1])?;
+                let src2 = reg_u8(&instr.operands[2])?;
                 instrs.push(emit_gc_bif2(import_bxor, live, src1, src2, dst));
             }
 
             // ── Bitwise XOR with immediate ─────────────────────────────────
             // XOR_IMM v_dst, v_src, imm  →  move {i,imm} scratch; gc_bif2 bxor src scratch dst
             IrOp::XorImm => {
-                let dst = reg_idx(&instr.operands[0])? as u8;
-                let src = reg_idx(&instr.operands[1])? as u8;
+                let dst = reg_u8(&instr.operands[0])?;
+                let src = reg_u8(&instr.operands[1])?;
                 let val = imm_val(&instr.operands[2])?;
                 instrs.push(BEAMInstruction::new(OP_MOVE, vec![
                     BEAMOperand::i(val as u64),
@@ -643,8 +659,8 @@ pub fn lower_ir_to_beam(
             //
             // NOT v_dst, v_src  →  gc_bif1 erlang:bnot/1 src dst
             IrOp::Not => {
-                let dst = reg_idx(&instr.operands[0])? as u8;
-                let src = reg_idx(&instr.operands[1])? as u8;
+                let dst = reg_u8(&instr.operands[0])?;
+                let src = reg_u8(&instr.operands[1])?;
                 instrs.push(emit_gc_bif1(import_bnot, live, src, dst));
             }
 
@@ -664,7 +680,7 @@ pub fn lower_ir_to_beam(
             //   • if Reg != 0: test passes → fall through (skip the jump)
             //   • if Reg == 0: test fails  → jump to Fail (our target label)
             IrOp::BranchZ => {
-                let reg = reg_idx(&instr.operands[0])? as u8;
+                let reg = reg_u8(&instr.operands[0])?;
                 let name = label_name(&instr.operands[1])?;
                 let beam_lbl = *label_map.get(&name)
                     .ok_or_else(|| BEAMBackendError::UndefinedLabel(name.clone()))?;
@@ -682,7 +698,7 @@ pub fn lower_ir_to_beam(
             //   • if Reg == 0: test passes → fall through (skip the jump)
             //   • if Reg != 0: test fails  → jump to Fail (our target label)
             IrOp::BranchNz => {
-                let reg = reg_idx(&instr.operands[0])? as u8;
+                let reg = reg_u8(&instr.operands[0])?;
                 let name = label_name(&instr.operands[1])?;
                 let beam_lbl = *label_map.get(&name)
                     .ok_or_else(|| BEAMBackendError::UndefinedLabel(name.clone()))?;
