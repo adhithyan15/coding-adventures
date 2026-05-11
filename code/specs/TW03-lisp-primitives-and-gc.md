@@ -1,5 +1,19 @@
 # TW03 — Full Lisp surface + GC across every Twig backend
 
+> **Architecture note (updated):** TW03 was originally written against the
+> deprecated `compiler-ir` / `IrProgram` layer.  The `compiler-ir` heap-op
+> additions described in Phase 3 of this spec (§"New IR ops") are **superseded**
+> by **LANG31**, which implements the same semantics via the `interpreter-ir`
+> (`IIRModule`) heap opcode family (`alloc`, `field_load`, `field_store`,
+> `is_null`) and the `iir-builtin-lowering` pre-pass.  All new implementation work
+> should follow LANG31.  This spec is preserved for its language-semantics and
+> per-backend GC strategy sections, which remain accurate.
+>
+> Additionally, for WASM: TW03 originally recommended a custom linear-memory GC
+> (Phase 4).  LANG31 supersedes this with **WasmGC** (standardised 2023, shipping
+> in V8 ≥ Chrome 119, SpiderMonkey ≥ Firefox 120, wasmtime ≥ 14.0), which provides
+> native GC semantics via struct/array heap types without custom collector code.
+
 ## Why this spec exists
 
 The Twig real-runtime trilogy is complete: source code runs on
