@@ -173,6 +173,7 @@ members = [
     "logic-engine",
     "adjudication-ir",
     "llm-gateway",
+    "llm-primitives",
     "prolog-lexer",
     "prolog-parser",
     "prolog-loader",
