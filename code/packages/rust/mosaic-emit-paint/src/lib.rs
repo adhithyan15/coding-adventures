@@ -217,7 +217,26 @@ fn resolve_text_content(props: &[MosaicProperty]) -> String {
 /// A [`LayoutBox`] whose `width` and `height` describe what the node consumed,
 /// and whose `instructions` are the complete paint commands for it and all its
 /// descendants.
-fn layout_node(node: &MosaicNode, x: f64, y: f64, avail_w: f64, avail_h: f64) -> LayoutBox {
+///
+/// ## Depth guard
+///
+/// `depth` counts how many nested `layout_node` frames are currently on the
+/// call stack. When it reaches `MAX_DEPTH` (128) we return an empty `LayoutBox`
+/// rather than recursing further. This prevents a maliciously deeply-nested
+/// Mosaic document from exhausting the thread stack and causing an abort.
+/// A stack overflow in Rust is delivered as `SIGSEGV` and cannot be caught by
+/// `catch_unwind`, so the depth guard is the only safe mitigation.
+fn layout_node(node: &MosaicNode, x: f64, y: f64, avail_w: f64, avail_h: f64, depth: usize) -> LayoutBox {
+    /// Maximum nesting depth before layout is short-circuited.
+    ///
+    /// 128 levels of nesting is far beyond any realistic Mosaic component
+    /// (typical UIs have 5–15 levels). At depth 128 we return an empty LayoutBox
+    /// so the caller still gets a coherent PaintScene, just without the deeply
+    /// nested content.
+    const MAX_DEPTH: usize = 128;
+    if depth >= MAX_DEPTH {
+        return LayoutBox { x, y, width: avail_w, height: 0.0, instructions: vec![] };
+    }
     match node.node_type.as_str() {
         // ─── Column ────────────────────────────────────────────────────────
         //
@@ -247,7 +266,7 @@ fn layout_node(node: &MosaicNode, x: f64, y: f64, avail_w: f64, avail_h: f64) ->
 
             let mut cursor_y = y;
             for child in children {
-                let lbox = layout_child(child, x, cursor_y, avail_w, child_h);
+                let lbox = layout_child(child, x, cursor_y, avail_w, child_h, depth + 1);
                 cursor_y += lbox.height;
                 instrs.extend(lbox.instructions);
             }
@@ -275,7 +294,7 @@ fn layout_node(node: &MosaicNode, x: f64, y: f64, avail_w: f64, avail_h: f64) ->
 
             let mut cursor_x = x;
             for child in children {
-                let lbox = layout_child(child, cursor_x, y, child_w, avail_h);
+                let lbox = layout_child(child, cursor_x, y, child_w, avail_h, depth + 1);
                 cursor_x += lbox.width;
                 instrs.extend(lbox.instructions);
             }
@@ -295,7 +314,7 @@ fn layout_node(node: &MosaicNode, x: f64, y: f64, avail_w: f64, avail_h: f64) ->
                 x, y, avail_w, avail_h, "#f8f8f8",
             )));
             for child in &node.children {
-                let lbox = layout_child(child, x, y, avail_w, avail_h);
+                let lbox = layout_child(child, x, y, avail_w, avail_h, depth + 1);
                 instrs.extend(lbox.instructions);
             }
             LayoutBox { x, y, width: avail_w, height: avail_h, instructions: instrs }
@@ -322,7 +341,7 @@ fn layout_node(node: &MosaicNode, x: f64, y: f64, avail_w: f64, avail_h: f64) ->
                 stroke_dash_offset: None,
             }));
             for child in &node.children {
-                let lbox = layout_child(child, x, y, avail_w, avail_h);
+                let lbox = layout_child(child, x, y, avail_w, avail_h, depth + 1);
                 instrs.extend(lbox.instructions);
             }
             LayoutBox { x, y, width: avail_w, height: avail_h, instructions: instrs }
@@ -515,10 +534,13 @@ fn layout_node(node: &MosaicNode, x: f64, y: f64, avail_w: f64, avail_h: f64) ->
 /// The Column/Row/Box handlers call this for each of their children instead of
 /// calling `layout_node` directly, so that non-Node children (slot refs, when,
 /// each) are also handled.
-fn layout_child(child: &MosaicChild, x: f64, y: f64, avail_w: f64, avail_h: f64) -> LayoutBox {
+///
+/// `depth` is passed through from `layout_node` and incremented by one at each
+/// level so the depth guard in `layout_node` can fire correctly.
+fn layout_child(child: &MosaicChild, x: f64, y: f64, avail_w: f64, avail_h: f64, depth: usize) -> LayoutBox {
     match child {
-        // A nested node: recurse into the layout engine.
-        MosaicChild::Node(n) => layout_node(n, x, y, avail_w, avail_h),
+        // A nested node: recurse into the layout engine, incrementing depth.
+        MosaicChild::Node(n) => layout_node(n, x, y, avail_w, avail_h, depth),
 
         // A bare slot reference used as a child: `@header;`
         // We render it as gray italic-style text so the reader can see
@@ -669,6 +691,21 @@ fn is_spacer_child(child: &MosaicChild) -> bool {
 /// assert!(!scene.instructions.is_empty());
 /// ```
 pub fn render_scene(source: &str, width: f64, height: f64) -> Result<PaintScene, String> {
+    // Reject absurdly large inputs before reaching the recursive parser.
+    //
+    // The mosaic-parser recurses one call-frame per nesting level. A source with
+    // thousands of nested containers would overflow the thread stack inside the
+    // parser with a SIGABRT that cannot be caught by `catch_unwind`. A hard 64 KB
+    // limit (>> any realistic Mosaic component) closes that attack vector at the
+    // API boundary.
+    const MAX_SOURCE_BYTES: usize = 65_536; // 64 KB
+    if source.len() > MAX_SOURCE_BYTES {
+        return Err(format!(
+            "Mosaic source too large ({} bytes > {MAX_SOURCE_BYTES} limit)",
+            source.len()
+        ));
+    }
+
     // `mosaic_analyzer::analyze` calls `mosaic_parser::parse` internally, which
     // panics on syntactically invalid input (the parser was not designed to return
     // errors — it assumes lexer-level validation has already filtered bad tokens).
@@ -685,6 +722,7 @@ pub fn render_scene(source: &str, width: f64, height: f64) -> Result<PaintScene,
         PADDING_PX,
         width - 2.0 * PADDING_PX,
         height - 2.0 * PADDING_PX,
+        0, // initial depth; guard fires at MAX_DEPTH (128)
     );
     let mut scene = PaintScene::new(width, height);
     scene.instructions = lbox.instructions;
@@ -1085,5 +1123,34 @@ mod tests {
         assert!(texts.contains(&"First"));
         assert!(texts.contains(&"Second"));
         assert!(texts.contains(&"Third"));
+    }
+
+    // ─── input size guard (DoS mitigation) ───────────────────────────────────
+
+    /// Source inputs larger than 64 KB must be rejected before reaching the
+    /// recursive parser. The mosaic-parser recurses one stack frame per nesting
+    /// level; an unbounded input could overflow the thread stack with SIGABRT,
+    /// which cannot be caught by `catch_unwind`. The 64 KB limit closes this
+    /// attack vector at the API boundary.
+    #[test]
+    fn render_scene_rejects_oversized_input() {
+        // Build a source string just over 64 KB. It doesn't need to be valid
+        // Mosaic — the size check fires before parsing.
+        let big = "x".repeat(65_537);
+        let result = render_scene(&big, 400.0, 300.0);
+        assert!(result.is_err(), "oversized input must return Err");
+        let msg = result.unwrap_err();
+        assert!(msg.contains("too large"), "error should mention 'too large': {msg}");
+    }
+
+    /// Source exactly at the 64 KB limit is accepted (if valid).
+    /// This test uses a short source — just verifying that the check does not
+    /// fire for reasonable inputs.
+    #[test]
+    fn render_scene_accepts_normal_sized_input() {
+        let src = "component X { Box { } }";
+        assert!(src.len() < 65_536);
+        let result = render_scene(src, 400.0, 300.0);
+        assert!(result.is_ok(), "normal-sized input must be accepted: {result:?}");
     }
 }
