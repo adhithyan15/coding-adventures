@@ -142,10 +142,16 @@ fn validate_io_in_op_is_rejected() {
 
 #[test]
 fn validate_alloc_op_is_rejected() {
+    // Phase 2: `alloc` is only accepted for `ref<LispyPair>`.
+    // `ref<i32>` should be rejected as UnsupportedType (not UnsupportedOp,
+    // since `alloc` itself is now promoted to the accepted ops list and the
+    // type restriction is enforced separately).
     let errs = validate_iir_for_clr(&single_fn(vec![
         IIRInstr::new("alloc", Some("v".into()), vec![Operand::Int(4)], "ref<i32>"),
     ]));
-    assert!(errs.iter().any(|e| e.contains("UnsupportedOp")));
+    assert!(!errs.is_empty(), "alloc ref<i32> must be rejected");
+    assert!(errs.iter().any(|e| e.contains("UnsupportedType") || e.contains("UnsupportedOp")),
+        "error should be UnsupportedType or UnsupportedOp: {:?}", errs);
 }
 
 #[test]
@@ -780,6 +786,365 @@ fn lower_const_large_int_uses_full_form() {
     let body = &lower_iir_to_cil(&module, &default_cfg()).unwrap().methods[0].body;
     // ldc.i4 = 0x20 (full 4-byte form for values >127)
     assert!(body.contains(&0x20), "expected ldc.i4 (0x20): {body:?}");
+}
+
+// ===========================================================================
+// Phase 2 — heap op lowering tests
+// ===========================================================================
+//
+// These tests exercise the `object[]` cons-cell encoding for heap ops:
+//
+//   alloc ref<LispyPair>  →  ldc.i4.2; newarr TOKEN; stloc dest
+//   field_load dest p 0   →  ldloc p; ldc.i4.0; ldelem.ref; stloc dest
+//   field_load dest p 1   →  ldloc p; ldc.i4.1; ldelem.ref; stloc dest
+//   field_store p 0 v     →  ldloc p; ldc.i4.0; ldloc v; stelem.ref
+//   is_null dest x        →  ldloc x; ldnull; ceq; stloc dest
+//   const nil ref<LP>     →  ldnull; stloc dest
+
+/// Opcodes we look for in heap-op bytecode assertions.
+const NEWARR:    u8 = 0x8D; // newarr
+const LDNULL:    u8 = 0x14; // ldnull
+const LDELEM_REF: u8 = 0xA2; // ldelem.ref
+const STELEM_REF: u8 = 0xA4; // stelem.ref
+
+// ---------------------------------------------------------------------------
+// 1. alloc ref<LispyPair> is accepted and lowers to newarr
+// ---------------------------------------------------------------------------
+
+/// `alloc ref<LispyPair>` must produce a `newarr` (0x8D) instruction.
+///
+/// The CLR allocates a 2-element `System.Object[]` to represent the cons cell.
+/// `newarr` takes a 4-byte type token, so the body contains [0x8D, b0, b1, b2, b3].
+#[test]
+fn heap_alloc_listy_pair_produces_newarr() {
+    let module = single_fn(vec![
+        IIRInstr::new("alloc", Some("p".into()), vec![], "ref<LispyPair>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let body = &lower_iir_to_cil(&module, &default_cfg()).unwrap().methods[0].body;
+    assert!(body.contains(&NEWARR),
+        "alloc ref<LispyPair> must emit newarr (0x8D): {body:?}");
+}
+
+// ---------------------------------------------------------------------------
+// 2. alloc with unsupported type is rejected by the validator
+// ---------------------------------------------------------------------------
+
+/// Any `alloc` op with a type other than `ref<LispyPair>` must be rejected.
+///
+/// This ensures that we don't silently miscompile `alloc ref<Foo>` by treating
+/// it as a LispyPair cons cell.
+#[test]
+fn heap_alloc_unsupported_type_rejected() {
+    let errs = validate_iir_for_clr(&single_fn(vec![
+        IIRInstr::new("alloc", Some("p".into()), vec![], "ref<FooBar>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]));
+    assert!(!errs.is_empty(), "alloc ref<FooBar> must be rejected");
+    assert!(errs.iter().any(|e| e.contains("UnsupportedType") || e.contains("alloc")),
+        "error must mention UnsupportedType or alloc: {:?}", errs);
+}
+
+// ---------------------------------------------------------------------------
+// 3. field_load 0 (car) compiles and contains ldelem.ref
+// ---------------------------------------------------------------------------
+
+/// `field_load dest pair 0` implements `car`: loads the head of the list.
+///
+/// CIL: `ldloc pair; ldc.i4.0; ldelem.ref; stloc dest`
+///
+/// `ldelem.ref` (0xA2) pops the array reference and the index, pushes the
+/// element.  For a cons cell pair[0] is the head value.
+#[test]
+fn heap_field_load_0_car_produces_ldelem_ref() {
+    let module = single_fn(vec![
+        IIRInstr::new("alloc", Some("p".into()), vec![], "ref<LispyPair>"),
+        // field_load: dest="h", srcs=[Var("p"), Int(0)], type="ref<LispyPair>"
+        IIRInstr::new("field_load", Some("h".into()),
+            vec![Operand::Var("p".into()), Operand::Int(0)], "ref<LispyPair>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let body = &lower_iir_to_cil(&module, &default_cfg()).unwrap().methods[0].body;
+    assert!(body.contains(&LDELEM_REF),
+        "field_load 0 must emit ldelem.ref (0xA2): {body:?}");
+}
+
+// ---------------------------------------------------------------------------
+// 4. field_load 1 (cdr) compiles and contains ldelem.ref
+// ---------------------------------------------------------------------------
+
+/// `field_load dest pair 1` implements `cdr`: loads the tail of the list.
+///
+/// Same structure as car, but with index 1 instead of 0.
+#[test]
+fn heap_field_load_1_cdr_produces_ldelem_ref() {
+    let module = single_fn(vec![
+        IIRInstr::new("alloc", Some("p".into()), vec![], "ref<LispyPair>"),
+        IIRInstr::new("field_load", Some("t".into()),
+            vec![Operand::Var("p".into()), Operand::Int(1)], "ref<LispyPair>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let body = &lower_iir_to_cil(&module, &default_cfg()).unwrap().methods[0].body;
+    assert!(body.contains(&LDELEM_REF),
+        "field_load 1 must emit ldelem.ref (0xA2): {body:?}");
+}
+
+// ---------------------------------------------------------------------------
+// 5. field_store compiles and contains stelem.ref
+// ---------------------------------------------------------------------------
+
+/// `field_store pair idx value` stores a value into a cons cell field.
+///
+/// CIL: `ldloc pair; ldc.i4 idx; ldloc value; stelem.ref`
+#[test]
+fn heap_field_store_produces_stelem_ref() {
+    let module = single_fn(vec![
+        IIRInstr::new("alloc", Some("p".into()), vec![], "ref<LispyPair>"),
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "i32"),
+        // store 42 into field 0 of p
+        IIRInstr::new("field_store", None,
+            vec![Operand::Var("p".into()), Operand::Int(0), Operand::Var("v".into())],
+            "ref<LispyPair>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let body = &lower_iir_to_cil(&module, &default_cfg()).unwrap().methods[0].body;
+    assert!(body.contains(&STELEM_REF),
+        "field_store must emit stelem.ref (0xA4): {body:?}");
+}
+
+// ---------------------------------------------------------------------------
+// 6. is_null compiles and contains ldnull + ceq
+// ---------------------------------------------------------------------------
+
+/// `is_null dest x` lowering produces `ldnull` followed by `ceq`.
+///
+/// The CLR has no single opcode for null checks.  The standard pattern is:
+/// ```text
+/// ldloc x
+/// ldnull          ; push null reference
+/// ceq             ; 1 if equal (both null), 0 otherwise
+/// stloc dest
+/// ```
+#[test]
+fn heap_is_null_produces_ldnull_and_ceq() {
+    let module = single_fn(vec![
+        IIRInstr::new("alloc", Some("p".into()), vec![], "ref<LispyPair>"),
+        IIRInstr::new("is_null", Some("b".into()),
+            vec![Operand::Var("p".into())], "ref<LispyPair>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let body = &lower_iir_to_cil(&module, &default_cfg()).unwrap().methods[0].body;
+    assert!(body.contains(&LDNULL),
+        "is_null must emit ldnull (0x14): {body:?}");
+    // ceq = 0xFE 0x01
+    assert!(body.windows(2).any(|w| w == [PFX, 0x01]),
+        "is_null must emit ceq (0xFE 0x01): {body:?}");
+}
+
+// ---------------------------------------------------------------------------
+// 7. const nil ref<LispyPair> produces ldnull
+// ---------------------------------------------------------------------------
+
+/// `const nil` with type `ref<LispyPair>` and no source operand encodes nil
+/// as `ldnull`.
+///
+/// An empty list is a null `object[]` reference.
+#[test]
+fn heap_const_nil_listy_pair_produces_ldnull() {
+    let module = single_fn(vec![
+        IIRInstr::new("const", Some("nil".into()), vec![], "ref<LispyPair>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let body = &lower_iir_to_cil(&module, &default_cfg()).unwrap().methods[0].body;
+    assert!(body.contains(&LDNULL),
+        "const nil ref<LispyPair> must emit ldnull (0x14): {body:?}");
+}
+
+// ---------------------------------------------------------------------------
+// 8. alloc produces newarr with the OBJECT_ARRAY_TYPE_TOKEN in LE bytes
+// ---------------------------------------------------------------------------
+
+/// Verify that the 4-byte token following `newarr` is `OBJECT_ARRAY_TYPE_TOKEN`
+/// encoded in little-endian order.
+///
+/// CLR simulators must see the correct sentinel to know which type to allocate.
+#[test]
+fn heap_alloc_newarr_token_is_correct() {
+    use ir_to_cil_bytecode::OBJECT_ARRAY_TYPE_TOKEN;
+
+    let module = single_fn(vec![
+        IIRInstr::new("alloc", Some("p".into()), vec![], "ref<LispyPair>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let body = &lower_iir_to_cil(&module, &default_cfg()).unwrap().methods[0].body;
+    // Find the newarr opcode position.
+    let newarr_pos = body.iter().position(|&b| b == NEWARR)
+        .expect("newarr must appear in body");
+    // Read the 4-byte token immediately after newarr.
+    assert!(newarr_pos + 5 <= body.len(), "body must have 4 token bytes after newarr");
+    let token = u32::from_le_bytes(body[newarr_pos + 1..newarr_pos + 5].try_into().unwrap());
+    assert_eq!(token, OBJECT_ARRAY_TYPE_TOKEN,
+        "newarr token must be OBJECT_ARRAY_TYPE_TOKEN (0x{:08X}): {body:?}",
+        OBJECT_ARRAY_TYPE_TOKEN);
+}
+
+// ---------------------------------------------------------------------------
+// 9. alloc produces ldc.i4.2 before newarr (array length = 2)
+// ---------------------------------------------------------------------------
+
+/// The cons cell is a 2-element array.  `ldc.i4.2` (0x18) must appear before
+/// `newarr` to push the array length onto the CIL evaluation stack.
+#[test]
+fn heap_alloc_pushes_length_2_before_newarr() {
+    let module = single_fn(vec![
+        IIRInstr::new("alloc", Some("p".into()), vec![], "ref<LispyPair>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let body = &lower_iir_to_cil(&module, &default_cfg()).unwrap().methods[0].body;
+    // ldc.i4.2 = 0x18
+    let ldc2_pos = body.iter().position(|&b| b == 0x18)
+        .expect("ldc.i4.2 (0x18) must appear for array length = 2");
+    let newarr_pos = body.iter().position(|&b| b == NEWARR)
+        .expect("newarr must appear after ldc.i4.2");
+    assert!(ldc2_pos < newarr_pos,
+        "ldc.i4.2 must precede newarr: {body:?}");
+}
+
+// ---------------------------------------------------------------------------
+// 10. Hand-crafted pair construction + car + is_null in one function
+// ---------------------------------------------------------------------------
+
+/// Full cons cell round-trip:
+///   1. Allocate a new pair.
+///   2. Store an integer in field 0 (head / car).
+///   3. Store null in field 1 (tail / cdr) — makes a one-element list.
+///   4. Read back field 0 (car).
+///   5. Test whether the tail (field 1) is null.
+///
+/// This verifies that all heap ops can appear together in the same function
+/// body without interfering with register allocation or branch resolution.
+#[test]
+fn heap_full_cons_car_isnull_in_one_function() {
+    let module = single_fn(vec![
+        // p = alloc()
+        IIRInstr::new("alloc", Some("p".into()), vec![], "ref<LispyPair>"),
+        // v = 42
+        IIRInstr::new("const", Some("v".into()), vec![Operand::Int(42)], "i32"),
+        // nil = null
+        IIRInstr::new("const", Some("nil".into()), vec![], "ref<LispyPair>"),
+        // p[0] = v
+        IIRInstr::new("field_store", None,
+            vec![Operand::Var("p".into()), Operand::Int(0), Operand::Var("v".into())],
+            "ref<LispyPair>"),
+        // p[1] = nil
+        IIRInstr::new("field_store", None,
+            vec![Operand::Var("p".into()), Operand::Int(1), Operand::Var("nil".into())],
+            "ref<LispyPair>"),
+        // head = p[0]  (car)
+        IIRInstr::new("field_load", Some("head".into()),
+            vec![Operand::Var("p".into()), Operand::Int(0)], "ref<LispyPair>"),
+        // tail = p[1]  (cdr)
+        IIRInstr::new("field_load", Some("tail".into()),
+            vec![Operand::Var("p".into()), Operand::Int(1)], "ref<LispyPair>"),
+        // is_tail_null = is_null(tail)
+        IIRInstr::new("is_null", Some("is_tail_null".into()),
+            vec![Operand::Var("tail".into())], "ref<LispyPair>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+
+    let artifact = lower_iir_to_cil(&module, &default_cfg()).unwrap();
+    let body = &artifact.methods[0].body;
+
+    // All four heap opcodes must appear in the body.
+    assert!(body.contains(&NEWARR),    "newarr (0x8D) must be present: {body:?}");
+    assert!(body.contains(&LDNULL),    "ldnull (0x14) must be present: {body:?}");
+    assert!(body.contains(&STELEM_REF), "stelem.ref (0xA4) must be present: {body:?}");
+    assert!(body.contains(&LDELEM_REF), "ldelem.ref (0xA2) must be present: {body:?}");
+    // ceq from is_null
+    assert!(body.windows(2).any(|w| w == [PFX, 0x01]),
+        "ceq (0xFE 0x01) from is_null must be present: {body:?}");
+    // ret
+    assert!(body.contains(&RET), "ret must be present: {body:?}");
+}
+
+// ---------------------------------------------------------------------------
+// 11. Two field_stores produce two stelem.ref opcodes
+// ---------------------------------------------------------------------------
+
+/// Building a cons cell from scratch requires two `field_store` ops (head and
+/// tail), which must produce exactly two `stelem.ref` (0xA4) instructions.
+#[test]
+fn heap_two_field_stores_produce_two_stelem_ref() {
+    let module = single_fn(vec![
+        IIRInstr::new("alloc", Some("p".into()), vec![], "ref<LispyPair>"),
+        IIRInstr::new("const", Some("h".into()), vec![Operand::Int(1)], "i32"),
+        IIRInstr::new("const", Some("t".into()), vec![Operand::Int(2)], "i32"),
+        IIRInstr::new("field_store", None,
+            vec![Operand::Var("p".into()), Operand::Int(0), Operand::Var("h".into())],
+            "ref<LispyPair>"),
+        IIRInstr::new("field_store", None,
+            vec![Operand::Var("p".into()), Operand::Int(1), Operand::Var("t".into())],
+            "ref<LispyPair>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]);
+    let body = &lower_iir_to_cil(&module, &default_cfg()).unwrap().methods[0].body;
+    let stelem_count = body.iter().filter(|&&b| b == STELEM_REF).count();
+    assert_eq!(stelem_count, 2,
+        "two field_stores must produce two stelem.ref (0xA4): {body:?}");
+}
+
+// ---------------------------------------------------------------------------
+// 12. is_null on a freshly allocated pair compiles and contains ret
+// ---------------------------------------------------------------------------
+
+/// Trivial test: allocate a pair, test is_null, and return.  Verifies the
+/// function body is well-formed (has a `ret`) even with heap ops.
+#[test]
+fn heap_alloc_is_null_function_produces_ret() {
+    let module = single_fn(vec![
+        IIRInstr::new("alloc", Some("p".into()), vec![], "ref<LispyPair>"),
+        IIRInstr::new("is_null", Some("b".into()),
+            vec![Operand::Var("p".into())], "ref<LispyPair>"),
+        IIRInstr::new("ret", None, vec![Operand::Var("b".into())], "i32"),
+    ]);
+    let body = &lower_iir_to_cil(&module, &default_cfg()).unwrap().methods[0].body;
+    assert!(body.contains(&RET),  "function must contain ret (0x2A): {body:?}");
+    assert!(body.contains(&NEWARR), "function must contain newarr (0x8D): {body:?}");
+    assert!(body.contains(&LDNULL), "function must contain ldnull (0x14): {body:?}");
+}
+
+// ---------------------------------------------------------------------------
+// 13. const nil validation: ref<LispyPair> with no srcs is valid
+// ---------------------------------------------------------------------------
+
+/// The validator must accept `const` with `type_hint == "ref<LispyPair>"` and
+/// no source operands (this encodes the nil literal).
+#[test]
+fn heap_validate_const_nil_ref_listy_pair_is_valid() {
+    let errs = validate_iir_for_clr(&single_fn(vec![
+        IIRInstr::new("const", Some("nil".into()), vec![], "ref<LispyPair>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]));
+    assert!(errs.is_empty(), "const nil ref<LispyPair> must pass validation: {:?}", errs);
+}
+
+// ---------------------------------------------------------------------------
+// 14. field_load and field_store are accepted by the validator
+// ---------------------------------------------------------------------------
+
+/// `field_load` and `field_store` with `ref<LispyPair>` must pass validation.
+/// This confirms the Phase 2 promotion is reflected in the validator.
+#[test]
+fn heap_validate_field_ops_are_valid() {
+    let errs = validate_iir_for_clr(&single_fn(vec![
+        IIRInstr::new("field_load", Some("x".into()),
+            vec![Operand::Var("p".into()), Operand::Int(0)], "ref<LispyPair>"),
+        IIRInstr::new("field_store", None,
+            vec![Operand::Var("p".into()), Operand::Int(1), Operand::Var("x".into())],
+            "ref<LispyPair>"),
+        IIRInstr::new("ret_void", None, vec![], "void"),
+    ]));
+    assert!(errs.is_empty(), "field_load / field_store should pass validation: {:?}", errs);
 }
 
 // ===========================================================================
