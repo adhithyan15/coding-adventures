@@ -24,9 +24,9 @@
 use std::collections::HashMap;
 
 use symbolic_ir::{
-    IRApply, IRNode, ACOS, ACOSH, ADD, AND, ASIN, ASINH, ASSIGN, ATAN, ATANH, COS, COSH, DEFINE,
-    DIV, EQUAL, EXP, GREATER, GREATER_EQUAL, IF, INV, LESS, LESS_EQUAL, LOG, MUL, NEG,
-    NOT, NOT_EQUAL, OR, POW, SIN, SINH, SQRT, SUB, TAN, TANH,
+    IRApply, IRNode, ACOS, ACOSH, ADD, AND, ASIN, ASINH, ASSIGN, ATAN, ATANH, COS, COSH, D, DEFINE,
+    DIV, EQUAL, EXP, GREATER, GREATER_EQUAL, IF, INV, LESS, LESS_EQUAL, LOG, MUL, NEG, NOT,
+    NOT_EQUAL, OR, POW, SIN, SINH, SQRT, SUB, TAN, TANH,
 };
 
 use crate::backend::Handler;
@@ -77,7 +77,11 @@ impl Numeric {
 /// Build a `Numeric::Rat` in lowest terms, collapsing to `Int` when denom==1.
 fn make_rat(numer: i64, denom: i64) -> Numeric {
     debug_assert_ne!(denom, 0);
-    let (numer, denom) = if denom < 0 { (-numer, -denom) } else { (numer, denom) };
+    let (numer, denom) = if denom < 0 {
+        (-numer, -denom)
+    } else {
+        (numer, denom)
+    };
     let g = gcd(numer.unsigned_abs(), denom.unsigned_abs()) as i64;
     let (n, d) = (numer / g, denom / g);
     if d == 1 {
@@ -243,14 +247,22 @@ pub fn false_sym() -> IRNode {
 
 /// Convert a bool to `True`/`False` IR node.
 fn bool_node(v: bool) -> IRNode {
-    if v { true_sym() } else { false_sym() }
+    if v {
+        true_sym()
+    } else {
+        false_sym()
+    }
 }
 
 /// Check if a node is the `True` or `False` symbol.
 fn is_truthy(node: &IRNode) -> Option<bool> {
     if let IRNode::Symbol(s) = node {
-        if s == "True" { return Some(true); }
-        if s == "False" { return Some(false); }
+        if s == "True" {
+            return Some(true);
+        }
+        if s == "False" {
+            return Some(false);
+        }
     }
     None
 }
@@ -274,8 +286,12 @@ fn add_handler(simplify: bool) -> Handler {
             panic!("Add requires numeric arguments: {expr}");
         }
         // x + 0 → x, 0 + x → x
-        if va.map(|v| v.is_zero()).unwrap_or(false) { return b; }
-        if vb.map(|v| v.is_zero()).unwrap_or(false) { return a; }
+        if va.map(|v| v.is_zero()).unwrap_or(false) {
+            return b;
+        }
+        if vb.map(|v| v.is_zero()).unwrap_or(false) {
+            return a;
+        }
         IRNode::Apply(Box::new(expr))
     })
 }
@@ -295,7 +311,9 @@ fn sub_handler(simplify: bool) -> Handler {
             panic!("Sub requires numeric arguments: {expr}");
         }
         // x - 0 → x
-        if vb.map(|v| v.is_zero()).unwrap_or(false) { return a; }
+        if vb.map(|v| v.is_zero()).unwrap_or(false) {
+            return a;
+        }
         IRNode::Apply(Box::new(expr))
     })
 }
@@ -319,8 +337,12 @@ fn mul_handler(simplify: bool) -> Handler {
             return IRNode::Integer(0);
         }
         // 1 * x → x, x * 1 → x
-        if va.map(|v| v.is_one()).unwrap_or(false) { return b; }
-        if vb.map(|v| v.is_one()).unwrap_or(false) { return a; }
+        if va.map(|v| v.is_one()).unwrap_or(false) {
+            return b;
+        }
+        if vb.map(|v| v.is_one()).unwrap_or(false) {
+            return a;
+        }
         IRNode::Apply(Box::new(expr))
     })
 }
@@ -342,8 +364,12 @@ fn div_handler(simplify: bool) -> Handler {
         if !simplify {
             panic!("Div requires numeric arguments: {expr}");
         }
-        if va.map(|v| v.is_zero()).unwrap_or(false) { return IRNode::Integer(0); }
-        if vb.map(|v| v.is_one()).unwrap_or(false) { return a; }
+        if va.map(|v| v.is_zero()).unwrap_or(false) {
+            return IRNode::Integer(0);
+        }
+        if vb.map(|v| v.is_one()).unwrap_or(false) {
+            return a;
+        }
         IRNode::Apply(Box::new(expr))
     })
 }
@@ -363,13 +389,21 @@ fn pow_handler(simplify: bool) -> Handler {
             panic!("Pow requires numeric arguments: {expr}");
         }
         // x^0 → 1
-        if ve.map(|v| v.is_zero()).unwrap_or(false) { return IRNode::Integer(1); }
+        if ve.map(|v| v.is_zero()).unwrap_or(false) {
+            return IRNode::Integer(1);
+        }
         // x^1 → x
-        if ve.map(|v| v.is_one()).unwrap_or(false) { return base; }
+        if ve.map(|v| v.is_one()).unwrap_or(false) {
+            return base;
+        }
         // 0^n → 0 (n ≠ 0 covered above)
-        if vb.map(|v| v.is_zero()).unwrap_or(false) { return IRNode::Integer(0); }
+        if vb.map(|v| v.is_zero()).unwrap_or(false) {
+            return IRNode::Integer(0);
+        }
         // 1^n → 1
-        if vb.map(|v| v.is_one()).unwrap_or(false) { return IRNode::Integer(1); }
+        if vb.map(|v| v.is_one()).unwrap_or(false) {
+            return IRNode::Integer(1);
+        }
         IRNode::Apply(Box::new(expr))
     })
 }
@@ -434,7 +468,9 @@ fn pow_numeric(base: Numeric, exp: Numeric) -> Numeric {
         }
         if e < 0 {
             // b^(-n) = 1/b^n
-            if b == 0 { panic!("0^negative"); }
+            if b == 0 {
+                panic!("0^negative");
+            }
             let pos = pow_numeric(base, Numeric::Int(-e));
             return make_rat(1, 1) / pos;
         }
@@ -443,9 +479,12 @@ fn pow_numeric(base: Numeric, exp: Numeric) -> Numeric {
     if let (Numeric::Rat(n, d), Numeric::Int(e)) = (base, exp) {
         if e >= 0 && e <= 30 {
             let eu = e as u32;
-            if let (Some(nn), Some(dd)) = ((n as i128).checked_pow(eu), (d as i128).checked_pow(eu)) {
-                if nn >= i64::MIN as i128 && nn <= i64::MAX as i128
-                    && dd >= 1 && dd <= i64::MAX as i128
+            if let (Some(nn), Some(dd)) = ((n as i128).checked_pow(eu), (d as i128).checked_pow(eu))
+            {
+                if nn >= i64::MIN as i128
+                    && nn <= i64::MAX as i128
+                    && dd >= 1
+                    && dd <= i64::MAX as i128
                 {
                     return make_rat(nn as i64, dd as i64);
                 }
@@ -498,31 +537,61 @@ fn elementary_handler(
 
 fn sin_handler(simplify: bool) -> Handler {
     std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(&expr, "Sin", f64::sin, &[(Numeric::Int(0), IRNode::Integer(0))], simplify)
+        single_trig(
+            &expr,
+            "Sin",
+            f64::sin,
+            &[(Numeric::Int(0), IRNode::Integer(0))],
+            simplify,
+        )
     })
 }
 
 fn cos_handler(simplify: bool) -> Handler {
     std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(&expr, "Cos", f64::cos, &[(Numeric::Int(0), IRNode::Integer(1))], simplify)
+        single_trig(
+            &expr,
+            "Cos",
+            f64::cos,
+            &[(Numeric::Int(0), IRNode::Integer(1))],
+            simplify,
+        )
     })
 }
 
 fn tan_handler(simplify: bool) -> Handler {
     std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(&expr, "Tan", f64::tan, &[(Numeric::Int(0), IRNode::Integer(0))], simplify)
+        single_trig(
+            &expr,
+            "Tan",
+            f64::tan,
+            &[(Numeric::Int(0), IRNode::Integer(0))],
+            simplify,
+        )
     })
 }
 
 fn exp_handler(simplify: bool) -> Handler {
     std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(&expr, "Exp", f64::exp, &[(Numeric::Int(0), IRNode::Integer(1))], simplify)
+        single_trig(
+            &expr,
+            "Exp",
+            f64::exp,
+            &[(Numeric::Int(0), IRNode::Integer(1))],
+            simplify,
+        )
     })
 }
 
 fn log_handler(simplify: bool) -> Handler {
     std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(&expr, "Log", f64::ln, &[(Numeric::Int(1), IRNode::Integer(0))], simplify)
+        single_trig(
+            &expr,
+            "Log",
+            f64::ln,
+            &[(Numeric::Int(1), IRNode::Integer(0))],
+            simplify,
+        )
     })
 }
 
@@ -532,7 +601,10 @@ fn sqrt_handler(simplify: bool) -> Handler {
             &expr,
             "Sqrt",
             f64::sqrt,
-            &[(Numeric::Int(0), IRNode::Integer(0)), (Numeric::Int(1), IRNode::Integer(1))],
+            &[
+                (Numeric::Int(0), IRNode::Integer(0)),
+                (Numeric::Int(1), IRNode::Integer(1)),
+            ],
             simplify,
         )
     })
@@ -540,13 +612,25 @@ fn sqrt_handler(simplify: bool) -> Handler {
 
 fn atan_handler(simplify: bool) -> Handler {
     std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(&expr, "Atan", f64::atan, &[(Numeric::Int(0), IRNode::Integer(0))], simplify)
+        single_trig(
+            &expr,
+            "Atan",
+            f64::atan,
+            &[(Numeric::Int(0), IRNode::Integer(0))],
+            simplify,
+        )
     })
 }
 
 fn asin_handler(simplify: bool) -> Handler {
     std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(&expr, "Asin", f64::asin, &[(Numeric::Int(0), IRNode::Integer(0))], simplify)
+        single_trig(
+            &expr,
+            "Asin",
+            f64::asin,
+            &[(Numeric::Int(0), IRNode::Integer(0))],
+            simplify,
+        )
     })
 }
 
@@ -558,37 +642,73 @@ fn acos_handler(simplify: bool) -> Handler {
 
 fn sinh_handler(simplify: bool) -> Handler {
     std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(&expr, "Sinh", f64::sinh, &[(Numeric::Int(0), IRNode::Integer(0))], simplify)
+        single_trig(
+            &expr,
+            "Sinh",
+            f64::sinh,
+            &[(Numeric::Int(0), IRNode::Integer(0))],
+            simplify,
+        )
     })
 }
 
 fn cosh_handler(simplify: bool) -> Handler {
     std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(&expr, "Cosh", f64::cosh, &[(Numeric::Int(0), IRNode::Integer(1))], simplify)
+        single_trig(
+            &expr,
+            "Cosh",
+            f64::cosh,
+            &[(Numeric::Int(0), IRNode::Integer(1))],
+            simplify,
+        )
     })
 }
 
 fn tanh_handler(simplify: bool) -> Handler {
     std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(&expr, "Tanh", f64::tanh, &[(Numeric::Int(0), IRNode::Integer(0))], simplify)
+        single_trig(
+            &expr,
+            "Tanh",
+            f64::tanh,
+            &[(Numeric::Int(0), IRNode::Integer(0))],
+            simplify,
+        )
     })
 }
 
 fn asinh_handler(simplify: bool) -> Handler {
     std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(&expr, "Asinh", f64::asinh, &[(Numeric::Int(0), IRNode::Integer(0))], simplify)
+        single_trig(
+            &expr,
+            "Asinh",
+            f64::asinh,
+            &[(Numeric::Int(0), IRNode::Integer(0))],
+            simplify,
+        )
     })
 }
 
 fn acosh_handler(simplify: bool) -> Handler {
     std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(&expr, "Acosh", f64::acosh, &[(Numeric::Int(1), IRNode::Integer(0))], simplify)
+        single_trig(
+            &expr,
+            "Acosh",
+            f64::acosh,
+            &[(Numeric::Int(1), IRNode::Integer(0))],
+            simplify,
+        )
     })
 }
 
 fn atanh_handler(simplify: bool) -> Handler {
     std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
-        single_trig(&expr, "Atanh", f64::atanh, &[(Numeric::Int(0), IRNode::Integer(0))], simplify)
+        single_trig(
+            &expr,
+            "Atanh",
+            f64::atanh,
+            &[(Numeric::Int(0), IRNode::Integer(0))],
+            simplify,
+        )
     })
 }
 
@@ -624,8 +744,8 @@ fn single_trig(
 
 fn comparison_handler(
     op: fn(f64, f64) -> bool,
-    eq_based: bool,  // true for Equal/NotEqual (structural check)
-    is_equal_op: bool,  // true for Equal (not NotEqual)
+    eq_based: bool,    // true for Equal/NotEqual (structural check)
+    is_equal_op: bool, // true for Equal (not NotEqual)
     simplify: bool,
 ) -> Handler {
     std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
@@ -668,7 +788,10 @@ fn and_handler(_simplify: bool) -> Handler {
             1 => remaining.remove(0),
             _ => {
                 let head = IRNode::Symbol(AND.to_string());
-                IRNode::Apply(Box::new(IRApply { head, args: remaining }))
+                IRNode::Apply(Box::new(IRApply {
+                    head,
+                    args: remaining,
+                }))
             }
         }
     })
@@ -689,7 +812,10 @@ fn or_handler(_simplify: bool) -> Handler {
             1 => remaining.remove(0),
             _ => {
                 let head = IRNode::Symbol(OR.to_string());
-                IRNode::Apply(Box::new(IRApply { head, args: remaining }))
+                IRNode::Apply(Box::new(IRApply {
+                    head,
+                    args: remaining,
+                }))
             }
         }
     })
@@ -731,7 +857,10 @@ fn if_handler(_simplify: bool) -> Handler {
                 // Predicate didn't reduce — rebuild the expression.
                 let mut new_args = vec![predicate];
                 new_args.extend(expr.args[1..].iter().cloned());
-                IRNode::Apply(Box::new(IRApply { head: expr.head, args: new_args }))
+                IRNode::Apply(Box::new(IRApply {
+                    head: expr.head,
+                    args: new_args,
+                }))
             }
         }
     })
@@ -768,7 +897,8 @@ fn define_handler(_simplify: bool) -> Handler {
         };
         // Store the entire Define(...) record under the name so the VM's
         // function-call path can find and apply it.
-        vm.backend.bind(&name, IRNode::Apply(Box::new(expr.clone())));
+        vm.backend
+            .bind(&name, IRNode::Apply(Box::new(expr.clone())));
         IRNode::Symbol(name)
     })
 }
@@ -781,6 +911,257 @@ fn list_handler(_simplify: bool) -> Handler {
     std::sync::Arc::new(move |_vm: &mut VM, expr: IRApply| -> IRNode {
         IRNode::Apply(Box::new(expr))
     })
+}
+
+// ---------------------------------------------------------------------------
+// Symbolic differentiation
+// ---------------------------------------------------------------------------
+
+fn derivative_handler() -> Handler {
+    std::sync::Arc::new(move |vm: &mut VM, expr: IRApply| -> IRNode {
+        if expr.args.len() != 2 {
+            panic!("D expects 2 arguments, got {}", expr.args.len());
+        }
+
+        let f = expr.args[0].clone();
+        let x = match &expr.args[1] {
+            IRNode::Symbol(s) => s.clone(),
+            _ => return IRNode::Apply(Box::new(expr)),
+        };
+
+        let result = diff(&f, &x);
+        let original = apply_node(D, vec![f, IRNode::Symbol(x)]);
+        if result == original {
+            result
+        } else {
+            vm.eval(result)
+        }
+    })
+}
+
+fn diff(f: &IRNode, x: &str) -> IRNode {
+    if !depends_on(f, x) {
+        return IRNode::Integer(0);
+    }
+
+    if f == &IRNode::Symbol(x.to_string()) {
+        return IRNode::Integer(1);
+    }
+
+    let IRNode::Apply(apply) = f else {
+        return apply_node(D, vec![f.clone(), IRNode::Symbol(x.to_string())]);
+    };
+
+    let IRNode::Symbol(head) = &apply.head else {
+        return apply_node(D, vec![f.clone(), IRNode::Symbol(x.to_string())]);
+    };
+
+    match (head.as_str(), apply.args.as_slice()) {
+        (ADD, [a, b]) => apply_node(ADD, vec![diff(a, x), diff(b, x)]),
+        (SUB, [a, b]) => apply_node(SUB, vec![diff(a, x), diff(b, x)]),
+        (NEG, [a]) => apply_node(NEG, vec![diff(a, x)]),
+        (MUL, [a, b]) => apply_node(
+            ADD,
+            vec![
+                apply_node(MUL, vec![diff(a, x), b.clone()]),
+                apply_node(MUL, vec![a.clone(), diff(b, x)]),
+            ],
+        ),
+        (DIV, [a, b]) => apply_node(
+            DIV,
+            vec![
+                apply_node(
+                    SUB,
+                    vec![
+                        apply_node(MUL, vec![diff(a, x), b.clone()]),
+                        apply_node(MUL, vec![a.clone(), diff(b, x)]),
+                    ],
+                ),
+                apply_node(POW, vec![b.clone(), IRNode::Integer(2)]),
+            ],
+        ),
+        (POW, [base, exponent]) => diff_pow(f, base, exponent, x),
+        (SIN, [inner]) => chain(COS, inner, x),
+        (COS, [inner]) => apply_node(
+            MUL,
+            vec![
+                apply_node(NEG, vec![apply_node(SIN, vec![inner.clone()])]),
+                diff(inner, x),
+            ],
+        ),
+        (TAN, [inner]) => apply_node(
+            DIV,
+            vec![
+                diff(inner, x),
+                apply_node(
+                    POW,
+                    vec![apply_node(COS, vec![inner.clone()]), IRNode::Integer(2)],
+                ),
+            ],
+        ),
+        (EXP, [inner]) => chain(EXP, inner, x),
+        (LOG, [inner]) => apply_node(DIV, vec![diff(inner, x), inner.clone()]),
+        (SQRT, [inner]) => apply_node(
+            DIV,
+            vec![
+                diff(inner, x),
+                apply_node(
+                    MUL,
+                    vec![IRNode::Integer(2), apply_node(SQRT, vec![inner.clone()])],
+                ),
+            ],
+        ),
+        (SINH, [inner]) => chain(COSH, inner, x),
+        (COSH, [inner]) => chain(SINH, inner, x),
+        (TANH, [inner]) => apply_node(
+            DIV,
+            vec![
+                diff(inner, x),
+                apply_node(
+                    POW,
+                    vec![apply_node(COSH, vec![inner.clone()]), IRNode::Integer(2)],
+                ),
+            ],
+        ),
+        (ASINH, [inner]) => {
+            let denom = apply_node(
+                SQRT,
+                vec![apply_node(
+                    ADD,
+                    vec![
+                        apply_node(POW, vec![inner.clone(), IRNode::Integer(2)]),
+                        IRNode::Integer(1),
+                    ],
+                )],
+            );
+            apply_node(DIV, vec![diff(inner, x), denom])
+        }
+        (ACOSH, [inner]) => {
+            let denom = apply_node(
+                SQRT,
+                vec![apply_node(
+                    SUB,
+                    vec![
+                        apply_node(POW, vec![inner.clone(), IRNode::Integer(2)]),
+                        IRNode::Integer(1),
+                    ],
+                )],
+            );
+            apply_node(DIV, vec![diff(inner, x), denom])
+        }
+        (ATANH, [inner]) => {
+            let denom = apply_node(
+                SUB,
+                vec![
+                    IRNode::Integer(1),
+                    apply_node(POW, vec![inner.clone(), IRNode::Integer(2)]),
+                ],
+            );
+            apply_node(DIV, vec![diff(inner, x), denom])
+        }
+        ("Coth", [inner]) => {
+            let denom = apply_node(
+                POW,
+                vec![apply_node(SINH, vec![inner.clone()]), IRNode::Integer(2)],
+            );
+            apply_node(NEG, vec![apply_node(DIV, vec![diff(inner, x), denom])])
+        }
+        ("Sech", [inner]) => {
+            let numer = apply_node(
+                MUL,
+                vec![diff(inner, x), apply_node(SINH, vec![inner.clone()])],
+            );
+            let denom = apply_node(
+                POW,
+                vec![apply_node(COSH, vec![inner.clone()]), IRNode::Integer(2)],
+            );
+            apply_node(NEG, vec![apply_node(DIV, vec![numer, denom])])
+        }
+        ("Csch", [inner]) => {
+            let numer = apply_node(
+                MUL,
+                vec![diff(inner, x), apply_node(COSH, vec![inner.clone()])],
+            );
+            let denom = apply_node(
+                POW,
+                vec![apply_node(SINH, vec![inner.clone()]), IRNode::Integer(2)],
+            );
+            apply_node(NEG, vec![apply_node(DIV, vec![numer, denom])])
+        }
+        _ => apply_node(D, vec![f.clone(), IRNode::Symbol(x.to_string())]),
+    }
+}
+
+fn diff_pow(f: &IRNode, base: &IRNode, exponent: &IRNode, x: &str) -> IRNode {
+    let base_depends = depends_on(base, x);
+    let exp_depends = depends_on(exponent, x);
+
+    if !exp_depends {
+        return apply_node(
+            MUL,
+            vec![
+                apply_node(
+                    MUL,
+                    vec![
+                        exponent.clone(),
+                        apply_node(
+                            POW,
+                            vec![
+                                base.clone(),
+                                apply_node(SUB, vec![exponent.clone(), IRNode::Integer(1)]),
+                            ],
+                        ),
+                    ],
+                ),
+                diff(base, x),
+            ],
+        );
+    }
+
+    if !base_depends {
+        return apply_node(
+            MUL,
+            vec![
+                apply_node(MUL, vec![f.clone(), apply_node(LOG, vec![base.clone()])]),
+                diff(exponent, x),
+            ],
+        );
+    }
+
+    diff(
+        &apply_node(
+            EXP,
+            vec![apply_node(
+                MUL,
+                vec![exponent.clone(), apply_node(LOG, vec![base.clone()])],
+            )],
+        ),
+        x,
+    )
+}
+
+fn chain(head: &str, inner: &IRNode, x: &str) -> IRNode {
+    apply_node(
+        MUL,
+        vec![apply_node(head, vec![inner.clone()]), diff(inner, x)],
+    )
+}
+
+fn depends_on(node: &IRNode, var: &str) -> bool {
+    match node {
+        IRNode::Symbol(s) => s == var,
+        IRNode::Apply(apply) => {
+            depends_on(&apply.head, var) || apply.args.iter().any(|arg| depends_on(arg, var))
+        }
+        IRNode::Integer(_) | IRNode::Rational(_, _) | IRNode::Float(_) | IRNode::Str(_) => false,
+    }
+}
+
+fn apply_node(head: &str, args: Vec<IRNode>) -> IRNode {
+    IRNode::Apply(Box::new(IRApply {
+        head: IRNode::Symbol(head.to_string()),
+        args,
+    }))
 }
 
 // ---------------------------------------------------------------------------
@@ -823,8 +1204,14 @@ pub fn build_handler_table(simplify: bool) -> HashMap<String, Handler> {
         NOT_EQUAL.to_string(),
         comparison_handler(|a, b| a != b, true, false, simplify),
     );
-    m.insert(LESS.to_string(), comparison_handler(|a, b| a < b, false, false, simplify));
-    m.insert(GREATER.to_string(), comparison_handler(|a, b| a > b, false, false, simplify));
+    m.insert(
+        LESS.to_string(),
+        comparison_handler(|a, b| a < b, false, false, simplify),
+    );
+    m.insert(
+        GREATER.to_string(),
+        comparison_handler(|a, b| a > b, false, false, simplify),
+    );
     m.insert(
         LESS_EQUAL.to_string(),
         comparison_handler(|a, b| a <= b, false, false, simplify),
@@ -840,6 +1227,9 @@ pub fn build_handler_table(simplify: bool) -> HashMap<String, Handler> {
     m.insert(ASSIGN.to_string(), assign_handler(simplify));
     m.insert(DEFINE.to_string(), define_handler(simplify));
     m.insert("List".to_string(), list_handler(simplify));
+    if simplify {
+        m.insert(D.to_string(), derivative_handler());
+    }
     m
 }
 

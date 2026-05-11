@@ -1,5 +1,14 @@
 # Changelog — symbolic-vm (Rust)
 
+## Unreleased
+
+### Added
+
+- `SymbolicBackend` installs a `D` derivative handler for symbolic-only
+  differentiation of arithmetic, elementary, hyperbolic, and inverse
+  hyperbolic expressions; `StrictBackend` continues to reject `D` as an
+  unknown head.
+
 ## [0.1.0] — 2026-04-27
 
 ### Added
