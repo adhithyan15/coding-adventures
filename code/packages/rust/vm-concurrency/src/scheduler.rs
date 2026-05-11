@@ -305,11 +305,14 @@ impl Scheduler {
             return Ok(false);
         }
         task.cancel_flag = true;
-        if matches!(task.state, TaskState::Parked(_)) {
+        // Only wake the task if it is currently parked — avoid double-enqueueing
+        // a task that is already in the Ready queue.  We check the state once,
+        // atomically, before any mutation so the guard and the wake use the same
+        // snapshot of the state.
+        let was_parked = matches!(task.state, TaskState::Parked(_));
+        if was_parked {
             task.state = TaskState::CancelRequested;
-        }
-        // If the target was parked, wake it immediately.
-        if matches!(task.state, TaskState::CancelRequested) {
+            // enqueue_ready transitions back to Ready and pushes to the queue.
             self.enqueue_ready(target);
         }
         Ok(true)
@@ -462,8 +465,9 @@ impl Scheduler {
 
     /// Receive a value.  Parks the current task if the channel is empty.
     pub fn chan_recv(&mut self, ch: ChannelId) -> Result<RecvResult, ConcurrencyError> {
-        let _ = self.channels.get(&ch).ok_or(ConcurrencyError::UnknownChannel(ch))?;
-        match self.channels.get_mut(&ch).unwrap().try_dequeue() {
+        // call try_dequeue() immediately so the &mut borrow of channels ends before
+        // we re-borrow self in the match arms below (NLL: borrow released on return).
+        match self.get_channel_mut(ch)?.try_dequeue() {
             TryDequeueResult::Received(value, woken_sender) => {
                 if let Some(sender) = woken_sender {
                     if let Some(t) = self.tasks.get_mut(&sender) {
@@ -506,8 +510,8 @@ impl Scheduler {
 
     /// Non-blocking receive.  Returns `Some(value)` if one was available.
     pub fn chan_try_recv(&mut self, ch: ChannelId) -> Result<Option<Value>, ConcurrencyError> {
-        let _ = self.channels.get(&ch).ok_or(ConcurrencyError::UnknownChannel(ch))?;
-        match self.channels.get_mut(&ch).unwrap().try_dequeue() {
+        // Same NLL pattern as chan_recv: borrow ends when try_dequeue() returns.
+        match self.get_channel_mut(ch)?.try_dequeue() {
             TryDequeueResult::Received(value, woken_sender) => {
                 if let Some(sender) = woken_sender {
                     if let Some(t) = self.tasks.get_mut(&sender) {
@@ -591,7 +595,10 @@ impl Scheduler {
             entry.add_arm(SelectArm::Cancel { token })
         };
         // Register this select set arm with the token.
-        let token_entry = self.tokens.get_mut(&token).unwrap();
+        // Use get_mut with proper error return rather than unwrap, so a
+        // concurrent-looking (but impossible in practice) removal doesn't panic.
+        let token_entry = self.tokens.get_mut(&token)
+            .ok_or(ConcurrencyError::UnknownCancelToken(token))?;
         token_entry.select_waiters.push((set, arm_id));
         Ok(arm_id)
     }
@@ -623,7 +630,8 @@ impl Scheduler {
         }
 
         // No arm was ready.  Fire default if present.
-        let has_default = self.select_sets[&set].has_default;
+        // Use get_select_mut (returns Err) rather than [] (panics) for robustness.
+        let has_default = self.get_select_mut(set)?.has_default;
         if has_default {
             let default_id = arm_snapshot.iter()
                 .find(|(_, a)| matches!(a, SelectArm::Default))
