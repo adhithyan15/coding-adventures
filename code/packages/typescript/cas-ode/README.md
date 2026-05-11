@@ -15,12 +15,15 @@ return symbolic IR nodes.
 | Separable | `D(y,x) = f(x)*g(y)` |
 | Bernoulli | `D(y,x) + P(x)*y = Q(x)*y^n` |
 | Exact | `M(x,y) + N(x,y)*D(y,x) = 0` |
+| Homogeneous type | `D(y,x) = f(y/x)` |
 | Second-order constant-coefficient homogeneous | `a*y'' + b*y' + c*y = 0` |
 | Second-order constant-coefficient nonhomogeneous | polynomial, exponential, sine, and cosine forcing, with variation-of-parameters fallback |
 | Euler-Cauchy | `a*x^2*y'' + b*x*y' + c*y = 0` |
 
 When an exact primitive is outside the built-in integration table, the solver
 returns symbolic `Integrate(expr, x)` nodes rather than failing the whole ODE.
+For homogeneous-type equations this includes implicit solutions such as
+`Equal(Integrate(1/(f(y/x)-y/x), y/x), Log(x)+%c)`.
 
 ## Usage
 
