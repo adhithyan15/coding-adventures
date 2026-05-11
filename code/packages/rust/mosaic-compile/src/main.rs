@@ -12,7 +12,8 @@
 //! MosaicVM  (drives MosaicRenderer callbacks)
 //!      │
 //!      ├── --backend webcomponent  →  MyComponent.js  (Custom Element)
-//!      └── --backend html          →  MyComponent.html (static snapshot)
+//!      ├── --backend html          →  MyComponent.html (static snapshot)
+//!      └── --backend react         →  MyComponent.jsx (React functional component)
 //! ```
 //!
 //! The CLI surface is driven by the spec at `code/specs/mosaic-compile.json`
@@ -28,6 +29,7 @@ use cli_builder::types::ParserOutput;
 use cli_builder::{load_spec_from_file, Parser};
 use mosaic_analyzer::analyze;
 use mosaic_emit_html::HtmlRenderer;
+use mosaic_emit_react::ReactRenderer;
 use mosaic_emit_webcomponent::WebComponentRenderer;
 use mosaic_vm::MosaicVM;
 
@@ -136,9 +138,9 @@ fn run(result: cli_builder::types::ParseResult) {
             process::exit(1);
         });
 
-    if backend != "webcomponent" && backend != "html" {
+    if backend != "webcomponent" && backend != "html" && backend != "react" {
         eprintln!(
-            "mosaic-compile: --backend must be 'webcomponent' or 'html', got '{backend}'"
+            "mosaic-compile: --backend must be 'webcomponent', 'html', or 'react', got '{backend}'"
         );
         process::exit(1);
     }
@@ -218,6 +220,21 @@ fn run(result: cli_builder::types::ParseResult) {
             let renderer = HtmlRenderer::new(fixtures, css);
             let result = vm.run(renderer).unwrap_or_else(|e| {
                 eprintln!("mosaic-compile: html backend error: {e}");
+                process::exit(1);
+            });
+
+            write_file_or_die(&out, &result.output);
+            eprintln!("Written: {out}");
+        }
+
+        "react" => {
+            let out = output_path
+                .map(str::to_string)
+                .unwrap_or_else(|| format!("{component_name}.jsx"));
+
+            let renderer = ReactRenderer::new();
+            let result = vm.run(renderer).unwrap_or_else(|e| {
+                eprintln!("mosaic-compile: react backend error: {e}");
                 process::exit(1);
             });
 
