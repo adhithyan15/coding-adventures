@@ -184,7 +184,9 @@ skip:
 
   # Comment syntax: the word "comment" followed by any text up to the next ";".
   # Example: comment this is a comment;
-  # Skip patterns run before keyword reclassification, so require an identifier
-  # boundary after the case-insensitive keyword to avoid swallowing identifiers
-  # such as "commentary".
-  COMMENT    = /(?i:comment)\b[^;]*;/
+  # Lua-compatible pattern: pcre_to_lua drops inline (?i:...) flag groups and
+  # does not handle \b word boundaries. We use a literal boundary character
+  # class [^a-zA-Z0-9_] instead of \b, and rely on the fact that GrammarLexer
+  # normalises identifiers to lowercase before keyword promotion — so the skip
+  # pattern only needs to match the lowercase "comment" spelling.
+  COMMENT    = /comment[^a-zA-Z0-9_][^;]*;/
