@@ -199,13 +199,10 @@ mod tests {
     // -----------------------------------------------------------------------
     // Test 5: List type slot
     // -----------------------------------------------------------------------
-    // NOTE: The Rust GrammarParser's packrat memoization resolves `list` as a
-    // KEYWORD before trying the `list_type` rule in the `slot_type` alternation.
-    // This is a known difference from the TypeScript parser. Marked `ignore`
-    // until the grammar or parser is updated to handle list<T> syntax.
+    // list<T> parsing is now fixed by reordering slot_type alternation to try
+    // list_type before KEYWORD.
 
     #[test]
-    #[ignore = "Rust GrammarParser tries KEYWORD before list_type in slot_type alternation"]
     fn test_parse_list_slot() {
         let src = r#"
           component List {
@@ -318,10 +315,9 @@ mod tests {
     // -----------------------------------------------------------------------
     // Test 11: each block
     // -----------------------------------------------------------------------
-    // NOTE: list<T> syntax fails in the Rust parser; test is marked ignore.
+    // list<T> parsing is now fixed; each block test is fully active.
 
     #[test]
-    #[ignore = "Rust GrammarParser resolves 'list' as KEYWORD before list_type"]
     fn test_parse_each_block() {
         let src = r#"
           component ItemList {

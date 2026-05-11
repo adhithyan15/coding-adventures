@@ -1,0 +1,16 @@
+[package]
+name = "mosaic-compile"
+version = "0.1.0"
+edition = "2021"
+description = "CLI that reads a .mosaic file and compiles to a target backend (webcomponent, html)"
+
+[[bin]]
+name = "mosaic-compile"
+path = "src/main.rs"
+
+[dependencies]
+mosaic-analyzer = { path = "../mosaic-analyzer" }
+mosaic-vm = { path = "../mosaic-vm" }
+mosaic-emit-webcomponent = { path = "../mosaic-emit-webcomponent" }
+mosaic-emit-html = { path = "../mosaic-emit-html" }
+serde_json = "1"

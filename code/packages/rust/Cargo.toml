@@ -324,6 +324,8 @@ members = [
     "image-codec-qoi",
     "mosaic-analyzer",
     "mosaic-driver",
+    "mosaic-compile",
+    "mosaic-emit-html",
     "mosaic-emit-react",
     "mosaic-emit-webcomponent",
     "mosaic-lexer",

@@ -1,0 +1,55 @@
+{
+  "cli_builder_spec_version": "1.0",
+  "name": "mosaic-compile",
+  "display_name": "Mosaic Compile",
+  "description": "Compile a .mosaic component file to a target output format.\n\nReads the unified .mosaic file format (interface + layout + style in one file)\nand emits to the specified backend.",
+  "version": "0.1.0",
+  "parsing_mode": "gnu",
+  "builtin_flags": {
+    "help": true,
+    "version": true
+  },
+  "flags": [
+    {
+      "id": "backend",
+      "long": "backend",
+      "short": "b",
+      "description": "Output backend: 'webcomponent' (Custom Element JS) or 'html' (static HTML file)",
+      "type": "string",
+      "required": true
+    },
+    {
+      "id": "output",
+      "long": "output",
+      "short": "o",
+      "description": "Output file path (default: <ComponentName>.js or <ComponentName>.html)",
+      "type": "string",
+      "required": false
+    },
+    {
+      "id": "fixtures",
+      "long": "fixtures",
+      "short": "f",
+      "description": "Path to a JSON fixture file providing slot values (for --backend html)",
+      "type": "string",
+      "required": false
+    },
+    {
+      "id": "css",
+      "long": "css",
+      "short": "c",
+      "description": "Path to a CSS file to inline in the HTML output (for --backend html)",
+      "type": "string",
+      "required": false
+    }
+  ],
+  "arguments": [
+    {
+      "id": "source",
+      "name": "SOURCE",
+      "description": "Path to the .mosaic source file to compile",
+      "type": "string",
+      "required": true
+    }
+  ]
+}

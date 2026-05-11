@@ -63,9 +63,9 @@ pub fn parser_grammar() -> ParserGrammar {
         GrammarRule {
             name: r#"slot_type"#.to_string(),
             body: GrammarElement::Alternation { choices: vec![
+                GrammarElement::RuleReference { name: r#"list_type"#.to_string() },
                 GrammarElement::TokenReference { name: r#"KEYWORD"#.to_string() },
                 GrammarElement::TokenReference { name: r#"NAME"#.to_string() },
-                GrammarElement::RuleReference { name: r#"list_type"#.to_string() },
             ] },
             line_number: 69,
         },
