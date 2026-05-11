@@ -1,5 +1,20 @@
 # Changelog — `twig-aot`
 
+## 0.1.2 — 2026-05-10
+
+**LANG25-25A — Windows compilation hygiene.**
+
+- `compile_file_macos_arm64` is now defined on all platforms.  On non-Unix
+  hosts (Windows) the function returns `AotError::Linker` with a clear
+  "requires Unix host" message.  Previously the `#[cfg(unix)]` gate made the
+  function undefined on Windows, causing the `twig-aot` binary to fail
+  `cargo check` on that platform.
+
+- `tests/macos_arm64_smoke.rs`: wrapped `use std::os::unix::fs::PermissionsExt`
+  in `#[cfg(unix)]` so the test file compiles on Windows (all callers are
+  already `#[cfg(all(target_os = "macos", ...))]` which is a strict subset
+  of unix).
+
 ## 0.1.1 — 2026-05-05
 
 Real Twig source programs now compile and run on Apple Silicon — not

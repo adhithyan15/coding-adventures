@@ -42,7 +42,8 @@ use crate::protocol::{build_event, build_response, read_message, write_message,
                        DapRequest, SeqCounter};
 use crate::sidecar::SidecarIndex;
 use crate::stepper::{StepController, StepDecision, StepMode};
-use crate::vm_conn::{StoppedEvent, StoppedReason, VmConnection, VmLocation};
+use crate::vm_conn::{StoppedEvent, StoppedReason, TcpConnectOptions, TcpVmConnection,
+                     VmConnection, VmLocation};
 
 // ---------------------------------------------------------------------------
 // DapServer
@@ -187,18 +188,47 @@ impl<A: LanguageDebugAdapter> DapServer<A> {
 
         self.sidecar = Some(SidecarIndex::from_bytes(&sidecar_bytes)?);
 
-        // The adapter is responsible for picking a debug port (typically a
-        // free ephemeral) and launching the VM.  In tests, we accept that the
-        // adapter may have already wired up a VmConnection out-of-band by
-        // the time `compile` returned — see `launch_test_helper` below.
+        // When `noDebug` is true the editor wants a plain run with no debug
+        // protocol — skip VM launch and connection entirely.
+        let no_debug = req.arguments.get("noDebug")
+            .and_then(|v| v.as_bool())
+            .unwrap_or(false);
+        if no_debug {
+            return Ok(json!({}));
+        }
+
+        // Resolve the debug port.  If the editor already picked one (e.g.
+        // from a saved launch configuration), use it.  Otherwise let the OS
+        // hand us a free ephemeral port — this avoids hardcoded-port
+        // collisions when multiple debug sessions are running.
         let port: u16 = req.arguments.get("debugPort")
             .and_then(|v| v.as_u64())
             .map(|p| p as u16)
-            .unwrap_or(0);
-        if port != 0 {
-            self.vm_proc = Some(self.adapter.launch_vm(&bytecode_path, port)
-                .map_err(|e| format!("launch_vm: {e}"))?);
+            .unwrap_or_else(|| allocate_free_port().unwrap_or(0));
+
+        if port == 0 {
+            return Err("launch: could not allocate a free debug port".into());
         }
+
+        // Launch the VM in debug mode.  The VM must start a TCP server on
+        // `port` and pause before executing bytecode (waiting for
+        // configurationDone → cont).
+        self.vm_proc = Some(self.adapter.launch_vm(&bytecode_path, port)
+            .map_err(|e| format!("launch_vm: {e}"))?);
+
+        // Connect to the VM's debug server with exponential-backoff retry.
+        // The VM typically needs a few hundred milliseconds to bind its
+        // TCP listener; `connect_with_retry` hides that race from the
+        // editor by retrying until `vm_connect_timeout_ms` expires.
+        let tcp_opts = TcpConnectOptions {
+            port,
+            connect_budget_ms: self.adapter.vm_connect_timeout_ms(),
+            ..TcpConnectOptions::default()
+        };
+        self.vm_conn = Some(Box::new(
+            TcpVmConnection::connect_with_retry(tcp_opts)
+                .map_err(|e| format!("vm connect: {e}"))?
+        ));
 
         Ok(json!({}))
     }
@@ -479,6 +509,26 @@ impl<A: LanguageDebugAdapter> DapServer<A> {
 }
 
 // ---------------------------------------------------------------------------
+// Internal utilities
+// ---------------------------------------------------------------------------
+
+/// Ask the OS for a free ephemeral port by binding to port 0, then
+/// release the listener so the VM can bind the same port.
+///
+/// ## TOCTOU note
+///
+/// There is a small window between `drop(listener)` and `launch_vm(port)`
+/// where another process could grab the port.  In practice this is
+/// acceptable: debug ports are short-lived local connections and a
+/// port-range scan would still be racy.  Typical OS ephemeral port ranges
+/// (32768-60999 on Linux, 49152-65535 on macOS) make collisions rare.
+fn allocate_free_port() -> Option<u16> {
+    use std::net::TcpListener;
+    let listener = TcpListener::bind("127.0.0.1:0").ok()?;
+    Some(listener.local_addr().ok()?.port())
+}
+
+// ---------------------------------------------------------------------------
 // Tests — handlers + integration flow
 // ---------------------------------------------------------------------------
 
@@ -543,12 +593,30 @@ mod tests {
 
     #[test]
     fn launch_loads_sidecar() {
+        // `noDebug: true` tells the adapter to compile + load the sidecar
+        // without trying to connect to a VM TCP server (no real VM here).
         let bytes = fixture_sidecar();
         let mut srv = DapServer::new(MockAdapter { sidecar_bytes: bytes });
         let req = DapRequest { seq: 1, typ: "request".into(), command: "launch".into(),
-                               arguments: json!({"program": "prog.tw"}) };
+                               arguments: json!({"program": "prog.tw", "noDebug": true}) };
         srv.handle_launch(&req).unwrap();
         assert!(srv.sidecar.is_some());
+        // No VM connection was established — that is expected for noDebug.
+        assert!(srv.vm_conn.is_none());
+    }
+
+    #[test]
+    fn launch_no_debug_skips_vm_conn() {
+        // Explicit noDebug:true must leave vm_conn unset regardless of any
+        // debugPort argument in the request.
+        let bytes = fixture_sidecar();
+        let mut srv = DapServer::new(MockAdapter { sidecar_bytes: bytes });
+        let req = DapRequest { seq: 1, typ: "request".into(), command: "launch".into(),
+                               arguments: json!({"program": "prog.tw",
+                                                 "noDebug": true,
+                                                 "debugPort": 9999}) };
+        srv.handle_launch(&req).unwrap();
+        assert!(srv.vm_conn.is_none());
     }
 
     #[test]
