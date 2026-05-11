@@ -3,8 +3,10 @@
 //! These tests exercise the full eval loop — constructing IR expressions
 //! directly and evaluating them under each backend.
 
-use symbolic_ir::{apply, flt, int, rat, sym, ADD, AND, ASSIGN, COS, DEFINE, DIV, EXP, IF, LIST,
-    LOG, MUL, NEG, NOT, OR, POW, SIN, SQRT, SUB};
+use symbolic_ir::{
+    apply, flt, int, rat, sym, ACOSH, ADD, AND, ASINH, ASSIGN, ATANH, COS, COSH, D, DEFINE, DIV,
+    EXP, IF, LIST, LOG, MUL, NEG, NOT, OR, POW, SIN, SINH, SQRT, SUB, TAN, TANH,
+};
 use symbolic_vm::{StrictBackend, SymbolicBackend, VM};
 
 // ---------------------------------------------------------------------------
@@ -17,6 +19,10 @@ fn strict() -> VM {
 
 fn symbolic() -> VM {
     VM::new(Box::new(SymbolicBackend::new()))
+}
+
+fn d(f: symbolic_ir::IRNode) -> symbolic_ir::IRNode {
+    symbolic().eval(apply(sym(D), vec![f, sym("x")]))
 }
 
 // ---------------------------------------------------------------------------
@@ -49,12 +55,18 @@ fn strict_add_integers() {
 
 #[test]
 fn strict_sub_integers() {
-    assert_eq!(strict().eval(apply(sym(SUB), vec![int(10), int(3)])), int(7));
+    assert_eq!(
+        strict().eval(apply(sym(SUB), vec![int(10), int(3)])),
+        int(7)
+    );
 }
 
 #[test]
 fn strict_mul_integers() {
-    assert_eq!(strict().eval(apply(sym(MUL), vec![int(4), int(5)])), int(20));
+    assert_eq!(
+        strict().eval(apply(sym(MUL), vec![int(4), int(5)])),
+        int(20)
+    );
 }
 
 #[test]
@@ -66,12 +78,18 @@ fn strict_div_integers_exact() {
 #[test]
 fn strict_div_integers_rational() {
     // 1 / 3 = 1/3 (exact rational)
-    assert_eq!(strict().eval(apply(sym(DIV), vec![int(1), int(3)])), rat(1, 3));
+    assert_eq!(
+        strict().eval(apply(sym(DIV), vec![int(1), int(3)])),
+        rat(1, 3)
+    );
 }
 
 #[test]
 fn strict_pow_integers() {
-    assert_eq!(strict().eval(apply(sym(POW), vec![int(2), int(10)])), int(1024));
+    assert_eq!(
+        strict().eval(apply(sym(POW), vec![int(2), int(10)])),
+        int(1024)
+    );
 }
 
 #[test]
@@ -99,7 +117,10 @@ fn strict_nested_arithmetic() {
 #[test]
 fn symbolic_add_fold() {
     // Add(2, 3) → 5
-    assert_eq!(symbolic().eval(apply(sym(ADD), vec![int(2), int(3)])), int(5));
+    assert_eq!(
+        symbolic().eval(apply(sym(ADD), vec![int(2), int(3)])),
+        int(5)
+    );
 }
 
 #[test]
@@ -238,6 +259,261 @@ fn sqrt_one() {
 fn sin_symbolic_stays() {
     // Sin(x) stays when x is unbound (symbolic mode)
     let expr = apply(sym(SIN), vec![sym("x")]);
+    assert_eq!(symbolic().eval(expr.clone()), expr);
+}
+
+// ---------------------------------------------------------------------------
+// Symbolic derivative handler
+// ---------------------------------------------------------------------------
+
+#[test]
+fn derivative_constants_and_variables() {
+    assert_eq!(d(int(42)), int(0));
+    assert_eq!(d(rat(1, 3)), int(0));
+    assert_eq!(d(sym("y")), int(0));
+    assert_eq!(d(sym("x")), int(1));
+}
+
+#[test]
+fn derivative_arithmetic_rules() {
+    assert_eq!(d(apply(sym(ADD), vec![sym("x"), int(3)])), int(1));
+    assert_eq!(d(apply(sym(SUB), vec![sym("x"), int(3)])), int(1));
+    assert_eq!(d(apply(sym(NEG), vec![sym("x")])), int(-1));
+
+    assert_eq!(
+        d(apply(sym(MUL), vec![sym("x"), sym("x")])),
+        apply(sym(ADD), vec![sym("x"), sym("x")])
+    );
+
+    let denominator = apply(sym(ADD), vec![sym("x"), int(1)]);
+    assert_eq!(
+        d(apply(sym(DIV), vec![sym("x"), denominator.clone()])),
+        apply(
+            sym(DIV),
+            vec![
+                apply(sym(SUB), vec![denominator.clone(), sym("x")]),
+                apply(sym(POW), vec![denominator, int(2)]),
+            ],
+        )
+    );
+}
+
+#[test]
+fn derivative_power_rules() {
+    assert_eq!(
+        d(apply(sym(POW), vec![sym("x"), int(3)])),
+        apply(
+            sym(MUL),
+            vec![int(3), apply(sym(POW), vec![sym("x"), int(2)])]
+        )
+    );
+
+    assert_eq!(
+        d(apply(sym(POW), vec![sym("a"), sym("x")])),
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(POW), vec![sym("a"), sym("x")]),
+                apply(sym(LOG), vec![sym("a")]),
+            ],
+        )
+    );
+
+    assert_eq!(
+        d(apply(sym(POW), vec![sym("x"), sym("x")])),
+        apply(
+            sym(MUL),
+            vec![
+                apply(
+                    sym(EXP),
+                    vec![apply(
+                        sym(MUL),
+                        vec![sym("x"), apply(sym(LOG), vec![sym("x")])],
+                    )],
+                ),
+                apply(
+                    sym(ADD),
+                    vec![
+                        apply(sym(LOG), vec![sym("x")]),
+                        apply(
+                            sym(MUL),
+                            vec![sym("x"), apply(sym(DIV), vec![int(1), sym("x")])],
+                        ),
+                    ],
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
+fn derivative_elementary_chain_rules() {
+    assert_eq!(
+        d(apply(sym(SIN), vec![sym("x")])),
+        apply(sym(COS), vec![sym("x")])
+    );
+    assert_eq!(
+        d(apply(sym(COS), vec![sym("x")])),
+        apply(sym(NEG), vec![apply(sym(SIN), vec![sym("x")])])
+    );
+    assert_eq!(
+        d(apply(sym(TAN), vec![sym("x")])),
+        apply(
+            sym(DIV),
+            vec![
+                int(1),
+                apply(sym(POW), vec![apply(sym(COS), vec![sym("x")]), int(2)]),
+            ],
+        )
+    );
+    assert_eq!(
+        d(apply(sym(EXP), vec![sym("x")])),
+        apply(sym(EXP), vec![sym("x")])
+    );
+    assert_eq!(
+        d(apply(sym(LOG), vec![sym("x")])),
+        apply(sym(DIV), vec![int(1), sym("x")])
+    );
+    assert_eq!(
+        d(apply(sym(SQRT), vec![sym("x")])),
+        apply(
+            sym(DIV),
+            vec![
+                int(1),
+                apply(sym(MUL), vec![int(2), apply(sym(SQRT), vec![sym("x")])]),
+            ],
+        )
+    );
+
+    assert_eq!(
+        d(apply(
+            sym(SIN),
+            vec![apply(sym(MUL), vec![int(2), sym("x")])]
+        )),
+        apply(
+            sym(MUL),
+            vec![
+                apply(sym(COS), vec![apply(sym(MUL), vec![int(2), sym("x")])]),
+                int(2),
+            ],
+        )
+    );
+}
+
+#[test]
+fn derivative_hyperbolic_chain_rules() {
+    assert_eq!(
+        d(apply(sym(SINH), vec![sym("x")])),
+        apply(sym(COSH), vec![sym("x")])
+    );
+    assert_eq!(
+        d(apply(sym(COSH), vec![sym("x")])),
+        apply(sym(SINH), vec![sym("x")])
+    );
+    assert_eq!(
+        d(apply(sym(TANH), vec![sym("x")])),
+        apply(
+            sym(DIV),
+            vec![
+                int(1),
+                apply(sym(POW), vec![apply(sym(COSH), vec![sym("x")]), int(2)]),
+            ],
+        )
+    );
+    assert_eq!(
+        d(apply(sym(ASINH), vec![sym("x")])),
+        apply(
+            sym(DIV),
+            vec![
+                int(1),
+                apply(
+                    sym(SQRT),
+                    vec![apply(
+                        sym(ADD),
+                        vec![apply(sym(POW), vec![sym("x"), int(2)]), int(1)],
+                    )],
+                ),
+            ],
+        )
+    );
+    assert_eq!(
+        d(apply(sym(ACOSH), vec![sym("x")])),
+        apply(
+            sym(DIV),
+            vec![
+                int(1),
+                apply(
+                    sym(SQRT),
+                    vec![apply(
+                        sym(SUB),
+                        vec![apply(sym(POW), vec![sym("x"), int(2)]), int(1)],
+                    )],
+                ),
+            ],
+        )
+    );
+    assert_eq!(
+        d(apply(sym(ATANH), vec![sym("x")])),
+        apply(
+            sym(DIV),
+            vec![
+                int(1),
+                apply(
+                    sym(SUB),
+                    vec![int(1), apply(sym(POW), vec![sym("x"), int(2)])]
+                ),
+            ],
+        )
+    );
+}
+
+#[test]
+fn derivative_reciprocal_hyperbolic_chain_rules() {
+    assert_eq!(
+        d(apply(sym("Coth"), vec![sym("x")])),
+        apply(
+            sym(NEG),
+            vec![apply(
+                sym(DIV),
+                vec![
+                    int(1),
+                    apply(sym(POW), vec![apply(sym(SINH), vec![sym("x")]), int(2)]),
+                ],
+            )],
+        )
+    );
+    assert_eq!(
+        d(apply(sym("Sech"), vec![sym("x")])),
+        apply(
+            sym(NEG),
+            vec![apply(
+                sym(DIV),
+                vec![
+                    apply(sym(SINH), vec![sym("x")]),
+                    apply(sym(POW), vec![apply(sym(COSH), vec![sym("x")]), int(2)]),
+                ],
+            )],
+        )
+    );
+    assert_eq!(
+        d(apply(sym("Csch"), vec![sym("x")])),
+        apply(
+            sym(NEG),
+            vec![apply(
+                sym(DIV),
+                vec![
+                    apply(sym(COSH), vec![sym("x")]),
+                    apply(sym(POW), vec![apply(sym(SINH), vec![sym("x")]), int(2)]),
+                ],
+            )],
+        )
+    );
+}
+
+#[test]
+fn derivative_unknown_head_stays_unevaluated() {
+    let f = apply(sym("F"), vec![sym("x")]);
+    let expr = apply(sym(D), vec![f, sym("x")]);
     assert_eq!(symbolic().eval(expr.clone()), expr);
 }
 
@@ -401,7 +677,10 @@ fn rational_mul_exact() {
 #[test]
 fn integer_div_exact_rational() {
     // 1 / 4 = 1/4
-    assert_eq!(strict().eval(apply(sym(DIV), vec![int(1), int(4)])), rat(1, 4));
+    assert_eq!(
+        strict().eval(apply(sym(DIV), vec![int(1), int(4)])),
+        rat(1, 4)
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -418,6 +697,12 @@ fn strict_panics_on_unbound_symbol() {
 #[should_panic(expected = "no handler for head")]
 fn strict_panics_on_unknown_head() {
     strict().eval(apply(sym("UnknownFunc"), vec![int(1)]));
+}
+
+#[test]
+#[should_panic(expected = "no handler for head")]
+fn strict_panics_on_derivative_head() {
+    strict().eval(apply(sym(D), vec![int(1), int(2)]));
 }
 
 #[test]

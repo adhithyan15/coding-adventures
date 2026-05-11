@@ -116,10 +116,7 @@ impl VM {
 
         // 3. Dispatch to a head-specific handler.
         //    Clone the Arc handler to release the borrow before calling.
-        let handler = self
-            .backend
-            .handler_for(&head_name)
-            .map(|h| h.clone());
+        let handler = self.backend.handler_for(&head_name).map(|h| h.clone());
         if let Some(handler) = handler {
             return handler(self, expr);
         }
@@ -157,11 +154,7 @@ impl VM {
     /// `Apply(sym("Define"), [name, List(param1, param2, …), body])`.
     ///
     /// Returns `None` if the record is malformed.
-    fn apply_user_function(
-        &self,
-        definition: IRApply,
-        args: Vec<IRNode>,
-    ) -> Option<IRNode> {
+    fn apply_user_function(&self, definition: IRApply, args: Vec<IRNode>) -> Option<IRNode> {
         // definition.args == [name, List(params...), body]
         if definition.args.len() != 3 {
             return None;
