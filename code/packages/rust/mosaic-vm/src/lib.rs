@@ -544,10 +544,9 @@ mod tests {
     // -----------------------------------------------------------------------
     // Test 6: each block calls begin_each / end_each
     // -----------------------------------------------------------------------
-    // NOTE: Uses list<text> which requires a grammar fix in the Rust parser.
+    // list<text> parsing is now fixed; each block test is fully active.
 
     #[test]
-    #[ignore = "Rust GrammarParser resolves 'list' as KEYWORD before list_type"]
     fn test_each_block_calls() {
         let src = r#"
           component List {

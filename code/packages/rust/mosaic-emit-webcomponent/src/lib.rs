@@ -600,10 +600,9 @@ mod tests {
     // -----------------------------------------------------------------------
     // Test 10: each block uses <template data-each>
     // -----------------------------------------------------------------------
-    // NOTE: Uses list<text> which requires a grammar fix in the Rust parser.
+    // list<text> parsing is now fixed; each block test is fully active.
 
     #[test]
-    #[ignore = "Rust GrammarParser resolves 'list' as KEYWORD before list_type"]
     fn test_each_template() {
         let out = emit(r#"
           component List {
