@@ -331,6 +331,7 @@ members = [
     "mosaic-driver",
     "mosaic-compile",
     "mosaic-emit-html",
+    "mosaic-emit-paint",
     "mosaic-emit-react",
     "mosaic-emit-webcomponent",
     "mosaic-lexer",
