@@ -1,0 +1,368 @@
+//! Pre-flight validation for IIR → JVM class file lowering.
+//!
+//! # Why validate separately?
+//!
+//! The JVM is a typed, stack-based virtual machine.  Not every IIR program can
+//! be lowered: the JVM has no support for raw memory operations, I/O syscalls,
+//! unsafe casts, or dynamically-typed ("any") instructions without explicit
+//! boxing.  Catching these problems *before* lowering produces clear, actionable
+//! error messages rather than a panic deep inside the code-generation pass.
+//!
+//! This module implements a single public function, [`validate_for_jvm`].
+//! The lowering pass ([`crate::lower::lower_iir_to_jvm`]) calls it automatically
+//! on entry and returns `Err(ValidationFailed(…))` if there are problems, so
+//! callers that just want a Result can skip the explicit validate call.
+//! Callers that want to display errors to the user should call it directly.
+//!
+//! # Checks performed
+//!
+//! | Error kind          | Condition |
+//! |---------------------|-----------|
+//! | `EmptyModule`       | Module has zero functions |
+//! | `EmptyFunction`     | A function has zero instructions |
+//! | `UntypedInstruction`| `type_hint` is `"any"` or `"polymorphic"` |
+//! | `UnsupportedType`   | `type_hint` is `"str"` or starts with `"ref<"` |
+//! | `UnsupportedOp`     | op is a runtime/memory/IO/GC opcode (list below) |
+//!
+//! **Importantly, float type hints and float constant operands are SUPPORTED.**
+//! The JVM has native `fload`/`dload`/`fadd`/`dadd` opcodes, unlike the BEAM
+//! backend which must box floats via `fmove` into floating-point registers.
+//!
+//! # Unsupported ops
+//!
+//! `call_builtin`, `io_in`, `io_out`, `cast`, `load_mem`, `store_mem`,
+//! `alloc`, `box`, `unbox`, `field_load`, `field_store`, `is_null`, `safepoint`.
+
+use interpreter_ir::IIRModule;
+
+// ---------------------------------------------------------------------------
+// Opcodes not supported by this JVM backend
+// ---------------------------------------------------------------------------
+//
+// These opcodes all have runtime / OS / memory semantics that cannot be
+// expressed as pure JVM stack arithmetic:
+//
+// - `call_builtin`  — host built-in; JVM has no host bridge in this lowering.
+// - `io_in/io_out`  — raw I/O; JVM does this via java.io APIs, not opcodes.
+// - `cast`          — type reinterpretation / unsafe casts not supported.
+// - `load_mem/store_mem` — raw pointer access; JVM has no unsafe memory.
+// - `alloc/box/unbox/field_load/field_store/is_null` — GC heap ops; JVM
+//   manages its own heap via `new`/`getfield`/`putfield`, which we do not
+//   emit in v1.
+// - `safepoint`     — GC coordination; handled by the JVM runtime itself.
+
+const UNSUPPORTED_OPS: &[&str] = &[
+    "call_builtin",
+    "io_in",
+    "io_out",
+    "cast",
+    "load_mem",
+    "store_mem",
+    "alloc",
+    "box",
+    "unbox",
+    "field_load",
+    "field_store",
+    "is_null",
+    "safepoint",
+];
+
+// ---------------------------------------------------------------------------
+// validate_for_jvm
+// ---------------------------------------------------------------------------
+
+/// Validate an `IIRModule` for JVM class file lowering.
+///
+/// Returns a `Vec<String>` of human-readable error messages.
+/// An empty vector means the module is safe to pass to
+/// [`crate::lower::lower_iir_to_jvm`].
+///
+/// # Checks
+///
+/// 1. **EmptyModule** — At least one function must exist.
+///
+/// 2. **EmptyFunction** — Each function must have at least one instruction.
+///    An empty body is almost certainly a front-end bug.
+///
+/// 3. **UntypedInstruction** — `type_hint` must not be `"any"` or
+///    `"polymorphic"`.  JVM typed opcodes require a known type to pick the
+///    right load/store/arithmetic instruction (`iadd` vs `ladd` vs `fadd`).
+///
+/// 4. **UnsupportedType** — `type_hint` must not be `"str"` or start with
+///    `"ref<"`.  String and heap pointer types require JVM object references
+///    that this backend does not emit in v1.
+///
+///    **Float types (`f32`, `f64`) ARE supported** — JVM has `fload`, `dload`,
+///    `fadd`, `dadd`, etc.  We do not reject float type hints here.
+///
+/// 5. **UnsupportedOp** — see [`UNSUPPORTED_OPS`].
+///
+/// # Example
+///
+/// ```
+/// use interpreter_ir::{IIRModule, IIRFunction, IIRInstr, Operand};
+/// use iir_to_jvm_class_file::validate_for_jvm;
+///
+/// let fn_ = IIRFunction::new("main", vec![], "void",
+///     vec![IIRInstr::new("ret_void", None, vec![], "void")]);
+/// let module = IIRModule {
+///     name: "test".into(),
+///     functions: vec![fn_],
+///     entry_point: Some("main".into()),
+///     language: "test".into(),
+/// };
+/// assert!(validate_for_jvm(&module).is_empty());
+/// ```
+pub fn validate_for_jvm(module: &IIRModule) -> Vec<String> {
+    let mut errors = Vec::new();
+
+    // ── Check 1: EmptyModule ─────────────────────────────────────────────────
+    //
+    // A JVM class with no methods has no code section entries.  The class
+    // loader requires at least one method for anything useful.
+    if module.functions.is_empty() {
+        errors.push("EmptyModule: module has no functions".to_string());
+        // Return early — the per-function checks below would be vacuous.
+        return errors;
+    }
+
+    for func in &module.functions {
+        // ── Check 2: EmptyFunction ───────────────────────────────────────────
+        //
+        // An empty function body would produce a method with a zero-length
+        // Code attribute — this is invalid JVM bytecode (every method needs
+        // at least a `return` instruction).
+        if func.instructions.is_empty() {
+            errors.push(format!(
+                "EmptyFunction: function {:?} has no instructions",
+                func.name
+            ));
+            continue; // no point scanning the (empty) instruction list
+        }
+
+        for instr in &func.instructions {
+            // ── Check 3: UntypedInstruction ──────────────────────────────────
+            //
+            // JVM arithmetic and load/store opcodes are typed — `iadd` works
+            // on `int`, `ladd` on `long`, `fadd` on `float`, `dadd` on `double`.
+            // Without a concrete type hint we cannot pick the right opcode family.
+            //
+            // `"polymorphic"` is the profiler's sentinel for "seen multiple
+            // types at runtime" — it means the JIT should NOT specialise.  It
+            // is equally useless for static JVM lowering.
+            if instr.type_hint == "any" || instr.type_hint == "polymorphic" {
+                errors.push(format!(
+                    "UntypedInstruction: function {:?}, op {:?} has type_hint {:?}; \
+                     JVM lowering requires concrete types",
+                    func.name, instr.op, instr.type_hint
+                ));
+            }
+
+            // ── Check 4: UnsupportedType ─────────────────────────────────────
+            //
+            // `"str"` — JVM has strings (`java.lang.String`), but there is no
+            // integer-arithmetic equivalent; we do not emit string handling code
+            // in v1.
+            //
+            // `"ref<…>"` — heap pointer types require `aload`/`astore` and GC
+            // object references; we do not emit those in v1.
+            //
+            // `"f32"` and `"f64"` are intentionally NOT rejected here.  The JVM
+            // has first-class float/double operations (`fload`, `dload`, `fadd`,
+            // `dadd`, etc.) that this backend emits.
+            if instr.type_hint == "str" {
+                errors.push(format!(
+                    "UnsupportedType: function {:?}, op {:?} has type_hint \"str\"; \
+                     string operations are not supported in this JVM backend",
+                    func.name, instr.op
+                ));
+            } else if instr.type_hint.starts_with("ref<") {
+                errors.push(format!(
+                    "UnsupportedType: function {:?}, op {:?} has reference type {:?}; \
+                     heap pointer types are not supported in this JVM backend",
+                    func.name, instr.op, instr.type_hint
+                ));
+            }
+
+            // ── Check 5: UnsupportedOp ───────────────────────────────────────
+            //
+            // The JVM backend in this crate implements a focused subset of IIR.
+            // Runtime, I/O, heap, and native-bridge operations have no direct
+            // JVM-bytecode equivalent here.
+            if UNSUPPORTED_OPS.contains(&instr.op.as_str()) {
+                errors.push(format!(
+                    "UnsupportedOp: function {:?}, op {:?} is not supported by \
+                     the JVM backend; it requires a native method or Java standard-library call",
+                    func.name, instr.op
+                ));
+            }
+        }
+    }
+
+    errors
+}
+
+// ---------------------------------------------------------------------------
+// Unit tests (in-module)
+// ---------------------------------------------------------------------------
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use interpreter_ir::{IIRFunction, IIRInstr, IIRModule, Operand};
+
+    fn single_fn_module(instrs: Vec<IIRInstr>) -> IIRModule {
+        let fn_ = IIRFunction::new("main", vec![], "void", instrs);
+        IIRModule {
+            name: "test".into(),
+            functions: vec![fn_],
+            entry_point: Some("main".into()),
+            language: "test".into(),
+        }
+    }
+
+    #[test]
+    fn empty_module_rejected() {
+        let module = IIRModule {
+            name: "empty".into(),
+            functions: vec![],
+            entry_point: None,
+            language: "test".into(),
+        };
+        let errs = validate_for_jvm(&module);
+        assert!(!errs.is_empty(), "should reject empty module");
+        assert!(errs[0].contains("EmptyModule"));
+    }
+
+    #[test]
+    fn empty_function_rejected() {
+        let errs = validate_for_jvm(&single_fn_module(vec![]));
+        assert!(!errs.is_empty());
+        assert!(errs[0].contains("EmptyFunction"));
+    }
+
+    #[test]
+    fn any_type_rejected() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new(
+                "add",
+                Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())],
+                "any",
+            ),
+        ]));
+        assert!(errs.iter().any(|e| e.contains("UntypedInstruction")));
+    }
+
+    #[test]
+    fn polymorphic_type_rejected() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new("add", Some("v".into()), vec![], "polymorphic"),
+        ]));
+        assert!(errs.iter().any(|e| e.contains("UntypedInstruction")));
+    }
+
+    #[test]
+    fn str_type_rejected() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new("const", Some("v".into()), vec![], "str"),
+        ]));
+        assert!(errs.iter().any(|e| e.contains("UnsupportedType")));
+    }
+
+    #[test]
+    fn ref_type_rejected() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new("const", Some("v".into()), vec![], "ref<i32>"),
+        ]));
+        assert!(errs.iter().any(|e| e.contains("UnsupportedType")));
+    }
+
+    #[test]
+    fn float_const_allowed() {
+        // Unlike BEAM backend, float constants ARE supported on JVM.
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new("const", Some("v".into()), vec![Operand::Float(3.14)], "f64"),
+        ]));
+        // Should NOT have a "Float" or "UnsupportedType" error
+        assert!(
+            !errs.iter().any(|e| e.contains("Float")),
+            "float consts should be allowed, got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn f32_type_allowed() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new("add", Some("v".into()), vec![], "f32"),
+        ]));
+        assert!(
+            !errs.iter().any(|e| e.contains("UnsupportedType")),
+            "f32 should be allowed, got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn f64_type_allowed() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new("ret", None, vec![], "f64"),
+        ]));
+        assert!(
+            !errs.iter().any(|e| e.contains("UnsupportedType")),
+            "f64 should be allowed, got: {:?}",
+            errs
+        );
+    }
+
+    #[test]
+    fn unsupported_ops_rejected() {
+        for op in &[
+            "call_builtin",
+            "io_in",
+            "io_out",
+            "cast",
+            "load_mem",
+            "store_mem",
+            "alloc",
+            "box",
+            "unbox",
+            "field_load",
+            "field_store",
+            "is_null",
+            "safepoint",
+        ] {
+            let errs = validate_for_jvm(&single_fn_module(vec![
+                IIRInstr::new(*op, None, vec![], "void"),
+            ]));
+            assert!(
+                errs.iter().any(|e| e.contains("UnsupportedOp")),
+                "op {:?} should be rejected",
+                op
+            );
+        }
+    }
+
+    #[test]
+    fn valid_module_no_errors() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new("ret_void", None, vec![], "void"),
+        ]));
+        assert!(errs.is_empty(), "unexpected errors: {:?}", errs);
+    }
+
+    #[test]
+    fn valid_typed_arithmetic_no_errors() {
+        let errs = validate_for_jvm(&single_fn_module(vec![
+            IIRInstr::new(
+                "add",
+                Some("v".into()),
+                vec![Operand::Var("a".into()), Operand::Var("b".into())],
+                "i32",
+            ),
+            IIRInstr::new("ret", None, vec![Operand::Var("v".into())], "i32"),
+        ]));
+        assert!(errs.is_empty(), "unexpected errors: {:?}", errs);
+    }
+}
