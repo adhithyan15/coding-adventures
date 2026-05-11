@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MosaicBook</title>
+<style>
+/*
+ * MosaicBook browser shell — single-file SPA
+ *
+ * Layout: fixed 280px left sidebar + flex-1 main content area.
+ * The sidebar lists components and stories; the main area has a backend
+ * tab bar at the top and a full-height iframe below.
+ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+/* ── Sidebar ────────────────────────────────────────────────────────── */
+#sidebar {
+  width: 280px;
+  background: #1e1e1e;
+  color: #ccc;
+  overflow-y: auto;
+  padding: 12px;
+  flex-shrink: 0;
+  border-right: 1px solid #333;
+}
+
+#sidebar h1 {
+  font-size: 14px;
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: 16px;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.component-group {
+  margin-bottom: 8px;
+}
+
+.component-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 8px;
+  user-select: none;
+}
+
+.story-item {
+  display: block;
+  padding: 6px 8px 6px 20px;
+  font-size: 13px;
+  color: #aaa;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.1s, color 0.1s;
+  text-decoration: none;
+}
+
+.story-item:hover {
+  background: #2d2d2d;
+  color: #fff;
+}
+
+.story-item.active {
+  background: #0070f3;
+  color: #fff;
+}
+
+/* Empty state shown while loading or when no stories exist */
+#story-list-empty {
+  font-size: 12px;
+  color: #555;
+  padding: 8px;
+  font-style: italic;
+}
+
+/* ── Main content ───────────────────────────────────────────────────── */
+#main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fff;
+}
+
+/* ── Toolbar (backend tabs + status) ────────────────────────────────── */
+#toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #fafafa;
+  border-bottom: 1px solid #e5e5e5;
+  flex-shrink: 0;
+}
+
+#backend-tabs {
+  display: flex;
+  gap: 4px;
+}
+
+.backend-tab {
+  padding: 4px 12px;
+  font-size: 13px;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #333;
+  transition: background 0.1s, color 0.1s, border-color 0.1s;
+  font-family: inherit;
+}
+
+.backend-tab:hover {
+  border-color: #0070f3;
+  color: #0070f3;
+}
+
+.backend-tab.active {
+  background: #0070f3;
+  color: #fff;
+  border-color: #0070f3;
+}
+
+.backend-tab:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+#status {
+  margin-left: auto;
+  font-size: 11px;
+  color: #888;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* SSE connection indicator */
+#sse-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ccc;
+  flex-shrink: 0;
+  title: "Live reload connection";
+}
+#sse-indicator.connected { background: #22c55e; }
+#sse-indicator.disconnected { background: #ef4444; }
+
+/* ── Preview iframe ─────────────────────────────────────────────────── */
+#preview-frame {
+  flex: 1;
+  border: none;
+  background: #fff;
+  width: 100%;
+}
+
+/* ── No-selection state ─────────────────────────────────────────────── */
+#no-selection {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+  font-size: 14px;
+  flex-direction: column;
+  gap: 8px;
+}
+
+#no-selection .hint {
+  font-size: 12px;
+  color: #ccc;
+}
+</style>
+</head>
+<body>
+
+<!-- ── Left sidebar: component + story tree ───────────────────────────── -->
+<nav id="sidebar">
+  <h1>MosaicBook</h1>
+  <div id="story-list">
+    <div id="story-list-empty">Loading stories&hellip;</div>
+  </div>
+</nav>
+
+<!-- ── Main content: toolbar + preview iframe ─────────────────────────── -->
+<main id="main">
+  <div id="toolbar">
+    <div id="backend-tabs">
+      <button class="backend-tab active" data-backend="html">HTML</button>
+      <button class="backend-tab" data-backend="webcomponent">Web Component</button>
+      <button class="backend-tab" data-backend="react">React</button>
+    </div>
+    <span id="status">Select a story to preview</span>
+    <div id="sse-indicator" title="Live reload: disconnected"></div>
+  </div>
+
+  <!-- The iframe is where compiled component output is rendered.
+       sandbox="allow-scripts allow-same-origin allow-forms" lets inline
+       scripts and same-origin fetch work while blocking top-level navigation
+       and popups that could hijack the parent page. -->
+  <iframe
+    id="preview-frame"
+    sandbox="allow-scripts allow-same-origin allow-forms"
+    style="display:none"
+  ></iframe>
+
+  <div id="no-selection">
+    <span>No story selected</span>
+    <span class="hint">Pick a component and story from the sidebar</span>
+  </div>
+</main>
+
+<script>
+/*
+ * MosaicBook browser shell — plain vanilla JS, no framework dependencies.
+ *
+ * State machine:
+ *   currentComponent  — the selected Component object from /api/stories
+ *   currentStory      — the selected Story object
+ *   currentBackend    — string: "html" | "webcomponent" | "react"
+ */
+
+let currentComponent = null;
+let currentStory = null;
+let currentBackend = 'html';
+
+// ── Story loading ─────────────────────────────────────────────────────────
+
+/**
+ * loadStories fetches /api/stories and rebuilds the sidebar.
+ * Tries to preserve the current selection if the component+story still exists.
+ */
+async function loadStories() {
+  let data;
+  try {
+    const res = await fetch('/api/stories');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    data = await res.json();
+  } catch (err) {
+    console.error('Failed to load stories:', err);
+    return;
+  }
+
+  const list = document.getElementById('story-list');
+  list.innerHTML = '';
+
+  const components = data.components || [];
+
+  if (components.length === 0) {
+    list.innerHTML = '<div id="story-list-empty">No .mosaic files found.<br>Run the server with --root pointing to your project directory.</div>';
+    return;
+  }
+
+  components.forEach(comp => {
+    const group = document.createElement('div');
+    group.className = 'component-group';
+
+    const titleEl = document.createElement('div');
+    titleEl.className = 'component-title';
+    titleEl.textContent = comp.title;
+    group.appendChild(titleEl);
+
+    (comp.stories || []).forEach(story => {
+      const item = document.createElement('a');
+      item.className = 'story-item';
+      item.textContent = story.name;
+      item.href = '#';
+
+      // Check if this was the previously selected story — restore it.
+      if (currentComponent && currentStory &&
+          currentComponent.id === comp.id &&
+          currentStory.name === story.name) {
+        item.classList.add('active');
+      }
+
+      item.addEventListener('click', e => {
+        e.preventDefault();
+        selectStory(comp, story, item);
+      });
+
+      group.appendChild(item);
+    });
+
+    list.appendChild(group);
+  });
+
+  // Auto-select the first story if nothing was previously selected.
+  if (!currentComponent || !currentStory) {
+    const first = list.querySelector('.story-item');
+    if (first) first.click();
+  }
+}
+
+// ── Story selection ───────────────────────────────────────────────────────
+
+/**
+ * selectStory activates a story item and triggers a preview load.
+ * @param {Object} comp   — Component object
+ * @param {Object} story  — Story object
+ * @param {HTMLElement} el — The clicked .story-item element
+ */
+function selectStory(comp, story, el) {
+  currentComponent = comp;
+  currentStory = story;
+
+  // Update active class on all story items.
+  document.querySelectorAll('.story-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+
+  loadPreview();
+}
+
+// ── Preview loading ───────────────────────────────────────────────────────
+
+/**
+ * loadPreview updates the iframe src to point at the compiled preview URL.
+ * The server compiles the .mosaic file on demand and returns a full HTML page.
+ */
+function loadPreview() {
+  if (!currentComponent || !currentStory) return;
+
+  // Encode each path segment independently so slashes in component IDs are
+  // preserved as path separators (not double-encoded).
+  const idParts = currentComponent.id.split('/').map(encodeURIComponent).join('/');
+  const storyPart = encodeURIComponent(currentStory.name);
+  const url = `/preview/${currentBackend}/${idParts}/${storyPart}`;
+
+  const frame = document.getElementById('preview-frame');
+  frame.style.display = '';
+  document.getElementById('no-selection').style.display = 'none';
+  frame.src = url;
+
+  document.getElementById('status').textContent =
+    `${currentBackend}  ›  ${currentComponent.title}  ›  ${currentStory.name}`;
+}
+
+// ── Backend tab switching ─────────────────────────────────────────────────
+
+document.querySelectorAll('.backend-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.backend-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentBackend = btn.dataset.backend;
+    loadPreview();
+  });
+});
+
+// ── Server-Sent Events (hot reload) ──────────────────────────────────────
+
+/**
+ * connectSSE opens the /events SSE stream and handles reload notifications.
+ * Reconnects automatically on disconnect (with a 2-second back-off).
+ */
+function connectSSE() {
+  const indicator = document.getElementById('sse-indicator');
+  const sse = new EventSource('/events');
+
+  sse.addEventListener('open', () => {
+    indicator.className = 'connected';
+    indicator.title = 'Live reload: connected';
+  });
+
+  sse.addEventListener('message', e => {
+    let data;
+    try { data = JSON.parse(e.data); } catch { return; }
+
+    if (data.type === 'reload') {
+      // Re-fetch the story catalogue (a new component may have appeared or
+      // an existing one may have changed) and reload the current preview.
+      loadStories().then(() => loadPreview());
+    }
+  });
+
+  sse.addEventListener('error', () => {
+    indicator.className = 'disconnected';
+    indicator.title = 'Live reload: disconnected — reconnecting…';
+    sse.close();
+    // EventSource has built-in reconnect, but we close and re-open for clarity.
+    setTimeout(connectSSE, 2000);
+  });
+}
+
+// ── Keyboard shortcuts ────────────────────────────────────────────────────
+
+document.addEventListener('keydown', e => {
+  // Ignore shortcuts when focus is inside the iframe (it has its own document).
+  if (document.activeElement && document.activeElement.tagName === 'IFRAME') return;
+
+  // 1-3: switch backend by index
+  if (e.key >= '1' && e.key <= '3') {
+    const tabs = document.querySelectorAll('.backend-tab:not(:disabled)');
+    const idx = parseInt(e.key, 10) - 1;
+    if (tabs[idx]) tabs[idx].click();
+  }
+
+  // R: force reload current preview
+  if (e.key === 'r' || e.key === 'R') {
+    if (!e.metaKey && !e.ctrlKey) loadPreview();
+  }
+
+  // Arrow up/down: navigate stories
+  if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+    e.preventDefault();
+    const items = Array.from(document.querySelectorAll('.story-item'));
+    if (items.length === 0) return;
+    const activeIdx = items.findIndex(el => el.classList.contains('active'));
+    let nextIdx = e.key === 'ArrowUp' ? activeIdx - 1 : activeIdx + 1;
+    if (nextIdx < 0) nextIdx = items.length - 1;
+    if (nextIdx >= items.length) nextIdx = 0;
+    items[nextIdx].click();
+    items[nextIdx].scrollIntoView({ block: 'nearest' });
+  }
+});
+
+// ── Boot ──────────────────────────────────────────────────────────────────
+
+loadStories();
+connectSSE();
+</script>
+</body>
+</html>
