@@ -197,6 +197,24 @@ pub fn validate_for_wasm(module: &IIRModule) -> Vec<String> {
                 ));
             }
         }
+
+        // ── Check 6: TooManyLabels (DoS guard) ──────────────────────────────
+        //
+        // The dispatch-loop pattern allocates O(N) memory for N label
+        // instructions per function (one basic block + one br_table entry each).
+        // Without a cap, a malformed module with millions of labels causes the
+        // compiler to allocate gigabytes of memory.  We apply the same limit
+        // that a realistic WASM function would approach before hitting the WASM
+        // spec's own code-section size limit.
+        const MAX_LABELS_PER_FUNCTION: usize = 65_536;
+        let label_count = func.instructions.iter().filter(|i| i.op == "label").count();
+        if label_count > MAX_LABELS_PER_FUNCTION {
+            errors.push(format!(
+                "TooManyLabels: function {:?} has {} label instructions; \
+                 the WASM dispatch-loop backend supports at most {} per function",
+                func.name, label_count, MAX_LABELS_PER_FUNCTION
+            ));
+        }
     }
 
     errors

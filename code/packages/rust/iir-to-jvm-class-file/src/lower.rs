@@ -833,7 +833,10 @@ fn allocate_slots(
     type_map: &HashMap<String, JvmType>,
 ) -> HashMap<String, (u16, JvmType)> {
     let mut slots: HashMap<String, (u16, JvmType)> = HashMap::new();
-    let mut next_slot: u16 = 0;
+    // Use u32 internally to detect overflow before narrowing to u16.
+    // JVM local slots are 16-bit; exceeding 65,535 slots would produce
+    // silently aliased locals, so we assert-guard the cast.
+    let mut next_slot: u32 = 0;
 
     // ── Step 1: allocate params ──────────────────────────────────────────────
     //
@@ -843,8 +846,12 @@ fn allocate_slots(
     for (param_name, param_type_str) in &func.params {
         let jvm_type = iir_type_to_jvm(param_type_str.as_str())
             .unwrap_or(JvmType::Int); // fallback; validator should catch bad types
-        slots.insert(param_name.clone(), (next_slot, jvm_type));
-        next_slot += jvm_type.slot_width();
+        assert!(
+            next_slot <= u16::MAX as u32,
+            "JVM local slot overflow: too many variables in function {:?}", func.name
+        );
+        slots.insert(param_name.clone(), (next_slot as u16, jvm_type));
+        next_slot += jvm_type.slot_width() as u32;
     }
 
     // ── Step 2: allocate dests and src Vars ──────────────────────────────────
@@ -864,8 +871,12 @@ fn allocate_slots(
                     .get(dest.as_str())
                     .copied()
                     .unwrap_or(instr_type);
-                slots.insert(dest.clone(), (next_slot, var_type));
-                next_slot += var_type.slot_width();
+                assert!(
+                    next_slot <= u16::MAX as u32,
+                    "JVM local slot overflow: too many variables in function {:?}", func.name
+                );
+                slots.insert(dest.clone(), (next_slot as u16, var_type));
+                next_slot += var_type.slot_width() as u32;
             }
         }
 
@@ -873,8 +884,12 @@ fn allocate_slots(
             if let Operand::Var(name) = src {
                 if !slots.contains_key(name.as_str()) {
                     let var_type = type_map.get(name.as_str()).copied().unwrap_or(instr_type);
-                    slots.insert(name.clone(), (next_slot, var_type));
-                    next_slot += var_type.slot_width();
+                    assert!(
+                        next_slot <= u16::MAX as u32,
+                        "JVM local slot overflow: too many variables in function {:?}", func.name
+                    );
+                    slots.insert(name.clone(), (next_slot as u16, var_type));
+                    next_slot += var_type.slot_width() as u32;
                 }
             }
         }
@@ -938,11 +953,21 @@ impl ConstantPoolBuilder {
     }
 
     /// Add an entry (or return existing index if key already present).
+    ///
+    /// Returns the 1-based constant pool index.  The JVM constant pool is
+    /// limited to 65,535 entries; exceeding this limit causes a panic with
+    /// a clear message (the validator should prevent this in practice, but
+    /// we guard here as a last line of defense).
     fn add_entry(&mut self, key: String, entry: JvmConstantPoolEntry) -> u16 {
         if let Some(&idx) = self.index_map.get(&key) {
             return idx;
         }
+        assert!(
+            self.entries.len() < u16::MAX as usize,
+            "JVM constant pool overflow: too many entries (limit 65535)"
+        );
         self.entries.push(Some(entry));
+        // Safe: bounded by the assert above.
         let idx = (self.entries.len() - 1) as u16;
         self.index_map.insert(key, idx);
         idx
@@ -1021,14 +1046,27 @@ fn lower_function(
     let type_map = build_type_map(func);
     let slots = allocate_slots(func, &type_map);
 
-    // Compute max_locals: the number of slots allocated (accounting for wide types).
-    // We find the maximum used slot index + its width.
-    let max_locals: u16 = slots
-        .values()
-        .map(|(idx, t)| idx + t.slot_width())
-        .max()
-        .unwrap_or(0)
-        .max(func.params.len() as u16);
+    // Compute max_locals: the maximum slot index + width across all variables.
+    // Use u32 arithmetic to avoid u16 overflow before the final bounds check.
+    // (allocate_slots already asserts that next_slot fits in u16, so this
+    //  sum is safe in practice, but we compute it wide for clarity.)
+    let max_locals: u16 = {
+        let from_slots = slots
+            .values()
+            .map(|(idx, t)| (*idx as u32) + (t.slot_width() as u32))
+            .max()
+            .unwrap_or(0);
+        let from_params = func.params.len() as u32;
+        let raw = from_slots.max(from_params);
+        u16::try_from(raw).unwrap_or_else(|_| {
+            // allocate_slots should have already asserted; this is belt-and-braces.
+            panic!(
+                "max_locals {} overflows u16 for function {:?}; \
+                 this should have been caught in allocate_slots",
+                raw, func.name
+            )
+        })
+    };
 
     // ── Pass 2: emit bytecode ────────────────────────────────────────────────
     let mut code: Vec<u8> = Vec::new();
@@ -1501,7 +1539,32 @@ fn lower_function(
                 label: fixup.target.clone(),
             }
         })?;
-        let offset = (target_pc as i32 - fixup.opcode_pos as i32) as i16;
+        // Compute the signed 16-bit branch offset.  JVM branches are limited
+        // to ±32,767 bytes (use goto_w for larger ranges — not implemented in
+        // V1).  We also guard against the case where opcode_pos exceeds the
+        // code buffer (an internal invariant violation that should never occur
+        // but we prefer a clean error over an index-out-of-bounds panic).
+        let raw_offset = target_pc as i64 - fixup.opcode_pos as i64;
+        if raw_offset < i16::MIN as i64 || raw_offset > i16::MAX as i64 {
+            return Err(IIRJvmError::InvalidOperand {
+                function: fname.clone(),
+                detail: format!(
+                    "branch offset {} does not fit in i16 (label {:?}); \
+                     goto_w is not implemented in V1 — split large functions",
+                    raw_offset, fixup.target
+                ),
+            });
+        }
+        if fixup.opcode_pos + 2 >= code.len() {
+            return Err(IIRJvmError::InvalidOperand {
+                function: fname.clone(),
+                detail: format!(
+                    "internal: fixup opcode_pos {} is out of bounds for code len {}",
+                    fixup.opcode_pos, code.len()
+                ),
+            });
+        }
+        let offset = raw_offset as i16;
         let offset_bytes = offset.to_be_bytes();
         code[fixup.opcode_pos + 1] = offset_bytes[0];
         code[fixup.opcode_pos + 2] = offset_bytes[1];

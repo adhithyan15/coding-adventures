@@ -243,13 +243,24 @@ impl AtomTable {
 
     /// Intern `atom`, returning its 1-based BEAM index.
     /// If the atom is already present, returns the existing index.
+    ///
+    /// BEAM limits the atom table to 1,048,576 entries; we apply the same
+    /// cap here so the emitted module is loadable.
     fn intern(&mut self, atom: &str) -> u32 {
         if let Some(&idx) = self.index.get(atom) {
             return idx;
         }
+        // BEAM atom table limit.
+        const BEAM_MAX_ATOMS: usize = 1_048_576;
+        debug_assert!(
+            self.atoms.len() < BEAM_MAX_ATOMS,
+            "atom table overflow: BEAM supports at most 1,048,576 atoms"
+        );
         self.atoms.push(atom.to_string());
         // 1-based index: first atom → 1, second → 2, …
-        let idx = self.atoms.len() as u32;
+        // u32::try_from is safe here because len() is bounded by BEAM_MAX_ATOMS.
+        let idx = u32::try_from(self.atoms.len())
+            .expect("atom table index overflows u32 (>4 billion atoms)");
         self.index.insert(atom.to_string(), idx);
         idx
     }
@@ -291,7 +302,10 @@ impl ImportTable {
         if let Some(&idx) = self.index.get(&key) {
             return idx;
         }
-        let idx = self.imports.len() as u32;
+        // u32::try_from is safe in practice (the import table can't exceed
+        // u32::MAX entries before OOM); panic with a clear message if it does.
+        let idx = u32::try_from(self.imports.len())
+            .expect("import table index overflows u32 (>4 billion imports)");
         self.imports.push(BEAMImport {
             module_atom_index: module_idx,
             function_atom_index: fn_idx,
@@ -414,9 +428,21 @@ pub fn lower_iir_to_beam(
         let fn_atom = atoms.intern(&func.name);
 
         // Assign the func_info label and entry label.
-        label_counter += 1;
+        // Use checked_add so a pathologically large module with billions of
+        // functions produces a clean error instead of silent label aliasing.
+        label_counter = label_counter.checked_add(1).ok_or_else(|| {
+            IIRBeamError::UnsupportedOp {
+                function: func.name.clone(),
+                op: "label counter overflow — module has too many labels".into(),
+            }
+        })?;
         let _fi_label = label_counter; // used for {label, L_fi}
-        label_counter += 1;
+        label_counter = label_counter.checked_add(1).ok_or_else(|| {
+            IIRBeamError::UnsupportedOp {
+                function: func.name.clone(),
+                op: "label counter overflow — module has too many labels".into(),
+            }
+        })?;
         let entry_label = label_counter; // used for {label, L_entry} and ExpT
 
         // Build the register map for this function.
@@ -426,12 +452,32 @@ pub fn lower_iir_to_beam(
         // … to the parameters first so that callers can move arguments into
         // the correct registers before calling.
         let mut reg_map: HashMap<String, u8> = HashMap::new();
-        let mut next_reg: u8 = 0;
+        // Use u32 to track the next register index so we can detect overflow
+        // before truncating to u8.  BEAM x-registers are 0..254 (255 is
+        // technically reserved); we cap at 255 to produce a clean error.
+        let mut next_reg: u32 = 0;
+
+        // Helper: allocate the next register, returning an error if we exceed
+        // the BEAM x-register limit (255 usable registers per function).
+        macro_rules! alloc_reg {
+            ($name:expr) => {{
+                if next_reg >= 255 {
+                    return Err(IIRBeamError::UnsupportedOp {
+                        function: func.name.clone(),
+                        op: format!(
+                            "too many distinct variables (>255); BEAM x-registers are 0..254"
+                        ),
+                    });
+                }
+                let r = next_reg as u8;
+                reg_map.insert($name, r);
+                next_reg += 1;
+            }};
+        }
 
         // Parameters → x0, x1, …
         for (param_name, _param_type) in &func.params {
-            reg_map.insert(param_name.clone(), next_reg);
-            next_reg += 1;
+            alloc_reg!(param_name.clone());
         }
 
         // Walk instruction dests and Var sources to assign registers for all
@@ -445,16 +491,14 @@ pub fn lower_iir_to_beam(
             for src in &instr.srcs {
                 if let Operand::Var(name) = src {
                     if !reg_map.contains_key(name.as_str()) {
-                        reg_map.insert(name.clone(), next_reg);
-                        next_reg += 1;
+                        alloc_reg!(name.clone());
                     }
                 }
             }
             // Destination
             if let Some(dest) = &instr.dest {
                 if !reg_map.contains_key(dest.as_str()) {
-                    reg_map.insert(dest.clone(), next_reg);
-                    next_reg += 1;
+                    alloc_reg!(dest.clone());
                 }
             }
         }
@@ -466,7 +510,12 @@ pub fn lower_iir_to_beam(
             if instr.op == "label" {
                 if let Some(Operand::Var(name)) = instr.srcs.first() {
                     if !iir_label_map.contains_key(name.as_str()) {
-                        label_counter += 1;
+                        label_counter = label_counter.checked_add(1).ok_or_else(|| {
+                            IIRBeamError::UnsupportedOp {
+                                function: func.name.clone(),
+                                op: "label counter overflow — module has too many labels".into(),
+                            }
+                        })?;
                         iir_label_map.insert(name.clone(), label_counter);
                     }
                 }
@@ -479,7 +528,7 @@ pub fn lower_iir_to_beam(
             entry_label,
             reg_map,
             iir_label_map,
-            next_reg,
+            next_reg: next_reg as u8, // safe: bounded to <255 by alloc_reg!
         });
     }
 
@@ -567,6 +616,24 @@ pub fn lower_iir_to_beam(
             }};
         }
 
+        // Helper: safely get the Nth source operand of `$instr`, returning an
+        // error instead of panicking when a malformed instruction has fewer
+        // sources than needed.  We pass `$instr` explicitly because
+        // `macro_rules!` hygiene requires outer variables to be passed as
+        // arguments rather than captured by name.
+        macro_rules! get_src {
+            ($instr:expr, $n:expr) => {{
+                let _instr = $instr;
+                _instr.srcs.get($n).ok_or_else(|| IIRBeamError::InvalidOperand {
+                    function: fn_name.clone(),
+                    detail: format!(
+                        "{}: expected at least {} source operand(s), got {}",
+                        _instr.op, $n + 1, _instr.srcs.len()
+                    ),
+                })?
+            }};
+        }
+
         // Helper: resolve an IIR label name to a BEAM label number.
         // We use `&*$name` to coerce both `String` and `&str` to `&str`,
         // avoiding the unstable `str::as_str()` method (stabilized after 1.94).
@@ -646,8 +713,10 @@ pub fn lower_iir_to_beam(
                             detail: format!("{} must have a dest", instr.op),
                         }),
                     };
-                    let r1 = operand_reg!(&instr.srcs[0]);
-                    let r2 = operand_reg!(&instr.srcs[1]);
+                    // Use get_src! instead of direct indexing to produce a clean
+                    // error rather than a panic when srcs is shorter than expected.
+                    let r1 = operand_reg!(get_src!(instr, 0));
+                    let r2 = operand_reg!(get_src!(instr, 1));
                     instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
                         BEAMOperand::f(0),
                         BEAMOperand::u(live),
@@ -678,7 +747,7 @@ pub fn lower_iir_to_beam(
                             detail: format!("{} must have a dest", instr.op),
                         }),
                     };
-                    let r = operand_reg!(&instr.srcs[0]);
+                    let r = operand_reg!(get_src!(instr, 0));
                     instrs.push(BEAMInstruction::new(OP_GC_BIF1, vec![
                         BEAMOperand::f(0),
                         BEAMOperand::u(live),
@@ -705,8 +774,8 @@ pub fn lower_iir_to_beam(
                             detail: format!("{} must have a dest", instr.op),
                         }),
                     };
-                    let r1 = operand_reg!(&instr.srcs[0]);
-                    let r2 = operand_reg!(&instr.srcs[1]);
+                    let r1 = operand_reg!(get_src!(instr, 0));
+                    let r2 = operand_reg!(get_src!(instr, 1));
                     instrs.push(BEAMInstruction::new(OP_GC_BIF2, vec![
                         BEAMOperand::f(0),
                         BEAMOperand::u(live),
@@ -740,11 +809,16 @@ pub fn lower_iir_to_beam(
                             detail: format!("{} must have a dest", instr.op),
                         }),
                     };
-                    let r1 = operand_reg!(&instr.srcs[0]);
-                    let r2 = operand_reg!(&instr.srcs[1]);
+                    let r1 = operand_reg!(get_src!(instr, 0));
+                    let r2 = operand_reg!(get_src!(instr, 1));
 
                     // Allocate a synthetic label for the false branch to converge.
-                    label_counter += 1;
+                    label_counter = label_counter.checked_add(1).ok_or_else(|| {
+                        IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: "label counter overflow — too many comparison instructions".into(),
+                        }
+                    })?;
                     let synth = label_counter;
 
                     // Step A: pre-load 0 (false) into rd.
@@ -863,7 +937,7 @@ pub fn lower_iir_to_beam(
                 //   jump {f,target}                             ← cond != 0: take the branch
                 //   label {u,fall_synth}                        ← cond == 0: continue here
                 "jmp_if_true" => {
-                    let cond_reg = operand_reg!(&instr.srcs[0]);
+                    let cond_reg = operand_reg!(get_src!(instr, 0));
                     let target_name = match instr.srcs.last() {
                         Some(Operand::Var(name)) if instr.srcs.len() >= 2 => name.as_str(),
                         _ => return Err(IIRBeamError::InvalidOperand {
@@ -872,7 +946,12 @@ pub fn lower_iir_to_beam(
                         }),
                     };
                     let target_lbl = resolve_label!(target_name);
-                    label_counter += 1;
+                    label_counter = label_counter.checked_add(1).ok_or_else(|| {
+                        IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: "label counter overflow — too many conditional branches".into(),
+                        }
+                    })?;
                     let fall_synth = label_counter;
 
                     instrs.push(BEAMInstruction::new(OP_IS_EQ_EXACT, vec![
@@ -897,7 +976,7 @@ pub fn lower_iir_to_beam(
                 //   jump {f,target}                             ← cond == 0: take the branch
                 //   label {u,fall_synth}                        ← cond != 0: continue here
                 "jmp_if_false" => {
-                    let cond_reg = operand_reg!(&instr.srcs[0]);
+                    let cond_reg = operand_reg!(get_src!(instr, 0));
                     let target_name = match instr.srcs.last() {
                         Some(Operand::Var(name)) if instr.srcs.len() >= 2 => name.as_str(),
                         _ => return Err(IIRBeamError::InvalidOperand {
@@ -906,7 +985,12 @@ pub fn lower_iir_to_beam(
                         }),
                     };
                     let target_lbl = resolve_label!(target_name);
-                    label_counter += 1;
+                    label_counter = label_counter.checked_add(1).ok_or_else(|| {
+                        IIRBeamError::UnsupportedOp {
+                            function: fn_name.clone(),
+                            op: "label counter overflow — too many conditional branches".into(),
+                        }
+                    })?;
                     let fall_synth = label_counter;
 
                     instrs.push(BEAMInstruction::new(OP_IS_NE_EXACT, vec![
@@ -931,7 +1015,7 @@ pub fn lower_iir_to_beam(
                 // the move is a no-op (same src = same dst), but we emit it
                 // unconditionally for simplicity.
                 "ret" => {
-                    let r = operand_reg!(&instr.srcs[0]);
+                    let r = operand_reg!(get_src!(instr, 0));
                     if r != 0 {
                         // Move the return value to x0 only if not already there.
                         instrs.push(BEAMInstruction::new(OP_MOVE, vec![
@@ -990,6 +1074,17 @@ pub fn lower_iir_to_beam(
                     // clearer.
                     for (i, src) in arg_srcs.iter().enumerate() {
                         let arg_reg = operand_reg!(src);
+                        // Bounds check: BEAM x-registers are 0..254; a call
+                        // with 255+ arguments cannot be represented.
+                        if i >= 255 {
+                            return Err(IIRBeamError::InvalidOperand {
+                                function: fn_name.clone(),
+                                detail: format!(
+                                    "call: too many arguments ({}); BEAM allows at most 255",
+                                    arg_srcs.len()
+                                ),
+                            });
+                        }
                         let target_x = i as u8;
                         if arg_reg != target_x {
                             instrs.push(BEAMInstruction::new(OP_MOVE, vec![

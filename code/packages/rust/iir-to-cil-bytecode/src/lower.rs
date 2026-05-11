@@ -184,25 +184,57 @@ struct RegInfo {
 /// Emits `ldarg` for method parameters and `ldloc` for local variables.
 /// Both have short forms (0..3 → single byte), a byte form (4..255 → 2 bytes),
 /// and a wide form (256+ → 4 bytes); the builder handles this automatically.
-fn emit_load(builder: &mut CILBytecodeBuilder, info: &RegInfo) {
+///
+/// Returns an error if the slot index exceeds the CIL encoding limit
+/// (`ldarg` uses u8 indices — max 255 params; `ldloc` uses u16 — max 65535 locals).
+fn emit_load(builder: &mut CILBytecodeBuilder, info: &RegInfo, fn_name: &str) -> Result<(), IIRClrError> {
     if info.is_param {
-        // `ldarg.0` through `ldarg.3` are single-byte; `ldarg.s N` for N≤255
-        builder.emit_ldarg(info.idx as u8);
+        let idx = u8::try_from(info.idx).map_err(|_| IIRClrError::InvalidOperand {
+            function: fn_name.to_string(),
+            detail: format!(
+                "ldarg index {} exceeds u8 max (255); CIL allows at most 256 parameters",
+                info.idx
+            ),
+        })?;
+        builder.emit_ldarg(idx);
     } else {
-        // `ldloc.0` through `ldloc.3` are single-byte; `ldloc.s N` for N≤255
-        builder.emit_ldloc(info.idx as u16);
+        let idx = u16::try_from(info.idx).map_err(|_| IIRClrError::InvalidOperand {
+            function: fn_name.to_string(),
+            detail: format!(
+                "ldloc index {} exceeds u16 max (65535); CIL allows at most 65536 locals",
+                info.idx
+            ),
+        })?;
+        builder.emit_ldloc(idx);
     }
+    Ok(())
 }
 
 /// Pop the top of the CIL stack and store it into a variable's slot.
 ///
 /// Emits `starg` for method parameters and `stloc` for local variables.
-fn emit_store(builder: &mut CILBytecodeBuilder, info: &RegInfo) {
+/// Returns an error if the slot index exceeds the CIL encoding limit.
+fn emit_store(builder: &mut CILBytecodeBuilder, info: &RegInfo, fn_name: &str) -> Result<(), IIRClrError> {
     if info.is_param {
-        builder.emit_starg(info.idx as u8);
+        let idx = u8::try_from(info.idx).map_err(|_| IIRClrError::InvalidOperand {
+            function: fn_name.to_string(),
+            detail: format!(
+                "starg index {} exceeds u8 max (255); CIL allows at most 256 parameters",
+                info.idx
+            ),
+        })?;
+        builder.emit_starg(idx);
     } else {
-        builder.emit_stloc(info.idx as u16);
+        let idx = u16::try_from(info.idx).map_err(|_| IIRClrError::InvalidOperand {
+            function: fn_name.to_string(),
+            detail: format!(
+                "stloc index {} exceeds u16 max (65535); CIL allows at most 65536 locals",
+                info.idx
+            ),
+        })?;
+        builder.emit_stloc(idx);
     }
+    Ok(())
 }
 
 // ===========================================================================
@@ -373,7 +405,7 @@ pub fn lower_iir_to_cil(
                         Some(Operand::Var(v)) => {
                             // A Var src in a const is unusual; treat it as a copy.
                             let src = reg_info!(v).clone();
-                            emit_load(&mut builder, &src);
+                            emit_load(&mut builder, &src, fn_name)?;
                         }
                         None => {
                             return Err(IIRClrError::InvalidOperand {
@@ -383,7 +415,7 @@ pub fn lower_iir_to_cil(
                         }
                     }
 
-                    emit_store(&mut builder, &dest);
+                    emit_store(&mut builder, &dest, fn_name)?;
                 }
 
                 // ── Binary arithmetic: add, sub, mul, div ────────────────────
@@ -405,8 +437,8 @@ pub fn lower_iir_to_cil(
                     let lhs = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
                     let rhs = get_operand_reg(&instr.srcs, 1, &reg_map, fn_name)?;
 
-                    emit_load(&mut builder, &lhs);
-                    emit_load(&mut builder, &rhs);
+                    emit_load(&mut builder, &lhs, fn_name)?;
+                    emit_load(&mut builder, &rhs, fn_name)?;
 
                     match instr.op.as_str() {
                         "add" => builder.emit_add(),
@@ -416,7 +448,7 @@ pub fn lower_iir_to_cil(
                         _ => unreachable!(),
                     }
 
-                    emit_store(&mut builder, &dest);
+                    emit_store(&mut builder, &dest, fn_name)?;
                 }
 
                 // ── mod r1, r2 → rd ──────────────────────────────────────────
@@ -440,11 +472,11 @@ pub fn lower_iir_to_cil(
                     let lhs = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
                     let rhs = get_operand_reg(&instr.srcs, 1, &reg_map, fn_name)?;
 
-                    emit_load(&mut builder, &lhs);
-                    emit_load(&mut builder, &rhs);
+                    emit_load(&mut builder, &lhs, fn_name)?;
+                    emit_load(&mut builder, &rhs, fn_name)?;
                     // `rem` opcode: 0x5D.  Not in CILOpcode enum, emitted raw.
                     builder.emit_raw(vec![0x5D]);
-                    emit_store(&mut builder, &dest);
+                    emit_store(&mut builder, &dest, fn_name)?;
                 }
 
                 // ── neg r → rd ───────────────────────────────────────────────
@@ -461,10 +493,10 @@ pub fn lower_iir_to_cil(
                     let dest = reg_info!(dest_name).clone();
 
                     let src = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
-                    emit_load(&mut builder, &src);
+                    emit_load(&mut builder, &src, fn_name)?;
                     // `neg` opcode: 0x65.
                     builder.emit_raw(vec![0x65]);
-                    emit_store(&mut builder, &dest);
+                    emit_store(&mut builder, &dest, fn_name)?;
                 }
 
                 // ── Binary bitwise: and, or, xor, shl, shr ──────────────────
@@ -483,8 +515,8 @@ pub fn lower_iir_to_cil(
                     let lhs = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
                     let rhs = get_operand_reg(&instr.srcs, 1, &reg_map, fn_name)?;
 
-                    emit_load(&mut builder, &lhs);
-                    emit_load(&mut builder, &rhs);
+                    emit_load(&mut builder, &lhs, fn_name)?;
+                    emit_load(&mut builder, &rhs, fn_name)?;
 
                     match instr.op.as_str() {
                         "and" => builder.emit_and(),
@@ -495,7 +527,7 @@ pub fn lower_iir_to_cil(
                         _ => unreachable!(),
                     }
 
-                    emit_store(&mut builder, &dest);
+                    emit_store(&mut builder, &dest, fn_name)?;
                 }
 
                 // ── not r → rd ───────────────────────────────────────────────
@@ -517,10 +549,10 @@ pub fn lower_iir_to_cil(
                     let dest = reg_info!(dest_name).clone();
 
                     let src = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
-                    emit_load(&mut builder, &src);
+                    emit_load(&mut builder, &src, fn_name)?;
                     // `not` opcode: 0x66.
                     builder.emit_raw(vec![0x66]);
-                    emit_store(&mut builder, &dest);
+                    emit_store(&mut builder, &dest, fn_name)?;
                 }
 
                 // ── cmp_eq r1, r2 → rd ───────────────────────────────────────
@@ -540,10 +572,10 @@ pub fn lower_iir_to_cil(
                     let r1 = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
                     let r2 = get_operand_reg(&instr.srcs, 1, &reg_map, fn_name)?;
 
-                    emit_load(&mut builder, &r1);
-                    emit_load(&mut builder, &r2);
+                    emit_load(&mut builder, &r1, fn_name)?;
+                    emit_load(&mut builder, &r2, fn_name)?;
                     builder.emit_ceq();
-                    emit_store(&mut builder, &dest);
+                    emit_store(&mut builder, &dest, fn_name)?;
                 }
 
                 // ── cmp_lt r1, r2 → rd ───────────────────────────────────────
@@ -562,10 +594,10 @@ pub fn lower_iir_to_cil(
                     let r1 = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
                     let r2 = get_operand_reg(&instr.srcs, 1, &reg_map, fn_name)?;
 
-                    emit_load(&mut builder, &r1);
-                    emit_load(&mut builder, &r2);
+                    emit_load(&mut builder, &r1, fn_name)?;
+                    emit_load(&mut builder, &r2, fn_name)?;
                     builder.emit_clt();
-                    emit_store(&mut builder, &dest);
+                    emit_store(&mut builder, &dest, fn_name)?;
                 }
 
                 // ── cmp_gt r1, r2 → rd ───────────────────────────────────────
@@ -584,10 +616,10 @@ pub fn lower_iir_to_cil(
                     let r1 = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
                     let r2 = get_operand_reg(&instr.srcs, 1, &reg_map, fn_name)?;
 
-                    emit_load(&mut builder, &r1);
-                    emit_load(&mut builder, &r2);
+                    emit_load(&mut builder, &r1, fn_name)?;
+                    emit_load(&mut builder, &r2, fn_name)?;
                     builder.emit_cgt();
-                    emit_store(&mut builder, &dest);
+                    emit_store(&mut builder, &dest, fn_name)?;
                 }
 
                 // ── cmp_ne r1, r2 → rd ───────────────────────────────────────
@@ -611,12 +643,12 @@ pub fn lower_iir_to_cil(
                     let r1 = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
                     let r2 = get_operand_reg(&instr.srcs, 1, &reg_map, fn_name)?;
 
-                    emit_load(&mut builder, &r1);
-                    emit_load(&mut builder, &r2);
+                    emit_load(&mut builder, &r1, fn_name)?;
+                    emit_load(&mut builder, &r2, fn_name)?;
                     builder.emit_ceq();                 // 1 if equal, 0 if not
                     builder.emit_ldc_i4(0);             // push 0
                     builder.emit_ceq();                 // NOT: 0 if equal, 1 if not
-                    emit_store(&mut builder, &dest);
+                    emit_store(&mut builder, &dest, fn_name)?;
                 }
 
                 // ── cmp_le r1, r2 → rd ───────────────────────────────────────
@@ -636,12 +668,12 @@ pub fn lower_iir_to_cil(
                     let r1 = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
                     let r2 = get_operand_reg(&instr.srcs, 1, &reg_map, fn_name)?;
 
-                    emit_load(&mut builder, &r1);
-                    emit_load(&mut builder, &r2);
+                    emit_load(&mut builder, &r1, fn_name)?;
+                    emit_load(&mut builder, &r2, fn_name)?;
                     builder.emit_cgt();                 // 1 if r1 > r2
                     builder.emit_ldc_i4(0);
                     builder.emit_ceq();                 // NOT: 1 if r1 <= r2
-                    emit_store(&mut builder, &dest);
+                    emit_store(&mut builder, &dest, fn_name)?;
                 }
 
                 // ── cmp_ge r1, r2 → rd ───────────────────────────────────────
@@ -661,12 +693,12 @@ pub fn lower_iir_to_cil(
                     let r1 = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
                     let r2 = get_operand_reg(&instr.srcs, 1, &reg_map, fn_name)?;
 
-                    emit_load(&mut builder, &r1);
-                    emit_load(&mut builder, &r2);
+                    emit_load(&mut builder, &r1, fn_name)?;
+                    emit_load(&mut builder, &r2, fn_name)?;
                     builder.emit_clt();                 // 1 if r1 < r2
                     builder.emit_ldc_i4(0);
                     builder.emit_ceq();                 // NOT: 1 if r1 >= r2
-                    emit_store(&mut builder, &dest);
+                    emit_store(&mut builder, &dest, fn_name)?;
                 }
 
                 // ── label name ───────────────────────────────────────────────
@@ -722,7 +754,7 @@ pub fn lower_iir_to_cil(
                         }),
                     };
                     let cond = reg_info!(cond_name).clone();
-                    emit_load(&mut builder, &cond);
+                    emit_load(&mut builder, &cond, fn_name)?;
                     builder.emit_branch(CILBranchKind::True, label_name, false);
                 }
 
@@ -748,7 +780,7 @@ pub fn lower_iir_to_cil(
                         }),
                     };
                     let cond = reg_info!(cond_name).clone();
-                    emit_load(&mut builder, &cond);
+                    emit_load(&mut builder, &cond, fn_name)?;
                     builder.emit_branch(CILBranchKind::False, label_name, false);
                 }
 
@@ -765,7 +797,7 @@ pub fn lower_iir_to_cil(
                         }),
                     };
                     let src = reg_info!(src_name).clone();
-                    emit_load(&mut builder, &src);
+                    emit_load(&mut builder, &src, fn_name)?;
                     builder.emit_ret();
                 }
 
@@ -811,16 +843,25 @@ pub fn lower_iir_to_cil(
 
                     // Compute the CIL method token.
                     // Token table 0x06 = MethodDef; ordinal is 1-based.
+                    // Use checked_add and return a proper error on overflow rather
+                    // than silently emitting a wrong token (which would dispatch to
+                    // the wrong method at runtime).
                     let method_token = 0x0600_0001u32
                         .checked_add(callee_idx as u32)
-                        .unwrap_or(0x0600_0001);
+                        .ok_or_else(|| IIRClrError::InvalidOperand {
+                            function: fn_name.clone(),
+                            detail: format!(
+                                "method token overflow for callee {:?} (index {})",
+                                callee_name, callee_idx
+                            ),
+                        })?;
 
                     // Push arguments in order.
                     for src in instr.srcs.iter().skip(1) {
                         match src {
                             Operand::Var(name) => {
                                 let info = reg_info!(name).clone();
-                                emit_load(&mut builder, &info);
+                                emit_load(&mut builder, &info, fn_name)?;
                             }
                             Operand::Int(n) => {
                                 builder.emit_ldc_i4(*n as i32);
@@ -843,7 +884,7 @@ pub fn lower_iir_to_cil(
                     // Store the return value if the call has a destination.
                     if let Some(dest_name) = &instr.dest {
                         let dest = reg_info!(dest_name).clone();
-                        emit_store(&mut builder, &dest);
+                        emit_store(&mut builder, &dest, fn_name)?;
                     } else {
                         // No destination: discard the return value with `pop`.
                         builder.emit_pop();
@@ -863,8 +904,8 @@ pub fn lower_iir_to_cil(
                     })?;
                     let dest = reg_info!(dest_name).clone();
                     let src = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
-                    emit_load(&mut builder, &src);
-                    emit_store(&mut builder, &dest);
+                    emit_load(&mut builder, &src, fn_name)?;
+                    emit_store(&mut builder, &dest, fn_name)?;
                 }
 
                 // ── store_reg v, src ─────────────────────────────────────────
@@ -875,8 +916,8 @@ pub fn lower_iir_to_cil(
                 "store_reg" => {
                     let v = get_operand_reg(&instr.srcs, 0, &reg_map, fn_name)?;
                     let src = get_operand_reg(&instr.srcs, 1, &reg_map, fn_name)?;
-                    emit_load(&mut builder, &src);
-                    emit_store(&mut builder, &v);
+                    emit_load(&mut builder, &src, fn_name)?;
+                    emit_store(&mut builder, &v, fn_name)?;
                 }
 
                 // ── type_assert ──────────────────────────────────────────────

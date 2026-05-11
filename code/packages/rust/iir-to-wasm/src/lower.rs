@@ -284,10 +284,20 @@ fn build_register_map(fn_: &IIRFunction) -> HashMap<String, u32> {
     let mut map: HashMap<String, u32> = HashMap::new();
     let mut next_idx: u32 = 0;
 
+    // WASM limits the number of locals per function to u32::MAX in theory,
+    // but realistic modules use far fewer.  We apply a generous cap to catch
+    // pathological inputs before the index counter wraps around to 0, which
+    // would silently produce duplicate local indices and corrupt the output.
+    const MAX_WASM_LOCALS: u32 = 1 << 20; // 1,048,576 — already pathological
+
     // Parameters come first (they receive the call arguments in WASM).
     for (param_name, _) in &fn_.params {
         map.entry(param_name.clone()).or_insert_with(|| {
             let idx = next_idx;
+            assert!(
+                idx < MAX_WASM_LOCALS,
+                "WASM local index overflow: too many variables in function {:?}", fn_.name
+            );
             next_idx += 1;
             idx
         });
@@ -299,6 +309,10 @@ fn build_register_map(fn_: &IIRFunction) -> HashMap<String, u32> {
         if let Some(dest) = &instr.dest {
             map.entry(dest.clone()).or_insert_with(|| {
                 let idx = next_idx;
+                assert!(
+                    idx < MAX_WASM_LOCALS,
+                    "WASM local index overflow: too many variables in function {:?}", fn_.name
+                );
                 next_idx += 1;
                 idx
             });
@@ -309,6 +323,10 @@ fn build_register_map(fn_: &IIRFunction) -> HashMap<String, u32> {
             if let Operand::Var(name) = src {
                 map.entry(name.clone()).or_insert_with(|| {
                     let idx = next_idx;
+                    assert!(
+                        idx < MAX_WASM_LOCALS,
+                        "WASM local index overflow: too many variables in function {:?}", fn_.name
+                    );
                     next_idx += 1;
                     idx
                 });
@@ -396,7 +414,10 @@ fn split_into_blocks(
     for instr in &fn_.instructions {
         if instr.op == "label" {
             // Start a new basic block.  The label name identifies it.
-            let block_idx = blocks.len() as u32;
+            // u32::try_from is safe because we cap label count at 65,536
+            // via validate_for_wasm (Check 6).
+            let block_idx = u32::try_from(blocks.len())
+                .expect("basic block count overflows u32 (should be caught by validation)");
             if let Some(Operand::Var(label_name)) = instr.srcs.first() {
                 label_to_block.insert(label_name.clone(), block_idx);
             }
