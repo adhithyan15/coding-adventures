@@ -19268,3 +19268,299 @@ Line1<br>Line2<br>Line3<br>Line4
 |   <body>
 |     <p>
 |     <summary>
+
+
+#source tests20.dat:1162
+#data
+<!doctype html><form><table><form>
+#errors
+(1,34): unexpected-form-in-table
+(1,34): eof-in-table
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <form>
+|       <table>
+
+
+#source tests20.dat:1163
+#data
+<!doctype html><table><form><form>
+#errors
+(1,28): unexpected-form-in-table
+(1,34): unexpected-form-in-table
+(1,34): eof-in-table
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <form>
+
+
+#source tests20.dat:1164
+#data
+<!doctype html><table><form></table><form>
+#errors
+(1,28): unexpected-form-in-table
+(1,42): unexpected-start-tag
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <table>
+|       <form>
+
+
+#source tests20.dat:1165
+#data
+<!doctype html><svg><foreignObject><p>
+#errors
+(1,38): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg foreignObject>
+|         <p>
+
+
+#source tests20.dat:1166
+#data
+<!doctype html><svg><title>abc
+#errors
+(1,30): expected-closing-tag-but-got-eof
+#document
+| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg title>
+|         "abc"
+
+
+#source tests20.dat:1167
+#data
+<option><span><option>
+#errors
+(1,8): expected-doctype-but-got-start-tag
+(1,22): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <option>
+|       <span>
+|         <option>
+
+
+#source tests20.dat:1168
+#data
+<option><option>
+#errors
+(1,8): expected-doctype-but-got-start-tag
+#document
+| <html>
+|   <head>
+|   <body>
+|     <option>
+|     <option>
+
+
+#source tests20.dat:1169
+#data
+<math><annotation-xml><div>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,27): unexpected-html-element-in-foreign-content
+(1,27): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math annotation-xml>
+|     <div>
+
+
+#source tests20.dat:1170
+#data
+<math><annotation-xml encoding="application/svg+xml"><div>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,58): unexpected-html-element-in-foreign-content
+(1,58): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math annotation-xml>
+|         encoding="application/svg+xml"
+|     <div>
+
+
+#source tests20.dat:1171
+#data
+<math><annotation-xml encoding="application/xhtml+xml"><div>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,60): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math annotation-xml>
+|         encoding="application/xhtml+xml"
+|         <div>
+
+
+#source tests20.dat:1172
+#data
+<math><annotation-xml encoding="aPPlication/xhtmL+xMl"><div>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,60): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math annotation-xml>
+|         encoding="aPPlication/xhtmL+xMl"
+|         <div>
+
+
+#source tests20.dat:1173
+#data
+<math><annotation-xml encoding="text/html"><div>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,48): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math annotation-xml>
+|         encoding="text/html"
+|         <div>
+
+
+#source tests20.dat:1174
+#data
+<math><annotation-xml encoding="Text/htmL"><div>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,48): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math annotation-xml>
+|         encoding="Text/htmL"
+|         <div>
+
+
+#source tests20.dat:1175
+#data
+<math><annotation-xml encoding=" text/html "><div>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,50): unexpected-html-element-in-foreign-content
+(1,50): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math annotation-xml>
+|         encoding=" text/html "
+|     <div>
+
+
+#source tests20.dat:1176
+#data
+<math><annotation-xml> </annotation-xml>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,40): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math annotation-xml>
+|         " "
+
+
+#source tests20.dat:1177
+#data
+<math><annotation-xml>c</annotation-xml>
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,40): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math annotation-xml>
+|         "c"
+
+
+#source tests20.dat:1178
+#data
+<math><annotation-xml><!--foo-->
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,32): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math annotation-xml>
+|         <!-- foo -->
+
+
+#source tests20.dat:1179
+#data
+<math><annotation-xml></svg>x
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,28): unexpected-end-tag-in-math
+(1,28): unexpected-end-tag
+(1,29): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math annotation-xml>
+|         "x"
+
+
+#source tests20.dat:1180
+#data
+<math><annotation-xml><svg>x
+#errors
+(1,6): expected-doctype-but-got-start-tag
+(1,28): expected-closing-tag-but-got-eof
+#document
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math annotation-xml>
+|         <svg svg>
+|           "x"

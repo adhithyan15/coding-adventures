@@ -724,6 +724,7 @@ pub struct HtmlParser {
     explicit_html_end_seen: bool,
     pending_table_text: String,
     strip_next_leading_noscript_literal: bool,
+    form_element_pointer_set: bool,
 }
 
 impl Default for HtmlParser {
@@ -742,6 +743,7 @@ impl Default for HtmlParser {
             explicit_html_end_seen: false,
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
+            form_element_pointer_set: false,
         }
     }
 }
@@ -787,6 +789,7 @@ impl HtmlParser {
             explicit_html_end_seen: false,
             pending_table_text: String::new(),
             strip_next_leading_noscript_literal: false,
+            form_element_pointer_set: false,
         }
     }
 
@@ -875,7 +878,7 @@ impl HtmlParser {
 
         let in_foreign_content = self.current_namespace().is_some()
             && !self.current_node_is_svg_html_integration_point()
-            && !self.current_node_is_mathml_text_integration_point();
+            && !self.current_node_is_mathml_integration_point();
         if in_foreign_content
             && !self.current_node_is_svg_html_integration_point()
             && exits_foreign_content_on_start_tag(&name, &attributes)
@@ -1030,7 +1033,7 @@ impl HtmlParser {
         let formatting_inside = self.take_formatting_reconstruction_inside_for(&name);
         if !in_foreign_content
             && !self.current_node_is_svg_html_integration_point()
-            && !self.current_node_is_mathml_text_integration_point()
+            && !self.current_node_is_mathml_integration_point()
         {
             self.apply_simple_implied_end_tags(&name);
         }
@@ -1191,7 +1194,20 @@ impl HtmlParser {
             self.close_open_element_if(|name| name == "select");
         }
 
+        if !in_foreign_content
+            && name == "form"
+            && self.current_element_is_table_structure()
+            && self.form_element_pointer_set
+        {
+            self.diagnostics.push(ParserDiagnostic::new(
+                "nested-form-start-tag",
+                "form start tag inside a table was ignored while a form was already open",
+            ));
+            return;
+        }
+
         if !in_foreign_content && name == "form" && self.current_element_is_table_structure() {
+            self.form_element_pointer_set = true;
             self.append_node(Node::element(name, attributes));
             return;
         }
@@ -1358,6 +1374,9 @@ impl HtmlParser {
             ));
         }
 
+        if namespace.is_none() && name == "form" {
+            self.form_element_pointer_set = true;
+        }
         let child_index = self.append_node(element_node(name.clone(), attributes, namespace));
         if !acknowledges_self_closing && !html_void_element {
             let mut path = self.current_parent_path().to_vec();
@@ -2325,6 +2344,8 @@ impl HtmlParser {
                 return;
             }
             if name == "form" && self.has_table_context_above(index) {
+                self.form_element_pointer_set = false;
+                self.open_elements.remove(index);
                 return;
             }
             if is_heading_element(name) && self.has_special_element_above(index) {
@@ -2368,6 +2389,9 @@ impl HtmlParser {
             if is_formatting_element(name) {
                 self.capture_formatting_above(index);
                 self.remove_pending_formatting_reconstruction(name);
+            }
+            if name == "form" {
+                self.form_element_pointer_set = false;
             }
             if matches!(name, "div" | "p" | "select") {
                 self.capture_formatting_above(index);
@@ -2495,7 +2519,9 @@ impl HtmlParser {
                 self.close_open_element_if(|name| name == "p");
                 self.close_open_element_if(|name| name == "dt" || name == "dd");
             }
-        } else if incoming_name == "option" {
+        } else if incoming_name == "option"
+            && (self.current_element_is("option") || self.has_open_element("select"))
+        {
             self.close_open_element_if(|name| name == "option");
         } else if incoming_name == "optgroup" {
             self.close_open_element_if(|name| name == "option");
@@ -2560,7 +2586,7 @@ impl HtmlParser {
                 self.close_open_element_silently("nobr");
                 false
             }
-            "form" if self.has_open_element("form") => {
+            "form" if self.form_element_pointer_set => {
                 self.diagnostics.push(ParserDiagnostic::new(
                     "nested-form-start-tag",
                     "nested form start tag was ignored while a form element was already open",
@@ -3585,7 +3611,7 @@ impl HtmlParser {
             return Some("math");
         }
         if self.current_node_is_svg_html_integration_point()
-            || self.current_node_is_mathml_text_integration_point()
+            || self.current_node_is_mathml_integration_point()
         {
             return None;
         }
@@ -3625,6 +3651,27 @@ impl HtmlParser {
         };
         element.namespace.as_deref() == Some("math")
             && matches!(element.name.as_str(), "mi" | "mo" | "mn" | "ms" | "mtext")
+    }
+
+    fn current_node_is_mathml_html_integration_point(&self) -> bool {
+        let Some(path) = self.open_elements.last() else {
+            return false;
+        };
+        let Some(element) = element_ref_at_path(&self.document, path) else {
+            return false;
+        };
+        if element.namespace.as_deref() != Some("math") || element.name != "annotation-xml" {
+            return false;
+        }
+        element.attribute("encoding").is_some_and(|value| {
+            value.eq_ignore_ascii_case("text/html")
+                || value.eq_ignore_ascii_case("application/xhtml+xml")
+        })
+    }
+
+    fn current_node_is_mathml_integration_point(&self) -> bool {
+        self.current_node_is_mathml_text_integration_point()
+            || self.current_node_is_mathml_html_integration_point()
     }
 
     fn has_open_svg_html_integration_point(&self) -> bool {
