@@ -1,0 +1,9 @@
+[package]
+name = "llm-primitives"
+version = "0.1.0"
+edition = "2021"
+description = "LM00b — skeleton for the typed LLM primitives layer. Defines Role, GatewayConfig, LlmCallRecord, PrimitiveError, and prompt-version constants. The six concrete primitives (decompose_text, render_node, entail, find_contradicting_reading, judge_plausibility, extract_rules) ship in follow-up crates / modules."
+
+[dependencies]
+llm-gateway = { path = "../llm-gateway" }
+adjudication-ir = { path = "../adjudication-ir" }
